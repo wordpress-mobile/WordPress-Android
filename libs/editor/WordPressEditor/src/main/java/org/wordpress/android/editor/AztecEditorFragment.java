@@ -1616,16 +1616,19 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
                     if (!TextUtils.isEmpty(metaData.getCaption())) {
                         AztecAttributes captionAttributes = CaptionExtensionsKt.getImageCaptionAttributes(content, mTappedMediaPredicate);
 
+                        //if caption is present apply align attribute to it instead of image
                         if (!TextUtils.isEmpty(metaData.getAlign())) {
                             captionAttributes.setValue(ATTR_ALIGN, ATTR_ALIGN + metaData.getAlign());
                         } else {
                             captionAttributes.removeAttribute(ATTR_ALIGN);
                         }
 
+                        //without width attribute caption will not render in the web
                         captionAttributes.setValue(ATTR_DIMEN_WIDTH, metaData.getWidth());
 
                         CaptionExtensionsKt.setImageCaption(content, mTappedMediaPredicate, metaData.getCaption(), captionAttributes);
                     } else {
+                        //if no caption present apply align attribute to directly to image
                         if (!TextUtils.isEmpty(metaData.getAlign())) {
                             attributesWithClass.addClass(ATTR_ALIGN + metaData.getAlign());
                         }
@@ -1642,7 +1645,6 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
                     }
 
                     attributes.setValue(ATTR_CLASS, attributesWithClass.getAttributes().getValue(ATTR_CLASS));
-
 
                     attributes.removeAttribute(TEMP_IMAGE_ID);
                     content.updateElementAttributes(mTappedMediaPredicate, attributes);
