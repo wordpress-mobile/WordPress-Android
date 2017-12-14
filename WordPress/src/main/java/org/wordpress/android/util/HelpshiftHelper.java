@@ -71,7 +71,10 @@ public class HelpshiftHelper {
         ORIGIN_LOGIN_SOCIAL("origin:login-social"),
         ORIGIN_LOGIN_USERNAME_PASSWORD("origin:login-username-password"),
         CONNECTING_JETPACK("connecting_jetpack"),
-        ORIGIN_SITE_CREATION_CATEGORY("origin:site-creation-category");
+        ORIGIN_SITE_CREATION_CATEGORY("origin:site-create-site-category"),
+        ORIGIN_SITE_CREATION_THEME("origin:site-create-site-theme"),
+        ORIGIN_SITE_CREATION_DETAILS("origin:site-create-site-details"),
+        ORIGIN_SITE_CREATION_DOMAIN("origin:site-create-site-domain");
 
         private final String mStringValue;
 
