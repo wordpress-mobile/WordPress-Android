@@ -261,7 +261,7 @@ public class LoginActivity extends AppCompatActivity implements ConnectionCallba
         AnalyticsTracker.track(AnalyticsTracker.Stat.SIGNUP_EMAIL_BUTTON_TAPPED);
 
         if (mSignupSheet != null) {
-            mSignupSheet.hide();
+            mSignupSheet.dismiss();
             mSignupSheetDisplayed = false;
         }
 
