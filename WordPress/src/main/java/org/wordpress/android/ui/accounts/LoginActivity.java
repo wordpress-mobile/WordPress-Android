@@ -152,7 +152,7 @@ public class LoginActivity extends AppCompatActivity implements ConnectionCallba
     private void loggedInAndFinish(ArrayList<Integer> oldSitesIds, boolean doLoginUpdate) {
         switch (getLoginMode()) {
             case FULL:
-                ActivityLauncher.showMainActivityAndLoginEpilogue(this, oldSitesIds);
+                ActivityLauncher.showMainActivityAndLoginEpilogue(this, oldSitesIds, doLoginUpdate);
                 setResult(Activity.RESULT_OK);
                 finish();
                 break;
