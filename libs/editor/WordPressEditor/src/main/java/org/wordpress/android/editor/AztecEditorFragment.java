@@ -1623,7 +1623,7 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
                             captionAttributes.removeAttribute(ATTR_ALIGN);
                         }
 
-                        //without width attribute caption will not render in the web
+                        //without width attribute caption will not render on the web
                         captionAttributes.setValue(ATTR_DIMEN_WIDTH, metaData.getWidth());
 
                         CaptionExtensionsKt.setImageCaption(content, mTappedMediaPredicate, metaData.getCaption(), captionAttributes);
