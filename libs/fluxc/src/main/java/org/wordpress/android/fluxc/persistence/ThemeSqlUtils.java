@@ -14,6 +14,10 @@ import java.util.List;
 
 public class ThemeSqlUtils {
     public static void insertOrUpdateThemeForSite(@NonNull ThemeModel theme) {
+        // Always remove WP.com flag while storing as a site associate theme as we might be saving
+        // a copy of a wp.com theme after an activation
+        theme.setIsWpComTheme(false);
+
         List<ThemeModel> existing = WellSql.select(ThemeModel.class)
                 .where().beginGroup()
                 .equals(ThemeModelTable.THEME_ID, theme.getThemeId())
