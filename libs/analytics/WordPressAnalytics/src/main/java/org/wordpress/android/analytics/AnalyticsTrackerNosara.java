@@ -754,6 +754,10 @@ public class AnalyticsTrackerNosara extends Tracker {
                 return "signup_email_button_tapped";
             case SIGNUP_GOOGLE_BUTTON_TAPPED:
                 return "signup_google_button_tapped";
+            case SIGNUP_SOCIAL_2FA_NEEDED:
+                return "signup_social_2fa_needed";
+            case SIGNUP_SOCIAL_ACCOUNTS_NEED_CONNECTING:
+                return "signup_social_accounts_need_connecting";
             case SIGNUP_TERMS_OF_SERVICE_TAPPED:
                 return "signup_terms_of_service_tapped";
             case SIGNUP_DISMISSED:

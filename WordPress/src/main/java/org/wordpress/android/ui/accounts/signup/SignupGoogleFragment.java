@@ -155,6 +155,7 @@ public class SignupGoogleFragment extends GoogleFragment {
             switch (event.error.type) {
                 // WordPress account exists with input email address, and two-factor authentication is required.
                 case TWO_STEP_ENABLED:
+                    AnalyticsTracker.track(AnalyticsTracker.Stat.SIGNUP_SOCIAL_2FA_NEEDED);
                     ToastUtils.showToast(getContext(), getString(R.string.signup_user_exists, mGoogleEmail),
                             ToastUtils.Duration.LONG);
                     // Dispatch social login action to retrieve data required for two-factor authentication.
@@ -163,6 +164,7 @@ public class SignupGoogleFragment extends GoogleFragment {
                     break;
                 // WordPress account exists with input email address, but not connected.
                 case USER_EXISTS:
+                    AnalyticsTracker.track(AnalyticsTracker.Stat.SIGNUP_SOCIAL_ACCOUNTS_NEED_CONNECTING);
                     ToastUtils.showToast(getContext(), getString(R.string.signup_user_exists, mGoogleEmail),
                             ToastUtils.Duration.LONG);
                     mLoginListener.loginViaSocialAccount(mGoogleEmail, mIdToken, SERVICE_TYPE_GOOGLE, true);
