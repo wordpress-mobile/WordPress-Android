@@ -200,8 +200,7 @@
                                 android:layout_height="wrap_content"
                                 android:gravity="top|start"
                                 android:hint="@string/media_edit_link_text"
-                                android:inputType="textCapSentences|textAutoCorrect"
-                                android:lines="3"
+                                android:inputType="textUri"
                                 tools:text="edit_link" />
 
                         </android.support.design.widget.TextInputLayout>
