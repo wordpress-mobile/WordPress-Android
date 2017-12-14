@@ -120,8 +120,6 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
     private static final int MAX_ACTION_TIME_MS = 2000;
 
     private static final MediaFile DEFAULT_MEDIA = new MediaFile();
-    private static final int DEFAULT_MEDIA_HEIGHT = DEFAULT_MEDIA.getHeight();
-    private static final int DEFAULT_MEDIA_WIDTH = DEFAULT_MEDIA.getWidth();
 
     private static final List<String> DRAGNDROP_SUPPORTED_MIMETYPES_TEXT = Arrays.asList(ClipDescription
             .MIMETYPE_TEXT_PLAIN, ClipDescription.MIMETYPE_TEXT_HTML);
@@ -1589,8 +1587,10 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
                     if (!TextUtils.isEmpty(metaData.getLinkUrl())) {
                         AztecAttributes linkAttributes = MediaLinkExtensionsKt.getMediaLinkAttributes(content, mTappedMediaPredicate);
 
+                        //without "noopener" img tag around img might be removed by calypso editor
                         linkAttributes.setValue("rel", "noopener");
 
+                        //when reusing attributes do not forget to remove href
                         linkAttributes.removeAttribute("href");
 
                         if (metaData.isLinkTargetBlank()) {
@@ -1625,7 +1625,6 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
                         captionAttributes.setValue(ATTR_DIMEN_WIDTH, metaData.getWidth());
 
                         CaptionExtensionsKt.setImageCaption(content, mTappedMediaPredicate, metaData.getCaption(), captionAttributes);
-
                     } else {
                         if (!TextUtils.isEmpty(metaData.getAlign())) {
                             attributesWithClass.addClass(ATTR_ALIGN + metaData.getAlign());
