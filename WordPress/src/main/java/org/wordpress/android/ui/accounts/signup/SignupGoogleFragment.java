@@ -2,7 +2,6 @@ package org.wordpress.android.ui.accounts.signup;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 
 import com.google.android.gms.auth.api.Auth;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
@@ -18,6 +17,7 @@ import org.wordpress.android.fluxc.store.AccountStore;
 import org.wordpress.android.fluxc.store.AccountStore.PushSocialPayload;
 import org.wordpress.android.ui.accounts.GoogleFragment;
 import org.wordpress.android.util.AppLog;
+import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.SiteUtils;
 import org.wordpress.android.util.ToastUtils;
 
@@ -61,7 +61,7 @@ public class SignupGoogleFragment extends GoogleFragment {
                             mOldSitesIds = SiteUtils.getCurrentSiteIds(mSiteStore, false);
                         } catch (NullPointerException exception) {
                             disconnectGoogleClient();
-                            AppLog.e(AppLog.T.NUX, "Cannot get ID token from Google signup account.", exception);
+                            AppLog.e(T.NUX, "Cannot get ID token from Google signup account.", exception);
                             showErrorDialog(getString(R.string.login_error_generic));
                         }
                     } else {
@@ -69,47 +69,47 @@ public class SignupGoogleFragment extends GoogleFragment {
                         switch (signInResult.getStatus().getStatusCode()) {
                             // Internal error.
                             case GoogleSignInStatusCodes.INTERNAL_ERROR:
-                                AppLog.e(AppLog.T.NUX, "Google Signup Failed: internal error.");
+                                AppLog.e(T.NUX, "Google Signup Failed: internal error.");
                                 showErrorDialog(getString(R.string.login_error_generic));
                                 break;
                             // Attempted to connect with an invalid account name specified.
                             case GoogleSignInStatusCodes.INVALID_ACCOUNT:
-                                AppLog.e(AppLog.T.NUX, "Google Signup Failed: invalid account name.");
+                                AppLog.e(T.NUX, "Google Signup Failed: invalid account name.");
                                 showErrorDialog(getString(R.string.login_error_generic)
                                         + getString(R.string.login_error_suffix));
                                 break;
                             // Network error.
                             case GoogleSignInStatusCodes.NETWORK_ERROR:
-                                AppLog.e(AppLog.T.NUX, "Google Signup Failed: network error.");
+                                AppLog.e(T.NUX, "Google Signup Failed: network error.");
                                 showErrorDialog(getString(R.string.error_generic_network));
                                 break;
                             // Cancelled by the user.
                             case GoogleSignInStatusCodes.SIGN_IN_CANCELLED:
-                                AppLog.e(AppLog.T.NUX, "Google Signup Failed: cancelled by user.");
+                                AppLog.e(T.NUX, "Google Signup Failed: cancelled by user.");
                                 break;
                             // Attempt didn't succeed with the current account.
                             case GoogleSignInStatusCodes.SIGN_IN_FAILED:
-                                AppLog.e(AppLog.T.NUX, "Google Signup Failed: current account failed.");
+                                AppLog.e(T.NUX, "Google Signup Failed: current account failed.");
                                 showErrorDialog(getString(R.string.login_error_generic));
                                 break;
                             // Attempted to connect, but the user is not signed in.
                             case GoogleSignInStatusCodes.SIGN_IN_REQUIRED:
-                                AppLog.e(AppLog.T.NUX, "Google Signup Failed: user is not signed in.");
+                                AppLog.e(T.NUX, "Google Signup Failed: user is not signed in.");
                                 showErrorDialog(getString(R.string.login_error_generic));
                                 break;
                             // Unknown error.
                             default:
-                                AppLog.e(AppLog.T.NUX, "Google Signup Failed: unknown error.");
+                                AppLog.e(T.NUX, "Google Signup Failed: unknown error.");
                                 showErrorDialog(getString(R.string.login_error_generic));
                                 break;
                         }
                     }
                 } else if (result == RESULT_CANCELED) {
                     AnalyticsTracker.track(AnalyticsTracker.Stat.LOGIN_SOCIAL_BUTTON_FAILURE);
-                    AppLog.e(AppLog.T.NUX, "Google Signup Failed: result was CANCELED.");
+                    AppLog.e(T.NUX, "Google Signup Failed: result was CANCELED.");
                 } else {
                     AnalyticsTracker.track(AnalyticsTracker.Stat.LOGIN_SOCIAL_BUTTON_FAILURE);
-                    AppLog.e(AppLog.T.NUX, "Google Signup Failed: result was not OK or CANCELED.");
+                    AppLog.e(T.NUX, "Google Signup Failed: result was not OK or CANCELED.");
                     showErrorDialog(getString(R.string.login_error_generic));
                 }
 
@@ -136,7 +136,7 @@ public class SignupGoogleFragment extends GoogleFragment {
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onAuthenticationChanged(AccountStore.OnAuthenticationChanged event) {
         if (event.isError()) {
-            Log.e("SignupGoogleFragment", "onAuthenticationChanged: " + event.error.type + " - " + event.error.message);
+            AppLog.e(T.API, "SignupGoogleFragment.onAuthenticationChanged: " + event.error.type + " - " + event.error.message);
         // Continue with signup since account was created.
         } else if (event.createdAccount) {
             mGoogleListener.onGoogleSignupFinished(mDisplayName, mGoogleEmail, mPhotoUrl);
@@ -150,7 +150,7 @@ public class SignupGoogleFragment extends GoogleFragment {
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onSocialChanged(AccountStore.OnSocialChanged event) {
         if (event.isError()) {
-            Log.e("SignupGoogleFragment", "onSocialChanged: " + event.error.type + " - " + event.error.message);
+            AppLog.e(T.API, "SignupGoogleFragment.onSocialChanged: " + event.error.type + " - " + event.error.message);
 
             switch (event.error.type) {
                 // WordPress account exists with input email address, and two-factor authentication is required.
