@@ -19,6 +19,7 @@ import org.wordpress.android.fluxc.store.AccountStore.PushSocialPayload;
 import org.wordpress.android.ui.accounts.GoogleFragment;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.SiteUtils;
+import org.wordpress.android.util.ToastUtils;
 
 import java.util.ArrayList;
 import java.util.regex.Matcher;
@@ -148,6 +149,20 @@ public class SignupGoogleFragment extends GoogleFragment {
     @SuppressWarnings("unused")
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onSocialChanged(AccountStore.OnSocialChanged event) {
-        mGoogleListener.onGoogleSignupFinished(mDisplayName, mGoogleEmail, mPhotoUrl);
+        if (event.isError()) {
+            Log.e("SignupGoogleFragment", "onSocialChanged: " + event.error.type + " - " + event.error.message);
+
+            switch (event.error.type) {
+                // WordPress account exists with input email address, but not connected.
+                case USER_EXISTS:
+                    ToastUtils.showToast(getContext(), getString(R.string.signup_user_exists, mGoogleEmail),
+                            ToastUtils.Duration.LONG);
+                    mLoginListener.loginViaSocialAccount(mGoogleEmail, mIdToken, SERVICE_TYPE_GOOGLE, true);
+                    break;
+                default:
+                    showErrorDialog(getString(R.string.login_error_generic));
+                    break;
+            }
+        }
     }
 }
