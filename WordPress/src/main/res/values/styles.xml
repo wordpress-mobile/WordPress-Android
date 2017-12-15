@@ -700,4 +700,53 @@
         <item name="android:maxHeight">8dip</item>
     </style>
 
+    <!--Plugin Styles-->
+    <style name="PluginCardView">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_marginBottom">@dimen/margin_extra_large</item>
+    </style>
+
+    <style name="PluginCardViewVerticalContainer">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:orientation">vertical</item>
+    </style>
+
+    <style name="PluginCardViewHorizontalContainer">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:padding">@dimen/margin_extra_large</item>
+    </style>
+
+    <style name="PluginCardViewDivider">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">@dimen/list_divider_height</item>
+        <item name="android:background">@color/grey_lighten_20</item>
+    </style>
+
+    <style name="PluginCardViewPrimaryText">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:gravity">center_vertical</item>
+        <item name="android:textColor">@color/grey_dark</item>
+        <item name="android:textSize">@dimen/text_sz_large</item>
+    </style>
+
+    <style name="PluginCardViewSecondaryElement">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_centerVertical">true</item>
+        <item name="android:layout_alignParentEnd">true</item>
+        <item name="android:layout_alignParentRight">true</item>
+    </style>
+
+    <style name="PluginCardViewSecondaryElement.ExternalLinkImage" parent="PluginCardViewSecondaryElement">
+        <item name="android:layout_width">@dimen/plugin_external_link_image_size</item>
+        <item name="android:layout_height">@dimen/plugin_external_link_image_size</item>
+        <item name="android:tint">@color/grey_darken_10</item>
+        <item name="android:layout_marginRight">@dimen/margin_medium</item>
+        <item name="android:layout_marginEnd">@dimen/margin_medium</item>
+    </style>
+
 </resources>
