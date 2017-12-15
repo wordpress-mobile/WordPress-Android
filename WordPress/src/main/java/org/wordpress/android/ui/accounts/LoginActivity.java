@@ -33,6 +33,7 @@ import org.wordpress.android.ui.accounts.login.LoginSiteAddressFragment;
 import org.wordpress.android.ui.accounts.login.LoginUsernamePasswordFragment;
 import org.wordpress.android.ui.accounts.signup.SignupBottomSheetDialog;
 import org.wordpress.android.ui.accounts.signup.SignupBottomSheetDialog.SignupSheetListener;
+import org.wordpress.android.ui.accounts.signup.SignupEpilogueSocialFragment;
 import org.wordpress.android.ui.accounts.signup.SignupGoogleFragment;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.HelpshiftHelper;
@@ -547,7 +548,10 @@ public class LoginActivity extends AppCompatActivity implements ConnectionCallba
 
     @Override
     public void onGoogleSignupFinished(String name, String email, String photoUrl) {
-        // TODO: Send data returned from Google API to signup epilogue.
+        dismissSignupSheet();
+        SignupEpilogueSocialFragment signupEpilogueSocialFragment = SignupEpilogueSocialFragment.newInstance(
+                name, email, photoUrl, "username123");
+        slideInFragment(signupEpilogueSocialFragment, true, SignupEpilogueSocialFragment.TAG);
     }
 
     private void dismissSignupSheet() {
