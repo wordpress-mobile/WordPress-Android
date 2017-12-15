@@ -174,6 +174,9 @@ public class SignupGoogleFragment extends GoogleFragment {
                     ToastUtils.showToast(getContext(), getString(R.string.signup_user_exists, mGoogleEmail),
                             ToastUtils.Duration.LONG);
                     mLoginListener.loginViaSocialAccount(mGoogleEmail, mIdToken, SERVICE_TYPE_GOOGLE, true);
+                    // Kill connections with FluxC and this fragment since the flow is changing to login.
+                    mDispatcher.unregister(this);
+                    getActivity().getSupportFragmentManager().beginTransaction().remove(this).commit();
                     break;
                 default:
                     showErrorDialog(getString(R.string.login_error_generic));
@@ -183,6 +186,9 @@ public class SignupGoogleFragment extends GoogleFragment {
         } else if (event.requiresTwoStepAuth) {
             mLoginListener.needs2faSocial(mGoogleEmail, event.userId, event.nonceAuthenticator, event.nonceBackup,
                     event.nonceSms);
+            // Kill connections with FluxC and this fragment since the flow is changing to login.
+            mDispatcher.unregister(this);
+            getActivity().getSupportFragmentManager().beginTransaction().remove(this).commit();
         }
     }
 }
