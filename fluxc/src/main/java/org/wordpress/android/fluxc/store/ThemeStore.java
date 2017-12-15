@@ -368,7 +368,7 @@ public class ThemeStore extends Store {
             event.error = payload.error;
         } else {
             for (ThemeModel theme : payload.themes) {
-                ThemeSqlUtils.insertOrUpdateThemeForSite(theme);
+                ThemeSqlUtils.insertOrUpdateWpComTheme(theme);
             }
         }
         emitChange(event);
