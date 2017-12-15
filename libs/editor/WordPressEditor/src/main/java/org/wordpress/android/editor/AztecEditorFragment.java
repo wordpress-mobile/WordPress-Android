@@ -1659,11 +1659,13 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
                                     content.getEditableText().delete(imageSpanEnd, imageSpanEnd + 1); //delete newline
                                     content.getEditableText().setSpan(captions[0], captionStart, captionEnd - 1, captionFlags); //we have an empty space, resize span
                                     content.enableTextChangedListener();
+                                    //reset content of the post after passing it through parser/formatter
+                                    content.fromHtml(content.toHtml(false));
                                 }
                             }
                         }
                     } else {
-                        //if no caption present apply align attribute to directly to image
+                        //if no caption present apply align attribute directly to image
                         if (!TextUtils.isEmpty(metaData.getAlign())) {
                             attributesWithClass.addClass(ATTR_ALIGN + metaData.getAlign());
                         }
