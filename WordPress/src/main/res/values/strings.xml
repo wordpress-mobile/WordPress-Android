@@ -2041,6 +2041,17 @@
     <string name="login_error_generic_start">Google login could not be started.</string>
     <string name="login_error_suffix">\nMaybe try a different account?</string>
 
+    <!-- Signup -->
+    <string name="sign_up">Sign Up</string>
+    <string name="signup_creating_account">Creating account&#8230;</string>
+    <string name="signup_epilogue_heading">New account</string>
+    <string name="signup_epilogue_hint_display">Display Name</string>
+    <string name="signup_epilogue_hint_username">Username</string>
+    <string name="signup_terms_of_service_text">By signing up, you agree to our %1$sTerms of Service%2$s.</string>
+    <string name="signup_user_exists">The Google account \'%s\' matches an existing account on WordPress.com. Continue with login.</string>
+    <string name="signup_with_email_button">Sign Up with Email</string>
+    <string name="signup_with_google_button">Sign Up with Google</string>
+
     <string name="notification_login_title_success">Logged in!</string>
     <string name="notification_logged_in">Tap to continue.</string>
 
@@ -2051,13 +2062,6 @@
     <string name="notification_error_wrong_password">Please double check your password to continue.</string>
     <string name="notification_2fa_needed">Please provide an authentication code to continue.</string>
     <string name="notification_login_failed">An error has occurred.</string>
-
-    <!-- Signup -->
-    <string name="sign_up">Sign Up</string>
-    <string name="signup_terms_of_service_text">By signing up, you agree to our %1$sTerms of Service%2$s.</string>
-    <string name="signup_user_exists">The Google account \'%s\' matches an existing account on WordPress.com. Continue with login.</string>
-    <string name="signup_with_email_button">Sign Up with Email</string>
-    <string name="signup_with_google_button">Sign Up with Google</string>
 
     <!-- Site Creation -->
     <string name="site_creation_title">Create New Site</string>
