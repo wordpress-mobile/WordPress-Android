@@ -1,9 +1,7 @@
 package org.wordpress.android.ui.posts;
 
 import android.app.Dialog;
-import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
 import android.support.annotation.DrawableRes;
 import android.support.annotation.NonNull;
 import android.support.annotation.StringRes;
@@ -138,8 +136,7 @@ public class PromoDialogEditor extends PromoDialogAdvanced {
                         AnalyticsTracker.track(AnalyticsTracker.Stat.EDITOR_AZTEC_PROMO_POSITIVE);
                         AppPrefs.setAztecEditorEnabled(true);
                         AppPrefs.setVisualEditorEnabled(false);
-                        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(getActivity());
-                        preferences.edit().putString(getString(R.string.pref_key_editor_type), "2").apply();
+                        AppPrefs.setNewEditorPromoRequired(false);
                     }
 
                     ActivityLauncher.addNewPostOrPageForResult(getActivity(),
