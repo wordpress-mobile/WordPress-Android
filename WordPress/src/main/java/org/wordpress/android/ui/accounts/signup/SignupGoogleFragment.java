@@ -145,7 +145,7 @@ public class SignupGoogleFragment extends GoogleFragment {
             AppLog.e(T.API, "SignupGoogleFragment.onAuthenticationChanged: " + event.error.type + " - " + event.error.message);
         // Continue with signup since account was created.
         } else if (event.createdAccount) {
-            mGoogleListener.onGoogleSignupFinished(mDisplayName, mGoogleEmail, mPhotoUrl);
+            mGoogleListener.onGoogleSignupFinished(mDisplayName, mGoogleEmail, mPhotoUrl, event.userName);
         // Continue with login since existing account was selected.
         } else {
             mLoginListener.loggedInViaSocialAccount(mOldSitesIds, true);

@@ -547,10 +547,10 @@ public class LoginActivity extends AppCompatActivity implements ConnectionCallba
     }
 
     @Override
-    public void onGoogleSignupFinished(String name, String email, String photoUrl) {
+    public void onGoogleSignupFinished(String name, String email, String photoUrl, String username) {
         dismissSignupSheet();
         SignupEpilogueSocialFragment signupEpilogueSocialFragment = SignupEpilogueSocialFragment.newInstance(
-                name, email, photoUrl, "username123");
+                name, email, photoUrl, username);
         slideInFragment(signupEpilogueSocialFragment, true, SignupEpilogueSocialFragment.TAG);
     }
 
