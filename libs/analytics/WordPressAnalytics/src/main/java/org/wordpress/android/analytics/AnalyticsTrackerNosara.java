@@ -762,6 +762,10 @@ public class AnalyticsTrackerNosara extends Tracker {
                 return "signup_social_2fa_needed";
             case SIGNUP_SOCIAL_ACCOUNTS_NEED_CONNECTING:
                 return "signup_social_accounts_need_connecting";
+            case SITE_CREATION_ACCESSED:
+                return "site_creation_accessed";
+            case SITE_CREATION_CATEGORY_VIEWED:
+                return "site_creation_category_viewed";
             case PERSON_REMOVED:
                 return "people_management_person_removed";
             case PERSON_UPDATED:
