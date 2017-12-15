@@ -93,6 +93,11 @@ public class LoginGoogleFragment extends GoogleFragment {
                                 AppLog.e(T.NUX, "Google Login Failed: user is not signed in.");
                                 showErrorDialog(getString(R.string.login_error_generic));
                                 break;
+                            // Timeout error.
+                            case GoogleSignInStatusCodes.TIMEOUT:
+                                AppLog.e(T.NUX, "Google Login Failed: timeout error.");
+                                showErrorDialog(getString(R.string.google_error_timeout));
+                                break;
                             // Unknown error.
                             default:
                                 AppLog.e(T.NUX, "Google Login Failed: unknown error.");
