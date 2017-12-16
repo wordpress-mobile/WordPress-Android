@@ -1008,6 +1008,35 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
         if (!TextUtils.isEmpty(localMediaId)) {
             mEditorFragmentListener.onMediaDeleted(localMediaId);
         }
+        removeCaptionFromDeletedMedia(localMediaId);
+    }
+
+    private void removeCaptionFromDeletedMedia(String localMediaId) {
+        AztecText.AttributePredicate localMediaIdPredicate = MediaPredicate.getLocalMediaIdPredicate(localMediaId);
+        List<IAztecAttributedSpan> imageSpanThatWasDeleted =
+                getSpansForPredicate(content.getEditableText(), localMediaIdPredicate, true);
+        if (imageSpanThatWasDeleted.size() > 0) {
+            int imageSpanEnd = content.getEditableText().getSpanEnd(imageSpanThatWasDeleted.get(0));
+
+            //look for the caption span somewhere inside tapped image
+            CaptionShortcodeSpan[] captions = content.getEditableText().getSpans(imageSpanEnd, imageSpanEnd, CaptionShortcodeSpan.class);
+
+            //TODO remove span size adjustment when https://github.com/wordpress-mobile/AztecEditor-Android/issues/573 is fixed
+            if (captions.length > 0) { //found caption span
+                int captionStart = content.getEditableText().getSpanStart(captions[0]);
+                int captionEnd = content.getEditableText().getSpanEnd(captions[0]);
+                int captionFlags = content.getEditableText().getSpanFlags(captions[0]);
+
+                if (captionStart < captionEnd && content.getEditableText().charAt(7) != '\n') {
+                    int newCaptionEnd = content.getEditableText().toString().indexOf('\n', captionStart);
+                    if (newCaptionEnd != -1 && captionStart > newCaptionEnd) {
+                        content.getEditableText().setSpan(captions[0], captionStart, newCaptionEnd, captionFlags);
+                    }
+                }
+
+                CaptionExtensionsKt.removeImageCaption(content, localMediaIdPredicate);
+            }
+        }
     }
 
     private static class MediaPredicate implements AztecText.AttributePredicate, Parcelable {
