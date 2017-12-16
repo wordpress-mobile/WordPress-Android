@@ -13,16 +13,41 @@ import org.wordpress.android.fluxc.model.ThemeModel;
 import java.util.List;
 
 public class ThemeSqlUtils {
-    public static void insertOrUpdateThemeForSite(@NonNull ThemeModel theme) {
+    public static void insertOrUpdateSiteTheme(@NonNull SiteModel site, @NonNull ThemeModel theme) {
+        List<ThemeModel> existing = WellSql.select(ThemeModel.class)
+                .where().beginGroup()
+                .equals(ThemeModelTable.THEME_ID, theme.getThemeId())
+                .equals(ThemeModelTable.LOCAL_SITE_ID, site.getId())
+                .equals(ThemeModelTable.IS_WP_COM_THEME, false)
+                .endGroup().endWhere().getAsModel();
+
+        // Make sure the local id of the theme is set correctly
+        theme.setLocalSiteId(site.getId());
         // Always remove WP.com flag while storing as a site associate theme as we might be saving
         // a copy of a wp.com theme after an activation
         theme.setIsWpComTheme(false);
 
+        if (existing.isEmpty()) {
+            // theme is not in the local DB so we insert it
+            WellSql.insert(theme).asSingleTransaction(true).execute();
+        } else {
+            // theme already exists in the local DB so we update the existing row with the passed theme
+            WellSql.update(ThemeModel.class).whereId(existing.get(0).getId())
+                    .put(theme, new UpdateAllExceptId<>(ThemeModel.class)).execute();
+        }
+    }
+
+    public static void insertOrUpdateWpComTheme(@NonNull ThemeModel theme) {
         List<ThemeModel> existing = WellSql.select(ThemeModel.class)
                 .where().beginGroup()
                 .equals(ThemeModelTable.THEME_ID, theme.getThemeId())
-                .equals(ThemeModelTable.LOCAL_SITE_ID, theme.getLocalSiteId())
+                .equals(ThemeModelTable.IS_WP_COM_THEME, true)
                 .endGroup().endWhere().getAsModel();
+
+        // Remove local site id if it's set for whatever reason (shouldn't normally happen, so it's a sanity check)
+        theme.setLocalSiteId(0);
+        // Make sure the isWpComTheme flag is set
+        theme.setIsWpComTheme(true);
 
         if (existing.isEmpty()) {
             // theme is not in the local DB so we insert it
@@ -72,10 +97,9 @@ public class ThemeSqlUtils {
             }
         }
 
-        // make sure active flag and local site ID are set then add to db
+        // make sure active flag is set
         theme.setActive(true);
-        theme.setLocalSiteId(site.getId());
-        insertOrUpdateThemeForSite(theme);
+        insertOrUpdateSiteTheme(site, theme);
     }
 
     public static List<ThemeModel> getActiveThemeForSite(@NonNull SiteModel site) {
