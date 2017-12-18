@@ -105,6 +105,13 @@
             android:entryValues="@array/post_format_display_names"
             app:longClickHint="@string/site_settings_format_hint" />
 
+        <org.wordpress.android.ui.prefs.DetailListPreference
+            android:id="@+id/pref_week_starts"
+            android:key="@string/pref_key_site_week_start"
+            android:title="@string/site_settings_week_start_title"
+            android:entries="@array/weekdays"
+            android:entryValues="@array/weekday_values" />
+
         <org.wordpress.android.ui.prefs.WPPreference
             android:id="@+id/pref_related_posts"
             android:key="@string/pref_key_site_related_posts"
