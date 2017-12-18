@@ -15,6 +15,7 @@ import android.widget.TextView;
 
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
+import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.ui.accounts.login.LoginBaseFormFragment;
 import org.wordpress.android.ui.accounts.login.LoginListener;
 import org.wordpress.android.widgets.WPLoginInputRow;
@@ -147,7 +148,7 @@ public class SignupEpilogueSocialFragment extends LoginBaseFormFragment<LoginLis
         super.onActivityCreated(savedInstanceState);
 
         if (savedInstanceState == null) {
-            // TODO: Add analytics when signup epilogue screen is view.
+            AnalyticsTracker.track(AnalyticsTracker.Stat.SIGNUP_SOCIAL_EPILOGUE_VIEWED);
         } else {
             // Overwrite original display name and username if they have changed.
             mDisplayName = savedInstanceState.getString(KEY_DISPLAY_NAME);
