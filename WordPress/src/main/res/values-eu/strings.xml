@@ -156,9 +156,6 @@ Language: eu_ES
 	<string name="post_format_status">Egoera</string>
 	<string name="post_format_video">Bideoa</string>
 	<string name="alignment_center">Erdira</string>
-	<string name="theme_all">Guztiak</string>
-	<string name="theme_free">Doakoak</string>
-	<string name="theme_premium">Ordainpekoak</string>
 	<string name="post_format_link">Esteka</string>
 	<string name="post_format_quote">Aipua</string>
 	<string name="post_format_image">Irudia</string>
@@ -556,7 +553,6 @@ Language: eu_ES
 	<string name="reader_toast_err_remove_tag">Ezin izna da etiketa hau kendu</string>
 	<string name="upload_failed">Igoerak huts egin du</string>
 	<string name="horizontal_alignment">Lerrokatze horizontala</string>
-	<string name="file_not_found">Ezin izan da igotzeko fitxategia aurkitu. Mugitua edo ezabatua izan da?</string>
 	<string name="trash_yes">Zakarrontzira bidali</string>
 	<string name="trash_no">Ez bidali zakarrontzira</string>
 	<string name="content_required">Iruzkina beharrezkoa da</string>

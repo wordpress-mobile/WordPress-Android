@@ -15,7 +15,7 @@ import android.widget.EditText;
 import android.widget.ImageView;
 
 import org.wordpress.android.R;
-import org.wordpress.android.util.WPActivityUtils;
+import org.wordpress.android.util.ActivityUtils;
 
 /**
  * A fragment representing a single step in a wizard. The fragment shows a dummy title indicating
@@ -53,7 +53,7 @@ public abstract class AbstractFragment extends Fragment {
 
             // hide keyboard before calling the done action
             if (getActivity() != null) {
-                WPActivityUtils.hideKeyboard(getActivity().getCurrentFocus());
+                ActivityUtils.hideKeyboardForced(getActivity().getCurrentFocus());
             }
 
             // call child action

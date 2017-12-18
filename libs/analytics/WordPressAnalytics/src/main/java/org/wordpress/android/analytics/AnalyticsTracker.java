@@ -178,6 +178,7 @@ public final class AnalyticsTracker {
         OPENED_MY_PROFILE,
         OPENED_PEOPLE_MANAGEMENT,
         OPENED_PERSON,
+        OPENED_PLUGINS,
         CREATE_ACCOUNT_INITIATED,
         CREATE_ACCOUNT_EMAIL_EXISTS,
         CREATE_ACCOUNT_USERNAME_EXISTS,
@@ -239,6 +240,7 @@ public final class AnalyticsTracker {
         LOGIN_SOCIAL_2FA_NEEDED,
         LOGIN_SOCIAL_ACCOUNTS_NEED_CONNECTING,
         LOGIN_SOCIAL_ERROR_UNKNOWN_USER,
+        LOGIN_WPCOM_BACKGROUND_SERVICE_UPDATE,
         MEDIA_LIBRARY_ADDED_PHOTO,
         MEDIA_LIBRARY_ADDED_VIDEO,
         PERSON_REMOVED,
@@ -295,7 +297,9 @@ public final class AnalyticsTracker {
         MEDIA_UPLOAD_CANCELED,
         APP_PERMISSION_GRANTED,
         APP_PERMISSION_DENIED,
-        SHARE_TO_WP_SUCCEEDED
+        SHARE_TO_WP_SUCCEEDED,
+        PLUGIN_REMOVED,
+        PLUGIN_UPDATED
     }
 
     private static final List<Tracker> TRACKERS = new ArrayList<>();

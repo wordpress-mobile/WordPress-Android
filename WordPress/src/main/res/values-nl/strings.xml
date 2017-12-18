@@ -1,11 +1,31 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2017-11-16 13:44:05+0000
+Translation-Revision-Date: 2017-11-23 08:34:44+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/2.4.0-alpha
 Language: nl
 -->
 <resources>
+	<string name="login_empty_password">Voer een wachtwoord in</string>
+	<string name="login_text_otp_another">Stuur me via SMS een andere code.</string>
+	<string name="size_full">Volledige grootte</string>
+	<string name="size_large">Groot</string>
+	<string name="size_medium">Gemiddeld</string>
+	<string name="size_thumbnail">Thumbnail</string>
+	<string name="image_size">Grootte</string>
+	<string name="uploading_subtitle_media_only_one">1 bestand resterend</string>
+	<string name="uploading_subtitle_media_only">%1$d van %2$d bestanden resterend</string>
+	<string name="uploading_subtitle_posts_only">%1$d %2$s resterend</string>
+	<string name="uploading_title">Uploaden...</string>
+	<string name="media_files_uploaded_write_post">Bericht schrijven</string>
+	<string name="media_file_uploaded">1 bestand geüpload </string>
+	<string name="media_file_not_uploaded">1 bestand niet geüpload </string>
+	<string name="media_files_uploaded">%d bestanden geupload</string>
+	<string name="remove_image_from_post">Uit bericht verwijderen</string>
+	<string name="uploaded_themes_header">Geüploade thema\'s</string>
+	<string name="confirm_remove_media_image">Deze afbeelding verwijderen uit het bericht?</string>
+	<string name="media_edit_customize_card_caption">Aanpassen</string>
+	<string name="media_edit_file_details_card_caption">Bestanddetails</string>
 	<string name="login_error_button">Sluit</string>
 	<string name="login_google_button_suffix">Log in met Google.</string>
 	<string name="jetpack_security_setting_title">Beveiliging</string>
@@ -26,7 +46,6 @@ Language: nl
 	<string name="media_edit_url_caption">URL</string>
 	<string name="media_edit_filetype_caption">Bestandstype</string>
 	<string name="media_edit_filename_caption">Bestandsnaam</string>
-	<string name="media_edit_file_details_card_caption">Bestandgegevens</string>
 	<string name="copy">Kopieer</string>
 	<string name="media_edit_alttext_text">Alt. tekst</string>
 	<string name="connect_site">Site koppelen</string>
@@ -48,7 +67,6 @@ Language: nl
 	<string name="notification_settings_master_status_on">Aan</string>
 	<string name="max_video_resolution">Maximale video grootte</string>
 	<string name="max_thumbnail_px_size">Maximale afbeeldingsgrootte</string>
-	<string name="error_media_recover_post">We kunnen de media van dit bericht niet uploaden. Bewerk het bericht en probeer het opnieuw.</string>
 	<string name="error_page_does_not_exist">Deze pagina bestaat niet meer</string>
 	<string name="error_upload_post_media_param">Er is een fout opgetreden bij het uploaden van een media-bestand bij dit bericht: %s.</string>
 	<string name="error_upload_post_param">Er is een fout opgetreden bij het uploaden dit bericht: %s.</string>
@@ -63,7 +81,6 @@ Language: nl
 	<string name="cant_open_url">De link kan niet worden geopend</string>
 	<string name="error_unknown_post">Bericht niet gevonden op server</string>
 	<string name="error_post_does_not_exist">Dit bericht bestaat niet meer</string>
-	<string name="error_media_recover_page">We kunnen de media van deze pagina niet uploaden. Bewerk de pagina en probeer het opnieuw.</string>
 	<string name="error_media_canceled">Het uploaden van media is geannuleerd</string>
 	<string name="error_upload_page_media_param">Er is een fout opgetreden bij het uploaden van media in deze pagina: %s.</string>
 	<string name="error_upload_page_param">Er is een fout opgetreden bij het uploaden van deze pagina: %s.</string>
@@ -75,10 +92,6 @@ Language: nl
 	<string name="dialog_confirm_cancel_post_media_uploading">Weet je het zeker? Door dit bericht te verwijderen, wordt de media-upload ook geannuleerd.</string>
 	<string name="page_scheduled">Pagina ingepland</string>
 	<string name="post_scheduled">Bericht ingepland</string>
-	<string name="post_draft_param">"%s" is opgeslagen als concept!</string>
-	<string name="post_scheduled_param">"%s" is ingepland!</string>
-	<string name="post_updated_param">"%s" is bijgewerkt!</string>
-	<string name="post_published_param">"%s" is gepubliceerd!</string>
 	<string name="button_retry">Opnieuw proberen</string>
 	<string name="post_queued">Bericht in wachtrij</string>
 	<string name="uploading_post">"%s" wordt geüpload</string>
@@ -109,7 +122,6 @@ Language: nl
 	<string name="login_magic_links_sent_label">Je magische link is onderweg! Controleer je e-mail op dit apparaat en tik op de link in de e-mail die je van WordPress.com ontvangt.</string>
 	<string name="login_magic_links_label">We sturen je een e-mail met een magische link waarmee je onmiddellijk kunt inloggen, zonder wachtwoord. Nooit meer moeite doen!</string>
 	<string name="password_incorrect">Het lijkt erop alsof dit wachtwoord onjuist is. Controleer je gegevens en probeer het nogmaals.</string>
-	<string name="email_not_registered_wpcom">Deze e-mail staat niet geregistreerd op WordPress.com.</string>
 	<string name="requesting_otp">Verificatiecode via sms aanvragen.</string>
 	<string name="login_text_otp">Sms de code in plaats daarvan naar me.</string>
 	<string name="enter_verification_code">Bijna klaar! Voer de verificatiecode uit je Authenticator-app in.</string>
@@ -584,9 +596,6 @@ Language: nl
 	<string name="post_format_status">Status</string>
 	<string name="post_format_video">Video</string>
 	<string name="alignment_center">Midden</string>
-	<string name="theme_free">Gratis</string>
-	<string name="theme_all">Alle</string>
-	<string name="theme_premium">Premium</string>
 	<string name="post_format_chat">Chat</string>
 	<string name="post_format_gallery">Galerij</string>
 	<string name="post_format_image">Afbeelding</string>
@@ -1200,7 +1209,6 @@ Language: nl
 	<string name="local_draft">Lokaal concept</string>
 	<string name="upload_failed">Uploaden mislukt</string>
 	<string name="horizontal_alignment">Horizontale uitlijning</string>
-	<string name="file_not_found">Kan het mediabestand voor upload niet vinden. Is het verplaatst of verwijderd?</string>
 	<string name="post_settings">Berichtinstellingen</string>
 	<string name="delete_post">Bericht verwijderen</string>
 	<string name="delete_page">Pagina verwijderen</string>

@@ -1,11 +1,44 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2017-11-13 21:03:36+0000
+Translation-Revision-Date: 2017-11-29 15:33:20+0000
 Plural-Forms: nplurals=2; plural=(n > 1);
 Generator: GlotPress/2.4.0-alpha
 Language: tr
 -->
 <resources>
+	<string name="login_empty_password">Lütfen bir parola girin</string>
+	<string name="email_not_registered_wpcom">Bu e-posta adresi WordPress.com\'da kayıtlı değil. Kullanıcı tarafından barındırılan bir siteye mi ulaşmaya çalışıyorsunuz? Ekranın altındaki bağlantıyı kullanarak giriş yapın.</string>
+	<string name="login_text_otp_another">Bana SMS ile başka bir kod gönder.</string>
+	<string name="enter_verification_code_sms">%s ile biten telefon numaranıza mesaj gönderdik. Lütfen SMS ile aldığınız doğrulama kodunu giriniz.</string>
+	<string name="error_generic_error">Işlem gerçekleştirilemedi</string>
+	<string name="error_media_recover_page">Sayfa ortamı yüklenemedi</string>
+	<string name="error_media_recover_post">Bu yazının ortam dosyası yüklenemedi</string>
+	<string name="size_full">Tam boyut</string>
+	<string name="uploading_subtitle_media_only_one">1 dosya kaldı</string>
+	<string name="image_size">Boyut</string>
+	<string name="uploading_subtitle_media_only">%2$d dosyadan %1$d kaldı</string>
+	<string name="size_large">Büyük</string>
+	<string name="size_medium">Orta</string>
+	<string name="size_thumbnail">Küçük</string>
+	<string name="uploading_subtitle_mixed_one">%1$d %2$s ve 1 dosya kaldı</string>
+	<string name="uploading_subtitle_posts_only">%1$d %2$s kaldı</string>
+	<string name="uploading_subtitle_mixed">%1$d %2$s ve %4$d dosyadan %3$d kaldı</string>
+	<string name="uploading_title">Yükleniyor...</string>
+	<string name="media_files_uploaded_write_post">Yazı yaz</string>
+	<string name="media_file_missing_for_retry">Tekrar deneme mümkün değil - Bu yazıdaki bazı dosyalar cihazınızdan kayıp</string>
+	<string name="media_all_files_uploaded_successfully">%d dosya başarıyla yüklendi</string>
+	<string name="media_files_uploaded_successfully">, %d başarıyla yüklendi</string>
+	<string name="media_file_not_uploaded">1 dosya yüklenmedi</string>
+	<string name="media_file_uploaded">1 dosya yüklendi</string>
+	<string name="media_files_uploaded">%d dosya yüklendi</string>
+	<string name="media_files_not_uploaded">%d dosya yüklenmedi</string>
+	<string name="media_file_post_mixed_not_uploaded">%1$d %2$s ile %3$d dosyaları yüklenmedi</string>
+	<string name="remove_image_from_post">Yazıdan kaldır</string>
+	<string name="wpcom_themes_header">WordPress.com temaları</string>
+	<string name="uploaded_themes_header">Yüklenmiş temalar</string>
+	<string name="confirm_remove_media_image">Bu görsel yazıdan kaldırılsın mı?</string>
+	<string name="media_edit_customize_card_caption">Özelleştir</string>
+	<string name="media_edit_file_details_card_caption">Dosya detayları</string>
 	<string name="login_error_generic">Google hesabı ile bağlantı kurarken bir miktar sorun yaşadık.</string>
 	<string name="login_error_suffix">\nBelki de farklı bir hesap denemelisiniz.</string>
 	<string name="login_error_email_not_found">\'%s\' Google hesabı WordPress.com\'daki mevcut bir hesabın hiçbiriyle eşleşmiyor.</string>
@@ -57,7 +90,6 @@ Language: tr
 	<string name="media_edit_filetype_caption">Dosya tipi</string>
 	<string name="media_edit_filename_caption">Dosya adı</string>
 	<string name="media_edit_url_caption">URL</string>
-	<string name="media_edit_file_details_card_caption">Dosya detayları</string>
 	<string name="copy">Kopyala</string>
 	<string name="media_edit_alttext_text">Alternatif metin</string>
 	<string name="notification_settings_item_sights_and_sounds_blink_light">Işığı yakıp söndür</string>
@@ -78,8 +110,7 @@ Language: tr
 	<string name="notification_settings_master_status_off">Kapalı</string>
 	<string name="notification_settings_master_status_on">Açık</string>
 	<string name="max_video_resolution">Azami video boyutu</string>
-	<string name="max_thumbnail_px_size">Asgari görsel boyutu</string>
-	<string name="error_media_recover_post">Bu yazının ortam dosyasını yükleyemedik. Lütfen tekrar denemek için yazıyı düzenleyin.</string>
+	<string name="max_thumbnail_px_size">Azami görsel boyutu</string>
 	<string name="error_page_does_not_exist">Bu sayfa artık mevcut değil</string>
 	<string name="error_upload_post_media_param">Bu yazıya ortam dosyası yüklenirken bir hata oluştu: %s.</string>
 	<string name="error_upload_post_param">Bu yazı yüklenirken hata oluştu: %s.</string>
@@ -94,7 +125,6 @@ Language: tr
 	<string name="cant_open_url">Bağlantı açılamıyor</string>
 	<string name="error_unknown_post">Yazı sunucuda bulunamadı</string>
 	<string name="error_post_does_not_exist">Bu yazı artık mevcut değil</string>
-	<string name="error_media_recover_page">Bu yazının ortam dosyasını karşıya yükleyemedik. Tekrar denemek için lütfen bu yazıyı düzenleyin.</string>
 	<string name="error_media_canceled">Ortam dosyasını karşıya yükleme iptal edildi</string>
 	<string name="error_upload_page_media_param">Bu sayfada ortam dosyasının kaşıya yüklenmesinde bir hata oluştu: %s.</string>
 	<string name="error_upload_page_param">Bu sayfa karşıya yüklenirken bir hata oluştu: %s.</string>
@@ -105,11 +135,7 @@ Language: tr
 	<string name="uploading_media">Ortam dosyası yükleniyor…</string>
 	<string name="dialog_confirm_cancel_post_media_uploading">Emin misiniz? Bu yazının silinmesi durumunda ortam dosyasının karşıya yüklenmesi de iptal edilir.</string>
 	<string name="page_scheduled">Sayfa zamanlandı</string>
-	<string name="post_draft_param">"%s" taslak olarak kaydedildi!</string>
 	<string name="post_scheduled">Yazı zamanlandı</string>
-	<string name="post_scheduled_param">"%s" zamanlandı!</string>
-	<string name="post_updated_param">"%s" güncellendi!</string>
-	<string name="post_published_param">"%s" yayımlandı!</string>
 	<string name="button_retry">Tekrar dene</string>
 	<string name="post_queued">Gönderi kuyruğa alındı</string>
 	<string name="uploading_post">"%s" yükleniyor</string>
@@ -140,7 +166,6 @@ Language: tr
 	<string name="login_magic_links_sent_label">Sihirli bağlantınız yola koyuldu. Bu cihazdaki e-posta adresinizi kontrol edin ve WordPress.com\'dan aldığınız e-posta içindeki bağlantıya basın.</string>
 	<string name="login_magic_links_label">Size anında giriş yapacağınız bir sihirli bağlantıyı e-posta ile göndereceğiz, hiç bir parolaya gerek yok. Artık tek tek yazmak yok.</string>
 	<string name="password_incorrect">Bu parola yanlış gibi görünüyor. Lütfen bilgilerinizi iki kez kontrol edin ve tekrar deneyin.</string>
-	<string name="email_not_registered_wpcom">Bu e-posta WordPress.com\'a kayıtlı değil</string>
 	<string name="requesting_otp">SMS ile bir doğrulama kodu istemek.</string>
 	<string name="login_text_otp">Bunun yerine bana SMS ile bir kod gönder.</string>
 	<string name="enter_verification_code">Neredeyse tamam. Lütfen kimlik doğrulayıcı uygulamanızdan doğrulama kodunu girin.</string>
@@ -614,9 +639,6 @@ Language: tr
 	<string name="xmlrpc_missing_method_error">Bağlanılamadı. Sunucuda gerekli XML-RPC işlevleri eksik.</string>
 	<string name="post_format_status">Durum</string>
 	<string name="post_format_video">Video</string>
-	<string name="theme_free">Ücretsiz</string>
-	<string name="theme_all">Tümü</string>
-	<string name="theme_premium">Premium</string>
 	<string name="alignment_center">Ortala</string>
 	<string name="post_format_chat">Sohbet</string>
 	<string name="post_format_gallery">Galeri</string>
@@ -1278,7 +1300,6 @@ Language: tr
 	<string name="cannot_delete_multi_media_items">Bazı medyalar silinemedi. Daha sonra tekrar deneyin</string>
 	<string name="link_enter_url_text">Link yazısı (opsiyonel)</string>
 	<string name="create_a_link">Link oluştur</string>
-	<string name="file_not_found">Upload edilecek medya dosyası bulunamadı. Silindi veya taşındı mı?</string>
 	<string name="post_settings">Yazı ayarları</string>
 	<string name="delete_post">Yazıyı sil</string>
 	<string name="comment_status_approved">Onaylanan</string>
@@ -1299,6 +1320,7 @@ Language: tr
 	<string name="jetpack_message_not_admin">Jetpack eklentisi gerekli. Site yöneticisi ile iletişim kurun.</string>
 	<string name="error_refresh_media">Ortam dosyaları şu an yenilenemiyor</string>
 	<string name="error_deleting_page">Sayfayı silinirken bir hata oluştu</string>
+	<string name="file_not_found">Yükleme için dosya bulunamadı. Silindi veya taşındı mı?</string>
 	<string name="share_url_page">Sayfayı paylaş</string>
 	<string name="share_link">Bağlantıyı paylaş</string>
 	<string name="deleting_page">Sayfa siliniyor</string>

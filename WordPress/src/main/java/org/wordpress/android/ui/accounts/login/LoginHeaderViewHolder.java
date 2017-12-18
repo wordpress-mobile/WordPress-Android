@@ -33,23 +33,25 @@ public class LoginHeaderViewHolder extends RecyclerView.ViewHolder {
         mMySitesHeadingTextView = (TextView) view.findViewById(R.id.my_sites_heading);
     }
 
-    public void updateLoggedInAsHeading(Context context, boolean isLoggedInWpcom, boolean isAfterLogin,
-            AccountModel defaultAccount) {
-        if (isLoggedInWpcom && isAfterLogin) {
+    public void updateLoggedInAsHeading(Context context, boolean isAfterLogin, AccountModel defaultAccount) {
+        updateLoggedInAsHeading(context, isAfterLogin, constructGravatarUrl(context, defaultAccount),
+                defaultAccount.getUserName(), defaultAccount.getDisplayName());
+    }
+
+    public void updateLoggedInAsHeading(Context context, boolean isAfterLogin, String avatarUrl, String username,
+            String displayName) {
+        if (isAfterLogin) {
             mLoggedInAsHeading.setVisibility(View.VISIBLE);
             mUserDetailsCard.setVisibility(View.VISIBLE);
 
-            final String avatarUrl = constructGravatarUrl(context, defaultAccount);
             mAvatarImageView.setImageUrl(avatarUrl, WPNetworkImageView.ImageType.AVATAR, null);
 
-            mUsernameTextView.setText(
-                    context.getString(R.string.login_username_at, defaultAccount.getUserName()));
+            mUsernameTextView.setText(context.getString(R.string.login_username_at, username));
 
-            String displayName = defaultAccount.getDisplayName();
             if (!TextUtils.isEmpty(displayName)) {
                 mDisplayNameTextView.setText(displayName);
             } else {
-                mDisplayNameTextView.setText(defaultAccount.getUserName());
+                mDisplayNameTextView.setText(username);
             }
         } else {
             mLoggedInAsHeading.setVisibility(View.GONE);

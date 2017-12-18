@@ -352,7 +352,6 @@ Language: sr_RS
 	<string name="post_settings">Подешавања чланка</string>
 	<string name="local_draft">Локални нацрт</string>
 	<string name="upload_failed">Отпремање неуспешно</string>
-	<string name="file_not_found">Није могуће пронаћи медијску датотеку за отпремање. Да ли је можда обрисана или померена?</string>
 	<string name="create_a_link">Направите везу</string>
 	<string name="link_enter_url_text">Текст везе (опционо)</string>
 	<string name="cannot_delete_multi_media_items">Неки медији тренутно не могу бити обрисани. Пробајте поново касније.</string>

@@ -24,7 +24,13 @@ public class AztecVideoLoader implements Html.VideoThumbnailGetter {
         this.loadingInProgress = loadingInProgressDrawable;
     }
 
-    public void loadVideoThumbnail(final String url, final Html.VideoThumbnailGetter.Callbacks callbacks, final int maxWidth) {
+    public void loadVideoThumbnail(final String url, final Html.VideoThumbnailGetter.Callbacks callbacks,
+                                   final int maxWidth) {
+        loadVideoThumbnail(url, callbacks, maxWidth, 0);
+    }
+
+    public void loadVideoThumbnail(final String url, final Html.VideoThumbnailGetter.Callbacks callbacks,
+                                   final int maxWidth, final int minWidth) {
         // Ignore the maxWidth passed from Aztec, since it's the MAX of screen width/height
         final int maxWidthForEditor = ImageUtils.getMaximumThumbnailWidthForEditor(context);
         if (TextUtils.isEmpty(url) || maxWidthForEditor <= 0) {
@@ -44,6 +50,7 @@ public class AztecVideoLoader implements Html.VideoThumbnailGetter {
 
                 return ImageUtils.getVideoFrameFromVideo(url, maxWidthForEditor);
             }
+
             protected void onPostExecute(Bitmap thumb) {
                 if (thumb == null) {
                     callbacks.onThumbnailFailed();

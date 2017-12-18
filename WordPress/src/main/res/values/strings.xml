@@ -18,6 +18,13 @@
     <string name="sign_out_wpcom_confirm">Logging out from your account will remove all of @%s’s WordPress.com data from this device, including local drafts and local changes.</string>
     <string name="account_two_step_auth_enabled">This account has two step authentication enabled. Visit your security settings on WordPress.com and generate an application-specific password.</string>
 
+    <string name="site_creating_label">Preparing your site…</string>
+    <string name="site_creating_fetching_info">Fetching site info…</string>
+    <string name="site_creating_set_tagline">Setting the tagline…</string>
+    <string name="site_creating_set_theme">Setting the theme…</string>
+    <string name="site_creating_failed">Sorry, failed to properly create your site :(</string>
+    <string name="site_creating_success">Success!</string>
+
     <!-- form labels -->
     <string name="select_categories">Select categories</string>
     <string name="tags_separate_with_commas">Separate tags with commas</string>
@@ -178,6 +185,8 @@
     <string name="media_edit_caption_text">Caption</string>
     <string name="media_edit_alttext_text">Alt text</string>
     <string name="media_edit_description_text">Description</string>
+    <string name="media_edit_link_text">Link to</string>
+    <string name="media_edit_link_hint">Open link in a new window/tab"</string>
     <string name="media_edit_title_hint">Enter a title here</string>
     <string name="media_edit_caption_hint">Enter a caption here</string>
     <string name="media_edit_description_hint">Enter a description here</string>
@@ -1191,7 +1200,7 @@
     <string name="publisher">Publisher:</string>
     <string name="automattic_inc" translatable="false">Automattic, Inc</string>
     <string name="automattic_url" translatable="false">automattic.com</string>
-    <string name="wordpresscom_tos_url" translatable="false">https://en.wordpress.com/tos</string>
+    <string name="wordpresscom_tos_url" translatable="false">https://%s.wordpress.com/tos</string>
     <string name="version">Version</string>
     <string name="tos">Terms of Service</string>
     <string name="privacy_policy">Privacy policy</string>
@@ -1586,6 +1595,7 @@
     <string name="my_site_btn_switch_site">Switch Site</string>
     <string name="my_site_btn_view_admin">View Admin</string>
     <string name="my_site_btn_view_site">View Site</string>
+    <string name="my_site_btn_plugins">Plugins</string>
     <string name="my_site_no_sites_view_drake">Illustration</string>
     <string name="my_site_no_sites_view_title">You don\'t have any WordPress sites yet.</string>
     <string name="my_site_no_sites_view_subtitle">Would you like to add one?</string>
@@ -1772,6 +1782,36 @@
 
     <string name="role_follower">Follower</string>
     <string name="role_viewer">Viewer</string>
+
+    <!--Plugins-->
+    <string name="plugins">Plugins</string>
+    <string name="plugin_active">Active</string>
+    <string name="plugin_inactive">Inactive</string>
+    <string name="plugin_autoupdates_on">Autoupdates on</string>
+    <string name="plugin_autoupdates_off">Autoupdates off</string>
+    <string name="plugin_detail_label_state_active">Active</string>
+    <string name="plugin_detail_label_state_autoupdates">Autoupdates</string>
+    <string name="plugin_not_found">An error occurred when accessing this plugin</string>
+    <string name="plugin_installed_version">Plugin version %s</string>
+    <string name="plugin_available_version">Version %s is available.</string>
+    <string name="plugin_updated_successfully">Successfully updated %s.</string>
+    <string name="plugin_updated_failed">Error removing %s.</string>
+    <string name="plugin_updated_failed_detailed">Error removing %1$s: %2$s</string>
+    <string name="plugin_removed_successfully">Successfully removed %s.</string>
+    <string name="plugin_remove_failed">Error removing %s.</string>
+    <string name="plugin_configuration_failed">An error occurred while configuring the plugin: %s</string>
+    <string name="plugin_btn_remove">Remove Plugin</string>
+    <string name="plugin_disable_progress_dialog_message">Disabling %s&#8230;</string>
+    <string name="plugin_remove_progress_dialog_message">Removing %s&#8230;</string>
+    <string name="plugin_remove_dialog_title">Remove Plugin</string>
+    <string name="plugin_remove_dialog_message">Are you sure you want to remove %1$s from %2$s?\n\nThis will deactivate the plugin and delete all associated files and data.</string>
+
+    <string name="wordpress_dot_org_plugin_page">WordPress.org Plugin page</string>
+    <string name="plugin_home_page">Plugin homepage</string>
+
+    <string name="plugin_icon_content_description">Plugin icon</string>
+    <string name="plugin_update_available_icon_content_description">Update available</string>
+    <string name="plugin_external_link_icon_content_description">External link</string>
 
     <!--My profile-->
     <string name="my_profile">My Profile</string>
@@ -2002,6 +2042,18 @@
     <string name="login_error_button">Close</string>
     <string name="login_error_email_not_found">The Google account \'%s\' doesn\'t match any existing account on WordPress.com.</string>
     <string name="login_error_generic">There was some trouble connecting with the Google account.</string>
+    <string name="login_error_generic_start">Google login could not be started.</string>
     <string name="login_error_suffix">\nMaybe try a different account?</string>
+
+    <string name="notification_login_title_success">Logged in!</string>
+    <string name="notification_logged_in">Tap to continue.</string>
+
+    <string name="notification_login_title_in_progress">Login in progress…</string>
+    <string name="notification_logging_in">Please wait while logging in.</string>
+
+    <string name="notification_login_title_stopped">Login stopped</string>
+    <string name="notification_error_wrong_password">Please double check your password to continue.</string>
+    <string name="notification_2fa_needed">Please provide an authentication code to continue.</string>
+    <string name="notification_login_failed">An error has occurred.</string>
 
 </resources>
