@@ -49,6 +49,7 @@ public class WPNetworkImageView extends AppCompatImageView {
         AVATAR,
         BLAVATAR,
         GONE_UNTIL_AVAILABLE,
+        PLUGIN_ICON,
     }
 
     public interface ImageLoadListener {
@@ -426,6 +427,9 @@ public class WPNetworkImageView extends AppCompatImageView {
                 // Grey circle for avatars
                 setImageResource(R.drawable.shape_oval_grey_light);
                 break;
+            case PLUGIN_ICON:
+                showDefaultPluginIcon();
+                break;
             default :
                 // light grey box for all others
                 setImageDrawable(new ColorDrawable(getColorRes(R.color.grey_light)));
@@ -452,6 +456,9 @@ public class WPNetworkImageView extends AppCompatImageView {
                 break;
             case BLAVATAR:
                 showDefaultBlavatarImage();
+                break;
+            case PLUGIN_ICON:
+                showDefaultPluginIcon();
                 break;
             default :
                 // grey box for all others
@@ -485,6 +492,10 @@ public class WPNetworkImageView extends AppCompatImageView {
 
     private void showDefaultBlavatarImage() {
         setImageResource(R.drawable.ic_placeholder_blavatar_grey_lighten_20_40dp);
+    }
+
+    private void showDefaultPluginIcon() {
+        setImageResource(R.drawable.plugin_placeholder);
     }
 
     // --------------------------------------------------------------------------------------------------

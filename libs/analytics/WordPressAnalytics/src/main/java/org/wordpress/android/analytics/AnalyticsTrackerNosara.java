@@ -600,6 +600,8 @@ public class AnalyticsTrackerNosara extends Tracker {
                 return "people_management_list_opened";
             case OPENED_PERSON:
                 return "people_management_details_opened";
+            case OPENED_PLUGINS:
+                return "plugins_opened";
             case CREATE_ACCOUNT_INITIATED:
                 return "account_create_initiated";
             case CREATE_ACCOUNT_EMAIL_EXISTS:
@@ -892,6 +894,10 @@ public class AnalyticsTrackerNosara extends Tracker {
                 return "app_permission_denied";
             case SHARE_TO_WP_SUCCEEDED:
                 return "share_to_wp_succeeded";
+            case PLUGIN_REMOVED:
+                return "plugin_removed";
+            case PLUGIN_UPDATED:
+                return "plugin_updated";
             default:
                 return null;
         }

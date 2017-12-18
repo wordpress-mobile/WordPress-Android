@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.design.widget.CoordinatorLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -150,7 +151,6 @@
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:orientation="vertical"
-                        android:paddingBottom="@dimen/margin_extra_large"
                         android:paddingLeft="@dimen/media_settings_margin"
                         android:paddingRight="@dimen/media_settings_margin">
 
@@ -175,6 +175,44 @@
 
                     </LinearLayout>
 
+                    <View
+                        style="@style/MediaSettings.Divider"
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp" />
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:orientation="vertical"
+                        android:paddingBottom="@dimen/margin_extra_large"
+                        android:paddingLeft="@dimen/media_settings_margin"
+                        android:paddingRight="@dimen/media_settings_margin">
+
+                        <android.support.design.widget.TextInputLayout
+                            android:id="@+id/edit_link_container"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            app:theme="@style/MediaSettings.TextInputTheme">
+
+                            <android.support.design.widget.TextInputEditText
+                                android:id="@+id/edit_link"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:gravity="top|start"
+                                android:hint="@string/media_edit_link_text"
+                                android:inputType="textUri"
+                                tools:text="edit_link" />
+
+                        </android.support.design.widget.TextInputLayout>
+
+                        <CheckBox
+                            android:id="@+id/edit_link_target_new_widnow_checkbox"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginBottom="@dimen/margin_small"
+                            android:hint="@string/media_edit_link_hint" />
+
+                    </LinearLayout>
 
                 </LinearLayout>
 
