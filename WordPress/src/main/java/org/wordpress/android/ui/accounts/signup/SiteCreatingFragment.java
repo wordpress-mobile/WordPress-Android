@@ -74,9 +74,9 @@ public class SiteCreatingFragment extends Fragment  {
     @SuppressWarnings("unused")
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onSiteCreationPhaseUpdated(OnSiteCreationStateUpdated event) {
-        AppLog.i(T.NUX, "Received state: " + event.state.name());
+        AppLog.i(T.NUX, "Received state: " + event.getState().name());
 
-        switch (event.state) {
+        switch (event.getState()) {
             case IDLE:
                 SiteCreationService.createSite(getActivity(),
                         WordPress.getBuildConfigString(getActivity(), "DEBUG_DOTCOM_NEW_SITE_TITLE"),

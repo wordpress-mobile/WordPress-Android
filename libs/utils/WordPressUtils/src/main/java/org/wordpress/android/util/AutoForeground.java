@@ -14,11 +14,30 @@ import android.support.v4.app.NotificationManagerCompat;
 
 import org.greenrobot.eventbus.EventBus;
 
-public abstract class AutoForeground<EventClass> extends Service {
+import org.wordpress.android.util.AutoForeground.ServiceEvent;
+import org.wordpress.android.util.AutoForeground.ServicePhase;
+
+import java.util.HashMap;
+import java.util.Map;
+
+public abstract class AutoForeground<PhaseClass extends ServicePhase, EventClass extends ServiceEvent<PhaseClass>>
+        extends Service {
 
     public static final int NOTIFICATION_ID_PROGRESS = 1;
     public static final int NOTIFICATION_ID_SUCCESS = 2;
     public static final int NOTIFICATION_ID_FAILURE = 3;
+
+    public interface ServicePhase {
+        boolean isIdle();
+        boolean isInProgress();
+        boolean isError();
+        boolean isTerminal();
+        String name();
+    }
+
+    public interface ServiceEvent<T> {
+        T getState();
+    }
 
     public static class ServiceEventConnection {
         private final ServiceConnection mServiceConnection;
@@ -52,29 +71,35 @@ public abstract class AutoForeground<EventClass> extends Service {
     private final IBinder mBinder = new LocalBinder();
 
     private final Class<EventClass> mEventClass;
-
-    protected abstract EventClass getCurrentStateEvent();
-    protected abstract Notification getNotification();
+    private final PhaseClass mInitialPhase;
 
     private boolean mIsForeground;
 
-    protected abstract boolean isIdle();
-    protected abstract boolean isInProgress();
-    protected abstract boolean isError();
+    protected abstract void onProgressStart();
+    protected abstract void onProgressEnd();
 
-    protected AutoForeground(Class<EventClass> eventClass) {
+    protected abstract EventClass getStateEvent(PhaseClass phase);
+    protected abstract Notification getNotification(PhaseClass phase);
+    protected abstract void trackPhaseUpdate(Map<String, ?> props);
+
+    protected AutoForeground(PhaseClass initialPhase, Class<EventClass> eventClass) {
         mEventClass = eventClass;
+        mInitialPhase = initialPhase;
     }
 
     public boolean isForeground() {
         return mIsForeground;
     }
 
+    protected PhaseClass getPhase() {
+        return EventBus.getDefault().getStickyEvent(mEventClass).getState();
+    }
+
     @Override
     public void onCreate() {
         super.onCreate();
 
-        notifyState();
+        notifyState(mInitialPhase);
     }
 
     @Nullable
@@ -119,8 +144,9 @@ public abstract class AutoForeground<EventClass> extends Service {
     }
 
     private void promoteForeground() {
-        if (isInProgress()) {
-            startForeground(NOTIFICATION_ID_PROGRESS, getNotification());
+        final PhaseClass phase = getPhase();
+        if (phase.isInProgress()) {
+            startForeground(NOTIFICATION_ID_PROGRESS, getNotification(phase));
             mIsForeground = true;
         }
     }
@@ -131,9 +157,35 @@ public abstract class AutoForeground<EventClass> extends Service {
     }
 
     @CallSuper
-    protected void notifyState() {
+    protected void setState(PhaseClass newPhase) {
+        if (!getPhase().isInProgress() && newPhase.isInProgress()) {
+            onProgressStart();
+        }
+
+        track(newPhase);
+        notifyState(newPhase);
+
+        if (newPhase.isTerminal()) {
+            onProgressEnd();
+            stopSelf();
+        }
+    }
+
+    private void track(ServicePhase phase) {
+        Map<String, Object> props = new HashMap<>();
+        props.put("login_phase", phase == null ? "null" : phase.name());
+        props.put("login_service_is_foreground", isForeground());
+        trackPhaseUpdate(props);
+    }
+
+    protected static <T> void clearServiceState(T klass) {
+        EventBus.getDefault().removeStickyEvent(klass);
+    }
+
+    @CallSuper
+    protected void notifyState(PhaseClass phase) {
         // sticky emit the state. The stickiness serves as a state keeping mechanism for clients to re-read upon connect
-        getEventBus().postSticky(getCurrentStateEvent());
+        getEventBus().postSticky(getStateEvent(phase));
 
         if (hasConnectedClients()) {
             // there are connected clients so, nothing more to do here
@@ -142,14 +194,14 @@ public abstract class AutoForeground<EventClass> extends Service {
 
         // ok, no connected clients so, update might need to be delivered to a notification as well
 
-        if (isIdle()) {
+        if (phase.isIdle()) {
             // no need to have a notification when idle
             return;
         }
 
-        if (isInProgress()) {
+        if (phase.isInProgress()) {
             // operation still is progress so, update the notification
-            NotificationManagerCompat.from(this).notify(NOTIFICATION_ID_PROGRESS, getNotification());
+            NotificationManagerCompat.from(this).notify(NOTIFICATION_ID_PROGRESS, getNotification(phase));
             return;
         }
 
@@ -160,7 +212,7 @@ public abstract class AutoForeground<EventClass> extends Service {
         NotificationManagerCompat.from(this).cancel(NOTIFICATION_ID_PROGRESS);
 
         // put out a simple success/failure notification
-        NotificationManagerCompat.from(this).notify(isError() ? NOTIFICATION_ID_FAILURE : NOTIFICATION_ID_SUCCESS,
-                getNotification());
+        NotificationManagerCompat.from(this).notify(phase.isError() ? NOTIFICATION_ID_FAILURE : NOTIFICATION_ID_SUCCESS,
+                getNotification(phase));
     }
 }

@@ -20,21 +20,23 @@ import org.wordpress.android.fluxc.store.AccountStore;
 import org.wordpress.android.fluxc.store.AccountStore.OnAuthenticationChanged;
 import org.wordpress.android.fluxc.store.SiteStore;
 import org.wordpress.android.ui.accounts.login.LoginWpcomService.OnLoginStateUpdated;
+import org.wordpress.android.ui.accounts.login.LoginWpcomService.LoginPhase;
 import org.wordpress.android.ui.notifications.services.NotificationsUpdateService;
 import org.wordpress.android.ui.reader.services.ReaderUpdateService;
 import org.wordpress.android.util.AnalyticsUtils;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.AutoForeground;
+import org.wordpress.android.util.AutoForegroundNotification;
 import org.wordpress.android.util.ToastUtils;
 
 import java.util.EnumSet;
-import java.util.HashMap;
 import java.util.Map;
+
 
 import javax.inject.Inject;
 
-public class LoginWpcomService extends AutoForeground<OnLoginStateUpdated> {
+public class LoginWpcomService extends AutoForeground<LoginPhase, OnLoginStateUpdated> {
 
     private static final String ARG_EMAIL = "ARG_EMAIL";
     private static final String ARG_PASSWORD = "ARG_PASSWORD";
@@ -42,7 +44,7 @@ public class LoginWpcomService extends AutoForeground<OnLoginStateUpdated> {
     private static final String ARG_SOCIAL_LOGIN = "ARG_SOCIAL_LOGIN";
     private static final String ARG_SOCIAL_SERVICE = "ARG_SOCIAL_SERVICE";
 
-    public enum LoginPhase {
+    public enum LoginPhase implements AutoForeground.ServicePhase {
         IDLE,
         AUTHENTICATING(25),
         SOCIAL_LOGIN(25),
@@ -67,29 +69,42 @@ public class LoginWpcomService extends AutoForeground<OnLoginStateUpdated> {
             this.progressPercent = progressPercent;
         }
 
+        @Override
+        public boolean isIdle() {
+            return this == IDLE;
+        }
+
+        @Override
         public boolean isInProgress() {
-            return this != LoginPhase.IDLE && !isTerminal();
+            return this != IDLE && !isTerminal();
         }
 
+        @Override
         public boolean isError() {
-            return this == LoginPhase.FAILURE
-                    || this == LoginPhase.FAILURE_EMAIL_WRONG_PASSWORD
-                    || this == LoginPhase.FAILURE_2FA
-                    || this == LoginPhase.FAILURE_SOCIAL_2FA
-                    || this == LoginPhase.FAILURE_FETCHING_ACCOUNT
-                    || this == LoginPhase.FAILURE_CANNOT_ADD_DUPLICATE_SITE;
+            return this == FAILURE
+                    || this == FAILURE_EMAIL_WRONG_PASSWORD
+                    || this == FAILURE_2FA
+                    || this == FAILURE_SOCIAL_2FA
+                    || this == FAILURE_FETCHING_ACCOUNT
+                    || this == FAILURE_CANNOT_ADD_DUPLICATE_SITE;
         }
 
+        @Override
         public boolean isTerminal() {
             return this == LoginPhase.SUCCESS || isError();
         }
     }
 
-    public static class OnLoginStateUpdated {
-        public final LoginPhase state;
+    public static class OnLoginStateUpdated implements AutoForeground.ServiceEvent<LoginPhase> {
+        private final LoginPhase state;
 
         OnLoginStateUpdated(LoginPhase state) {
             this.state = state;
+        }
+
+        @Override
+        public LoginPhase getState() {
+            return state;
         }
     }
 
@@ -100,8 +115,6 @@ public class LoginWpcomService extends AutoForeground<OnLoginStateUpdated> {
     @Inject Dispatcher mDispatcher;
     @Inject AccountStore mAccountStore;
     @Inject SiteStore mSiteStore;
-
-    private LoginPhase mLoginPhase = LoginPhase.IDLE;
 
     private String mIdToken;
     private String mService;
@@ -123,75 +136,59 @@ public class LoginWpcomService extends AutoForeground<OnLoginStateUpdated> {
     }
 
     public static void clearLoginServiceState() {
-        EventBus.getDefault().removeStickyEvent(OnLoginStateUpdated.class);
+        clearServiceState(OnLoginStateUpdated.class);
     }
 
     public LoginWpcomService() {
-        super(OnLoginStateUpdated.class);
+        super(LoginPhase.IDLE, OnLoginStateUpdated.class);
     }
 
     @Override
-    protected OnLoginStateUpdated getCurrentStateEvent() {
-        return new OnLoginStateUpdated(mLoginPhase);
+    protected void onProgressStart() {
+        mDispatcher.register(this);
     }
 
     @Override
-    public boolean isIdle() {
-        return mLoginPhase == LoginPhase.IDLE;
+    protected void onProgressEnd() {
+        mDispatcher.unregister(this);
     }
 
     @Override
-    public boolean isInProgress() {
-        return mLoginPhase.isInProgress();
+    protected OnLoginStateUpdated getStateEvent(LoginPhase phase) {
+        return new OnLoginStateUpdated(phase);
     }
 
     @Override
-    public boolean isError() {
-        return mLoginPhase.isError();
-    }
-
-    @Override
-    public Notification getNotification() {
-        switch (mLoginPhase) {
+    public Notification getNotification(LoginPhase phase) {
+        switch (phase) {
             case AUTHENTICATING:
             case FETCHING_ACCOUNT:
             case FETCHING_SETTINGS:
             case FETCHING_SITES:
-                return LoginNotification.progress(this, mLoginPhase.progressPercent, R.string.notification_logging_in);
+                return AutoForegroundNotification.progress(this, phase.progressPercent,
+                        R.string.notification_login_title_in_progress, R.string.notification_logging_in);
             case SUCCESS:
-                return LoginNotification.success(this, R.string.notification_logged_in);
+                return AutoForegroundNotification.success(this, R.string.notification_login_title_success,
+                        R.string.notification_logged_in);
             case FAILURE_EMAIL_WRONG_PASSWORD:
-                return LoginNotification.failure(this, R.string.notification_error_wrong_password);
+                return AutoForegroundNotification.failure(this, R.string.notification_login_title_stopped,
+                        R.string.notification_error_wrong_password);
             case FAILURE_2FA:
-                return LoginNotification.failure(this, R.string.notification_2fa_needed);
+                return AutoForegroundNotification.failure(this, R.string.notification_login_title_stopped,
+                        R.string.notification_2fa_needed);
             case FAILURE_SOCIAL_2FA:
-                return LoginNotification.failure(this, R.string.notification_2fa_needed);
+                return AutoForegroundNotification.failure(this, R.string.notification_login_title_stopped,
+                        R.string.notification_2fa_needed);
             case FAILURE:
-                return LoginNotification.failure(this, R.string.notification_login_failed);
+                return AutoForegroundNotification.failure(this, R.string.notification_login_title_stopped,
+                        R.string.notification_login_failed);
         }
 
         return null;
     }
 
-    private void setState(LoginPhase loginPhase) {
-        if (!mLoginPhase.isInProgress() && loginPhase.isInProgress()) {
-            mDispatcher.register(this);
-        }
-
-        mLoginPhase = loginPhase;
-        track();
-        notifyState();
-
-        if (mLoginPhase.isTerminal()) {
-            mDispatcher.unregister(this);
-            stopSelf();
-        }
-    }
-
-    private void track() {
-        Map<String, Object> props = new HashMap<>();
-        props.put("login_phase", mLoginPhase == null ? "null" : mLoginPhase.name());
-        props.put("login_service_is_foreground", isForeground());
+    @Override
+    protected void trackPhaseUpdate(Map<String, ?> props) {
         AnalyticsTracker.track(AnalyticsTracker.Stat.LOGIN_WPCOM_BACKGROUND_SERVICE_UPDATE, props);
     }
 
