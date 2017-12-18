@@ -609,7 +609,7 @@ class DotComSiteSettings extends SiteSettingsInterface {
         if (mSettings.twitterUsername != null && !mSettings.twitterUsername.equals(mRemoteSettings.twitterUsername)) {
             params.put(TWITTER_USERNAME_KEY, mSettings.twitterUsername);
         }
-        if (!StringUtils.equals(mSettings.startOfWeek, mRemoteSettings.startOfWeek)) {
+        if (mSettings.startOfWeek != null && !mSettings.startOfWeek.equals(mRemoteSettings.startOfWeek)) {
             params.put(START_OF_WEEK_KEY, mSettings.startOfWeek);
         }
 
