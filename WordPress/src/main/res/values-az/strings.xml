@@ -55,7 +55,7 @@ Language: az
 	<string name="stats_other_recent_stats_moved_label">Digər Son Statistikaları axtarırsınızmı? Bu məlumatları Tək Baxışda səhifəsinə daşıdıq.</string>
 	<string name="me_btn_login_logout">Giriş/Çıxış</string>
 	<string name="me_btn_support">Yardım və Dəstək</string>
-	<string name="site_picker_cant_hide_current_site">"%s" hazırkı sayt olduğundan gizlədilə bilmədi</string>
+	<string name="site_picker_cant_hide_current_site">\"%s\" hazırkı sayt olduğundan gizlədilə bilmədi</string>
 	<string name="site_picker_create_dotcom">WordPress.com saytı yarat</string>
 	<string name="site_picker_add_site">Sayt əlavə et</string>
 	<string name="site_picker_add_self_hosted">İstifadəçinin öz hostundakı saytı əlavə et</string>
@@ -280,7 +280,7 @@ Language: az
 	<string name="username_required">İstifadəçi adınızı daxil edin</string>
 	<string name="username_not_allowed">İstifadəçi adına izin verilmir</string>
 	<string name="username_must_be_at_least_four_characters">İstifadəçi adı ən az 4 simvol olmalıdır</string>
-	<string name="username_contains_invalid_characters">İstifadəçi adında "_" simvolu ola bilməz</string>
+	<string name="username_contains_invalid_characters">İstifadəçi adında \"_\" simvolu ola bilməz</string>
 	<string name="username_must_include_letters">İstifadəçi adında ən az 1 hərf(a-z) olmalıdır</string>
 	<string name="email_invalid">Etibarlı e-poçt ünvanı daxil edin</string>
 	<string name="email_not_allowed">Bu e-poçt ünvanına izin verilmir</string>
