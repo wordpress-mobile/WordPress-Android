@@ -36,7 +36,7 @@ Language: th
 	<string name="site_settings_close_after_dialog_title">ปิดการแสดงความเห็น</string>
 	<string name="site_settings_list_editor_input_hint">ใส่คำหรือวลี</string>
 	<string name="site_settings_list_editor_no_items_text">ไม่มีรายการ</string>
-	<string name="site_settings_rp_preview1_site">ใน "มือถือ"</string>
+	<string name="site_settings_rp_preview1_site">ใน \"มือถือ\"</string>
 	<string name="site_settings_rp_show_images_title">แสดงรูปภาพ</string>
 	<string name="site_settings_rp_show_header_title">แสดงส่วนหัว</string>
 	<string name="site_settings_whitelist_hint">ผู้เขียนความเห็นต้องมีความเห็นก่อนหน้าที่ได้รับอนุมัติแล้ว</string>
@@ -230,7 +230,7 @@ Language: th
 	<string name="stats_other_recent_stats_moved_label">กำลังหาสถิติล่าสุดอื่น ๆ ของคุณ?  เราได้ย้ายมันไปยังหน้ารายละเอียด (insight page)</string>
 	<string name="me_btn_login_logout">เข้าสู่ระบบ/ออกจากระบบ</string>
 	<string name="me_connect_to_wordpress_com">เชื่อมต่อกับ WordPress.com</string>
-	<string name="site_picker_cant_hide_current_site">ไม่ได้ซ่อน "%s" เพราะว่ามันเป็นเว็บปัจจุบัน</string>
+	<string name="site_picker_cant_hide_current_site">ไม่ได้ซ่อน \"%s\" เพราะว่ามันเป็นเว็บปัจจุบัน</string>
 	<string name="me_btn_support">ช่วยเหลือและสนับสนุน</string>
 	<string name="account_settings">ตั้งค่าบัญชี</string>
 	<string name="site_picker_create_dotcom">สร้างเว็บ WordPress.com</string>
