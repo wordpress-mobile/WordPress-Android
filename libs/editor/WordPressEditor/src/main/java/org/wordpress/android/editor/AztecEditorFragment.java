@@ -1007,8 +1007,8 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
         mUploadingMediaProgressMax.remove(localMediaId);
         if (!TextUtils.isEmpty(localMediaId)) {
             mEditorFragmentListener.onMediaDeleted(localMediaId);
+            removeCaptionFromDeletedMedia(localMediaId);
         }
-        removeCaptionFromDeletedMedia(localMediaId);
     }
 
     private void removeCaptionFromDeletedMedia(String localMediaId) {
