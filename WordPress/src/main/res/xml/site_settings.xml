@@ -104,17 +104,13 @@
             android:title="@string/site_settings_default_format_title"
             app:longClickHint="@string/site_settings_format_hint" />
 
-        <org.wordpress.android.ui.prefs.DetailListPreference
+        <org.wordpress.android.ui.prefs.WPPreference
             android:id="@+id/pref_date_format"
-            android:entries="@array/date_format_entries"
-            android:entryValues="@array/date_format_values"
             android:key="@string/pref_key_site_date_format"
             android:title="@string/site_settings_date_format_title" />
 
-        <org.wordpress.android.ui.prefs.DetailListPreference
+        <org.wordpress.android.ui.prefs.WPPreference
             android:id="@+id/pref_time_format"
-            android:entries="@array/time_format_entries"
-            android:entryValues="@array/time_format_values"
             android:key="@string/pref_key_site_time_format"
             android:title="@string/site_settings_time_format_title" />
 

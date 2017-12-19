@@ -61,6 +61,7 @@ import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.store.AccountStore;
 import org.wordpress.android.fluxc.store.SiteStore;
 import org.wordpress.android.ui.WPWebViewActivity;
+import org.wordpress.android.ui.prefs.SiteSettingsFormatDialog.FormatType;
 import org.wordpress.android.util.AnalyticsUtils;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.HelpshiftHelper;
@@ -130,6 +131,8 @@ public class SiteSettingsFragment extends PreferenceFragment
     private static final int CLOSE_AFTER_REQUEST_CODE = 4;
     private static final int MULTIPLE_LINKS_REQUEST_CODE = 5;
     private static final int DELETE_SITE_REQUEST_CODE = 6;
+    private static final int DATE_FORMAT_REQUEST_CODE = 7;
+    private static final int TIME_FORMAT_REQUEST_CODE = 8;
     private static final String DELETE_SITE_TAG = "delete-site";
     private static final String PURCHASE_ORIGINAL_RESPONSE_KEY = "originalResponse";
     private static final String PURCHASE_ACTIVE_KEY = "active";
@@ -166,8 +169,8 @@ public class SiteSettingsFragment extends PreferenceFragment
     // Writing settings
     private DetailListPreference mCategoryPref;
     private DetailListPreference mFormatPref;
-    private DetailListPreference mDateFormatPref;
-    private DetailListPreference mTimeFormatPref;
+    private WPPreference mDateFormatPref;
+    private WPPreference mTimeFormatPref;
     private DetailListPreference mWeekStartPref;
     private Preference mRelatedPostsPref;
 
@@ -460,6 +463,10 @@ public class SiteSettingsFragment extends PreferenceFragment
                 String title = getString(R.string.start_over);
                 WPActivityUtils.addToolbarToDialog(this, dialog, title);
             }
+        }  else if (preference == mDateFormatPref) {
+            showDateOrTimeFormatDialog(FormatType.DATE_FORMAT);
+        } else if (preference == mTimeFormatPref) {
+            showDateOrTimeFormatDialog(FormatType.TIME_FORMAT);
         }
 
         return false;
@@ -634,14 +641,6 @@ public class SiteSettingsFragment extends PreferenceFragment
             mModerationHoldPref.setSummary(mSiteSettings.getModerationHoldDescription());
         } else if (preference == mBlacklistPref) {
             mBlacklistPref.setSummary(mSiteSettings.getBlacklistDescription());
-        } else if (preference == mDateFormatPref) {
-            mSiteSettings.setDateFormat(newValue.toString());
-            mDateFormatPref.setValue(newValue.toString());
-            mDateFormatPref.setSummary(mDateFormatPref.getEntry());
-        } else if (preference == mTimeFormatPref) {
-            mSiteSettings.setTimeFormat(newValue.toString());
-            mTimeFormatPref.setValue(newValue.toString());
-            mTimeFormatPref.setSummary(mTimeFormatPref.getEntry());
         } else if (preference == mWeekStartPref) {
             mSiteSettings.setStartOfWeek(newValue.toString());
             mWeekStartPref.setValue(newValue.toString());
@@ -796,8 +795,8 @@ public class SiteSettingsFragment extends PreferenceFragment
         mJpUseTwoFactorPref = (WPSwitchPreference) getChangePref(R.string.pref_key_jetpack_require_two_factor);
         mJpWhitelistPref = (WPPreference) getClickPref(R.string.pref_key_jetpack_brute_force_whitelist);
         mWeekStartPref = (DetailListPreference) getChangePref(R.string.pref_key_site_week_start);
-        mDateFormatPref = (DetailListPreference) getChangePref(R.string.pref_key_site_date_format);
-        mTimeFormatPref = (DetailListPreference) getChangePref(R.string.pref_key_site_time_format);
+        mDateFormatPref = (WPPreference) getChangePref(R.string.pref_key_site_date_format);
+        mTimeFormatPref = (WPPreference) getChangePref(R.string.pref_key_site_time_format);
 
         sortLanguages();
 
@@ -916,6 +915,15 @@ public class SiteSettingsFragment extends PreferenceFragment
         builder.show();
         AnalyticsUtils.trackWithSiteDetails(AnalyticsTracker.Stat.SITE_SETTINGS_EXPORT_SITE_ACCESSED, mSite);
     }
+
+    private void showDateOrTimeFormatDialog(@NonNull FormatType formatType) {
+        String formatString = formatType == FormatType.DATE_FORMAT ? mSiteSettings.getDateFormat() : mSiteSettings.getTimeFormat();
+        SiteSettingsFormatDialog dialog = SiteSettingsFormatDialog.newInstance(formatType, formatString);
+        int requestCode = formatType == FormatType.DATE_FORMAT ? DATE_FORMAT_REQUEST_CODE : TIME_FORMAT_REQUEST_CODE;
+        dialog.setTargetFragment(this, requestCode);
+        dialog.show(getFragmentManager(), "format-dialog-tag");
+    }
+
 
     private void dismissProgressDialog(ProgressDialog progressDialog) {
         if (progressDialog != null && progressDialog.isShowing()) {
@@ -1097,25 +1105,8 @@ public class SiteSettingsFragment extends PreferenceFragment
         mJpWhitelistPref.setSummary(mSiteSettings.getJetpackProtectWhitelistSummary());
         mWeekStartPref.setValue(mSiteSettings.getStartOfWeek());
         mWeekStartPref.setSummary(mWeekStartPref.getEntry());
-
-        setDateOrTimeFormat(mDateFormatPref, mSiteSettings.getDateFormat());
-        setDateOrTimeFormat(mTimeFormatPref, mSiteSettings.getTimeFormat());
-    }
-
-    private void setDateOrTimeFormat(DetailListPreference formatPref, String formatString) {
-        // is this one of the pre-defined formats?
-        CharSequence[] values = formatPref.getEntryValues();
-        for (int i = 0; i < values.length; i++) {
-            if (formatString.equals(values[i])) {
-                formatPref.setValue(formatString);
-                formatPref.setSummary(formatPref.getEntry());
-                return;
-            }
-        }
-
-        // not a pre-defined value, so it must be a custom doermat (the last choice)
-        formatPref.setValueIndex(values.length - 1);
-        formatPref.setSummary(formatString);
+        mDateFormatPref.setTitle(mSiteSettings.getDateFormat());
+        mTimeFormatPref.setTitle(mSiteSettings.getTimeFormat());
     }
 
     private void setCategories() {
