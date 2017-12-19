@@ -2057,7 +2057,7 @@
     <!-- Signup -->
     <string name="sign_up">Sign Up</string>
     <string name="signup_terms_of_service_text">By signing up, you agree to our %1$sTerms of Service%2$s.</string>
-    <string name="signup_user_exists">The Google account \'%s\' matches an existing account on WordPress.com. Continue with login.</string>
+    <string name="signup_user_exists">Email already exists on WordPress.com.\nProceeding with login.</string>
     <string name="signup_with_email_button">Sign Up with Email</string>
     <string name="signup_with_google_button">Sign Up with Google</string>
 
