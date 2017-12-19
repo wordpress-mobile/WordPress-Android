@@ -895,6 +895,7 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
     public void setUrlForVideoPressId(final String videoId, final String videoUrl, final String posterUrl) {
         //This is a test
         AppLog.d(T.EDITOR, "This is a test");
+        content.updateVideoPressThumb(posterUrl, videoUrl, videoId);
     }
 
     @Override
@@ -1517,8 +1518,8 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
                     try {
                         // Open the video preview in the default browser for now.
                         // TODO open the preview activity already available in media?
-                        final String imageSrc = meta.getString(ATTR_SRC);
-                        Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(imageSrc));
+                        final String videoURL = meta.getString(ATTR_SRC);
+                        Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(videoURL));
                         startActivity(browserIntent);
                     } catch (JSONException e) {
                         AppLog.e(AppLog.T.EDITOR, "Could not retrieve image url from JSON metadata");
