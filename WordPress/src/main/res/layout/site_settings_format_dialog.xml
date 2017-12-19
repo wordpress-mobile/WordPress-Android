@@ -19,22 +19,29 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:padding="@dimen/margin_extra_large" />
+        android:paddingLeft="@dimen/margin_extra_large"
+        android:paddingRight="@dimen/margin_extra_large" />
 
     <EditText
         android:id="@+id/edit_custom"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:padding="@dimen/margin_extra_large" />
+        android:layout_marginLeft="@dimen/margin_extra_large"
+        android:layout_marginRight="@dimen/margin_extra_large"
+        android:paddingLeft="@dimen/margin_extra_large"
+        android:paddingRight="@dimen/margin_extra_large"
+        android:textSize="@dimen/text_sz_medium" />
 
     <TextView
         android:id="@+id/text_help"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@+id/image"
+        android:layout_marginLeft="@dimen/margin_extra_extra_large"
         android:background="?android:selectableItemBackground"
         android:gravity="center_vertical"
-        android:padding="@dimen/margin_extra_large"
+        android:paddingLeft="@dimen/margin_extra_large"
+        android:paddingRight="@dimen/margin_extra_large"
         android:text="@string/site_settings_format_help"
         android:textColor="@color/link" />
 </LinearLayout>

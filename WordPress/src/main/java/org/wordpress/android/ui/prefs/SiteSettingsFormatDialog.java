@@ -12,7 +12,9 @@ import android.support.annotation.NonNull;
 import android.support.annotation.StringRes;
 import android.text.TextUtils;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.TextView;
@@ -97,18 +99,22 @@ public class SiteSettingsFormatDialog extends DialogFragment implements DialogIn
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity(), R.style.Calypso_AlertDialog);
         builder.setPositiveButton(android.R.string.ok, this);
         builder.setNegativeButton(R.string.cancel, this);
-        //builder.setCustomTitle(txtTitle);
         builder.setView(view);
 
         return builder.create();
     }
 
     private void createRadioButtons() {
+        int margin = getResources().getDimensionPixelSize(R.dimen.margin_small);
+
         for (int i = 0; i < mEntries.length; i++) {
             RadioButton radio = new RadioButton(getActivity());
             radio.setText(mEntries[i]);
             radio.setId(i);
             mRadioGroup.addView(radio);
+            LinearLayout.LayoutParams params = (LinearLayout.LayoutParams) radio.getLayoutParams();
+            params.topMargin = margin;
+            params.bottomMargin = margin;
         }
 
         mRadioGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {

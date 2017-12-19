@@ -924,7 +924,6 @@ public class SiteSettingsFragment extends PreferenceFragment
         dialog.show(getFragmentManager(), "format-dialog-tag");
     }
 
-
     private void dismissProgressDialog(ProgressDialog progressDialog) {
         if (progressDialog != null && progressDialog.isShowing()) {
             try {
@@ -1105,8 +1104,8 @@ public class SiteSettingsFragment extends PreferenceFragment
         mJpWhitelistPref.setSummary(mSiteSettings.getJetpackProtectWhitelistSummary());
         mWeekStartPref.setValue(mSiteSettings.getStartOfWeek());
         mWeekStartPref.setSummary(mWeekStartPref.getEntry());
-        mDateFormatPref.setTitle(mSiteSettings.getDateFormat());
-        mTimeFormatPref.setTitle(mSiteSettings.getTimeFormat());
+        mDateFormatPref.setSummary(mSiteSettings.getDateFormat());
+        mTimeFormatPref.setSummary(mSiteSettings.getTimeFormat());
     }
 
     private void setCategories() {
