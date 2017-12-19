@@ -154,6 +154,7 @@ public class LoginWpcomService extends AutoForeground<OnLoginStateUpdated> {
     public Notification getNotification() {
         switch (mLoginPhase) {
             case AUTHENTICATING:
+            case SOCIAL_LOGIN:
             case FETCHING_ACCOUNT:
             case FETCHING_SETTINGS:
             case FETCHING_SITES:
