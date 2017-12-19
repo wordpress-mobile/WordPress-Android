@@ -52,6 +52,7 @@ import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.DisplayUtils;
 import org.wordpress.android.util.ImageUtils;
 import org.wordpress.android.util.ProfilingUtils;
+import org.wordpress.android.util.ShortcodeUtils;
 import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.UrlUtils;
@@ -985,13 +986,14 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
 
                 attrs.setValue(ATTR_CLASS, attributesWithClass.getAttributes().getValue(ATTR_CLASS));
 
-                /* TODO add video press attribute -> value here
-                if (mediaType.equals(MediaType.VIDEO)) {
+                // VideoPress special case here
+                if (mediaType.equals(MediaType.VIDEO) && !TextUtils.isEmpty(mediaFile.getVideoPressShortCode())) {
                     String videoPressId = ShortcodeUtils.getVideoPressIdFromShortCode(
                             mediaFile.getVideoPressShortCode());
-                    attrs.setValue( ?? , videoPressId);
+                    attrs.setValue( "videopress_hidden_id" , videoPressId);
+                    attrs.setValue( "videopress_hidden_src" , remoteUrl);
+                    attrs.removeAttribute("src");
                 }
-                */
 
                 // clear overlay
                 content.clearOverlays(predicate);
