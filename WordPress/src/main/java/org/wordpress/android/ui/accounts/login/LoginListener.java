@@ -55,4 +55,6 @@ public interface LoginListener {
     void help2FaScreen(String email);
 
     void setHelpContext(String faqId, String faqSection);
+
+    void showSignupToLoginMessage();
 }
