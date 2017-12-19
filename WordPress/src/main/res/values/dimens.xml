@@ -334,4 +334,7 @@
     <dimen name="magic_link_sent_illustration_sz">120dp</dimen>
     <dimen name="google_button_icon_sz">24dp</dimen>
 
+    <!--plugin-->
+    <dimen name="plugin_icon_size">40dp</dimen>
+    <dimen name="plugin_external_link_image_size">16dp</dimen>
 </resources>

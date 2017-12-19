@@ -2612,6 +2612,12 @@ public class EditPostActivity extends AppCompatActivity implements
         String videoUrl = mMediaStore.
                 getUrlForSiteVideoWithVideoPressGuid(mSite, videoId);
 
+        if (videoUrl == null) {
+            AppLog.w(T.EDITOR, "The editor wants more info about the following VideoPress code: " + videoId
+                    + " but it's not available in the current site " + mSite.getUrl() + " Maybe it's from another site?" );
+            return;
+        }
+
         if (videoUrl.isEmpty()) {
             if (PermissionUtils.checkAndRequestCameraAndStoragePermissions(this, WPPermissionUtils.EDITOR_MEDIA_PERMISSION_REQUEST_CODE)) {
                 runOnUiThread(new Runnable() {

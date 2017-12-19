@@ -296,6 +296,25 @@
 
             </LinearLayout>
 
+            <!--Plugin-->
+            <LinearLayout
+                android:id="@+id/row_plugins"
+                style="@style/MySiteListRowLayout">
+
+                <ImageView
+                    android:id="@+id/my_site_plugins_icon"
+                    style="@style/MySiteListRowIcon"
+                    android:contentDescription="@string/plugins"
+                    android:tint="@color/grey"
+                    app:srcCompat="@drawable/ic_gridicons_plugin" />
+
+                <org.wordpress.android.widgets.WPTextView
+                    android:id="@+id/my_site_plugins_text_view"
+                    style="@style/MySiteListRowTextView"
+                    android:text="@string/my_site_btn_plugins" />
+
+            </LinearLayout>
+
             <!--Sharing-->
             <LinearLayout
                 android:id="@+id/row_sharing"
