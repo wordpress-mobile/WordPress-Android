@@ -47,7 +47,7 @@ Language: hi_IN
 	<string name="reader_excerpt_link">और जानने के लिए  %s पर जाये </string>
 	<string name="error_unknown_page">सर्वर पर यह पृष्ठ मौजूद नहीं है </string>
 	<string name="error_publish_empty_page">खाली पृष्ठ प्रकाशित नहीं कर सकते </string>
-	<string name="upload_failed_param">"%s" के लिए अपलोड असफल </string>
+	<string name="upload_failed_param">\"%s\" के लिए अपलोड असफल </string>
 	<string name="cannot_retry_deleted_media_item">मीडिया हटा दिया गया हैं। इस पोस्ट से इसे हटाये?</string>
 	<string name="error_please_choose_browser">मौजूदा वेब ब्राउज़र खोलने में अक्षम। कृपया दूसरा ऐप्प चुने:</string>
 	<string name="cant_open_url">लिंक को खोलने में अक्षम</string>
@@ -350,11 +350,11 @@ Language: hi_IN
 	<string name="email_exists">वह ईमेल पता पहले ही से प्रयोग में है</string>
 	<string name="error_refresh_stats">आँकड़े को इस समय रिफ्रेश नहीं किया जा सकता</string>
 	<string name="blog_name_only_lowercase_letters_and_numbers">साइट का पता केवल छोटे अक्षरों (a-z) और अंक हो सकते हैं</string>
-	<string name="blog_name_contains_invalid_characters">साइट के पते में "_" अक्षर नहीं हो सकता है</string>
+	<string name="blog_name_contains_invalid_characters">साइट के पते में \"_\" अक्षर नहीं हो सकता है</string>
 	<string name="blog_name_must_be_at_least_four_characters">साइट का पता कम से कम 4 अक्षरों का होना चाहिए</string>
 	<string name="blog_name_must_be_less_than_sixty_four_characters">साइट का पता 64 अक्षर से कम होना चाहिए</string>
 	<string name="username_only_lowercase_letters_and_numbers">उपयोगकर्ता नाम केवल छोटे अक्षरों (a-z) और अंक हो सकते हैं</string>
-	<string name="username_contains_invalid_characters">उपयोगकर्ता नाम में "_" अक्षर नहीं हो सकता है</string>
+	<string name="username_contains_invalid_characters">उपयोगकर्ता नाम में \"_\" अक्षर नहीं हो सकता है</string>
 	<string name="username_must_be_at_least_four_characters">उपयोगकर्ता नाम कम से कम 4 अक्षरों का होना चाहिए</string>
 	<string name="invalid_username_too_short">उपयोगकर्ता नाम 4 अक्षरों से अधिक समय होना चाहिए</string>
 	<string name="invalid_username_too_long">उपयोगकर्ता नाम 61 अक्षरो से कम होना चाहिए</string>

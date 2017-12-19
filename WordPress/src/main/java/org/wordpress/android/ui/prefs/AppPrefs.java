@@ -63,15 +63,6 @@ public class AppPrefs {
         // last data stored for the Stats Widgets
         STATS_WIDGET_DATA,
 
-        // aztec editor enabled
-        AZTEC_EDITOR_ENABLED,
-
-        // aztec editor toolbar expanded state
-        AZTEC_EDITOR_TOOLBAR_EXPANDED,
-
-        // visual editor enabled
-        VISUAL_EDITOR_ENABLED,
-
         // Store the number of times Stats are loaded without errors. It's used to show the Widget promo dialog.
         STATS_WIDGET_PROMO_ANALYTICS,
 
@@ -118,6 +109,15 @@ public class AppPrefs {
 
         // visual editor available
         VISUAL_EDITOR_AVAILABLE,
+
+        // visual editor enabled
+        VISUAL_EDITOR_ENABLED,
+
+        // aztec editor enabled
+        AZTEC_EDITOR_ENABLED,
+
+        // aztec editor toolbar expanded state
+        AZTEC_EDITOR_TOOLBAR_EXPANDED,
 
         // When we need to show the new editor beta snackbar
         AZTEC_EDITOR_BETA_REQUIRED,
@@ -430,25 +430,25 @@ public class AppPrefs {
 
     // Aztec Editor
     public static void setAztecEditorEnabled(boolean isEnabled) {
-        setBoolean(DeletablePrefKey.AZTEC_EDITOR_ENABLED, isEnabled);
+        setBoolean(UndeletablePrefKey.AZTEC_EDITOR_ENABLED, isEnabled);
         AnalyticsTracker.track(isEnabled ? Stat.EDITOR_AZTEC_TOGGLED_ON : Stat.EDITOR_AZTEC_TOGGLED_OFF);
     }
 
     public static boolean isAztecEditorEnabled() {
-        return getBoolean(DeletablePrefKey.AZTEC_EDITOR_ENABLED, false);
+        return getBoolean(UndeletablePrefKey.AZTEC_EDITOR_ENABLED, false);
     }
 
     public static boolean isAztecEditorToolbarExpanded() {
-        return getBoolean(DeletablePrefKey.AZTEC_EDITOR_TOOLBAR_EXPANDED, false);
+        return getBoolean(UndeletablePrefKey.AZTEC_EDITOR_TOOLBAR_EXPANDED, false);
     }
 
     public static void setAztecEditorToolbarExpanded(boolean isExpanded) {
-        setBoolean(DeletablePrefKey.AZTEC_EDITOR_TOOLBAR_EXPANDED, isExpanded);
+        setBoolean(UndeletablePrefKey.AZTEC_EDITOR_TOOLBAR_EXPANDED, isExpanded);
     }
 
     // Visual Editor
     public static void setVisualEditorEnabled(boolean visualEditorEnabled) {
-        setBoolean(DeletablePrefKey.VISUAL_EDITOR_ENABLED, visualEditorEnabled);
+        setBoolean(UndeletablePrefKey.VISUAL_EDITOR_ENABLED, visualEditorEnabled);
         AnalyticsTracker.track(visualEditorEnabled ? Stat.EDITOR_HYBRID_TOGGLED_ON : Stat.EDITOR_HYBRID_TOGGLED_OFF);
     }
 
@@ -464,7 +464,7 @@ public class AppPrefs {
     }
 
     public static boolean isVisualEditorEnabled() {
-        return isVisualEditorAvailable() && getBoolean(DeletablePrefKey.VISUAL_EDITOR_ENABLED, !isAztecEditorEnabled());
+        return isVisualEditorAvailable() && getBoolean(UndeletablePrefKey.VISUAL_EDITOR_ENABLED, !isAztecEditorEnabled());
     }
 
     public static boolean isNewEditorBetaRequired() {
