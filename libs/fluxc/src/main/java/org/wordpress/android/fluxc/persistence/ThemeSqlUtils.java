@@ -2,6 +2,7 @@ package org.wordpress.android.fluxc.persistence;
 
 import android.database.Cursor;
 import android.support.annotation.NonNull;
+import android.text.TextUtils;
 
 import com.wellsql.generated.ThemeModelTable;
 import com.yarolegovich.wellsql.WellSql;
@@ -12,16 +13,47 @@ import org.wordpress.android.fluxc.model.ThemeModel;
 import java.util.List;
 
 public class ThemeSqlUtils {
-    public static void insertOrUpdateThemeForSite(@NonNull ThemeModel theme) {
+    public static void insertOrUpdateSiteTheme(@NonNull SiteModel site, @NonNull ThemeModel theme) {
         List<ThemeModel> existing = WellSql.select(ThemeModel.class)
                 .where().beginGroup()
                 .equals(ThemeModelTable.THEME_ID, theme.getThemeId())
-                .equals(ThemeModelTable.LOCAL_SITE_ID, theme.getLocalSiteId())
+                .equals(ThemeModelTable.LOCAL_SITE_ID, site.getId())
+                .equals(ThemeModelTable.IS_WP_COM_THEME, false)
                 .endGroup().endWhere().getAsModel();
 
+        // Make sure the local id of the theme is set correctly
+        theme.setLocalSiteId(site.getId());
+        // Always remove WP.com flag while storing as a site associate theme as we might be saving
+        // a copy of a wp.com theme after an activation
+        theme.setIsWpComTheme(false);
+
         if (existing.isEmpty()) {
+            // theme is not in the local DB so we insert it
             WellSql.insert(theme).asSingleTransaction(true).execute();
         } else {
+            // theme already exists in the local DB so we update the existing row with the passed theme
+            WellSql.update(ThemeModel.class).whereId(existing.get(0).getId())
+                    .put(theme, new UpdateAllExceptId<>(ThemeModel.class)).execute();
+        }
+    }
+
+    public static void insertOrUpdateWpComTheme(@NonNull ThemeModel theme) {
+        List<ThemeModel> existing = WellSql.select(ThemeModel.class)
+                .where().beginGroup()
+                .equals(ThemeModelTable.THEME_ID, theme.getThemeId())
+                .equals(ThemeModelTable.IS_WP_COM_THEME, true)
+                .endGroup().endWhere().getAsModel();
+
+        // Remove local site id if it's set for whatever reason (shouldn't normally happen, so it's a sanity check)
+        theme.setLocalSiteId(0);
+        // Make sure the isWpComTheme flag is set
+        theme.setIsWpComTheme(true);
+
+        if (existing.isEmpty()) {
+            // theme is not in the local DB so we insert it
+            WellSql.insert(theme).asSingleTransaction(true).execute();
+        } else {
+            // theme already exists in the local DB so we update the existing row with the passed theme
             WellSql.update(ThemeModel.class).whereId(existing.get(0).getId())
                     .put(theme, new UpdateAllExceptId<>(ThemeModel.class)).execute();
         }
@@ -65,9 +97,9 @@ public class ThemeSqlUtils {
             }
         }
 
-        // make sure active flag is set then add to db
+        // make sure active flag is set
         theme.setActive(true);
-        insertOrUpdateThemeForSite(theme);
+        insertOrUpdateSiteTheme(site, theme);
     }
 
     public static List<ThemeModel> getActiveThemeForSite(@NonNull SiteModel site) {
@@ -110,14 +142,33 @@ public class ThemeSqlUtils {
                 .endWhere().getAsModel();
     }
 
-    /**
-     * @return the first theme that matches a given theme ID; null if none found
-     */
-    public static ThemeModel getThemeByThemeId(@NonNull String themeId, boolean isWpComTheme) {
+    public static ThemeModel getWpComThemeByThemeId(String themeId) {
+        if (TextUtils.isEmpty(themeId)) {
+            return null;
+        }
+
         List<ThemeModel> matches = WellSql.select(ThemeModel.class)
                 .where().beginGroup()
                 .equals(ThemeModelTable.THEME_ID, themeId)
-                .equals(ThemeModelTable.IS_WP_COM_THEME, isWpComTheme)
+                .equals(ThemeModelTable.IS_WP_COM_THEME, true)
+                .endGroup().endWhere().getAsModel();
+
+        if (matches == null || matches.isEmpty()) {
+            return null;
+        }
+
+        return matches.get(0);
+    }
+
+    public static ThemeModel getSiteThemeByThemeId(SiteModel siteModel, String themeId) {
+        if (siteModel == null || TextUtils.isEmpty(themeId)) {
+            return null;
+        }
+        List<ThemeModel> matches = WellSql.select(ThemeModel.class)
+                .where().beginGroup()
+                .equals(ThemeModelTable.LOCAL_SITE_ID, siteModel.getId())
+                .equals(ThemeModelTable.THEME_ID, themeId)
+                .equals(ThemeModelTable.IS_WP_COM_THEME, false)
                 .endGroup().endWhere().getAsModel();
 
         if (matches == null || matches.isEmpty()) {

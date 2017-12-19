@@ -12,12 +12,16 @@ import org.wordpress.android.fluxc.model.SiteModel;
 
 import java.util.List;
 
+import static com.yarolegovich.wellsql.SelectQuery.ORDER_ASCENDING;
+
 public class PluginSqlUtils {
     public static List<PluginModel> getSitePlugins(@NonNull SiteModel site) {
         return WellSql.select(PluginModel.class)
                 .where()
                 .equals(PluginModelTable.LOCAL_SITE_ID, site.getId())
-                .endWhere().getAsModel();
+                .endWhere()
+                .orderBy(PluginModelTable.DISPLAY_NAME, ORDER_ASCENDING)
+                .getAsModel();
     }
 
     public static void insertOrReplaceSitePlugins(@NonNull SiteModel site, @NonNull List<PluginModel> plugins) {
@@ -37,20 +41,36 @@ public class PluginSqlUtils {
                 .endWhere().execute();
     }
 
-    public static int insertOrUpdateSitePlugin(SiteModel site, PluginModel plugin) {
+    public static int insertOrUpdateSitePlugin(PluginModel plugin) {
         if (plugin == null) {
             return 0;
         }
 
-        PluginModel oldPlugin = getSitePluginByName(site, plugin.getName());
-        if (oldPlugin == null) {
+        List<PluginModel> pluginResult = WellSql.select(PluginModel.class)
+                .where()
+                .equals(PluginModelTable.ID, plugin.getId())
+                .endWhere().getAsModel();
+        if (pluginResult.isEmpty()) {
             WellSql.insert(plugin).execute();
             return 1;
         } else {
-            int oldId = oldPlugin.getId();
+            int oldId = plugin.getId();
             return WellSql.update(PluginModel.class).whereId(oldId)
                     .put(plugin, new UpdateAllExceptId<>(PluginModel.class)).execute();
         }
+    }
+
+    public static int deleteSitePlugin(SiteModel site, PluginModel plugin) {
+        if (plugin == null) {
+            return 0;
+        }
+        // The local id of the plugin might not be set if it's coming from a network request,
+        // using site id and name is a safer approach here
+        return WellSql.delete(PluginModel.class)
+                .where()
+                .equals(PluginModelTable.NAME, plugin.getName())
+                .equals(PluginModelTable.LOCAL_SITE_ID, site.getId())
+                .endWhere().execute();
     }
 
     public static int insertOrUpdatePluginInfo(PluginInfoModel pluginInfo) {

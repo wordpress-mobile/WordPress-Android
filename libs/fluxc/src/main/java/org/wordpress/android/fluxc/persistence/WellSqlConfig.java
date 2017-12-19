@@ -58,7 +58,7 @@ public class WellSqlConfig extends DefaultWellConfig {
 
     @Override
     public int getDbVersion() {
-        return 16;
+        return 19;
     }
 
     @Override
@@ -139,6 +139,7 @@ public class WellSqlConfig extends DefaultWellConfig {
                         + "NAME TEXT,SLUG TEXT,VERSION TEXT,RATING TEXT,ICON TEXT)");
                 oldVersion++;
             case 14:
+                AppLog.d(T.DB, "Migrating to version " + (oldVersion + 1));
                 db.execSQL("CREATE TABLE MediaUploadModel (_id INTEGER PRIMARY KEY,UPLOAD_STATE INTEGER,"
                         + "PROGRESS REAL,ERROR_TYPE TEXT,ERROR_MESSAGE TEXT,FOREIGN KEY(_id) REFERENCES "
                         + "MediaModel(_id) ON DELETE CASCADE)");
@@ -147,11 +148,26 @@ public class WellSqlConfig extends DefaultWellConfig {
                         + "PostModel(_id) ON DELETE CASCADE)");
                 oldVersion++;
             case 15:
+                AppLog.d(T.DB, "Migrating to version " + (oldVersion + 1));
                 db.execSQL("CREATE TABLE ThemeModel (_id INTEGER PRIMARY KEY AUTOINCREMENT,LOCAL_SITE_ID INTEGER,"
                         + "THEME_ID TEXT,NAME TEXT,DESCRIPTION TEXT,SLUG TEXT,VERSION TEXT,AUTHOR_NAME TEXT,"
                         + "AUTHOR_URL TEXT,THEME_URL TEXT,SCREENSHOT_URL TEXT,DEMO_URL TEXT,DOWNLOAD_URL TEXT,"
                         + "STYLESHEET TEXT,CURRENCY TEXT,PRICE REAL,ACTIVE INTEGER,AUTO_UPDATE INTEGER,"
                         + "AUTO_UPDATE_TRANSLATION INTEGER,IS_WP_COM_THEME INTEGER)");
+                oldVersion++;
+            case 16:
+                AppLog.d(T.DB, "Migrating to version " + (oldVersion + 1));
+                db.execSQL("alter table ThemeModel add FREE integer;");
+                db.execSQL("alter table ThemeModel add PRICE_TEXT integer;");
+                oldVersion++;
+            case 17:
+                AppLog.d(T.DB, "Migrating to version " + (oldVersion + 1));
+                db.execSQL("alter table SiteModel add EMAIL text;");
+                db.execSQL("alter table SiteModel add DISPLAY_NAME text;");
+                oldVersion++;
+            case 18:
+                AppLog.d(T.DB, "Migrating to version " + (oldVersion + 1));
+                db.execSQL("alter table SiteModel add JETPACK_VERSION text;");
                 oldVersion++;
         }
         db.setTransactionSuccessful();

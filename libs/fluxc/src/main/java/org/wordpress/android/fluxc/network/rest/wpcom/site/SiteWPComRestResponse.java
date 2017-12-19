@@ -21,6 +21,7 @@ public class SiteWPComRestResponse implements Response {
         public String max_upload_size;
         public String wp_max_memory_limit;
         public String wp_memory_limit;
+        public String jetpack_version;
     }
 
     public class Plan {
