@@ -1097,10 +1097,25 @@ public class SiteSettingsFragment extends PreferenceFragment
         mJpWhitelistPref.setSummary(mSiteSettings.getJetpackProtectWhitelistSummary());
         mWeekStartPref.setValue(mSiteSettings.getStartOfWeek());
         mWeekStartPref.setSummary(mWeekStartPref.getEntry());
-        mDateFormatPref.setValue(mSiteSettings.getDateFormat());
-        mDateFormatPref.setSummary(mDateFormatPref.getEntry());
-        mTimeFormatPref.setValue(mSiteSettings.getTimeFormat());
-        mTimeFormatPref.setSummary(mTimeFormatPref.getEntry());
+
+        setDateOrTimeFormat(mDateFormatPref, mSiteSettings.getDateFormat());
+        setDateOrTimeFormat(mTimeFormatPref, mSiteSettings.getTimeFormat());
+    }
+
+    private void setDateOrTimeFormat(DetailListPreference formatPref, String formatString) {
+        // is this one of the pre-defined formats?
+        CharSequence[] values = formatPref.getEntryValues();
+        for (int i = 0; i < values.length; i++) {
+            if (formatString.equals(values[i])) {
+                formatPref.setValue(formatString);
+                formatPref.setSummary(formatPref.getEntry());
+                return;
+            }
+        }
+
+        // not a pre-defined value, so it must be a custom doermat (the last choice)
+        formatPref.setValueIndex(values.length - 1);
+        formatPref.setSummary(formatString);
     }
 
     private void setCategories() {

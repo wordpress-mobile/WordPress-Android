@@ -6,7 +6,7 @@
 
     <TextView
         android:id="@+id/text_title"
-        style="@style/Base.TextAppearance.AppCompat.Body1"
+        style="@style/Base.TextAppearance.AppCompat.Title"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@+id/image"
@@ -17,7 +17,8 @@
     <EditText
         android:id="@+id/edit"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
+        android:layout_height="wrap_content"
+        android:padding="@dimen/margin_extra_large" />
 
     <TextView
         android:id="@+id/text_help"
