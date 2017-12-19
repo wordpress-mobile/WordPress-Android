@@ -22,6 +22,8 @@ import org.wordpress.android.fluxc.store.SiteStore.SuggestDomainsResponsePayload
 public enum SiteAction implements IAction {
     // Remote actions
     @Action(payloadType = SiteModel.class)
+    FETCH_PROFILE_XML_RPC,
+    @Action(payloadType = SiteModel.class)
     FETCH_SITE,
     @Action
     FETCH_SITES,
@@ -47,6 +49,8 @@ public enum SiteAction implements IAction {
     FETCH_WPCOM_SITE_BY_URL,
 
     // Remote responses
+    @Action(payloadType = SiteModel.class)
+    FETCHED_PROFILE_XML_RPC,
     @Action(payloadType = SitesModel.class)
     FETCHED_SITES,
     @Action(payloadType = SitesModel.class)

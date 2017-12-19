@@ -6,6 +6,7 @@ import android.support.annotation.NonNull;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response.Listener;
 
+import org.apache.commons.text.StringEscapeUtils;
 import org.wordpress.android.fluxc.Dispatcher;
 import org.wordpress.android.fluxc.generated.PluginActionBuilder;
 import org.wordpress.android.fluxc.generated.endpoint.WPCOMREST;
@@ -19,11 +20,15 @@ import org.wordpress.android.fluxc.network.rest.wpcom.WPComGsonRequest;
 import org.wordpress.android.fluxc.network.rest.wpcom.WPComGsonRequest.WPComGsonNetworkError;
 import org.wordpress.android.fluxc.network.rest.wpcom.auth.AccessToken;
 import org.wordpress.android.fluxc.network.rest.wpcom.plugin.PluginWPComRestResponse.FetchPluginsResponse;
+import org.wordpress.android.fluxc.store.PluginStore.ConfiguredSitePluginPayload;
+import org.wordpress.android.fluxc.store.PluginStore.DeleteSitePluginError;
+import org.wordpress.android.fluxc.store.PluginStore.DeletedSitePluginPayload;
 import org.wordpress.android.fluxc.store.PluginStore.FetchSitePluginsError;
-import org.wordpress.android.fluxc.store.PluginStore.FetchSitePluginsErrorType;
 import org.wordpress.android.fluxc.store.PluginStore.FetchedSitePluginsPayload;
+import org.wordpress.android.fluxc.store.PluginStore.InstallSitePluginError;
+import org.wordpress.android.fluxc.store.PluginStore.InstalledSitePluginPayload;
+import org.wordpress.android.fluxc.store.PluginStore.ConfigureSitePluginError;
 import org.wordpress.android.fluxc.store.PluginStore.UpdateSitePluginError;
-import org.wordpress.android.fluxc.store.PluginStore.UpdateSitePluginErrorType;
 import org.wordpress.android.fluxc.store.PluginStore.UpdatedSitePluginPayload;
 
 import java.io.UnsupportedEncodingException;
@@ -64,16 +69,8 @@ public class PluginRestClient extends BaseWPComRestClient {
                 new BaseErrorListener() {
                     @Override
                     public void onErrorResponse(@NonNull BaseNetworkError networkError) {
-                        FetchSitePluginsError fetchPluginsError
-                                = new FetchSitePluginsError(FetchSitePluginsErrorType.GENERIC_ERROR);
-                        if (networkError instanceof WPComGsonNetworkError) {
-                            switch (((WPComGsonNetworkError) networkError).apiError) {
-                                case "unauthorized":
-                                    fetchPluginsError.type = FetchSitePluginsErrorType.UNAUTHORIZED;
-                                    break;
-                            }
-                        }
-                        fetchPluginsError.message = networkError.message;
+                        FetchSitePluginsError fetchPluginsError = new FetchSitePluginsError(((WPComGsonNetworkError)
+                                networkError).apiError, networkError.message);
                         FetchedSitePluginsPayload payload = new FetchedSitePluginsPayload(fetchPluginsError);
                         mDispatcher.dispatch(PluginActionBuilder.newFetchedSitePluginsAction(payload));
                     }
@@ -82,40 +79,109 @@ public class PluginRestClient extends BaseWPComRestClient {
         add(request);
     }
 
-    public void updateSitePlugin(@NonNull final SiteModel site, @NonNull final PluginModel plugin) {
-        String name;
-        try {
-            // We need to encode plugin name otherwise names like "akismet/akismet" would fail
-            name = URLEncoder.encode(plugin.getName(), "UTF-8");
-        } catch (UnsupportedEncodingException e) {
-            name = plugin.getName();
-        }
-        String url = WPCOMREST.sites.site(site.getSiteId()).plugins.name(name).getUrlV1_2();
+    public void configureSitePlugin(@NonNull final SiteModel site, @NonNull final PluginModel plugin) {
+        String url = WPCOMREST.sites.site(site.getSiteId()).plugins.name(getEncodedPluginName(plugin)).getUrlV1_2();
         Map<String, Object> params = paramsFromPluginModel(plugin);
         final WPComGsonRequest<PluginWPComRestResponse> request = WPComGsonRequest.buildPostRequest(url, params,
                 PluginWPComRestResponse.class,
                 new Listener<PluginWPComRestResponse>() {
                     @Override
                     public void onResponse(PluginWPComRestResponse response) {
-                        PluginModel pluginModel = pluginModelFromResponse(site, response);
+                        PluginModel pluginFromResponse = pluginModelFromResponse(site, response);
+                        pluginFromResponse.setId(plugin.getId());
+                        mDispatcher.dispatch(PluginActionBuilder.newConfiguredSitePluginAction(
+                                new ConfiguredSitePluginPayload(site, pluginFromResponse)));
+                    }
+                },
+                new BaseErrorListener() {
+                    @Override
+                    public void onErrorResponse(@NonNull BaseNetworkError networkError) {
+                        ConfigureSitePluginError configurePluginError = new ConfigureSitePluginError(((
+                                WPComGsonNetworkError) networkError).apiError, networkError.message);
+                        ConfiguredSitePluginPayload payload =
+                                new ConfiguredSitePluginPayload(site, configurePluginError);
+                        mDispatcher.dispatch(PluginActionBuilder.newConfiguredSitePluginAction(payload));
+                    }
+                }
+        );
+        add(request);
+    }
+
+    public void deleteSitePlugin(@NonNull final SiteModel site, @NonNull final PluginModel plugin) {
+        String url = WPCOMREST.sites.site(site.getSiteId()).
+                plugins.name(getEncodedPluginName(plugin)).delete.getUrlV1_2();
+        final WPComGsonRequest<PluginWPComRestResponse> request = WPComGsonRequest.buildPostRequest(url, null,
+                PluginWPComRestResponse.class,
+                new Listener<PluginWPComRestResponse>() {
+                    @Override
+                    public void onResponse(PluginWPComRestResponse response) {
+                        PluginModel pluginFromResponse = pluginModelFromResponse(site, response);
+                        pluginFromResponse.setId(plugin.getId());
+                        mDispatcher.dispatch(PluginActionBuilder.newDeletedSitePluginAction(
+                                new DeletedSitePluginPayload(site, pluginFromResponse)));
+                    }
+                },
+                new BaseErrorListener() {
+                    @Override
+                    public void onErrorResponse(@NonNull BaseNetworkError networkError) {
+                        DeleteSitePluginError deletePluginError = new DeleteSitePluginError(((WPComGsonNetworkError)
+                                networkError).apiError, networkError.message);
+                        DeletedSitePluginPayload payload =
+                                new DeletedSitePluginPayload(site, plugin, deletePluginError);
+                        mDispatcher.dispatch(PluginActionBuilder.newDeletedSitePluginAction(payload));
+                    }
+                }
+        );
+        add(request);
+    }
+
+    public void installSitePlugin(@NonNull final SiteModel site, String pluginName) {
+        String url = WPCOMREST.sites.site(site.getSiteId()).plugins.name(pluginName).install.getUrlV1_2();
+        final WPComGsonRequest<PluginWPComRestResponse> request = WPComGsonRequest.buildPostRequest(url, null,
+                PluginWPComRestResponse.class,
+                new Listener<PluginWPComRestResponse>() {
+                    @Override
+                    public void onResponse(PluginWPComRestResponse response) {
+                        PluginModel pluginFromResponse = pluginModelFromResponse(site, response);
+                        mDispatcher.dispatch(PluginActionBuilder.newInstalledSitePluginAction(
+                                new InstalledSitePluginPayload(site, pluginFromResponse)));
+                    }
+                },
+                new BaseErrorListener() {
+                    @Override
+                    public void onErrorResponse(@NonNull BaseNetworkError networkError) {
+                        InstallSitePluginError installPluginError = new InstallSitePluginError(((WPComGsonNetworkError)
+                                networkError).apiError, networkError.message);
+                        InstalledSitePluginPayload payload = new InstalledSitePluginPayload(site, installPluginError);
+                        mDispatcher.dispatch(PluginActionBuilder.newInstalledSitePluginAction(payload));
+                    }
+                }
+        );
+        add(request);
+    }
+
+    public void updateSitePlugin(@NonNull final SiteModel site, @NonNull final PluginModel plugin) {
+        String url = WPCOMREST.sites.site(site.getSiteId()).
+                plugins.name(getEncodedPluginName(plugin)).update.getUrlV1_2();
+        final WPComGsonRequest<PluginWPComRestResponse> request = WPComGsonRequest.buildPostRequest(url, null,
+                PluginWPComRestResponse.class,
+                new Listener<PluginWPComRestResponse>() {
+                    @Override
+                    public void onResponse(PluginWPComRestResponse response) {
+                        PluginModel pluginFromResponse = pluginModelFromResponse(site, response);
+                        pluginFromResponse.setId(plugin.getId());
                         mDispatcher.dispatch(PluginActionBuilder.newUpdatedSitePluginAction(
-                                new UpdatedSitePluginPayload(site, pluginModel)));
+                                new UpdatedSitePluginPayload(site, pluginFromResponse)));
                     }
                 },
                 new BaseErrorListener() {
                     @Override
                     public void onErrorResponse(@NonNull BaseNetworkError networkError) {
                         UpdateSitePluginError updatePluginError
-                                = new UpdateSitePluginError(UpdateSitePluginErrorType.GENERIC_ERROR);
-                        if (networkError instanceof WPComGsonNetworkError) {
-                            switch (((WPComGsonNetworkError) networkError).apiError) {
-                                case "unauthorized":
-                                    updatePluginError.type = UpdateSitePluginErrorType.UNAUTHORIZED;
-                                    break;
-                            }
-                        }
-                        updatePluginError.message = networkError.message;
-                        UpdatedSitePluginPayload payload = new UpdatedSitePluginPayload(site, updatePluginError);
+                                = new UpdateSitePluginError(((WPComGsonNetworkError) networkError).apiError,
+                                networkError.message);
+                        UpdatedSitePluginPayload payload = new UpdatedSitePluginPayload(site,
+                                updatePluginError);
                         mDispatcher.dispatch(PluginActionBuilder.newUpdatedSitePluginAction(payload));
                     }
                 }
@@ -127,10 +193,10 @@ public class PluginRestClient extends BaseWPComRestClient {
         PluginModel pluginModel = new PluginModel();
         pluginModel.setLocalSiteId(siteModel.getId());
         pluginModel.setName(response.name);
-        pluginModel.setDisplayName(response.display_name);
-        pluginModel.setAuthorName(response.author);
+        pluginModel.setDisplayName(StringEscapeUtils.unescapeHtml4(response.display_name));
+        pluginModel.setAuthorName(StringEscapeUtils.unescapeHtml4(response.author));
         pluginModel.setAuthorUrl(response.author_url);
-        pluginModel.setDescription(response.description);
+        pluginModel.setDescription(StringEscapeUtils.unescapeHtml4(response.description));
         pluginModel.setIsActive(response.active);
         pluginModel.setIsAutoUpdateEnabled(response.autoupdate);
         pluginModel.setPluginUrl(response.plugin_url);
@@ -144,5 +210,14 @@ public class PluginRestClient extends BaseWPComRestClient {
         params.put("active", pluginModel.isActive());
         params.put("autoupdate", pluginModel.isAutoUpdateEnabled());
         return params;
+    }
+
+    private String getEncodedPluginName(PluginModel plugin) {
+        try {
+            // We need to encode plugin name otherwise names like "akismet/akismet" would fail
+            return URLEncoder.encode(plugin.getName(), "UTF-8");
+        } catch (UnsupportedEncodingException e) {
+            return plugin.getName();
+        }
     }
 }

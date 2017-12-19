@@ -2,9 +2,10 @@ package org.wordpress.android.fluxc.network.rest.wpcom.theme;
 
 import java.util.List;
 
-public class ThemeJetpackResponse {
-    public class MultipleJetpackThemesResponse {
-        public List<ThemeJetpackResponse> themes;
+@SuppressWarnings("WeakerAccess")
+public class JetpackThemeResponse {
+    public class JetpackThemeListResponse {
+        public List<JetpackThemeResponse> themes;
         public int count;
     }
 

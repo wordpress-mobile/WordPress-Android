@@ -2,6 +2,7 @@ package org.wordpress.android.fluxc.store;
 
 import android.database.Cursor;
 import android.support.annotation.NonNull;
+import android.text.TextUtils;
 
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
@@ -157,6 +158,14 @@ public class ThemeStore extends Store {
         }
     }
 
+    public static class OnThemeRemoved extends OnChanged<ThemesError> {
+        public ThemeModel theme;
+
+        public OnThemeRemoved(ThemeModel theme) {
+            this.theme = theme;
+        }
+    }
+
     public static class OnThemeDeleted extends OnChanged<ThemesError> {
         public SiteModel site;
         public ThemeModel theme;
@@ -240,6 +249,12 @@ public class ThemeStore extends Store {
             case DELETED_THEME:
                 handleThemeDeleted((ActivateThemePayload) action.getPayload());
                 break;
+            case REMOVE_THEME:
+                removeTheme((ThemeModel) action.getPayload());
+                break;
+            case REMOVE_SITE_THEMES:
+                removeSiteThemes((SiteModel) action.getPayload());
+                break;
         }
     }
 
@@ -264,18 +279,18 @@ public class ThemeStore extends Store {
         return ThemeSqlUtils.getThemesForSite(site);
     }
 
-    public ThemeModel getInstalledThemeByThemeId(String themeId) {
+    public ThemeModel getInstalledThemeByThemeId(SiteModel siteModel, String themeId) {
         if (themeId == null || themeId.isEmpty()) {
             return null;
         }
-        return ThemeSqlUtils.getThemeByThemeId(themeId, false);
+        return ThemeSqlUtils.getSiteThemeByThemeId(siteModel, themeId);
     }
 
     public ThemeModel getWpComThemeByThemeId(String themeId) {
-        if (themeId == null || themeId.isEmpty()) {
+        if (TextUtils.isEmpty(themeId)) {
             return null;
         }
-        return ThemeSqlUtils.getThemeByThemeId(themeId, true);
+        return ThemeSqlUtils.getWpComThemeByThemeId(themeId);
     }
 
     public ThemeModel getActiveThemeForSite(@NonNull SiteModel site) {
@@ -338,7 +353,7 @@ public class ThemeStore extends Store {
         if (payload.isError()) {
             event.error = payload.error;
         } else {
-            ThemeSqlUtils.insertOrUpdateThemeForSite(payload.theme);
+            ThemeSqlUtils.insertOrReplaceActiveThemeForSite(payload.site, payload.theme);
         }
         emitChange(event);
     }
@@ -353,7 +368,7 @@ public class ThemeStore extends Store {
             event.error = payload.error;
         } else {
             for (ThemeModel theme : payload.themes) {
-                ThemeSqlUtils.insertOrUpdateThemeForSite(theme);
+                ThemeSqlUtils.insertOrUpdateWpComTheme(theme);
             }
         }
         emitChange(event);
@@ -373,7 +388,7 @@ public class ThemeStore extends Store {
         if (payload.isError()) {
             event.error = payload.error;
         } else {
-            ThemeSqlUtils.insertOrUpdateThemeForSite(payload.theme);
+            ThemeSqlUtils.insertOrUpdateSiteTheme(payload.site, payload.theme);
         }
         emitChange(event);
     }
@@ -389,7 +404,20 @@ public class ThemeStore extends Store {
 
     private void handleThemeActivated(@NonNull ActivateThemePayload payload) {
         OnThemeActivated event = new OnThemeActivated(payload.site, payload.theme);
-        event.error = payload.error;
+        if (payload.isError()) {
+            event.error = payload.error;
+        } else {
+            ThemeModel activatedTheme;
+            // payload theme doesn't have all the data so we grab a copy of the database theme and update active flag
+            if (payload.site.isJetpackConnected()) {
+                activatedTheme = getInstalledThemeByThemeId(payload.site, payload.theme.getThemeId());
+            } else {
+                activatedTheme = getWpComThemeByThemeId(payload.theme.getThemeId());
+            }
+            if (activatedTheme != null) {
+                setActiveThemeForSite(payload.site, activatedTheme);
+            }
+        }
         emitChange(event);
     }
 
@@ -410,5 +438,22 @@ public class ThemeStore extends Store {
             ThemeSqlUtils.removeTheme(payload.theme);
         }
         emitChange(event);
+    }
+
+    private void removeTheme(ThemeModel theme) {
+        if (theme != null) {
+            ThemeSqlUtils.removeTheme(theme);
+        }
+        emitChange(new OnThemeRemoved(theme));
+    }
+
+    private void removeSiteThemes(SiteModel site) {
+        final List<ThemeModel> themes = getThemesForSite(site);
+        if (!themes.isEmpty()) {
+            for (ThemeModel theme : themes) {
+                ThemeSqlUtils.removeTheme(theme);
+            }
+        }
+        emitChange(new OnThemesChanged(site));
     }
 }

@@ -4,6 +4,7 @@ import org.wordpress.android.fluxc.annotations.Action;
 import org.wordpress.android.fluxc.annotations.ActionEnum;
 import org.wordpress.android.fluxc.annotations.action.IAction;
 import org.wordpress.android.fluxc.model.SiteModel;
+import org.wordpress.android.fluxc.model.ThemeModel;
 import org.wordpress.android.fluxc.store.ThemeStore.SearchThemesPayload;
 import org.wordpress.android.fluxc.store.ThemeStore.SearchedThemesPayload;
 import org.wordpress.android.fluxc.store.ThemeStore.FetchedCurrentThemePayload;
@@ -46,5 +47,11 @@ public enum ThemeAction implements IAction {
     @Action(payloadType = ActivateThemePayload.class)
     INSTALLED_THEME,
     @Action(payloadType = ActivateThemePayload.class)
-    DELETED_THEME
+    DELETED_THEME,
+
+    // Local actions
+    @Action(payloadType = ThemeModel.class)
+    REMOVE_THEME,
+    @Action(payloadType = SiteModel.class)
+    REMOVE_SITE_THEMES
 }

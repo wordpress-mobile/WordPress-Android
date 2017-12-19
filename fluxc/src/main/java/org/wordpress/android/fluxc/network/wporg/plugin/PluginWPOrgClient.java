@@ -44,6 +44,13 @@ public class PluginWPOrgClient extends BaseWPOrgAPIClient {
                         new Listener<FetchPluginInfoResponse>() {
                             @Override
                             public void onResponse(FetchPluginInfoResponse response) {
+                                if (response == null) {
+                                    FetchPluginInfoError error = new FetchPluginInfoError(
+                                            FetchPluginInfoErrorType.EMPTY_RESPONSE);
+                                    mDispatcher.dispatch(PluginActionBuilder.newFetchedPluginInfoAction(
+                                            new FetchedPluginInfoPayload(error)));
+                                    return;
+                                }
                                 PluginInfoModel pluginInfoModel = pluginInfoModelFromResponse(response);
                                 FetchedPluginInfoPayload payload = new FetchedPluginInfoPayload(pluginInfoModel);
                                 mDispatcher.dispatch(PluginActionBuilder.newFetchedPluginInfoAction(payload));

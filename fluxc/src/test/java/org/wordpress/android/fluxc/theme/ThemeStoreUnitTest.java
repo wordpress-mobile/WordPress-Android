@@ -71,25 +71,28 @@ public class ThemeStoreUnitTest {
     }
 
     @Test
-    public void testInsertOrUpdateTheme() {
+    public void testInsertOrUpdateTheme() throws SiteSqlUtils.DuplicateSiteException {
+        final SiteModel site = SiteUtils.generateJetpackSiteOverRestOnly();
+        SiteSqlUtils.insertOrUpdateSite(site);
+
         final String testThemeId = "fluxc-ftw";
         final String testThemeName = "FluxC FTW";
         final String testUpdatedName = testThemeName + " v2";
-        final ThemeModel insertTheme = generateTestTheme(12345, testThemeId, testThemeName);
+        final ThemeModel insertTheme = generateTestTheme(site.getId(), testThemeId, testThemeName);
 
         // verify theme doesn't already exist
-        assertNull(mThemeStore.getInstalledThemeByThemeId(testThemeId));
+        assertNull(mThemeStore.getInstalledThemeByThemeId(site, testThemeId));
 
         // insert new theme and verify it exists
-        ThemeSqlUtils.insertOrUpdateThemeForSite(insertTheme);
-        ThemeModel insertedTheme = mThemeStore.getInstalledThemeByThemeId(testThemeId);
+        ThemeSqlUtils.insertOrUpdateSiteTheme(site, insertTheme);
+        ThemeModel insertedTheme = mThemeStore.getInstalledThemeByThemeId(site, testThemeId);
         assertNotNull(insertedTheme);
         assertEquals(testThemeName, insertedTheme.getName());
 
         // update the theme and verify the updated attributes
         insertedTheme.setName(testUpdatedName);
-        ThemeSqlUtils.insertOrUpdateThemeForSite(insertedTheme);
-        insertedTheme = mThemeStore.getInstalledThemeByThemeId(testThemeId);
+        ThemeSqlUtils.insertOrUpdateSiteTheme(site, insertedTheme);
+        insertedTheme = mThemeStore.getInstalledThemeByThemeId(site, testThemeId);
         assertNotNull(insertedTheme);
         assertEquals(testUpdatedName, insertedTheme.getName());
     }
@@ -165,7 +168,7 @@ public class ThemeStoreUnitTest {
     }
 
     @Test
-    public void testRemoveSiteThemes() throws SiteSqlUtils.DuplicateSiteException {
+    public void testRemoveInstalledSiteThemes() throws SiteSqlUtils.DuplicateSiteException {
         final SiteModel site = SiteUtils.generateJetpackSiteOverRestOnly();
         SiteSqlUtils.insertOrUpdateSite(site);
 

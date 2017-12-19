@@ -27,12 +27,14 @@ import org.wordpress.android.fluxc.network.rest.wpcom.WPComGsonRequest.WPComGson
 import org.wordpress.android.fluxc.network.rest.wpcom.auth.AccessToken;
 import org.wordpress.android.fluxc.network.rest.wpcom.auth.AppSecrets;
 import org.wordpress.android.fluxc.store.AccountStore.AccountSocialError;
+import org.wordpress.android.fluxc.store.AccountStore.AccountSocialErrorType;
 import org.wordpress.android.fluxc.store.AccountStore.IsAvailableError;
 import org.wordpress.android.fluxc.store.AccountStore.NewUserError;
 import org.wordpress.android.fluxc.store.AccountStore.NewUserErrorType;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 
+import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -45,6 +47,7 @@ import javax.inject.Singleton;
 public class AccountRestClient extends BaseWPComRestClient {
     private static final String SOCIAL_AUTH_ENDPOINT_VERSION = "1";
     private static final String SOCIAL_LOGIN_ENDPOINT_VERSION = "1";
+    private static final String SOCIAL_SMS_ENDPOINT_VERSION = "1";
 
     private final AppSecrets mAppSecrets;
 
@@ -66,25 +69,30 @@ public class AccountRestClient extends BaseWPComRestClient {
     public static class AccountPushSocialResponsePayload extends Payload<AccountSocialError> {
         public AccountPushSocialResponsePayload(AccountSocialResponse response) {
             this.bearerToken = response.bearer_token;
+            this.createdAccount = response.created_account;
+            this.phoneNumber = response.phone_number;
+            this.twoStepNonce = response.two_step_nonce;
             this.twoStepNonceAuthenticator = response.two_step_nonce_authenticator;
             this.twoStepNonceBackup = response.two_step_nonce_backup;
             this.twoStepNonceSms = response.two_step_nonce_sms;
             this.twoStepNotificationSent = response.two_step_notification_sent;
             this.twoStepTypes = convertJsonArrayToStringList(response.two_step_supported_auth_types);
             this.userId = response.user_id;
-        }
-        public AccountPushSocialResponsePayload(BaseNetworkError error) {
-            this.error = new AccountSocialError(error.volleyError.networkResponse.data);
+            this.userName = response.username;
         }
         public AccountPushSocialResponsePayload() {
         }
         public List<String> twoStepTypes;
         public String bearerToken;
+        public String phoneNumber;
+        public String twoStepNonce;
         public String twoStepNonceAuthenticator;
         public String twoStepNonceBackup;
         public String twoStepNonceSms;
         public String twoStepNotificationSent;
         public String userId;
+        public String userName;
+        public boolean createdAccount;
 
         private List<String> convertJsonArrayToStringList(JSONArray array) {
             List<String> list = new ArrayList<>();
@@ -102,12 +110,20 @@ public class AccountRestClient extends BaseWPComRestClient {
             return list;
         }
 
+        public boolean hasPhoneNumber() {
+            return !TextUtils.isEmpty(this.phoneNumber);
+        }
+
         public boolean hasToken() {
             return !TextUtils.isEmpty(this.bearerToken);
         }
 
         public boolean hasTwoStepTypes() {
             return this.twoStepTypes != null && this.twoStepTypes.size() > 0;
+        }
+
+        public boolean hasUsername() {
+            return !TextUtils.isEmpty(this.userName);
         }
     }
 
@@ -282,7 +298,8 @@ public class AccountRestClient extends BaseWPComRestClient {
                 new BaseErrorListener() {
                     @Override
                     public void onErrorResponse(@NonNull BaseNetworkError error) {
-                        AccountPushSocialResponsePayload payload = new AccountPushSocialResponsePayload(error);
+                        AccountPushSocialResponsePayload payload =
+                                volleyErrorToAccountSocialResponsePayload(error.volleyError);
                         mDispatcher.dispatch(AccountActionBuilder.newPushedSocialAction(payload));
                     }
                 }
@@ -368,11 +385,98 @@ public class AccountRestClient extends BaseWPComRestClient {
                 new BaseErrorListener() {
                     @Override
                     public void onErrorResponse(@NonNull BaseNetworkError error) {
-                        AccountPushSocialResponsePayload payload = new AccountPushSocialResponsePayload(error);
+                        AccountPushSocialResponsePayload payload =
+                                volleyErrorToAccountSocialResponsePayload(error.volleyError);
                         mDispatcher.dispatch(AccountActionBuilder.newPushedSocialAction(payload));
                     }
                 }
         ));
+    }
+
+    /**
+     * Performs an HTTP POST call to the v1.1 /users/social/new endpoint.  Upon receiving a response
+     * (success or error) a {@link AccountAction#PUSHED_SOCIAL} action is dispatched with a payload
+     * of type {@link AccountPushSocialResponsePayload}.
+     *
+     * {@link AccountPushSocialResponsePayload#isError()} can be used to check the request result.
+     *
+     * No HTTP POST call is made if the given parameter map is null or contains no entries.
+     *
+     * @param idToken       OpenID Connect Token (JWT) from the service the user is using to
+     *                      authenticate their account.
+     * @param service       Slug representing the service for the given token (e.g. google).
+     */
+    public void pushSocialSignup(@NonNull String idToken, @NonNull String service) {
+        String url = WPCOMREST.users.social.new_.getUrlV1_1();
+
+        Map<String, Object> params = new HashMap<>();
+        params.put("id_token", idToken);
+        params.put("service", service);
+        params.put("signup_flow_name", "social");
+        params.put("client_id", mAppSecrets.getAppId());
+        params.put("client_secret", mAppSecrets.getAppSecret());
+
+        add(WPComGsonRequest.buildPostRequest(url, params, AccountSocialResponse.class,
+                new Listener<AccountSocialResponse>() {
+                    @Override
+                    public void onResponse(AccountSocialResponse response) {
+                        AccountPushSocialResponsePayload payload = new AccountPushSocialResponsePayload(response);
+                        mDispatcher.dispatch(AccountActionBuilder.newPushedSocialAction(payload));
+                    }
+                },
+                new BaseErrorListener() {
+                    @Override
+                    public void onErrorResponse(@NonNull BaseNetworkError error) {
+                        AccountPushSocialResponsePayload payload = new AccountPushSocialResponsePayload();
+                        payload.error = new AccountSocialError(((WPComGsonNetworkError) error).apiError, error.message);
+                        mDispatcher.dispatch(AccountActionBuilder.newPushedSocialAction(payload));
+                    }
+                }
+        ));
+    }
+
+    /**
+     * Performs an HTTP POST call to https://wordpress.com/wp-login.php with send-sms-code-endpoint action.  Upon
+     * receiving a response (success or error) a {@link AccountAction#PUSHED_SOCIAL} action is dispatched with a
+     * payload of type {@link AccountPushSocialResponsePayload}.
+     *
+     * {@link AccountPushSocialResponsePayload#isError()} can be used to check the request result.
+     *
+     * No HTTP POST call is made if the given parameter map is null or contains no entries.
+     *
+     * @param userId    WordPress.com user identification number
+     * @param nonce     One-time-use token returned in {@link #pushSocialLogin(String, String)}} response
+     */
+    public void pushSocialSms(@NonNull String userId, @NonNull String nonce) {
+        String url = "https://wordpress.com/wp-login.php";
+
+        Map<String, String> params = new HashMap<>();
+        params.put("action", "send-sms-code-endpoint");
+        params.put("version", SOCIAL_SMS_ENDPOINT_VERSION);
+        params.put("user_id", userId);
+        params.put("two_step_nonce", nonce);
+        params.put("client_id", mAppSecrets.getAppId());
+        params.put("client_secret", mAppSecrets.getAppSecret());
+
+        AccountSocialRequest request = new AccountSocialRequest(url, params,
+                new Listener<AccountSocialResponse>() {
+                    @Override
+                    public void onResponse(AccountSocialResponse response) {
+                        AccountPushSocialResponsePayload payload = new AccountPushSocialResponsePayload(response);
+                        mDispatcher.dispatch(AccountActionBuilder.newPushedSocialAction(payload));
+                    }
+                },
+                new BaseErrorListener() {
+                    @Override
+                    public void onErrorResponse(@NonNull BaseNetworkError error) {
+                        AccountPushSocialResponsePayload payload =
+                                volleyErrorToAccountSocialResponsePayload(error.volleyError);
+                        mDispatcher.dispatch(AccountActionBuilder.newPushedSocialAction(payload));
+                    }
+                }
+        );
+        request.disableRetries();
+        addUnauthedRequest(request);
     }
 
     public void newAccount(@NonNull String username, @NonNull String password, @NonNull String email,
@@ -494,6 +598,29 @@ public class AccountRestClient extends BaseWPComRestClient {
                 // Do nothing (keep default error)
             }
         }
+        return payload;
+    }
+
+    private AccountPushSocialResponsePayload volleyErrorToAccountSocialResponsePayload(VolleyError error) {
+        AccountPushSocialResponsePayload payload = new AccountPushSocialResponsePayload();
+        payload.error = new AccountSocialError(AccountSocialErrorType.GENERIC_ERROR, "");
+
+        if (error.networkResponse != null && error.networkResponse.data != null) {
+            AppLog.e(T.API, new String(error.networkResponse.data));
+
+            try {
+                String responseBody = new String(error.networkResponse.data, "UTF-8");
+                JSONObject object = new JSONObject(responseBody);
+                JSONObject data = object.getJSONObject("data");
+                payload.error.nonce = data.optString("two_step_nonce");
+                JSONArray errors = data.getJSONArray("errors");
+                payload.error.type = AccountSocialErrorType.fromString(errors.getJSONObject(0).getString("code"));
+                payload.error.message = errors.getJSONObject(0).getString("message");
+            } catch (UnsupportedEncodingException | JSONException exception) {
+                AppLog.e(T.API, "Unable to parse social error response: " + exception.getMessage());
+            }
+        }
+
         return payload;
     }
 
