@@ -1,6 +1,5 @@
 package org.wordpress.android.ui.main;
 
-import android.annotation.TargetApi;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Fragment;
@@ -8,17 +7,15 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.graphics.Outline;
 import android.net.Uri;
 import android.os.AsyncTask;
-import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.view.ViewGroup;
-import android.view.ViewOutlineProvider;
 import android.widget.TextView;
 
 import com.android.volley.Cache;
@@ -129,15 +126,17 @@ public class MeFragment extends Fragment {
         mNotificationsView = rootView.findViewById(R.id.row_notifications);
         mNotificationsDividerView = rootView.findViewById(R.id.me_notifications_divider);
 
-        addDropShadowToAvatar();
-
-        mAvatarContainer.setOnClickListener(new View.OnClickListener() {
+        OnClickListener showPickerListener = new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 AnalyticsTracker.track(AnalyticsTracker.Stat.ME_GRAVATAR_TAPPED);
                 showPhotoPickerForGravatar();
             }
-        });
+        };
+
+        mAvatarContainer.setOnClickListener(showPickerListener);
+        rootView.findViewById(R.id.change_photo).setOnClickListener(showPickerListener);
+
         mMyProfileView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -234,22 +233,6 @@ public class MeFragment extends Fragment {
             mDisconnectProgressDialog = null;
         }
         super.onDestroy();
-    }
-
-    /**
-     * adds a circular drop shadow to the avatar's parent view (Lollipop+ only)
-     */
-    @TargetApi(Build.VERSION_CODES.LOLLIPOP)
-    private void addDropShadowToAvatar() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            mAvatarContainer.setOutlineProvider(new ViewOutlineProvider() {
-                @Override
-                public void getOutline(View view, Outline outline) {
-                    int padding = mAvatarContainer.getWidth() + 10;
-                    outline.setOval(0, 0, padding, padding);
-                }
-            });
-        }
     }
 
     private void refreshAccountDetails() {
