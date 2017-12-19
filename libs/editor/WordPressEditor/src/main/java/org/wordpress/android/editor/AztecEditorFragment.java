@@ -894,8 +894,6 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
 
     @Override
     public void setUrlForVideoPressId(final String videoId, final String videoUrl, final String posterUrl) {
-        //This is a test
-        AppLog.d(T.EDITOR, "This is a test");
         content.updateVideoPressThumb(posterUrl, videoUrl, videoId);
     }
 
