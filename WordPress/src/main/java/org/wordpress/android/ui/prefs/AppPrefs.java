@@ -27,7 +27,10 @@ import java.util.List;
 public class AppPrefs {
     private static final int THEME_IMAGE_SIZE_WIDTH_DEFAULT = 400;
     private static final int MAX_PENDING_DRAFTS_AMOUNT = 100;
-    public static final int MAX_RECENTLY_PICKED_SITES = 5;
+
+    // store twice as many recent sites as we show
+    private static final int MAX_RECENTLY_PICKED_SITES_TO_SHOW = 5;
+    private static final int MAX_RECENTLY_PICKED_SITES_TO_SAVE = MAX_RECENTLY_PICKED_SITES_TO_SHOW * 2;
 
     public interface PrefKey {
         String name();
@@ -59,15 +62,6 @@ public class AppPrefs {
 
         // last data stored for the Stats Widgets
         STATS_WIDGET_DATA,
-
-        // aztec editor enabled
-        AZTEC_EDITOR_ENABLED,
-
-        // aztec editor toolbar expanded state
-        AZTEC_EDITOR_TOOLBAR_EXPANDED,
-
-        // visual editor enabled
-        VISUAL_EDITOR_ENABLED,
 
         // Store the number of times Stats are loaded without errors. It's used to show the Widget promo dialog.
         STATS_WIDGET_PROMO_ANALYTICS,
@@ -116,6 +110,15 @@ public class AppPrefs {
         // visual editor available
         VISUAL_EDITOR_AVAILABLE,
 
+        // visual editor enabled
+        VISUAL_EDITOR_ENABLED,
+
+        // aztec editor enabled
+        AZTEC_EDITOR_ENABLED,
+
+        // aztec editor toolbar expanded state
+        AZTEC_EDITOR_TOOLBAR_EXPANDED,
+
         // When we need to show the new editor beta snackbar
         AZTEC_EDITOR_BETA_REQUIRED,
 
@@ -158,7 +161,10 @@ public class AppPrefs {
         ASKED_PERMISSION_LOCATION_FINE,
 
         // wizard style login flow active
-        LOGIN_WIZARD_STYLE_ACTIVE
+        LOGIN_WIZARD_STYLE_ACTIVE,
+
+        // Updated after WP.com themes have been fetched
+        LAST_WP_COM_THEMES_SYNC
     }
 
     private static SharedPreferences prefs() {
@@ -424,25 +430,25 @@ public class AppPrefs {
 
     // Aztec Editor
     public static void setAztecEditorEnabled(boolean isEnabled) {
-        setBoolean(DeletablePrefKey.AZTEC_EDITOR_ENABLED, isEnabled);
+        setBoolean(UndeletablePrefKey.AZTEC_EDITOR_ENABLED, isEnabled);
         AnalyticsTracker.track(isEnabled ? Stat.EDITOR_AZTEC_TOGGLED_ON : Stat.EDITOR_AZTEC_TOGGLED_OFF);
     }
 
     public static boolean isAztecEditorEnabled() {
-        return getBoolean(DeletablePrefKey.AZTEC_EDITOR_ENABLED, false);
+        return getBoolean(UndeletablePrefKey.AZTEC_EDITOR_ENABLED, false);
     }
 
     public static boolean isAztecEditorToolbarExpanded() {
-        return getBoolean(DeletablePrefKey.AZTEC_EDITOR_TOOLBAR_EXPANDED, false);
+        return getBoolean(UndeletablePrefKey.AZTEC_EDITOR_TOOLBAR_EXPANDED, false);
     }
 
     public static void setAztecEditorToolbarExpanded(boolean isExpanded) {
-        setBoolean(DeletablePrefKey.AZTEC_EDITOR_TOOLBAR_EXPANDED, isExpanded);
+        setBoolean(UndeletablePrefKey.AZTEC_EDITOR_TOOLBAR_EXPANDED, isExpanded);
     }
 
     // Visual Editor
     public static void setVisualEditorEnabled(boolean visualEditorEnabled) {
-        setBoolean(DeletablePrefKey.VISUAL_EDITOR_ENABLED, visualEditorEnabled);
+        setBoolean(UndeletablePrefKey.VISUAL_EDITOR_ENABLED, visualEditorEnabled);
         AnalyticsTracker.track(visualEditorEnabled ? Stat.EDITOR_HYBRID_TOGGLED_ON : Stat.EDITOR_HYBRID_TOGGLED_OFF);
     }
 
@@ -458,7 +464,7 @@ public class AppPrefs {
     }
 
     public static boolean isVisualEditorEnabled() {
-        return isVisualEditorAvailable() && getBoolean(DeletablePrefKey.VISUAL_EDITOR_ENABLED, !isAztecEditorEnabled());
+        return isVisualEditorAvailable() && getBoolean(UndeletablePrefKey.VISUAL_EDITOR_ENABLED, !isAztecEditorEnabled());
     }
 
     public static boolean isNewEditorBetaRequired() {
@@ -645,12 +651,18 @@ public class AppPrefs {
      * returns a list of local IDs of sites recently chosen in the site picker
      */
     public static ArrayList<Integer> getRecentlyPickedSiteIds() {
+        return getRecentlyPickedSiteIds(MAX_RECENTLY_PICKED_SITES_TO_SHOW);
+    }
+    private static ArrayList<Integer> getRecentlyPickedSiteIds(int limit) {
         String idsAsString = getString(DeletablePrefKey.RECENTLY_PICKED_SITE_IDS, "");
         List<String> items = Arrays.asList(idsAsString.split(","));
 
         ArrayList<Integer> siteIds = new ArrayList<>();
         for (String item : items) {
             siteIds.add(StringUtils.stringToInt(item));
+            if (siteIds.size() == limit) {
+                break;
+            }
         }
 
         return siteIds;
@@ -662,7 +674,7 @@ public class AppPrefs {
     public static void addRecentlyPickedSiteId(Integer localId) {
         if (localId == 0) return;
 
-        ArrayList<Integer> currentIds = getRecentlyPickedSiteIds();
+        ArrayList<Integer> currentIds = getRecentlyPickedSiteIds(MAX_RECENTLY_PICKED_SITES_TO_SAVE);
 
         // remove this ID if it already exists in the list
         int index = currentIds.indexOf(localId);
@@ -674,12 +686,31 @@ public class AppPrefs {
         currentIds.add(0, localId);
 
         // remove at max
-        if (currentIds.size() > MAX_RECENTLY_PICKED_SITES) {
-            currentIds.remove(MAX_RECENTLY_PICKED_SITES);
+        if (currentIds.size() > MAX_RECENTLY_PICKED_SITES_TO_SAVE) {
+            currentIds.remove(MAX_RECENTLY_PICKED_SITES_TO_SAVE);
         }
 
         // store in prefs
         String idsAsString = TextUtils.join(",", currentIds);
         setString(DeletablePrefKey.RECENTLY_PICKED_SITE_IDS, idsAsString);
+    }
+
+    public static void removeRecentlyPickedSiteId(Integer localId) {
+        ArrayList<Integer> currentIds = getRecentlyPickedSiteIds(MAX_RECENTLY_PICKED_SITES_TO_SAVE);
+
+        int index = currentIds.indexOf(localId);
+        if (index > -1) {
+            currentIds.remove(index);
+            String idsAsString = TextUtils.join(",", currentIds);
+            setString(DeletablePrefKey.RECENTLY_PICKED_SITE_IDS, idsAsString);
+        }
+    }
+
+    public static long getLastWpComThemeSync() {
+        return getLong(UndeletablePrefKey.LAST_WP_COM_THEMES_SYNC);
+    }
+
+    public static void setLastWpComThemeSync(long time) {
+        setLong(UndeletablePrefKey.LAST_WP_COM_THEMES_SYNC, time);
     }
 }

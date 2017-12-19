@@ -105,9 +105,9 @@ Language: es_CL
 	<string name="stats_insights_today">Estadísticas de hoy</string>
 	<string name="stats_insights_all_time">Entradas, vistas y visitantes de todos los tiempos</string>
 	<string name="stats_insights">Detalles</string>
-	<string name="stats_other_recent_stats_moved_label">¿Buscas tus otras estadísticas recientes? Las hemos trasladado a la página "Detalles".</string>
+	<string name="stats_other_recent_stats_moved_label">¿Buscas tus otras estadísticas recientes? Las hemos trasladado a la página \"Detalles\".</string>
 	<string name="me_btn_login_logout">Iniciar/Cerrar sesión</string>
-	<string name="site_picker_cant_hide_current_site">"%s" no se ocultó porque es el sitio actual</string>
+	<string name="site_picker_cant_hide_current_site">\"%s\" no se ocultó porque es el sitio actual</string>
 	<string name="me_btn_support">Ayuda y Soporte</string>
 	<string name="account_settings">Preferencias de la Cuenta</string>
 	<string name="site_picker_create_dotcom">Crear sitio en WordPress.com</string>
@@ -231,7 +231,6 @@ Language: es_CL
 	<string name="delete_sure_post">Eliminar esta entrada</string>
 	<string name="delete_sure">Eliminar este borrador</string>
 	<string name="delete_sure_page">Eliminar esta página</string>
-	<string name="confirm_delete_multi_media">¿Quieres eliminar los elementos seleccionados?</string>
 	<string name="cab_selected">%d seleccionados</string>
 	<string name="reader_empty_followed_blogs_title">Todavía no sigues a ningún sitio.</string>
 	<string name="reader_empty_posts_liked">No te ha gustado ninguna entrada.</string>
@@ -382,7 +381,6 @@ Language: es_CL
 	<string name="local_draft">Borrador local</string>
 	<string name="upload_failed">Falló la subida</string>
 	<string name="horizontal_alignment">Alineación horizontal</string>
-	<string name="file_not_found">No ha sido posible encontrar el archivo multimedia para cargar. ¿Se ha borrado o cambiado de ubicación?</string>
 	<string name="post_settings">Ajustes de entrada</string>
 	<string name="delete_post">Borrar entrada</string>
 	<string name="delete_page">Borrar página</string>
@@ -479,7 +477,6 @@ Language: es_CL
 	<string name="nux_add_selfhosted_blog">Añade un sitio auto hospedado</string>
 	<string name="media_add_popup_title">Añadir a biblioteca multimedia</string>
 	<string name="empty_list_default">Esta lista esta vacía</string>
-	<string name="select_from_media_library">Seleccionar de la biblioteca multimedia</string>
 	<string name="jetpack_not_found">No se ha encontrado el plugin Jetpack</string>
 	<string name="reader_untitled_post">Sin título</string>
 	<string name="reader_btn_share">Compartir</string>

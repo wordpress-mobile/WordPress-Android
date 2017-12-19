@@ -2,6 +2,9 @@ package org.wordpress.android.widgets;
 
 import android.content.Context;
 import android.content.res.TypedArray;
+import android.support.annotation.ColorRes;
+import android.support.annotation.DrawableRes;
+import android.support.annotation.StringRes;
 import android.util.AttributeSet;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -83,9 +86,10 @@ public class PostListButton extends LinearLayout {
         mButtonType = buttonType;
         mTextView.setText(getButtonTextResId(buttonType));
         mImageView.setImageResource(getButtonIconResId(buttonType));
+        mTextView.setTextColor(getContext().getResources().getColor(getTextColorResId(buttonType)));
     }
 
-    public static int getButtonTextResId(int buttonType) {
+    public static @StringRes int getButtonTextResId(int buttonType) {
         switch (buttonType) {
             case BUTTON_EDIT:
                 return R.string.button_edit;
@@ -116,7 +120,7 @@ public class PostListButton extends LinearLayout {
         }
     }
 
-    public static int getButtonIconResId(int buttonType) {
+    public static @DrawableRes int getButtonIconResId(int buttonType) {
         switch (buttonType) {
             case BUTTON_EDIT:
                 return R.drawable.ic_pencil_blue_wordpress_18dp;
@@ -139,9 +143,18 @@ public class PostListButton extends LinearLayout {
             case BUTTON_BACK:
                 return R.drawable.ic_chevron_left_blue_wordpress_18dp;
             case BUTTON_RETRY:
-                return R.drawable.ic_refresh_blue_wordpress_18dp;
+                return R.drawable.ic_refresh_red_18dp;
             default:
                 return 0;
+        }
+    }
+
+    public static @ColorRes int getTextColorResId(int buttonType) {
+        switch (buttonType) {
+            case BUTTON_RETRY:
+                return R.color.alert_red;
+            default:
+                return R.color.blue_wordpress;
         }
     }
 }

@@ -46,10 +46,10 @@ import org.wordpress.android.ui.main.SitePickerAdapter.SiteList;
 import org.wordpress.android.ui.main.SitePickerAdapter.SiteRecord;
 import org.wordpress.android.ui.prefs.AppPrefs;
 import org.wordpress.android.ui.stats.datasets.StatsTable;
+import org.wordpress.android.util.ActivityUtils;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.ToastUtils;
-import org.wordpress.android.util.WPActivityUtils;
 import org.wordpress.android.util.helpers.Debouncer;
 import org.wordpress.android.util.helpers.SwipeToRefreshHelper;
 import org.wordpress.android.util.widgets.CustomSwipeRefreshLayout;
@@ -462,7 +462,7 @@ public class SitePickerActivity extends AppCompatActivity
 
     private void hideSoftKeyboard() {
         if (!hasHardwareKeyboard()) {
-            WPActivityUtils.hideKeyboard(mSearchView);
+            ActivityUtils.hideKeyboardForced(mSearchView);
         }
     }
 

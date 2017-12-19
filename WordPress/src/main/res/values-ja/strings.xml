@@ -21,7 +21,6 @@ Language: ja_JP
 	<string name="max_video_resolution">最大動画サイズ</string>
 	<string name="notification_settings_master_status_on">オン</string>
 	<string name="max_thumbnail_px_size">最大画像サイズ</string>
-	<string name="error_media_recover_post">この投稿のメディアファイルをアップロードできませんでした。投稿を編集してもう一度お試しください。</string>
 	<string name="error_page_does_not_exist">このページはもう存在しません</string>
 	<string name="error_upload_post_media_param">投稿内のメディアのアップロード中にエラーが発生しました: %s。</string>
 	<string name="error_upload_post_param">投稿のアップロード中にエラーが発生しました: %s。</string>
@@ -30,13 +29,12 @@ Language: ja_JP
 	<string name="login_site_address_help_image">サイトアドレスは Webブラウザーのナビゲーションバーにあります</string>
 	<string name="error_unknown_page">サーバー上にページが見つかりませんでした</string>
 	<string name="error_publish_empty_page">空のページは公開できません</string>
-	<string name="upload_failed_param">"%s" のアップロードに失敗</string>
+	<string name="upload_failed_param">\"%s\" のアップロードに失敗</string>
 	<string name="cannot_retry_deleted_media_item">メディアは削除されました。この投稿から削除しますか ?</string>
 	<string name="error_please_choose_browser">デフォルトのブラウザーを開く際にエラーが発生しました。別のアプリを選択してください:</string>
 	<string name="cant_open_url">リンクを開けません</string>
 	<string name="error_unknown_post">サーバー上で投稿が見つかりませんでした</string>
 	<string name="error_post_does_not_exist">この投稿は存在しません</string>
-	<string name="error_media_recover_page">この投稿のメディアをアップロードできませんでした。投稿を編集して、もう一度お試しください。</string>
 	<string name="error_media_canceled">メディアのアップロードがキャンセルされました</string>
 	<string name="error_upload_page_media_param">このページ内のメディアをアップロードする際にエラーが発生しました: %s.</string>
 	<string name="error_upload_page_param">このページをアップロードする際にエラーが発生しました: %s.</string>
@@ -44,14 +42,9 @@ Language: ja_JP
 	<string name="async_promo_description">エディターを閉じると、投稿の保存と公開がバックグラウンドで自動的に行われるようになりました。お試しください。</string>
 	<string name="async_promo_title">自信を持って公開</string>
 	<string name="editor_uploading_post">投稿をアップロード中</string>
-	<string name="uploading_post_media">メディアをアップロード中…</string>
 	<string name="dialog_confirm_cancel_post_media_uploading">本当に実行しますか ?この投稿を削除すると、メディアのアップロードもキャンセルされます。</string>
 	<string name="page_scheduled">ページの公開を予約しました</string>
 	<string name="post_scheduled">投稿を予約しました</string>
-	<string name="post_draft_param">「%s」を下書きとして保存しました。</string>
-	<string name="post_scheduled_param">「%s」を予約しました。</string>
-	<string name="post_updated_param">「%s」を更新しました。</string>
-	<string name="post_published_param">「%s」を公開しました。</string>
 	<string name="button_retry">再試行</string>
 	<string name="post_queued">待機中の投稿</string>
 	<string name="uploading_post">「%s」をアップロード中</string>
@@ -82,7 +75,6 @@ Language: ja_JP
 	<string name="login_magic_links_sent_label">マジックリンクがもうすぐ送られてきます。このデバイスでメールをチェックして、WordPress.com から届いたメールにあるリンクをタップしてください。</string>
 	<string name="login_magic_links_label">パスワードなしですぐにログインできるマジックリンクのメールをお送りします。面倒な入力は不要です !</string>
 	<string name="password_incorrect">このパスワードは間違っているようです。入力した情報をもう一度確認してから、やり直してください。</string>
-	<string name="email_not_registered_wpcom">このメールアドレスは WordPress.com に登録されていません</string>
 	<string name="requesting_otp">SMS 経由で認証コードをリクエスト。</string>
 	<string name="login_text_otp">代わりに SMS でコードを送信する。</string>
 	<string name="enter_verification_code">もう少しで完了です。認証アプリから認証コードを入力してください。</string>
@@ -294,7 +286,6 @@ Language: ja_JP
 	<string name="media_encoder_quality_80">低い</string>
 	<string name="media_upload_state_uploaded">アップロード済み</string>
 	<string name="media_encoder_quality_100">最高</string>
-	<string name="media_upload_state_failed">失敗</string>
 	<string name="media_upload_state_deleted">削除済み</string>
 	<string name="media_upload_state_deleting">削除中</string>
 	<string name="media_upload_state_uploading">アップロード中</string>
@@ -556,9 +547,6 @@ Language: ja_JP
 	<string name="xmlrpc_missing_method_error">接続できませんでした。必要な XML-RPC メソッドがサーバーにありません。</string>
 	<string name="post_format_status">ステータス</string>
 	<string name="post_format_video">動画</string>
-	<string name="theme_free">無料</string>
-	<string name="theme_all">すべて</string>
-	<string name="theme_premium">プレミアム</string>
 	<string name="alignment_center">中央</string>
 	<string name="post_format_chat">チャット</string>
 	<string name="post_format_gallery">ギャラリー</string>
@@ -1014,7 +1002,6 @@ Language: ja_JP
 	<string name="delete_sure_post">この投稿を削除</string>
 	<string name="delete_sure">この下書きを削除</string>
 	<string name="delete_sure_page">このページを削除</string>
-	<string name="confirm_delete_multi_media">選択した項目を削除しますか ?</string>
 	<string name="cab_selected">%d件選択</string>
 	<string name="reader_empty_posts_liked">「いいね」を付けた投稿はありません。</string>
 	<string name="browse_our_faq_button">よく聞かれる質問を表示</string>
@@ -1184,7 +1171,6 @@ Language: ja_JP
 	<string name="edit_post">投稿を編集</string>
 	<string name="email_hint">メールアドレス</string>
 	<string name="email_reserved">そのメールアドレスはすでに使われています。有効化メールが届いていないかチェックしてみてください。有効化しなかった場合、数日後に同じアドレスでもう一度登録できるようになります。</string>
-	<string name="file_not_found">アップロードするメディアファイルが見つかりませんでした。削除または移動されたようです。</string>
 	<string name="hint_comment_content">コメント</string>
 	<string name="horizontal_alignment">横配置</string>
 	<string name="http_authorization_required">認証が必要です</string>
@@ -1276,7 +1262,6 @@ Language: ja_JP
 	<string name="nux_tutorial_get_started_title">始めてみましょう</string>
 	<string name="media_add_popup_title">メディアライブラリに追加</string>
 	<string name="empty_list_default">リストが空です</string>
-	<string name="select_from_media_library">メディアライブラリから選択</string>
 	<string name="reader_untitled_post">(無題)</string>
 	<string name="reader_btn_share">共有</string>
 	<string name="reader_btn_follow">フォロー</string>

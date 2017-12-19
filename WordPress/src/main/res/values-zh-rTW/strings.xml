@@ -52,7 +52,6 @@ Language: zh_TW
 	<string name="media_encoder_quality_85">中</string>
 	<string name="media_encoder_quality_80">低</string>
 	<string name="media_upload_state_uploaded">已上傳</string>
-	<string name="media_upload_state_failed">失敗</string>
 	<string name="media_upload_state_deleted">已刪除</string>
 	<string name="media_upload_state_deleting">正在刪除</string>
 	<string name="media_upload_state_uploading">正在上傳</string>
@@ -308,9 +307,6 @@ Language: zh_TW
 	<string name="post_format_status">狀態</string>
 	<string name="post_format_video">影片</string>
 	<string name="alignment_center">置中</string>
-	<string name="theme_free">免費</string>
-	<string name="theme_all">全部</string>
-	<string name="theme_premium">進階版</string>
 	<string name="post_format_chat">聊天</string>
 	<string name="post_format_gallery">圖庫</string>
 	<string name="post_format_image">圖片</string>
@@ -760,7 +756,6 @@ Language: zh_TW
 	<string name="delete_sure_post">刪除此文章</string>
 	<string name="delete_sure">刪除此草稿</string>
 	<string name="delete_sure_page">刪除此頁面</string>
-	<string name="confirm_delete_multi_media">要刪除選取的項目嗎？</string>
 	<string name="cab_selected">已選取：%d</string>
 	<string name="reader_empty_posts_liked">你未對任何文章按讚</string>
 	<string name="faq_button">常見問題集</string>
@@ -917,7 +912,6 @@ Language: zh_TW
 	<string name="local_draft">本機草稿</string>
 	<string name="upload_failed">上傳失敗</string>
 	<string name="horizontal_alignment">水平對齊</string>
-	<string name="file_not_found">找不到可上傳的媒體檔案。該檔案是否已刪除或移走？</string>
 	<string name="post_settings">文章設定</string>
 	<string name="delete_post">刪除文章</string>
 	<string name="delete_page">刪除頁面</string>
@@ -1017,7 +1011,6 @@ Language: zh_TW
 	<string name="signing_in">正在登入…</string>
 	<string name="media_add_popup_title">增加媒體庫</string>
 	<string name="empty_list_default">清單是空的</string>
-	<string name="select_from_media_library">從媒體庫選擇</string>
 	<string name="jetpack_not_found">找不到 Jetpack</string>
 	<string name="reader_untitled_post">（未命名）</string>
 	<string name="reader_btn_unfollow">追蹤</string>

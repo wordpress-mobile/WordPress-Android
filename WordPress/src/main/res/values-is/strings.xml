@@ -33,7 +33,6 @@ Language: is
 	<string name="media_encoder_quality_85">Miðlungi gott</string>
 	<string name="media_encoder_quality_80">Lítil</string>
 	<string name="media_upload_state_uploaded">Efni upphlaðið</string>
-	<string name="media_upload_state_failed">Mistókst</string>
 	<string name="media_upload_state_deleted">Eytt</string>
 	<string name="media_upload_state_deleting">Eyði</string>
 	<string name="media_upload_state_uploading">Hlaða upp</string>
@@ -286,9 +285,6 @@ Language: is
 	<string name="site_timeout_error">Gat ekki tengst WordPress vef þar sem tenging rann út á tíma.</string>
 	<string name="xmlrpc_malformed_response_error">Gat ekki tengst. WordPress uppsetningin svaraði með ógildu XML-RPC skjali.</string>
 	<string name="xmlrpc_missing_method_error">Gat ekki tengst. Nauðsynlega XML-RPC virkni vantar á netþjóninn.</string>
-	<string name="theme_premium">Sérfræðingar</string>
-	<string name="theme_all">Allt</string>
-	<string name="theme_free">Ókeypis</string>
 	<string name="alignment_center">Miðja</string>
 	<string name="post_format_video">Myndband</string>
 	<string name="post_format_status">Staða</string>
@@ -393,16 +389,16 @@ Language: is
 	<string name="site_settings_paging_dialog_description">Skipta umræðuþráðum niður á síður.</string>
 	<string name="site_settings_paging_dialog_header">Athugasemdir á síðu</string>
 	<string name="site_settings_close_after_dialog_title">Loka fyrir athuagsemdir</string>
-	<string name="site_settings_blacklist_description">Þegar athugasemd inniheldur einhver af þessum orðum í efni, nafni, vefslóð, netfangi eða IP tölu, verður hún merkt sem amapóstur. Þú getur slegið inn hluta úr orði, þannig að "press" mun passa við "WordPress."</string>
-	<string name="site_settings_hold_for_moderation_description">Þegar athugasemd inniheldur einhver af þessum orðum í efni, nafni, vefslóð, netfangi eða IP tölu, verður hún flutt í biðröð. Þú getur slegið inn hluta úr orði, þannig að "press" mun passa við "WordPress."</string>
+	<string name="site_settings_blacklist_description">Þegar athugasemd inniheldur einhver af þessum orðum í efni, nafni, vefslóð, netfangi eða IP tölu, verður hún merkt sem amapóstur. Þú getur slegið inn hluta úr orði, þannig að \"press\" mun passa við \"WordPress.\"</string>
+	<string name="site_settings_hold_for_moderation_description">Þegar athugasemd inniheldur einhver af þessum orðum í efni, nafni, vefslóð, netfangi eða IP tölu, verður hún flutt í biðröð. Þú getur slegið inn hluta úr orði, þannig að \"press\" mun passa við \"WordPress.\"</string>
 	<string name="site_settings_list_editor_input_hint">Sláðu inn orð eða setningu</string>
 	<string name="site_settings_list_editor_no_items_text">Engin atriði</string>
 	<string name="site_settings_learn_more_caption">Þú getur yfirskrifað þessar stillingar fyrir einstaka færslur.</string>
-	<string name="site_settings_rp_preview3_site">í "uppfærslu"</string>
+	<string name="site_settings_rp_preview3_site">í \"uppfærslu\"</string>
 	<string name="site_settings_rp_preview3_title">Uppfræsla: VideoPress fyrir brúðkaup</string>
-	<string name="site_settings_rp_preview2_site">í "forritum"</string>
+	<string name="site_settings_rp_preview2_site">í \"forritum\"</string>
 	<string name="site_settings_rp_preview2_title">WordPress forritið fyrir Android fær stóra andlitslyftingu</string>
-	<string name="site_settings_rp_preview1_site">í "farsíma"</string>
+	<string name="site_settings_rp_preview1_site">í \"farsíma\"</string>
 	<string name="site_settings_rp_preview1_title">Stór iPhone/iPad uppfærsla nú í boði</string>
 	<string name="site_settings_rp_show_images_title">Birta myndir</string>
 	<string name="site_settings_rp_show_header_title">Sýna haus</string>
@@ -613,7 +609,7 @@ Language: is
 	<string name="me_disconnect_from_wordpress_com">Útskráning frá WordPress.com</string>
 	<string name="me_btn_login_logout">Innskrá/útskrá</string>
 	<string name="me_connect_to_wordpress_com">WordPress.com innskráning</string>
-	<string name="site_picker_cant_hide_current_site">"%s" var ekki falið þar sem það er núverandi vefur</string>
+	<string name="site_picker_cant_hide_current_site">\"%s\" var ekki falið þar sem það er núverandi vefur</string>
 	<string name="me_btn_support">Hjálp og aðstoð</string>
 	<string name="account_settings">Stillingar notandareiknings</string>
 	<string name="site_picker_create_dotcom">Stofna WordPress.com vef</string>
@@ -739,7 +735,6 @@ Language: is
 	<string name="themes_fetching">Sæki þemu...</string>
 	<string name="ssl_certificate_details">Upplýsingar</string>
 	<string name="cab_selected">%d valið</string>
-	<string name="confirm_delete_multi_media">Eyða völdum atriðum?</string>
 	<string name="delete_sure_page">Eyða þessari síðu</string>
 	<string name="delete_sure">Eyða þessum drögum</string>
 	<string name="delete_sure_post">Eyða þessari færslu</string>
@@ -940,7 +935,6 @@ Language: is
 	<string name="delete_page">Eyða síðu</string>
 	<string name="delete_post">Eyða færslu</string>
 	<string name="post_settings">Stillingar færslu</string>
-	<string name="file_not_found">Gat ekki fundið skrána til upphleðslu. Var henni eytt eða hún flutt?</string>
 	<string name="horizontal_alignment">Lárétt jöfnun</string>
 	<string name="upload_failed">Sending mistókst</string>
 	<string name="local_draft">Staðvær drög</string>
@@ -1018,7 +1012,6 @@ Language: is
 	<string name="reader_btn_share">Deila</string>
 	<string name="reader_untitled_post">(Án titils)</string>
 	<string name="jetpack_not_found">Jetpack viðbót finnst ekki</string>
-	<string name="select_from_media_library">Veldu úr skráarsafni</string>
 	<string name="empty_list_default">Þessi listi er tómur</string>
 	<string name="media_add_popup_title">Bæta í skráarsafn</string>
 	<string name="passcode_turn_on">Kveikja á PIN læsingu</string>

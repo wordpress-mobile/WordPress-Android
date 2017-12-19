@@ -7,6 +7,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.CallSuper;
 import android.support.annotation.LayoutRes;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.annotation.StringRes;
 import android.support.v4.app.Fragment;
@@ -67,7 +68,7 @@ public abstract class LoginBaseFormFragment<LoginListenerType> extends Fragment 
     @Inject AccountStore mAccountStore;
 
     protected abstract @LayoutRes int getContentLayout();
-    protected abstract void setupLabel(TextView label);
+    protected abstract void setupLabel(@NonNull TextView label);
     protected abstract void setupContent(ViewGroup rootView);
     protected abstract void setupBottomButtons(Button secondaryButton, Button primaryButton);
     protected abstract @StringRes int getProgressBarText();
@@ -209,11 +210,15 @@ public abstract class LoginBaseFormFragment<LoginListenerType> extends Fragment 
     }
 
     protected void startProgress() {
+        startProgress(true);
+    }
+
+    protected void startProgress(boolean cancellable) {
         mPrimaryButton.setEnabled(false);
         mSecondaryButton.setEnabled(false);
 
         mProgressDialog =
-                ProgressDialog.show(getActivity(), "", getActivity().getString(getProgressBarText()), true, true,
+                ProgressDialog.show(getActivity(), "", getActivity().getString(getProgressBarText()), true, cancellable,
                         new DialogInterface.OnCancelListener() {
                             @Override
                             public void onCancel(DialogInterface dialogInterface) {
@@ -255,7 +260,7 @@ public abstract class LoginBaseFormFragment<LoginListenerType> extends Fragment 
     protected void onLoginFinished() {
     }
 
-    private void onLoginFinished(boolean success) {
+    protected void onLoginFinished(boolean success) {
         mLoginFinished = true;
 
         if (!success) {

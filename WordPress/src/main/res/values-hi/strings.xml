@@ -1,16 +1,85 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2017-08-18 23:31:13+0000
+Translation-Revision-Date: 2017-12-02 23:45:38+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/2.4.0-alpha
 Language: hi_IN
 -->
 <resources>
+	<string name="jetpack_allow_wpcom_sign_in_title">WordPress.com लॉगिन की अनुमति दें</string>
+	<string name="jetpack_wpcom_sign_in_category_title">WordPress.com लॉगिन</string>
+	<string name="jetpack_security_setting_title">सुरक्षा</string>
+	<string name="jetpack_site_settings_category_title">जेटपैक सेटिंग्स</string>
+	<string name="share_action_media">मीडिया लाइब्रेरी में जोड़ें</string>
+	<string name="share_action_post">नई पोस्ट में जोड़ें</string>
+	<string name="deleting_media_dlg">हटाया जा रहा है</string>
+	<string name="media_title_audio_details">ऑडियो का विवरण</string>
+	<string name="media_title_document_details">दस्तावेज़ का विवरण</string>
+	<string name="media_title_video_details">वीडियो का विवरण</string>
+	<string name="fab_content_description_preview">पूर्वावलोकन</string>
+	<string name="media_title_image_details">छवि का विवरण</string>
+	<string name="media_edit_duration_caption">अवधि</string>
+	<string name="media_edit_upload_date_caption">अपलोड की तारीख</string>
+	<string name="media_edit_url_caption">यूआरएल</string>
+	<string name="media_edit_filename_caption">फ़ाइल का नाम</string>
+	<string name="media_edit_filetype_caption">फाइल का प्रकार</string>
+	<string name="copy">कापी</string>
+	<string name="connect_site">साइट कनेक्ट करे</string>
+	<string name="notification_settings_item_sights_and_sounds_blink_light">लाइट टिमटिमाये </string>
+	<string name="notification_settings_item_sights_and_sounds_choose_sound">ध्वनि चुनें</string>
+	<string name="notification_settings_category_sights_and_sounds">दृश्य और ध्वनि </string>
+	<string name="notification_settings_item_other_account_emails">WordPress.com से ईमेल </string>
+	<string name="notification_settings_item_other_pending_drafts">अधूरे ड्राफ्ट के बारे में सूचित करें </string>
+	<string name="notification_settings_item_other_comments_other_blogs">दूसरे वेबसाइट पर टिप्पणी करें </string>
+	<string name="notification_settings_category_other">अन्य </string>
+	<string name="notification_settings_item_your_sites_all_your_sites">मेरे सभी साईट </string>
+	<string name="notification_settings_category_your_sites">आपके साइट </string>
+	<string name="notification_settings_master_hint_off">सूचना सक्रिय करें </string>
+	<string name="notification_settings_master_hint_on">सूचना असक्रिये करें </string>
+	<string name="notification_settings_master_status_off">बंद करें </string>
+	<string name="notification_settings_master_status_on">ऑन </string>
+	<string name="max_video_resolution">अधिकतम वीडियो साइज</string>
+	<string name="max_thumbnail_px_size">अधिकतम छवि साइज</string>
+	<string name="error_page_does_not_exist">यह  पृष्ठ अब उपलब्ध नहीं है</string>
+	<string name="error_upload_post_media_param">इस पोस्ट : %s में मीडिया अपलोड करते समय त्रुटि आई।</string>
+	<string name="error_upload_post_param">इस पोस्ट : %s में अपलोड करते समय त्रुटि आई।</string>
+	<string name="add_media_progress">मीडिया जोड़े </string>
+	<string name="reader_excerpt_link">और जानने के लिए  %s पर जाये </string>
+	<string name="error_unknown_page">सर्वर पर यह पृष्ठ मौजूद नहीं है </string>
+	<string name="error_publish_empty_page">खाली पृष्ठ प्रकाशित नहीं कर सकते </string>
+	<string name="upload_failed_param">\"%s\" के लिए अपलोड असफल </string>
+	<string name="cannot_retry_deleted_media_item">मीडिया हटा दिया गया हैं। इस पोस्ट से इसे हटाये?</string>
+	<string name="error_please_choose_browser">मौजूदा वेब ब्राउज़र खोलने में अक्षम। कृपया दूसरा ऐप्प चुने:</string>
+	<string name="cant_open_url">लिंक को खोलने में अक्षम</string>
+	<string name="error_unknown_post">इस सर्वर पर पोस्ट मौजूद नहीं है </string>
+	<string name="error_post_does_not_exist">पोस्ट अब मौजूद नहीं है </string>
+	<string name="async_promo_link">यह कैसे काम करता है?</string>
+	<string name="editor_uploading_post">आपकी पोस्ट अपलोड हो रहे है</string>
+	<string name="uploading_media">मीडिया अपलोड हो रही है...</string>
+	<string name="button_retry">पुन: प्रयास करें</string>
+	<string name="login_epilogue_mysites_one">मेरी साइट</string>
+	<string name="login_site_address">साइट का पता</string>
+	<string name="login_username_at">\@%s</string>
+	<string name="login_continue">जारी रखें</string>
+	<string name="connect_more">अन्य साइट कनेक्ट करें</string>
+	<string name="next">अगला</string>
+	<string name="open_mail">मेल खोलें</string>
+	<string name="turn_on">चालू करें</string>
+	<string name="leave_off">छोड़ दें</string>
+	<string name="post_title">शीर्षक</string>
+	<string name="media_audio">ऑडियो</string>
+	<string name="format_bar_description_heading">शीर्षक</string>
+	<string name="format_bar_description_list">सूची</string>
+	<string name="format_bar_description_media">मीडिया</string>
+	<string name="new_editor_promo_confirmation_action">सेटिंग्स</string>
+	<string name="permission_camera">कैमरा</string>
+	<string name="twitter">ट्विटर</string>
 	<string name="editor_draft_saved_locally">ड्राफ़्ट डिवाइस पर सहेजा गया</string>
 	<string name="editor_post_saved_locally">पोस्ट डिवाइस पर सहेजा गया</string>
 	<string name="button_sync">सिंक</string>
 	<string name="wp_media_title">वर्डप्रेस मीडिया </string>
 	<string name="error_unknown_post_type">अज्ञात पोस्ट प्रारूप</string>
+	<string name="confirm">पुष्टि करें</string>
 	<string name="jetpack_stats_module_disabled_message_not_admin">जेटपैक प्लगइन से जुड़ा हुआ है, लेकिन आँकड़े मॉड्यूल सक्रिय नहीं है। साइट व्यवस्थापक से संपर्क करें।</string>
 	<string name="jetpack_stats_module_disabled_message">जेटपैक प्लगइन से जुड़ा हुआ है, लेकिन आँकड़े मॉड्यूल सक्रिय नहीं है। क्या आप आँकड़े सक्रिय करना चाहते हैं?</string>
 	<string name="jetpack_info">जेटपैक की जानकारी</string>
@@ -33,16 +102,16 @@ Language: hi_IN
 	<string name="notifications_label_new_notifications_subtitle">उन्हें दिखाने के लिए टैप करेंI</string>
 	<string name="notifications_label_new_notifications">नई सूचनाएं I</string>
 	<string name="like">लाइक</string>
+	<string name="reader_label_image_count_one">1 छवि</string>
 	<string name="timespan_now">अब</string>
 	<string name="visual_editor">विजुअल सम्पादक</string>
+	<string name="format_bar_description_html">एचटीएमएल</string>
 	<string name="image_width">चौड़ाई </string>
 	<string name="invite_error_for_username">%1$s: %2$s</string>
+	<string name="send">भेजें</string>
 	<string name="post_format_video">विडियो </string>
 	<string name="alignment_center">मध्य में</string>
 	<string name="post_format_status">स्थिति</string>
-	<string name="theme_free">नि: शुल्क</string>
-	<string name="theme_all">सभी</string>
-	<string name="theme_premium">प्रीमियम</string>
 	<string name="post_format_standard">मानक</string>
 	<string name="post_format_chat">चैट</string>
 	<string name="post_format_gallery">गैलरी</string>
@@ -61,6 +130,7 @@ Language: hi_IN
 	<string name="editor_page_title_placeholder">पृष्ठ शीर्षक</string>
 	<string name="editor_post_title_placeholder">पोस्ट शीर्षक</string>
 	<string name="email_address">ईमेल पता</string>
+	<string name="preference_editor">संपादक</string>
 	<string name="comment_status_all">सभी</string>
 	<string name="could_not_load_page">पृष्ठ लोड नहीं हो सका</string>
 	<string name="about_the_app">ऐप्प के बारे में</string>
@@ -280,11 +350,11 @@ Language: hi_IN
 	<string name="email_exists">वह ईमेल पता पहले ही से प्रयोग में है</string>
 	<string name="error_refresh_stats">आँकड़े को इस समय रिफ्रेश नहीं किया जा सकता</string>
 	<string name="blog_name_only_lowercase_letters_and_numbers">साइट का पता केवल छोटे अक्षरों (a-z) और अंक हो सकते हैं</string>
-	<string name="blog_name_contains_invalid_characters">साइट के पते में "_" अक्षर नहीं हो सकता है</string>
+	<string name="blog_name_contains_invalid_characters">साइट के पते में \"_\" अक्षर नहीं हो सकता है</string>
 	<string name="blog_name_must_be_at_least_four_characters">साइट का पता कम से कम 4 अक्षरों का होना चाहिए</string>
 	<string name="blog_name_must_be_less_than_sixty_four_characters">साइट का पता 64 अक्षर से कम होना चाहिए</string>
 	<string name="username_only_lowercase_letters_and_numbers">उपयोगकर्ता नाम केवल छोटे अक्षरों (a-z) और अंक हो सकते हैं</string>
-	<string name="username_contains_invalid_characters">उपयोगकर्ता नाम में "_" अक्षर नहीं हो सकता है</string>
+	<string name="username_contains_invalid_characters">उपयोगकर्ता नाम में \"_\" अक्षर नहीं हो सकता है</string>
 	<string name="username_must_be_at_least_four_characters">उपयोगकर्ता नाम कम से कम 4 अक्षरों का होना चाहिए</string>
 	<string name="invalid_username_too_short">उपयोगकर्ता नाम 4 अक्षरों से अधिक समय होना चाहिए</string>
 	<string name="invalid_username_too_long">उपयोगकर्ता नाम 61 अक्षरो से कम होना चाहिए</string>
@@ -433,7 +503,6 @@ Language: hi_IN
 	<string name="reader_toast_err_view_image">छवि को देखने में असमर्थ</string>
 	<string name="media_add_popup_title">मीडिया संग्रह में जोड़े</string>
 	<string name="reader_toast_err_tag_exists">आप पहले से ही इस टैग का अनुसरण कर रहे है</string>
-	<string name="select_from_media_library">मीडिया लाइब्रेरी से चुने </string>
 	<string name="empty_list_default">इस सूची खाली है</string>
 	<string name="nux_tutorial_get_started_title">शुरू हो जाये!</string>
 	<string name="reader_toast_err_tag_invalid">वह एक मान्य टैग नहीं है</string>

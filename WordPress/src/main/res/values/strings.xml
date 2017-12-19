@@ -18,6 +18,13 @@
     <string name="sign_out_wpcom_confirm">Logging out from your account will remove all of @%s’s WordPress.com data from this device, including local drafts and local changes.</string>
     <string name="account_two_step_auth_enabled">This account has two step authentication enabled. Visit your security settings on WordPress.com and generate an application-specific password.</string>
 
+    <string name="site_creating_label">Preparing your site…</string>
+    <string name="site_creating_fetching_info">Fetching site info…</string>
+    <string name="site_creating_set_tagline">Setting the tagline…</string>
+    <string name="site_creating_set_theme">Setting the theme…</string>
+    <string name="site_creating_failed">Sorry, failed to properly create your site :(</string>
+    <string name="site_creating_success">Success!</string>
+
     <!-- form labels -->
     <string name="select_categories">Select categories</string>
     <string name="tags_separate_with_commas">Separate tags with commas</string>
@@ -178,6 +185,8 @@
     <string name="media_edit_caption_text">Caption</string>
     <string name="media_edit_alttext_text">Alt text</string>
     <string name="media_edit_description_text">Description</string>
+    <string name="media_edit_link_text">Link to</string>
+    <string name="media_edit_link_hint">Open link in a new window/tab"</string>
     <string name="media_edit_title_hint">Enter a title here</string>
     <string name="media_edit_caption_hint">Enter a caption here</string>
     <string name="media_edit_description_hint">Enter a description here</string>
@@ -185,7 +194,8 @@
     <string name="media_edit_failure">Failed to update</string>
     <string name="saving">Saving…</string>
     <string name="confirm_discard_changes">Discard unsaved changes?</string>
-    <string name="media_edit_card_caption">File Details</string>
+    <string name="media_edit_file_details_card_caption">File Details</string>
+    <string name="media_edit_customize_card_caption">Customize</string>
     <string name="media_edit_url_caption">URL</string>
     <string name="media_edit_filename_caption">File Name</string>
     <string name="media_edit_filetype_caption">File Type</string>
@@ -212,8 +222,10 @@
     <string name="media_empty_audio_list">You don\'t have any audio</string>
     <string name="delete">Delete</string>
     <string name="confirm_delete_media_image">Delete this image?</string>
+    <string name="confirm_remove_media_image">Remove this image from the post?</string>
     <string name="confirm_delete_media_video">Delete this video?</string>
     <string name="deleting_media_dlg">Deleting</string>
+    <string name="remove_image_from_post">Remove from post</string>
 
     <!-- Media details -->
     <string name="media_details_label_date_added">Added</string>
@@ -236,6 +248,8 @@
     <string name="theme_auth_error_message">Ensure you have the privilege to set themes</string>
     <string name="theme_current_theme">Current theme</string>
     <string name="theme_premium_theme">Premium theme</string>
+    <string name="uploaded_themes_header">Uploaded themes</string>
+    <string name="wpcom_themes_header">WordPress.com themes</string>
     <string name="theme_no_search_result_found">Sorry, no themes found.</string>
     <string name="theme_auth_error_authenticate">Failed to fetch themes: failed authenticate user</string>
 
@@ -285,11 +299,17 @@
     </string-array>
 
     <!-- post uploads -->
-    <string name="post_published_param">\"%s\" has been published!</string>
-    <string name="post_updated_param">\"%s\" has been updated!</string>
-    <string name="post_scheduled_param">\"%s\" has been scheduled!</string>
-    <string name="post_draft_param">\"%s\" has been saved as a draft!</string>
     <string name="upload_failed_param">Upload failed for \"%s\"</string>
+    <string name="media_file_post_mixed_not_uploaded">%1$d %2$s with %3$d files not uploaded</string>
+    <string name="media_files_not_uploaded">%d files not uploaded</string>
+    <string name="media_files_uploaded">%d files uploaded</string>
+    <string name="media_file_not_uploaded">1 file not uploaded</string>
+    <string name="media_file_uploaded">1 file uploaded</string>
+    <string name="media_files_uploaded_successfully">, %d successfully uploaded</string>
+    <string name="media_all_files_uploaded_successfully">%d files uploaded successfully</string>
+    <string name="retry_needs_aztec" translatable="false">Retry only available in the Beta editor</string>
+    <string name="media_file_missing_for_retry">Retry not possible - some files in this Post are missing from your device</string>
+    <string name="media_files_uploaded_write_post">Write Post</string>
 
     <!-- post view -->
     <string name="post_id">Post</string>
@@ -307,7 +327,7 @@
     <string name="featured">Use as featured image</string>
     <string name="featured_in_post">Include image in post content</string>
     <string name="out_of_memory">Device out of memory</string>
-    <string name="file_not_found">Couldn\'t find the media file for upload. Was it deleted or moved?</string>
+    <string name="file_not_found">Couldn\'t find the file for upload. Was it deleted or moved?</string>
     <string name="download">Downloading media</string>
     <string name="delete_post">Delete post</string>
     <string name="delete_page">Delete page</string>
@@ -427,6 +447,12 @@
     <string name="preview">Preview</string>
     <string name="update_verb">Update</string>
     <string name="sending_content">Uploading %s content…</string>
+    <string name="uploading_title">Uploading…</string>
+    <string name="uploading_subtitle_mixed">%1$d %2$s, and %3$d of %4$d files remaining</string>
+    <string name="uploading_subtitle_mixed_one">%1$d %2$s, and 1 file remaining</string>
+    <string name="uploading_subtitle_posts_only">%1$d %2$s remaining</string>
+    <string name="uploading_subtitle_media_only">%1$d of %2$d files remaining</string>
+    <string name="uploading_subtitle_media_only_one">1 file remaining</string>
     <string name="uploading_total">Uploading %1$d of %2$d</string>
     <string name="uploading_media">Uploading media…</string>
 
@@ -504,6 +530,7 @@
     <string name="site_settings_password_title" translatable="false">@string/password</string>
     <string name="site_settings_default_category_title">Default Category</string>
     <string name="site_settings_default_format_title">Default Format</string>
+    <string name="site_settings_week_start_title">Week starts on</string>
     <string name="site_settings_image_original_size">Original Size</string>
     <string name="site_settings_optimize_images">Optimize Images</string>
     <string name="site_settings_default_image_width_title" translatable="false">@string/max_thumbnail_px_size</string>
@@ -1145,12 +1172,35 @@
         <item>@string/alignment_right</item>
     </string-array>
 
+
+    <!-- Image Size -->
+    <string name="image_size">Size</string>
+
+    <string name="size_thumbnail">Thumbnail</string>
+    <string name="size_medium">Medium</string>
+    <string name="size_large">Large</string>
+    <string name="size_full">Full Size</string>
+
+    <string-array name="image_size_key_array" translatable="false">
+        <item>size-thumbnail</item>
+        <item>size-medium</item>
+        <item>size-large</item>
+        <item>size-full</item>
+    </string-array>
+
+    <string-array name="image_size_label_array" translatable="false">
+        <item>@string/size_thumbnail</item>
+        <item>@string/size_medium</item>
+        <item>@string/size_large</item>
+        <item>@string/size_full</item>
+    </string-array>
+
     <!-- About View -->
     <string name="app_title">WordPress for Android</string>
     <string name="publisher">Publisher:</string>
     <string name="automattic_inc" translatable="false">Automattic, Inc</string>
     <string name="automattic_url" translatable="false">automattic.com</string>
-    <string name="wordpresscom_tos_url" translatable="false">https://en.wordpress.com/tos</string>
+    <string name="wordpresscom_tos_url" translatable="false">https://%s.wordpress.com/tos</string>
     <string name="version">Version</string>
     <string name="tos">Terms of Service</string>
     <string name="privacy_policy">Privacy policy</string>
@@ -1214,8 +1264,8 @@
     <string name="error_media_load">Unable to load media</string>
     <string name="error_media_save">Unable to save media</string>
     <string name="error_media_canceled">Uploading media were canceled</string>
-    <string name="error_media_recover_post">We were unable to upload this post\'s media. Please edit the post to try again.</string>
-    <string name="error_media_recover_page">We were unable to upload this page\'s media. Please edit the page to try again.</string>
+    <string name="error_media_recover_post">Unable to upload this post\'s media</string>
+    <string name="error_media_recover_page">Unable to upload this page\'s media</string>
     <string name="error_post_does_not_exist">This post no longer exists</string>
     <string name="error_page_does_not_exist">This page no longer exists</string>
     <string name="error_blog_hidden">This blog is hidden and couldn\'t be loaded. Enable it again in settings and try again.</string>
@@ -1236,6 +1286,7 @@
     <string name="error_notif_q_action_approve">Could not approve comment. Please try again later.</string>
     <string name="error_notif_q_action_reply">Could not reply to comment. Please try again later.</string>
     <string name="error_fetch_site_after_creation">Site has been created, you might need to refresh your sites in the site picker.</string>
+    <string name="error_generic_error">Couldn\'t perform operation</string>
 
     <!-- Post Error -->
     <string name="error_unknown_post">Could not find the post on the server</string>
@@ -1544,6 +1595,7 @@
     <string name="my_site_btn_switch_site">Switch Site</string>
     <string name="my_site_btn_view_admin">View Admin</string>
     <string name="my_site_btn_view_site">View Site</string>
+    <string name="my_site_btn_plugins">Plugins</string>
     <string name="my_site_no_sites_view_drake">Illustration</string>
     <string name="my_site_no_sites_view_title">You don\'t have any WordPress sites yet.</string>
     <string name="my_site_no_sites_view_subtitle">Would you like to add one?</string>
@@ -1669,15 +1721,6 @@
     <string name="support">Support</string>
     <string name="active">Active</string>
 
-    <string name="theme_free">Free</string>
-    <string name="theme_all">All</string>
-    <string name="theme_premium">Premium</string>
-    <string-array name="themes_filter_array" translatable="false">
-        <item>@string/theme_free</item>
-        <item>@string/theme_all</item>
-        <item>@string/theme_premium</item>
-    </string-array>
-
     <string name="title_activity_theme_support">Themes</string>
     <string name="theme_activate">Activate</string>
     <string name="theme_try_and_customize">Try &amp; Customize</string>
@@ -1739,6 +1782,36 @@
 
     <string name="role_follower">Follower</string>
     <string name="role_viewer">Viewer</string>
+
+    <!--Plugins-->
+    <string name="plugins">Plugins</string>
+    <string name="plugin_active">Active</string>
+    <string name="plugin_inactive">Inactive</string>
+    <string name="plugin_autoupdates_on">Autoupdates on</string>
+    <string name="plugin_autoupdates_off">Autoupdates off</string>
+    <string name="plugin_detail_label_state_active">Active</string>
+    <string name="plugin_detail_label_state_autoupdates">Autoupdates</string>
+    <string name="plugin_not_found">An error occurred when accessing this plugin</string>
+    <string name="plugin_installed_version">Plugin version %s</string>
+    <string name="plugin_available_version">Version %s is available.</string>
+    <string name="plugin_updated_successfully">Successfully updated %s.</string>
+    <string name="plugin_updated_failed">Error removing %s.</string>
+    <string name="plugin_updated_failed_detailed">Error removing %1$s: %2$s</string>
+    <string name="plugin_removed_successfully">Successfully removed %s.</string>
+    <string name="plugin_remove_failed">Error removing %s.</string>
+    <string name="plugin_configuration_failed">An error occurred while configuring the plugin: %s</string>
+    <string name="plugin_btn_remove">Remove Plugin</string>
+    <string name="plugin_disable_progress_dialog_message">Disabling %s&#8230;</string>
+    <string name="plugin_remove_progress_dialog_message">Removing %s&#8230;</string>
+    <string name="plugin_remove_dialog_title">Remove Plugin</string>
+    <string name="plugin_remove_dialog_message">Are you sure you want to remove %1$s from %2$s?\n\nThis will deactivate the plugin and delete all associated files and data.</string>
+
+    <string name="wordpress_dot_org_plugin_page">WordPress.org Plugin page</string>
+    <string name="plugin_home_page">Plugin homepage</string>
+
+    <string name="plugin_icon_content_description">Plugin icon</string>
+    <string name="plugin_update_available_icon_content_description">Update available</string>
+    <string name="plugin_external_link_icon_content_description">External link</string>
 
     <!--My profile-->
     <string name="my_profile">My Profile</string>
@@ -1928,9 +2001,11 @@
     <string name="enter_username_instead">Log in with username instead.</string>
     <string name="enter_the_address_of_your_wordpress_site">Enter the address of your WordPress site</string>
     <string name="enter_verification_code">Almost there! Please enter the verification code from your Authenticator app.</string>
+    <string name="enter_verification_code_sms">We sent a text message to the phone number ending in %s. Please enter the verification code in the SMS.</string>
     <string name="login_text_otp">Text me a code instead.</string>
+    <string name="login_text_otp_another">Text me another code instead.</string>
     <string name="requesting_otp">Requesting a verification code via SMS.</string>
-    <string name="email_not_registered_wpcom">This email is not registered on WordPress.com</string>
+    <string name="email_not_registered_wpcom">Hmm, this email address isn\'t registered with WordPress.com.\nAre you trying to access a self-hosted site? Log in using the link at the bottom of this screen.</string>
     <string name="password_incorrect">It looks like this password is incorrect. Please double check your information and try again.</string>
     <string name="login_magic_links_label">We\'ll email you a magic link that\'ll log you in instantly, no password needed. Hunt and peck no more!</string>
     <string name="login_magic_links_sent_label">Your magic link is on its way! Check your email on this device and tap the link in the email you received from WordPress.com.</string>
@@ -1956,6 +2031,7 @@
     <string name="login_log_in_for_share_intent">Log in to WordPress.com to share the content.</string>
     <string name="login_empty_site_url">Please enter a site address</string>
     <string name="login_empty_username">Please enter a username</string>
+    <string name="login_empty_password">Please enter a password</string>
     <string name="login_empty_2fa">Please enter a verification code</string>
     <string name="login_email_client_not_found">Can\'t detect your email client app</string>
     <string name="login_logged_in_as">Logged in as</string>
@@ -1966,9 +2042,18 @@
     <string name="login_error_button">Close</string>
     <string name="login_error_email_not_found">The Google account \'%s\' doesn\'t match any existing account on WordPress.com.</string>
     <string name="login_error_generic">There was some trouble connecting with the Google account.</string>
+    <string name="login_error_generic_start">Google login could not be started.</string>
     <string name="login_error_suffix">\nMaybe try a different account?</string>
 
-    <!-- shared element names -->
-    <string name="shared_element_media" translatable="false">media</string>
+    <string name="notification_login_title_success">Logged in!</string>
+    <string name="notification_logged_in">Tap to continue.</string>
+
+    <string name="notification_login_title_in_progress">Login in progress…</string>
+    <string name="notification_logging_in">Please wait while logging in.</string>
+
+    <string name="notification_login_title_stopped">Login stopped</string>
+    <string name="notification_error_wrong_password">Please double check your password to continue.</string>
+    <string name="notification_2fa_needed">Please provide an authentication code to continue.</string>
+    <string name="notification_login_failed">An error has occurred.</string>
 
 </resources>

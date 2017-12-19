@@ -568,6 +568,12 @@ public class AnalyticsTrackerNosara extends Tracker {
                 return "notifications_comment_liked";
             case NOTIFICATION_UNLIKED:
                 return "notifications_comment_unliked";
+            case NOTIFICATION_UPLOAD_MEDIA_SUCCESS_WRITE_POST:
+                return "notifications_upload_media_success_write_post";
+            case NOTIFICATION_UPLOAD_POST_ERROR_RETRY:
+                return "notifications_upload_post_error_retry";
+            case NOTIFICATION_UPLOAD_MEDIA_ERROR_RETRY:
+                return "notifications_upload_media_error_retry";
             case OPENED_POSTS:
                 return "site_menu_opened";
             case OPENED_PAGES:
@@ -594,6 +600,8 @@ public class AnalyticsTrackerNosara extends Tracker {
                 return "people_management_list_opened";
             case OPENED_PERSON:
                 return "people_management_details_opened";
+            case OPENED_PLUGINS:
+                return "plugins_opened";
             case CREATE_ACCOUNT_INITIATED:
                 return "account_create_initiated";
             case CREATE_ACCOUNT_EMAIL_EXISTS:
@@ -688,6 +696,16 @@ public class AnalyticsTrackerNosara extends Tracker {
                 return "login_autofill_credentials_updated";
             case LOGIN_PROLOGUE_PAGED:
                 return "login_prologue_paged";
+            case LOGIN_PROLOGUE_PAGED_JETPACK:
+                return "login_prologue_paged_jetpack";
+            case LOGIN_PROLOGUE_PAGED_NOTIFICATIONS:
+                return "login_prologue_paged_notifications";
+            case LOGIN_PROLOGUE_PAGED_POST:
+                return "login_prologue_paged_post";
+            case LOGIN_PROLOGUE_PAGED_READER:
+                return "login_prologue_paged_reader";
+            case LOGIN_PROLOGUE_PAGED_STATS:
+                return "login_prologue_paged_stats";
             case LOGIN_PROLOGUE_VIEWED:
                 return "login_prologue_viewed";
             case LOGIN_EMAIL_FORM_VIEWED:
@@ -730,6 +748,8 @@ public class AnalyticsTrackerNosara extends Tracker {
                 return "login_social_accounts_need_connecting";
             case LOGIN_SOCIAL_ERROR_UNKNOWN_USER:
                 return "login_social_error_unknown_user";
+            case LOGIN_WPCOM_BACKGROUND_SERVICE_UPDATE:
+                return "login_wpcom_background_service_update";
             case PERSON_REMOVED:
                 return "people_management_person_removed";
             case PERSON_UPDATED:
@@ -874,6 +894,10 @@ public class AnalyticsTrackerNosara extends Tracker {
                 return "app_permission_denied";
             case SHARE_TO_WP_SUCCEEDED:
                 return "share_to_wp_succeeded";
+            case PLUGIN_REMOVED:
+                return "plugin_removed";
+            case PLUGIN_UPDATED:
+                return "plugin_updated";
             default:
                 return null;
         }

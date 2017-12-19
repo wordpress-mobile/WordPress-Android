@@ -1,11 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2017-10-31 16:33:03+0000
+Translation-Revision-Date: 2017-11-27 04:07:31+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/2.4.0-alpha
 Language: nb_NO
 -->
 <resources>
+	<string name="login_empty_password">Vennligst skriv inn et passord</string>
+	<string name="login_text_otp_another">Send meg en annen kode i stedet.</string>
+	<string name="size_large">Stor</string>
+	<string name="size_medium">Middels</string>
+	<string name="image_size">Størrelse</string>
 	<string name="login_log_in_for_share_intent">Logg inn på WordPress.com for å dele innholdet.</string>
 	<string name="enter_site_address_share_intent">Skriv inn adressen til WordPress-siden din som du ønsker å dele innholdet til.</string>
 	<string name="jetpack_disconnect_error_toast">Feil under frakobling av siden.</string>
@@ -32,7 +37,6 @@ Language: nb_NO
 	<string name="share_media_permission_required">Tillatelser er påkrevd for å kunne dele bilder eller videoer</string>
 	<string name="share_action_post">Legg til i et nytt innlegg</string>
 	<string name="invalid_ip_or_range">Ugyldig IP-adresse eller IP-område</string>
-	<string name="error_media_still_uploading">Vennligst vent på at opplastingen blir ferdig</string>
 	<string name="deleting_media_dlg">Sletter</string>
 	<string name="confirm_delete_media_video">Vil du slette denne videoen?</string>
 	<string name="confirm_delete_media_image">Vil du slette dette bildet?</string>
@@ -48,7 +52,6 @@ Language: nb_NO
 	<string name="media_edit_filetype_caption">Filtype</string>
 	<string name="media_edit_filename_caption">Filnavn</string>
 	<string name="media_edit_url_caption">Nettadresse</string>
-	<string name="media_edit_card_caption">Fildetaljer</string>
 	<string name="copy">Kopier</string>
 	<string name="media_edit_alttext_text">Alternativ tekst</string>
 	<string name="notification_settings_item_sights_and_sounds_blink_light">Lysblink</string>
@@ -70,7 +73,6 @@ Language: nb_NO
 	<string name="notification_settings_master_status_on">På</string>
 	<string name="max_video_resolution">Maks videostørrelse</string>
 	<string name="max_thumbnail_px_size">Maks bildestørrelse</string>
-	<string name="error_media_recover_post">Vi klarte ikke å laste denne postens media. Vennligst rediger innlegget for å prøve igjen.</string>
 	<string name="error_page_does_not_exist">Denne siden finnes ikke lenger</string>
 	<string name="error_upload_post_media_param">Det var en feil under opplastning av mediene i dette innlegget: %s.</string>
 	<string name="error_upload_post_param">Det var en feil under opplastning av dette innlegget: %s.</string>
@@ -79,13 +81,12 @@ Language: nb_NO
 	<string name="reader_excerpt_link">Besøk %s for å se mer</string>
 	<string name="error_unknown_page">Klarte ikke å finne siden på tjeneren</string>
 	<string name="error_publish_empty_page">Kan ikke publisere en tom side</string>
-	<string name="upload_failed_param">Opplastningen av "%s" mislyktes</string>
+	<string name="upload_failed_param">Opplastningen av \"%s\" mislyktes</string>
 	<string name="cannot_retry_deleted_media_item">Mediet har blitt fjernet. Vil du slette den fra dette innlegget?</string>
 	<string name="error_please_choose_browser">Feil ved åpning av standardnettleseren. Vennligst velg en annen app:</string>
 	<string name="cant_open_url">Klarte ikke å åpne lenken</string>
 	<string name="error_unknown_post">Klarte ikke å finne innlegget på tjeneren</string>
 	<string name="error_post_does_not_exist">Dette innlegget finnes ikke lenger</string>
-	<string name="error_media_recover_page">Vi klarte ikke å laste opp denne sidens medier. Vennligst rediger siden for å prøve igjen.</string>
 	<string name="error_media_canceled">Opplasting av medie ble avbrutt</string>
 	<string name="error_upload_page_media_param">Det var en feil under opplastning av mediene i denne siden: %s.</string>
 	<string name="error_upload_page_param">Det var en feil under opplastning av denne siden: %s.</string>
@@ -93,14 +94,9 @@ Language: nb_NO
 	<string name="async_promo_description">Du kan forlate redigereren, og innlegget ditt vil lagre og publisere bak kulissene! Prøv det ut, da vel!</string>
 	<string name="async_promo_title">Publiser med sikkerhet</string>
 	<string name="editor_uploading_post">Innlegget ditt lastes opp</string>
-	<string name="uploading_post_media">Laster opp medie …</string>
 	<string name="dialog_confirm_cancel_post_media_uploading">Er du sikker? Å slette dette innlegget vil også avbryte medieopplastingen.</string>
 	<string name="page_scheduled">Siden har blitt planlagt</string>
 	<string name="post_scheduled">Innlegget har blitt planlagt</string>
-	<string name="post_draft_param">«%s» har blitt lagret som et utkast!</string>
-	<string name="post_scheduled_param">«%s» har blitt planlagt!</string>
-	<string name="post_updated_param">«%s» har blitt oppdatert!</string>
-	<string name="post_published_param">«%s» har blitt publisert!</string>
 	<string name="button_retry">Prøv igjen</string>
 	<string name="post_queued">Køoppstilt innlegg</string>
 	<string name="connection_to_server_lost">Tilkoblingen til tjeneren forsvant</string>
@@ -131,7 +127,6 @@ Language: nb_NO
 	<string name="login_magic_links_sent_label">Din magiske lenke er på vei! Sjekk E-posten din på denne enheten, og trykk på lenken i E-posten du mottok fra WordPress.com.</string>
 	<string name="login_magic_links_label">Vi sender deg en E-post med en magisk lenke som vil logge deg inn umiddelbart, og intet passord er påkrevd. Du trenger aldri å lete etter den igjen!</string>
 	<string name="password_incorrect">Det ser ut til at dette passordet er feil. Vennligst dobbeltsjekk informasjonen din og prøv igjen.</string>
-	<string name="email_not_registered_wpcom">Denne E-posten er ikke registrert på WordPress.com</string>
 	<string name="requesting_otp">Ber om en verifiseringskode via SMS.</string>
 	<string name="login_text_otp">Send meg en SMS-kode istedet.</string>
 	<string name="enter_verification_code">Nesten framme! Vennligst skriv inn verifiseringskoden fra autentiseringsappen din.</string>
@@ -255,7 +250,7 @@ Language: nb_NO
 	<string name="visual">Visuelt</string>
 	<string name="buttons">Knapper</string>
 	<string name="sharing_edit_more_buttons">Rediger «Mere»-knappene</string>
-	<string name="sharing_more_description">En "Mere"-knapp inneholder en nedfallsmeny som viser deleknapper</string>
+	<string name="sharing_more_description">En \"Mere\"-knapp inneholder en nedfallsmeny som viser deleknapper</string>
 	<string name="sharing_sharing_buttons_description">Velg hvilke knappen som skal vises under dine innlegg</string>
 	<string name="twitter_username">Brukernavn på Twitter</string>
 	<string name="sharing_comment_likes">Kommentar-Likes</string>
@@ -344,7 +339,6 @@ Language: nb_NO
 	<string name="media_encoder_quality_90">Høy</string>
 	<string name="media_encoder_quality_80">Lav</string>
 	<string name="media_upload_state_queued">Stilt opp i kø</string>
-	<string name="media_upload_state_failed">Mislyktes</string>
 	<string name="media_upload_state_deleted">Slettet</string>
 	<string name="media_upload_state_deleting">Sletter</string>
 	<string name="media_upload_state_uploading">Laster opp</string>
@@ -603,12 +597,9 @@ Language: nb_NO
 	<string name="site_timeout_error">Klarte ikke å koble til WordPress-nettstedet på grunn av en tidsutløpsfeil.</string>
 	<string name="xmlrpc_malformed_response_error">Klarte ikke å koble til. WordPress-installasjonen svarte med et ugylidg XML-RPC-dokument.</string>
 	<string name="xmlrpc_missing_method_error">Klarte ikke å koble til. De påkrevde XML-RPC-metodene mangler på denne tjeneren.</string>
-	<string name="theme_free">Gratis</string>
-	<string name="theme_all">Alle</string>
 	<string name="alignment_center">Midten</string>
 	<string name="post_format_video">Video</string>
 	<string name="post_format_status">Status</string>
-	<string name="theme_premium">Betalt</string>
 	<string name="post_format_gallery">Galleri</string>
 	<string name="post_format_image">Bilde</string>
 	<string name="post_format_quote">Sitering</string>
@@ -1064,7 +1055,6 @@ Language: nb_NO
 	<string name="delete_sure_page">Slett denne siden</string>
 	<string name="delete_sure">Slett denne kladden</string>
 	<string name="delete_sure_post">Slett dette innlegget</string>
-	<string name="confirm_delete_multi_media">Slette valgte elementer?</string>
 	<string name="cab_selected">%d valgt</string>
 	<string name="reader_label_comment_count_single">En kommentar</string>
 	<string name="comment">Kommentar</string>
@@ -1275,7 +1265,6 @@ Language: nb_NO
 	<string name="blog_removed_successfully">Nettstedet ble vellykket fjernet</string>
 	<string name="content_required">Kommentering er påkrevd</string>
 	<string name="sure_to_cancel_edit_comment">Vil du avbryte redigeringen av denne kommentaren?</string>
-	<string name="file_not_found">Klarte ikke å finne mediefilen som skulle lastes opp. Ble den kanskje slettet eller flyttet?</string>
 	<string name="theme_premium_theme">Betalt tema</string>
 	<string name="media_error_no_permission">Du har ikke tillatelse til å se mediebiblioteket</string>
 	<string name="post_not_found">En feil oppstod under innlastning av innlegget. Oppfrisk innleggene dine, og prøv igjen.</string>
@@ -1346,7 +1335,6 @@ Language: nb_NO
 	<string name="connecting_wpcom">Logger inn til WordPress.com</string>
 	<string name="reader_hint_comment_on_comment">Svar på kommentar …</string>
 	<string name="reader_label_added_tag">La til %s</string>
-	<string name="select_from_media_library">Velg fra mediebiblioteket</string>
 	<string name="media_add_popup_title">Legg til i mediebiblioteket</string>
 	<string name="reader_label_removed_tag">Fjernet %s</string>
 	<string name="themes">Temaer</string>

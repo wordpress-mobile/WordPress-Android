@@ -558,6 +558,14 @@ public abstract class SiteSettingsInterface {
                 R.string.site_settings_list_editor_summary_other, count);
     }
 
+    public String getStartOfWeek() {
+        return mSettings.startOfWeek;
+    }
+
+    public void setStartOfWeek(String startOfWeek) {
+        mSettings.startOfWeek = startOfWeek;
+    }
+
     public boolean isJetpackMonitorEnabled() {
         return mJpSettings.monitorActive;
     }

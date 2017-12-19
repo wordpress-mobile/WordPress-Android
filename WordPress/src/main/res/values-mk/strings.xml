@@ -76,7 +76,6 @@ Language: mk
 	<string name="ssl_certificate_details">Детали</string>
 	<string name="delete_sure_post">Избриши напис</string>
 	<string name="delete_sure">Избриши овој драфт</string>
-	<string name="confirm_delete_multi_media">Избриши слектирни?</string>
 	<string name="cab_selected">%d слекетирано</string>
 	<string name="delete_sure_page">Избриши оваа страница</string>
 	<string name="reader_empty_posts_liked">Сеуште немате допаднити написи</string>
@@ -215,7 +214,6 @@ Language: mk
 	<string name="mnu_comment_spam">Спам</string>
 	<string name="horizontal_alignment">Хоризонтално порамнување</string>
 	<string name="dlg_confirm_trash_comments">Испрати во корпа?</string>
-	<string name="file_not_found">Не е пронајдена медиа за качување. Дали е избришана или преместена?</string>
 	<string name="post_settings">Подесувања на напис</string>
 	<string name="delete_post">Избриши напис</string>
 	<string name="delete_page">Избриши страница</string>
@@ -317,7 +315,6 @@ Language: mk
 	<string name="reader_label_removed_tag">Одстранети %s</string>
 	<string name="media_add_popup_title">Додади во медиа библиотеката</string>
 	<string name="empty_list_default">Оваа листа е празна</string>
-	<string name="select_from_media_library">Избери медиа од библиотеката</string>
 	<string name="jetpack_not_found">Jetpack додатокот не е пронајден</string>
 	<string name="reader_untitled_post">(без наслов)</string>
 	<string name="reader_btn_share">Сподели</string>

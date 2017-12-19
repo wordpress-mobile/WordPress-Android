@@ -1,11 +1,69 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2017-10-25 16:49:51+0000
+Translation-Revision-Date: 2017-12-13 11:02:21+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/2.4.0-alpha
 Language: sv_SE
 -->
 <resources>
+	<string name="notification_login_failed">Ett fel har inträffat.</string>
+	<string name="notification_2fa_needed">Fyll i en autentiseringskod för att fortsätta.</string>
+	<string name="notification_error_wrong_password">Dubbelkontrollera ditt lösenord för att fortsätta.</string>
+	<string name="notification_login_title_stopped">Inloggningen avbruten</string>
+	<string name="notification_login_title_in_progress">Inloggning pågår...</string>
+	<string name="notification_logging_in">Vänta medan inloggningen pågår.</string>
+	<string name="notification_logged_in">Tryck för att fortsätta.</string>
+	<string name="notification_login_title_success">Inloggad!</string>
+	<string name="login_error_generic_start">Google login kunde inte startas.</string>
+	<string name="site_creating_failed">Det gick inte att skapa din webbplats korrekt :(</string>
+	<string name="site_creating_success">Klart!</string>
+	<string name="site_creating_set_theme">Sätter temat...</string>
+	<string name="site_creating_set_tagline">Sätter slogan...</string>
+	<string name="site_creating_fetching_info">Hämtar webbplatsens information...</string>
+	<string name="site_creating_label">Förbereder din webbplats...</string>
+	<string name="login_empty_password">Skriv in ett lösenord</string>
+	<string name="email_not_registered_wpcom">Hmm, denna e-postadress är inte registrerad på WordPress.com.\nFörsöker du logga in på en webbplats som ligger på webbhotell eller egen server? Logga då in via länken längst ned på denna sida.</string>
+	<string name="login_text_otp_another">Skicka ett nytt SMS med en kod till mig istället.</string>
+	<string name="enter_verification_code_sms">Vi har skickat ett SMS till telefonnumret som slutar på %s. Skriv in bekräftelsekoden from SMS;et.</string>
+	<string name="error_generic_error">Åtgärden kunde inte utföras</string>
+	<string name="error_media_recover_page">Det gick inte att ladda upp sidans media</string>
+	<string name="error_media_recover_post">Det gick inte att ladda upp inläggets media</string>
+	<string name="size_full">Full storlek</string>
+	<string name="size_large">Stor</string>
+	<string name="size_medium">Medium</string>
+	<string name="size_thumbnail">Miniatyr</string>
+	<string name="image_size">Storlek</string>
+	<string name="uploading_subtitle_media_only_one">1 fil återstår</string>
+	<string name="uploading_subtitle_media_only">%1$d av %2$d filer återstår</string>
+	<string name="uploading_subtitle_posts_only">%1$d %2$s återstår</string>
+	<string name="uploading_subtitle_mixed_one">%1$d %2$s, och 1 fil återstår</string>
+	<string name="uploading_subtitle_mixed">%1$d %2$s, och %3$d av %4$d filer återstår</string>
+	<string name="uploading_title">Ladda upp…</string>
+	<string name="media_files_uploaded_write_post">Skriv inlägg</string>
+	<string name="media_file_missing_for_retry">Det går inte att försöka igen. Några av inläggets filer saknas på din enhet</string>
+	<string name="media_all_files_uploaded_successfully">%d filer har laddats upp</string>
+	<string name="media_files_uploaded_successfully">%d har laddats upp</string>
+	<string name="media_file_uploaded">1 fil har laddats upp</string>
+	<string name="media_file_not_uploaded">1 fil laddades inte upp</string>
+	<string name="media_files_uploaded">%d filer har laddats upp</string>
+	<string name="media_files_not_uploaded">%d filer har inte laddats upp</string>
+	<string name="media_file_post_mixed_not_uploaded">%1$d %2$s med %3$d filer som inte laddats upp</string>
+	<string name="wpcom_themes_header">Teman från WordPress.com</string>
+	<string name="uploaded_themes_header">Uppladdade teman</string>
+	<string name="remove_image_from_post">Ta bort ur inlägget</string>
+	<string name="confirm_remove_media_image">Ta bort denna bild ur inlägget?</string>
+	<string name="media_edit_customize_card_caption">Anpassa</string>
+	<string name="media_edit_file_details_card_caption">Filinformation</string>
+	<string name="login_error_suffix">\nDu kanske vill prova ett annat konto?</string>
+	<string name="login_error_generic">Det var något som inte stämde vid uppkoppling till Google-kontot.</string>
+	<string name="login_error_email_not_found">Google-kontot ”%s” motsvarar inte något befintligt konto på WordPress.com.</string>
+	<string name="login_error_button">Stäng</string>
+	<string name="login_google_button_suffix">Logga in via Google.</string>
+	<string name="login_google_button_prefix">Annars kan du</string>
+	<string name="enter_wpcom_password_google">Ange motsvarande lösenord för WordPress.com för att fortsätta med detta Google-konto. Denna fråga får du endast en gång.</string>
+	<string name="error_generic_network">Ett nätverksfel har inträffat. Kontrollera anslutningen och försök igen.</string>
+	<string name="post_settings_remove_featured_image">Ta bort den utvalda bilden</string>
+	<string name="post_settings_choose_featured_image">Välj utvald bild</string>
 	<string name="login_log_in_for_share_intent">Logga in på WordPress.com för att dela innehållet.</string>
 	<string name="enter_site_address_share_intent">Skriv in adressen för den WordPress-webbplats dit du vill dela innehållet.</string>
 	<string name="jetpack_disconnect_success_toast">Webbplatsen har kopplats bort</string>
@@ -32,7 +90,6 @@ Language: sv_SE
 	<string name="share_media_permission_required">Tillstånd krävs för delning av bilder och video</string>
 	<string name="share_action_post">Lägg till i nytt inlägg</string>
 	<string name="invalid_ip_or_range">Ogiltig IP-adress eller -adressintervall</string>
-	<string name="error_media_still_uploading">Vänta till uppladdningen är klar</string>
 	<string name="deleting_media_dlg">Raderar</string>
 	<string name="confirm_delete_media_video">Ska videon raderas?</string>
 	<string name="confirm_delete_media_image">Ska bilden raderas?</string>
@@ -48,7 +105,6 @@ Language: sv_SE
 	<string name="media_edit_filetype_caption">Filtyp</string>
 	<string name="media_edit_filename_caption">Filnamn</string>
 	<string name="media_edit_url_caption">URL</string>
-	<string name="media_edit_card_caption">Information om fil</string>
 	<string name="media_edit_alttext_text">Alt-text</string>
 	<string name="copy">Kopiera</string>
 	<string name="connect_site">Anslut webbplats</string>
@@ -70,7 +126,6 @@ Language: sv_SE
 	<string name="notification_settings_master_status_on">På</string>
 	<string name="max_video_resolution">Maximal videostorlek</string>
 	<string name="max_thumbnail_px_size">Maximal bildstorlek</string>
-	<string name="error_media_recover_post">Vi lyckades inte ladda upp inläggets media. Redigera inlägget och försök igen.</string>
 	<string name="error_page_does_not_exist">Denna sida finns inte längre</string>
 	<string name="error_upload_post_media_param">Ett fel inträffade vid uppladdning av media för följande inlägg: %s.</string>
 	<string name="error_upload_post_param">Ett fel inträffade vid uppladdning av följande inlägg: %s.</string>
@@ -85,7 +140,6 @@ Language: sv_SE
 	<string name="cant_open_url">Kan inte öppna länken</string>
 	<string name="error_unknown_post">Hittade inte inlägget på servern</string>
 	<string name="error_post_does_not_exist">Detta inlägg finns inte kvar</string>
-	<string name="error_media_recover_page">Det gick inte att ladda upp mediafilerna för denna sida. Redigera sidan och försök igen.</string>
 	<string name="error_media_canceled">Uppladdningen av media avbröts</string>
 	<string name="error_upload_page_media_param">Ett fel inträffade vid uppladdning av media för sidan %s.</string>
 	<string name="error_upload_page_param">Ett fel inträffade vid uppladdning av sidan %s.</string>
@@ -93,14 +147,10 @@ Language: sv_SE
 	<string name="async_promo_description">Nu kan du gå ur redigeraren. Inlägget kommer att sparas och publiceras automatiskt! Prova!</string>
 	<string name="async_promo_title">Publicera utan oro</string>
 	<string name="editor_uploading_post">Ditt inlägg håller på att laddas upp</string>
-	<string name="uploading_post_media">Laddar upp media …</string>
+	<string name="uploading_media">Laddar upp media …</string>
 	<string name="dialog_confirm_cancel_post_media_uploading">Är du säker? Om du raderar detta inlägg kommer även mediauppladdningen att avbrytas.</string>
 	<string name="page_scheduled">Sidan har tidsinställts</string>
 	<string name="post_scheduled">Inlägget har tidsinställts</string>
-	<string name="post_draft_param">”%s” har sparats som utkast!</string>
-	<string name="post_scheduled_param">”%s” har tidsinställts!</string>
-	<string name="post_updated_param">”%s” har uppdaterats!</string>
-	<string name="post_published_param">”%s” har publicerats!</string>
 	<string name="button_retry">Försök igen</string>
 	<string name="post_queued">Inlägget i kö</string>
 	<string name="uploading_post">Laddar upp ”%s”</string>
@@ -131,7 +181,6 @@ Language: sv_SE
 	<string name="login_magic_links_sent_label">Din magiska länk är på väg! Kolla e-posten på din enhet och knacka på länken i e-postmeddelandet du just fick från WordPress.com</string>
 	<string name="login_magic_links_label">Vi skickar en magisk länk som låter dig logga in direkt, utan något lösenord. Slut på pekfingervalsandet!</string>
 	<string name="password_incorrect">Det verkar som om ditt lösenord inte stämmer. Dubbelkolla dina uppgifer och försök igen.</string>
-	<string name="email_not_registered_wpcom">Denna e-postadress finns inte registrerad på WordPress.com</string>
 	<string name="requesting_otp">Begär en verifieringskod via SMS.</string>
 	<string name="login_text_otp">Skicka mig en kod via SMS istället.</string>
 	<string name="enter_verification_code">Nästan klart! Skriv in verifieringskoden från din Authenticator-app.</string>
@@ -347,7 +396,7 @@ Language: sv_SE
 	<string name="media_upload_state_uploading">Laddar upp</string>
 	<string name="media_upload_state_deleting">Raderar</string>
 	<string name="media_upload_state_deleted">Raderat</string>
-	<string name="media_upload_state_failed">Misslyckades</string>
+	<string name="media_upload_state_failed">Uppladdningen misslyckades</string>
 	<string name="image_quality">Bildkvalitet</string>
 	<string name="keep_editing">Fortsätt redigera</string>
 	<string name="update_draft">Uppdatera utkast</string>
@@ -605,9 +654,6 @@ Language: sv_SE
 	<string name="xmlrpc_missing_method_error">Kunde inte ansluta. Obligatoriska XML-RPC-metoder saknas på servern.</string>
 	<string name="post_format_status">Status</string>
 	<string name="post_format_video">Videoklipp</string>
-	<string name="theme_free">Free</string>
-	<string name="theme_all">Alla</string>
-	<string name="theme_premium">Premium</string>
 	<string name="alignment_center">Centrerat</string>
 	<string name="post_format_chat">Chatt</string>
 	<string name="post_format_gallery">Galleri</string>
@@ -712,16 +758,16 @@ Language: sv_SE
 	<string name="site_settings_paging_dialog_description">Dela upp kommentarstrådar i flera sidor.</string>
 	<string name="site_settings_paging_dialog_header">Kommentarer per sida</string>
 	<string name="site_settings_close_after_dialog_title">Stäng kommentarer</string>
-	<string name="site_settings_blacklist_description">När en kommentar innehåller något av dessa ord i innehåll, namn, URL, e-postadress eller IP markeras den som skräppost. Du kan ange delar av ord, så "press" kommer att matcha "Wordpress".</string>
-	<string name="site_settings_hold_for_moderation_description">När en kommentar innehåller något av dessa ord i innehåll, namn, URL, e-postadress eller IP stannar den i granskningskön Du kan ange delar av ord, så "press" kommer att matcha "Wordpress".</string>
+	<string name="site_settings_blacklist_description">När en kommentar innehåller något av dessa ord i innehåll, namn, URL, e-postadress eller IP markeras den som skräppost. Du kan ange delar av ord, så \"press\" kommer att matcha \"Wordpress\".</string>
+	<string name="site_settings_hold_for_moderation_description">När en kommentar innehåller något av dessa ord i innehåll, namn, URL, e-postadress eller IP stannar den i granskningskön Du kan ange delar av ord, så \"press\" kommer att matcha \"Wordpress\".</string>
 	<string name="site_settings_list_editor_input_hint">Ange ett ord eller en fras</string>
 	<string name="site_settings_list_editor_no_items_text">Inga objekt</string>
 	<string name="site_settings_learn_more_caption">Du kan åsidosätta dessa inställningar för enskilda inlägg.</string>
-	<string name="site_settings_rp_preview3_site">i "Uppgradera"</string>
+	<string name="site_settings_rp_preview3_site">i \"Uppgradera\"</string>
 	<string name="site_settings_rp_preview3_title">Uppgraderingsfokus: VideoPress för bröllop</string>
-	<string name="site_settings_rp_preview2_site">i "Appar"</string>
+	<string name="site_settings_rp_preview2_site">i \"Appar\"</string>
 	<string name="site_settings_rp_preview2_title">WordPress för Android får en ansiktslyftning</string>
-	<string name="site_settings_rp_preview1_site">i "Mobilt"</string>
+	<string name="site_settings_rp_preview1_site">i \"Mobilt\"</string>
 	<string name="site_settings_rp_preview1_title">Stor iPhone/iPad-uppdatering finns nu tillgänglig</string>
 	<string name="site_settings_rp_show_images_title">Visa bilder</string>
 	<string name="site_settings_rp_show_header_title">Visa sidhuvud</string>
@@ -840,7 +886,7 @@ Language: sv_SE
 	<string name="media_dimensions">Storlek: %s</string>
 	<string name="media_file_type">Filtyp: %s</string>
 	<string name="reader_label_gap_marker">Ladda fler inlägg</string>
-	<string name="notifications_no_search_results">Inga webbplatser matchade "%s"</string>
+	<string name="notifications_no_search_results">Inga webbplatser matchade \"%s\"</string>
 	<string name="search_sites">Sök webbplatser</string>
 	<string name="notifications_empty_view_reader">Visa Läsare</string>
 	<string name="notifications_empty_action_followers_likes">Se till att synas: kommentera inlägg som du läst.</string>
@@ -935,7 +981,7 @@ Language: sv_SE
 	<string name="me_disconnect_from_wordpress_com">Logga ut från WordPress.com </string>
 	<string name="me_btn_login_logout">Logga in/Logga ut</string>
 	<string name="me_connect_to_wordpress_com">Logga in på WordPress.com</string>
-	<string name="site_picker_cant_hide_current_site">"%s" kunde inte döljas eftersom den är den nuvarande webbplatsen</string>
+	<string name="site_picker_cant_hide_current_site">\"%s\" kunde inte döljas eftersom den är den nuvarande webbplatsen</string>
 	<string name="me_btn_support">Hjälp &amp; support</string>
 	<string name="account_settings">Kontoinställningar</string>
 	<string name="site_picker_create_dotcom">Skapa en webbplats på WordPress.com</string>
@@ -1064,7 +1110,6 @@ Language: sv_SE
 	<string name="delete_sure_post">Radera detta inlägg</string>
 	<string name="delete_sure">Radera detta utkast</string>
 	<string name="delete_sure_page">Radera denna sida</string>
-	<string name="confirm_delete_multi_media">Radera valda  poster?</string>
 	<string name="cab_selected">%d valda</string>
 	<string name="reader_empty_posts_liked">Du har inte gillat några inlägg</string>
 	<string name="faq_button">Vanliga frågor</string>
@@ -1156,7 +1201,7 @@ Language: sv_SE
 	<string name="username_required">Ange ett användarnamn</string>
 	<string name="username_not_allowed">Användarnamnet är inte tillåtet</string>
 	<string name="username_must_be_at_least_four_characters">Användarnamnet måste vara minst 4 tecken</string>
-	<string name="username_contains_invalid_characters">Användarnamn får inte innehålla tecknet "_"</string>
+	<string name="username_contains_invalid_characters">Användarnamn får inte innehålla tecknet \"_\"</string>
 	<string name="username_must_include_letters">Användarnamn måste innehålla minst en bokstav (a-z)</string>
 	<string name="email_invalid">Ange en giltig epostadress</string>
 	<string name="email_not_allowed">Epostadressen är ogiltig</string>
@@ -1173,7 +1218,7 @@ Language: sv_SE
 	<string name="blog_name_not_allowed">Webbplatsadressen är inte tillåten</string>
 	<string name="blog_name_must_be_at_least_four_characters">Webbplatsadressen måste vara minst 4 tecken</string>
 	<string name="blog_name_must_be_less_than_sixty_four_characters">Webbplatsadressen måste vara kortare än 64 tecken</string>
-	<string name="blog_name_contains_invalid_characters">Webbplatsadressen får inte innehålla tecknet "_"</string>
+	<string name="blog_name_contains_invalid_characters">Webbplatsadressen får inte innehålla tecknet \"_\"</string>
 	<string name="username_exists">Användarnamnet används redan</string>
 	<string name="error_moderate_comment">Ett fel uppstod under modereringen</string>
 	<string name="error_edit_comment">Ett fel uppstod under redigeringen av kommentaren</string>
@@ -1277,7 +1322,6 @@ Language: sv_SE
 	<string name="media_error_no_permission">Du har inte behörighet att visa mediebiblioteket</string>
 	<string name="cannot_delete_multi_media_items">En del medieobjekt kunde inte tas bort just nu. Försök igen senare.</string>
 	<string name="themes_live_preview">Live förhandsgranskning</string>
-	<string name="file_not_found">Kunde inte hitta mediafilen att ladda upp. Har den tagits bort eller flyttats?</string>
 	<string name="comment_status_unapproved">Väntande</string>
 	<string name="mnu_comment_unapprove">Godkänn ej</string>
 	<string name="dlg_unapproving_comments">Förkastar</string>
@@ -1291,6 +1335,7 @@ Language: sv_SE
 	<string name="jetpack_message_not_admin">Tillägget Jetpack krävs. Kontakta webbplatsens administratör.</string>
 	<string name="error_refresh_media">Det gick inte att förnya medialistan just nu</string>
 	<string name="error_deleting_page">Ett fel inträffade när sidan skulle raderas</string>
+	<string name="file_not_found">Kunde inte hitta mediafilen att ladda upp. Kanske har den tagits bort eller flyttats?</string>
 	<string name="deleting_page">Tar bort sida</string>
 	<string name="deleting_post">Tar bort inlägg</string>
 	<string name="share_url_post">Dela inlägg</string>
@@ -1325,7 +1370,6 @@ Language: sv_SE
 	<string name="signing_in">Loggar in...</string>
 	<string name="media_add_popup_title">Lägg till i mediebiblioteket</string>
 	<string name="empty_list_default">Listan är tom</string>
-	<string name="select_from_media_library">Välj från mediebiblioteket</string>
 	<string name="jetpack_not_found">Jetpack-tillägget kunde inte hittas</string>
 	<string name="reader_untitled_post">(Ingen titel)</string>
 	<string name="reader_btn_share">Dela</string>

@@ -53,7 +53,7 @@ public class SitePickerAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
 
     public interface HeaderHandler {
         RecyclerView.ViewHolder onCreateViewHolder(LayoutInflater layoutInflater, ViewGroup parent, boolean attachToRoot);
-        void onBindViewHolder(final RecyclerView.ViewHolder holder, int numberOfSites);
+        void onBindViewHolder(final RecyclerView.ViewHolder holder, SiteList sites);
     }
 
     private final int mTextColorNormal;
@@ -220,7 +220,7 @@ public class SitePickerAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         int viewType = getItemViewType(position);
 
         if (viewType == VIEW_TYPE_HEADER) {
-            mHeaderHandler.onBindViewHolder(viewHolder, getItemCount() - 1);
+            mHeaderHandler.onBindViewHolder(viewHolder, mSites);
             return;
         }
 
@@ -482,22 +482,32 @@ public class SitePickerAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
 
     Set<SiteRecord> setVisibilityForSelectedSites(boolean makeVisible) {
         SiteList sites = getSelectedSites();
-        Set<SiteRecord> siteRecordSet = new HashSet<>();
+        Set<SiteRecord> changeSet = new HashSet<>();
         if (sites != null && sites.size() > 0) {
+            ArrayList<Integer> recentIds = AppPrefs.getRecentlyPickedSiteIds();
+            int currentSiteId = AppPrefs.getSelectedSite();
             for (SiteRecord site: sites) {
                 int index = mAllSites.indexOfSite(site);
                 if (index > -1) {
                     SiteRecord siteRecord = mAllSites.get(index);
                     if (siteRecord.isHidden == makeVisible) {
-                        // add it to change set
-                        siteRecordSet.add(siteRecord);
+                        changeSet.add(siteRecord);
+                        siteRecord.isHidden = !makeVisible;
+                        if (!makeVisible
+                                && siteRecord.localId != currentSiteId
+                                && recentIds.contains(siteRecord.localId)) {
+                            AppPrefs.removeRecentlyPickedSiteId(siteRecord.localId);
+                        }
                     }
-                    siteRecord.isHidden = !makeVisible;
                 }
             }
+
+            if (!changeSet.isEmpty()) {
+                notifyDataSetChanged();
+            }
         }
-        notifyDataSetChanged();
-        return siteRecordSet;
+
+        return changeSet;
     }
 
     public void loadSites() {
@@ -641,7 +651,7 @@ public class SitePickerAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
     /**
      * SiteRecord is a simplified version of the full account (blog) record
      */
-     static class SiteRecord {
+     public static class SiteRecord {
         final int localId;
         final long siteId;
         final String blogName;
@@ -667,9 +677,13 @@ public class SitePickerAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
             }
             return blogName;
         }
+
+        public int getLocalId() {
+            return localId;
+        }
     }
 
-    static class SiteList extends ArrayList<SiteRecord> {
+    public static class SiteList extends ArrayList<SiteRecord> {
         SiteList() { }
         SiteList(List<SiteModel> siteModels) {
             if (siteModels != null) {

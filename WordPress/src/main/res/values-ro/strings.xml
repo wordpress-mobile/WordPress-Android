@@ -1,11 +1,69 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2017-10-27 16:43:17+0000
+Translation-Revision-Date: 2017-12-13 09:35:47+0000
 Plural-Forms: nplurals=3; plural=(n==1 ? 0 : (n==0 || (n%100 > 0 && n%100 < 20)) ? 1 : 2);
 Generator: GlotPress/2.4.0-alpha
 Language: ro
 -->
 <resources>
+	<string name="notification_login_failed">A apărut o eroare.</string>
+	<string name="notification_2fa_needed">Te rog furnizează codul de autentificare pentru a continua.</string>
+	<string name="notification_error_wrong_password">Te rog verifică-ți de două ori parola înainte de a continua.</string>
+	<string name="notification_login_title_stopped">Autentificare oprită</string>
+	<string name="notification_logging_in">Te rog așteaptă până te autentificăm.</string>
+	<string name="notification_login_title_in_progress">Autentificare în curs...</string>
+	<string name="notification_logged_in">Atinge pentru a continua.</string>
+	<string name="notification_login_title_success">Ești autentificat!</string>
+	<string name="login_error_generic_start">Autentificarea Google nu poate fi pornită.</string>
+	<string name="site_creating_success">Succes!</string>
+	<string name="site_creating_failed">Regret, am eșuat în crearea corectă a sitului tău :(</string>
+	<string name="site_creating_set_theme">Setăm tema...</string>
+	<string name="site_creating_set_tagline">Setăm sloganul...</string>
+	<string name="site_creating_fetching_info">Extragem informația de sit...</string>
+	<string name="site_creating_label">Pregătim situl tău...</string>
+	<string name="login_empty_password">Te rog introdu o parolă</string>
+	<string name="email_not_registered_wpcom">Hm, această adresă de email nu este înregistrată cu WordPress.com.\nÎncerci să accesezi un sit auto-găzduit? Autentifică-te folosind legătura din partea de jos a acestui ecran.</string>
+	<string name="login_text_otp_another">Trimite-mi în schimb un mesaj text cu un alt cod.</string>
+	<string name="enter_verification_code_sms">Am trimis un mesaj text către numărul de telefon care se termină cu %s. Te rog introdu codul de verificare în SMS.</string>
+	<string name="error_generic_error">Nu am putut efectua operația</string>
+	<string name="error_media_recover_page">Nu pot încărca această pagină din media</string>
+	<string name="error_media_recover_post">Nu pot încărca acest articol din media</string>
+	<string name="size_full">Dimensiune completă</string>
+	<string name="size_large">Mare</string>
+	<string name="size_medium">Medie</string>
+	<string name="size_thumbnail">Miniatură</string>
+	<string name="image_size">Dimensiune</string>
+	<string name="uploading_subtitle_media_only_one">1 fișier rămas</string>
+	<string name="uploading_subtitle_media_only">%1$d din %2$d fișiere rămase</string>
+	<string name="uploading_subtitle_posts_only">%1$d %2$s rămase</string>
+	<string name="uploading_subtitle_mixed_one">%1$d %2$s și 1 fișier rămas</string>
+	<string name="uploading_subtitle_mixed">%1$d %2$s și %3$d din %4$d fișiere rămase</string>
+	<string name="uploading_title">Încarc...</string>
+	<string name="media_files_uploaded_write_post">Scrie articol</string>
+	<string name="media_file_missing_for_retry">Reîncercarea nu este posibilă - unele fișiere din articol lipsesc de pe dispozitivul tău</string>
+	<string name="media_all_files_uploaded_successfully">%d fișiere încărcate cu succes</string>
+	<string name="media_files_uploaded_successfully">, %d încărcate cu succes</string>
+	<string name="media_file_uploaded">1 fișier încărcat</string>
+	<string name="media_file_not_uploaded">1 fișier neîncărcat</string>
+	<string name="media_files_uploaded">%d fișiere încărcate</string>
+	<string name="media_files_not_uploaded">%d fișiere neîncărcate</string>
+	<string name="media_file_post_mixed_not_uploaded">%1$d %2$s cu %3$d fișiere neîncărcate</string>
+	<string name="wpcom_themes_header">Teme WordPress.com</string>
+	<string name="uploaded_themes_header">Teme încărcate</string>
+	<string name="remove_image_from_post">Înlătură din articol</string>
+	<string name="confirm_remove_media_image">Înlături această imagine din articol?</string>
+	<string name="media_edit_customize_card_caption">Personalizare</string>
+	<string name="media_edit_file_details_card_caption">Detalii fișier</string>
+	<string name="login_error_suffix">\nPoate încerci un alt cont?</string>
+	<string name="login_error_generic">Au fost probleme cu conectarea la contul Google.</string>
+	<string name="login_error_email_not_found">Contul Google „%s” nu se potrivește cu niciun cont existent pe WordPress.com.</string>
+	<string name="login_error_button">Închide</string>
+	<string name="login_google_button_suffix">Autentificare cu Google.</string>
+	<string name="login_google_button_prefix">Sau poți</string>
+	<string name="enter_wpcom_password_google">Pentru a continua cu acest cont Google, te rog furnizează parola WordPress.com care se potrivește. Aceasta va fi cerută o singură dată.</string>
+	<string name="error_generic_network">A apărut o eroare de rețea. Te rog verifică-ți conexiunea și încearcă din nou.</string>
+	<string name="post_settings_remove_featured_image">Înlătură imaginea reprezentativă</string>
+	<string name="post_settings_choose_featured_image">Alege imagine reprezentativă</string>
 	<string name="login_log_in_for_share_intent">Autentifică-te în WordPress.com pentru a-ți partaja conținutul.</string>
 	<string name="enter_site_address_share_intent">Introdu adresa sitului tău WordPress de pe care vrei să partajezi conținutul.</string>
 	<string name="jetpack_disconnect_error_toast">Eroare la deconectarea sitului</string>
@@ -32,7 +90,6 @@ Language: ro
 	<string name="share_action_post">Adaugă într-un articol nou</string>
 	<string name="share_media_permission_required">Permisiuni necesare pentru a partaja imagini sau videouri</string>
 	<string name="invalid_ip_or_range">IP sau interval de IP-uri invalid</string>
-	<string name="error_media_still_uploading">Te rog așteaptă să se termine încărcarea</string>
 	<string name="deleting_media_dlg">Ștergere</string>
 	<string name="confirm_delete_media_video">Ștergi acest video?</string>
 	<string name="confirm_delete_media_image">Ștergi această imagine?</string>
@@ -48,7 +105,6 @@ Language: ro
 	<string name="media_edit_filetype_caption">Tip de fișier</string>
 	<string name="media_edit_filename_caption">Nume fișier</string>
 	<string name="media_edit_url_caption">URL</string>
-	<string name="media_edit_card_caption">Detalii fișier</string>
 	<string name="media_edit_alttext_text">Text alternativ</string>
 	<string name="copy">Copiază</string>
 	<string name="connect_site">Conectează situl</string>
@@ -70,7 +126,6 @@ Language: ro
 	<string name="notification_settings_master_status_on">Pornite</string>
 	<string name="max_video_resolution">Dimensiune maximă video</string>
 	<string name="max_thumbnail_px_size">Dimensiune maximă imagine</string>
-	<string name="error_media_recover_post">Nu am putut să încărcăm media în acest articol. Te rog editează articolul pentru a încerca din nou.</string>
 	<string name="error_page_does_not_exist">Această pagină nu mai există</string>
 	<string name="error_upload_post_media_param">A fost o eroare la încărcarea media în acest articol: %s.</string>
 	<string name="error_upload_post_param">A fost o eroare la încărcarea acestui articol: %s.</string>
@@ -85,7 +140,6 @@ Language: ro
 	<string name="cant_open_url">Nu pot deschide legătura</string>
 	<string name="error_unknown_post">N-am putut găsi articolul pe server</string>
 	<string name="error_post_does_not_exist">Acest articol nu mai există</string>
-	<string name="error_media_recover_page">Nu am putut să încărcăm media în această pagină. Te rog editează pagina pentru a încerca din nou.</string>
 	<string name="error_media_canceled">Încărcarea media a fost anulată</string>
 	<string name="error_upload_page_media_param">A fost o eroare la încărcarea media în această pagină: %s.</string>
 	<string name="error_upload_page_param">A fost o eroare la încărcarea acestei pagini: %s.</string>
@@ -93,14 +147,10 @@ Language: ro
 	<string name="async_promo_description">Acum poți părăsi editorul și articolul tău se va salva și publica în spatele scenei! Încearcă!</string>
 	<string name="async_promo_title">Publică cu Confidence</string>
 	<string name="editor_uploading_post">Articolul tău se încarcă</string>
-	<string name="uploading_post_media">Încarc media...</string>
+	<string name="uploading_media">Încarc media...</string>
 	<string name="dialog_confirm_cancel_post_media_uploading">Sigur? Ștergerea acestui articol va anula, de asemenea, încărcarea media.</string>
 	<string name="page_scheduled">Pagină programată</string>
 	<string name="post_scheduled">Articol programat</string>
-	<string name="post_draft_param">„%s” a fost salvat ca o ciornă!</string>
-	<string name="post_scheduled_param">„%s” a fost programat!</string>
-	<string name="post_updated_param">„%s” a fost actualizat!</string>
-	<string name="post_published_param">„%s” a fost publicat!</string>
 	<string name="button_retry">Reîncearcă</string>
 	<string name="post_queued">Articol în coada de așteptare</string>
 	<string name="uploading_post">Încarc „%s”</string>
@@ -131,7 +181,6 @@ Language: ro
 	<string name="login_magic_links_sent_label">Legătura ta magică este pe drum! Verifică-ți emailul pe acest dispozitiv și atinge legătura din emailul pe care l-ai primit de la WordPress.com.</string>
 	<string name="login_magic_links_label">Îți vom trimite prin email o legătură magică care te va autentifica instantaneu, fără nicio parolă. Nu mai trebuie să scrii nimic!</string>
 	<string name="password_incorrect">Se pare că această parolă este incorectă. Te rog verifică-ți din nou informațiile și încearcă din nou.</string>
-	<string name="email_not_registered_wpcom">Acest email nu este înregistrat pe WordPress.com</string>
 	<string name="requesting_otp">Cer un cod de verificare prin SMS.</string>
 	<string name="login_text_otp">În schimb, trimite-mi un mesaj text cu un cod.</string>
 	<string name="enter_verification_code">Aproape gata! Te rog codul de verificare din aplicația ta Authenticator.</string>
@@ -343,7 +392,7 @@ Language: ro
 	<string name="media_encoder_quality_85">Medie</string>
 	<string name="media_encoder_quality_80">Slabă</string>
 	<string name="media_upload_state_uploaded">Încărcată</string>
-	<string name="media_upload_state_failed">Eșuată</string>
+	<string name="media_upload_state_failed">Încărcare eșuată</string>
 	<string name="media_upload_state_deleted">Ștearsă</string>
 	<string name="media_upload_state_deleting">Ștergere</string>
 	<string name="media_upload_state_uploading">Se încarcă</string>
@@ -603,9 +652,6 @@ Language: ro
 	<string name="site_timeout_error">Nu ne-am putut conecta la situl WordPress datorită unei erori de expirare timp.</string>
 	<string name="xmlrpc_malformed_response_error">Nu ne-am putut conecta. Instalarea WordPress a răspuns cu un document XML-RPC invalid.</string>
 	<string name="xmlrpc_missing_method_error">Nu ne-am putut conecta. Metodele XML-RPC necesare lipsesc de pe server.</string>
-	<string name="theme_premium">Premium</string>
-	<string name="theme_all">Toate</string>
-	<string name="theme_free">Gratis</string>
 	<string name="alignment_center">Centru</string>
 	<string name="post_format_video">Video</string>
 	<string name="post_format_status">Stare</string>
@@ -712,16 +758,16 @@ Language: ro
 	<string name="site_settings_paging_dialog_description">Împarte firele de comentarii în mai multe pagini.</string>
 	<string name="site_settings_paging_dialog_header">Comentarii per pagină</string>
 	<string name="site_settings_close_after_dialog_title">Închidere comentare</string>
-	<string name="site_settings_blacklist_description">Când un comentariu conține oricare dintre aceste cuvinte în conținutul său, în nume, URL, email sau IP, va fi marcat ca spam. Poți introduce cuvinte parțiale, așa că "press" se va potrivi și pentru "WordPress".</string>
-	<string name="site_settings_hold_for_moderation_description">Când un comentariu conține oricare dintre aceste cuvinte în conținutul său, în nume, URL, email sau IP, va fi reținut în coada de moderare. Poți introduce cuvinte parțiale, așa că "press" se va potrivi și pentru "WordPress".</string>
+	<string name="site_settings_blacklist_description">Când un comentariu conține oricare dintre aceste cuvinte în conținutul său, în nume, URL, email sau IP, va fi marcat ca spam. Poți introduce cuvinte parțiale, așa că \"press\" se va potrivi și pentru \"WordPress\".</string>
+	<string name="site_settings_hold_for_moderation_description">Când un comentariu conține oricare dintre aceste cuvinte în conținutul său, în nume, URL, email sau IP, va fi reținut în coada de moderare. Poți introduce cuvinte parțiale, așa că \"press\" se va potrivi și pentru \"WordPress\".</string>
 	<string name="site_settings_list_editor_input_hint">Introdu un cuvânt sau frază</string>
 	<string name="site_settings_list_editor_no_items_text">Niciun element</string>
 	<string name="site_settings_learn_more_caption">Poți suprascrie aceste setări pentru fiecare articol.</string>
-	<string name="site_settings_rp_preview3_site">în "Actualizare"</string>
+	<string name="site_settings_rp_preview3_site">în \"Actualizare\"</string>
 	<string name="site_settings_rp_preview3_title">Focalizare actualizare: VideoPress pentru nunți</string>
-	<string name="site_settings_rp_preview2_site">în "Applicații"</string>
+	<string name="site_settings_rp_preview2_site">în \"Applicații\"</string>
 	<string name="site_settings_rp_preview2_title">Aplicația WordPress pentru Android a primit o mare actualizare a aspectului</string>
-	<string name="site_settings_rp_preview1_site">în "Mobile"</string>
+	<string name="site_settings_rp_preview1_site">în \"Mobile\"</string>
 	<string name="site_settings_rp_preview1_title">Este disponibilă o importantă actualizare pentru iPhone/iPad</string>
 	<string name="site_settings_rp_show_images_title">Arată imaginile</string>
 	<string name="site_settings_rp_show_header_title">Arată antetul</string>
@@ -935,7 +981,7 @@ Language: ro
 	<string name="me_disconnect_from_wordpress_com">Dezautentificare din WordPress.com</string>
 	<string name="me_btn_login_logout">Autentificare/Deautentificare</string>
 	<string name="me_connect_to_wordpress_com">Conectare la WordPress.com</string>
-	<string name="site_picker_cant_hide_current_site">"%s" n-a fost ascuns pentru că este situl curent</string>
+	<string name="site_picker_cant_hide_current_site">\"%s\" n-a fost ascuns pentru că este situl curent</string>
 	<string name="me_btn_support">Ajutor și suport</string>
 	<string name="account_settings">Setări cont</string>
 	<string name="site_picker_create_dotcom">Creează un sit WordPress.com</string>
@@ -1062,7 +1108,6 @@ Language: ro
 	<string name="themes_fetching">Se aduc teme...</string>
 	<string name="ssl_certificate_details">Detalii</string>
 	<string name="cab_selected">%d selectate</string>
-	<string name="confirm_delete_multi_media">Ștergi elementele selectate?</string>
 	<string name="delete_sure_page">Șterge această pagină</string>
 	<string name="delete_sure">Șterge această ciornă</string>
 	<string name="delete_sure_post">Șterge acest articol</string>
@@ -1146,7 +1191,7 @@ Language: ro
 	<string name="blog_name_exists">Acel sit există deja</string>
 	<string name="blog_name_only_lowercase_letters_and_numbers">Adresa de sit poate conține doar litere mici (a-z) și numere</string>
 	<string name="blog_name_cant_be_used">S-ar putea să nu folosești acea adresă de sit</string>
-	<string name="blog_name_contains_invalid_characters">Adresa de sit nu poate conține caracterul "_"</string>
+	<string name="blog_name_contains_invalid_characters">Adresa de sit nu poate conține caracterul \"_\"</string>
 	<string name="blog_name_must_be_less_than_sixty_four_characters">Adresa de sit trebuie să fie mai scurtă de 64 de caractere</string>
 	<string name="blog_name_must_be_at_least_four_characters">Adresa de sit trebuie să aibă cel puțin 4 caractere</string>
 	<string name="blog_name_not_allowed">Acea adresă de sit nu e permisă</string>
@@ -1157,7 +1202,7 @@ Language: ro
 	<string name="email_not_allowed">Acea adresă de email nu e permisă</string>
 	<string name="email_invalid">Introdu o adresă de email validă</string>
 	<string name="username_must_include_letters">Numele de utilizator trebuie să aibă cel puțin o literă (a-z)</string>
-	<string name="username_contains_invalid_characters">Numele de utilizator nu poate conține caracterul "_"</string>
+	<string name="username_contains_invalid_characters">Numele de utilizator nu poate conține caracterul \"_\"</string>
 	<string name="username_must_be_at_least_four_characters">Numele de utilizator trebuie să aibă cel puțin 4 caractere</string>
 	<string name="username_not_allowed">Nume de utilizator nepermis</string>
 	<string name="username_required">Introdu un nume de utilizator</string>
@@ -1268,7 +1313,7 @@ Language: ro
 	<string name="delete_page">Șterge pagină</string>
 	<string name="delete_post">Șterge articol</string>
 	<string name="post_settings">Setări articol</string>
-	<string name="file_not_found">Nu am găsit fișierul media pentru încărcare. A fost șters sau mutat?</string>
+	<string name="file_not_found">Nu am putut găsit fișierul pentru încărcare. A fost șters sau mutat?</string>
 	<string name="horizontal_alignment">Aliniere orizontală</string>
 	<string name="upload_failed">Încărcare eșuată</string>
 	<string name="local_draft">Ciornă locală</string>
@@ -1346,7 +1391,6 @@ Language: ro
 	<string name="reader_btn_share">Partajare</string>
 	<string name="reader_untitled_post">(Fără titlu)</string>
 	<string name="jetpack_not_found">Modulul Jetpack nu e găsit</string>
-	<string name="select_from_media_library">Selectează din biblioteca media</string>
 	<string name="empty_list_default">Această listă e goală</string>
 	<string name="media_add_popup_title">Adaugă în biblioteca media</string>
 	<string name="passcode_turn_on">Pune blocarea PIN-ului</string>

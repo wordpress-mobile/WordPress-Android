@@ -1,18 +1,76 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2017-10-25 21:57:07+0000
+Translation-Revision-Date: 2017-12-13 22:22:51+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/2.4.0-alpha
 Language: en_AU
 -->
 <resources>
+	<string name="notification_login_failed">An error has occurred.</string>
+	<string name="notification_2fa_needed">Please provide an authentication code to continue.</string>
+	<string name="notification_error_wrong_password">Please double check your password to continue.</string>
+	<string name="notification_login_title_stopped">Login stopped</string>
+	<string name="notification_logging_in">Please wait while logging in.</string>
+	<string name="notification_login_title_in_progress">Login in progress…</string>
+	<string name="notification_logged_in">Tap to continue.</string>
+	<string name="notification_login_title_success">Logged in!</string>
+	<string name="login_error_generic_start">Google login could not be started.</string>
+	<string name="site_creating_success">Success!</string>
+	<string name="site_creating_failed">Sorry, failed to properly create your site :(</string>
+	<string name="site_creating_set_theme">Setting the theme…</string>
+	<string name="site_creating_set_tagline">Setting the tagline…</string>
+	<string name="site_creating_fetching_info">Fetching site info…</string>
+	<string name="site_creating_label">Preparing your site…</string>
+	<string name="login_empty_password">Please enter a password</string>
+	<string name="email_not_registered_wpcom">Hmm, this email address isn\'t registered with WordPress.com.\nAre you trying to access a self-hosted site? Log in using the link at the bottom of this screen.</string>
+	<string name="login_text_otp_another">Text me another code instead.</string>
+	<string name="enter_verification_code_sms">We sent a text message to the phone number ending in %s. Please enter the verification code in the SMS.</string>
+	<string name="error_generic_error">Couldn\'t perform operation</string>
+	<string name="error_media_recover_page">Unable to upload this page\'s media</string>
+	<string name="error_media_recover_post">Unable to upload this post\'s media</string>
+	<string name="size_full">Full Size</string>
+	<string name="size_large">Large</string>
+	<string name="size_medium">Medium</string>
+	<string name="size_thumbnail">Thumbnail</string>
+	<string name="image_size">Size</string>
+	<string name="uploading_subtitle_media_only_one">1 file remaining</string>
+	<string name="uploading_subtitle_media_only">%1$d of %2$d files remaining</string>
+	<string name="uploading_subtitle_posts_only">%1$d %2$s remaining</string>
+	<string name="uploading_subtitle_mixed_one">%1$d %2$s, and 1 file remaining</string>
+	<string name="uploading_subtitle_mixed">%1$d %2$s, and %3$d of %4$d files remaining</string>
+	<string name="uploading_title">Uploading…</string>
+	<string name="media_files_uploaded_write_post">Write Post</string>
+	<string name="media_file_missing_for_retry">Retry not possible - some files in this Post are missing from your device</string>
+	<string name="media_all_files_uploaded_successfully">%d files uploaded successfully</string>
+	<string name="media_files_uploaded_successfully">, %d successfully uploaded</string>
+	<string name="media_file_uploaded">1 file uploaded</string>
+	<string name="media_file_not_uploaded">1 file not uploaded</string>
+	<string name="media_files_uploaded">%d files uploaded</string>
+	<string name="media_files_not_uploaded">%d files not uploaded</string>
+	<string name="media_file_post_mixed_not_uploaded">%1$d %2$s with %3$d files not uploaded</string>
+	<string name="wpcom_themes_header">WordPress.com themes</string>
+	<string name="uploaded_themes_header">Uploaded themes</string>
+	<string name="remove_image_from_post">Remove from post</string>
+	<string name="confirm_remove_media_image">Remove this image from the post?</string>
+	<string name="media_edit_customize_card_caption">Customise</string>
+	<string name="media_edit_file_details_card_caption">File Details</string>
+	<string name="login_error_suffix">\nMaybe try a different account?</string>
+	<string name="login_error_generic">There was some trouble connecting with the Google account.</string>
+	<string name="login_error_email_not_found">The Google account \'%s\' doesn\'t match any existing account on WordPress.com.</string>
+	<string name="login_error_button">Close</string>
+	<string name="login_google_button_suffix">Log in with Google.</string>
+	<string name="login_google_button_prefix">Or you can</string>
+	<string name="enter_wpcom_password_google">To proceed with this Google account, please provide the matching WordPress.com password. This will be asked only once.</string>
+	<string name="error_generic_network">A network error occurred. Please check your connection and try again.</string>
+	<string name="post_settings_remove_featured_image">Remove featured image</string>
+	<string name="post_settings_choose_featured_image">Choose featured image</string>
 	<string name="login_log_in_for_share_intent">Log in to WordPress.com to share the content.</string>
 	<string name="enter_site_address_share_intent">Enter the address of your WordPress site you\'d like to share the content to.</string>
 	<string name="jetpack_disconnect_error_toast">Error disconnecting site</string>
 	<string name="jetpack_disconnect_success_toast">Site disconnected</string>
 	<string name="jetpack_disconnect_confirm">Disconnect</string>
 	<string name="jetpack_disconnect_confirmation_message">Are you sure you want to disconnect Jetpack from the site?</string>
-	<string name="jetpack_disconnect_pref_title">"Disconnect from WordPress.com"</string>
+	<string name="jetpack_disconnect_pref_title">\"Disconnect from WordPress.com\"</string>
 	<string name="site_settings_jetpack_whitelist_description">You may whitelist an IP address or series of addresses preventing them from ever being blocked by Jetpack. IPv4 and IPv6 are acceptable. To specify a range, enter the low value and high value separated by a dash. Example: 12.12.12.1–12.12.12.100</string>
 	<string name="jetpack_require_two_factor_title">Require two-step authentication</string>
 	<string name="jetpack_match_wpcom_via_email_title">Match accounts using email</string>
@@ -32,7 +90,6 @@ Language: en_AU
 	<string name="share_action_post">Add to new post</string>
 	<string name="share_media_permission_required">Permissions required in order to share images or videos</string>
 	<string name="invalid_ip_or_range">Invalid IP or IP range</string>
-	<string name="error_media_still_uploading">Please wait for the upload to finish</string>
 	<string name="deleting_media_dlg">Deleting</string>
 	<string name="confirm_delete_media_video">Delete this video?</string>
 	<string name="confirm_delete_media_image">Delete this image?</string>
@@ -48,7 +105,6 @@ Language: en_AU
 	<string name="media_edit_filetype_caption">File Type</string>
 	<string name="media_edit_filename_caption">File Name</string>
 	<string name="media_edit_url_caption">URL</string>
-	<string name="media_edit_card_caption">File Details</string>
 	<string name="media_edit_alttext_text">Alt text</string>
 	<string name="copy">Copy</string>
 	<string name="connect_site">Connect Site</string>
@@ -70,7 +126,6 @@ Language: en_AU
 	<string name="notification_settings_master_status_on">On</string>
 	<string name="max_video_resolution">Maximum Video Size</string>
 	<string name="max_thumbnail_px_size">Maximum Image Size</string>
-	<string name="error_media_recover_post">We were unable to upload this post\'s media. Please edit the post to try again.</string>
 	<string name="error_page_does_not_exist">This page no longer exists</string>
 	<string name="error_upload_post_media_param">There was an error uploading the media in this post: %s.</string>
 	<string name="error_upload_post_param">There was an error uploading this post: %s.</string>
@@ -79,13 +134,12 @@ Language: en_AU
 	<string name="login_site_address_help_image">The site address can be found in the navigation bar of your web browser</string>
 	<string name="error_unknown_page">Could not find the page on the server</string>
 	<string name="error_publish_empty_page">Can\'t publish an empty page</string>
-	<string name="upload_failed_param">Upload failed for "%s"</string>
+	<string name="upload_failed_param">Upload failed for \"%s\"</string>
 	<string name="cannot_retry_deleted_media_item">Media has been removed. Delete it from this post?</string>
 	<string name="error_please_choose_browser">Error opening the default web browser. Please choose another app:</string>
 	<string name="cant_open_url">Unable to open the link</string>
 	<string name="error_unknown_post">Could not find the post on the server</string>
 	<string name="error_post_does_not_exist">This post no longer exists</string>
-	<string name="error_media_recover_page">We were unable to upload this page\'s media. Please edit the page to try again.</string>
 	<string name="error_media_canceled">Uploading media were cancelled</string>
 	<string name="error_upload_page_media_param">There was an error uploading the media in this page: %s.</string>
 	<string name="error_upload_page_param">There was an error uploading this page: %s.</string>
@@ -93,17 +147,13 @@ Language: en_AU
 	<string name="async_promo_description">You can now leave the editor and your post will save and publish behind the scenes! Give it a try!</string>
 	<string name="async_promo_title">Publish with Confidence</string>
 	<string name="editor_uploading_post">Your post is uploading</string>
-	<string name="uploading_post_media">Uploading media…</string>
+	<string name="uploading_media">Uploading media…</string>
 	<string name="dialog_confirm_cancel_post_media_uploading">Are you sure? Deleting this post will also cancel the media upload.</string>
 	<string name="page_scheduled">Page scheduled</string>
 	<string name="post_scheduled">Post scheduled</string>
-	<string name="post_draft_param">"%s" has been saved as a draft!</string>
-	<string name="post_scheduled_param">"%s" has been scheduled!</string>
-	<string name="post_updated_param">"%s" has been updated!</string>
-	<string name="post_published_param">"%s" has been published!</string>
 	<string name="button_retry">Retry</string>
 	<string name="post_queued">Queued post</string>
-	<string name="uploading_post">Uploading "%s"</string>
+	<string name="uploading_post">Uploading \"%s\"</string>
 	<string name="connection_to_server_lost">The connection to the server was lost</string>
 	<string name="login_epilogue_mysites_other">My sites</string>
 	<string name="login_epilogue_mysites_one">My site</string>
@@ -131,7 +181,6 @@ Language: en_AU
 	<string name="login_magic_links_sent_label">Your magic link is on its way! Check your email on this device and tap the link in the email you received from WordPress.com.</string>
 	<string name="login_magic_links_label">We\'ll email you a magic link that\'ll log you in instantly, no password needed. Hunt and peck no more!</string>
 	<string name="password_incorrect">It looks like this password is incorrect. Please double check your information and try again.</string>
-	<string name="email_not_registered_wpcom">This email is not registered on WordPress.com</string>
 	<string name="requesting_otp">Requesting a verification code via SMS.</string>
 	<string name="login_text_otp">Text me a code instead.</string>
 	<string name="enter_verification_code">Almost there! Please enter the verification code from your Authenticator app.</string>
@@ -254,14 +303,14 @@ Language: en_AU
 	<string name="sharing_comment_likes_description">Allow all comments to be Liked by you and your readers</string>
 	<string name="visual">Visual</string>
 	<string name="buttons">Buttons</string>
-	<string name="sharing_edit_more_buttons">Edit "More" Buttons</string>
-	<string name="sharing_more_description">A "More" button contains a dropdown which displays sharing buttons</string>
+	<string name="sharing_edit_more_buttons">Edit \"More\" Buttons</string>
+	<string name="sharing_more_description">A \"More\" button contains a dropdown which displays sharing buttons</string>
 	<string name="sharing_sharing_buttons_description">Select which buttons are shown under your posts</string>
 	<string name="twitter_username">Twitter Username</string>
 	<string name="sharing_comment_likes">Comment Likes</string>
 	<string name="button_style">Button Style</string>
 	<string name="label">Label</string>
-	<string name="more_buttons">"More" Buttons</string>
+	<string name="more_buttons">\"More\" Buttons</string>
 	<string name="sharing_buttons">Sharing buttons</string>
 	<string name="site_settings_like">Show Like Button</string>
 	<string name="site_settings_reblog">Show Reblog Button</string>
@@ -343,7 +392,7 @@ Language: en_AU
 	<string name="media_encoder_quality_85">Medium</string>
 	<string name="media_encoder_quality_80">Low</string>
 	<string name="media_upload_state_uploaded">Uploaded</string>
-	<string name="media_upload_state_failed">Failed</string>
+	<string name="media_upload_state_failed">Upload Failed</string>
 	<string name="media_upload_state_deleted">Deleted</string>
 	<string name="media_upload_state_deleting">Deleting</string>
 	<string name="media_upload_state_uploading">Uploading</string>
@@ -603,9 +652,6 @@ Language: en_AU
 	<string name="site_timeout_error">Couldn\'t connect to the WordPress site due to Timeout error.</string>
 	<string name="xmlrpc_malformed_response_error">Couldn\'t connect. The WordPress installation responded with an invalid XML-RPC document.</string>
 	<string name="xmlrpc_missing_method_error">Couldn\'t connect. Required XML-RPC methods are missing on the server.</string>
-	<string name="theme_premium">Premium</string>
-	<string name="theme_all">All</string>
-	<string name="theme_free">Free</string>
 	<string name="alignment_center">Centre</string>
 	<string name="post_format_video">Video</string>
 	<string name="post_format_status">Status</string>
@@ -712,16 +758,16 @@ Language: en_AU
 	<string name="site_settings_paging_dialog_description">Break comment threads into multiple pages.</string>
 	<string name="site_settings_paging_dialog_header">Comments per page</string>
 	<string name="site_settings_close_after_dialog_title">Close commenting</string>
-	<string name="site_settings_blacklist_description">When a comment contains any of these words in its content, name, URL, e-mail, or IP, it will be marked as spam. You can enter partial words, so "press" will match "WordPress."</string>
-	<string name="site_settings_hold_for_moderation_description">When a comment contains any of these words in its content, name, URL, email, or IP, it will be held in the moderation queue. You can enter partial words, so "press" will match "WordPress."</string>
+	<string name="site_settings_blacklist_description">When a comment contains any of these words in its content, name, URL, e-mail, or IP, it will be marked as spam. You can enter partial words, so \"press\" will match \"WordPress.\"</string>
+	<string name="site_settings_hold_for_moderation_description">When a comment contains any of these words in its content, name, URL, email, or IP, it will be held in the moderation queue. You can enter partial words, so \"press\" will match \"WordPress.\"</string>
 	<string name="site_settings_list_editor_input_hint">Enter a word or phrase</string>
 	<string name="site_settings_list_editor_no_items_text">No items</string>
 	<string name="site_settings_learn_more_caption">You can override these settings for individual posts.</string>
-	<string name="site_settings_rp_preview3_site">in "Upgrade"</string>
+	<string name="site_settings_rp_preview3_site">in \"Upgrade\"</string>
 	<string name="site_settings_rp_preview3_title">Upgrade Focus: VideoPress For Weddings</string>
-	<string name="site_settings_rp_preview2_site">in "Apps"</string>
+	<string name="site_settings_rp_preview2_site">in \"Apps\"</string>
 	<string name="site_settings_rp_preview2_title">The WordPress for Android App Gets a Big Facelift</string>
-	<string name="site_settings_rp_preview1_site">in "Mobile"</string>
+	<string name="site_settings_rp_preview1_site">in \"Mobile\"</string>
 	<string name="site_settings_rp_preview1_title">Big iPhone/iPad Update Now Available</string>
 	<string name="site_settings_rp_show_images_title">Show Images</string>
 	<string name="site_settings_rp_show_header_title">Show Header</string>
@@ -935,7 +981,7 @@ Language: en_AU
 	<string name="me_disconnect_from_wordpress_com">Log out of WordPress.com</string>
 	<string name="me_btn_login_logout">Login/Logout</string>
 	<string name="me_connect_to_wordpress_com">Log in to WordPress.com</string>
-	<string name="site_picker_cant_hide_current_site">"%s" wasn\'t hidden because it\'s the current site</string>
+	<string name="site_picker_cant_hide_current_site">\"%s\" wasn\'t hidden because it\'s the current site</string>
 	<string name="me_btn_support">Help &amp; Support</string>
 	<string name="account_settings">Account Settings</string>
 	<string name="site_picker_create_dotcom">Create WordPress.com site</string>
@@ -1062,7 +1108,6 @@ Language: en_AU
 	<string name="themes_fetching">Fetching themes…</string>
 	<string name="ssl_certificate_details">Details</string>
 	<string name="cab_selected">%d selected</string>
-	<string name="confirm_delete_multi_media">Delete selected items?</string>
 	<string name="delete_sure_page">Delete this page</string>
 	<string name="delete_sure">Delete this draft</string>
 	<string name="delete_sure_post">Delete this post</string>
@@ -1268,7 +1313,7 @@ Language: en_AU
 	<string name="delete_page">Delete page</string>
 	<string name="delete_post">Delete post</string>
 	<string name="post_settings">Post settings</string>
-	<string name="file_not_found">Couldn\'t find the media file for upload. Was it deleted or moved?</string>
+	<string name="file_not_found">Couldn\'t find the file for upload. Was it deleted or moved?</string>
 	<string name="horizontal_alignment">Horizontal alignment</string>
 	<string name="upload_failed">Upload failed</string>
 	<string name="local_draft">Local draft</string>
@@ -1346,7 +1391,6 @@ Language: en_AU
 	<string name="reader_btn_share">Share</string>
 	<string name="reader_untitled_post">(Untitled)</string>
 	<string name="jetpack_not_found">Jetpack plugin not found</string>
-	<string name="select_from_media_library">Select from media library</string>
 	<string name="empty_list_default">This list is empty</string>
 	<string name="media_add_popup_title">Add to media library</string>
 	<string name="passcode_turn_on">Turn PIN lock on</string>

@@ -9,10 +9,12 @@ import org.apache.commons.lang3.StringUtils;
 import org.jetbrains.annotations.NotNull;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.analytics.AnalyticsTracker;
+import org.wordpress.android.fluxc.model.MediaModel;
 import org.wordpress.android.fluxc.model.PostModel;
 import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.model.post.PostLocation;
 import org.wordpress.android.fluxc.model.post.PostStatus;
+import org.wordpress.android.fluxc.store.PostStore;
 import org.wordpress.android.ui.prefs.AppPrefs;
 import org.wordpress.android.util.AnalyticsUtils;
 import org.wordpress.android.util.AppLog;
@@ -27,6 +29,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -325,5 +328,25 @@ public class PostUtils {
             return true;
         }
         return false;
+    }
+
+    public static boolean isFirstTimePublish(PostModel post) {
+        return PostStatus.fromPost(post) == PostStatus.DRAFT
+                || (PostStatus.fromPost(post) == PostStatus.PUBLISHED && post.isLocalDraft());
+    }
+
+    public static Set<PostModel> getPostsThatIncludeThisMedia(PostStore postStore, List<MediaModel> mediaModelList) {
+        // if there' a Post to which the retried media belongs, clear their status
+        HashSet<PostModel> postsThatContainListedMedia = new HashSet<>();
+        for (MediaModel media : mediaModelList) {
+            if (media.getLocalPostId() > 0) {
+                PostModel post = postStore.getPostByLocalPostId(media.getLocalPostId());
+                if (post != null) {
+                    postsThatContainListedMedia.add(post);
+                }
+            }
+        }
+
+        return postsThatContainListedMedia;
     }
 }

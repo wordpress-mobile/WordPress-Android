@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2017-10-11 08:04:22+0000
+Translation-Revision-Date: 2017-11-23 09:38:19+0000
 Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);
 Generator: GlotPress/2.4.0-alpha
 Language: hr
@@ -54,11 +54,11 @@ Language: hr
 	<string name="site_settings_list_editor_input_hint">Unesite riječi ili frazu</string>
 	<string name="site_settings_list_editor_no_items_text">Nema stavki</string>
 	<string name="site_settings_learn_more_caption">Možete zaobići ove postavke na individualnim objavama.</string>
-	<string name="site_settings_rp_preview3_site">u "Nadogradnji"</string>
+	<string name="site_settings_rp_preview3_site">u \"Nadogradnji\"</string>
 	<string name="site_settings_rp_preview3_title">Fokus nadogradnje: VideoPress za vjenčanja</string>
-	<string name="site_settings_rp_preview2_site">u "Aplikacijama"</string>
+	<string name="site_settings_rp_preview2_site">u \"Aplikacijama\"</string>
 	<string name="site_settings_rp_preview2_title">WordPress for Android aplikacija dobila redizajn</string>
-	<string name="site_settings_rp_preview1_site">u "Mobilnom"</string>
+	<string name="site_settings_rp_preview1_site">u \"Mobilnom\"</string>
 	<string name="site_settings_rp_preview1_title">Veliko iPhone/iPad ažuriranje sada dostupno</string>
 	<string name="site_settings_rp_show_images_title">Prikaži slike</string>
 	<string name="site_settings_rp_show_header_title">Prikaži zaglavlje</string>
@@ -274,7 +274,7 @@ Language: hr
 	<string name="me_connect_to_wordpress_com">Spoji se u WordPress.com</string>
 	<string name="me_btn_support">Pomoć i podrška</string>
 	<string name="account_settings">Postavke računa</string>
-	<string name="site_picker_cant_hide_current_site">"%s" nije skriven jer je to trenutna web-stranica.</string>
+	<string name="site_picker_cant_hide_current_site">\"%s\" nije skriven jer je to trenutna web-stranica.</string>
 	<string name="site_picker_create_dotcom">Kreiraj WordPress.com web-stranicu</string>
 	<string name="site_picker_add_site">Dodaj stranicu</string>
 	<string name="site_picker_edit_visibility">Prikaži/sakrij web-stranice</string>
@@ -401,7 +401,6 @@ Language: hr
 	<string name="delete_sure_post">Obriši ovu obavijest</string>
 	<string name="delete_sure">Obriši ovu skicu</string>
 	<string name="delete_sure_page">Obriši ovu stranicu</string>
-	<string name="confirm_delete_multi_media">Obriši odabrane stavke?</string>
 	<string name="cab_selected">%d odabrano</string>
 	<string name="reader_empty_posts_liked">Niste lajkali ni jednu objavu</string>
 	<string name="faq_button">FAQ</string>
@@ -661,7 +660,6 @@ Language: hr
 	<string name="reader_empty_followed_tags">Ne pratite ni jednu oznaku</string>
 	<string name="media_add_popup_title">Dodaj u medijske zapise</string>
 	<string name="empty_list_default">Popis je prazan</string>
-	<string name="select_from_media_library">Odaberi iz medijskih zapisa</string>
 	<string name="jetpack_not_found">Dodatak Jetpack nije pronađen</string>
 	<string name="reader_untitled_post">(Bez naslova)</string>
 	<string name="reader_btn_share">Podjeli</string>
