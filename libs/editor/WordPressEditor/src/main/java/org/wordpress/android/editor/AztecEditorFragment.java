@@ -749,13 +749,20 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
             AztecAttributes attributes = new AztecAttributes();
             attributes.setValue(ATTR_SRC, mediaUrl);
 
-            setDefaultAttributes(attributes, mediaFile);
-
             if (mediaFile.isVideo()) {
+                // VideoPress special case here
+                if (!TextUtils.isEmpty(mediaFile.getVideoPressShortCode())) {
+                    attributes.removeAttribute(ATTR_SRC);
+                    String videoPressId = ShortcodeUtils.getVideoPressIdFromShortCode(mediaFile.getVideoPressShortCode());
+                    attributes.setValue( "videopress_hidden_id" , videoPressId);
+                    attributes.setValue( "videopress_hidden_src" , mediaUrl);
+                }
+                // Do not set default attributes here like for pictures
                 addVideoUploadingClassIfMissing(attributes);
                 content.insertVideo(getLoadingVideoPlaceholder(), attributes);
                 overlayVideoIcon(0, new MediaPredicate(mediaUrl, ATTR_SRC));
             } else {
+                setDefaultAttributes(attributes, mediaFile);
                 content.insertImage(getLoadingImagePlaceholder(), attributes);
             }
 
@@ -767,6 +774,9 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
                     for (AztecMediaSpan currentClass : imageOrVideoSpans) {
                         if (currentClass.getAttributes().hasAttribute(ATTR_SRC) &&
                                 mediaUrl.equals(currentClass.getAttributes().getValue(ATTR_SRC))) {
+                            currentClass.setDrawable(newDrawable);
+                        } if (currentClass.getAttributes().hasAttribute("videopress_hidden_src") &&
+                                mediaUrl.equals(currentClass.getAttributes().getValue("videopress_hidden_src"))) {
                             currentClass.setDrawable(newDrawable);
                         }
                     }
@@ -804,9 +814,6 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
                         showErrorPlaceholder();
                         return;
                     }
-
-                    AztecAttributes attributes = new AztecAttributes();
-                    attributes.setValue(ATTR_SRC, mediaUrl);
 
                     int minimumDimension = DisplayUtils.dpToPx(getActivity(), MIN_BITMAP_DIMENSION_DP);
 
@@ -873,7 +880,6 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
             content.updateElementAttributes(localMediaIdPredicate, attrs);
 
             content.resetAttributedMediaSpan(localMediaIdPredicate);
-
         }
     }
 
