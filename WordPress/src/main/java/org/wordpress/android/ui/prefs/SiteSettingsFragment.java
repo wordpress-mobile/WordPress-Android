@@ -166,6 +166,8 @@ public class SiteSettingsFragment extends PreferenceFragment
     // Writing settings
     private DetailListPreference mCategoryPref;
     private DetailListPreference mFormatPref;
+    private DetailListPreference mDateFormatPref;
+    private DetailListPreference mTimeFormatPref;
     private DetailListPreference mWeekStartPref;
     private Preference mRelatedPostsPref;
 
@@ -632,6 +634,14 @@ public class SiteSettingsFragment extends PreferenceFragment
             mModerationHoldPref.setSummary(mSiteSettings.getModerationHoldDescription());
         } else if (preference == mBlacklistPref) {
             mBlacklistPref.setSummary(mSiteSettings.getBlacklistDescription());
+        } else if (preference == mDateFormatPref) {
+            mSiteSettings.setDateFormat(newValue.toString());
+            mDateFormatPref.setValue(newValue.toString());
+            mDateFormatPref.setSummary(mDateFormatPref.getEntry());
+        } else if (preference == mTimeFormatPref) {
+            mSiteSettings.setTimeFormat(newValue.toString());
+            mTimeFormatPref.setValue(newValue.toString());
+            mTimeFormatPref.setSummary(mTimeFormatPref.getEntry());
         } else if (preference == mWeekStartPref) {
             mSiteSettings.setStartOfWeek(newValue.toString());
             mWeekStartPref.setValue(newValue.toString());
@@ -786,6 +796,8 @@ public class SiteSettingsFragment extends PreferenceFragment
         mJpUseTwoFactorPref = (WPSwitchPreference) getChangePref(R.string.pref_key_jetpack_require_two_factor);
         mJpWhitelistPref = (WPPreference) getClickPref(R.string.pref_key_jetpack_brute_force_whitelist);
         mWeekStartPref = (DetailListPreference) getChangePref(R.string.pref_key_site_week_start);
+        mDateFormatPref = (DetailListPreference) getChangePref(R.string.pref_key_site_date_format);
+        mTimeFormatPref = (DetailListPreference) getChangePref(R.string.pref_key_site_time_format);
 
         sortLanguages();
 
@@ -819,6 +831,7 @@ public class SiteSettingsFragment extends PreferenceFragment
                 mReceivePingbacksNested, mIdentityRequiredPreference, mUserAccountRequiredPref,
                 mSortByPref, mWhitelistPref, mRelatedPostsPref, mCloseAfterPref, mPagingPref,
                 mThreadingPref, mMultipleLinksPref, mModerationHoldPref, mBlacklistPref, mWeekStartPref,
+                mDateFormatPref, mTimeFormatPref,
                 mDeleteSitePref, mJpMonitorActivePref, mJpMonitorEmailNotesPref, mJpSsoPref,
                 mJpMonitorWpNotesPref, mJpBruteForcePref, mJpWhitelistPref, mJpMatchEmailPref, mJpUseTwoFactorPref
         };
@@ -1084,6 +1097,10 @@ public class SiteSettingsFragment extends PreferenceFragment
         mJpWhitelistPref.setSummary(mSiteSettings.getJetpackProtectWhitelistSummary());
         mWeekStartPref.setValue(mSiteSettings.getStartOfWeek());
         mWeekStartPref.setSummary(mWeekStartPref.getEntry());
+        mDateFormatPref.setValue(mSiteSettings.getDateFormat());
+        mDateFormatPref.setSummary(mDateFormatPref.getEntry());
+        mTimeFormatPref.setValue(mSiteSettings.getTimeFormat());
+        mTimeFormatPref.setSummary(mTimeFormatPref.getEntry());
     }
 
     private void setCategories() {
