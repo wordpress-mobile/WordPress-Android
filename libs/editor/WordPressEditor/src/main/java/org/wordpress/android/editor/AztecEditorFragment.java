@@ -67,6 +67,7 @@ import org.wordpress.aztec.IHistoryListener;
 import org.wordpress.aztec.ITextFormat;
 import org.wordpress.aztec.extensions.MediaLinkExtensionsKt;
 import org.wordpress.aztec.plugins.IAztecPlugin;
+import org.wordpress.aztec.plugins.IMediaToolbarButton;
 import org.wordpress.aztec.plugins.shortcodes.AudioShortcodePlugin;
 import org.wordpress.aztec.plugins.shortcodes.CaptionShortcodePlugin;
 import org.wordpress.aztec.plugins.shortcodes.VideoShortcodePlugin;
@@ -240,6 +241,15 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
             }
         });
 
+        MediaToolbarCameraButton mediaToolbarCameraButton = new MediaToolbarCameraButton(formattingToolbar);
+        mediaToolbarCameraButton.setMediaToolbarButtonClickListener(new IMediaToolbarButton.IMediaToolbarClickListener() {
+            @Override
+            public void onClick(View view) {
+                mEditorFragmentListener.onAddMediaClicked();
+            }
+        });
+
+
         Aztec.Factory.with(content, source, formattingToolbar, this)
                 .setImageGetter(aztecImageLoader)
                 .setVideoThumbnailGetter(aztecVideoLoader)
@@ -252,7 +262,8 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
                 .addPlugin(new MoreToolbarButton(content))
                 .addPlugin(new CaptionShortcodePlugin(content))
                 .addPlugin(new VideoShortcodePlugin())
-                .addPlugin(new AudioShortcodePlugin());
+                .addPlugin(new AudioShortcodePlugin())
+                .addPlugin(mediaToolbarCameraButton);
 
         mEditorFragmentListener.onEditorFragmentInitialized();
 
@@ -1360,19 +1371,21 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
     };
 
     @Override
-    public void onToolbarMediaButtonClicked() {
+    public boolean onToolbarMediaButtonClicked() {
         mEditorFragmentListener.onTrackableEvent(TrackableEvent.MEDIA_BUTTON_TAPPED);
 
         if (isActionInProgress()) {
             ToastUtils.showToast(getActivity(), R.string.alert_action_while_uploading, ToastUtils.Duration.LONG);
-            return;
         }
 
         if (source.isFocused()) {
             ToastUtils.showToast(getActivity(), R.string.alert_insert_image_html_mode, ToastUtils.Duration.LONG);
         } else {
-            mEditorFragmentListener.onAddMediaClicked();
+//            mEditorFragmentListener.onAddMediaClicked();
+            return false;
         }
+
+        return true;
     }
 
     @Override
