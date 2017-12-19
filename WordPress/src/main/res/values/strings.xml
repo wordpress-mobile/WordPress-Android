@@ -185,6 +185,8 @@
     <string name="media_edit_caption_text">Caption</string>
     <string name="media_edit_alttext_text">Alt text</string>
     <string name="media_edit_description_text">Description</string>
+    <string name="media_edit_link_text">Link to</string>
+    <string name="media_edit_link_hint">Open link in a new window/tab"</string>
     <string name="media_edit_title_hint">Enter a title here</string>
     <string name="media_edit_caption_hint">Enter a caption here</string>
     <string name="media_edit_description_hint">Enter a description here</string>
@@ -2043,12 +2045,19 @@
 
     <string name="google_error_timeout">Google took too long to respond. You may need to wait until you have a stronger internet connection.</string>
 
+    <!-- Site Creation notifications -->
+    <string name="notification_site_creation_title_success">Site created!</string>
+    <string name="notification_site_creation_created">Tap to continue.</string>
+    <string name="notification_site_creation_title_in_progress">Creating site…</string>
+    <string name="notification_site_creation_please_wait">Please wait while creating your site.</string>
+    <string name="notification_site_creation_title_stopped">Site creation stopped</string>
+    <string name="notification_site_creation_failed">An error has occurred.</string>
+
+    <!-- Login notifications -->
     <string name="notification_login_title_success">Logged in!</string>
     <string name="notification_logged_in">Tap to continue.</string>
-
     <string name="notification_login_title_in_progress">Login in progress…</string>
     <string name="notification_logging_in">Please wait while logging in.</string>
-
     <string name="notification_login_title_stopped">Login stopped</string>
     <string name="notification_error_wrong_password">Please double check your password to continue.</string>
     <string name="notification_2fa_needed">Please provide an authentication code to continue.</string>

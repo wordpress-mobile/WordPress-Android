@@ -1,4 +1,4 @@
-package org.wordpress.android.ui.accounts.login;
+package org.wordpress.android.util;
 
 import android.app.Notification;
 import android.app.PendingIntent;
@@ -8,9 +8,8 @@ import android.support.annotation.StringRes;
 import android.support.v4.app.NotificationCompat;
 
 import org.wordpress.android.R;
-import org.wordpress.android.util.AutoForeground;
 
-class LoginNotification {
+public class AutoForegroundNotification {
     private static Intent getResumeIntent(Context context) {
         // Let's get an Intent with the sole purpose of _resuming_ the app from the background
         Intent resumeIntent = context.getPackageManager().getLaunchIntentForPackage(context.getPackageName());
@@ -38,8 +37,8 @@ class LoginNotification {
                 .setAutoCancel(true);
     }
 
-    static Notification progress(Context context, int progress, @StringRes int content) {
-        return getNotificationBuilder(context, R.string.notification_login_title_in_progress, content)
+    public static Notification progress(Context context, int progress, @StringRes int title, @StringRes int content) {
+        return getNotificationBuilder(context, title, content)
                 .setContentIntent(PendingIntent.getActivity(
                         context,
                         AutoForeground.NOTIFICATION_ID_PROGRESS,
@@ -49,8 +48,8 @@ class LoginNotification {
                 .build();
     }
 
-    static Notification success(Context context, @StringRes int content) {
-        return getNotificationBuilder(context, R.string.notification_login_title_success, content)
+    public static Notification success(Context context, @StringRes int title, @StringRes int content) {
+        return getNotificationBuilder(context, title, content)
                 .setContentIntent(PendingIntent.getActivity(
                         context,
                         AutoForeground.NOTIFICATION_ID_SUCCESS,
@@ -59,8 +58,8 @@ class LoginNotification {
                 .build();
     }
 
-    static Notification failure(Context context, @StringRes int content) {
-        return getNotificationBuilder(context, R.string.notification_login_title_stopped, content)
+    public static Notification failure(Context context, @StringRes int title, @StringRes int content) {
+        return getNotificationBuilder(context, title, content)
                 .setContentIntent(PendingIntent.getActivity(
                         context,
                         AutoForeground.NOTIFICATION_ID_FAILURE,
