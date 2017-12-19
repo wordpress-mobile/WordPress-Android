@@ -27,6 +27,7 @@
                 android:layout_width="50dp"
                 android:layout_height="50dp"
                 app:srcCompat="@drawable/ic_my_sites_white_50dp"
+                android:importantForAccessibility="no"
                 android:layout_marginTop="@dimen/margin_medium"/>
 
             <org.wordpress.android.widgets.WPTextView

@@ -23,6 +23,7 @@ import org.wordpress.android.WordPress;
 import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.fluxc.generated.AuthenticationActionBuilder;
 import org.wordpress.android.fluxc.generated.SiteActionBuilder;
+import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.store.AccountStore;
 import org.wordpress.android.fluxc.store.SiteStore;
 import org.wordpress.android.util.AnalyticsUtils;
@@ -38,6 +39,7 @@ import org.wordpress.android.widgets.WPLoginInputRow.OnEditorCommitListener;
 import org.wordpress.android.widgets.WPNetworkImageView;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class LoginUsernamePasswordFragment extends LoginBaseFormFragment<LoginListener> implements TextWatcher,
         OnEditorCommitListener {
@@ -337,6 +339,17 @@ public class LoginUsernamePasswordFragment extends LoginBaseFormFragment<LoginLi
         });
     }
 
+    private @Nullable SiteModel detectNewlyAddedXMLRPCSite() {
+        List<SiteModel> selfhostedSites = mSiteStore.getSitesAccessedViaXMLRPC();
+        for (SiteModel site : selfhostedSites) {
+            if (!mOldSitesIDs.contains(site.getId())) {
+                return site;
+            }
+        }
+
+        return null;
+    }
+
     @Override
     protected void endProgress() {
         super.endProgress();
@@ -416,6 +429,23 @@ public class LoginUsernamePasswordFragment extends LoginBaseFormFragment<LoginLi
         mLoginListener.loggedInViaPassword(mOldSitesIDs);
     }
 
+    private void finishLogin() {
+        AnalyticsUtils.trackAnalyticsSignIn(mAccountStore, mSiteStore, mIsWpcom);
+
+        startPostLoginServices();
+
+        // mark as finished so any subsequent onSiteChanged (e.g. triggered by WPMainActivity) won't be intercepted
+        mLoginFinished = true;
+
+        if (mLoginListener != null) {
+            if (mIsWpcom) {
+                saveCredentialsInSmartLock(mLoginListener.getSmartLockHelper(), mRequestedUsername, mRequestedPassword);
+            }
+
+            mLoginListener.loggedInViaUsernamePassword(mOldSitesIDs);
+        }
+    }
+
     @SuppressWarnings("unused")
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onSiteChanged(SiteStore.OnSiteChanged event) {
@@ -457,22 +487,36 @@ public class LoginUsernamePasswordFragment extends LoginBaseFormFragment<LoginLi
             return;
         }
 
-        // continue with success, even if the operation was cancelled since the user got logged in regardless. So, go on
-        //  with finishing the login process
+        SiteModel newlyAddedXMLRPCSite = detectNewlyAddedXMLRPCSite();
+        // newlyAddedSite will be null if the user sign in with wpcom credentials
+        if (newlyAddedXMLRPCSite != null && !newlyAddedXMLRPCSite.isUsingWpComRestApi()) {
+            mDispatcher.dispatch(SiteActionBuilder.newFetchProfileXmlRpcAction(newlyAddedXMLRPCSite));
+        } else {
+            finishLogin();
+        }
+    }
 
-        AnalyticsUtils.trackAnalyticsSignIn(mAccountStore, mSiteStore, mIsWpcom);
+    @SuppressWarnings("unused")
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onProfileFetched(SiteStore.OnProfileFetched event) {
+        if (!isAdded() || mLoginFinished) {
+            return;
+        }
 
-        startPostLoginServices();
-
-        // mark as finished so any subsequent onSiteChanged (e.g. triggered by WPMainActivity) won't be intercepted
-        mLoginFinished = true;
-
-        if (mLoginListener != null) {
-            if (mIsWpcom) {
-                saveCredentialsInSmartLock(mLoginListener.getSmartLockHelper(), mRequestedUsername, mRequestedPassword);
+        if (event.isError()) {
+            if (mRequestedUsername == null) {
+                // just bail since the operation was cancelled
+                return;
             }
 
-            mLoginListener.loggedInViaUsernamePassword(mOldSitesIDs);
+            endProgress();
+
+            AppLog.e(T.API, "Fetching selfhosted site profile has error: " + event.error.type + " - " +
+                    event.error.message);
+
+            // continue with success, even if the operation was cancelled since the user got logged in regardless. So, go on
+            //  with finishing the login process
         }
+        finishLogin();
     }
 }

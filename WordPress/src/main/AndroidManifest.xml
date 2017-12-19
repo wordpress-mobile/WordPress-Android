@@ -188,6 +188,9 @@
         <activity
             android:name=".ui.comments.EditCommentActivity"
             android:theme="@style/CalypsoTheme" />
+        <activity
+            android:name=".ui.comments.CommentsDetailActivity"
+            android:theme="@style/CalypsoTheme" />
 
         <!-- Posts activities -->
         <activity
@@ -197,7 +200,6 @@
             android:windowSoftInputMode="stateVisible" />
         <activity
             android:name=".ui.posts.EditPostActivity"
-            android:configChanges="orientation|keyboardHidden|screenSize"
             android:theme="@style/Calypso.ActionMode.Dark"
             android:windowSoftInputMode="stateHidden|adjustResize">
             <meta-data
@@ -459,6 +461,16 @@
         <activity
             android:name=".ui.people.PeopleManagementActivity"
             android:label="@string/people"
+            android:theme="@style/Calypso.NoActionBar"/>
+
+        <!--Plugins-->
+        <activity
+            android:name=".ui.plugins.PluginListActivity"
+            android:label="@string/plugins"
+            android:theme="@style/Calypso.NoActionBar"/>
+
+        <activity
+            android:name=".ui.plugins.PluginDetailActivity"
             android:theme="@style/Calypso.NoActionBar"/>
 
         <!-- Me activities -->

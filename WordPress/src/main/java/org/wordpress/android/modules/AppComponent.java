@@ -35,6 +35,7 @@ import org.wordpress.android.ui.accounts.login.LoginWpcomService;
 import org.wordpress.android.ui.comments.CommentAdapter;
 import org.wordpress.android.ui.comments.CommentDetailFragment;
 import org.wordpress.android.ui.comments.CommentsActivity;
+import org.wordpress.android.ui.comments.CommentsDetailActivity;
 import org.wordpress.android.ui.comments.CommentsListFragment;
 import org.wordpress.android.ui.comments.EditCommentActivity;
 import org.wordpress.android.ui.main.MeFragment;
@@ -60,6 +61,8 @@ import org.wordpress.android.ui.people.RoleChangeDialogFragment;
 import org.wordpress.android.ui.people.RoleSelectDialogFragment;
 import org.wordpress.android.ui.photopicker.PhotoPickerActivity;
 import org.wordpress.android.ui.plans.PlansActivity;
+import org.wordpress.android.ui.plugins.PluginDetailActivity;
+import org.wordpress.android.ui.plugins.PluginListActivity;
 import org.wordpress.android.ui.posts.AddCategoryFragment;
 import org.wordpress.android.ui.posts.EditPostActivity;
 import org.wordpress.android.ui.posts.EditPostSettingsFragment;
@@ -170,6 +173,7 @@ public interface AppComponent {
     void inject(CommentAdapter object);
     void inject(CommentsListFragment object);
     void inject(CommentsActivity object);
+    void inject(CommentsDetailActivity object);
 
     void inject(MeFragment object);
     void inject(MyProfileActivity object);
@@ -245,4 +249,7 @@ public interface AppComponent {
     void inject(AddCategoryFragment object);
 
     void inject(HtmlToSpannedConverter object);
+
+    void inject(PluginListActivity object);
+    void inject(PluginDetailActivity object);
 }

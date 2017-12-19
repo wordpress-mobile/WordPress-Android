@@ -154,6 +154,7 @@ public class LoginWpcomService extends AutoForeground<OnLoginStateUpdated> {
     public Notification getNotification() {
         switch (mLoginPhase) {
             case AUTHENTICATING:
+            case SOCIAL_LOGIN:
             case FETCHING_ACCOUNT:
             case FETCHING_SETTINGS:
             case FETCHING_SITES:
@@ -306,7 +307,7 @@ public class LoginWpcomService extends AutoForeground<OnLoginStateUpdated> {
 
         if (isSocialLogin) {
             setState(LoginPhase.SOCIAL_LOGIN);
-            AccountStore.PushSocialLoginPayload payload = new AccountStore.PushSocialLoginPayload(mIdToken, mService);
+            AccountStore.PushSocialPayload payload = new AccountStore.PushSocialPayload(mIdToken, mService);
             mDispatcher.dispatch(AccountActionBuilder.newPushSocialConnectAction(payload));
         } else {
             signalCredentialsOK();

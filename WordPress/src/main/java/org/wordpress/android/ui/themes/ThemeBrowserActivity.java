@@ -346,7 +346,7 @@ public class ThemeBrowserActivity extends AppCompatActivity implements ThemeBrow
             return;
         }
 
-        ThemeModel theme = mThemeStore.getInstalledThemeByThemeId(themeId);
+        ThemeModel theme = mThemeStore.getInstalledThemeByThemeId(mSite, themeId);
         if (theme == null) {
             theme = mThemeStore.getWpComThemeByThemeId(themeId);
             if (theme == null) {
