@@ -1104,8 +1104,37 @@ public class SiteSettingsFragment extends PreferenceFragment
         mJpWhitelistPref.setSummary(mSiteSettings.getJetpackProtectWhitelistSummary());
         mWeekStartPref.setValue(mSiteSettings.getStartOfWeek());
         mWeekStartPref.setSummary(mWeekStartPref.getEntry());
-        mDateFormatPref.setSummary(mSiteSettings.getDateFormat());
-        mTimeFormatPref.setSummary(mSiteSettings.getTimeFormat());
+
+        mDateFormatPref.setSummary(getFormatEntryForValue(FormatType.DATE_FORMAT, mSiteSettings.getDateFormat()));
+        mTimeFormatPref.setSummary(getFormatEntryForValue(FormatType.TIME_FORMAT, mSiteSettings.getTimeFormat()));
+    }
+
+    /*
+     * returns the entry (display text) for the passed date/time format value
+     */
+    private String getFormatEntryForValue(FormatType formatType, String value) {
+        String[] entries;
+        String[] values;
+        switch (formatType) {
+            case DATE_FORMAT:
+                entries = getResources().getStringArray(R.array.date_format_entries);
+                values = getResources().getStringArray(R.array.date_format_values);
+                break;
+            default:
+                entries = getResources().getStringArray(R.array.time_format_entries);
+                values = getResources().getStringArray(R.array.time_format_values);
+                break;
+        }
+
+        // return predefined format if there's a match
+        for (int i = 0; i < values.length; i++) {
+            if (values[i].equals(value)) {
+                return entries[i];
+            }
+        }
+
+        // not a predefined format, so it must be custom
+        return getString(R.string.site_settings_format_entry_custom);
     }
 
     private void setCategories() {

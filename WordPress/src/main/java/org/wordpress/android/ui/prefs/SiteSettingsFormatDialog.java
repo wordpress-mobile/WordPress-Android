@@ -38,9 +38,8 @@ public class SiteSettingsFormatDialog extends DialogFragment implements DialogIn
     public static final String KEY_FORMAT_STRING = "format_string";
 
     private FormatType mFormatType;
+    private String mFormatEntry;
     private boolean mConfirmed;
-    private String mSelectedEntry;
-    private String mSelectedValue;
 
     private EditText mEditText;
     private RadioGroup mRadioGroup;
@@ -67,10 +66,9 @@ public class SiteSettingsFormatDialog extends DialogFragment implements DialogIn
         mRadioGroup = view.findViewById(R.id.radio_group);
 
         Bundle args = getArguments();
-        String formatString = args.getString(KEY_FORMAT_STRING);
-        mEditText.setText(formatString);
-
+        mFormatEntry = args.getString(KEY_FORMAT_STRING);
         mFormatType = (FormatType) args.getSerializable(KEY_FORMAT_TYPE);
+
         @StringRes int titleRes = mFormatType == FormatType.DATE_FORMAT ?
                 R.string.site_settings_date_format_title : R.string.site_settings_time_format_title;
         txtTitle.setText(titleRes);
@@ -92,8 +90,6 @@ public class SiteSettingsFormatDialog extends DialogFragment implements DialogIn
                 mValues = getResources().getStringArray(R.array.time_format_values);
                 break;
         }
-
-
         createRadioButtons();
 
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity(), R.style.Calypso_AlertDialog);

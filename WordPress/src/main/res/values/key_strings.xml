@@ -178,7 +178,7 @@
         <item>2017–12–31</item>
         <item>12/31/2017</item>
         <item>31/12/2017</item>
-        <item>Custom</item>
+        <item>@string/site_settings_format_entry_custom</item>
     </string-array>
 
     <string-array name="date_format_values">
@@ -193,7 +193,7 @@
         <item>11:59 pm</item>
         <item>11:59 PM</item>
         <item>23:59</item>
-        <item>Custom</item>
+        <item>@string/site_settings_format_entry_custom</item>
     </string-array>
 
     <string-array name="time_format_values">

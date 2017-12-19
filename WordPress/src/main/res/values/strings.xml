@@ -533,6 +533,7 @@
     <string name="site_settings_week_start_title">Week starts on</string>
     <string name="site_settings_date_format_title">Date Format</string>
     <string name="site_settings_time_format_title">Time Format</string>
+    <string name="site_settings_format_entry_custom">Custom</string>
     <string name="site_settings_format_help">Learn more about date &amp; time formatting</string>
     <string name="site_settings_image_original_size">Original Size</string>
     <string name="site_settings_optimize_images">Optimize Images</string>
