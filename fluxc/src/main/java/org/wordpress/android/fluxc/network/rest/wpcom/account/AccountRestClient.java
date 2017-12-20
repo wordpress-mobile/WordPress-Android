@@ -28,6 +28,7 @@ import org.wordpress.android.fluxc.network.rest.wpcom.auth.AccessToken;
 import org.wordpress.android.fluxc.network.rest.wpcom.auth.AppSecrets;
 import org.wordpress.android.fluxc.store.AccountStore.AccountSocialError;
 import org.wordpress.android.fluxc.store.AccountStore.AccountSocialErrorType;
+import org.wordpress.android.fluxc.store.AccountStore.AccountUsernameError;
 import org.wordpress.android.fluxc.store.AccountStore.IsAvailableError;
 import org.wordpress.android.fluxc.store.AccountStore.NewUserError;
 import org.wordpress.android.fluxc.store.AccountStore.NewUserErrorType;
@@ -127,7 +128,7 @@ public class AccountRestClient extends BaseWPComRestClient {
         }
     }
 
-    public static class AccountPushUsernameResponsePayload extends Payload<BaseNetworkError> {
+    public static class AccountPushUsernameResponsePayload extends Payload<AccountUsernameError> {
     }
 
     public static class NewAccountResponsePayload extends Payload<NewUserError> {
