@@ -12,8 +12,8 @@ import org.wordpress.android.WordPress;
 import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.ui.accounts.signup.SiteCreationCategoryFragment;
 import org.wordpress.android.ui.accounts.signup.SiteCreationListener;
+import org.wordpress.android.ui.accounts.signup.SiteCreationThemeFragment;
 import org.wordpress.android.util.HelpshiftHelper;
-import org.wordpress.android.util.ToastUtils;
 
 public class SiteCreationActivity extends AppCompatActivity implements SiteCreationListener {
 
@@ -42,6 +42,15 @@ public class SiteCreationActivity extends AppCompatActivity implements SiteCreat
         fragmentTransaction.commit();
     }
 
+    private void slideInFragment(Fragment fragment, String tag) {
+        FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
+        fragmentTransaction.setCustomAnimations(R.anim.activity_slide_in_from_right, R.anim.activity_slide_out_to_left,
+                R.anim.activity_slide_in_from_left, R.anim.activity_slide_out_to_right);
+        fragmentTransaction.replace(R.id.fragment_container, fragment, tag);
+        fragmentTransaction.addToBackStack(null);
+        fragmentTransaction.commitAllowingStateLoss();
+    }
+
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getItemId() == android.R.id.home) {
@@ -63,25 +72,30 @@ public class SiteCreationActivity extends AppCompatActivity implements SiteCreat
 
     @Override
     public void startWithBlog() {
-        // TODO: Jump to theme selection for a Blog
-        ToastUtils.showToast(this, "Blog category selected");
+        slideInFragment(SiteCreationThemeFragment.newInstance(SiteCreationThemeFragment.ThemeCategory.BLOG),
+                SiteCreationThemeFragment.TAG);
     }
 
     @Override
     public void startWithWebsite() {
-        // TODO: Jump to theme selection for a Website
-        ToastUtils.showToast(this, "Website category selected");
+        slideInFragment(SiteCreationThemeFragment.newInstance(SiteCreationThemeFragment.ThemeCategory.WEBSITE),
+                SiteCreationThemeFragment.TAG);
     }
 
     @Override
     public void startWithPortfolio() {
-        // TODO: Jump to theme selection for a Portfolio
-        ToastUtils.showToast(this, "Portfolio category selected");
+        slideInFragment(SiteCreationThemeFragment.newInstance(SiteCreationThemeFragment.ThemeCategory.PORTFOLIO),
+                SiteCreationThemeFragment.TAG);
     }
 
     @Override
     public void helpCategoryScreen() {
         launchHelpshift(HelpshiftHelper.Tag.ORIGIN_SITE_CREATION_CATEGORY);
+    }
+
+    @Override
+    public void helpThemeScreen() {
+        launchHelpshift(HelpshiftHelper.Tag.ORIGIN_SITE_CREATION_THEME);
     }
 
     @Override
