@@ -12,7 +12,6 @@ import android.support.annotation.NonNull;
 import android.support.annotation.StringRes;
 import android.text.TextUtils;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.RadioButton;
@@ -35,10 +34,10 @@ public class SiteSettingsFormatDialog extends DialogFragment implements DialogIn
     }
 
     private static final String KEY_FORMAT_TYPE = "format_type";
-    public static final String KEY_FORMAT_STRING = "format_string";
+    public static final String KEY_FORMAT_VALUE = "format_value";
 
     private FormatType mFormatType;
-    private String mFormatEntry;
+    private String mFormatValue;
     private boolean mConfirmed;
 
     private EditText mEditText;
@@ -47,10 +46,10 @@ public class SiteSettingsFormatDialog extends DialogFragment implements DialogIn
     private String[] mEntries;
     private String[] mValues;
 
-    public static SiteSettingsFormatDialog newInstance(@NonNull FormatType formatType, @NonNull String formatString) {
+    public static SiteSettingsFormatDialog newInstance(@NonNull FormatType formatType, @NonNull String formatValue) {
         Bundle args = new Bundle();
         args.putSerializable(KEY_FORMAT_TYPE, formatType);
-        args.putString(KEY_FORMAT_STRING, formatString);
+        args.putString(KEY_FORMAT_VALUE, formatValue);
 
         SiteSettingsFormatDialog dialog = new SiteSettingsFormatDialog();
         dialog.setArguments(args);
@@ -66,7 +65,7 @@ public class SiteSettingsFormatDialog extends DialogFragment implements DialogIn
         mRadioGroup = view.findViewById(R.id.radio_group);
 
         Bundle args = getArguments();
-        mFormatEntry = args.getString(KEY_FORMAT_STRING);
+        mFormatValue = args.getString(KEY_FORMAT_VALUE);
         mFormatType = (FormatType) args.getSerializable(KEY_FORMAT_TYPE);
 
         @StringRes int titleRes = mFormatType == FormatType.DATE_FORMAT ?
@@ -108,15 +107,22 @@ public class SiteSettingsFormatDialog extends DialogFragment implements DialogIn
             radio.setText(mEntries[i]);
             radio.setId(i);
             mRadioGroup.addView(radio);
+
             LinearLayout.LayoutParams params = (LinearLayout.LayoutParams) radio.getLayoutParams();
             params.topMargin = margin;
             params.bottomMargin = margin;
+
+            if (mValues[i].equals(mFormatValue)) {
+                radio.setChecked(true);
+            }
         }
 
         mRadioGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(RadioGroup group, int checkedId) {
-
+                String customEntry = getString(R.string.site_settings_format_entry_custom);
+                boolean isCustom = mEntries[checkedId].equals(customEntry);
+                mEditText.setEnabled(isCustom);
             }
         });
     }
@@ -133,7 +139,7 @@ public class SiteSettingsFormatDialog extends DialogFragment implements DialogIn
         Fragment target = getTargetFragment();
         if (mConfirmed && target != null && !TextUtils.isEmpty(formatString)) {
             if (mConfirmed) {
-                Intent intent = new Intent().putExtra(KEY_FORMAT_STRING, formatString);
+                Intent intent = new Intent().putExtra(KEY_FORMAT_VALUE, formatString);
                 target.onActivityResult(getTargetRequestCode(), Activity.RESULT_OK, intent);
             }
         }
