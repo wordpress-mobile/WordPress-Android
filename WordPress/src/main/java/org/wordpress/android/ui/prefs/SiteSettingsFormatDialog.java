@@ -5,6 +5,7 @@ import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.DialogFragment;
 import android.app.Fragment;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
@@ -30,13 +31,29 @@ import org.wordpress.android.util.EditTextUtils;
 public class SiteSettingsFormatDialog extends DialogFragment implements DialogInterface.OnClickListener {
 
     public enum FormatType {
-        DATE_FORMAT, TIME_FORMAT
+        DATE_FORMAT,
+        TIME_FORMAT;
+
+        public String[] getEntries(@NonNull Context context) {
+            if (this == FormatType.DATE_FORMAT) {
+                return context.getResources().getStringArray(R.array.date_format_entries);
+            } else {
+                return context.getResources().getStringArray(R.array.time_format_entries);
+            }
+        }
+
+        public String[] getValues(@NonNull Context context) {
+            if (this == FormatType.DATE_FORMAT) {
+                return context.getResources().getStringArray(R.array.date_format_values);
+            } else {
+                return context.getResources().getStringArray(R.array.time_format_values);
+            }
+        }
     }
 
     private static final String KEY_FORMAT_TYPE = "format_type";
     public static final String KEY_FORMAT_VALUE = "format_value";
 
-    private FormatType mFormatType;
     private String mFormatValue;
     private boolean mConfirmed;
 
@@ -65,10 +82,20 @@ public class SiteSettingsFormatDialog extends DialogFragment implements DialogIn
         mRadioGroup = view.findViewById(R.id.radio_group);
 
         Bundle args = getArguments();
+        FormatType formatType = (FormatType) args.getSerializable(KEY_FORMAT_TYPE);
         mFormatValue = args.getString(KEY_FORMAT_VALUE);
-        mFormatType = (FormatType) args.getSerializable(KEY_FORMAT_TYPE);
 
-        @StringRes int titleRes = mFormatType == FormatType.DATE_FORMAT ?
+        mEntries = formatType.getEntries(getActivity());
+        mValues = formatType.getValues(getActivity());
+        createRadioButtons();
+
+        boolean isCustomFormat = isCustomFormatValue(mFormatValue);
+        mEditCustomFormat.setEnabled(isCustomFormat);
+        if (isCustomFormat) {
+            mEditCustomFormat.setText(mFormatValue);
+        }
+
+        @StringRes int titleRes = formatType == FormatType.DATE_FORMAT ?
                 R.string.site_settings_date_format_title : R.string.site_settings_time_format_title;
         txtTitle.setText(titleRes);
 
@@ -79,18 +106,6 @@ public class SiteSettingsFormatDialog extends DialogFragment implements DialogIn
             }
         });
 
-        switch (mFormatType) {
-            case DATE_FORMAT:
-                mEntries = getResources().getStringArray(R.array.date_format_entries);
-                mValues = getResources().getStringArray(R.array.date_format_values);
-                break;
-            default:
-                mEntries = getResources().getStringArray(R.array.time_format_entries);
-                mValues = getResources().getStringArray(R.array.time_format_values);
-                break;
-        }
-        createRadioButtons();
-
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity(), R.style.Calypso_AlertDialog);
         builder.setPositiveButton(android.R.string.ok, this);
         builder.setNegativeButton(R.string.cancel, this);
@@ -100,6 +115,7 @@ public class SiteSettingsFormatDialog extends DialogFragment implements DialogIn
     }
 
     private void createRadioButtons() {
+        boolean isCustomFormat = isCustomFormatValue(mFormatValue);
         int margin = getResources().getDimensionPixelSize(R.dimen.margin_small);
 
         for (int i = 0; i < mEntries.length; i++) {
@@ -112,7 +128,9 @@ public class SiteSettingsFormatDialog extends DialogFragment implements DialogIn
             params.topMargin = margin;
             params.bottomMargin = margin;
 
-            if (mValues[i].equals(mFormatValue)) {
+            if (isCustomFormat && isCustomFormatEntry(mEntries[i])) {
+                radio.setChecked(true);
+            } else if (mValues[i].equals(mFormatValue)) {
                 radio.setChecked(true);
             }
         }
@@ -134,6 +152,15 @@ public class SiteSettingsFormatDialog extends DialogFragment implements DialogIn
     private boolean isCustomFormatEntry(@NonNull String entry) {
         String customEntry = getString(R.string.site_settings_format_entry_custom);
         return entry.equals(customEntry);
+    }
+
+    private boolean isCustomFormatValue(@NonNull String value) {
+        for (String thisValue: mValues) {
+            if (thisValue.equals(value)) {
+                return false;
+            }
+        }
+        return true;
     }
 
     private String getSelectedFormatValue() {

@@ -1124,18 +1124,8 @@ public class SiteSettingsFragment extends PreferenceFragment
     }
 
     private void setDateTimeFormat(FormatType formatType, WPPreference formatPref, String formatValue) {
-        String[] entries;
-        String[] values;
-        switch (formatType) {
-            case DATE_FORMAT:
-                entries = getResources().getStringArray(R.array.date_format_entries);
-                values = getResources().getStringArray(R.array.date_format_values);
-                break;
-            default:
-                entries = getResources().getStringArray(R.array.time_format_entries);
-                values = getResources().getStringArray(R.array.time_format_values);
-                break;
-        }
+        String[] entries = formatType.getEntries(getActivity());
+        String[] values = formatType.getValues(getActivity());
 
         // return predefined format if there's a match
         for (int i = 0; i < values.length; i++) {
