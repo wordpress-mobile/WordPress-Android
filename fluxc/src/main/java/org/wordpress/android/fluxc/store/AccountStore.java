@@ -132,6 +132,7 @@ public class AccountStore extends Store {
     }
 
     public static class OnAuthenticationChanged extends OnChanged<AuthenticationError> {
+        public String userName;
         public boolean createdAccount;
     }
 
@@ -624,7 +625,7 @@ public class AccountStore extends Store {
         } else {
             // Social login or signup completed; update token and send boolean flag.
             if (payload.hasUsername()) {
-                updateToken(new UpdateTokenPayload(payload.bearerToken), payload.createdAccount);
+                updateToken(new UpdateTokenPayload(payload.bearerToken), payload.createdAccount, payload.userName);
             } else {
                 updateToken(new UpdateTokenPayload(payload.bearerToken));
             }
@@ -719,11 +720,13 @@ public class AccountStore extends Store {
      *
      * @param updateTokenPayload payload containing token to be updated
      * @param createdAccount     flag to send in event to determine login or signup
+     * @param userName           username of created account
      */
-    private void updateToken(UpdateTokenPayload updateTokenPayload, boolean createdAccount) {
+    private void updateToken(UpdateTokenPayload updateTokenPayload, boolean createdAccount, String userName) {
         mAccessToken.set(updateTokenPayload.token);
         OnAuthenticationChanged event = new OnAuthenticationChanged();
         event.createdAccount = createdAccount;
+        event.userName = userName;
         emitChange(event);
     }
 
