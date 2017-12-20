@@ -775,7 +775,7 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
                         if (currentClass.getAttributes().hasAttribute(ATTR_SRC) &&
                                 mediaUrl.equals(currentClass.getAttributes().getValue(ATTR_SRC))) {
                             currentClass.setDrawable(newDrawable);
-                        } if (currentClass.getAttributes().hasAttribute("videopress_hidden_src") &&
+                        } else if (currentClass.getAttributes().hasAttribute("videopress_hidden_src") &&
                                 mediaUrl.equals(currentClass.getAttributes().getValue("videopress_hidden_src"))) {
                             currentClass.setDrawable(newDrawable);
                         }
