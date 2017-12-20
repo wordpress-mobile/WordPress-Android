@@ -53,6 +53,13 @@
             android:title="@string/site_settings_language_title"
             app:longClickHint="@string/site_settings_language_hint" />
 
+        <org.wordpress.android.ui.prefs.DetailListPreference
+            android:id="@+id/pref_site_timezone"
+            android:entries="@array/timezone_entries"
+            android:entryValues="@array/timezone_values"
+            android:key="@string/pref_key_site_timezone"
+            android:title="@string/site_settings_timezone_title" />
+
     </PreferenceCategory>
 
     <!-- Account settings; only used with .org sites -->
@@ -126,6 +133,12 @@
             android:key="@string/pref_key_site_related_posts"
             android:title="@string/site_settings_related_posts_title"
             app:longClickHint="@string/site_settings_related_posts_hint" />
+
+        <org.wordpress.android.ui.prefs.WPPreference
+            android:id="@+id/pref_posts_per_page"
+            android:defaultValue="10"
+            android:key="@string/pref_key_site_posts_per_page"
+            android:title="@string/site_settings_posts_per_page_title" />
 
     </PreferenceCategory>
 
