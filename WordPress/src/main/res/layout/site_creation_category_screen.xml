@@ -31,7 +31,6 @@
         style="@style/LoginTheme.TextLabel" />
 
     <LinearLayout
-        android:id="@+id/site_creation_category_cards"
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/margin_medium"
         android:layout_marginBottom="@dimen/margin_medium"
