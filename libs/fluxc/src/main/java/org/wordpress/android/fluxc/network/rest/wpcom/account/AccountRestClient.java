@@ -127,6 +127,9 @@ public class AccountRestClient extends BaseWPComRestClient {
         }
     }
 
+    public static class AccountPushUsernameResponsePayload extends Payload<BaseNetworkError> {
+    }
+
     public static class NewAccountResponsePayload extends Payload<NewUserError> {
         public boolean dryRun;
     }
