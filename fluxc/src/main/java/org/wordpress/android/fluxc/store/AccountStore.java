@@ -20,6 +20,7 @@ import org.wordpress.android.fluxc.network.discovery.SelfHostedEndpointFinder.Di
 import org.wordpress.android.fluxc.network.rest.wpcom.account.AccountRestClient;
 import org.wordpress.android.fluxc.network.rest.wpcom.account.AccountRestClient.AccountPushSettingsResponsePayload;
 import org.wordpress.android.fluxc.network.rest.wpcom.account.AccountRestClient.AccountPushSocialResponsePayload;
+import org.wordpress.android.fluxc.network.rest.wpcom.account.AccountRestClient.AccountPushUsernameResponsePayload;
 import org.wordpress.android.fluxc.network.rest.wpcom.account.AccountRestClient.AccountRestPayload;
 import org.wordpress.android.fluxc.network.rest.wpcom.account.AccountRestClient.IsAvailable;
 import org.wordpress.android.fluxc.network.rest.wpcom.account.AccountRestClient.IsAvailableResponsePayload;
@@ -168,6 +169,9 @@ public class AccountStore extends Store {
             this.phoneNumber = payload.phoneNumber;
             this.userId = payload.userId;
         }
+    }
+
+    public static class OnUsernameChanged extends OnChanged<AccountUsernameError> {
     }
 
     public static class OnDiscoveryResponse extends OnChanged<DiscoveryError> {
@@ -494,6 +498,9 @@ public class AccountStore extends Store {
             case PUSH_SOCIAL_SMS:
                 createPushSocialSms((PushSocialSmsPayload) payload);
                 break;
+            case PUSH_USERNAME:
+                createPushUsername((PushUsernamePayload) payload);
+                break;
             case UPDATE_ACCOUNT:
                 updateDefaultAccount((AccountModel) payload, AccountAction.UPDATE_ACCOUNT);
                 break;
@@ -514,6 +521,9 @@ public class AccountStore extends Store {
                 break;
             case PUSHED_SOCIAL:
                 handlePushSocialCompleted((AccountPushSocialResponsePayload) payload);
+                break;
+            case PUSHED_USERNAME:
+                handlePushUsernameCompleted((AccountPushUsernameResponsePayload) payload);
                 break;
             case FETCHED_SETTINGS:
                 handleFetchSettingsCompleted((AccountRestPayload) payload);
@@ -668,6 +678,12 @@ public class AccountStore extends Store {
         }
     }
 
+    private void handlePushUsernameCompleted(AccountPushUsernameResponsePayload payload) {
+        OnUsernameChanged onUsernameChanged = new OnUsernameChanged();
+        onUsernameChanged.error = payload.error;
+        emitChange(onUsernameChanged);
+    }
+
     private void handleNewAccountCreated(NewAccountResponsePayload payload) {
         OnNewUserCreated onNewUserCreated = new OnNewUserCreated();
         onNewUserCreated.error = payload.error;
@@ -714,6 +730,10 @@ public class AccountStore extends Store {
 
     private void createPushSocialSms(PushSocialSmsPayload payload) {
         mAccountRestClient.pushSocialSms(payload.userId, payload.nonce);
+    }
+
+    private void createPushUsername(PushUsernamePayload payload) {
+        mAccountRestClient.pushUsername(payload.username, payload.action);
     }
 
     private void signOut() {
