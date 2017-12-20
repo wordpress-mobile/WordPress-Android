@@ -11,7 +11,7 @@ import org.wordpress.aztec.plugins.IMediaToolbarButton;
 import org.wordpress.aztec.toolbar.AztecToolbar;
 import org.wordpress.aztec.toolbar.IToolbarAction;
 
-public class MediaToolbarMediaLibraryButton implements IMediaToolbarButton {
+public class MediaToolbarLibraryButton implements IMediaToolbarButton {
 
     private IMediaToolbarClickListener mClickListener;
     private Context mContext;
@@ -19,7 +19,7 @@ public class MediaToolbarMediaLibraryButton implements IMediaToolbarButton {
     private AztecToolbar mToolbar;
 
 
-    public MediaToolbarMediaLibraryButton(AztecToolbar aztecToolbar) {
+    public MediaToolbarLibraryButton(AztecToolbar aztecToolbar) {
         mToolbar = aztecToolbar;
         mContext = mToolbar.getContext();
     }
