@@ -997,6 +997,7 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
                     attrs.setValue( "videopress_hidden_id" , videoPressId);
                     attrs.setValue( "videopress_hidden_src" , remoteUrl);
                     attrs.removeAttribute("src");
+                    attrs.removeAttribute(ATTR_CLASS);
                 }
 
                 // clear overlay
