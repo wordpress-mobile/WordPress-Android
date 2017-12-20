@@ -103,6 +103,15 @@ public class AccountStore extends Store {
         }
     }
 
+    public static class PushUsernamePayload extends Payload<BaseNetworkError> {
+        public String action;
+        public String username;
+        public PushUsernamePayload(@NonNull String username, @NonNull String action) {
+            this.username = username;
+            this.action = action;
+        }
+    }
+
     public static class NewAccountPayload extends Payload<BaseNetworkError> {
         public String username;
         public String password;
