@@ -364,6 +364,16 @@ public class SiteSettingsFragment extends PreferenceFragment
                     if (numLinks < 0 || numLinks == mSiteSettings.getMultipleLinks()) return;
                     onPreferenceChange(mMultipleLinksPref, numLinks);
                     break;
+                case DATE_FORMAT_REQUEST_CODE:
+                    String dateFormatValue = data.getStringExtra(SiteSettingsFormatDialog.KEY_FORMAT_VALUE);
+                    setDateTimeFormat(FormatType.DATE_FORMAT, mDateFormatPref, dateFormatValue);
+                    onPreferenceChange(mDateFormatPref, dateFormatValue);
+                    break;
+                case TIME_FORMAT_REQUEST_CODE:
+                    String timeFormatValue = data.getStringExtra(SiteSettingsFormatDialog.KEY_FORMAT_VALUE);
+                    setDateTimeFormat(FormatType.TIME_FORMAT, mTimeFormatPref, timeFormatValue);
+                    onPreferenceChange(mTimeFormatPref, timeFormatValue);
+                    break;
             }
         } else {
             switch (requestCode) {
@@ -645,6 +655,10 @@ public class SiteSettingsFragment extends PreferenceFragment
             mSiteSettings.setStartOfWeek(newValue.toString());
             mWeekStartPref.setValue(newValue.toString());
             mWeekStartPref.setSummary(mWeekStartPref.getEntry());
+        } else if (preference == mDateFormatPref) {
+            mSiteSettings.setDateFormat(newValue.toString());
+        } else if (preference == mTimeFormatPref) {
+            mSiteSettings.setTimeFormat(newValue.toString());
         } else {
             return false;
         }
@@ -1105,30 +1119,27 @@ public class SiteSettingsFragment extends PreferenceFragment
         mWeekStartPref.setValue(mSiteSettings.getStartOfWeek());
         mWeekStartPref.setSummary(mWeekStartPref.getEntry());
 
-        setDateTimeFormat(FormatType.DATE_FORMAT, mDateFormatPref);
-        setDateTimeFormat(FormatType.TIME_FORMAT, mTimeFormatPref);
+        setDateTimeFormat(FormatType.DATE_FORMAT, mDateFormatPref, mSiteSettings.getDateFormat());
+        setDateTimeFormat(FormatType.TIME_FORMAT, mTimeFormatPref, mSiteSettings.getTimeFormat());
     }
 
-    private void setDateTimeFormat(FormatType formatType, WPPreference formatPref) {
+    private void setDateTimeFormat(FormatType formatType, WPPreference formatPref, String formatValue) {
         String[] entries;
         String[] values;
-        String currentValue;
         switch (formatType) {
             case DATE_FORMAT:
                 entries = getResources().getStringArray(R.array.date_format_entries);
                 values = getResources().getStringArray(R.array.date_format_values);
-                currentValue = mSiteSettings.getDateFormat();
                 break;
             default:
                 entries = getResources().getStringArray(R.array.time_format_entries);
                 values = getResources().getStringArray(R.array.time_format_values);
-                currentValue = mSiteSettings.getTimeFormat();
                 break;
         }
 
         // return predefined format if there's a match
         for (int i = 0; i < values.length; i++) {
-            if (values[i].equals(currentValue)) {
+            if (values[i].equals(formatValue)) {
                 formatPref.setSummary(entries[i]);
                 return;
             }

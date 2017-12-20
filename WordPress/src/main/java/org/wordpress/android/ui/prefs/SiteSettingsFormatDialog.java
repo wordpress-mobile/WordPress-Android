@@ -40,7 +40,7 @@ public class SiteSettingsFormatDialog extends DialogFragment implements DialogIn
     private String mFormatValue;
     private boolean mConfirmed;
 
-    private EditText mEditText;
+    private EditText mEditCustomFormat;
     private RadioGroup mRadioGroup;
 
     private String[] mEntries;
@@ -61,7 +61,7 @@ public class SiteSettingsFormatDialog extends DialogFragment implements DialogIn
         View view = View.inflate(getActivity(), R.layout.site_settings_format_dialog, null);
         TextView txtTitle = view.findViewById(R.id.text_title);
         TextView txtHelp = view.findViewById(R.id.text_help);
-        mEditText = view.findViewById(R.id.edit_custom);
+        mEditCustomFormat = view.findViewById(R.id.edit_custom);
         mRadioGroup = view.findViewById(R.id.radio_group);
 
         Bundle args = getArguments();
@@ -120,9 +120,7 @@ public class SiteSettingsFormatDialog extends DialogFragment implements DialogIn
         mRadioGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(RadioGroup group, int checkedId) {
-                String customEntry = getString(R.string.site_settings_format_entry_custom);
-                boolean isCustom = mEntries[checkedId].equals(customEntry);
-                mEditText.setEnabled(isCustom);
+                mEditCustomFormat.setEnabled(isCustomFormatEntry(mEntries[checkedId]));
             }
         });
     }
@@ -133,15 +131,29 @@ public class SiteSettingsFormatDialog extends DialogFragment implements DialogIn
         dismiss();
     }
 
+    private boolean isCustomFormatEntry(@NonNull String entry) {
+        String customEntry = getString(R.string.site_settings_format_entry_custom);
+        return entry.equals(customEntry);
+    }
+
+    private String getSelectedFormatValue() {
+        int id = mRadioGroup.getCheckedRadioButtonId();
+        if (id == -1) {
+            return null;
+        }
+        if (isCustomFormatEntry(mEntries[id])) {
+            return EditTextUtils.getText(mEditCustomFormat);
+        }
+        return mValues[id];
+    }
+
     @Override
     public void onDismiss(DialogInterface dialog) {
-        String formatString = EditTextUtils.getText(mEditText);
+        String formatValue = getSelectedFormatValue();
         Fragment target = getTargetFragment();
-        if (mConfirmed && target != null && !TextUtils.isEmpty(formatString)) {
-            if (mConfirmed) {
-                Intent intent = new Intent().putExtra(KEY_FORMAT_VALUE, formatString);
-                target.onActivityResult(getTargetRequestCode(), Activity.RESULT_OK, intent);
-            }
+        if (mConfirmed && target != null && !TextUtils.isEmpty(formatValue)) {
+            Intent intent = new Intent().putExtra(KEY_FORMAT_VALUE, formatValue);
+            target.onActivityResult(getTargetRequestCode(), Activity.RESULT_OK, intent);
         }
 
         super.onDismiss(dialog);
