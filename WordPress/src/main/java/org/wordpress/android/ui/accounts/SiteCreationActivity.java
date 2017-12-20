@@ -13,6 +13,7 @@ import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.ui.accounts.signup.SiteCreationCategoryFragment;
 import org.wordpress.android.ui.accounts.signup.SiteCreationListener;
 import org.wordpress.android.ui.accounts.signup.SiteCreationThemeFragment;
+import org.wordpress.android.ui.accounts.signup.SiteCreationThemeLoaderFragment;
 import org.wordpress.android.util.HelpshiftHelper;
 
 public class SiteCreationActivity extends AppCompatActivity implements SiteCreationListener {
@@ -27,6 +28,7 @@ public class SiteCreationActivity extends AppCompatActivity implements SiteCreat
         if (savedInstanceState == null) {
             AnalyticsTracker.track(AnalyticsTracker.Stat.SITE_CREATION_ACCESSED);
 
+            earlyLoadThemeLoaderFragment();
             showFragment(new SiteCreationCategoryFragment(), SiteCreationCategoryFragment.TAG);
         }
     }
@@ -49,6 +51,14 @@ public class SiteCreationActivity extends AppCompatActivity implements SiteCreat
         fragmentTransaction.replace(R.id.fragment_container, fragment, tag);
         fragmentTransaction.addToBackStack(null);
         fragmentTransaction.commitAllowingStateLoss();
+    }
+
+    private void earlyLoadThemeLoaderFragment() {
+        FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
+        SiteCreationThemeLoaderFragment themeLoaderFragment = new SiteCreationThemeLoaderFragment();
+        themeLoaderFragment.setRetainInstance(true);
+        fragmentTransaction.add(themeLoaderFragment, SiteCreationThemeLoaderFragment.TAG);
+        fragmentTransaction.commit();
     }
 
     @Override

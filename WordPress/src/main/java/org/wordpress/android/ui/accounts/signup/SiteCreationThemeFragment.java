@@ -3,11 +3,16 @@ package org.wordpress.android.ui.accounts.signup;
 import android.os.Bundle;
 import android.support.annotation.LayoutRes;
 import android.support.annotation.Nullable;
+import android.view.View;
 import android.view.ViewGroup;
 
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.analytics.AnalyticsTracker;
+import org.wordpress.android.ui.accounts.signup.SiteCreationThemeLoaderFragment.OnThemeLoadingUpdated;
 import org.wordpress.android.util.ToastUtils;
 
 public class SiteCreationThemeFragment extends SiteCreationBaseFormFragment<SiteCreationListener> {
@@ -22,6 +27,8 @@ public class SiteCreationThemeFragment extends SiteCreationBaseFormFragment<Site
     }
 
     private ThemeCategory mThemeCategory;
+
+    private View mProgressBarContainer;
 
     public static SiteCreationThemeFragment newInstance(ThemeCategory themeCategory) {
         SiteCreationThemeFragment fragment = new SiteCreationThemeFragment();
@@ -38,6 +45,8 @@ public class SiteCreationThemeFragment extends SiteCreationBaseFormFragment<Site
 
     @Override
     protected void setupContent(ViewGroup rootView) {
+        mProgressBarContainer = rootView.findViewById(R.id.progress_container);
+
         switch (mThemeCategory) {
             case BLOG:
                 ToastUtils.showToast(getContext(), "Blog category selected");
@@ -78,8 +87,32 @@ public class SiteCreationThemeFragment extends SiteCreationBaseFormFragment<Site
     }
 
     @Override
+    public void onResume() {
+        super.onResume();
+
+        EventBus.getDefault().register(this);
+    }
+
+    @Override
     public void onDetach() {
         super.onDetach();
+        EventBus.getDefault().unregister(this);
         mSiteCreationListener = null;
+    }
+
+    @SuppressWarnings("unused")
+    @Subscribe(threadMode = ThreadMode.MAIN, sticky = true)
+    public void onThemeLoadingUpdated(OnThemeLoadingUpdated event) {
+        switch (event.getState()) {
+            case UPDATING:
+                mProgressBarContainer.setVisibility(View.VISIBLE);
+                break;
+            case ERROR:
+                mProgressBarContainer.setVisibility(View.GONE);
+                break;
+            case FINISHED:
+                mProgressBarContainer.setVisibility(View.GONE);
+                break;
+        }
     }
 }

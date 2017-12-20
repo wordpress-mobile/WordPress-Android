@@ -2080,5 +2080,6 @@
 
     <string name="site_creation_label_theme_selection_title">Step 2 of 4</string>
     <string name="site_creation_label_theme_selection">Pick one of our popular themes to get started or choose from hundreds more after you create it.</string>
+    <string name="site_creation_label_theme_loading">Please wait while loading themes</string>
 
 </resources>
