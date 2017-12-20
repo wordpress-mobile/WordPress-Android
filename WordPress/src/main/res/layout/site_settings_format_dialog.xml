@@ -34,6 +34,7 @@
             android:layout_marginRight="@dimen/margin_extra_large"
             android:layout_marginStart="@dimen/margin_extra_extra_large"
             android:hint="@string/site_settings_format_hint_custom"
+            android:imeOptions="flagNoExtractUi"
             android:paddingLeft="@dimen/margin_small"
             android:textSize="@dimen/text_sz_medium" />
 
