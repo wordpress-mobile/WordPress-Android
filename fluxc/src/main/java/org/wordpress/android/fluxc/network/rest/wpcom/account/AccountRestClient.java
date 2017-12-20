@@ -29,6 +29,7 @@ import org.wordpress.android.fluxc.network.rest.wpcom.auth.AppSecrets;
 import org.wordpress.android.fluxc.store.AccountStore.AccountSocialError;
 import org.wordpress.android.fluxc.store.AccountStore.AccountSocialErrorType;
 import org.wordpress.android.fluxc.store.AccountStore.AccountUsernameError;
+import org.wordpress.android.fluxc.store.AccountStore.AccountUsernameErrorType;
 import org.wordpress.android.fluxc.store.AccountStore.IsAvailableError;
 import org.wordpress.android.fluxc.store.AccountStore.NewUserError;
 import org.wordpress.android.fluxc.store.AccountStore.NewUserErrorType;
@@ -483,6 +484,45 @@ public class AccountRestClient extends BaseWPComRestClient {
         addUnauthedRequest(request);
     }
 
+    /**
+     * Performs an HTTP POST call to v1.1 /me/username endpoint.  Upon receiving a response
+     * (success or error) a {@link AccountAction#PUSHED_USERNAME} action is dispatched with a
+     * payload of type {@link AccountPushUsernameResponsePayload}.
+     *
+     * {@link AccountPushUsernameResponsePayload#isError()} can be used to check the request result.
+     *
+     * No HTTP POST call is made if the given parameter map is null or contains no entries.
+     *
+     * @param username  Alphanumeric string to save as unique WordPress.com account identifier
+     * @param action    Action to take on the WordPress.com site after the username is changed
+     */
+    public void pushUsername(@NonNull String username, @NonNull String action) {
+        String url = WPCOMREST.me.username.getUrlV1_1();
+
+        Map<String, Object> params = new HashMap<>();
+        params.put("username", username);
+        params.put("action", action);
+
+        add(WPComGsonRequest.buildPostRequest(url, params,
+                AccountBoolResponse.class,
+                new Listener<AccountBoolResponse>() {
+                    @Override
+                    public void onResponse(AccountBoolResponse response) {
+                        AccountPushUsernameResponsePayload payload = new AccountPushUsernameResponsePayload();
+                        mDispatcher.dispatch(AccountActionBuilder.newPushedUsernameAction(payload));
+                    }
+                },
+                new BaseErrorListener() {
+                    @Override
+                    public void onErrorResponse(@NonNull BaseNetworkError error) {
+                        AccountPushUsernameResponsePayload payload =
+                                volleyErrorToAccountUsernameResponsePayload(error.volleyError);
+                        mDispatcher.dispatch(AccountActionBuilder.newPushedUsernameAction(payload));
+                    }
+                }
+        ));
+    }
+
     public void newAccount(@NonNull String username, @NonNull String password, @NonNull String email,
                            final boolean dryRun) {
         String url = WPCOMREST.users.new_.getUrlV1();
@@ -622,6 +662,26 @@ public class AccountRestClient extends BaseWPComRestClient {
                 payload.error.message = errors.getJSONObject(0).getString("message");
             } catch (UnsupportedEncodingException | JSONException exception) {
                 AppLog.e(T.API, "Unable to parse social error response: " + exception.getMessage());
+            }
+        }
+
+        return payload;
+    }
+
+    private AccountPushUsernameResponsePayload volleyErrorToAccountUsernameResponsePayload(VolleyError error) {
+        AccountPushUsernameResponsePayload payload = new AccountPushUsernameResponsePayload();
+        payload.error = new AccountUsernameError(AccountUsernameErrorType.GENERIC_ERROR, "");
+
+        if (error.networkResponse != null && error.networkResponse.data != null) {
+            AppLog.e(T.API, new String(error.networkResponse.data));
+            String jsonString = new String(error.networkResponse.data);
+
+            try {
+                JSONObject errorObj = new JSONObject(jsonString);
+                payload.error.type = AccountUsernameErrorType.fromString((String) errorObj.get("error"));
+                payload.error.message = (String) errorObj.get("message");
+            } catch (JSONException exception) {
+                AppLog.e(T.API, "Unable to parse username error response: " + exception.getMessage());
             }
         }
 
