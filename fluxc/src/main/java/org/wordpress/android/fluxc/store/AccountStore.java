@@ -329,6 +329,34 @@ public class AccountStore extends Store {
         }
     }
 
+    public static class AccountUsernameError implements OnChangedError {
+        public AccountUsernameErrorType type;
+        public String message;
+
+        public AccountUsernameError(@NonNull AccountUsernameErrorType type, @NonNull String message) {
+            this.type = type;
+            this.message = message;
+        }
+    }
+
+    public enum AccountUsernameErrorType {
+        INVALID_ACTION,
+        INVALID_INPUT,
+        GENERIC_ERROR;
+
+        public static AccountUsernameErrorType fromString(String string) {
+            if (string != null) {
+                for (AccountUsernameErrorType type : AccountUsernameErrorType.values()) {
+                    if (string.equalsIgnoreCase(type.name())) {
+                        return type;
+                    }
+                }
+            }
+
+            return GENERIC_ERROR;
+        }
+    }
+
     public static class AuthEmailError implements OnChangedError {
         public AuthEmailErrorType type;
         public String message;
