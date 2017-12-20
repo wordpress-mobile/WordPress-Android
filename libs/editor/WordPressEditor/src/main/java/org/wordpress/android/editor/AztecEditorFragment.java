@@ -241,8 +241,24 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
             }
         });
 
+        MediaToolbarGalleryButton mediaToolbarGalleryButton = new MediaToolbarGalleryButton(formattingToolbar);
+        mediaToolbarGalleryButton.setMediaToolbarButtonClickListener(new IMediaToolbarButton.IMediaToolbarClickListener() {
+            @Override
+            public void onClick(View view) {
+                mEditorFragmentListener.onAddMediaClicked();
+            }
+        });
+
         MediaToolbarCameraButton mediaToolbarCameraButton = new MediaToolbarCameraButton(formattingToolbar);
         mediaToolbarCameraButton.setMediaToolbarButtonClickListener(new IMediaToolbarButton.IMediaToolbarClickListener() {
+            @Override
+            public void onClick(View view) {
+                mEditorFragmentListener.onAddMediaClicked();
+            }
+        });
+
+        MediaToolbarLibraryButton mediaToolbarLibraryButton = new MediaToolbarLibraryButton(formattingToolbar);
+        mediaToolbarLibraryButton.setMediaToolbarButtonClickListener(new IMediaToolbarButton.IMediaToolbarClickListener() {
             @Override
             public void onClick(View view) {
                 mEditorFragmentListener.onAddMediaClicked();
@@ -263,7 +279,9 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
                 .addPlugin(new CaptionShortcodePlugin(content))
                 .addPlugin(new VideoShortcodePlugin())
                 .addPlugin(new AudioShortcodePlugin())
-                .addPlugin(mediaToolbarCameraButton);
+                .addPlugin(mediaToolbarGalleryButton)
+                .addPlugin(mediaToolbarCameraButton)
+                .addPlugin(mediaToolbarLibraryButton);
 
         mEditorFragmentListener.onEditorFragmentInitialized();
 
@@ -1381,7 +1399,7 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
         if (source.isFocused()) {
             ToastUtils.showToast(getActivity(), R.string.alert_insert_image_html_mode, ToastUtils.Duration.LONG);
         } else {
-//            mEditorFragmentListener.onAddMediaClicked();
+            mEditorFragmentListener.onAddMediaClicked();
             return false;
         }
 

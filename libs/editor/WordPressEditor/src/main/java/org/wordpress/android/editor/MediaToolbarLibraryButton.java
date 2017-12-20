@@ -15,7 +15,7 @@ public class MediaToolbarLibraryButton implements IMediaToolbarButton {
 
     private IMediaToolbarClickListener mClickListener;
     private Context mContext;
-    private IToolbarAction mAction = MediaToolbarAction.CAMERA;
+    private IToolbarAction mAction = MediaToolbarAction.LIBRARY;
     private AztecToolbar mToolbar;
 
 
@@ -55,7 +55,7 @@ public class MediaToolbarLibraryButton implements IMediaToolbarButton {
 
     @Override
     public void inflateButton(ViewGroup viewGroup) {
-        LayoutInflater.from(getContext()).inflate(R.layout.media_toobar_camera_button, viewGroup);
+        LayoutInflater.from(getContext()).inflate(R.layout.media_toobar_library_button, viewGroup);
     }
 
     @Override

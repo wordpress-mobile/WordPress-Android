@@ -10,7 +10,8 @@ import org.wordpress.aztec.toolbar.ToolbarActionType;
 public enum MediaToolbarAction implements IToolbarAction {
 
     GALLERY(R.id.media_bar_button_gallery, ToolbarActionType.OTHER, AztecTextFormat.FORMAT_NONE),
-    CAMERA(R.id.media_bar_button_camera, ToolbarActionType.OTHER, AztecTextFormat.FORMAT_NONE);
+    CAMERA(R.id.media_bar_button_camera, ToolbarActionType.OTHER, AztecTextFormat.FORMAT_NONE),
+    LIBRARY(R.id.media_bar_button_library, ToolbarActionType.OTHER, AztecTextFormat.FORMAT_NONE);
 
     private final int mButtonId;
     private final ToolbarActionType mActionType;
