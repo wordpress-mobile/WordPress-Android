@@ -1105,36 +1105,37 @@ public class SiteSettingsFragment extends PreferenceFragment
         mWeekStartPref.setValue(mSiteSettings.getStartOfWeek());
         mWeekStartPref.setSummary(mWeekStartPref.getEntry());
 
-        mDateFormatPref.setSummary(getFormatEntryForValue(FormatType.DATE_FORMAT, mSiteSettings.getDateFormat()));
-        mTimeFormatPref.setSummary(getFormatEntryForValue(FormatType.TIME_FORMAT, mSiteSettings.getTimeFormat()));
+        setDateTimeFormat(FormatType.DATE_FORMAT, mDateFormatPref);
+        setDateTimeFormat(FormatType.TIME_FORMAT, mTimeFormatPref);
     }
 
-    /*
-     * returns the entry (display text) for the passed date/time format value
-     */
-    private String getFormatEntryForValue(FormatType formatType, String value) {
+    private void setDateTimeFormat(FormatType formatType, WPPreference formatPref) {
         String[] entries;
         String[] values;
+        String currentValue;
         switch (formatType) {
             case DATE_FORMAT:
                 entries = getResources().getStringArray(R.array.date_format_entries);
                 values = getResources().getStringArray(R.array.date_format_values);
+                currentValue = mSiteSettings.getDateFormat();
                 break;
             default:
                 entries = getResources().getStringArray(R.array.time_format_entries);
                 values = getResources().getStringArray(R.array.time_format_values);
+                currentValue = mSiteSettings.getTimeFormat();
                 break;
         }
 
         // return predefined format if there's a match
         for (int i = 0; i < values.length; i++) {
-            if (values[i].equals(value)) {
-                return entries[i];
+            if (values[i].equals(currentValue)) {
+                formatPref.setSummary(entries[i]);
+                return;
             }
         }
 
         // not a predefined format, so it must be custom
-        return getString(R.string.site_settings_format_entry_custom);
+        formatPref.setSummary(R.string.site_settings_format_entry_custom);
     }
 
     private void setCategories() {
