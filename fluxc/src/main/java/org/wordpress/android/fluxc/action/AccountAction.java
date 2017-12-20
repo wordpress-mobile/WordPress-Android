@@ -6,6 +6,7 @@ import org.wordpress.android.fluxc.annotations.action.IAction;
 import org.wordpress.android.fluxc.model.AccountModel;
 import org.wordpress.android.fluxc.network.rest.wpcom.account.AccountRestClient.AccountPushSettingsResponsePayload;
 import org.wordpress.android.fluxc.network.rest.wpcom.account.AccountRestClient.AccountPushSocialResponsePayload;
+import org.wordpress.android.fluxc.network.rest.wpcom.account.AccountRestClient.AccountPushUsernameResponsePayload;
 import org.wordpress.android.fluxc.network.rest.wpcom.account.AccountRestClient.AccountRestPayload;
 import org.wordpress.android.fluxc.network.rest.wpcom.account.AccountRestClient.IsAvailableResponsePayload;
 import org.wordpress.android.fluxc.network.rest.wpcom.account.AccountRestClient.NewAccountResponsePayload;
@@ -14,6 +15,7 @@ import org.wordpress.android.fluxc.store.AccountStore.PushAccountSettingsPayload
 import org.wordpress.android.fluxc.store.AccountStore.PushSocialAuthPayload;
 import org.wordpress.android.fluxc.store.AccountStore.PushSocialPayload;
 import org.wordpress.android.fluxc.store.AccountStore.PushSocialSmsPayload;
+import org.wordpress.android.fluxc.store.AccountStore.PushUsernamePayload;
 import org.wordpress.android.fluxc.store.AccountStore.UpdateTokenPayload;
 
 @ActionEnum
@@ -37,6 +39,8 @@ public enum AccountAction implements IAction {
     PUSH_SOCIAL_SIGNUP,     // request social signup remotely
     @Action(payloadType = PushSocialSmsPayload.class)
     PUSH_SOCIAL_SMS,      // request social sms remotely
+    @Action(payloadType = PushUsernamePayload.class)
+    PUSH_USERNAME,        // request username remotely
     @Action(payloadType = NewAccountPayload.class)
     CREATE_NEW_ACCOUNT,     // create a new account (can be used to validate the account before creating it)
     @Action(payloadType = String.class)
@@ -59,6 +63,8 @@ public enum AccountAction implements IAction {
     PUSHED_SETTINGS,        // response received from Account Settings post
     @Action(payloadType = AccountPushSocialResponsePayload.class)
     PUSHED_SOCIAL,          // response received from social login post
+    @Action(payloadType = AccountPushUsernameResponsePayload.class)
+    PUSHED_USERNAME,        // response received from username post
     @Action(payloadType = NewAccountResponsePayload.class)
     CREATED_NEW_ACCOUNT,    // create a new account response
     @Action(payloadType = IsAvailableResponsePayload.class)
