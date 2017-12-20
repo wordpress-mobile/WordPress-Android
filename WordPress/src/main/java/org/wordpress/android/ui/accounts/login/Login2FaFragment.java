@@ -487,7 +487,7 @@ public class Login2FaFragment extends LoginBaseFormFragment<LoginListener> imple
         AnalyticsUtils.trackAnalyticsSignIn(mAccountStore, mSiteStore, true);
 
         if (isSocialLogin) {
-            mLoginListener.loggedInViaSocialAccount(mOldSitesIDs);
+            mLoginListener.loggedInViaSocialAccount(mOldSitesIDs, false);
         } else {
             mLoginListener.loggedInViaPassword(mOldSitesIDs);
         }

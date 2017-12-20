@@ -4,7 +4,9 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.view.MenuItem;
@@ -19,11 +21,11 @@ import org.wordpress.android.WordPress;
 import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.ui.ActivityLauncher;
 import org.wordpress.android.ui.RequestCodes;
+import org.wordpress.android.ui.accounts.GoogleFragment.GoogleListener;
 import org.wordpress.android.ui.accounts.SmartLockHelper.Callback;
 import org.wordpress.android.ui.accounts.login.Login2FaFragment;
 import org.wordpress.android.ui.accounts.login.LoginEmailFragment;
 import org.wordpress.android.ui.accounts.login.LoginEmailPasswordFragment;
-import org.wordpress.android.ui.accounts.login.LoginGoogleFragment.GoogleLoginListener;
 import org.wordpress.android.ui.accounts.login.LoginListener;
 import org.wordpress.android.ui.accounts.login.LoginMagicLinkRequestFragment;
 import org.wordpress.android.ui.accounts.login.LoginMagicLinkSentFragment;
@@ -32,16 +34,18 @@ import org.wordpress.android.ui.accounts.login.LoginSiteAddressFragment;
 import org.wordpress.android.ui.accounts.login.LoginUsernamePasswordFragment;
 import org.wordpress.android.ui.accounts.signup.SignupBottomSheetDialog;
 import org.wordpress.android.ui.accounts.signup.SignupBottomSheetDialog.SignupSheetListener;
+import org.wordpress.android.ui.accounts.signup.SignupGoogleFragment;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.HelpshiftHelper;
 import org.wordpress.android.util.HelpshiftHelper.Tag;
+import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.WPActivityUtils;
 
 import java.util.ArrayList;
 
 public class LoginActivity extends AppCompatActivity implements ConnectionCallbacks, OnConnectionFailedListener,
-        Callback, LoginListener, GoogleLoginListener, SignupSheetListener {
+        Callback, LoginListener, GoogleListener, SignupSheetListener {
     private static final String KEY_SIGNUP_SHEET_DISPLAYED = "KEY_SIGNUP_SHEET_DISPLAYED";
     private static final String KEY_SMARTLOCK_COMPLETED = "KEY_SMARTLOCK_COMPLETED";
 
@@ -146,10 +150,10 @@ public class LoginActivity extends AppCompatActivity implements ConnectionCallba
         return mLoginMode;
     }
 
-    private void loggedInAndFinish(ArrayList<Integer> oldSitesIds) {
+    private void loggedInAndFinish(ArrayList<Integer> oldSitesIds, boolean doLoginUpdate) {
         switch (getLoginMode()) {
             case FULL:
-                ActivityLauncher.showMainActivityAndLoginEpilogue(this, oldSitesIds);
+                ActivityLauncher.showMainActivityAndLoginEpilogue(this, oldSitesIds, doLoginUpdate);
                 setResult(Activity.RESULT_OK);
                 finish();
                 break;
@@ -248,20 +252,15 @@ public class LoginActivity extends AppCompatActivity implements ConnectionCallba
     }
 
     @Override
-    public void onSignupSheetDismissed() {
-        AnalyticsTracker.track(AnalyticsTracker.Stat.SIGNUP_DISMISSED);
+    public void onSignupSheetCanceled() {
+        AnalyticsTracker.track(AnalyticsTracker.Stat.SIGNUP_CANCELED);
         mSignupSheetDisplayed = false;
     }
 
     @Override
     public void onSignupSheetEmailClicked() {
         AnalyticsTracker.track(AnalyticsTracker.Stat.SIGNUP_EMAIL_BUTTON_TAPPED);
-
-        if (mSignupSheet != null) {
-            mSignupSheet.hide();
-            mSignupSheetDisplayed = false;
-        }
-
+        dismissSignupSheet();
         NewUserFragment newUserFragment = NewUserFragment.newInstance();
         slideInFragment(newUserFragment, true, NewUserFragment.TAG);
     }
@@ -269,7 +268,22 @@ public class LoginActivity extends AppCompatActivity implements ConnectionCallba
     @Override
     public void onSignupSheetGoogleClicked() {
         AnalyticsTracker.track(AnalyticsTracker.Stat.SIGNUP_GOOGLE_BUTTON_TAPPED);
-        // TODO: Add Google signup.
+
+        if (NetworkUtils.checkConnection(this)) {
+            SignupGoogleFragment signupGoogleFragment;
+            FragmentManager fragmentManager = getSupportFragmentManager();
+            FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+            signupGoogleFragment = (SignupGoogleFragment) fragmentManager.findFragmentByTag(SignupGoogleFragment.TAG);
+
+            if (signupGoogleFragment != null) {
+                fragmentTransaction.remove(signupGoogleFragment);
+            }
+
+            signupGoogleFragment = new SignupGoogleFragment();
+            signupGoogleFragment.setRetainInstance(true);
+            fragmentTransaction.add(signupGoogleFragment, SignupGoogleFragment.TAG);
+            fragmentTransaction.commit();
+        }
     }
 
     @Override
@@ -280,7 +294,7 @@ public class LoginActivity extends AppCompatActivity implements ConnectionCallba
 
     @Override
     public void loggedInViaSignup(ArrayList<Integer> oldSitesIds) {
-        loggedInAndFinish(oldSitesIds);
+        loggedInAndFinish(oldSitesIds, false);
     }
 
     @Override
@@ -310,15 +324,16 @@ public class LoginActivity extends AppCompatActivity implements ConnectionCallba
 
     @Override
     public void loginViaSocialAccount(String email, String idToken, String service, boolean isPasswordRequired) {
+        dismissSignupSheet();
         LoginEmailPasswordFragment loginEmailPasswordFragment =
                 LoginEmailPasswordFragment.newInstance(email, null, idToken, service, isPasswordRequired);
         slideInFragment(loginEmailPasswordFragment, true, LoginEmailPasswordFragment.TAG);
     }
 
     @Override
-    public void loggedInViaSocialAccount(ArrayList<Integer> oldSitesIds) {
+    public void loggedInViaSocialAccount(ArrayList<Integer> oldSitesIds, boolean doLoginUpdate) {
         AnalyticsTracker.track(AnalyticsTracker.Stat.LOGIN_SOCIAL_SUCCESS);
-        loggedInAndFinish(oldSitesIds);
+        loggedInAndFinish(oldSitesIds, doLoginUpdate);
     }
 
     @Override
@@ -365,6 +380,7 @@ public class LoginActivity extends AppCompatActivity implements ConnectionCallba
     @Override
     public void needs2faSocial(String email, String userId, String nonceAuthenticator, String nonceBackup,
                                String nonceSms) {
+        dismissSignupSheet();
         AnalyticsTracker.track(AnalyticsTracker.Stat.LOGIN_SOCIAL_2FA_NEEDED);
         Login2FaFragment login2FaFragment = Login2FaFragment.newInstanceSocial(email, userId,
                 nonceAuthenticator, nonceBackup, nonceSms);
@@ -380,13 +396,13 @@ public class LoginActivity extends AppCompatActivity implements ConnectionCallba
 
     @Override
     public void loggedInViaPassword(ArrayList<Integer> oldSitesIds) {
-        loggedInAndFinish(oldSitesIds);
+        loggedInAndFinish(oldSitesIds, false);
     }
 
     @Override
     public void alreadyLoggedInWpcom(ArrayList<Integer> oldSitesIds) {
         ToastUtils.showToast(this, R.string.already_logged_in_wpcom, ToastUtils.Duration.LONG);
-        loggedInAndFinish(oldSitesIds);
+        loggedInAndFinish(oldSitesIds, false);
     }
 
     public void gotWpcomSiteInfo(String siteAddress, String siteName, String siteIconUrl) {
@@ -422,7 +438,7 @@ public class LoginActivity extends AppCompatActivity implements ConnectionCallba
 
     @Override
     public void loggedInViaUsernamePassword(ArrayList<Integer> oldSitesIds) {
-        loggedInAndFinish(oldSitesIds);
+        loggedInAndFinish(oldSitesIds, false);
     }
 
     @Override
@@ -514,7 +530,12 @@ public class LoginActivity extends AppCompatActivity implements ConnectionCallba
         AppLog.d(AppLog.T.NUX, "Google API client connection suspended");
     }
 
-    // GoogleLoginListener
+    @Override
+    public void showSignupToLoginMessage() {
+        Snackbar.make(findViewById(R.id.main_view), R.string.signup_user_exists, Snackbar.LENGTH_LONG).show();
+    }
+
+    // GoogleListener
 
     @Override
     public void onGoogleEmailSelected(String email) {
@@ -528,5 +549,17 @@ public class LoginActivity extends AppCompatActivity implements ConnectionCallba
         LoginEmailFragment loginEmailFragment =
                 (LoginEmailFragment) getSupportFragmentManager().findFragmentByTag(LoginEmailFragment.TAG);
         loginEmailFragment.finishLogin();
+    }
+
+    @Override
+    public void onGoogleSignupFinished(String name, String email, String photoUrl) {
+        // TODO: Send data returned from Google API to signup epilogue.
+    }
+
+    private void dismissSignupSheet() {
+        if (mSignupSheet != null) {
+            mSignupSheet.dismiss();
+            mSignupSheetDisplayed = false;
+        }
     }
 }

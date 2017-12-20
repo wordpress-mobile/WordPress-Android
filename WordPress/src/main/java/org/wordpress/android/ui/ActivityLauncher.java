@@ -69,9 +69,11 @@ import java.util.List;
 
 public class ActivityLauncher {
 
-    public static void showMainActivityAndLoginEpilogue(Activity activity, ArrayList<Integer> oldSitesIds) {
+    public static void showMainActivityAndLoginEpilogue(Activity activity,  ArrayList<Integer> oldSitesIds,
+                                                        boolean doLoginUpdate) {
         Intent intent = new Intent(activity, WPMainActivity.class);
         intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        intent.putExtra(WPMainActivity.ARG_DO_LOGIN_UPDATE, doLoginUpdate);
         intent.putExtra(WPMainActivity.ARG_SHOW_LOGIN_EPILOGUE, true);
         intent.putIntegerArrayListExtra(WPMainActivity.ARG_OLD_SITES_IDS, oldSitesIds);
         activity.startActivity(intent);

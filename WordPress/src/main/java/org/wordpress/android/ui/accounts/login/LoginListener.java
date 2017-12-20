@@ -18,7 +18,7 @@ public interface LoginListener {
     void gotWpcomEmail(String email);
     void loginViaSiteAddress();
     void loginViaSocialAccount(String email, String idToken, String service, boolean isPasswordRequired);
-    void loggedInViaSocialAccount(ArrayList<Integer> oldSiteIds);
+    void loggedInViaSocialAccount(ArrayList<Integer> oldSiteIds, boolean doLoginUpdate);
     void loginViaWpcomUsernameInstead();
     void helpEmailScreen(String email);
     void helpSocialEmailScreen(String email);
@@ -55,4 +55,6 @@ public interface LoginListener {
     void help2FaScreen(String email);
 
     void setHelpContext(String faqId, String faqSection);
+
+    void showSignupToLoginMessage();
 }
