@@ -5,7 +5,7 @@
     style="@style/FormatBarButton"
     android:layout_width="wrap_content"
     android:layout_height="fill_parent"
-    android:background="@drawable/media_bar_button_camera"
+    android:background="@drawable/media_bar_button_camera_selector"
     android:contentDescription="@string/media_bar_description_camera">
 </org.wordpress.aztec.toolbar.RippleToggleButton>
 
