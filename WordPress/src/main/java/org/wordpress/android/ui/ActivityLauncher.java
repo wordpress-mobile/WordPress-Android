@@ -341,6 +341,15 @@ public class ActivityLauncher {
         activity.startActivityForResult(intent, RequestCodes.SHOW_LOGIN_EPILOGUE_AND_RETURN);
     }
 
+    public static void showSignupEpilogue(Activity activity, String name, String email, String photoUrl, String username) {
+        Intent intent = new Intent(activity, SignupEpilogueActivity.class);
+        intent.putExtra(SignupEpilogueActivity.EXTRA_SIGNUP_DISPLAY_NAME, name);
+        intent.putExtra(SignupEpilogueActivity.EXTRA_SIGNUP_EMAIL_ADDRESS, email);
+        intent.putExtra(SignupEpilogueActivity.EXTRA_SIGNUP_PHOTO_URL, photoUrl);
+        intent.putExtra(SignupEpilogueActivity.EXTRA_SIGNUP_USERNAME, username);
+        activity.startActivity(intent);
+    }
+
     public static void viewStatsSinglePostDetails(Context context, SiteModel site, PostModel post, boolean isPage) {
         if (post == null) return;
 
