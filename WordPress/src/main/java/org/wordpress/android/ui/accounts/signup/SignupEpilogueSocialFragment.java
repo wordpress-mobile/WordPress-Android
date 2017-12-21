@@ -13,20 +13,33 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
 
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.analytics.AnalyticsTracker;
+import org.wordpress.android.fluxc.Dispatcher;
+import org.wordpress.android.fluxc.generated.AccountActionBuilder;
+import org.wordpress.android.fluxc.store.AccountStore.OnAccountChanged;
+import org.wordpress.android.fluxc.store.AccountStore.PushAccountSettingsPayload;
 import org.wordpress.android.ui.accounts.login.LoginBaseFormFragment;
 import org.wordpress.android.ui.accounts.login.LoginListener;
+import org.wordpress.android.util.AppLog;
+import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.widgets.WPLoginInputRow;
 import org.wordpress.android.widgets.WPNetworkImageView;
 import org.wordpress.android.widgets.WPTextView;
 
+import java.util.HashMap;
+
+import javax.inject.Inject;
+
 public class SignupEpilogueSocialFragment extends LoginBaseFormFragment<LoginListener> {
-    private String mDisplayName;
     private String mEmailAddress;
     private String mPhotoUrl;
     private String mUsername;
+
+    protected String mDisplayName;
 
     private static final String ARG_DISPLAY_NAME = "ARG_DISPLAY_NAME";
     private static final String ARG_EMAIL_ADDRESS = "ARG_EMAIL_ADDRESS";
@@ -36,6 +49,9 @@ public class SignupEpilogueSocialFragment extends LoginBaseFormFragment<LoginLis
     private static final String KEY_USERNAME = "KEY_USERNAME";
 
     public static final String TAG = "signup_epilogue_fragment_tag";
+
+    @Inject
+    protected Dispatcher mDispatcher;
 
     public static SignupEpilogueSocialFragment newInstance(String displayName, String emailAddress,
                                                            String photoUrl, String username) {
@@ -127,7 +143,13 @@ public class SignupEpilogueSocialFragment extends LoginBaseFormFragment<LoginLis
         primaryButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                startProgress();
+                if (changedDisplayName()) {
+                    startProgress();
+                    PushAccountSettingsPayload payload = new PushAccountSettingsPayload();
+                    payload.params = new HashMap<>();
+                    payload.params.put("display_name", mDisplayName);
+                    mDispatcher.dispatch(AccountActionBuilder.newPushSettingsAction(payload));
+                }
             }
         });
     }
@@ -182,5 +204,20 @@ public class SignupEpilogueSocialFragment extends LoginBaseFormFragment<LoginLis
     @Override
     protected void onLoginFinished() {
         endProgress();
+    }
+
+    @SuppressWarnings("unused")
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onAccountChanged(OnAccountChanged event) {
+        if (event.isError()) {
+            // TODO: Add analytics tracking.
+            AppLog.e(AppLog.T.API, "SignupEpilogueSocialFragment.onAccountChanged: " +
+                    event.error.type + " - " + event.error.message);
+            // TODO: Show error dialog.
+        }
+    }
+
+    protected boolean changedDisplayName() {
+        return !StringUtils.equals(getArguments().getString(ARG_DISPLAY_NAME), mDisplayName);
     }
 }
