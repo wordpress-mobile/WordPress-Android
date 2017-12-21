@@ -467,25 +467,9 @@ public class AppPrefs {
         return isVisualEditorAvailable() && getBoolean(UndeletablePrefKey.VISUAL_EDITOR_ENABLED, !isAztecEditorEnabled());
     }
 
-    public static boolean isNewEditorBetaRequired() {
-        return getBoolean(UndeletablePrefKey.AZTEC_EDITOR_BETA_REQUIRED, true);
-    }
-
-    public static boolean isNewEditorPromoRequired() {
-       return getBoolean(UndeletablePrefKey.AZTEC_EDITOR_PROMO_REQUIRED, true);
-   }
-
     public static boolean isAsyncPromoRequired() {
         return getBoolean(UndeletablePrefKey.ASYNC_PROMO_REQUIRED, true);
     }
-
-    public static void setNewEditorBetaRequired(boolean required) {
-        setBoolean(UndeletablePrefKey.AZTEC_EDITOR_BETA_REQUIRED, required);
-    }
-
-    public static void setNewEditorPromoRequired(boolean required) {
-       setBoolean(UndeletablePrefKey.AZTEC_EDITOR_PROMO_REQUIRED, required);
-   }
 
     public static void setAsyncPromoRequired(boolean required) {
         setBoolean(UndeletablePrefKey.ASYNC_PROMO_REQUIRED, required);
