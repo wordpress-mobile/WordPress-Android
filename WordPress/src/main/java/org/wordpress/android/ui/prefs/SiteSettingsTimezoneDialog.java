@@ -32,6 +32,7 @@ import com.android.volley.toolbox.Volley;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.wordpress.android.Constants;
 import org.wordpress.android.R;
 import org.wordpress.android.util.ActivityUtils;
 import org.wordpress.android.util.AppLog;
@@ -156,8 +157,7 @@ public class SiteSettingsTimezoneDialog extends DialogFragment implements Dialog
             }
         };
 
-        String path = "https://public-api.wordpress.com/wpcom/v2/timezones";
-        StringRequest request = new StringRequest(path, listener, errorListener) {
+        StringRequest request = new StringRequest(Constants.URL_TIMEZONE_ENDPOINT, listener, errorListener) {
             @Override
             protected Map<String, String> getParams() throws AuthFailureError {
                 Map<String, String> params = new HashMap<>();
