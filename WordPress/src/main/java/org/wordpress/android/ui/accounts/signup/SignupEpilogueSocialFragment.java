@@ -1,6 +1,7 @@
 package org.wordpress.android.ui.accounts.signup;
 
 import android.content.Context;
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.annotation.LayoutRes;
 import android.support.annotation.NonNull;
@@ -45,6 +46,8 @@ public class SignupEpilogueSocialFragment extends LoginBaseFormFragment<SignupEp
     protected SignupEpilogueListener mSignupEpilogueListener;
     protected String mDisplayName;
     protected String mUsername;
+    protected WPLoginInputRow mInputDisplayName;
+    protected WPLoginInputRow mInputUsername;
 
     private static final String ARG_DISPLAY_NAME = "ARG_DISPLAY_NAME";
     private static final String ARG_EMAIL_ADDRESS = "ARG_EMAIL_ADDRESS";
@@ -97,9 +100,9 @@ public class SignupEpilogueSocialFragment extends LoginBaseFormFragment<SignupEp
         headerDisplayName.setText(mDisplayName);
         final WPTextView headerEmailAddress = (WPTextView) rootView.findViewById(R.id.signup_epilogue_header_username);
         headerEmailAddress.setText(mEmailAddress);
-        final WPLoginInputRow inputDisplayName = (WPLoginInputRow) rootView.findViewById(R.id.signup_epilogue_input_display);
-        inputDisplayName.getEditText().setText(mDisplayName);
-        inputDisplayName.getEditText().addTextChangedListener(new TextWatcher() {
+        mInputDisplayName = (WPLoginInputRow) rootView.findViewById(R.id.signup_epilogue_input_display);
+        mInputDisplayName.getEditText().setText(mDisplayName);
+        mInputDisplayName.getEditText().addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
             }
@@ -114,15 +117,15 @@ public class SignupEpilogueSocialFragment extends LoginBaseFormFragment<SignupEp
                 headerDisplayName.setText(mDisplayName);
             }
         });
-        final WPLoginInputRow inputUsername = (WPLoginInputRow) rootView.findViewById(R.id.signup_epilogue_input_username);
-        inputUsername.getEditText().setText(mUsername);
-        inputUsername.getEditText().setOnClickListener(new View.OnClickListener() {
+        mInputUsername = (WPLoginInputRow) rootView.findViewById(R.id.signup_epilogue_input_username);
+        mInputUsername.getEditText().setText(mUsername);
+        mInputUsername.getEditText().setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 // TODO: Launch username changer.
             }
         });
-        inputUsername.getEditText().setOnFocusChangeListener(new View.OnFocusChangeListener() {
+        mInputUsername.getEditText().setOnFocusChangeListener(new View.OnFocusChangeListener() {
             @Override
             public void onFocusChange(View view, boolean hasFocus) {
                 if (hasFocus) {
@@ -130,7 +133,7 @@ public class SignupEpilogueSocialFragment extends LoginBaseFormFragment<SignupEp
                 }
             }
         });
-        inputUsername.getEditText().setOnKeyListener(new View.OnKeyListener() {
+        mInputUsername.getEditText().setOnKeyListener(new View.OnKeyListener() {
             @Override
             public boolean onKey(View view, int keyCode, KeyEvent event) {
                 // Consume keyboard events except for Enter (i.e. click/tap) and Tab (i.e. focus/navigation).
@@ -149,20 +152,7 @@ public class SignupEpilogueSocialFragment extends LoginBaseFormFragment<SignupEp
         primaryButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (changedDisplayName()) {
-                    startProgress();
-                    PushAccountSettingsPayload payload = new PushAccountSettingsPayload();
-                    payload.params = new HashMap<>();
-                    payload.params.put("display_name", mDisplayName);
-                    mDispatcher.dispatch(AccountActionBuilder.newPushSettingsAction(payload));
-                } else if (changedUsername()) {
-                    startProgress();
-                    PushUsernamePayload payload = new PushUsernamePayload(mUsername, "none");
-                    mDispatcher.dispatch(AccountActionBuilder.newPushUsernameAction(payload));
-                } else if (mSignupEpilogueListener != null) {
-                    AnalyticsTracker.track(AnalyticsTracker.Stat.SIGNUP_SOCIAL_EPILOGUE_UNCHANGED);
-                    mSignupEpilogueListener.onContinue();
-                }
+                updateAccountOrContinue();
             }
         });
     }
@@ -271,10 +261,51 @@ public class SignupEpilogueSocialFragment extends LoginBaseFormFragment<SignupEp
     }
 
     protected void showErrorDialog(String message) {
+        DialogInterface.OnClickListener dialogListener = new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                switch (which) {
+                    case DialogInterface.BUTTON_NEGATIVE:
+                        undoChanges();
+                        break;
+                    case DialogInterface.BUTTON_POSITIVE:
+                        updateAccountOrContinue();
+                        break;
+                }
+            }
+        };
+
         AlertDialog dialog = new AlertDialog.Builder(new ContextThemeWrapper(getActivity(), R.style.LoginTheme))
                 .setMessage(message)
-                .setPositiveButton(R.string.login_error_button, null)
+                .setNeutralButton(R.string.login_error_button, dialogListener)
+                .setNegativeButton(R.string.signup_epilogue_error_button_negative, dialogListener)
+                .setPositiveButton(R.string.signup_epilogue_error_button_positive, dialogListener)
                 .create();
         dialog.show();
+    }
+
+    protected void undoChanges() {
+        mDisplayName = getArguments().getString(ARG_DISPLAY_NAME);
+        mInputDisplayName.getEditText().setText(mDisplayName);
+        mUsername = getArguments().getString(ARG_USERNAME);
+        mInputUsername.getEditText().setText(mUsername);
+        updateAccountOrContinue();
+    }
+
+    protected void updateAccountOrContinue() {
+        if (changedDisplayName()) {
+            startProgress();
+            PushAccountSettingsPayload payload = new PushAccountSettingsPayload();
+            payload.params = new HashMap<>();
+            payload.params.put("display_name", mDisplayName);
+            mDispatcher.dispatch(AccountActionBuilder.newPushSettingsAction(payload));
+        } else if (changedUsername()) {
+            startProgress();
+            PushUsernamePayload payload = new PushUsernamePayload(mUsername, "none");
+            mDispatcher.dispatch(AccountActionBuilder.newPushUsernameAction(payload));
+        } else if (mSignupEpilogueListener != null) {
+            AnalyticsTracker.track(AnalyticsTracker.Stat.SIGNUP_SOCIAL_EPILOGUE_UNCHANGED);
+            mSignupEpilogueListener.onContinue();
+        }
     }
 }
