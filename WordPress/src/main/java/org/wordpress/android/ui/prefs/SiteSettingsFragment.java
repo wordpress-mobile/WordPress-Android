@@ -134,6 +134,7 @@ public class SiteSettingsFragment extends PreferenceFragment
     private static final int DATE_FORMAT_REQUEST_CODE = 7;
     private static final int TIME_FORMAT_REQUEST_CODE = 8;
     private static final int POSTS_PER_PAGE_REQUEST_CODE = 9;
+    private static final int TIMEZONE_REQUEST_CODE = 10;
 
     private static final String DELETE_SITE_TAG = "delete-site";
     private static final String PURCHASE_ORIGINAL_RESPONSE_KEY = "originalResponse";
@@ -175,7 +176,7 @@ public class SiteSettingsFragment extends PreferenceFragment
     private WPPreference mTimeFormatPref;
     private DetailListPreference mWeekStartPref;
     private Preference mRelatedPostsPref;
-    private DetailListPreference mTimezonePref;
+    private Preference mTimezonePref;
     private Preference mPostsPerPagePref;
 
     // Discussion settings preview
@@ -383,6 +384,11 @@ public class SiteSettingsFragment extends PreferenceFragment
                     if (numPosts < 0 || numPosts == 10) return;
                     onPreferenceChange(mPostsPerPagePref, numPosts);
                     break;
+                case TIMEZONE_REQUEST_CODE:
+                    String timezone = data.getStringExtra(SiteSettingsTimezoneDialog.KEY_TIMEZONE);
+                    mSiteSettings.setTimezone(timezone);
+                    onPreferenceChange(mTimezonePref, timezone);
+                    break;
             }
         } else {
             switch (requestCode) {
@@ -488,6 +494,8 @@ public class SiteSettingsFragment extends PreferenceFragment
             showDateOrTimeFormatDialog(FormatType.TIME_FORMAT);
         } else if (preference == mPostsPerPagePref) {
             showPostsPerPageDialog();
+        } else if (preference == mTimezonePref) {
+            showTimezoneDialog();
         }
 
         return false;
@@ -828,7 +836,7 @@ public class SiteSettingsFragment extends PreferenceFragment
         mDateFormatPref = (WPPreference) getChangePref(R.string.pref_key_site_date_format);
         mTimeFormatPref = (WPPreference) getChangePref(R.string.pref_key_site_time_format);
         mPostsPerPagePref = getClickPref(R.string.pref_key_site_posts_per_page);
-        mTimezonePref = (DetailListPreference) getChangePref(R.string.pref_key_site_timezone);
+        mTimezonePref = getClickPref(R.string.pref_key_site_timezone);
 
         sortLanguages();
 
@@ -964,6 +972,12 @@ public class SiteSettingsFragment extends PreferenceFragment
         int requestCode = formatType == FormatType.DATE_FORMAT ? DATE_FORMAT_REQUEST_CODE : TIME_FORMAT_REQUEST_CODE;
         dialog.setTargetFragment(this, requestCode);
         dialog.show(getFragmentManager(), "format-dialog-tag");
+    }
+
+    private void showTimezoneDialog() {
+        SiteSettingsTimezoneDialog dialog = SiteSettingsTimezoneDialog.newInstance(mSiteSettings.getTimezone());
+        dialog.setTargetFragment(this, TIMEZONE_REQUEST_CODE);
+        dialog.show(getFragmentManager(), "timezone-dialog-tag");
     }
 
     private void dismissProgressDialog(ProgressDialog progressDialog) {
