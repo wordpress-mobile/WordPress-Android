@@ -381,8 +381,9 @@ public class SiteSettingsFragment extends PreferenceFragment
                     break;
                 case POSTS_PER_PAGE_REQUEST_CODE:
                     int numPosts = data.getIntExtra(NumberPickerDialog.CUR_VALUE_KEY, -1);
-                    if (numPosts < 0 || numPosts == 10) return;
-                    onPreferenceChange(mPostsPerPagePref, numPosts);
+                    if (numPosts > -1) {
+                        onPreferenceChange(mPostsPerPagePref, numPosts);
+                    }
                     break;
                 case TIMEZONE_REQUEST_CODE:
                     String timezone = data.getStringExtra(SiteSettingsTimezoneDialog.KEY_TIMEZONE);
