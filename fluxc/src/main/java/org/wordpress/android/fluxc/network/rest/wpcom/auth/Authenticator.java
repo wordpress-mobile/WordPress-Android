@@ -68,7 +68,11 @@ public class Authenticator {
     }
 
     public static class AuthEmailResponsePayload extends Payload<AuthEmailError> {
-        public AuthEmailResponsePayload() {}
+        public final boolean isSignup;
+
+        public AuthEmailResponsePayload(boolean isSignup) {
+            this.isSignup = isSignup;
+        }
     }
 
     @Inject
@@ -211,19 +215,20 @@ public class Authenticator {
                 new Response.Listener<AuthEmailWPComRestResponse>() {
                     @Override
                     public void onResponse(AuthEmailWPComRestResponse response) {
-                        AuthEmailResponsePayload payload = new AuthEmailResponsePayload();
+                        AuthEmailResponsePayload responsePayload = new AuthEmailResponsePayload(payload.isSignup);
 
                         if (!response.success) {
-                            payload.error = new AuthEmailError(AuthEmailErrorType.UNSUCCESSFUL, "");
+                            responsePayload.error = new AuthEmailError(AuthEmailErrorType.UNSUCCESSFUL, "");
                         }
-                        mDispatcher.dispatch(AuthenticationActionBuilder.newSentAuthEmailAction(payload));
+                        mDispatcher.dispatch(AuthenticationActionBuilder.newSentAuthEmailAction(responsePayload));
                     }
                 }, new BaseErrorListener() {
                     @Override
                     public void onErrorResponse(@NonNull BaseNetworkError error) {
-                        AuthEmailResponsePayload payload = new AuthEmailResponsePayload();
-                        payload.error = new AuthEmailError(((WPComGsonNetworkError) error).apiError, error.message);
-                        mDispatcher.dispatch(AuthenticationActionBuilder.newSentAuthEmailAction(payload));
+                        AuthEmailResponsePayload responsePayload = new AuthEmailResponsePayload(payload.isSignup);
+                        responsePayload.error = new AuthEmailError(((WPComGsonNetworkError) error).apiError,
+                                error.message);
+                        mDispatcher.dispatch(AuthenticationActionBuilder.newSentAuthEmailAction(responsePayload));
                     }
                 }
         );

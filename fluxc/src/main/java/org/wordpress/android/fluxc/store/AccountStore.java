@@ -194,7 +194,13 @@ public class AccountStore extends Store {
         }
     }
 
-    public static class OnAuthEmailSent extends OnChanged<AuthEmailError> {}
+    public static class OnAuthEmailSent extends OnChanged<AuthEmailError> {
+        public final boolean isSignup;
+
+        public OnAuthEmailSent(boolean isSignup) {
+            this.isSignup = isSignup;
+        }
+    }
 
     public static class AuthenticationError implements OnChangedError {
         public AuthenticationErrorType type;
@@ -778,11 +784,11 @@ public class AccountStore extends Store {
 
     private void handleSentAuthEmail(final AuthEmailResponsePayload payload) {
         if (payload.isError()) {
-            OnAuthEmailSent event = new OnAuthEmailSent();
+            OnAuthEmailSent event = new OnAuthEmailSent(payload.isSignup);
             event.error = payload.error;
             emitChange(event);
         } else {
-            OnAuthEmailSent event = new OnAuthEmailSent();
+            OnAuthEmailSent event = new OnAuthEmailSent(payload.isSignup);
             emitChange(event);
         }
     }
