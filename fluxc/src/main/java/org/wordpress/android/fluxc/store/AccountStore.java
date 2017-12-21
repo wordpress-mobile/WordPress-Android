@@ -105,11 +105,11 @@ public class AccountStore extends Store {
     }
 
     public static class PushUsernamePayload extends Payload<BaseNetworkError> {
-        public String action;
+        public AccountUsernameActionType actionType;
         public String username;
-        public PushUsernamePayload(@NonNull String username, @NonNull String action) {
+        public PushUsernamePayload(@NonNull String username, @NonNull AccountUsernameActionType actionType) {
             this.username = username;
-            this.action = action;
+            this.actionType = actionType;
         }
     }
 
@@ -755,7 +755,7 @@ public class AccountStore extends Store {
     }
 
     private void createPushUsername(PushUsernamePayload payload) {
-        mAccountRestClient.pushUsername(payload.username, payload.action);
+        mAccountRestClient.pushUsername(payload.username, payload.actionType);
     }
 
     private void signOut() {

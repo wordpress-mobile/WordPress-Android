@@ -28,6 +28,7 @@ import org.wordpress.android.fluxc.network.rest.wpcom.auth.AccessToken;
 import org.wordpress.android.fluxc.network.rest.wpcom.auth.AppSecrets;
 import org.wordpress.android.fluxc.store.AccountStore.AccountSocialError;
 import org.wordpress.android.fluxc.store.AccountStore.AccountSocialErrorType;
+import org.wordpress.android.fluxc.store.AccountStore.AccountUsernameActionType;
 import org.wordpress.android.fluxc.store.AccountStore.AccountUsernameError;
 import org.wordpress.android.fluxc.store.AccountStore.AccountUsernameErrorType;
 import org.wordpress.android.fluxc.store.AccountStore.IsAvailableError;
@@ -493,15 +494,15 @@ public class AccountRestClient extends BaseWPComRestClient {
      *
      * No HTTP POST call is made if the given parameter map is null or contains no entries.
      *
-     * @param username  Alphanumeric string to save as unique WordPress.com account identifier
-     * @param action    Action to take on the WordPress.com site after the username is changed
+     * @param username      Alphanumeric string to save as unique WordPress.com account identifier
+     * @param actionType    {@link AccountUsernameActionType} to take on WordPress.com site after username is changed
      */
-    public void pushUsername(@NonNull String username, @NonNull String action) {
+    public void pushUsername(@NonNull String username, @NonNull AccountUsernameActionType actionType) {
         String url = WPCOMREST.me.username.getUrlV1_1();
 
         Map<String, Object> params = new HashMap<>();
         params.put("username", username);
-        params.put("action", action);
+        params.put("action", AccountUsernameActionType.getStringFromType(actionType));
 
         add(WPComGsonRequest.buildPostRequest(url, params,
                 AccountBoolResponse.class,
