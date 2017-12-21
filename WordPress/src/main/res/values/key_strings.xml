@@ -205,14 +205,6 @@
         <item>Custom</item>
     </string-array>
 
-    <!-- TODO: Unsure of source for these entries/values. Hard-coded or do we get from an endpoint? -->
-    <string-array name="timezone_entries">
-        <item>TODO</item>
-    </string-array>
-    <string-array name="timezone_values">
-        <item>TODO</item>
-    </string-array>
-
     <!-- App Settings - Editor -->
     <string-array name="editor_values" translatable="false">
         <item>0</item>

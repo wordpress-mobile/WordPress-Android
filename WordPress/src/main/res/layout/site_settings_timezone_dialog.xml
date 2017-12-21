@@ -13,8 +13,9 @@
         android:padding="@dimen/margin_extra_large"
         android:text="@string/site_settings_timezone_title" />
 
-    <android.support.v7.widget.RecyclerView
-        android:id="@+id/recycler"
+    <ListView
+        android:id="@+id/list"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
+        android:layout_height="match_parent" />
+
 </LinearLayout>
