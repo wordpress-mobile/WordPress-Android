@@ -23,8 +23,8 @@ import org.wordpress.android.ui.accounts.HelpActivity;
 import org.wordpress.android.ui.accounts.LoginActivity;
 import org.wordpress.android.ui.accounts.LoginEpilogueActivity;
 import org.wordpress.android.ui.accounts.LoginMode;
-import org.wordpress.android.ui.accounts.NewBlogActivity;
 import org.wordpress.android.ui.accounts.SignInActivity;
+import org.wordpress.android.ui.accounts.SignupEpilogueActivity;
 import org.wordpress.android.ui.accounts.SiteCreationActivity;
 import org.wordpress.android.ui.comments.CommentsActivity;
 import org.wordpress.android.ui.main.SitePickerActivity;
@@ -76,6 +76,18 @@ public class ActivityLauncher {
         intent.putExtra(WPMainActivity.ARG_DO_LOGIN_UPDATE, doLoginUpdate);
         intent.putExtra(WPMainActivity.ARG_SHOW_LOGIN_EPILOGUE, true);
         intent.putIntegerArrayListExtra(WPMainActivity.ARG_OLD_SITES_IDS, oldSitesIds);
+        activity.startActivity(intent);
+    }
+
+    public static void showMainActivityAndSignupEpilogue(Activity activity, String name, String email, String photoUrl,
+                                                         String username) {
+        Intent intent = new Intent(activity, WPMainActivity.class);
+        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        intent.putExtra(WPMainActivity.ARG_SHOW_SIGNUP_EPILOGUE, true);
+        intent.putExtra(SignupEpilogueActivity.EXTRA_SIGNUP_DISPLAY_NAME, name);
+        intent.putExtra(SignupEpilogueActivity.EXTRA_SIGNUP_EMAIL_ADDRESS, email);
+        intent.putExtra(SignupEpilogueActivity.EXTRA_SIGNUP_PHOTO_URL, photoUrl);
+        intent.putExtra(SignupEpilogueActivity.EXTRA_SIGNUP_USERNAME, username);
         activity.startActivity(intent);
     }
 
