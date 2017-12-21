@@ -759,6 +759,7 @@ public class WordPress extends MultiDexApplication {
                     AppLog.d(T.MAIN, "ConnectionChangeReceiver successfully unregistered");
                 } catch (IllegalArgumentException e) {
                     AppLog.e(T.MAIN, "ConnectionChangeReceiver was already unregistered");
+                    Crashlytics.logException(e);
                 }
             }
         }
