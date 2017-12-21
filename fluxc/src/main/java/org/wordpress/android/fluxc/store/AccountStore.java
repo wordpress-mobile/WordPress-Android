@@ -66,11 +66,11 @@ public class AccountStore extends Store {
     }
 
     public static class AuthEmailPayload extends Payload<BaseNetworkError> {
-        public String email;
+        public String emailOrUsername;
         public boolean isSignup;
 
-        public AuthEmailPayload(String email, boolean isSignup) {
-            this.email = email;
+        public AuthEmailPayload(String emailOrUsername, boolean isSignup) {
+            this.emailOrUsername = emailOrUsername;
             this.isSignup = isSignup;
         }
     }

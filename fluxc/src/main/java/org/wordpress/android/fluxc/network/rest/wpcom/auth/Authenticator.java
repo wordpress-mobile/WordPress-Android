@@ -203,7 +203,7 @@ public class Authenticator {
                 : WPCOMREST.auth.send_login_email.getUrlV1_3();
 
         Map<String, Object> params = new HashMap<>();
-        params.put("email", payload.email);
+        params.put("email", payload.emailOrUsername);
         params.put("client_id", mAppSecrets.getAppId());
         params.put("client_secret", mAppSecrets.getAppSecret());
 
