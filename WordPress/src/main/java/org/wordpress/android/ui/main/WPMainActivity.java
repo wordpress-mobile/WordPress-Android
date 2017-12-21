@@ -86,6 +86,7 @@ public class WPMainActivity extends AppCompatActivity {
     public static final String ARG_OLD_SITES_IDS = "ARG_OLD_SITES_IDS";
     public static final String ARG_OPENED_FROM_PUSH = "opened_from_push";
     public static final String ARG_SHOW_LOGIN_EPILOGUE = "show_login_epilogue";
+    public static final String ARG_SHOW_SIGNUP_EPILOGUE = "show_signup_epilogue";
 
     private WPViewPager mViewPager;
     private WPMainTabLayout mTabLayout;
