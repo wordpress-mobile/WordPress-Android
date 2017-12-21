@@ -33,6 +33,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.wordpress.android.R;
+import org.wordpress.android.util.ActivityUtils;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.ToastUtils;
 
@@ -89,6 +90,7 @@ public class SiteSettingsTimezoneDialog extends DialogFragment implements Dialog
                 Timezone tz = (Timezone) mAdapter.getItem(position);
                 mSelectedTimezone = tz.value;
                 mAdapter.notifyDataSetChanged();
+                hideSearchKeyboard();
             }
         });
 
@@ -193,7 +195,7 @@ public class SiteSettingsTimezoneDialog extends DialogFragment implements Dialog
                         mListView.setSelection(index);
                     }
                 }
-            }, 500);
+            }, 100);
 
         } catch (JSONException e) {
             AppLog.e(AppLog.T.SETTINGS, "Error parsing timezones", e);
@@ -232,6 +234,12 @@ public class SiteSettingsTimezoneDialog extends DialogFragment implements Dialog
     private void showProgressView(boolean show) {
         if (isAdded()) {
             mProgressView.setVisibility(show ? View.VISIBLE : View.GONE);
+        }
+    }
+
+    private void hideSearchKeyboard() {
+        if (isAdded()) {
+            ActivityUtils.hideKeyboardForced(mSearchView);
         }
     }
 
