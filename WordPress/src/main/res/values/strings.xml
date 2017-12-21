@@ -1036,18 +1036,6 @@
     <string name="visual_editor_disabled">Visual Editor disabled</string>
     <string name="aztec_editor_enabled" translatable="false">Aztec Editor enabled</string>
     <string name="aztec_editor_disabled" translatable="false">Aztec Editor disabled</string>
-    <string name="aztec_editor_available" translatable="false">Aztec Editor available</string>
-    <string name="new_editor_beta_action">Read More</string>
-    <string name="new_editor_beta_message">New Editor in Open Beta!</string>
-    <string name="new_editor_promo_button_negative">Not Now</string>
-    <string name="new_editor_promo_button_positive">Try It</string>
-    <string name="new_editor_promo_confirmation_action">Settings</string>
-    <string name="new_editor_promo_confirmation_message">New Editor enabled!</string>
-    <string name="new_editor_promo_description">The WordPress app now includes a beautiful new editor. Try it out by creating a new post!</string>
-    <string name="new_editor_promo_description_image">Hand Write Image</string>
-    <string name="new_editor_promo_link">What\'s new?</string>
-    <string name="new_editor_promo_title">Try the new Editor</string>
-    <string name="new_editor_promo_title_beta">Beta</string>
     <string name="new_editor_reflection_error">Visual editor is not compatible with your device. It was
         automatically disabled.</string>
 

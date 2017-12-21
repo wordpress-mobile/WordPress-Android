@@ -660,10 +660,6 @@
         <item name="android:textStyle">bold</item>
     </style>
 
-    <style name="PromoDialogTitleBeta" parent="EditorTitleBeta">
-        <item name="android:layout_marginLeft">@dimen/margin_large</item>
-    </style>
-
     <style name="PromoDialogDescription" parent="WordPress">
         <item name="android:layout_height">wrap_content</item>
         <item name="android:layout_marginTop">@dimen/margin_extra_large</item>

@@ -35,8 +35,6 @@
                     android:hint="@string/post_title"
                     android:inputType="textCapSentences|textMultiLine"
                     android:layout_height="wrap_content"
-                    android:layout_toLeftOf="@+id/title_beta"
-                    android:layout_toStartOf="@+id/title_beta"
                     android:layout_width="match_parent"
                     android:padding="@dimen/margin_extra_large"
                     android:fontFamily="serif"
@@ -47,20 +45,6 @@
                     aztec:textColor="@color/grey_dark"
                     aztec:textColorHint="@color/hint_text">
                 </org.wordpress.aztec.AztecText>
-
-                <ImageButton
-                    android:id="@+id/title_beta"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentEnd="true"
-                    android:layout_alignParentRight="true"
-                    android:layout_centerVertical="true"
-                    android:background="?android:attr/selectableItemBackground"
-                    android:contentDescription="@string/editor_title_beta"
-                    android:padding="@dimen/margin_extra_large"
-                    android:src="@drawable/ic_gridicons_help">
-                </ImageButton>
-
             </RelativeLayout>
 
             <View

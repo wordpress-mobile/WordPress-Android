@@ -119,15 +119,6 @@ public class AppPrefs {
         // aztec editor toolbar expanded state
         AZTEC_EDITOR_TOOLBAR_EXPANDED,
 
-        // When we need to show the new editor beta snackbar
-        AZTEC_EDITOR_BETA_REQUIRED,
-
-        // When we need to show the new editor promo dialog
-        AZTEC_EDITOR_PROMO_REQUIRED,
-
-        // counter which determines whether it's time to show the above promo
-        AZTEC_EDITOR_PROMO_COUNTER,
-
         // When we need to show the async promo dialog
         ASYNC_PROMO_REQUIRED,
 
@@ -488,12 +479,6 @@ public class AppPrefs {
 
     public static int getAnalyticsForStatsWidgetPromo() {
         return getInt(DeletablePrefKey.STATS_WIDGET_PROMO_ANALYTICS);
-    }
-
-    public static int bumpAndReturnAztecPromoCounter() {
-        int count = getInt(UndeletablePrefKey.AZTEC_EDITOR_PROMO_COUNTER) + 1;
-        setInt(UndeletablePrefKey.AZTEC_EDITOR_PROMO_COUNTER, count);
-        return count;
     }
 
     public static void setGlobalPlansFeatures(String jsonOfFeatures) {

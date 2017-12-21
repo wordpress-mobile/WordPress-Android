@@ -20,7 +20,6 @@ import android.os.Environment;
 import android.os.Handler;
 import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
-import android.support.design.widget.Snackbar;
 import android.support.v13.app.FragmentPagerAdapter;
 import android.support.v4.app.ActivityCompat.OnRequestPermissionsResultCallback;
 import android.support.v4.app.FragmentTransaction;
@@ -50,7 +49,6 @@ import org.wordpress.android.WordPress;
 import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.analytics.AnalyticsTracker.Stat;
 import org.wordpress.android.editor.AztecEditorFragment;
-import org.wordpress.android.editor.EditorBetaClickListener;
 import org.wordpress.android.editor.EditorFragment;
 import org.wordpress.android.editor.EditorFragment.IllegalEditorStateException;
 import org.wordpress.android.editor.EditorFragmentAbstract;
@@ -154,7 +152,6 @@ import de.greenrobot.event.EventBus;
 
 public class EditPostActivity extends AppCompatActivity implements
         EditorFragmentActivity,
-        EditorBetaClickListener,
         EditorImageSettingsListener,
         EditorDragAndDropListener,
         EditorFragmentListener,
@@ -583,12 +580,6 @@ public class EditPostActivity extends AppCompatActivity implements
         if (fragment != null) {
             fragment.redrawForOrientationChange();
         }
-    }
-
-    @Override
-    public void onBetaClicked() {
-        ActivityLauncher.showAztecEditorReleaseNotes(this);
-        AnalyticsTracker.track(Stat.EDITOR_AZTEC_BETA_LABEL);
     }
 
     private String getSaveButtonText() {
@@ -1038,7 +1029,6 @@ public class EditPostActivity extends AppCompatActivity implements
     public void initializeEditorFragment() {
         if (mEditorFragment instanceof AztecEditorFragment) {
             AztecEditorFragment aztecEditorFragment = (AztecEditorFragment)mEditorFragment;
-            aztecEditorFragment.setEditorBetaClickListener(EditPostActivity.this);
             aztecEditorFragment.setEditorImageSettingsListener(EditPostActivity.this);
 
             Drawable loadingImagePlaceholder = getResources().getDrawable(org.wordpress.android.editor.R.drawable.ic_gridicons_image);
@@ -1412,16 +1402,8 @@ public class EditPostActivity extends AppCompatActivity implements
                 case 0:
                     // TODO: Remove editor options after testing.
                     if (mShowAztecEditor) {
-
-                        // Show confirmation message when coming from editor promotion dialog.
-                        if (mIsPromo) {
-                            showSnackbarConfirmation();
-                        // Show open beta message when Aztec is already enabled.
-                        } else if (AppPrefs.isAztecEditorEnabled() && AppPrefs.isNewEditorBetaRequired()) {
-                            showSnackbarBeta();
-                        }
-
-                        return AztecEditorFragment.newInstance("", "", AppPrefs.isAztecEditorToolbarExpanded());
+                        return AztecEditorFragment.newInstance("", "",
+                                AppPrefs.isAztecEditorToolbarExpanded());
                     } else if (mShowNewEditor) {
                         EditorWebViewCompatibility.setReflectionFailureListener(EditPostActivity.this);
                         return new EditorFragment();
@@ -2864,47 +2846,6 @@ public class EditPostActivity extends AppCompatActivity implements
                         EditorFragmentAbstract.MediaType.VIDEO : EditorFragmentAbstract.MediaType.IMAGE;
                 mEditorMediaUploadListener.onMediaUploadRetry(localMediaId, mediaType);
             }
-        }
-    }
-
-    protected void showSnackbarBeta() {
-        Snackbar.make(
-                mViewPager,
-                getString(R.string.new_editor_beta_message),
-                Snackbar.LENGTH_LONG
-        )
-                .setAction(
-                        R.string.new_editor_beta_action,
-                        new View.OnClickListener() {
-                            @Override
-                            public void onClick(View view) {
-                                ActivityLauncher.showAztecEditorReleaseNotes(EditPostActivity.this);
-                                AnalyticsTracker.track(Stat.EDITOR_AZTEC_BETA_LINK);
-                            }
-                        }
-                )
-                .show();
-        AppPrefs.setNewEditorBetaRequired(false);
-    }
-
-    protected void showSnackbarConfirmation() {
-        if (mViewPager != null) {
-            Snackbar.make(
-                    mViewPager,
-                    getString(R.string.new_editor_promo_confirmation_message),
-                    Snackbar.LENGTH_LONG
-            )
-                    .setAction(
-                            R.string.new_editor_promo_confirmation_action,
-                            new View.OnClickListener() {
-                                @Override
-                                public void onClick(View view) {
-                                    ActivityLauncher.viewAppSettings(EditPostActivity.this);
-                                    finish();
-                                }
-                            }
-                    )
-                    .show();
         }
     }
 
