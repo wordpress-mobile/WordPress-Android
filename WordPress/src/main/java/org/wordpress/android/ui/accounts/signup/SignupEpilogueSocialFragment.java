@@ -228,6 +228,7 @@ public class SignupEpilogueSocialFragment extends LoginBaseFormFragment<SignupEp
             AnalyticsTracker.track(AnalyticsTracker.Stat.SIGNUP_SOCIAL_EPILOGUE_UPDATE_DISPLAY_NAME_FAILED);
             AppLog.e(AppLog.T.API, "SignupEpilogueSocialFragment.onAccountChanged: " +
                     event.error.type + " - " + event.error.message);
+            endProgress();
             showErrorDialog(getString(R.string.signup_epilogue_error_generic));
         } else if (changedUsername()) {
             startProgress();
@@ -246,6 +247,7 @@ public class SignupEpilogueSocialFragment extends LoginBaseFormFragment<SignupEp
             AnalyticsTracker.track(AnalyticsTracker.Stat.SIGNUP_SOCIAL_EPILOGUE_UPDATE_USERNAME_FAILED);
             AppLog.e(AppLog.T.API, "SignupEpilogueSocialFragment.onUsernameChanged: " +
                     event.error.type + " - " + event.error.message);
+            endProgress();
             showErrorDialog(getString(R.string.signup_epilogue_error_generic));
         } else if (mSignupEpilogueListener != null) {
             AnalyticsTracker.track(AnalyticsTracker.Stat.SIGNUP_SOCIAL_EPILOGUE_UPDATE_USERNAME_SUCCEEDED);
