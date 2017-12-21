@@ -5,8 +5,10 @@ import android.os.Bundle;
 import android.support.annotation.LayoutRes;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v7.app.AlertDialog;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.view.ContextThemeWrapper;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -234,7 +236,7 @@ public class SignupEpilogueSocialFragment extends LoginBaseFormFragment<SignupEp
             // TODO: Add analytics tracking.
             AppLog.e(AppLog.T.API, "SignupEpilogueSocialFragment.onAccountChanged: " +
                     event.error.type + " - " + event.error.message);
-            // TODO: Show error dialog.
+            showErrorDialog(getString(R.string.signup_epilogue_error_generic));
         } else if (changedUsername()) {
             startProgress();
             PushUsernamePayload payload = new PushUsernamePayload(mUsername, "none");
@@ -252,7 +254,7 @@ public class SignupEpilogueSocialFragment extends LoginBaseFormFragment<SignupEp
             // TODO: Add analytics tracking.
             AppLog.e(AppLog.T.API, "SignupEpilogueSocialFragment.onUsernameChanged: " +
                     event.error.type + " - " + event.error.message);
-            // TODO: Show error dialog.
+            showErrorDialog(getString(R.string.signup_epilogue_error_generic));
         } else if (mSignupEpilogueListener != null) {
             // TODO: Add analytics tracking.
             mSignupEpilogueListener.onContinue();
@@ -265,5 +267,13 @@ public class SignupEpilogueSocialFragment extends LoginBaseFormFragment<SignupEp
 
     protected boolean changedUsername() {
         return !StringUtils.equals(getArguments().getString(ARG_USERNAME), mUsername);
+    }
+
+    protected void showErrorDialog(String message) {
+        AlertDialog dialog = new AlertDialog.Builder(new ContextThemeWrapper(getActivity(), R.style.LoginTheme))
+                .setMessage(message)
+                .setPositiveButton(R.string.login_error_button, null)
+                .create();
+        dialog.show();
     }
 }

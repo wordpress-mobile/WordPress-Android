@@ -2044,6 +2044,7 @@
     <!-- Signup -->
     <string name="sign_up">Sign Up</string>
     <string name="signup_creating_account">Creating account&#8230;</string>
+    <string name="signup_epilogue_error_generic">There was some trouble updating your account.</string>
     <string name="signup_epilogue_heading">New account</string>
     <string name="signup_epilogue_hint_display">Display Name</string>
     <string name="signup_epilogue_hint_username">Username</string>
