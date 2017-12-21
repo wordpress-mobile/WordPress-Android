@@ -21,7 +21,9 @@ import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.fluxc.Dispatcher;
 import org.wordpress.android.fluxc.generated.AccountActionBuilder;
 import org.wordpress.android.fluxc.store.AccountStore.OnAccountChanged;
+import org.wordpress.android.fluxc.store.AccountStore.OnUsernameChanged;
 import org.wordpress.android.fluxc.store.AccountStore.PushAccountSettingsPayload;
+import org.wordpress.android.fluxc.store.AccountStore.PushUsernamePayload;
 import org.wordpress.android.ui.accounts.login.LoginBaseFormFragment;
 import org.wordpress.android.ui.accounts.login.LoginListener;
 import org.wordpress.android.util.AppLog;
@@ -37,9 +39,9 @@ import javax.inject.Inject;
 public class SignupEpilogueSocialFragment extends LoginBaseFormFragment<LoginListener> {
     private String mEmailAddress;
     private String mPhotoUrl;
-    private String mUsername;
 
     protected String mDisplayName;
+    protected String mUsername;
 
     private static final String ARG_DISPLAY_NAME = "ARG_DISPLAY_NAME";
     private static final String ARG_EMAIL_ADDRESS = "ARG_EMAIL_ADDRESS";
@@ -149,6 +151,10 @@ public class SignupEpilogueSocialFragment extends LoginBaseFormFragment<LoginLis
                     payload.params = new HashMap<>();
                     payload.params.put("display_name", mDisplayName);
                     mDispatcher.dispatch(AccountActionBuilder.newPushSettingsAction(payload));
+                } else if (changedUsername()) {
+                    startProgress();
+                    PushUsernamePayload payload = new PushUsernamePayload(mUsername, "none");
+                    mDispatcher.dispatch(AccountActionBuilder.newPushUsernameAction(payload));
                 }
             }
         });
@@ -214,10 +220,29 @@ public class SignupEpilogueSocialFragment extends LoginBaseFormFragment<LoginLis
             AppLog.e(AppLog.T.API, "SignupEpilogueSocialFragment.onAccountChanged: " +
                     event.error.type + " - " + event.error.message);
             // TODO: Show error dialog.
+        } else if (changedUsername()) {
+            startProgress();
+            PushUsernamePayload payload = new PushUsernamePayload(mUsername, "none");
+            mDispatcher.dispatch(AccountActionBuilder.newPushUsernameAction(payload));
+        }
+    }
+
+    @SuppressWarnings("unused")
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onUsernameChanged(OnUsernameChanged event) {
+        if (event.isError()) {
+            // TODO: Add analytics tracking.
+            AppLog.e(AppLog.T.API, "SignupEpilogueSocialFragment.onUsernameChanged: " +
+                    event.error.type + " - " + event.error.message);
+            // TODO: Show error dialog.
         }
     }
 
     protected boolean changedDisplayName() {
         return !StringUtils.equals(getArguments().getString(ARG_DISPLAY_NAME), mDisplayName);
+    }
+
+    protected boolean changedUsername() {
+        return !StringUtils.equals(getArguments().getString(ARG_USERNAME), mUsername);
     }
 }
