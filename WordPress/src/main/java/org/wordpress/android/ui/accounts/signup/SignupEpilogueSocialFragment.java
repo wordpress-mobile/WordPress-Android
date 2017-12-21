@@ -160,6 +160,7 @@ public class SignupEpilogueSocialFragment extends LoginBaseFormFragment<SignupEp
                     PushUsernamePayload payload = new PushUsernamePayload(mUsername, "none");
                     mDispatcher.dispatch(AccountActionBuilder.newPushUsernameAction(payload));
                 } else if (mSignupEpilogueListener != null) {
+                    AnalyticsTracker.track(AnalyticsTracker.Stat.SIGNUP_SOCIAL_EPILOGUE_UNCHANGED);
                     mSignupEpilogueListener.onContinue();
                 }
             }
@@ -233,7 +234,7 @@ public class SignupEpilogueSocialFragment extends LoginBaseFormFragment<SignupEp
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onAccountChanged(OnAccountChanged event) {
         if (event.isError()) {
-            // TODO: Add analytics tracking.
+            AnalyticsTracker.track(AnalyticsTracker.Stat.SIGNUP_SOCIAL_EPILOGUE_UPDATE_DISPLAY_NAME_FAILED);
             AppLog.e(AppLog.T.API, "SignupEpilogueSocialFragment.onAccountChanged: " +
                     event.error.type + " - " + event.error.message);
             showErrorDialog(getString(R.string.signup_epilogue_error_generic));
@@ -242,7 +243,7 @@ public class SignupEpilogueSocialFragment extends LoginBaseFormFragment<SignupEp
             PushUsernamePayload payload = new PushUsernamePayload(mUsername, "none");
             mDispatcher.dispatch(AccountActionBuilder.newPushUsernameAction(payload));
         } else if (mSignupEpilogueListener != null) {
-            // TODO: Add analytics tracking.
+            AnalyticsTracker.track(AnalyticsTracker.Stat.SIGNUP_SOCIAL_EPILOGUE_UPDATE_DISPLAY_NAME_SUCCEEDED);
             mSignupEpilogueListener.onContinue();
         }
     }
@@ -251,12 +252,12 @@ public class SignupEpilogueSocialFragment extends LoginBaseFormFragment<SignupEp
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onUsernameChanged(OnUsernameChanged event) {
         if (event.isError()) {
-            // TODO: Add analytics tracking.
+            AnalyticsTracker.track(AnalyticsTracker.Stat.SIGNUP_SOCIAL_EPILOGUE_UPDATE_USERNAME_FAILED);
             AppLog.e(AppLog.T.API, "SignupEpilogueSocialFragment.onUsernameChanged: " +
                     event.error.type + " - " + event.error.message);
             showErrorDialog(getString(R.string.signup_epilogue_error_generic));
         } else if (mSignupEpilogueListener != null) {
-            // TODO: Add analytics tracking.
+            AnalyticsTracker.track(AnalyticsTracker.Stat.SIGNUP_SOCIAL_EPILOGUE_UPDATE_USERNAME_SUCCEEDED);
             mSignupEpilogueListener.onContinue();
         }
     }

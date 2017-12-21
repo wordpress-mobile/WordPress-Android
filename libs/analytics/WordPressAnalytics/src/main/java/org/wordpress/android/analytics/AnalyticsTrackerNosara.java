@@ -764,6 +764,16 @@ public class AnalyticsTrackerNosara extends Tracker {
                 return "signup_social_2fa_needed";
             case SIGNUP_SOCIAL_ACCOUNTS_NEED_CONNECTING:
                 return "signup_social_accounts_need_connecting";
+            case SIGNUP_SOCIAL_EPILOGUE_UNCHANGED:
+                return "signup_social_epilogue_unchanged";
+            case SIGNUP_SOCIAL_EPILOGUE_UPDATE_DISPLAY_NAME_FAILED:
+                return "signup_social_epilogue_update_display_name_failed";
+            case SIGNUP_SOCIAL_EPILOGUE_UPDATE_DISPLAY_NAME_SUCCEEDED:
+                return "signup_social_epilogue_update_display_name_succeeded";
+            case SIGNUP_SOCIAL_EPILOGUE_UPDATE_USERNAME_FAILED:
+                return "signup_social_epilogue_update_username_failed";
+            case SIGNUP_SOCIAL_EPILOGUE_UPDATE_USERNAME_SUCCEEDED:
+                return "signup_social_epilogue_update_username_succeeded";
             case SIGNUP_SOCIAL_EPILOGUE_VIEWED:
                 return "signup_social_epilogue_viewed";
             case SIGNUP_SOCIAL_SUCCESS:
