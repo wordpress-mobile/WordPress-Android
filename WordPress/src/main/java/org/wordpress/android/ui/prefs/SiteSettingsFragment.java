@@ -682,6 +682,7 @@ public class SiteSettingsFragment extends PreferenceFragment
             mPostsPerPagePref.setSummary(newValue.toString());
             mSiteSettings.setPostsPerPage(Integer.parseInt(newValue.toString()));
         } else if (preference == mTimezonePref) {
+            mTimezonePref.setSummary(newValue.toString());
             mSiteSettings.setTimezone(newValue.toString());
         } else {
             return false;
@@ -975,7 +976,7 @@ public class SiteSettingsFragment extends PreferenceFragment
     }
 
     private void showTimezoneDialog() {
-        SiteSettingsTimezoneDialog dialog = SiteSettingsTimezoneDialog.newInstance(mSiteSettings.getTimezone());
+        SiteSettingsTimezoneDialog dialog = SiteSettingsTimezoneDialog.newInstance(mSiteSettings.getTimezone(), mSiteSettings.getLanguageCode());
         dialog.setTargetFragment(this, TIMEZONE_REQUEST_CODE);
         dialog.show(getFragmentManager(), "timezone-dialog-tag");
     }

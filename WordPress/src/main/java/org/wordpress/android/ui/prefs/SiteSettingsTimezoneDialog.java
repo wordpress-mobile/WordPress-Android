@@ -12,6 +12,7 @@ import android.support.annotation.NonNull;
 import android.text.TextUtils;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -38,10 +39,11 @@ import java.util.Map;
 public class SiteSettingsTimezoneDialog extends DialogFragment implements DialogInterface.OnClickListener {
 
     public static final String KEY_TIMEZONE = "timezone";
+    public static final String KEY_LANGUAGE_CODE = "language_code";
 
     private class Timezone {
-        private String label;
-        private String value;
+        private final String label;
+        private final String value;
         private Timezone(String label, String value) {
             this.label = label;
             this.value = value;
@@ -49,11 +51,16 @@ public class SiteSettingsTimezoneDialog extends DialogFragment implements Dialog
     }
 
     private boolean mConfirmed;
-    private ListView mListView;
+    private String mSelectedTimezone;
+    private String mLanguageCode;
 
-    public static SiteSettingsTimezoneDialog newInstance(@NonNull String timezone) {
+    private ListView mListView;
+    private TimezoneAdapter mAdapter;
+
+    public static SiteSettingsTimezoneDialog newInstance(@NonNull String timezone, @NonNull String languageCode) {
         Bundle args = new Bundle();
-        args.putSerializable(KEY_TIMEZONE, timezone);
+        args.putString(KEY_TIMEZONE, timezone);
+        args.putString(KEY_LANGUAGE_CODE, languageCode);
 
         SiteSettingsTimezoneDialog dialog = new SiteSettingsTimezoneDialog();
         dialog.setArguments(args);
@@ -63,7 +70,19 @@ public class SiteSettingsTimezoneDialog extends DialogFragment implements Dialog
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         View view = View.inflate(getActivity(), R.layout.site_settings_timezone_dialog, null);
+
         mListView = view.findViewById(R.id.list);
+        mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                Timezone tz = (Timezone) mAdapter.getItem(position);
+                mSelectedTimezone = tz.value;
+                mAdapter.notifyDataSetChanged();
+            }
+        });
+
+        mSelectedTimezone = getArguments().getString(KEY_TIMEZONE);
+        mLanguageCode = getArguments().getString(KEY_LANGUAGE_CODE);
 
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity(), R.style.Calypso_AlertDialog);
         builder.setPositiveButton(android.R.string.ok, this);
@@ -81,7 +100,7 @@ public class SiteSettingsTimezoneDialog extends DialogFragment implements Dialog
             public void onResponse(String response) {
                 AppLog.d(AppLog.T.SETTINGS, "timezones requested");
                 if (isAdded() && response != null) {
-                    parseResponse(response);
+                    loadTimezones(response);
                 }
             }
         };
@@ -100,8 +119,8 @@ public class SiteSettingsTimezoneDialog extends DialogFragment implements Dialog
         StringRequest request = new StringRequest(path, listener, errorListener) {
             @Override
             protected Map<String, String> getParams() throws AuthFailureError {
-                Map<String, String> params = new HashMap<String, String>();
-                // TODO: params.put("locale", ??);
+                Map<String, String> params = new HashMap<>();
+                params.put("locale", mLanguageCode);
                 return params;
             }
         };
@@ -110,10 +129,10 @@ public class SiteSettingsTimezoneDialog extends DialogFragment implements Dialog
         queue.add(request);
     }
 
-    private void parseResponse(@NonNull String response) {
+    private void loadTimezones(@NonNull String responseJson) {
         ArrayList<Timezone> timezones = new ArrayList<>();
         try {
-            JSONObject jsonResponse = new JSONObject(response);
+            JSONObject jsonResponse = new JSONObject(responseJson);
             JSONArray jsonTimezones = jsonResponse.getJSONArray("timezones");
             for (int i = 0; i < jsonTimezones.length(); i++) {
                 JSONObject json = jsonTimezones.getJSONObject(i);
@@ -122,7 +141,8 @@ public class SiteSettingsTimezoneDialog extends DialogFragment implements Dialog
                 );
             }
 
-            mListView.setAdapter(new TimezoneAdapter(timezones));
+            mAdapter = new TimezoneAdapter(timezones);
+            mListView.setAdapter(mAdapter);
         } catch (JSONException e) {
             AppLog.e(AppLog.T.SETTINGS, "Error parsing timezones", e);
             dismissWithError();
@@ -140,16 +160,11 @@ public class SiteSettingsTimezoneDialog extends DialogFragment implements Dialog
         dismiss();
     }
 
-    private String getSelectedTimezone() {
-        return null;
-    }
-
     @Override
     public void onDismiss(DialogInterface dialog) {
-        String timezone = getSelectedTimezone();
         Fragment target = getTargetFragment();
-        if (mConfirmed && target != null && !TextUtils.isEmpty(timezone)) {
-            Intent intent = new Intent().putExtra(KEY_TIMEZONE, timezone);
+        if (mConfirmed && target != null && !TextUtils.isEmpty(mSelectedTimezone)) {
+            Intent intent = new Intent().putExtra(KEY_TIMEZONE, mSelectedTimezone);
             target.onActivityResult(getTargetRequestCode(), Activity.RESULT_OK, intent);
         }
 
@@ -157,7 +172,7 @@ public class SiteSettingsTimezoneDialog extends DialogFragment implements Dialog
     }
 
     private class TimezoneAdapter extends BaseAdapter {
-        private List<Timezone> mTimezones = new ArrayList<>();
+        private final List<Timezone> mTimezones = new ArrayList<>();
 
         private TimezoneAdapter(@NonNull List<Timezone> timezones) {
             mTimezones.addAll(timezones);
@@ -183,6 +198,11 @@ public class SiteSettingsTimezoneDialog extends DialogFragment implements Dialog
             View view = View.inflate(getActivity(), android.R.layout.simple_list_item_1, null);
             TextView txtLabel = view.findViewById(android.R.id.text1);
             txtLabel.setText(mTimezones.get(position).label);
+
+            boolean isSelected = mSelectedTimezone != null && mSelectedTimezone.equals(mTimezones.get(position).value);
+            int colorRes = isSelected ? R.color.list_row_selected : R.color.transparent;
+            txtLabel.setBackgroundColor(getResources().getColor(colorRes));
+
             return view;
         }
     }
