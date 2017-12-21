@@ -23,6 +23,7 @@ import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.fluxc.Dispatcher;
+import org.wordpress.android.fluxc.action.AccountAction;
 import org.wordpress.android.fluxc.generated.AccountActionBuilder;
 import org.wordpress.android.fluxc.store.AccountStore.OnAccountChanged;
 import org.wordpress.android.fluxc.store.AccountStore.OnUsernameChanged;
@@ -232,7 +233,7 @@ public class SignupEpilogueSocialFragment extends LoginBaseFormFragment<SignupEp
             startProgress();
             PushUsernamePayload payload = new PushUsernamePayload(mUsername, "none");
             mDispatcher.dispatch(AccountActionBuilder.newPushUsernameAction(payload));
-        } else if (mSignupEpilogueListener != null) {
+        } else if (event.causeOfChange == AccountAction.PUSH_SETTINGS && mSignupEpilogueListener != null) {
             AnalyticsTracker.track(AnalyticsTracker.Stat.SIGNUP_SOCIAL_EPILOGUE_UPDATE_DISPLAY_NAME_SUCCEEDED);
             mSignupEpilogueListener.onContinue();
         }
