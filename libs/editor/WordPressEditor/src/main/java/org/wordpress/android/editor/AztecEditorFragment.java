@@ -755,8 +755,8 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
                 if (!TextUtils.isEmpty(mediaFile.getVideoPressShortCode())) {
                     attributes.removeAttribute(ATTR_SRC);
                     String videoPressId = ShortcodeUtils.getVideoPressIdFromShortCode(mediaFile.getVideoPressShortCode());
-                    attributes.setValue( "videopress_hidden_id" , videoPressId);
-                    attributes.setValue( "videopress_hidden_src" , mediaUrl);
+                    attributes.setValue(VideoPressExtensionsKt.getATTRIBUTE_VIDEOPRESS_HIDDEN_ID() , videoPressId);
+                    attributes.setValue(VideoPressExtensionsKt.getATTRIBUTE_VIDEOPRESS_HIDDEN_SRC() , mediaUrl);
                 }
                 // Do not set default attributes here like for pictures
                 addVideoUploadingClassIfMissing(attributes);
@@ -776,8 +776,8 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
                         if (currentClass.getAttributes().hasAttribute(ATTR_SRC) &&
                                 mediaUrl.equals(currentClass.getAttributes().getValue(ATTR_SRC))) {
                             currentClass.setDrawable(newDrawable);
-                        } else if (currentClass.getAttributes().hasAttribute("videopress_hidden_src") &&
-                                mediaUrl.equals(currentClass.getAttributes().getValue("videopress_hidden_src"))) {
+                        } else if (currentClass.getAttributes().hasAttribute(VideoPressExtensionsKt.getATTRIBUTE_VIDEOPRESS_HIDDEN_SRC()) &&
+                                mediaUrl.equals(currentClass.getAttributes().getValue(VideoPressExtensionsKt.getATTRIBUTE_VIDEOPRESS_HIDDEN_SRC()))) {
                             currentClass.setDrawable(newDrawable);
                         }
                     }
@@ -995,8 +995,8 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
                 if (mediaType.equals(MediaType.VIDEO) && !TextUtils.isEmpty(mediaFile.getVideoPressShortCode())) {
                     String videoPressId = ShortcodeUtils.getVideoPressIdFromShortCode(
                             mediaFile.getVideoPressShortCode());
-                    attrs.setValue( "videopress_hidden_id" , videoPressId);
-                    attrs.setValue( "videopress_hidden_src" , remoteUrl);
+                    attrs.setValue(VideoPressExtensionsKt.getATTRIBUTE_VIDEOPRESS_HIDDEN_ID() , videoPressId);
+                    attrs.setValue(VideoPressExtensionsKt.getATTRIBUTE_VIDEOPRESS_HIDDEN_SRC() , remoteUrl);
                     attrs.removeAttribute("src");
                     attrs.removeAttribute(ATTR_CLASS);
                 }
@@ -1177,8 +1177,8 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
     @Override
     public void onVideoInfoRequested(final AztecAttributes attrs) {
         // VideoPress special case here
-        if (attrs.hasAttribute("videopress_hidden_id")) {
-            mEditorFragmentListener.onVideoPressInfoRequested(attrs.getValue("videopress_hidden_id"));
+        if (attrs.hasAttribute(VideoPressExtensionsKt.getATTRIBUTE_VIDEOPRESS_HIDDEN_ID())) {
+            mEditorFragmentListener.onVideoPressInfoRequested(attrs.getValue(VideoPressExtensionsKt.getATTRIBUTE_VIDEOPRESS_HIDDEN_ID()));
         }
     }
 

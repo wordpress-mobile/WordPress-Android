@@ -8,6 +8,7 @@ import org.json.JSONObject;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.aztec.AztecAttributes;
 import org.wordpress.aztec.Constants;
+import org.wordpress.aztec.plugins.shortcodes.extensions.VideoPressExtensionsKt;
 import org.xml.sax.Attributes;
 
 import java.util.ArrayList;
@@ -43,7 +44,7 @@ public class MetadataUtils {
 
         String src = attrs.getAttribute("src", "");
         if (TextUtils.isEmpty(src)) {
-            src = attrs.getAttribute("videopress_hidden_src", "");
+            src = attrs.getAttribute(VideoPressExtensionsKt.getATTRIBUTE_VIDEOPRESS_HIDDEN_SRC(), "");
         }
         addMetadataProperty(metadata, "src", src);
 
