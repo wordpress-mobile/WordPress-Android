@@ -8,6 +8,7 @@ public interface SiteCreationListener {
     void helpCategoryScreen();
 
     // Site Creation Theme Selection callbacks
+    void withTheme(String themeId);
     void helpThemeScreen();
 
     void setHelpContext(String faqId, String faqSection);

@@ -15,6 +15,7 @@ import org.wordpress.android.ui.accounts.signup.SiteCreationListener;
 import org.wordpress.android.ui.accounts.signup.SiteCreationThemeFragment;
 import org.wordpress.android.ui.accounts.signup.SiteCreationThemeLoaderFragment;
 import org.wordpress.android.util.HelpshiftHelper;
+import org.wordpress.android.util.ToastUtils;
 
 public class SiteCreationActivity extends AppCompatActivity implements SiteCreationListener {
 
@@ -101,6 +102,11 @@ public class SiteCreationActivity extends AppCompatActivity implements SiteCreat
     @Override
     public void helpCategoryScreen() {
         launchHelpshift(HelpshiftHelper.Tag.ORIGIN_SITE_CREATION_CATEGORY);
+    }
+
+    @Override
+    public void withTheme(String themeId) {
+        ToastUtils.showToast(this, "Selected theme " + themeId);
     }
 
     @Override
