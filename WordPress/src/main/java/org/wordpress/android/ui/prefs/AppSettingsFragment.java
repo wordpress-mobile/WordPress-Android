@@ -222,7 +222,6 @@ public class AppSettingsFragment extends PreferenceFragment implements OnPrefere
                             case IDX_AZTEC_EDITOR:
                                 AppPrefs.setAztecEditorEnabled(true);
                                 AppPrefs.setVisualEditorEnabled(false);
-                                AppPrefs.setNewEditorPromoRequired(false);
                                 break;
                             default:
                                 AppPrefs.setAztecEditorEnabled(false);
@@ -241,9 +240,9 @@ public class AppSettingsFragment extends PreferenceFragment implements OnPrefere
             final int editorTypeSetting;
             if (AppPrefs.isAztecEditorEnabled()) {
                 editorTypeSetting = IDX_AZTEC_EDITOR;
-            } else if(AppPrefs.isVisualEditorEnabled()) {
+            } else if (AppPrefs.isVisualEditorEnabled()) {
                 editorTypeSetting = IDX_VISUAL_EDITOR;
-            } else{
+            } else {
                 editorTypeSetting = IDX_LEGACY_EDITOR;
             }
 
