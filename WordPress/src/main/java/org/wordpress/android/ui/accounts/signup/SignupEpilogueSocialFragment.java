@@ -1,5 +1,6 @@
 package org.wordpress.android.ui.accounts.signup;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.LayoutRes;
 import android.support.annotation.NonNull;
@@ -183,6 +184,17 @@ public class SignupEpilogueSocialFragment extends LoginBaseFormFragment<SignupEp
             // Overwrite original display name and username if they have changed.
             mDisplayName = savedInstanceState.getString(KEY_DISPLAY_NAME);
             mUsername = savedInstanceState.getString(KEY_USERNAME);
+        }
+    }
+
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+
+        if (context instanceof SignupEpilogueListener) {
+            mSignupEpilogueListener = (SignupEpilogueListener) context;
+        } else {
+            throw new RuntimeException(context.toString() + " must implement SignupEpilogueListener");
         }
     }
 
