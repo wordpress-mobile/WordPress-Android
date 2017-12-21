@@ -33,7 +33,6 @@ import org.wordpress.android.ui.accounts.login.LoginSiteAddressFragment;
 import org.wordpress.android.ui.accounts.login.LoginUsernamePasswordFragment;
 import org.wordpress.android.ui.accounts.signup.SignupBottomSheetDialog;
 import org.wordpress.android.ui.accounts.signup.SignupBottomSheetDialog.SignupSheetListener;
-import org.wordpress.android.ui.accounts.signup.SignupEpilogueSocialFragment;
 import org.wordpress.android.ui.accounts.signup.SignupGoogleFragment;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.HelpshiftHelper;
@@ -549,10 +548,9 @@ public class LoginActivity extends AppCompatActivity implements ConnectionCallba
     @Override
     public void onGoogleSignupFinished(String name, String email, String photoUrl, String username) {
         AnalyticsTracker.track(AnalyticsTracker.Stat.SIGNUP_SOCIAL_SUCCESS);
-        dismissSignupSheet();
-        SignupEpilogueSocialFragment signupEpilogueSocialFragment = SignupEpilogueSocialFragment.newInstance(
-                name, email, photoUrl, username);
-        slideInFragment(signupEpilogueSocialFragment, true, SignupEpilogueSocialFragment.TAG);
+        ActivityLauncher.showMainActivityAndSignupEpilogue(this, name, email, photoUrl, username);
+        setResult(Activity.RESULT_OK);
+        finish();
     }
 
     private void dismissSignupSheet() {
