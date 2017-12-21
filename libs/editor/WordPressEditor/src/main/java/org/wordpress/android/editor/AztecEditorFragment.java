@@ -1947,17 +1947,17 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
     public static String resetUploadingMediaToFailed(Context context, @NonNull String postContent) {
         // fill in Aztec with the post's content
         AztecParser parser = getAztecParserWithPlugins();
-        Spanned content = parser.fromHtml(postContent, context);
+        SpannableStringBuilder builder = getCalypsoCompatibleStringBuilder(context, postContent, parser);
 
         // get all items with "failed" class, and make sure they are still failed
         // i.e. if they have a local src, then they are failed.
-        resetMediaWithStatus(content, ATTR_STATUS_FAILED);
+        resetMediaWithStatus(builder, ATTR_STATUS_FAILED);
         // get all items with "uploading" class, and make sure they are either already uploaded
         // (that is, they have a remote src), and mark them "failed" if not.
-        resetMediaWithStatus(content, ATTR_STATUS_UPLOADING);
+        resetMediaWithStatus(builder, ATTR_STATUS_UPLOADING);
 
         // re-set the post content
-        postContent = parser.toHtml(content, false);
+        postContent = toHtml(builder, parser);
         return postContent;
     }
 
@@ -2013,13 +2013,13 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
     public static String restartFailedMediaToUploading(Context context, String postContent) {
         // fill in Aztec with the post's content
         AztecParser parser = getAztecParserWithPlugins();
-        Spanned content = parser.fromHtml(postContent, context);
+        SpannableStringBuilder builder = getCalypsoCompatibleStringBuilder(context, postContent, parser);
 
         // get all items with class defined by the "status" variable
         AztecText.AttributePredicate statusPredicate = getPredicateWithClass(ATTR_STATUS_FAILED);
 
         // update all these items to UPLOADING
-        for (IAztecAttributedSpan span : getSpansForPredicate(content, statusPredicate, false)) {
+        for (IAztecAttributedSpan span : getSpansForPredicate(builder, statusPredicate, false)) {
             AttributesWithClass attributesWithClass = getAttributesWithClass(span.getAttributes());
             attributesWithClass.removeClass(ATTR_STATUS_FAILED);
             attributesWithClass.addClass(ATTR_STATUS_UPLOADING);
@@ -2027,7 +2027,7 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
         }
 
         // re-set the post content
-        postContent = parser.toHtml(content, false);
+        postContent = toHtml(builder, parser);
         return postContent;
     }
 
