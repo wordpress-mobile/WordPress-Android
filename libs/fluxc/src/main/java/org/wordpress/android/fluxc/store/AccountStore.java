@@ -359,8 +359,8 @@ public class AccountStore extends Store {
         public AccountUsernameErrorType type;
         public String message;
 
-        public AccountUsernameError(@NonNull AccountUsernameErrorType type, @NonNull String message) {
-            this.type = type;
+        public AccountUsernameError(@NonNull String type, @NonNull String message) {
+            this.type = AccountUsernameErrorType.fromString(type);
             this.message = message;
         }
     }
