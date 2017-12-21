@@ -8,6 +8,7 @@ import android.app.Fragment;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
@@ -183,6 +184,17 @@ public class SiteSettingsTimezoneDialog extends DialogFragment implements Dialog
             mAdapter = new TimezoneAdapter(timezones);
             mListView.setAdapter(mAdapter);
             mSearchView.setEnabled(true);
+
+            new Handler().postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    int index = mAdapter.indexOfValue(mSelectedTimezone);
+                    if (index > -1) {
+                        mListView.setSelection(index);
+                    }
+                }
+            }, 500);
+
         } catch (JSONException e) {
             AppLog.e(AppLog.T.SETTINGS, "Error parsing timezones", e);
             dismissWithError();
@@ -253,6 +265,17 @@ public class SiteSettingsTimezoneDialog extends DialogFragment implements Dialog
         @Override
         public long getItemId(int position) {
             return position;
+        }
+
+        public int indexOfValue(String timezoneValue) {
+            if (!TextUtils.isEmpty(timezoneValue)) {
+                for (int i = 0; i < mFilteredTimezones.size(); i++) {
+                    if (timezoneValue.equals(mFilteredTimezones.get(i).value)) {
+                        return i;
+                    }
+                }
+            }
+            return -1;
         }
 
         @Override
