@@ -1006,8 +1006,11 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
                 if (mediaType.equals(MediaType.VIDEO)) {
                     overlayVideoIcon(0, predicate);
                 }
-                content.updateElementAttributes(predicate, attrs);
                 content.resetAttributedMediaSpan(predicate);
+                // finally remove the local id as it won't be necessary anynmore
+                attrs.removeAttribute(ATTR_ID_WP);
+                attrs.removeAttribute(TEMP_IMAGE_ID);
+                content.updateElementAttributes(predicate, attrs);
 
                 mUploadingMediaProgressMax.remove(localMediaId);
             }
@@ -1406,8 +1409,12 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
         onMediaTapped(attrs, 0, 0, MediaType.VIDEO);
     }
 
+    private void setIdAttributeOnMedia(AztecAttributes attrs, String idName, String localMediaId) {
+        attrs.setValue(idName, localMediaId);
+        mTappedMediaPredicate = new MediaPredicate(localMediaId, idName);
+    }
 
-    private void onMediaTapped(@NonNull AztecAttributes attrs, int naturalWidth, int naturalHeight, final MediaType mediaType) {
+    private void onMediaTapped(@NonNull final AztecAttributes attrs, int naturalWidth, int naturalHeight, final MediaType mediaType) {
         if (mediaType == null || !isAdded()) {
             return;
         }
@@ -1435,11 +1442,11 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
             localMediaId = attrs.getValue(idName);
         }
 
-        attrs.setValue(idName, localMediaId);
-        mTappedMediaPredicate = new MediaPredicate(localMediaId, idName);
 
         switch (uploadStatus) {
             case ATTR_STATUS_UPLOADING:
+                setIdAttributeOnMedia(attrs, idName, localMediaId);
+
                 // Display 'cancel upload' dialog
                 AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
                 builder.setTitle(getString(R.string.stop_upload_dialog_title));
@@ -1475,6 +1482,8 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
                 dialog.show();
                 break;
             case ATTR_STATUS_FAILED:
+                setIdAttributeOnMedia(attrs, idName, localMediaId);
+
                 // Retry media upload
                 boolean successfullyRetried = true;
                 if (mFailedMediaIds.contains(localMediaId)) {
