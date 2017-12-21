@@ -32,6 +32,7 @@ import com.android.volley.toolbox.Volley;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.w3c.dom.Text;
 import org.wordpress.android.Constants;
 import org.wordpress.android.R;
 import org.wordpress.android.networking.RestClientUtils;
@@ -133,9 +134,10 @@ public class SiteSettingsTimezoneDialog extends DialogFragment implements Dialog
                 AppLog.d(AppLog.T.SETTINGS, "timezones requested");
                 if (isAdded()) {
                     showProgressView(false);
-                    if (response != null) {
+                    if (!TextUtils.isEmpty(response)) {
                         loadTimezones(response);
                     } else {
+                        AppLog.w(AppLog.T.SETTINGS, "empty response requesting timezones");
                         dismissWithError();
                     }
                 }
@@ -197,7 +199,7 @@ public class SiteSettingsTimezoneDialog extends DialogFragment implements Dialog
     }
 
     private void dismissWithError() {
-        ToastUtils.showToast(getActivity(), R.string.error_generic);
+        ToastUtils.showToast(getActivity(), R.string.site_settings_timezones_error);
         dismiss();
     }
 
