@@ -83,6 +83,9 @@ public class SiteSettingsFormatDialog extends DialogFragment implements DialogIn
 
         Bundle args = getArguments();
         FormatType formatType = (FormatType) args.getSerializable(KEY_FORMAT_TYPE);
+        if (formatType == null) {
+            formatType = FormatType.DATE_FORMAT;
+        }
         mFormatValue = args.getString(KEY_FORMAT_VALUE);
 
         mEntries = formatType.getEntries(getActivity());
