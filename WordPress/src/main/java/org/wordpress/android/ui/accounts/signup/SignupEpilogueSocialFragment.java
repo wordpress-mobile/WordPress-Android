@@ -25,7 +25,6 @@ import org.wordpress.android.fluxc.store.AccountStore.OnUsernameChanged;
 import org.wordpress.android.fluxc.store.AccountStore.PushAccountSettingsPayload;
 import org.wordpress.android.fluxc.store.AccountStore.PushUsernamePayload;
 import org.wordpress.android.ui.accounts.login.LoginBaseFormFragment;
-import org.wordpress.android.ui.accounts.login.LoginListener;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.widgets.WPLoginInputRow;
@@ -36,10 +35,11 @@ import java.util.HashMap;
 
 import javax.inject.Inject;
 
-public class SignupEpilogueSocialFragment extends LoginBaseFormFragment<LoginListener> {
+public class SignupEpilogueSocialFragment extends LoginBaseFormFragment<SignupEpilogueListener> {
     private String mEmailAddress;
     private String mPhotoUrl;
 
+    protected SignupEpilogueListener mSignupEpilogueListener;
     protected String mDisplayName;
     protected String mUsername;
 
@@ -155,6 +155,8 @@ public class SignupEpilogueSocialFragment extends LoginBaseFormFragment<LoginLis
                     startProgress();
                     PushUsernamePayload payload = new PushUsernamePayload(mUsername, "none");
                     mDispatcher.dispatch(AccountActionBuilder.newPushUsernameAction(payload));
+                } else if (mSignupEpilogueListener != null) {
+                    mSignupEpilogueListener.onContinue();
                 }
             }
         });
@@ -224,6 +226,9 @@ public class SignupEpilogueSocialFragment extends LoginBaseFormFragment<LoginLis
             startProgress();
             PushUsernamePayload payload = new PushUsernamePayload(mUsername, "none");
             mDispatcher.dispatch(AccountActionBuilder.newPushUsernameAction(payload));
+        } else if (mSignupEpilogueListener != null) {
+            // TODO: Add analytics tracking.
+            mSignupEpilogueListener.onContinue();
         }
     }
 
@@ -235,6 +240,9 @@ public class SignupEpilogueSocialFragment extends LoginBaseFormFragment<LoginLis
             AppLog.e(AppLog.T.API, "SignupEpilogueSocialFragment.onUsernameChanged: " +
                     event.error.type + " - " + event.error.message);
             // TODO: Show error dialog.
+        } else if (mSignupEpilogueListener != null) {
+            // TODO: Add analytics tracking.
+            mSignupEpilogueListener.onContinue();
         }
     }
 
