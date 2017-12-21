@@ -129,7 +129,7 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
     private boolean mEditorWasPaused = false;
     private boolean mHideActionBarOnSoftKeyboardUp = false;
 
-    private AztecText title;
+    private org.wordpress.android.editor.SourceViewEditText title;
     private AztecText content;
     private boolean mAztecReady;
     private SourceViewEditText source;
@@ -184,7 +184,7 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
             ((EditorFragmentActivity) getActivity()).initializeEditorFragment();
         }
 
-        title = (AztecText) view.findViewById(R.id.title);
+        title = (org.wordpress.android.editor.SourceViewEditText) view.findViewById(R.id.title);
         content = (AztecText) view.findViewById(R.id.aztec);
         source = (SourceViewEditText) view.findViewById(R.id.source);
 
@@ -192,7 +192,11 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
         content.setOnTouchListener(this);
         source.setOnTouchListener(this);
 
-        title.setOnImeBackListener(this);
+        title.setOnImeBackListener(new org.wordpress.android.editor.OnImeBackListener() {
+            public void onImeBack() {
+                showActionBarIfNeeded();
+            }
+        });
         content.setOnImeBackListener(this);
         source.setOnImeBackListener(this);
 
