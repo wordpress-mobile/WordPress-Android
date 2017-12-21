@@ -333,6 +333,28 @@ public class AccountStore extends Store {
         }
     }
 
+    public enum AccountUsernameActionType {
+        CREATE_NEW_SITE_AND_ADDRESS, // site and address remain unchanged plus empty site created with new username
+        KEEP_OLD_SITE_AND_ADDRESS, // site and address remain unchanged; only username is changed
+        RENAME_SITE_AND_DISCARD_OLD_ADDRESS, // site renamed and old site address discarded
+        RENAME_SITE_AND_KEEP_OLD_ADDRESS; // site renamed and new empty site belonging to user created with old address
+
+        public static String getStringFromType(AccountUsernameActionType type) {
+            switch (type) {
+                case CREATE_NEW_SITE_AND_ADDRESS:
+                    return "new";
+                case KEEP_OLD_SITE_AND_ADDRESS:
+                    return "none";
+                case RENAME_SITE_AND_DISCARD_OLD_ADDRESS:
+                    return "rename_discard";
+                case RENAME_SITE_AND_KEEP_OLD_ADDRESS:
+                    return "rename_keep";
+                default:
+                    return "";
+            }
+        }
+    }
+
     public static class AccountUsernameError implements OnChangedError {
         public AccountUsernameErrorType type;
         public String message;
