@@ -976,7 +976,7 @@ public class SiteSettingsFragment extends PreferenceFragment
     }
 
     private void showTimezoneDialog() {
-        SiteSettingsTimezoneDialog dialog = SiteSettingsTimezoneDialog.newInstance(mSiteSettings.getTimezone(), mSiteSettings.getLanguageCode());
+        SiteSettingsTimezoneDialog dialog = SiteSettingsTimezoneDialog.newInstance(mSiteSettings.getTimezone());
         dialog.setTargetFragment(this, TIMEZONE_REQUEST_CODE);
         dialog.show(getFragmentManager(), "timezone-dialog-tag");
     }

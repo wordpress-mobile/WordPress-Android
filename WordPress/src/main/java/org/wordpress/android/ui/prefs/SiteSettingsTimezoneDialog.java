@@ -34,19 +34,18 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import org.wordpress.android.Constants;
 import org.wordpress.android.R;
+import org.wordpress.android.networking.RestClientUtils;
 import org.wordpress.android.util.ActivityUtils;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.ToastUtils;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 public class SiteSettingsTimezoneDialog extends DialogFragment implements DialogInterface.OnClickListener {
 
     public static final String KEY_TIMEZONE = "timezone";
-    private static final String KEY_LANGUAGE_CODE = "language_code";
 
     private class Timezone {
         private final String label;
@@ -59,7 +58,6 @@ public class SiteSettingsTimezoneDialog extends DialogFragment implements Dialog
 
     private boolean mConfirmed;
     private String mSelectedTimezone;
-    private String mLanguageCode;
 
     private ListView mListView;
     private SearchView mSearchView;
@@ -69,10 +67,9 @@ public class SiteSettingsTimezoneDialog extends DialogFragment implements Dialog
     private TimezoneAdapter mAdapter;
     private LayoutInflater mInflater;
 
-    public static SiteSettingsTimezoneDialog newInstance(@NonNull String timezone, @NonNull String languageCode) {
+    public static SiteSettingsTimezoneDialog newInstance(@NonNull String timezone) {
         Bundle args = new Bundle();
         args.putString(KEY_TIMEZONE, timezone);
-        args.putString(KEY_LANGUAGE_CODE, languageCode);
 
         SiteSettingsTimezoneDialog dialog = new SiteSettingsTimezoneDialog();
         dialog.setArguments(args);
@@ -118,14 +115,12 @@ public class SiteSettingsTimezoneDialog extends DialogFragment implements Dialog
         mEmptyView = view.findViewById(R.id.empty_view);
         mProgressView = view.findViewById(R.id.progress_view);
 
-        mSelectedTimezone = getArguments().getString(KEY_TIMEZONE);
-        mLanguageCode = getArguments().getString(KEY_LANGUAGE_CODE);
-
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity(), R.style.Calypso_AlertDialog);
         builder.setPositiveButton(android.R.string.ok, this);
         builder.setNegativeButton(R.string.cancel, this);
         builder.setView(view);
 
+        mSelectedTimezone = getArguments().getString(KEY_TIMEZONE);
         requestTimezones();
 
         return builder.create();
@@ -160,9 +155,7 @@ public class SiteSettingsTimezoneDialog extends DialogFragment implements Dialog
         StringRequest request = new StringRequest(Constants.URL_TIMEZONE_ENDPOINT, listener, errorListener) {
             @Override
             protected Map<String, String> getParams() throws AuthFailureError {
-                Map<String, String> params = new HashMap<>();
-                params.put("locale", mLanguageCode);
-                return params;
+                return RestClientUtils.getRestLocaleParams(getActivity());
             }
         };
 
