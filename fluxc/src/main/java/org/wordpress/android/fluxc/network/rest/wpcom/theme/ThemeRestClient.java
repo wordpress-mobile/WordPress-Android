@@ -19,6 +19,7 @@ import org.wordpress.android.fluxc.network.rest.wpcom.BaseWPComRestClient;
 import org.wordpress.android.fluxc.network.rest.wpcom.WPComGsonRequest;
 import org.wordpress.android.fluxc.network.rest.wpcom.auth.AccessToken;
 import org.wordpress.android.fluxc.network.rest.wpcom.theme.WPComThemeResponse.WPComThemeListResponse;
+import org.wordpress.android.fluxc.network.rest.wpcom.theme.WPComThemeResponse.WPComThemeMobileFriendlyTaxonomy;
 import org.wordpress.android.fluxc.network.rest.wpcom.theme.JetpackThemeResponse.JetpackThemeListResponse;
 import org.wordpress.android.fluxc.store.ThemeStore.ThemesError;
 import org.wordpress.android.fluxc.store.ThemeStore.SearchedThemesPayload;
@@ -39,6 +40,7 @@ import javax.inject.Singleton;
 @Singleton
 public class ThemeRestClient extends BaseWPComRestClient {
     private static final String WP_THEME_FETCH_NUMBER_PARAM = "number=500";
+    private static final String WPCOM_MOBILE_FRIENDLY_TAXONOMY_SLUG = "mobile-friendly";
 
     @Inject
     public ThemeRestClient(Context appContext, Dispatcher dispatcher, RequestQueue requestQueue,
@@ -239,6 +241,19 @@ public class ThemeRestClient extends BaseWPComRestClient {
             theme.setFree(false);
             theme.setPriceText(response.price);
         }
+
+        // detect the mobile-friendly category slug if there
+        if (response.taxonomies != null && response.taxonomies.theme_mobile_friendly != null) {
+            String category = null;
+            for (WPComThemeMobileFriendlyTaxonomy taxonomy : response.taxonomies.theme_mobile_friendly) {
+                if (!taxonomy.slug.equals(WPCOM_MOBILE_FRIENDLY_TAXONOMY_SLUG)) {
+                    category = taxonomy.slug;
+                    break;
+                }
+            }
+            theme.setMobileFriendlyCategorySlug(category);
+        }
+
         return theme;
     }
 
