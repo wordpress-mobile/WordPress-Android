@@ -57,7 +57,7 @@
                     android:paddingRight="@dimen/margin_extra_large" >
 
                     <org.wordpress.android.widgets.WPNetworkImageView
-                        android:id="@+id/avatar"
+                        android:id="@+id/signup_epilogue_header_avatar"
                         android:layout_height="@dimen/avatar_sz_login_epilogue"
                         android:layout_marginBottom="@dimen/margin_medium"
                         android:layout_marginTop="@dimen/margin_extra_medium_large"
@@ -77,6 +77,8 @@
 
                     <org.wordpress.android.widgets.WPTextView
                         android:id="@+id/signup_epilogue_header_username"
+                        android:focusable="true"
+                        android:focusableInTouchMode="true"
                         android:gravity="center_horizontal"
                         android:layout_height="wrap_content"
                         android:layout_marginBottom="@dimen/margin_extra_medium_large"

@@ -89,15 +89,13 @@ public class SignupEpilogueSocialFragment extends LoginBaseFormFragment<SignupEp
 
     @Override
     protected void setupContent(ViewGroup rootView) {
-        WPNetworkImageView avatar = (WPNetworkImageView) rootView.findViewById(R.id.avatar);
-        avatar.setImageResource(R.drawable.ic_gridicons_user_circle_100dp);
+        final WPNetworkImageView headerAvatar = (WPNetworkImageView) rootView.findViewById(R.id.signup_epilogue_header_avatar);
+        headerAvatar.setImageUrl(mPhotoUrl, WPNetworkImageView.ImageType.AVATAR);
         final WPTextView headerDisplayName = (WPTextView) rootView.findViewById(R.id.signup_epilogue_header_display);
         headerDisplayName.setText(mDisplayName);
-        WPTextView headerEmailAddress = (WPTextView) rootView.findViewById(R.id.signup_epilogue_header_username);
+        final WPTextView headerEmailAddress = (WPTextView) rootView.findViewById(R.id.signup_epilogue_header_username);
         headerEmailAddress.setText(mEmailAddress);
-        WPNetworkImageView headerAvatar = (WPNetworkImageView) rootView.findViewById(R.id.avatar);
-        headerAvatar.setImageUrl(mPhotoUrl, WPNetworkImageView.ImageType.AVATAR);
-        WPLoginInputRow inputDisplayName = (WPLoginInputRow) rootView.findViewById(R.id.signup_epilogue_input_display);
+        final WPLoginInputRow inputDisplayName = (WPLoginInputRow) rootView.findViewById(R.id.signup_epilogue_input_display);
         inputDisplayName.getEditText().setText(mDisplayName);
         inputDisplayName.getEditText().addTextChangedListener(new TextWatcher() {
             @Override
@@ -114,7 +112,7 @@ public class SignupEpilogueSocialFragment extends LoginBaseFormFragment<SignupEp
                 headerDisplayName.setText(mDisplayName);
             }
         });
-        WPLoginInputRow inputUsername = (WPLoginInputRow) rootView.findViewById(R.id.signup_epilogue_input_username);
+        final WPLoginInputRow inputUsername = (WPLoginInputRow) rootView.findViewById(R.id.signup_epilogue_input_username);
         inputUsername.getEditText().setText(mUsername);
         inputUsername.getEditText().setOnClickListener(new View.OnClickListener() {
             @Override
@@ -139,6 +137,9 @@ public class SignupEpilogueSocialFragment extends LoginBaseFormFragment<SignupEp
                 return !(keyCode == KeyEvent.KEYCODE_ENTER || keyCode == KeyEvent.KEYCODE_TAB);
             }
         });
+
+        // Set focus on static text field to avoid showing keyboard on start.
+        headerEmailAddress.requestFocus();
     }
 
     @Override
