@@ -8,6 +8,7 @@ import org.wordpress.android.datasets.NotificationsTable;
 import org.wordpress.android.datasets.PeopleTable;
 import org.wordpress.android.datasets.SiteSettingsTable;
 import org.wordpress.android.datasets.SuggestionTable;
+import org.wordpress.android.models.SiteSettingsModel;
 import org.wordpress.android.ui.prefs.AppPrefs;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
@@ -20,7 +21,7 @@ import java.io.InputStream;
 import java.io.OutputStream;
 
 public class WordPressDB {
-    private static final int DATABASE_VERSION = 59;
+    private static final int DATABASE_VERSION = 60;
 
     // Warning if you rename DATABASE_NAME, that could break previous App backups (see: xml/backup_scheme.xml)
     private static final String DATABASE_NAME = "wordpress";
@@ -194,6 +195,10 @@ public class WordPressDB {
             case 58:
                 // ThemeStore merged, remove deprecated themes tables
                 db.execSQL(DROP_TABLE_PREFIX + THEMES_TABLE);
+                currentVersion++;
+            case 59:
+                // add Start of Week site setting as part of #betterjetpackxp
+                db.execSQL(SiteSettingsModel.ADD_START_OF_WEEK);
                 currentVersion++;
         }
         db.setVersion(DATABASE_VERSION);

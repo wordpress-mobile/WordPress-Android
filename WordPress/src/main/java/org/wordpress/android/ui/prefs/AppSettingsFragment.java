@@ -238,13 +238,18 @@ public class AppSettingsFragment extends PreferenceFragment implements OnPrefere
                 }
             });
 
-            String editorTypeKey = getString(R.string.pref_key_editor_type);
-            String editorTypeSetting = mSettings.getString(editorTypeKey, "");
-
-            if (!editorTypeSetting.equalsIgnoreCase("")) {
-                CharSequence[] entries = editorTypePreference.getEntries();
-                editorTypePreference.setSummary(entries[Integer.parseInt(editorTypeSetting)]);
+            final int editorTypeSetting;
+            if (AppPrefs.isAztecEditorEnabled()) {
+                editorTypeSetting = IDX_AZTEC_EDITOR;
+            } else if(AppPrefs.isVisualEditorEnabled()) {
+                editorTypeSetting = IDX_VISUAL_EDITOR;
+            } else{
+                editorTypeSetting = IDX_LEGACY_EDITOR;
             }
+
+            CharSequence[] entries = editorTypePreference.getEntries();
+            editorTypePreference.setSummary(entries[editorTypeSetting]);
+            editorTypePreference.setValueIndex(editorTypeSetting);
 
             toggleEditorFooterPreference();
         }

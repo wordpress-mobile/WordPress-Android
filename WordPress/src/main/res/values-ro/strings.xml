@@ -1,11 +1,26 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2017-11-23 11:24:45+0000
+Translation-Revision-Date: 2017-12-13 09:35:47+0000
 Plural-Forms: nplurals=3; plural=(n==1 ? 0 : (n==0 || (n%100 > 0 && n%100 < 20)) ? 1 : 2);
 Generator: GlotPress/2.4.0-alpha
 Language: ro
 -->
 <resources>
+	<string name="notification_login_failed">A apărut o eroare.</string>
+	<string name="notification_2fa_needed">Te rog furnizează codul de autentificare pentru a continua.</string>
+	<string name="notification_error_wrong_password">Te rog verifică-ți de două ori parola înainte de a continua.</string>
+	<string name="notification_login_title_stopped">Autentificare oprită</string>
+	<string name="notification_logging_in">Te rog așteaptă până te autentificăm.</string>
+	<string name="notification_login_title_in_progress">Autentificare în curs...</string>
+	<string name="notification_logged_in">Atinge pentru a continua.</string>
+	<string name="notification_login_title_success">Ești autentificat!</string>
+	<string name="login_error_generic_start">Autentificarea Google nu poate fi pornită.</string>
+	<string name="site_creating_success">Succes!</string>
+	<string name="site_creating_failed">Regret, am eșuat în crearea corectă a sitului tău :(</string>
+	<string name="site_creating_set_theme">Setăm tema...</string>
+	<string name="site_creating_set_tagline">Setăm sloganul...</string>
+	<string name="site_creating_fetching_info">Extragem informația de sit...</string>
+	<string name="site_creating_label">Pregătim situl tău...</string>
 	<string name="login_empty_password">Te rog introdu o parolă</string>
 	<string name="email_not_registered_wpcom">Hm, această adresă de email nu este înregistrată cu WordPress.com.\nÎncerci să accesezi un sit auto-găzduit? Autentifică-te folosind legătura din partea de jos a acestui ecran.</string>
 	<string name="login_text_otp_another">Trimite-mi în schimb un mesaj text cu un alt cod.</string>
@@ -743,16 +758,16 @@ Language: ro
 	<string name="site_settings_paging_dialog_description">Împarte firele de comentarii în mai multe pagini.</string>
 	<string name="site_settings_paging_dialog_header">Comentarii per pagină</string>
 	<string name="site_settings_close_after_dialog_title">Închidere comentare</string>
-	<string name="site_settings_blacklist_description">Când un comentariu conține oricare dintre aceste cuvinte în conținutul său, în nume, URL, email sau IP, va fi marcat ca spam. Poți introduce cuvinte parțiale, așa că "press" se va potrivi și pentru "WordPress".</string>
-	<string name="site_settings_hold_for_moderation_description">Când un comentariu conține oricare dintre aceste cuvinte în conținutul său, în nume, URL, email sau IP, va fi reținut în coada de moderare. Poți introduce cuvinte parțiale, așa că "press" se va potrivi și pentru "WordPress".</string>
+	<string name="site_settings_blacklist_description">Când un comentariu conține oricare dintre aceste cuvinte în conținutul său, în nume, URL, email sau IP, va fi marcat ca spam. Poți introduce cuvinte parțiale, așa că \"press\" se va potrivi și pentru \"WordPress\".</string>
+	<string name="site_settings_hold_for_moderation_description">Când un comentariu conține oricare dintre aceste cuvinte în conținutul său, în nume, URL, email sau IP, va fi reținut în coada de moderare. Poți introduce cuvinte parțiale, așa că \"press\" se va potrivi și pentru \"WordPress\".</string>
 	<string name="site_settings_list_editor_input_hint">Introdu un cuvânt sau frază</string>
 	<string name="site_settings_list_editor_no_items_text">Niciun element</string>
 	<string name="site_settings_learn_more_caption">Poți suprascrie aceste setări pentru fiecare articol.</string>
-	<string name="site_settings_rp_preview3_site">în "Actualizare"</string>
+	<string name="site_settings_rp_preview3_site">în \"Actualizare\"</string>
 	<string name="site_settings_rp_preview3_title">Focalizare actualizare: VideoPress pentru nunți</string>
-	<string name="site_settings_rp_preview2_site">în "Applicații"</string>
+	<string name="site_settings_rp_preview2_site">în \"Applicații\"</string>
 	<string name="site_settings_rp_preview2_title">Aplicația WordPress pentru Android a primit o mare actualizare a aspectului</string>
-	<string name="site_settings_rp_preview1_site">în "Mobile"</string>
+	<string name="site_settings_rp_preview1_site">în \"Mobile\"</string>
 	<string name="site_settings_rp_preview1_title">Este disponibilă o importantă actualizare pentru iPhone/iPad</string>
 	<string name="site_settings_rp_show_images_title">Arată imaginile</string>
 	<string name="site_settings_rp_show_header_title">Arată antetul</string>
@@ -966,7 +981,7 @@ Language: ro
 	<string name="me_disconnect_from_wordpress_com">Dezautentificare din WordPress.com</string>
 	<string name="me_btn_login_logout">Autentificare/Deautentificare</string>
 	<string name="me_connect_to_wordpress_com">Conectare la WordPress.com</string>
-	<string name="site_picker_cant_hide_current_site">"%s" n-a fost ascuns pentru că este situl curent</string>
+	<string name="site_picker_cant_hide_current_site">\"%s\" n-a fost ascuns pentru că este situl curent</string>
 	<string name="me_btn_support">Ajutor și suport</string>
 	<string name="account_settings">Setări cont</string>
 	<string name="site_picker_create_dotcom">Creează un sit WordPress.com</string>
@@ -1176,7 +1191,7 @@ Language: ro
 	<string name="blog_name_exists">Acel sit există deja</string>
 	<string name="blog_name_only_lowercase_letters_and_numbers">Adresa de sit poate conține doar litere mici (a-z) și numere</string>
 	<string name="blog_name_cant_be_used">S-ar putea să nu folosești acea adresă de sit</string>
-	<string name="blog_name_contains_invalid_characters">Adresa de sit nu poate conține caracterul "_"</string>
+	<string name="blog_name_contains_invalid_characters">Adresa de sit nu poate conține caracterul \"_\"</string>
 	<string name="blog_name_must_be_less_than_sixty_four_characters">Adresa de sit trebuie să fie mai scurtă de 64 de caractere</string>
 	<string name="blog_name_must_be_at_least_four_characters">Adresa de sit trebuie să aibă cel puțin 4 caractere</string>
 	<string name="blog_name_not_allowed">Acea adresă de sit nu e permisă</string>
@@ -1187,7 +1202,7 @@ Language: ro
 	<string name="email_not_allowed">Acea adresă de email nu e permisă</string>
 	<string name="email_invalid">Introdu o adresă de email validă</string>
 	<string name="username_must_include_letters">Numele de utilizator trebuie să aibă cel puțin o literă (a-z)</string>
-	<string name="username_contains_invalid_characters">Numele de utilizator nu poate conține caracterul "_"</string>
+	<string name="username_contains_invalid_characters">Numele de utilizator nu poate conține caracterul \"_\"</string>
 	<string name="username_must_be_at_least_four_characters">Numele de utilizator trebuie să aibă cel puțin 4 caractere</string>
 	<string name="username_not_allowed">Nume de utilizator nepermis</string>
 	<string name="username_required">Introdu un nume de utilizator</string>

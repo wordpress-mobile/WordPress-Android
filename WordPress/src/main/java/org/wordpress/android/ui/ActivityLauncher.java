@@ -15,6 +15,7 @@ import android.text.TextUtils;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.analytics.AnalyticsTracker;
+import org.wordpress.android.fluxc.model.PluginModel;
 import org.wordpress.android.fluxc.model.PostModel;
 import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.networking.SSLCertsViewActivity;
@@ -33,6 +34,9 @@ import org.wordpress.android.ui.people.PeopleManagementActivity;
 import org.wordpress.android.ui.photopicker.PhotoPickerActivity;
 import org.wordpress.android.ui.photopicker.PhotoPickerFragment;
 import org.wordpress.android.ui.plans.PlansActivity;
+import org.wordpress.android.ui.plugins.PluginDetailActivity;
+import org.wordpress.android.ui.plugins.PluginListActivity;
+import org.wordpress.android.ui.plugins.PluginUtils;
 import org.wordpress.android.ui.posts.EditPostActivity;
 import org.wordpress.android.ui.posts.PostPreviewActivity;
 import org.wordpress.android.ui.posts.PostsListActivity;
@@ -147,6 +151,24 @@ public class ActivityLauncher {
         intent.putExtra(WordPress.SITE, site);
         context.startActivity(intent);
         AnalyticsUtils.trackWithSiteDetails(AnalyticsTracker.Stat.OPENED_PEOPLE_MANAGEMENT, site);
+    }
+
+    public static void viewCurrentBlogPlugins(Context context, SiteModel site) {
+        if (PluginUtils.isPluginFeatureAvailable(site)) {
+            AnalyticsUtils.trackWithSiteDetails(AnalyticsTracker.Stat.OPENED_PLUGINS, site);
+            Intent intent = new Intent(context, PluginListActivity.class);
+            intent.putExtra(WordPress.SITE, site);
+            context.startActivity(intent);
+        }
+    }
+
+    public static void viewPluginDetail(Context context, SiteModel site, PluginModel plugin) {
+        if (PluginUtils.isPluginFeatureAvailable(site)) {
+            Intent intent = new Intent(context, PluginDetailActivity.class);
+            intent.putExtra(WordPress.SITE, site);
+            intent.putExtra(PluginDetailActivity.KEY_PLUGIN_NAME, plugin.getName());
+            context.startActivity(intent);
+        }
     }
 
     public static void viewBlogSettingsForResult(Activity activity, SiteModel site) {
