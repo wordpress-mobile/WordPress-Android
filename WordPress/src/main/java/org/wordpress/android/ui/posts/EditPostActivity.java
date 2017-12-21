@@ -20,7 +20,6 @@ import android.os.Environment;
 import android.os.Handler;
 import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
-import android.support.design.widget.Snackbar;
 import android.support.v13.app.FragmentPagerAdapter;
 import android.support.v4.app.ActivityCompat.OnRequestPermissionsResultCallback;
 import android.support.v4.app.FragmentTransaction;
@@ -50,7 +49,6 @@ import org.wordpress.android.WordPress;
 import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.analytics.AnalyticsTracker.Stat;
 import org.wordpress.android.editor.AztecEditorFragment;
-import org.wordpress.android.editor.EditorBetaClickListener;
 import org.wordpress.android.editor.EditorFragment;
 import org.wordpress.android.editor.EditorFragment.IllegalEditorStateException;
 import org.wordpress.android.editor.EditorFragmentAbstract;
@@ -101,7 +99,6 @@ import org.wordpress.android.ui.posts.InsertMediaDialog.InsertMediaCallback;
 import org.wordpress.android.ui.posts.services.AztecImageLoader;
 import org.wordpress.android.ui.posts.services.AztecVideoLoader;
 import org.wordpress.android.ui.prefs.AppPrefs;
-import org.wordpress.android.ui.prefs.ReleaseNotesActivity;
 import org.wordpress.android.ui.prefs.SiteSettingsInterface;
 import org.wordpress.android.ui.uploads.PostEvents;
 import org.wordpress.android.ui.uploads.UploadService;
@@ -154,7 +151,6 @@ import de.greenrobot.event.EventBus;
 
 public class EditPostActivity extends AppCompatActivity implements
         EditorFragmentActivity,
-        EditorBetaClickListener,
         EditorImageSettingsListener,
         EditorDragAndDropListener,
         EditorFragmentListener,
@@ -585,12 +581,6 @@ public class EditPostActivity extends AppCompatActivity implements
         }
     }
 
-    @Override
-    public void onBetaClicked() {
-        ActivityLauncher.showAztecEditorReleaseNotes(this);
-        AnalyticsTracker.track(Stat.EDITOR_AZTEC_BETA_LABEL);
-    }
-
     private String getSaveButtonText() {
         if (!userCanPublishPosts()) {
             return getString(R.string.submit_for_review);
@@ -879,8 +869,6 @@ public class EditPostActivity extends AppCompatActivity implements
         if (itemId == R.id.menu_save_post) {
             if (!AppPrefs.isAsyncPromoRequired()) {
                 publishPost();
-            } else {
-                showAsyncPromoDialog();
             }
         } else {
             // Disable other action bar buttons while a media upload is in progress
@@ -1038,7 +1026,6 @@ public class EditPostActivity extends AppCompatActivity implements
     public void initializeEditorFragment() {
         if (mEditorFragment instanceof AztecEditorFragment) {
             AztecEditorFragment aztecEditorFragment = (AztecEditorFragment)mEditorFragment;
-            aztecEditorFragment.setEditorBetaClickListener(EditPostActivity.this);
             aztecEditorFragment.setEditorImageSettingsListener(EditPostActivity.this);
 
             Drawable loadingImagePlaceholder = getResources().getDrawable(org.wordpress.android.editor.R.drawable.ic_gridicons_image);
@@ -1412,15 +1399,6 @@ public class EditPostActivity extends AppCompatActivity implements
                 case 0:
                     // TODO: Remove editor options after testing.
                     if (mShowAztecEditor) {
-
-                        // Show confirmation message when coming from editor promotion dialog.
-                        if (mIsPromo) {
-                            showSnackbarConfirmation();
-                        // Show open beta message when Aztec is already enabled.
-                        } else if (AppPrefs.isAztecEditorEnabled() && AppPrefs.isNewEditorBetaRequired()) {
-                            showSnackbarBeta();
-                        }
-
                         return AztecEditorFragment.newInstance("", "", AppPrefs.isAztecEditorToolbarExpanded());
                     } else if (mShowNewEditor) {
                         EditorWebViewCompatibility.setReflectionFailureListener(EditPostActivity.this);
@@ -2865,77 +2843,6 @@ public class EditPostActivity extends AppCompatActivity implements
                 mEditorMediaUploadListener.onMediaUploadRetry(localMediaId, mediaType);
             }
         }
-    }
-
-    protected void showSnackbarBeta() {
-        Snackbar.make(
-                mViewPager,
-                getString(R.string.new_editor_beta_message),
-                Snackbar.LENGTH_LONG
-        )
-                .setAction(
-                        R.string.new_editor_beta_action,
-                        new View.OnClickListener() {
-                            @Override
-                            public void onClick(View view) {
-                                ActivityLauncher.showAztecEditorReleaseNotes(EditPostActivity.this);
-                                AnalyticsTracker.track(Stat.EDITOR_AZTEC_BETA_LINK);
-                            }
-                        }
-                )
-                .show();
-        AppPrefs.setNewEditorBetaRequired(false);
-    }
-
-    protected void showSnackbarConfirmation() {
-        if (mViewPager != null) {
-            Snackbar.make(
-                    mViewPager,
-                    getString(R.string.new_editor_promo_confirmation_message),
-                    Snackbar.LENGTH_LONG
-            )
-                    .setAction(
-                            R.string.new_editor_promo_confirmation_action,
-                            new View.OnClickListener() {
-                                @Override
-                                public void onClick(View view) {
-                                    ActivityLauncher.viewAppSettings(EditPostActivity.this);
-                                    finish();
-                                }
-                            }
-                    )
-                    .show();
-        }
-    }
-
-    private void showAsyncPromoDialog() {
-        PromoDialogAdvanced asyncPromoDialog = new PromoDialogAdvanced.Builder(
-                R.drawable.img_promo_async,
-                R.string.async_promo_title,
-                R.string.async_promo_description,
-                android.R.string.ok)
-                .setLinkText(R.string.async_promo_link)
-                .build();
-
-        asyncPromoDialog.setLinkOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(EditPostActivity.this, ReleaseNotesActivity.class);
-                intent.putExtra(ReleaseNotesActivity.KEY_TARGET_URL,
-                        "https://make.wordpress.org/mobile/whats-new-in-android-media-uploading/");
-                startActivity(intent);
-            }
-        });
-
-        asyncPromoDialog.setPositiveButtonOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                publishPost();
-            }
-        });
-
-        asyncPromoDialog.show(getSupportFragmentManager(), ASYNC_PROMO_DIALOG_TAG);
-        AppPrefs.setAsyncPromoRequired(false);
     }
 
     // EditPostActivityHook methods
