@@ -124,6 +124,14 @@ public class ThemeSqlUtils {
                 .endWhere().getAsModel();
     }
 
+    public static List<ThemeModel> getWpComMobileFriendlyThemes(String categorySlug) {
+        return WellSql.select(ThemeModel.class)
+                .where()
+                .equals(ThemeModelTable.MOBILE_FRIENDLY_CATEGORY_SLUG, categorySlug)
+                .equals(ThemeModelTable.IS_WP_COM_THEME, true)
+                .endWhere().getAsModel();
+    }
+
     /**
      * Retrieves themes associated with a given site. Installed themes (for Jetpack sites) are the only themes
      * targeted for now.

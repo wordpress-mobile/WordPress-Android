@@ -28,6 +28,7 @@ public class ThemeModel implements Identifiable, Serializable {
     @Column private String mStylesheet;
     @Column private String mPriceText;
     @Column private boolean mFree = true;
+    @Column private String mMobileFriendlyCategorySlug;
     @Column private boolean mActive;
     @Column private boolean mAutoUpdate;
     @Column private boolean mAutoUpdateTranslation;
@@ -67,6 +68,7 @@ public class ThemeModel implements Identifiable, Serializable {
                 && StringUtils.equals(getStylesheet(), otherTheme.getStylesheet())
                 && StringUtils.equals(getPriceText(), otherTheme.getPriceText())
                 && getFree() == otherTheme.getFree()
+                && StringUtils.equals(getMobileFriendlyCategorySlug(), otherTheme.getMobileFriendlyCategorySlug())
                 && getActive() == otherTheme.getActive()
                 && getAutoUpdate() == otherTheme.getAutoUpdate()
                 && getAutoUpdateTranslation() == otherTheme.getAutoUpdateTranslation()
@@ -187,6 +189,14 @@ public class ThemeModel implements Identifiable, Serializable {
 
     public boolean getFree() {
         return mFree;
+    }
+
+    public String getMobileFriendlyCategorySlug() {
+        return mMobileFriendlyCategorySlug;
+    }
+
+    public void setMobileFriendlyCategorySlug(String mobileFriendlyCategorySlug) {
+        mMobileFriendlyCategorySlug = mobileFriendlyCategorySlug;
     }
 
     public boolean isFree() {
