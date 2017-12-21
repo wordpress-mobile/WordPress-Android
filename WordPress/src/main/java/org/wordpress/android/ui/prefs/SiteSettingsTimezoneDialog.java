@@ -10,11 +10,15 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.text.TextUtils;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.BaseAdapter;
+import android.widget.Filter;
+import android.widget.Filterable;
 import android.widget.ListView;
+import android.widget.SearchView;
 import android.widget.TextView;
 
 import com.android.volley.AuthFailureError;
@@ -39,7 +43,7 @@ import java.util.Map;
 public class SiteSettingsTimezoneDialog extends DialogFragment implements DialogInterface.OnClickListener {
 
     public static final String KEY_TIMEZONE = "timezone";
-    public static final String KEY_LANGUAGE_CODE = "language_code";
+    private static final String KEY_LANGUAGE_CODE = "language_code";
 
     private class Timezone {
         private final String label;
@@ -55,7 +59,12 @@ public class SiteSettingsTimezoneDialog extends DialogFragment implements Dialog
     private String mLanguageCode;
 
     private ListView mListView;
+    private SearchView mSearchView;
+    private View mEmptyView;
+    private View mProgressView;
+
     private TimezoneAdapter mAdapter;
+    private LayoutInflater mInflater;
 
     public static SiteSettingsTimezoneDialog newInstance(@NonNull String timezone, @NonNull String languageCode) {
         Bundle args = new Bundle();
@@ -69,7 +78,8 @@ public class SiteSettingsTimezoneDialog extends DialogFragment implements Dialog
 
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
-        View view = View.inflate(getActivity(), R.layout.site_settings_timezone_dialog, null);
+        mInflater = LayoutInflater.from(getActivity());
+        View view = mInflater.inflate(R.layout.site_settings_timezone_dialog, null);
 
         mListView = view.findViewById(R.id.list);
         mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -80,6 +90,29 @@ public class SiteSettingsTimezoneDialog extends DialogFragment implements Dialog
                 mAdapter.notifyDataSetChanged();
             }
         });
+
+        mSearchView = view.findViewById(R.id.search_view);
+        mSearchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                if (mAdapter != null) {
+                    mAdapter.getFilter().filter(query);
+                }
+                return true;
+            }
+            @Override
+            public boolean onQueryTextChange(String newText) {
+                if (mAdapter != null) {
+                    mAdapter.getFilter().filter(newText);
+                }
+                return true;
+            }
+        });
+        mSearchView.setEnabled(false);
+        mSearchView.setIconifiedByDefault(false);
+
+        mEmptyView = view.findViewById(R.id.empty_view);
+        mProgressView = view.findViewById(R.id.progress_view);
 
         mSelectedTimezone = getArguments().getString(KEY_TIMEZONE);
         mLanguageCode = getArguments().getString(KEY_LANGUAGE_CODE);
@@ -99,8 +132,13 @@ public class SiteSettingsTimezoneDialog extends DialogFragment implements Dialog
             @Override
             public void onResponse(String response) {
                 AppLog.d(AppLog.T.SETTINGS, "timezones requested");
-                if (isAdded() && response != null) {
-                    loadTimezones(response);
+                if (isAdded()) {
+                    showProgressView(false);
+                    if (response != null) {
+                        loadTimezones(response);
+                    } else {
+                        dismissWithError();
+                    }
                 }
             }
         };
@@ -125,6 +163,7 @@ public class SiteSettingsTimezoneDialog extends DialogFragment implements Dialog
             }
         };
 
+        showProgressView(true);
         RequestQueue queue = Volley.newRequestQueue(getActivity());
         queue.add(request);
     }
@@ -143,6 +182,7 @@ public class SiteSettingsTimezoneDialog extends DialogFragment implements Dialog
 
             mAdapter = new TimezoneAdapter(timezones);
             mListView.setAdapter(mAdapter);
+            mSearchView.setEnabled(true);
         } catch (JSONException e) {
             AppLog.e(AppLog.T.SETTINGS, "Error parsing timezones", e);
             dismissWithError();
@@ -171,21 +211,43 @@ public class SiteSettingsTimezoneDialog extends DialogFragment implements Dialog
         super.onDismiss(dialog);
     }
 
-    private class TimezoneAdapter extends BaseAdapter {
-        private final List<Timezone> mTimezones = new ArrayList<>();
+    private void showEmptyView(boolean show) {
+        if (isAdded()) {
+            mEmptyView.setVisibility(show ? View.VISIBLE : View.GONE);
+        }
+    }
+
+    private void showProgressView(boolean show) {
+        if (isAdded()) {
+            mProgressView.setVisibility(show ? View.VISIBLE : View.GONE);
+        }
+    }
+
+    private class TimezoneViewHolder {
+        private final TextView txtLabel;
+
+        TimezoneViewHolder(View view) {
+            txtLabel = view.findViewById(android.R.id.text1);
+        }
+    }
+
+    private class TimezoneAdapter extends BaseAdapter implements Filterable {
+        private final List<Timezone> mAllTimezones = new ArrayList<>();
+        private final List<Timezone> mFilteredTimezones = new ArrayList<>();
 
         private TimezoneAdapter(@NonNull List<Timezone> timezones) {
-            mTimezones.addAll(timezones);
+            mAllTimezones.addAll(timezones);
+            mFilteredTimezones.addAll(timezones);
         }
 
         @Override
         public int getCount() {
-            return mTimezones.size();
+            return mFilteredTimezones.size();
         }
 
         @Override
         public Object getItem(int position) {
-            return mTimezones.get(position);
+            return mFilteredTimezones.get(position);
         }
 
         @Override
@@ -195,15 +257,55 @@ public class SiteSettingsTimezoneDialog extends DialogFragment implements Dialog
 
         @Override
         public View getView(int position, View convertView, ViewGroup parent) {
-            View view = View.inflate(getActivity(), android.R.layout.simple_list_item_1, null);
-            TextView txtLabel = view.findViewById(android.R.id.text1);
-            txtLabel.setText(mTimezones.get(position).label);
+            TimezoneViewHolder holder;
+            if (convertView == null || convertView.getTag() == null) {
+                convertView = mInflater.inflate(android.R.layout.simple_list_item_1, parent, false);
+                holder = new TimezoneViewHolder(convertView);
+                convertView.setTag(holder);
+            } else {
+                holder = (TimezoneViewHolder) convertView.getTag();
+            }
 
-            boolean isSelected = mSelectedTimezone != null && mSelectedTimezone.equals(mTimezones.get(position).value);
+            boolean isSelected = mSelectedTimezone != null && mSelectedTimezone.equals(mFilteredTimezones.get(position).value);
             int colorRes = isSelected ? R.color.list_row_selected : R.color.transparent;
-            txtLabel.setBackgroundColor(getResources().getColor(colorRes));
+            holder.txtLabel.setBackgroundColor(getResources().getColor(colorRes));
+            holder.txtLabel.setText(mFilteredTimezones.get(position).label);
 
-            return view;
+            return convertView;
+        }
+
+        @Override
+        public Filter getFilter() {
+            return new Filter() {
+                @SuppressWarnings("unchecked")
+                @Override
+                protected void publishResults(CharSequence constraint, FilterResults results) {
+                    mFilteredTimezones.clear();
+                    mFilteredTimezones.addAll((List<Timezone>)results.values);
+                    showEmptyView(mFilteredTimezones.isEmpty());
+                    TimezoneAdapter.this.notifyDataSetChanged();
+                }
+
+                @Override
+                protected FilterResults performFiltering(CharSequence constraint) {
+                    List<Timezone> filtered = new ArrayList<>();
+                    if (TextUtils.isEmpty(constraint)) {
+                        filtered.addAll(mAllTimezones);
+                    } else {
+                        String lcConstraint = constraint.toString().toLowerCase();
+                        for (Timezone tz: mAllTimezones) {
+                            if (tz.label.toLowerCase().contains(lcConstraint)) {
+                                filtered.add(tz);
+                            }
+                        }
+                    }
+
+                    FilterResults results = new FilterResults();
+                    results.values = filtered;
+
+                    return results;
+                }
+            };
         }
     }
 
