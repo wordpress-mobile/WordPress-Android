@@ -75,7 +75,7 @@ public class SignupEpilogueSocialFragment extends LoginBaseFormFragment<SignupEp
 
     @Override
     protected @LayoutRes int getProgressBarText() {
-        return R.string.signup_creating_account;
+        return R.string.signup_updating_account;
     }
 
     @Override
