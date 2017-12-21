@@ -72,6 +72,7 @@ import org.wordpress.aztec.plugins.shortcodes.AudioShortcodePlugin;
 import org.wordpress.aztec.plugins.shortcodes.CaptionShortcodePlugin;
 import org.wordpress.aztec.plugins.shortcodes.VideoShortcodePlugin;
 import org.wordpress.aztec.plugins.shortcodes.extensions.CaptionExtensionsKt;
+import org.wordpress.aztec.plugins.shortcodes.extensions.VideoPressExtensionsKt;
 import org.wordpress.aztec.plugins.shortcodes.spans.CaptionShortcodeSpan;
 import org.wordpress.aztec.plugins.wpcomments.CommentsTextFormat;
 import org.wordpress.aztec.plugins.wpcomments.WordPressCommentsPlugin;
@@ -98,7 +99,7 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
         AztecText.OnImageTappedListener,
         AztecText.OnVideoTappedListener,
         AztecText.OnMediaDeletedListener,
-        AztecText.OnVideoPressInfoRequestedListener,
+        AztecText.OnVideoInfoRequestedListener,
         View.OnTouchListener,
         EditorMediaUploadListener,
         IAztecToolbarClickListener,
@@ -250,7 +251,7 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
                 .setOnImageTappedListener(this)
                 .setOnVideoTappedListener(this)
                 .setOnMediaDeletedListener(this)
-                .setOnVideoPressInfoRequestedListener(this)
+                .setOnVideoInfoRequestedListener(this)
                 .addPlugin(new WordPressCommentsPlugin(content))
                 .addPlugin(new MoreToolbarButton(content))
                 .addPlugin(new CaptionShortcodePlugin(content))
@@ -900,7 +901,7 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
 
     @Override
     public void setUrlForVideoPressId(final String videoId, final String videoUrl, final String posterUrl) {
-        content.updateVideoPressThumb(posterUrl, videoUrl, videoId);
+        VideoPressExtensionsKt.updateVideoPressThumb(content, posterUrl, videoUrl, videoId);
     }
 
     @Override
@@ -1174,8 +1175,11 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
     }
 
     @Override
-    public void onVideoPressInfoRequested(final String videoId) {
-        mEditorFragmentListener.onVideoPressInfoRequested(videoId);
+    public void onVideoInfoRequested(final AztecAttributes attrs) {
+        // VideoPress special case here
+        if (attrs.hasAttribute("videopress_hidden_id")) {
+            mEditorFragmentListener.onVideoPressInfoRequested(attrs.getValue("videopress_hidden_id"));
+        }
     }
 
     @Override
