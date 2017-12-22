@@ -68,6 +68,8 @@ class DotComSiteSettings extends SiteSettingsInterface {
     private static final String TIME_FORMAT_KEY = "time_format";
     private static final String TIMEZONE_KEY = "timezone_string";
     private static final String POSTS_PER_PAGE_KEY = "posts_per_page";
+    private static final String AMP_SUPPORTED_KEY = "amp_supported";
+    private static final String AMP_ENABLED_KEY = "amp_enabled";
 
     // WP.com REST keys used to GET certain site settings
     private static final String GET_TITLE_KEY = "name";
@@ -454,6 +456,8 @@ class DotComSiteSettings extends SiteSettingsInterface {
         mRemoteSettings.timeFormat = settingsObject.optString(TIME_FORMAT_KEY, "");
         mRemoteSettings.timezone = settingsObject.optString(TIMEZONE_KEY, "");
         mRemoteSettings.postsPerPage = settingsObject.optInt(POSTS_PER_PAGE_KEY, 0);
+        mRemoteSettings.ampSupported = settingsObject.optBoolean(AMP_SUPPORTED_KEY, false);
+        mRemoteSettings.ampEnabled = settingsObject.optBoolean(AMP_ENABLED_KEY, false);
 
         boolean reblogsDisabled = settingsObject.optBoolean(SHARING_REBLOGS_DISABLED_KEY, false);
         boolean likesDisabled = settingsObject.optBoolean(SHARING_LIKES_DISABLED_KEY, false);
@@ -631,6 +635,12 @@ class DotComSiteSettings extends SiteSettingsInterface {
         }
         if (mSettings.postsPerPage != mRemoteSettings.postsPerPage) {
             params.put(POSTS_PER_PAGE_KEY, String.valueOf(mSettings.postsPerPage));
+        }
+        if (mSettings.ampSupported != mRemoteSettings.ampSupported) {
+            params.put(AMP_SUPPORTED_KEY, String.valueOf(mSettings.ampSupported));
+        }
+        if (mSettings.ampEnabled != mRemoteSettings.ampEnabled) {
+            params.put(AMP_ENABLED_KEY, String.valueOf(mSettings.ampEnabled));
         }
 
         return params;
