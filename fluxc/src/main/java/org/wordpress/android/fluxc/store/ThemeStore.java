@@ -24,6 +24,10 @@ import javax.inject.Singleton;
 
 @Singleton
 public class ThemeStore extends Store {
+    public static final String MOBILE_FRIENDLY_CATEGORY_BLOG = "starting-blog";
+    public static final String MOBILE_FRIENDLY_CATEGORY_WEBSITE = "starting-website";
+    public static final String MOBILE_FRIENDLY_CATEGORY_PORTFOLIO = "starting-portfolio";
+
     // Payloads
     public static class FetchedCurrentThemePayload extends Payload<ThemesError> {
         public SiteModel site;
