@@ -127,6 +127,7 @@ public class ThemeStore extends Store {
     // OnChanged events
     public static class OnThemesChanged extends OnChanged<ThemesError> {
         public SiteModel site;
+        public ThemeAction origin;
 
         public OnThemesChanged(SiteModel site) {
             this.site = site;
@@ -315,6 +316,7 @@ public class ThemeStore extends Store {
 
     private void handleWpComThemesFetched(@NonNull FetchedThemesPayload payload) {
         OnThemesChanged event = new OnThemesChanged(payload.site);
+        event.origin = ThemeAction.FETCH_WP_COM_THEMES;
         if (payload.isError()) {
             event.error = payload.error;
         } else {
@@ -335,6 +337,7 @@ public class ThemeStore extends Store {
 
     private void handleInstalledThemesFetched(@NonNull FetchedThemesPayload payload) {
         OnThemesChanged event = new OnThemesChanged(payload.site);
+        event.origin = ThemeAction.FETCH_INSTALLED_THEMES;
         if (payload.isError()) {
             event.error = payload.error;
         } else {
