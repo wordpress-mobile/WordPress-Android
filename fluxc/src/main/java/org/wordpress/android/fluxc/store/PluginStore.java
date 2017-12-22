@@ -79,8 +79,9 @@ public class PluginStore extends Store {
             this.plugin = plugin;
         }
 
-        public DeletedSitePluginPayload(SiteModel site, DeleteSitePluginError error) {
+        public DeletedSitePluginPayload(SiteModel site, PluginModel plugin, DeleteSitePluginError error) {
             this.site = site;
+            this.plugin = plugin;
             this.error = error;
         }
     }
@@ -509,7 +510,7 @@ public class PluginStore extends Store {
             mPluginRestClient.deleteSitePlugin(payload.site, payload.plugin);
         } else {
             DeleteSitePluginError error = new DeleteSitePluginError(DeleteSitePluginErrorType.NOT_AVAILABLE);
-            DeletedSitePluginPayload errorPayload = new DeletedSitePluginPayload(payload.site, error);
+            DeletedSitePluginPayload errorPayload = new DeletedSitePluginPayload(payload.site, payload.plugin, error);
             deletedSitePlugin(errorPayload);
         }
     }
@@ -570,7 +571,11 @@ public class PluginStore extends Store {
 
     private void deletedSitePlugin(DeletedSitePluginPayload payload) {
         OnSitePluginDeleted event = new OnSitePluginDeleted(payload.site);
-        if (payload.isError()) {
+        // If the remote returns `UNKNOWN_PLUGIN` error, it means the plugin is not installed in remote anymore
+        // most likely because the plugin is already removed on a different client and it was not synced yet.
+        // Since we are trying to remove an already removed plugin, we should just remove it from DB and treat it as a
+        // successful action.
+        if (payload.isError() && payload.error.type != DeleteSitePluginErrorType.UNKNOWN_PLUGIN) {
             event.error = payload.error;
         } else {
             event.plugin = payload.plugin;

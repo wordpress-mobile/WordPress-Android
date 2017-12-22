@@ -9,6 +9,7 @@ import org.wordpress.android.fluxc.annotations.endpoint.EndpointNode;
 import org.wordpress.android.fluxc.annotations.endpoint.EndpointTreeGenerator;
 import org.wordpress.android.fluxc.annotations.endpoint.WPAPIEndpoint;
 import org.wordpress.android.fluxc.annotations.endpoint.WPComEndpoint;
+import org.wordpress.android.fluxc.annotations.endpoint.WPComV2Endpoint;
 import org.wordpress.android.fluxc.annotations.endpoint.WPOrgAPIEndpoint;
 
 import java.io.File;
@@ -31,6 +32,7 @@ import javax.lang.model.element.TypeElement;
 @AutoService(Processor.class)
 public class EndpointProcessor extends AbstractProcessor {
     private static final String WPCOMREST_ENDPOINT_FILE = "fluxc/src/main/tools/wp-com-endpoints.txt";
+    private static final String WPCOMV2_ENDPOINT_FILE = "fluxc/src/main/tools/wp-com-v2-endpoints.txt";
     private static final String XMLRPC_ENDPOINT_FILE = "fluxc/src/main/tools/xmlrpc-endpoints.txt";
     private static final String WPAPI_ENDPOINT_FILE = "fluxc/src/main/tools/wp-api-endpoints.txt";
     private static final String WPORG_API_ENDPOINT_FILE = "fluxc/src/main/tools/wporg-api-endpoints.txt";
@@ -63,6 +65,7 @@ public class EndpointProcessor extends AbstractProcessor {
 
         try {
             generateWPCOMRESTEndpointFile();
+            generateWPCOMV2EndpointFile();
             generateXMLRPCEndpointFile();
             generateWPAPIEndpointFile();
             generateWPORGAPIEndpointFile();
@@ -81,6 +84,15 @@ public class EndpointProcessor extends AbstractProcessor {
         EndpointNode rootNode = EndpointTreeGenerator.process(file);
 
         TypeSpec endpointClass = RESTPoet.generate(rootNode, "WPCOMREST", WPComEndpoint.class,
+                WPCOMREST_VARIABLE_ENDPOINT_PATTERN);
+        writeEndpointClassToFile(endpointClass);
+    }
+
+    private void generateWPCOMV2EndpointFile() throws IOException {
+        File file = new File(WPCOMV2_ENDPOINT_FILE);
+        EndpointNode rootNode = EndpointTreeGenerator.process(file);
+
+        TypeSpec endpointClass = RESTPoet.generate(rootNode, "WPCOMV2", WPComV2Endpoint.class,
                 WPCOMREST_VARIABLE_ENDPOINT_PATTERN);
         writeEndpointClassToFile(endpointClass);
     }
