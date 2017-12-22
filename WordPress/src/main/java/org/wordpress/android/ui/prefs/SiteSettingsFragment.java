@@ -1170,7 +1170,7 @@ public class SiteSettingsFragment extends PreferenceFragment
         if (mSiteSettings.getAmpSupported()) {
             mAmpPref.setChecked(mSiteSettings.getAmpEnabled());
         } else {
-            WPPrefUtils.removePreference(this, R.string.pref_key_site_traffic, R.string.pref_key_site_amp);
+            WPPrefUtils.removePreference(this, R.string.pref_key_site_screen, R.string.pref_key_site_traffic);
         }
 
         setDateTimeFormatPref(FormatType.DATE_FORMAT, mDateFormatPref, mSiteSettings.getDateFormat());
