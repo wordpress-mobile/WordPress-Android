@@ -16,7 +16,7 @@
         android:minHeight="@dimen/min_touch_target_sz"
         android:padding="@dimen/margin_extra_large"
         android:textColor="@color/grey_dark"
-        android:textSize="@dimen/text_sz_medium"
+        android:textSize="@dimen/text_sz_large"
         tools:text="text_tag" />
 
     <TextView

@@ -19,7 +19,6 @@ import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.model.TermModel;
 import org.wordpress.android.fluxc.store.TaxonomyStore;
 import org.wordpress.android.util.AppLog;
-import org.wordpress.android.util.DisplayUtils;
 import org.wordpress.android.util.EditTextUtils;
 import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.ToastUtils;
@@ -87,13 +86,9 @@ public class TagDetailFragment extends Fragment {
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
-        if (savedInstanceState == null && !DisplayUtils.isLandscape(getActivity())) {
-            EditTextUtils.showSoftInput(mNameView);
-        }
-
         if (getArguments() != null) {
             mSite = (SiteModel) getArguments().getSerializable(WordPress.SITE);
-            mTagId = getArguments().getInt(ARGS_TAG_ID);
+            mTagId = getArguments().getLong(ARGS_TAG_ID);
         }
 
         loadTagDetail();

@@ -119,6 +119,10 @@ public class TagListActivity extends AppCompatActivity {
     @Override
     public void onBackPressed() {
         if (getFragmentManager().getBackStackEntryCount() > 0) {
+            TagDetailFragment fragment = getDetailFragment();
+            if (fragment != null) {
+                fragment.saveChanges();
+            }
             getFragmentManager().popBackStack();
         } else {
             super.onBackPressed();
@@ -140,9 +144,12 @@ public class TagListActivity extends AppCompatActivity {
         mRecycler.setAdapter(mAdapter);
     }
 
+    private TagDetailFragment getDetailFragment() {
+        return (TagDetailFragment) getFragmentManager().findFragmentByTag(TagDetailFragment.TAG);
+    }
+
     private void showTagDetail(@NonNull TermModel term) {
-        FragmentManager fm = getFragmentManager();
-        TagDetailFragment fragment = (TagDetailFragment) fm.findFragmentByTag(TagDetailFragment.TAG);
+        TagDetailFragment fragment = getDetailFragment();
         if (fragment == null) {
             fragment = TagDetailFragment.newInstance(mSite, term.getRemoteTermId());
             getFragmentManager().beginTransaction()
