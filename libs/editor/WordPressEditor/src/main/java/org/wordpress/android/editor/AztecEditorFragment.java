@@ -132,7 +132,7 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
     private boolean mEditorWasPaused = false;
     private boolean mHideActionBarOnSoftKeyboardUp = false;
 
-    private org.wordpress.android.editor.SourceViewEditText title;
+    private EditTextWithKeyBackListener title;
     private AztecText content;
     private boolean mAztecReady;
     private SourceViewEditText source;
@@ -187,7 +187,7 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
             ((EditorFragmentActivity) getActivity()).initializeEditorFragment();
         }
 
-        title = (org.wordpress.android.editor.SourceViewEditText) view.findViewById(R.id.title);
+        title = (EditTextWithKeyBackListener) view.findViewById(R.id.title);
         content = (AztecText) view.findViewById(R.id.aztec);
         source = (SourceViewEditText) view.findViewById(R.id.source);
 

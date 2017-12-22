@@ -30,7 +30,7 @@
                 android:layout_height="wrap_content"
                 android:layout_width="match_parent" >
 
-                <org.wordpress.android.editor.SourceViewEditText
+                <org.wordpress.android.editor.EditTextWithKeyBackListener
                     android:id="@+id/title"
                     android:hint="@string/post_title"
                     android:inputType="textCapSentences|textAutoCorrect|textMultiLine"
@@ -47,7 +47,7 @@
                     android:lineSpacingExtra="@dimen/spacing_extra_title"
                     android:textColor="@color/grey_dark"
                     android:textColorHint="@color/hint_text">
-                </org.wordpress.android.editor.SourceViewEditText>
+                </org.wordpress.android.editor.EditTextWithKeyBackListener>
 
                 <ImageButton
                     android:id="@+id/title_beta"
