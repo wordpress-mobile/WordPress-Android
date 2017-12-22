@@ -58,6 +58,8 @@ public class SiteSettingsModel {
     private static final String ALLOW_COMMENT_LIKES_COLUMN_NAME = "allowCommentLikes";
     private static final String TWITTER_USERNAME_COLUMN_NAME = "twitterUsername";
     private static final String START_OF_WEEK_COLUMN_NAME = "startOfWeek";
+    private static final String DATE_FORMAT_COLUMN_NAME = "dateFormat";
+    private static final String TIME_FORMAT_COLUMN_NAME = "timeFormat";
 
     public static final String SETTINGS_TABLE_NAME = "site_settings";
 
@@ -75,6 +77,10 @@ public class SiteSettingsModel {
             " add " + TWITTER_USERNAME_COLUMN_NAME + " TEXT;";
     public static final String ADD_START_OF_WEEK = "alter table " + SETTINGS_TABLE_NAME +
             " add " + START_OF_WEEK_COLUMN_NAME + " TEXT;";
+    public static final String ADD_TIME_FORMAT = "alter table " + SETTINGS_TABLE_NAME +
+            " add " + TIME_FORMAT_COLUMN_NAME + " TEXT;";
+    public static final String ADD_DATE_FORMAT = "alter table " + SETTINGS_TABLE_NAME +
+            " add " + DATE_FORMAT_COLUMN_NAME + " TEXT;";
 
     public static final String CREATE_SETTINGS_TABLE_SQL =
             "CREATE TABLE IF NOT EXISTS " +
@@ -156,6 +162,8 @@ public class SiteSettingsModel {
     public boolean allowCommentLikes;
     public String twitterUsername;
     public String startOfWeek;
+    public String dateFormat;
+    public String timeFormat;
 
     @Override
     public boolean equals(Object other) {
@@ -170,6 +178,8 @@ public class SiteSettingsModel {
                 equals(tagline, otherModel.tagline) &&
                 equals(defaultPostFormat, otherModel.defaultPostFormat) &&
                 equals(startOfWeek, otherModel.startOfWeek) &&
+                equals(dateFormat, otherModel.dateFormat) &&
+                equals(timeFormat, otherModel.timeFormat) &&
                 languageId == otherModel.languageId &&
                 privacy == otherModel.privacy &&
                 location == otherModel.location &&
@@ -242,6 +252,8 @@ public class SiteSettingsModel {
         commentAutoApprovalKnownUsers = other.commentAutoApprovalKnownUsers;
         maxLinks = other.maxLinks;
         startOfWeek = other.startOfWeek;
+        dateFormat = other.dateFormat;
+        timeFormat = other.timeFormat;
         if (other.holdForModeration != null) {
             holdForModeration = new ArrayList<>(other.holdForModeration);
         }
@@ -295,6 +307,8 @@ public class SiteSettingsModel {
         commentsRequireUserAccount = getBooleanFromCursor(cursor, USER_ACCOUNT_REQUIRED_COLUMN_NAME);
         commentAutoApprovalKnownUsers = getBooleanFromCursor(cursor, WHITELIST_COLUMN_NAME);
         startOfWeek = getStringFromCursor(cursor, START_OF_WEEK_COLUMN_NAME);
+        dateFormat = getStringFromCursor(cursor, DATE_FORMAT_COLUMN_NAME);
+        timeFormat = getStringFromCursor(cursor, TIME_FORMAT_COLUMN_NAME);
 
         String moderationKeys = getStringFromCursor(cursor, MODERATION_KEYS_COLUMN_NAME);
         String blacklistKeys = getStringFromCursor(cursor, BLACKLIST_KEYS_COLUMN_NAME);
@@ -378,6 +392,8 @@ public class SiteSettingsModel {
         values.put(USER_ACCOUNT_REQUIRED_COLUMN_NAME, commentsRequireUserAccount);
         values.put(WHITELIST_COLUMN_NAME, commentAutoApprovalKnownUsers);
         values.put(START_OF_WEEK_COLUMN_NAME, startOfWeek);
+        values.put(DATE_FORMAT_COLUMN_NAME, dateFormat);
+        values.put(TIME_FORMAT_COLUMN_NAME, timeFormat);
 
         String moderationKeys = "";
         if (holdForModeration != null) {

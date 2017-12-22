@@ -531,6 +531,11 @@
     <string name="site_settings_default_category_title">Default Category</string>
     <string name="site_settings_default_format_title">Default Format</string>
     <string name="site_settings_week_start_title">Week starts on</string>
+    <string name="site_settings_date_format_title">Date Format</string>
+    <string name="site_settings_time_format_title">Time Format</string>
+    <string name="site_settings_format_entry_custom">Custom</string>
+    <string name="site_settings_format_hint_custom">Custom format</string>
+    <string name="site_settings_format_help">Learn more about date &amp; time formatting</string>
     <string name="site_settings_image_original_size">Original Size</string>
     <string name="site_settings_optimize_images">Optimize Images</string>
     <string name="site_settings_default_image_width_title" translatable="false">@string/max_thumbnail_px_size</string>
