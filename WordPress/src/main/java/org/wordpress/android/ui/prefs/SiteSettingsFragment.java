@@ -133,6 +133,9 @@ public class SiteSettingsFragment extends PreferenceFragment
     private static final int DELETE_SITE_REQUEST_CODE = 6;
     private static final int DATE_FORMAT_REQUEST_CODE = 7;
     private static final int TIME_FORMAT_REQUEST_CODE = 8;
+    private static final int POSTS_PER_PAGE_REQUEST_CODE = 9;
+    private static final int TIMEZONE_REQUEST_CODE = 10;
+
     private static final String DELETE_SITE_TAG = "delete-site";
     private static final String PURCHASE_ORIGINAL_RESPONSE_KEY = "originalResponse";
     private static final String PURCHASE_ACTIVE_KEY = "active";
@@ -173,6 +176,8 @@ public class SiteSettingsFragment extends PreferenceFragment
     private WPPreference mTimeFormatPref;
     private DetailListPreference mWeekStartPref;
     private Preference mRelatedPostsPref;
+    private Preference mTimezonePref;
+    private Preference mPostsPerPagePref;
 
     // Discussion settings preview
     private WPSwitchPreference mAllowCommentsPref;
@@ -366,13 +371,24 @@ public class SiteSettingsFragment extends PreferenceFragment
                     break;
                 case DATE_FORMAT_REQUEST_CODE:
                     String dateFormatValue = data.getStringExtra(SiteSettingsFormatDialog.KEY_FORMAT_VALUE);
-                    setDateTimeFormat(FormatType.DATE_FORMAT, mDateFormatPref, dateFormatValue);
+                    setDateTimeFormatPref(FormatType.DATE_FORMAT, mDateFormatPref, dateFormatValue);
                     onPreferenceChange(mDateFormatPref, dateFormatValue);
                     break;
                 case TIME_FORMAT_REQUEST_CODE:
                     String timeFormatValue = data.getStringExtra(SiteSettingsFormatDialog.KEY_FORMAT_VALUE);
-                    setDateTimeFormat(FormatType.TIME_FORMAT, mTimeFormatPref, timeFormatValue);
+                    setDateTimeFormatPref(FormatType.TIME_FORMAT, mTimeFormatPref, timeFormatValue);
                     onPreferenceChange(mTimeFormatPref, timeFormatValue);
+                    break;
+                case POSTS_PER_PAGE_REQUEST_CODE:
+                    int numPosts = data.getIntExtra(NumberPickerDialog.CUR_VALUE_KEY, -1);
+                    if (numPosts > -1) {
+                        onPreferenceChange(mPostsPerPagePref, numPosts);
+                    }
+                    break;
+                case TIMEZONE_REQUEST_CODE:
+                    String timezone = data.getStringExtra(SiteSettingsTimezoneDialog.KEY_TIMEZONE);
+                    mSiteSettings.setTimezone(timezone);
+                    onPreferenceChange(mTimezonePref, timezone);
                     break;
             }
         } else {
@@ -477,6 +493,10 @@ public class SiteSettingsFragment extends PreferenceFragment
             showDateOrTimeFormatDialog(FormatType.DATE_FORMAT);
         } else if (preference == mTimeFormatPref) {
             showDateOrTimeFormatDialog(FormatType.TIME_FORMAT);
+        } else if (preference == mPostsPerPagePref) {
+            showPostsPerPageDialog();
+        } else if (preference == mTimezonePref) {
+            showTimezoneDialog();
         }
 
         return false;
@@ -659,6 +679,12 @@ public class SiteSettingsFragment extends PreferenceFragment
             mSiteSettings.setDateFormat(newValue.toString());
         } else if (preference == mTimeFormatPref) {
             mSiteSettings.setTimeFormat(newValue.toString());
+        } else if (preference == mPostsPerPagePref) {
+            mPostsPerPagePref.setSummary(newValue.toString());
+            mSiteSettings.setPostsPerPage(Integer.parseInt(newValue.toString()));
+        } else if (preference == mTimezonePref) {
+            setTimezonePref(newValue.toString());
+            mSiteSettings.setTimezone(newValue.toString());
         } else {
             return false;
         }
@@ -811,6 +837,8 @@ public class SiteSettingsFragment extends PreferenceFragment
         mWeekStartPref = (DetailListPreference) getChangePref(R.string.pref_key_site_week_start);
         mDateFormatPref = (WPPreference) getChangePref(R.string.pref_key_site_date_format);
         mTimeFormatPref = (WPPreference) getChangePref(R.string.pref_key_site_time_format);
+        mPostsPerPagePref = getClickPref(R.string.pref_key_site_posts_per_page);
+        mTimezonePref = getClickPref(R.string.pref_key_site_timezone);
 
         sortLanguages();
 
@@ -844,7 +872,7 @@ public class SiteSettingsFragment extends PreferenceFragment
                 mReceivePingbacksNested, mIdentityRequiredPreference, mUserAccountRequiredPref,
                 mSortByPref, mWhitelistPref, mRelatedPostsPref, mCloseAfterPref, mPagingPref,
                 mThreadingPref, mMultipleLinksPref, mModerationHoldPref, mBlacklistPref, mWeekStartPref,
-                mDateFormatPref, mTimeFormatPref,
+                mDateFormatPref, mTimeFormatPref, mTimezonePref, mPostsPerPagePref,
                 mDeleteSitePref, mJpMonitorActivePref, mJpMonitorEmailNotesPref, mJpSsoPref,
                 mJpMonitorWpNotesPref, mJpBruteForcePref, mJpWhitelistPref, mJpMatchEmailPref, mJpUseTwoFactorPref
         };
@@ -854,6 +882,16 @@ public class SiteSettingsFragment extends PreferenceFragment
         }
 
         mEditingEnabled = enabled;
+    }
+
+    private void showPostsPerPageDialog() {
+        Bundle args = new Bundle();
+        args.putBoolean(NumberPickerDialog.SHOW_SWITCH_KEY, false);
+        args.putString(NumberPickerDialog.TITLE_KEY, getString(R.string.site_settings_posts_per_page_title));
+        args.putInt(NumberPickerDialog.MIN_VALUE_KEY, 1);
+        args.putInt(NumberPickerDialog.MAX_VALUE_KEY, getResources().getInteger(R.integer.posts_per_page_limit));
+        args.putInt(NumberPickerDialog.CUR_VALUE_KEY, mSiteSettings.getPostsPerPage());
+        showNumberPickerDialog(args, POSTS_PER_PAGE_REQUEST_CODE, "posts-per-page-dialog");
     }
 
     private void showRelatedPostsDialog() {
@@ -936,6 +974,12 @@ public class SiteSettingsFragment extends PreferenceFragment
         int requestCode = formatType == FormatType.DATE_FORMAT ? DATE_FORMAT_REQUEST_CODE : TIME_FORMAT_REQUEST_CODE;
         dialog.setTargetFragment(this, requestCode);
         dialog.show(getFragmentManager(), "format-dialog-tag");
+    }
+
+    private void showTimezoneDialog() {
+        SiteSettingsTimezoneDialog dialog = SiteSettingsTimezoneDialog.newInstance(mSiteSettings.getTimezone());
+        dialog.setTargetFragment(this, TIMEZONE_REQUEST_CODE);
+        dialog.show(getFragmentManager(), "timezone-dialog-tag");
     }
 
     private void dismissProgressDialog(ProgressDialog progressDialog) {
@@ -1119,11 +1163,14 @@ public class SiteSettingsFragment extends PreferenceFragment
         mWeekStartPref.setValue(mSiteSettings.getStartOfWeek());
         mWeekStartPref.setSummary(mWeekStartPref.getEntry());
 
-        setDateTimeFormat(FormatType.DATE_FORMAT, mDateFormatPref, mSiteSettings.getDateFormat());
-        setDateTimeFormat(FormatType.TIME_FORMAT, mTimeFormatPref, mSiteSettings.getTimeFormat());
+        setDateTimeFormatPref(FormatType.DATE_FORMAT, mDateFormatPref, mSiteSettings.getDateFormat());
+        setDateTimeFormatPref(FormatType.TIME_FORMAT, mTimeFormatPref, mSiteSettings.getTimeFormat());
+
+        mPostsPerPagePref.setSummary(String.valueOf(mSiteSettings.getPostsPerPage()));
+        setTimezonePref(mSiteSettings.getTimezone());
     }
 
-    private void setDateTimeFormat(FormatType formatType, WPPreference formatPref, String formatValue) {
+    private void setDateTimeFormatPref(FormatType formatType, WPPreference formatPref, String formatValue) {
         String[] entries = formatType.getEntries(getActivity());
         String[] values = formatType.getValues(getActivity());
 
@@ -1137,6 +1184,18 @@ public class SiteSettingsFragment extends PreferenceFragment
 
         // not a predefined format, so it must be custom
         formatPref.setSummary(R.string.site_settings_format_entry_custom);
+    }
+
+    private void setTimezonePref(String timezoneValue) {
+        if (timezoneValue == null) return;
+
+        String timezone = timezoneValue.replace("_", " ");
+        int index = timezone.lastIndexOf("/");
+        if (index > -1) {
+            mTimezonePref.setSummary(timezone.substring(index + 1));
+        } else {
+            mTimezonePref.setSummary(timezone);
+        }
     }
 
     private void setCategories() {

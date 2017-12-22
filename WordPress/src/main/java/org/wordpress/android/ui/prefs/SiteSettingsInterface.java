@@ -581,6 +581,22 @@ public abstract class SiteSettingsInterface {
         mSettings.timeFormat = timeFormat;
     }
 
+    public String getTimezone() {
+        return mSettings.timezone;
+    }
+
+    public void setTimezone(String timezone) {
+        mSettings.timezone = timezone;
+    }
+
+    public int getPostsPerPage() {
+        return mSettings.postsPerPage;
+    }
+
+    public void setPostsPerPage(int postsPerPage) {
+        mSettings.postsPerPage = postsPerPage;
+    }
+
     public boolean isJetpackMonitorEnabled() {
         return mJpSettings.monitorActive;
     }

@@ -533,6 +533,9 @@
     <string name="site_settings_week_start_title">Week starts on</string>
     <string name="site_settings_date_format_title">Date Format</string>
     <string name="site_settings_time_format_title">Time Format</string>
+    <string name="site_settings_timezone_title">Timezone</string>
+    <string name="site_settings_timezone_subtitle">Choose a city in your timezone</string>
+    <string name="site_settings_posts_per_page_title">Posts per page</string>
     <string name="site_settings_format_entry_custom">Custom</string>
     <string name="site_settings_format_hint_custom">Custom format</string>
     <string name="site_settings_format_help">Learn more about date &amp; time formatting</string>
@@ -560,6 +563,7 @@
     <string name="site_settings_moderation_hold_title">Hold for Moderation</string>
     <string name="site_settings_blacklist_title">Blacklist</string>
     <string name="site_settings_delete_site_title">Delete Site</string>
+    <string name="site_settings_timezones_error">Unable to load timezones</string>
 
     <!-- Jetpack settings -->
     <string name="jetpack_site_settings_category_title">Jetpack Settings</string>
