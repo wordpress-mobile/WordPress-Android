@@ -2,6 +2,7 @@ package org.wordpress.android.fluxc.store;
 
 import android.database.Cursor;
 import android.support.annotation.NonNull;
+import android.text.TextUtils;
 
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
@@ -278,18 +279,18 @@ public class ThemeStore extends Store {
         return ThemeSqlUtils.getThemesForSite(site);
     }
 
-    public ThemeModel getInstalledThemeByThemeId(String themeId) {
+    public ThemeModel getInstalledThemeByThemeId(SiteModel siteModel, String themeId) {
         if (themeId == null || themeId.isEmpty()) {
             return null;
         }
-        return ThemeSqlUtils.getThemeByThemeId(themeId, false);
+        return ThemeSqlUtils.getSiteThemeByThemeId(siteModel, themeId);
     }
 
     public ThemeModel getWpComThemeByThemeId(String themeId) {
-        if (themeId == null || themeId.isEmpty()) {
+        if (TextUtils.isEmpty(themeId)) {
             return null;
         }
-        return ThemeSqlUtils.getThemeByThemeId(themeId, true);
+        return ThemeSqlUtils.getWpComThemeByThemeId(themeId);
     }
 
     public ThemeModel getActiveThemeForSite(@NonNull SiteModel site) {
@@ -367,7 +368,7 @@ public class ThemeStore extends Store {
             event.error = payload.error;
         } else {
             for (ThemeModel theme : payload.themes) {
-                ThemeSqlUtils.insertOrUpdateThemeForSite(theme);
+                ThemeSqlUtils.insertOrUpdateWpComTheme(theme);
             }
         }
         emitChange(event);
@@ -387,7 +388,7 @@ public class ThemeStore extends Store {
         if (payload.isError()) {
             event.error = payload.error;
         } else {
-            ThemeSqlUtils.insertOrUpdateThemeForSite(payload.theme);
+            ThemeSqlUtils.insertOrUpdateSiteTheme(payload.site, payload.theme);
         }
         emitChange(event);
     }
@@ -409,11 +410,9 @@ public class ThemeStore extends Store {
             ThemeModel activatedTheme;
             // payload theme doesn't have all the data so we grab a copy of the database theme and update active flag
             if (payload.site.isJetpackConnected()) {
-                activatedTheme = getInstalledThemeByThemeId(payload.theme.getThemeId());
+                activatedTheme = getInstalledThemeByThemeId(payload.site, payload.theme.getThemeId());
             } else {
                 activatedTheme = getWpComThemeByThemeId(payload.theme.getThemeId());
-                // Remove WP.com flag to store as site-associate theme
-                activatedTheme.setIsWpComTheme(false);
             }
             if (activatedTheme != null) {
                 setActiveThemeForSite(payload.site, activatedTheme);
