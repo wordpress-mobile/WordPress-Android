@@ -888,7 +888,7 @@ public class SiteSettingsFragment extends PreferenceFragment
         Bundle args = new Bundle();
         args.putBoolean(NumberPickerDialog.SHOW_SWITCH_KEY, false);
         args.putString(NumberPickerDialog.TITLE_KEY, getString(R.string.site_settings_posts_per_page_title));
-        args.putInt(NumberPickerDialog.MIN_VALUE_KEY, 0);
+        args.putInt(NumberPickerDialog.MIN_VALUE_KEY, 1);
         args.putInt(NumberPickerDialog.MAX_VALUE_KEY, getResources().getInteger(R.integer.posts_per_page_limit));
         args.putInt(NumberPickerDialog.CUR_VALUE_KEY, mSiteSettings.getPostsPerPage());
         showNumberPickerDialog(args, POSTS_PER_PAGE_REQUEST_CODE, "posts-per-page-dialog");
