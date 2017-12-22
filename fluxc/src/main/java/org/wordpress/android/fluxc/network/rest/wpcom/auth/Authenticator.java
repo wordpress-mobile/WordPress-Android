@@ -23,6 +23,7 @@ import org.wordpress.android.fluxc.network.rest.wpcom.WPComGsonRequest;
 import org.wordpress.android.fluxc.network.rest.wpcom.WPComGsonRequest.WPComGsonNetworkError;
 import org.wordpress.android.fluxc.store.AccountStore.AuthEmailError;
 import org.wordpress.android.fluxc.store.AccountStore.AuthEmailErrorType;
+import org.wordpress.android.fluxc.store.AccountStore.AuthEmailPayload;
 import org.wordpress.android.fluxc.store.AccountStore.AuthenticationErrorType;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
@@ -67,7 +68,11 @@ public class Authenticator {
     }
 
     public static class AuthEmailResponsePayload extends Payload<AuthEmailError> {
-        public AuthEmailResponsePayload() {}
+        public final boolean isSignup;
+
+        public AuthEmailResponsePayload(boolean isSignup) {
+            this.isSignup = isSignup;
+        }
     }
 
     @Inject
@@ -197,11 +202,12 @@ public class Authenticator {
         }
     }
 
-    public void sendAuthEmail(final String email) {
-        String url = WPCOMREST.auth.send_login_email.getUrlV1_1();
+    public void sendAuthEmail(final AuthEmailPayload payload) {
+        String url = payload.isSignup ? WPCOMREST.auth.send_signup_email.getUrlV1_1()
+                : WPCOMREST.auth.send_login_email.getUrlV1_3();
 
         Map<String, Object> params = new HashMap<>();
-        params.put("email", email);
+        params.put("email", payload.emailOrUsername);
         params.put("client_id", mAppSecrets.getAppId());
         params.put("client_secret", mAppSecrets.getAppSecret());
 
@@ -209,19 +215,20 @@ public class Authenticator {
                 new Response.Listener<AuthEmailWPComRestResponse>() {
                     @Override
                     public void onResponse(AuthEmailWPComRestResponse response) {
-                        AuthEmailResponsePayload payload = new AuthEmailResponsePayload();
+                        AuthEmailResponsePayload responsePayload = new AuthEmailResponsePayload(payload.isSignup);
 
                         if (!response.success) {
-                            payload.error = new AuthEmailError(AuthEmailErrorType.UNSUCCESSFUL, "");
+                            responsePayload.error = new AuthEmailError(AuthEmailErrorType.UNSUCCESSFUL, "");
                         }
-                        mDispatcher.dispatch(AuthenticationActionBuilder.newSentAuthEmailAction(payload));
+                        mDispatcher.dispatch(AuthenticationActionBuilder.newSentAuthEmailAction(responsePayload));
                     }
                 }, new BaseErrorListener() {
                     @Override
                     public void onErrorResponse(@NonNull BaseNetworkError error) {
-                        AuthEmailResponsePayload payload = new AuthEmailResponsePayload();
-                        payload.error = new AuthEmailError(((WPComGsonNetworkError) error).apiError, error.message);
-                        mDispatcher.dispatch(AuthenticationActionBuilder.newSentAuthEmailAction(payload));
+                        AuthEmailResponsePayload responsePayload = new AuthEmailResponsePayload(payload.isSignup);
+                        responsePayload.error = new AuthEmailError(((WPComGsonNetworkError) error).apiError,
+                                error.message);
+                        mDispatcher.dispatch(AuthenticationActionBuilder.newSentAuthEmailAction(responsePayload));
                     }
                 }
         );
