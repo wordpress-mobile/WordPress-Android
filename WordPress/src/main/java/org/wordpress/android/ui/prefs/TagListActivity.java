@@ -152,8 +152,14 @@ public class TagListActivity extends AppCompatActivity {
 
         @Override
         public void onBindViewHolder(final TagListAdapter.TagViewHolder holder, int position) {
-            String tag = StringEscapeUtils.unescapeHtml4(mFilteredTags.get(position).getName());
-            holder.txtTag.setText(tag);
+            TermModel term = mFilteredTags.get(position);
+            holder.txtTag.setText(StringEscapeUtils.unescapeHtml4(term.getName()));
+            if (term.getPostCount() > 0) {
+                holder.txtCount.setVisibility(View.VISIBLE);
+                holder.txtCount.setText(String.valueOf(term.getPostCount()));
+            } else {
+                holder.txtCount.setVisibility(View.GONE);
+            }
         }
 
         @Override
@@ -178,10 +184,12 @@ public class TagListActivity extends AppCompatActivity {
 
         class TagViewHolder extends RecyclerView.ViewHolder {
             private final TextView txtTag;
+            private final TextView txtCount;
 
             TagViewHolder(View view) {
                 super(view);
                 txtTag = view.findViewById(R.id.text_tag);
+                txtCount = view.findViewById(R.id.text_count);
                 view.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
