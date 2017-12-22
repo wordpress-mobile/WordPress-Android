@@ -83,21 +83,8 @@ public class SiteCreationActivity extends AppCompatActivity implements SiteCreat
     // SiteCreationListener implementation methods
 
     @Override
-    public void startWithBlog() {
-        slideInFragment(SiteCreationThemeFragment.newInstance(ThemeStore.MOBILE_FRIENDLY_CATEGORY_BLOG),
-                SiteCreationThemeFragment.TAG);
-    }
-
-    @Override
-    public void startWithWebsite() {
-        slideInFragment(SiteCreationThemeFragment.newInstance(ThemeStore.MOBILE_FRIENDLY_CATEGORY_WEBSITE),
-                SiteCreationThemeFragment.TAG);
-    }
-
-    @Override
-    public void startWithPortfolio() {
-        slideInFragment(SiteCreationThemeFragment.newInstance(ThemeStore.MOBILE_FRIENDLY_CATEGORY_PORTFOLIO),
-                SiteCreationThemeFragment.TAG);
+    public void withCategory(String category) {
+        slideInFragment(SiteCreationThemeFragment.newInstance(category), SiteCreationThemeFragment.TAG);
     }
 
     @Override

@@ -2,9 +2,7 @@ package org.wordpress.android.ui.accounts.signup;
 
 public interface SiteCreationListener {
     // Site Creation Category callbacks
-    void startWithBlog();
-    void startWithWebsite();
-    void startWithPortfolio();
+    void withCategory(String category);
     void helpCategoryScreen();
 
     // Site Creation Theme Selection callbacks
