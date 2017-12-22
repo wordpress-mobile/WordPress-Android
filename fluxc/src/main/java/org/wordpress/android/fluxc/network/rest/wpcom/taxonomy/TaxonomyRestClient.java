@@ -161,6 +161,7 @@ public class TaxonomyRestClient extends BaseWPComRestClient {
         term.setSlug(from.slug);
         term.setDescription(StringEscapeUtils.unescapeHtml4(from.description));
         term.setParentRemoteId(from.parent);
+        term.setPostCount(from.post_count);
 
         return term;
     }
