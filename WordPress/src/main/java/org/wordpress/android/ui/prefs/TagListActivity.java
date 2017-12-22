@@ -1,5 +1,6 @@
 package org.wordpress.android.ui.prefs;
 
+import android.app.FragmentManager;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -115,6 +116,15 @@ public class TagListActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
+    @Override
+    public void onBackPressed() {
+        if (getFragmentManager().getBackStackEntryCount() > 0) {
+            getFragmentManager().popBackStack();
+        } else {
+            super.onBackPressed();
+        }
+    }
+
     @SuppressWarnings("unused")
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onTaxonomyChanged(TaxonomyStore.OnTaxonomyChanged event) {
@@ -130,8 +140,15 @@ public class TagListActivity extends AppCompatActivity {
         mRecycler.setAdapter(mAdapter);
     }
 
-    private void doTagSelected(@NonNull String selectedTag) {
-        // TODO: show detail view
+    private void showTagDetail(@NonNull TermModel term) {
+        FragmentManager fm = getFragmentManager();
+        TagDetailFragment fragment = (TagDetailFragment) fm.findFragmentByTag(TagDetailFragment.TAG);
+        if (fragment == null) {
+            fragment = TagDetailFragment.newInstance(mSite, term.getRemoteTermId());
+            getFragmentManager().beginTransaction()
+                    .add(R.id.container, fragment, TagDetailFragment.TAG)
+                    .commitAllowingStateLoss();
+        }
     }
 
     private class TagListAdapter extends RecyclerView.Adapter<TagListAdapter.TagViewHolder> {
@@ -193,7 +210,8 @@ public class TagListActivity extends AppCompatActivity {
                 view.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
-                        doTagSelected(txtTag.getText().toString());
+                        int position = getAdapterPosition();
+                        showTagDetail(mFilteredTags.get(position));
                     }
                 });
             }

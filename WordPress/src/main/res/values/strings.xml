@@ -562,6 +562,10 @@
     <string name="site_settings_blacklist_title">Blacklist</string>
     <string name="site_settings_delete_site_title">Delete Site</string>
 
+    <!-- tag list and detail -->
+    <string name="tag_name_hint">Tag</string>
+    <string name="tag_description_hint">Description</string>
+
     <!-- Jetpack settings -->
     <string name="jetpack_site_settings_category_title">Jetpack Settings</string>
     <string name="jetpack_security_setting_title">Security</string>
