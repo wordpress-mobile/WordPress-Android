@@ -2,6 +2,8 @@ package org.wordpress.android.ui.accounts.signup;
 
 import android.content.Context;
 import android.content.DialogInterface;
+import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.LayoutRes;
 import android.support.annotation.NonNull;
@@ -25,17 +27,24 @@ import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.fluxc.Dispatcher;
 import org.wordpress.android.fluxc.action.AccountAction;
 import org.wordpress.android.fluxc.generated.AccountActionBuilder;
+import org.wordpress.android.fluxc.store.AccountStore;
 import org.wordpress.android.fluxc.store.AccountStore.OnAccountChanged;
 import org.wordpress.android.fluxc.store.AccountStore.OnUsernameChanged;
 import org.wordpress.android.fluxc.store.AccountStore.PushAccountSettingsPayload;
 import org.wordpress.android.fluxc.store.AccountStore.PushUsernamePayload;
+import org.wordpress.android.networking.GravatarApi;
 import org.wordpress.android.ui.accounts.login.LoginBaseFormFragment;
 import org.wordpress.android.util.AppLog;
+import org.wordpress.android.util.AppLog.T;
+import org.wordpress.android.util.MediaUtils;
 import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.widgets.WPLoginInputRow;
 import org.wordpress.android.widgets.WPNetworkImageView;
 import org.wordpress.android.widgets.WPTextView;
 
+import java.io.File;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.util.HashMap;
 
 import javax.inject.Inject;
@@ -59,6 +68,8 @@ public class SignupEpilogueSocialFragment extends LoginBaseFormFragment<SignupEp
 
     public static final String TAG = "signup_epilogue_fragment_tag";
 
+    @Inject
+    protected AccountStore mAccount;
     @Inject
     protected Dispatcher mDispatcher;
 
@@ -175,6 +186,7 @@ public class SignupEpilogueSocialFragment extends LoginBaseFormFragment<SignupEp
 
         if (savedInstanceState == null) {
             AnalyticsTracker.track(AnalyticsTracker.Stat.SIGNUP_SOCIAL_EPILOGUE_VIEWED);
+            new DownloadAvatarAndUploadGravatarTask().execute(mPhotoUrl, mEmailAddress, mAccount.getAccessToken());
         } else {
             // Overwrite original display name and username if they have changed.
             mDisplayName = savedInstanceState.getString(KEY_DISPLAY_NAME);
@@ -309,6 +321,41 @@ public class SignupEpilogueSocialFragment extends LoginBaseFormFragment<SignupEp
         } else if (mSignupEpilogueListener != null) {
             AnalyticsTracker.track(AnalyticsTracker.Stat.SIGNUP_SOCIAL_EPILOGUE_UNCHANGED);
             mSignupEpilogueListener.onContinue();
+        }
+    }
+
+    private class DownloadAvatarAndUploadGravatarTask extends AsyncTask<String, Void, Void> {
+        @Override
+        protected Void doInBackground(String... params) {
+            if (params.length != 3) {
+                return null;
+            }
+
+            String url = params[0];
+            String email = params[1];
+            String token = params[2];
+
+            try {
+                Uri uri = MediaUtils.downloadExternalMedia(getContext(), Uri.parse(url));
+                File file = new File(new URI(uri.toString()));
+                GravatarApi.uploadGravatar(file, email, token,
+                    new GravatarApi.GravatarUploadListener() {
+                        @Override
+                        public void onSuccess() {
+                            AppLog.i(T.NUX, "Google avatar download and Gravatar upload succeeded.");
+                        }
+
+                        @Override
+                        public void onError() {
+                            AppLog.i(T.NUX, "Google avatar download and Gravatar upload failed.");
+                        }
+                    });
+            } catch (URISyntaxException exception) {
+                AppLog.e(T.NUX, "Google avatar download and Gravatar upload failed - " +
+                        exception.toString() + " - " + exception.getMessage());
+            }
+
+            return null;
         }
     }
 }
