@@ -66,6 +66,16 @@ public class AccountStore extends Store {
         }
     }
 
+    public static class AuthEmailPayload extends Payload<BaseNetworkError> {
+        public String emailOrUsername;
+        public boolean isSignup;
+
+        public AuthEmailPayload(String emailOrUsername, boolean isSignup) {
+            this.emailOrUsername = emailOrUsername;
+            this.isSignup = isSignup;
+        }
+    }
+
     public static class PushAccountSettingsPayload extends Payload<BaseNetworkError> {
         public Map<String, Object> params;
         public PushAccountSettingsPayload() {
@@ -142,6 +152,7 @@ public class AccountStore extends Store {
     }
 
     public static class OnAuthenticationChanged extends OnChanged<AuthenticationError> {
+        public String userName;
         public boolean createdAccount;
     }
 
@@ -199,7 +210,13 @@ public class AccountStore extends Store {
         }
     }
 
-    public static class OnAuthEmailSent extends OnChanged<AuthEmailError> {}
+    public static class OnAuthEmailSent extends OnChanged<AuthEmailError> {
+        public final boolean isSignup;
+
+        public OnAuthEmailSent(boolean isSignup) {
+            this.isSignup = isSignup;
+        }
+    }
 
     public static class AuthenticationError implements OnChangedError {
         public AuthenticationErrorType type;
@@ -401,8 +418,8 @@ public class AccountStore extends Store {
     }
 
     public enum AuthEmailErrorType {
-        INVALID_INPUT,
-        NO_SUCH_USER,
+        INVALID_EMAIL,
+        USER_EXISTS,
         UNSUCCESSFUL,
         GENERIC_ERROR;
 
@@ -591,7 +608,7 @@ public class AccountStore extends Store {
                 discoveryResult((DiscoveryResultPayload) payload);
                 break;
             case SEND_AUTH_EMAIL:
-                mAuthenticator.sendAuthEmail((String) payload);
+                mAuthenticator.sendAuthEmail((AuthEmailPayload) payload);
                 break;
             case SENT_AUTH_EMAIL:
                 handleSentAuthEmail((AuthEmailResponsePayload) payload);
@@ -695,7 +712,7 @@ public class AccountStore extends Store {
         } else {
             // Social login or signup completed; update token and send boolean flag.
             if (payload.hasUsername()) {
-                updateToken(new UpdateTokenPayload(payload.bearerToken), payload.createdAccount);
+                updateToken(new UpdateTokenPayload(payload.bearerToken), payload.createdAccount, payload.userName);
             } else {
                 updateToken(new UpdateTokenPayload(payload.bearerToken));
             }
@@ -802,11 +819,13 @@ public class AccountStore extends Store {
      *
      * @param updateTokenPayload payload containing token to be updated
      * @param createdAccount     flag to send in event to determine login or signup
+     * @param userName           username of created account
      */
-    private void updateToken(UpdateTokenPayload updateTokenPayload, boolean createdAccount) {
+    private void updateToken(UpdateTokenPayload updateTokenPayload, boolean createdAccount, String userName) {
         mAccessToken.set(updateTokenPayload.token);
         OnAuthenticationChanged event = new OnAuthenticationChanged();
         event.createdAccount = createdAccount;
+        event.userName = userName;
         emitChange(event);
     }
 
@@ -851,11 +870,11 @@ public class AccountStore extends Store {
 
     private void handleSentAuthEmail(final AuthEmailResponsePayload payload) {
         if (payload.isError()) {
-            OnAuthEmailSent event = new OnAuthEmailSent();
+            OnAuthEmailSent event = new OnAuthEmailSent(payload.isSignup);
             event.error = payload.error;
             emitChange(event);
         } else {
-            OnAuthEmailSent event = new OnAuthEmailSent();
+            OnAuthEmailSent event = new OnAuthEmailSent(payload.isSignup);
             emitChange(event);
         }
     }
