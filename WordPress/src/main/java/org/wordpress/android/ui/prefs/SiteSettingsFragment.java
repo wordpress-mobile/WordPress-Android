@@ -178,6 +178,7 @@ public class SiteSettingsFragment extends PreferenceFragment
     private Preference mRelatedPostsPref;
     private Preference mTimezonePref;
     private Preference mPostsPerPagePref;
+    private WPSwitchPreference mAmpPref;
 
     // Discussion settings preview
     private WPSwitchPreference mAllowCommentsPref;
@@ -682,6 +683,8 @@ public class SiteSettingsFragment extends PreferenceFragment
         } else if (preference == mPostsPerPagePref) {
             mPostsPerPagePref.setSummary(newValue.toString());
             mSiteSettings.setPostsPerPage(Integer.parseInt(newValue.toString()));
+        } else if (preference == mAmpPref) {
+            mSiteSettings.setAmpEnabled((Boolean) newValue);
         } else if (preference == mTimezonePref) {
             setTimezonePref(newValue.toString());
             mSiteSettings.setTimezone(newValue.toString());
@@ -839,6 +842,7 @@ public class SiteSettingsFragment extends PreferenceFragment
         mTimeFormatPref = (WPPreference) getChangePref(R.string.pref_key_site_time_format);
         mPostsPerPagePref = getClickPref(R.string.pref_key_site_posts_per_page);
         mTimezonePref = getClickPref(R.string.pref_key_site_timezone);
+        mAmpPref = (WPSwitchPreference) getChangePref(R.string.pref_key_site_amp);
 
         sortLanguages();
 
@@ -872,7 +876,7 @@ public class SiteSettingsFragment extends PreferenceFragment
                 mReceivePingbacksNested, mIdentityRequiredPreference, mUserAccountRequiredPref,
                 mSortByPref, mWhitelistPref, mRelatedPostsPref, mCloseAfterPref, mPagingPref,
                 mThreadingPref, mMultipleLinksPref, mModerationHoldPref, mBlacklistPref, mWeekStartPref,
-                mDateFormatPref, mTimeFormatPref, mTimezonePref, mPostsPerPagePref,
+                mDateFormatPref, mTimeFormatPref, mTimezonePref, mPostsPerPagePref, mAmpPref,
                 mDeleteSitePref, mJpMonitorActivePref, mJpMonitorEmailNotesPref, mJpSsoPref,
                 mJpMonitorWpNotesPref, mJpBruteForcePref, mJpWhitelistPref, mJpMatchEmailPref, mJpUseTwoFactorPref
         };
@@ -1162,6 +1166,12 @@ public class SiteSettingsFragment extends PreferenceFragment
         mJpWhitelistPref.setSummary(mSiteSettings.getJetpackProtectWhitelistSummary());
         mWeekStartPref.setValue(mSiteSettings.getStartOfWeek());
         mWeekStartPref.setSummary(mWeekStartPref.getEntry());
+
+        if (mSiteSettings.getAmpSupported()) {
+            mAmpPref.setChecked(mSiteSettings.getAmpEnabled());
+        } else {
+            WPPrefUtils.removePreference(this, R.string.pref_key_site_traffic, R.string.pref_key_site_amp);
+        }
 
         setDateTimeFormatPref(FormatType.DATE_FORMAT, mDateFormatPref, mSiteSettings.getDateFormat());
         setDateTimeFormatPref(FormatType.TIME_FORMAT, mTimeFormatPref, mSiteSettings.getTimeFormat());

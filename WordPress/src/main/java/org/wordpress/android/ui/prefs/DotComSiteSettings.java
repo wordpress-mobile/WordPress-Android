@@ -68,8 +68,8 @@ class DotComSiteSettings extends SiteSettingsInterface {
     private static final String TIME_FORMAT_KEY = "time_format";
     private static final String TIMEZONE_KEY = "timezone_string";
     private static final String POSTS_PER_PAGE_KEY = "posts_per_page";
-    private static final String AMP_SUPPORTED_KEY = "amp_supported";
-    private static final String AMP_ENABLED_KEY = "amp_enabled";
+    private static final String AMP_SUPPORTED_KEY = "amp_is_supported";
+    private static final String AMP_ENABLED_KEY = "amp_is_enabled";
 
     // WP.com REST keys used to GET certain site settings
     private static final String GET_TITLE_KEY = "name";

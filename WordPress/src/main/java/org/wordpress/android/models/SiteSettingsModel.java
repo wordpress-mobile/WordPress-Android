@@ -89,10 +89,10 @@ public class SiteSettingsModel {
             " add " + TIMEZONE_COLUMN_NAME + " TEXT;";
     public static final String ADD_POSTS_PER_PAGE = "alter table " + SETTINGS_TABLE_NAME +
             " add " + POSTS_PER_PAGE_COLUMN_NAME + " INTEGER;";
-    public static final String ADD_AMP_SUPPORTED = "alter table " + SETTINGS_TABLE_NAME +
-            " add " + AMP_ENABLED_COLUMN_NAME + " BOOLEAN;";
     public static final String ADD_AMP_ENABLED = "alter table " + SETTINGS_TABLE_NAME +
             " add " + AMP_ENABLED_COLUMN_NAME + " BOOLEAN;";
+    public static final String ADD_AMP_SUPPORTED = "alter table " + SETTINGS_TABLE_NAME +
+            " add " + AMP_SUPPORTED_COLUMN_NAME + " BOOLEAN;";
 
     public static final String CREATE_SETTINGS_TABLE_SQL =
             "CREATE TABLE IF NOT EXISTS " +
