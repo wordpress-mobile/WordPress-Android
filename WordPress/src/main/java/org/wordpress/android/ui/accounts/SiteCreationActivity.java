@@ -10,6 +10,7 @@ import android.view.MenuItem;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.analytics.AnalyticsTracker;
+import org.wordpress.android.fluxc.store.ThemeStore;
 import org.wordpress.android.ui.accounts.signup.SiteCreationCategoryFragment;
 import org.wordpress.android.ui.accounts.signup.SiteCreationListener;
 import org.wordpress.android.ui.accounts.signup.SiteCreationThemeFragment;
@@ -83,19 +84,19 @@ public class SiteCreationActivity extends AppCompatActivity implements SiteCreat
 
     @Override
     public void startWithBlog() {
-        slideInFragment(SiteCreationThemeFragment.newInstance(SiteCreationThemeFragment.ThemeCategory.BLOG),
+        slideInFragment(SiteCreationThemeFragment.newInstance(ThemeStore.MOBILE_FRIENDLY_CATEGORY_BLOG),
                 SiteCreationThemeFragment.TAG);
     }
 
     @Override
     public void startWithWebsite() {
-        slideInFragment(SiteCreationThemeFragment.newInstance(SiteCreationThemeFragment.ThemeCategory.WEBSITE),
+        slideInFragment(SiteCreationThemeFragment.newInstance(ThemeStore.MOBILE_FRIENDLY_CATEGORY_WEBSITE),
                 SiteCreationThemeFragment.TAG);
     }
 
     @Override
     public void startWithPortfolio() {
-        slideInFragment(SiteCreationThemeFragment.newInstance(SiteCreationThemeFragment.ThemeCategory.PORTFOLIO),
+        slideInFragment(SiteCreationThemeFragment.newInstance(ThemeStore.MOBILE_FRIENDLY_CATEGORY_PORTFOLIO),
                 SiteCreationThemeFragment.TAG);
     }
 

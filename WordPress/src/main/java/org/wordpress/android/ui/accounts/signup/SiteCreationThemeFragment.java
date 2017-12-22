@@ -18,7 +18,6 @@ import org.wordpress.android.fluxc.model.ThemeModel;
 import org.wordpress.android.fluxc.store.ThemeStore;
 import org.wordpress.android.ui.accounts.signup.SiteCreationThemeLoaderFragment.OnThemeLoadingUpdated;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import javax.inject.Inject;
@@ -28,23 +27,17 @@ public class SiteCreationThemeFragment extends SiteCreationBaseFormFragment<Site
 
     private static final String ARG_THEME_CATEGORY = "ARG_THEME_CATEGORY";
 
-    public enum ThemeCategory {
-        BLOG,
-        WEBSITE,
-        PORTFOLIO
-    }
-
-    private ThemeCategory mThemeCategory;
+    private String mThemeCategory;
 
     private View mProgressBarContainer;
     private RecyclerView mRecyclerView;
 
     @Inject ThemeStore mThemeStore;
 
-    public static SiteCreationThemeFragment newInstance(ThemeCategory themeCategory) {
+    public static SiteCreationThemeFragment newInstance(String themeCategory) {
         SiteCreationThemeFragment fragment = new SiteCreationThemeFragment();
         Bundle args = new Bundle();
-        args.putInt(ARG_THEME_CATEGORY, themeCategory.ordinal());
+        args.putString(ARG_THEME_CATEGORY, themeCategory);
         fragment.setArguments(args);
         return fragment;
     }
@@ -76,7 +69,7 @@ public class SiteCreationThemeFragment extends SiteCreationBaseFormFragment<Site
         ((WordPress) getActivity().getApplication()).component().inject(this);
 
         if (getArguments() != null) {
-            mThemeCategory = ThemeCategory.values()[getArguments().getInt(ARG_THEME_CATEGORY)];
+            mThemeCategory = getArguments().getString(ARG_THEME_CATEGORY);
         }
     }
 
@@ -104,13 +97,7 @@ public class SiteCreationThemeFragment extends SiteCreationBaseFormFragment<Site
     }
 
     private List<ThemeModel> getThemes() {
-        // TODO: replace with proper API call to get only the category's mobile-friendly themes
-        List<ThemeModel> allThemes = mThemeStore.getWpComThemes();
-        List<ThemeModel> themes = new ArrayList<>();
-        for (int i = 0; i < 4; i++) {
-            themes.add(allThemes.get(i));
-        }
-        return themes;
+        return mThemeStore.getWpComMobileFriendlyThemes(mThemeCategory);
     }
 
     @SuppressWarnings("unused")
