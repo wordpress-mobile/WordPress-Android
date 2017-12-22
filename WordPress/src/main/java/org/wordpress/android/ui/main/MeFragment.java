@@ -1,6 +1,5 @@
 package org.wordpress.android.ui.main;
 
-import android.annotation.TargetApi;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Fragment;
@@ -8,26 +7,19 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.res.Resources;
-import android.graphics.Color;
-import android.graphics.Outline;
 import android.net.Uri;
 import android.os.AsyncTask;
-import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
 import android.text.TextUtils;
-import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.view.ViewGroup;
-import android.view.ViewOutlineProvider;
 import android.widget.TextView;
 
 import com.android.volley.Cache;
 import com.android.volley.Request;
-import com.github.xizzhu.simpletooltip.ToolTip;
-import com.github.xizzhu.simpletooltip.ToolTipView;
 import com.yalantis.ucrop.UCrop;
 import com.yalantis.ucrop.UCropActivity;
 
@@ -47,7 +39,6 @@ import org.wordpress.android.ui.RequestCodes;
 import org.wordpress.android.ui.media.MediaBrowserType;
 import org.wordpress.android.ui.photopicker.PhotoPickerActivity;
 import org.wordpress.android.ui.photopicker.PhotoPickerActivity.PhotoPickerMediaSource;
-import org.wordpress.android.ui.prefs.AppPrefs;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.FluxCUtils;
 import org.wordpress.android.util.GravatarUtils;
@@ -77,8 +68,6 @@ public class MeFragment extends Fragment {
 
     private ViewGroup mAvatarFrame;
     private View mProgressBar;
-    private ToolTipView mGravatarToolTipView;
-    private View mAvatarTooltipAnchor;
     private ViewGroup mAvatarContainer;
     private WPNetworkImageView mAvatarImageView;
     private TextView mDisplayNameTextView;
@@ -118,50 +107,6 @@ public class MeFragment extends Fragment {
         super.setUserVisibleHint(isVisibleToUser);
 
         mIsUserVisible = isVisibleToUser;
-
-        if (isResumed()) {
-            showGravatarTooltipIfNeeded();
-        }
-    }
-
-    private void showGravatarTooltipIfNeeded() {
-        if (!isAdded() || !mAccountStore.hasAccessToken() || !AppPrefs.isGravatarChangePromoRequired() ||
-                !mIsUserVisible || mGravatarToolTipView != null) {
-            return;
-        }
-
-        ToolTip toolTip = createGravatarPromoToolTip(getString(R.string.gravatar_tip), ContextCompat.getColor
-                (getActivity(), R.color.color_primary));
-        mGravatarToolTipView = new ToolTipView.Builder(getActivity())
-                .withAnchor(mAvatarTooltipAnchor)
-                .withToolTip(toolTip)
-                .withGravity(Gravity.END)
-                .build();
-        mGravatarToolTipView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                AnalyticsTracker.track(AnalyticsTracker.Stat.ME_GRAVATAR_TOOLTIP_TAPPED);
-
-                mGravatarToolTipView.remove();
-                AppPrefs.setGravatarChangePromoRequired(false);
-            }
-        });
-        mGravatarToolTipView.showDelayed(500);
-    }
-
-    private ToolTip createGravatarPromoToolTip(CharSequence text, int backgroundColor) {
-        Resources resources = getResources();
-        int padding = resources.getDimensionPixelSize(R.dimen.tooltip_padding);
-        int textSize = resources.getDimensionPixelSize(R.dimen.tooltip_text_size);
-        int radius = resources.getDimensionPixelSize(R.dimen.tooltip_radius);
-        return new ToolTip.Builder()
-                .withText(text)
-                .withTextColor(Color.WHITE)
-                .withTextSize(textSize)
-                .withBackgroundColor(backgroundColor)
-                .withPadding(padding, padding, padding, padding)
-                .withCornerRadius(radius)
-                .build();
     }
 
     @Override
@@ -172,7 +117,6 @@ public class MeFragment extends Fragment {
         mAvatarFrame = (ViewGroup) rootView.findViewById(R.id.frame_avatar);
         mAvatarContainer = (ViewGroup) rootView.findViewById(R.id.avatar_container);
         mAvatarImageView = (WPNetworkImageView) rootView.findViewById(R.id.me_avatar);
-        mAvatarTooltipAnchor = rootView.findViewById(R.id.avatar_tooltip_anchor);
         mProgressBar = rootView.findViewById(R.id.avatar_progress);
         mDisplayNameTextView = (TextView) rootView.findViewById(R.id.me_display_name);
         mUsernameTextView = (TextView) rootView.findViewById(R.id.me_username);
@@ -182,23 +126,17 @@ public class MeFragment extends Fragment {
         mNotificationsView = rootView.findViewById(R.id.row_notifications);
         mNotificationsDividerView = rootView.findViewById(R.id.me_notifications_divider);
 
-        addDropShadowToAvatar();
-
-        mAvatarContainer.setOnClickListener(new View.OnClickListener() {
+        OnClickListener showPickerListener = new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 AnalyticsTracker.track(AnalyticsTracker.Stat.ME_GRAVATAR_TAPPED);
-
-                // User tapped the Gravatar so dismiss the tooltip
-                if (mGravatarToolTipView != null) {
-                    mGravatarToolTipView.remove();
-                }
-                // and no need to promote the feature any more
-                AppPrefs.setGravatarChangePromoRequired(false);
-
                 showPhotoPickerForGravatar();
             }
-        });
+        };
+
+        mAvatarContainer.setOnClickListener(showPickerListener);
+        rootView.findViewById(R.id.change_photo).setOnClickListener(showPickerListener);
+
         mMyProfileView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -286,7 +224,6 @@ public class MeFragment extends Fragment {
     public void onResume() {
         super.onResume();
         refreshAccountDetails();
-        showGravatarTooltipIfNeeded();
     }
 
     @Override
@@ -296,23 +233,6 @@ public class MeFragment extends Fragment {
             mDisconnectProgressDialog = null;
         }
         super.onDestroy();
-    }
-
-    /**
-     * adds a circular drop shadow to the avatar's parent view (Lollipop+ only)
-     */
-    @TargetApi(Build.VERSION_CODES.LOLLIPOP)
-    private void addDropShadowToAvatar() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            mAvatarContainer.setOutlineProvider(new ViewOutlineProvider() {
-                @Override
-                public void getOutline(View view, Outline outline) {
-                    int padding = (mAvatarContainer.getWidth() - mAvatarImageView.getWidth()) / 2;
-                    outline.setOval(padding, padding, view.getWidth() - padding, view.getHeight() - padding);
-                }
-            });
-            mAvatarContainer.setElevation(mAvatarContainer.getResources().getDimensionPixelSize(R.dimen.card_elevation));
-        }
     }
 
     private void refreshAccountDetails() {

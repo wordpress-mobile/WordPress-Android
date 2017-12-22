@@ -1,6 +1,5 @@
 package org.wordpress.android.ui.prefs;
 
-import android.app.Activity;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.database.Cursor;
@@ -556,6 +555,30 @@ public abstract class SiteSettingsInterface {
         return StringUtils.getQuantityString(mContext, R.string.site_settings_list_editor_no_items_text,
                 R.string.site_settings_list_editor_summary_one,
                 R.string.site_settings_list_editor_summary_other, count);
+    }
+
+    public String getStartOfWeek() {
+        return mSettings.startOfWeek;
+    }
+
+    public void setStartOfWeek(String startOfWeek) {
+        mSettings.startOfWeek = startOfWeek;
+    }
+
+    public String getDateFormat() {
+        return mSettings.dateFormat;
+    }
+
+    public void setDateFormat(String dateFormat) {
+        mSettings.dateFormat = dateFormat;
+    }
+
+    public String getTimeFormat() {
+        return mSettings.timeFormat;
+    }
+
+    public void setTimeFormat(String timeFormat) {
+        mSettings.timeFormat = timeFormat;
     }
 
     public boolean isJetpackMonitorEnabled() {

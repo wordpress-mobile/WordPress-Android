@@ -23,11 +23,12 @@ import android.support.v7.app.ActionBar;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.text.Spannable;
-import android.text.InputFilter;
 import android.text.SpannableStringBuilder;
 import android.text.Spanned;
 import android.text.TextUtils;
 import android.text.style.SuggestionSpan;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.DragEvent;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -55,6 +56,7 @@ import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.DisplayUtils;
 import org.wordpress.android.util.ImageUtils;
 import org.wordpress.android.util.ProfilingUtils;
+import org.wordpress.android.util.ShortcodeUtils;
 import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.UrlUtils;
@@ -74,6 +76,7 @@ import org.wordpress.aztec.plugins.shortcodes.AudioShortcodePlugin;
 import org.wordpress.aztec.plugins.shortcodes.CaptionShortcodePlugin;
 import org.wordpress.aztec.plugins.shortcodes.VideoShortcodePlugin;
 import org.wordpress.aztec.plugins.shortcodes.extensions.CaptionExtensionsKt;
+import org.wordpress.aztec.plugins.shortcodes.extensions.VideoPressExtensionsKt;
 import org.wordpress.aztec.plugins.shortcodes.spans.CaptionShortcodeSpan;
 import org.wordpress.aztec.plugins.wpcomments.CommentsTextFormat;
 import org.wordpress.aztec.plugins.wpcomments.WordPressCommentsPlugin;
@@ -102,6 +105,7 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
         AztecText.OnImageTappedListener,
         AztecText.OnVideoTappedListener,
         AztecText.OnMediaDeletedListener,
+        AztecText.OnVideoInfoRequestedListener,
         View.OnTouchListener,
         EditorMediaUploadListener,
         IAztecToolbarClickListener,
@@ -134,7 +138,7 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
     private boolean mEditorWasPaused = false;
     private boolean mHideActionBarOnSoftKeyboardUp = false;
 
-    private AztecText title;
+    private EditTextWithKeyBackListener title;
     private AztecText content;
     private boolean mAztecReady;
     private SourceViewEditText source;
@@ -189,7 +193,7 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
             ((EditorFragmentActivity) getActivity()).initializeEditorFragment();
         }
 
-        title = (AztecText) view.findViewById(R.id.title);
+        title = (EditTextWithKeyBackListener) view.findViewById(R.id.title);
         content = (AztecText) view.findViewById(R.id.aztec);
         source = (SourceViewEditText) view.findViewById(R.id.source);
 
@@ -197,13 +201,34 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
         content.setOnTouchListener(this);
         source.setOnTouchListener(this);
 
-        title.setOnImeBackListener(this);
+        title.setOnImeBackListener(new org.wordpress.android.editor.OnImeBackListener() {
+            public void onImeBack() {
+                showActionBarIfNeeded();
+            }
+        });
         content.setOnImeBackListener(this);
         source.setOnImeBackListener(this);
 
-        // We need to intercept the "Enter" key on the title field, and replace it with a space instead
-        title.setFilters(new InputFilter[]{replaceEnterKeyWithSpaceInputFilter});
+        title.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+            }
 
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                for (int i = s.length(); i > 0; i--) {
+                    if (s.subSequence(i - 1, i).toString().equals("\n")) {
+                        s.replace(i - 1, i, " ");
+                    }
+                }
+            }
+        });
+
+        // We need to intercept the "Enter" key on the title field, and replace it with a space instead
         source.setHint("<p>" + getString(R.string.editor_content_hint) + "</p>");
 
         formattingToolbar = (AztecToolbar) view.findViewById(R.id.formatting_toolbar);
@@ -253,6 +278,7 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
                 .setOnImageTappedListener(this)
                 .setOnVideoTappedListener(this)
                 .setOnMediaDeletedListener(this)
+                .setOnVideoInfoRequestedListener(this)
                 .addPlugin(new WordPressCommentsPlugin(content))
                 .addPlugin(new MoreToolbarButton(content))
                 .addPlugin(new CaptionShortcodePlugin(content))
@@ -279,35 +305,6 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
     public void setAztecVideoLoader(Html.VideoThumbnailGetter videoLoader) {
         this.aztecVideoLoader = videoLoader;
     }
-
-    private InputFilter replaceEnterKeyWithSpaceInputFilter = new InputFilter() {
-        @Override
-        public CharSequence filter(CharSequence source, int start, int end,
-                                   Spanned dest, int dstart, int dend) {
-            //  You sometimes get a SpannableStringBuilder, sometimes a plain String in the source parameter
-            if (source instanceof SpannableStringBuilder) {
-                SpannableStringBuilder sourceAsSpannableBuilder = (SpannableStringBuilder) source;
-                for (int i = end - 1; i >= start; i--) {
-                    char currentChar = source.charAt(i);
-                    if (currentChar == '\n') {
-                        sourceAsSpannableBuilder.replace(i, i + 1, " ");
-                    }
-                }
-                return source;
-            } else {
-                StringBuilder filteredStringBuilder = new StringBuilder();
-                for (int i = start; i < end; i++) {
-                    char currentChar = source.charAt(i);
-                    if (currentChar == '\n') {
-                        filteredStringBuilder.append(" ");
-                    } else {
-                        filteredStringBuilder.append(currentChar);
-                    }
-                }
-                return filteredStringBuilder.toString();
-            }
-        }
-    };
 
     @Override
     public void onPause() {
@@ -751,13 +748,20 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
             AztecAttributes attributes = new AztecAttributes();
             attributes.setValue(ATTR_SRC, mediaUrl);
 
-            setDefaultAttributes(attributes, mediaFile);
-
             if (mediaFile.isVideo()) {
+                // VideoPress special case here
+                if (!TextUtils.isEmpty(mediaFile.getVideoPressShortCode())) {
+                    attributes.removeAttribute(ATTR_SRC);
+                    String videoPressId = ShortcodeUtils.getVideoPressIdFromShortCode(mediaFile.getVideoPressShortCode());
+                    attributes.setValue(VideoPressExtensionsKt.getATTRIBUTE_VIDEOPRESS_HIDDEN_ID() , videoPressId);
+                    attributes.setValue(VideoPressExtensionsKt.getATTRIBUTE_VIDEOPRESS_HIDDEN_SRC() , mediaUrl);
+                }
+                // Do not set default attributes here like for pictures
                 addVideoUploadingClassIfMissing(attributes);
                 content.insertVideo(getLoadingVideoPlaceholder(), attributes);
                 overlayVideoIcon(0, new MediaPredicate(mediaUrl, ATTR_SRC));
             } else {
+                setDefaultAttributes(attributes, mediaFile);
                 content.insertImage(getLoadingImagePlaceholder(), attributes);
             }
 
@@ -769,6 +773,9 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
                     for (AztecMediaSpan currentClass : imageOrVideoSpans) {
                         if (currentClass.getAttributes().hasAttribute(ATTR_SRC) &&
                                 mediaUrl.equals(currentClass.getAttributes().getValue(ATTR_SRC))) {
+                            currentClass.setDrawable(newDrawable);
+                        } else if (currentClass.getAttributes().hasAttribute(VideoPressExtensionsKt.getATTRIBUTE_VIDEOPRESS_HIDDEN_SRC()) &&
+                                mediaUrl.equals(currentClass.getAttributes().getValue(VideoPressExtensionsKt.getATTRIBUTE_VIDEOPRESS_HIDDEN_SRC()))) {
                             currentClass.setDrawable(newDrawable);
                         }
                     }
@@ -806,9 +813,6 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
                         showErrorPlaceholder();
                         return;
                     }
-
-                    AztecAttributes attributes = new AztecAttributes();
-                    attributes.setValue(ATTR_SRC, mediaUrl);
 
                     int minimumDimension = DisplayUtils.dpToPx(getActivity(), MIN_BITMAP_DIMENSION_DP);
 
@@ -875,7 +879,6 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
             content.updateElementAttributes(localMediaIdPredicate, attrs);
 
             content.resetAttributedMediaSpan(localMediaIdPredicate);
-
         }
     }
 
@@ -896,6 +899,7 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
 
     @Override
     public void setUrlForVideoPressId(final String videoId, final String videoUrl, final String posterUrl) {
+        VideoPressExtensionsKt.updateVideoPressThumb(content, posterUrl, videoUrl, videoId);
     }
 
     @Override
@@ -985,13 +989,15 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
 
                 attrs.setValue(ATTR_CLASS, attributesWithClass.getAttributes().getValue(ATTR_CLASS));
 
-                /* TODO add video press attribute -> value here
-                if (mediaType.equals(MediaType.VIDEO)) {
+                // VideoPress special case here
+                if (mediaType.equals(MediaType.VIDEO) && !TextUtils.isEmpty(mediaFile.getVideoPressShortCode())) {
                     String videoPressId = ShortcodeUtils.getVideoPressIdFromShortCode(
                             mediaFile.getVideoPressShortCode());
-                    attrs.setValue( ?? , videoPressId);
+                    attrs.setValue(VideoPressExtensionsKt.getATTRIBUTE_VIDEOPRESS_HIDDEN_ID() , videoPressId);
+                    attrs.setValue(VideoPressExtensionsKt.getATTRIBUTE_VIDEOPRESS_HIDDEN_SRC() , remoteUrl);
+                    attrs.removeAttribute("src");
+                    attrs.removeAttribute(ATTR_CLASS);
                 }
-                */
 
                 // clear overlay
                 content.clearOverlays(predicate);
@@ -1163,6 +1169,14 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
             }
             mFailedMediaIds.add(localMediaId);
             mUploadingMediaProgressMax.remove(localMediaId);
+        }
+    }
+
+    @Override
+    public void onVideoInfoRequested(final AztecAttributes attrs) {
+        // VideoPress special case here
+        if (attrs.hasAttribute(VideoPressExtensionsKt.getATTRIBUTE_VIDEOPRESS_HIDDEN_ID())) {
+            mEditorFragmentListener.onVideoPressInfoRequested(attrs.getValue(VideoPressExtensionsKt.getATTRIBUTE_VIDEOPRESS_HIDDEN_ID()));
         }
     }
 
@@ -1513,8 +1527,8 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
                     try {
                         // Open the video preview in the default browser for now.
                         // TODO open the preview activity already available in media?
-                        final String imageSrc = meta.getString(ATTR_SRC);
-                        Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(imageSrc));
+                        final String videoURL = meta.getString(ATTR_SRC);
+                        Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(videoURL));
                         startActivity(browserIntent);
                     } catch (JSONException e) {
                         AppLog.e(AppLog.T.EDITOR, "Could not retrieve image url from JSON metadata");

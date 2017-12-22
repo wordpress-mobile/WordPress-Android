@@ -81,7 +81,7 @@ Language: nb_NO
 	<string name="reader_excerpt_link">Besøk %s for å se mer</string>
 	<string name="error_unknown_page">Klarte ikke å finne siden på tjeneren</string>
 	<string name="error_publish_empty_page">Kan ikke publisere en tom side</string>
-	<string name="upload_failed_param">Opplastningen av "%s" mislyktes</string>
+	<string name="upload_failed_param">Opplastningen av \"%s\" mislyktes</string>
 	<string name="cannot_retry_deleted_media_item">Mediet har blitt fjernet. Vil du slette den fra dette innlegget?</string>
 	<string name="error_please_choose_browser">Feil ved åpning av standardnettleseren. Vennligst velg en annen app:</string>
 	<string name="cant_open_url">Klarte ikke å åpne lenken</string>
@@ -250,7 +250,7 @@ Language: nb_NO
 	<string name="visual">Visuelt</string>
 	<string name="buttons">Knapper</string>
 	<string name="sharing_edit_more_buttons">Rediger «Mere»-knappene</string>
-	<string name="sharing_more_description">En "Mere"-knapp inneholder en nedfallsmeny som viser deleknapper</string>
+	<string name="sharing_more_description">En \"Mere\"-knapp inneholder en nedfallsmeny som viser deleknapper</string>
 	<string name="sharing_sharing_buttons_description">Velg hvilke knappen som skal vises under dine innlegg</string>
 	<string name="twitter_username">Brukernavn på Twitter</string>
 	<string name="sharing_comment_likes">Kommentar-Likes</string>
