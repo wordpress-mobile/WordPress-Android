@@ -172,6 +172,8 @@ public class AccountStore extends Store {
     }
 
     public static class OnUsernameChanged extends OnChanged<AccountUsernameError> {
+        public AccountUsernameActionType type;
+        public String username;
     }
 
     public static class OnDiscoveryResponse extends OnChanged<DiscoveryError> {
@@ -702,6 +704,8 @@ public class AccountStore extends Store {
 
     private void handlePushUsernameCompleted(AccountPushUsernameResponsePayload payload) {
         OnUsernameChanged onUsernameChanged = new OnUsernameChanged();
+        onUsernameChanged.username = payload.username;
+        onUsernameChanged.type = payload.type;
         onUsernameChanged.error = payload.error;
         emitChange(onUsernameChanged);
     }

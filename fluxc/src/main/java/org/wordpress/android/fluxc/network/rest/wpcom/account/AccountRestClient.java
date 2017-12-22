@@ -130,6 +130,8 @@ public class AccountRestClient extends BaseWPComRestClient {
     }
 
     public static class AccountPushUsernameResponsePayload extends Payload<AccountUsernameError> {
+        public AccountUsernameActionType type;
+        public String username;
     }
 
     public static class NewAccountResponsePayload extends Payload<NewUserError> {
@@ -496,7 +498,7 @@ public class AccountRestClient extends BaseWPComRestClient {
      * @param username      Alphanumeric string to save as unique WordPress.com account identifier
      * @param actionType    {@link AccountUsernameActionType} to take on WordPress.com site after username is changed
      */
-    public void pushUsername(@NonNull String username, @NonNull AccountUsernameActionType actionType) {
+    public void pushUsername(@NonNull final String username, @NonNull final AccountUsernameActionType actionType) {
         String url = WPCOMREST.me.username.getUrlV1_1();
 
         Map<String, Object> params = new HashMap<>();
@@ -509,6 +511,8 @@ public class AccountRestClient extends BaseWPComRestClient {
                     @Override
                     public void onResponse(AccountBoolResponse response) {
                         AccountPushUsernameResponsePayload payload = new AccountPushUsernameResponsePayload();
+                        payload.username = username;
+                        payload.type = actionType;
                         mDispatcher.dispatch(AccountActionBuilder.newPushedUsernameAction(payload));
                     }
                 },
@@ -516,6 +520,8 @@ public class AccountRestClient extends BaseWPComRestClient {
                     @Override
                     public void onErrorResponse(@NonNull BaseNetworkError error) {
                         AccountPushUsernameResponsePayload payload = new AccountPushUsernameResponsePayload();
+                        payload.username = username;
+                        payload.type = actionType;
                         payload.error = new AccountUsernameError(((WPComGsonNetworkError) error).apiError,
                                 error.message);
                         mDispatcher.dispatch(AccountActionBuilder.newPushedUsernameAction(payload));
