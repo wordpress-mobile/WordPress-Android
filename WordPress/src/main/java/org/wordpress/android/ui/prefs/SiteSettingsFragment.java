@@ -371,12 +371,12 @@ public class SiteSettingsFragment extends PreferenceFragment
                     break;
                 case DATE_FORMAT_REQUEST_CODE:
                     String dateFormatValue = data.getStringExtra(SiteSettingsFormatDialog.KEY_FORMAT_VALUE);
-                    setDateTimeFormat(FormatType.DATE_FORMAT, mDateFormatPref, dateFormatValue);
+                    setDateTimeFormatPref(FormatType.DATE_FORMAT, mDateFormatPref, dateFormatValue);
                     onPreferenceChange(mDateFormatPref, dateFormatValue);
                     break;
                 case TIME_FORMAT_REQUEST_CODE:
                     String timeFormatValue = data.getStringExtra(SiteSettingsFormatDialog.KEY_FORMAT_VALUE);
-                    setDateTimeFormat(FormatType.TIME_FORMAT, mTimeFormatPref, timeFormatValue);
+                    setDateTimeFormatPref(FormatType.TIME_FORMAT, mTimeFormatPref, timeFormatValue);
                     onPreferenceChange(mTimeFormatPref, timeFormatValue);
                     break;
                 case POSTS_PER_PAGE_REQUEST_CODE:
@@ -683,7 +683,7 @@ public class SiteSettingsFragment extends PreferenceFragment
             mPostsPerPagePref.setSummary(newValue.toString());
             mSiteSettings.setPostsPerPage(Integer.parseInt(newValue.toString()));
         } else if (preference == mTimezonePref) {
-            mTimezonePref.setSummary(newValue.toString());
+            setTimezonePref(newValue.toString());
             mSiteSettings.setTimezone(newValue.toString());
         } else {
             return false;
@@ -1163,14 +1163,14 @@ public class SiteSettingsFragment extends PreferenceFragment
         mWeekStartPref.setValue(mSiteSettings.getStartOfWeek());
         mWeekStartPref.setSummary(mWeekStartPref.getEntry());
 
-        setDateTimeFormat(FormatType.DATE_FORMAT, mDateFormatPref, mSiteSettings.getDateFormat());
-        setDateTimeFormat(FormatType.TIME_FORMAT, mTimeFormatPref, mSiteSettings.getTimeFormat());
+        setDateTimeFormatPref(FormatType.DATE_FORMAT, mDateFormatPref, mSiteSettings.getDateFormat());
+        setDateTimeFormatPref(FormatType.TIME_FORMAT, mTimeFormatPref, mSiteSettings.getTimeFormat());
 
         mPostsPerPagePref.setSummary(String.valueOf(mSiteSettings.getPostsPerPage()));
-        mTimezonePref.setSummary(mSiteSettings.getTimezone());
+        setTimezonePref(mSiteSettings.getTimezone());
     }
 
-    private void setDateTimeFormat(FormatType formatType, WPPreference formatPref, String formatValue) {
+    private void setDateTimeFormatPref(FormatType formatType, WPPreference formatPref, String formatValue) {
         String[] entries = formatType.getEntries(getActivity());
         String[] values = formatType.getValues(getActivity());
 
@@ -1184,6 +1184,18 @@ public class SiteSettingsFragment extends PreferenceFragment
 
         // not a predefined format, so it must be custom
         formatPref.setSummary(R.string.site_settings_format_entry_custom);
+    }
+
+    private void setTimezonePref(String timezoneValue) {
+        if (timezoneValue == null) return;
+
+        String timezone = timezoneValue.replace("_", " ");
+        int index = timezone.lastIndexOf("/");
+        if (index > -1) {
+            mTimezonePref.setSummary(timezone.substring(index + 1));
+        } else {
+            mTimezonePref.setSummary(timezone);
+        }
     }
 
     private void setCategories() {
