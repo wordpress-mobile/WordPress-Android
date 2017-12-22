@@ -6,6 +6,7 @@ import android.support.annotation.NonNull;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response.Listener;
 
+import org.apache.commons.text.StringEscapeUtils;
 import org.wordpress.android.fluxc.Dispatcher;
 import org.wordpress.android.fluxc.generated.PluginActionBuilder;
 import org.wordpress.android.fluxc.generated.endpoint.WPCOMREST;
@@ -125,7 +126,8 @@ public class PluginRestClient extends BaseWPComRestClient {
                     public void onErrorResponse(@NonNull BaseNetworkError networkError) {
                         DeleteSitePluginError deletePluginError = new DeleteSitePluginError(((WPComGsonNetworkError)
                                 networkError).apiError, networkError.message);
-                        DeletedSitePluginPayload payload = new DeletedSitePluginPayload(site, deletePluginError);
+                        DeletedSitePluginPayload payload =
+                                new DeletedSitePluginPayload(site, plugin, deletePluginError);
                         mDispatcher.dispatch(PluginActionBuilder.newDeletedSitePluginAction(payload));
                     }
                 }
@@ -191,10 +193,10 @@ public class PluginRestClient extends BaseWPComRestClient {
         PluginModel pluginModel = new PluginModel();
         pluginModel.setLocalSiteId(siteModel.getId());
         pluginModel.setName(response.name);
-        pluginModel.setDisplayName(response.display_name);
-        pluginModel.setAuthorName(response.author);
+        pluginModel.setDisplayName(StringEscapeUtils.unescapeHtml4(response.display_name));
+        pluginModel.setAuthorName(StringEscapeUtils.unescapeHtml4(response.author));
         pluginModel.setAuthorUrl(response.author_url);
-        pluginModel.setDescription(response.description);
+        pluginModel.setDescription(StringEscapeUtils.unescapeHtml4(response.description));
         pluginModel.setIsActive(response.active);
         pluginModel.setIsAutoUpdateEnabled(response.autoupdate);
         pluginModel.setPluginUrl(response.plugin_url);
