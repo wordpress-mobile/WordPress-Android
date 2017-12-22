@@ -154,6 +154,7 @@ public class TagListActivity extends AppCompatActivity {
             fragment = TagDetailFragment.newInstance(mSite, term.getRemoteTermId());
             getFragmentManager().beginTransaction()
                     .add(R.id.container, fragment, TagDetailFragment.TAG)
+                    .addToBackStack(null)
                     .commitAllowingStateLoss();
         }
     }

@@ -136,7 +136,7 @@ public class TagDetailFragment extends Fragment {
     public void onTaxonomyChanged(TaxonomyStore.OnTaxonomyChanged event) {
         if (event.isError()) {
             AppLog.e(AppLog.T.SETTINGS, event.error.message);
-        } else if (event.causeOfChange == FETCH_TAGS) {
+        } else if (isAdded() && event.causeOfChange == FETCH_TAGS) {
             loadTagDetail();
         }
     }
