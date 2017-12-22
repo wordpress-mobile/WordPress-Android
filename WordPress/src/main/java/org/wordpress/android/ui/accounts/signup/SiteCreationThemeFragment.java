@@ -80,11 +80,6 @@ public class SiteCreationThemeFragment extends SiteCreationBaseFormFragment<Site
         if (savedInstanceState == null) {
             AnalyticsTracker.track(AnalyticsTracker.Stat.SITE_CREATION_THEME_VIEWED);
         }
-    }
-
-    @Override
-    public void onResume() {
-        super.onResume();
 
         EventBus.getDefault().register(this);
     }
