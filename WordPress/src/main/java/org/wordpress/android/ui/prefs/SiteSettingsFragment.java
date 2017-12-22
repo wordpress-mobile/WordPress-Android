@@ -517,7 +517,7 @@ public class SiteSettingsFragment extends PreferenceFragment
             AnalyticsUtils.trackWithSiteDetails(AnalyticsTracker.Stat.SITE_SETTINGS_DELETE_SITE_ACCESSED, mSite);
             requestPurchasesForDeletionCheck();
         } else if (preference == mTagsPref) {
-            showTagEditor();
+            TagListActivity.showTagList(getActivity(), mSite);
         } else {
             return false;
         }
@@ -858,10 +858,6 @@ public class SiteSettingsFragment extends PreferenceFragment
         }
 
         mEditingEnabled = enabled;
-    }
-
-    private void showTagEditor() {
-        // TODO
     }
 
     private void showRelatedPostsDialog() {
