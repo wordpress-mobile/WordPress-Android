@@ -30,10 +30,11 @@
                 android:layout_height="wrap_content"
                 android:layout_width="match_parent" >
 
-                <org.wordpress.aztec.AztecText
+                <org.wordpress.android.editor.EditTextWithKeyBackListener
                     android:id="@+id/title"
                     android:hint="@string/post_title"
-                    android:inputType="textCapSentences|textMultiLine"
+                    android:inputType="textCapSentences|textAutoCorrect|textMultiLine"
+                    android:background="@null"
                     android:layout_height="wrap_content"
                     android:layout_toLeftOf="@+id/title_beta"
                     android:layout_toStartOf="@+id/title_beta"
@@ -43,10 +44,10 @@
                     android:textStyle="bold"
                     android:textSize="@dimen/aztec_title_size"
                     android:imeOptions="flagNoExtractUi"
-                    aztec:lineSpacingExtra="@dimen/spacing_extra_title"
-                    aztec:textColor="@color/grey_dark"
-                    aztec:textColorHint="@color/hint_text">
-                </org.wordpress.aztec.AztecText>
+                    android:lineSpacingExtra="@dimen/spacing_extra_title"
+                    android:textColor="@color/grey_dark"
+                    android:textColorHint="@color/hint_text">
+                </org.wordpress.android.editor.EditTextWithKeyBackListener>
 
                 <ImageButton
                     android:id="@+id/title_beta"
