@@ -173,6 +173,7 @@ public class SiteSettingsFragment extends PreferenceFragment
     private WPPreference mTimeFormatPref;
     private DetailListPreference mWeekStartPref;
     private Preference mRelatedPostsPref;
+    private Preference mTagsPref;
 
     // Discussion settings preview
     private WPSwitchPreference mAllowCommentsPref;
@@ -515,6 +516,8 @@ public class SiteSettingsFragment extends PreferenceFragment
         } else if (preference == mDeleteSitePref) {
             AnalyticsUtils.trackWithSiteDetails(AnalyticsTracker.Stat.SITE_SETTINGS_DELETE_SITE_ACCESSED, mSite);
             requestPurchasesForDeletionCheck();
+        } else if (preference == mTagsPref) {
+            showTagEditor();
         } else {
             return false;
         }
@@ -777,6 +780,7 @@ public class SiteSettingsFragment extends PreferenceFragment
         mUsernamePref = (EditTextPreference) getChangePref(R.string.pref_key_site_username);
         mPasswordPref = (EditTextPreference) getChangePref(R.string.pref_key_site_password);
         mCategoryPref = (DetailListPreference) getChangePref(R.string.pref_key_site_category);
+        mTagsPref = getClickPref(R.string.pref_key_site_tags);
         mFormatPref = (DetailListPreference) getChangePref(R.string.pref_key_site_format);
         mAllowCommentsPref = (WPSwitchPreference) getChangePref(R.string.pref_key_site_allow_comments);
         mAllowCommentsNested = (WPSwitchPreference) getChangePref(R.string.pref_key_site_allow_comments_nested);
@@ -839,7 +843,7 @@ public class SiteSettingsFragment extends PreferenceFragment
         // excludes mAddressPref, mMorePreference, mJpSecuritySettings
         final Preference[] editablePreference = {
                 mTitlePref , mTaglinePref, mPrivacyPref, mLanguagePref, mUsernamePref,
-                mPasswordPref, mCategoryPref, mFormatPref, mAllowCommentsPref,
+                mPasswordPref, mCategoryPref, mTagsPref, mFormatPref, mAllowCommentsPref,
                 mAllowCommentsNested, mSendPingbacksPref, mSendPingbacksNested, mReceivePingbacksPref,
                 mReceivePingbacksNested, mIdentityRequiredPreference, mUserAccountRequiredPref,
                 mSortByPref, mWhitelistPref, mRelatedPostsPref, mCloseAfterPref, mPagingPref,
@@ -854,6 +858,10 @@ public class SiteSettingsFragment extends PreferenceFragment
         }
 
         mEditingEnabled = enabled;
+    }
+
+    private void showTagEditor() {
+        // TODO
     }
 
     private void showRelatedPostsDialog() {

@@ -529,6 +529,7 @@
     <string name="site_settings_username_title" translatable="false">@string/username</string>
     <string name="site_settings_password_title" translatable="false">@string/password</string>
     <string name="site_settings_default_category_title">Default Category</string>
+    <string name="site_settings_tags_title">Tags</string>
     <string name="site_settings_default_format_title">Default Format</string>
     <string name="site_settings_week_start_title">Week starts on</string>
     <string name="site_settings_date_format_title">Date Format</string>
@@ -640,6 +641,7 @@
     <string name="site_settings_username_hint">Current user account</string>
     <string name="site_settings_password_hint">Change your password</string>
     <string name="site_settings_category_hint">Sets new post category</string>
+    <string name="site_settings_tags_hint">Manage your site\'s tags</string>
     <string name="site_settings_format_hint">Sets new post format</string>
     <string name="site_settings_image_width_hint">Resizes images in posts to this width</string>
     <string name="site_settings_image_quality_hint">Quality of pictures. Higher values mean better quality pictures.</string>
