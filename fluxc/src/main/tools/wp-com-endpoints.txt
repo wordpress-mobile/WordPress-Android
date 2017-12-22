@@ -1,4 +1,5 @@
 /auth/send-login-email/
+/auth/send-signup-email/
 
 /connect/site-info/$protocol#String/$address#String
 
