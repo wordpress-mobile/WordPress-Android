@@ -1,6 +1,8 @@
 package org.wordpress.android.ui.prefs;
 
+import android.app.AlertDialog;
 import android.app.Fragment;
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -22,13 +24,12 @@ import org.wordpress.android.fluxc.generated.TaxonomyActionBuilder;
 import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.model.TermModel;
 import org.wordpress.android.fluxc.store.TaxonomyStore;
-import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.EditTextUtils;
 import org.wordpress.android.util.StringUtils;
 
 import javax.inject.Inject;
 
-import static org.wordpress.android.fluxc.action.TaxonomyAction.FETCH_TAGS;
+import static org.wordpress.android.fluxc.action.TaxonomyAction.PUSHED_TERM;
 
 /**
  * A fragment for editing a tag
@@ -141,7 +142,7 @@ public class TagDetailFragment extends Fragment {
         return super.onOptionsItemSelected(item);
     }
 
-    void loadTagDetail() {
+    private void loadTagDetail() {
         if (!isAdded()) return;
 
         getActivity().setTitle(mTerm.getName());
@@ -178,16 +179,35 @@ public class TagDetailFragment extends Fragment {
     }
 
     private void confirmTrashTag() {
-        // TODO:
+        AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(getActivity());
+        dialogBuilder.setTitle(getResources().getText(R.string.trash));
+        dialogBuilder.setMessage(getResources().getText(R.string.dlg_confirm_trash_tag));
+        dialogBuilder.setPositiveButton(getResources().getText(R.string.trash_yes),
+                new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int whichButton) {
+                        trashTag();
+                    }
+                });
+        dialogBuilder.setNegativeButton(getResources().getText(R.string.trash_no), null);
+        dialogBuilder.setCancelable(true);
+        dialogBuilder.create().show();
+    }
+
+    private void trashTag() {
+        // TODO: need to update FluxC to allow trashing a tag
     }
 
     @SuppressWarnings("unused")
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onTaxonomyChanged(TaxonomyStore.OnTaxonomyChanged event) {
-        if (event.isError()) {
-            AppLog.e(AppLog.T.SETTINGS, event.error.message);
-        } else if (isAdded() && event.causeOfChange == FETCH_TAGS) {
-            loadTagDetail();
+        if (isAdded()) {
+            switch (event.causeOfChange) {
+                case PUSHED_TERM:
+                    mIsNewTerm = false;
+                    getArguments().putBoolean(ARGS_IS_NEW_TERM, false);
+                    break;
+                // TODO: detect deleted term and close fragment
+            }
         }
     }
 }
