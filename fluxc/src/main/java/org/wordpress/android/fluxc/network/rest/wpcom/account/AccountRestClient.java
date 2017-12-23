@@ -132,6 +132,11 @@ public class AccountRestClient extends BaseWPComRestClient {
     public static class AccountPushUsernameResponsePayload extends Payload<AccountUsernameError> {
         public AccountUsernameActionType type;
         public String username;
+
+        public AccountPushUsernameResponsePayload(String username, AccountUsernameActionType type) {
+            this.username = username;
+            this.type = type;
+        }
     }
 
     public static class NewAccountResponsePayload extends Payload<NewUserError> {
@@ -510,18 +515,16 @@ public class AccountRestClient extends BaseWPComRestClient {
                 new Listener<AccountBoolResponse>() {
                     @Override
                     public void onResponse(AccountBoolResponse response) {
-                        AccountPushUsernameResponsePayload payload = new AccountPushUsernameResponsePayload();
-                        payload.username = username;
-                        payload.type = actionType;
+                        AccountPushUsernameResponsePayload payload = new AccountPushUsernameResponsePayload(username,
+                                actionType);
                         mDispatcher.dispatch(AccountActionBuilder.newPushedUsernameAction(payload));
                     }
                 },
                 new BaseErrorListener() {
                     @Override
                     public void onErrorResponse(@NonNull BaseNetworkError error) {
-                        AccountPushUsernameResponsePayload payload = new AccountPushUsernameResponsePayload();
-                        payload.username = username;
-                        payload.type = actionType;
+                        AccountPushUsernameResponsePayload payload = new AccountPushUsernameResponsePayload(username,
+                                actionType);
                         payload.error = new AccountUsernameError(((WPComGsonNetworkError) error).apiError,
                                 error.message);
                         mDispatcher.dispatch(AccountActionBuilder.newPushedUsernameAction(payload));
