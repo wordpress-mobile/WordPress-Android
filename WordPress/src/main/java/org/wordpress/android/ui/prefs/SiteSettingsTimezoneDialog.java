@@ -29,6 +29,7 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 
+import org.apache.commons.lang3.StringUtils;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -36,11 +37,14 @@ import org.w3c.dom.Text;
 import org.wordpress.android.Constants;
 import org.wordpress.android.R;
 import org.wordpress.android.networking.RestClientUtils;
+import org.wordpress.android.ui.stats.models.PostViewsModel;
 import org.wordpress.android.util.ActivityUtils;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.ToastUtils;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
 
@@ -178,16 +182,26 @@ public class SiteSettingsTimezoneDialog extends DialogFragment implements Dialog
                 );
             }
 
+            // sort by label
+            Collections.sort(timezones, new Comparator<Timezone>() {
+                public int compare(Timezone t1, Timezone t2) {
+                    return StringUtils.compare(t1.label, t2.label);
+                }
+            });
+
             mAdapter = new TimezoneAdapter(timezones);
             mListView.setAdapter(mAdapter);
             mSearchView.setEnabled(true);
 
+            // give the list time to load before making the selection
             new Handler().postDelayed(new Runnable() {
                 @Override
                 public void run() {
-                    int index = mAdapter.indexOfValue(mSelectedTimezone);
-                    if (index > -1) {
-                        mListView.setSelection(index);
+                    if (isAdded()) {
+                        int index = mAdapter.indexOfValue(mSelectedTimezone);
+                        if (index > -1) {
+                            mListView.setSelection(index);
+                        }
                     }
                 }
             }, 100);
@@ -292,7 +306,8 @@ public class SiteSettingsTimezoneDialog extends DialogFragment implements Dialog
                 holder = (TimezoneViewHolder) convertView.getTag();
             }
 
-            boolean isSelected = mSelectedTimezone != null && mSelectedTimezone.equals(mFilteredTimezones.get(position).value);
+            boolean isSelected = mSelectedTimezone != null
+                    && mSelectedTimezone.equals(mFilteredTimezones.get(position).value);
             int colorRes = isSelected ? R.color.list_row_selected : R.color.transparent;
             holder.txtLabel.setBackgroundColor(getResources().getColor(colorRes));
             holder.txtLabel.setText(mFilteredTimezones.get(position).label);
