@@ -5,7 +5,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.support.v4.view.MenuItemCompat;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
@@ -125,8 +124,7 @@ public class TagListActivity extends AppCompatActivity implements SearchView.OnQ
             return true;
         } else if (item.getItemId() == R.id.menu_search) {
             mSearchMenuItem = item;
-            MenuItemCompat.setOnActionExpandListener(mSearchMenuItem, this);
-            MenuItemCompat.expandActionView(mSearchMenuItem);
+            mSearchMenuItem.expandActionView();
 
             mSearchView = (SearchView) item.getActionView();
             mSearchView.setOnQueryTextListener(this);
@@ -159,7 +157,6 @@ public class TagListActivity extends AppCompatActivity implements SearchView.OnQ
         getMenuInflater().inflate(R.menu.tag_list, menu);
 
         mSearchMenuItem = menu.findItem(R.id.menu_search);
-        MenuItemCompat.setOnActionExpandListener(mSearchMenuItem, this);
 
         mSearchView = (SearchView) mSearchMenuItem.getActionView();
         mSearchView.setOnQueryTextListener(this);
@@ -167,7 +164,7 @@ public class TagListActivity extends AppCompatActivity implements SearchView.OnQ
         // open search bar if we were searching for something before
         if (!TextUtils.isEmpty(mQuery)) {
             String tempQuery = mQuery;
-            MenuItemCompat.expandActionView(mSearchMenuItem);
+            mSearchMenuItem.expandActionView();
             onQueryTextSubmit(tempQuery);
             mSearchView.setQuery(mQuery, true);
         }
@@ -195,6 +192,7 @@ public class TagListActivity extends AppCompatActivity implements SearchView.OnQ
     }
 
     private void showTagDetail(@NonNull TermModel term) {
+        mSearchMenuItem.collapseActionView();
         TagDetailFragment fragment = getDetailFragment();
         if (fragment == null) {
             fragment = TagDetailFragment.newInstance(mSite, term.getRemoteTermId());
