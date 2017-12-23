@@ -119,6 +119,27 @@ public class TagListActivity extends AppCompatActivity implements SearchView.OnQ
     }
 
     @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        mMenu = menu;
+        getMenuInflater().inflate(R.menu.tag_list, menu);
+
+        mSearchMenuItem = menu.findItem(R.id.menu_search);
+
+        mSearchView = (SearchView) mSearchMenuItem.getActionView();
+        mSearchView.setOnQueryTextListener(this);
+
+        // open search bar if we were searching for something before
+        if (!TextUtils.isEmpty(mQuery)) {
+            String tempQuery = mQuery;
+            mSearchMenuItem.expandActionView();
+            onQueryTextSubmit(tempQuery);
+            mSearchView.setQuery(mQuery, true);
+        }
+
+        return super.onCreateOptionsMenu(menu);
+    }
+
+    @Override
     public boolean onOptionsItemSelected(final MenuItem item) {
         if (item.getItemId() == android.R.id.home) {
             onBackPressed();
@@ -149,30 +170,10 @@ public class TagListActivity extends AppCompatActivity implements SearchView.OnQ
             getFragmentManager().popBackStack();
             setTitle(R.string.site_settings_tags_title);
             ActivityUtils.hideKeyboard(this);
+            invalidateOptionsMenu();
         } else {
             super.onBackPressed();
         }
-    }
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        mMenu = menu;
-        getMenuInflater().inflate(R.menu.tag_list, menu);
-
-        mSearchMenuItem = menu.findItem(R.id.menu_search);
-
-        mSearchView = (SearchView) mSearchMenuItem.getActionView();
-        mSearchView.setOnQueryTextListener(this);
-
-        // open search bar if we were searching for something before
-        if (!TextUtils.isEmpty(mQuery)) {
-            String tempQuery = mQuery;
-            mSearchMenuItem.expandActionView();
-            onQueryTextSubmit(tempQuery);
-            mSearchView.setQuery(mQuery, true);
-        }
-
-        return super.onCreateOptionsMenu(menu);
     }
 
     @SuppressWarnings("unused")
@@ -192,6 +193,10 @@ public class TagListActivity extends AppCompatActivity implements SearchView.OnQ
 
     private TagDetailFragment getDetailFragment() {
         return (TagDetailFragment) getFragmentManager().findFragmentByTag(TagDetailFragment.TAG);
+    }
+
+    private boolean hasDetailFragment() {
+        return getDetailFragment() != null;
     }
 
     private void showTagDetail(@NonNull TermModel term) {

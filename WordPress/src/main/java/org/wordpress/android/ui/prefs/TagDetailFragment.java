@@ -6,13 +6,15 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
 
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
-import org.w3c.dom.Text;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.fluxc.Dispatcher;
@@ -114,6 +116,31 @@ public class TagDetailFragment extends Fragment {
         loadTagDetail();
     }
 
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        inflater.inflate(R.menu.tag_detail, menu);
+        super.onCreateOptionsMenu(menu, inflater);
+    }
+
+    @Override
+    public void onPrepareOptionsMenu(Menu menu) {
+        super.onPrepareOptionsMenu(menu);
+        menu.findItem(R.id.menu_trash).setVisible(!mIsNewTerm);
+        menu.findItem(R.id.menu_search).setVisible(false);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(final MenuItem item) {
+        if (item.getItemId() == android.R.id.home) {
+            // TODO
+            return true;
+        } else if (item.getItemId() == R.id.menu_trash) {
+            confirmTrashTag();
+            return true;
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
     void loadTagDetail() {
         if (!isAdded()) return;
 
@@ -148,6 +175,10 @@ public class TagDetailFragment extends Fragment {
                 mDispatcher.dispatch(TaxonomyActionBuilder.newUpdateTermAction(mTerm));
             }
         }
+    }
+
+    private void confirmTrashTag() {
+        // TODO:
     }
 
     @SuppressWarnings("unused")
