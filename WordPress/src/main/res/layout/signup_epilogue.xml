@@ -63,6 +63,7 @@
                         android:layout_marginTop="@dimen/margin_extra_medium_large"
                         android:layout_width="@dimen/avatar_sz_login_epilogue"
                         app:wpDefaultImageDrawable="@drawable/ic_gridicons_user_circle_100dp"
+                        app:wpErrorImageDrawable="@drawable/ic_gridicons_user_circle_100dp"
                         tools:src="@drawable/ic_gridicons_user_circle_100dp" >
                     </org.wordpress.android.widgets.WPNetworkImageView>
 
