@@ -1,16 +1,18 @@
 package org.wordpress.android.ui.prefs;
 
-import android.app.FragmentManager;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.v4.view.MenuItemCompat;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.SearchView;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
+import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
@@ -37,15 +39,23 @@ import javax.inject.Inject;
 
 import static org.wordpress.android.fluxc.action.TaxonomyAction.FETCH_TAGS;
 
-public class TagListActivity extends AppCompatActivity {
+public class TagListActivity extends AppCompatActivity
+        implements SearchView.OnQueryTextListener, MenuItemCompat.OnActionExpandListener {
 
     @Inject Dispatcher mDispatcher;
     @Inject SiteStore mSiteStore;
     @Inject TaxonomyStore mTaxonomyStore;
 
+    private static final String SAVED_QUERY = "SAVED_QUERY";
+
     private SiteModel mSite;
     private RecyclerView mRecycler;
     private TagListAdapter mAdapter;
+    private String mQuery;
+
+    private Menu mMenu;
+    private MenuItem mSearchMenuItem;
+    private SearchView mSearchView;
 
     public static void showTagList(@NonNull Context context, @NonNull SiteModel site) {
         Intent intent = new Intent(context, TagListActivity.class);
@@ -65,11 +75,11 @@ public class TagListActivity extends AppCompatActivity {
             actionBar.setDisplayHomeAsUpEnabled(true);
         }
 
-
         if (savedInstanceState == null) {
             mSite = (SiteModel) getIntent().getSerializableExtra(WordPress.SITE);
         } else {
             mSite = (SiteModel) savedInstanceState.getSerializable(WordPress.SITE);
+            mQuery = savedInstanceState.getString(SAVED_QUERY);
         }
         if (mSite == null) {
             ToastUtils.showToast(this, R.string.blog_not_found, ToastUtils.Duration.SHORT);
@@ -105,12 +115,26 @@ public class TagListActivity extends AppCompatActivity {
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
         outState.putSerializable(WordPress.SITE, mSite);
+        outState.putString(SAVED_QUERY, mQuery);
     }
 
     @Override
     public boolean onOptionsItemSelected(final MenuItem item) {
         if (item.getItemId() == android.R.id.home) {
             onBackPressed();
+            return true;
+        } else if (item.getItemId() == R.id.menu_search) {
+            mSearchMenuItem = item;
+            MenuItemCompat.setOnActionExpandListener(mSearchMenuItem, this);
+            MenuItemCompat.expandActionView(mSearchMenuItem);
+
+            mSearchView = (SearchView) item.getActionView();
+            mSearchView.setOnQueryTextListener(this);
+
+            if (!TextUtils.isEmpty(mQuery)) {
+                onQueryTextSubmit(mQuery);
+                mSearchView.setQuery(mQuery, true);
+            }
             return true;
         }
         return super.onOptionsItemSelected(item);
@@ -127,6 +151,28 @@ public class TagListActivity extends AppCompatActivity {
         } else {
             super.onBackPressed();
         }
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        mMenu = menu;
+        getMenuInflater().inflate(R.menu.tag_list, menu);
+
+        mSearchMenuItem = menu.findItem(R.id.menu_search);
+        MenuItemCompat.setOnActionExpandListener(mSearchMenuItem, this);
+
+        mSearchView = (SearchView) mSearchMenuItem.getActionView();
+        mSearchView.setOnQueryTextListener(this);
+
+        // open search bar if we were searching for something before
+        if (!TextUtils.isEmpty(mQuery)) {
+            String tempQuery = mQuery;
+            MenuItemCompat.expandActionView(mSearchMenuItem);
+            onQueryTextSubmit(tempQuery);
+            mSearchView.setQuery(mQuery, true);
+        }
+
+        return super.onCreateOptionsMenu(menu);
     }
 
     @SuppressWarnings("unused")
@@ -159,10 +205,37 @@ public class TagListActivity extends AppCompatActivity {
         }
     }
 
+    @Override
+    public boolean onQueryTextSubmit(String query) {
+        mAdapter.filter(query);
+        mSearchView.clearFocus();
+        return true;
+    }
+
+    @Override
+    public boolean onQueryTextChange(String query) {
+        mAdapter.filter(query);
+        return true;
+    }
+
+    @Override
+    public boolean onMenuItemActionExpand(MenuItem menuItem) {
+        if (!TextUtils.isEmpty(mQuery)) {
+            onQueryTextChange(mQuery);
+        }
+        return true;
+    }
+
+    @Override
+    public boolean onMenuItemActionCollapse(MenuItem menuItem) {
+        mMenu.findItem(R.id.menu_new_media).setVisible(true);
+        invalidateOptionsMenu();
+        return true;
+    }
+
     private class TagListAdapter extends RecyclerView.Adapter<TagListAdapter.TagViewHolder> {
         private final List<TermModel> mAllTags = new ArrayList<>();
         private final List<TermModel> mFilteredTags = new ArrayList<>();
-        private String mCurFilter;
 
         TagListAdapter(@NonNull List<TermModel> allTags) {
             mAllTags.addAll(allTags);
@@ -193,7 +266,6 @@ public class TagListActivity extends AppCompatActivity {
         }
 
         public void filter(final String text) {
-            mCurFilter = text;
             mFilteredTags.clear();
             if (TextUtils.isEmpty(text)) {
                 mFilteredTags.addAll(mAllTags);

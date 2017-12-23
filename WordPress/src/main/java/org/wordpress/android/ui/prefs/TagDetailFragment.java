@@ -99,7 +99,7 @@ public class TagDetailFragment extends Fragment {
 
         TermModel tag = mTaxonomyStore.getTagByRemoteId(mSite, mTagId);
         if (tag == null) {
-            ToastUtils.showToast(getActivity(), R.string.error_generic);
+            ToastUtils.showToast(getActivity(), R.string.error_tag_not_found);
             return;
         }
 
@@ -115,7 +115,7 @@ public class TagDetailFragment extends Fragment {
 
         TermModel tag = mTaxonomyStore.getTagByRemoteId(mSite, mTagId);
         if (tag == null) {
-            ToastUtils.showToast(getActivity(), R.string.error_generic);
+            ToastUtils.showToast(getActivity(), R.string.error_tag_not_found);
             return;
         }
 
