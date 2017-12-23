@@ -22,6 +22,7 @@ public class TermModel extends Payload<BaseNetworkError> implements Identifiable
     @Column private String mSlug;
     @Column private String mDescription;
     @Column private long mParentRemoteId;
+    @Column private int mPostCount;
 
     @Override
     public int getId() {
@@ -89,6 +90,14 @@ public class TermModel extends Payload<BaseNetworkError> implements Identifiable
         mParentRemoteId = parentRemoteId;
     }
 
+    public int getPostCount() {
+        return mPostCount;
+    }
+
+    public void setPostCount(int count) {
+        mPostCount = count;
+    }
+
     @Override
     public boolean equals(Object other) {
         if (this == other) return true;
@@ -100,6 +109,7 @@ public class TermModel extends Payload<BaseNetworkError> implements Identifiable
                 && getLocalSiteId() == otherTerm.getLocalSiteId()
                 && getRemoteTermId() == otherTerm.getRemoteTermId()
                 && getParentRemoteId() == otherTerm.getParentRemoteId()
+                && getPostCount() == otherTerm.getPostCount()
                 && StringUtils.equals(getSlug(), otherTerm.getSlug())
                 && StringUtils.equals(getName(), otherTerm.getName())
                 && StringUtils.equals(getTaxonomy(), otherTerm.getTaxonomy())

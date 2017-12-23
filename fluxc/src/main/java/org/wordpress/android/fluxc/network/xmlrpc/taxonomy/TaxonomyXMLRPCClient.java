@@ -243,6 +243,7 @@ public class TaxonomyXMLRPCClient extends BaseXMLRPCClient {
         term.setDescription(StringEscapeUtils.unescapeHtml4(MapUtils.getMapStr(termMap, "description")));
         term.setParentRemoteId(MapUtils.getMapLong(termMap, "parent"));
         term.setTaxonomy(MapUtils.getMapStr(termMap, "taxonomy"));
+        term.setPostCount(MapUtils.getMapInt(termMap, "count", 0));
 
         return term;
     }
