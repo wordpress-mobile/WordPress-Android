@@ -572,6 +572,7 @@
     <!-- tag list and detail -->
     <string name="tag_name_hint">Tag</string>
     <string name="tag_description_hint">Description</string>
+    <string name="add_new_tag">Add New Tag</string>
 
     <!-- Jetpack settings -->
     <string name="jetpack_site_settings_category_title">Jetpack Settings</string>
