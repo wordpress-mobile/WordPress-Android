@@ -21,7 +21,6 @@ import org.wordpress.android.fluxc.store.TaxonomyStore;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.EditTextUtils;
 import org.wordpress.android.util.StringUtils;
-import org.wordpress.android.util.ToastUtils;
 
 import javax.inject.Inject;
 
@@ -31,7 +30,7 @@ import static org.wordpress.android.fluxc.action.TaxonomyAction.FETCH_TAGS;
  * A fragment for editing a tag
  */
 public class TagDetailFragment extends Fragment {
-    private static final String ARGS_TAG_ID = "tag_id";
+    private static final String ARGS_TERM = "term";
     static final String TAG = "TagDetailFragment";
 
     @Inject Dispatcher mDispatcher;
@@ -40,13 +39,13 @@ public class TagDetailFragment extends Fragment {
     private EditText mNameView;
     private EditText mDescriptionView;
 
-    private long mTagId;
+    private TermModel mTerm;
     private SiteModel mSite;
 
-    public static TagDetailFragment newInstance(@NonNull SiteModel site, long tagRemoteId) {
+    public static TagDetailFragment newInstance(@NonNull SiteModel site, @NonNull TermModel term) {
         TagDetailFragment fragment = new TagDetailFragment();
         Bundle args = new Bundle();
-        args.putLong(ARGS_TAG_ID, tagRemoteId);
+        args.putSerializable(ARGS_TERM, term);
         args.putSerializable(WordPress.SITE, site);
         fragment.setArguments(args);
         return fragment;
@@ -86,10 +85,8 @@ public class TagDetailFragment extends Fragment {
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
-        if (getArguments() != null) {
-            mSite = (SiteModel) getArguments().getSerializable(WordPress.SITE);
-            mTagId = getArguments().getLong(ARGS_TAG_ID);
-        }
+        mSite = (SiteModel) getArguments().getSerializable(WordPress.SITE);
+        mTerm = (TermModel) getArguments().getSerializable(ARGS_TERM);
 
         loadTagDetail();
     }
@@ -97,14 +94,10 @@ public class TagDetailFragment extends Fragment {
     void loadTagDetail() {
         if (!isAdded()) return;
 
-        TermModel tag = mTaxonomyStore.getTagByRemoteId(mSite, mTagId);
-        if (tag == null) {
-            ToastUtils.showToast(getActivity(), R.string.error_tag_not_found);
-            return;
-        }
+        getActivity().setTitle(mTerm.getName());
 
-        mNameView.setText(tag.getName());
-        mDescriptionView.setText(tag.getDescription());
+        mNameView.setText(mTerm.getName());
+        mDescriptionView.setText(mTerm.getDescription());
 
         mNameView.requestFocus();
         mNameView.setSelection(mNameView.getText().length());
@@ -113,21 +106,16 @@ public class TagDetailFragment extends Fragment {
     public void saveChanges() {
         if (!isAdded()) return;
 
-        TermModel tag = mTaxonomyStore.getTagByRemoteId(mSite, mTagId);
-        if (tag == null) {
-            ToastUtils.showToast(getActivity(), R.string.error_tag_not_found);
-            return;
-        }
 
         String thisName = EditTextUtils.getText(mNameView);
         String thisDescription = EditTextUtils.getText(mDescriptionView);
 
-        boolean hasChanged = !StringUtils.equals(tag.getName(), thisName)
-                || !StringUtils.equals(tag.getDescription(), thisDescription);
+        boolean hasChanged = !StringUtils.equals(mTerm.getName(), thisName)
+                || !StringUtils.equals(mTerm.getDescription(), thisDescription);
         if (hasChanged) {
-            tag.setName(thisName);
-            tag.setDescription(thisDescription);
-            mDispatcher.dispatch(TaxonomyActionBuilder.newPushTermAction(new TaxonomyStore.RemoteTermPayload(tag, mSite)));
+            mTerm.setName(thisName);
+            mTerm.setDescription(thisDescription);
+            mDispatcher.dispatch(TaxonomyActionBuilder.newPushTermAction(new TaxonomyStore.RemoteTermPayload(mTerm, mSite)));
         }
     }
 

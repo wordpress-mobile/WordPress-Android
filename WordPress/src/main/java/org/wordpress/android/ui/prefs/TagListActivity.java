@@ -29,6 +29,7 @@ import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.model.TermModel;
 import org.wordpress.android.fluxc.store.SiteStore;
 import org.wordpress.android.fluxc.store.TaxonomyStore;
+import org.wordpress.android.util.ActivityUtils;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.ToastUtils;
 
@@ -146,6 +147,8 @@ public class TagListActivity extends AppCompatActivity implements SearchView.OnQ
                 fragment.saveChanges();
             }
             getFragmentManager().popBackStack();
+            setTitle(R.string.site_settings_tags_title);
+            ActivityUtils.hideKeyboard(this);
         } else {
             super.onBackPressed();
         }
@@ -195,7 +198,7 @@ public class TagListActivity extends AppCompatActivity implements SearchView.OnQ
         mSearchMenuItem.collapseActionView();
         TagDetailFragment fragment = getDetailFragment();
         if (fragment == null) {
-            fragment = TagDetailFragment.newInstance(mSite, term.getRemoteTermId());
+            fragment = TagDetailFragment.newInstance(mSite, term);
             getFragmentManager().beginTransaction()
                     .add(R.id.container, fragment, TagDetailFragment.TAG)
                     .addToBackStack(null)
