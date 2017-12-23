@@ -28,6 +28,7 @@ import org.wordpress.android.fluxc.Dispatcher;
 import org.wordpress.android.fluxc.action.AccountAction;
 import org.wordpress.android.fluxc.generated.AccountActionBuilder;
 import org.wordpress.android.fluxc.store.AccountStore;
+import org.wordpress.android.fluxc.store.AccountStore.AccountUsernameActionType;
 import org.wordpress.android.fluxc.store.AccountStore.OnAccountChanged;
 import org.wordpress.android.fluxc.store.AccountStore.OnUsernameChanged;
 import org.wordpress.android.fluxc.store.AccountStore.PushAccountSettingsPayload;
@@ -244,7 +245,8 @@ public class SignupEpilogueSocialFragment extends LoginBaseFormFragment<SignupEp
             showErrorDialog(getString(R.string.signup_epilogue_error_generic));
         } else if (changedUsername()) {
             startProgress();
-            PushUsernamePayload payload = new PushUsernamePayload(mUsername, "none");
+            PushUsernamePayload payload = new PushUsernamePayload(mUsername,
+                    AccountUsernameActionType.KEEP_OLD_SITE_AND_ADDRESS);
             mDispatcher.dispatch(AccountActionBuilder.newPushUsernameAction(payload));
         } else if (event.causeOfChange == AccountAction.PUSH_SETTINGS && mSignupEpilogueListener != null) {
             AnalyticsTracker.track(AnalyticsTracker.Stat.SIGNUP_SOCIAL_EPILOGUE_UPDATE_DISPLAY_NAME_SUCCEEDED);
@@ -316,7 +318,8 @@ public class SignupEpilogueSocialFragment extends LoginBaseFormFragment<SignupEp
             mDispatcher.dispatch(AccountActionBuilder.newPushSettingsAction(payload));
         } else if (changedUsername()) {
             startProgress();
-            PushUsernamePayload payload = new PushUsernamePayload(mUsername, "none");
+            PushUsernamePayload payload = new PushUsernamePayload(mUsername,
+                    AccountUsernameActionType.KEEP_OLD_SITE_AND_ADDRESS);
             mDispatcher.dispatch(AccountActionBuilder.newPushUsernameAction(payload));
         } else if (mSignupEpilogueListener != null) {
             AnalyticsTracker.track(AnalyticsTracker.Stat.SIGNUP_SOCIAL_EPILOGUE_UNCHANGED);
