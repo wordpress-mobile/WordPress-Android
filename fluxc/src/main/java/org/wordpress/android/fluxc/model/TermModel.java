@@ -22,7 +22,7 @@ public class TermModel extends Payload<BaseNetworkError> implements Identifiable
     @Column private String mSlug;
     @Column private String mDescription;
     @Column private long mParentRemoteId;
-    @Column private long mPostCount;
+    @Column private int mPostCount;
 
     @Override
     public int getId() {
@@ -90,11 +90,11 @@ public class TermModel extends Payload<BaseNetworkError> implements Identifiable
         mParentRemoteId = parentRemoteId;
     }
 
-    public long getPostCount() {
+    public int getPostCount() {
         return mPostCount;
     }
 
-    public void setPostCount(long count) {
+    public void setPostCount(int count) {
         mPostCount = count;
     }
 

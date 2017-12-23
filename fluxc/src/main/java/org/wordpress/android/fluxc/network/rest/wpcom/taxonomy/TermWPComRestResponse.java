@@ -13,7 +13,7 @@ public class TermWPComRestResponse implements Response {
     public String name;
     public String slug;
     public String description;
-    public long post_count;
+    public int post_count;
     public long parent;
     public Meta meta;
 
