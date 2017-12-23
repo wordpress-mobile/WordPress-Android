@@ -1,5 +1,6 @@
 package org.wordpress.android.ui.prefs;
 
+import android.app.FragmentTransaction;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -201,6 +202,7 @@ public class TagListActivity extends AppCompatActivity
             getFragmentManager().beginTransaction()
                     .add(R.id.container, fragment, TagDetailFragment.TAG)
                     .addToBackStack(null)
+                    .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE)
                     .commitAllowingStateLoss();
         }
     }
