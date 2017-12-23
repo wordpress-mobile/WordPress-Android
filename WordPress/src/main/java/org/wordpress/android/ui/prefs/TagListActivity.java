@@ -40,8 +40,7 @@ import javax.inject.Inject;
 
 import static org.wordpress.android.fluxc.action.TaxonomyAction.FETCH_TAGS;
 
-public class TagListActivity extends AppCompatActivity
-        implements SearchView.OnQueryTextListener, MenuItemCompat.OnActionExpandListener {
+public class TagListActivity extends AppCompatActivity implements SearchView.OnQueryTextListener {
 
     @Inject Dispatcher mDispatcher;
     @Inject SiteStore mSiteStore;
@@ -217,21 +216,6 @@ public class TagListActivity extends AppCompatActivity
     @Override
     public boolean onQueryTextChange(String query) {
         mAdapter.filter(query);
-        return true;
-    }
-
-    @Override
-    public boolean onMenuItemActionExpand(MenuItem menuItem) {
-        if (!TextUtils.isEmpty(mQuery)) {
-            onQueryTextChange(mQuery);
-        }
-        return true;
-    }
-
-    @Override
-    public boolean onMenuItemActionCollapse(MenuItem menuItem) {
-        mMenu.findItem(R.id.menu_new_media).setVisible(true);
-        invalidateOptionsMenu();
         return true;
     }
 
