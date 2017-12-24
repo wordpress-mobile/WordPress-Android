@@ -99,6 +99,14 @@ public class TaxonomyStore extends Store {
         }
     }
 
+    public static class OnTermRemoved extends OnChanged<TaxonomyError> {
+        public TermModel term;
+
+        public OnTermRemoved(TermModel term) {
+            this.term = term;
+        }
+    }
+
     public static class TaxonomyError implements OnChangedError {
         public TaxonomyErrorType type;
         public String message;
@@ -290,6 +298,9 @@ public class TaxonomyStore extends Store {
             case PUSHED_TERM:
                 handlePushTermCompleted((RemoteTermPayload) action.getPayload());
                 break;
+            case REMOVE_TERM:
+                handleRemoveTermCompleted((RemoteTermPayload) action.getPayload());
+                break;
             case REMOVE_ALL_TERMS:
                 removeAllTerms();
                 break;
@@ -376,6 +387,17 @@ public class TaxonomyStore extends Store {
         }
     }
 
+    private void handleRemoveTermCompleted(RemoteTermPayload payload) {
+        if (payload.isError()) {
+            OnTermRemoved onTermRemoved = new OnTermRemoved(payload.term);
+            onTermRemoved.error = payload.error;
+            emitChange(onTermRemoved);
+        } else {
+            removeTerm(payload.term);
+            emitChange(new OnTermRemoved(payload.term));
+        }
+    }
+
     private void handlePushTermCompleted(RemoteTermPayload payload) {
         if (payload.isError()) {
             OnTermUploaded onTermUploaded = new OnTermUploaded(payload.term);
@@ -410,6 +432,14 @@ public class TaxonomyStore extends Store {
 
         OnTaxonomyChanged onTaxonomyChanged = new OnTaxonomyChanged(rowsAffected, term.getTaxonomy());
         onTaxonomyChanged.causeOfChange = TaxonomyAction.UPDATE_TERM;
+        emitChange(onTaxonomyChanged);
+    }
+
+    private void removeTerm(TermModel term) {
+        int rowsAffected = TaxonomySqlUtils.deleteTerm(term);
+
+        OnTaxonomyChanged onTaxonomyChanged = new OnTaxonomyChanged(rowsAffected, term.getTaxonomy());
+        onTaxonomyChanged.causeOfChange = TaxonomyAction.REMOVE_TERM;
         emitChange(onTaxonomyChanged);
     }
 
