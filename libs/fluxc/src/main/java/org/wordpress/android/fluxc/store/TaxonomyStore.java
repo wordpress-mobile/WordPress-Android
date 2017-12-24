@@ -299,6 +299,9 @@ public class TaxonomyStore extends Store {
                 handlePushTermCompleted((RemoteTermPayload) action.getPayload());
                 break;
             case REMOVE_TERM:
+                removeTerm((TermModel) action.getPayload());
+                break;
+            case REMOVED_TERM:
                 handleRemoveTermCompleted((RemoteTermPayload) action.getPayload());
                 break;
             case REMOVE_ALL_TERMS:
