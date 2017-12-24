@@ -4,7 +4,9 @@ import android.app.FragmentTransaction;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
@@ -30,6 +32,7 @@ import org.wordpress.android.fluxc.model.TermModel;
 import org.wordpress.android.fluxc.store.SiteStore;
 import org.wordpress.android.fluxc.store.TaxonomyStore;
 import org.wordpress.android.util.ActivityUtils;
+import org.wordpress.android.util.AniUtils;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.ToastUtils;
 
@@ -50,6 +53,7 @@ public class TagListActivity extends AppCompatActivity implements SearchView.OnQ
 
     private SiteModel mSite;
     private RecyclerView mRecycler;
+    private View mFabView;
     private TagListAdapter mAdapter;
     private String mQuery;
 
@@ -87,6 +91,19 @@ public class TagListActivity extends AppCompatActivity implements SearchView.OnQ
             return;
         }
 
+        mFabView = findViewById(R.id.fab_button);
+        mFabView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                showTagDetail(null);
+            }
+        });
+
+        // hide the FAB the first time the fragment is created in order to animate it in onResume()
+        if (savedInstanceState == null) {
+            mFabView.setVisibility(View.INVISIBLE);
+        }
+
         mRecycler = findViewById(R.id.recycler);
         mRecycler.setHasFixedSize(true);
         mRecycler.setLayoutManager(new LinearLayoutManager(this));
@@ -96,7 +113,13 @@ public class TagListActivity extends AppCompatActivity implements SearchView.OnQ
         if (savedInstanceState == null) {
             mDispatcher.dispatch(TaxonomyActionBuilder.newFetchTagsAction(mSite));
         }
+    }
 
+    @Override
+    public void onResume() {
+        super.onResume();
+
+        showFabIfHidden();
     }
 
     @Override
@@ -168,12 +191,30 @@ public class TagListActivity extends AppCompatActivity implements SearchView.OnQ
                 fragment.saveChanges();
             }
             getFragmentManager().popBackStack();
+
             setTitle(R.string.site_settings_tags_title);
             ActivityUtils.hideKeyboard(this);
+
             invalidateOptionsMenu();
+            showFabIfHidden();
+
+            loadTags();
         } else {
             super.onBackPressed();
         }
+    }
+
+    private void showFabIfHidden() {
+        // redisplay hidden fab after a short delay
+        long delayMs = getResources().getInteger(R.integer.fab_animation_delay);
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                if (!isFinishing() && mFabView.getVisibility() != View.VISIBLE) {
+                    AniUtils.showFab(mFabView, true);
+                }
+            }
+        }, delayMs);
     }
 
     @SuppressWarnings("unused")
@@ -199,17 +240,24 @@ public class TagListActivity extends AppCompatActivity implements SearchView.OnQ
         return getDetailFragment() != null;
     }
 
-    private void showTagDetail(@NonNull TermModel term) {
-        mSearchMenuItem.collapseActionView();
-        TagDetailFragment fragment = getDetailFragment();
-        if (fragment == null) {
+    /*
+     * shows the detail (edit) view for the passed term, or adds a new term is passed term is null
+     */
+    private void showTagDetail(@Nullable TermModel term) {
+        TagDetailFragment fragment;
+        if (term != null) {
             fragment = TagDetailFragment.newInstance(mSite, term);
-            getFragmentManager().beginTransaction()
-                    .add(R.id.container, fragment, TagDetailFragment.TAG)
-                    .addToBackStack(null)
-                    .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE)
-                    .commitAllowingStateLoss();
+        } else {
+            fragment = TagDetailFragment.newInstance(mSite);
         }
+        getFragmentManager().beginTransaction()
+                .add(R.id.container, fragment, TagDetailFragment.TAG)
+                .addToBackStack(null)
+                .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE)
+                .commitAllowingStateLoss();
+
+        mSearchMenuItem.collapseActionView();
+        mFabView.setVisibility(View.GONE);
     }
 
     @Override

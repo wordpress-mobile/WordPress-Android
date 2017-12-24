@@ -145,8 +145,11 @@ public class TagDetailFragment extends Fragment {
     private void loadTagDetail() {
         if (!isAdded()) return;
 
-        getActivity().setTitle(mTerm.getName());
-
+        if (mIsNewTerm) {
+            getActivity().setTitle(R.string.add_new_tag);
+        } else {
+            getActivity().setTitle(mTerm.getName());
+        }
         mNameView.setText(mTerm.getName());
         mDescriptionView.setText(mTerm.getDescription());
 
