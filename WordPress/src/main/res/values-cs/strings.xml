@@ -1,12 +1,81 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2017-07-11 14:01:34+0000
+Translation-Revision-Date: 2017-12-17 13:42:33+0000
 Plural-Forms: nplurals=3; plural=(n==1) ? 0 : (n>=2 && n<=4) ? 1 : 2;
 Generator: GlotPress/2.4.0-alpha
 Language: cs_CZ
 -->
 <resources>
+	<string name="notification_login_failed">Došlo k chybě.</string>
+	<string name="notification_2fa_needed">Pro pokračování zadejte ověřovací kód.</string>
+	<string name="notification_error_wrong_password">Před pokračováním si znovu překontrolujte heslo.</string>
+	<string name="notification_login_title_stopped">Přihlášení bylo zastaveno</string>
+	<string name="notification_logging_in">Počkejte prosím, probíhá přihlašování.</string>
+	<string name="notification_login_title_in_progress">Probíhá přihlašování...</string>
+	<string name="notification_logged_in">Pokračujte klepnutím.</string>
+	<string name="notification_login_title_success">Přihlášeno!</string>
+	<string name="login_error_generic_start">Přihlášení pomocí Google nemůže být spuštěno.</string>
+	<string name="site_creating_success">Úspěch!</string>
+	<string name="site_creating_set_theme">Nastavuje se šablona...</string>
+	<string name="site_creating_fetching_info">Načítají se informace o webu...</string>
+	<string name="site_creating_label">Web se připravuje...</string>
+	<string name="login_empty_password">Zadejte heslo</string>
+	<string name="email_not_registered_wpcom">Hmm, tato emailová adresa není registrovaná na WordPress.com.\nSnažíte se dostat na web na vlastním hostingu? Přihlašte se přes odkaz dole na obrazovce.</string>
+	<string name="login_text_otp_another">Pošlete mi nový kód.</string>
+	<string name="enter_verification_code_sms">Na telefonní číslo končící na %s byla zaslána textová zpráva. Zadejte prosím ověřovací kód z SMS.</string>
+	<string name="error_generic_error">Akci se nepodařilo vykonat</string>
+	<string name="error_media_recover_page">Nepodařilo se nahrát média této stránky</string>
+	<string name="error_media_recover_post">Nepodařilo se nahrát média tohoto příspěvku</string>
+	<string name="size_full">Původní velikost</string>
+	<string name="size_large">Velký obrázek</string>
+	<string name="size_medium">Střední velikost</string>
+	<string name="size_thumbnail">Náhled</string>
+	<string name="image_size">Velikost</string>
+	<string name="uploading_subtitle_media_only_one">1 zbývající soubor</string>
+	<string name="uploading_subtitle_media_only">Zbývá %1$d z %2$d souborů</string>
+	<string name="uploading_subtitle_posts_only">Zbývá %1$d %2$s</string>
+	<string name="uploading_subtitle_mixed_one">%1$d %2$s, a 1 zbývající soubor</string>
+	<string name="uploading_subtitle_mixed">%1$d %2$s, a %3$d z %4$d zbývajících souborů</string>
+	<string name="uploading_title">Nahrávání...</string>
+	<string name="media_files_uploaded_write_post">Napsat příspěvek</string>
+	<string name="media_file_missing_for_retry">Opakování není možné - některé soubory z tohoto příspěvku nebyly nalezeny na tomto zařízení</string>
+	<string name="media_all_files_uploaded_successfully">%d souborů bylo úspěšně náhráno</string>
+	<string name="media_files_uploaded_successfully">, %d úspěšně náhráno</string>
+	<string name="media_file_uploaded">1 soubor nahrán</string>
+	<string name="media_file_not_uploaded">1 soubor se nepodařilo nahrát</string>
+	<string name="media_files_uploaded">%d souborů nahráno</string>
+	<string name="media_files_not_uploaded">%d souborů se nepodařilo nahrát</string>
+	<string name="media_file_post_mixed_not_uploaded">%1$d %2$s s %3$d soubory se nepodařilo nahrát</string>
+	<string name="wpcom_themes_header">Šablony WordPress.com</string>
+	<string name="uploaded_themes_header">Nahrané šablony</string>
+	<string name="remove_image_from_post">Odstranit z příspěvku</string>
+	<string name="confirm_remove_media_image">Odstranit tento obrázek z příspěvku?</string>
+	<string name="media_edit_customize_card_caption">Přizpůsobit</string>
+	<string name="media_edit_file_details_card_caption">Podrobnosti souboru</string>
+	<string name="login_error_generic">Při připojování ke Google účtu se objevily nějaké potíže.</string>
+	<string name="login_error_email_not_found">Účet Google \'%s\' neodpovídá žádnému existujícímu účtu na WordPress.com.</string>
+	<string name="login_error_button">Zavřít</string>
+	<string name="login_google_button_suffix">Přihlásit se pomocí Google.</string>
+	<string name="login_google_button_prefix">Nebo</string>
+	<string name="enter_wpcom_password_google">Abyste mohli pokračovat s tímto Google účtem, zadejte odpovídající heslo k WordPress.com. Tato žádost bude pouze jednou.</string>
+	<string name="error_generic_network">Vyskytla se chyba sítě. Zkontrolujte připojení a zkuste znovu.</string>
+	<string name="post_settings_remove_featured_image">Odstranit náhledový obrázek</string>
+	<string name="post_settings_choose_featured_image">Zvolit náhledový obrázek</string>
+	<string name="login_log_in_for_share_intent">Pro sdílení obsahu se přihlašte na WordPress.com.</string>
+	<string name="fab_content_description_preview">Náhled</string>
+	<string name="media_edit_url_caption">URL</string>
+	<string name="notification_settings_master_hint_off">Povolit oznámení</string>
+	<string name="notification_settings_master_hint_on">Zakázat oznámení</string>
+	<string name="notification_settings_master_status_off">Vypnuto</string>
+	<string name="notification_settings_master_status_on">Zapnuto</string>
+	<string name="uploading_media">Nahrávám média...</string>
+	<string name="page_scheduled">Stránka naplánována</string>
+	<string name="post_scheduled">Příspěvek naplánován</string>
+	<string name="button_retry">Opakovat</string>
+	<string name="login_epilogue_mysites_other">Moje weby</string>
+	<string name="login_epilogue_mysites_one">Můj web</string>
 	<string name="photo_picker_title">Zvolit obrázek</string>
+	<string name="editor_post_saved_online">Příspěvek je uložený online</string>
 	<string name="media_encoder_quality_100">Maximální</string>
 	<string name="media_encoder_quality_95">Hodně vysoká</string>
 	<string name="media_encoder_quality_90">Vysoká</string>
@@ -16,9 +85,11 @@ Language: cs_CZ
 	<string name="media_upload_state_deleted">Smazáno</string>
 	<string name="media_upload_state_deleting">Mazání</string>
 	<string name="media_upload_state_uploading">Nahrávání</string>
+	<string name="media_upload_state_failed">Chyba nahrávání</string>
 	<string name="update_draft">Aktualizovat koncept</string>
 	<string name="image_quality">Kvalita obrázku</string>
 	<string name="error_unknown_post_type">Neznámý formát příspěvku</string>
+	<string name="xmlrpc_post_blocked_error">Nepodařilo se připojit. Váš hostitel blokuje požadavky POST, které jsou potřeba ke komunikaci s webovou stránkou. Pro vyřešení toho problému kontaktujte svého hostitele.</string>
 	<string name="reader_empty_followed_blogs_search_title">Neodpovídají žádné weby</string>
 	<string name="reader_hint_search_followed_sites">Prohledat sledované stránky</string>
 	<string name="visual_editor_disabled">Vizuální editor zakázán</string>
@@ -43,10 +114,10 @@ Language: cs_CZ
 	<string name="reader_err_get_post_not_authorized_signin_fallback">Nemáte oprávnění pro zobrazení tohoto příspěvku. Zkuste se nejdřív přihlásit na WordPress.com nebo použijte akční tlačítko nahoře v prohlížeči.</string>
 	<string name="reader_err_get_post_not_authorized_signin">Nemáte oprávnění pro zobrazení tohoto příspěvku. Zkuste se přihlásit nejdřív přihlásit WordPress.com.</string>
 	<string name="reader_err_get_post_not_authorized_fallback">Nemáte oprávnění pro zobrazení tohoto příspěvku. Pomocí akčního tlačítka výše můžete vyzkoušet v prohlížeči.</string>
-	<string name="reader_snackbar_err_cannot_like_post_logged_out">Nelze použít "to se mi líbí", protože jste odhlášený od WordPress.com</string>
-	<string name="reader_toast_err_already_liked">Již jste tento komentář označili "to se mi líbí"</string>
+	<string name="reader_snackbar_err_cannot_like_post_logged_out">Nelze použít \"to se mi líbí\", protože jste odhlášený od WordPress.com</string>
+	<string name="reader_toast_err_already_liked">Již jste tento komentář označili \"to se mi líbí\"</string>
 	<string name="reader_toast_err_comment_not_found">Komentář nebyl nalezen!</string>
-	<string name="reader_toast_err_cannot_like_post">Selhalo označení příspěvku "to se mi líbí"</string>
+	<string name="reader_toast_err_cannot_like_post">Selhalo označení příspěvku \"to se mi líbí\"</string>
 	<string name="reader_title_post_detail_wpcom">WordPress.com příspěvek</string>
 	<string name="reader_title_deeplink">WordPress čtečka</string>
 	<string name="error_notif_q_action_reply">Nepodařilo se odpovědět na komentář. Zkuste to znovu později.</string>
@@ -61,7 +132,7 @@ Language: cs_CZ
 	<string name="comment_q_action_done_generic">Akce hotová!</string>
 	<string name="signout">Odhlásit se</string>
 	<string name="sign_in_wpcom">Přihlásit se k WordPress.com</string>
-	<string name="comment_liked">Komentář označen "to se mi líbí"</string>
+	<string name="comment_liked">Komentář označen \"to se mi líbí\"</string>
 	<string name="reader_label_global_related_posts">Více informací o WordPress.com</string>
 	<string name="reader_label_local_related_posts">Více na %s</string>
 	<string name="preference_open_device_settings">Otevřít nastavení v zařízení</string>
@@ -113,6 +184,7 @@ Language: cs_CZ
 	<string name="format_bar_description_ol">Uspořádaný seznam</string>
 	<string name="format_bar_description_more">Číst více</string>
 	<string name="format_bar_description_strike">Přeškrtnutí</string>
+	<string name="format_bar_description_quote">Blokovat citace</string>
 	<string name="format_bar_description_italic">Kurzíva</string>
 	<string name="format_bar_description_underline">Tlustě</string>
 	<string name="format_bar_description_bold">Tučně</string>
@@ -292,6 +364,8 @@ Language: cs_CZ
 	<string name="pending_email_change_snackbar">Kliknutím na ověřovací odkaz v emailu zaslaném na %1$s musíte potvrdit tuto adresu</string>
 	<string name="editor_toast_uploading_please_wait">Právě teď se nahrávají média. Počkejte, dokud se to nedokončí.</string>
 	<string name="error_refresh_comments_showing_older">Komentáře nemohou být v tuto chvíli aktualizonány - zobrazující se starší komentáře</string>
+	<string name="post_settings_set_featured_image">Nastavit náhledový obrázek</string>
+	<string name="post_settings_featured_image">Náhledový obrázek</string>
 	<string name="visual_editor_enabled">Vizuální editor povolen</string>
 	<string name="editor_content_placeholder">Sdílejte svůj příběh zde...</string>
 	<string name="editor_page_title_placeholder">Název stránky</string>
@@ -348,16 +422,16 @@ Language: cs_CZ
 	<string name="site_settings_paging_dialog_description">Rozdělit vlákna komentářů do více stránek.</string>
 	<string name="site_settings_paging_dialog_header">Komentářů na stránku</string>
 	<string name="site_settings_close_after_dialog_title">Uzavřít komentování</string>
-	<string name="site_settings_blacklist_description">Pokud komentář obsahuje jakékoliv z těchto slov ve svém obsahu, jméně, URL, e-mailu, nebo IP, bude označen jako spam. Můžete také zadat části slov, takže podmínce "press" bude odpovídat "WordPress".</string>
-	<string name="site_settings_hold_for_moderation_description">Pokud komentář obsahuje jakékoliv z těchto slov ve svém obsahu, jméně, URL, e-mailu, nebo IP, tento komentář bude pozdržen a moderován. Můžete také zadat části slov, takže podmínce "press" bude odpovídat "WordPress".</string>
+	<string name="site_settings_blacklist_description">Pokud komentář obsahuje jakékoliv z těchto slov ve svém obsahu, jméně, URL, e-mailu, nebo IP, bude označen jako spam. Můžete také zadat části slov, takže podmínce \"press\" bude odpovídat \"WordPress\".</string>
+	<string name="site_settings_hold_for_moderation_description">Pokud komentář obsahuje jakékoliv z těchto slov ve svém obsahu, jméně, URL, e-mailu, nebo IP, tento komentář bude pozdržen a moderován. Můžete také zadat části slov, takže podmínce \"press\" bude odpovídat \"WordPress\".</string>
 	<string name="site_settings_list_editor_input_hint">Zadejte slovo nebo frázi</string>
 	<string name="site_settings_list_editor_no_items_text">Žádné položky</string>
 	<string name="site_settings_learn_more_caption">Tato nastavení můžete změnit pro jednotlivé příspěvky.</string>
-	<string name="site_settings_rp_preview3_site">v "aktualizaci"</string>
+	<string name="site_settings_rp_preview3_site">v \"aktualizaci\"</string>
 	<string name="site_settings_rp_preview3_title">Zaměření upgradu: VideoPress pro svatby</string>
-	<string name="site_settings_rp_preview2_site">v "Aplikaci"</string>
+	<string name="site_settings_rp_preview2_site">v \"Aplikaci\"</string>
 	<string name="site_settings_rp_preview2_title">Aplikace WordPress pro Android má vylepšený vzhled</string>
-	<string name="site_settings_rp_preview1_site">v "Mobilu"</string>
+	<string name="site_settings_rp_preview1_site">v \"Mobilu\"</string>
 	<string name="site_settings_rp_preview1_title">Velký iPhone/iPad dostává nyní aktualizaci</string>
 	<string name="site_settings_rp_show_images_title">Zobrazit obrázky</string>
 	<string name="site_settings_rp_show_header_title">Zobrazit hlavičku</string>
@@ -437,6 +511,7 @@ Language: cs_CZ
 	<string name="reader_empty_followed_blogs_no_recent_posts_description">Stránky, které sledujete v poslední době neměly žádné příspěvky</string>
 	<string name="reader_empty_followed_blogs_no_recent_posts_title">Žádné nedávné příspěvky</string>
 	<string name="edit_media">Upravit média</string>
+	<string name="media_edit_copy_url_toast">URL adresa byla zkopírována do schránky</string>
 	<string name="media_details_label_date_uploaded">Nahráno</string>
 	<string name="media_details_label_date_added">Přidáno</string>
 	<string name="selected_theme">Vybraná šablona</string>
@@ -482,7 +557,7 @@ Language: cs_CZ
 	<string name="notifications_empty_action_comments">Připojte se ke konverzaci: komentujte příspěvky z webů, které sledujete.</string>
 	<string name="notifications_empty_action_unread">Začněte konverzaci: napište nový příspěvek.</string>
 	<string name="notifications_empty_action_all">Buďte aktivní! Komentujte příspěvky z webů, které sledujete.</string>
-	<string name="notifications_empty_likes">Žádné nové !to se mi líbí"...zatím.</string>
+	<string name="notifications_empty_likes">Žádné nové !to se mi líbí\"...zatím.</string>
 	<string name="notifications_empty_followers">Žádný nový sledující...zatím.</string>
 	<string name="notifications_empty_comments">Žádné nové komentáře...zatím.</string>
 	<string name="notifications_empty_unread">Všechny jsou přečtené.</string>
@@ -495,6 +570,7 @@ Language: cs_CZ
 	<string name="stats_widget_loading_data">Načítám data...</string>
 	<string name="stats_widget_name_for_blog">Dnešní statistiky pro %1$s</string>
 	<string name="stats_widget_name">Dnešní statistiky Wordpress</string>
+	<string name="post_settings_add_location_permission_required">Je vyžadován souhlas k přidání polohy</string>
 	<string name="add_media_permission_required">Je vyžadován souhlas k přidání souborů</string>
 	<string name="access_media_permission_required">Je vyžadován souhlas pro přístup k souborům</string>
 	<string name="stats_enable_rest_api_in_jetpack">Povolte modul JSON API v Jetpacku, k náhledu vašich statistik.</string>
@@ -527,6 +603,7 @@ Language: cs_CZ
 	<string name="notifications_tab">Karta oznámení</string>
 	<string name="email">Email</string>
 	<string name="notifications_wpcom_updates">Aktualizace WordPress.com</string>
+	<string name="notification_settings_item_other_account_emails_summary">Budeme vždy odesílat důležité emaily týkající se vašeho účtu, ale můžete také získat některé zajímavé bonusy.</string>
 	<string name="stats_insights_latest_post_trend">Bylo to %1$s od %2$s publikován. Zde je návod, jak byl příspěvek doposud upravován...</string>
 	<string name="stats_insights_latest_post_summary">Přehled posledních příspěvků</string>
 	<string name="button_revert">Vrátit</string>
@@ -570,7 +647,7 @@ Language: cs_CZ
 	<string name="me_connect_to_wordpress_com">Připojit k WordPress.com</string>
 	<string name="account_settings">Uživatelské nastavení</string>
 	<string name="me_btn_support">Pomoc a podpora</string>
-	<string name="site_picker_cant_hide_current_site">"%s" nebyl skrytý, protože je to aktuální stránka</string>
+	<string name="site_picker_cant_hide_current_site">\"%s\" nebyl skrytý, protože je to aktuální stránka</string>
 	<string name="site_picker_create_dotcom">Vytvořit web na WordPress.com</string>
 	<string name="site_picker_add_self_hosted">Přidat vlastní WordPress web</string>
 	<string name="site_picker_add_site">Přidat web</string>
@@ -634,6 +711,7 @@ Language: cs_CZ
 	<string name="stats_average_per_day">Průměr za den</string>
 	<string name="stats_recent_weeks">Poslední týdny</string>
 	<string name="error_copy_to_clipboard">Při kopírování textu do schránky nastala chyba</string>
+	<string name="post_uploading">Nahrávám příspěvek</string>
 	<string name="stats_visitors">Návštěvníci</string>
 	<string name="stats_views">Zobrazení</string>
 	<string name="stats_timeframe_years">Roky</string>
@@ -720,6 +798,7 @@ Language: cs_CZ
 	<string name="nux_help_description">Pro odpovědi na časté dotazy navštivte naše centrum nápovědy nebo fórum</string>
 	<string name="reader_empty_posts_in_tag">Neexistuje žádný příspěvek s tímto štítkem</string>
 	<string name="stats_no_blog">Statistiky pro daný web nebylo možné načíst</string>
+	<string name="sending_content">Nahrávání obsahu %s</string>
 	<string name="posts_empty_list">Žádné příspěvky. Přejete si nějaký vytvořit?</string>
 	<string name="pages_empty_list">Žádné stránky. Přejete si nějakou vytvořit?</string>
 	<string name="agree_terms_of_service">Založením účtu souhlasíte s našimi %1$sPodmínkami používání služby%2$s</string>
@@ -732,7 +811,7 @@ Language: cs_CZ
 	<string name="mnu_comment_liked">To se mi líbí</string>
 	<string name="reader_label_liked_by">To se líbí</string>
 	<string name="reader_label_like">To se mi líbí</string>
-	<string name="reader_empty_posts_liked">Žádné příspěvky jste neoznačili jako "to se mi líbí"</string>
+	<string name="reader_empty_posts_liked">Žádné příspěvky jste neoznačili jako \"to se mi líbí\"</string>
 	<string name="reader_toast_err_generic">Nepodařilo se provést tuto akci</string>
 	<string name="reader_toast_blog_blocked">Příspěvky z tohoto webu se již nebudou zobrazovat</string>
 	<string name="reader_toast_err_block_blog">Nepodařilo se zablokovat tento web</string>
@@ -801,7 +880,7 @@ Language: cs_CZ
 	<string name="username_required">Vlož uživatelské jméno</string>
 	<string name="username_not_allowed">Uživatelské jméno není povoleno</string>
 	<string name="username_must_be_at_least_four_characters">Uživatelské jméno musí být nejméně 4 znaky</string>
-	<string name="username_contains_invalid_characters">Uživatelské jméno nesmí obsahovat znak "_"</string>
+	<string name="username_contains_invalid_characters">Uživatelské jméno nesmí obsahovat znak \"_\"</string>
 	<string name="username_must_include_letters">Uživatelské Jméno musí mít alespoň 1 písmeno (a-z)</string>
 	<string name="email_invalid">Vlož platnou emailovou adresu</string>
 	<string name="email_not_allowed">Tato emailová adresa není dovolena</string>
@@ -819,7 +898,7 @@ Language: cs_CZ
 	<string name="blog_name_exists">Tento web již existuje</string>
 	<string name="blog_name_not_allowed">Tato adresa webu není povolena</string>
 	<string name="blog_name_must_be_at_least_four_characters">Adresa webu musí obsahovat alespoň 4 znaky</string>
-	<string name="blog_name_contains_invalid_characters">Adresa webu nesmí obsahovat znak "_"</string>
+	<string name="blog_name_contains_invalid_characters">Adresa webu nesmí obsahovat znak \"_\"</string>
 	<string name="blog_name_only_lowercase_letters_and_numbers">Adresa webu může obsahovat pouze malá písmena (a-z) a číslice</string>
 	<string name="blog_name_required">Vlož adresu webu</string>
 	<string name="invalid_url_message">Zkontrolujte platnost zadané adresy webu</string>
@@ -828,6 +907,7 @@ Language: cs_CZ
 	<string name="adding_cat_success">Rubrubrika úspěšně přidána</string>
 	<string name="cat_name_required">Název rubriky je vyžadován</string>
 	<string name="category_automatically_renamed">Název rubriky %1$s není platný. Byl změněn na %2$s.</string>
+	<string name="error_deleting_post">Nastala chyba při mazání příspěvku</string>
 	<string name="view_site">Zobrazit stránku</string>
 	<string name="new_media">Nahrát soubor</string>
 	<string name="new_post">Vytvořit příspěvěk</string>
@@ -875,6 +955,7 @@ Language: cs_CZ
 	<string name="media_error_no_permission">Nemáte oprávnění pro zobrazení mediální knihovny</string>
 	<string name="cannot_delete_multi_media_items">Některá média momentálně nelze odstranit. Zkuste to později.</string>
 	<string name="horizontal_alignment">Vodorovné zarovnání</string>
+	<string name="file_not_found">Nepodařilo se najít mediální soubor pro nahrávání. Nebyl odstraněný nebo přesunutý?</string>
 	<string name="comment_status_approved">Schváleno</string>
 	<string name="mnu_comment_approve">Schválit</string>
 	<string name="mnu_comment_unapprove">Zamítnout</string>
@@ -917,6 +998,8 @@ Language: cs_CZ
 	<string name="email_hint">Email</string>
 	<string name="email_cant_be_used_to_signup">Tuto emailovou adresu pro registraci nemůžete použít. Tento poskytovatel blokuje některé z našich emailů. Použijte jiného emailového poskytovatele.</string>
 	<string name="email_reserved">Tato emailová adresa již byla použita. Zkontrolujte prosím, zda nemáte v doručené poště aktivační email. Pokud aktivaci neprovedete hned, můžete zkusit znovu za pár dní.</string>
+	<string name="error_deleting_page">Při mazání stránky se vyskytla chyba.</string>
+	<string name="error_refresh_media">Média se nepodařilo obnovit</string>
 	<string name="share_url_page">Sdílení stránky</string>
 	<string name="deleting_page">Mazání stránky</string>
 	<string name="deleting_post">Smazat příspěvek</string>
@@ -1042,6 +1125,7 @@ Language: cs_CZ
 	<string name="incorrect_credentials">Nesprávné uživatelské jméno nebo heslo.</string>
 	<string name="password">Heslo</string>
 	<string name="username">Uživatelské jméno</string>
+	<string name="log_in">Přihlásit</string>
 	<string name="reader">Čtenář</string>
 	<string name="featured_in_post">Vložit obrázek do obsahu příspěvku</string>
 	<string name="no_network_title">Síť není dostupná</string>
@@ -1077,6 +1161,7 @@ Language: cs_CZ
 	<string name="upload_full_size_image">Nahrát a odkazovat na plný obrázek</string>
 	<string name="title">Název</string>
 	<string name="categories">Rubriky</string>
+	<string name="tags_separate_with_commas">Štítky (oddělte štítky čárkami)</string>
 	<string name="dlg_deleting_comments">Odstraňování komentářů</string>
 	<string name="sdcard_title">Vyžadována SD karta</string>
 	<string name="media">Média</string>

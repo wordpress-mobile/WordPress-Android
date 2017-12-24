@@ -9,13 +9,13 @@ import android.support.annotation.Nullable;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
 import android.view.animation.Interpolator;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
 import android.widget.ScrollView;
 
 import org.greenrobot.eventbus.Subscribe;
@@ -33,6 +33,7 @@ import org.wordpress.android.ui.RequestCodes;
 import org.wordpress.android.ui.accounts.LoginActivity;
 import org.wordpress.android.ui.accounts.LoginMode;
 import org.wordpress.android.ui.comments.CommentsListFragment.CommentStatusCriteria;
+import org.wordpress.android.ui.plugins.PluginUtils;
 import org.wordpress.android.ui.posts.EditPostActivity;
 import org.wordpress.android.ui.prefs.AppPrefs;
 import org.wordpress.android.ui.stats.service.StatsService;
@@ -74,6 +75,7 @@ public class MySiteFragment extends Fragment
     private LinearLayout mPeopleView;
     private LinearLayout mPageView;
     private LinearLayout mPlanContainer;
+    private LinearLayout mPluginsContainer;
     private View mConfigurationHeader;
     private View mSettingsView;
     private LinearLayout mAdminView;
@@ -155,6 +157,7 @@ public class MySiteFragment extends Fragment
         mThemesContainer = (LinearLayout) rootView.findViewById(R.id.row_themes);
         mPeopleView = (LinearLayout) rootView.findViewById(R.id.row_people);
         mPlanContainer = (LinearLayout) rootView.findViewById(R.id.row_plan);
+        mPluginsContainer = (LinearLayout) rootView.findViewById(R.id.row_plugins);
         mConfigurationHeader = rootView.findViewById(R.id.row_configuration);
         mSettingsView = rootView.findViewById(R.id.row_settings);
         mSharingView = rootView.findViewById(R.id.row_sharing);
@@ -257,6 +260,13 @@ public class MySiteFragment extends Fragment
             @Override
             public void onClick(View v) {
                 ActivityLauncher.viewCurrentBlogPeople(getActivity(), getSelectedSite());
+            }
+        });
+
+        mPluginsContainer.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                ActivityLauncher.viewCurrentBlogPlugins(getActivity(), getSelectedSite());
             }
         });
 
@@ -413,6 +423,8 @@ public class MySiteFragment extends Fragment
         boolean isAdminOrSelfHosted = site.getHasCapabilityManageOptions() || !SiteUtils.isAccessedViaWPComRest(site);
         mSettingsView.setVisibility(isAdminOrSelfHosted ? View.VISIBLE : View.GONE);
         mPeopleView.setVisibility(site.getHasCapabilityListUsers() ? View.VISIBLE : View.GONE);
+
+        mPluginsContainer.setVisibility(PluginUtils.isPluginFeatureAvailable(site) ? View.VISIBLE : View.GONE);
 
         // if either people or settings is visible, configuration header should be visible
         int settingsVisibility = (isAdminOrSelfHosted || site.getHasCapabilityListUsers()) ? View.VISIBLE : View.GONE;

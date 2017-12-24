@@ -1,0 +1,161 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:card_view="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/plugin_detail_container"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <include
+            android:id="@+id/toolbar"
+            layout="@layout/toolbar" />
+
+        <android.support.v7.widget.CardView
+            style="@style/PluginCardView"
+            card_view:cardBackgroundColor="@color/white"
+            card_view:cardCornerRadius="@dimen/cardview_default_radius">
+
+            <LinearLayout style="@style/PluginCardViewVerticalContainer">
+
+                <RelativeLayout style="@style/PluginCardViewHorizontalContainer">
+
+                    <TextView
+                        android:id="@+id/plugin_installed_version"
+                        style="@style/PluginCardViewPrimaryText" />
+
+                    <TextView
+                        android:id="@+id/plugin_available_version"
+                        style="@style/PluginCardViewPrimaryText"
+                        android:layout_below="@id/plugin_installed_version"
+                        android:textColor="@color/grey_darken_10" />
+
+                    <FrameLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentEnd="true"
+                        android:layout_alignParentRight="true"
+                        android:layout_centerVertical="true">
+
+                        <TextView
+                            android:id="@+id/plugin_btn_update"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:background="?android:attr/selectableItemBackground"
+                            android:padding="@dimen/margin_large"
+                            android:text="@string/update_verb"
+                            android:textAllCaps="true"
+                            android:textColor="@color/wp_blue_medium"
+                            android:textSize="@dimen/text_sz_medium" />
+
+                        <ProgressBar
+                            android:id="@+id/plugin_update_progress_bar"
+                            style="?android:attr/progressBarStyle"
+                            android:layout_width="@dimen/margin_extra_extra_medium_large"
+                            android:layout_height="@dimen/margin_extra_extra_medium_large"
+                            android:layout_gravity="center" />
+                    </FrameLayout>
+                </RelativeLayout>
+            </LinearLayout>
+
+        </android.support.v7.widget.CardView>
+
+        <android.support.v7.widget.CardView
+            style="@style/PluginCardView"
+            card_view:cardBackgroundColor="@color/white"
+            card_view:cardCornerRadius="@dimen/cardview_default_radius">
+
+            <LinearLayout style="@style/PluginCardViewVerticalContainer">
+
+                <RelativeLayout
+                    android:id="@+id/plugin_state_active_container"
+                    style="@style/PluginCardViewHorizontalContainer">
+
+                    <TextView
+                        style="@style/PluginCardViewPrimaryText"
+                        android:text="@string/plugin_detail_label_state_active" />
+
+                    <Switch
+                        android:id="@+id/plugin_state_active"
+                        style="@style/PluginCardViewSecondaryElement" />
+                </RelativeLayout>
+
+                <View style="@style/PostSettingsDivider" />
+
+                <RelativeLayout style="@style/PluginCardViewHorizontalContainer">
+
+                    <TextView
+                        style="@style/PluginCardViewPrimaryText"
+                        android:text="@string/plugin_detail_label_state_autoupdates" />
+
+                    <Switch
+                        android:id="@+id/plugin_state_autoupdates"
+                        style="@style/PluginCardViewSecondaryElement" />
+                </RelativeLayout>
+            </LinearLayout>
+        </android.support.v7.widget.CardView>
+
+        <android.support.v7.widget.CardView
+            style="@style/PluginCardView"
+            card_view:cardBackgroundColor="@color/white"
+            card_view:cardCornerRadius="@dimen/cardview_default_radius">
+
+            <LinearLayout style="@style/PluginCardViewVerticalContainer">
+
+                <RelativeLayout
+                    android:id="@+id/plugin_wp_org_page"
+                    style="@style/PluginCardViewHorizontalContainer"
+                    android:background="?android:attr/selectableItemBackground">
+
+                    <TextView
+                        style="@style/PluginCardViewPrimaryText"
+                        android:text="@string/wordpress_dot_org_plugin_page" />
+
+                    <ImageView
+                        style="@style/PluginCardViewSecondaryElement.ExternalLinkImage"
+                        android:contentDescription="@string/plugin_external_link_icon_content_description"
+                        app:srcCompat="@drawable/ic_external_black_24dp" />
+                </RelativeLayout>
+
+                <View style="@style/PostSettingsDivider" />
+
+                <RelativeLayout
+                    android:id="@+id/plugin_home_page"
+                    style="@style/PluginCardViewHorizontalContainer"
+                    android:background="?android:attr/selectableItemBackground">
+
+                    <TextView
+                        style="@style/PluginCardViewPrimaryText"
+                        android:text="@string/plugin_home_page" />
+
+                    <ImageView
+                        style="@style/PluginCardViewSecondaryElement.ExternalLinkImage"
+                        android:contentDescription="@string/plugin_external_link_icon_content_description"
+                        app:srcCompat="@drawable/ic_external_black_24dp" />
+                </RelativeLayout>
+            </LinearLayout>
+        </android.support.v7.widget.CardView>
+
+        <android.support.v7.widget.CardView
+            style="@style/PluginCardView"
+            card_view:cardBackgroundColor="@color/white"
+            card_view:cardCornerRadius="@dimen/cardview_default_radius">
+
+            <Button
+                android:id="@+id/plugin_btn_remove"
+                style="?android:attr/borderlessButtonStyle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="?android:attr/selectableItemBackground"
+                android:gravity="start|center_vertical"
+                android:padding="@dimen/margin_extra_large"
+                android:text="@string/plugin_btn_remove"
+                android:textAllCaps="true"
+                android:textColor="@color/alert_red" />
+        </android.support.v7.widget.CardView>
+    </LinearLayout>
+</ScrollView>
