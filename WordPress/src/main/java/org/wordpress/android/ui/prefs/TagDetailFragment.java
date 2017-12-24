@@ -20,6 +20,7 @@ import org.greenrobot.eventbus.ThreadMode;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.fluxc.Dispatcher;
+import org.wordpress.android.fluxc.annotations.action.Action;
 import org.wordpress.android.fluxc.generated.TaxonomyActionBuilder;
 import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.model.TermModel;
@@ -29,7 +30,7 @@ import org.wordpress.android.util.StringUtils;
 
 import javax.inject.Inject;
 
-import static org.wordpress.android.fluxc.action.TaxonomyAction.PUSHED_TERM;
+import static org.wordpress.android.ui.reader.utils.ReaderUtils.sanitizeWithDashes;
 
 /**
  * A fragment for editing a tag
@@ -68,6 +69,8 @@ public class TagDetailFragment extends Fragment {
     public static TagDetailFragment newInstance(@NonNull SiteModel site) {
         TagDetailFragment fragment = new TagDetailFragment();
         TermModel term = new TermModel();
+        term.setTaxonomy("post_tag");
+
         Bundle args = new Bundle();
         args.putSerializable(ARGS_TERM, term);
         args.putBoolean(ARGS_IS_NEW_TERM, true);
@@ -132,10 +135,7 @@ public class TagDetailFragment extends Fragment {
 
     @Override
     public boolean onOptionsItemSelected(final MenuItem item) {
-        if (item.getItemId() == android.R.id.home) {
-            // TODO
-            return true;
-        } else if (item.getItemId() == R.id.menu_trash) {
+        if (item.getItemId() == R.id.menu_trash) {
             confirmTrashTag();
             return true;
         }
@@ -150,6 +150,7 @@ public class TagDetailFragment extends Fragment {
         } else {
             getActivity().setTitle(mTerm.getName());
         }
+
         mNameView.setText(mTerm.getName());
         mDescriptionView.setText(mTerm.getDescription());
 
@@ -172,19 +173,23 @@ public class TagDetailFragment extends Fragment {
         if (hasChanged) {
             mTerm.setName(thisName);
             mTerm.setDescription(thisDescription);
+            mTerm.setSlug(sanitizeWithDashes(thisName));
             getArguments().putSerializable(ARGS_TERM, mTerm);
+            Action action;
             if (mIsNewTerm) {
-                mDispatcher.dispatch(TaxonomyActionBuilder.newPushTermAction(new TaxonomyStore.RemoteTermPayload(mTerm, mSite)));
+                action = TaxonomyActionBuilder.newPushTermAction(new TaxonomyStore.RemoteTermPayload(mTerm, mSite));
             } else {
-                mDispatcher.dispatch(TaxonomyActionBuilder.newUpdateTermAction(mTerm));
+                action = TaxonomyActionBuilder.newUpdateTermAction(mTerm);
             }
+            mDispatcher.dispatch(action);
         }
     }
 
     private void confirmTrashTag() {
+        String message = String.format(getString(R.string.dlg_confirm_trash_tag), mTerm.getName());
         AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(getActivity());
         dialogBuilder.setTitle(getResources().getText(R.string.trash));
-        dialogBuilder.setMessage(getResources().getText(R.string.dlg_confirm_trash_tag));
+        dialogBuilder.setMessage(message);
         dialogBuilder.setPositiveButton(getResources().getText(R.string.trash_yes),
                 new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int whichButton) {
@@ -206,6 +211,7 @@ public class TagDetailFragment extends Fragment {
         if (isAdded()) {
             switch (event.causeOfChange) {
                 case PUSHED_TERM:
+                case UPDATE_TERM:
                     mIsNewTerm = false;
                     getArguments().putBoolean(ARGS_IS_NEW_TERM, false);
                     break;
