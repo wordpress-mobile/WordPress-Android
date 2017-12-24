@@ -27,6 +27,9 @@ import org.wordpress.android.fluxc.model.TermModel;
 import org.wordpress.android.fluxc.store.TaxonomyStore;
 import org.wordpress.android.util.EditTextUtils;
 import org.wordpress.android.util.StringUtils;
+import org.wordpress.android.util.ToastUtils;
+
+import java.util.List;
 
 import javax.inject.Inject;
 
@@ -69,7 +72,7 @@ public class TagDetailFragment extends Fragment {
     public static TagDetailFragment newInstance(@NonNull SiteModel site) {
         TagDetailFragment fragment = new TagDetailFragment();
         TermModel term = new TermModel();
-        term.setTaxonomy("post_tag");
+        term.setTaxonomy(TaxonomyStore.DEFAULT_TAXONOMY_TAG);
 
         Bundle args = new Bundle();
         args.putSerializable(ARGS_TERM, term);
@@ -136,7 +139,8 @@ public class TagDetailFragment extends Fragment {
     @Override
     public boolean onOptionsItemSelected(final MenuItem item) {
         if (item.getItemId() == R.id.menu_trash) {
-            confirmTrashTag();
+            //confirmTrashTag();
+            saveChanges(); // TODO
             return true;
         }
         return super.onOptionsItemSelected(item);
@@ -168,6 +172,11 @@ public class TagDetailFragment extends Fragment {
             return;
         }
 
+        if (mIsNewTerm && termExists(thisName)) {
+            ToastUtils.showToast(getActivity(), R.string.error_tag_exists);
+            return;
+        }
+
         boolean hasChanged = !StringUtils.equals(mTerm.getName(), thisName)
                 || !StringUtils.equals(mTerm.getDescription(), thisDescription);
         if (hasChanged) {
@@ -183,6 +192,16 @@ public class TagDetailFragment extends Fragment {
             }
             mDispatcher.dispatch(action);
         }
+    }
+
+    private boolean termExists(@NonNull String termName) {
+        List<TermModel> terms = mTaxonomyStore.getTagsForSite(mSite);
+        for (TermModel term: terms) {
+            if (termName.equalsIgnoreCase(term.getName())) {
+                return true;
+            }
+        }
+        return false;
     }
 
     private void confirmTrashTag() {
