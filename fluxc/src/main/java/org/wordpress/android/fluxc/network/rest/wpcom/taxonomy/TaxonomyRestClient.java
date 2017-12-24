@@ -154,6 +154,44 @@ public class TaxonomyRestClient extends BaseWPComRestClient {
         add(request);
     }
 
+    public void removeTerm(final TermModel term, final SiteModel site) {
+        final String taxonomy = term.getTaxonomy();
+        String url = WPCOMREST.sites.site(site.getSiteId()).taxonomies.taxonomy(taxonomy).terms.new_.getUrlV1_1();
+
+        Map<String, Object> body = termModelToParams(term);
+
+        final WPComGsonRequest request = WPComGsonRequest.buildPostRequest(url, body,
+                TermWPComRestResponse.class,
+                new Listener<TermWPComRestResponse>() {
+                    @Override
+                    public void onResponse(TermWPComRestResponse response) {
+                        TermModel uploadedTerm = termResponseToTermModel(response);
+
+                        uploadedTerm.setId(term.getId());
+                        uploadedTerm.setLocalSiteId(site.getId());
+                        uploadedTerm.setTaxonomy(taxonomy);
+
+                        RemoteTermPayload payload = new RemoteTermPayload(uploadedTerm, site);
+                        mDispatcher.dispatch(TaxonomyActionBuilder.newPushedTermAction(payload));
+                    }
+                },
+                new BaseErrorListener() {
+                    @Override
+                    public void onErrorResponse(@NonNull BaseNetworkError error) {
+                        // Possible non-generic errors: 400 invalid_taxonomy, 409 duplicate
+                        RemoteTermPayload payload = new RemoteTermPayload(term, site);
+                        payload.error = new TaxonomyError(((WPComGsonNetworkError) error).apiError, error.message);
+                        mDispatcher.dispatch(TaxonomyActionBuilder.newPushedTermAction(payload));
+                    }
+                }
+        );
+
+        request.addQueryParameter("context", "edit");
+
+        request.disableRetries();
+        add(request);
+    }
+
     private TermModel termResponseToTermModel(TermWPComRestResponse from) {
         TermModel term = new TermModel();
         term.setRemoteTermId(from.ID);
