@@ -57,7 +57,7 @@ public class TagListActivity extends AppCompatActivity implements SearchView.OnQ
     private View mEmptyView;
 
     private TagListAdapter mAdapter;
-    private String mQuery;
+    private String mSavedQuery;
 
     private MenuItem mSearchMenuItem;
     private SearchView mSearchView;
@@ -84,7 +84,7 @@ public class TagListActivity extends AppCompatActivity implements SearchView.OnQ
             mSite = (SiteModel) getIntent().getSerializableExtra(WordPress.SITE);
         } else {
             mSite = (SiteModel) savedInstanceState.getSerializable(WordPress.SITE);
-            mQuery = savedInstanceState.getString(SAVED_QUERY);
+            mSavedQuery = savedInstanceState.getString(SAVED_QUERY);
         }
         if (mSite == null) {
             ToastUtils.showToast(this, R.string.blog_not_found, ToastUtils.Duration.SHORT);
@@ -141,7 +141,9 @@ public class TagListActivity extends AppCompatActivity implements SearchView.OnQ
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
         outState.putSerializable(WordPress.SITE, mSite);
-        outState.putString(SAVED_QUERY, mQuery);
+        if (mSearchMenuItem.isActionViewExpanded()) {
+            outState.putString(SAVED_QUERY, mSearchView.getQuery().toString());
+        }
     }
 
     @Override
@@ -153,11 +155,10 @@ public class TagListActivity extends AppCompatActivity implements SearchView.OnQ
         mSearchView.setOnQueryTextListener(this);
 
         // open search bar if we were searching for something before
-        if (!TextUtils.isEmpty(mQuery)) {
-            String tempQuery = mQuery;
+        if (!TextUtils.isEmpty(mSavedQuery)) {
             mSearchMenuItem.expandActionView();
-            onQueryTextSubmit(tempQuery);
-            mSearchView.setQuery(mQuery, true);
+            onQueryTextSubmit(mSavedQuery);
+            mSearchView.setQuery(mSavedQuery, true);
         }
 
         return super.onCreateOptionsMenu(menu);
@@ -175,10 +176,12 @@ public class TagListActivity extends AppCompatActivity implements SearchView.OnQ
             mSearchView = (SearchView) item.getActionView();
             mSearchView.setOnQueryTextListener(this);
 
-            if (!TextUtils.isEmpty(mQuery)) {
-                onQueryTextSubmit(mQuery);
-                mSearchView.setQuery(mQuery, true);
+            if (!TextUtils.isEmpty(mSavedQuery)) {
+                onQueryTextSubmit(mSavedQuery);
+                mSearchView.setQuery(mSavedQuery, true);
             }
+
+            mSearchMenuItem.expandActionView();
             return true;
         }
         return super.onOptionsItemSelected(item);
