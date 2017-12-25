@@ -1309,7 +1309,7 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
                     }
 
                     ClipDescription clipDescription = dragEvent.getClipDescription();
-                    if (clipDescription.getMimeTypeCount() < 1) {
+                    if (clipDescription == null || clipDescription.getMimeTypeCount() < 1) {
                         break;
                     }
 
