@@ -29,7 +29,8 @@ public class ThemeStore extends Store {
         public SiteModel site;
         public ThemeModel theme;
 
-        public FetchedCurrentThemePayload(ThemesError error) {
+        public FetchedCurrentThemePayload(@NonNull SiteModel site, @NonNull ThemesError error) {
+            this.site = site;
             this.error = error;
         }
 
@@ -343,7 +344,7 @@ public class ThemeStore extends Store {
             mThemeRestClient.fetchCurrentTheme(site);
         } else {
             ThemesError error = new ThemesError(ThemeErrorType.NOT_AVAILABLE);
-            FetchedCurrentThemePayload payload = new FetchedCurrentThemePayload(error);
+            FetchedCurrentThemePayload payload = new FetchedCurrentThemePayload(site, error);
             handleCurrentThemeFetched(payload);
         }
     }
