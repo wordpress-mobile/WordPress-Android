@@ -44,7 +44,8 @@ public class ThemeStore extends Store {
         public SiteModel site;
         public List<ThemeModel> themes;
 
-        public FetchedThemesPayload(ThemesError error) {
+        public FetchedThemesPayload(@NonNull SiteModel site, @NonNull ThemesError error) {
+            this.site = site;
             this.error = error;
         }
 
@@ -323,7 +324,7 @@ public class ThemeStore extends Store {
             mThemeRestClient.fetchJetpackInstalledThemes(site);
         } else {
             ThemesError error = new ThemesError(ThemeErrorType.NOT_AVAILABLE);
-            FetchedThemesPayload payload = new FetchedThemesPayload(error);
+            FetchedThemesPayload payload = new FetchedThemesPayload(site, error);
             handleInstalledThemesFetched(payload);
         }
     }
