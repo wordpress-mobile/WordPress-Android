@@ -55,6 +55,18 @@ public class ThemeStore extends Store {
         }
     }
 
+    public static class FetchedWpComThemesPayload extends Payload<ThemesError> {
+        public List<ThemeModel> themes;
+
+        public FetchedWpComThemesPayload(@NonNull ThemesError error) {
+            this.error = error;
+        }
+
+        public FetchedWpComThemesPayload(@NonNull List<ThemeModel> themes) {
+            this.themes = themes;
+        }
+    }
+
     public static class SearchThemesPayload extends Payload<ThemesError> {
         public String searchTerm;
 
@@ -127,7 +139,7 @@ public class ThemeStore extends Store {
         public SiteModel site;
         public ThemeAction origin;
 
-        public OnThemesChanged(SiteModel site) {
+        public OnThemesChanged(SiteModel site) { //TODO: rename and introduce another onchanged event for wpcom themes
             this.site = site;
         }
     }
@@ -208,7 +220,7 @@ public class ThemeStore extends Store {
                 fetchWpComThemes();
                 break;
             case FETCHED_WP_COM_THEMES:
-                handleWpComThemesFetched((FetchedSiteThemesPayload) action.getPayload());
+                handleWpComThemesFetched((FetchedWpComThemesPayload) action.getPayload());
                 break;
             case FETCH_INSTALLED_THEMES:
                 fetchInstalledThemes((SiteModel) action.getPayload());
@@ -308,9 +320,9 @@ public class ThemeStore extends Store {
         mThemeRestClient.fetchWpComThemes();
     }
 
-    private void handleWpComThemesFetched(@NonNull FetchedSiteThemesPayload payload) {
-        OnThemesChanged event = new OnThemesChanged(payload.site);
-        event.origin = ThemeAction.FETCH_WP_COM_THEMES;
+    private void handleWpComThemesFetched(@NonNull FetchedWpComThemesPayload payload) {
+        OnThemesChanged event = new OnThemesChanged(null);
+        event.origin = ThemeAction.FETCH_WP_COM_THEMES; //TODO: check WPAndroid once new onchanged event is introduced
         if (payload.isError()) {
             event.error = payload.error;
         } else {
