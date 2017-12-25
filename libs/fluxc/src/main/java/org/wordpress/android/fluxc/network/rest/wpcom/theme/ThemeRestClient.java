@@ -131,8 +131,8 @@ public class ThemeRestClient extends BaseWPComRestClient {
                     @Override
                     public void onResponse(WPComThemeListResponse response) {
                         AppLog.d(AppLog.T.API, "Received response to WP.com themes fetch request.");
-                        FetchedThemesPayload payload = new FetchedThemesPayload(null);
-                        payload.themes = createThemeListFromArrayResponse(response);
+                        List<ThemeModel> themes = createThemeListFromArrayResponse(response);
+                        FetchedThemesPayload payload = new FetchedThemesPayload(null, themes);
                         mDispatcher.dispatch(ThemeActionBuilder.newFetchedWpComThemesAction(payload));
                     }
                 }, new BaseRequest.BaseErrorListener() {
@@ -141,7 +141,7 @@ public class ThemeRestClient extends BaseWPComRestClient {
                         AppLog.e(AppLog.T.API, "Received error response to WP.com themes fetch request.");
                         ThemesError themeError = new ThemesError(
                                 ((WPComGsonRequest.WPComGsonNetworkError) error).apiError, error.message);
-                        FetchedThemesPayload payload = new FetchedThemesPayload(themeError);
+                        FetchedThemesPayload payload = new FetchedThemesPayload(null, themeError);
                         mDispatcher.dispatch(ThemeActionBuilder.newFetchedWpComThemesAction(payload));
                     }
                 }));
@@ -165,7 +165,7 @@ public class ThemeRestClient extends BaseWPComRestClient {
                         AppLog.e(AppLog.T.API, "Received error response to Jetpack installed themes fetch request.");
                         ThemesError themeError = new ThemesError(
                                 ((WPComGsonRequest.WPComGsonNetworkError) error).apiError, error.message);
-                        FetchedThemesPayload payload = new FetchedThemesPayload(themeError);
+                        FetchedThemesPayload payload = new FetchedThemesPayload(site, themeError);
                         mDispatcher.dispatch(ThemeActionBuilder.newFetchedInstalledThemesAction(payload));
                     }
                 }));
