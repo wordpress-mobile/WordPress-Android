@@ -54,10 +54,11 @@ public class TagListActivity extends AppCompatActivity implements SearchView.OnQ
     private SiteModel mSite;
     private RecyclerView mRecycler;
     private View mFabView;
+    private View mEmptyView;
+
     private TagListAdapter mAdapter;
     private String mQuery;
 
-    private Menu mMenu;
     private MenuItem mSearchMenuItem;
     private SearchView mSearchView;
 
@@ -108,6 +109,8 @@ public class TagListActivity extends AppCompatActivity implements SearchView.OnQ
         mRecycler.setHasFixedSize(true);
         mRecycler.setLayoutManager(new LinearLayoutManager(this));
 
+        mEmptyView = findViewById(R.id.empty_view);
+
         loadTags();
 
         if (savedInstanceState == null) {
@@ -143,11 +146,9 @@ public class TagListActivity extends AppCompatActivity implements SearchView.OnQ
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        mMenu = menu;
         getMenuInflater().inflate(R.menu.tag_list, menu);
 
         mSearchMenuItem = menu.findItem(R.id.menu_search);
-
         mSearchView = (SearchView) mSearchMenuItem.getActionView();
         mSearchView.setOnQueryTextListener(this);
 
@@ -236,10 +237,6 @@ public class TagListActivity extends AppCompatActivity implements SearchView.OnQ
         return (TagDetailFragment) getFragmentManager().findFragmentByTag(TagDetailFragment.TAG);
     }
 
-    private boolean hasDetailFragment() {
-        return getDetailFragment() != null;
-    }
-
     /*
      * shows the detail (edit) view for the passed term, or adds a new term is passed term is null
      */
@@ -271,6 +268,10 @@ public class TagListActivity extends AppCompatActivity implements SearchView.OnQ
     public boolean onQueryTextChange(String query) {
         mAdapter.filter(query);
         return true;
+    }
+
+    private void showEmptyView(boolean show) {
+        mEmptyView.setVisibility(show ? View.VISIBLE : View.GONE);
     }
 
     private class TagListAdapter extends RecyclerView.Adapter<TagListAdapter.TagViewHolder> {
@@ -317,6 +318,7 @@ public class TagListActivity extends AppCompatActivity implements SearchView.OnQ
                 }
             }
             notifyDataSetChanged();
+            showEmptyView(mFilteredTags.isEmpty());
         }
 
         class TagViewHolder extends RecyclerView.ViewHolder {
