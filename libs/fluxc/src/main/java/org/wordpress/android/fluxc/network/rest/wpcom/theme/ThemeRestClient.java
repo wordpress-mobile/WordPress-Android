@@ -189,7 +189,7 @@ public class ThemeRestClient extends BaseWPComRestClient {
                         AppLog.e(AppLog.T.API, "Received error response to current theme fetch request.");
                         ThemesError themeError = new ThemesError(
                                 ((WPComGsonRequest.WPComGsonNetworkError) error).apiError, error.message);
-                        FetchedCurrentThemePayload payload = new FetchedCurrentThemePayload(themeError);
+                        FetchedCurrentThemePayload payload = new FetchedCurrentThemePayload(site, themeError);
                         mDispatcher.dispatch(ThemeActionBuilder.newFetchedCurrentThemeAction(payload));
                     }
                 }));
