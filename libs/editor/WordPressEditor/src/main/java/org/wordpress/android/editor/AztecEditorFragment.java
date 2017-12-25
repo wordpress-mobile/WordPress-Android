@@ -52,6 +52,7 @@ import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.DisplayUtils;
 import org.wordpress.android.util.ImageUtils;
 import org.wordpress.android.util.ProfilingUtils;
+import org.wordpress.android.util.ShortcodeUtils;
 import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.UrlUtils;
@@ -72,6 +73,7 @@ import org.wordpress.aztec.plugins.shortcodes.AudioShortcodePlugin;
 import org.wordpress.aztec.plugins.shortcodes.CaptionShortcodePlugin;
 import org.wordpress.aztec.plugins.shortcodes.VideoShortcodePlugin;
 import org.wordpress.aztec.plugins.shortcodes.extensions.CaptionExtensionsKt;
+import org.wordpress.aztec.plugins.shortcodes.extensions.VideoPressExtensionsKt;
 import org.wordpress.aztec.plugins.shortcodes.spans.CaptionShortcodeSpan;
 import org.wordpress.aztec.plugins.wpcomments.CommentsTextFormat;
 import org.wordpress.aztec.plugins.wpcomments.WordPressCommentsPlugin;
@@ -98,6 +100,7 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
         AztecText.OnImageTappedListener,
         AztecText.OnVideoTappedListener,
         AztecText.OnMediaDeletedListener,
+        AztecText.OnVideoInfoRequestedListener,
         View.OnTouchListener,
         EditorMediaUploadListener,
         IAztecToolbarClickListener,
@@ -274,6 +277,7 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
                 .setOnImageTappedListener(this)
                 .setOnVideoTappedListener(this)
                 .setOnMediaDeletedListener(this)
+                .setOnVideoInfoRequestedListener(this)
                 .addPlugin(new WordPressCommentsPlugin(content))
                 .addPlugin(new MoreToolbarButton(content))
                 .addPlugin(new CaptionShortcodePlugin(content))
@@ -775,13 +779,20 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
             AztecAttributes attributes = new AztecAttributes();
             attributes.setValue(ATTR_SRC, mediaUrl);
 
-            setDefaultAttributes(attributes, mediaFile);
-
             if (mediaFile.isVideo()) {
+                // VideoPress special case here
+                if (!TextUtils.isEmpty(mediaFile.getVideoPressShortCode())) {
+                    attributes.removeAttribute(ATTR_SRC);
+                    String videoPressId = ShortcodeUtils.getVideoPressIdFromShortCode(mediaFile.getVideoPressShortCode());
+                    attributes.setValue(VideoPressExtensionsKt.getATTRIBUTE_VIDEOPRESS_HIDDEN_ID() , videoPressId);
+                    attributes.setValue(VideoPressExtensionsKt.getATTRIBUTE_VIDEOPRESS_HIDDEN_SRC() , mediaUrl);
+                }
+                // Do not set default attributes here like for pictures
                 addVideoUploadingClassIfMissing(attributes);
                 content.insertVideo(getLoadingVideoPlaceholder(), attributes);
                 overlayVideoIcon(0, new MediaPredicate(mediaUrl, ATTR_SRC));
             } else {
+                setDefaultAttributes(attributes, mediaFile);
                 content.insertImage(getLoadingImagePlaceholder(), attributes);
             }
 
@@ -793,6 +804,9 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
                     for (AztecMediaSpan currentClass : imageOrVideoSpans) {
                         if (currentClass.getAttributes().hasAttribute(ATTR_SRC) &&
                                 mediaUrl.equals(currentClass.getAttributes().getValue(ATTR_SRC))) {
+                            currentClass.setDrawable(newDrawable);
+                        } else if (currentClass.getAttributes().hasAttribute(VideoPressExtensionsKt.getATTRIBUTE_VIDEOPRESS_HIDDEN_SRC()) &&
+                                mediaUrl.equals(currentClass.getAttributes().getValue(VideoPressExtensionsKt.getATTRIBUTE_VIDEOPRESS_HIDDEN_SRC()))) {
                             currentClass.setDrawable(newDrawable);
                         }
                     }
@@ -830,9 +844,6 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
                         showErrorPlaceholder();
                         return;
                     }
-
-                    AztecAttributes attributes = new AztecAttributes();
-                    attributes.setValue(ATTR_SRC, mediaUrl);
 
                     int minimumDimension = DisplayUtils.dpToPx(getActivity(), MIN_BITMAP_DIMENSION_DP);
 
@@ -899,7 +910,6 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
             content.updateElementAttributes(localMediaIdPredicate, attrs);
 
             content.resetAttributedMediaSpan(localMediaIdPredicate);
-
         }
     }
 
@@ -920,6 +930,7 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
 
     @Override
     public void setUrlForVideoPressId(final String videoId, final String videoUrl, final String posterUrl) {
+        VideoPressExtensionsKt.updateVideoPressThumb(content, posterUrl, videoUrl, videoId);
     }
 
     @Override
@@ -1009,13 +1020,15 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
 
                 attrs.setValue(ATTR_CLASS, attributesWithClass.getAttributes().getValue(ATTR_CLASS));
 
-                /* TODO add video press attribute -> value here
-                if (mediaType.equals(MediaType.VIDEO)) {
+                // VideoPress special case here
+                if (mediaType.equals(MediaType.VIDEO) && !TextUtils.isEmpty(mediaFile.getVideoPressShortCode())) {
                     String videoPressId = ShortcodeUtils.getVideoPressIdFromShortCode(
                             mediaFile.getVideoPressShortCode());
-                    attrs.setValue( ?? , videoPressId);
+                    attrs.setValue(VideoPressExtensionsKt.getATTRIBUTE_VIDEOPRESS_HIDDEN_ID() , videoPressId);
+                    attrs.setValue(VideoPressExtensionsKt.getATTRIBUTE_VIDEOPRESS_HIDDEN_SRC() , remoteUrl);
+                    attrs.removeAttribute("src");
+                    attrs.removeAttribute(ATTR_CLASS);
                 }
-                */
 
                 // clear overlay
                 content.clearOverlays(predicate);
@@ -1187,6 +1200,14 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
             }
             mFailedMediaIds.add(localMediaId);
             mUploadingMediaProgressMax.remove(localMediaId);
+        }
+    }
+
+    @Override
+    public void onVideoInfoRequested(final AztecAttributes attrs) {
+        // VideoPress special case here
+        if (attrs.hasAttribute(VideoPressExtensionsKt.getATTRIBUTE_VIDEOPRESS_HIDDEN_ID())) {
+            mEditorFragmentListener.onVideoPressInfoRequested(attrs.getValue(VideoPressExtensionsKt.getATTRIBUTE_VIDEOPRESS_HIDDEN_ID()));
         }
     }
 
@@ -1539,8 +1560,8 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
                     try {
                         // Open the video preview in the default browser for now.
                         // TODO open the preview activity already available in media?
-                        final String imageSrc = meta.getString(ATTR_SRC);
-                        Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(imageSrc));
+                        final String videoURL = meta.getString(ATTR_SRC);
+                        Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(videoURL));
                         startActivity(browserIntent);
                     } catch (JSONException e) {
                         AppLog.e(AppLog.T.EDITOR, "Could not retrieve image url from JSON metadata");
