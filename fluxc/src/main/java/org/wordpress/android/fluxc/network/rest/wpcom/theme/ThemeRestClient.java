@@ -22,7 +22,7 @@ import org.wordpress.android.fluxc.network.rest.wpcom.theme.WPComThemeResponse.W
 import org.wordpress.android.fluxc.network.rest.wpcom.theme.JetpackThemeResponse.JetpackThemeListResponse;
 import org.wordpress.android.fluxc.store.ThemeStore.ThemesError;
 import org.wordpress.android.fluxc.store.ThemeStore.SearchedThemesPayload;
-import org.wordpress.android.fluxc.store.ThemeStore.FetchedThemesPayload;
+import org.wordpress.android.fluxc.store.ThemeStore.FetchedSiteThemesPayload;
 import org.wordpress.android.fluxc.store.ThemeStore.FetchedCurrentThemePayload;
 import org.wordpress.android.fluxc.store.ThemeStore.ActivateThemePayload;
 import org.wordpress.android.util.AppLog;
@@ -132,7 +132,7 @@ public class ThemeRestClient extends BaseWPComRestClient {
                     public void onResponse(WPComThemeListResponse response) {
                         AppLog.d(AppLog.T.API, "Received response to WP.com themes fetch request.");
                         List<ThemeModel> themes = createThemeListFromArrayResponse(response);
-                        FetchedThemesPayload payload = new FetchedThemesPayload(null, themes);
+                        FetchedSiteThemesPayload payload = new FetchedSiteThemesPayload(null, themes);
                         mDispatcher.dispatch(ThemeActionBuilder.newFetchedWpComThemesAction(payload));
                     }
                 }, new BaseRequest.BaseErrorListener() {
@@ -141,7 +141,7 @@ public class ThemeRestClient extends BaseWPComRestClient {
                         AppLog.e(AppLog.T.API, "Received error response to WP.com themes fetch request.");
                         ThemesError themeError = new ThemesError(
                                 ((WPComGsonRequest.WPComGsonNetworkError) error).apiError, error.message);
-                        FetchedThemesPayload payload = new FetchedThemesPayload(null, themeError);
+                        FetchedSiteThemesPayload payload = new FetchedSiteThemesPayload(null, themeError);
                         mDispatcher.dispatch(ThemeActionBuilder.newFetchedWpComThemesAction(payload));
                     }
                 }));
@@ -156,7 +156,7 @@ public class ThemeRestClient extends BaseWPComRestClient {
                     public void onResponse(JetpackThemeListResponse response) {
                         AppLog.d(AppLog.T.API, "Received response to Jetpack installed themes fetch request.");
                         List<ThemeModel> themes = createThemeListFromJetpackResponse(response);
-                        FetchedThemesPayload payload = new FetchedThemesPayload(site, themes);
+                        FetchedSiteThemesPayload payload = new FetchedSiteThemesPayload(site, themes);
                         mDispatcher.dispatch(ThemeActionBuilder.newFetchedInstalledThemesAction(payload));
                     }
                 }, new BaseRequest.BaseErrorListener() {
@@ -165,7 +165,7 @@ public class ThemeRestClient extends BaseWPComRestClient {
                         AppLog.e(AppLog.T.API, "Received error response to Jetpack installed themes fetch request.");
                         ThemesError themeError = new ThemesError(
                                 ((WPComGsonRequest.WPComGsonNetworkError) error).apiError, error.message);
-                        FetchedThemesPayload payload = new FetchedThemesPayload(site, themeError);
+                        FetchedSiteThemesPayload payload = new FetchedSiteThemesPayload(site, themeError);
                         mDispatcher.dispatch(ThemeActionBuilder.newFetchedInstalledThemesAction(payload));
                     }
                 }));
