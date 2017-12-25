@@ -40,16 +40,16 @@ public class ThemeStore extends Store {
         }
     }
 
-    public static class FetchedThemesPayload extends Payload<ThemesError> {
+    public static class FetchedSiteThemesPayload extends Payload<ThemesError> {
         public SiteModel site;
         public List<ThemeModel> themes;
 
-        public FetchedThemesPayload(@NonNull SiteModel site, @NonNull ThemesError error) {
+        public FetchedSiteThemesPayload(@NonNull SiteModel site, @NonNull ThemesError error) {
             this.site = site;
             this.error = error;
         }
 
-        public FetchedThemesPayload(@NonNull SiteModel site, @NonNull List<ThemeModel> themes) {
+        public FetchedSiteThemesPayload(@NonNull SiteModel site, @NonNull List<ThemeModel> themes) {
             this.site = site;
             this.themes = themes;
         }
@@ -208,13 +208,13 @@ public class ThemeStore extends Store {
                 fetchWpComThemes();
                 break;
             case FETCHED_WP_COM_THEMES:
-                handleWpComThemesFetched((FetchedThemesPayload) action.getPayload());
+                handleWpComThemesFetched((FetchedSiteThemesPayload) action.getPayload());
                 break;
             case FETCH_INSTALLED_THEMES:
                 fetchInstalledThemes((SiteModel) action.getPayload());
                 break;
             case FETCHED_INSTALLED_THEMES:
-                handleInstalledThemesFetched((FetchedThemesPayload) action.getPayload());
+                handleInstalledThemesFetched((FetchedSiteThemesPayload) action.getPayload());
                 break;
             case FETCH_PURCHASED_THEMES:
                 break;
@@ -308,7 +308,7 @@ public class ThemeStore extends Store {
         mThemeRestClient.fetchWpComThemes();
     }
 
-    private void handleWpComThemesFetched(@NonNull FetchedThemesPayload payload) {
+    private void handleWpComThemesFetched(@NonNull FetchedSiteThemesPayload payload) {
         OnThemesChanged event = new OnThemesChanged(payload.site);
         event.origin = ThemeAction.FETCH_WP_COM_THEMES;
         if (payload.isError()) {
@@ -324,12 +324,12 @@ public class ThemeStore extends Store {
             mThemeRestClient.fetchJetpackInstalledThemes(site);
         } else {
             ThemesError error = new ThemesError(ThemeErrorType.NOT_AVAILABLE);
-            FetchedThemesPayload payload = new FetchedThemesPayload(site, error);
+            FetchedSiteThemesPayload payload = new FetchedSiteThemesPayload(site, error);
             handleInstalledThemesFetched(payload);
         }
     }
 
-    private void handleInstalledThemesFetched(@NonNull FetchedThemesPayload payload) {
+    private void handleInstalledThemesFetched(@NonNull FetchedSiteThemesPayload payload) {
         OnThemesChanged event = new OnThemesChanged(payload.site);
         event.origin = ThemeAction.FETCH_INSTALLED_THEMES;
         if (payload.isError()) {
