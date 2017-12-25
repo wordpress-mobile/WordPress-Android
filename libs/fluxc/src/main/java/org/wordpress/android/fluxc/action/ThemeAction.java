@@ -5,11 +5,12 @@ import org.wordpress.android.fluxc.annotations.ActionEnum;
 import org.wordpress.android.fluxc.annotations.action.IAction;
 import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.model.ThemeModel;
-import org.wordpress.android.fluxc.store.ThemeStore.SearchThemesPayload;
-import org.wordpress.android.fluxc.store.ThemeStore.SearchedThemesPayload;
+import org.wordpress.android.fluxc.store.ThemeStore.ActivateThemePayload;
 import org.wordpress.android.fluxc.store.ThemeStore.FetchedCurrentThemePayload;
 import org.wordpress.android.fluxc.store.ThemeStore.FetchedSiteThemesPayload;
-import org.wordpress.android.fluxc.store.ThemeStore.ActivateThemePayload;
+import org.wordpress.android.fluxc.store.ThemeStore.FetchedWpComThemesPayload;
+import org.wordpress.android.fluxc.store.ThemeStore.SearchThemesPayload;
+import org.wordpress.android.fluxc.store.ThemeStore.SearchedThemesPayload;
 
 @ActionEnum
 public enum ThemeAction implements IAction {
@@ -32,7 +33,7 @@ public enum ThemeAction implements IAction {
     DELETE_THEME,
 
     // Remote responses
-    @Action(payloadType = FetchedSiteThemesPayload.class)
+    @Action(payloadType = FetchedWpComThemesPayload.class)
     FETCHED_WP_COM_THEMES,
     @Action(payloadType = FetchedSiteThemesPayload.class)
     FETCHED_INSTALLED_THEMES,
