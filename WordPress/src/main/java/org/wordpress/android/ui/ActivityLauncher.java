@@ -34,6 +34,7 @@ import org.wordpress.android.ui.people.PeopleManagementActivity;
 import org.wordpress.android.ui.photopicker.PhotoPickerActivity;
 import org.wordpress.android.ui.photopicker.PhotoPickerFragment;
 import org.wordpress.android.ui.plans.PlansActivity;
+import org.wordpress.android.ui.posts.ContentType;
 import org.wordpress.android.ui.plugins.PluginDetailActivity;
 import org.wordpress.android.ui.plugins.PluginListActivity;
 import org.wordpress.android.ui.plugins.PluginUtils;
@@ -65,6 +66,10 @@ import org.wordpress.passcodelock.AppLockManager;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import static org.wordpress.android.ui.posts.ContentType.PAGE;
+import static org.wordpress.android.ui.posts.ContentType.PORTFOLIO;
+import static org.wordpress.android.ui.posts.ContentType.POST;
 
 public class ActivityLauncher {
 
@@ -109,13 +114,6 @@ public class ActivityLauncher {
         context.startActivity(intent);
     }
 
-    public static void viewCurrentBlogPosts(Context context, SiteModel site) {
-        Intent intent = new Intent(context, PostsListActivity.class);
-        intent.putExtra(WordPress.SITE, site);
-        context.startActivity(intent);
-        AnalyticsUtils.trackWithSiteDetails(AnalyticsTracker.Stat.OPENED_POSTS, site);
-    }
-
     public static void viewCurrentBlogMedia(Context context, SiteModel site) {
         Intent intent = new Intent(context, MediaBrowserActivity.class);
         intent.putExtra(WordPress.SITE, site);
@@ -124,12 +122,24 @@ public class ActivityLauncher {
         AnalyticsUtils.trackWithSiteDetails(AnalyticsTracker.Stat.OPENED_MEDIA_LIBRARY, site);
     }
 
+    public static void viewCurrentBlogPosts(Context context, SiteModel site) {
+        openPostListActivity(context, site, POST, AnalyticsTracker.Stat.OPENED_POSTS);
+    }
+
     public static void viewCurrentBlogPages(Context context, SiteModel site) {
+        openPostListActivity(context, site, PAGE, AnalyticsTracker.Stat.OPENED_PAGES);
+    }
+
+    public static void viewCurrentBlogPortfolio(Context context, SiteModel site) {
+        openPostListActivity(context, site, PORTFOLIO, AnalyticsTracker.Stat.OPENED_PORTFOLIO);
+    }
+
+    private static void openPostListActivity(Context context, SiteModel site, int contentType, AnalyticsTracker.Stat tag) {
         Intent intent = new Intent(context, PostsListActivity.class);
         intent.putExtra(WordPress.SITE, site);
-        intent.putExtra(PostsListActivity.EXTRA_VIEW_PAGES, true);
+        intent.putExtra(PostsListActivity.EXTRA_CONTENT_TYPE, contentType);
         context.startActivity(intent);
-        AnalyticsUtils.trackWithSiteDetails(AnalyticsTracker.Stat.OPENED_PAGES, site);
+        AnalyticsUtils.trackWithSiteDetails(tag, site);
     }
 
     public static void viewCurrentBlogComments(Context context, SiteModel site) {
@@ -218,12 +228,12 @@ public class ActivityLauncher {
         activity.startActivityForResult(intent, RequestCodes.PREVIEW_POST);
     }
 
-    public static void addNewPostOrPageForResult(Activity activity, SiteModel site, boolean isPage, boolean isPromo) {
+    public static void addNewPostOrPageForResult(Activity activity, SiteModel site, @ContentType int contentType, boolean isPromo) {
         if (site == null) return;
 
         Intent intent = new Intent(activity, EditPostActivity.class);
         intent.putExtra(WordPress.SITE, site);
-        intent.putExtra(EditPostActivity.EXTRA_IS_PAGE, isPage);
+        intent.putExtra(EditPostActivity.EXTRA_CONTENT_TYPE, contentType);
         intent.putExtra(EditPostActivity.EXTRA_IS_PROMO, isPromo);
         activity.startActivityForResult(intent, RequestCodes.EDIT_POST);
     }
@@ -319,19 +329,19 @@ public class ActivityLauncher {
     }
 
     public static void showLoginEpilogueForResult(Activity activity, boolean showAndReturn,
-            ArrayList<Integer> oldSitesIds) {
+                                                  ArrayList<Integer> oldSitesIds) {
         Intent intent = new Intent(activity, LoginEpilogueActivity.class);
         intent.putExtra(LoginEpilogueActivity.EXTRA_SHOW_AND_RETURN, showAndReturn);
         intent.putIntegerArrayListExtra(LoginEpilogueActivity.ARG_OLD_SITES_IDS, oldSitesIds);
         activity.startActivityForResult(intent, RequestCodes.SHOW_LOGIN_EPILOGUE_AND_RETURN);
     }
 
-    public static void viewStatsSinglePostDetails(Context context, SiteModel site, PostModel post, boolean isPage) {
+    public static void viewStatsSinglePostDetails(Context context, SiteModel site, PostModel post, @ContentType int contentType) {
         if (post == null) return;
 
         StatsPostModel statsPostModel = new StatsPostModel(site.getSiteId(),
                 String.valueOf(post.getRemotePostId()), post.getTitle(), post.getLink(),
-                isPage ? StatsConstants.ITEM_TYPE_PAGE : StatsConstants.ITEM_TYPE_POST);
+                contentType == PAGE ? StatsConstants.ITEM_TYPE_PAGE : StatsConstants.ITEM_TYPE_POST);
         viewStatsSinglePostDetails(context, statsPostModel);
     }
 

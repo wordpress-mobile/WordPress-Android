@@ -1,6 +1,7 @@
 package org.wordpress.android;
 
 import android.os.Build;
+import android.support.multidex.BuildConfig;
 
 import org.junit.After;
 import org.junit.Assert;

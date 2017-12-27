@@ -310,7 +310,7 @@ class PostUploadNotifier {
         notificationIntent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
         notificationIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         notificationIntent.putExtra(WordPress.SITE, site);
-        notificationIntent.putExtra(PostsListActivity.EXTRA_VIEW_PAGES, post.isPage());
+        notificationIntent.putExtra(PostsListActivity.EXTRA_CONTENT_TYPE, post.isPage());
         PendingIntent pendingIntentPost = PendingIntent.getActivity(mContext,
                 (int)notificationId,
                 notificationIntent, PendingIntent.FLAG_ONE_SHOT);
@@ -440,7 +440,7 @@ class PostUploadNotifier {
         notificationIntent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
         notificationIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         notificationIntent.putExtra(WordPress.SITE, site);
-        notificationIntent.putExtra(PostsListActivity.EXTRA_VIEW_PAGES, post.isPage());
+        notificationIntent.putExtra(PostsListActivity.EXTRA_CONTENT_TYPE, post.isPage());
         notificationIntent.putExtra(PostsListActivity.EXTRA_TARGET_POST_LOCAL_ID, post.getId());
         notificationIntent.setAction(String.valueOf(notificationId));
 

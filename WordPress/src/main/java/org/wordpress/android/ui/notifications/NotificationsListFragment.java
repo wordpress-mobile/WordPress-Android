@@ -35,6 +35,7 @@ import org.wordpress.android.ui.main.WPMainActivity;
 import org.wordpress.android.ui.notifications.adapters.NotesAdapter;
 import org.wordpress.android.ui.notifications.services.NotificationsUpdateService;
 import org.wordpress.android.ui.notifications.utils.NotificationsActions;
+import org.wordpress.android.ui.posts.ContentType;
 import org.wordpress.android.util.AniUtils;
 import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.helpers.SwipeToRefreshHelper;
@@ -418,7 +419,7 @@ public class NotificationsListFragment extends Fragment implements WPMainActivit
 
         int i = mFilterRadioGroup.getCheckedRadioButtonId();
         if (i == R.id.notifications_filter_unread) { // Create a new post
-            ActivityLauncher.addNewPostOrPageForResult(getActivity(), getSelectedSite(), false, false);
+            ActivityLauncher.addNewPostOrPageForResult(getActivity(), getSelectedSite(), ContentType.POST, false);
         } else {// Switch to Reader tab
             if (getActivity() instanceof WPMainActivity) {
                 ((WPMainActivity) getActivity()).setReaderTabActive();

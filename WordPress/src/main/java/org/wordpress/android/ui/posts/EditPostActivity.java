@@ -152,6 +152,9 @@ import javax.inject.Inject;
 
 import de.greenrobot.event.EventBus;
 
+import static org.wordpress.android.ui.posts.ContentType.PAGE;
+import static org.wordpress.android.ui.posts.ContentType.POST;
+
 public class EditPostActivity extends AppCompatActivity implements
         EditorFragmentActivity,
         EditorBetaClickListener,
@@ -164,7 +167,7 @@ public class EditPostActivity extends AppCompatActivity implements
         EditPostSettingsFragment.EditPostActivityHook {
 
     public static final String EXTRA_POST_LOCAL_ID = "postModelLocalId";
-    public static final String EXTRA_IS_PAGE = "isPage";
+    public static final String EXTRA_CONTENT_TYPE = "contentType";
     public static final String EXTRA_IS_PROMO = "isPromo";
     public static final String EXTRA_IS_QUICKPRESS = "isQuickPress";
     public static final String EXTRA_QUICKPRESS_BLOG_ID = "quickPressBlogId";
@@ -220,8 +223,8 @@ public class EditPostActivity extends AppCompatActivity implements
 
     private EditorMediaUploadListener mEditorMediaUploadListener;
 
+    private int mContentType;
     private boolean mIsNewPost;
-    private boolean mIsPage;
     private boolean mIsPromo;
     private boolean mHasSetPostContent;
 
@@ -297,7 +300,7 @@ public class EditPostActivity extends AppCompatActivity implements
                 }
 
                 if (extras != null) {
-                    mIsPage = extras.getBoolean(EXTRA_IS_PAGE);
+                    mContentType = extras.getInt(EXTRA_CONTENT_TYPE);
                     mIsPromo = extras.getBoolean(EXTRA_IS_PROMO);
                 }
                 mIsNewPost = true;
@@ -321,7 +324,8 @@ public class EditPostActivity extends AppCompatActivity implements
                     categories.add((long) SiteSettingsInterface.getDefaultCategory(WordPress.getContext()));
                     postFormat = SiteSettingsInterface.getDefaultFormat(WordPress.getContext());
                 }
-                mPost = mPostStore.instantiatePostModel(mSite, mIsPage, categories, postFormat);
+                //TODO Portfolio support?
+                mPost = mPostStore.instantiatePostModel(mSite, mContentType == PAGE, categories, postFormat);
                 mPost.setStatus(PostStatus.PUBLISHED.toString());
             } else if (extras != null) {
                 // Load post passed in extras
@@ -431,7 +435,8 @@ public class EditPostActivity extends AppCompatActivity implements
             mMediaMarkedUploadingOnStartIds =
                     AztecEditorFragment.getMediaMarkedUploadingInPostContent(this, mPost.getContent());
             Collections.sort(mMediaMarkedUploadingOnStartIds);
-            mIsPage = mPost.isPage();
+            //TODO Portfolio support
+            mContentType = mPost.isPage() ? PAGE : POST;
         }
     }
 
@@ -1180,7 +1185,7 @@ public class EditPostActivity extends AppCompatActivity implements
         Intent i = getIntent();
         i.putExtra(EXTRA_SAVED_AS_LOCAL_DRAFT, savedLocally);
         i.putExtra(EXTRA_HAS_FAILED_MEDIA, hasFailedMedia());
-        i.putExtra(EXTRA_IS_PAGE, mIsPage);
+        i.putExtra(EXTRA_CONTENT_TYPE, mContentType);
         i.putExtra(EXTRA_HAS_CHANGES, saved);
         i.putExtra(EXTRA_POST_LOCAL_ID, mPost.getId());
         setResult(RESULT_OK, i);
@@ -1261,7 +1266,8 @@ public class EditPostActivity extends AppCompatActivity implements
                     EditPostActivity.this.runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
-                            String message = getString(mIsPage ? R.string.error_publish_empty_page : R.string.error_publish_empty_post);
+                            //TODO Portfolio support
+                            String message = getString(mContentType == PAGE ? R.string.error_publish_empty_page : R.string.error_publish_empty_post);
                             ToastUtils.showToast(EditPostActivity.this, message, Duration.SHORT);
                         }
                     });
@@ -1582,7 +1588,8 @@ public class EditPostActivity extends AppCompatActivity implements
 
         // Set up the placeholder text
         mEditorFragment.setContentPlaceholder(getString(R.string.editor_content_placeholder));
-        mEditorFragment.setTitlePlaceholder(getString(mIsPage ? R.string.editor_page_title_placeholder :
+        //TODO Portfolio support
+        mEditorFragment.setTitlePlaceholder(getString(mContentType == PAGE ? R.string.editor_page_title_placeholder :
                 R.string.editor_post_title_placeholder));
 
         // Set post title and content
