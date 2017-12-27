@@ -764,7 +764,13 @@ public class WordPress extends MultiDexApplication implements HasServiceInjector
             // the receiver twice.
             if (mConnectionReceiverRegistered) {
                 mConnectionReceiverRegistered = false;
-                unregisterReceiver(ConnectionChangeReceiver.getInstance());
+                try {
+                    unregisterReceiver(ConnectionChangeReceiver.getInstance());
+                    AppLog.d(T.MAIN, "ConnectionChangeReceiver successfully unregistered");
+                } catch (IllegalArgumentException e) {
+                    AppLog.e(T.MAIN, "ConnectionChangeReceiver was already unregistered");
+                    Crashlytics.logException(e);
+                }
             }
         }
 

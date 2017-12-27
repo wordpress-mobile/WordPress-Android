@@ -98,8 +98,8 @@ public class EditorFragment extends EditorFragmentAbstract implements View.OnCli
 
     private EditorWebViewAbstract mWebView;
     private View mSourceView;
-    private SourceViewEditText mSourceViewTitle;
-    private SourceViewEditText mSourceViewContent;
+    private EditTextWithKeyBackListener mSourceViewTitle;
+    private EditTextWithKeyBackListener mSourceViewContent;
 
     private int mSelectionStart;
     private int mSelectionEnd;
@@ -339,8 +339,8 @@ public class EditorFragment extends EditorFragmentAbstract implements View.OnCli
         // -- HTML mode configuration
 
         mSourceView = view.findViewById(R.id.sourceview);
-        mSourceViewTitle = (SourceViewEditText) view.findViewById(R.id.sourceview_title);
-        mSourceViewContent = (SourceViewEditText) view.findViewById(R.id.sourceview_content);
+        mSourceViewTitle = (EditTextWithKeyBackListener) view.findViewById(R.id.sourceview_title);
+        mSourceViewContent = (EditTextWithKeyBackListener) view.findViewById(R.id.sourceview_content);
 
         // Toggle format bar on/off as user changes focus between title and content in HTML mode
         mSourceViewTitle.setOnFocusChangeListener(new View.OnFocusChangeListener() {

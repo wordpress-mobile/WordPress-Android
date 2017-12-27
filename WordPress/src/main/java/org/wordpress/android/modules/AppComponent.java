@@ -55,6 +55,8 @@ import org.wordpress.android.ui.people.RoleChangeDialogFragment;
 import org.wordpress.android.ui.people.RoleSelectDialogFragment;
 import org.wordpress.android.ui.photopicker.PhotoPickerActivity;
 import org.wordpress.android.ui.plans.PlansActivity;
+import org.wordpress.android.ui.plugins.PluginDetailActivity;
+import org.wordpress.android.ui.plugins.PluginListActivity;
 import org.wordpress.android.ui.posts.AddCategoryFragment;
 import org.wordpress.android.ui.posts.EditPostActivity;
 import org.wordpress.android.ui.posts.EditPostSettingsFragment;
@@ -242,6 +244,9 @@ public interface AppComponent extends AndroidInjector<WordPress> {
     void inject(AddCategoryFragment object);
 
     void inject(HtmlToSpannedConverter object);
+
+    void inject(PluginListActivity object);
+    void inject(PluginDetailActivity object);
 
     // Allows us to inject the application without having to instantiate any modules, and provides the Application
     // in the app graph

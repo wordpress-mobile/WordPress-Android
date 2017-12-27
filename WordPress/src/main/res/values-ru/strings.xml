@@ -1,11 +1,26 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2017-11-23 14:42:19+0000
+Translation-Revision-Date: 2017-12-13 15:00:06+0000
 Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);
 Generator: GlotPress/2.4.0-alpha
 Language: ru
 -->
 <resources>
+	<string name="notification_login_failed">Произошла ошибка</string>
+	<string name="notification_2fa_needed">Пожалуйста, введите код авторизации для продолжения.</string>
+	<string name="notification_error_wrong_password">Пожалуйста, перепроверьте свой пароль для продолжения.</string>
+	<string name="notification_login_title_stopped">Вход остановлен</string>
+	<string name="notification_logging_in">Пожалуйста подождите пока авторизуемся.</string>
+	<string name="notification_login_title_in_progress">Вход ...</string>
+	<string name="notification_logged_in">Нажмите чтобы продолжить.</string>
+	<string name="notification_login_title_success">Вход успешен!</string>
+	<string name="login_error_generic_start">Процесс входа в Google не может быть запущен.</string>
+	<string name="site_creating_success">Успешно!</string>
+	<string name="site_creating_failed">Извините, произошла ошибка при создании вашего сайта :(</string>
+	<string name="site_creating_set_theme">Настраиваем тему...</string>
+	<string name="site_creating_set_tagline">Настраиваем подзаголовки...</string>
+	<string name="site_creating_fetching_info">Получаем информацию о сайте...</string>
+	<string name="site_creating_label">Подготовка сайта...</string>
 	<string name="login_empty_password">Пожалуйста, введите пароль</string>
 	<string name="email_not_registered_wpcom">Хм, этот email адрес не зарегистрирован на WordPress.com.\nВозможно вы пытаетесь получить доступ к сайту на своем хостинге? Войдите используя ссылка внизу этого экрана.</string>
 	<string name="login_text_otp_another">Пришлите мне другой код.</string>
@@ -55,7 +70,7 @@ Language: ru
 	<string name="jetpack_disconnect_success_toast">Сайт отключен</string>
 	<string name="jetpack_disconnect_confirm">Отключить</string>
 	<string name="jetpack_disconnect_confirmation_message">Вы точно хотите отключить Jetpack от этого сайта?</string>
-	<string name="jetpack_disconnect_pref_title">"Отключить от WordPress.com"</string>
+	<string name="jetpack_disconnect_pref_title">\"Отключить от WordPress.com\"</string>
 	<string name="site_settings_jetpack_whitelist_description">Вы можете внести IP адрес или диапазон адресов в белый список, они не будут блокироваться Jetpack. Приемлимы IPv4 и IPv6. Для указания диапазона, введите начальный и конечный адрес разделенные тире. Пример: 12.12.12.1–12.12.12.100</string>
 	<string name="jetpack_require_two_factor_title">Требуется 2-факторная авторизация</string>
 	<string name="jetpack_match_wpcom_via_email_title">Использовать сопоставление учетных записей по email адресу</string>
@@ -119,7 +134,7 @@ Language: ru
 	<string name="login_site_address_help_image">Адрес сайта отображается на навигационной панели вашего веб-браузера</string>
 	<string name="error_unknown_page">Не удалось найти страницу на сервере</string>
 	<string name="error_publish_empty_page">Нельзя опубликовать пустую страницу.</string>
-	<string name="upload_failed_param">Ошибка загрузки "%s"</string>
+	<string name="upload_failed_param">Ошибка загрузки \"%s\"</string>
 	<string name="cannot_retry_deleted_media_item">Медиафайл удалён. Удалить его из этой записи?</string>
 	<string name="error_please_choose_browser">Ошибка при открытии веб-браузера по умолчанию. Выберите другое приложение:</string>
 	<string name="cant_open_url">Не удаётся открыть ссылку</string>
@@ -279,27 +294,27 @@ Language: ru
 	<string name="photo_picker_soft_ask_allow">Разрешить</string>
 	<string name="photo_picker_soft_ask_label"> %s требуется разрешение на доступ к вашим фотографиям</string>
 	<string name="sharing_twitter_message">Эта информация будет указана в твитах при публикации записи посредством кнопки Twitter</string>
-	<string name="sharing_label_message">Измените текст подписи кнопок "Поделиться". Этот текст отобразится только после добавления хотя бы одной кнопки "Поделиться".</string>
+	<string name="sharing_label_message">Измените текст подписи кнопок \"Поделиться\". Этот текст отобразится только после добавления хотя бы одной кнопки \"Поделиться\".</string>
 	<string name="connecting_account">Подключение учётной записи</string>
 	<string name="cannot_connect_account_error">Не удалось подключиться к %s. Не выбрана учётная запись.</string>
 	<string name="connected">Подключено</string>
 	<string name="twitter">Twitter</string>
-	<string name="likes">Отметки "Нравится"</string>
-	<string name="sharing_comment_likes_description">Разрешить себе и своим читателям ставить отметки "Нравится" к любым комментариям</string>
+	<string name="likes">Отметки \"Нравится\"</string>
+	<string name="sharing_comment_likes_description">Разрешить себе и своим читателям ставить отметки \"Нравится\" к любым комментариям</string>
 	<string name="visual">Визуальный</string>
 	<string name="buttons">Кнопки</string>
-	<string name="sharing_edit_more_buttons">Изменить кнопки "Ещё"</string>
-	<string name="sharing_more_description">Кнопка "Ещё" содержит выпадающее меню с несколькими кнопками "Поделиться"</string>
+	<string name="sharing_edit_more_buttons">Изменить кнопки \"Ещё\"</string>
+	<string name="sharing_more_description">Кнопка \"Ещё\" содержит выпадающее меню с несколькими кнопками \"Поделиться\"</string>
 	<string name="sharing_sharing_buttons_description">Выберите, какие кнопки будут отображаться под вашими записями</string>
 	<string name="twitter_username">Имя пользователя Twitter</string>
-	<string name="sharing_comment_likes">Отметки "Нравится" для комментария</string>
+	<string name="sharing_comment_likes">Отметки \"Нравится\" для комментария</string>
 	<string name="button_style">Стиль кнопки</string>
 	<string name="label">Текст подписи</string>
-	<string name="more_buttons">Кнопки "Ещё"</string>
-	<string name="sharing_buttons">Кнопки "Поделиться"</string>
-	<string name="site_settings_like">Показывать кнопку "Нравится"</string>
-	<string name="site_settings_reblog">Показывать кнопку "Перепостить"</string>
-	<string name="site_settings_reblog_and_like_header">Перепостить и поставить отметку "Нравится"</string>
+	<string name="more_buttons">Кнопки \"Ещё\"</string>
+	<string name="sharing_buttons">Кнопки \"Поделиться\"</string>
+	<string name="site_settings_like">Показывать кнопку \"Нравится\"</string>
+	<string name="site_settings_reblog">Показывать кнопку \"Перепостить\"</string>
+	<string name="site_settings_reblog_and_like_header">Перепостить и поставить отметку \"Нравится\"</string>
 	<string name="publicize_text_only">Только текст</string>
 	<string name="publicize_icon_and_text">Значок и текст</string>
 	<string name="publicize_icon_only">Только значок</string>
@@ -966,7 +981,7 @@ Language: ru
 	<string name="me_disconnect_from_wordpress_com">Отключение от WordPress.com</string>
 	<string name="me_btn_login_logout">Вход/выход</string>
 	<string name="me_connect_to_wordpress_com">Подключение к WordPress.com</string>
-	<string name="site_picker_cant_hide_current_site">"%s" не был скрыт, так как это текущий сайт.</string>
+	<string name="site_picker_cant_hide_current_site">\"%s\" не был скрыт, так как это текущий сайт.</string>
 	<string name="me_btn_support">Помощь и техническая поддержка</string>
 	<string name="account_settings">Настройки учётной записи</string>
 	<string name="site_picker_create_dotcom">Создать сайт на WordPress.com</string>
@@ -1176,7 +1191,7 @@ Language: ru
 	<string name="blog_name_exists">Такой сайт уже существует</string>
 	<string name="blog_name_only_lowercase_letters_and_numbers">Адрес сайта может содержать только строчные буквы (a-z) и цифры</string>
 	<string name="blog_name_cant_be_used">Вы не можете использовать этот адрес сайта</string>
-	<string name="blog_name_contains_invalid_characters">Адрес сайта не должен содержать знак подчёркивания "_"</string>
+	<string name="blog_name_contains_invalid_characters">Адрес сайта не должен содержать знак подчёркивания \"_\"</string>
 	<string name="blog_name_must_be_less_than_sixty_four_characters">Адрес сайта должен быть короче 64 символов</string>
 	<string name="blog_name_must_be_at_least_four_characters">Адрес сайта не может быть короче 4 знаков</string>
 	<string name="blog_name_not_allowed">Адрес сайта в неправильном виде</string>
@@ -1216,7 +1231,7 @@ Language: ru
 	<string name="sdcard_message">Для загрузки медиа нужно подключить SD карту</string>
 	<string name="no_account">Не найдено аккаунта WordPress. Добавьте аккаунт и попробуйте снова</string>
 	<string name="category_automatically_renamed">Название категории %1$s не является правильным. Она будет переименована в %2$s.</string>
-	<string name="cat_name_required">Поле "название категории" является обязательным</string>
+	<string name="cat_name_required">Поле \"название категории\" является обязательным</string>
 	<string name="adding_cat_success">Категория успешно добавлена</string>
 	<string name="adding_cat_failed">Добавление категории не удалось</string>
 	<string name="mnu_comment_unspam">Нет спама</string>

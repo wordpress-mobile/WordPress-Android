@@ -28,7 +28,7 @@
             android:layout_height="wrap_content"
             android:orientation="vertical">
 
-            <org.wordpress.android.editor.SourceViewEditText
+            <org.wordpress.android.editor.EditTextWithKeyBackListener
                 android:id="@+id/sourceview_title"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
@@ -52,7 +52,7 @@
                 android:layout_marginRight="@dimen/sourceview_side_margin"
                 style="@style/DividerSourceView"/>
 
-            <org.wordpress.android.editor.SourceViewEditText
+            <org.wordpress.android.editor.EditTextWithKeyBackListener
                 android:id="@+id/sourceview_content"
                 android:layout_width="fill_parent"
                 android:layout_height="0dp"

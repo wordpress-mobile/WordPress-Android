@@ -105,9 +105,9 @@ Language: es_CL
 	<string name="stats_insights_today">Estadísticas de hoy</string>
 	<string name="stats_insights_all_time">Entradas, vistas y visitantes de todos los tiempos</string>
 	<string name="stats_insights">Detalles</string>
-	<string name="stats_other_recent_stats_moved_label">¿Buscas tus otras estadísticas recientes? Las hemos trasladado a la página "Detalles".</string>
+	<string name="stats_other_recent_stats_moved_label">¿Buscas tus otras estadísticas recientes? Las hemos trasladado a la página \"Detalles\".</string>
 	<string name="me_btn_login_logout">Iniciar/Cerrar sesión</string>
-	<string name="site_picker_cant_hide_current_site">"%s" no se ocultó porque es el sitio actual</string>
+	<string name="site_picker_cant_hide_current_site">\"%s\" no se ocultó porque es el sitio actual</string>
 	<string name="me_btn_support">Ayuda y Soporte</string>
 	<string name="account_settings">Preferencias de la Cuenta</string>
 	<string name="site_picker_create_dotcom">Crear sitio en WordPress.com</string>

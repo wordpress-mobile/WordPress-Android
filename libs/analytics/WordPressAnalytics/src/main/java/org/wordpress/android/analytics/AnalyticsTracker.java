@@ -135,7 +135,6 @@ public final class AnalyticsTracker {
         EDITOR_AZTEC_PROMO_POSITIVE, // Aztec editor only
         ME_ACCESSED,
         ME_GRAVATAR_TAPPED,
-        ME_GRAVATAR_TOOLTIP_TAPPED,
         ME_GRAVATAR_SHOT_NEW,
         ME_GRAVATAR_GALLERY_PICKED,
         ME_GRAVATAR_CROPPED,
@@ -178,6 +177,7 @@ public final class AnalyticsTracker {
         OPENED_MY_PROFILE,
         OPENED_PEOPLE_MANAGEMENT,
         OPENED_PERSON,
+        OPENED_PLUGINS,
         CREATE_ACCOUNT_INITIATED,
         CREATE_ACCOUNT_EMAIL_EXISTS,
         CREATE_ACCOUNT_USERNAME_EXISTS,
@@ -296,7 +296,9 @@ public final class AnalyticsTracker {
         MEDIA_UPLOAD_CANCELED,
         APP_PERMISSION_GRANTED,
         APP_PERMISSION_DENIED,
-        SHARE_TO_WP_SUCCEEDED
+        SHARE_TO_WP_SUCCEEDED,
+        PLUGIN_REMOVED,
+        PLUGIN_UPDATED
     }
 
     private static final List<Tracker> TRACKERS = new ArrayList<>();
