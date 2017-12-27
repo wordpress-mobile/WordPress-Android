@@ -88,6 +88,8 @@ import java.util.List;
 import javax.inject.Inject;
 
 import static android.app.Activity.RESULT_OK;
+import static org.wordpress.android.fluxc.model.post.ContentType.PAGE;
+import static org.wordpress.android.fluxc.model.post.ContentType.POST;
 import static org.wordpress.android.ui.posts.EditPostActivity.EXTRA_POST_LOCAL_ID;
 import static org.wordpress.android.ui.posts.SelectCategoriesActivity.KEY_SELECTED_CATEGORY_IDS;
 
@@ -125,13 +127,18 @@ public class EditPostSettingsFragment extends Fragment {
     private ArrayList<String> mPostFormatKeys;
     private ArrayList<String> mPostFormatNames;
 
-    @Inject SiteStore mSiteStore;
-    @Inject MediaStore mMediaStore;
-    @Inject TaxonomyStore mTaxonomyStore;
-    @Inject Dispatcher mDispatcher;
+    @Inject
+    SiteStore mSiteStore;
+    @Inject
+    MediaStore mMediaStore;
+    @Inject
+    TaxonomyStore mTaxonomyStore;
+    @Inject
+    Dispatcher mDispatcher;
 
     interface EditPostActivityHook {
         PostModel getPost();
+
         SiteModel getSite();
     }
 
@@ -156,7 +163,7 @@ public class EditPostSettingsFragment extends Fragment {
         // Update post formats and categories, in case anything changed.
         SiteModel siteModel = getSite();
         mDispatcher.dispatch(SiteActionBuilder.newFetchPostFormatsAction(siteModel));
-        if (!getPost().isPage()) {
+        if (getPost() != null && getPost().getContentType() == POST) {
             mDispatcher.dispatch(TaxonomyActionBuilder.newFetchCategoriesAction(siteModel));
         }
 
@@ -324,7 +331,8 @@ public class EditPostSettingsFragment extends Fragment {
         });
 
 
-        if (getPost() != null && getPost().isPage()) { // remove post specific views
+        //TODO add portfolio specific views
+        if (getPost() != null && getPost().getContentType() == PAGE) { // remove post specific views
             final View categoriesTagsContainer = rootView.findViewById(R.id.post_categories_and_tags_card);
             final View formatBottomSeparator = rootView.findViewById(R.id.post_format_bottom_separator);
             categoriesTagsContainer.setVisibility(View.GONE);
@@ -361,7 +369,7 @@ public class EditPostSettingsFragment extends Fragment {
         }
 
         PostModel postModel = getPost();
-        if (postModel.isPage()) {
+        if (postModel != null && postModel.getContentType() == PAGE) {
             // remove post specific views
             mCategoriesContainer.setVisibility(View.GONE);
             mExcerptContainer.setVisibility(View.GONE);
@@ -490,7 +498,7 @@ public class EditPostSettingsFragment extends Fragment {
         builder.setSingleChoiceItems(R.array.post_settings_statuses, getCurrentPostStatusIndex(), null);
         builder.setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int which) {
-                ListView listView = ((AlertDialog)dialog).getListView();
+                ListView listView = ((AlertDialog) dialog).getListView();
                 int index = listView.getCheckedItemPosition();
                 updatePostStatus(getPostStatusAtIndex(index).toString());
             }
@@ -519,7 +527,7 @@ public class EditPostSettingsFragment extends Fragment {
         builder.setSingleChoiceItems(mPostFormatNames.toArray(new CharSequence[0]), checkedItem, null);
         builder.setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int which) {
-                ListView listView = ((AlertDialog)dialog).getListView();
+                ListView listView = ((AlertDialog) dialog).getListView();
                 String formatName = (String) listView.getAdapter().getItem(listView.getCheckedItemPosition());
                 updatePostFormat(getPostFormatKeyFromName(formatName));
             }
@@ -741,7 +749,7 @@ public class EditPostSettingsFragment extends Fragment {
             mPublishDateTextView.setText(R.string.immediately);
         } else {
             String dateCreated = postModel.getDateCreated();
-            if (!TextUtils.isEmpty(dateCreated)){
+            if (!TextUtils.isEmpty(dateCreated)) {
                 String formattedDate = DateUtils.formatDateTime(getActivity(),
                         DateTimeUtils.timestampFromIso8601Millis(dateCreated), getDateTimeFlags());
                 mPublishDateTextView.setText(formattedDate);

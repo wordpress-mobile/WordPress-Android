@@ -30,6 +30,9 @@ import org.wordpress.android.util.WPMediaUtils;
 import java.util.ArrayList;
 import java.util.List;
 
+import static org.wordpress.android.fluxc.model.post.ContentType.PAGE;
+import static org.wordpress.android.fluxc.model.post.ContentType.POST;
+
 public class UploadUtils {
 
     private static int K_SNACKBAR_WAIT_TIME_MS = 5000;
@@ -38,7 +41,8 @@ public class UploadUtils {
      */
     static @NonNull String getErrorMessage(Context context, PostModel post, String errorMessage, boolean isMediaError) {
         String baseErrorString;
-        if (post.isPage()) {
+        //TODO add portfolios
+        if (post.getContentType() == PAGE) {
             if (isMediaError) {
                 baseErrorString = context.getString(R.string.error_upload_page_media_param);
             } else {
@@ -59,12 +63,13 @@ public class UploadUtils {
      */
     public static @NonNull String getErrorMessageFromPostError(Context context, PostModel post, PostError error) {
         switch (error.type) {
+            //TODO consider portfolios
             case UNKNOWN_POST:
-                return post.isPage() ? context.getString(R.string.error_unknown_page) : context.getString(R.string.error_unknown_post);
+                return post.getContentType() == PAGE ? context.getString(R.string.error_unknown_page) : context.getString(R.string.error_unknown_post);
             case UNKNOWN_POST_TYPE:
                 return context.getString(R.string.error_unknown_post_type);
             case UNAUTHORIZED:
-                return post.isPage() ? context.getString(R.string.error_refresh_unauthorized_pages) :
+                return post.getContentType() == PAGE ? context.getString(R.string.error_refresh_unauthorized_pages) :
                         context.getString(R.string.error_refresh_unauthorized_posts);
         }
         // In case of a generic or uncaught error, return the message from the API response or the error type
@@ -227,7 +232,8 @@ public class UploadUtils {
 
         // If the post is empty, don't publish
         if (!PostUtils.isPublishable(post)) {
-            String message = activity.getString(post.isPage() ? R.string.error_publish_empty_page : R.string.error_publish_empty_post);
+            //TODO add portfolios
+            String message = activity.getString(post.getContentType() == PAGE ? R.string.error_publish_empty_page : R.string.error_publish_empty_post);
             ToastUtils.showToast(activity, message, ToastUtils.Duration.SHORT);
             return;
         }
@@ -285,7 +291,8 @@ public class UploadUtils {
                     UploadUtils.showSnackbarSuccessAction(snackbarAttachView, R.string.editor_draft_saved_online,
                             R.string.button_publish, publishPostListener);
                 } else {
-                    int messageRes = post.isPage() ? R.string.page_published : R.string.post_published;
+                    //TODO add portfolios
+                    int messageRes = post.getContentType() == PAGE ? R.string.page_published : R.string.post_published;
                     UploadUtils.showSnackbarSuccessAction(snackbarAttachView, messageRes,
                             R.string.button_view, new View.OnClickListener() {
                                 @Override
@@ -340,7 +347,7 @@ public class UploadUtils {
                             writePostIntent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
                             writePostIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                             writePostIntent.putExtra(WordPress.SITE, site);
-                            writePostIntent.putExtra(EditPostActivity.EXTRA_IS_PAGE, false);
+                            writePostIntent.putExtra(EditPostActivity.EXTRA_CONTENT_TYPE, POST);
                             writePostIntent.putExtra(EditPostActivity.EXTRA_INSERT_MEDIA, mediaListToInsertInPost);
                             activity.startActivity(writePostIntent);
                         }

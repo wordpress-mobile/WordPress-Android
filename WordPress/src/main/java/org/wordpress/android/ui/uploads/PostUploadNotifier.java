@@ -15,6 +15,7 @@ import org.wordpress.android.WordPress;
 import org.wordpress.android.fluxc.model.MediaModel;
 import org.wordpress.android.fluxc.model.PostModel;
 import org.wordpress.android.fluxc.model.SiteModel;
+import org.wordpress.android.fluxc.model.post.ContentType;
 import org.wordpress.android.fluxc.model.post.PostStatus;
 import org.wordpress.android.ui.RequestCodes;
 import org.wordpress.android.ui.media.MediaBrowserActivity;
@@ -35,6 +36,9 @@ import java.util.Map;
 import java.util.Random;
 
 import de.greenrobot.event.EventBus;
+
+import static org.wordpress.android.fluxc.model.post.ContentType.PAGE;
+import static org.wordpress.android.fluxc.model.post.ContentType.POST;
 
 class PostUploadNotifier {
     private final Context mContext;
@@ -121,7 +125,7 @@ class PostUploadNotifier {
     void removePostInfoFromForegroundNotificationData(@NonNull PostModel post, @Nullable List<MediaModel> media) {
         if (sNotificationData.totalPostItems > 0) {
             sNotificationData.totalPostItems--;
-            if (post.isPage()) {
+            if (post.getContentType() == PAGE) {
                 sNotificationData.totalPageItemsIncludedInPostCount--;
             }
         }
@@ -133,7 +137,8 @@ class PostUploadNotifier {
     // Post could have initial media, or not (nullable)
     void addPostInfoToForegroundNotification(@NonNull PostModel post, @Nullable List<MediaModel> media) {
         sNotificationData.totalPostItems++;
-        if (post.isPage()) {
+        //TODO consider portfolios
+        if (post.getContentType() == PAGE) {
             sNotificationData.totalPageItemsIncludedInPostCount++;
         }
         if (media != null) {
@@ -285,9 +290,11 @@ class PostUploadNotifier {
         if (PostStatus.DRAFT.equals(PostStatus.fromPost(post))) {
             notificationTitle += mContext.getString(R.string.draft_uploaded);
         } else if (PostStatus.SCHEDULED.equals(PostStatus.fromPost(post))) {
-            notificationTitle += mContext.getString(post.isPage() ? R.string.page_scheduled : R.string.post_scheduled);
+            //TODO consider portfolios
+            notificationTitle += mContext.getString(post.getContentType() == PAGE ? R.string.page_scheduled : R.string.post_scheduled);
         } else {
-            if (post.isPage()) {
+            //TODO portfolios?
+            if (post.getContentType() == PAGE) {
                 notificationTitle += mContext.getString(
                         isFirstTimePublish ? R.string.page_published : R.string.page_updated);
             } else {
@@ -310,7 +317,7 @@ class PostUploadNotifier {
         notificationIntent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
         notificationIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         notificationIntent.putExtra(WordPress.SITE, site);
-        notificationIntent.putExtra(PostsListActivity.EXTRA_CONTENT_TYPE, post.isPage());
+        notificationIntent.putExtra(PostsListActivity.EXTRA_CONTENT_TYPE, post.getType());
         PendingIntent pendingIntentPost = PendingIntent.getActivity(mContext,
                 (int)notificationId,
                 notificationIntent, PendingIntent.FLAG_ONE_SHOT);
@@ -390,7 +397,7 @@ class PostUploadNotifier {
             writePostIntent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
             writePostIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
             writePostIntent.putExtra(WordPress.SITE, site);
-            writePostIntent.putExtra(EditPostActivity.EXTRA_IS_PAGE, false);
+            writePostIntent.putExtra(EditPostActivity.EXTRA_CONTENT_TYPE, POST.getValue());
             writePostIntent.putExtra(EditPostActivity.EXTRA_INSERT_MEDIA, mediaToIncludeInPost);
             writePostIntent.setAction(String.valueOf(notificationId));
 
@@ -440,7 +447,7 @@ class PostUploadNotifier {
         notificationIntent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
         notificationIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         notificationIntent.putExtra(WordPress.SITE, site);
-        notificationIntent.putExtra(PostsListActivity.EXTRA_CONTENT_TYPE, post.isPage());
+        notificationIntent.putExtra(PostsListActivity.EXTRA_CONTENT_TYPE, post.getType());
         notificationIntent.putExtra(PostsListActivity.EXTRA_TARGET_POST_LOCAL_ID, post.getId());
         notificationIntent.setAction(String.valueOf(notificationId));
 
@@ -673,7 +680,8 @@ class PostUploadNotifier {
     void setTotalMediaItems(PostModel post, int totalMediaItems) {
         if (post != null) {
             sNotificationData.totalPostItems = 1;
-            if (post.isPage()) {
+            //TODO consider portfolios
+            if (post.getContentType() == PAGE) {
                 sNotificationData.totalPageItemsIncludedInPostCount = 1;
             }
         }
@@ -697,7 +705,8 @@ class PostUploadNotifier {
         String uploadingMessage = String.format(
                 mContext.getString(R.string.uploading_subtitle_posts_only),
                 sNotificationData.totalPostItems - getCurrentPostItem(),
-                (post != null && post.isPage()) ? mContext.getString(R.string.page).toLowerCase()
+                //TODO portfolios?
+                (post != null && post.getContentType() == PAGE) ? mContext.getString(R.string.page).toLowerCase()
                         : mContext.getString(R.string.post).toLowerCase()
         );
         return uploadingMessage;

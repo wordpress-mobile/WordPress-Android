@@ -33,7 +33,6 @@ import org.wordpress.android.ui.RequestCodes;
 import org.wordpress.android.ui.accounts.LoginActivity;
 import org.wordpress.android.ui.accounts.LoginMode;
 import org.wordpress.android.ui.comments.CommentsListFragment.CommentStatusCriteria;
-import org.wordpress.android.ui.posts.ContentType;
 import org.wordpress.android.ui.plugins.PluginUtils;
 import org.wordpress.android.ui.posts.EditPostActivity;
 import org.wordpress.android.ui.prefs.AppPrefs;

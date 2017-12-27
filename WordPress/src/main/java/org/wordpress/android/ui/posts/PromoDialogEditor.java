@@ -14,11 +14,14 @@ import android.widget.LinearLayout;
 
 import org.wordpress.android.R;
 import org.wordpress.android.analytics.AnalyticsTracker;
+import org.wordpress.android.fluxc.model.post.ContentType;
 import org.wordpress.android.ui.ActivityLauncher;
 import org.wordpress.android.ui.main.WPMainActivity;
 import org.wordpress.android.ui.prefs.AppPrefs;
 import org.wordpress.android.util.DisplayUtils;
 import org.wordpress.android.widgets.WPTextView;
+
+import static org.wordpress.android.fluxc.model.post.ContentType.POST;
 
 public class PromoDialogEditor extends PromoDialogAdvanced {
     protected static final String KEY_TITLE_BETA_RES_ID = "titleBetaResId";
@@ -140,7 +143,7 @@ public class PromoDialogEditor extends PromoDialogAdvanced {
                     }
 
                     ActivityLauncher.addNewPostOrPageForResult(getActivity(),
-                            ((WPMainActivity) getActivity()).getSelectedSite(), false, true);
+                            ((WPMainActivity) getActivity()).getSelectedSite(), POST, true);
                 }
             });
         } else {

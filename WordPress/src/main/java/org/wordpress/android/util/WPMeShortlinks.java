@@ -16,6 +16,8 @@ import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.model.post.PostStatus;
 import org.wordpress.android.util.AppLog.T;
 
+import static org.wordpress.android.fluxc.model.post.ContentType.PAGE;
+
 public class WPMeShortlinks {
     /**
      * Converts a base-10 number to base-62
@@ -84,7 +86,8 @@ public class WPMeShortlinks {
         } else {
             id = wpme_dec2sixtwo(postId);
 
-            if (post.isPage()) {
+            //TODO portfolios?
+            if (post.getContentType() == PAGE) {
                 type = "P";
             } else {
                 type = "p";

@@ -76,6 +76,7 @@ import org.wordpress.android.fluxc.model.MediaModel;
 import org.wordpress.android.fluxc.model.MediaModel.MediaUploadState;
 import org.wordpress.android.fluxc.model.PostModel;
 import org.wordpress.android.fluxc.model.SiteModel;
+import org.wordpress.android.fluxc.model.post.ContentType;
 import org.wordpress.android.fluxc.model.post.PostStatus;
 import org.wordpress.android.fluxc.store.AccountStore;
 import org.wordpress.android.fluxc.store.AccountStore.OnAccountChanged;
@@ -152,8 +153,7 @@ import javax.inject.Inject;
 
 import de.greenrobot.event.EventBus;
 
-import static org.wordpress.android.ui.posts.ContentType.PAGE;
-import static org.wordpress.android.ui.posts.ContentType.POST;
+import static org.wordpress.android.fluxc.model.post.ContentType.PAGE;
 
 public class EditPostActivity extends AppCompatActivity implements
         EditorFragmentActivity,
@@ -223,7 +223,7 @@ public class EditPostActivity extends AppCompatActivity implements
 
     private EditorMediaUploadListener mEditorMediaUploadListener;
 
-    private int mContentType;
+    private ContentType mContentType;
     private boolean mIsNewPost;
     private boolean mIsPromo;
     private boolean mHasSetPostContent;
@@ -300,7 +300,7 @@ public class EditPostActivity extends AppCompatActivity implements
                 }
 
                 if (extras != null) {
-                    mContentType = extras.getInt(EXTRA_CONTENT_TYPE);
+                    mContentType = ContentType.getContentType(extras.getString(EXTRA_CONTENT_TYPE));
                     mIsPromo = extras.getBoolean(EXTRA_IS_PROMO);
                 }
                 mIsNewPost = true;
@@ -324,8 +324,7 @@ public class EditPostActivity extends AppCompatActivity implements
                     categories.add((long) SiteSettingsInterface.getDefaultCategory(WordPress.getContext()));
                     postFormat = SiteSettingsInterface.getDefaultFormat(WordPress.getContext());
                 }
-                //TODO Portfolio support?
-                mPost = mPostStore.instantiatePostModel(mSite, mContentType == PAGE, categories, postFormat);
+                mPost = mPostStore.instantiatePostModel(mSite, mContentType, categories, postFormat);
                 mPost.setStatus(PostStatus.PUBLISHED.toString());
             } else if (extras != null) {
                 // Load post passed in extras
@@ -401,10 +400,12 @@ public class EditPostActivity extends AppCompatActivity implements
                 if (position == PAGE_CONTENT) {
                     setTitle(SiteUtils.getSiteNameOrHomeURL(mSite));
                 } else if (position == PAGE_SETTINGS) {
-                    setTitle(mPost.isPage() ? R.string.page_settings : R.string.post_settings);
+                    //TODO add portfolios
+                    setTitle(mContentType ==PAGE ? R.string.page_settings : R.string.post_settings);
                     hidePhotoPicker();
                 } else if (position == PAGE_PREVIEW) {
-                    setTitle(mPost.isPage() ? R.string.preview_page : R.string.preview_post);
+                    //TODO add portfolios
+                    setTitle(mContentType ==PAGE ? R.string.preview_page : R.string.preview_post);
                     hidePhotoPicker();
                     savePostAsync(new AfterSavePostListener() {
                         @Override
@@ -435,8 +436,7 @@ public class EditPostActivity extends AppCompatActivity implements
             mMediaMarkedUploadingOnStartIds =
                     AztecEditorFragment.getMediaMarkedUploadingInPostContent(this, mPost.getContent());
             Collections.sort(mMediaMarkedUploadingOnStartIds);
-            //TODO Portfolio support
-            mContentType = mPost.isPage() ? PAGE : POST;
+            mContentType = mPost.getContentType();
         }
     }
 
