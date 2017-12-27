@@ -145,6 +145,9 @@ public class ThemeStore extends Store {
         }
     }
 
+    public static class OnWpComThemesChanged extends OnChanged<ThemesError> {
+    }
+
     public static class OnCurrentThemeFetched extends OnChanged<ThemesError> {
         public SiteModel site;
         public ThemeModel theme;
@@ -322,7 +325,7 @@ public class ThemeStore extends Store {
     }
 
     private void handleWpComThemesFetched(@NonNull FetchedWpComThemesPayload payload) {
-        OnThemesChanged event = new OnThemesChanged(null, ThemeAction.FETCH_WP_COM_THEMES);
+        OnWpComThemesChanged event = new OnWpComThemesChanged();
         if (payload.isError()) {
             event.error = payload.error;
         } else {
