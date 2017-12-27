@@ -86,7 +86,8 @@ public class LoginMagicLinkRequestFragment extends Fragment {
                 if (mLoginListener != null) {
                     if (NetworkUtils.checkConnection(getActivity())) {
                         showMagicLinkRequestProgressDialog();
-                        mDispatcher.dispatch(AuthenticationActionBuilder.newSendAuthEmailAction(mEmail));
+                        mDispatcher.dispatch(AuthenticationActionBuilder.newSendAuthEmailAction(
+                                new AccountStore.AuthEmailPayload(mEmail, false)));
                     }
                 }
             }
