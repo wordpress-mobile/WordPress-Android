@@ -720,6 +720,10 @@ public class AccountStore extends Store {
     }
 
     private void handlePushUsernameCompleted(AccountPushUsernameResponsePayload payload) {
+        if (!payload.isError()) {
+            AccountSqlUtils.updateUsername(getAccount(), payload.username);
+        }
+
         OnUsernameChanged onUsernameChanged = new OnUsernameChanged();
         onUsernameChanged.username = payload.username;
         onUsernameChanged.type = payload.type;
