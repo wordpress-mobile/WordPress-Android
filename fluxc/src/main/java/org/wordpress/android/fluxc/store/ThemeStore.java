@@ -139,8 +139,9 @@ public class ThemeStore extends Store {
         public SiteModel site;
         public ThemeAction origin;
 
-        public OnThemesChanged(SiteModel site) { //TODO: rename and introduce another onchanged event for wpcom themes
+        public OnThemesChanged(SiteModel site, ThemeAction origin) { //TODO: rename and introduce another onchanged event for wpcom themes
             this.site = site;
+            this.origin = origin;
         }
     }
 
@@ -321,8 +322,7 @@ public class ThemeStore extends Store {
     }
 
     private void handleWpComThemesFetched(@NonNull FetchedWpComThemesPayload payload) {
-        OnThemesChanged event = new OnThemesChanged(null);
-        event.origin = ThemeAction.FETCH_WP_COM_THEMES; //TODO: check WPAndroid once new onchanged event is introduced
+        OnThemesChanged event = new OnThemesChanged(null, ThemeAction.FETCH_WP_COM_THEMES);
         if (payload.isError()) {
             event.error = payload.error;
         } else {
@@ -342,8 +342,7 @@ public class ThemeStore extends Store {
     }
 
     private void handleInstalledThemesFetched(@NonNull FetchedSiteThemesPayload payload) {
-        OnThemesChanged event = new OnThemesChanged(payload.site);
-        event.origin = ThemeAction.FETCH_INSTALLED_THEMES;
+        OnThemesChanged event = new OnThemesChanged(payload.site, ThemeAction.FETCH_INSTALLED_THEMES);
         if (payload.isError()) {
             event.error = payload.error;
         } else {
@@ -468,6 +467,6 @@ public class ThemeStore extends Store {
                 ThemeSqlUtils.removeTheme(theme);
             }
         }
-        emitChange(new OnThemesChanged(site));
+        emitChange(new OnThemesChanged(site, ThemeAction.REMOVE_SITE_THEMES));
     }
 }
