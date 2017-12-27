@@ -53,6 +53,30 @@ public class AccountSqlUtils {
     }
 
     /**
+     * Update the username in the {@link AccountModelTable} that matches the given {@link AccountModel}.
+     *
+     * @param accountModel  {@link AccountModel} to update with username
+     * @param username      username to update in {@link AccountModelTable#USER_NAME}
+     *
+     * @return zero if update is not performed; non-zero otherwise
+     */
+    public static int updateUsername(AccountModel accountModel, final String username) {
+        if (accountModel == null || username == null) {
+            return 0;
+        } else {
+            return WellSql.update(AccountModel.class).whereId(accountModel.getId())
+                    .put(accountModel, new InsertMapper<AccountModel>() {
+                        @Override
+                        public ContentValues toCv(AccountModel item) {
+                            ContentValues cv = new ContentValues();
+                            cv.put(AccountModelTable.USER_NAME, username);
+                            return cv;
+                        }
+                    }).execute();
+        }
+    }
+
+    /**
      * Deletes rows from the Account table that share an ID with the given {@link AccountModel}.
      */
     public static int deleteAccount(AccountModel account) {
