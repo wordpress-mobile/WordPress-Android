@@ -135,11 +135,11 @@ public class ThemeStore extends Store {
     }
 
     // OnChanged events
-    public static class OnThemesChanged extends OnChanged<ThemesError> {
+    public static class OnSiteThemesChanged extends OnChanged<ThemesError> {
         public SiteModel site;
         public ThemeAction origin;
 
-        public OnThemesChanged(SiteModel site, ThemeAction origin) { //TODO: rename and introduce another onchanged event for wpcom themes
+        public OnSiteThemesChanged(SiteModel site, ThemeAction origin) {
             this.site = site;
             this.origin = origin;
         }
@@ -345,7 +345,7 @@ public class ThemeStore extends Store {
     }
 
     private void handleInstalledThemesFetched(@NonNull FetchedSiteThemesPayload payload) {
-        OnThemesChanged event = new OnThemesChanged(payload.site, ThemeAction.FETCH_INSTALLED_THEMES);
+        OnSiteThemesChanged event = new OnSiteThemesChanged(payload.site, ThemeAction.FETCH_INSTALLED_THEMES);
         if (payload.isError()) {
             event.error = payload.error;
         } else {
@@ -470,6 +470,6 @@ public class ThemeStore extends Store {
                 ThemeSqlUtils.removeTheme(theme);
             }
         }
-        emitChange(new OnThemesChanged(site, ThemeAction.REMOVE_SITE_THEMES));
+        emitChange(new OnSiteThemesChanged(site, ThemeAction.REMOVE_SITE_THEMES));
     }
 }
