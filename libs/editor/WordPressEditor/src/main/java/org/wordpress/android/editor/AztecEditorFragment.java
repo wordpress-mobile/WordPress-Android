@@ -1614,6 +1614,8 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
                         captionAttributes.setValue(ATTR_DIMEN_WIDTH, metaData.getWidth());
 
                         CaptionExtensionsKt.setImageCaption(content, mTappedMediaPredicate, metaData.getCaption(), captionAttributes);
+
+                        //setting caption causes rendering issue in some cases, reset content to avoid them
                         content.fromHtml(content.toHtml(false));
                     } else {
                         //if no caption present apply align attribute directly to image
