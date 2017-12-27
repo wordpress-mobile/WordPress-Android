@@ -249,6 +249,9 @@ public class LoginEmailPasswordFragment extends LoginBaseFormFragment<LoginListe
 
     @Override
     protected void onLoginFinished() {
+        mAnalyticsListener.trackAnalyticsSignIn(mAccountStore, mSiteStore, true);
+        mLoginListener.startPostLoginServices();
+
         if (mIsSocialLogin) {
             mLoginListener.loggedInViaSocialAccount(mOldSitesIDs);
         } else {
@@ -311,8 +314,6 @@ public class LoginEmailPasswordFragment extends LoginBaseFormFragment<LoginListe
                 showError(getString(R.string.error_generic));
                 break;
             case SUCCESS:
-                mAnalyticsListener.trackAnalyticsSignIn(mAccountStore, mSiteStore, true);
-                mLoginListener.startPostLoginServices();
                 onLoginFinished(true);
                 break;
         }

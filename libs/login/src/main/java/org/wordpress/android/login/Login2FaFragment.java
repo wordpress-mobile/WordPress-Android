@@ -271,11 +271,6 @@ public class Login2FaFragment extends LoginBaseFormFragment<LoginListener> imple
         }
     }
 
-    @Override
-    protected void startPostLoginServices() {
-        mLoginListener.startPostLoginServices();
-    }
-
     protected void next() {
         if (TextUtils.isEmpty(m2FaInput.getEditText().getText())) {
             show2FaError(getString(R.string.login_empty_2fa));
@@ -501,6 +496,8 @@ public class Login2FaFragment extends LoginBaseFormFragment<LoginListener> imple
     @Override
     protected void onLoginFinished() {
         mAnalyticsListener.trackAnalyticsSignIn(mAccountStore, mSiteStore, true);
+
+        mLoginListener.startPostLoginServices();
 
         if (mIsSocialLogin) {
             mLoginListener.loggedInViaSocialAccount(mOldSitesIDs);

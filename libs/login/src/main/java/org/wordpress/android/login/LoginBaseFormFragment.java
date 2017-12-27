@@ -72,8 +72,6 @@ public abstract class LoginBaseFormFragment<LoginListenerType> extends Fragment 
         return true;
     }
 
-    protected void startPostLoginServices() { }
-
     protected EditText getEditTextToFocusOnStart() {
         return null;
     }
@@ -329,8 +327,6 @@ public abstract class LoginBaseFormFragment<LoginListenerType> extends Fragment 
                 ToastUtils.showToast(getContext(), R.string.duplicate_site_detected);
             }
         }
-
-        startPostLoginServices();
 
         onLoginFinished(true);
     }
