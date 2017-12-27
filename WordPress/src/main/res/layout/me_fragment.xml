@@ -40,7 +40,9 @@
                         <org.wordpress.android.widgets.WPNetworkImageView
                             android:id="@+id/me_avatar"
                             android:layout_width="@dimen/avatar_sz_inner_circle"
-                            android:layout_height="@dimen/avatar_sz_inner_circle" />
+                            android:layout_height="@dimen/avatar_sz_inner_circle"
+                            app:wpDefaultImageDrawable="@drawable/ic_gridicons_user_circle_100dp"
+                            app:wpErrorImageDrawable="@drawable/ic_gridicons_user_circle_100dp" />
                     </FrameLayout>
 
                     <ProgressBar
