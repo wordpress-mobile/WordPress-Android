@@ -157,6 +157,7 @@ public class LoginWpcomService extends AutoForeground<OnLoginStateUpdated> {
     public Notification getNotification() {
         switch (mLoginPhase) {
             case AUTHENTICATING:
+            case SOCIAL_LOGIN:
             case FETCHING_ACCOUNT:
             case FETCHING_SETTINGS:
             case FETCHING_SITES:
@@ -169,6 +170,8 @@ public class LoginWpcomService extends AutoForeground<OnLoginStateUpdated> {
                 return LoginNotification.failure(this, R.string.notification_2fa_needed);
             case FAILURE_SOCIAL_2FA:
                 return LoginNotification.failure(this, R.string.notification_2fa_needed);
+            case FAILURE_FETCHING_ACCOUNT:
+            case FAILURE_CANNOT_ADD_DUPLICATE_SITE:
             case FAILURE:
                 return LoginNotification.failure(this, R.string.notification_login_failed);
         }

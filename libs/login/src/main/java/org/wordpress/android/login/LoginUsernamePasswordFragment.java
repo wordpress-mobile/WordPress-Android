@@ -357,7 +357,7 @@ public class LoginUsernamePasswordFragment extends LoginBaseFormFragment<LoginLi
         });
     }
 
-    private @Nullable SiteModel detectNewlyAddedSite() {
+    private @Nullable SiteModel detectNewlyAddedXMLRPCSite() {
         List<SiteModel> selfhostedSites = mSiteStore.getSitesAccessedViaXMLRPC();
         for (SiteModel site : selfhostedSites) {
             if (!mOldSitesIDs.contains(site.getId())) {
@@ -447,6 +447,23 @@ public class LoginUsernamePasswordFragment extends LoginBaseFormFragment<LoginLi
         mLoginListener.loggedInViaPassword(mOldSitesIDs);
     }
 
+    private void finishLogin() {
+        mAnalyticsListener.trackAnalyticsSignIn(mAccountStore, mSiteStore, mIsWpcom);
+
+        mLoginListener.startPostLoginServices();
+
+        // mark as finished so any subsequent onSiteChanged (e.g. triggered by WPMainActivity) won't be intercepted
+        mLoginFinished = true;
+
+        if (mLoginListener != null) {
+            if (mIsWpcom) {
+                saveCredentialsInSmartLock(mLoginListener, mRequestedUsername, mRequestedPassword);
+            }
+
+            mLoginListener.loggedInViaUsernamePassword(mOldSitesIDs);
+        }
+    }
+
     @SuppressWarnings("unused")
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onSiteChanged(OnSiteChanged event) {
@@ -488,8 +505,13 @@ public class LoginUsernamePasswordFragment extends LoginBaseFormFragment<LoginLi
             return;
         }
 
-        SiteModel newlyAddedSite = detectNewlyAddedSite();
-        mDispatcher.dispatch(SiteActionBuilder.newFetchProfileXmlRpcAction(newlyAddedSite));
+        SiteModel newlyAddedXMLRPCSite = detectNewlyAddedXMLRPCSite();
+        // newlyAddedSite will be null if the user sign in with wpcom credentials
+        if (newlyAddedXMLRPCSite != null && !newlyAddedXMLRPCSite.isUsingWpComRestApi()) {
+            mDispatcher.dispatch(SiteActionBuilder.newFetchProfileXmlRpcAction(newlyAddedXMLRPCSite));
+        } else {
+            finishLogin();
+        }
     }
 
     @SuppressWarnings("unused")
@@ -513,20 +535,6 @@ public class LoginUsernamePasswordFragment extends LoginBaseFormFragment<LoginLi
             // continue with success, even if the operation was cancelled since the user got logged in regardless.
             // So, go on with finishing the login process
         }
-
-        mAnalyticsListener.trackAnalyticsSignIn(mAccountStore, mSiteStore, mIsWpcom);
-
-        mLoginListener.startPostLoginServices();
-
-        // mark as finished so any subsequent onSiteChanged (e.g. triggered by WPMainActivity) won't be intercepted
-        mLoginFinished = true;
-
-        if (mLoginListener != null) {
-            if (mIsWpcom) {
-                saveCredentialsInSmartLock(mLoginListener, mRequestedUsername, mRequestedPassword);
-            }
-
-            mLoginListener.loggedInViaUsernamePassword(mOldSitesIDs);
-        }
+        finishLogin();
     }
 }
