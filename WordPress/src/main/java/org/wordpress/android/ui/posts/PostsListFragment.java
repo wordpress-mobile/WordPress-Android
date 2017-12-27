@@ -353,7 +353,7 @@ public class PostsListFragment extends Fragment
                 mDispatcher.dispatch(PostActionBuilder.newFetchPagesAction(payload));
                 break;
             case PORTFOLIO:
-                //TODO
+                mDispatcher.dispatch(PostActionBuilder.newFetchPortfoliosAction(payload));
                 break;
         }
     }

@@ -861,7 +861,8 @@ public class PostsListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
                     tmpPosts = mPostStore.getPagesForSite(mSite);
                     break;
                 case PORTFOLIO:
-                    //TODO get portfolios
+                    tmpPosts = mPostStore.getPortfoliosForSite(mSite);
+                    break;
             }
 
             // Make sure we don't return any hidden posts
