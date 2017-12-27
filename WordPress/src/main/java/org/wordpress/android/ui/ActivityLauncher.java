@@ -18,6 +18,7 @@ import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.fluxc.model.PluginModel;
 import org.wordpress.android.fluxc.model.PostModel;
 import org.wordpress.android.fluxc.model.SiteModel;
+import org.wordpress.android.fluxc.model.post.ContentType;
 import org.wordpress.android.networking.SSLCertsViewActivity;
 import org.wordpress.android.ui.accounts.HelpActivity;
 import org.wordpress.android.ui.accounts.LoginActivity;
@@ -37,7 +38,6 @@ import org.wordpress.android.ui.plans.PlansActivity;
 import org.wordpress.android.ui.plugins.PluginDetailActivity;
 import org.wordpress.android.ui.plugins.PluginListActivity;
 import org.wordpress.android.ui.plugins.PluginUtils;
-import org.wordpress.android.ui.posts.ContentType;
 import org.wordpress.android.ui.posts.EditPostActivity;
 import org.wordpress.android.ui.posts.PostPreviewActivity;
 import org.wordpress.android.ui.posts.PostsListActivity;
@@ -67,9 +67,9 @@ import org.wordpress.passcodelock.AppLockManager;
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.wordpress.android.ui.posts.ContentType.PAGE;
-import static org.wordpress.android.ui.posts.ContentType.PORTFOLIO;
-import static org.wordpress.android.ui.posts.ContentType.POST;
+import static org.wordpress.android.fluxc.model.post.ContentType.POST;
+import static org.wordpress.android.fluxc.model.post.ContentType.PAGE;
+import static org.wordpress.android.fluxc.model.post.ContentType.PORTFOLIO;
 
 public class ActivityLauncher {
 
@@ -134,10 +134,10 @@ public class ActivityLauncher {
         openPostListActivity(context, site, PORTFOLIO, AnalyticsTracker.Stat.OPENED_PORTFOLIO);
     }
 
-    private static void openPostListActivity(Context context, SiteModel site, int contentType, AnalyticsTracker.Stat tag) {
+    private static void openPostListActivity(Context context, SiteModel site, ContentType contentType, AnalyticsTracker.Stat tag) {
         Intent intent = new Intent(context, PostsListActivity.class);
         intent.putExtra(WordPress.SITE, site);
-        intent.putExtra(PostsListActivity.EXTRA_CONTENT_TYPE, contentType);
+        intent.putExtra(PostsListActivity.EXTRA_CONTENT_TYPE, contentType.getValue());
         context.startActivity(intent);
         AnalyticsUtils.trackWithSiteDetails(tag, site);
     }
@@ -228,12 +228,12 @@ public class ActivityLauncher {
         activity.startActivityForResult(intent, RequestCodes.PREVIEW_POST);
     }
 
-    public static void addNewPostOrPageForResult(Activity activity, SiteModel site, @ContentType int contentType, boolean isPromo) {
+    public static void addNewPostOrPageForResult(Activity activity, SiteModel site, ContentType contentType, boolean isPromo) {
         if (site == null) return;
 
         Intent intent = new Intent(activity, EditPostActivity.class);
         intent.putExtra(WordPress.SITE, site);
-        intent.putExtra(EditPostActivity.EXTRA_CONTENT_TYPE, contentType);
+        intent.putExtra(EditPostActivity.EXTRA_CONTENT_TYPE, contentType.getValue());
         intent.putExtra(EditPostActivity.EXTRA_IS_PROMO, isPromo);
         activity.startActivityForResult(intent, RequestCodes.EDIT_POST);
     }
@@ -336,7 +336,7 @@ public class ActivityLauncher {
         activity.startActivityForResult(intent, RequestCodes.SHOW_LOGIN_EPILOGUE_AND_RETURN);
     }
 
-    public static void viewStatsSinglePostDetails(Context context, SiteModel site, PostModel post, @ContentType int contentType) {
+    public static void viewStatsSinglePostDetails(Context context, SiteModel site, PostModel post, ContentType contentType) {
         if (post == null) return;
 
         StatsPostModel statsPostModel = new StatsPostModel(site.getSiteId(),

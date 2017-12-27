@@ -58,7 +58,7 @@ import javax.inject.Inject;
 
 import de.greenrobot.event.EventBus;
 
-import static org.wordpress.android.ui.posts.ContentType.POST;
+import static org.wordpress.android.fluxc.model.post.ContentType.POST;
 
 public class MySiteFragment extends Fragment
         implements WPMainActivity.OnScrollToTopListener {

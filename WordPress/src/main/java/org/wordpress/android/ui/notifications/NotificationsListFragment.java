@@ -35,7 +35,6 @@ import org.wordpress.android.ui.main.WPMainActivity;
 import org.wordpress.android.ui.notifications.adapters.NotesAdapter;
 import org.wordpress.android.ui.notifications.services.NotificationsUpdateService;
 import org.wordpress.android.ui.notifications.utils.NotificationsActions;
-import org.wordpress.android.ui.posts.ContentType;
 import org.wordpress.android.util.AniUtils;
 import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.helpers.SwipeToRefreshHelper;

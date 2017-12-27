@@ -32,6 +32,7 @@ import org.wordpress.android.fluxc.generated.PostActionBuilder;
 import org.wordpress.android.fluxc.model.MediaModel;
 import org.wordpress.android.fluxc.model.PostModel;
 import org.wordpress.android.fluxc.model.SiteModel;
+import org.wordpress.android.fluxc.model.post.ContentType;
 import org.wordpress.android.fluxc.store.MediaStore;
 import org.wordpress.android.fluxc.store.MediaStore.OnMediaUploaded;
 import org.wordpress.android.fluxc.store.PostStore;
@@ -69,9 +70,9 @@ import javax.inject.Inject;
 
 import de.greenrobot.event.EventBus;
 
-import static org.wordpress.android.ui.posts.ContentType.PAGE;
-import static org.wordpress.android.ui.posts.ContentType.PORTFOLIO;
-import static org.wordpress.android.ui.posts.ContentType.POST;
+import static org.wordpress.android.fluxc.model.post.ContentType.POST;
+import static org.wordpress.android.fluxc.model.post.ContentType.PAGE;
+import static org.wordpress.android.fluxc.model.post.ContentType.PORTFOLIO;
 import static org.wordpress.android.util.WPSwipeToRefreshHelper.buildSwipeToRefreshHelper;
 
 public class PostsListFragment extends Fragment
@@ -110,13 +111,13 @@ public class PostsListFragment extends Fragment
     PostStore mPostStore;
     @Inject
     Dispatcher mDispatcher;
-    private int mContentType;
+    private ContentType mContentType;
 
-    public static PostsListFragment newInstance(SiteModel site, @ContentType int contentType, @Nullable PostModel targetPost) {
+    public static PostsListFragment newInstance(SiteModel site, ContentType contentType, @Nullable PostModel targetPost) {
         PostsListFragment fragment = new PostsListFragment();
         Bundle bundle = new Bundle();
         bundle.putSerializable(WordPress.SITE, site);
-        bundle.putInt(PostsListActivity.EXTRA_CONTENT_TYPE, contentType);
+        bundle.putString(PostsListActivity.EXTRA_CONTENT_TYPE, contentType.getValue());
         if (targetPost != null) {
             bundle.putInt(PostsListActivity.EXTRA_TARGET_POST_LOCAL_ID, targetPost.getId());
         }
@@ -151,18 +152,18 @@ public class PostsListFragment extends Fragment
         if (savedInstanceState == null) {
             if (getArguments() != null) {
                 mSite = (SiteModel) getArguments().getSerializable(WordPress.SITE);
-                mContentType = getArguments().getInt(PostsListActivity.EXTRA_CONTENT_TYPE);
+                mContentType = getContentType(getArguments());
                 mTargetPost = mPostStore.getPostByLocalPostId(
                         getArguments().getInt(PostsListActivity.EXTRA_TARGET_POST_LOCAL_ID));
             } else {
                 mSite = (SiteModel) getActivity().getIntent().getSerializableExtra(WordPress.SITE);
-                mContentType = getActivity().getIntent().getIntExtra(PostsListActivity.EXTRA_CONTENT_TYPE, 0);
+                mContentType = getContentType(getActivity().getIntent().getExtras());
                 mTargetPost = mPostStore.getPostByLocalPostId(
                         getActivity().getIntent().getIntExtra(PostsListActivity.EXTRA_TARGET_POST_LOCAL_ID, 0));
             }
         } else {
             mSite = (SiteModel) savedInstanceState.getSerializable(WordPress.SITE);
-            mContentType = savedInstanceState.getInt(PostsListActivity.EXTRA_CONTENT_TYPE);
+            mContentType = getContentType(savedInstanceState);
             mTargetPost = mPostStore.getPostByLocalPostId(
                     savedInstanceState.getInt(PostsListActivity.EXTRA_TARGET_POST_LOCAL_ID));
         }
@@ -171,6 +172,10 @@ public class PostsListFragment extends Fragment
             ToastUtils.showToast(getActivity(), R.string.blog_not_found, ToastUtils.Duration.SHORT);
             getActivity().finish();
         }
+    }
+
+    private ContentType getContentType(Bundle bundle) {
+        return ContentType.getContentType(bundle.getString(PostsListActivity.EXTRA_CONTENT_TYPE));
     }
 
     @Override

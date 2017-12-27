@@ -11,6 +11,7 @@ import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.fluxc.model.PostModel;
 import org.wordpress.android.fluxc.model.SiteModel;
+import org.wordpress.android.fluxc.model.post.ContentType;
 import org.wordpress.android.fluxc.store.PostStore;
 import org.wordpress.android.fluxc.store.SiteStore;
 import org.wordpress.android.ui.ActivityId;
@@ -19,14 +20,13 @@ import org.wordpress.android.util.ToastUtils;
 
 import javax.inject.Inject;
 
-import static org.wordpress.android.ui.posts.ContentType.PAGE;
-import static org.wordpress.android.ui.posts.ContentType.POST;
+import static org.wordpress.android.fluxc.model.post.ContentType.PAGE;
 
 public class PostsListActivity extends AppCompatActivity {
     public static final String EXTRA_CONTENT_TYPE = "contentType";
     public static final String EXTRA_TARGET_POST_LOCAL_ID = "targetPostLocalId";
 
-    private int mContentType;
+    private ContentType mContentType;
     private PostsListFragment mPostList;
 
     private SiteModel mSite;
@@ -61,17 +61,17 @@ public class PostsListActivity extends AppCompatActivity {
     }
 
     private void handleIntent(Intent intent) {
-        mContentType = intent.getIntExtra(EXTRA_CONTENT_TYPE, POST);
+        mContentType = ContentType.getContentType(intent.getStringExtra(EXTRA_CONTENT_TYPE));
 
         // get new intent extras and compare whether the running instance of PostsListActivity has
         // the same values or not. If not, we need to create a new fragment and show the corresponding
         // requested content
         boolean pageHasChanged = false;
         if (intent.hasExtra(EXTRA_CONTENT_TYPE)) {
-            int contentType = intent.getIntExtra(EXTRA_CONTENT_TYPE, POST);
+            ContentType contentType = ContentType.getContentType(intent.getStringExtra(EXTRA_CONTENT_TYPE));
             pageHasChanged = contentType != mContentType;
         }
-        mContentType = intent.getIntExtra(EXTRA_CONTENT_TYPE, POST);
+        mContentType = ContentType.getContentType(intent.getStringExtra(EXTRA_CONTENT_TYPE));
 
         boolean siteHasChanged = false;
         if (intent.hasExtra(WordPress.SITE)) {

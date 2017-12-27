@@ -34,6 +34,7 @@ import org.wordpress.android.fluxc.generated.MediaActionBuilder;
 import org.wordpress.android.fluxc.model.MediaModel;
 import org.wordpress.android.fluxc.model.PostModel;
 import org.wordpress.android.fluxc.model.SiteModel;
+import org.wordpress.android.fluxc.model.post.ContentType;
 import org.wordpress.android.fluxc.model.post.PostStatus;
 import org.wordpress.android.fluxc.store.MediaStore;
 import org.wordpress.android.fluxc.store.MediaStore.MediaPayload;
@@ -64,9 +65,8 @@ import java.util.Map;
 
 import javax.inject.Inject;
 
-import static org.wordpress.android.ui.posts.ContentType.PAGE;
-import static org.wordpress.android.ui.posts.ContentType.PORTFOLIO;
-import static org.wordpress.android.ui.posts.ContentType.POST;
+import static org.wordpress.android.fluxc.model.post.ContentType.PAGE;
+import static org.wordpress.android.fluxc.model.post.ContentType.POST;
 
 /**
  * Adapter for Posts/Pages list
@@ -98,7 +98,7 @@ public class PostsListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
     private final int mPhotonHeight;
     private final int mEndlistIndicatorHeight;
 
-    private final int mContentType;
+    private final ContentType mContentType;
     private final boolean mIsStatsSupported;
     private final boolean mShowAllButtons;
 
@@ -120,7 +120,7 @@ public class PostsListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
     @Inject
     protected UploadStore mUploadStore;
 
-    public PostsListAdapter(Context context, SiteModel site, int contentType) {
+    public PostsListAdapter(Context context, SiteModel site, ContentType contentType) {
         ((WordPress) context.getApplicationContext()).component().inject(this);
 
         mContentType = contentType;
@@ -458,7 +458,7 @@ public class PostsListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
             UploadError reason = mUploadStore.getUploadErrorForPost(post);
             if (reason != null && !UploadService.hasInProgressMediaUploadsForPost(post)) {
                 if (reason.mediaError != null) {
-                    errorMessage = context.getString(post.isPage() ? R.string.error_media_recover_page
+                    errorMessage = context.getString(post.getContentType() == POST ? R.string.error_media_recover_page
                             : R.string.error_media_recover_post);
                 } else if (reason.postError != null) {
                     errorMessage = UploadUtils.getErrorMessageFromPostError(context, post, reason.postError);
