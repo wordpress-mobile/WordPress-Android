@@ -444,13 +444,13 @@ public class LoginUsernamePasswordFragment extends LoginBaseFormFragment<LoginLi
     protected void onLoginFinished() {
         mAnalyticsListener.trackAnalyticsSignIn(mAccountStore, mSiteStore, mIsWpcom);
 
+        mLoginListener.startPostLoginServices();
+
         mLoginListener.loggedInViaPassword(mOldSitesIDs);
     }
 
     private void finishLogin() {
         mAnalyticsListener.trackAnalyticsSignIn(mAccountStore, mSiteStore, mIsWpcom);
-
-        mLoginListener.startPostLoginServices();
 
         // mark as finished so any subsequent onSiteChanged (e.g. triggered by WPMainActivity) won't be intercepted
         mLoginFinished = true;
