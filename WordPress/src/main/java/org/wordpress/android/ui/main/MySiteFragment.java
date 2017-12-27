@@ -33,6 +33,7 @@ import org.wordpress.android.ui.RequestCodes;
 import org.wordpress.android.ui.accounts.LoginActivity;
 import org.wordpress.android.ui.accounts.LoginMode;
 import org.wordpress.android.ui.comments.CommentsListFragment.CommentStatusCriteria;
+import org.wordpress.android.ui.posts.ContentType;
 import org.wordpress.android.ui.plugins.PluginUtils;
 import org.wordpress.android.ui.posts.EditPostActivity;
 import org.wordpress.android.ui.prefs.AppPrefs;
@@ -56,6 +57,8 @@ import java.util.TimeZone;
 import javax.inject.Inject;
 
 import de.greenrobot.event.EventBus;
+
+import static org.wordpress.android.ui.posts.ContentType.POST;
 
 public class MySiteFragment extends Fragment
         implements WPMainActivity.OnScrollToTopListener {
@@ -184,7 +187,7 @@ public class MySiteFragment extends Fragment
         mFabView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                ActivityLauncher.addNewPostOrPageForResult(getActivity(), getSelectedSite(), false, false);
+                ActivityLauncher.addNewPostOrPageForResult(getActivity(), getSelectedSite(), POST, false);
             }
         });
 
@@ -239,6 +242,16 @@ public class MySiteFragment extends Fragment
             @Override
             public void onClick(View v) {
                 ActivityLauncher.viewCurrentBlogPages(getActivity(), getSelectedSite());
+            }
+        });
+
+        //FIXME show only when portfolios enabled
+        View portfolioView = rootView.findViewById(R.id.row_portfolio);
+        portfolioView.setVisibility(View.VISIBLE);
+        portfolioView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                ActivityLauncher.viewCurrentBlogPortfolio(getActivity(), getSelectedSite());
             }
         });
 
