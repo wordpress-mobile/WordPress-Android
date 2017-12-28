@@ -1309,7 +1309,7 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
                     }
 
                     ClipDescription clipDescription = dragEvent.getClipDescription();
-                    if (clipDescription.getMimeTypeCount() < 1) {
+                    if (clipDescription == null || clipDescription.getMimeTypeCount() < 1) {
                         break;
                     }
 
@@ -1434,11 +1434,10 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
             localMediaId = attrs.getValue(idName);
         }
 
+        setIdAttributeOnMedia(attrs, idName, localMediaId);
 
         switch (uploadStatus) {
             case ATTR_STATUS_UPLOADING:
-                setIdAttributeOnMedia(attrs, idName, localMediaId);
-
                 // Display 'cancel upload' dialog
                 AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
                 builder.setTitle(getString(R.string.stop_upload_dialog_title));
@@ -1474,8 +1473,6 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
                 dialog.show();
                 break;
             case ATTR_STATUS_FAILED:
-                setIdAttributeOnMedia(attrs, idName, localMediaId);
-
                 // Retry media upload
                 boolean successfullyRetried = true;
                 if (mFailedMediaIds.contains(localMediaId)) {
