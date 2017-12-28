@@ -299,7 +299,7 @@ public class TaxonomyStore extends Store {
                 handlePushTermCompleted((RemoteTermPayload) action.getPayload());
                 break;
             case DELETE_TERM:
-                removeTerm((TermModel) action.getPayload());
+                deleteTerm((RemoteTermPayload) action.getPayload());
                 break;
             case DELETED_TERM:
                 handleDeleteTermCompleted((RemoteTermPayload) action.getPayload());
@@ -396,7 +396,7 @@ public class TaxonomyStore extends Store {
             onTermRemoved.error = payload.error;
             emitChange(onTermRemoved);
         } else {
-            emitChange(new OnTermRemoved(payload.term));
+            removeTerm(payload.term);
         }
     }
 
@@ -426,6 +426,14 @@ public class TaxonomyStore extends Store {
         } else {
             // TODO: check for WP-REST-API plugin and use it here
             mTaxonomyXMLRPCClient.pushTerm(payload.term, payload.site);
+        }
+    }
+
+    private void deleteTerm(RemoteTermPayload payload) {
+        if (payload.site.isUsingWpComRestApi()) {
+            mTaxonomyRestClient.deleteTerm(payload.term, payload.site);
+        } else {
+            mTaxonomyXMLRPCClient.deleteTerm(payload.term, payload.site);
         }
     }
 
