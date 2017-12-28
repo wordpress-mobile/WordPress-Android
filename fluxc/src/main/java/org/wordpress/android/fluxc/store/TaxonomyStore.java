@@ -298,11 +298,11 @@ public class TaxonomyStore extends Store {
             case PUSHED_TERM:
                 handlePushTermCompleted((RemoteTermPayload) action.getPayload());
                 break;
-            case REMOVE_TERM:
+            case DELETE_TERM:
                 removeTerm((TermModel) action.getPayload());
                 break;
-            case REMOVED_TERM:
-                handleRemoveTermCompleted((RemoteTermPayload) action.getPayload());
+            case DELETED_TERM:
+                handleDeleteTermCompleted((RemoteTermPayload) action.getPayload());
                 break;
             case REMOVE_ALL_TERMS:
                 removeAllTerms();
@@ -390,7 +390,7 @@ public class TaxonomyStore extends Store {
         }
     }
 
-    private void handleRemoveTermCompleted(RemoteTermPayload payload) {
+    private void handleDeleteTermCompleted(RemoteTermPayload payload) {
         if (payload.isError()) {
             OnTermRemoved onTermRemoved = new OnTermRemoved(payload.term);
             onTermRemoved.error = payload.error;
@@ -442,7 +442,7 @@ public class TaxonomyStore extends Store {
         int rowsAffected = TaxonomySqlUtils.deleteTerm(term);
 
         OnTaxonomyChanged onTaxonomyChanged = new OnTaxonomyChanged(rowsAffected, term.getTaxonomy());
-        onTaxonomyChanged.causeOfChange = TaxonomyAction.REMOVE_TERM;
+        onTaxonomyChanged.causeOfChange = TaxonomyAction.DELETE_TERM;
         emitChange(onTaxonomyChanged);
     }
 

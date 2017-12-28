@@ -24,9 +24,9 @@ public enum TaxonomyAction implements IAction {
     @Action(payloadType = RemoteTermPayload.class)
     PUSH_TERM,
     @Action(payloadType = RemoteTermPayload.class)
-    REMOVE_TERM,
+    DELETE_TERM,
     @Action(payloadType = RemoteTermPayload.class)
-    REMOVED_TERM,
+    DELETED_TERM,
 
     // Remote responses
     @Action(payloadType = FetchTermsResponsePayload.class)
