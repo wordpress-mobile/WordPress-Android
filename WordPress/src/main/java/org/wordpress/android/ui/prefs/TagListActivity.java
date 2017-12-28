@@ -43,7 +43,8 @@ import javax.inject.Inject;
 
 import static org.wordpress.android.fluxc.action.TaxonomyAction.FETCH_TAGS;
 
-public class TagListActivity extends AppCompatActivity implements SearchView.OnQueryTextListener {
+public class TagListActivity extends AppCompatActivity
+        implements SearchView.OnQueryTextListener, MenuItem.OnActionExpandListener {
 
     @Inject Dispatcher mDispatcher;
     @Inject SiteStore mSiteStore;
@@ -121,7 +122,6 @@ public class TagListActivity extends AppCompatActivity implements SearchView.OnQ
     @Override
     public void onResume() {
         super.onResume();
-
         showFabIfHidden();
     }
 
@@ -171,7 +171,7 @@ public class TagListActivity extends AppCompatActivity implements SearchView.OnQ
             return true;
         } else if (item.getItemId() == R.id.menu_search) {
             mSearchMenuItem = item;
-            mSearchMenuItem.expandActionView();
+            mSearchMenuItem.setOnActionExpandListener(this);
 
             mSearchView = (SearchView) item.getActionView();
             mSearchView.setOnQueryTextListener(this);
@@ -182,6 +182,7 @@ public class TagListActivity extends AppCompatActivity implements SearchView.OnQ
             }
 
             mSearchMenuItem.expandActionView();
+
             return true;
         }
         return super.onOptionsItemSelected(item);
@@ -219,6 +220,12 @@ public class TagListActivity extends AppCompatActivity implements SearchView.OnQ
                 }
             }
         }, delayMs);
+    }
+
+    private void hideFabIfShowing() {
+        if (!isFinishing() && mFabView.getVisibility() == View.VISIBLE) {
+            AniUtils.showFab(mFabView, false);
+        }
     }
 
     @SuppressWarnings("unused")
@@ -275,6 +282,18 @@ public class TagListActivity extends AppCompatActivity implements SearchView.OnQ
 
     private void showEmptyView(boolean show) {
         mEmptyView.setVisibility(show ? View.VISIBLE : View.GONE);
+    }
+
+    @Override
+    public boolean onMenuItemActionExpand(MenuItem item) {
+        hideFabIfShowing();
+        return true;
+    }
+
+    @Override
+    public boolean onMenuItemActionCollapse(MenuItem item) {
+        showFabIfHidden();
+        return true;
     }
 
     private class TagListAdapter extends RecyclerView.Adapter<TagListAdapter.TagViewHolder> {
