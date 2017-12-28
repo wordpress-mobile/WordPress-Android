@@ -396,7 +396,6 @@ public class TaxonomyStore extends Store {
             onTermRemoved.error = payload.error;
             emitChange(onTermRemoved);
         } else {
-            removeTerm(payload.term);
             emitChange(new OnTermRemoved(payload.term));
         }
     }
@@ -442,7 +441,7 @@ public class TaxonomyStore extends Store {
         int rowsAffected = TaxonomySqlUtils.deleteTerm(term);
 
         OnTaxonomyChanged onTaxonomyChanged = new OnTaxonomyChanged(rowsAffected, term.getTaxonomy());
-        onTaxonomyChanged.causeOfChange = TaxonomyAction.DELETE_TERM;
+        onTaxonomyChanged.causeOfChange = TaxonomyAction.REMOVE_TERM;
         emitChange(onTaxonomyChanged);
     }
 
