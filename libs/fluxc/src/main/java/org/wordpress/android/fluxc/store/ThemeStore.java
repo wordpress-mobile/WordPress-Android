@@ -29,7 +29,8 @@ public class ThemeStore extends Store {
         public SiteModel site;
         public ThemeModel theme;
 
-        public FetchedCurrentThemePayload(ThemesError error) {
+        public FetchedCurrentThemePayload(@NonNull SiteModel site, @NonNull ThemesError error) {
+            this.site = site;
             this.error = error;
         }
 
@@ -39,16 +40,29 @@ public class ThemeStore extends Store {
         }
     }
 
-    public static class FetchedThemesPayload extends Payload<ThemesError> {
+    public static class FetchedSiteThemesPayload extends Payload<ThemesError> {
         public SiteModel site;
         public List<ThemeModel> themes;
 
-        public FetchedThemesPayload(ThemesError error) {
+        public FetchedSiteThemesPayload(@NonNull SiteModel site, @NonNull ThemesError error) {
+            this.site = site;
             this.error = error;
         }
 
-        public FetchedThemesPayload(@NonNull SiteModel site, @NonNull List<ThemeModel> themes) {
+        public FetchedSiteThemesPayload(@NonNull SiteModel site, @NonNull List<ThemeModel> themes) {
             this.site = site;
+            this.themes = themes;
+        }
+    }
+
+    public static class FetchedWpComThemesPayload extends Payload<ThemesError> {
+        public List<ThemeModel> themes;
+
+        public FetchedWpComThemesPayload(@NonNull ThemesError error) {
+            this.error = error;
+        }
+
+        public FetchedWpComThemesPayload(@NonNull List<ThemeModel> themes) {
             this.themes = themes;
         }
     }
@@ -121,13 +135,17 @@ public class ThemeStore extends Store {
     }
 
     // OnChanged events
-    public static class OnThemesChanged extends OnChanged<ThemesError> {
+    public static class OnSiteThemesChanged extends OnChanged<ThemesError> {
         public SiteModel site;
         public ThemeAction origin;
 
-        public OnThemesChanged(SiteModel site) {
+        public OnSiteThemesChanged(SiteModel site, ThemeAction origin) {
             this.site = site;
+            this.origin = origin;
         }
+    }
+
+    public static class OnWpComThemesChanged extends OnChanged<ThemesError> {
     }
 
     public static class OnCurrentThemeFetched extends OnChanged<ThemesError> {
@@ -206,13 +224,13 @@ public class ThemeStore extends Store {
                 fetchWpComThemes();
                 break;
             case FETCHED_WP_COM_THEMES:
-                handleWpComThemesFetched((FetchedThemesPayload) action.getPayload());
+                handleWpComThemesFetched((FetchedWpComThemesPayload) action.getPayload());
                 break;
             case FETCH_INSTALLED_THEMES:
                 fetchInstalledThemes((SiteModel) action.getPayload());
                 break;
             case FETCHED_INSTALLED_THEMES:
-                handleInstalledThemesFetched((FetchedThemesPayload) action.getPayload());
+                handleInstalledThemesFetched((FetchedSiteThemesPayload) action.getPayload());
                 break;
             case FETCH_PURCHASED_THEMES:
                 break;
@@ -306,9 +324,8 @@ public class ThemeStore extends Store {
         mThemeRestClient.fetchWpComThemes();
     }
 
-    private void handleWpComThemesFetched(@NonNull FetchedThemesPayload payload) {
-        OnThemesChanged event = new OnThemesChanged(payload.site);
-        event.origin = ThemeAction.FETCH_WP_COM_THEMES;
+    private void handleWpComThemesFetched(@NonNull FetchedWpComThemesPayload payload) {
+        OnWpComThemesChanged event = new OnWpComThemesChanged();
         if (payload.isError()) {
             event.error = payload.error;
         } else {
@@ -322,14 +339,13 @@ public class ThemeStore extends Store {
             mThemeRestClient.fetchJetpackInstalledThemes(site);
         } else {
             ThemesError error = new ThemesError(ThemeErrorType.NOT_AVAILABLE);
-            FetchedThemesPayload payload = new FetchedThemesPayload(error);
+            FetchedSiteThemesPayload payload = new FetchedSiteThemesPayload(site, error);
             handleInstalledThemesFetched(payload);
         }
     }
 
-    private void handleInstalledThemesFetched(@NonNull FetchedThemesPayload payload) {
-        OnThemesChanged event = new OnThemesChanged(payload.site);
-        event.origin = ThemeAction.FETCH_INSTALLED_THEMES;
+    private void handleInstalledThemesFetched(@NonNull FetchedSiteThemesPayload payload) {
+        OnSiteThemesChanged event = new OnSiteThemesChanged(payload.site, ThemeAction.FETCH_INSTALLED_THEMES);
         if (payload.isError()) {
             event.error = payload.error;
         } else {
@@ -343,7 +359,7 @@ public class ThemeStore extends Store {
             mThemeRestClient.fetchCurrentTheme(site);
         } else {
             ThemesError error = new ThemesError(ThemeErrorType.NOT_AVAILABLE);
-            FetchedCurrentThemePayload payload = new FetchedCurrentThemePayload(error);
+            FetchedCurrentThemePayload payload = new FetchedCurrentThemePayload(site, error);
             handleCurrentThemeFetched(payload);
         }
     }
@@ -454,6 +470,6 @@ public class ThemeStore extends Store {
                 ThemeSqlUtils.removeTheme(theme);
             }
         }
-        emitChange(new OnThemesChanged(site));
+        emitChange(new OnSiteThemesChanged(site, ThemeAction.REMOVE_SITE_THEMES));
     }
 }
