@@ -197,8 +197,44 @@ public class TaxonomyXMLRPCClient extends BaseXMLRPCClient {
         add(request);
     }
 
-    // TODO: deleteTerm
+    public void deleteTerm(final TermModel term, final SiteModel site) {
+        Map<String, Object> contentStruct = termModelToContentStruct(term);
 
+        List<Object> params = new ArrayList<>(4);
+        params.add(site.getSelfHostedSiteId());
+        params.add(site.getUsername());
+        params.add(site.getPassword());
+        params.add(contentStruct);
+
+        final XMLRPCRequest request = new XMLRPCRequest(site.getXmlRpcUrl(), XMLRPC.DELETE_TERM, params,
+                new Listener<Object>() {
+                    @Override
+                    public void onResponse(Object response) {
+                        RemoteTermPayload payload = new RemoteTermPayload(term, site);
+                        mDispatcher.dispatch(TaxonomyActionBuilder.newDeletedTermAction(payload));
+                    }
+                },
+                new BaseErrorListener() {
+                    @Override
+                    public void onErrorResponse(@NonNull BaseNetworkError error) {
+                        RemoteTermPayload payload = new RemoteTermPayload(term, site);
+                        TaxonomyError taxonomyError;
+                        switch (error.type) {
+                            case AUTHORIZATION_REQUIRED:
+                                taxonomyError = new TaxonomyError(TaxonomyErrorType.UNAUTHORIZED, error.message);
+                                break;
+                            default:
+                                taxonomyError = new TaxonomyError(TaxonomyErrorType.GENERIC_ERROR, error.message);
+                        }
+                        payload.error = taxonomyError;
+                        mDispatcher.dispatch(TaxonomyActionBuilder.newDeletedTermAction(payload));
+                    }
+                }
+        );
+
+        request.disableRetries();
+        add(request);
+    }
     private TermsModel termsResponseToTermsModel(Object[] response, SiteModel site) {
         List<Map<?, ?>> termsList = new ArrayList<>();
         for (Object responseObject : response) {
