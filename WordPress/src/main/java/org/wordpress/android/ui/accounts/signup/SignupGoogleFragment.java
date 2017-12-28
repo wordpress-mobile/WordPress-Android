@@ -19,7 +19,6 @@ import org.wordpress.android.ui.accounts.GoogleFragment;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.SiteUtils;
-import org.wordpress.android.util.ToastUtils;
 
 import java.util.ArrayList;
 import java.util.regex.Matcher;
@@ -103,6 +102,11 @@ public class SignupGoogleFragment extends GoogleFragment {
                                 AppLog.e(T.NUX, "Google Signup Failed: user is not signed in.");
                                 showErrorDialog(getString(R.string.login_error_generic));
                                 break;
+                            // Timeout error.
+                            case GoogleSignInStatusCodes.TIMEOUT:
+                                AppLog.e(T.NUX, "Google Signup Failed: timeout error.");
+                                showErrorDialog(getString(R.string.google_error_timeout));
+                                break;
                             // Unknown error.
                             default:
                                 AppLog.e(T.NUX, "Google Signup Failed: unknown error.");
@@ -164,8 +168,7 @@ public class SignupGoogleFragment extends GoogleFragment {
                 case TWO_STEP_ENABLED:
                     AnalyticsTracker.track(AnalyticsTracker.Stat.SIGNUP_SOCIAL_2FA_NEEDED);
                     AnalyticsTracker.track(AnalyticsTracker.Stat.SIGNUP_SOCIAL_TO_LOGIN);
-                    ToastUtils.showToast(getContext(), getString(R.string.signup_user_exists, mGoogleEmail),
-                            ToastUtils.Duration.LONG);
+                    mLoginListener.showSignupToLoginMessage();
                     // Dispatch social login action to retrieve data required for two-factor authentication.
                     PushSocialPayload payload = new PushSocialPayload(mIdToken, SERVICE_TYPE_GOOGLE);
                     mDispatcher.dispatch(AccountActionBuilder.newPushSocialLoginAction(payload));
@@ -174,8 +177,7 @@ public class SignupGoogleFragment extends GoogleFragment {
                 case USER_EXISTS:
                     AnalyticsTracker.track(AnalyticsTracker.Stat.SIGNUP_SOCIAL_ACCOUNTS_NEED_CONNECTING);
                     AnalyticsTracker.track(AnalyticsTracker.Stat.SIGNUP_SOCIAL_TO_LOGIN);
-                    ToastUtils.showToast(getContext(), getString(R.string.signup_user_exists, mGoogleEmail),
-                            ToastUtils.Duration.LONG);
+                    mLoginListener.showSignupToLoginMessage();
                     mLoginListener.loginViaSocialAccount(mGoogleEmail, mIdToken, SERVICE_TYPE_GOOGLE, true);
                     // Kill connections with FluxC and this fragment since the flow is changing to login.
                     mDispatcher.unregister(this);

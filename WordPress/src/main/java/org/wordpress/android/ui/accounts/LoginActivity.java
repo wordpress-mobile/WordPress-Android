@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
@@ -527,6 +528,11 @@ public class LoginActivity extends AppCompatActivity implements ConnectionCallba
     @Override
     public void onConnectionSuspended(int i) {
         AppLog.d(AppLog.T.NUX, "Google API client connection suspended");
+    }
+
+    @Override
+    public void showSignupToLoginMessage() {
+        Snackbar.make(findViewById(R.id.main_view), R.string.signup_user_exists, Snackbar.LENGTH_LONG).show();
     }
 
     // GoogleListener
