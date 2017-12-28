@@ -136,7 +136,7 @@ public class TaxonomySqlUtils {
                 .execute();
     }
 
-    public static int deleteTerm(TermModel term) {
+    public static int removeTerm(TermModel term) {
         if (term == null) {
             return 0;
         }
