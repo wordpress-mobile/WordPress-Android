@@ -151,18 +151,26 @@ public class TaxonomyXMLRPCClient extends BaseXMLRPCClient {
 
     public void pushTerm(final TermModel term, final SiteModel site) {
         Map<String, Object> contentStruct = termModelToContentStruct(term);
+        final boolean updatingExistingTerm = term.getRemoteTermId() > 0;
 
         List<Object> params = new ArrayList<>(4);
         params.add(site.getSelfHostedSiteId());
         params.add(site.getUsername());
         params.add(site.getPassword());
+        if (updatingExistingTerm) {
+            params.add(term.getRemoteTermId());
+        }
         params.add(contentStruct);
 
-        final XMLRPCRequest request = new XMLRPCRequest(site.getXmlRpcUrl(), XMLRPC.NEW_TERM, params,
+        XMLRPC method = updatingExistingTerm ? XMLRPC.EDIT_TERM : XMLRPC.NEW_TERM;
+        final XMLRPCRequest request = new XMLRPCRequest(site.getXmlRpcUrl(), method, params,
                 new Listener<Object>() {
                     @Override
                     public void onResponse(Object response) {
-                        term.setRemoteTermId(Long.valueOf((String) response));
+                        // `term_id` is only returned for XMLRPC.NEW_TERM
+                        if (!updatingExistingTerm) {
+                            term.setRemoteTermId(Long.valueOf((String) response));
+                        }
 
                         RemoteTermPayload payload = new RemoteTermPayload(term, site);
                         mDispatcher.dispatch(TaxonomyActionBuilder.newPushedTermAction(payload));
