@@ -12,6 +12,7 @@ wp.deletePost
 wp.getTerm
 wp.getTerms
 wp.newTerm
+wp.deleteTerm
 wp.uploadFile
 wp.newComment
 wp.getComment
