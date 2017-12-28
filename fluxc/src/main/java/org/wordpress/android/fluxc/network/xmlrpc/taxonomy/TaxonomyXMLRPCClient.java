@@ -197,6 +197,8 @@ public class TaxonomyXMLRPCClient extends BaseXMLRPCClient {
         add(request);
     }
 
+    // TODO: deleteTerm
+
     private TermsModel termsResponseToTermsModel(Object[] response, SiteModel site) {
         List<Map<?, ?>> termsList = new ArrayList<>();
         for (Object responseObject : response) {
