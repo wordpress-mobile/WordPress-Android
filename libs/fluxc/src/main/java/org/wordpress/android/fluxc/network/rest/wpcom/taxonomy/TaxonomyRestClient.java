@@ -156,9 +156,8 @@ public class TaxonomyRestClient extends BaseWPComRestClient {
 
     public void deleteTerm(final TermModel term, final SiteModel site) {
         final String taxonomy = term.getTaxonomy();
-        // TODO: "delete" rather than "new_"
-        String url = WPCOMREST.sites.site(site.getSiteId()).taxonomies.taxonomy(taxonomy).terms.new_.getUrlV1_1();
-
+        String url = WPCOMREST.sites.site(site.getSiteId()).taxonomies.taxonomy(taxonomy).terms
+                .slug(term.getSlug()).delete.getUrlV1_1();
         Map<String, Object> body = termModelToParams(term);
 
         final WPComGsonRequest request = WPComGsonRequest.buildPostRequest(url, body,
@@ -166,7 +165,8 @@ public class TaxonomyRestClient extends BaseWPComRestClient {
                 new Listener<TermWPComRestResponse>() {
                     @Override
                     public void onResponse(TermWPComRestResponse response) {
-                        // TODO: mDispatcher.dispatch(TaxonomyActionBuilder.newDeletedTermAction(term));
+                        RemoteTermPayload payload = new RemoteTermPayload(term, site);
+                        mDispatcher.dispatch(TaxonomyActionBuilder.newDeletedTermAction(payload));
                     }
                 },
                 new BaseErrorListener() {
@@ -175,7 +175,7 @@ public class TaxonomyRestClient extends BaseWPComRestClient {
                         // Possible non-generic errors: 400 invalid_taxonomy, 409 duplicate
                         RemoteTermPayload payload = new RemoteTermPayload(term, site);
                         payload.error = new TaxonomyError(((WPComGsonNetworkError) error).apiError, error.message);
-                        // TODO: mDispatcher.dispatch(TaxonomyActionBuilder.newDeletedTermAction(payload));
+                        mDispatcher.dispatch(TaxonomyActionBuilder.newDeletedTermAction(payload));
                     }
                 }
         );
