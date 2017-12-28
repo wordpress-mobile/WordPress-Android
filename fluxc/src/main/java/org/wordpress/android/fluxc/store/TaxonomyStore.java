@@ -446,7 +446,7 @@ public class TaxonomyStore extends Store {
     }
 
     private void removeTerm(TermModel term) {
-        int rowsAffected = TaxonomySqlUtils.deleteTerm(term);
+        int rowsAffected = TaxonomySqlUtils.removeTerm(term);
 
         OnTaxonomyChanged onTaxonomyChanged = new OnTaxonomyChanged(rowsAffected, term.getTaxonomy());
         onTaxonomyChanged.causeOfChange = TaxonomyAction.REMOVE_TERM;
