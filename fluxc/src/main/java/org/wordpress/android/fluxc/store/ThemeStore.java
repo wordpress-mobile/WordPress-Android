@@ -255,10 +255,6 @@ public class ThemeStore extends Store {
         return ThemeSqlUtils.getWpComThemesCursor();
     }
 
-    public Cursor getThemesCursorForSite(@NonNull SiteModel site) {
-        return ThemeSqlUtils.getThemesForSiteAsCursor(site);
-    }
-
     public List<ThemeModel> getThemesForSite(@NonNull SiteModel site) {
         return ThemeSqlUtils.getThemesForSite(site);
     }
@@ -270,6 +266,7 @@ public class ThemeStore extends Store {
         return ThemeSqlUtils.getSiteThemeByThemeId(siteModel, themeId);
     }
 
+    @SuppressWarnings("WeakerAccess")
     public ThemeModel getWpComThemeByThemeId(String themeId) {
         if (TextUtils.isEmpty(themeId)) {
             return null;
