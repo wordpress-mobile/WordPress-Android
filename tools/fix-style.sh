@@ -10,10 +10,10 @@ function remove_duplicate_white_spaces() {
 }
 
 function move_binary_operators() {
-    perl -i -0pe 's/ \+\r\n([ ]+)/\r\n$1+ /g' $1
-    perl -i -0pe 's/ &&\r\n([ ]+)/\r\n$1&& /g' $1
-    perl -i -0pe 's/ \|\|\r\n([ ]+)/\r\n$1|| /g' $1
-    perl -i -0pe 's/ \|\r\n([ ]+)/\r\n$1| /g' $1
+    perl -i -0pe 's/ \+\r?\n([ ]+)/\n$1+ /g' $1
+    perl -i -0pe 's/ &&\r?\n([ ]+)/\n$1&& /g' $1
+    perl -i -0pe 's/ \|\|\r?\n([ ]+)/\n$1|| /g' $1
+    perl -i -0pe 's/ \|\r?\n([ ]+)/\n$1| /g' $1
 }
 
 function remove_trailing_white_spaces {
