@@ -36,6 +36,7 @@ public class WordPressDB {
 
     private SQLiteDatabase db;
 
+    @SuppressWarnings({"FallThrough"})
     public WordPressDB(Context ctx) {
         db = ctx.openOrCreateDatabase(DATABASE_NAME, 0, null);
 
