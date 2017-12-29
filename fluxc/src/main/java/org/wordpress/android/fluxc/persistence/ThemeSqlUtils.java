@@ -49,7 +49,7 @@ public class ThemeSqlUtils {
         WellSql.insert(themes).asSingleTransaction(true).execute();
     }
 
-    public static int insertOrReplaceInstalledThemes(@NonNull SiteModel site, @NonNull List<ThemeModel> themes) {
+    public static void insertOrReplaceInstalledThemes(@NonNull SiteModel site, @NonNull List<ThemeModel> themes) {
         // remove existing installed themes
         removeThemes(site);
 
@@ -59,8 +59,6 @@ public class ThemeSqlUtils {
         }
 
         WellSql.insert(themes).asSingleTransaction(true).execute();
-
-        return themes.size();
     }
 
     public static void insertOrReplaceActiveThemeForSite(@NonNull SiteModel site, @NonNull ThemeModel theme) {
