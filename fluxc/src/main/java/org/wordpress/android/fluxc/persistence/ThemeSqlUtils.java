@@ -37,28 +37,6 @@ public class ThemeSqlUtils {
         }
     }
 
-    public static void insertOrUpdateWpComTheme(@NonNull ThemeModel theme) {
-        List<ThemeModel> existing = WellSql.select(ThemeModel.class)
-                .where().beginGroup()
-                .equals(ThemeModelTable.THEME_ID, theme.getThemeId())
-                .equals(ThemeModelTable.IS_WP_COM_THEME, true)
-                .endGroup().endWhere().getAsModel();
-
-        // Remove local site id if it's set for whatever reason (shouldn't normally happen, so it's a sanity check)
-        theme.setLocalSiteId(0);
-        // Make sure the isWpComTheme flag is set
-        theme.setIsWpComTheme(true);
-
-        if (existing.isEmpty()) {
-            // theme is not in the local DB so we insert it
-            WellSql.insert(theme).asSingleTransaction(true).execute();
-        } else {
-            // theme already exists in the local DB so we update the existing row with the passed theme
-            WellSql.update(ThemeModel.class).whereId(existing.get(0).getId())
-                    .put(theme, new UpdateAllExceptId<>(ThemeModel.class)).execute();
-        }
-    }
-
     public static void insertOrReplaceWpComThemes(@NonNull List<ThemeModel> themes) {
         // remove existing WP.com themes
         removeWpComThemes();
