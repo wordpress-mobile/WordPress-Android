@@ -24,7 +24,6 @@ import org.wordpress.android.fluxc.store.ThemeStore.ActivateThemePayload;
 import org.wordpress.android.fluxc.store.ThemeStore.FetchedCurrentThemePayload;
 import org.wordpress.android.fluxc.store.ThemeStore.FetchedSiteThemesPayload;
 import org.wordpress.android.fluxc.store.ThemeStore.FetchedWpComThemesPayload;
-import org.wordpress.android.fluxc.store.ThemeStore.SearchedThemesPayload;
 import org.wordpress.android.fluxc.store.ThemeStore.ThemesError;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.StringUtils;
@@ -192,30 +191,6 @@ public class ThemeRestClient extends BaseWPComRestClient {
                                 ((WPComGsonRequest.WPComGsonNetworkError) error).apiError, error.message);
                         FetchedCurrentThemePayload payload = new FetchedCurrentThemePayload(site, themeError);
                         mDispatcher.dispatch(ThemeActionBuilder.newFetchedCurrentThemeAction(payload));
-                    }
-                }));
-    }
-
-    /** [Undocumented!] Endpoint: v1.2/themes?search=$term */
-    public void searchThemes(@NonNull final String searchTerm) {
-        String url = WPCOMREST.themes.getUrlV1_2() + "?search=" + searchTerm;
-        add(WPComGsonRequest.buildGetRequest(url, null, WPComThemeListResponse.class,
-                new Response.Listener<WPComThemeListResponse>() {
-                    @Override
-                    public void onResponse(WPComThemeListResponse response) {
-                        AppLog.d(AppLog.T.API, "Received response to search themes request.");
-                        SearchedThemesPayload payload =
-                                new SearchedThemesPayload(searchTerm, createThemeListFromArrayResponse(response));
-                        mDispatcher.dispatch(ThemeActionBuilder.newSearchedThemesAction(payload));
-                    }
-                }, new BaseRequest.BaseErrorListener() {
-                    @Override
-                    public void onErrorResponse(@NonNull BaseNetworkError error) {
-                        AppLog.e(AppLog.T.API, "Received error response to search themes request.");
-                        ThemesError themeError = new ThemesError(
-                                ((WPComGsonRequest.WPComGsonNetworkError) error).apiError, error.message);
-                        SearchedThemesPayload payload = new SearchedThemesPayload(themeError);
-                        mDispatcher.dispatch(ThemeActionBuilder.newSearchedThemesAction(payload));
                     }
                 }));
     }
