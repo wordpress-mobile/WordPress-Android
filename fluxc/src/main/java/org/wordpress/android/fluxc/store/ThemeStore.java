@@ -67,28 +67,6 @@ public class ThemeStore extends Store {
         }
     }
 
-    public static class SearchThemesPayload extends Payload<ThemesError> {
-        public String searchTerm;
-
-        public SearchThemesPayload(@NonNull String searchTerm) {
-            this.searchTerm = searchTerm;
-        }
-    }
-
-    public static class SearchedThemesPayload extends Payload<ThemesError> {
-        public String searchTerm;
-        public List<ThemeModel> themes;
-
-        public SearchedThemesPayload(@NonNull String searchTerm, List<ThemeModel> themes) {
-            this.searchTerm = searchTerm;
-            this.themes = themes;
-        }
-
-        public SearchedThemesPayload(ThemesError error) {
-            this.error = error;
-        }
-    }
-
     public static class ActivateThemePayload extends Payload<ThemesError> {
         public SiteModel site;
         public ThemeModel theme;
@@ -155,14 +133,6 @@ public class ThemeStore extends Store {
         public OnCurrentThemeFetched(SiteModel site, ThemeModel theme) {
             this.site = site;
             this.theme = theme;
-        }
-    }
-
-    public static class OnThemesSearched extends OnChanged<ThemesError> {
-        public List<ThemeModel> searchResults;
-
-        public OnThemesSearched(List<ThemeModel> searchResults) {
-            this.searchResults = searchResults;
         }
     }
 
@@ -241,13 +211,6 @@ public class ThemeStore extends Store {
                 break;
             case FETCHED_CURRENT_THEME:
                 handleCurrentThemeFetched((FetchedCurrentThemePayload) action.getPayload());
-                break;
-            case SEARCH_THEMES:
-                SearchThemesPayload searchPayload = (SearchThemesPayload) action.getPayload();
-                searchThemes(searchPayload.searchTerm);
-                break;
-            case SEARCHED_THEMES:
-                handleSearchedThemes((SearchedThemesPayload) action.getPayload());
                 break;
             case ACTIVATE_THEME:
                 activateTheme((ActivateThemePayload) action.getPayload());
@@ -370,22 +333,6 @@ public class ThemeStore extends Store {
             event.error = payload.error;
         } else {
             ThemeSqlUtils.insertOrReplaceActiveThemeForSite(payload.site, payload.theme);
-        }
-        emitChange(event);
-    }
-
-    private void searchThemes(@NonNull String searchTerm) {
-        mThemeRestClient.searchThemes(searchTerm);
-    }
-
-    private void handleSearchedThemes(@NonNull SearchedThemesPayload payload) {
-        OnThemesSearched event = new OnThemesSearched(payload.themes);
-        if (payload.isError()) {
-            event.error = payload.error;
-        } else {
-            for (ThemeModel theme : payload.themes) {
-                ThemeSqlUtils.insertOrUpdateWpComTheme(theme);
-            }
         }
         emitChange(event);
     }
