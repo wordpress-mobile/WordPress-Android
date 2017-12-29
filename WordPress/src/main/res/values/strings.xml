@@ -2086,6 +2086,11 @@
     <string name="signup_with_email_button">Sign Up with Email</string>
     <string name="signup_with_google_button">Sign Up with Google</string>
 
+    <string name="username_changer_dismiss_button_positive">Discard</string>
+    <string name="username_changer_dismiss_message">Discard changing username?</string>
+    <string name="username_changer_header">Your username is currently %1$s%2$s%3$s. It will be used for mentions and links, but otherwise people will just see your display name, %4$s%5$s%6$s.</string>
+    <string name="username_changer_hint">Type to get more suggestions</string>
+
     <string name="google_error_timeout">Google took too long to respond. You may need to wait until you have a stronger internet connection.</string>
 
     <!-- Site Creation notifications -->
