@@ -98,6 +98,7 @@ public class ThemeStore extends Store {
         }
     }
 
+    @SuppressWarnings("WeakerAccess")
     public static class ThemesError implements OnChangedError {
         public ThemeErrorType type;
         public String message;
@@ -113,6 +114,7 @@ public class ThemeStore extends Store {
     }
 
     // OnChanged events
+    @SuppressWarnings("WeakerAccess")
     public static class OnSiteThemesChanged extends OnChanged<ThemesError> {
         public SiteModel site;
         public ThemeAction origin;
@@ -126,6 +128,7 @@ public class ThemeStore extends Store {
     public static class OnWpComThemesChanged extends OnChanged<ThemesError> {
     }
 
+    @SuppressWarnings("WeakerAccess")
     public static class OnCurrentThemeFetched extends OnChanged<ThemesError> {
         public SiteModel site;
         public ThemeModel theme;
@@ -136,6 +139,7 @@ public class ThemeStore extends Store {
         }
     }
 
+    @SuppressWarnings("WeakerAccess")
     public static class OnThemeActivated extends OnChanged<ThemesError> {
         public SiteModel site;
         public ThemeModel theme;
@@ -146,6 +150,7 @@ public class ThemeStore extends Store {
         }
     }
 
+    @SuppressWarnings("WeakerAccess")
     public static class OnThemeRemoved extends OnChanged<ThemesError> {
         public ThemeModel theme;
 
@@ -154,6 +159,7 @@ public class ThemeStore extends Store {
         }
     }
 
+    @SuppressWarnings("WeakerAccess")
     public static class OnThemeDeleted extends OnChanged<ThemesError> {
         public SiteModel site;
         public ThemeModel theme;
@@ -164,6 +170,7 @@ public class ThemeStore extends Store {
         }
     }
 
+    @SuppressWarnings("WeakerAccess")
     public static class OnThemeInstalled extends OnChanged<ThemesError> {
         public SiteModel site;
         public ThemeModel theme;
