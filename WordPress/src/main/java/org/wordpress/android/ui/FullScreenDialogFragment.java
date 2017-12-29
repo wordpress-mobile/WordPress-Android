@@ -89,7 +89,7 @@ public class FullScreenDialogFragment extends DialogFragment {
             getChildFragmentManager()
                     .beginTransaction()
                     .setCustomAnimations(R.anim.full_screen_dialog_fragment_none, 0, 0, R.anim.full_screen_dialog_fragment_none)
-                    .add(R.id.content, mFragment)
+                    .add(R.id.full_screen_dialog_fragment_content, mFragment)
                     .commitNow();
         }
     }
@@ -99,7 +99,7 @@ public class FullScreenDialogFragment extends DialogFragment {
         super.onCreate(savedInstanceState);
 
         if (savedInstanceState != null) {
-            mFragment = getChildFragmentManager().findFragmentById(R.id.content);
+            mFragment = getChildFragmentManager().findFragmentById(R.id.full_screen_dialog_fragment_content);
         }
 
         mController = new FullScreenDialogController() {
@@ -204,7 +204,7 @@ public class FullScreenDialogFragment extends DialogFragment {
      * @param view {@link View}
      */
     private void initToolbar(View view) {
-        Toolbar toolbar = (Toolbar) view.findViewById(R.id.toolbar);
+        Toolbar toolbar = view.findViewById(R.id.full_screen_dialog_fragment_toolbar);
         toolbar.setTitle(mTitle);
         toolbar.setNavigationIcon(ContextCompat.getDrawable(getContext(), R.drawable.ic_close_white_24dp));
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
