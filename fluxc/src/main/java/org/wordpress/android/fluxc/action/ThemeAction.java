@@ -18,8 +18,6 @@ public enum ThemeAction implements IAction {
     @Action(payloadType = SiteModel.class)
     FETCH_INSTALLED_THEMES, // Jetpack only
     @Action(payloadType = SiteModel.class)
-    FETCH_PURCHASED_THEMES,
-    @Action(payloadType = SiteModel.class)
     FETCH_CURRENT_THEME,
     @Action(payloadType = SiteThemePayload.class)
     ACTIVATE_THEME,
@@ -33,8 +31,6 @@ public enum ThemeAction implements IAction {
     FETCHED_WP_COM_THEMES,
     @Action(payloadType = FetchedSiteThemesPayload.class)
     FETCHED_INSTALLED_THEMES,
-    @Action(payloadType = FetchedSiteThemesPayload.class)
-    FETCHED_PURCHASED_THEMES,
     @Action(payloadType = FetchedCurrentThemePayload.class)
     FETCHED_CURRENT_THEME,
     @Action(payloadType = SiteThemePayload.class)
