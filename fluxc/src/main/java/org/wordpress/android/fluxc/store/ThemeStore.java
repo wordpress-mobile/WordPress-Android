@@ -209,10 +209,6 @@ public class ThemeStore extends Store {
             case FETCHED_INSTALLED_THEMES:
                 handleInstalledThemesFetched((FetchedSiteThemesPayload) action.getPayload());
                 break;
-            case FETCH_PURCHASED_THEMES:
-                break;
-            case FETCHED_PURCHASED_THEMES:
-                break;
             case FETCH_CURRENT_THEME:
                 fetchCurrentTheme((SiteModel) action.getPayload());
                 break;
