@@ -1,12 +1,14 @@
 package org.wordpress.android.ui.prefs;
 
 import android.app.FragmentTransaction;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.annotation.StringRes;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
@@ -26,6 +28,7 @@ import org.greenrobot.eventbus.ThreadMode;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.fluxc.Dispatcher;
+import org.wordpress.android.fluxc.annotations.action.Action;
 import org.wordpress.android.fluxc.generated.TaxonomyActionBuilder;
 import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.model.TermModel;
@@ -44,7 +47,8 @@ import javax.inject.Inject;
 import static org.wordpress.android.fluxc.action.TaxonomyAction.FETCH_TAGS;
 
 public class TagListActivity extends AppCompatActivity
-        implements SearchView.OnQueryTextListener, MenuItem.OnActionExpandListener {
+        implements SearchView.OnQueryTextListener, MenuItem.OnActionExpandListener,
+        TagDetailFragment.OnTagDetailListener {
 
     @Inject Dispatcher mDispatcher;
     @Inject SiteStore mSiteStore;
@@ -62,6 +66,7 @@ public class TagListActivity extends AppCompatActivity
 
     private MenuItem mSearchMenuItem;
     private SearchView mSearchView;
+    private ProgressDialog mProgressDialog;
 
     public static void showTagList(@NonNull Context context, @NonNull SiteModel site) {
         Intent intent = new Intent(context, TagListActivity.class);
@@ -116,6 +121,11 @@ public class TagListActivity extends AppCompatActivity
 
         if (savedInstanceState == null) {
             mDispatcher.dispatch(TaxonomyActionBuilder.newFetchTagsAction(mSite));
+        } else {
+            TagDetailFragment fragment = getDetailFragment();
+            if (fragment != null) {
+                fragment.setOnTagDetailListener(this);
+            }
         }
     }
 
@@ -192,18 +202,19 @@ public class TagListActivity extends AppCompatActivity
     public void onBackPressed() {
         if (getFragmentManager().getBackStackEntryCount() > 0) {
             TagDetailFragment fragment = getDetailFragment();
-            if (fragment != null) {
-                fragment.saveChanges();
+            if (fragment != null && fragment.hasChanges()) {
+                saveTag(fragment.getTerm(), fragment.isNewTerm());
+            } else {
+                getFragmentManager().popBackStack();
+
+                setTitle(R.string.site_settings_tags_title);
+                ActivityUtils.hideKeyboard(this);
+
+                invalidateOptionsMenu();
+                showFabIfHidden();
+
+                loadTags();
             }
-            getFragmentManager().popBackStack();
-
-            setTitle(R.string.site_settings_tags_title);
-            ActivityUtils.hideKeyboard(this);
-
-            invalidateOptionsMenu();
-            showFabIfHidden();
-
-            loadTags();
         } else {
             super.onBackPressed();
         }
@@ -231,16 +242,37 @@ public class TagListActivity extends AppCompatActivity
     @SuppressWarnings("unused")
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onTaxonomyChanged(TaxonomyStore.OnTaxonomyChanged event) {
+        hideProgressDialog();
         if (event.isError()) {
             AppLog.e(AppLog.T.SETTINGS, event.error.message);
-        } else if (event.causeOfChange == FETCH_TAGS) {
-            loadTags();
+        }
+        switch (event.causeOfChange) {
+            case FETCH_TAGS:
+                if (!event.isError()) {
+                    loadTags();
+                }
+                break;
+            case PUSHED_TERM:
+            case DELETED_TERM:
+            case UPDATE_TERM:
+                hideProgressDialog();
+                if (hasDetaiLFragment()) {
+                    getFragmentManager().popBackStack();
+                }
+                if (!event.isError()) {
+                    loadTags();
+                }
+                break;
         }
     }
 
     private void loadTags() {
         mAdapter = new TagListAdapter(mTaxonomyStore.getTagsForSite(mSite));
         mRecycler.setAdapter(mAdapter);
+    }
+
+    private boolean hasDetaiLFragment() {
+        return getDetailFragment() != null;
     }
 
     private TagDetailFragment getDetailFragment() {
@@ -257,6 +289,8 @@ public class TagListActivity extends AppCompatActivity
         } else {
             fragment = TagDetailFragment.newInstance(mSite);
         }
+        fragment.setOnTagDetailListener(this);
+
         getFragmentManager().beginTransaction()
                 .add(R.id.container, fragment, TagDetailFragment.TAG)
                 .addToBackStack(null)
@@ -295,6 +329,53 @@ public class TagListActivity extends AppCompatActivity
         showFabIfHidden();
         return true;
     }
+
+    private void showProgressDialog(@StringRes int messageId) {
+        mProgressDialog = new ProgressDialog(this);
+        mProgressDialog.setCancelable(false);
+        mProgressDialog.setIndeterminate(true);
+        mProgressDialog.setMessage(getString(messageId));
+        mProgressDialog.show();
+    }
+
+    private void hideProgressDialog() {
+        if (mProgressDialog != null && mProgressDialog.isShowing()) {
+            mProgressDialog.dismiss();
+        }
+    }
+
+    @Override
+    public void onRequestDeleteTag(@NonNull TermModel term) {
+        showProgressDialog(R.string.dlg_deleting_tag);
+        Action action = TaxonomyActionBuilder.newDeleteTermAction(new TaxonomyStore.RemoteTermPayload(term, mSite));
+        mDispatcher.dispatch(action);
+    }
+
+    public void saveTag(@NonNull TermModel term, boolean isNewTerm) {
+        if (TextUtils.isEmpty(term.getName())) {
+            return;
+        }
+
+        if (isNewTerm && termExists(term.getName())) {
+            ToastUtils.showToast(this, R.string.error_tag_exists);
+            return;
+        }
+
+        showProgressDialog(R.string.dlg_saving_tag);
+        Action action = TaxonomyActionBuilder.newPushTermAction(new TaxonomyStore.RemoteTermPayload(term, mSite));
+        mDispatcher.dispatch(action);
+    }
+
+    private boolean termExists(@NonNull String termName) {
+        List<TermModel> terms = mTaxonomyStore.getTagsForSite(mSite);
+        for (TermModel term: terms) {
+            if (termName.equalsIgnoreCase(term.getName())) {
+                return true;
+            }
+        }
+        return false;
+    }
+
 
     private class TagListAdapter extends RecyclerView.Adapter<TagListAdapter.TagViewHolder> {
         private final List<TermModel> mAllTags = new ArrayList<>();

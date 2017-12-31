@@ -574,7 +574,9 @@
     <string name="tag_description_hint">Description</string>
     <string name="add_new_tag">Add New Tag</string>
     <string name="error_tag_exists">A tag with this name already exists</string>
-    <string name="dlg_confirm_trash_tag">Permanently delete \'%s\'?</string>
+    <string name="dlg_confirm_delete_tag">Permanently delete \'%s\'?</string>
+    <string name="dlg_deleting_tag">Deleting</string>
+    <string name="dlg_saving_tag">Saving</string>
 
     <!-- Jetpack settings -->
     <string name="jetpack_site_settings_category_title">Jetpack Settings</string>
