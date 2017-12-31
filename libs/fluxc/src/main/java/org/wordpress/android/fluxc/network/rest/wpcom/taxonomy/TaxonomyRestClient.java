@@ -10,6 +10,7 @@ import org.apache.commons.text.StringEscapeUtils;
 import org.wordpress.android.fluxc.Dispatcher;
 import org.wordpress.android.fluxc.generated.TaxonomyActionBuilder;
 import org.wordpress.android.fluxc.generated.endpoint.WPCOMREST;
+import org.wordpress.android.fluxc.generated.endpoint.WPCOMREST.SitesEndpoint.SiteEndpoint.TaxonomiesEndpoint;
 import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.model.TermModel;
 import org.wordpress.android.fluxc.model.TermsModel;
@@ -118,7 +119,10 @@ public class TaxonomyRestClient extends BaseWPComRestClient {
 
     public void pushTerm(final TermModel term, final SiteModel site) {
         final String taxonomy = term.getTaxonomy();
-        String url = WPCOMREST.sites.site(site.getSiteId()).taxonomies.taxonomy(taxonomy).terms.new_.getUrlV1_1();
+        TaxonomiesEndpoint endpoint = WPCOMREST.sites.site(site.getSiteId()).taxonomies;
+        String url = term.getRemoteTermId() > 0
+                ? endpoint.taxonomy(taxonomy).terms.slug(term.getSlug()).getUrlV1_1() // update existing term
+                : endpoint.taxonomy(taxonomy).terms.new_.getUrlV1_1(); // upload new term
 
         Map<String, Object> body = termModelToParams(term);
 

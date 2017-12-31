@@ -56,6 +56,7 @@ public class WPComEndpointTest {
         assertEquals("/me/", WPCOMREST.me.getEndpoint());
         assertEquals("/me/settings/", WPCOMREST.me.settings.getEndpoint());
         assertEquals("/me/sites/", WPCOMREST.me.sites.getEndpoint());
+        assertEquals("/me/username/", WPCOMREST.me.username.getEndpoint());
 
         // Users
         assertEquals("/users/new/", WPCOMREST.users.new_.getEndpoint());
