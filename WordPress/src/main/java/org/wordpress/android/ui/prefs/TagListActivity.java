@@ -22,6 +22,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.text.StringEscapeUtils;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
@@ -40,11 +41,11 @@ import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.ToastUtils;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 import javax.inject.Inject;
-
-import static org.wordpress.android.fluxc.action.TaxonomyAction.FETCH_TAGS;
 
 public class TagListActivity extends AppCompatActivity
         implements SearchView.OnQueryTextListener, MenuItem.OnActionExpandListener,
@@ -102,7 +103,7 @@ public class TagListActivity extends AppCompatActivity
         mFabView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                showTagDetail(null);
+                showDetailFragment(null);
             }
         });
 
@@ -126,6 +127,7 @@ public class TagListActivity extends AppCompatActivity
             if (fragment != null) {
                 fragment.setOnTagDetailListener(this);
             }
+            // TODO: restore mProgressDlg
         }
     }
 
@@ -205,14 +207,7 @@ public class TagListActivity extends AppCompatActivity
             if (fragment != null && fragment.hasChanges()) {
                 saveTag(fragment.getTerm(), fragment.isNewTerm());
             } else {
-                getFragmentManager().popBackStack();
-
-                setTitle(R.string.site_settings_tags_title);
-                ActivityUtils.hideKeyboard(this);
-
-                invalidateOptionsMenu();
-                showFabIfHidden();
-
+                hideDetailFragment();
                 loadTags();
             }
         } else {
@@ -253,12 +248,10 @@ public class TagListActivity extends AppCompatActivity
                 }
                 break;
             case PUSHED_TERM:
-            case DELETED_TERM:
+            case REMOVE_TERM:
             case UPDATE_TERM:
                 hideProgressDialog();
-                if (hasDetaiLFragment()) {
-                    getFragmentManager().popBackStack();
-                }
+                hideDetailFragment();
                 if (!event.isError()) {
                     loadTags();
                 }
@@ -267,12 +260,14 @@ public class TagListActivity extends AppCompatActivity
     }
 
     private void loadTags() {
-        mAdapter = new TagListAdapter(mTaxonomyStore.getTagsForSite(mSite));
+        List<TermModel> tags = mTaxonomyStore.getTagsForSite(mSite);
+        Collections.sort(tags, new Comparator<TermModel>() {
+            public int compare(TermModel t1, TermModel t2) {
+                return StringUtils.compareIgnoreCase(t1.getName(), t2.getName());
+            }
+        });
+        mAdapter = new TagListAdapter(tags);
         mRecycler.setAdapter(mAdapter);
-    }
-
-    private boolean hasDetaiLFragment() {
-        return getDetailFragment() != null;
     }
 
     private TagDetailFragment getDetailFragment() {
@@ -282,13 +277,8 @@ public class TagListActivity extends AppCompatActivity
     /*
      * shows the detail (edit) view for the passed term, or adds a new term is passed term is null
      */
-    private void showTagDetail(@Nullable TermModel term) {
-        TagDetailFragment fragment;
-        if (term != null) {
-            fragment = TagDetailFragment.newInstance(mSite, term);
-        } else {
-            fragment = TagDetailFragment.newInstance(mSite);
-        }
+    private void showDetailFragment(@Nullable TermModel term) {
+        TagDetailFragment fragment = TagDetailFragment.newInstance(term);
         fragment.setOnTagDetailListener(this);
 
         getFragmentManager().beginTransaction()
@@ -299,6 +289,17 @@ public class TagListActivity extends AppCompatActivity
 
         mSearchMenuItem.collapseActionView();
         mFabView.setVisibility(View.GONE);
+    }
+
+    private void hideDetailFragment() {
+        TagDetailFragment fragment = getDetailFragment();
+        if (fragment != null) {
+            getFragmentManager().popBackStack();
+            ActivityUtils.hideKeyboard(this);
+            showFabIfHidden();
+            setTitle(R.string.site_settings_tags_title);
+            invalidateOptionsMenu();
+        }
     }
 
     @Override
@@ -351,7 +352,7 @@ public class TagListActivity extends AppCompatActivity
         mDispatcher.dispatch(action);
     }
 
-    public void saveTag(@NonNull TermModel term, boolean isNewTerm) {
+    private void saveTag(@NonNull TermModel term, boolean isNewTerm) {
         if (TextUtils.isEmpty(term.getName())) {
             return;
         }
@@ -436,7 +437,7 @@ public class TagListActivity extends AppCompatActivity
                     @Override
                     public void onClick(View view) {
                         int position = getAdapterPosition();
-                        showTagDetail(mFilteredTags.get(position));
+                        showDetailFragment(mFilteredTags.get(position));
                     }
                 });
             }

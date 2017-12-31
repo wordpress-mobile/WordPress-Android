@@ -16,7 +16,6 @@ import android.widget.EditText;
 
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
-import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.model.TermModel;
 import org.wordpress.android.fluxc.store.TaxonomyStore;
 import org.wordpress.android.util.EditTextUtils;
@@ -35,41 +34,28 @@ public class TagDetailFragment extends Fragment {
     static final String TAG = "TagDetailFragment";
 
     public interface OnTagDetailListener {
-        public void onRequestDeleteTag(@NonNull TermModel tag);
+        void onRequestDeleteTag(@NonNull TermModel tag);
     }
 
     private EditText mNameView;
     private EditText mDescriptionView;
 
     private TermModel mTerm;
-    private SiteModel mSite;
     private boolean mIsNewTerm;
     private OnTagDetailListener mListener;
 
     /*
-     * use this to edit an existing tag
+     * pass an existing term to edit it, or pass null to create a new one
      */
-    public static TagDetailFragment newInstance(@NonNull SiteModel site, @NonNull TermModel term) {
+    public static TagDetailFragment newInstance(@NonNull TermModel term) {
         TagDetailFragment fragment = new TagDetailFragment();
         Bundle args = new Bundle();
+        if (term == null) {
+            args.putBoolean(ARGS_IS_NEW_TERM, true);
+            term = new TermModel();
+            term.setTaxonomy(TaxonomyStore.DEFAULT_TAXONOMY_TAG);
+        }
         args.putSerializable(ARGS_TERM, term);
-        args.putSerializable(WordPress.SITE, site);
-        fragment.setArguments(args);
-        return fragment;
-    }
-
-    /*
-     * use this to add a new tag
-     */
-    public static TagDetailFragment newInstance(@NonNull SiteModel site) {
-        TagDetailFragment fragment = new TagDetailFragment();
-        TermModel term = new TermModel();
-        term.setTaxonomy(TaxonomyStore.DEFAULT_TAXONOMY_TAG);
-
-        Bundle args = new Bundle();
-        args.putSerializable(ARGS_TERM, term);
-        args.putBoolean(ARGS_IS_NEW_TERM, true);
-        args.putSerializable(WordPress.SITE, site);
         fragment.setArguments(args);
         return fragment;
     }
@@ -96,7 +82,6 @@ public class TagDetailFragment extends Fragment {
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
-        mSite = (SiteModel) getArguments().getSerializable(WordPress.SITE);
         mTerm = (TermModel) getArguments().getSerializable(ARGS_TERM);
         mIsNewTerm = getArguments().getBoolean(ARGS_IS_NEW_TERM);
 
