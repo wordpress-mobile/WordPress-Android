@@ -2,6 +2,7 @@ package org.wordpress.android.ui.prefs;
 
 import android.app.AlertDialog;
 import android.app.Fragment;
+import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -26,6 +27,7 @@ import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.model.TermModel;
 import org.wordpress.android.fluxc.store.TaxonomyStore;
 import org.wordpress.android.util.EditTextUtils;
+import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.ToastUtils;
 
@@ -53,6 +55,8 @@ public class TagDetailFragment extends Fragment {
     private TermModel mTerm;
     private SiteModel mSite;
     private boolean mIsNewTerm;
+
+    private ProgressDialog mProgressDialog;
 
     /*
      * use this to edit an existing tag
@@ -139,8 +143,7 @@ public class TagDetailFragment extends Fragment {
     @Override
     public boolean onOptionsItemSelected(final MenuItem item) {
         if (item.getItemId() == R.id.menu_trash) {
-            //confirmTrashTag();
-            saveChanges(); // TODO
+            confirmTrashTag();
             return true;
         }
         return super.onOptionsItemSelected(item);
@@ -202,6 +205,8 @@ public class TagDetailFragment extends Fragment {
     }
 
     private void confirmTrashTag() {
+        if (!NetworkUtils.checkConnection(getActivity())) return;
+
         String message = String.format(getString(R.string.dlg_confirm_trash_tag), mTerm.getName());
         AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(getActivity());
         dialogBuilder.setTitle(getResources().getText(R.string.trash));
@@ -218,7 +223,14 @@ public class TagDetailFragment extends Fragment {
     }
 
     private void trashTag() {
-        // TODO: need to update FluxC to allow trashing a tag
+        Action action = TaxonomyActionBuilder.newDeleteTermAction(new TaxonomyStore.RemoteTermPayload(mTerm, mSite));
+        mDispatcher.dispatch(action);
+
+        mProgressDialog = new ProgressDialog(getActivity());
+        mProgressDialog.setCancelable(false);
+        mProgressDialog.setIndeterminate(true);
+        mProgressDialog.setMessage(getString(R.string.deleting_media_dlg));
+        mProgressDialog.show();
     }
 
     @SuppressWarnings("unused")
@@ -231,7 +243,13 @@ public class TagDetailFragment extends Fragment {
                     mIsNewTerm = false;
                     getArguments().putBoolean(ARGS_IS_NEW_TERM, false);
                     break;
-                // TODO: detect deleted term and close fragment
+                case DELETED_TERM:
+                    if (mProgressDialog != null && mProgressDialog.isShowing()) {
+                        mProgressDialog.dismiss();
+                    }
+                    mIsNewTerm = false;
+                    getActivity().getFragmentManager().popBackStack();
+                    break;
             }
         }
     }
