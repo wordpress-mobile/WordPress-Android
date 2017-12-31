@@ -182,14 +182,11 @@ public class TagDetailFragment extends Fragment {
         if (hasChanged) {
             mTerm.setName(thisName);
             mTerm.setDescription(thisDescription);
-            mTerm.setSlug(sanitizeWithDashes(thisName));
-            getArguments().putSerializable(ARGS_TERM, mTerm);
-            Action action;
             if (mIsNewTerm) {
-                action = TaxonomyActionBuilder.newPushTermAction(new TaxonomyStore.RemoteTermPayload(mTerm, mSite));
-            } else {
-                action = TaxonomyActionBuilder.newUpdateTermAction(mTerm);
+                mTerm.setSlug(sanitizeWithDashes(thisName));
             }
+            getArguments().putSerializable(ARGS_TERM, mTerm);
+            Action action = TaxonomyActionBuilder.newPushTermAction(new TaxonomyStore.RemoteTermPayload(mTerm, mSite));
             mDispatcher.dispatch(action);
         }
     }
