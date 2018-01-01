@@ -398,14 +398,14 @@ public class ThemeStore extends Store {
         if (payload.isError()) {
             event.error = payload.error;
         } else {
-            ThemeSqlUtils.removeTheme(payload.theme);
+            ThemeSqlUtils.removeSiteTheme(payload.site, payload.theme);
         }
         emitChange(event);
     }
 
     private void removeTheme(ThemeModel theme) {
         if (theme != null) {
-            ThemeSqlUtils.removeTheme(theme);
+            ThemeSqlUtils.removeSiteTheme(null, theme);
         }
         emitChange(new OnThemeRemoved(theme));
     }
@@ -414,7 +414,7 @@ public class ThemeStore extends Store {
         final List<ThemeModel> themes = getThemesForSite(site);
         if (!themes.isEmpty()) {
             for (ThemeModel theme : themes) {
-                ThemeSqlUtils.removeTheme(theme);
+                ThemeSqlUtils.removeSiteTheme(site, theme);
             }
         }
         emitChange(new OnSiteThemesChanged(site, ThemeAction.REMOVE_SITE_THEMES));
