@@ -51,7 +51,7 @@ public class ThemeSqlUtils {
 
     public static void insertOrReplaceInstalledThemes(@NonNull SiteModel site, @NonNull List<ThemeModel> themes) {
         // remove existing installed themes
-        removeThemes(site);
+        removeSiteThemes(site);
 
         // ensure site ID is set before inserting
         for (ThemeModel theme : themes) {
@@ -155,17 +155,15 @@ public class ThemeSqlUtils {
                 .where()
                 .equals(ThemeModelTable.LOCAL_SITE_ID, site.getId())
                 .equals(ThemeModelTable.THEME_ID, theme.getThemeId())
+                .equals(ThemeModelTable.IS_WP_COM_THEME, false)
                 .endWhere().execute();
     }
 
-    public static void removeThemes(@NonNull SiteModel site) {
-        removeThemes(site.getId());
-    }
-
-    private static void removeThemes(int localSiteId) {
+    public static void removeSiteThemes(@NonNull SiteModel site) {
         WellSql.delete(ThemeModel.class)
                 .where()
-                .equals(ThemeModelTable.LOCAL_SITE_ID, localSiteId)
+                .equals(ThemeModelTable.LOCAL_SITE_ID, site.getId())
+                .equals(ThemeModelTable.IS_WP_COM_THEME, false)
                 .endWhere().execute();
     }
 }
