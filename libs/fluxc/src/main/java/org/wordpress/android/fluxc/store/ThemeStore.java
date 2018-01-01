@@ -403,13 +403,8 @@ public class ThemeStore extends Store {
         emitChange(event);
     }
 
-    private void removeSiteThemes(SiteModel site) {
-        final List<ThemeModel> themes = getThemesForSite(site);
-        if (!themes.isEmpty()) {
-            for (ThemeModel theme : themes) {
-                ThemeSqlUtils.removeSiteTheme(site, theme);
-            }
-        }
+    private void removeSiteThemes(@NonNull SiteModel site) {
+        ThemeSqlUtils.removeSiteThemes(site);
         emitChange(new OnSiteThemesChanged(site, ThemeAction.REMOVE_SITE_THEMES));
     }
 }
