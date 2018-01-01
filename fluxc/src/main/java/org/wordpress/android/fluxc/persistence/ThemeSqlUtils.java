@@ -150,10 +150,11 @@ public class ThemeSqlUtils {
                 .endWhere().execute();
     }
 
-    public static void removeTheme(@NonNull ThemeModel theme) {
+    public static void removeSiteTheme(@NonNull SiteModel site, @NonNull ThemeModel theme) {
         WellSql.delete(ThemeModel.class)
                 .where()
-                .equals(ThemeModelTable.ID, theme.getId())
+                .equals(ThemeModelTable.LOCAL_SITE_ID, site.getId())
+                .equals(ThemeModelTable.THEME_ID, theme.getThemeId())
                 .endWhere().execute();
     }
 
