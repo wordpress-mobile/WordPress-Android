@@ -40,8 +40,6 @@ public enum ThemeAction implements IAction {
     DELETED_THEME,
 
     // Local actions
-    @Action(payloadType = SiteThemePayload.class)
-    REMOVE_THEME,
     @Action(payloadType = SiteModel.class)
     REMOVE_SITE_THEMES
 }
