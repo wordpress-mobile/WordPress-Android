@@ -236,9 +236,6 @@ public class ThemeStore extends Store {
             case DELETED_THEME:
                 handleThemeDeleted((SiteThemePayload) action.getPayload());
                 break;
-            case REMOVE_THEME:
-                removeSiteTheme((SiteThemePayload) action.getPayload());
-                break;
             case REMOVE_SITE_THEMES:
                 removeSiteThemes((SiteModel) action.getPayload());
                 break;
@@ -404,11 +401,6 @@ public class ThemeStore extends Store {
             ThemeSqlUtils.removeSiteTheme(payload.site, payload.theme);
         }
         emitChange(event);
-    }
-
-    private void removeSiteTheme(@NonNull SiteThemePayload payload) {
-        ThemeSqlUtils.removeSiteTheme(payload.site, payload.theme);
-        emitChange(new OnThemeRemoved(payload.site, payload.theme));
     }
 
     private void removeSiteThemes(SiteModel site) {
