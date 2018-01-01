@@ -1,5 +1,6 @@
 package org.wordpress.android.fluxc.store;
 
+import android.content.res.Resources;
 import android.database.Cursor;
 import android.support.annotation.NonNull;
 import android.text.TextUtils;
@@ -152,9 +153,11 @@ public class ThemeStore extends Store {
 
     @SuppressWarnings("WeakerAccess")
     public static class OnThemeRemoved extends OnChanged<ThemesError> {
+        public SiteModel site;
         public ThemeModel theme;
 
-        public OnThemeRemoved(ThemeModel theme) {
+        public OnThemeRemoved(@NonNull SiteModel site, @NonNull ThemeModel theme) {
+            this.site = site;
             this.theme = theme;
         }
     }
@@ -234,7 +237,7 @@ public class ThemeStore extends Store {
                 handleThemeDeleted((SiteThemePayload) action.getPayload());
                 break;
             case REMOVE_THEME:
-                removeTheme((ThemeModel) action.getPayload());
+                removeSiteTheme((SiteThemePayload) action.getPayload());
                 break;
             case REMOVE_SITE_THEMES:
                 removeSiteThemes((SiteModel) action.getPayload());
@@ -403,11 +406,9 @@ public class ThemeStore extends Store {
         emitChange(event);
     }
 
-    private void removeTheme(ThemeModel theme) {
-        if (theme != null) {
-            ThemeSqlUtils.removeSiteTheme(null, theme);
-        }
-        emitChange(new OnThemeRemoved(theme));
+    private void removeSiteTheme(@NonNull SiteThemePayload payload) {
+        ThemeSqlUtils.removeSiteTheme(payload.site, payload.theme);
+        emitChange(new OnThemeRemoved(payload.site, payload.theme));
     }
 
     private void removeSiteThemes(SiteModel site) {
