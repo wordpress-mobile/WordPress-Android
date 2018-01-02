@@ -1,6 +1,5 @@
 package org.wordpress.android.fluxc.store;
 
-import android.content.res.Resources;
 import android.database.Cursor;
 import android.support.annotation.NonNull;
 import android.text.TextUtils;
