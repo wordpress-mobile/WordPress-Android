@@ -226,6 +226,7 @@ public class ShareIntentReceiverActivity extends AppCompatActivity implements Sh
         AnalyticsUtils.trackWithSiteDetails(AnalyticsTracker.Stat.SHARE_TO_WP_SUCCEEDED,
                 mSiteStore.getSiteByLocalId(selectedSiteLocalId),
                 analyticsProperties);
+        AnalyticsUtils.trackWithSiteDetails(AnalyticsTracker.Stat.MEDIA_LIBRARY_ADDED_PHOTO, mSiteStore.getSiteByLocalId(selectedSiteLocalId));
 
     }
 
