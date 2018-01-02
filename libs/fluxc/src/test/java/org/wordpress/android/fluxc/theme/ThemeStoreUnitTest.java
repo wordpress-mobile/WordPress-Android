@@ -179,7 +179,7 @@ public class ThemeStoreUnitTest {
         assertEquals(testThemes.size(), mThemeStore.getThemesForSite(site).size());
 
         // remove and verify count
-        ThemeSqlUtils.removeThemes(site);
+        ThemeSqlUtils.removeSiteThemes(site);
         assertEquals(0, mThemeStore.getThemesForSite(site).size());
     }
 
