@@ -361,11 +361,7 @@ public class TagListActivity extends AppCompatActivity
     }
 
     private void saveTag(@NonNull TermModel term, boolean isNewTerm) {
-        if (TextUtils.isEmpty(term.getName())) {
-            return;
-        }
-
-        if (isNewTerm && termExists(term.getName())) {
+        if (isNewTerm && tagExists(term.getName())) {
             ToastUtils.showToast(this, R.string.error_tag_exists);
             return;
         }
@@ -375,7 +371,7 @@ public class TagListActivity extends AppCompatActivity
         mDispatcher.dispatch(action);
     }
 
-    private boolean termExists(@NonNull String termName) {
+    private boolean tagExists(@NonNull String termName) {
         List<TermModel> terms = mTaxonomyStore.getTagsForSite(mSite);
         for (TermModel term: terms) {
             if (termName.equalsIgnoreCase(term.getName())) {
@@ -384,7 +380,6 @@ public class TagListActivity extends AppCompatActivity
         }
         return false;
     }
-
 
     private class TagListAdapter extends RecyclerView.Adapter<TagListAdapter.TagViewHolder> {
         private final List<TermModel> mAllTags = new ArrayList<>();

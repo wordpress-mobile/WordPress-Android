@@ -6,6 +6,7 @@ import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -53,6 +54,8 @@ public class TagDetailFragment extends Fragment {
         if (term == null) {
             args.putBoolean(ARGS_IS_NEW_TERM, true);
             term = new TermModel();
+            term.setName("");
+            term.setDescription("");
             term.setTaxonomy(TaxonomyStore.DEFAULT_TAXONOMY_TAG);
         }
         args.putSerializable(ARGS_TERM, term);
@@ -131,8 +134,9 @@ public class TagDetailFragment extends Fragment {
     }
 
     boolean hasChanges() {
-        return !StringUtils.equals(mTerm.getName(), EditTextUtils.getText(mNameView))
-                || !StringUtils.equals(mTerm.getDescription(), EditTextUtils.getText(mDescriptionView));
+        return !TextUtils.isEmpty(mTerm.getName())
+                && (!StringUtils.equals(mTerm.getName(), EditTextUtils.getText(mNameView))
+                || !StringUtils.equals(mTerm.getDescription(), EditTextUtils.getText(mDescriptionView)));
     }
 
     @NonNull TermModel getTerm() {
