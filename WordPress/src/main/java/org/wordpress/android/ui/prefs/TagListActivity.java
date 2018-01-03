@@ -358,14 +358,13 @@ public class TagListActivity extends AppCompatActivity
     @Override
     public void onRequestDeleteTag(@NonNull TermModel term) {
         if (NetworkUtils.checkConnection(this)) {
-            confirmTrashTag(term);
+            confirmDeleteTag(term);
         }
     }
 
-    private void confirmTrashTag(@NonNull final TermModel term) {
+    private void confirmDeleteTag(@NonNull final TermModel term) {
         String message = String.format(getString(R.string.dlg_confirm_delete_tag), term.getName());
         AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(this);
-        dialogBuilder.setTitle(getResources().getText(R.string.trash));
         dialogBuilder.setMessage(message);
         dialogBuilder.setPositiveButton(getResources().getText(R.string.delete_yes),
                 new DialogInterface.OnClickListener() {

@@ -51,8 +51,6 @@ public class TagDetailFragment extends Fragment {
         if (term == null) {
             args.putBoolean(ARGS_IS_NEW_TERM, true);
             term = new TermModel();
-            term.setName("");
-            term.setDescription("");
             term.setTaxonomy(TaxonomyStore.DEFAULT_TAXONOMY_TAG);
         }
         args.putSerializable(ARGS_TERM, term);
@@ -131,9 +129,14 @@ public class TagDetailFragment extends Fragment {
     }
 
     boolean hasChanges() {
-        return !TextUtils.isEmpty(mTerm.getName())
-                && (!StringUtils.equals(mTerm.getName(), EditTextUtils.getText(mNameView))
-                || !StringUtils.equals(mTerm.getDescription(), EditTextUtils.getText(mDescriptionView)));
+        String thisName = EditTextUtils.getText(mNameView);
+        String thisDescription = EditTextUtils.getText(mDescriptionView);
+        if (mIsNewTerm) {
+            return !TextUtils.isEmpty(thisName);
+        }
+        return !TextUtils.isEmpty(thisName)
+                && (!StringUtils.equals(mTerm.getName(), thisName)
+                || !StringUtils.equals(mTerm.getDescription(), thisDescription));
     }
 
     @NonNull TermModel getTerm() {
