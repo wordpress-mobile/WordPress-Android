@@ -248,7 +248,6 @@ public class TagListActivity extends AppCompatActivity
     @SuppressWarnings("unused")
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onTaxonomyChanged(TaxonomyStore.OnTaxonomyChanged event) {
-        hideProgressDialog();
         if (event.isError()) {
             AppLog.e(AppLog.T.SETTINGS, event.error.message);
         }
