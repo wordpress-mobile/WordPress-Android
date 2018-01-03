@@ -99,14 +99,6 @@ public class TaxonomyStore extends Store {
         }
     }
 
-    public static class OnTermRemoved extends OnChanged<TaxonomyError> {
-        public TermModel term;
-
-        public OnTermRemoved(TermModel term) {
-            this.term = term;
-        }
-    }
-
     public static class TaxonomyError implements OnChangedError {
         public TaxonomyErrorType type;
         public String message;
@@ -392,9 +384,10 @@ public class TaxonomyStore extends Store {
 
     private void handleDeleteTermCompleted(RemoteTermPayload payload) {
         if (payload.isError()) {
-            OnTermRemoved onTermRemoved = new OnTermRemoved(payload.term);
-            onTermRemoved.error = payload.error;
-            emitChange(onTermRemoved);
+            OnTaxonomyChanged event = new OnTaxonomyChanged(0, payload.term.getTaxonomy());
+            event.error = payload.error;
+            event.causeOfChange = TaxonomyAction.DELETE_TERM;
+            emitChange(event);
         } else {
             removeTerm(payload.term);
         }
