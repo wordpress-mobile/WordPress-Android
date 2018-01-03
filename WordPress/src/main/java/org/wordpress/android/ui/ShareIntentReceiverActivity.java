@@ -219,14 +219,25 @@ public class ShareIntentReceiverActivity extends AppCompatActivity implements Sh
     }
 
     private void bumpAnalytics(ShareAction shareAction, int selectedSiteLocalId) {
+        SiteModel selectedSite = mSiteStore.getSiteByLocalId(selectedSiteLocalId);
+        int numberOfMediaShared = countMedia();
+
         Map<String, Object> analyticsProperties = new HashMap<>();
-        analyticsProperties.put("number_of_media_shared", countMedia());
+        analyticsProperties.put("number_of_media_shared", numberOfMediaShared);
         analyticsProperties.put("share_to", shareAction.analyticsName);
 
         AnalyticsUtils.trackWithSiteDetails(AnalyticsTracker.Stat.SHARE_TO_WP_SUCCEEDED,
-                mSiteStore.getSiteByLocalId(selectedSiteLocalId),
+                selectedSite,
                 analyticsProperties);
-        AnalyticsUtils.trackWithSiteDetails(AnalyticsTracker.Stat.MEDIA_LIBRARY_ADDED_PHOTO, mSiteStore.getSiteByLocalId(selectedSiteLocalId));
+
+        if (numberOfMediaShared > 0) {
+            ArrayList<Uri> mediaUrls = getIntent().getParcelableArrayListExtra((Intent.EXTRA_STREAM));
+            for (Uri uri : mediaUrls) {
+                boolean isVideo = getContentResolver().getType(uri).contains("video");
+                Map<String, Object> properties = AnalyticsUtils.getMediaProperties(this, isVideo, uri, null);
+                AnalyticsUtils.trackWithSiteDetails(AnalyticsTracker.Stat.MEDIA_LIBRARY_ADDED_PHOTO, selectedSite, properties);
+            }
+        }
 
     }
 
