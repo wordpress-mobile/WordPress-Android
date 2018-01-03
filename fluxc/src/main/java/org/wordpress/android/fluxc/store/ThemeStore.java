@@ -67,11 +67,11 @@ public class ThemeStore extends Store {
         }
     }
 
-    public static class ActivateThemePayload extends Payload<ThemesError> {
+    public static class SiteThemePayload extends Payload<ThemesError> {
         public SiteModel site;
         public ThemeModel theme;
 
-        public ActivateThemePayload(SiteModel site, ThemeModel theme) {
+        public SiteThemePayload(@NonNull SiteModel site, @NonNull ThemeModel theme) {
             this.site = site;
             this.theme = theme;
         }
@@ -98,6 +98,7 @@ public class ThemeStore extends Store {
         }
     }
 
+    @SuppressWarnings("WeakerAccess")
     public static class ThemesError implements OnChangedError {
         public ThemeErrorType type;
         public String message;
@@ -113,6 +114,7 @@ public class ThemeStore extends Store {
     }
 
     // OnChanged events
+    @SuppressWarnings("WeakerAccess")
     public static class OnSiteThemesChanged extends OnChanged<ThemesError> {
         public SiteModel site;
         public ThemeAction origin;
@@ -126,6 +128,7 @@ public class ThemeStore extends Store {
     public static class OnWpComThemesChanged extends OnChanged<ThemesError> {
     }
 
+    @SuppressWarnings("WeakerAccess")
     public static class OnCurrentThemeFetched extends OnChanged<ThemesError> {
         public SiteModel site;
         public ThemeModel theme;
@@ -136,6 +139,7 @@ public class ThemeStore extends Store {
         }
     }
 
+    @SuppressWarnings("WeakerAccess")
     public static class OnThemeActivated extends OnChanged<ThemesError> {
         public SiteModel site;
         public ThemeModel theme;
@@ -146,6 +150,7 @@ public class ThemeStore extends Store {
         }
     }
 
+    @SuppressWarnings("WeakerAccess")
     public static class OnThemeRemoved extends OnChanged<ThemesError> {
         public ThemeModel theme;
 
@@ -154,6 +159,7 @@ public class ThemeStore extends Store {
         }
     }
 
+    @SuppressWarnings("WeakerAccess")
     public static class OnThemeDeleted extends OnChanged<ThemesError> {
         public SiteModel site;
         public ThemeModel theme;
@@ -164,6 +170,7 @@ public class ThemeStore extends Store {
         }
     }
 
+    @SuppressWarnings("WeakerAccess")
     public static class OnThemeInstalled extends OnChanged<ThemesError> {
         public SiteModel site;
         public ThemeModel theme;
@@ -202,10 +209,6 @@ public class ThemeStore extends Store {
             case FETCHED_INSTALLED_THEMES:
                 handleInstalledThemesFetched((FetchedSiteThemesPayload) action.getPayload());
                 break;
-            case FETCH_PURCHASED_THEMES:
-                break;
-            case FETCHED_PURCHASED_THEMES:
-                break;
             case FETCH_CURRENT_THEME:
                 fetchCurrentTheme((SiteModel) action.getPayload());
                 break;
@@ -213,22 +216,22 @@ public class ThemeStore extends Store {
                 handleCurrentThemeFetched((FetchedCurrentThemePayload) action.getPayload());
                 break;
             case ACTIVATE_THEME:
-                activateTheme((ActivateThemePayload) action.getPayload());
+                activateTheme((SiteThemePayload) action.getPayload());
                 break;
             case ACTIVATED_THEME:
-                handleThemeActivated((ActivateThemePayload) action.getPayload());
+                handleThemeActivated((SiteThemePayload) action.getPayload());
                 break;
             case INSTALL_THEME:
-                installTheme((ActivateThemePayload) action.getPayload());
+                installTheme((SiteThemePayload) action.getPayload());
                 break;
             case INSTALLED_THEME:
-                handleThemeInstalled((ActivateThemePayload) action.getPayload());
+                handleThemeInstalled((SiteThemePayload) action.getPayload());
                 break;
             case DELETE_THEME:
-                deleteTheme((ActivateThemePayload) action.getPayload());
+                deleteTheme((SiteThemePayload) action.getPayload());
                 break;
             case DELETED_THEME:
-                handleThemeDeleted((ActivateThemePayload) action.getPayload());
+                handleThemeDeleted((SiteThemePayload) action.getPayload());
                 break;
             case REMOVE_THEME:
                 removeTheme((ThemeModel) action.getPayload());
@@ -252,10 +255,6 @@ public class ThemeStore extends Store {
         return ThemeSqlUtils.getWpComThemesCursor();
     }
 
-    public Cursor getThemesCursorForSite(@NonNull SiteModel site) {
-        return ThemeSqlUtils.getThemesForSiteAsCursor(site);
-    }
-
     public List<ThemeModel> getThemesForSite(@NonNull SiteModel site) {
         return ThemeSqlUtils.getThemesForSite(site);
     }
@@ -267,6 +266,7 @@ public class ThemeStore extends Store {
         return ThemeSqlUtils.getSiteThemeByThemeId(siteModel, themeId);
     }
 
+    @SuppressWarnings("WeakerAccess")
     public ThemeModel getWpComThemeByThemeId(String themeId) {
         if (TextUtils.isEmpty(themeId)) {
             return null;
@@ -337,7 +337,7 @@ public class ThemeStore extends Store {
         emitChange(event);
     }
 
-    private void installTheme(@NonNull ActivateThemePayload payload) {
+    private void installTheme(@NonNull SiteThemePayload payload) {
         if (payload.site.isJetpackConnected() && payload.site.isUsingWpComRestApi()) {
             mThemeRestClient.installTheme(payload.site, payload.theme);
         } else {
@@ -346,7 +346,7 @@ public class ThemeStore extends Store {
         }
     }
 
-    private void handleThemeInstalled(@NonNull ActivateThemePayload payload) {
+    private void handleThemeInstalled(@NonNull SiteThemePayload payload) {
         OnThemeInstalled event = new OnThemeInstalled(payload.site, payload.theme);
         if (payload.isError()) {
             event.error = payload.error;
@@ -356,7 +356,7 @@ public class ThemeStore extends Store {
         emitChange(event);
     }
 
-    private void activateTheme(@NonNull ActivateThemePayload payload) {
+    private void activateTheme(@NonNull SiteThemePayload payload) {
         if (payload.site.isUsingWpComRestApi()) {
             mThemeRestClient.activateTheme(payload.site, payload.theme);
         } else {
@@ -365,7 +365,7 @@ public class ThemeStore extends Store {
         }
     }
 
-    private void handleThemeActivated(@NonNull ActivateThemePayload payload) {
+    private void handleThemeActivated(@NonNull SiteThemePayload payload) {
         OnThemeActivated event = new OnThemeActivated(payload.site, payload.theme);
         if (payload.isError()) {
             event.error = payload.error;
@@ -384,7 +384,7 @@ public class ThemeStore extends Store {
         emitChange(event);
     }
 
-    private void deleteTheme(@NonNull ActivateThemePayload payload) {
+    private void deleteTheme(@NonNull SiteThemePayload payload) {
         if (payload.site.isJetpackConnected() && payload.site.isUsingWpComRestApi()) {
             mThemeRestClient.deleteTheme(payload.site, payload.theme);
         } else {
@@ -393,7 +393,7 @@ public class ThemeStore extends Store {
         }
     }
 
-    private void handleThemeDeleted(@NonNull ActivateThemePayload payload) {
+    private void handleThemeDeleted(@NonNull SiteThemePayload payload) {
         OnThemeDeleted event = new OnThemeDeleted(payload.site, payload.theme);
         if (payload.isError()) {
             event.error = payload.error;
