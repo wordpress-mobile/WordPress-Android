@@ -206,8 +206,6 @@ public class TaxonomyXMLRPCClient extends BaseXMLRPCClient {
     }
 
     public void deleteTerm(final TermModel term, final SiteModel site) {
-        Map<String, Object> contentStruct = termModelToContentStruct(term);
-
         List<Object> params = new ArrayList<>(4);
         params.add(site.getSelfHostedSiteId());
         params.add(site.getUsername());
