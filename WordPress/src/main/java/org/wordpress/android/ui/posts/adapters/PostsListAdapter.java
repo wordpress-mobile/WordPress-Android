@@ -34,6 +34,7 @@ import org.wordpress.android.fluxc.generated.MediaActionBuilder;
 import org.wordpress.android.fluxc.model.MediaModel;
 import org.wordpress.android.fluxc.model.PostModel;
 import org.wordpress.android.fluxc.model.SiteModel;
+import org.wordpress.android.fluxc.model.post.ContentType;
 import org.wordpress.android.fluxc.model.post.PostStatus;
 import org.wordpress.android.fluxc.store.MediaStore;
 import org.wordpress.android.fluxc.store.MediaStore.MediaPayload;
@@ -64,6 +65,9 @@ import java.util.Map;
 
 import javax.inject.Inject;
 
+import static org.wordpress.android.fluxc.model.post.ContentType.PAGE;
+import static org.wordpress.android.fluxc.model.post.ContentType.POST;
+
 /**
  * Adapter for Posts/Pages list
  */
@@ -71,8 +75,9 @@ public class PostsListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
     private static final long ROW_ANIM_DURATION = 150;
     private static final int MAX_DISPLAYED_UPLOAD_PROGRESS = 90;
 
-    private static final int VIEW_TYPE_POST_OR_PAGE = 0;
-    private static final int VIEW_TYPE_ENDLIST_INDICATOR = 1;
+    private static final int VIEW_TYPE_POST = 0;
+    private static final int VIEW_TYPE_PAGE = 1;
+    private static final int VIEW_TYPE_ENDLIST_INDICATOR = 2;
 
     public interface OnPostButtonClickListener {
         void onPostButtonClicked(int buttonId, PostModel post);
@@ -93,7 +98,7 @@ public class PostsListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
     private final int mPhotonHeight;
     private final int mEndlistIndicatorHeight;
 
-    private final boolean mIsPage;
+    private final ContentType mContentType;
     private final boolean mIsStatsSupported;
     private final boolean mShowAllButtons;
 
@@ -106,15 +111,19 @@ public class PostsListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
     private RecyclerView mRecyclerView;
     private final LayoutInflater mLayoutInflater;
 
-    @Inject Dispatcher mDispatcher;
-    @Inject protected PostStore mPostStore;
-    @Inject protected MediaStore mMediaStore;
-    @Inject protected UploadStore mUploadStore;
+    @Inject
+    Dispatcher mDispatcher;
+    @Inject
+    protected PostStore mPostStore;
+    @Inject
+    protected MediaStore mMediaStore;
+    @Inject
+    protected UploadStore mUploadStore;
 
-    public PostsListAdapter(Context context, @NonNull SiteModel site, boolean isPage) {
+    public PostsListAdapter(Context context, SiteModel site, ContentType contentType) {
         ((WordPress) context.getApplicationContext()).component().inject(this);
 
-        mIsPage = isPage;
+        mContentType = contentType;
         mLayoutInflater = LayoutInflater.from(context);
 
         mSite = site;
@@ -126,7 +135,7 @@ public class PostsListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
         mPhotonHeight = context.getResources().getDimensionPixelSize(R.dimen.reader_featured_image_height);
 
         // endlist indicator height is hard-coded here so that its horz line is in the middle of the fab
-        mEndlistIndicatorHeight = DisplayUtils.dpToPx(context, mIsPage ? 82 : 74);
+        mEndlistIndicatorHeight = DisplayUtils.dpToPx(context, mContentType == PAGE ? 82 : 74);
 
         // on larger displays we can always show all buttons
         mShowAllButtons = displayWidth >= 1080;
@@ -170,7 +179,10 @@ public class PostsListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
         if (position == mPosts.size()) {
             return VIEW_TYPE_ENDLIST_INDICATOR;
         }
-        return VIEW_TYPE_POST_OR_PAGE;
+        if (mContentType == PAGE) {
+            return VIEW_TYPE_PAGE;
+        }
+        return VIEW_TYPE_POST;
     }
 
     @Override
@@ -184,16 +196,20 @@ public class PostsListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
 
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        if (viewType == VIEW_TYPE_ENDLIST_INDICATOR) {
-            View view = mLayoutInflater.inflate(R.layout.endlist_indicator, parent, false);
-            view.getLayoutParams().height = mEndlistIndicatorHeight;
-            return new EndListViewHolder(view);
-        } else if (mIsPage) {
-            View view = mLayoutInflater.inflate(R.layout.page_item, parent, false);
-            return new PageViewHolder(view);
-        } else {
-            View view = mLayoutInflater.inflate(R.layout.post_cardview, parent, false);
-            return new PostViewHolder(view);
+        View view;
+        switch (viewType) {
+            case VIEW_TYPE_ENDLIST_INDICATOR:
+                view = mLayoutInflater.inflate(R.layout.endlist_indicator, parent, false);
+                view.getLayoutParams().height = mEndlistIndicatorHeight;
+                return new EndListViewHolder(view);
+            case VIEW_TYPE_PAGE:
+                view = mLayoutInflater.inflate(R.layout.page_item, parent, false);
+                return new PageViewHolder(view);
+            case VIEW_TYPE_POST:
+                view = mLayoutInflater.inflate(R.layout.post_cardview, parent, false);
+                return new PostViewHolder(view);
+            default:
+                throw new RuntimeException("Unsupported view type: " + viewType);
         }
     }
 
@@ -339,7 +355,7 @@ public class PostsListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
         if (imageUrl == null) {
             imgFeatured.setVisibility(View.GONE);
         } else if (imageUrl.startsWith("http")) {
-            String photonUrl =  ReaderUtils.getResizedImageUrl(
+            String photonUrl = ReaderUtils.getResizedImageUrl(
                     imageUrl, mPhotonWidth, mPhotonHeight, !SiteUtils.isPhotonCapable(mSite));
             imgFeatured.setVisibility(View.VISIBLE);
             imgFeatured.setImageUrl(photonUrl, WPNetworkImageView.ImageType.PHOTO);
@@ -442,7 +458,7 @@ public class PostsListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
             UploadError reason = mUploadStore.getUploadErrorForPost(post);
             if (reason != null && !UploadService.hasInProgressMediaUploadsForPost(post)) {
                 if (reason.mediaError != null) {
-                    errorMessage = context.getString(post.isPage() ? R.string.error_media_recover_page
+                    errorMessage = context.getString(post.getContentType() == POST ? R.string.error_media_recover_page
                             : R.string.error_media_recover_post);
                 } else if (reason.postError != null) {
                     errorMessage = UploadUtils.getErrorMessageFromPostError(context, post, reason.postError);
@@ -455,7 +471,7 @@ public class PostsListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
             } else if (UploadService.hasInProgressMediaUploadsForPost(post)) {
                 statusTextResId = R.string.uploading_media;
                 statusIconResId = R.drawable.ic_gridicons_cloud_upload;
-            } else if(UploadService.isPostQueued(post) || UploadService.hasPendingMediaUploadsForPost(post)) {
+            } else if (UploadService.isPostQueued(post) || UploadService.hasPendingMediaUploadsForPost(post)) {
                 // the Post (or its related media if such a thing exist) *is strictly* queued
                 statusTextResId = R.string.post_queued;
                 statusIconResId = R.drawable.ic_gridicons_cloud_upload;
@@ -682,7 +698,7 @@ public class PostsListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
                 notifyItemRemoved(position);
 
                 //when page is removed update the next one in case we need to show a header
-                if (mIsPage) {
+                if (mContentType == PAGE) {
                     notifyItemChanged(position);
                 }
             } else {
@@ -738,27 +754,27 @@ public class PostsListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
         PostViewHolder(View view) {
             super(view);
 
-            txtTitle = (TextView) view.findViewById(R.id.text_title);
-            txtExcerpt = (TextView) view.findViewById(R.id.text_excerpt);
-            txtDate = (TextView) view.findViewById(R.id.text_date);
-            txtStatus = (TextView) view.findViewById(R.id.text_status);
-            imgStatus = (ImageView) view.findViewById(R.id.image_status);
+            txtTitle = view.findViewById(R.id.text_title);
+            txtExcerpt = view.findViewById(R.id.text_excerpt);
+            txtDate = view.findViewById(R.id.text_date);
+            txtStatus = view.findViewById(R.id.text_status);
+            imgStatus = view.findViewById(R.id.image_status);
 
-            btnEdit = (PostListButton) view.findViewById(R.id.btn_edit);
-            btnView = (PostListButton) view.findViewById(R.id.btn_view);
-            btnPublish = (PostListButton) view.findViewById(R.id.btn_publish);
-            btnMore = (PostListButton) view.findViewById(R.id.btn_more);
+            btnEdit = view.findViewById(R.id.btn_edit);
+            btnView = view.findViewById(R.id.btn_view);
+            btnPublish = view.findViewById(R.id.btn_publish);
+            btnMore = view.findViewById(R.id.btn_more);
 
-            btnStats = (PostListButton) view.findViewById(R.id.btn_stats);
-            btnTrash = (PostListButton) view.findViewById(R.id.btn_trash);
-            btnBack = (PostListButton) view.findViewById(R.id.btn_back);
+            btnStats = view.findViewById(R.id.btn_stats);
+            btnTrash = view.findViewById(R.id.btn_trash);
+            btnBack = view.findViewById(R.id.btn_back);
 
-            imgFeatured = (WPNetworkImageView) view.findViewById(R.id.image_featured);
-            layoutButtons = (ViewGroup) view.findViewById(R.id.layout_buttons);
+            imgFeatured = view.findViewById(R.id.image_featured);
+            layoutButtons = view.findViewById(R.id.layout_buttons);
 
             disabledOverlay = view.findViewById(R.id.disabled_overlay);
 
-            progressBar = (ProgressBar) view.findViewById(R.id.post_upload_progress);
+            progressBar = view.findViewById(R.id.post_upload_progress);
         }
     }
 
@@ -775,15 +791,15 @@ public class PostsListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
 
         PageViewHolder(View view) {
             super(view);
-            txtTitle = (TextView) view.findViewById(R.id.text_title);
-            txtStatus = (TextView) view.findViewById(R.id.text_status);
-            imgStatus = (ImageView) view.findViewById(R.id.image_status);
+            txtTitle = view.findViewById(R.id.text_title);
+            txtStatus = view.findViewById(R.id.text_status);
+            imgStatus = view.findViewById(R.id.image_status);
             btnMore = view.findViewById(R.id.btn_more);
             dividerTop = view.findViewById(R.id.divider_top);
-            dateHeader = (ViewGroup) view.findViewById(R.id.header_date);
-            txtDate = (TextView) dateHeader.findViewById(R.id.text_date);
+            dateHeader = view.findViewById(R.id.header_date);
+            txtDate = dateHeader.findViewById(R.id.text_date);
             disabledOverlay = view.findViewById(R.id.disabled_overlay);
-            progressBar = (ProgressBar) view.findViewById(R.id.post_upload_progress);
+            progressBar = view.findViewById(R.id.post_upload_progress);
         }
     }
 
@@ -837,10 +853,16 @@ public class PostsListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
 
         @Override
         protected Boolean doInBackground(Void... nada) {
-            if (mIsPage) {
-                tmpPosts = mPostStore.getPagesForSite(mSite);
-            } else {
-                tmpPosts = mPostStore.getPostsForSite(mSite);
+            switch (mContentType) {
+                case POST:
+                    tmpPosts = mPostStore.getPostsForSite(mSite);
+                    break;
+                case PAGE:
+                    tmpPosts = mPostStore.getPagesForSite(mSite);
+                    break;
+                case PORTFOLIO:
+                    tmpPosts = mPostStore.getPortfoliosForSite(mSite);
+                    break;
             }
 
             // Make sure we don't return any hidden posts

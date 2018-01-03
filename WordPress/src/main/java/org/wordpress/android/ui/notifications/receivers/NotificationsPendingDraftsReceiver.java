@@ -26,6 +26,8 @@ import java.util.Random;
 
 import javax.inject.Inject;
 
+import static org.wordpress.android.fluxc.model.post.ContentType.PAGE;
+
 public class NotificationsPendingDraftsReceiver extends BroadcastReceiver {
     public static final String POST_ID_EXTRA = "postId";
     public static final String IS_PAGE_EXTRA = "isPage";
@@ -38,8 +40,10 @@ public class NotificationsPendingDraftsReceiver extends BroadcastReceiver {
 
     private static final int BASE_REQUEST_CODE = 100;
 
-    @Inject PostStore mPostStore;
-    @Inject SiteStore mSiteStore;
+    @Inject
+    PostStore mPostStore;
+    @Inject
+    SiteStore mSiteStore;
 
     @Override
     public void onReceive(Context context, Intent intent) {
@@ -76,7 +80,7 @@ public class NotificationsPendingDraftsReceiver extends BroadcastReceiver {
                 long now = System.currentTimeMillis();
                 long dateLastUpdated = DateTimeUtils.timestampFromIso8601(post.getDateLocallyChanged());
                 long daysInDraft = (now - dateLastUpdated) / ONE_DAY;
-                boolean isPage = post.isPage();
+                boolean isPage = post.getContentType() == PAGE;
 
                 if (daysInDraft < MAX_DAYS_TO_SHOW_DAYS_IN_MESSAGE) {
                     String formattedString = context.getString(R.string.pending_draft_one_generic);
@@ -87,9 +91,7 @@ public class NotificationsPendingDraftsReceiver extends BroadcastReceiver {
 
                     if (dateLastUpdated < one_month_ago) {
                         formattedString = context.getString(R.string.pending_draft_one_month);
-                    }
-                    else
-                    if (dateLastUpdated < one_week_ago) {
+                    } else if (dateLastUpdated < one_week_ago) {
                         // use any of the available 2 string formats, randomly
                         Random randomNum = new Random();
                         int result = randomNum.nextInt(2);
@@ -97,9 +99,7 @@ public class NotificationsPendingDraftsReceiver extends BroadcastReceiver {
                             formattedString = context.getString(R.string.pending_draft_one_week_1);
                         else
                             formattedString = context.getString(R.string.pending_draft_one_week_2);
-                    }
-                    else
-                    if (dateLastUpdated < one_day_ago) {
+                    } else if (dateLastUpdated < one_day_ago) {
                         // use any of the available 2 string formats, randomly
                         Random randomNum = new Random();
                         int result = randomNum.nextInt(2);

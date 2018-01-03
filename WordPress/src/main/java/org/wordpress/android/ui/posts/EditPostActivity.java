@@ -76,6 +76,7 @@ import org.wordpress.android.fluxc.model.MediaModel;
 import org.wordpress.android.fluxc.model.MediaModel.MediaUploadState;
 import org.wordpress.android.fluxc.model.PostModel;
 import org.wordpress.android.fluxc.model.SiteModel;
+import org.wordpress.android.fluxc.model.post.ContentType;
 import org.wordpress.android.fluxc.model.post.PostStatus;
 import org.wordpress.android.fluxc.store.AccountStore;
 import org.wordpress.android.fluxc.store.AccountStore.OnAccountChanged;
@@ -152,6 +153,8 @@ import javax.inject.Inject;
 
 import de.greenrobot.event.EventBus;
 
+import static org.wordpress.android.fluxc.model.post.ContentType.PAGE;
+
 public class EditPostActivity extends AppCompatActivity implements
         EditorFragmentActivity,
         EditorBetaClickListener,
@@ -164,7 +167,7 @@ public class EditPostActivity extends AppCompatActivity implements
         EditPostSettingsFragment.EditPostActivityHook {
 
     public static final String EXTRA_POST_LOCAL_ID = "postModelLocalId";
-    public static final String EXTRA_IS_PAGE = "isPage";
+    public static final String EXTRA_CONTENT_TYPE = "contentType";
     public static final String EXTRA_IS_PROMO = "isPromo";
     public static final String EXTRA_IS_QUICKPRESS = "isQuickPress";
     public static final String EXTRA_QUICKPRESS_BLOG_ID = "quickPressBlogId";
@@ -220,8 +223,8 @@ public class EditPostActivity extends AppCompatActivity implements
 
     private EditorMediaUploadListener mEditorMediaUploadListener;
 
+    private ContentType mContentType;
     private boolean mIsNewPost;
-    private boolean mIsPage;
     private boolean mIsPromo;
     private boolean mHasSetPostContent;
 
@@ -297,7 +300,7 @@ public class EditPostActivity extends AppCompatActivity implements
                 }
 
                 if (extras != null) {
-                    mIsPage = extras.getBoolean(EXTRA_IS_PAGE);
+                    mContentType = ContentType.getContentType(extras.getString(EXTRA_CONTENT_TYPE));
                     mIsPromo = extras.getBoolean(EXTRA_IS_PROMO);
                 }
                 mIsNewPost = true;
@@ -321,7 +324,7 @@ public class EditPostActivity extends AppCompatActivity implements
                     categories.add((long) SiteSettingsInterface.getDefaultCategory(WordPress.getContext()));
                     postFormat = SiteSettingsInterface.getDefaultFormat(WordPress.getContext());
                 }
-                mPost = mPostStore.instantiatePostModel(mSite, mIsPage, categories, postFormat);
+                mPost = mPostStore.instantiatePostModel(mSite, mContentType, categories, postFormat);
                 mPost.setStatus(PostStatus.PUBLISHED.toString());
             } else if (extras != null) {
                 // Load post passed in extras
@@ -397,10 +400,12 @@ public class EditPostActivity extends AppCompatActivity implements
                 if (position == PAGE_CONTENT) {
                     setTitle(SiteUtils.getSiteNameOrHomeURL(mSite));
                 } else if (position == PAGE_SETTINGS) {
-                    setTitle(mPost.isPage() ? R.string.page_settings : R.string.post_settings);
+                    //TODO add portfolios
+                    setTitle(mContentType ==PAGE ? R.string.page_settings : R.string.post_settings);
                     hidePhotoPicker();
                 } else if (position == PAGE_PREVIEW) {
-                    setTitle(mPost.isPage() ? R.string.preview_page : R.string.preview_post);
+                    //TODO add portfolios
+                    setTitle(mContentType ==PAGE ? R.string.preview_page : R.string.preview_post);
                     hidePhotoPicker();
                     savePostAsync(new AfterSavePostListener() {
                         @Override
@@ -431,7 +436,7 @@ public class EditPostActivity extends AppCompatActivity implements
             mMediaMarkedUploadingOnStartIds =
                     AztecEditorFragment.getMediaMarkedUploadingInPostContent(this, mPost.getContent());
             Collections.sort(mMediaMarkedUploadingOnStartIds);
-            mIsPage = mPost.isPage();
+            mContentType = mPost.getContentType();
         }
     }
 
@@ -1180,7 +1185,7 @@ public class EditPostActivity extends AppCompatActivity implements
         Intent i = getIntent();
         i.putExtra(EXTRA_SAVED_AS_LOCAL_DRAFT, savedLocally);
         i.putExtra(EXTRA_HAS_FAILED_MEDIA, hasFailedMedia());
-        i.putExtra(EXTRA_IS_PAGE, mIsPage);
+        i.putExtra(EXTRA_CONTENT_TYPE, mContentType);
         i.putExtra(EXTRA_HAS_CHANGES, saved);
         i.putExtra(EXTRA_POST_LOCAL_ID, mPost.getId());
         setResult(RESULT_OK, i);
@@ -1261,7 +1266,8 @@ public class EditPostActivity extends AppCompatActivity implements
                     EditPostActivity.this.runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
-                            String message = getString(mIsPage ? R.string.error_publish_empty_page : R.string.error_publish_empty_post);
+                            //TODO Portfolio support
+                            String message = getString(mContentType == PAGE ? R.string.error_publish_empty_page : R.string.error_publish_empty_post);
                             ToastUtils.showToast(EditPostActivity.this, message, Duration.SHORT);
                         }
                     });
@@ -1582,7 +1588,8 @@ public class EditPostActivity extends AppCompatActivity implements
 
         // Set up the placeholder text
         mEditorFragment.setContentPlaceholder(getString(R.string.editor_content_placeholder));
-        mEditorFragment.setTitlePlaceholder(getString(mIsPage ? R.string.editor_page_title_placeholder :
+        //TODO Portfolio support
+        mEditorFragment.setTitlePlaceholder(getString(mContentType == PAGE ? R.string.editor_page_title_placeholder :
                 R.string.editor_post_title_placeholder));
 
         // Set post title and content

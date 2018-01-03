@@ -25,6 +25,7 @@ import org.wordpress.android.fluxc.Dispatcher;
 import org.wordpress.android.fluxc.generated.PostActionBuilder;
 import org.wordpress.android.fluxc.model.PostModel;
 import org.wordpress.android.fluxc.model.SiteModel;
+import org.wordpress.android.fluxc.model.post.ContentType;
 import org.wordpress.android.fluxc.model.post.PostStatus;
 import org.wordpress.android.fluxc.store.PostStore;
 import org.wordpress.android.fluxc.store.PostStore.OnPostChanged;
@@ -51,8 +52,10 @@ public class PostPreviewActivity extends AppCompatActivity {
     private PostModel mPost;
     private SiteModel mSite;
 
-    @Inject Dispatcher mDispatcher;
-    @Inject PostStore mPostStore;
+    @Inject
+    Dispatcher mDispatcher;
+    @Inject
+    PostStore mPostStore;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -84,8 +87,8 @@ public class PostPreviewActivity extends AppCompatActivity {
             return;
         }
 
-
-        setTitle(mPost.isPage() ? getString(R.string.preview_page) : getString(R.string.preview_post));
+        //TODO add portfolio
+        setTitle(mPost.getContentType() == ContentType.PAGE ? getString(R.string.preview_page) : getString(R.string.preview_post));
     }
 
     @Override

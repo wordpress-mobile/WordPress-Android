@@ -86,7 +86,8 @@ public class LoginMagicLinkRequestFragment extends Fragment {
                 if (mLoginListener != null) {
                     if (NetworkUtils.checkConnection(getActivity())) {
                         showMagicLinkRequestProgressDialog();
-                        mDispatcher.dispatch(AuthenticationActionBuilder.newSendAuthEmailAction(mEmail));
+                        //TODO uncomment - there is something wrong with FluxC version I'm targeting atm.
+//                        mDispatcher.dispatch(AuthenticationActionBuilder.newSendAuthEmailAction(mEmail));
                     }
                 }
             }

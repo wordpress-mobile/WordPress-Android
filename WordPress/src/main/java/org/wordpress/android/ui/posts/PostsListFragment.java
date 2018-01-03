@@ -32,6 +32,7 @@ import org.wordpress.android.fluxc.generated.PostActionBuilder;
 import org.wordpress.android.fluxc.model.MediaModel;
 import org.wordpress.android.fluxc.model.PostModel;
 import org.wordpress.android.fluxc.model.SiteModel;
+import org.wordpress.android.fluxc.model.post.ContentType;
 import org.wordpress.android.fluxc.store.MediaStore;
 import org.wordpress.android.fluxc.store.MediaStore.OnMediaUploaded;
 import org.wordpress.android.fluxc.store.PostStore;
@@ -69,6 +70,9 @@ import javax.inject.Inject;
 
 import de.greenrobot.event.EventBus;
 
+import static org.wordpress.android.fluxc.model.post.ContentType.POST;
+import static org.wordpress.android.fluxc.model.post.ContentType.PAGE;
+import static org.wordpress.android.fluxc.model.post.ContentType.PORTFOLIO;
 import static org.wordpress.android.util.WPSwipeToRefreshHelper.buildSwipeToRefreshHelper;
 
 public class PostsListFragment extends Fragment
@@ -92,7 +96,6 @@ public class PostsListFragment extends Fragment
     private ImageView mEmptyViewImage;
 
     private boolean mCanLoadMorePosts = true;
-    private boolean mIsPage;
     private PostModel mTargetPost;
     private boolean mIsFetchingPosts;
     private boolean mShouldCancelPendingDraftNotification = false;
@@ -102,15 +105,19 @@ public class PostsListFragment extends Fragment
 
     private SiteModel mSite;
 
-    @Inject SiteStore mSiteStore;
-    @Inject PostStore mPostStore;
-    @Inject Dispatcher mDispatcher;
+    @Inject
+    SiteStore mSiteStore;
+    @Inject
+    PostStore mPostStore;
+    @Inject
+    Dispatcher mDispatcher;
+    private ContentType mContentType;
 
-    public static PostsListFragment newInstance(SiteModel site, boolean isPage, @Nullable PostModel targetPost) {
+    public static PostsListFragment newInstance(SiteModel site, ContentType contentType, @Nullable PostModel targetPost) {
         PostsListFragment fragment = new PostsListFragment();
         Bundle bundle = new Bundle();
         bundle.putSerializable(WordPress.SITE, site);
-        bundle.putBoolean(PostsListActivity.EXTRA_VIEW_PAGES, isPage);
+        bundle.putString(PostsListActivity.EXTRA_CONTENT_TYPE, contentType.getValue());
         if (targetPost != null) {
             bundle.putInt(PostsListActivity.EXTRA_TARGET_POST_LOCAL_ID, targetPost.getId());
         }
@@ -145,18 +152,18 @@ public class PostsListFragment extends Fragment
         if (savedInstanceState == null) {
             if (getArguments() != null) {
                 mSite = (SiteModel) getArguments().getSerializable(WordPress.SITE);
-                mIsPage = getArguments().getBoolean(PostsListActivity.EXTRA_VIEW_PAGES);
+                mContentType = getContentType(getArguments());
                 mTargetPost = mPostStore.getPostByLocalPostId(
                         getArguments().getInt(PostsListActivity.EXTRA_TARGET_POST_LOCAL_ID));
             } else {
                 mSite = (SiteModel) getActivity().getIntent().getSerializableExtra(WordPress.SITE);
-                mIsPage = getActivity().getIntent().getBooleanExtra(PostsListActivity.EXTRA_VIEW_PAGES, false);
+                mContentType = getContentType(getActivity().getIntent().getExtras());
                 mTargetPost = mPostStore.getPostByLocalPostId(
                         getActivity().getIntent().getIntExtra(PostsListActivity.EXTRA_TARGET_POST_LOCAL_ID, 0));
             }
         } else {
             mSite = (SiteModel) savedInstanceState.getSerializable(WordPress.SITE);
-            mIsPage = savedInstanceState.getBoolean(PostsListActivity.EXTRA_VIEW_PAGES);
+            mContentType = getContentType(savedInstanceState);
             mTargetPost = mPostStore.getPostByLocalPostId(
                     savedInstanceState.getInt(PostsListActivity.EXTRA_TARGET_POST_LOCAL_ID));
         }
@@ -167,22 +174,26 @@ public class PostsListFragment extends Fragment
         }
     }
 
+    private ContentType getContentType(Bundle bundle) {
+        return ContentType.getContentType(bundle.getString(PostsListActivity.EXTRA_CONTENT_TYPE));
+    }
+
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.post_list_fragment, container, false);
 
-        mRecyclerView = (RecyclerView) view.findViewById(R.id.recycler_view);
-        mProgressLoadMore = (ProgressBar) view.findViewById(R.id.progress);
+        mRecyclerView = view.findViewById(R.id.recycler_view);
+        mProgressLoadMore = view.findViewById(R.id.progress);
         mFabView = view.findViewById(R.id.fab_button);
 
         mEmptyView = view.findViewById(R.id.empty_view);
-        mEmptyViewTitle = (TextView) mEmptyView.findViewById(R.id.title_empty);
-        mEmptyViewImage = (ImageView) mEmptyView.findViewById(R.id.image_empty);
+        mEmptyViewTitle = mEmptyView.findViewById(R.id.title_empty);
+        mEmptyViewImage = mEmptyView.findViewById(R.id.image_empty);
 
         Context context = getActivity();
         mRecyclerView.setLayoutManager(new LinearLayoutManager(context));
 
-        int spacingVertical = mIsPage ? 0 : context.getResources().getDimensionPixelSize(R.dimen.card_gutters);
+        int spacingVertical = mContentType == PAGE ? 0 : context.getResources().getDimensionPixelSize(R.dimen.card_gutters);
         int spacingHorizontal = context.getResources().getDimensionPixelSize(R.dimen.content_margin);
         mRecyclerView.addItemDecoration(new RecyclerItemDecoration(spacingHorizontal, spacingVertical));
 
@@ -253,9 +264,10 @@ public class PostsListFragment extends Fragment
         );
     }
 
-    private @Nullable PostsListAdapter getPostListAdapter() {
+    private @Nullable
+    PostsListAdapter getPostListAdapter() {
         if (mPostsListAdapter == null) {
-            mPostsListAdapter = new PostsListAdapter(getActivity(), mSite, mIsPage);
+            mPostsListAdapter = new PostsListAdapter(getActivity(), mSite, mContentType);
             mPostsListAdapter.setOnLoadMoreListener(this);
             mPostsListAdapter.setOnPostsLoadedListener(this);
             mPostsListAdapter.setOnPostSelectedListener(this);
@@ -277,7 +289,7 @@ public class PostsListFragment extends Fragment
 
     private void newPost() {
         if (!isAdded()) return;
-        ActivityLauncher.addNewPostOrPageForResult(getActivity(), mSite, mIsPage, false);
+        ActivityLauncher.addNewPostOrPageForResult(getActivity(), mSite, mContentType, false);
     }
 
     public void onResume() {
@@ -333,10 +345,16 @@ public class PostsListFragment extends Fragment
 
         FetchPostsPayload payload = new FetchPostsPayload(mSite, loadMore);
 
-        if (mIsPage) {
-            mDispatcher.dispatch(PostActionBuilder.newFetchPagesAction(payload));
-        } else {
-            mDispatcher.dispatch(PostActionBuilder.newFetchPostsAction(payload));
+        switch (mContentType) {
+            case POST:
+                mDispatcher.dispatch(PostActionBuilder.newFetchPostsAction(payload));
+                break;
+            case PAGE:
+                mDispatcher.dispatch(PostActionBuilder.newFetchPagesAction(payload));
+                break;
+            case PORTFOLIO:
+                mDispatcher.dispatch(PostActionBuilder.newFetchPortfoliosAction(payload));
+                break;
         }
     }
 
@@ -372,24 +390,25 @@ public class PostsListFragment extends Fragment
         }
     }
 
+    //TODO Portfolio support
     private void updateEmptyView(EmptyViewMessageType emptyViewMessageType) {
         int stringId;
         switch (emptyViewMessageType) {
             case LOADING:
-                stringId = mIsPage ? R.string.pages_fetching : R.string.posts_fetching;
+                stringId = mContentType == PAGE ? R.string.pages_fetching : R.string.posts_fetching;
                 break;
             case NO_CONTENT:
-                stringId = mIsPage ? R.string.pages_empty_list : R.string.posts_empty_list;
+                stringId = mContentType == PAGE ? R.string.pages_empty_list : R.string.posts_empty_list;
                 break;
             case NETWORK_ERROR:
                 stringId = R.string.no_network_message;
                 break;
             case PERMISSION_ERROR:
-                stringId = mIsPage ? R.string.error_refresh_unauthorized_pages :
+                stringId = mContentType == PAGE ? R.string.error_refresh_unauthorized_pages :
                         R.string.error_refresh_unauthorized_posts;
                 break;
             case GENERIC_ERROR:
-                stringId = mIsPage ? R.string.error_refresh_pages : R.string.error_refresh_posts;
+                stringId = mContentType == PAGE ? R.string.error_refresh_pages : R.string.error_refresh_posts;
                 break;
             default:
                 return;
@@ -528,7 +547,7 @@ public class PostsListFragment extends Fragment
                 ActivityLauncher.viewPostPreviewForResult(getActivity(), mSite, post);
                 break;
             case PostListButton.BUTTON_STATS:
-                ActivityLauncher.viewStatsSinglePostDetails(getActivity(), mSite, post, mIsPage);
+                ActivityLauncher.viewStatsSinglePostDetails(getActivity(), mSite, post, mContentType);
                 break;
             case PostListButton.BUTTON_TRASH:
             case PostListButton.BUTTON_DELETE:
@@ -559,7 +578,7 @@ public class PostsListFragment extends Fragment
         //only check if network is available in case this is not a local draft - local drafts have not yet
         //been posted to the server so they can be trashed w/o further care
         if (!isAdded() || (!post.isLocalDraft() && !NetworkUtils.checkConnection(getActivity()))
-            || getPostListAdapter() == null) {
+                || getPostListAdapter() == null) {
             return;
         }
 
@@ -585,9 +604,10 @@ public class PostsListFragment extends Fragment
         // different undo text if this is a local draft since it will be deleted rather than trashed
         String text;
         if (post.isLocalDraft()) {
-            text = mIsPage ? getString(R.string.page_deleted) : getString(R.string.post_deleted);
+            //FIXME Portfolio suport
+            text = mContentType==PAGE ? getString(R.string.page_deleted) : getString(R.string.post_deleted);
         } else {
-            text = mIsPage ? getString(R.string.page_trashed) : getString(R.string.post_trashed);
+            text = mContentType==PAGE ? getString(R.string.page_trashed) : getString(R.string.post_trashed);
         }
 
         Snackbar snackbar = Snackbar.make(getView().findViewById(R.id.coordinator), text, Snackbar.LENGTH_LONG)
@@ -635,7 +655,7 @@ public class PostsListFragment extends Fragment
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
         outState.putSerializable(WordPress.SITE, mSite);
-        outState.putSerializable(PostsListActivity.EXTRA_VIEW_PAGES, mIsPage);
+        outState.putSerializable(PostsListActivity.EXTRA_CONTENT_TYPE, mContentType);
         mRVScrollPositionSaver.onSaveInstanceState(outState, mRecyclerView);
     }
 
@@ -675,7 +695,8 @@ public class PostsListFragment extends Fragment
                 break;
             case DELETE_POST:
                 if (event.isError()) {
-                    String message = getString(mIsPage ? R.string.error_deleting_page : R.string.error_deleting_post);
+                    //FIXME Portfolio support
+                    String message = getString(mContentType==PAGE ? R.string.error_deleting_page : R.string.error_deleting_post);
                     ToastUtils.showToast(getActivity(), message, ToastUtils.Duration.SHORT);
                     loadPosts(LoadMode.IF_CHANGED);
                 }
@@ -724,7 +745,7 @@ public class PostsListFragment extends Fragment
 
         PostModel post = mPostStore.getPostByLocalPostId(event.media.getLocalPostId());
         if (post != null) {
-            if ((event.media.isError() || event.canceled)){
+            if ((event.media.isError() || event.canceled)) {
                 // if a media is cancelled or ends in error, and the post is not uploading nor queued,
                 // (meaning there is no other pending media to be uploaded for this post)
                 // then we should refresh it to show its new state
@@ -753,8 +774,7 @@ public class PostsListFragment extends Fragment
         if (event.post != null) {
             UploadUtils.onPostUploadedSnackbarHandler(getActivity(),
                     getActivity().findViewById(R.id.coordinator), true, event.post, event.errorMessage, mSite, mDispatcher);
-        }
-        else if (event.mediaModelList != null && !event.mediaModelList.isEmpty()) {
+        } else if (event.mediaModelList != null && !event.mediaModelList.isEmpty()) {
             UploadUtils.onMediaUploadedSnackbarHandler(getActivity(),
                     getActivity().findViewById(R.id.coordinator), true,
                     event.mediaModelList, mSite, event.errorMessage);

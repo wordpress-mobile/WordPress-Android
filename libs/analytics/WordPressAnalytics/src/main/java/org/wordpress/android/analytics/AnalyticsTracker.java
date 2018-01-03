@@ -166,6 +166,7 @@ public final class AnalyticsTracker {
         NOTIFICATION_UPLOAD_MEDIA_ERROR_RETRY,
         OPENED_POSTS,
         OPENED_PAGES,
+        OPENED_PORTFOLIO,
         OPENED_COMMENTS,
         OPENED_VIEW_SITE,
         OPENED_VIEW_SITE_FROM_HEADER,

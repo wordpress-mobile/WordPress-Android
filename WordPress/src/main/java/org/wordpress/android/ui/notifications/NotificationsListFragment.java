@@ -45,6 +45,7 @@ import javax.inject.Inject;
 import de.greenrobot.event.EventBus;
 
 import static android.app.Activity.RESULT_OK;
+import static org.wordpress.android.fluxc.model.post.ContentType.POST;
 import static org.wordpress.android.util.WPSwipeToRefreshHelper.buildSwipeToRefreshHelper;
 
 public class NotificationsListFragment extends Fragment implements WPMainActivity.OnScrollToTopListener,
@@ -71,7 +72,8 @@ public class NotificationsListFragment extends Fragment implements WPMainActivit
     private long mRestoredScrollNoteID;
     private boolean mIsAnimatingOutNewNotificationsBar;
 
-    @Inject AccountStore mAccountStore;
+    @Inject
+    AccountStore mAccountStore;
 
     public static NotificationsListFragment newInstance() {
         return new NotificationsListFragment();
@@ -161,7 +163,7 @@ public class NotificationsListFragment extends Fragment implements WPMainActivit
 
     @Override
     public void onScrollToTop() {
-        if(!isAdded()) return;
+        if (!isAdded()) return;
         clearPendingNotificationsItemsOnUI();
         if (getFirstVisibleItemID() > 0) {
             mLinearLayoutManager.smoothScrollToPosition(mRecyclerView, null, 0);
@@ -418,7 +420,7 @@ public class NotificationsListFragment extends Fragment implements WPMainActivit
 
         int i = mFilterRadioGroup.getCheckedRadioButtonId();
         if (i == R.id.notifications_filter_unread) { // Create a new post
-            ActivityLauncher.addNewPostOrPageForResult(getActivity(), getSelectedSite(), false, false);
+            ActivityLauncher.addNewPostOrPageForResult(getActivity(), getSelectedSite(), POST, false);
         } else {// Switch to Reader tab
             if (getActivity() instanceof WPMainActivity) {
                 ((WPMainActivity) getActivity()).setReaderTabActive();
@@ -427,7 +429,7 @@ public class NotificationsListFragment extends Fragment implements WPMainActivit
     }
 
     private void restoreListScrollPosition() {
-        if (!isAdded()  ||  mRestoredScrollNoteID <= 0) {
+        if (!isAdded() || mRestoredScrollNoteID <= 0) {
             return;
         }
         final int pos = getNotesAdapter().getPositionForNote(String.valueOf(mRestoredScrollNoteID));
@@ -509,6 +511,7 @@ public class NotificationsListFragment extends Fragment implements WPMainActivit
             mSwipeToRefreshHelper.setRefreshing(false);
         }
     }
+
     @SuppressWarnings("unused")
     public void onEventMainThread(final NotificationEvents.NotificationsRefreshCompleted event) {
         if (!isAdded()) {
@@ -628,7 +631,9 @@ public class NotificationsListFragment extends Fragment implements WPMainActivit
 
         Animation.AnimationListener listener = new Animation.AnimationListener() {
             @Override
-            public void onAnimationStart(Animation animation) { }
+            public void onAnimationStart(Animation animation) {
+            }
+
             @Override
             public void onAnimationEnd(Animation animation) {
                 if (isAdded()) {
@@ -636,8 +641,10 @@ public class NotificationsListFragment extends Fragment implements WPMainActivit
                     mIsAnimatingOutNewNotificationsBar = false;
                 }
             }
+
             @Override
-            public void onAnimationRepeat(Animation animation) { }
+            public void onAnimationRepeat(Animation animation) {
+            }
         };
         AniUtils.startAnimation(mNewNotificationsBar, R.anim.notifications_bottom_bar_out, listener);
     }

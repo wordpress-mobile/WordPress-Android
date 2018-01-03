@@ -168,6 +168,8 @@ public class AnalyticsTrackerNosara extends Tracker {
             case OPENED_POSTS:
                 predefinedEventProperties.put("menu_item", "posts");
                 break;
+            case OPENED_PORTFOLIO:
+                //FIXME portfolio analytics tag
             case OPENED_PAGES:
                 predefinedEventProperties.put("menu_item", "pages");
                 break;

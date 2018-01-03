@@ -11,6 +11,7 @@ import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.fluxc.model.PostModel;
 import org.wordpress.android.fluxc.model.SiteModel;
+import org.wordpress.android.fluxc.model.post.ContentType;
 import org.wordpress.android.fluxc.store.PostStore;
 import org.wordpress.android.fluxc.store.SiteStore;
 import org.wordpress.android.ui.ActivityId;
@@ -19,16 +20,20 @@ import org.wordpress.android.util.ToastUtils;
 
 import javax.inject.Inject;
 
+import static org.wordpress.android.fluxc.model.post.ContentType.PAGE;
+
 public class PostsListActivity extends AppCompatActivity {
-    public static final String EXTRA_VIEW_PAGES = "viewPages";
+    public static final String EXTRA_CONTENT_TYPE = "contentType";
     public static final String EXTRA_TARGET_POST_LOCAL_ID = "targetPostLocalId";
 
-    private boolean mIsPage = false;
+    private ContentType mContentType;
     private PostsListFragment mPostList;
-    private SiteModel mSite;
 
-    @Inject SiteStore mSiteStore;
-    @Inject PostStore mPostStore;
+    private SiteModel mSite;
+    @Inject
+    SiteStore mSiteStore;
+    @Inject
+    PostStore mPostStore;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -37,7 +42,7 @@ public class PostsListActivity extends AppCompatActivity {
 
         setContentView(R.layout.post_list_activity);
 
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
         if (savedInstanceState == null) {
@@ -56,17 +61,17 @@ public class PostsListActivity extends AppCompatActivity {
     }
 
     private void handleIntent(Intent intent) {
-        mIsPage = intent.getBooleanExtra(EXTRA_VIEW_PAGES, false);
+        mContentType = ContentType.getContentType(intent.getStringExtra(EXTRA_CONTENT_TYPE));
 
         // get new intent extras and compare whether the running instance of PostsListActivity has
         // the same values or not. If not, we need to create a new fragment and show the corresponding
         // requested content
         boolean pageHasChanged = false;
-        if (intent.hasExtra(EXTRA_VIEW_PAGES)) {
-            boolean isPage = intent.getBooleanExtra(EXTRA_VIEW_PAGES, false);
-            pageHasChanged = isPage != mIsPage;
+        if (intent.hasExtra(EXTRA_CONTENT_TYPE)) {
+            ContentType contentType = ContentType.getContentType(intent.getStringExtra(EXTRA_CONTENT_TYPE));
+            pageHasChanged = contentType != mContentType;
         }
-        mIsPage = intent.getBooleanExtra(EXTRA_VIEW_PAGES, false);
+        mContentType = ContentType.getContentType(intent.getStringExtra(EXTRA_CONTENT_TYPE));
 
         boolean siteHasChanged = false;
         if (intent.hasExtra(WordPress.SITE)) {
@@ -85,7 +90,8 @@ public class PostsListActivity extends AppCompatActivity {
 
         ActionBar actionBar = getSupportActionBar();
         if (actionBar != null) {
-            actionBar.setTitle(getString(mIsPage ? R.string.pages : R.string.posts));
+            //TODO Portfolio support
+            actionBar.setTitle(getString(mContentType == PAGE ? R.string.pages : R.string.posts));
             actionBar.setDisplayShowTitleEnabled(true);
             actionBar.setDisplayHomeAsUpEnabled(true);
         }
@@ -95,7 +101,8 @@ public class PostsListActivity extends AppCompatActivity {
         if (targetPostId > 0) {
             targetPost = mPostStore.getPostByLocalPostId(intent.getIntExtra(EXTRA_TARGET_POST_LOCAL_ID, 0));
             if (targetPost == null) {
-                String errorMessage = getString(mIsPage ? R.string.error_page_does_not_exist
+                //TODO Portfolio support
+                String errorMessage = getString(mContentType == PAGE ? R.string.error_page_does_not_exist
                         : R.string.error_post_does_not_exist);
                 ToastUtils.showToast(this, errorMessage);
             }
@@ -104,7 +111,7 @@ public class PostsListActivity extends AppCompatActivity {
         mPostList = (PostsListFragment) getFragmentManager().findFragmentByTag(PostsListFragment.TAG);
         if (mPostList == null || siteHasChanged || pageHasChanged || targetPost != null) {
             PostsListFragment oldFragment = mPostList;
-            mPostList = PostsListFragment.newInstance(mSite, mIsPage, targetPost);
+            mPostList = PostsListFragment.newInstance(mSite, mContentType, targetPost);
             if (oldFragment == null) {
                 getFragmentManager().beginTransaction()
                         .add(R.id.post_list_container, mPostList, PostsListFragment.TAG)
@@ -120,7 +127,8 @@ public class PostsListActivity extends AppCompatActivity {
     @Override
     public void onResume() {
         super.onResume();
-        ActivityId.trackLastActivity(mIsPage ? ActivityId.PAGES : ActivityId.POSTS);
+        //TODO Portfolio support
+        ActivityId.trackLastActivity(mContentType == PAGE ? ActivityId.PAGES : ActivityId.POSTS);
     }
 
     @Override

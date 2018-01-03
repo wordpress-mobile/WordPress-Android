@@ -57,6 +57,8 @@ import javax.inject.Inject;
 
 import de.greenrobot.event.EventBus;
 
+import static org.wordpress.android.fluxc.model.post.ContentType.POST;
+
 public class MySiteFragment extends Fragment
         implements WPMainActivity.OnScrollToTopListener {
 
@@ -184,7 +186,7 @@ public class MySiteFragment extends Fragment
         mFabView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                ActivityLauncher.addNewPostOrPageForResult(getActivity(), getSelectedSite(), false, false);
+                ActivityLauncher.addNewPostOrPageForResult(getActivity(), getSelectedSite(), POST, false);
             }
         });
 
@@ -239,6 +241,16 @@ public class MySiteFragment extends Fragment
             @Override
             public void onClick(View v) {
                 ActivityLauncher.viewCurrentBlogPages(getActivity(), getSelectedSite());
+            }
+        });
+
+        //FIXME show only when portfolios enabled
+        View portfolioView = rootView.findViewById(R.id.row_portfolio);
+        portfolioView.setVisibility(View.VISIBLE);
+        portfolioView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                ActivityLauncher.viewCurrentBlogPortfolio(getActivity(), getSelectedSite());
             }
         });
 
