@@ -55,7 +55,8 @@ public class TagListActivity extends AppCompatActivity
     @Inject SiteStore mSiteStore;
     @Inject TaxonomyStore mTaxonomyStore;
 
-    private static final String SAVED_QUERY = "SAVED_QUERY";
+    private static final String KEY_SAVED_QUERY = "SAVED_QUERY";
+    private static final String KEY_PROGRESS_RES_ID = "PROGRESS_RESOURCE_ID";
 
     private SiteModel mSite;
     private RecyclerView mRecycler;
@@ -64,6 +65,7 @@ public class TagListActivity extends AppCompatActivity
 
     private TagListAdapter mAdapter;
     private String mSavedQuery;
+    private int mLastProgressResId;
 
     private MenuItem mSearchMenuItem;
     private SearchView mSearchView;
@@ -91,7 +93,7 @@ public class TagListActivity extends AppCompatActivity
             mSite = (SiteModel) getIntent().getSerializableExtra(WordPress.SITE);
         } else {
             mSite = (SiteModel) savedInstanceState.getSerializable(WordPress.SITE);
-            mSavedQuery = savedInstanceState.getString(SAVED_QUERY);
+            mSavedQuery = savedInstanceState.getString(KEY_SAVED_QUERY);
         }
         if (mSite == null) {
             ToastUtils.showToast(this, R.string.blog_not_found, ToastUtils.Duration.SHORT);
@@ -127,7 +129,10 @@ public class TagListActivity extends AppCompatActivity
             if (fragment != null) {
                 fragment.setOnTagDetailListener(this);
             }
-            // TODO: restore mProgressDlg
+            if (savedInstanceState.containsKey(KEY_PROGRESS_RES_ID)) {
+                @StringRes int messageId = savedInstanceState.getInt(KEY_PROGRESS_RES_ID);
+                showProgressDialog(messageId);
+            }
         }
     }
 
@@ -154,7 +159,10 @@ public class TagListActivity extends AppCompatActivity
         super.onSaveInstanceState(outState);
         outState.putSerializable(WordPress.SITE, mSite);
         if (mSearchMenuItem.isActionViewExpanded()) {
-            outState.putString(SAVED_QUERY, mSearchView.getQuery().toString());
+            outState.putString(KEY_SAVED_QUERY, mSearchView.getQuery().toString());
+        }
+        if (mProgressDialog != null && mProgressDialog.isShowing()) {
+            outState.putInt(KEY_PROGRESS_RES_ID, mLastProgressResId);
         }
     }
 
@@ -336,6 +344,7 @@ public class TagListActivity extends AppCompatActivity
         mProgressDialog.setIndeterminate(true);
         mProgressDialog.setMessage(getString(messageId));
         mProgressDialog.show();
+        mLastProgressResId = messageId;
     }
 
     private void hideProgressDialog() {
