@@ -1,8 +1,10 @@
 package org.wordpress.android.ui.prefs;
 
+import android.app.AlertDialog;
 import android.app.FragmentTransaction;
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
@@ -38,6 +40,7 @@ import org.wordpress.android.fluxc.store.TaxonomyStore;
 import org.wordpress.android.util.ActivityUtils;
 import org.wordpress.android.util.AniUtils;
 import org.wordpress.android.util.AppLog;
+import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.ToastUtils;
 
 import java.util.ArrayList;
@@ -355,9 +358,27 @@ public class TagListActivity extends AppCompatActivity
 
     @Override
     public void onRequestDeleteTag(@NonNull TermModel term) {
-        showProgressDialog(R.string.dlg_deleting_tag);
-        Action action = TaxonomyActionBuilder.newDeleteTermAction(new TaxonomyStore.RemoteTermPayload(term, mSite));
-        mDispatcher.dispatch(action);
+        if (NetworkUtils.checkConnection(this)) {
+            confirmTrashTag(term);
+        }
+    }
+
+    private void confirmTrashTag(@NonNull final TermModel term) {
+        String message = String.format(getString(R.string.dlg_confirm_delete_tag), term.getName());
+        AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(this);
+        dialogBuilder.setTitle(getResources().getText(R.string.trash));
+        dialogBuilder.setMessage(message);
+        dialogBuilder.setPositiveButton(getResources().getText(R.string.delete_yes),
+                new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int whichButton) {
+                        showProgressDialog(R.string.dlg_deleting_tag);
+                        Action action = TaxonomyActionBuilder.newDeleteTermAction(new TaxonomyStore.RemoteTermPayload(term, mSite));
+                        mDispatcher.dispatch(action);
+                    }
+                });
+        dialogBuilder.setNegativeButton(getResources().getText(R.string.delete_no), null);
+        dialogBuilder.setCancelable(true);
+        dialogBuilder.create().show();
     }
 
     private void saveTag(@NonNull TermModel term, boolean isNewTerm) {

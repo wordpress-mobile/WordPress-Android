@@ -105,6 +105,8 @@
     <string name="invalid_ip_or_range">Invalid IP or IP range</string>
     <string name="copy">Copy</string>
     <string name="error_please_choose_browser">Error opening the default web browser. Please choose another app:</string>
+    <string name="delete_yes">Delete</string>
+    <string name="delete_no">Don\'t Delete</string>
 
     <string name="button_skip">Skip</string>
     <string name="button_next">Next</string>

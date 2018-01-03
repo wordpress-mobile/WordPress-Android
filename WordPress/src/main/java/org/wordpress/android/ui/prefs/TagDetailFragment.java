@@ -1,8 +1,6 @@
 package org.wordpress.android.ui.prefs;
 
-import android.app.AlertDialog;
 import android.app.Fragment;
-import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -20,7 +18,6 @@ import org.wordpress.android.WordPress;
 import org.wordpress.android.fluxc.model.TermModel;
 import org.wordpress.android.fluxc.store.TaxonomyStore;
 import org.wordpress.android.util.EditTextUtils;
-import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.StringUtils;
 
 import static org.wordpress.android.ui.reader.utils.ReaderUtils.sanitizeWithDashes;
@@ -106,8 +103,8 @@ public class TagDetailFragment extends Fragment {
 
     @Override
     public boolean onOptionsItemSelected(final MenuItem item) {
-        if (item.getItemId() == R.id.menu_trash) {
-            confirmTrashTag();
+        if (item.getItemId() == R.id.menu_trash && mListener != null) {
+            mListener.onRequestDeleteTag(mTerm);
             return true;
         }
         return super.onOptionsItemSelected(item);
@@ -152,23 +149,5 @@ public class TagDetailFragment extends Fragment {
 
     boolean isNewTerm() {
         return mIsNewTerm;
-    }
-
-    private void confirmTrashTag() {
-        if (!NetworkUtils.checkConnection(getActivity())) return;
-
-        String message = String.format(getString(R.string.dlg_confirm_delete_tag), mTerm.getName());
-        AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(getActivity());
-        dialogBuilder.setTitle(getResources().getText(R.string.trash));
-        dialogBuilder.setMessage(message);
-        dialogBuilder.setPositiveButton(getResources().getText(R.string.trash_yes),
-                new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int whichButton) {
-                        mListener.onRequestDeleteTag(mTerm);
-                    }
-                });
-        dialogBuilder.setNegativeButton(getResources().getText(R.string.trash_no), null);
-        dialogBuilder.setCancelable(true);
-        dialogBuilder.create().show();
     }
 }
