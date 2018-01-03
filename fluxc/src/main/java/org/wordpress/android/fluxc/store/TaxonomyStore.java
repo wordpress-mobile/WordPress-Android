@@ -290,6 +290,12 @@ public class TaxonomyStore extends Store {
             case PUSHED_TERM:
                 handlePushTermCompleted((RemoteTermPayload) action.getPayload());
                 break;
+            case DELETE_TERM:
+                deleteTerm((RemoteTermPayload) action.getPayload());
+                break;
+            case DELETED_TERM:
+                handleDeleteTermCompleted((RemoteTermPayload) action.getPayload());
+                break;
             case REMOVE_ALL_TERMS:
                 removeAllTerms();
                 break;
@@ -376,6 +382,17 @@ public class TaxonomyStore extends Store {
         }
     }
 
+    private void handleDeleteTermCompleted(RemoteTermPayload payload) {
+        if (payload.isError()) {
+            OnTaxonomyChanged event = new OnTaxonomyChanged(0, payload.term.getTaxonomy());
+            event.error = payload.error;
+            event.causeOfChange = TaxonomyAction.DELETE_TERM;
+            emitChange(event);
+        } else {
+            removeTerm(payload.term);
+        }
+    }
+
     private void handlePushTermCompleted(RemoteTermPayload payload) {
         if (payload.isError()) {
             OnTermUploaded onTermUploaded = new OnTermUploaded(payload.term);
@@ -405,11 +422,27 @@ public class TaxonomyStore extends Store {
         }
     }
 
+    private void deleteTerm(RemoteTermPayload payload) {
+        if (payload.site.isUsingWpComRestApi()) {
+            mTaxonomyRestClient.deleteTerm(payload.term, payload.site);
+        } else {
+            mTaxonomyXMLRPCClient.deleteTerm(payload.term, payload.site);
+        }
+    }
+
     private void updateTerm(TermModel term) {
         int rowsAffected = TaxonomySqlUtils.insertOrUpdateTerm(term);
 
         OnTaxonomyChanged onTaxonomyChanged = new OnTaxonomyChanged(rowsAffected, term.getTaxonomy());
         onTaxonomyChanged.causeOfChange = TaxonomyAction.UPDATE_TERM;
+        emitChange(onTaxonomyChanged);
+    }
+
+    private void removeTerm(TermModel term) {
+        int rowsAffected = TaxonomySqlUtils.removeTerm(term);
+
+        OnTaxonomyChanged onTaxonomyChanged = new OnTaxonomyChanged(rowsAffected, term.getTaxonomy());
+        onTaxonomyChanged.causeOfChange = TaxonomyAction.REMOVE_TERM;
         emitChange(onTaxonomyChanged);
     }
 
