@@ -25,7 +25,7 @@ import org.wordpress.android.fluxc.generated.ThemeActionBuilder;
 import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.model.ThemeModel;
 import org.wordpress.android.fluxc.store.ThemeStore;
-import org.wordpress.android.fluxc.store.ThemeStore.ActivateThemePayload;
+import org.wordpress.android.fluxc.store.ThemeStore.SiteThemePayload;
 import org.wordpress.android.ui.ActivityId;
 import org.wordpress.android.ui.prefs.AppPrefs;
 import org.wordpress.android.ui.themes.ThemeBrowserFragment.ThemeBrowserFragmentCallback;
@@ -34,7 +34,6 @@ import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.ToastUtils;
-import org.wordpress.android.widgets.WPAlertDialogFragment;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -195,7 +194,7 @@ public class ThemeBrowserActivity extends AppCompatActivity implements ThemeBrow
 
     @SuppressWarnings("unused")
     @Subscribe(threadMode = ThreadMode.MAIN)
-    public void onThemesChanged(ThemeStore.OnThemesChanged event) {
+    public void onSiteThemesChanged(ThemeStore.OnSiteThemesChanged event) {
         // always unset refreshing status to remove progress indicator
         if (mThemeBrowserFragment != null) {
             mThemeBrowserFragment.setRefreshing(false);
@@ -330,12 +329,12 @@ public class ThemeBrowserActivity extends AppCompatActivity implements ThemeBrow
 
             if (mSite.isJetpackConnected()) {
                 // first install the theme, then activate it
-                mDispatcher.dispatch(ThemeActionBuilder.newInstallThemeAction(new ActivateThemePayload(mSite, theme)));
+                mDispatcher.dispatch(ThemeActionBuilder.newInstallThemeAction(new SiteThemePayload(mSite, theme)));
                 return;
             }
         }
 
-        mDispatcher.dispatch(ThemeActionBuilder.newActivateThemeAction(new ActivateThemePayload(mSite, theme)));
+        mDispatcher.dispatch(ThemeActionBuilder.newActivateThemeAction(new SiteThemePayload(mSite, theme)));
     }
 
     protected void setThemeBrowserFragment(ThemeBrowserFragment themeBrowserFragment) {
