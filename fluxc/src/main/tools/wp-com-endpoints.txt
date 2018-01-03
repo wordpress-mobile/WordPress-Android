@@ -54,6 +54,7 @@
 /sites/$site/taxonomies/$taxonomy#String/terms/
 /sites/$site/taxonomies/$taxonomy#String/terms/new/
 /sites/$site/taxonomies/$taxonomy#String/terms/slug:$slug#String/
+/sites/$site/taxonomies/$taxonomy#String/terms/slug:$slug#String/delete/
 
 /themes
 /sites/$site/themes/mine
