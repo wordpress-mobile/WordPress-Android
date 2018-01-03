@@ -162,9 +162,8 @@ public class TaxonomyRestClient extends BaseWPComRestClient {
         final String taxonomy = term.getTaxonomy();
         String url = WPCOMREST.sites.site(site.getSiteId()).taxonomies.taxonomy(taxonomy).terms
                 .slug(term.getSlug()).delete.getUrlV1_1();
-        Map<String, Object> body = termModelToParams(term);
 
-        final WPComGsonRequest request = WPComGsonRequest.buildPostRequest(url, body,
+        final WPComGsonRequest request = WPComGsonRequest.buildPostRequest(url, null,
                 TermWPComRestResponse.class,
                 new Listener<TermWPComRestResponse>() {
                     @Override
@@ -183,8 +182,6 @@ public class TaxonomyRestClient extends BaseWPComRestClient {
                     }
                 }
         );
-
-        request.addQueryParameter("context", "edit");
 
         request.disableRetries();
         add(request);
