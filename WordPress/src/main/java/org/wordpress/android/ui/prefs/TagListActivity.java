@@ -247,7 +247,6 @@ public class TagListActivity extends AppCompatActivity
                     loadTags();
                 }
                 break;
-            case PUSHED_TERM:
             case REMOVE_TERM:
             case UPDATE_TERM:
                 hideProgressDialog();
