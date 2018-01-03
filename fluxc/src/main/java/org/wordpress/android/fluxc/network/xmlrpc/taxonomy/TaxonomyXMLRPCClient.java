@@ -242,6 +242,7 @@ public class TaxonomyXMLRPCClient extends BaseXMLRPCClient {
         request.disableRetries();
         add(request);
     }
+
     private TermsModel termsResponseToTermsModel(Object[] response, SiteModel site) {
         List<Map<?, ?>> termsList = new ArrayList<>();
         for (Object responseObject : response) {
