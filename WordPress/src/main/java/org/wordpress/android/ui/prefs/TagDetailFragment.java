@@ -47,7 +47,7 @@ public class TagDetailFragment extends Fragment {
     /*
      * pass an existing term to edit it, or pass null to create a new one
      */
-    public static TagDetailFragment newInstance(@NonNull TermModel term) {
+    public static TagDetailFragment newInstance(@Nullable TermModel term) {
         TagDetailFragment fragment = new TagDetailFragment();
         Bundle args = new Bundle();
         if (term == null) {
