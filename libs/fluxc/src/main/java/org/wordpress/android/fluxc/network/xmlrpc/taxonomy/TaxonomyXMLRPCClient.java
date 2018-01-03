@@ -212,7 +212,8 @@ public class TaxonomyXMLRPCClient extends BaseXMLRPCClient {
         params.add(site.getSelfHostedSiteId());
         params.add(site.getUsername());
         params.add(site.getPassword());
-        params.add(contentStruct);
+        params.add(term.getTaxonomy());
+        params.add(term.getId());
 
         final XMLRPCRequest request = new XMLRPCRequest(site.getXmlRpcUrl(), XMLRPC.DELETE_TERM, params,
                 new Listener<Object>() {
