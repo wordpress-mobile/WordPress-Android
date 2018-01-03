@@ -6,6 +6,7 @@ import android.graphics.BitmapFactory;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
+import android.util.DisplayMetrics;
 
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.ImageLoader;
@@ -40,6 +41,9 @@ public class AztecImageLoader implements Html.ImageGetter {
         final String cacheKey = url + maxWidthForEditor;
         Bitmap cachedBitmap = WordPress.getBitmapCache().get(cacheKey);
         if (cachedBitmap != null) {
+            // By default, BitmapFactory.decodeFile sets the bitmap's density to the device default so, we need
+            // to correctly set the input density to 160 ourselves.
+            cachedBitmap.setDensity(DisplayMetrics.DENSITY_DEFAULT);
             callbacks.onImageLoaded(new BitmapDrawable(context.getResources(), cachedBitmap));
             return;
         }
@@ -74,6 +78,9 @@ public class AztecImageLoader implements Html.ImageGetter {
                 } else if (bitmap != null) {
                     final String cacheKey = url + maxWidthForEditor;
                     WordPress.getBitmapCache().putBitmap(cacheKey, bitmap);
+                    // By default, BitmapFactory.decodeFile sets the bitmap's density to the device default so, we need
+                    // to correctly set the input density to 160 ourselves.
+                    bitmap.setDensity(DisplayMetrics.DENSITY_DEFAULT);
                     BitmapDrawable bitmapDrawable = new BitmapDrawable(context.getResources(), bitmap);
                     callbacks.onImageLoaded(bitmapDrawable);
                 }

@@ -26,6 +26,7 @@ import android.text.Editable;
 import android.text.Spanned;
 import android.text.TextUtils;
 import android.text.TextWatcher;
+import android.util.DisplayMetrics;
 import android.view.DragEvent;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -842,7 +843,9 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
                     getActivity(),
                     safeMediaPreviewUrl,
                     maxWidth > realBitmapWidth && realBitmapWidth > 0 ? realBitmapWidth : maxWidth);
-
+            // By default, BitmapFactory.decodeFile sets the bitmap's density to the device default so, we need
+            // to correctly set the input density to 160 ourselves.
+            bitmapToShow.setDensity(DisplayMetrics.DENSITY_DEFAULT);
             MediaPredicate localMediaIdPredicate = MediaPredicate.getLocalMediaIdPredicate(localMediaId);
 
             if (bitmapToShow != null) {
