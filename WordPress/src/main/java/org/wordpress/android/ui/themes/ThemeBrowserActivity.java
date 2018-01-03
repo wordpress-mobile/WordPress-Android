@@ -25,7 +25,6 @@ import org.wordpress.android.fluxc.generated.ThemeActionBuilder;
 import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.model.ThemeModel;
 import org.wordpress.android.fluxc.store.ThemeStore;
-import org.wordpress.android.fluxc.store.ThemeStore.SearchThemesPayload;
 import org.wordpress.android.fluxc.store.ThemeStore.ActivateThemePayload;
 import org.wordpress.android.ui.ActivityId;
 import org.wordpress.android.ui.prefs.AppPrefs;
@@ -247,30 +246,6 @@ public class ThemeBrowserActivity extends AppCompatActivity implements ThemeBrow
 
     @SuppressWarnings("unused")
     @Subscribe(threadMode = ThreadMode.MAIN)
-    public void onThemesSearched(ThemeStore.OnThemesSearched event) {
-        if (event.isError()) {
-            AppLog.e(T.THEMES, "Error searching themes: " + event.error.message);
-            if (event.error.type == ThemeStore.ThemeErrorType.UNAUTHORIZED) {
-                AppLog.d(T.THEMES, getString(R.string.theme_auth_error_authenticate));
-                String errorTitle = getString(R.string.theme_auth_error_title);
-                String errorMsg = getString(R.string.theme_auth_error_message);
-
-                if (mIsRunning) {
-                    FragmentTransaction ft = getFragmentManager().beginTransaction();
-                    WPAlertDialogFragment fragment = WPAlertDialogFragment.newAlertDialog(errorMsg,
-                            errorTitle);
-                    ft.add(fragment, ALERT_TAB);
-                    ft.commitAllowingStateLoss();
-                }
-            }
-        } else {
-            AppLog.d(T.THEMES, "Themes search successful!");
-            mThemeSearchFragment.setSearchResults(event.searchResults);
-        }
-    }
-
-    @SuppressWarnings("unused")
-    @Subscribe(threadMode = ThreadMode.MAIN)
     public void onThemeInstalled(ThemeStore.OnThemeInstalled event) {
         if (event.isError()) {
             AppLog.e(T.THEMES, "Error installing theme: " + event.error.message);
@@ -318,8 +293,7 @@ public class ThemeBrowserActivity extends AppCompatActivity implements ThemeBrow
         if (TextUtils.isEmpty(searchTerm)) {
             return;
         }
-        SearchThemesPayload payload = new SearchThemesPayload(searchTerm);
-        mDispatcher.dispatch(ThemeActionBuilder.newSearchThemesAction(payload));
+        // TODO: implement local theme search
     }
 
     public void fetchCurrentTheme() {
