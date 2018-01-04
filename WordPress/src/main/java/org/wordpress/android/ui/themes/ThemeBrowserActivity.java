@@ -20,6 +20,7 @@ import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.analytics.AnalyticsTracker.Stat;
 import org.wordpress.android.fluxc.Dispatcher;
+import org.wordpress.android.fluxc.action.ThemeAction;
 import org.wordpress.android.fluxc.generated.ThemeActionBuilder;
 import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.model.ThemeModel;
@@ -213,19 +214,24 @@ public class ThemeBrowserActivity extends AppCompatActivity implements ThemeBrow
     @SuppressWarnings("unused")
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onSiteThemesChanged(ThemeStore.OnSiteThemesChanged event) {
-        // always unset refreshing status to remove progress indicator
-        if (mThemeBrowserFragment != null) {
-            mThemeBrowserFragment.setRefreshing(false);
-            mThemeBrowserFragment.refreshView();
-        }
+        if (event.origin == ThemeAction.FETCH_INSTALLED_THEMES) {
+            // always unset refreshing status to remove progress indicator
+            if (mThemeBrowserFragment != null) {
+                mThemeBrowserFragment.setRefreshing(false);
+                mThemeBrowserFragment.refreshView();
+            }
 
-        mIsFetchingInstalledThemes = false;
+            mIsFetchingInstalledThemes = false;
 
-        if (event.isError()) {
-            AppLog.e(T.THEMES, "Error fetching themes: " + event.error.message);
-            ToastUtils.showToast(this, R.string.theme_fetch_failed, ToastUtils.Duration.SHORT);
-        } else {
-            AppLog.d(T.THEMES, "Installed themes fetch successful!");
+            if (event.isError()) {
+                AppLog.e(T.THEMES, "Error fetching themes: " + event.error.message);
+                ToastUtils.showToast(this, R.string.theme_fetch_failed, ToastUtils.Duration.SHORT);
+            } else {
+                AppLog.d(T.THEMES, "Installed themes fetch successful!");
+            }
+        } else if (event.origin == ThemeAction.REMOVE_SITE_THEMES){
+            // Since this is a logout event, we don't need to do anything
+            AppLog.d(T.THEMES, "Site themes removed for site: " + event.site.getDisplayName());
         }
     }
 
