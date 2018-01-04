@@ -647,8 +647,12 @@ public class PostsListFragment extends Fragment
         switch (event.causeOfChange) {
             // if a Post is updated, let's refresh the whole list, because we can't really know
             // from FluxC which post has changed, or when. So to make sure, we go to the source,
-            // which is the FkuxC PostStore.
+            // which is the FluxC PostStore.
             case UPDATE_POST:
+                if (!event.isError()) {
+                    loadPosts(LoadMode.IF_CHANGED);
+                }
+                break;
             case FETCH_POSTS:
             case FETCH_PAGES:
                 mIsFetchingPosts = false;
