@@ -35,8 +35,6 @@ import java.util.Map;
 
 import javax.inject.Inject;
 
-import static org.wordpress.android.ui.ShareIntentReceiverFragment.ShareAction;
-
 /**
  * An activity to handle share intents, since there are multiple actions possible.
  * If the user is not logged in, redirects the user to the LoginFlow. When the user is logged in,
@@ -256,7 +254,7 @@ public class ShareIntentReceiverActivity extends AppCompatActivity implements Sh
     }
 
     private boolean doesContainMediaAndWasSharedToMediaLibrary(ShareAction shareAction, int numberOfMediaShared) {
-        return shareAction != null && (numberOfMediaShared > 0 && ShareAction.SHARE_TO_MEDIA_LIBRARY.analyticsName.equals(shareAction.analyticsName));
+        return shareAction != null && shareAction.analyticsName.equals(ShareAction.SHARE_TO_MEDIA_LIBRARY.analyticsName) && numberOfMediaShared > 0;
     }
 
     private int countMedia() {
