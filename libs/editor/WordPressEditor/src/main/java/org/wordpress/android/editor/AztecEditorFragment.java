@@ -817,9 +817,8 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
                         return;
                     }
 
-                    Bitmap resizedBitmap = ImageUtils.getScaledBitmapAtLongestSide(downloadedBitmap, maxImageWidthForVisualEditor);
-                    resizedBitmap.setDensity(DisplayMetrics.DENSITY_DEFAULT);
-                    replaceDrawable(new BitmapDrawable(getResources(), resizedBitmap));
+                    downloadedBitmap.setDensity(DisplayMetrics.DENSITY_DEFAULT);
+                    replaceDrawable(new BitmapDrawable(getResources(), downloadedBitmap));
                 }
             }, maxImageWidthForVisualEditor, 0);
 
