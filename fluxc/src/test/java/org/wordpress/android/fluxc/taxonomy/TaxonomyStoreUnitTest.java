@@ -151,6 +151,16 @@ public class TaxonomyStoreUnitTest {
     }
 
     @Test
+    public void testRemoveTag() {
+        TermModel tag = TaxonomyTestUtils.generateSampleTag();
+        TaxonomySqlUtils.insertOrUpdateTerm(tag);
+        assertEquals(1, TaxonomyTestUtils.getTermsCount());
+
+        TaxonomySqlUtils.removeTerm(tag);
+        assertEquals(0, TaxonomyTestUtils.getTermsCount());
+    }
+
+    @Test
     public void testClearTaxonomy() {
         SiteModel site = new SiteModel();
         site.setId(6);
