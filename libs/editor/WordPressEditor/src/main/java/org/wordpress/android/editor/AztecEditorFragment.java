@@ -842,7 +842,8 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
                     safeMediaPreviewUrl,
                     maxImageWidthForVisualEditor > realBitmapWidth && realBitmapWidth > 0 ? realBitmapWidth
                             : maxImageWidthForVisualEditor);
-            MediaPredicate localMediaIdPredicate = MediaPredicate.getLocalMediaIdPredicate(localMediaId); if (bitmapToShow != null) {
+            MediaPredicate localMediaIdPredicate = MediaPredicate.getLocalMediaIdPredicate(localMediaId);
+            if (bitmapToShow != null) {
                 // By default, BitmapFactory.decodeFile sets the bitmap's density to the device default so, we need
                 // to correctly set the input density to 160 ourselves.
                 bitmapToShow.setDensity(DisplayMetrics.DENSITY_DEFAULT);
