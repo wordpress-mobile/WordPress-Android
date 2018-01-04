@@ -8,6 +8,7 @@ import android.media.ThumbnailUtils;
 import android.os.AsyncTask;
 import android.provider.MediaStore;
 import android.text.TextUtils;
+import android.util.DisplayMetrics;
 
 import org.wordpress.android.util.ImageUtils;
 import org.wordpress.aztec.Html;
@@ -43,7 +44,8 @@ public class AztecVideoLoader implements Html.VideoThumbnailGetter {
                 // If local file
                 if (new File(url).exists()) {
                     Bitmap thumb = ThumbnailUtils.createVideoThumbnail(url, MediaStore.Images.Thumbnails.FULL_SCREEN_KIND);
-                    return ImageUtils.getScaledBitmapAtLongestSide(thumb, maxWidth);
+                    thumb = ImageUtils.getScaledBitmapAtLongestSide(thumb, maxWidth);
+                    thumb.setDensity(DisplayMetrics.DENSITY_DEFAULT);
                 }
 
                 return ImageUtils.getVideoFrameFromVideo(url, maxWidth);
@@ -53,6 +55,7 @@ public class AztecVideoLoader implements Html.VideoThumbnailGetter {
                 if (thumb == null) {
                     callbacks.onThumbnailFailed();
                 }
+                thumb.setDensity(DisplayMetrics.DENSITY_DEFAULT);
                 BitmapDrawable bitmapDrawable = new BitmapDrawable(context.getResources(), thumb);
                 callbacks.onThumbnailLoaded(bitmapDrawable);
             }

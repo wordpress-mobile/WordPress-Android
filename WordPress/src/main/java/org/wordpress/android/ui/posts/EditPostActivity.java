@@ -1041,17 +1041,15 @@ public class EditPostActivity extends AppCompatActivity implements
             aztecEditorFragment.setEditorBetaClickListener(EditPostActivity.this);
             aztecEditorFragment.setEditorImageSettingsListener(EditPostActivity.this);
 
-            Drawable loadingImagePlaceholder = getResources().getDrawable(org.wordpress.android.editor.R.drawable.ic_gridicons_image);
-            loadingImagePlaceholder.setBounds(0, 0,
-                    AztecEditorFragment.DEFAULT_MEDIA_PLACEHOLDER_DIMENSION_DP,
-                    AztecEditorFragment.DEFAULT_MEDIA_PLACEHOLDER_DIMENSION_DP);
+            Drawable loadingImagePlaceholder = aztecEditorFragment.getAztecPlaceholderDrawableFromResID(
+                    org.wordpress.android.editor.R.drawable.ic_gridicons_image
+            );
             aztecEditorFragment.setAztecImageLoader(new AztecImageLoader(getBaseContext(), loadingImagePlaceholder));
             aztecEditorFragment.setLoadingImagePlaceholder(loadingImagePlaceholder);
 
-            Drawable loadingVideoPlaceholder = getResources().getDrawable(org.wordpress.android.editor.R.drawable.ic_gridicons_video_camera);
-            loadingVideoPlaceholder.setBounds(0, 0,
-                    AztecEditorFragment.DEFAULT_MEDIA_PLACEHOLDER_DIMENSION_DP,
-                    AztecEditorFragment.DEFAULT_MEDIA_PLACEHOLDER_DIMENSION_DP);
+            Drawable loadingVideoPlaceholder = aztecEditorFragment.getAztecPlaceholderDrawableFromResID(
+                    org.wordpress.android.editor.R.drawable.ic_gridicons_video_camera
+            );
             aztecEditorFragment.setAztecVideoLoader(new AztecVideoLoader(getBaseContext(), loadingVideoPlaceholder));
             aztecEditorFragment.setLoadingVideoPlaceholder(loadingVideoPlaceholder);
         }

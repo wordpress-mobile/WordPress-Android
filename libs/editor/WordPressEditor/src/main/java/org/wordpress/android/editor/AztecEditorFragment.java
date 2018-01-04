@@ -14,6 +14,7 @@ import android.graphics.Canvas;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
+import android.graphics.drawable.VectorDrawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
@@ -186,14 +187,20 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_aztec_editor, container, false);
 
-        // request dependency injection
-        if (getActivity() instanceof EditorFragmentActivity) {
-            ((EditorFragmentActivity) getActivity()).initializeEditorFragment();
-        }
-
         title = (EditTextWithKeyBackListener) view.findViewById(R.id.title);
         content = (AztecText) view.findViewById(R.id.aztec);
         source = (SourceViewEditText) view.findViewById(R.id.source);
+
+        // Set the default value for max and min picture sizes.
+        maxImageWidthForVisualEditor = ImageUtils.getMaximumThumbnailWidthForEditor(getActivity());
+        minImageWidthForVisualEditor = DisplayUtils.dpToPx(getActivity(), MIN_BITMAP_DIMENSION_DP);
+        content.setMinImagesWidth(minImageWidthForVisualEditor);
+        content.setMaxImagesWidth(maxImageWidthForVisualEditor);
+
+        // request dependency injection. Do this after setting min/max dimensions
+        if (getActivity() instanceof EditorFragmentActivity) {
+            ((EditorFragmentActivity) getActivity()).initializeEditorFragment();
+        }
 
         title.setOnTouchListener(this);
         content.setOnTouchListener(this);
@@ -255,12 +262,6 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
                 }
             }
         };
-
-        // Set the default value for max and min picture sizes.
-        maxImageWidthForVisualEditor = ImageUtils.getMaximumThumbnailWidthForEditor(getActivity());
-        content.setMaxImagesWidth(maxImageWidthForVisualEditor);
-        minImageWidthForVisualEditor = DisplayUtils.dpToPx(getActivity(), MIN_BITMAP_DIMENSION_DP);
-        content.setMinImagesWidth(minImageWidthForVisualEditor);
 
         content.refreshText();
 
@@ -789,7 +790,7 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
                         // the fragment is detached
                         return;
                     }
-                    replaceDrawable(getPictureLoadingErrorPlaceholder(null));
+                    replaceDrawable(getLoadingMediaErrorPlaceholder(null));
                 }
 
                 @Override
@@ -804,17 +805,18 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
                             // Bitmap is null but isImmediate is true (as soon as the request starts).
                             return;
                         }
-                        replaceDrawable(getPictureLoadingErrorPlaceholder(null));
+                        replaceDrawable(getLoadingMediaErrorPlaceholder(null));
                         return;
                     }
 
                     if (downloadedBitmap.getHeight() < minImageWidthForVisualEditor || downloadedBitmap.getWidth() < minImageWidthForVisualEditor) {
                         // Bitmap is too small.  Show image placeholder.
-                        replaceDrawable(getPictureLoadingErrorPlaceholder(getString(R.string.error_media_small)));
+                        replaceDrawable(getLoadingMediaErrorPlaceholder(getString(R.string.error_media_small)));
                         return;
                     }
 
                     Bitmap resizedBitmap = ImageUtils.getScaledBitmapAtLongestSide(downloadedBitmap, maxImageWidthForVisualEditor);
+                    resizedBitmap.setDensity(DisplayMetrics.DENSITY_DEFAULT);
                     replaceDrawable(new BitmapDrawable(getResources(), resizedBitmap));
                 }
             }, maxImageWidthForVisualEditor, 0);
@@ -840,8 +842,7 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
                     safeMediaPreviewUrl,
                     maxImageWidthForVisualEditor > realBitmapWidth && realBitmapWidth > 0 ? realBitmapWidth
                             : maxImageWidthForVisualEditor);
-            MediaPredicate localMediaIdPredicate = MediaPredicate.getLocalMediaIdPredicate(localMediaId);
-            if (bitmapToShow != null) {
+            MediaPredicate localMediaIdPredicate = MediaPredicate.getLocalMediaIdPredicate(localMediaId); if (bitmapToShow != null) {
                 // By default, BitmapFactory.decodeFile sets the bitmap's density to the device default so, we need
                 // to correctly set the input density to 160 ourselves.
                 bitmapToShow.setDensity(DisplayMetrics.DENSITY_DEFAULT);
@@ -853,7 +854,7 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
                 }
             } else {
                 // Failed to retrieve bitmap.  Show failed placeholder.
-                Drawable drawable = getPictureLoadingErrorPlaceholder(null);
+                Drawable drawable = getLoadingMediaErrorPlaceholder(null);
                 content.insertImage(drawable, attrs);
             }
 
@@ -872,22 +873,46 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
         }
     }
 
-    private Drawable getPictureLoadingErrorPlaceholder(String msg) {
+    private Drawable getLoadingMediaErrorPlaceholder(String msg) {
         if (TextUtils.isEmpty(msg)) {
             ToastUtils.showToast(getActivity(), R.string.error_media_load);
         } else {
             ToastUtils.showToast(getActivity(), msg);
         }
-        Drawable drawable = getResources().getDrawable(R.drawable.ic_image_failed_grey_a_40_48dp);
-        drawable.setBounds(0, 0, maxImageWidthForVisualEditor, maxImageWidthForVisualEditor);
+        return getAztecPlaceholderDrawableFromResID(R.drawable.ic_image_failed_grey_a_40_48dp);
+    }
 
-        Bitmap bitmap = Bitmap.createBitmap(maxImageWidthForVisualEditor,
-                maxImageWidthForVisualEditor, Bitmap.Config.ARGB_8888);
-        Canvas canvas = new Canvas(bitmap);
-        drawable.setBounds(0, 0, canvas.getWidth(), canvas.getHeight());
-        drawable.draw(canvas);
-
+    public BitmapDrawable getAztecPlaceholderDrawableFromResID(int drawableId) {
+        Drawable drawable = getResources().getDrawable(drawableId);
+        Bitmap bitmap;
+        if (drawable instanceof BitmapDrawable) {
+            bitmap = ((BitmapDrawable) drawable).getBitmap();
+            bitmap = ImageUtils.getScaledBitmapAtLongestSide(bitmap, maxImageWidthForVisualEditor);
+            bitmap.setDensity(DisplayMetrics.DENSITY_DEFAULT);
+        } else if (drawable instanceof VectorDrawable) {
+             bitmap = getScaledBitmapFromVectorDrawable((VectorDrawable) drawable, maxImageWidthForVisualEditor,
+                    maxImageWidthForVisualEditor);
+        } else {
+            throw new IllegalArgumentException("unsupported drawable type");
+        }
         return new BitmapDrawable(getResources(), bitmap);
+    }
+
+    // we can move this to utils
+    private static Bitmap getScaledBitmapFromVectorDrawable(VectorDrawable vectorDrawable, int width, int height) {
+        if (width < 1) {
+            width = vectorDrawable.getIntrinsicWidth();
+        }
+        if (height < 1) {
+            height = vectorDrawable.getIntrinsicHeight();
+        }
+
+        Bitmap bitmap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888);
+        bitmap.setDensity(DisplayMetrics.DENSITY_DEFAULT);
+        Canvas canvas = new Canvas(bitmap);
+        vectorDrawable.setBounds(0, 0, canvas.getWidth(), canvas.getHeight());
+        vectorDrawable.draw(canvas);
+        return bitmap;
     }
 
     @Override
