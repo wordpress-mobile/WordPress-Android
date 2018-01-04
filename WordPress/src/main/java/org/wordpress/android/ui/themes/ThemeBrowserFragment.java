@@ -118,9 +118,9 @@ public class ThemeBrowserFragment extends Fragment implements RecyclerListener {
         View view = inflater.inflate(R.layout.theme_browser_fragment, container, false);
 
         setRetainInstance(true);
-        mNoResultText = (TextView) view.findViewById(R.id.theme_no_search_result_text);
-        mEmptyTextView = (TextView) view.findViewById(R.id.text_empty);
-        mEmptyView = (RelativeLayout) view.findViewById(R.id.empty_view);
+        mNoResultText = view.findViewById(R.id.theme_no_search_result_text);
+        mEmptyTextView = view.findViewById(R.id.text_empty);
+        mEmptyView = view.findViewById(R.id.empty_view);
 
         configureGridView(inflater, view);
         configureSwipeToRefresh(view);
@@ -143,15 +143,9 @@ public class ThemeBrowserFragment extends Fragment implements RecyclerListener {
     }
 
     @Override
-    public void onResume() {
-        super.onResume();
-        // TODO mThemeBrowserActivity.fetchCurrentTheme();
-    }
-
-    @Override
     public void onMovedToScrapHeap(View view) {
         // cancel image fetch requests if the view has been moved to recycler.
-        WPNetworkImageView niv = (WPNetworkImageView) view.findViewById(R.id.theme_grid_item_image);
+        WPNetworkImageView niv = view.findViewById(R.id.theme_grid_item_image);
         if (niv != null) {
             // this tag is set in the ThemeBrowserAdapter class
             String requestUrl = (String) niv.getTag();
@@ -208,7 +202,7 @@ public class ThemeBrowserFragment extends Fragment implements RecyclerListener {
     }
 
     private void configureGridView(LayoutInflater inflater, View view) {
-        mGridView = (HeaderGridView) view.findViewById(R.id.theme_listview);
+        mGridView = view.findViewById(R.id.theme_listview);
         addHeaderViews(inflater);
         mGridView.setRecyclerListener(this);
     }
@@ -216,10 +210,10 @@ public class ThemeBrowserFragment extends Fragment implements RecyclerListener {
     private void addMainHeader(LayoutInflater inflater) {
         @SuppressLint("InflateParams")
         View header = inflater.inflate(R.layout.theme_grid_cardview_header, null);
-        mCurrentThemeTextView = (TextView) header.findViewById(R.id.header_theme_text);
+        mCurrentThemeTextView = header.findViewById(R.id.header_theme_text);
 
         setThemeNameIfAlreadyAvailable();
-        LinearLayout customize = (LinearLayout) header.findViewById(R.id.customize);
+        LinearLayout customize = header.findViewById(R.id.customize);
         customize.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -227,7 +221,7 @@ public class ThemeBrowserFragment extends Fragment implements RecyclerListener {
             }
         });
 
-        LinearLayout details = (LinearLayout) header.findViewById(R.id.details);
+        LinearLayout details = header.findViewById(R.id.details);
         details.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -235,7 +229,7 @@ public class ThemeBrowserFragment extends Fragment implements RecyclerListener {
             }
         });
 
-        LinearLayout support = (LinearLayout) header.findViewById(R.id.support);
+        LinearLayout support = header.findViewById(R.id.support);
         support.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -273,7 +267,7 @@ public class ThemeBrowserFragment extends Fragment implements RecyclerListener {
             }
         });
         mGridView.addHeaderView(headerSearch);
-        ImageButton searchButton = (ImageButton) headerSearch.findViewById(R.id.theme_search);
+        ImageButton searchButton = headerSearch.findViewById(R.id.theme_search);
         searchButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

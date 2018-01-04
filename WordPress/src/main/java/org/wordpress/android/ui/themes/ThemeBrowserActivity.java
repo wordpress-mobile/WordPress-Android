@@ -111,6 +111,7 @@ public class ThemeBrowserActivity extends AppCompatActivity implements ThemeBrow
         showCorrectToolbar();
         mIsRunning = true;
         ActivityId.trackLastActivity(ActivityId.THEMES);
+        fetchCurrentTheme();
     }
 
     @Override
@@ -329,11 +330,11 @@ public class ThemeBrowserActivity extends AppCompatActivity implements ThemeBrow
         }
     }
 
-    public void setIsInSearchMode(boolean isInSearchMode) {
+    private void setIsInSearchMode(boolean isInSearchMode) {
         mIsInSearchMode = isInSearchMode;
     }
 
-    public void searchThemes(String searchTerm) {
+    private void searchThemes(String searchTerm) {
         if (TextUtils.isEmpty(searchTerm)) {
             return;
         }
@@ -341,25 +342,25 @@ public class ThemeBrowserActivity extends AppCompatActivity implements ThemeBrow
         mDispatcher.dispatch(ThemeActionBuilder.newSearchThemesAction(payload));
     }
 
-    public void fetchCurrentTheme() {
+    private void fetchCurrentTheme() {
         mDispatcher.dispatch(ThemeActionBuilder.newFetchCurrentThemeAction(mSite));
     }
 
-    public void fetchWpComThemesIfSyncTimedOut(boolean force) {
+    private void fetchWpComThemesIfSyncTimedOut(boolean force) {
         long currentTime = System.currentTimeMillis();
         if (force || currentTime - AppPrefs.getLastWpComThemeSync() > WP_COM_THEMES_SYNC_TIMEOUT) {
             mDispatcher.dispatch(ThemeActionBuilder.newFetchWpComThemesAction());
         }
     }
 
-    public void fetchInstalledThemesIfJetpackSite() {
+    private void fetchInstalledThemesIfJetpackSite() {
         if (mSite.isJetpackConnected() && mSite.isUsingWpComRestApi() && !mIsFetchingInstalledThemes) {
             mDispatcher.dispatch(ThemeActionBuilder.newFetchInstalledThemesAction(mSite));
             mIsFetchingInstalledThemes = true;
         }
     }
 
-    public void activateTheme(String themeId) {
+    private void activateTheme(String themeId) {
         if (!mSite.isUsingWpComRestApi()) {
             AppLog.i(T.THEMES, "Theme activation requires a site using WP.com REST API. Aborting request.");
             return;
@@ -383,16 +384,8 @@ public class ThemeBrowserActivity extends AppCompatActivity implements ThemeBrow
         mDispatcher.dispatch(ThemeActionBuilder.newActivateThemeAction(new ActivateThemePayload(mSite, theme)));
     }
 
-    protected void setThemeBrowserFragment(ThemeBrowserFragment themeBrowserFragment) {
-        mThemeBrowserFragment = themeBrowserFragment;
-    }
-
-    protected void setThemeSearchFragment(ThemeSearchFragment themeSearchFragment) {
-        mThemeSearchFragment = themeSearchFragment;
-    }
-
-    protected void showToolbar() {
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+    private void showToolbar() {
+        Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
         ActionBar actionBar = getSupportActionBar();
@@ -414,7 +407,7 @@ public class ThemeBrowserActivity extends AppCompatActivity implements ThemeBrow
     }
 
     private void showSearchToolbar() {
-        Toolbar toolbarSearch = (Toolbar) findViewById(R.id.toolbar_search);
+        Toolbar toolbarSearch = findViewById(R.id.toolbar_search);
         setSupportActionBar(toolbarSearch);
         toolbarSearch.setTitle("");
         findViewById(R.id.toolbar).setVisibility(View.GONE);
