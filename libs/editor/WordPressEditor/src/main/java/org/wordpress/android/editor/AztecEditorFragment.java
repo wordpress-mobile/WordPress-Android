@@ -889,13 +889,13 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
         if (drawable instanceof BitmapDrawable) {
             bitmap = ((BitmapDrawable) drawable).getBitmap();
             bitmap = ImageUtils.getScaledBitmapAtLongestSide(bitmap, maxImageWidthForVisualEditor);
-            bitmap.setDensity(DisplayMetrics.DENSITY_DEFAULT);
         } else if (drawable instanceof VectorDrawable) {
              bitmap = getScaledBitmapFromVectorDrawable((VectorDrawable) drawable, maxImageWidthForVisualEditor,
                     maxImageWidthForVisualEditor);
         } else {
             throw new IllegalArgumentException("unsupported drawable type");
         }
+        bitmap.setDensity(DisplayMetrics.DENSITY_DEFAULT);
         return new BitmapDrawable(getResources(), bitmap);
     }
 
@@ -909,7 +909,6 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
         }
 
         Bitmap bitmap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888);
-        bitmap.setDensity(DisplayMetrics.DENSITY_DEFAULT);
         Canvas canvas = new Canvas(bitmap);
         vectorDrawable.setBounds(0, 0, canvas.getWidth(), canvas.getHeight());
         vectorDrawable.draw(canvas);
