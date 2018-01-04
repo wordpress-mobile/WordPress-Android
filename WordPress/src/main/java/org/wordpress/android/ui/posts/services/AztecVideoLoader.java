@@ -31,9 +31,7 @@ public class AztecVideoLoader implements Html.VideoThumbnailGetter {
 
     public void loadVideoThumbnail(final String url, final Html.VideoThumbnailGetter.Callbacks callbacks,
                                    final int maxWidth, final int minWidth) {
-        // Ignore the maxWidth passed from Aztec, since it's the MAX of screen width/height
-        final int maxWidthForEditor = ImageUtils.getMaximumThumbnailWidthForEditor(context);
-        if (TextUtils.isEmpty(url) || maxWidthForEditor <= 0) {
+        if (TextUtils.isEmpty(url) || maxWidth <= 0) {
             callbacks.onThumbnailFailed();
             return;
         }
@@ -45,10 +43,10 @@ public class AztecVideoLoader implements Html.VideoThumbnailGetter {
                 // If local file
                 if (new File(url).exists()) {
                     Bitmap thumb = ThumbnailUtils.createVideoThumbnail(url, MediaStore.Images.Thumbnails.FULL_SCREEN_KIND);
-                    return ImageUtils.getScaledBitmapAtLongestSide(thumb, maxWidthForEditor);
+                    return ImageUtils.getScaledBitmapAtLongestSide(thumb, maxWidth);
                 }
 
-                return ImageUtils.getVideoFrameFromVideo(url, maxWidthForEditor);
+                return ImageUtils.getVideoFrameFromVideo(url, maxWidth);
             }
 
             protected void onPostExecute(Bitmap thumb) {

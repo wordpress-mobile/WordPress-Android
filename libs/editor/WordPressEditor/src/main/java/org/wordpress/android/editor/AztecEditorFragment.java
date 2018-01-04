@@ -252,6 +252,7 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
             }
         };
 
+        content.setMaxImagesWidth(ImageUtils.getMaximumThumbnailWidthForEditor(getActivity()));
         content.refreshText();
 
         mAztecReady = true;
@@ -2018,5 +2019,13 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
 
     public void setLoadingVideoPlaceholder(Drawable loadingVideoPlaceholder) {
         this.loadingVideoPlaceholder = loadingVideoPlaceholder;
+    }
+
+    public void setMaxImageWidth(int maxWidth) {
+        content.setMaxImagesWidth(maxWidth);
+    }
+
+    public void setMinImageWidth(int minWidth) {
+        content.setMinImagesWidth(minWidth);
     }
 }
