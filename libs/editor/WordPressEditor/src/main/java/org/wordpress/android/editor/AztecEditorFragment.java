@@ -10,6 +10,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.graphics.Bitmap;
+import android.graphics.Canvas;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
@@ -156,6 +157,9 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
     private Drawable loadingImagePlaceholder;
     private Drawable loadingVideoPlaceholder;
 
+    private int maxImageWidthForVisualEditor;
+    private int minImageWidthForVisualEditor;
+
     public static AztecEditorFragment newInstance(String title, String content, boolean isExpanded) {
         mIsToolbarExpanded = isExpanded;
         AztecEditorFragment fragment = new AztecEditorFragment();
@@ -252,7 +256,12 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
             }
         };
 
-        content.setMaxImagesWidth(ImageUtils.getMaximumThumbnailWidthForEditor(getActivity()));
+        // Set the default value for max and min picture sizes.
+        maxImageWidthForVisualEditor = ImageUtils.getMaximumThumbnailWidthForEditor(getActivity());
+        content.setMaxImagesWidth(maxImageWidthForVisualEditor);
+        minImageWidthForVisualEditor = DisplayUtils.dpToPx(getActivity(), MIN_BITMAP_DIMENSION_DP);
+        content.setMinImagesWidth(minImageWidthForVisualEditor);
+
         content.refreshText();
 
         mAztecReady = true;
@@ -736,9 +745,6 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
 
     @Override
     public void appendMediaFile(final MediaFile mediaFile, final String mediaUrl, ImageLoader imageLoader) {
-        // load a scaled version of the image to prevent OOM exception
-        final int maxWidth = ImageUtils.getMaximumThumbnailWidthForEditor(getActivity());
-
         if (URLUtil.isNetworkUrl(mediaUrl)) {
             AztecAttributes attributes = new AztecAttributes();
             attributes.setValue(ATTR_SRC, mediaUrl);
@@ -777,20 +783,13 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
                     content.refreshText();
                 }
 
-                private void showErrorPlaceholder() {
-                    // Show failed placeholder.
-                    ToastUtils.showToast(getActivity(), R.string.error_media_load);
-                    Drawable drawable = getResources().getDrawable(R.drawable.ic_image_failed_grey_a_40_48dp);
-                    replaceDrawable(drawable);
-                }
-
                 @Override
                 public void onErrorResponse(VolleyError error) {
                     if (!isAdded()) {
                         // the fragment is detached
                         return;
                     }
-                    showErrorPlaceholder();
+                    replaceDrawable(getPictureLoadingErrorPlaceholder(null));
                 }
 
                 @Override
@@ -805,24 +804,20 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
                             // Bitmap is null but isImmediate is true (as soon as the request starts).
                             return;
                         }
-                        showErrorPlaceholder();
+                        replaceDrawable(getPictureLoadingErrorPlaceholder(null));
                         return;
                     }
 
-                    int minimumDimension = DisplayUtils.dpToPx(getActivity(), MIN_BITMAP_DIMENSION_DP);
-
-                    if (downloadedBitmap.getHeight() < minimumDimension || downloadedBitmap.getWidth() < minimumDimension) {
+                    if (downloadedBitmap.getHeight() < minImageWidthForVisualEditor || downloadedBitmap.getWidth() < minImageWidthForVisualEditor) {
                         // Bitmap is too small.  Show image placeholder.
-                        ToastUtils.showToast(getActivity(), R.string.error_media_small);
-                        Drawable drawable = getResources().getDrawable(R.drawable.ic_image_loading_grey_a_40_48dp);
-                        replaceDrawable(drawable);
+                        replaceDrawable(getPictureLoadingErrorPlaceholder(getString(R.string.error_media_small)));
                         return;
                     }
 
-                    Bitmap resizedBitmap = ImageUtils.getScaledBitmapAtLongestSide(downloadedBitmap, maxWidth);
+                    Bitmap resizedBitmap = ImageUtils.getScaledBitmapAtLongestSide(downloadedBitmap, maxImageWidthForVisualEditor);
                     replaceDrawable(new BitmapDrawable(getResources(), resizedBitmap));
                 }
-            }, maxWidth, 0);
+            }, maxImageWidthForVisualEditor, 0);
 
             mActionStartedAt = System.currentTimeMillis();
         } else {
@@ -843,13 +838,13 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
             Bitmap bitmapToShow = ImageUtils.getWPImageSpanThumbnailFromFilePath(
                     getActivity(),
                     safeMediaPreviewUrl,
-                    maxWidth > realBitmapWidth && realBitmapWidth > 0 ? realBitmapWidth : maxWidth);
-            // By default, BitmapFactory.decodeFile sets the bitmap's density to the device default so, we need
-            // to correctly set the input density to 160 ourselves.
-            bitmapToShow.setDensity(DisplayMetrics.DENSITY_DEFAULT);
+                    maxImageWidthForVisualEditor > realBitmapWidth && realBitmapWidth > 0 ? realBitmapWidth
+                            : maxImageWidthForVisualEditor);
             MediaPredicate localMediaIdPredicate = MediaPredicate.getLocalMediaIdPredicate(localMediaId);
-
             if (bitmapToShow != null) {
+                // By default, BitmapFactory.decodeFile sets the bitmap's density to the device default so, we need
+                // to correctly set the input density to 160 ourselves.
+                bitmapToShow.setDensity(DisplayMetrics.DENSITY_DEFAULT);
                 if (mediaFile.isVideo()) {
                     addVideoUploadingClassIfMissing(attrs);
                     content.insertVideo(new BitmapDrawable(getResources(), bitmapToShow), attrs);
@@ -858,9 +853,7 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
                 }
             } else {
                 // Failed to retrieve bitmap.  Show failed placeholder.
-                ToastUtils.showToast(getActivity(), R.string.error_media_load);
-                Drawable drawable = getResources().getDrawable(R.drawable.ic_image_failed_grey_a_40_48dp);
-                drawable.setBounds(0, 0, maxWidth, maxWidth);
+                Drawable drawable = getPictureLoadingErrorPlaceholder(null);
                 content.insertImage(drawable, attrs);
             }
 
@@ -877,6 +870,24 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
 
             content.resetAttributedMediaSpan(localMediaIdPredicate);
         }
+    }
+
+    private Drawable getPictureLoadingErrorPlaceholder(String msg) {
+        if (TextUtils.isEmpty(msg)) {
+            ToastUtils.showToast(getActivity(), R.string.error_media_load);
+        } else {
+            ToastUtils.showToast(getActivity(), msg);
+        }
+        Drawable drawable = getResources().getDrawable(R.drawable.ic_image_failed_grey_a_40_48dp);
+        drawable.setBounds(0, 0, maxImageWidthForVisualEditor, maxImageWidthForVisualEditor);
+
+        Bitmap bitmap = Bitmap.createBitmap(maxImageWidthForVisualEditor,
+                maxImageWidthForVisualEditor, Bitmap.Config.ARGB_8888);
+        Canvas canvas = new Canvas(bitmap);
+        drawable.setBounds(0, 0, canvas.getWidth(), canvas.getHeight());
+        drawable.draw(canvas);
+
+        return new BitmapDrawable(getResources(), bitmap);
     }
 
     @Override
@@ -2022,10 +2033,12 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
     }
 
     public void setMaxImageWidth(int maxWidth) {
+        this.maxImageWidthForVisualEditor = maxWidth;
         content.setMaxImagesWidth(maxWidth);
     }
 
     public void setMinImageWidth(int minWidth) {
+        this.minImageWidthForVisualEditor = minWidth;
         content.setMinImagesWidth(minWidth);
     }
 }
