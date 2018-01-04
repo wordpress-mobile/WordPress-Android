@@ -4,11 +4,10 @@ import org.wordpress.android.fluxc.annotations.Action;
 import org.wordpress.android.fluxc.annotations.ActionEnum;
 import org.wordpress.android.fluxc.annotations.action.IAction;
 import org.wordpress.android.fluxc.model.SiteModel;
-import org.wordpress.android.fluxc.model.ThemeModel;
-import org.wordpress.android.fluxc.store.ThemeStore.SiteThemePayload;
 import org.wordpress.android.fluxc.store.ThemeStore.FetchedCurrentThemePayload;
 import org.wordpress.android.fluxc.store.ThemeStore.FetchedSiteThemesPayload;
 import org.wordpress.android.fluxc.store.ThemeStore.FetchedWpComThemesPayload;
+import org.wordpress.android.fluxc.store.ThemeStore.SiteThemePayload;
 
 @ActionEnum
 public enum ThemeAction implements IAction {
@@ -41,8 +40,6 @@ public enum ThemeAction implements IAction {
     DELETED_THEME,
 
     // Local actions
-    @Action(payloadType = ThemeModel.class)
-    REMOVE_THEME,
     @Action(payloadType = SiteModel.class)
     REMOVE_SITE_THEMES
 }
