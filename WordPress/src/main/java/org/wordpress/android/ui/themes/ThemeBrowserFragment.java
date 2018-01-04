@@ -3,11 +3,9 @@ package org.wordpress.android.ui.themes;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.Fragment;
-import android.content.Context;
 import android.database.Cursor;
 import android.database.MatrixCursor;
 import android.database.MergeCursor;
-import android.os.Build;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
@@ -49,6 +47,9 @@ import static org.wordpress.android.util.WPSwipeToRefreshHelper.buildSwipeToRefr
  * A fragment display the themes on a grid view.
  */
 public class ThemeBrowserFragment extends Fragment implements RecyclerListener {
+
+    public static final String TAG = ThemeBrowserFragment.class.getName();
+
     public static ThemeBrowserFragment newInstance(SiteModel site) {
         ThemeBrowserFragment fragment = new ThemeBrowserFragment();
         Bundle bundle = new Bundle();
@@ -64,20 +65,23 @@ public class ThemeBrowserFragment extends Fragment implements RecyclerListener {
         void onDetailsSelected(String themeId);
         void onSupportSelected(String themeId);
         void onSearchClicked();
+        void onSearchRequested(String searchTerm);
+        void onSearchClosed();
+        void onSwipeToRefresh();
     }
 
     protected SwipeToRefreshHelper mSwipeToRefreshHelper;
-    protected ThemeBrowserActivity mThemeBrowserActivity;
     private String mCurrentThemeId;
     private HeaderGridView mGridView;
     private RelativeLayout mEmptyView;
     private TextView mNoResultText;
     private TextView mCurrentThemeTextView;
     private ThemeBrowserAdapter mAdapter;
-    private ThemeBrowserFragmentCallback mCallback;
     private boolean mShouldRefreshOnStart;
     private TextView mEmptyTextView;
     private SiteModel mSite;
+
+    ThemeBrowserFragmentCallback mCallback;
 
     @Inject ThemeStore mThemeStore;
 
@@ -86,12 +90,7 @@ public class ThemeBrowserFragment extends Fragment implements RecyclerListener {
         super.onCreate(savedInstanceState);
         ((WordPress) getActivity().getApplication()).component().inject(this);
 
-        if (savedInstanceState == null) {
-            mSite = (SiteModel) getArguments().getSerializable(WordPress.SITE);
-        } else {
-            mSite = (SiteModel) savedInstanceState.getSerializable(WordPress.SITE);
-        }
-
+        mSite = (SiteModel) getArguments().getSerializable(WordPress.SITE);
         if (mSite == null) {
             ToastUtils.showToast(getActivity(), R.string.blog_not_found, ToastUtils.Duration.SHORT);
             getActivity().finish();
@@ -99,27 +98,10 @@ public class ThemeBrowserFragment extends Fragment implements RecyclerListener {
     }
 
     @Override
-    public void onAttach(Context context) {
-        super.onAttach(context);
-
-        attachActivity((ThemeBrowserActivity) context);
-    }
-
-    @Override
     public void onAttach(Activity activity) {
         super.onAttach(activity);
-
-        // This version of onAttach will be called for all Android versions but it's deprecated, so we only want to
-        // use it when we have to. https://github.com/wordpress-mobile/WordPress-Android/issues/6937
-        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M) {
-            attachActivity((ThemeBrowserActivity) activity);
-        }
-    }
-
-    private void attachActivity(ThemeBrowserActivity activity) {
         try {
-            mCallback = activity;
-            mThemeBrowserActivity = activity;
+            mCallback = (ThemeBrowserFragmentCallback) activity;
         } catch (ClassCastException e) {
             throw new ClassCastException(activity.toString() + " must implement ThemeBrowserFragmentCallback");
         }
@@ -150,18 +132,12 @@ public class ThemeBrowserFragment extends Fragment implements RecyclerListener {
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
-        if (this instanceof ThemeSearchFragment) {
-            mThemeBrowserActivity.setThemeSearchFragment((ThemeSearchFragment) this);
-        } else {
-            mThemeBrowserActivity.setThemeBrowserFragment(this);
-        }
-
         Cursor cursor = fetchThemes();
         if (cursor == null) {
             return;
         }
 
-        mAdapter = new ThemeBrowserAdapter(mThemeBrowserActivity, cursor, false, mCallback);
+        mAdapter = new ThemeBrowserAdapter(getActivity(), cursor, false, mCallback);
         setEmptyViewVisible(mAdapter.getCount() == 0);
         mGridView.setAdapter(mAdapter);
     }
@@ -169,13 +145,7 @@ public class ThemeBrowserFragment extends Fragment implements RecyclerListener {
     @Override
     public void onResume() {
         super.onResume();
-        mThemeBrowserActivity.fetchCurrentTheme();
-    }
-
-    @Override
-    public void onSaveInstanceState(Bundle outState) {
-        super.onSaveInstanceState(outState);
-        outState.putSerializable(WordPress.SITE, mSite);
+        // TODO mThemeBrowserActivity.fetchCurrentTheme();
     }
 
     @Override
@@ -224,14 +194,13 @@ public class ThemeBrowserFragment extends Fragment implements RecyclerListener {
                         if (!isAdded()) {
                             return;
                         }
-                        if (!NetworkUtils.checkConnection(mThemeBrowserActivity)) {
+                        if (!NetworkUtils.checkConnection(getActivity())) {
                             mSwipeToRefreshHelper.setRefreshing(false);
                             mEmptyTextView.setText(R.string.no_network_title);
                             return;
                         }
                         setRefreshing(true);
-                        mThemeBrowserActivity.fetchInstalledThemesIfJetpackSite();
-                        mThemeBrowserActivity.fetchWpComThemesIfSyncTimedOut(true);
+                        mCallback.onSwipeToRefresh();
                     }
                 }
         );
@@ -319,7 +288,7 @@ public class ThemeBrowserFragment extends Fragment implements RecyclerListener {
         }
         mEmptyView.setVisibility(visible ? RelativeLayout.VISIBLE : RelativeLayout.GONE);
         mGridView.setVisibility(visible ? View.GONE : View.VISIBLE);
-        if (visible && !NetworkUtils.isNetworkAvailable(mThemeBrowserActivity)) {
+        if (visible && !NetworkUtils.isNetworkAvailable(getActivity())) {
             mEmptyTextView.setText(R.string.no_network_title);
         }
     }
@@ -343,7 +312,7 @@ public class ThemeBrowserFragment extends Fragment implements RecyclerListener {
             return;
         }
         if (mAdapter == null) {
-            mAdapter = new ThemeBrowserAdapter(mThemeBrowserActivity, cursor, false, mCallback);
+            mAdapter = new ThemeBrowserAdapter(getActivity(), cursor, false, mCallback);
         }
         if (mNoResultText.isShown()) {
             mNoResultText.setVisibility(View.GONE);

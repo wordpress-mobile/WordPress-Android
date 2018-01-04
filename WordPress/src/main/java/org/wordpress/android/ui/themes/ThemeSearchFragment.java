@@ -48,18 +48,15 @@ public class ThemeSearchFragment extends ThemeBrowserFragment implements SearchV
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
-        if (savedInstanceState != null) {
-            mLastSearch = savedInstanceState.getString(BUNDLE_LAST_SEARCH);
-        }
-        if (savedInstanceState == null) {
-            mSite = (SiteModel) getArguments().getSerializable(WordPress.SITE);
-        } else {
-            mSite = (SiteModel) savedInstanceState.getSerializable(WordPress.SITE);
-        }
 
+        mSite = (SiteModel) getArguments().getSerializable(WordPress.SITE);
         if (mSite == null) {
             ToastUtils.showToast(getActivity(), R.string.blog_not_found, ToastUtils.Duration.SHORT);
             getActivity().finish();
+        }
+
+        if (savedInstanceState != null) {
+            mLastSearch = savedInstanceState.getString(BUNDLE_LAST_SEARCH);
         }
     }
 
@@ -67,7 +64,6 @@ public class ThemeSearchFragment extends ThemeBrowserFragment implements SearchV
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
         outState.putString(BUNDLE_LAST_SEARCH, mLastSearch);
-        outState.putSerializable(WordPress.SITE, mSite);
     }
 
     @Override
@@ -89,9 +85,7 @@ public class ThemeSearchFragment extends ThemeBrowserFragment implements SearchV
 
     @Override
     public boolean onMenuItemActionCollapse(MenuItem item) {
-        mThemeBrowserActivity.setIsInSearchMode(false);
-        mThemeBrowserActivity.showToolbar();
-        mThemeBrowserActivity.getFragmentManager().popBackStack();
+        mCallback.onSearchClosed();
         return true;
     }
 
@@ -165,8 +159,8 @@ public class ThemeSearchFragment extends ThemeBrowserFragment implements SearchV
 
     private void search(String searchTerm) {
         mLastSearch = searchTerm;
-        if (NetworkUtils.isNetworkAvailable(mThemeBrowserActivity)) {
-            mThemeBrowserActivity.searchThemes(searchTerm);
+        if (NetworkUtils.isNetworkAvailable(getActivity())) {
+            mCallback.onSearchRequested(searchTerm);
         } else {
             refreshView();
         }
