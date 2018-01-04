@@ -35,6 +35,8 @@ import java.util.Map;
 
 import javax.inject.Inject;
 
+import static org.wordpress.android.ui.ShareIntentReceiverFragment.ShareAction.SHARE_TO_MEDIA_LIBRARY;
+
 /**
  * An activity to handle share intents, since there are multiple actions possible.
  * If the user is not logged in, redirects the user to the LoginFlow. When the user is logged in,
@@ -230,7 +232,7 @@ public class ShareIntentReceiverActivity extends AppCompatActivity implements Sh
                 selectedSite,
                 analyticsProperties);
 
-        if (numberOfMediaShared > 0) {
+        if (doesContainMediaAndWasSharedToMediaLibrary(shareAction, numberOfMediaShared)) {
             trackMediaAddedToMediaLibrary(selectedSite);
         }
     }
@@ -251,6 +253,10 @@ public class ShareIntentReceiverActivity extends AppCompatActivity implements Sh
             Map<String, Object> properties = AnalyticsUtils.getMediaProperties(this, isVideo, uri, null);
             AnalyticsUtils.trackWithSiteDetails(AnalyticsTracker.Stat.MEDIA_LIBRARY_ADDED_PHOTO, selectedSite, properties);
         }
+    }
+
+    private boolean doesContainMediaAndWasSharedToMediaLibrary(ShareAction shareAction, int numberOfMediaShared) {
+        return numberOfMediaShared > 0 && mShareActionName.equals(SHARE_TO_MEDIA_LIBRARY);
     }
 
     private int countMedia() {
