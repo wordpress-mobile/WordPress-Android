@@ -20,7 +20,6 @@ import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.analytics.AnalyticsTracker.Stat;
 import org.wordpress.android.fluxc.Dispatcher;
-import org.wordpress.android.fluxc.action.ThemeAction;
 import org.wordpress.android.fluxc.generated.ThemeActionBuilder;
 import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.model.ThemeModel;
@@ -194,6 +193,25 @@ public class ThemeBrowserActivity extends AppCompatActivity implements ThemeBrow
 
     @SuppressWarnings("unused")
     @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onWpComThemesChanged(ThemeStore.OnWpComThemesChanged event) {
+        // always unset refreshing status to remove progress indicator
+        if (mThemeBrowserFragment != null) {
+            mThemeBrowserFragment.setRefreshing(false);
+            mThemeBrowserFragment.refreshView();
+        }
+
+        if (event.isError()) {
+            AppLog.e(T.THEMES, "Error fetching themes: " + event.error.message);
+            ToastUtils.showToast(this, R.string.theme_fetch_failed, ToastUtils.Duration.SHORT);
+        } else {
+            AppLog.d(T.THEMES, "WordPress.com Theme fetch successful!");
+        }
+        AppPrefs.setLastWpComThemeSync(System.currentTimeMillis());
+    }
+
+
+    @SuppressWarnings("unused")
+    @Subscribe(threadMode = ThreadMode.MAIN)
     public void onSiteThemesChanged(ThemeStore.OnSiteThemesChanged event) {
         // always unset refreshing status to remove progress indicator
         if (mThemeBrowserFragment != null) {
@@ -201,19 +219,13 @@ public class ThemeBrowserActivity extends AppCompatActivity implements ThemeBrow
             mThemeBrowserFragment.refreshView();
         }
 
-        if (event.origin == ThemeAction.FETCH_INSTALLED_THEMES) {
-            mIsFetchingInstalledThemes = false;
-        }
+        mIsFetchingInstalledThemes = false;
+
         if (event.isError()) {
             AppLog.e(T.THEMES, "Error fetching themes: " + event.error.message);
             ToastUtils.showToast(this, R.string.theme_fetch_failed, ToastUtils.Duration.SHORT);
         } else {
-            if (event.origin == ThemeAction.FETCH_WP_COM_THEMES) {
-                AppLog.d(T.THEMES, "WordPress.com Theme fetch successful!");
-                AppPrefs.setLastWpComThemeSync(System.currentTimeMillis());
-            } else if (event.origin == ThemeAction.FETCH_INSTALLED_THEMES) {
-                AppLog.d(T.THEMES, "Installed themes fetch successful!");
-            }
+            AppLog.d(T.THEMES, "Installed themes fetch successful!");
         }
     }
 
