@@ -20,7 +20,9 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Parcel;
 import android.os.Parcelable;
+import android.support.annotation.DrawableRes;
 import android.support.annotation.NonNull;
+import android.support.graphics.drawable.VectorDrawableCompat;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
@@ -883,36 +885,22 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
         return getAztecPlaceholderDrawableFromResID(R.drawable.ic_image_failed_grey_a_40_48dp);
     }
 
-    public BitmapDrawable getAztecPlaceholderDrawableFromResID(int drawableId) {
+    public BitmapDrawable getAztecPlaceholderDrawableFromResID(@DrawableRes int drawableId) {
         Drawable drawable = getResources().getDrawable(drawableId);
         Bitmap bitmap;
         if (drawable instanceof BitmapDrawable) {
             bitmap = ((BitmapDrawable) drawable).getBitmap();
             bitmap = ImageUtils.getScaledBitmapAtLongestSide(bitmap, maxImageWidthForVisualEditor);
-        } else if (drawable instanceof VectorDrawable) {
-             bitmap = getScaledBitmapFromVectorDrawable((VectorDrawable) drawable, maxImageWidthForVisualEditor,
-                    maxImageWidthForVisualEditor);
+        } else if (drawable instanceof VectorDrawableCompat || drawable instanceof VectorDrawable) {
+            bitmap = Bitmap.createBitmap(maxImageWidthForVisualEditor, maxImageWidthForVisualEditor, Bitmap.Config.ARGB_8888);
+            Canvas canvas = new Canvas(bitmap);
+            drawable.setBounds(0, 0, canvas.getWidth(), canvas.getHeight());
+            drawable.draw(canvas);
         } else {
             throw new IllegalArgumentException("unsupported drawable type");
         }
         bitmap.setDensity(DisplayMetrics.DENSITY_DEFAULT);
         return new BitmapDrawable(getResources(), bitmap);
-    }
-
-    // we can move this to utils
-    private static Bitmap getScaledBitmapFromVectorDrawable(VectorDrawable vectorDrawable, int width, int height) {
-        if (width < 1) {
-            width = vectorDrawable.getIntrinsicWidth();
-        }
-        if (height < 1) {
-            height = vectorDrawable.getIntrinsicHeight();
-        }
-
-        Bitmap bitmap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888);
-        Canvas canvas = new Canvas(bitmap);
-        vectorDrawable.setBounds(0, 0, canvas.getWidth(), canvas.getHeight());
-        vectorDrawable.draw(canvas);
-        return bitmap;
     }
 
     @Override
