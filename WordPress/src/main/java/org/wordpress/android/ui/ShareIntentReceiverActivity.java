@@ -35,7 +35,7 @@ import java.util.Map;
 
 import javax.inject.Inject;
 
-import static org.wordpress.android.ui.ShareIntentReceiverFragment.ShareAction.SHARE_TO_MEDIA_LIBRARY;
+import static org.wordpress.android.ui.ShareIntentReceiverFragment.ShareAction;
 
 /**
  * An activity to handle share intents, since there are multiple actions possible.
@@ -256,7 +256,7 @@ public class ShareIntentReceiverActivity extends AppCompatActivity implements Sh
     }
 
     private boolean doesContainMediaAndWasSharedToMediaLibrary(ShareAction shareAction, int numberOfMediaShared) {
-        return numberOfMediaShared > 0 && mShareActionName.equals(SHARE_TO_MEDIA_LIBRARY);
+        return shareAction != null && (numberOfMediaShared > 0 && ShareAction.SHARE_TO_MEDIA_LIBRARY.analyticsName.equals(shareAction.analyticsName));
     }
 
     private int countMedia() {
