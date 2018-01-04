@@ -231,14 +231,25 @@ public class ShareIntentReceiverActivity extends AppCompatActivity implements Sh
                 analyticsProperties);
 
         if (numberOfMediaShared > 0) {
-            ArrayList<Uri> mediaUrls = getIntent().getParcelableArrayListExtra((Intent.EXTRA_STREAM));
-            for (Uri uri : mediaUrls) {
-                boolean isVideo = getContentResolver().getType(uri).contains("video");
-                Map<String, Object> properties = AnalyticsUtils.getMediaProperties(this, isVideo, uri, null);
-                AnalyticsUtils.trackWithSiteDetails(AnalyticsTracker.Stat.MEDIA_LIBRARY_ADDED_PHOTO, selectedSite, properties);
-            }
+            trackMediaAddedToMediaLibrary(selectedSite);
+        }
+    }
+
+    private void trackMediaAddedToMediaLibrary(SiteModel selectedSite) {
+        ArrayList<Uri> mediaUrls = new ArrayList<>();
+        if (countMedia() == 1) {
+            Uri singleMedia = getIntent().getParcelableExtra(Intent.EXTRA_STREAM);
+            mediaUrls.add(singleMedia);
+        } else {
+            ArrayList<Uri> imageUris = getIntent().getParcelableArrayListExtra(Intent.EXTRA_STREAM);
+            mediaUrls.addAll(imageUris);
         }
 
+        for (Uri uri : mediaUrls) {
+            boolean isVideo = getContentResolver().getType(uri).contains("video");
+            Map<String, Object> properties = AnalyticsUtils.getMediaProperties(this, isVideo, uri, null);
+            AnalyticsUtils.trackWithSiteDetails(AnalyticsTracker.Stat.MEDIA_LIBRARY_ADDED_PHOTO, selectedSite, properties);
+        }
     }
 
     private int countMedia() {
