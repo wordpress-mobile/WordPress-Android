@@ -519,6 +519,7 @@
     <string name="site_settings_discussion_new_posts_header">Defaults for new posts</string>
     <string name="site_settings_comments_header" translatable="false">@string/comments</string>
     <string name="site_settings_advanced_header">Advanced</string>
+    <string name="site_settings_traffic_header">Traffic</string>
 
     <!-- Preference Titles -->
     <string name="site_settings_title_title">Site Title</string>
@@ -564,6 +565,8 @@
     <string name="site_settings_blacklist_title">Blacklist</string>
     <string name="site_settings_delete_site_title">Delete Site</string>
     <string name="site_settings_timezones_error">Unable to load timezones</string>
+    <string name="site_settings_amp_title">Accelerated Mobile Pages (AMP)</string>
+    <string name="site_settings_amp_summary">Your WordPress.com site supports the use of Accelerated Mobile Pages, a Google-led initiative that dramatically speeds up loading times on mobile devices</string>
 
     <!-- Jetpack settings -->
     <string name="jetpack_site_settings_category_title">Jetpack Settings</string>
