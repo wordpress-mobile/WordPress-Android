@@ -1,6 +1,5 @@
 package org.wordpress.android.ui.themes;
 
-import android.database.Cursor;
 import android.os.Bundle;
 import android.support.v4.view.MenuItemCompat;
 import android.support.v7.widget.SearchView;
@@ -121,9 +120,9 @@ public class ThemeSearchFragment extends ThemeBrowserFragment implements SearchV
     }
 
     @Override
-    protected Cursor fetchThemes() {
+    protected List<ThemeModel> fetchThemes() {
         if (mSearchResults == null) {
-            return mThemeStore.getWpComThemesCursor();
+            return mThemeStore.getWpComThemes();
         }
 
         // create a copy of the search results list to filter without changing results
@@ -137,7 +136,7 @@ public class ThemeSearchFragment extends ThemeBrowserFragment implements SearchV
             removeNonActivePremiumThemes(themes);
         }
 
-        return createCursorForThemesList(themes);
+        return themes;
     }
 
     @Override

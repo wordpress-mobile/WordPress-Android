@@ -11,7 +11,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.CursorAdapter;
+import android.widget.BaseAdapter;
 import android.widget.FrameLayout;
 import android.widget.ImageButton;
 import android.widget.PopupMenu;
@@ -23,12 +23,15 @@ import com.wellsql.generated.ThemeModelTable;
 import org.wordpress.android.R;
 import org.wordpress.android.fluxc.model.ThemeModel;
 import org.wordpress.android.ui.prefs.AppPrefs;
-import org.wordpress.android.util.StringUtils;
+import org.wordpress.android.ui.themes.ThemeBrowserFragment.ThemeBrowserFragmentCallback;
 import org.wordpress.android.widgets.HeaderGridView;
 import org.wordpress.android.widgets.WPNetworkImageView;
-import org.wordpress.android.ui.themes.ThemeBrowserFragment.ThemeBrowserFragmentCallback;
 
-class ThemeBrowserAdapter extends CursorAdapter {
+import java.util.ArrayList;
+import java.util.List;
+
+class ThemeBrowserAdapter extends BaseAdapter {
+    private static final int THEME_VIEW_TYPE = 0;
     private static final int HEADER_VIEW_TYPE = 1;
     private static final String HEADER_THEME_ID = "HEADER_THEME_ID";
     private static final String THEME_IMAGE_PARAMETER = "?w=";
@@ -52,12 +55,14 @@ class ThemeBrowserAdapter extends CursorAdapter {
         };
     }
 
+    private final Context mContext;
     private final LayoutInflater mInflater;
     private final ThemeBrowserFragmentCallback mCallback;
     private int mViewWidth;
+    private final List<ThemeModel> mThemes = new ArrayList<>();
 
-    ThemeBrowserAdapter(Context context, Cursor c, boolean autoRequery, ThemeBrowserFragmentCallback callback) {
-        super(context, c, autoRequery);
+    ThemeBrowserAdapter(Context context, ThemeBrowserFragmentCallback callback) {
+        mContext = context;
         mInflater = LayoutInflater.from(context);
         mCallback = callback;
         mViewWidth = AppPrefs.getThemeImageSizeWidth();
@@ -74,14 +79,14 @@ class ThemeBrowserAdapter extends CursorAdapter {
         private final RelativeLayout detailsView;
 
         ThemeViewHolder(View view) {
-            cardView = (CardView) view.findViewById(R.id.theme_grid_card);
-            imageView = (WPNetworkImageView) view.findViewById(R.id.theme_grid_item_image);
-            nameView = (TextView) view.findViewById(R.id.theme_grid_item_name);
-            priceView = (TextView) view.findViewById(R.id.theme_grid_item_price);
-            activeView = (TextView) view.findViewById(R.id.theme_grid_item_active);
-            imageButton = (ImageButton) view.findViewById(R.id.theme_grid_item_image_button);
-            frameLayout = (FrameLayout) view.findViewById(R.id.theme_grid_item_image_layout);
-            detailsView = (RelativeLayout) view.findViewById(R.id.theme_grid_item_details);
+            cardView = view.findViewById(R.id.theme_grid_card);
+            imageView = view.findViewById(R.id.theme_grid_item_image);
+            nameView = view.findViewById(R.id.theme_grid_item_name);
+            priceView = view.findViewById(R.id.theme_grid_item_price);
+            activeView = view.findViewById(R.id.theme_grid_item_active);
+            imageButton = view.findViewById(R.id.theme_grid_item_image_button);
+            frameLayout = view.findViewById(R.id.theme_grid_item_image_layout);
+            detailsView = view.findViewById(R.id.theme_grid_item_details);
         }
     }
 
@@ -90,54 +95,67 @@ class ThemeBrowserAdapter extends CursorAdapter {
         private final TextView countText;
 
         HeaderViewHolder(View view) {
-            headerText = (TextView) view.findViewById(R.id.section_header_text);
-            countText = (TextView) view.findViewById(R.id.section_header_count);
+            headerText = view.findViewById(R.id.section_header_text);
+            countText = view.findViewById(R.id.section_header_count);
         }
     }
 
     @Override
-    public View newView(Context context, Cursor cursor, ViewGroup parent) {
-        if (getItemViewType(cursor) == HEADER_VIEW_TYPE) {
+    public int getCount() {
+        return mThemes.size();
+    }
+
+    @Override
+    public Object getItem(int position) {
+        return position;
+    }
+
+    @Override
+    public long getItemId(int position) {
+        String id = mThemes.get(position).getThemeId();
+        return Long.valueOf(id);
+    }
+
+    public void setThemeList(@NonNull List<ThemeModel> themes) {
+        mThemes.clear();
+        mThemes.addAll(themes);
+        notifyDataSetChanged();
+    }
+
+    @Override
+    public View getView(int position, View convertView, ViewGroup parent) {
+        if (getItemViewType(position) == HEADER_VIEW_TYPE) {
             View view = mInflater.inflate(R.layout.theme_section_header, parent, false);
             HeaderViewHolder headerViewHolder = new HeaderViewHolder(view);
             view.setTag(headerViewHolder);
             return view;
         }
 
-        View view = mInflater.inflate(R.layout.theme_grid_item, parent, false);
-        configureThemeImageSize(parent);
-        ThemeViewHolder themeViewHolder = new ThemeViewHolder(view);
-        view.setTag(themeViewHolder);
-        return view;
-    }
-
-    @Override
-    public void bindView(View view, Context context, Cursor cursor) {
-        if (getItemViewType(cursor) == HEADER_VIEW_TYPE) {
-            final HeaderViewHolder headerViewHolder = (HeaderViewHolder) view.getTag();
-            final String headerText = cursor.getString(cursor.getColumnIndex(ThemeModelTable.NAME));
-            final String countText = cursor.getString(cursor.getColumnIndex("count"));
-            headerViewHolder.headerText.setText(headerText);
-            headerViewHolder.countText.setText(countText);
-            return;
+        ThemeViewHolder holder;
+        if (convertView == null || convertView.getTag() == null) {
+            convertView = mInflater.inflate(R.layout.theme_grid_item, parent, false);
+            holder = new ThemeViewHolder(convertView);
+            convertView.setTag(holder);
+        } else {
+            holder = (ThemeViewHolder) convertView.getTag();
         }
 
-        String screenshotURL = cursor.getString(cursor.getColumnIndex(ThemeModelTable.SCREENSHOT_URL));
-        final ThemeViewHolder themeViewHolder = (ThemeViewHolder) view.getTag();
-        final String name = cursor.getString(cursor.getColumnIndex(ThemeModelTable.NAME));
-        final String themeId = cursor.getString(cursor.getColumnIndex(ThemeModelTable.THEME_ID));
-        final String priceText = cursor.getString(cursor.getColumnIndex(ThemeModelTable.PRICE_TEXT));
-        final boolean isPremium =
-                StringUtils.equals("false", cursor.getString(cursor.getColumnIndex(ThemeModelTable.FREE)));
-        final boolean isCurrent =
-                StringUtils.equals("true", cursor.getString(cursor.getColumnIndex(ThemeModelTable.ACTIVE)));
+        configureThemeImageSize(parent);
+        ThemeModel theme = mThemes.get(position);
 
-        themeViewHolder.nameView.setText(name);
+        String screenshotURL = theme.getScreenshotUrl();
+        String name = theme.getName();
+        String themeId = theme.getThemeId();
+        String priceText = theme.getPriceText();
+        boolean isPremium = !theme.isFree();
+        boolean isCurrent = theme.getActive();
+
+        holder.nameView.setText(name);
         if (isPremium) {
-            themeViewHolder.priceView.setText(priceText);
-            themeViewHolder.priceView.setVisibility(View.VISIBLE);
+            holder.priceView.setText(priceText);
+            holder.priceView.setVisibility(View.VISIBLE);
         } else {
-            themeViewHolder.priceView.setVisibility(View.GONE);
+            holder.priceView.setVisibility(View.GONE);
         }
 
         // catch the case where a URL has no protocol
@@ -150,26 +168,28 @@ class ThemeBrowserAdapter extends CursorAdapter {
             screenshotURL = ThemeWebActivity.THEME_HTTPS_PROTOCOL + screenshotURL;
         }
 
-        configureImageView(themeViewHolder, screenshotURL, themeId, isCurrent);
-        configureImageButton(context, themeViewHolder, themeId, isPremium, isCurrent);
-        configureCardView(context, themeViewHolder, isCurrent);
+        configureImageView(holder, screenshotURL, themeId, isCurrent);
+        configureImageButton(holder, themeId, isPremium, isCurrent);
+        configureCardView(holder, isCurrent);
+
+        return convertView;
     }
 
     @Override
     public int getItemViewType(int position) {
-        Cursor cursor = (Cursor) getItem(position);
-        return getItemViewType(cursor);
+        // TODO
+        return THEME_VIEW_TYPE;
     }
 
     @Override
     public int getViewTypeCount() {
         // standard theme item view and a header view for Jetpack sites to section Uploaded/WP.com themes
-        return 2;
+        return 1; // TODO
     }
 
     @SuppressWarnings("deprecation")
-    private void configureCardView(Context context, ThemeViewHolder themeViewHolder, boolean isCurrent) {
-        Resources resources = context.getResources();
+    private void configureCardView(ThemeViewHolder themeViewHolder, boolean isCurrent) {
+        Resources resources = mContext.getResources();
         if (isCurrent) {
             themeViewHolder.detailsView.setBackgroundColor(resources.getColor(R.color.blue_wordpress));
             themeViewHolder.nameView.setTextColor(resources.getColor(R.color.white));
@@ -210,8 +230,8 @@ class ThemeBrowserAdapter extends CursorAdapter {
         });
     }
 
-    private void configureImageButton(Context context, ThemeViewHolder themeViewHolder, final String themeId, final boolean isPremium, boolean isCurrent) {
-        final PopupMenu popupMenu = new PopupMenu(context, themeViewHolder.imageButton);
+    private void configureImageButton(ThemeViewHolder themeViewHolder, final String themeId, final boolean isPremium, boolean isCurrent) {
+        final PopupMenu popupMenu = new PopupMenu(mContext, themeViewHolder.imageButton);
         popupMenu.getMenuInflater().inflate(R.menu.theme_more, popupMenu.getMenu());
 
         configureMenuForTheme(popupMenu.getMenu(), isCurrent);
@@ -268,7 +288,7 @@ class ThemeBrowserAdapter extends CursorAdapter {
     }
 
     private void configureThemeImageSize(ViewGroup parent) {
-        HeaderGridView gridView = (HeaderGridView) parent.findViewById(R.id.theme_listview);
+        HeaderGridView gridView = parent.findViewById(R.id.theme_listview);
         int numColumns = gridView.getNumColumns();
         int screenWidth = gridView.getWidth();
         int imageWidth = screenWidth / numColumns;
@@ -276,13 +296,5 @@ class ThemeBrowserAdapter extends CursorAdapter {
             mViewWidth = imageWidth;
             AppPrefs.setThemeImageSizeWidth(mViewWidth);
         }
-    }
-
-    private int getItemViewType(Cursor cursor) {
-        String id = cursor.getString(cursor.getColumnIndex(ThemeModelTable.THEME_ID));
-        if (id.equals(HEADER_THEME_ID)) {
-            return HEADER_VIEW_TYPE;
-        }
-        return 0;
     }
 }
