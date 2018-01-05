@@ -597,6 +597,21 @@ public abstract class SiteSettingsInterface {
         mSettings.postsPerPage = postsPerPage;
     }
 
+    public boolean getAmpSupported() {
+        return mSettings.ampSupported;
+    }
+
+    public void setAmpSupported(boolean supported) {
+        mSettings.ampSupported = supported;
+    }
+
+    public boolean getAmpEnabled() {
+        return mSettings.ampEnabled;
+    }
+
+    public void setAmpEnabled(boolean enabled) {
+        mSettings.ampEnabled = enabled;
+    }
     public boolean isJetpackMonitorEnabled() {
         return mJpSettings.monitorActive;
     }

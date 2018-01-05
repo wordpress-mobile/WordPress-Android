@@ -140,6 +140,20 @@
 
     </PreferenceCategory>
 
+    <!-- Traffic settings -->
+    <PreferenceCategory
+        android:id="@+id/pref_traffic"
+        android:key="@string/pref_key_site_traffic"
+        android:title="@string/site_settings_traffic_header">
+
+        <org.wordpress.android.ui.prefs.WPSwitchPreference
+            android:id="@+id/pref_toggle_amp"
+            android:key="@string/pref_key_site_amp"
+            android:summary="@string/site_settings_amp_summary"
+            android:title="@string/site_settings_amp_title" />
+
+    </PreferenceCategory>
+
     <!-- Discussion settings -->
     <PreferenceCategory
         android:id="@+id/pref_discussion_settings2"
