@@ -297,7 +297,8 @@ public class ThemeBrowserFragment extends Fragment implements RecyclerListener {
 
     private ThemeBrowserAdapter getAdapter() {
         if (mAdapter == null) {
-            mAdapter = new ThemeBrowserAdapter(getActivity(), mCallback);
+            boolean showHeaders = !mSite.isWPCom();
+            mAdapter = new ThemeBrowserAdapter(getActivity(), showHeaders, mCallback);
         }
         return mAdapter;
     }

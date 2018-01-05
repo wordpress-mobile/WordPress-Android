@@ -31,8 +31,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 class ThemeBrowserAdapter extends BaseAdapter {
-    private static final int THEME_VIEW_TYPE = 0;
-    private static final int HEADER_VIEW_TYPE = 1;
     private static final String HEADER_THEME_ID = "HEADER_THEME_ID";
     private static final String THEME_IMAGE_PARAMETER = "?w=";
 
@@ -58,12 +56,14 @@ class ThemeBrowserAdapter extends BaseAdapter {
     private final Context mContext;
     private final LayoutInflater mInflater;
     private final ThemeBrowserFragmentCallback mCallback;
+    private final boolean mShowHeaders;
     private int mViewWidth;
     private final List<ThemeModel> mThemes = new ArrayList<>();
 
-    ThemeBrowserAdapter(Context context, ThemeBrowserFragmentCallback callback) {
+    ThemeBrowserAdapter(Context context, boolean showHeaders, ThemeBrowserFragmentCallback callback) {
         mContext = context;
         mInflater = LayoutInflater.from(context);
+        mShowHeaders = showHeaders;
         mCallback = callback;
         mViewWidth = AppPrefs.getThemeImageSizeWidth();
     }
@@ -78,6 +78,10 @@ class ThemeBrowserAdapter extends BaseAdapter {
         private final FrameLayout frameLayout;
         private final RelativeLayout detailsView;
 
+        private final ViewGroup headerView;
+        private final TextView headerText;
+        private final TextView headerCount;
+
         ThemeViewHolder(View view) {
             cardView = view.findViewById(R.id.theme_grid_card);
             imageView = view.findViewById(R.id.theme_grid_item_image);
@@ -87,6 +91,10 @@ class ThemeBrowserAdapter extends BaseAdapter {
             imageButton = view.findViewById(R.id.theme_grid_item_image_button);
             frameLayout = view.findViewById(R.id.theme_grid_item_image_layout);
             detailsView = view.findViewById(R.id.theme_grid_item_details);
+
+            headerView = view.findViewById(R.id.section_header);
+            headerText = headerView.findViewById(R.id.section_header_text);
+            headerCount = headerView.findViewById(R.id.section_header_count);
         }
     }
 
@@ -107,13 +115,12 @@ class ThemeBrowserAdapter extends BaseAdapter {
 
     @Override
     public Object getItem(int position) {
-        return position;
+        return mThemes.get(position);
     }
 
     @Override
     public long getItemId(int position) {
-        String id = mThemes.get(position).getThemeId();
-        return Long.valueOf(id);
+        return position;
     }
 
     public void setThemeList(@NonNull List<ThemeModel> themes) {
@@ -124,13 +131,6 @@ class ThemeBrowserAdapter extends BaseAdapter {
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
-        if (getItemViewType(position) == HEADER_VIEW_TYPE) {
-            View view = mInflater.inflate(R.layout.theme_section_header, parent, false);
-            HeaderViewHolder headerViewHolder = new HeaderViewHolder(view);
-            view.setTag(headerViewHolder);
-            return view;
-        }
-
         ThemeViewHolder holder;
         if (convertView == null || convertView.getTag() == null) {
             convertView = mInflater.inflate(R.layout.theme_grid_item, parent, false);
@@ -144,15 +144,13 @@ class ThemeBrowserAdapter extends BaseAdapter {
         ThemeModel theme = mThemes.get(position);
 
         String screenshotURL = theme.getScreenshotUrl();
-        String name = theme.getName();
         String themeId = theme.getThemeId();
-        String priceText = theme.getPriceText();
         boolean isPremium = !theme.isFree();
         boolean isCurrent = theme.getActive();
 
-        holder.nameView.setText(name);
+        holder.nameView.setText(theme.getName());
         if (isPremium) {
-            holder.priceView.setText(priceText);
+            holder.priceView.setText(theme.getPriceText());
             holder.priceView.setVisibility(View.VISIBLE);
         } else {
             holder.priceView.setVisibility(View.GONE);
@@ -172,19 +170,13 @@ class ThemeBrowserAdapter extends BaseAdapter {
         configureImageButton(holder, themeId, isPremium, isCurrent);
         configureCardView(holder, isCurrent);
 
+        if (mShowHeaders && position == 0) {
+            holder.headerView.setVisibility(View.VISIBLE);
+        } else {
+            holder.headerView.setVisibility(View.GONE);
+        }
+
         return convertView;
-    }
-
-    @Override
-    public int getItemViewType(int position) {
-        // TODO
-        return THEME_VIEW_TYPE;
-    }
-
-    @Override
-    public int getViewTypeCount() {
-        // standard theme item view and a header view for Jetpack sites to section Uploaded/WP.com themes
-        return 1; // TODO
     }
 
     @SuppressWarnings("deprecation")
