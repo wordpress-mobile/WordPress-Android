@@ -2,8 +2,6 @@ package org.wordpress.android.ui.themes;
 
 import android.content.Context;
 import android.content.res.Resources;
-import android.database.Cursor;
-import android.database.MatrixCursor;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.CardView;
 import android.view.LayoutInflater;
@@ -18,8 +16,6 @@ import android.widget.PopupMenu;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.wellsql.generated.ThemeModelTable;
-
 import org.wordpress.android.R;
 import org.wordpress.android.fluxc.model.ThemeModel;
 import org.wordpress.android.ui.prefs.AppPrefs;
@@ -31,41 +27,36 @@ import java.util.ArrayList;
 import java.util.List;
 
 class ThemeBrowserAdapter extends BaseAdapter {
-    private static final String HEADER_THEME_ID = "HEADER_THEME_ID";
     private static final String THEME_IMAGE_PARAMETER = "?w=";
-
-    static Cursor createHeaderCursor(String headerText, int count) {
-        MatrixCursor cursor = new MatrixCursor(new String[] {
-                ThemeModelTable.ID, ThemeModelTable.THEME_ID, ThemeModelTable.NAME, "count"
-        });
-        cursor.addRow(new String[]{"0", HEADER_THEME_ID, headerText, String.valueOf(count)});
-        return cursor;
-    }
-
-    static final String[] THEME_COLUMNS = new String[] {
-            ThemeModelTable.ID, ThemeModelTable.THEME_ID, ThemeModelTable.NAME, ThemeModelTable.SCREENSHOT_URL,
-            ThemeModelTable.PRICE_TEXT, ThemeModelTable.ACTIVE, ThemeModelTable.FREE
-    };
-    static String[] createThemeCursorRow(@NonNull ThemeModel theme) {
-        return new String[] {
-                String.valueOf(theme.getId()), theme.getThemeId(), theme.getName(), theme.getScreenshotUrl(),
-                theme.getPriceText(), String.valueOf(theme.getActive()), String.valueOf(theme.getFree())
-        };
-    }
 
     private final Context mContext;
     private final LayoutInflater mInflater;
     private final ThemeBrowserFragmentCallback mCallback;
-    private final boolean mShowHeaders;
-    private int mViewWidth;
-    private final List<ThemeModel> mThemes = new ArrayList<>();
 
-    ThemeBrowserAdapter(Context context, boolean showHeaders, ThemeBrowserFragmentCallback callback) {
+    private int mViewWidth;
+    private final boolean mIsWpCom;
+
+    private final List<ThemeModel> mThemes = new ArrayList<>();
+    private final List<ThemeSectionHeader> mHeaders = new ArrayList<>();
+
+    public class ThemeSectionHeader {
+        final String text;
+        final int position;
+        final int count;
+
+        public ThemeSectionHeader(int position, @NonNull String text, int count) {
+            this.position = position;
+            this.text = text;
+            this.count = count;
+        }
+    }
+
+    ThemeBrowserAdapter(Context context, boolean isWpCom, ThemeBrowserFragmentCallback callback) {
         mContext = context;
         mInflater = LayoutInflater.from(context);
-        mShowHeaders = showHeaders;
         mCallback = callback;
         mViewWidth = AppPrefs.getThemeImageSizeWidth();
+        mIsWpCom = isWpCom;
     }
 
     private static class ThemeViewHolder {
@@ -98,16 +89,6 @@ class ThemeBrowserAdapter extends BaseAdapter {
         }
     }
 
-    private static class HeaderViewHolder {
-        private final TextView headerText;
-        private final TextView countText;
-
-        HeaderViewHolder(View view) {
-            headerText = view.findViewById(R.id.section_header_text);
-            countText = view.findViewById(R.id.section_header_count);
-        }
-    }
-
     @Override
     public int getCount() {
         return mThemes.size();
@@ -126,6 +107,33 @@ class ThemeBrowserAdapter extends BaseAdapter {
     public void setThemeList(@NonNull List<ThemeModel> themes) {
         mThemes.clear();
         mThemes.addAll(themes);
+
+        // create headers for .org and jetpack sites
+        if (!mIsWpCom) {
+            mHeaders.clear();
+            int numUploadedThemes = 0;
+            int numWpComThemes = 0;
+            for (ThemeModel theme: themes) {
+                if (theme.isWpComTheme()) {
+                    numWpComThemes++;
+                } else {
+                    numUploadedThemes++;
+                }
+            }
+
+            for (int i = 0; i < themes.size(); i++) {
+                ThemeModel theme = themes.get(i);
+                if (i == 0 && !theme.isWpComTheme()) {
+                    String text = mContext.getString(R.string.uploaded_themes_header);
+                    mHeaders.add(new ThemeSectionHeader(i, text, numUploadedThemes));
+                } else if (theme.isWpComTheme()) {
+                    String text = mContext.getString(R.string.wpcom_themes_header);
+                    mHeaders.add(new ThemeSectionHeader(i, text, numWpComThemes));
+                    break;
+                }
+            }
+        }
+
         notifyDataSetChanged();
     }
 
@@ -170,13 +178,25 @@ class ThemeBrowserAdapter extends BaseAdapter {
         configureImageButton(holder, themeId, isPremium, isCurrent);
         configureCardView(holder, isCurrent);
 
-        if (mShowHeaders && position == 0) {
+        ThemeSectionHeader header = getSectionHeaderForPosition(position);
+        if (header != null) {
             holder.headerView.setVisibility(View.VISIBLE);
+            holder.headerText.setText(header.text);
+            holder.headerCount.setText(Integer.toString(header.count));
         } else {
             holder.headerView.setVisibility(View.GONE);
         }
 
         return convertView;
+    }
+
+    private ThemeSectionHeader getSectionHeaderForPosition(int position) {
+        for (ThemeSectionHeader header: mHeaders) {
+            if (header.position == position) {
+                return header;
+            }
+        }
+        return null;
     }
 
     @SuppressWarnings("deprecation")

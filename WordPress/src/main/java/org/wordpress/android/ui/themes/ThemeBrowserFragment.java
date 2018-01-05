@@ -3,8 +3,6 @@ package org.wordpress.android.ui.themes;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.Fragment;
-import android.database.Cursor;
-import android.database.MatrixCursor;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
@@ -297,8 +295,7 @@ public class ThemeBrowserFragment extends Fragment implements RecyclerListener {
 
     private ThemeBrowserAdapter getAdapter() {
         if (mAdapter == null) {
-            boolean showHeaders = !mSite.isWPCom();
-            mAdapter = new ThemeBrowserAdapter(getActivity(), showHeaders, mCallback);
+            mAdapter = new ThemeBrowserAdapter(getActivity(), mSite.isWPCom(), mCallback);
         }
         return mAdapter;
     }
@@ -342,24 +339,6 @@ public class ThemeBrowserFragment extends Fragment implements RecyclerListener {
         allThemes.addAll(uploadedThemes);
         allThemes.addAll(wpComThemes);
         return allThemes;
-
-        // TODO
-        // 1. Uploaded header
-        // 2. Uploaded themes
-        // 3. WP.com header
-        // 4. WP.com themes
-        /*final Cursor[] cursors = new Cursor[4];
-        final Cursor uploadedThemesCursor = createCursorForThemesList(uploadedThemes);
-        final Cursor wpComThemesCursor = createCursorForThemesList(wpComThemes);
-
-        cursors[0] = ThemeBrowserAdapter.createHeaderCursor(
-                getString(R.string.uploaded_themes_header), uploadedThemesCursor.getCount());
-        cursors[1] = uploadedThemesCursor;
-        cursors[2] = ThemeBrowserAdapter.createHeaderCursor(
-                getString(R.string.wpcom_themes_header), wpComThemesCursor.getCount());
-        cursors[3] = wpComThemesCursor;
-
-        return new MergeCursor(cursors);*/
     }
 
     protected void moveActiveThemeToFront(final List<ThemeModel> themes) {
@@ -423,13 +402,5 @@ public class ThemeBrowserFragment extends Fragment implements RecyclerListener {
                 || planId == PlansConstants.BUSINESS_PLAN_ID
                 || planId == PlansConstants.JETPACK_PREMIUM_PLAN_ID
                 || planId == PlansConstants.JETPACK_BUSINESS_PLAN_ID;
-    }
-
-    protected Cursor createCursorForThemesList(List<ThemeModel> themes) {
-        final MatrixCursor cursor = new MatrixCursor(ThemeBrowserAdapter.THEME_COLUMNS);
-        for (ThemeModel theme : themes) {
-            cursor.addRow(ThemeBrowserAdapter.createThemeCursorRow(theme));
-        }
-        return cursor;
     }
 }
