@@ -158,7 +158,7 @@
         <activity
             android:name=".ui.prefs.LicensesActivity"
             android:theme="@style/Calypso.NoActionBar" />
-        <activity android:name=".ui.prefs.TagListActivity"
+        <activity android:name=".ui.prefs.SiteSettingsTagListActivity"
             android:theme="@style/CalypsoTheme"
             android:label="@string/site_settings_tags_title" />
         <activity

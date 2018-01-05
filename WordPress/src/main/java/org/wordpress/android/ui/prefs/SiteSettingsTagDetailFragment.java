@@ -25,7 +25,7 @@ import static org.wordpress.android.ui.reader.utils.ReaderUtils.sanitizeWithDash
 /**
  * A fragment for editing a tag
  */
-public class TagDetailFragment extends Fragment {
+public class SiteSettingsTagDetailFragment extends Fragment {
     private static final String ARGS_TERM = "term";
     private static final String ARGS_IS_NEW_TERM = "is_new";
 
@@ -45,8 +45,8 @@ public class TagDetailFragment extends Fragment {
     /*
      * pass an existing term to edit it, or pass null to create a new one
      */
-    public static TagDetailFragment newInstance(@Nullable TermModel term) {
-        TagDetailFragment fragment = new TagDetailFragment();
+    public static SiteSettingsTagDetailFragment newInstance(@Nullable TermModel term) {
+        SiteSettingsTagDetailFragment fragment = new SiteSettingsTagDetailFragment();
         Bundle args = new Bundle();
         if (term == null) {
             args.putBoolean(ARGS_IS_NEW_TERM, true);
@@ -68,7 +68,7 @@ public class TagDetailFragment extends Fragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View view  = inflater.inflate(R.layout.tag_detail_fragment, container, false);
+        View view  = inflater.inflate(R.layout.site_settings_tag_detail_fragment, container, false);
 
         mNameView = view.findViewById(R.id.edit_name);
         mDescriptionView = view.findViewById(R.id.edit_description);

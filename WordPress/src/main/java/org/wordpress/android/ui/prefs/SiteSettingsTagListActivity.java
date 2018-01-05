@@ -50,9 +50,9 @@ import java.util.List;
 
 import javax.inject.Inject;
 
-public class TagListActivity extends AppCompatActivity
+public class SiteSettingsTagListActivity extends AppCompatActivity
         implements SearchView.OnQueryTextListener, MenuItem.OnActionExpandListener,
-        TagDetailFragment.OnTagDetailListener {
+        SiteSettingsTagDetailFragment.OnTagDetailListener {
 
     @Inject Dispatcher mDispatcher;
     @Inject SiteStore mSiteStore;
@@ -75,7 +75,7 @@ public class TagListActivity extends AppCompatActivity
     private ProgressDialog mProgressDialog;
 
     public static void showTagList(@NonNull Context context, @NonNull SiteModel site) {
-        Intent intent = new Intent(context, TagListActivity.class);
+        Intent intent = new Intent(context, SiteSettingsTagListActivity.class);
         intent.putExtra(WordPress.SITE, site);
         context.startActivity(intent);
     }
@@ -85,7 +85,7 @@ public class TagListActivity extends AppCompatActivity
         super.onCreate(savedInstanceState);
         ((WordPress) getApplication()).component().inject(this);
 
-        setContentView(R.layout.tag_list_activity);
+        setContentView(R.layout.site_settings_tag_list_activity);
         ActionBar actionBar = getSupportActionBar();
         if (actionBar != null) {
             actionBar.setHomeButtonEnabled(true);
@@ -128,7 +128,7 @@ public class TagListActivity extends AppCompatActivity
         if (savedInstanceState == null) {
             mDispatcher.dispatch(TaxonomyActionBuilder.newFetchTagsAction(mSite));
         } else {
-            TagDetailFragment fragment = getDetailFragment();
+            SiteSettingsTagDetailFragment fragment = getDetailFragment();
             if (fragment != null) {
                 fragment.setOnTagDetailListener(this);
             }
@@ -214,7 +214,7 @@ public class TagListActivity extends AppCompatActivity
     @Override
     public void onBackPressed() {
         if (getFragmentManager().getBackStackEntryCount() > 0) {
-            TagDetailFragment fragment = getDetailFragment();
+            SiteSettingsTagDetailFragment fragment = getDetailFragment();
             if (fragment != null && fragment.hasChanges()) {
                 saveTag(fragment.getTerm(), fragment.isNewTerm());
             } else {
@@ -279,19 +279,19 @@ public class TagListActivity extends AppCompatActivity
         mRecycler.setAdapter(mAdapter);
     }
 
-    private TagDetailFragment getDetailFragment() {
-        return (TagDetailFragment) getFragmentManager().findFragmentByTag(TagDetailFragment.TAG);
+    private SiteSettingsTagDetailFragment getDetailFragment() {
+        return (SiteSettingsTagDetailFragment) getFragmentManager().findFragmentByTag(SiteSettingsTagDetailFragment.TAG);
     }
 
     /*
      * shows the detail (edit) view for the passed term, or adds a new term is passed term is null
      */
     private void showDetailFragment(@Nullable TermModel term) {
-        TagDetailFragment fragment = TagDetailFragment.newInstance(term);
+        SiteSettingsTagDetailFragment fragment = SiteSettingsTagDetailFragment.newInstance(term);
         fragment.setOnTagDetailListener(this);
 
         getFragmentManager().beginTransaction()
-                .add(R.id.container, fragment, TagDetailFragment.TAG)
+                .add(R.id.container, fragment, SiteSettingsTagDetailFragment.TAG)
                 .addToBackStack(null)
                 .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE)
                 .commitAllowingStateLoss();
@@ -305,7 +305,7 @@ public class TagListActivity extends AppCompatActivity
     }
 
     private void hideDetailFragment() {
-        TagDetailFragment fragment = getDetailFragment();
+        SiteSettingsTagDetailFragment fragment = getDetailFragment();
         if (fragment != null) {
             getFragmentManager().popBackStack();
             ActivityUtils.hideKeyboard(this);
@@ -415,7 +415,7 @@ public class TagListActivity extends AppCompatActivity
 
         @Override
         public TagViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-            View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.tag_list_row, parent, false);
+            View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.site_settings_tag_list_row, parent, false);
             return new TagListAdapter.TagViewHolder(view);
         }
 

@@ -538,7 +538,7 @@ public class SiteSettingsFragment extends PreferenceFragment
             AnalyticsUtils.trackWithSiteDetails(AnalyticsTracker.Stat.SITE_SETTINGS_DELETE_SITE_ACCESSED, mSite);
             requestPurchasesForDeletionCheck();
         } else if (preference == mTagsPref) {
-            TagListActivity.showTagList(getActivity(), mSite);
+            SiteSettingsTagListActivity.showTagList(getActivity(), mSite);
         } else {
             return false;
         }
