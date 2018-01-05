@@ -25,8 +25,7 @@ import org.wordpress.android.fluxc.generated.ThemeActionBuilder;
 import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.model.ThemeModel;
 import org.wordpress.android.fluxc.store.ThemeStore;
-import org.wordpress.android.fluxc.store.ThemeStore.SearchThemesPayload;
-import org.wordpress.android.fluxc.store.ThemeStore.ActivateThemePayload;
+import org.wordpress.android.fluxc.store.ThemeStore.SiteThemePayload;
 import org.wordpress.android.ui.ActivityId;
 import org.wordpress.android.ui.prefs.AppPrefs;
 import org.wordpress.android.ui.themes.ThemeBrowserFragment.ThemeBrowserFragmentCallback;
@@ -35,7 +34,6 @@ import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.ToastUtils;
-import org.wordpress.android.widgets.WPAlertDialogFragment;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -196,26 +194,44 @@ public class ThemeBrowserActivity extends AppCompatActivity implements ThemeBrow
 
     @SuppressWarnings("unused")
     @Subscribe(threadMode = ThreadMode.MAIN)
-    public void onThemesChanged(ThemeStore.OnThemesChanged event) {
+    public void onWpComThemesChanged(ThemeStore.OnWpComThemesChanged event) {
         // always unset refreshing status to remove progress indicator
         if (mThemeBrowserFragment != null) {
             mThemeBrowserFragment.setRefreshing(false);
             mThemeBrowserFragment.refreshView();
         }
 
-        if (event.origin == ThemeAction.FETCH_INSTALLED_THEMES) {
-            mIsFetchingInstalledThemes = false;
-        }
         if (event.isError()) {
             AppLog.e(T.THEMES, "Error fetching themes: " + event.error.message);
             ToastUtils.showToast(this, R.string.theme_fetch_failed, ToastUtils.Duration.SHORT);
         } else {
-            if (event.origin == ThemeAction.FETCH_WP_COM_THEMES) {
-                AppLog.d(T.THEMES, "WordPress.com Theme fetch successful!");
-                AppPrefs.setLastWpComThemeSync(System.currentTimeMillis());
-            } else if (event.origin == ThemeAction.FETCH_INSTALLED_THEMES) {
+            AppLog.d(T.THEMES, "WordPress.com Theme fetch successful!");
+        }
+        AppPrefs.setLastWpComThemeSync(System.currentTimeMillis());
+    }
+
+
+    @SuppressWarnings("unused")
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onSiteThemesChanged(ThemeStore.OnSiteThemesChanged event) {
+        if (event.origin == ThemeAction.FETCH_INSTALLED_THEMES) {
+            // always unset refreshing status to remove progress indicator
+            if (mThemeBrowserFragment != null) {
+                mThemeBrowserFragment.setRefreshing(false);
+                mThemeBrowserFragment.refreshView();
+            }
+
+            mIsFetchingInstalledThemes = false;
+
+            if (event.isError()) {
+                AppLog.e(T.THEMES, "Error fetching themes: " + event.error.message);
+                ToastUtils.showToast(this, R.string.theme_fetch_failed, ToastUtils.Duration.SHORT);
+            } else {
                 AppLog.d(T.THEMES, "Installed themes fetch successful!");
             }
+        } else if (event.origin == ThemeAction.REMOVE_SITE_THEMES){
+            // Since this is a logout event, we don't need to do anything
+            AppLog.d(T.THEMES, "Site themes removed for site: " + event.site.getDisplayName());
         }
     }
 
@@ -242,30 +258,6 @@ public class ThemeBrowserActivity extends AppCompatActivity implements ThemeBrow
             if (mThemeSearchFragment != null && mThemeSearchFragment.isVisible()) {
                 mThemeSearchFragment.setRefreshing(false);
             }
-        }
-    }
-
-    @SuppressWarnings("unused")
-    @Subscribe(threadMode = ThreadMode.MAIN)
-    public void onThemesSearched(ThemeStore.OnThemesSearched event) {
-        if (event.isError()) {
-            AppLog.e(T.THEMES, "Error searching themes: " + event.error.message);
-            if (event.error.type == ThemeStore.ThemeErrorType.UNAUTHORIZED) {
-                AppLog.d(T.THEMES, getString(R.string.theme_auth_error_authenticate));
-                String errorTitle = getString(R.string.theme_auth_error_title);
-                String errorMsg = getString(R.string.theme_auth_error_message);
-
-                if (mIsRunning) {
-                    FragmentTransaction ft = getFragmentManager().beginTransaction();
-                    WPAlertDialogFragment fragment = WPAlertDialogFragment.newAlertDialog(errorMsg,
-                            errorTitle);
-                    ft.add(fragment, ALERT_TAB);
-                    ft.commitAllowingStateLoss();
-                }
-            }
-        } else {
-            AppLog.d(T.THEMES, "Themes search successful!");
-            mThemeSearchFragment.setSearchResults(event.searchResults);
         }
     }
 
@@ -318,8 +310,7 @@ public class ThemeBrowserActivity extends AppCompatActivity implements ThemeBrow
         if (TextUtils.isEmpty(searchTerm)) {
             return;
         }
-        SearchThemesPayload payload = new SearchThemesPayload(searchTerm);
-        mDispatcher.dispatch(ThemeActionBuilder.newSearchThemesAction(payload));
+        // TODO: implement local theme search
     }
 
     public void fetchCurrentTheme() {
@@ -356,12 +347,12 @@ public class ThemeBrowserActivity extends AppCompatActivity implements ThemeBrow
 
             if (mSite.isJetpackConnected()) {
                 // first install the theme, then activate it
-                mDispatcher.dispatch(ThemeActionBuilder.newInstallThemeAction(new ActivateThemePayload(mSite, theme)));
+                mDispatcher.dispatch(ThemeActionBuilder.newInstallThemeAction(new SiteThemePayload(mSite, theme)));
                 return;
             }
         }
 
-        mDispatcher.dispatch(ThemeActionBuilder.newActivateThemeAction(new ActivateThemePayload(mSite, theme)));
+        mDispatcher.dispatch(ThemeActionBuilder.newActivateThemeAction(new SiteThemePayload(mSite, theme)));
     }
 
     protected void setThemeBrowserFragment(ThemeBrowserFragment themeBrowserFragment) {
