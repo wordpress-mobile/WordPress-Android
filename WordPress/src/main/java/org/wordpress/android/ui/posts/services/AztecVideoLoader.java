@@ -10,6 +10,7 @@ import android.provider.MediaStore;
 import android.text.TextUtils;
 import android.util.DisplayMetrics;
 
+import org.wordpress.android.editor.MediaUtils;
 import org.wordpress.android.util.ImageUtils;
 import org.wordpress.aztec.Html;
 
@@ -43,18 +44,22 @@ public class AztecVideoLoader implements Html.VideoThumbnailGetter {
             protected Bitmap doInBackground(Void... params) {
                 // If local file
                 if (new File(url).exists()) {
-                    Bitmap thumb = ThumbnailUtils.createVideoThumbnail(url, MediaStore.Images.Thumbnails.FULL_SCREEN_KIND);
-                    thumb = ImageUtils.getScaledBitmapAtLongestSide(thumb, maxWidth);
-                    thumb.setDensity(DisplayMetrics.DENSITY_DEFAULT);
+                   return ThumbnailUtils.createVideoThumbnail(url, MediaStore.Images.Thumbnails.FULL_SCREEN_KIND);
                 }
 
-                return ImageUtils.getVideoFrameFromVideo(url, maxWidth);
+                // `getVideoFrameFromVideo` takes in consideration both width and height of the picture.
+                // We need to make sure to set the correct max width for the current thumb
+                // keeping the correct aspect ratio and the max width setting from the editor.
+                // Request double the width for now
+                return ImageUtils.getVideoFrameFromVideo(url, 2 * maxWidth);
             }
 
             protected void onPostExecute(Bitmap thumb) {
                 if (thumb == null) {
                     callbacks.onThumbnailFailed();
                 }
+                int maxRequestedSize =  MediaUtils.getMaxMediaSizeForEditor(thumb.getWidth(), thumb.getHeight(), maxWidth);
+                thumb = ImageUtils.getScaledBitmapAtLongestSide(thumb, maxRequestedSize);
                 thumb.setDensity(DisplayMetrics.DENSITY_DEFAULT);
                 BitmapDrawable bitmapDrawable = new BitmapDrawable(context.getResources(), thumb);
                 callbacks.onThumbnailLoaded(bitmapDrawable);

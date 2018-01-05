@@ -1041,14 +1041,22 @@ public class EditPostActivity extends AppCompatActivity implements
             aztecEditorFragment.setEditorBetaClickListener(EditPostActivity.this);
             aztecEditorFragment.setEditorImageSettingsListener(EditPostActivity.this);
 
-            Drawable loadingImagePlaceholder = aztecEditorFragment.getAztecPlaceholderDrawableFromResID(
-                    org.wordpress.android.editor.R.drawable.ic_gridicons_image
+            // Here we should set the max width for picture, but the default size is already OK. No need
+            // to customize it further
+            // int maxImageWidthForVisualEditor = ImageUtils.getMaximumThumbnailWidthForEditor(getActivity());
+
+            Drawable loadingImagePlaceholder = org.wordpress.android.editor.MediaUtils.getAztecPlaceholderDrawableFromResID(
+                    this,
+                    org.wordpress.android.editor.R.drawable.ic_gridicons_image,
+                    aztecEditorFragment.getMaxImageWidth()
             );
             aztecEditorFragment.setAztecImageLoader(new AztecImageLoader(getBaseContext(), loadingImagePlaceholder));
             aztecEditorFragment.setLoadingImagePlaceholder(loadingImagePlaceholder);
 
-            Drawable loadingVideoPlaceholder = aztecEditorFragment.getAztecPlaceholderDrawableFromResID(
-                    org.wordpress.android.editor.R.drawable.ic_gridicons_video_camera
+            Drawable loadingVideoPlaceholder = org.wordpress.android.editor.MediaUtils.getAztecPlaceholderDrawableFromResID(
+                    this,
+                    org.wordpress.android.editor.R.drawable.ic_gridicons_video_camera,
+                    aztecEditorFragment.getMaxImageWidth()
             );
             aztecEditorFragment.setAztecVideoLoader(new AztecVideoLoader(getBaseContext(), loadingVideoPlaceholder));
             aztecEditorFragment.setLoadingVideoPlaceholder(loadingVideoPlaceholder);

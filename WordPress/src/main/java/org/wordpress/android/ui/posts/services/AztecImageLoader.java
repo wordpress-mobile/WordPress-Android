@@ -12,6 +12,7 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.ImageLoader;
 
 import org.wordpress.android.WordPress;
+import org.wordpress.android.editor.MediaUtils;
 import org.wordpress.android.util.ImageUtils;
 import org.wordpress.aztec.Html;
 
@@ -46,12 +47,17 @@ public class AztecImageLoader implements Html.ImageGetter {
 
         if (new File(url).exists()) {
             int orientation = ImageUtils.getImageOrientation(this.context, url);
+            // `createThumbnailFromUri` takes in consideration both width and height of the picture.
+            // We need to make sure to set the correct max dimension for the current picture
+            // keeping the correct aspect ratio and the max width setting for the editor
+            int maxRequestedSize =  MediaUtils.getMaxMediaSizeForEditor(this.context, url, maxWidth);
             byte[] bytes = ImageUtils.createThumbnailFromUri(
-                   context, Uri.parse(url), maxWidth, null, orientation);
+                   context, Uri.parse(url), maxRequestedSize, null, orientation);
             if (bytes != null) {
                 Bitmap bitmap = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
                 if (bitmap != null) {
                     WordPress.getBitmapCache().putBitmap(cacheKey, bitmap);
+                    bitmap.setDensity(DisplayMetrics.DENSITY_DEFAULT);
                 }
                 BitmapDrawable bitmapDrawable = new BitmapDrawable(context.getResources(), bitmap);
                 callbacks.onImageLoaded(bitmapDrawable);

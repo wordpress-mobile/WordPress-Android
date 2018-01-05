@@ -10,19 +10,15 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.graphics.Bitmap;
-import android.graphics.Canvas;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
-import android.graphics.drawable.VectorDrawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Parcel;
 import android.os.Parcelable;
-import android.support.annotation.DrawableRes;
 import android.support.annotation.NonNull;
-import android.support.graphics.drawable.VectorDrawableCompat;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
@@ -836,13 +832,13 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
 
             addDefaultSizeClassIfMissing(attrs);
 
-            int[] bitmapDimensions = ImageUtils.getImageSize(Uri.parse(safeMediaPreviewUrl), getActivity());
-            int realBitmapWidth = bitmapDimensions[0];
+            // `getWPImageSpanThumbnailFromFilePath` takes in consideration both width and height of the picture.
+            // We need to make sure to set the correct max dimension for the current picture
+            // keeping the correct aspect ratio and the max width setting for the editor
+            int maxRequestedSize = MediaUtils.getMaxMediaSizeForEditor(getActivity(), safeMediaPreviewUrl, maxImageWidthForVisualEditor);
             Bitmap bitmapToShow = ImageUtils.getWPImageSpanThumbnailFromFilePath(
-                    getActivity(),
-                    safeMediaPreviewUrl,
-                    maxImageWidthForVisualEditor > realBitmapWidth && realBitmapWidth > 0 ? realBitmapWidth
-                            : maxImageWidthForVisualEditor);
+                    getActivity(), safeMediaPreviewUrl, maxRequestedSize
+            );
             MediaPredicate localMediaIdPredicate = MediaPredicate.getLocalMediaIdPredicate(localMediaId);
             if (bitmapToShow != null) {
                 // By default, BitmapFactory.decodeFile sets the bitmap's density to the device default so, we need
@@ -881,25 +877,7 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
         } else {
             ToastUtils.showToast(getActivity(), msg);
         }
-        return getAztecPlaceholderDrawableFromResID(R.drawable.ic_image_failed_grey_a_40_48dp);
-    }
-
-    public BitmapDrawable getAztecPlaceholderDrawableFromResID(@DrawableRes int drawableId) {
-        Drawable drawable = getResources().getDrawable(drawableId);
-        Bitmap bitmap;
-        if (drawable instanceof BitmapDrawable) {
-            bitmap = ((BitmapDrawable) drawable).getBitmap();
-            bitmap = ImageUtils.getScaledBitmapAtLongestSide(bitmap, maxImageWidthForVisualEditor);
-        } else if (drawable instanceof VectorDrawableCompat || drawable instanceof VectorDrawable) {
-            bitmap = Bitmap.createBitmap(maxImageWidthForVisualEditor, maxImageWidthForVisualEditor, Bitmap.Config.ARGB_8888);
-            Canvas canvas = new Canvas(bitmap);
-            drawable.setBounds(0, 0, canvas.getWidth(), canvas.getHeight());
-            drawable.draw(canvas);
-        } else {
-            throw new IllegalArgumentException("unsupported drawable type");
-        }
-        bitmap.setDensity(DisplayMetrics.DENSITY_DEFAULT);
-        return new BitmapDrawable(getResources(), bitmap);
+        return MediaUtils.getAztecPlaceholderDrawableFromResID(this.getActivity(), R.drawable.ic_image_failed_grey_a_40_48dp, maxImageWidthForVisualEditor);
     }
 
     @Override
@@ -2047,6 +2025,10 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
     public void setMaxImageWidth(int maxWidth) {
         this.maxImageWidthForVisualEditor = maxWidth;
         content.setMaxImagesWidth(maxWidth);
+    }
+
+    public int getMaxImageWidth() {
+        return maxImageWidthForVisualEditor;
     }
 
     public void setMinImageWidth(int minWidth) {
