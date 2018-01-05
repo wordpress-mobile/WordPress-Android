@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.res.Resources;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.CardView;
+import android.util.SparseArray;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -37,15 +38,13 @@ class ThemeBrowserAdapter extends BaseAdapter {
     private final boolean mIsWpCom;
 
     private final List<ThemeModel> mThemes = new ArrayList<>();
-    private final List<ThemeSectionHeader> mHeaders = new ArrayList<>();
+    private final SparseArray<ThemeSectionHeader> mHeaders = new SparseArray<>();
 
-    public class ThemeSectionHeader {
+    class ThemeSectionHeader {
         final String text;
-        final int position;
         final int count;
 
-        public ThemeSectionHeader(int position, @NonNull String text, int count) {
-            this.position = position;
+        ThemeSectionHeader(@NonNull String text, int count) {
             this.text = text;
             this.count = count;
         }
@@ -108,9 +107,11 @@ class ThemeBrowserAdapter extends BaseAdapter {
         mThemes.clear();
         mThemes.addAll(themes);
 
-        // create headers for .org and jetpack sites
+        // .org and jetpack sites have headers above the uploaded themes and wp.com themes
         if (!mIsWpCom) {
             mHeaders.clear();
+
+            // first count the themes
             int numUploadedThemes = 0;
             int numWpComThemes = 0;
             for (ThemeModel theme: themes) {
@@ -124,11 +125,13 @@ class ThemeBrowserAdapter extends BaseAdapter {
             for (int i = 0; i < themes.size(); i++) {
                 ThemeModel theme = themes.get(i);
                 if (i == 0 && !theme.isWpComTheme()) {
+                    // add uploaded themes header if this is the first theme and it's not wp.com
                     String text = mContext.getString(R.string.uploaded_themes_header);
-                    mHeaders.add(new ThemeSectionHeader(i, text, numUploadedThemes));
+                    mHeaders.put(i, new ThemeSectionHeader(text, numUploadedThemes));
                 } else if (theme.isWpComTheme()) {
+                    // add wp.com themes header if this is the first wp.com theme
                     String text = mContext.getString(R.string.wpcom_themes_header);
-                    mHeaders.add(new ThemeSectionHeader(i, text, numWpComThemes));
+                    mHeaders.put(i, new ThemeSectionHeader(text, numWpComThemes));
                     break;
                 }
             }
@@ -178,7 +181,7 @@ class ThemeBrowserAdapter extends BaseAdapter {
         configureImageButton(holder, themeId, isPremium, isCurrent);
         configureCardView(holder, isCurrent);
 
-        ThemeSectionHeader header = getSectionHeaderForPosition(position);
+        ThemeSectionHeader header = mHeaders.get(position);
         if (header != null) {
             holder.headerView.setVisibility(View.VISIBLE);
             holder.headerText.setText(header.text);
@@ -188,15 +191,6 @@ class ThemeBrowserAdapter extends BaseAdapter {
         }
 
         return convertView;
-    }
-
-    private ThemeSectionHeader getSectionHeaderForPosition(int position) {
-        for (ThemeSectionHeader header: mHeaders) {
-            if (header.position == position) {
-                return header;
-            }
-        }
-        return null;
     }
 
     @SuppressWarnings("deprecation")
