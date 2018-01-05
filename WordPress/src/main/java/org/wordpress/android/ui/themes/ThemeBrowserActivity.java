@@ -52,9 +52,7 @@ public class ThemeBrowserActivity extends AppCompatActivity implements ThemeBrow
     private static final long WP_COM_THEMES_SYNC_TIMEOUT = 1000 * 60 * 60 * 24 * 3;
 
     private static final String IS_IN_SEARCH_MODE = "is_in_search_mode";
-    private static final String ALERT_TAB = "alert";
 
-    private boolean mIsRunning;
     private ThemeBrowserFragment mThemeBrowserFragment;
     private ThemeSearchFragment mThemeSearchFragment;
     private ThemeModel mCurrentTheme;
@@ -106,15 +104,8 @@ public class ThemeBrowserActivity extends AppCompatActivity implements ThemeBrow
     protected void onResume() {
         super.onResume();
         showCorrectToolbar();
-        mIsRunning = true;
         ActivityId.trackLastActivity(ActivityId.THEMES);
         fetchCurrentTheme();
-    }
-
-    @Override
-    protected void onPause() {
-        super.onPause();
-        mIsRunning = false;
     }
 
     @Override

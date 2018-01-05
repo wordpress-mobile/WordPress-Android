@@ -27,7 +27,7 @@ public class ThemeSearchFragment extends ThemeBrowserFragment implements SearchV
         MenuItemCompat.OnActionExpandListener {
     public static final String TAG = ThemeSearchFragment.class.getName();
     private static final String BUNDLE_LAST_SEARCH = "BUNDLE_LAST_SEARCH";
-    public static final int SEARCH_VIEW_MAX_WIDTH = 10000;
+    private static final int SEARCH_VIEW_MAX_WIDTH = 10000;
 
     private List<ThemeModel> mSearchResults;
     private String mLastSearch = "";
