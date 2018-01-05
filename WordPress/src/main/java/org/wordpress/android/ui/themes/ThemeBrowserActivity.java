@@ -2,7 +2,6 @@ package org.wordpress.android.ui.themes;
 
 import android.app.AlertDialog;
 import android.app.FragmentManager;
-import android.app.FragmentTransaction;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
@@ -74,17 +73,9 @@ public class ThemeBrowserActivity extends AppCompatActivity implements ThemeBrow
 
         if (savedInstanceState == null) {
             mSite = (SiteModel) getIntent().getSerializableExtra(WordPress.SITE);
-            if (mSite != null) {
-                AnalyticsUtils.trackWithSiteDetails(Stat.THEMES_ACCESSED_THEMES_BROWSER, mSite);
-                mThemeBrowserFragment = ThemeBrowserFragment.newInstance(mSite);
-                mThemeSearchFragment = ThemeSearchFragment.newInstance(mSite);
-                addBrowserFragment();
-            }
         } else {
             mSite = (SiteModel) savedInstanceState.getSerializable(WordPress.SITE);
-            setIsInSearchMode(savedInstanceState.getBoolean(IS_IN_SEARCH_MODE));
         }
-
         if (mSite == null) {
             ToastUtils.showToast(this, R.string.blog_not_found, ToastUtils.Duration.SHORT);
             finish();
@@ -92,6 +83,15 @@ public class ThemeBrowserActivity extends AppCompatActivity implements ThemeBrow
         }
 
         setContentView(R.layout.theme_browser_activity);
+
+        if (savedInstanceState == null) {
+            AnalyticsUtils.trackWithSiteDetails(Stat.THEMES_ACCESSED_THEMES_BROWSER, mSite);
+            addBrowserFragment();
+        } else {
+            mThemeBrowserFragment = (ThemeBrowserFragment) getFragmentManager().findFragmentByTag(ThemeBrowserFragment.TAG);
+            mThemeSearchFragment = (ThemeSearchFragment) getFragmentManager().findFragmentByTag(ThemeSearchFragment.TAG);
+            setIsInSearchMode(savedInstanceState.getBoolean(IS_IN_SEARCH_MODE));
+        }
 
         // fetch most recent themes data
         if (!mIsInSearchMode) {
@@ -108,6 +108,7 @@ public class ThemeBrowserActivity extends AppCompatActivity implements ThemeBrow
         showCorrectToolbar();
         mIsRunning = true;
         ActivityId.trackLastActivity(ActivityId.THEMES);
+        fetchCurrentTheme();
     }
 
     @Override
@@ -189,7 +190,25 @@ public class ThemeBrowserActivity extends AppCompatActivity implements ThemeBrow
     public void onSearchClicked() {
         setIsInSearchMode(true);
         AnalyticsUtils.trackWithSiteDetails(Stat.THEMES_ACCESSED_SEARCH, mSite);
-        addSearchFragment();
+        showSearchFragment();
+    }
+
+    @Override
+    public void onSearchRequested(String searchTerm) {
+        searchThemes(searchTerm);
+    }
+
+    @Override
+    public void onSearchClosed() {
+        setIsInSearchMode(false);
+        showToolbar();
+        getFragmentManager().popBackStack();
+    }
+
+    @Override
+    public void onSwipeToRefresh() {
+        fetchInstalledThemesIfJetpackSite();
+        fetchWpComThemesIfSyncTimedOut(true);
     }
 
     @SuppressWarnings("unused")
@@ -302,36 +321,36 @@ public class ThemeBrowserActivity extends AppCompatActivity implements ThemeBrow
         }
     }
 
-    public void setIsInSearchMode(boolean isInSearchMode) {
+    private void setIsInSearchMode(boolean isInSearchMode) {
         mIsInSearchMode = isInSearchMode;
     }
 
-    public void searchThemes(String searchTerm) {
+    private void searchThemes(String searchTerm) {
         if (TextUtils.isEmpty(searchTerm)) {
             return;
         }
         // TODO: implement local theme search
     }
 
-    public void fetchCurrentTheme() {
+    private void fetchCurrentTheme() {
         mDispatcher.dispatch(ThemeActionBuilder.newFetchCurrentThemeAction(mSite));
     }
 
-    public void fetchWpComThemesIfSyncTimedOut(boolean force) {
+    private void fetchWpComThemesIfSyncTimedOut(boolean force) {
         long currentTime = System.currentTimeMillis();
         if (force || currentTime - AppPrefs.getLastWpComThemeSync() > WP_COM_THEMES_SYNC_TIMEOUT) {
             mDispatcher.dispatch(ThemeActionBuilder.newFetchWpComThemesAction());
         }
     }
 
-    public void fetchInstalledThemesIfJetpackSite() {
+    private void fetchInstalledThemesIfJetpackSite() {
         if (mSite.isJetpackConnected() && mSite.isUsingWpComRestApi() && !mIsFetchingInstalledThemes) {
             mDispatcher.dispatch(ThemeActionBuilder.newFetchInstalledThemesAction(mSite));
             mIsFetchingInstalledThemes = true;
         }
     }
 
-    public void activateTheme(String themeId) {
+    private void activateTheme(String themeId) {
         if (!mSite.isUsingWpComRestApi()) {
             AppLog.i(T.THEMES, "Theme activation requires a site using WP.com REST API. Aborting request.");
             return;
@@ -355,16 +374,8 @@ public class ThemeBrowserActivity extends AppCompatActivity implements ThemeBrow
         mDispatcher.dispatch(ThemeActionBuilder.newActivateThemeAction(new SiteThemePayload(mSite, theme)));
     }
 
-    protected void setThemeBrowserFragment(ThemeBrowserFragment themeBrowserFragment) {
-        mThemeBrowserFragment = themeBrowserFragment;
-    }
-
-    protected void setThemeSearchFragment(ThemeSearchFragment themeSearchFragment) {
-        mThemeSearchFragment = themeSearchFragment;
-    }
-
-    protected void showToolbar() {
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+    private void showToolbar() {
+        Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
         ActionBar actionBar = getSupportActionBar();
@@ -386,7 +397,7 @@ public class ThemeBrowserActivity extends AppCompatActivity implements ThemeBrow
     }
 
     private void showSearchToolbar() {
-        Toolbar toolbarSearch = (Toolbar) findViewById(R.id.toolbar_search);
+        Toolbar toolbarSearch = findViewById(R.id.toolbar_search);
         setSupportActionBar(toolbarSearch);
         toolbarSearch.setTitle("");
         findViewById(R.id.toolbar).setVisibility(View.GONE);
@@ -399,24 +410,22 @@ public class ThemeBrowserActivity extends AppCompatActivity implements ThemeBrow
     }
 
     private void addBrowserFragment() {
-        if (mThemeBrowserFragment == null) {
-            mThemeBrowserFragment = new ThemeBrowserFragment();
-        }
+        mThemeBrowserFragment = ThemeBrowserFragment.newInstance(mSite);
         showToolbar();
-        FragmentTransaction fragmentTransaction = getFragmentManager().beginTransaction();
-        fragmentTransaction.add(R.id.theme_browser_container, mThemeBrowserFragment);
-        fragmentTransaction.commit();
+        getFragmentManager().beginTransaction()
+                .add(R.id.theme_browser_container, mThemeBrowserFragment, ThemeBrowserFragment.TAG)
+                .commit();
     }
 
-    private void addSearchFragment() {
+    private void showSearchFragment() {
         if (mThemeSearchFragment == null) {
             mThemeSearchFragment = ThemeSearchFragment.newInstance(mSite);
         }
         showSearchToolbar();
-        FragmentTransaction fragmentTransaction = getFragmentManager().beginTransaction();
-        fragmentTransaction.replace(R.id.theme_browser_container, mThemeSearchFragment);
-        fragmentTransaction.addToBackStack(null);
-        fragmentTransaction.commit();
+        getFragmentManager().beginTransaction()
+                .replace(R.id.theme_browser_container, mThemeSearchFragment, ThemeSearchFragment.TAG)
+                .addToBackStack(null)
+                .commit();
     }
 
     private void showAlertDialogOnNewSettingNewTheme(ThemeModel newTheme) {
