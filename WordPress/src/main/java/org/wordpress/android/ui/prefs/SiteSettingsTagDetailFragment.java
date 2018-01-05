@@ -88,6 +88,7 @@ public class SiteSettingsTagDetailFragment extends Fragment {
 
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        menu.clear();
         inflater.inflate(R.menu.tag_detail, menu);
         super.onCreateOptionsMenu(menu, inflater);
     }
@@ -96,7 +97,6 @@ public class SiteSettingsTagDetailFragment extends Fragment {
     public void onPrepareOptionsMenu(Menu menu) {
         super.onPrepareOptionsMenu(menu);
         menu.findItem(R.id.menu_trash).setVisible(!mIsNewTerm);
-        menu.findItem(R.id.menu_search).setVisible(false);
     }
 
     @Override
