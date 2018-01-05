@@ -300,6 +300,10 @@ public class TagListActivity extends AppCompatActivity
         mFabView.setVisibility(View.GONE);
     }
 
+    private boolean isDetailFragmentShowing() {
+        return getDetailFragment() != null;
+    }
+
     private void hideDetailFragment() {
         TagDetailFragment fragment = getDetailFragment();
         if (fragment != null) {
@@ -458,8 +462,10 @@ public class TagListActivity extends AppCompatActivity
                 view.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
-                        int position = getAdapterPosition();
-                        showDetailFragment(mFilteredTags.get(position));
+                        if (!isDetailFragmentShowing()) {
+                            int position = getAdapterPosition();
+                            showDetailFragment(mFilteredTags.get(position));
+                        }
                     }
                 });
             }
