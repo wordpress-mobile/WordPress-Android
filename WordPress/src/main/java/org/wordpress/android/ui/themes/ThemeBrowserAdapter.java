@@ -107,11 +107,11 @@ class ThemeBrowserAdapter extends BaseAdapter {
         mThemes.clear();
         mThemes.addAll(themes);
 
-        // .org and jetpack sites have headers above the uploaded themes and wp.com themes
+        // jetpack sites have headers above the uploaded themes and wp.com themes
         if (!mIsWpCom) {
             mHeaders.clear();
 
-            // first count the themes
+            // first count the two types of themes
             int numUploadedThemes = 0;
             int numWpComThemes = 0;
             for (ThemeModel theme: themes) {
@@ -122,6 +122,7 @@ class ThemeBrowserAdapter extends BaseAdapter {
                 }
             }
 
+            // then create the headers
             for (int i = 0; i < themes.size(); i++) {
                 ThemeModel theme = themes.get(i);
                 if (i == 0 && !theme.isWpComTheme()) {
@@ -181,6 +182,7 @@ class ThemeBrowserAdapter extends BaseAdapter {
         configureImageButton(holder, themeId, isPremium, isCurrent);
         configureCardView(holder, isCurrent);
 
+        // show a section header if one exists at this position
         ThemeSectionHeader header = mHeaders.get(position);
         if (header != null) {
             holder.headerView.setVisibility(View.VISIBLE);
