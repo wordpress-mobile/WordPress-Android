@@ -126,6 +126,14 @@ public class ThemeSearchFragment extends ThemeBrowserFragment implements SearchV
         return filter(themes);
     }
 
+    @Override
+    protected void setEmptyViewVisible(boolean visible) {
+        super.setEmptyViewVisible(visible);
+        if (!TextUtils.isEmpty(mLastSearch)) {
+            mEmptyTextView.setText(R.string.theme_no_search_result_found);
+        }
+    }
+
     private void search(String searchTerm) {
         mLastSearch = searchTerm;
         refreshView();

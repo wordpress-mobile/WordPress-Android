@@ -75,7 +75,7 @@ public class ThemeBrowserFragment extends Fragment implements RecyclerListener {
     private TextView mCurrentThemeTextView;
     private ThemeBrowserAdapter mAdapter;
     private boolean mShouldRefreshOnStart;
-    private TextView mEmptyTextView;
+    protected TextView mEmptyTextView;
     private SiteModel mSite;
 
     ThemeBrowserFragmentCallback mCallback;
@@ -268,7 +268,7 @@ public class ThemeBrowserFragment extends Fragment implements RecyclerListener {
         });
     }
 
-    private void setEmptyViewVisible(boolean visible) {
+    protected void setEmptyViewVisible(boolean visible) {
         if (!isAdded() || getView() == null) {
             return;
         }
