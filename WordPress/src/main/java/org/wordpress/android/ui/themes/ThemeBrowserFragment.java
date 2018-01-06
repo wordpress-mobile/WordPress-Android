@@ -3,9 +3,6 @@ package org.wordpress.android.ui.themes;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.Fragment;
-import android.database.Cursor;
-import android.database.MatrixCursor;
-import android.database.MergeCursor;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
@@ -36,6 +33,7 @@ import org.wordpress.android.util.widgets.CustomSwipeRefreshLayout;
 import org.wordpress.android.widgets.HeaderGridView;
 import org.wordpress.android.widgets.WPNetworkImageView;
 
+import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
@@ -132,14 +130,9 @@ public class ThemeBrowserFragment extends Fragment implements RecyclerListener {
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
-        Cursor cursor = fetchThemes();
-        if (cursor == null) {
-            return;
-        }
-
-        mAdapter = new ThemeBrowserAdapter(getActivity(), cursor, false, mCallback);
-        setEmptyViewVisible(mAdapter.getCount() == 0);
-        mGridView.setAdapter(mAdapter);
+        getAdapter().setThemeList(fetchThemes());
+        setEmptyViewVisible(getAdapter().getCount() == 0);
+        mGridView.setAdapter(getAdapter());
     }
 
     @Override
@@ -287,37 +280,36 @@ public class ThemeBrowserFragment extends Fragment implements RecyclerListener {
         }
     }
 
-    protected Cursor fetchThemes() {
+    protected List<ThemeModel> fetchThemes() {
         if (mSite == null) {
-            return null;
+            return new ArrayList<>();
         }
 
         if (mSite.isWPCom()) {
-            return getSortedWpComThemesCursor();
+            return getSortedWpComThemes();
         }
 
         // this is a Jetpack site, show two sections with headers
-        return getSortedJetpackCursor();
+        return getSortedJetpackThemes();
+    }
+
+    private ThemeBrowserAdapter getAdapter() {
+        if (mAdapter == null) {
+            mAdapter = new ThemeBrowserAdapter(getActivity(), mSite.isWPCom(), mCallback);
+        }
+        return mAdapter;
     }
 
     protected void refreshView() {
-        Cursor cursor = fetchThemes();
-        if (cursor == null) {
-            return;
-        }
-        if (mAdapter == null) {
-            mAdapter = new ThemeBrowserAdapter(getActivity(), cursor, false, mCallback);
-        }
         if (mNoResultText.isShown()) {
             mNoResultText.setVisibility(View.GONE);
         }
-        mAdapter.changeCursor(cursor);
-        mAdapter.notifyDataSetChanged();
-        setEmptyViewVisible(mAdapter.getCount() == 0);
+        getAdapter().setThemeList(fetchThemes());
+        setEmptyViewVisible(getAdapter().getCount() == 0);
     }
 
-    private Cursor getSortedWpComThemesCursor() {
-        final List<ThemeModel> wpComThemes = mThemeStore.getWpComThemes();
+    private List<ThemeModel> getSortedWpComThemes() {
+        List<ThemeModel> wpComThemes = mThemeStore.getWpComThemes();
 
         // first thing to do is attempt to find the active theme and move it to the front of the list
         moveActiveThemeToFront(wpComThemes);
@@ -327,13 +319,12 @@ public class ThemeBrowserFragment extends Fragment implements RecyclerListener {
             removeNonActivePremiumThemes(wpComThemes);
         }
 
-        // lastly convert the list into a Cursor for the adapter
-        return createCursorForThemesList(wpComThemes);
+        return wpComThemes;
     }
 
-    private Cursor getSortedJetpackCursor() {
-        final List<ThemeModel> wpComThemes = mThemeStore.getWpComThemes();
-        final List<ThemeModel> uploadedThemes = mThemeStore.getThemesForSite(mSite);
+    private List<ThemeModel> getSortedJetpackThemes() {
+        List<ThemeModel> wpComThemes = mThemeStore.getWpComThemes();
+        List<ThemeModel> uploadedThemes = mThemeStore.getThemesForSite(mSite);
 
         // put the active theme at the top of the uploaded themes list
         moveActiveThemeToFront(uploadedThemes);
@@ -344,22 +335,10 @@ public class ThemeBrowserFragment extends Fragment implements RecyclerListener {
         // remove uploaded themes from WP.com themes list (including active theme)
         removeDuplicateThemes(wpComThemes, uploadedThemes);
 
-        // 1. Uploaded header
-        // 2. Uploaded themes
-        // 3. WP.com header
-        // 4. WP.com themes
-        final Cursor[] cursors = new Cursor[4];
-        final Cursor uploadedThemesCursor = createCursorForThemesList(uploadedThemes);
-        final Cursor wpComThemesCursor = createCursorForThemesList(wpComThemes);
-
-        cursors[0] = ThemeBrowserAdapter.createHeaderCursor(
-                getString(R.string.uploaded_themes_header), uploadedThemesCursor.getCount());
-        cursors[1] = uploadedThemesCursor;
-        cursors[2] = ThemeBrowserAdapter.createHeaderCursor(
-                getString(R.string.wpcom_themes_header), wpComThemesCursor.getCount());
-        cursors[3] = wpComThemesCursor;
-
-        return new MergeCursor(cursors);
+        List<ThemeModel> allThemes = new ArrayList<>();
+        allThemes.addAll(uploadedThemes);
+        allThemes.addAll(wpComThemes);
+        return allThemes;
     }
 
     protected void moveActiveThemeToFront(final List<ThemeModel> themes) {
@@ -423,13 +402,5 @@ public class ThemeBrowserFragment extends Fragment implements RecyclerListener {
                 || planId == PlansConstants.BUSINESS_PLAN_ID
                 || planId == PlansConstants.JETPACK_PREMIUM_PLAN_ID
                 || planId == PlansConstants.JETPACK_BUSINESS_PLAN_ID;
-    }
-
-    protected Cursor createCursorForThemesList(List<ThemeModel> themes) {
-        final MatrixCursor cursor = new MatrixCursor(ThemeBrowserAdapter.THEME_COLUMNS);
-        for (ThemeModel theme : themes) {
-            cursor.addRow(ThemeBrowserAdapter.createThemeCursorRow(theme));
-        }
-        return cursor;
     }
 }
