@@ -92,7 +92,7 @@ public class ThemeSearchFragment extends ThemeBrowserFragment implements SearchV
 
     @Override
     public boolean onQueryTextChange(String newText) {
-        if (!mLastSearch.equals(newText) && !newText.equals("")) {
+        if (!mLastSearch.equals(newText)) {
             search(newText);
         }
         return true;
