@@ -63,7 +63,6 @@ public class ThemeBrowserFragment extends Fragment implements RecyclerListener {
         void onDetailsSelected(String themeId);
         void onSupportSelected(String themeId);
         void onSearchClicked();
-        void onSearchRequested(String searchTerm);
         void onSearchClosed();
         void onSwipeToRefresh();
     }

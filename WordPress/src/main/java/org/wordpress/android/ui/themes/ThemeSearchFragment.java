@@ -12,11 +12,6 @@ import android.view.View;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.fluxc.model.SiteModel;
-import org.wordpress.android.fluxc.model.ThemeModel;
-import org.wordpress.android.util.NetworkUtils;
-
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * A fragment for display the results of a theme search
@@ -27,7 +22,6 @@ public class ThemeSearchFragment extends ThemeBrowserFragment implements SearchV
     private static final String BUNDLE_LAST_SEARCH = "BUNDLE_LAST_SEARCH";
     private static final int SEARCH_VIEW_MAX_WIDTH = 10000;
 
-    private List<ThemeModel> mSearchResults;
     private String mLastSearch = "";
     private SearchView mSearchView;
     private MenuItem mSearchMenuItem;
@@ -82,7 +76,6 @@ public class ThemeSearchFragment extends ThemeBrowserFragment implements SearchV
     @Override
     public boolean onQueryTextSubmit(String query) {
         if (!mLastSearch.equals(query)) {
-            mLastSearch = query;
             search(query);
         }
         if (mSearchView != null) {
@@ -94,7 +87,6 @@ public class ThemeSearchFragment extends ThemeBrowserFragment implements SearchV
     @Override
     public boolean onQueryTextChange(String newText) {
         if (!mLastSearch.equals(newText) && !newText.equals("")) {
-            mLastSearch = newText;
             search(newText);
         }
         return true;
@@ -111,26 +103,6 @@ public class ThemeSearchFragment extends ThemeBrowserFragment implements SearchV
     }
 
     @Override
-    protected List<ThemeModel> fetchThemes() {
-        if (mSearchResults == null) {
-            return mThemeStore.getWpComThemes();
-        }
-
-        // create a copy of the search results list to filter without changing results
-        List<ThemeModel> themes = new ArrayList<>(mSearchResults);
-
-        // move active theme to the top of the list if it's in the search results
-        moveActiveThemeToFront(themes);
-
-        // remove premium themes if plan doesn't support it
-        if (!shouldShowPremiumThemes()) {
-            removeNonActivePremiumThemes(themes);
-        }
-
-        return themes;
-    }
-
-    @Override
     protected void configureSwipeToRefresh(View view) {
         super.configureSwipeToRefresh(view);
         mSwipeToRefreshHelper.setRefreshing(false);
@@ -142,18 +114,8 @@ public class ThemeSearchFragment extends ThemeBrowserFragment implements SearchV
         // No header on Search
     }
 
-    public void setSearchResults(List<ThemeModel> results) {
-        mSearchResults = results;
-        refreshView();
-    }
-
     private void search(String searchTerm) {
         mLastSearch = searchTerm;
-        if (NetworkUtils.isNetworkAvailable(getActivity())) {
-            mCallback.onSearchRequested(searchTerm);
-        } else {
-            refreshView();
-        }
     }
 
     private void configureSearchView() {

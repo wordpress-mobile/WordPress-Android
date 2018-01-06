@@ -184,11 +184,6 @@ public class ThemeBrowserActivity extends AppCompatActivity implements ThemeBrow
     }
 
     @Override
-    public void onSearchRequested(String searchTerm) {
-        searchThemes(searchTerm);
-    }
-
-    @Override
     public void onSearchClosed() {
         setIsInSearchMode(false);
         showToolbar();
@@ -313,13 +308,6 @@ public class ThemeBrowserActivity extends AppCompatActivity implements ThemeBrow
 
     private void setIsInSearchMode(boolean isInSearchMode) {
         mIsInSearchMode = isInSearchMode;
-    }
-
-    private void searchThemes(String searchTerm) {
-        if (TextUtils.isEmpty(searchTerm)) {
-            return;
-        }
-        // TODO: implement local theme search
     }
 
     private void fetchCurrentTheme() {
