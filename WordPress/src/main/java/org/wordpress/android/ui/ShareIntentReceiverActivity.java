@@ -249,7 +249,9 @@ public class ShareIntentReceiverActivity extends AppCompatActivity implements Sh
             String mimeType = getContentResolver().getType(uri);
             boolean isVideo = mimeType != null && mimeType.startsWith("video");
             Map<String, Object> properties = AnalyticsUtils.getMediaProperties(this, isVideo, uri, null);
-            AnalyticsUtils.trackWithSiteDetails(AnalyticsTracker.Stat.MEDIA_LIBRARY_ADDED_PHOTO, selectedSite, properties);
+
+            AnalyticsTracker.Stat mediaTypeTrack = isVideo ? AnalyticsTracker.Stat.MEDIA_LIBRARY_ADDED_VIDEO : AnalyticsTracker.Stat.MEDIA_LIBRARY_ADDED_PHOTO;
+            AnalyticsUtils.trackWithSiteDetails(mediaTypeTrack, selectedSite, properties);
         }
     }
 
