@@ -14,7 +14,6 @@ import org.wordpress.android.WordPress;
 import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.model.ThemeModel;
 import org.wordpress.android.util.NetworkUtils;
-import org.wordpress.android.util.ToastUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -33,8 +32,6 @@ public class ThemeSearchFragment extends ThemeBrowserFragment implements SearchV
     private SearchView mSearchView;
     private MenuItem mSearchMenuItem;
 
-    private SiteModel mSite;
-
     public static ThemeSearchFragment newInstance(SiteModel site) {
         ThemeSearchFragment fragment = new ThemeSearchFragment();
         Bundle bundle = new Bundle();
@@ -47,12 +44,6 @@ public class ThemeSearchFragment extends ThemeBrowserFragment implements SearchV
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
-
-        mSite = (SiteModel) getArguments().getSerializable(WordPress.SITE);
-        if (mSite == null) {
-            ToastUtils.showToast(getActivity(), R.string.blog_not_found, ToastUtils.Duration.SHORT);
-            getActivity().finish();
-        }
 
         if (savedInstanceState != null) {
             mLastSearch = savedInstanceState.getString(BUNDLE_LAST_SEARCH);
