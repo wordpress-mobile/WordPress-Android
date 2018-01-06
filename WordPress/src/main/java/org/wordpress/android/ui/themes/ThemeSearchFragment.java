@@ -1,8 +1,10 @@
 package org.wordpress.android.ui.themes;
 
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v4.view.MenuItemCompat;
 import android.support.v7.widget.SearchView;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -12,6 +14,10 @@ import android.view.View;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.fluxc.model.SiteModel;
+import org.wordpress.android.fluxc.model.ThemeModel;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * A fragment for display the results of a theme search
@@ -114,8 +120,15 @@ public class ThemeSearchFragment extends ThemeBrowserFragment implements SearchV
         // No header on Search
     }
 
+    @Override
+    protected List<ThemeModel> fetchThemes() {
+        List<ThemeModel> themes = super.fetchThemes();
+        return filter(themes);
+    }
+
     private void search(String searchTerm) {
         mLastSearch = searchTerm;
+        refreshView();
     }
 
     private void configureSearchView() {
@@ -123,5 +136,18 @@ public class ThemeSearchFragment extends ThemeBrowserFragment implements SearchV
         mSearchView.setOnQueryTextListener(this);
         mSearchView.setQuery(mLastSearch, true);
         mSearchView.setMaxWidth(SEARCH_VIEW_MAX_WIDTH);
+    }
+
+    private List<ThemeModel> filter(@NonNull List<ThemeModel> themes) {
+        if (TextUtils.isEmpty(mLastSearch)) {
+            return themes;
+        }
+        List<ThemeModel> filteredThemes = new ArrayList<>();
+        for (ThemeModel theme : themes) {
+            if (theme.getName().toLowerCase().contains(mLastSearch.toLowerCase())) {
+                filteredThemes.add(theme);
+            }
+        }
+        return filteredThemes;
     }
 }
