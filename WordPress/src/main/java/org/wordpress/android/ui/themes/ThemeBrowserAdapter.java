@@ -103,7 +103,7 @@ class ThemeBrowserAdapter extends BaseAdapter {
         return position;
     }
 
-    public void setThemeList(@NonNull List<ThemeModel> themes) {
+    void setThemeList(@NonNull List<ThemeModel> themes) {
         mThemes.clear();
         mThemes.addAll(themes);
 
@@ -187,7 +187,7 @@ class ThemeBrowserAdapter extends BaseAdapter {
         if (header != null) {
             holder.headerView.setVisibility(View.VISIBLE);
             holder.headerText.setText(header.text);
-            holder.headerCount.setText(Integer.toString(header.count));
+            holder.headerCount.setText(String.valueOf(header.count));
         } else {
             holder.headerView.setVisibility(View.GONE);
         }
