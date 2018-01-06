@@ -81,6 +81,8 @@ import org.wordpress.android.ui.prefs.MyProfileFragment;
 import org.wordpress.android.ui.prefs.ReleaseNotesActivity;
 import org.wordpress.android.ui.prefs.SiteSettingsFragment;
 import org.wordpress.android.ui.prefs.SiteSettingsInterface;
+import org.wordpress.android.ui.prefs.SiteSettingsTagDetailFragment;
+import org.wordpress.android.ui.prefs.SiteSettingsTagListActivity;
 import org.wordpress.android.ui.prefs.notifications.NotificationsSettingsFragment;
 import org.wordpress.android.ui.publicize.PublicizeButtonPrefsFragment;
 import org.wordpress.android.ui.publicize.PublicizeDetailFragment;
@@ -200,6 +202,9 @@ public interface AppComponent {
     void inject(MediaPreviewFragment object);
     void inject(MediaSettingsActivity object);
     void inject(PhotoPickerActivity object);
+
+    void inject(SiteSettingsTagListActivity object);
+    void inject(SiteSettingsTagDetailFragment object);
 
     void inject(PublicizeListActivity object);
     void inject(PublicizeWebViewFragment object);

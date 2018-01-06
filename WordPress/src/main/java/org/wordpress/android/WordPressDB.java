@@ -21,7 +21,7 @@ import java.io.InputStream;
 import java.io.OutputStream;
 
 public class WordPressDB {
-    private static final int DATABASE_VERSION = 62;
+    private static final int DATABASE_VERSION = 63;
 
     // Warning if you rename DATABASE_NAME, that could break previous App backups (see: xml/backup_scheme.xml)
     private static final String DATABASE_NAME = "wordpress";
@@ -209,6 +209,11 @@ public class WordPressDB {
                 // add timezone and posts per page site setting as part of #betterjetpackxp
                 db.execSQL(SiteSettingsModel.ADD_TIMEZONE);
                 db.execSQL(SiteSettingsModel.ADD_POSTS_PER_PAGE);
+                currentVersion++;
+            case 62:
+                // add AMP site setting as part of #betterjetpackxp
+                db.execSQL(SiteSettingsModel.ADD_AMP_SUPPORTED);
+                db.execSQL(SiteSettingsModel.ADD_AMP_ENABLED);
                 currentVersion++;
         }
         db.setVersion(DATABASE_VERSION);

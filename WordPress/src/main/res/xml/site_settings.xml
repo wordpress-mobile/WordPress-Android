@@ -101,6 +101,12 @@
             android:title="@string/site_settings_default_category_title"
             app:longClickHint="@string/site_settings_category_hint" />
 
+        <org.wordpress.android.ui.prefs.WPPreference
+            android:id="@+id/pref_tags"
+            android:key="@string/pref_key_site_tags"
+            android:title="@string/site_settings_tags_title"
+            app:longClickHint="@string/site_settings_tags_hint" />
+
         <org.wordpress.android.ui.prefs.DetailListPreference
             android:id="@+id/pref_default_format"
             android:entries="@array/post_format_display_names"
@@ -137,6 +143,20 @@
             android:defaultValue="10"
             android:key="@string/pref_key_site_posts_per_page"
             android:title="@string/site_settings_posts_per_page_title" />
+
+    </PreferenceCategory>
+
+    <!-- Traffic settings -->
+    <PreferenceCategory
+        android:id="@+id/pref_traffic"
+        android:key="@string/pref_key_site_traffic"
+        android:title="@string/site_settings_traffic_header">
+
+        <org.wordpress.android.ui.prefs.WPSwitchPreference
+            android:id="@+id/pref_toggle_amp"
+            android:key="@string/pref_key_site_amp"
+            android:summary="@string/site_settings_amp_summary"
+            android:title="@string/site_settings_amp_title" />
 
     </PreferenceCategory>
 
