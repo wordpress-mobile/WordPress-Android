@@ -151,8 +151,10 @@ public class ThemeSearchFragment extends ThemeBrowserFragment implements SearchV
             return themes;
         }
         List<ThemeModel> filteredThemes = new ArrayList<>();
+        String lcSearch = mLastSearch.toLowerCase();
         for (ThemeModel theme : themes) {
-            if (theme.getName().toLowerCase().contains(mLastSearch.toLowerCase())) {
+            if (theme.getName().toLowerCase().contains(lcSearch)
+                    || (theme.getDescription() != null && theme.getDescription().toLowerCase().contains(lcSearch))) {
                 filteredThemes.add(theme);
             }
         }
