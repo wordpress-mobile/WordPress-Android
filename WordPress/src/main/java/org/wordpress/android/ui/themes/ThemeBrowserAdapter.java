@@ -332,8 +332,7 @@ class ThemeBrowserAdapter extends BaseAdapter implements Filterable {
                 } else {
                     String lcConstraint = constraint.toString().toLowerCase();
                     for (ThemeModel theme : mAllThemes) {
-                        if (theme.getName().toLowerCase().contains(lcConstraint)
-                                || (theme.getDescription() != null && theme.getDescription().toLowerCase().contains(lcConstraint))) {
+                        if (theme.getName().toLowerCase().contains(lcConstraint)) {
                             filtered.add(theme);
                         }
                     }

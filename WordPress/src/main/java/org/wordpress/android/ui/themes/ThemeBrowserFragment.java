@@ -4,7 +4,6 @@ import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.Fragment;
 import android.os.Bundle;
-import android.support.v4.view.MenuItemCompat;
 import android.support.v7.widget.SearchView;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
@@ -51,7 +50,7 @@ import static org.wordpress.android.util.WPSwipeToRefreshHelper.buildSwipeToRefr
  * A fragment display the themes on a grid view.
  */
 public class ThemeBrowserFragment extends Fragment
-        implements RecyclerListener, SearchView.OnQueryTextListener, MenuItemCompat.OnActionExpandListener {
+        implements RecyclerListener, SearchView.OnQueryTextListener {
 
     public static final String TAG = ThemeBrowserFragment.class.getName();
     private static final String KEY_LAST_SEARCH = "last_search";
@@ -73,7 +72,7 @@ public class ThemeBrowserFragment extends Fragment
         void onSwipeToRefresh();
     }
 
-    protected SwipeToRefreshHelper mSwipeToRefreshHelper;
+    private SwipeToRefreshHelper mSwipeToRefreshHelper;
     private String mCurrentThemeId;
     private String mLastSearch;
 
@@ -84,13 +83,12 @@ public class ThemeBrowserFragment extends Fragment
 
     private ThemeBrowserAdapter mAdapter;
     private boolean mShouldRefreshOnStart;
-    protected TextView mEmptyTextView;
+    private TextView mEmptyTextView;
     private SiteModel mSite;
 
     private SearchView mSearchView;
-    private MenuItem mSearchMenuItem;
 
-    ThemeBrowserFragmentCallback mCallback;
+    private ThemeBrowserFragmentCallback mCallback;
 
     @Inject ThemeStore mThemeStore;
 
@@ -125,6 +123,9 @@ public class ThemeBrowserFragment extends Fragment
     @Override
     public void onDetach() {
         super.onDetach();
+        if (mSearchView != null) {
+            mSearchView.setOnQueryTextListener(null);
+        }
         mCallback = null;
     }
 
@@ -132,7 +133,6 @@ public class ThemeBrowserFragment extends Fragment
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.theme_browser_fragment, container, false);
 
-        setRetainInstance(true);
         mNoResultText = view.findViewById(R.id.theme_no_search_result_text);
         mEmptyTextView = view.findViewById(R.id.text_empty);
         mEmptyView = view.findViewById(R.id.empty_view);
@@ -167,13 +167,12 @@ public class ThemeBrowserFragment extends Fragment
     public void onPrepareOptionsMenu(Menu menu) {
         super.onPrepareOptionsMenu(menu);
 
-        mSearchMenuItem = menu.findItem(R.id.menu_search);
-        MenuItemCompat.setOnActionExpandListener(mSearchMenuItem, this);
-
-        mSearchView = (SearchView) MenuItemCompat.getActionView(mSearchMenuItem);
+        MenuItem searchMenuItem = menu.findItem(R.id.menu_search);
+        mSearchView = (SearchView) searchMenuItem.getActionView();
         mSearchView.setOnQueryTextListener(this);
+
         if (!TextUtils.isEmpty(mLastSearch)) {
-            mSearchMenuItem.expandActionView();
+            searchMenuItem.expandActionView();
             mSearchView.setQuery(mLastSearch, true);
         }
     }
@@ -188,20 +187,8 @@ public class ThemeBrowserFragment extends Fragment
     }
 
     @Override
-    public boolean onMenuItemActionExpand(MenuItem item) {
-        return item.getItemId() == R.id.menu_search;
-    }
-
-    @Override
-    public boolean onMenuItemActionCollapse(MenuItem item) {
-        return true;
-    }
-
-    @Override
     public boolean onQueryTextSubmit(String query) {
-        if (!StringUtils.equals(query, mLastSearch)) {
-            search(query);
-        }
+        search(query);
         if (mSearchView != null) {
             mSearchView.clearFocus();
         }
@@ -210,9 +197,7 @@ public class ThemeBrowserFragment extends Fragment
 
     @Override
     public boolean onQueryTextChange(String newText) {
-        if (!StringUtils.equals(newText, mLastSearch)) {
-            search(newText);
-        }
+        search(newText);
         return true;
     }
 
@@ -253,11 +238,11 @@ public class ThemeBrowserFragment extends Fragment
         refreshView();
     }
 
-    protected void addHeaderViews(LayoutInflater inflater) {
+    private void addHeaderViews(LayoutInflater inflater) {
         addMainHeader(inflater);
     }
 
-    protected void configureSwipeToRefresh(View view) {
+    private void configureSwipeToRefresh(View view) {
         mSwipeToRefreshHelper = buildSwipeToRefreshHelper(
                 (CustomSwipeRefreshLayout) view.findViewById(R.id.ptr_layout),
                 new RefreshListener() {
@@ -335,7 +320,7 @@ public class ThemeBrowserFragment extends Fragment
         }
     }
 
-    protected void setEmptyViewVisible(boolean visible) {
+    private void setEmptyViewVisible(boolean visible) {
         if (!isAdded() || getView() == null) {
             return;
         }
@@ -346,7 +331,7 @@ public class ThemeBrowserFragment extends Fragment
         }
     }
 
-    protected List<ThemeModel> fetchThemes() {
+    private List<ThemeModel> fetchThemes() {
         if (mSite == null) {
             return new ArrayList<>();
         }
@@ -407,7 +392,7 @@ public class ThemeBrowserFragment extends Fragment
         return allThemes;
     }
 
-    protected void moveActiveThemeToFront(final List<ThemeModel> themes) {
+    private void moveActiveThemeToFront(final List<ThemeModel> themes) {
         if (themes == null || themes.isEmpty() || TextUtils.isEmpty(mCurrentThemeId)) {
             return;
         }
@@ -428,7 +413,7 @@ public class ThemeBrowserFragment extends Fragment
         }
     }
 
-    protected void removeNonActivePremiumThemes(final List<ThemeModel> themes) {
+    private void removeNonActivePremiumThemes(final List<ThemeModel> themes) {
         if (themes == null || themes.isEmpty()) {
             return;
         }
@@ -459,7 +444,7 @@ public class ThemeBrowserFragment extends Fragment
         }
     }
 
-    protected boolean shouldShowPremiumThemes() {
+    private boolean shouldShowPremiumThemes() {
         if (mSite == null) {
             return false;
         }
