@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.res.Resources;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.CardView;
+import android.text.TextUtils;
 import android.util.SparseArray;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -11,6 +12,8 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.Filter;
+import android.widget.Filterable;
 import android.widget.FrameLayout;
 import android.widget.ImageButton;
 import android.widget.PopupMenu;
@@ -27,7 +30,7 @@ import org.wordpress.android.widgets.WPNetworkImageView;
 import java.util.ArrayList;
 import java.util.List;
 
-class ThemeBrowserAdapter extends BaseAdapter {
+class ThemeBrowserAdapter extends BaseAdapter implements Filterable {
     private static final String THEME_IMAGE_PARAMETER = "?w=";
 
     private final Context mContext;
@@ -35,9 +38,11 @@ class ThemeBrowserAdapter extends BaseAdapter {
     private final ThemeBrowserFragmentCallback mCallback;
 
     private int mViewWidth;
+    private String mQuery;
     private final boolean mIsWpCom;
 
-    private final List<ThemeModel> mThemes = new ArrayList<>();
+    private final List<ThemeModel> mAllThemes = new ArrayList<>();
+    private final List<ThemeModel> mFilteredThemes = new ArrayList<>();
     private final SparseArray<ThemeSectionHeader> mHeaders = new SparseArray<>();
 
     class ThemeSectionHeader {
@@ -90,12 +95,12 @@ class ThemeBrowserAdapter extends BaseAdapter {
 
     @Override
     public int getCount() {
-        return mThemes.size();
+        return mFilteredThemes.size();
     }
 
     @Override
     public Object getItem(int position) {
-        return mThemes.get(position);
+        return mFilteredThemes.get(position);
     }
 
     @Override
@@ -104,41 +109,54 @@ class ThemeBrowserAdapter extends BaseAdapter {
     }
 
     void setThemeList(@NonNull List<ThemeModel> themes) {
-        mThemes.clear();
-        mThemes.addAll(themes);
+        mAllThemes.clear();
+        mAllThemes.addAll(themes);
 
-        // jetpack sites have headers above the uploaded themes and wp.com themes
-        if (!mIsWpCom) {
-            mHeaders.clear();
+        mFilteredThemes.clear();
+        mFilteredThemes.addAll(themes);
 
-            // first count the two types of themes
-            int numUploadedThemes = 0;
-            int numWpComThemes = 0;
-            for (ThemeModel theme: themes) {
-                if (theme.isWpComTheme()) {
-                    numWpComThemes++;
-                } else {
-                    numUploadedThemes++;
-                }
-            }
+        if (!TextUtils.isEmpty(mQuery)) {
+            getFilter().filter(mQuery);
+        } else {
+            updateHeaders();
+            notifyDataSetChanged();
+        }
+    }
 
-            // then create the headers
-            for (int i = 0; i < themes.size(); i++) {
-                ThemeModel theme = themes.get(i);
-                if (i == 0 && !theme.isWpComTheme()) {
-                    // add uploaded themes header if this is the first theme and it's not wp.com
-                    String text = mContext.getString(R.string.uploaded_themes_header);
-                    mHeaders.put(i, new ThemeSectionHeader(text, numUploadedThemes));
-                } else if (theme.isWpComTheme()) {
-                    // add wp.com themes header if this is the first wp.com theme
-                    String text = mContext.getString(R.string.wpcom_themes_header);
-                    mHeaders.put(i, new ThemeSectionHeader(text, numWpComThemes));
-                    break;
-                }
+    /*
+     * jetpack sites have headers above the uploaded themes and wp.com themes
+     */
+    private void updateHeaders() {
+        if (mIsWpCom) return;
+
+        mHeaders.clear();
+        if (mFilteredThemes.size() == 0) return;
+
+        // first count the two types of themes
+        int numUploadedThemes = 0;
+        int numWpComThemes = 0;
+        for (ThemeModel theme: mFilteredThemes) {
+            if (theme.isWpComTheme()) {
+                numWpComThemes++;
+            } else {
+                numUploadedThemes++;
             }
         }
 
-        notifyDataSetChanged();
+        // then create the headers
+        for (int i = 0; i < mFilteredThemes.size(); i++) {
+            ThemeModel theme = mFilteredThemes.get(i);
+            if (i == 0 && !theme.isWpComTheme()) {
+                // add uploaded themes header if this is the first theme and it's not wp.com
+                String text = mContext.getString(R.string.uploaded_themes_header);
+                mHeaders.put(i, new ThemeSectionHeader(text, numUploadedThemes));
+            } else if (theme.isWpComTheme()) {
+                // add wp.com themes header if this is the first wp.com theme
+                String text = mContext.getString(R.string.wpcom_themes_header);
+                mHeaders.put(i, new ThemeSectionHeader(text, numWpComThemes));
+                break;
+            }
+        }
     }
 
     @Override
@@ -153,7 +171,7 @@ class ThemeBrowserAdapter extends BaseAdapter {
         }
 
         configureThemeImageSize(parent);
-        ThemeModel theme = mThemes.get(position);
+        ThemeModel theme = mFilteredThemes.get(position);
 
         String screenshotURL = theme.getScreenshotUrl();
         String themeId = theme.getThemeId();
@@ -304,5 +322,41 @@ class ThemeBrowserAdapter extends BaseAdapter {
             mViewWidth = imageWidth;
             AppPrefs.setThemeImageSizeWidth(mViewWidth);
         }
+    }
+
+    @Override
+    public Filter getFilter() {
+        return new Filter() {
+            @SuppressWarnings("unchecked")
+            @Override
+            protected void publishResults(CharSequence constraint, FilterResults results) {
+                mFilteredThemes.clear();
+                mFilteredThemes.addAll((List<ThemeModel>) results.values);
+                updateHeaders();
+                ThemeBrowserAdapter.this.notifyDataSetChanged();
+            }
+
+            @Override
+            protected FilterResults performFiltering(CharSequence constraint) {
+                List<ThemeModel> filtered = new ArrayList<>();
+                if (TextUtils.isEmpty(constraint)) {
+                    mQuery = null;
+                    filtered.addAll(mAllThemes);
+                } else {
+                    mQuery = constraint.toString();
+                    String lcConstraint = constraint.toString().toLowerCase();
+                    for (ThemeModel theme : mAllThemes) {
+                        if (theme.getName().toLowerCase().contains(lcConstraint)) {
+                            filtered.add(theme);
+                        }
+                    }
+                }
+
+                FilterResults results = new FilterResults();
+                results.values = filtered;
+
+                return results;
+            }
+        };
     }
 }
