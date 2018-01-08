@@ -1830,6 +1830,7 @@
     <string name="plugin_remove_progress_dialog_message">Removing %s&#8230;</string>
     <string name="plugin_remove_dialog_title">Remove Plugin</string>
     <string name="plugin_remove_dialog_message">Are you sure you want to remove %1$s from %2$s?\n\nThis will deactivate the plugin and delete all associated files and data.</string>
+    <string name="plugin_fetch_error">An error occurred while fetching the plugins: %s</string>
 
     <string name="wordpress_dot_org_plugin_page">WordPress.org Plugin page</string>
     <string name="plugin_home_page">Plugin homepage</string>

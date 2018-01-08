@@ -167,7 +167,7 @@ public class PluginListActivity extends AppCompatActivity {
         }
         mSwipeToRefreshHelper.setRefreshing(false);
         if (event.isError()) {
-            AppLog.e(T.API, "An error occurred while fetching the plugins: " + event.error.message);
+            ToastUtils.showToast(this, getString(R.string.plugin_fetch_error, event.error.message));
             return;
         }
         refreshPluginList();
