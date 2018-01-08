@@ -19,6 +19,7 @@ public class NetworkUtils {
     /**
      * returns information on the active network connection
      */
+    @SuppressLint("MissingPermission")
     private static NetworkInfo getActiveNetworkInfo(Context context) {
         if (context == null) {
             return null;

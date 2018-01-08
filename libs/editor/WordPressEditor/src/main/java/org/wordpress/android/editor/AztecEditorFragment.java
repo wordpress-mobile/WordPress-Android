@@ -22,9 +22,12 @@ import android.support.annotation.NonNull;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
-import android.text.Editable;
+import android.text.Spannable;
+import android.text.SpannableStringBuilder;
 import android.text.Spanned;
 import android.text.TextUtils;
+import android.text.style.SuggestionSpan;
+import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.DisplayMetrics;
 import android.view.DragEvent;
@@ -36,6 +39,7 @@ import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.BaseInputConnection;
 import android.webkit.URLUtil;
 import android.widget.ImageButton;
 import android.widget.Toast;
@@ -77,11 +81,13 @@ import org.wordpress.aztec.plugins.shortcodes.extensions.VideoPressExtensionsKt;
 import org.wordpress.aztec.plugins.wpcomments.CommentsTextFormat;
 import org.wordpress.aztec.plugins.wpcomments.WordPressCommentsPlugin;
 import org.wordpress.aztec.plugins.wpcomments.toolbar.MoreToolbarButton;
+import org.wordpress.aztec.source.Format;
 import org.wordpress.aztec.source.SourceViewEditText;
 import org.wordpress.aztec.spans.AztecMediaSpan;
 import org.wordpress.aztec.spans.IAztecAttributedSpan;
 import org.wordpress.aztec.toolbar.AztecToolbar;
 import org.wordpress.aztec.toolbar.IAztecToolbarClickListener;
+import org.wordpress.aztec.watchers.EndOfBufferMarkerAdder;
 import org.xml.sax.Attributes;
 
 import java.util.ArrayList;
@@ -1780,18 +1786,44 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
         }
     }
 
+    private static SpannableStringBuilder getCalypsoCompatibleStringBuilder(Context context, String postContent,
+                                                                            AztecParser parser) {
+        SpannableStringBuilder builder = new SpannableStringBuilder();
+        String cleanSource = Format.removeSourceEditorFormatting(postContent, true);
+        builder.append(parser.fromHtml(cleanSource, context));
+        Format.preProcessSpannedText(builder, true);
+        return builder;
+    }
+
+    private static String toHtml(SpannableStringBuilder builder,
+                               AztecParser parser) {
+        clearMetaSpans(builder);
+        parser.syncVisualNewlinesOfBlockElements(builder);
+        Format.postProcessSpannedText(builder, true);
+        return EndOfBufferMarkerAdder.removeEndOfTextMarker(parser.toHtml(builder, false));
+    }
+
+    private static void clearMetaSpans(Spannable text) {
+        BaseInputConnection.removeComposingSpans(text);
+        SuggestionSpan[] spans = text.getSpans(0, text.length(), SuggestionSpan.class);
+        for (SuggestionSpan span : spans) {
+            text.removeSpan(span);
+        }
+    }
+
     public static String replaceMediaFileWithUrl(Context context, @NonNull String postContent,
                                                  String localMediaId, MediaFile mediaFile) {
         if (mediaFile != null) {
             String remoteUrl = Utils.escapeQuotes(mediaFile.getFileURL());
             // fill in Aztec with the post's content
             AztecParser parser = getAztecParserWithPlugins();
-            Spanned content = parser.fromHtml(postContent, context);
+            SpannableStringBuilder builder = getCalypsoCompatibleStringBuilder(context, postContent, parser);
 
             MediaPredicate predicate = MediaPredicate.getLocalMediaIdPredicate(localMediaId);
 
             // remove the uploading class
-            Attributes firstElementAttributes = getFirstElementAttributes(content, predicate);
+            //Attributes firstElementAttributes = getFirstElementAttributes(content, predicate);
+            Attributes firstElementAttributes = getFirstElementAttributes(builder, predicate);
             // let's make sure the element is still there within the content. Sometimes it may happen
             // this method is called but the element doesn't exist in the post content anymore
             if (firstElementAttributes != null) {
@@ -1807,10 +1839,10 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
 
                 addDefaultSizeClassIfMissing(attrs);
 
-                updateElementAttributes(content, predicate, attrs);
+                updateElementAttributes(builder, predicate, attrs);
 
                 // re-set the post content
-                postContent = parser.toHtml(content, false);
+                postContent = toHtml(builder, parser);
             }
         }
         return postContent;
@@ -1821,12 +1853,12 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
         if (mediaFile != null) {
             // fill in Aztec with the post's content
             AztecParser parser = getAztecParserWithPlugins();
-            Spanned content = parser.fromHtml(postContent, context);
+            SpannableStringBuilder builder = getCalypsoCompatibleStringBuilder(context, postContent, parser);
 
             MediaPredicate predicate = MediaPredicate.getLocalMediaIdPredicate(localMediaId);
 
             // remove the uploading class
-            Attributes firstElementAttributes = getFirstElementAttributes(content, predicate);
+            Attributes firstElementAttributes = getFirstElementAttributes(builder, predicate);
             // let's make sure the element is still there within the content. Sometimes it may happen
             // this method is called but the element doesn't exist in the post content anymore
             if (firstElementAttributes != null) {
@@ -1840,10 +1872,10 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
                 // mark failed
                 attributesWithClass.addClass(ATTR_STATUS_FAILED);
 
-                updateElementAttributes(content, predicate, attributesWithClass.getAttributes());
+                updateElementAttributes(builder, predicate, attributesWithClass.getAttributes());
 
                 // re-set the post content
-                postContent = parser.toHtml(content, false);
+                postContent = toHtml(builder, parser);
             }
         }
         return postContent;
@@ -1872,17 +1904,17 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
     public static String resetUploadingMediaToFailed(Context context, @NonNull String postContent) {
         // fill in Aztec with the post's content
         AztecParser parser = getAztecParserWithPlugins();
-        Spanned content = parser.fromHtml(postContent, context);
+        SpannableStringBuilder builder = getCalypsoCompatibleStringBuilder(context, postContent, parser);
 
         // get all items with "failed" class, and make sure they are still failed
         // i.e. if they have a local src, then they are failed.
-        resetMediaWithStatus(content, ATTR_STATUS_FAILED);
+        resetMediaWithStatus(builder, ATTR_STATUS_FAILED);
         // get all items with "uploading" class, and make sure they are either already uploaded
         // (that is, they have a remote src), and mark them "failed" if not.
-        resetMediaWithStatus(content, ATTR_STATUS_UPLOADING);
+        resetMediaWithStatus(builder, ATTR_STATUS_UPLOADING);
 
         // re-set the post content
-        postContent = parser.toHtml(content, false);
+        postContent = toHtml(builder, parser);
         return postContent;
     }
 
@@ -1938,13 +1970,13 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
     public static String restartFailedMediaToUploading(Context context, String postContent) {
         // fill in Aztec with the post's content
         AztecParser parser = getAztecParserWithPlugins();
-        Spanned content = parser.fromHtml(postContent, context);
+        SpannableStringBuilder builder = getCalypsoCompatibleStringBuilder(context, postContent, parser);
 
         // get all items with class defined by the "status" variable
         AztecText.AttributePredicate statusPredicate = getPredicateWithClass(ATTR_STATUS_FAILED);
 
         // update all these items to UPLOADING
-        for (IAztecAttributedSpan span : getSpansForPredicate(content, statusPredicate, false)) {
+        for (IAztecAttributedSpan span : getSpansForPredicate(builder, statusPredicate, false)) {
             AttributesWithClass attributesWithClass = getAttributesWithClass(span.getAttributes());
             attributesWithClass.removeClass(ATTR_STATUS_FAILED);
             attributesWithClass.addClass(ATTR_STATUS_UPLOADING);
@@ -1952,7 +1984,7 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
         }
 
         // re-set the post content
-        postContent = parser.toHtml(content, false);
+        postContent = toHtml(builder, parser);
         return postContent;
     }
 
