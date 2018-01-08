@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.res.Resources;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.CardView;
+import android.text.TextUtils;
 import android.util.SparseArray;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -11,6 +12,8 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.Filter;
+import android.widget.Filterable;
 import android.widget.FrameLayout;
 import android.widget.ImageButton;
 import android.widget.PopupMenu;
@@ -27,7 +30,7 @@ import org.wordpress.android.widgets.WPNetworkImageView;
 import java.util.ArrayList;
 import java.util.List;
 
-class ThemeBrowserAdapter extends BaseAdapter {
+class ThemeBrowserAdapter extends BaseAdapter implements Filterable {
     private static final String THEME_IMAGE_PARAMETER = "?w=";
 
     private final Context mContext;
@@ -37,7 +40,8 @@ class ThemeBrowserAdapter extends BaseAdapter {
     private int mViewWidth;
     private final boolean mIsWpCom;
 
-    private final List<ThemeModel> mThemes = new ArrayList<>();
+    private final List<ThemeModel> mAllThemes = new ArrayList<>();
+    private final List<ThemeModel> mFilteredThemes = new ArrayList<>();
     private final SparseArray<ThemeSectionHeader> mHeaders = new SparseArray<>();
 
     class ThemeSectionHeader {
@@ -90,12 +94,12 @@ class ThemeBrowserAdapter extends BaseAdapter {
 
     @Override
     public int getCount() {
-        return mThemes.size();
+        return mFilteredThemes.size();
     }
 
     @Override
     public Object getItem(int position) {
-        return mThemes.get(position);
+        return mFilteredThemes.get(position);
     }
 
     @Override
@@ -104,8 +108,11 @@ class ThemeBrowserAdapter extends BaseAdapter {
     }
 
     void setThemeList(@NonNull List<ThemeModel> themes) {
-        mThemes.clear();
-        mThemes.addAll(themes);
+        mAllThemes.clear();
+        mAllThemes.addAll(themes);
+
+        mFilteredThemes.clear();
+        mFilteredThemes.addAll(themes);
 
         // jetpack sites have headers above the uploaded themes and wp.com themes
         if (!mIsWpCom) {
@@ -153,7 +160,7 @@ class ThemeBrowserAdapter extends BaseAdapter {
         }
 
         configureThemeImageSize(parent);
-        ThemeModel theme = mThemes.get(position);
+        ThemeModel theme = mFilteredThemes.get(position);
 
         String screenshotURL = theme.getScreenshotUrl();
         String themeId = theme.getThemeId();
@@ -304,5 +311,39 @@ class ThemeBrowserAdapter extends BaseAdapter {
             mViewWidth = imageWidth;
             AppPrefs.setThemeImageSizeWidth(mViewWidth);
         }
+    }
+
+    @Override
+    public Filter getFilter() {
+        return new Filter() {
+            @SuppressWarnings("unchecked")
+            @Override
+            protected void publishResults(CharSequence constraint, FilterResults results) {
+                mFilteredThemes.clear();
+                mFilteredThemes.addAll((List<ThemeModel>) results.values);
+                ThemeBrowserAdapter.this.notifyDataSetChanged();
+            }
+
+            @Override
+            protected FilterResults performFiltering(CharSequence constraint) {
+                List<ThemeModel> filtered = new ArrayList<>();
+                if (TextUtils.isEmpty(constraint)) {
+                    filtered.addAll(mAllThemes);
+                } else {
+                    String lcConstraint = constraint.toString().toLowerCase();
+                    for (ThemeModel theme : mAllThemes) {
+                        if (theme.getName().toLowerCase().contains(lcConstraint)
+                                || (theme.getDescription() != null && theme.getDescription().toLowerCase().contains(lcConstraint))) {
+                            filtered.add(theme);
+                        }
+                    }
+                }
+
+                FilterResults results = new FilterResults();
+                results.values = filtered;
+
+                return results;
+            }
+        };
     }
 }

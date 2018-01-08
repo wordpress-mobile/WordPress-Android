@@ -54,6 +54,7 @@ public class ThemeBrowserFragment extends Fragment
         implements RecyclerListener, SearchView.OnQueryTextListener, MenuItemCompat.OnActionExpandListener {
 
     public static final String TAG = ThemeBrowserFragment.class.getName();
+    private static final String KEY_LAST_SEARCH = "last_search";
 
     public static ThemeBrowserFragment newInstance(SiteModel site) {
         ThemeBrowserFragment fragment = new ThemeBrowserFragment();
@@ -74,6 +75,7 @@ public class ThemeBrowserFragment extends Fragment
 
     protected SwipeToRefreshHelper mSwipeToRefreshHelper;
     private String mCurrentThemeId;
+    private String mLastSearch;
 
     private HeaderGridView mGridView;
     private RelativeLayout mEmptyView;
@@ -85,7 +87,6 @@ public class ThemeBrowserFragment extends Fragment
     protected TextView mEmptyTextView;
     private SiteModel mSite;
 
-    private String mLastSearch = "";
     private SearchView mSearchView;
     private MenuItem mSearchMenuItem;
 
@@ -105,6 +106,10 @@ public class ThemeBrowserFragment extends Fragment
         }
 
         setHasOptionsMenu(true);
+
+        if (savedInstanceState != null) {
+            mLastSearch = savedInstanceState.getString(KEY_LAST_SEARCH);
+        }
     }
 
     @Override
@@ -148,6 +153,12 @@ public class ThemeBrowserFragment extends Fragment
     }
 
     @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putString(KEY_LAST_SEARCH, mLastSearch);
+    }
+
+    @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         inflater.inflate(R.menu.theme_search, menu);
     }
@@ -188,7 +199,7 @@ public class ThemeBrowserFragment extends Fragment
 
     @Override
     public boolean onQueryTextSubmit(String query) {
-        if (!mLastSearch.equals(query)) {
+        if (!StringUtils.equals(query, mLastSearch)) {
             search(query);
         }
         if (mSearchView != null) {
@@ -199,7 +210,7 @@ public class ThemeBrowserFragment extends Fragment
 
     @Override
     public boolean onQueryTextChange(String newText) {
-        if (!mLastSearch.equals(newText)) {
+        if (!StringUtils.equals(newText, mLastSearch)) {
             search(newText);
         }
         return true;
@@ -207,7 +218,7 @@ public class ThemeBrowserFragment extends Fragment
 
     private void search(String searchTerm) {
         mLastSearch = searchTerm;
-        refreshView();
+        getAdapter().getFilter().filter(searchTerm);
     }
 
     @Override
