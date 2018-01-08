@@ -16,7 +16,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
-import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import org.greenrobot.eventbus.Subscribe;
@@ -36,7 +35,10 @@ import org.wordpress.android.fluxc.store.PluginStore.OnSitePluginsFetched;
 import org.wordpress.android.ui.ActivityLauncher;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
+import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.ToastUtils;
+import org.wordpress.android.util.helpers.SwipeToRefreshHelper;
+import org.wordpress.android.util.widgets.CustomSwipeRefreshLayout;
 import org.wordpress.android.widgets.DividerItemDecoration;
 import org.wordpress.android.widgets.WPNetworkImageView;
 import org.wordpress.android.widgets.WPNetworkImageView.ImageType;
@@ -45,11 +47,15 @@ import java.util.List;
 
 import javax.inject.Inject;
 
+import static org.wordpress.android.util.WPSwipeToRefreshHelper.buildSwipeToRefreshHelper;
+
 public class PluginListActivity extends AppCompatActivity {
+    private static final String KEY_REFRESHING = "KEY_REFRESHING";
+
     private SiteModel mSite;
     private RecyclerView mRecyclerView;
     private PluginListAdapter mAdapter;
-    private ProgressBar mProgressBar;
+    private SwipeToRefreshHelper mSwipeToRefreshHelper;
 
     @Inject PluginStore mPluginStore;
     @Inject Dispatcher mDispatcher;
@@ -58,8 +64,8 @@ public class PluginListActivity extends AppCompatActivity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         ((WordPress) getApplication()).component().inject(this);
-
         setContentView(R.layout.plugin_list_activity);
+        mDispatcher.register(this);
 
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -82,12 +88,14 @@ public class PluginListActivity extends AppCompatActivity {
             return;
         }
 
-        mDispatcher.register(this);
-        mDispatcher.dispatch(PluginActionBuilder.newFetchSitePluginsAction(mSite));
-
         setupViews();
-        if (mPluginStore.getSitePlugins(mSite).size() == 0) {
-            mProgressBar.setVisibility(View.VISIBLE);
+
+        if (savedInstanceState != null) {
+            mSwipeToRefreshHelper.setRefreshing(savedInstanceState.getBoolean(KEY_REFRESHING, false));
+        } else {
+            // Fetch plugins for the first time the activity is created
+            mSwipeToRefreshHelper.setRefreshing(true);
+            fetchPluginList();
         }
     }
 
@@ -110,6 +118,7 @@ public class PluginListActivity extends AppCompatActivity {
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
         outState.putSerializable(WordPress.SITE, mSite);
+        outState.putBoolean(KEY_REFRESHING, mSwipeToRefreshHelper.isRefreshing());
     }
 
     private void setupViews() {
@@ -122,9 +131,28 @@ public class PluginListActivity extends AppCompatActivity {
         mAdapter = new PluginListAdapter(this);
         mRecyclerView.setAdapter(mAdapter);
 
-        mProgressBar = findViewById(R.id.plugin_progress_bar);
+        mSwipeToRefreshHelper = buildSwipeToRefreshHelper(
+                (CustomSwipeRefreshLayout) findViewById(R.id.ptr_layout),
+                new SwipeToRefreshHelper.RefreshListener() {
+                    @Override
+                    public void onRefreshStarted() {
+                        if (isFinishing()) {
+                            return;
+                        }
+                        if (!NetworkUtils.checkConnection(PluginListActivity.this)) {
+                            mSwipeToRefreshHelper.setRefreshing(false);
+                            return;
+                        }
+                        fetchPluginList();
+                    }
+                }
+        );
 
         refreshPluginList();
+    }
+
+    private void fetchPluginList() {
+        mDispatcher.dispatch(PluginActionBuilder.newFetchSitePluginsAction(mSite));
     }
 
     private void refreshPluginList() {
@@ -137,9 +165,9 @@ public class PluginListActivity extends AppCompatActivity {
         if (isFinishing()) {
             return;
         }
-        mProgressBar.setVisibility(View.GONE);
+        mSwipeToRefreshHelper.setRefreshing(false);
         if (event.isError()) {
-            AppLog.e(T.API, "An error occurred while fetching the plugins: " + event.error.message);
+            ToastUtils.showToast(this, R.string.plugin_fetch_error);
             return;
         }
         refreshPluginList();
