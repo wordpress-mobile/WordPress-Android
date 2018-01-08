@@ -115,41 +115,47 @@ class ThemeBrowserAdapter extends BaseAdapter implements Filterable {
         mFilteredThemes.clear();
         mFilteredThemes.addAll(themes);
 
-        // jetpack sites have headers above the uploaded themes and wp.com themes
-        if (!mIsWpCom) {
-            mHeaders.clear();
-
-            // first count the two types of themes
-            int numUploadedThemes = 0;
-            int numWpComThemes = 0;
-            for (ThemeModel theme: themes) {
-                if (theme.isWpComTheme()) {
-                    numWpComThemes++;
-                } else {
-                    numUploadedThemes++;
-                }
-            }
-
-            // then create the headers
-            for (int i = 0; i < themes.size(); i++) {
-                ThemeModel theme = themes.get(i);
-                if (i == 0 && !theme.isWpComTheme()) {
-                    // add uploaded themes header if this is the first theme and it's not wp.com
-                    String text = mContext.getString(R.string.uploaded_themes_header);
-                    mHeaders.put(i, new ThemeSectionHeader(text, numUploadedThemes));
-                } else if (theme.isWpComTheme()) {
-                    // add wp.com themes header if this is the first wp.com theme
-                    String text = mContext.getString(R.string.wpcom_themes_header);
-                    mHeaders.put(i, new ThemeSectionHeader(text, numWpComThemes));
-                    break;
-                }
-            }
-        }
-
         if (!TextUtils.isEmpty(mQuery)) {
             getFilter().filter(mQuery);
         } else {
+            updateHeaders();
             notifyDataSetChanged();
+        }
+    }
+
+    /*
+     * jetpack sites have headers above the uploaded themes and wp.com themes
+     */
+    private void updateHeaders() {
+        if (mIsWpCom) return;
+
+        mHeaders.clear();
+        if (mFilteredThemes.size() == 0) return;
+
+        // first count the two types of themes
+        int numUploadedThemes = 0;
+        int numWpComThemes = 0;
+        for (ThemeModel theme: mFilteredThemes) {
+            if (theme.isWpComTheme()) {
+                numWpComThemes++;
+            } else {
+                numUploadedThemes++;
+            }
+        }
+
+        // then create the headers
+        for (int i = 0; i < mFilteredThemes.size(); i++) {
+            ThemeModel theme = mFilteredThemes.get(i);
+            if (i == 0 && !theme.isWpComTheme()) {
+                // add uploaded themes header if this is the first theme and it's not wp.com
+                String text = mContext.getString(R.string.uploaded_themes_header);
+                mHeaders.put(i, new ThemeSectionHeader(text, numUploadedThemes));
+            } else if (theme.isWpComTheme()) {
+                // add wp.com themes header if this is the first wp.com theme
+                String text = mContext.getString(R.string.wpcom_themes_header);
+                mHeaders.put(i, new ThemeSectionHeader(text, numWpComThemes));
+                break;
+            }
         }
     }
 
@@ -326,6 +332,7 @@ class ThemeBrowserAdapter extends BaseAdapter implements Filterable {
             protected void publishResults(CharSequence constraint, FilterResults results) {
                 mFilteredThemes.clear();
                 mFilteredThemes.addAll((List<ThemeModel>) results.values);
+                updateHeaders();
                 ThemeBrowserAdapter.this.notifyDataSetChanged();
             }
 
