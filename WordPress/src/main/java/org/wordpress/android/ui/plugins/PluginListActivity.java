@@ -167,7 +167,7 @@ public class PluginListActivity extends AppCompatActivity {
         }
         mSwipeToRefreshHelper.setRefreshing(false);
         if (event.isError()) {
-            ToastUtils.showToast(this, getString(R.string.plugin_fetch_error, event.error.message));
+            ToastUtils.showToast(this, R.string.plugin_fetch_error);
             return;
         }
         refreshPluginList();
