@@ -12,7 +12,6 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.ImageLoader;
 
 import org.wordpress.android.WordPress;
-import org.wordpress.android.editor.MediaUtils;
 import org.wordpress.android.util.ImageUtils;
 import org.wordpress.aztec.Html;
 

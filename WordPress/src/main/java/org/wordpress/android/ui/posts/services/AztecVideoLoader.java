@@ -10,7 +10,6 @@ import android.provider.MediaStore;
 import android.text.TextUtils;
 import android.util.DisplayMetrics;
 
-import org.wordpress.android.editor.MediaUtils;
 import org.wordpress.android.util.ImageUtils;
 import org.wordpress.aztec.Html;
 

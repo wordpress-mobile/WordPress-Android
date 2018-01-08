@@ -15,7 +15,7 @@ import android.util.DisplayMetrics;
 import org.wordpress.android.util.DisplayUtils;
 import org.wordpress.android.util.ImageUtils;
 
-public class MediaUtils {
+public class EditorMediaUtils {
     public static BitmapDrawable getAztecPlaceholderDrawableFromResID(Context context, @DrawableRes int drawableId, int maxImageSizeForVisualEditor) {
         Drawable drawable = ContextCompat.getDrawable(context, drawableId);
         Bitmap bitmap;

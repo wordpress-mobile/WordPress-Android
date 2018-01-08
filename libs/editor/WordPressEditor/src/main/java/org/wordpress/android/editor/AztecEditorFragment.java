@@ -190,7 +190,7 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
         source = (SourceViewEditText) view.findViewById(R.id.source);
 
         // Set the default value for max and min picture sizes.
-        maxMediaSize = MediaUtils.getMaximumThumbnailSizeForEditor(getActivity());
+        maxMediaSize = EditorMediaUtils.getMaximumThumbnailSizeForEditor(getActivity());
         minMediaSize = DisplayUtils.dpToPx(getActivity(), MIN_BITMAP_DIMENSION_DP);
         content.setMinImagesWidth(minMediaSize);
         content.setMaxImagesWidth(maxMediaSize);
@@ -873,7 +873,7 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
         } else {
             ToastUtils.showToast(getActivity(), msg);
         }
-        return MediaUtils.getAztecPlaceholderDrawableFromResID(this.getActivity(), R.drawable.ic_image_failed_grey_a_40_48dp, maxMediaSize);
+        return EditorMediaUtils.getAztecPlaceholderDrawableFromResID(this.getActivity(), R.drawable.ic_image_failed_grey_a_40_48dp, maxMediaSize);
     }
 
     @Override
