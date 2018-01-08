@@ -190,7 +190,7 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
         source = (SourceViewEditText) view.findViewById(R.id.source);
 
         // Set the default value for max and min picture sizes.
-        maxMediaSize = ImageUtils.getMaximumThumbnailWidthForEditor(getActivity());
+        maxMediaSize = MediaUtils.getMaximumThumbnailSizeForEditor(getActivity());
         minMediaSize = DisplayUtils.dpToPx(getActivity(), MIN_BITMAP_DIMENSION_DP);
         content.setMinImagesWidth(minMediaSize);
         content.setMaxImagesWidth(maxMediaSize);

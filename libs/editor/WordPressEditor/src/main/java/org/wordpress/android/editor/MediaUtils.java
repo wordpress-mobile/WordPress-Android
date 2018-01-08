@@ -3,6 +3,7 @@ package org.wordpress.android.editor;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
+import android.graphics.Point;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.VectorDrawable;
@@ -11,6 +12,7 @@ import android.support.graphics.drawable.VectorDrawableCompat;
 import android.support.v4.content.ContextCompat;
 import android.util.DisplayMetrics;
 
+import org.wordpress.android.util.DisplayUtils;
 import org.wordpress.android.util.ImageUtils;
 
 public class MediaUtils {
@@ -30,5 +32,15 @@ public class MediaUtils {
         }
         bitmap.setDensity(DisplayMetrics.DENSITY_DEFAULT);
         return new BitmapDrawable(context.getResources(), bitmap);
+    }
+
+    public static int getMaximumThumbnailSizeForEditor(Context context) {
+        Point size = DisplayUtils.getDisplayPixelSize(context);
+        int screenWidth = size.x;
+        int screenHeight = size.y;
+        int maximumThumbnailWidthForEditor = screenWidth > screenHeight?screenHeight:screenWidth;
+        int padding = DisplayUtils.dpToPx(context, 48) * 2;
+        maximumThumbnailWidthForEditor -= padding;
+        return maximumThumbnailWidthForEditor;
     }
 }

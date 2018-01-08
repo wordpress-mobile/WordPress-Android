@@ -1481,7 +1481,7 @@ public class EditPostActivity extends AppCompatActivity implements
 
     private int getMaximumThumbnailWidthForEditor() {
         if (mMaxThumbWidth == 0) {
-            mMaxThumbWidth = ImageUtils.getMaximumThumbnailWidthForEditor(this);
+            mMaxThumbWidth = org.wordpress.android.editor.MediaUtils.getMaximumThumbnailSizeForEditor(this);
         }
         return mMaxThumbWidth;
     }
@@ -2373,7 +2373,7 @@ public class EditPostActivity extends AppCompatActivity implements
             FileOutputStream outputStream = new FileOutputStream(outputFile);
             Bitmap thumb = ImageUtils.getVideoFrameFromVideo(
                     videoPath,
-                    ImageUtils.getMaximumThumbnailWidthForEditor(this)
+                    org.wordpress.android.editor.MediaUtils.getMaximumThumbnailSizeForEditor(this)
             );
             if (thumb != null) {
                 thumb.compress(Bitmap.CompressFormat.PNG, 75, outputStream);
