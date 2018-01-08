@@ -156,7 +156,7 @@ public class ThemeBrowserFragment extends Fragment
     @Override
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
-        if (mSearchMenuItem.isActionViewExpanded()) {
+        if (mSearchMenuItem != null && mSearchMenuItem.isActionViewExpanded()) {
             outState.putString(KEY_LAST_SEARCH, mSearchView.getQuery().toString());
         }
     }
