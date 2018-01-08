@@ -832,12 +832,8 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
 
             addDefaultSizeClassIfMissing(attrs);
 
-            // `getWPImageSpanThumbnailFromFilePath` takes in consideration both width and height of the picture.
-            // We need to make sure to set the correct max dimension for the current picture
-            // keeping the correct aspect ratio and the max width setting for the editor
-            int maxRequestedSize = MediaUtils.getMaxMediaSizeForEditor(getActivity(), safeMediaPreviewUrl, maxImageWidthForVisualEditor);
             Bitmap bitmapToShow = ImageUtils.getWPImageSpanThumbnailFromFilePath(
-                    getActivity(), safeMediaPreviewUrl, maxRequestedSize
+                    getActivity(), safeMediaPreviewUrl, maxImageWidthForVisualEditor
             );
             MediaPredicate localMediaIdPredicate = MediaPredicate.getLocalMediaIdPredicate(localMediaId);
             if (bitmapToShow != null) {

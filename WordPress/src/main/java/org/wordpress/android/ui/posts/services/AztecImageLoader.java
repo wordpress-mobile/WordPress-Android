@@ -47,12 +47,8 @@ public class AztecImageLoader implements Html.ImageGetter {
 
         if (new File(url).exists()) {
             int orientation = ImageUtils.getImageOrientation(this.context, url);
-            // `createThumbnailFromUri` takes in consideration both width and height of the picture.
-            // We need to make sure to set the correct max dimension for the current picture
-            // keeping the correct aspect ratio and the max width setting for the editor
-            int maxRequestedSize =  MediaUtils.getMaxMediaSizeForEditor(this.context, url, maxWidth);
             byte[] bytes = ImageUtils.createThumbnailFromUri(
-                   context, Uri.parse(url), maxRequestedSize, null, orientation);
+                   context, Uri.parse(url), maxWidth, null, orientation);
             if (bytes != null) {
                 Bitmap bitmap = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
                 if (bitmap != null) {
@@ -79,6 +75,8 @@ public class AztecImageLoader implements Html.ImageGetter {
                     callbacks.onImageFailed();
                 } else if (bitmap != null) {
                     final String cacheKey = url + maxWidth;
+                    // Make sure both width ad height respect the max size for the editor
+                    bitmap = ImageUtils.getScaledBitmapAtLongestSide(bitmap, maxWidth);
                     WordPress.getBitmapCache().putBitmap(cacheKey, bitmap);
                     // By default, BitmapFactory.decodeFile sets the bitmap's density to the device default so, we need
                     // to correctly set the input density to 160 ourselves.

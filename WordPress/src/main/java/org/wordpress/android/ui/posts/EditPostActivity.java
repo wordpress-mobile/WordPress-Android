@@ -1041,9 +1041,8 @@ public class EditPostActivity extends AppCompatActivity implements
             aztecEditorFragment.setEditorBetaClickListener(EditPostActivity.this);
             aztecEditorFragment.setEditorImageSettingsListener(EditPostActivity.this);
 
-            // Here we should set the max width for picture, but the default size is already OK. No need
+            // Here we should set the max width for media, but the default size is already OK. No need
             // to customize it further
-            // int maxImageWidthForVisualEditor = ImageUtils.getMaximumThumbnailWidthForEditor(getActivity());
 
             Drawable loadingImagePlaceholder = org.wordpress.android.editor.MediaUtils.getAztecPlaceholderDrawableFromResID(
                     this,
