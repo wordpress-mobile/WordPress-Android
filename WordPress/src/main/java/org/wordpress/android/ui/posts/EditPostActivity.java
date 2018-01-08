@@ -1047,7 +1047,7 @@ public class EditPostActivity extends AppCompatActivity implements
             Drawable loadingImagePlaceholder = org.wordpress.android.editor.MediaUtils.getAztecPlaceholderDrawableFromResID(
                     this,
                     org.wordpress.android.editor.R.drawable.ic_gridicons_image,
-                    aztecEditorFragment.getMaxImageWidth()
+                    aztecEditorFragment.getMaxMediaSize()
             );
             aztecEditorFragment.setAztecImageLoader(new AztecImageLoader(getBaseContext(), loadingImagePlaceholder));
             aztecEditorFragment.setLoadingImagePlaceholder(loadingImagePlaceholder);
@@ -1055,7 +1055,7 @@ public class EditPostActivity extends AppCompatActivity implements
             Drawable loadingVideoPlaceholder = org.wordpress.android.editor.MediaUtils.getAztecPlaceholderDrawableFromResID(
                     this,
                     org.wordpress.android.editor.R.drawable.ic_gridicons_video_camera,
-                    aztecEditorFragment.getMaxImageWidth()
+                    aztecEditorFragment.getMaxMediaSize()
             );
             aztecEditorFragment.setAztecVideoLoader(new AztecVideoLoader(getBaseContext(), loadingVideoPlaceholder));
             aztecEditorFragment.setLoadingVideoPlaceholder(loadingVideoPlaceholder);
