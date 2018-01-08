@@ -29,6 +29,7 @@ import android.text.TextUtils;
 import android.text.style.SuggestionSpan;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.DisplayMetrics;
 import android.view.DragEvent;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -161,6 +162,9 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
     private Drawable loadingImagePlaceholder;
     private Drawable loadingVideoPlaceholder;
 
+    private int maxMediaSize;
+    private int minMediaSize;
+
     public static AztecEditorFragment newInstance(String title, String content, boolean isExpanded) {
         mIsToolbarExpanded = isExpanded;
         AztecEditorFragment fragment = new AztecEditorFragment();
@@ -187,14 +191,20 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_aztec_editor, container, false);
 
-        // request dependency injection
-        if (getActivity() instanceof EditorFragmentActivity) {
-            ((EditorFragmentActivity) getActivity()).initializeEditorFragment();
-        }
-
         title = (EditTextWithKeyBackListener) view.findViewById(R.id.title);
         content = (AztecText) view.findViewById(R.id.aztec);
         source = (SourceViewEditText) view.findViewById(R.id.source);
+
+        // Set the default value for max and min picture sizes.
+        maxMediaSize = EditorMediaUtils.getMaximumThumbnailSizeForEditor(getActivity());
+        minMediaSize = DisplayUtils.dpToPx(getActivity(), MIN_BITMAP_DIMENSION_DP);
+        content.setMinImagesWidth(minMediaSize);
+        content.setMaxImagesWidth(maxMediaSize);
+
+        // request dependency injection. Do this after setting min/max dimensions
+        if (getActivity() instanceof EditorFragmentActivity) {
+            ((EditorFragmentActivity) getActivity()).initializeEditorFragment();
+        }
 
         title.setOnTouchListener(this);
         content.setOnTouchListener(this);
@@ -740,9 +750,6 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
 
     @Override
     public void appendMediaFile(final MediaFile mediaFile, final String mediaUrl, ImageLoader imageLoader) {
-        // load a scaled version of the image to prevent OOM exception
-        final int maxWidth = ImageUtils.getMaximumThumbnailWidthForEditor(getActivity());
-
         if (URLUtil.isNetworkUrl(mediaUrl)) {
             AztecAttributes attributes = new AztecAttributes();
             attributes.setValue(ATTR_SRC, mediaUrl);
@@ -781,20 +788,13 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
                     content.refreshText();
                 }
 
-                private void showErrorPlaceholder() {
-                    // Show failed placeholder.
-                    ToastUtils.showToast(getActivity(), R.string.error_media_load);
-                    Drawable drawable = getResources().getDrawable(R.drawable.ic_image_failed_grey_a_40_48dp);
-                    replaceDrawable(drawable);
-                }
-
                 @Override
                 public void onErrorResponse(VolleyError error) {
                     if (!isAdded()) {
                         // the fragment is detached
                         return;
                     }
-                    showErrorPlaceholder();
+                    replaceDrawable(getLoadingMediaErrorPlaceholder(null));
                 }
 
                 @Override
@@ -809,24 +809,20 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
                             // Bitmap is null but isImmediate is true (as soon as the request starts).
                             return;
                         }
-                        showErrorPlaceholder();
+                        replaceDrawable(getLoadingMediaErrorPlaceholder(null));
                         return;
                     }
 
-                    int minimumDimension = DisplayUtils.dpToPx(getActivity(), MIN_BITMAP_DIMENSION_DP);
-
-                    if (downloadedBitmap.getHeight() < minimumDimension || downloadedBitmap.getWidth() < minimumDimension) {
+                    if (downloadedBitmap.getHeight() < minMediaSize || downloadedBitmap.getWidth() < minMediaSize) {
                         // Bitmap is too small.  Show image placeholder.
-                        ToastUtils.showToast(getActivity(), R.string.error_media_small);
-                        Drawable drawable = getResources().getDrawable(R.drawable.ic_image_loading_grey_a_40_48dp);
-                        replaceDrawable(drawable);
+                        replaceDrawable(getLoadingMediaErrorPlaceholder(getString(R.string.error_media_small)));
                         return;
                     }
 
-                    Bitmap resizedBitmap = ImageUtils.getScaledBitmapAtLongestSide(downloadedBitmap, maxWidth);
-                    replaceDrawable(new BitmapDrawable(getResources(), resizedBitmap));
+                    downloadedBitmap.setDensity(DisplayMetrics.DENSITY_DEFAULT);
+                    replaceDrawable(new BitmapDrawable(getResources(), downloadedBitmap));
                 }
-            }, maxWidth, 0);
+            }, maxMediaSize, 0);
 
             mActionStartedAt = System.currentTimeMillis();
         } else {
@@ -842,16 +838,14 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
 
             addDefaultSizeClassIfMissing(attrs);
 
-            int[] bitmapDimensions = ImageUtils.getImageSize(Uri.parse(safeMediaPreviewUrl), getActivity());
-            int realBitmapWidth = bitmapDimensions[0];
             Bitmap bitmapToShow = ImageUtils.getWPImageSpanThumbnailFromFilePath(
-                    getActivity(),
-                    safeMediaPreviewUrl,
-                    maxWidth > realBitmapWidth && realBitmapWidth > 0 ? realBitmapWidth : maxWidth);
-
+                    getActivity(), safeMediaPreviewUrl, maxMediaSize
+            );
             MediaPredicate localMediaIdPredicate = MediaPredicate.getLocalMediaIdPredicate(localMediaId);
-
             if (bitmapToShow != null) {
+                // By default, BitmapFactory.decodeFile sets the bitmap's density to the device default so, we need
+                // to correctly set the input density to 160 ourselves.
+                bitmapToShow.setDensity(DisplayMetrics.DENSITY_DEFAULT);
                 if (mediaFile.isVideo()) {
                     addVideoUploadingClassIfMissing(attrs);
                     content.insertVideo(new BitmapDrawable(getResources(), bitmapToShow), attrs);
@@ -860,9 +854,7 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
                 }
             } else {
                 // Failed to retrieve bitmap.  Show failed placeholder.
-                ToastUtils.showToast(getActivity(), R.string.error_media_load);
-                Drawable drawable = getResources().getDrawable(R.drawable.ic_image_failed_grey_a_40_48dp);
-                drawable.setBounds(0, 0, maxWidth, maxWidth);
+                Drawable drawable = getLoadingMediaErrorPlaceholder(null);
                 content.insertImage(drawable, attrs);
             }
 
@@ -879,6 +871,15 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
 
             content.resetAttributedMediaSpan(localMediaIdPredicate);
         }
+    }
+
+    private Drawable getLoadingMediaErrorPlaceholder(String msg) {
+        if (TextUtils.isEmpty(msg)) {
+            ToastUtils.showToast(getActivity(), R.string.error_media_load);
+        } else {
+            ToastUtils.showToast(getActivity(), msg);
+        }
+        return EditorMediaUtils.getAztecPlaceholderDrawableFromResID(this.getActivity(), R.drawable.ic_image_failed_grey_a_40_48dp, maxMediaSize);
     }
 
     @Override
@@ -2047,5 +2048,9 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
 
     public void setLoadingVideoPlaceholder(Drawable loadingVideoPlaceholder) {
         this.loadingVideoPlaceholder = loadingVideoPlaceholder;
+    }
+
+    public int getMaxMediaSize() {
+        return maxMediaSize;
     }
 }
