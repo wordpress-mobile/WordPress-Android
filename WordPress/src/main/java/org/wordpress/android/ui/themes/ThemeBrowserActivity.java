@@ -83,7 +83,6 @@ public class ThemeBrowserActivity extends AppCompatActivity implements ThemeBrow
         setContentView(R.layout.theme_browser_activity);
 
         if (savedInstanceState == null) {
-            AnalyticsUtils.trackWithSiteDetails(Stat.THEMES_ACCESSED_THEMES_BROWSER, mSite);
             addBrowserFragment();
         } else {
             mThemeBrowserFragment = (ThemeBrowserFragment) getFragmentManager().findFragmentByTag(ThemeBrowserFragment.TAG);
@@ -182,11 +181,6 @@ public class ThemeBrowserActivity extends AppCompatActivity implements ThemeBrow
         setIsInSearchMode(true);
         AnalyticsUtils.trackWithSiteDetails(Stat.THEMES_ACCESSED_SEARCH, mSite);
         showSearchFragment();
-    }
-
-    @Override
-    public void onSearchRequested(String searchTerm) {
-        searchThemes(searchTerm);
     }
 
     @Override
@@ -314,13 +308,6 @@ public class ThemeBrowserActivity extends AppCompatActivity implements ThemeBrow
 
     private void setIsInSearchMode(boolean isInSearchMode) {
         mIsInSearchMode = isInSearchMode;
-    }
-
-    private void searchThemes(String searchTerm) {
-        if (TextUtils.isEmpty(searchTerm)) {
-            return;
-        }
-        // TODO: implement local theme search
     }
 
     private void fetchCurrentTheme() {

@@ -1,8 +1,10 @@
 package org.wordpress.android.ui.themes;
 
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v4.view.MenuItemCompat;
 import android.support.v7.widget.SearchView;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -13,8 +15,6 @@ import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.model.ThemeModel;
-import org.wordpress.android.util.NetworkUtils;
-import org.wordpress.android.util.ToastUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -28,12 +28,9 @@ public class ThemeSearchFragment extends ThemeBrowserFragment implements SearchV
     private static final String BUNDLE_LAST_SEARCH = "BUNDLE_LAST_SEARCH";
     private static final int SEARCH_VIEW_MAX_WIDTH = 10000;
 
-    private List<ThemeModel> mSearchResults;
     private String mLastSearch = "";
     private SearchView mSearchView;
     private MenuItem mSearchMenuItem;
-
-    private SiteModel mSite;
 
     public static ThemeSearchFragment newInstance(SiteModel site) {
         ThemeSearchFragment fragment = new ThemeSearchFragment();
@@ -47,12 +44,6 @@ public class ThemeSearchFragment extends ThemeBrowserFragment implements SearchV
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
-
-        mSite = (SiteModel) getArguments().getSerializable(WordPress.SITE);
-        if (mSite == null) {
-            ToastUtils.showToast(getActivity(), R.string.blog_not_found, ToastUtils.Duration.SHORT);
-            getActivity().finish();
-        }
 
         if (savedInstanceState != null) {
             mLastSearch = savedInstanceState.getString(BUNDLE_LAST_SEARCH);
@@ -91,7 +82,6 @@ public class ThemeSearchFragment extends ThemeBrowserFragment implements SearchV
     @Override
     public boolean onQueryTextSubmit(String query) {
         if (!mLastSearch.equals(query)) {
-            mLastSearch = query;
             search(query);
         }
         if (mSearchView != null) {
@@ -102,8 +92,7 @@ public class ThemeSearchFragment extends ThemeBrowserFragment implements SearchV
 
     @Override
     public boolean onQueryTextChange(String newText) {
-        if (!mLastSearch.equals(newText) && !newText.equals("")) {
-            mLastSearch = newText;
+        if (!mLastSearch.equals(newText)) {
             search(newText);
         }
         return true;
@@ -120,26 +109,6 @@ public class ThemeSearchFragment extends ThemeBrowserFragment implements SearchV
     }
 
     @Override
-    protected List<ThemeModel> fetchThemes() {
-        if (mSearchResults == null) {
-            return mThemeStore.getWpComThemes();
-        }
-
-        // create a copy of the search results list to filter without changing results
-        List<ThemeModel> themes = new ArrayList<>(mSearchResults);
-
-        // move active theme to the top of the list if it's in the search results
-        moveActiveThemeToFront(themes);
-
-        // remove premium themes if plan doesn't support it
-        if (!shouldShowPremiumThemes()) {
-            removeNonActivePremiumThemes(themes);
-        }
-
-        return themes;
-    }
-
-    @Override
     protected void configureSwipeToRefresh(View view) {
         super.configureSwipeToRefresh(view);
         mSwipeToRefreshHelper.setRefreshing(false);
@@ -151,18 +120,23 @@ public class ThemeSearchFragment extends ThemeBrowserFragment implements SearchV
         // No header on Search
     }
 
-    public void setSearchResults(List<ThemeModel> results) {
-        mSearchResults = results;
-        refreshView();
+    @Override
+    protected List<ThemeModel> fetchThemes() {
+        List<ThemeModel> themes = super.fetchThemes();
+        return filter(themes);
+    }
+
+    @Override
+    protected void setEmptyViewVisible(boolean visible) {
+        super.setEmptyViewVisible(visible);
+        if (!TextUtils.isEmpty(mLastSearch)) {
+            mEmptyTextView.setText(R.string.theme_no_search_result_found);
+        }
     }
 
     private void search(String searchTerm) {
         mLastSearch = searchTerm;
-        if (NetworkUtils.isNetworkAvailable(getActivity())) {
-            mCallback.onSearchRequested(searchTerm);
-        } else {
-            refreshView();
-        }
+        refreshView();
     }
 
     private void configureSearchView() {
@@ -170,5 +144,20 @@ public class ThemeSearchFragment extends ThemeBrowserFragment implements SearchV
         mSearchView.setOnQueryTextListener(this);
         mSearchView.setQuery(mLastSearch, true);
         mSearchView.setMaxWidth(SEARCH_VIEW_MAX_WIDTH);
+    }
+
+    private List<ThemeModel> filter(@NonNull List<ThemeModel> themes) {
+        if (TextUtils.isEmpty(mLastSearch)) {
+            return themes;
+        }
+        List<ThemeModel> filteredThemes = new ArrayList<>();
+        String lcSearch = mLastSearch.toLowerCase();
+        for (ThemeModel theme : themes) {
+            if (theme.getName().toLowerCase().contains(lcSearch)
+                    || (theme.getDescription() != null && theme.getDescription().toLowerCase().contains(lcSearch))) {
+                filteredThemes.add(theme);
+            }
+        }
+        return filteredThemes;
     }
 }
