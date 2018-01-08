@@ -60,6 +60,10 @@ public class SiteSettingsModel {
     private static final String START_OF_WEEK_COLUMN_NAME = "startOfWeek";
     private static final String DATE_FORMAT_COLUMN_NAME = "dateFormat";
     private static final String TIME_FORMAT_COLUMN_NAME = "timeFormat";
+    private static final String TIMEZONE_COLUMN_NAME = "siteTimezone";
+    private static final String POSTS_PER_PAGE_COLUMN_NAME = "postsPerPage";
+    private static final String AMP_SUPPORTED_COLUMN_NAME = "ampSupported";
+    private static final String AMP_ENABLED_COLUMN_NAME = "ampEnabled";
 
     public static final String SETTINGS_TABLE_NAME = "site_settings";
 
@@ -81,6 +85,14 @@ public class SiteSettingsModel {
             " add " + TIME_FORMAT_COLUMN_NAME + " TEXT;";
     public static final String ADD_DATE_FORMAT = "alter table " + SETTINGS_TABLE_NAME +
             " add " + DATE_FORMAT_COLUMN_NAME + " TEXT;";
+    public static final String ADD_TIMEZONE = "alter table " + SETTINGS_TABLE_NAME +
+            " add " + TIMEZONE_COLUMN_NAME + " TEXT;";
+    public static final String ADD_POSTS_PER_PAGE = "alter table " + SETTINGS_TABLE_NAME +
+            " add " + POSTS_PER_PAGE_COLUMN_NAME + " INTEGER;";
+    public static final String ADD_AMP_ENABLED = "alter table " + SETTINGS_TABLE_NAME +
+            " add " + AMP_ENABLED_COLUMN_NAME + " BOOLEAN;";
+    public static final String ADD_AMP_SUPPORTED = "alter table " + SETTINGS_TABLE_NAME +
+            " add " + AMP_SUPPORTED_COLUMN_NAME + " BOOLEAN;";
 
     public static final String CREATE_SETTINGS_TABLE_SQL =
             "CREATE TABLE IF NOT EXISTS " +
@@ -164,6 +176,10 @@ public class SiteSettingsModel {
     public String startOfWeek;
     public String dateFormat;
     public String timeFormat;
+    public String timezone;
+    public int postsPerPage;
+    public boolean ampSupported;
+    public boolean ampEnabled;
 
     @Override
     public boolean equals(Object other) {
@@ -180,6 +196,7 @@ public class SiteSettingsModel {
                 equals(startOfWeek, otherModel.startOfWeek) &&
                 equals(dateFormat, otherModel.dateFormat) &&
                 equals(timeFormat, otherModel.timeFormat) &&
+                equals(timezone, otherModel.timezone) &&
                 languageId == otherModel.languageId &&
                 privacy == otherModel.privacy &&
                 location == otherModel.location &&
@@ -198,6 +215,9 @@ public class SiteSettingsModel {
                 commentsRequireIdentity == otherModel.commentsRequireIdentity &&
                 commentsRequireUserAccount == otherModel.commentsRequireUserAccount &&
                 commentAutoApprovalKnownUsers == otherModel.commentAutoApprovalKnownUsers &&
+                postsPerPage == otherModel.postsPerPage &&
+                ampEnabled == otherModel.ampEnabled &&
+                ampSupported == otherModel.ampSupported &&
                 maxLinks == otherModel.maxLinks &&
                 equals(defaultPostFormat, otherModel.defaultPostFormat) &&
                 holdForModeration != null
@@ -254,6 +274,10 @@ public class SiteSettingsModel {
         startOfWeek = other.startOfWeek;
         dateFormat = other.dateFormat;
         timeFormat = other.timeFormat;
+        timezone = other.timezone;
+        postsPerPage = other.postsPerPage;
+        ampSupported = other.ampSupported;
+        ampEnabled = other.ampEnabled;
         if (other.holdForModeration != null) {
             holdForModeration = new ArrayList<>(other.holdForModeration);
         }
@@ -309,6 +333,10 @@ public class SiteSettingsModel {
         startOfWeek = getStringFromCursor(cursor, START_OF_WEEK_COLUMN_NAME);
         dateFormat = getStringFromCursor(cursor, DATE_FORMAT_COLUMN_NAME);
         timeFormat = getStringFromCursor(cursor, TIME_FORMAT_COLUMN_NAME);
+        timezone = getStringFromCursor(cursor, TIMEZONE_COLUMN_NAME);
+        postsPerPage = getIntFromCursor(cursor, POSTS_PER_PAGE_COLUMN_NAME);
+        ampSupported = getBooleanFromCursor(cursor, AMP_SUPPORTED_COLUMN_NAME);
+        ampEnabled = getBooleanFromCursor(cursor, AMP_ENABLED_COLUMN_NAME);
 
         String moderationKeys = getStringFromCursor(cursor, MODERATION_KEYS_COLUMN_NAME);
         String blacklistKeys = getStringFromCursor(cursor, BLACKLIST_KEYS_COLUMN_NAME);
@@ -394,7 +422,11 @@ public class SiteSettingsModel {
         values.put(START_OF_WEEK_COLUMN_NAME, startOfWeek);
         values.put(DATE_FORMAT_COLUMN_NAME, dateFormat);
         values.put(TIME_FORMAT_COLUMN_NAME, timeFormat);
-
+        values.put(TIMEZONE_COLUMN_NAME, timezone);
+        values.put(POSTS_PER_PAGE_COLUMN_NAME, postsPerPage);
+        values.put(AMP_SUPPORTED_COLUMN_NAME, ampSupported);
+        values.put(AMP_ENABLED_COLUMN_NAME, ampEnabled);
+        
         String moderationKeys = "";
         if (holdForModeration != null) {
             for (String key : holdForModeration) {
