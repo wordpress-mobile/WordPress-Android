@@ -38,6 +38,7 @@ class ThemeBrowserAdapter extends BaseAdapter implements Filterable {
     private final ThemeBrowserFragmentCallback mCallback;
 
     private int mViewWidth;
+    private String mQuery;
     private final boolean mIsWpCom;
 
     private final List<ThemeModel> mAllThemes = new ArrayList<>();
@@ -145,7 +146,11 @@ class ThemeBrowserAdapter extends BaseAdapter implements Filterable {
             }
         }
 
-        notifyDataSetChanged();
+        if (!TextUtils.isEmpty(mQuery)) {
+            getFilter().filter(mQuery);
+        } else {
+            notifyDataSetChanged();
+        }
     }
 
     @Override
@@ -328,8 +333,10 @@ class ThemeBrowserAdapter extends BaseAdapter implements Filterable {
             protected FilterResults performFiltering(CharSequence constraint) {
                 List<ThemeModel> filtered = new ArrayList<>();
                 if (TextUtils.isEmpty(constraint)) {
+                    mQuery = null;
                     filtered.addAll(mAllThemes);
                 } else {
+                    mQuery = constraint.toString();
                     String lcConstraint = constraint.toString().toLowerCase();
                     for (ThemeModel theme : mAllThemes) {
                         if (theme.getName().toLowerCase().contains(lcConstraint)) {

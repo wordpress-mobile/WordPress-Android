@@ -86,6 +86,7 @@ public class ThemeBrowserFragment extends Fragment
     private TextView mEmptyTextView;
     private SiteModel mSite;
 
+    private MenuItem mSearchMenuItem;
     private SearchView mSearchView;
 
     private ThemeBrowserFragmentCallback mCallback;
@@ -155,24 +156,22 @@ public class ThemeBrowserFragment extends Fragment
     @Override
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
-        outState.putString(KEY_LAST_SEARCH, mLastSearch);
+        if (mSearchMenuItem.isActionViewExpanded()) {
+            outState.putString(KEY_LAST_SEARCH, mSearchView.getQuery().toString());
+        }
     }
 
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         inflater.inflate(R.menu.theme_search, menu);
-    }
 
-    @Override
-    public void onPrepareOptionsMenu(Menu menu) {
-        super.onPrepareOptionsMenu(menu);
-
-        MenuItem searchMenuItem = menu.findItem(R.id.menu_search);
-        mSearchView = (SearchView) searchMenuItem.getActionView();
+        mSearchMenuItem = menu.findItem(R.id.menu_search);
+        mSearchView = (SearchView) mSearchMenuItem.getActionView();
         mSearchView.setOnQueryTextListener(this);
 
         if (!TextUtils.isEmpty(mLastSearch)) {
-            searchMenuItem.expandActionView();
+            mSearchMenuItem.expandActionView();
+            onQueryTextSubmit(mLastSearch);
             mSearchView.setQuery(mLastSearch, true);
         }
     }
@@ -188,7 +187,7 @@ public class ThemeBrowserFragment extends Fragment
 
     @Override
     public boolean onQueryTextSubmit(String query) {
-        search(query);
+        getAdapter().getFilter().filter(query);
         if (mSearchView != null) {
             mSearchView.clearFocus();
         }
@@ -197,13 +196,8 @@ public class ThemeBrowserFragment extends Fragment
 
     @Override
     public boolean onQueryTextChange(String newText) {
-        search(newText);
+        getAdapter().getFilter().filter(newText);
         return true;
-    }
-
-    private void search(String searchTerm) {
-        mLastSearch = searchTerm;
-        getAdapter().getFilter().filter(searchTerm);
     }
 
     @Override
