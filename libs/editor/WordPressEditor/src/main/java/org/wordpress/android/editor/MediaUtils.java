@@ -16,19 +16,19 @@ import org.wordpress.android.util.DisplayUtils;
 import org.wordpress.android.util.ImageUtils;
 
 public class MediaUtils {
-    public static BitmapDrawable getAztecPlaceholderDrawableFromResID(Context context, @DrawableRes int drawableId, int maxImageWidthForVisualEditor) {
+    public static BitmapDrawable getAztecPlaceholderDrawableFromResID(Context context, @DrawableRes int drawableId, int maxImageSizeForVisualEditor) {
         Drawable drawable = ContextCompat.getDrawable(context, drawableId);
         Bitmap bitmap;
         if (drawable instanceof BitmapDrawable) {
             bitmap = ((BitmapDrawable) drawable).getBitmap();
-            bitmap = ImageUtils.getScaledBitmapAtLongestSide(bitmap, maxImageWidthForVisualEditor);
+            bitmap = ImageUtils.getScaledBitmapAtLongestSide(bitmap, maxImageSizeForVisualEditor);
         } else if (drawable instanceof VectorDrawableCompat || drawable instanceof VectorDrawable) {
-            bitmap = Bitmap.createBitmap(maxImageWidthForVisualEditor, maxImageWidthForVisualEditor, Bitmap.Config.ARGB_8888);
+            bitmap = Bitmap.createBitmap(maxImageSizeForVisualEditor, maxImageSizeForVisualEditor, Bitmap.Config.ARGB_8888);
             Canvas canvas = new Canvas(bitmap);
             drawable.setBounds(0, 0, canvas.getWidth(), canvas.getHeight());
             drawable.draw(canvas);
         } else {
-            throw new IllegalArgumentException("Unsupported drawable type");
+            throw new IllegalArgumentException("Unsupported Drawable Type: " + drawable.getClass().getName());
         }
         bitmap.setDensity(DisplayMetrics.DENSITY_DEFAULT);
         return new BitmapDrawable(context.getResources(), bitmap);
