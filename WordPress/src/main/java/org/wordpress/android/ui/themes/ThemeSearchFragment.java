@@ -61,7 +61,7 @@ public class ThemeSearchFragment extends ThemeBrowserFragment implements SearchV
         super.onPrepareOptionsMenu(menu);
         menu.removeItem(R.id.menu_search);
 
-        mSearchMenuItem = menu.findItem(R.id.menu_theme_search);
+        mSearchMenuItem = menu.findItem(R.id.menu_search);
         mSearchMenuItem.expandActionView();
         MenuItemCompat.setOnActionExpandListener(mSearchMenuItem, this);
 
@@ -70,7 +70,7 @@ public class ThemeSearchFragment extends ThemeBrowserFragment implements SearchV
 
     @Override
     public boolean onMenuItemActionExpand(MenuItem item) {
-        return item.getItemId() == R.id.menu_theme_search;
+        return item.getItemId() == R.id.menu_search;
     }
 
     @Override

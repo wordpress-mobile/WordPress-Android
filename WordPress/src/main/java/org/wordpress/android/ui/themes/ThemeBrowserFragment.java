@@ -155,20 +155,21 @@ public class ThemeBrowserFragment extends Fragment
     @Override
     public void onPrepareOptionsMenu(Menu menu) {
         super.onPrepareOptionsMenu(menu);
-        menu.removeItem(R.id.menu_search);
 
-        mSearchMenuItem = menu.findItem(R.id.menu_theme_search);
-        mSearchMenuItem.expandActionView();
+        mSearchMenuItem = menu.findItem(R.id.menu_search);
         MenuItemCompat.setOnActionExpandListener(mSearchMenuItem, this);
 
         mSearchView = (SearchView) MenuItemCompat.getActionView(mSearchMenuItem);
         mSearchView.setOnQueryTextListener(this);
-        mSearchView.setQuery(mLastSearch, true);
+        if (!TextUtils.isEmpty(mLastSearch)) {
+            mSearchMenuItem.expandActionView();
+            mSearchView.setQuery(mLastSearch, true);
+        }
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        if (item.getItemId() == R.id.menu_theme_search) {
+        if (item.getItemId() == R.id.menu_search) {
             AnalyticsUtils.trackWithSiteDetails(AnalyticsTracker.Stat.THEMES_ACCESSED_SEARCH, mSite);
             return true;
         }
@@ -177,7 +178,7 @@ public class ThemeBrowserFragment extends Fragment
 
     @Override
     public boolean onMenuItemActionExpand(MenuItem item) {
-        return item.getItemId() == R.id.menu_theme_search;
+        return item.getItemId() == R.id.menu_search;
     }
 
     @Override
