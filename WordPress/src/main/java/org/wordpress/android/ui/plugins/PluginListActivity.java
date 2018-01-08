@@ -16,7 +16,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
-import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import org.greenrobot.eventbus.Subscribe;
@@ -56,7 +55,6 @@ public class PluginListActivity extends AppCompatActivity {
     private SiteModel mSite;
     private RecyclerView mRecyclerView;
     private PluginListAdapter mAdapter;
-    private ProgressBar mProgressBar;
     private SwipeToRefreshHelper mSwipeToRefreshHelper;
 
     @Inject PluginStore mPluginStore;
@@ -91,9 +89,6 @@ public class PluginListActivity extends AppCompatActivity {
         }
 
         setupViews();
-        if (mPluginStore.getSitePlugins(mSite).size() == 0) {
-            mProgressBar.setVisibility(View.VISIBLE);
-        }
 
         if (savedInstanceState != null) {
             mSwipeToRefreshHelper.setRefreshing(savedInstanceState.getBoolean(KEY_REFRESHING, false));
@@ -135,8 +130,6 @@ public class PluginListActivity extends AppCompatActivity {
         mRecyclerView.addItemDecoration(dividerItemDecoration);
         mAdapter = new PluginListAdapter(this);
         mRecyclerView.setAdapter(mAdapter);
-
-        mProgressBar = findViewById(R.id.plugin_progress_bar);
 
         mSwipeToRefreshHelper = buildSwipeToRefreshHelper(
                 (CustomSwipeRefreshLayout) findViewById(R.id.ptr_layout),

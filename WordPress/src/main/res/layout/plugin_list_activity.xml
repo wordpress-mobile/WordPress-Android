@@ -19,11 +19,4 @@
             android:layout_height="match_parent"
             android:scrollbars="vertical" />
     </org.wordpress.android.util.widgets.CustomSwipeRefreshLayout>
-
-    <ProgressBar
-        android:id="@+id/plugin_progress_bar"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_centerInParent="true"
-        android:visibility="gone" />
 </RelativeLayout>
