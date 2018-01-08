@@ -105,6 +105,8 @@
     <string name="invalid_ip_or_range">Invalid IP or IP range</string>
     <string name="copy">Copy</string>
     <string name="error_please_choose_browser">Error opening the default web browser. Please choose another app:</string>
+    <string name="delete_yes">Delete</string>
+    <string name="delete_no">Don\'t Delete</string>
 
     <string name="button_skip">Skip</string>
     <string name="button_next">Next</string>
@@ -530,6 +532,7 @@
     <string name="site_settings_username_title" translatable="false">@string/username</string>
     <string name="site_settings_password_title" translatable="false">@string/password</string>
     <string name="site_settings_default_category_title">Default Category</string>
+    <string name="site_settings_tags_title">Tags</string>
     <string name="site_settings_default_format_title">Default Format</string>
     <string name="site_settings_week_start_title">Week starts on</string>
     <string name="site_settings_date_format_title">Date Format</string>
@@ -567,6 +570,15 @@
     <string name="site_settings_timezones_error">Unable to load timezones</string>
     <string name="site_settings_amp_title">Accelerated Mobile Pages (AMP)</string>
     <string name="site_settings_amp_summary">Your WordPress.com site supports the use of Accelerated Mobile Pages, a Google-led initiative that dramatically speeds up loading times on mobile devices</string>
+
+    <!-- tag list and detail -->
+    <string name="tag_name_hint">Tag</string>
+    <string name="tag_description_hint">Description</string>
+    <string name="add_new_tag">Add New Tag</string>
+    <string name="error_tag_exists">A tag with this name already exists</string>
+    <string name="dlg_confirm_delete_tag">Permanently delete \'%s\'?</string>
+    <string name="dlg_deleting_tag">Deleting</string>
+    <string name="dlg_saving_tag">Saving</string>
 
     <!-- Jetpack settings -->
     <string name="jetpack_site_settings_category_title">Jetpack Settings</string>
@@ -647,6 +659,7 @@
     <string name="site_settings_username_hint">Current user account</string>
     <string name="site_settings_password_hint">Change your password</string>
     <string name="site_settings_category_hint">Sets new post category</string>
+    <string name="site_settings_tags_hint">Manage your site\'s tags</string>
     <string name="site_settings_format_hint">Sets new post format</string>
     <string name="site_settings_image_width_hint">Resizes images in posts to this width</string>
     <string name="site_settings_image_quality_hint">Quality of pictures. Higher values mean better quality pictures.</string>

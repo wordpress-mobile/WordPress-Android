@@ -219,14 +219,44 @@ public class ShareIntentReceiverActivity extends AppCompatActivity implements Sh
     }
 
     private void bumpAnalytics(ShareAction shareAction, int selectedSiteLocalId) {
+        SiteModel selectedSite = mSiteStore.getSiteByLocalId(selectedSiteLocalId);
+        int numberOfMediaShared = countMedia();
+
         Map<String, Object> analyticsProperties = new HashMap<>();
-        analyticsProperties.put("number_of_media_shared", countMedia());
+        analyticsProperties.put("number_of_media_shared", numberOfMediaShared);
         analyticsProperties.put("share_to", shareAction.analyticsName);
 
         AnalyticsUtils.trackWithSiteDetails(AnalyticsTracker.Stat.SHARE_TO_WP_SUCCEEDED,
-                mSiteStore.getSiteByLocalId(selectedSiteLocalId),
+                selectedSite,
                 analyticsProperties);
 
+        if (doesContainMediaAndWasSharedToMediaLibrary(shareAction, numberOfMediaShared)) {
+            trackMediaAddedToMediaLibrary(selectedSite);
+        }
+    }
+
+    private void trackMediaAddedToMediaLibrary(SiteModel selectedSite) {
+        ArrayList<Uri> mediaUrls = new ArrayList<>();
+        if (countMedia() == 1) {
+            Uri singleMedia = getIntent().getParcelableExtra(Intent.EXTRA_STREAM);
+            mediaUrls.add(singleMedia);
+        } else {
+            ArrayList<Uri> imageUris = getIntent().getParcelableArrayListExtra(Intent.EXTRA_STREAM);
+            mediaUrls.addAll(imageUris);
+        }
+
+        for (Uri uri : mediaUrls) {
+            String mimeType = getContentResolver().getType(uri);
+            boolean isVideo = mimeType != null && mimeType.startsWith("video");
+            Map<String, Object> properties = AnalyticsUtils.getMediaProperties(this, isVideo, uri, null);
+
+            AnalyticsTracker.Stat mediaTypeTrack = isVideo ? AnalyticsTracker.Stat.MEDIA_LIBRARY_ADDED_VIDEO : AnalyticsTracker.Stat.MEDIA_LIBRARY_ADDED_PHOTO;
+            AnalyticsUtils.trackWithSiteDetails(mediaTypeTrack, selectedSite, properties);
+        }
+    }
+
+    private boolean doesContainMediaAndWasSharedToMediaLibrary(ShareAction shareAction, int numberOfMediaShared) {
+        return shareAction != null && shareAction.analyticsName.equals(ShareAction.SHARE_TO_MEDIA_LIBRARY.analyticsName) && numberOfMediaShared > 0;
     }
 
     private int countMedia() {
