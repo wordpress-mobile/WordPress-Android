@@ -4,12 +4,16 @@ import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.Fragment;
 import android.os.Bundle;
+import android.support.v4.view.MenuItemCompat;
+import android.support.v7.widget.SearchView;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AbsListView.RecyclerListener;
-import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -20,10 +24,12 @@ import com.android.volley.toolbox.ImageLoader.ImageListener;
 
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
+import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.model.ThemeModel;
 import org.wordpress.android.fluxc.store.ThemeStore;
 import org.wordpress.android.ui.plans.PlansConstants;
+import org.wordpress.android.util.AnalyticsUtils;
 import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.ToastUtils;
@@ -44,7 +50,8 @@ import static org.wordpress.android.util.WPSwipeToRefreshHelper.buildSwipeToRefr
 /**
  * A fragment display the themes on a grid view.
  */
-public class ThemeBrowserFragment extends Fragment implements RecyclerListener {
+public class ThemeBrowserFragment extends Fragment
+        implements RecyclerListener, SearchView.OnQueryTextListener, MenuItemCompat.OnActionExpandListener {
 
     public static final String TAG = ThemeBrowserFragment.class.getName();
 
@@ -62,21 +69,25 @@ public class ThemeBrowserFragment extends Fragment implements RecyclerListener {
         void onViewSelected(String themeId);
         void onDetailsSelected(String themeId);
         void onSupportSelected(String themeId);
-        void onSearchClicked();
-        void onSearchClosed();
         void onSwipeToRefresh();
     }
 
     protected SwipeToRefreshHelper mSwipeToRefreshHelper;
     private String mCurrentThemeId;
+
     private HeaderGridView mGridView;
     private RelativeLayout mEmptyView;
     private TextView mNoResultText;
     private TextView mCurrentThemeTextView;
+
     private ThemeBrowserAdapter mAdapter;
     private boolean mShouldRefreshOnStart;
     protected TextView mEmptyTextView;
     private SiteModel mSite;
+
+    private String mLastSearch = "";
+    private SearchView mSearchView;
+    private MenuItem mSearchMenuItem;
 
     ThemeBrowserFragmentCallback mCallback;
 
@@ -92,6 +103,8 @@ public class ThemeBrowserFragment extends Fragment implements RecyclerListener {
             ToastUtils.showToast(getActivity(), R.string.blog_not_found, ToastUtils.Duration.SHORT);
             getActivity().finish();
         }
+
+        setHasOptionsMenu(true);
     }
 
     @Override
@@ -135,6 +148,68 @@ public class ThemeBrowserFragment extends Fragment implements RecyclerListener {
     }
 
     @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        inflater.inflate(R.menu.theme_search, menu);
+    }
+
+    @Override
+    public void onPrepareOptionsMenu(Menu menu) {
+        super.onPrepareOptionsMenu(menu);
+        menu.removeItem(R.id.menu_search);
+
+        mSearchMenuItem = menu.findItem(R.id.menu_theme_search);
+        mSearchMenuItem.expandActionView();
+        MenuItemCompat.setOnActionExpandListener(mSearchMenuItem, this);
+
+        mSearchView = (SearchView) MenuItemCompat.getActionView(mSearchMenuItem);
+        mSearchView.setOnQueryTextListener(this);
+        mSearchView.setQuery(mLastSearch, true);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if (item.getItemId() == R.id.menu_theme_search) {
+            AnalyticsUtils.trackWithSiteDetails(AnalyticsTracker.Stat.THEMES_ACCESSED_SEARCH, mSite);
+            return true;
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public boolean onMenuItemActionExpand(MenuItem item) {
+        return item.getItemId() == R.id.menu_theme_search;
+    }
+
+    @Override
+    public boolean onMenuItemActionCollapse(MenuItem item) {
+        return true;
+    }
+
+    @Override
+    public boolean onQueryTextSubmit(String query) {
+        if (!mLastSearch.equals(query)) {
+            search(query);
+        }
+        if (mSearchView != null) {
+            mSearchView.clearFocus();
+        }
+        return true;
+    }
+
+    @Override
+    public boolean onQueryTextChange(String newText) {
+        if (!mLastSearch.equals(newText)) {
+            search(newText);
+        }
+        return true;
+    }
+
+    private void search(String searchTerm) {
+        mLastSearch = searchTerm;
+        refreshView();
+    }
+
+    @Override
     public void onMovedToScrapHeap(View view) {
         // cancel image fetch requests if the view has been moved to recycler.
         WPNetworkImageView niv = view.findViewById(R.id.theme_grid_item_image);
@@ -168,7 +243,6 @@ public class ThemeBrowserFragment extends Fragment implements RecyclerListener {
 
     protected void addHeaderViews(LayoutInflater inflater) {
         addMainHeader(inflater);
-        configureAndAddSearchHeader(inflater);
     }
 
     protected void configureSwipeToRefresh(View view) {
@@ -247,25 +321,6 @@ public class ThemeBrowserFragment extends Fragment implements RecyclerListener {
                 refreshView();
             }
         }
-    }
-
-    private void configureAndAddSearchHeader(LayoutInflater inflater) {
-        @SuppressLint("InflateParams")
-        View headerSearch = inflater.inflate(R.layout.theme_grid_cardview_header_search, null);
-        headerSearch.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                mCallback.onSearchClicked();
-            }
-        });
-        mGridView.addHeaderView(headerSearch);
-        ImageButton searchButton = headerSearch.findViewById(R.id.theme_search);
-        searchButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                mCallback.onSearchClicked();
-            }
-        });
     }
 
     protected void setEmptyViewVisible(boolean visible) {

@@ -75,7 +75,6 @@ public class ThemeSearchFragment extends ThemeBrowserFragment implements SearchV
 
     @Override
     public boolean onMenuItemActionCollapse(MenuItem item) {
-        mCallback.onSearchClosed();
         return true;
     }
 
