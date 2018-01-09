@@ -15,8 +15,8 @@ import org.wordpress.android.fluxc.model.AccountModel;
 import org.wordpress.android.fluxc.model.CommentModel;
 import org.wordpress.android.fluxc.model.MediaModel;
 import org.wordpress.android.fluxc.model.MediaUploadModel;
-import org.wordpress.android.fluxc.model.PluginInfoModel;
-import org.wordpress.android.fluxc.model.PluginModel;
+import org.wordpress.android.fluxc.model.WPOrgPluginModel;
+import org.wordpress.android.fluxc.model.SitePluginModel;
 import org.wordpress.android.fluxc.model.PostFormatModel;
 import org.wordpress.android.fluxc.model.PostModel;
 import org.wordpress.android.fluxc.model.PostUploadModel;
@@ -44,8 +44,8 @@ public class WellSqlConfig extends DefaultWellConfig {
         add(HTTPAuthModel.class);
         add(MediaModel.class);
         add(MediaUploadModel.class);
-        add(PluginInfoModel.class);
-        add(PluginModel.class);
+        add(WPOrgPluginModel.class);
+        add(SitePluginModel.class);
         add(PostFormatModel.class);
         add(PostModel.class);
         add(PostUploadModel.class);
@@ -58,7 +58,7 @@ public class WellSqlConfig extends DefaultWellConfig {
 
     @Override
     public int getDbVersion() {
-        return 20;
+        return 21;
     }
 
     @Override
@@ -172,6 +172,11 @@ public class WellSqlConfig extends DefaultWellConfig {
             case 19:
                 AppLog.d(T.DB, "Migrating to version " + (oldVersion + 1));
                 db.execSQL("alter table TermModel add POST_COUNT integer;");
+                oldVersion++;
+            case 20:
+                AppLog.d(T.DB, "Migrating to version " + (oldVersion + 1));
+                db.execSQL("alter table PluginModel rename to SitePluginModel;");
+                db.execSQL("alter table PluginInfoModel rename to WPOrgPluginModel;");
                 oldVersion++;
         }
         db.setTransactionSuccessful();

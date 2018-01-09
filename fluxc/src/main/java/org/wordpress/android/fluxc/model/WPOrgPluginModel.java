@@ -8,7 +8,7 @@ import com.yarolegovich.wellsql.core.annotation.Table;
 import java.io.Serializable;
 
 @Table
-public class PluginInfoModel implements Identifiable, Serializable {
+public class WPOrgPluginModel implements Identifiable, Serializable {
     @PrimaryKey @Column private int mId;
     @Column private String mName;
     @Column private String mSlug;

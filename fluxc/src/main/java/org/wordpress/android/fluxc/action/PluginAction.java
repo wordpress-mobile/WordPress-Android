@@ -8,7 +8,7 @@ import org.wordpress.android.fluxc.store.PluginStore.ConfigureSitePluginPayload;
 import org.wordpress.android.fluxc.store.PluginStore.ConfiguredSitePluginPayload;
 import org.wordpress.android.fluxc.store.PluginStore.DeleteSitePluginPayload;
 import org.wordpress.android.fluxc.store.PluginStore.DeletedSitePluginPayload;
-import org.wordpress.android.fluxc.store.PluginStore.FetchedPluginInfoPayload;
+import org.wordpress.android.fluxc.store.PluginStore.FetchedWPOrgPluginPayload;
 import org.wordpress.android.fluxc.store.PluginStore.FetchedSitePluginsPayload;
 import org.wordpress.android.fluxc.store.PluginStore.InstallSitePluginPayload;
 import org.wordpress.android.fluxc.store.PluginStore.InstalledSitePluginPayload;
@@ -23,7 +23,7 @@ public enum PluginAction implements IAction {
     @Action(payloadType = DeleteSitePluginPayload.class)
     DELETE_SITE_PLUGIN,
     @Action(payloadType = String.class)
-    FETCH_PLUGIN_INFO,
+    FETCH_WPORG_PLUGIN,
     @Action(payloadType = SiteModel.class)
     FETCH_SITE_PLUGINS,
     @Action(payloadType = InstallSitePluginPayload.class)
@@ -36,8 +36,8 @@ public enum PluginAction implements IAction {
     CONFIGURED_SITE_PLUGIN,
     @Action(payloadType = DeletedSitePluginPayload.class)
     DELETED_SITE_PLUGIN,
-    @Action(payloadType = FetchedPluginInfoPayload.class)
-    FETCHED_PLUGIN_INFO,
+    @Action(payloadType = FetchedWPOrgPluginPayload.class)
+    FETCHED_WPORG_PLUGIN,
     @Action(payloadType = FetchedSitePluginsPayload.class)
     FETCHED_SITE_PLUGINS,
     @Action(payloadType = InstalledSitePluginPayload.class)
