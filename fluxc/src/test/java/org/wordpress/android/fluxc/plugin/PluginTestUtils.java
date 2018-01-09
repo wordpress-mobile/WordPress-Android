@@ -1,14 +1,14 @@
 package org.wordpress.android.fluxc.plugin;
 
 import org.wordpress.android.fluxc.model.PluginInfoModel;
-import org.wordpress.android.fluxc.model.PluginModel;
+import org.wordpress.android.fluxc.model.SitePluginModel;
 
 import java.util.ArrayList;
 import java.util.List;
 
 class PluginTestUtils {
-    static List<PluginModel> generatePlugins(String... names) {
-        List<PluginModel> res = new ArrayList<>();
+    static List<SitePluginModel> generatePlugins(String... names) {
+        List<SitePluginModel> res = new ArrayList<>();
         for (String name : names) {
             res.add(generatePlugin(name));
         }
@@ -21,9 +21,9 @@ class PluginTestUtils {
         return pluginInfo;
     }
 
-    static PluginModel generatePlugin(String name) {
-        PluginModel pluginModel = new PluginModel();
-        pluginModel.setName(name.toLowerCase());
-        return pluginModel;
+    static SitePluginModel generatePlugin(String name) {
+        SitePluginModel sitePluginModel = new SitePluginModel();
+        sitePluginModel.setName(name.toLowerCase());
+        return sitePluginModel;
     }
 }

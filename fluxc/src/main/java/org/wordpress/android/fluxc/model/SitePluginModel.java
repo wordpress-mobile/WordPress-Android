@@ -8,7 +8,7 @@ import com.yarolegovich.wellsql.core.annotation.Table;
 import java.io.Serializable;
 
 @Table
-public class PluginModel implements Identifiable, Serializable {
+public class SitePluginModel implements Identifiable, Serializable {
     @PrimaryKey @Column private int mId;
     @Column private int mLocalSiteId;
     @Column private String mName;
