@@ -7,7 +7,7 @@ import com.wellsql.generated.PluginModelTable;
 import com.yarolegovich.wellsql.WellSql;
 
 import org.wordpress.android.fluxc.model.PluginInfoModel;
-import org.wordpress.android.fluxc.model.PluginModel;
+import org.wordpress.android.fluxc.model.SitePluginModel;
 import org.wordpress.android.fluxc.model.SiteModel;
 
 import java.util.List;
@@ -15,8 +15,8 @@ import java.util.List;
 import static com.yarolegovich.wellsql.SelectQuery.ORDER_ASCENDING;
 
 public class PluginSqlUtils {
-    public static List<PluginModel> getSitePlugins(@NonNull SiteModel site) {
-        return WellSql.select(PluginModel.class)
+    public static List<SitePluginModel> getSitePlugins(@NonNull SiteModel site) {
+        return WellSql.select(SitePluginModel.class)
                 .where()
                 .equals(PluginModelTable.LOCAL_SITE_ID, site.getId())
                 .endWhere()
@@ -24,29 +24,29 @@ public class PluginSqlUtils {
                 .getAsModel();
     }
 
-    public static void insertOrReplaceSitePlugins(@NonNull SiteModel site, @NonNull List<PluginModel> plugins) {
+    public static void insertOrReplaceSitePlugins(@NonNull SiteModel site, @NonNull List<SitePluginModel> plugins) {
         // Remove previous plugins for this site
         removeSitePlugins(site);
         // Insert new plugins for this site
-        for (PluginModel pluginModel : plugins) {
-            pluginModel.setLocalSiteId(site.getId());
+        for (SitePluginModel sitePluginModel : plugins) {
+            sitePluginModel.setLocalSiteId(site.getId());
         }
         WellSql.insert(plugins).asSingleTransaction(true).execute();
     }
 
     private static void removeSitePlugins(@NonNull SiteModel site) {
-        WellSql.delete(PluginModel.class)
+        WellSql.delete(SitePluginModel.class)
                 .where()
                 .equals(PluginModelTable.LOCAL_SITE_ID, site.getId())
                 .endWhere().execute();
     }
 
-    public static int insertOrUpdateSitePlugin(PluginModel plugin) {
+    public static int insertOrUpdateSitePlugin(SitePluginModel plugin) {
         if (plugin == null) {
             return 0;
         }
 
-        List<PluginModel> pluginResult = WellSql.select(PluginModel.class)
+        List<SitePluginModel> pluginResult = WellSql.select(SitePluginModel.class)
                 .where()
                 .equals(PluginModelTable.ID, plugin.getId())
                 .endWhere().getAsModel();
@@ -55,18 +55,18 @@ public class PluginSqlUtils {
             return 1;
         } else {
             int oldId = plugin.getId();
-            return WellSql.update(PluginModel.class).whereId(oldId)
-                    .put(plugin, new UpdateAllExceptId<>(PluginModel.class)).execute();
+            return WellSql.update(SitePluginModel.class).whereId(oldId)
+                    .put(plugin, new UpdateAllExceptId<>(SitePluginModel.class)).execute();
         }
     }
 
-    public static int deleteSitePlugin(SiteModel site, PluginModel plugin) {
+    public static int deleteSitePlugin(SiteModel site, SitePluginModel plugin) {
         if (plugin == null) {
             return 0;
         }
         // The local id of the plugin might not be set if it's coming from a network request,
         // using site id and name is a safer approach here
-        return WellSql.delete(PluginModel.class)
+        return WellSql.delete(SitePluginModel.class)
                 .where()
                 .equals(PluginModelTable.NAME, plugin.getName())
                 .equals(PluginModelTable.LOCAL_SITE_ID, site.getId())
@@ -91,8 +91,8 @@ public class PluginSqlUtils {
         }
     }
 
-    public static PluginModel getSitePluginByName(SiteModel site, String name) {
-        List<PluginModel> result = WellSql.select(PluginModel.class)
+    public static SitePluginModel getSitePluginByName(SiteModel site, String name) {
+        List<SitePluginModel> result = WellSql.select(SitePluginModel.class)
                 .where().equals(PluginModelTable.NAME, name)
                 .equals(PluginModelTable.LOCAL_SITE_ID, site.getId())
                 .endWhere().getAsModel();
