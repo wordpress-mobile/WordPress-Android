@@ -75,11 +75,6 @@ public class PublicizeButtonPrefsFragment extends Fragment implements
 
         setRetainInstance(true);
 
-        if (!NetworkUtils.checkConnection(getActivity())) {
-            getActivity().finish();
-            return;
-        }
-
         if (savedInstanceState == null) {
             mSite = (SiteModel) getArguments().getSerializable(WordPress.SITE);
         } else {
@@ -88,6 +83,11 @@ public class PublicizeButtonPrefsFragment extends Fragment implements
 
         if (mSite == null) {
             ToastUtils.showToast(getActivity(), R.string.blog_not_found, ToastUtils.Duration.SHORT);
+            getActivity().finish();
+            return;
+        }
+
+        if (!NetworkUtils.checkConnection(getActivity())) {
             getActivity().finish();
             return;
         }
