@@ -26,8 +26,8 @@ import org.wordpress.android.WordPress;
 import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.fluxc.Dispatcher;
 import org.wordpress.android.fluxc.generated.PluginActionBuilder;
-import org.wordpress.android.fluxc.model.PluginInfoModel;
-import org.wordpress.android.fluxc.model.PluginModel;
+import org.wordpress.android.fluxc.model.WPOrgPluginModel;
+import org.wordpress.android.fluxc.model.SitePluginModel;
 import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.store.PluginStore;
 import org.wordpress.android.fluxc.store.PluginStore.ConfigureSitePluginPayload;
@@ -57,8 +57,8 @@ public class PluginDetailActivity extends AppCompatActivity {
             = "KEY_IS_SHOWING_REMOVE_PLUGIN_CONFIRMATION_DIALOG";
 
     private SiteModel mSite;
-    private PluginModel mPlugin;
-    private PluginInfoModel mPluginInfo;
+    private SitePluginModel mPlugin;
+    private WPOrgPluginModel mPluginInfo;
 
     private ScrollView mContainer;
     private TextView mInstalledVersionTextView;
@@ -115,7 +115,7 @@ public class PluginDetailActivity extends AppCompatActivity {
             mIsAutoUpdateEnabled = mPlugin.isAutoUpdateEnabled();
 
             // Refresh the plugin information to check if there is a newer version
-            mDispatcher.dispatch(PluginActionBuilder.newFetchPluginInfoAction(mPlugin.getSlug()));
+            mDispatcher.dispatch(PluginActionBuilder.newFetchWporgPluginAction(mPlugin.getSlug()));
         } else {
             mIsConfiguringPlugin = savedInstanceState.getBoolean(KEY_IS_CONFIGURING_PLUGIN);
             mIsUpdatingPlugin = savedInstanceState.getBoolean(KEY_IS_UPDATING_PLUGIN);
@@ -484,7 +484,7 @@ public class PluginDetailActivity extends AppCompatActivity {
 
     @SuppressWarnings("unused")
     @Subscribe(threadMode = ThreadMode.MAIN)
-    public void onPluginInfoChanged(PluginStore.OnPluginInfoChanged event) {
+    public void onWPOrgPluginFetched(PluginStore.OnWPOrgPluginFetched event) {
         if (isFinishing()) {
             return;
         }
@@ -493,12 +493,12 @@ public class PluginDetailActivity extends AppCompatActivity {
                     + event.error.type);
             return;
         }
-        if (event.pluginInfo != null
-                && mPlugin.getSlug() != null
-                && mPlugin.getSlug().equals(event.pluginInfo.getSlug())) {
-            mPluginInfo = event.pluginInfo;
-            refreshPluginVersionViews();
-        }
+//        if (event.pluginInfo != null
+//                && mPlugin.getSlug() != null
+//                && mPlugin.getSlug().equals(event.pluginInfo.getSlug())) {
+//            mPluginInfo = event.pluginInfo;
+//            refreshPluginVersionViews();
+//        }
     }
 
     @SuppressWarnings("unused")

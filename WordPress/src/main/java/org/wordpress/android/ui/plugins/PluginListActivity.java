@@ -10,7 +10,6 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.RecyclerView.ViewHolder;
 import android.support.v7.widget.Toolbar;
-import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
@@ -24,14 +23,14 @@ import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.fluxc.Dispatcher;
 import org.wordpress.android.fluxc.generated.PluginActionBuilder;
-import org.wordpress.android.fluxc.model.PluginInfoModel;
-import org.wordpress.android.fluxc.model.PluginModel;
 import org.wordpress.android.fluxc.model.SiteModel;
+import org.wordpress.android.fluxc.model.SitePluginModel;
+import org.wordpress.android.fluxc.model.WPOrgPluginModel;
 import org.wordpress.android.fluxc.store.PluginStore;
-import org.wordpress.android.fluxc.store.PluginStore.OnPluginInfoChanged;
 import org.wordpress.android.fluxc.store.PluginStore.OnSitePluginConfigured;
 import org.wordpress.android.fluxc.store.PluginStore.OnSitePluginDeleted;
 import org.wordpress.android.fluxc.store.PluginStore.OnSitePluginsFetched;
+import org.wordpress.android.fluxc.store.PluginStore.OnWPOrgPluginFetched;
 import org.wordpress.android.ui.ActivityLauncher;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
@@ -175,7 +174,7 @@ public class PluginListActivity extends AppCompatActivity {
 
     @SuppressWarnings("unused")
     @Subscribe(threadMode = ThreadMode.MAIN)
-    public void onPluginInfoChanged(OnPluginInfoChanged event) {
+    public void onWPOrgPluginFetched(OnWPOrgPluginFetched event) {
         if (isFinishing()) {
             return;
         }
@@ -183,9 +182,9 @@ public class PluginListActivity extends AppCompatActivity {
             AppLog.e(T.API, "An error occurred while fetching the plugin info with type: " + event.error.type);
             return;
         }
-        if (event.pluginInfo != null && !TextUtils.isEmpty(event.pluginInfo.getSlug())) {
-            mAdapter.refreshPluginWithSlug(event.pluginInfo.getSlug());
-        }
+//        if (event.pluginInfo != null && !TextUtils.isEmpty(event.pluginInfo.getSlug())) {
+//            mAdapter.refreshPluginWithSlug(event.pluginInfo.getSlug());
+//        }
     }
 
     @SuppressWarnings("unused")
@@ -209,7 +208,7 @@ public class PluginListActivity extends AppCompatActivity {
     }
 
     private class PluginListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> implements View.OnClickListener {
-        private List<PluginModel> mPlugins;
+        private List<SitePluginModel> mPlugins;
 
         private final LayoutInflater mLayoutInflater;
 
@@ -217,12 +216,12 @@ public class PluginListActivity extends AppCompatActivity {
             mLayoutInflater = LayoutInflater.from(context);
         }
 
-        public void setPlugins(List<PluginModel> plugins) {
+        public void setPlugins(List<SitePluginModel> plugins) {
             mPlugins = plugins;
             notifyDataSetChanged();
         }
 
-        private PluginModel getItem(int position) {
+        private SitePluginModel getItem(int position) {
             if (mPlugins != null && position < mPlugins.size()) {
                 return mPlugins.get(position);
             }
@@ -243,14 +242,14 @@ public class PluginListActivity extends AppCompatActivity {
 
         @Override
         public void onBindViewHolder(ViewHolder holder, int position) {
-            PluginModel pluginModel = getItem(position);
+            SitePluginModel pluginModel = getItem(position);
             if (pluginModel != null) {
                 PluginViewHolder pluginHolder = (PluginViewHolder) holder;
                 pluginHolder.name.setText(pluginModel.getDisplayName());
                 pluginHolder.status.setText(getPluginStatusText(pluginModel));
-                PluginInfoModel pluginInfo = PluginUtils.getPluginInfo(mPluginStore, pluginModel);
+                WPOrgPluginModel pluginInfo = PluginUtils.getPluginInfo(mPluginStore, pluginModel);
                 if (pluginInfo == null) {
-                    mDispatcher.dispatch(PluginActionBuilder.newFetchPluginInfoAction(pluginModel.getSlug()));
+                    mDispatcher.dispatch(PluginActionBuilder.newFetchWporgPluginAction(pluginModel.getSlug()));
                 }
                 String iconUrl = pluginInfo != null ? pluginInfo.getIcon() : "";
                 pluginHolder.icon.setImageUrl(iconUrl, ImageType.PLUGIN_ICON);
@@ -282,7 +281,7 @@ public class PluginListActivity extends AppCompatActivity {
         @Override
         public void onClick(View view) {
             int itemPosition = mRecyclerView.getChildLayoutPosition(view);
-            PluginModel plugin = getItem(itemPosition);
+            SitePluginModel plugin = getItem(itemPosition);
             ActivityLauncher.viewPluginDetail(PluginListActivity.this, mSite, plugin);
         }
 
@@ -302,7 +301,7 @@ public class PluginListActivity extends AppCompatActivity {
         }
     }
 
-    private String getPluginStatusText(@NonNull PluginModel plugin) {
+    private String getPluginStatusText(@NonNull SitePluginModel plugin) {
         String activeStatus = plugin.isActive() ? getString(R.string.plugin_active)
                 : getString(R.string.plugin_inactive);
         String autoUpdateStatus = plugin.isAutoUpdateEnabled() ? getString(R.string.plugin_autoupdates_on)

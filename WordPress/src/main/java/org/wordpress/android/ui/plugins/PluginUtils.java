@@ -3,8 +3,8 @@ package org.wordpress.android.ui.plugins;
 import android.support.annotation.NonNull;
 import android.text.TextUtils;
 
-import org.wordpress.android.fluxc.model.PluginInfoModel;
-import org.wordpress.android.fluxc.model.PluginModel;
+import org.wordpress.android.fluxc.model.WPOrgPluginModel;
+import org.wordpress.android.fluxc.model.SitePluginModel;
 import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.store.PluginStore;
 import org.wordpress.android.util.helpers.Version;
@@ -20,15 +20,15 @@ public class PluginUtils {
         return false;
     }
 
-    static PluginInfoModel getPluginInfo(@NonNull PluginStore pluginStore, @NonNull PluginModel plugin) {
+    static WPOrgPluginModel getPluginInfo(@NonNull PluginStore pluginStore, @NonNull SitePluginModel plugin) {
         String slug = plugin.getSlug();
         if (TextUtils.isEmpty(slug)) {
             return null;
         }
-        return pluginStore.getPluginInfoBySlug(slug);
+        return pluginStore.getWPOrgPluginBySlug(slug);
     }
 
-    static boolean isUpdateAvailable(PluginModel plugin, PluginInfoModel pluginInfo) {
+    static boolean isUpdateAvailable(SitePluginModel plugin, WPOrgPluginModel pluginInfo) {
         if (pluginInfo == null
                 || TextUtils.isEmpty(plugin.getVersion())
                 || TextUtils.isEmpty(pluginInfo.getVersion())) {
