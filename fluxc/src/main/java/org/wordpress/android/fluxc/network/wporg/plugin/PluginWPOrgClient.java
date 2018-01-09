@@ -9,7 +9,7 @@ import com.android.volley.Response.Listener;
 import org.wordpress.android.fluxc.Dispatcher;
 import org.wordpress.android.fluxc.generated.PluginActionBuilder;
 import org.wordpress.android.fluxc.generated.endpoint.WPORGAPI;
-import org.wordpress.android.fluxc.model.PluginInfoModel;
+import org.wordpress.android.fluxc.model.DotOrgPluginModel;
 import org.wordpress.android.fluxc.network.BaseRequest.BaseErrorListener;
 import org.wordpress.android.fluxc.network.BaseRequest.BaseNetworkError;
 import org.wordpress.android.fluxc.network.UserAgent;
@@ -51,7 +51,7 @@ public class PluginWPOrgClient extends BaseWPOrgAPIClient {
                                             new FetchedPluginInfoPayload(error)));
                                     return;
                                 }
-                                PluginInfoModel pluginInfoModel = pluginInfoModelFromResponse(response);
+                                DotOrgPluginModel pluginInfoModel = pluginInfoModelFromResponse(response);
                                 FetchedPluginInfoPayload payload = new FetchedPluginInfoPayload(pluginInfoModel);
                                 mDispatcher.dispatch(PluginActionBuilder.newFetchedPluginInfoAction(payload));
                             }
@@ -69,8 +69,8 @@ public class PluginWPOrgClient extends BaseWPOrgAPIClient {
         add(request);
     }
 
-    private PluginInfoModel pluginInfoModelFromResponse(FetchPluginInfoResponse response) {
-        PluginInfoModel pluginInfo = new PluginInfoModel();
+    private DotOrgPluginModel pluginInfoModelFromResponse(FetchPluginInfoResponse response) {
+        DotOrgPluginModel pluginInfo = new DotOrgPluginModel();
         pluginInfo.setName(response.name);
         pluginInfo.setRating(response.rating);
         pluginInfo.setSlug(response.slug);
