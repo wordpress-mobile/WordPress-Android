@@ -1810,6 +1810,7 @@
 
     <!--Plugins-->
     <string name="plugins">Plugins</string>
+    <string name="plugin_byline">by %s</string>
     <string name="plugin_active">Active</string>
     <string name="plugin_inactive">Inactive</string>
     <string name="plugin_autoupdates_on">Autoupdates on</string>
@@ -1817,7 +1818,8 @@
     <string name="plugin_detail_label_state_active">Active</string>
     <string name="plugin_detail_label_state_autoupdates">Autoupdates</string>
     <string name="plugin_not_found">An error occurred when accessing this plugin</string>
-    <string name="plugin_installed_version">Plugin version %s</string>
+    <string name="plugin_version">Version %s</string>
+    <string name="plugin_installed_version">Version %s installed</string>
     <string name="plugin_available_version">Version %s is available.</string>
     <string name="plugin_updated_successfully">Successfully updated %s.</string>
     <string name="plugin_updated_failed">Error removing %s.</string>

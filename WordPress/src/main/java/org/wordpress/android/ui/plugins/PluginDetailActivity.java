@@ -8,6 +8,7 @@ import android.support.v7.app.ActionBar;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.text.Html;
 import android.text.TextUtils;
 import android.view.MenuItem;
 import android.view.View;
@@ -43,6 +44,7 @@ import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.SiteUtils;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.ToastUtils.Duration;
+import org.wordpress.android.util.WPLinkMovementMethod;
 
 import javax.inject.Inject;
 
@@ -61,8 +63,10 @@ public class PluginDetailActivity extends AppCompatActivity {
     private PluginInfoModel mPluginInfo;
 
     private ScrollView mContainer;
-    private TextView mInstalledVersionTextView;
-    private TextView mAvailableVersionTextView;
+    private TextView mTitleTextView;
+    private TextView mByLineTextView;
+    private TextView mVersionTopTextView;
+    private TextView mVersionBottomTextView;
     private TextView mUpdateTextView;
     private ProgressBar mUpdateProgressBar;
     private Switch mSwitchActive;
@@ -195,8 +199,10 @@ public class PluginDetailActivity extends AppCompatActivity {
 
     private void setupViews() {
         mContainer = findViewById(R.id.plugin_detail_container);
-        mInstalledVersionTextView = findViewById(R.id.plugin_installed_version);
-        mAvailableVersionTextView = findViewById(R.id.plugin_available_version);
+        mTitleTextView = findViewById(R.id.text_title);
+        mByLineTextView = findViewById(R.id.text_byline);
+        mVersionTopTextView = findViewById(R.id.plugin_version_top);
+        mVersionBottomTextView = findViewById(R.id.plugin_version_bottom);
         mUpdateTextView = findViewById(R.id.plugin_btn_update);
         mUpdateProgressBar = findViewById(R.id.plugin_update_progress_bar);
         mSwitchActive = findViewById(R.id.plugin_state_active);
@@ -262,6 +268,17 @@ public class PluginDetailActivity extends AppCompatActivity {
     }
 
     private void refreshViews() {
+        mTitleTextView.setText(mPlugin.getDisplayName());
+
+        if (TextUtils.isEmpty(mPlugin.getAuthorUrl())) {
+            mByLineTextView.setText(String.format(getString(R.string.plugin_byline), mPlugin.getAuthorName()));
+        } else {
+            String authorLink = "<a href='" + mPlugin.getAuthorUrl() + "'>" + mPlugin.getAuthorName() + "</a>";
+            String byline = String.format(getString(R.string.plugin_byline), authorLink);
+            mByLineTextView.setMovementMethod(WPLinkMovementMethod.getInstance());
+            mByLineTextView.setText(Html.fromHtml(byline));
+        }
+
         mSwitchActive.setChecked(mIsActive);
         mSwitchAutoupdates.setChecked(mIsAutoUpdateEnabled);
 
@@ -269,20 +286,19 @@ public class PluginDetailActivity extends AppCompatActivity {
     }
 
     private void refreshPluginVersionViews() {
-        if (TextUtils.isEmpty(mPlugin.getVersion())) {
-            mInstalledVersionTextView.setVisibility(View.GONE);
-        } else {
-            mInstalledVersionTextView.setVisibility(View.VISIBLE);
-            mInstalledVersionTextView.setText(getString(R.string.plugin_installed_version,
-                    mPlugin.getVersion()));
-        }
+        String pluginVersion = TextUtils.isEmpty(mPlugin.getVersion()) ? "?" : mPlugin.getVersion();
+        String installedVersion;
 
-        if (!PluginUtils.isUpdateAvailable(mPlugin, mPluginInfo)) {
-            mAvailableVersionTextView.setVisibility(View.GONE);
+        if (PluginUtils.isUpdateAvailable(mPlugin, mPluginInfo)) {
+            installedVersion = String.format(getString(R.string.plugin_installed_version), pluginVersion);
+            String availableVersion = String.format(getString(R.string.plugin_available_version), mPluginInfo.getVersion());
+            mVersionTopTextView.setText(availableVersion);
+            mVersionBottomTextView.setText(installedVersion);
+            mVersionBottomTextView.setVisibility(View.VISIBLE);
         } else {
-            mAvailableVersionTextView.setVisibility(View.VISIBLE);
-            mAvailableVersionTextView.setText(getString(R.string.plugin_available_version,
-                    mPluginInfo.getVersion()));
+            installedVersion = String.format(getString(R.string.plugin_version), pluginVersion);
+            mVersionTopTextView.setText(installedVersion);
+            mVersionBottomTextView.setVisibility(View.GONE);
         }
 
         refreshUpdateVersionViews();
