@@ -236,7 +236,7 @@ public class ThemeBrowserActivity extends AppCompatActivity implements ThemeBrow
         } else {
             AppLog.d(T.THEMES, "Current Theme fetch successful!");
             mCurrentTheme = mThemeStore.getActiveThemeForSite(event.site);
-            AppLog.d(T.THEMES, "Current theme is " + mCurrentTheme.getName());
+            AppLog.d(T.THEMES, "Current theme is " + (mCurrentTheme == null ? "(null)" : mCurrentTheme.getName()));
             updateCurrentThemeView();
 
             if (mThemeSearchFragment != null && mThemeSearchFragment.isVisible()) {
