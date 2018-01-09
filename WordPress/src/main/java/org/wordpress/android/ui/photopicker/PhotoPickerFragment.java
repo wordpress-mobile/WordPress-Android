@@ -61,6 +61,7 @@ public class PhotoPickerFragment extends Fragment {
      */
     public interface PhotoPickerListener {
         void onPhotoPickerMediaChosen(@NonNull List<Uri> uriList);
+
         void onPhotoPickerIconClicked(@NonNull PhotoPickerIcon icon);
     }
 
@@ -129,7 +130,9 @@ public class PhotoPickerFragment extends Fragment {
 
         mBottomBar = view.findViewById(R.id.bottom_bar);
 
-        if (mBrowserType != MediaBrowserType.AZTEC_EDITOR_PICKER) {
+        if (mBrowserType == MediaBrowserType.AZTEC_EDITOR_PICKER) {
+            mBottomBar.setVisibility(View.GONE);
+        } else {
             mBottomBar.findViewById(R.id.icon_camera).setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -165,8 +168,6 @@ public class PhotoPickerFragment extends Fragment {
                     }
                 });
             }
-        } else {
-            mBottomBar.setVisibility(View.GONE);
         }
 
         mSoftAskContainer = (ViewGroup) view.findViewById(R.id.container_soft_ask);
@@ -267,13 +268,13 @@ public class PhotoPickerFragment extends Fragment {
     }
 
     private void showBottomBar() {
-        if (!isBottomBarShowing()) {
+        if (!isBottomBarShowing() && mBrowserType != MediaBrowserType.AZTEC_EDITOR_PICKER) {
             AniUtils.animateBottomBar(mBottomBar, true);
         }
     }
 
     private void hideBottomBar() {
-        if (isBottomBarShowing()) {
+        if (isBottomBarShowing() && mBrowserType != MediaBrowserType.AZTEC_EDITOR_PICKER) {
             AniUtils.animateBottomBar(mBottomBar, false);
         }
     }
