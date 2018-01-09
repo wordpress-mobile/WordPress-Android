@@ -174,7 +174,7 @@ public class PhotoPickerFragment extends Fragment {
         checkStoragePermission();
     }
 
-    private void doIconClicked(@NonNull PhotoPickerIcon icon) {
+    public void doIconClicked(@NonNull PhotoPickerIcon icon) {
         mLastTappedIcon = icon;
 
         if (icon == PhotoPickerIcon.ANDROID_CAPTURE_PHOTO || icon == PhotoPickerIcon.ANDROID_CAPTURE_VIDEO) {
@@ -208,7 +208,7 @@ public class PhotoPickerFragment extends Fragment {
         }
     }
 
-    private void showPickerPopupMenu(@NonNull View view) {
+    public void showPickerPopupMenu(@NonNull View view) {
         PopupMenu popup = new PopupMenu(getActivity(), view);
 
         MenuItem itemPhoto = popup.getMenu().add(R.string.photo_picker_choose_photo);
@@ -232,7 +232,7 @@ public class PhotoPickerFragment extends Fragment {
         popup.show();
     }
 
-    private void showCameraPopupMenu(@NonNull View view) {
+    public void showCameraPopupMenu(@NonNull View view) {
         PopupMenu popup = new PopupMenu(getActivity(), view);
 
         MenuItem itemPhoto = popup.getMenu().add(R.string.photo_picker_capture_photo);
