@@ -88,13 +88,16 @@ public class PluginStore extends Store {
 
     @SuppressWarnings("WeakerAccess")
     public static class FetchedWPOrgPluginPayload extends Payload<FetchWPOrgPluginError> {
+        public String pluginSlug;
         public WPOrgPluginModel wpOrgPlugin;
 
-        public FetchedWPOrgPluginPayload(FetchWPOrgPluginError error) {
+        public FetchedWPOrgPluginPayload(String pluginSlug, FetchWPOrgPluginError error) {
+            this.pluginSlug = pluginSlug;
             this.error = error;
         }
 
-        public FetchedWPOrgPluginPayload(WPOrgPluginModel plugin) {
+        public FetchedWPOrgPluginPayload(String pluginSlug, WPOrgPluginModel plugin) {
+            this.pluginSlug = pluginSlug;
             this.wpOrgPlugin = plugin;
         }
     }
@@ -347,7 +350,11 @@ public class PluginStore extends Store {
 
     @SuppressWarnings("WeakerAccess")
     public static class OnWPOrgPluginFetched extends OnChanged<FetchWPOrgPluginError> {
-        public WPOrgPluginModel wpOrgPlugin;
+        public String pluginSlug;
+
+        public OnWPOrgPluginFetched(String pluginSlug) {
+            this.pluginSlug = pluginSlug;
+        }
     }
 
     @SuppressWarnings("WeakerAccess")
@@ -536,11 +543,10 @@ public class PluginStore extends Store {
     }
 
     private void fetchedWPOrgPlugin(FetchedWPOrgPluginPayload payload) {
-        OnWPOrgPluginFetched event = new OnWPOrgPluginFetched();
+        OnWPOrgPluginFetched event = new OnWPOrgPluginFetched(payload.pluginSlug);
         if (payload.isError()) {
             event.error = payload.error;
-        } else {
-            event.wpOrgPlugin = payload.wpOrgPlugin;
+        } else if (event.pluginSlug != null) {
             PluginSqlUtils.insertOrUpdateWPOrgPlugin(payload.wpOrgPlugin);
         }
         emitChange(event);

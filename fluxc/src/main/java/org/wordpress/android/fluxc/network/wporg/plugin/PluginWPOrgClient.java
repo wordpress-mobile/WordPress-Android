@@ -35,7 +35,7 @@ public class PluginWPOrgClient extends BaseWPOrgAPIClient {
         mDispatcher = dispatcher;
     }
 
-    public void fetchWPOrgPlugin(String pluginSlug) {
+    public void fetchWPOrgPlugin(final String pluginSlug) {
         String url = WPORGAPI.plugins.info.version("1.0").slug(pluginSlug).getUrl();
         Map<String, String> params = new HashMap<>();
         params.put("fields", "icons");
@@ -48,11 +48,12 @@ public class PluginWPOrgClient extends BaseWPOrgAPIClient {
                                     FetchWPOrgPluginError error = new FetchWPOrgPluginError(
                                             FetchWPOrgPluginErrorType.EMPTY_RESPONSE);
                                     mDispatcher.dispatch(PluginActionBuilder.newFetchedWporgPluginAction(
-                                            new FetchedWPOrgPluginPayload(error)));
+                                            new FetchedWPOrgPluginPayload(pluginSlug, error)));
                                     return;
                                 }
                                 WPOrgPluginModel wpOrgPluginModel = wpOrgPluginFromResponse(response);
-                                FetchedWPOrgPluginPayload payload = new FetchedWPOrgPluginPayload(wpOrgPluginModel);
+                                FetchedWPOrgPluginPayload payload =
+                                        new FetchedWPOrgPluginPayload(pluginSlug, wpOrgPluginModel);
                                 mDispatcher.dispatch(PluginActionBuilder.newFetchedWporgPluginAction(payload));
                             }
                         },
@@ -62,7 +63,7 @@ public class PluginWPOrgClient extends BaseWPOrgAPIClient {
                                 FetchWPOrgPluginError error = new FetchWPOrgPluginError(
                                         FetchWPOrgPluginErrorType.GENERIC_ERROR);
                                 mDispatcher.dispatch(PluginActionBuilder.newFetchedWporgPluginAction(
-                                        new FetchedWPOrgPluginPayload(error)));
+                                        new FetchedWPOrgPluginPayload(pluginSlug, error)));
                             }
                         }
                 );
