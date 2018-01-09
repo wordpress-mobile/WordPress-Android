@@ -764,7 +764,6 @@ public class EditPostActivity extends AppCompatActivity implements
         addMediaList(uriList, false);
     }
 
-
     @Override
     public void onMediaToolbarButtonClicked(MediaToolbarAction button) {
         switch (button) {
