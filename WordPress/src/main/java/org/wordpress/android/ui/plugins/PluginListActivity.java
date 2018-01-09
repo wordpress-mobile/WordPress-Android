@@ -243,19 +243,19 @@ public class PluginListActivity extends AppCompatActivity {
 
         @Override
         public void onBindViewHolder(ViewHolder holder, int position) {
-            SitePluginModel pluginModel = getItem(position);
-            if (pluginModel != null) {
+            SitePluginModel sitePlugin = getItem(position);
+            if (sitePlugin != null) {
                 PluginViewHolder pluginHolder = (PluginViewHolder) holder;
-                pluginHolder.name.setText(pluginModel.getDisplayName());
-                pluginHolder.status.setText(getPluginStatusText(pluginModel));
-                WPOrgPluginModel wpOrgPlugin = PluginUtils.getWPOrgPlugin(mPluginStore, pluginModel);
+                pluginHolder.name.setText(sitePlugin.getDisplayName());
+                pluginHolder.status.setText(getPluginStatusText(sitePlugin));
+                WPOrgPluginModel wpOrgPlugin = PluginUtils.getWPOrgPlugin(mPluginStore, sitePlugin);
                 if (wpOrgPlugin == null) {
-                    mDispatcher.dispatch(PluginActionBuilder.newFetchWporgPluginAction(pluginModel.getSlug()));
+                    mDispatcher.dispatch(PluginActionBuilder.newFetchWporgPluginAction(sitePlugin.getSlug()));
                 }
                 String iconUrl = wpOrgPlugin != null ? wpOrgPlugin.getIcon() : "";
                 pluginHolder.icon.setImageUrl(iconUrl, ImageType.PLUGIN_ICON);
 
-                if (wpOrgPlugin != null && PluginUtils.isUpdateAvailable(pluginModel, wpOrgPlugin)) {
+                if (wpOrgPlugin != null && PluginUtils.isUpdateAvailable(sitePlugin, wpOrgPlugin)) {
                     pluginHolder.updateAvailableIcon.setVisibility(View.VISIBLE);
                 } else {
                     pluginHolder.updateAvailableIcon.setVisibility(View.GONE);
