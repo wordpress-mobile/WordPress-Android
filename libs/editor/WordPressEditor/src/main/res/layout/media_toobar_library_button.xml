@@ -6,6 +6,6 @@
     android:layout_width="wrap_content"
     android:layout_height="fill_parent"
     android:background="@drawable/media_bar_button_library_selector"
-    android:contentDescription="@string/media_bar_description_camera">
+    android:contentDescription="@string/media_bar_description_library">
 </org.wordpress.aztec.toolbar.RippleToggleButton>
 
