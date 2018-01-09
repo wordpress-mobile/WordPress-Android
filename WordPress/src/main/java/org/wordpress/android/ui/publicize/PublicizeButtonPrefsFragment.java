@@ -136,12 +136,10 @@ public class PublicizeButtonPrefsFragment extends Fragment implements
     public void onViewStateRestored(Bundle savedInstanceState) {
         super.onViewStateRestored(savedInstanceState);
 
-        if (getActivity() != null && !getActivity().isFinishing()) {
-            boolean shouldFetchSettings = (savedInstanceState == null);
-            getSiteSettings(shouldFetchSettings);
+        boolean shouldFetchSettings = (savedInstanceState == null);
+        getSiteSettings(shouldFetchSettings);
 
-            configureSharingButtons();
-        }
+        configureSharingButtons();
     }
 
     /**
