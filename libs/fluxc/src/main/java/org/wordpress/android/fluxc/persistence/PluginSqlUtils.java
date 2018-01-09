@@ -2,11 +2,11 @@ package org.wordpress.android.fluxc.persistence;
 
 import android.support.annotation.NonNull;
 
-import com.wellsql.generated.DotOrgPluginModelTable;
+import com.wellsql.generated.WPOrgPluginModelTable;
 import com.wellsql.generated.SitePluginModelTable;
 import com.yarolegovich.wellsql.WellSql;
 
-import org.wordpress.android.fluxc.model.DotOrgPluginModel;
+import org.wordpress.android.fluxc.model.WPOrgPluginModel;
 import org.wordpress.android.fluxc.model.SitePluginModel;
 import org.wordpress.android.fluxc.model.SiteModel;
 
@@ -73,21 +73,21 @@ public class PluginSqlUtils {
                 .endWhere().execute();
     }
 
-    public static int insertOrUpdatePluginInfo(DotOrgPluginModel pluginInfo) {
+    public static int insertOrUpdatePluginInfo(WPOrgPluginModel pluginInfo) {
         if (pluginInfo == null) {
             return 0;
         }
 
         // Slug is the primary key in remote, so we should use that to identify PluginInfoModels
-        DotOrgPluginModel oldPluginInfo = getPluginInfoBySlug(pluginInfo.getSlug());
+        WPOrgPluginModel oldPluginInfo = getPluginInfoBySlug(pluginInfo.getSlug());
 
         if (oldPluginInfo == null) {
             WellSql.insert(pluginInfo).execute();
             return 1;
         } else {
             int oldId = oldPluginInfo.getId();
-            return WellSql.update(DotOrgPluginModel.class).whereId(oldId)
-                    .put(pluginInfo, new UpdateAllExceptId<>(DotOrgPluginModel.class)).execute();
+            return WellSql.update(WPOrgPluginModel.class).whereId(oldId)
+                    .put(pluginInfo, new UpdateAllExceptId<>(WPOrgPluginModel.class)).execute();
         }
     }
 
@@ -99,9 +99,9 @@ public class PluginSqlUtils {
         return result.isEmpty() ? null : result.get(0);
     }
 
-    public static DotOrgPluginModel getPluginInfoBySlug(String slug) {
-        List<DotOrgPluginModel> result = WellSql.select(DotOrgPluginModel.class)
-                .where().equals(DotOrgPluginModelTable.SLUG, slug)
+    public static WPOrgPluginModel getPluginInfoBySlug(String slug) {
+        List<WPOrgPluginModel> result = WellSql.select(WPOrgPluginModel.class)
+                .where().equals(WPOrgPluginModelTable.SLUG, slug)
                 .endWhere().getAsModel();
         return result.isEmpty() ? null : result.get(0);
     }

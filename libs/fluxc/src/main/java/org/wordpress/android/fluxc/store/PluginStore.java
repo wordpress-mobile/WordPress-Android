@@ -10,7 +10,7 @@ import org.wordpress.android.fluxc.Payload;
 import org.wordpress.android.fluxc.action.PluginAction;
 import org.wordpress.android.fluxc.annotations.action.Action;
 import org.wordpress.android.fluxc.annotations.action.IAction;
-import org.wordpress.android.fluxc.model.DotOrgPluginModel;
+import org.wordpress.android.fluxc.model.WPOrgPluginModel;
 import org.wordpress.android.fluxc.model.SitePluginModel;
 import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.network.BaseRequest.BaseNetworkError;
@@ -88,13 +88,13 @@ public class PluginStore extends Store {
 
     @SuppressWarnings("WeakerAccess")
     public static class FetchedPluginInfoPayload extends Payload<FetchPluginInfoError> {
-        public DotOrgPluginModel pluginInfo;
+        public WPOrgPluginModel pluginInfo;
 
         public FetchedPluginInfoPayload(FetchPluginInfoError error) {
             this.error = error;
         }
 
-        public FetchedPluginInfoPayload(DotOrgPluginModel pluginInfo) {
+        public FetchedPluginInfoPayload(WPOrgPluginModel pluginInfo) {
             this.pluginInfo = pluginInfo;
         }
     }
@@ -347,7 +347,7 @@ public class PluginStore extends Store {
 
     @SuppressWarnings("WeakerAccess")
     public static class OnPluginInfoChanged extends OnChanged<FetchPluginInfoError> {
-        public DotOrgPluginModel pluginInfo;
+        public WPOrgPluginModel pluginInfo;
     }
 
     @SuppressWarnings("WeakerAccess")
@@ -466,7 +466,7 @@ public class PluginStore extends Store {
         return PluginSqlUtils.getSitePluginByName(site, name);
     }
 
-    public DotOrgPluginModel getPluginInfoBySlug(String slug) {
+    public WPOrgPluginModel getPluginInfoBySlug(String slug) {
         return PluginSqlUtils.getPluginInfoBySlug(slug);
     }
 
