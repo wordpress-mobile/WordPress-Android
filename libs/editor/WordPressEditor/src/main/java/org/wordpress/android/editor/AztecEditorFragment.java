@@ -46,7 +46,6 @@ import com.google.gson.Gson;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.wordpress.android.editor.MetadataUtils.AttributesWithClass;
-import org.wordpress.android.editor.legacy.EditorImageSettingsListener;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.DisplayUtils;
@@ -153,6 +152,7 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
 
     private EditorBetaClickListener mEditorBetaClickListener;
     private EditorImageSettingsListener mEditorImageSettingsListener;
+    private MediaToolbarAction.MediaToolbarButtonClickListener mMediaToolbarButtonClickListener;
 
     private Drawable loadingImagePlaceholder;
     private Drawable loadingVideoPlaceholder;
@@ -248,7 +248,7 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
         mediaToolbarGalleryButton.setMediaToolbarButtonClickListener(new IMediaToolbarButton.IMediaToolbarClickListener() {
             @Override
             public void onClick(View view) {
-                mEditorFragmentListener.onAddMediaClicked();
+                mMediaToolbarButtonClickListener.onMediaToolbarButtonClicked(MediaToolbarAction.GALLERY);
             }
         });
 
@@ -256,7 +256,7 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
         mediaToolbarCameraButton.setMediaToolbarButtonClickListener(new IMediaToolbarButton.IMediaToolbarClickListener() {
             @Override
             public void onClick(View view) {
-                mEditorFragmentListener.onAddMediaClicked();
+                mMediaToolbarButtonClickListener.onMediaToolbarButtonClicked(MediaToolbarAction.CAMERA);
             }
         });
 
@@ -264,7 +264,7 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
         mediaToolbarLibraryButton.setMediaToolbarButtonClickListener(new IMediaToolbarButton.IMediaToolbarClickListener() {
             @Override
             public void onClick(View view) {
-                mEditorFragmentListener.onAddMediaClicked();
+                mMediaToolbarButtonClickListener.onMediaToolbarButtonClicked(MediaToolbarAction.LIBRARY);
             }
         });
 
@@ -298,6 +298,10 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
 
     public void setEditorImageSettingsListener(EditorImageSettingsListener listener) {
         mEditorImageSettingsListener = listener;
+    }
+
+    public void setMediaToolbarButtonClickListener(MediaToolbarAction.MediaToolbarButtonClickListener listener) {
+        mMediaToolbarButtonClickListener = listener;
     }
 
     public void setAztecImageLoader(Html.ImageGetter imageLoader) {
@@ -634,6 +638,8 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
 
     public void enableMediaMode(boolean enable) {
         formattingToolbar.enableMediaMode(enable);
+        formattingToolbar.toggleMediaToolbar();
+
         getActivity().invalidateOptionsMenu();
     }
 
@@ -784,8 +790,8 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
                 if (!TextUtils.isEmpty(mediaFile.getVideoPressShortCode())) {
                     attributes.removeAttribute(ATTR_SRC);
                     String videoPressId = ShortcodeUtils.getVideoPressIdFromShortCode(mediaFile.getVideoPressShortCode());
-                    attributes.setValue(VideoPressExtensionsKt.getATTRIBUTE_VIDEOPRESS_HIDDEN_ID() , videoPressId);
-                    attributes.setValue(VideoPressExtensionsKt.getATTRIBUTE_VIDEOPRESS_HIDDEN_SRC() , mediaUrl);
+                    attributes.setValue(VideoPressExtensionsKt.getATTRIBUTE_VIDEOPRESS_HIDDEN_ID(), videoPressId);
+                    attributes.setValue(VideoPressExtensionsKt.getATTRIBUTE_VIDEOPRESS_HIDDEN_SRC(), mediaUrl);
                 }
                 // Do not set default attributes here like for pictures
                 addVideoUploadingClassIfMissing(attributes);
@@ -1024,8 +1030,8 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
                 if (mediaType.equals(MediaType.VIDEO) && !TextUtils.isEmpty(mediaFile.getVideoPressShortCode())) {
                     String videoPressId = ShortcodeUtils.getVideoPressIdFromShortCode(
                             mediaFile.getVideoPressShortCode());
-                    attrs.setValue(VideoPressExtensionsKt.getATTRIBUTE_VIDEOPRESS_HIDDEN_ID() , videoPressId);
-                    attrs.setValue(VideoPressExtensionsKt.getATTRIBUTE_VIDEOPRESS_HIDDEN_SRC() , remoteUrl);
+                    attrs.setValue(VideoPressExtensionsKt.getATTRIBUTE_VIDEOPRESS_HIDDEN_ID(), videoPressId);
+                    attrs.setValue(VideoPressExtensionsKt.getATTRIBUTE_VIDEOPRESS_HIDDEN_SRC(), remoteUrl);
                     attrs.removeAttribute("src");
                     attrs.removeAttribute(ATTR_CLASS);
                 }
@@ -1421,7 +1427,7 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
             ToastUtils.showToast(getActivity(), R.string.alert_insert_image_html_mode, ToastUtils.Duration.LONG);
         } else {
             mEditorFragmentListener.onAddMediaClicked();
-            return false;
+            return true;
         }
 
         return true;

@@ -44,4 +44,8 @@ public enum MediaToolbarAction implements IToolbarAction {
     public boolean isStylingAction() {
         return false;
     }
+
+    public interface MediaToolbarButtonClickListener {
+        void onMediaToolbarButtonClicked(MediaToolbarAction button);
+    }
 }
