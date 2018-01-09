@@ -53,11 +53,9 @@ public class AztecImageLoader implements Html.ImageGetter {
                 if (bitmap != null) {
                     WordPress.getBitmapCache().putBitmap(cacheKey, bitmap);
                     bitmap.setDensity(DisplayMetrics.DENSITY_DEFAULT);
-                    BitmapDrawable bitmapDrawable = new BitmapDrawable(context.getResources(), bitmap);
-                    callbacks.onImageLoaded(bitmapDrawable);
-                } else {
-                    callbacks.onImageFailed();
                 }
+                BitmapDrawable bitmapDrawable = new BitmapDrawable(context.getResources(), bitmap);
+                callbacks.onImageLoaded(bitmapDrawable);
             } else {
                 callbacks.onImageFailed();
             }
@@ -78,16 +76,12 @@ public class AztecImageLoader implements Html.ImageGetter {
                     final String cacheKey = url + maxWidth;
                     // Make sure both width ad height respect the max size for the editor
                     bitmap = ImageUtils.getScaledBitmapAtLongestSide(bitmap, maxWidth);
-                    if (bitmap != null) {
-                        WordPress.getBitmapCache().putBitmap(cacheKey, bitmap);
-                        // By default, BitmapFactory.decodeFile sets the bitmap's density to the device default so, we need
-                        // to correctly set the input density to 160 ourselves.
-                        bitmap.setDensity(DisplayMetrics.DENSITY_DEFAULT);
-                        BitmapDrawable bitmapDrawable = new BitmapDrawable(context.getResources(), bitmap);
-                        callbacks.onImageLoaded(bitmapDrawable);
-                    } else {
-                        callbacks.onImageFailed();
-                    }
+                    WordPress.getBitmapCache().putBitmap(cacheKey, bitmap);
+                    // By default, BitmapFactory.decodeFile sets the bitmap's density to the device default so, we need
+                    // to correctly set the input density to 160 ourselves.
+                    bitmap.setDensity(DisplayMetrics.DENSITY_DEFAULT);
+                    BitmapDrawable bitmapDrawable = new BitmapDrawable(context.getResources(), bitmap);
+                    callbacks.onImageLoaded(bitmapDrawable);
                 }
             }
 
