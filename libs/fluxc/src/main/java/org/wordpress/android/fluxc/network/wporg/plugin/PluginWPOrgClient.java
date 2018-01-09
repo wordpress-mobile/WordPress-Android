@@ -39,11 +39,11 @@ public class PluginWPOrgClient extends BaseWPOrgAPIClient {
         String url = WPORGAPI.plugins.info.version("1.0").slug(plugin).getUrl();
         Map<String, String> params = new HashMap<>();
         params.put("fields", "icons");
-        final WPOrgAPIGsonRequest<FetchPluginInfoResponse> request =
-                new WPOrgAPIGsonRequest<>(Method.GET, url, params, null, FetchPluginInfoResponse.class,
-                        new Listener<FetchPluginInfoResponse>() {
+        final WPOrgAPIGsonRequest<WPOrgPluginResponse> request =
+                new WPOrgAPIGsonRequest<>(Method.GET, url, params, null, WPOrgPluginResponse.class,
+                        new Listener<WPOrgPluginResponse>() {
                             @Override
-                            public void onResponse(FetchPluginInfoResponse response) {
+                            public void onResponse(WPOrgPluginResponse response) {
                                 if (response == null) {
                                     FetchPluginInfoError error = new FetchPluginInfoError(
                                             FetchPluginInfoErrorType.EMPTY_RESPONSE);
@@ -69,7 +69,7 @@ public class PluginWPOrgClient extends BaseWPOrgAPIClient {
         add(request);
     }
 
-    private WPOrgPluginModel pluginInfoModelFromResponse(FetchPluginInfoResponse response) {
+    private WPOrgPluginModel pluginInfoModelFromResponse(WPOrgPluginResponse response) {
         WPOrgPluginModel pluginInfo = new WPOrgPluginModel();
         pluginInfo.setName(response.name);
         pluginInfo.setRating(response.rating);
