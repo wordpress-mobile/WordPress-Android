@@ -35,6 +35,7 @@ import org.wordpress.android.fluxc.store.PluginStore.DeleteSitePluginPayload;
 import org.wordpress.android.fluxc.store.PluginStore.OnSitePluginConfigured;
 import org.wordpress.android.fluxc.store.PluginStore.OnSitePluginDeleted;
 import org.wordpress.android.fluxc.store.PluginStore.OnSitePluginUpdated;
+import org.wordpress.android.fluxc.store.PluginStore.OnWPOrgPluginFetched;
 import org.wordpress.android.fluxc.store.PluginStore.UpdateSitePluginPayload;
 import org.wordpress.android.ui.ActivityLauncher;
 import org.wordpress.android.util.AnalyticsUtils;
@@ -58,7 +59,7 @@ public class PluginDetailActivity extends AppCompatActivity {
 
     private SiteModel mSite;
     private SitePluginModel mPlugin;
-    private WPOrgPluginModel mPluginInfo;
+    private WPOrgPluginModel mWPOrgPlugin;
 
     private ScrollView mContainer;
     private TextView mInstalledVersionTextView;
@@ -126,7 +127,7 @@ public class PluginDetailActivity extends AppCompatActivity {
                     savedInstanceState.getBoolean(KEY_IS_SHOWING_REMOVE_PLUGIN_CONFIRMATION_DIALOG);
         }
 
-        mPluginInfo = PluginUtils.getPluginInfo(mPluginStore, mPlugin);
+        mWPOrgPlugin = PluginUtils.getWPOrgPlugin(mPluginStore, mPlugin);
 
         setContentView(R.layout.plugin_detail_activity);
 
@@ -277,19 +278,19 @@ public class PluginDetailActivity extends AppCompatActivity {
                     mPlugin.getVersion()));
         }
 
-        if (!PluginUtils.isUpdateAvailable(mPlugin, mPluginInfo)) {
+        if (!PluginUtils.isUpdateAvailable(mPlugin, mWPOrgPlugin)) {
             mAvailableVersionTextView.setVisibility(View.GONE);
         } else {
             mAvailableVersionTextView.setVisibility(View.VISIBLE);
             mAvailableVersionTextView.setText(getString(R.string.plugin_available_version,
-                    mPluginInfo.getVersion()));
+                    mWPOrgPlugin.getVersion()));
         }
 
         refreshUpdateVersionViews();
     }
 
     private void refreshUpdateVersionViews() {
-        boolean isUpdateAvailable = PluginUtils.isUpdateAvailable(mPlugin, mPluginInfo);
+        boolean isUpdateAvailable = PluginUtils.isUpdateAvailable(mPlugin, mWPOrgPlugin);
         if (isUpdateAvailable && !mIsUpdatingPlugin) {
             mUpdateTextView.setVisibility(View.VISIBLE);
         } else {
@@ -395,7 +396,7 @@ public class PluginDetailActivity extends AppCompatActivity {
         if (!NetworkUtils.checkConnection(this)) {
             return;
         }
-        if (!PluginUtils.isUpdateAvailable(mPlugin, mPluginInfo) || mIsUpdatingPlugin) {
+        if (!PluginUtils.isUpdateAvailable(mPlugin, mWPOrgPlugin) || mIsUpdatingPlugin) {
             return;
         }
 
@@ -484,7 +485,7 @@ public class PluginDetailActivity extends AppCompatActivity {
 
     @SuppressWarnings("unused")
     @Subscribe(threadMode = ThreadMode.MAIN)
-    public void onWPOrgPluginFetched(PluginStore.OnWPOrgPluginFetched event) {
+    public void onWPOrgPluginFetched(OnWPOrgPluginFetched event) {
         if (isFinishing()) {
             return;
         }
@@ -493,12 +494,10 @@ public class PluginDetailActivity extends AppCompatActivity {
                     + event.error.type);
             return;
         }
-//        if (event.pluginInfo != null
-//                && mPlugin.getSlug() != null
-//                && mPlugin.getSlug().equals(event.pluginInfo.getSlug())) {
-//            mPluginInfo = event.pluginInfo;
-//            refreshPluginVersionViews();
-//        }
+        if (!TextUtils.isEmpty(mPlugin.getSlug()) && mPlugin.getSlug().equals(event.pluginSlug)) {
+            mWPOrgPlugin = mPluginStore.getWPOrgPluginBySlug(event.pluginSlug);
+            refreshPluginVersionViews();
+        }
     }
 
     @SuppressWarnings("unused")

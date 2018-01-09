@@ -10,6 +10,7 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.RecyclerView.ViewHolder;
 import android.support.v7.widget.Toolbar;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
@@ -179,12 +180,12 @@ public class PluginListActivity extends AppCompatActivity {
             return;
         }
         if (event.isError()) {
-            AppLog.e(T.API, "An error occurred while fetching the plugin info with type: " + event.error.type);
+            AppLog.e(T.API, "An error occurred while fetching the wporg plugin with type: " + event.error.type);
             return;
         }
-//        if (event.pluginInfo != null && !TextUtils.isEmpty(event.pluginInfo.getSlug())) {
-//            mAdapter.refreshPluginWithSlug(event.pluginInfo.getSlug());
-//        }
+        if (!TextUtils.isEmpty(event.pluginSlug)) {
+            mAdapter.refreshPluginWithSlug(event.pluginSlug);
+        }
     }
 
     @SuppressWarnings("unused")
@@ -247,14 +248,14 @@ public class PluginListActivity extends AppCompatActivity {
                 PluginViewHolder pluginHolder = (PluginViewHolder) holder;
                 pluginHolder.name.setText(pluginModel.getDisplayName());
                 pluginHolder.status.setText(getPluginStatusText(pluginModel));
-                WPOrgPluginModel pluginInfo = PluginUtils.getPluginInfo(mPluginStore, pluginModel);
-                if (pluginInfo == null) {
+                WPOrgPluginModel wpOrgPlugin = PluginUtils.getWPOrgPlugin(mPluginStore, pluginModel);
+                if (wpOrgPlugin == null) {
                     mDispatcher.dispatch(PluginActionBuilder.newFetchWporgPluginAction(pluginModel.getSlug()));
                 }
-                String iconUrl = pluginInfo != null ? pluginInfo.getIcon() : "";
+                String iconUrl = wpOrgPlugin != null ? wpOrgPlugin.getIcon() : "";
                 pluginHolder.icon.setImageUrl(iconUrl, ImageType.PLUGIN_ICON);
 
-                if (pluginInfo != null && PluginUtils.isUpdateAvailable(pluginModel, pluginInfo)) {
+                if (wpOrgPlugin != null && PluginUtils.isUpdateAvailable(pluginModel, wpOrgPlugin)) {
                     pluginHolder.updateAvailableIcon.setVisibility(View.VISIBLE);
                 } else {
                     pluginHolder.updateAvailableIcon.setVisibility(View.GONE);
