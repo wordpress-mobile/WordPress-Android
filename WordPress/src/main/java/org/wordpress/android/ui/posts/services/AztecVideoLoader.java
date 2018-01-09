@@ -52,6 +52,7 @@ public class AztecVideoLoader implements Html.VideoThumbnailGetter {
             protected void onPostExecute(Bitmap thumb) {
                 if (thumb == null) {
                     callbacks.onThumbnailFailed();
+                    return;
                 }
                 thumb = ImageUtils.getScaledBitmapAtLongestSide(thumb, maxWidth);
                 thumb.setDensity(DisplayMetrics.DENSITY_DEFAULT);
