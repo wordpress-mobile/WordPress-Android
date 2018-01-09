@@ -35,8 +35,8 @@ public class PluginWPOrgClient extends BaseWPOrgAPIClient {
         mDispatcher = dispatcher;
     }
 
-    public void fetchPluginInfo(String plugin) {
-        String url = WPORGAPI.plugins.info.version("1.0").slug(plugin).getUrl();
+    public void fetchWPOrgPlugin(String pluginSlug) {
+        String url = WPORGAPI.plugins.info.version("1.0").slug(pluginSlug).getUrl();
         Map<String, String> params = new HashMap<>();
         params.put("fields", "icons");
         final WPOrgAPIGsonRequest<WPOrgPluginResponse> request =
@@ -51,8 +51,8 @@ public class PluginWPOrgClient extends BaseWPOrgAPIClient {
                                             new FetchedWPOrgPluginPayload(error)));
                                     return;
                                 }
-                                WPOrgPluginModel pluginInfoModel = pluginInfoModelFromResponse(response);
-                                FetchedWPOrgPluginPayload payload = new FetchedWPOrgPluginPayload(pluginInfoModel);
+                                WPOrgPluginModel wpOrgPluginModel = wpOrgPluginFromResponse(response);
+                                FetchedWPOrgPluginPayload payload = new FetchedWPOrgPluginPayload(wpOrgPluginModel);
                                 mDispatcher.dispatch(PluginActionBuilder.newFetchedPluginInfoAction(payload));
                             }
                         },
@@ -69,13 +69,13 @@ public class PluginWPOrgClient extends BaseWPOrgAPIClient {
         add(request);
     }
 
-    private WPOrgPluginModel pluginInfoModelFromResponse(WPOrgPluginResponse response) {
-        WPOrgPluginModel pluginInfo = new WPOrgPluginModel();
-        pluginInfo.setName(response.name);
-        pluginInfo.setRating(response.rating);
-        pluginInfo.setSlug(response.slug);
-        pluginInfo.setVersion(response.version);
-        pluginInfo.setIcon(response.icon);
-        return pluginInfo;
+    private WPOrgPluginModel wpOrgPluginFromResponse(WPOrgPluginResponse response) {
+        WPOrgPluginModel wpOrgPluginModel = new WPOrgPluginModel();
+        wpOrgPluginModel.setName(response.name);
+        wpOrgPluginModel.setRating(response.rating);
+        wpOrgPluginModel.setSlug(response.slug);
+        wpOrgPluginModel.setVersion(response.version);
+        wpOrgPluginModel.setIcon(response.icon);
+        return wpOrgPluginModel;
     }
 }

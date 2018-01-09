@@ -425,7 +425,7 @@ public class PluginStore extends Store {
                 fetchSitePlugins((SiteModel) action.getPayload());
                 break;
             case FETCH_PLUGIN_INFO:
-                fetchPluginInfo((String) action.getPayload());
+                fetchWPOrgPlugin((String) action.getPayload());
                 break;
             case UPDATE_SITE_PLUGIN:
                 updateSitePlugin((UpdateSitePluginPayload) action.getPayload());
@@ -444,7 +444,7 @@ public class PluginStore extends Store {
                 fetchedSitePlugins((FetchedSitePluginsPayload) action.getPayload());
                 break;
             case FETCHED_PLUGIN_INFO:
-                fetchedPluginInfo((FetchedWPOrgPluginPayload) action.getPayload());
+                fetchedWPOrgPlugin((FetchedWPOrgPluginPayload) action.getPayload());
                 break;
             case UPDATED_SITE_PLUGIN:
                 updatedSitePlugin((UpdatedSitePluginPayload) action.getPayload());
@@ -466,8 +466,8 @@ public class PluginStore extends Store {
         return PluginSqlUtils.getSitePluginByName(site, name);
     }
 
-    public WPOrgPluginModel getPluginInfoBySlug(String slug) {
-        return PluginSqlUtils.getPluginInfoBySlug(slug);
+    public WPOrgPluginModel getWPOrgPluginBySlug(String slug) {
+        return PluginSqlUtils.getWPOrgPluginBySlug(slug);
     }
 
     private void fetchSitePlugins(SiteModel site) {
@@ -480,8 +480,8 @@ public class PluginStore extends Store {
         }
     }
 
-    private void fetchPluginInfo(String plugin) {
-        mPluginWPOrgClient.fetchPluginInfo(plugin);
+    private void fetchWPOrgPlugin(String pluginSlug) {
+        mPluginWPOrgClient.fetchWPOrgPlugin(pluginSlug);
     }
 
     private void configureSitePlugin(ConfigureSitePluginPayload payload) {
@@ -535,13 +535,13 @@ public class PluginStore extends Store {
         emitChange(event);
     }
 
-    private void fetchedPluginInfo(FetchedWPOrgPluginPayload payload) {
+    private void fetchedWPOrgPlugin(FetchedWPOrgPluginPayload payload) {
         OnPluginInfoChanged event = new OnPluginInfoChanged();
         if (payload.isError()) {
             event.error = payload.error;
         } else {
             event.pluginInfo = payload.plugin;
-            PluginSqlUtils.insertOrUpdatePluginInfo(payload.plugin);
+            PluginSqlUtils.insertOrUpdateWPOrgPlugin(payload.plugin);
         }
         emitChange(event);
     }
