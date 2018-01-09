@@ -9,8 +9,8 @@ import com.google.gson.annotations.JsonAdapter;
 
 import java.lang.reflect.Type;
 
-@JsonAdapter(PluginInfoDeserializer.class)
-public class FetchPluginInfoResponse {
+@JsonAdapter(WPOrgPluginDeserializer.class)
+public class WPOrgPluginResponse {
     public String name;
     public String slug;
     public String version;
@@ -18,12 +18,12 @@ public class FetchPluginInfoResponse {
     public String icon;
 }
 
-class PluginInfoDeserializer implements JsonDeserializer<FetchPluginInfoResponse> {
+class WPOrgPluginDeserializer implements JsonDeserializer<WPOrgPluginResponse> {
     @Override
-    public FetchPluginInfoResponse deserialize(JsonElement json, Type typeOfT,
-                                               JsonDeserializationContext context) throws JsonParseException {
+    public WPOrgPluginResponse deserialize(JsonElement json, Type typeOfT,
+                                           JsonDeserializationContext context) throws JsonParseException {
         JsonObject jsonObject = json.getAsJsonObject();
-        FetchPluginInfoResponse response = new FetchPluginInfoResponse();
+        WPOrgPluginResponse response = new WPOrgPluginResponse();
         response.name = getStringFromJsonIfAvailable(jsonObject, "name");
         response.slug = getStringFromJsonIfAvailable(jsonObject, "slug");
         response.version = getStringFromJsonIfAvailable(jsonObject, "version");
