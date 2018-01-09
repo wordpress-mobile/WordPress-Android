@@ -45,8 +45,11 @@ import org.wordpress.android.util.SiteUtils;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.ToastUtils.Duration;
 import org.wordpress.android.util.WPLinkMovementMethod;
+import org.wordpress.android.widgets.WPNetworkImageView;
 
 import javax.inject.Inject;
+
+import static org.wordpress.android.widgets.WPNetworkImageView.ImageType.PLUGIN_ICON;
 
 public class PluginDetailActivity extends AppCompatActivity {
     public static final String KEY_PLUGIN_NAME = "KEY_PLUGIN_NAME";
@@ -72,6 +75,9 @@ public class PluginDetailActivity extends AppCompatActivity {
     private Switch mSwitchActive;
     private Switch mSwitchAutoupdates;
     private ProgressDialog mRemovePluginProgressDialog;
+
+    private WPNetworkImageView mImageBanner;
+    private WPNetworkImageView mImageIcon;
 
     private boolean mIsConfiguringPlugin;
     private boolean mIsUpdatingPlugin;
@@ -224,6 +230,9 @@ public class PluginDetailActivity extends AppCompatActivity {
         mSwitchActive = findViewById(R.id.plugin_state_active);
         mSwitchAutoupdates = findViewById(R.id.plugin_state_autoupdates);
 
+        mImageBanner = findViewById(R.id.image_banner);
+        mImageIcon = findViewById(R.id.image_icon);
+
         mSwitchActive.setOnCheckedChangeListener(new OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
@@ -295,6 +304,8 @@ public class PluginDetailActivity extends AppCompatActivity {
 
         mSwitchActive.setChecked(mIsActive);
         mSwitchAutoupdates.setChecked(mIsAutoUpdateEnabled);
+
+        mImageIcon.setImageUrl(mWPOrgPlugin.getIcon(), PLUGIN_ICON);
 
         refreshPluginVersionViews();
     }
@@ -599,6 +610,7 @@ public class PluginDetailActivity extends AppCompatActivity {
 
     // only show settings for active plugins on .org sites
     private boolean canShowSettings() {
+        // TODO: also verify that there *is* a settings URL
         return mSitePlugin.isActive() && !mSite.isJetpackConnected();
     }
 
