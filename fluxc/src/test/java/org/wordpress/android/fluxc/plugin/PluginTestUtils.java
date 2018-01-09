@@ -1,6 +1,6 @@
 package org.wordpress.android.fluxc.plugin;
 
-import org.wordpress.android.fluxc.model.PluginInfoModel;
+import org.wordpress.android.fluxc.model.DotOrgPluginModel;
 import org.wordpress.android.fluxc.model.SitePluginModel;
 
 import java.util.ArrayList;
@@ -15,8 +15,8 @@ class PluginTestUtils {
         return res;
     }
 
-    static PluginInfoModel generatePluginInfo(String slug) {
-        PluginInfoModel pluginInfo = new PluginInfoModel();
+    static DotOrgPluginModel generatePluginInfo(String slug) {
+        DotOrgPluginModel pluginInfo = new DotOrgPluginModel();
         pluginInfo.setSlug(slug);
         return pluginInfo;
     }

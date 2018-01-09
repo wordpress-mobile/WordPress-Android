@@ -15,7 +15,7 @@ import org.wordpress.android.fluxc.model.AccountModel;
 import org.wordpress.android.fluxc.model.CommentModel;
 import org.wordpress.android.fluxc.model.MediaModel;
 import org.wordpress.android.fluxc.model.MediaUploadModel;
-import org.wordpress.android.fluxc.model.PluginInfoModel;
+import org.wordpress.android.fluxc.model.DotOrgPluginModel;
 import org.wordpress.android.fluxc.model.SitePluginModel;
 import org.wordpress.android.fluxc.model.PostFormatModel;
 import org.wordpress.android.fluxc.model.PostModel;
@@ -44,7 +44,7 @@ public class WellSqlConfig extends DefaultWellConfig {
         add(HTTPAuthModel.class);
         add(MediaModel.class);
         add(MediaUploadModel.class);
-        add(PluginInfoModel.class);
+        add(DotOrgPluginModel.class);
         add(SitePluginModel.class);
         add(PostFormatModel.class);
         add(PostModel.class);
