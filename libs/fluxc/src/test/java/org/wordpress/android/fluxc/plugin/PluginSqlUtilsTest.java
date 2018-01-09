@@ -191,6 +191,7 @@ public class PluginSqlUtilsTest {
             String name = randomString("name");
             pluginNames.add(name);
             SitePluginModel plugin = getTestPlugin(name);
+            plugin.setLocalSiteId(site.getId());
             Assert.assertEquals(1, PluginSqlUtils.insertOrUpdateSitePlugin(plugin));
         }
         return pluginNames;
