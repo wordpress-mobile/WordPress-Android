@@ -3,7 +3,7 @@ package org.wordpress.android.fluxc.persistence;
 import android.support.annotation.NonNull;
 
 import com.wellsql.generated.PluginInfoModelTable;
-import com.wellsql.generated.PluginModelTable;
+import com.wellsql.generated.SitePluginModelTable;
 import com.yarolegovich.wellsql.WellSql;
 
 import org.wordpress.android.fluxc.model.PluginInfoModel;
@@ -18,9 +18,9 @@ public class PluginSqlUtils {
     public static List<SitePluginModel> getSitePlugins(@NonNull SiteModel site) {
         return WellSql.select(SitePluginModel.class)
                 .where()
-                .equals(PluginModelTable.LOCAL_SITE_ID, site.getId())
+                .equals(SitePluginModelTable.LOCAL_SITE_ID, site.getId())
                 .endWhere()
-                .orderBy(PluginModelTable.DISPLAY_NAME, ORDER_ASCENDING)
+                .orderBy(SitePluginModelTable.DISPLAY_NAME, ORDER_ASCENDING)
                 .getAsModel();
     }
 
@@ -37,7 +37,7 @@ public class PluginSqlUtils {
     private static void removeSitePlugins(@NonNull SiteModel site) {
         WellSql.delete(SitePluginModel.class)
                 .where()
-                .equals(PluginModelTable.LOCAL_SITE_ID, site.getId())
+                .equals(SitePluginModelTable.LOCAL_SITE_ID, site.getId())
                 .endWhere().execute();
     }
 
@@ -48,7 +48,7 @@ public class PluginSqlUtils {
 
         List<SitePluginModel> pluginResult = WellSql.select(SitePluginModel.class)
                 .where()
-                .equals(PluginModelTable.ID, plugin.getId())
+                .equals(SitePluginModelTable.ID, plugin.getId())
                 .endWhere().getAsModel();
         if (pluginResult.isEmpty()) {
             WellSql.insert(plugin).execute();
@@ -68,8 +68,8 @@ public class PluginSqlUtils {
         // using site id and name is a safer approach here
         return WellSql.delete(SitePluginModel.class)
                 .where()
-                .equals(PluginModelTable.NAME, plugin.getName())
-                .equals(PluginModelTable.LOCAL_SITE_ID, site.getId())
+                .equals(SitePluginModelTable.NAME, plugin.getName())
+                .equals(SitePluginModelTable.LOCAL_SITE_ID, site.getId())
                 .endWhere().execute();
     }
 
@@ -93,8 +93,8 @@ public class PluginSqlUtils {
 
     public static SitePluginModel getSitePluginByName(SiteModel site, String name) {
         List<SitePluginModel> result = WellSql.select(SitePluginModel.class)
-                .where().equals(PluginModelTable.NAME, name)
-                .equals(PluginModelTable.LOCAL_SITE_ID, site.getId())
+                .where().equals(SitePluginModelTable.NAME, name)
+                .equals(SitePluginModelTable.LOCAL_SITE_ID, site.getId())
                 .endWhere().getAsModel();
         return result.isEmpty() ? null : result.get(0);
     }

@@ -58,7 +58,7 @@ public class WellSqlConfig extends DefaultWellConfig {
 
     @Override
     public int getDbVersion() {
-        return 20;
+        return 21;
     }
 
     @Override
@@ -172,6 +172,10 @@ public class WellSqlConfig extends DefaultWellConfig {
             case 19:
                 AppLog.d(T.DB, "Migrating to version " + (oldVersion + 1));
                 db.execSQL("alter table TermModel add POST_COUNT integer;");
+                oldVersion++;
+            case 20:
+                AppLog.d(T.DB, "Migrating to version " + (oldVersion + 1));
+                db.execSQL("alter table PluginModel rename to SitePluginModel;");
                 oldVersion++;
         }
         db.setTransactionSuccessful();
