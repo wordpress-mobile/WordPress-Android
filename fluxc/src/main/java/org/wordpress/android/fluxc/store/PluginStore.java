@@ -424,7 +424,7 @@ public class PluginStore extends Store {
             case FETCH_SITE_PLUGINS:
                 fetchSitePlugins((SiteModel) action.getPayload());
                 break;
-            case FETCH_PLUGIN_INFO:
+            case FETCH_WPORG_PLUGIN:
                 fetchWPOrgPlugin((String) action.getPayload());
                 break;
             case UPDATE_SITE_PLUGIN:
@@ -443,7 +443,7 @@ public class PluginStore extends Store {
             case FETCHED_SITE_PLUGINS:
                 fetchedSitePlugins((FetchedSitePluginsPayload) action.getPayload());
                 break;
-            case FETCHED_PLUGIN_INFO:
+            case FETCHED_WPORG_PLUGIN:
                 fetchedWPOrgPlugin((FetchedWPOrgPluginPayload) action.getPayload());
                 break;
             case UPDATED_SITE_PLUGIN:

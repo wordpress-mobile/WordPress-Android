@@ -47,13 +47,13 @@ public class PluginWPOrgClient extends BaseWPOrgAPIClient {
                                 if (response == null) {
                                     FetchWPOrgPluginError error = new FetchWPOrgPluginError(
                                             FetchWPOrgPluginErrorType.EMPTY_RESPONSE);
-                                    mDispatcher.dispatch(PluginActionBuilder.newFetchedPluginInfoAction(
+                                    mDispatcher.dispatch(PluginActionBuilder.newFetchedWporgPluginAction(
                                             new FetchedWPOrgPluginPayload(error)));
                                     return;
                                 }
                                 WPOrgPluginModel wpOrgPluginModel = wpOrgPluginFromResponse(response);
                                 FetchedWPOrgPluginPayload payload = new FetchedWPOrgPluginPayload(wpOrgPluginModel);
-                                mDispatcher.dispatch(PluginActionBuilder.newFetchedPluginInfoAction(payload));
+                                mDispatcher.dispatch(PluginActionBuilder.newFetchedWporgPluginAction(payload));
                             }
                         },
                         new BaseErrorListener() {
@@ -61,7 +61,7 @@ public class PluginWPOrgClient extends BaseWPOrgAPIClient {
                             public void onErrorResponse(@NonNull BaseNetworkError networkError) {
                                 FetchWPOrgPluginError error = new FetchWPOrgPluginError(
                                         FetchWPOrgPluginErrorType.GENERIC_ERROR);
-                                mDispatcher.dispatch(PluginActionBuilder.newFetchedPluginInfoAction(
+                                mDispatcher.dispatch(PluginActionBuilder.newFetchedWporgPluginAction(
                                         new FetchedWPOrgPluginPayload(error)));
                             }
                         }

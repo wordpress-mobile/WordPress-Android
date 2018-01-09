@@ -23,7 +23,7 @@ public enum PluginAction implements IAction {
     @Action(payloadType = DeleteSitePluginPayload.class)
     DELETE_SITE_PLUGIN,
     @Action(payloadType = String.class)
-    FETCH_PLUGIN_INFO,
+    FETCH_WPORG_PLUGIN,
     @Action(payloadType = SiteModel.class)
     FETCH_SITE_PLUGINS,
     @Action(payloadType = InstallSitePluginPayload.class)
@@ -37,7 +37,7 @@ public enum PluginAction implements IAction {
     @Action(payloadType = DeletedSitePluginPayload.class)
     DELETED_SITE_PLUGIN,
     @Action(payloadType = FetchedWPOrgPluginPayload.class)
-    FETCHED_PLUGIN_INFO,
+    FETCHED_WPORG_PLUGIN,
     @Action(payloadType = FetchedSitePluginsPayload.class)
     FETCHED_SITE_PLUGINS,
     @Action(payloadType = InstalledSitePluginPayload.class)
