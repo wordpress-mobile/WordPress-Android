@@ -252,7 +252,7 @@ public class PluginDetailActivity extends AppCompatActivity {
         });
 
         View settingsView = findViewById(R.id.plugin_settings_page);
-        if (mPlugin.isActive()) {
+        if (canShowSettings()) {
             settingsView.setVisibility(View.VISIBLE);
             settingsView.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -597,6 +597,11 @@ public class PluginDetailActivity extends AppCompatActivity {
         // Disable removing akismet and vaultpress for AT sites
         return !mSite.isAutomatedTransfer()
                 || (!pluginName.equals("akismet/akismet") && !pluginName.equals("vaultpress/vaultpress"));
+    }
+
+    // only show settings for active plugins on .org sites
+    private boolean canShowSettings() {
+        return mPlugin.isActive() && !mSite.isJetpackConnected();
     }
 
     private boolean isPluginStateChangedSinceLastConfigurationDispatch() {
