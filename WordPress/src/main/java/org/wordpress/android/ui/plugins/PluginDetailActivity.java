@@ -10,9 +10,9 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.text.Html;
 import android.text.TextUtils;
+import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.Button;
 import android.widget.CompoundButton;
 import android.widget.CompoundButton.OnCheckedChangeListener;
 import android.widget.ProgressBar;
@@ -138,7 +138,7 @@ public class PluginDetailActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
         ActionBar actionBar = getSupportActionBar();
         if (actionBar != null) {
-            actionBar.setTitle(mPlugin.getDisplayName());
+            actionBar.setTitle(null);
             actionBar.setHomeButtonEnabled(true);
             actionBar.setDisplayHomeAsUpEnabled(true);
             actionBar.setElevation(0);
@@ -169,6 +169,19 @@ public class PluginDetailActivity extends AppCompatActivity {
     }
 
     @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.plugin_detail, menu);
+        return super.onCreateOptionsMenu(menu);
+    }
+
+    @Override
+    public boolean onPrepareOptionsMenu(Menu menu) {
+        boolean showTrash = canPluginBeDisabledOrRemoved();
+        menu.findItem(R.id.menu_trash).setVisible(showTrash);
+        return super.onPrepareOptionsMenu(menu);
+    }
+
+    @Override
     public boolean onOptionsItemSelected(final MenuItem item) {
         if (item.getItemId() == android.R.id.home) {
             if (isPluginStateChangedSinceLastConfigurationDispatch()) {
@@ -177,6 +190,9 @@ public class PluginDetailActivity extends AppCompatActivity {
                 dispatchConfigurePluginAction(true);
             }
             onBackPressed();
+            return true;
+        } else if (item.getItemId() == R.id.menu_trash) {
+            confirmRemovePlugin();
             return true;
         }
         return super.onOptionsItemSelected(item);
@@ -248,21 +264,6 @@ public class PluginDetailActivity extends AppCompatActivity {
                 ActivityLauncher.openUrlExternal(PluginDetailActivity.this, mPlugin.getPluginUrl());
             }
         });
-
-        Button removeBtn = findViewById(R.id.plugin_btn_remove);
-        removeBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                confirmRemovePlugin();
-            }
-        });
-
-        // Handle specific cases for Jetpack, Akismet and VaultPress
-        boolean canPluginBeDisabledOrRemoved = canPluginBeDisabledOrRemoved();
-        removeBtn.setVisibility(canPluginBeDisabledOrRemoved ? View.VISIBLE : View.GONE);
-        if (!canPluginBeDisabledOrRemoved) {
-            findViewById(R.id.plugin_state_active_container).setVisibility(View.GONE);
-        }
 
         refreshViews();
     }
