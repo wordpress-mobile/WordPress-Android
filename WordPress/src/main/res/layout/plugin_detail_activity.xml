@@ -162,6 +162,21 @@
             <LinearLayout style="@style/PluginCardViewVerticalContainer">
 
                 <RelativeLayout
+                    android:id="@+id/plugin_settings_page"
+                    style="@style/PluginCardViewHorizontalContainer"
+                    android:background="?android:attr/selectableItemBackground">
+
+                    <TextView
+                        style="@style/PluginCardViewPrimaryText"
+                        android:text="@string/plugin_settings" />
+
+                    <ImageView
+                        style="@style/PluginCardViewSecondaryElement.ExternalLinkImage"
+                        android:contentDescription="@string/plugin_external_link_icon_content_description"
+                        app:srcCompat="@drawable/ic_external_black_24dp" />
+                </RelativeLayout>
+
+                <RelativeLayout
                     android:id="@+id/plugin_wp_org_page"
                     style="@style/PluginCardViewHorizontalContainer"
                     android:background="?android:attr/selectableItemBackground">

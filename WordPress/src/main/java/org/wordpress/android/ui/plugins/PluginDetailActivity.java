@@ -251,6 +251,19 @@ public class PluginDetailActivity extends AppCompatActivity {
             }
         });
 
+        View settingsView = findViewById(R.id.plugin_settings_page);
+        if (mPlugin.isActive()) {
+            settingsView.setVisibility(View.VISIBLE);
+            settingsView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    // TODO
+                }
+            });
+        } else {
+            settingsView.setVisibility(View.GONE);
+        }
+
         findViewById(R.id.plugin_wp_org_page).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
