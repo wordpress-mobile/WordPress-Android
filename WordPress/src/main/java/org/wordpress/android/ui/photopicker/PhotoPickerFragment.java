@@ -128,39 +128,45 @@ public class PhotoPickerFragment extends Fragment {
         });
 
         mBottomBar = view.findViewById(R.id.bottom_bar);
-        mBottomBar.findViewById(R.id.icon_camera).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (mBrowserType.isSingleImagePicker()) {
-                    doIconClicked(PhotoPickerIcon.ANDROID_CAPTURE_PHOTO);
-                } else {
-                    showCameraPopupMenu(v);
-                }
-            }
-        });
-        mBottomBar.findViewById(R.id.icon_picker).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (mBrowserType.isSingleImagePicker()) {
-                    doIconClicked(PhotoPickerIcon.ANDROID_CHOOSE_PHOTO);
-                } else {
-                    showPickerPopupMenu(v);
-                }
 
-            }
-        });
-
-        // choosing from WP media requires a site
-        View wpMedia = mBottomBar.findViewById(R.id.icon_wpmedia);
-        if (mSite == null) {
-            wpMedia.setVisibility(View.GONE);
-        } else {
-            wpMedia.setOnClickListener(new View.OnClickListener() {
+        if (mBrowserType != MediaBrowserType.AZTEC_EDITOR_PICKER) {
+            mBottomBar.findViewById(R.id.icon_camera).setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    doIconClicked(PhotoPickerIcon.WP_MEDIA);
+                    if (mBrowserType.isSingleImagePicker()) {
+                        doIconClicked(PhotoPickerIcon.ANDROID_CAPTURE_PHOTO);
+                    } else {
+                        showCameraPopupMenu(v);
+                    }
                 }
             });
+            mBottomBar.findViewById(R.id.icon_picker).setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if (mBrowserType.isSingleImagePicker()) {
+                        doIconClicked(PhotoPickerIcon.ANDROID_CHOOSE_PHOTO);
+                    } else {
+                        showPickerPopupMenu(v);
+                    }
+
+                }
+            });
+
+
+            // choosing from WP media requires a site
+            View wpMedia = mBottomBar.findViewById(R.id.icon_wpmedia);
+            if (mSite == null) {
+                wpMedia.setVisibility(View.GONE);
+            } else {
+                wpMedia.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        doIconClicked(PhotoPickerIcon.WP_MEDIA);
+                    }
+                });
+            }
+        } else {
+            mBottomBar.setVisibility(View.GONE);
         }
 
         mSoftAskContainer = (ViewGroup) view.findViewById(R.id.container_soft_ask);
@@ -444,13 +450,13 @@ public class PhotoPickerFragment extends Fragment {
     }
 
     private void requestStoragePermission() {
-        String[] permissions = new String[] { permission.WRITE_EXTERNAL_STORAGE };
+        String[] permissions = new String[]{permission.WRITE_EXTERNAL_STORAGE};
         FragmentCompat.requestPermissions(
                 this, permissions, WPPermissionUtils.PHOTO_PICKER_STORAGE_PERMISSION_REQUEST_CODE);
     }
 
     private void requestCameraPermission() {
-        String[] permissions = new String[] { permission.CAMERA };
+        String[] permissions = new String[]{permission.CAMERA};
         FragmentCompat.requestPermissions(
                 this, permissions, WPPermissionUtils.PHOTO_PICKER_CAMERA_PERMISSION_REQUEST_CODE);
     }
