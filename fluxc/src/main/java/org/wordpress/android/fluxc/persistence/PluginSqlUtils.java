@@ -73,21 +73,21 @@ public class PluginSqlUtils {
                 .endWhere().execute();
     }
 
-    public static int insertOrUpdatePluginInfo(WPOrgPluginModel pluginInfo) {
-        if (pluginInfo == null) {
+    public static int insertOrUpdateWPOrgPlugin(WPOrgPluginModel wpOrgPluginModel) {
+        if (wpOrgPluginModel == null) {
             return 0;
         }
 
-        // Slug is the primary key in remote, so we should use that to identify PluginInfoModels
-        WPOrgPluginModel oldPluginInfo = getPluginInfoBySlug(pluginInfo.getSlug());
+        // Slug is the primary key in remote, so we should use that to identify WPOrgPluginModels
+        WPOrgPluginModel oldPlugin = getWPOrgPluginBySlug(wpOrgPluginModel.getSlug());
 
-        if (oldPluginInfo == null) {
-            WellSql.insert(pluginInfo).execute();
+        if (oldPlugin == null) {
+            WellSql.insert(wpOrgPluginModel).execute();
             return 1;
         } else {
-            int oldId = oldPluginInfo.getId();
+            int oldId = oldPlugin.getId();
             return WellSql.update(WPOrgPluginModel.class).whereId(oldId)
-                    .put(pluginInfo, new UpdateAllExceptId<>(WPOrgPluginModel.class)).execute();
+                    .put(wpOrgPluginModel, new UpdateAllExceptId<>(WPOrgPluginModel.class)).execute();
         }
     }
 
@@ -99,7 +99,7 @@ public class PluginSqlUtils {
         return result.isEmpty() ? null : result.get(0);
     }
 
-    public static WPOrgPluginModel getPluginInfoBySlug(String slug) {
+    public static WPOrgPluginModel getWPOrgPluginBySlug(String slug) {
         List<WPOrgPluginModel> result = WellSql.select(WPOrgPluginModel.class)
                 .where().equals(WPOrgPluginModelTable.SLUG, slug)
                 .endWhere().getAsModel();
