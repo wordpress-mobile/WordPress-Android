@@ -15,9 +15,9 @@ import org.wordpress.android.fluxc.network.BaseRequest.BaseNetworkError;
 import org.wordpress.android.fluxc.network.UserAgent;
 import org.wordpress.android.fluxc.network.wporg.BaseWPOrgAPIClient;
 import org.wordpress.android.fluxc.network.wporg.WPOrgAPIGsonRequest;
-import org.wordpress.android.fluxc.store.PluginStore.FetchPluginInfoError;
-import org.wordpress.android.fluxc.store.PluginStore.FetchPluginInfoErrorType;
-import org.wordpress.android.fluxc.store.PluginStore.FetchedPluginInfoPayload;
+import org.wordpress.android.fluxc.store.PluginStore.FetchWPOrgPluginError;
+import org.wordpress.android.fluxc.store.PluginStore.FetchWPOrgPluginErrorType;
+import org.wordpress.android.fluxc.store.PluginStore.FetchedWPOrgPluginPayload;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -45,24 +45,24 @@ public class PluginWPOrgClient extends BaseWPOrgAPIClient {
                             @Override
                             public void onResponse(WPOrgPluginResponse response) {
                                 if (response == null) {
-                                    FetchPluginInfoError error = new FetchPluginInfoError(
-                                            FetchPluginInfoErrorType.EMPTY_RESPONSE);
+                                    FetchWPOrgPluginError error = new FetchWPOrgPluginError(
+                                            FetchWPOrgPluginErrorType.EMPTY_RESPONSE);
                                     mDispatcher.dispatch(PluginActionBuilder.newFetchedPluginInfoAction(
-                                            new FetchedPluginInfoPayload(error)));
+                                            new FetchedWPOrgPluginPayload(error)));
                                     return;
                                 }
                                 WPOrgPluginModel pluginInfoModel = pluginInfoModelFromResponse(response);
-                                FetchedPluginInfoPayload payload = new FetchedPluginInfoPayload(pluginInfoModel);
+                                FetchedWPOrgPluginPayload payload = new FetchedWPOrgPluginPayload(pluginInfoModel);
                                 mDispatcher.dispatch(PluginActionBuilder.newFetchedPluginInfoAction(payload));
                             }
                         },
                         new BaseErrorListener() {
                             @Override
                             public void onErrorResponse(@NonNull BaseNetworkError networkError) {
-                                FetchPluginInfoError error = new FetchPluginInfoError(
-                                        FetchPluginInfoErrorType.GENERIC_ERROR);
+                                FetchWPOrgPluginError error = new FetchWPOrgPluginError(
+                                        FetchWPOrgPluginErrorType.GENERIC_ERROR);
                                 mDispatcher.dispatch(PluginActionBuilder.newFetchedPluginInfoAction(
-                                        new FetchedPluginInfoPayload(error)));
+                                        new FetchedWPOrgPluginPayload(error)));
                             }
                         }
                 );
