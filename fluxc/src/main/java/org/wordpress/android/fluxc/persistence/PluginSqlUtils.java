@@ -2,7 +2,7 @@ package org.wordpress.android.fluxc.persistence;
 
 import android.support.annotation.NonNull;
 
-import com.wellsql.generated.PluginInfoModelTable;
+import com.wellsql.generated.DotOrgPluginModelTable;
 import com.wellsql.generated.SitePluginModelTable;
 import com.yarolegovich.wellsql.WellSql;
 
@@ -101,7 +101,7 @@ public class PluginSqlUtils {
 
     public static DotOrgPluginModel getPluginInfoBySlug(String slug) {
         List<DotOrgPluginModel> result = WellSql.select(DotOrgPluginModel.class)
-                .where().equals(PluginInfoModelTable.SLUG, slug)
+                .where().equals(DotOrgPluginModelTable.SLUG, slug)
                 .endWhere().getAsModel();
         return result.isEmpty() ? null : result.get(0);
     }
