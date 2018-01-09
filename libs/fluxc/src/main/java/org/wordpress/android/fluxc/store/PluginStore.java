@@ -87,15 +87,15 @@ public class PluginStore extends Store {
     }
 
     @SuppressWarnings("WeakerAccess")
-    public static class FetchedPluginInfoPayload extends Payload<FetchPluginInfoError> {
-        public WPOrgPluginModel pluginInfo;
+    public static class FetchedWPOrgPluginPayload extends Payload<FetchWPOrgPluginError> {
+        public WPOrgPluginModel plugin;
 
-        public FetchedPluginInfoPayload(FetchPluginInfoError error) {
+        public FetchedWPOrgPluginPayload(FetchWPOrgPluginError error) {
             this.error = error;
         }
 
-        public FetchedPluginInfoPayload(WPOrgPluginModel pluginInfo) {
-            this.pluginInfo = pluginInfo;
+        public FetchedWPOrgPluginPayload(WPOrgPluginModel plugin) {
+            this.plugin = plugin;
         }
     }
 
@@ -174,10 +174,10 @@ public class PluginStore extends Store {
         }
     }
 
-    public static class FetchPluginInfoError implements OnChangedError {
-        public FetchPluginInfoErrorType type;
+    public static class FetchWPOrgPluginError implements OnChangedError {
+        public FetchWPOrgPluginErrorType type;
 
-        public FetchPluginInfoError(FetchPluginInfoErrorType type) {
+        public FetchWPOrgPluginError(FetchWPOrgPluginErrorType type) {
             this.type = type;
         }
     }
@@ -259,7 +259,7 @@ public class PluginStore extends Store {
         }
     }
 
-    public enum FetchPluginInfoErrorType {
+    public enum FetchWPOrgPluginErrorType {
         EMPTY_RESPONSE,
         GENERIC_ERROR
     }
@@ -346,7 +346,7 @@ public class PluginStore extends Store {
     // OnChanged Events
 
     @SuppressWarnings("WeakerAccess")
-    public static class OnPluginInfoChanged extends OnChanged<FetchPluginInfoError> {
+    public static class OnPluginInfoChanged extends OnChanged<FetchWPOrgPluginError> {
         public WPOrgPluginModel pluginInfo;
     }
 
@@ -444,7 +444,7 @@ public class PluginStore extends Store {
                 fetchedSitePlugins((FetchedSitePluginsPayload) action.getPayload());
                 break;
             case FETCHED_PLUGIN_INFO:
-                fetchedPluginInfo((FetchedPluginInfoPayload) action.getPayload());
+                fetchedPluginInfo((FetchedWPOrgPluginPayload) action.getPayload());
                 break;
             case UPDATED_SITE_PLUGIN:
                 updatedSitePlugin((UpdatedSitePluginPayload) action.getPayload());
@@ -535,13 +535,13 @@ public class PluginStore extends Store {
         emitChange(event);
     }
 
-    private void fetchedPluginInfo(FetchedPluginInfoPayload payload) {
+    private void fetchedPluginInfo(FetchedWPOrgPluginPayload payload) {
         OnPluginInfoChanged event = new OnPluginInfoChanged();
         if (payload.isError()) {
             event.error = payload.error;
         } else {
-            event.pluginInfo = payload.pluginInfo;
-            PluginSqlUtils.insertOrUpdatePluginInfo(payload.pluginInfo);
+            event.pluginInfo = payload.plugin;
+            PluginSqlUtils.insertOrUpdatePluginInfo(payload.plugin);
         }
         emitChange(event);
     }
