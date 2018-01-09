@@ -176,6 +176,7 @@ public class WellSqlConfig extends DefaultWellConfig {
             case 20:
                 AppLog.d(T.DB, "Migrating to version " + (oldVersion + 1));
                 db.execSQL("alter table PluginModel rename to SitePluginModel;");
+                db.execSQL("alter table PluginInfoModel rename to DotOrgPluginModel;");
                 oldVersion++;
         }
         db.setTransactionSuccessful();
