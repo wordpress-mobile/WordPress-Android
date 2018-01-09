@@ -24,6 +24,7 @@
     <integer name="paging_limit">300</integer>
     <integer name="threading_limit">10</integer>
     <integer name="close_after_limit">365</integer>
+    <integer name="posts_per_page_limit">100</integer>
 
     <!-- People Management -->
     <integer name="invite_message_char_limit">500</integer>
