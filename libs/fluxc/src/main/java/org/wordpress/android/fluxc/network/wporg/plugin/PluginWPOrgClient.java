@@ -72,8 +72,7 @@ public class PluginWPOrgClient extends BaseWPOrgAPIClient {
 
     private WPOrgPluginModel wpOrgPluginFromResponse(WPOrgPluginResponse response) {
         WPOrgPluginModel wpOrgPluginModel = new WPOrgPluginModel();
-        wpOrgPluginModel.setAuthor(response.author);
-        wpOrgPluginModel.setAuthorUrl(response.authorUrl);
+        wpOrgPluginModel.setAuthorAsHtml(response.authorAsHtml);
         wpOrgPluginModel.setBanner(response.banner);
         wpOrgPluginModel.setDescriptionAsHtml(response.descriptionAsHtml);
         wpOrgPluginModel.setFaqAsHtml(response.faqAsHtml);
