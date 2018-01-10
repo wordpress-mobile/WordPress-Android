@@ -188,6 +188,8 @@
                         app:srcCompat="@drawable/ic_external_black_24dp" />
                 </RelativeLayout>
 
+                <View style="@style/PostSettingsDivider" />
+
                 <RelativeLayout
                     android:id="@+id/plugin_wp_org_page"
                     style="@style/PluginCardViewHorizontalContainer"
@@ -256,6 +258,8 @@
 
                 </RelativeLayout>
 
+                <View style="@style/PostSettingsDivider" />
+
                 <RelativeLayout
                     android:id="@+id/plugin_installation_container"
                     style="@style/PluginCardViewHorizontalContainer"
@@ -283,6 +287,8 @@
 
                 </RelativeLayout>
 
+                <View style="@style/PostSettingsDivider" />
+
                 <RelativeLayout
                     android:id="@+id/plugin_whatsnew_container"
                     style="@style/PluginCardViewHorizontalContainer"
@@ -309,6 +315,8 @@
                         app:srcCompat="@drawable/ic_chevron_down_grey_100_35dp" />
 
                 </RelativeLayout>
+
+                <View style="@style/PostSettingsDivider" />
 
                 <RelativeLayout
                     android:id="@+id/plugin_faq_container"
