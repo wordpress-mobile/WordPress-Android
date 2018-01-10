@@ -1837,6 +1837,7 @@
     <string name="wordpress_dot_org_plugin_page">WordPress.org Plugin page</string>
     <string name="plugin_home_page">Plugin homepage</string>
     <string name="plugin_settings">Settings</string>
+    <string name="plugin_description">Description</string>
 
     <string name="plugin_icon_content_description">Plugin icon</string>
     <string name="plugin_update_available_icon_content_description">Update available</string>

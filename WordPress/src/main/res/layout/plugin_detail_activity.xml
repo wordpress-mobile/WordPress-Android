@@ -26,7 +26,7 @@
                 <org.wordpress.android.widgets.WPNetworkImageView
                     android:id="@+id/image_banner"
                     android:layout_width="match_parent"
-                    android:layout_height="96dp"
+                    android:layout_height="@dimen/plugin_banner_size"
                     android:background="@color/grey_lighten_10" />
 
                 <RelativeLayout
@@ -37,10 +37,10 @@
 
                     <org.wordpress.android.widgets.WPNetworkImageView
                         android:id="@+id/image_icon"
-                        android:layout_width="48dp"
-                        android:layout_height="48dp"
+                        android:layout_width="@dimen/plugin_icon_size"
+                        android:layout_height="@dimen/plugin_icon_size"
                         android:layout_centerVertical="true"
-                        android:src="@drawable/plugin_placeholder" />
+                        tools:src="@drawable/plugin_placeholder" />
 
                     <LinearLayout
                         android:layout_width="match_parent"
@@ -206,6 +206,42 @@
                         style="@style/PluginCardViewSecondaryElement.ExternalLinkImage"
                         android:contentDescription="@string/plugin_external_link_icon_content_description"
                         app:srcCompat="@drawable/ic_external_black_24dp" />
+                </RelativeLayout>
+            </LinearLayout>
+        </android.support.v7.widget.CardView>
+
+        <android.support.v7.widget.CardView
+            style="@style/PluginCardView"
+            card_view:cardBackgroundColor="@color/white"
+            card_view:cardCornerRadius="@dimen/cardview_default_radius">
+
+            <LinearLayout style="@style/PluginCardViewVerticalContainer">
+
+                <RelativeLayout
+                    style="@style/PluginCardViewHorizontalContainer"
+                    android:background="?android:attr/selectableItemBackground">
+
+                    <TextView
+                        android:id="@+id/plugin_description_label"
+                        style="@style/PluginCardViewPrimaryText"
+                        android:text="@string/plugin_description" />
+
+                    <TextView
+                        android:id="@+id/plugin_description"
+                        style="@style/PluginCardViewPrimaryText"
+                        android:layout_below="@+id/plugin_description_label"
+                        android:layout_marginTop="@dimen/margin_large"
+                        android:visibility="gone"
+                        tools:text="plugin_description"
+                        tools:visibility="visible" />
+
+                    <ImageView
+                        android:id="@+id/plugin_description_chevron"
+                        style="@style/PluginCardViewSecondaryElement.ExternalLinkImage"
+                        android:layout_centerVertical="false"
+                        android:background="?android:attr/selectableItemBackground"
+                        app:srcCompat="@drawable/ic_chevron_down_grey_100_35dp" />
+
                 </RelativeLayout>
             </LinearLayout>
         </android.support.v7.widget.CardView>

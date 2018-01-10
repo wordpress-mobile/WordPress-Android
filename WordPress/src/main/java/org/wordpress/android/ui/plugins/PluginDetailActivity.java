@@ -1,8 +1,10 @@
 package org.wordpress.android.ui.plugins;
 
+import android.animation.ObjectAnimator;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AlertDialog;
@@ -15,6 +17,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.CompoundButton;
 import android.widget.CompoundButton.OnCheckedChangeListener;
+import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.ScrollView;
 import android.widget.Switch;
@@ -39,6 +42,7 @@ import org.wordpress.android.fluxc.store.PluginStore.OnSitePluginUpdated;
 import org.wordpress.android.fluxc.store.PluginStore.UpdateSitePluginPayload;
 import org.wordpress.android.ui.ActivityLauncher;
 import org.wordpress.android.util.AnalyticsUtils;
+import org.wordpress.android.util.AniUtils;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.SiteUtils;
@@ -71,6 +75,8 @@ public class PluginDetailActivity extends AppCompatActivity {
     private TextView mVersionTopTextView;
     private TextView mVersionBottomTextView;
     private TextView mUpdateTextView;
+    private TextView mDescriptionTextView;
+    private ImageView mDescriptionChevron;
     private ProgressBar mUpdateProgressBar;
     private Switch mSwitchActive;
     private Switch mSwitchAutoupdates;
@@ -233,6 +239,15 @@ public class PluginDetailActivity extends AppCompatActivity {
         mImageBanner = findViewById(R.id.image_banner);
         mImageIcon = findViewById(R.id.image_icon);
 
+        mDescriptionTextView = findViewById(R.id.plugin_description);
+        mDescriptionChevron = findViewById(R.id.plugin_description_chevron);
+        mDescriptionChevron.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                toggleText(mDescriptionTextView, mDescriptionChevron);
+            }
+        });
+
         mSwitchActive.setOnCheckedChangeListener(new OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
@@ -306,6 +321,8 @@ public class PluginDetailActivity extends AppCompatActivity {
         mSwitchAutoupdates.setChecked(mIsAutoUpdateEnabled);
 
         mImageIcon.setImageUrl(mWPOrgPlugin.getIcon(), PLUGIN_ICON);
+        // TODO mDescriptionTextView.setText(Html.fromHtml(mWPOrgPlugin.getDescription()));
+        mDescriptionTextView.setText("sakjha kdhasjdhd akjdhkja dghjhadghajhsdg jahsdg ajdgjahdg jahsdg ahdgaj sgdja");
 
         refreshPluginVersionViews();
     }
@@ -342,6 +359,19 @@ public class PluginDetailActivity extends AppCompatActivity {
         } else {
             mUpdateProgressBar.setVisibility(View.GONE);
         }
+    }
+
+    private void toggleText(@NonNull TextView textView, @NonNull ImageView chevron) {
+        boolean isExpanded = textView.getVisibility() == View.VISIBLE;
+        if (isExpanded) {
+            AniUtils.scaleOut(textView, AniUtils.Duration.SHORT);
+        } else {
+            AniUtils.scaleIn(textView, AniUtils.Duration.SHORT);
+        }
+
+        float endRotate = !isExpanded ? -180f : 180f;
+        ObjectAnimator animRotate = ObjectAnimator.ofFloat(chevron, View.ROTATION, 0f, endRotate);
+        animRotate.start();
     }
 
     private void confirmRemovePlugin() {
@@ -591,6 +621,10 @@ public class PluginDetailActivity extends AppCompatActivity {
 
     private String getWpOrgPluginUrl() {
         return "https://wordpress.org/plugins/" + mSitePlugin.getSlug();
+    }
+
+    private String getWpOrgReviewsUrl() {
+        return "https://wordpress.org/plugins/" + mSitePlugin.getSlug() + "/reviews/";
     }
 
     private String getRemovingPluginMessage() {
