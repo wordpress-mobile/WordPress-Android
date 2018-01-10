@@ -10,6 +10,22 @@
     <LinearLayout style="@style/PluginCardViewVerticalContainer">
 
         <LinearLayout
+            android:id="@+id/stars_container"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="?android:attr/selectableItemBackground"
+            android:orientation="horizontal"
+            android:padding="@dimen/margin_extra_large">
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                app:srcCompat="@drawable/ic_star_outline_blue_light_18dp" />
+        </LinearLayout>
+
+
+        <LinearLayout
             android:id="@+id/reviews_container"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -18,7 +34,6 @@
             android:padding="@dimen/margin_extra_large">
 
             <TextView
-                android:id="@+id/plugin_read_reviews"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"

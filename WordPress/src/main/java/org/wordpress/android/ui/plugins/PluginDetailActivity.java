@@ -412,17 +412,9 @@ public class PluginDetailActivity extends AppCompatActivity {
 
     private void refreshUpdateVersionViews() {
         boolean isUpdateAvailable = PluginUtils.isUpdateAvailable(mSitePlugin, mWPOrgPlugin);
-        if (isUpdateAvailable && !mIsUpdatingPlugin) {
-            mUpdateTextView.setVisibility(View.VISIBLE);
-        } else {
-            mUpdateTextView.setVisibility(View.GONE);
-        }
-
-        if (mIsUpdatingPlugin) {
-            mUpdateProgressBar.setVisibility(View.VISIBLE);
-        } else {
-            mUpdateProgressBar.setVisibility(View.GONE);
-        }
+        mUpdateTextView.setVisibility(isUpdateAvailable && !mIsUpdatingPlugin ? View.VISIBLE : View.GONE);
+        mUpdateProgressBar.setVisibility(mIsUpdatingPlugin ? View.VISIBLE: View.GONE);
+        findViewById(R.id.plugin_installed).setVisibility(isUpdateAvailable || mIsUpdatingPlugin ? View.GONE : View.VISIBLE);
     }
 
     private void showPluginInfoPopup() {
