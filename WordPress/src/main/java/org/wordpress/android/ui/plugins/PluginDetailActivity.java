@@ -241,7 +241,7 @@ public class PluginDetailActivity extends AppCompatActivity {
 
         mDescriptionTextView = findViewById(R.id.plugin_description);
         mDescriptionChevron = findViewById(R.id.plugin_description_chevron);
-        mDescriptionChevron.setOnClickListener(new View.OnClickListener() {
+        findViewById(R.id.plugin_description_container).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 toggleText(mDescriptionTextView, mDescriptionChevron);
