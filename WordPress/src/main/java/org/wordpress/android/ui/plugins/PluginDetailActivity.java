@@ -254,15 +254,19 @@ public class PluginDetailActivity extends AppCompatActivity {
             }
         });
 
-        mSwitchActive.setOnCheckedChangeListener(new OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
-                if (compoundButton.isPressed()) {
-                    mIsActive = b;
-                    dispatchConfigurePluginAction(false);
+        if (!canPluginBeDisabledOrRemoved()) {
+            mSwitchActive.setVisibility(View.GONE);
+        } else {
+            mSwitchActive.setOnCheckedChangeListener(new OnCheckedChangeListener() {
+                @Override
+                public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
+                    if (compoundButton.isPressed()) {
+                        mIsActive = b;
+                        dispatchConfigurePluginAction(false);
+                    }
                 }
-            }
-        });
+            });
+        }
 
         mSwitchAutoupdates.setOnCheckedChangeListener(new OnCheckedChangeListener() {
             @Override
