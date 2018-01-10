@@ -44,16 +44,16 @@ public class WellSqlConfig extends DefaultWellConfig {
         add(HTTPAuthModel.class);
         add(MediaModel.class);
         add(MediaUploadModel.class);
-        add(WPOrgPluginModel.class);
-        add(SitePluginModel.class);
         add(PostFormatModel.class);
         add(PostModel.class);
         add(PostUploadModel.class);
         add(RoleModel.class);
         add(SiteModel.class);
+        add(SitePluginModel.class);
         add(TaxonomyModel.class);
         add(TermModel.class);
         add(ThemeModel.class);
+        add(WPOrgPluginModel.class);
     }};
 
     @Override
@@ -181,6 +181,23 @@ public class WellSqlConfig extends DefaultWellConfig {
             case 21:
                 AppLog.d(T.DB, "Migrating to version " + (oldVersion + 1));
                 db.execSQL("alter table SitePluginModel add SETTINGS_URL text;");
+                db.execSQL("alter table WPOrgPluginModel add AUTHOR TEXT;");
+                db.execSQL("alter table WPOrgPluginModel add BANNER TEXT;");
+                db.execSQL("alter table WPOrgPluginModel add AUTHOR_URL TEXT;");
+                db.execSQL("alter table WPOrgPluginModel add DESCRIPTION_AS_HTML TEXT;");
+                db.execSQL("alter table WPOrgPluginModel add FAQ_AS_HTML TEXT;");
+                db.execSQL("alter table WPOrgPluginModel add HOMEPAGE_URL TEXT;");
+                db.execSQL("alter table WPOrgPluginModel add INSTALLATION_INSTRUCTIONS_AS_HTML TEXT;");
+                db.execSQL("alter table WPOrgPluginModel add LAST_UPDATED TEXT;");
+                db.execSQL("alter table WPOrgPluginModel add REQUIRED_WORD_PRESS_VERSION TEXT;");
+                db.execSQL("alter table WPOrgPluginModel add WHATS_NEW_AS_HTML TEXT;");
+                db.execSQL("alter table WPOrgPluginModel add DOWNLOAD_COUNT INTEGER;");
+                db.execSQL("alter table WPOrgPluginModel add NUMBER_OF_RATINGS INTEGER;");
+                db.execSQL("alter table WPOrgPluginModel add NUMBER_OF_RATINGS_OF_ONE INTEGER;");
+                db.execSQL("alter table WPOrgPluginModel add NUMBER_OF_RATINGS_OF_TWO INTEGER;");
+                db.execSQL("alter table WPOrgPluginModel add NUMBER_OF_RATINGS_OF_THREE INTEGER;");
+                db.execSQL("alter table WPOrgPluginModel add NUMBER_OF_RATINGS_OF_FOUR INTEGER;");
+                db.execSQL("alter table WPOrgPluginModel add NUMBER_OF_RATINGS_OF_FIVE INTEGER;");
                 oldVersion++;
         }
         db.setTransactionSuccessful();
