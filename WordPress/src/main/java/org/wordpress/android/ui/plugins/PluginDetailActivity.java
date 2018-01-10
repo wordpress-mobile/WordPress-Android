@@ -75,12 +75,19 @@ public class PluginDetailActivity extends AppCompatActivity {
     private TextView mVersionTopTextView;
     private TextView mVersionBottomTextView;
     private TextView mUpdateTextView;
-    private TextView mDescriptionTextView;
-    private ImageView mDescriptionChevron;
     private ProgressBar mUpdateProgressBar;
     private Switch mSwitchActive;
     private Switch mSwitchAutoupdates;
     private ProgressDialog mRemovePluginProgressDialog;
+
+    private TextView mDescriptionTextView;
+    private ImageView mDescriptionChevron;
+    private TextView mInstallationTextView;
+    private ImageView mInstallationChevron;
+    private TextView mWhatsNewTextView;
+    private ImageView mWhatsNewChevron;
+    private TextView mFaqTextView;
+    private ImageView mFaqChevron;
 
     private WPNetworkImageView mImageBanner;
     private WPNetworkImageView mImageIcon;
@@ -237,13 +244,43 @@ public class PluginDetailActivity extends AppCompatActivity {
         mSwitchAutoupdates = findViewById(R.id.plugin_state_autoupdates);
         mImageBanner = findViewById(R.id.image_banner);
         mImageIcon = findViewById(R.id.image_icon);
-        mDescriptionTextView = findViewById(R.id.plugin_description);
-        mDescriptionChevron = findViewById(R.id.plugin_description_chevron);
 
+        mDescriptionTextView = findViewById(R.id.plugin_description_text);
+        mDescriptionChevron = findViewById(R.id.plugin_description_chevron);
         findViewById(R.id.plugin_description_container).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 toggleText(mDescriptionTextView, mDescriptionChevron);
+            }
+        });
+
+        mInstallationTextView = findViewById(R.id.plugin_installation_text);
+        mInstallationChevron = findViewById(R.id.plugin_installation_chevron);
+        findViewById(R.id.plugin_installation_container).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                toggleText(mInstallationTextView, mInstallationChevron);
+            }
+        });
+
+        mWhatsNewTextView = findViewById(R.id.plugin_whatsnew_text);
+        mWhatsNewChevron = findViewById(R.id.plugin_whatsnew_chevron);
+        findViewById(R.id.plugin_whatsnew_container).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                toggleText(mWhatsNewTextView, mWhatsNewChevron);
+            }
+        });
+        if (PluginUtils.isUpdateAvailable(mSitePlugin, mWPOrgPlugin)) {
+            toggleText(mWhatsNewTextView, mWhatsNewChevron);
+        }
+
+        mFaqTextView = findViewById(R.id.plugin_faq_text);
+        mFaqChevron = findViewById(R.id.plugin_faq_chevron);
+        findViewById(R.id.plugin_faq_container).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                toggleText(mFaqTextView, mFaqChevron);
             }
         });
 
@@ -331,8 +368,18 @@ public class PluginDetailActivity extends AppCompatActivity {
         mSwitchAutoupdates.setChecked(mIsAutoUpdateEnabled);
 
         mImageIcon.setImageUrl(mWPOrgPlugin.getIcon(), PLUGIN_ICON);
-        // TODO mDescriptionTextView.setText(Html.fromHtml(mWPOrgPlugin.getDescription()));
-        mDescriptionTextView.setText("sakjha kdhasjdhd akjdhkja dghjhadghajhsdg jahsdg ajdgjahdg jahsdg ahdgaj sgdja");
+
+        // TODO
+        String bogus = "sakjha kdhasjdhd akjdhkja dghjhadghajhsdg jahsdg ajdgjahdg jahsdg ahdgaj sgdja"
+                + "sakjha kdhasjdhd akjdhkja dghjhadghajhsdg jahsdg ajdgjahdg jahsdg ahdgaj sgdja"
+                + "sakjha kdhasjdhd akjdhkja dghjhadghajhsdg jahsdg ajdgjahdg jahsdg ahdgaj sgdja"
+                + "sakjha kdhasjdhd akjdhkja dghjhadghajhsdg jahsdg ajdgjahdg jahsdg ahdgaj sgdja"
+                + "sakjha kdhasjdhd akjdhkja dghjhadghajhsdg jahsdg ajdgjahdg jahsdg ahdgaj sgdja"
+                + "sakjha kdhasjdhd akjdhkja dghjhadghajhsdg jahsdg ajdgjahdg jahsdg ahdgaj sgdja";
+        mDescriptionTextView.setText(bogus);
+        mInstallationTextView.setText(bogus);
+        mWhatsNewTextView.setText(bogus);
+        mFaqTextView.setText(bogus);
 
         refreshPluginVersionViews();
     }
