@@ -14,8 +14,7 @@ import java.lang.reflect.Type;
 @SuppressWarnings("WeakerAccess")
 @JsonAdapter(WPOrgPluginDeserializer.class)
 public class WPOrgPluginResponse {
-    public String author;
-    public String authorUrl;
+    public String authorAsHtml;
     public String banner;
     public String homepageUrl;
     public String icon;
@@ -48,12 +47,7 @@ class WPOrgPluginDeserializer implements JsonDeserializer<WPOrgPluginResponse> {
                                            JsonDeserializationContext context) throws JsonParseException {
         JsonObject jsonObject = json.getAsJsonObject();
         WPOrgPluginResponse response = new WPOrgPluginResponse();
-        // Sample string: <a href=\"https://automattic.com/wordpress-plugins/\">Automattic</a>
-        String authorHtml = getStringFromJsonIfAvailable(jsonObject, "author");
-        // Although we could use Regex matching or some other "nicer" way to achieve the same thing, since we'll be
-        // performing these repeatedly and the return format is always the same, we can do it more efficiently
-        response.author = getSubstringBetweenTwoStrings(authorHtml, "\">", "</a>");
-        response.authorUrl = getSubstringBetweenTwoStrings(authorHtml, "href=\"", "\">");
+        response.authorAsHtml = getStringFromJsonIfAvailable(jsonObject, "author");
         response.banner = getBannerFromJson(jsonObject);
         response.downloadCount = getIntFromJsonIfAvailable(jsonObject, "downloaded");
         response.icon = getIconFromJson(jsonObject);
@@ -100,15 +94,6 @@ class WPOrgPluginDeserializer implements JsonDeserializer<WPOrgPluginResponse> {
             return jsonObject.get(property).getAsInt();
         }
         return 0;
-    }
-
-    private @Nullable String getSubstringBetweenTwoStrings(String originalStr, String startStr, String endStr) {
-        int beginIndex = originalStr.indexOf(startStr) + startStr.length();
-        int endIndex = originalStr.indexOf(endStr);
-        if (beginIndex != -1 && endIndex != -1 && beginIndex < endIndex && endIndex < originalStr.length()) {
-            return originalStr.substring(beginIndex, endIndex);
-        }
-        return null;
     }
 
     private @Nullable String getBannerFromJson(JsonObject jsonObject) throws JsonParseException {
