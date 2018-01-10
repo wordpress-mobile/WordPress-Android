@@ -72,6 +72,7 @@ import org.wordpress.android.fluxc.action.AccountAction;
 import org.wordpress.android.fluxc.generated.AccountActionBuilder;
 import org.wordpress.android.fluxc.generated.MediaActionBuilder;
 import org.wordpress.android.fluxc.generated.PostActionBuilder;
+import org.wordpress.android.fluxc.generated.UploadActionBuilder;
 import org.wordpress.android.fluxc.model.AccountModel;
 import org.wordpress.android.fluxc.model.MediaModel;
 import org.wordpress.android.fluxc.model.MediaModel.MediaUploadState;
@@ -88,6 +89,7 @@ import org.wordpress.android.fluxc.store.MediaStore.MediaPayload;
 import org.wordpress.android.fluxc.store.MediaStore.OnMediaChanged;
 import org.wordpress.android.fluxc.store.PostStore;
 import org.wordpress.android.fluxc.store.SiteStore;
+import org.wordpress.android.fluxc.store.UploadStore;
 import org.wordpress.android.fluxc.tools.FluxCImageLoader;
 import org.wordpress.android.ui.ActivityId;
 import org.wordpress.android.ui.ActivityLauncher;
@@ -142,6 +144,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -238,6 +241,7 @@ public class EditPostActivity extends AppCompatActivity implements
     @Inject SiteStore mSiteStore;
     @Inject PostStore mPostStore;
     @Inject MediaStore mMediaStore;
+    @Inject UploadStore mUploadStore;
     @Inject FluxCImageLoader mImageLoader;
 
     private SiteModel mSite;
@@ -433,6 +437,38 @@ public class EditPostActivity extends AppCompatActivity implements
                     AztecEditorFragment.getMediaMarkedUploadingInPostContent(this, mPost.getContent());
             Collections.sort(mMediaMarkedUploadingOnStartIds);
             mIsPage = mPost.isPage();
+            new Thread(new Runnable() {
+                @Override
+                public void run() {
+                    // run this purge in the background to not delay Editor initialization
+                    purgeMediaToPostAssociationsIfNotInPostAnymore();
+                }
+            }).start();
+        }
+    }
+
+    private void purgeMediaToPostAssociationsIfNotInPostAnymore() {
+        ArrayList<MediaModel> allMedia = new ArrayList<>();
+        Set<MediaModel> failedMedia = mUploadStore.getFailedMediaForPost(mPost);
+        Set<MediaModel> completedMedia = mUploadStore.getCompletedMediaForPost(mPost);
+        Set<MediaModel> uploadingMedia = mUploadStore.getUploadingMediaForPost(mPost);
+        allMedia.addAll(failedMedia);
+        allMedia.addAll(completedMedia);
+        allMedia.addAll(uploadingMedia);
+
+        if (allMedia != null && !allMedia.isEmpty()) {
+            HashSet<MediaModel> mediaToDeleteAssociationFor = new HashSet<>();
+            for (MediaModel media : allMedia) {
+                if (!AztecEditorFragment.isMediaInPostBody(this, mPost.getContent(), String.valueOf(media.getId()))) {
+                    mediaToDeleteAssociationFor.add(media);
+                }
+            }
+
+            if (!mediaToDeleteAssociationFor.isEmpty()) {
+                // also remove the association of Media-to-Post for this post
+                UploadStore.ClearMediaPayload clearMediaPayload = new UploadStore.ClearMediaPayload(mPost, mediaToDeleteAssociationFor);
+                mDispatcher.dispatch(UploadActionBuilder.newClearMediaForPostAction(clearMediaPayload));
+            }
         }
     }
 
