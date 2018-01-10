@@ -24,7 +24,7 @@
                 android:layout_height="wrap_content"
                 android:paddingBottom="@dimen/margin_medium"
                 android:paddingTop="@dimen/margin_medium"
-                app:srcCompat="@drawable/ic_star_blue_wordpress_18dp" />
+                app:srcCompat="@drawable/ic_star_blue_medium_18dp" />
 
             <ImageView
                 android:id="@+id/image_star2"
@@ -32,7 +32,7 @@
                 android:layout_height="wrap_content"
                 android:paddingBottom="@dimen/margin_medium"
                 android:paddingTop="@dimen/margin_medium"
-                app:srcCompat="@drawable/ic_star_blue_wordpress_18dp" />
+                app:srcCompat="@drawable/ic_star_blue_medium_18dp" />
 
             <ImageView
                 android:id="@+id/image_star3"
@@ -40,7 +40,7 @@
                 android:layout_height="wrap_content"
                 android:paddingBottom="@dimen/margin_medium"
                 android:paddingTop="@dimen/margin_medium"
-                app:srcCompat="@drawable/ic_star_blue_wordpress_18dp" />
+                app:srcCompat="@drawable/ic_star_blue_medium_18dp" />
 
             <ImageView
                 android:id="@+id/image_star4"
@@ -48,7 +48,7 @@
                 android:layout_height="wrap_content"
                 android:paddingBottom="@dimen/margin_medium"
                 android:paddingTop="@dimen/margin_medium"
-                app:srcCompat="@drawable/ic_star_outline_blue_wordpress_18dp" />
+                app:srcCompat="@drawable/ic_star_outline_blue_medium_18dp" />
 
             <ImageView
                 android:id="@+id/image_star5"
@@ -56,7 +56,7 @@
                 android:layout_height="wrap_content"
                 android:paddingBottom="@dimen/margin_medium"
                 android:paddingTop="@dimen/margin_medium"
-                app:srcCompat="@drawable/ic_star_outline_blue_wordpress_18dp" />
+                app:srcCompat="@drawable/ic_star_outline_blue_medium_18dp" />
         </LinearLayout>
 
         <LinearLayout
@@ -74,18 +74,18 @@
                 android:padding="@dimen/margin_medium"
                 android:text="@string/plugin_read_reviews"
                 android:textAllCaps="true"
-                android:textColor="@color/blue_wordpress"
+                android:textColor="@color/blue_medium"
                 android:textSize="@dimen/text_sz_medium" />
 
             <ImageView
                 style="@style/PluginCardViewSecondaryElement.ExternalLinkImage"
                 android:layout_gravity="center_vertical"
-                android:tint="@color/blue_wordpress"
+                android:tint="@color/blue_medium"
                 app:srcCompat="@drawable/ic_external_black_24dp" />
         </LinearLayout>
 
         <LinearLayout
-            android:id="@+id/linearLayout"
+            android:id="@+id/ratings_container"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@+id/read_reviews_container"
@@ -114,7 +114,7 @@
                     android:layout_gravity="center_vertical"
                     android:layout_weight="1"
                     android:progress="75"
-                    android:progressTint="@color/blue_wordpress" />
+                    android:progressTint="@color/blue_medium" />
 
             </LinearLayout>
 
@@ -141,7 +141,7 @@
                     android:layout_gravity="center_vertical"
                     android:layout_weight="1"
                     android:progress="25"
-                    android:progressTint="@color/blue_wordpress" />
+                    android:progressTint="@color/blue_medium" />
 
             </LinearLayout>
 
@@ -168,7 +168,7 @@
                     android:layout_gravity="center_vertical"
                     android:layout_weight="1"
                     android:progress="10"
-                    android:progressTint="@color/blue_wordpress" />
+                    android:progressTint="@color/blue_medium" />
 
             </LinearLayout>
 
@@ -195,7 +195,7 @@
                     android:layout_gravity="center_vertical"
                     android:layout_weight="1"
                     android:progress="10"
-                    android:progressTint="@color/blue_wordpress" />
+                    android:progressTint="@color/blue_medium" />
 
             </LinearLayout>
 
@@ -222,9 +222,36 @@
                     android:layout_gravity="center_vertical"
                     android:layout_weight="1"
                     android:progress="0"
-                    android:progressTint="@color/blue_wordpress" />
+                    android:progressTint="@color/blue_medium" />
 
             </LinearLayout>
         </LinearLayout>
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/ratings_container"
+            android:layout_marginTop="@dimen/margin_large">
+
+            <TextView
+                android:id="@+id/text_num_ratings"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:text="text_num_ratings"
+                android:textColor="@color/grey_lighten_10"
+                android:textSize="@dimen/text_sz_medium" />
+
+            <TextView
+                android:id="@+id/text_num_downloads"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_gravity="center_vertical"
+                android:text="text_num_downloads"
+                android:textColor="@color/grey_lighten_10"
+                android:textSize="@dimen/text_sz_medium" />
+
+        </RelativeLayout>
     </RelativeLayout>
 </android.support.v7.widget.CardView>
