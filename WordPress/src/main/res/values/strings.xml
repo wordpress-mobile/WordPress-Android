@@ -1844,6 +1844,12 @@
     <string name="plugin_faq">Frequently Asked Questions</string>
     <string name="plugin_read_reviews">Read Reviews</string>
 
+    <string name="plugin_one_star">1 star</string>
+    <string name="plugin_two_stars">2 stars</string>
+    <string name="plugin_three_stars">3 stars</string>
+    <string name="plugin_four_stars">4 stars</string>
+    <string name="plugin_five_stars">5 stars</string>
+
     <string name="plugin_icon_content_description">Plugin icon</string>
     <string name="plugin_update_available_icon_content_description">Update available</string>
     <string name="plugin_external_link_icon_content_description">External link</string>

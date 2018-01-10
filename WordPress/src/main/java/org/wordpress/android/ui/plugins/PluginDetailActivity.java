@@ -349,7 +349,7 @@ public class PluginDetailActivity extends AppCompatActivity {
             }
         });
 
-        findViewById(R.id.reviews_container).setOnClickListener(new View.OnClickListener() {
+        findViewById(R.id.read_reviews_container).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 ActivityLauncher.openUrlExternal(PluginDetailActivity.this, getWpOrgReviewsUrl());

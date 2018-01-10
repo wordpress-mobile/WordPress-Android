@@ -7,31 +7,65 @@
     card_view:cardBackgroundColor="@color/white"
     card_view:cardCornerRadius="@dimen/cardview_default_radius">
 
-    <LinearLayout style="@style/PluginCardViewVerticalContainer">
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="@dimen/margin_extra_large">
 
         <LinearLayout
             android:id="@+id/stars_container"
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:background="?android:attr/selectableItemBackground"
-            android:orientation="horizontal"
-            android:padding="@dimen/margin_extra_large">
+            android:orientation="horizontal">
 
             <ImageView
+                android:id="@+id/image_star1"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center_vertical"
-                app:srcCompat="@drawable/ic_star_outline_blue_light_18dp" />
+                android:paddingBottom="@dimen/margin_medium"
+                android:paddingTop="@dimen/margin_medium"
+                app:srcCompat="@drawable/ic_star_blue_wordpress_18dp" />
+
+            <ImageView
+                android:id="@+id/image_star2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:paddingBottom="@dimen/margin_medium"
+                android:paddingTop="@dimen/margin_medium"
+                app:srcCompat="@drawable/ic_star_blue_wordpress_18dp" />
+
+            <ImageView
+                android:id="@+id/image_star3"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:paddingBottom="@dimen/margin_medium"
+                android:paddingTop="@dimen/margin_medium"
+                app:srcCompat="@drawable/ic_star_blue_wordpress_18dp" />
+
+            <ImageView
+                android:id="@+id/image_star4"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:paddingBottom="@dimen/margin_medium"
+                android:paddingTop="@dimen/margin_medium"
+                app:srcCompat="@drawable/ic_star_outline_blue_wordpress_18dp" />
+
+            <ImageView
+                android:id="@+id/image_star5"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:paddingBottom="@dimen/margin_medium"
+                android:paddingTop="@dimen/margin_medium"
+                app:srcCompat="@drawable/ic_star_outline_blue_wordpress_18dp" />
         </LinearLayout>
 
-
         <LinearLayout
-            android:id="@+id/reviews_container"
-            android:layout_width="match_parent"
+            android:id="@+id/read_reviews_container"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
             android:background="?android:attr/selectableItemBackground"
-            android:orientation="horizontal"
-            android:padding="@dimen/margin_extra_large">
+            android:orientation="horizontal">
 
             <TextView
                 android:layout_width="wrap_content"
@@ -41,7 +75,7 @@
                 android:text="@string/plugin_read_reviews"
                 android:textAllCaps="true"
                 android:textColor="@color/blue_wordpress"
-                android:textSize="@dimen/text_sz_large" />
+                android:textSize="@dimen/text_sz_medium" />
 
             <ImageView
                 style="@style/PluginCardViewSecondaryElement.ExternalLinkImage"
@@ -49,5 +83,148 @@
                 android:tint="@color/blue_wordpress"
                 app:srcCompat="@drawable/ic_external_black_24dp" />
         </LinearLayout>
-    </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/linearLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/read_reviews_container"
+            android:layout_marginTop="@dimen/margin_large"
+            android:orientation="vertical">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:layout_marginRight="@dimen/margin_large"
+                    android:text="@string/plugin_five_stars"
+                    android:textColor="@color/grey_lighten_10"
+                    android:textSize="@dimen/text_sz_medium" />
+
+                <ProgressBar
+                    android:id="@+id/progress5"
+                    style="?android:attr/progressBarStyleHorizontal"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:layout_weight="1"
+                    android:progress="75"
+                    android:progressTint="@color/blue_wordpress" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/margin_medium"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:layout_marginRight="@dimen/margin_large"
+                    android:text="@string/plugin_four_stars"
+                    android:textColor="@color/grey_lighten_10"
+                    android:textSize="@dimen/text_sz_medium" />
+
+                <ProgressBar
+                    android:id="@+id/progress4"
+                    style="?android:attr/progressBarStyleHorizontal"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:layout_weight="1"
+                    android:progress="25"
+                    android:progressTint="@color/blue_wordpress" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/margin_medium"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:layout_marginRight="@dimen/margin_large"
+                    android:text="@string/plugin_three_stars"
+                    android:textColor="@color/grey_lighten_10"
+                    android:textSize="@dimen/text_sz_medium" />
+
+                <ProgressBar
+                    android:id="@+id/progress3"
+                    style="?android:attr/progressBarStyleHorizontal"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:layout_weight="1"
+                    android:progress="10"
+                    android:progressTint="@color/blue_wordpress" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/margin_medium"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:layout_marginRight="@dimen/margin_large"
+                    android:text="@string/plugin_two_stars"
+                    android:textColor="@color/grey_lighten_10"
+                    android:textSize="@dimen/text_sz_medium" />
+
+                <ProgressBar
+                    android:id="@+id/progress2"
+                    style="?android:attr/progressBarStyleHorizontal"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:layout_weight="1"
+                    android:progress="10"
+                    android:progressTint="@color/blue_wordpress" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/margin_medium"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:layout_marginRight="@dimen/margin_large"
+                    android:text="@string/plugin_one_star"
+                    android:textColor="@color/grey_lighten_10"
+                    android:textSize="@dimen/text_sz_medium" />
+
+                <ProgressBar
+                    android:id="@+id/progress1"
+                    style="?android:attr/progressBarStyleHorizontal"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:layout_weight="1"
+                    android:progress="0"
+                    android:progressTint="@color/blue_wordpress" />
+
+            </LinearLayout>
+        </LinearLayout>
+    </RelativeLayout>
 </android.support.v7.widget.CardView>
