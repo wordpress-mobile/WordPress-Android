@@ -17,12 +17,29 @@ public class WPOrgPluginResponse {
     public String author;
     public String authorUrl;
     public String banner;
-    public String descriptionAsHtml;
+    public String homepageUrl;
     public String icon;
+    public String lastUpdated;
     public String name;
     public String rating;
+    public String requiredWordPressVersion;
     public String slug;
     public String version;
+    public int downloadCount;
+
+    // Sections
+    public String descriptionAsHtml;
+    public String faqAsHtml;
+    public String installationInstructionsAsHtml;
+    public String whatsNewAsHtml;
+
+    // Ratings
+    public int numberOfRatings;
+    public int numberOfRatingsOfOne;
+    public int numberOfRatingsOfTwo;
+    public int numberOfRatingsOfThree;
+    public int numberOfRatingsOfFour;
+    public int numberOfRatingsOfFive;
 }
 
 class WPOrgPluginDeserializer implements JsonDeserializer<WPOrgPluginResponse> {
@@ -38,12 +55,36 @@ class WPOrgPluginDeserializer implements JsonDeserializer<WPOrgPluginResponse> {
         response.author = getSubstringBetweenTwoStrings(authorHtml, "\">", "</a>");
         response.authorUrl = getSubstringBetweenTwoStrings(authorHtml, "href=\"", "\">");
         response.banner = getBannerFromJson(jsonObject);
-        response.descriptionAsHtml = getStringFromJsonIfAvailable(jsonObject, "description");
+        response.downloadCount = getIntFromJsonIfAvailable(jsonObject, "downloaded");
+        response.icon = getIconFromJson(jsonObject);
+        response.homepageUrl = getStringFromJsonIfAvailable(jsonObject, "homepage");
+        response.lastUpdated = getStringFromJsonIfAvailable(jsonObject, "last_updated");
         response.name = getStringFromJsonIfAvailable(jsonObject, "name");
+        response.rating = getStringFromJsonIfAvailable(jsonObject, "rating");
+        response.requiredWordPressVersion = getStringFromJsonIfAvailable(jsonObject, "requires");
         response.slug = getStringFromJsonIfAvailable(jsonObject, "slug");
         response.version = getStringFromJsonIfAvailable(jsonObject, "version");
-        response.rating = getStringFromJsonIfAvailable(jsonObject, "rating");
-        response.icon = getIconFromJson(jsonObject);
+
+        // Sections
+        if (jsonObject.has("sections")) {
+            JsonObject sections = jsonObject.get("sections").getAsJsonObject();
+            response.descriptionAsHtml = getStringFromJsonIfAvailable(sections, "description");
+            response.faqAsHtml = getStringFromJsonIfAvailable(sections, "faq");
+            response.installationInstructionsAsHtml = getStringFromJsonIfAvailable(sections, "installation");
+            response.whatsNewAsHtml = getStringFromJsonIfAvailable(sections, "changelog");
+        }
+
+        // Ratings
+        response.numberOfRatings = getIntFromJsonIfAvailable(jsonObject, "num_ratings");
+        if (jsonObject.has("ratings")) {
+            JsonObject ratings = jsonObject.get("ratings").getAsJsonObject();
+            response.numberOfRatingsOfOne = getIntFromJsonIfAvailable(ratings, "1");
+            response.numberOfRatingsOfTwo = getIntFromJsonIfAvailable(ratings, "2");
+            response.numberOfRatingsOfThree = getIntFromJsonIfAvailable(ratings, "3");
+            response.numberOfRatingsOfFour = getIntFromJsonIfAvailable(ratings, "4");
+            response.numberOfRatingsOfFive = getIntFromJsonIfAvailable(ratings, "5");
+        }
+
         return response;
     }
 
@@ -52,6 +93,13 @@ class WPOrgPluginDeserializer implements JsonDeserializer<WPOrgPluginResponse> {
             return jsonObject.get(property).getAsString();
         }
         return null;
+    }
+
+    private int getIntFromJsonIfAvailable(JsonObject jsonObject, String property) {
+        if (jsonObject.has(property)) {
+            return jsonObject.get(property).getAsInt();
+        }
+        return 0;
     }
 
     private @Nullable String getSubstringBetweenTwoStrings(String originalStr, String startStr, String endStr) {
