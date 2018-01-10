@@ -329,5 +329,7 @@
                 </RelativeLayout>
             </LinearLayout>
         </android.support.v7.widget.CardView>
+
+        <include layout="@layout/plugin_ratings_cardview" />
     </LinearLayout>
 </ScrollView>

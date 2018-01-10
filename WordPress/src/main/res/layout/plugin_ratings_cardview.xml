@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:card_view="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    style="@style/PluginCardView"
+    card_view:cardBackgroundColor="@color/white"
+    card_view:cardCornerRadius="@dimen/cardview_default_radius">
+
+    <LinearLayout style="@style/PluginCardViewVerticalContainer">
+
+        <LinearLayout
+            android:id="@+id/reviews_container"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="?android:attr/selectableItemBackground"
+            android:orientation="horizontal"
+            android:padding="@dimen/margin_extra_large">
+
+            <TextView
+                android:id="@+id/plugin_read_reviews"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:padding="@dimen/margin_medium"
+                android:text="@string/plugin_read_reviews"
+                android:textAllCaps="true"
+                android:textColor="@color/blue_wordpress"
+                android:textSize="@dimen/text_sz_large" />
+
+            <ImageView
+                style="@style/PluginCardViewSecondaryElement.ExternalLinkImage"
+                android:layout_gravity="center_vertical"
+                android:tint="@color/blue_wordpress"
+                app:srcCompat="@drawable/ic_external_black_24dp" />
+        </LinearLayout>
+    </LinearLayout>
+</android.support.v7.widget.CardView>

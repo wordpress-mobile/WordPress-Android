@@ -349,6 +349,13 @@ public class PluginDetailActivity extends AppCompatActivity {
             }
         });
 
+        findViewById(R.id.reviews_container).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                ActivityLauncher.openUrlExternal(PluginDetailActivity.this, getWpOrgReviewsUrl());
+            }
+        });
+
         refreshViews();
     }
 
@@ -687,7 +694,7 @@ public class PluginDetailActivity extends AppCompatActivity {
     }
 
     private String getWpOrgReviewsUrl() {
-        return "https://wordpress.org/plugins/" + mSitePlugin.getSlug() + "/reviews/";
+        return "https://wordpress.org/plugins/" + mSitePlugin.getSlug() + "/#reviews";
     }
 
     private String getRemovingPluginMessage() {
