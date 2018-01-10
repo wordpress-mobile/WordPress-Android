@@ -55,7 +55,7 @@
                             android:layout_height="wrap_content"
                             android:layout_marginLeft="@dimen/margin_extra_large"
                             android:textColor="@color/grey_dark"
-                            android:textSize="@dimen/text_sz_extra_large"
+                            android:textSize="@dimen/text_sz_large"
                             android:textStyle="bold"
                             tools:text="text_title" />
 
@@ -67,7 +67,7 @@
                             android:linksClickable="true"
                             android:textColor="@color/grey_dark"
                             android:textColorLink="@color/blue_wordpress"
-                            android:textSize="@dimen/text_sz_large"
+                            android:textSize="@dimen/text_sz_medium"
                             tools:text="text_byline" />
                     </LinearLayout>
                 </RelativeLayout>
@@ -77,6 +77,7 @@
                     <TextView
                         android:id="@+id/plugin_version_top"
                         style="@style/PluginCardViewPrimaryText"
+                        android:background="?android:attr/selectableItemBackground"
                         android:drawablePadding="@dimen/margin_small"
                         android:drawableRight="@drawable/ic_info_outline_grey_dark_18dp"
                         tools:text="plugin_installed_version" />
