@@ -27,7 +27,7 @@
                     android:id="@+id/image_banner"
                     android:layout_width="match_parent"
                     android:layout_height="@dimen/plugin_banner_size"
-                    android:background="@color/grey_lighten_10" />
+                    android:background="@color/grey_lighten_20" />
 
                 <RelativeLayout
                     android:layout_width="match_parent"
@@ -116,7 +116,7 @@
                             android:layout_height="wrap_content"
                             android:layout_gravity="center_vertical"
                             android:text="@string/plugin_installed"
-                            android:textColor="@color/grey_lighten_10"
+                            android:textColor="@color/grey"
                             android:textSize="@dimen/text_sz_medium" />
 
                         <ProgressBar
