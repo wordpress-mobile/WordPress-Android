@@ -237,9 +237,9 @@
 
                     <ImageView
                         android:id="@+id/plugin_description_chevron"
-                        style="@style/PluginCardViewSecondaryElement.ExternalLinkImage"
-                        android:layout_centerVertical="false"
+                        style="@style/PluginCardViewSecondaryElement.ChevronImage"
                         android:background="?android:attr/selectableItemBackground"
+                        android:contentDescription="@string/plugin_chevron_icon_content_description"
                         app:srcCompat="@drawable/ic_chevron_down_grey_100_35dp" />
 
                 </RelativeLayout>
