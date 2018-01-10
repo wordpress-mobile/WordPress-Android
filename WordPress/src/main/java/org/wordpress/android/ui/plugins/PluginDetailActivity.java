@@ -364,9 +364,9 @@ public class PluginDetailActivity extends AppCompatActivity {
     private void toggleText(@NonNull TextView textView, @NonNull ImageView chevron) {
         boolean isExpanded = textView.getVisibility() == View.VISIBLE;
         if (isExpanded) {
-            AniUtils.scaleOut(textView, AniUtils.Duration.SHORT);
+            AniUtils.fadeOut(textView, AniUtils.Duration.SHORT);
         } else {
-            AniUtils.scaleIn(textView, AniUtils.Duration.SHORT);
+            AniUtils.fadeIn(textView, AniUtils.Duration.SHORT);
         }
 
         float endRotate = !isExpanded ? -180f : 180f;
