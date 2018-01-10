@@ -749,6 +749,10 @@ public class UploadService extends Service {
             // If the post is already registered, the new media will be added to its list
             mUploadStore.registerPostModel(post, mediaToRetry);
             mPostUploadNotifier.addPostInfoToForegroundNotification(post, mediaToRetry);
+
+            // send event so Editors can handle clearing Failed statuses properly if Post is being edited right now
+            EventBus.getDefault().post(new UploadService.UploadMediaRetryEvent(mediaToRetry));
+
         } else {
             // retry uploading the Post
             mPostUploadHandler.upload(post);
