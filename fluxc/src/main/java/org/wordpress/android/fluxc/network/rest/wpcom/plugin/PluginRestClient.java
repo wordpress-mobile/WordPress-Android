@@ -202,6 +202,9 @@ public class PluginRestClient extends BaseWPComRestClient {
         sitePluginModel.setPluginUrl(response.plugin_url);
         sitePluginModel.setSlug(response.slug);
         sitePluginModel.setVersion(response.version);
+        if (response.action_links != null) {
+            sitePluginModel.setSettingsUrl(response.action_links.settings);
+        }
         return sitePluginModel;
     }
 
