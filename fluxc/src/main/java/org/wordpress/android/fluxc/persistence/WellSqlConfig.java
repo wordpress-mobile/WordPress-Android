@@ -181,9 +181,8 @@ public class WellSqlConfig extends DefaultWellConfig {
             case 21:
                 AppLog.d(T.DB, "Migrating to version " + (oldVersion + 1));
                 db.execSQL("alter table SitePluginModel add SETTINGS_URL text;");
-                db.execSQL("alter table WPOrgPluginModel add AUTHOR TEXT;");
+                db.execSQL("alter table WPOrgPluginModel add AUTHOR_AS_HTML TEXT;");
                 db.execSQL("alter table WPOrgPluginModel add BANNER TEXT;");
-                db.execSQL("alter table WPOrgPluginModel add AUTHOR_URL TEXT;");
                 db.execSQL("alter table WPOrgPluginModel add DESCRIPTION_AS_HTML TEXT;");
                 db.execSQL("alter table WPOrgPluginModel add FAQ_AS_HTML TEXT;");
                 db.execSQL("alter table WPOrgPluginModel add HOMEPAGE_URL TEXT;");
