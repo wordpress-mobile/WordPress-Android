@@ -77,6 +77,8 @@
                     <TextView
                         android:id="@+id/plugin_version_top"
                         style="@style/PluginCardViewPrimaryText"
+                        android:drawablePadding="@dimen/margin_small"
+                        android:drawableRight="@drawable/ic_info_outline_grey_dark_18dp"
                         tools:text="plugin_installed_version" />
 
                     <TextView

@@ -235,16 +235,22 @@ public class PluginDetailActivity extends AppCompatActivity {
         mUpdateProgressBar = findViewById(R.id.plugin_update_progress_bar);
         mSwitchActive = findViewById(R.id.plugin_state_active);
         mSwitchAutoupdates = findViewById(R.id.plugin_state_autoupdates);
-
         mImageBanner = findViewById(R.id.image_banner);
         mImageIcon = findViewById(R.id.image_icon);
-
         mDescriptionTextView = findViewById(R.id.plugin_description);
         mDescriptionChevron = findViewById(R.id.plugin_description_chevron);
+
         findViewById(R.id.plugin_description_container).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 toggleText(mDescriptionTextView, mDescriptionChevron);
+            }
+        });
+
+        mVersionTopTextView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                showPluginInfoPopup();
             }
         });
 
@@ -359,6 +365,10 @@ public class PluginDetailActivity extends AppCompatActivity {
         } else {
             mUpdateProgressBar.setVisibility(View.GONE);
         }
+    }
+
+    private void showPluginInfoPopup() {
+        // TODO: show popup with info (see prototype)
     }
 
     private void toggleText(@NonNull final TextView textView, @NonNull ImageView chevron) {
