@@ -41,7 +41,7 @@ dependencies {
 
     compile 'com.google.android.gms:play-services-auth:10.0.1'
 
-    compile 'com.github.wordpress-mobile.WordPress-FluxC-Android:fluxc:bb6ac01f9d2964edc0ba132462182d5d6a33f4b0'
+    compile 'com.github.wordpress-mobile.WordPress-FluxC-Android:fluxc:fd47635fb823d74405c56edc37c6c7a6a59e5fb5'
 
     compile 'com.github.bumptech.glide:glide:4.1.1'
     annotationProcessor 'com.github.bumptech.glide:compiler:4.1.1'
