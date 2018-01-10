@@ -2547,6 +2547,7 @@ public class EditPostActivity extends AppCompatActivity implements
     public void onMediaDeleted(String localMediaId) {
         if (!TextUtils.isEmpty(localMediaId)) {
             mAztecBackspaceDeletedMediaItemIds.add(localMediaId);
+            UploadService.setDeletedMediaItemIds(mAztecBackspaceDeletedMediaItemIds);
             // passing false here as we need to keep the media item in case the user wants to undo
             cancelMediaUpload(StringUtils.stringToInt(localMediaId), false);
         }
@@ -2611,6 +2612,8 @@ public class EditPostActivity extends AppCompatActivity implements
             if (!found) {
                 if (mEditorFragment instanceof AztecEditorFragment) {
                     mAztecBackspaceDeletedMediaItemIds.remove(mediaId);
+                    // update the mediaIds list in UploadService
+                    UploadService.setDeletedMediaItemIds(mAztecBackspaceDeletedMediaItemIds);
                     ((AztecEditorFragment)mEditorFragment).setMediaToFailed(mediaId);
                 }
             }
