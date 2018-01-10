@@ -361,16 +361,18 @@ public class PluginDetailActivity extends AppCompatActivity {
         }
     }
 
-    private void toggleText(@NonNull TextView textView, @NonNull ImageView chevron) {
+    private void toggleText(@NonNull final TextView textView, @NonNull ImageView chevron) {
+        AniUtils.Duration duration = AniUtils.Duration.SHORT;
         boolean isExpanded = textView.getVisibility() == View.VISIBLE;
         if (isExpanded) {
-            AniUtils.fadeOut(textView, AniUtils.Duration.SHORT);
+            AniUtils.fadeOut(textView, duration);
         } else {
-            AniUtils.fadeIn(textView, AniUtils.Duration.SHORT);
+            AniUtils.fadeIn(textView, duration);
         }
 
-        float endRotate = !isExpanded ? -180f : 180f;
+        float endRotate = isExpanded ? 360f : -180f;
         ObjectAnimator animRotate = ObjectAnimator.ofFloat(chevron, View.ROTATION, 0f, endRotate);
+        animRotate.setDuration(duration.toMillis(this));
         animRotate.start();
     }
 
@@ -655,7 +657,7 @@ public class PluginDetailActivity extends AppCompatActivity {
     private boolean refreshPluginFromStoreAndCheckForNull() {
         mSitePlugin = mPluginStore.getSitePluginByName(mSite, mSitePlugin.getName());
         if (mSitePlugin == null) {
-            ToastUtils.showToast(this, R.string.plugin_not_found, Duration.SHORT);
+            ToastUtils.showToast(this, R.string.plugin_not_found);
             finish();
             return true;
         }
