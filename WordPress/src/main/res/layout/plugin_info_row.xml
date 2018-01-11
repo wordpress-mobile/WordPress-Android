@@ -1,45 +1,32 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:minHeight="?attr/listPreferredItemHeight"
+    android:orientation="horizontal"
     android:paddingEnd="?android:attr/listPreferredItemPaddingEnd"
     android:paddingStart="?android:attr/listPreferredItemPaddingStart">
 
-    <LinearLayout
+    <TextView
+        android:id="@+id/text1"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_centerVertical="true"
-        android:orientation="horizontal">
+        android:layout_gravity="center_vertical"
+        android:layout_weight="1"
+        android:textColor="@color/grey_dark"
+        android:textSize="@dimen/text_sz_large"
+        tools:text="text1" />
 
-        <TextView
-            android:id="@+id/text1"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_vertical"
-            android:layout_weight="1"
-            android:textColor="@color/grey_dark"
-            android:textSize="@dimen/text_sz_large"
-            tools:text="text1" />
-
-        <TextView
-            android:id="@+id/text2"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_vertical"
-            android:layout_weight="1"
-            android:gravity="right"
-            android:textColor="@color/grey_dark"
-            android:textSize="@dimen/text_sz_large"
-            android:textStyle="bold"
-            tools:text="text2" />
-    </LinearLayout>
-
-    <View
+    <TextView
+        android:id="@+id/text2"
         android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:layout_alignParentBottom="true"
-        android:background="@color/grey_lighten_20" />
-
-</RelativeLayout>
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_vertical"
+        android:layout_weight="1"
+        android:gravity="right"
+        android:textColor="@color/grey_dark"
+        android:textSize="@dimen/text_sz_large"
+        android:textStyle="bold"
+        tools:text="text2" />
+</LinearLayout>
