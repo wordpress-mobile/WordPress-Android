@@ -437,6 +437,18 @@ public class PluginStore extends Store {
     }
 
     @SuppressWarnings("WeakerAccess")
+    public static class OnPluginDirectorySearched extends OnChanged<PluginDirectoryError> {
+        public String searchTerm;
+        public int offset;
+        public List<WPOrgPluginModel> plugins;
+
+        public OnPluginDirectorySearched(String searchTerm, int offset) {
+            this.searchTerm = searchTerm;
+            this.offset = offset;
+        }
+    }
+
+    @SuppressWarnings("WeakerAccess")
     public static class OnSitePluginConfigured extends OnChanged<ConfigureSitePluginError> {
         public SiteModel site;
         public SitePluginModel plugin;
@@ -718,7 +730,13 @@ public class PluginStore extends Store {
     }
 
     private void searchedPluginDirectory(SearchedPluginDirectoryPayload payload) {
-
+        OnPluginDirectorySearched event = new OnPluginDirectorySearched(payload.searchTerm, payload.offset);
+        if (payload.isError()) {
+            event.error = payload.error;
+        } else {
+            event.plugins = payload.plugins;
+        }
+        emitChange(event);
     }
 
     private void updatedSitePlugin(UpdatedSitePluginPayload payload) {
