@@ -206,7 +206,7 @@ public class UploadService extends Service {
 
     private void registerPostModelsForMedia(List<MediaModel> mediaList, boolean isRetry) {
         if (mediaList != null && !mediaList.isEmpty()) {
-            Set<PostModel> postsToRefresh = PostUtils.getPostsThatIncludeThisMedia(mPostStore, mediaList);
+            Set<PostModel> postsToRefresh = PostUtils.getPostsThatIncludeAnyOfTheseMedia(mPostStore, mediaList);
             for (PostModel post : postsToRefresh) {
                 mUploadStore.registerPostModel(post, mediaList);
                 if (isThisPostTotallyNewOrFailed(post)) {
