@@ -1,12 +1,8 @@
 package org.wordpress.android.fluxc.model.plugin;
 
 public enum PluginDirectoryType {
-    APPEARANCE,
-    ENGAGEMENT,
     NEW,
-    POPULAR,
-    SECURITY,
-    WRITING;
+    POPULAR;
 
     public String toString() {
         return this.name();
@@ -20,6 +16,6 @@ public enum PluginDirectoryType {
                 }
             }
         }
-        return POPULAR;
+        return NEW;
     }
 }
