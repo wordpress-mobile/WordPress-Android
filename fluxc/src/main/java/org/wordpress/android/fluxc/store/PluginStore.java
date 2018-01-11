@@ -10,9 +10,10 @@ import org.wordpress.android.fluxc.Payload;
 import org.wordpress.android.fluxc.action.PluginAction;
 import org.wordpress.android.fluxc.annotations.action.Action;
 import org.wordpress.android.fluxc.annotations.action.IAction;
-import org.wordpress.android.fluxc.model.plugin.WPOrgPluginModel;
-import org.wordpress.android.fluxc.model.plugin.SitePluginModel;
 import org.wordpress.android.fluxc.model.SiteModel;
+import org.wordpress.android.fluxc.model.plugin.PluginDirectoryType;
+import org.wordpress.android.fluxc.model.plugin.SitePluginModel;
+import org.wordpress.android.fluxc.model.plugin.WPOrgPluginModel;
 import org.wordpress.android.fluxc.network.BaseRequest.BaseNetworkError;
 import org.wordpress.android.fluxc.network.rest.wpcom.plugin.PluginRestClient;
 import org.wordpress.android.fluxc.network.wporg.plugin.PluginWPOrgClient;
@@ -44,6 +45,17 @@ public class PluginStore extends Store {
         public DeleteSitePluginPayload(SiteModel site, SitePluginModel plugin) {
             this.site = site;
             this.plugin = plugin;
+        }
+    }
+
+    @SuppressWarnings("WeakerAccess")
+    public static class FetchPluginDirectoryPayload extends Payload<BaseNetworkError> {
+        public PluginDirectoryType type;
+        public boolean loadMore;
+
+        public FetchPluginDirectoryPayload(PluginDirectoryType type, boolean loadMore) {
+            this.type = type;
+            this.loadMore = loadMore;
         }
     }
 
@@ -97,6 +109,27 @@ public class PluginStore extends Store {
         public DeletedSitePluginPayload(SiteModel site, SitePluginModel plugin, DeleteSitePluginError error) {
             this.site = site;
             this.plugin = plugin;
+            this.error = error;
+        }
+    }
+
+    @SuppressWarnings("WeakerAccess")
+    public static class FetchedPluginDirectoryPayload extends Payload<FetchPluginDirectoryError> {
+        public PluginDirectoryType type;
+        public boolean loadMore;
+        public List<WPOrgPluginModel> plugins;
+
+        public FetchedPluginDirectoryPayload(PluginDirectoryType type, boolean loadMore,
+                                             List<WPOrgPluginModel> plugins) {
+            this.type = type;
+            this.loadMore = loadMore;
+            this.plugins = plugins;
+        }
+
+        public FetchedPluginDirectoryPayload(PluginDirectoryType type, boolean loadMore,
+                                             FetchPluginDirectoryError error) {
+            this.type = type;
+            this.loadMore = loadMore;
             this.error = error;
         }
     }
@@ -191,6 +224,16 @@ public class PluginStore extends Store {
         }
     }
 
+    public static class FetchPluginDirectoryError implements OnChangedError {
+        public FetchPluginDirectoryErrorType type;
+        @Nullable public String message;
+
+        public FetchPluginDirectoryError(FetchPluginDirectoryErrorType type, @Nullable String message) {
+            this.type = type;
+            this.message = message;
+        }
+    }
+
     public static class FetchSitePluginsError implements OnChangedError {
         public FetchSitePluginsErrorType type;
         @Nullable public String message;
@@ -280,6 +323,10 @@ public class PluginStore extends Store {
             }
             return GENERIC_ERROR;
         }
+    }
+
+    public enum FetchPluginDirectoryErrorType {
+        GENERIC_ERROR
     }
 
     public enum FetchSitePluginsErrorType {
