@@ -456,7 +456,7 @@ public class EditPostActivity extends AppCompatActivity implements
         allMedia.addAll(completedMedia);
         allMedia.addAll(uploadingMedia);
 
-        if (allMedia != null && !allMedia.isEmpty()) {
+        if (!allMedia.isEmpty()) {
             HashSet<MediaModel> mediaToDeleteAssociationFor = new HashSet<>();
             for (MediaModel media : allMedia) {
                 if (!AztecEditorFragment.isMediaInPostBody(this, mPost.getContent(), String.valueOf(media.getId()))) {
