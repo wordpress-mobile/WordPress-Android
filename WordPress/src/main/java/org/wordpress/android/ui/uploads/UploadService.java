@@ -909,6 +909,7 @@ public class UploadService extends Service {
     }
 
     public static void setDeletedMediaItemIds(List<String> mediaIds) {
+        mUserDeletedMediaItemIds.clear();
         mUserDeletedMediaItemIds.addAll(mediaIds);
     }
 
