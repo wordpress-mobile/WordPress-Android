@@ -6,8 +6,8 @@ import com.wellsql.generated.WPOrgPluginModelTable;
 import com.wellsql.generated.SitePluginModelTable;
 import com.yarolegovich.wellsql.WellSql;
 
-import org.wordpress.android.fluxc.model.WPOrgPluginModel;
-import org.wordpress.android.fluxc.model.SitePluginModel;
+import org.wordpress.android.fluxc.model.plugin.WPOrgPluginModel;
+import org.wordpress.android.fluxc.model.plugin.SitePluginModel;
 import org.wordpress.android.fluxc.model.SiteModel;
 
 import java.util.List;
