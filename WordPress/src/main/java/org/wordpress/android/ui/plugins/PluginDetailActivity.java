@@ -49,6 +49,7 @@ import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.FormatUtils;
 import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.SiteUtils;
+import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.ToastUtils.Duration;
 import org.wordpress.android.util.WPLinkMovementMethod;
@@ -446,12 +447,29 @@ public class PluginDetailActivity extends AppCompatActivity {
         setRatingsBar(R.id.progress3, mWPOrgPlugin.getNumberOfRatingsOfThree(), numRatingsTotal);
         setRatingsBar(R.id.progress2, mWPOrgPlugin.getNumberOfRatingsOfTwo(), numRatingsTotal);
         setRatingsBar(R.id.progress1, mWPOrgPlugin.getNumberOfRatingsOfOne(), numRatingsTotal);
+
+        int rating = StringUtils.stringToInt(mWPOrgPlugin.getRating(), 1);
+        rating = Math.round(rating / 10) * 10;
+        int averageRating = rating / 20;
+        setRatingsStar(R.id.image_star1, 1, averageRating);
+        setRatingsStar(R.id.image_star2, 2, averageRating);
+        setRatingsStar(R.id.image_star3, 3, averageRating);
+        setRatingsStar(R.id.image_star4, 4, averageRating);
+        setRatingsStar(R.id.image_star5, 5, averageRating);
     }
 
     private void setRatingsBar(@IdRes int progressResId, int numRatingsForStar, int numRatingsTotal) {
         ProgressBar bar = findViewById(progressResId);
         bar.setMax(numRatingsTotal);
         bar.setProgress(numRatingsForStar);
+    }
+
+    private void setRatingsStar(@IdRes int starImageResId, int starNumber, int averageRating) {
+        ImageView imageStar = findViewById(starImageResId);
+        int drawableRes = starNumber <= averageRating
+                ? R.drawable.ic_star_blue_medium_18dp : R.drawable.ic_star_outline_blue_medium_18dp;
+        // TODO: verify this works with vector images on lesser APIs
+        imageStar.setImageResource(drawableRes);
     }
 
     private void showPluginInfoPopup() {
