@@ -406,21 +406,22 @@ public class PluginDetailActivity extends AppCompatActivity {
         }
         mImageIcon.setImageUrl(mWPOrgPlugin.getIcon(), PLUGIN_ICON);
 
-        setCollapsibleHtmlText(mDescriptionTextView, R.id.plugin_description_container, mWPOrgPlugin.getDescriptionAsHtml());
-        setCollapsibleHtmlText(mInstallationTextView, R.id.plugin_installation_container, mWPOrgPlugin.getInstallationInstructionsAsHtml());
-        setCollapsibleHtmlText(mWhatsNewTextView, R.id.plugin_whatsnew_container, mWPOrgPlugin.getWhatsNewAsHtml());
-        setCollapsibleHtmlText(mFaqTextView, R.id.plugin_faq_container, mWPOrgPlugin.getFaqAsHtml());
+        setCollapsibleHtmlText(mDescriptionTextView, mWPOrgPlugin.getDescriptionAsHtml());
+        setCollapsibleHtmlText(mInstallationTextView, mWPOrgPlugin.getInstallationInstructionsAsHtml());
+        setCollapsibleHtmlText(mWhatsNewTextView, mWPOrgPlugin.getWhatsNewAsHtml());
+        setCollapsibleHtmlText(mFaqTextView, mWPOrgPlugin.getFaqAsHtml());
 
         refreshPluginVersionViews();
         refreshRatingsViews();
     }
 
-    private void setCollapsibleHtmlText(@NonNull TextView textView, @IdRes int containerViewResId, @Nullable String htmlText) {
+    private void setCollapsibleHtmlText(@NonNull TextView textView, @Nullable String htmlText) {
         if (!TextUtils.isEmpty(htmlText)) {
             textView.setMovementMethod(WPLinkMovementMethod.getInstance());
             textView.setText(Html.fromHtml(htmlText));
         } else {
-            findViewById(containerViewResId).setVisibility(View.GONE);
+            textView.setTextColor(getColor(R.color.grey_lighten_10));
+            textView.setText(R.string.plugin_empty_text);
         }
     }
 
