@@ -478,6 +478,8 @@ public class PluginStore extends Store {
             case DELETE_SITE_PLUGIN:
                 deleteSitePlugin((DeleteSitePluginPayload) action.getPayload());
                 break;
+            case FETCH_PLUGIN_DIRECTORY:
+                break;
             case FETCH_SITE_PLUGINS:
                 fetchSitePlugins((SiteModel) action.getPayload());
                 break;
@@ -496,6 +498,8 @@ public class PluginStore extends Store {
                 break;
             case DELETED_SITE_PLUGIN:
                 deletedSitePlugin((DeletedSitePluginPayload) action.getPayload());
+                break;
+            case FETCHED_PLUGIN_DIRECTORY:
                 break;
             case FETCHED_SITE_PLUGINS:
                 fetchedSitePlugins((FetchedSitePluginsPayload) action.getPayload());
