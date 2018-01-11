@@ -208,9 +208,8 @@ public class UploadService extends Service {
         if (mediaList != null && !mediaList.isEmpty()) {
             Set<PostModel> postsToRefresh = PostUtils.getPostsThatIncludeAnyOfTheseMedia(mPostStore, mediaList);
             for (PostModel post : postsToRefresh) {
-                mUploadStore.registerPostModel(post, mediaList);
-                if (isThisPostTotallyNewOrFailed(post)) {
-                    mPostUploadNotifier.addPostInfoToForegroundNotification(post, null);
+                if (!mUploadStore.isRegisteredPostModel(post)) {
+                    mUploadStore.registerPostModel(post, mediaList);
                 }
             }
 
@@ -259,7 +258,7 @@ public class UploadService extends Service {
             // is this a new post? only add count to the notification when the post is totally new
             // i.e. it still doesn't have any tracked state in the UploadStore
             // or it's a failed one the user is actively retrying.
-            if (isThisPostTotallyNewOrFailed(post)) {
+            if (isThisPostTotallyNewOrFailed(post) && !PostUploadHandler.isPostUploadingOrQueued(post)) {
                 mPostUploadNotifier.addPostInfoToForegroundNotification(post, null);
             }
 
