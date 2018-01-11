@@ -20,6 +20,7 @@ import org.wordpress.android.fluxc.network.wporg.plugin.PluginWPOrgClient;
 import org.wordpress.android.fluxc.persistence.PluginSqlUtils;
 import org.wordpress.android.util.AppLog;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.inject.Inject;
@@ -526,6 +527,11 @@ public class PluginStore extends Store {
                 updatedSitePlugin((UpdatedSitePluginPayload) action.getPayload());
                 break;
         }
+    }
+
+    public List<WPOrgPluginModel> getPluginDirectory(PluginDirectoryType type) {
+        // TODO: query the plugin directory from PluginSqlUtils
+        return new ArrayList<>();
     }
 
     public SitePluginModel getSitePluginByName(SiteModel site, String name) {
