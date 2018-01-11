@@ -14,6 +14,8 @@ import org.wordpress.android.fluxc.store.PluginStore.FetchedSitePluginsPayload;
 import org.wordpress.android.fluxc.store.PluginStore.FetchedWPOrgPluginPayload;
 import org.wordpress.android.fluxc.store.PluginStore.InstallSitePluginPayload;
 import org.wordpress.android.fluxc.store.PluginStore.InstalledSitePluginPayload;
+import org.wordpress.android.fluxc.store.PluginStore.SearchPluginDirectoryPayload;
+import org.wordpress.android.fluxc.store.PluginStore.SearchedPluginDirectoryPayload;
 import org.wordpress.android.fluxc.store.PluginStore.UpdateSitePluginPayload;
 import org.wordpress.android.fluxc.store.PluginStore.UpdatedSitePluginPayload;
 
@@ -32,6 +34,8 @@ public enum PluginAction implements IAction {
     FETCH_WPORG_PLUGIN,
     @Action(payloadType = InstallSitePluginPayload.class)
     INSTALL_SITE_PLUGIN,
+    @Action(payloadType = SearchPluginDirectoryPayload.class)
+    SEARCH_PLUGIN_DIRECTORY,
     @Action(payloadType = UpdateSitePluginPayload.class)
     UPDATE_SITE_PLUGIN,
 
@@ -48,6 +52,8 @@ public enum PluginAction implements IAction {
     FETCHED_WPORG_PLUGIN,
     @Action(payloadType = InstalledSitePluginPayload.class)
     INSTALLED_SITE_PLUGIN,
+    @Action(payloadType = SearchedPluginDirectoryPayload.class)
+    SEARCHED_PLUGIN_DIRECTORY,
     @Action(payloadType = UpdatedSitePluginPayload.class)
     UPDATED_SITE_PLUGIN
 }
