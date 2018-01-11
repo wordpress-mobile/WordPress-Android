@@ -15,7 +15,6 @@ public class PluginUtils {
         String jetpackVersion = site.getJetpackVersion();
         if (site.isUsingWpComRestApi() && site.isJetpackConnected() && !TextUtils.isEmpty(jetpackVersion)) {
             try {
-                jetpackVersion = "5.6-alpha";
                 // strip any trailing "-beta" or "-alpha" from the version
                 int index = jetpackVersion.lastIndexOf("-");
                 if (index > 0) {
