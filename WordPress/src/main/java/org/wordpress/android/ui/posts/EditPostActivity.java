@@ -449,12 +449,9 @@ public class EditPostActivity extends AppCompatActivity implements
 
     private void purgeMediaToPostAssociationsIfNotInPostAnymore() {
         ArrayList<MediaModel> allMedia = new ArrayList<>();
-        Set<MediaModel> failedMedia = mUploadStore.getFailedMediaForPost(mPost);
-        Set<MediaModel> completedMedia = mUploadStore.getCompletedMediaForPost(mPost);
-        Set<MediaModel> uploadingMedia = mUploadStore.getUploadingMediaForPost(mPost);
-        allMedia.addAll(failedMedia);
-        allMedia.addAll(completedMedia);
-        allMedia.addAll(uploadingMedia);
+        allMedia.addAll(mUploadStore.getFailedMediaForPost(mPost));
+        allMedia.addAll(mUploadStore.getCompletedMediaForPost(mPost));
+        allMedia.addAll(mUploadStore.getUploadingMediaForPost(mPost));
 
         if (!allMedia.isEmpty()) {
             HashSet<MediaModel> mediaToDeleteAssociationFor = new HashSet<>();
