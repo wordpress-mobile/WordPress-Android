@@ -60,6 +60,7 @@ import org.wordpress.android.editor.EditorFragmentAbstract.TrackableEvent;
 import org.wordpress.android.editor.EditorFragmentActivity;
 import org.wordpress.android.editor.EditorImageMetaData;
 import org.wordpress.android.editor.EditorMediaUploadListener;
+import org.wordpress.android.editor.EditorMediaUtils;
 import org.wordpress.android.editor.EditorWebViewAbstract.ErrorListener;
 import org.wordpress.android.editor.EditorWebViewCompatibility;
 import org.wordpress.android.editor.EditorWebViewCompatibility.ReflectionException;
@@ -1041,17 +1042,22 @@ public class EditPostActivity extends AppCompatActivity implements
             aztecEditorFragment.setEditorBetaClickListener(EditPostActivity.this);
             aztecEditorFragment.setEditorImageSettingsListener(EditPostActivity.this);
 
-            Drawable loadingImagePlaceholder = getResources().getDrawable(org.wordpress.android.editor.R.drawable.ic_gridicons_image);
-            loadingImagePlaceholder.setBounds(0, 0,
-                    AztecEditorFragment.DEFAULT_MEDIA_PLACEHOLDER_DIMENSION_DP,
-                    AztecEditorFragment.DEFAULT_MEDIA_PLACEHOLDER_DIMENSION_DP);
+            // Here we should set the max width for media, but the default size is already OK. No need
+            // to customize it further
+
+            Drawable loadingImagePlaceholder = EditorMediaUtils.getAztecPlaceholderDrawableFromResID(
+                    this,
+                    org.wordpress.android.editor.R.drawable.ic_gridicons_image,
+                    aztecEditorFragment.getMaxMediaSize()
+            );
             aztecEditorFragment.setAztecImageLoader(new AztecImageLoader(getBaseContext(), loadingImagePlaceholder));
             aztecEditorFragment.setLoadingImagePlaceholder(loadingImagePlaceholder);
 
-            Drawable loadingVideoPlaceholder = getResources().getDrawable(org.wordpress.android.editor.R.drawable.ic_gridicons_video_camera);
-            loadingVideoPlaceholder.setBounds(0, 0,
-                    AztecEditorFragment.DEFAULT_MEDIA_PLACEHOLDER_DIMENSION_DP,
-                    AztecEditorFragment.DEFAULT_MEDIA_PLACEHOLDER_DIMENSION_DP);
+            Drawable loadingVideoPlaceholder = EditorMediaUtils.getAztecPlaceholderDrawableFromResID(
+                    this,
+                    org.wordpress.android.editor.R.drawable.ic_gridicons_video_camera,
+                    aztecEditorFragment.getMaxMediaSize()
+            );
             aztecEditorFragment.setAztecVideoLoader(new AztecVideoLoader(getBaseContext(), loadingVideoPlaceholder));
             aztecEditorFragment.setLoadingVideoPlaceholder(loadingVideoPlaceholder);
         }
@@ -1476,7 +1482,7 @@ public class EditPostActivity extends AppCompatActivity implements
 
     private int getMaximumThumbnailWidthForEditor() {
         if (mMaxThumbWidth == 0) {
-            mMaxThumbWidth = ImageUtils.getMaximumThumbnailWidthForEditor(this);
+            mMaxThumbWidth = EditorMediaUtils.getMaximumThumbnailSizeForEditor(this);
         }
         return mMaxThumbWidth;
     }
@@ -2222,13 +2228,24 @@ public class EditPostActivity extends AppCompatActivity implements
             return;
         }
 
-        // if only one item was chosen insert it as a media object, otherwise show the insert
-        // media dialog so the user can choose how to insert the items
-        if (ids.size() == 1) {
-            long mediaId = ids.get(0);
-            addExistingMediaToEditorAndSave(mediaId);
-        } else {
+        boolean allAreImages = true;
+        for (Long id: ids) {
+            MediaModel media = mMediaStore.getSiteMediaWithId(mSite, id);
+            if (media != null && !MediaUtils.isValidImage(media.getUrl())) {
+                allAreImages = false;
+                break;
+            }
+        }
+
+        // if the user selected multiple items and they're all images, show the insert media
+        // dialog so the user can choose whether to insert them individually or as a gallery
+        if (ids.size() > 1 && allAreImages) {
             showInsertMediaDialog(ids);
+        } else {
+            for (Long id: ids) {
+                addExistingMediaToEditor(id);
+            }
+            savePostAsync(null);
         }
     }
 
@@ -2357,7 +2374,7 @@ public class EditPostActivity extends AppCompatActivity implements
             FileOutputStream outputStream = new FileOutputStream(outputFile);
             Bitmap thumb = ImageUtils.getVideoFrameFromVideo(
                     videoPath,
-                    ImageUtils.getMaximumThumbnailWidthForEditor(this)
+                    EditorMediaUtils.getMaximumThumbnailSizeForEditor(this)
             );
             if (thumb != null) {
                 thumb.compress(Bitmap.CompressFormat.PNG, 75, outputStream);
@@ -2611,6 +2628,12 @@ public class EditPostActivity extends AppCompatActivity implements
     public void onVideoPressInfoRequested(final String videoId) {
         String videoUrl = mMediaStore.
                 getUrlForSiteVideoWithVideoPressGuid(mSite, videoId);
+
+        if (videoUrl == null) {
+            AppLog.w(T.EDITOR, "The editor wants more info about the following VideoPress code: " + videoId
+                    + " but it's not available in the current site " + mSite.getUrl() + " Maybe it's from another site?" );
+            return;
+        }
 
         if (videoUrl.isEmpty()) {
             if (PermissionUtils.checkAndRequestCameraAndStoragePermissions(this, WPPermissionUtils.EDITOR_MEDIA_PERMISSION_REQUEST_CODE)) {

@@ -6,6 +6,7 @@ import android.graphics.BitmapFactory;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
+import android.util.DisplayMetrics;
 
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.ImageLoader;
@@ -32,14 +33,13 @@ public class AztecImageLoader implements Html.ImageGetter {
     }
 
     @Override
-    public void loadImage(final String url, final Callbacks callbacks, int maxWidth, int minWidth) {
-        // FIXME: Aztec has now the option to set the desired image width. We should respect it
-        // Ignore the maxWidth passed from Aztec, since it's the MAX of screen width/height
-        final int maxWidthForEditor = ImageUtils.getMaximumThumbnailWidthForEditor(context);
-
-        final String cacheKey = url + maxWidthForEditor;
+    public void loadImage(final String url, final Callbacks callbacks, final int maxWidth, final int minWidth) {
+        final String cacheKey = url + maxWidth;
         Bitmap cachedBitmap = WordPress.getBitmapCache().get(cacheKey);
         if (cachedBitmap != null) {
+            // By default, BitmapFactory.decodeFile sets the bitmap's density to the device default so, we need
+            // to correctly set the input density to 160 ourselves.
+            cachedBitmap.setDensity(DisplayMetrics.DENSITY_DEFAULT);
             callbacks.onImageLoaded(new BitmapDrawable(context.getResources(), cachedBitmap));
             return;
         }
@@ -47,11 +47,12 @@ public class AztecImageLoader implements Html.ImageGetter {
         if (new File(url).exists()) {
             int orientation = ImageUtils.getImageOrientation(this.context, url);
             byte[] bytes = ImageUtils.createThumbnailFromUri(
-                   context, Uri.parse(url), maxWidthForEditor, null, orientation);
+                   context, Uri.parse(url), maxWidth, null, orientation);
             if (bytes != null) {
                 Bitmap bitmap = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
                 if (bitmap != null) {
                     WordPress.getBitmapCache().putBitmap(cacheKey, bitmap);
+                    bitmap.setDensity(DisplayMetrics.DENSITY_DEFAULT);
                 }
                 BitmapDrawable bitmapDrawable = new BitmapDrawable(context.getResources(), bitmap);
                 callbacks.onImageLoaded(bitmapDrawable);
@@ -72,8 +73,13 @@ public class AztecImageLoader implements Html.ImageGetter {
                     // isImmediate is true as soon as the request starts.
                     callbacks.onImageFailed();
                 } else if (bitmap != null) {
-                    final String cacheKey = url + maxWidthForEditor;
+                    final String cacheKey = url + maxWidth;
+                    // Make sure both width ad height respect the max size for the editor
+                    bitmap = ImageUtils.getScaledBitmapAtLongestSide(bitmap, maxWidth);
                     WordPress.getBitmapCache().putBitmap(cacheKey, bitmap);
+                    // By default, BitmapFactory.decodeFile sets the bitmap's density to the device default so, we need
+                    // to correctly set the input density to 160 ourselves.
+                    bitmap.setDensity(DisplayMetrics.DENSITY_DEFAULT);
                     BitmapDrawable bitmapDrawable = new BitmapDrawable(context.getResources(), bitmap);
                     callbacks.onImageLoaded(bitmapDrawable);
                 }
@@ -83,6 +89,6 @@ public class AztecImageLoader implements Html.ImageGetter {
             public void onErrorResponse(VolleyError error) {
                 callbacks.onImageFailed();
             }
-        }, maxWidthForEditor, 0);
+        }, maxWidth, 0);
     }
 }

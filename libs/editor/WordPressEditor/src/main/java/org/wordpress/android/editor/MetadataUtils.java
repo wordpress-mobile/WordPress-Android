@@ -7,6 +7,8 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.aztec.AztecAttributes;
+import org.wordpress.aztec.Constants;
+import org.wordpress.aztec.plugins.shortcodes.extensions.VideoPressExtensionsKt;
 import org.xml.sax.Attributes;
 
 import java.util.ArrayList;
@@ -40,7 +42,12 @@ public class MetadataUtils {
         addMetadataProperty(metadata, "naturalWidth", "");       // The natural width of the image.
         addMetadataProperty(metadata, "naturalHeight", "");       // The natural height of the image.
 
-        addMetadataProperty(metadata, "src", attrs.getAttribute("src", ""));
+        String src = attrs.getAttribute("src", "");
+        if (TextUtils.isEmpty(src)) {
+            src = attrs.getAttribute(VideoPressExtensionsKt.getATTRIBUTE_VIDEOPRESS_HIDDEN_SRC(), "");
+        }
+        addMetadataProperty(metadata, "src", src);
+
         addMetadataProperty(metadata, "alt", attrs.getAttribute("alt", ""));
         addMetadataProperty(metadata, "title", attrs.getAttribute("title", ""));
         addMetadataProperty(metadata, "naturalWidth", naturalWidth);

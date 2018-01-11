@@ -25,6 +25,7 @@ import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.fluxc.Dispatcher;
 import org.wordpress.android.fluxc.generated.AuthenticationActionBuilder;
 import org.wordpress.android.fluxc.store.AccountStore;
+import org.wordpress.android.fluxc.store.AccountStore.AuthEmailPayload;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.GravatarUtils;
 import org.wordpress.android.util.NetworkUtils;
@@ -86,7 +87,8 @@ public class LoginMagicLinkRequestFragment extends Fragment {
                 if (mLoginListener != null) {
                     if (NetworkUtils.checkConnection(getActivity())) {
                         showMagicLinkRequestProgressDialog();
-                        mDispatcher.dispatch(AuthenticationActionBuilder.newSendAuthEmailAction(mEmail));
+                        AuthEmailPayload authEmailPayload = new AuthEmailPayload(mEmail, false);
+                        mDispatcher.dispatch(AuthenticationActionBuilder.newSendAuthEmailAction(authEmailPayload));
                     }
                 }
             }

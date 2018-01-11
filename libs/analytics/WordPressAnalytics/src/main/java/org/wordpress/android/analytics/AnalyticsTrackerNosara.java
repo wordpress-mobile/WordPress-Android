@@ -794,8 +794,6 @@ public class AnalyticsTrackerNosara extends Tracker {
                 return "me_tab_accessed";
             case ME_GRAVATAR_TAPPED:
                 return "me_gravatar_tapped";
-            case ME_GRAVATAR_TOOLTIP_TAPPED:
-                return "me_gravatar_tooltip_tapped";
             case ME_GRAVATAR_SHOT_NEW:
                 return "me_gravatar_shot_new";
             case ME_GRAVATAR_GALLERY_PICKED:

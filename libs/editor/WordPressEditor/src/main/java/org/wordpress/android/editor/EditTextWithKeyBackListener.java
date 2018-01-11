@@ -9,19 +9,19 @@ import android.view.KeyEvent;
  * An EditText with support for {@link org.wordpress.android.editor.OnImeBackListener} and typeface setting
  * using a custom XML attribute.
  */
-public class SourceViewEditText extends AppCompatEditText {
+public class EditTextWithKeyBackListener extends AppCompatEditText {
 
     private OnImeBackListener mOnImeBackListener;
 
-    public SourceViewEditText(Context context) {
+    public EditTextWithKeyBackListener(Context context) {
         super(context);
     }
 
-    public SourceViewEditText(Context context, AttributeSet attrs) {
+    public EditTextWithKeyBackListener(Context context, AttributeSet attrs) {
         super(context, attrs);
     }
 
-    public SourceViewEditText(Context context, AttributeSet attrs, int defStyle) {
+    public EditTextWithKeyBackListener(Context context, AttributeSet attrs, int defStyle) {
         super(context, attrs, defStyle);
     }
 

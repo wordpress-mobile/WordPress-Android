@@ -105,6 +105,8 @@
     <string name="invalid_ip_or_range">Invalid IP or IP range</string>
     <string name="copy">Copy</string>
     <string name="error_please_choose_browser">Error opening the default web browser. Please choose another app:</string>
+    <string name="delete_yes">Delete</string>
+    <string name="delete_no">Don\'t Delete</string>
 
     <string name="button_skip">Skip</string>
     <string name="button_next">Next</string>
@@ -519,6 +521,7 @@
     <string name="site_settings_discussion_new_posts_header">Defaults for new posts</string>
     <string name="site_settings_comments_header" translatable="false">@string/comments</string>
     <string name="site_settings_advanced_header">Advanced</string>
+    <string name="site_settings_traffic_header">Traffic</string>
 
     <!-- Preference Titles -->
     <string name="site_settings_title_title">Site Title</string>
@@ -529,7 +532,17 @@
     <string name="site_settings_username_title" translatable="false">@string/username</string>
     <string name="site_settings_password_title" translatable="false">@string/password</string>
     <string name="site_settings_default_category_title">Default Category</string>
+    <string name="site_settings_tags_title">Tags</string>
     <string name="site_settings_default_format_title">Default Format</string>
+    <string name="site_settings_week_start_title">Week starts on</string>
+    <string name="site_settings_date_format_title">Date Format</string>
+    <string name="site_settings_time_format_title">Time Format</string>
+    <string name="site_settings_timezone_title">Timezone</string>
+    <string name="site_settings_timezone_subtitle">Choose a city in your timezone</string>
+    <string name="site_settings_posts_per_page_title">Posts per page</string>
+    <string name="site_settings_format_entry_custom">Custom</string>
+    <string name="site_settings_format_hint_custom">Custom format</string>
+    <string name="site_settings_format_help">Learn more about date &amp; time formatting</string>
     <string name="site_settings_image_original_size">Original Size</string>
     <string name="site_settings_optimize_images">Optimize Images</string>
     <string name="site_settings_default_image_width_title" translatable="false">@string/max_thumbnail_px_size</string>
@@ -554,6 +567,18 @@
     <string name="site_settings_moderation_hold_title">Hold for Moderation</string>
     <string name="site_settings_blacklist_title">Blacklist</string>
     <string name="site_settings_delete_site_title">Delete Site</string>
+    <string name="site_settings_timezones_error">Unable to load timezones</string>
+    <string name="site_settings_amp_title">Accelerated Mobile Pages (AMP)</string>
+    <string name="site_settings_amp_summary">Your WordPress.com site supports the use of Accelerated Mobile Pages, a Google-led initiative that dramatically speeds up loading times on mobile devices</string>
+
+    <!-- tag list and detail -->
+    <string name="tag_name_hint">Tag</string>
+    <string name="tag_description_hint">Description</string>
+    <string name="add_new_tag">Add New Tag</string>
+    <string name="error_tag_exists">A tag with this name already exists</string>
+    <string name="dlg_confirm_delete_tag">Permanently delete \'%s\'?</string>
+    <string name="dlg_deleting_tag">Deleting</string>
+    <string name="dlg_saving_tag">Saving</string>
 
     <!-- Jetpack settings -->
     <string name="jetpack_site_settings_category_title">Jetpack Settings</string>
@@ -634,6 +659,7 @@
     <string name="site_settings_username_hint">Current user account</string>
     <string name="site_settings_password_hint">Change your password</string>
     <string name="site_settings_category_hint">Sets new post category</string>
+    <string name="site_settings_tags_hint">Manage your site\'s tags</string>
     <string name="site_settings_format_hint">Sets new post format</string>
     <string name="site_settings_image_width_hint">Resizes images in posts to this width</string>
     <string name="site_settings_image_quality_hint">Quality of pictures. Higher values mean better quality pictures.</string>
@@ -1804,6 +1830,7 @@
     <string name="plugin_remove_progress_dialog_message">Removing %s&#8230;</string>
     <string name="plugin_remove_dialog_title">Remove Plugin</string>
     <string name="plugin_remove_dialog_message">Are you sure you want to remove %1$s from %2$s?\n\nThis will deactivate the plugin and delete all associated files and data.</string>
+    <string name="plugin_fetch_error">Unable to load plugins</string>
 
     <string name="wordpress_dot_org_plugin_page">WordPress.org Plugin page</string>
     <string name="plugin_home_page">Plugin homepage</string>
@@ -2062,6 +2089,7 @@
     <string name="notification_error_wrong_password">Please double check your password to continue.</string>
     <string name="notification_2fa_needed">Please provide an authentication code to continue.</string>
     <string name="notification_login_failed">An error has occurred.</string>
+    <string name="change_photo">Change photo</string>
 
     <!-- Signup -->
     <string name="sign_up">Sign Up</string>

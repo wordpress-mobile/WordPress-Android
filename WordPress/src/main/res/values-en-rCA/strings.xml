@@ -1,11 +1,26 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2017-11-23 18:56:58+0000
+Translation-Revision-Date: 2017-12-13 18:46:47+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/2.4.0-alpha
 Language: en_CA
 -->
 <resources>
+	<string name="notification_login_failed">An error has occurred.</string>
+	<string name="notification_2fa_needed">Please provide an authentication code to continue.</string>
+	<string name="notification_error_wrong_password">Please double check your password to continue.</string>
+	<string name="notification_login_title_stopped">Login stopped</string>
+	<string name="notification_logging_in">Please wait while logging in.</string>
+	<string name="notification_login_title_in_progress">Login in progress…</string>
+	<string name="notification_logged_in">Tap to continue.</string>
+	<string name="notification_login_title_success">Logged in!</string>
+	<string name="login_error_generic_start">Google login could not be started.</string>
+	<string name="site_creating_success">Success!</string>
+	<string name="site_creating_failed">Sorry, failed to properly create your site :(</string>
+	<string name="site_creating_set_theme">Setting the theme…</string>
+	<string name="site_creating_set_tagline">Setting the tagline…</string>
+	<string name="site_creating_fetching_info">Fetching site info…</string>
+	<string name="site_creating_label">Preparing your site…</string>
 	<string name="login_empty_password">Please enter a password</string>
 	<string name="email_not_registered_wpcom">Hmm, this email address isn\'t registered with WordPress.com.\nAre you trying to access a self-hosted site? Log in using the link at the bottom of this screen.</string>
 	<string name="login_text_otp_another">Text me another code instead.</string>
@@ -55,7 +70,7 @@ Language: en_CA
 	<string name="jetpack_disconnect_success_toast">Site disconnected</string>
 	<string name="jetpack_disconnect_confirm">Disconnect</string>
 	<string name="jetpack_disconnect_confirmation_message">Are you sure you want to disconnect Jetpack from the site?</string>
-	<string name="jetpack_disconnect_pref_title">"Disconnect from WordPress.com"</string>
+	<string name="jetpack_disconnect_pref_title">\"Disconnect from WordPress.com\"</string>
 	<string name="site_settings_jetpack_whitelist_description">You may whitelist an IP address or series of addresses preventing them from ever being blocked by Jetpack. IPv4 and IPv6 are acceptable. To specify a range, enter the low value and high value separated by a dash. Example: 12.12.12.1–12.12.12.100</string>
 	<string name="jetpack_require_two_factor_title">Require two-step authentication</string>
 	<string name="jetpack_match_wpcom_via_email_title">Match accounts using email</string>
@@ -119,7 +134,7 @@ Language: en_CA
 	<string name="login_site_address_help_image">The site address can be found in the navigation bar of your web browser</string>
 	<string name="error_unknown_page">Could not find the page on the server</string>
 	<string name="error_publish_empty_page">Can\'t publish an empty page</string>
-	<string name="upload_failed_param">Upload failed for "%s"</string>
+	<string name="upload_failed_param">Upload failed for \"%s\"</string>
 	<string name="cannot_retry_deleted_media_item">Media has been removed. Delete it from this post?</string>
 	<string name="error_please_choose_browser">Error opening the default web browser. Please choose another app:</string>
 	<string name="cant_open_url">Unable to open the link</string>
@@ -138,7 +153,7 @@ Language: en_CA
 	<string name="post_scheduled">Post scheduled</string>
 	<string name="button_retry">Retry</string>
 	<string name="post_queued">Queued post</string>
-	<string name="uploading_post">Uploading "%s"</string>
+	<string name="uploading_post">Uploading \"%s\"</string>
 	<string name="connection_to_server_lost">The connection to the server was lost</string>
 	<string name="login_epilogue_mysites_other">My sites</string>
 	<string name="login_epilogue_mysites_one">My site</string>
@@ -288,14 +303,14 @@ Language: en_CA
 	<string name="sharing_comment_likes_description">Allow all comments to be Liked by you and your readers</string>
 	<string name="visual">Visual</string>
 	<string name="buttons">Buttons</string>
-	<string name="sharing_edit_more_buttons">Edit "More" Buttons</string>
-	<string name="sharing_more_description">A "More" button contains a dropdown which displays sharing buttons</string>
+	<string name="sharing_edit_more_buttons">Edit \"More\" Buttons</string>
+	<string name="sharing_more_description">A \"More\" button contains a dropdown which displays sharing buttons</string>
 	<string name="sharing_sharing_buttons_description">Select which buttons are shown under your posts</string>
 	<string name="twitter_username">Twitter Username</string>
 	<string name="sharing_comment_likes">Comment Likes</string>
 	<string name="button_style">Button Style</string>
 	<string name="label">Label</string>
-	<string name="more_buttons">"More" Buttons</string>
+	<string name="more_buttons">\"More\" Buttons</string>
 	<string name="sharing_buttons">Sharing buttons</string>
 	<string name="site_settings_like">Show Like Button</string>
 	<string name="site_settings_reblog">Show Reblog Button</string>
@@ -743,16 +758,16 @@ Language: en_CA
 	<string name="site_settings_paging_dialog_description">Break comment threads into multiple pages.</string>
 	<string name="site_settings_paging_dialog_header">Comments per page</string>
 	<string name="site_settings_close_after_dialog_title">Close commenting</string>
-	<string name="site_settings_blacklist_description">When a comment contains any of these words in its content, name, URL, email, or IP, it will be marked as spam. You can enter partial words, so "press" will match "WordPress."</string>
-	<string name="site_settings_hold_for_moderation_description">When a comment contains any of these words in its content, name, URL, email, or IP, it will be held in the moderation queue. You can enter partial words, so "press" will match "WordPress."</string>
+	<string name="site_settings_blacklist_description">When a comment contains any of these words in its content, name, URL, email, or IP, it will be marked as spam. You can enter partial words, so \"press\" will match \"WordPress.\"</string>
+	<string name="site_settings_hold_for_moderation_description">When a comment contains any of these words in its content, name, URL, email, or IP, it will be held in the moderation queue. You can enter partial words, so \"press\" will match \"WordPress.\"</string>
 	<string name="site_settings_list_editor_input_hint">Enter a word or phrase</string>
 	<string name="site_settings_list_editor_no_items_text">No items</string>
 	<string name="site_settings_learn_more_caption">You can override these settings for individual posts.</string>
-	<string name="site_settings_rp_preview3_site">in "Upgrade"</string>
+	<string name="site_settings_rp_preview3_site">in \"Upgrade\"</string>
 	<string name="site_settings_rp_preview3_title">Upgrade Focus: VideoPress For Weddings</string>
-	<string name="site_settings_rp_preview2_site">in "Apps"</string>
+	<string name="site_settings_rp_preview2_site">in \"Apps\"</string>
 	<string name="site_settings_rp_preview2_title">The WordPress for Android App Gets a Big Facelift</string>
-	<string name="site_settings_rp_preview1_site">in "Mobile"</string>
+	<string name="site_settings_rp_preview1_site">in \"Mobile\"</string>
 	<string name="site_settings_rp_preview1_title">Big iPhone/iPad Update Now Available</string>
 	<string name="site_settings_rp_show_images_title">Show Images</string>
 	<string name="site_settings_rp_show_header_title">Show Header</string>
@@ -967,7 +982,7 @@ Language: en_CA
 	<string name="me_btn_login_logout">Login/Logout</string>
 	<string name="me_connect_to_wordpress_com">Log in to WordPress.com</string>
 	<string name="me_btn_support">Help &amp; Support</string>
-	<string name="site_picker_cant_hide_current_site">"%s" wasn\'t hidden because it\'s the current site</string>
+	<string name="site_picker_cant_hide_current_site">\"%s\" wasn\'t hidden because it\'s the current site</string>
 	<string name="account_settings">Account Settings</string>
 	<string name="site_picker_create_dotcom">Create WordPress.com site</string>
 	<string name="site_picker_add_site">Add site</string>

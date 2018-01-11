@@ -163,6 +163,9 @@
         <activity
             android:name=".ui.prefs.LicensesActivity"
             android:theme="@style/Calypso.NoActionBar" />
+        <activity android:name=".ui.prefs.SiteSettingsTagListActivity"
+            android:theme="@style/CalypsoTheme"
+            android:label="@string/site_settings_tags_title" />
         <activity
             android:name=".ui.prefs.AccountSettingsActivity"
             android:configChanges="orientation|screenSize"

@@ -125,9 +125,10 @@
     <dimen name="avatar_sz_extra_small">24dp</dimen>
     <dimen name="avatar_sz_small">32dp</dimen>
     <dimen name="avatar_sz_medium">38dp</dimen>
+    <dimen name="avatar_sz_inner_circle">60dp</dimen>
+    <dimen name="avatar_sz_circle">68dp</dimen>
     <dimen name="avatar_sz_large">64dp</dimen>
     <dimen name="avatar_sz_login">100dp</dimen>
-    <dimen name="avatar_sz_login_epilogue">60dp</dimen>
     <dimen name="blavatar_sz_small">32dp</dimen>
     <dimen name="blavatar_sz">40dp</dimen>
 
@@ -234,7 +235,7 @@
 
     <!--me-->
     <dimen name="me_avatar_margin_top">24dp</dimen>
-    <dimen name="me_list_margin_top">20dp</dimen>
+    <dimen name="me_list_margin_top">24dp</dimen>
     <dimen name="me_list_row_icon_size">24dp</dimen>
 
     <!--site picker-->
