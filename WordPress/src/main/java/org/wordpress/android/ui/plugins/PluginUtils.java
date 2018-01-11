@@ -7,15 +7,26 @@ import org.wordpress.android.fluxc.model.PluginInfoModel;
 import org.wordpress.android.fluxc.model.PluginModel;
 import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.store.PluginStore;
+import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.helpers.Version;
 
 public class PluginUtils {
     public static boolean isPluginFeatureAvailable(SiteModel site) {
         String jetpackVersion = site.getJetpackVersion();
         if (site.isUsingWpComRestApi() && site.isJetpackConnected() && !TextUtils.isEmpty(jetpackVersion)) {
-            Version siteJetpackVersion = new Version(jetpackVersion);
-            Version minVersion = new Version("5.6");
-            return siteJetpackVersion.compareTo(minVersion) >= 0; // if the site has Jetpack 5.6 or newer installed
+            try {
+                // strip any trailing "-beta" or "-alpha" from the version
+                int index = jetpackVersion.lastIndexOf("-");
+                if (index > 0) {
+                    jetpackVersion = jetpackVersion.substring(0, index);
+                }
+                Version siteJetpackVersion = new Version(jetpackVersion);
+                Version minVersion = new Version("5.6");
+                return siteJetpackVersion.compareTo(minVersion) >= 0; // if the site has Jetpack 5.6 or newer installed
+            } catch (IllegalArgumentException e) {
+                AppLog.e(AppLog.T.UTILS, "Invalid site jetpack version " + jetpackVersion, e);
+                return true;
+            }
         }
         return false;
     }
