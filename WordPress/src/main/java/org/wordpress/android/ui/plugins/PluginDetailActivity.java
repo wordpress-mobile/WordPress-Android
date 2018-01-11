@@ -53,6 +53,7 @@ import org.wordpress.android.widgets.WPNetworkImageView;
 
 import javax.inject.Inject;
 
+import static org.wordpress.android.widgets.WPNetworkImageView.ImageType.PHOTO;
 import static org.wordpress.android.widgets.WPNetworkImageView.ImageType.PLUGIN_ICON;
 
 public class PluginDetailActivity extends AppCompatActivity {
@@ -328,7 +329,7 @@ public class PluginDetailActivity extends AppCompatActivity {
             settingsView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    // TODO
+                    // TODO: show settings page in external browser
                 }
             });
         } else {
@@ -374,19 +375,14 @@ public class PluginDetailActivity extends AppCompatActivity {
         mSwitchActive.setChecked(mIsActive);
         mSwitchAutoupdates.setChecked(mIsAutoUpdateEnabled);
 
+        mImageBanner.setImageUrl(mWPOrgPlugin.getBanner(), PHOTO);
         mImageIcon.setImageUrl(mWPOrgPlugin.getIcon(), PLUGIN_ICON);
 
-        // TODO
-        String bogus = "sakjha kdhasjdhd akjdhkja dghjhadghajhsdg jahsdg ajdgjahdg jahsdg ahdgaj sgdja"
-                + "sakjha kdhasjdhd akjdhkja dghjhadghajhsdg jahsdg ajdgjahdg jahsdg ahdgaj sgdja"
-                + "sakjha kdhasjdhd akjdhkja dghjhadghajhsdg jahsdg ajdgjahdg jahsdg ahdgaj sgdja"
-                + "sakjha kdhasjdhd akjdhkja dghjhadghajhsdg jahsdg ajdgjahdg jahsdg ahdgaj sgdja"
-                + "sakjha kdhasjdhd akjdhkja dghjhadghajhsdg jahsdg ajdgjahdg jahsdg ahdgaj sgdja"
-                + "sakjha kdhasjdhd akjdhkja dghjhadghajhsdg jahsdg ajdgjahdg jahsdg ahdgaj sgdja";
-        mDescriptionTextView.setText(bogus);
-        mInstallationTextView.setText(bogus);
-        mWhatsNewTextView.setText(bogus);
-        mFaqTextView.setText(bogus);
+        // TODO: hide sections where html is empty
+        mDescriptionTextView.setText(Html.fromHtml(mWPOrgPlugin.getDescriptionAsHtml()));
+        mInstallationTextView.setText(Html.fromHtml(mWPOrgPlugin.getInstallationInstructionsAsHtml()));
+        mWhatsNewTextView.setText(Html.fromHtml(mWPOrgPlugin.getWhatsNewAsHtml()));
+        mFaqTextView.setText(Html.fromHtml(mWPOrgPlugin.getFaqAsHtml()));
 
         refreshPluginVersionViews();
     }
