@@ -396,6 +396,16 @@ public class PluginStore extends Store {
     // OnChanged Events
 
     @SuppressWarnings("WeakerAccess")
+    public static class OnPluginDirectoryFetched extends OnChanged<FetchPluginDirectoryError> {
+        public PluginDirectoryType type;
+        public boolean loadMore;
+        public OnPluginDirectoryFetched(PluginDirectoryType type, boolean loadMore) {
+            this.type = type;
+            this.loadMore = loadMore;
+        }
+    }
+
+    @SuppressWarnings("WeakerAccess")
     public static class OnSitePluginConfigured extends OnChanged<ConfigureSitePluginError> {
         public SiteModel site;
         public SitePluginModel plugin;
@@ -479,6 +489,7 @@ public class PluginStore extends Store {
                 deleteSitePlugin((DeleteSitePluginPayload) action.getPayload());
                 break;
             case FETCH_PLUGIN_DIRECTORY:
+                fetchPluginDirectory((FetchPluginDirectoryPayload) action.getPayload());
                 break;
             case FETCH_SITE_PLUGINS:
                 fetchSitePlugins((SiteModel) action.getPayload());
@@ -500,6 +511,7 @@ public class PluginStore extends Store {
                 deletedSitePlugin((DeletedSitePluginPayload) action.getPayload());
                 break;
             case FETCHED_PLUGIN_DIRECTORY:
+                fetchedPluginDirectory((FetchedPluginDirectoryPayload) action.getPayload());
                 break;
             case FETCHED_SITE_PLUGINS:
                 fetchedSitePlugins((FetchedSitePluginsPayload) action.getPayload());
@@ -548,6 +560,10 @@ public class PluginStore extends Store {
             DeletedSitePluginPayload errorPayload = new DeletedSitePluginPayload(payload.site, payload.plugin, error);
             deletedSitePlugin(errorPayload);
         }
+    }
+
+    private void fetchPluginDirectory(FetchPluginDirectoryPayload payload) {
+        // TODO: call PluginWPOrgClient's fetchPluginDirectory method (yet to be implemented)
     }
 
     private void fetchSitePlugins(SiteModel site) {
@@ -610,6 +626,16 @@ public class PluginStore extends Store {
         } else {
             event.plugin = payload.plugin;
             PluginSqlUtils.deleteSitePlugin(payload.site, payload.plugin);
+        }
+        emitChange(event);
+    }
+
+    private void fetchedPluginDirectory(FetchedPluginDirectoryPayload payload) {
+        OnPluginDirectoryFetched event = new OnPluginDirectoryFetched(payload.type, payload.loadMore);
+        if (payload.isError()) {
+            event.error = payload.error;
+        } else {
+            // TODO: Save the payload.plugins to DB
         }
         emitChange(event);
     }
