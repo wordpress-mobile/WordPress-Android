@@ -210,7 +210,7 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_vertical"
                     android:layout_marginRight="@dimen/margin_large"
-                    android:text="@string/plugin_one_star"
+                    android:text="@string/plugin_one_stars"
                     android:textColor="@color/grey"
                     android:textSize="@dimen/text_sz_medium" />
 

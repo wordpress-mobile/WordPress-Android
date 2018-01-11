@@ -469,11 +469,11 @@ public class PluginDetailActivity extends AppCompatActivity {
 
         int rating = StringUtils.stringToInt(mWPOrgPlugin.getRating(), 1);
         int averageRating = rating / 20;
-        setRatingsStar(R.id.image_star1, 1, averageRating);
-        setRatingsStar(R.id.image_star2, 2, averageRating);
-        setRatingsStar(R.id.image_star3, 3, averageRating);
-        setRatingsStar(R.id.image_star4, 4, averageRating);
         setRatingsStar(R.id.image_star5, 5, averageRating);
+        setRatingsStar(R.id.image_star4, 4, averageRating);
+        setRatingsStar(R.id.image_star3, 3, averageRating);
+        setRatingsStar(R.id.image_star2, 2, averageRating);
+        setRatingsStar(R.id.image_star1, 1, averageRating);
     }
 
     private void setRatingsBar(@IdRes int progressResId, int numRatingsForStar, int numRatingsTotal) {
