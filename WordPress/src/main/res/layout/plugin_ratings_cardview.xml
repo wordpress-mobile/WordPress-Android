@@ -238,9 +238,9 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
-                android:text="text_num_ratings"
                 android:textColor="@color/grey"
-                android:textSize="@dimen/text_sz_medium" />
+                android:textSize="@dimen/text_sz_medium"
+                tools:text="text_num_ratings" />
 
             <TextView
                 android:id="@+id/text_num_downloads"
@@ -248,9 +248,9 @@
                 android:layout_height="wrap_content"
                 android:layout_alignParentRight="true"
                 android:layout_gravity="center_vertical"
-                android:text="text_num_downloads"
                 android:textColor="@color/grey"
-                android:textSize="@dimen/text_sz_medium" />
+                android:textSize="@dimen/text_sz_medium"
+                tools:text="text_num_downloads" />
 
         </RelativeLayout>
     </RelativeLayout>
