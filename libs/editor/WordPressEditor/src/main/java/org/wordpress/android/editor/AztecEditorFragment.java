@@ -1346,18 +1346,20 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
     };
 
     @Override
-    public void onToolbarMediaButtonClicked() {
+    public boolean onToolbarMediaButtonClicked() {
         mEditorFragmentListener.onTrackableEvent(TrackableEvent.MEDIA_BUTTON_TAPPED);
 
         if (isActionInProgress()) {
             ToastUtils.showToast(getActivity(), R.string.alert_action_while_uploading, ToastUtils.Duration.LONG);
-            return;
+            return true;
         }
 
         if (source.isFocused()) {
             ToastUtils.showToast(getActivity(), R.string.alert_insert_image_html_mode, ToastUtils.Duration.LONG);
+            return true;
         } else {
             mEditorFragmentListener.onAddMediaClicked();
+            return false;
         }
     }
 
