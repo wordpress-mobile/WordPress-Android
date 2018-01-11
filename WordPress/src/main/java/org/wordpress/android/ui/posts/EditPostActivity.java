@@ -2172,8 +2172,15 @@ public class EditPostActivity extends AppCompatActivity implements
             File f = new File(mMediaCapturePath);
             Uri capturedImageUri = Uri.fromFile(f);
             if (addMedia(capturedImageUri, true)) {
-                this.sendBroadcast(new Intent(Intent.ACTION_MEDIA_MOUNTED, Uri.parse("file://"
-                        + Environment.getExternalStorageDirectory())));
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+                    final Intent scanIntent = new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE);
+                    scanIntent.setData(capturedImageUri);
+                    sendBroadcast(scanIntent);
+                } else {
+                    this.sendBroadcast(new Intent(Intent.ACTION_MEDIA_MOUNTED,
+                            Uri.parse("file://" + Environment.getExternalStorageDirectory()))
+                    );
+                }
             } else {
                 ToastUtils.showToast(this, R.string.gallery_error, Duration.SHORT);
             }
