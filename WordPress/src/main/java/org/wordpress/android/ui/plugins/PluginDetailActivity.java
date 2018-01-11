@@ -331,7 +331,7 @@ public class PluginDetailActivity extends AppCompatActivity {
             settingsView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    // TODO: show settings page in external browser
+                    ActivityLauncher.openUrlExternal(PluginDetailActivity.this, mSitePlugin.getSettingsUrl());
                 }
             });
         } else {
@@ -377,7 +377,12 @@ public class PluginDetailActivity extends AppCompatActivity {
         mSwitchActive.setChecked(mIsActive);
         mSwitchAutoupdates.setChecked(mIsAutoUpdateEnabled);
 
-        mImageBanner.setImageUrl(mWPOrgPlugin.getBanner(), PHOTO);
+        if (!TextUtils.isEmpty(mWPOrgPlugin.getBanner())) {
+            mImageBanner.setVisibility(View.VISIBLE);
+            mImageBanner.setImageUrl(mWPOrgPlugin.getBanner(), PHOTO);
+        } else {
+            mImageBanner.setVisibility(View.GONE);
+        }
         mImageIcon.setImageUrl(mWPOrgPlugin.getIcon(), PLUGIN_ICON);
 
         setCollapsibleHtmlText(mDescriptionTextView, R.id.plugin_description_container, mWPOrgPlugin.getDescriptionAsHtml());
@@ -711,8 +716,7 @@ public class PluginDetailActivity extends AppCompatActivity {
 
     // only show settings for active plugins on .org sites
     private boolean canShowSettings() {
-        // TODO: also verify that there *is* a settings URL
-        return mSitePlugin.isActive() && !mSite.isJetpackConnected();
+        return mSitePlugin.isActive() && !mSite.isJetpackConnected() && !TextUtils.isEmpty(mSitePlugin.getSettingsUrl());
     }
 
     private boolean isPluginStateChangedSinceLastConfigurationDispatch() {
