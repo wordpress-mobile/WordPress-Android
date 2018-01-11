@@ -21,22 +21,6 @@ public class PostEvents {
         }
     }
 
-    public static class PostMediaInfoUpdated {
-        private long mMediaId;
-        private String mMediaUrl;
-
-        PostMediaInfoUpdated(long mediaId, String mediaUrl) {
-            mMediaId = mediaId;
-            mMediaUrl = mediaUrl;
-        }
-        public long getMediaId() {
-            return mMediaId;
-        }
-        public String getMediaUrl() {
-            return StringUtils.notNullStr(mMediaUrl);
-        }
-    }
-
     public static class PostMediaCanceled {
         public PostModel post;
 
