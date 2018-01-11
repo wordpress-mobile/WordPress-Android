@@ -4,7 +4,9 @@ import android.animation.ObjectAnimator;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.os.Bundle;
+import android.support.annotation.IdRes;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AlertDialog;
@@ -378,13 +380,20 @@ public class PluginDetailActivity extends AppCompatActivity {
         mImageBanner.setImageUrl(mWPOrgPlugin.getBanner(), PHOTO);
         mImageIcon.setImageUrl(mWPOrgPlugin.getIcon(), PLUGIN_ICON);
 
-        // TODO: hide sections where html is empty
-        mDescriptionTextView.setText(Html.fromHtml(mWPOrgPlugin.getDescriptionAsHtml()));
-        mInstallationTextView.setText(Html.fromHtml(mWPOrgPlugin.getInstallationInstructionsAsHtml()));
-        mWhatsNewTextView.setText(Html.fromHtml(mWPOrgPlugin.getWhatsNewAsHtml()));
-        mFaqTextView.setText(Html.fromHtml(mWPOrgPlugin.getFaqAsHtml()));
+        setCollapsibleHtmlText(mDescriptionTextView, R.id.plugin_description_container, mWPOrgPlugin.getDescriptionAsHtml());
+        setCollapsibleHtmlText(mInstallationTextView, R.id.plugin_installation_container, mWPOrgPlugin.getInstallationInstructionsAsHtml());
+        setCollapsibleHtmlText(mWhatsNewTextView, R.id.plugin_whatsnew_container, mWPOrgPlugin.getWhatsNewAsHtml());
+        setCollapsibleHtmlText(mFaqTextView, R.id.plugin_faq_container, mWPOrgPlugin.getFaqAsHtml());
 
         refreshPluginVersionViews();
+    }
+
+    private void setCollapsibleHtmlText(@NonNull TextView textView, @IdRes int containerViewResId, @Nullable String htmlText) {
+        if (!TextUtils.isEmpty(htmlText)) {
+            textView.setText(Html.fromHtml(htmlText));
+        } else {
+            findViewById(containerViewResId).setVisibility(View.GONE);
+        }
     }
 
     private void refreshPluginVersionViews() {

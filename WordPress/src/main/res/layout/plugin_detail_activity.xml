@@ -27,7 +27,8 @@
                     android:id="@+id/image_banner"
                     android:layout_width="match_parent"
                     android:layout_height="@dimen/plugin_banner_size"
-                    android:background="@color/grey_lighten_20" />
+                    android:background="@color/grey_lighten_20"
+                    android:scaleType="centerCrop" />
 
                 <RelativeLayout
                     android:layout_width="match_parent"
