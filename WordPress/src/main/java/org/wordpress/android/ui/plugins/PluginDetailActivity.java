@@ -395,6 +395,7 @@ public class PluginDetailActivity extends AppCompatActivity {
 
     private void setCollapsibleHtmlText(@NonNull TextView textView, @IdRes int containerViewResId, @Nullable String htmlText) {
         if (!TextUtils.isEmpty(htmlText)) {
+            textView.setMovementMethod(WPLinkMovementMethod.getInstance());
             textView.setText(Html.fromHtml(htmlText));
         } else {
             findViewById(containerViewResId).setVisibility(View.GONE);
