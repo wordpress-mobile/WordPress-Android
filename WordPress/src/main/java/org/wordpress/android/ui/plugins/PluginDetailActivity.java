@@ -391,6 +391,7 @@ public class PluginDetailActivity extends AppCompatActivity {
         setCollapsibleHtmlText(mFaqTextView, R.id.plugin_faq_container, mWPOrgPlugin.getFaqAsHtml());
 
         refreshPluginVersionViews();
+        refreshRatingsViews();
     }
 
     private void setCollapsibleHtmlText(@NonNull TextView textView, @IdRes int containerViewResId, @Nullable String htmlText) {
@@ -426,6 +427,29 @@ public class PluginDetailActivity extends AppCompatActivity {
         mUpdateTextView.setVisibility(isUpdateAvailable && !mIsUpdatingPlugin ? View.VISIBLE : View.GONE);
         mUpdateProgressBar.setVisibility(mIsUpdatingPlugin ? View.VISIBLE: View.GONE);
         findViewById(R.id.plugin_installed).setVisibility(isUpdateAvailable || mIsUpdatingPlugin ? View.GONE : View.VISIBLE);
+    }
+
+    private void refreshRatingsViews() {
+        TextView txtNumRatings = findViewById(R.id.text_num_ratings);
+        txtNumRatings.setText(String.format(
+                getString(R.string.plugin_num_ratings), mWPOrgPlugin.getNumberOfRatings()));
+
+        TextView txtNumDownloads = findViewById(R.id.text_num_downloads);
+        txtNumDownloads.setText(String.format(
+                getString(R.string.plugin_num_downloads), mWPOrgPlugin.getDownloadCount()));
+
+        int numRatingsTotal = mWPOrgPlugin.getNumberOfRatings();
+        setRatingsBar(R.id.progress5, mWPOrgPlugin.getNumberOfRatingsOfFive(), numRatingsTotal);
+        setRatingsBar(R.id.progress4, mWPOrgPlugin.getNumberOfRatingsOfFour(), numRatingsTotal);
+        setRatingsBar(R.id.progress3, mWPOrgPlugin.getNumberOfRatingsOfThree(), numRatingsTotal);
+        setRatingsBar(R.id.progress2, mWPOrgPlugin.getNumberOfRatingsOfTwo(), numRatingsTotal);
+        setRatingsBar(R.id.progress1, mWPOrgPlugin.getNumberOfRatingsOfOne(), numRatingsTotal);
+    }
+
+    private void setRatingsBar(@IdRes int progressResId, int numRatingsForStar, int numRatingsTotal) {
+        ProgressBar bar = findViewById(progressResId);
+        bar.setMax(numRatingsTotal);
+        bar.setProgress(numRatingsForStar);
     }
 
     private void showPluginInfoPopup() {
