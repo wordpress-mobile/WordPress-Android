@@ -3,6 +3,7 @@ package org.wordpress.android.ui.plugins;
 import android.animation.ObjectAnimator;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.annotation.IdRes;
 import android.support.annotation.NonNull;
@@ -11,6 +12,7 @@ import android.support.design.widget.Snackbar;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.content.res.AppCompatResources;
 import android.support.v7.widget.Toolbar;
 import android.text.Html;
 import android.text.TextUtils;
@@ -250,6 +252,10 @@ public class PluginDetailActivity extends AppCompatActivity {
         mImageBanner = findViewById(R.id.image_banner);
         mImageIcon = findViewById(R.id.image_icon);
 
+        // vector drawable has to be assigned at runtime for backwards compatibility
+        Drawable rightDrawable = AppCompatResources.getDrawable(this, R.drawable.ic_info_outline_grey_dark_18dp);
+        mVersionTopTextView.setCompoundDrawablesWithIntrinsicBounds(null, null, rightDrawable, null);
+
         mDescriptionTextView = findViewById(R.id.plugin_description_text);
         mDescriptionChevron = findViewById(R.id.plugin_description_chevron);
         findViewById(R.id.plugin_description_container).setOnClickListener(new View.OnClickListener() {
@@ -449,7 +455,6 @@ public class PluginDetailActivity extends AppCompatActivity {
         setRatingsBar(R.id.progress1, mWPOrgPlugin.getNumberOfRatingsOfOne(), numRatingsTotal);
 
         int rating = StringUtils.stringToInt(mWPOrgPlugin.getRating(), 1);
-        rating = Math.round(rating / 10) * 10;
         int averageRating = rating / 20;
         setRatingsStar(R.id.image_star1, 1, averageRating);
         setRatingsStar(R.id.image_star2, 2, averageRating);
@@ -468,7 +473,6 @@ public class PluginDetailActivity extends AppCompatActivity {
         ImageView imageStar = findViewById(starImageResId);
         int drawableRes = starNumber <= averageRating
                 ? R.drawable.ic_star_blue_medium_18dp : R.drawable.ic_star_outline_blue_medium_18dp;
-        // TODO: verify this works with vector images on lesser APIs
         imageStar.setImageResource(drawableRes);
     }
 

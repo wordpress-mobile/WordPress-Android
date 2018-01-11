@@ -80,7 +80,7 @@
                         style="@style/PluginCardViewPrimaryText"
                         android:background="?android:attr/selectableItemBackground"
                         android:drawablePadding="@dimen/margin_small"
-                        android:drawableRight="@drawable/ic_info_outline_grey_dark_18dp"
+                        tools:drawableRight="@drawable/ic_info_outline_grey_dark_18dp"
                         tools:text="plugin_installed_version" />
 
                     <TextView
