@@ -49,6 +49,7 @@ import org.wordpress.android.ui.ActivityLauncher;
 import org.wordpress.android.util.AnalyticsUtils;
 import org.wordpress.android.util.AniUtils;
 import org.wordpress.android.util.AppLog;
+import org.wordpress.android.util.DateTimeUtils;
 import org.wordpress.android.util.FormatUtils;
 import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.SiteUtils;
@@ -58,10 +59,16 @@ import org.wordpress.android.util.ToastUtils.Duration;
 import org.wordpress.android.util.WPLinkMovementMethod;
 import org.wordpress.android.widgets.WPNetworkImageView;
 
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
+import java.util.TimeZone;
 
 import javax.inject.Inject;
 
@@ -485,6 +492,20 @@ public class PluginDetailActivity extends AppCompatActivity {
     private static final String KEY_LABEL = "label";
     private static final String KEY_TEXT = "text";
 
+    private String timespanFromUpdateDate(@NonNull String lastUpdated) {
+        // ex: 2017-12-13 2:55pm GMT
+        if (lastUpdated.endsWith(" GMT")) {
+            lastUpdated = lastUpdated.substring(0, lastUpdated.length() - 4);
+        }
+        DateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm", Locale.US);
+        try {
+            formatter.setTimeZone(TimeZone.getTimeZone("UTC"));
+            Date date = formatter.parse(lastUpdated);
+            return DateTimeUtils.javaDateToTimeSpan(date, this);
+        } catch (ParseException var2) {
+            return "?";
+        }
+    }
     private void showPluginInfoPopup() {
         List<Map<String, String>> data = new ArrayList<>();
         int[] to = { R.id.text1, R.id.text2 };
@@ -503,7 +524,7 @@ public class PluginDetailActivity extends AppCompatActivity {
 
         Map<String,String> mapUpdated = new HashMap<>();
         mapUpdated.put(KEY_LABEL, labels[1]);
-        mapVersion.put(KEY_TEXT, StringUtils.notNullStr(mWPOrgPlugin.getLastUpdated()));
+        mapUpdated.put(KEY_TEXT, timespanFromUpdateDate(StringUtils.notNullStr(mWPOrgPlugin.getLastUpdated())));
         data.add(mapUpdated);
 
         Map<String,String> mapRequiredVer = new HashMap<>();
@@ -513,7 +534,7 @@ public class PluginDetailActivity extends AppCompatActivity {
 
         Map<String,String> mapThisVer = new HashMap<>();
         mapThisVer.put(KEY_LABEL, labels[3]);
-        mapThisVer.put(KEY_TEXT, StringUtils.notNullStr(mSite.getSoftwareVersion()));
+        mapThisVer.put(KEY_TEXT, !TextUtils.isEmpty(mSite.getSoftwareVersion()) ? mSite.getSoftwareVersion() : "?");
         data.add(mapThisVer);
 
         SimpleAdapter adapter = new SimpleAdapter(this,
