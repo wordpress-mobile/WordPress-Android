@@ -24,6 +24,7 @@ import android.widget.CompoundButton.OnCheckedChangeListener;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.ScrollView;
+import android.widget.SimpleAdapter;
 import android.widget.Switch;
 import android.widget.TextView;
 
@@ -56,6 +57,11 @@ import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.ToastUtils.Duration;
 import org.wordpress.android.util.WPLinkMovementMethod;
 import org.wordpress.android.widgets.WPNetworkImageView;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 import javax.inject.Inject;
 
@@ -477,7 +483,47 @@ public class PluginDetailActivity extends AppCompatActivity {
     }
 
     private void showPluginInfoPopup() {
-        // TODO: show popup with info (see prototype)
+        List<Map<String, String>> data = new ArrayList<>();
+        int[] to = {R.id.text1, R.id.text2};
+        String[] from = {
+                getString(R.string.plugin_info_version),
+                getString(R.string.plugin_info_lastupdated),
+                getString(R.string.plugin_info_requires_version),
+                getString(R.string.plugin_info_your_version)
+        };
+
+        Map<String,String> mapVersion = new HashMap<>();
+        mapVersion.put(from[0], StringUtils.notNullStr(mWPOrgPlugin.getVersion()));
+        data.add(mapVersion);
+
+        Map<String,String> mapUpdated = new HashMap<>();
+        mapUpdated.put(from[1], StringUtils.notNullStr(mWPOrgPlugin.getLastUpdated()));
+        data.add(mapUpdated);
+
+        Map<String,String> mapRequiredVer = new HashMap<>();
+        mapRequiredVer.put(from[2], StringUtils.notNullStr(mWPOrgPlugin.getRequiredWordPressVersion()));
+        data.add(mapRequiredVer);
+
+        Map<String,String> mapThisVer = new HashMap<>();
+        mapThisVer.put(from[3], StringUtils.notNullStr(mSite.getSoftwareVersion()));
+        data.add(mapThisVer);
+
+        SimpleAdapter adapter = new SimpleAdapter(this,
+                data,
+                R.layout.plugin_info_row,
+                from,
+                to);
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setCancelable(true);
+        builder.setAdapter(adapter, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.dismiss();
+            }
+        });
+        builder.show();
+
     }
 
     private void toggleText(@NonNull final TextView textView, @NonNull ImageView chevron) {
@@ -781,4 +827,5 @@ public class PluginDetailActivity extends AppCompatActivity {
         }
         return false;
     }
+
 }

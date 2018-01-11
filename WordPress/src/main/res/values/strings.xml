@@ -1852,6 +1852,11 @@
     <string name="plugin_four_stars">4 stars</string>
     <string name="plugin_five_stars">5 stars</string>
 
+    <string name="plugin_info_version">Version</string>
+    <string name="plugin_info_lastupdated">Last Updated</string>
+    <string name="plugin_info_requires_version">Requires WordPress Version</string>
+    <string name="plugin_info_your_version">Your WordPress Version</string>
+
     <string name="plugin_icon_content_description">Plugin icon</string>
     <string name="plugin_update_available_icon_content_description">Update available</string>
     <string name="plugin_external_link_icon_content_description">External link</string>
