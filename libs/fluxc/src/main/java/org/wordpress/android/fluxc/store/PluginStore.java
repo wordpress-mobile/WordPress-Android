@@ -10,15 +10,17 @@ import org.wordpress.android.fluxc.Payload;
 import org.wordpress.android.fluxc.action.PluginAction;
 import org.wordpress.android.fluxc.annotations.action.Action;
 import org.wordpress.android.fluxc.annotations.action.IAction;
-import org.wordpress.android.fluxc.model.plugin.WPOrgPluginModel;
-import org.wordpress.android.fluxc.model.plugin.SitePluginModel;
 import org.wordpress.android.fluxc.model.SiteModel;
+import org.wordpress.android.fluxc.model.plugin.PluginDirectoryType;
+import org.wordpress.android.fluxc.model.plugin.SitePluginModel;
+import org.wordpress.android.fluxc.model.plugin.WPOrgPluginModel;
 import org.wordpress.android.fluxc.network.BaseRequest.BaseNetworkError;
 import org.wordpress.android.fluxc.network.rest.wpcom.plugin.PluginRestClient;
 import org.wordpress.android.fluxc.network.wporg.plugin.PluginWPOrgClient;
 import org.wordpress.android.fluxc.persistence.PluginSqlUtils;
 import org.wordpress.android.util.AppLog;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.inject.Inject;
@@ -48,6 +50,17 @@ public class PluginStore extends Store {
     }
 
     @SuppressWarnings("WeakerAccess")
+    public static class FetchPluginDirectoryPayload extends Payload<BaseNetworkError> {
+        public PluginDirectoryType type;
+        public boolean loadMore;
+
+        public FetchPluginDirectoryPayload(PluginDirectoryType type, boolean loadMore) {
+            this.type = type;
+            this.loadMore = loadMore;
+        }
+    }
+
+    @SuppressWarnings("WeakerAccess")
     public static class InstallSitePluginPayload extends Payload<BaseNetworkError> {
         public SiteModel site;
         public String pluginName;
@@ -55,6 +68,17 @@ public class PluginStore extends Store {
         public InstallSitePluginPayload(SiteModel site, String pluginName) {
             this.site = site;
             this.pluginName = pluginName;
+        }
+    }
+
+    @SuppressWarnings("WeakerAccess")
+    public static class SearchPluginDirectoryPayload extends Payload<BaseNetworkError> {
+        public String searchTerm;
+        public int offset;
+
+        public SearchPluginDirectoryPayload(String searchTerm, int offset) {
+            this.searchTerm = searchTerm;
+            this.offset = offset;
         }
     }
 
@@ -98,6 +122,19 @@ public class PluginStore extends Store {
             this.site = site;
             this.plugin = plugin;
             this.error = error;
+        }
+    }
+
+    @SuppressWarnings("WeakerAccess")
+    public static class FetchedPluginDirectoryPayload extends Payload<PluginDirectoryError> {
+        public PluginDirectoryType type;
+        public boolean loadMore;
+        public boolean canLoadMore;
+        public List<WPOrgPluginModel> plugins;
+
+        public FetchedPluginDirectoryPayload(PluginDirectoryType type, boolean loadMore) {
+            this.type = type;
+            this.loadMore = loadMore;
         }
     }
 
@@ -146,6 +183,19 @@ public class PluginStore extends Store {
         }
     }
 
+    @SuppressWarnings("WeakerAccess")
+    public static class SearchedPluginDirectoryPayload extends Payload<PluginDirectoryError> {
+        public String searchTerm;
+        public int offset;
+        public boolean canLoadMore;
+        public List<WPOrgPluginModel> plugins;
+
+        public SearchedPluginDirectoryPayload(String searchTerm, int offset) {
+            this.searchTerm = searchTerm;
+            this.offset = offset;
+        }
+    }
+
     public static class UpdatedSitePluginPayload extends Payload<UpdateSitePluginError> {
         public SiteModel site;
         public SitePluginModel plugin;
@@ -187,6 +237,16 @@ public class PluginStore extends Store {
 
         public DeleteSitePluginError(String type, @Nullable String message) {
             this.type = DeleteSitePluginErrorType.fromString(type);
+            this.message = message;
+        }
+    }
+
+    public static class PluginDirectoryError implements OnChangedError {
+        public PluginDirectoryErrorType type;
+        @Nullable public String message;
+
+        public PluginDirectoryError(PluginDirectoryErrorType type, @Nullable String message) {
+            this.type = type;
             this.message = message;
         }
     }
@@ -282,6 +342,10 @@ public class PluginStore extends Store {
         }
     }
 
+    public enum PluginDirectoryErrorType {
+        GENERIC_ERROR
+    }
+
     public enum FetchSitePluginsErrorType {
         GENERIC_ERROR,
         UNAUTHORIZED,
@@ -347,6 +411,31 @@ public class PluginStore extends Store {
     }
 
     // OnChanged Events
+
+    @SuppressWarnings("WeakerAccess")
+    public static class OnPluginDirectoryFetched extends OnChanged<PluginDirectoryError> {
+        public PluginDirectoryType type;
+        public boolean loadMore;
+        public boolean canLoadMore;
+
+        public OnPluginDirectoryFetched(PluginDirectoryType type, boolean loadMore) {
+            this.type = type;
+            this.loadMore = loadMore;
+        }
+    }
+
+    @SuppressWarnings("WeakerAccess")
+    public static class OnPluginDirectorySearched extends OnChanged<PluginDirectoryError> {
+        public String searchTerm;
+        public int offset;
+        public boolean canLoadMore;
+        public List<WPOrgPluginModel> plugins;
+
+        public OnPluginDirectorySearched(String searchTerm, int offset) {
+            this.searchTerm = searchTerm;
+            this.offset = offset;
+        }
+    }
 
     @SuppressWarnings("WeakerAccess")
     public static class OnSitePluginConfigured extends OnChanged<ConfigureSitePluginError> {
@@ -431,6 +520,9 @@ public class PluginStore extends Store {
             case DELETE_SITE_PLUGIN:
                 deleteSitePlugin((DeleteSitePluginPayload) action.getPayload());
                 break;
+            case FETCH_PLUGIN_DIRECTORY:
+                fetchPluginDirectory((FetchPluginDirectoryPayload) action.getPayload());
+                break;
             case FETCH_SITE_PLUGINS:
                 fetchSitePlugins((SiteModel) action.getPayload());
                 break;
@@ -439,6 +531,9 @@ public class PluginStore extends Store {
                 break;
             case INSTALL_SITE_PLUGIN:
                 installSitePlugin((InstallSitePluginPayload) action.getPayload());
+                break;
+            case SEARCH_PLUGIN_DIRECTORY:
+                searchPluginDirectory((SearchPluginDirectoryPayload) action.getPayload());
                 break;
             case UPDATE_SITE_PLUGIN:
                 updateSitePlugin((UpdateSitePluginPayload) action.getPayload());
@@ -450,6 +545,9 @@ public class PluginStore extends Store {
             case DELETED_SITE_PLUGIN:
                 deletedSitePlugin((DeletedSitePluginPayload) action.getPayload());
                 break;
+            case FETCHED_PLUGIN_DIRECTORY:
+                fetchedPluginDirectory((FetchedPluginDirectoryPayload) action.getPayload());
+                break;
             case FETCHED_SITE_PLUGINS:
                 fetchedSitePlugins((FetchedSitePluginsPayload) action.getPayload());
                 break;
@@ -459,10 +557,18 @@ public class PluginStore extends Store {
             case INSTALLED_SITE_PLUGIN:
                 installedSitePlugin((InstalledSitePluginPayload) action.getPayload());
                 break;
+            case SEARCHED_PLUGIN_DIRECTORY:
+                searchedPluginDirectory((SearchedPluginDirectoryPayload) action.getPayload());
+                break;
             case UPDATED_SITE_PLUGIN:
                 updatedSitePlugin((UpdatedSitePluginPayload) action.getPayload());
                 break;
         }
+    }
+
+    public List<WPOrgPluginModel> getPluginDirectory(PluginDirectoryType type) {
+        // TODO: query the plugin directory from PluginSqlUtils
+        return new ArrayList<>();
     }
 
     public SitePluginModel getSitePluginByName(SiteModel site, String name) {
@@ -499,6 +605,10 @@ public class PluginStore extends Store {
         }
     }
 
+    private void fetchPluginDirectory(FetchPluginDirectoryPayload payload) {
+        // TODO: call PluginWPOrgClient's fetchPluginDirectory method (yet to be implemented)
+    }
+
     private void fetchSitePlugins(SiteModel site) {
         if (site.isUsingWpComRestApi() && site.isJetpackConnected()) {
             mPluginRestClient.fetchSitePlugins(site);
@@ -521,6 +631,10 @@ public class PluginStore extends Store {
             InstalledSitePluginPayload errorPayload = new InstalledSitePluginPayload(payload.site, error);
             installedSitePlugin(errorPayload);
         }
+    }
+
+    private void searchPluginDirectory(SearchPluginDirectoryPayload payload) {
+        // TODO: call PluginWPOrgClient's fetchPluginDirectory method (yet to be implemented)
     }
 
     private void updateSitePlugin(UpdateSitePluginPayload payload) {
@@ -563,6 +677,17 @@ public class PluginStore extends Store {
         emitChange(event);
     }
 
+    private void fetchedPluginDirectory(FetchedPluginDirectoryPayload payload) {
+        OnPluginDirectoryFetched event = new OnPluginDirectoryFetched(payload.type, payload.loadMore);
+        if (payload.isError()) {
+            event.error = payload.error;
+        } else {
+            event.canLoadMore = payload.canLoadMore;
+            // TODO: Save the payload.plugins to DB
+        }
+        emitChange(event);
+    }
+
     private void fetchedSitePlugins(FetchedSitePluginsPayload payload) {
         OnSitePluginsFetched event = new OnSitePluginsFetched(payload.site);
         if (payload.isError()) {
@@ -590,6 +715,17 @@ public class PluginStore extends Store {
         } else {
             event.plugin = payload.plugin;
             PluginSqlUtils.insertOrUpdateSitePlugin(payload.plugin);
+        }
+        emitChange(event);
+    }
+
+    private void searchedPluginDirectory(SearchedPluginDirectoryPayload payload) {
+        OnPluginDirectorySearched event = new OnPluginDirectorySearched(payload.searchTerm, payload.offset);
+        if (payload.isError()) {
+            event.error = payload.error;
+        } else {
+            event.canLoadMore = payload.canLoadMore;
+            event.plugins = payload.plugins;
         }
         emitChange(event);
     }
