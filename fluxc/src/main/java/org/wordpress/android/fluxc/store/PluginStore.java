@@ -71,6 +71,17 @@ public class PluginStore extends Store {
         }
     }
 
+    @SuppressWarnings("WeakerAccess")
+    public static class SearchPluginDirectoryPayload extends Payload<BaseNetworkError> {
+        public String searchTerm;
+        public int offset;
+
+        public SearchPluginDirectoryPayload(String searchTerm, int offset) {
+            this.searchTerm = searchTerm;
+            this.offset = offset;
+        }
+    }
+
     public static class UpdateSitePluginPayload extends Payload<BaseNetworkError> {
         public SiteModel site;
         public SitePluginModel plugin;
@@ -115,7 +126,7 @@ public class PluginStore extends Store {
     }
 
     @SuppressWarnings("WeakerAccess")
-    public static class FetchedPluginDirectoryPayload extends Payload<FetchPluginDirectoryError> {
+    public static class FetchedPluginDirectoryPayload extends Payload<PluginDirectoryError> {
         public PluginDirectoryType type;
         public boolean loadMore;
         public List<WPOrgPluginModel> plugins;
@@ -128,7 +139,7 @@ public class PluginStore extends Store {
         }
 
         public FetchedPluginDirectoryPayload(PluginDirectoryType type, boolean loadMore,
-                                             FetchPluginDirectoryError error) {
+                                             PluginDirectoryError error) {
             this.type = type;
             this.loadMore = loadMore;
             this.error = error;
@@ -180,6 +191,25 @@ public class PluginStore extends Store {
         }
     }
 
+    @SuppressWarnings("WeakerAccess")
+    public static class SearchedPluginDirectoryPayload extends Payload<PluginDirectoryError> {
+        public String searchTerm;
+        public int offset;
+        public List<WPOrgPluginModel> plugins;
+
+        public SearchedPluginDirectoryPayload(String searchTerm, int offset, List<WPOrgPluginModel> plugins) {
+            this.searchTerm = searchTerm;
+            this.offset = offset;
+            this.plugins = plugins;
+        }
+
+        public SearchedPluginDirectoryPayload(String searchTerm, int offset, PluginDirectoryError error) {
+            this.searchTerm = searchTerm;
+            this.offset = offset;
+            this.error = error;
+        }
+    }
+
     public static class UpdatedSitePluginPayload extends Payload<UpdateSitePluginError> {
         public SiteModel site;
         public SitePluginModel plugin;
@@ -225,11 +255,11 @@ public class PluginStore extends Store {
         }
     }
 
-    public static class FetchPluginDirectoryError implements OnChangedError {
-        public FetchPluginDirectoryErrorType type;
+    public static class PluginDirectoryError implements OnChangedError {
+        public PluginDirectoryErrorType type;
         @Nullable public String message;
 
-        public FetchPluginDirectoryError(FetchPluginDirectoryErrorType type, @Nullable String message) {
+        public PluginDirectoryError(PluginDirectoryErrorType type, @Nullable String message) {
             this.type = type;
             this.message = message;
         }
@@ -326,7 +356,7 @@ public class PluginStore extends Store {
         }
     }
 
-    public enum FetchPluginDirectoryErrorType {
+    public enum PluginDirectoryErrorType {
         GENERIC_ERROR
     }
 
@@ -397,7 +427,7 @@ public class PluginStore extends Store {
     // OnChanged Events
 
     @SuppressWarnings("WeakerAccess")
-    public static class OnPluginDirectoryFetched extends OnChanged<FetchPluginDirectoryError> {
+    public static class OnPluginDirectoryFetched extends OnChanged<PluginDirectoryError> {
         public PluginDirectoryType type;
         public boolean loadMore;
         public OnPluginDirectoryFetched(PluginDirectoryType type, boolean loadMore) {
