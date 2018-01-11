@@ -531,6 +531,9 @@ public class PluginStore extends Store {
             case INSTALL_SITE_PLUGIN:
                 installSitePlugin((InstallSitePluginPayload) action.getPayload());
                 break;
+            case SEARCH_PLUGIN_DIRECTORY:
+                searchPluginDirectory((SearchPluginDirectoryPayload) action.getPayload());
+                break;
             case UPDATE_SITE_PLUGIN:
                 updateSitePlugin((UpdateSitePluginPayload) action.getPayload());
                 break;
@@ -552,6 +555,9 @@ public class PluginStore extends Store {
                 break;
             case INSTALLED_SITE_PLUGIN:
                 installedSitePlugin((InstalledSitePluginPayload) action.getPayload());
+                break;
+            case SEARCHED_PLUGIN_DIRECTORY:
+                searchedPluginDirectory((SearchedPluginDirectoryPayload) action.getPayload());
                 break;
             case UPDATED_SITE_PLUGIN:
                 updatedSitePlugin((UpdatedSitePluginPayload) action.getPayload());
@@ -624,6 +630,10 @@ public class PluginStore extends Store {
             InstalledSitePluginPayload errorPayload = new InstalledSitePluginPayload(payload.site, error);
             installedSitePlugin(errorPayload);
         }
+    }
+
+    private void searchPluginDirectory(SearchPluginDirectoryPayload payload) {
+        // TODO: call PluginWPOrgClient's fetchPluginDirectory method (yet to be implemented)
     }
 
     private void updateSitePlugin(UpdateSitePluginPayload payload) {
@@ -705,6 +715,10 @@ public class PluginStore extends Store {
             PluginSqlUtils.insertOrUpdateSitePlugin(payload.plugin);
         }
         emitChange(event);
+    }
+
+    private void searchedPluginDirectory(SearchedPluginDirectoryPayload payload) {
+
     }
 
     private void updatedSitePlugin(UpdatedSitePluginPayload payload) {
