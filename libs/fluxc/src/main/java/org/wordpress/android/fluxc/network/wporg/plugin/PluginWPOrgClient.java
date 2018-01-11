@@ -38,7 +38,7 @@ public class PluginWPOrgClient extends BaseWPOrgAPIClient {
     public void fetchWPOrgPlugin(final String pluginSlug) {
         String url = WPORGAPI.plugins.info.version("1.0").slug(pluginSlug).getUrl();
         Map<String, String> params = new HashMap<>();
-        params.put("fields", "icons");
+        params.put("fields", "banners,icons");
         final WPOrgAPIGsonRequest<WPOrgPluginResponse> request =
                 new WPOrgAPIGsonRequest<>(Method.GET, url, params, null, WPOrgPluginResponse.class,
                         new Listener<WPOrgPluginResponse>() {
@@ -72,11 +72,27 @@ public class PluginWPOrgClient extends BaseWPOrgAPIClient {
 
     private WPOrgPluginModel wpOrgPluginFromResponse(WPOrgPluginResponse response) {
         WPOrgPluginModel wpOrgPluginModel = new WPOrgPluginModel();
+        wpOrgPluginModel.setAuthorAsHtml(response.authorAsHtml);
+        wpOrgPluginModel.setBanner(response.banner);
+        wpOrgPluginModel.setDescriptionAsHtml(response.descriptionAsHtml);
+        wpOrgPluginModel.setFaqAsHtml(response.faqAsHtml);
+        wpOrgPluginModel.setHomepageUrl(response.homepageUrl);
+        wpOrgPluginModel.setIcon(response.icon);
+        wpOrgPluginModel.setInstallationInstructionsAsHtml(response.installationInstructionsAsHtml);
+        wpOrgPluginModel.setLastUpdated(response.lastUpdated);
         wpOrgPluginModel.setName(response.name);
         wpOrgPluginModel.setRating(response.rating);
+        wpOrgPluginModel.setRequiredWordPressVersion(response.requiredWordPressVersion);
         wpOrgPluginModel.setSlug(response.slug);
         wpOrgPluginModel.setVersion(response.version);
-        wpOrgPluginModel.setIcon(response.icon);
+        wpOrgPluginModel.setWhatsNewAsHtml(response.whatsNewAsHtml);
+        wpOrgPluginModel.setDownloadCount(response.downloadCount);
+        wpOrgPluginModel.setNumberOfRatings(response.numberOfRatings);
+        wpOrgPluginModel.setNumberOfRatingsOfOne(response.numberOfRatingsOfOne);
+        wpOrgPluginModel.setNumberOfRatingsOfTwo(response.numberOfRatingsOfTwo);
+        wpOrgPluginModel.setNumberOfRatingsOfThree(response.numberOfRatingsOfThree);
+        wpOrgPluginModel.setNumberOfRatingsOfFour(response.numberOfRatingsOfFour);
+        wpOrgPluginModel.setNumberOfRatingsOfFive(response.numberOfRatingsOfFive);
         return wpOrgPluginModel;
     }
 }
