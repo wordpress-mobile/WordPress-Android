@@ -129,20 +129,12 @@ public class PluginStore extends Store {
     public static class FetchedPluginDirectoryPayload extends Payload<PluginDirectoryError> {
         public PluginDirectoryType type;
         public boolean loadMore;
+        public boolean canLoadMore;
         public List<WPOrgPluginModel> plugins;
 
-        public FetchedPluginDirectoryPayload(PluginDirectoryType type, boolean loadMore,
-                                             List<WPOrgPluginModel> plugins) {
+        public FetchedPluginDirectoryPayload(PluginDirectoryType type, boolean loadMore) {
             this.type = type;
             this.loadMore = loadMore;
-            this.plugins = plugins;
-        }
-
-        public FetchedPluginDirectoryPayload(PluginDirectoryType type, boolean loadMore,
-                                             PluginDirectoryError error) {
-            this.type = type;
-            this.loadMore = loadMore;
-            this.error = error;
         }
     }
 
@@ -195,18 +187,12 @@ public class PluginStore extends Store {
     public static class SearchedPluginDirectoryPayload extends Payload<PluginDirectoryError> {
         public String searchTerm;
         public int offset;
+        public boolean canLoadMore;
         public List<WPOrgPluginModel> plugins;
 
-        public SearchedPluginDirectoryPayload(String searchTerm, int offset, List<WPOrgPluginModel> plugins) {
+        public SearchedPluginDirectoryPayload(String searchTerm, int offset) {
             this.searchTerm = searchTerm;
             this.offset = offset;
-            this.plugins = plugins;
-        }
-
-        public SearchedPluginDirectoryPayload(String searchTerm, int offset, PluginDirectoryError error) {
-            this.searchTerm = searchTerm;
-            this.offset = offset;
-            this.error = error;
         }
     }
 
@@ -430,6 +416,8 @@ public class PluginStore extends Store {
     public static class OnPluginDirectoryFetched extends OnChanged<PluginDirectoryError> {
         public PluginDirectoryType type;
         public boolean loadMore;
+        public boolean canLoadMore;
+
         public OnPluginDirectoryFetched(PluginDirectoryType type, boolean loadMore) {
             this.type = type;
             this.loadMore = loadMore;
@@ -440,6 +428,7 @@ public class PluginStore extends Store {
     public static class OnPluginDirectorySearched extends OnChanged<PluginDirectoryError> {
         public String searchTerm;
         public int offset;
+        public boolean canLoadMore;
         public List<WPOrgPluginModel> plugins;
 
         public OnPluginDirectorySearched(String searchTerm, int offset) {
@@ -693,6 +682,7 @@ public class PluginStore extends Store {
         if (payload.isError()) {
             event.error = payload.error;
         } else {
+            event.canLoadMore = payload.canLoadMore;
             // TODO: Save the payload.plugins to DB
         }
         emitChange(event);
@@ -734,6 +724,7 @@ public class PluginStore extends Store {
         if (payload.isError()) {
             event.error = payload.error;
         } else {
+            event.canLoadMore = payload.canLoadMore;
             event.plugins = payload.plugins;
         }
         emitChange(event);
