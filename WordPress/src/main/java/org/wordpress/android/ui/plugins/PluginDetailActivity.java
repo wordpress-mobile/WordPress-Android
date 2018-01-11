@@ -482,10 +482,14 @@ public class PluginDetailActivity extends AppCompatActivity {
         imageStar.setImageResource(drawableRes);
     }
 
+    private static final String KEY_LABEL = "label";
+    private static final String KEY_TEXT = "text";
+
     private void showPluginInfoPopup() {
         List<Map<String, String>> data = new ArrayList<>();
-        int[] to = {R.id.text1, R.id.text2};
-        String[] from = {
+        int[] to = { R.id.text1, R.id.text2 };
+        String[] from = { KEY_LABEL, KEY_TEXT };
+        String[] labels = {
                 getString(R.string.plugin_info_version),
                 getString(R.string.plugin_info_lastupdated),
                 getString(R.string.plugin_info_requires_version),
@@ -493,19 +497,23 @@ public class PluginDetailActivity extends AppCompatActivity {
         };
 
         Map<String,String> mapVersion = new HashMap<>();
-        mapVersion.put(from[0], StringUtils.notNullStr(mWPOrgPlugin.getVersion()));
+        mapVersion.put(KEY_LABEL, labels[0]);
+        mapVersion.put(KEY_TEXT, StringUtils.notNullStr(mWPOrgPlugin.getVersion()));
         data.add(mapVersion);
 
         Map<String,String> mapUpdated = new HashMap<>();
-        mapUpdated.put(from[1], StringUtils.notNullStr(mWPOrgPlugin.getLastUpdated()));
+        mapUpdated.put(KEY_LABEL, labels[1]);
+        mapVersion.put(KEY_TEXT, StringUtils.notNullStr(mWPOrgPlugin.getLastUpdated()));
         data.add(mapUpdated);
 
         Map<String,String> mapRequiredVer = new HashMap<>();
-        mapRequiredVer.put(from[2], StringUtils.notNullStr(mWPOrgPlugin.getRequiredWordPressVersion()));
+        mapRequiredVer.put(KEY_LABEL, labels[2]);
+        mapRequiredVer.put(KEY_TEXT, StringUtils.notNullStr(mWPOrgPlugin.getRequiredWordPressVersion()));
         data.add(mapRequiredVer);
 
         Map<String,String> mapThisVer = new HashMap<>();
-        mapThisVer.put(from[3], StringUtils.notNullStr(mSite.getSoftwareVersion()));
+        mapThisVer.put(KEY_LABEL, labels[3]);
+        mapThisVer.put(KEY_TEXT, StringUtils.notNullStr(mSite.getSoftwareVersion()));
         data.add(mapThisVer);
 
         SimpleAdapter adapter = new SimpleAdapter(this,
