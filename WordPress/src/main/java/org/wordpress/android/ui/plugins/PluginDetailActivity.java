@@ -46,6 +46,7 @@ import org.wordpress.android.ui.ActivityLauncher;
 import org.wordpress.android.util.AnalyticsUtils;
 import org.wordpress.android.util.AniUtils;
 import org.wordpress.android.util.AppLog;
+import org.wordpress.android.util.FormatUtils;
 import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.SiteUtils;
 import org.wordpress.android.util.ToastUtils;
@@ -430,15 +431,16 @@ public class PluginDetailActivity extends AppCompatActivity {
     }
 
     private void refreshRatingsViews() {
+        int numRatingsTotal = mWPOrgPlugin.getNumberOfRatings();
+
         TextView txtNumRatings = findViewById(R.id.text_num_ratings);
-        txtNumRatings.setText(String.format(
-                getString(R.string.plugin_num_ratings), mWPOrgPlugin.getNumberOfRatings()));
+        String numRatings = FormatUtils.formatInt(numRatingsTotal);
+        txtNumRatings.setText(String.format(getString(R.string.plugin_num_ratings), numRatings));
 
         TextView txtNumDownloads = findViewById(R.id.text_num_downloads);
-        txtNumDownloads.setText(String.format(
-                getString(R.string.plugin_num_downloads), mWPOrgPlugin.getDownloadCount()));
+        String numDownloads = FormatUtils.formatInt(mWPOrgPlugin.getDownloadCount());
+        txtNumDownloads.setText(String.format(getString(R.string.plugin_num_downloads), numDownloads));
 
-        int numRatingsTotal = mWPOrgPlugin.getNumberOfRatings();
         setRatingsBar(R.id.progress5, mWPOrgPlugin.getNumberOfRatingsOfFive(), numRatingsTotal);
         setRatingsBar(R.id.progress4, mWPOrgPlugin.getNumberOfRatingsOfFour(), numRatingsTotal);
         setRatingsBar(R.id.progress3, mWPOrgPlugin.getNumberOfRatingsOfThree(), numRatingsTotal);

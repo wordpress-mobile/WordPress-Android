@@ -1843,8 +1843,8 @@
     <string name="plugin_whatsnew">What\'s New</string>
     <string name="plugin_faq">Frequently Asked Questions</string>
     <string name="plugin_read_reviews">Read Reviews</string>
-    <string name="plugin_num_ratings">%d ratings</string>
-    <string name="plugin_num_downloads">%d downloads</string>
+    <string name="plugin_num_ratings">%s ratings</string>
+    <string name="plugin_num_downloads">%s downloads</string>
 
     <string name="plugin_one_star">1 star</string>
     <string name="plugin_two_stars">2 stars</string>
