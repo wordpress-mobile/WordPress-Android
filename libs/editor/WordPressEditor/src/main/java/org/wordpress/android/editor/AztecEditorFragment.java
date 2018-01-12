@@ -284,7 +284,10 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
         mediaToolbarGalleryButton.setMediaToolbarButtonClickListener(new IMediaToolbarButton.IMediaToolbarClickListener() {
             @Override
             public void onClick(View view) {
-                mMediaToolbarButtonClickListener.onMediaToolbarButtonClicked(MediaToolbarAction.GALLERY);
+                if (mMediaToolbarButtonClickListener != null) {
+                    mMediaToolbarButtonClickListener.onMediaToolbarButtonClicked(MediaToolbarAction.GALLERY);
+                }
+
             }
         });
 
@@ -292,7 +295,9 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
         mediaToolbarCameraButton.setMediaToolbarButtonClickListener(new IMediaToolbarButton.IMediaToolbarClickListener() {
             @Override
             public void onClick(View view) {
-                mMediaToolbarButtonClickListener.onMediaToolbarButtonClicked(MediaToolbarAction.CAMERA);
+                if (mMediaToolbarButtonClickListener != null) {
+                    mMediaToolbarButtonClickListener.onMediaToolbarButtonClicked(MediaToolbarAction.CAMERA);
+                }
             }
         });
 
@@ -300,7 +305,9 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
         mediaToolbarLibraryButton.setMediaToolbarButtonClickListener(new IMediaToolbarButton.IMediaToolbarClickListener() {
             @Override
             public void onClick(View view) {
-                mMediaToolbarButtonClickListener.onMediaToolbarButtonClicked(MediaToolbarAction.LIBRARY);
+                if (mMediaToolbarButtonClickListener != null) {
+                    mMediaToolbarButtonClickListener.onMediaToolbarButtonClicked(MediaToolbarAction.LIBRARY);
+                }
             }
         });
 
