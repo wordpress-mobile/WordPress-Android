@@ -67,7 +67,6 @@ public class UploadService extends Service {
 
     // we hold this reference here for the success notification for Media uploads
     private List<MediaModel> mMediaBatchUploaded = new ArrayList<>();
-    private PostEvents.PostOpenedInEditor mCurrentPostBeingEdited;
 
     // we keep this list so we don't tell the user an error happened when we find a FAILED media item
     // for media that the user actively cancelled uploads for
@@ -86,7 +85,6 @@ public class UploadService extends Service {
         ((WordPress) getApplication()).component().inject(this);
         AppLog.i(T.MAIN, "UploadService > Created");
         mDispatcher.register(this);
-        EventBus.getDefault().register(this);
         sInstance = this;
         // TODO: Recover any posts/media uploads that were interrupted by the service being stopped
     }
@@ -111,7 +109,6 @@ public class UploadService extends Service {
         }
 
         mDispatcher.unregister(this);
-        EventBus.getDefault().unregister(this);
         sInstance = null;
         AppLog.i(T.MAIN, "UploadService > Destroyed");
         super.onDestroy();
@@ -941,9 +938,10 @@ public class UploadService extends Service {
     }
 
     private boolean isPostCurrentlyBeingEdited(PostModel post) {
-        if (mCurrentPostBeingEdited != null && post != null
-                && post.getLocalSiteId() == mCurrentPostBeingEdited.localSiteId
-                && post.getId() == mCurrentPostBeingEdited.postId) {
+        PostEvents.PostOpenedInEditor flag = EventBus.getDefault().getStickyEvent(PostEvents.PostOpenedInEditor.class);
+        if (flag != null && post != null
+                && post.getLocalSiteId() == flag.localSiteId
+                && post.getId() == flag.postId) {
             return true;
         }
         return false;
@@ -957,26 +955,6 @@ public class UploadService extends Service {
     @Subscribe(threadMode = ThreadMode.MAIN, priority = 7)
     public void onPostUploaded(OnPostUploaded event) {
         stopServiceIfUploadsComplete();
-    }
-
-
-    // App events
-
-    @SuppressWarnings("unused")
-    public void onEventMainThread(PostEvents.PostOpenedInEditor event) {
-        synchronized (this) {
-            mCurrentPostBeingEdited = new PostEvents.PostOpenedInEditor(event.localSiteId, event.postId);
-        }
-    }
-
-    @SuppressWarnings("unused")
-    public void onEventMainThread(PostEvents.PostClosedInEditor event) {
-        synchronized (this) {
-            if (mCurrentPostBeingEdited != null && mCurrentPostBeingEdited.postId == event.postId &&
-                    mCurrentPostBeingEdited.localSiteId == event.localSiteId) {
-                mCurrentPostBeingEdited = null;
-            }
-        }
     }
 
     public static class UploadErrorEvent {

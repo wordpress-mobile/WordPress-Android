@@ -328,6 +328,8 @@ public class EditPostActivity extends AppCompatActivity implements
                 }
                 mPost = mPostStore.instantiatePostModel(mSite, mIsPage, categories, postFormat);
                 mPost.setStatus(PostStatus.PUBLISHED.toString());
+                EventBus.getDefault().postSticky(
+                        new PostEvents.PostOpenedInEditor(mPost.getLocalSiteId(), mPost.getId()));
             } else if (extras != null) {
                 // Load post passed in extras
                 mPost = mPostStore.getPostByLocalPostId(extras.getInt(EXTRA_POST_LOCAL_ID));
@@ -438,7 +440,7 @@ public class EditPostActivity extends AppCompatActivity implements
             Collections.sort(mMediaMarkedUploadingOnStartIds);
             mIsPage = mPost.isPage();
 
-            EventBus.getDefault().post(
+            EventBus.getDefault().postSticky(
                     new PostEvents.PostOpenedInEditor(mPost.getLocalSiteId(), mPost.getId()));
 
             new Thread(new Runnable() {
@@ -584,7 +586,16 @@ public class EditPostActivity extends AppCompatActivity implements
         AnalyticsTracker.track(AnalyticsTracker.Stat.EDITOR_CLOSED);
         mDispatcher.unregister(this);
         cancelAddMediaListThread();
+        removePostOpenInEditorStickyEvent();
         super.onDestroy();
+    }
+
+    private void removePostOpenInEditorStickyEvent() {
+        PostEvents.PostOpenedInEditor stickyEvent = EventBus.getDefault().getStickyEvent(PostEvents.PostOpenedInEditor.class);
+        if(stickyEvent != null) {
+            // "Consume" the sticky event
+            EventBus.getDefault().removeStickyEvent(stickyEvent);
+        }
     }
 
     @Override
@@ -1181,8 +1192,7 @@ public class EditPostActivity extends AppCompatActivity implements
         @Override
         protected void onPostExecute(Void saved) {
             saveResult(true, false);
-            EventBus.getDefault().post(
-                    new PostEvents.PostClosedInEditor(mPost.getLocalSiteId(), mPost.getId()));
+            removePostOpenInEditorStickyEvent();
             finish();
         }
     }
@@ -1217,8 +1227,7 @@ public class EditPostActivity extends AppCompatActivity implements
         @Override
         protected void onPostExecute(Boolean saved) {
             saveResult(saved, true);
-            EventBus.getDefault().post(
-                    new PostEvents.PostClosedInEditor(mPost.getLocalSiteId(), mPost.getId()));
+            removePostOpenInEditorStickyEvent();
             finish();
         }
     }
@@ -1388,8 +1397,7 @@ public class EditPostActivity extends AppCompatActivity implements
                     if (!isPublishable && isNewPost()) {
                         mDispatcher.dispatch(PostActionBuilder.newRemovePostAction(mPost));
                     }
-                    EventBus.getDefault().post(
-                            new PostEvents.PostClosedInEditor(mPost.getLocalSiteId(), mPost.getId()));
+                    removePostOpenInEditorStickyEvent();
                     finish();
                 }
             }
