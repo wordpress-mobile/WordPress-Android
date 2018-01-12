@@ -31,6 +31,7 @@ import javax.inject.Singleton;
 
 @Singleton
 public class PluginWPOrgClient extends BaseWPOrgAPIClient {
+    private static final int FETCH_PLUGIN_DIRECTORY_PAGE_SIZE = 50;
     private final Dispatcher mDispatcher;
 
     @Inject
@@ -41,12 +42,14 @@ public class PluginWPOrgClient extends BaseWPOrgAPIClient {
 
     public void fetchPluginDirectory(final PluginDirectoryType directoryType) {
         String url = WPORGAPI.plugins.info.version("1.1").getUrl() + "?action=query_plugins";
-        final Map<String, String> params = getPluginDirectoryParams();
+        final Map<String, String> params = getCommonPluginDirectoryParams();
+        params.put("request[browse]", directoryType.toString());
         final WPOrgAPIGsonRequest<FetchPluginDirectoryResponse> request =
                 new WPOrgAPIGsonRequest<>(Method.POST, url, params, null, FetchPluginDirectoryResponse.class,
                         new Listener<FetchPluginDirectoryResponse>() {
                             @Override
                             public void onResponse(FetchPluginDirectoryResponse response) {
+                                // TODO: handle pagination and return correct value for loadMore
                                 FetchedPluginDirectoryPayload payload =
                                         new FetchedPluginDirectoryPayload(directoryType, true);
                                 mDispatcher.dispatch(PluginActionBuilder.newFetchedPluginDirectoryAction(payload));
@@ -55,6 +58,7 @@ public class PluginWPOrgClient extends BaseWPOrgAPIClient {
                         new BaseErrorListener() {
                             @Override
                             public void onErrorResponse(@NonNull BaseNetworkError networkError) {
+                                // TODO: handle pagination and return correct value for loadMore
                                 FetchedPluginDirectoryPayload payload =
                                         new FetchedPluginDirectoryPayload(directoryType, true);
                                 payload.error = new PluginDirectoryError(
@@ -69,6 +73,7 @@ public class PluginWPOrgClient extends BaseWPOrgAPIClient {
     public void fetchWPOrgPlugin(final String pluginSlug) {
         String url = WPORGAPI.plugins.info.version("1.0").slug(pluginSlug).getUrl();
         Map<String, String> params = new HashMap<>();
+        // TODO: check if we need more fields similar to the ones in getPluginDirectoryParams
         params.put("fields", "banners,icons");
         final WPOrgAPIGsonRequest<WPOrgPluginResponse> request =
                 new WPOrgAPIGsonRequest<>(Method.GET, url, params, null, WPOrgPluginResponse.class,
@@ -101,13 +106,17 @@ public class PluginWPOrgClient extends BaseWPOrgAPIClient {
         add(request);
     }
 
-    private Map<String, String> getPluginDirectoryParams() {
+    private Map<String, String> getCommonPluginDirectoryParams() {
         Map<String, String> params = new HashMap<>();
+        // TODO: Handle pagination
         params.put("request[page]", String.valueOf(1));
-        params.put("request[per_page]", String.valueOf(10));
-        params.put("request[fields][icons]", String.valueOf(1));
+        params.put("request[per_page]", String.valueOf(FETCH_PLUGIN_DIRECTORY_PAGE_SIZE));
         params.put("request[fields][banners]", String.valueOf(1));
-        params.put("request[browse]", "new");
+        params.put("request[fields][compatibility]", String.valueOf(1));
+        params.put("request[fields][icons]", String.valueOf(1));
+        params.put("request[fields][requires]", String.valueOf(1));
+        params.put("request[fields][sections]", String.valueOf(1));
+        params.put("request[fields][tested]", String.valueOf(0));
         return params;
     }
 
