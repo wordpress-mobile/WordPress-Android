@@ -40,6 +40,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.RelativeLayout;
 
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
@@ -284,6 +285,14 @@ public class EditPostActivity extends AppCompatActivity implements
         //AppPrefs.setAztecEditorEnabled(true);
         mShowAztecEditor = AppPrefs.isAztecEditorEnabled();
         mShowNewEditor = AppPrefs.isVisualEditorEnabled();
+
+        //TODO when aztec is the only editor, remove this part and set the overlay bottom margin in xml
+        if (mShowAztecEditor) {
+            View overlay = findViewById(R.id.view_overlay);
+            RelativeLayout.LayoutParams layoutParams = (RelativeLayout.LayoutParams) overlay.getLayoutParams();
+            layoutParams.bottomMargin = getResources().getDimensionPixelOffset(R.dimen.aztec_format_bar_height);
+            overlay.setLayoutParams(layoutParams);
+        }
 
         // Set up the action bar.
         final ActionBar actionBar = getSupportActionBar();
