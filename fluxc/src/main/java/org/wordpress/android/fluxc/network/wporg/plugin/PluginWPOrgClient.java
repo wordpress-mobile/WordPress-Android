@@ -22,6 +22,7 @@ import org.wordpress.android.fluxc.store.PluginStore.FetchedPluginDirectoryPaylo
 import org.wordpress.android.fluxc.store.PluginStore.FetchedWPOrgPluginPayload;
 import org.wordpress.android.fluxc.store.PluginStore.PluginDirectoryError;
 import org.wordpress.android.fluxc.store.PluginStore.PluginDirectoryErrorType;
+import org.wordpress.android.fluxc.store.PluginStore.SearchedPluginDirectoryPayload;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -100,6 +101,36 @@ public class PluginWPOrgClient extends BaseWPOrgAPIClient {
                                         FetchWPOrgPluginErrorType.GENERIC_ERROR);
                                 mDispatcher.dispatch(PluginActionBuilder.newFetchedWporgPluginAction(
                                         new FetchedWPOrgPluginPayload(pluginSlug, error)));
+                            }
+                        }
+                );
+        add(request);
+    }
+
+    public void searchPluginDirectory(final String searchTerm) {
+        String url = WPORGAPI.plugins.info.version("1.1").getUrl() + "?action=query_plugins";
+        final Map<String, String> params = getCommonPluginDirectoryParams();
+        params.put("request[search]", searchTerm);
+        final WPOrgAPIGsonRequest<FetchPluginDirectoryResponse> request =
+                new WPOrgAPIGsonRequest<>(Method.POST, url, params, null, FetchPluginDirectoryResponse.class,
+                        new Listener<FetchPluginDirectoryResponse>() {
+                            @Override
+                            public void onResponse(FetchPluginDirectoryResponse response) {
+                                // TODO: handle pagination and return correct value for offset
+                                SearchedPluginDirectoryPayload payload =
+                                        new SearchedPluginDirectoryPayload(searchTerm, 0);
+                                mDispatcher.dispatch(PluginActionBuilder.newSearchedPluginDirectoryAction(payload));
+                            }
+                        },
+                        new BaseErrorListener() {
+                            @Override
+                            public void onErrorResponse(@NonNull BaseNetworkError networkError) {
+                                // TODO: handle pagination and return correct value for offset
+                                SearchedPluginDirectoryPayload payload =
+                                        new SearchedPluginDirectoryPayload(searchTerm, 0);
+                                payload.error = new PluginDirectoryError(
+                                        PluginDirectoryErrorType.GENERIC_ERROR, networkError.message);
+                                mDispatcher.dispatch(PluginActionBuilder.newSearchedPluginDirectoryAction(payload));
                             }
                         }
                 );
