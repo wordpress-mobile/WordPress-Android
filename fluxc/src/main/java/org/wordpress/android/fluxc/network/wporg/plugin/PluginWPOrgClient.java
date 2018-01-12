@@ -9,6 +9,7 @@ import com.android.volley.Response.Listener;
 import org.wordpress.android.fluxc.Dispatcher;
 import org.wordpress.android.fluxc.generated.PluginActionBuilder;
 import org.wordpress.android.fluxc.generated.endpoint.WPORGAPI;
+import org.wordpress.android.fluxc.model.plugin.PluginDirectoryType;
 import org.wordpress.android.fluxc.model.plugin.WPOrgPluginModel;
 import org.wordpress.android.fluxc.network.BaseRequest.BaseErrorListener;
 import org.wordpress.android.fluxc.network.BaseRequest.BaseNetworkError;
@@ -17,7 +18,10 @@ import org.wordpress.android.fluxc.network.wporg.BaseWPOrgAPIClient;
 import org.wordpress.android.fluxc.network.wporg.WPOrgAPIGsonRequest;
 import org.wordpress.android.fluxc.store.PluginStore.FetchWPOrgPluginError;
 import org.wordpress.android.fluxc.store.PluginStore.FetchWPOrgPluginErrorType;
+import org.wordpress.android.fluxc.store.PluginStore.FetchedPluginDirectoryPayload;
 import org.wordpress.android.fluxc.store.PluginStore.FetchedWPOrgPluginPayload;
+import org.wordpress.android.fluxc.store.PluginStore.PluginDirectoryError;
+import org.wordpress.android.fluxc.store.PluginStore.PluginDirectoryErrorType;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -33,6 +37,33 @@ public class PluginWPOrgClient extends BaseWPOrgAPIClient {
     public PluginWPOrgClient(Dispatcher dispatcher, RequestQueue requestQueue, UserAgent userAgent) {
         super(dispatcher, requestQueue, userAgent);
         mDispatcher = dispatcher;
+    }
+
+    public void fetchPluginDirectory(final PluginDirectoryType directoryType) {
+        String url = WPORGAPI.plugins.info.version("1.1").getUrl() + "?action=query_plugins";
+        final Map<String, String> params = getPluginDirectoryParams();
+        final WPOrgAPIGsonRequest<FetchPluginDirectoryResponse> request =
+                new WPOrgAPIGsonRequest<>(Method.POST, url, params, null, FetchPluginDirectoryResponse.class,
+                        new Listener<FetchPluginDirectoryResponse>() {
+                            @Override
+                            public void onResponse(FetchPluginDirectoryResponse response) {
+                                FetchedPluginDirectoryPayload payload =
+                                        new FetchedPluginDirectoryPayload(directoryType, true);
+                                mDispatcher.dispatch(PluginActionBuilder.newFetchedPluginDirectoryAction(payload));
+                            }
+                        },
+                        new BaseErrorListener() {
+                            @Override
+                            public void onErrorResponse(@NonNull BaseNetworkError networkError) {
+                                FetchedPluginDirectoryPayload payload =
+                                        new FetchedPluginDirectoryPayload(directoryType, true);
+                                payload.error = new PluginDirectoryError(
+                                        PluginDirectoryErrorType.GENERIC_ERROR, networkError.message);
+                                mDispatcher.dispatch(PluginActionBuilder.newFetchedPluginDirectoryAction(payload));
+                            }
+                        }
+                );
+        add(request);
     }
 
     public void fetchWPOrgPlugin(final String pluginSlug) {
@@ -68,6 +99,16 @@ public class PluginWPOrgClient extends BaseWPOrgAPIClient {
                         }
                 );
         add(request);
+    }
+
+    private Map<String, String> getPluginDirectoryParams() {
+        Map<String, String> params = new HashMap<>();
+        params.put("request[page]", String.valueOf(1));
+        params.put("request[per_page]", String.valueOf(10));
+        params.put("request[fields][icons]", String.valueOf(1));
+        params.put("request[fields][banners]", String.valueOf(1));
+        params.put("request[browse]", "new");
+        return params;
     }
 
     private WPOrgPluginModel wpOrgPluginFromResponse(WPOrgPluginResponse response) {
