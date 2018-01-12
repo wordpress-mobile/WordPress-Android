@@ -857,6 +857,11 @@ public class UploadService extends Service {
         // If this was the last media upload a post was waiting for, update the post content
         // This done for pending as well as cancelled and failed posts
         for (PostModel postModel : mUploadStore.getAllRegisteredPosts()) {
+            if (isPostCurrentlyBeingEdited(postModel)) {
+                // don't touch a Post that is being currently open in the Editor.
+                break;
+            }
+
             if (!UploadService.hasPendingOrInProgressMediaUploadsForPost(postModel)) {
                 // Replace local with remote media in the post content
                 PostModel updatedPost = updateOnePostModelWithCompletedAndFailedUploads(postModel);
@@ -930,6 +935,16 @@ public class UploadService extends Service {
         }
 
         return failedStandAloneMedia;
+    }
+
+    private boolean isPostCurrentlyBeingEdited(PostModel post) {
+        PostEvents.PostOpenedInEditor flag = EventBus.getDefault().getStickyEvent(PostEvents.PostOpenedInEditor.class);
+        if (flag != null && post != null
+                && post.getLocalSiteId() == flag.localSiteId
+                && post.getId() == flag.postId) {
+            return true;
+        }
+        return false;
     }
 
     /**

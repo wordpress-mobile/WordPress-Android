@@ -21,27 +21,21 @@ public class PostEvents {
         }
     }
 
-    public static class PostMediaInfoUpdated {
-        private long mMediaId;
-        private String mMediaUrl;
-
-        PostMediaInfoUpdated(long mediaId, String mediaUrl) {
-            mMediaId = mediaId;
-            mMediaUrl = mediaUrl;
-        }
-        public long getMediaId() {
-            return mMediaId;
-        }
-        public String getMediaUrl() {
-            return StringUtils.notNullStr(mMediaUrl);
-        }
-    }
-
     public static class PostMediaCanceled {
         public PostModel post;
 
         public PostMediaCanceled(PostModel post) {
             this.post = post;
+        }
+    }
+
+    public static class PostOpenedInEditor {
+        public final int localSiteId;
+        public final int postId;
+
+        public PostOpenedInEditor(int localSiteId, int postId) {
+            this.localSiteId = localSiteId;
+            this.postId = postId;
         }
     }
 }
