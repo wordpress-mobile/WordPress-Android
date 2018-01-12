@@ -148,6 +148,24 @@
 
             </LinearLayout>
 
+            <!--Pages-->
+            <LinearLayout
+                android:id="@+id/row_pages"
+                style="@style/MySiteListRowLayout">
+
+                <ImageView
+                    android:id="@+id/my_site_pages_icon"
+                    style="@style/MySiteListRowIcon"
+                    app:srcCompat="@drawable/ic_pages_grey_24dp"
+                    android:importantForAccessibility="no"/>
+
+                <org.wordpress.android.widgets.WPTextView
+                    android:id="@+id/my_site_pages_text_view"
+                    style="@style/MySiteListRowTextView"
+                    android:text="@string/my_site_btn_site_pages" />
+
+            </LinearLayout>
+
             <!--Blog Posts-->
             <FrameLayout
                 android:layout_width="match_parent"
@@ -195,24 +213,6 @@
                     android:id="@+id/my_site_media_text_view"
                     style="@style/MySiteListRowTextView"
                     android:text="@string/media" />
-
-            </LinearLayout>
-
-            <!--Pages-->
-            <LinearLayout
-                android:id="@+id/row_pages"
-                style="@style/MySiteListRowLayout">
-
-                <ImageView
-                    android:id="@+id/my_site_pages_icon"
-                    style="@style/MySiteListRowIcon"
-                    app:srcCompat="@drawable/ic_pages_grey_24dp"
-                    android:importantForAccessibility="no"/>
-
-                <org.wordpress.android.widgets.WPTextView
-                    android:id="@+id/my_site_pages_text_view"
-                    style="@style/MySiteListRowTextView"
-                    android:text="@string/pages" />
 
             </LinearLayout>
 
