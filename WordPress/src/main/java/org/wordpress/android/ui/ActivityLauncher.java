@@ -15,7 +15,7 @@ import android.text.TextUtils;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.analytics.AnalyticsTracker;
-import org.wordpress.android.fluxc.model.PluginModel;
+import org.wordpress.android.fluxc.model.SitePluginModel;
 import org.wordpress.android.fluxc.model.PostModel;
 import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.networking.SSLCertsViewActivity;
@@ -164,7 +164,7 @@ public class ActivityLauncher {
         }
     }
 
-    public static void viewPluginDetail(Context context, SiteModel site, PluginModel plugin) {
+    public static void viewPluginDetail(Context context, SiteModel site, SitePluginModel plugin) {
         if (PluginUtils.isPluginFeatureAvailable(site)) {
             Intent intent = new Intent(context, PluginDetailActivity.class);
             intent.putExtra(WordPress.SITE, site);
