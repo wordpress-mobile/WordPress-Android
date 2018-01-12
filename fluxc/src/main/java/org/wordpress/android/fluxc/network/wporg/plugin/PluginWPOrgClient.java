@@ -24,7 +24,9 @@ import org.wordpress.android.fluxc.store.PluginStore.PluginDirectoryError;
 import org.wordpress.android.fluxc.store.PluginStore.PluginDirectoryErrorType;
 import org.wordpress.android.fluxc.store.PluginStore.SearchedPluginDirectoryPayload;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import javax.inject.Inject;
@@ -119,6 +121,10 @@ public class PluginWPOrgClient extends BaseWPOrgAPIClient {
                                 // TODO: handle pagination and return correct value for offset
                                 SearchedPluginDirectoryPayload payload =
                                         new SearchedPluginDirectoryPayload(searchTerm, 0);
+                                if (response != null) {
+                                    payload.plugins = wpOrgPluginListFromResponse(response);
+                                }
+                                // TODO: throw an error if the response is null
                                 mDispatcher.dispatch(PluginActionBuilder.newSearchedPluginDirectoryAction(payload));
                             }
                         },
@@ -149,6 +155,16 @@ public class PluginWPOrgClient extends BaseWPOrgAPIClient {
         params.put("request[fields][sections]", String.valueOf(1));
         params.put("request[fields][tested]", String.valueOf(0));
         return params;
+    }
+
+    private List<WPOrgPluginModel> wpOrgPluginListFromResponse(@NonNull FetchPluginDirectoryResponse response) {
+        List<WPOrgPluginModel> pluginList = new ArrayList<>();
+        if (response.plugins != null) {
+            for (WPOrgPluginResponse wpOrgPluginResponse : response.plugins) {
+                pluginList.add(wpOrgPluginFromResponse(wpOrgPluginResponse));
+            }
+        }
+        return pluginList;
     }
 
     private WPOrgPluginModel wpOrgPluginFromResponse(WPOrgPluginResponse response) {
