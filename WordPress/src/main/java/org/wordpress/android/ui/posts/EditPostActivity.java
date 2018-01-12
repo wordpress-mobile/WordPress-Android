@@ -180,6 +180,7 @@ public class EditPostActivity extends AppCompatActivity implements
     private static final String STATE_KEY_POST_LOCAL_ID = "stateKeyPostModelLocalId";
     private static final String STATE_KEY_POST_REMOTE_ID = "stateKeyPostModelRemoteId";
     private static final String STATE_KEY_IS_NEW_POST = "stateKeyIsNewPost";
+    private static final String STATE_KEY_IS_PHOTO_PICKER_VISIBLE = "stateKeyPhotoPickerVisible";
 
     private static int PAGE_CONTENT = 0;
     private static int PAGE_SETTINGS = 1;
@@ -568,12 +569,22 @@ public class EditPostActivity extends AppCompatActivity implements
             outState.putLong(STATE_KEY_POST_REMOTE_ID, mPost.getRemotePostId());
         }
         outState.putBoolean(STATE_KEY_IS_NEW_POST, mIsNewPost);
+        outState.putBoolean(STATE_KEY_IS_PHOTO_PICKER_VISIBLE, isPhotoPickerShowing());
         outState.putSerializable(WordPress.SITE, mSite);
 
         outState.putParcelableArrayList(STATE_KEY_DROPPED_MEDIA_URIS, mDroppedMediaUris);
 
         if (mEditorFragment != null) {
             getFragmentManager().putFragment(outState, STATE_KEY_EDITOR_FRAGMENT, mEditorFragment);
+        }
+    }
+
+    @Override
+    protected void onRestoreInstanceState(Bundle savedInstanceState) {
+        super.onRestoreInstanceState(savedInstanceState);
+
+        if (savedInstanceState.getBoolean(STATE_KEY_IS_PHOTO_PICKER_VISIBLE, false)) {
+            showPhotoPicker();
         }
     }
 
@@ -765,13 +776,15 @@ public class EditPostActivity extends AppCompatActivity implements
     }
 
     @Override
-    public void onMediaToolbarButtonClicked(MediaToolbarAction button) {
-        switch (button) {
+    public void onMediaToolbarButtonClicked(MediaToolbarAction action) {
+        if (!isPhotoPickerShowing()) return;
+
+        switch (action) {
             case CAMERA:
-                mPhotoPickerFragment.showCameraPopupMenu(findViewById(button.getButtonId()));
+                mPhotoPickerFragment.showCameraPopupMenu(findViewById(action.getButtonId()));
                 break;
             case GALLERY:
-                mPhotoPickerFragment.showPickerPopupMenu(findViewById(button.getButtonId()));
+                mPhotoPickerFragment.showPickerPopupMenu(findViewById(action.getButtonId()));
                 break;
             case LIBRARY:
                 mPhotoPickerFragment.doIconClicked(PhotoPickerIcon.WP_MEDIA);

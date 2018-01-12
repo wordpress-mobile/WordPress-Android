@@ -33,6 +33,7 @@ import org.wordpress.android.ui.photopicker.PhotoPickerAdapter.PhotoPickerAdapte
 import org.wordpress.android.util.AnalyticsUtils;
 import org.wordpress.android.util.AniUtils;
 import org.wordpress.android.util.AppLog;
+import org.wordpress.android.util.DisplayUtils;
 import org.wordpress.android.util.MediaUtils;
 import org.wordpress.android.util.WPActivityUtils;
 import org.wordpress.android.util.WPMediaUtils;
@@ -130,7 +131,7 @@ public class PhotoPickerFragment extends Fragment {
 
         mBottomBar = view.findViewById(R.id.bottom_bar);
 
-        if (mBrowserType == MediaBrowserType.AZTEC_EDITOR_PICKER) {
+        if (!canShowBottomBar()) {
             mBottomBar.setVisibility(View.GONE);
         } else {
             mBottomBar.findViewById(R.id.icon_camera).setOnClickListener(new View.OnClickListener() {
@@ -155,7 +156,6 @@ public class PhotoPickerFragment extends Fragment {
                 }
             });
 
-
             // choosing from WP media requires a site
             View wpMedia = mBottomBar.findViewById(R.id.icon_wpmedia);
             if (mSite == null) {
@@ -173,6 +173,16 @@ public class PhotoPickerFragment extends Fragment {
         mSoftAskContainer = (ViewGroup) view.findViewById(R.id.container_soft_ask);
 
         return view;
+    }
+
+    private boolean canShowBottomBar() {
+        if (mBrowserType == MediaBrowserType.AZTEC_EDITOR_PICKER && DisplayUtils.isLandscape(getActivity())) {
+            return true;
+        } else if (mBrowserType == MediaBrowserType.AZTEC_EDITOR_PICKER) {
+            return false;
+        }
+
+        return true;
     }
 
     @Override
@@ -268,13 +278,13 @@ public class PhotoPickerFragment extends Fragment {
     }
 
     private void showBottomBar() {
-        if (!isBottomBarShowing() && mBrowserType != MediaBrowserType.AZTEC_EDITOR_PICKER) {
+        if (!isBottomBarShowing() && canShowBottomBar()) {
             AniUtils.animateBottomBar(mBottomBar, true);
         }
     }
 
     private void hideBottomBar() {
-        if (isBottomBarShowing() && mBrowserType != MediaBrowserType.AZTEC_EDITOR_PICKER) {
+        if (isBottomBarShowing() && canShowBottomBar()) {
             AniUtils.animateBottomBar(mBottomBar, false);
         }
     }

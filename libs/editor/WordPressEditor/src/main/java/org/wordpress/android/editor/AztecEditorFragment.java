@@ -645,7 +645,12 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
 
     public void enableMediaMode(boolean enable) {
         formattingToolbar.enableMediaMode(enable);
-        formattingToolbar.toggleMediaToolbar();
+
+        if (enable) {
+            formattingToolbar.showMediaToolbar();
+        } else {
+            formattingToolbar.hideMediaToolbar();
+        }
 
         getActivity().invalidateOptionsMenu();
     }
@@ -1399,7 +1404,6 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
             ToastUtils.showToast(getActivity(), R.string.alert_insert_image_html_mode, ToastUtils.Duration.LONG);
         } else {
             mEditorFragmentListener.onAddMediaClicked();
-            return true;
         }
 
         return true;
@@ -1833,7 +1837,7 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
     }
 
     private static String toHtml(SpannableStringBuilder builder,
-                               AztecParser parser) {
+                                 AztecParser parser) {
         clearMetaSpans(builder);
         parser.syncVisualNewlinesOfBlockElements(builder);
         Format.postProcessSpannedText(builder, true);
