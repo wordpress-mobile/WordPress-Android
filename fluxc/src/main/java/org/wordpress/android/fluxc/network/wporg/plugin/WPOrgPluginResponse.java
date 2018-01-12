@@ -60,7 +60,7 @@ class WPOrgPluginDeserializer implements JsonDeserializer<WPOrgPluginResponse> {
         response.version = getStringFromJsonIfAvailable(jsonObject, "version");
 
         // Sections
-        if (jsonObject.has("sections")) {
+        if (jsonObject.has("sections") && jsonObject.get("sections").isJsonObject()) {
             JsonObject sections = jsonObject.get("sections").getAsJsonObject();
             response.descriptionAsHtml = getStringFromJsonIfAvailable(sections, "description");
             response.faqAsHtml = getStringFromJsonIfAvailable(sections, "faq");
@@ -70,7 +70,7 @@ class WPOrgPluginDeserializer implements JsonDeserializer<WPOrgPluginResponse> {
 
         // Ratings
         response.numberOfRatings = getIntFromJsonIfAvailable(jsonObject, "num_ratings");
-        if (jsonObject.has("ratings")) {
+        if (jsonObject.has("ratings") && jsonObject.get("ratings").isJsonObject()) {
             JsonObject ratings = jsonObject.get("ratings").getAsJsonObject();
             response.numberOfRatingsOfOne = getIntFromJsonIfAvailable(ratings, "1");
             response.numberOfRatingsOfTwo = getIntFromJsonIfAvailable(ratings, "2");
@@ -97,7 +97,7 @@ class WPOrgPluginDeserializer implements JsonDeserializer<WPOrgPluginResponse> {
     }
 
     private @Nullable String getBannerFromJson(JsonObject jsonObject) throws JsonParseException {
-        if (jsonObject.has("banners")) {
+        if (jsonObject.has("banners") && jsonObject.get("banners").isJsonObject()) {
             JsonObject banners = jsonObject.get("banners").getAsJsonObject();
             if (banners.has("high")) {
                 String bannerUrlHigh = banners.get("high").getAsString();
@@ -115,7 +115,7 @@ class WPOrgPluginDeserializer implements JsonDeserializer<WPOrgPluginResponse> {
     }
 
     private @Nullable String getIconFromJson(JsonObject jsonObject) throws JsonParseException {
-        if (jsonObject.has("icons")) {
+        if (jsonObject.has("icons") && jsonObject.get("icons").isJsonObject()) {
             JsonObject icons = jsonObject.get("icons").getAsJsonObject();
             if (icons.has("2x")) {
                 return icons.get("2x").getAsString();
