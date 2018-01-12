@@ -122,7 +122,7 @@
                 <ImageView
                     android:id="@+id/my_site_plan_icon"
                     style="@style/MySiteListRowIcon"
-                    app:srcCompat="@drawable/ic_clipboard_grey_24dp"
+                    app:srcCompat="@drawable/ic_jetpack_icon_24dp"
                     android:importantForAccessibility="no"/>
 
                 <org.wordpress.android.widgets.WPTextView
