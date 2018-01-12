@@ -186,7 +186,7 @@
     <string name="media_edit_alttext_text">Alt text</string>
     <string name="media_edit_description_text">Description</string>
     <string name="media_edit_link_text">Link to</string>
-    <string name="media_edit_link_hint">Open link in a new window/tab"</string>
+    <string name="media_edit_link_hint">Open link in a new window/tab</string>
     <string name="media_edit_title_hint">Enter a title here</string>
     <string name="media_edit_caption_hint">Enter a caption here</string>
     <string name="media_edit_description_hint">Enter a description here</string>
