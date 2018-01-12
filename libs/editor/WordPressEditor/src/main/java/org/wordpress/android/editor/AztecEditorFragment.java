@@ -1359,7 +1359,7 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
             return true;
         } else {
             mEditorFragmentListener.onAddMediaClicked();
-            return false;
+            return true;
         }
     }
 
