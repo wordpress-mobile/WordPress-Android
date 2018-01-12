@@ -433,6 +433,9 @@ public class EditPostActivity extends AppCompatActivity implements
                     AztecEditorFragment.getMediaMarkedUploadingInPostContent(this, mPost.getContent());
             Collections.sort(mMediaMarkedUploadingOnStartIds);
             mIsPage = mPost.isPage();
+
+            EventBus.getDefault().post(
+                    new PostEvents.PostOpenedInEditor(mPost.getLocalSiteId(), mPost.getId()));
         }
     }
 
@@ -1144,6 +1147,8 @@ public class EditPostActivity extends AppCompatActivity implements
         @Override
         protected void onPostExecute(Void saved) {
             saveResult(true, false);
+            EventBus.getDefault().post(
+                    new PostEvents.PostClosedInEditor(mPost.getLocalSiteId(), mPost.getId()));
             finish();
         }
     }
@@ -1178,6 +1183,8 @@ public class EditPostActivity extends AppCompatActivity implements
         @Override
         protected void onPostExecute(Boolean saved) {
             saveResult(saved, true);
+            EventBus.getDefault().post(
+                    new PostEvents.PostClosedInEditor(mPost.getLocalSiteId(), mPost.getId()));
             finish();
         }
     }
@@ -1347,6 +1354,8 @@ public class EditPostActivity extends AppCompatActivity implements
                     if (!isPublishable && isNewPost()) {
                         mDispatcher.dispatch(PostActionBuilder.newRemovePostAction(mPost));
                     }
+                    EventBus.getDefault().post(
+                            new PostEvents.PostClosedInEditor(mPost.getLocalSiteId(), mPost.getId()));
                     finish();
                 }
             }

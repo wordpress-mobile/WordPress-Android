@@ -66,6 +66,7 @@ public class UploadService extends Service {
 
     // we hold this reference here for the success notification for Media uploads
     private List<MediaModel> mMediaBatchUploaded = new ArrayList<>();
+    private PostEvents.PostOpenedInEditor mCurrentPostBeingEdited;
 
     @Inject Dispatcher mDispatcher;
     @Inject MediaStore mMediaStore;
@@ -79,6 +80,7 @@ public class UploadService extends Service {
         ((WordPress) getApplication()).component().inject(this);
         AppLog.i(T.MAIN, "UploadService > Created");
         mDispatcher.register(this);
+        EventBus.getDefault().register(this);
         sInstance = this;
         // TODO: Recover any posts/media uploads that were interrupted by the service being stopped
     }
@@ -103,6 +105,7 @@ public class UploadService extends Service {
         }
 
         mDispatcher.unregister(this);
+        EventBus.getDefault().unregister(this);
         sInstance = null;
         AppLog.i(T.MAIN, "UploadService > Destroyed");
         super.onDestroy();
@@ -842,6 +845,11 @@ public class UploadService extends Service {
         // If this was the last media upload a post was waiting for, update the post content
         // This done for pending as well as cancelled and failed posts
         for (PostModel postModel : mUploadStore.getAllRegisteredPosts()) {
+            if (isPostCurrentlyBeingEdited(postModel)) {
+                // don't touch a Post that is being currently open in the Editor.
+                break;
+            }
+
             if (!UploadService.hasPendingOrInProgressMediaUploadsForPost(postModel)) {
                 // Replace local with remote media in the post content
                 PostModel updatedPost = updateOnePostModelWithCompletedAndFailedUploads(postModel);
@@ -894,6 +902,15 @@ public class UploadService extends Service {
         return failedStandAloneMedia;
     }
 
+    private boolean isPostCurrentlyBeingEdited(PostModel post) {
+        if (mCurrentPostBeingEdited != null && post != null
+                && post.getLocalSiteId() == mCurrentPostBeingEdited.localSiteId
+                && post.getId() == mCurrentPostBeingEdited.postId) {
+            return true;
+        }
+        return false;
+    }
+
     /**
      * Has lower priority than the PostUploadHandler, which ensures that the handler has already received and
      * processed this OnPostUploaded event. This means we can safely rely on its internal state being up to date.
@@ -902,6 +919,26 @@ public class UploadService extends Service {
     @Subscribe(threadMode = ThreadMode.MAIN, priority = 7)
     public void onPostUploaded(OnPostUploaded event) {
         stopServiceIfUploadsComplete();
+    }
+
+
+    // App events
+
+    @SuppressWarnings("unused")
+    public void onEventMainThread(PostEvents.PostOpenedInEditor event) {
+        synchronized (this) {
+            mCurrentPostBeingEdited = new PostEvents.PostOpenedInEditor(event.localSiteId, event.postId);
+        }
+    }
+
+    @SuppressWarnings("unused")
+    public void onEventMainThread(PostEvents.PostClosedInEditor event) {
+        synchronized (this) {
+            if (mCurrentPostBeingEdited != null && mCurrentPostBeingEdited.postId == event.postId &&
+                    mCurrentPostBeingEdited.localSiteId == event.localSiteId) {
+                mCurrentPostBeingEdited = null;
+            }
+        }
     }
 
     public static class UploadErrorEvent {

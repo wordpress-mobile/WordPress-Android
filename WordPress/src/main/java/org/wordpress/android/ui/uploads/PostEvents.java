@@ -28,4 +28,24 @@ public class PostEvents {
             this.post = post;
         }
     }
+
+    public static class PostOpenedInEditor {
+        public final int localSiteId;
+        public final int postId;
+
+        public PostOpenedInEditor(int localSiteId, int postId) {
+            this.localSiteId = localSiteId;
+            this.postId = postId;
+        }
+    }
+
+    public static class PostClosedInEditor {
+        public final int localSiteId;
+        public final int postId;
+
+        public PostClosedInEditor(int localSiteId, int postId) {
+            this.localSiteId = localSiteId;
+            this.postId = postId;
+        }
+    }
 }
