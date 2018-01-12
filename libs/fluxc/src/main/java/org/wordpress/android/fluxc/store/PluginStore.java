@@ -634,7 +634,7 @@ public class PluginStore extends Store {
     }
 
     private void searchPluginDirectory(SearchPluginDirectoryPayload payload) {
-        // TODO: call PluginWPOrgClient's fetchPluginDirectory method (yet to be implemented)
+        mPluginWPOrgClient.searchPluginDirectory(payload.searchTerm);
     }
 
     private void updateSitePlugin(UpdateSitePluginPayload payload) {
