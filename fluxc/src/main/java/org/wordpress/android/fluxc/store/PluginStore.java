@@ -606,7 +606,7 @@ public class PluginStore extends Store {
     }
 
     private void fetchPluginDirectory(FetchPluginDirectoryPayload payload) {
-        // TODO: call PluginWPOrgClient's fetchPluginDirectory method (yet to be implemented)
+        mPluginWPOrgClient.fetchPluginDirectory(payload.type);
     }
 
     private void fetchSitePlugins(SiteModel site) {
