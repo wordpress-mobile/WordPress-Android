@@ -72,6 +72,7 @@ import org.wordpress.android.fluxc.action.AccountAction;
 import org.wordpress.android.fluxc.generated.AccountActionBuilder;
 import org.wordpress.android.fluxc.generated.MediaActionBuilder;
 import org.wordpress.android.fluxc.generated.PostActionBuilder;
+import org.wordpress.android.fluxc.generated.UploadActionBuilder;
 import org.wordpress.android.fluxc.model.AccountModel;
 import org.wordpress.android.fluxc.model.MediaModel;
 import org.wordpress.android.fluxc.model.MediaModel.MediaUploadState;
@@ -88,6 +89,7 @@ import org.wordpress.android.fluxc.store.MediaStore.MediaPayload;
 import org.wordpress.android.fluxc.store.MediaStore.OnMediaChanged;
 import org.wordpress.android.fluxc.store.PostStore;
 import org.wordpress.android.fluxc.store.SiteStore;
+import org.wordpress.android.fluxc.store.UploadStore;
 import org.wordpress.android.fluxc.tools.FluxCImageLoader;
 import org.wordpress.android.ui.ActivityId;
 import org.wordpress.android.ui.ActivityLauncher;
@@ -142,6 +144,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -238,6 +241,7 @@ public class EditPostActivity extends AppCompatActivity implements
     @Inject SiteStore mSiteStore;
     @Inject PostStore mPostStore;
     @Inject MediaStore mMediaStore;
+    @Inject UploadStore mUploadStore;
     @Inject FluxCImageLoader mImageLoader;
 
     private SiteModel mSite;
@@ -324,6 +328,8 @@ public class EditPostActivity extends AppCompatActivity implements
                 }
                 mPost = mPostStore.instantiatePostModel(mSite, mIsPage, categories, postFormat);
                 mPost.setStatus(PostStatus.PUBLISHED.toString());
+                EventBus.getDefault().postSticky(
+                        new PostEvents.PostOpenedInEditor(mPost.getLocalSiteId(), mPost.getId()));
             } else if (extras != null) {
                 // Load post passed in extras
                 mPost = mPostStore.getPostByLocalPostId(extras.getInt(EXTRA_POST_LOCAL_ID));
@@ -433,6 +439,39 @@ public class EditPostActivity extends AppCompatActivity implements
                     AztecEditorFragment.getMediaMarkedUploadingInPostContent(this, mPost.getContent());
             Collections.sort(mMediaMarkedUploadingOnStartIds);
             mIsPage = mPost.isPage();
+
+            EventBus.getDefault().postSticky(
+                    new PostEvents.PostOpenedInEditor(mPost.getLocalSiteId(), mPost.getId()));
+
+            new Thread(new Runnable() {
+                @Override
+                public void run() {
+                    // run this purge in the background to not delay Editor initialization
+                    purgeMediaToPostAssociationsIfNotInPostAnymore();
+                }
+            }).start();
+        }
+    }
+
+    private void purgeMediaToPostAssociationsIfNotInPostAnymore() {
+        ArrayList<MediaModel> allMedia = new ArrayList<>();
+        allMedia.addAll(mUploadStore.getFailedMediaForPost(mPost));
+        allMedia.addAll(mUploadStore.getCompletedMediaForPost(mPost));
+        allMedia.addAll(mUploadStore.getUploadingMediaForPost(mPost));
+
+        if (!allMedia.isEmpty()) {
+            HashSet<MediaModel> mediaToDeleteAssociationFor = new HashSet<>();
+            for (MediaModel media : allMedia) {
+                if (!AztecEditorFragment.isMediaInPostBody(this, mPost.getContent(), String.valueOf(media.getId()))) {
+                    mediaToDeleteAssociationFor.add(media);
+                }
+            }
+
+            if (!mediaToDeleteAssociationFor.isEmpty()) {
+                // also remove the association of Media-to-Post for this post
+                UploadStore.ClearMediaPayload clearMediaPayload = new UploadStore.ClearMediaPayload(mPost, mediaToDeleteAssociationFor);
+                mDispatcher.dispatch(UploadActionBuilder.newClearMediaForPostAction(clearMediaPayload));
+            }
         }
     }
 
@@ -547,7 +586,16 @@ public class EditPostActivity extends AppCompatActivity implements
         AnalyticsTracker.track(AnalyticsTracker.Stat.EDITOR_CLOSED);
         mDispatcher.unregister(this);
         cancelAddMediaListThread();
+        removePostOpenInEditorStickyEvent();
         super.onDestroy();
+    }
+
+    private void removePostOpenInEditorStickyEvent() {
+        PostEvents.PostOpenedInEditor stickyEvent = EventBus.getDefault().getStickyEvent(PostEvents.PostOpenedInEditor.class);
+        if(stickyEvent != null) {
+            // "Consume" the sticky event
+            EventBus.getDefault().removeStickyEvent(stickyEvent);
+        }
     }
 
     @Override
@@ -1144,6 +1192,7 @@ public class EditPostActivity extends AppCompatActivity implements
         @Override
         protected void onPostExecute(Void saved) {
             saveResult(true, false);
+            removePostOpenInEditorStickyEvent();
             finish();
         }
     }
@@ -1178,6 +1227,7 @@ public class EditPostActivity extends AppCompatActivity implements
         @Override
         protected void onPostExecute(Boolean saved) {
             saveResult(saved, true);
+            removePostOpenInEditorStickyEvent();
             finish();
         }
     }
@@ -1347,6 +1397,7 @@ public class EditPostActivity extends AppCompatActivity implements
                     if (!isPublishable && isNewPost()) {
                         mDispatcher.dispatch(PostActionBuilder.newRemovePostAction(mPost));
                     }
+                    removePostOpenInEditorStickyEvent();
                     finish();
                 }
             }
@@ -2547,6 +2598,7 @@ public class EditPostActivity extends AppCompatActivity implements
     public void onMediaDeleted(String localMediaId) {
         if (!TextUtils.isEmpty(localMediaId)) {
             mAztecBackspaceDeletedMediaItemIds.add(localMediaId);
+            UploadService.setDeletedMediaItemIds(mAztecBackspaceDeletedMediaItemIds);
             // passing false here as we need to keep the media item in case the user wants to undo
             cancelMediaUpload(StringUtils.stringToInt(localMediaId), false);
         }
@@ -2611,6 +2663,8 @@ public class EditPostActivity extends AppCompatActivity implements
             if (!found) {
                 if (mEditorFragment instanceof AztecEditorFragment) {
                     mAztecBackspaceDeletedMediaItemIds.remove(mediaId);
+                    // update the mediaIds list in UploadService
+                    UploadService.setDeletedMediaItemIds(mAztecBackspaceDeletedMediaItemIds);
                     ((AztecEditorFragment)mEditorFragment).setMediaToFailed(mediaId);
                 }
             }
