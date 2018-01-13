@@ -296,11 +296,9 @@ public class PluginDetailActivity extends AppCompatActivity {
             }
         });
 
-        // expand "what's new" if there's an update, otherwise expand the description
+        // expand "what's new" if there's an update available
         if (PluginUtils.isUpdateAvailable(mSitePlugin, mWPOrgPlugin)) {
             toggleText(mWhatsNewTextView, mWhatsNewChevron);
-        } else {
-            toggleText(mDescriptionTextView, mDescriptionChevron);
         }
 
         mFaqTextView = findViewById(R.id.plugin_faq_text);
