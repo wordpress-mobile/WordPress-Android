@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:paddingLeft="@dimen/margin_extra_large"
+    android:paddingStart="@dimen/margin_extra_large"
+    android:paddingRight="@dimen/margin_extra_large"
+    android:paddingEnd="@dimen/margin_extra_large"
+    android:layout_marginBottom="@dimen/margin_extra_large">
+
+    <TextView
+        style="@style/LoginTheme.TextLabel"
+        android:id="@+id/label"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/margin_extra_large"
+        android:layout_marginBottom="@dimen/margin_extra_large"
+        android:text="@string/enter_verification_code" />
+
+    <org.wordpress.android.login.widgets.WPLoginInputRow
+        android:id="@+id/login_2fa_row"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="@string/verification_code"
+        android:inputType="numberDecimal"/>
+</LinearLayout>
