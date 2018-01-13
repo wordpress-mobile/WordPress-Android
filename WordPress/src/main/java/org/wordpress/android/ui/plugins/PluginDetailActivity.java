@@ -471,7 +471,7 @@ public class PluginDetailActivity extends AppCompatActivity {
         setRatingsBar(R.id.progress1, mWPOrgPlugin.getNumberOfRatingsOfOne(), numRatingsTotal);
 
         int rating = StringUtils.stringToInt(mWPOrgPlugin.getRating(), 1);
-        int averageRating = rating / 20;
+        int averageRating = Math.round(rating / 20f);
         setRatingsStar(R.id.image_star5, 5, averageRating);
         setRatingsStar(R.id.image_star4, 4, averageRating);
         setRatingsStar(R.id.image_star3, 3, averageRating);
