@@ -144,6 +144,7 @@ public class ActivityLauncher {
             Intent intent = new Intent(context, ThemeBrowserActivity.class);
             intent.putExtra(WordPress.SITE, site);
             context.startActivity(intent);
+            AnalyticsUtils.trackWithSiteDetails(AnalyticsTracker.Stat.THEMES_ACCESSED_THEMES_BROWSER, site);
         }
     }
 
