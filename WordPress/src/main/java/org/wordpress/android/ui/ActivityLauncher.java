@@ -34,6 +34,7 @@ import org.wordpress.android.ui.people.PeopleManagementActivity;
 import org.wordpress.android.ui.photopicker.PhotoPickerActivity;
 import org.wordpress.android.ui.photopicker.PhotoPickerFragment;
 import org.wordpress.android.ui.plans.PlansActivity;
+import org.wordpress.android.ui.plugins.PluginBrowserActivity;
 import org.wordpress.android.ui.plugins.PluginDetailActivity;
 import org.wordpress.android.ui.plugins.PluginListActivity;
 import org.wordpress.android.ui.plugins.PluginUtils;
@@ -159,6 +160,15 @@ public class ActivityLauncher {
         if (PluginUtils.isPluginFeatureAvailable(site)) {
             AnalyticsUtils.trackWithSiteDetails(AnalyticsTracker.Stat.OPENED_PLUGINS, site);
             Intent intent = new Intent(context, PluginListActivity.class);
+            intent.putExtra(WordPress.SITE, site);
+            context.startActivity(intent);
+        }
+    }
+
+    public static void viewPluginBrowser(Context context, SiteModel site) {
+        if (PluginUtils.isPluginFeatureAvailable(site)) {
+            // TODO: AnalyticsUtils.trackWithSiteDetails(AnalyticsTracker.Stat.OPENED_PLUGIN_BROWSER, site);
+            Intent intent = new Intent(context, PluginBrowserActivity.class);
             intent.putExtra(WordPress.SITE, site);
             context.startActivity(intent);
         }

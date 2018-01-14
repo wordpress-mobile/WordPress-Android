@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="?android:attr/selectableItemBackground"
+    android:orientation="vertical"
+    android:paddingBottom="@dimen/margin_extra_large"
+    android:paddingEnd="@dimen/margin_extra_large"
+    android:paddingLeft="@dimen/margin_extra_large"
+    android:paddingRight="@dimen/margin_extra_large"
+    android:paddingStart="@dimen/margin_extra_large"
+    android:paddingTop="@dimen/margin_extra_large">
+
+    <org.wordpress.android.widgets.WPNetworkImageView
+        android:id="@+id/plugin_icon"
+        android:layout_width="128dp"
+        android:layout_height="128dp"
+        android:layout_gravity="center_horizontal"
+        android:contentDescription="@string/plugin_icon_content_description"
+        tools:src="@drawable/plugin_placeholder" />
+
+    <TextView
+        android:id="@+id/plugin_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="@dimen/margin_large"
+        android:textColor="@color/grey_dark"
+        android:textSize="@dimen/text_sz_large"
+        android:textStyle="bold"
+        tools:text="plugin_name" />
+
+    <TextView
+        android:id="@+id/plugin_author"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:textColor="@color/grey_darken_10"
+        android:textSize="@dimen/text_sz_medium"
+        tools:text="plugin_author" />
+
+    <TextView
+        android:id="@+id/plugin_update"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="@dimen/margin_large"
+        android:drawableLeft="@drawable/plugin_update_available_icon"
+        android:drawablePadding="@dimen/margin_small"
+        android:gravity="center_vertical"
+        android:text="@string/plugin_needs_update"
+        android:textColor="@color/alert_yellow"
+        android:textSize="@dimen/text_sz_medium"
+        android:visibility="gone"
+        tools:visibility="visible" />
+
+    <RatingBar
+        android:id="@+id/rating_bar"
+        style="?android:attr/ratingBarStyleSmall"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="@dimen/margin_large"
+        android:numStars="5"
+        tools:rating="3" />
+
+</LinearLayout>

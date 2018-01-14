@@ -266,7 +266,7 @@ public class MySiteFragment extends Fragment
         mPluginsContainer.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View view) {
-                ActivityLauncher.viewCurrentBlogPlugins(getActivity(), getSelectedSite());
+                ActivityLauncher.viewPluginBrowser(getActivity(), getSelectedSite());
             }
         });
 
