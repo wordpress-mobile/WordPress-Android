@@ -109,7 +109,7 @@ public class PluginBrowserActivity extends AppCompatActivity {
         int maxRows = isLandscape ? 6 : 4;
         mRowWidth = Math.round(displayWidth / (maxRows - 0.4f));
         mIconSize = mRowWidth - (margin * 2);
-        mRowHeight = isLandscape ? displayHeight / 2 : displayHeight / 3;
+        mRowHeight = Math.round(displayHeight / 3.2f); // TODO: landscape
 
         mInstalledPluginsRecycler.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false));
         mInstalledPluginsRecycler.setHasFixedSize(true);
@@ -265,7 +265,7 @@ public class PluginBrowserActivity extends AppCompatActivity {
                 author = sitePlugin.getAuthorName();
             } else {
                 wpOrgPlugin = (WPOrgPluginModel) item;
-                sitePlugin = getSitePluginFromSlug(wpOrgPlugin.getSlug());
+                sitePlugin = null; // TODO: change to getSitePluginFromSlug(wpOrgPlugin.getSlug());
                 name = wpOrgPlugin.getName();
                 author = wpOrgPlugin.getAuthorAsHtml();
             }

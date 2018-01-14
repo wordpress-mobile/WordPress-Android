@@ -28,7 +28,7 @@
         android:ellipsize="end"
         android:maxLines="2"
         android:textColor="@color/grey_dark"
-        android:textSize="@dimen/text_sz_large"
+        android:textSize="@dimen/text_sz_medium"
         android:textStyle="bold"
         tools:text="plugin_name" />
 
@@ -40,7 +40,7 @@
         android:ellipsize="end"
         android:maxLines="2"
         android:textColor="@color/grey_darken_10"
-        android:textSize="@dimen/text_sz_medium"
+        android:textSize="@dimen/text_sz_small"
         tools:text="plugin_author" />
 
     <LinearLayout
