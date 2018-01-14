@@ -765,7 +765,7 @@ public class PluginDetailActivity extends AppCompatActivity {
         }
         if (!TextUtils.isEmpty(mSitePlugin.getSlug()) && mSitePlugin.getSlug().equals(event.pluginSlug)) {
             mWPOrgPlugin = mPluginStore.getWPOrgPluginBySlug(event.pluginSlug);
-            refreshPluginVersionViews();
+            refreshViews();
         }
     }
 
