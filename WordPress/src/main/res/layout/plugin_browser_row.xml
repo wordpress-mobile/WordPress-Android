@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
+    android:layout_height="match_parent"
     android:background="?android:attr/selectableItemBackground"
     android:paddingBottom="@dimen/margin_extra_large"
     android:paddingEnd="@dimen/margin_extra_large"
@@ -48,20 +48,21 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
-        android:layout_marginTop="@dimen/margin_large"
+        android:layout_below="@+id/plugin_author"
         android:orientation="horizontal">
 
         <ImageView
             android:id="@+id/plugin_status_icon"
             android:layout_width="12dp"
             android:layout_height="12dp"
-            android:layout_gravity="center_vertical"
+            android:layout_gravity="bottom"
             tools:src="@drawable/plugin_update_available_icon" />
 
         <TextView
             android:id="@+id/plugin_status_text"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_gravity="bottom"
             android:layout_marginLeft="@dimen/margin_small"
             android:gravity="center_vertical"
             android:textColor="@color/alert_yellow"
@@ -75,6 +76,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
+        android:layout_below="@+id/plugin_author"
         android:layout_marginTop="@dimen/margin_large"
         android:numStars="5"
         tools:rating="3" />

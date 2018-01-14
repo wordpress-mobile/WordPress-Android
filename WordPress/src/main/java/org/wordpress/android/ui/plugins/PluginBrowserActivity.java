@@ -53,6 +53,7 @@ public class PluginBrowserActivity extends AppCompatActivity {
     private PluginDirectoryAdapter mInstalledPluginsAdapter;
 
     private int mRowWidth;
+    private int mRowHeight;
     private int mIconSize;
 
     @Inject PluginStore mPluginStore;
@@ -89,11 +90,14 @@ public class PluginBrowserActivity extends AppCompatActivity {
             return;
         }
 
+        boolean isLandscape = DisplayUtils.isLandscape(this);
         int margin = getResources().getDimensionPixelSize(R.dimen.margin_extra_large);
         int displayWidth = DisplayUtils.getDisplayPixelWidth(this);
-        int maxRows = DisplayUtils.isLandscape(this) ? 6 : 4;
+        int displayHeight = DisplayUtils.getDisplayPixelHeight(this);
+        int maxRows = isLandscape ? 5 : 3;
         mRowWidth = Math.round(displayWidth / (maxRows - 0.4f));
         mIconSize = mRowWidth - (margin * 2);
+        mRowHeight = isLandscape ? displayHeight / 2 : displayHeight / 3;
 
         mInstalledPluginsRecycler.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false));
         mInstalledPluginsRecycler.setHasFixedSize(true);
@@ -294,6 +298,8 @@ public class PluginBrowserActivity extends AppCompatActivity {
                 statusIcon = statusContainer.findViewById(R.id.plugin_status_icon);
 
                 view.getLayoutParams().width = mRowWidth;
+                view.getLayoutParams().height = mRowHeight;
+
                 icon.getLayoutParams().width = mIconSize;
                 icon.getLayoutParams().height = mIconSize;
 
