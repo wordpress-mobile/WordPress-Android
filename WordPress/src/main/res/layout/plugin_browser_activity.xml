@@ -50,7 +50,8 @@
                         android:text="@string/plugin_manage"
                         android:textAllCaps="true"
                         android:textColor="@color/blue_medium"
-                        android:textSize="@dimen/text_sz_large" />
+                        android:textSize="@dimen/text_sz_medium"
+                        android:textStyle="bold" />
 
                     <android.support.v7.widget.RecyclerView
                         android:id="@+id/installed_plugins_recycler"

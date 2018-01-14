@@ -38,7 +38,7 @@
         android:layout_height="wrap_content"
         android:layout_below="@+id/plugin_name"
         android:ellipsize="end"
-        android:maxLines="1"
+        android:maxLines="2"
         android:textColor="@color/grey_darken_10"
         android:textSize="@dimen/text_sz_medium"
         tools:text="plugin_author" />

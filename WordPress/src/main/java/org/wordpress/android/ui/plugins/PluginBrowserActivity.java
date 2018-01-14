@@ -102,9 +102,9 @@ public class PluginBrowserActivity extends AppCompatActivity {
         int margin = getResources().getDimensionPixelSize(R.dimen.margin_extra_large);
         int displayWidth = DisplayUtils.getDisplayPixelWidth(this);
         int displayHeight = DisplayUtils.getDisplayPixelHeight(this);
-        int maxRows = isLandscape ? 5 : 3;
+        int maxRows = isLandscape ? 6 : 4;
         mRowWidth = Math.round(displayWidth / (maxRows - 0.4f));
-        mIconSize = mRowWidth - (margin * 4);
+        mIconSize = mRowWidth - (margin * 2);
         mRowHeight = isLandscape ? displayHeight / 2 : displayHeight / 3;
 
         mInstalledPluginsRecycler.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false));
@@ -316,11 +316,11 @@ public class PluginBrowserActivity extends AppCompatActivity {
                     public void onClick(View v) {
                         int position = getAdapterPosition();
                         WPOrgPluginModel wpOrgPlugin = getItem(position);
-                        if (wpOrgPlugin != null) {
-                            SitePluginModel sitePlugin = getSitePluginFromSlug(wpOrgPlugin.getSlug());
-                            if (sitePlugin != null) {
-                                ActivityLauncher.viewPluginDetail(PluginBrowserActivity.this, mSite, sitePlugin);
-                            }
+                        SitePluginModel sitePlugin = wpOrgPlugin != null ? getSitePluginFromSlug(wpOrgPlugin.getSlug()) : null;
+                        if (sitePlugin != null) {
+                            ActivityLauncher.viewPluginDetail(PluginBrowserActivity.this, mSite, sitePlugin);
+                        } else {
+                            // TODO: show detail for WPOrgPlugin - wait for detail redesign to be merged
                         }
                     }
                 });
