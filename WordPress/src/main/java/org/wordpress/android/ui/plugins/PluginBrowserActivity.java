@@ -2,8 +2,11 @@ package org.wordpress.android.ui.plugins;
 
 import android.content.Context;
 import android.os.Bundle;
+import android.support.annotation.ColorRes;
+import android.support.annotation.DrawableRes;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.annotation.StringRes;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
@@ -15,6 +18,7 @@ import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.RatingBar;
 import android.widget.TextView;
 
@@ -29,6 +33,9 @@ import org.wordpress.android.fluxc.model.SitePluginModel;
 import org.wordpress.android.fluxc.model.WPOrgPluginModel;
 import org.wordpress.android.fluxc.store.PluginStore;
 import org.wordpress.android.util.AppLog;
+import org.wordpress.android.util.DisplayUtils;
+import org.wordpress.android.util.HtmlUtils;
+import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.widgets.WPNetworkImageView;
 import org.wordpress.android.widgets.WPNetworkImageView.ImageType;
@@ -45,6 +52,9 @@ public class PluginBrowserActivity extends AppCompatActivity {
     private RecyclerView mInstalledPluginsRecycler;
     private PluginDirectoryAdapter mInstalledPluginsAdapter;
 
+    private int mRowWidth;
+    private int mIconSize;
+
     @Inject PluginStore mPluginStore;
     @Inject Dispatcher mDispatcher;
 
@@ -56,6 +66,8 @@ public class PluginBrowserActivity extends AppCompatActivity {
         setContentView(R.layout.plugin_browser_activity);
         mDispatcher.register(this);
 
+        mInstalledPluginsRecycler = findViewById(R.id.installed_plugins_recycler);
+
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         ActionBar actionBar = getSupportActionBar();
@@ -64,10 +76,6 @@ public class PluginBrowserActivity extends AppCompatActivity {
             actionBar.setDisplayHomeAsUpEnabled(true);
             actionBar.setElevation(0);
         }
-
-        mInstalledPluginsRecycler = findViewById(R.id.installed_plugins_recycler);
-        mInstalledPluginsRecycler.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false));
-        mInstalledPluginsRecycler.setHasFixedSize(true);
 
         if (savedInstanceState == null) {
             mSite = (SiteModel) getIntent().getSerializableExtra(WordPress.SITE);
@@ -80,6 +88,15 @@ public class PluginBrowserActivity extends AppCompatActivity {
             finish();
             return;
         }
+
+        int margin = getResources().getDimensionPixelSize(R.dimen.margin_extra_large);
+        int displayWidth = DisplayUtils.getDisplayPixelWidth(this);
+        int maxRows = DisplayUtils.isLandscape(this) ? 6 : 4;
+        mRowWidth = Math.round(displayWidth / (maxRows - 0.4f));
+        mIconSize = mRowWidth - (margin * 2);
+
+        mInstalledPluginsRecycler.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false));
+        mInstalledPluginsRecycler.setHasFixedSize(true);
 
         mSitePlugins = mPluginStore.getSitePlugins(mSite);
         loadInstalledPlugins();
@@ -160,6 +177,12 @@ public class PluginBrowserActivity extends AppCompatActivity {
         public void setPlugins(List<WPOrgPluginModel> plugins) {
             mWpOrgPlugins.clear();
             mWpOrgPlugins.addAll(plugins);
+
+            // strip HTML here so we don't have to do it in every call to onBindViewHolder
+            for (WPOrgPluginModel plugin: mWpOrgPlugins) {
+                plugin.setAuthorAsHtml(HtmlUtils.fastStripHtml(plugin.getAuthorAsHtml()));
+            }
+
             notifyDataSetChanged();
         }
 
@@ -177,7 +200,11 @@ public class PluginBrowserActivity extends AppCompatActivity {
 
         @Override
         public long getItemId(int position) {
-            return getItem(position).getId();
+            WPOrgPluginModel wpOrgPlugin = getItem(position);
+            if (wpOrgPlugin != null) {
+                return wpOrgPlugin.getId();
+            }
+            return -1;
         }
 
         @Override
@@ -187,16 +214,47 @@ public class PluginBrowserActivity extends AppCompatActivity {
         }
 
         @Override
-        public void onBindViewHolder(ViewHolder holder, int position) {
-            PluginViewHolder pluginHolder = (PluginViewHolder) holder;
+        public void onBindViewHolder(ViewHolder viewHolder, int position) {
+            PluginViewHolder holder = (PluginViewHolder) viewHolder;
             WPOrgPluginModel wpOrgPlugin = getItem(position);
+            if (wpOrgPlugin == null) return;
+
             SitePluginModel sitePlugin = getSitePluginFromSlug(wpOrgPlugin.getSlug());
             boolean isUpdatable = sitePlugin != null && PluginUtils.isUpdateAvailable(sitePlugin, wpOrgPlugin);
 
-            pluginHolder.name.setText(wpOrgPlugin.getName());
-            pluginHolder.ratingBar.setVisibility(isUpdatable ? View.GONE : View.VISIBLE);
-            pluginHolder.update.setVisibility(isUpdatable ? View.VISIBLE : View.GONE);
-            pluginHolder.icon.setImageUrl(wpOrgPlugin.getIcon(), ImageType.PLUGIN_ICON);
+            holder.nameText.setText(wpOrgPlugin.getName());
+            holder.authorText.setText(wpOrgPlugin.getAuthorAsHtml());
+            holder.icon.setImageUrl(wpOrgPlugin.getIcon(), ImageType.PLUGIN_ICON);
+
+            if (sitePlugin != null) {
+                @StringRes int textResId;
+                @ColorRes int colorResId;
+                @DrawableRes int drawableResId;
+                if (PluginUtils.isUpdateAvailable(sitePlugin, wpOrgPlugin)) {
+                    textResId = R.string.plugin_needs_update;
+                    colorResId = R.color.alert_yellow;
+                    drawableResId = R.drawable.plugin_update_available_icon;
+                } else if (sitePlugin.isActive()) {
+                    textResId = R.string.plugin_active;
+                    colorResId = R.color.alert_green;
+                    drawableResId = R.drawable.ic_checkmark_green_24dp;
+                } else {
+                    textResId = R.string.plugin_inactive;
+                    colorResId = R.color.grey;
+                    drawableResId = R.drawable.ic_cross_grey_600_24dp;
+                }
+                holder.statusText.setText(textResId);
+                holder.statusText.setTextColor(getResources().getColor(colorResId));
+                holder.statusIcon.setImageResource(drawableResId);
+                holder.statusContainer.setVisibility(View.VISIBLE);
+                holder.ratingBar.setVisibility(View.GONE);
+            } else {
+                holder.statusContainer.setVisibility(View.GONE);
+                holder.ratingBar.setVisibility(View.VISIBLE);
+                int rating = StringUtils.stringToInt(wpOrgPlugin.getRating(), 1);
+                int averageRating = Math.round(rating / 20f);
+                holder.ratingBar.setRating(averageRating);
+            }
         }
 
         private void refreshPluginWithSlug(@NonNull String slug) {
@@ -216,19 +274,29 @@ public class PluginBrowserActivity extends AppCompatActivity {
         }
 
         private class PluginViewHolder extends ViewHolder {
-            final TextView name;
-            final TextView author;
-            final TextView update;
+            final TextView nameText;
+            final TextView authorText;
+            final ViewGroup statusContainer;
+            final TextView statusText;
+            final ImageView statusIcon;
             final WPNetworkImageView icon;
             final RatingBar ratingBar;
 
             PluginViewHolder(View view) {
                 super(view);
-                name = view.findViewById(R.id.plugin_name);
-                author = view.findViewById(R.id.plugin_author);
-                update = view.findViewById(R.id.plugin_update);
+                nameText = view.findViewById(R.id.plugin_name);
+                authorText = view.findViewById(R.id.plugin_author);
                 icon = view.findViewById(R.id.plugin_icon);
                 ratingBar = view.findViewById(R.id.rating_bar);
+
+                statusContainer = view.findViewById(R.id.plugin_status_container);
+                statusText = statusContainer.findViewById(R.id.plugin_status_text);
+                statusIcon = statusContainer.findViewById(R.id.plugin_status_icon);
+
+                view.getLayoutParams().width = mRowWidth;
+                icon.getLayoutParams().width = mIconSize;
+                icon.getLayoutParams().height = mIconSize;
+
                 view.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
