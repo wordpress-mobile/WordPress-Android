@@ -315,9 +315,12 @@ public class PluginBrowserActivity extends AppCompatActivity {
                     @Override
                     public void onClick(View v) {
                         int position = getAdapterPosition();
-                        WPOrgPluginModel plugin = getItem(position);
-                        if (plugin != null) {
-                            // TODO: ActivityLauncher.viewPluginDetail(PluginDirectoryActivity.this, mSite, plugin);
+                        WPOrgPluginModel wpOrgPlugin = getItem(position);
+                        if (wpOrgPlugin != null) {
+                            SitePluginModel sitePlugin = getSitePluginFromSlug(wpOrgPlugin.getSlug());
+                            if (sitePlugin != null) {
+                                ActivityLauncher.viewPluginDetail(PluginBrowserActivity.this, mSite, sitePlugin);
+                            }
                         }
                     }
                 });
