@@ -24,14 +24,14 @@ import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.fluxc.Dispatcher;
 import org.wordpress.android.fluxc.generated.PluginActionBuilder;
-import org.wordpress.android.fluxc.model.PluginInfoModel;
-import org.wordpress.android.fluxc.model.PluginModel;
 import org.wordpress.android.fluxc.model.SiteModel;
+import org.wordpress.android.fluxc.model.SitePluginModel;
+import org.wordpress.android.fluxc.model.WPOrgPluginModel;
 import org.wordpress.android.fluxc.store.PluginStore;
-import org.wordpress.android.fluxc.store.PluginStore.OnPluginInfoChanged;
 import org.wordpress.android.fluxc.store.PluginStore.OnSitePluginConfigured;
 import org.wordpress.android.fluxc.store.PluginStore.OnSitePluginDeleted;
 import org.wordpress.android.fluxc.store.PluginStore.OnSitePluginsFetched;
+import org.wordpress.android.fluxc.store.PluginStore.OnWPOrgPluginFetched;
 import org.wordpress.android.ui.ActivityLauncher;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
@@ -175,16 +175,16 @@ public class PluginListActivity extends AppCompatActivity {
 
     @SuppressWarnings("unused")
     @Subscribe(threadMode = ThreadMode.MAIN)
-    public void onPluginInfoChanged(OnPluginInfoChanged event) {
+    public void onWPOrgPluginFetched(OnWPOrgPluginFetched event) {
         if (isFinishing()) {
             return;
         }
         if (event.isError()) {
-            AppLog.e(T.API, "An error occurred while fetching the plugin info with type: " + event.error.type);
+            AppLog.e(T.API, "An error occurred while fetching the wporg plugin with type: " + event.error.type);
             return;
         }
-        if (event.pluginInfo != null && !TextUtils.isEmpty(event.pluginInfo.getSlug())) {
-            mAdapter.refreshPluginWithSlug(event.pluginInfo.getSlug());
+        if (!TextUtils.isEmpty(event.pluginSlug)) {
+            mAdapter.refreshPluginWithSlug(event.pluginSlug);
         }
     }
 
@@ -209,7 +209,7 @@ public class PluginListActivity extends AppCompatActivity {
     }
 
     private class PluginListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> implements View.OnClickListener {
-        private List<PluginModel> mPlugins;
+        private List<SitePluginModel> mPlugins;
 
         private final LayoutInflater mLayoutInflater;
 
@@ -217,12 +217,12 @@ public class PluginListActivity extends AppCompatActivity {
             mLayoutInflater = LayoutInflater.from(context);
         }
 
-        public void setPlugins(List<PluginModel> plugins) {
+        public void setPlugins(List<SitePluginModel> plugins) {
             mPlugins = plugins;
             notifyDataSetChanged();
         }
 
-        private PluginModel getItem(int position) {
+        private SitePluginModel getItem(int position) {
             if (mPlugins != null && position < mPlugins.size()) {
                 return mPlugins.get(position);
             }
@@ -243,19 +243,19 @@ public class PluginListActivity extends AppCompatActivity {
 
         @Override
         public void onBindViewHolder(ViewHolder holder, int position) {
-            PluginModel pluginModel = getItem(position);
-            if (pluginModel != null) {
+            SitePluginModel sitePlugin = getItem(position);
+            if (sitePlugin != null) {
                 PluginViewHolder pluginHolder = (PluginViewHolder) holder;
-                pluginHolder.name.setText(pluginModel.getDisplayName());
-                pluginHolder.status.setText(getPluginStatusText(pluginModel));
-                PluginInfoModel pluginInfo = PluginUtils.getPluginInfo(mPluginStore, pluginModel);
-                if (pluginInfo == null) {
-                    mDispatcher.dispatch(PluginActionBuilder.newFetchPluginInfoAction(pluginModel.getSlug()));
+                pluginHolder.name.setText(sitePlugin.getDisplayName());
+                pluginHolder.status.setText(getPluginStatusText(sitePlugin));
+                WPOrgPluginModel wpOrgPlugin = PluginUtils.getWPOrgPlugin(mPluginStore, sitePlugin);
+                if (wpOrgPlugin == null) {
+                    mDispatcher.dispatch(PluginActionBuilder.newFetchWporgPluginAction(sitePlugin.getSlug()));
                 }
-                String iconUrl = pluginInfo != null ? pluginInfo.getIcon() : "";
+                String iconUrl = wpOrgPlugin != null ? wpOrgPlugin.getIcon() : "";
                 pluginHolder.icon.setImageUrl(iconUrl, ImageType.PLUGIN_ICON);
 
-                if (pluginInfo != null && PluginUtils.isUpdateAvailable(pluginModel, pluginInfo)) {
+                if (wpOrgPlugin != null && PluginUtils.isUpdateAvailable(sitePlugin, wpOrgPlugin)) {
                     pluginHolder.updateAvailableIcon.setVisibility(View.VISIBLE);
                 } else {
                     pluginHolder.updateAvailableIcon.setVisibility(View.GONE);
@@ -282,7 +282,7 @@ public class PluginListActivity extends AppCompatActivity {
         @Override
         public void onClick(View view) {
             int itemPosition = mRecyclerView.getChildLayoutPosition(view);
-            PluginModel plugin = getItem(itemPosition);
+            SitePluginModel plugin = getItem(itemPosition);
             ActivityLauncher.viewPluginDetail(PluginListActivity.this, mSite, plugin);
         }
 
@@ -302,7 +302,7 @@ public class PluginListActivity extends AppCompatActivity {
         }
     }
 
-    private String getPluginStatusText(@NonNull PluginModel plugin) {
+    private String getPluginStatusText(@NonNull SitePluginModel plugin) {
         String activeStatus = plugin.isActive() ? getString(R.string.plugin_active)
                 : getString(R.string.plugin_inactive);
         String autoUpdateStatus = plugin.isAutoUpdateEnabled() ? getString(R.string.plugin_autoupdates_on)

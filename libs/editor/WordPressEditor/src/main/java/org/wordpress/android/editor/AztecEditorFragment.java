@@ -1862,7 +1862,7 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
     public static String replaceMediaFileWithUrl(Context context, @NonNull String postContent,
                                                  String localMediaId, MediaFile mediaFile) {
         if (mediaFile != null) {
-            String remoteUrl = Utils.escapeQuotes(mediaFile.getFileURL());
+            String remoteUrl = StringUtils.notNullStr(Utils.escapeQuotes(mediaFile.getFileURL()));
             // fill in Aztec with the post's content
             AztecParser parser = getAztecParserWithPlugins();
             SpannableStringBuilder builder = getCalypsoCompatibleStringBuilder(context, postContent, parser);
@@ -1927,6 +1927,19 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
             }
         }
         return postContent;
+    }
+
+    public static boolean isMediaInPostBody(Context context, @NonNull String postContent,
+                                         String localMediaId) {
+        // fill in Aztec with the post's content
+        AztecParser parser = getAztecParserWithPlugins();
+        SpannableStringBuilder builder = getCalypsoCompatibleStringBuilder(context, postContent, parser);
+
+        MediaPredicate predicate = MediaPredicate.getLocalMediaIdPredicate(localMediaId);
+
+        Attributes firstElementAttributes = getFirstElementAttributes(builder, predicate);
+        // is this media item not there anymore within the Post's content?
+        return (firstElementAttributes != null);
     }
 
     public static boolean hasMediaItemsMarkedUploading(Context context, @NonNull String postContent) {
