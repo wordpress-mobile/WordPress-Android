@@ -64,6 +64,9 @@
     <string name="login_error_generic">There was some trouble connecting with the Google account.</string>
     <string name="login_error_generic_start">Google login could not be started.</string>
     <string name="login_error_suffix">\nMaybe try a different account?</string>
+
+    <string name="google_error_timeout">Google took too long to respond. You may need to wait until you have a stronger internet connection.</string>
+
     <string name="username_or_password_incorrect">The username or password you entered is incorrect</string>
     <string name="cannot_add_duplicate_site">This site already exists in the app, you can\'t add it.</string>
     <string name="duplicate_site_detected">A duplicate site has been detected.</string>

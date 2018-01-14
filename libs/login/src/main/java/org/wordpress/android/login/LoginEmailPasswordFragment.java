@@ -253,7 +253,7 @@ public class LoginEmailPasswordFragment extends LoginBaseFormFragment<LoginListe
         mLoginListener.startPostLoginServices();
 
         if (mIsSocialLogin) {
-            mLoginListener.loggedInViaSocialAccount(mOldSitesIDs);
+            mLoginListener.loggedInViaSocialAccount(mOldSitesIDs, false);
         } else {
             mLoginListener.loggedInViaPassword(mOldSitesIDs);
         }
@@ -268,9 +268,9 @@ public class LoginEmailPasswordFragment extends LoginBaseFormFragment<LoginListe
     @SuppressWarnings("unused")
     @Subscribe(threadMode = ThreadMode.MAIN, sticky = true)
     public void onLoginStateUpdated(OnLoginStateUpdated event) {
-        AppLog.i(T.NUX, "Received state: " + event.state.name());
+        AppLog.i(T.NUX, "Received state: " + event.getState().name());
 
-        switch (event.state) {
+        switch (event.getState()) {
             case IDLE:
                 // nothing special to do, we'll start the service on next()
                 break;
