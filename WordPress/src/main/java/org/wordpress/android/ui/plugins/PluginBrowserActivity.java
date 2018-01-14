@@ -32,6 +32,7 @@ import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.model.SitePluginModel;
 import org.wordpress.android.fluxc.model.WPOrgPluginModel;
 import org.wordpress.android.fluxc.store.PluginStore;
+import org.wordpress.android.ui.ActivityLauncher;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.DisplayUtils;
 import org.wordpress.android.util.HtmlUtils;
@@ -90,13 +91,20 @@ public class PluginBrowserActivity extends AppCompatActivity {
             return;
         }
 
+        findViewById(R.id.text_manage).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                ActivityLauncher.viewCurrentBlogPlugins(PluginBrowserActivity.this, mSite);
+            }
+        });
+
         boolean isLandscape = DisplayUtils.isLandscape(this);
         int margin = getResources().getDimensionPixelSize(R.dimen.margin_extra_large);
         int displayWidth = DisplayUtils.getDisplayPixelWidth(this);
         int displayHeight = DisplayUtils.getDisplayPixelHeight(this);
         int maxRows = isLandscape ? 5 : 3;
         mRowWidth = Math.round(displayWidth / (maxRows - 0.4f));
-        mIconSize = mRowWidth - (margin * 2);
+        mIconSize = mRowWidth - (margin * 4);
         mRowHeight = isLandscape ? displayHeight / 2 : displayHeight / 3;
 
         mInstalledPluginsRecycler.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false));
