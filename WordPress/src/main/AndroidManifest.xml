@@ -476,6 +476,7 @@
             android:theme="@style/Calypso.NoActionBar"/>
         <activity
             android:name=".ui.plugins.PluginBrowserActivity"
+            android:label="@string/plugins"
             android:theme="@style/Calypso.NoActionBar"/>
 
         <!-- Me activities -->

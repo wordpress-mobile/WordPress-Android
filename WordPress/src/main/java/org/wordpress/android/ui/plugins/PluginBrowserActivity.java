@@ -53,6 +53,9 @@ public class PluginBrowserActivity extends AppCompatActivity {
     private RecyclerView mInstalledPluginsRecycler;
     private PluginDirectoryAdapter mInstalledPluginsAdapter;
 
+    private RecyclerView mNewPluginsRecycler;
+    private PluginDirectoryAdapter mNewPluginsAdapter;
+
     private int mRowWidth;
     private int mRowHeight;
     private int mIconSize;
@@ -69,6 +72,7 @@ public class PluginBrowserActivity extends AppCompatActivity {
         mDispatcher.register(this);
 
         mInstalledPluginsRecycler = findViewById(R.id.installed_plugins_recycler);
+        mNewPluginsRecycler = findViewById(R.id.new_plugins_recycler);
 
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);

@@ -1837,6 +1837,9 @@
     <string name="plugin_fetch_error">Unable to load plugins</string>
     <string name="plugin_manage">Manage</string>
 
+    <string name="plugin_caption_installed" translatable="false">@string/plugin_installed</string>
+    <string name="plugin_caption_new">New</string>
+
     <string name="wordpress_dot_org_plugin_page">WordPress.org Plugin page</string>
     <string name="plugin_home_page">Plugin homepage</string>
     <string name="plugin_settings">Settings</string>
