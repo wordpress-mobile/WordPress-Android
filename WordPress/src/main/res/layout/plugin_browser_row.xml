@@ -2,7 +2,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
+    android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     android:background="?android:attr/selectableItemBackground"
     android:orientation="vertical"
@@ -15,8 +15,8 @@
 
     <org.wordpress.android.widgets.WPNetworkImageView
         android:id="@+id/plugin_icon"
-        android:layout_width="128dp"
-        android:layout_height="128dp"
+        android:layout_width="64dp"
+        android:layout_height="64dp"
         android:layout_gravity="center_horizontal"
         android:contentDescription="@string/plugin_icon_content_description"
         tools:src="@drawable/plugin_placeholder" />
@@ -27,6 +27,8 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
         android:layout_marginTop="@dimen/margin_large"
+        android:ellipsize="end"
+        android:maxLines="2"
         android:textColor="@color/grey_dark"
         android:textSize="@dimen/text_sz_large"
         android:textStyle="bold"
@@ -37,6 +39,8 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
+        android:ellipsize="end"
+        android:maxLines="2"
         android:textColor="@color/grey_darken_10"
         android:textSize="@dimen/text_sz_medium"
         tools:text="plugin_author" />
