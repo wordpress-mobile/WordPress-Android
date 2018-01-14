@@ -116,7 +116,13 @@ public class PluginBrowserActivity extends AppCompatActivity {
         mInstalledPluginsAdapter = new PluginDirectoryAdapter(this);
         mInstalledPluginsRecycler.setAdapter(mInstalledPluginsAdapter);
 
+        mNewPluginsRecycler.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false));
+        mNewPluginsRecycler.setHasFixedSize(true);
+        mNewPluginsAdapter = new PluginDirectoryAdapter(this);
+        mNewPluginsRecycler.setAdapter(mNewPluginsAdapter);
+
         loadInstalledPlugins();
+        loadNewPlugins();
     }
 
     @Override
@@ -143,6 +149,18 @@ public class PluginBrowserActivity extends AppCompatActivity {
     private void loadInstalledPlugins() {
         mSitePlugins = mPluginStore.getSitePlugins(mSite);
         mInstalledPluginsAdapter.setSitePlugins(mSitePlugins);
+    }
+
+    private void loadNewPlugins() {
+        // TODO: this is a dummy list generated from site plugins
+        List<WPOrgPluginModel> wpOrgPlugins = new ArrayList<>();
+        for (SitePluginModel sitePlugin: mSitePlugins) {
+            WPOrgPluginModel wpOrgPlugin = PluginUtils.getWPOrgPlugin(mPluginStore, sitePlugin);
+            if (wpOrgPlugin != null) {
+                wpOrgPlugins.add(wpOrgPlugin);
+            }
+        }
+        mNewPluginsAdapter.setWPOrgPlugins(wpOrgPlugins);
     }
 
     private SitePluginModel getSitePluginFromSlug(@Nullable String slug) {
