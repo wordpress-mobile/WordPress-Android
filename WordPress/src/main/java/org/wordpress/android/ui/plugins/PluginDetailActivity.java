@@ -19,11 +19,11 @@ import android.text.TextUtils;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.CompoundButton;
 import android.widget.CompoundButton.OnCheckedChangeListener;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
-import android.widget.ScrollView;
 import android.widget.SimpleAdapter;
 import android.widget.Switch;
 import android.widget.TextView;
@@ -89,7 +89,7 @@ public class PluginDetailActivity extends AppCompatActivity {
     private SitePluginModel mSitePlugin;
     private WPOrgPluginModel mWPOrgPlugin;
 
-    private ScrollView mContainer;
+    private ViewGroup mContainer;
     private TextView mTitleTextView;
     private TextView mByLineTextView;
     private TextView mVersionTopTextView;
@@ -156,9 +156,6 @@ public class PluginDetailActivity extends AppCompatActivity {
         if (savedInstanceState == null) {
             mIsActive = mSitePlugin.isActive();
             mIsAutoUpdateEnabled = mSitePlugin.isAutoUpdateEnabled();
-
-            // Refresh the plugin information to check if there is a newer version
-            mDispatcher.dispatch(PluginActionBuilder.newFetchWporgPluginAction(mSitePlugin.getSlug()));
         } else {
             mIsConfiguringPlugin = savedInstanceState.getBoolean(KEY_IS_CONFIGURING_PLUGIN);
             mIsUpdatingPlugin = savedInstanceState.getBoolean(KEY_IS_UPDATING_PLUGIN);
@@ -185,14 +182,15 @@ public class PluginDetailActivity extends AppCompatActivity {
 
         setupViews();
 
-        // Show remove plugin confirmation dialog if it's dismissed while activity is re-created
         if (mIsShowingRemovePluginConfirmationDialog) {
+            // Show remove plugin confirmation dialog if it's dismissed while activity is re-created
             confirmRemovePlugin();
-        }
-
-        // Show remove plugin progress dialog if it's dismissed while activity is re-created
-        if (mIsRemovingPlugin) {
+        } else if (mIsRemovingPlugin) {
+            // Show remove plugin progress dialog if it's dismissed while activity is re-created
             showRemovePluginProgressDialog();
+        } else if (savedInstanceState == null) {
+            // Refresh the plugin information to check if there is a newer version
+            mDispatcher.dispatch(PluginActionBuilder.newFetchWporgPluginAction(mSitePlugin.getSlug()));
         }
     }
 
