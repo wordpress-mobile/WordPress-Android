@@ -1,0 +1,77 @@
+buildscript {
+    repositories {
+        jcenter()
+    }
+    dependencies {
+        classpath 'com.android.tools.build:gradle:2.3.3'
+    }
+}
+
+apply plugin: 'com.android.library'
+
+repositories {
+    google()
+    jcenter()
+    maven { url "https://jitpack.io" }
+}
+
+android {
+    publishNonDefault true
+
+    compileSdkVersion 26
+    buildToolsVersion "25.0.3"
+
+    defaultConfig {
+        minSdkVersion 16
+        targetSdkVersion 25
+        versionCode 1
+        versionName "1.0"
+
+        vectorDrawables.useSupportLibrary = true
+    }
+}
+
+dependencies {
+    compile ('org.wordpress:utils:1.19.0') {
+        exclude group: "com.mcxiaoke.volley"
+    }
+
+    compile 'com.android.support:appcompat-v7:26.1.0'
+    compile 'com.android.support:design:26.1.0'
+
+    compile 'com.google.android.gms:play-services-auth:10.0.1'
+
+    compile 'com.github.wordpress-mobile.WordPress-FluxC-Android:fluxc:fd47635fb823d74405c56edc37c6c7a6a59e5fb5'
+
+    compile 'com.github.bumptech.glide:glide:4.1.1'
+    annotationProcessor 'com.github.bumptech.glide:compiler:4.1.1'
+
+    // Dagger
+    compile 'com.google.dagger:dagger:2.11'
+    annotationProcessor 'com.google.dagger:dagger-compiler:2.11'
+    provided 'org.glassfish:javax.annotation:10.0-b28'
+    compile 'com.google.dagger:dagger-android-support:2.11'
+    annotationProcessor 'com.google.dagger:dagger-android-processor:2.11'
+}
+
+// Add properties named "wp.xxx" to our BuildConfig
+android.buildTypes.all { buildType ->
+    Properties gradleProperties = new Properties()
+    File propertiesFile = file("../gradle.properties")
+    if (propertiesFile.exists()) {
+        gradleProperties.load(new FileInputStream(propertiesFile))
+    } else {
+        // Load defaults
+        gradleProperties.load(new FileInputStream(file("../gradle.properties-example")))
+    }
+    gradleProperties.any { property ->
+        if (property.key.toLowerCase().startsWith("wp.")) {
+            buildType.buildConfigField "String", property.key.replace("wp.", "").replace(".", "_").toUpperCase(),
+                    "\"${property.value}\""
+        }
+        if (property.key.toLowerCase().startsWith("wp.res.")) {
+            buildType.resValue "string", property.key.replace("wp.res.", "").replace(".", "_").toLowerCase(),
+                    "${property.value}"
+        }
+    }
+}
