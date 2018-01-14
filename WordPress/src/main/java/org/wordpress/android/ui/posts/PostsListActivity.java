@@ -85,7 +85,7 @@ public class PostsListActivity extends AppCompatActivity {
 
         ActionBar actionBar = getSupportActionBar();
         if (actionBar != null) {
-            actionBar.setTitle(getString(mIsPage ? R.string.pages : R.string.posts));
+            actionBar.setTitle(getString(mIsPage ? R.string.my_site_btn_site_pages : R.string.my_site_btn_blog_posts));
             actionBar.setDisplayShowTitleEnabled(true);
             actionBar.setDisplayHomeAsUpEnabled(true);
         }
