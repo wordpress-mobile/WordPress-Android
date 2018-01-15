@@ -20,6 +20,7 @@ import org.wordpress.android.fluxc.network.discovery.SelfHostedEndpointFinder.Di
 import org.wordpress.android.fluxc.network.rest.wpcom.account.AccountRestClient;
 import org.wordpress.android.fluxc.network.rest.wpcom.account.AccountRestClient.AccountPushSettingsResponsePayload;
 import org.wordpress.android.fluxc.network.rest.wpcom.account.AccountRestClient.AccountPushSocialResponsePayload;
+import org.wordpress.android.fluxc.network.rest.wpcom.account.AccountRestClient.AccountPushUsernameResponsePayload;
 import org.wordpress.android.fluxc.network.rest.wpcom.account.AccountRestClient.AccountRestPayload;
 import org.wordpress.android.fluxc.network.rest.wpcom.account.AccountRestClient.IsAvailable;
 import org.wordpress.android.fluxc.network.rest.wpcom.account.AccountRestClient.IsAvailableResponsePayload;
@@ -65,6 +66,16 @@ public class AccountStore extends Store {
         }
     }
 
+    public static class AuthEmailPayload extends Payload<BaseNetworkError> {
+        public String emailOrUsername;
+        public boolean isSignup;
+
+        public AuthEmailPayload(String emailOrUsername, boolean isSignup) {
+            this.emailOrUsername = emailOrUsername;
+            this.isSignup = isSignup;
+        }
+    }
+
     public static class PushAccountSettingsPayload extends Payload<BaseNetworkError> {
         public Map<String, Object> params;
         public PushAccountSettingsPayload() {
@@ -103,6 +114,15 @@ public class AccountStore extends Store {
         }
     }
 
+    public static class PushUsernamePayload extends Payload<BaseNetworkError> {
+        public AccountUsernameActionType actionType;
+        public String username;
+        public PushUsernamePayload(@NonNull String username, @NonNull AccountUsernameActionType actionType) {
+            this.username = username;
+            this.actionType = actionType;
+        }
+    }
+
     public static class NewAccountPayload extends Payload<BaseNetworkError> {
         public String username;
         public String password;
@@ -132,6 +152,7 @@ public class AccountStore extends Store {
     }
 
     public static class OnAuthenticationChanged extends OnChanged<AuthenticationError> {
+        public String userName;
         public boolean createdAccount;
     }
 
@@ -161,6 +182,11 @@ public class AccountStore extends Store {
         }
     }
 
+    public static class OnUsernameChanged extends OnChanged<AccountUsernameError> {
+        public AccountUsernameActionType type;
+        public String username;
+    }
+
     public static class OnDiscoveryResponse extends OnChanged<DiscoveryError> {
         public String xmlRpcEndpoint;
         public String wpRestEndpoint;
@@ -184,7 +210,13 @@ public class AccountStore extends Store {
         }
     }
 
-    public static class OnAuthEmailSent extends OnChanged<AuthEmailError> {}
+    public static class OnAuthEmailSent extends OnChanged<AuthEmailError> {
+        public final boolean isSignup;
+
+        public OnAuthEmailSent(boolean isSignup) {
+            this.isSignup = isSignup;
+        }
+    }
 
     public static class AuthenticationError implements OnChangedError {
         public AuthenticationErrorType type;
@@ -320,6 +352,56 @@ public class AccountStore extends Store {
         }
     }
 
+    public enum AccountUsernameActionType {
+        CREATE_NEW_SITE_AND_ADDRESS, // site and address remain unchanged plus empty site created with new username
+        KEEP_OLD_SITE_AND_ADDRESS, // site and address remain unchanged; only username is changed
+        RENAME_SITE_AND_DISCARD_OLD_ADDRESS, // site renamed and old site address discarded
+        RENAME_SITE_AND_KEEP_OLD_ADDRESS; // site renamed and new empty site belonging to user created with old address
+
+        public static String getStringFromType(AccountUsernameActionType type) {
+            switch (type) {
+                case CREATE_NEW_SITE_AND_ADDRESS:
+                    return "new";
+                case KEEP_OLD_SITE_AND_ADDRESS:
+                    return "none";
+                case RENAME_SITE_AND_DISCARD_OLD_ADDRESS:
+                    return "rename_discard";
+                case RENAME_SITE_AND_KEEP_OLD_ADDRESS:
+                    return "rename_keep";
+                default:
+                    return "";
+            }
+        }
+    }
+
+    public static class AccountUsernameError implements OnChangedError {
+        public AccountUsernameErrorType type;
+        public String message;
+
+        public AccountUsernameError(@NonNull String type, @NonNull String message) {
+            this.type = AccountUsernameErrorType.fromString(type);
+            this.message = message;
+        }
+    }
+
+    public enum AccountUsernameErrorType {
+        INVALID_ACTION,
+        INVALID_INPUT,
+        GENERIC_ERROR;
+
+        public static AccountUsernameErrorType fromString(String string) {
+            if (string != null) {
+                for (AccountUsernameErrorType type : AccountUsernameErrorType.values()) {
+                    if (string.equalsIgnoreCase(type.name())) {
+                        return type;
+                    }
+                }
+            }
+
+            return GENERIC_ERROR;
+        }
+    }
+
     public static class AuthEmailError implements OnChangedError {
         public AuthEmailErrorType type;
         public String message;
@@ -336,8 +418,8 @@ public class AccountStore extends Store {
     }
 
     public enum AuthEmailErrorType {
-        INVALID_INPUT,
-        NO_SUCH_USER,
+        INVALID_EMAIL,
+        USER_EXISTS,
         UNSUCCESSFUL,
         GENERIC_ERROR;
 
@@ -457,6 +539,9 @@ public class AccountStore extends Store {
             case PUSH_SOCIAL_SMS:
                 createPushSocialSms((PushSocialSmsPayload) payload);
                 break;
+            case PUSH_USERNAME:
+                createPushUsername((PushUsernamePayload) payload);
+                break;
             case UPDATE_ACCOUNT:
                 updateDefaultAccount((AccountModel) payload, AccountAction.UPDATE_ACCOUNT);
                 break;
@@ -477,6 +562,9 @@ public class AccountStore extends Store {
                 break;
             case PUSHED_SOCIAL:
                 handlePushSocialCompleted((AccountPushSocialResponsePayload) payload);
+                break;
+            case PUSHED_USERNAME:
+                handlePushUsernameCompleted((AccountPushUsernameResponsePayload) payload);
                 break;
             case FETCHED_SETTINGS:
                 handleFetchSettingsCompleted((AccountRestPayload) payload);
@@ -520,7 +608,7 @@ public class AccountStore extends Store {
                 discoveryResult((DiscoveryResultPayload) payload);
                 break;
             case SEND_AUTH_EMAIL:
-                mAuthenticator.sendAuthEmail((String) payload);
+                mAuthenticator.sendAuthEmail((AuthEmailPayload) payload);
                 break;
             case SENT_AUTH_EMAIL:
                 handleSentAuthEmail((AuthEmailResponsePayload) payload);
@@ -624,11 +712,23 @@ public class AccountStore extends Store {
         } else {
             // Social login or signup completed; update token and send boolean flag.
             if (payload.hasUsername()) {
-                updateToken(new UpdateTokenPayload(payload.bearerToken), payload.createdAccount);
+                updateToken(new UpdateTokenPayload(payload.bearerToken), payload.createdAccount, payload.userName);
             } else {
                 updateToken(new UpdateTokenPayload(payload.bearerToken));
             }
         }
+    }
+
+    private void handlePushUsernameCompleted(AccountPushUsernameResponsePayload payload) {
+        if (!payload.isError()) {
+            AccountSqlUtils.updateUsername(getAccount(), payload.username);
+        }
+
+        OnUsernameChanged onUsernameChanged = new OnUsernameChanged();
+        onUsernameChanged.username = payload.username;
+        onUsernameChanged.type = payload.type;
+        onUsernameChanged.error = payload.error;
+        emitChange(onUsernameChanged);
     }
 
     private void handleNewAccountCreated(NewAccountResponsePayload payload) {
@@ -679,6 +779,10 @@ public class AccountStore extends Store {
         mAccountRestClient.pushSocialSms(payload.userId, payload.nonce);
     }
 
+    private void createPushUsername(PushUsernamePayload payload) {
+        mAccountRestClient.pushUsername(payload.username, payload.actionType);
+    }
+
     private void signOut() {
         // Remove Account
         AccountSqlUtils.deleteAccount(mAccount);
@@ -719,11 +823,13 @@ public class AccountStore extends Store {
      *
      * @param updateTokenPayload payload containing token to be updated
      * @param createdAccount     flag to send in event to determine login or signup
+     * @param userName           username of created account
      */
-    private void updateToken(UpdateTokenPayload updateTokenPayload, boolean createdAccount) {
+    private void updateToken(UpdateTokenPayload updateTokenPayload, boolean createdAccount, String userName) {
         mAccessToken.set(updateTokenPayload.token);
         OnAuthenticationChanged event = new OnAuthenticationChanged();
         event.createdAccount = createdAccount;
+        event.userName = userName;
         emitChange(event);
     }
 
@@ -768,11 +874,11 @@ public class AccountStore extends Store {
 
     private void handleSentAuthEmail(final AuthEmailResponsePayload payload) {
         if (payload.isError()) {
-            OnAuthEmailSent event = new OnAuthEmailSent();
+            OnAuthEmailSent event = new OnAuthEmailSent(payload.isSignup);
             event.error = payload.error;
             emitChange(event);
         } else {
-            OnAuthEmailSent event = new OnAuthEmailSent();
+            OnAuthEmailSent event = new OnAuthEmailSent(payload.isSignup);
             emitChange(event);
         }
     }

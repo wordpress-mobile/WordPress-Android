@@ -102,6 +102,25 @@ public class AccountSqlUtilsTest {
         Assert.assertNull(AccountSqlUtils.getAccountByLocalId(testAccount.getId()));
     }
 
+    @Test
+    public void testUpdateUsername() {
+        String firstName = "firstName";
+        String usernameBeforeChange = "usernameBeforeChange";
+        String usernameAfterChange = "usernameAfterChange";
+        AccountModel testAccount = getTestAccount();
+        testAccount.setFirstName(firstName);
+        testAccount.setUserName(usernameBeforeChange);
+        // Insert the account
+        Assert.assertEquals(0, AccountSqlUtils.insertOrUpdateDefaultAccount(testAccount));
+        // Update username
+        Assert.assertEquals(1, AccountSqlUtils.updateUsername(testAccount, usernameAfterChange));
+        AccountModel defaultAccount = AccountSqlUtils.getDefaultAccount();
+        // verify the first name is not changed - any field except for username
+        Assert.assertEquals(firstName, defaultAccount.getFirstName());
+        // verify the username is updated
+        Assert.assertEquals(usernameAfterChange, defaultAccount.getUserName());
+    }
+
     private AccountModel getTestAccount() {
         AccountModel testModel = new AccountModel();
         testModel.setId(1);

@@ -136,6 +136,20 @@ public class TaxonomySqlUtils {
                 .execute();
     }
 
+    public static int removeTerm(TermModel term) {
+        if (term == null) {
+            return 0;
+        }
+
+        return WellSql.delete(TermModel.class)
+                .where().beginGroup()
+                .equals(TermModelTable.TAXONOMY, term.getTaxonomy())
+                .equals(TermModelTable.REMOTE_TERM_ID, term.getRemoteTermId())
+                .equals(TermModelTable.LOCAL_SITE_ID, term.getLocalSiteId())
+                .endGroup().endWhere()
+                .execute();
+    }
+
     public static int deleteAllTerms() {
         return WellSql.delete(TermModel.class).execute();
     }

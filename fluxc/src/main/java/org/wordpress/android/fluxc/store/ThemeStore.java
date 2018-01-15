@@ -33,7 +33,8 @@ public class ThemeStore extends Store {
         public SiteModel site;
         public ThemeModel theme;
 
-        public FetchedCurrentThemePayload(ThemesError error) {
+        public FetchedCurrentThemePayload(@NonNull SiteModel site, @NonNull ThemesError error) {
+            this.site = site;
             this.error = error;
         }
 
@@ -43,47 +44,38 @@ public class ThemeStore extends Store {
         }
     }
 
-    public static class FetchedThemesPayload extends Payload<ThemesError> {
+    public static class FetchedSiteThemesPayload extends Payload<ThemesError> {
         public SiteModel site;
         public List<ThemeModel> themes;
 
-        public FetchedThemesPayload(ThemesError error) {
+        public FetchedSiteThemesPayload(@NonNull SiteModel site, @NonNull ThemesError error) {
+            this.site = site;
             this.error = error;
         }
 
-        public FetchedThemesPayload(@NonNull SiteModel site, @NonNull List<ThemeModel> themes) {
+        public FetchedSiteThemesPayload(@NonNull SiteModel site, @NonNull List<ThemeModel> themes) {
             this.site = site;
             this.themes = themes;
         }
     }
 
-    public static class SearchThemesPayload extends Payload<ThemesError> {
-        public String searchTerm;
-
-        public SearchThemesPayload(@NonNull String searchTerm) {
-            this.searchTerm = searchTerm;
-        }
-    }
-
-    public static class SearchedThemesPayload extends Payload<ThemesError> {
-        public String searchTerm;
+    public static class FetchedWpComThemesPayload extends Payload<ThemesError> {
         public List<ThemeModel> themes;
 
-        public SearchedThemesPayload(@NonNull String searchTerm, List<ThemeModel> themes) {
-            this.searchTerm = searchTerm;
-            this.themes = themes;
+        public FetchedWpComThemesPayload(@NonNull ThemesError error) {
+            this.error = error;
         }
 
-        public SearchedThemesPayload(ThemesError error) {
-            this.error = error;
+        public FetchedWpComThemesPayload(@NonNull List<ThemeModel> themes) {
+            this.themes = themes;
         }
     }
 
-    public static class ActivateThemePayload extends Payload<ThemesError> {
+    public static class SiteThemePayload extends Payload<ThemesError> {
         public SiteModel site;
         public ThemeModel theme;
 
-        public ActivateThemePayload(SiteModel site, ThemeModel theme) {
+        public SiteThemePayload(@NonNull SiteModel site, @NonNull ThemeModel theme) {
             this.site = site;
             this.theme = theme;
         }
@@ -110,6 +102,7 @@ public class ThemeStore extends Store {
         }
     }
 
+    @SuppressWarnings("WeakerAccess")
     public static class ThemesError implements OnChangedError {
         public ThemeErrorType type;
         public String message;
@@ -125,15 +118,21 @@ public class ThemeStore extends Store {
     }
 
     // OnChanged events
-    public static class OnThemesChanged extends OnChanged<ThemesError> {
+    @SuppressWarnings("WeakerAccess")
+    public static class OnSiteThemesChanged extends OnChanged<ThemesError> {
         public SiteModel site;
         public ThemeAction origin;
 
-        public OnThemesChanged(SiteModel site) {
+        public OnSiteThemesChanged(SiteModel site, ThemeAction origin) {
             this.site = site;
+            this.origin = origin;
         }
     }
 
+    public static class OnWpComThemesChanged extends OnChanged<ThemesError> {
+    }
+
+    @SuppressWarnings("WeakerAccess")
     public static class OnCurrentThemeFetched extends OnChanged<ThemesError> {
         public SiteModel site;
         public ThemeModel theme;
@@ -144,14 +143,7 @@ public class ThemeStore extends Store {
         }
     }
 
-    public static class OnThemesSearched extends OnChanged<ThemesError> {
-        public List<ThemeModel> searchResults;
-
-        public OnThemesSearched(List<ThemeModel> searchResults) {
-            this.searchResults = searchResults;
-        }
-    }
-
+    @SuppressWarnings("WeakerAccess")
     public static class OnThemeActivated extends OnChanged<ThemesError> {
         public SiteModel site;
         public ThemeModel theme;
@@ -162,14 +154,18 @@ public class ThemeStore extends Store {
         }
     }
 
+    @SuppressWarnings("WeakerAccess")
     public static class OnThemeRemoved extends OnChanged<ThemesError> {
+        public SiteModel site;
         public ThemeModel theme;
 
-        public OnThemeRemoved(ThemeModel theme) {
+        public OnThemeRemoved(@NonNull SiteModel site, @NonNull ThemeModel theme) {
+            this.site = site;
             this.theme = theme;
         }
     }
 
+    @SuppressWarnings("WeakerAccess")
     public static class OnThemeDeleted extends OnChanged<ThemesError> {
         public SiteModel site;
         public ThemeModel theme;
@@ -180,6 +176,7 @@ public class ThemeStore extends Store {
         }
     }
 
+    @SuppressWarnings("WeakerAccess")
     public static class OnThemeInstalled extends OnChanged<ThemesError> {
         public SiteModel site;
         public ThemeModel theme;
@@ -210,17 +207,13 @@ public class ThemeStore extends Store {
                 fetchWpComThemes();
                 break;
             case FETCHED_WP_COM_THEMES:
-                handleWpComThemesFetched((FetchedThemesPayload) action.getPayload());
+                handleWpComThemesFetched((FetchedWpComThemesPayload) action.getPayload());
                 break;
             case FETCH_INSTALLED_THEMES:
                 fetchInstalledThemes((SiteModel) action.getPayload());
                 break;
             case FETCHED_INSTALLED_THEMES:
-                handleInstalledThemesFetched((FetchedThemesPayload) action.getPayload());
-                break;
-            case FETCH_PURCHASED_THEMES:
-                break;
-            case FETCHED_PURCHASED_THEMES:
+                handleInstalledThemesFetched((FetchedSiteThemesPayload) action.getPayload());
                 break;
             case FETCH_CURRENT_THEME:
                 fetchCurrentTheme((SiteModel) action.getPayload());
@@ -228,33 +221,23 @@ public class ThemeStore extends Store {
             case FETCHED_CURRENT_THEME:
                 handleCurrentThemeFetched((FetchedCurrentThemePayload) action.getPayload());
                 break;
-            case SEARCH_THEMES:
-                SearchThemesPayload searchPayload = (SearchThemesPayload) action.getPayload();
-                searchThemes(searchPayload.searchTerm);
-                break;
-            case SEARCHED_THEMES:
-                handleSearchedThemes((SearchedThemesPayload) action.getPayload());
-                break;
             case ACTIVATE_THEME:
-                activateTheme((ActivateThemePayload) action.getPayload());
+                activateTheme((SiteThemePayload) action.getPayload());
                 break;
             case ACTIVATED_THEME:
-                handleThemeActivated((ActivateThemePayload) action.getPayload());
+                handleThemeActivated((SiteThemePayload) action.getPayload());
                 break;
             case INSTALL_THEME:
-                installTheme((ActivateThemePayload) action.getPayload());
+                installTheme((SiteThemePayload) action.getPayload());
                 break;
             case INSTALLED_THEME:
-                handleThemeInstalled((ActivateThemePayload) action.getPayload());
+                handleThemeInstalled((SiteThemePayload) action.getPayload());
                 break;
             case DELETE_THEME:
-                deleteTheme((ActivateThemePayload) action.getPayload());
+                deleteTheme((SiteThemePayload) action.getPayload());
                 break;
             case DELETED_THEME:
-                handleThemeDeleted((ActivateThemePayload) action.getPayload());
-                break;
-            case REMOVE_THEME:
-                removeTheme((ThemeModel) action.getPayload());
+                handleThemeDeleted((SiteThemePayload) action.getPayload());
                 break;
             case REMOVE_SITE_THEMES:
                 removeSiteThemes((SiteModel) action.getPayload());
@@ -279,10 +262,6 @@ public class ThemeStore extends Store {
         return ThemeSqlUtils.getWpComThemesCursor();
     }
 
-    public Cursor getThemesCursorForSite(@NonNull SiteModel site) {
-        return ThemeSqlUtils.getThemesForSiteAsCursor(site);
-    }
-
     public List<ThemeModel> getThemesForSite(@NonNull SiteModel site) {
         return ThemeSqlUtils.getThemesForSite(site);
     }
@@ -294,6 +273,7 @@ public class ThemeStore extends Store {
         return ThemeSqlUtils.getSiteThemeByThemeId(siteModel, themeId);
     }
 
+    @SuppressWarnings("WeakerAccess")
     public ThemeModel getWpComThemeByThemeId(String themeId) {
         if (TextUtils.isEmpty(themeId)) {
             return null;
@@ -314,9 +294,8 @@ public class ThemeStore extends Store {
         mThemeRestClient.fetchWpComThemes();
     }
 
-    private void handleWpComThemesFetched(@NonNull FetchedThemesPayload payload) {
-        OnThemesChanged event = new OnThemesChanged(payload.site);
-        event.origin = ThemeAction.FETCH_WP_COM_THEMES;
+    private void handleWpComThemesFetched(@NonNull FetchedWpComThemesPayload payload) {
+        OnWpComThemesChanged event = new OnWpComThemesChanged();
         if (payload.isError()) {
             event.error = payload.error;
         } else {
@@ -330,14 +309,13 @@ public class ThemeStore extends Store {
             mThemeRestClient.fetchJetpackInstalledThemes(site);
         } else {
             ThemesError error = new ThemesError(ThemeErrorType.NOT_AVAILABLE);
-            FetchedThemesPayload payload = new FetchedThemesPayload(error);
+            FetchedSiteThemesPayload payload = new FetchedSiteThemesPayload(site, error);
             handleInstalledThemesFetched(payload);
         }
     }
 
-    private void handleInstalledThemesFetched(@NonNull FetchedThemesPayload payload) {
-        OnThemesChanged event = new OnThemesChanged(payload.site);
-        event.origin = ThemeAction.FETCH_INSTALLED_THEMES;
+    private void handleInstalledThemesFetched(@NonNull FetchedSiteThemesPayload payload) {
+        OnSiteThemesChanged event = new OnSiteThemesChanged(payload.site, ThemeAction.FETCH_INSTALLED_THEMES);
         if (payload.isError()) {
             event.error = payload.error;
         } else {
@@ -351,7 +329,7 @@ public class ThemeStore extends Store {
             mThemeRestClient.fetchCurrentTheme(site);
         } else {
             ThemesError error = new ThemesError(ThemeErrorType.NOT_AVAILABLE);
-            FetchedCurrentThemePayload payload = new FetchedCurrentThemePayload(error);
+            FetchedCurrentThemePayload payload = new FetchedCurrentThemePayload(site, error);
             handleCurrentThemeFetched(payload);
         }
     }
@@ -366,23 +344,7 @@ public class ThemeStore extends Store {
         emitChange(event);
     }
 
-    private void searchThemes(@NonNull String searchTerm) {
-        mThemeRestClient.searchThemes(searchTerm);
-    }
-
-    private void handleSearchedThemes(@NonNull SearchedThemesPayload payload) {
-        OnThemesSearched event = new OnThemesSearched(payload.themes);
-        if (payload.isError()) {
-            event.error = payload.error;
-        } else {
-            for (ThemeModel theme : payload.themes) {
-                ThemeSqlUtils.insertOrUpdateWpComTheme(theme);
-            }
-        }
-        emitChange(event);
-    }
-
-    private void installTheme(@NonNull ActivateThemePayload payload) {
+    private void installTheme(@NonNull SiteThemePayload payload) {
         if (payload.site.isJetpackConnected() && payload.site.isUsingWpComRestApi()) {
             mThemeRestClient.installTheme(payload.site, payload.theme);
         } else {
@@ -391,7 +353,7 @@ public class ThemeStore extends Store {
         }
     }
 
-    private void handleThemeInstalled(@NonNull ActivateThemePayload payload) {
+    private void handleThemeInstalled(@NonNull SiteThemePayload payload) {
         OnThemeInstalled event = new OnThemeInstalled(payload.site, payload.theme);
         if (payload.isError()) {
             event.error = payload.error;
@@ -401,7 +363,7 @@ public class ThemeStore extends Store {
         emitChange(event);
     }
 
-    private void activateTheme(@NonNull ActivateThemePayload payload) {
+    private void activateTheme(@NonNull SiteThemePayload payload) {
         if (payload.site.isUsingWpComRestApi()) {
             mThemeRestClient.activateTheme(payload.site, payload.theme);
         } else {
@@ -410,7 +372,7 @@ public class ThemeStore extends Store {
         }
     }
 
-    private void handleThemeActivated(@NonNull ActivateThemePayload payload) {
+    private void handleThemeActivated(@NonNull SiteThemePayload payload) {
         OnThemeActivated event = new OnThemeActivated(payload.site, payload.theme);
         if (payload.isError()) {
             event.error = payload.error;
@@ -429,7 +391,7 @@ public class ThemeStore extends Store {
         emitChange(event);
     }
 
-    private void deleteTheme(@NonNull ActivateThemePayload payload) {
+    private void deleteTheme(@NonNull SiteThemePayload payload) {
         if (payload.site.isJetpackConnected() && payload.site.isUsingWpComRestApi()) {
             mThemeRestClient.deleteTheme(payload.site, payload.theme);
         } else {
@@ -438,30 +400,18 @@ public class ThemeStore extends Store {
         }
     }
 
-    private void handleThemeDeleted(@NonNull ActivateThemePayload payload) {
+    private void handleThemeDeleted(@NonNull SiteThemePayload payload) {
         OnThemeDeleted event = new OnThemeDeleted(payload.site, payload.theme);
         if (payload.isError()) {
             event.error = payload.error;
         } else {
-            ThemeSqlUtils.removeTheme(payload.theme);
+            ThemeSqlUtils.removeSiteTheme(payload.site, payload.theme);
         }
         emitChange(event);
     }
 
-    private void removeTheme(ThemeModel theme) {
-        if (theme != null) {
-            ThemeSqlUtils.removeTheme(theme);
-        }
-        emitChange(new OnThemeRemoved(theme));
-    }
-
-    private void removeSiteThemes(SiteModel site) {
-        final List<ThemeModel> themes = getThemesForSite(site);
-        if (!themes.isEmpty()) {
-            for (ThemeModel theme : themes) {
-                ThemeSqlUtils.removeTheme(theme);
-            }
-        }
-        emitChange(new OnThemesChanged(site));
+    private void removeSiteThemes(@NonNull SiteModel site) {
+        ThemeSqlUtils.removeSiteThemes(site);
+        emitChange(new OnSiteThemesChanged(site, ThemeAction.REMOVE_SITE_THEMES));
     }
 }

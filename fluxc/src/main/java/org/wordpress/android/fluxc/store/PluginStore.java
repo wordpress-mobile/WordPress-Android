@@ -10,8 +10,8 @@ import org.wordpress.android.fluxc.Payload;
 import org.wordpress.android.fluxc.action.PluginAction;
 import org.wordpress.android.fluxc.annotations.action.Action;
 import org.wordpress.android.fluxc.annotations.action.IAction;
-import org.wordpress.android.fluxc.model.PluginInfoModel;
-import org.wordpress.android.fluxc.model.PluginModel;
+import org.wordpress.android.fluxc.model.WPOrgPluginModel;
+import org.wordpress.android.fluxc.model.SitePluginModel;
 import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.network.BaseRequest.BaseNetworkError;
 import org.wordpress.android.fluxc.network.rest.wpcom.plugin.PluginRestClient;
@@ -29,9 +29,9 @@ public class PluginStore extends Store {
     // Request payloads
     public static class DeleteSitePluginPayload extends Payload<BaseNetworkError> {
         public SiteModel site;
-        public PluginModel plugin;
+        public SitePluginModel plugin;
 
-        public DeleteSitePluginPayload(SiteModel site, PluginModel plugin) {
+        public DeleteSitePluginPayload(SiteModel site, SitePluginModel plugin) {
             this.site = site;
             this.plugin = plugin;
         }
@@ -50,9 +50,9 @@ public class PluginStore extends Store {
 
     public static class ConfigureSitePluginPayload extends Payload<BaseNetworkError> {
         public SiteModel site;
-        public PluginModel plugin;
+        public SitePluginModel plugin;
 
-        public ConfigureSitePluginPayload(SiteModel site, PluginModel plugin) {
+        public ConfigureSitePluginPayload(SiteModel site, SitePluginModel plugin) {
             this.site = site;
             this.plugin = plugin;
         }
@@ -60,9 +60,9 @@ public class PluginStore extends Store {
 
     public static class UpdateSitePluginPayload extends Payload<BaseNetworkError> {
         public SiteModel site;
-        public PluginModel plugin;
+        public SitePluginModel plugin;
 
-        public UpdateSitePluginPayload(SiteModel site, PluginModel plugin) {
+        public UpdateSitePluginPayload(SiteModel site, SitePluginModel plugin) {
             this.site = site;
             this.plugin = plugin;
         }
@@ -72,14 +72,14 @@ public class PluginStore extends Store {
 
     public static class DeletedSitePluginPayload extends Payload<DeleteSitePluginError> {
         public SiteModel site;
-        public PluginModel plugin;
+        public SitePluginModel plugin;
 
-        public DeletedSitePluginPayload(SiteModel site, PluginModel plugin) {
+        public DeletedSitePluginPayload(SiteModel site, SitePluginModel plugin) {
             this.site = site;
             this.plugin = plugin;
         }
 
-        public DeletedSitePluginPayload(SiteModel site, PluginModel plugin, DeleteSitePluginError error) {
+        public DeletedSitePluginPayload(SiteModel site, SitePluginModel plugin, DeleteSitePluginError error) {
             this.site = site;
             this.plugin = plugin;
             this.error = error;
@@ -87,27 +87,30 @@ public class PluginStore extends Store {
     }
 
     @SuppressWarnings("WeakerAccess")
-    public static class FetchedPluginInfoPayload extends Payload<FetchPluginInfoError> {
-        public PluginInfoModel pluginInfo;
+    public static class FetchedWPOrgPluginPayload extends Payload<FetchWPOrgPluginError> {
+        public String pluginSlug;
+        public WPOrgPluginModel wpOrgPlugin;
 
-        public FetchedPluginInfoPayload(FetchPluginInfoError error) {
+        public FetchedWPOrgPluginPayload(String pluginSlug, FetchWPOrgPluginError error) {
+            this.pluginSlug = pluginSlug;
             this.error = error;
         }
 
-        public FetchedPluginInfoPayload(PluginInfoModel pluginInfo) {
-            this.pluginInfo = pluginInfo;
+        public FetchedWPOrgPluginPayload(String pluginSlug, WPOrgPluginModel plugin) {
+            this.pluginSlug = pluginSlug;
+            this.wpOrgPlugin = plugin;
         }
     }
 
     public static class FetchedSitePluginsPayload extends Payload<FetchSitePluginsError> {
         public SiteModel site;
-        public List<PluginModel> plugins;
+        public List<SitePluginModel> plugins;
 
         public FetchedSitePluginsPayload(FetchSitePluginsError error) {
             this.error = error;
         }
 
-        public FetchedSitePluginsPayload(@NonNull SiteModel site, @NonNull List<PluginModel> plugins) {
+        public FetchedSitePluginsPayload(@NonNull SiteModel site, @NonNull List<SitePluginModel> plugins) {
             this.site = site;
             this.plugins = plugins;
         }
@@ -115,9 +118,9 @@ public class PluginStore extends Store {
 
     public static class InstalledSitePluginPayload extends Payload<InstallSitePluginError> {
         public SiteModel site;
-        public PluginModel plugin;
+        public SitePluginModel plugin;
 
-        public InstalledSitePluginPayload(SiteModel site, PluginModel plugin) {
+        public InstalledSitePluginPayload(SiteModel site, SitePluginModel plugin) {
             this.site = site;
             this.plugin = plugin;
         }
@@ -130,9 +133,9 @@ public class PluginStore extends Store {
 
     public static class ConfiguredSitePluginPayload extends Payload<ConfigureSitePluginError> {
         public SiteModel site;
-        public PluginModel plugin;
+        public SitePluginModel plugin;
 
-        public ConfiguredSitePluginPayload(SiteModel site, PluginModel plugin) {
+        public ConfiguredSitePluginPayload(SiteModel site, SitePluginModel plugin) {
             this.site = site;
             this.plugin = plugin;
         }
@@ -145,9 +148,9 @@ public class PluginStore extends Store {
 
     public static class UpdatedSitePluginPayload extends Payload<UpdateSitePluginError> {
         public SiteModel site;
-        public PluginModel plugin;
+        public SitePluginModel plugin;
 
-        public UpdatedSitePluginPayload(SiteModel site, PluginModel plugin) {
+        public UpdatedSitePluginPayload(SiteModel site, SitePluginModel plugin) {
             this.site = site;
             this.plugin = plugin;
         }
@@ -174,10 +177,10 @@ public class PluginStore extends Store {
         }
     }
 
-    public static class FetchPluginInfoError implements OnChangedError {
-        public FetchPluginInfoErrorType type;
+    public static class FetchWPOrgPluginError implements OnChangedError {
+        public FetchWPOrgPluginErrorType type;
 
-        public FetchPluginInfoError(FetchPluginInfoErrorType type) {
+        public FetchWPOrgPluginError(FetchWPOrgPluginErrorType type) {
             this.type = type;
         }
     }
@@ -259,7 +262,7 @@ public class PluginStore extends Store {
         }
     }
 
-    public enum FetchPluginInfoErrorType {
+    public enum FetchWPOrgPluginErrorType {
         EMPTY_RESPONSE,
         GENERIC_ERROR
     }
@@ -346,14 +349,18 @@ public class PluginStore extends Store {
     // OnChanged Events
 
     @SuppressWarnings("WeakerAccess")
-    public static class OnPluginInfoChanged extends OnChanged<FetchPluginInfoError> {
-        public PluginInfoModel pluginInfo;
+    public static class OnWPOrgPluginFetched extends OnChanged<FetchWPOrgPluginError> {
+        public String pluginSlug;
+
+        public OnWPOrgPluginFetched(String pluginSlug) {
+            this.pluginSlug = pluginSlug;
+        }
     }
 
     @SuppressWarnings("WeakerAccess")
     public static class OnSitePluginDeleted extends OnChanged<DeleteSitePluginError> {
         public SiteModel site;
-        public PluginModel plugin;
+        public SitePluginModel plugin;
         public OnSitePluginDeleted(SiteModel site) {
             this.site = site;
         }
@@ -362,7 +369,7 @@ public class PluginStore extends Store {
     @SuppressWarnings("WeakerAccess")
     public static class OnSitePluginConfigured extends OnChanged<ConfigureSitePluginError> {
         public SiteModel site;
-        public PluginModel plugin;
+        public SitePluginModel plugin;
         public OnSitePluginConfigured(SiteModel site) {
             this.site = site;
         }
@@ -371,7 +378,7 @@ public class PluginStore extends Store {
     @SuppressWarnings("WeakerAccess")
     public static class OnSitePluginUpdated extends OnChanged<UpdateSitePluginError> {
         public SiteModel site;
-        public PluginModel plugin;
+        public SitePluginModel plugin;
         public OnSitePluginUpdated(SiteModel site) {
             this.site = site;
         }
@@ -388,7 +395,7 @@ public class PluginStore extends Store {
     @SuppressWarnings("WeakerAccess")
     public static class OnSitePluginInstalled extends OnChanged<InstallSitePluginError> {
         public SiteModel site;
-        public PluginModel plugin;
+        public SitePluginModel plugin;
         public OnSitePluginInstalled(SiteModel site) {
             this.site = site;
         }
@@ -424,8 +431,8 @@ public class PluginStore extends Store {
             case FETCH_SITE_PLUGINS:
                 fetchSitePlugins((SiteModel) action.getPayload());
                 break;
-            case FETCH_PLUGIN_INFO:
-                fetchPluginInfo((String) action.getPayload());
+            case FETCH_WPORG_PLUGIN:
+                fetchWPOrgPlugin((String) action.getPayload());
                 break;
             case UPDATE_SITE_PLUGIN:
                 updateSitePlugin((UpdateSitePluginPayload) action.getPayload());
@@ -443,8 +450,8 @@ public class PluginStore extends Store {
             case FETCHED_SITE_PLUGINS:
                 fetchedSitePlugins((FetchedSitePluginsPayload) action.getPayload());
                 break;
-            case FETCHED_PLUGIN_INFO:
-                fetchedPluginInfo((FetchedPluginInfoPayload) action.getPayload());
+            case FETCHED_WPORG_PLUGIN:
+                fetchedWPOrgPlugin((FetchedWPOrgPluginPayload) action.getPayload());
                 break;
             case UPDATED_SITE_PLUGIN:
                 updatedSitePlugin((UpdatedSitePluginPayload) action.getPayload());
@@ -458,16 +465,16 @@ public class PluginStore extends Store {
         }
     }
 
-    public List<PluginModel> getSitePlugins(SiteModel site) {
+    public List<SitePluginModel> getSitePlugins(SiteModel site) {
         return PluginSqlUtils.getSitePlugins(site);
     }
 
-    public PluginModel getSitePluginByName(SiteModel site, String name) {
+    public SitePluginModel getSitePluginByName(SiteModel site, String name) {
         return PluginSqlUtils.getSitePluginByName(site, name);
     }
 
-    public PluginInfoModel getPluginInfoBySlug(String slug) {
-        return PluginSqlUtils.getPluginInfoBySlug(slug);
+    public WPOrgPluginModel getWPOrgPluginBySlug(String slug) {
+        return PluginSqlUtils.getWPOrgPluginBySlug(slug);
     }
 
     private void fetchSitePlugins(SiteModel site) {
@@ -480,8 +487,8 @@ public class PluginStore extends Store {
         }
     }
 
-    private void fetchPluginInfo(String plugin) {
-        mPluginWPOrgClient.fetchPluginInfo(plugin);
+    private void fetchWPOrgPlugin(String pluginSlug) {
+        mPluginWPOrgClient.fetchWPOrgPlugin(pluginSlug);
     }
 
     private void configureSitePlugin(ConfigureSitePluginPayload payload) {
@@ -535,13 +542,12 @@ public class PluginStore extends Store {
         emitChange(event);
     }
 
-    private void fetchedPluginInfo(FetchedPluginInfoPayload payload) {
-        OnPluginInfoChanged event = new OnPluginInfoChanged();
+    private void fetchedWPOrgPlugin(FetchedWPOrgPluginPayload payload) {
+        OnWPOrgPluginFetched event = new OnWPOrgPluginFetched(payload.pluginSlug);
         if (payload.isError()) {
             event.error = payload.error;
-        } else {
-            event.pluginInfo = payload.pluginInfo;
-            PluginSqlUtils.insertOrUpdatePluginInfo(payload.pluginInfo);
+        } else if (event.pluginSlug != null) {
+            PluginSqlUtils.insertOrUpdateWPOrgPlugin(payload.wpOrgPlugin);
         }
         emitChange(event);
     }
