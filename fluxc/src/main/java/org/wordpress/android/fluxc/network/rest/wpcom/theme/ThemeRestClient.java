@@ -233,10 +233,17 @@ public class ThemeRestClient extends BaseWPComRestClient {
         if (response.taxonomies != null && response.taxonomies.theme_mobile_friendly != null) {
             String category = null;
             for (WPComThemeMobileFriendlyTaxonomy taxonomy : response.taxonomies.theme_mobile_friendly) {
-                if (!taxonomy.slug.equals(WPCOM_MOBILE_FRIENDLY_TAXONOMY_SLUG)) {
-                    category = taxonomy.slug;
-                    break;
+                // The server response has two taxonomies defined here. One is named "mobile-friendly" and the other is
+                //  a more specific category the theme belongs to. We're only interested in the specific one here so,
+                //  ignore the "mobile-friendly" one.
+                if (taxonomy.slug.equals(WPCOM_MOBILE_FRIENDLY_TAXONOMY_SLUG)) {
+                    continue;
                 }
+
+                category = taxonomy.slug;
+
+                // we got the category slug so, no need to continue looping
+                break;
             }
             theme.setMobileFriendlyCategorySlug(category);
         }
