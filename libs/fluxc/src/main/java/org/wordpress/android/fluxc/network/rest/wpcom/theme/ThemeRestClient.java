@@ -21,6 +21,7 @@ import org.wordpress.android.fluxc.network.rest.wpcom.WPComGsonRequest.WPComGson
 import org.wordpress.android.fluxc.network.rest.wpcom.auth.AccessToken;
 import org.wordpress.android.fluxc.network.rest.wpcom.theme.JetpackThemeResponse.JetpackThemeListResponse;
 import org.wordpress.android.fluxc.network.rest.wpcom.theme.WPComThemeResponse.WPComThemeListResponse;
+import org.wordpress.android.fluxc.network.rest.wpcom.theme.WPComThemeResponse.WPComThemeMobileFriendlyTaxonomy;
 import org.wordpress.android.fluxc.store.ThemeStore.SiteThemePayload;
 import org.wordpress.android.fluxc.store.ThemeStore.FetchedCurrentThemePayload;
 import org.wordpress.android.fluxc.store.ThemeStore.FetchedSiteThemesPayload;
@@ -41,6 +42,7 @@ import javax.inject.Singleton;
 public class ThemeRestClient extends BaseWPComRestClient {
     /** Used by {@link #fetchWpComThemes()} request all themes in a single fetch. */
     private static final String WP_THEME_FETCH_NUMBER_PARAM = "number=500";
+    private static final String WPCOM_MOBILE_FRIENDLY_TAXONOMY_SLUG = "mobile-friendly";
 
     @Inject
     public ThemeRestClient(Context appContext, Dispatcher dispatcher, RequestQueue requestQueue,
@@ -226,6 +228,26 @@ public class ThemeRestClient extends BaseWPComRestClient {
             theme.setFree(false);
             theme.setPriceText(response.price);
         }
+
+        // detect the mobile-friendly category slug if there
+        if (response.taxonomies != null && response.taxonomies.theme_mobile_friendly != null) {
+            String category = null;
+            for (WPComThemeMobileFriendlyTaxonomy taxonomy : response.taxonomies.theme_mobile_friendly) {
+                // The server response has two taxonomies defined here. One is named "mobile-friendly" and the other is
+                //  a more specific category the theme belongs to. We're only interested in the specific one here so,
+                //  ignore the "mobile-friendly" one.
+                if (taxonomy.slug.equals(WPCOM_MOBILE_FRIENDLY_TAXONOMY_SLUG)) {
+                    continue;
+                }
+
+                category = taxonomy.slug;
+
+                // we got the category slug so, no need to continue looping
+                break;
+            }
+            theme.setMobileFriendlyCategorySlug(category);
+        }
+
         return theme;
     }
 
