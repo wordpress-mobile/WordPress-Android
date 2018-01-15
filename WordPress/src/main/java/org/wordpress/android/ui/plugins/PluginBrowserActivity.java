@@ -55,11 +55,11 @@ public class PluginBrowserActivity extends AppCompatActivity implements SearchVi
     private SiteModel mSite;
     private List<SitePluginModel> mSitePlugins;
 
-    private RecyclerView mInstalledPluginsRecycler;
-    private PluginDirectoryAdapter mInstalledPluginsAdapter;
+    private RecyclerView mSitePluginsRecycler;
+    private PluginBrowserAdapter mSitePluginsAdapter;
 
     private RecyclerView mNewPluginsRecycler;
-    private PluginDirectoryAdapter mNewPluginsAdapter;
+    private PluginBrowserAdapter mNewPluginsAdapter;
 
     private int mRowWidth;
     private int mRowHeight;
@@ -80,7 +80,7 @@ public class PluginBrowserActivity extends AppCompatActivity implements SearchVi
         setContentView(R.layout.plugin_browser_activity);
         mDispatcher.register(this);
 
-        mInstalledPluginsRecycler = findViewById(R.id.installed_plugins_recycler);
+        mSitePluginsRecycler = findViewById(R.id.installed_plugins_recycler);
         mNewPluginsRecycler = findViewById(R.id.new_plugins_recycler);
 
         Toolbar toolbar = findViewById(R.id.toolbar);
@@ -120,18 +120,22 @@ public class PluginBrowserActivity extends AppCompatActivity implements SearchVi
         mIconSize = mRowWidth - (margin * 2);
         mRowHeight = Math.round(displayHeight / 3.2f); // TODO: landscape
 
-        mInstalledPluginsRecycler.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false));
-        mInstalledPluginsRecycler.setHasFixedSize(true);
-        mInstalledPluginsAdapter = new PluginDirectoryAdapter(this);
-        mInstalledPluginsRecycler.setAdapter(mInstalledPluginsAdapter);
+        mSitePluginsRecycler.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false));
+        mSitePluginsRecycler.setHasFixedSize(true);
+        mSitePluginsAdapter = new PluginBrowserAdapter(this);
+        mSitePluginsRecycler.setAdapter(mSitePluginsAdapter);
 
         mNewPluginsRecycler.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false));
         mNewPluginsRecycler.setHasFixedSize(true);
-        mNewPluginsAdapter = new PluginDirectoryAdapter(this);
+        mNewPluginsAdapter = new PluginBrowserAdapter(this);
         mNewPluginsRecycler.setAdapter(mNewPluginsAdapter);
 
-        loadInstalledPlugins();
-        loadNewPlugins();
+        refreshSitePlugins();
+        refreshNewPlugins();
+
+        if (savedInstanceState == null) {
+            fetchPlugins();
+        }
     }
 
     @Override
@@ -178,12 +182,19 @@ public class PluginBrowserActivity extends AppCompatActivity implements SearchVi
         }
     }
 
-    private void loadInstalledPlugins() {
-        mSitePlugins = mPluginStore.getSitePlugins(mSite);
-        mInstalledPluginsAdapter.setSitePlugins(mSitePlugins);
+    private void fetchPlugins() {
+        if (mPluginStore.getSitePlugins(mSite).size() == 0) {
+            showProgress(true);
+        }
+        mDispatcher.dispatch(PluginActionBuilder.newFetchSitePluginsAction(mSite));
     }
 
-    private void loadNewPlugins() {
+    private void refreshSitePlugins() {
+        mSitePlugins = mPluginStore.getSitePlugins(mSite);
+        mSitePluginsAdapter.setSitePlugins(mSitePlugins);
+    }
+
+    private void refreshNewPlugins() {
         // TODO: this is a dummy list generated from site plugins
         List<WPOrgPluginModel> wpOrgPlugins = new ArrayList<>();
         for (SitePluginModel sitePlugin: mSitePlugins) {
@@ -208,6 +219,20 @@ public class PluginBrowserActivity extends AppCompatActivity implements SearchVi
 
     @SuppressWarnings("unused")
     @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onSitePluginsFetched(PluginStore.OnSitePluginsFetched event) {
+        if (isFinishing()) {
+            return;
+        }
+        showProgress(false);
+        if (event.isError()) {
+            ToastUtils.showToast(this, R.string.plugin_fetch_error);
+            return;
+        }
+        refreshSitePlugins();
+    }
+
+    @SuppressWarnings("unused")
+    @Subscribe(threadMode = ThreadMode.MAIN)
     public void onWPOrgPluginFetched(PluginStore.OnWPOrgPluginFetched event) {
         if (isFinishing()) {
             return;
@@ -217,7 +242,7 @@ public class PluginBrowserActivity extends AppCompatActivity implements SearchVi
             return;
         }
         if (!TextUtils.isEmpty(event.pluginSlug)) {
-            mInstalledPluginsAdapter.refreshPluginWithSlug(event.pluginSlug);
+            mSitePluginsAdapter.refreshPluginWithSlug(event.pluginSlug);
             mNewPluginsAdapter.refreshPluginWithSlug(event.pluginSlug);
         }
     }
@@ -233,6 +258,7 @@ public class PluginBrowserActivity extends AppCompatActivity implements SearchVi
 
     @Override
     public boolean onQueryTextChange(String query) {
+        submitSearch(query);
         return true;
     }
 
@@ -240,11 +266,15 @@ public class PluginBrowserActivity extends AppCompatActivity implements SearchVi
         // TODO
     }
 
-    private class PluginDirectoryAdapter extends RecyclerView.Adapter<ViewHolder> {
+    private void showProgress(boolean show) {
+        findViewById(R.id.progress).setVisibility(show ? View.VISIBLE : View.GONE);
+    }
+
+    private class PluginBrowserAdapter extends RecyclerView.Adapter<ViewHolder> {
         private final List<Object> mItems = new ArrayList<>();
         private final LayoutInflater mLayoutInflater;
 
-        PluginDirectoryAdapter(Context context) {
+        PluginBrowserAdapter(Context context) {
             mLayoutInflater = LayoutInflater.from(context);
             setHasStableIds(true);
         }
