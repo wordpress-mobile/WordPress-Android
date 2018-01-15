@@ -3,15 +3,15 @@ package org.wordpress.android.fluxc.persistence;
 import android.support.annotation.NonNull;
 
 import com.wellsql.generated.PluginDirectoryModelTable;
-import com.wellsql.generated.WPOrgPluginModelTable;
 import com.wellsql.generated.SitePluginModelTable;
+import com.wellsql.generated.WPOrgPluginModelTable;
 import com.yarolegovich.wellsql.WellSql;
 
+import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.model.plugin.PluginDirectoryModel;
 import org.wordpress.android.fluxc.model.plugin.PluginDirectoryType;
-import org.wordpress.android.fluxc.model.plugin.WPOrgPluginModel;
 import org.wordpress.android.fluxc.model.plugin.SitePluginModel;
-import org.wordpress.android.fluxc.model.SiteModel;
+import org.wordpress.android.fluxc.model.plugin.WPOrgPluginModel;
 
 import java.util.List;
 
@@ -109,10 +109,47 @@ public class PluginSqlUtils {
         }
     }
 
+    // Plugin Directory
+
     public static void deletePluginDirectoryForType(PluginDirectoryType directoryType) {
         WellSql.delete(PluginDirectoryModel.class)
                 .where()
                 .equals(PluginDirectoryModelTable.DIRECTORY_TYPE, directoryType.toString())
                 .endWhere().execute();
+    }
+
+    public static void insertOrUpdatePluginDirectoryList(List<PluginDirectoryModel> pluginDirectories) {
+        if (pluginDirectories == null) {
+            return;
+        }
+
+        for (PluginDirectoryModel pluginDirectory : pluginDirectories) {
+            insertOrUpdatePluginDirectoryModel(pluginDirectory);
+        }
+    }
+
+    private static PluginDirectoryModel getPluginDirectoryModel(String directoryType, String slug) {
+        List<PluginDirectoryModel> result = WellSql.select(PluginDirectoryModel.class)
+                .where()
+                .equals(PluginDirectoryModelTable.SLUG, slug)
+                .equals(PluginDirectoryModelTable.DIRECTORY_TYPE, directoryType)
+                .endWhere()
+                .getAsModel();
+        return result.isEmpty() ? null : result.get(0);
+    }
+
+    private static void insertOrUpdatePluginDirectoryModel(PluginDirectoryModel pluginDirectory) {
+        if (pluginDirectory == null) {
+            return;
+        }
+
+        PluginDirectoryModel existing = getPluginDirectoryModel(pluginDirectory.getDirectoryType(),
+                pluginDirectory.getDirectoryType());
+        if (existing == null) {
+            WellSql.insert(pluginDirectory).execute();
+        } else {
+            WellSql.update(WPOrgPluginModel.class).whereId(existing.getId())
+                    .put(pluginDirectory, new UpdateAllExceptId<>(PluginDirectoryModel.class)).execute();
+        }
     }
 }
