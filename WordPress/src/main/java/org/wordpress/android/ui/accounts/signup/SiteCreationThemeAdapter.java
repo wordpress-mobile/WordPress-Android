@@ -35,8 +35,6 @@ public class SiteCreationThemeAdapter extends RecyclerView.Adapter<SiteCreationT
         super();
         ((WordPress) context.getApplicationContext()).component().inject(this);
 
-        setHasStableIds(true);
-
         mSiteCreationListener = siteCreationListener;
         mThemes = themes;
     }
