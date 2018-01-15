@@ -40,6 +40,9 @@ public class SiteCreationThemeLoaderFragment extends Fragment {
 
     @Inject Dispatcher mDispatcher;
 
+    // need to inject it even though we're not using it directly, otherwise we can't listen for its event responses
+    @Inject ThemeStore mThemeStore;
+
     private void postUpdate(ThemesUpdateState state) {
         EventBus.getDefault().postSticky(new OnThemeLoadingUpdated(state));
     }
