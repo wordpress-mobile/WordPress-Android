@@ -567,9 +567,8 @@ public class PluginStore extends Store {
         }
     }
 
-    public List<WPOrgPluginModel> getPluginDirectory(PluginDirectoryType type) {
-        // TODO: query the plugin directory from PluginSqlUtils
-        return new ArrayList<>();
+    public @Nullable List<WPOrgPluginModel> getPluginDirectory(PluginDirectoryType type) {
+        return PluginSqlUtils.getWPOrgPluginsForDirectory(type);
     }
 
     public SitePluginModel getSitePluginByName(SiteModel site, String name) {
