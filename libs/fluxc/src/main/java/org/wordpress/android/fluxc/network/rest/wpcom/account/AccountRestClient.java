@@ -28,6 +28,8 @@ import org.wordpress.android.fluxc.network.rest.wpcom.auth.AccessToken;
 import org.wordpress.android.fluxc.network.rest.wpcom.auth.AppSecrets;
 import org.wordpress.android.fluxc.store.AccountStore.AccountSocialError;
 import org.wordpress.android.fluxc.store.AccountStore.AccountSocialErrorType;
+import org.wordpress.android.fluxc.store.AccountStore.AccountUsernameActionType;
+import org.wordpress.android.fluxc.store.AccountStore.AccountUsernameError;
 import org.wordpress.android.fluxc.store.AccountStore.IsAvailableError;
 import org.wordpress.android.fluxc.store.AccountStore.NewUserError;
 import org.wordpress.android.fluxc.store.AccountStore.NewUserErrorType;
@@ -124,6 +126,16 @@ public class AccountRestClient extends BaseWPComRestClient {
 
         public boolean hasUsername() {
             return !TextUtils.isEmpty(this.userName);
+        }
+    }
+
+    public static class AccountPushUsernameResponsePayload extends Payload<AccountUsernameError> {
+        public AccountUsernameActionType type;
+        public String username;
+
+        public AccountPushUsernameResponsePayload(String username, AccountUsernameActionType type) {
+            this.username = username;
+            this.type = type;
         }
     }
 
@@ -477,6 +489,48 @@ public class AccountRestClient extends BaseWPComRestClient {
         );
         request.disableRetries();
         addUnauthedRequest(request);
+    }
+
+    /**
+     * Performs an HTTP POST call to v1.1 /me/username endpoint.  Upon receiving a response
+     * (success or error) a {@link AccountAction#PUSHED_USERNAME} action is dispatched with a
+     * payload of type {@link AccountPushUsernameResponsePayload}.
+     *
+     * {@link AccountPushUsernameResponsePayload#isError()} can be used to check the request result.
+     *
+     * No HTTP POST call is made if the given parameter map is null or contains no entries.
+     *
+     * @param username      Alphanumeric string to save as unique WordPress.com account identifier
+     * @param actionType    {@link AccountUsernameActionType} to take on WordPress.com site after username is changed
+     */
+    public void pushUsername(@NonNull final String username, @NonNull final AccountUsernameActionType actionType) {
+        String url = WPCOMREST.me.username.getUrlV1_1();
+
+        Map<String, Object> params = new HashMap<>();
+        params.put("username", username);
+        params.put("action", AccountUsernameActionType.getStringFromType(actionType));
+
+        add(WPComGsonRequest.buildPostRequest(url, params,
+                AccountBoolResponse.class,
+                new Listener<AccountBoolResponse>() {
+                    @Override
+                    public void onResponse(AccountBoolResponse response) {
+                        AccountPushUsernameResponsePayload payload = new AccountPushUsernameResponsePayload(username,
+                                actionType);
+                        mDispatcher.dispatch(AccountActionBuilder.newPushedUsernameAction(payload));
+                    }
+                },
+                new BaseErrorListener() {
+                    @Override
+                    public void onErrorResponse(@NonNull BaseNetworkError error) {
+                        AccountPushUsernameResponsePayload payload = new AccountPushUsernameResponsePayload(username,
+                                actionType);
+                        payload.error = new AccountUsernameError(((WPComGsonNetworkError) error).apiError,
+                                error.message);
+                        mDispatcher.dispatch(AccountActionBuilder.newPushedUsernameAction(payload));
+                    }
+                }
+        ));
     }
 
     public void newAccount(@NonNull String username, @NonNull String password, @NonNull String email,
