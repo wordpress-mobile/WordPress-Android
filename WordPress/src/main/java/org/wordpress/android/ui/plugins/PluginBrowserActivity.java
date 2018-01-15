@@ -235,6 +235,8 @@ public class PluginBrowserActivity extends AppCompatActivity {
             Object item = getItem(position);
             if (item instanceof WPOrgPluginModel) {
                 return ((WPOrgPluginModel) item).getId();
+            } else if (item instanceof SitePluginModel) {
+                return ((SitePluginModel) item).getId();
             }
             return -1;
         }
