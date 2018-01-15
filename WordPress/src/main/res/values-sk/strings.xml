@@ -1,11 +1,72 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2016-11-21 18:54:29+0000
+Translation-Revision-Date: 2018-01-05 18:31:05+0000
 Plural-Forms: nplurals=3; plural=(n==1) ? 0 : (n>=2 && n<=4) ? 1 : 2;
 Generator: GlotPress/2.4.0-alpha
 Language: sk
 -->
 <resources>
+	<string name="plugin_icon_content_description">Ikona pluginu</string>
+	<string name="plugin_home_page">Domovská stránka pluginu</string>
+	<string name="wordpress_dot_org_plugin_page">WordPress.org stránka pluginov</string>
+	<string name="plugin_remove_dialog_title">Odstrániť plugin</string>
+	<string name="plugin_remove_progress_dialog_message">Odstraňujem %s...</string>
+	<string name="plugin_disable_progress_dialog_message">Vypínam %s...</string>
+	<string name="plugin_btn_remove">Odstrániť plugin</string>
+	<string name="plugin_configuration_failed">Vyskytla sa chyba počas konfigurácie pluginu: %s</string>
+	<string name="plugin_remove_failed">Chyba pri odstraňovaní %s.</string>
+	<string name="plugin_removed_successfully">Úspešne odstránené %s.</string>
+	<string name="plugin_updated_failed_detailed">Chyba v odstraňovaní %1$s: %2$s</string>
+	<string name="plugin_updated_failed">Chyba v odstraňovaní %s.</string>
+	<string name="plugin_updated_successfully">Úspešne aktualizované %s.</string>
+	<string name="plugin_available_version">Verzia %s je dostupná.</string>
+	<string name="plugin_installed_version">Verzia pluginu %s</string>
+	<string name="plugin_detail_label_state_autoupdates">Automatické aktualizácie</string>
+	<string name="plugin_detail_label_state_active">Aktívny</string>
+	<string name="plugin_autoupdates_off">Automatické aktuaizácie sú vypnuté</string>
+	<string name="plugin_autoupdates_on">Automatické aktualizácie sú zapnuté</string>
+	<string name="plugin_inactive">Neaktívny</string>
+	<string name="plugin_active">Aktívny</string>
+	<string name="plugins">Pluginy</string>
+	<string name="my_site_btn_plugins">Pluginy</string>
+	<string name="media_edit_link_hint">Otvoriť odkaz v novom okne/karte\"</string>
+	<string name="media_edit_link_text">Odkaz na</string>
+	<string name="notification_login_failed">Vyskytla sa chyba.</string>
+	<string name="notification_2fa_needed">Na pokračovanie prosím zadajte overovací kód.</string>
+	<string name="notification_error_wrong_password">Na pokračovanie prosím ešte raz skontrolujte svoje heslo.</string>
+	<string name="notification_login_title_stopped">Prihlásenie zastavené</string>
+	<string name="notification_logging_in">Prosím čakajte, pokiaľ sa prihlásim. </string>
+	<string name="notification_login_title_in_progress">Prihlasujem sa…</string>
+	<string name="notification_logged_in">Ťuknite a pokračujte.</string>
+	<string name="notification_login_title_success">Prihlásený!</string>
+	<string name="login_error_generic_start">Google prihlásenie nemože byť spustené.</string>
+	<string name="site_creating_success">Úspešné!</string>
+	<string name="site_creating_failed">Prepáč, nebolo možné poriadne vytvoriť tvoju webovú stránku :(</string>
+	<string name="site_creating_set_theme">Nastavujem tému…</string>
+	<string name="site_creating_label">Tvoja webová stránka sa pripravuje…</string>
+	<string name="login_empty_password">Prosím zadajte heslo </string>
+	<string name="login_text_otp_another">Pošlite mi druhý kód.</string>
+	<string name="enter_verification_code_sms">Poslali sme správu na telefónne číslo končiace sa %s. Prosím vložte verifikačný kód z SMS. </string>
+	<string name="error_generic_error">Operáciu sa nepodarilo vykonať</string>
+	<string name="error_media_recover_page">Nepodarilo sa nahrať médiá tejto stránky</string>
+	<string name="error_media_recover_post">Nemožno nahrať médium tohto príspevku</string>
+	<string name="size_full">Plná veľkosť</string>
+	<string name="size_large">Veľká</string>
+	<string name="size_medium">Stredná</string>
+	<string name="size_thumbnail">Miniatúra</string>
+	<string name="image_size">Veľkosť</string>
+	<string name="uploading_title">Nahrávam...</string>
+	<string name="media_files_uploaded_write_post">Napíš článok</string>
+	<string name="media_file_uploaded">1 nahraný súbor</string>
+	<string name="media_file_not_uploaded">1 nenahraný súbor</string>
+	<string name="media_files_uploaded">%d nahraných súborov</string>
+	<string name="wpcom_themes_header">WordPress.com témy</string>
+	<string name="remove_image_from_post">Odstrániť z príspevku</string>
+	<string name="confirm_remove_media_image">Odstrániť tento obrázok z príspevku?</string>
+	<string name="media_edit_customize_card_caption">Prispôsobiť</string>
+	<string name="media_edit_file_details_card_caption">Podrobnosti súboru</string>
+	<string name="login_error_button">Zavrieť</string>
+	<string name="login_google_button_suffix">Prihláste sa pomocou Google.</string>
 	<string name="reader_label_global_related_posts">Viac na WordPress.com</string>
 	<string name="reader_label_local_related_posts">Viac na %s</string>
 	<string name="preference_open_device_settings">Otvoriť nastavenia zariadenia</string>
@@ -98,12 +159,15 @@ Language: sk
 	<string name="logging_in">Prihlasovanie</string>
 	<string name="username_email">Email alebo používateľské meno</string>
 	<string name="stats_insights_latest_post_no_title">(žiadny nadpis)</string>
+	<string name="capture_or_pick_photo">Odfoť alebo vyber fotku</string>
 	<string name="plans_post_purchase_button_themes">Prehladávať témy</string>
+	<string name="plans_post_purchase_button_video">Začať nový článok</string>
 	<string name="plans_post_purchase_title_video">Oživte články s videom</string>
 	<string name="plans_post_purchase_button_customize">Prispôsobiť moju stránku</string>
 	<string name="plans_post_purchase_title_customize">Upravte písmo a farby</string>
 	<string name="plans">Paušály</string>
 	<string name="plan">Paušál</string>
+	<string name="export_your_content_message">Tvoj článok, webová stránka a nastavenia budú zaslané emailom na %s.</string>
 	<string name="export_your_content">Exportujem Váš obsah...</string>
 	<string name="export_email_sent">Exportovaný email odoslaný!</string>
 	<string name="exporting_content_progress">Exportujem obsah...</string>
@@ -151,7 +215,11 @@ Language: sk
 	<string name="filter_draft_posts">Koncepty</string>
 	<string name="filter_published_posts">Publikované</string>
 	<string name="web_address">Webová adresa</string>
+	<string name="primary_site">Hlavná webová stránka</string>
+	<string name="pending_email_change_snackbar">Kliknite na verifikačný odkaz v emaile poslaný na %1$s a potvrďte svoju novú adresu</string>
+	<string name="editor_toast_uploading_please_wait">Momentálne nahrávate médiá. Prosím počkaj na dokončenie.</string>
 	<string name="visual_editor_enabled">Vizuálny editor povolený</string>
+	<string name="editor_content_placeholder">Zdieľaj svoj príbeh tu…</string>
 	<string name="editor_page_title_placeholder">Nadpis stránky</string>
 	<string name="editor_post_title_placeholder">Nadpis článku</string>
 	<string name="email_address">Emailová adresa</string>
@@ -201,6 +269,8 @@ Language: sk
 	<string name="site_settings_unsupported_version_error">Nepodporovaná verzia WordPress</string>
 	<string name="site_settings_multiple_links_dialog_description">Podržať komentár vo fronte, ak obsahuje viac odkazov ako toto číslo.</string>
 	<string name="site_settings_close_after_dialog_switch_text">Automaticky uzavrieť</string>
+	<string name="site_settings_rp_preview2_title">WordPress pre Android aplikáciu dostane novú tvár</string>
+	<string name="site_settings_rp_preview1_site">v \"Mobile\"</string>
 	<string name="blog_name_no_spaced_allowed">Adresa webovej stránky nemôže obsahovať medzery</string>
 	<string name="invalid_username_no_spaces">Používateľské meno nemôže obsahovať medzery</string>
 	<string name="reader_empty_followed_blogs_no_recent_posts_description">Webové stránky, ktoré sledujete v poslednej dobe nezverejnili nič.</string>
@@ -597,6 +667,8 @@ Language: sk
 	<string name="reader_title_applog">Záznamy aplikácie</string>
 	<string name="fatal_db_error">Počas vytvárania databázy sa vyskytla chyba. Preinštalujte aplikáciu.</string>
 	<string name="error_blog_hidden">Blog je skrytý a nemôže byť načítaný. Povoľte ho v nastaveniach a skúste znova.</string>
+	<string name="error_refresh_media">Média momentálne nemohli byť obnovené </string>
+	<string name="error_deleting_page">Pri vymazávaní webovej stránky sa vyskytla chyba</string>
 	<string name="wordpress_blog">WordPress blog</string>
 	<string name="add_account_blog_url">Adresa blogu</string>
 	<string name="image_settings">Nastavenie obrázka</string>
@@ -787,6 +859,7 @@ Language: sk
 	<string name="publish_date">Zverejniť</string>
 	<string name="post_content">Obsah (kliknutím pridajte text a súbor)</string>
 	<string name="incorrect_credentials">Nesprávne používatelské meno alebo heslo.</string>
+	<string name="log_in">Prihlásiť sa</string>
 	<string name="username">Používatelské meno</string>
 	<string name="password">Heslo</string>
 	<string name="reader">Čitateľ</string>
