@@ -39,7 +39,6 @@ public class SiteCreationThemeLoaderFragment extends Fragment {
     }
 
     @Inject Dispatcher mDispatcher;
-    @Inject ThemeStore mThemeStore;
 
     private void postUpdate(ThemesUpdateState state) {
         EventBus.getDefault().postSticky(new OnThemeLoadingUpdated(state));
