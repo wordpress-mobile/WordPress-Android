@@ -11,6 +11,7 @@ import org.wordpress.android.fluxc.action.PluginAction;
 import org.wordpress.android.fluxc.annotations.action.Action;
 import org.wordpress.android.fluxc.annotations.action.IAction;
 import org.wordpress.android.fluxc.model.SiteModel;
+import org.wordpress.android.fluxc.model.plugin.PluginDirectoryModel;
 import org.wordpress.android.fluxc.model.plugin.PluginDirectoryType;
 import org.wordpress.android.fluxc.model.plugin.SitePluginModel;
 import org.wordpress.android.fluxc.model.plugin.WPOrgPluginModel;
@@ -688,6 +689,14 @@ public class PluginStore extends Store {
                 // This is a fresh list, we need to remove the directory records for the fetched type
                 PluginSqlUtils.deletePluginDirectoryForType(payload.type);
             }
+            if (payload.plugins != null) {
+                // For pagination to work correctly, we need to separate the actual plugin data from the list of plugins
+                // for each directory type. This is important because the same data will be fetched from multiple
+                // sources. We fetch different directory types (same plugin can be in both new and popular) as well as
+                // do standalone fetches for plugins with `FETCH_WPORG_PLUGIN` action.
+                PluginSqlUtils.insertOrUpdatePluginDirectoryList(pluginDirectoryListFromWPOrgPlugins(payload.plugins,
+                        payload.type));
+            }
         }
         emitChange(event);
     }
@@ -743,5 +752,18 @@ public class PluginStore extends Store {
             PluginSqlUtils.insertOrUpdateSitePlugin(payload.plugin);
         }
         emitChange(event);
+    }
+
+    // Helpers
+
+    private List<PluginDirectoryModel> pluginDirectoryListFromWPOrgPlugins(@NonNull List<WPOrgPluginModel> wpOrgPlugins,
+                                                                           PluginDirectoryType directoryType) {
+        List<PluginDirectoryModel> directoryList = new ArrayList<>(wpOrgPlugins.size());
+        for (WPOrgPluginModel wpOrgPluginModel : wpOrgPlugins) {
+            PluginDirectoryModel pluginDirectoryModel = new PluginDirectoryModel();
+            pluginDirectoryModel.setSlug(wpOrgPluginModel.getSlug());
+            pluginDirectoryModel.setDirectoryType(directoryType.toString());
+        }
+        return directoryList;
     }
 }
