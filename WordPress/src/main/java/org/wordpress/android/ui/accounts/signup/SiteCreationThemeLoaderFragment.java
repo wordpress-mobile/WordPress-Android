@@ -65,7 +65,9 @@ public class SiteCreationThemeLoaderFragment extends Fragment {
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onThemesChanged(ThemeStore.OnThemesChanged event) {
         if (event.origin != ThemeAction.FETCH_WP_COM_THEMES) {
-            // just bail. This is not the response to the action we initiated
+            // just bail with a logged warning. This is not the response to the action we initiated
+            AppLog.w(AppLog.T.THEMES, "Received OnThemesChanged with origin " + event.origin + " while expecting "
+                    + ThemeAction.FETCH_WP_COM_THEMES + ". This might indicate an error in the flow.");
             return;
         }
 
