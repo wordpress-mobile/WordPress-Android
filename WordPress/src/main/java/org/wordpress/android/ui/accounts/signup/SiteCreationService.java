@@ -16,13 +16,13 @@ import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.model.ThemeModel;
 import org.wordpress.android.fluxc.store.SiteStore;
 import org.wordpress.android.fluxc.store.ThemeStore;
-import org.wordpress.android.login.AutoForegroundNotification;
 import org.wordpress.android.ui.accounts.signup.SiteCreationService.OnSiteCreationStateUpdated;
 import org.wordpress.android.ui.accounts.signup.SiteCreationService.SiteCreationPhase;
 import org.wordpress.android.ui.prefs.SiteSettingsInterface;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.AutoForeground;
+import org.wordpress.android.util.AutoForegroundNotification;
 import org.wordpress.android.util.LanguageUtils;
 
 import java.util.Map;
@@ -143,15 +143,21 @@ public class SiteCreationService extends AutoForeground<SiteCreationPhase, OnSit
             case SET_THEME:
                 return AutoForegroundNotification.progress(this, 25,
                         R.string.notification_site_creation_title_in_progress,
-                        R.string.notification_site_creation_please_wait);
+                        R.string.notification_site_creation_please_wait,
+                        R.drawable.ic_my_sites_24dp,
+                        R.color.blue_wordpress);
             case SUCCESS:
                 return AutoForegroundNotification.success(this,
                         R.string.notification_site_creation_title_success,
-                        R.string.notification_site_creation_created);
+                        R.string.notification_site_creation_created,
+                        R.drawable.ic_my_sites_24dp,
+                        R.color.blue_wordpress);
             case FAILURE:
                 return AutoForegroundNotification.success(this,
                         R.string.notification_site_creation_title_stopped,
-                        R.string.notification_site_creation_failed);
+                        R.string.notification_site_creation_failed,
+                        R.drawable.ic_my_sites_24dp,
+                        R.color.blue_wordpress);
         }
 
         return null;
