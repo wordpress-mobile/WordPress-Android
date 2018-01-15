@@ -147,6 +147,11 @@ public class PluginSqlUtils {
         }
     }
 
+    public static int getNumberOfPluginsForDirectory(PluginDirectoryType directoryType) {
+        List<PluginDirectoryModel> pluginDirectoryList = getPluginDirectoriesForType(directoryType);
+        return pluginDirectoryList != null ? pluginDirectoryList.size() : 0;
+    }
+
     private static List<PluginDirectoryModel> getPluginDirectoriesForType(PluginDirectoryType directoryType) {
         return WellSql.select(PluginDirectoryModel.class)
                 .where()

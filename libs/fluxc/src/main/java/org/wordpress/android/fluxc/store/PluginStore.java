@@ -606,7 +606,11 @@ public class PluginStore extends Store {
     }
 
     private void fetchPluginDirectory(FetchPluginDirectoryPayload payload) {
-        mPluginWPOrgClient.fetchPluginDirectory(payload.type);
+        int offset = 0;
+        if (payload.loadMore) {
+            offset = PluginSqlUtils.getNumberOfPluginsForDirectory(payload.type);
+        }
+        mPluginWPOrgClient.fetchPluginDirectory(payload.type, offset);
     }
 
     private void fetchSitePlugins(SiteModel site) {
@@ -634,7 +638,7 @@ public class PluginStore extends Store {
     }
 
     private void searchPluginDirectory(SearchPluginDirectoryPayload payload) {
-        mPluginWPOrgClient.searchPluginDirectory(payload.searchTerm);
+        mPluginWPOrgClient.searchPluginDirectory(payload.searchTerm, payload.offset);
     }
 
     private void updateSitePlugin(UpdateSitePluginPayload payload) {
