@@ -13,6 +13,7 @@ import org.wordpress.android.fluxc.model.plugin.PluginDirectoryType;
 import org.wordpress.android.fluxc.model.plugin.SitePluginModel;
 import org.wordpress.android.fluxc.model.plugin.WPOrgPluginModel;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import static com.yarolegovich.wellsql.SelectQuery.ORDER_ASCENDING;
@@ -91,6 +92,15 @@ public class PluginSqlUtils {
         return result.isEmpty() ? null : result.get(0);
     }
 
+    public static List<WPOrgPluginModel> getWPOrgPluginsForDirectory(PluginDirectoryType directoryType) {
+        List<PluginDirectoryModel> directoryModels = getPluginDirectoriesForType(directoryType);
+        List<WPOrgPluginModel> wpOrgPluginModels = new ArrayList<>(directoryModels.size());
+        for (PluginDirectoryModel pluginDirectoryModel : directoryModels) {
+            wpOrgPluginModels.add(getWPOrgPluginBySlug(pluginDirectoryModel.getSlug()));
+        }
+        return wpOrgPluginModels;
+    }
+
     public static void insertOrUpdateWPOrgPlugin(WPOrgPluginModel wpOrgPluginModel) {
         if (wpOrgPluginModel == null) {
             return;
@@ -135,6 +145,14 @@ public class PluginSqlUtils {
         for (PluginDirectoryModel pluginDirectory : pluginDirectories) {
             insertOrUpdatePluginDirectoryModel(pluginDirectory);
         }
+    }
+
+    private static List<PluginDirectoryModel> getPluginDirectoriesForType(PluginDirectoryType directoryType) {
+        return WellSql.select(PluginDirectoryModel.class)
+                .where()
+                .equals(PluginDirectoryModelTable.DIRECTORY_TYPE, directoryType)
+                .endWhere()
+                .getAsModel();
     }
 
     private static PluginDirectoryModel getPluginDirectoryModel(String directoryType, String slug) {
