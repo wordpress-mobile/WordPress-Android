@@ -684,6 +684,10 @@ public class PluginStore extends Store {
         } else {
             event.canLoadMore = payload.canLoadMore;
             // TODO: Save the payload.plugins to DB
+            if (!payload.loadMore) {
+                // This is a fresh list, we need to remove the directory records for the fetched type
+                PluginSqlUtils.deletePluginDirectoryForType(payload.type);
+            }
         }
         emitChange(event);
     }
