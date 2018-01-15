@@ -568,7 +568,7 @@ public class PluginStore extends Store {
         }
     }
 
-    public @Nullable List<WPOrgPluginModel> getPluginDirectory(PluginDirectoryType type) {
+    public @NonNull List<WPOrgPluginModel> getPluginDirectory(PluginDirectoryType type) {
         return PluginSqlUtils.getWPOrgPluginsForDirectory(type);
     }
 
@@ -767,6 +767,7 @@ public class PluginStore extends Store {
             PluginDirectoryModel pluginDirectoryModel = new PluginDirectoryModel();
             pluginDirectoryModel.setSlug(wpOrgPluginModel.getSlug());
             pluginDirectoryModel.setDirectoryType(directoryType.toString());
+            directoryList.add(pluginDirectoryModel);
         }
         return directoryList;
     }
