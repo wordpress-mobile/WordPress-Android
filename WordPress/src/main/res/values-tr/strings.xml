@@ -1,11 +1,54 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2017-11-29 15:33:20+0000
+Translation-Revision-Date: 2018-01-11 21:41:58+0000
 Plural-Forms: nplurals=2; plural=(n > 1);
 Generator: GlotPress/2.4.0-alpha
 Language: tr
 -->
 <resources>
+	<string name="plugin_external_link_icon_content_description">Harici bağlantı</string>
+	<string name="plugin_update_available_icon_content_description">Güncelleme mevcut</string>
+	<string name="plugin_icon_content_description">Eklenti simgesi</string>
+	<string name="wordpress_dot_org_plugin_page">WordPress.org eklenti sayfası</string>
+	<string name="plugin_home_page">Eklenti ana sayfası</string>
+	<string name="plugin_remove_dialog_message">%1$s içinden %2$s eklentisini kaldırmak istediğinizden emin misiniz?\n\nBu eklentiyi devre dışı bırakır ve tüm ilişkili dosyaları ve verileri siler.</string>
+	<string name="plugin_remove_progress_dialog_message">Kaldırılıyor %s...</string>
+	<string name="plugin_remove_dialog_title">Eklentiyi kaldır</string>
+	<string name="plugin_disable_progress_dialog_message">Etkisizleştiriliyor %s...</string>
+	<string name="plugin_btn_remove">Eklentiyi kaldır</string>
+	<string name="plugin_configuration_failed">Eklentiyi yapılandırılırken bir hata oluştu: %s</string>
+	<string name="plugin_remove_failed">%s kaldırılmasında hata.</string>
+	<string name="plugin_removed_successfully">Başarıyla kaldırıldı %s.</string>
+	<string name="plugin_updated_failed_detailed">%1$s kaldırılması sırasında hata: %2$s</string>
+	<string name="plugin_updated_successfully">Başarıyla güncellendi %s.</string>
+	<string name="plugin_updated_failed">%s kaldırılması sırasında hata.</string>
+	<string name="plugin_available_version">%s sürümü mevcut.</string>
+	<string name="plugin_installed_version">Eklenti sürümü %s</string>
+	<string name="plugin_detail_label_state_autoupdates">Otomatik güncellemeler</string>
+	<string name="plugin_detail_label_state_active">Aktif</string>
+	<string name="plugin_autoupdates_off">Otomatik güncellemeler kapalı</string>
+	<string name="plugin_autoupdates_on">Otomatik güncellemeler açık</string>
+	<string name="my_site_btn_plugins">Eklentiler</string>
+	<string name="plugins">Eklentiler</string>
+	<string name="plugin_active">Aktif</string>
+	<string name="media_edit_link_hint">Bağlantıyı yeni sekmede/pencere aç</string>
+	<string name="plugin_inactive">Etkin değil</string>
+	<string name="media_edit_link_text">Bağlantı</string>
+	<string name="notification_login_failed">Bir hata oluştu.</string>
+	<string name="notification_2fa_needed">Lütfen devam etmek için bir kimlik doğrulama kodu sağlayın.</string>
+	<string name="notification_error_wrong_password">Lütfen devam etmek için parolanızı iki kere kontrol edin.</string>
+	<string name="notification_login_title_stopped">Giriş durdu</string>
+	<string name="notification_logging_in">Giriş yaparken lütfen bekleyin.</string>
+	<string name="notification_login_title_in_progress">Giriş işlemi devam ediyor...</string>
+	<string name="notification_logged_in">Devam etmek için dokunun.</string>
+	<string name="notification_login_title_success">Oturum açıldı!</string>
+	<string name="login_error_generic_start">Google giriş başlatılamadı.</string>
+	<string name="site_creating_success">Başarılı!</string>
+	<string name="site_creating_failed">Maalesef siteniz düzgün bir şekilde oluşturulamadı :(</string>
+	<string name="site_creating_set_theme">Tema ayarlanıyor...</string>
+	<string name="site_creating_set_tagline">Slogan ayarlanıyor...</string>
+	<string name="site_creating_fetching_info">Site bilgisi getiriliyor...</string>
+	<string name="site_creating_label">Siteniz hazırlanıyor...</string>
 	<string name="login_empty_password">Lütfen bir parola girin</string>
 	<string name="email_not_registered_wpcom">Bu e-posta adresi WordPress.com\'da kayıtlı değil. Kullanıcı tarafından barındırılan bir siteye mi ulaşmaya çalışıyorsunuz? Ekranın altındaki bağlantıyı kullanarak giriş yapın.</string>
 	<string name="login_text_otp_another">Bana SMS ile başka bir kod gönder.</string>
@@ -1321,6 +1364,7 @@ Language: tr
 	<string name="error_refresh_media">Ortam dosyaları şu an yenilenemiyor</string>
 	<string name="error_deleting_page">Sayfayı silinirken bir hata oluştu</string>
 	<string name="file_not_found">Yükleme için dosya bulunamadı. Silindi veya taşındı mı?</string>
+	<string name="plugin_not_found">Bu eklentiye erişirken bir hata oluştu </string>
 	<string name="share_url_page">Sayfayı paylaş</string>
 	<string name="share_link">Bağlantıyı paylaş</string>
 	<string name="deleting_page">Sayfa siliniyor</string>

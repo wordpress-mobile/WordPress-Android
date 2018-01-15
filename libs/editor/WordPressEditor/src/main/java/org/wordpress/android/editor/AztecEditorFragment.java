@@ -22,13 +22,13 @@ import android.support.annotation.NonNull;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
+import android.text.Editable;
 import android.text.Spannable;
 import android.text.SpannableStringBuilder;
 import android.text.Spanned;
 import android.text.TextUtils;
-import android.text.style.SuggestionSpan;
-import android.text.Editable;
 import android.text.TextWatcher;
+import android.text.style.SuggestionSpan;
 import android.util.DisplayMetrics;
 import android.view.DragEvent;
 import android.view.Gravity;
@@ -156,7 +156,6 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
 
     private MediaPredicate mTappedMediaPredicate;
 
-    private EditorBetaClickListener mEditorBetaClickListener;
     private EditorImageSettingsListener mEditorImageSettingsListener;
     private MediaToolbarAction.MediaToolbarButtonClickListener mMediaToolbarButtonClickListener;
 
@@ -272,14 +271,6 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
 
         mAztecReady = true;
 
-        ImageButton titleBeta = (ImageButton) view.findViewById(R.id.title_beta);
-        titleBeta.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                mEditorBetaClickListener.onBetaClicked();
-            }
-        });
-
         MediaToolbarGalleryButton mediaToolbarGalleryButton = new MediaToolbarGalleryButton(formattingToolbar);
         mediaToolbarGalleryButton.setMediaToolbarButtonClickListener(new IMediaToolbarButton.IMediaToolbarClickListener() {
             @Override
@@ -311,7 +302,6 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
             }
         });
 
-
         Aztec.Factory.with(content, source, formattingToolbar, this)
                 .setImageGetter(aztecImageLoader)
                 .setVideoThumbnailGetter(aztecVideoLoader)
@@ -333,10 +323,6 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
         mEditorFragmentListener.onEditorFragmentInitialized();
 
         return view;
-    }
-
-    public void setEditorBetaClickListener(EditorBetaClickListener listener) {
-        mEditorBetaClickListener = listener;
     }
 
     public void setEditorImageSettingsListener(EditorImageSettingsListener listener) {
