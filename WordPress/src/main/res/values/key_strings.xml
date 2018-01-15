@@ -22,7 +22,6 @@
     <string name="pref_key_app_about" translatable="false">wp_pref_app_about</string>
     <string name="pref_key_oss_licenses" translatable="false">wp_pref_open_source_licenses</string>
     <string name="pref_key_editor" translatable="false">wp_pref_editor</string>
-    <string name="pref_key_editor_footer" translatable="false">wp_pref_editor_footer</string>
     <string name="pref_key_editor_type" translatable="false">pref_key_editor_type</string>
     <string name="pref_notification_blogs" translatable="false">wp_pref_notification_blogs</string>
     <string name="pref_notification_other_category" translatable="false">wp_pref_notification_other_category</string>

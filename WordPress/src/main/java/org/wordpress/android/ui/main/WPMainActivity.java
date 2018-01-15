@@ -14,7 +14,6 @@ import android.support.design.widget.TabLayout;
 import android.support.v4.app.RemoteInput;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.app.AppCompatDialogFragment;
 import android.text.TextUtils;
 import android.view.View;
 import android.widget.TextView;
@@ -53,7 +52,6 @@ import org.wordpress.android.ui.notifications.receivers.NotificationsPendingDraf
 import org.wordpress.android.ui.notifications.utils.NotificationsActions;
 import org.wordpress.android.ui.notifications.utils.NotificationsUtils;
 import org.wordpress.android.ui.notifications.utils.PendingDraftsNotificationsUtils;
-import org.wordpress.android.ui.posts.PromoDialogEditor;
 import org.wordpress.android.ui.prefs.AppPrefs;
 import org.wordpress.android.ui.prefs.AppSettingsFragment;
 import org.wordpress.android.ui.prefs.SiteSettingsFragment;
@@ -301,20 +299,6 @@ public class WPMainActivity extends AppCompatActivity {
         }
     }
 
-    private void showNewEditorPromoDialog() {
-        AppCompatDialogFragment newFragment = new PromoDialogEditor.Builder(
-                R.drawable.img_promo_editor,
-                R.string.new_editor_promo_title,
-                R.string.new_editor_promo_description,
-                R.string.new_editor_promo_button_positive)
-                .setLinkText(R.string.new_editor_promo_link)
-                .setNegativeButtonText(R.string.new_editor_promo_button_negative)
-                .setTitleBetaText(R.string.new_editor_promo_title_beta)
-                .build();
-        newFragment.show(getSupportFragmentManager(), "new-editor-promo");
-        AppPrefs.setNewEditorPromoRequired(false);
-    }
-
     @Override
     protected void onNewIntent(Intent intent) {
         super.onNewIntent(intent);
@@ -499,16 +483,6 @@ public class WPMainActivity extends AppCompatActivity {
     private void trackLastVisibleTab(int position, boolean trackAnalytics) {
         switch (position) {
             case WPMainTabAdapter.TAB_MY_SITE:
-                // show the new editor promo if the user is logged in and this is at least the second time
-                // the my site tab has been visited
-                if (AppPrefs.isNewEditorPromoRequired()
-                        && !AppPrefs.isAztecEditorEnabled()
-                        && FluxCUtils.isSignedInWPComOrHasWPOrgSite(mAccountStore, mSiteStore)) {
-                    int count = AppPrefs.bumpAndReturnAztecPromoCounter();
-                    if (count >= 2)  {
-                        showNewEditorPromoDialog();
-                    }
-                }
                 ActivityId.trackLastActivity(ActivityId.MY_SITE);
                 if (trackAnalytics) {
                     AnalyticsUtils.trackWithSiteDetails(AnalyticsTracker.Stat.MY_SITE_ACCESSED,

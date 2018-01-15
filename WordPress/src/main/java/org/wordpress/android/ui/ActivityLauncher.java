@@ -45,7 +45,6 @@ import org.wordpress.android.ui.prefs.AppPrefs;
 import org.wordpress.android.ui.prefs.AppSettingsActivity;
 import org.wordpress.android.ui.prefs.BlogPreferencesActivity;
 import org.wordpress.android.ui.prefs.MyProfileActivity;
-import org.wordpress.android.ui.prefs.ReleaseNotesActivity;
 import org.wordpress.android.ui.prefs.notifications.NotificationsSettingsActivity;
 import org.wordpress.android.ui.publicize.PublicizeListActivity;
 import org.wordpress.android.ui.reader.ReaderPostPagerActivity;
@@ -415,14 +414,6 @@ public class ActivityLauncher {
         }
 
         activity.startActivityForResult(intent, RequestCodes.DO_LOGIN);
-    }
-
-    public static void showAztecEditorReleaseNotes(Activity activity) {
-        Intent intent = new Intent(activity, ReleaseNotesActivity.class);
-        intent.putExtra(ReleaseNotesActivity.KEY_TARGET_URL,
-                "https://make.wordpress.org/mobile/whats-new-in-beta-android-editor/");
-        intent.putExtra(ReleaseNotesActivity.KEY_HELPSHIFT_TAG, HelpshiftHelper.Tag.ORIGIN_FEEDBACK_AZTEC);
-        activity.startActivity(intent);
     }
 
     /*
