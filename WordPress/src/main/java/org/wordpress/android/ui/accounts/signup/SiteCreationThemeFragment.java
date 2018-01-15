@@ -5,7 +5,6 @@ import android.support.annotation.LayoutRes;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.view.View;
 import android.view.ViewGroup;
 
 import org.greenrobot.eventbus.EventBus;
@@ -29,8 +28,7 @@ public class SiteCreationThemeFragment extends SiteCreationBaseFormFragment<Site
 
     private String mThemeCategory;
 
-    private View mProgressBarContainer;
-    private RecyclerView mRecyclerView;
+    private SiteCreationThemeAdapter mSiteCreationThemeAdapter;
 
     @Inject ThemeStore mThemeStore;
 
@@ -49,11 +47,9 @@ public class SiteCreationThemeFragment extends SiteCreationBaseFormFragment<Site
 
     @Override
     protected void setupContent(ViewGroup rootView) {
-        mProgressBarContainer = rootView.findViewById(R.id.progress_container);
-
-        mRecyclerView = (RecyclerView) rootView.findViewById(R.id.recycler_view);
-        mRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
-        mRecyclerView.setNestedScrollingEnabled(false);
+        RecyclerView recyclerView = (RecyclerView) rootView.findViewById(R.id.recycler_view);
+        recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+        recyclerView.setAdapter(mSiteCreationThemeAdapter);
     }
 
     @Override
@@ -71,6 +67,12 @@ public class SiteCreationThemeFragment extends SiteCreationBaseFormFragment<Site
         if (getArguments() != null) {
             mThemeCategory = getArguments().getString(ARG_THEME_CATEGORY);
         }
+
+        // Will trigger the update method since the onThemeLoadingUpdated event is sticky.
+        // Need to do this early so the mSiteCreationThemeAdapter gets initialized before RecyclerView needs it. This
+        //  ensures that on rotation, the RecyclerView will have its data ready before layout and scroll position will
+        //  hold correctly automatically.
+        EventBus.getDefault().register(this);
     }
 
     @Override
@@ -80,8 +82,6 @@ public class SiteCreationThemeFragment extends SiteCreationBaseFormFragment<Site
         if (savedInstanceState == null) {
             AnalyticsTracker.track(AnalyticsTracker.Stat.SITE_CREATION_THEME_VIEWED);
         }
-
-        EventBus.getDefault().register(this);
     }
 
     @Override
@@ -98,17 +98,20 @@ public class SiteCreationThemeFragment extends SiteCreationBaseFormFragment<Site
     @SuppressWarnings("unused")
     @Subscribe(threadMode = ThreadMode.MAIN, sticky = true)
     public void onThemeLoadingUpdated(OnThemeLoadingUpdated event) {
+        if (mSiteCreationThemeAdapter == null) {
+            // Fragment is initializing or rotating so, just instantiate a new adapter.
+            mSiteCreationThemeAdapter = new SiteCreationThemeAdapter(getContext(), mSiteCreationListener);
+        }
+
         switch (event.getState()) {
             case UPDATING:
-                mProgressBarContainer.setVisibility(View.VISIBLE);
+                mSiteCreationThemeAdapter.setData(true, null);
                 break;
             case ERROR:
-                mProgressBarContainer.setVisibility(View.GONE);
+                mSiteCreationThemeAdapter.setData(false, null);
                 break;
             case FINISHED:
-                mProgressBarContainer.setVisibility(View.GONE);
-                mRecyclerView.setAdapter(new SiteCreationThemeAdapter(getContext(), mSiteCreationListener,
-                        getThemes()));
+                mSiteCreationThemeAdapter.setData(false, getThemes());
                 break;
         }
     }

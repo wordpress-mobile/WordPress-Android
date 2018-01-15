@@ -15,54 +15,105 @@ import org.wordpress.android.widgets.WPNetworkImageView;
 
 import java.util.List;
 
-public class SiteCreationThemeAdapter extends RecyclerView.Adapter<SiteCreationThemeAdapter.ThemeViewHolder> {
+public class SiteCreationThemeAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
+    private static final int VIEW_TYPE_HEADER = 0;
+    private static final int VIEW_TYPE_ITEM = 1;
+
+    private boolean mIsLoading;
     private List<ThemeModel> mThemes;
     private SiteCreationListener mSiteCreationListener;
+
+    public static class HeaderViewHolder extends RecyclerView.ViewHolder {
+        public final View progress;
+        public final TextView label;
+
+        HeaderViewHolder(View itemView) {
+            super(itemView);
+            this.progress = itemView.findViewById(R.id.progress_container);
+            this.label = itemView.findViewById(R.id.progress_label);
+        }
+    }
 
     public static class ThemeViewHolder extends RecyclerView.ViewHolder {
         private final WPNetworkImageView imageView;
         private final TextView nameView;
 
-        public ThemeViewHolder(View view) {
+        ThemeViewHolder(View view) {
             super(view);
             imageView = (WPNetworkImageView) view.findViewById(R.id.theme_grid_item_image);
             nameView = (TextView) view.findViewById(R.id.theme_grid_item_name);
         }
     }
 
-    public SiteCreationThemeAdapter(Context context, SiteCreationListener siteCreationListener,
-            List<ThemeModel> themes) {
+    public SiteCreationThemeAdapter(Context context, SiteCreationListener siteCreationListener) {
         super();
         ((WordPress) context.getApplicationContext()).component().inject(this);
 
         mSiteCreationListener = siteCreationListener;
+    }
+
+    public void setData(boolean isLoading, List<ThemeModel> themes) {
+        mIsLoading = isLoading;
         mThemes = themes;
+        notifyDataSetChanged();
     }
 
     @Override
-    public ThemeViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View itemView = LayoutInflater.from(parent.getContext()).inflate(R.layout.site_creation_theme_item, parent, false);
-        return new ThemeViewHolder(itemView);
+    public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+        if (viewType == VIEW_TYPE_HEADER) {
+            View itemView = LayoutInflater.from(parent.getContext()).inflate(R.layout.site_creation_theme_header,
+                    parent, false);
+            return new HeaderViewHolder(itemView);
+        } else {
+            View itemView = LayoutInflater.from(parent.getContext()).inflate(R.layout.site_creation_theme_item, parent,
+                    false);
+            return new ThemeViewHolder(itemView);
+        }
     }
 
     @Override
-    public void onBindViewHolder(ThemeViewHolder holder, int position) {
-        final ThemeModel theme = mThemes.get(position);
+    public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
+        int viewType = getItemViewType(position);
 
-        holder.nameView.setText(theme.getName());
-        configureImageView(holder, theme.getScreenshotUrl());
-
-        holder.itemView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                mSiteCreationListener.withTheme(theme.getThemeId());
+        if (viewType == VIEW_TYPE_HEADER) {
+            final HeaderViewHolder headerViewHolder = (HeaderViewHolder) holder;
+            headerViewHolder.progress.setVisibility(mIsLoading ? View.VISIBLE : View.GONE);
+            if (!mIsLoading && mThemes == null) {
+                // this is an error situation so, show an error
+                headerViewHolder.label.setText(R.string.error_generic);
             }
-        });
+        } else {
+            final ThemeModel theme = getItem(position);
+            final ThemeViewHolder themeViewHolder = (ThemeViewHolder) holder;
+            themeViewHolder.nameView.setText(theme.getName());
+            configureImageView(themeViewHolder, theme.getScreenshotUrl());
+
+            holder.itemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    mSiteCreationListener.withTheme(theme.getThemeId());
+                }
+            });
+        }
     }
 
     @Override
     public int getItemCount() {
-        return mThemes.size();
+        return 1 + (mThemes == null ? 0 : mThemes.size());
+    }
+
+    @Override
+    public long getItemId(int position) {
+        return position == 0 ? RecyclerView.NO_ID : getItem(position).getId();
+    }
+
+    @Override
+    public int getItemViewType(int position) {
+        return position == 0 ? VIEW_TYPE_HEADER : VIEW_TYPE_ITEM;
+    }
+
+    private ThemeModel getItem(int position) {
+        return mThemes.get(position - 1);
     }
 
     private static final String THEME_IMAGE_PARAMETER = "?w=";
@@ -72,6 +123,7 @@ public class SiteCreationThemeAdapter extends RecyclerView.Adapter<SiteCreationT
         if (requestURL == null) {
             requestURL = screenshotURL;
             themeViewHolder.imageView.setDefaultImageResId(R.drawable.theme_loading);
+            themeViewHolder.imageView.showDefaultImage(); // force showing the default image so layout is computed
             themeViewHolder.imageView.setTag(requestURL);
         }
 
