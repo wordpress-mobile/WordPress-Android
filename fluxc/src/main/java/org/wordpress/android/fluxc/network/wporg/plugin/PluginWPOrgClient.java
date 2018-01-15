@@ -53,9 +53,15 @@ public class PluginWPOrgClient extends BaseWPOrgAPIClient {
                         new Listener<FetchPluginDirectoryResponse>() {
                             @Override
                             public void onResponse(FetchPluginDirectoryResponse response) {
-                                // TODO: return correct value for canLoadMore
                                 FetchedPluginDirectoryPayload payload =
                                         new FetchedPluginDirectoryPayload(directoryType, loadMore);
+                                if (response != null) {
+                                    payload.canLoadMore = response.info.page < response.info.pages;
+                                    payload.plugins = wpOrgPluginListFromResponse(response);
+                                } else {
+                                    payload.error = new PluginDirectoryError(
+                                            PluginDirectoryErrorType.EMPTY_RESPONSE, null);
+                                }
                                 mDispatcher.dispatch(PluginActionBuilder.newFetchedPluginDirectoryAction(payload));
                             }
                         },
@@ -118,13 +124,15 @@ public class PluginWPOrgClient extends BaseWPOrgAPIClient {
                         new Listener<FetchPluginDirectoryResponse>() {
                             @Override
                             public void onResponse(FetchPluginDirectoryResponse response) {
-                                // TODO: return correct value for canLoadMore
                                 SearchedPluginDirectoryPayload payload =
                                         new SearchedPluginDirectoryPayload(searchTerm, offset);
                                 if (response != null) {
+                                    payload.canLoadMore = response.info.page < response.info.pages;
                                     payload.plugins = wpOrgPluginListFromResponse(response);
+                                } else {
+                                    payload.error = new PluginDirectoryError(
+                                            PluginDirectoryErrorType.EMPTY_RESPONSE, null);
                                 }
-                                // TODO: throw an error if the response is null
                                 mDispatcher.dispatch(PluginActionBuilder.newSearchedPluginDirectoryAction(payload));
                             }
                         },
