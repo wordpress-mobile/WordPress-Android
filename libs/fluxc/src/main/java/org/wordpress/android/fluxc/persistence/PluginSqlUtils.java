@@ -2,10 +2,13 @@ package org.wordpress.android.fluxc.persistence;
 
 import android.support.annotation.NonNull;
 
+import com.wellsql.generated.PluginDirectoryModelTable;
 import com.wellsql.generated.WPOrgPluginModelTable;
 import com.wellsql.generated.SitePluginModelTable;
 import com.yarolegovich.wellsql.WellSql;
 
+import org.wordpress.android.fluxc.model.plugin.PluginDirectoryModel;
+import org.wordpress.android.fluxc.model.plugin.PluginDirectoryType;
 import org.wordpress.android.fluxc.model.plugin.WPOrgPluginModel;
 import org.wordpress.android.fluxc.model.plugin.SitePluginModel;
 import org.wordpress.android.fluxc.model.SiteModel;
@@ -73,6 +76,21 @@ public class PluginSqlUtils {
                 .endWhere().execute();
     }
 
+    public static SitePluginModel getSitePluginByName(SiteModel site, String name) {
+        List<SitePluginModel> result = WellSql.select(SitePluginModel.class)
+                .where().equals(SitePluginModelTable.NAME, name)
+                .equals(SitePluginModelTable.LOCAL_SITE_ID, site.getId())
+                .endWhere().getAsModel();
+        return result.isEmpty() ? null : result.get(0);
+    }
+
+    public static WPOrgPluginModel getWPOrgPluginBySlug(String slug) {
+        List<WPOrgPluginModel> result = WellSql.select(WPOrgPluginModel.class)
+                .where().equals(WPOrgPluginModelTable.SLUG, slug)
+                .endWhere().getAsModel();
+        return result.isEmpty() ? null : result.get(0);
+    }
+
     public static int insertOrUpdateWPOrgPlugin(WPOrgPluginModel wpOrgPluginModel) {
         if (wpOrgPluginModel == null) {
             return 0;
@@ -91,18 +109,10 @@ public class PluginSqlUtils {
         }
     }
 
-    public static SitePluginModel getSitePluginByName(SiteModel site, String name) {
-        List<SitePluginModel> result = WellSql.select(SitePluginModel.class)
-                .where().equals(SitePluginModelTable.NAME, name)
-                .equals(SitePluginModelTable.LOCAL_SITE_ID, site.getId())
-                .endWhere().getAsModel();
-        return result.isEmpty() ? null : result.get(0);
-    }
-
-    public static WPOrgPluginModel getWPOrgPluginBySlug(String slug) {
-        List<WPOrgPluginModel> result = WellSql.select(WPOrgPluginModel.class)
-                .where().equals(WPOrgPluginModelTable.SLUG, slug)
-                .endWhere().getAsModel();
-        return result.isEmpty() ? null : result.get(0);
+    public static void deletePluginDirectoryForType(PluginDirectoryType directoryType) {
+        WellSql.delete(PluginDirectoryModel.class)
+                .where()
+                .equals(PluginDirectoryModelTable.DIRECTORY_TYPE, directoryType.toString())
+                .endWhere().execute();
     }
 }
