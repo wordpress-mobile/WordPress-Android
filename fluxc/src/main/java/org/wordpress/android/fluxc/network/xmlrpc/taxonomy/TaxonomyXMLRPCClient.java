@@ -151,18 +151,26 @@ public class TaxonomyXMLRPCClient extends BaseXMLRPCClient {
 
     public void pushTerm(final TermModel term, final SiteModel site) {
         Map<String, Object> contentStruct = termModelToContentStruct(term);
+        final boolean updatingExistingTerm = term.getRemoteTermId() > 0;
 
         List<Object> params = new ArrayList<>(4);
         params.add(site.getSelfHostedSiteId());
         params.add(site.getUsername());
         params.add(site.getPassword());
+        if (updatingExistingTerm) {
+            params.add(term.getRemoteTermId());
+        }
         params.add(contentStruct);
 
-        final XMLRPCRequest request = new XMLRPCRequest(site.getXmlRpcUrl(), XMLRPC.NEW_TERM, params,
+        XMLRPC method = updatingExistingTerm ? XMLRPC.EDIT_TERM : XMLRPC.NEW_TERM;
+        final XMLRPCRequest request = new XMLRPCRequest(site.getXmlRpcUrl(), method, params,
                 new Listener<Object>() {
                     @Override
                     public void onResponse(Object response) {
-                        term.setRemoteTermId(Long.valueOf((String) response));
+                        // `term_id` is only returned for XMLRPC.NEW_TERM
+                        if (!updatingExistingTerm) {
+                            term.setRemoteTermId(Long.valueOf((String) response));
+                        }
 
                         RemoteTermPayload payload = new RemoteTermPayload(term, site);
                         mDispatcher.dispatch(TaxonomyActionBuilder.newPushedTermAction(payload));
@@ -189,6 +197,44 @@ public class TaxonomyXMLRPCClient extends BaseXMLRPCClient {
                         }
                         payload.error = taxonomyError;
                         mDispatcher.dispatch(TaxonomyActionBuilder.newPushedTermAction(payload));
+                    }
+                }
+        );
+
+        request.disableRetries();
+        add(request);
+    }
+
+    public void deleteTerm(final TermModel term, final SiteModel site) {
+        List<Object> params = new ArrayList<>(4);
+        params.add(site.getSelfHostedSiteId());
+        params.add(site.getUsername());
+        params.add(site.getPassword());
+        params.add(term.getTaxonomy());
+        params.add(term.getRemoteTermId());
+
+        final XMLRPCRequest request = new XMLRPCRequest(site.getXmlRpcUrl(), XMLRPC.DELETE_TERM, params,
+                new Listener<Object>() {
+                    @Override
+                    public void onResponse(Object response) {
+                        RemoteTermPayload payload = new RemoteTermPayload(term, site);
+                        mDispatcher.dispatch(TaxonomyActionBuilder.newDeletedTermAction(payload));
+                    }
+                },
+                new BaseErrorListener() {
+                    @Override
+                    public void onErrorResponse(@NonNull BaseNetworkError error) {
+                        RemoteTermPayload payload = new RemoteTermPayload(term, site);
+                        TaxonomyError taxonomyError;
+                        switch (error.type) {
+                            case AUTHORIZATION_REQUIRED:
+                                taxonomyError = new TaxonomyError(TaxonomyErrorType.UNAUTHORIZED, error.message);
+                                break;
+                            default:
+                                taxonomyError = new TaxonomyError(TaxonomyErrorType.GENERIC_ERROR, error.message);
+                        }
+                        payload.error = taxonomyError;
+                        mDispatcher.dispatch(TaxonomyActionBuilder.newDeletedTermAction(payload));
                     }
                 }
         );
@@ -243,6 +289,7 @@ public class TaxonomyXMLRPCClient extends BaseXMLRPCClient {
         term.setDescription(StringEscapeUtils.unescapeHtml4(MapUtils.getMapStr(termMap, "description")));
         term.setParentRemoteId(MapUtils.getMapLong(termMap, "parent"));
         term.setTaxonomy(MapUtils.getMapStr(termMap, "taxonomy"));
+        term.setPostCount(MapUtils.getMapInt(termMap, "count", 0));
 
         return term;
     }

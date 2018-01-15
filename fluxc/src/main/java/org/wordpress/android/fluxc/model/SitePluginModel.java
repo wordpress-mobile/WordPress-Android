@@ -8,7 +8,7 @@ import com.yarolegovich.wellsql.core.annotation.Table;
 import java.io.Serializable;
 
 @Table
-public class PluginModel implements Identifiable, Serializable {
+public class SitePluginModel implements Identifiable, Serializable {
     @PrimaryKey @Column private int mId;
     @Column private int mLocalSiteId;
     @Column private String mName;
@@ -19,6 +19,7 @@ public class PluginModel implements Identifiable, Serializable {
     @Column private String mDescription;
     @Column private String mAuthorName;
     @Column private String mAuthorUrl;
+    @Column private String mSettingsUrl;
     @Column private boolean mIsActive;
     @Column private boolean mIsAutoUpdateEnabled;
 
@@ -102,6 +103,14 @@ public class PluginModel implements Identifiable, Serializable {
 
     public void setAuthorUrl(String authorUrl) {
         mAuthorUrl = authorUrl;
+    }
+
+    public String getSettingsUrl() {
+        return mSettingsUrl;
+    }
+
+    public void setSettingsUrl(String settingsUrl) {
+        mSettingsUrl = settingsUrl;
     }
 
     public boolean isActive() {
