@@ -12,9 +12,11 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.RecyclerView.ViewHolder;
+import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
+import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
@@ -46,7 +48,10 @@ import java.util.List;
 
 import javax.inject.Inject;
 
-public class PluginBrowserActivity extends AppCompatActivity {
+public class PluginBrowserActivity extends AppCompatActivity implements SearchView.OnQueryTextListener {
+
+    private static final String KEY_LAST_SEARCH = "last_search";
+
     private SiteModel mSite;
     private List<SitePluginModel> mSitePlugins;
 
@@ -59,6 +64,10 @@ public class PluginBrowserActivity extends AppCompatActivity {
     private int mRowWidth;
     private int mRowHeight;
     private int mIconSize;
+
+    private String mLastSearch;
+    private MenuItem mSearchMenuItem;
+    private SearchView mSearchView;
 
     @Inject PluginStore mPluginStore;
     @Inject Dispatcher mDispatcher;
@@ -128,7 +137,27 @@ public class PluginBrowserActivity extends AppCompatActivity {
     @Override
     protected void onDestroy() {
         mDispatcher.unregister(this);
+        if (mSearchView != null) {
+            mSearchView.setOnQueryTextListener(null);
+        }
         super.onDestroy();
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.search, menu);
+
+        mSearchMenuItem = menu.findItem(R.id.menu_search);
+        mSearchView = (SearchView) mSearchMenuItem.getActionView();
+        mSearchView.setOnQueryTextListener(this);
+
+        if (!TextUtils.isEmpty(mLastSearch)) {
+            mSearchMenuItem.expandActionView();
+            onQueryTextSubmit(mLastSearch);
+            mSearchView.setQuery(mLastSearch, true);
+        }
+
+        return super.onCreateOptionsMenu(menu);
     }
 
     @Override
@@ -144,6 +173,9 @@ public class PluginBrowserActivity extends AppCompatActivity {
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
         outState.putSerializable(WordPress.SITE, mSite);
+        if (mSearchMenuItem != null && mSearchMenuItem.isActionViewExpanded()) {
+            outState.putString(KEY_LAST_SEARCH, mSearchView.getQuery().toString());
+        }
     }
 
     private void loadInstalledPlugins() {
@@ -188,6 +220,24 @@ public class PluginBrowserActivity extends AppCompatActivity {
             mInstalledPluginsAdapter.refreshPluginWithSlug(event.pluginSlug);
             mNewPluginsAdapter.refreshPluginWithSlug(event.pluginSlug);
         }
+    }
+
+    @Override
+    public boolean onQueryTextSubmit(String query) {
+        if (mSearchView != null) {
+            mSearchView.clearFocus();
+        }
+        submitSearch(query);
+        return true;
+    }
+
+    @Override
+    public boolean onQueryTextChange(String query) {
+        return true;
+    }
+
+    private void submitSearch(String query) {
+        // TODO
     }
 
     private class PluginDirectoryAdapter extends RecyclerView.Adapter<ViewHolder> {
