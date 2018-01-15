@@ -1,11 +1,39 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2017-12-13 09:36:03+0000
+Translation-Revision-Date: 2017-12-20 07:02:11+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/2.4.0-alpha
 Language: es
 -->
 <resources>
+	<string name="plugin_external_link_icon_content_description">Enlace externo</string>
+	<string name="plugin_update_available_icon_content_description">Actualización disponible</string>
+	<string name="plugin_icon_content_description">Icono del plugin</string>
+	<string name="plugin_home_page">Web del plugin</string>
+	<string name="wordpress_dot_org_plugin_page">Página del plugin en WordPress.org</string>
+	<string name="plugin_remove_dialog_message">¿Estás seguro de querer borrar %1$s de %2$s?\n\nEsto desactivará el plugin y todos los archivos y datos asociados.</string>
+	<string name="plugin_remove_dialog_title">Borrar plugin</string>
+	<string name="plugin_remove_progress_dialog_message">Borrando %s…</string>
+	<string name="plugin_disable_progress_dialog_message">Desactivando %s…</string>
+	<string name="plugin_btn_remove">Borrar plugin</string>
+	<string name="plugin_configuration_failed">Ocurrió un error al configurar el plugin: %s</string>
+	<string name="plugin_remove_failed">Error al borrar %s.</string>
+	<string name="plugin_removed_successfully">%s borrado con éxito</string>
+	<string name="plugin_updated_failed_detailed">Error al borrar %1$s: %2$s</string>
+	<string name="plugin_updated_failed">Error al borrar %s.</string>
+	<string name="plugin_updated_successfully">%s actualizado con éxito.</string>
+	<string name="plugin_available_version">La versión %s está disponible.</string>
+	<string name="plugin_installed_version">Plugin versión %s</string>
+	<string name="plugin_detail_label_state_autoupdates">Actualizaciones automáticas</string>
+	<string name="plugin_detail_label_state_active">Activo</string>
+	<string name="plugin_autoupdates_off">Actualizaciones automáticas inactivas</string>
+	<string name="plugin_autoupdates_on">Actualizaciones automáticas activas</string>
+	<string name="plugin_inactive">Inactivo</string>
+	<string name="plugin_active">Activo</string>
+	<string name="plugins">Plugins</string>
+	<string name="my_site_btn_plugins">Plugins</string>
+	<string name="media_edit_link_hint">Abrir enlace en nueva ventana/pestaña\"</string>
+	<string name="media_edit_link_text">Enlace a</string>
 	<string name="notification_login_failed">Ocurrió un error.</string>
 	<string name="notification_2fa_needed">Por favor, facilita un código de identificación para continuar.</string>
 	<string name="notification_error_wrong_password">Por favor, vuelve a teclear tu contraseña para continuar.</string>
@@ -1328,6 +1356,7 @@ Language: es
 	<string name="media_gallery_type_thumbnail_grid">Malla (red) de miniaturas</string>
 	<string name="learn_more">Aprender más</string>
 	<string name="post_not_found">Ocurrió un error al cargar la entrada. Actualiza tus entradas e intenta nuevamente.</string>
+	<string name="plugin_not_found">Ocurrió un error al acceder a este plugin</string>
 	<string name="scaled_image_error">Introduce un valor válido de ancho a escala</string>
 	<string name="cancel_edit">Cancelar edición</string>
 	<string name="connection_error">Error de conexión</string>

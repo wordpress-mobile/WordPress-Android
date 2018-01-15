@@ -1,11 +1,39 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2017-12-14 19:00:13+0000
+Translation-Revision-Date: 2017-12-19 18:41:08+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/2.4.0-alpha
 Language: sq_AL
 -->
 <resources>
+	<string name="plugin_external_link_icon_content_description">Lidhje e jashtme</string>
+	<string name="plugin_update_available_icon_content_description">Ka përditësim</string>
+	<string name="plugin_icon_content_description">Ikonë shtojce</string>
+	<string name="plugin_home_page">Faqe hyrëse e shtojcës</string>
+	<string name="wordpress_dot_org_plugin_page">Faqja e Shtojcës në WordPress.org</string>
+	<string name="plugin_remove_dialog_message">Jeni të sigurt se doni të hiqet %1$s nga %2$s?\n\nKjo do të çaktivizojë shtojcën dhe do të fshijë krejt kartelat dhe të dhënat përshoqëruara asaj.</string>
+	<string name="plugin_remove_dialog_title">Hiqe Shtojcën</string>
+	<string name="plugin_remove_progress_dialog_message">Po hiqet %s…</string>
+	<string name="plugin_disable_progress_dialog_message">Po çaktivizohet %s…</string>
+	<string name="plugin_btn_remove">Hiqe Shtojcën</string>
+	<string name="plugin_configuration_failed">Ndodhi një gabim gjatë formësimit të shtojcës: %s</string>
+	<string name="plugin_remove_failed">Gabim në heqjen e %s.</string>
+	<string name="plugin_removed_successfully">U hoq me sukses %s.</string>
+	<string name="plugin_updated_failed_detailed">Gabim në heqjen e %1$s: %2$s</string>
+	<string name="plugin_updated_failed">Gabim në heqjen e %s.</string>
+	<string name="plugin_updated_successfully">U përditësua me sukses %s.</string>
+	<string name="plugin_available_version">Është gati versioni %s.</string>
+	<string name="plugin_installed_version">Version shtojce %s</string>
+	<string name="plugin_detail_label_state_autoupdates">Vetëpërditësime</string>
+	<string name="plugin_detail_label_state_active">Aktive</string>
+	<string name="plugin_autoupdates_off">Me vetëpërditësime të çaktivizuara</string>
+	<string name="plugin_autoupdates_on">Me vetëpërditësime të aktivizuara</string>
+	<string name="plugin_inactive">Jo aktive</string>
+	<string name="plugin_active">Aktive</string>
+	<string name="plugins">Shtojca</string>
+	<string name="my_site_btn_plugins">Shtojca</string>
+	<string name="media_edit_link_hint">Hape lidhjen në dritare/skedë të re\"</string>
+	<string name="media_edit_link_text">Lidhje për te</string>
 	<string name="notification_login_failed">Ndodhi një gabim.</string>
 	<string name="notification_2fa_needed">Ju lutemi, që të vazhdohet jepni një kod mirëfilltësimi.</string>
 	<string name="notification_error_wrong_password">Ju lutemi, që të vazhdohet, rikontrolloni fjalëkalimin.</string>
@@ -1336,6 +1364,7 @@ Language: sq_AL
 	<string name="cannot_delete_multi_media_items">Disa media s’fshihen dot hëpërhë. Riprovoni më vonë.</string>
 	<string name="media_error_no_permission">S’keni leje të shihni mediatekën</string>
 	<string name="xmlrpc_error">S’u lidh dot. Jepni shtegun e plotë për te xmlrpc.php në sajtin tuaj dhe riprovoni.</string>
+	<string name="plugin_not_found">Ndodhi një gabim gjatë hyrjes te kjo shtojcë</string>
 	<string name="deleting_page">Po fshihet faqe</string>
 	<string name="deleting_post">Po fshihet postim</string>
 	<string name="share_url_post">Ndajeni postimin me të tjerët</string>

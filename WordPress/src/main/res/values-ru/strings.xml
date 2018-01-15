@@ -1,11 +1,39 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2017-12-13 15:00:06+0000
+Translation-Revision-Date: 2017-12-19 17:15:58+0000
 Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);
 Generator: GlotPress/2.4.0-alpha
 Language: ru
 -->
 <resources>
+	<string name="plugin_external_link_icon_content_description">Внешняя ссылка</string>
+	<string name="plugin_update_available_icon_content_description">Доступно обновление</string>
+	<string name="plugin_icon_content_description">Значок плагина</string>
+	<string name="plugin_home_page">Домашняя страница плагина</string>
+	<string name="wordpress_dot_org_plugin_page">Страница плагина на WordPress.org</string>
+	<string name="plugin_remove_dialog_message">Вы точно хотите удалить %1$s с %2$s?\n\nЭто деактивирует плагин и удалит все ассоциированные файлы и данные.</string>
+	<string name="plugin_remove_dialog_title">Удаление плагина</string>
+	<string name="plugin_remove_progress_dialog_message">Удаление %s...</string>
+	<string name="plugin_disable_progress_dialog_message">Отключение %s...</string>
+	<string name="plugin_btn_remove">Удалить плагин</string>
+	<string name="plugin_configuration_failed">Возникла ошибка конфигурации плагина: %s</string>
+	<string name="plugin_remove_failed">Ошибка удаления %s.</string>
+	<string name="plugin_removed_successfully">%s удален.</string>
+	<string name="plugin_updated_failed_detailed">Ошибка удаления %1$s: %2$s</string>
+	<string name="plugin_updated_failed">Ошибка удаления %s.</string>
+	<string name="plugin_updated_successfully">%s успешно обновлен.</string>
+	<string name="plugin_available_version">Доступна версия %s.</string>
+	<string name="plugin_installed_version">Плагин версии %s</string>
+	<string name="plugin_detail_label_state_autoupdates">Автообновления</string>
+	<string name="plugin_detail_label_state_active">Активен</string>
+	<string name="plugin_autoupdates_off">Автообновления выключены</string>
+	<string name="plugin_autoupdates_on">Автообновления включены</string>
+	<string name="plugin_inactive">Неактивен</string>
+	<string name="plugin_active">Активен</string>
+	<string name="plugins">Плагины</string>
+	<string name="my_site_btn_plugins">Плагины</string>
+	<string name="media_edit_link_hint">Открыть ссылку в новом окне/вкладке\"</string>
+	<string name="media_edit_link_text">Ссылка на</string>
 	<string name="notification_login_failed">Произошла ошибка</string>
 	<string name="notification_2fa_needed">Пожалуйста, введите код авторизации для продолжения.</string>
 	<string name="notification_error_wrong_password">Пожалуйста, перепроверьте свой пароль для продолжения.</string>
@@ -1328,6 +1356,7 @@ Language: ru
 	<string name="media_gallery_type_thumbnail_grid">Эскиз сетки</string>
 	<string name="learn_more">Узнать больше</string>
 	<string name="post_not_found">Произошла ошибка при загрузке поста. Обновите ваши записи и повторите попытку.</string>
+	<string name="plugin_not_found">Возникла ошибка при доступе к этому плагину</string>
 	<string name="scaled_image_error">Введите допустимое значение ширины</string>
 	<string name="cancel_edit">Отменить изменения</string>
 	<string name="connection_error">Ошибка соединения</string>
