@@ -273,6 +273,10 @@
         <!-- Label color in TRUE state and bar color FALSE and TRUE State -->
         <item name="colorControlNormal">@color/grey_500</item>
         <item name="colorControlActivated">@color/blue_wordpress</item>
+
+        <!-- Fix for crash on ASUS devices - https://github.com/wordpress-mobile/WordPress-Android/issues/7038 -->
+        <item name="android:textColorHighlight">@color/transparent</item>
+        <item name="android:textColorLink">@color/transparent</item>
     </style>
     <style name="MediaSettings.Divider">
         <item name="android:background">@color/divider_grey</item>
