@@ -15,8 +15,6 @@ import org.wordpress.android.fluxc.model.AccountModel;
 import org.wordpress.android.fluxc.model.CommentModel;
 import org.wordpress.android.fluxc.model.MediaModel;
 import org.wordpress.android.fluxc.model.MediaUploadModel;
-import org.wordpress.android.fluxc.model.plugin.WPOrgPluginModel;
-import org.wordpress.android.fluxc.model.plugin.SitePluginModel;
 import org.wordpress.android.fluxc.model.PostFormatModel;
 import org.wordpress.android.fluxc.model.PostModel;
 import org.wordpress.android.fluxc.model.PostUploadModel;
@@ -25,6 +23,9 @@ import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.model.TaxonomyModel;
 import org.wordpress.android.fluxc.model.TermModel;
 import org.wordpress.android.fluxc.model.ThemeModel;
+import org.wordpress.android.fluxc.model.plugin.PluginDirectoryModel;
+import org.wordpress.android.fluxc.model.plugin.SitePluginModel;
+import org.wordpress.android.fluxc.model.plugin.WPOrgPluginModel;
 import org.wordpress.android.fluxc.network.HTTPAuthModel;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
@@ -44,6 +45,7 @@ public class WellSqlConfig extends DefaultWellConfig {
         add(HTTPAuthModel.class);
         add(MediaModel.class);
         add(MediaUploadModel.class);
+        add(PluginDirectoryModel.class);
         add(PostFormatModel.class);
         add(PostModel.class);
         add(PostUploadModel.class);
@@ -58,7 +60,7 @@ public class WellSqlConfig extends DefaultWellConfig {
 
     @Override
     public int getDbVersion() {
-        return 22;
+        return 23;
     }
 
     @Override
@@ -197,6 +199,11 @@ public class WellSqlConfig extends DefaultWellConfig {
                 db.execSQL("alter table WPOrgPluginModel add NUMBER_OF_RATINGS_OF_THREE INTEGER;");
                 db.execSQL("alter table WPOrgPluginModel add NUMBER_OF_RATINGS_OF_FOUR INTEGER;");
                 db.execSQL("alter table WPOrgPluginModel add NUMBER_OF_RATINGS_OF_FIVE INTEGER;");
+                oldVersion++;
+            case 22:
+                AppLog.d(T.DB, "Migrating to version " + (oldVersion + 1));
+                db.execSQL("CREATE TABLE PluginDirectoryModel (_id INTEGER PRIMARY KEY AUTOINCREMENT,"
+                        + "SLUG TEXT,DIRECTORY_TYPE TEXT)");
                 oldVersion++;
         }
         db.setTransactionSuccessful();
