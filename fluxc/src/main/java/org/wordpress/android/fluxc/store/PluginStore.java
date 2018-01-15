@@ -684,7 +684,6 @@ public class PluginStore extends Store {
             event.error = payload.error;
         } else {
             event.canLoadMore = payload.canLoadMore;
-            // TODO: Save the payload.plugins to DB
             if (!payload.loadMore) {
                 // This is a fresh list, we need to remove the directory records for the fetched type
                 PluginSqlUtils.deletePluginDirectoryForType(payload.type);
@@ -696,6 +695,7 @@ public class PluginStore extends Store {
                 // do standalone fetches for plugins with `FETCH_WPORG_PLUGIN` action.
                 PluginSqlUtils.insertOrUpdatePluginDirectoryList(pluginDirectoryListFromWPOrgPlugins(payload.plugins,
                         payload.type));
+                PluginSqlUtils.insertOrUpdateWPOrgPluginList(payload.plugins);
             }
         }
         emitChange(event);
