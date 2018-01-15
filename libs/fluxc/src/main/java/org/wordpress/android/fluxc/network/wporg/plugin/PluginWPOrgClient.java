@@ -82,7 +82,6 @@ public class PluginWPOrgClient extends BaseWPOrgAPIClient {
     public void fetchWPOrgPlugin(final String pluginSlug) {
         String url = WPORGAPI.plugins.info.version("1.0").slug(pluginSlug).getUrl();
         Map<String, String> params = new HashMap<>();
-        // TODO: check if we need more fields similar to the ones in getPluginDirectoryParams
         params.put("fields", "banners,icons");
         final WPOrgAPIGsonRequest<WPOrgPluginResponse> request =
                 new WPOrgAPIGsonRequest<>(Method.GET, url, params, null, WPOrgPluginResponse.class,

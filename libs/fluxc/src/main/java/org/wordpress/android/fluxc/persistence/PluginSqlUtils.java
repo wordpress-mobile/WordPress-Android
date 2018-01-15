@@ -1,6 +1,7 @@
 package org.wordpress.android.fluxc.persistence;
 
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 
 import com.wellsql.generated.PluginDirectoryModelTable;
 import com.wellsql.generated.SitePluginModelTable;
@@ -92,7 +93,7 @@ public class PluginSqlUtils {
         return result.isEmpty() ? null : result.get(0);
     }
 
-    public static List<WPOrgPluginModel> getWPOrgPluginsForDirectory(PluginDirectoryType directoryType) {
+    public static @NonNull List<WPOrgPluginModel> getWPOrgPluginsForDirectory(PluginDirectoryType directoryType) {
         List<PluginDirectoryModel> directoryModels = getPluginDirectoriesForType(directoryType);
         List<WPOrgPluginModel> wpOrgPluginModels = new ArrayList<>(directoryModels.size());
         for (PluginDirectoryModel pluginDirectoryModel : directoryModels) {
@@ -152,7 +153,7 @@ public class PluginSqlUtils {
         return pluginDirectoryList != null ? pluginDirectoryList.size() : 0;
     }
 
-    private static List<PluginDirectoryModel> getPluginDirectoriesForType(PluginDirectoryType directoryType) {
+    private static @Nullable List<PluginDirectoryModel> getPluginDirectoriesForType(PluginDirectoryType directoryType) {
         return WellSql.select(PluginDirectoryModel.class)
                 .where()
                 .equals(PluginDirectoryModelTable.DIRECTORY_TYPE, directoryType)
