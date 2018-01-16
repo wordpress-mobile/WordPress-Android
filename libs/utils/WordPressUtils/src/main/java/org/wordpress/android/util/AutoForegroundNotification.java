@@ -9,6 +9,10 @@ import android.support.annotation.DrawableRes;
 import android.support.annotation.StringRes;
 import android.support.v4.app.NotificationCompat;
 
+import static org.wordpress.android.util.AutoForeground.NOTIFICATION_ID_PROGRESS;
+import static org.wordpress.android.util.AutoForeground.NOTIFICATION_ID_SUCCESS;
+import static org.wordpress.android.util.AutoForeground.NOTIFICATION_ID_FAILURE;
+
 public class AutoForegroundNotification {
     private static Intent getResumeIntent(Context context) {
         // Let's get an Intent with the sole purpose of _resuming_ the app from the background
@@ -22,9 +26,9 @@ public class AutoForegroundNotification {
         return resumeIntent;
     }
 
-    private static NotificationCompat.Builder getNotificationBuilder(Context context, @StringRes int title,
-                                                                     @StringRes int content, @DrawableRes int icon,
-                                                                     @ColorRes int accentColor) {
+    private static NotificationCompat.Builder getNotificationBuilder(Context context, int requestCode,
+                                                                     @StringRes int title, @StringRes int content,
+                                                                     @DrawableRes int icon, @ColorRes int accentColor) {
         NotificationCompat.BigTextStyle bigTextStyle = new NotificationCompat.BigTextStyle();
         bigTextStyle.setBigContentTitle(context.getString(title));
         bigTextStyle.bigText(context.getString(content));
@@ -35,40 +39,28 @@ public class AutoForegroundNotification {
                 .setContentText(context.getString(content))
                 .setSmallIcon(icon)
                 .setColor(context.getResources().getColor(accentColor))
-                .setAutoCancel(true);
+                .setAutoCancel(true)
+                .setContentIntent(PendingIntent.getActivity(
+                        context,
+                        requestCode,
+                        getResumeIntent(context),
+                        PendingIntent.FLAG_ONE_SHOT));
     }
 
     public static Notification progress(Context context, int progress, @StringRes int title, @StringRes int content,
                                         @DrawableRes int icon, @ColorRes int accentColor) {
-        return getNotificationBuilder(context, title, content, icon, accentColor)
-                .setContentIntent(PendingIntent.getActivity(
-                        context,
-                        AutoForeground.NOTIFICATION_ID_PROGRESS,
-                        getResumeIntent(context),
-                        PendingIntent.FLAG_ONE_SHOT))
+        return getNotificationBuilder(context, NOTIFICATION_ID_PROGRESS, title, content, icon, accentColor)
                 .setProgress(100, progress, false)
                 .build();
     }
 
     public static Notification success(Context context, @StringRes int title, @StringRes int content,
                                        @DrawableRes int icon, @ColorRes int accentColor) {
-        return getNotificationBuilder(context, title, content, icon, accentColor)
-                .setContentIntent(PendingIntent.getActivity(
-                        context,
-                        AutoForeground.NOTIFICATION_ID_SUCCESS,
-                        getResumeIntent(context),
-                        PendingIntent.FLAG_ONE_SHOT))
-                .build();
+        return getNotificationBuilder(context, NOTIFICATION_ID_SUCCESS, title, content, icon, accentColor).build();
     }
 
     public static Notification failure(Context context, @StringRes int title, @StringRes int content,
                                        @DrawableRes int icon, @ColorRes int accentColor) {
-        return getNotificationBuilder(context, title, content, icon, accentColor)
-                .setContentIntent(PendingIntent.getActivity(
-                        context,
-                        AutoForeground.NOTIFICATION_ID_FAILURE,
-                        getResumeIntent(context),
-                        PendingIntent.FLAG_ONE_SHOT))
-                .build();
+        return getNotificationBuilder(context, NOTIFICATION_ID_FAILURE, title, content, icon, accentColor).build();
     }
 }

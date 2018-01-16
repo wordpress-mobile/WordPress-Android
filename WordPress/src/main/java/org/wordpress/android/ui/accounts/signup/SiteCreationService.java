@@ -4,6 +4,7 @@ import android.app.Notification;
 import android.content.Context;
 import android.content.Intent;
 import android.support.annotation.Nullable;
+import android.support.annotation.StringRes;
 
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
@@ -76,6 +77,32 @@ public class SiteCreationService extends AutoForeground<SiteCreationPhase, OnSit
         }
     }
 
+    private static class SiteCreationNotification {
+        static Notification progress(Context context, int progress) {
+            return AutoForegroundNotification.progress(context, progress,
+                    org.wordpress.android.login.R.string.notification_site_creation_title_in_progress,
+                    org.wordpress.android.login.R.string.notification_site_creation_please_wait,
+                    org.wordpress.android.login.R.drawable.ic_my_sites_24dp,
+                    org.wordpress.android.login.R.color.blue_wordpress);
+        }
+
+        static Notification success(Context context) {
+            return AutoForegroundNotification.success(context,
+                    org.wordpress.android.login.R.string.notification_site_creation_title_success,
+                    org.wordpress.android.login.R.string.notification_site_creation_created,
+                    org.wordpress.android.login.R.drawable.ic_my_sites_24dp,
+                    org.wordpress.android.login.R.color.blue_wordpress);
+        }
+
+        static Notification failure(Context context, @StringRes int content) {
+            return AutoForegroundNotification.failure(context,
+                    org.wordpress.android.login.R.string.notification_site_creation_title_stopped,
+                    content,
+                    org.wordpress.android.login.R.drawable.ic_my_sites_24dp,
+                    org.wordpress.android.login.R.color.blue_wordpress);
+        }
+    }
+
     public static class OnSiteCreationStateUpdated implements AutoForeground.ServiceEvent<SiteCreationPhase> {
         private final SiteCreationPhase state;
 
@@ -141,23 +168,11 @@ public class SiteCreationService extends AutoForeground<SiteCreationPhase, OnSit
             case FETCHING_NEW_SITE:
             case SET_TAGLINE:
             case SET_THEME:
-                return AutoForegroundNotification.progress(this, 25,
-                        R.string.notification_site_creation_title_in_progress,
-                        R.string.notification_site_creation_please_wait,
-                        R.drawable.ic_my_sites_24dp,
-                        R.color.blue_wordpress);
+                return SiteCreationNotification.progress(this, 25);
             case SUCCESS:
-                return AutoForegroundNotification.success(this,
-                        R.string.notification_site_creation_title_success,
-                        R.string.notification_site_creation_created,
-                        R.drawable.ic_my_sites_24dp,
-                        R.color.blue_wordpress);
+                return SiteCreationNotification.success(this);
             case FAILURE:
-                return AutoForegroundNotification.success(this,
-                        R.string.notification_site_creation_title_stopped,
-                        R.string.notification_site_creation_failed,
-                        R.drawable.ic_my_sites_24dp,
-                        R.color.blue_wordpress);
+                return SiteCreationNotification.failure(this, R.string.notification_site_creation_failed);
         }
 
         return null;
