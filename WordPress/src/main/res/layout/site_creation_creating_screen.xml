@@ -26,6 +26,6 @@
         android:gravity="center"
         android:layout_below="@+id/image"
         android:padding="@dimen/margin_extra_large"
-        android:text="@string/site_creating_label"/>
+        android:text="@string/site_creation_creating_label"/>
 
 </RelativeLayout>

@@ -5,7 +5,7 @@ import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 
 import org.wordpress.android.R;
-import org.wordpress.android.ui.accounts.signup.SiteCreatingFragment;
+import org.wordpress.android.ui.accounts.signup.SiteCreationCreatingFragment;
 
 public class NewBlogActivity extends AppCompatActivity {
 
@@ -16,7 +16,7 @@ public class NewBlogActivity extends AppCompatActivity {
 
         if (savedInstanceState == null) {
             FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
-            fragmentTransaction.replace(R.id.fragment_container, new SiteCreatingFragment(), SiteCreatingFragment.TAG);
+            fragmentTransaction.replace(R.id.fragment_container, new SiteCreationCreatingFragment(), SiteCreationCreatingFragment.TAG);
             fragmentTransaction.commit();
 
         }

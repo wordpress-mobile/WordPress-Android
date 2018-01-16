@@ -21,7 +21,7 @@ import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.AutoForeground.ServiceEventConnection;
 
-public class SiteCreatingFragment extends Fragment  {
+public class SiteCreationCreatingFragment extends Fragment  {
     public static final String TAG = "site_creating_fragment_tag";
 
     private ServiceEventConnection mServiceEventConnection;
@@ -84,25 +84,25 @@ public class SiteCreatingFragment extends Fragment  {
                         WordPress.getBuildConfigString(getActivity(), "DEBUG_DOTCOM_NEW_SITE_SLUG"),
                         WordPress.getBuildConfigString(getActivity(), "DEBUG_DOTCOM_NEW_SITE_THEME"));
 
-                mLabel.setText(R.string.site_creating_label);
+                mLabel.setText(R.string.site_creation_creating_label);
                 break;
             case NEW_SITE:
                 // nothing special to do here, just waiting for the site creation result...
                 break;
             case FETCHING_NEW_SITE:
-                mLabel.setText(R.string.site_creating_fetching_info);
+                mLabel.setText(R.string.site_creation_creating_fetching_info);
                 break;
             case SET_TAGLINE:
-                mLabel.setText(R.string.site_creating_set_tagline);
+                mLabel.setText(R.string.site_creation_creating_set_tagline);
                 break;
             case SET_THEME:
-                mLabel.setText(R.string.site_creating_set_theme);
+                mLabel.setText(R.string.site_creation_creating_set_theme);
                 break;
             case FAILURE:
-                mLabel.setText(R.string.site_creating_failed);
+                mLabel.setText(R.string.site_creation_creating_failed);
                 break;
             case SUCCESS:
-                mLabel.setText(R.string.site_creating_success);
+                mLabel.setText(R.string.site_creation_creating_success);
                 break;
         }
     }
