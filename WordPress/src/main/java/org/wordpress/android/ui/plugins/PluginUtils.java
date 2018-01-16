@@ -50,8 +50,10 @@ public class PluginUtils {
             Version availableVersion = new Version(pluginInfo.getVersion());
             return currentVersion.compareTo(availableVersion) == -1;
         } catch (IllegalArgumentException e) {
-            // If the versions are not in the expected format, we can assume that an update is available if the
-            // values for the site's plugin version and the version of the plugin directory are not the same
+            AppLog.e(AppLog.T.UTILS, String.format("An IllegalArgumentException occurred while trying to compare site" +
+                    " plugin version: %s with wporg plugin version: %s", plugin.getVersion(), pluginInfo.getVersion()));
+            // If the versions are not in the expected format, we can assume that an update is available if the version
+            // values for the site plugin and wporg plugin are not the same
             return !plugin.getVersion().equalsIgnoreCase(pluginInfo.getVersion());
         }
     }
