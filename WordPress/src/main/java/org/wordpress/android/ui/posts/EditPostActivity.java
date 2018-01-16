@@ -1153,7 +1153,7 @@ public class EditPostActivity extends AppCompatActivity implements
                             public boolean shouldLog(Throwable throwable) {
                                 // Do not log private or password protected post
                                 return getPost() != null && TextUtils.isEmpty(getPost().getPassword()) &&
-                                        !"private".equals(getPost().getStatus());
+                                        !PostStatus.PRIVATE.toString().equals(getPost().getStatus());
                             }
                         }
                 );
