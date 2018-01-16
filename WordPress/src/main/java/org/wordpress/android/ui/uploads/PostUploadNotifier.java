@@ -581,8 +581,9 @@ class PostUploadNotifier {
 
     private String buildSuccessMessageForMedia(int mediaItemsUploaded) {
         // all media items were uploaded successfully
-        String successMessage =  String.format(mContext.getString(R.string.media_all_files_uploaded_successfully),
-                    mediaItemsUploaded);
+        String successMessage =  mediaItemsUploaded == 1 ? mContext.getString(R.string.media_file_uploaded)
+                                    : String.format(mContext.getString(R.string.media_all_files_uploaded_successfully),
+                                            mediaItemsUploaded);
         return successMessage;
     }
 
