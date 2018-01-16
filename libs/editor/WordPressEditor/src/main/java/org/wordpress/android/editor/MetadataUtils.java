@@ -7,7 +7,6 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.aztec.AztecAttributes;
-import org.wordpress.aztec.Constants;
 import org.wordpress.aztec.plugins.shortcodes.extensions.VideoPressExtensionsKt;
 import org.xml.sax.Attributes;
 
