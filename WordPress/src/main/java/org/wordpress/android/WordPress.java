@@ -108,7 +108,7 @@ public class WordPress extends MultiDexApplication implements HasServiceInjector
     public static final String SITE = "SITE";
     public static String versionName;
     public static WordPressDB wpDB;
-    public static boolean sAppIsInTheBackground;
+    public static boolean sAppIsInTheBackground = true;
 
     private static RestClientUtils sRestClientUtils;
     private static RestClientUtils sRestClientUtilsVersion1_1;
