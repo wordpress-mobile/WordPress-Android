@@ -13,5 +13,9 @@ public interface SiteCreationListener {
     void withSiteDetails(String siteTitle, String siteTagline);
     void helpSiteDetailsScreen();
 
+    // Site Creation Site details callbacks
+    void creationSuccess();
+    void helpSiteCreatingScreen();
+
     void setHelpContext(String faqId, String faqSection);
 }

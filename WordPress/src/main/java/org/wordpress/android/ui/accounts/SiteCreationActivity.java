@@ -11,6 +11,7 @@ import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.ui.accounts.signup.SiteCreationCategoryFragment;
+import org.wordpress.android.ui.accounts.signup.SiteCreationCreatingFragment;
 import org.wordpress.android.ui.accounts.signup.SiteCreationListener;
 import org.wordpress.android.ui.accounts.signup.SiteCreationSiteDetailsFragment;
 import org.wordpress.android.ui.accounts.signup.SiteCreationThemeFragment;
@@ -127,12 +128,26 @@ public class SiteCreationActivity extends AppCompatActivity implements SiteCreat
     public void withSiteDetails(String siteTitle, String siteTagline) {
         mSiteTitle = siteTitle;
         mSiteTagline = siteTagline;
-        ToastUtils.showToast(this, "title: " + siteTitle + ", tagline: " + siteTagline);
+
+        // TODO: insert the Domain selection screen here. Jump to "Creating" screen is for dev purposes
+        String siteSlug = WordPress.getBuildConfigString(this, "DEBUG_DOTCOM_NEW_SITE_SLUG");
+        slideInFragment(SiteCreationCreatingFragment.newInstance(mSiteTitle, mSiteTagline, siteSlug, mThemeId),
+                SiteCreationCreatingFragment.TAG);
     }
 
     @Override
     public void helpSiteDetailsScreen() {
         launchHelpshift(HelpshiftHelper.Tag.ORIGIN_SITE_CREATION_DETAILS);
+    }
+
+    @Override
+    public void creationSuccess() {
+        ToastUtils.showToast(this, "Success!");
+    }
+
+    @Override
+    public void helpSiteCreatingScreen() {
+        launchHelpshift(HelpshiftHelper.Tag.ORIGIN_SITE_CREATION_CREATING);
     }
 
     @Override

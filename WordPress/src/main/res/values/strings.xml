@@ -2079,12 +2079,11 @@
     <string name="site_creation_tagline_hint">Site tagline (optional)</string>
     <string name="site_creation_tagline_helper">The tagline is a short line of text shown right below the title in most themes, and act as site metadata on search engines.</string>
     <string name="site_creation_empty_site_title">Please enter a site title</string>
-    <string name="site_creation_creating_label">Preparing your site…</string>
-    <string name="site_creation_creating_fetching_info">Fetching site info…</string>
-    <string name="site_creation_creating_set_tagline">Setting the tagline…</string>
-    <string name="site_creation_creating_set_theme">Setting the theme…</string>
+    <string name="site_creation_creating_laying_foundation">Laying site foundation…</string>
+    <string name="site_creation_creating_fetching_info">Retrieving site information…</string>
+    <string name="site_creation_creating_configuring_content">Configuring site content…</string>
+    <string name="site_creation_creating_configuring_theme">Configuring site style…</string>
+    <string name="site_creation_creating_preparing_frontend">Preparing frontend…</string>
     <string name="site_creation_creating_failed">Sorry, failed to properly create your site :(</string>
-    <string name="site_creation_creating_success">Success!</string>
-
 
 </resources>

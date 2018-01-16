@@ -1,12 +1,9 @@
 package org.wordpress.android.ui.accounts.signup;
 
 import android.os.Bundle;
+import android.os.Handler;
+import android.support.annotation.LayoutRes;
 import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
-import android.support.v7.app.ActionBar;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
-import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
@@ -14,41 +11,66 @@ import android.widget.TextView;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 import org.wordpress.android.R;
-import org.wordpress.android.WordPress;
 import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.ui.accounts.signup.SiteCreationService.OnSiteCreationStateUpdated;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.AutoForeground.ServiceEventConnection;
+import org.wordpress.android.util.ToastUtils;
 
-public class SiteCreationCreatingFragment extends Fragment  {
+public class SiteCreationCreatingFragment extends SiteCreationBaseFormFragment<SiteCreationListener> {
     public static final String TAG = "site_creating_fragment_tag";
+
+    private static final String ARG_SITE_TITLE = "ARG_SITE_TITLE";
+    private static final String ARG_SITE_TAGLINE = "ARG_SITE_TAGLINE";
+    private static final String ARG_SITE_SLUG = "ARG_SITE_SLUG";
+    private static final String ARG_SITE_THEME = "ARG_SITE_THEME";
 
     private ServiceEventConnection mServiceEventConnection;
 
-    private TextView mLabel;
+    private TextView mLabelFoundation;
+    private TextView mLabelFetching;
+    private TextView mLabelContent;
+    private TextView mLabelStyle;
+    private TextView mLabelFrontend;
+
+    public static SiteCreationCreatingFragment newInstance(String siteTitle, String siteTagline, String siteSlug,
+            String siteTheme) {
+        SiteCreationCreatingFragment fragment = new SiteCreationCreatingFragment();
+        Bundle args = new Bundle();
+        args.putString(ARG_SITE_TITLE, siteTitle);
+        args.putString(ARG_SITE_TAGLINE, siteTagline);
+        args.putString(ARG_SITE_SLUG, siteSlug);
+        args.putString(ARG_SITE_THEME, siteTheme);
+        fragment.setArguments(args);
+        return fragment;
+    }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.site_creating_screen, container, false);
-
-        mLabel = (TextView) view.findViewById(R.id.label);
-
-        return view;
+    protected @LayoutRes int getContentLayout() {
+        return R.layout.site_creation_creating_screen;
     }
+
+    @Override
+    protected void setupContent(ViewGroup rootView) {
+        mLabelFoundation = (TextView) rootView.findViewById(R.id.site_creation_creating_laying_foundation);
+        mLabelFetching = (TextView) rootView.findViewById(R.id.site_creation_creating_fetching_info);
+        mLabelContent = (TextView) rootView.findViewById(R.id.site_creation_creating_configuring_content);
+        mLabelStyle = (TextView) rootView.findViewById(R.id.site_creation_creating_configuring_theme);
+        mLabelFrontend = (TextView) rootView.findViewById(R.id.site_creation_creating_preparing_frontend);
+    }
+
+    @Override
+    protected void onHelp() {
+        if (mSiteCreationListener != null) {
+            mSiteCreationListener.helpSiteCreatingScreen();
+        }
+    }
+
 
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-
-        Toolbar toolbar = (Toolbar) view.findViewById(R.id.toolbar);
-        ((AppCompatActivity) getActivity()).setSupportActionBar(toolbar);
-
-        ActionBar actionBar = ((AppCompatActivity) getActivity()).getSupportActionBar();
-        if (actionBar != null) {
-            actionBar.setDisplayShowTitleEnabled(false);
-            actionBar.setDisplayHomeAsUpEnabled(true);
-        }
 
         if (savedInstanceState == null) {
             AnalyticsTracker.track(AnalyticsTracker.Stat.LOGIN_MAGIC_LINK_OPEN_EMAIL_CLIENT_VIEWED);
@@ -78,31 +100,49 @@ public class SiteCreationCreatingFragment extends Fragment  {
 
         switch (event.getState()) {
             case IDLE:
-                SiteCreationService.createSite(getActivity(),
-                        WordPress.getBuildConfigString(getActivity(), "DEBUG_DOTCOM_NEW_SITE_TITLE"),
-                        WordPress.getBuildConfigString(getActivity(), "DEBUG_DOTCOM_NEW_SITE_TAGLINE"),
-                        WordPress.getBuildConfigString(getActivity(), "DEBUG_DOTCOM_NEW_SITE_SLUG"),
-                        WordPress.getBuildConfigString(getActivity(), "DEBUG_DOTCOM_NEW_SITE_THEME"));
+                String siteTitle = getArguments().getString(ARG_SITE_TITLE);
+                String siteTagline = getArguments().getString(ARG_SITE_TAGLINE);
+                String siteSlug = getArguments().getString(ARG_SITE_SLUG);
+                String siteTheme = getArguments().getString(ARG_SITE_THEME);
+                SiteCreationService.createSite(getActivity(), siteTitle, siteTagline, siteSlug, siteTheme);
 
-                mLabel.setText(R.string.site_creation_creating_label);
+                mLabelFoundation.setEnabled(true);
                 break;
             case NEW_SITE:
                 // nothing special to do here, just waiting for the site creation result...
+                mLabelFoundation.setEnabled(true);
                 break;
             case FETCHING_NEW_SITE:
-                mLabel.setText(R.string.site_creation_creating_fetching_info);
+                mLabelFoundation.setEnabled(true);
+                mLabelFetching.setEnabled(true);
                 break;
             case SET_TAGLINE:
-                mLabel.setText(R.string.site_creation_creating_set_tagline);
+                mLabelFoundation.setEnabled(true);
+                mLabelFetching.setEnabled(true);
+                mLabelContent.setEnabled(true);
                 break;
             case SET_THEME:
-                mLabel.setText(R.string.site_creation_creating_set_theme);
+                mLabelFoundation.setEnabled(true);
+                mLabelFetching.setEnabled(true);
+                mLabelContent.setEnabled(true);
+                mLabelStyle.setEnabled(true);
                 break;
             case FAILURE:
-                mLabel.setText(R.string.site_creation_creating_failed);
+                ToastUtils.showToast(getContext(), R.string.site_creation_creating_failed);
                 break;
             case SUCCESS:
-                mLabel.setText(R.string.site_creation_creating_success);
+                mLabelFoundation.setEnabled(true);
+                mLabelFetching.setEnabled(true);
+                mLabelContent.setEnabled(true);
+                mLabelStyle.setEnabled(true);
+                mLabelFrontend.setEnabled(true);
+
+                new Handler().postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        mSiteCreationListener.creationSuccess();
+                    }
+                }, 4000);
                 break;
         }
     }

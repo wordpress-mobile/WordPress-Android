@@ -74,7 +74,8 @@ public class HelpshiftHelper {
         ORIGIN_SITE_CREATION_CATEGORY("origin:site-create-site-category"),
         ORIGIN_SITE_CREATION_THEME("origin:site-create-site-theme"),
         ORIGIN_SITE_CREATION_DETAILS("origin:site-create-site-details"),
-        ORIGIN_SITE_CREATION_DOMAIN("origin:site-create-site-domain");
+        ORIGIN_SITE_CREATION_DOMAIN("origin:site-create-site-domain"),
+        ORIGIN_SITE_CREATION_CREATING("origin:site-create-creating");
 
         private final String mStringValue;
 

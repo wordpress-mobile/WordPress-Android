@@ -1,31 +1,72 @@
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <include
-        android:id="@+id/toolbar"
-        layout="@layout/toolbar_login" />
-
-    <ImageView
-        android:id="@+id/image"
-        android:layout_width="@dimen/magic_link_sent_illustration_sz"
-        android:layout_height="@dimen/magic_link_sent_illustration_sz"
-        android:layout_centerHorizontal="true"
-        android:layout_below="@+id/toolbar"
-        android:scaleType="centerInside"
-        android:layout_marginTop="@dimen/margin_extra_extra_large"
-        android:importantForAccessibility="no"
-        app:srcCompat="@drawable/img_email_alert_120dp"/>
-
-    <TextView
-        android:id="@+id/label"
-        style="@style/Base.TextAppearance.AppCompat.Body1"
+    <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:gravity="center"
-        android:layout_below="@+id/image"
-        android:padding="@dimen/margin_extra_large"
-        android:text="@string/site_creation_creating_label"/>
+        android:layout_marginTop="@dimen/margin_extra_extra_large">
 
-</RelativeLayout>
+        <ImageView
+            android:id="@+id/image"
+            android:layout_width="@dimen/magic_link_sent_illustration_sz"
+            android:layout_height="@dimen/magic_link_sent_illustration_sz"
+            android:layout_centerHorizontal="true"
+            android:scaleType="centerInside"
+            android:importantForAccessibility="no"
+            app:srcCompat="@drawable/img_email_alert_120dp"/>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/image"
+            android:layout_marginTop="@dimen/margin_extra_large"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/site_creation_creating_laying_foundation"
+                style="@style/Base.TextAppearance.AppCompat.Body1"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:enabled="false"
+                android:text="@string/site_creation_creating_laying_foundation"/>
+            <TextView
+                android:id="@+id/site_creation_creating_fetching_info"
+                style="@style/Base.TextAppearance.AppCompat.Body1"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:enabled="false"
+                android:text="@string/site_creation_creating_fetching_info"/>
+            <TextView
+                android:id="@+id/site_creation_creating_configuring_content"
+                style="@style/Base.TextAppearance.AppCompat.Body1"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:enabled="false"
+                android:text="@string/site_creation_creating_configuring_content"/>
+            <TextView
+                android:id="@+id/site_creation_creating_configuring_theme"
+                style="@style/Base.TextAppearance.AppCompat.Body1"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:enabled="false"
+                android:text="@string/site_creation_creating_configuring_theme"/>
+            <TextView
+                android:id="@+id/site_creation_creating_preparing_frontend"
+                style="@style/Base.TextAppearance.AppCompat.Body1"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:enabled="false"
+                android:text="@string/site_creation_creating_preparing_frontend"/>
+        </LinearLayout>
+
+    </RelativeLayout>
+</ScrollView>
