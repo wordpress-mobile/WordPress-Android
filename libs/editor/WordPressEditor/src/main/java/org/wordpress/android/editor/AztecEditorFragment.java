@@ -64,6 +64,7 @@ import org.wordpress.android.util.helpers.MediaFile;
 import org.wordpress.android.util.helpers.MediaGallery;
 import org.wordpress.aztec.Aztec;
 import org.wordpress.aztec.AztecAttributes;
+import org.wordpress.aztec.AztecExceptionHandler;
 import org.wordpress.aztec.AztecParser;
 import org.wordpress.aztec.AztecText;
 import org.wordpress.aztec.AztecTextFormat;
@@ -2099,5 +2100,13 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
 
     public int getMaxMediaSize() {
         return maxMediaSize;
+    }
+
+    public void enableContentLogOnCrashes(AztecExceptionHandler.ExceptionHandlerHelper helper) {
+        content.enableCrashLogging(helper);
+    }
+
+    public void disableContentLogOnCrashes() {
+        content.disableCrashLogging();
     }
 }

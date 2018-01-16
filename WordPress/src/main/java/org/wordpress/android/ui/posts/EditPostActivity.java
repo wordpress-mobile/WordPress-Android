@@ -136,6 +136,7 @@ import org.wordpress.android.util.helpers.MediaGallery;
 import org.wordpress.android.util.helpers.MediaGalleryImageSpan;
 import org.wordpress.android.util.helpers.WPImageSpan;
 import org.wordpress.android.widgets.WPViewPager;
+import org.wordpress.aztec.AztecExceptionHandler;
 import org.wordpress.passcodelock.AppLockManager;
 
 import java.io.File;
@@ -596,6 +597,9 @@ public class EditPostActivity extends AppCompatActivity implements
         mDispatcher.unregister(this);
         cancelAddMediaListThread();
         removePostOpenInEditorStickyEvent();
+        if (mEditorFragment instanceof AztecEditorFragment) {
+            ((AztecEditorFragment)mEditorFragment).disableContentLogOnCrashes();
+        }
         super.onDestroy();
     }
 
@@ -1140,6 +1144,20 @@ public class EditPostActivity extends AppCompatActivity implements
             );
             aztecEditorFragment.setAztecVideoLoader(new AztecVideoLoader(getBaseContext(), loadingVideoPlaceholder));
             aztecEditorFragment.setLoadingVideoPlaceholder(loadingVideoPlaceholder);
+
+            if (getSite() != null && getSite().isWPCom() && !getSite().isPrivate()) {
+                // Add the content reporting for wpcom blogs that are not private
+                aztecEditorFragment.enableContentLogOnCrashes(
+                        new AztecExceptionHandler.ExceptionHandlerHelper() {
+                            @Override
+                            public boolean shouldLog(Throwable throwable) {
+                                // Do not log private or password protected post
+                                return getPost() != null && TextUtils.isEmpty(getPost().getPassword()) &&
+                                        !PostStatus.PRIVATE.toString().equals(getPost().getStatus());
+                            }
+                        }
+                );
+            }
         }
     }
 
