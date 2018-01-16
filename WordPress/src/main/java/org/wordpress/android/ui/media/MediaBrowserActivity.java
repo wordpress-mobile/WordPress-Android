@@ -298,6 +298,10 @@ public class MediaBrowserActivity extends AppCompatActivity implements MediaGrid
         registerReceiver(mReceiver, new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION));
         mDispatcher.register(this);
         EventBus.getDefault().register(this);
+        // FluxC and App events are not reflecting on the grid while the app is sent to the
+        // background as listeners are unregistered in onStop(), so let's refresh the content
+        // when we're back on the foreground (don't worry - it will only refresh if differences are found)
+        reloadMediaGrid();
     }
 
     @Override

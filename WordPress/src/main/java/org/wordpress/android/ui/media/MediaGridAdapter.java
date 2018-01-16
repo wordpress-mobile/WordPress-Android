@@ -673,8 +673,15 @@ public class MediaGridAdapter extends RecyclerView.Adapter<MediaGridAdapter.Grid
         }
 
         for (MediaModel otherMedia : otherList) {
-            if (!mediaExists(otherMedia)) {
+            int idxCurrentList = indexOfMedia(otherMedia);
+            if (idxCurrentList == -1) {
                 return false;
+            } else {
+                MediaModel modelInCurrentList = mMediaList.get(idxCurrentList);
+                if (modelInCurrentList.getUploadState() != null &&
+                        !modelInCurrentList.getUploadState().equals(otherMedia.getUploadState())) {
+                    return false;
+                }
             }
         }
 
