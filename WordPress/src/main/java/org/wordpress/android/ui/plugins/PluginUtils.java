@@ -45,8 +45,14 @@ public class PluginUtils {
                 || TextUtils.isEmpty(pluginInfo.getVersion())) {
             return false;
         }
-        Version currentVersion = new Version(plugin.getVersion());
-        Version availableVersion = new Version(pluginInfo.getVersion());
-        return currentVersion.compareTo(availableVersion) == -1;
+        try {
+            Version currentVersion = new Version(plugin.getVersion());
+            Version availableVersion = new Version(pluginInfo.getVersion());
+            return currentVersion.compareTo(availableVersion) == -1;
+        } catch (IllegalArgumentException e) {
+            // If the versions are not in the expected format, we can assume that an update is available if the
+            // values for the site's plugin version and the version of the plugin directory are not the same
+            return !plugin.getVersion().equalsIgnoreCase(pluginInfo.getVersion());
+        }
     }
 }
