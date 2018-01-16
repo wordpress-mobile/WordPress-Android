@@ -346,7 +346,7 @@ class PostUploadNotifier {
         // show the snackbar
         if (mediaList != null && !mediaList.isEmpty()) {
             String snackbarMessage = buildSnackbarSuccessMessageForMedia(mediaList.size());
-            EventBus.getDefault().post(new UploadService.UploadMediaSuccessEvent(mediaList, snackbarMessage));
+            EventBus.getDefault().postSticky(new UploadService.UploadMediaSuccessEvent(mediaList, snackbarMessage));
         }
 
         if (!WordPress.sAppIsInTheBackground) {
@@ -472,7 +472,7 @@ class PostUploadNotifier {
                     actionPendingIntent).setColor(mContext.getResources().getColor(R.color.orange_jazzy));
         }
 
-        EventBus.getDefault().post(new UploadService.UploadErrorEvent(post, snackbarMessage));
+        EventBus.getDefault().postSticky(new UploadService.UploadErrorEvent(post, snackbarMessage));
 
         doNotify(notificationId, notificationBuilder.build());
     }
@@ -521,7 +521,7 @@ class PostUploadNotifier {
 
         }
 
-        EventBus.getDefault().post(new UploadService.UploadErrorEvent(mediaList, snackbarMessage));
+        EventBus.getDefault().postSticky(new UploadService.UploadErrorEvent(mediaList, snackbarMessage));
         doNotify(notificationId, notificationBuilder.build());
     }
 
