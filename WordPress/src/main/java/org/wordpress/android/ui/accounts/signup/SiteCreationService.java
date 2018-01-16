@@ -80,26 +80,26 @@ public class SiteCreationService extends AutoForeground<SiteCreationPhase, OnSit
     private static class SiteCreationNotification {
         static Notification progress(Context context, int progress) {
             return AutoForegroundNotification.progress(context, progress,
-                    org.wordpress.android.login.R.string.notification_site_creation_title_in_progress,
-                    org.wordpress.android.login.R.string.notification_site_creation_please_wait,
-                    org.wordpress.android.login.R.drawable.ic_my_sites_24dp,
-                    org.wordpress.android.login.R.color.blue_wordpress);
+                    R.string.notification_site_creation_title_in_progress,
+                    R.string.notification_site_creation_please_wait,
+                    R.drawable.ic_my_sites_24dp,
+                    R.color.blue_wordpress);
         }
 
         static Notification success(Context context) {
             return AutoForegroundNotification.success(context,
-                    org.wordpress.android.login.R.string.notification_site_creation_title_success,
-                    org.wordpress.android.login.R.string.notification_site_creation_created,
-                    org.wordpress.android.login.R.drawable.ic_my_sites_24dp,
-                    org.wordpress.android.login.R.color.blue_wordpress);
+                    R.string.notification_site_creation_title_success,
+                    R.string.notification_site_creation_created,
+                    R.drawable.ic_my_sites_24dp,
+                    R.color.blue_wordpress);
         }
 
         static Notification failure(Context context, @StringRes int content) {
             return AutoForegroundNotification.failure(context,
-                    org.wordpress.android.login.R.string.notification_site_creation_title_stopped,
+                    R.string.notification_site_creation_title_stopped,
                     content,
-                    org.wordpress.android.login.R.drawable.ic_my_sites_24dp,
-                    org.wordpress.android.login.R.color.blue_wordpress);
+                    R.drawable.ic_my_sites_24dp,
+                    R.color.blue_wordpress);
         }
     }
 
