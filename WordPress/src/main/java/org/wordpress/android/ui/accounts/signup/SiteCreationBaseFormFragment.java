@@ -15,15 +15,23 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewStub;
+import android.widget.Button;
 
 import org.wordpress.android.R;
 
 public abstract class SiteCreationBaseFormFragment<SiteCreationListenerType> extends Fragment {
 
+    private Button mPrimaryButton;
+
     protected SiteCreationListenerType mSiteCreationListener;
 
     protected abstract @LayoutRes int getContentLayout();
     protected abstract void setupContent(ViewGroup rootView);
+
+    protected void setupBottomButtons(Button primaryButton) {};
+    protected Button getPrimaryButton() {
+        return mPrimaryButton;
+    }
 
     protected abstract void onHelp();
 
@@ -47,6 +55,9 @@ public abstract class SiteCreationBaseFormFragment<SiteCreationListenerType> ext
         ViewGroup rootView = createMainView(inflater, container, savedInstanceState);
 
         setupContent(rootView);
+
+        mPrimaryButton = (Button) rootView.findViewById(R.id.primary_button);
+        setupBottomButtons(mPrimaryButton);
 
         return rootView;
     }

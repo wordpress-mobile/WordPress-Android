@@ -2077,9 +2077,14 @@
     <string name="site_creation_subtitle_website">To promote your business or brand and connect with your audience.</string>
     <string name="site_creation_title_portfolio">Start with a Portfolio</string>
     <string name="site_creation_subtitle_portfolio">To present your creative projects in a visual showcase.</string>
-
     <string name="site_creation_label_theme_selection_title">Step 2 of 4</string>
     <string name="site_creation_label_theme_selection">Pick one of our popular themes to get started or choose from hundreds more after you create it.</string>
     <string name="site_creation_label_theme_loading">Please wait while loading themes</string>
+    <string name="site_creation_label_site_details_title">Step 3 of 4</string>
+    <string name="site_creation_label_site_details">Tell us more about what you\'re creating. What\'s the title and tagline?</string>
+    <string name="site_creation_title_hint">Site title</string>
+    <string name="site_creation_tagline_hint">Site tagline (optional)</string>
+    <string name="site_creation_tagline_helper">The tagline is a short line of text shown right below the title in most themes, and act as site metadata on search engines.</string>
+    <string name="site_creation_empty_site_title">Please enter a site title</string>
 
 </resources>

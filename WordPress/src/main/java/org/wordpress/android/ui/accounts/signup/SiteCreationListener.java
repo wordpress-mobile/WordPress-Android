@@ -9,5 +9,9 @@ public interface SiteCreationListener {
     void withTheme(String themeId);
     void helpThemeScreen();
 
+    // Site Creation Site details callbacks
+    void withSiteDetails(String siteTitle, String siteTagline);
+    void helpSiteDetailsScreen();
+
     void setHelpContext(String faqId, String faqSection);
 }

@@ -338,6 +338,7 @@
 
     <!-- Site Creation -->
     <dimen name="site_creation_category_illustration_sz">80dp</dimen>
+    <dimen name="margin_tagline_left">40dp</dimen>
 
     <!--plugin-->
     <dimen name="plugin_icon_size">40dp</dimen>
