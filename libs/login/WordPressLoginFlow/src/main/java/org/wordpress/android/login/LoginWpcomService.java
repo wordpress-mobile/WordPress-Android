@@ -4,6 +4,7 @@ import android.app.Notification;
 import android.content.Context;
 import android.content.Intent;
 import android.support.annotation.Nullable;
+import android.support.annotation.StringRes;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -93,6 +94,32 @@ public class LoginWpcomService extends AutoForeground<LoginPhase, OnLoginStateUp
         }
     }
 
+    private static class LoginNotification {
+        static Notification progress(Context context, int progress) {
+            return AutoForegroundNotification.progress(context, progress,
+                    R.string.notification_login_title_in_progress,
+                    R.string.notification_logging_in,
+                    R.drawable.ic_my_sites_24dp,
+                    R.color.blue_wordpress);
+        }
+
+        static Notification success(Context context) {
+            return AutoForegroundNotification.success(context,
+                    R.string.notification_login_title_success,
+                    R.string.notification_logged_in,
+                    R.drawable.ic_my_sites_24dp,
+                    R.color.blue_wordpress);
+        }
+
+        static Notification failure(Context context, @StringRes int content) {
+            return AutoForegroundNotification.failure(context,
+                    R.string.notification_login_title_stopped,
+                    content,
+                    R.drawable.ic_my_sites_24dp,
+                    R.color.blue_wordpress);
+        }
+    }
+
     public static class OnLoginStateUpdated implements AutoForeground.ServiceEvent<LoginPhase> {
         private final LoginPhase mState;
 
@@ -164,43 +191,19 @@ public class LoginWpcomService extends AutoForeground<LoginPhase, OnLoginStateUp
             case FETCHING_ACCOUNT:
             case FETCHING_SETTINGS:
             case FETCHING_SITES:
-                return AutoForegroundNotification.progress(this, phase.progressPercent,
-                        R.string.notification_login_title_in_progress,
-                        R.string.notification_logging_in,
-                        R.drawable.ic_my_sites_24dp,
-                        R.color.blue_wordpress);
+                return LoginNotification.progress(this, phase.progressPercent);
             case SUCCESS:
-                return AutoForegroundNotification.success(this,
-                        R.string.notification_login_title_success,
-                        R.string.notification_logged_in,
-                        R.drawable.ic_my_sites_24dp,
-                        R.color.blue_wordpress);
+                return LoginNotification.success(this);
             case FAILURE_EMAIL_WRONG_PASSWORD:
-                return AutoForegroundNotification.failure(this,
-                        R.string.notification_login_title_stopped,
-                        R.string.notification_error_wrong_password,
-                        R.drawable.ic_my_sites_24dp,
-                        R.color.blue_wordpress);
+                return LoginNotification.failure(this, R.string.notification_error_wrong_password);
             case FAILURE_2FA:
-                return AutoForegroundNotification.failure(this,
-                        R.string.notification_login_title_stopped,
-                        R.string.notification_2fa_needed,
-                        R.drawable.ic_my_sites_24dp,
-                        R.color.blue_wordpress);
+                return LoginNotification.failure(this, R.string.notification_2fa_needed);
             case FAILURE_SOCIAL_2FA:
-                return AutoForegroundNotification.failure(this,
-                        R.string.notification_login_title_stopped,
-                        R.string.notification_2fa_needed,
-                        R.drawable.ic_my_sites_24dp,
-                        R.color.blue_wordpress);
+                return LoginNotification.failure(this, R.string.notification_2fa_needed);
             case FAILURE_FETCHING_ACCOUNT:
             case FAILURE_CANNOT_ADD_DUPLICATE_SITE:
             case FAILURE:
-                return AutoForegroundNotification.failure(this,
-                        R.string.notification_login_title_stopped,
-                        R.string.notification_login_failed,
-                        R.drawable.ic_my_sites_24dp,
-                        R.color.blue_wordpress);
+                return LoginNotification.failure(this, R.string.notification_login_failed);
         }
 
         return null;
