@@ -9,7 +9,7 @@ import android.view.ViewGroup;
 
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
-import org.wordpress.android.fluxc.model.WPOrgPluginModel;
+import org.wordpress.android.fluxc.model.plugin.WPOrgPluginModel;
 
 import java.util.List;
 

@@ -32,8 +32,8 @@ import org.wordpress.android.WordPress;
 import org.wordpress.android.fluxc.Dispatcher;
 import org.wordpress.android.fluxc.generated.PluginActionBuilder;
 import org.wordpress.android.fluxc.model.SiteModel;
-import org.wordpress.android.fluxc.model.SitePluginModel;
-import org.wordpress.android.fluxc.model.WPOrgPluginModel;
+import org.wordpress.android.fluxc.model.plugin.SitePluginModel;
+import org.wordpress.android.fluxc.model.plugin.WPOrgPluginModel;
 import org.wordpress.android.fluxc.store.PluginStore;
 import org.wordpress.android.ui.ActivityLauncher;
 import org.wordpress.android.util.AppLog;
@@ -55,13 +55,13 @@ public class PluginBrowserActivity extends AppCompatActivity
     private static final String KEY_LAST_SEARCH = "last_search";
 
     public enum PluginType {
-        INSTALLED,
+        SITE,
         POPULAR,
         NEW
     }
 
     private SiteModel mSite;
-    private List<SitePluginModel> mSitePlugins;
+    private final List<SitePluginModel> mSitePlugins = new ArrayList<>();
 
     private RecyclerView mSitePluginsRecycler;
     private RecyclerView mPopularPluginsRecycler;
@@ -103,6 +103,7 @@ public class PluginBrowserActivity extends AppCompatActivity
             mSite = (SiteModel) getIntent().getSerializableExtra(WordPress.SITE);
         } else {
             mSite = (SiteModel) savedInstanceState.getSerializable(WordPress.SITE);
+            mLastSearch = savedInstanceState.getString(KEY_LAST_SEARCH);
         }
 
         if (mSite == null) {
@@ -198,8 +199,9 @@ public class PluginBrowserActivity extends AppCompatActivity
 
     private void refreshPlugins(@NonNull PluginType pluginType) {
         switch (pluginType) {
-            case INSTALLED:
-                mSitePlugins = mPluginStore.getSitePlugins(mSite);
+            case SITE:
+                mSitePlugins.clear();
+                mSitePlugins.addAll(mPluginStore.getSitePlugins(mSite));
                 ((PluginBrowserAdapter) mSitePluginsRecycler.getAdapter()).setPlugins(mSitePlugins);
                 break;
             default:
@@ -245,7 +247,7 @@ public class PluginBrowserActivity extends AppCompatActivity
             ToastUtils.showToast(this, R.string.plugin_fetch_error);
             return;
         }
-        refreshPlugins(PluginType.INSTALLED);
+        refreshPlugins(PluginType.SITE);
     }
 
     @SuppressWarnings("unused")
@@ -359,9 +361,7 @@ public class PluginBrowserActivity extends AppCompatActivity
         }
 
         void setPlugins(@NonNull List<?> items) {
-            if (isSameList(items)) {
-                return;
-            }
+            if (isSameList(items)) return;
 
             mItems.clear();
             mItems.addAll(items);
@@ -431,7 +431,6 @@ public class PluginBrowserActivity extends AppCompatActivity
                 author = wpOrgPlugin.getAuthorAsHtml();
             }
 
-            boolean isUpdatable = sitePlugin != null && PluginUtils.isUpdateAvailable(sitePlugin, wpOrgPlugin);
             String iconUrl = wpOrgPlugin != null ? wpOrgPlugin.getIcon() : null;
 
             holder.nameText.setText(name);
