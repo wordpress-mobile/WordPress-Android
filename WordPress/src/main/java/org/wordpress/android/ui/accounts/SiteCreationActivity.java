@@ -131,11 +131,12 @@ public class SiteCreationActivity extends AppCompatActivity implements SiteCreat
         mSiteTagline = siteTagline;
 
         // TODO: insert the Domain selection screen here. Jump to "Creating" screen is for dev purposes
-        String siteSlug = WordPress.getBuildConfigString(this, "DEBUG_DOTCOM_NEW_SITE_SLUG");
-        slideInFragment(new SiteCreationCreatingFragment(), SiteCreationCreatingFragment.TAG);
 
         // start the Service to perform the site creation
+        String siteSlug = WordPress.getBuildConfigString(this, "DEBUG_DOTCOM_NEW_SITE_SLUG");
         SiteCreationService.createSite(this, siteTitle, siteTagline, siteSlug, mThemeId);
+
+        slideInFragment(new SiteCreationCreatingFragment(), SiteCreationCreatingFragment.TAG);
     }
 
     @Override
