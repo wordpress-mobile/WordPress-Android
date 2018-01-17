@@ -13,6 +13,7 @@ import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.ui.accounts.signup.SiteCreationCategoryFragment;
 import org.wordpress.android.ui.accounts.signup.SiteCreationCreatingFragment;
 import org.wordpress.android.ui.accounts.signup.SiteCreationListener;
+import org.wordpress.android.ui.accounts.signup.SiteCreationService;
 import org.wordpress.android.ui.accounts.signup.SiteCreationSiteDetailsFragment;
 import org.wordpress.android.ui.accounts.signup.SiteCreationThemeFragment;
 import org.wordpress.android.ui.accounts.signup.SiteCreationThemeLoaderFragment;
@@ -131,8 +132,10 @@ public class SiteCreationActivity extends AppCompatActivity implements SiteCreat
 
         // TODO: insert the Domain selection screen here. Jump to "Creating" screen is for dev purposes
         String siteSlug = WordPress.getBuildConfigString(this, "DEBUG_DOTCOM_NEW_SITE_SLUG");
-        slideInFragment(SiteCreationCreatingFragment.newInstance(mSiteTitle, mSiteTagline, siteSlug, mThemeId),
-                SiteCreationCreatingFragment.TAG);
+        slideInFragment(new SiteCreationCreatingFragment(), SiteCreationCreatingFragment.TAG);
+
+        // start the Service to perform the site creation
+        SiteCreationService.createSite(this, siteTitle, siteTagline, siteSlug, mThemeId);
     }
 
     @Override

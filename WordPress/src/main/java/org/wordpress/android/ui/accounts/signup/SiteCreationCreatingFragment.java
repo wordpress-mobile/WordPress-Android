@@ -21,11 +21,6 @@ import org.wordpress.android.util.ToastUtils;
 public class SiteCreationCreatingFragment extends SiteCreationBaseFormFragment<SiteCreationListener> {
     public static final String TAG = "site_creating_fragment_tag";
 
-    private static final String ARG_SITE_TITLE = "ARG_SITE_TITLE";
-    private static final String ARG_SITE_TAGLINE = "ARG_SITE_TAGLINE";
-    private static final String ARG_SITE_SLUG = "ARG_SITE_SLUG";
-    private static final String ARG_SITE_THEME = "ARG_SITE_THEME";
-
     private ServiceEventConnection mServiceEventConnection;
 
     private TextView mLabelFoundation;
@@ -33,18 +28,6 @@ public class SiteCreationCreatingFragment extends SiteCreationBaseFormFragment<S
     private TextView mLabelContent;
     private TextView mLabelStyle;
     private TextView mLabelFrontend;
-
-    public static SiteCreationCreatingFragment newInstance(String siteTitle, String siteTagline, String siteSlug,
-            String siteTheme) {
-        SiteCreationCreatingFragment fragment = new SiteCreationCreatingFragment();
-        Bundle args = new Bundle();
-        args.putString(ARG_SITE_TITLE, siteTitle);
-        args.putString(ARG_SITE_TAGLINE, siteTagline);
-        args.putString(ARG_SITE_SLUG, siteSlug);
-        args.putString(ARG_SITE_THEME, siteTheme);
-        fragment.setArguments(args);
-        return fragment;
-    }
 
     @Override
     protected @LayoutRes int getContentLayout() {
@@ -66,7 +49,6 @@ public class SiteCreationCreatingFragment extends SiteCreationBaseFormFragment<S
             mSiteCreationListener.helpSiteCreatingScreen();
         }
     }
-
 
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
@@ -100,12 +82,6 @@ public class SiteCreationCreatingFragment extends SiteCreationBaseFormFragment<S
 
         switch (event.getState()) {
             case IDLE:
-                String siteTitle = getArguments().getString(ARG_SITE_TITLE);
-                String siteTagline = getArguments().getString(ARG_SITE_TAGLINE);
-                String siteSlug = getArguments().getString(ARG_SITE_SLUG);
-                String siteTheme = getArguments().getString(ARG_SITE_THEME);
-                SiteCreationService.createSite(getActivity(), siteTitle, siteTagline, siteSlug, siteTheme);
-
                 mLabelFoundation.setEnabled(true);
                 break;
             case NEW_SITE:
