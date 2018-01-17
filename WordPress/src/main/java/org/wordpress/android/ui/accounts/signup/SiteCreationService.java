@@ -4,6 +4,7 @@ import android.app.Notification;
 import android.content.Context;
 import android.content.Intent;
 import android.support.annotation.Nullable;
+import android.support.annotation.StringRes;
 
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
@@ -16,13 +17,13 @@ import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.model.ThemeModel;
 import org.wordpress.android.fluxc.store.SiteStore;
 import org.wordpress.android.fluxc.store.ThemeStore;
-import org.wordpress.android.login.AutoForegroundNotification;
 import org.wordpress.android.ui.accounts.signup.SiteCreationService.OnSiteCreationStateUpdated;
 import org.wordpress.android.ui.accounts.signup.SiteCreationService.SiteCreationPhase;
 import org.wordpress.android.ui.prefs.SiteSettingsInterface;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.AutoForeground;
+import org.wordpress.android.util.AutoForegroundNotification;
 import org.wordpress.android.util.LanguageUtils;
 
 import java.util.Map;
@@ -73,6 +74,32 @@ public class SiteCreationService extends AutoForeground<SiteCreationPhase, OnSit
         @Override
         public boolean isTerminal() {
             return this == SUCCESS || isError();
+        }
+    }
+
+    private static class SiteCreationNotification {
+        static Notification progress(Context context, int progress) {
+            return AutoForegroundNotification.progress(context, progress,
+                    R.string.notification_site_creation_title_in_progress,
+                    R.string.notification_site_creation_please_wait,
+                    R.drawable.ic_my_sites_24dp,
+                    R.color.blue_wordpress);
+        }
+
+        static Notification success(Context context) {
+            return AutoForegroundNotification.success(context,
+                    R.string.notification_site_creation_title_success,
+                    R.string.notification_site_creation_created,
+                    R.drawable.ic_my_sites_24dp,
+                    R.color.blue_wordpress);
+        }
+
+        static Notification failure(Context context, @StringRes int content) {
+            return AutoForegroundNotification.failure(context,
+                    R.string.notification_site_creation_title_stopped,
+                    content,
+                    R.drawable.ic_my_sites_24dp,
+                    R.color.blue_wordpress);
         }
     }
 
@@ -141,17 +168,11 @@ public class SiteCreationService extends AutoForeground<SiteCreationPhase, OnSit
             case FETCHING_NEW_SITE:
             case SET_TAGLINE:
             case SET_THEME:
-                return AutoForegroundNotification.progress(this, 25,
-                        R.string.notification_site_creation_title_in_progress,
-                        R.string.notification_site_creation_please_wait);
+                return SiteCreationNotification.progress(this, 25);
             case SUCCESS:
-                return AutoForegroundNotification.success(this,
-                        R.string.notification_site_creation_title_success,
-                        R.string.notification_site_creation_created);
+                return SiteCreationNotification.success(this);
             case FAILURE:
-                return AutoForegroundNotification.success(this,
-                        R.string.notification_site_creation_title_stopped,
-                        R.string.notification_site_creation_failed);
+                return SiteCreationNotification.failure(this, R.string.notification_site_creation_failed);
         }
 
         return null;
