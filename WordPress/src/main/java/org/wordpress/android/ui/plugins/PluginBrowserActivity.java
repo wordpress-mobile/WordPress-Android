@@ -8,7 +8,6 @@ import android.support.annotation.DrawableRes;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.annotation.StringRes;
-import android.support.v4.view.MenuItemCompat;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
@@ -51,7 +50,7 @@ import java.util.List;
 import javax.inject.Inject;
 
 public class PluginBrowserActivity extends AppCompatActivity
-        implements SearchView.OnQueryTextListener, MenuItemCompat.OnActionExpandListener {
+        implements SearchView.OnQueryTextListener, MenuItem.OnActionExpandListener {
 
     private static final String KEY_LAST_SEARCH = "last_search";
 
@@ -155,6 +154,7 @@ public class PluginBrowserActivity extends AppCompatActivity
         getMenuInflater().inflate(R.menu.search, menu);
 
         mSearchMenuItem = menu.findItem(R.id.menu_search);
+        mSearchMenuItem.setOnActionExpandListener(this);
         mSearchView = (SearchView) mSearchMenuItem.getActionView();
         mSearchView.setOnQueryTextListener(this);
 
@@ -260,13 +260,13 @@ public class PluginBrowserActivity extends AppCompatActivity
         if (mSearchView != null) {
             mSearchView.clearFocus();
         }
-        showSearchFragment(query);
+        submitSearch(query);
         return true;
     }
 
     @Override
     public boolean onQueryTextChange(String query) {
-        showSearchFragment(query);
+        submitSearch(query);
         return true;
     }
 
@@ -278,21 +278,26 @@ public class PluginBrowserActivity extends AppCompatActivity
         return null;
     }
 
-    private void showSearchFragment(String query) {
-        PluginSearchFragment fragment = getSearchFragment();
-        if (fragment == null) {
-            fragment = PluginSearchFragment.newInstance();
+    private boolean hasSearchFragment() {
+        return getSearchFragment() != null;
+    }
+    private void showSearchFragment() {
+        if (!hasSearchFragment()) {
             getFragmentManager().beginTransaction()
-                    .add(R.id.fragment_container, fragment, PluginSearchFragment.TAG)
+                    .add(R.id.fragment_container, PluginSearchFragment.newInstance(), PluginSearchFragment.TAG)
+                    .addToBackStack(null)
                     .commit();
         }
-        // TODO: search will be implemented in a subsequent PR
+    }
+
+    private void submitSearch(String query) {
+        showSearchFragment();
+        // TODO: search will be performed in a subsequent PR
     }
 
     private void hideSearchFragment() {
-        PluginSearchFragment fragment = getSearchFragment();
-        if (fragment != null) {
-            getFragmentManager().beginTransaction().remove(fragment).commit();
+        if (getFragmentManager().getBackStackEntryCount() > 0) {
+            getFragmentManager().popBackStack();
         }
     }
 
@@ -302,6 +307,7 @@ public class PluginBrowserActivity extends AppCompatActivity
 
     @Override
     public boolean onMenuItemActionExpand(MenuItem menuItem) {
+        showSearchFragment();
         return true;
     }
 
