@@ -30,7 +30,7 @@ public class SiteCreationThemeAdapter extends RecyclerView.Adapter<RecyclerView.
         HeaderViewHolder(View itemView) {
             super(itemView);
             this.progress = itemView.findViewById(R.id.progress_container);
-            this.label = itemView.findViewById(R.id.progress_label);
+            this.label = (TextView) itemView.findViewById(R.id.progress_label);
         }
     }
 
