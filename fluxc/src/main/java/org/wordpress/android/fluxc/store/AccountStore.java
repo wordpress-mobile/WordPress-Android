@@ -409,6 +409,36 @@ public class AccountStore extends Store {
         }
     }
 
+    public static class AccountFetchUsernameSuggestionsError implements OnChangedError {
+        public AccountFetchUsernameSuggestionsErrorType type;
+        public String message;
+
+        public AccountFetchUsernameSuggestionsError(@NonNull AccountFetchUsernameSuggestionsErrorType type,
+                                                    @NonNull String message) {
+            this.type = type;
+            this.message = message;
+        }
+    }
+
+    public enum AccountFetchUsernameSuggestionsErrorType {
+        REST_MISSING_CALLBACK_PARAM,
+        REST_NO_NAME,
+        GENERIC_ERROR;
+
+        public static AccountFetchUsernameSuggestionsErrorType fromString(String string) {
+            if (string != null) {
+                for (AccountFetchUsernameSuggestionsErrorType type
+                        : AccountFetchUsernameSuggestionsErrorType.values()) {
+                    if (string.equalsIgnoreCase(type.name())) {
+                        return type;
+                    }
+                }
+            }
+
+            return GENERIC_ERROR;
+        }
+    }
+
     public static class AuthEmailError implements OnChangedError {
         public AuthEmailErrorType type;
         public String message;

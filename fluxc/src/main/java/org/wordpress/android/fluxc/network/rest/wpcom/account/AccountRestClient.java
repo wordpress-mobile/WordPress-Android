@@ -26,6 +26,7 @@ import org.wordpress.android.fluxc.network.rest.wpcom.WPComGsonRequest;
 import org.wordpress.android.fluxc.network.rest.wpcom.WPComGsonRequest.WPComGsonNetworkError;
 import org.wordpress.android.fluxc.network.rest.wpcom.auth.AccessToken;
 import org.wordpress.android.fluxc.network.rest.wpcom.auth.AppSecrets;
+import org.wordpress.android.fluxc.store.AccountStore.AccountFetchUsernameSuggestionsError;
 import org.wordpress.android.fluxc.store.AccountStore.AccountSocialError;
 import org.wordpress.android.fluxc.store.AccountStore.AccountSocialErrorType;
 import org.wordpress.android.fluxc.store.AccountStore.AccountUsernameActionType;
@@ -139,7 +140,8 @@ public class AccountRestClient extends BaseWPComRestClient {
         }
     }
 
-    public static class AccountFetchUsernameSuggestionsResponsePayload extends Payload<AccountUsernameError> {
+    public static class AccountFetchUsernameSuggestionsResponsePayload extends
+            Payload<AccountFetchUsernameSuggestionsError> {
         public List<String> suggestions;
 
         public AccountFetchUsernameSuggestionsResponsePayload() {
