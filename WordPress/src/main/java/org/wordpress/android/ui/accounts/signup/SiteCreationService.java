@@ -5,12 +5,8 @@ import android.content.Context;
 import android.content.Intent;
 import android.support.annotation.Nullable;
 
-import com.android.volley.VolleyError;
-import com.wordpress.rest.RestRequest;
-
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
-import org.json.JSONObject;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.analytics.AnalyticsTracker;
@@ -20,13 +16,13 @@ import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.model.ThemeModel;
 import org.wordpress.android.fluxc.store.SiteStore;
 import org.wordpress.android.fluxc.store.ThemeStore;
+import org.wordpress.android.login.AutoForegroundNotification;
 import org.wordpress.android.ui.accounts.signup.SiteCreationService.OnSiteCreationStateUpdated;
 import org.wordpress.android.ui.accounts.signup.SiteCreationService.SiteCreationPhase;
 import org.wordpress.android.ui.prefs.SiteSettingsInterface;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.AutoForeground;
-import org.wordpress.android.util.AutoForegroundNotification;
 import org.wordpress.android.util.LanguageUtils;
 
 import java.util.Map;
@@ -211,19 +207,20 @@ public class SiteCreationService extends AutoForeground<SiteCreationPhase, OnSit
     }
 
     private void activateTheme(final SiteModel site, final ThemeModel themeModel) {
-        WordPress.getRestClientUtils().setTheme(site.getSiteId(), themeModel.getThemeId(), new RestRequest.Listener() {
-            @Override
-            public void onResponse(JSONObject response) {
-                mThemeStore.setActiveThemeForSite(site, themeModel);
-
-                setState(SiteCreationPhase.SUCCESS);
-            }
-        }, new RestRequest.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError error) {
-                setState(SiteCreationPhase.FAILURE);
-            }
-        });
+        // TODO: Activate theme using FluxC methods, as setTheme() has been dropped
+//        WordPress.getRestClientUtils().setTheme(site.getSiteId(), themeModel.getThemeId(), new RestRequest.Listener() {
+//            @Override
+//            public void onResponse(JSONObject response) {
+//                mThemeStore.setActiveThemeForSite(site, themeModel);
+//
+//                setState(SiteCreationPhase.SUCCESS);
+//            }
+//        }, new RestRequest.ErrorListener() {
+//            @Override
+//            public void onErrorResponse(VolleyError error) {
+//                setState(SiteCreationPhase.FAILURE);
+//            }
+//        });
     }
 
     // OnChanged events

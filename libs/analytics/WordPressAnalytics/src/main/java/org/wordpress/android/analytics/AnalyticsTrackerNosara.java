@@ -758,8 +758,12 @@ public class AnalyticsTrackerNosara extends Tracker {
                 return "signup_google_button_tapped";
             case SIGNUP_TERMS_OF_SERVICE_TAPPED:
                 return "signup_terms_of_service_tapped";
-            case SIGNUP_DISMISSED:
-                return "signup_dismissed";
+            case SIGNUP_CANCELED:
+                return "signup_canceled";
+            case SIGNUP_SOCIAL_2FA_NEEDED:
+                return "signup_social_2fa_needed";
+            case SIGNUP_SOCIAL_ACCOUNTS_NEED_CONNECTING:
+                return "signup_social_accounts_need_connecting";
             case SITE_CREATION_ACCESSED:
                 return "site_creation_accessed";
             case SITE_CREATION_CATEGORY_VIEWED:
@@ -792,8 +796,6 @@ public class AnalyticsTrackerNosara extends Tracker {
                 return "me_tab_accessed";
             case ME_GRAVATAR_TAPPED:
                 return "me_gravatar_tapped";
-            case ME_GRAVATAR_TOOLTIP_TAPPED:
-                return "me_gravatar_tooltip_tapped";
             case ME_GRAVATAR_SHOT_NEW:
                 return "me_gravatar_shot_new";
             case ME_GRAVATAR_GALLERY_PICKED:

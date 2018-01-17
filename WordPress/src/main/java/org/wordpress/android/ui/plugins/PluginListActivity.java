@@ -16,7 +16,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
-import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import org.greenrobot.eventbus.Subscribe;
@@ -25,18 +24,21 @@ import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.fluxc.Dispatcher;
 import org.wordpress.android.fluxc.generated.PluginActionBuilder;
-import org.wordpress.android.fluxc.model.PluginInfoModel;
-import org.wordpress.android.fluxc.model.PluginModel;
 import org.wordpress.android.fluxc.model.SiteModel;
+import org.wordpress.android.fluxc.model.SitePluginModel;
+import org.wordpress.android.fluxc.model.WPOrgPluginModel;
 import org.wordpress.android.fluxc.store.PluginStore;
-import org.wordpress.android.fluxc.store.PluginStore.OnPluginInfoChanged;
 import org.wordpress.android.fluxc.store.PluginStore.OnSitePluginConfigured;
 import org.wordpress.android.fluxc.store.PluginStore.OnSitePluginDeleted;
 import org.wordpress.android.fluxc.store.PluginStore.OnSitePluginsFetched;
+import org.wordpress.android.fluxc.store.PluginStore.OnWPOrgPluginFetched;
 import org.wordpress.android.ui.ActivityLauncher;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
+import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.ToastUtils;
+import org.wordpress.android.util.helpers.SwipeToRefreshHelper;
+import org.wordpress.android.util.widgets.CustomSwipeRefreshLayout;
 import org.wordpress.android.widgets.DividerItemDecoration;
 import org.wordpress.android.widgets.WPNetworkImageView;
 import org.wordpress.android.widgets.WPNetworkImageView.ImageType;
@@ -45,11 +47,15 @@ import java.util.List;
 
 import javax.inject.Inject;
 
+import static org.wordpress.android.util.WPSwipeToRefreshHelper.buildSwipeToRefreshHelper;
+
 public class PluginListActivity extends AppCompatActivity {
+    private static final String KEY_REFRESHING = "KEY_REFRESHING";
+
     private SiteModel mSite;
     private RecyclerView mRecyclerView;
     private PluginListAdapter mAdapter;
-    private ProgressBar mProgressBar;
+    private SwipeToRefreshHelper mSwipeToRefreshHelper;
 
     @Inject PluginStore mPluginStore;
     @Inject Dispatcher mDispatcher;
@@ -58,8 +64,8 @@ public class PluginListActivity extends AppCompatActivity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         ((WordPress) getApplication()).component().inject(this);
-
         setContentView(R.layout.plugin_list_activity);
+        mDispatcher.register(this);
 
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -82,12 +88,14 @@ public class PluginListActivity extends AppCompatActivity {
             return;
         }
 
-        mDispatcher.register(this);
-        mDispatcher.dispatch(PluginActionBuilder.newFetchSitePluginsAction(mSite));
-
         setupViews();
-        if (mPluginStore.getSitePlugins(mSite).size() == 0) {
-            mProgressBar.setVisibility(View.VISIBLE);
+
+        if (savedInstanceState != null) {
+            mSwipeToRefreshHelper.setRefreshing(savedInstanceState.getBoolean(KEY_REFRESHING, false));
+        } else {
+            // Fetch plugins for the first time the activity is created
+            mSwipeToRefreshHelper.setRefreshing(true);
+            fetchPluginList();
         }
     }
 
@@ -110,6 +118,7 @@ public class PluginListActivity extends AppCompatActivity {
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
         outState.putSerializable(WordPress.SITE, mSite);
+        outState.putBoolean(KEY_REFRESHING, mSwipeToRefreshHelper.isRefreshing());
     }
 
     private void setupViews() {
@@ -122,9 +131,28 @@ public class PluginListActivity extends AppCompatActivity {
         mAdapter = new PluginListAdapter(this);
         mRecyclerView.setAdapter(mAdapter);
 
-        mProgressBar = findViewById(R.id.plugin_progress_bar);
+        mSwipeToRefreshHelper = buildSwipeToRefreshHelper(
+                (CustomSwipeRefreshLayout) findViewById(R.id.ptr_layout),
+                new SwipeToRefreshHelper.RefreshListener() {
+                    @Override
+                    public void onRefreshStarted() {
+                        if (isFinishing()) {
+                            return;
+                        }
+                        if (!NetworkUtils.checkConnection(PluginListActivity.this)) {
+                            mSwipeToRefreshHelper.setRefreshing(false);
+                            return;
+                        }
+                        fetchPluginList();
+                    }
+                }
+        );
 
         refreshPluginList();
+    }
+
+    private void fetchPluginList() {
+        mDispatcher.dispatch(PluginActionBuilder.newFetchSitePluginsAction(mSite));
     }
 
     private void refreshPluginList() {
@@ -137,9 +165,9 @@ public class PluginListActivity extends AppCompatActivity {
         if (isFinishing()) {
             return;
         }
-        mProgressBar.setVisibility(View.GONE);
+        mSwipeToRefreshHelper.setRefreshing(false);
         if (event.isError()) {
-            AppLog.e(T.API, "An error occurred while fetching the plugins: " + event.error.message);
+            ToastUtils.showToast(this, R.string.plugin_fetch_error);
             return;
         }
         refreshPluginList();
@@ -147,16 +175,16 @@ public class PluginListActivity extends AppCompatActivity {
 
     @SuppressWarnings("unused")
     @Subscribe(threadMode = ThreadMode.MAIN)
-    public void onPluginInfoChanged(OnPluginInfoChanged event) {
+    public void onWPOrgPluginFetched(OnWPOrgPluginFetched event) {
         if (isFinishing()) {
             return;
         }
         if (event.isError()) {
-            AppLog.e(T.API, "An error occurred while fetching the plugin info with type: " + event.error.type);
+            AppLog.e(T.API, "An error occurred while fetching the wporg plugin with type: " + event.error.type);
             return;
         }
-        if (event.pluginInfo != null && !TextUtils.isEmpty(event.pluginInfo.getSlug())) {
-            mAdapter.refreshPluginWithSlug(event.pluginInfo.getSlug());
+        if (!TextUtils.isEmpty(event.pluginSlug)) {
+            mAdapter.refreshPluginWithSlug(event.pluginSlug);
         }
     }
 
@@ -181,7 +209,7 @@ public class PluginListActivity extends AppCompatActivity {
     }
 
     private class PluginListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> implements View.OnClickListener {
-        private List<PluginModel> mPlugins;
+        private List<SitePluginModel> mPlugins;
 
         private final LayoutInflater mLayoutInflater;
 
@@ -189,12 +217,12 @@ public class PluginListActivity extends AppCompatActivity {
             mLayoutInflater = LayoutInflater.from(context);
         }
 
-        public void setPlugins(List<PluginModel> plugins) {
+        public void setPlugins(List<SitePluginModel> plugins) {
             mPlugins = plugins;
             notifyDataSetChanged();
         }
 
-        private PluginModel getItem(int position) {
+        private SitePluginModel getItem(int position) {
             if (mPlugins != null && position < mPlugins.size()) {
                 return mPlugins.get(position);
             }
@@ -215,19 +243,19 @@ public class PluginListActivity extends AppCompatActivity {
 
         @Override
         public void onBindViewHolder(ViewHolder holder, int position) {
-            PluginModel pluginModel = getItem(position);
-            if (pluginModel != null) {
+            SitePluginModel sitePlugin = getItem(position);
+            if (sitePlugin != null) {
                 PluginViewHolder pluginHolder = (PluginViewHolder) holder;
-                pluginHolder.name.setText(pluginModel.getDisplayName());
-                pluginHolder.status.setText(getPluginStatusText(pluginModel));
-                PluginInfoModel pluginInfo = PluginUtils.getPluginInfo(mPluginStore, pluginModel);
-                if (pluginInfo == null) {
-                    mDispatcher.dispatch(PluginActionBuilder.newFetchPluginInfoAction(pluginModel.getSlug()));
+                pluginHolder.name.setText(sitePlugin.getDisplayName());
+                pluginHolder.status.setText(getPluginStatusText(sitePlugin));
+                WPOrgPluginModel wpOrgPlugin = PluginUtils.getWPOrgPlugin(mPluginStore, sitePlugin);
+                if (wpOrgPlugin == null) {
+                    mDispatcher.dispatch(PluginActionBuilder.newFetchWporgPluginAction(sitePlugin.getSlug()));
                 }
-                String iconUrl = pluginInfo != null ? pluginInfo.getIcon() : "";
+                String iconUrl = wpOrgPlugin != null ? wpOrgPlugin.getIcon() : "";
                 pluginHolder.icon.setImageUrl(iconUrl, ImageType.PLUGIN_ICON);
 
-                if (pluginInfo != null && PluginUtils.isUpdateAvailable(pluginModel, pluginInfo)) {
+                if (wpOrgPlugin != null && PluginUtils.isUpdateAvailable(sitePlugin, wpOrgPlugin)) {
                     pluginHolder.updateAvailableIcon.setVisibility(View.VISIBLE);
                 } else {
                     pluginHolder.updateAvailableIcon.setVisibility(View.GONE);
@@ -254,7 +282,7 @@ public class PluginListActivity extends AppCompatActivity {
         @Override
         public void onClick(View view) {
             int itemPosition = mRecyclerView.getChildLayoutPosition(view);
-            PluginModel plugin = getItem(itemPosition);
+            SitePluginModel plugin = getItem(itemPosition);
             ActivityLauncher.viewPluginDetail(PluginListActivity.this, mSite, plugin);
         }
 
@@ -274,7 +302,7 @@ public class PluginListActivity extends AppCompatActivity {
         }
     }
 
-    private String getPluginStatusText(@NonNull PluginModel plugin) {
+    private String getPluginStatusText(@NonNull SitePluginModel plugin) {
         String activeStatus = plugin.isActive() ? getString(R.string.plugin_active)
                 : getString(R.string.plugin_inactive);
         String autoUpdateStatus = plugin.isAutoUpdateEnabled() ? getString(R.string.plugin_autoupdates_on)

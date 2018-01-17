@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/text_title"
+            style="@style/Base.TextAppearance.AppCompat.Title"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical"
+            android:padding="@dimen/margin_extra_large"
+            android:text="@string/site_settings_date_format_title" />
+
+        <RadioGroup
+            android:id="@+id/radio_group"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:paddingLeft="@dimen/margin_extra_large"
+            android:paddingRight="@dimen/margin_extra_large" />
+
+        <EditText
+            android:id="@+id/edit_custom"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="@dimen/margin_extra_large"
+            android:layout_marginLeft="@dimen/margin_extra_extra_large"
+            android:layout_marginRight="@dimen/margin_extra_large"
+            android:layout_marginStart="@dimen/margin_extra_extra_large"
+            android:hint="@string/site_settings_format_hint_custom"
+            android:imeOptions="flagNoExtractUi"
+            android:paddingLeft="@dimen/margin_small"
+            android:textSize="@dimen/text_sz_medium" />
+
+        <TextView
+            android:id="@+id/text_help"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/margin_extra_large"
+            android:layout_marginLeft="@dimen/margin_extra_extra_large"
+            android:layout_marginStart="@dimen/margin_extra_extra_large"
+            android:background="?android:selectableItemBackground"
+            android:gravity="center_vertical"
+            android:paddingLeft="@dimen/margin_small"
+            android:text="@string/site_settings_format_help"
+            android:textColor="@color/link"
+            android:textSize="@dimen/text_sz_small" />
+    </LinearLayout>
+
+</ScrollView>

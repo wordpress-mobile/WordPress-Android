@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="?attr/dialogPreferredPadding">
+
+    <android.support.design.widget.TextInputLayout
+        app:theme="@style/LoginTheme.EditText"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <!-- use singleLine (even if deprecated) to have a scrolling single line. -->
+        <android.support.design.widget.TextInputEditText
+            android:id="@+id/login_http_username"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:singleLine="true"
+            android:hint="@string/httpuser"/>
+    </android.support.design.widget.TextInputLayout>
+
+    <android.support.design.widget.TextInputLayout
+        app:theme="@style/LoginTheme.EditText"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/margin_extra_large"
+        app:passwordToggleEnabled="true"
+        app:passwordToggleTint="@color/grey">
+
+        <android.support.design.widget.TextInputEditText
+            android:id="@+id/login_http_password"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:inputType="textPassword"
+            android:hint="@string/httppassword"/>
+    </android.support.design.widget.TextInputLayout>
+</LinearLayout>

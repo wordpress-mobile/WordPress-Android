@@ -114,7 +114,7 @@ Language: bg
 	<string name="connected">Свързан</string>
 	<string name="twitter">Twitter</string>
 	<string name="buttons">Бутони</string>
-	<string name="sharing_edit_more_buttons">Редактирайте бутоните "още"</string>
+	<string name="sharing_edit_more_buttons">Редактирайте бутоните \"още\"</string>
 	<string name="visual">Визуален</string>
 	<string name="sharing_sharing_buttons_description">Изберете кои бутони да се показват под вашите публикации</string>
 	<string name="sharing_comment_likes">Харесвания на коментари</string>
@@ -122,7 +122,7 @@ Language: bg
 	<string name="label">Етикет</string>
 	<string name="sharing_buttons">Бутони за споделяне</string>
 	<string name="button_style">Стил на бутона</string>
-	<string name="more_buttons">Бутони "Още"</string>
+	<string name="more_buttons">Бутони \"Още\"</string>
 	<string name="publicize_text_only">Само текст</string>
 	<string name="publicize_icon_and_text">Иконка и текст</string>
 	<string name="publicize_icon_only">Само иконка</string>
@@ -529,11 +529,11 @@ Language: bg
 	<string name="site_settings_list_editor_input_hint">Въведете дума или фраза</string>
 	<string name="site_settings_list_editor_no_items_text">Няма елементи</string>
 	<string name="site_settings_learn_more_caption">Можете да презаписвате тези настройки за отделните публикации.</string>
-	<string name="site_settings_rp_preview3_site">в "Обновяване"</string>
+	<string name="site_settings_rp_preview3_site">в \"Обновяване\"</string>
 	<string name="site_settings_rp_preview3_title">Фокус на промяната: Видео Прес за сватби</string>
-	<string name="site_settings_rp_preview2_site">в "Приложения"</string>
+	<string name="site_settings_rp_preview2_site">в \"Приложения\"</string>
 	<string name="site_settings_rp_preview2_title">Подобрения в приложението на WordPress за Андроид</string>
-	<string name="site_settings_rp_preview1_site">в "Mobile"</string>
+	<string name="site_settings_rp_preview1_site">в \"Mobile\"</string>
 	<string name="site_settings_rp_preview1_title">Налични са големи подобрения за iPhone/iPad</string>
 	<string name="site_settings_rp_show_images_title">Показване на изображения</string>
 	<string name="site_settings_rp_show_header_title">Показване на заглавката</string>
@@ -695,7 +695,7 @@ Language: bg
 	<string name="local_changes_explainer">Публикацията има локални промени, които не са публикувани</string>
 	<string name="notifications_push_summary">Настройки на известявания, които се появяват на вашето устройство</string>
 	<string name="notifications_email_summary">Настройки за известяванията, които се изпращат на пощата асоциирана с вашия профил.</string>
-	<string name="notifications_tab_summary">Настройки за известяванията, които се появяват в подпрозореца "Известявания"</string>
+	<string name="notifications_tab_summary">Настройки за известяванията, които се появяват в подпрозореца \"Известявания\"</string>
 	<string name="notifications_disabled">Известяванията са спрени. Натиснете тук, за да ги активирате.</string>
 	<string name="notification_types">Видове известия</string>
 	<string name="error_loading_notifications">Настройките за известяванията не могат да бъдат заредени</string>
@@ -749,7 +749,7 @@ Language: bg
 	<string name="me_connect_to_wordpress_com">Влизане в WordPress.com</string>
 	<string name="account_settings">Настройки на профила</string>
 	<string name="me_btn_support">Помощ и поддръжка</string>
-	<string name="site_picker_cant_hide_current_site">"%s" не беше скрит защото е текущият уебсайт</string>
+	<string name="site_picker_cant_hide_current_site">\"%s\" не беше скрит защото е текущият уебсайт</string>
 	<string name="site_picker_create_dotcom">Създаване на WordPress.com уебсайт</string>
 	<string name="site_picker_edit_visibility">Показване/скриване на сайтовете</string>
 	<string name="site_picker_add_site">Добавяне на сайт</string>
@@ -966,14 +966,14 @@ Language: bg
 	<string name="out_of_memory">Няма повече налична памет в устройството</string>
 	<string name="invalid_username_too_long">Потребителското име трябва да е по-кратко от 61 символа</string>
 	<string name="error_refresh_stats">Статистиката не може да бъде обновена в момента</string>
-	<string name="cat_name_required">Полето "име на категория" е задължително</string>
+	<string name="cat_name_required">Полето \"име на категория\" е задължително</string>
 	<string name="blog_name_must_be_at_least_four_characters">Дължината на адреса на уебсайта трябва да бъде поне 4 символа дълга</string>
 	<string name="gallery_error">Възникна грешка при извличането на файла</string>
 	<string name="blog_name_cant_be_used">Не можете да използвате тозу уебсайт адрес</string>
 	<string name="blog_name_reserved_but_may_be_available">Този уебсайт е резервиран в момента, но въпреки това може да бъде наличен в близките дни</string>
 	<string name="username_must_be_at_least_four_characters">Потребителското име трябва да е поне 4 символа дълго</string>
 	<string name="username_must_include_letters">Потребителското име трябва да съдържа поне 1 латинска буква (a-z)</string>
-	<string name="username_contains_invalid_characters">Потребителското име не трябва да съдържа символа "_"</string>
+	<string name="username_contains_invalid_characters">Потребителското име не трябва да съдържа символа \"_\"</string>
 	<string name="blog_name_only_lowercase_letters_and_numbers">Адреса на уебсайта може да съдържа само малки латински букви (a-z) и числа</string>
 	<string name="username_reserved_but_may_be_available">Това потребителско име е резервирано в момента, но може да бъде налично в близките дни</string>
 	<string name="blog_not_found">Възникна грешка при достъпване на този блог</string>
@@ -985,7 +985,7 @@ Language: bg
 	<string name="stats_bar_graph_empty">Няма налична статистика</string>
 	<string name="theme_auth_error_message">Уверете се че имате нужните права за да сменяте теми</string>
 	<string name="blog_name_reserved">Този уебсайт е резервиран</string>
-	<string name="blog_name_contains_invalid_characters">Адреса на уебсайта не може да съдържа символа "_"</string>
+	<string name="blog_name_contains_invalid_characters">Адреса на уебсайта не може да съдържа символа \"_\"</string>
 	<string name="username_only_lowercase_letters_and_numbers">Потребителското име може да съдържа само малки латински букви (a-z) и числа</string>
 	<string name="theme_fetch_failed">Възникна грешка при извличането на снимките</string>
 	<string name="username_not_allowed">Това потребителско име не е разрешено</string>

@@ -150,55 +150,6 @@ public class RestClientUtils {
         post(path, params, null, listener, errorListener);
     }
 
-    public void getFreeSearchThemes(long siteId, int limit, int offset, String searchTerm,
-                                    Listener listener, ErrorListener errorListener) {
-        getSearchThemes("free", siteId, limit, offset, searchTerm, listener, errorListener);
-    }
-
-    private void getSearchThemes(String tier, long siteId, int limit, int offset, String searchTerm, Listener listener,
-                                 ErrorListener errorListener) {
-        String path = String.format(Locale.US, "sites/%d/themes?tier=" + tier + "&number=%d&offset=%d&search=%s",
-                siteId, limit, offset, searchTerm);
-        get(path, listener, errorListener);
-    }
-
-    public void getFreeThemes(long siteId, int limit, int offset, Listener listener, ErrorListener errorListener) {
-        getThemes("free", siteId, limit, offset, listener, errorListener);
-    }
-
-    public void getPurchasedThemes(long siteId, Listener listener, ErrorListener errorListener) {
-        String path = String.format(Locale.US, "sites/%d/themes/purchased", siteId);
-        get(path, listener, errorListener);
-    }
-
-    /**
-     * Get all a site's themes
-     */
-    private void getThemes(String tier, long siteId, int limit, int offset,
-                           Listener listener, ErrorListener errorListener) {
-        String path = String.format(Locale.US, "sites/%d/themes/?tier="
-                + tier + "&number=%d&offset=%d", siteId, limit, offset);
-        get(path, listener, errorListener);
-    }
-
-    /**
-     * Set a site's theme
-     */
-    public void setTheme(long siteId, String themeId, Listener listener, ErrorListener errorListener) {
-        Map<String, String> params = new HashMap<>();
-        params.put("theme", themeId);
-        String path = String.format(Locale.US, "sites/%d/themes/mine", siteId);
-        post(path, params, null, listener, errorListener);
-    }
-
-    /**
-     * Get a site's current theme
-     */
-    public void getCurrentTheme(long siteId, Listener listener, ErrorListener errorListener) {
-        String path = String.format(Locale.US, "sites/%d/themes/mine", siteId);
-        get(path, listener, errorListener);
-    }
-
     public void getJetpackSettings(long siteId, Listener listener, ErrorListener errorListener) {
         String path = String.format(Locale.US, "jetpack-blogs/%d/rest-api/?path=/jetpack/v4/settings", siteId);
         get(path, listener, errorListener);
