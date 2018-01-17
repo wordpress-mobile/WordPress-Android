@@ -73,13 +73,13 @@
                 card_view:cardBackgroundColor="@color/white"
                 card_view:cardCornerRadius="@dimen/cardview_default_radius">
 
-                <LinearLayout
+                <RelativeLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/margin_extra_large"
-                    android:orientation="vertical">
+                    android:layout_marginTop="@dimen/margin_extra_large">
 
                     <TextView
+                        android:id="@+id/text_popular"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="@dimen/margin_extra_large"
@@ -88,13 +88,27 @@
                         android:textSize="@dimen/text_sz_large"
                         android:textStyle="bold" />
 
+                    <TextView
+                        android:id="@+id/text_all_popular"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentRight="true"
+                        android:layout_marginRight="@dimen/margin_extra_large"
+                        android:background="?android:attr/selectableItemBackground"
+                        android:text="@string/plugin_see_all"
+                        android:textAllCaps="true"
+                        android:textColor="@color/blue_medium"
+                        android:textSize="@dimen/text_sz_medium"
+                        android:textStyle="bold" />
+
                     <android.support.v7.widget.RecyclerView
                         android:id="@+id/popular_plugins_recycler"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
+                        android:layout_below="@+id/text_popular"
                         android:layout_marginTop="@dimen/margin_medium"
                         android:scrollbars="none" />
-                </LinearLayout>
+                </RelativeLayout>
             </android.support.v7.widget.CardView>
 
             <android.support.v7.widget.CardView
@@ -105,13 +119,14 @@
                 card_view:cardBackgroundColor="@color/white"
                 card_view:cardCornerRadius="@dimen/cardview_default_radius">
 
-                <LinearLayout
+                <RelativeLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="@dimen/margin_extra_large"
                     android:orientation="vertical">
 
                     <TextView
+                        android:id="@+id/text_new"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="@dimen/margin_extra_large"
@@ -120,13 +135,27 @@
                         android:textSize="@dimen/text_sz_large"
                         android:textStyle="bold" />
 
+                    <TextView
+                        android:id="@+id/text_all_new"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentRight="true"
+                        android:layout_marginRight="@dimen/margin_extra_large"
+                        android:background="?android:attr/selectableItemBackground"
+                        android:text="@string/plugin_see_all"
+                        android:textAllCaps="true"
+                        android:textColor="@color/blue_medium"
+                        android:textSize="@dimen/text_sz_medium"
+                        android:textStyle="bold" />
+
                     <android.support.v7.widget.RecyclerView
                         android:id="@+id/new_plugins_recycler"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
+                        android:layout_below="@+id/text_new"
                         android:layout_marginTop="@dimen/margin_medium"
                         android:scrollbars="none" />
-                </LinearLayout>
+                </RelativeLayout>
             </android.support.v7.widget.CardView>
         </LinearLayout>
 
