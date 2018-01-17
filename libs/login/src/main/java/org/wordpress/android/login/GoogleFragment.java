@@ -51,7 +51,7 @@ public class GoogleFragment extends Fragment implements ConnectionCallbacks, OnC
     public interface GoogleListener {
         void onGoogleEmailSelected(String email);
         void onGoogleLoginFinished();
-        void onGoogleSignupFinished(String name, String email, String photoUrl);
+        void onGoogleSignupFinished(String name, String email, String photoUrl, String username);
     }
 
     @Override
