@@ -2,6 +2,7 @@ package org.wordpress.android.ui.accounts.signup;
 
 import android.os.Bundle;
 import android.os.Handler;
+import android.support.annotation.IdRes;
 import android.support.annotation.LayoutRes;
 import android.support.annotation.Nullable;
 import android.view.View;
@@ -23,11 +24,7 @@ public class SiteCreationCreatingFragment extends SiteCreationBaseFormFragment<S
 
     private ServiceEventConnection mServiceEventConnection;
 
-    private TextView mLabelFoundation;
-    private TextView mLabelFetching;
-    private TextView mLabelContent;
-    private TextView mLabelStyle;
-    private TextView mLabelFrontend;
+    private TextView[] mLabels;
 
     @Override
     protected @LayoutRes int getContentLayout() {
@@ -36,11 +33,13 @@ public class SiteCreationCreatingFragment extends SiteCreationBaseFormFragment<S
 
     @Override
     protected void setupContent(ViewGroup rootView) {
-        mLabelFoundation = (TextView) rootView.findViewById(R.id.site_creation_creating_laying_foundation);
-        mLabelFetching = (TextView) rootView.findViewById(R.id.site_creation_creating_fetching_info);
-        mLabelContent = (TextView) rootView.findViewById(R.id.site_creation_creating_configuring_content);
-        mLabelStyle = (TextView) rootView.findViewById(R.id.site_creation_creating_configuring_theme);
-        mLabelFrontend = (TextView) rootView.findViewById(R.id.site_creation_creating_preparing_frontend);
+        // construct an array with the labels in reverse order
+        mLabels = new TextView[] {
+                (TextView) rootView.findViewById(R.id.site_creation_creating_preparing_frontend),
+                (TextView) rootView.findViewById(R.id.site_creation_creating_configuring_theme),
+                (TextView) rootView.findViewById(R.id.site_creation_creating_configuring_content),
+                (TextView) rootView.findViewById(R.id.site_creation_creating_fetching_info),
+                (TextView) rootView.findViewById(R.id.site_creation_creating_laying_foundation)};
     }
 
     @Override
@@ -75,6 +74,19 @@ public class SiteCreationCreatingFragment extends SiteCreationBaseFormFragment<S
         mServiceEventConnection.disconnect(getContext(), this);
     }
 
+    private void disableUntil(@IdRes int textViewId) {
+        boolean enabled = false;
+
+        // traverse the array (elements are in "reverse" order already) and disable them until the provided on is reach.
+        //  From that point on, enable the laberls found
+        for(TextView tv : mLabels) {
+            if (tv.getId() == textViewId) {
+                enabled = true;
+            }
+
+            tv.setEnabled(enabled);
+        }
+    }
     @SuppressWarnings("unused")
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onSiteCreationPhaseUpdated(OnSiteCreationStateUpdated event) {
@@ -82,37 +94,27 @@ public class SiteCreationCreatingFragment extends SiteCreationBaseFormFragment<S
 
         switch (event.getState()) {
             case IDLE:
-                mLabelFoundation.setEnabled(true);
+                disableUntil(0);
                 break;
             case NEW_SITE:
-                // nothing special to do here, just waiting for the site creation result...
-                mLabelFoundation.setEnabled(true);
+                disableUntil(R.id.site_creation_creating_laying_foundation);
                 break;
             case FETCHING_NEW_SITE:
-                mLabelFoundation.setEnabled(true);
-                mLabelFetching.setEnabled(true);
+                disableUntil(R.id.site_creation_creating_fetching_info);
                 break;
             case SET_TAGLINE:
-                mLabelFoundation.setEnabled(true);
-                mLabelFetching.setEnabled(true);
-                mLabelContent.setEnabled(true);
+                disableUntil(R.id.site_creation_creating_configuring_content);
                 break;
             case SET_THEME:
-                mLabelFoundation.setEnabled(true);
-                mLabelFetching.setEnabled(true);
-                mLabelContent.setEnabled(true);
-                mLabelStyle.setEnabled(true);
+                disableUntil(R.id.site_creation_creating_configuring_theme);
                 break;
             case FAILURE:
                 ToastUtils.showToast(getContext(), R.string.site_creation_creating_failed);
                 break;
             case SUCCESS:
-                mLabelFoundation.setEnabled(true);
-                mLabelFetching.setEnabled(true);
-                mLabelContent.setEnabled(true);
-                mLabelStyle.setEnabled(true);
-                mLabelFrontend.setEnabled(true);
+                disableUntil(R.id.site_creation_creating_preparing_frontend);
 
+                // artificial delay to load the site in the background
                 new Handler().postDelayed(new Runnable() {
                     @Override
                     public void run() {
