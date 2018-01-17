@@ -76,6 +76,13 @@ public class AccountStore extends Store {
         }
     }
 
+    public static class FetchUsernameSuggestionsPayload extends Payload<BaseNetworkError> {
+        public String name;
+        public FetchUsernameSuggestionsPayload(@NonNull String name) {
+            this.name = name;
+        }
+    }
+
     public static class PushAccountSettingsPayload extends Payload<BaseNetworkError> {
         public Map<String, Object> params;
         public PushAccountSettingsPayload() {
