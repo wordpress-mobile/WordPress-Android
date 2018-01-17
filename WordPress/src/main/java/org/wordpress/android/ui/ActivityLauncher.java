@@ -18,11 +18,11 @@ import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.fluxc.model.SitePluginModel;
 import org.wordpress.android.fluxc.model.PostModel;
 import org.wordpress.android.fluxc.model.SiteModel;
+import org.wordpress.android.login.LoginMode;
 import org.wordpress.android.networking.SSLCertsViewActivity;
 import org.wordpress.android.ui.accounts.HelpActivity;
 import org.wordpress.android.ui.accounts.LoginActivity;
 import org.wordpress.android.ui.accounts.LoginEpilogueActivity;
-import org.wordpress.android.ui.accounts.LoginMode;
 import org.wordpress.android.ui.accounts.NewBlogActivity;
 import org.wordpress.android.ui.accounts.SignInActivity;
 import org.wordpress.android.ui.accounts.SiteCreationActivity;
@@ -147,6 +147,7 @@ public class ActivityLauncher {
             Intent intent = new Intent(context, ThemeBrowserActivity.class);
             intent.putExtra(WordPress.SITE, site);
             context.startActivity(intent);
+            AnalyticsUtils.trackWithSiteDetails(AnalyticsTracker.Stat.THEMES_ACCESSED_THEMES_BROWSER, site);
         }
     }
 

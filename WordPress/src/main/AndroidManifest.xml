@@ -556,7 +556,7 @@
             android:exported="false"
             android:label="Notifications Update Service" />
         <service
-            android:name=".ui.accounts.login.LoginWpcomService"
+            android:name=".login.LoginWpcomService"
             android:exported="false"
             android:label="Login to WPCOM Service" />
         <service

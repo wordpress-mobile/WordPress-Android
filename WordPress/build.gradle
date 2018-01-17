@@ -135,8 +135,10 @@ dependencies {
     compile 'com.google.dagger:dagger:2.11'
     apt 'com.google.dagger:dagger-compiler:2.11'
     provided 'org.glassfish:javax.annotation:10.0-b28'
+    compile 'com.google.dagger:dagger-android-support:2.11'
+    apt 'com.google.dagger:dagger-android-processor:2.11'
 
-    compile ('com.github.wordpress-mobile.WordPress-FluxC-Android:fluxc:fd47635fb823d74405c56edc37c6c7a6a59e5fb5') {
+    compile ('com.github.wordpress-mobile.WordPress-FluxC-Android:fluxc:3251d1575c5861344ae6f8ce7c76d130bb40a696') {
         exclude group: "com.android.volley"
     }
 
@@ -150,6 +152,12 @@ dependencies {
     debugCompile project(path:':libs:analytics:WordPressAnalytics', configuration: 'debug')
     releaseCompile project(path:':libs:editor:WordPressEditor', configuration: 'release')
     debugCompile project(path:':libs:editor:WordPressEditor', configuration: 'debug')
+    releaseCompile (project(path:':libs:login:WordPressLoginFlow', configuration: 'release')) {
+        exclude group: "com.github.wordpress-mobile.WordPress-FluxC-Android", module: "fluxc";
+    }
+    debugCompile (project(path:':libs:login:WordPressLoginFlow', configuration: 'debug')) {
+        exclude group: "com.github.wordpress-mobile.WordPress-FluxC-Android", module: "fluxc";
+    }
 
     // Debug
     debugCompile 'com.facebook.stetho:stetho:1.4.2'
