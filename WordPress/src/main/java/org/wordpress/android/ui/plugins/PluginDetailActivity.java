@@ -399,21 +399,18 @@ public class PluginDetailActivity extends AppCompatActivity {
         mSwitchActive.setChecked(mIsActive);
         mSwitchAutoupdates.setChecked(mIsAutoUpdateEnabled);
 
-        if (!TextUtils.isEmpty(mWPOrgPlugin.getBanner())) {
-            mImageBanner.setVisibility(View.VISIBLE);
+        if (mWPOrgPlugin != null) {
             mImageBanner.setImageUrl(mWPOrgPlugin.getBanner(), PHOTO);
-        } else {
-            mImageBanner.setVisibility(View.GONE);
+            mImageIcon.setImageUrl(mWPOrgPlugin.getIcon(), PLUGIN_ICON);
+
+            setCollapsibleHtmlText(mDescriptionTextView, mWPOrgPlugin.getDescriptionAsHtml());
+            setCollapsibleHtmlText(mInstallationTextView, mWPOrgPlugin.getInstallationInstructionsAsHtml());
+            setCollapsibleHtmlText(mWhatsNewTextView, mWPOrgPlugin.getWhatsNewAsHtml());
+            setCollapsibleHtmlText(mFaqTextView, mWPOrgPlugin.getFaqAsHtml());
+
+            refreshPluginVersionViews();
+            refreshRatingsViews();
         }
-        mImageIcon.setImageUrl(mWPOrgPlugin.getIcon(), PLUGIN_ICON);
-
-        setCollapsibleHtmlText(mDescriptionTextView, mWPOrgPlugin.getDescriptionAsHtml());
-        setCollapsibleHtmlText(mInstallationTextView, mWPOrgPlugin.getInstallationInstructionsAsHtml());
-        setCollapsibleHtmlText(mWhatsNewTextView, mWPOrgPlugin.getWhatsNewAsHtml());
-        setCollapsibleHtmlText(mFaqTextView, mWPOrgPlugin.getFaqAsHtml());
-
-        refreshPluginVersionViews();
-        refreshRatingsViews();
     }
 
     private void setCollapsibleHtmlText(@NonNull TextView textView, @Nullable String htmlText) {
@@ -446,6 +443,8 @@ public class PluginDetailActivity extends AppCompatActivity {
     }
 
     private void refreshUpdateVersionViews() {
+        if (mWPOrgPlugin == null) return;
+
         boolean isUpdateAvailable = PluginUtils.isUpdateAvailable(mSitePlugin, mWPOrgPlugin);
         mUpdateTextView.setVisibility(isUpdateAvailable && !mIsUpdatingPlugin ? View.VISIBLE : View.GONE);
         mUpdateProgressBar.setVisibility(mIsUpdatingPlugin ? View.VISIBLE: View.GONE);
@@ -453,6 +452,8 @@ public class PluginDetailActivity extends AppCompatActivity {
     }
 
     private void refreshRatingsViews() {
+        if (mWPOrgPlugin == null) return;
+
         int numRatingsTotal = mWPOrgPlugin.getNumberOfRatings();
 
         TextView txtNumRatings = findViewById(R.id.text_num_ratings);
@@ -499,6 +500,8 @@ public class PluginDetailActivity extends AppCompatActivity {
         }
     }
     private void showPluginInfoPopup() {
+        if (mWPOrgPlugin == null) return;
+
         List<Map<String, String>> data = new ArrayList<>();
         int[] to = { R.id.text1, R.id.text2 };
         String[] from = { KEY_LABEL, KEY_TEXT };
