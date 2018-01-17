@@ -18,6 +18,7 @@ import org.wordpress.android.fluxc.network.discovery.SelfHostedEndpointFinder;
 import org.wordpress.android.fluxc.network.discovery.SelfHostedEndpointFinder.DiscoveryError;
 import org.wordpress.android.fluxc.network.discovery.SelfHostedEndpointFinder.DiscoveryResultPayload;
 import org.wordpress.android.fluxc.network.rest.wpcom.account.AccountRestClient;
+import org.wordpress.android.fluxc.network.rest.wpcom.account.AccountRestClient.AccountFetchUsernameSuggestionsResponsePayload;
 import org.wordpress.android.fluxc.network.rest.wpcom.account.AccountRestClient.AccountPushSettingsResponsePayload;
 import org.wordpress.android.fluxc.network.rest.wpcom.account.AccountRestClient.AccountPushSocialResponsePayload;
 import org.wordpress.android.fluxc.network.rest.wpcom.account.AccountRestClient.AccountPushUsernameResponsePayload;
@@ -192,6 +193,10 @@ public class AccountStore extends Store {
     public static class OnUsernameChanged extends OnChanged<AccountUsernameError> {
         public AccountUsernameActionType type;
         public String username;
+    }
+
+    public static class OnUsernameSuggestionsFetched extends OnChanged<AccountFetchUsernameSuggestionsError> {
+        public List<String> suggestions;
     }
 
     public static class OnDiscoveryResponse extends OnChanged<DiscoveryError> {
@@ -555,6 +560,9 @@ public class AccountStore extends Store {
             case FETCH_SETTINGS:
                 mAccountRestClient.fetchAccountSettings();
                 break;
+            case FETCH_USERNAME_SUGGESTIONS:
+                createFetchUsernameSuggestions((FetchUsernameSuggestionsPayload) payload);
+                break;
             case SEND_VERIFICATION_EMAIL:
                 mAccountRestClient.sendVerificationEmail();
                 break;
@@ -605,6 +613,9 @@ public class AccountStore extends Store {
                 break;
             case FETCHED_SETTINGS:
                 handleFetchSettingsCompleted((AccountRestPayload) payload);
+                break;
+            case FETCHED_USERNAME_SUGGESTIONS:
+                handleFetchUsernameSuggestionsCompleted((AccountFetchUsernameSuggestionsResponsePayload) payload);
                 break;
             case FETCHED_ACCOUNT:
                 handleFetchAccountCompleted((AccountRestPayload) payload);
@@ -701,6 +712,13 @@ public class AccountStore extends Store {
         }
     }
 
+    private void handleFetchUsernameSuggestionsCompleted(AccountFetchUsernameSuggestionsResponsePayload payload) {
+        OnUsernameSuggestionsFetched event = new OnUsernameSuggestionsFetched();
+        event.error = payload.error;
+        event.suggestions = payload.suggestions;
+        emitChange(event);
+    }
+
     private void handleSentVerificationEmail(NewAccountResponsePayload payload) {
         OnAccountChanged accountChanged = new OnAccountChanged();
         accountChanged.causeOfChange = AccountAction.SEND_VERIFICATION_EMAIL;
@@ -790,6 +808,10 @@ public class AccountStore extends Store {
         OnAccountChanged event = new OnAccountChanged();
         event.error = new AccountError(errorType, "");
         emitChange(event);
+    }
+
+    private void createFetchUsernameSuggestions(FetchUsernameSuggestionsPayload payload) {
+        mAccountRestClient.fetchUsernameSuggestions(payload.name);
     }
 
     private void createNewAccount(NewAccountPayload payload) {
