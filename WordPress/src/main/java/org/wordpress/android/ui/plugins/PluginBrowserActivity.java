@@ -194,7 +194,7 @@ public class PluginBrowserActivity extends AppCompatActivity
 
     private void refreshSitePlugins() {
         mSitePlugins = mPluginStore.getSitePlugins(mSite);
-        ((PluginBrowserAdapter) mSitePluginsRecycler.getAdapter()).setSitePlugins(mSitePlugins);
+        ((PluginBrowserAdapter) mSitePluginsRecycler.getAdapter()).setPlugins(mSitePlugins);
     }
 
     private void refreshDirectoryPlugins(@NonNull RecyclerView recycler) {
@@ -206,7 +206,7 @@ public class PluginBrowserActivity extends AppCompatActivity
                 wpOrgPlugins.add(wpOrgPlugin);
             }
         }
-        ((PluginBrowserAdapter) recycler.getAdapter()).setWPOrgPlugins(wpOrgPlugins);
+        ((PluginBrowserAdapter) recycler.getAdapter()).setPlugins(wpOrgPlugins);
     }
 
     private SitePluginModel getSitePluginFromSlug(@Nullable String slug) {
@@ -286,6 +286,7 @@ public class PluginBrowserActivity extends AppCompatActivity
                     .add(R.id.fragment_container, fragment, PluginSearchFragment.TAG)
                     .commit();
         }
+        // TODO: search will be implemented in a subsequent PR
     }
 
     private void hideSearchFragment() {
@@ -319,21 +320,17 @@ public class PluginBrowserActivity extends AppCompatActivity
             setHasStableIds(true);
         }
 
-        public void setSitePlugins(List<SitePluginModel> items) {
+        void setPlugins(@NonNull List<?> items) {
             mItems.clear();
             mItems.addAll(items);
 
-            notifyDataSetChanged();
-        }
-
-        public void setWPOrgPlugins(List<WPOrgPluginModel> wpOrgPlugins) {
             // strip HTML here so we don't have to do it in every call to onBindViewHolder
-            for (WPOrgPluginModel wpOrgPlugin: wpOrgPlugins) {
-                wpOrgPlugin.setAuthorAsHtml(HtmlUtils.fastStripHtml(wpOrgPlugin.getAuthorAsHtml()));
+            for (Object item: mItems) {
+                if (item instanceof WPOrgPluginModel) {
+                    WPOrgPluginModel plugin = (WPOrgPluginModel) item;
+                    plugin.setAuthorAsHtml(HtmlUtils.fastStripHtml(plugin.getAuthorAsHtml()));
+                }
             }
-
-            mItems.clear();
-            mItems.addAll(wpOrgPlugins);
 
             notifyDataSetChanged();
         }
