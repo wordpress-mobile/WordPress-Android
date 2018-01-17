@@ -35,7 +35,7 @@ android {
 
     defaultConfig {
         versionName "1.19.0"
-        minSdkVersion 14
+        minSdkVersion 15
         targetSdkVersion 25
     }
 }
