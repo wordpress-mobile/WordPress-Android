@@ -33,13 +33,13 @@ import org.wordpress.android.fluxc.store.AccountStore.OnAccountChanged;
 import org.wordpress.android.fluxc.store.AccountStore.OnUsernameChanged;
 import org.wordpress.android.fluxc.store.AccountStore.PushAccountSettingsPayload;
 import org.wordpress.android.fluxc.store.AccountStore.PushUsernamePayload;
+import org.wordpress.android.login.LoginBaseFormFragment;
+import org.wordpress.android.login.widgets.WPLoginInputRow;
 import org.wordpress.android.networking.GravatarApi;
-import org.wordpress.android.ui.accounts.login.LoginBaseFormFragment;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.MediaUtils;
 import org.wordpress.android.util.StringUtils;
-import org.wordpress.android.widgets.WPLoginInputRow;
 import org.wordpress.android.widgets.WPNetworkImageView;
 import org.wordpress.android.widgets.WPTextView;
 
