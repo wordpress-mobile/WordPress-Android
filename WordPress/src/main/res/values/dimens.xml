@@ -338,6 +338,8 @@
 
     <!-- Site Creation -->
     <dimen name="site_creation_category_illustration_sz">80dp</dimen>
+    <dimen name="site_creation_creating_illustration_width">200dp</dimen>
+    <dimen name="site_creation_creating_illustration_height">125dp</dimen>
     <dimen name="margin_tagline_left">40dp</dimen>
 
     <!--plugin-->
