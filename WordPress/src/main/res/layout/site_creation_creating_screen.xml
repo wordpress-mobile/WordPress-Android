@@ -1,29 +1,36 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ScrollView
     xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <RelativeLayout
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/margin_extra_extra_large">
+        android:layout_marginTop="@dimen/margin_extra_extra_large"
+        android:paddingLeft="@dimen/margin_extra_large"
+        android:paddingStart="@dimen/margin_extra_large"
+        android:paddingRight="@dimen/margin_extra_large"
+        android:paddingEnd="@dimen/margin_extra_large"
+        android:gravity="center_horizontal"
+        android:orientation="vertical">
 
         <ImageView
             android:id="@+id/image"
             android:layout_width="@dimen/site_creation_creating_illustration_width"
             android:layout_height="@dimen/site_creation_creating_illustration_height"
-            android:layout_centerHorizontal="true"
             android:scaleType="centerInside"
             android:importantForAccessibility="no"
             app:srcCompat="@drawable/ic_site_logo"/>
 
         <LinearLayout
+            android:id="@+id/progress_container"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/image"
-            android:layout_marginTop="@dimen/margin_extra_large"
+            android:paddingTop="@dimen/margin_extra_large"
+            android:paddingBottom="@dimen/margin_extra_large"
             android:orientation="vertical">
 
             <TextView
@@ -68,5 +75,29 @@
                 android:text="@string/site_creation_creating_preparing_frontend"/>
         </LinearLayout>
 
-    </RelativeLayout>
+        <LinearLayout
+            android:id="@+id/error_container"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingTop="@dimen/margin_extra_large"
+            android:paddingBottom="@dimen/margin_extra_large"
+            android:visibility="gone"
+            tools:visibility="visible"
+            android:orientation="vertical">
+
+            <TextView
+                style="@style/Base.TextAppearance.AppCompat.Body2"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:text="@string/site_creation_creating_failed"/>
+            <TextView
+                style="@style/Base.TextAppearance.AppCompat.Body1"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/margin_medium"
+                android:gravity="center"
+                android:text="@string/site_creation_creating_failed_extended"/>
+        </LinearLayout>
+    </LinearLayout>
 </ScrollView>

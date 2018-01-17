@@ -7,6 +7,7 @@ import android.support.annotation.LayoutRes;
 import android.support.annotation.Nullable;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import org.greenrobot.eventbus.Subscribe;
@@ -24,6 +25,9 @@ public class SiteCreationCreatingFragment extends SiteCreationBaseFormFragment<S
 
     private ServiceEventConnection mServiceEventConnection;
 
+    private ImageView mImageView;
+    private View mProgressContainer;
+    private View mErrorContainer;
     private TextView[] mLabels;
 
     @Override
@@ -33,6 +37,10 @@ public class SiteCreationCreatingFragment extends SiteCreationBaseFormFragment<S
 
     @Override
     protected void setupContent(ViewGroup rootView) {
+        mImageView = (ImageView) rootView.findViewById(R.id.image);
+        mProgressContainer = rootView.findViewById(R.id.progress_container);
+        mErrorContainer = rootView.findViewById(R.id.error_container);
+
         // construct an array with the labels in reverse order
         mLabels = new TextView[] {
                 (TextView) rootView.findViewById(R.id.site_creation_creating_preparing_frontend),
@@ -92,6 +100,9 @@ public class SiteCreationCreatingFragment extends SiteCreationBaseFormFragment<S
     public void onSiteCreationPhaseUpdated(OnSiteCreationStateUpdated event) {
         AppLog.i(T.NUX, "Received state: " + event.getState().name());
 
+        mProgressContainer.setVisibility(View.VISIBLE);
+        mErrorContainer.setVisibility(View.GONE);
+
         switch (event.getState()) {
             case IDLE:
                 disableUntil(0);
@@ -109,7 +120,9 @@ public class SiteCreationCreatingFragment extends SiteCreationBaseFormFragment<S
                 disableUntil(R.id.site_creation_creating_configuring_theme);
                 break;
             case FAILURE:
-                ToastUtils.showToast(getContext(), R.string.site_creation_creating_failed);
+                mImageView.setImageResource(R.drawable.ic_site_error);
+                mProgressContainer.setVisibility(View.GONE);
+                mErrorContainer.setVisibility(View.VISIBLE);
                 break;
             case SUCCESS:
                 disableUntil(R.id.site_creation_creating_preparing_frontend);

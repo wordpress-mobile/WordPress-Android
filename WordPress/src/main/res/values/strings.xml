@@ -2116,6 +2116,7 @@
     <string name="site_creation_creating_configuring_content">Configuring site content…</string>
     <string name="site_creation_creating_configuring_theme">Configuring site style…</string>
     <string name="site_creation_creating_preparing_frontend">Preparing frontend…</string>
-    <string name="site_creation_creating_failed">Sorry, failed to properly create your site :(</string>
+    <string name="site_creation_creating_failed">Something went wrong...</string>
+    <string name="site_creation_creating_failed_extended">A parliament of owls distracted our servers with their superior oratory skills</string>
 
 </resources>
