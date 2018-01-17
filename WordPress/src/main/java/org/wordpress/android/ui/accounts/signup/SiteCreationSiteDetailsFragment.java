@@ -14,8 +14,8 @@ import android.widget.ScrollView;
 
 import org.wordpress.android.R;
 import org.wordpress.android.analytics.AnalyticsTracker;
+import org.wordpress.android.login.widgets.WPLoginInputRow;
 import org.wordpress.android.util.EditTextUtils;
-import org.wordpress.android.widgets.WPLoginInputRow;
 
 public class SiteCreationSiteDetailsFragment extends SiteCreationBaseFormFragment<SiteCreationListener>
         implements TextWatcher {
@@ -38,7 +38,7 @@ public class SiteCreationSiteDetailsFragment extends SiteCreationBaseFormFragmen
         mSiteTitleInput.addTextChangedListener(this);
         mSiteTitleInput.setOnEditorCommitListener(new WPLoginInputRow.OnEditorCommitListener() {
             @Override
-            public void OnEditorCommit() {
+            public void onEditorCommit() {
                 mSiteTaglineInput.getEditText().requestFocus();
             }
         });
@@ -47,7 +47,7 @@ public class SiteCreationSiteDetailsFragment extends SiteCreationBaseFormFragmen
         mSiteTaglineInput.addTextChangedListener(this);
         mSiteTaglineInput.setOnEditorCommitListener(new WPLoginInputRow.OnEditorCommitListener() {
             @Override
-            public void OnEditorCommit() {
+            public void onEditorCommit() {
                 next();
             }
         });
