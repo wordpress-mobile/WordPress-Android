@@ -52,6 +52,7 @@
                 android:layout_marginEnd="@dimen/card_elevation"
                 android:foreground="?android:attr/selectableItemBackground"
                 android:clickable="true"
+                android:focusable="true"
                 app:cardBackgroundColor="@color/white"
                 app:cardCornerRadius="@dimen/cardview_default_radius"
                 app:cardElevation="@dimen/card_elevation">
@@ -109,6 +110,7 @@
                 android:layout_marginEnd="@dimen/card_elevation"
                 android:foreground="?android:attr/selectableItemBackground"
                 android:clickable="true"
+                android:focusable="true"
                 app:cardBackgroundColor="@color/white"
                 app:cardCornerRadius="@dimen/cardview_default_radius"
                 app:cardElevation="@dimen/card_elevation">
@@ -166,6 +168,7 @@
                 android:layout_marginEnd="@dimen/card_elevation"
                 android:foreground="?android:attr/selectableItemBackground"
                 android:clickable="true"
+                android:focusable="true"
                 app:cardBackgroundColor="@color/white"
                 app:cardCornerRadius="@dimen/cardview_default_radius"
                 app:cardElevation="@dimen/card_elevation">

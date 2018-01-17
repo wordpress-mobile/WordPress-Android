@@ -82,9 +82,10 @@ import de.greenrobot.event.EventBus;
  * Main activity which hosts sites, reader, me and notifications tabs
  */
 public class WPMainActivity extends AppCompatActivity {
+    public static final String ARG_DO_LOGIN_UPDATE = "ARG_DO_LOGIN_UPDATE";
+    public static final String ARG_OLD_SITES_IDS = "ARG_OLD_SITES_IDS";
     public static final String ARG_OPENED_FROM_PUSH = "opened_from_push";
     public static final String ARG_SHOW_LOGIN_EPILOGUE = "show_login_epilogue";
-    public static final String ARG_OLD_SITES_IDS = "ARG_OLD_SITES_IDS";
 
     private WPViewPager mViewPager;
     private WPMainTabLayout mTabLayout;
@@ -272,7 +273,8 @@ public class WPMainActivity extends AppCompatActivity {
             AccountStore.UpdateTokenPayload payload = new AccountStore.UpdateTokenPayload(authTokenToSet);
             mDispatcher.dispatch(AccountActionBuilder.newUpdateAccessTokenAction(payload));
         } else if (getIntent().getBooleanExtra(ARG_SHOW_LOGIN_EPILOGUE, false) && savedInstanceState == null) {
-            ActivityLauncher.showLoginEpilogue(this, false, getIntent().getIntegerArrayListExtra(ARG_OLD_SITES_IDS));
+            ActivityLauncher.showLoginEpilogue(this, getIntent().getBooleanExtra(ARG_DO_LOGIN_UPDATE, false),
+                    getIntent().getIntegerArrayListExtra(ARG_OLD_SITES_IDS));
         }
     }
 

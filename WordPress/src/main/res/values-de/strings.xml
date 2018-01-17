@@ -691,7 +691,7 @@ Language: de
 	<string name="stats_other_recent_stats_moved_label">Suchst du nach deinen anderen, aktuellen Statistiken? Die findest du jetzt auf der Seite Einsichten.</string>
 	<string name="me_btn_login_logout">Anmelden/Abmelden</string>
 	<string name="me_connect_to_wordpress_com">Bei WordPress.com anmelden</string>
-	<string name="site_picker_cant_hide_current_site">"%s" wurde nicht ausgeblendet, denn es ist die aktuelle Webseite</string>
+	<string name="site_picker_cant_hide_current_site">\"%s\" wurde nicht ausgeblendet, denn es ist die aktuelle Webseite</string>
 	<string name="me_btn_support">Hilfe &amp; Support</string>
 	<string name="account_settings">Kontoeinstellungen</string>
 	<string name="site_picker_create_dotcom">WordPress.com Website erstellen</string>
@@ -928,7 +928,7 @@ Language: de
 	<string name="reply_failed">Antwort fehlgeschlagen</string>
 	<string name="theme_set_failed">Theme festlegen fehlgeschlagen</string>
 	<string name="theme_fetch_failed">Abrufen der Themes fehlgeschlagen</string>
-	<string name="username_contains_invalid_characters">Benutzername darf das Zeichen "_" nicht enthalten</string>
+	<string name="username_contains_invalid_characters">Benutzername darf das Zeichen \"_\" nicht enthalten</string>
 	<string name="sdcard_message">Eine angeschlossene SD-Karte wird für den Medienupload benötigt</string>
 	<string name="category_automatically_renamed">Kategorie-Name %1$s ist ungültig. Er wurde umbenannt zu %2$s.</string>
 	<string name="error_refresh_comments">Kommentare konnten nicht aktualisiert werden</string>
@@ -944,7 +944,7 @@ Language: de
 	<string name="blog_name_not_allowed">Diese Website-Adresse ist nicht erlaubt</string>
 	<string name="blog_name_must_be_at_least_four_characters">Website-Adresse muss aus mindestens 4 Zeichen bestehen</string>
 	<string name="blog_name_must_be_less_than_sixty_four_characters">Die Website-Adresse muss kürzer sein als 64 Zeichen</string>
-	<string name="blog_name_contains_invalid_characters">Website-Adresse darf das Zeichen "_" nicht enthalten</string>
+	<string name="blog_name_contains_invalid_characters">Website-Adresse darf das Zeichen \"_\" nicht enthalten</string>
 	<string name="blog_name_cant_be_used">Diese Website-Adresse kann nicht genutzt werden</string>
 	<string name="blog_name_only_lowercase_letters_and_numbers">Website-Adresse darf nur Kleinbuchstaben (a-z) und Nummern enthalten</string>
 	<string name="blog_name_exists">Diese Website existiert bereits</string>

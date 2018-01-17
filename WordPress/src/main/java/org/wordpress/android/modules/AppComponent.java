@@ -1,18 +1,21 @@
 package org.wordpress.android.modules;
 
+import android.app.Application;
+
 import org.wordpress.android.WordPress;
-import org.wordpress.android.fluxc.module.AppContextModule;
 import org.wordpress.android.fluxc.module.ReleaseBaseModule;
 import org.wordpress.android.fluxc.module.ReleaseNetworkModule;
 import org.wordpress.android.fluxc.module.ReleaseOkHttpClientModule;
 import org.wordpress.android.fluxc.module.ReleaseToolsModule;
+import org.wordpress.android.login.di.LoginFragmentModule;
+import org.wordpress.android.login.di.LoginServiceModule;
 import org.wordpress.android.push.GCMMessageService;
 import org.wordpress.android.push.GCMRegistrationIntentService;
 import org.wordpress.android.push.NotificationsProcessingService;
 import org.wordpress.android.ui.AddQuickPressShortcutActivity;
 import org.wordpress.android.ui.DeepLinkingIntentReceiverActivity;
-import org.wordpress.android.ui.ShareIntentReceiverFragment;
 import org.wordpress.android.ui.ShareIntentReceiverActivity;
+import org.wordpress.android.ui.ShareIntentReceiverFragment;
 import org.wordpress.android.ui.WPWebViewActivity;
 import org.wordpress.android.ui.accounts.HelpActivity;
 import org.wordpress.android.ui.accounts.LoginActivity;
@@ -23,16 +26,8 @@ import org.wordpress.android.ui.accounts.SignInActivity;
 import org.wordpress.android.ui.accounts.SignInDialogFragment;
 import org.wordpress.android.ui.accounts.SignInFragment;
 import org.wordpress.android.ui.accounts.SiteCreationActivity;
-import org.wordpress.android.ui.accounts.login.Login2FaFragment;
-import org.wordpress.android.ui.accounts.login.LoginEmailFragment;
-import org.wordpress.android.ui.accounts.login.LoginEmailPasswordFragment;
 import org.wordpress.android.ui.accounts.login.LoginEpilogueFragment;
-import org.wordpress.android.ui.accounts.login.LoginGoogleFragment;
-import org.wordpress.android.ui.accounts.login.LoginMagicLinkRequestFragment;
-import org.wordpress.android.ui.accounts.login.LoginSiteAddressFragment;
-import org.wordpress.android.ui.accounts.login.LoginSiteAddressHelpDialogFragment;
-import org.wordpress.android.ui.accounts.login.LoginUsernamePasswordFragment;
-import org.wordpress.android.ui.accounts.login.LoginWpcomService;
+import org.wordpress.android.ui.accounts.signup.SignupGoogleFragment;
 import org.wordpress.android.ui.accounts.signup.SiteCreationCategoryFragment;
 import org.wordpress.android.ui.accounts.signup.SiteCreationService;
 import org.wordpress.android.ui.accounts.signup.SiteCreationSiteDetailsFragment;
@@ -88,6 +83,8 @@ import org.wordpress.android.ui.prefs.MyProfileFragment;
 import org.wordpress.android.ui.prefs.ReleaseNotesActivity;
 import org.wordpress.android.ui.prefs.SiteSettingsFragment;
 import org.wordpress.android.ui.prefs.SiteSettingsInterface;
+import org.wordpress.android.ui.prefs.SiteSettingsTagDetailFragment;
+import org.wordpress.android.ui.prefs.SiteSettingsTagListActivity;
 import org.wordpress.android.ui.prefs.notifications.NotificationsSettingsFragment;
 import org.wordpress.android.ui.publicize.PublicizeButtonPrefsFragment;
 import org.wordpress.android.ui.publicize.PublicizeDetailFragment;
@@ -121,20 +118,30 @@ import org.wordpress.android.util.WPWebViewClient;
 
 import javax.inject.Singleton;
 
+import dagger.BindsInstance;
 import dagger.Component;
+import dagger.android.AndroidInjector;
+import dagger.android.support.AndroidSupportInjectionModule;
 
 @Singleton
 @Component(modules = {
-        AppContextModule.class,
+        ApplicationModule.class,
         AppSecretsModule.class,
         ReleaseBaseModule.class,
         ReleaseOkHttpClientModule.class,
         ReleaseNetworkModule.class,
         LegacyModule.class,
-        ReleaseToolsModule.class
+        ReleaseToolsModule.class,
+        AndroidSupportInjectionModule.class,
+        // Login flow library
+        LoginAnalyticsModule.class,
+        LoginFragmentModule.class,
+        LoginServiceModule.class
 })
-public interface AppComponent {
-    void inject(WordPress application);
+public interface AppComponent extends AndroidInjector<WordPress> {
+    @Override
+    void inject(WordPress instance);
+
     void inject(WPMainActivity object);
     void inject(SignInActivity object);
     void inject(SignInFragment object);
@@ -148,17 +155,10 @@ public interface AppComponent {
     void inject(PostUploadHandler object);
 
     void inject(LoginActivity object);
-    void inject(LoginWpcomService object);
-    void inject(LoginMagicLinkRequestFragment object);
-    void inject(LoginEmailFragment object);
-    void inject(LoginGoogleFragment object);
-    void inject(LoginEmailPasswordFragment object);
-    void inject(Login2FaFragment object);
-    void inject(LoginSiteAddressFragment object);
-    void inject(LoginSiteAddressHelpDialogFragment object);
-    void inject(LoginUsernamePasswordFragment object);
     void inject(LoginEpilogueActivity object);
     void inject(LoginEpilogueFragment object);
+
+    void inject(SignupGoogleFragment object);
 
     void inject(SiteCreationActivity object);
     void inject(SiteCreationCategoryFragment object);
@@ -216,6 +216,9 @@ public interface AppComponent {
     void inject(MediaSettingsActivity object);
     void inject(PhotoPickerActivity object);
 
+    void inject(SiteSettingsTagListActivity object);
+    void inject(SiteSettingsTagDetailFragment object);
+
     void inject(PublicizeListActivity object);
     void inject(PublicizeWebViewFragment object);
     void inject(PublicizeDetailFragment object);
@@ -267,4 +270,14 @@ public interface AppComponent {
 
     void inject(PluginListActivity object);
     void inject(PluginDetailActivity object);
+
+    // Allows us to inject the application without having to instantiate any modules, and provides the Application
+    // in the app graph
+    @Component.Builder
+    interface Builder {
+        @BindsInstance
+        AppComponent.Builder application(Application application);
+
+        AppComponent build();
+    }
 }

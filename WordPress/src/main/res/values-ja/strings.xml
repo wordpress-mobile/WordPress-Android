@@ -29,7 +29,7 @@ Language: ja_JP
 	<string name="login_site_address_help_image">サイトアドレスは Webブラウザーのナビゲーションバーにあります</string>
 	<string name="error_unknown_page">サーバー上にページが見つかりませんでした</string>
 	<string name="error_publish_empty_page">空のページは公開できません</string>
-	<string name="upload_failed_param">"%s" のアップロードに失敗</string>
+	<string name="upload_failed_param">\"%s\" のアップロードに失敗</string>
 	<string name="cannot_retry_deleted_media_item">メディアは削除されました。この投稿から削除しますか ?</string>
 	<string name="error_please_choose_browser">デフォルトのブラウザーを開く際にエラーが発生しました。別のアプリを選択してください:</string>
 	<string name="cant_open_url">リンクを開けません</string>

@@ -1,6 +1,5 @@
 package org.wordpress.android.ui.prefs;
 
-import android.app.Activity;
 import android.content.Context;
 import android.support.annotation.NonNull;
 import android.text.TextUtils;
@@ -19,6 +18,7 @@ import org.wordpress.android.models.CategoryModel;
 import org.wordpress.android.models.JetpackSettingsModel;
 import org.wordpress.android.util.AnalyticsUtils;
 import org.wordpress.android.util.AppLog;
+import org.wordpress.android.util.StringUtils;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -63,6 +63,13 @@ class DotComSiteSettings extends SiteSettingsInterface {
     private static final String JP_MONITOR_EMAIL_NOTES_KEY = "email_notifications";
     private static final String JP_MONITOR_WP_NOTES_KEY = "wp_note_notifications";
     private static final String JP_PROTECT_WHITELIST_KEY = "jetpack_protect_whitelist";
+    private static final String START_OF_WEEK_KEY = "start_of_week";
+    private static final String DATE_FORMAT_KEY = "date_format";
+    private static final String TIME_FORMAT_KEY = "time_format";
+    private static final String TIMEZONE_KEY = "timezone_string";
+    private static final String POSTS_PER_PAGE_KEY = "posts_per_page";
+    private static final String AMP_SUPPORTED_KEY = "amp_is_supported";
+    private static final String AMP_ENABLED_KEY = "amp_is_enabled";
 
     // WP.com REST keys used to GET certain site settings
     private static final String GET_TITLE_KEY = "name";
@@ -444,6 +451,13 @@ class DotComSiteSettings extends SiteSettingsInterface {
         mRemoteSettings.sharingButtonStyle = settingsObject.optString(SHARING_BUTTON_STYLE_KEY, DEFAULT_SHARING_BUTTON_STYLE);
         mRemoteSettings.allowCommentLikes = settingsObject.optBoolean(SHARING_COMMENT_LIKES_KEY, false);
         mRemoteSettings.twitterUsername = settingsObject.optString(TWITTER_USERNAME_KEY, "");
+        mRemoteSettings.startOfWeek = settingsObject.optString(START_OF_WEEK_KEY, "");
+        mRemoteSettings.dateFormat = settingsObject.optString(DATE_FORMAT_KEY, "");
+        mRemoteSettings.timeFormat = settingsObject.optString(TIME_FORMAT_KEY, "");
+        mRemoteSettings.timezone = settingsObject.optString(TIMEZONE_KEY, "");
+        mRemoteSettings.postsPerPage = settingsObject.optInt(POSTS_PER_PAGE_KEY, 0);
+        mRemoteSettings.ampSupported = settingsObject.optBoolean(AMP_SUPPORTED_KEY, false);
+        mRemoteSettings.ampEnabled = settingsObject.optBoolean(AMP_ENABLED_KEY, false);
 
         boolean reblogsDisabled = settingsObject.optBoolean(SHARING_REBLOGS_DISABLED_KEY, false);
         boolean likesDisabled = settingsObject.optBoolean(SHARING_LIKES_DISABLED_KEY, false);
@@ -606,6 +620,27 @@ class DotComSiteSettings extends SiteSettingsInterface {
         }
         if (mSettings.twitterUsername != null && !mSettings.twitterUsername.equals(mRemoteSettings.twitterUsername)) {
             params.put(TWITTER_USERNAME_KEY, mSettings.twitterUsername);
+        }
+        if (mSettings.startOfWeek != null && !mSettings.startOfWeek.equals(mRemoteSettings.startOfWeek)) {
+            params.put(START_OF_WEEK_KEY, mSettings.startOfWeek);
+        }
+        if (mSettings.dateFormat != null && !mSettings.dateFormat.equals(mRemoteSettings.dateFormat)) {
+            params.put(DATE_FORMAT_KEY, mSettings.dateFormat);
+        }
+        if (mSettings.timeFormat != null && !mSettings.timeFormat.equals(mRemoteSettings.timeFormat)) {
+            params.put(TIME_FORMAT_KEY, mSettings.timeFormat);
+        }
+        if (!StringUtils.equals(mSettings.timezone, mRemoteSettings.timezone)) {
+            params.put(TIMEZONE_KEY, mSettings.timezone);
+        }
+        if (mSettings.postsPerPage != mRemoteSettings.postsPerPage) {
+            params.put(POSTS_PER_PAGE_KEY, String.valueOf(mSettings.postsPerPage));
+        }
+        if (mSettings.ampSupported != mRemoteSettings.ampSupported) {
+            params.put(AMP_SUPPORTED_KEY, String.valueOf(mSettings.ampSupported));
+        }
+        if (mSettings.ampEnabled != mRemoteSettings.ampEnabled) {
+            params.put(AMP_ENABLED_KEY, String.valueOf(mSettings.ampEnabled));
         }
 
         return params;

@@ -1,0 +1,26 @@
+allprojects {
+    apply plugin: 'checkstyle'
+
+    repositories {
+        jcenter()
+        maven {
+            url "https://maven.google.com"
+        }
+    }
+
+    if (tasks.findByPath('checkstyle') == null) {
+        tasks.create(name: 'checkstyle', type: Checkstyle) {
+            source 'src'
+            include '**/*.java'
+            include '**/*.kt'
+            exclude '**/gen/**'
+
+            classpath = files()
+        }
+
+        checkstyle {
+            toolVersion = '8.3'
+            configFile file("${project.rootDir}/config/checkstyle.xml")
+        }
+    }
+}
