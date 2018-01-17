@@ -139,6 +139,17 @@ public class AccountRestClient extends BaseWPComRestClient {
         }
     }
 
+    public static class AccountFetchUsernameSuggestionsResponsePayload extends Payload<AccountUsernameError> {
+        public List<String> suggestions;
+
+        public AccountFetchUsernameSuggestionsResponsePayload() {
+        }
+
+        public AccountFetchUsernameSuggestionsResponsePayload(List<String> suggestions) {
+            this.suggestions = suggestions;
+        }
+    }
+
     public static class NewAccountResponsePayload extends Payload<NewUserError> {
         public boolean dryRun;
     }
