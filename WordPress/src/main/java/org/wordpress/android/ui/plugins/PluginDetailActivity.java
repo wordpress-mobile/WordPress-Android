@@ -24,6 +24,7 @@ import android.widget.CompoundButton;
 import android.widget.CompoundButton.OnCheckedChangeListener;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
+import android.widget.RatingBar;
 import android.widget.SimpleAdapter;
 import android.widget.Switch;
 import android.widget.TextView;
@@ -462,32 +463,22 @@ public class PluginDetailActivity extends AppCompatActivity {
         String numDownloads = FormatUtils.formatInt(mWPOrgPlugin.getDownloadCount());
         txtNumDownloads.setText(String.format(getString(R.string.plugin_num_downloads), numDownloads));
 
-        setRatingsBar(R.id.progress5, mWPOrgPlugin.getNumberOfRatingsOfFive(), numRatingsTotal);
-        setRatingsBar(R.id.progress4, mWPOrgPlugin.getNumberOfRatingsOfFour(), numRatingsTotal);
-        setRatingsBar(R.id.progress3, mWPOrgPlugin.getNumberOfRatingsOfThree(), numRatingsTotal);
-        setRatingsBar(R.id.progress2, mWPOrgPlugin.getNumberOfRatingsOfTwo(), numRatingsTotal);
-        setRatingsBar(R.id.progress1, mWPOrgPlugin.getNumberOfRatingsOfOne(), numRatingsTotal);
+        setRatingsProgressBar(R.id.progress5, mWPOrgPlugin.getNumberOfRatingsOfFive(), numRatingsTotal);
+        setRatingsProgressBar(R.id.progress4, mWPOrgPlugin.getNumberOfRatingsOfFour(), numRatingsTotal);
+        setRatingsProgressBar(R.id.progress3, mWPOrgPlugin.getNumberOfRatingsOfThree(), numRatingsTotal);
+        setRatingsProgressBar(R.id.progress2, mWPOrgPlugin.getNumberOfRatingsOfTwo(), numRatingsTotal);
+        setRatingsProgressBar(R.id.progress1, mWPOrgPlugin.getNumberOfRatingsOfOne(), numRatingsTotal);
 
         int rating = StringUtils.stringToInt(mWPOrgPlugin.getRating(), 1);
         int averageRating = Math.round(rating / 20f);
-        setRatingsStar(R.id.image_star5, 5, averageRating);
-        setRatingsStar(R.id.image_star4, 4, averageRating);
-        setRatingsStar(R.id.image_star3, 3, averageRating);
-        setRatingsStar(R.id.image_star2, 2, averageRating);
-        setRatingsStar(R.id.image_star1, 1, averageRating);
+        RatingBar ratingBar = findViewById(R.id.rating_bar);
+        ratingBar.setRating(averageRating);
     }
 
-    private void setRatingsBar(@IdRes int progressResId, int numRatingsForStar, int numRatingsTotal) {
+    private void setRatingsProgressBar(@IdRes int progressResId, int numRatingsForStar, int numRatingsTotal) {
         ProgressBar bar = findViewById(progressResId);
         bar.setMax(numRatingsTotal);
         bar.setProgress(numRatingsForStar);
-    }
-
-    private void setRatingsStar(@IdRes int starImageResId, int starNumber, int averageRating) {
-        ImageView imageStar = findViewById(starImageResId);
-        int drawableRes = starNumber <= averageRating
-                ? R.drawable.ic_star_blue_medium_18dp : R.drawable.ic_star_outline_blue_medium_18dp;
-        imageStar.setImageResource(drawableRes);
     }
 
     private static final String KEY_LABEL = "label";
