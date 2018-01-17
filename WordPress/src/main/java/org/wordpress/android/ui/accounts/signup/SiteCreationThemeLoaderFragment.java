@@ -8,7 +8,6 @@ import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.fluxc.Dispatcher;
-import org.wordpress.android.fluxc.action.ThemeAction;
 import org.wordpress.android.fluxc.generated.ThemeActionBuilder;
 import org.wordpress.android.fluxc.store.ThemeStore;
 import org.wordpress.android.util.AppLog;
@@ -66,14 +65,7 @@ public class SiteCreationThemeLoaderFragment extends Fragment {
 
     @SuppressWarnings("unused")
     @Subscribe(threadMode = ThreadMode.MAIN)
-    public void onThemesChanged(ThemeStore.OnThemesChanged event) {
-        if (event.origin != ThemeAction.FETCH_WP_COM_THEMES) {
-            // just bail with a logged warning. This is not the response to the action we initiated
-            AppLog.w(AppLog.T.THEMES, "Received OnThemesChanged with origin " + event.origin + " while expecting "
-                    + ThemeAction.FETCH_WP_COM_THEMES + ". This might indicate an error in the flow.");
-            return;
-        }
-
+    public void onThemesChanged(ThemeStore.OnWpComThemesChanged event) {
         mDispatcher.unregister(this);
 
         if (event.isError()) {
