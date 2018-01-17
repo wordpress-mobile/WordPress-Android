@@ -57,6 +57,7 @@ public class PluginWPOrgClient extends BaseWPOrgAPIClient {
                                         new FetchedPluginDirectoryPayload(directoryType, loadMore);
                                 if (response != null) {
                                     payload.canLoadMore = response.info.page < response.info.pages;
+                                    payload.page = response.info.page;
                                     payload.plugins = wpOrgPluginListFromResponse(response);
                                 } else {
                                     payload.error = new PluginDirectoryError(
