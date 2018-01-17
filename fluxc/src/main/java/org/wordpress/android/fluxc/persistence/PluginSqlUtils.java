@@ -97,7 +97,10 @@ public class PluginSqlUtils {
         List<PluginDirectoryModel> directoryModels = getPluginDirectoriesForType(directoryType);
         List<WPOrgPluginModel> wpOrgPluginModels = new ArrayList<>(directoryModels.size());
         for (PluginDirectoryModel pluginDirectoryModel : directoryModels) {
-            wpOrgPluginModels.add(getWPOrgPluginBySlug(pluginDirectoryModel.getSlug()));
+            WPOrgPluginModel wpOrgPluginModel = getWPOrgPluginBySlug(pluginDirectoryModel.getSlug());
+            if (wpOrgPluginModel != null) {
+                wpOrgPluginModels.add(wpOrgPluginModel);
+            }
         }
         return wpOrgPluginModels;
     }
