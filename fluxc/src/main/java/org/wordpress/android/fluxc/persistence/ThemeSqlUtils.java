@@ -37,28 +37,6 @@ public class ThemeSqlUtils {
         }
     }
 
-    public static void insertOrUpdateWpComTheme(@NonNull ThemeModel theme) {
-        List<ThemeModel> existing = WellSql.select(ThemeModel.class)
-                .where().beginGroup()
-                .equals(ThemeModelTable.THEME_ID, theme.getThemeId())
-                .equals(ThemeModelTable.IS_WP_COM_THEME, true)
-                .endGroup().endWhere().getAsModel();
-
-        // Remove local site id if it's set for whatever reason (shouldn't normally happen, so it's a sanity check)
-        theme.setLocalSiteId(0);
-        // Make sure the isWpComTheme flag is set
-        theme.setIsWpComTheme(true);
-
-        if (existing.isEmpty()) {
-            // theme is not in the local DB so we insert it
-            WellSql.insert(theme).asSingleTransaction(true).execute();
-        } else {
-            // theme already exists in the local DB so we update the existing row with the passed theme
-            WellSql.update(ThemeModel.class).whereId(existing.get(0).getId())
-                    .put(theme, new UpdateAllExceptId<>(ThemeModel.class)).execute();
-        }
-    }
-
     public static void insertOrReplaceWpComThemes(@NonNull List<ThemeModel> themes) {
         // remove existing WP.com themes
         removeWpComThemes();
@@ -71,9 +49,9 @@ public class ThemeSqlUtils {
         WellSql.insert(themes).asSingleTransaction(true).execute();
     }
 
-    public static int insertOrReplaceInstalledThemes(@NonNull SiteModel site, @NonNull List<ThemeModel> themes) {
+    public static void insertOrReplaceInstalledThemes(@NonNull SiteModel site, @NonNull List<ThemeModel> themes) {
         // remove existing installed themes
-        removeThemes(site);
+        removeSiteThemes(site);
 
         // ensure site ID is set before inserting
         for (ThemeModel theme : themes) {
@@ -81,8 +59,6 @@ public class ThemeSqlUtils {
         }
 
         WellSql.insert(themes).asSingleTransaction(true).execute();
-
-        return themes.size();
     }
 
     public static void insertOrReplaceActiveThemeForSite(@NonNull SiteModel site, @NonNull ThemeModel theme) {
@@ -124,15 +100,12 @@ public class ThemeSqlUtils {
                 .endWhere().getAsModel();
     }
 
-    /**
-     * Retrieves themes associated with a given site. Installed themes (for Jetpack sites) are the only themes
-     * targeted for now.
-     */
-    public static Cursor getThemesForSiteAsCursor(@NonNull SiteModel site) {
+    public static List<ThemeModel> getWpComMobileFriendlyThemes(String categorySlug) {
         return WellSql.select(ThemeModel.class)
                 .where()
-                .equals(ThemeModelTable.LOCAL_SITE_ID, site.getId())
-                .endWhere().getAsCursor();
+                .equals(ThemeModelTable.MOBILE_FRIENDLY_CATEGORY_SLUG, categorySlug)
+                .equals(ThemeModelTable.IS_WP_COM_THEME, true)
+                .endWhere().getAsModel();
     }
 
     public static List<ThemeModel> getThemesForSite(@NonNull SiteModel site) {
@@ -185,21 +158,20 @@ public class ThemeSqlUtils {
                 .endWhere().execute();
     }
 
-    public static void removeTheme(@NonNull ThemeModel theme) {
+    public static void removeSiteTheme(@NonNull SiteModel site, @NonNull ThemeModel theme) {
         WellSql.delete(ThemeModel.class)
                 .where()
-                .equals(ThemeModelTable.ID, theme.getId())
+                .equals(ThemeModelTable.LOCAL_SITE_ID, site.getId())
+                .equals(ThemeModelTable.THEME_ID, theme.getThemeId())
+                .equals(ThemeModelTable.IS_WP_COM_THEME, false)
                 .endWhere().execute();
     }
 
-    public static void removeThemes(@NonNull SiteModel site) {
-        removeThemes(site.getId());
-    }
-
-    private static void removeThemes(int localSiteId) {
+    public static void removeSiteThemes(@NonNull SiteModel site) {
         WellSql.delete(ThemeModel.class)
                 .where()
-                .equals(ThemeModelTable.LOCAL_SITE_ID, localSiteId)
+                .equals(ThemeModelTable.LOCAL_SITE_ID, site.getId())
+                .equals(ThemeModelTable.IS_WP_COM_THEME, false)
                 .endWhere().execute();
     }
 }
