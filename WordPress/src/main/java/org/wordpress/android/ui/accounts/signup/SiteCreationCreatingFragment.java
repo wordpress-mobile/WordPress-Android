@@ -88,7 +88,7 @@ public class SiteCreationCreatingFragment extends SiteCreationBaseFormFragment<S
         }
     }
     @SuppressWarnings("unused")
-    @Subscribe(threadMode = ThreadMode.MAIN)
+    @Subscribe(threadMode = ThreadMode.MAIN, sticky = true)
     public void onSiteCreationPhaseUpdated(OnSiteCreationStateUpdated event) {
         AppLog.i(T.NUX, "Received state: " + event.getState().name());
 
