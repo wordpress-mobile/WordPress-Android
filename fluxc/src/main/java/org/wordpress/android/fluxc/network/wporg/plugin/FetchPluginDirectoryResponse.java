@@ -10,15 +10,12 @@ import com.google.gson.annotations.JsonAdapter;
 import com.google.gson.reflect.TypeToken;
 
 import java.lang.reflect.Type;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 @JsonAdapter(FetchPluginDirectoryResponseDeserializer.class)
 public class FetchPluginDirectoryResponse {
-    public class FetchPluginDirectoryResponseInfo {
-        public int page;
-        public int pages;
-    }
-
     public FetchPluginDirectoryResponseInfo info;
     public List<WPOrgPluginResponse> plugins;
 
@@ -33,27 +30,32 @@ class FetchPluginDirectoryResponseDeserializer implements JsonDeserializer<Fetch
                                                     JsonDeserializationContext context) throws JsonParseException {
         JsonObject jsonObject = json.getAsJsonObject();
         FetchPluginDirectoryResponse response = new FetchPluginDirectoryResponse();
-
+        if (jsonObject.has("info")) {
+            response.info = context.deserialize(jsonObject.get("info"), FetchPluginDirectoryResponseInfo.class);
+        }
         if (jsonObject.has("plugins")) {
             JsonElement pluginsEl = jsonObject.get("plugins");
             if (pluginsEl.isJsonArray()) {
                 JsonArray pluginsJsonArray = pluginsEl.getAsJsonArray();
                 Type collectionType = new TypeToken<List<WPOrgPluginResponse>>(){}.getType();
                 response.plugins = context.deserialize(pluginsJsonArray, collectionType);
-            }
-        }
-        if (jsonObject.has("info")) {
-            JsonElement infoEl = jsonObject.get("info");
-            if (infoEl.isJsonObject()) {
-                JsonObject info = jsonObject.get("info").getAsJsonObject();
-                if (info.has("page")) {
-                    response.info.page = info.get("page").getAsInt();
-                }
-                if (info.has("pages")) {
-                    response.info.pages = info.get("pages").getAsInt();
+            } else if (pluginsEl.isJsonObject()) {
+                JsonObject pluginsJsonObject = pluginsEl.getAsJsonObject();
+                response.plugins = new ArrayList<>();
+                for (Map.Entry<String, JsonElement> entry : pluginsJsonObject.entrySet()) {
+                    WPOrgPluginResponse pluginResponse = context.deserialize(entry.getValue(),
+                            WPOrgPluginResponse.class);
+                    if (pluginResponse != null) {
+                        response.plugins.add(pluginResponse);
+                    }
                 }
             }
         }
         return response;
     }
+}
+
+class FetchPluginDirectoryResponseInfo {
+    public int page;
+    public int pages;
 }
