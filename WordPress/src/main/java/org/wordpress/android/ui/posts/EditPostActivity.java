@@ -137,6 +137,7 @@ import org.wordpress.android.util.helpers.MediaGalleryImageSpan;
 import org.wordpress.android.util.helpers.WPImageSpan;
 import org.wordpress.android.widgets.WPViewPager;
 import org.wordpress.aztec.AztecExceptionHandler;
+import org.wordpress.aztec.util.AztecLog;
 import org.wordpress.passcodelock.AppLockManager;
 
 import java.io.File;
@@ -1158,6 +1159,22 @@ public class EditPostActivity extends AppCompatActivity implements
                         }
                 );
             }
+            aztecEditorFragment.setExternalLogger(new AztecLog.ExternalLogger() {
+                @Override
+                public void log(String s) {
+                    CrashlyticsUtils.log(s);
+                }
+
+                @Override
+                public void logException(Throwable throwable) {
+                    CrashlyticsUtils.logException(throwable);
+                }
+
+                @Override
+                public void logException(Throwable throwable, String s) {
+                    CrashlyticsUtils.logException(throwable, T.EDITOR, s);
+                }
+            });
         }
     }
 
