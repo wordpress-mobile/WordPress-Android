@@ -17,6 +17,7 @@ import org.wordpress.android.fluxc.Payload;
 import org.wordpress.android.fluxc.action.AccountAction;
 import org.wordpress.android.fluxc.generated.AccountActionBuilder;
 import org.wordpress.android.fluxc.generated.endpoint.WPCOMREST;
+import org.wordpress.android.fluxc.generated.endpoint.WPCOMV2;
 import org.wordpress.android.fluxc.model.AccountModel;
 import org.wordpress.android.fluxc.network.BaseRequest.BaseErrorListener;
 import org.wordpress.android.fluxc.network.BaseRequest.BaseNetworkError;
@@ -27,6 +28,7 @@ import org.wordpress.android.fluxc.network.rest.wpcom.WPComGsonRequest.WPComGson
 import org.wordpress.android.fluxc.network.rest.wpcom.auth.AccessToken;
 import org.wordpress.android.fluxc.network.rest.wpcom.auth.AppSecrets;
 import org.wordpress.android.fluxc.store.AccountStore.AccountFetchUsernameSuggestionsError;
+import org.wordpress.android.fluxc.store.AccountStore.AccountFetchUsernameSuggestionsErrorType;
 import org.wordpress.android.fluxc.store.AccountStore.AccountSocialError;
 import org.wordpress.android.fluxc.store.AccountStore.AccountSocialErrorType;
 import org.wordpress.android.fluxc.store.AccountStore.AccountUsernameActionType;
@@ -226,6 +228,43 @@ public class AccountRestClient extends BaseWPComRestClient {
                     public void onErrorResponse(@NonNull BaseNetworkError error) {
                         AccountRestPayload payload = new AccountRestPayload(null, error);
                         mDispatcher.dispatch(AccountActionBuilder.newFetchedSettingsAction(payload));
+                    }
+                }
+        ));
+    }
+
+    /**
+     * Performs an HTTP GET call to the v2 /users/usernames/suggestions endpoint.  Upon receiving a response
+     * (success or error) a {@link AccountAction#FETCHED_USERNAME_SUGGESTIONS} action is dispatched with a
+     * payload of type {@link AccountRestPayload}.
+     *
+     * {@link AccountRestPayload#isError()} can be used to check the request result.
+     *
+     * No HTTP GET call is made if the given parameter map is null or contains no entries.
+     *
+     * @param name  Text (e.g. display name) from which to create username suggestions
+     */
+    public void fetchUsernameSuggestions(@NonNull String name) {
+        String url = WPCOMV2.users.username.suggestions.getUrl();
+
+        Map<String, String> params = new HashMap<>();
+        params.put("name", name);
+
+        add(WPComGsonRequest.buildGetRequest(url, params, UsernameSuggestionsResponse.class,
+                new Listener<UsernameSuggestionsResponse>() {
+                    @Override
+                    public void onResponse(UsernameSuggestionsResponse response) {
+                        AccountFetchUsernameSuggestionsResponsePayload payload = new
+                                AccountFetchUsernameSuggestionsResponsePayload(response.suggestions);
+                        mDispatcher.dispatch(AccountActionBuilder.newFetchedUsernameSuggestionsAction(payload));
+                    }
+                },
+                new BaseErrorListener() {
+                    @Override
+                    public void onErrorResponse(@NonNull BaseNetworkError error) {
+                        AccountFetchUsernameSuggestionsResponsePayload payload =
+                                volleyErrorToFetchUsernameSuggestionsResponsePayload(error.volleyError);
+                        mDispatcher.dispatch(AccountActionBuilder.newFetchedUsernameSuggestionsAction(payload));
                     }
                 }
         ));
@@ -685,6 +724,28 @@ public class AccountRestClient extends BaseWPComRestClient {
                 payload.error.message = errors.getJSONObject(0).getString("message");
             } catch (UnsupportedEncodingException | JSONException exception) {
                 AppLog.e(T.API, "Unable to parse social error response: " + exception.getMessage());
+            }
+        }
+
+        return payload;
+    }
+
+    private AccountFetchUsernameSuggestionsResponsePayload volleyErrorToFetchUsernameSuggestionsResponsePayload(
+            VolleyError error) {
+        AccountFetchUsernameSuggestionsResponsePayload payload = new AccountFetchUsernameSuggestionsResponsePayload();
+        payload.error = new AccountFetchUsernameSuggestionsError(
+                AccountFetchUsernameSuggestionsErrorType.GENERIC_ERROR, "");
+
+        if (error.networkResponse != null && error.networkResponse.data != null) {
+            AppLog.e(T.API, new String(error.networkResponse.data));
+
+            try {
+                String responseBody = new String(error.networkResponse.data, "UTF-8");
+                JSONObject object = new JSONObject(responseBody);
+                payload.error.type = AccountFetchUsernameSuggestionsErrorType.fromString(object.optString("code"));
+                payload.error.message = object.optString("message");
+            } catch (UnsupportedEncodingException | JSONException exception) {
+                AppLog.e(T.API, "Unable to parse username suggestions error response: " + exception.getMessage());
             }
         }
 
