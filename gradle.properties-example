@@ -32,7 +32,3 @@ wp.app_license_key = wordpress
 
 # Needed to use the Google Maps component aka the PlacePicker (Post Settings -> Location)
 wp.res.com.google.android.geo.api.key = geo-api-key
-
-# Optional: used to autofill username and password fields at login on debug build only
-wp.debug.dotcom_login_username =
-wp.debug.dotcom_login_password =

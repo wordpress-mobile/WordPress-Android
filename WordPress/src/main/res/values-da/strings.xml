@@ -56,7 +56,7 @@ Language: da_DK
 	<string name="stats_insights">Indsigt</string>
 	<string name="me_btn_login_logout">Log ind/ud</string>
 	<string name="me_btn_support">Hjælp &amp; Support</string>
-	<string name="site_picker_cant_hide_current_site">"%s" blev ikke skjult, fordi det er det aktuelle websted</string>
+	<string name="site_picker_cant_hide_current_site">\"%s\" blev ikke skjult, fordi det er det aktuelle websted</string>
 	<string name="site_picker_create_dotcom">Opret websted på WordPress.com</string>
 	<string name="site_picker_add_site">Tilføj websted</string>
 	<string name="site_picker_add_self_hosted">Tilføj websted fra egen udbyder</string>
@@ -265,7 +265,7 @@ Language: da_DK
 	<string name="invalid_username_too_long">Brugernavnet må maksimum være på 61 tegn</string>
 	<string name="username_only_lowercase_letters_and_numbers">Brugernavnet må kun indeholde små bogstaver og tal (f.eks. a-z og 0-9)</string>
 	<string name="username_must_be_at_least_four_characters">Brugernavnet skal være mindst fire tegn</string>
-	<string name="username_contains_invalid_characters">Brugernavnet må ikke indholde tegnet "_"</string>
+	<string name="username_contains_invalid_characters">Brugernavnet må ikke indholde tegnet \"_\"</string>
 	<string name="username_must_include_letters">Brugernavnet skal have mindst et bogstav (fra a-z)</string>
 	<string name="email_not_allowed">Denne e-mailadresse er ikke tilladt</string>
 	<string name="username_reserved_but_may_be_available">Brugernavnet er reserveret, men det kan blive ledigt om et par dage</string>

@@ -155,6 +155,10 @@ public class ShareIntentReceiverFragment extends Fragment {
                         mRecyclerView.post(new Runnable() {
                             @Override
                             public void run() {
+                                if (!isAdded()) {
+                                    return;
+                                }
+
                                 if (mRecyclerView.computeVerticalScrollRange() > mRecyclerView.getHeight()) {
                                     mBottomButtonsShadow.setVisibility(View.VISIBLE);
                                     mBottomButtonsContainer.setBackgroundResource(R.color.white);

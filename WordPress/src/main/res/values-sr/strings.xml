@@ -73,7 +73,7 @@ Language: sr_RS
 	<string name="stats_other_recent_stats_moved_label">Тражите своје друге скорашње статистике? Померили смо их на страницу Увиди.</string>
 	<string name="me_btn_login_logout">Пријава/одјава</string>
 	<string name="me_btn_support">Помоћ и подршка</string>
-	<string name="site_picker_cant_hide_current_site">"%s" није сакривен зато што је тренутно веб место</string>
+	<string name="site_picker_cant_hide_current_site">\"%s\" није сакривен зато што је тренутно веб место</string>
 	<string name="site_picker_create_dotcom">Направи WordPress.com веб место</string>
 	<string name="site_picker_add_self_hosted">Додај самостално угошћено веб место</string>
 	<string name="site_picker_add_site">Додај веб место</string>
@@ -274,7 +274,7 @@ Language: sr_RS
 	<string name="blog_name_reserved">То веб место је резервисано</string>
 	<string name="blog_name_exists">То веб место већ постоји</string>
 	<string name="blog_name_cant_be_used">Не смете употребити ту адресу веб места</string>
-	<string name="blog_name_contains_invalid_characters">Адреса веб места не сме да садржи знак "_"</string>
+	<string name="blog_name_contains_invalid_characters">Адреса веб места не сме да садржи знак \"_\"</string>
 	<string name="blog_name_must_be_less_than_sixty_four_characters">Адреса веб места мора бити дужине мање од 64 знака</string>
 	<string name="blog_name_must_be_at_least_four_characters">Адреса веб места мора бити дужине најмање 4 знака</string>
 	<string name="blog_name_not_allowed">Та адреса веб места није дозвољена</string>
@@ -284,7 +284,7 @@ Language: sr_RS
 	<string name="email_exists">Та адреса е-поште је већ у употреби</string>
 	<string name="username_reserved_but_may_be_available">То корисничко име је тренутно резервисано али ће можда бити слободно за пар дана</string>
 	<string name="email_invalid">Унесите исправну адресу е-поште</string>
-	<string name="username_contains_invalid_characters">Корисничко име не сме да садржи знак "_"</string>
+	<string name="username_contains_invalid_characters">Корисничко име не сме да садржи знак \"_\"</string>
 	<string name="username_not_allowed">Недозвољено корисничко име</string>
 	<string name="username_must_be_at_least_four_characters">Корисничко име мора садржати бар 4 знака</string>
 	<string name="username_required">Унесите корисничко име</string>

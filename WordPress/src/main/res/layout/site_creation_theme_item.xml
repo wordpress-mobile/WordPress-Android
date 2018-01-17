@@ -12,6 +12,7 @@
     android:layout_marginBottom="@dimen/margin_extra_large"
     android:foreground="?android:attr/selectableItemBackground"
     android:clickable="true"
+    android:focusable="true"
     card_view:cardElevation="@dimen/card_elevation">
 
     <RelativeLayout

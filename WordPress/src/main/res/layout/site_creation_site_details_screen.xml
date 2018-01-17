@@ -34,7 +34,7 @@
             android:text="@string/site_creation_label_site_details"
             style="@style/LoginTheme.TextLabel" />
 
-        <org.wordpress.android.widgets.WPLoginInputRow
+        <org.wordpress.android.login.widgets.WPLoginInputRow
             android:id="@+id/site_creation_site_title_row"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -43,7 +43,7 @@
             android:imeOptions="actionNext"
             app:wpIconDrawable="@drawable/ic_globe_grey_24dp"/>
 
-        <org.wordpress.android.widgets.WPLoginInputRow
+        <org.wordpress.android.login.widgets.WPLoginInputRow
             android:id="@+id/site_creation_site_tagline_row"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

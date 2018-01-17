@@ -13,7 +13,7 @@ Language: he_IL
 	<string name="page_scheduled">העמוד תוזמן לפרסום</string>
 	<string name="post_scheduled">הפוסט תוזמן לפרסום</string>
 	<string name="button_retry">לנסות שנית</string>
-	<string name="uploading_post">מעלה את "%s"</string>
+	<string name="uploading_post">מעלה את \"%s\"</string>
 	<string name="login_epilogue_mysites_other">האתרים שלי</string>
 	<string name="login_epilogue_mysites_one">האתר שלי</string>
 	<string name="login_logged_in_as">מחובר בתור</string>
@@ -492,8 +492,8 @@ Language: he_IL
 	<string name="site_settings_paging_dialog_description">חלוקת שרשורי תגובות למספר עמודים.</string>
 	<string name="site_settings_paging_dialog_header">תגובות לעמוד</string>
 	<string name="site_settings_close_after_dialog_title">סגור לתגובות</string>
-	<string name="site_settings_blacklist_description">תגובה שתכיל מילה מהמילים הללו בתוכן שלה, בשם, בכתובת, באימייל או ב-IP תסומן כתגובת זבל. אפשר להשתמש גם בחלקי מילים, כך ש-"press" תתאים למילה "WordPress".</string>
-	<string name="site_settings_hold_for_moderation_description">תגובה שתכיל מילה מהמילים הללו בתוכן שלה, בשם, בכתובת האתר, באימייל או ב-IP תישמר בתור המנהל. אפשר להשתמש גם בחלקי מילים, כך ש-"press" תתאים למילה "WordPress".</string>
+	<string name="site_settings_blacklist_description">תגובה שתכיל מילה מהמילים הללו בתוכן שלה, בשם, בכתובת, באימייל או ב-IP תסומן כתגובת זבל. אפשר להשתמש גם בחלקי מילים, כך ש-\"press\" תתאים למילה \"WordPress\".</string>
+	<string name="site_settings_hold_for_moderation_description">תגובה שתכיל מילה מהמילים הללו בתוכן שלה, בשם, בכתובת האתר, באימייל או ב-IP תישמר בתור המנהל. אפשר להשתמש גם בחלקי מילים, כך ש-\"press\" תתאים למילה \"WordPress\".</string>
 	<string name="site_settings_list_editor_input_hint">הזנת מילה או ביטוי</string>
 	<string name="site_settings_list_editor_no_items_text">אין פריטים</string>
 	<string name="site_settings_learn_more_caption">אפשר לעקוף הגדרות אלה בפוסטים נפרדים.</string>
@@ -715,7 +715,7 @@ Language: he_IL
 	<string name="me_disconnect_from_wordpress_com">התנתקות מוורדפרס.קום</string>
 	<string name="me_btn_login_logout">כניסה/יציאה</string>
 	<string name="me_connect_to_wordpress_com">התחברות לוורדפרס.קום</string>
-	<string name="site_picker_cant_hide_current_site">"%s" לא הוסתר מכיוון שזהו האתר הנוכחי</string>
+	<string name="site_picker_cant_hide_current_site">\"%s\" לא הוסתר מכיוון שזהו האתר הנוכחי</string>
 	<string name="me_btn_support">עזרה ותמיכה</string>
 	<string name="account_settings">הגדרות חשבון</string>
 	<string name="site_picker_create_dotcom">יצירת אתר וורדפרס.קום</string>
@@ -780,7 +780,7 @@ Language: he_IL
 	<string name="logs_copied_to_clipboard">הלוגים של האפליקציה הועתקו אל ה-clipboard</string>
 	<string name="stats_period">תקופה</string>
 	<string name="stats_overall">מבט כללי</string>
-	<string name="stats_total">סה"כ</string>
+	<string name="stats_total">סה\"כ</string>
 	<string name="post_uploading">מעלה פוסט</string>
 	<string name="stats_visitors">מבקרים</string>
 	<string name="stats_views">צפיות</string>
@@ -819,11 +819,11 @@ Language: he_IL
 	<string name="stats_empty_followers_desc">אפשר לעקוב אחר המספר הכולל של עוקבים ומשך הזמן שכל אחד מהם עוקב אחר האתר שלך.</string>
 	<string name="stats_comments_by_posts_and_pages">לפי פוסטים ועמודים</string>
 	<string name="stats_comments_by_authors">לפי מחברים</string>
-	<string name="stats_comments_total_comments_followers">סה"כ פוסטים עם עוקבים אחר תגובות: %1$s</string>
-	<string name="stats_followers_total_wpcom">סה"כ עוקבי וורדפרס.קום: %1$s</string>
+	<string name="stats_comments_total_comments_followers">סה\"כ פוסטים עם עוקבים אחר תגובות: %1$s</string>
+	<string name="stats_followers_total_wpcom">סה\"כ עוקבי וורדפרס.קום: %1$s</string>
 	<string name="stats_followers_email_selector">אימייל</string>
 	<string name="stats_followers_wpcom_selector">WordPress.com</string>
-	<string name="stats_followers_total_email">סה"כ עוקבי אימייל: %1$s</string>
+	<string name="stats_followers_total_email">סה\"כ עוקבי אימייל: %1$s</string>
 	<string name="stats_followers_seconds_ago">לפני כמה שניות</string>
 	<string name="stats_followers_a_minute_ago">לפני דקה</string>
 	<string name="stats_followers_days">%1$d ימים</string>
@@ -925,7 +925,7 @@ Language: he_IL
 	<string name="blog_name_exists">אתר זה כבר קיים</string>
 	<string name="blog_name_only_lowercase_letters_and_numbers">כתובת האתר יכולה לכלול רק אותיות לא רישיות (a-z) וספרות</string>
 	<string name="blog_name_cant_be_used">אינך רשאי להשתמש בכתובת אתר זו</string>
-	<string name="blog_name_contains_invalid_characters">כתובת האתר לא יכולה לכלול את התו "_"</string>
+	<string name="blog_name_contains_invalid_characters">כתובת האתר לא יכולה לכלול את התו \"_\"</string>
 	<string name="blog_name_must_be_less_than_sixty_four_characters">כתובת האתר חייבת לכלול פחות מ-64 תווים</string>
 	<string name="blog_name_must_be_at_least_four_characters">כתובת האתר חייבת להכיל לפחות 4 תווים</string>
 	<string name="blog_name_not_allowed">כתובת אתר זו אינה מותרת</string>
@@ -936,7 +936,7 @@ Language: he_IL
 	<string name="email_not_allowed">כתובת אימייל זו אינה מותרת</string>
 	<string name="email_invalid">הקלד כתובת אימייל חוקית</string>
 	<string name="username_must_include_letters">שם המשתמש חייב לכלול לפחות אות אחת (a-z)</string>
-	<string name="username_contains_invalid_characters">שם המשתמש לא יכול לכלול את התו "_"</string>
+	<string name="username_contains_invalid_characters">שם המשתמש לא יכול לכלול את התו \"_\"</string>
 	<string name="username_must_be_at_least_four_characters">שם המשתמש חייב להכיל לפחות 4 תווים</string>
 	<string name="username_not_allowed">שם המשתמש לא מותר</string>
 	<string name="username_required">הקלד שם משתמש</string>

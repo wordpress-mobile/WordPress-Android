@@ -13,67 +13,84 @@
         android:paddingLeft="@dimen/content_margin"
         android:paddingRight="@dimen/content_margin">
 
-        <RelativeLayout
+        <android.support.v7.widget.CardView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:paddingTop="@dimen/me_avatar_margin_top">
+            android:layout_margin="@dimen/margin_large">
 
-            <View
-                android:id="@+id/avatar_tooltip_anchor"
-                android:layout_width="@dimen/avatar_sz_large"
-                android:layout_height="1dp"
-                android:layout_centerHorizontal="true"
-                android:visibility="invisible"/>
-
-            <FrameLayout
-                android:id="@+id/frame_avatar"
-                android:layout_width="wrap_content"
+            <RelativeLayout
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_centerHorizontal="true">
+                android:padding="@dimen/margin_extra_medium_large">
 
                 <FrameLayout
-                    android:id="@+id/avatar_container"
+                    android:id="@+id/frame_avatar"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:padding="@dimen/margin_medium"
-                    android:background="?attr/selectableItemBackgroundBorderless"
-                    android:contentDescription="@string/me_profile_photo">
+                    android:layout_centerHorizontal="true">
 
-                    <org.wordpress.android.widgets.WPNetworkImageView
-                        android:id="@+id/me_avatar"
-                        android:layout_width="@dimen/avatar_sz_large"
-                        android:layout_height="@dimen/avatar_sz_large" />
+                    <FrameLayout
+                        android:id="@+id/avatar_container"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:padding="4dp"
+                        android:background="?attr/selectableItemBackgroundBorderless"
+                        android:contentDescription="@string/me_profile_photo">
+
+                        <org.wordpress.android.widgets.WPNetworkImageView
+                            android:id="@+id/me_avatar"
+                            android:layout_width="@dimen/avatar_sz_inner_circle"
+                            android:layout_height="@dimen/avatar_sz_inner_circle"
+                            app:wpDefaultImageDrawable="@drawable/ic_gridicons_user_circle_100dp"
+                            app:wpErrorImageDrawable="@drawable/ic_gridicons_user_circle_100dp" />
+                    </FrameLayout>
+
+                    <ProgressBar
+                        android:id="@+id/avatar_progress"
+                        style="@android:style/Widget.Holo.ProgressBar"
+                        android:layout_width="@dimen/avatar_sz_inner_circle"
+                        android:layout_height="@dimen/avatar_sz_inner_circle"
+                        android:background="@drawable/shape_oval_translucent"
+                        android:layout_gravity="center"
+                        android:padding="@dimen/margin_large"
+                        android:indeterminate="true"
+                        android:clickable="true"
+                        android:visibility="gone"
+                        tools:visibility="visible"/>
                 </FrameLayout>
 
-                <ProgressBar
-                    android:id="@+id/avatar_progress"
-                    style="@android:style/Widget.Holo.ProgressBar"
-                    android:layout_width="@dimen/avatar_sz_large"
-                    android:layout_height="@dimen/avatar_sz_large"
-                    android:background="@drawable/shape_oval_translucent"
-                    android:layout_gravity="center"
-                    android:padding="@dimen/margin_large"
-                    android:indeterminate="true"
+                <org.wordpress.android.widgets.WPTextView
+                    android:id="@+id/change_photo"
+                    android:background="?attr/selectableItemBackground"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerHorizontal="true"
+                    android:layout_below="@id/frame_avatar"
+                    android:textColor="@color/grey_darken_10"
+                    android:padding="8dp"
+                    android:textAllCaps="true"
+                    android:textSize="10sp"
                     android:clickable="true"
-                    android:visibility="gone"
-                    tools:visibility="visible"/>
-            </FrameLayout>
+                    android:focusable="true"
+                    android:text="@string/change_photo"
+                    tools:text="Change photo" />
 
-            <org.wordpress.android.widgets.WPTextView
+                <org.wordpress.android.widgets.WPTextView
                     android:id="@+id/me_display_name"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_below="@+id/frame_avatar"
+                    android:layout_below="@+id/change_photo"
+                    android:layout_marginTop="8dp"
                     android:layout_centerHorizontal="true"
                     android:ellipsize="end"
+                    android:fontFamily="sans-serif-light"
                     android:maxLines="1"
                     android:textColor="@color/grey_dark"
                     android:textSize="@dimen/text_sz_large"
                     android:textStyle="bold"
-                    android:fontFamily="sans-serif-light"
                     tools:text="Full Name" />
 
-            <org.wordpress.android.widgets.WPTextView
+                <org.wordpress.android.widgets.WPTextView
                     android:id="@+id/me_username"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -84,12 +101,13 @@
                     android:textColor="@color/grey"
                     android:textSize="@dimen/text_sz_medium"
                     tools:text="username" />
-        </RelativeLayout>
+            </RelativeLayout>
+
+        </android.support.v7.widget.CardView>
 
         <LinearLayout
             android:id="@+id/row_my_profile"
-            style="@style/MeListRowLayout"
-            android:layout_marginTop="@dimen/me_list_margin_top">
+            style="@style/MeListRowLayout">
 
             <ImageView
                 android:id="@+id/me_my_profile_icon"
