@@ -340,7 +340,29 @@ public class PluginBrowserActivity extends AppCompatActivity
             setHasStableIds(true);
         }
 
+        boolean isSameList(@NonNull List<?> items) {
+            if (mItems.size() != items.size()) {
+                return false;
+            }
+            for (Object item: items) {
+                if (item instanceof WPOrgPluginModel) {
+                    if (indexOfPluginWithSlug(((WPOrgPluginModel) item).getSlug()) == -1) {
+                        return false;
+                    }
+                } else if (item instanceof SitePluginModel) {
+                    if (indexOfPluginWithSlug(((SitePluginModel) item).getSlug()) == -1) {
+                        return false;
+                    }
+                }
+            }
+            return true;
+        }
+
         void setPlugins(@NonNull List<?> items) {
+            if (isSameList(items)) {
+                return;
+            }
+
             mItems.clear();
             mItems.addAll(items);
 
