@@ -20,7 +20,9 @@ import java.util.Map;
 
 public abstract class GsonRequest<T> extends BaseRequest<T> {
     private static final String PROTOCOL_CHARSET = "utf-8";
-    private static final String PROTOCOL_CONTENT_TYPE = String.format("application/json; charset=%s", PROTOCOL_CHARSET);
+    private static final String PROTOCOL_CONTENT_TYPE_JSON = String.format("application/json; charset=%s",
+            PROTOCOL_CHARSET);
+    protected static final String PROTOCOL_CONTENT_TYPE_URL_ENCODED = "application/x-www-form-urlencoded";
 
     private final Gson mGson;
     private final Class<T> mClass;
@@ -52,7 +54,7 @@ public abstract class GsonRequest<T> extends BaseRequest<T> {
 
     @Override
     public String getBodyContentType() {
-        return PROTOCOL_CONTENT_TYPE;
+        return PROTOCOL_CONTENT_TYPE_JSON;
     }
 
     @Override
@@ -62,7 +64,7 @@ public abstract class GsonRequest<T> extends BaseRequest<T> {
 
     @Override
     public byte[] getBody() throws AuthFailureError {
-        if (mBody == null) {
+        if (mBody == null || getBodyContentType().equals(PROTOCOL_CONTENT_TYPE_URL_ENCODED)) {
             return super.getBody();
         }
 

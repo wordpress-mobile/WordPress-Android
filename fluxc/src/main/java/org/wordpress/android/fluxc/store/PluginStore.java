@@ -11,6 +11,7 @@ import org.wordpress.android.fluxc.action.PluginAction;
 import org.wordpress.android.fluxc.annotations.action.Action;
 import org.wordpress.android.fluxc.annotations.action.IAction;
 import org.wordpress.android.fluxc.model.SiteModel;
+import org.wordpress.android.fluxc.model.plugin.PluginDirectoryModel;
 import org.wordpress.android.fluxc.model.plugin.PluginDirectoryType;
 import org.wordpress.android.fluxc.model.plugin.SitePluginModel;
 import org.wordpress.android.fluxc.model.plugin.WPOrgPluginModel;
@@ -343,6 +344,7 @@ public class PluginStore extends Store {
     }
 
     public enum PluginDirectoryErrorType {
+        EMPTY_RESPONSE,
         GENERIC_ERROR
     }
 
@@ -566,20 +568,19 @@ public class PluginStore extends Store {
         }
     }
 
-    public List<WPOrgPluginModel> getPluginDirectory(PluginDirectoryType type) {
-        // TODO: query the plugin directory from PluginSqlUtils
-        return new ArrayList<>();
+    public @NonNull List<WPOrgPluginModel> getPluginDirectory(PluginDirectoryType type) {
+        return PluginSqlUtils.getWPOrgPluginsForDirectory(type);
     }
 
-    public SitePluginModel getSitePluginByName(SiteModel site, String name) {
+    public @Nullable SitePluginModel getSitePluginByName(SiteModel site, String name) {
         return PluginSqlUtils.getSitePluginByName(site, name);
     }
 
-    public List<SitePluginModel> getSitePlugins(SiteModel site) {
+    public @NonNull List<SitePluginModel> getSitePlugins(SiteModel site) {
         return PluginSqlUtils.getSitePlugins(site);
     }
 
-    public WPOrgPluginModel getWPOrgPluginBySlug(String slug) {
+    public @Nullable WPOrgPluginModel getWPOrgPluginBySlug(String slug) {
         return PluginSqlUtils.getWPOrgPluginBySlug(slug);
     }
 
@@ -606,7 +607,11 @@ public class PluginStore extends Store {
     }
 
     private void fetchPluginDirectory(FetchPluginDirectoryPayload payload) {
-        // TODO: call PluginWPOrgClient's fetchPluginDirectory method (yet to be implemented)
+        int offset = 0;
+        if (payload.loadMore) {
+            offset = PluginSqlUtils.getNumberOfPluginsForDirectory(payload.type);
+        }
+        mPluginWPOrgClient.fetchPluginDirectory(payload.type, offset);
     }
 
     private void fetchSitePlugins(SiteModel site) {
@@ -634,7 +639,7 @@ public class PluginStore extends Store {
     }
 
     private void searchPluginDirectory(SearchPluginDirectoryPayload payload) {
-        // TODO: call PluginWPOrgClient's fetchPluginDirectory method (yet to be implemented)
+        mPluginWPOrgClient.searchPluginDirectory(payload.searchTerm, payload.offset);
     }
 
     private void updateSitePlugin(UpdateSitePluginPayload payload) {
@@ -683,7 +688,19 @@ public class PluginStore extends Store {
             event.error = payload.error;
         } else {
             event.canLoadMore = payload.canLoadMore;
-            // TODO: Save the payload.plugins to DB
+            if (!payload.loadMore) {
+                // This is a fresh list, we need to remove the directory records for the fetched type
+                PluginSqlUtils.deletePluginDirectoryForType(payload.type);
+            }
+            if (payload.plugins != null) {
+                // For pagination to work correctly, we need to separate the actual plugin data from the list of plugins
+                // for each directory type. This is important because the same data will be fetched from multiple
+                // sources. We fetch different directory types (same plugin can be in both new and popular) as well as
+                // do standalone fetches for plugins with `FETCH_WPORG_PLUGIN` action.
+                PluginSqlUtils.insertOrUpdatePluginDirectoryList(pluginDirectoryListFromWPOrgPlugins(payload.plugins,
+                        payload.type));
+                PluginSqlUtils.insertOrUpdateWPOrgPluginList(payload.plugins);
+            }
         }
         emitChange(event);
     }
@@ -739,5 +756,19 @@ public class PluginStore extends Store {
             PluginSqlUtils.insertOrUpdateSitePlugin(payload.plugin);
         }
         emitChange(event);
+    }
+
+    // Helpers
+
+    private List<PluginDirectoryModel> pluginDirectoryListFromWPOrgPlugins(@NonNull List<WPOrgPluginModel> wpOrgPlugins,
+                                                                           PluginDirectoryType directoryType) {
+        List<PluginDirectoryModel> directoryList = new ArrayList<>(wpOrgPlugins.size());
+        for (WPOrgPluginModel wpOrgPluginModel : wpOrgPlugins) {
+            PluginDirectoryModel pluginDirectoryModel = new PluginDirectoryModel();
+            pluginDirectoryModel.setSlug(wpOrgPluginModel.getSlug());
+            pluginDirectoryModel.setDirectoryType(directoryType.toString());
+            directoryList.add(pluginDirectoryModel);
+        }
+        return directoryList;
     }
 }

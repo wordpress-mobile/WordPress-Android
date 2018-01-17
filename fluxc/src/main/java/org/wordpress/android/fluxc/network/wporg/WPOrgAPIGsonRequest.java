@@ -22,4 +22,9 @@ public class WPOrgAPIGsonRequest<T> extends GsonRequest<T> {
     public BaseNetworkError deliverBaseNetworkError(@NonNull BaseNetworkError error) {
         return error;
     }
+
+    @Override
+    public String getBodyContentType() {
+        return PROTOCOL_CONTENT_TYPE_URL_ENCODED;
+    }
 }
