@@ -116,7 +116,7 @@ public class PluginWPOrgClient extends BaseWPOrgAPIClient {
 
     public void searchPluginDirectory(final String searchTerm, final int offset) {
         String url = WPORGAPI.plugins.info.version("1.1").getUrl() + "?action=query_plugins";
-        final Map<String, String> params = getCommonPluginDirectoryParams(0);
+        final Map<String, String> params = getCommonPluginDirectoryParams(offset);
         params.put("request[search]", searchTerm);
         final WPOrgAPIGsonRequest<FetchPluginDirectoryResponse> request =
                 new WPOrgAPIGsonRequest<>(Method.POST, url, params, null, FetchPluginDirectoryResponse.class,
@@ -151,7 +151,7 @@ public class PluginWPOrgClient extends BaseWPOrgAPIClient {
 
     private Map<String, String> getCommonPluginDirectoryParams(int offset) {
         Map<String, String> params = new HashMap<>();
-        int page = (int) Math.floor(((double) offset) / FETCH_PLUGIN_DIRECTORY_PAGE_SIZE);
+        int page = getPageNumberFromOffset(offset);
         params.put("request[page]", String.valueOf(page));
         params.put("request[per_page]", String.valueOf(FETCH_PLUGIN_DIRECTORY_PAGE_SIZE));
         params.put("request[fields][banners]", String.valueOf(1));
@@ -197,5 +197,14 @@ public class PluginWPOrgClient extends BaseWPOrgAPIClient {
         wpOrgPluginModel.setNumberOfRatingsOfFour(response.numberOfRatingsOfFour);
         wpOrgPluginModel.setNumberOfRatingsOfFive(response.numberOfRatingsOfFive);
         return wpOrgPluginModel;
+    }
+
+    private int getPageNumberFromOffset(int offset) {
+        // Offset = 0, page = 1
+        // Offset = 20, page = 1
+        // Offset = 50, page = 2
+        // Offset = 80, page = 2
+        // Offset = 100, page = 3
+        return (int) Math.floor(((double) offset) / FETCH_PLUGIN_DIRECTORY_PAGE_SIZE) + 1;
     }
 }
