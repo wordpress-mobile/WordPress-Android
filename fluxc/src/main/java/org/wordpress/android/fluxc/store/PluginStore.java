@@ -131,6 +131,7 @@ public class PluginStore extends Store {
         public PluginDirectoryType type;
         public boolean loadMore;
         public boolean canLoadMore;
+        public int page;
         public List<WPOrgPluginModel> plugins;
 
         public FetchedPluginDirectoryPayload(PluginDirectoryType type, boolean loadMore) {
@@ -696,9 +697,10 @@ public class PluginStore extends Store {
                 // For pagination to work correctly, we need to separate the actual plugin data from the list of plugins
                 // for each directory type. This is important because the same data will be fetched from multiple
                 // sources. We fetch different directory types (same plugin can be in both new and popular) as well as
-                // do standalone fetches for plugins with `FETCH_WPORG_PLUGIN` action.
+                // do standalone fetches for plugins with `FETCH_WPORG_PLUGIN` action. We also need to keep track of the
+                // page the plugin belongs to, because the `per_page` parameter is unreliable.
                 PluginSqlUtils.insertOrUpdatePluginDirectoryList(pluginDirectoryListFromWPOrgPlugins(payload.plugins,
-                        payload.type));
+                        payload.type, payload.page));
                 PluginSqlUtils.insertOrUpdateWPOrgPluginList(payload.plugins);
             }
         }
@@ -761,12 +763,14 @@ public class PluginStore extends Store {
     // Helpers
 
     private List<PluginDirectoryModel> pluginDirectoryListFromWPOrgPlugins(@NonNull List<WPOrgPluginModel> wpOrgPlugins,
-                                                                           PluginDirectoryType directoryType) {
+                                                                           PluginDirectoryType directoryType,
+                                                                           int page) {
         List<PluginDirectoryModel> directoryList = new ArrayList<>(wpOrgPlugins.size());
         for (WPOrgPluginModel wpOrgPluginModel : wpOrgPlugins) {
             PluginDirectoryModel pluginDirectoryModel = new PluginDirectoryModel();
             pluginDirectoryModel.setSlug(wpOrgPluginModel.getSlug());
             pluginDirectoryModel.setDirectoryType(directoryType.toString());
+            pluginDirectoryModel.setPage(page);
             directoryList.add(pluginDirectoryModel);
         }
         return directoryList;

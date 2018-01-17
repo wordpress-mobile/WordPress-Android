@@ -10,6 +10,7 @@ public class PluginDirectoryModel implements Identifiable {
     @PrimaryKey @Column private int mId;
     @Column private String mSlug;
     @Column private String mDirectoryType;
+    @Column private int mPage;
 
     @Override
     public int getId() {
@@ -35,5 +36,13 @@ public class PluginDirectoryModel implements Identifiable {
 
     public void setDirectoryType(String directoryType) {
         mDirectoryType = directoryType;
+    }
+
+    public int getPage() {
+        return mPage;
+    }
+
+    public void setPage(int page) {
+        mPage = page;
     }
 }
