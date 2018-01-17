@@ -1,5 +1,6 @@
 package org.wordpress.android.ui.plugins;
 
+import android.app.Fragment;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.ColorRes;
@@ -7,6 +8,7 @@ import android.support.annotation.DrawableRes;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.annotation.StringRes;
+import android.support.v4.view.MenuItemCompat;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
@@ -48,7 +50,8 @@ import java.util.List;
 
 import javax.inject.Inject;
 
-public class PluginBrowserActivity extends AppCompatActivity implements SearchView.OnQueryTextListener {
+public class PluginBrowserActivity extends AppCompatActivity
+        implements SearchView.OnQueryTextListener, MenuItemCompat.OnActionExpandListener {
 
     private static final String KEY_LAST_SEARCH = "last_search";
 
@@ -56,10 +59,8 @@ public class PluginBrowserActivity extends AppCompatActivity implements SearchVi
     private List<SitePluginModel> mSitePlugins;
 
     private RecyclerView mSitePluginsRecycler;
-    private PluginBrowserAdapter mSitePluginsAdapter;
-
+    private RecyclerView mPopularPluginsRecycler;
     private RecyclerView mNewPluginsRecycler;
-    private PluginBrowserAdapter mNewPluginsAdapter;
 
     private int mRowWidth;
     private int mRowHeight;
@@ -81,6 +82,7 @@ public class PluginBrowserActivity extends AppCompatActivity implements SearchVi
         mDispatcher.register(this);
 
         mSitePluginsRecycler = findViewById(R.id.installed_plugins_recycler);
+        mPopularPluginsRecycler = findViewById(R.id.popular_plugins_recycler);
         mNewPluginsRecycler = findViewById(R.id.new_plugins_recycler);
 
         Toolbar toolbar = findViewById(R.id.toolbar);
@@ -120,22 +122,23 @@ public class PluginBrowserActivity extends AppCompatActivity implements SearchVi
         mIconSize = mRowWidth - (margin * 2);
         mRowHeight = Math.round(displayHeight / 3.2f); // TODO: landscape
 
-        mSitePluginsRecycler.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false));
-        mSitePluginsRecycler.setHasFixedSize(true);
-        mSitePluginsAdapter = new PluginBrowserAdapter(this);
-        mSitePluginsRecycler.setAdapter(mSitePluginsAdapter);
-
-        mNewPluginsRecycler.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false));
-        mNewPluginsRecycler.setHasFixedSize(true);
-        mNewPluginsAdapter = new PluginBrowserAdapter(this);
-        mNewPluginsRecycler.setAdapter(mNewPluginsAdapter);
+        configureRecycler(mSitePluginsRecycler);
+        configureRecycler(mPopularPluginsRecycler);
+        configureRecycler(mNewPluginsRecycler);
 
         refreshSitePlugins();
-        refreshNewPlugins();
+        refreshDirectoryPlugins(mPopularPluginsRecycler);
+        refreshDirectoryPlugins(mNewPluginsRecycler);
 
         if (savedInstanceState == null) {
             fetchPlugins();
         }
+    }
+
+    private void configureRecycler(@NonNull RecyclerView recycler) {
+        recycler.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false));
+        recycler.setHasFixedSize(true);
+        recycler.setAdapter(new PluginBrowserAdapter(this));
     }
 
     @Override
@@ -191,10 +194,10 @@ public class PluginBrowserActivity extends AppCompatActivity implements SearchVi
 
     private void refreshSitePlugins() {
         mSitePlugins = mPluginStore.getSitePlugins(mSite);
-        mSitePluginsAdapter.setSitePlugins(mSitePlugins);
+        ((PluginBrowserAdapter) mSitePluginsRecycler.getAdapter()).setSitePlugins(mSitePlugins);
     }
 
-    private void refreshNewPlugins() {
+    private void refreshDirectoryPlugins(@NonNull RecyclerView recycler) {
         // TODO: this is a dummy list generated from site plugins
         List<WPOrgPluginModel> wpOrgPlugins = new ArrayList<>();
         for (SitePluginModel sitePlugin: mSitePlugins) {
@@ -203,7 +206,7 @@ public class PluginBrowserActivity extends AppCompatActivity implements SearchVi
                 wpOrgPlugins.add(wpOrgPlugin);
             }
         }
-        mNewPluginsAdapter.setWPOrgPlugins(wpOrgPlugins);
+        ((PluginBrowserAdapter) recycler.getAdapter()).setWPOrgPlugins(wpOrgPlugins);
     }
 
     private SitePluginModel getSitePluginFromSlug(@Nullable String slug) {
@@ -242,9 +245,14 @@ public class PluginBrowserActivity extends AppCompatActivity implements SearchVi
             return;
         }
         if (!TextUtils.isEmpty(event.pluginSlug)) {
-            mSitePluginsAdapter.refreshPluginWithSlug(event.pluginSlug);
-            mNewPluginsAdapter.refreshPluginWithSlug(event.pluginSlug);
+            refreshPluginWithSlug(event.pluginSlug);
         }
+    }
+
+    private void refreshPluginWithSlug(@NonNull String slug) {
+        ((PluginBrowserAdapter) mSitePluginsRecycler.getAdapter()).refreshPluginWithSlug(slug);
+        ((PluginBrowserAdapter) mPopularPluginsRecycler.getAdapter()).refreshPluginWithSlug(slug);
+        ((PluginBrowserAdapter) mNewPluginsRecycler.getAdapter()).refreshPluginWithSlug(slug);
     }
 
     @Override
@@ -252,22 +260,54 @@ public class PluginBrowserActivity extends AppCompatActivity implements SearchVi
         if (mSearchView != null) {
             mSearchView.clearFocus();
         }
-        submitSearch(query);
+        showSearchFragment(query);
         return true;
     }
 
     @Override
     public boolean onQueryTextChange(String query) {
-        submitSearch(query);
+        showSearchFragment(query);
         return true;
     }
 
-    private void submitSearch(String query) {
-        // TODO
+    private PluginSearchFragment getSearchFragment() {
+        Fragment fragment = getFragmentManager().findFragmentByTag(PluginSearchFragment.TAG);
+        if (fragment != null) {
+            return (PluginSearchFragment) fragment;
+        }
+        return null;
+    }
+
+    private void showSearchFragment(String query) {
+        PluginSearchFragment fragment = getSearchFragment();
+        if (fragment == null) {
+            fragment = PluginSearchFragment.newInstance();
+            getFragmentManager().beginTransaction()
+                    .add(R.id.fragment_container, fragment, PluginSearchFragment.TAG)
+                    .commit();
+        }
+    }
+
+    private void hideSearchFragment() {
+        PluginSearchFragment fragment = getSearchFragment();
+        if (fragment != null) {
+            getFragmentManager().beginTransaction().remove(fragment).commit();
+        }
     }
 
     private void showProgress(boolean show) {
         findViewById(R.id.progress).setVisibility(show ? View.VISIBLE : View.GONE);
+    }
+
+    @Override
+    public boolean onMenuItemActionExpand(MenuItem menuItem) {
+        return true;
+    }
+
+    @Override
+    public boolean onMenuItemActionCollapse(MenuItem menuItem) {
+        hideSearchFragment();
+        return true;
     }
 
     private class PluginBrowserAdapter extends RecyclerView.Adapter<ViewHolder> {
