@@ -1,11 +1,39 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2017-12-13 09:35:47+0000
+Translation-Revision-Date: 2017-12-19 19:56:43+0000
 Plural-Forms: nplurals=3; plural=(n==1 ? 0 : (n==0 || (n%100 > 0 && n%100 < 20)) ? 1 : 2);
 Generator: GlotPress/2.4.0-alpha
 Language: ro
 -->
 <resources>
+	<string name="plugin_external_link_icon_content_description">Legătură externă</string>
+	<string name="plugin_update_available_icon_content_description">Actualizare disponibilă</string>
+	<string name="plugin_icon_content_description">Icon modul</string>
+	<string name="plugin_home_page">Prima pagină a modulului</string>
+	<string name="wordpress_dot_org_plugin_page">Pagină modul WordPress.org</string>
+	<string name="plugin_remove_dialog_message">Sigur vrei să înlături %1$s din %2$s?\n\nAsta va dezactiva modulul și va șterge toate fișierele și datele asociate.</string>
+	<string name="plugin_remove_dialog_title">Înlătură modulul</string>
+	<string name="plugin_remove_progress_dialog_message">Înlătur %s…</string>
+	<string name="plugin_disable_progress_dialog_message">Dezactivez %s…</string>
+	<string name="plugin_btn_remove">Înlătură modulul</string>
+	<string name="plugin_configuration_failed">A apărut o eroare în timpul configurării modulului: %s</string>
+	<string name="plugin_remove_failed">Eroare la înlăturarea %s.</string>
+	<string name="plugin_removed_successfully">%s înlăturat cu succes.</string>
+	<string name="plugin_updated_failed_detailed">Eroare la înlăturarea %1$s: %2$s</string>
+	<string name="plugin_updated_failed">Eroare la înlăturarea %s.</string>
+	<string name="plugin_updated_successfully">%s actualizat cu succes.</string>
+	<string name="plugin_available_version">Este disponibilă versiunea %s.</string>
+	<string name="plugin_installed_version">Versiune modul %s</string>
+	<string name="plugin_detail_label_state_autoupdates">Actualizări automate</string>
+	<string name="plugin_detail_label_state_active">Activ</string>
+	<string name="plugin_autoupdates_off">Actualizări automate oprite</string>
+	<string name="plugin_autoupdates_on">Actualizări automate pornite</string>
+	<string name="plugin_inactive">Inactiv</string>
+	<string name="plugin_active">Activ</string>
+	<string name="plugins">Module</string>
+	<string name="my_site_btn_plugins">Module</string>
+	<string name="media_edit_link_hint">Deschide legătura într-o fereastră/filă nouă</string>
+	<string name="media_edit_link_text">Legătură la</string>
 	<string name="notification_login_failed">A apărut o eroare.</string>
 	<string name="notification_2fa_needed">Te rog furnizează codul de autentificare pentru a continua.</string>
 	<string name="notification_error_wrong_password">Te rog verifică-ți de două ori parola înainte de a continua.</string>
@@ -1328,6 +1356,7 @@ Language: ro
 	<string name="media_gallery_type_thumbnail_grid">Grilă miniaturi</string>
 	<string name="learn_more">Află mai mult</string>
 	<string name="post_not_found">A apărut o eroare la încărcarea articolului. Reîmprospătează articolele și încearcă din nou.</string>
+	<string name="plugin_not_found">A apărut o eroare la accesarea acestui modul</string>
 	<string name="scaled_image_error">Introdu o valoare validă de lățime</string>
 	<string name="cancel_edit">Abandonează editarea</string>
 	<string name="connection_error">Eroare de conectare</string>

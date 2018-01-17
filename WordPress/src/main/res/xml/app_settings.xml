@@ -36,11 +36,6 @@
             android:layout="@layout/preference_layout"
             android:title="@string/preference_editor_type"
             tools:summary="Visual" />
-
-        <Preference
-            android:key="@string/pref_key_editor_footer"
-            android:layout="@layout/preference_layout_editor_footer" />
-
     </PreferenceCategory>
 
     <PreferenceCategory

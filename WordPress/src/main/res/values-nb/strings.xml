@@ -1,11 +1,28 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2017-11-27 04:07:31+0000
+Translation-Revision-Date: 2017-12-29 01:30:33+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/2.4.0-alpha
 Language: nb_NO
 -->
 <resources>
+	<string name="plugin_external_link_icon_content_description">Ekstern lenke</string>
+	<string name="plugin_update_available_icon_content_description">Oppdatering er tilgjengelig</string>
+	<string name="plugin_icon_content_description">Utvidelsesikon</string>
+	<string name="plugin_home_page">Utvidelsens hjemmeside</string>
+	<string name="wordpress_dot_org_plugin_page">WordPress.org-utvidelsesside</string>
+	<string name="plugin_remove_dialog_title">Fjerner utvidelsen</string>
+	<string name="plugin_remove_progress_dialog_message">Fjerner %s …</string>
+	<string name="plugin_disable_progress_dialog_message">Skrur av %s …</string>
+	<string name="plugin_btn_remove">Fjern utvidelsen</string>
+	<string name="plugin_configuration_failed">En feil oppstod under oppsett av utvidelsen: %s</string>
+	<string name="plugin_remove_failed">Feil under fjerning av %s.</string>
+	<string name="plugin_removed_successfully">Lyktes i å fjerne %s.</string>
+	<string name="plugin_available_version">Versjon %s er tilgjengelig.</string>
+	<string name="plugin_detail_label_state_active">Aktiv</string>
+	<string name="my_site_btn_plugins">Utvidelser</string>
+	<string name="notification_2fa_needed">Vennligst skriv inn en autentiseringskode for å fortsette.</string>
+	<string name="site_creating_set_theme">Velger temaet …</string>
 	<string name="login_empty_password">Vennligst skriv inn et passord</string>
 	<string name="login_text_otp_another">Send meg en annen kode i stedet.</string>
 	<string name="size_large">Stor</string>

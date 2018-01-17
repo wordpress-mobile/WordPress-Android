@@ -1,11 +1,39 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2017-12-13 16:23:10+0000
+Translation-Revision-Date: 2018-01-02 08:58:38+0000
 Plural-Forms: nplurals=3; plural=(n==1 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);
 Generator: GlotPress/2.4.0-alpha
 Language: pl
 -->
 <resources>
+	<string name="plugin_external_link_icon_content_description">Zewnętrzny odnośnik</string>
+	<string name="plugin_update_available_icon_content_description">Aktualizacja dostępna</string>
+	<string name="plugin_icon_content_description">Ikona wtyczki</string>
+	<string name="plugin_home_page">Strona domowa wtyczki</string>
+	<string name="wordpress_dot_org_plugin_page">Strona wtyczki na WordPress.org</string>
+	<string name="plugin_remove_dialog_message">Czy na pewno chcesz usunąć %1$s z %2$s?\n\nSpowoduje to wyłączenie wtyczki i usunie wszystkie powiązane pliki i dane.</string>
+	<string name="plugin_remove_dialog_title">Usuń wtyczkę</string>
+	<string name="plugin_remove_progress_dialog_message">Usuwanie %s...</string>
+	<string name="plugin_disable_progress_dialog_message">Wyłączanie %s...</string>
+	<string name="plugin_btn_remove">Usuń wtyczkę</string>
+	<string name="plugin_configuration_failed">Wystąpił błąd podczas konfiguracji wtyczki: %s</string>
+	<string name="plugin_remove_failed">Błąd usuwania %s.</string>
+	<string name="plugin_removed_successfully">Z powodzeniem usunięto %s.</string>
+	<string name="plugin_updated_failed_detailed">Błąd podczas usuwania %1$s: %2$s</string>
+	<string name="plugin_updated_failed">Błąd podczas usuwania %s.</string>
+	<string name="plugin_updated_successfully">Z powodzeniem zaktualizowano %s.</string>
+	<string name="plugin_available_version">Wersja %s jest dostępna.</string>
+	<string name="plugin_installed_version">Wersja %s wtyczki</string>
+	<string name="plugin_detail_label_state_autoupdates">Autoaktualizacja</string>
+	<string name="plugin_detail_label_state_active">Aktywne</string>
+	<string name="plugin_autoupdates_off">Autoaktualizacje są wyłączone</string>
+	<string name="plugin_autoupdates_on">Autoaktualizacje są włączone</string>
+	<string name="plugin_inactive">Nieaktywne</string>
+	<string name="plugin_active">Aktywne</string>
+	<string name="plugins">Wtyczki</string>
+	<string name="my_site_btn_plugins">Wtyczki</string>
+	<string name="media_edit_link_hint">Otwórz odnośnik w nowym oknie/zakładce</string>
+	<string name="media_edit_link_text">Odnośnik do</string>
 	<string name="notification_login_failed">Wystąpił błąd</string>
 	<string name="notification_2fa_needed">Proszę wprowadzić kod autoryzacji aby kontynuować. </string>
 	<string name="notification_error_wrong_password">Proszę sprawdzić swoje hasło aby kontynuować. </string>
@@ -459,7 +487,7 @@ Language: pl
 	<string name="error_notif_q_action_reply">Nie można dodać odpowiedzi do komentarza. Proszę spróbować później.</string>
 	<string name="error_notif_q_action_approve">Nie można zatwierdzić komentarza. Proszę spróbować później.</string>
 	<string name="error_notif_q_action_like">Nie można dodać polubienia komentarza. Proszę spróbować później.</string>
-	<string name="notifications_label_new_notifications_subtitle">Stuknij aby je zobaczyć </string>
+	<string name="notifications_label_new_notifications_subtitle">Stuknij aby je wyświetlić</string>
 	<string name="notifications_label_new_notifications">Nowe powiadomienia</string>
 	<string name="comment_q_action_replying">Dodawanie odpowiedzi...</string>
 	<string name="comment_q_action_approving">Zatwierdzanie...</string>
@@ -1336,6 +1364,7 @@ Language: pl
 	<string name="jetpack_message_not_admin">Wymagana jest wtyczka Jetpack. Skontaktuj się z administratorem witryny.</string>
 	<string name="error_refresh_media">Nie można było odświeżyć mediów w tym momencie</string>
 	<string name="error_deleting_page">Wystąpił błąd podczas usuwania strony</string>
+	<string name="plugin_not_found">Wystąpił błąd podczas próby dostępu do tej wtyczki</string>
 	<string name="share_url_post">Udostępnij wpis</string>
 	<string name="share_url_page">Udostępnij stronę</string>
 	<string name="share_link">Udostępnij odnośnik</string>

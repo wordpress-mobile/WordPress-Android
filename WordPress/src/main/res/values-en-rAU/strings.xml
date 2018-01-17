@@ -1,11 +1,39 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2017-12-13 22:22:51+0000
+Translation-Revision-Date: 2017-12-20 02:30:35+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/2.4.0-alpha
 Language: en_AU
 -->
 <resources>
+	<string name="plugin_external_link_icon_content_description">External link</string>
+	<string name="plugin_update_available_icon_content_description">Update available</string>
+	<string name="plugin_icon_content_description">Plugin icon</string>
+	<string name="plugin_home_page">Plugin home page</string>
+	<string name="wordpress_dot_org_plugin_page">WordPress.org Plugin page</string>
+	<string name="plugin_remove_dialog_message">Are you sure you want to remove %1$s from %2$s?\n\nThis will deactivate the plugin and delete all associated files and data.</string>
+	<string name="plugin_remove_dialog_title">Remove Plugin</string>
+	<string name="plugin_remove_progress_dialog_message">Removing %s…</string>
+	<string name="plugin_disable_progress_dialog_message">Disabling %s…</string>
+	<string name="plugin_btn_remove">Remove Plugin</string>
+	<string name="plugin_configuration_failed">An error occurred while configuring the plugin: %s</string>
+	<string name="plugin_remove_failed">Error removing %s.</string>
+	<string name="plugin_removed_successfully">Successfully removed %s.</string>
+	<string name="plugin_updated_failed_detailed">Error removing %1$s: %2$s</string>
+	<string name="plugin_updated_failed">Error removing %s.</string>
+	<string name="plugin_updated_successfully">Successfully updated %s.</string>
+	<string name="plugin_available_version">Version %s is available.</string>
+	<string name="plugin_installed_version">Plugin version %s</string>
+	<string name="plugin_detail_label_state_autoupdates">Autoupdates</string>
+	<string name="plugin_detail_label_state_active">Active</string>
+	<string name="plugin_autoupdates_off">Autoupdates off</string>
+	<string name="plugin_autoupdates_on">Autoupdates on</string>
+	<string name="plugin_inactive">Inactive</string>
+	<string name="plugin_active">Active</string>
+	<string name="plugins">Plugins</string>
+	<string name="my_site_btn_plugins">Plugins</string>
+	<string name="media_edit_link_hint">Open link in a new window/tab\"</string>
+	<string name="media_edit_link_text">Link to</string>
 	<string name="notification_login_failed">An error has occurred.</string>
 	<string name="notification_2fa_needed">Please provide an authentication code to continue.</string>
 	<string name="notification_error_wrong_password">Please double check your password to continue.</string>
@@ -1328,6 +1356,7 @@ Language: en_AU
 	<string name="media_gallery_type_thumbnail_grid">Thumbnail grid</string>
 	<string name="learn_more">Learn more</string>
 	<string name="post_not_found">An error occurred when loading the post. Refresh your posts and try again.</string>
+	<string name="plugin_not_found">An error occurred when accessing this plugin</string>
 	<string name="scaled_image_error">Enter a valid scaled width value</string>
 	<string name="cancel_edit">Cancel edit</string>
 	<string name="connection_error">Connection error</string>
