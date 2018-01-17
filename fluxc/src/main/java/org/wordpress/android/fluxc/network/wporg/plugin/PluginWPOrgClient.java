@@ -115,9 +115,9 @@ public class PluginWPOrgClient extends BaseWPOrgAPIClient {
         add(request);
     }
 
-    public void searchPluginDirectory(final String searchTerm, final int offset) {
+    public void searchPluginDirectory(final String searchTerm, final int page) {
         String url = WPORGAPI.plugins.info.version("1.1").getUrl();
-        final Map<String, String> params = getCommonPluginDirectoryParams(offset);
+        final Map<String, String> params = getCommonPluginDirectoryParams(page);
         params.put("request[search]", searchTerm);
         final WPOrgAPIGsonRequest<FetchPluginDirectoryResponse> request =
                 new WPOrgAPIGsonRequest<>(Method.GET, url, params, null, FetchPluginDirectoryResponse.class,
@@ -125,7 +125,7 @@ public class PluginWPOrgClient extends BaseWPOrgAPIClient {
                             @Override
                             public void onResponse(FetchPluginDirectoryResponse response) {
                                 SearchedPluginDirectoryPayload payload =
-                                        new SearchedPluginDirectoryPayload(searchTerm, offset);
+                                        new SearchedPluginDirectoryPayload(searchTerm, page);
                                 if (response != null) {
                                     payload.canLoadMore = response.info.page < response.info.pages;
                                     payload.plugins = wpOrgPluginListFromResponse(response);
@@ -140,7 +140,7 @@ public class PluginWPOrgClient extends BaseWPOrgAPIClient {
                             @Override
                             public void onErrorResponse(@NonNull BaseNetworkError networkError) {
                                 SearchedPluginDirectoryPayload payload =
-                                        new SearchedPluginDirectoryPayload(searchTerm, offset);
+                                        new SearchedPluginDirectoryPayload(searchTerm, page);
                                 payload.error = new PluginDirectoryError(
                                         PluginDirectoryErrorType.GENERIC_ERROR, networkError.message);
                                 mDispatcher.dispatch(PluginActionBuilder.newSearchedPluginDirectoryAction(payload));

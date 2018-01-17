@@ -75,11 +75,11 @@ public class PluginStore extends Store {
     @SuppressWarnings("WeakerAccess")
     public static class SearchPluginDirectoryPayload extends Payload<BaseNetworkError> {
         public String searchTerm;
-        public int offset;
+        public int page;
 
-        public SearchPluginDirectoryPayload(String searchTerm, int offset) {
+        public SearchPluginDirectoryPayload(String searchTerm, int page) {
             this.searchTerm = searchTerm;
-            this.offset = offset;
+            this.page = page;
         }
     }
 
@@ -188,13 +188,13 @@ public class PluginStore extends Store {
     @SuppressWarnings("WeakerAccess")
     public static class SearchedPluginDirectoryPayload extends Payload<PluginDirectoryError> {
         public String searchTerm;
-        public int offset;
+        public int page;
         public boolean canLoadMore;
         public List<WPOrgPluginModel> plugins;
 
-        public SearchedPluginDirectoryPayload(String searchTerm, int offset) {
+        public SearchedPluginDirectoryPayload(String searchTerm, int page) {
             this.searchTerm = searchTerm;
-            this.offset = offset;
+            this.page = page;
         }
     }
 
@@ -430,13 +430,13 @@ public class PluginStore extends Store {
     @SuppressWarnings("WeakerAccess")
     public static class OnPluginDirectorySearched extends OnChanged<PluginDirectoryError> {
         public String searchTerm;
-        public int offset;
+        public int page;
         public boolean canLoadMore;
         public List<WPOrgPluginModel> plugins;
 
-        public OnPluginDirectorySearched(String searchTerm, int offset) {
+        public OnPluginDirectorySearched(String searchTerm, int page) {
             this.searchTerm = searchTerm;
-            this.offset = offset;
+            this.page = page;
         }
     }
 
@@ -640,7 +640,7 @@ public class PluginStore extends Store {
     }
 
     private void searchPluginDirectory(SearchPluginDirectoryPayload payload) {
-        mPluginWPOrgClient.searchPluginDirectory(payload.searchTerm, payload.offset);
+        mPluginWPOrgClient.searchPluginDirectory(payload.searchTerm, payload.page);
     }
 
     private void updateSitePlugin(UpdateSitePluginPayload payload) {
@@ -739,7 +739,7 @@ public class PluginStore extends Store {
     }
 
     private void searchedPluginDirectory(SearchedPluginDirectoryPayload payload) {
-        OnPluginDirectorySearched event = new OnPluginDirectorySearched(payload.searchTerm, payload.offset);
+        OnPluginDirectorySearched event = new OnPluginDirectorySearched(payload.searchTerm, payload.page);
         if (payload.isError()) {
             event.error = payload.error;
         } else {
