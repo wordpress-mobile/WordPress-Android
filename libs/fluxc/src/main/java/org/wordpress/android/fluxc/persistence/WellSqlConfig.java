@@ -60,7 +60,7 @@ public class WellSqlConfig extends DefaultWellConfig {
 
     @Override
     public int getDbVersion() {
-        return 23;
+        return 24;
     }
 
     @Override
@@ -201,6 +201,10 @@ public class WellSqlConfig extends DefaultWellConfig {
                 db.execSQL("alter table WPOrgPluginModel add NUMBER_OF_RATINGS_OF_FIVE INTEGER;");
                 oldVersion++;
             case 22:
+                AppLog.d(T.DB, "Migrating to version " + (oldVersion + 1));
+                db.execSQL("alter table ThemeModel add MOBILE_FRIENDLY_CATEGORY_SLUG text;");
+                oldVersion++;
+            case 23:
                 AppLog.d(T.DB, "Migrating to version " + (oldVersion + 1));
                 db.execSQL("CREATE TABLE PluginDirectoryModel (_id INTEGER PRIMARY KEY AUTOINCREMENT,"
                         + "SLUG TEXT,DIRECTORY_TYPE TEXT)");
