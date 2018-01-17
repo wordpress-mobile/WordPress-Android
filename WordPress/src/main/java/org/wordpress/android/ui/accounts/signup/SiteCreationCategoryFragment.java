@@ -9,6 +9,7 @@ import android.view.ViewGroup;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.analytics.AnalyticsTracker;
+import org.wordpress.android.fluxc.store.ThemeStore;
 
 public class SiteCreationCategoryFragment extends SiteCreationBaseFormFragment<SiteCreationListener> {
     public static final String TAG = "site_creation_category_fragment_tag";
@@ -24,7 +25,7 @@ public class SiteCreationCategoryFragment extends SiteCreationBaseFormFragment<S
             @Override
             public void onClick(View view) {
                 if (mSiteCreationListener != null) {
-                    mSiteCreationListener.startWithBlog();
+                    mSiteCreationListener.withCategory(ThemeStore.MOBILE_FRIENDLY_CATEGORY_BLOG);
                 }
             }
         });
@@ -33,7 +34,7 @@ public class SiteCreationCategoryFragment extends SiteCreationBaseFormFragment<S
             @Override
             public void onClick(View view) {
                 if (mSiteCreationListener != null) {
-                    mSiteCreationListener.startWithWebsite();
+                    mSiteCreationListener.withCategory(ThemeStore.MOBILE_FRIENDLY_CATEGORY_WEBSITE);
                 }
             }
         });
@@ -42,7 +43,7 @@ public class SiteCreationCategoryFragment extends SiteCreationBaseFormFragment<S
             @Override
             public void onClick(View view) {
                 if (mSiteCreationListener != null) {
-                    mSiteCreationListener.startWithPortfolio();
+                    mSiteCreationListener.withCategory(ThemeStore.MOBILE_FRIENDLY_CATEGORY_PORTFOLIO);
                 }
             }
         });

@@ -18,15 +18,9 @@
         app:theme="@style/LoginTheme.Toolbar"
         tools:targetApi="LOLLIPOP"/>
 
-    <ScrollView
-        android:id="@+id/scroll_view"
+    <ViewStub
+        android:id="@+id/site_creation_form_content_stub"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_below="@+id/toolbar">
-
-        <ViewStub
-            android:id="@+id/site_creation_form_content_stub"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"/>
-    </ScrollView>
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/toolbar"/>
 </RelativeLayout>
