@@ -2111,7 +2111,7 @@
     <string name="site_creation_subtitle_portfolio">To present your creative projects in a visual showcase.</string>
 
     <string name="site_creation_label_theme_selection_title">Step 2 of 4</string>
-    <string name="site_creation_label_theme_selection">Get started fast with one of our popular themes — once your site is created, you can browse and choose from hundreds more.</string>
+    <string name="site_creation_label_theme_selection">Get started fast with one of our popular themes. Once your site is created, you can browse and choose from hundreds more.</string>
     <string name="site_creation_label_theme_loading">Please wait while loading themes</string>
 
 </resources>
