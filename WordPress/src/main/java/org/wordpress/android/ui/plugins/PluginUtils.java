@@ -8,6 +8,7 @@ import org.wordpress.android.fluxc.model.PluginModel;
 import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.store.PluginStore;
 import org.wordpress.android.util.AppLog;
+import org.wordpress.android.util.CrashlyticsUtils;
 import org.wordpress.android.util.helpers.Version;
 
 public class PluginUtils {
@@ -24,7 +25,9 @@ public class PluginUtils {
                 Version minVersion = new Version("5.6");
                 return siteJetpackVersion.compareTo(minVersion) >= 0; // if the site has Jetpack 5.6 or newer installed
             } catch (IllegalArgumentException e) {
-                AppLog.e(AppLog.T.UTILS, "Invalid site jetpack version " + jetpackVersion, e);
+                String errorStr = "Invalid site jetpack version " + jetpackVersion;
+                AppLog.e(AppLog.T.UTILS, errorStr, e);
+                CrashlyticsUtils.logException(e, AppLog.T.UTILS, errorStr);
                 return true;
             }
         }
@@ -50,8 +53,10 @@ public class PluginUtils {
             Version availableVersion = new Version(pluginInfo.getVersion());
             return currentVersion.compareTo(availableVersion) == -1;
         } catch (IllegalArgumentException e) {
-            AppLog.e(AppLog.T.UTILS, String.format("An IllegalArgumentException occurred while trying to compare site" +
-                    " plugin version: %s with wporg plugin version: %s", plugin.getVersion(), pluginInfo.getVersion()));
+            String errorStr = String.format("An IllegalArgumentException occurred while trying to compare site" +
+                    " plugin version: %s with wporg plugin version: %s", plugin.getVersion(), pluginInfo.getVersion());
+            AppLog.e(AppLog.T.UTILS, errorStr, e);
+            CrashlyticsUtils.logException(e, AppLog.T.UTILS, errorStr);
             // If the versions are not in the expected format, we can assume that an update is available if the version
             // values for the site plugin and wporg plugin are not the same
             return !plugin.getVersion().equalsIgnoreCase(pluginInfo.getVersion());
