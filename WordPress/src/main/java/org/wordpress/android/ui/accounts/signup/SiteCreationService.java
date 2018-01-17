@@ -13,6 +13,7 @@ import org.wordpress.android.WordPress;
 import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.fluxc.Dispatcher;
 import org.wordpress.android.fluxc.generated.SiteActionBuilder;
+import org.wordpress.android.fluxc.generated.ThemeActionBuilder;
 import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.model.ThemeModel;
 import org.wordpress.android.fluxc.store.SiteStore;
@@ -228,20 +229,8 @@ public class SiteCreationService extends AutoForeground<SiteCreationPhase, OnSit
     }
 
     private void activateTheme(final SiteModel site, final ThemeModel themeModel) {
-        // TODO: Activate theme using FluxC methods, as setTheme() has been dropped
-//        WordPress.getRestClientUtils().setTheme(site.getSiteId(), themeModel.getThemeId(), new RestRequest.Listener() {
-//            @Override
-//            public void onResponse(JSONObject response) {
-//                mThemeStore.setActiveThemeForSite(site, themeModel);
-//
-//                setState(SiteCreationPhase.SUCCESS);
-//            }
-//        }, new RestRequest.ErrorListener() {
-//            @Override
-//            public void onErrorResponse(VolleyError error) {
-//                setState(SiteCreationPhase.FAILURE);
-//            }
-//        });
+        mDispatcher.dispatch(
+                ThemeActionBuilder.newActivateThemeAction(new ThemeStore.SiteThemePayload(site, themeModel)));
     }
 
     // OnChanged events
@@ -331,6 +320,17 @@ public class SiteCreationService extends AutoForeground<SiteCreationPhase, OnSit
         } else if (phase == SiteCreationPhase.SET_TAGLINE) {
             setState(SiteCreationPhase.SET_THEME);
             activateTheme(site, mSiteTheme);
+        }
+    }
+
+    @SuppressWarnings("unused")
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onThemeActivated(ThemeStore.OnThemeActivated event) {
+        if (event.isError()) {
+            AppLog.e(T.THEMES, "Error setting new site's theme: " + event.error.message);
+            setState(SiteCreationPhase.FAILURE);
+        } else {
+            setState(SiteCreationPhase.SUCCESS);
         }
     }
 }
