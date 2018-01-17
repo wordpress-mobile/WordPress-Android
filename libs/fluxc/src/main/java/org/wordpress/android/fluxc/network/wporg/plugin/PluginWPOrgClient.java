@@ -44,12 +44,12 @@ public class PluginWPOrgClient extends BaseWPOrgAPIClient {
     }
 
     public void fetchPluginDirectory(final PluginDirectoryType directoryType, int offset) {
-        String url = WPORGAPI.plugins.info.version("1.1").getUrl() + "?action=query_plugins";
+        String url = WPORGAPI.plugins.info.version("1.1").getUrl();
         final boolean loadMore = offset > 0;
         final Map<String, String> params = getCommonPluginDirectoryParams(offset);
         params.put("request[browse]", directoryType.toString());
         final WPOrgAPIGsonRequest<FetchPluginDirectoryResponse> request =
-                new WPOrgAPIGsonRequest<>(Method.POST, url, params, null, FetchPluginDirectoryResponse.class,
+                new WPOrgAPIGsonRequest<>(Method.GET, url, params, null, FetchPluginDirectoryResponse.class,
                         new Listener<FetchPluginDirectoryResponse>() {
                             @Override
                             public void onResponse(FetchPluginDirectoryResponse response) {
@@ -115,11 +115,11 @@ public class PluginWPOrgClient extends BaseWPOrgAPIClient {
     }
 
     public void searchPluginDirectory(final String searchTerm, final int offset) {
-        String url = WPORGAPI.plugins.info.version("1.1").getUrl() + "?action=query_plugins";
+        String url = WPORGAPI.plugins.info.version("1.1").getUrl();
         final Map<String, String> params = getCommonPluginDirectoryParams(offset);
         params.put("request[search]", searchTerm);
         final WPOrgAPIGsonRequest<FetchPluginDirectoryResponse> request =
-                new WPOrgAPIGsonRequest<>(Method.POST, url, params, null, FetchPluginDirectoryResponse.class,
+                new WPOrgAPIGsonRequest<>(Method.GET, url, params, null, FetchPluginDirectoryResponse.class,
                         new Listener<FetchPluginDirectoryResponse>() {
                             @Override
                             public void onResponse(FetchPluginDirectoryResponse response) {
@@ -152,6 +152,7 @@ public class PluginWPOrgClient extends BaseWPOrgAPIClient {
     private Map<String, String> getCommonPluginDirectoryParams(int offset) {
         Map<String, String> params = new HashMap<>();
         int page = getPageNumberFromOffset(offset);
+        params.put("action", "query_plugins");
         params.put("request[page]", String.valueOf(page));
         params.put("request[per_page]", String.valueOf(FETCH_PLUGIN_DIRECTORY_PAGE_SIZE));
         params.put("request[fields][banners]", String.valueOf(1));
