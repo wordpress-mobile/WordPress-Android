@@ -88,6 +88,7 @@ import org.wordpress.aztec.spans.AztecMediaSpan;
 import org.wordpress.aztec.spans.IAztecAttributedSpan;
 import org.wordpress.aztec.toolbar.AztecToolbar;
 import org.wordpress.aztec.toolbar.IAztecToolbarClickListener;
+import org.wordpress.aztec.util.AztecLog;
 import org.wordpress.aztec.watchers.EndOfBufferMarkerAdder;
 import org.xml.sax.Attributes;
 
@@ -2108,5 +2109,9 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
 
     public void disableContentLogOnCrashes() {
         content.disableCrashLogging();
+    }
+
+    public void setExternalLogger(AztecLog.ExternalLogger logger) {
+        content.setExternalLogger(logger);
     }
 }
