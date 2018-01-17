@@ -54,6 +54,12 @@ public class PluginBrowserActivity extends AppCompatActivity
 
     private static final String KEY_LAST_SEARCH = "last_search";
 
+    public enum PluginType {
+        INSTALLED,
+        POPULAR,
+        NEW
+    }
+
     private SiteModel mSite;
     private List<SitePluginModel> mSitePlugins;
 
@@ -125,9 +131,7 @@ public class PluginBrowserActivity extends AppCompatActivity
         configureRecycler(mPopularPluginsRecycler);
         configureRecycler(mNewPluginsRecycler);
 
-        refreshSitePlugins();
-        refreshDirectoryPlugins(mPopularPluginsRecycler);
-        refreshDirectoryPlugins(mNewPluginsRecycler);
+        refreshAllPlugins();
 
         if (savedInstanceState == null) {
             fetchPlugins();
@@ -192,21 +196,31 @@ public class PluginBrowserActivity extends AppCompatActivity
         mDispatcher.dispatch(PluginActionBuilder.newFetchSitePluginsAction(mSite));
     }
 
-    private void refreshSitePlugins() {
-        mSitePlugins = mPluginStore.getSitePlugins(mSite);
-        ((PluginBrowserAdapter) mSitePluginsRecycler.getAdapter()).setPlugins(mSitePlugins);
+    private void refreshPlugins(@NonNull PluginType pluginType) {
+        switch (pluginType) {
+            case INSTALLED:
+                mSitePlugins = mPluginStore.getSitePlugins(mSite);
+                ((PluginBrowserAdapter) mSitePluginsRecycler.getAdapter()).setPlugins(mSitePlugins);
+                break;
+            default:
+                // TODO: this is a dummy list generated from site plugins
+                List<WPOrgPluginModel> wpOrgPlugins = new ArrayList<>();
+                for (SitePluginModel sitePlugin: mSitePlugins) {
+                    WPOrgPluginModel wpOrgPlugin = PluginUtils.getWPOrgPlugin(mPluginStore, sitePlugin);
+                    if (wpOrgPlugin != null) {
+                        wpOrgPlugins.add(wpOrgPlugin);
+                    }
+                }
+                RecyclerView recycler = pluginType == PluginType.NEW ? mNewPluginsRecycler : mPopularPluginsRecycler;
+                ((PluginBrowserAdapter) recycler.getAdapter()).setPlugins(wpOrgPlugins);
+                break;
+        }
     }
 
-    private void refreshDirectoryPlugins(@NonNull RecyclerView recycler) {
-        // TODO: this is a dummy list generated from site plugins
-        List<WPOrgPluginModel> wpOrgPlugins = new ArrayList<>();
-        for (SitePluginModel sitePlugin: mSitePlugins) {
-            WPOrgPluginModel wpOrgPlugin = PluginUtils.getWPOrgPlugin(mPluginStore, sitePlugin);
-            if (wpOrgPlugin != null) {
-                wpOrgPlugins.add(wpOrgPlugin);
-            }
+    private void refreshAllPlugins() {
+        for (PluginType pluginType: PluginType.values()) {
+            refreshPlugins(pluginType);
         }
-        ((PluginBrowserAdapter) recycler.getAdapter()).setPlugins(wpOrgPlugins);
     }
 
     private SitePluginModel getSitePluginFromSlug(@Nullable String slug) {
@@ -231,7 +245,7 @@ public class PluginBrowserActivity extends AppCompatActivity
             ToastUtils.showToast(this, R.string.plugin_fetch_error);
             return;
         }
-        refreshSitePlugins();
+        refreshPlugins(PluginType.INSTALLED);
     }
 
     @SuppressWarnings("unused")
