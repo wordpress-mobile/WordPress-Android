@@ -316,7 +316,7 @@ public class PluginDetailActivity extends AppCompatActivity {
         });
 
         if (!canPluginBeDisabledOrRemoved()) {
-            mSwitchActive.setVisibility(View.GONE);
+            findViewById(R.id.plugin_state_active_container).setVisibility(View.GONE);
         } else {
             mSwitchActive.setOnCheckedChangeListener(new OnCheckedChangeListener() {
                 @Override
