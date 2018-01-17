@@ -4,13 +4,10 @@ import android.app.Notification;
 import android.content.Context;
 import android.content.Intent;
 import android.support.annotation.Nullable;
-
-import com.android.volley.VolleyError;
-import com.wordpress.rest.RestRequest;
+import android.support.annotation.StringRes;
 
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
-import org.json.JSONObject;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.analytics.AnalyticsTracker;
@@ -80,6 +77,32 @@ public class SiteCreationService extends AutoForeground<SiteCreationPhase, OnSit
         }
     }
 
+    private static class SiteCreationNotification {
+        static Notification progress(Context context, int progress) {
+            return AutoForegroundNotification.progress(context, progress,
+                    R.string.notification_site_creation_title_in_progress,
+                    R.string.notification_site_creation_please_wait,
+                    R.drawable.ic_my_sites_24dp,
+                    R.color.blue_wordpress);
+        }
+
+        static Notification success(Context context) {
+            return AutoForegroundNotification.success(context,
+                    R.string.notification_site_creation_title_success,
+                    R.string.notification_site_creation_created,
+                    R.drawable.ic_my_sites_24dp,
+                    R.color.blue_wordpress);
+        }
+
+        static Notification failure(Context context, @StringRes int content) {
+            return AutoForegroundNotification.failure(context,
+                    R.string.notification_site_creation_title_stopped,
+                    content,
+                    R.drawable.ic_my_sites_24dp,
+                    R.color.blue_wordpress);
+        }
+    }
+
     public static class OnSiteCreationStateUpdated implements AutoForeground.ServiceEvent<SiteCreationPhase> {
         private final SiteCreationPhase state;
 
@@ -145,17 +168,11 @@ public class SiteCreationService extends AutoForeground<SiteCreationPhase, OnSit
             case FETCHING_NEW_SITE:
             case SET_TAGLINE:
             case SET_THEME:
-                return AutoForegroundNotification.progress(this, 25,
-                        R.string.notification_site_creation_title_in_progress,
-                        R.string.notification_site_creation_please_wait);
+                return SiteCreationNotification.progress(this, 25);
             case SUCCESS:
-                return AutoForegroundNotification.success(this,
-                        R.string.notification_site_creation_title_success,
-                        R.string.notification_site_creation_created);
+                return SiteCreationNotification.success(this);
             case FAILURE:
-                return AutoForegroundNotification.success(this,
-                        R.string.notification_site_creation_title_stopped,
-                        R.string.notification_site_creation_failed);
+                return SiteCreationNotification.failure(this, R.string.notification_site_creation_failed);
         }
 
         return null;
@@ -211,19 +228,20 @@ public class SiteCreationService extends AutoForeground<SiteCreationPhase, OnSit
     }
 
     private void activateTheme(final SiteModel site, final ThemeModel themeModel) {
-        WordPress.getRestClientUtils().setTheme(site.getSiteId(), themeModel.getThemeId(), new RestRequest.Listener() {
-            @Override
-            public void onResponse(JSONObject response) {
-                mThemeStore.setActiveThemeForSite(site, themeModel);
-
-                setState(SiteCreationPhase.SUCCESS);
-            }
-        }, new RestRequest.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError error) {
-                setState(SiteCreationPhase.FAILURE);
-            }
-        });
+        // TODO: Activate theme using FluxC methods, as setTheme() has been dropped
+//        WordPress.getRestClientUtils().setTheme(site.getSiteId(), themeModel.getThemeId(), new RestRequest.Listener() {
+//            @Override
+//            public void onResponse(JSONObject response) {
+//                mThemeStore.setActiveThemeForSite(site, themeModel);
+//
+//                setState(SiteCreationPhase.SUCCESS);
+//            }
+//        }, new RestRequest.ErrorListener() {
+//            @Override
+//            public void onErrorResponse(VolleyError error) {
+//                setState(SiteCreationPhase.FAILURE);
+//            }
+//        });
     }
 
     // OnChanged events

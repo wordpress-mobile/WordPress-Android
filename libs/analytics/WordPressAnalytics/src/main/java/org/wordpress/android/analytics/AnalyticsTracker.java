@@ -135,7 +135,6 @@ public final class AnalyticsTracker {
         EDITOR_AZTEC_PROMO_POSITIVE, // Aztec editor only
         ME_ACCESSED,
         ME_GRAVATAR_TAPPED,
-        ME_GRAVATAR_TOOLTIP_TAPPED,
         ME_GRAVATAR_SHOT_NEW,
         ME_GRAVATAR_GALLERY_PICKED,
         ME_GRAVATAR_CROPPED,

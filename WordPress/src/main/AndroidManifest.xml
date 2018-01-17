@@ -168,6 +168,9 @@
         <activity
             android:name=".ui.prefs.LicensesActivity"
             android:theme="@style/Calypso.NoActionBar" />
+        <activity android:name=".ui.prefs.SiteSettingsTagListActivity"
+            android:theme="@style/CalypsoTheme"
+            android:label="@string/site_settings_tags_title" />
         <activity
             android:name=".ui.prefs.AccountSettingsActivity"
             android:configChanges="orientation|screenSize"
@@ -558,7 +561,7 @@
             android:exported="false"
             android:label="Notifications Update Service" />
         <service
-            android:name=".ui.accounts.login.LoginWpcomService"
+            android:name=".login.LoginWpcomService"
             android:exported="false"
             android:label="Login to WPCOM Service" />
         <service
