@@ -572,15 +572,15 @@ public class PluginStore extends Store {
         return PluginSqlUtils.getWPOrgPluginsForDirectory(type);
     }
 
-    public SitePluginModel getSitePluginByName(SiteModel site, String name) {
+    public @Nullable SitePluginModel getSitePluginByName(SiteModel site, String name) {
         return PluginSqlUtils.getSitePluginByName(site, name);
     }
 
-    public List<SitePluginModel> getSitePlugins(SiteModel site) {
+    public @NonNull List<SitePluginModel> getSitePlugins(SiteModel site) {
         return PluginSqlUtils.getSitePlugins(site);
     }
 
-    public WPOrgPluginModel getWPOrgPluginBySlug(String slug) {
+    public @Nullable WPOrgPluginModel getWPOrgPluginBySlug(String slug) {
         return PluginSqlUtils.getWPOrgPluginBySlug(slug);
     }
 
