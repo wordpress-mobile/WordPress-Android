@@ -58,7 +58,7 @@ public class PhotonUtils {
         }
 
         // strip=all removes EXIF and other non-visual data from JPEGs
-        String query = "?strip=all";
+        String query = "?strip=info";
 
         switch (quality) {
             case HIGH:
