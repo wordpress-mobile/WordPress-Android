@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.support.annotation.Nullable;
 import android.support.annotation.StringRes;
+import android.text.TextUtils;
 
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
@@ -279,49 +280,54 @@ public class SiteCreationService extends AutoForeground<SiteCreationPhase, OnSit
 
             setState(SiteCreationPhase.SET_TAGLINE);
 
-            SiteSettingsInterface siteSettings = SiteSettingsInterface.getInterface(this, site,
-                    new SiteSettingsInterface.SiteSettingsListener() {
-                        @Override
-                        public void onSaveError(Exception error) {
-                            setState(SiteCreationPhase.FAILURE);
-                        }
-
-                        @Override
-                        public void onFetchError(Exception error) {
-                            setState(SiteCreationPhase.FAILURE);
-                        }
-
-                        @Override
-                        public void onSettingsUpdated() {
-                            // we'll just handle onSettingsSaved()
-                        }
-
-                        @Override
-                        public void onSettingsSaved() {
-                            setState(SiteCreationPhase.SET_THEME);
-                            SiteModel site = mSiteStore.getSiteBySiteId(mNewSiteRemoteId);
-                            activateTheme(site, mSiteTheme);
-                        }
-
-                        @Override
-                        public void onCredentialsValidated(Exception error) {
-                            if (error != null) {
+            if (!TextUtils.isEmpty(mSiteTagline)) {
+                SiteSettingsInterface siteSettings = SiteSettingsInterface.getInterface(this, site,
+                        new SiteSettingsInterface.SiteSettingsListener() {
+                            @Override
+                            public void onSaveError(Exception error) {
                                 setState(SiteCreationPhase.FAILURE);
                             }
-                        }
-                    });
 
-            if (siteSettings == null) {
-                setState(SiteCreationPhase.FAILURE);
-                return;
+                            @Override
+                            public void onFetchError(Exception error) {
+                                setState(SiteCreationPhase.FAILURE);
+                            }
+
+                            @Override
+                            public void onSettingsUpdated() {
+                                // we'll just handle onSettingsSaved()
+                            }
+
+                            @Override
+                            public void onSettingsSaved() {
+                                setState(SiteCreationPhase.SET_THEME);
+                                SiteModel site = mSiteStore.getSiteBySiteId(mNewSiteRemoteId);
+                                activateTheme(site, mSiteTheme);
+                            }
+
+                            @Override
+                            public void onCredentialsValidated(Exception error) {
+                                if (error != null) {
+                                    setState(SiteCreationPhase.FAILURE);
+                                }
+                            }
+                        });
+
+                if (siteSettings == null) {
+                    setState(SiteCreationPhase.FAILURE);
+                    return;
+                }
+
+                siteSettings.init(false);
+                siteSettings.setTagline(mSiteTagline);
+                siteSettings.saveSettings();
+            } else {
+                setState(SiteCreationPhase.SET_THEME);
+                activateTheme(site, mSiteTheme);
             }
-
-            siteSettings.init(false);
-            siteSettings.setTagline(mSiteTagline);
-            siteSettings.saveSettings();
-        } else if (phase == SiteCreationPhase.SET_TAGLINE) {
-            setState(SiteCreationPhase.SET_THEME);
-            activateTheme(site, mSiteTheme);
+        } else {
+            AppLog.e(T.NUX, "Got onSiteChanged but not in FETCHING_NEW_SITE state!");
+            setState(SiteCreationPhase.FAILURE);
         }
     }
 
