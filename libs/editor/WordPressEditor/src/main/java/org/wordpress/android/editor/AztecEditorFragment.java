@@ -113,6 +113,12 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
         IAztecToolbarClickListener,
         IHistoryListener {
 
+    static public class AztecLoggingException extends Exception {
+        public AztecLoggingException(String message) {
+            super(message);
+        }
+    }
+
     private static final String ATTR_TAPPED_MEDIA_PREDICATE = "tapped_media_predicate";
 
     private static final String ATTR_ALIGN = "align";
