@@ -511,6 +511,7 @@ public class SiteRestClient extends BaseWPComRestClient {
             site.setFrameNonce(from.options.frame_nonce);
             site.setUnmappedUrl(from.options.unmapped_url);
             site.setJetpackVersion(from.options.jetpack_version);
+            site.setSoftwareVersion(from.options.software_version);
 
             try {
                 site.setMaxUploadSize(Long.valueOf(from.options.max_upload_size));
