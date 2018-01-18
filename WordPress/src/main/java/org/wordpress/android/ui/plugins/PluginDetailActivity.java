@@ -470,10 +470,8 @@ public class PluginDetailActivity extends AppCompatActivity {
         setRatingsProgressBar(R.id.progress2, mWPOrgPlugin.getNumberOfRatingsOfTwo(), numRatingsTotal);
         setRatingsProgressBar(R.id.progress1, mWPOrgPlugin.getNumberOfRatingsOfOne(), numRatingsTotal);
 
-        int rating = StringUtils.stringToInt(mWPOrgPlugin.getRating(), 1);
-        int averageRating = Math.round(rating / 20f);
         RatingBar ratingBar = findViewById(R.id.rating_bar);
-        ratingBar.setRating(averageRating);
+        ratingBar.setRating(PluginUtils.getAverageStarRating(mWPOrgPlugin));
     }
 
     private void setRatingsProgressBar(@IdRes int progressResId, int numRatingsForStar, int numRatingsTotal) {

@@ -289,7 +289,7 @@ public class PluginListActivity extends AppCompatActivity {
             PluginViewHolder(View view) {
                 super(view);
                 name = view.findViewById(R.id.plugin_name);
-                status = view.findViewById(R.id.plugin_status);
+                status = view.findViewById(R.id.plugin_status_text);
                 icon = view.findViewById(R.id.plugin_icon);
             }
         }

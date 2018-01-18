@@ -4,6 +4,7 @@ import android.app.Fragment;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.ColorRes;
+import android.support.annotation.DrawableRes;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.annotation.StringRes;
@@ -12,6 +13,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.RatingBar;
 import android.widget.TextView;
 
@@ -160,14 +162,31 @@ public class PluginListFragment extends Fragment {
             holder.icon.setImageUrl(iconUrl, WPNetworkImageView.ImageType.PLUGIN_ICON);
 
             if (sitePlugin != null) {
-                @StringRes int stringRes = sitePlugin.isActive() ? R.string.plugin_active : R.string.plugin_inactive;
-                @ColorRes int colorRes = sitePlugin.isActive() ? R.color.alert_green : R.color.alert_yellow;
-                holder.status.setText(stringRes);
-                holder.status.setTextColor(getResources().getColor(colorRes));
-                holder.status.setVisibility(View.VISIBLE);
+                @StringRes int textResId;
+                @ColorRes int colorResId;
+                @DrawableRes int drawableResId;
+                if (PluginUtils.isUpdateAvailable(sitePlugin, wpOrgPlugin)) {
+                    textResId = R.string.plugin_needs_update;
+                    colorResId = R.color.alert_yellow;
+                    drawableResId = R.drawable.plugin_update_available_icon;
+                } else if (sitePlugin.isActive()) {
+                    textResId = R.string.plugin_active;
+                    colorResId = R.color.alert_green;
+                    drawableResId = R.drawable.ic_checkmark_green_24dp;
+                } else {
+                    textResId = R.string.plugin_inactive;
+                    colorResId = R.color.grey;
+                    drawableResId = R.drawable.ic_cross_grey_600_24dp;
+                }
+                holder.statusText.setText(textResId);
+                holder.statusText.setTextColor(getResources().getColor(colorResId));
+                holder.statusIcon.setImageResource(drawableResId);
+                holder.statusText.setVisibility(View.VISIBLE);
+                holder.statusIcon.setVisibility(View.VISIBLE);
                 holder.ratingBar.setVisibility(View.GONE);
             } else {
-                holder.status.setVisibility(View.GONE);
+                holder.statusText.setVisibility(View.GONE);
+                holder.statusIcon.setVisibility(View.GONE);
                 holder.ratingBar.setVisibility(View.VISIBLE);
                 holder.ratingBar.setRating(PluginUtils.getAverageStarRating(wpOrgPlugin));
             }
@@ -182,14 +201,16 @@ public class PluginListFragment extends Fragment {
 
         private class PluginViewHolder extends RecyclerView.ViewHolder {
             final TextView name;
-            final TextView status;
+            final TextView statusText;
+            final ImageView statusIcon;
             final WPNetworkImageView icon;
             final RatingBar ratingBar;
 
             PluginViewHolder(View view) {
                 super(view);
                 name = view.findViewById(R.id.plugin_name);
-                status = view.findViewById(R.id.plugin_status);
+                statusText = view.findViewById(R.id.plugin_status_text);
+                statusIcon = view.findViewById(R.id.plugin_status_icon);
                 icon = view.findViewById(R.id.plugin_icon);
                 ratingBar = view.findViewById(R.id.rating_bar);
 
@@ -202,7 +223,7 @@ public class PluginListFragment extends Fragment {
                             SitePluginModel sitePlugin = (SitePluginModel) item;
                             ActivityLauncher.viewPluginDetail(getActivity(), mSite, sitePlugin);
                         } else {
-                            // TODO: show detail for WPOrgPlugin - wait for detail redesign to be merged
+                            // TODO: show detail for WPOrgPlugin
                         }
                     }
                 });
