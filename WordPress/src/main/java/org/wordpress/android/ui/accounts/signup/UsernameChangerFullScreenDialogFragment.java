@@ -20,6 +20,7 @@ import android.view.ContextThemeWrapper;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import org.greenrobot.eventbus.Subscribe;
@@ -44,6 +45,8 @@ import javax.inject.Inject;
 
 public class UsernameChangerFullScreenDialogFragment extends Fragment implements
         FullScreenDialogContent, OnUsernameSelectedListener {
+    private ProgressBar mProgressBar;
+
     protected FullScreenDialogController mDialogController;
     protected Handler mGetSuggestionsHandler;
     protected RecyclerView mUsernameSuggestions;
@@ -88,6 +91,8 @@ public class UsernameChangerFullScreenDialogFragment extends Fragment implements
         mUsernameSuggestions.setLayoutManager(new LinearLayoutManager(getActivity()));
         // Stop list from blinking when data set is updated.
         ((SimpleItemAnimator) mUsernameSuggestions.getItemAnimator()).setSupportsChangeAnimations(false);
+
+        mProgressBar = rootView.findViewById(R.id.progress);
 
         return rootView;
     }
@@ -217,6 +222,8 @@ public class UsernameChangerFullScreenDialogFragment extends Fragment implements
     }
 
     protected void getUsernameSuggestions(String usernameQuery) {
+        showProgress(true);
+
         FetchUsernameSuggestionsPayload payload = new FetchUsernameSuggestionsPayload(usernameQuery);
         mDispatcher.dispatch(AccountActionBuilder.newFetchUsernameSuggestionsAction(payload));
     }
@@ -277,9 +284,16 @@ public class UsernameChangerFullScreenDialogFragment extends Fragment implements
         dialog.show();
     }
 
+    protected void showProgress(boolean showProgress) {
+        mUsernameSuggestions.setVisibility(showProgress ? View.GONE : View.VISIBLE);
+        mProgressBar.setVisibility(showProgress ? View.VISIBLE : View.GONE);
+    }
+
     @SuppressWarnings("unused")
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onUsernameSuggestionsFetched(OnUsernameSuggestionsFetched event) {
+        showProgress(false);
+
         if (event.isError()) {
             AnalyticsTracker.track(AnalyticsTracker.Stat.SIGNUP_SOCIAL_EPILOGUE_USERNAME_SUGGESTIONS_FAILED);
             AppLog.e(T.API, "SignupEpilogueSocialFragment.onUsernameSuggestionsFetched: " +
