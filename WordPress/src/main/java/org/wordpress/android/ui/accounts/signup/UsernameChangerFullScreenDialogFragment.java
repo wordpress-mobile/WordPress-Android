@@ -26,6 +26,7 @@ import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
+import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.fluxc.Dispatcher;
 import org.wordpress.android.fluxc.generated.AccountActionBuilder;
 import org.wordpress.android.fluxc.store.AccountStore.FetchUsernameSuggestionsPayload;
@@ -33,6 +34,8 @@ import org.wordpress.android.fluxc.store.AccountStore.OnUsernameSuggestionsFetch
 import org.wordpress.android.ui.FullScreenDialogFragment.FullScreenDialogContent;
 import org.wordpress.android.ui.FullScreenDialogFragment.FullScreenDialogController;
 import org.wordpress.android.ui.accounts.signup.UsernameChangerRecyclerViewAdapter.OnUsernameSelectedListener;
+import org.wordpress.android.util.AppLog;
+import org.wordpress.android.util.AppLog.T;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -278,6 +281,9 @@ public class UsernameChangerFullScreenDialogFragment extends Fragment implements
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onUsernameSuggestionsFetched(OnUsernameSuggestionsFetched event) {
         if (event.isError()) {
+            AnalyticsTracker.track(AnalyticsTracker.Stat.SIGNUP_SOCIAL_EPILOGUE_USERNAME_SUGGESTIONS_FAILED);
+            AppLog.e(T.API, "SignupEpilogueSocialFragment.onUsernameSuggestionsFetched: " +
+                    event.error.type + " - " + event.error.message);
             showErrorDialog(new SpannedString(getString(R.string.username_changer_error_generic)));
         } else if (event.suggestions.size() == 0) {
             showErrorDialog(

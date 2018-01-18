@@ -774,6 +774,8 @@ public class AnalyticsTrackerNosara extends Tracker {
                 return "signup_social_epilogue_update_username_failed";
             case SIGNUP_SOCIAL_EPILOGUE_UPDATE_USERNAME_SUCCEEDED:
                 return "signup_social_epilogue_update_username_succeeded";
+            case SIGNUP_SOCIAL_EPILOGUE_USERNAME_SUGGESTIONS_FAILED:
+                return "signup_social_epilogue_username_suggestions_failed";
             case SIGNUP_SOCIAL_EPILOGUE_VIEWED:
                 return "signup_social_epilogue_viewed";
             case SIGNUP_SOCIAL_SUCCESS:
