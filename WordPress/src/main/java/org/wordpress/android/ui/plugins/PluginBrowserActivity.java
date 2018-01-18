@@ -37,6 +37,7 @@ import org.wordpress.android.fluxc.model.plugin.SitePluginModel;
 import org.wordpress.android.fluxc.model.plugin.WPOrgPluginModel;
 import org.wordpress.android.fluxc.store.PluginStore;
 import org.wordpress.android.ui.ActivityLauncher;
+import org.wordpress.android.util.AniUtils;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.DisplayUtils;
 import org.wordpress.android.util.HtmlUtils;
@@ -244,18 +245,32 @@ public class PluginBrowserActivity extends AppCompatActivity
 
     private void refreshPlugins(@NonNull PluginType pluginType) {
         PluginBrowserAdapter adapter;
+        View cardView;
         switch (pluginType) {
             case POPULAR:
                 adapter = (PluginBrowserAdapter) mPopularPluginsRecycler.getAdapter();
+                cardView = findViewById(R.id.popular_plugins_cardview);
                 break;
             case NEW:
                 adapter = (PluginBrowserAdapter) mNewPluginsRecycler.getAdapter();
+                cardView = findViewById(R.id.new_plugins_cardview);
                 break;
             default:
                 adapter = (PluginBrowserAdapter) mSitePluginsRecycler.getAdapter();
+                cardView = findViewById(R.id.installed_plugins_cardview);
                 break;
         }
-        adapter.setPlugins(getPlugins(pluginType));
+
+        List<?> plugins = getPlugins(pluginType);
+        adapter.setPlugins(plugins);
+
+        int newVisibility = plugins.size() > 0 ? View.VISIBLE : View.GONE;
+        int oldVisibility = cardView.getVisibility();
+        if (newVisibility == View.VISIBLE && oldVisibility != View.VISIBLE) {
+            AniUtils.fadeIn(cardView, AniUtils.Duration.SHORT);
+        } else if (newVisibility != View.VISIBLE && oldVisibility == View.VISIBLE) {
+            AniUtils.fadeOut(cardView, AniUtils.Duration.SHORT);
+        }
     }
 
     private List<?> getPlugins(@NonNull PluginType pluginType) {

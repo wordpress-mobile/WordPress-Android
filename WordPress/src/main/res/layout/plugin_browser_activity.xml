@@ -24,8 +24,10 @@
                 android:id="@+id/installed_plugins_cardview"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:visibility="gone"
                 card_view:cardBackgroundColor="@color/white"
-                card_view:cardCornerRadius="@dimen/cardview_default_radius">
+                card_view:cardCornerRadius="@dimen/cardview_default_radius"
+                tools:visibility="visible">
 
                 <RelativeLayout
                     android:layout_width="match_parent"
@@ -69,8 +71,10 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/margin_extra_large"
+                android:visibility="gone"
                 card_view:cardBackgroundColor="@color/white"
-                card_view:cardCornerRadius="@dimen/cardview_default_radius">
+                card_view:cardCornerRadius="@dimen/cardview_default_radius"
+                tools:visibility="visible">
 
                 <RelativeLayout
                     android:layout_width="match_parent"
@@ -114,8 +118,10 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/margin_extra_large"
+                android:visibility="gone"
                 card_view:cardBackgroundColor="@color/white"
-                card_view:cardCornerRadius="@dimen/cardview_default_radius">
+                card_view:cardCornerRadius="@dimen/cardview_default_radius"
+                tools:visibility="visible">
 
                 <RelativeLayout
                     android:layout_width="match_parent"
