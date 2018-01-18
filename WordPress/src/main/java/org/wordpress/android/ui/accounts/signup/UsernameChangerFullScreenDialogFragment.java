@@ -35,6 +35,7 @@ import org.wordpress.android.fluxc.store.AccountStore.OnUsernameSuggestionsFetch
 import org.wordpress.android.ui.FullScreenDialogFragment.FullScreenDialogContent;
 import org.wordpress.android.ui.FullScreenDialogFragment.FullScreenDialogController;
 import org.wordpress.android.ui.accounts.signup.UsernameChangerRecyclerViewAdapter.OnUsernameSelectedListener;
+import org.wordpress.android.util.ActivityUtils;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 
@@ -169,6 +170,8 @@ public class UsernameChangerFullScreenDialogFragment extends Fragment implements
 
     @Override
     public boolean onConfirmClicked(FullScreenDialogController controller) {
+        ActivityUtils.hideKeyboard(getActivity());
+
         Bundle result = new Bundle();
         result.putString(RESULT_USERNAME, mUsernamesAdapter.mItems.get(mUsernamesAdapter.getSelectedItem()));
         controller.confirm(result);
@@ -178,6 +181,8 @@ public class UsernameChangerFullScreenDialogFragment extends Fragment implements
 
     @Override
     public boolean onDismissClicked(FullScreenDialogController controller) {
+        ActivityUtils.hideKeyboard(getActivity());
+
         if (hasUsernameChanged()) {
             showDismissDialog();
         } else {
