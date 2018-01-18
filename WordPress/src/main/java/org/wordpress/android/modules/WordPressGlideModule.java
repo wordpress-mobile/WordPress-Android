@@ -29,6 +29,11 @@ public class WordPressGlideModule extends AppGlideModule {
     public void applyOptions(Context context, GlideBuilder builder) {}
 
     @Override
+    public boolean isManifestParsingEnabled() {
+        return false;
+    }
+
+    @Override
     public void registerComponents(Context context, Glide glide, Registry registry) {
         ((WordPress) context).component().inject(this);
         glide.getRegistry().replace(GlideUrl.class, InputStream.class, new VolleyUrlLoader.Factory(mRequestQueue));
