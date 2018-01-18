@@ -51,7 +51,9 @@ import java.util.List;
 import javax.inject.Inject;
 
 public class PluginBrowserActivity extends AppCompatActivity
-        implements SearchView.OnQueryTextListener, MenuItem.OnActionExpandListener {
+        implements SearchView.OnQueryTextListener,
+        MenuItem.OnActionExpandListener,
+        PluginListFragment.PluginListFragmentListener {
 
     private static final String KEY_LAST_SEARCH = "last_search";
     private static final String KEY_LAST_LIST_TYPE = "last_list_type";
@@ -65,7 +67,7 @@ public class PluginBrowserActivity extends AppCompatActivity
     private SiteModel mSite;
     private final List<SitePluginModel> mSitePlugins = new ArrayList<>();
 
-    private PluginListType mLastPluginListType;
+    private PluginListType mLastListType;
     private RecyclerView mSitePluginsRecycler;
     private RecyclerView mPopularPluginsRecycler;
     private RecyclerView mNewPluginsRecycler;
@@ -157,9 +159,8 @@ public class PluginBrowserActivity extends AppCompatActivity
 
         if (savedInstanceState == null) {
             fetchAllPlugins();
-        } else if (hasListFragment() && savedInstanceState.containsKey(KEY_LAST_LIST_TYPE)) {
-            PluginListType listType = (PluginListType) savedInstanceState.getSerializable(KEY_LAST_LIST_TYPE);
-            showListFragment(listType);
+        } else if (hasListFragment()) {
+            mLastListType = (PluginListType) savedInstanceState.getSerializable(KEY_LAST_LIST_TYPE);
         }
     }
 
@@ -212,8 +213,8 @@ public class PluginBrowserActivity extends AppCompatActivity
         if (mSearchMenuItem != null && mSearchMenuItem.isActionViewExpanded()) {
             outState.putString(KEY_LAST_SEARCH, mSearchView.getQuery().toString());
         }
-        if (mLastPluginListType != null) {
-            outState.putSerializable(KEY_LAST_LIST_TYPE, mLastPluginListType);
+        if (mLastListType != null) {
+            outState.putSerializable(KEY_LAST_LIST_TYPE, mLastListType);
         }
     }
 
@@ -390,13 +391,11 @@ public class PluginBrowserActivity extends AppCompatActivity
     }
 
     private void showListFragment(@NonNull PluginListType type) {
-        mLastPluginListType = type;
+        mLastListType = type;
         PluginListFragment listFragment = getOrCreateListFragment();
-        listFragment.setPlugins(getPlugins(type));
     }
 
     private void showListFragmentForQuery(@Nullable String query) {
-        PluginListFragment listFragment = getOrCreateListFragment();
         // TODO: search will be performed in a subsequent PR
     }
 
@@ -408,6 +407,11 @@ public class PluginBrowserActivity extends AppCompatActivity
         if (getFragmentManager().getBackStackEntryCount() > 0) {
             getFragmentManager().popBackStack();
         }
+    }
+
+    @Override
+    public List<?> onListFragmentRequestPlugins() {
+        return getPlugins(mLastListType);
     }
 
     private void showProgress(boolean show) {

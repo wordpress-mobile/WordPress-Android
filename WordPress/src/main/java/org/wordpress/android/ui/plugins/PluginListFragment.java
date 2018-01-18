@@ -37,10 +37,15 @@ public class PluginListFragment extends Fragment {
 
     public static final String TAG = PluginListFragment.class.getName();
 
+    public interface PluginListFragmentListener {
+        List<?> onListFragmentRequestPlugins();
+    }
+
     private RecyclerView mRecycler;
     private SiteModel mSite;
     private final List<SitePluginModel> mSitePlugins = new ArrayList<>();
-    private List<?> mCachedPlugins;
+
+    private PluginListFragmentListener mListener;
 
     @Inject PluginStore mPluginStore;
     @Inject Dispatcher mDispatcher;
@@ -76,24 +81,22 @@ public class PluginListFragment extends Fragment {
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        if (mCachedPlugins != null) {
-            setPlugins(mCachedPlugins);
-            mCachedPlugins = null;
+        try {
+            mListener = (PluginListFragmentListener) getActivity();
+            setPlugins(mListener.onListFragmentRequestPlugins());
+        } catch (ClassCastException e) {
+            throw new ClassCastException(getActivity().toString() + " must implement PluginListFragmentListener");
         }
     }
 
-    public void setPlugins(@NonNull List<?> plugins) {
-        if (isAdded() && mRecycler != null) {
-            PluginListAdapter adapter = new PluginListAdapter(getActivity());
-            mRecycler.setAdapter(adapter);
-            adapter.setPlugins(plugins);
-        } else {
-            mCachedPlugins = plugins;
-        }
+    private void setPlugins(@NonNull List<?> plugins) {
+        PluginListAdapter adapter = new PluginListAdapter(getActivity());
+        mRecycler.setAdapter(adapter);
+        adapter.setPlugins(plugins);
     }
 
     private SitePluginModel getSitePluginFromSlug(@Nullable String slug) {
-        if (slug != null && mSitePlugins != null) {
+        if (slug != null) {
             for (SitePluginModel plugin : mSitePlugins) {
                 if (slug.equals(plugin.getSlug())) {
                     return plugin;
