@@ -32,6 +32,7 @@ import org.wordpress.android.WordPress;
 import org.wordpress.android.fluxc.Dispatcher;
 import org.wordpress.android.fluxc.generated.PluginActionBuilder;
 import org.wordpress.android.fluxc.model.SiteModel;
+import org.wordpress.android.fluxc.model.plugin.PluginDirectoryType;
 import org.wordpress.android.fluxc.model.plugin.SitePluginModel;
 import org.wordpress.android.fluxc.model.plugin.WPOrgPluginModel;
 import org.wordpress.android.fluxc.store.PluginStore;
@@ -135,7 +136,7 @@ public class PluginBrowserActivity extends AppCompatActivity
         refreshAllPlugins();
 
         if (savedInstanceState == null) {
-            fetchPlugins();
+            fetchAllPlugins();
         }
     }
 
@@ -190,11 +191,32 @@ public class PluginBrowserActivity extends AppCompatActivity
         }
     }
 
-    private void fetchPlugins() {
-        if (mPluginStore.getSitePlugins(mSite).size() == 0) {
-            showProgress(true);
+    private void fetchAllPlugins() {
+        for (PluginType pluginType: PluginType.values()) {
+            fetchPlugins(pluginType);
         }
-        mDispatcher.dispatch(PluginActionBuilder.newFetchSitePluginsAction(mSite));
+    }
+
+    private void fetchPlugins(@NonNull PluginType pluginType) {
+        switch (pluginType) {
+            case SITE:
+                if (mPluginStore.getSitePlugins(mSite).size() == 0) {
+                    showProgress(true);
+                }
+                mDispatcher.dispatch(PluginActionBuilder.newFetchSitePluginsAction(mSite));
+                break;
+            case POPULAR:
+                PluginStore.FetchPluginDirectoryPayload popularPayload =
+                        new PluginStore.FetchPluginDirectoryPayload(PluginDirectoryType.POPULAR, false);
+                mDispatcher.dispatch(PluginActionBuilder.newFetchPluginDirectoryAction(popularPayload));
+                break;
+            case NEW:
+                PluginStore.FetchPluginDirectoryPayload newPayload =
+                        new PluginStore.FetchPluginDirectoryPayload(PluginDirectoryType.NEW, false);
+                mDispatcher.dispatch(PluginActionBuilder.newFetchPluginDirectoryAction(newPayload));
+                break;
+        }
+
     }
 
     private void refreshPlugins(@NonNull PluginType pluginType) {
@@ -262,6 +284,26 @@ public class PluginBrowserActivity extends AppCompatActivity
         }
         if (!TextUtils.isEmpty(event.pluginSlug)) {
             refreshPluginWithSlug(event.pluginSlug);
+        }
+    }
+
+    @SuppressWarnings("unused")
+    @Subscribe
+    public void onPluginDirectoryFetched(PluginStore.OnPluginDirectoryFetched event) {
+        if (isFinishing()) {
+            return;
+        }
+        if (event.isError()) {
+            AppLog.e(AppLog.T.API, "An error occurred while fetching the plugin directory: " + event.type);
+            return;
+        }
+        switch (event.type) {
+            case POPULAR:
+                refreshPlugins(PluginType.POPULAR);
+                break;
+            case NEW:
+                refreshPlugins(PluginType.NEW);
+                break;
         }
     }
 
