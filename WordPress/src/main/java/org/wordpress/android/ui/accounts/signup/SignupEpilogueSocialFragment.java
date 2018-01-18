@@ -197,7 +197,7 @@ public class SignupEpilogueSocialFragment extends LoginBaseFormFragment<SignupEp
             AnalyticsTracker.track(AnalyticsTracker.Stat.SIGNUP_SOCIAL_EPILOGUE_VIEWED);
             new DownloadAvatarAndUploadGravatarTask().execute(mPhotoUrl, mEmailAddress, mAccount.getAccessToken());
         } else {
-            mDialog = (FullScreenDialogFragment) getChildFragmentManager().findFragmentByTag(FullScreenDialogFragment.TAG);
+            mDialog = (FullScreenDialogFragment) getFragmentManager().findFragmentByTag(FullScreenDialogFragment.TAG);
 
             if (mDialog != null) {
                 mDialog.setOnConfirmListener(this);
