@@ -207,7 +207,7 @@ public class WellSqlConfig extends DefaultWellConfig {
             case 23:
                 AppLog.d(T.DB, "Migrating to version " + (oldVersion + 1));
                 db.execSQL("CREATE TABLE PluginDirectoryModel (_id INTEGER PRIMARY KEY AUTOINCREMENT,"
-                        + "SLUG TEXT,DIRECTORY_TYPE TEXT)");
+                        + "SLUG TEXT,DIRECTORY_TYPE TEXT,PAGE INTEGER)");
                 oldVersion++;
         }
         db.setTransactionSuccessful();

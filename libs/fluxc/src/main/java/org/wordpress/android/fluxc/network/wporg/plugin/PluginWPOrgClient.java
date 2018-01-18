@@ -43,13 +43,13 @@ public class PluginWPOrgClient extends BaseWPOrgAPIClient {
         mDispatcher = dispatcher;
     }
 
-    public void fetchPluginDirectory(final PluginDirectoryType directoryType, int offset) {
-        String url = WPORGAPI.plugins.info.version("1.1").getUrl() + "?action=query_plugins";
-        final boolean loadMore = offset > 0;
-        final Map<String, String> params = getCommonPluginDirectoryParams(offset);
+    public void fetchPluginDirectory(final PluginDirectoryType directoryType, int page) {
+        String url = WPORGAPI.plugins.info.version("1.1").getUrl();
+        final boolean loadMore = page > 1;
+        final Map<String, String> params = getCommonPluginDirectoryParams(page);
         params.put("request[browse]", directoryType.toString());
         final WPOrgAPIGsonRequest<FetchPluginDirectoryResponse> request =
-                new WPOrgAPIGsonRequest<>(Method.POST, url, params, null, FetchPluginDirectoryResponse.class,
+                new WPOrgAPIGsonRequest<>(Method.GET, url, params, null, FetchPluginDirectoryResponse.class,
                         new Listener<FetchPluginDirectoryResponse>() {
                             @Override
                             public void onResponse(FetchPluginDirectoryResponse response) {
@@ -57,6 +57,7 @@ public class PluginWPOrgClient extends BaseWPOrgAPIClient {
                                         new FetchedPluginDirectoryPayload(directoryType, loadMore);
                                 if (response != null) {
                                     payload.canLoadMore = response.info.page < response.info.pages;
+                                    payload.page = response.info.page;
                                     payload.plugins = wpOrgPluginListFromResponse(response);
                                 } else {
                                     payload.error = new PluginDirectoryError(
@@ -114,17 +115,17 @@ public class PluginWPOrgClient extends BaseWPOrgAPIClient {
         add(request);
     }
 
-    public void searchPluginDirectory(final String searchTerm, final int offset) {
-        String url = WPORGAPI.plugins.info.version("1.1").getUrl() + "?action=query_plugins";
-        final Map<String, String> params = getCommonPluginDirectoryParams(offset);
+    public void searchPluginDirectory(final String searchTerm, final int page) {
+        String url = WPORGAPI.plugins.info.version("1.1").getUrl();
+        final Map<String, String> params = getCommonPluginDirectoryParams(page);
         params.put("request[search]", searchTerm);
         final WPOrgAPIGsonRequest<FetchPluginDirectoryResponse> request =
-                new WPOrgAPIGsonRequest<>(Method.POST, url, params, null, FetchPluginDirectoryResponse.class,
+                new WPOrgAPIGsonRequest<>(Method.GET, url, params, null, FetchPluginDirectoryResponse.class,
                         new Listener<FetchPluginDirectoryResponse>() {
                             @Override
                             public void onResponse(FetchPluginDirectoryResponse response) {
                                 SearchedPluginDirectoryPayload payload =
-                                        new SearchedPluginDirectoryPayload(searchTerm, offset);
+                                        new SearchedPluginDirectoryPayload(searchTerm, page);
                                 if (response != null) {
                                     payload.canLoadMore = response.info.page < response.info.pages;
                                     payload.plugins = wpOrgPluginListFromResponse(response);
@@ -139,7 +140,7 @@ public class PluginWPOrgClient extends BaseWPOrgAPIClient {
                             @Override
                             public void onErrorResponse(@NonNull BaseNetworkError networkError) {
                                 SearchedPluginDirectoryPayload payload =
-                                        new SearchedPluginDirectoryPayload(searchTerm, offset);
+                                        new SearchedPluginDirectoryPayload(searchTerm, page);
                                 payload.error = new PluginDirectoryError(
                                         PluginDirectoryErrorType.GENERIC_ERROR, networkError.message);
                                 mDispatcher.dispatch(PluginActionBuilder.newSearchedPluginDirectoryAction(payload));
@@ -149,16 +150,16 @@ public class PluginWPOrgClient extends BaseWPOrgAPIClient {
         add(request);
     }
 
-    private Map<String, String> getCommonPluginDirectoryParams(int offset) {
+    private Map<String, String> getCommonPluginDirectoryParams(int page) {
         Map<String, String> params = new HashMap<>();
-        int page = getPageNumberFromOffset(offset);
+        params.put("action", "query_plugins");
         params.put("request[page]", String.valueOf(page));
         params.put("request[per_page]", String.valueOf(FETCH_PLUGIN_DIRECTORY_PAGE_SIZE));
         params.put("request[fields][banners]", String.valueOf(1));
         params.put("request[fields][compatibility]", String.valueOf(1));
         params.put("request[fields][icons]", String.valueOf(1));
         params.put("request[fields][requires]", String.valueOf(1));
-        params.put("request[fields][sections]", String.valueOf(1));
+        params.put("request[fields][sections]", String.valueOf(0));
         params.put("request[fields][tested]", String.valueOf(0));
         return params;
     }
@@ -197,14 +198,5 @@ public class PluginWPOrgClient extends BaseWPOrgAPIClient {
         wpOrgPluginModel.setNumberOfRatingsOfFour(response.numberOfRatingsOfFour);
         wpOrgPluginModel.setNumberOfRatingsOfFive(response.numberOfRatingsOfFive);
         return wpOrgPluginModel;
-    }
-
-    private int getPageNumberFromOffset(int offset) {
-        // Offset = 0, page = 1
-        // Offset = 20, page = 1
-        // Offset = 50, page = 2
-        // Offset = 80, page = 2
-        // Offset = 100, page = 3
-        return (int) Math.floor(((double) offset) / FETCH_PLUGIN_DIRECTORY_PAGE_SIZE) + 1;
     }
 }

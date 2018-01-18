@@ -151,8 +151,13 @@ public class PluginSqlUtils {
         }
     }
 
-    public static int getNumberOfPluginsForDirectory(PluginDirectoryType directoryType) {
-        return getPluginDirectoriesForType(directoryType).size();
+    public static int getLastRequestedPageForDirectoryType(PluginDirectoryType directoryType) {
+        List<PluginDirectoryModel> list = getPluginDirectoriesForType(directoryType);
+        int page = 0;
+        for (PluginDirectoryModel pluginDirectoryModel : list) {
+            page = Math.max(pluginDirectoryModel.getPage(), page);
+        }
+        return page;
     }
 
     private static @NonNull List<PluginDirectoryModel> getPluginDirectoriesForType(PluginDirectoryType directoryType) {
