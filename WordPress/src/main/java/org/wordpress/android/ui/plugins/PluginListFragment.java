@@ -83,7 +83,7 @@ public class PluginListFragment extends Fragment {
     }
 
     public void setPlugins(@NonNull List<?> plugins) {
-        if (isAdded()) {
+        if (isAdded() && mRecycler != null) {
             PluginListAdapter adapter = new PluginListAdapter(getActivity());
             mRecycler.setAdapter(adapter);
             adapter.setPlugins(plugins);
@@ -219,11 +219,16 @@ public class PluginListFragment extends Fragment {
                     public void onClick(View v) {
                         int position = getAdapterPosition();
                         Object item = getItem(position);
+                        SitePluginModel sitePlugin;
                         if (item instanceof SitePluginModel) {
-                            SitePluginModel sitePlugin = (SitePluginModel) item;
-                            ActivityLauncher.viewPluginDetail(getActivity(), mSite, sitePlugin);
+                            sitePlugin = (SitePluginModel) item;
                         } else {
-                            // TODO: show detail for WPOrgPlugin
+                            WPOrgPluginModel wpOrgPlugin = (WPOrgPluginModel) item;
+                            sitePlugin = getSitePluginFromSlug(wpOrgPlugin.getSlug());
+                        }
+                        // TODO: show detail for WPOrgPlugin
+                        if (sitePlugin != null) {
+                            ActivityLauncher.viewPluginDetail(getActivity(), mSite, sitePlugin);
                         }
                     }
                 });

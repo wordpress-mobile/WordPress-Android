@@ -41,7 +41,6 @@ import org.wordpress.android.util.AniUtils;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.DisplayUtils;
 import org.wordpress.android.util.HtmlUtils;
-import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.widgets.WPNetworkImageView;
 import org.wordpress.android.widgets.WPNetworkImageView.ImageType;
@@ -55,8 +54,9 @@ public class PluginBrowserActivity extends AppCompatActivity
         implements SearchView.OnQueryTextListener, MenuItem.OnActionExpandListener {
 
     private static final String KEY_LAST_SEARCH = "last_search";
+    private static final String KEY_LAST_LIST_TYPE = "last_list_type";
 
-    public enum PluginType {
+    public enum PluginListType {
         SITE,
         POPULAR,
         NEW
@@ -65,6 +65,7 @@ public class PluginBrowserActivity extends AppCompatActivity
     private SiteModel mSite;
     private final List<SitePluginModel> mSitePlugins = new ArrayList<>();
 
+    private PluginListType mLastPluginListType;
     private RecyclerView mSitePluginsRecycler;
     private RecyclerView mPopularPluginsRecycler;
     private RecyclerView mNewPluginsRecycler;
@@ -118,7 +119,7 @@ public class PluginBrowserActivity extends AppCompatActivity
         findViewById(R.id.text_manage).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                showListFragment(PluginType.SITE);
+                showListFragment(PluginListType.SITE);
             }
         });
 
@@ -126,7 +127,7 @@ public class PluginBrowserActivity extends AppCompatActivity
         findViewById(R.id.text_all_popular).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                showListFragment(PluginType.POPULAR);
+                showListFragment(PluginListType.POPULAR);
             }
         });
 
@@ -134,7 +135,7 @@ public class PluginBrowserActivity extends AppCompatActivity
         findViewById(R.id.text_all_new).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                showListFragment(PluginType.NEW);
+                showListFragment(PluginListType.NEW);
             }
         });
 
@@ -156,6 +157,9 @@ public class PluginBrowserActivity extends AppCompatActivity
 
         if (savedInstanceState == null) {
             fetchAllPlugins();
+        } else if (hasListFragment() && savedInstanceState.containsKey(KEY_LAST_LIST_TYPE)) {
+            PluginListType listType = (PluginListType) savedInstanceState.getSerializable(KEY_LAST_LIST_TYPE);
+            showListFragment(listType);
         }
     }
 
@@ -208,15 +212,18 @@ public class PluginBrowserActivity extends AppCompatActivity
         if (mSearchMenuItem != null && mSearchMenuItem.isActionViewExpanded()) {
             outState.putString(KEY_LAST_SEARCH, mSearchView.getQuery().toString());
         }
+        if (mLastPluginListType != null) {
+            outState.putSerializable(KEY_LAST_LIST_TYPE, mLastPluginListType);
+        }
     }
 
     private void fetchAllPlugins() {
-        for (PluginType pluginType: PluginType.values()) {
+        for (PluginListType pluginType: PluginListType.values()) {
             fetchPlugins(pluginType);
         }
     }
 
-    private void fetchPlugins(@NonNull PluginType pluginType) {
+    private void fetchPlugins(@NonNull PluginListType pluginType) {
         switch (pluginType) {
             case SITE:
                 if (mPluginStore.getSitePlugins(mSite).size() == 0) {
@@ -238,12 +245,12 @@ public class PluginBrowserActivity extends AppCompatActivity
     }
 
     private void refreshAllPlugins() {
-        for (PluginType pluginType: PluginType.values()) {
+        for (PluginListType pluginType: PluginListType.values()) {
             refreshPlugins(pluginType);
         }
     }
 
-    private void refreshPlugins(@NonNull PluginType pluginType) {
+    private void refreshPlugins(@NonNull PluginListType pluginType) {
         PluginBrowserAdapter adapter;
         View cardView;
         switch (pluginType) {
@@ -273,7 +280,7 @@ public class PluginBrowserActivity extends AppCompatActivity
         }
     }
 
-    private List<?> getPlugins(@NonNull PluginType pluginType) {
+    private List<?> getPlugins(@NonNull PluginListType pluginType) {
         switch (pluginType) {
             case POPULAR:
                 return mPluginStore.getPluginDirectory(PluginDirectoryType.POPULAR);
@@ -306,7 +313,7 @@ public class PluginBrowserActivity extends AppCompatActivity
             ToastUtils.showToast(this, R.string.plugin_fetch_error);
             return;
         }
-        refreshPlugins(PluginType.SITE);
+        refreshPlugins(PluginListType.SITE);
     }
 
     @SuppressWarnings("unused")
@@ -336,10 +343,10 @@ public class PluginBrowserActivity extends AppCompatActivity
         }
         switch (event.type) {
             case POPULAR:
-                refreshPlugins(PluginType.POPULAR);
+                refreshPlugins(PluginListType.POPULAR);
                 break;
             case NEW:
-                refreshPlugins(PluginType.NEW);
+                refreshPlugins(PluginListType.NEW);
                 break;
         }
     }
@@ -365,6 +372,10 @@ public class PluginBrowserActivity extends AppCompatActivity
         return true;
     }
 
+    private boolean hasListFragment() {
+        return getFragmentManager().findFragmentByTag(PluginListFragment.TAG) != null;
+    }
+
     private PluginListFragment getOrCreateListFragment() {
         Fragment fragment = getFragmentManager().findFragmentByTag(PluginListFragment.TAG);
         if (fragment != null) {
@@ -378,7 +389,8 @@ public class PluginBrowserActivity extends AppCompatActivity
         return listFragment;
     }
 
-    private void showListFragment(@NonNull PluginType type) {
+    private void showListFragment(@NonNull PluginListType type) {
+        mLastPluginListType = type;
         PluginListFragment listFragment = getOrCreateListFragment();
         listFragment.setPlugins(getPlugins(type));
     }
@@ -460,12 +472,12 @@ public class PluginBrowserActivity extends AppCompatActivity
         @Override
         public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
             View view = mLayoutInflater.inflate(R.layout.plugin_browser_row, parent, false);
-            return new PluginViewHolder(view);
+            return new PluginBrowserViewHolder(view);
         }
 
         @Override
         public void onBindViewHolder(ViewHolder viewHolder, int position) {
-            PluginViewHolder holder = (PluginViewHolder) viewHolder;
+            PluginBrowserViewHolder holder = (PluginBrowserViewHolder) viewHolder;
             Object item = getItem(position);
             if (item == null) return;
 
@@ -530,7 +542,7 @@ public class PluginBrowserActivity extends AppCompatActivity
             }
         }
 
-        private class PluginViewHolder extends ViewHolder {
+        private class PluginBrowserViewHolder extends ViewHolder {
             final TextView nameText;
             final TextView authorText;
             final ViewGroup statusContainer;
@@ -539,7 +551,7 @@ public class PluginBrowserActivity extends AppCompatActivity
             final WPNetworkImageView icon;
             final RatingBar ratingBar;
 
-            PluginViewHolder(View view) {
+            PluginBrowserViewHolder(View view) {
                 super(view);
                 nameText = view.findViewById(R.id.plugin_name);
                 authorText = view.findViewById(R.id.plugin_author);
@@ -561,11 +573,16 @@ public class PluginBrowserActivity extends AppCompatActivity
                     public void onClick(View v) {
                         int position = getAdapterPosition();
                         Object item = getItem(position);
+                        SitePluginModel sitePlugin;
                         if (item instanceof SitePluginModel) {
-                            SitePluginModel sitePlugin = (SitePluginModel) item;
-                            ActivityLauncher.viewPluginDetail(PluginBrowserActivity.this, mSite, sitePlugin);
+                            sitePlugin = (SitePluginModel) item;
                         } else {
-                            // TODO: show detail for WPOrgPlugin - wait for detail redesign to be merged
+                            WPOrgPluginModel wpOrgPlugin = (WPOrgPluginModel) item;
+                            sitePlugin = getSitePluginFromSlug(wpOrgPlugin.getSlug());
+                        }
+                        // TODO: show detail for WPOrgPlugin
+                        if (sitePlugin != null) {
+                            ActivityLauncher.viewPluginDetail(PluginBrowserActivity.this, mSite, sitePlugin);
                         }
                     }
                 });
