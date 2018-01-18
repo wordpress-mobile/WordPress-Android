@@ -6,6 +6,7 @@ public enum PluginDirectoryType {
     NEW,
     POPULAR;
 
+    @Override
     public String toString() {
         return this.name().toLowerCase(Locale.US);
     }
