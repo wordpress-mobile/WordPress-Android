@@ -18,7 +18,7 @@
         android:layout_height="wrap_content"
         android:layout_centerInParent="true"
         android:text="@string/empty_list_default"
-        android:visibility="visible"
+        android:visibility="gone"
         tools:visibility="visible" />
 
 </RelativeLayout>

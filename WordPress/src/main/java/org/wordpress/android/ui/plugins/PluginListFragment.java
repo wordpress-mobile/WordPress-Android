@@ -21,6 +21,7 @@ import org.wordpress.android.fluxc.model.plugin.SitePluginModel;
 import org.wordpress.android.fluxc.model.plugin.WPOrgPluginModel;
 import org.wordpress.android.fluxc.store.PluginStore;
 import org.wordpress.android.ui.ActivityLauncher;
+import org.wordpress.android.widgets.DividerItemDecoration;
 import org.wordpress.android.widgets.WPNetworkImageView;
 
 import java.util.ArrayList;
@@ -35,6 +36,7 @@ public class PluginListFragment extends Fragment {
     private RecyclerView mRecycler;
     private SiteModel mSite;
     private final List<SitePluginModel> mSitePlugins = new ArrayList<>();
+    private List<?> mCachedPlugins;
 
     @Inject PluginStore mPluginStore;
     @Inject Dispatcher mDispatcher;
@@ -62,14 +64,28 @@ public class PluginListFragment extends Fragment {
 
         mRecycler = view.findViewById(R.id.recycler);
         mRecycler.setLayoutManager(new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false));
+        mRecycler.addItemDecoration(new DividerItemDecoration(getActivity(), DividerItemDecoration.VERTICAL_LIST));
 
         return view;
     }
 
-    public void setPlugins(@NonNull List<Object> plugins) {
-        PluginListAdapter adapter = new PluginListAdapter(getActivity());
-        mRecycler.setAdapter(adapter);
-        adapter.setPlugins(plugins);
+    @Override
+    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+        if (mCachedPlugins != null) {
+            setPlugins(mCachedPlugins);
+            mCachedPlugins = null;
+        }
+    }
+
+    public void setPlugins(@NonNull List<?> plugins) {
+        if (isAdded()) {
+            PluginListAdapter adapter = new PluginListAdapter(getActivity());
+            mRecycler.setAdapter(adapter);
+            adapter.setPlugins(plugins);
+        } else {
+            mCachedPlugins = plugins;
+        }
     }
 
     private SitePluginModel getSitePluginFromSlug(@Nullable String slug) {
@@ -92,7 +108,7 @@ public class PluginListFragment extends Fragment {
             setHasStableIds(true);
         }
 
-        public void setPlugins(List<Object> plugins) {
+        public void setPlugins(List<?> plugins) {
             mItems.clear();
             mItems.addAll(plugins);
             notifyDataSetChanged();

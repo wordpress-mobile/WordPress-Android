@@ -113,10 +113,27 @@ public class PluginBrowserActivity extends AppCompatActivity
             return;
         }
 
+        // site plugin list
         findViewById(R.id.text_manage).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                ActivityLauncher.viewCurrentBlogPlugins(PluginBrowserActivity.this, mSite);
+                showListFragment(PluginType.SITE);
+            }
+        });
+
+        // popular plugin list
+        findViewById(R.id.text_all_popular).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                showListFragment(PluginType.POPULAR);
+            }
+        });
+
+        // new plugin list
+        findViewById(R.id.text_all_new).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                showListFragment(PluginType.NEW);
             }
         });
 
@@ -217,7 +234,12 @@ public class PluginBrowserActivity extends AppCompatActivity
                 mDispatcher.dispatch(PluginActionBuilder.newFetchPluginDirectoryAction(newPayload));
                 break;
         }
+    }
 
+    private void refreshAllPlugins() {
+        for (PluginType pluginType: PluginType.values()) {
+            refreshPlugins(pluginType);
+        }
     }
 
     private void refreshPlugins(@NonNull PluginType pluginType) {
@@ -244,12 +266,6 @@ public class PluginBrowserActivity extends AppCompatActivity
                 return mPluginStore.getPluginDirectory(PluginDirectoryType.NEW);
             default:
                 return mPluginStore.getSitePlugins(mSite);
-        }
-    }
-
-    private void refreshAllPlugins() {
-        for (PluginType pluginType: PluginType.values()) {
-            refreshPlugins(pluginType);
         }
     }
 
@@ -349,10 +365,7 @@ public class PluginBrowserActivity extends AppCompatActivity
 
     private void showListFragment(@NonNull PluginType type) {
         PluginListFragment listFragment = getOrCreateListFragment();
-        switch (type) {
-            case SITE:
-
-        }
+        listFragment.setPlugins(getPlugins(type));
     }
 
     private void showListFragmentForQuery(@Nullable String query) {
