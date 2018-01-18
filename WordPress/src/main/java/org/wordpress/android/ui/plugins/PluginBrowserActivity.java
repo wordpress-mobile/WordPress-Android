@@ -60,7 +60,18 @@ public class PluginBrowserActivity extends AppCompatActivity
     public enum PluginListType {
         SITE,
         POPULAR,
-        NEW
+        NEW;
+
+        @StringRes int getTitleRes() {
+            switch (this) {
+                case POPULAR:
+                    return R.string.plugin_caption_popular;
+                case NEW:
+                    return R.string.plugin_caption_new;
+                default:
+                    return R.string.plugin_caption_installed;
+            }
+        }
     }
 
     private SiteModel mSite;
@@ -172,6 +183,12 @@ public class PluginBrowserActivity extends AppCompatActivity
             mSearchView.setOnQueryTextListener(null);
         }
         super.onDestroy();
+    }
+
+    @Override
+    public void onBackPressed() {
+        setTitle(R.string.plugins);
+        super.onBackPressed();
     }
 
     @Override
@@ -397,10 +414,12 @@ public class PluginBrowserActivity extends AppCompatActivity
         if (getFragmentManager().getBackStackEntryCount() > 0) {
             getFragmentManager().popBackStack();
         }
+        setTitle(R.string.plugins);
     }
 
     @Override
     public List<?> onListFragmentRequestPlugins(@NonNull PluginListType listType) {
+        setTitle(listType.getTitleRes());
         return getPlugins(listType);
     }
 
