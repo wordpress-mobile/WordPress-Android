@@ -504,9 +504,7 @@ public class PluginBrowserActivity extends AppCompatActivity
             } else {
                 holder.statusContainer.setVisibility(View.GONE);
                 holder.ratingBar.setVisibility(View.VISIBLE);
-                int rating = StringUtils.stringToInt(wpOrgPlugin.getRating(), 1);
-                int averageRating = Math.round(rating / 20f);
-                holder.ratingBar.setRating(averageRating);
+                holder.ratingBar.setRating(PluginUtils.getAverageStarRating(wpOrgPlugin));
             }
         }
 

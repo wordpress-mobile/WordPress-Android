@@ -9,6 +9,7 @@ import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.store.PluginStore;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.CrashlyticsUtils;
+import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.helpers.Version;
 
 public class PluginUtils {
@@ -40,6 +41,11 @@ public class PluginUtils {
             return null;
         }
         return pluginStore.getWPOrgPluginBySlug(slug);
+    }
+
+    static int getAverageStarRating(@NonNull WPOrgPluginModel wpOrgPlugin) {
+        int rating = StringUtils.stringToInt(wpOrgPlugin.getRating(), 1);
+        return Math.round(rating / 20f);
     }
 
     static boolean isUpdateAvailable(SitePluginModel plugin, WPOrgPluginModel wpOrgPlugin) {

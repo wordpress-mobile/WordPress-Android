@@ -3,14 +3,16 @@ package org.wordpress.android.ui.plugins;
 import android.app.Fragment;
 import android.content.Context;
 import android.os.Bundle;
+import android.support.annotation.ColorRes;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.annotation.StringRes;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
+import android.widget.RatingBar;
 import android.widget.TextView;
 
 import org.wordpress.android.R;
@@ -138,7 +140,7 @@ public class PluginListFragment extends Fragment {
         }
 
         @Override
-        public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
+        public void onBindViewHolder(RecyclerView.ViewHolder viewHolder, int position) {
             Object item = getItem(position);
             SitePluginModel sitePlugin;
             WPOrgPluginModel wpOrgPlugin;
@@ -151,15 +153,24 @@ public class PluginListFragment extends Fragment {
             }
 
             String name = sitePlugin != null ? sitePlugin.getDisplayName() : wpOrgPlugin.getName();
-            String status = sitePlugin != null ? getPluginStatusText(sitePlugin) : null;
             String iconUrl = wpOrgPlugin != null ? wpOrgPlugin.getIcon() : null;
-            boolean isUpdatable = sitePlugin != null && PluginUtils.isUpdateAvailable(sitePlugin, wpOrgPlugin);
 
-            PluginViewHolder pluginHolder = (PluginViewHolder) holder;
-            pluginHolder.name.setText(name);
-            pluginHolder.status.setText(status);
-            pluginHolder.icon.setImageUrl(iconUrl, WPNetworkImageView.ImageType.PLUGIN_ICON);
-            pluginHolder.updateAvailableIcon.setVisibility(isUpdatable ? View.VISIBLE : View.GONE);
+            PluginViewHolder holder = (PluginViewHolder) viewHolder;
+            holder.name.setText(name);
+            holder.icon.setImageUrl(iconUrl, WPNetworkImageView.ImageType.PLUGIN_ICON);
+
+            if (sitePlugin != null) {
+                @StringRes int stringRes = sitePlugin.isActive() ? R.string.plugin_active : R.string.plugin_inactive;
+                @ColorRes int colorRes = sitePlugin.isActive() ? R.color.alert_green : R.color.alert_yellow;
+                holder.status.setText(stringRes);
+                holder.status.setTextColor(getResources().getColor(colorRes));
+                holder.status.setVisibility(View.VISIBLE);
+                holder.ratingBar.setVisibility(View.GONE);
+            } else {
+                holder.status.setVisibility(View.GONE);
+                holder.ratingBar.setVisibility(View.VISIBLE);
+                holder.ratingBar.setRating(PluginUtils.getAverageStarRating(wpOrgPlugin));
+            }
         }
 
         private void refreshPluginWithSlug(@NonNull String slug) {
@@ -173,14 +184,14 @@ public class PluginListFragment extends Fragment {
             final TextView name;
             final TextView status;
             final WPNetworkImageView icon;
-            final ImageView updateAvailableIcon;
+            final RatingBar ratingBar;
 
             PluginViewHolder(View view) {
                 super(view);
                 name = view.findViewById(R.id.plugin_name);
                 status = view.findViewById(R.id.plugin_status);
                 icon = view.findViewById(R.id.plugin_icon);
-                updateAvailableIcon = view.findViewById(R.id.plugin_update_available_icon);
+                ratingBar = view.findViewById(R.id.rating_bar);
 
                 view.setOnClickListener(new View.OnClickListener() {
                     @Override
@@ -197,13 +208,5 @@ public class PluginListFragment extends Fragment {
                 });
             }
         }
-    }
-
-    private String getPluginStatusText(@NonNull SitePluginModel plugin) {
-        String activeStatus = plugin.isActive() ? getString(R.string.plugin_active)
-                : getString(R.string.plugin_inactive);
-        String autoUpdateStatus = plugin.isAutoUpdateEnabled() ? getString(R.string.plugin_autoupdates_on)
-                : getString(R.string.plugin_autoupdates_off);
-        return activeStatus + ", " + autoUpdateStatus;
     }
 }

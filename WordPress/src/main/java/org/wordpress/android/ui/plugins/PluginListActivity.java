@@ -49,6 +49,7 @@ import javax.inject.Inject;
 
 import static org.wordpress.android.util.WPSwipeToRefreshHelper.buildSwipeToRefreshHelper;
 
+// TODO: this activity can be deleted once PluginListFragment is completed
 public class PluginListActivity extends AppCompatActivity {
     private static final String KEY_REFRESHING = "KEY_REFRESHING";
 
@@ -254,12 +255,6 @@ public class PluginListActivity extends AppCompatActivity {
                 }
                 String iconUrl = wpOrgPlugin != null ? wpOrgPlugin.getIcon() : "";
                 pluginHolder.icon.setImageUrl(iconUrl, ImageType.PLUGIN_ICON);
-
-                if (wpOrgPlugin != null && PluginUtils.isUpdateAvailable(sitePlugin, wpOrgPlugin)) {
-                    pluginHolder.updateAvailableIcon.setVisibility(View.VISIBLE);
-                } else {
-                    pluginHolder.updateAvailableIcon.setVisibility(View.GONE);
-                }
             }
         }
 
@@ -290,14 +285,12 @@ public class PluginListActivity extends AppCompatActivity {
             TextView name;
             TextView status;
             WPNetworkImageView icon;
-            ImageView updateAvailableIcon;
 
             PluginViewHolder(View view) {
                 super(view);
                 name = view.findViewById(R.id.plugin_name);
                 status = view.findViewById(R.id.plugin_status);
                 icon = view.findViewById(R.id.plugin_icon);
-                updateAvailableIcon = view.findViewById(R.id.plugin_update_available_icon);
             }
         }
     }

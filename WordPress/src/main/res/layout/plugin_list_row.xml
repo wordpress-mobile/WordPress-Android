@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:background="?android:attr/selectableItemBackground"
@@ -19,42 +20,53 @@
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
         android:layout_centerVertical="true"
-        android:contentDescription="@string/plugin_icon_content_description" />
+        android:contentDescription="@string/plugin_icon_content_description"
+        tools:src="@drawable/plugin_placeholder" />
 
-    <LinearLayout
+    <TextView
+        android:id="@+id/plugin_name"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_centerVertical="true"
+        android:layout_marginEnd="@dimen/margin_medium"
         android:layout_marginLeft="@dimen/margin_extra_large"
+        android:layout_marginRight="@dimen/margin_medium"
         android:layout_marginStart="@dimen/margin_extra_large"
         android:layout_toEndOf="@id/plugin_icon"
+        android:layout_toLeftOf="@+id/frame"
         android:layout_toRightOf="@id/plugin_icon"
-        android:orientation="vertical">
+        android:layout_toStartOf="@+id/frame"
+        android:textColor="@color/grey_dark"
+        android:textSize="@dimen/text_sz_large"
+        tools:text="plugin_name" />
 
-        <TextView
-            android:id="@+id/plugin_name"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textColor="@color/grey_dark"
-            android:textSize="@dimen/text_sz_large"/>
+    <FrameLayout
+        android:id="@+id/frame"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_centerVertical="true">
 
         <TextView
             android:id="@+id/plugin_status"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textColor="@color/grey_darken_10"
-            android:textSize="@dimen/text_sz_medium"/>
-    </LinearLayout>
+            android:textSize="@dimen/text_sz_medium"
+            android:visibility="gone"
+            tools:text="plugin_status"
+            tools:visibility="visible" />
 
-    <ImageView
-        android:id="@+id/plugin_update_available_icon"
-        android:layout_width="@dimen/margin_extra_medium_large"
-        android:layout_height="@dimen/margin_extra_medium_large"
-        android:layout_alignParentEnd="true"
-        android:layout_alignParentRight="true"
-        android:layout_centerVertical="true"
-        android:contentDescription="@string/plugin_update_available_icon_content_description"
-        android:visibility="gone"
-        app:srcCompat="@drawable/plugin_update_available_icon" />
+        <RatingBar
+            android:id="@+id/rating_bar"
+            style="?android:attr/ratingBarStyleSmall"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:numStars="5"
+            android:visibility="gone"
+            tools:rating="3"
+            tools:visibility="visible" />
+    </FrameLayout>
+
 
 </RelativeLayout>
