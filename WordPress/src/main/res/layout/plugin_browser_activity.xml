@@ -39,8 +39,7 @@
                         android:layout_marginLeft="@dimen/margin_extra_large"
                         android:text="@string/plugin_caption_installed"
                         android:textColor="@color/grey_dark"
-                        android:textSize="@dimen/text_sz_large"
-                        android:textStyle="bold" />
+                        android:textSize="@dimen/text_sz_large" />
 
                     <TextView
                         android:id="@+id/text_manage"
@@ -85,8 +84,7 @@
                         android:layout_marginLeft="@dimen/margin_extra_large"
                         android:text="@string/plugin_caption_popular"
                         android:textColor="@color/grey_dark"
-                        android:textSize="@dimen/text_sz_large"
-                        android:textStyle="bold" />
+                        android:textSize="@dimen/text_sz_large" />
 
                     <TextView
                         android:id="@+id/text_all_popular"
@@ -132,8 +130,7 @@
                         android:layout_marginLeft="@dimen/margin_extra_large"
                         android:text="@string/plugin_caption_new"
                         android:textColor="@color/grey_dark"
-                        android:textSize="@dimen/text_sz_large"
-                        android:textStyle="bold" />
+                        android:textSize="@dimen/text_sz_large" />
 
                     <TextView
                         android:id="@+id/text_all_new"

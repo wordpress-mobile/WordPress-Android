@@ -121,7 +121,7 @@ public class PluginBrowserActivity extends AppCompatActivity
         });
 
         boolean isLandscape = DisplayUtils.isLandscape(this);
-        int margin = getResources().getDimensionPixelSize(R.dimen.margin_extra_large);
+        int margin = getResources().getDimensionPixelSize(R.dimen.margin_large);
         int displayWidth = DisplayUtils.getDisplayPixelWidth(this);
         int displayHeight = DisplayUtils.getDisplayPixelHeight(this);
         int maxRows = isLandscape ? 6 : 4;
@@ -226,17 +226,13 @@ public class PluginBrowserActivity extends AppCompatActivity
                 mSitePlugins.addAll(mPluginStore.getSitePlugins(mSite));
                 ((PluginBrowserAdapter) mSitePluginsRecycler.getAdapter()).setPlugins(mSitePlugins);
                 break;
-            default:
-                // TODO: this is a dummy list generated from site plugins
-                List<WPOrgPluginModel> wpOrgPlugins = new ArrayList<>();
-                for (SitePluginModel sitePlugin: mSitePlugins) {
-                    WPOrgPluginModel wpOrgPlugin = PluginUtils.getWPOrgPlugin(mPluginStore, sitePlugin);
-                    if (wpOrgPlugin != null) {
-                        wpOrgPlugins.add(wpOrgPlugin);
-                    }
-                }
-                RecyclerView recycler = pluginType == PluginType.NEW ? mNewPluginsRecycler : mPopularPluginsRecycler;
-                ((PluginBrowserAdapter) recycler.getAdapter()).setPlugins(wpOrgPlugins);
+            case POPULAR:
+                List<WPOrgPluginModel> popularPlugins = mPluginStore.getPluginDirectory(PluginDirectoryType.POPULAR);;
+                ((PluginBrowserAdapter) mPopularPluginsRecycler.getAdapter()).setPlugins(popularPlugins);
+                break;
+            case NEW:
+                List<WPOrgPluginModel> newPlugins = mPluginStore.getPluginDirectory(PluginDirectoryType.NEW);;
+                ((PluginBrowserAdapter) mNewPluginsRecycler.getAdapter()).setPlugins(newPlugins);
                 break;
         }
     }
@@ -468,7 +464,7 @@ public class PluginBrowserActivity extends AppCompatActivity
                 author = sitePlugin.getAuthorName();
             } else {
                 wpOrgPlugin = (WPOrgPluginModel) item;
-                sitePlugin = null; // TODO: change to getSitePluginFromSlug(wpOrgPlugin.getSlug());
+                sitePlugin = getSitePluginFromSlug(wpOrgPlugin.getSlug());
                 name = wpOrgPlugin.getName();
                 author = wpOrgPlugin.getAuthorAsHtml();
             }
