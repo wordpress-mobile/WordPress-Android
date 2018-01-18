@@ -34,7 +34,7 @@ public class MetadataUtils {
         addMetadataProperty(metadata, "linkRel", "");            // The rel attribute for the link (if any)
         addMetadataProperty(metadata, "linkTargetBlank", false); // true if the link should open in a new window.
         addMetadataProperty(metadata, "linkUrl", "");            // The href attribute of the link
-        addMetadataProperty(metadata, "size", "size-full");         // Accepted values: size-thumbnail, size-medium, size-large, size-full, or empty string
+        addMetadataProperty(metadata, "size", "size-full");         // Accepted values: size-thumbnail, size-medium, size-large, size-full
         addMetadataProperty(metadata, "src", "");                // The src attribute of the image
         addMetadataProperty(metadata, "title", "");              // The title attribute of the image (if any)
         addMetadataProperty(metadata, "width", "");              // The image width attribute
