@@ -5,7 +5,7 @@ public enum PluginDirectoryType {
     POPULAR;
 
     public String toString() {
-        return this.name();
+        return this.name().toLowerCase();
     }
 
     public static PluginDirectoryType fromString(String string) {
