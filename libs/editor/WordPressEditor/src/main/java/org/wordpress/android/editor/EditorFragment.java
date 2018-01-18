@@ -635,14 +635,14 @@ public class EditorFragment extends EditorFragmentAbstract implements View.OnCli
                         getContent();
                     } catch (IllegalEditorStateException e) {
                         AppLog.e(T.EDITOR, "toggleHtmlMode: unable to get title or content");
-                        getActivity().runOnUiThread(new Runnable() {
-                            @Override
-                            public void run() {
-                                toggleButton.setChecked(false);
-                            }
-                        });
                         return;
                     }
+
+                    //sanity check
+                    if (!isAdded()) {
+                        return;
+                    }
+
                     getActivity().runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
