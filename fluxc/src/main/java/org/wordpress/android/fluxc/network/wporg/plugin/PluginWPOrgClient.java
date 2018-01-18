@@ -159,7 +159,7 @@ public class PluginWPOrgClient extends BaseWPOrgAPIClient {
         params.put("request[fields][compatibility]", String.valueOf(1));
         params.put("request[fields][icons]", String.valueOf(1));
         params.put("request[fields][requires]", String.valueOf(1));
-        params.put("request[fields][sections]", String.valueOf(1));
+        params.put("request[fields][sections]", String.valueOf(0));
         params.put("request[fields][tested]", String.valueOf(0));
         return params;
     }
