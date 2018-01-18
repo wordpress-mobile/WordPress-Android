@@ -2089,6 +2089,8 @@
     <string name="username_changer_action">Save</string>
     <string name="username_changer_dismiss_button_positive">Discard</string>
     <string name="username_changer_dismiss_message">Discard changing username?</string>
+    <string name="username_changer_error_generic">An error occurred while retrieving username suggestions.</string>
+    <string name="username_changer_error_none">No usernames are suggested from %1$s%2$s%3$s. Please enter more letters or numbers to get suggestions.</string>
     <string name="username_changer_header">Your username is currently %1$s%2$s%3$s. It will be used for mentions and links, but otherwise people will just see your display name, %4$s%5$s%6$s.</string>
     <string name="username_changer_hint">Type to get more suggestions</string>
     <string name="username_changer_title">Change username</string>

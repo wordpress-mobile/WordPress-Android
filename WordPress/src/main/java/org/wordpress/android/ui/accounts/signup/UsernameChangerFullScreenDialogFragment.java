@@ -13,18 +13,23 @@ import android.support.v7.widget.SimpleItemAnimator;
 import android.text.Editable;
 import android.text.Html;
 import android.text.Spanned;
+import android.text.SpannedString;
 import android.text.TextUtils;
 import android.text.TextWatcher;
+import android.view.ContextThemeWrapper;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.fluxc.Dispatcher;
 import org.wordpress.android.fluxc.generated.AccountActionBuilder;
 import org.wordpress.android.fluxc.store.AccountStore.FetchUsernameSuggestionsPayload;
+import org.wordpress.android.fluxc.store.AccountStore.OnUsernameSuggestionsFetched;
 import org.wordpress.android.ui.FullScreenDialogFragment.FullScreenDialogContent;
 import org.wordpress.android.ui.FullScreenDialogFragment.FullScreenDialogController;
 import org.wordpress.android.ui.accounts.signup.UsernameChangerRecyclerViewAdapter.OnUsernameSelectedListener;
@@ -259,5 +264,34 @@ public class UsernameChangerFullScreenDialogFragment extends Fragment implements
                         })
                 .setNegativeButton(android.R.string.cancel, null)
                 .show();
+    }
+
+    protected void showErrorDialog(Spanned message) {
+        AlertDialog dialog = new AlertDialog.Builder(new ContextThemeWrapper(getActivity(), R.style.LoginTheme))
+                .setMessage(message)
+                .setPositiveButton(R.string.login_error_button, null)
+                .create();
+        dialog.show();
+    }
+
+    @SuppressWarnings("unused")
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onUsernameSuggestionsFetched(OnUsernameSuggestionsFetched event) {
+        if (event.isError()) {
+            showErrorDialog(new SpannedString(getString(R.string.username_changer_error_generic)));
+        } else if (event.suggestions.size() == 0) {
+            showErrorDialog(
+                Html.fromHtml(
+                    String.format(
+                        getString(R.string.username_changer_error_none),
+                        "<b>",
+                        mUsernameSuggestionInput,
+                        "</b>"
+                    )
+                )
+            );
+        } else {
+            populateUsernameSuggestions(event.suggestions);
+        }
     }
 }
