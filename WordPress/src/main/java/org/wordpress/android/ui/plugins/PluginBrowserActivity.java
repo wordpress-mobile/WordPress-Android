@@ -56,7 +56,6 @@ public class PluginBrowserActivity extends AppCompatActivity
         PluginListFragment.PluginListFragmentListener {
 
     private static final String KEY_LAST_SEARCH = "last_search";
-    private static final String KEY_LAST_LIST_TYPE = "last_list_type";
 
     public enum PluginListType {
         SITE,
@@ -67,7 +66,6 @@ public class PluginBrowserActivity extends AppCompatActivity
     private SiteModel mSite;
     private final List<SitePluginModel> mSitePlugins = new ArrayList<>();
 
-    private PluginListType mLastListType;
     private RecyclerView mSitePluginsRecycler;
     private RecyclerView mPopularPluginsRecycler;
     private RecyclerView mNewPluginsRecycler;
@@ -159,8 +157,6 @@ public class PluginBrowserActivity extends AppCompatActivity
 
         if (savedInstanceState == null) {
             fetchAllPlugins();
-        } else if (hasListFragment()) {
-            mLastListType = (PluginListType) savedInstanceState.getSerializable(KEY_LAST_LIST_TYPE);
         }
     }
 
@@ -212,9 +208,6 @@ public class PluginBrowserActivity extends AppCompatActivity
         outState.putSerializable(WordPress.SITE, mSite);
         if (mSearchMenuItem != null && mSearchMenuItem.isActionViewExpanded()) {
             outState.putString(KEY_LAST_SEARCH, mSearchView.getQuery().toString());
-        }
-        if (mLastListType != null) {
-            outState.putSerializable(KEY_LAST_LIST_TYPE, mLastListType);
         }
     }
 
@@ -377,22 +370,20 @@ public class PluginBrowserActivity extends AppCompatActivity
         return getFragmentManager().findFragmentByTag(PluginListFragment.TAG) != null;
     }
 
-    private PluginListFragment getOrCreateListFragment() {
+    private void showListFragment(@NonNull PluginListType listType) {
+        PluginListFragment listFragment;
+
         Fragment fragment = getFragmentManager().findFragmentByTag(PluginListFragment.TAG);
         if (fragment != null) {
-            return (PluginListFragment) fragment;
+            listFragment = (PluginListFragment) fragment;
+            listFragment.setListType(listType);
+        } else {
+            listFragment = PluginListFragment.newInstance(mSite, listType);
+            getFragmentManager().beginTransaction()
+                    .add(R.id.fragment_container, listFragment, PluginListFragment.TAG)
+                    .addToBackStack(null)
+                    .commit();
         }
-        PluginListFragment listFragment = PluginListFragment.newInstance(mSite);
-        getFragmentManager().beginTransaction()
-                .add(R.id.fragment_container, listFragment, PluginListFragment.TAG)
-                .addToBackStack(null)
-                .commit();
-        return listFragment;
-    }
-
-    private void showListFragment(@NonNull PluginListType type) {
-        mLastListType = type;
-        PluginListFragment listFragment = getOrCreateListFragment();
     }
 
     private void showListFragmentForQuery(@Nullable String query) {
@@ -410,8 +401,8 @@ public class PluginBrowserActivity extends AppCompatActivity
     }
 
     @Override
-    public List<?> onListFragmentRequestPlugins() {
-        return getPlugins(mLastListType);
+    public List<?> onListFragmentRequestPlugins(@NonNull PluginListType listType) {
+        return getPlugins(listType);
     }
 
     private void showProgress(boolean show) {

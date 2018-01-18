@@ -25,6 +25,7 @@ import org.wordpress.android.fluxc.model.plugin.SitePluginModel;
 import org.wordpress.android.fluxc.model.plugin.WPOrgPluginModel;
 import org.wordpress.android.fluxc.store.PluginStore;
 import org.wordpress.android.ui.ActivityLauncher;
+import org.wordpress.android.ui.plugins.PluginBrowserActivity.PluginListType;
 import org.wordpress.android.widgets.DividerItemDecoration;
 import org.wordpress.android.widgets.WPNetworkImageView;
 
@@ -36,12 +37,15 @@ import javax.inject.Inject;
 public class PluginListFragment extends Fragment {
 
     public static final String TAG = PluginListFragment.class.getName();
+    private static final String ARG_LIST_TYPE = "list_type";
 
     public interface PluginListFragmentListener {
-        List<?> onListFragmentRequestPlugins();
+        List<?> onListFragmentRequestPlugins(@NonNull PluginListType listType);
     }
 
     private RecyclerView mRecycler;
+    private PluginListType mListType;
+
     private SiteModel mSite;
     private final List<SitePluginModel> mSitePlugins = new ArrayList<>();
 
@@ -50,10 +54,11 @@ public class PluginListFragment extends Fragment {
     @Inject PluginStore mPluginStore;
     @Inject Dispatcher mDispatcher;
 
-    public static PluginListFragment newInstance(@NonNull SiteModel site) {
+    public static PluginListFragment newInstance(@NonNull SiteModel site, @NonNull PluginListType listType) {
         PluginListFragment fragment = new PluginListFragment();
         Bundle bundle = new Bundle();
         bundle.putSerializable(WordPress.SITE, site);
+        bundle.putSerializable(ARG_LIST_TYPE, listType);
         fragment.setArguments(bundle);
         return fragment;
     }
@@ -65,6 +70,7 @@ public class PluginListFragment extends Fragment {
 
         mSite = (SiteModel) getArguments().getSerializable(WordPress.SITE);
         mSitePlugins.addAll(mPluginStore.getSitePlugins(mSite));
+        mListType = (PluginListType) getArguments().getSerializable(ARG_LIST_TYPE);
     }
 
     @Override
@@ -83,9 +89,21 @@ public class PluginListFragment extends Fragment {
         super.onActivityCreated(savedInstanceState);
         try {
             mListener = (PluginListFragmentListener) getActivity();
-            setPlugins(mListener.onListFragmentRequestPlugins());
+            requestPlugins();
         } catch (ClassCastException e) {
             throw new ClassCastException(getActivity().toString() + " must implement PluginListFragmentListener");
+        }
+    }
+
+    private void requestPlugins() {
+        setPlugins(mListener.onListFragmentRequestPlugins(mListType));
+    }
+
+    void setListType(@NonNull PluginListType listType) {
+        if (!listType.equals(mListType)) {
+            mListType = listType;
+            getArguments().putSerializable(ARG_LIST_TYPE, mListType);
+            requestPlugins();
         }
     }
 
