@@ -140,13 +140,12 @@ public class PluginBrowserActivity extends AppCompatActivity
         });
 
         boolean isLandscape = DisplayUtils.isLandscape(this);
-        int margin = getResources().getDimensionPixelSize(R.dimen.margin_large);
         int displayWidth = DisplayUtils.getDisplayPixelWidth(this);
         int displayHeight = DisplayUtils.getDisplayPixelHeight(this);
         int maxRows = isLandscape ? 6 : 4;
         mRowWidth = Math.round(displayWidth / (maxRows - 0.4f));
-        mIconSize = mRowWidth - (margin * 2);
-        mRowHeight = Math.round(displayHeight / 3.2f); // TODO: landscape
+        mIconSize = mRowWidth;
+        mRowHeight = Math.round(displayHeight / 3.4f); // TODO: landscape
 
         configureRecycler(mSitePluginsRecycler);
         configureRecycler(mPopularPluginsRecycler);

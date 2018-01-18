@@ -61,6 +61,8 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_below="@+id/text_installed"
+                        android:layout_marginBottom="@dimen/margin_small"
+                        android:layout_marginLeft="@dimen/margin_medium"
                         android:layout_marginTop="@dimen/margin_small"
                         android:scrollbars="none" />
                 </RelativeLayout>
@@ -108,6 +110,8 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_below="@+id/text_popular"
+                        android:layout_marginBottom="@dimen/margin_small"
+                        android:layout_marginLeft="@dimen/margin_medium"
                         android:layout_marginTop="@dimen/margin_small"
                         android:scrollbars="none" />
                 </RelativeLayout>
@@ -156,6 +160,8 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_below="@+id/text_new"
+                        android:layout_marginBottom="@dimen/margin_small"
+                        android:layout_marginLeft="@dimen/margin_medium"
                         android:layout_marginTop="@dimen/margin_small"
                         android:scrollbars="none" />
                 </RelativeLayout>
