@@ -651,6 +651,11 @@ public class MediaSettingsActivity extends AppCompatActivity implements Activity
 
         int imageSizeKey = Arrays.asList(mImageSizeKeyArray).indexOf(mEditorImageMetaData.getSize());
 
+        //if the image size is something we can't recognize, default to the full size
+        if (imageSizeKey == -1) {
+            imageSizeKey = mImageSizeLabelArray.length - 1;
+        }
+
         mImageSizeSeekBarView.setMax(mImageSizeLabelArray.length - 1);
         mImageSizeSeekBarView.setProgress(imageSizeKey);
 
