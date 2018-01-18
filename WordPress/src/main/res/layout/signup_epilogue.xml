@@ -92,7 +92,7 @@
 
             </android.support.v7.widget.CardView>
 
-            <org.wordpress.android.widgets.WPLoginInputRow
+            <org.wordpress.android.login.widgets.WPLoginInputRow
                 android:id="@+id/signup_epilogue_input_display"
                 android:hint="@string/signup_epilogue_hint_display"
                 android:imeOptions="actionDone"
@@ -104,9 +104,9 @@
                 android:paddingRight="@dimen/margin_extra_large"
                 android:paddingEnd="@dimen/margin_extra_large"
                 app:wpIconDrawable="@drawable/ic_user_grey_24dp" >
-            </org.wordpress.android.widgets.WPLoginInputRow>
+            </org.wordpress.android.login.widgets.WPLoginInputRow>
 
-            <org.wordpress.android.widgets.WPLoginInputRow
+            <org.wordpress.android.login.widgets.WPLoginInputRow
                 android:id="@+id/signup_epilogue_input_username"
                 android:hint="@string/signup_epilogue_hint_username"
                 android:inputType="none"
@@ -119,7 +119,7 @@
                 android:paddingRight="@dimen/margin_extra_large"
                 android:paddingEnd="@dimen/margin_extra_large"
                 app:wpIconDrawable="@drawable/ic_mention_grey_24dp" >
-            </org.wordpress.android.widgets.WPLoginInputRow>
+            </org.wordpress.android.login.widgets.WPLoginInputRow>
 
         </LinearLayout>
 
