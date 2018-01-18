@@ -1,11 +1,13 @@
 package org.wordpress.android.fluxc.model.plugin;
 
+import java.util.Locale;
+
 public enum PluginDirectoryType {
     NEW,
     POPULAR;
 
     public String toString() {
-        return this.name().toLowerCase();
+        return this.name().toLowerCase(Locale.US);
     }
 
     public static PluginDirectoryType fromString(String string) {
