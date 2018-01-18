@@ -660,6 +660,14 @@
         <item name="android:textSize">@dimen/text_sz_large</item>
     </style>
 
+    <style name="PluginCardViewSecondaryText">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:gravity">center_vertical</item>
+        <item name="android:textColor">@color/grey_darken_10</item>
+        <item name="android:textSize">@dimen/text_sz_medium</item>
+    </style>
+
     <style name="PluginCardViewSecondaryElement">
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
@@ -674,5 +682,10 @@
         <item name="android:tint">@color/grey_darken_10</item>
         <item name="android:layout_marginRight">@dimen/margin_medium</item>
         <item name="android:layout_marginEnd">@dimen/margin_medium</item>
+    </style>
+
+    <style name="PluginCardViewSecondaryElement.ChevronImage" parent="PluginCardViewSecondaryElement.ExternalLinkImage">
+        <item name="android:layout_marginTop">@dimen/margin_small</item>
+        <item name="android:layout_centerVertical">false</item>
     </style>
 </resources>
