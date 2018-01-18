@@ -18,19 +18,19 @@ import java.io.InputStream;
 import javax.inject.Inject;
 import javax.inject.Named;
 
+/**
+ * Custom {@link AppGlideModule} that replaces Glide's default {@link RequestQueue} with FluxC's.
+ */
 @GlideModule
 public class WordPressGlideModule extends AppGlideModule {
     @Inject @Named("custom-ssl") RequestQueue mRequestQueue;
-
-    public WordPressGlideModule() {
-        ((WordPress) WordPress.getContext()).component().inject(this);
-    }
 
     @Override
     public void applyOptions(Context context, GlideBuilder builder) {}
 
     @Override
     public void registerComponents(Context context, Glide glide, Registry registry) {
+        ((WordPress) context).component().inject(this);
         glide.getRegistry().replace(GlideUrl.class, InputStream.class, new VolleyUrlLoader.Factory(mRequestQueue));
     }
 }
