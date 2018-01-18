@@ -51,7 +51,7 @@ import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.analytics.AnalyticsTracker.Stat;
 import org.wordpress.android.editor.AztecEditorFragment;
 import org.wordpress.android.editor.EditorFragment;
-import org.wordpress.android.editor.EditorFragment.IllegalEditorStateException;
+import org.wordpress.android.editor.EditorFragment.EditorFragmentNotAddedException;
 import org.wordpress.android.editor.EditorFragmentAbstract;
 import org.wordpress.android.editor.EditorFragmentAbstract.EditorDragAndDropListener;
 import org.wordpress.android.editor.EditorFragmentAbstract.EditorFragmentListener;
@@ -522,7 +522,7 @@ public class EditPostActivity extends AppCompatActivity implements
                 public void run() {
                     try {
                         updatePostObject(true);
-                    } catch (IllegalEditorStateException e) {
+                    } catch (EditorFragmentNotAddedException e) {
                         AppLog.e(T.EDITOR, "Impossible to save the post, we weren't able to update it.");
                         return;
                     }
@@ -1076,7 +1076,7 @@ public class EditPostActivity extends AppCompatActivity implements
         );
     }
 
-    private synchronized void updatePostObject(boolean isAutosave) throws IllegalEditorStateException {
+    private synchronized void updatePostObject(boolean isAutosave) throws EditorFragmentNotAddedException {
         if (mPost == null) {
             AppLog.e(AppLog.T.POSTS, "Attempted to save an invalid Post.");
             return;
@@ -1108,7 +1108,7 @@ public class EditPostActivity extends AppCompatActivity implements
             public void run() {
                 try {
                     updatePostObject(false);
-                } catch (IllegalEditorStateException e) {
+                } catch (EditorFragmentNotAddedException e) {
                     AppLog.e(T.EDITOR, "Impossible to save the post, we weren't able to update it.");
                     return;
                 }
@@ -1489,7 +1489,7 @@ public class EditPostActivity extends AppCompatActivity implements
     private boolean updatePostObject() {
         try {
             updatePostObject(false);
-        } catch (IllegalEditorStateException e) {
+        } catch (EditorFragmentNotAddedException e) {
             AppLog.e(T.EDITOR, "Impossible to save and publish the post, we weren't able to update it.");
             return false;
         }
@@ -1805,7 +1805,7 @@ public class EditPostActivity extends AppCompatActivity implements
     /**
      * Updates post object with content of this fragment
      */
-    public boolean updatePostContent(boolean isAutoSave) throws IllegalEditorStateException {
+    public boolean updatePostContent(boolean isAutoSave) throws EditorFragmentNotAddedException {
         if (mPost == null) {
             return false;
         }
