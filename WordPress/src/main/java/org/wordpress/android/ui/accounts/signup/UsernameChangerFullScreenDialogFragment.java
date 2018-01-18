@@ -27,13 +27,15 @@ import org.wordpress.android.fluxc.generated.AccountActionBuilder;
 import org.wordpress.android.fluxc.store.AccountStore.FetchUsernameSuggestionsPayload;
 import org.wordpress.android.ui.FullScreenDialogFragment.FullScreenDialogContent;
 import org.wordpress.android.ui.FullScreenDialogFragment.FullScreenDialogController;
+import org.wordpress.android.ui.accounts.signup.UsernameChangerRecyclerViewAdapter.OnUsernameSelectedListener;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import javax.inject.Inject;
 
-public class UsernameChangerFullScreenDialogFragment extends Fragment implements FullScreenDialogContent {
+public class UsernameChangerFullScreenDialogFragment extends Fragment implements
+        FullScreenDialogContent, OnUsernameSelectedListener {
     protected FullScreenDialogController mDialogController;
     protected Handler mGetSuggestionsHandler;
     protected RecyclerView mUsernameSuggestions;
@@ -44,6 +46,7 @@ public class UsernameChangerFullScreenDialogFragment extends Fragment implements
     protected String mUsernameSuggestionInput;
     protected TextInputEditText mUsernameView;
     protected TextView mHeaderView;
+    protected UsernameChangerRecyclerViewAdapter mUsernamesAdapter;
     protected boolean mShouldWatchText;  // Flag handling text watcher to avoid network call on device rotation.
     protected int mUsernameSelectedIndex;
 
@@ -154,7 +157,7 @@ public class UsernameChangerFullScreenDialogFragment extends Fragment implements
     @Override
     public boolean onConfirmClicked(FullScreenDialogController controller) {
         Bundle result = new Bundle();
-        result.putString(RESULT_USERNAME, mUsername);
+        result.putString(RESULT_USERNAME, mUsernamesAdapter.mItems.get(mUsernamesAdapter.getSelectedItem()));
         controller.confirm(result);
 
         return true;
@@ -177,6 +180,14 @@ public class UsernameChangerFullScreenDialogFragment extends Fragment implements
         outState.putBoolean(KEY_SHOULD_WATCH_TEXT, false);
         outState.putString(KEY_USERNAME_SELECTED, mUsernameSelected);
         outState.putInt(KEY_USERNAME_SELECTED_INDEX, mUsernameSelectedIndex);
+        outState.putStringArrayList(KEY_USERNAME_SUGGESTIONS, new ArrayList<>(mUsernamesAdapter.mItems));
+    }
+
+    @Override
+    public void onUsernameSelected(String username) {
+        mHeaderView.setText(getHeaderText(username, mDisplayName));
+        mUsernameSelected = username;
+        mUsernameSelectedIndex = mUsernamesAdapter.getSelectedItem();
     }
 
     protected Spanned getHeaderText(String username, String display) {
@@ -222,10 +233,18 @@ public class UsernameChangerFullScreenDialogFragment extends Fragment implements
             }
         }
 
+        mUsernamesAdapter = new UsernameChangerRecyclerViewAdapter(getActivity(), suggestionList);
+        mUsernamesAdapter.setOnUsernameSelectedListener(UsernameChangerFullScreenDialogFragment.this);
+        mUsernamesAdapter.setSelectedItem(0);
         mUsernameSelectedIndex = 0;
+        mUsernameSuggestions.setAdapter(mUsernamesAdapter);
     }
 
     private void setUsernameSuggestions(List<String> suggestions) {
+        mUsernamesAdapter = new UsernameChangerRecyclerViewAdapter(getActivity(), suggestions);
+        mUsernamesAdapter.setOnUsernameSelectedListener(UsernameChangerFullScreenDialogFragment.this);
+        mUsernamesAdapter.setSelectedItem(mUsernameSelectedIndex);
+        mUsernameSuggestions.setAdapter(mUsernamesAdapter);
     }
 
     protected void showDismissDialog() {
