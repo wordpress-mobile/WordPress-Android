@@ -608,11 +608,11 @@ public class PluginStore extends Store {
     }
 
     private void fetchPluginDirectory(FetchPluginDirectoryPayload payload) {
-        int offset = 0;
+        int page = 1;
         if (payload.loadMore) {
-            offset = PluginSqlUtils.getNumberOfPluginsForDirectory(payload.type);
+            page = PluginSqlUtils.getLastRequestedPageForDirectoryType(payload.type) + 1;
         }
-        mPluginWPOrgClient.fetchPluginDirectory(payload.type, offset);
+        mPluginWPOrgClient.fetchPluginDirectory(payload.type, page);
     }
 
     private void fetchSitePlugins(SiteModel site) {
