@@ -82,7 +82,6 @@ public class PluginBrowserActivity extends AppCompatActivity
     private RecyclerView mNewPluginsRecycler;
 
     private int mRowWidth;
-    private int mRowHeight;
     private int mIconSize;
 
     private String mLastSearch;
@@ -156,7 +155,6 @@ public class PluginBrowserActivity extends AppCompatActivity
         int maxRows = isLandscape ? 6 : 4;
         mRowWidth = Math.round(displayWidth / (maxRows - 0.4f));
         mIconSize = mRowWidth;
-        mRowHeight = Math.round(displayHeight / 3.4f); // TODO: landscape
 
         configureRecycler(mSitePluginsRecycler);
         configureRecycler(mPopularPluginsRecycler);
@@ -576,7 +574,6 @@ public class PluginBrowserActivity extends AppCompatActivity
                 statusIcon = statusContainer.findViewById(R.id.plugin_status_icon);
 
                 view.getLayoutParams().width = mRowWidth;
-                view.getLayoutParams().height = mRowHeight;
 
                 icon.getLayoutParams().width = mIconSize;
                 icon.getLayoutParams().height = mIconSize;
