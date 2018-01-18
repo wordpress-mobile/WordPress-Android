@@ -1825,7 +1825,6 @@
     <string name="plugin_fetch_error">Unable to load plugins</string>
     <string name="plugin_manage">Manage</string>
     <string name="plugin_see_all">See All</string>
-    <string name="searching_plugins">Searching\u2026</string>
 
     <string name="plugin_caption_installed" translatable="false">@string/plugin_installed</string>
     <string name="plugin_caption_popular">Popular</string>

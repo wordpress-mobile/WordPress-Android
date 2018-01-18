@@ -58,7 +58,7 @@ import org.wordpress.android.ui.plans.PlansActivity;
 import org.wordpress.android.ui.plugins.PluginBrowserActivity;
 import org.wordpress.android.ui.plugins.PluginDetailActivity;
 import org.wordpress.android.ui.plugins.PluginListActivity;
-import org.wordpress.android.ui.plugins.PluginSearchFragment;
+import org.wordpress.android.ui.plugins.PluginListFragment;
 import org.wordpress.android.ui.posts.AddCategoryFragment;
 import org.wordpress.android.ui.posts.EditPostActivity;
 import org.wordpress.android.ui.posts.EditPostSettingsFragment;
@@ -255,7 +255,7 @@ public interface AppComponent extends AndroidInjector<WordPress> {
     void inject(PluginListActivity object);
     void inject(PluginDetailActivity object);
     void inject(PluginBrowserActivity object);
-    void inject(PluginSearchFragment object);
+    void inject(PluginListFragment object);
 
     // Allows us to inject the application without having to instantiate any modules, and provides the Application
     // in the app graph

@@ -133,6 +133,7 @@ public class PluginBrowserActivity extends AppCompatActivity
         configureRecycler(mPopularPluginsRecycler);
         configureRecycler(mNewPluginsRecycler);
 
+        mSitePlugins.addAll(mPluginStore.getSitePlugins(mSite));
         refreshAllPlugins();
 
         if (savedInstanceState == null) {
@@ -220,20 +221,29 @@ public class PluginBrowserActivity extends AppCompatActivity
     }
 
     private void refreshPlugins(@NonNull PluginType pluginType) {
+        PluginBrowserAdapter adapter;
         switch (pluginType) {
-            case SITE:
-                mSitePlugins.clear();
-                mSitePlugins.addAll(mPluginStore.getSitePlugins(mSite));
-                ((PluginBrowserAdapter) mSitePluginsRecycler.getAdapter()).setPlugins(mSitePlugins);
-                break;
             case POPULAR:
-                List<WPOrgPluginModel> popularPlugins = mPluginStore.getPluginDirectory(PluginDirectoryType.POPULAR);;
-                ((PluginBrowserAdapter) mPopularPluginsRecycler.getAdapter()).setPlugins(popularPlugins);
+                adapter = (PluginBrowserAdapter) mPopularPluginsRecycler.getAdapter();
                 break;
             case NEW:
-                List<WPOrgPluginModel> newPlugins = mPluginStore.getPluginDirectory(PluginDirectoryType.NEW);;
-                ((PluginBrowserAdapter) mNewPluginsRecycler.getAdapter()).setPlugins(newPlugins);
+                adapter = (PluginBrowserAdapter) mNewPluginsRecycler.getAdapter();
                 break;
+            default:
+                adapter = (PluginBrowserAdapter) mSitePluginsRecycler.getAdapter();
+                break;
+        }
+        adapter.setPlugins(getPlugins(pluginType));
+    }
+
+    private List<?> getPlugins(@NonNull PluginType pluginType) {
+        switch (pluginType) {
+            case POPULAR:
+                return mPluginStore.getPluginDirectory(PluginDirectoryType.POPULAR);
+            case NEW:
+                return mPluginStore.getPluginDirectory(PluginDirectoryType.NEW);
+            default:
+                return mPluginStore.getSitePlugins(mSite);
         }
     }
 
@@ -244,7 +254,7 @@ public class PluginBrowserActivity extends AppCompatActivity
     }
 
     private SitePluginModel getSitePluginFromSlug(@Nullable String slug) {
-        if (slug != null && mSitePlugins != null) {
+        if (slug != null) {
             for (SitePluginModel plugin : mSitePlugins) {
                 if (slug.equals(plugin.getSlug())) {
                     return plugin;
@@ -324,32 +334,37 @@ public class PluginBrowserActivity extends AppCompatActivity
         return true;
     }
 
-    private PluginSearchFragment getSearchFragment() {
-        Fragment fragment = getFragmentManager().findFragmentByTag(PluginSearchFragment.TAG);
+    private PluginListFragment getOrCreateListFragment() {
+        Fragment fragment = getFragmentManager().findFragmentByTag(PluginListFragment.TAG);
         if (fragment != null) {
-            return (PluginSearchFragment) fragment;
+            return (PluginListFragment) fragment;
         }
-        return null;
+        PluginListFragment listFragment = PluginListFragment.newInstance(mSite);
+        getFragmentManager().beginTransaction()
+                .add(R.id.fragment_container, listFragment, PluginListFragment.TAG)
+                .addToBackStack(null)
+                .commit();
+        return listFragment;
     }
 
-    private boolean hasSearchFragment() {
-        return getSearchFragment() != null;
-    }
-    private void showSearchFragment() {
-        if (!hasSearchFragment()) {
-            getFragmentManager().beginTransaction()
-                    .add(R.id.fragment_container, PluginSearchFragment.newInstance(), PluginSearchFragment.TAG)
-                    .addToBackStack(null)
-                    .commit();
+    private void showListFragment(@NonNull PluginType type) {
+        PluginListFragment listFragment = getOrCreateListFragment();
+        switch (type) {
+            case SITE:
+
         }
     }
 
-    private void submitSearch(String query) {
-        showSearchFragment();
+    private void showListFragmentForQuery(@Nullable String query) {
+        PluginListFragment listFragment = getOrCreateListFragment();
         // TODO: search will be performed in a subsequent PR
     }
 
-    private void hideSearchFragment() {
+    private void submitSearch(String query) {
+        showListFragmentForQuery(query);
+    }
+
+    private void hideListFragment() {
         if (getFragmentManager().getBackStackEntryCount() > 0) {
             getFragmentManager().popBackStack();
         }
@@ -361,18 +376,18 @@ public class PluginBrowserActivity extends AppCompatActivity
 
     @Override
     public boolean onMenuItemActionExpand(MenuItem menuItem) {
-        showSearchFragment();
+        showListFragmentForQuery(null);
         return true;
     }
 
     @Override
     public boolean onMenuItemActionCollapse(MenuItem menuItem) {
-        hideSearchFragment();
+        hideListFragment();
         return true;
     }
 
     private class PluginBrowserAdapter extends RecyclerView.Adapter<ViewHolder> {
-        private final List<Object> mItems = new ArrayList<>();
+        private final PluginList mItems = new PluginList();
         private final LayoutInflater mLayoutInflater;
 
         PluginBrowserAdapter(Context context) {
@@ -380,26 +395,8 @@ public class PluginBrowserActivity extends AppCompatActivity
             setHasStableIds(true);
         }
 
-        boolean isSameList(@NonNull List<?> items) {
-            if (mItems.size() != items.size()) {
-                return false;
-            }
-            for (Object item: items) {
-                if (item instanceof WPOrgPluginModel) {
-                    if (indexOfPluginWithSlug(((WPOrgPluginModel) item).getSlug()) == -1) {
-                        return false;
-                    }
-                } else if (item instanceof SitePluginModel) {
-                    if (indexOfPluginWithSlug(((SitePluginModel) item).getSlug()) == -1) {
-                        return false;
-                    }
-                }
-            }
-            return true;
-        }
-
         void setPlugins(@NonNull List<?> items) {
-            if (isSameList(items)) return;
+            if (mItems.isSameList(items)) return;
 
             mItems.clear();
             mItems.addAll(items);
@@ -429,13 +426,7 @@ public class PluginBrowserActivity extends AppCompatActivity
 
         @Override
         public long getItemId(int position) {
-            Object item = getItem(position);
-            if (item instanceof WPOrgPluginModel) {
-                return ((WPOrgPluginModel) item).getId();
-            } else if (item instanceof SitePluginModel) {
-                return ((SitePluginModel) item).getId();
-            }
-            return -1;
+            return mItems.getItemId(position);
         }
 
         @Override
@@ -507,26 +498,10 @@ public class PluginBrowserActivity extends AppCompatActivity
         }
 
         private void refreshPluginWithSlug(@NonNull String slug) {
-            int index = indexOfPluginWithSlug(slug);
+            int index = mItems.indexOfPluginWithSlug(slug);
             if (index != -1) {
                 notifyItemChanged(index);
             }
-        }
-
-        private int indexOfPluginWithSlug(@NonNull String slug) {
-            for (int i = 0; i < mItems.size(); i++) {
-                Object item = mItems.get(i);
-                String itemSlug;
-                if ((item instanceof  SitePluginModel)) {
-                    itemSlug = ((SitePluginModel) item).getSlug();
-                } else {
-                    itemSlug = ((WPOrgPluginModel) item).getSlug();
-                }
-                if (slug.equalsIgnoreCase(itemSlug)) {
-                    return i;
-                }
-            }
-            return -1;
         }
 
         private class PluginViewHolder extends ViewHolder {
@@ -571,4 +546,5 @@ public class PluginBrowserActivity extends AppCompatActivity
             }
         }
     }
+
 }
