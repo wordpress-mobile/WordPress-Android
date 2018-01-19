@@ -46,6 +46,7 @@ import org.wordpress.android.ui.ActivityId;
 import org.wordpress.android.ui.ActivityLauncher;
 import org.wordpress.android.ui.RequestCodes;
 import org.wordpress.android.ui.accounts.SignInActivity;
+import org.wordpress.android.ui.accounts.SignupEpilogueActivity;
 import org.wordpress.android.ui.notifications.NotificationEvents;
 import org.wordpress.android.ui.notifications.NotificationsListFragment;
 import org.wordpress.android.ui.notifications.adapters.NotesAdapter;
@@ -86,6 +87,7 @@ public class WPMainActivity extends AppCompatActivity {
     public static final String ARG_OLD_SITES_IDS = "ARG_OLD_SITES_IDS";
     public static final String ARG_OPENED_FROM_PUSH = "opened_from_push";
     public static final String ARG_SHOW_LOGIN_EPILOGUE = "show_login_epilogue";
+    public static final String ARG_SHOW_SIGNUP_EPILOGUE = "show_signup_epilogue";
 
     private WPViewPager mViewPager;
     private WPMainTabLayout mTabLayout;
@@ -275,6 +277,12 @@ public class WPMainActivity extends AppCompatActivity {
         } else if (getIntent().getBooleanExtra(ARG_SHOW_LOGIN_EPILOGUE, false) && savedInstanceState == null) {
             ActivityLauncher.showLoginEpilogue(this, getIntent().getBooleanExtra(ARG_DO_LOGIN_UPDATE, false),
                     getIntent().getIntegerArrayListExtra(ARG_OLD_SITES_IDS));
+        } else if (getIntent().getBooleanExtra(ARG_SHOW_SIGNUP_EPILOGUE, false) && savedInstanceState == null) {
+            ActivityLauncher.showSignupEpilogue(this,
+                    getIntent().getStringExtra(SignupEpilogueActivity.EXTRA_SIGNUP_DISPLAY_NAME),
+                    getIntent().getStringExtra(SignupEpilogueActivity.EXTRA_SIGNUP_EMAIL_ADDRESS),
+                    getIntent().getStringExtra(SignupEpilogueActivity.EXTRA_SIGNUP_PHOTO_URL),
+                    getIntent().getStringExtra(SignupEpilogueActivity.EXTRA_SIGNUP_USERNAME));
         }
     }
 
