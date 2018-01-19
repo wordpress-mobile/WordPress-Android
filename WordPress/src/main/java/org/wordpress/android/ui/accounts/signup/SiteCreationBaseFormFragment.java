@@ -44,9 +44,9 @@ public abstract class SiteCreationBaseFormFragment<SiteCreationListenerType> ext
 
     protected ViewGroup createMainView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         ViewGroup rootView = (ViewGroup) inflater.inflate(R.layout.site_creation_form_screen, container, false);
-        ViewStub form_container = ((ViewStub) rootView.findViewById(R.id.site_creation_form_content_stub));
-        form_container.setLayoutResource(getContentLayout());
-        form_container.inflate();
+        ViewStub formContainer = ((ViewStub) rootView.findViewById(R.id.site_creation_form_content_stub));
+        formContainer.setLayoutResource(getContentLayout());
+        formContainer.inflate();
         return rootView;
     }
 
