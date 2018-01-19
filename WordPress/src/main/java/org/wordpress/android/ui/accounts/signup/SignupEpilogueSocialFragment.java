@@ -3,7 +3,6 @@ package org.wordpress.android.ui.accounts.signup;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.net.Uri;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.LayoutRes;
 import android.support.annotation.NonNull;
@@ -187,7 +186,7 @@ public class SignupEpilogueSocialFragment extends LoginBaseFormFragment<SignupEp
 
         if (savedInstanceState == null) {
             AnalyticsTracker.track(AnalyticsTracker.Stat.SIGNUP_SOCIAL_EPILOGUE_VIEWED);
-            new DownloadAvatarAndUploadGravatarTask().execute(mPhotoUrl, mEmailAddress, mAccount.getAccessToken());
+            new DownloadAvatarAndUploadGravatarThread(mPhotoUrl, mEmailAddress, mAccount.getAccessToken()).start();
         } else {
             // Overwrite original display name and username if they have changed.
             mDisplayName = savedInstanceState.getString(KEY_DISPLAY_NAME);
@@ -327,21 +326,23 @@ public class SignupEpilogueSocialFragment extends LoginBaseFormFragment<SignupEp
         }
     }
 
-    private class DownloadAvatarAndUploadGravatarTask extends AsyncTask<String, Void, Void> {
+    private class DownloadAvatarAndUploadGravatarThread extends Thread {
+        private String mEmail;
+        private String mToken;
+        private String mUrl;
+
+        DownloadAvatarAndUploadGravatarThread(String url, String email, String token) {
+            mUrl = url;
+            mEmail = email;
+            mToken = token;
+        }
+
         @Override
-        protected Void doInBackground(String... params) {
-            if (params.length != 3) {
-                return null;
-            }
-
-            String url = params[0];
-            String email = params[1];
-            String token = params[2];
-
+        public void run() {
             try {
-                Uri uri = MediaUtils.downloadExternalMedia(getContext(), Uri.parse(url));
+                Uri uri = MediaUtils.downloadExternalMedia(getContext(), Uri.parse(mUrl));
                 File file = new File(new URI(uri.toString()));
-                GravatarApi.uploadGravatar(file, email, token,
+                GravatarApi.uploadGravatar(file, mEmail, mToken,
                     new GravatarApi.GravatarUploadListener() {
                         @Override
                         public void onSuccess() {
@@ -357,8 +358,6 @@ public class SignupEpilogueSocialFragment extends LoginBaseFormFragment<SignupEp
                 AppLog.e(T.NUX, "Google avatar download and Gravatar upload failed - " +
                         exception.toString() + " - " + exception.getMessage());
             }
-
-            return null;
         }
     }
 }
