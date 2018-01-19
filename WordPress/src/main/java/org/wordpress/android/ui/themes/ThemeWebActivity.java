@@ -108,9 +108,8 @@ public class ThemeWebActivity extends WPWebViewActivity {
                 case DEMO:
                     return site.getAdminUrl() + "themes.php?theme=" + theme.getThemeId();
                 case DETAILS:
-                    return theme.getThemeUrl();
                 case SUPPORT:
-                    return theme.getAuthorUrl();
+                    return theme.getThemeUrl();
             }
         }
         return "";
