@@ -50,7 +50,7 @@
             android:layout_marginTop="@dimen/margin_extra_large"
             android:hint="@string/site_creation_tagline_hint"
             android:inputType="textNoSuggestions"
-            app:wpIconDrawable="@drawable/ic_gridicons_aside"/>
+            app:wpIconDrawable="@drawable/ic_aside_grey_24dp"/>
 
         <TextView
             android:layout_height="wrap_content"
