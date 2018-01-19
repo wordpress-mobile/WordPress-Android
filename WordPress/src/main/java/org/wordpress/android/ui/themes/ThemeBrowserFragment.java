@@ -340,7 +340,7 @@ public class ThemeBrowserFragment extends Fragment
 
     private ThemeBrowserAdapter getAdapter() {
         if (mAdapter == null) {
-            mAdapter = new ThemeBrowserAdapter(getActivity(), mSite.isWPCom(), mCallback);
+            mAdapter = new ThemeBrowserAdapter(getActivity(), mCallback);
         }
         return mAdapter;
     }
