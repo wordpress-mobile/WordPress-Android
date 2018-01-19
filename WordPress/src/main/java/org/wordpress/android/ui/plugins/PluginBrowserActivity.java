@@ -151,7 +151,6 @@ public class PluginBrowserActivity extends AppCompatActivity
 
         boolean isLandscape = DisplayUtils.isLandscape(this);
         int displayWidth = DisplayUtils.getDisplayPixelWidth(this);
-        int displayHeight = DisplayUtils.getDisplayPixelHeight(this);
         int maxRows = isLandscape ? 6 : 4;
         mRowWidth = Math.round(displayWidth / (maxRows - 0.4f));
         mIconSize = mRowWidth;
@@ -227,11 +226,11 @@ public class PluginBrowserActivity extends AppCompatActivity
 
     private void fetchAllPlugins() {
         for (PluginListType pluginType: PluginListType.values()) {
-            fetchPlugins(pluginType);
+            fetchPlugins(pluginType, false);
         }
     }
 
-    private void fetchPlugins(@NonNull PluginListType pluginType) {
+    private void fetchPlugins(@NonNull PluginListType pluginType, boolean loadMore) {
         switch (pluginType) {
             case SITE:
                 if (mPluginStore.getSitePlugins(mSite).size() == 0) {
@@ -241,12 +240,12 @@ public class PluginBrowserActivity extends AppCompatActivity
                 break;
             case POPULAR:
                 PluginStore.FetchPluginDirectoryPayload popularPayload =
-                        new PluginStore.FetchPluginDirectoryPayload(PluginDirectoryType.POPULAR, false);
+                        new PluginStore.FetchPluginDirectoryPayload(PluginDirectoryType.POPULAR, loadMore);
                 mDispatcher.dispatch(PluginActionBuilder.newFetchPluginDirectoryAction(popularPayload));
                 break;
             case NEW:
                 PluginStore.FetchPluginDirectoryPayload newPayload =
-                        new PluginStore.FetchPluginDirectoryPayload(PluginDirectoryType.NEW, false);
+                        new PluginStore.FetchPluginDirectoryPayload(PluginDirectoryType.NEW, loadMore);
                 mDispatcher.dispatch(PluginActionBuilder.newFetchPluginDirectoryAction(newPayload));
                 break;
         }
@@ -340,22 +339,28 @@ public class PluginBrowserActivity extends AppCompatActivity
     }
 
     @SuppressWarnings("unused")
-    @Subscribe
+    @Subscribe(threadMode = ThreadMode.MAIN)
     public void onPluginDirectoryFetched(PluginStore.OnPluginDirectoryFetched event) {
         if (isFinishing()) {
             return;
         }
+
         if (event.isError()) {
             AppLog.e(AppLog.T.API, "An error occurred while fetching the plugin directory: " + event.type);
-            return;
+        } else {
+            switch (event.type) {
+                case POPULAR:
+                    refreshPlugins(PluginListType.POPULAR);
+                    break;
+                case NEW:
+                    refreshPlugins(PluginListType.NEW);
+                    break;
+            }
         }
-        switch (event.type) {
-            case POPULAR:
-                refreshPlugins(PluginListType.POPULAR);
-                break;
-            case NEW:
-                refreshPlugins(PluginListType.NEW);
-                break;
+
+        PluginListFragment fragment = getListFragment();
+        if (fragment != null) {
+            fragment.onLoadedMore(event.canLoadMore);
         }
     }
 
@@ -380,14 +385,18 @@ public class PluginBrowserActivity extends AppCompatActivity
         return true;
     }
 
-    private boolean hasListFragment() {
-        return getFragmentManager().findFragmentByTag(PluginListFragment.TAG) != null;
+    private PluginListFragment getListFragment() {
+        Fragment fragment = getFragmentManager().findFragmentByTag(PluginListFragment.TAG);
+        if (fragment != null) {
+            return (PluginListFragment) fragment;
+        }
+        return null;
     }
 
     private void showListFragment(@NonNull PluginListType listType) {
         PluginListFragment listFragment;
 
-        Fragment fragment = getFragmentManager().findFragmentByTag(PluginListFragment.TAG);
+        Fragment fragment = getListFragment();
         if (fragment != null) {
             listFragment = (PluginListFragment) fragment;
             listFragment.setListType(listType);
@@ -416,9 +425,16 @@ public class PluginBrowserActivity extends AppCompatActivity
     }
 
     @Override
-    public List<?> onListFragmentRequestPlugins(@NonNull PluginListType listType) {
+    public List<?> onListFragmentRequestPlugins(@NonNull PluginListFragment fragment) {
+        PluginListType listType = fragment.getListType();
         setTitle(listType.getTitleRes());
         return getPlugins(listType);
+    }
+
+    @Override
+    public void onListFragmentLoadMore(@NonNull PluginListFragment fragment) {
+        PluginListType listType = fragment.getListType();
+        fetchPlugins(listType, true);
     }
 
     private void showProgress(boolean show) {
@@ -583,10 +599,10 @@ public class PluginBrowserActivity extends AppCompatActivity
                     public void onClick(View v) {
                         int position = getAdapterPosition();
                         Object item = getItem(position);
-                        SitePluginModel sitePlugin;
+                        SitePluginModel sitePlugin = null;
                         if (item instanceof SitePluginModel) {
                             sitePlugin = (SitePluginModel) item;
-                        } else {
+                        } else if (item instanceof WPOrgPluginModel) {
                             WPOrgPluginModel wpOrgPlugin = (WPOrgPluginModel) item;
                             sitePlugin = getSitePluginFromSlug(wpOrgPlugin.getSlug());
                         }

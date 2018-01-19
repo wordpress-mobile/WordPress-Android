@@ -40,11 +40,15 @@ public class PluginListFragment extends Fragment {
     private static final String ARG_LIST_TYPE = "list_type";
 
     public interface PluginListFragmentListener {
-        List<?> onListFragmentRequestPlugins(@NonNull PluginListType listType);
+        List<?> onListFragmentRequestPlugins(@NonNull PluginListFragment fragment);
+        void onListFragmentLoadMore(@NonNull PluginListFragment fragment);
     }
 
     private RecyclerView mRecycler;
     private PluginListType mListType;
+
+    private boolean mCanLoadMore = true;
+    private boolean mIsLoadingMore;
 
     private SiteModel mSite;
     private final List<SitePluginModel> mSitePlugins = new ArrayList<>();
@@ -96,15 +100,24 @@ public class PluginListFragment extends Fragment {
     }
 
     private void requestPlugins() {
-        setPlugins(mListener.onListFragmentRequestPlugins(mListType));
+        setPlugins(mListener.onListFragmentRequestPlugins(this));
     }
 
     void setListType(@NonNull PluginListType listType) {
+        // site plugins are retrieved all at once
+        if (listType == PluginListType.SITE) {
+            mCanLoadMore = false;
+        }
+
         if (!listType.equals(mListType)) {
             mListType = listType;
             getArguments().putSerializable(ARG_LIST_TYPE, mListType);
             requestPlugins();
         }
+    }
+
+    PluginListType getListType() {
+        return mListType;
     }
 
     private void setPlugins(@NonNull List<?> plugins) {
@@ -122,6 +135,33 @@ public class PluginListFragment extends Fragment {
             }
         }
         return null;
+    }
+
+    private void showProgress(boolean show) {
+        if (isAdded()) {
+            getView().findViewById(R.id.progress).setVisibility(show ? View.VISIBLE : View.GONE);
+        }
+    }
+
+    boolean isEmpty() {
+        if (isAdded() && mRecycler != null && mRecycler.getAdapter() != null) {
+            return mRecycler.getAdapter().getItemCount() == 0;
+        }
+        return true;
+    }
+
+    private void loadMore() {
+        showProgress(true);
+        mIsLoadingMore = true;
+        mListener.onListFragmentLoadMore(PluginListFragment.this);
+    }
+
+    void onLoadedMore(boolean canLoadMore) {
+        mCanLoadMore = canLoadMore;
+        if (isAdded()) {
+            showProgress(false);
+            requestPlugins();
+        }
     }
 
     private class PluginListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
@@ -210,6 +250,12 @@ public class PluginListFragment extends Fragment {
                 holder.statusIcon.setVisibility(View.GONE);
                 holder.ratingBar.setVisibility(View.VISIBLE);
                 holder.ratingBar.setRating(PluginUtils.getAverageStarRating(wpOrgPlugin));
+            }
+
+            if (mCanLoadMore
+                    && !mIsLoadingMore
+                    && position == getItemCount() - 1) {
+                loadMore();
             }
         }
 
