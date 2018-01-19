@@ -151,6 +151,7 @@ public class SignupEpilogueSocialFragment extends LoginBaseFormFragment<SignupEp
                 // Consume keyboard events except for Enter (i.e. click/tap) and Tab (i.e. focus/navigation).
                 // The onKey method returns true if the listener has consumed the event and false otherwise
                 // allowing hardware keyboard users to tap and navigate, but not input text as expected.
+                // This allows the username changer to launch using the keyboard.
                 return !(keyCode == KeyEvent.KEYCODE_ENTER || keyCode == KeyEvent.KEYCODE_TAB);
             }
         });
