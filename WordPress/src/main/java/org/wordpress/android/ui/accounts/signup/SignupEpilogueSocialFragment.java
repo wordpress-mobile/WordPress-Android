@@ -287,6 +287,7 @@ public class SignupEpilogueSocialFragment extends LoginBaseFormFragment<SignupEp
                     case DialogInterface.BUTTON_POSITIVE:
                         updateAccountOrContinue();
                         break;
+                    // DialogInterface.BUTTON_NEUTRAL is intentionally ignored.  Just dismiss dialog.
                 }
             }
         };
