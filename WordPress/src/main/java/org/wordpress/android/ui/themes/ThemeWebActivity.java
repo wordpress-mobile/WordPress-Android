@@ -45,7 +45,7 @@ public class ThemeWebActivity extends WPWebViewActivity {
 
     public static void openTheme(Activity activity, SiteModel site, ThemeModel theme, ThemeWebActivityType type) {
         String url = getUrl(site, theme, type, false);
-        if (type == ThemeWebActivityType.PREVIEW) {
+        if (type == ThemeWebActivityType.PREVIEW || !url.contains("wordpress.com")) {
             // Do not open the Customizer with the in-app browser.
             // Customizer may need to access local files (mostly pictures) on the device storage,
             // and our internal webview doesn't handle this feature yet.
@@ -85,6 +85,10 @@ public class ThemeWebActivity extends WPWebViewActivity {
                 String domain = isPremium ? THEME_DOMAIN_PREMIUM : THEME_DOMAIN_PUBLIC;
                 return String.format(THEME_URL_PREVIEW, UrlUtils.getHost(site.getUrl()), domain, theme.getThemeId());
             case DEMO:
+                // demo URL may be empty for installed themes on .org sites
+                if (TextUtils.isEmpty(theme.getDemoUrl())) {
+                    return site.getAdminUrl() + "themes.php?theme=" + theme.getThemeId();
+                }
                 String url = theme.getDemoUrl();
                 if (url.contains("?")) {
                     return url + "&" + THEME_URL_DEMO_PARAMETER;
