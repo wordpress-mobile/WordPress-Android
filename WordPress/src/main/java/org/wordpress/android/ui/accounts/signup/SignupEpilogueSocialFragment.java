@@ -96,6 +96,7 @@ public class SignupEpilogueSocialFragment extends LoginBaseFormFragment<SignupEp
 
     @Override
     protected void setupLabel(@NonNull TextView label) {
+        // no label in this screen
     }
 
     @Override
