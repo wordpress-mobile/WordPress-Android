@@ -69,10 +69,8 @@ public class SignupEpilogueSocialFragment extends LoginBaseFormFragment<SignupEp
 
     public static final String TAG = "signup_epilogue_fragment_tag";
 
-    @Inject
-    protected AccountStore mAccount;
-    @Inject
-    protected Dispatcher mDispatcher;
+    @Inject protected AccountStore mAccount;
+    @Inject protected Dispatcher mDispatcher;
 
     public static SignupEpilogueSocialFragment newInstance(String displayName, String emailAddress,
                                                            String photoUrl, String username) {
