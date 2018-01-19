@@ -86,7 +86,7 @@ public class SignupEpilogueSocialFragment extends LoginBaseFormFragment<SignupEp
 
     @Override
     protected @LayoutRes int getContentLayout() {
-        return 0;
+        return 0;  // no content layout; entire view is inflated in createMainView
     }
 
     @Override
