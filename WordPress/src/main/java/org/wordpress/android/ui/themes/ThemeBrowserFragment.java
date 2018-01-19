@@ -334,7 +334,6 @@ public class ThemeBrowserFragment extends Fragment
             return getSortedWpComThemes();
         }
 
-        // this is a Jetpack site, show two sections with headers
         return getSortedJetpackThemes();
     }
 
