@@ -35,6 +35,7 @@
         android:paddingTop="@dimen/margin_medium_large"
         android:paddingBottom="@dimen/margin_medium_large"
         android:layout_alignParentBottom="true"
+        android:background="@color/grey_lighten_30"
         android:clipToPadding="false"
         android:visibility="gone"
         tools:visibility="visible">
