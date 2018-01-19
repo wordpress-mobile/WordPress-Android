@@ -622,8 +622,11 @@ public class LoginActivity extends AppCompatActivity implements ConnectionCallba
     }
 
     @Override
-    public void onGoogleSignupFinished(String name, String email, String photoUrl) {
-        // TODO: Send data returned from Google API to signup epilogue.
+    public void onGoogleSignupFinished(String name, String email, String photoUrl, String username) {
+        AnalyticsTracker.track(AnalyticsTracker.Stat.SIGNUP_SOCIAL_SUCCESS);
+        ActivityLauncher.showMainActivityAndSignupEpilogue(this, name, email, photoUrl, username);
+        setResult(Activity.RESULT_OK);
+        finish();
     }
 
     private void dismissSignupSheet() {

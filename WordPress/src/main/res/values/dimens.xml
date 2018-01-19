@@ -333,6 +333,7 @@
     <dimen name="promo_indicator_bullet_size">4dp</dimen>
     <dimen name="magic_link_sent_illustration_sz">120dp</dimen>
 
+    <dimen name="button_container_shadow_height">5dp</dimen>
 
     <dimen name="bottom_sheet_dialog_width">0dp</dimen>
 

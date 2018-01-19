@@ -15,16 +15,16 @@ import android.text.TextUtils;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.analytics.AnalyticsTracker;
-import org.wordpress.android.fluxc.model.SitePluginModel;
 import org.wordpress.android.fluxc.model.PostModel;
 import org.wordpress.android.fluxc.model.SiteModel;
+import org.wordpress.android.fluxc.model.SitePluginModel;
 import org.wordpress.android.login.LoginMode;
 import org.wordpress.android.networking.SSLCertsViewActivity;
 import org.wordpress.android.ui.accounts.HelpActivity;
 import org.wordpress.android.ui.accounts.LoginActivity;
 import org.wordpress.android.ui.accounts.LoginEpilogueActivity;
-import org.wordpress.android.ui.accounts.NewBlogActivity;
 import org.wordpress.android.ui.accounts.SignInActivity;
+import org.wordpress.android.ui.accounts.SignupEpilogueActivity;
 import org.wordpress.android.ui.accounts.SiteCreationActivity;
 import org.wordpress.android.ui.comments.CommentsActivity;
 import org.wordpress.android.ui.main.SitePickerActivity;
@@ -76,6 +76,18 @@ public class ActivityLauncher {
         intent.putExtra(WPMainActivity.ARG_DO_LOGIN_UPDATE, doLoginUpdate);
         intent.putExtra(WPMainActivity.ARG_SHOW_LOGIN_EPILOGUE, true);
         intent.putIntegerArrayListExtra(WPMainActivity.ARG_OLD_SITES_IDS, oldSitesIds);
+        activity.startActivity(intent);
+    }
+
+    public static void showMainActivityAndSignupEpilogue(Activity activity, String name, String email, String photoUrl,
+                                                         String username) {
+        Intent intent = new Intent(activity, WPMainActivity.class);
+        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        intent.putExtra(WPMainActivity.ARG_SHOW_SIGNUP_EPILOGUE, true);
+        intent.putExtra(SignupEpilogueActivity.EXTRA_SIGNUP_DISPLAY_NAME, name);
+        intent.putExtra(SignupEpilogueActivity.EXTRA_SIGNUP_EMAIL_ADDRESS, email);
+        intent.putExtra(SignupEpilogueActivity.EXTRA_SIGNUP_PHOTO_URL, photoUrl);
+        intent.putExtra(SignupEpilogueActivity.EXTRA_SIGNUP_USERNAME, username);
         activity.startActivity(intent);
     }
 
@@ -328,6 +340,15 @@ public class ActivityLauncher {
         intent.putExtra(LoginEpilogueActivity.EXTRA_SHOW_AND_RETURN, showAndReturn);
         intent.putIntegerArrayListExtra(LoginEpilogueActivity.ARG_OLD_SITES_IDS, oldSitesIds);
         activity.startActivityForResult(intent, RequestCodes.SHOW_LOGIN_EPILOGUE_AND_RETURN);
+    }
+
+    public static void showSignupEpilogue(Activity activity, String name, String email, String photoUrl, String username) {
+        Intent intent = new Intent(activity, SignupEpilogueActivity.class);
+        intent.putExtra(SignupEpilogueActivity.EXTRA_SIGNUP_DISPLAY_NAME, name);
+        intent.putExtra(SignupEpilogueActivity.EXTRA_SIGNUP_EMAIL_ADDRESS, email);
+        intent.putExtra(SignupEpilogueActivity.EXTRA_SIGNUP_PHOTO_URL, photoUrl);
+        intent.putExtra(SignupEpilogueActivity.EXTRA_SIGNUP_USERNAME, username);
+        activity.startActivity(intent);
     }
 
     public static void viewStatsSinglePostDetails(Context context, SiteModel site, PostModel post, boolean isPage) {

@@ -22,7 +22,8 @@
         android:id="@+id/site_creation_form_content_stub"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/toolbar"/>
+        android:layout_below="@+id/toolbar"
+        android:layout_above="@+id/bottom_buttons"/>
 
     <RelativeLayout
         android:id="@+id/bottom_buttons"
@@ -35,6 +36,7 @@
         android:paddingTop="@dimen/margin_medium_large"
         android:paddingBottom="@dimen/margin_medium_large"
         android:layout_alignParentBottom="true"
+        android:background="@color/grey_lighten_30"
         android:clipToPadding="false"
         android:visibility="gone"
         tools:visibility="visible">
