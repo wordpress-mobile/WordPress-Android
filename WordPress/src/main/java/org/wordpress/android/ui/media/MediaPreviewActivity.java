@@ -193,6 +193,7 @@ public class MediaPreviewActivity extends AppCompatActivity implements MediaPrev
     @Override
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
+        outState.putSerializable(WordPress.SITE, mSite);
         outState.putInt(MediaPreviewFragment.ARG_MEDIA_ID, mMediaId);
         outState.putString(MediaPreviewFragment.ARG_MEDIA_CONTENT_URI, mContentUri);
         if (mMediaIdList != null) {
