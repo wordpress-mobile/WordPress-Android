@@ -45,7 +45,11 @@ public class ThemeWebActivity extends WPWebViewActivity {
 
     public static void openTheme(Activity activity, SiteModel site, ThemeModel theme, ThemeWebActivityType type) {
         String url = getUrl(site, theme, type, false);
-        if (type == ThemeWebActivityType.PREVIEW || !url.contains("wordpress.com")) {
+        if (TextUtils.isEmpty(url)) {
+            ToastUtils.showToast(activity, R.string.could_not_load_theme);
+            return;
+        }
+        if (type == ThemeWebActivityType.PREVIEW || !theme.isWpComTheme()) {
             // Do not open the Customizer with the in-app browser.
             // Customizer may need to access local files (mostly pictures) on the device storage,
             // and our internal webview doesn't handle this feature yet.
@@ -80,28 +84,36 @@ public class ThemeWebActivity extends WPWebViewActivity {
     }
 
     public static String getUrl(SiteModel site, ThemeModel theme, ThemeWebActivityType type, boolean isPremium) {
-        switch (type) {
-            case PREVIEW:
-                String domain = isPremium ? THEME_DOMAIN_PREMIUM : THEME_DOMAIN_PUBLIC;
-                return String.format(THEME_URL_PREVIEW, UrlUtils.getHost(site.getUrl()), domain, theme.getThemeId());
-            case DEMO:
-                // demo URL may be empty for installed themes on .org sites
-                if (TextUtils.isEmpty(theme.getDemoUrl())) {
+        if (theme.isWpComTheme()) {
+            switch (type) {
+                case PREVIEW:
+                    String domain = isPremium ? THEME_DOMAIN_PREMIUM : THEME_DOMAIN_PUBLIC;
+                    return String.format(THEME_URL_PREVIEW, UrlUtils.getHost(site.getUrl()), domain, theme.getThemeId());
+                case DEMO:
+                    String url = theme.getDemoUrl();
+                    if (url.contains("?")) {
+                        return url + "&" + THEME_URL_DEMO_PARAMETER;
+                    } else {
+                        return url + "?" + THEME_URL_DEMO_PARAMETER;
+                    }
+                case DETAILS:
+                    return String.format(THEME_URL_DETAILS, theme.getThemeId());
+                case SUPPORT:
+                    return String.format(THEME_URL_SUPPORT, theme.getThemeId());
+            }
+        } else {
+            switch (type) {
+                case PREVIEW:
+                    return site.getAdminUrl() + "customize.php?theme=" + theme.getThemeId();
+                case DEMO:
                     return site.getAdminUrl() + "themes.php?theme=" + theme.getThemeId();
-                }
-                String url = theme.getDemoUrl();
-                if (url.contains("?")) {
-                    return url + "&" + THEME_URL_DEMO_PARAMETER;
-                } else {
-                    return url + "?" + THEME_URL_DEMO_PARAMETER;
-                }
-            case DETAILS:
-                return String.format(THEME_URL_DETAILS, theme.getThemeId());
-            case SUPPORT:
-                return String.format(THEME_URL_SUPPORT, theme.getThemeId());
-            default:
-                return "";
+                case DETAILS:
+                    return theme.getThemeUrl();
+                case SUPPORT:
+                    return theme.getAuthorUrl();
+            }
         }
+        return "";
     }
 
     @Override
