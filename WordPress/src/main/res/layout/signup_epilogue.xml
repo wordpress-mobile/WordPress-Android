@@ -77,7 +77,7 @@
                     </org.wordpress.android.widgets.WPTextView>
 
                     <org.wordpress.android.widgets.WPTextView
-                        android:id="@+id/signup_epilogue_header_username"
+                        android:id="@+id/signup_epilogue_header_email"
                         android:focusable="true"
                         android:focusableInTouchMode="true"
                         android:gravity="center_horizontal"

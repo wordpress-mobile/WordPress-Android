@@ -110,7 +110,7 @@ public class SignupEpilogueSocialFragment extends LoginBaseFormFragment<SignupEp
         headerAvatar.setImageUrl(mPhotoUrl, WPNetworkImageView.ImageType.AVATAR);
         final WPTextView headerDisplayName = (WPTextView) rootView.findViewById(R.id.signup_epilogue_header_display);
         headerDisplayName.setText(mDisplayName);
-        final WPTextView headerEmailAddress = (WPTextView) rootView.findViewById(R.id.signup_epilogue_header_username);
+        final WPTextView headerEmailAddress = (WPTextView) rootView.findViewById(R.id.signup_epilogue_header_email);
         headerEmailAddress.setText(mEmailAddress);
         mInputDisplayName = (WPLoginInputRow) rootView.findViewById(R.id.signup_epilogue_input_display);
         mInputDisplayName.getEditText().setText(mDisplayName);
