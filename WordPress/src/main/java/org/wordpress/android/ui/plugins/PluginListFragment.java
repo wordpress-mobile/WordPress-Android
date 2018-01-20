@@ -121,8 +121,13 @@ public class PluginListFragment extends Fragment {
     }
 
     private void setPlugins(@NonNull List<?> plugins) {
-        PluginListAdapter adapter = new PluginListAdapter(getActivity());
-        mRecycler.setAdapter(adapter);
+        PluginListAdapter adapter;
+        if (mRecycler.getAdapter() == null) {
+            adapter = new PluginListAdapter(getActivity());
+            mRecycler.setAdapter(adapter);
+        } else {
+            adapter = (PluginListAdapter) mRecycler.getAdapter();
+        }
         adapter.setPlugins(plugins);
     }
 
@@ -174,9 +179,11 @@ public class PluginListFragment extends Fragment {
         }
 
         public void setPlugins(List<?> plugins) {
-            mItems.clear();
-            mItems.addAll(plugins);
-            notifyDataSetChanged();
+            if (!mItems.isSameList(plugins)) {
+                mItems.clear();
+                mItems.addAll(plugins);
+                notifyDataSetChanged();
+            }
         }
 
         private Object getItem(int position) {
