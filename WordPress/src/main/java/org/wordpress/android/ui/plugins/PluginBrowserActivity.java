@@ -599,16 +599,19 @@ public class PluginBrowserActivity extends AppCompatActivity
                     public void onClick(View v) {
                         int position = getAdapterPosition();
                         Object item = getItem(position);
-                        SitePluginModel sitePlugin = null;
+                        SitePluginModel sitePlugin;
+                        WPOrgPluginModel wpOrgPlugin;
                         if (item instanceof SitePluginModel) {
                             sitePlugin = (SitePluginModel) item;
-                        } else if (item instanceof WPOrgPluginModel) {
-                            WPOrgPluginModel wpOrgPlugin = (WPOrgPluginModel) item;
+                            wpOrgPlugin = mPluginStore.getWPOrgPluginBySlug(sitePlugin.getSlug());
+                        } else {
+                            wpOrgPlugin = (WPOrgPluginModel) item;
                             sitePlugin = getSitePluginFromSlug(wpOrgPlugin.getSlug());
                         }
-                        // TODO: show detail for WPOrgPlugin
                         if (sitePlugin != null) {
                             ActivityLauncher.viewPluginDetail(PluginBrowserActivity.this, mSite, sitePlugin);
+                        } else if (wpOrgPlugin != null) {
+                            ActivityLauncher.viewPluginDetail(PluginBrowserActivity.this, mSite, wpOrgPlugin);
                         }
                     }
                 });

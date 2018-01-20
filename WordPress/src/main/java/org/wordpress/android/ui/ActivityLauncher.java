@@ -18,6 +18,7 @@ import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.fluxc.model.PostModel;
 import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.model.plugin.SitePluginModel;
+import org.wordpress.android.fluxc.model.plugin.WPOrgPluginModel;
 import org.wordpress.android.login.LoginMode;
 import org.wordpress.android.networking.SSLCertsViewActivity;
 import org.wordpress.android.ui.accounts.HelpActivity;
@@ -178,6 +179,17 @@ public class ActivityLauncher {
             Intent intent = new Intent(context, PluginDetailActivity.class);
             intent.putExtra(WordPress.SITE, site);
             intent.putExtra(PluginDetailActivity.KEY_PLUGIN_NAME, plugin.getName());
+            intent.putExtra(PluginDetailActivity.KEY_PLUGIN_SLUG, plugin.getSlug());
+            context.startActivity(intent);
+        }
+    }
+
+    public static void viewPluginDetail(Context context, SiteModel site, WPOrgPluginModel plugin) {
+        if (PluginUtils.isPluginFeatureAvailable(site)) {
+            Intent intent = new Intent(context, PluginDetailActivity.class);
+            intent.putExtra(WordPress.SITE, site);
+            intent.putExtra(PluginDetailActivity.KEY_PLUGIN_NAME, plugin.getName());
+            intent.putExtra(PluginDetailActivity.KEY_PLUGIN_SLUG, plugin.getSlug());
             context.startActivity(intent);
         }
     }

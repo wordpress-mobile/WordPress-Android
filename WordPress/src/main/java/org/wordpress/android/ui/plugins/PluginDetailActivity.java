@@ -78,6 +78,7 @@ import static org.wordpress.android.widgets.WPNetworkImageView.ImageType.PLUGIN_
 
 public class PluginDetailActivity extends AppCompatActivity {
     public static final String KEY_PLUGIN_NAME = "KEY_PLUGIN_NAME";
+    public static final String KEY_PLUGIN_SLUG = "KEY_PLUGIN_SLUG";
     private static final String KEY_IS_CONFIGURING_PLUGIN = "KEY_IS_CONFIGURING_PLUGIN";
     private static final String KEY_IS_UPDATING_PLUGIN = "KEY_IS_UPDATING_PLUGIN";
     private static final String KEY_IS_REMOVING_PLUGIN = "KEY_IS_REMOVING_PLUGIN";
@@ -132,13 +133,15 @@ public class PluginDetailActivity extends AppCompatActivity {
         mDispatcher.register(this);
 
         String pluginName;
-
+        String pluginSlug;
         if (savedInstanceState == null) {
             mSite = (SiteModel) getIntent().getSerializableExtra(WordPress.SITE);
             pluginName = getIntent().getStringExtra(KEY_PLUGIN_NAME);
+            pluginSlug = getIntent().getStringExtra(KEY_PLUGIN_SLUG);
         } else {
             mSite = (SiteModel) savedInstanceState.getSerializable(WordPress.SITE);
             pluginName = savedInstanceState.getString(KEY_PLUGIN_NAME);
+            pluginSlug = savedInstanceState.getString(KEY_PLUGIN_SLUG);
         }
 
         if (mSite == null) {
@@ -148,15 +151,17 @@ public class PluginDetailActivity extends AppCompatActivity {
         }
 
         mSitePlugin = mPluginStore.getSitePluginByName(mSite, pluginName);
-        if (mSitePlugin == null) {
+        mWPOrgPlugin = mPluginStore.getWPOrgPluginBySlug(pluginSlug);
+
+        if (mSitePlugin == null && mWPOrgPlugin == null) {
             ToastUtils.showToast(this, R.string.plugin_not_found, Duration.SHORT);
             finish();
             return;
         }
 
         if (savedInstanceState == null) {
-            mIsActive = mSitePlugin.isActive();
-            mIsAutoUpdateEnabled = mSitePlugin.isAutoUpdateEnabled();
+            mIsActive = mSitePlugin != null && mSitePlugin.isActive();
+            mIsAutoUpdateEnabled = mSitePlugin != null && mSitePlugin.isAutoUpdateEnabled();
         } else {
             mIsConfiguringPlugin = savedInstanceState.getBoolean(KEY_IS_CONFIGURING_PLUGIN);
             mIsUpdatingPlugin = savedInstanceState.getBoolean(KEY_IS_UPDATING_PLUGIN);
@@ -166,8 +171,6 @@ public class PluginDetailActivity extends AppCompatActivity {
             mIsShowingRemovePluginConfirmationDialog =
                     savedInstanceState.getBoolean(KEY_IS_SHOWING_REMOVE_PLUGIN_CONFIRMATION_DIALOG);
         }
-
-        mWPOrgPlugin = PluginUtils.getWPOrgPlugin(mPluginStore, mSitePlugin);
 
         setContentView(R.layout.plugin_detail_activity);
 
@@ -191,7 +194,7 @@ public class PluginDetailActivity extends AppCompatActivity {
             showRemovePluginProgressDialog();
         } else if (savedInstanceState == null) {
             // Refresh the plugin information to check if there is a newer version
-            mDispatcher.dispatch(PluginActionBuilder.newFetchWporgPluginAction(mSitePlugin.getSlug()));
+            mDispatcher.dispatch(PluginActionBuilder.newFetchWporgPluginAction(pluginSlug));
         }
     }
 
@@ -296,7 +299,7 @@ public class PluginDetailActivity extends AppCompatActivity {
         });
 
         // expand "what's new" if there's an update available
-        if (PluginUtils.isUpdateAvailable(mSitePlugin, mWPOrgPlugin)) {
+        if (mSitePlugin != null && PluginUtils.isUpdateAvailable(mSitePlugin, mWPOrgPlugin)) {
             toggleText(mWhatsNewTextView, mWhatsNewChevron);
         }
 
@@ -370,7 +373,8 @@ public class PluginDetailActivity extends AppCompatActivity {
         findViewById(R.id.plugin_home_page).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                ActivityLauncher.openUrlExternal(PluginDetailActivity.this, mSitePlugin.getPluginUrl());
+                String url = mSitePlugin != null ? mSitePlugin.getPluginUrl() : mWPOrgPlugin.getHomepageUrl();
+                ActivityLauncher.openUrlExternal(PluginDetailActivity.this, url);
             }
         });
 
@@ -385,21 +389,8 @@ public class PluginDetailActivity extends AppCompatActivity {
     }
 
     private void refreshViews() {
-        mTitleTextView.setText(mSitePlugin.getDisplayName());
-
-        if (TextUtils.isEmpty(mSitePlugin.getAuthorUrl())) {
-            mByLineTextView.setText(String.format(getString(R.string.plugin_byline), mSitePlugin.getAuthorName()));
-        } else {
-            String authorLink = "<a href='" + mSitePlugin.getAuthorUrl() + "'>" + mSitePlugin.getAuthorName() + "</a>";
-            String byline = String.format(getString(R.string.plugin_byline), authorLink);
-            mByLineTextView.setMovementMethod(WPLinkMovementMethod.getInstance());
-            mByLineTextView.setText(Html.fromHtml(byline));
-        }
-
-        mSwitchActive.setChecked(mIsActive);
-        mSwitchAutoupdates.setChecked(mIsAutoUpdateEnabled);
-
         if (mWPOrgPlugin != null) {
+            mTitleTextView.setText(mWPOrgPlugin.getName());
             mImageBanner.setImageUrl(mWPOrgPlugin.getBanner(), PHOTO);
             mImageIcon.setImageUrl(mWPOrgPlugin.getIcon(), PLUGIN_ICON);
 
@@ -408,9 +399,25 @@ public class PluginDetailActivity extends AppCompatActivity {
             setCollapsibleHtmlText(mWhatsNewTextView, mWPOrgPlugin.getWhatsNewAsHtml());
             setCollapsibleHtmlText(mFaqTextView, mWPOrgPlugin.getFaqAsHtml());
 
+            mByLineTextView.setMovementMethod(WPLinkMovementMethod.getInstance());
+            mByLineTextView.setText(Html.fromHtml(mWPOrgPlugin.getAuthorAsHtml()));
+
             refreshPluginVersionViews();
             refreshRatingsViews();
+        } else {
+            mTitleTextView.setText(mSitePlugin.getDisplayName());
+            if (TextUtils.isEmpty(mSitePlugin.getAuthorUrl())) {
+                mByLineTextView.setText(String.format(getString(R.string.plugin_byline), mSitePlugin.getAuthorName()));
+            } else {
+                String authorLink = "<a href='" + mSitePlugin.getAuthorUrl() + "'>" + mSitePlugin.getAuthorName() + "</a>";
+                String byline = String.format(getString(R.string.plugin_byline), authorLink);
+                mByLineTextView.setMovementMethod(WPLinkMovementMethod.getInstance());
+                mByLineTextView.setText(Html.fromHtml(byline));
+            }
         }
+
+        mSwitchActive.setChecked(mIsActive);
+        mSwitchAutoupdates.setChecked(mIsAutoUpdateEnabled);
     }
 
     private void setCollapsibleHtmlText(@NonNull TextView textView, @Nullable String htmlText) {
@@ -424,6 +431,14 @@ public class PluginDetailActivity extends AppCompatActivity {
     }
 
     private void refreshPluginVersionViews() {
+        if (mSitePlugin == null) {
+            mVersionTopTextView.setVisibility(View.GONE);
+            mVersionBottomTextView.setVisibility(View.GONE);
+            return;
+        }
+
+        mVersionTopTextView.setVisibility(View.VISIBLE);
+
         String pluginVersion = TextUtils.isEmpty(mSitePlugin.getVersion()) ? "?" : mSitePlugin.getVersion();
         String installedVersion;
 
@@ -753,10 +768,8 @@ public class PluginDetailActivity extends AppCompatActivity {
                     + event.error.type);
             return;
         }
-        if (!TextUtils.isEmpty(mSitePlugin.getSlug()) && mSitePlugin.getSlug().equals(event.pluginSlug)) {
-            mWPOrgPlugin = mPluginStore.getWPOrgPluginBySlug(event.pluginSlug);
-            refreshViews();
-        }
+        mWPOrgPlugin = mPluginStore.getWPOrgPluginBySlug(event.pluginSlug);
+        refreshViews();
     }
 
     @SuppressWarnings("unused")
@@ -821,6 +834,10 @@ public class PluginDetailActivity extends AppCompatActivity {
     }
 
     private boolean canPluginBeDisabledOrRemoved() {
+        if (mSitePlugin == null) {
+            return false;
+        }
+
         String pluginName = mSitePlugin.getName();
         // Disable removing jetpack as the site will stop working in the client
         if (pluginName.equals("jetpack/jetpack")) {
@@ -833,14 +850,24 @@ public class PluginDetailActivity extends AppCompatActivity {
 
     // only show settings for active plugins on .org sites
     private boolean canShowSettings() {
-        return mSitePlugin.isActive() && !mSite.isJetpackConnected() && !TextUtils.isEmpty(mSitePlugin.getSettingsUrl());
+        return mSitePlugin != null
+                && mSitePlugin.isActive()
+                && !mSite.isJetpackConnected()
+                && !TextUtils.isEmpty(mSitePlugin.getSettingsUrl());
     }
 
     private boolean isPluginStateChangedSinceLastConfigurationDispatch() {
+        if (mSitePlugin == null) {
+            return false;
+        }
         return mSitePlugin.isActive() != mIsActive || mSitePlugin.isAutoUpdateEnabled() != mIsAutoUpdateEnabled;
     }
 
     private boolean refreshPluginFromStoreAndCheckForNull() {
+        if (mSitePlugin == null) {
+            return false;
+        }
+
         mSitePlugin = mPluginStore.getSitePluginByName(mSite, mSitePlugin.getName());
         if (mSitePlugin == null) {
             ToastUtils.showToast(this, R.string.plugin_not_found);

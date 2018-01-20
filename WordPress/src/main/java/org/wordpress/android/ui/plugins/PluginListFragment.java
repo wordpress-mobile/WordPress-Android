@@ -294,15 +294,18 @@ public class PluginListFragment extends Fragment {
                         int position = getAdapterPosition();
                         Object item = getItem(position);
                         SitePluginModel sitePlugin;
+                        WPOrgPluginModel wpOrgPlugin;
                         if (item instanceof SitePluginModel) {
                             sitePlugin = (SitePluginModel) item;
+                            wpOrgPlugin = mPluginStore.getWPOrgPluginBySlug(sitePlugin.getSlug());
                         } else {
-                            WPOrgPluginModel wpOrgPlugin = (WPOrgPluginModel) item;
+                            wpOrgPlugin = (WPOrgPluginModel) item;
                             sitePlugin = getSitePluginFromSlug(wpOrgPlugin.getSlug());
                         }
-                        // TODO: show detail for WPOrgPlugin
                         if (sitePlugin != null) {
                             ActivityLauncher.viewPluginDetail(getActivity(), mSite, sitePlugin);
+                        } else if (wpOrgPlugin != null) {
+                            ActivityLauncher.viewPluginDetail(getActivity(), mSite, wpOrgPlugin);
                         }
                     }
                 });
