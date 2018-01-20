@@ -447,21 +447,12 @@
         <org.wordpress.android.widgets.WPTextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/margin_large"
+            android:layout_marginTop="@dimen/margin_extra_medium_large"
             android:gravity="center"
-            android:text="@string/my_site_no_sites_view_title"
-            android:textColor="@color/grey_dark"
-            android:textSize="@dimen/text_sz_double_extra_large"
-            android:fontFamily="sans-serif-light" />
-
-        <org.wordpress.android.widgets.WPTextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/margin_medium"
-            android:gravity="center"
-            android:text="@string/my_site_no_sites_view_subtitle"
+            android:text="@string/my_site_create_new_site"
             android:textColor="@color/grey"
-            android:textSize="@dimen/text_sz_medium" />
+            android:textSize="@dimen/text_sz_medium"
+            app:fixWidowWords="true" />
 
         <android.support.v7.widget.CardView
             android:layout_width="wrap_content"
