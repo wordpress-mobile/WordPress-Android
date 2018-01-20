@@ -441,7 +441,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            app:srcCompat="@drawable/drake_no_sites_190dp"
+            app:srcCompat="@drawable/img_site_wordpress_camera_pencils_226dp"
             android:importantForAccessibility="no"/>
 
         <org.wordpress.android.widgets.WPTextView
