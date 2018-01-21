@@ -866,6 +866,7 @@ public class PluginDetailActivity extends AppCompatActivity {
         mSitePlugin = event.plugin;
         refreshViews();
         showSuccessfulInstallSnackbar();
+        invalidateOptionsMenu();
 
         // TODO: add PLUGIN_INSTALLED
         //AnalyticsUtils.trackWithSiteDetails(AnalyticsTracker.Stat.PLUGIN_INSTALLED, mSite);\
