@@ -157,6 +157,7 @@ public class PluginDetailActivity extends AppCompatActivity {
         mSitePlugin = mPluginStore.getSitePluginByName(mSite, pluginName);
         mWPOrgPlugin = mPluginStore.getWPOrgPluginBySlug(pluginSlug);
 
+        // we must have either a site plugin or a wporg plugin to continue
         if (mSitePlugin == null && mWPOrgPlugin == null) {
             ToastUtils.showToast(this, R.string.plugin_not_found, Duration.SHORT);
             finish();
@@ -427,6 +428,7 @@ public class PluginDetailActivity extends AppCompatActivity {
 
     private void setCollapsibleHtmlText(@NonNull TextView textView, @Nullable String htmlText) {
         if (!TextUtils.isEmpty(htmlText)) {
+            textView.setTextColor(getResources().getColor(R.color.grey_dark));
             textView.setMovementMethod(WPLinkMovementMethod.getInstance());
             textView.setText(Html.fromHtml(htmlText));
         } else {
