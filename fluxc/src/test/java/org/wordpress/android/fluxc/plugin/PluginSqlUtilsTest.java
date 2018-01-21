@@ -49,7 +49,7 @@ public class PluginSqlUtilsTest {
         // Create site and plugin
         SiteModel site = getTestSite();
         String name = randomString("name");
-        SitePluginModel plugin = getTestPlugin(name);
+        SitePluginModel plugin = getTestPluginByName(name);
 
         // Insert the plugin and assert that it was successful
         Assert.assertEquals(1, PluginSqlUtils.insertOrUpdateSitePlugin(plugin));
@@ -70,7 +70,7 @@ public class PluginSqlUtilsTest {
         String displayName = randomString("displayName");
 
         // First install a plugin and retrieve the DB copy
-        SitePluginModel plugin = getTestPlugin(name);
+        SitePluginModel plugin = getTestPluginByName(name);
         plugin.setDisplayName(displayName);
         Assert.assertEquals(1, PluginSqlUtils.insertOrUpdateSitePlugin(plugin));
         List<SitePluginModel> sitePlugins = PluginSqlUtils.getSitePlugins(site);
@@ -119,7 +119,7 @@ public class PluginSqlUtilsTest {
         // Create a single plugin and update the site plugin list and assert that now we have a single plugin
         List<SitePluginModel> newSitePlugins = new ArrayList<>();
         String newSitePluginName = randomString("newPluginName");
-        SitePluginModel singleSitePlugin = getTestPlugin(newSitePluginName);
+        SitePluginModel singleSitePlugin = getTestPluginByName(newSitePluginName);
         newSitePlugins.add(singleSitePlugin);
         PluginSqlUtils.insertOrReplaceSitePlugins(site, newSitePlugins);
 
@@ -134,7 +134,7 @@ public class PluginSqlUtilsTest {
         // Create site and plugin
         SiteModel site = getTestSite();
         String name = randomString("name");
-        SitePluginModel plugin = getTestPlugin(name);
+        SitePluginModel plugin = getTestPluginByName(name);
 
         // Insert the plugin and verify that site plugin size is 1
         Assert.assertEquals(1, PluginSqlUtils.insertOrUpdateSitePlugin(plugin));
@@ -154,9 +154,9 @@ public class PluginSqlUtilsTest {
         String displayName1 = randomString("displayName1");
         String displayName2 = randomString("displayName2");
 
-        SitePluginModel plugin1 = getTestPlugin(pluginName1);
+        SitePluginModel plugin1 = getTestPluginByName(pluginName1);
         plugin1.setDisplayName(displayName1);
-        SitePluginModel plugin2 = getTestPlugin(pluginName2);
+        SitePluginModel plugin2 = getTestPluginByName(pluginName2);
         plugin2.setDisplayName(displayName2);
 
         // Insert the plugins and verify that site plugin size is 2
@@ -176,12 +176,44 @@ public class PluginSqlUtilsTest {
         Assert.assertEquals(pluginByName2.getDisplayName(), displayName2);
     }
 
+    @Test
+    public void testGetSitePluginBySlug() {
+        // Create site and 2 plugins
+        SiteModel site = getTestSite();
+        String pluginSlug1 = randomString("slug1");
+        String pluginSlug2 = randomString("slug2");
+
+        SitePluginModel plugin1 = getTestPluginBySlug(pluginSlug1);
+        SitePluginModel plugin2 = getTestPluginBySlug(pluginSlug2);
+
+        // Insert the plugins and verify that site plugin size is 2
+        Assert.assertEquals(1, PluginSqlUtils.insertOrUpdateSitePlugin(plugin1));
+        Assert.assertEquals(1, PluginSqlUtils.insertOrUpdateSitePlugin(plugin2));
+        Assert.assertEquals(2, PluginSqlUtils.getSitePlugins(site).size());
+
+        // Assert that getSitePluginBySlug retrieves the correct plugins
+        SitePluginModel pluginBySlug1 = PluginSqlUtils.getSitePluginBySlug(site, pluginSlug1);
+        Assert.assertNotNull(pluginBySlug1);
+        Assert.assertEquals(pluginBySlug1.getSlug(), pluginSlug1);
+
+        SitePluginModel pluginBySlug2 = PluginSqlUtils.getSitePluginBySlug(site, pluginSlug2);
+        Assert.assertNotNull(pluginBySlug2);
+        Assert.assertEquals(pluginBySlug2.getSlug(), pluginSlug2);
+    }
+
     // Helper methods
 
-    private SitePluginModel getTestPlugin(String name) {
+    private SitePluginModel getTestPluginByName(String name) {
         SitePluginModel plugin = new SitePluginModel();
         plugin.setLocalSiteId(TEST_LOCAL_SITE_ID);
         plugin.setName(name);
+        return plugin;
+    }
+
+    private SitePluginModel getTestPluginBySlug(String slug) {
+        SitePluginModel plugin = new SitePluginModel();
+        plugin.setLocalSiteId(TEST_LOCAL_SITE_ID);
+        plugin.setSlug(slug);
         return plugin;
     }
 
@@ -190,7 +222,7 @@ public class PluginSqlUtilsTest {
         for (int i = 0; i < numberOfPlugins; i++) {
             String name = randomString("name");
             pluginNames.add(name);
-            SitePluginModel plugin = getTestPlugin(name);
+            SitePluginModel plugin = getTestPluginByName(name);
             plugin.setLocalSiteId(site.getId());
             Assert.assertEquals(1, PluginSqlUtils.insertOrUpdateSitePlugin(plugin));
         }
