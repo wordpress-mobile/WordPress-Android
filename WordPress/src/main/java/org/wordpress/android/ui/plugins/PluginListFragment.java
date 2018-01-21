@@ -99,7 +99,7 @@ public class PluginListFragment extends Fragment {
         }
     }
 
-    private void requestPlugins() {
+    void requestPlugins() {
         setPlugins(mListener.onListFragmentRequestPlugins(this));
     }
 

@@ -231,6 +231,7 @@ public class PluginBrowserActivity extends AppCompatActivity
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == RequestCodes.PLUGIN_DETAIL) {
             refreshAllPlugins();
+            refreshListFragment();
         }
     }
 
@@ -416,6 +417,13 @@ public class PluginBrowserActivity extends AppCompatActivity
                     .add(R.id.fragment_container, listFragment, PluginListFragment.TAG)
                     .addToBackStack(null)
                     .commit();
+        }
+    }
+
+    private void refreshListFragment() {
+        PluginListFragment fragment = getListFragment();
+        if (fragment != null) {
+            fragment.requestPlugins();
         }
     }
 

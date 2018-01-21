@@ -868,7 +868,7 @@ public class PluginDetailActivity extends AppCompatActivity {
         showSuccessfulInstallSnackbar();
         invalidateOptionsMenu();
 
-        AnalyticsUtils.trackWithSiteDetails(AnalyticsTracker.Stat.PLUGIN_INSTALLED, mSite);\
+        AnalyticsUtils.trackWithSiteDetails(AnalyticsTracker.Stat.PLUGIN_INSTALLED, mSite);
     }
 
     @SuppressWarnings("unused")
