@@ -303,9 +303,9 @@ public class PluginListFragment extends Fragment {
                             sitePlugin = getSitePluginFromSlug(wpOrgPlugin.getSlug());
                         }
                         if (sitePlugin != null) {
-                            ActivityLauncher.viewPluginDetail(getActivity(), mSite, sitePlugin);
+                            ActivityLauncher.viewPluginDetailForResult(getActivity(), mSite, sitePlugin);
                         } else if (wpOrgPlugin != null) {
-                            ActivityLauncher.viewPluginDetail(getActivity(), mSite, wpOrgPlugin);
+                            ActivityLauncher.viewPluginDetailForResult(getActivity(), mSite, wpOrgPlugin);
                         }
                     }
                 });

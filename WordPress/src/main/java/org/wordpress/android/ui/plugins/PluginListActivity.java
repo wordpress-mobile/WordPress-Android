@@ -278,7 +278,7 @@ public class PluginListActivity extends AppCompatActivity {
         public void onClick(View view) {
             int itemPosition = mRecyclerView.getChildLayoutPosition(view);
             SitePluginModel plugin = getItem(itemPosition);
-            ActivityLauncher.viewPluginDetail(PluginListActivity.this, mSite, plugin);
+            ActivityLauncher.viewPluginDetailForResult(PluginListActivity.this, mSite, plugin);
         }
 
         private class PluginViewHolder extends RecyclerView.ViewHolder {

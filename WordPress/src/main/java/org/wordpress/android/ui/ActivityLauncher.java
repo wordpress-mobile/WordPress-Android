@@ -174,23 +174,23 @@ public class ActivityLauncher {
         }
     }
 
-    public static void viewPluginDetail(Context context, SiteModel site, SitePluginModel plugin) {
+    public static void viewPluginDetailForResult(Activity context, SiteModel site, SitePluginModel plugin) {
         if (PluginUtils.isPluginFeatureAvailable(site)) {
             Intent intent = new Intent(context, PluginDetailActivity.class);
             intent.putExtra(WordPress.SITE, site);
             intent.putExtra(PluginDetailActivity.KEY_PLUGIN_NAME, plugin.getName());
             intent.putExtra(PluginDetailActivity.KEY_PLUGIN_SLUG, plugin.getSlug());
-            context.startActivity(intent);
+            context.startActivityForResult(intent, RequestCodes.PLUGIN_DETAIL);
         }
     }
 
-    public static void viewPluginDetail(Context context, SiteModel site, WPOrgPluginModel plugin) {
+    public static void viewPluginDetailForResult(Activity context, SiteModel site, WPOrgPluginModel plugin) {
         if (PluginUtils.isPluginFeatureAvailable(site)) {
             Intent intent = new Intent(context, PluginDetailActivity.class);
             intent.putExtra(WordPress.SITE, site);
             intent.putExtra(PluginDetailActivity.KEY_PLUGIN_NAME, plugin.getName());
             intent.putExtra(PluginDetailActivity.KEY_PLUGIN_SLUG, plugin.getSlug());
-            context.startActivity(intent);
+            context.startActivityForResult(intent, RequestCodes.PLUGIN_DETAIL);
         }
     }
 

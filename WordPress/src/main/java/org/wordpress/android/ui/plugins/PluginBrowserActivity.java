@@ -2,6 +2,7 @@ package org.wordpress.android.ui.plugins;
 
 import android.app.Fragment;
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.ColorRes;
 import android.support.annotation.DrawableRes;
@@ -37,6 +38,7 @@ import org.wordpress.android.fluxc.model.plugin.SitePluginModel;
 import org.wordpress.android.fluxc.model.plugin.WPOrgPluginModel;
 import org.wordpress.android.fluxc.store.PluginStore;
 import org.wordpress.android.ui.ActivityLauncher;
+import org.wordpress.android.ui.RequestCodes;
 import org.wordpress.android.util.AniUtils;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.DisplayUtils;
@@ -221,6 +223,14 @@ public class PluginBrowserActivity extends AppCompatActivity
         outState.putSerializable(WordPress.SITE, mSite);
         if (mSearchMenuItem != null && mSearchMenuItem.isActionViewExpanded()) {
             outState.putString(KEY_LAST_SEARCH, mSearchView.getQuery().toString());
+        }
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == RequestCodes.PLUGIN_DETAIL) {
+            refreshAllPlugins();
         }
     }
 
@@ -609,9 +619,9 @@ public class PluginBrowserActivity extends AppCompatActivity
                             sitePlugin = getSitePluginFromSlug(wpOrgPlugin.getSlug());
                         }
                         if (sitePlugin != null) {
-                            ActivityLauncher.viewPluginDetail(PluginBrowserActivity.this, mSite, sitePlugin);
+                            ActivityLauncher.viewPluginDetailForResult(PluginBrowserActivity.this, mSite, sitePlugin);
                         } else if (wpOrgPlugin != null) {
-                            ActivityLauncher.viewPluginDetail(PluginBrowserActivity.this, mSite, wpOrgPlugin);
+                            ActivityLauncher.viewPluginDetailForResult(PluginBrowserActivity.this, mSite, wpOrgPlugin);
                         }
                     }
                 });
