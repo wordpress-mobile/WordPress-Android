@@ -281,9 +281,9 @@ public class PluginBrowserActivity extends AppCompatActivity
         int newVisibility = plugins.size() > 0 ? View.VISIBLE : View.GONE;
         int oldVisibility = cardView.getVisibility();
         if (newVisibility == View.VISIBLE && oldVisibility != View.VISIBLE) {
-            AniUtils.fadeIn(cardView, AniUtils.Duration.SHORT);
+            AniUtils.fadeIn(cardView, AniUtils.Duration.MEDIUM);
         } else if (newVisibility != View.VISIBLE && oldVisibility == View.VISIBLE) {
-            AniUtils.fadeOut(cardView, AniUtils.Duration.SHORT);
+            AniUtils.fadeOut(cardView, AniUtils.Duration.MEDIUM);
         }
     }
 

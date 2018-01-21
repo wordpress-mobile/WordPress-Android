@@ -132,6 +132,7 @@ public class PluginDetailActivity extends AppCompatActivity {
         ((WordPress) getApplication()).component().inject(this);
         mDispatcher.register(this);
 
+        // TODO: once FluxC branch which adds getSitePlugInBySlug() is merged we can rely solely on slug here
         String pluginName;
         String pluginSlug;
         if (savedInstanceState == null) {
