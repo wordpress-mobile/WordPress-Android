@@ -148,13 +148,6 @@ public class PluginListFragment extends Fragment {
         }
     }
 
-    boolean isEmpty() {
-        if (isAdded() && mRecycler != null && mRecycler.getAdapter() != null) {
-            return mRecycler.getAdapter().getItemCount() == 0;
-        }
-        return true;
-    }
-
     private void loadMore() {
         showProgress(true);
         mIsLoadingMore = true;
@@ -266,13 +259,6 @@ public class PluginListFragment extends Fragment {
             }
         }
 
-        private void refreshPluginWithSlug(@NonNull String slug) {
-            int index = mItems.indexOfPluginWithSlug(slug);
-            if (index != -1) {
-                notifyItemChanged(index);
-            }
-        }
-
         private class PluginViewHolder extends RecyclerView.ViewHolder {
             final TextView name;
             final TextView statusText;
@@ -304,7 +290,7 @@ public class PluginListFragment extends Fragment {
                         }
                         if (sitePlugin != null) {
                             ActivityLauncher.viewPluginDetailForResult(getActivity(), mSite, sitePlugin);
-                        } else if (wpOrgPlugin != null) {
+                        } else {
                             ActivityLauncher.viewPluginDetailForResult(getActivity(), mSite, wpOrgPlugin);
                         }
                     }

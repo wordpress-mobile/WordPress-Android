@@ -19,10 +19,10 @@ class PluginList extends ArrayList<Object> {
         if (slug != null) {
             for (int i = 0; i < this.size(); i++) {
                 Object item = this.get(i);
-                String itemSlug;
+                String itemSlug = null;
                 if ((item instanceof SitePluginModel)) {
                     itemSlug = ((SitePluginModel) item).getSlug();
-                } else {
+                } else if (item instanceof WPOrgPluginModel) {
                     itemSlug = ((WPOrgPluginModel) item).getSlug();
                 }
                 if (slug.equalsIgnoreCase(itemSlug)) {
