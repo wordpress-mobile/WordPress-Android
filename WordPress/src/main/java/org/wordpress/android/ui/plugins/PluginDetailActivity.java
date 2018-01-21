@@ -660,7 +660,7 @@ public class PluginDetailActivity extends AppCompatActivity {
                 .setAction(R.string.retry, new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
-                        dispatchUpdatePluginAction();
+                        dispatchInstallPluginAction();
                     }
                 })
                 .show();
