@@ -242,8 +242,13 @@ public class PluginDetailActivity extends AppCompatActivity {
     @Override
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
+
+        String name = mSitePlugin != null ? mSitePlugin.getName() : mWPOrgPlugin.getName();
+        String slug = mSitePlugin != null ? mSitePlugin.getSlug() : mWPOrgPlugin.getSlug();
+        outState.putString(KEY_PLUGIN_NAME, name);
+        outState.putString(KEY_PLUGIN_SLUG, slug);
+
         outState.putSerializable(WordPress.SITE, mSite);
-        outState.putString(KEY_PLUGIN_NAME, mSitePlugin.getName());
         outState.putBoolean(KEY_IS_CONFIGURING_PLUGIN, mIsConfiguringPlugin);
         outState.putBoolean(KEY_IS_UPDATING_PLUGIN, mIsUpdatingPlugin);
         outState.putBoolean(KEY_IS_REMOVING_PLUGIN, mIsRemovingPlugin);
@@ -319,19 +324,15 @@ public class PluginDetailActivity extends AppCompatActivity {
             }
         });
 
-        if (!canPluginBeDisabledOrRemoved()) {
-            findViewById(R.id.plugin_state_active_container).setVisibility(View.GONE);
-        } else {
-            mSwitchActive.setOnCheckedChangeListener(new OnCheckedChangeListener() {
-                @Override
-                public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
-                    if (compoundButton.isPressed()) {
-                        mIsActive = b;
-                        dispatchConfigurePluginAction(false);
-                    }
+        mSwitchActive.setOnCheckedChangeListener(new OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
+                if (compoundButton.isPressed()) {
+                    mIsActive = b;
+                    dispatchConfigurePluginAction(false);
                 }
-            });
-        }
+            }
+        });
 
         mSwitchAutoupdates.setOnCheckedChangeListener(new OnCheckedChangeListener() {
             @Override
@@ -401,11 +402,15 @@ public class PluginDetailActivity extends AppCompatActivity {
 
             mByLineTextView.setMovementMethod(WPLinkMovementMethod.getInstance());
             mByLineTextView.setText(Html.fromHtml(mWPOrgPlugin.getAuthorAsHtml()));
-
-            refreshPluginVersionViews();
-            refreshRatingsViews();
         } else {
             mTitleTextView.setText(mSitePlugin.getDisplayName());
+            mSwitchActive.setChecked(mIsActive);
+            mSwitchAutoupdates.setChecked(mIsAutoUpdateEnabled);
+
+            if (!canPluginBeDisabledOrRemoved()) {
+                findViewById(R.id.plugin_state_active_container).setVisibility(View.GONE);
+            }
+
             if (TextUtils.isEmpty(mSitePlugin.getAuthorUrl())) {
                 mByLineTextView.setText(String.format(getString(R.string.plugin_byline), mSitePlugin.getAuthorName()));
             } else {
@@ -416,8 +421,9 @@ public class PluginDetailActivity extends AppCompatActivity {
             }
         }
 
-        mSwitchActive.setChecked(mIsActive);
-        mSwitchAutoupdates.setChecked(mIsAutoUpdateEnabled);
+        findViewById(R.id.plugin_card_site).setVisibility(mSitePlugin != null ? View.VISIBLE : View.GONE);
+        refreshPluginVersionViews();
+        refreshRatingsViews();
     }
 
     private void setCollapsibleHtmlText(@NonNull TextView textView, @Nullable String htmlText) {
@@ -432,12 +438,11 @@ public class PluginDetailActivity extends AppCompatActivity {
 
     private void refreshPluginVersionViews() {
         if (mSitePlugin == null) {
-            mVersionTopTextView.setVisibility(View.GONE);
+            String version = String.format(getString(R.string.plugin_version), mWPOrgPlugin.getVersion());
+            mVersionTopTextView.setText(version);
             mVersionBottomTextView.setVisibility(View.GONE);
             return;
         }
-
-        mVersionTopTextView.setVisibility(View.VISIBLE);
 
         String pluginVersion = TextUtils.isEmpty(mSitePlugin.getVersion()) ? "?" : mSitePlugin.getVersion();
         String installedVersion;
