@@ -779,7 +779,7 @@ public class PluginDetailActivity extends AppCompatActivity {
             ToastUtils.showToast(this, getString(R.string.plugin_configuration_failed, event.error.message));
 
             // Refresh the UI to plugin's last known state
-            if (refreshPluginFromStoreAndCheckForNull()) {
+            if (!refreshSitePluginFromStore()) {
                 return;
             }
             mIsActive = mSitePlugin.isActive();
@@ -794,7 +794,7 @@ public class PluginDetailActivity extends AppCompatActivity {
             return;
         }
 
-        if (refreshPluginFromStoreAndCheckForNull()) {
+        if (!refreshSitePluginFromStore()) {
             return;
         }
 
@@ -840,13 +840,12 @@ public class PluginDetailActivity extends AppCompatActivity {
             showUpdateFailedSnackbar();
             return;
         }
-        if (refreshPluginFromStoreAndCheckForNull()) {
-            return;
-        }
 
-        AnalyticsUtils.trackWithSiteDetails(AnalyticsTracker.Stat.PLUGIN_UPDATED, mSite);
+        refreshSitePluginFromStore();
         refreshViews();
         showSuccessfulUpdateSnackbar();
+
+        AnalyticsUtils.trackWithSiteDetails(AnalyticsTracker.Stat.PLUGIN_UPDATED, mSite);
     }
 
     @SuppressWarnings("unused")
@@ -864,14 +863,12 @@ public class PluginDetailActivity extends AppCompatActivity {
             return;
         }
 
-        if (refreshPluginFromStoreAndCheckForNull()) {
-            return;
-        }
-
-        // TODO: add PLUGIN_INSTALLED
-        //AnalyticsUtils.trackWithSiteDetails(AnalyticsTracker.Stat.PLUGIN_INSTALLED, mSite);
+        mSitePlugin = event.plugin;
         refreshViews();
         showSuccessfulInstallSnackbar();
+
+        // TODO: add PLUGIN_INSTALLED
+        //AnalyticsUtils.trackWithSiteDetails(AnalyticsTracker.Stat.PLUGIN_INSTALLED, mSite);\
     }
 
     @SuppressWarnings("unused")
@@ -950,14 +947,9 @@ public class PluginDetailActivity extends AppCompatActivity {
         return mSitePlugin.isActive() != mIsActive || mSitePlugin.isAutoUpdateEnabled() != mIsAutoUpdateEnabled;
     }
 
-    private boolean refreshPluginFromStoreAndCheckForNull() {
+    private boolean refreshSitePluginFromStore() {
         mSitePlugin = mPluginStore.getSitePluginByName(mSite, getPluginName());
-        if (mSitePlugin == null) {
-            ToastUtils.showToast(this, R.string.plugin_not_found);
-            finish();
-            return true;
-        }
-        return false;
+        return mSitePlugin != null;
     }
 
 }
