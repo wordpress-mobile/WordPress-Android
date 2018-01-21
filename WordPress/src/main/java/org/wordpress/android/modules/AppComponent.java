@@ -57,7 +57,6 @@ import org.wordpress.android.ui.photopicker.PhotoPickerActivity;
 import org.wordpress.android.ui.plans.PlansActivity;
 import org.wordpress.android.ui.plugins.PluginBrowserActivity;
 import org.wordpress.android.ui.plugins.PluginDetailActivity;
-import org.wordpress.android.ui.plugins.PluginListActivity;
 import org.wordpress.android.ui.plugins.PluginListFragment;
 import org.wordpress.android.ui.posts.AddCategoryFragment;
 import org.wordpress.android.ui.posts.EditPostActivity;
@@ -252,7 +251,6 @@ public interface AppComponent extends AndroidInjector<WordPress> {
 
     void inject(HtmlToSpannedConverter object);
 
-    void inject(PluginListActivity object);
     void inject(PluginDetailActivity object);
     void inject(PluginBrowserActivity object);
     void inject(PluginListFragment object);

@@ -468,10 +468,6 @@
 
         <!--Plugins-->
         <activity
-            android:name=".ui.plugins.PluginListActivity"
-            android:label="@string/plugins"
-            android:theme="@style/Calypso.NoActionBar"/>
-        <activity
             android:name=".ui.plugins.PluginDetailActivity"
             android:theme="@style/Calypso.NoActionBar"/>
         <activity
