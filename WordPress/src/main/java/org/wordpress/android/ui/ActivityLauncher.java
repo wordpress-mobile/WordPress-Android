@@ -156,18 +156,9 @@ public class ActivityLauncher {
         AnalyticsUtils.trackWithSiteDetails(AnalyticsTracker.Stat.OPENED_PEOPLE_MANAGEMENT, site);
     }
 
-    public static void viewCurrentBlogPlugins(Context context, SiteModel site) {
-        if (PluginUtils.isPluginFeatureAvailable(site)) {
-            AnalyticsUtils.trackWithSiteDetails(AnalyticsTracker.Stat.OPENED_PLUGINS, site);
-            Intent intent = new Intent(context, PluginListActivity.class);
-            intent.putExtra(WordPress.SITE, site);
-            context.startActivity(intent);
-        }
-    }
-
     public static void viewPluginBrowser(Context context, SiteModel site) {
         if (PluginUtils.isPluginFeatureAvailable(site)) {
-            // TODO: AnalyticsUtils.trackWithSiteDetails(AnalyticsTracker.Stat.OPENED_PLUGIN_BROWSER, site);
+            AnalyticsUtils.trackWithSiteDetails(AnalyticsTracker.Stat.OPENED_PLUGINS, site);
             Intent intent = new Intent(context, PluginBrowserActivity.class);
             intent.putExtra(WordPress.SITE, site);
             context.startActivity(intent);
@@ -176,7 +167,7 @@ public class ActivityLauncher {
 
     public static void viewPluginDetailForResult(Activity context, SiteModel site, SitePluginModel plugin) {
         if (PluginUtils.isPluginFeatureAvailable(site)) {
-            // TODO: AnalyticsUtils.trackWithSiteDetails(AnalyticsTracker.Stat.OPENED_PLUGIN_DETAIL, site);
+            AnalyticsUtils.trackWithSiteDetails(AnalyticsTracker.Stat.OPENED_PLUGIN_DETAIL, site);
             Intent intent = new Intent(context, PluginDetailActivity.class);
             intent.putExtra(WordPress.SITE, site);
             intent.putExtra(PluginDetailActivity.KEY_PLUGIN_NAME, plugin.getName());
@@ -187,7 +178,7 @@ public class ActivityLauncher {
 
     public static void viewPluginDetailForResult(Activity context, SiteModel site, WPOrgPluginModel plugin) {
         if (PluginUtils.isPluginFeatureAvailable(site)) {
-            // TODO: AnalyticsUtils.trackWithSiteDetails(AnalyticsTracker.Stat.OPENED_PLUGIN_DETAIL, site);
+            AnalyticsUtils.trackWithSiteDetails(AnalyticsTracker.Stat.OPENED_PLUGIN_DETAIL, site);
             Intent intent = new Intent(context, PluginDetailActivity.class);
             intent.putExtra(WordPress.SITE, site);
             intent.putExtra(PluginDetailActivity.KEY_PLUGIN_NAME, plugin.getName());
