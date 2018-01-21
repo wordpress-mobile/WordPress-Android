@@ -80,20 +80,27 @@
 
                     <RelativeLayout style="@style/PluginCardViewHorizontalContainer">
 
-                        <TextView
-                            android:id="@+id/plugin_version_top"
-                            style="@style/PluginCardViewPrimaryText"
-                            android:background="?android:attr/selectableItemBackground"
-                            android:drawablePadding="@dimen/margin_small"
-                            tools:drawableRight="@drawable/ic_info_outline_grey_dark_18dp"
-                            tools:text="plugin_version_top" />
+                        <LinearLayout
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_centerVertical="true"
+                            android:orientation="vertical">
 
-                        <TextView
-                            android:id="@+id/plugin_version_bottom"
-                            style="@style/PluginCardViewSecondaryText"
-                            android:layout_below="@id/plugin_version_top"
-                            android:textColor="@color/grey_darken_10"
-                            tools:text="plugin_version_bottom" />
+                            <TextView
+                                android:id="@+id/plugin_version_top"
+                                style="@style/PluginCardViewPrimaryText"
+                                android:background="?android:attr/selectableItemBackground"
+                                android:drawablePadding="@dimen/margin_small"
+                                tools:drawableRight="@drawable/ic_info_outline_grey_dark_18dp"
+                                tools:text="plugin_version_top" />
+
+                            <TextView
+                                android:id="@+id/plugin_version_bottom"
+                                style="@style/PluginCardViewSecondaryText"
+                                android:layout_below="@id/plugin_version_top"
+                                android:textColor="@color/grey_darken_10"
+                                tools:text="plugin_version_bottom" />
+                        </LinearLayout>
 
                         <FrameLayout
                             android:layout_width="wrap_content"
@@ -160,8 +167,8 @@
             </android.support.v7.widget.CardView>
 
             <android.support.v7.widget.CardView
-                style="@style/PluginCardView"
                 android:id="@+id/plugin_card_site"
+                style="@style/PluginCardView"
                 card_view:cardBackgroundColor="@color/white"
                 card_view:cardCornerRadius="@dimen/cardview_default_radius">
 
