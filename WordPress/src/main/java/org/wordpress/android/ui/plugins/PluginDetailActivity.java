@@ -46,6 +46,8 @@ import org.wordpress.android.fluxc.store.PluginStore.OnSitePluginConfigured;
 import org.wordpress.android.fluxc.store.PluginStore.OnSitePluginDeleted;
 import org.wordpress.android.fluxc.store.PluginStore.OnSitePluginUpdated;
 import org.wordpress.android.fluxc.store.PluginStore.UpdateSitePluginPayload;
+import org.wordpress.android.fluxc.store.PluginStore.InstallSitePluginPayload;
+import org.wordpress.android.fluxc.store.PluginStore.OnSitePluginInstalled;
 import org.wordpress.android.ui.ActivityLauncher;
 import org.wordpress.android.util.AnalyticsUtils;
 import org.wordpress.android.util.AniUtils;
@@ -96,7 +98,8 @@ public class PluginDetailActivity extends AppCompatActivity {
     private TextView mByLineTextView;
     private TextView mVersionTopTextView;
     private TextView mVersionBottomTextView;
-    private TextView mUpdateTextView;
+    private TextView mUpdateButton;
+    private TextView mInstallButton;
     private ProgressBar mUpdateProgressBar;
     private Switch mSwitchActive;
     private Switch mSwitchAutoupdates;
@@ -266,7 +269,8 @@ public class PluginDetailActivity extends AppCompatActivity {
         mByLineTextView = findViewById(R.id.text_byline);
         mVersionTopTextView = findViewById(R.id.plugin_version_top);
         mVersionBottomTextView = findViewById(R.id.plugin_version_bottom);
-        mUpdateTextView = findViewById(R.id.plugin_btn_update);
+        mUpdateButton = findViewById(R.id.plugin_btn_update);
+        mInstallButton = findViewById(R.id.plugin_btn_install);
         mUpdateProgressBar = findViewById(R.id.plugin_update_progress_bar);
         mSwitchActive = findViewById(R.id.plugin_state_active);
         mSwitchAutoupdates = findViewById(R.id.plugin_state_autoupdates);
@@ -342,13 +346,6 @@ public class PluginDetailActivity extends AppCompatActivity {
                     mIsAutoUpdateEnabled = b;
                     dispatchConfigurePluginAction(false);
                 }
-            }
-        });
-
-        mUpdateTextView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                dispatchUpdatePluginAction();
             }
         });
 
@@ -438,25 +435,24 @@ public class PluginDetailActivity extends AppCompatActivity {
     }
 
     private void refreshPluginVersionViews() {
-        if (mSitePlugin == null) {
+        if (mSitePlugin != null) {
+            String pluginVersion = TextUtils.isEmpty(mSitePlugin.getVersion()) ? "?" : mSitePlugin.getVersion();
+            String installedVersion;
+
+            if (PluginUtils.isUpdateAvailable(mSitePlugin, mWPOrgPlugin)) {
+                installedVersion = String.format(getString(R.string.plugin_installed_version), pluginVersion);
+                String availableVersion = String.format(getString(R.string.plugin_available_version), mWPOrgPlugin.getVersion());
+                mVersionTopTextView.setText(availableVersion);
+                mVersionBottomTextView.setText(installedVersion);
+                mVersionBottomTextView.setVisibility(View.VISIBLE);
+            } else {
+                installedVersion = String.format(getString(R.string.plugin_version), pluginVersion);
+                mVersionTopTextView.setText(installedVersion);
+                mVersionBottomTextView.setVisibility(View.GONE);
+            }
+        } else {
             String version = String.format(getString(R.string.plugin_version), mWPOrgPlugin.getVersion());
             mVersionTopTextView.setText(version);
-            mVersionBottomTextView.setVisibility(View.GONE);
-            return;
-        }
-
-        String pluginVersion = TextUtils.isEmpty(mSitePlugin.getVersion()) ? "?" : mSitePlugin.getVersion();
-        String installedVersion;
-
-        if (PluginUtils.isUpdateAvailable(mSitePlugin, mWPOrgPlugin)) {
-            installedVersion = String.format(getString(R.string.plugin_installed_version), pluginVersion);
-            String availableVersion = String.format(getString(R.string.plugin_available_version), mWPOrgPlugin.getVersion());
-            mVersionTopTextView.setText(availableVersion);
-            mVersionBottomTextView.setText(installedVersion);
-            mVersionBottomTextView.setVisibility(View.VISIBLE);
-        } else {
-            installedVersion = String.format(getString(R.string.plugin_version), pluginVersion);
-            mVersionTopTextView.setText(installedVersion);
             mVersionBottomTextView.setVisibility(View.GONE);
         }
 
@@ -464,12 +460,32 @@ public class PluginDetailActivity extends AppCompatActivity {
     }
 
     private void refreshUpdateVersionViews() {
-        if (mWPOrgPlugin == null) return;
+        if (mSitePlugin != null) {
+            mInstallButton.setVisibility(View.GONE);
+            boolean isUpdateAvailable = PluginUtils.isUpdateAvailable(mSitePlugin, mWPOrgPlugin);
+            boolean canUpdate = isUpdateAvailable && !mIsUpdatingPlugin;
+            mUpdateButton.setVisibility(canUpdate ? View.VISIBLE : View.GONE);
+            findViewById(R.id.plugin_installed).setVisibility(isUpdateAvailable || mIsUpdatingPlugin ? View.GONE : View.VISIBLE);
+            if (canUpdate) {
+                mUpdateButton.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        dispatchUpdatePluginAction();
+                    }
+                });
+            }
+        } else {
+            mUpdateButton.setVisibility(View.GONE);
+            mInstallButton.setVisibility(View.VISIBLE);
+            mInstallButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    dispatchInstallPluginAction();
+                }
+            });
+        }
 
-        boolean isUpdateAvailable = PluginUtils.isUpdateAvailable(mSitePlugin, mWPOrgPlugin);
-        mUpdateTextView.setVisibility(isUpdateAvailable && !mIsUpdatingPlugin ? View.VISIBLE : View.GONE);
-        mUpdateProgressBar.setVisibility(mIsUpdatingPlugin ? View.VISIBLE: View.GONE);
-        findViewById(R.id.plugin_installed).setVisibility(isUpdateAvailable || mIsUpdatingPlugin ? View.GONE : View.VISIBLE);
+        mUpdateProgressBar.setVisibility(mIsUpdatingPlugin ? View.VISIBLE : View.GONE);
     }
 
     private void refreshRatingsViews() {
@@ -617,9 +633,29 @@ public class PluginDetailActivity extends AppCompatActivity {
                 .show();
     }
 
+    private void showSuccessfulInstallSnackbar() {
+        Snackbar.make(mContainer,
+                getString(R.string.plugin_installed_successfully, mWPOrgPlugin.getName()),
+                Snackbar.LENGTH_LONG)
+                .show();
+    }
+
     private void showUpdateFailedSnackbar() {
         Snackbar.make(mContainer,
                 getString(R.string.plugin_updated_failed, mSitePlugin.getDisplayName()),
+                Snackbar.LENGTH_LONG)
+                .setAction(R.string.retry, new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        dispatchUpdatePluginAction();
+                    }
+                })
+                .show();
+    }
+
+    private void showInstallFailedSnackbar() {
+        Snackbar.make(mContainer,
+                getString(R.string.plugin_installed_failed, mWPOrgPlugin.getName()),
                 Snackbar.LENGTH_LONG)
                 .setAction(R.string.retry, new View.OnClickListener() {
                     @Override
@@ -684,6 +720,17 @@ public class PluginDetailActivity extends AppCompatActivity {
         refreshUpdateVersionViews();
         UpdateSitePluginPayload payload = new UpdateSitePluginPayload(mSite, mSitePlugin);
         mDispatcher.dispatch(PluginActionBuilder.newUpdateSitePluginAction(payload));
+    }
+
+    private void dispatchInstallPluginAction() {
+        if (!NetworkUtils.checkConnection(this)) {
+            return;
+        }
+
+        mIsUpdatingPlugin = true;
+        refreshUpdateVersionViews();
+        PluginStore.InstallSitePluginPayload payload = new InstallSitePluginPayload(mSite, mWPOrgPlugin.getName());
+        mDispatcher.dispatch(PluginActionBuilder.newInstallSitePluginAction(payload));
     }
 
     private void dispatchRemovePluginAction() {
@@ -803,6 +850,31 @@ public class PluginDetailActivity extends AppCompatActivity {
 
     @SuppressWarnings("unused")
     @Subscribe(threadMode = ThreadMode.MAIN)
+    public void OnSitePluginInstalled(OnSitePluginInstalled event) {
+        if (isFinishing()) {
+            return;
+        }
+        mIsUpdatingPlugin = false;
+        if (event.isError()) {
+            AppLog.e(AppLog.T.API, "An error occurred while installing the plugin with type: "
+                    + event.error.type);
+            refreshPluginVersionViews();
+            showInstallFailedSnackbar();
+            return;
+        }
+
+        if (refreshPluginFromStoreAndCheckForNull()) {
+            return;
+        }
+
+        // TODO: add PLUGIN_INSTALLED
+        //AnalyticsUtils.trackWithSiteDetails(AnalyticsTracker.Stat.PLUGIN_INSTALLED, mSite);
+        refreshViews();
+        showSuccessfulInstallSnackbar();
+    }
+
+    @SuppressWarnings("unused")
+    @Subscribe(threadMode = ThreadMode.MAIN)
     public void onSitePluginDeleted(OnSitePluginDeleted event) {
         if (isFinishing()) {
             return;
@@ -870,11 +942,8 @@ public class PluginDetailActivity extends AppCompatActivity {
     }
 
     private boolean refreshPluginFromStoreAndCheckForNull() {
-        if (mSitePlugin == null) {
-            return false;
-        }
-
-        mSitePlugin = mPluginStore.getSitePluginByName(mSite, mSitePlugin.getName());
+        String name = mSitePlugin != null ? mSitePlugin.getName() : mWPOrgPlugin.getName();
+        mSitePlugin = mPluginStore.getSitePluginByName(mSite, name);
         if (mSitePlugin == null) {
             ToastUtils.showToast(this, R.string.plugin_not_found);
             finish();
