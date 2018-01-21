@@ -402,12 +402,6 @@ public class PluginDetailActivity extends AppCompatActivity {
             mByLineTextView.setText(Html.fromHtml(mWPOrgPlugin.getAuthorAsHtml()));
         } else {
             mTitleTextView.setText(mSitePlugin.getDisplayName());
-            mSwitchActive.setChecked(mIsActive);
-            mSwitchAutoupdates.setChecked(mIsAutoUpdateEnabled);
-
-            if (!canPluginBeDisabledOrRemoved()) {
-                findViewById(R.id.plugin_state_active_container).setVisibility(View.GONE);
-            }
 
             if (TextUtils.isEmpty(mSitePlugin.getAuthorUrl())) {
                 mByLineTextView.setText(String.format(getString(R.string.plugin_byline), mSitePlugin.getAuthorName()));
@@ -417,6 +411,13 @@ public class PluginDetailActivity extends AppCompatActivity {
                 mByLineTextView.setMovementMethod(WPLinkMovementMethod.getInstance());
                 mByLineTextView.setText(Html.fromHtml(byline));
             }
+        }
+
+        if (!canPluginBeDisabledOrRemoved()) {
+            findViewById(R.id.plugin_state_active_container).setVisibility(View.GONE);
+        } else if (mSitePlugin != null) {
+            mSwitchActive.setChecked(mIsActive);
+            mSwitchAutoupdates.setChecked(mIsAutoUpdateEnabled);
         }
 
         findViewById(R.id.plugin_card_site).setVisibility(mSitePlugin != null ? View.VISIBLE : View.GONE);
