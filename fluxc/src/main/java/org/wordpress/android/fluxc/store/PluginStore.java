@@ -473,6 +473,10 @@ public class PluginStore extends Store {
         return PluginSqlUtils.getSitePluginByName(site, name);
     }
 
+    public SitePluginModel getSitePluginBySlug(SiteModel site, String slug) {
+        return PluginSqlUtils.getSitePluginBySlug(site, slug);
+    }
+
     public WPOrgPluginModel getWPOrgPluginBySlug(String slug) {
         return PluginSqlUtils.getWPOrgPluginBySlug(slug);
     }
