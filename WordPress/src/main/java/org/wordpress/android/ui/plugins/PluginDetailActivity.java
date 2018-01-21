@@ -307,8 +307,11 @@ public class PluginDetailActivity extends AppCompatActivity {
             }
         });
 
-        // expand "what's new" if there's an update available
-        if (mSitePlugin != null && PluginUtils.isUpdateAvailable(mSitePlugin, mWPOrgPlugin)) {
+        // expand description if this plugin isn't installed, otherwise expand "what's new" if
+        // this is an installed plugin and there's an update available
+        if (mSitePlugin == null) {
+            toggleText(mDescriptionTextView, mDescriptionChevron);
+        } else if (PluginUtils.isUpdateAvailable(mSitePlugin, mWPOrgPlugin)) {
             toggleText(mWhatsNewTextView, mWhatsNewChevron);
         }
 
