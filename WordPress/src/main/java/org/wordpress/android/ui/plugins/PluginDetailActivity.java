@@ -248,10 +248,8 @@ public class PluginDetailActivity extends AppCompatActivity {
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
 
-        String name = mSitePlugin != null ? mSitePlugin.getName() : mWPOrgPlugin.getName();
-        String slug = mSitePlugin != null ? mSitePlugin.getSlug() : mWPOrgPlugin.getSlug();
-        outState.putString(KEY_PLUGIN_NAME, name);
-        outState.putString(KEY_PLUGIN_SLUG, slug);
+        outState.putString(KEY_PLUGIN_NAME, getPluginName());
+        outState.putString(KEY_PLUGIN_SLUG, getPluginSlug());
 
         outState.putSerializable(WordPress.SITE, mSite);
         outState.putBoolean(KEY_IS_CONFIGURING_PLUGIN, mIsConfiguringPlugin);
@@ -732,7 +730,7 @@ public class PluginDetailActivity extends AppCompatActivity {
 
         mIsUpdatingPlugin = true;
         refreshUpdateVersionViews();
-        PluginStore.InstallSitePluginPayload payload = new InstallSitePluginPayload(mSite, mWPOrgPlugin.getName());
+        PluginStore.InstallSitePluginPayload payload = new InstallSitePluginPayload(mSite, getPluginSlug());
         mDispatcher.dispatch(PluginActionBuilder.newInstallSitePluginAction(payload));
     }
 
@@ -902,12 +900,20 @@ public class PluginDetailActivity extends AppCompatActivity {
 
     // Utils
 
+    private String getPluginName() {
+        return mSitePlugin != null ? mSitePlugin.getName() : mWPOrgPlugin.getName();
+    }
+
+    private String getPluginSlug() {
+        return mSitePlugin != null ? mSitePlugin.getSlug() : mWPOrgPlugin.getSlug();
+    }
+
     private String getWpOrgPluginUrl() {
-        return "https://wordpress.org/plugins/" + mSitePlugin.getSlug();
+        return "https://wordpress.org/plugins/" + getPluginSlug();
     }
 
     private String getWpOrgReviewsUrl() {
-        return "https://wordpress.org/plugins/" + mSitePlugin.getSlug() + "/#reviews";
+        return "https://wordpress.org/plugins/" + getPluginSlug() + "/#reviews";
     }
 
     private String getRemovingPluginMessage() {
@@ -945,8 +951,7 @@ public class PluginDetailActivity extends AppCompatActivity {
     }
 
     private boolean refreshPluginFromStoreAndCheckForNull() {
-        String name = mSitePlugin != null ? mSitePlugin.getName() : mWPOrgPlugin.getName();
-        mSitePlugin = mPluginStore.getSitePluginByName(mSite, name);
+        mSitePlugin = mPluginStore.getSitePluginByName(mSite, getPluginName());
         if (mSitePlugin == null) {
             ToastUtils.showToast(this, R.string.plugin_not_found);
             finish();

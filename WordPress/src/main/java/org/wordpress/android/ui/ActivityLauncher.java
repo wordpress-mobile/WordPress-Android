@@ -176,6 +176,7 @@ public class ActivityLauncher {
 
     public static void viewPluginDetailForResult(Activity context, SiteModel site, SitePluginModel plugin) {
         if (PluginUtils.isPluginFeatureAvailable(site)) {
+            // TODO: AnalyticsUtils.trackWithSiteDetails(AnalyticsTracker.Stat.OPENED_PLUGIN_DETAIL, site);
             Intent intent = new Intent(context, PluginDetailActivity.class);
             intent.putExtra(WordPress.SITE, site);
             intent.putExtra(PluginDetailActivity.KEY_PLUGIN_NAME, plugin.getName());
@@ -186,6 +187,7 @@ public class ActivityLauncher {
 
     public static void viewPluginDetailForResult(Activity context, SiteModel site, WPOrgPluginModel plugin) {
         if (PluginUtils.isPluginFeatureAvailable(site)) {
+            // TODO: AnalyticsUtils.trackWithSiteDetails(AnalyticsTracker.Stat.OPENED_PLUGIN_DETAIL, site);
             Intent intent = new Intent(context, PluginDetailActivity.class);
             intent.putExtra(WordPress.SITE, site);
             intent.putExtra(PluginDetailActivity.KEY_PLUGIN_NAME, plugin.getName());
