@@ -4,12 +4,14 @@ import org.wordpress.android.fluxc.annotations.Action;
 import org.wordpress.android.fluxc.annotations.ActionEnum;
 import org.wordpress.android.fluxc.annotations.action.IAction;
 import org.wordpress.android.fluxc.model.AccountModel;
+import org.wordpress.android.fluxc.network.rest.wpcom.account.AccountRestClient.AccountFetchUsernameSuggestionsResponsePayload;
 import org.wordpress.android.fluxc.network.rest.wpcom.account.AccountRestClient.AccountPushSettingsResponsePayload;
 import org.wordpress.android.fluxc.network.rest.wpcom.account.AccountRestClient.AccountPushSocialResponsePayload;
 import org.wordpress.android.fluxc.network.rest.wpcom.account.AccountRestClient.AccountPushUsernameResponsePayload;
 import org.wordpress.android.fluxc.network.rest.wpcom.account.AccountRestClient.AccountRestPayload;
 import org.wordpress.android.fluxc.network.rest.wpcom.account.AccountRestClient.IsAvailableResponsePayload;
 import org.wordpress.android.fluxc.network.rest.wpcom.account.AccountRestClient.NewAccountResponsePayload;
+import org.wordpress.android.fluxc.store.AccountStore.FetchUsernameSuggestionsPayload;
 import org.wordpress.android.fluxc.store.AccountStore.NewAccountPayload;
 import org.wordpress.android.fluxc.store.AccountStore.PushAccountSettingsPayload;
 import org.wordpress.android.fluxc.store.AccountStore.PushSocialAuthPayload;
@@ -25,6 +27,8 @@ public enum AccountAction implements IAction {
     FETCH_ACCOUNT,          // request fetch of Account information
     @Action
     FETCH_SETTINGS,         // request fetch of Account Settings
+    @Action(payloadType = FetchUsernameSuggestionsPayload.class)
+    FETCH_USERNAME_SUGGESTIONS,  // request fetch of Username Suggestions
     @Action
     SEND_VERIFICATION_EMAIL, // request verification email for unverified accounts
     @Action(payloadType = PushAccountSettingsPayload.class)
@@ -57,6 +61,8 @@ public enum AccountAction implements IAction {
     FETCHED_ACCOUNT,        // response received from Account fetch request
     @Action(payloadType = AccountRestPayload.class)
     FETCHED_SETTINGS,       // response received from Account Settings fetch
+    @Action(payloadType = AccountFetchUsernameSuggestionsResponsePayload.class)
+    FETCHED_USERNAME_SUGGESTIONS,  // response received from Username Suggestions fetch
     @Action(payloadType = NewAccountResponsePayload.class)
     SENT_VERIFICATION_EMAIL,
     @Action(payloadType = AccountPushSettingsResponsePayload.class)
