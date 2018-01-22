@@ -441,12 +441,20 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
 
     @Override
     public void onRedoEnabled() {
+        if(!isAdded()){
+            return;
+        }
+
         invalidateOptionsHandler.removeCallbacks(invalidateOptionsRunnable);
         invalidateOptionsHandler.postDelayed(invalidateOptionsRunnable, getResources().getInteger(android.R.integer.config_mediumAnimTime));
     }
 
     @Override
     public void onUndoEnabled() {
+        if(!isAdded()){
+            return;
+        }
+
         invalidateOptionsHandler.removeCallbacks(invalidateOptionsRunnable);
         invalidateOptionsHandler.postDelayed(invalidateOptionsRunnable, getResources().getInteger(android.R.integer.config_mediumAnimTime));
     }
