@@ -114,8 +114,8 @@ public class EditorFragmentTest extends ActivityInstrumentationTestCase2<MockEdi
 
         String content = mFragment.getContent().toString();
 
-        final SourceViewEditText titleText = (SourceViewEditText) view.findViewById(R.id.sourceview_title);
-        final SourceViewEditText contentText = (SourceViewEditText) view.findViewById(R.id.sourceview_content);
+        final EditTextWithKeyBackListener titleText = (EditTextWithKeyBackListener) view.findViewById(R.id.sourceview_title);
+        final EditTextWithKeyBackListener contentText = (EditTextWithKeyBackListener) view.findViewById(R.id.sourceview_content);
 
         // -- Check that title and content text is properly loaded into the EditTexts when switching to HTML mode
 

@@ -37,8 +37,8 @@ android {
 
     defaultConfig {
         applicationId "org.wordpress.android"
-        versionName "9.1-rc-2"
-        versionCode 506
+        versionName "9.2-rc-2"
+        versionCode 515
         minSdkVersion 16
         targetSdkVersion 25
 
@@ -117,7 +117,6 @@ dependencies {
     compile ('com.yalantis:ucrop:2.2.0') {
         exclude group: 'com.squareup.okhttp3'
     }
-    compile 'com.github.xizzhu:simple-tool-tip:0.5.0'
 
     testCompile 'junit:junit:4.12'
     testCompile 'org.robolectric:robolectric:3.3.2'
@@ -136,9 +135,11 @@ dependencies {
     compile 'com.google.dagger:dagger:2.11'
     apt 'com.google.dagger:dagger-compiler:2.11'
     provided 'org.glassfish:javax.annotation:10.0-b28'
+    compile 'com.google.dagger:dagger-android-support:2.11'
+    apt 'com.google.dagger:dagger-android-processor:2.11'
 
-    compile ('com.github.wordpress-mobile.WordPress-FluxC-Android:fluxc:c910b2c7dad00bdd4e70b4e2851cc26c039f069c') {
-        exclude group: "com.android.volley";
+    compile ('com.github.wordpress-mobile.WordPress-FluxC-Android:fluxc:3251d1575c5861344ae6f8ce7c76d130bb40a696') {
+        exclude group: "com.android.volley"
     }
 
     compile ('com.github.indexos.media-for-mobile:android:43a9026f0973a2f0a74fa813132f6a16f7499c3a')
@@ -151,6 +152,12 @@ dependencies {
     debugCompile project(path:':libs:analytics:WordPressAnalytics', configuration: 'debug')
     releaseCompile project(path:':libs:editor:WordPressEditor', configuration: 'release')
     debugCompile project(path:':libs:editor:WordPressEditor', configuration: 'debug')
+    releaseCompile (project(path:':libs:login:WordPressLoginFlow', configuration: 'release')) {
+        exclude group: "com.github.wordpress-mobile.WordPress-FluxC-Android", module: "fluxc";
+    }
+    debugCompile (project(path:':libs:login:WordPressLoginFlow', configuration: 'debug')) {
+        exclude group: "com.github.wordpress-mobile.WordPress-FluxC-Android", module: "fluxc";
+    }
 
     // Debug
     debugCompile 'com.facebook.stetho:stetho:1.4.2'

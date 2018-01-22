@@ -122,7 +122,7 @@
                 <ImageView
                     android:id="@+id/my_site_plan_icon"
                     style="@style/MySiteListRowIcon"
-                    app:srcCompat="@drawable/ic_clipboard_grey_24dp"
+                    app:srcCompat="@drawable/ic_jetpack_icon_24dp"
                     android:importantForAccessibility="no"/>
 
                 <org.wordpress.android.widgets.WPTextView
@@ -145,6 +145,24 @@
                     android:text="@string/my_site_header_publish" />
 
                 <View style="@style/MySiteListSectionDividerView" />
+
+            </LinearLayout>
+
+            <!--Pages-->
+            <LinearLayout
+                android:id="@+id/row_pages"
+                style="@style/MySiteListRowLayout">
+
+                <ImageView
+                    android:id="@+id/my_site_pages_icon"
+                    style="@style/MySiteListRowIcon"
+                    app:srcCompat="@drawable/ic_pages_grey_24dp"
+                    android:importantForAccessibility="no"/>
+
+                <org.wordpress.android.widgets.WPTextView
+                    android:id="@+id/my_site_pages_text_view"
+                    style="@style/MySiteListRowTextView"
+                    android:text="@string/my_site_btn_site_pages" />
 
             </LinearLayout>
 
@@ -195,24 +213,6 @@
                     android:id="@+id/my_site_media_text_view"
                     style="@style/MySiteListRowTextView"
                     android:text="@string/media" />
-
-            </LinearLayout>
-
-            <!--Pages-->
-            <LinearLayout
-                android:id="@+id/row_pages"
-                style="@style/MySiteListRowLayout">
-
-                <ImageView
-                    android:id="@+id/my_site_pages_icon"
-                    style="@style/MySiteListRowIcon"
-                    app:srcCompat="@drawable/ic_pages_grey_24dp"
-                    android:importantForAccessibility="no"/>
-
-                <org.wordpress.android.widgets.WPTextView
-                    android:id="@+id/my_site_pages_text_view"
-                    style="@style/MySiteListRowTextView"
-                    android:text="@string/pages" />
 
             </LinearLayout>
 

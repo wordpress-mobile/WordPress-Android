@@ -1,11 +1,39 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2017-12-17 13:42:33+0000
+Translation-Revision-Date: 2017-12-23 16:28:49+0000
 Plural-Forms: nplurals=3; plural=(n==1) ? 0 : (n>=2 && n<=4) ? 1 : 2;
 Generator: GlotPress/2.4.0-alpha
 Language: cs_CZ
 -->
 <resources>
+	<string name="plugin_external_link_icon_content_description">Externí odkaz</string>
+	<string name="plugin_update_available_icon_content_description">Aktualizace je k dispozici</string>
+	<string name="plugin_icon_content_description">Ikona pluginu</string>
+	<string name="plugin_home_page">Domovská stránka pluginu</string>
+	<string name="wordpress_dot_org_plugin_page">Web pluginu na WordPress.org</string>
+	<string name="plugin_remove_dialog_message">Opravdu chcete odstranit %1$s z %2$s?\n\nDojde k deaktivaci pluginu a smazání všech přidružených souborů a dat.</string>
+	<string name="plugin_remove_dialog_title">Odstranit plugin</string>
+	<string name="plugin_remove_progress_dialog_message">Odstraňování %s…</string>
+	<string name="plugin_disable_progress_dialog_message">Deaktivování %s…</string>
+	<string name="plugin_btn_remove">Odstranit plugin</string>
+	<string name="plugin_configuration_failed">Při konfigurování pluginu se vyskytla chyba: %s</string>
+	<string name="plugin_remove_failed">Chyba při odstraňování %s.</string>
+	<string name="plugin_removed_successfully">%s byl úspěšně odstraněn.</string>
+	<string name="plugin_updated_failed_detailed">Chyba při odebírání %1$s: %2$s</string>
+	<string name="plugin_updated_failed">Chyba při odebírání %s.</string>
+	<string name="plugin_updated_successfully">%s byl úspěšně aktualizován.</string>
+	<string name="plugin_available_version">K dispozici je novější verze %s.</string>
+	<string name="plugin_installed_version">Verze pluginu %s</string>
+	<string name="plugin_detail_label_state_autoupdates">Automatické aktualizace</string>
+	<string name="plugin_detail_label_state_active">Aktivní</string>
+	<string name="plugin_autoupdates_off">Automatické aktualizace vypnuty</string>
+	<string name="plugin_autoupdates_on">Automatické aktualizace zapnuty</string>
+	<string name="plugin_inactive">Neaktivní</string>
+	<string name="plugin_active">Aktivní</string>
+	<string name="plugins">Pluginy</string>
+	<string name="my_site_btn_plugins">Pluginy</string>
+	<string name="media_edit_link_hint">Otevřít odkaz v novém okně/tabu\"</string>
+	<string name="media_edit_link_text">Odkaz na</string>
 	<string name="notification_login_failed">Došlo k chybě.</string>
 	<string name="notification_2fa_needed">Pro pokračování zadejte ověřovací kód.</string>
 	<string name="notification_error_wrong_password">Před pokračováním si znovu překontrolujte heslo.</string>
@@ -53,6 +81,7 @@ Language: cs_CZ
 	<string name="media_edit_customize_card_caption">Přizpůsobit</string>
 	<string name="media_edit_file_details_card_caption">Podrobnosti souboru</string>
 	<string name="login_error_generic">Při připojování ke Google účtu se objevily nějaké potíže.</string>
+	<string name="login_error_suffix">Možná zkuste jiný účet?</string>
 	<string name="login_error_email_not_found">Účet Google \'%s\' neodpovídá žádnému existujícímu účtu na WordPress.com.</string>
 	<string name="login_error_button">Zavřít</string>
 	<string name="login_google_button_suffix">Přihlásit se pomocí Google.</string>
@@ -62,8 +91,56 @@ Language: cs_CZ
 	<string name="post_settings_remove_featured_image">Odstranit náhledový obrázek</string>
 	<string name="post_settings_choose_featured_image">Zvolit náhledový obrázek</string>
 	<string name="login_log_in_for_share_intent">Pro sdílení obsahu se přihlašte na WordPress.com.</string>
+	<string name="enter_site_address_share_intent">Zadejte adresu WordPress webu, na který chcete sdílet obsah.</string>
+	<string name="jetpack_disconnect_error_toast">Chyba při odpojování webové stránky</string>
+	<string name="jetpack_disconnect_success_toast">Webová stránka odpojena</string>
+	<string name="jetpack_disconnect_confirm">Odpojit</string>
+	<string name="jetpack_disconnect_confirmation_message">Opravdu chcete odpojit Jetpack od webové stránky?</string>
+	<string name="jetpack_disconnect_pref_title">\"Odpojit z WordPress.com\"</string>
+	<string name="jetpack_require_two_factor_title">Vyžadovat dvoustupňové ověření</string>
+	<string name="jetpack_match_wpcom_via_email_title">Spárovat účty pomocí emailu</string>
+	<string name="jetpack_allow_wpcom_sign_in_title">Povolit přihlášení pomocí WordPress.com</string>
+	<string name="jetpack_wpcom_sign_in_category_title">Přihlášení přes WordPress.com</string>
+	<string name="jetpack_brute_force_whitelist_title">Seznam povolených IP adres</string>
+	<string name="jetpack_prevent_brute_force_title">Blokovat škodlivé pokusy o přihlášení</string>
+	<string name="jetpack_prevent_brute_force_category_title">Ochrana před útokem hrubou silou</string>
+	<string name="jetpack_send_wp_notifications_title">Odesílání nabízených oznámení</string>
+	<string name="jetpack_send_email_notifications_title">Posílat oznámení emailem</string>
+	<string name="jetpack_security_setting_title">Zabezpečení</string>
+	<string name="jetpack_monitor_uptime_title">Sledovat dobu provozu webu</string>
+	<string name="jetpack_site_settings_category_title">Nastavení Jetpack</string>
+	<string name="share_intent_adding_to">Přidat k</string>
+	<string name="share_intent_pick_site">Zvolte web</string>
+	<string name="share_action_media">Přidat do knihovny médií</string>
+	<string name="share_action_post">Přidat k novému příspěvku</string>
+	<string name="share_media_permission_required">Ke sdílení obrázků nebo videí je vyžadováno oprávnění</string>
+	<string name="invalid_ip_or_range">Neplatná IP nebo rozsah IP adres</string>
+	<string name="deleting_media_dlg">Mazání</string>
+	<string name="confirm_delete_media_video">Smazat toto video?</string>
+	<string name="confirm_delete_media_image">Smazat tento obrázek?</string>
+	<string name="media_title_document_details">Podrobnosti o dokumentu</string>
+	<string name="media_title_audio_details">Podrobnosti o zvuku</string>
+	<string name="media_title_video_details">Podrobnosti o videu</string>
 	<string name="fab_content_description_preview">Náhled</string>
+	<string name="media_title_image_details">Podrobnosti o obrázku</string>
+	<string name="media_edit_upload_date_caption">Datum nahrání</string>
+	<string name="media_edit_duration_caption">Délka trvání</string>
+	<string name="media_edit_video_dimensions_caption">Rozlišení videa</string>
+	<string name="media_edit_image_dimensions_caption">Rozlišení obrázků</string>
 	<string name="media_edit_url_caption">URL</string>
+	<string name="media_edit_filetype_caption">Typ souboru</string>
+	<string name="media_edit_filename_caption">Jméno souboru</string>
+	<string name="media_edit_alttext_text">Alternativní text</string>
+	<string name="copy">Kopírovat</string>
+	<string name="connect_site">Web pro připojení</string>
+	<string name="notification_settings_item_sights_and_sounds_blink_light">Blikat světlem</string>
+	<string name="notification_settings_item_sights_and_sounds_vibrate_device">Vibrovat zařízením</string>
+	<string name="notification_settings_item_sights_and_sounds_choose_sound">Zvolit zvuk</string>
+	<string name="notification_settings_category_sights_and_sounds">Zobrazení a zvuky</string>
+	<string name="notification_settings_item_other_account_emails">Email z WordPress.com</string>
+	<string name="notification_settings_item_other_pending_drafts">Upozorňovat jestliže jsou nevyřízené koncepty</string>
+	<string name="notification_settings_item_other_comments_other_blogs">Komentáře na jiných webech</string>
+	<string name="notification_settings_category_other">Jiné</string>
 	<string name="notification_settings_master_hint_off">Povolit oznámení</string>
 	<string name="notification_settings_master_hint_on">Zakázat oznámení</string>
 	<string name="notification_settings_master_status_off">Vypnuto</string>
@@ -74,6 +151,10 @@ Language: cs_CZ
 	<string name="button_retry">Opakovat</string>
 	<string name="login_epilogue_mysites_other">Moje weby</string>
 	<string name="login_epilogue_mysites_one">Můj web</string>
+	<string name="login_username_at">\@%s</string>
+	<string name="media_gallery_column_count_multi">%d sloupců</string>
+	<string name="media_gallery_column_count_single">1 sloupec</string>
+	<string name="editor_confirm_email_prompt_negative">Znovu odeslat email</string>
 	<string name="photo_picker_title">Zvolit obrázek</string>
 	<string name="editor_post_saved_online">Příspěvek je uložený online</string>
 	<string name="media_encoder_quality_100">Maximální</string>
@@ -89,6 +170,8 @@ Language: cs_CZ
 	<string name="update_draft">Aktualizovat koncept</string>
 	<string name="image_quality">Kvalita obrázku</string>
 	<string name="error_unknown_post_type">Neznámý formát příspěvku</string>
+	<string name="submit_for_review">Odeslat</string>
+	<string name="tell_me_more">Řekněte mi</string>
 	<string name="xmlrpc_post_blocked_error">Nepodařilo se připojit. Váš hostitel blokuje požadavky POST, které jsou potřeba ke komunikaci s webovou stránkou. Pro vyřešení toho problému kontaktujte svého hostitele.</string>
 	<string name="reader_empty_followed_blogs_search_title">Neodpovídají žádné weby</string>
 	<string name="reader_hint_search_followed_sites">Prohledat sledované stránky</string>

@@ -22,7 +22,6 @@
     <string name="pref_key_app_about" translatable="false">wp_pref_app_about</string>
     <string name="pref_key_oss_licenses" translatable="false">wp_pref_open_source_licenses</string>
     <string name="pref_key_editor" translatable="false">wp_pref_editor</string>
-    <string name="pref_key_editor_footer" translatable="false">wp_pref_editor_footer</string>
     <string name="pref_key_editor_type" translatable="false">pref_key_editor_type</string>
     <string name="pref_notification_blogs" translatable="false">wp_pref_notification_blogs</string>
     <string name="pref_notification_other_category" translatable="false">wp_pref_notification_other_category</string>
@@ -46,7 +45,15 @@
     <string name="pref_key_site_password" translatable="false">wp_pref_site_password</string>
     <string name="pref_key_site_related_posts" translatable="false">wp_pref_site_related_posts</string>
     <string name="pref_key_site_category" translatable="false">wp_pref_site_default_category</string>
+    <string name="pref_key_site_tags" translatable="false">wp_pref_site_tags</string>
     <string name="pref_key_site_format" translatable="false">wp_pref_site_default_format</string>
+    <string name="pref_key_site_week_start" translatable="false">wp_pref_site_week_start</string>
+    <string name="pref_key_site_date_format" translatable="false">wp_pref_site_date_format</string>
+    <string name="pref_key_site_time_format" translatable="false">wp_pref_site_time_format</string>
+    <string name="pref_key_site_timezone" translatable="false">wp_pref_site_timezone</string>
+    <string name="pref_key_site_posts_per_page" translatable="false">wp_pref_site_post_per_page</string>
+    <string name="pref_key_site_amp" translatable="false">wp_pref_site_amp</string>
+    <string name="pref_key_site_traffic" translatable="false">wp_pref_site_traffic</string>
     <string name="pref_key_optimize_media" translatable="false">wp_pref_optimize_media</string>
     <string name="pref_key_optimize_image" translatable="false">wp_pref_key_optimize_image</string>
     <string name="pref_key_site_image_width" translatable="false">wp_pref_site_default_image_width</string>
@@ -148,6 +155,56 @@
         <item>1</item>
         <item>0</item>
         <item>-1</item>
+    </string-array>
+
+    <string-array name="weekdays">
+        <item>Sunday</item>
+        <item>Monday</item>
+        <item>Tuesday</item>
+        <item>Wednesday</item>
+        <item>Thursday</item>
+        <item>Friday</item>
+        <item>Saturday</item>
+    </string-array>
+
+    <string-array name="weekday_values">
+        <item>0</item>
+        <item>1</item>
+        <item>2</item>
+        <item>3</item>
+        <item>4</item>
+        <item>5</item>
+        <item>6</item>
+    </string-array>
+
+    <string-array name="date_format_entries">
+        <item>December 31, 2017</item>
+        <item>2017–12–31</item>
+        <item>12/31/2017</item>
+        <item>31/12/2017</item>
+        <item>@string/site_settings_format_entry_custom</item>
+    </string-array>
+
+    <string-array name="date_format_values">
+        <item>F j, Y</item>
+        <item>Y-m-d</item>
+        <item>m/d/Y</item>
+        <item>d/m/Y</item>
+        <item>Custom</item>
+    </string-array>
+
+    <string-array name="time_format_entries">
+        <item>11:59 pm</item>
+        <item>11:59 PM</item>
+        <item>23:59</item>
+        <item>@string/site_settings_format_entry_custom</item>
+    </string-array>
+
+    <string-array name="time_format_values">
+        <item>g:i a</item>
+        <item>g:i A</item>
+        <item>H:i</item>
+        <item>Custom</item>
     </string-array>
 
     <!-- App Settings - Editor -->
