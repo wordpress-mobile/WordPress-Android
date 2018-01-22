@@ -132,6 +132,14 @@ public class PluginSqlUtils {
         }
     }
 
+    public static SitePluginModel getSitePluginBySlug(SiteModel site, String slug) {
+        List<SitePluginModel> result = WellSql.select(SitePluginModel.class)
+                .where().equals(SitePluginModelTable.SLUG, slug)
+                .equals(SitePluginModelTable.LOCAL_SITE_ID, site.getId())
+                .endWhere().getAsModel();
+        return result.isEmpty() ? null : result.get(0);
+    }
+
     // Plugin Directory
 
     public static void deletePluginDirectoryForType(PluginDirectoryType directoryType) {
