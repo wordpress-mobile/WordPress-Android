@@ -1,4 +1,4 @@
-package org.wordpress.android.fluxc.model;
+package org.wordpress.android.fluxc.model.plugin;
 
 import com.yarolegovich.wellsql.core.Identifiable;
 import com.yarolegovich.wellsql.core.annotation.Column;
