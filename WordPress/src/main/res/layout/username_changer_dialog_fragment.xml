@@ -28,7 +28,6 @@
         <ImageView
             android:id="@+id/icon"
             android:importantForAccessibility="no"
-            android:layout_alignBaseline="@+id/input_layout"
             android:layout_height="wrap_content"
             android:layout_marginEnd="@dimen/margin_extra_large"
             android:layout_marginRight="@dimen/margin_extra_large"
