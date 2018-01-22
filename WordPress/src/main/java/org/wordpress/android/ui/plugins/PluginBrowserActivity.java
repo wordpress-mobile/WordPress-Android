@@ -536,7 +536,7 @@ public class PluginBrowserActivity extends AppCompatActivity
                 if (wpOrgPlugin == null) {
                     mDispatcher.dispatch(PluginActionBuilder.newFetchWporgPluginAction(sitePlugin.getSlug()));
                 }
-                name = sitePlugin.getName();
+                name = sitePlugin.getDisplayName();
                 author = sitePlugin.getAuthorName();
             } else {
                 wpOrgPlugin = (WPOrgPluginModel) item;
