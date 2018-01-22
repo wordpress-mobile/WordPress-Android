@@ -103,20 +103,23 @@ public class SiteCreationDomainAdapter extends RecyclerView.Adapter<RecyclerView
 //            final HeaderViewHolder headerViewHolder = (HeaderViewHolder) holder;
         } else if (viewType == VIEW_TYPE_INPUT) {
             final InputViewHolder inputViewHolder = (InputViewHolder) holder;
-            inputViewHolder.input.addTextChangedListener(new TextWatcher() {
-                @Override
-                public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-                }
+            if (inputViewHolder.input.getTag() == null) {
+                inputViewHolder.input.setTag(Boolean.TRUE);
+                inputViewHolder.input.addTextChangedListener(new TextWatcher() {
+                    @Override
+                    public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+                    }
 
-                @Override
-                public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-                }
+                    @Override
+                    public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+                    }
 
-                @Override
-                public void afterTextChanged(Editable editable) {
-                    mOnDomainKeywordsListener.onChange(editable.toString());
-                }
-            });
+                    @Override
+                    public void afterTextChanged(Editable editable) {
+                        mOnDomainKeywordsListener.onChange(editable.toString());
+                    }
+                });
+            }
         } else {
             final DomainSuggestionResponse suggestion = getItem(position);
             final DomainViewHolder domainViewHolder = (DomainViewHolder) holder;
