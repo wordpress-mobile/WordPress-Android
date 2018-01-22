@@ -315,8 +315,9 @@ public class ActivityLauncher {
         context.startActivity(intent);
     }
 
-    public static void newBlogForResult(Activity activity) {
+    public static void newBlogForResult(Activity activity, String username) {
         Intent intent = new Intent(activity, SiteCreationActivity.class);
+        intent.putExtra(SiteCreationActivity.ARG_USERNAME, username);
         activity.startActivityForResult(intent, RequestCodes.CREATE_SITE);
     }
 
