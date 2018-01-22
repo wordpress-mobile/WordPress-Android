@@ -23,9 +23,9 @@
         android:contentDescription="@string/plugin_icon_content_description"
         tools:src="@drawable/plugin_placeholder" />
 
-    <TextView
-        android:id="@+id/plugin_name"
-        android:layout_width="match_parent"
+    <LinearLayout
+        android:id="@+id/plugin_name_container"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerVertical="true"
         android:layout_marginEnd="@dimen/margin_medium"
@@ -36,16 +36,36 @@
         android:layout_toLeftOf="@+id/plugin_status_container"
         android:layout_toRightOf="@id/plugin_icon"
         android:layout_toStartOf="@+id/plugin_status_container"
-        android:textColor="@color/grey_dark"
-        android:textSize="@dimen/text_sz_large"
-        tools:text="plugin_name" />
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/plugin_name"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textColor="@color/grey_dark"
+            android:textSize="@dimen/text_sz_large"
+            tools:text="plugin_name" />
+
+        <TextView
+            android:id="@+id/plugin_author"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignLeft="@+id/plugin_name"
+            android:layout_below="@+id/plugin_name"
+            android:layout_marginTop="@dimen/margin_extra_small"
+            android:ellipsize="end"
+            android:lines="1"
+            android:textColor="@color/grey_darken_10"
+            android:textSize="@dimen/text_sz_small"
+            tools:text="plugin_author" />
+    </LinearLayout>
 
     <LinearLayout
         android:id="@+id/plugin_status_container"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_alignBottom="@+id/plugin_name_container"
         android:layout_alignParentRight="true"
-        android:layout_centerVertical="true"
         android:orientation="horizontal">
 
         <ImageView

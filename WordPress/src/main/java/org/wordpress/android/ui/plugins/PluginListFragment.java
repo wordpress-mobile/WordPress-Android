@@ -20,12 +20,14 @@ import android.widget.TextView;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.fluxc.Dispatcher;
+import org.wordpress.android.fluxc.generated.PluginActionBuilder;
 import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.model.plugin.SitePluginModel;
 import org.wordpress.android.fluxc.model.plugin.WPOrgPluginModel;
 import org.wordpress.android.fluxc.store.PluginStore;
 import org.wordpress.android.ui.ActivityLauncher;
 import org.wordpress.android.ui.plugins.PluginBrowserActivity.PluginListType;
+import org.wordpress.android.util.HtmlUtils;
 import org.wordpress.android.widgets.DividerItemDecoration;
 import org.wordpress.android.widgets.WPNetworkImageView;
 
@@ -216,10 +218,12 @@ public class PluginListFragment extends Fragment {
             }
 
             String name = sitePlugin != null ? sitePlugin.getDisplayName() : wpOrgPlugin.getName();
+            String author = sitePlugin != null ? sitePlugin.getAuthorName() : HtmlUtils.fastStripHtml(wpOrgPlugin.getAuthorAsHtml());
             String iconUrl = wpOrgPlugin != null ? wpOrgPlugin.getIcon() : null;
 
             PluginViewHolder holder = (PluginViewHolder) viewHolder;
             holder.name.setText(name);
+            holder.author.setText(author);
             holder.icon.setImageUrl(iconUrl, WPNetworkImageView.ImageType.PLUGIN_ICON);
 
             if (sitePlugin != null) {
@@ -261,6 +265,7 @@ public class PluginListFragment extends Fragment {
 
         private class PluginViewHolder extends RecyclerView.ViewHolder {
             final TextView name;
+            final TextView author;
             final TextView statusText;
             final ImageView statusIcon;
             final WPNetworkImageView icon;
@@ -269,6 +274,7 @@ public class PluginListFragment extends Fragment {
             PluginViewHolder(View view) {
                 super(view);
                 name = view.findViewById(R.id.plugin_name);
+                author = view.findViewById(R.id.plugin_author);
                 statusText = view.findViewById(R.id.plugin_status_text);
                 statusIcon = view.findViewById(R.id.plugin_status_icon);
                 icon = view.findViewById(R.id.plugin_icon);
