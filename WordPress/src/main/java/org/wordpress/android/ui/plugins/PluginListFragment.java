@@ -105,7 +105,8 @@ public class PluginListFragment extends Fragment {
     }
 
     void requestPlugins() {
-        setPlugins(mListener.onListFragmentRequestPlugins(this));
+        List<?> plugins = mListener.onListFragmentRequestPlugins(this);
+        setPlugins(plugins);
     }
 
     void setListType(@NonNull PluginListType listType) {

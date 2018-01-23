@@ -437,7 +437,6 @@ public class PluginBrowserActivity extends AppCompatActivity
             mSearchView.clearFocus();
         }
         ActivityUtils.hideKeyboard(this);
-        submitSearch(query, false);
         return true;
     }
 
@@ -490,12 +489,12 @@ public class PluginBrowserActivity extends AppCompatActivity
                     }
                 }
             }, 250);
-        }
-
-        mSearchResults.clear();
-        showListFragment(PluginListType.SEARCH);
-        if (!TextUtils.isEmpty(mSearchQuery)) {
-            fetchPlugins(PluginListType.SEARCH, false);
+        } else {
+            mSearchResults.clear();
+            showListFragment(PluginListType.SEARCH);
+            if (!TextUtils.isEmpty(mSearchQuery)) {
+                fetchPlugins(PluginListType.SEARCH, false);
+            }
         }
     }
 
