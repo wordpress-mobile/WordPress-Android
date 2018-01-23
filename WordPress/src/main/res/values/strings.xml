@@ -1622,9 +1622,8 @@
     <string name="my_site_btn_view_admin">View Admin</string>
     <string name="my_site_btn_view_site">View Site</string>
     <string name="my_site_btn_plugins">Plugins</string>
-    <string name="my_site_no_sites_view_drake">Illustration</string>
-    <string name="my_site_no_sites_view_title">You don\'t have any WordPress sites yet.</string>
-    <string name="my_site_no_sites_view_subtitle">Would you like to add one?</string>
+    <string name="my_site_create_new_site">Create a new site for your business, magazine, or personal blog; or connect an existing WordPress installation.</string>
+    <string name="my_site_add_new_site">Add new site</string>
     <string name="fab_content_description_write">Write</string>
 
     <!-- site picker -->
