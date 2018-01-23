@@ -110,11 +110,9 @@ public class PluginListFragment extends Fragment {
             mCanLoadMore = false;
         }
 
-        if (!listType.equals(mListType)) {
-            mListType = listType;
-            getArguments().putSerializable(ARG_LIST_TYPE, mListType);
-            requestPlugins();
-        }
+        mListType = listType;
+        getArguments().putSerializable(ARG_LIST_TYPE, mListType);
+        requestPlugins();
     }
 
     PluginListType getListType() {

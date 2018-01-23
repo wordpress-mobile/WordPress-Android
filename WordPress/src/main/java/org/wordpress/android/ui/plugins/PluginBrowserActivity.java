@@ -4,6 +4,7 @@ import android.app.Fragment;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.annotation.ColorRes;
 import android.support.annotation.DrawableRes;
 import android.support.annotation.NonNull;
@@ -60,7 +61,7 @@ public class PluginBrowserActivity extends AppCompatActivity
         MenuItem.OnActionExpandListener,
         PluginListFragment.PluginListFragmentListener {
 
-    private static final String KEY_LAST_SEARCH = "last_search";
+    private static final String KEY_SEARCH_QUERY = "search_query";
 
     public enum PluginListType {
         SITE,
@@ -86,6 +87,7 @@ public class PluginBrowserActivity extends AppCompatActivity
     private final List<SitePluginModel> mSitePlugins = new ArrayList<>();
     private final List<WPOrgPluginModel> mSearchResults = new ArrayList<>();
 
+    private final Handler mHandler = new Handler();
     private RecyclerView mSitePluginsRecycler;
     private RecyclerView mPopularPluginsRecycler;
     private RecyclerView mNewPluginsRecycler;
@@ -93,7 +95,6 @@ public class PluginBrowserActivity extends AppCompatActivity
     private int mRowWidth;
     private int mIconSize;
 
-    private String mSavedSearch;
     private String mSearchQuery;
     private MenuItem mSearchMenuItem;
     private SearchView mSearchView;
@@ -126,7 +127,7 @@ public class PluginBrowserActivity extends AppCompatActivity
             mSite = (SiteModel) getIntent().getSerializableExtra(WordPress.SITE);
         } else {
             mSite = (SiteModel) savedInstanceState.getSerializable(WordPress.SITE);
-            mSavedSearch = savedInstanceState.getString(KEY_LAST_SEARCH);
+            mSearchQuery = savedInstanceState.getString(KEY_SEARCH_QUERY);
         }
 
         if (mSite == null) {
@@ -207,10 +208,10 @@ public class PluginBrowserActivity extends AppCompatActivity
         mSearchView = (SearchView) mSearchMenuItem.getActionView();
         mSearchView.setOnQueryTextListener(this);
 
-        if (!TextUtils.isEmpty(mSavedSearch)) {
+        if (!TextUtils.isEmpty(mSearchQuery)) {
             mSearchMenuItem.expandActionView();
-            onQueryTextSubmit(mSavedSearch);
-            mSearchView.setQuery(mSavedSearch, true);
+            onQueryTextSubmit(mSearchQuery);
+            mSearchView.setQuery(mSearchQuery, true);
         }
 
         return super.onCreateOptionsMenu(menu);
@@ -230,7 +231,7 @@ public class PluginBrowserActivity extends AppCompatActivity
         super.onSaveInstanceState(outState);
         outState.putSerializable(WordPress.SITE, mSite);
         if (mSearchMenuItem != null && mSearchMenuItem.isActionViewExpanded()) {
-            outState.putString(KEY_LAST_SEARCH, mSearchView.getQuery().toString());
+            outState.putString(KEY_SEARCH_QUERY, mSearchView.getQuery().toString());
         }
     }
 
@@ -410,7 +411,7 @@ public class PluginBrowserActivity extends AppCompatActivity
 
         mSearchResults.clear();
         mSearchResults.addAll(event.plugins);
-        fragment.requestPlugins();
+        refreshListFragment();
     }
 
     private void refreshPluginWithSlug(@NonNull String slug) {
@@ -424,13 +425,13 @@ public class PluginBrowserActivity extends AppCompatActivity
         if (mSearchView != null) {
             mSearchView.clearFocus();
         }
-        submitSearch(query);
+        submitSearch(query, false);
         return true;
     }
 
     @Override
     public boolean onQueryTextChange(String query) {
-        submitSearch(query);
+        submitSearch(query, true);
         return true;
     }
 
@@ -465,8 +466,20 @@ public class PluginBrowserActivity extends AppCompatActivity
         }
     }
 
-    private void submitSearch(@Nullable String query) {
+    private void submitSearch(@Nullable final String query, boolean delayed) {
         mSearchQuery = query;
+
+        if (delayed && !TextUtils.isEmpty(query)) {
+            mHandler.postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    if (StringUtils.equals(query, mSearchQuery)) {
+                        submitSearch(query, false);
+                    }
+                }
+            }, 250);
+        }
+
         mSearchResults.clear();
         showListFragment(PluginListType.SEARCH);
         if (!TextUtils.isEmpty(mSearchQuery)) {
@@ -500,7 +513,7 @@ public class PluginBrowserActivity extends AppCompatActivity
 
     @Override
     public boolean onMenuItemActionExpand(MenuItem menuItem) {
-        submitSearch(null);
+        submitSearch(null, false);
         return true;
     }
 
