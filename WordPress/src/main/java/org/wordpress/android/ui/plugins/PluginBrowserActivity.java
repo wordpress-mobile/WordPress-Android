@@ -188,6 +188,9 @@ public class PluginBrowserActivity extends AppCompatActivity
     @Override
     protected void onDestroy() {
         mDispatcher.unregister(this);
+        if (mSearchMenuItem != null) {
+            mSearchMenuItem.setOnActionExpandListener(null);
+        }
         if (mSearchView != null) {
             mSearchView.setOnQueryTextListener(null);
         }
@@ -205,15 +208,16 @@ public class PluginBrowserActivity extends AppCompatActivity
         getMenuInflater().inflate(R.menu.search, menu);
 
         mSearchMenuItem = menu.findItem(R.id.menu_search);
-        mSearchMenuItem.setOnActionExpandListener(this);
         mSearchView = (SearchView) mSearchMenuItem.getActionView();
-        mSearchView.setOnQueryTextListener(this);
 
         if (!TextUtils.isEmpty(mSearchQuery)) {
             mSearchMenuItem.expandActionView();
             onQueryTextSubmit(mSearchQuery);
             mSearchView.setQuery(mSearchQuery, true);
         }
+
+        mSearchMenuItem.setOnActionExpandListener(this);
+        mSearchView.setOnQueryTextListener(this);
 
         return super.onCreateOptionsMenu(menu);
     }
