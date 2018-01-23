@@ -29,6 +29,7 @@ public class SiteCreationDomainAdapter extends RecyclerView.Adapter<RecyclerView
     }
 
     private boolean mIsLoading;
+    private String mKeywords;
     private List<DomainSuggestionResponse> mSuggestions;
     private SiteCreationListener mSiteCreationListener;
     private OnDomainKeywordsListener mOnDomainKeywordsListener;
@@ -82,12 +83,13 @@ public class SiteCreationDomainAdapter extends RecyclerView.Adapter<RecyclerView
         mOnDomainKeywordsListener = onDomainKeywordsListener;
     }
 
-    public void setData(boolean isLoading, List<DomainSuggestionResponse> suggestions) {
+    public void setData(boolean isLoading, String keywords, List<DomainSuggestionResponse> suggestions) {
         if (isLoading != mIsLoading) {
             notifyItemChanged(1);
         }
 
         mIsLoading = isLoading;
+        mKeywords = keywords;
         mSuggestions = suggestions;
         notifyDataSetChanged();
     }
@@ -119,6 +121,7 @@ public class SiteCreationDomainAdapter extends RecyclerView.Adapter<RecyclerView
             final InputViewHolder inputViewHolder = (InputViewHolder) holder;
             inputViewHolder.progressBar.setVisibility(mIsLoading ? View.VISIBLE : View.GONE);
             if (inputViewHolder.input.getTag() == null) {
+                inputViewHolder.input.setText(mKeywords);
                 inputViewHolder.input.setTag(Boolean.TRUE);
                 inputViewHolder.input.addTextChangedListener(new TextWatcher() {
                     @Override

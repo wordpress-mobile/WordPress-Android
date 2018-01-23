@@ -25,7 +25,10 @@ public class SiteCreationDomainFragment extends SiteCreationBaseFormFragment<Sit
 
     private static final String ARG_USERNAME = "ARG_USERNAME";
 
+    private static final String KEY_KEYWORDS = "KEY_KEYWORDS";
+
     private String mUsername;
+    private String mKeywords;
 
     private SiteCreationDomainAdapter mSiteCreationDomainAdapter;
 
@@ -67,6 +70,10 @@ public class SiteCreationDomainFragment extends SiteCreationBaseFormFragment<Sit
             mUsername = getArguments().getString(ARG_USERNAME);
         }
 
+        if (savedInstanceState != null) {
+            mKeywords = savedInstanceState.getString(KEY_KEYWORDS);
+        }
+
         // Need to do this early so the mSiteCreationDomainAdapter gets initialized before RecyclerView needs it. This
         //  ensures that on rotation, the RecyclerView will have its data ready before layout and scroll position will
         //  hold correctly automatically.
@@ -98,6 +105,13 @@ public class SiteCreationDomainFragment extends SiteCreationBaseFormFragment<Sit
         mSiteCreationListener = null;
     }
 
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+
+        outState.putString(KEY_KEYWORDS, mKeywords);
+    }
+
     private SiteCreationDomainLoaderFragment getLoaderFragment() {
         return (SiteCreationDomainLoaderFragment) getChildFragmentManager()
                 .findFragmentByTag(SiteCreationDomainLoaderFragment.TAG);
@@ -112,6 +126,7 @@ public class SiteCreationDomainFragment extends SiteCreationBaseFormFragment<Sit
                     new SiteCreationDomainAdapter.OnDomainKeywordsListener() {
                         @Override
                         public void onChange(String keywords) {
+                            mKeywords = keywords;
                             getLoaderFragment().load(keywords);
                         }
                     });
@@ -119,13 +134,13 @@ public class SiteCreationDomainFragment extends SiteCreationBaseFormFragment<Sit
 
         switch (event.phase) {
             case UPDATING:
-                mSiteCreationDomainAdapter.setData(true, null);
+                mSiteCreationDomainAdapter.setData(true, mKeywords, null);
                 break;
             case ERROR:
-                mSiteCreationDomainAdapter.setData(false, null);
+                mSiteCreationDomainAdapter.setData(false, mKeywords, null);
                 break;
             case FINISHED:
-                mSiteCreationDomainAdapter.setData(false, event.event.suggestions);
+                mSiteCreationDomainAdapter.setData(false, mKeywords, event.event.suggestions);
                 break;
         }
     }
