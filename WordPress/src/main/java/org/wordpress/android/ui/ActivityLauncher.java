@@ -169,7 +169,6 @@ public class ActivityLauncher {
             AnalyticsUtils.trackWithSiteDetails(AnalyticsTracker.Stat.OPENED_PLUGIN_DETAIL, site);
             Intent intent = new Intent(context, PluginDetailActivity.class);
             intent.putExtra(WordPress.SITE, site);
-            intent.putExtra(PluginDetailActivity.KEY_PLUGIN_NAME, plugin.getName());
             intent.putExtra(PluginDetailActivity.KEY_PLUGIN_SLUG, plugin.getSlug());
             context.startActivityForResult(intent, RequestCodes.PLUGIN_DETAIL);
         }
@@ -180,7 +179,6 @@ public class ActivityLauncher {
             AnalyticsUtils.trackWithSiteDetails(AnalyticsTracker.Stat.OPENED_PLUGIN_DETAIL, site);
             Intent intent = new Intent(context, PluginDetailActivity.class);
             intent.putExtra(WordPress.SITE, site);
-            intent.putExtra(PluginDetailActivity.KEY_PLUGIN_NAME, plugin.getName());
             intent.putExtra(PluginDetailActivity.KEY_PLUGIN_SLUG, plugin.getSlug());
             context.startActivityForResult(intent, RequestCodes.PLUGIN_DETAIL);
         }

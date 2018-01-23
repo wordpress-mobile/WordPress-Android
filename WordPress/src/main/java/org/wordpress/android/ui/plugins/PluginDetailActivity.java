@@ -80,7 +80,6 @@ import static org.wordpress.android.widgets.WPNetworkImageView.ImageType.PHOTO;
 import static org.wordpress.android.widgets.WPNetworkImageView.ImageType.PLUGIN_ICON;
 
 public class PluginDetailActivity extends AppCompatActivity {
-    public static final String KEY_PLUGIN_NAME = "KEY_PLUGIN_NAME";
     public static final String KEY_PLUGIN_SLUG = "KEY_PLUGIN_SLUG";
     private static final String KEY_IS_CONFIGURING_PLUGIN = "KEY_IS_CONFIGURING_PLUGIN";
     private static final String KEY_IS_UPDATING_PLUGIN = "KEY_IS_UPDATING_PLUGIN";
@@ -136,16 +135,12 @@ public class PluginDetailActivity extends AppCompatActivity {
         ((WordPress) getApplication()).component().inject(this);
         mDispatcher.register(this);
 
-        // TODO: once FluxC branch which adds getSitePlugInBySlug() is merged we can rely solely on slug here
-        String pluginName;
         String pluginSlug;
         if (savedInstanceState == null) {
             mSite = (SiteModel) getIntent().getSerializableExtra(WordPress.SITE);
-            pluginName = getIntent().getStringExtra(KEY_PLUGIN_NAME);
             pluginSlug = getIntent().getStringExtra(KEY_PLUGIN_SLUG);
         } else {
             mSite = (SiteModel) savedInstanceState.getSerializable(WordPress.SITE);
-            pluginName = savedInstanceState.getString(KEY_PLUGIN_NAME);
             pluginSlug = savedInstanceState.getString(KEY_PLUGIN_SLUG);
         }
 
@@ -155,7 +150,7 @@ public class PluginDetailActivity extends AppCompatActivity {
             return;
         }
 
-        mSitePlugin = mPluginStore.getSitePluginByName(mSite, pluginName);
+        mSitePlugin = mPluginStore.getSitePluginBySlug(mSite, pluginSlug);
         mWPOrgPlugin = mPluginStore.getWPOrgPluginBySlug(pluginSlug);
 
         // we must have either a site plugin or a wporg plugin to continue
@@ -248,11 +243,8 @@ public class PluginDetailActivity extends AppCompatActivity {
     @Override
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
-
-        outState.putString(KEY_PLUGIN_NAME, getPluginName());
-        outState.putString(KEY_PLUGIN_SLUG, getPluginSlug());
-
         outState.putSerializable(WordPress.SITE, mSite);
+        outState.putString(KEY_PLUGIN_SLUG, getPluginSlug());
         outState.putBoolean(KEY_IS_CONFIGURING_PLUGIN, mIsConfiguringPlugin);
         outState.putBoolean(KEY_IS_UPDATING_PLUGIN, mIsUpdatingPlugin);
         outState.putBoolean(KEY_IS_REMOVING_PLUGIN, mIsRemovingPlugin);
