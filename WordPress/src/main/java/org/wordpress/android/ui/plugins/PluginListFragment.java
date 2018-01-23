@@ -100,6 +100,10 @@ public class PluginListFragment extends Fragment {
         }
     }
 
+    void setCanLoadMore(boolean canLoadMore) {
+        mCanLoadMore = canLoadMore;
+    }
+
     void requestPlugins() {
         setPlugins(mListener.onListFragmentRequestPlugins(this));
     }

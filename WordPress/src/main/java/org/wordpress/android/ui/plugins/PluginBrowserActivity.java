@@ -42,6 +42,7 @@ import org.wordpress.android.fluxc.store.PluginStore.OnPluginDirectorySearched;
 import org.wordpress.android.fluxc.store.PluginStore.SearchPluginDirectoryPayload;
 import org.wordpress.android.ui.ActivityLauncher;
 import org.wordpress.android.ui.RequestCodes;
+import org.wordpress.android.util.ActivityUtils;
 import org.wordpress.android.util.AniUtils;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.DisplayUtils;
@@ -269,6 +270,9 @@ public class PluginBrowserActivity extends AppCompatActivity
                 mDispatcher.dispatch(PluginActionBuilder.newFetchPluginDirectoryAction(newPayload));
                 break;
             case SEARCH:
+                if (mSearchResults.size() == 0) {
+                    showProgress(true);
+                }
                 SearchPluginDirectoryPayload searchPayload = new SearchPluginDirectoryPayload(mSearchQuery, 1);
                 mDispatcher.dispatch(PluginActionBuilder.newSearchPluginDirectoryAction(searchPayload));
                 break;
@@ -397,6 +401,8 @@ public class PluginBrowserActivity extends AppCompatActivity
     public void onPluginDirectorySearched(OnPluginDirectorySearched event) throws InterruptedException {
         if (isFinishing()) return;
 
+        showProgress(false);
+
         if (event.isError()) {
             AppLog.e(AppLog.T.API, "An error occurred while searching the plugin directory");
             return;
@@ -411,6 +417,7 @@ public class PluginBrowserActivity extends AppCompatActivity
 
         mSearchResults.clear();
         mSearchResults.addAll(event.plugins);
+        fragment.setCanLoadMore(event.canLoadMore);
         refreshListFragment();
     }
 
@@ -425,6 +432,7 @@ public class PluginBrowserActivity extends AppCompatActivity
         if (mSearchView != null) {
             mSearchView.clearFocus();
         }
+        ActivityUtils.hideKeyboard(this);
         submitSearch(query, false);
         return true;
     }
