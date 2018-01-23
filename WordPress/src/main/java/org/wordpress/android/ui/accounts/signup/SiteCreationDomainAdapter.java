@@ -7,7 +7,6 @@ import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.CheckedTextView;
 import android.widget.EditText;
 import android.widget.RadioButton;
 import android.widget.TextView;
@@ -56,10 +55,12 @@ public class SiteCreationDomainAdapter extends RecyclerView.Adapter<RecyclerView
 
     public static class DomainViewHolder extends RecyclerView.ViewHolder {
         public final RadioButton radioButton;
+        public final TextView textView;
 
         public DomainViewHolder(View itemView) {
             super(itemView);
-            radioButton = (RadioButton) itemView;
+            radioButton = (RadioButton) itemView.findViewById(R.id.radio_button);
+            textView = (TextView) itemView.findViewById(R.id.text);
         }
     }
 
@@ -123,10 +124,10 @@ public class SiteCreationDomainAdapter extends RecyclerView.Adapter<RecyclerView
         } else {
             final DomainSuggestionResponse suggestion = getItem(position);
             final DomainViewHolder domainViewHolder = (DomainViewHolder) holder;
-            domainViewHolder.radioButton.setText(suggestion.domain_name);
             domainViewHolder.radioButton.setChecked(suggestion.equals(mSelectedDomain));
+            domainViewHolder.textView.setText(suggestion.domain_name);
 
-            holder.itemView.setOnClickListener(new View.OnClickListener() {
+            View.OnClickListener clickListener = new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
                     if (!suggestion.equals(mSelectedDomain)) {
@@ -136,7 +137,10 @@ public class SiteCreationDomainAdapter extends RecyclerView.Adapter<RecyclerView
 
 //                    mSiteCreationListener.withDomain(suggestion.domain_name);
                 }
-            });
+            };
+
+            holder.itemView.setOnClickListener(clickListener);
+            domainViewHolder.radioButton.setOnClickListener(clickListener);
         }
     }
 
