@@ -92,6 +92,12 @@ public class SiteCreationDomainAdapter extends RecyclerView.Adapter<RecyclerView
         mIsLoading = isLoading;
         mKeywords = keywords;
         mSuggestions = suggestions;
+
+        if (mSuggestions != null) {
+            mSelectedDomain = mSuggestions.get(0);
+            mOnAdapterListener.onSelectionChange(mSelectedDomain.domain_name);
+        }
+
         notifyDataSetChanged();
     }
 
