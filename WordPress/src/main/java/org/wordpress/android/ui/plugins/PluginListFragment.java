@@ -152,6 +152,12 @@ public class PluginListFragment extends Fragment {
         }
     }
 
+    void showEmptyView(boolean show) {
+        if (isAdded()) {
+            getView().findViewById(R.id.text_empty).setVisibility(show ? View.VISIBLE : View.GONE);
+        }
+    }
+
     private void loadMore() {
         showProgress(true);
         mIsLoadingMore = true;

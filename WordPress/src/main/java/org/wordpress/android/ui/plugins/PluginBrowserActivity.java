@@ -422,6 +422,7 @@ public class PluginBrowserActivity extends AppCompatActivity
         mSearchResults.clear();
         mSearchResults.addAll(event.plugins);
         fragment.setCanLoadMore(event.canLoadMore);
+        fragment.showEmptyView(mSearchResults.isEmpty() && !TextUtils.isEmpty(mSearchQuery));
         refreshListFragment();
     }
 
@@ -454,7 +455,7 @@ public class PluginBrowserActivity extends AppCompatActivity
         return null;
     }
 
-    private void showListFragment(@NonNull PluginListType listType) {
+    private PluginListFragment showListFragment(@NonNull PluginListType listType) {
         PluginListFragment listFragment;
 
         Fragment fragment = getListFragment();
@@ -468,6 +469,7 @@ public class PluginBrowserActivity extends AppCompatActivity
                     .addToBackStack(null)
                     .commit();
         }
+        return listFragment;
     }
 
     private void refreshListFragment() {
@@ -491,7 +493,8 @@ public class PluginBrowserActivity extends AppCompatActivity
             }, 250);
         } else {
             mSearchResults.clear();
-            showListFragment(PluginListType.SEARCH);
+            PluginListFragment fragment = showListFragment(PluginListType.SEARCH);
+            fragment.showEmptyView(false);
             if (!TextUtils.isEmpty(mSearchQuery)) {
                 fetchPlugins(PluginListType.SEARCH, false);
             }
