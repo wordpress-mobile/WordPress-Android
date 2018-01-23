@@ -23,7 +23,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal|bottom"
             android:baselineAligned="true"
-            android:gravity="right"
+            android:gravity="end"
             android:orientation="horizontal">
 
             <ImageView
@@ -89,7 +89,9 @@
                     android:layout_marginRight="16dp"
                     android:contentDescription="@string/help"
                     app:srcCompat="@drawable/ic_info_black_24dp"
-                    android:tint="@color/grey_lighten_10" />
+                    android:tint="@color/grey_lighten_10"
+                    android:layout_marginEnd="16dp"
+                    android:layout_alignParentEnd="true"/>
             </RelativeLayout>
 
             <org.wordpress.android.widgets.WPTextView
@@ -102,7 +104,9 @@
                 android:paddingBottom="@dimen/margin_extra_large"
                 android:gravity="center_horizontal"
                 android:text="@string/sign_in_jetpack"
-                android:visibility="gone" />
+                android:visibility="gone"
+                android:paddingEnd="@dimen/margin_extra_large"
+                android:paddingStart="@dimen/margin_extra_large"/>
 
             <RelativeLayout
                 android:id="@+id/nux_username_layout"
@@ -153,7 +157,8 @@
                     android:layout_marginRight="38dp"
                     android:hint="@string/password"
                     android:maxLength="@integer/max_length_password"
-                    android:inputType="textPassword" />
+                    android:inputType="textPassword"
+                    android:layout_marginEnd="38dp"/>
 
                 <ImageView
                     android:id="@+id/imageView4"
@@ -243,7 +248,9 @@
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="16dp"
                 android:layout_marginRight="16dp"
-                android:layout_marginTop="16dp">
+                android:layout_marginTop="16dp"
+                android:layout_marginEnd="16dp"
+                android:layout_marginStart="16dp">
 
                 <org.wordpress.android.widgets.WPTextView
                     android:id="@+id/nux_sign_in_button"
@@ -302,7 +309,9 @@
                     android:gravity="center_horizontal"
                     android:text="@string/two_step_footer_label"
                     android:textColor="@color/white"
-                    app:fixWidowWords="true" />
+                    app:fixWidowWords="true"
+                    android:layout_marginStart="@dimen/margin_extra_large"
+                    android:layout_marginEnd="@dimen/margin_extra_large"/>
 
                 <org.wordpress.android.widgets.WPTextView
                     android:id="@+id/two_step_footer_button"
@@ -312,7 +321,9 @@
                     android:layout_marginRight="@dimen/margin_extra_large"
                     android:background="@drawable/selectable_background_wordpress"
                     android:text="@string/two_step_footer_button"
-                    android:textColor="@color/white" />
+                    android:textColor="@color/white"
+                    android:layout_marginStart="@dimen/margin_extra_large"
+                    android:layout_marginEnd="@dimen/margin_extra_large"/>
             </LinearLayout>
 
             <org.wordpress.android.widgets.WPTextView
@@ -323,7 +334,9 @@
                 android:layout_marginBottom="8dp"
                 android:layout_marginLeft="16dp"
                 android:layout_marginRight="16dp"
-                android:text="@string/forgot_password" />
+                android:text="@string/forgot_password"
+                android:layout_marginEnd="16dp"
+                android:layout_marginStart="16dp"/>
 
         </org.wordpress.android.widgets.WPLinearLayoutSizeBound>
 
@@ -345,7 +358,9 @@
                 android:layout_marginLeft="16dp"
                 android:layout_marginRight="16dp"
                 android:gravity="center"
-                android:text="@string/nux_add_selfhosted_blog" />
+                android:text="@string/nux_add_selfhosted_blog"
+                android:layout_marginStart="16dp"
+                android:layout_marginEnd="16dp"/>
 
             <LinearLayout
                 android:layout_width="fill_parent"
@@ -361,7 +376,9 @@
                 android:layout_marginLeft="16dp"
                 android:layout_marginRight="16dp"
                 android:gravity="center"
-                android:text="@string/nux_welcome_create_account" />
+                android:text="@string/nux_welcome_create_account"
+                android:layout_marginStart="16dp"
+                android:layout_marginEnd="16dp"/>
         </org.wordpress.android.widgets.WPLinearLayoutSizeBound>
     </LinearLayout>
 </ScrollView>

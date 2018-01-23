@@ -22,34 +22,39 @@
         android:paddingBottom="@dimen/margin_large"
         android:paddingLeft="@dimen/reader_card_content_padding"
         android:paddingRight="@dimen/reader_card_content_padding"
-        android:paddingTop="@dimen/margin_large">
+        android:paddingTop="@dimen/margin_large"
+        android:paddingStart="@dimen/reader_card_content_padding"
+        android:paddingEnd="@dimen/reader_card_content_padding">
 
         <FrameLayout
             android:layout_width="wrap_content"
             android:paddingLeft="@dimen/reader_xpost_padding_left"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:paddingStart="@dimen/reader_xpost_padding_left">
 
             <org.wordpress.android.widgets.WPNetworkImageView
                 android:id="@+id/image_blavatar"
                 android:layout_width="@dimen/blavatar_sz"
                 android:layout_height="@dimen/blavatar_sz"
-                android:layout_gravity="top|left"
+                android:layout_gravity="top|start"
                 app:srcCompat="@drawable/ic_placeholder_blavatar_grey_lighten_20_40dp" />
 
             <org.wordpress.android.widgets.WPNetworkImageView
                 android:id="@+id/image_avatar"
                 style="@style/ReaderImageView.Avatar.Small"
-                android:layout_gravity="bottom|right"
+                android:layout_gravity="bottom|end"
                 android:layout_marginLeft="14dp"
                 android:layout_marginTop="14dp"
-                app:srcCompat="@drawable/ic_placeholder_gravatar_grey_lighten_20_100dp" />
+                app:srcCompat="@drawable/ic_placeholder_gravatar_grey_lighten_20_100dp"
+                android:layout_marginStart="14dp"/>
         </FrameLayout>
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginLeft="@dimen/margin_large"
-            android:orientation="vertical">
+            android:orientation="vertical"
+            android:layout_marginStart="@dimen/margin_large">
 
             <org.wordpress.android.widgets.WPTextView
                 android:id="@+id/text_title"

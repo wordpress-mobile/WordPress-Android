@@ -13,14 +13,17 @@
     android:paddingBottom="@dimen/margin_large"
     android:paddingLeft="@dimen/margin_extra_large"
     android:paddingRight="@dimen/margin_extra_large"
-    android:paddingTop="@dimen/margin_large">
+    android:paddingTop="@dimen/margin_large"
+    android:paddingEnd="@dimen/margin_extra_large"
+    android:paddingStart="@dimen/margin_extra_large">
 
     <org.wordpress.android.widgets.WPNetworkImageView
         android:id="@+id/image_blog"
         android:layout_width="@dimen/avatar_sz_medium"
         android:layout_height="@dimen/avatar_sz_medium"
         android:layout_marginRight="@dimen/margin_large"
-        android:layout_weight="0" />
+        android:layout_weight="0"
+        android:layout_marginEnd="@dimen/margin_large"/>
 
     <LinearLayout
         android:id="@+id/layout_content"
@@ -38,7 +41,8 @@
             android:maxLines="1"
             android:textColor="@color/grey_dark"
             android:textSize="@dimen/text_sz_medium"
-            tools:text="text_title" />
+            tools:text="text_title"
+            android:layout_marginEnd="@dimen/margin_medium"/>
 
         <org.wordpress.android.widgets.WPTextView
             android:id="@+id/text_url"

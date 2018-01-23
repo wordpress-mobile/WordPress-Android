@@ -69,7 +69,9 @@
             android:text="@string/plans_manage"
             android:textColor="@color/white"
             android:textColorLink="@color/blue_light"
-            android:textSize="@dimen/text_sz_large" />
+            android:textSize="@dimen/text_sz_large"
+            android:paddingEnd="@dimen/content_margin"
+            android:paddingStart="@dimen/content_margin"/>
     </FrameLayout>
 
 </RelativeLayout>

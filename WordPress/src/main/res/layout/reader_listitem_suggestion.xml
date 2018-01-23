@@ -21,7 +21,8 @@
         android:minHeight="?android:attr/listPreferredItemHeightSmall"
         android:textAppearance="?android:attr/textAppearanceListItemSmall"
         android:textColor="@color/grey_dark"
-        tools:text="Suggestion" />
+        tools:text="Suggestion"
+        android:layout_toStartOf="@+id/image_delete"/>
 
     <ImageView
         android:id="@+id/image_delete"
@@ -32,5 +33,7 @@
         android:layout_marginLeft="@dimen/margin_small"
         android:background="?android:selectableItemBackground"
         android:padding="@dimen/margin_small"
-        android:src="@drawable/ic_cross_grey_600_24dp" />
+        android:src="@drawable/ic_cross_grey_600_24dp"
+        android:layout_marginStart="@dimen/margin_small"
+        android:layout_alignParentEnd="true"/>
 </RelativeLayout>

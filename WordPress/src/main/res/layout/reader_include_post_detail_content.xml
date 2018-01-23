@@ -16,7 +16,9 @@
         style="@style/ReaderTextView.Post.Title.Detail"
         android:layout_alignLeft="@+id/reader_webview"
         android:layout_alignRight="@+id/reader_webview"
-        tools:text="text_title"/>
+        tools:text="text_title"
+        android:layout_alignStart="@+id/reader_webview"
+        android:layout_alignEnd="@+id/reader_webview"/>
 
     <LinearLayout
         android:id="@+id/layout_dateline"
@@ -34,7 +36,8 @@
             android:layout_marginRight="@dimen/margin_large"
             android:textColor="@color/grey_darken_10"
             android:textSize="@dimen/text_sz_large"
-            tools:text="text_dateline"/>
+            tools:text="text_dateline"
+            android:layout_marginEnd="@dimen/margin_large"/>
 
         <org.wordpress.android.ui.reader.views.ReaderTagStrip
             android:id="@+id/tag_strip"

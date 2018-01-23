@@ -67,7 +67,9 @@
                 android:paddingRight="@dimen/margin_extra_small"
                 android:paddingBottom="@dimen/margin_large"
                 android:minHeight="@dimen/stats_barchart_height"
-                android:orientation="vertical" />
+                android:orientation="vertical"
+                android:paddingEnd="@dimen/margin_extra_small"
+                android:paddingStart="@dimen/margin_medium"/>
             <LinearLayout
                 android:id="@+id/stats_bar_chart_no_activity"
                 android:layout_width="wrap_content"

@@ -30,7 +30,9 @@
                 android:paddingLeft="@dimen/margin_extra_large"
                 android:paddingRight="@dimen/margin_extra_large"
                 android:paddingTop="@dimen/margin_large"
-                android:background="@color/white">
+                android:background="@color/white"
+                android:paddingEnd="@dimen/margin_extra_large"
+                android:paddingStart="@dimen/margin_extra_large">
 
                 <org.wordpress.android.widgets.WPNetworkImageView
                     android:id="@+id/image_avatar"
@@ -118,7 +120,9 @@
                 android:textIsSelectable="false"
                 android:textSize="@dimen/text_sz_large"
                 android:fontFamily="serif"
-                tools:text="text_content" />
+                tools:text="text_content"
+                android:paddingEnd="@dimen/margin_extra_large"
+                android:paddingStart="@dimen/margin_extra_large"/>
 
         </LinearLayout>
 

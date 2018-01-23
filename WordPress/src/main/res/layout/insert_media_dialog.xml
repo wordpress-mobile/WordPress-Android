@@ -14,7 +14,8 @@
             android:id="@+id/radio_group_insert_type"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="@dimen/margin_small">
+            android:layout_marginLeft="@dimen/margin_small"
+            android:layout_marginStart="@dimen/margin_small">
 
             <RadioButton
                 android:id="@+id/radio_insert_individually"
@@ -37,7 +38,8 @@
             android:layout_height="wrap_content"
             android:layout_marginLeft="@dimen/margin_extra_large"
             android:layout_marginTop="@dimen/margin_medium"
-            android:orientation="vertical">
+            android:orientation="vertical"
+            android:layout_marginStart="@dimen/margin_extra_large">
 
             <FrameLayout
                 android:layout_width="match_parent"
@@ -84,10 +86,11 @@
                     android:id="@+id/image_gallery_type"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_gravity="center_vertical|right"
+                    android:layout_gravity="center_vertical|end"
                     android:layout_marginRight="@dimen/margin_extra_large"
                     android:tint="@color/grey_darken_10"
-                    tools:src="@drawable/gallery_icon_thumbnailgrid" />
+                    tools:src="@drawable/gallery_icon_thumbnailgrid"
+                    android:layout_marginEnd="@dimen/margin_extra_large"/>
             </FrameLayout>
 
             <RelativeLayout
@@ -126,14 +129,16 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_toLeftOf="@+id/button_ok"
-                android:text="@android:string/cancel" />
+                android:text="@android:string/cancel"
+                android:layout_toStartOf="@+id/button_ok"/>
 
             <Button
                 android:id="@+id/button_ok"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentRight="true"
-                android:text="@android:string/ok" />
+                android:text="@android:string/ok"
+                android:layout_alignParentEnd="true"/>
         </RelativeLayout>
     </LinearLayout>
 </ScrollView>

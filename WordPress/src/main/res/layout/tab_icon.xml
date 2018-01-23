@@ -9,7 +9,9 @@
     android:layout_height="@dimen/toolbar_height"
     android:paddingLeft="@dimen/tabstrip_icon_spacing"
     android:paddingRight="@dimen/tabstrip_icon_spacing"
-    tools:background="@color/color_primary">
+    tools:background="@color/color_primary"
+    android:paddingEnd="@dimen/tabstrip_icon_spacing"
+    android:paddingStart="@dimen/tabstrip_icon_spacing">
 
     <ImageView
         android:id="@+id/tab_icon"
@@ -27,6 +29,7 @@
         android:layout_marginTop="-8dp"
         android:background="@drawable/badge"
         android:visibility="gone"
-        tools:visibility="visible" />
+        tools:visibility="visible"
+        android:layout_marginStart="-8dp"/>
 
 </FrameLayout>

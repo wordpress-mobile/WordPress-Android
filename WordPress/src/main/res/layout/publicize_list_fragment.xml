@@ -30,7 +30,11 @@
                 android:layout_marginTop="@dimen/margin_large"
                 android:orientation="vertical"
                 android:paddingLeft="@dimen/margin_medium"
-                android:paddingRight="@dimen/margin_medium">
+                android:paddingRight="@dimen/margin_medium"
+                android:layout_marginStart="@dimen/content_margin"
+                android:paddingEnd="@dimen/margin_medium"
+                android:paddingStart="@dimen/margin_medium"
+                android:layout_marginEnd="@dimen/content_margin">
 
                 <org.wordpress.android.widgets.WPTextView
                     android:layout_width="wrap_content"
@@ -85,7 +89,11 @@
                 android:layout_marginLeft="@dimen/content_margin"
                 android:layout_marginRight="@dimen/content_margin"
                 android:paddingLeft="@dimen/margin_medium"
-                android:paddingRight="@dimen/margin_medium">
+                android:paddingRight="@dimen/margin_medium"
+                android:layout_marginStart="@dimen/content_margin"
+                android:paddingStart="@dimen/margin_medium"
+                android:layout_marginEnd="@dimen/content_margin"
+                android:paddingEnd="@dimen/margin_medium">
 
                 <org.wordpress.android.widgets.WPTextView
                     android:id="@+id/text_manage_label"
@@ -121,7 +129,8 @@
                         android:layout_marginLeft="@dimen/margin_extra_large"
                         android:text="@string/manage"
                         android:textColor="@color/grey_dark"
-                        android:textSize="@dimen/text_sz_large" />
+                        android:textSize="@dimen/text_sz_large"
+                        android:layout_marginStart="@dimen/margin_extra_large"/>
                 </LinearLayout>
             </RelativeLayout>
         </android.support.v7.widget.CardView>

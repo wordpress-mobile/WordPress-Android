@@ -23,7 +23,9 @@
                 android:paddingLeft="@dimen/margin_large"
                 android:paddingRight="@dimen/margin_large"
                 android:paddingBottom="@dimen/margin_small"
-                style="@style/StatsModuleTitle" />
+                style="@style/StatsModuleTitle"
+                android:paddingEnd="@dimen/margin_large"
+                android:paddingStart="@dimen/margin_large"/>
 
             <include
                 android:id="@+id/stats_empty_module_placeholder"

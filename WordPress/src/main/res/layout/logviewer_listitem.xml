@@ -7,7 +7,9 @@
     android:orientation="horizontal"
     android:paddingLeft="@dimen/margin_medium"
     android:paddingRight="@dimen/margin_medium"
-    android:paddingTop="@dimen/margin_extra_small">
+    android:paddingTop="@dimen/margin_extra_small"
+    android:paddingEnd="@dimen/margin_medium"
+    android:paddingStart="@dimen/margin_medium">
 
     <org.wordpress.android.widgets.WPTextView
         android:id="@+id/text_line"
@@ -25,5 +27,6 @@
         android:layout_marginLeft="@dimen/margin_small"
         android:gravity="top"
         android:textSize="@dimen/text_sz_medium"
-        tools:text="application log text" />
+        tools:text="application log text"
+        android:layout_marginStart="@dimen/margin_small"/>
 </LinearLayout>

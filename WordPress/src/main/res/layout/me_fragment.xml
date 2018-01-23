@@ -11,7 +11,9 @@
         android:layout_height="wrap_content"
         android:orientation="vertical"
         android:paddingLeft="@dimen/content_margin"
-        android:paddingRight="@dimen/content_margin">
+        android:paddingRight="@dimen/content_margin"
+        android:paddingEnd="@dimen/content_margin"
+        android:paddingStart="@dimen/content_margin">
 
         <android.support.v7.widget.CardView
             android:layout_width="match_parent"

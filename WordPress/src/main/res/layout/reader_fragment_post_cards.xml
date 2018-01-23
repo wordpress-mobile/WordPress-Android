@@ -30,7 +30,9 @@
         android:paddingTop="@dimen/margin_large"
         android:visibility="gone"
         tools:targetApi="LOLLIPOP"
-        tools:visibility="visible">
+        tools:visibility="visible"
+        android:paddingEnd="24dp"
+        android:paddingStart="24dp">
 
         <org.wordpress.android.widgets.WPTextView
             android:layout_width="wrap_content"
@@ -55,6 +57,7 @@
         android:layout_alignParentBottom="true"
         android:layout_marginLeft="@dimen/margin_large"
         android:visibility="gone"
-        tools:visibility="visible" />
+        tools:visibility="visible"
+        android:layout_marginStart="@dimen/margin_large"/>
 
 </RelativeLayout>

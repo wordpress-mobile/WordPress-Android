@@ -49,7 +49,9 @@
         android:paddingBottom="@dimen/margin_medium"
         android:paddingLeft="@dimen/margin_medium"
         android:paddingRight="@dimen/margin_extra_large"
-        android:paddingTop="@dimen/margin_small">
+        android:paddingTop="@dimen/margin_small"
+        android:paddingStart="@dimen/margin_medium"
+        android:paddingEnd="@dimen/margin_extra_large">
 
         <EditText
             android:id="@+id/edit_add"

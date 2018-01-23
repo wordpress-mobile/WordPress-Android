@@ -95,7 +95,9 @@
                     android:layout_marginRight="@dimen/margin_medium"
                     android:background="@drawable/media_icon_circle"
                     android:padding="10dp"
-                    app:srcCompat="@drawable/media_retry_image" />
+                    app:srcCompat="@drawable/media_retry_image"
+                    android:layout_marginStart="@dimen/margin_medium"
+                    android:layout_marginEnd="@dimen/margin_medium"/>
 
                 <ImageView
                     android:id="@+id/image_trash"
@@ -105,7 +107,9 @@
                     android:layout_marginRight="@dimen/margin_medium"
                     android:background="@drawable/media_icon_circle"
                     android:padding="10dp"
-                    app:srcCompat="@drawable/ic_trash_white_24dp" />
+                    app:srcCompat="@drawable/ic_trash_white_24dp"
+                    android:layout_marginEnd="@dimen/margin_medium"
+                    android:layout_marginStart="@dimen/margin_medium"/>
             </LinearLayout>
 
             <ProgressBar

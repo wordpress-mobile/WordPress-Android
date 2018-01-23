@@ -13,7 +13,8 @@
         android:layout_height="28dp"
         android:layout_centerVertical="true"
         android:layout_marginRight="@dimen/margin_extra_large"
-        tools:background="@drawable/ic_reader_blue_wordpress_18dp"/>
+        tools:background="@drawable/ic_reader_blue_wordpress_18dp"
+        android:layout_marginEnd="@dimen/margin_extra_large"/>
 
     <org.wordpress.android.widgets.WPTextView
         android:id="@+id/text_feature_title"
@@ -25,7 +26,8 @@
         android:textColor="@color/grey_darken_20"
         android:textSize="@dimen/text_sz_large"
         android:textStyle="bold"
-        tools:text="text_feature_title"/>
+        tools:text="text_feature_title"
+        android:layout_toEndOf="@+id/image_icon"/>
 
     <org.wordpress.android.widgets.WPTextView
         android:id="@+id/text_feature_description"
@@ -37,6 +39,7 @@
         android:ellipsize="end"
         android:textColor="@color/grey_darken_20"
         android:textSize="@dimen/text_sz_medium"
-        tools:text="text_feature_description"/>
+        tools:text="text_feature_description"
+        android:layout_toEndOf="@+id/image_icon"/>
 
 </RelativeLayout>

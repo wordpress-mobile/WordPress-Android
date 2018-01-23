@@ -17,7 +17,7 @@
             android:orientation="horizontal"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:gravity="right"
+            android:gravity="end"
             android:baselineAligned="true"
             android:layout_gravity="center_horizontal|bottom">
 
@@ -29,7 +29,8 @@
                 android:layout_marginRight="16dp"
                 android:layout_marginTop="16dp"
                 android:contentDescription="@string/help"
-                android:tint="@color/blue_dark"/>
+                android:tint="@color/blue_dark"
+                android:layout_marginEnd="16dp" />
         </org.wordpress.android.widgets.WPLinearLayoutSizeBound>
 
         <org.wordpress.android.widgets.WPLinearLayoutSizeBound
@@ -48,7 +49,9 @@
                 android:layout_marginRight="@dimen/margin_medium"
                 style="@style/WordPress.NUXTitle"
                 android:fontFamily="sans-serif-light"
-                app:fixWidowWords="true"/>
+                app:fixWidowWords="true"
+                android:layout_marginStart="@dimen/margin_medium"
+                android:layout_marginEnd="@dimen/margin_medium" />
 
             <RelativeLayout
                 android:layout_width="wrap_content"
@@ -129,7 +132,8 @@
                     android:hint="@string/password"
                     android:maxLength="@integer/max_length_password"
                     android:layout_marginRight="38dp"
-                    android:layout_marginStart="38dp"/>
+                    android:layout_marginStart="38dp"
+                    android:layout_marginEnd="38dp" />
 
                 <ImageView
                     android:layout_width="wrap_content"
@@ -183,7 +187,9 @@
                     android:paddingBottom="12dp"
                     android:layout_toLeftOf="@+id/textView"
                     android:layout_toStartOf="@+id/textView"
-                    app:persistenceEnabled="true"/>
+                    app:persistenceEnabled="true"
+                    android:paddingEnd="0dp"
+                    android:paddingStart="0dp" />
 
                 <org.wordpress.android.widgets.WPTextView
                     android:layout_width="wrap_content"
@@ -226,7 +232,9 @@
                 android:layout_width="wrap_content"
                 android:layout_height="@dimen/nux_main_button_height"
                 android:layout_marginLeft="16dp"
-                android:layout_marginRight="16dp">
+                android:layout_marginRight="16dp"
+                android:layout_marginEnd="16dp"
+                android:layout_marginStart="16dp">
 
                 <org.wordpress.android.widgets.WPTextView
                     style="@style/WordPress.NUXPrimaryButton"
@@ -270,7 +278,9 @@
                 android:layout_marginLeft="16dp"
                 android:layout_marginRight="16dp"
                 style="@style/WordPress.NUXGreyButtonNoBg"
-                app:fixWidowWords="true"/>
+                app:fixWidowWords="true"
+                android:layout_marginEnd="16dp"
+                android:layout_marginStart="16dp" />
 
         </org.wordpress.android.widgets.WPLinearLayoutSizeBound>
     </LinearLayout>

@@ -9,4 +9,7 @@
     android:paddingRight="0dp"
     android:paddingLeft="0dp"
     android:drawableRight="@drawable/ic_dropdown_24dp"
-    tools:text="spinner item"/>
+    tools:text="spinner item"
+    android:paddingStart="0dp"
+    android:paddingEnd="0dp"
+    android:drawableEnd="@drawable/ic_dropdown_24dp"/>

@@ -6,6 +6,7 @@
 
     <application
         tools:replace="android:name"
-        android:name=".WordPressDebug" />
+        android:name=".WordPressDebug"
+        android:supportsRtl="true"/>
 
 </manifest>

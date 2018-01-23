@@ -25,7 +25,8 @@
         android:maxLines="1"
         android:textColor="@color/grey_dark"
         android:textSize="@dimen/text_sz_medium"
-        tools:text="user_login" />
+        tools:text="user_login"
+        android:layout_marginStart="@dimen/margin_medium"/>
 
     <org.wordpress.android.widgets.WPTextView
         android:id="@+id/suggestion_list_row_display_name_label"
@@ -34,10 +35,11 @@
         android:layout_marginLeft="@dimen/margin_medium"
         android:layout_weight="2"
         android:ellipsize="end"
-        android:gravity="center_vertical|right"
+        android:gravity="center_vertical|end"
         android:maxLines="1"
         android:textColor="@color/grey"
         android:textSize="@dimen/text_sz_medium"
-        tools:text="display_name" />
+        tools:text="display_name"
+        android:layout_marginStart="@dimen/margin_medium"/>
 
 </LinearLayout>
