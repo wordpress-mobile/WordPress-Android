@@ -50,10 +50,12 @@ public class SiteCreationDomainAdapter extends RecyclerView.Adapter<RecyclerView
 
     public static class InputViewHolder extends RecyclerView.ViewHolder {
         public final EditText input;
+        public final View progressBar;
 
         public InputViewHolder(View itemView) {
             super(itemView);
             this.input = itemView.findViewById(R.id.input);
+            this.progressBar = itemView.findViewById(R.id.progress_bar);
         }
     }
 
@@ -81,6 +83,10 @@ public class SiteCreationDomainAdapter extends RecyclerView.Adapter<RecyclerView
     }
 
     public void setData(boolean isLoading, List<DomainSuggestionResponse> suggestions) {
+        if (isLoading != mIsLoading) {
+            notifyItemChanged(1);
+        }
+
         mIsLoading = isLoading;
         mSuggestions = suggestions;
         notifyDataSetChanged();
@@ -111,6 +117,7 @@ public class SiteCreationDomainAdapter extends RecyclerView.Adapter<RecyclerView
 //            final HeaderViewHolder headerViewHolder = (HeaderViewHolder) holder;
         } else if (viewType == VIEW_TYPE_INPUT) {
             final InputViewHolder inputViewHolder = (InputViewHolder) holder;
+            inputViewHolder.progressBar.setVisibility(mIsLoading ? View.VISIBLE : View.GONE);
             if (inputViewHolder.input.getTag() == null) {
                 inputViewHolder.input.setTag(Boolean.TRUE);
                 inputViewHolder.input.addTextChangedListener(new TextWatcher() {
