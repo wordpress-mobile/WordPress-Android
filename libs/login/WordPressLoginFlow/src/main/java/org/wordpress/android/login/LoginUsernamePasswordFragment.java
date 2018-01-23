@@ -462,6 +462,8 @@ public class LoginUsernamePasswordFragment extends LoginBaseFormFragment<LoginLi
 
             mLoginListener.loggedInViaUsernamePassword(mOldSitesIDs);
         }
+
+        endProgress();
     }
 
     @SuppressWarnings("unused")
