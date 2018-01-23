@@ -7,7 +7,9 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -26,9 +28,11 @@ public class SiteCreationDomainFragment extends SiteCreationBaseFormFragment<Sit
     private static final String ARG_USERNAME = "ARG_USERNAME";
 
     private static final String KEY_KEYWORDS = "KEY_KEYWORDS";
+    private static final String KEY_DOMAIN = "KEY_DOMAIN";
 
     private String mUsername;
     private String mKeywords;
+    private String mDomain;
 
     private SiteCreationDomainAdapter mSiteCreationDomainAdapter;
 
@@ -52,6 +56,21 @@ public class SiteCreationDomainFragment extends SiteCreationBaseFormFragment<Sit
         RecyclerView recyclerView = (RecyclerView) rootView.findViewById(R.id.recycler_view);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         recyclerView.setAdapter(mSiteCreationDomainAdapter);
+
+        View bottomShadow = rootView.findViewById(R.id.bottom_shadow);
+        bottomShadow.setVisibility(View.VISIBLE);
+
+        ViewGroup bottomButtons = (ViewGroup) rootView.findViewById(R.id.bottom_buttons);
+        bottomButtons.setVisibility(View.VISIBLE);
+
+        Button finishButon = (Button) rootView.findViewById(R.id.finish_button);
+        finishButon.setVisibility(View.VISIBLE);
+        finishButon.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                mSiteCreationListener.withDomain(mDomain);
+            }
+        });
     }
 
     @Override
@@ -72,6 +91,7 @@ public class SiteCreationDomainFragment extends SiteCreationBaseFormFragment<Sit
 
         if (savedInstanceState != null) {
             mKeywords = savedInstanceState.getString(KEY_KEYWORDS);
+            mDomain = savedInstanceState.getString(KEY_DOMAIN);
         }
 
         // Need to do this early so the mSiteCreationDomainAdapter gets initialized before RecyclerView needs it. This
@@ -110,6 +130,7 @@ public class SiteCreationDomainFragment extends SiteCreationBaseFormFragment<Sit
         super.onSaveInstanceState(outState);
 
         outState.putString(KEY_KEYWORDS, mKeywords);
+        outState.putString(KEY_DOMAIN, mDomain);
     }
 
     private SiteCreationDomainLoaderFragment getLoaderFragment() {
@@ -123,11 +144,16 @@ public class SiteCreationDomainFragment extends SiteCreationBaseFormFragment<Sit
         if (mSiteCreationDomainAdapter == null) {
             // Fragment is initializing or rotating so, just instantiate a new adapter.
             mSiteCreationDomainAdapter = new SiteCreationDomainAdapter(getContext(), mSiteCreationListener,
-                    new SiteCreationDomainAdapter.OnDomainKeywordsListener() {
+                    new SiteCreationDomainAdapter.OnAdapterListener() {
                         @Override
-                        public void onChange(String keywords) {
+                        public void onKeywordsChange(String keywords) {
                             mKeywords = keywords;
                             getLoaderFragment().load(keywords);
+                        }
+
+                        @Override
+                        public void onSelectionChange(String domain) {
+                            mDomain = domain;
                         }
                     });
         }

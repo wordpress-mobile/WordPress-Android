@@ -24,15 +24,16 @@ public class SiteCreationDomainAdapter extends RecyclerView.Adapter<RecyclerView
     private static final int VIEW_TYPE_INPUT = 1;
     private static final int VIEW_TYPE_ITEM = 2;
 
-    public interface OnDomainKeywordsListener {
-        void onChange(String keywords);
+    public interface OnAdapterListener {
+        void onKeywordsChange(String keywords);
+        void onSelectionChange(String domain);
     }
 
     private boolean mIsLoading;
     private String mKeywords;
     private List<DomainSuggestionResponse> mSuggestions;
     private SiteCreationListener mSiteCreationListener;
-    private OnDomainKeywordsListener mOnDomainKeywordsListener;
+    private OnAdapterListener mOnAdapterListener;
 
     private DomainSuggestionResponse mSelectedDomain;
 
@@ -72,7 +73,7 @@ public class SiteCreationDomainAdapter extends RecyclerView.Adapter<RecyclerView
     }
 
     public SiteCreationDomainAdapter(Context context, SiteCreationListener siteCreationListener,
-            OnDomainKeywordsListener onDomainKeywordsListener) {
+            OnAdapterListener onAdapterListener) {
         super();
         ((WordPress) context.getApplicationContext()).component().inject(this);
 
@@ -80,7 +81,7 @@ public class SiteCreationDomainAdapter extends RecyclerView.Adapter<RecyclerView
         setHasStableIds(true);
 
         mSiteCreationListener = siteCreationListener;
-        mOnDomainKeywordsListener = onDomainKeywordsListener;
+        mOnAdapterListener = onAdapterListener;
     }
 
     public void setData(boolean isLoading, String keywords, List<DomainSuggestionResponse> suggestions) {
@@ -137,7 +138,7 @@ public class SiteCreationDomainAdapter extends RecyclerView.Adapter<RecyclerView
                         mDebouncer.debounce(Void.class, new Runnable() {
                             @Override
                             public void run() {
-                                mOnDomainKeywordsListener.onChange(editable.toString());
+                                mOnAdapterListener.onKeywordsChange(editable.toString());
                             }
                         }, 400, TimeUnit.MILLISECONDS);
                     }
@@ -155,9 +156,8 @@ public class SiteCreationDomainAdapter extends RecyclerView.Adapter<RecyclerView
                     if (!suggestion.equals(mSelectedDomain)) {
                         mSelectedDomain = suggestion;
                         notifyDataSetChanged();
+                        mOnAdapterListener.onSelectionChange(mSelectedDomain.domain_name);
                     }
-
-//                    mSiteCreationListener.withDomain(suggestion.domain_name);
                 }
             };
 
