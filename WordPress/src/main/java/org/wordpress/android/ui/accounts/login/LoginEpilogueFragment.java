@@ -157,6 +157,10 @@ public class LoginEpilogueFragment extends LoginBaseFormFragment<LoginEpilogueLi
                         mSitesList.post(new Runnable() {
                             @Override
                             public void run() {
+                                if (!isAdded()) {
+                                    return;
+                                }
+
                                 if (mSitesList.computeVerticalScrollRange() > mSitesList.getHeight()) {
                                     mBottomShadow.setVisibility(View.VISIBLE);
                                     mBottomButtonsContainer.setBackgroundResource(R.color.white);
