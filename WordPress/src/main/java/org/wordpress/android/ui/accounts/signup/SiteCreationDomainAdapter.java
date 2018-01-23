@@ -14,8 +14,10 @@ import android.widget.TextView;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.fluxc.network.rest.wpcom.site.DomainSuggestionResponse;
+import org.wordpress.android.util.helpers.Debouncer;
 
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 public class SiteCreationDomainAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     private static final int VIEW_TYPE_HEADER = 0;
@@ -32,6 +34,8 @@ public class SiteCreationDomainAdapter extends RecyclerView.Adapter<RecyclerView
     private OnDomainKeywordsListener mOnDomainKeywordsListener;
 
     private DomainSuggestionResponse mSelectedDomain;
+
+    private Debouncer mDebouncer = new Debouncer();
 
     public static class HeaderViewHolder extends RecyclerView.ViewHolder {
         public final View progress;
@@ -119,8 +123,13 @@ public class SiteCreationDomainAdapter extends RecyclerView.Adapter<RecyclerView
                     }
 
                     @Override
-                    public void afterTextChanged(Editable editable) {
-                        mOnDomainKeywordsListener.onChange(editable.toString());
+                    public void afterTextChanged(final Editable editable) {
+                        mDebouncer.debounce(Void.class, new Runnable() {
+                            @Override
+                            public void run() {
+                                mOnDomainKeywordsListener.onChange(editable.toString());
+                            }
+                        }, 400, TimeUnit.MILLISECONDS);
                     }
                 });
             }
