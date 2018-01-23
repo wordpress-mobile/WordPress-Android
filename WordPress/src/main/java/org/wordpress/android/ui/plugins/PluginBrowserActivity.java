@@ -37,12 +37,15 @@ import org.wordpress.android.fluxc.model.plugin.PluginDirectoryType;
 import org.wordpress.android.fluxc.model.plugin.SitePluginModel;
 import org.wordpress.android.fluxc.model.plugin.WPOrgPluginModel;
 import org.wordpress.android.fluxc.store.PluginStore;
+import org.wordpress.android.fluxc.store.PluginStore.OnPluginDirectorySearched;
+import org.wordpress.android.fluxc.store.PluginStore.SearchPluginDirectoryPayload;
 import org.wordpress.android.ui.ActivityLauncher;
 import org.wordpress.android.ui.RequestCodes;
 import org.wordpress.android.util.AniUtils;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.DisplayUtils;
 import org.wordpress.android.util.HtmlUtils;
+import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.widgets.WPNetworkImageView;
 import org.wordpress.android.widgets.WPNetworkImageView.ImageType;
@@ -62,7 +65,8 @@ public class PluginBrowserActivity extends AppCompatActivity
     public enum PluginListType {
         SITE,
         POPULAR,
-        NEW;
+        NEW,
+        SEARCH;
 
         @StringRes int getTitleRes() {
             switch (this) {
@@ -70,6 +74,8 @@ public class PluginBrowserActivity extends AppCompatActivity
                     return R.string.plugin_caption_popular;
                 case NEW:
                     return R.string.plugin_caption_new;
+                case SEARCH:
+                    return R.string.plugin_caption_search;
                 default:
                     return R.string.plugin_caption_installed;
             }
@@ -78,6 +84,7 @@ public class PluginBrowserActivity extends AppCompatActivity
 
     private SiteModel mSite;
     private final List<SitePluginModel> mSitePlugins = new ArrayList<>();
+    private final List<WPOrgPluginModel> mSearchResults = new ArrayList<>();
 
     private RecyclerView mSitePluginsRecycler;
     private RecyclerView mPopularPluginsRecycler;
@@ -86,7 +93,8 @@ public class PluginBrowserActivity extends AppCompatActivity
     private int mRowWidth;
     private int mIconSize;
 
-    private String mLastSearch;
+    private String mSavedSearch;
+    private String mSearchQuery;
     private MenuItem mSearchMenuItem;
     private SearchView mSearchView;
 
@@ -118,7 +126,7 @@ public class PluginBrowserActivity extends AppCompatActivity
             mSite = (SiteModel) getIntent().getSerializableExtra(WordPress.SITE);
         } else {
             mSite = (SiteModel) savedInstanceState.getSerializable(WordPress.SITE);
-            mLastSearch = savedInstanceState.getString(KEY_LAST_SEARCH);
+            mSavedSearch = savedInstanceState.getString(KEY_LAST_SEARCH);
         }
 
         if (mSite == null) {
@@ -199,10 +207,10 @@ public class PluginBrowserActivity extends AppCompatActivity
         mSearchView = (SearchView) mSearchMenuItem.getActionView();
         mSearchView.setOnQueryTextListener(this);
 
-        if (!TextUtils.isEmpty(mLastSearch)) {
+        if (!TextUtils.isEmpty(mSavedSearch)) {
             mSearchMenuItem.expandActionView();
-            onQueryTextSubmit(mLastSearch);
-            mSearchView.setQuery(mLastSearch, true);
+            onQueryTextSubmit(mSavedSearch);
+            mSearchView.setQuery(mSavedSearch, true);
         }
 
         return super.onCreateOptionsMenu(menu);
@@ -259,6 +267,10 @@ public class PluginBrowserActivity extends AppCompatActivity
                         new PluginStore.FetchPluginDirectoryPayload(PluginDirectoryType.NEW, loadMore);
                 mDispatcher.dispatch(PluginActionBuilder.newFetchPluginDirectoryAction(newPayload));
                 break;
+            case SEARCH:
+                SearchPluginDirectoryPayload searchPayload = new SearchPluginDirectoryPayload(mSearchQuery, 1);
+                mDispatcher.dispatch(PluginActionBuilder.newSearchPluginDirectoryAction(searchPayload));
+                break;
         }
     }
 
@@ -280,6 +292,8 @@ public class PluginBrowserActivity extends AppCompatActivity
                 adapter = (PluginBrowserAdapter) mNewPluginsRecycler.getAdapter();
                 cardView = findViewById(R.id.new_plugins_cardview);
                 break;
+            case SEARCH:
+                return;
             default:
                 adapter = (PluginBrowserAdapter) mSitePluginsRecycler.getAdapter();
                 cardView = findViewById(R.id.installed_plugins_cardview);
@@ -304,6 +318,8 @@ public class PluginBrowserActivity extends AppCompatActivity
                 return mPluginStore.getPluginDirectory(PluginDirectoryType.POPULAR);
             case NEW:
                 return mPluginStore.getPluginDirectory(PluginDirectoryType.NEW);
+            case SEARCH:
+                return mSearchResults;
             default:
                 return mPluginStore.getSitePlugins(mSite);
         }
@@ -375,6 +391,28 @@ public class PluginBrowserActivity extends AppCompatActivity
         }
     }
 
+    @SuppressWarnings("unused")
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onPluginDirectorySearched(OnPluginDirectorySearched event) throws InterruptedException {
+        if (isFinishing()) return;
+
+        if (event.isError()) {
+            AppLog.e(AppLog.T.API, "An error occurred while searching the plugin directory");
+            return;
+        }
+
+        PluginListFragment fragment = getListFragment();
+        if (fragment == null
+                || fragment.getListType() != PluginListType.SEARCH
+                || !StringUtils.equals(mSearchQuery, event.searchTerm)) {
+            return;
+        }
+
+        mSearchResults.clear();
+        mSearchResults.addAll(event.plugins);
+        fragment.requestPlugins();
+    }
+
     private void refreshPluginWithSlug(@NonNull String slug) {
         ((PluginBrowserAdapter) mSitePluginsRecycler.getAdapter()).refreshPluginWithSlug(slug);
         ((PluginBrowserAdapter) mPopularPluginsRecycler.getAdapter()).refreshPluginWithSlug(slug);
@@ -427,12 +465,13 @@ public class PluginBrowserActivity extends AppCompatActivity
         }
     }
 
-    private void showListFragmentForQuery(@Nullable String query) {
-        // TODO: search will be performed in a subsequent PR
-    }
-
-    private void submitSearch(String query) {
-        showListFragmentForQuery(query);
+    private void submitSearch(@Nullable String query) {
+        mSearchQuery = query;
+        mSearchResults.clear();
+        showListFragment(PluginListType.SEARCH);
+        if (!TextUtils.isEmpty(mSearchQuery)) {
+            fetchPlugins(PluginListType.SEARCH, false);
+        }
     }
 
     private void hideListFragment() {
@@ -461,7 +500,7 @@ public class PluginBrowserActivity extends AppCompatActivity
 
     @Override
     public boolean onMenuItemActionExpand(MenuItem menuItem) {
-        showListFragmentForQuery(null);
+        submitSearch(null);
         return true;
     }
 
