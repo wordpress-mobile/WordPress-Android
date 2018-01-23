@@ -69,6 +69,9 @@ public class SiteCreationDomainAdapter extends RecyclerView.Adapter<RecyclerView
         super();
         ((WordPress) context.getApplicationContext()).component().inject(this);
 
+        // Stable IDs so the edittext doesn't lose focus on refresh
+        setHasStableIds(true);
+
         mSiteCreationListener = siteCreationListener;
         mOnDomainKeywordsListener = onDomainKeywordsListener;
     }
@@ -158,6 +161,11 @@ public class SiteCreationDomainAdapter extends RecyclerView.Adapter<RecyclerView
         } else {
             return VIEW_TYPE_ITEM;
         }
+    }
+
+    @Override
+    public long getItemId(int position) {
+        return position; // just return the position itself. Items are all unique anyway.
     }
 
     private DomainSuggestionResponse getItem(int position) {
