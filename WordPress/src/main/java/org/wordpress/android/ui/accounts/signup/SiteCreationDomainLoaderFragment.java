@@ -63,8 +63,8 @@ public class SiteCreationDomainLoaderFragment extends Fragment {
     }
 
     @Override
-    public void onDetach() {
-        super.onDetach();
+    public void onDestroy() {
+        super.onDestroy();
         mDispatcher.unregister(this);
     }
 
