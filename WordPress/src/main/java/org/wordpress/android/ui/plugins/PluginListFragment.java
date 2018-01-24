@@ -100,10 +100,6 @@ public class PluginListFragment extends Fragment {
         }
     }
 
-    void setCanLoadMore(boolean canLoadMore) {
-        mCanLoadMore = canLoadMore;
-    }
-
     void requestPlugins() {
         List<?> plugins = mListener.onListFragmentRequestPlugins(this);
         setPlugins(plugins);
@@ -111,7 +107,8 @@ public class PluginListFragment extends Fragment {
 
     void setListType(@NonNull PluginListType listType) {
         // site plugins are retrieved all at once
-        if (listType == PluginListType.SITE) {
+        // TODO: a future PR will implement paging in search
+        if (listType == PluginListType.SITE || listType == PluginListType.SEARCH) {
             mCanLoadMore = false;
         }
 

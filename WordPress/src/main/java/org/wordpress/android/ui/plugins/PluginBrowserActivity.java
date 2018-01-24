@@ -175,7 +175,9 @@ public class PluginBrowserActivity extends AppCompatActivity
         refreshAllPlugins();
 
         if (savedInstanceState == null) {
-            fetchAllPlugins();
+            fetchPlugins(PluginListType.SITE, false);
+            fetchPlugins(PluginListType.POPULAR, false);
+            fetchPlugins(PluginListType.NEW, false);
         }
     }
 
@@ -246,12 +248,6 @@ public class PluginBrowserActivity extends AppCompatActivity
         if (requestCode == RequestCodes.PLUGIN_DETAIL) {
             refreshAllPlugins();
             refreshListFragment();
-        }
-    }
-
-    private void fetchAllPlugins() {
-        for (PluginListType pluginType: PluginListType.values()) {
-            fetchPlugins(pluginType, false);
         }
     }
 
@@ -408,7 +404,7 @@ public class PluginBrowserActivity extends AppCompatActivity
         showProgress(false);
 
         if (event.isError()) {
-            AppLog.e(AppLog.T.API, "An error occurred while searching the plugin directory");
+            AppLog.e(AppLog.T.PLUGINS, "An error occurred while searching the plugin directory");
             return;
         }
 
@@ -421,7 +417,6 @@ public class PluginBrowserActivity extends AppCompatActivity
 
         mSearchResults.clear();
         mSearchResults.addAll(event.plugins);
-        fragment.setCanLoadMore(event.canLoadMore);
         fragment.showEmptyView(mSearchResults.isEmpty() && !TextUtils.isEmpty(mSearchQuery));
         refreshListFragment();
     }
