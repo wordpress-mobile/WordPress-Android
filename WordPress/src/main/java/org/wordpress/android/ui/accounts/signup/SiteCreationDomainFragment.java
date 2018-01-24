@@ -28,10 +28,12 @@ public class SiteCreationDomainFragment extends SiteCreationBaseFormFragment<Sit
     private static final String ARG_USERNAME = "ARG_USERNAME";
 
     private static final String KEY_KEYWORDS = "KEY_KEYWORDS";
-    private static final String KEY_DOMAIN = "KEY_DOMAIN";
+    private static final String KEY_SELECTED_DOMAIN_SUGGESTION_INDEX = "KEY_SELECTED_DOMAIN_SUGGESTION_INDEX";
 
     private String mUsername;
-    private String mKeywords;
+    private String mKeywords = "";
+    private int mSelectedDomainSuggestionIndex = -1;
+
     private String mDomain;
 
     private SiteCreationDomainAdapter mSiteCreationDomainAdapter;
@@ -91,7 +93,7 @@ public class SiteCreationDomainFragment extends SiteCreationBaseFormFragment<Sit
 
         if (savedInstanceState != null) {
             mKeywords = savedInstanceState.getString(KEY_KEYWORDS);
-            mDomain = savedInstanceState.getString(KEY_DOMAIN);
+            mSelectedDomainSuggestionIndex = savedInstanceState.getInt(KEY_SELECTED_DOMAIN_SUGGESTION_INDEX);
         }
 
         // Need to do this early so the mSiteCreationDomainAdapter gets initialized before RecyclerView needs it. This
@@ -130,7 +132,7 @@ public class SiteCreationDomainFragment extends SiteCreationBaseFormFragment<Sit
         super.onSaveInstanceState(outState);
 
         outState.putString(KEY_KEYWORDS, mKeywords);
-        outState.putString(KEY_DOMAIN, mDomain);
+        outState.putInt(KEY_SELECTED_DOMAIN_SUGGESTION_INDEX, mSelectedDomainSuggestionIndex);
     }
 
     private SiteCreationDomainLoaderFragment getLoaderFragment() {
@@ -152,7 +154,8 @@ public class SiteCreationDomainFragment extends SiteCreationBaseFormFragment<Sit
                         }
 
                         @Override
-                        public void onSelectionChange(String domain) {
+                        public void onSelectionChange(int selectedDomainSuggestionIndex, String domain) {
+                            mSelectedDomainSuggestionIndex = selectedDomainSuggestionIndex;
                             mDomain = domain;
                         }
                     });
@@ -160,13 +163,18 @@ public class SiteCreationDomainFragment extends SiteCreationBaseFormFragment<Sit
 
         switch (event.phase) {
             case UPDATING:
-                mSiteCreationDomainAdapter.setData(true, mKeywords, null);
+                mSelectedDomainSuggestionIndex = -1;
+                mSiteCreationDomainAdapter.setData(true, mKeywords, mSelectedDomainSuggestionIndex, null);
                 break;
             case ERROR:
-                mSiteCreationDomainAdapter.setData(false, mKeywords, null);
+                mSiteCreationDomainAdapter.setData(false, mKeywords, mSelectedDomainSuggestionIndex, null);
                 break;
             case FINISHED:
-                mSiteCreationDomainAdapter.setData(false, mKeywords, event.event.suggestions);
+                if (mSelectedDomainSuggestionIndex == -1 ) {
+                    mSelectedDomainSuggestionIndex = 0;
+                }
+                mSiteCreationDomainAdapter.setData(false, mKeywords, mSelectedDomainSuggestionIndex,
+                        event.event.suggestions);
                 break;
         }
     }

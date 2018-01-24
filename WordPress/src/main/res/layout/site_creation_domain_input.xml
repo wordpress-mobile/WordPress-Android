@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
+<RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
@@ -9,41 +9,37 @@
     android:clickable="true"
     android:focusable="true">
 
-    <FrameLayout
+    <EditText
+        android:id="@+id/input"
+        style="@style/Theme.AppCompat.Light"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:background="@color/white"
+        android:drawableLeft="@drawable/ic_search_grey_24dp"
+        android:drawableStart="@drawable/ic_search_grey_24dp"
+        android:drawablePadding="@dimen/margin_extra_large"
+        android:hint="@string/site_creation_domain_keywords_hint"
+        android:textColorHint="@color/grey_lighten_10"
+        android:paddingLeft="@dimen/margin_extra_large"
+        android:paddingStart="@dimen/margin_extra_large"
+        android:paddingRight="@dimen/margin_extra_large"
+        android:paddingEnd="@dimen/margin_extra_large"
+        android:paddingBottom="@dimen/margin_extra_large"
+        android:paddingTop="@dimen/margin_extra_large"/>
 
-        <EditText
-            android:id="@+id/input"
-            style="@style/Theme.AppCompat.Light"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="@color/white"
-            android:drawableLeft="@drawable/ic_search_grey_24dp"
-            android:drawableStart="@drawable/ic_search_grey_24dp"
-            android:drawablePadding="@dimen/margin_extra_large"
-            android:hint="@string/site_creation_domain_keywords_hint"
-            android:textColorHint="@color/grey_lighten_10"
-            android:paddingLeft="@dimen/margin_extra_large"
-            android:paddingStart="@dimen/margin_extra_large"
-            android:paddingRight="@dimen/margin_extra_large"
-            android:paddingEnd="@dimen/margin_extra_large"
-            android:paddingBottom="@dimen/margin_extra_large"
-            android:paddingTop="@dimen/margin_extra_large"/>
-
-        <ProgressBar
-            android:id="@+id/progress_bar"
-            android:layout_width="24dp"
-            android:layout_height="24dp"
-            android:background="@color/white"
-            android:layout_marginLeft="@dimen/margin_extra_large"
-            android:layout_marginStart="@dimen/margin_extra_large"
-            android:layout_marginTop="@dimen/margin_extra_large"/>
-    </FrameLayout>
+    <ProgressBar
+        android:id="@+id/progress_bar"
+        android:layout_width="24dp"
+        android:layout_height="24dp"
+        android:background="@color/white"
+        android:layout_marginLeft="@dimen/margin_extra_large"
+        android:layout_marginStart="@dimen/margin_extra_large"
+        android:layout_marginTop="@dimen/margin_extra_large"/>
 
     <View
         android:layout_width="match_parent"
         android:layout_height="1dp"
-        android:background="@color/grey_lighten_30"/>
-</LinearLayout>
+        android:background="@color/grey_lighten_30"
+        android:layout_below="@+id/input"/>
+</RelativeLayout>
 

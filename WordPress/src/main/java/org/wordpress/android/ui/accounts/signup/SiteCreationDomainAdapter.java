@@ -26,15 +26,15 @@ public class SiteCreationDomainAdapter extends RecyclerView.Adapter<RecyclerView
 
     public interface OnAdapterListener {
         void onKeywordsChange(String keywords);
-        void onSelectionChange(String domain);
+        void onSelectionChange(int index, String domain);
     }
 
     private boolean mIsLoading;
-    private String mKeywords;
+    private String mKeywords = "";
     private List<DomainSuggestionResponse> mSuggestions;
     private OnAdapterListener mOnAdapterListener;
 
-    private DomainSuggestionResponse mSelectedDomain;
+    private int mSelectedDomainSuggestionIndex;
 
     private Debouncer mDebouncer = new Debouncer();
 
@@ -79,7 +79,8 @@ public class SiteCreationDomainAdapter extends RecyclerView.Adapter<RecyclerView
         mOnAdapterListener = onAdapterListener;
     }
 
-    void setData(boolean isLoading, String keywords, List<DomainSuggestionResponse> suggestions) {
+    void setData(boolean isLoading, String keywords, int selectedDomainSuggestionIndex,
+            List<DomainSuggestionResponse> suggestions) {
         if (isLoading != mIsLoading) {
             notifyItemChanged(1);
         }
@@ -87,11 +88,10 @@ public class SiteCreationDomainAdapter extends RecyclerView.Adapter<RecyclerView
         mIsLoading = isLoading;
         mKeywords = keywords;
         mSuggestions = suggestions;
+        mSelectedDomainSuggestionIndex = selectedDomainSuggestionIndex;
 
-        if (mSuggestions != null) {
-            mSelectedDomain = mSuggestions.get(0);
-            mOnAdapterListener.onSelectionChange(mSelectedDomain.domain_name);
-        }
+        mOnAdapterListener.onSelectionChange(mSelectedDomainSuggestionIndex,
+                mSuggestions != null ? mSuggestions.get(mSelectedDomainSuggestionIndex).domain_name : null);
 
         notifyDataSetChanged();
     }
@@ -103,7 +103,7 @@ public class SiteCreationDomainAdapter extends RecyclerView.Adapter<RecyclerView
                     parent, false);
             return new HeaderViewHolder(itemView);
         } else if (viewType == VIEW_TYPE_INPUT) {
-            View itemView = LayoutInflater.from(parent.getContext()).inflate(R.layout.site_creation_domain_input, parent,
+            final View itemView = LayoutInflater.from(parent.getContext()).inflate(R.layout.site_creation_domain_input, parent,
                     false);
             return new InputViewHolder(itemView);
         } else {
@@ -143,8 +143,10 @@ public class SiteCreationDomainAdapter extends RecyclerView.Adapter<RecyclerView
             if (inputViewHolder.keepFocus) {
                 inputViewHolder.input.requestFocus();
             }
-            if (inputViewHolder.input.getTag() == null) {
+            if (!inputViewHolder.input.getText().toString().equals(mKeywords)) {
                 inputViewHolder.input.setText(mKeywords);
+            }
+            if (inputViewHolder.input.getTag() == null) {
                 inputViewHolder.input.setTag(Boolean.TRUE);
                 inputViewHolder.input.addTextChangedListener(new TextWatcher() {
                     @Override
@@ -161,6 +163,7 @@ public class SiteCreationDomainAdapter extends RecyclerView.Adapter<RecyclerView
                             @Override
                             public void run() {
                                 mOnAdapterListener.onKeywordsChange(editable.toString());
+                                mOnAdapterListener.onSelectionChange(-1, null);
                             }
                         }, 400, TimeUnit.MILLISECONDS);
                     }
@@ -175,18 +178,20 @@ public class SiteCreationDomainAdapter extends RecyclerView.Adapter<RecyclerView
                 });
             }
         } else {
+            final boolean onSelectedItem = position - 2 == mSelectedDomainSuggestionIndex;
             final DomainSuggestionResponse suggestion = getItem(position);
             final DomainViewHolder domainViewHolder = (DomainViewHolder) holder;
-            domainViewHolder.radioButton.setChecked(suggestion.equals(mSelectedDomain));
+            domainViewHolder.radioButton.setChecked(onSelectedItem);
             domainViewHolder.textView.setText(suggestion.domain_name);
 
             View.OnClickListener clickListener = new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    if (!suggestion.equals(mSelectedDomain)) {
-                        mSelectedDomain = suggestion;
+                    if (!onSelectedItem) {
+                        mSelectedDomainSuggestionIndex = domainViewHolder.getAdapterPosition() - 2;
                         notifyDataSetChanged();
-                        mOnAdapterListener.onSelectionChange(mSelectedDomain.domain_name);
+                        mOnAdapterListener.onSelectionChange(mSelectedDomainSuggestionIndex,
+                                mSuggestions.get(mSelectedDomainSuggestionIndex).domain_name);
                     }
                 }
             };
