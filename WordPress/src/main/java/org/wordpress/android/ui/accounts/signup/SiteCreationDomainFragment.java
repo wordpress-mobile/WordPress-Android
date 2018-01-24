@@ -7,6 +7,7 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.TextUtils;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
@@ -160,7 +161,11 @@ public class SiteCreationDomainFragment extends SiteCreationBaseFormFragment<Sit
                         @Override
                         public void onKeywordsChange(String keywords) {
                             mKeywords = keywords;
-                            getLoaderFragment().load(keywords);
+
+                            // fallback to using the provided username as query if text is empty
+                            String queryString = TextUtils.isEmpty(keywords.trim()) ? mUsername : keywords;
+
+                            getLoaderFragment().load(queryString);
                         }
 
                         @Override
