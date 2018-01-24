@@ -215,13 +215,18 @@ public class PluginBrowserActivity extends AppCompatActivity
 
         if (!TextUtils.isEmpty(mSearchQuery)) {
             mSearchMenuItem.expandActionView();
-            onQueryTextSubmit(mSearchQuery);
-            mSearchView.setQuery(mSearchQuery, true);
+            mSearchView.setQuery(mSearchQuery, false);
+            fetchPlugins(PluginListType.SEARCH, false);
         }
 
         mSearchMenuItem.setOnActionExpandListener(this);
 
         return super.onCreateOptionsMenu(menu);
+    }
+
+    @Override
+    public boolean onPrepareOptionsMenu(Menu menu) {
+        return super.onPrepareOptionsMenu(menu);
     }
 
     @Override
