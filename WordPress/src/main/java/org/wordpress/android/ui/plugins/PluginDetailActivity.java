@@ -100,7 +100,6 @@ public class PluginDetailActivity extends AppCompatActivity {
     private TextView mVersionBottomTextView;
     private TextView mUpdateButton;
     private TextView mInstallButton;
-    private ProgressBar mUpdateProgressBar;
     private Switch mSwitchActive;
     private Switch mSwitchAutoupdates;
     private ProgressDialog mRemovePluginProgressDialog;
@@ -153,13 +152,6 @@ public class PluginDetailActivity extends AppCompatActivity {
         mSitePlugin = mPluginStore.getSitePluginBySlug(mSite, pluginSlug);
         mWPOrgPlugin = mPluginStore.getWPOrgPluginBySlug(pluginSlug);
 
-        // we must have either a site plugin or a wporg plugin to continue
-        if (mSitePlugin == null && mWPOrgPlugin == null) {
-            ToastUtils.showToast(this, R.string.plugin_not_found, Duration.SHORT);
-            finish();
-            return;
-        }
-
         if (savedInstanceState == null) {
             mIsActive = mSitePlugin != null && mSitePlugin.isActive();
             mIsAutoUpdateEnabled = mSitePlugin != null && mSitePlugin.isAutoUpdateEnabled();
@@ -193,7 +185,7 @@ public class PluginDetailActivity extends AppCompatActivity {
         } else if (mIsRemovingPlugin) {
             // Show remove plugin progress dialog if it's dismissed while activity is re-created
             showRemovePluginProgressDialog();
-        } else if (savedInstanceState == null) {
+        } else if (savedInstanceState == null || mWPOrgPlugin == null) {
             // Refresh the plugin information to check if there is a newer version
             mDispatcher.dispatch(PluginActionBuilder.newFetchWporgPluginAction(pluginSlug));
         }
@@ -263,7 +255,6 @@ public class PluginDetailActivity extends AppCompatActivity {
         mVersionBottomTextView = findViewById(R.id.plugin_version_bottom);
         mUpdateButton = findViewById(R.id.plugin_btn_update);
         mInstallButton = findViewById(R.id.plugin_btn_install);
-        mUpdateProgressBar = findViewById(R.id.plugin_update_progress_bar);
         mSwitchActive = findViewById(R.id.plugin_state_active);
         mSwitchAutoupdates = findViewById(R.id.plugin_state_autoupdates);
         mImageBanner = findViewById(R.id.image_banner);
@@ -388,6 +379,14 @@ public class PluginDetailActivity extends AppCompatActivity {
     }
 
     private void refreshViews() {
+        boolean hasPlugin = mSitePlugin != null || mWPOrgPlugin != null;
+        View scrollView = findViewById(R.id.scroll_view);
+        if (hasPlugin && scrollView.getVisibility() != View.VISIBLE) {
+            AniUtils.fadeIn(scrollView, AniUtils.Duration.MEDIUM);
+        } else if (!hasPlugin) {
+            scrollView.setVisibility(View.GONE);
+        }
+
         if (mWPOrgPlugin != null) {
             mTitleTextView.setText(mWPOrgPlugin.getName());
             mImageBanner.setImageUrl(mWPOrgPlugin.getBanner(), PHOTO);
@@ -400,7 +399,7 @@ public class PluginDetailActivity extends AppCompatActivity {
 
             mByLineTextView.setMovementMethod(WPLinkMovementMethod.getInstance());
             mByLineTextView.setText(Html.fromHtml(mWPOrgPlugin.getAuthorAsHtml()));
-        } else {
+        } else if (mSitePlugin != null) {
             mTitleTextView.setText(mSitePlugin.getDisplayName());
 
             if (TextUtils.isEmpty(mSitePlugin.getAuthorUrl())) {
@@ -452,7 +451,7 @@ public class PluginDetailActivity extends AppCompatActivity {
                 mVersionTopTextView.setText(installedVersion);
                 mVersionBottomTextView.setVisibility(View.GONE);
             }
-        } else {
+        } else if (mWPOrgPlugin != null) {
             String version = String.format(getString(R.string.plugin_version), mWPOrgPlugin.getVersion());
             mVersionTopTextView.setText(version);
             mVersionBottomTextView.setVisibility(View.GONE);
@@ -476,7 +475,7 @@ public class PluginDetailActivity extends AppCompatActivity {
                     }
                 });
             }
-        } else {
+        } else if (mWPOrgPlugin != null) {
             mUpdateButton.setVisibility(View.GONE);
             mInstallButton.setVisibility(View.VISIBLE);
             mInstallButton.setOnClickListener(new View.OnClickListener() {
@@ -487,7 +486,7 @@ public class PluginDetailActivity extends AppCompatActivity {
             });
         }
 
-        mUpdateProgressBar.setVisibility(mIsUpdatingPlugin ? View.VISIBLE : View.GONE);
+        findViewById(R.id.plugin_update_progress_bar).setVisibility(mIsUpdatingPlugin ? View.VISIBLE : View.GONE);
     }
 
     private void refreshRatingsViews() {
