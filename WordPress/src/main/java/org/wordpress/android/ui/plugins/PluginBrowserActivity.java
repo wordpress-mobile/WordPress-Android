@@ -1,6 +1,7 @@
 package org.wordpress.android.ui.plugins;
 
 import android.app.Fragment;
+import android.app.FragmentTransaction;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -219,7 +220,6 @@ public class PluginBrowserActivity extends AppCompatActivity
         }
 
         mSearchMenuItem.setOnActionExpandListener(this);
-        mSearchView.setOnQueryTextListener(this);
 
         return super.onCreateOptionsMenu(menu);
     }
@@ -451,17 +451,15 @@ public class PluginBrowserActivity extends AppCompatActivity
     }
 
     private PluginListFragment showListFragment(@NonNull PluginListType listType) {
-        PluginListFragment listFragment;
-
-        Fragment fragment = getListFragment();
-        if (fragment != null) {
-            listFragment = (PluginListFragment) fragment;
+        PluginListFragment listFragment = getListFragment();
+        if (listFragment != null) {
             listFragment.setListType(listType);
         } else {
             listFragment = PluginListFragment.newInstance(mSite, listType);
             getFragmentManager().beginTransaction()
                     .add(R.id.fragment_container, listFragment, PluginListFragment.TAG)
                     .addToBackStack(null)
+                    .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE)
                     .commit();
         }
         return listFragment;
@@ -477,7 +475,7 @@ public class PluginBrowserActivity extends AppCompatActivity
     private void submitSearch(@Nullable final String query, boolean delayed) {
         mSearchQuery = query;
 
-        if (delayed && !TextUtils.isEmpty(query)) {
+        if (delayed) {
             mHandler.postDelayed(new Runnable() {
                 @Override
                 public void run() {
@@ -498,9 +496,8 @@ public class PluginBrowserActivity extends AppCompatActivity
 
     private void hideListFragment() {
         if (getFragmentManager().getBackStackEntryCount() > 0) {
-            getFragmentManager().popBackStack();
+            onBackPressed();
         }
-        setTitle(R.string.plugins);
     }
 
     @Override
@@ -522,11 +519,14 @@ public class PluginBrowserActivity extends AppCompatActivity
 
     @Override
     public boolean onMenuItemActionExpand(MenuItem menuItem) {
+        submitSearch(null, true);
+        mSearchView.setOnQueryTextListener(this);
         return true;
     }
 
     @Override
     public boolean onMenuItemActionCollapse(MenuItem menuItem) {
+        mSearchView.setOnQueryTextListener(null);
         hideListFragment();
         return true;
     }
