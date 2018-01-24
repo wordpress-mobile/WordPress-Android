@@ -186,8 +186,7 @@ public class PluginDetailActivity extends AppCompatActivity {
             // Show remove plugin progress dialog if it's dismissed while activity is re-created
             showRemovePluginProgressDialog();
         } else if (savedInstanceState == null || mWPOrgPlugin == null) {
-            // Refresh the plugin information to check if there is a newer version
-            mDispatcher.dispatch(PluginActionBuilder.newFetchWporgPluginAction(pluginSlug));
+            fetchWPOrgPlugin(pluginSlug);
         }
     }
 
@@ -535,6 +534,7 @@ public class PluginDetailActivity extends AppCompatActivity {
             return "?";
         }
     }
+
     private void showPluginInfoPopup() {
         if (mWPOrgPlugin == null) return;
 
@@ -599,6 +599,17 @@ public class PluginDetailActivity extends AppCompatActivity {
         ObjectAnimator animRotate = ObjectAnimator.ofFloat(chevron, View.ROTATION, 0f, endRotate);
         animRotate.setDuration(duration.toMillis(this));
         animRotate.start();
+    }
+
+    private void fetchWPOrgPlugin(@NonNull String pluginSlug) {
+        if (mWPOrgPlugin == null && mSitePlugin == null) {
+            showFetchProgress(true);
+        }
+        mDispatcher.dispatch(PluginActionBuilder.newFetchWporgPluginAction(pluginSlug));
+    }
+
+    private void showFetchProgress(boolean show) {
+        findViewById(R.id.plugin_fetching_progress_bar).setVisibility(show ? View.VISIBLE : View.GONE);
     }
 
     private void confirmRemovePlugin() {
@@ -761,9 +772,8 @@ public class PluginDetailActivity extends AppCompatActivity {
     @SuppressWarnings("unused")
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onSitePluginConfigured(OnSitePluginConfigured event) {
-        if (isFinishing()) {
-            return;
-        }
+        if (isFinishing()) return;
+
         mIsConfiguringPlugin = false;
         if (event.isError()) {
             // The plugin was already removed in remote, there is no need to show an error to the user
@@ -814,24 +824,23 @@ public class PluginDetailActivity extends AppCompatActivity {
     @SuppressWarnings("unused")
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onWPOrgPluginFetched(PluginStore.OnWPOrgPluginFetched event) {
-        if (isFinishing()) {
-            return;
-        }
+        if (isFinishing()) return;
+
+        showFetchProgress(false);
         if (event.isError()) {
             AppLog.e(AppLog.T.API, "An error occurred while fetching wporg plugin with type: "
                     + event.error.type);
-            return;
+        } else {
+            mWPOrgPlugin = mPluginStore.getWPOrgPluginBySlug(event.pluginSlug);
+            refreshViews();
         }
-        mWPOrgPlugin = mPluginStore.getWPOrgPluginBySlug(event.pluginSlug);
-        refreshViews();
     }
 
     @SuppressWarnings("unused")
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onSitePluginUpdated(OnSitePluginUpdated event) {
-        if (isFinishing()) {
-            return;
-        }
+        if (isFinishing()) return;
+
         mIsUpdatingPlugin = false;
         if (event.isError()) {
             AppLog.e(AppLog.T.API, "An error occurred while updating the plugin with type: "
@@ -851,9 +860,8 @@ public class PluginDetailActivity extends AppCompatActivity {
     @SuppressWarnings("unused")
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void OnSitePluginInstalled(OnSitePluginInstalled event) {
-        if (isFinishing()) {
-            return;
-        }
+        if (isFinishing()) return;
+
         mIsUpdatingPlugin = false;
         if (event.isError()) {
             AppLog.e(AppLog.T.API, "An error occurred while installing the plugin with type: "
@@ -874,9 +882,8 @@ public class PluginDetailActivity extends AppCompatActivity {
     @SuppressWarnings("unused")
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onSitePluginDeleted(OnSitePluginDeleted event) {
-        if (isFinishing()) {
-            return;
-        }
+        if (isFinishing()) return;
+
         mIsRemovingPlugin = false;
         cancelRemovePluginProgressDialog();
         if (event.isError()) {
