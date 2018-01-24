@@ -108,17 +108,17 @@ public class JetpackUtils {
                     .setTitle(activity.getString(R.string.jetpack_not_found));
             builder.setPositiveButton(R.string.yes, new DialogInterface.OnClickListener() {
                 public void onClick(DialogInterface dialog, int id) {
-                    String stringToLoad = site.getAdminUrl()
-                                          + "plugin-install.php?tab=search&s=jetpack+by+wordpress.com"
-                                          + "&plugin-search-input=Search+Plugins";
-                    String authURL = WPWebViewActivity.getSiteLoginUrl(site);
-                    Intent jetpackIntent = new Intent(activity, WPWebViewActivity.class);
-                    jetpackIntent.putExtra(WPWebViewActivity.AUTHENTICATION_USER, site.getUsername());
-                    jetpackIntent.putExtra(WPWebViewActivity.AUTHENTICATION_PASSWD, site.getPassword());
-                    jetpackIntent.putExtra(WPWebViewActivity.URL_TO_LOAD, stringToLoad);
-                    jetpackIntent.putExtra(WPWebViewActivity.AUTHENTICATION_URL, authURL);
-                    activity.startActivityForResult(jetpackIntent, RequestCodes.REQUEST_JETPACK);
-                    // TODO: rename STATS_SELECTED_INSTALL_JETPACK to something more generic
+                    String stringToLoad = "https://wordpress.com/jetpack/connect?"
+                            + "url=" + site.getUrl()
+                            + "&mobile_redirect=wordpress://jetpack-connection";
+                    WPWebViewActivity.openUrlByUsingGlobalWPCOMCredentials(activity, stringToLoad);
+//                    String authURL = WPWebViewActivity.getSiteLoginUrl(site);
+//                    Intent jetpackIntent = new Intent(activity, WPWebViewActivity.class);
+//                    jetpackIntent.putExtra(WPWebViewActivity.AUTHENTICATION_USER, site.getUsername());
+//                    jetpackIntent.putExtra(WPWebViewActivity.AUTHENTICATION_PASSWD, site.getPassword());
+//                    jetpackIntent.putExtra(WPWebViewActivity.URL_TO_LOAD, stringToLoad);
+//                    jetpackIntent.putExtra(WPWebViewActivity.AUTHENTICATION_URL, authURL);
+//                    activity.startActivity(jetpackIntent);
                     AnalyticsTracker.track(AnalyticsTracker.Stat.STATS_SELECTED_INSTALL_JETPACK);
                 }
             });

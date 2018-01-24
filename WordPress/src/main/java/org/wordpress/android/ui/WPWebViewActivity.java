@@ -5,9 +5,11 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.ProgressBar;
 
@@ -17,6 +19,7 @@ import org.wordpress.android.fluxc.model.PostModel;
 import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.store.AccountStore;
 import org.wordpress.android.fluxc.store.SiteStore;
+import org.wordpress.android.ui.prefs.AppPrefs;
 import org.wordpress.android.ui.reader.ReaderActivityLauncher;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.StringUtils;
@@ -28,6 +31,9 @@ import org.wordpress.android.util.WPWebViewClient;
 import org.wordpress.android.util.helpers.WPWebChromeClient;
 
 import java.io.UnsupportedEncodingException;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.net.URLDecoder;
 import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -81,12 +87,15 @@ public class WPWebViewActivity extends WebViewActivity {
     public static final String SHARE_SUBJECT = "share_subject";
     public static final String REFERRER_URL = "referrer_url";
     public static final String DISABLE_LINKS_ON_PAGE = "DISABLE_LINKS_ON_PAGE";
+    public static final String AUTO_LOGIN_ON_WP_ADMIN = "AUTO_LOGIN_ON_WP_ADMIN";
     public static final String ALLOWED_URLS = "allowed_urls";
 
     private static final String ENCODING_UTF8 = "UTF-8";
 
-    @Inject AccountStore mAccountStore;
-    @Inject SiteStore mSiteStore;
+    @Inject
+    AccountStore mAccountStore;
+    @Inject
+    SiteStore mSiteStore;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -148,7 +157,7 @@ public class WPWebViewActivity extends WebViewActivity {
         intent.putExtra(WPWebViewActivity.AUTHENTICATION_URL, authURL);
         intent.putExtra(WPWebViewActivity.LOCAL_BLOG_ID, site.getId());
         intent.putExtra(WPWebViewActivity.DISABLE_LINKS_ON_PAGE, true);
-            intent.putExtra(ALLOWED_URLS, listOfAllowedURLs);
+        intent.putExtra(ALLOWED_URLS, listOfAllowedURLs);
         if (post != null) {
             intent.putExtra(WPWebViewActivity.SHAREABLE_URL, post.getLink());
             if (!TextUtils.isEmpty(post.getTitle())) {
@@ -221,14 +230,17 @@ public class WPWebViewActivity extends WebViewActivity {
         mWebView.getSettings().setDomStorageEnabled(true);
 
         WebViewClient webViewClient;
-        Bundle extras = getIntent().getExtras();
+        final Bundle extras = getIntent().getExtras();
+        boolean autoLoginOnWpAdmin = false;
 
         // Configure the allowed URLs if available
         ArrayList<String> allowedURL = null;
         if (extras != null && extras.getBoolean(DISABLE_LINKS_ON_PAGE, false)) {
             String addressToLoad = extras.getString(URL_TO_LOAD);
             String authURL = extras.getString(AUTHENTICATION_URL);
+            autoLoginOnWpAdmin = extras.getBoolean(AUTO_LOGIN_ON_WP_ADMIN, false);
             allowedURL = new ArrayList<>();
+            allowedURL.add("wordpress://jetpack-connection");
             if (!TextUtils.isEmpty(addressToLoad)) {
                 allowedURL.add(addressToLoad);
             }
@@ -236,13 +248,14 @@ public class WPWebViewActivity extends WebViewActivity {
                 allowedURL.add(authURL);
             }
 
-            if(extras.getStringArray(ALLOWED_URLS) != null) {
+            if (extras.getStringArray(ALLOWED_URLS) != null) {
                 String[] urls = extras.getStringArray(ALLOWED_URLS);
-                for (String currentURL: urls) {
+                for (String currentURL : urls) {
                     allowedURL.add(currentURL);
                 }
             }
         }
+
 
         if (getIntent().hasExtra(LOCAL_BLOG_ID)) {
             SiteModel site = mSiteStore.getSiteByLocalId(getIntent().getIntExtra(LOCAL_BLOG_ID, -1));
@@ -251,12 +264,51 @@ public class WPWebViewActivity extends WebViewActivity {
                 finish();
             }
             webViewClient = new WPWebViewClient(site, mAccountStore.getAccessToken(), allowedURL);
+        } else if (true) {
+            webViewClient = new URLFilteredWebViewClient(allowedURL) {
+                @Override
+                public void onPageFinished(WebView view, String stringUrl) {
+                    super.onPageFinished(view, stringUrl);
+                    try {
+                        URL actualUrl = new URL(stringUrl);
+                        String login = "/wp-login.php";
+                        SiteModel site = mSiteStore.getSiteByLocalId(AppPrefs.getSelectedSite());
+                        if (actualUrl.getHost().equals(site.getUrl()) && actualUrl.getPath().equals(login)) {
+                            Log.d("vojta", "found login");
+                            String authURL = WPWebViewActivity.getSiteLoginUrl(site);
+                            Map<String, String> queryMap = getQueryMap(actualUrl.getQuery());
+                            String urlToLoad = URLDecoder.decode(queryMap.get("redirect_to"), ENCODING_UTF8);
+                            loadAuthenticatedUrl(authURL, urlToLoad, site.getUsername(), site.getPassword());
+                        } else {
+                            Log.d("vojta", "missed login");
+                        }
+                    } catch (MalformedURLException e) {
+                        e.printStackTrace();
+                    } catch (UnsupportedEncodingException e) {
+                        e.printStackTrace();
+                    }
+                }
+            };
         } else {
             webViewClient = new URLFilteredWebViewClient(allowedURL);
         }
 
         mWebView.setWebViewClient(webViewClient);
         mWebView.setWebChromeClient(new WPWebChromeClient(this, (ProgressBar) findViewById(R.id.progress_bar)));
+    }
+
+    private  static Map<String, String> getQueryMap(String query)
+    {
+        Map<String, String> map = new HashMap<>();
+        if (query != null && !query.isEmpty()) {
+            String[] params = query.split("&");
+            for (String param : params) {
+                String name = param.split("=")[0];
+                String value = param.split("=")[1];
+                map.put(name, value);
+            }
+        }
+        return map;
     }
 
     @Override
@@ -336,7 +388,7 @@ public class WPWebViewActivity extends WebViewActivity {
     }
 
     public static String getAuthenticationPostData(String authenticationUrl, String urlToLoad, String username,
-            String password, String token) {
+                                                   String password, String token) {
         if (TextUtils.isEmpty(authenticationUrl)) return "";
 
         try {

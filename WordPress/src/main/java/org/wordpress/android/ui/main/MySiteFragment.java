@@ -62,6 +62,7 @@ public class MySiteFragment extends Fragment
 
     private static final long ALERT_ANIM_OFFSET_MS   = 1000L;
     private static final long ALERT_ANIM_DURATION_MS = 1000L;
+    private static final String JETPACK_CONNECTION_URL = "https://wordpress.com/jetpack/connect?url=%s&mobile_redirect=wordpress://jetpack-connection";
     public static final int HIDE_WP_ADMIN_YEAR = 2015;
     public static final int HIDE_WP_ADMIN_MONTH = 9;
     public static final int HIDE_WP_ADMIN_DAY = 7;
@@ -522,8 +523,7 @@ public class MySiteFragment extends Fragment
                         getActivity().findViewById(R.id.coordinator), true,
                         event.post, event.errorMessage, site, mDispatcher);
             }
-        }
-        else if (event.mediaModelList != null && !event.mediaModelList.isEmpty()) {
+        } else if (event.mediaModelList != null && !event.mediaModelList.isEmpty()) {
             UploadUtils.onMediaUploadedSnackbarHandler(getActivity(),
                     getActivity().findViewById(R.id.coordinator), true,
                     event.mediaModelList, site, event.errorMessage);
