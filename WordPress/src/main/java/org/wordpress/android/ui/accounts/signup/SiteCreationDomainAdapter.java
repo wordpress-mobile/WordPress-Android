@@ -39,13 +39,8 @@ public class SiteCreationDomainAdapter extends RecyclerView.Adapter<RecyclerView
     private Debouncer mDebouncer = new Debouncer();
 
     public static class HeaderViewHolder extends RecyclerView.ViewHolder {
-        public final View progress;
-        public final TextView label;
-
-        HeaderViewHolder(View itemView) {
+        public HeaderViewHolder(View itemView) {
             super(itemView);
-            this.progress = itemView.findViewById(R.id.progress_container);
-            this.label = (TextView) itemView.findViewById(R.id.progress_label);
         }
     }
 
@@ -120,7 +115,7 @@ public class SiteCreationDomainAdapter extends RecyclerView.Adapter<RecyclerView
         int viewType = getItemViewType(position);
 
         if (viewType == VIEW_TYPE_HEADER) {
-//            final HeaderViewHolder headerViewHolder = (HeaderViewHolder) holder;
+            // nothing to configure in the header
         } else if (viewType == VIEW_TYPE_INPUT) {
             final InputViewHolder inputViewHolder = (InputViewHolder) holder;
             inputViewHolder.progressBar.setVisibility(mIsLoading ? View.VISIBLE : View.GONE);
