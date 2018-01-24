@@ -105,8 +105,8 @@ public class SiteCreationDomainAdapter extends RecyclerView.Adapter<RecyclerView
                     parent, false);
             return new HeaderViewHolder(itemView);
         } else if (viewType == VIEW_TYPE_INPUT) {
-            final View itemView = LayoutInflater.from(parent.getContext()).inflate(R.layout.site_creation_domain_input, parent,
-                    false);
+            final View itemView = LayoutInflater.from(parent.getContext()).inflate(R.layout.site_creation_domain_input,
+                    parent, false);
             TextWatcher textWatcher = new TextWatcher() {
                 @Override
                 public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
