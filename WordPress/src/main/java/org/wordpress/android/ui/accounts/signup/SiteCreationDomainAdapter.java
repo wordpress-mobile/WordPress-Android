@@ -26,6 +26,8 @@ public class SiteCreationDomainAdapter extends RecyclerView.Adapter<RecyclerView
     private static final int VIEW_TYPE_INPUT = 1;
     private static final int VIEW_TYPE_ITEM = 2;
 
+    private static final int GET_SUGGESTIONS_INTERVAL_MS = 400;
+
     public interface OnAdapterListener {
         void onKeywordsChange(String keywords);
         void onSelectionChange(int index, String domain);
@@ -76,7 +78,7 @@ public class SiteCreationDomainAdapter extends RecyclerView.Adapter<RecyclerView
                         public void run() {
                             keywordsChanged(text);
                         }
-                    }, 400, TimeUnit.MILLISECONDS);
+                    }, GET_SUGGESTIONS_INTERVAL_MS, TimeUnit.MILLISECONDS);
                 }
             };
         }
