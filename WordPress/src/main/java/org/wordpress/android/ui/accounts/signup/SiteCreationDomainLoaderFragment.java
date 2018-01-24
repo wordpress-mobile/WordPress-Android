@@ -26,11 +26,11 @@ public class SiteCreationDomainLoaderFragment extends Fragment {
         ERROR
     }
 
-    public static class DomainSuggestionEvent {
-        public final DomainUpdatePhase phase;
-        public final OnSuggestedDomains event;
+    static class DomainSuggestionEvent {
+        final DomainUpdatePhase phase;
+        final OnSuggestedDomains event;
 
-        public DomainSuggestionEvent(DomainUpdatePhase phase, OnSuggestedDomains event) {
+        DomainSuggestionEvent(DomainUpdatePhase phase, OnSuggestedDomains event) {
             this.phase = phase;
             this.event = event;
         }

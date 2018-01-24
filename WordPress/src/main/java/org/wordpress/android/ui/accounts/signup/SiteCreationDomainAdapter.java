@@ -38,35 +38,35 @@ public class SiteCreationDomainAdapter extends RecyclerView.Adapter<RecyclerView
 
     private Debouncer mDebouncer = new Debouncer();
 
-    public static class HeaderViewHolder extends RecyclerView.ViewHolder {
-        public HeaderViewHolder(View itemView) {
+    private static class HeaderViewHolder extends RecyclerView.ViewHolder {
+        private HeaderViewHolder(View itemView) {
             super(itemView);
         }
     }
 
-    public static class InputViewHolder extends RecyclerView.ViewHolder {
-        public final EditText input;
-        public final View progressBar;
+    private static class InputViewHolder extends RecyclerView.ViewHolder {
+        private final EditText input;
+        private final View progressBar;
 
-        public InputViewHolder(View itemView) {
+        private InputViewHolder(View itemView) {
             super(itemView);
             this.input = itemView.findViewById(R.id.input);
             this.progressBar = itemView.findViewById(R.id.progress_bar);
         }
     }
 
-    public static class DomainViewHolder extends RecyclerView.ViewHolder {
-        public final RadioButton radioButton;
-        public final TextView textView;
+    private static class DomainViewHolder extends RecyclerView.ViewHolder {
+        private final RadioButton radioButton;
+        private final TextView textView;
 
-        public DomainViewHolder(View itemView) {
+        private DomainViewHolder(View itemView) {
             super(itemView);
             radioButton = (RadioButton) itemView.findViewById(R.id.radio_button);
             textView = (TextView) itemView.findViewById(R.id.text);
         }
     }
 
-    public SiteCreationDomainAdapter(Context context, OnAdapterListener onAdapterListener) {
+    SiteCreationDomainAdapter(Context context, OnAdapterListener onAdapterListener) {
         super();
         ((WordPress) context.getApplicationContext()).component().inject(this);
 
@@ -76,7 +76,7 @@ public class SiteCreationDomainAdapter extends RecyclerView.Adapter<RecyclerView
         mOnAdapterListener = onAdapterListener;
     }
 
-    public void setData(boolean isLoading, String keywords, List<DomainSuggestionResponse> suggestions) {
+    void setData(boolean isLoading, String keywords, List<DomainSuggestionResponse> suggestions) {
         if (isLoading != mIsLoading) {
             notifyItemChanged(1);
         }
