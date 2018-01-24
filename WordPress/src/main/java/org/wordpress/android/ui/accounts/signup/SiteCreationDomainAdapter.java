@@ -46,14 +46,16 @@ public class SiteCreationDomainAdapter extends RecyclerView.Adapter<RecyclerView
 
     private static class InputViewHolder extends RecyclerView.ViewHolder {
         private final EditText input;
+        private final TextWatcher textWatcher;
         private final View progressBar;
 
         private boolean isDetached;
         private boolean keepFocus;
 
-        private InputViewHolder(View itemView) {
+        private InputViewHolder(View itemView, TextWatcher textWatcher) {
             super(itemView);
             this.input = itemView.findViewById(R.id.input);
+            this.textWatcher = textWatcher;
             this.progressBar = itemView.findViewById(R.id.progress_bar);
         }
     }
@@ -105,7 +107,28 @@ public class SiteCreationDomainAdapter extends RecyclerView.Adapter<RecyclerView
         } else if (viewType == VIEW_TYPE_INPUT) {
             final View itemView = LayoutInflater.from(parent.getContext()).inflate(R.layout.site_creation_domain_input, parent,
                     false);
-            return new InputViewHolder(itemView);
+            TextWatcher textWatcher = new TextWatcher() {
+                @Override
+                public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+                }
+
+                @Override
+                public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+                }
+
+                @Override
+                public void afterTextChanged(final Editable editable) {
+                    final String text = editable.toString();
+                    mDebouncer.debounce(Void.class, new Runnable() {
+                        @Override
+                        public void run() {
+                            mOnAdapterListener.onKeywordsChange(text);
+                            mOnAdapterListener.onSelectionChange(-1, null);
+                        }
+                    }, 400, TimeUnit.MILLISECONDS);
+                }
+            };
+            return new InputViewHolder(itemView, textWatcher);
         } else {
             View itemView = LayoutInflater.from(parent.getContext()).inflate(R.layout.site_creation_domain_item, parent,
                     false);
@@ -140,43 +163,23 @@ public class SiteCreationDomainAdapter extends RecyclerView.Adapter<RecyclerView
         } else if (viewType == VIEW_TYPE_INPUT) {
             final InputViewHolder inputViewHolder = (InputViewHolder) holder;
             inputViewHolder.progressBar.setVisibility(mIsLoading ? View.VISIBLE : View.GONE);
+
+            inputViewHolder.input.removeTextChangedListener(inputViewHolder.textWatcher);
             if (inputViewHolder.keepFocus) {
                 inputViewHolder.input.requestFocus();
             }
             if (!inputViewHolder.input.getText().toString().equals(mKeywords)) {
                 inputViewHolder.input.setText(mKeywords);
             }
-            if (inputViewHolder.input.getTag() == null) {
-                inputViewHolder.input.setTag(Boolean.TRUE);
-                inputViewHolder.input.addTextChangedListener(new TextWatcher() {
-                    @Override
-                    public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-                    }
-
-                    @Override
-                    public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-                    }
-
-                    @Override
-                    public void afterTextChanged(final Editable editable) {
-                        mDebouncer.debounce(Void.class, new Runnable() {
-                            @Override
-                            public void run() {
-                                mOnAdapterListener.onKeywordsChange(editable.toString());
-                                mOnAdapterListener.onSelectionChange(-1, null);
-                            }
-                        }, 400, TimeUnit.MILLISECONDS);
-                    }
-                });
-                inputViewHolder.input.setOnFocusChangeListener(new View.OnFocusChangeListener() {
-                    @Override
-                    public void onFocusChange(View view, boolean focused) {
-                        // when the focus is lost when out-of-view then it means we lost it because of the shadowing.
-                        //  Let's keep a note to restore focus when back-in-view.
-                        inputViewHolder.keepFocus = !focused && inputViewHolder.isDetached;
-                    }
-                });
-            }
+            inputViewHolder.input.addTextChangedListener(inputViewHolder.textWatcher);
+            inputViewHolder.input.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+                @Override
+                public void onFocusChange(View view, boolean focused) {
+                    // when the focus is lost when out-of-view then it means we lost it because of the shadowing.
+                    //  Let's keep a note to restore focus when back-in-view.
+                    inputViewHolder.keepFocus = !focused && inputViewHolder.isDetached;
+                }
+            });
         } else {
             final boolean onSelectedItem = position - 2 == mSelectedDomainSuggestionIndex;
             final DomainSuggestionResponse suggestion = getItem(position);
