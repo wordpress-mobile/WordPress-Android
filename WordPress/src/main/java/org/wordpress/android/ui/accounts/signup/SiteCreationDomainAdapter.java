@@ -48,6 +48,9 @@ public class SiteCreationDomainAdapter extends RecyclerView.Adapter<RecyclerView
         private final EditText input;
         private final View progressBar;
 
+        private boolean isDetached;
+        private boolean keepFocus;
+
         private InputViewHolder(View itemView) {
             super(itemView);
             this.input = itemView.findViewById(R.id.input);
@@ -111,6 +114,24 @@ public class SiteCreationDomainAdapter extends RecyclerView.Adapter<RecyclerView
     }
 
     @Override
+    public void onViewDetachedFromWindow(RecyclerView.ViewHolder holder) {
+        super.onViewDetachedFromWindow(holder);
+
+        if (holder instanceof InputViewHolder) {
+            ((InputViewHolder) holder).isDetached = true;
+        }
+    }
+
+    @Override
+    public void onViewAttachedToWindow(RecyclerView.ViewHolder holder) {
+        super.onViewAttachedToWindow(holder);
+
+        if (holder instanceof InputViewHolder) {
+            ((InputViewHolder) holder).isDetached = false;
+        }
+    }
+
+    @Override
     public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
         int viewType = getItemViewType(position);
 
@@ -119,6 +140,9 @@ public class SiteCreationDomainAdapter extends RecyclerView.Adapter<RecyclerView
         } else if (viewType == VIEW_TYPE_INPUT) {
             final InputViewHolder inputViewHolder = (InputViewHolder) holder;
             inputViewHolder.progressBar.setVisibility(mIsLoading ? View.VISIBLE : View.GONE);
+            if (inputViewHolder.keepFocus) {
+                inputViewHolder.input.requestFocus();
+            }
             if (inputViewHolder.input.getTag() == null) {
                 inputViewHolder.input.setText(mKeywords);
                 inputViewHolder.input.setTag(Boolean.TRUE);
@@ -139,6 +163,14 @@ public class SiteCreationDomainAdapter extends RecyclerView.Adapter<RecyclerView
                                 mOnAdapterListener.onKeywordsChange(editable.toString());
                             }
                         }, 400, TimeUnit.MILLISECONDS);
+                    }
+                });
+                inputViewHolder.input.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+                    @Override
+                    public void onFocusChange(View view, boolean focused) {
+                        // when the focus is lost when out-of-view then it means we lost it because of the shadowing.
+                        //  Let's keep a note to restore focus when back-in-view.
+                        inputViewHolder.keepFocus = !focused && inputViewHolder.isDetached;
                     }
                 });
             }
