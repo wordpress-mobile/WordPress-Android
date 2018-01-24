@@ -32,7 +32,6 @@ public class SiteCreationDomainAdapter extends RecyclerView.Adapter<RecyclerView
     private boolean mIsLoading;
     private String mKeywords;
     private List<DomainSuggestionResponse> mSuggestions;
-    private SiteCreationListener mSiteCreationListener;
     private OnAdapterListener mOnAdapterListener;
 
     private DomainSuggestionResponse mSelectedDomain;
@@ -72,15 +71,13 @@ public class SiteCreationDomainAdapter extends RecyclerView.Adapter<RecyclerView
         }
     }
 
-    public SiteCreationDomainAdapter(Context context, SiteCreationListener siteCreationListener,
-            OnAdapterListener onAdapterListener) {
+    public SiteCreationDomainAdapter(Context context, OnAdapterListener onAdapterListener) {
         super();
         ((WordPress) context.getApplicationContext()).component().inject(this);
 
         // Stable IDs so the edittext doesn't lose focus on refresh
         setHasStableIds(true);
 
-        mSiteCreationListener = siteCreationListener;
         mOnAdapterListener = onAdapterListener;
     }
 

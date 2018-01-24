@@ -143,7 +143,7 @@ public class SiteCreationDomainFragment extends SiteCreationBaseFormFragment<Sit
     public void onDomainSuggestionEvent(DomainSuggestionEvent event) {
         if (mSiteCreationDomainAdapter == null) {
             // Fragment is initializing or rotating so, just instantiate a new adapter.
-            mSiteCreationDomainAdapter = new SiteCreationDomainAdapter(getContext(), mSiteCreationListener,
+            mSiteCreationDomainAdapter = new SiteCreationDomainAdapter(getContext(),
                     new SiteCreationDomainAdapter.OnAdapterListener() {
                         @Override
                         public void onKeywordsChange(String keywords) {
