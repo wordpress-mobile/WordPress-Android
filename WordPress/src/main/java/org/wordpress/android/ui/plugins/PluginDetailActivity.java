@@ -819,7 +819,7 @@ public class PluginDetailActivity extends AppCompatActivity {
             return;
         }
         if (event.isError()) {
-            AppLog.e(AppLog.T.API, "An error occurred while fetching wporg plugin with type: "
+            AppLog.e(AppLog.T.PLUGINS, "An error occurred while fetching wporg plugin with type: "
                     + event.error.type);
             return;
         }
@@ -835,7 +835,7 @@ public class PluginDetailActivity extends AppCompatActivity {
         }
         mIsUpdatingPlugin = false;
         if (event.isError()) {
-            AppLog.e(AppLog.T.API, "An error occurred while updating the plugin with type: "
+            AppLog.e(AppLog.T.PLUGINS, "An error occurred while updating the plugin with type: "
                     + event.error.type);
             refreshPluginVersionViews();
             showUpdateFailedSnackbar();
@@ -857,7 +857,7 @@ public class PluginDetailActivity extends AppCompatActivity {
         }
         mIsUpdatingPlugin = false;
         if (event.isError()) {
-            AppLog.e(AppLog.T.API, "An error occurred while installing the plugin with type: "
+            AppLog.e(AppLog.T.PLUGINS, "An error occurred while installing the plugin with type: "
                     + event.error.type);
             refreshPluginVersionViews();
             showInstallFailedSnackbar();
@@ -881,7 +881,7 @@ public class PluginDetailActivity extends AppCompatActivity {
         mIsRemovingPlugin = false;
         cancelRemovePluginProgressDialog();
         if (event.isError()) {
-            AppLog.e(AppLog.T.API, "An error occurred while removing the plugin with type: "
+            AppLog.e(AppLog.T.PLUGINS, "An error occurred while removing the plugin with type: "
                     + event.error.type);
             String toastMessage = getString(R.string.plugin_updated_failed_detailed,
                     mSitePlugin.getDisplayName(), event.error.message);

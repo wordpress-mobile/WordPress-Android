@@ -341,7 +341,7 @@ public class PluginBrowserActivity extends AppCompatActivity
             return;
         }
         if (event.isError()) {
-            AppLog.e(AppLog.T.API, "An error occurred while fetching the wporg plugin with type: " + event.error.type);
+            AppLog.e(AppLog.T.PLUGINS, "An error occurred while fetching the wporg plugin with type: " + event.error.type);
             return;
         }
         if (!TextUtils.isEmpty(event.pluginSlug)) {
@@ -357,7 +357,7 @@ public class PluginBrowserActivity extends AppCompatActivity
         }
 
         if (event.isError()) {
-            AppLog.e(AppLog.T.API, "An error occurred while fetching the plugin directory: " + event.type);
+            AppLog.e(AppLog.T.PLUGINS, "An error occurred while fetching the plugin directory: " + event.type);
         } else {
             switch (event.type) {
                 case POPULAR:
