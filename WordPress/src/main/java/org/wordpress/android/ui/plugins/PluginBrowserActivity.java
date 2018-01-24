@@ -689,7 +689,7 @@ public class PluginBrowserActivity extends AppCompatActivity
                         }
                         if (sitePlugin != null) {
                             ActivityLauncher.viewPluginDetailForResult(PluginBrowserActivity.this, mSite, sitePlugin);
-                        } else {
+                        } else if (wpOrgPlugin != null){
                             ActivityLauncher.viewPluginDetailForResult(PluginBrowserActivity.this, mSite, wpOrgPlugin);
                         }
                     }

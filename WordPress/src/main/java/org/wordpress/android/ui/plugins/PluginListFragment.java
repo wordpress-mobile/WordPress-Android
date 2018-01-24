@@ -301,7 +301,7 @@ public class PluginListFragment extends Fragment {
                         }
                         if (sitePlugin != null) {
                             ActivityLauncher.viewPluginDetailForResult(getActivity(), mSite, sitePlugin);
-                        } else {
+                        } else if (wpOrgPlugin != null) {
                             ActivityLauncher.viewPluginDetailForResult(getActivity(), mSite, wpOrgPlugin);
                         }
                     }
