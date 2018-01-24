@@ -170,8 +170,8 @@ public class CommentStore extends Store {
     // Constructor
 
     @Inject
-    public CommentStore(Dispatcher dispatcher, CommentRestClient commentRestClient, CommentXMLRPCClient
-            commentXMLRPCClient) {
+    public CommentStore(Dispatcher dispatcher, CommentRestClient commentRestClient,
+                        CommentXMLRPCClient commentXMLRPCClient) {
         super(dispatcher);
         mCommentRestClient = commentRestClient;
         mCommentXMLRPCClient = commentXMLRPCClient;
