@@ -53,17 +53,17 @@ public class SiteCreationDomainFragment extends SiteCreationBaseFormFragment<Sit
 
     @Override
     protected void setupContent(ViewGroup rootView) {
-        RecyclerView recyclerView = (RecyclerView) rootView.findViewById(R.id.recycler_view);
+        RecyclerView recyclerView = rootView.findViewById(R.id.recycler_view);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         recyclerView.setAdapter(mSiteCreationDomainAdapter);
 
         View bottomShadow = rootView.findViewById(R.id.bottom_shadow);
         bottomShadow.setVisibility(View.VISIBLE);
 
-        ViewGroup bottomButtons = (ViewGroup) rootView.findViewById(R.id.bottom_buttons);
+        ViewGroup bottomButtons = rootView.findViewById(R.id.bottom_buttons);
         bottomButtons.setVisibility(View.VISIBLE);
 
-        Button finishButon = (Button) rootView.findViewById(R.id.finish_button);
+        Button finishButon = rootView.findViewById(R.id.finish_button);
         finishButon.setVisibility(View.VISIBLE);
         finishButon.setOnClickListener(new View.OnClickListener() {
             @Override

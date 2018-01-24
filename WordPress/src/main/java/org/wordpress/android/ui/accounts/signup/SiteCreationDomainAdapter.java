@@ -61,8 +61,8 @@ public class SiteCreationDomainAdapter extends RecyclerView.Adapter<RecyclerView
 
         private DomainViewHolder(View itemView) {
             super(itemView);
-            radioButton = (RadioButton) itemView.findViewById(R.id.radio_button);
-            textView = (TextView) itemView.findViewById(R.id.text);
+            radioButton = itemView.findViewById(R.id.radio_button);
+            textView = itemView.findViewById(R.id.text);
         }
     }
 

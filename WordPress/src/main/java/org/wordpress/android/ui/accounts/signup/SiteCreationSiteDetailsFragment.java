@@ -32,9 +32,9 @@ public class SiteCreationSiteDetailsFragment extends SiteCreationBaseFormFragmen
 
     @Override
     protected void setupContent(ViewGroup rootView) {
-        mScrollView = (ScrollView) rootView.findViewById(R.id.scroll_view);
+        mScrollView = rootView.findViewById(R.id.scroll_view);
 
-        mSiteTitleInput = (WPLoginInputRow) rootView.findViewById(R.id.site_creation_site_title_row);
+        mSiteTitleInput = rootView.findViewById(R.id.site_creation_site_title_row);
         mSiteTitleInput.addTextChangedListener(this);
         mSiteTitleInput.setOnEditorCommitListener(new WPLoginInputRow.OnEditorCommitListener() {
             @Override
@@ -43,7 +43,7 @@ public class SiteCreationSiteDetailsFragment extends SiteCreationBaseFormFragmen
             }
         });
 
-        mSiteTaglineInput = (WPLoginInputRow) rootView.findViewById(R.id.site_creation_site_tagline_row);
+        mSiteTaglineInput = rootView.findViewById(R.id.site_creation_site_tagline_row);
         mSiteTaglineInput.addTextChangedListener(this);
         mSiteTaglineInput.setOnEditorCommitListener(new WPLoginInputRow.OnEditorCommitListener() {
             @Override
@@ -52,7 +52,7 @@ public class SiteCreationSiteDetailsFragment extends SiteCreationBaseFormFragmen
             }
         });
 
-        ViewGroup bottomButtons = (ViewGroup) rootView.findViewById(R.id.bottom_buttons);
+        ViewGroup bottomButtons = rootView.findViewById(R.id.bottom_buttons);
         bottomButtons.setVisibility(View.VISIBLE);
     }
 
