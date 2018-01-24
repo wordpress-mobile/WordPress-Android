@@ -225,11 +225,6 @@ public class PluginBrowserActivity extends AppCompatActivity
     }
 
     @Override
-    public boolean onPrepareOptionsMenu(Menu menu) {
-        return super.onPrepareOptionsMenu(menu);
-    }
-
-    @Override
     public boolean onOptionsItemSelected(final MenuItem item) {
         if (item.getItemId() == android.R.id.home) {
             onBackPressed();
@@ -693,7 +688,7 @@ public class PluginBrowserActivity extends AppCompatActivity
                         }
                         if (sitePlugin != null) {
                             ActivityLauncher.viewPluginDetailForResult(PluginBrowserActivity.this, mSite, sitePlugin);
-                        } else if (wpOrgPlugin != null){
+                        } else {
                             ActivityLauncher.viewPluginDetailForResult(PluginBrowserActivity.this, mSite, wpOrgPlugin);
                         }
                     }

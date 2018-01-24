@@ -144,7 +144,13 @@ public class PluginDetailActivity extends AppCompatActivity {
         }
 
         if (mSite == null) {
-            ToastUtils.showToast(this, R.string.blog_not_found, Duration.SHORT);
+            ToastUtils.showToast(this, R.string.blog_not_found);
+            finish();
+            return;
+        }
+
+        if (TextUtils.isEmpty(pluginSlug)) {
+            ToastUtils.showToast(this, R.string.plugin_not_found);
             finish();
             return;
         }
