@@ -417,8 +417,8 @@ public class PluginDetailActivity extends AppCompatActivity {
             findViewById(R.id.plugin_state_active_container).setVisibility(View.GONE);
         } else if (mSitePlugin != null) {
             mSwitchActive.setChecked(mIsActive);
-            mSwitchAutoupdates.setChecked(mIsAutoUpdateEnabled);
         }
+        mSwitchAutoupdates.setChecked(mIsAutoUpdateEnabled);
 
         findViewById(R.id.plugin_card_site).setVisibility(mSitePlugin != null ? View.VISIBLE : View.GONE);
         refreshPluginVersionViews();
