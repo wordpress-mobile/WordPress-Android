@@ -11,6 +11,8 @@ import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.ui.RequestCodes;
 import org.wordpress.android.ui.WPWebViewActivity;
 
+import static org.wordpress.android.ui.WPWebViewActivity.JETPACK_CONNECTION_DEEPLINK;
+
 public class JetpackUtils {
     public static void showJetpackStatsModuleAlert(final Activity activity, final SiteModel site) {
         AlertDialog.Builder builder = new AlertDialog.Builder(activity);
@@ -110,15 +112,9 @@ public class JetpackUtils {
                 public void onClick(DialogInterface dialog, int id) {
                     String stringToLoad = "https://wordpress.com/jetpack/connect?"
                             + "url=" + site.getUrl()
-                            + "&mobile_redirect=wordpress://jetpack-connection";
-                    WPWebViewActivity.openUrlByUsingGlobalWPCOMCredentials(activity, stringToLoad);
-//                    String authURL = WPWebViewActivity.getSiteLoginUrl(site);
-//                    Intent jetpackIntent = new Intent(activity, WPWebViewActivity.class);
-//                    jetpackIntent.putExtra(WPWebViewActivity.AUTHENTICATION_USER, site.getUsername());
-//                    jetpackIntent.putExtra(WPWebViewActivity.AUTHENTICATION_PASSWD, site.getPassword());
-//                    jetpackIntent.putExtra(WPWebViewActivity.URL_TO_LOAD, stringToLoad);
-//                    jetpackIntent.putExtra(WPWebViewActivity.AUTHENTICATION_URL, authURL);
-//                    activity.startActivity(jetpackIntent);
+                            + "&mobile_redirect="
+                            + JETPACK_CONNECTION_DEEPLINK;
+                    WPWebViewActivity.openJetpackConnectionFlow(activity, stringToLoad);
                     AnalyticsTracker.track(AnalyticsTracker.Stat.STATS_SELECTED_INSTALL_JETPACK);
                 }
             });

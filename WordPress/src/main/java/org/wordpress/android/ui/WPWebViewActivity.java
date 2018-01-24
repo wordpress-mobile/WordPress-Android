@@ -3,9 +3,10 @@ package org.wordpress.android.ui;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.net.Uri;
 import android.os.Bundle;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -31,8 +32,6 @@ import org.wordpress.android.util.WPWebViewClient;
 import org.wordpress.android.util.helpers.WPWebChromeClient;
 
 import java.io.UnsupportedEncodingException;
-import java.net.MalformedURLException;
-import java.net.URL;
 import java.net.URLDecoder;
 import java.net.URLEncoder;
 import java.util.ArrayList;
@@ -87,7 +86,8 @@ public class WPWebViewActivity extends WebViewActivity {
     public static final String SHARE_SUBJECT = "share_subject";
     public static final String REFERRER_URL = "referrer_url";
     public static final String DISABLE_LINKS_ON_PAGE = "DISABLE_LINKS_ON_PAGE";
-    public static final String AUTO_LOGIN_ON_WP_ADMIN = "AUTO_LOGIN_ON_WP_ADMIN";
+    public static final String JETPACK_CONNECTION_FLOW = "JETPACK_CONNECTION_FLOW";
+    public static final String JETPACK_CONNECTION_DEEPLINK = "wordpress://jetpack-connection";
     public static final String ALLOWED_URLS = "allowed_urls";
 
     private static final String ENCODING_UTF8 = "UTF-8";
@@ -97,6 +97,8 @@ public class WPWebViewActivity extends WebViewActivity {
     @Inject
     SiteStore mSiteStore;
 
+    private String redirectPage;
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         ((WordPress) getApplication()).component().inject(this);
@@ -104,12 +106,17 @@ public class WPWebViewActivity extends WebViewActivity {
     }
 
     public static void openUrlByUsingGlobalWPCOMCredentials(Context context, String url) {
-        openWPCOMURL(context, url, null, null);
+        openWPCOMURL(context, url, null, null, false);
+    }
+
+
+    public static void openJetpackConnectionFlow(Context context, String url) {
+        openWPCOMURL(context, url, null, null, true);
     }
 
     public static void openPostUrlByUsingGlobalWPCOMCredentials(Context context, String url, String shareableUrl,
                                                                 String shareSubject) {
-        openWPCOMURL(context, url, shareableUrl, shareSubject);
+        openWPCOMURL(context, url, shareableUrl, shareSubject, false);
     }
 
     // frameNonce is used to show drafts, without it "no page found" error would be thrown
@@ -205,7 +212,7 @@ public class WPWebViewActivity extends WebViewActivity {
         return true;
     }
 
-    private static void openWPCOMURL(Context context, String url, String shareableUrl, String shareSubject) {
+    private static void openWPCOMURL(Context context, String url, String shareableUrl, String shareSubject, boolean isJetpackConnectionFlow) {
         if (!checkContextAndUrl(context, url)) {
             return;
         }
@@ -220,6 +227,7 @@ public class WPWebViewActivity extends WebViewActivity {
         if (!TextUtils.isEmpty(shareSubject)) {
             intent.putExtra(WPWebViewActivity.SHARE_SUBJECT, shareSubject);
         }
+        intent.putExtra(JETPACK_CONNECTION_FLOW, isJetpackConnectionFlow);
         context.startActivity(intent);
     }
 
@@ -231,16 +239,13 @@ public class WPWebViewActivity extends WebViewActivity {
 
         WebViewClient webViewClient;
         final Bundle extras = getIntent().getExtras();
-        boolean autoLoginOnWpAdmin = false;
 
         // Configure the allowed URLs if available
         ArrayList<String> allowedURL = null;
         if (extras != null && extras.getBoolean(DISABLE_LINKS_ON_PAGE, false)) {
             String addressToLoad = extras.getString(URL_TO_LOAD);
             String authURL = extras.getString(AUTHENTICATION_URL);
-            autoLoginOnWpAdmin = extras.getBoolean(AUTO_LOGIN_ON_WP_ADMIN, false);
             allowedURL = new ArrayList<>();
-            allowedURL.add("wordpress://jetpack-connection");
             if (!TextUtils.isEmpty(addressToLoad)) {
                 allowedURL.add(addressToLoad);
             }
@@ -264,29 +269,45 @@ public class WPWebViewActivity extends WebViewActivity {
                 finish();
             }
             webViewClient = new WPWebViewClient(site, mAccountStore.getAccessToken(), allowedURL);
-        } else if (true) {
-            webViewClient = new URLFilteredWebViewClient(allowedURL) {
+        } else if (getIntent().getBooleanExtra(JETPACK_CONNECTION_FLOW, false)) {
+            webViewClient = new WebViewClient() {
                 @Override
-                public void onPageFinished(WebView view, String stringUrl) {
-                    super.onPageFinished(view, stringUrl);
+                public void onPageStarted(WebView view, String stringUrl, Bitmap favicon) {
+                    super.onPageStarted(view, stringUrl, favicon);
                     try {
-                        URL actualUrl = new URL(stringUrl);
+                        Uri url = Uri.parse(stringUrl);
                         String login = "/wp-login.php";
+                        String admin = "/wp-admin/admin.php";
                         SiteModel site = mSiteStore.getSiteByLocalId(AppPrefs.getSelectedSite());
-                        if (actualUrl.getHost().equals(site.getUrl()) && actualUrl.getPath().equals(login)) {
-                            Log.d("vojta", "found login");
-                            String authURL = WPWebViewActivity.getSiteLoginUrl(site);
-                            Map<String, String> queryMap = getQueryMap(actualUrl.getQuery());
-                            String urlToLoad = URLDecoder.decode(queryMap.get("redirect_to"), ENCODING_UTF8);
-                            loadAuthenticatedUrl(authURL, urlToLoad, site.getUsername(), site.getPassword());
-                        } else {
-                            Log.d("vojta", "missed login");
+                        String redirectString = "redirect_to=";
+                        if (url.getHost().equals(Uri.parse(site.getUrl()).getHost())
+                                && url.getPath().equals(login)
+                                && stringUrl.contains(redirectString)) {
+                            int from = stringUrl.indexOf(redirectString) + redirectString.length();
+                            int to = stringUrl.indexOf("&", from);
+                            String redirectUrl = stringUrl.substring(from, to);
+                            redirectPage = URLDecoder.decode(redirectUrl, ENCODING_UTF8);
+                            loadAuthenticatedUrl(WPWebViewActivity.getSiteLoginUrl(site), redirectPage, site.getUsername(), site.getPassword());
+                        } else if (url.getHost().equals(Uri.parse(site.getUrl()).getHost()) && url.getPath().equals(admin) && redirectPage != null) {
+                            mWebView.loadUrl(redirectPage);
+                            redirectPage = null;
                         }
-                    } catch (MalformedURLException e) {
-                        e.printStackTrace();
                     } catch (UnsupportedEncodingException e) {
                         e.printStackTrace();
                     }
+                }
+
+                @Override
+                public boolean shouldOverrideUrlLoading(WebView view, String url) {
+                    Uri parsedUrl = Uri.parse(url);
+                    Uri expectedUrl = Uri.parse(JETPACK_CONNECTION_DEEPLINK);
+                    if (parsedUrl.getScheme().equals(expectedUrl.getScheme()) && parsedUrl.getHost().equals(expectedUrl.getHost())) {
+                        Intent intent = new Intent(Intent.ACTION_VIEW);
+                        intent.setData(parsedUrl);
+                        startActivity(intent);
+                        return true;
+                    }
+                    return false;
                 }
             };
         } else {
@@ -295,20 +316,6 @@ public class WPWebViewActivity extends WebViewActivity {
 
         mWebView.setWebViewClient(webViewClient);
         mWebView.setWebChromeClient(new WPWebChromeClient(this, (ProgressBar) findViewById(R.id.progress_bar)));
-    }
-
-    private  static Map<String, String> getQueryMap(String query)
-    {
-        Map<String, String> map = new HashMap<>();
-        if (query != null && !query.isEmpty()) {
-            String[] params = query.split("&");
-            for (String param : params) {
-                String name = param.split("=")[0];
-                String value = param.split("=")[1];
-                map.put(name, value);
-            }
-        }
-        return map;
     }
 
     @Override
