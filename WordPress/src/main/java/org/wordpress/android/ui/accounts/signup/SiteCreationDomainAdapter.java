@@ -4,9 +4,11 @@ import android.content.Context;
 import android.support.v7.widget.RecyclerView;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.EditorInfo;
 import android.widget.EditText;
 import android.widget.RadioButton;
 import android.widget.TextView;
@@ -98,6 +100,11 @@ public class SiteCreationDomainAdapter extends RecyclerView.Adapter<RecyclerView
         notifyDataSetChanged();
     }
 
+    private void keywordsChanged(String text) {
+        mOnAdapterListener.onKeywordsChange(text);
+        mOnAdapterListener.onSelectionChange(-1, null);
+    }
+
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         if (viewType == VIEW_TYPE_HEADER) {
@@ -122,8 +129,7 @@ public class SiteCreationDomainAdapter extends RecyclerView.Adapter<RecyclerView
                     mDebouncer.debounce(Void.class, new Runnable() {
                         @Override
                         public void run() {
-                            mOnAdapterListener.onKeywordsChange(text);
-                            mOnAdapterListener.onSelectionChange(-1, null);
+                            keywordsChanged(text);
                         }
                     }, 400, TimeUnit.MILLISECONDS);
                 }
@@ -171,6 +177,20 @@ public class SiteCreationDomainAdapter extends RecyclerView.Adapter<RecyclerView
             if (!inputViewHolder.input.getText().toString().equals(mKeywords)) {
                 inputViewHolder.input.setText(mKeywords);
             }
+            inputViewHolder.input.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+                @Override
+                public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+                    if (actionId == EditorInfo.IME_ACTION_SEARCH
+                            || (event != null
+                            && event.getAction() == KeyEvent.ACTION_UP
+                            && event.getKeyCode() == KeyEvent.KEYCODE_ENTER)) {
+                        keywordsChanged(inputViewHolder.input.getText().toString());
+                    }
+
+                    // always consume the event so the focus stays in the EditText
+                    return true;
+                }
+            });
             inputViewHolder.input.addTextChangedListener(inputViewHolder.textWatcher);
             inputViewHolder.input.setOnFocusChangeListener(new View.OnFocusChangeListener() {
                 @Override

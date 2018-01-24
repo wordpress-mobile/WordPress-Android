@@ -18,6 +18,7 @@
         android:drawablePadding="@dimen/margin_extra_large"
         android:hint="@string/site_creation_domain_keywords_hint"
         android:singleLine="true"
+        android:imeOptions="actionSearch"
         android:textColorHint="@color/grey_lighten_10"
         android:paddingLeft="@dimen/margin_extra_large"
         android:paddingStart="@dimen/margin_extra_large"
