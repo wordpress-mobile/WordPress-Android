@@ -116,7 +116,7 @@ public class SiteCreationDomainFragment extends SiteCreationBaseFormFragment<Sit
         super.onActivityCreated(savedInstanceState);
 
         if (savedInstanceState == null) {
-            AnalyticsTracker.track(AnalyticsTracker.Stat.SITE_CREATION_THEME_VIEWED);
+            AnalyticsTracker.track(AnalyticsTracker.Stat.SITE_CREATION_DOMAIN_VIEWED);
         }
     }
 
