@@ -55,6 +55,17 @@
             app:theme="@style/LoginTheme.EditText" >
         </android.support.design.widget.TextInputEditText>
 
+        <ProgressBar
+            android:id="@+id/progress"
+            android:background="@color/white"
+            android:layout_centerVertical="true"
+            android:layout_height="@dimen/progress_spinner_small"
+            android:layout_width="@dimen/progress_spinner_small"
+            android:paddingBottom="@dimen/margin_extra_large"
+            android:paddingTop="@dimen/margin_extra_large"
+            android:visibility="gone" >
+        </ProgressBar>
+
     </RelativeLayout>
 
     <View
@@ -63,29 +74,12 @@
         android:layout_width="match_parent" >
     </View>
 
-    <RelativeLayout
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/suggestions"
         android:background="@color/white"
-        android:layout_height="match_parent"
-        android:layout_width="match_parent" >
-
-        <android.support.v7.widget.RecyclerView
-            android:id="@+id/suggestions"
-            android:layout_height="fill_parent"
-            android:layout_width="match_parent"
-            android:scrollbars="vertical" >
-        </android.support.v7.widget.RecyclerView>
-
-        <ProgressBar
-            android:id="@+id/progress"
-            android:layout_alignParentTop="true"
-            android:layout_centerHorizontal="true"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/margin_medium"
-            android:layout_width="wrap_content"
-            android:visibility="gone"
-            style="?android:attr/progressBarStyle" >
-        </ProgressBar>
-
-    </RelativeLayout>
+        android:layout_height="fill_parent"
+        android:layout_width="match_parent"
+        android:scrollbars="vertical" >
+    </android.support.v7.widget.RecyclerView>
 
 </LinearLayout>
