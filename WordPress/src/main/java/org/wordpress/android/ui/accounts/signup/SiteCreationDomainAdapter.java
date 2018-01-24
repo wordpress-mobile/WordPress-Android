@@ -38,15 +38,13 @@ public class SiteCreationDomainAdapter extends RecyclerView.Adapter<RecyclerView
 
     private int mSelectedDomainSuggestionIndex;
 
-    private Debouncer mDebouncer = new Debouncer();
-
-    private static class HeaderViewHolder extends RecyclerView.ViewHolder {
+    private class HeaderViewHolder extends RecyclerView.ViewHolder {
         private HeaderViewHolder(View itemView) {
             super(itemView);
         }
     }
 
-    private static class InputViewHolder extends RecyclerView.ViewHolder {
+    private class InputViewHolder extends RecyclerView.ViewHolder {
         private final EditText input;
         private final TextWatcher textWatcher;
         private final View progressBar;
@@ -54,11 +52,33 @@ public class SiteCreationDomainAdapter extends RecyclerView.Adapter<RecyclerView
         private boolean isDetached;
         private boolean keepFocus;
 
-        private InputViewHolder(View itemView, TextWatcher textWatcher) {
+        private InputViewHolder(View itemView) {
             super(itemView);
             this.input = itemView.findViewById(R.id.input);
-            this.textWatcher = textWatcher;
             this.progressBar = itemView.findViewById(R.id.progress_bar);
+
+            this.textWatcher = new TextWatcher() {
+                private Debouncer mDebouncer = new Debouncer();
+
+                @Override
+                public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+                }
+
+                @Override
+                public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+                }
+
+                @Override
+                public void afterTextChanged(final Editable editable) {
+                    final String text = editable.toString();
+                    mDebouncer.debounce(Void.class, new Runnable() {
+                        @Override
+                        public void run() {
+                            keywordsChanged(text);
+                        }
+                    }, 400, TimeUnit.MILLISECONDS);
+                }
+            };
         }
     }
 
@@ -107,38 +127,18 @@ public class SiteCreationDomainAdapter extends RecyclerView.Adapter<RecyclerView
 
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        if (viewType == VIEW_TYPE_HEADER) {
-            View itemView = LayoutInflater.from(parent.getContext()).inflate(R.layout.site_creation_domain_header,
-                    parent, false);
-            return new HeaderViewHolder(itemView);
-        } else if (viewType == VIEW_TYPE_INPUT) {
-            final View itemView = LayoutInflater.from(parent.getContext()).inflate(R.layout.site_creation_domain_input,
-                    parent, false);
-            TextWatcher textWatcher = new TextWatcher() {
-                @Override
-                public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-                }
-
-                @Override
-                public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-                }
-
-                @Override
-                public void afterTextChanged(final Editable editable) {
-                    final String text = editable.toString();
-                    mDebouncer.debounce(Void.class, new Runnable() {
-                        @Override
-                        public void run() {
-                            keywordsChanged(text);
-                        }
-                    }, 400, TimeUnit.MILLISECONDS);
-                }
-            };
-            return new InputViewHolder(itemView, textWatcher);
-        } else {
-            View itemView = LayoutInflater.from(parent.getContext()).inflate(R.layout.site_creation_domain_item, parent,
-                    false);
-            return new DomainViewHolder(itemView);
+        switch (viewType) {
+            case VIEW_TYPE_HEADER:
+                return new HeaderViewHolder(LayoutInflater.from(parent.getContext())
+                        .inflate(R.layout.site_creation_domain_header, parent, false));
+            case VIEW_TYPE_INPUT:
+                return new InputViewHolder(LayoutInflater.from(parent.getContext())
+                        .inflate(R.layout.site_creation_domain_input, parent, false));
+            case VIEW_TYPE_ITEM:
+                return new DomainViewHolder(LayoutInflater.from(parent.getContext())
+                        .inflate(R.layout.site_creation_domain_item, parent, false));
+            default:
+                throw new RuntimeException("Unknown view type " + viewType);
         }
     }
 
