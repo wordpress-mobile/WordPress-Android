@@ -522,7 +522,6 @@ public class PluginBrowserActivity extends AppCompatActivity
 
     @Override
     public boolean onMenuItemActionExpand(MenuItem menuItem) {
-        submitSearch(null, false);
         return true;
     }
 
