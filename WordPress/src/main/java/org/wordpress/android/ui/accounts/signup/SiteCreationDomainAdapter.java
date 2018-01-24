@@ -164,64 +164,74 @@ public class SiteCreationDomainAdapter extends RecyclerView.Adapter<RecyclerView
     public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
         int viewType = getItemViewType(position);
 
-        if (viewType == VIEW_TYPE_HEADER) {
-            // nothing to configure in the header
-        } else if (viewType == VIEW_TYPE_INPUT) {
-            final InputViewHolder inputViewHolder = (InputViewHolder) holder;
-            inputViewHolder.progressBar.setVisibility(mIsLoading ? View.VISIBLE : View.GONE);
+        switch (viewType) {
+            // case VIEW_TYPE_HEADER:
+            //  nothing to be bound for VIEW_TYPE_HEADER so, just have this as a comment
 
-            inputViewHolder.input.removeTextChangedListener(inputViewHolder.textWatcher);
-            if (inputViewHolder.keepFocus) {
-                inputViewHolder.input.requestFocus();
-            }
-            if (!inputViewHolder.input.getText().toString().equals(mKeywords)) {
-                inputViewHolder.input.setText(mKeywords);
-            }
-            inputViewHolder.input.setOnEditorActionListener(new TextView.OnEditorActionListener() {
-                @Override
-                public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
-                    if (actionId == EditorInfo.IME_ACTION_SEARCH
-                            || (event != null
-                            && event.getAction() == KeyEvent.ACTION_UP
-                            && event.getKeyCode() == KeyEvent.KEYCODE_ENTER)) {
-                        keywordsChanged(inputViewHolder.input.getText().toString());
-                    }
-
-                    // always consume the event so the focus stays in the EditText
-                    return true;
-                }
-            });
-            inputViewHolder.input.addTextChangedListener(inputViewHolder.textWatcher);
-            inputViewHolder.input.setOnFocusChangeListener(new View.OnFocusChangeListener() {
-                @Override
-                public void onFocusChange(View view, boolean focused) {
-                    // when the focus is lost when out-of-view then it means we lost it because of the shadowing.
-                    //  Let's keep a note to restore focus when back-in-view.
-                    inputViewHolder.keepFocus = !focused && inputViewHolder.isDetached;
-                }
-            });
-        } else {
-            final boolean onSelectedItem = position - 2 == mSelectedDomainSuggestionIndex;
-            final DomainSuggestionResponse suggestion = getItem(position);
-            final DomainViewHolder domainViewHolder = (DomainViewHolder) holder;
-            domainViewHolder.radioButton.setChecked(onSelectedItem);
-            domainViewHolder.textView.setText(suggestion.domain_name);
-
-            View.OnClickListener clickListener = new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    if (!onSelectedItem) {
-                        mSelectedDomainSuggestionIndex = domainViewHolder.getAdapterPosition() - 2;
-                        notifyDataSetChanged();
-                        mOnAdapterListener.onSelectionChange(mSelectedDomainSuggestionIndex,
-                                mSuggestions.get(mSelectedDomainSuggestionIndex).domain_name);
-                    }
-                }
-            };
-
-            holder.itemView.setOnClickListener(clickListener);
-            domainViewHolder.radioButton.setOnClickListener(clickListener);
+            case VIEW_TYPE_INPUT:
+                bindInput((InputViewHolder) holder);
+                break;
+            case VIEW_TYPE_ITEM:
+                bindSuggest((DomainViewHolder) holder, position);
+                break;
         }
+    }
+
+    private void bindInput(final InputViewHolder inputViewHolder) {
+        inputViewHolder.progressBar.setVisibility(mIsLoading ? View.VISIBLE : View.GONE);
+
+        inputViewHolder.input.removeTextChangedListener(inputViewHolder.textWatcher);
+        if (inputViewHolder.keepFocus) {
+            inputViewHolder.input.requestFocus();
+        }
+        if (!inputViewHolder.input.getText().toString().equals(mKeywords)) {
+            inputViewHolder.input.setText(mKeywords);
+        }
+        inputViewHolder.input.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+            @Override
+            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+                if (actionId == EditorInfo.IME_ACTION_SEARCH
+                        || (event != null
+                        && event.getAction() == KeyEvent.ACTION_UP
+                        && event.getKeyCode() == KeyEvent.KEYCODE_ENTER)) {
+                    keywordsChanged(inputViewHolder.input.getText().toString());
+                }
+
+                // always consume the event so the focus stays in the EditText
+                return true;
+            }
+        });
+        inputViewHolder.input.addTextChangedListener(inputViewHolder.textWatcher);
+        inputViewHolder.input.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View view, boolean focused) {
+                // when the focus is lost when out-of-view then it means we lost it because of the shadowing.
+                //  Let's keep a note to restore focus when back-in-view.
+                inputViewHolder.keepFocus = !focused && inputViewHolder.isDetached;
+            }
+        });
+    }
+
+    private void bindSuggest(final DomainViewHolder domainViewHolder, int position) {
+        final boolean onSelectedItem = position - 2 == mSelectedDomainSuggestionIndex;
+        final DomainSuggestionResponse suggestion = getItem(position);
+        domainViewHolder.radioButton.setChecked(onSelectedItem);
+        domainViewHolder.textView.setText(suggestion.domain_name);
+
+        View.OnClickListener clickListener = new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (!onSelectedItem) {
+                    mSelectedDomainSuggestionIndex = domainViewHolder.getAdapterPosition() - 2;
+                    notifyDataSetChanged();
+                    mOnAdapterListener.onSelectionChange(mSelectedDomainSuggestionIndex,
+                            mSuggestions.get(mSelectedDomainSuggestionIndex).domain_name);
+                }
+            }
+        };
+
+        domainViewHolder.itemView.setOnClickListener(clickListener);
+        domainViewHolder.radioButton.setOnClickListener(clickListener);
     }
 
     @Override
