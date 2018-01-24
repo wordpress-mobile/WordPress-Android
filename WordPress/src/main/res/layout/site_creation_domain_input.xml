@@ -5,9 +5,7 @@
     android:layout_height="wrap_content"
     android:orientation="vertical"
     android:gravity="center_vertical"
-    android:background="@color/white"
-    android:clickable="true"
-    android:focusable="true">
+    android:background="@color/white">
 
     <EditText
         android:id="@+id/input"
