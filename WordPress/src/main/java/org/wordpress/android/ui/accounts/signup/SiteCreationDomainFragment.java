@@ -63,9 +63,9 @@ public class SiteCreationDomainFragment extends SiteCreationBaseFormFragment<Sit
         ViewGroup bottomButtons = rootView.findViewById(R.id.bottom_buttons);
         bottomButtons.setVisibility(View.VISIBLE);
 
-        Button finishButon = rootView.findViewById(R.id.finish_button);
-        finishButon.setVisibility(View.VISIBLE);
-        finishButon.setOnClickListener(new View.OnClickListener() {
+        Button finishButton = rootView.findViewById(R.id.finish_button);
+        finishButton.setVisibility(View.VISIBLE);
+        finishButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 mSiteCreationListener.withDomain(mDomain);
