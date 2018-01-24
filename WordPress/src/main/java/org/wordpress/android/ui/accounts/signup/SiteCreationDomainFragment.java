@@ -36,6 +36,8 @@ public class SiteCreationDomainFragment extends SiteCreationBaseFormFragment<Sit
 
     private String mDomain;
 
+    private Button mFinishButton;
+
     private SiteCreationDomainAdapter mSiteCreationDomainAdapter;
 
     @Inject SiteStore mSiteStore;
@@ -65,9 +67,10 @@ public class SiteCreationDomainFragment extends SiteCreationBaseFormFragment<Sit
         ViewGroup bottomButtons = rootView.findViewById(R.id.bottom_buttons);
         bottomButtons.setVisibility(View.VISIBLE);
 
-        Button finishButton = rootView.findViewById(R.id.finish_button);
-        finishButton.setVisibility(View.VISIBLE);
-        finishButton.setOnClickListener(new View.OnClickListener() {
+        mFinishButton = rootView.findViewById(R.id.finish_button);
+        mFinishButton.setVisibility(View.VISIBLE);
+        mFinishButton.setEnabled(mSelectedDomainSuggestionIndex > -1);
+        mFinishButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 mSiteCreationListener.withDomain(mDomain);
@@ -140,6 +143,13 @@ public class SiteCreationDomainFragment extends SiteCreationBaseFormFragment<Sit
                 .findFragmentByTag(SiteCreationDomainLoaderFragment.TAG);
     }
 
+    private void updateFinishButton() {
+        // the UI will not be fully setup yet on the initial sticky event registration so, only update it if setup.
+        if (mFinishButton != null) {
+            mFinishButton.setEnabled(mSelectedDomainSuggestionIndex > -1);
+        }
+    }
+
     @SuppressWarnings("unused")
     @Subscribe(threadMode = ThreadMode.MAIN, sticky = true)
     public void onDomainSuggestionEvent(DomainSuggestionEvent event) {
@@ -157,6 +167,7 @@ public class SiteCreationDomainFragment extends SiteCreationBaseFormFragment<Sit
                         public void onSelectionChange(int selectedDomainSuggestionIndex, String domain) {
                             mSelectedDomainSuggestionIndex = selectedDomainSuggestionIndex;
                             mDomain = domain;
+                            updateFinishButton();
                         }
                     });
         }
@@ -171,11 +182,15 @@ public class SiteCreationDomainFragment extends SiteCreationBaseFormFragment<Sit
                 break;
             case FINISHED:
                 if (mSelectedDomainSuggestionIndex == -1 ) {
+                    // select the first result if none is selected
                     mSelectedDomainSuggestionIndex = 0;
                 }
+
                 mSiteCreationDomainAdapter.setData(false, mKeywords, mSelectedDomainSuggestionIndex,
                         event.event.suggestions);
                 break;
         }
+
+        updateFinishButton();
     }
 }
