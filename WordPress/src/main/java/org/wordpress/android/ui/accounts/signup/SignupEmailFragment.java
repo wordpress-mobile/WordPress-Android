@@ -253,6 +253,7 @@ public class SignupEmailFragment extends LoginBaseFormFragment<LoginListener> im
             }
 
             if (event.isError()) {
+                AppLog.e(T.API, "OnAvailabilityChecked error: " + event.error.type + " - " + event.error.message);
                 showErrorDialog(getString(R.string.signup_email_error_generic));
             } else {
                 switch (event.type) {
@@ -269,6 +270,9 @@ public class SignupEmailFragment extends LoginBaseFormFragment<LoginListener> im
                             getActivity().getSupportFragmentManager().beginTransaction().remove(this).commit();
                         }
 
+                        break;
+                    default:
+                        AppLog.e(T.API, "OnAvailabilityChecked unhandled event: " + event.error.type);
                         break;
                 }
             }
