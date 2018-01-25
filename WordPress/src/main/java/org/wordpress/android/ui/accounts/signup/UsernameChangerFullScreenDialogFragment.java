@@ -260,11 +260,8 @@ public class UsernameChangerFullScreenDialogFragment extends Fragment implements
             }
         }
 
-        mUsernamesAdapter = new UsernameChangerRecyclerViewAdapter(getActivity(), suggestionList);
-        mUsernamesAdapter.setOnUsernameSelectedListener(UsernameChangerFullScreenDialogFragment.this);
-        mUsernamesAdapter.setSelectedItem(0);
         mUsernameSelectedIndex = 0;
-        mUsernameSuggestions.setAdapter(mUsernamesAdapter);
+        setUsernameSuggestions(suggestionList);
     }
 
     private void setUsernameSuggestions(List<String> suggestions) {
