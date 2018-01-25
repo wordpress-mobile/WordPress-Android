@@ -47,19 +47,19 @@ public class SiteCreationDomainAdapter extends RecyclerView.Adapter<RecyclerView
     }
 
     private class InputViewHolder extends RecyclerView.ViewHolder {
-        private final EditText input;
-        private final TextWatcher textWatcher;
-        private final View progressBar;
+        private final EditText mInput;
+        private final TextWatcher mTextwatcher;
+        private final View mProgressBar;
 
-        private boolean isDetached;
-        private boolean keepFocus;
+        private boolean mIsDetached;
+        private boolean mKeepFocus;
 
         private InputViewHolder(View itemView) {
             super(itemView);
-            this.input = itemView.findViewById(R.id.input);
-            this.progressBar = itemView.findViewById(R.id.progress_bar);
+            this.mInput = itemView.findViewById(R.id.input);
+            this.mProgressBar = itemView.findViewById(R.id.progress_bar);
 
-            this.textWatcher = new TextWatcher() {
+            this.mTextwatcher = new TextWatcher() {
                 private Debouncer mDebouncer = new Debouncer();
 
                 @Override
@@ -85,13 +85,13 @@ public class SiteCreationDomainAdapter extends RecyclerView.Adapter<RecyclerView
     }
 
     private static class DomainViewHolder extends RecyclerView.ViewHolder {
-        private final RadioButton radioButton;
-        private final TextView textView;
+        private final RadioButton mRadioButton;
+        private final TextView mTextView;
 
         private DomainViewHolder(View itemView) {
             super(itemView);
-            radioButton = itemView.findViewById(R.id.radio_button);
-            textView = itemView.findViewById(R.id.text);
+            mRadioButton = itemView.findViewById(R.id.radio_button);
+            mTextView = itemView.findViewById(R.id.text);
         }
     }
 
@@ -149,7 +149,7 @@ public class SiteCreationDomainAdapter extends RecyclerView.Adapter<RecyclerView
         super.onViewDetachedFromWindow(holder);
 
         if (holder instanceof InputViewHolder) {
-            ((InputViewHolder) holder).isDetached = true;
+            ((InputViewHolder) holder).mIsDetached = true;
         }
     }
 
@@ -158,7 +158,7 @@ public class SiteCreationDomainAdapter extends RecyclerView.Adapter<RecyclerView
         super.onViewAttachedToWindow(holder);
 
         if (holder instanceof InputViewHolder) {
-            ((InputViewHolder) holder).isDetached = false;
+            ((InputViewHolder) holder).mIsDetached = false;
         }
     }
 
@@ -180,36 +180,36 @@ public class SiteCreationDomainAdapter extends RecyclerView.Adapter<RecyclerView
     }
 
     private void bindInput(final InputViewHolder inputViewHolder) {
-        inputViewHolder.progressBar.setVisibility(mIsLoading ? View.VISIBLE : View.GONE);
+        inputViewHolder.mProgressBar.setVisibility(mIsLoading ? View.VISIBLE : View.GONE);
 
-        inputViewHolder.input.removeTextChangedListener(inputViewHolder.textWatcher);
-        if (inputViewHolder.keepFocus) {
-            inputViewHolder.input.requestFocus();
+        inputViewHolder.mInput.removeTextChangedListener(inputViewHolder.mTextwatcher);
+        if (inputViewHolder.mKeepFocus) {
+            inputViewHolder.mInput.requestFocus();
         }
-        if (!inputViewHolder.input.getText().toString().equals(mKeywords)) {
-            inputViewHolder.input.setText(mKeywords);
+        if (!inputViewHolder.mInput.getText().toString().equals(mKeywords)) {
+            inputViewHolder.mInput.setText(mKeywords);
         }
-        inputViewHolder.input.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+        inputViewHolder.mInput.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
             public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
                 if (actionId == EditorInfo.IME_ACTION_SEARCH
                         || (event != null
                         && event.getAction() == KeyEvent.ACTION_UP
                         && event.getKeyCode() == KeyEvent.KEYCODE_ENTER)) {
-                    keywordsChanged(inputViewHolder.input.getText().toString());
+                    keywordsChanged(inputViewHolder.mInput.getText().toString());
                 }
 
                 // always consume the event so the focus stays in the EditText
                 return true;
             }
         });
-        inputViewHolder.input.addTextChangedListener(inputViewHolder.textWatcher);
-        inputViewHolder.input.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+        inputViewHolder.mInput.addTextChangedListener(inputViewHolder.mTextwatcher);
+        inputViewHolder.mInput.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             @Override
             public void onFocusChange(View view, boolean focused) {
                 // when the focus is lost when out-of-view then it means we lost it because of the shadowing.
                 //  Let's keep a note to restore focus when back-in-view.
-                inputViewHolder.keepFocus = !focused && inputViewHolder.isDetached;
+                inputViewHolder.mKeepFocus = !focused && inputViewHolder.mIsDetached;
             }
         });
     }
@@ -217,8 +217,8 @@ public class SiteCreationDomainAdapter extends RecyclerView.Adapter<RecyclerView
     private void bindSuggest(final DomainViewHolder domainViewHolder, int position) {
         final boolean onSelectedItem = position - 2 == mSelectedDomainSuggestionIndex;
         final DomainSuggestionResponse suggestion = getItem(position);
-        domainViewHolder.radioButton.setChecked(onSelectedItem);
-        domainViewHolder.textView.setText(suggestion.domain_name);
+        domainViewHolder.mRadioButton.setChecked(onSelectedItem);
+        domainViewHolder.mTextView.setText(suggestion.domain_name);
 
         View.OnClickListener clickListener = new View.OnClickListener() {
             @Override
@@ -233,7 +233,7 @@ public class SiteCreationDomainAdapter extends RecyclerView.Adapter<RecyclerView
         };
 
         domainViewHolder.itemView.setOnClickListener(clickListener);
-        domainViewHolder.radioButton.setOnClickListener(clickListener);
+        domainViewHolder.mRadioButton.setOnClickListener(clickListener);
     }
 
     @Override
