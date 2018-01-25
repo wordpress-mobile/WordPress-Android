@@ -41,6 +41,7 @@ import org.wordpress.android.ui.accounts.login.LoginPrologueFragment;
 import org.wordpress.android.ui.accounts.login.LoginPrologueListener;
 import org.wordpress.android.ui.accounts.signup.SignupBottomSheetDialog;
 import org.wordpress.android.ui.accounts.signup.SignupBottomSheetDialog.SignupSheetListener;
+import org.wordpress.android.ui.accounts.signup.SignupEmailFragment;
 import org.wordpress.android.ui.accounts.signup.SignupGoogleFragment;
 import org.wordpress.android.ui.notifications.services.NotificationsUpdateService;
 import org.wordpress.android.ui.reader.services.ReaderUpdateService;
@@ -282,8 +283,7 @@ public class LoginActivity extends AppCompatActivity implements ConnectionCallba
     public void onSignupSheetEmailClicked() {
         AnalyticsTracker.track(AnalyticsTracker.Stat.SIGNUP_EMAIL_BUTTON_TAPPED);
         dismissSignupSheet();
-        NewUserFragment newUserFragment = NewUserFragment.newInstance();
-        slideInFragment(newUserFragment, true, NewUserFragment.TAG);
+        slideInFragment(new SignupEmailFragment(), true, SignupEmailFragment.TAG);
     }
 
     @Override
