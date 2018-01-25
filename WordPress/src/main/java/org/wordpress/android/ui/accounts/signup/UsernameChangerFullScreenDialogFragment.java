@@ -74,6 +74,13 @@ public class UsernameChangerFullScreenDialogFragment extends Fragment implements
     @Inject
     protected Dispatcher mDispatcher;
 
+    protected static Bundle newBundle(String displayName, String username) {
+        Bundle bundle = new Bundle();
+        bundle.putString(EXTRA_DISPLAY, displayName);
+        bundle.putString(EXTRA_USERNAME, username);
+        return bundle;
+    }
+
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

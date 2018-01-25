@@ -305,16 +305,15 @@ public class SignupEpilogueSocialFragment extends LoginBaseFormFragment<SignupEp
     }
 
     protected void launchDialog() {
-        final Bundle extras = new Bundle();
-        extras.putString(UsernameChangerFullScreenDialogFragment.EXTRA_DISPLAY, mEditTextDisplayName.getText().toString());
-        extras.putString(UsernameChangerFullScreenDialogFragment.EXTRA_USERNAME, mEditTextUsername.getText().toString());
+        final Bundle bundle = UsernameChangerFullScreenDialogFragment.newBundle(
+                mEditTextDisplayName.getText().toString(), mEditTextUsername.getText().toString());
 
         mDialog = new FullScreenDialogFragment.Builder(getContext())
                 .setTitle(R.string.username_changer_title)
                 .setAction(R.string.username_changer_action)
                 .setOnConfirmListener(this)
                 .setOnDismissListener(this)
-                .setContent(UsernameChangerFullScreenDialogFragment.class, extras)
+                .setContent(UsernameChangerFullScreenDialogFragment.class, bundle)
                 .build();
 
         mDialog.show(getActivity().getSupportFragmentManager(), FullScreenDialogFragment.TAG);
