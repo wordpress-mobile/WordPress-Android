@@ -130,6 +130,9 @@ public class SignupEmailFragment extends LoginBaseFormFragment<LoginListener> im
 
     @Override
     protected void onHelp() {
+        if (mLoginListener != null) {
+            mLoginListener.helpSignupEmailScreen(EditTextUtils.getText(mEmailInput.getEditText()));
+        }
     }
 
     @Override
