@@ -62,7 +62,7 @@ public class UsernameChangerFullScreenDialogFragment extends Fragment implements
     protected boolean mShouldWatchText;  // Flag handling text watcher to avoid network call on device rotation.
     protected int mUsernameSelectedIndex;
 
-    public static final String EXTRA_DISPLAY = "EXTRA_DISPLAY";
+    public static final String EXTRA_DISPLAY_NAME = "EXTRA_DISPLAY_NAME";
     public static final String EXTRA_USERNAME = "EXTRA_USERNAME";
     public static final String KEY_SHOULD_WATCH_TEXT = "KEY_SHOULD_WATCH_TEXT";
     public static final String KEY_USERNAME_SELECTED = "KEY_USERNAME_SELECTED";
@@ -76,7 +76,7 @@ public class UsernameChangerFullScreenDialogFragment extends Fragment implements
 
     protected static Bundle newBundle(String displayName, String username) {
         Bundle bundle = new Bundle();
-        bundle.putString(EXTRA_DISPLAY, displayName);
+        bundle.putString(EXTRA_DISPLAY_NAME, displayName);
         bundle.putString(EXTRA_USERNAME, username);
         return bundle;
     }
@@ -92,7 +92,7 @@ public class UsernameChangerFullScreenDialogFragment extends Fragment implements
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         ViewGroup rootView = (ViewGroup) inflater.inflate(R.layout.username_changer_dialog_fragment, container, false);
 
-        mDisplayName = getArguments().getString(EXTRA_DISPLAY);
+        mDisplayName = getArguments().getString(EXTRA_DISPLAY_NAME);
         mUsername = getArguments().getString(EXTRA_USERNAME);
 
         mUsernameSuggestions = rootView.findViewById(R.id.suggestions);
