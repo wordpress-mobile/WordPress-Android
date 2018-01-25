@@ -51,6 +51,7 @@ import org.wordpress.android.util.AnalyticsUtils;
 import org.wordpress.android.util.AniUtils;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.DateTimeUtils;
+import org.wordpress.android.util.DisplayUtils;
 import org.wordpress.android.util.FormatUtils;
 import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.SiteUtils;
@@ -380,6 +381,11 @@ public class PluginDetailActivity extends AppCompatActivity {
                 ActivityLauncher.openUrlExternal(PluginDetailActivity.this, getWpOrgReviewsUrl());
             }
         });
+
+        // set the height of the gradient scrim that appears atop the banner image
+        int toolbarHeight = DisplayUtils.getActionBarHeight(this);
+        ImageView imgScrim = findViewById(R.id.image_gradient_scrim);
+        imgScrim.getLayoutParams().height = toolbarHeight * 2;
 
         refreshViews();
     }
