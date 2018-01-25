@@ -116,7 +116,8 @@ public class SiteCreationDomainAdapter extends RecyclerView.Adapter<RecyclerView
         mSelectedDomainSuggestionIndex = selectedDomainSuggestionIndex;
 
         mOnAdapterListener.onSelectionChange(mSelectedDomainSuggestionIndex,
-                mSuggestions != null ? mSuggestions.get(mSelectedDomainSuggestionIndex).domain_name : null);
+                (mSuggestions != null && mSelectedDomainSuggestionIndex > -1) ?
+                        mSuggestions.get(mSelectedDomainSuggestionIndex).domain_name : null);
 
         notifyDataSetChanged();
     }

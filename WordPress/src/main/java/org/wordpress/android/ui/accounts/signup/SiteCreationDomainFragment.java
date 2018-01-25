@@ -186,11 +186,6 @@ public class SiteCreationDomainFragment extends SiteCreationBaseFormFragment<Sit
                 mSiteCreationDomainAdapter.setData(false, mSelectedDomainSuggestionIndex, null);
                 break;
             case FINISHED:
-                if (mSelectedDomainSuggestionIndex == -1 ) {
-                    // select the first result if none is selected
-                    mSelectedDomainSuggestionIndex = 0;
-                }
-
                 mSiteCreationDomainAdapter.setData(false, mSelectedDomainSuggestionIndex,
                         event.event.suggestions);
                 break;
