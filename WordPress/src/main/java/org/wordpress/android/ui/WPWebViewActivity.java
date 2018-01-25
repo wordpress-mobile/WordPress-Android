@@ -3,14 +3,11 @@ package org.wordpress.android.ui;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Bitmap;
-import android.net.Uri;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
-import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.ProgressBar;
 
@@ -20,7 +17,6 @@ import org.wordpress.android.fluxc.model.PostModel;
 import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.store.AccountStore;
 import org.wordpress.android.fluxc.store.SiteStore;
-import org.wordpress.android.ui.prefs.AppPrefs;
 import org.wordpress.android.ui.reader.ReaderActivityLauncher;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.StringUtils;
@@ -32,7 +28,6 @@ import org.wordpress.android.util.WPWebViewClient;
 import org.wordpress.android.util.helpers.WPWebChromeClient;
 
 import java.io.UnsupportedEncodingException;
-import java.net.URLDecoder;
 import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -89,15 +84,12 @@ public class WPWebViewActivity extends WebViewActivity {
     public static final String JETPACK_CONNECTION_FLOW = "JETPACK_CONNECTION_FLOW";
     public static final String JETPACK_CONNECTION_DEEPLINK = "wordpress://jetpack-connection";
     public static final String ALLOWED_URLS = "allowed_urls";
-
-    private static final String ENCODING_UTF8 = "UTF-8";
+    public static final String ENCODING_UTF8 = "UTF-8";
 
     @Inject
     AccountStore mAccountStore;
     @Inject
     SiteStore mSiteStore;
-
-    private String redirectPage;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -270,46 +262,7 @@ public class WPWebViewActivity extends WebViewActivity {
             }
             webViewClient = new WPWebViewClient(site, mAccountStore.getAccessToken(), allowedURL);
         } else if (getIntent().getBooleanExtra(JETPACK_CONNECTION_FLOW, false)) {
-            webViewClient = new WebViewClient() {
-                @Override
-                public void onPageStarted(WebView view, String stringUrl, Bitmap favicon) {
-                    super.onPageStarted(view, stringUrl, favicon);
-                    try {
-                        Uri url = Uri.parse(stringUrl);
-                        String login = "/wp-login.php";
-                        String admin = "/wp-admin/admin.php";
-                        SiteModel site = mSiteStore.getSiteByLocalId(AppPrefs.getSelectedSite());
-                        String redirectString = "redirect_to=";
-                        if (url.getHost().equals(Uri.parse(site.getUrl()).getHost())
-                                && url.getPath().equals(login)
-                                && stringUrl.contains(redirectString)) {
-                            int from = stringUrl.indexOf(redirectString) + redirectString.length();
-                            int to = stringUrl.indexOf("&", from);
-                            String redirectUrl = stringUrl.substring(from, to);
-                            redirectPage = URLDecoder.decode(redirectUrl, ENCODING_UTF8);
-                            loadAuthenticatedUrl(WPWebViewActivity.getSiteLoginUrl(site), redirectPage, site.getUsername(), site.getPassword());
-                        } else if (url.getHost().equals(Uri.parse(site.getUrl()).getHost()) && url.getPath().equals(admin) && redirectPage != null) {
-                            mWebView.loadUrl(redirectPage);
-                            redirectPage = null;
-                        }
-                    } catch (UnsupportedEncodingException e) {
-                        e.printStackTrace();
-                    }
-                }
-
-                @Override
-                public boolean shouldOverrideUrlLoading(WebView view, String url) {
-                    Uri parsedUrl = Uri.parse(url);
-                    Uri expectedUrl = Uri.parse(JETPACK_CONNECTION_DEEPLINK);
-                    if (parsedUrl.getScheme().equals(expectedUrl.getScheme()) && parsedUrl.getHost().equals(expectedUrl.getHost())) {
-                        Intent intent = new Intent(Intent.ACTION_VIEW);
-                        intent.setData(parsedUrl);
-                        startActivity(intent);
-                        return true;
-                    }
-                    return false;
-                }
-            };
+            webViewClient = new JetpackConnectionWebViewClient(mAccountStore.getAccessToken(), mSiteStore);
         } else {
             webViewClient = new URLFilteredWebViewClient(allowedURL);
         }
@@ -480,4 +433,5 @@ public class WPWebViewActivity extends WebViewActivity {
 
         return super.onOptionsItemSelected(item);
     }
+
 }
