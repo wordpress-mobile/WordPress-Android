@@ -59,11 +59,13 @@ public class UsernameChangerFullScreenDialogFragment extends Fragment implements
     protected TextInputEditText mUsernameView;
     protected TextView mHeaderView;
     protected UsernameChangerRecyclerViewAdapter mUsernamesAdapter;
+    protected boolean mIsShowingDismissDialog;
     protected boolean mShouldWatchText;  // Flag handling text watcher to avoid network call on device rotation.
     protected int mUsernameSelectedIndex;
 
     public static final String EXTRA_DISPLAY_NAME = "EXTRA_DISPLAY_NAME";
     public static final String EXTRA_USERNAME = "EXTRA_USERNAME";
+    public static final String KEY_IS_SHOWING_DISMISS_DIALOG = "KEY_IS_SHOWING_DISMISS_DIALOG";
     public static final String KEY_SHOULD_WATCH_TEXT = "KEY_SHOULD_WATCH_TEXT";
     public static final String KEY_USERNAME_SELECTED = "KEY_USERNAME_SELECTED";
     public static final String KEY_USERNAME_SELECTED_INDEX = "KEY_USERNAME_SELECTED_INDEX";
@@ -115,10 +117,15 @@ public class UsernameChangerFullScreenDialogFragment extends Fragment implements
         super.onActivityCreated(savedInstanceState);
 
         if (savedInstanceState != null) {
+            mIsShowingDismissDialog = savedInstanceState.getBoolean(KEY_IS_SHOWING_DISMISS_DIALOG);
             mShouldWatchText = savedInstanceState.getBoolean(KEY_SHOULD_WATCH_TEXT);
             mUsernameSelected = savedInstanceState.getString(KEY_USERNAME_SELECTED);
             mUsernameSelectedIndex = savedInstanceState.getInt(KEY_USERNAME_SELECTED_INDEX);
             setUsernameSuggestions(savedInstanceState.getStringArrayList(KEY_USERNAME_SUGGESTIONS));
+
+            if (mIsShowingDismissDialog) {
+                showDismissDialog();
+            }
         } else {
             mShouldWatchText = true;
             mUsernameSelected = mUsername;
@@ -202,6 +209,7 @@ public class UsernameChangerFullScreenDialogFragment extends Fragment implements
     @Override
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
+        outState.putBoolean(KEY_IS_SHOWING_DISMISS_DIALOG, mIsShowingDismissDialog);
         outState.putBoolean(KEY_SHOULD_WATCH_TEXT, false);
         outState.putString(KEY_USERNAME_SELECTED, mUsernameSelected);
         outState.putInt(KEY_USERNAME_SELECTED_INDEX, mUsernameSelectedIndex);
@@ -272,6 +280,8 @@ public class UsernameChangerFullScreenDialogFragment extends Fragment implements
     }
 
     protected void showDismissDialog() {
+        mIsShowingDismissDialog = true;
+
         new AlertDialog.Builder(getContext())
                 .setMessage(R.string.username_changer_dismiss_message)
                 .setPositiveButton(R.string.username_changer_dismiss_button_positive,
@@ -281,7 +291,13 @@ public class UsernameChangerFullScreenDialogFragment extends Fragment implements
                                 mDialogController.dismiss();
                             }
                         })
-                .setNegativeButton(android.R.string.cancel, null)
+                .setNegativeButton(android.R.string.cancel,
+                        new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                mIsShowingDismissDialog = false;
+                            }
+                        })
                 .show();
     }
 
