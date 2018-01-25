@@ -2073,6 +2073,7 @@
     <!-- Signup -->
     <string name="sign_up">Sign Up</string>
     <string name="signup_creating_account">Creating account&#8230;</string>
+    <string name="signup_email_error_generic">There was some trouble checking the email address.</string>
     <string name="signup_email_header">To create your new WordPress.com account, please enter your email address.</string>
     <string name="signup_epilogue_error_generic">There was some trouble updating your account. You can retry or revert your changes to continue.</string>
     <string name="signup_epilogue_error_button_negative">Revert</string>

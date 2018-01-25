@@ -8,9 +8,11 @@ import android.os.Bundle;
 import android.support.annotation.LayoutRes;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v7.app.AlertDialog;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Patterns;
+import android.view.ContextThemeWrapper;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
@@ -224,6 +226,14 @@ public class SignupEmailFragment extends LoginBaseFormFragment<LoginListener> im
         mPrimaryButton.setEnabled(!s.toString().trim().isEmpty());
     }
 
+    protected void showErrorDialog(String message) {
+        AlertDialog dialog = new AlertDialog.Builder(new ContextThemeWrapper(getActivity(), R.style.LoginTheme))
+                .setMessage(message)
+                .setPositiveButton(R.string.login_error_button, null)
+                .create();
+        dialog.show();
+    }
+
     private void showErrorEmail(String message) {
         mEmailInput.setError(message);
     }
@@ -242,7 +252,9 @@ public class SignupEmailFragment extends LoginBaseFormFragment<LoginListener> im
                 endProgress();
             }
 
-            if (!event.isError()) {
+            if (event.isError()) {
+                showErrorDialog(getString(R.string.signup_email_error_generic));
+            } else {
                 switch (event.type) {
                     case EMAIL:
                         if (event.isAvailable) {
