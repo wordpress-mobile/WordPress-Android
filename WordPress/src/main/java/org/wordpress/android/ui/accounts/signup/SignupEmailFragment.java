@@ -33,6 +33,7 @@ import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
+import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.fluxc.generated.AccountActionBuilder;
 import org.wordpress.android.fluxc.store.AccountStore.OnAvailabilityChecked;
 import org.wordpress.android.login.BuildConfig;
@@ -263,6 +264,7 @@ public class SignupEmailFragment extends LoginBaseFormFragment<LoginListener> im
                             Toast.makeText(getActivity(), "Continue to magic link", Toast.LENGTH_SHORT).show();
                         } else if (mLoginListener != null) {
                             ActivityUtils.hideKeyboard(getActivity());
+                            AnalyticsTracker.track(AnalyticsTracker.Stat.SIGNUP_EMAIL_TO_LOGIN);
                             mLoginListener.showSignupToLoginMessage();
                             mLoginListener.gotWpcomEmail(event.value);
                             // Kill connections with FluxC and this fragment since the flow is changing to login.
