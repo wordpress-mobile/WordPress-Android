@@ -2,13 +2,15 @@ package org.wordpress.android.login.widgets;
 
 import android.content.Context;
 import android.content.res.TypedArray;
-import android.os.Build;
+import android.os.Bundle;
 import android.os.Parcel;
 import android.os.Parcelable;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.TextInputLayout;
 import android.text.TextWatcher;
 import android.util.AttributeSet;
+import android.util.SparseArray;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
@@ -18,16 +20,14 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import org.wordpress.android.login.R;
-import org.wordpress.android.util.ViewUtils;
-
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
 
 /**
  * Compound view composed of an icon and an EditText
  */
 public class WPLoginInputRow extends RelativeLayout {
+
+    private static final String KEY_SUPER_STATE = "wplogin_input_row_super_state";
+
     public interface OnEditorCommitListener {
         void onEditorCommit();
     }
@@ -35,8 +35,6 @@ public class WPLoginInputRow extends RelativeLayout {
     private ImageView mIcon;
     private TextInputLayout mTextInputLayout;
     private EditText mEditText;
-
-    private List<Integer> mNewIds;
 
     public ImageView getIcon() {
         return mIcon;
@@ -64,9 +62,9 @@ public class WPLoginInputRow extends RelativeLayout {
     private void init(Context context, AttributeSet attrs) {
         inflate(context, R.layout.login_input_row, this);
 
-        mIcon = (ImageView) findViewById(R.id.icon);
-        mTextInputLayout = (TextInputLayout) findViewById(R.id.input_layout);
-        mEditText = (EditText) findViewById(R.id.input);
+        mIcon =  findViewById(R.id.icon);
+        mTextInputLayout =  findViewById(R.id.input_layout);
+        mEditText =  findViewById(R.id.input);
 
         if (attrs != null) {
             TypedArray a = context.getTheme().obtainStyledAttributes(attrs, R.styleable.wpLoginInputRow, 0, 0);
@@ -105,68 +103,53 @@ public class WPLoginInputRow extends RelativeLayout {
             }
         }
 
-        mNewIds = Arrays.asList(ViewUtils.generateViewId(), ViewUtils.generateViewId(), ViewUtils.generateViewId());
+    }
 
-        reassignIds();
+
+    /**
+     * Save the Views state manually so multiple instances of the compound View can exist in the same layout.
+     */
+    @Override
+    public Parcelable onSaveInstanceState() {
+        Bundle bundle = new Bundle();
+        bundle.putParcelable(KEY_SUPER_STATE, saveViewsState());
+        return bundle;
+    }
+
+    @Override
+    public void onRestoreInstanceState(Parcelable state) {
+        if (state instanceof Bundle) {
+            Bundle bundle = (Bundle) state;
+            state = restoreViewsState((SavedState) bundle.getParcelable(KEY_SUPER_STATE));
+        }
+
+        super.onRestoreInstanceState(state);
+    }
+
+    @NonNull
+    private SavedState saveViewsState() {
+        Parcelable editTextState = mEditText.onSaveInstanceState();
+        return new SavedState(super.onSaveInstanceState(), editTextState);
+    }
+
+    private Parcelable restoreViewsState(SavedState state) {
+        mEditText.onRestoreInstanceState(state.mEditTextState);
+        return state.getSuperState();
     }
 
     /**
-     * Assign new IDs to the Views so multiple instances of the compound View can exist in the same layout and
-     *  auto-save of the Views state can be performed
+     * Disable the auto-save feature, since the Views state is saved manually.
      */
-    private void reassignIds() {
-        RelativeLayout.LayoutParams iconLayoutParams = (LayoutParams) mIcon.getLayoutParams();
-        int[] rules = iconLayoutParams.getRules();
-        for (int i = 0; i < rules.length; i++) {
-            if (rules[i] == mTextInputLayout.getId()) {
-                if (Build.VERSION.SDK_INT > Build.VERSION_CODES.M) {
-                    rules[i] = mNewIds.get(1);
-                } else {
-                    iconLayoutParams.addRule(i, mNewIds.get(1));
-                }
-            }
-        }
-        mIcon.setLayoutParams(iconLayoutParams);
-
-        RelativeLayout.LayoutParams editTextLayoutParams = (LayoutParams) mTextInputLayout.getLayoutParams();
-        rules = editTextLayoutParams.getRules();
-        for (int i = 0; i < rules.length; i++) {
-            if (rules[i] == mIcon.getId()) {
-                if (Build.VERSION.SDK_INT > Build.VERSION_CODES.M) {
-                    rules[i] = mNewIds.get(0);
-                } else {
-                    editTextLayoutParams.addRule(i, mNewIds.get(0));
-                }
-            }
-        }
-        mTextInputLayout.setLayoutParams(editTextLayoutParams);
-
-        mIcon.setId(mNewIds.get(0));
-        mTextInputLayout.setId(mNewIds.get(1));
-        mEditText.setId(mNewIds.get(2));
+    @Override
+    protected void dispatchSaveInstanceState(SparseArray container) {
+        super.dispatchFreezeSelfOnly(container);
     }
 
     @Override
-    protected Parcelable onSaveInstanceState() {
-        Parcelable superState = super.onSaveInstanceState();
-        return new SavedState(superState, mNewIds);
+    protected void dispatchRestoreInstanceState(SparseArray container) {
+        super.dispatchThawSelfOnly(container);
     }
 
-    @Override
-    protected void onRestoreInstanceState(Parcelable state) {
-        // Begin boilerplate code so parent classes can restore state
-        if (!(state instanceof SavedState)) {
-            super.onRestoreInstanceState(state);
-            return;
-        }
-
-        SavedState savedState = (SavedState) state;
-        super.onRestoreInstanceState(savedState.getSuperState());
-
-        mNewIds = savedState.mIds;
-
-        reassignIds();
-    }
 
     public void addTextChangedListener(TextWatcher watcher) {
         mEditText.addTextChangedListener(watcher);
@@ -179,8 +162,8 @@ public class WPLoginInputRow extends RelativeLayout {
                 if (actionId == EditorInfo.IME_ACTION_DONE
                         || actionId == EditorInfo.IME_ACTION_NEXT
                         || (event != null
-                                && event.getAction() == KeyEvent.ACTION_UP
-                                && event.getKeyCode() == KeyEvent.KEYCODE_ENTER)) {
+                        && event.getAction() == KeyEvent.ACTION_UP
+                        && event.getKeyCode() == KeyEvent.KEYCODE_ENTER)) {
                     listener.onEditorCommit();
                 }
 
@@ -206,24 +189,23 @@ public class WPLoginInputRow extends RelativeLayout {
     }
 
     private static class SavedState extends BaseSavedState {
-        private List<Integer> mIds;
 
-        SavedState(Parcelable superState, List<Integer> ids) {
+        private Parcelable mEditTextState;
+
+        SavedState(Parcelable superState, Parcelable editTextState) {
             super(superState);
-            mIds = ids;
+            this.mEditTextState = editTextState;
         }
 
         SavedState(Parcel in) {
             super(in);
-
-            mIds = new ArrayList<>();
-            in.readList(mIds, List.class.getClassLoader());
+            mEditTextState = in.readParcelable(Parcelable.class.getClassLoader());
         }
 
         @Override
         public void writeToParcel(Parcel out, int flags) {
             super.writeToParcel(out, flags);
-            out.writeList(mIds);
+            out.writeParcelable(mEditTextState, 0);
         }
 
         public static final Parcelable.Creator<SavedState> CREATOR = new Parcelable.Creator<SavedState>() {
