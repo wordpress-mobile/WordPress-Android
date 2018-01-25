@@ -27,14 +27,20 @@
         android:paddingBottom="@dimen/margin_extra_large"
         android:paddingTop="@dimen/margin_extra_large"/>
 
-    <ProgressBar
+    <!-- ProgressBar seems to render correctly after when scrolled away only when in a container :( -->
+    <FrameLayout
         android:id="@+id/progress_bar"
         android:layout_width="24dp"
         android:layout_height="24dp"
         android:background="@color/white"
         android:layout_marginLeft="@dimen/margin_extra_large"
         android:layout_marginStart="@dimen/margin_extra_large"
-        android:layout_marginTop="@dimen/margin_extra_large"/>
+        android:layout_marginTop="@dimen/margin_extra_large">
+
+        <ProgressBar
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"/>
+    </FrameLayout>
 
     <View
         android:layout_width="match_parent"
