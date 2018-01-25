@@ -356,37 +356,36 @@ public class ThemeBrowserActivity extends AppCompatActivity implements ThemeBrow
     }
 
     private void startWebActivity(String themeId, ThemeWebActivity.ThemeWebActivityType type) {
-        String toastText = getString(R.string.no_network_message);
+        if (!NetworkUtils.checkConnection(this)) return;
 
-        if (NetworkUtils.isNetworkAvailable(this)) {
-            ThemeModel theme = TextUtils.isEmpty(themeId) ? null : mThemeStore.getWpComThemeByThemeId(themeId.replace("-wpcom", ""));
-            if (theme != null) {
-                Map<String, Object> themeProperties = new HashMap<>();
-                themeProperties.put(THEME_ID, themeId);
-                theme.setActive(isActiveThemeForSite(theme.getThemeId()));
-
-                switch (type) {
-                    case PREVIEW:
-                        AnalyticsUtils.trackWithSiteDetails(Stat.THEMES_PREVIEWED_SITE, mSite, themeProperties);
-                        break;
-                    case DEMO:
-                        AnalyticsUtils.trackWithSiteDetails(Stat.THEMES_DEMO_ACCESSED, mSite, themeProperties);
-                        break;
-                    case DETAILS:
-                        AnalyticsUtils.trackWithSiteDetails(Stat.THEMES_DETAILS_ACCESSED, mSite, themeProperties);
-                        break;
-                    case SUPPORT:
-                        AnalyticsUtils.trackWithSiteDetails(Stat.THEMES_SUPPORT_ACCESSED, mSite, themeProperties);
-                        break;
-                }
-                ThemeWebActivity.openTheme(this, mSite, theme, type);
+        ThemeModel theme = TextUtils.isEmpty(themeId) ? null : mThemeStore.getWpComThemeByThemeId(themeId.replace("-wpcom", ""));
+        if (theme == null) {
+            theme = mThemeStore.getInstalledThemeByThemeId(mSite, themeId);
+            if (theme == null) {
+                ToastUtils.showToast(this, R.string.could_not_load_theme);
                 return;
-            } else {
-                toastText = getString(R.string.could_not_load_theme);
             }
         }
 
-        ToastUtils.showToast(this, toastText, ToastUtils.Duration.SHORT);
+        Map<String, Object> themeProperties = new HashMap<>();
+        themeProperties.put(THEME_ID, themeId);
+        theme.setActive(isActiveThemeForSite(theme.getThemeId()));
+
+        switch (type) {
+            case PREVIEW:
+                AnalyticsUtils.trackWithSiteDetails(Stat.THEMES_PREVIEWED_SITE, mSite, themeProperties);
+                break;
+            case DEMO:
+                AnalyticsUtils.trackWithSiteDetails(Stat.THEMES_DEMO_ACCESSED, mSite, themeProperties);
+                break;
+            case DETAILS:
+                AnalyticsUtils.trackWithSiteDetails(Stat.THEMES_DETAILS_ACCESSED, mSite, themeProperties);
+                break;
+            case SUPPORT:
+                AnalyticsUtils.trackWithSiteDetails(Stat.THEMES_SUPPORT_ACCESSED, mSite, themeProperties);
+                break;
+        }
+        ThemeWebActivity.openTheme(this, mSite, theme, type);
     }
 
     private boolean isActiveThemeForSite(@NonNull String themeId) {
