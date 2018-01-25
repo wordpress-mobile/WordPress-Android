@@ -34,7 +34,7 @@ public class SiteCreationDomainAdapter extends RecyclerView.Adapter<RecyclerView
     }
 
     private boolean mIsLoading;
-    private String mKeywords = "";
+    private String mInitialKeywords;
     private List<DomainSuggestionResponse> mSuggestions;
     private OnAdapterListener mOnAdapterListener;
 
@@ -95,24 +95,23 @@ public class SiteCreationDomainAdapter extends RecyclerView.Adapter<RecyclerView
         }
     }
 
-    SiteCreationDomainAdapter(Context context, OnAdapterListener onAdapterListener) {
+    SiteCreationDomainAdapter(Context context, String initialKeywords, OnAdapterListener onAdapterListener) {
         super();
         ((WordPress) context.getApplicationContext()).component().inject(this);
 
         // Stable IDs so the edittext doesn't lose focus on refresh
         setHasStableIds(true);
 
+        mInitialKeywords = initialKeywords;
         mOnAdapterListener = onAdapterListener;
     }
 
-    void setData(boolean isLoading, String keywords, int selectedDomainSuggestionIndex,
-            List<DomainSuggestionResponse> suggestions) {
+    void setData(boolean isLoading, int selectedDomainSuggestionIndex, List<DomainSuggestionResponse> suggestions) {
         if (isLoading != mIsLoading) {
             notifyItemChanged(1);
         }
 
         mIsLoading = isLoading;
-        mKeywords = keywords;
         mSuggestions = suggestions;
         mSelectedDomainSuggestionIndex = selectedDomainSuggestionIndex;
 
@@ -186,8 +185,9 @@ public class SiteCreationDomainAdapter extends RecyclerView.Adapter<RecyclerView
         if (inputViewHolder.mKeepFocus) {
             inputViewHolder.mInput.requestFocus();
         }
-        if (!inputViewHolder.mInput.getText().toString().equals(mKeywords)) {
-            inputViewHolder.mInput.setText(mKeywords);
+        if (mInitialKeywords != null) {
+            inputViewHolder.mInput.setText(mInitialKeywords);
+            mInitialKeywords = null;
         }
         inputViewHolder.mInput.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override

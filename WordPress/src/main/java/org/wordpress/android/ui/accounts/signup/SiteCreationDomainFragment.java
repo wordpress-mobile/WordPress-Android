@@ -156,7 +156,7 @@ public class SiteCreationDomainFragment extends SiteCreationBaseFormFragment<Sit
     public void onDomainSuggestionEvent(DomainSuggestionEvent event) {
         if (mSiteCreationDomainAdapter == null) {
             // Fragment is initializing or rotating so, just instantiate a new adapter.
-            mSiteCreationDomainAdapter = new SiteCreationDomainAdapter(getContext(),
+            mSiteCreationDomainAdapter = new SiteCreationDomainAdapter(getContext(), mKeywords,
                     new SiteCreationDomainAdapter.OnAdapterListener() {
                         @Override
                         public void onKeywordsChange(String keywords) {
@@ -180,10 +180,10 @@ public class SiteCreationDomainFragment extends SiteCreationBaseFormFragment<Sit
         switch (event.phase) {
             case UPDATING:
                 mSelectedDomainSuggestionIndex = -1;
-                mSiteCreationDomainAdapter.setData(true, mKeywords, mSelectedDomainSuggestionIndex, null);
+                mSiteCreationDomainAdapter.setData(true, mSelectedDomainSuggestionIndex, null);
                 break;
             case ERROR:
-                mSiteCreationDomainAdapter.setData(false, mKeywords, mSelectedDomainSuggestionIndex, null);
+                mSiteCreationDomainAdapter.setData(false, mSelectedDomainSuggestionIndex, null);
                 break;
             case FINISHED:
                 if (mSelectedDomainSuggestionIndex == -1 ) {
@@ -191,7 +191,7 @@ public class SiteCreationDomainFragment extends SiteCreationBaseFormFragment<Sit
                     mSelectedDomainSuggestionIndex = 0;
                 }
 
-                mSiteCreationDomainAdapter.setData(false, mKeywords, mSelectedDomainSuggestionIndex,
+                mSiteCreationDomainAdapter.setData(false, mSelectedDomainSuggestionIndex,
                         event.event.suggestions);
                 break;
         }
