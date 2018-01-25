@@ -297,7 +297,7 @@ public class MediaBrowserActivity extends AppCompatActivity implements MediaGrid
         super.onStart();
         registerReceiver(mReceiver, new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION));
         mDispatcher.register(this);
-        EventBus.getDefault().register(this);
+        EventBus.getDefault().registerSticky(this);
     }
 
     @Override
@@ -945,6 +945,14 @@ public class MediaBrowserActivity extends AppCompatActivity implements MediaGrid
         }
     }
 
+    private void updateMediaGridForTheseMedia(List<MediaModel> mediaModelList){
+        if (mediaModelList != null) {
+            for (MediaModel media : mediaModelList) {
+                updateMediaGridItem(media, true);
+            }
+        }
+    }
+
     private void reloadMediaGrid() {
         if (mMediaGridFragment != null) {
             mMediaGridFragment.reload();
@@ -952,20 +960,26 @@ public class MediaBrowserActivity extends AppCompatActivity implements MediaGrid
     }
 
     @SuppressWarnings("unused")
+    @Subscribe(sticky = true, threadMode = ThreadMode.MAIN)
     public void onEventMainThread(UploadService.UploadErrorEvent event) {
+        EventBus.getDefault().removeStickyEvent(event);
         if (event.mediaModelList != null && !event.mediaModelList.isEmpty()) {
             UploadUtils.onMediaUploadedSnackbarHandler(this,
                     findViewById(R.id.tab_layout), true,
                     event.mediaModelList, mSite, event.errorMessage);
+            updateMediaGridForTheseMedia(event.mediaModelList);
         }
     }
 
     @SuppressWarnings("unused")
+    @Subscribe(sticky = true, threadMode = ThreadMode.MAIN)
     public void onEventMainThread(UploadService.UploadMediaSuccessEvent event) {
+        EventBus.getDefault().removeStickyEvent(event);
         if (event.mediaModelList != null && !event.mediaModelList.isEmpty()) {
             UploadUtils.onMediaUploadedSnackbarHandler(this,
                     findViewById(R.id.tab_layout), false,
                     event.mediaModelList, mSite, event.successMessage);
+            updateMediaGridForTheseMedia(event.mediaModelList);
         }
     }
 
