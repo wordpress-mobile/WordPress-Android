@@ -281,11 +281,19 @@ public class LoginSiteAddressFragment extends LoginBaseFormFragment<LoginListene
         }
 
         if (event.isError()) {
-            // not a wp.com site so, start the discovery process
-            mDispatcher.dispatch(AuthenticationActionBuilder.newDiscoverEndpointAction(mRequestedSiteAddress));
+            // Not a WordPress.com or Jetpack site
+            if (mLoginListener.getLoginMode() == LoginMode.WPCOM_LOGIN_ONLY) {
+                showError(R.string.enter_wpcom_or_jetpack_site, null, null);
+                endProgress();
+            } else {
+                // Start the discovery process
+                mDispatcher.dispatch(AuthenticationActionBuilder.newDiscoverEndpointAction(mRequestedSiteAddress));
+            }
         } else {
-            if (event.site.isJetpackInstalled()) {
-                // if Jetpack site, treat it as selfhosted and start the discovery process
+            if (event.site.isJetpackInstalled() && mLoginListener.getLoginMode() != LoginMode.WPCOM_LOGIN_ONLY) {
+                // If Jetpack site, treat it as self-hosted and start the discovery process
+                // An exception is WPCOM_LOGIN_ONLY mode - in that case we're only interested in adding sites
+                // through WordPress.com login, and should proceed along that login path
                 mDispatcher.dispatch(AuthenticationActionBuilder.newDiscoverEndpointAction(mRequestedSiteAddress));
                 return;
             }
