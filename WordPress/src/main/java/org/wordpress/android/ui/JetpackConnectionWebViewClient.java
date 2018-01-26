@@ -1,13 +1,14 @@
 package org.wordpress.android.ui;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
-import android.graphics.Bitmap;
 import android.net.Uri;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 
 import org.wordpress.android.fluxc.model.SiteModel;
+import org.wordpress.android.fluxc.store.AccountStore;
 import org.wordpress.android.fluxc.store.SiteStore;
 import org.wordpress.android.ui.accounts.LoginActivity;
 import org.wordpress.android.ui.accounts.LoginMode;
@@ -18,51 +19,31 @@ import java.net.URLDecoder;
 
 class JetpackConnectionWebViewClient extends WebViewClient {
 
-    private Activity activity;
-    private final String mAccessToken;
-    private final SiteStore mSiteStore;
-
-    private String redirectPage;
     private static final String LOGIN_PATH = "/wp-login.php";
     private static final String ADMIN_PATH = "/wp-admin/admin.php";
     private static final String REDIRECT_PARAMETER = "redirect_to=";
     private static final int REQUEST_CODE = 1;
+    private static final String WORDPRESS_COM_HOST = "wordpress.com";
+    private static final String LOG_IN_PATH = "/log-in";
+    private static final String JETPACK_PATH = "/jetpack";
+    private static final String WORDPRESS_COM_PREFIX = "https://wordpress.com";
+    private static final Uri JETPACK_DEEPLINK_URI = Uri.parse(WPWebViewActivity.JETPACK_CONNECTION_DEEPLINK);
 
-    JetpackConnectionWebViewClient(Activity activity, String mAccessToken, SiteStore mSiteStore) {
+    private Activity activity;
+    private final AccountStore accountStore;
+    private final SiteStore mSiteStore;
+
+    private String redirectPage;
+
+    JetpackConnectionWebViewClient(Activity activity, AccountStore accountStore, SiteStore mSiteStore) {
         this.activity = activity;
-        this.mAccessToken = mAccessToken;
+        this.accountStore = accountStore;
         this.mSiteStore = mSiteStore;
-    }
-
-    @Override
-    public void onPageStarted(WebView view, String stringUrl, Bitmap favicon) {
-        super.onPageStarted(view, stringUrl, favicon);
-        try {
-            Uri url = Uri.parse(stringUrl);
-            SiteModel site = mSiteStore.getSiteByLocalId(AppPrefs.getSelectedSite());
-            if (url.getHost().equals(Uri.parse(site.getUrl()).getHost())
-                    && url.getPath().equals(LOGIN_PATH)
-                    && stringUrl.contains(REDIRECT_PARAMETER)) {
-                redirectPage = extractRedirect(stringUrl);
-                loginToWPCom(view, site);
-            } else if (url.getHost().equals(Uri.parse(site.getUrl()).getHost()) && url.getPath().equals(ADMIN_PATH) && redirectPage != null) {
-                view.loadUrl(redirectPage);
-                redirectPage = null;
-            } else if (url.getHost().equals("wordpress.com") && url.getPath().equals("/log-in")
-                    && stringUrl.contains(REDIRECT_PARAMETER)) {
-                redirectPage = extractRedirect(stringUrl);
-                Intent loginIntent = new Intent(activity, LoginActivity.class);
-                LoginMode.JETPACK_STATS.putInto(loginIntent);
-                activity.startActivityForResult(loginIntent, REQUEST_CODE);
-            }
-        } catch (UnsupportedEncodingException e) {
-            e.printStackTrace();
-        }
     }
 
     private void loginToWPCom(WebView view, SiteModel site) {
         String authenticationURL = WPWebViewActivity.getSiteLoginUrl(site);
-        String postData = WPWebViewActivity.getAuthenticationPostData(authenticationURL, redirectPage, site.getUsername(), site.getPassword(), mAccessToken);
+        String postData = WPWebViewActivity.getAuthenticationPostData(authenticationURL, redirectPage, site.getUsername(), site.getPassword(), accountStore.getAccessToken());
         view.postUrl(authenticationURL, postData.getBytes());
     }
 
@@ -75,24 +56,56 @@ class JetpackConnectionWebViewClient extends WebViewClient {
         } else {
             redirectUrl = stringUrl.substring(from);
         }
+        if (redirectUrl.startsWith(JETPACK_PATH)) {
+            redirectUrl = WORDPRESS_COM_PREFIX + redirectUrl;
+        }
         return URLDecoder.decode(redirectUrl, WPWebViewActivity.ENCODING_UTF8);
     }
 
     @Override
-    public boolean shouldOverrideUrlLoading(WebView view, String url) {
-        Uri parsedUrl = Uri.parse(url);
-        Uri expectedUrl = Uri.parse(WPWebViewActivity.JETPACK_CONNECTION_DEEPLINK);
-        if (parsedUrl.getScheme().equals(expectedUrl.getScheme()) && parsedUrl.getHost().equals(expectedUrl.getHost())) {
-            Intent intent = new Intent(Intent.ACTION_VIEW);
-            intent.setData(parsedUrl);
-            view.getContext().startActivity(intent);
-            return true;
+    public boolean shouldOverrideUrlLoading(WebView view, String stringUrl) {
+        try {
+            final Uri url = Uri.parse(stringUrl);
+            final SiteModel site = mSiteStore.getSiteByLocalId(AppPrefs.getSelectedSite());
+            final String loadedHost = url.getHost();
+            final String loadedPath = url.getPath();
+            final String currentSiteHost = Uri.parse(site.getUrl()).getHost();
+            if (loadedHost.equals(currentSiteHost)
+                    && loadedPath.equals(LOGIN_PATH)
+                    && stringUrl.contains(REDIRECT_PARAMETER)) {
+                redirectPage = extractRedirect(stringUrl);
+                loginToWPCom(view, site);
+                return true;
+            } else if (loadedHost.equals(currentSiteHost)
+                    && loadedPath.equals(ADMIN_PATH)
+                    && redirectPage != null) {
+                view.loadUrl(redirectPage);
+                redirectPage = null;
+                return true;
+            } else if (loadedHost.equals(WORDPRESS_COM_HOST)
+                    && loadedPath.equals(LOG_IN_PATH)
+                    && stringUrl.contains(REDIRECT_PARAMETER)) {
+                redirectPage = extractRedirect(stringUrl);
+                Intent loginIntent = new Intent(activity, LoginActivity.class);
+                LoginMode.JETPACK_STATS.putInto(loginIntent);
+                activity.startActivityForResult(loginIntent, REQUEST_CODE);
+                return true;
+            } else if (loadedHost.equals(JETPACK_DEEPLINK_URI.getHost())
+                    && url.getScheme().equals(JETPACK_DEEPLINK_URI.getScheme())) {
+                Intent intent = new Intent(Intent.ACTION_VIEW);
+                intent.setData(url);
+                view.getContext().startActivity(intent);
+                return true;
+            }
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
         }
         return false;
     }
 
-    public void loginFinished(WebView view) {
-        loginToWPCom(view, mSiteStore.getSiteByLocalId(AppPrefs.getSelectedSite()));
-        redirectPage = null;
+    void activityResult(Context context, int requestCode) {
+        if (requestCode == REQUEST_CODE) {
+            WPWebViewActivity.openJetpackConnectionFlow(context, redirectPage);
+        }
     }
 }

@@ -103,11 +103,9 @@ public class WPWebViewActivity extends WebViewActivity {
         openWPCOMURL(context, url, null, null, false);
     }
 
-
     public static void openJetpackConnectionFlow(Context context, String url) {
         openWPCOMURL(context, url, null, null, true);
     }
-
 
     public static void openUnauthorizedJetpackConnectionFlow(Context context, String url) {
         if (!checkContextAndUrl(context, url)) {
@@ -275,7 +273,7 @@ public class WPWebViewActivity extends WebViewActivity {
             }
             mWebViewClient = new WPWebViewClient(site, mAccountStore.getAccessToken(), allowedURL);
         } else if (getIntent().getBooleanExtra(JETPACK_CONNECTION_FLOW, false)) {
-            mWebViewClient = new JetpackConnectionWebViewClient(this, mAccountStore.getAccessToken(), mSiteStore);
+            mWebViewClient = new JetpackConnectionWebViewClient(this, mAccountStore, mSiteStore);
         } else {
             mWebViewClient = new URLFilteredWebViewClient(allowedURL);
         }
@@ -288,7 +286,7 @@ public class WPWebViewActivity extends WebViewActivity {
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (mWebViewClient != null && mWebViewClient instanceof JetpackConnectionWebViewClient) {
-            ((JetpackConnectionWebViewClient) this.mWebViewClient).loginFinished(mWebView);
+            ((JetpackConnectionWebViewClient) this.mWebViewClient).activityResult(this, requestCode);
         }
     }
 
