@@ -2,6 +2,7 @@ package org.wordpress.android.login.widgets;
 
 import android.content.Context;
 import android.content.res.TypedArray;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Parcel;
 import android.os.Parcelable;
@@ -62,9 +63,9 @@ public class WPLoginInputRow extends RelativeLayout {
     private void init(Context context, AttributeSet attrs) {
         inflate(context, R.layout.login_input_row, this);
 
-        mIcon =  findViewById(R.id.icon);
-        mTextInputLayout =  findViewById(R.id.input_layout);
-        mEditText =  findViewById(R.id.input);
+        mIcon = findViewById(R.id.icon);
+        mTextInputLayout = findViewById(R.id.input_layout);
+        mEditText = findViewById(R.id.input);
 
         if (attrs != null) {
             TypedArray a = context.getTheme().obtainStyledAttributes(attrs, R.styleable.wpLoginInputRow, 0, 0);
@@ -97,6 +98,12 @@ public class WPLoginInputRow extends RelativeLayout {
                 if (a.hasValue(R.styleable.wpLoginInputRow_passwordToggleTint)) {
                     mTextInputLayout.setPasswordVisibilityToggleTintList(
                             a.getColorStateList(R.styleable.wpLoginInputRow_passwordToggleTint));
+                }
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
+                    if (a.hasValue(R.styleable.wpLoginInputRow_android_textAlignment)) {
+                        mEditText.setTextAlignment(
+                                a.getInt(R.styleable.wpLoginInputRow_android_textAlignment, TEXT_ALIGNMENT_GRAVITY));
+                    }
                 }
             } finally {
                 a.recycle();
