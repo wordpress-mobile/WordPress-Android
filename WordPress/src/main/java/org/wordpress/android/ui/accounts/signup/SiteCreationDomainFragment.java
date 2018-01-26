@@ -31,12 +31,15 @@ public class SiteCreationDomainFragment extends SiteCreationBaseFormFragment<Sit
 
     private static final String ARG_USERNAME = "ARG_USERNAME";
 
+    private static final String KEY_QUERY_STRING = "KEY_QUERY_STRING";
     private static final String KEY_KEYWORDS = "KEY_KEYWORDS";
     private static final String KEY_CARRY_OVER_DOMAIN = "KEY_CARRY_OVER_DOMAIN";
     private static final String KEY_SELECTED_DOMAIN = "KEY_SELECTED_DOMAIN";
 
     private String mUsername;
     private String mKeywords = "";
+
+    private String mQueryString;
 
     private String mCarryOverDomain;
     private String mSelectedDomain;
@@ -100,9 +103,12 @@ public class SiteCreationDomainFragment extends SiteCreationBaseFormFragment<Sit
         }
 
         if (savedInstanceState != null) {
+            mQueryString = savedInstanceState.getString(KEY_QUERY_STRING);
             mKeywords = savedInstanceState.getString(KEY_KEYWORDS);
             mCarryOverDomain = savedInstanceState.getString(KEY_CARRY_OVER_DOMAIN);
             mSelectedDomain = savedInstanceState.getString(KEY_SELECTED_DOMAIN);
+        } else {
+            mQueryString = mUsername;
         }
 
         // Need to do this early so the mSiteCreationDomainAdapter gets initialized before RecyclerView needs it. This
@@ -140,6 +146,7 @@ public class SiteCreationDomainFragment extends SiteCreationBaseFormFragment<Sit
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
 
+        outState.putString(KEY_QUERY_STRING, mQueryString);
         outState.putString(KEY_KEYWORDS, mKeywords);
         outState.putString(KEY_CARRY_OVER_DOMAIN, mCarryOverDomain);
         outState.putString(KEY_SELECTED_DOMAIN, mSelectedDomain);
@@ -170,9 +177,9 @@ public class SiteCreationDomainFragment extends SiteCreationBaseFormFragment<Sit
                             mCarryOverDomain = mSelectedDomain;
 
                             // fallback to using the provided username as query if text is empty
-                            String queryString = TextUtils.isEmpty(keywords.trim()) ? mUsername : keywords;
+                            mQueryString = TextUtils.isEmpty(keywords.trim()) ? mUsername : keywords;
 
-                            getLoaderFragment().load(queryString);
+                            getLoaderFragment().load(mQueryString);
                         }
 
                         @Override
@@ -192,6 +199,11 @@ public class SiteCreationDomainFragment extends SiteCreationBaseFormFragment<Sit
                 mSiteCreationDomainAdapter.setData(false, mCarryOverDomain, mSelectedDomain, null);
                 break;
             case FINISHED:
+                if (!event.query.equals(mQueryString)) {
+                    // this is not the result for the latest query the debouncer sent so, ignore it
+                    break;
+                }
+
                 ArrayList<String> suggestions = new ArrayList<>();
                 for (DomainSuggestionResponse suggestionResponse : event.event.suggestions) {
                     suggestions.add(suggestionResponse.domain_name);

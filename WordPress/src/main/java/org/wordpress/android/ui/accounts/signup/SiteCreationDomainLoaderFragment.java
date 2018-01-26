@@ -28,10 +28,12 @@ public class SiteCreationDomainLoaderFragment extends Fragment {
 
     static class DomainSuggestionEvent {
         final DomainUpdatePhase phase;
+        final String query;
         final OnSuggestedDomains event;
 
-        DomainSuggestionEvent(DomainUpdatePhase phase, OnSuggestedDomains event) {
+        DomainSuggestionEvent(DomainUpdatePhase phase, String query, OnSuggestedDomains event) {
             this.phase = phase;
+            this.query = query;
             this.event = event;
         }
     }
@@ -69,7 +71,7 @@ public class SiteCreationDomainLoaderFragment extends Fragment {
     }
 
     public void load(String keywords) {
-        postUpdate(new DomainSuggestionEvent(DomainUpdatePhase.UPDATING, null));
+        postUpdate(new DomainSuggestionEvent(DomainUpdatePhase.UPDATING, keywords, null));
 
         SiteStore.SuggestDomainsPayload payload = new SiteStore.SuggestDomainsPayload(keywords, true, false, 20);
         mDispatcher.dispatch(SiteActionBuilder.newSuggestDomainsAction(payload));
@@ -80,10 +82,10 @@ public class SiteCreationDomainLoaderFragment extends Fragment {
     public void onSuggestedDomains(OnSuggestedDomains event) {
         if (event.isError()) {
             AppLog.e(AppLog.T.API, "Error fetching domain suggestions: " + event.error.message);
-            postUpdate(new DomainSuggestionEvent(DomainUpdatePhase.ERROR, event));
+            postUpdate(new DomainSuggestionEvent(DomainUpdatePhase.ERROR, event.query, event));
         } else {
             AppLog.d(AppLog.T.API, "WordPress.com domain suggestions fetch successful!");
-            postUpdate(new DomainSuggestionEvent(DomainUpdatePhase.FINISHED, event));
+            postUpdate(new DomainSuggestionEvent(DomainUpdatePhase.FINISHED, event.query, event));
         }
     }
 }
