@@ -91,6 +91,8 @@ public class WPWebViewActivity extends WebViewActivity {
     @Inject
     SiteStore mSiteStore;
 
+    private WebViewClient mWebViewClient;
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         ((WordPress) getApplication()).component().inject(this);
@@ -104,6 +106,18 @@ public class WPWebViewActivity extends WebViewActivity {
 
     public static void openJetpackConnectionFlow(Context context, String url) {
         openWPCOMURL(context, url, null, null, true);
+    }
+
+
+    public static void openUnauthorizedJetpackConnectionFlow(Context context, String url) {
+        if (!checkContextAndUrl(context, url)) {
+            return;
+        }
+
+        Intent intent = new Intent(context, WPWebViewActivity.class);
+        intent.putExtra(WPWebViewActivity.URL_TO_LOAD, url);
+        intent.putExtra(JETPACK_CONNECTION_FLOW, true);
+        context.startActivity(intent);
     }
 
     public static void openPostUrlByUsingGlobalWPCOMCredentials(Context context, String url, String shareableUrl,
@@ -229,7 +243,6 @@ public class WPWebViewActivity extends WebViewActivity {
         mWebView.getSettings().setJavaScriptEnabled(true);
         mWebView.getSettings().setDomStorageEnabled(true);
 
-        WebViewClient webViewClient;
         final Bundle extras = getIntent().getExtras();
 
         // Configure the allowed URLs if available
@@ -260,15 +273,23 @@ public class WPWebViewActivity extends WebViewActivity {
                 AppLog.e(AppLog.T.UTILS, "No valid blog passed to WPWebViewActivity");
                 finish();
             }
-            webViewClient = new WPWebViewClient(site, mAccountStore.getAccessToken(), allowedURL);
+            mWebViewClient = new WPWebViewClient(site, mAccountStore.getAccessToken(), allowedURL);
         } else if (getIntent().getBooleanExtra(JETPACK_CONNECTION_FLOW, false)) {
-            webViewClient = new JetpackConnectionWebViewClient(mAccountStore.getAccessToken(), mSiteStore);
+            mWebViewClient = new JetpackConnectionWebViewClient(this, mAccountStore.getAccessToken(), mSiteStore);
         } else {
-            webViewClient = new URLFilteredWebViewClient(allowedURL);
+            mWebViewClient = new URLFilteredWebViewClient(allowedURL);
         }
 
-        mWebView.setWebViewClient(webViewClient);
+        mWebView.setWebViewClient(mWebViewClient);
         mWebView.setWebChromeClient(new WPWebChromeClient(this, (ProgressBar) findViewById(R.id.progress_bar)));
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (mWebViewClient != null && mWebViewClient instanceof JetpackConnectionWebViewClient) {
+            ((JetpackConnectionWebViewClient) this.mWebViewClient).loginFinished(mWebView);
+        }
     }
 
     @Override

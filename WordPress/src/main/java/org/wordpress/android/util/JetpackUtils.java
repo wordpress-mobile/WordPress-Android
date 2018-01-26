@@ -8,6 +8,7 @@ import android.content.Intent;
 import org.wordpress.android.R;
 import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.fluxc.model.SiteModel;
+import org.wordpress.android.fluxc.store.AccountStore;
 import org.wordpress.android.ui.RequestCodes;
 import org.wordpress.android.ui.WPWebViewActivity;
 
@@ -103,7 +104,7 @@ public class JetpackUtils {
         dialog.show();
     }
 
-    public static void showInstallJetpackAlert(final Activity activity, final SiteModel site) {
+    public static void showInstallJetpackAlert(final Activity activity, final SiteModel site, final AccountStore mAccountStore) {
         AlertDialog.Builder builder = new AlertDialog.Builder(activity);
         if (site.isSelfHostedAdmin()) {
             builder.setMessage(activity.getString(R.string.jetpack_message))
@@ -114,8 +115,13 @@ public class JetpackUtils {
                             + "url=" + site.getUrl()
                             + "&mobile_redirect="
                             + JETPACK_CONNECTION_DEEPLINK;
-                    WPWebViewActivity.openJetpackConnectionFlow(activity, stringToLoad);
+                    if (mAccountStore.hasAccessToken()) {
+                        WPWebViewActivity.openJetpackConnectionFlow(activity, stringToLoad);
+                    } else {
+                        WPWebViewActivity.openUnauthorizedJetpackConnectionFlow(activity, stringToLoad);
+                    }
                     AnalyticsTracker.track(AnalyticsTracker.Stat.STATS_SELECTED_INSTALL_JETPACK);
+                    activity.finish();
                 }
             });
             builder.setNegativeButton(R.string.no, new DialogInterface.OnClickListener() {

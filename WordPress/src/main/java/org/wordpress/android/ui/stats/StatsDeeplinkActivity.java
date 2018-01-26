@@ -6,8 +6,12 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
 
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.analytics.AnalyticsTracker;
+import org.wordpress.android.fluxc.Dispatcher;
+import org.wordpress.android.fluxc.generated.SiteActionBuilder;
 import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.store.AccountStore;
 import org.wordpress.android.fluxc.store.SiteStore;
@@ -18,6 +22,8 @@ import org.wordpress.android.util.AnalyticsUtils;
 import org.wordpress.android.util.ToastUtils;
 
 import javax.inject.Inject;
+
+import de.greenrobot.event.EventBus;
 
 /**
  * An activity to handle Jetpack deeplink
@@ -33,6 +39,8 @@ public class StatsDeeplinkActivity extends AppCompatActivity {
     AccountStore mAccountStore;
     @Inject
     SiteStore mSiteStore;
+    @Inject
+    Dispatcher mDispatcher;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -53,13 +61,24 @@ public class StatsDeeplinkActivity extends AppCompatActivity {
             // and then show the post once the user has signed in
             if (mAccountStore.hasAccessToken()) {
                 showStats();
-                finish();
             } else {
                 ActivityLauncher.loginForDeeplink(this);
             }
         } else {
             finish();
         }
+    }
+
+    @Override
+    protected void onStop() {
+        mDispatcher.unregister(this);
+        super.onStop();
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        mDispatcher.register(this);
     }
 
     @Override
@@ -76,15 +95,24 @@ public class StatsDeeplinkActivity extends AppCompatActivity {
     private void showStats() {
         if (!TextUtils.isEmpty(reason)) {
             ToastUtils.showToast(this, reason);
+            finish();
         } else {
             SiteModel site = mSiteStore.getSiteByLocalId(AppPrefs.getSelectedSite());
-            ActivityLauncher.viewBlogStats(this, site);
+            mDispatcher.dispatch(SiteActionBuilder.newFetchSiteAction(site));
         }
     }
 
     @Override
     public void onBackPressed() {
         super.onBackPressed();
+        finish();
+    }
+
+    @SuppressWarnings("unused")
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onSiteChanged(SiteStore.OnSiteChanged event) {
+        SiteModel site = mSiteStore.getSiteByLocalId(AppPrefs.getSelectedSite());
+        ActivityLauncher.viewBlogStats(this, site);
         finish();
     }
 }

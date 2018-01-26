@@ -208,12 +208,12 @@ public class MySiteFragment extends Fragment
         rootView.findViewById(R.id.row_stats).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (!mAccountStore.hasAccessToken()) {
-                    // If the user is not connected to WordPress.com, ask him to connect first.
-                    startWPComLoginForJetpackStats();
-                } else {
+//                if (!mAccountStore.hasAccessToken()) {
+//                     If the user is not connected to WordPress.com, ask him to connect first.
+//                    startWPComLoginForJetpackStats();
+//                } else {
                     ActivityLauncher.viewBlogStats(getActivity(), getSelectedSite());
-                }
+//                }
             }
         });
 

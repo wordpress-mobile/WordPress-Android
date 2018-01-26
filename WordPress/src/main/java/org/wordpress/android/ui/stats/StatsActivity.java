@@ -279,7 +279,7 @@ public class StatsActivity extends AppCompatActivity
         // If the site is not accessible via wpcom (Jetpack included), then show a dialog to the user.
         if (!SiteUtils.isAccessedViaWPComRest(mSite)) {
             if (!site.isJetpackInstalled()) {
-                JetpackUtils.showInstallJetpackAlert(this, site);
+                JetpackUtils.showInstallJetpackAlert(this, site, mAccountStore);
                 return false;
             }
 
