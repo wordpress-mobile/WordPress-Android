@@ -49,7 +49,7 @@ public class SiteCreationDomainAdapter extends RecyclerView.Adapter<RecyclerView
 
     private class InputViewHolder extends RecyclerView.ViewHolder {
         private final EditText mInput;
-        private final TextWatcher mTextwatcher;
+        private final TextWatcher mTextWatcher;
         private final View mProgressBar;
 
         private boolean mIsDetached;
@@ -60,7 +60,7 @@ public class SiteCreationDomainAdapter extends RecyclerView.Adapter<RecyclerView
             this.mInput = itemView.findViewById(R.id.input);
             this.mProgressBar = itemView.findViewById(R.id.progress_bar);
 
-            this.mTextwatcher = new TextWatcher() {
+            this.mTextWatcher = new TextWatcher() {
                 private Debouncer mDebouncer = new Debouncer();
 
                 @Override
@@ -180,7 +180,7 @@ public class SiteCreationDomainAdapter extends RecyclerView.Adapter<RecyclerView
     private void bindInput(final InputViewHolder inputViewHolder) {
         inputViewHolder.mProgressBar.setVisibility(mIsLoading ? View.VISIBLE : View.GONE);
 
-        inputViewHolder.mInput.removeTextChangedListener(inputViewHolder.mTextwatcher);
+        inputViewHolder.mInput.removeTextChangedListener(inputViewHolder.mTextWatcher);
         if (inputViewHolder.mKeepFocus) {
             inputViewHolder.mInput.requestFocus();
         }
@@ -202,7 +202,7 @@ public class SiteCreationDomainAdapter extends RecyclerView.Adapter<RecyclerView
                 return true;
             }
         });
-        inputViewHolder.mInput.addTextChangedListener(inputViewHolder.mTextwatcher);
+        inputViewHolder.mInput.addTextChangedListener(inputViewHolder.mTextWatcher);
         inputViewHolder.mInput.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             @Override
             public void onFocusChange(View view, boolean focused) {
