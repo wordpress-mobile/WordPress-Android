@@ -13,6 +13,10 @@ public interface SiteCreationListener {
     void withSiteDetails(String siteTitle, String siteTagline);
     void helpSiteDetailsScreen();
 
+    // Site Creation Domain Selection callbacks
+    void withDomain(String domain);
+    void helpDomainScreen();
+
     // Site Creation Site details callbacks
     void creationSuccess();
     void helpSiteCreatingScreen();

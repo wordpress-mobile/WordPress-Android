@@ -1615,9 +1615,8 @@
     <string name="my_site_btn_view_admin">View Admin</string>
     <string name="my_site_btn_view_site">View Site</string>
     <string name="my_site_btn_plugins">Plugins</string>
-    <string name="my_site_no_sites_view_drake">Illustration</string>
-    <string name="my_site_no_sites_view_title">You don\'t have any WordPress sites yet.</string>
-    <string name="my_site_no_sites_view_subtitle">Would you like to add one?</string>
+    <string name="my_site_create_new_site">Create a new site for your business, magazine, or personal blog; or connect an existing WordPress installation.</string>
+    <string name="my_site_add_new_site">Add new site</string>
     <string name="fab_content_description_write">Write</string>
 
     <!-- site picker -->
@@ -2067,6 +2066,8 @@
     <!-- Signup -->
     <string name="sign_up">Sign Up</string>
     <string name="signup_creating_account">Creating account&#8230;</string>
+    <string name="signup_email_error_generic">There was some trouble checking the email address.</string>
+    <string name="signup_email_header">To create your new WordPress.com account, please enter your email address.</string>
     <string name="signup_epilogue_error_generic">There was some trouble updating your account. You can retry or revert your changes to continue.</string>
     <string name="signup_epilogue_error_button_negative">Revert</string>
     <string name="signup_epilogue_error_button_positive">Retry</string>
@@ -2115,6 +2116,10 @@
     <string name="site_creation_label_theme_loading">Please wait while loading themes</string>
     <string name="site_creation_label_site_details_title">Step 3 of 4</string>
     <string name="site_creation_label_site_details">Tell us more about what you\'re creating. What\'s the title and tagline?</string>
+    <string name="site_creation_label_domain_selection_title">Step 4 of 4</string>
+    <string name="site_creation_label_domain_selection">Pick an available \"yourname.wordpress.com\" address to let people find you on the web.</string>
+    <string name="site_creation_domain_keywords_hint">Type to get more suggestions</string>
+    <string name="site_creation_domain_finish_button">Create site</string>
     <string name="site_creation_title_hint">Site title</string>
     <string name="site_creation_tagline_hint">Site tagline (optional)</string>
     <string name="site_creation_tagline_helper">The tagline is a short line of text shown right below the title in most themes, and act as site metadata on search engines.</string>

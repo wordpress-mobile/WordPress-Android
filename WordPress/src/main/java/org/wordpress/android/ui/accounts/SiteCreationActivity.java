@@ -12,6 +12,7 @@ import org.wordpress.android.WordPress;
 import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.ui.accounts.signup.SiteCreationCategoryFragment;
 import org.wordpress.android.ui.accounts.signup.SiteCreationCreatingFragment;
+import org.wordpress.android.ui.accounts.signup.SiteCreationDomainFragment;
 import org.wordpress.android.ui.accounts.signup.SiteCreationListener;
 import org.wordpress.android.ui.accounts.signup.SiteCreationService;
 import org.wordpress.android.ui.accounts.signup.SiteCreationSiteDetailsFragment;
@@ -20,16 +21,23 @@ import org.wordpress.android.ui.accounts.signup.SiteCreationThemeLoaderFragment;
 import org.wordpress.android.util.HelpshiftHelper;
 import org.wordpress.android.util.ToastUtils;
 
+import java.net.URI;
+
 public class SiteCreationActivity extends AppCompatActivity implements SiteCreationListener {
+    public static final String ARG_USERNAME = "ARG_USERNAME";
+
     private static final String KEY_CATERGORY = "KEY_CATERGORY";
     private static final String KEY_THEME_ID = "KEY_THEME_ID";
     private static final String KEY_SITE_TITLE = "KEY_SITE_TITLE";
     private static final String KEY_SITE_TAGLINE = "KEY_SITE_TAGLINE";
 
+    private String mUsername;
+
     private String mCategory;
     private String mThemeId;
     private String mSiteTitle;
     private String mSiteTagline;
+    private String mSiteDomain;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -37,6 +45,8 @@ public class SiteCreationActivity extends AppCompatActivity implements SiteCreat
         ((WordPress) getApplication()).component().inject(this);
 
         setContentView(R.layout.site_creation_activity);
+
+        mUsername = getIntent().getStringExtra(ARG_USERNAME);
 
         if (savedInstanceState == null) {
             AnalyticsTracker.track(AnalyticsTracker.Stat.SITE_CREATION_ACCESSED);
@@ -130,18 +140,30 @@ public class SiteCreationActivity extends AppCompatActivity implements SiteCreat
         mSiteTitle = siteTitle;
         mSiteTagline = siteTagline;
 
-        // TODO: insert the Domain selection screen here. Jump to "Creating" screen is for dev purposes
-
-        // start the Service to perform the site creation
-        String siteSlug = WordPress.getBuildConfigString(this, "DEBUG_DOTCOM_NEW_SITE_SLUG");
-        SiteCreationService.createSite(this, siteTitle, siteTagline, siteSlug, mThemeId);
-
-        slideInFragment(new SiteCreationCreatingFragment(), SiteCreationCreatingFragment.TAG);
+        SiteCreationDomainFragment fragment = SiteCreationDomainFragment.newInstance(mUsername);
+        slideInFragment(fragment, SiteCreationDomainFragment.TAG);
     }
 
     @Override
     public void helpSiteDetailsScreen() {
         launchHelpshift(HelpshiftHelper.Tag.ORIGIN_SITE_CREATION_DETAILS);
+    }
+
+    @Override
+    public void withDomain(String domain) {
+        mSiteDomain = domain;
+        String siteSlug = "qwe";//new URI(domain).;
+
+        // start the Service to perform the site creation
+        siteSlug = WordPress.getBuildConfigString(this, "DEBUG_DOTCOM_NEW_SITE_SLUG");
+        SiteCreationService.createSite(this, mSiteTitle, mSiteTagline, siteSlug, mThemeId);
+
+        slideInFragment(new SiteCreationCreatingFragment(), SiteCreationCreatingFragment.TAG);
+    }
+
+    @Override
+    public void helpDomainScreen() {
+        launchHelpshift(HelpshiftHelper.Tag.ORIGIN_SITE_CREATION_DOMAIN);
     }
 
     @Override
