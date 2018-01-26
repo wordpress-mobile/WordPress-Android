@@ -119,7 +119,8 @@ public class WPLoginInputRow extends RelativeLayout {
     @Override
     public Parcelable onSaveInstanceState() {
         Bundle bundle = new Bundle();
-        bundle.putParcelable(KEY_SUPER_STATE, saveViewsState());
+        Parcelable editTextState = mEditText.onSaveInstanceState();
+        bundle.putParcelable(KEY_SUPER_STATE, new SavedState(super.onSaveInstanceState(), editTextState));
         return bundle;
     }
 
@@ -131,12 +132,6 @@ public class WPLoginInputRow extends RelativeLayout {
         }
 
         super.onRestoreInstanceState(state);
-    }
-
-    @NonNull
-    private SavedState saveViewsState() {
-        Parcelable editTextState = mEditText.onSaveInstanceState();
-        return new SavedState(super.onSaveInstanceState(), editTextState);
     }
 
     private Parcelable restoreViewsState(SavedState state) {
