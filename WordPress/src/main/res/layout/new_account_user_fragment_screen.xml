@@ -65,6 +65,8 @@
                     style="@style/WordPress.NUXEditText"
                     android:hint="@string/email_hint"
                     android:inputType="textEmailAddress"
+                    android:textAlignment="viewStart"
+                    android:gravity="start"
                     app:persistenceEnabled="true"/>
 
                 <ImageView
@@ -99,6 +101,8 @@
                     android:digits="0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"
                     android:hint="@string/username"
                     android:maxLength="@integer/max_length_username"
+                    android:textAlignment="viewStart"
+                    android:gravity="start"
                     app:persistenceEnabled="true"/>
 
                 <ImageView
@@ -133,7 +137,9 @@
                     android:maxLength="@integer/max_length_password"
                     android:layout_marginRight="38dp"
                     android:layout_marginStart="38dp"
-                    android:layout_marginEnd="38dp" />
+                    android:layout_marginEnd="38dp"
+                    android:textAlignment="viewStart"
+                    android:gravity="start"/>
 
                 <ImageView
                     android:layout_width="wrap_content"
@@ -209,7 +215,9 @@
                         android:layout_toLeftOf="@+id/textView"
                         app:persistenceEnabled="true"
                         android:layout_marginLeft="0dp"
-                        android:layout_marginStart="0dp" />
+                        android:layout_marginStart="0dp"
+                        android:textAlignment="viewStart"
+                        android:gravity="start"/>
 
                     <org.wordpress.android.widgets.WPTextView
                         android:layout_width="wrap_content"
