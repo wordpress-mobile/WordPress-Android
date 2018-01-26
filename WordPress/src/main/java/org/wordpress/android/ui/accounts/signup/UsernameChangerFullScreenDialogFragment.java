@@ -71,7 +71,7 @@ public class UsernameChangerFullScreenDialogFragment extends Fragment implements
     public static final String KEY_USERNAME_SELECTED_INDEX = "KEY_USERNAME_SELECTED_INDEX";
     public static final String KEY_USERNAME_SUGGESTIONS = "KEY_USERNAME_SUGGESTIONS";
     public static final String RESULT_USERNAME = "RESULT_USERNAME";
-    public static final int GET_SUGGESTIONS_INTERVAL_MS = 2000;
+    public static final int GET_SUGGESTIONS_INTERVAL_MS = 1000;
 
     @Inject
     protected Dispatcher mDispatcher;
