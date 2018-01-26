@@ -15,7 +15,6 @@ import android.widget.TextView;
 
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
-import org.wordpress.android.fluxc.network.rest.wpcom.site.DomainSuggestionResponse;
 import org.wordpress.android.util.helpers.Debouncer;
 
 import java.util.List;
@@ -30,15 +29,17 @@ public class SiteCreationDomainAdapter extends RecyclerView.Adapter<RecyclerView
 
     public interface OnAdapterListener {
         void onKeywordsChange(String keywords);
-        void onSelectionChange(int index, String domain);
+        void onSelectionChange(String domain);
     }
 
     private boolean mIsLoading;
     private String mInitialKeywords;
-    private List<DomainSuggestionResponse> mSuggestions;
+    private List<String> mSuggestions;
     private OnAdapterListener mOnAdapterListener;
 
-    private int mSelectedDomainSuggestionIndex;
+    private String mCarryOverDomain;
+    private String mSelectedDomain;
+    private boolean mNeedExtraLineForSelectedDomain;
 
     private class HeaderViewHolder extends RecyclerView.ViewHolder {
         private HeaderViewHolder(View itemView) {
@@ -76,7 +77,7 @@ public class SiteCreationDomainAdapter extends RecyclerView.Adapter<RecyclerView
                     mDebouncer.debounce(Void.class, new Runnable() {
                         @Override
                         public void run() {
-                            keywordsChanged(text);
+                            mOnAdapterListener.onKeywordsChange(text);
                         }
                     }, GET_SUGGESTIONS_INTERVAL_MS, TimeUnit.MILLISECONDS);
                 }
@@ -106,25 +107,22 @@ public class SiteCreationDomainAdapter extends RecyclerView.Adapter<RecyclerView
         mOnAdapterListener = onAdapterListener;
     }
 
-    void setData(boolean isLoading, int selectedDomainSuggestionIndex, List<DomainSuggestionResponse> suggestions) {
+    void setData(boolean isLoading, String carryOverDomain, String selectedDomain, List<String> suggestions) {
         if (isLoading != mIsLoading) {
             notifyItemChanged(1);
         }
 
         mIsLoading = isLoading;
         mSuggestions = suggestions;
-        mSelectedDomainSuggestionIndex = selectedDomainSuggestionIndex;
+        mCarryOverDomain = carryOverDomain;
+        mSelectedDomain = selectedDomain;
 
-        mOnAdapterListener.onSelectionChange(mSelectedDomainSuggestionIndex,
-                (mSuggestions != null && mSelectedDomainSuggestionIndex > -1) ?
-                        mSuggestions.get(mSelectedDomainSuggestionIndex).domain_name : null);
+        mOnAdapterListener.onSelectionChange(mSelectedDomain);
+
+        mNeedExtraLineForSelectedDomain = carryOverDomain != null
+                && (suggestions == null || !suggestions.contains(carryOverDomain));
 
         notifyDataSetChanged();
-    }
-
-    private void keywordsChanged(String text) {
-        mOnAdapterListener.onKeywordsChange(text);
-        mOnAdapterListener.onSelectionChange(-1, null);
     }
 
     @Override
@@ -197,7 +195,7 @@ public class SiteCreationDomainAdapter extends RecyclerView.Adapter<RecyclerView
                         || (event != null
                         && event.getAction() == KeyEvent.ACTION_UP
                         && event.getKeyCode() == KeyEvent.KEYCODE_ENTER)) {
-                    keywordsChanged(inputViewHolder.mInput.getText().toString());
+                    mOnAdapterListener.onKeywordsChange(inputViewHolder.mInput.getText().toString());
                 }
 
                 // always consume the event so the focus stays in the EditText
@@ -216,19 +214,18 @@ public class SiteCreationDomainAdapter extends RecyclerView.Adapter<RecyclerView
     }
 
     private void bindSuggest(final DomainViewHolder domainViewHolder, int position) {
-        final boolean onSelectedItem = position - 2 == mSelectedDomainSuggestionIndex;
-        final DomainSuggestionResponse suggestion = getItem(position);
+        final String suggestion = getItem(position);
+        final boolean onSelectedItem = suggestion.equals(mSelectedDomain);
         domainViewHolder.mRadioButton.setChecked(onSelectedItem);
-        domainViewHolder.mTextView.setText(suggestion.domain_name);
+        domainViewHolder.mTextView.setText(suggestion);
 
         View.OnClickListener clickListener = new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 if (!onSelectedItem) {
-                    mSelectedDomainSuggestionIndex = domainViewHolder.getAdapterPosition() - 2;
+                    mSelectedDomain = suggestion;
                     notifyDataSetChanged();
-                    mOnAdapterListener.onSelectionChange(mSelectedDomainSuggestionIndex,
-                            mSuggestions.get(mSelectedDomainSuggestionIndex).domain_name);
+                    mOnAdapterListener.onSelectionChange(suggestion);
                 }
             }
         };
@@ -239,7 +236,13 @@ public class SiteCreationDomainAdapter extends RecyclerView.Adapter<RecyclerView
 
     @Override
     public int getItemCount() {
-        return 2 + (mSuggestions == null ? 0 : mSuggestions.size());
+        int itemCount = 2; // the header and the input box
+
+        // extra line if the selected domain is not in the list
+        itemCount += mNeedExtraLineForSelectedDomain ? 1 : 0;
+
+        itemCount += mSuggestions == null ? 0 : mSuggestions.size();
+        return itemCount;
     }
 
     @Override
@@ -258,7 +261,17 @@ public class SiteCreationDomainAdapter extends RecyclerView.Adapter<RecyclerView
         return position; // just return the position itself. Items are all unique anyway.
     }
 
-    private DomainSuggestionResponse getItem(int position) {
-        return mSuggestions.get(position - 2);
+    private String getItem(int position) {
+        if (mNeedExtraLineForSelectedDomain) {
+            if (position == 2) {
+                // return the selected domain if we're on the first item on the listview
+                return mCarryOverDomain;
+            } else {
+                // otherwise return the suggestion from the data
+                return mSuggestions.get(position - 3);
+            }
+        } else {
+            return mSuggestions.get(position - 2);
+        }
     }
 }

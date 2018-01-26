@@ -18,8 +18,11 @@ import org.greenrobot.eventbus.ThreadMode;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.analytics.AnalyticsTracker;
+import org.wordpress.android.fluxc.network.rest.wpcom.site.DomainSuggestionResponse;
 import org.wordpress.android.fluxc.store.SiteStore;
 import org.wordpress.android.ui.accounts.signup.SiteCreationDomainLoaderFragment.DomainSuggestionEvent;
+
+import java.util.ArrayList;
 
 import javax.inject.Inject;
 
@@ -29,13 +32,14 @@ public class SiteCreationDomainFragment extends SiteCreationBaseFormFragment<Sit
     private static final String ARG_USERNAME = "ARG_USERNAME";
 
     private static final String KEY_KEYWORDS = "KEY_KEYWORDS";
-    private static final String KEY_SELECTED_DOMAIN_SUGGESTION_INDEX = "KEY_SELECTED_DOMAIN_SUGGESTION_INDEX";
+    private static final String KEY_CARRY_OVER_DOMAIN = "KEY_CARRY_OVER_DOMAIN";
+    private static final String KEY_SELECTED_DOMAIN = "KEY_SELECTED_DOMAIN";
 
     private String mUsername;
     private String mKeywords = "";
-    private int mSelectedDomainSuggestionIndex = -1;
 
-    private String mDomain;
+    private String mCarryOverDomain;
+    private String mSelectedDomain;
 
     private Button mFinishButton;
 
@@ -70,11 +74,11 @@ public class SiteCreationDomainFragment extends SiteCreationBaseFormFragment<Sit
 
         mFinishButton = rootView.findViewById(R.id.finish_button);
         mFinishButton.setVisibility(View.VISIBLE);
-        mFinishButton.setEnabled(mSelectedDomainSuggestionIndex > -1);
+        mFinishButton.setEnabled(mSelectedDomain != null);
         mFinishButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                mSiteCreationListener.withDomain(mDomain);
+                mSiteCreationListener.withDomain(mSelectedDomain);
             }
         });
     }
@@ -97,7 +101,8 @@ public class SiteCreationDomainFragment extends SiteCreationBaseFormFragment<Sit
 
         if (savedInstanceState != null) {
             mKeywords = savedInstanceState.getString(KEY_KEYWORDS);
-            mSelectedDomainSuggestionIndex = savedInstanceState.getInt(KEY_SELECTED_DOMAIN_SUGGESTION_INDEX);
+            mCarryOverDomain = savedInstanceState.getString(KEY_CARRY_OVER_DOMAIN);
+            mSelectedDomain = savedInstanceState.getString(KEY_SELECTED_DOMAIN);
         }
 
         // Need to do this early so the mSiteCreationDomainAdapter gets initialized before RecyclerView needs it. This
@@ -136,7 +141,8 @@ public class SiteCreationDomainFragment extends SiteCreationBaseFormFragment<Sit
         super.onSaveInstanceState(outState);
 
         outState.putString(KEY_KEYWORDS, mKeywords);
-        outState.putInt(KEY_SELECTED_DOMAIN_SUGGESTION_INDEX, mSelectedDomainSuggestionIndex);
+        outState.putString(KEY_CARRY_OVER_DOMAIN, mCarryOverDomain);
+        outState.putString(KEY_SELECTED_DOMAIN, mSelectedDomain);
     }
 
     private SiteCreationDomainLoaderFragment getLoaderFragment() {
@@ -147,7 +153,7 @@ public class SiteCreationDomainFragment extends SiteCreationBaseFormFragment<Sit
     private void updateFinishButton() {
         // the UI will not be fully setup yet on the initial sticky event registration so, only update it if setup.
         if (mFinishButton != null) {
-            mFinishButton.setEnabled(mSelectedDomainSuggestionIndex > -1);
+            mFinishButton.setEnabled(mSelectedDomain != null);
         }
     }
 
@@ -161,6 +167,7 @@ public class SiteCreationDomainFragment extends SiteCreationBaseFormFragment<Sit
                         @Override
                         public void onKeywordsChange(String keywords) {
                             mKeywords = keywords;
+                            mCarryOverDomain = mSelectedDomain;
 
                             // fallback to using the provided username as query if text is empty
                             String queryString = TextUtils.isEmpty(keywords.trim()) ? mUsername : keywords;
@@ -169,9 +176,8 @@ public class SiteCreationDomainFragment extends SiteCreationBaseFormFragment<Sit
                         }
 
                         @Override
-                        public void onSelectionChange(int selectedDomainSuggestionIndex, String domain) {
-                            mSelectedDomainSuggestionIndex = selectedDomainSuggestionIndex;
-                            mDomain = domain;
+                        public void onSelectionChange(String domain) {
+                            mSelectedDomain = domain;
                             updateFinishButton();
                         }
                     });
@@ -179,15 +185,19 @@ public class SiteCreationDomainFragment extends SiteCreationBaseFormFragment<Sit
 
         switch (event.phase) {
             case UPDATING:
-                mSelectedDomainSuggestionIndex = -1;
-                mSiteCreationDomainAdapter.setData(true, mSelectedDomainSuggestionIndex, null);
+                mSelectedDomain = mCarryOverDomain;
+                mSiteCreationDomainAdapter.setData(true, mCarryOverDomain, mSelectedDomain, null);
                 break;
             case ERROR:
-                mSiteCreationDomainAdapter.setData(false, mSelectedDomainSuggestionIndex, null);
+                mSiteCreationDomainAdapter.setData(false, mCarryOverDomain, mSelectedDomain, null);
                 break;
             case FINISHED:
-                mSiteCreationDomainAdapter.setData(false, mSelectedDomainSuggestionIndex,
-                        event.event.suggestions);
+                ArrayList<String> suggestions = new ArrayList<>();
+                for (DomainSuggestionResponse suggestionResponse : event.event.suggestions) {
+                    suggestions.add(suggestionResponse.domain_name);
+                }
+
+                mSiteCreationDomainAdapter.setData(false, mCarryOverDomain, mSelectedDomain, suggestions);
                 break;
         }
 
