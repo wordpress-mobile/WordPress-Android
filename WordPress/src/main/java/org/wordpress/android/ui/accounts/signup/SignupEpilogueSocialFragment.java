@@ -16,6 +16,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.TextView;
 
 import org.greenrobot.eventbus.Subscribe;
@@ -35,6 +36,9 @@ import org.wordpress.android.fluxc.store.AccountStore.PushUsernamePayload;
 import org.wordpress.android.login.LoginBaseFormFragment;
 import org.wordpress.android.login.widgets.WPLoginInputRow;
 import org.wordpress.android.networking.GravatarApi;
+import org.wordpress.android.ui.FullScreenDialogFragment;
+import org.wordpress.android.ui.FullScreenDialogFragment.OnConfirmListener;
+import org.wordpress.android.ui.FullScreenDialogFragment.OnDismissListener;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.MediaUtils;
@@ -49,15 +53,17 @@ import java.util.HashMap;
 
 import javax.inject.Inject;
 
-public class SignupEpilogueSocialFragment extends LoginBaseFormFragment<SignupEpilogueListener> {
+public class SignupEpilogueSocialFragment extends LoginBaseFormFragment<SignupEpilogueListener>
+        implements OnConfirmListener, OnDismissListener {
+    private EditText mEditTextDisplayName;
+    private EditText mEditTextUsername;
+    private FullScreenDialogFragment mDialog;
+    private SignupEpilogueListener mSignupEpilogueListener;
     private String mEmailAddress;
     private String mPhotoUrl;
+    private String mUsername;
 
-    protected SignupEpilogueListener mSignupEpilogueListener;
     protected String mDisplayName;
-    protected String mUsername;
-    protected WPLoginInputRow mInputDisplayName;
-    protected WPLoginInputRow mInputUsername;
 
     private static final String ARG_DISPLAY_NAME = "ARG_DISPLAY_NAME";
     private static final String ARG_EMAIL_ADDRESS = "ARG_EMAIL_ADDRESS";
@@ -105,15 +111,16 @@ public class SignupEpilogueSocialFragment extends LoginBaseFormFragment<SignupEp
 
     @Override
     protected void setupContent(ViewGroup rootView) {
-        final WPNetworkImageView headerAvatar = (WPNetworkImageView) rootView.findViewById(R.id.signup_epilogue_header_avatar);
+        final WPNetworkImageView headerAvatar = rootView.findViewById(R.id.signup_epilogue_header_avatar);
         headerAvatar.setImageUrl(mPhotoUrl, WPNetworkImageView.ImageType.AVATAR);
-        final WPTextView headerDisplayName = (WPTextView) rootView.findViewById(R.id.signup_epilogue_header_display);
+        final WPTextView headerDisplayName = rootView.findViewById(R.id.signup_epilogue_header_display);
         headerDisplayName.setText(mDisplayName);
-        final WPTextView headerEmailAddress = (WPTextView) rootView.findViewById(R.id.signup_epilogue_header_email);
+        final WPTextView headerEmailAddress = rootView.findViewById(R.id.signup_epilogue_header_email);
         headerEmailAddress.setText(mEmailAddress);
-        mInputDisplayName = (WPLoginInputRow) rootView.findViewById(R.id.signup_epilogue_input_display);
-        mInputDisplayName.getEditText().setText(mDisplayName);
-        mInputDisplayName.getEditText().addTextChangedListener(new TextWatcher() {
+        WPLoginInputRow inputDisplayName = rootView.findViewById(R.id.signup_epilogue_input_display);
+        mEditTextDisplayName = inputDisplayName.getEditText();
+        mEditTextDisplayName.setText(mDisplayName);
+        mEditTextDisplayName.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
             }
@@ -128,23 +135,24 @@ public class SignupEpilogueSocialFragment extends LoginBaseFormFragment<SignupEp
                 headerDisplayName.setText(mDisplayName);
             }
         });
-        mInputUsername = (WPLoginInputRow) rootView.findViewById(R.id.signup_epilogue_input_username);
-        mInputUsername.getEditText().setText(mUsername);
-        mInputUsername.getEditText().setOnClickListener(new View.OnClickListener() {
+        WPLoginInputRow inputUsername = rootView.findViewById(R.id.signup_epilogue_input_username);
+        mEditTextUsername = inputUsername.getEditText();
+        mEditTextUsername.setText(mUsername);
+        mEditTextUsername.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                // TODO: Launch username changer.
+                launchDialog();
             }
         });
-        mInputUsername.getEditText().setOnFocusChangeListener(new View.OnFocusChangeListener() {
+        mEditTextUsername.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             @Override
             public void onFocusChange(View view, boolean hasFocus) {
                 if (hasFocus) {
-                    // TODO: Launch username changer.
+                    launchDialog();
                 }
             }
         });
-        mInputUsername.getEditText().setOnKeyListener(new View.OnKeyListener() {
+        mEditTextUsername.setOnKeyListener(new View.OnKeyListener() {
             @Override
             public boolean onKey(View view, int keyCode, KeyEvent event) {
                 // Consume keyboard events except for Enter (i.e. click/tap) and Tab (i.e. focus/navigation).
@@ -188,6 +196,13 @@ public class SignupEpilogueSocialFragment extends LoginBaseFormFragment<SignupEp
             AnalyticsTracker.track(AnalyticsTracker.Stat.SIGNUP_SOCIAL_EPILOGUE_VIEWED);
             new DownloadAvatarAndUploadGravatarThread(mPhotoUrl, mEmailAddress, mAccount.getAccessToken()).start();
         } else {
+            mDialog = (FullScreenDialogFragment) getFragmentManager().findFragmentByTag(FullScreenDialogFragment.TAG);
+
+            if (mDialog != null) {
+                mDialog.setOnConfirmListener(this);
+                mDialog.setOnDismissListener(this);
+            }
+
             // Overwrite original display name and username if they have changed.
             mDisplayName = savedInstanceState.getString(KEY_DISPLAY_NAME);
             mUsername = savedInstanceState.getString(KEY_USERNAME);
@@ -203,6 +218,19 @@ public class SignupEpilogueSocialFragment extends LoginBaseFormFragment<SignupEp
         } else {
             throw new RuntimeException(context.toString() + " must implement SignupEpilogueListener");
         }
+    }
+
+    @Override
+    public void onConfirm(@Nullable Bundle result) {
+        if (result != null) {
+            mUsername = result.getString(UsernameChangerFullScreenDialogFragment.RESULT_USERNAME);
+            mEditTextUsername.setText(mUsername);
+        }
+    }
+
+    @Override
+    public void onDismiss() {
+        mDialog = null;
     }
 
     @Override
@@ -276,6 +304,21 @@ public class SignupEpilogueSocialFragment extends LoginBaseFormFragment<SignupEp
         return !StringUtils.equals(getArguments().getString(ARG_USERNAME), mUsername);
     }
 
+    protected void launchDialog() {
+        final Bundle bundle = UsernameChangerFullScreenDialogFragment.newBundle(
+                mEditTextDisplayName.getText().toString(), mEditTextUsername.getText().toString());
+
+        mDialog = new FullScreenDialogFragment.Builder(getContext())
+                .setTitle(R.string.username_changer_title)
+                .setAction(R.string.username_changer_action)
+                .setOnConfirmListener(this)
+                .setOnDismissListener(this)
+                .setContent(UsernameChangerFullScreenDialogFragment.class, bundle)
+                .build();
+
+        mDialog.show(getActivity().getSupportFragmentManager(), FullScreenDialogFragment.TAG);
+    }
+
     protected void showErrorDialog(String message) {
         DialogInterface.OnClickListener dialogListener = new DialogInterface.OnClickListener() {
             @Override
@@ -303,9 +346,9 @@ public class SignupEpilogueSocialFragment extends LoginBaseFormFragment<SignupEp
 
     protected void undoChanges() {
         mDisplayName = getArguments().getString(ARG_DISPLAY_NAME);
-        mInputDisplayName.getEditText().setText(mDisplayName);
+        mEditTextDisplayName.setText(mDisplayName);
         mUsername = getArguments().getString(ARG_USERNAME);
-        mInputUsername.getEditText().setText(mUsername);
+        mEditTextUsername.setText(mUsername);
         updateAccountOrContinue();
     }
 
