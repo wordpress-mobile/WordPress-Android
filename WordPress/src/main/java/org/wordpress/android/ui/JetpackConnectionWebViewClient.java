@@ -7,6 +7,7 @@ import android.net.Uri;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 
+import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.store.AccountStore;
 import org.wordpress.android.fluxc.store.SiteStore;
@@ -95,6 +96,7 @@ class JetpackConnectionWebViewClient extends WebViewClient {
                 Intent intent = new Intent(Intent.ACTION_VIEW);
                 intent.setData(url);
                 view.getContext().startActivity(intent);
+                AnalyticsTracker.track(AnalyticsTracker.Stat.STATS_SELECTED_INSTALL_JETPACK);
                 return true;
             }
         } catch (UnsupportedEncodingException e) {
