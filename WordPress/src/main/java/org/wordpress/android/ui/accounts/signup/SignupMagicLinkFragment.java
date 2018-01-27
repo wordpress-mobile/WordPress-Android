@@ -7,8 +7,10 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.ActionBar;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.view.ContextThemeWrapper;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -175,11 +177,36 @@ public class SignupMagicLinkFragment extends Fragment {
         }
     }
 
+    protected void showErrorDialog(String message) {
+        DialogInterface.OnClickListener dialogListener = new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                switch (which) {
+                    case DialogInterface.BUTTON_POSITIVE:
+                        sendMagicLinkEmail();
+                        break;
+                    // DialogInterface.BUTTON_NEGATIVE is intentionally ignored.  Just dismiss dialog.
+                }
+            }
+        };
+
+        AlertDialog dialog = new AlertDialog.Builder(new ContextThemeWrapper(getActivity(), R.style.LoginTheme))
+                .setMessage(message)
+                .setNegativeButton(R.string.signup_magic_link_error_button_negative, dialogListener)
+                .setPositiveButton(R.string.signup_magic_link_error_button_positive, dialogListener)
+                .create();
+        dialog.show();
+    }
+
     @SuppressWarnings("unused")
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onAuthEmailSent(AccountStore.OnAuthEmailSent event) {
         if (mInProgress) {
             endProgress();
+
+            if (event.isError()) {
+                showErrorDialog(getString(R.string.signup_magic_link_error));
+            }
         }
     }
 }
