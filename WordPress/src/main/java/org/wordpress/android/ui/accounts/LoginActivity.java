@@ -43,6 +43,7 @@ import org.wordpress.android.ui.accounts.signup.SignupBottomSheetDialog;
 import org.wordpress.android.ui.accounts.signup.SignupBottomSheetDialog.SignupSheetListener;
 import org.wordpress.android.ui.accounts.signup.SignupEmailFragment;
 import org.wordpress.android.ui.accounts.signup.SignupGoogleFragment;
+import org.wordpress.android.ui.accounts.signup.SignupMagicLinkFragment;
 import org.wordpress.android.ui.notifications.services.NotificationsUpdateService;
 import org.wordpress.android.ui.reader.services.ReaderUpdateService;
 import org.wordpress.android.util.AppLog;
@@ -369,6 +370,12 @@ public class LoginActivity extends AppCompatActivity implements ConnectionCallba
     public void showMagicLinkSentScreen(String email) {
         LoginMagicLinkSentFragment loginMagicLinkSentFragment = LoginMagicLinkSentFragment.newInstance(email);
         slideInFragment(loginMagicLinkSentFragment, true, LoginMagicLinkSentFragment.TAG);
+    }
+
+    @Override
+    public void showSignupMagicLink(String email) {
+        SignupMagicLinkFragment signupMagicLinkFragment = SignupMagicLinkFragment.newInstance(email);
+        slideInFragment(signupMagicLinkFragment, true, SignupMagicLinkFragment.TAG);
     }
 
     @Override
