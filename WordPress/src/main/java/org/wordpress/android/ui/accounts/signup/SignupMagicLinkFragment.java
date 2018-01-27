@@ -28,6 +28,8 @@ import org.wordpress.android.fluxc.generated.AuthenticationActionBuilder;
 import org.wordpress.android.fluxc.store.AccountStore;
 import org.wordpress.android.login.LoginAnalyticsListener;
 import org.wordpress.android.login.LoginListener;
+import org.wordpress.android.util.AppLog;
+import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.NetworkUtils;
 
 import javax.inject.Inject;
@@ -205,6 +207,7 @@ public class SignupMagicLinkFragment extends Fragment {
             endProgress();
 
             if (event.isError()) {
+                AppLog.e(T.API, "OnAuthEmailSent error: " + event.error.type + " - " + event.error.message);
                 showErrorDialog(getString(R.string.signup_magic_link_error));
             }
         }
