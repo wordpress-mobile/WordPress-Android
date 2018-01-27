@@ -2081,11 +2081,14 @@
     <string name="signup_epilogue_heading">New account</string>
     <string name="signup_epilogue_hint_display">Display Name</string>
     <string name="signup_epilogue_hint_username">Username</string>
+    <string name="signup_magic_link_message">We sent an email with a link, open it to proceed with your new WordPress.com account.</string>
+    <string name="signup_magic_link_progress">Sending email</string>
     <string name="signup_terms_of_service_text">By signing up, you agree to our %1$sTerms of Service%2$s.</string>
     <string name="signup_updating_account">Updating account&#8230;</string>
     <string name="signup_user_exists">Email already exists on WordPress.com.\nProceeding with login.</string>
     <string name="signup_with_email_button">Sign Up with Email</string>
     <string name="signup_with_google_button">Sign Up with Google</string>
+    <string name="try_again">Try again</string>
 
     <string name="google_error_timeout">Google took too long to respond. You may need to wait until you have a stronger internet connection.</string>
 
