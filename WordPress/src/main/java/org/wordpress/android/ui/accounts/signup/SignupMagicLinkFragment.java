@@ -130,6 +130,10 @@ public class SignupMagicLinkFragment extends Fragment {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.help:
+                if (mLoginListener != null) {
+                    mLoginListener.helpSignupMagicLinkScreen(mEmail);
+                }
+
                 return true;
             default:
                 return false;

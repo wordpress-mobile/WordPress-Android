@@ -499,6 +499,11 @@ public class LoginActivity extends AppCompatActivity implements ConnectionCallba
     }
 
     @Override
+    public void helpSignupMagicLinkScreen(String email) {
+        launchHelpshift(null, email, true, Tag.ORIGIN_SIGNUP_MAGIC_LINK);
+    }
+
+    @Override
     public void helpSocialEmailScreen(String email) {
         launchHelpshift(null, email, true, Tag.ORIGIN_LOGIN_SOCIAL);
     }
