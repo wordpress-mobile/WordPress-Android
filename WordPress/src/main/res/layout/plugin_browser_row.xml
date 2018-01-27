@@ -46,8 +46,8 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@+id/plugin_author"
-        android:layout_marginBottom="@dimen/margin_medium"
-        android:orientation="horizontal">
+        android:orientation="horizontal"
+        android:paddingBottom="@dimen/margin_large">
 
         <ImageView
             android:id="@+id/plugin_status_icon"
@@ -73,8 +73,8 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@+id/plugin_author"
-        android:layout_marginBottom="@dimen/margin_medium"
         android:numStars="5"
+        android:paddingBottom="@dimen/margin_large"
         tools:rating="3" />
 
 </RelativeLayout>
