@@ -69,5 +69,6 @@ public interface LoginListener {
 
     // Signup
     void helpSignupEmailScreen(String email);
+    void showSignupMagicLink(String email);
     void showSignupToLoginMessage();
 }
