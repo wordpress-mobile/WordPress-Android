@@ -328,6 +328,7 @@ public class PluginBrowserActivity extends AppCompatActivity
         }
         showProgress(false);
         if (event.isError()) {
+            AppLog.e(AppLog.T.PLUGINS, "An error occurred while fetching site plugins with type: " + event.error.type);
             ToastUtils.showToast(this, R.string.plugin_fetch_error);
             return;
         }
