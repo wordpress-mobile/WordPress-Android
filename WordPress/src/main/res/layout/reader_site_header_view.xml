@@ -32,6 +32,8 @@
             android:layout_marginEnd="@dimen/margin_large"/>
 
         <org.wordpress.android.widgets.WPTextView
+            android:textAlignment="viewStart"
+            android:gravity="start"
             android:id="@+id/text_blog_name"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -44,6 +46,8 @@
             android:layout_toEndOf="@+id/image_blavatar"/>
 
         <org.wordpress.android.widgets.WPTextView
+            android:textAlignment="viewStart"
+            android:gravity="start"
             android:id="@+id/text_domain"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -110,7 +114,6 @@
                 android:id="@+id/text_blog_follow_count"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_below="@+id/text_domain"
                 android:textColor="@color/grey_darken_10"
                 android:textSize="@dimen/text_sz_small"
                 tools:text="12 followers" />
