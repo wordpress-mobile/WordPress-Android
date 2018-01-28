@@ -412,16 +412,15 @@ public class PluginBrowserActivity extends AppCompatActivity
             return;
         }
 
-        mSearchResults.clear();
-
         if (event.isError()) {
             AppLog.e(AppLog.T.PLUGINS, "An error occurred while searching the plugin directory");
             ToastUtils.showToast(this, R.string.plugin_search_error);
         } else {
+            mSearchResults.clear();
             mSearchResults.addAll(event.plugins);
             fragment.showEmptyView(mSearchResults.isEmpty() && !TextUtils.isEmpty(mSearchQuery));
+            refreshListFragment();
         }
-        refreshListFragment();
     }
 
     private void refreshPluginWithSlug(@NonNull String slug) {
