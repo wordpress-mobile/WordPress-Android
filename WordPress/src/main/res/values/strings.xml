@@ -1826,6 +1826,7 @@
     <string name="plugin_remove_dialog_title">Remove Plugin</string>
     <string name="plugin_remove_dialog_message">Are you sure you want to remove %1$s from %2$s?\n\nThis will deactivate the plugin and delete all associated files and data.</string>
     <string name="plugin_fetch_error">Unable to load plugins</string>
+    <string name="plugin_search_error">Unable to searcb plugins</string>
     <string name="plugin_manage">Manage</string>
     <string name="plugin_see_all">See All</string>
     <string name="plugins_empty_search_list">No matches</string>

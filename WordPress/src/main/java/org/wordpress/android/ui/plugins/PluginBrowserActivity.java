@@ -403,11 +403,8 @@ public class PluginBrowserActivity extends AppCompatActivity
 
         showProgress(false);
 
-        if (event.isError()) {
-            AppLog.e(AppLog.T.PLUGINS, "An error occurred while searching the plugin directory");
-            return;
-        }
-
+        // make sure the search list fragment is still active and that this is the same as the most
+        // recent search (could be a stale response)
         PluginListFragment fragment = getListFragment();
         if (fragment == null
                 || fragment.getListType() != PluginListType.SEARCH
@@ -416,8 +413,14 @@ public class PluginBrowserActivity extends AppCompatActivity
         }
 
         mSearchResults.clear();
-        mSearchResults.addAll(event.plugins);
-        fragment.showEmptyView(mSearchResults.isEmpty() && !TextUtils.isEmpty(mSearchQuery));
+
+        if (event.isError()) {
+            AppLog.e(AppLog.T.PLUGINS, "An error occurred while searching the plugin directory");
+            ToastUtils.showToast(this, R.string.plugin_search_error);
+        } else {
+            mSearchResults.addAll(event.plugins);
+            fragment.showEmptyView(mSearchResults.isEmpty() && !TextUtils.isEmpty(mSearchQuery));
+        }
         refreshListFragment();
     }
 
