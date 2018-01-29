@@ -99,7 +99,10 @@ public abstract class AutoForeground<PhaseClass extends ServicePhase, EventClass
     public void onCreate() {
         super.onCreate();
 
-        notifyState(mInitialPhase);
+        // initialize the sticky phase if it hasn't already
+        if (EventBus.getDefault().getStickyEvent(mEventClass) == null) {
+            notifyState(mInitialPhase);
+        }
     }
 
     @Nullable
