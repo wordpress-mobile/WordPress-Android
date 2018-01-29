@@ -251,16 +251,6 @@ Language: zh_CN
 	<string name="format_bar_description_heading">标题</string>
 	<string name="format_bar_description_media">媒体</string>
 	<string name="reader_view_comments">查看评论</string>
-	<string name="new_editor_promo_title_beta">beta</string>
-	<string name="new_editor_promo_title">试用新编辑器</string>
-	<string name="new_editor_promo_link">有何新内容？</string>
-	<string name="new_editor_promo_description_image">手绘图像</string>
-	<string name="new_editor_promo_confirmation_message">已启用新编辑器！</string>
-	<string name="new_editor_promo_confirmation_action">设置</string>
-	<string name="new_editor_promo_button_positive">试一试</string>
-	<string name="new_editor_promo_button_negative">改天再试</string>
-	<string name="new_editor_beta_message">全新编辑器公测中！</string>
-	<string name="new_editor_beta_action">了解更多</string>
 	<string name="preference_editor_footer_description">信息图标</string>
 	<string name="preference_editor_footer">编辑器版本说明和错误报告</string>
 	<string name="site_settings_video_quality_hint">视频画质。值越高，视频画质越好。</string>
@@ -341,7 +331,6 @@ Language: zh_CN
 	<string name="smart_toast_photo_long_press">按住可选择多张照片</string>
 	<string name="photo_picker_choose_video">从设备中选择视频</string>
 	<string name="photo_picker_choose_photo">从设备中选择照片</string>
-	<string name="new_editor_promo_description">WordPress 应用现在提供漂亮的新版编辑器。请创建新文章试用一下。</string>
 	<string name="wp_media_title">WordPress 媒体</string>
 	<string name="media_insert_as_gallery">添加为画廊</string>
 	<string name="media_insert_individually">单个添加</string>
