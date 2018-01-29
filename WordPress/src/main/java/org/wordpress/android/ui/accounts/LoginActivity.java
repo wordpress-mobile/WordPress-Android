@@ -43,6 +43,7 @@ import org.wordpress.android.ui.accounts.signup.SignupBottomSheetDialog;
 import org.wordpress.android.ui.accounts.signup.SignupBottomSheetDialog.SignupSheetListener;
 import org.wordpress.android.ui.accounts.signup.SignupEmailFragment;
 import org.wordpress.android.ui.accounts.signup.SignupGoogleFragment;
+import org.wordpress.android.ui.accounts.signup.SignupMagicLinkFragment;
 import org.wordpress.android.ui.notifications.services.NotificationsUpdateService;
 import org.wordpress.android.ui.reader.services.ReaderUpdateService;
 import org.wordpress.android.util.AppLog;
@@ -372,6 +373,12 @@ public class LoginActivity extends AppCompatActivity implements ConnectionCallba
     }
 
     @Override
+    public void showSignupMagicLink(String email) {
+        SignupMagicLinkFragment signupMagicLinkFragment = SignupMagicLinkFragment.newInstance(email);
+        slideInFragment(signupMagicLinkFragment, true, SignupMagicLinkFragment.TAG);
+    }
+
+    @Override
     public void openEmailClient() {
         if (WPActivityUtils.isEmailClientAvailable(this)) {
             AnalyticsTracker.track(AnalyticsTracker.Stat.LOGIN_MAGIC_LINK_OPEN_EMAIL_CLIENT_CLICKED);
@@ -489,6 +496,11 @@ public class LoginActivity extends AppCompatActivity implements ConnectionCallba
     @Override
     public void helpSignupEmailScreen(String email) {
         launchHelpshift(null, email, true, Tag.ORIGIN_SIGNUP_EMAIL);
+    }
+
+    @Override
+    public void helpSignupMagicLinkScreen(String email) {
+        launchHelpshift(null, email, true, Tag.ORIGIN_SIGNUP_MAGIC_LINK);
     }
 
     @Override
