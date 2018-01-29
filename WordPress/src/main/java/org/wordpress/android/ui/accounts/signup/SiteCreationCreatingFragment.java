@@ -44,17 +44,17 @@ public class SiteCreationCreatingFragment extends SiteCreationBaseFormFragment<S
 
     @Override
     protected void setupContent(ViewGroup rootView) {
-        mImageView = (ImageView) rootView.findViewById(R.id.image);
+        mImageView = rootView.findViewById(R.id.image);
         mProgressContainer = rootView.findViewById(R.id.progress_container);
         mErrorContainer = rootView.findViewById(R.id.error_container);
 
         // construct an array with the labels in reverse order
         mLabels = new TextView[] {
-                (TextView) rootView.findViewById(R.id.site_creation_creating_preparing_frontend),
-                (TextView) rootView.findViewById(R.id.site_creation_creating_configuring_theme),
-                (TextView) rootView.findViewById(R.id.site_creation_creating_configuring_content),
-                (TextView) rootView.findViewById(R.id.site_creation_creating_fetching_info),
-                (TextView) rootView.findViewById(R.id.site_creation_creating_laying_foundation)};
+                rootView.findViewById(R.id.site_creation_creating_preparing_frontend),
+                rootView.findViewById(R.id.site_creation_creating_configuring_theme),
+                rootView.findViewById(R.id.site_creation_creating_configuring_content),
+                rootView.findViewById(R.id.site_creation_creating_fetching_info),
+                rootView.findViewById(R.id.site_creation_creating_laying_foundation)};
     }
 
     @Override
