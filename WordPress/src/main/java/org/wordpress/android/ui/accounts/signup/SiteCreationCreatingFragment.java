@@ -23,12 +23,16 @@ import org.wordpress.android.util.ToastUtils;
 public class SiteCreationCreatingFragment extends SiteCreationBaseFormFragment<SiteCreationListener> {
     public static final String TAG = "site_creating_fragment_tag";
 
+    private static final String KEY_CREATION_FINISHED = "KEY_CREATION_FINISHED";
+
     private ServiceEventConnection mServiceEventConnection;
 
     private ImageView mImageView;
     private View mProgressContainer;
     private View mErrorContainer;
     private TextView[] mLabels;
+
+    private boolean mCreationFinished;
 
     @Override
     protected @LayoutRes int getContentLayout() {
@@ -58,6 +62,15 @@ public class SiteCreationCreatingFragment extends SiteCreationBaseFormFragment<S
     }
 
     @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+
+        if (savedInstanceState != null) {
+            mCreationFinished = savedInstanceState.getBoolean(KEY_CREATION_FINISHED, false);
+        }
+    }
+
+    @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
@@ -70,16 +83,29 @@ public class SiteCreationCreatingFragment extends SiteCreationBaseFormFragment<S
     public void onResume() {
         super.onResume();
 
-        // connect to the Service. We'll receive updates via EventBus.
-        mServiceEventConnection = new ServiceEventConnection(getContext(), SiteCreationService.class, this);
+        if (!mCreationFinished) {
+            // connect to the Service. We'll receive updates via EventBus.
+            mServiceEventConnection = new ServiceEventConnection(getContext(), SiteCreationService.class, this);
+        } else {
+            disableUntil(R.id.site_creation_creating_preparing_frontend);
+        }
     }
 
     @Override
     public void onPause() {
         super.onPause();
 
-        // disconnect from the Service
-        mServiceEventConnection.disconnect(getContext(), this);
+        if (mServiceEventConnection != null) {
+            // disconnect from the Service
+            mServiceEventConnection.disconnect(getContext(), this);
+        }
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+
+        outState.putBoolean(KEY_CREATION_FINISHED, mCreationFinished);
     }
 
     private void disableUntil(@IdRes int textViewId) {
@@ -131,6 +157,7 @@ public class SiteCreationCreatingFragment extends SiteCreationBaseFormFragment<S
                 new Handler().postDelayed(new Runnable() {
                     @Override
                     public void run() {
+                        mCreationFinished = true;
                         mSiteCreationListener.creationSuccess();
                     }
                 }, 4000);
