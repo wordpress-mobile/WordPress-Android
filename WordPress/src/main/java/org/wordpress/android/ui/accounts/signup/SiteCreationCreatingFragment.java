@@ -115,7 +115,7 @@ public class SiteCreationCreatingFragment extends SiteCreationBaseFormFragment<S
         boolean enabled = false;
 
         // traverse the array (elements are in "reverse" order already) and disable them until the provided on is reach.
-        //  From that point on, enable the laberls found
+        //  From that point on, enable the labels found
         for(TextView tv : mLabels) {
             if (tv.getId() == textViewId) {
                 enabled = true;
