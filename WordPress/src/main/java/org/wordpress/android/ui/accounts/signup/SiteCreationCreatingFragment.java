@@ -18,7 +18,6 @@ import org.wordpress.android.ui.accounts.signup.SiteCreationService.OnSiteCreati
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.AutoForeground.ServiceEventConnection;
-import org.wordpress.android.util.ToastUtils;
 
 public class SiteCreationCreatingFragment extends SiteCreationBaseFormFragment<SiteCreationListener> {
     public static final String TAG = "site_creating_fragment_tag";
