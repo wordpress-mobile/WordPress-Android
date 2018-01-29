@@ -158,9 +158,7 @@ public class SiteCreationActivity extends AppCompatActivity implements SiteCreat
         siteSlug = WordPress.getBuildConfigString(this, "DEBUG_DOTCOM_NEW_SITE_SLUG");
         SiteCreationService.createSite(this, mSiteTitle, mSiteTagline, siteSlug, mThemeId);
 
-        SiteCreationCreatingFragment siteCreationCreatingFragment = new SiteCreationCreatingFragment();
-        siteCreationCreatingFragment.initializeServiceState();
-        slideInFragment(siteCreationCreatingFragment, SiteCreationCreatingFragment.TAG);
+        slideInFragment(new SiteCreationCreatingFragment(), SiteCreationCreatingFragment.TAG);
     }
 
     @Override

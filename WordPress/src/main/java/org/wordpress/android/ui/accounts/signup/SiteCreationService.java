@@ -132,6 +132,8 @@ public class SiteCreationService extends AutoForeground<SiteCreationPhase, OnSit
             String siteTagline,
             String siteSlug,
             String siteThemeId) {
+        clearSiteCreationServiceState();
+
         Intent intent = new Intent(context, SiteCreationService.class);
         intent.putExtra(ARG_SITE_TITLE, siteTitle);
         intent.putExtra(ARG_SITE_TAGLINE, siteTagline);

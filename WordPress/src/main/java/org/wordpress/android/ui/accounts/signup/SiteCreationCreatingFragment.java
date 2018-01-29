@@ -33,10 +33,6 @@ public class SiteCreationCreatingFragment extends SiteCreationBaseFormFragment<S
 
     private boolean mCreationFinished;
 
-    public void initializeServiceState() {
-        SiteCreationService.clearSiteCreationServiceState();
-    }
-
     @Override
     protected @LayoutRes int getContentLayout() {
         return R.layout.site_creation_creating_screen;
