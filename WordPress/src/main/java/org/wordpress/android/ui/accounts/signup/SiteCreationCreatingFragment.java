@@ -106,6 +106,8 @@ public class SiteCreationCreatingFragment extends SiteCreationBaseFormFragment<S
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
+        showHomeButton(!mInModalMode);
+
         if (savedInstanceState == null) {
             AnalyticsTracker.track(AnalyticsTracker.Stat.LOGIN_MAGIC_LINK_OPEN_EMAIL_CLIENT_VIEWED);
         }
@@ -154,6 +156,12 @@ public class SiteCreationCreatingFragment extends SiteCreationBaseFormFragment<S
             tv.setEnabled(enabled);
         }
     }
+
+    private void setModalMode(boolean inModalMode) {
+        mInModalMode = inModalMode;
+        showHomeButton(!mInModalMode);
+    }
+
     @SuppressWarnings("unused")
     @Subscribe(threadMode = ThreadMode.MAIN, sticky = true)
     public void onSiteCreationPhaseUpdated(OnSiteCreationStateUpdated event) {
@@ -179,7 +187,7 @@ public class SiteCreationCreatingFragment extends SiteCreationBaseFormFragment<S
                 disableUntil(R.id.site_creation_creating_configuring_theme);
                 break;
             case FAILURE:
-                mInModalMode = false;
+                setModalMode(false);
                 mImageView.setImageResource(R.drawable.ic_site_error);
                 mProgressContainer.setVisibility(View.GONE);
                 mErrorContainer.setVisibility(View.VISIBLE);
@@ -191,7 +199,7 @@ public class SiteCreationCreatingFragment extends SiteCreationBaseFormFragment<S
                 new Handler().postDelayed(new Runnable() {
                     @Override
                     public void run() {
-                        mInModalMode = false;
+                        setModalMode(false);
                         mCreationFinished = true;
                         mSiteCreationListener.creationSuccess();
                     }
