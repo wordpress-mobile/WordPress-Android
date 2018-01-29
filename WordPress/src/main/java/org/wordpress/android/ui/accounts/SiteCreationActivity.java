@@ -109,6 +109,23 @@ public class SiteCreationActivity extends AppCompatActivity implements SiteCreat
         startActivity(intent);
     }
 
+    private boolean isInSiteCreationModalMode() {
+        SiteCreationCreatingFragment siteCreationCreatingFragment =
+                (SiteCreationCreatingFragment) getSupportFragmentManager()
+                        .findFragmentByTag(SiteCreationCreatingFragment.TAG);
+
+        return siteCreationCreatingFragment != null && siteCreationCreatingFragment.isInModalMode();
+    }
+
+    @Override
+    public void onBackPressed() {
+        if (!isInSiteCreationModalMode()) {
+            super.onBackPressed();
+        } else {
+            ToastUtils.showToast(this, R.string.site_creation_creating_modal);
+        }
+    }
+
     // SiteCreationListener implementation methods
 
     @Override

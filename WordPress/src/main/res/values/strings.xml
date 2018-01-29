@@ -2146,5 +2146,6 @@
     <string name="site_creation_creating_preparing_frontend">Preparing frontend…</string>
     <string name="site_creation_creating_failed">Something went wrong...</string>
     <string name="site_creation_creating_failed_extended">A parliament of owls distracted our servers with their superior oratory skills</string>
+    <string name="site_creation_creating_modal">Please wait until site creation is completed.</string>
 
 </resources>

@@ -27,6 +27,7 @@ public class SiteCreationCreatingFragment extends SiteCreationBaseFormFragment<S
     private static final String ARG_SITE_SLUG = "ARG_SITE_SLUG";
     private static final String ARG_SITE_THEME_ID = "ARG_SITE_THEME_ID";
 
+    private static final String KEY_IN_MODAL_MODE = "KEY_IN_MODAL_MODE";
     private static final String KEY_CREATION_FINISHED = "KEY_CREATION_FINISHED";
 
     private ServiceEventConnection mServiceEventConnection;
@@ -36,7 +37,12 @@ public class SiteCreationCreatingFragment extends SiteCreationBaseFormFragment<S
     private View mErrorContainer;
     private TextView[] mLabels;
 
+    private boolean mInModalMode;
     private boolean mCreationFinished;
+
+    public boolean isInModalMode() {
+        return mInModalMode;
+    }
 
     public static SiteCreationCreatingFragment newInstance(String siteTitle, String siteTagline, String siteSlug,
             String themeId) {
@@ -88,8 +94,10 @@ public class SiteCreationCreatingFragment extends SiteCreationBaseFormFragment<S
             String themeId = getArguments().getString(ARG_SITE_THEME_ID);
 
             // on first appearance start the Service to perform the site creation
+            mInModalMode = true;
             SiteCreationService.createSite(getContext(), siteTitle, siteTagline, siteSlug, themeId);
         } else {
+            mInModalMode = savedInstanceState.getBoolean(KEY_IN_MODAL_MODE, false);
             mCreationFinished = savedInstanceState.getBoolean(KEY_CREATION_FINISHED, false);
         }
     }
@@ -129,6 +137,7 @@ public class SiteCreationCreatingFragment extends SiteCreationBaseFormFragment<S
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
 
+        outState.putBoolean(KEY_IN_MODAL_MODE, mInModalMode);
         outState.putBoolean(KEY_CREATION_FINISHED, mCreationFinished);
     }
 
@@ -170,6 +179,7 @@ public class SiteCreationCreatingFragment extends SiteCreationBaseFormFragment<S
                 disableUntil(R.id.site_creation_creating_configuring_theme);
                 break;
             case FAILURE:
+                mInModalMode = false;
                 mImageView.setImageResource(R.drawable.ic_site_error);
                 mProgressContainer.setVisibility(View.GONE);
                 mErrorContainer.setVisibility(View.VISIBLE);
@@ -181,6 +191,7 @@ public class SiteCreationCreatingFragment extends SiteCreationBaseFormFragment<S
                 new Handler().postDelayed(new Runnable() {
                     @Override
                     public void run() {
+                        mInModalMode = false;
                         mCreationFinished = true;
                         mSiteCreationListener.creationSuccess();
                     }
