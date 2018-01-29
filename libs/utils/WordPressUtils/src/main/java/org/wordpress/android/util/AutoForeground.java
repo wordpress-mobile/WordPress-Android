@@ -181,7 +181,7 @@ public abstract class AutoForeground<PhaseClass extends ServicePhase, EventClass
         trackPhaseUpdate(props);
     }
 
-    protected static <T> void clearServiceState(T klass) {
+    protected static <T> void clearServiceState(Class<T> klass) {
         EventBus.getDefault().removeStickyEvent(klass);
     }
 
