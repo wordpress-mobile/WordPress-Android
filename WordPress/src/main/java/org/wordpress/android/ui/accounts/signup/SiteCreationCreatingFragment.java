@@ -22,6 +22,11 @@ import org.wordpress.android.util.AutoForeground.ServiceEventConnection;
 public class SiteCreationCreatingFragment extends SiteCreationBaseFormFragment<SiteCreationListener> {
     public static final String TAG = "site_creating_fragment_tag";
 
+    private static final String ARG_SITE_TITLE = "ARG_SITE_TITLE";
+    private static final String ARG_SITE_TAGLINE = "ARG_SITE_TAGLINE";
+    private static final String ARG_SITE_SLUG = "ARG_SITE_SLUG";
+    private static final String ARG_SITE_THEME_ID = "ARG_SITE_THEME_ID";
+
     private static final String KEY_CREATION_FINISHED = "KEY_CREATION_FINISHED";
 
     private ServiceEventConnection mServiceEventConnection;
@@ -32,6 +37,18 @@ public class SiteCreationCreatingFragment extends SiteCreationBaseFormFragment<S
     private TextView[] mLabels;
 
     private boolean mCreationFinished;
+
+    public static SiteCreationCreatingFragment newInstance(String siteTitle, String siteTagline, String siteSlug,
+            String themeId) {
+        SiteCreationCreatingFragment fragment = new SiteCreationCreatingFragment();
+        Bundle args = new Bundle();
+        args.putString(ARG_SITE_TITLE, siteTitle);
+        args.putString(ARG_SITE_TAGLINE, siteTagline);
+        args.putString(ARG_SITE_SLUG, siteSlug);
+        args.putString(ARG_SITE_THEME_ID, themeId);
+        fragment.setArguments(args);
+        return fragment;
+    }
 
     @Override
     protected @LayoutRes int getContentLayout() {
@@ -64,7 +81,15 @@ public class SiteCreationCreatingFragment extends SiteCreationBaseFormFragment<S
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        if (savedInstanceState != null) {
+        if (savedInstanceState == null) {
+            String siteTitle = getArguments().getString(ARG_SITE_TITLE);
+            String siteTagline = getArguments().getString(ARG_SITE_TAGLINE);
+            String siteSlug = getArguments().getString(ARG_SITE_SLUG);
+            String themeId = getArguments().getString(ARG_SITE_THEME_ID);
+
+            // on first appearance start the Service to perform the site creation
+            SiteCreationService.createSite(getContext(), siteTitle, siteTagline, siteSlug, themeId);
+        } else {
             mCreationFinished = savedInstanceState.getBoolean(KEY_CREATION_FINISHED, false);
         }
     }
