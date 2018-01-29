@@ -1,7 +1,6 @@
 package org.wordpress.android.ui.accounts.signup;
 
 import android.os.Bundle;
-import android.os.Handler;
 import android.support.annotation.IdRes;
 import android.support.annotation.LayoutRes;
 import android.support.annotation.Nullable;
@@ -194,16 +193,7 @@ public class SiteCreationCreatingFragment extends SiteCreationBaseFormFragment<S
                 break;
             case SUCCESS:
                 disableUntil(R.id.site_creation_creating_preparing_frontend);
-
-                // artificial delay to load the site in the background
-                new Handler().postDelayed(new Runnable() {
-                    @Override
-                    public void run() {
-                        setModalMode(false);
-                        mCreationFinished = true;
-                        mSiteCreationListener.creationSuccess();
-                    }
-                }, 4000);
+                mSiteCreationListener.creationSuccess();
                 break;
         }
     }
