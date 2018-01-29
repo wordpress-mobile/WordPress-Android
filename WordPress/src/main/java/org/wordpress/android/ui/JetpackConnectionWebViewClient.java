@@ -14,6 +14,7 @@ import org.wordpress.android.fluxc.store.SiteStore;
 import org.wordpress.android.ui.accounts.LoginActivity;
 import org.wordpress.android.ui.accounts.LoginMode;
 import org.wordpress.android.ui.prefs.AppPrefs;
+import org.wordpress.android.util.AppLog;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
@@ -100,6 +101,7 @@ class JetpackConnectionWebViewClient extends WebViewClient {
                 return true;
             }
         } catch (UnsupportedEncodingException e) {
+            AppLog.e(AppLog.T.API, "Unexpected URL encoding in Jetpack connection flow.", e);
             e.printStackTrace();
         }
         return false;
