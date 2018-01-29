@@ -80,10 +80,10 @@ public class SiteCreationService extends AutoForeground<SiteCreationPhase, OnSit
     }
 
     private static class SiteCreationNotification {
-        static Notification progress(Context context, int progress) {
+        static Notification progress(Context context, int progress, @StringRes int stepString) {
             return AutoForegroundNotification.progress(context, progress,
                     R.string.notification_site_creation_title_in_progress,
-                    R.string.notification_site_creation_please_wait,
+                    stepString,
                     R.drawable.ic_my_sites_24dp,
                     R.color.blue_wordpress);
         }
@@ -169,10 +169,13 @@ public class SiteCreationService extends AutoForeground<SiteCreationPhase, OnSit
     public Notification getNotification(SiteCreationPhase phase) {
         switch (phase) {
             case NEW_SITE:
+                return SiteCreationNotification.progress(this, 25, R.string.notification_site_creation_step_creating);
             case FETCHING_NEW_SITE:
+                return SiteCreationNotification.progress(this, 50, R.string.notification_site_creation_step_fetching);
             case SET_TAGLINE:
+                return SiteCreationNotification.progress(this, 75, R.string.notification_site_creation_step_tagline);
             case SET_THEME:
-                return SiteCreationNotification.progress(this, 25);
+                return SiteCreationNotification.progress(this, 100, R.string.notification_site_creation_step_theme);
             case SUCCESS:
                 return SiteCreationNotification.success(this);
             case FAILURE:
