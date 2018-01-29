@@ -323,7 +323,6 @@ public class LoginActivity extends AppCompatActivity implements ConnectionCallba
     public void newUserCreatedButErrored(String email, String password) {
         LoginEmailPasswordFragment loginEmailPasswordFragment =
                 LoginEmailPasswordFragment.newInstance(email, password, null, null, false);
-        loginEmailPasswordFragment.initializeServiceState();
         slideInFragment(loginEmailPasswordFragment, false, LoginEmailPasswordFragment.TAG);
     }
 
@@ -338,7 +337,6 @@ public class LoginActivity extends AppCompatActivity implements ConnectionCallba
         } else {
             LoginEmailPasswordFragment loginEmailPasswordFragment =
                     LoginEmailPasswordFragment.newInstance(email, null, null, null, false);
-            loginEmailPasswordFragment.initializeServiceState();
             slideInFragment(loginEmailPasswordFragment, true, LoginEmailPasswordFragment.TAG);
         }
     }
@@ -354,7 +352,6 @@ public class LoginActivity extends AppCompatActivity implements ConnectionCallba
         dismissSignupSheet();
         LoginEmailPasswordFragment loginEmailPasswordFragment =
                 LoginEmailPasswordFragment.newInstance(email, null, idToken, service, isPasswordRequired);
-        loginEmailPasswordFragment.initializeServiceState();
         slideInFragment(loginEmailPasswordFragment, true, LoginEmailPasswordFragment.TAG);
     }
 
@@ -396,7 +393,6 @@ public class LoginActivity extends AppCompatActivity implements ConnectionCallba
         AnalyticsTracker.track(AnalyticsTracker.Stat.LOGIN_MAGIC_LINK_EXITED);
         LoginEmailPasswordFragment loginEmailPasswordFragment =
                 LoginEmailPasswordFragment.newInstance(email, null, null, null, false);
-        loginEmailPasswordFragment.initializeServiceState();
         slideInFragment(loginEmailPasswordFragment, true, LoginEmailPasswordFragment.TAG);
     }
 

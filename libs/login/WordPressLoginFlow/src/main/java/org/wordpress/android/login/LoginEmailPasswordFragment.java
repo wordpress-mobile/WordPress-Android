@@ -73,10 +73,6 @@ public class LoginEmailPasswordFragment extends LoginBaseFormFragment<LoginListe
         return fragment;
     }
 
-    public void initializeServiceState() {
-        LoginWpcomService.clearLoginServiceState();
-    }
-
     @Override
     public void onAttach(Context context) {
         AndroidSupportInjection.inject(this);
