@@ -32,7 +32,6 @@ Language: de
 	<string name="plugins">Plugins</string>
 	<string name="plugin_active">Aktiv</string>
 	<string name="plugin_inactive">Inaktiv</string>
-	<string name="media_edit_link_hint">Link in einem neuen Tab/Fenster öffnen</string>
 	<string name="media_edit_link_text">Link zu</string>
 	<string name="notification_login_failed">Ein Fehler ist aufgetreten.</string>
 	<string name="notification_login_title_success">Angemeldet!</string>
@@ -150,9 +149,6 @@ Language: de
 	<string name="error_media_parse_error">Unerwartete Serverantwort</string>
 	<string name="format_bar_description_page">Seitenumbruch</string>
 	<string name="format_bar_description_heading">Überschrift</string>
-	<string name="new_editor_promo_title_beta">Beta</string>
-	<string name="new_editor_promo_link">Was ist neu?</string>
-	<string name="new_editor_promo_confirmation_action">Einstellungen</string>
 	<string name="site_settings_optimize_videos">Videos optimieren</string>
 	<string name="report_bug">Fehler melden</string>
 	<string name="permission_camera">Kamera</string>

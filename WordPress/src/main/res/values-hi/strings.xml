@@ -71,7 +71,6 @@ Language: hi_IN
 	<string name="format_bar_description_heading">शीर्षक</string>
 	<string name="format_bar_description_list">सूची</string>
 	<string name="format_bar_description_media">मीडिया</string>
-	<string name="new_editor_promo_confirmation_action">सेटिंग्स</string>
 	<string name="permission_camera">कैमरा</string>
 	<string name="twitter">ट्विटर</string>
 	<string name="editor_draft_saved_locally">ड्राफ़्ट डिवाइस पर सहेजा गया</string>

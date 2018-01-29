@@ -63,10 +63,6 @@ Language: he_IL
 	<string name="format_bar_description_heading">כותרת</string>
 	<string name="format_bar_description_media">מדיה</string>
 	<string name="reader_view_comments">הצגת התגובות</string>
-	<string name="new_editor_promo_link">מה חדש?</string>
-	<string name="new_editor_promo_confirmation_action">הגדרות</string>
-	<string name="new_editor_promo_button_negative">לא עכשיו</string>
-	<string name="new_editor_beta_action">מידע נוסף</string>
 	<string name="draft_uploaded">הטיוטה הועלתה</string>
 	<string name="report_bug">דיווח על באג</string>
 	<string name="video_quality">איכות וידאו</string>
@@ -91,7 +87,6 @@ Language: he_IL
 	<string name="smart_toast_photo_long_press">יש להקיש ולהחזיק כדי לבחור מספר תמונות</string>
 	<string name="photo_picker_choose_video">בחירת וידאו מהמכשיר</string>
 	<string name="photo_picker_choose_photo">בחירת תמונה מהמכשיר</string>
-	<string name="new_editor_promo_description">אפליקציית וורדפרס כוללת כעת עורך חדש ויפה. ניתן להתנסות בו על ידי יצירת פוסט חדש!</string>
 	<string name="wp_media_title">מדיה של WordPress</string>
 	<string name="media_insert_as_gallery">הוספה כגלריה</string>
 	<string name="media_insert_individually">הוספה של כל פריט בנפרד</string>

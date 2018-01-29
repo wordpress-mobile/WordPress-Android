@@ -25,7 +25,6 @@ Language: sk
 	<string name="plugin_detail_label_state_active">Aktívny</string>
 	<string name="plugin_autoupdates_off">Automatické aktuaizácie sú vypnuté</string>
 	<string name="plugin_autoupdates_on">Automatické aktualizácie sú zapnuté</string>
-	<string name="media_edit_link_hint">Otvoriť odkaz v novom okne/karte\"</string>
 	<string name="plugin_active">Aktívny</string>
 	<string name="plugins">Pluginy</string>
 	<string name="my_site_btn_plugins">Pluginy</string>
