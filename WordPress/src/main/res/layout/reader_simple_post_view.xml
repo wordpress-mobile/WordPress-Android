@@ -87,8 +87,6 @@
     </RelativeLayout>
 
     <org.wordpress.android.widgets.WPTextView
-        android:textAlignment="viewStart"
-        android:gravity="start"
         android:id="@+id/text_simple_post_title"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -104,8 +102,6 @@
         android:layout_toEndOf="@+id/image_featured"/>
 
     <org.wordpress.android.widgets.WPTextView
-        android:textAlignment="viewStart"
-        android:gravity="start"
         android:id="@+id/text_simple_post_excerpt"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
