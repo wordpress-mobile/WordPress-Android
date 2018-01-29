@@ -18,7 +18,6 @@ import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.google.android.gms.auth.api.Auth;
 import com.google.android.gms.auth.api.credentials.Credential;
@@ -259,17 +258,19 @@ public class SignupEmailFragment extends LoginBaseFormFragment<LoginListener> im
             } else {
                 switch (event.type) {
                     case EMAIL:
-                        if (event.isAvailable) {
-//                            TODO: Launch magic link signup.
-                            Toast.makeText(getActivity(), "Continue to magic link", Toast.LENGTH_SHORT).show();
-                        } else if (mLoginListener != null) {
-                            ActivityUtils.hideKeyboard(getActivity());
-                            AnalyticsTracker.track(AnalyticsTracker.Stat.SIGNUP_EMAIL_TO_LOGIN);
-                            mLoginListener.showSignupToLoginMessage();
-                            mLoginListener.gotWpcomEmail(event.value);
-                            // Kill connections with FluxC and this fragment since the flow is changing to login.
-                            mDispatcher.unregister(this);
-                            getActivity().getSupportFragmentManager().beginTransaction().remove(this).commit();
+                        ActivityUtils.hideKeyboard(getActivity());
+
+                        if (mLoginListener != null) {
+                            if (event.isAvailable) {
+                                mLoginListener.showSignupMagicLink(event.value);
+                            } else {
+                                AnalyticsTracker.track(AnalyticsTracker.Stat.SIGNUP_EMAIL_TO_LOGIN);
+                                mLoginListener.showSignupToLoginMessage();
+                                mLoginListener.gotWpcomEmail(event.value);
+                                // Kill connections with FluxC and this fragment since the flow is changing to login.
+                                mDispatcher.unregister(this);
+                                getActivity().getSupportFragmentManager().beginTransaction().remove(this).commit();
+                            }
                         }
 
                         break;
