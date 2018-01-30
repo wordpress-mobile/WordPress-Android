@@ -11,6 +11,7 @@ import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.ui.accounts.signup.SiteCreationCategoryFragment;
+import org.wordpress.android.ui.accounts.signup.SiteCreationCreatingFragment;
 import org.wordpress.android.ui.accounts.signup.SiteCreationDomainFragment;
 import org.wordpress.android.ui.accounts.signup.SiteCreationListener;
 import org.wordpress.android.ui.accounts.signup.SiteCreationSiteDetailsFragment;
@@ -18,8 +19,7 @@ import org.wordpress.android.ui.accounts.signup.SiteCreationThemeFragment;
 import org.wordpress.android.ui.accounts.signup.SiteCreationThemeLoaderFragment;
 import org.wordpress.android.util.HelpshiftHelper;
 import org.wordpress.android.util.ToastUtils;
-
-import java.net.URI;
+import org.wordpress.android.util.UrlUtils;
 
 public class SiteCreationActivity extends AppCompatActivity implements SiteCreationListener {
     public static final String ARG_USERNAME = "ARG_USERNAME";
@@ -109,6 +109,23 @@ public class SiteCreationActivity extends AppCompatActivity implements SiteCreat
         startActivity(intent);
     }
 
+    private boolean isInSiteCreationModalMode() {
+        SiteCreationCreatingFragment siteCreationCreatingFragment =
+                (SiteCreationCreatingFragment) getSupportFragmentManager()
+                        .findFragmentByTag(SiteCreationCreatingFragment.TAG);
+
+        return siteCreationCreatingFragment != null && siteCreationCreatingFragment.isInModalMode();
+    }
+
+    @Override
+    public void onBackPressed() {
+        if (!isInSiteCreationModalMode()) {
+            super.onBackPressed();
+        } else {
+            ToastUtils.showToast(this, R.string.site_creation_creating_modal);
+        }
+    }
+
     // SiteCreationListener implementation methods
 
     @Override
@@ -150,14 +167,26 @@ public class SiteCreationActivity extends AppCompatActivity implements SiteCreat
     @Override
     public void withDomain(String domain) {
         mSiteDomain = domain;
-        String siteSlug = "qwe";//new URI(domain).;
+        String siteSlug = UrlUtils.extractSubDomain(domain);
 
-        ToastUtils.showToast(this, "Domain selected: " + domain);
+        SiteCreationCreatingFragment siteCreationCreatingFragment = SiteCreationCreatingFragment.newInstance(mSiteTitle,
+                mSiteTagline, siteSlug, mThemeId);
+        slideInFragment(siteCreationCreatingFragment, SiteCreationCreatingFragment.TAG);
     }
 
     @Override
     public void helpDomainScreen() {
         launchHelpshift(HelpshiftHelper.Tag.ORIGIN_SITE_CREATION_DOMAIN);
+    }
+
+    @Override
+    public void creationSuccess() {
+        ToastUtils.showToast(this, "Success!");
+    }
+
+    @Override
+    public void helpSiteCreatingScreen() {
+        launchHelpshift(HelpshiftHelper.Tag.ORIGIN_SITE_CREATION_CREATING);
     }
 
     @Override

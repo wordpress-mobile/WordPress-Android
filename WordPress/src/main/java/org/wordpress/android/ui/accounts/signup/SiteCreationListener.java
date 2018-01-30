@@ -17,5 +17,9 @@ public interface SiteCreationListener {
     void withDomain(String domain);
     void helpDomainScreen();
 
+    // Site Creation Site details callbacks
+    void creationSuccess();
+    void helpSiteCreatingScreen();
+
     void setHelpContext(String faqId, String faqSection);
 }

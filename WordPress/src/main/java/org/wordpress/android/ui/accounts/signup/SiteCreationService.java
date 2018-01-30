@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.support.annotation.Nullable;
 import android.support.annotation.StringRes;
+import android.text.TextUtils;
 
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
@@ -13,6 +14,7 @@ import org.wordpress.android.WordPress;
 import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.fluxc.Dispatcher;
 import org.wordpress.android.fluxc.generated.SiteActionBuilder;
+import org.wordpress.android.fluxc.generated.ThemeActionBuilder;
 import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.model.ThemeModel;
 import org.wordpress.android.fluxc.store.SiteStore;
@@ -78,10 +80,11 @@ public class SiteCreationService extends AutoForeground<SiteCreationPhase, OnSit
     }
 
     private static class SiteCreationNotification {
-        static Notification progress(Context context, int progress) {
+        static Notification progress(Context context, int progress, @StringRes int titleString,
+                @StringRes int stepString) {
             return AutoForegroundNotification.progress(context, progress,
-                    R.string.notification_site_creation_title_in_progress,
-                    R.string.notification_site_creation_please_wait,
+                    titleString,
+                    stepString,
                     R.drawable.ic_my_sites_24dp,
                     R.color.blue_wordpress);
         }
@@ -130,6 +133,8 @@ public class SiteCreationService extends AutoForeground<SiteCreationPhase, OnSit
             String siteTagline,
             String siteSlug,
             String siteThemeId) {
+        clearSiteCreationServiceState();
+
         Intent intent = new Intent(context, SiteCreationService.class);
         intent.putExtra(ARG_SITE_TITLE, siteTitle);
         intent.putExtra(ARG_SITE_TAGLINE, siteTagline);
@@ -165,10 +170,17 @@ public class SiteCreationService extends AutoForeground<SiteCreationPhase, OnSit
     public Notification getNotification(SiteCreationPhase phase) {
         switch (phase) {
             case NEW_SITE:
+                return SiteCreationNotification.progress(this, 25, R.string.site_creation_creating_laying_foundation,
+                        R.string.notification_site_creation_step_creating);
             case FETCHING_NEW_SITE:
+                return SiteCreationNotification.progress(this, 50, R.string.site_creation_creating_fetching_info,
+                        R.string.notification_site_creation_step_fetching);
             case SET_TAGLINE:
+                return SiteCreationNotification.progress(this, 75, R.string.site_creation_creating_configuring_content,
+                        R.string.notification_site_creation_step_tagline);
             case SET_THEME:
-                return SiteCreationNotification.progress(this, 25);
+                return SiteCreationNotification.progress(this, 100, R.string.site_creation_creating_configuring_theme,
+                        R.string.notification_site_creation_step_theme);
             case SUCCESS:
                 return SiteCreationNotification.success(this);
             case FAILURE:
@@ -228,20 +240,8 @@ public class SiteCreationService extends AutoForeground<SiteCreationPhase, OnSit
     }
 
     private void activateTheme(final SiteModel site, final ThemeModel themeModel) {
-        // TODO: Activate theme using FluxC methods, as setTheme() has been dropped
-//        WordPress.getRestClientUtils().setTheme(site.getSiteId(), themeModel.getThemeId(), new RestRequest.Listener() {
-//            @Override
-//            public void onResponse(JSONObject response) {
-//                mThemeStore.setActiveThemeForSite(site, themeModel);
-//
-//                setState(SiteCreationPhase.SUCCESS);
-//            }
-//        }, new RestRequest.ErrorListener() {
-//            @Override
-//            public void onErrorResponse(VolleyError error) {
-//                setState(SiteCreationPhase.FAILURE);
-//            }
-//        });
+        mDispatcher.dispatch(
+                ThemeActionBuilder.newActivateThemeAction(new ThemeStore.SiteThemePayload(site, themeModel)));
     }
 
     // OnChanged events
@@ -288,49 +288,65 @@ public class SiteCreationService extends AutoForeground<SiteCreationPhase, OnSit
 
             setState(SiteCreationPhase.SET_TAGLINE);
 
-            SiteSettingsInterface siteSettings = SiteSettingsInterface.getInterface(this, site,
-                    new SiteSettingsInterface.SiteSettingsListener() {
-                        @Override
-                        public void onSaveError(Exception error) {
-                            setState(SiteCreationPhase.FAILURE);
-                        }
-
-                        @Override
-                        public void onFetchError(Exception error) {
-                            setState(SiteCreationPhase.FAILURE);
-                        }
-
-                        @Override
-                        public void onSettingsUpdated() {
-                            // we'll just handle onSettingsSaved()
-                        }
-
-                        @Override
-                        public void onSettingsSaved() {
-                            setState(SiteCreationPhase.SET_THEME);
-                            SiteModel site = mSiteStore.getSiteBySiteId(mNewSiteRemoteId);
-                            activateTheme(site, mSiteTheme);
-                        }
-
-                        @Override
-                        public void onCredentialsValidated(Exception error) {
-                            if (error != null) {
+            if (!TextUtils.isEmpty(mSiteTagline)) {
+                SiteSettingsInterface siteSettings = SiteSettingsInterface.getInterface(this, site,
+                        new SiteSettingsInterface.SiteSettingsListener() {
+                            @Override
+                            public void onSaveError(Exception error) {
                                 setState(SiteCreationPhase.FAILURE);
                             }
-                        }
-                    });
 
-            if (siteSettings == null) {
-                setState(SiteCreationPhase.FAILURE);
-                return;
+                            @Override
+                            public void onFetchError(Exception error) {
+                                setState(SiteCreationPhase.FAILURE);
+                            }
+
+                            @Override
+                            public void onSettingsUpdated() {
+                                // we'll just handle onSettingsSaved()
+                            }
+
+                            @Override
+                            public void onSettingsSaved() {
+                                setState(SiteCreationPhase.SET_THEME);
+                                SiteModel site = mSiteStore.getSiteBySiteId(mNewSiteRemoteId);
+                                activateTheme(site, mSiteTheme);
+                            }
+
+                            @Override
+                            public void onCredentialsValidated(Exception error) {
+                                if (error != null) {
+                                    setState(SiteCreationPhase.FAILURE);
+                                }
+                            }
+                        });
+
+                if (siteSettings == null) {
+                    setState(SiteCreationPhase.FAILURE);
+                    return;
+                }
+
+                siteSettings.init(false);
+                siteSettings.setTagline(mSiteTagline);
+                siteSettings.saveSettings();
+            } else {
+                setState(SiteCreationPhase.SET_THEME);
+                activateTheme(site, mSiteTheme);
             }
+        } else {
+            AppLog.e(T.NUX, "Got onSiteChanged but not in FETCHING_NEW_SITE state!");
+            setState(SiteCreationPhase.FAILURE);
+        }
+    }
 
-            siteSettings.init(false);
-            siteSettings.setTagline(mSiteTagline);
-            siteSettings.saveSettings();
-        } else if (phase == SiteCreationPhase.SET_TAGLINE) {
-            setState(SiteCreationPhase.SET_THEME);
-            activateTheme(site, mSiteTheme);
+    @SuppressWarnings("unused")
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onThemeActivated(ThemeStore.OnThemeActivated event) {
+        if (event.isError()) {
+            AppLog.e(T.THEMES, "Error setting new site's theme: " + event.error.message);
+            setState(SiteCreationPhase.FAILURE);
+        } else {
+            setState(SiteCreationPhase.SUCCESS);
         }
     }
 }

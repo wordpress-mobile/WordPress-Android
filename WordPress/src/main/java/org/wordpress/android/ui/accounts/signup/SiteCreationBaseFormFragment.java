@@ -76,6 +76,13 @@ public abstract class SiteCreationBaseFormFragment<SiteCreationListenerType> ext
         }
     }
 
+    protected void showHomeButton(boolean visible) {
+        ActionBar actionBar = ((AppCompatActivity) getActivity()).getSupportActionBar();
+        if (actionBar != null) {
+            actionBar.setDisplayHomeAsUpEnabled(visible);
+        }
+    }
+
     @Override
     @SuppressWarnings("unchecked")
     public void onAttach(Context context) {

@@ -18,13 +18,6 @@
     <string name="sign_out_wpcom_confirm">Logging out from your account will remove all of @%s’s WordPress.com data from this device, including local drafts and local changes.</string>
     <string name="account_two_step_auth_enabled">This account has two step authentication enabled. Visit your security settings on WordPress.com and generate an application-specific password.</string>
 
-    <string name="site_creating_label">Preparing your site…</string>
-    <string name="site_creating_fetching_info">Fetching site info…</string>
-    <string name="site_creating_set_tagline">Setting the tagline…</string>
-    <string name="site_creating_set_theme">Setting the theme…</string>
-    <string name="site_creating_failed">Sorry, failed to properly create your site :(</string>
-    <string name="site_creating_success">Success!</string>
-
     <!-- form labels -->
     <string name="select_categories">Select categories</string>
     <string name="tags_separate_with_commas">Separate tags with commas</string>
@@ -2108,7 +2101,10 @@
     <string name="notification_site_creation_title_success">Site created!</string>
     <string name="notification_site_creation_created">Tap to continue.</string>
     <string name="notification_site_creation_title_in_progress">Creating site…</string>
-    <string name="notification_site_creation_please_wait">Please wait while creating your site.</string>
+    <string name="notification_site_creation_step_creating">Step 1 of 4</string>
+    <string name="notification_site_creation_step_fetching">Step 2 of 4</string>
+    <string name="notification_site_creation_step_tagline">Step 3 of 4</string>
+    <string name="notification_site_creation_step_theme">Step 4 of 4</string>
     <string name="notification_site_creation_title_stopped">Site creation stopped</string>
     <string name="notification_site_creation_failed">An error has occurred.</string>
 
@@ -2146,5 +2142,13 @@
     <string name="site_creation_tagline_hint">Site tagline (optional)</string>
     <string name="site_creation_tagline_helper">The tagline is a short line of text shown right below the title in most themes, and act as site metadata on search engines.</string>
     <string name="site_creation_empty_site_title">Please enter a site title</string>
+    <string name="site_creation_creating_laying_foundation">Laying site foundation…</string>
+    <string name="site_creation_creating_fetching_info">Retrieving site information…</string>
+    <string name="site_creation_creating_configuring_content">Configuring site content…</string>
+    <string name="site_creation_creating_configuring_theme">Configuring site style…</string>
+    <string name="site_creation_creating_preparing_frontend">Preparing frontend…</string>
+    <string name="site_creation_creating_failed">Something went wrong&#8230;</string>
+    <string name="site_creation_creating_failed_extended">A parliament of owls distracted our servers with their superior oratory skills</string>
+    <string name="site_creation_creating_modal">Please wait until site creation is completed.</string>
 
 </resources>
