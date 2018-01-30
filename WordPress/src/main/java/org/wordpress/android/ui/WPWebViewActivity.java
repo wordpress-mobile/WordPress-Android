@@ -86,10 +86,8 @@ public class WPWebViewActivity extends WebViewActivity {
     public static final String ALLOWED_URLS = "allowed_urls";
     public static final String ENCODING_UTF8 = "UTF-8";
 
-    @Inject
-    AccountStore mAccountStore;
-    @Inject
-    SiteStore mSiteStore;
+    @Inject AccountStore mAccountStore;
+    @Inject SiteStore mSiteStore;
 
     private WebViewClient mWebViewClient;
 

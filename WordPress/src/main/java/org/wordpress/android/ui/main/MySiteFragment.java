@@ -210,7 +210,7 @@ public class MySiteFragment extends Fragment
             public void onClick(View v) {
                 SiteModel selectedSite = getSelectedSite();
                 if (!mAccountStore.hasAccessToken() && selectedSite != null && selectedSite.isJetpackConnected()) {
-//                  If the user is not connected to WordPress.com, ask him to connect first.
+                    // If the user is not connected to WordPress.com, ask him to connect first.
                     startWPComLoginForJetpackStats();
                 } else {
                     ActivityLauncher.viewBlogStats(getActivity(), selectedSite);
