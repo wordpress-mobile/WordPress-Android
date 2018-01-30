@@ -31,6 +31,7 @@
             android:layout_gravity="center_vertical"
             android:layout_marginLeft="@dimen/content_margin"
             app:srcCompat="@drawable/ic_reply_grey_24dp"
+            android:rotationY="@integer/mirror_flip"
             android:layout_marginStart="@dimen/content_margin"/>
 
         <org.wordpress.android.widgets.SuggestionAutoCompleteText
