@@ -187,7 +187,7 @@ public class SiteCreationCreatingFragment extends SiteCreationBaseFormFragment<S
                 break;
             case FAILURE:
                 setModalMode(false);
-                mImageView.setImageResource(R.drawable.ic_site_error);
+                mImageView.setImageResource(R.drawable.img_site_error_camera_pencils_226dp);
                 mProgressContainer.setVisibility(View.GONE);
                 mErrorContainer.setVisibility(View.VISIBLE);
                 break;
