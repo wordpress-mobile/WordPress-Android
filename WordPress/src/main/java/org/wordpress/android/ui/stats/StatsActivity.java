@@ -284,7 +284,7 @@ public class StatsActivity extends AppCompatActivity
             }
 
             if (!site.isJetpackConnected()) {
-                JetpackUtils.showJetpackNonConnectedAlert(this, site);
+                JetpackUtils.showJetpackNonConnectedAlert(this, site, mAccountStore);
                 return false;
             }
             // TODO: if Jetpack site, we should check the stats option is enabled

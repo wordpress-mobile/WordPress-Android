@@ -453,4 +453,26 @@ public class WPWebViewActivity extends WebViewActivity {
         return super.onOptionsItemSelected(item);
     }
 
+    @Override
+    protected void cancel() {
+        if (mWebViewClient != null && mWebViewClient instanceof JetpackConnectionWebViewClient) {
+            ((JetpackConnectionWebViewClient) this.mWebViewClient).cancel();
+        }
+    }
+
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        if (mWebViewClient != null && mWebViewClient instanceof JetpackConnectionWebViewClient) {
+            ((JetpackConnectionWebViewClient) this.mWebViewClient).onSaveInstanceState(outState);
+        }
+    }
+
+    @Override
+    protected void onRestoreInstanceState(Bundle savedInstanceState) {
+        super.onRestoreInstanceState(savedInstanceState);
+        if (mWebViewClient != null && mWebViewClient instanceof JetpackConnectionWebViewClient) {
+            ((JetpackConnectionWebViewClient) this.mWebViewClient).onRestoreInstanceState(savedInstanceState);
+        }
+    }
 }

@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
+import android.os.Bundle;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 
@@ -11,8 +12,8 @@ import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.store.AccountStore;
 import org.wordpress.android.fluxc.store.SiteStore;
+import org.wordpress.android.login.LoginMode;
 import org.wordpress.android.ui.accounts.LoginActivity;
-import org.wordpress.android.ui.accounts.LoginMode;
 import org.wordpress.android.ui.prefs.AppPrefs;
 import org.wordpress.android.util.AppLog;
 
@@ -30,12 +31,15 @@ class JetpackConnectionWebViewClient extends WebViewClient {
     private static final String JETPACK_PATH = "/jetpack";
     private static final String WORDPRESS_COM_PREFIX = "https://wordpress.com";
     private static final Uri JETPACK_DEEPLINK_URI = Uri.parse(WPWebViewActivity.JETPACK_CONNECTION_DEEPLINK);
+    private static final String REDIRECT_PAGE_STATE_ITEM = "redirectPage";
+    private static final String FLOW_FINISHED = "FLOW_FINISHED";
 
     private Activity activity;
     private final AccountStore accountStore;
     private final SiteStore mSiteStore;
 
     private String redirectPage;
+    private boolean flowFinished = false;
 
     JetpackConnectionWebViewClient(Activity activity, AccountStore accountStore, SiteStore mSiteStore) {
         this.activity = activity;
@@ -96,7 +100,9 @@ class JetpackConnectionWebViewClient extends WebViewClient {
                     && url.getScheme().equals(JETPACK_DEEPLINK_URI.getScheme())) {
                 Intent intent = new Intent(Intent.ACTION_VIEW);
                 intent.setData(url);
-                view.getContext().startActivity(intent);
+                activity.startActivity(intent);
+                activity.finish();
+                flowFinished = true;
                 AnalyticsTracker.track(AnalyticsTracker.Stat.STATS_SELECTED_INSTALL_JETPACK);
                 return true;
             }
@@ -111,5 +117,21 @@ class JetpackConnectionWebViewClient extends WebViewClient {
         if (requestCode == REQUEST_CODE) {
             WPWebViewActivity.openJetpackConnectionFlow(context, redirectPage);
         }
+    }
+
+    public void cancel() {
+        if (!flowFinished) {
+            AnalyticsTracker.track(AnalyticsTracker.Stat.STATS_CANCELED_INSTALL_JETPACK);
+        }
+    }
+
+    public void onSaveInstanceState(Bundle outState) {
+        outState.putString(REDIRECT_PAGE_STATE_ITEM, redirectPage);
+        outState.putBoolean(FLOW_FINISHED, flowFinished);
+    }
+
+    public void onRestoreInstanceState(Bundle savedInstanceState) {
+        redirectPage = savedInstanceState.getString(REDIRECT_PAGE_STATE_ITEM);
+        flowFinished = savedInstanceState.getBoolean(FLOW_FINISHED);
     }
 }
