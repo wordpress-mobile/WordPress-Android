@@ -1,7 +1,6 @@
 package org.wordpress.android.ui.accounts.signup;
 
 import android.os.Bundle;
-import android.os.Handler;
 import android.support.annotation.IdRes;
 import android.support.annotation.LayoutRes;
 import android.support.annotation.Nullable;
@@ -32,6 +31,7 @@ public class SiteCreationCreatingFragment extends SiteCreationBaseFormFragment<S
 
     private static final String KEY_IN_MODAL_MODE = "KEY_IN_MODAL_MODE";
     private static final String KEY_CREATION_FINISHED = "KEY_CREATION_FINISHED";
+    private static final String KEY_WEBVIEW_LOADED_IN_TIME = "KEY_WEBVIEW_LOADED_IN_TIME";
 
     private ServiceEventConnection mServiceEventConnection;
 
@@ -45,6 +45,9 @@ public class SiteCreationCreatingFragment extends SiteCreationBaseFormFragment<S
 
     private boolean mInModalMode;
     private boolean mCreationFinished;
+    private boolean mWebViewLoadedInTime;
+
+    private PreviewWebViewClient mPreviewWebViewClient;
 
     public boolean isInModalMode() {
         return mInModalMode;
@@ -126,6 +129,7 @@ public class SiteCreationCreatingFragment extends SiteCreationBaseFormFragment<S
         } else {
             mInModalMode = savedInstanceState.getBoolean(KEY_IN_MODAL_MODE, false);
             mCreationFinished = savedInstanceState.getBoolean(KEY_CREATION_FINISHED, false);
+            mWebViewLoadedInTime = savedInstanceState.getBoolean(KEY_WEBVIEW_LOADED_IN_TIME, false);
         }
     }
 
@@ -168,6 +172,7 @@ public class SiteCreationCreatingFragment extends SiteCreationBaseFormFragment<S
 
         outState.putBoolean(KEY_IN_MODAL_MODE, mInModalMode);
         outState.putBoolean(KEY_CREATION_FINISHED, mCreationFinished);
+        outState.putBoolean(KEY_WEBVIEW_LOADED_IN_TIME, mWebViewLoadedInTime);
     }
 
     private void mutateToCompleted(boolean showWebView) {
@@ -252,20 +257,21 @@ public class SiteCreationCreatingFragment extends SiteCreationBaseFormFragment<S
                 mProgressContainer.setVisibility(View.GONE);
                 mErrorContainer.setVisibility(View.VISIBLE);
                 break;
-            case SUCCESS:
+            case PRELOAD:
                 disableUntil(R.id.site_creation_creating_preparing_frontend);
-                mSiteCreationListener.creationSuccess();
+                mPreviewWebViewClient = loadWebview();
+                break;
+            case SUCCESS:
+                setModalMode(false);
 
-                final PreviewWebViewClient previewWebViewClient = loadWebview();
+                if (mPreviewWebViewClient == null) {
+                    // Apparently view got rotated while at the final so, just reconfigure the WebView.
+                    loadWebview();
+                } else {
+                    mWebViewLoadedInTime = mPreviewWebViewClient.mIsPageFinished;
+                }
 
-                // artificial delay to load the site in the background
-                new Handler().postDelayed(new Runnable() {
-                    @Override
-                    public void run() {
-                        setModalMode(false);
-                        mutateToCompleted(previewWebViewClient.mIsPageFinished);
-                    }
-                }, 4000);
+                mutateToCompleted(mWebViewLoadedInTime);
                 break;
         }
     }

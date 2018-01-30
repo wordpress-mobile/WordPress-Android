@@ -3,6 +3,8 @@ package org.wordpress.android.ui.accounts.signup;
 import android.app.Notification;
 import android.content.Context;
 import android.content.Intent;
+import android.os.Handler;
+import android.os.Looper;
 import android.support.annotation.Nullable;
 import android.support.annotation.StringRes;
 import android.text.TextUtils;
@@ -39,12 +41,15 @@ public class SiteCreationService extends AutoForeground<SiteCreationPhase, OnSit
     private static final String ARG_SITE_SLUG = "ARG_SITE_SLUG";
     private static final String ARG_SITE_THEME_ID = "ARG_SITE_THEME_ID";
 
+    private static final int PRELOAD_TIMEOUT_MS = 3000;
+
     public enum SiteCreationPhase implements AutoForeground.ServicePhase {
         IDLE,
         NEW_SITE(25),
         FETCHING_NEW_SITE(50),
         SET_TAGLINE(75),
         SET_THEME(100),
+        PRELOAD,
         SUCCESS,
         FAILURE;
 
@@ -179,6 +184,8 @@ public class SiteCreationService extends AutoForeground<SiteCreationPhase, OnSit
                 return SiteCreationNotification.progress(this, 75, R.string.site_creation_creating_configuring_content,
                         R.string.notification_site_creation_step_tagline);
             case SET_THEME:
+            case PRELOAD:
+                // treat PRELOAD phase as SET_THEME since when in background the UI isn't doing any preloading.
                 return SiteCreationNotification.progress(this, 100, R.string.site_creation_creating_configuring_theme,
                         R.string.notification_site_creation_step_theme);
             case SUCCESS:
@@ -346,7 +353,14 @@ public class SiteCreationService extends AutoForeground<SiteCreationPhase, OnSit
             AppLog.e(T.THEMES, "Error setting new site's theme: " + event.error.message);
             setState(SiteCreationPhase.FAILURE);
         } else {
-            setState(SiteCreationPhase.SUCCESS);
+            setState(SiteCreationPhase.PRELOAD);
+
+            new Handler(Looper.getMainLooper()).postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    setState(SiteCreationPhase.SUCCESS);
+                }
+            }, PRELOAD_TIMEOUT_MS);
         }
     }
 }
