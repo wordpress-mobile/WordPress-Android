@@ -796,6 +796,10 @@ public class AnalyticsTrackerNosara extends Tracker {
                 return "site_creation_theme_viewed";
             case SITE_CREATION_DETAILS_VIEWED:
                 return "site_creation_details_viewed";
+            case SITE_CREATION_DOMAIN_VIEWED:
+                return "site_creation_domain_viewed";
+            case SITE_CREATION_CREATING_VIEWED:
+                return "site_creation_creating_viewed";
             case PERSON_REMOVED:
                 return "people_management_person_removed";
             case PERSON_UPDATED:

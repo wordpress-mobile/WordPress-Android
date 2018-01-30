@@ -108,7 +108,7 @@ public class SiteCreationCreatingFragment extends SiteCreationBaseFormFragment<S
         showHomeButton(!mInModalMode);
 
         if (savedInstanceState == null) {
-            AnalyticsTracker.track(AnalyticsTracker.Stat.LOGIN_MAGIC_LINK_OPEN_EMAIL_CLIENT_VIEWED);
+            AnalyticsTracker.track(AnalyticsTracker.Stat.SITE_CREATION_CREATING_VIEWED);
         }
     }
 
