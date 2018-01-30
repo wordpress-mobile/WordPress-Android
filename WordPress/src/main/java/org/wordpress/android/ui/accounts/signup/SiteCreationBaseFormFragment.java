@@ -22,13 +22,14 @@ import org.wordpress.android.R;
 public abstract class SiteCreationBaseFormFragment<SiteCreationListenerType> extends Fragment {
 
     private Button mPrimaryButton;
+    private Button mSecondaryButton;
 
     protected SiteCreationListenerType mSiteCreationListener;
 
     protected abstract @LayoutRes int getContentLayout();
     protected abstract void setupContent(ViewGroup rootView);
 
-    protected void setupBottomButtons(Button primaryButton) {};
+    protected void setupBottomButtons(Button secondaryButton, Button primaryButton) {}
     protected Button getPrimaryButton() {
         return mPrimaryButton;
     }
@@ -57,7 +58,8 @@ public abstract class SiteCreationBaseFormFragment<SiteCreationListenerType> ext
         setupContent(rootView);
 
         mPrimaryButton = (Button) rootView.findViewById(R.id.primary_button);
-        setupBottomButtons(mPrimaryButton);
+        mSecondaryButton = (Button) rootView.findViewById(R.id.secondary_button);
+        setupBottomButtons(mSecondaryButton, mPrimaryButton);
 
         return rootView;
     }
@@ -111,5 +113,12 @@ public abstract class SiteCreationBaseFormFragment<SiteCreationListenerType> ext
         }
 
         return false;
+    }
+
+    protected void hideActionbar() {
+        ActionBar actionBar = ((AppCompatActivity) getActivity()).getSupportActionBar();
+        if (actionBar != null) {
+            actionBar.hide();
+        }
     }
 }

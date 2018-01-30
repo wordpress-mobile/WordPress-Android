@@ -185,6 +185,16 @@ public class SiteCreationActivity extends AppCompatActivity implements SiteCreat
     }
 
     @Override
+    public void doConfigureSite() {
+        // TODO: jump to MySite
+    }
+
+    @Override
+    public void doWriteFirstPost() {
+        // TODO: Jump directly to the editor
+    }
+
+    @Override
     public void helpSiteCreatingScreen() {
         launchHelpshift(HelpshiftHelper.Tag.ORIGIN_SITE_CREATION_CREATING);
     }

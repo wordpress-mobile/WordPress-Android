@@ -1,11 +1,14 @@
 package org.wordpress.android.ui.accounts.signup;
 
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.annotation.IdRes;
 import android.support.annotation.LayoutRes;
 import android.support.annotation.Nullable;
 import android.view.View;
 import android.view.ViewGroup;
+import android.webkit.WebView;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -17,6 +20,7 @@ import org.wordpress.android.ui.accounts.signup.SiteCreationService.OnSiteCreati
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.AutoForeground.ServiceEventConnection;
+import org.wordpress.android.util.URLFilteredWebViewClient;
 
 public class SiteCreationCreatingFragment extends SiteCreationBaseFormFragment<SiteCreationListener> {
     public static final String TAG = "site_creating_fragment_tag";
@@ -34,6 +38,9 @@ public class SiteCreationCreatingFragment extends SiteCreationBaseFormFragment<S
     private ImageView mImageView;
     private View mProgressContainer;
     private View mErrorContainer;
+    private View mCompletedContainer;
+    private WebView mWebView;
+    private View mTadaContainer;
     private TextView[] mLabels;
 
     private boolean mInModalMode;
@@ -65,6 +72,9 @@ public class SiteCreationCreatingFragment extends SiteCreationBaseFormFragment<S
         mImageView = rootView.findViewById(R.id.image);
         mProgressContainer = rootView.findViewById(R.id.progress_container);
         mErrorContainer = rootView.findViewById(R.id.error_container);
+        mCompletedContainer = rootView.findViewById(R.id.completed_container);
+        mWebView = rootView.findViewById(R.id.webview);
+        mTadaContainer = rootView.findViewById(R.id.tada_container);
 
         // construct an array with the labels in reverse order
         mLabels = new TextView[] {
@@ -73,6 +83,24 @@ public class SiteCreationCreatingFragment extends SiteCreationBaseFormFragment<S
                 rootView.findViewById(R.id.site_creation_creating_configuring_content),
                 rootView.findViewById(R.id.site_creation_creating_fetching_info),
                 rootView.findViewById(R.id.site_creation_creating_laying_foundation)};
+    }
+
+    @Override
+    protected void setupBottomButtons(Button secondaryButton, Button primaryButton) {
+        secondaryButton.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                if (isAdded()) {
+                    mSiteCreationListener.doConfigureSite();
+                }
+            }
+        });
+        primaryButton.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                if (isAdded()) {
+                    mSiteCreationListener.doWriteFirstPost();
+                }
+            }
+        });
     }
 
     @Override
@@ -142,6 +170,39 @@ public class SiteCreationCreatingFragment extends SiteCreationBaseFormFragment<S
         outState.putBoolean(KEY_CREATION_FINISHED, mCreationFinished);
     }
 
+    private void mutateToCompleted(boolean showWebView) {
+        if (isAdded()) {
+            hideActionbar();
+            mProgressContainer.setVisibility(View.GONE);
+            mCompletedContainer.setVisibility(View.VISIBLE);
+            mWebView.setVisibility(showWebView ? View.VISIBLE : View.INVISIBLE);
+            mTadaContainer.setVisibility(showWebView ? View.INVISIBLE : View.VISIBLE);
+        }
+    }
+
+    private PreviewWebViewClient loadWebview() {
+        String siteAddress = "https://" + getArguments().getString(ARG_SITE_SLUG) + ".wordpress.com";
+        PreviewWebViewClient client = new PreviewWebViewClient(siteAddress);
+        mWebView.setWebViewClient(client);
+        mWebView.loadUrl(siteAddress);
+        return client;
+    }
+
+    private static class PreviewWebViewClient extends URLFilteredWebViewClient {
+        private boolean mIsPageFinished;
+
+        PreviewWebViewClient(String siteAddress) {
+            super(siteAddress);
+        }
+
+        @Override
+        public void onPageFinished(WebView view, String url) {
+            super.onPageFinished(view, url);
+
+            mIsPageFinished = true;
+        }
+    }
+
     private void disableUntil(@IdRes int textViewId) {
         boolean enabled = false;
 
@@ -194,6 +255,17 @@ public class SiteCreationCreatingFragment extends SiteCreationBaseFormFragment<S
             case SUCCESS:
                 disableUntil(R.id.site_creation_creating_preparing_frontend);
                 mSiteCreationListener.creationSuccess();
+
+                final PreviewWebViewClient previewWebViewClient = loadWebview();
+
+                // artificial delay to load the site in the background
+                new Handler().postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        setModalMode(false);
+                        mutateToCompleted(previewWebViewClient.mIsPageFinished);
+                    }
+                }, 4000);
                 break;
         }
     }
