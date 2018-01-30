@@ -11,6 +11,7 @@
         <attr name="android:imeOptions" />
         <attr name="passwordToggleEnabled" />
         <attr name="passwordToggleTint" />
+        <attr name="android:textAlignment" />
     </declare-styleable>
 
 </resources>
