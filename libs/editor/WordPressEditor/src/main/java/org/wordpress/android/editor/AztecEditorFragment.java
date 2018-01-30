@@ -1569,22 +1569,16 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
                 EditorImageMetaData metaData = data.getParcelableExtra(ARG_EDITOR_IMAGE_METADATA);
 
                 if (metaData.isRemoved()) {
-                    //History is not working as expected when calling removeMedia, so we are handling it manually here
-                    String editorContentBeforeImageIsRemoved = "";
-                    if (isHistoryEnabled()) {
-                        editorContentBeforeImageIsRemoved = content.toFormattedHtml();
-                    }
-
                     CaptionExtensionsKt.removeImageCaption(content, mTappedMediaPredicate);
                     content.removeMedia(mTappedMediaPredicate);
 
                     if (isHistoryEnabled()) {
-                        content.history.beforeTextChanged(editorContentBeforeImageIsRemoved);
+                        content.history.beforeTextChanged(content);
                     }
                 } else {
                     //changing image settings should be recorded in history
                     if (isHistoryEnabled()) {
-                        content.history.beforeTextChanged(content.toFormattedHtml());
+                        content.history.beforeTextChanged(content);
                     }
 
                     AztecAttributes attributes = content.getElementAttributes(mTappedMediaPredicate);
@@ -1675,13 +1669,8 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
                 }
 
                 mTappedMediaPredicate = null;
-
-                if (isHistoryEnabled()) {
-                    content.history.handleHistory(content);
-                }
             }
         }
-
     }
 
 
