@@ -23,7 +23,7 @@
             android:layout_height="@dimen/site_creation_creating_illustration_height"
             android:scaleType="centerInside"
             android:importantForAccessibility="no"
-            app:srcCompat="@drawable/ic_site_logo"/>
+            app:srcCompat="@drawable/img_site_wordpress_camera_pencils_226dp"/>
 
         <LinearLayout
             android:id="@+id/progress_container"
