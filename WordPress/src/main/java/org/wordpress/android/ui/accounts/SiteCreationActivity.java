@@ -109,20 +109,40 @@ public class SiteCreationActivity extends AppCompatActivity implements SiteCreat
         startActivity(intent);
     }
 
-    private boolean isInSiteCreationModalMode() {
+    private enum SiteCreationBackStackMode {
+        NORMAL,
+        MODAL,
+        FINISH
+    }
+
+    private SiteCreationBackStackMode getSiteCreationBackStackMode() {
         SiteCreationCreatingFragment siteCreationCreatingFragment =
                 (SiteCreationCreatingFragment) getSupportFragmentManager()
                         .findFragmentByTag(SiteCreationCreatingFragment.TAG);
 
-        return siteCreationCreatingFragment != null && siteCreationCreatingFragment.isInModalMode();
+        if (siteCreationCreatingFragment == null) {
+            return SiteCreationBackStackMode.NORMAL;
+        } else if (siteCreationCreatingFragment.isInModalMode()) {
+            return SiteCreationBackStackMode.MODAL;
+        } else if (siteCreationCreatingFragment.isCreationSucceeded()) {
+            return SiteCreationBackStackMode.FINISH;
+        } else {
+            return SiteCreationBackStackMode.NORMAL;
+        }
     }
 
     @Override
     public void onBackPressed() {
-        if (!isInSiteCreationModalMode()) {
-            super.onBackPressed();
-        } else {
-            ToastUtils.showToast(this, R.string.site_creation_creating_modal);
+        switch (getSiteCreationBackStackMode()) {
+            case NORMAL:
+                super.onBackPressed();
+                break;
+            case MODAL:
+                ToastUtils.showToast(this, R.string.site_creation_creating_modal);
+                break;
+            case FINISH:
+                finish();
+                break;
         }
     }
 
@@ -177,11 +197,6 @@ public class SiteCreationActivity extends AppCompatActivity implements SiteCreat
     @Override
     public void helpDomainScreen() {
         launchHelpshift(HelpshiftHelper.Tag.ORIGIN_SITE_CREATION_DOMAIN);
-    }
-
-    @Override
-    public void creationSuccess() {
-        ToastUtils.showToast(this, "Success!");
     }
 
     @Override

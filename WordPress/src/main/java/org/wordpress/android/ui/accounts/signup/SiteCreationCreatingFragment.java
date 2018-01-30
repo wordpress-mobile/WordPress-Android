@@ -44,13 +44,17 @@ public class SiteCreationCreatingFragment extends SiteCreationBaseFormFragment<S
     private TextView[] mLabels;
 
     private boolean mInModalMode;
-    private boolean mCreationFinished;
+    private boolean mCreationSucceeded;
     private boolean mWebViewLoadedInTime;
 
     private PreviewWebViewClient mPreviewWebViewClient;
 
     public boolean isInModalMode() {
         return mInModalMode;
+    }
+
+    public boolean isCreationSucceeded() {
+        return mCreationSucceeded;
     }
 
     public static SiteCreationCreatingFragment newInstance(String siteTitle, String siteTagline, String siteSlug,
@@ -128,7 +132,7 @@ public class SiteCreationCreatingFragment extends SiteCreationBaseFormFragment<S
             SiteCreationService.createSite(getContext(), siteTitle, siteTagline, siteSlug, themeId);
         } else {
             mInModalMode = savedInstanceState.getBoolean(KEY_IN_MODAL_MODE, false);
-            mCreationFinished = savedInstanceState.getBoolean(KEY_CREATION_FINISHED, false);
+            mCreationSucceeded = savedInstanceState.getBoolean(KEY_CREATION_FINISHED, false);
             mWebViewLoadedInTime = savedInstanceState.getBoolean(KEY_WEBVIEW_LOADED_IN_TIME, false);
         }
     }
@@ -148,7 +152,7 @@ public class SiteCreationCreatingFragment extends SiteCreationBaseFormFragment<S
     public void onResume() {
         super.onResume();
 
-        if (!mCreationFinished) {
+        if (!mCreationSucceeded) {
             // connect to the Service. We'll receive updates via EventBus.
             mServiceEventConnection = new ServiceEventConnection(getContext(), SiteCreationService.class, this);
         } else {
@@ -171,7 +175,7 @@ public class SiteCreationCreatingFragment extends SiteCreationBaseFormFragment<S
         super.onSaveInstanceState(outState);
 
         outState.putBoolean(KEY_IN_MODAL_MODE, mInModalMode);
-        outState.putBoolean(KEY_CREATION_FINISHED, mCreationFinished);
+        outState.putBoolean(KEY_CREATION_FINISHED, mCreationSucceeded);
         outState.putBoolean(KEY_WEBVIEW_LOADED_IN_TIME, mWebViewLoadedInTime);
     }
 
@@ -262,6 +266,7 @@ public class SiteCreationCreatingFragment extends SiteCreationBaseFormFragment<S
                 mPreviewWebViewClient = loadWebview();
                 break;
             case SUCCESS:
+                mCreationSucceeded = true;
                 setModalMode(false);
 
                 if (mPreviewWebViewClient == null) {

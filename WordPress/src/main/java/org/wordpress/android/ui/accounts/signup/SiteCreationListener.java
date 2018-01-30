@@ -17,11 +17,8 @@ public interface SiteCreationListener {
     void withDomain(String domain);
     void helpDomainScreen();
 
-    // Site Creation Creating screen callbacks
-    void creationSuccess();
+    // Site Creation Creating and epilogue screen callbacks
     void helpSiteCreatingScreen();
-
-    // Site Creation epilogue screen callbacks
     void doConfigureSite();
     void doWriteFirstPost();
 
