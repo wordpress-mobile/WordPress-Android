@@ -96,6 +96,7 @@
     <color name="login_theme_accent_color">@color/blue_medium</color>
     <color name="login_background_color">@color/grey_light</color>
 
+    <color name="login_toolbar_color">@color/blue_wordpress</color>
     <color name="login_primary_button_normal_color">@color/blue_medium</color>
     <color name="login_primary_button_text_color">@color/white</color>
     <color name="login_secondary_button_text_color">@color/blue_wordpress</color>
