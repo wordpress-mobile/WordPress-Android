@@ -112,7 +112,7 @@ public class SiteCreationActivity extends AppCompatActivity implements SiteCreat
     private enum SiteCreationBackStackMode {
         NORMAL,
         MODAL,
-        FINISH
+        FINISH_OK
     }
 
     private SiteCreationBackStackMode getSiteCreationBackStackMode() {
@@ -125,7 +125,7 @@ public class SiteCreationActivity extends AppCompatActivity implements SiteCreat
         } else if (siteCreationCreatingFragment.isInModalMode()) {
             return SiteCreationBackStackMode.MODAL;
         } else if (siteCreationCreatingFragment.isCreationSucceeded()) {
-            return SiteCreationBackStackMode.FINISH;
+            return SiteCreationBackStackMode.FINISH_OK;
         } else {
             return SiteCreationBackStackMode.NORMAL;
         }
@@ -140,7 +140,8 @@ public class SiteCreationActivity extends AppCompatActivity implements SiteCreat
             case MODAL:
                 ToastUtils.showToast(this, R.string.site_creation_creating_modal);
                 break;
-            case FINISH:
+            case FINISH_OK:
+                setResult(RESULT_OK);
                 finish();
                 break;
         }
