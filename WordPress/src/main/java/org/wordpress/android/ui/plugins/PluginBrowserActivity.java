@@ -383,8 +383,10 @@ public class PluginBrowserActivity extends AppCompatActivity
             }
         }
 
+        PluginListType listType = event.type == PluginDirectoryType.POPULAR ?
+                PluginListType.POPULAR : PluginListType.NEW;
         PluginListFragment fragment = getListFragment();
-        if (fragment != null) {
+        if (fragment != null && fragment.getListType() == listType) {
             fragment.onLoadedMore(event.canLoadMore);
         }
     }
