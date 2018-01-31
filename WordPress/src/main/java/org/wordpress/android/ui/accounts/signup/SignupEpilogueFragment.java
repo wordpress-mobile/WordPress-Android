@@ -621,7 +621,7 @@ public class SignupEpilogueFragment extends LoginBaseFormFragment<SignupEpilogue
             }
 
             mDispatcher.dispatch(AccountActionBuilder.newPushSettingsAction(payload));
-        } else if (changedPassword()) {
+        } else if (!changedDisplayName() && changedPassword()) {
             startProgress();
             PushAccountSettingsPayload payload = new PushAccountSettingsPayload();
             payload.params = new HashMap<>();
