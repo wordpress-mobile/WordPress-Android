@@ -28,7 +28,9 @@
             android:layout_height="wrap_content"
             android:text="@string/site_settings_rp_switch_title"
             android:textColor="@color/grey_dark"
-            android:textSize="@dimen/text_sz_large" />
+            android:textSize="@dimen/text_sz_large"
+            android:textAlignment="viewStart"
+            android:gravity="start"/>
 
         <org.wordpress.android.widgets.WPTextView
             android:id="@+id/toggleRelatedPostsSummary"
@@ -36,7 +38,7 @@
             android:layout_height="wrap_content"
             android:text="@string/site_settings_rp_switch_summary"
             android:textColor="@color/grey_darken_10"
-            android:textSize="@dimen/text_sz_small" />
+            android:textSize="@dimen/text_sz_small"/>
 
         <CheckBox
             android:id="@+id/show_header_checkbox"
@@ -45,7 +47,9 @@
             android:layout_marginTop="12dp"
             android:textColor="@color/calypso_title_text"
             android:textSize="@dimen/text_sz_large"
-            android:text="@string/site_settings_rp_show_header_title" />
+            android:text="@string/site_settings_rp_show_header_title"
+            android:textAlignment="viewStart"
+            android:gravity="center_vertical|start"/>
 
         <CheckBox
             android:id="@+id/show_images_checkbox"
@@ -54,7 +58,9 @@
             android:layout_marginTop="6dp"
             android:textColor="@color/calypso_title_text"
             android:textSize="@dimen/text_sz_large"
-            android:text="@string/site_settings_rp_show_images_title" />
+            android:text="@string/site_settings_rp_show_images_title"
+            android:textAlignment="viewStart"
+            android:gravity="center_vertical|start"/>
 
         <View
             android:layout_width="match_parent"
