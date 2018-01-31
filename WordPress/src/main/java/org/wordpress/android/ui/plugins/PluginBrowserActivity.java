@@ -46,7 +46,6 @@ import org.wordpress.android.ui.RequestCodes;
 import org.wordpress.android.util.ActivityUtils;
 import org.wordpress.android.util.AniUtils;
 import org.wordpress.android.util.AppLog;
-import org.wordpress.android.util.DisplayUtils;
 import org.wordpress.android.util.HtmlUtils;
 import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.ToastUtils;
@@ -94,10 +93,9 @@ public class PluginBrowserActivity extends AppCompatActivity
     private RecyclerView mPopularPluginsRecycler;
     private RecyclerView mNewPluginsRecycler;
 
-    private int mRowWidth;
-    private int mIconSize;
-
     private String mSearchQuery;
+    private String mLastSearch;
+
     private MenuItem mSearchMenuItem;
     private SearchView mSearchView;
 
@@ -161,12 +159,6 @@ public class PluginBrowserActivity extends AppCompatActivity
                 showListFragment(PluginListType.NEW);
             }
         });
-
-        boolean isLandscape = DisplayUtils.isLandscape(this);
-        int displayWidth = DisplayUtils.getDisplayPixelWidth(this);
-        int maxRows = isLandscape ? 6 : 4;
-        mRowWidth = Math.round(displayWidth / (maxRows - 0.4f));
-        mIconSize = mRowWidth;
 
         configureRecycler(mSitePluginsRecycler);
         configureRecycler(mPopularPluginsRecycler);
@@ -349,6 +341,7 @@ public class PluginBrowserActivity extends AppCompatActivity
         }
         showProgress(false);
         if (event.isError()) {
+            AppLog.e(AppLog.T.PLUGINS, "An error occurred while fetching site plugins with type: " + event.error.type);
             ToastUtils.showToast(this, R.string.plugin_fetch_error);
             return;
         }
@@ -503,15 +496,13 @@ public class PluginBrowserActivity extends AppCompatActivity
     }
 
     @Override
-    public List<?> onListFragmentRequestPlugins(@NonNull PluginListFragment fragment) {
-        PluginListType listType = fragment.getListType();
+    public List<?> onListFragmentRequestPlugins(@NonNull PluginListType listType) {
         setTitle(listType.getTitleRes());
         return getPlugins(listType);
     }
 
     @Override
-    public void onListFragmentLoadMore(@NonNull PluginListFragment fragment) {
-        PluginListType listType = fragment.getListType();
+    public void onListFragmentLoadMore(@NonNull PluginListType listType) {
         fetchPlugins(listType, true);
     }
 
@@ -668,11 +659,6 @@ public class PluginBrowserActivity extends AppCompatActivity
                 statusContainer = view.findViewById(R.id.plugin_status_container);
                 statusText = statusContainer.findViewById(R.id.plugin_status_text);
                 statusIcon = statusContainer.findViewById(R.id.plugin_status_icon);
-
-                view.getLayoutParams().width = mRowWidth;
-
-                icon.getLayoutParams().width = mIconSize;
-                icon.getLayoutParams().height = mIconSize;
 
                 view.setOnClickListener(new View.OnClickListener() {
                     @Override

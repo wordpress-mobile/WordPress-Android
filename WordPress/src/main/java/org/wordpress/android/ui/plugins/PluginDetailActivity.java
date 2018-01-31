@@ -346,7 +346,7 @@ public class PluginDetailActivity extends AppCompatActivity {
             settingsView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    ActivityLauncher.openUrlExternal(PluginDetailActivity.this, mSitePlugin.getSettingsUrl());
+                    openUrl(mSitePlugin.getSettingsUrl());
                 }
             });
         } else {
@@ -356,7 +356,7 @@ public class PluginDetailActivity extends AppCompatActivity {
         findViewById(R.id.plugin_wp_org_page).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                ActivityLauncher.openUrlExternal(PluginDetailActivity.this, getWpOrgPluginUrl());
+                openUrl(getWpOrgPluginUrl());
             }
         });
 
@@ -364,14 +364,14 @@ public class PluginDetailActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 String url = mSitePlugin != null ? mSitePlugin.getPluginUrl() : mWPOrgPlugin.getHomepageUrl();
-                ActivityLauncher.openUrlExternal(PluginDetailActivity.this, url);
+                openUrl(url);
             }
         });
 
         findViewById(R.id.read_reviews_container).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                ActivityLauncher.openUrlExternal(PluginDetailActivity.this, getWpOrgReviewsUrl());
+                openUrl(getWpOrgReviewsUrl());
             }
         });
 
@@ -612,6 +612,12 @@ public class PluginDetailActivity extends AppCompatActivity {
             showFetchProgress(true);
         }
         mDispatcher.dispatch(PluginActionBuilder.newFetchWporgPluginAction(pluginSlug));
+    }
+
+    private void openUrl(@Nullable String url) {
+        if (url != null) {
+            ActivityLauncher.openUrlExternal(this, url);
+        }
     }
 
     private void showFetchProgress(boolean show) {

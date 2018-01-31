@@ -19,7 +19,6 @@ import android.widget.TextView;
 
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
-import org.wordpress.android.fluxc.Dispatcher;
 import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.model.plugin.SitePluginModel;
 import org.wordpress.android.fluxc.model.plugin.WPOrgPluginModel;
@@ -41,8 +40,8 @@ public class PluginListFragment extends Fragment {
     private static final String ARG_LIST_TYPE = "list_type";
 
     public interface PluginListFragmentListener {
-        List<?> onListFragmentRequestPlugins(@NonNull PluginListFragment fragment);
-        void onListFragmentLoadMore(@NonNull PluginListFragment fragment);
+        List<?> onListFragmentRequestPlugins(@NonNull PluginListType listType);
+        void onListFragmentLoadMore(@NonNull PluginListType listType);
     }
 
     private RecyclerView mRecycler;
@@ -57,7 +56,6 @@ public class PluginListFragment extends Fragment {
     private PluginListFragmentListener mListener;
 
     @Inject PluginStore mPluginStore;
-    @Inject Dispatcher mDispatcher;
 
     public static PluginListFragment newInstance(@NonNull SiteModel site, @NonNull PluginListType listType) {
         PluginListFragment fragment = new PluginListFragment();
@@ -101,8 +99,7 @@ public class PluginListFragment extends Fragment {
     }
 
     void requestPlugins() {
-        List<?> plugins = mListener.onListFragmentRequestPlugins(this);
-        setPlugins(plugins);
+        setPlugins(mListener.onListFragmentRequestPlugins(mListType));
     }
 
     void setListType(@NonNull PluginListType listType) {
@@ -158,7 +155,7 @@ public class PluginListFragment extends Fragment {
     private void loadMore() {
         showProgress(true);
         mIsLoadingMore = true;
-        mListener.onListFragmentLoadMore(PluginListFragment.this);
+        mListener.onListFragmentLoadMore(mListType);
     }
 
     void onLoadedMore(boolean canLoadMore) {
