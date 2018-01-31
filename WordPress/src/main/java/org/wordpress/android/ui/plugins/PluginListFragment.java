@@ -38,6 +38,8 @@ public class PluginListFragment extends Fragment {
 
     public static final String TAG = PluginListFragment.class.getName();
     private static final String ARG_LIST_TYPE = "list_type";
+    private static final String KEY_CAN_LOAD_MORE = "can_load_more";
+    private static final String KEY_IS_LOADING_MORE = "is_loading_more";
 
     public interface PluginListFragmentListener {
         List<?> onListFragmentRequestPlugins(@NonNull PluginListType listType);
@@ -75,6 +77,18 @@ public class PluginListFragment extends Fragment {
         mSite = (SiteModel) getArguments().getSerializable(WordPress.SITE);
         mSitePlugins.addAll(mPluginStore.getSitePlugins(mSite));
         mListType = (PluginListType) getArguments().getSerializable(ARG_LIST_TYPE);
+
+        if (savedInstanceState != null) {
+            mCanLoadMore = savedInstanceState.getBoolean(KEY_CAN_LOAD_MORE);
+            mIsLoadingMore = savedInstanceState.getBoolean(KEY_IS_LOADING_MORE);
+        }
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putBoolean(KEY_CAN_LOAD_MORE, mCanLoadMore);
+        outState.putBoolean(KEY_IS_LOADING_MORE, mIsLoadingMore);
     }
 
     @Override
