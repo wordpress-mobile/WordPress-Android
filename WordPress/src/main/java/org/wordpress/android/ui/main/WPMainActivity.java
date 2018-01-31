@@ -251,7 +251,7 @@ public class WPMainActivity extends AppCompatActivity {
                     }
                 }
             } else {
-                if (hasMagicLinkLoginIntent() || hasMagicLinkSignupIntent()) {
+                if (hasMagicLinkLoginIntent()) {
                     authTokenToSet = getAuthToken();
                 } else {
                     ActivityLauncher.showSignInForResult(this);
