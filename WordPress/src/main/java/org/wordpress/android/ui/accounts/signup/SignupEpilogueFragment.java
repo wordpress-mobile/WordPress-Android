@@ -294,14 +294,22 @@ public class SignupEpilogueFragment extends LoginBaseFormFragment<SignupEpilogue
                                     Uri imageUri = Uri.parse(mediaUriString);
 
                                     if (imageUri != null) {
-                                        WPMediaUtils.fetchMediaAndDoNext(getActivity(), imageUri,
+                                        boolean wasSuccess = WPMediaUtils.fetchMediaAndDoNext(getActivity(), imageUri,
                                                 new WPMediaUtils.MediaFetchDoNext() {
                                                     @Override
                                                     public void doNext(Uri uri) {
                                                         startCropActivity(uri);
                                                     }
                                                 });
+
+                                        if (!wasSuccess) {
+                                            AppLog.e(T.UTILS, "Can't download picked or captured image");
+                                        }
+                                    } else {
+                                        AppLog.e(T.UTILS, "Can't parse media string");
                                     }
+                                } else {
+                                    AppLog.e(T.UTILS, "Can't resolve picked or captured image");
                                 }
                             }
 
@@ -320,6 +328,7 @@ public class SignupEpilogueFragment extends LoginBaseFormFragment<SignupEpilogue
 
                     break;
                 case UCrop.RESULT_ERROR:
+                    AppLog.e(T.NUX, "Image cropping failed", UCrop.getError(data));
                     ToastUtils.showToast(getActivity(), R.string.error_cropping_image, ToastUtils.Duration.SHORT);
                     break;
             }
@@ -569,6 +578,7 @@ public class SignupEpilogueFragment extends LoginBaseFormFragment<SignupEpilogue
                             public void onError() {
                                 endProgress();
                                 showErrorDialogAvatar();
+                                AppLog.e(T.NUX, "Uploading image to Gravatar failed");
                             }
                         });
             } else {
