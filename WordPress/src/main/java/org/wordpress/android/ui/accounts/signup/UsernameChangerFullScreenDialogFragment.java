@@ -321,8 +321,7 @@ public class UsernameChangerFullScreenDialogFragment extends Fragment implements
 
         if (event.isError()) {
             AnalyticsTracker.track(AnalyticsTracker.Stat.SIGNUP_SOCIAL_EPILOGUE_USERNAME_SUGGESTIONS_FAILED);
-            AppLog.e(T.API, "SignupEpilogueSocialFragment.onUsernameSuggestionsFetched: " +
-                    event.error.type + " - " + event.error.message);
+            AppLog.e(T.API, "onUsernameSuggestionsFetched: " + event.error.type + " - " + event.error.message);
             showErrorDialog(new SpannedString(getString(R.string.username_changer_error_generic)));
         } else if (event.suggestions.size() == 0) {
             showErrorDialog(
