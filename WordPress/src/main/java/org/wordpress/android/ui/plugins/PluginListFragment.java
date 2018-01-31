@@ -124,11 +124,7 @@ public class PluginListFragment extends Fragment {
     void setListType(@NonNull PluginListType listType) {
         // site plugins are retrieved all at once so "load more" isn't necessary, search returns
         // the first 50 best matches which we've decided is enough
-        if (listType == PluginListType.SITE || listType == PluginListType.SEARCH) {
-            mCanLoadMore = false;
-        } else {
-            mCanLoadMore = true;
-        }
+        mCanLoadMore = !(listType == PluginListType.SITE || listType == PluginListType.SEARCH);
 
         mListType = listType;
         getArguments().putSerializable(ARG_LIST_TYPE, mListType);

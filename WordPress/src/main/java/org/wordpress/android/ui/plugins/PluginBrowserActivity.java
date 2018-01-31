@@ -87,7 +87,6 @@ public class PluginBrowserActivity extends AppCompatActivity
 
     private SiteModel mSite;
     private final HashMap<String, SitePluginModel> mSitePluginsMap = new HashMap<>();
-    private final HashMap<String, WPOrgPluginModel> mWPOrgPluginsMap = new HashMap<>();
     private final List<WPOrgPluginModel> mSearchResults = new ArrayList<>();
 
     private final Handler mHandler = new Handler();
@@ -96,8 +95,6 @@ public class PluginBrowserActivity extends AppCompatActivity
     private RecyclerView mNewPluginsRecycler;
 
     private String mSearchQuery;
-    private String mLastSearch;
-
     private MenuItem mSearchMenuItem;
     private SearchView mSearchView;
 
