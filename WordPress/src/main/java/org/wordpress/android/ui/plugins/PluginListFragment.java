@@ -122,6 +122,8 @@ public class PluginListFragment extends Fragment {
         // the first 50 best matches which we've decided is enough
         if (listType == PluginListType.SITE || listType == PluginListType.SEARCH) {
             mCanLoadMore = false;
+        } else {
+            mCanLoadMore = true;
         }
 
         mListType = listType;
