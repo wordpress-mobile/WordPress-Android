@@ -70,4 +70,19 @@
         <item name="android:drawablePadding">0dp</item>
         <item name="android:text">View</item>
     </style -->
+
+    <style name="JetpackConnectionText" parent="TextAppearance.AppCompat.Body1">
+        <item name="android:textColor">@color/grey_dark</item>
+        <item name="android:layout_marginTop">@dimen/margin_extra_medium_large</item>
+    </style>
+
+    <style name="JetpackConnectionButton" parent="WordPress.Button.Primary">
+        <item name="android:layout_marginTop">@dimen/margin_extra_medium_large</item>
+        <item name="android:paddingLeft">@dimen/margin_extra_medium_large</item>
+        <item name="android:paddingRight">@dimen/margin_extra_medium_large</item>
+    </style>
+    <style name="JetpackMoreInfoButton" parent="TextAppearance.AppCompat.Caption">
+        <item name="android:layout_marginTop">@dimen/margin_extra_large</item>
+        <item name="android:textColor">@color/blue_medium</item>
+    </style>
 </resources>

@@ -211,8 +211,10 @@ public class MySiteFragment extends Fragment
                 if (!mAccountStore.hasAccessToken() && selectedSite != null && selectedSite.isJetpackConnected()) {
                     // If the user is not connected to WordPress.com, ask him to connect first.
                     startWPComLoginForJetpackStats();
-                } else {
+                } else if (selectedSite != null && selectedSite.isJetpackInstalled() && selectedSite.isJetpackConnected()){
                     ActivityLauncher.viewBlogStats(getActivity(), selectedSite);
+                } else {
+                    ActivityLauncher.startJetpackConnectionFlow(getActivity(), selectedSite);
                 }
             }
         });

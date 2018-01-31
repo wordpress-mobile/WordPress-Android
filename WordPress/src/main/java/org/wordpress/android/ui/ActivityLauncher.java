@@ -49,6 +49,7 @@ import org.wordpress.android.ui.prefs.notifications.NotificationsSettingsActivit
 import org.wordpress.android.ui.publicize.PublicizeListActivity;
 import org.wordpress.android.ui.reader.ReaderPostPagerActivity;
 import org.wordpress.android.ui.stats.StatsActivity;
+import org.wordpress.android.ui.stats.StatsConnectJetpackActivity;
 import org.wordpress.android.ui.stats.StatsConstants;
 import org.wordpress.android.ui.stats.StatsSingleItemDetailsActivity;
 import org.wordpress.android.ui.stats.models.StatsPostModel;
@@ -98,6 +99,12 @@ public class ActivityLauncher {
 
     public static void viewBlogStats(Context context, SiteModel site) {
         Intent intent = new Intent(context, StatsActivity.class);
+        intent.putExtra(WordPress.SITE, site);
+        context.startActivity(intent);
+    }
+
+    public static void startJetpackConnectionFlow(Context context, SiteModel site) {
+        Intent intent = new Intent(context, StatsConnectJetpackActivity.class);
         intent.putExtra(WordPress.SITE, site);
         context.startActivity(intent);
     }

@@ -266,6 +266,9 @@
         <activity
             android:name=".ui.JetpackConnectionWebViewActivity"
             android:theme="@style/Calypso.NoActionBar" />
+        <activity
+            android:name=".ui.stats.StatsConnectJetpackActivity"
+            android:theme="@style/Calypso.NoActionBar" />
         <activity android:name=".ui.stats.StatsDeeplinkActivity" android:theme="@style/Calypso.NoActionBar">
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
