@@ -712,15 +712,15 @@ public class WPMainActivity extends AppCompatActivity {
         }
 
         if (mAccountStore.hasAccessToken()) {
-            // Check signup first since login and signup have the same action and host,
-            // but signup has an extra parameter.
-            if (hasMagicLinkSignupIntent()) {
-                AnalyticsTracker.track(AnalyticsTracker.Stat.SIGNUP_MAGIC_LINK_SUCCEEDED);
-                Intent intent = getIntent();
-                ActivityLauncher.showSignupEpilogue(this, null, null, null, null, true);
-            } else if (hasMagicLinkLoginIntent()) {
-                AnalyticsTracker.track(AnalyticsTracker.Stat.LOGIN_MAGIC_LINK_SUCCEEDED);
-                ActivityLauncher.showLoginEpilogue(this, true, getIntent().getIntegerArrayListExtra(ARG_OLD_SITES_IDS));
+            if (hasMagicLinkLoginIntent()) {
+                if (hasMagicLinkSignupIntent()) {
+                    AnalyticsTracker.track(AnalyticsTracker.Stat.SIGNUP_MAGIC_LINK_SUCCEEDED);
+                    Intent intent = getIntent();
+                    ActivityLauncher.showSignupEpilogue(this, null, null, null, null, true);
+                } else {
+                    AnalyticsTracker.track(AnalyticsTracker.Stat.LOGIN_MAGIC_LINK_SUCCEEDED);
+                    ActivityLauncher.showLoginEpilogue(this, true, getIntent().getIntegerArrayListExtra(ARG_OLD_SITES_IDS));
+                }
             }
         }
     }
