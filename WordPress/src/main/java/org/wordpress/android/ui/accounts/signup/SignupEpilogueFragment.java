@@ -51,6 +51,7 @@ import org.wordpress.android.ui.FullScreenDialogFragment.OnDismissListener;
 import org.wordpress.android.ui.RequestCodes;
 import org.wordpress.android.ui.media.MediaBrowserType;
 import org.wordpress.android.ui.photopicker.PhotoPickerActivity;
+import org.wordpress.android.ui.photopicker.PhotoPickerActivity.PhotoPickerMediaSource;
 import org.wordpress.android.ui.photopicker.PhotoPickerFragment;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
@@ -250,6 +251,7 @@ public class SignupEpilogueFragment extends LoginBaseFormFragment<SignupEpilogue
 
         if (savedInstanceState == null) {
             if (mIsEmailSignup) {
+                AnalyticsTracker.track(AnalyticsTracker.Stat.SIGNUP_EMAIL_EPILOGUE_VIEWED);
                 startProgress();
             } else {
                 AnalyticsTracker.track(AnalyticsTracker.Stat.SIGNUP_SOCIAL_EPILOGUE_VIEWED);
@@ -291,6 +293,13 @@ public class SignupEpilogueFragment extends LoginBaseFormFragment<SignupEpilogue
                                 String mediaUriString = data.getStringExtra(PhotoPickerActivity.EXTRA_MEDIA_URI);
 
                                 if (mediaUriString != null) {
+                                PhotoPickerMediaSource source = PhotoPickerMediaSource.fromString(
+                                        data.getStringExtra(PhotoPickerActivity.EXTRA_MEDIA_SOURCE));
+                                AnalyticsTracker.Stat stat =
+                                        source == PhotoPickerActivity.PhotoPickerMediaSource.ANDROID_CAMERA
+                                                ? AnalyticsTracker.Stat.SIGNUP_EMAIL_EPILOGUE_GRAVATAR_SHOT_NEW
+                                                : AnalyticsTracker.Stat.SIGNUP_EMAIL_EPILOGUE_GRAVATAR_GALLERY_PICKED;
+                                AnalyticsTracker.track(stat);
                                     Uri imageUri = Uri.parse(mediaUriString);
 
                                     if (imageUri != null) {
@@ -315,6 +324,7 @@ public class SignupEpilogueFragment extends LoginBaseFormFragment<SignupEpilogue
 
                             break;
                         case UCrop.REQUEST_CROP:
+                            AnalyticsTracker.track(AnalyticsTracker.Stat.SIGNUP_EMAIL_EPILOGUE_GRAVATAR_CROPPED);
                             WPMediaUtils.fetchMediaAndDoNext(getActivity(), UCrop.getOutput(data),
                                     new WPMediaUtils.MediaFetchDoNext() {
                                         @Override
