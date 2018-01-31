@@ -128,16 +128,18 @@ public class MySiteFragment extends Fragment
         if (ServiceUtils.isServiceRunning(getActivity(), StatsService.class)) {
             getActivity().stopService(new Intent(getActivity(), StatsService.class));
         }
-        // redisplay hidden fab after a short delay
-        long delayMs = getResources().getInteger(R.integer.fab_animation_delay);
-        new Handler().postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                if (isAdded() && (mFabView.getVisibility() != View.VISIBLE || mFabView.getTranslationY() != 0)) {
-                    AniUtils.showFab(mFabView, true);
+        if (getSelectedSite() != null) {
+            // redisplay hidden fab after a short delay
+            long delayMs = getResources().getInteger(R.integer.fab_animation_delay);
+            new Handler().postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    if (isAdded() && (mFabView.getVisibility() != View.VISIBLE || mFabView.getTranslationY() != 0)) {
+                        AniUtils.showFab(mFabView, true);
+                    }
                 }
-            }
-        }, delayMs);
+            }, delayMs);
+        }
     }
 
     @Override

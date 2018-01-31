@@ -260,16 +260,6 @@ Language: ms
 	<string name="format_bar_description_heading">Tajuk</string>
 	<string name="format_bar_description_media">Media</string>
 	<string name="reader_view_comments">Lihat ulasan</string>
-	<string name="new_editor_promo_title_beta">Beta</string>
-	<string name="new_editor_promo_title">Cuba Penyunting baharu</string>
-	<string name="new_editor_promo_link">Apa yang baharu?</string>
-	<string name="new_editor_promo_description_image">Tulis Tangan Imej</string>
-	<string name="new_editor_promo_confirmation_message">Penyunting baharu dibolehkan!</string>
-	<string name="new_editor_promo_confirmation_action">Tetapan</string>
-	<string name="new_editor_promo_button_positive">Cubanya</string>
-	<string name="new_editor_promo_button_negative">Bukan Sekarang</string>
-	<string name="new_editor_beta_message">Penyunting baharu dalam Beta Terbuka!</string>
-	<string name="new_editor_beta_action">Baca Lebih Lanjut</string>
 	<string name="preference_editor_footer_description">Ikon Maklumat</string>
 	<string name="preference_editor_footer">Nota keluaran penyunting dan pelaporan pepijat</string>
 	<string name="site_settings_video_quality_hint">Kualiti video. Nilai lebih tinggi bermakna kualiti video yang lebih baik.</string>
@@ -350,7 +340,6 @@ Language: ms
 	<string name="smart_toast_photo_long_press">Tap dan tahan untuk memilih gambar berbilang</string>
 	<string name="photo_picker_choose_video">Pilih video dari peranti</string>
 	<string name="photo_picker_choose_photo">Pilih gambar dari peranti</string>
-	<string name="new_editor_promo_description">Aplikasi WordPress kini terdiri daripada penyunting baharu yang indah. Cubalah ia dengan mencipta kiriman baharu!</string>
 	<string name="wp_media_title">Media WordPress</string>
 	<string name="media_insert_as_gallery">Tambah sebagai galeri</string>
 	<string name="media_insert_individually">Tambah sebagai individu</string>
