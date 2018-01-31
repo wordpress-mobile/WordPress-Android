@@ -157,6 +157,7 @@ public class PluginListFragment extends Fragment {
 
     void onLoadedMore(boolean canLoadMore) {
         mCanLoadMore = canLoadMore;
+        mIsLoadingMore = false;
         if (isAdded()) {
             showProgress(false);
             requestPlugins();
