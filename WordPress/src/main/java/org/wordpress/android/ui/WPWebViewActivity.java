@@ -81,15 +81,11 @@ public class WPWebViewActivity extends WebViewActivity {
     public static final String SHARE_SUBJECT = "share_subject";
     public static final String REFERRER_URL = "referrer_url";
     public static final String DISABLE_LINKS_ON_PAGE = "DISABLE_LINKS_ON_PAGE";
-    public static final String JETPACK_CONNECTION_FLOW = "JETPACK_CONNECTION_FLOW";
-    public static final String JETPACK_CONNECTION_DEEPLINK = "wordpress://jetpack-connection";
     public static final String ALLOWED_URLS = "allowed_urls";
     public static final String ENCODING_UTF8 = "UTF-8";
 
     @Inject AccountStore mAccountStore;
     @Inject SiteStore mSiteStore;
-
-    private WebViewClient mWebViewClient;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -98,27 +94,12 @@ public class WPWebViewActivity extends WebViewActivity {
     }
 
     public static void openUrlByUsingGlobalWPCOMCredentials(Context context, String url) {
-        openWPCOMURL(context, url, null, null, false);
-    }
-
-    public static void openJetpackConnectionFlow(Context context, String url) {
-        openWPCOMURL(context, url, null, null, true);
-    }
-
-    public static void openUnauthorizedJetpackConnectionFlow(Context context, String url) {
-        if (!checkContextAndUrl(context, url)) {
-            return;
-        }
-
-        Intent intent = new Intent(context, WPWebViewActivity.class);
-        intent.putExtra(WPWebViewActivity.URL_TO_LOAD, url);
-        intent.putExtra(JETPACK_CONNECTION_FLOW, true);
-        context.startActivity(intent);
+        openWPCOMURL(context, url, null, null);
     }
 
     public static void openPostUrlByUsingGlobalWPCOMCredentials(Context context, String url, String shareableUrl,
                                                                 String shareSubject) {
-        openWPCOMURL(context, url, shareableUrl, shareSubject, false);
+        openWPCOMURL(context, url, shareableUrl, shareSubject);
     }
 
     // frameNonce is used to show drafts, without it "no page found" error would be thrown
@@ -200,7 +181,7 @@ public class WPWebViewActivity extends WebViewActivity {
         context.startActivity(intent);
     }
 
-    private static boolean checkContextAndUrl(Context context, String url) {
+    protected static boolean checkContextAndUrl(Context context, String url) {
         if (context == null) {
             AppLog.e(AppLog.T.UTILS, "Context is null");
             return false;
@@ -214,7 +195,7 @@ public class WPWebViewActivity extends WebViewActivity {
         return true;
     }
 
-    private static void openWPCOMURL(Context context, String url, String shareableUrl, String shareSubject, boolean isJetpackConnectionFlow) {
+    private static void openWPCOMURL(Context context, String url, String shareableUrl, String shareSubject) {
         if (!checkContextAndUrl(context, url)) {
             return;
         }
@@ -229,7 +210,6 @@ public class WPWebViewActivity extends WebViewActivity {
         if (!TextUtils.isEmpty(shareSubject)) {
             intent.putExtra(WPWebViewActivity.SHARE_SUBJECT, shareSubject);
         }
-        intent.putExtra(JETPACK_CONNECTION_FLOW, isJetpackConnectionFlow);
         context.startActivity(intent);
     }
 
@@ -262,29 +242,22 @@ public class WPWebViewActivity extends WebViewActivity {
             }
         }
 
+        WebViewClient webViewClient = createWebViewClient(allowedURL);
 
+        mWebView.setWebViewClient(webViewClient);
+        mWebView.setWebChromeClient(new WPWebChromeClient(this, (ProgressBar) findViewById(R.id.progress_bar)));
+    }
+
+    protected WebViewClient createWebViewClient(List<String> allowedURL) {
         if (getIntent().hasExtra(LOCAL_BLOG_ID)) {
             SiteModel site = mSiteStore.getSiteByLocalId(getIntent().getIntExtra(LOCAL_BLOG_ID, -1));
             if (site == null) {
                 AppLog.e(AppLog.T.UTILS, "No valid blog passed to WPWebViewActivity");
                 finish();
             }
-            mWebViewClient = new WPWebViewClient(site, mAccountStore.getAccessToken(), allowedURL);
-        } else if (getIntent().getBooleanExtra(JETPACK_CONNECTION_FLOW, false)) {
-            mWebViewClient = new JetpackConnectionWebViewClient(this, mAccountStore, mSiteStore);
+            return new WPWebViewClient(site, mAccountStore.getAccessToken(), allowedURL);
         } else {
-            mWebViewClient = new URLFilteredWebViewClient(allowedURL);
-        }
-
-        mWebView.setWebViewClient(mWebViewClient);
-        mWebView.setWebChromeClient(new WPWebChromeClient(this, (ProgressBar) findViewById(R.id.progress_bar)));
-    }
-
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        if (mWebViewClient != null && mWebViewClient instanceof JetpackConnectionWebViewClient) {
-            ((JetpackConnectionWebViewClient) this.mWebViewClient).activityResult(this, requestCode);
+            return new URLFilteredWebViewClient(allowedURL);
         }
     }
 
@@ -449,28 +422,5 @@ public class WPWebViewActivity extends WebViewActivity {
         }
 
         return super.onOptionsItemSelected(item);
-    }
-
-    @Override
-    protected void cancel() {
-        if (mWebViewClient != null && mWebViewClient instanceof JetpackConnectionWebViewClient) {
-            ((JetpackConnectionWebViewClient) this.mWebViewClient).cancel();
-        }
-    }
-
-    @Override
-    protected void onSaveInstanceState(Bundle outState) {
-        super.onSaveInstanceState(outState);
-        if (mWebViewClient != null && mWebViewClient instanceof JetpackConnectionWebViewClient) {
-            ((JetpackConnectionWebViewClient) this.mWebViewClient).onSaveInstanceState(outState);
-        }
-    }
-
-    @Override
-    protected void onRestoreInstanceState(Bundle savedInstanceState) {
-        super.onRestoreInstanceState(savedInstanceState);
-        if (mWebViewClient != null && mWebViewClient instanceof JetpackConnectionWebViewClient) {
-            ((JetpackConnectionWebViewClient) this.mWebViewClient).onRestoreInstanceState(savedInstanceState);
-        }
     }
 }

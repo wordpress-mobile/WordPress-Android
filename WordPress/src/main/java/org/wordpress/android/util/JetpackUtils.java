@@ -3,16 +3,14 @@ package org.wordpress.android.util;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
-import android.content.Intent;
 
 import org.wordpress.android.R;
 import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.store.AccountStore;
-import org.wordpress.android.ui.RequestCodes;
-import org.wordpress.android.ui.WPWebViewActivity;
+import org.wordpress.android.ui.JetpackConnectionWebViewActivity;
 
-import static org.wordpress.android.ui.WPWebViewActivity.JETPACK_CONNECTION_DEEPLINK;
+import static org.wordpress.android.ui.JetpackConnectionWebViewActivity.JETPACK_CONNECTION_DEEPLINK;
 
 public class JetpackUtils {
 
@@ -90,9 +88,9 @@ public class JetpackUtils {
                 + "&mobile_redirect="
                 + JETPACK_CONNECTION_DEEPLINK;
         if (mAccountStore.hasAccessToken()) {
-            WPWebViewActivity.openJetpackConnectionFlow(activity, stringToLoad);
+            JetpackConnectionWebViewActivity.openJetpackConnectionFlow(activity, stringToLoad, site);
         } else {
-            WPWebViewActivity.openUnauthorizedJetpackConnectionFlow(activity, stringToLoad);
+            JetpackConnectionWebViewActivity.openUnauthorizedJetpackConnectionFlow(activity, stringToLoad, site);
         }
         activity.finish();
     }
