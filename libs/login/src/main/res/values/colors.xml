@@ -112,4 +112,6 @@
     <color name="login_subhead_text_color">@color/grey_dark</color>
     <color name="login_username_text_color">@color/grey_darken_10</color>
     <color name="login_footnote_text_color">@color/grey_dark</color>
+
+    <color name="login_notification_accent_color">@color/blue_wordpress</color>
 </resources>
