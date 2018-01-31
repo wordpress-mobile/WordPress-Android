@@ -40,6 +40,8 @@
         android:textColor="@color/grey_dark"
         android:textSize="@dimen/text_sz_large"
         tools:text="display_name"
+        android:textAlignment="viewStart"
+        android:gravity="start"
         android:layout_toStartOf="@id/person_role"/>
 
     <org.wordpress.android.widgets.WPTextView
@@ -52,6 +54,8 @@
         android:textColor="@color/grey"
         android:textSize="@dimen/text_sz_medium"
         tools:text="username"
+        android:textAlignment="viewStart"
+        android:gravity="start"
         android:layout_toStartOf="@id/person_role"/>
 
     <org.wordpress.android.widgets.WPTextView
@@ -66,6 +70,8 @@
         android:textColor="@color/grey"
         android:textSize="@dimen/text_sz_small"
         tools:text="Since {date}"
+        android:textAlignment="viewStart"
+        android:gravity="start"
         android:layout_toStartOf="@id/person_role"/>
 
 

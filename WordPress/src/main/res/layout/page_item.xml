@@ -29,6 +29,8 @@
             android:textColor="@color/grey_darken_10"
             android:textSize="@dimen/text_sz_medium"
             tools:text="text_date"
+            android:textAlignment="viewStart"
+            android:gravity="start"
             android:drawableStart="@drawable/ic_time_grey_darken_10_16dp"/>
 
         <View
@@ -71,6 +73,8 @@
                     android:textColor="@color/grey_dark"
                     android:textSize="@dimen/text_sz_large"
                     android:fontFamily="serif"
+                    android:textAlignment="viewStart"
+                    android:gravity="start"
                     tools:text="text_title" />
 
                 <LinearLayout
@@ -80,6 +84,8 @@
                     android:layout_marginRight="@dimen/margin_extra_large"
                     android:layout_marginTop="@dimen/margin_medium"
                     android:orientation="horizontal"
+                    android:textAlignment="viewStart"
+                    android:gravity="start"
                     android:layout_marginEnd="@dimen/margin_extra_large"
                     android:layout_marginStart="@dimen/margin_extra_large">
 

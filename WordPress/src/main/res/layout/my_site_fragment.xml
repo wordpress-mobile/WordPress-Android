@@ -135,6 +135,8 @@
                 <org.wordpress.android.widgets.WPTextView
                     android:id="@+id/my_site_current_plan_text_view"
                     style="@style/MySiteListRowSecondaryTextView"
+                    android:textAlignment="viewEnd"
+                    android:gravity="end"
                     android:text="@string/plan" />
 
             </LinearLayout>

@@ -216,6 +216,8 @@
         <!-- Label color in TRUE state and bar color FALSE and TRUE State -->
         <item name="colorControlNormal">@color/grey_500</item>
         <item name="colorControlActivated">@color/blue_wordpress</item>
+        <item name="android:textAlignment">viewStart</item>
+        <item name="android:gravity">start</item>
 
         <!-- Fix for crash on ASUS devices - https://github.com/wordpress-mobile/WordPress-Android/issues/7038 -->
         <item name="android:textColorHighlight">@color/transparent</item>

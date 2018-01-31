@@ -132,6 +132,8 @@
             android:textColor="@color/grey"
             android:textSize="@dimen/text_sz_small"
             android:padding="@dimen/margin_large"
+            android:textAlignment="viewStart"
+            android:gravity="start"
             android:visibility="gone" />
 
         <LinearLayout

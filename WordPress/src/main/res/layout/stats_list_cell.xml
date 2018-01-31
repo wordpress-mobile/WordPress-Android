@@ -36,6 +36,7 @@
             android:layout_marginRight="@dimen/margin_large"
             android:layout_marginEnd="@dimen/margin_large"
             android:visibility="gone"
+            android:rotationY="@integer/mirror_flip"
             app:srcCompat="@drawable/ic_chevron_right_blue_wordpress_24dp" />
 
         <org.wordpress.android.widgets.WPNetworkImageView
@@ -66,11 +67,12 @@
             android:layout_marginRight="@dimen/margin_large"
             android:layout_marginEnd="@dimen/margin_large"
             android:maxLines="3"
-            android:gravity="center_vertical"
+            android:gravity="center_vertical|start"
             android:autoLink="none"
             android:textColor="@color/stats_text_color"
             android:textColorLink="@color/stats_link_text_color"
             android:textColorHighlight="@color/transparent"
+            android:textAlignment="viewStart"
             android:textSize="@dimen/text_sz_medium" />
 
         <ImageView

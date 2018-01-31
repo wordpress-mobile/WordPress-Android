@@ -163,6 +163,10 @@ public class SummaryEditTextPreference extends EditTextPreference implements Pre
         }
         WPPrefUtils.layoutAsInput(editText);
         editText.setSelection(editText.getText().length());
+        // RtL language support
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
+            editText.setTextAlignment(View.TEXT_ALIGNMENT_VIEW_START);
+        }
 
         TextView message = (TextView) view.findViewById(android.R.id.message);
         WPPrefUtils.layoutAsDialogMessage(message);

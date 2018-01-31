@@ -104,6 +104,7 @@
                             android:layout_marginBottom="@dimen/margin_extra_small"
                             android:textColor="@color/stats_blue_labels"
                             android:gravity="start"
+                            android:textAlignment="viewStart"
                             android:text="@string/stats_other_recent_stats_label" />
 
                         <FrameLayout
@@ -196,6 +197,7 @@
                             android:layout_marginTop="@dimen/margin_large"
                             android:textColor="@color/stats_blue_labels"
                             android:gravity="start"
+                            android:textAlignment="viewStart"
                             android:textSize="@dimen/text_sz_large"
                             android:text="@string/stats_other_recent_stats_label" />
 
@@ -208,6 +210,7 @@
                             android:layout_marginTop="@dimen/margin_small"
                             android:textColor="@color/stats_link_text_color"
                             android:gravity="start"
+                            android:textAlignment="viewStart"
                             android:textSize="@dimen/text_sz_small"
                             android:text="@string/stats_other_recent_stats_moved_label" />
 

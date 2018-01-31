@@ -33,6 +33,8 @@
             android:layout_marginRight="@dimen/margin_extra_large"
             android:layout_marginTop="@dimen/margin_extra_large"
             tools:text="text_title"
+            android:textAlignment="viewStart"
+            android:gravity="start"
             android:layout_marginEnd="@dimen/margin_extra_large"
             android:layout_marginStart="@dimen/margin_extra_large"/>
 
