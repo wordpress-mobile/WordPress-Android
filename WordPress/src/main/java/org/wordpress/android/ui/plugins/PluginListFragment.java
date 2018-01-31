@@ -52,6 +52,7 @@ public class PluginListFragment extends Fragment {
 
     private SiteModel mSite;
     private final List<SitePluginModel> mSitePlugins = new ArrayList<>();
+    private final List<WPOrgPluginModel> mWPOrgPlugins = new ArrayList<>();
 
     private PluginListFragmentListener mListener;
 
@@ -119,6 +120,18 @@ public class PluginListFragment extends Fragment {
     }
 
     private void setPlugins(@NonNull List<?> plugins) {
+        // preload .org plugins for site plugins
+        mWPOrgPlugins.clear();
+        for (Object item: plugins) {
+            if (item instanceof SitePluginModel) {
+                SitePluginModel sitePlugin = (SitePluginModel) item;
+                WPOrgPluginModel wpOrgPlugin = PluginUtils.getWPOrgPlugin(mPluginStore, sitePlugin);
+                if (wpOrgPlugin != null) {
+                    mWPOrgPlugins.add(wpOrgPlugin);
+                }
+            }
+        }
+
         PluginListAdapter adapter;
         if (mRecycler.getAdapter() == null) {
             adapter = new PluginListAdapter(getActivity());
@@ -132,6 +145,17 @@ public class PluginListFragment extends Fragment {
     private SitePluginModel getSitePluginFromSlug(@Nullable String slug) {
         if (slug != null) {
             for (SitePluginModel plugin : mSitePlugins) {
+                if (slug.equals(plugin.getSlug())) {
+                    return plugin;
+                }
+            }
+        }
+        return null;
+    }
+
+    private WPOrgPluginModel getWPOrgPluginFromSlug(@Nullable String slug) {
+        if (slug != null) {
+            for (WPOrgPluginModel plugin : mWPOrgPlugins) {
                 if (slug.equals(plugin.getSlug())) {
                     return plugin;
                 }
@@ -214,7 +238,7 @@ public class PluginListFragment extends Fragment {
             WPOrgPluginModel wpOrgPlugin;
             if (item instanceof SitePluginModel) {
                 sitePlugin = (SitePluginModel) item;
-                wpOrgPlugin = PluginUtils.getWPOrgPlugin(mPluginStore, sitePlugin);
+                wpOrgPlugin = getWPOrgPluginFromSlug(sitePlugin.getSlug());
             } else {
                 wpOrgPlugin = (WPOrgPluginModel) item;
                 sitePlugin = getSitePluginFromSlug(wpOrgPlugin.getSlug());
