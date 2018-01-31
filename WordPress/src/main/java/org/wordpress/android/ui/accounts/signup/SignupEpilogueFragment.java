@@ -80,7 +80,6 @@ public class SignupEpilogueFragment extends LoginBaseFormFragment<SignupEpilogue
     protected ImageButton mHeaderAvatarAdd;
     protected String mDisplayName;
     protected String mEmailAddress;
-    protected String mPassword;
     protected String mPhotoUrl;
     protected String mUsername;
     protected WPLoginInputRow mInputPassword;
@@ -98,7 +97,6 @@ public class SignupEpilogueFragment extends LoginBaseFormFragment<SignupEpilogue
     private static final String KEY_DISPLAY_NAME = "KEY_DISPLAY_NAME";
     private static final String KEY_EMAIL_ADDRESS = "KEY_EMAIL_ADDRESS";
     private static final String KEY_IS_AVATAR_ADDED = "KEY_IS_AVATAR_ADDED";
-    private static final String KEY_PASSWORD = "KEY_PASSWORD";
     private static final String KEY_PHOTO_URL = "KEY_PHOTO_URL";
     private static final String KEY_USERNAME = "KEY_USERNAME";
 
@@ -267,7 +265,6 @@ public class SignupEpilogueFragment extends LoginBaseFormFragment<SignupEpilogue
 
             mDisplayName = savedInstanceState.getString(KEY_DISPLAY_NAME);
             mUsername = savedInstanceState.getString(KEY_USERNAME);
-            mPassword = savedInstanceState.getString(KEY_PASSWORD);
             mIsAvatarAdded = savedInstanceState.getBoolean(KEY_IS_AVATAR_ADDED);
 
             if (mIsEmailSignup) {
@@ -376,7 +373,6 @@ public class SignupEpilogueFragment extends LoginBaseFormFragment<SignupEpilogue
         outState.putString(KEY_DISPLAY_NAME, mDisplayName);
         outState.putString(KEY_EMAIL_ADDRESS, mEmailAddress);
         outState.putString(KEY_USERNAME, mUsername);
-        outState.putString(KEY_PASSWORD, mPassword);
         outState.putBoolean(KEY_IS_AVATAR_ADDED, mIsAvatarAdded);
     }
 
@@ -604,7 +600,6 @@ public class SignupEpilogueFragment extends LoginBaseFormFragment<SignupEpilogue
         mEditTextDisplayName.setText(mDisplayName);
         mUsername = getArguments().getString(ARG_USERNAME);
         mEditTextUsername.setText(mUsername);
-        mPassword = "";
         mInputPassword.getEditText().setText("");
         updateAccountOrContinue();
     }
@@ -617,7 +612,7 @@ public class SignupEpilogueFragment extends LoginBaseFormFragment<SignupEpilogue
             payload.params.put("display_name", mDisplayName);
 
             if (changedPassword()) {
-                payload.params.put("password", mPassword);
+                payload.params.put("password", mInputPassword.getEditText().getText().toString());
             }
 
             mDispatcher.dispatch(AccountActionBuilder.newPushSettingsAction(payload));
@@ -625,7 +620,7 @@ public class SignupEpilogueFragment extends LoginBaseFormFragment<SignupEpilogue
             startProgress();
             PushAccountSettingsPayload payload = new PushAccountSettingsPayload();
             payload.params = new HashMap<>();
-            payload.params.put("password", mPassword);
+            payload.params.put("password", mInputPassword.getEditText().getText().toString());
             mDispatcher.dispatch(AccountActionBuilder.newPushSettingsAction(payload));
         } else if (changedUsername()) {
             startProgress();
