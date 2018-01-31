@@ -333,7 +333,8 @@
     <dimen name="promo_indicator_bullet_size">4dp</dimen>
     <dimen name="magic_link_sent_illustration_sz">120dp</dimen>
 
-    <!--plugin-->
+    <!--plugins-->
+    <dimen name="plugin_row_width">116dp</dimen>
     <dimen name="plugin_icon_size">40dp</dimen>
     <dimen name="plugin_external_link_image_size">16dp</dimen>
     <dimen name="plugin_banner_size">192dp</dimen>
