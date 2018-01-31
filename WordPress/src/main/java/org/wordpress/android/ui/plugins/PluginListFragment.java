@@ -41,8 +41,8 @@ public class PluginListFragment extends Fragment {
     private static final String ARG_LIST_TYPE = "list_type";
 
     public interface PluginListFragmentListener {
-        List<?> onListFragmentRequestPlugins(@NonNull PluginListFragment fragment);
-        void onListFragmentLoadMore(@NonNull PluginListFragment fragment);
+        List<?> onListFragmentRequestPlugins(@NonNull PluginListType listType);
+        void onListFragmentLoadMore(@NonNull PluginListType listType);
     }
 
     private RecyclerView mRecycler;
@@ -101,7 +101,7 @@ public class PluginListFragment extends Fragment {
     }
 
     void requestPlugins() {
-        setPlugins(mListener.onListFragmentRequestPlugins(this));
+        setPlugins(mListener.onListFragmentRequestPlugins(mListType));
     }
 
     void setListType(@NonNull PluginListType listType) {
@@ -152,7 +152,7 @@ public class PluginListFragment extends Fragment {
     private void loadMore() {
         showProgress(true);
         mIsLoadingMore = true;
-        mListener.onListFragmentLoadMore(PluginListFragment.this);
+        mListener.onListFragmentLoadMore(mListType);
     }
 
     void onLoadedMore(boolean canLoadMore) {

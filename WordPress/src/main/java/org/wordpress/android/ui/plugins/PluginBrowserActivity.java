@@ -434,15 +434,13 @@ public class PluginBrowserActivity extends AppCompatActivity
     }
 
     @Override
-    public List<?> onListFragmentRequestPlugins(@NonNull PluginListFragment fragment) {
-        PluginListType listType = fragment.getListType();
+    public List<?> onListFragmentRequestPlugins(@NonNull PluginListType listType) {
         setTitle(listType.getTitleRes());
         return getPlugins(listType);
     }
 
     @Override
-    public void onListFragmentLoadMore(@NonNull PluginListFragment fragment) {
-        PluginListType listType = fragment.getListType();
+    public void onListFragmentLoadMore(@NonNull PluginListType listType) {
         fetchPlugins(listType, true);
     }
 
