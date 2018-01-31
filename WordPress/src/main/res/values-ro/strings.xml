@@ -1,11 +1,38 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2017-12-19 19:56:43+0000
+Translation-Revision-Date: 2018-01-26 09:19:32+0000
 Plural-Forms: nplurals=3; plural=(n==1 ? 0 : (n==0 || (n%100 > 0 && n%100 < 20)) ? 1 : 2);
 Generator: GlotPress/2.4.0-alpha
 Language: ro
 -->
 <resources>
+	<string name="change_photo">Schimbă fotografia</string>
+	<string name="plugin_fetch_error">Nu pot încărca module</string>
+	<string name="my_site_btn_site_pages">Pagini sit</string>
+	<string name="site_settings_tags_hint">Administrează-ți etichetele sitului</string>
+	<string name="dlg_saving_tag">Salvez</string>
+	<string name="dlg_deleting_tag">Șterg</string>
+	<string name="dlg_confirm_delete_tag">Ștergi definitiv „%s”?</string>
+	<string name="error_tag_exists">Există deja o etichetă cu acest nume</string>
+	<string name="add_new_tag">Adaugă o etichetă nouă</string>
+	<string name="tag_description_hint">Descriere</string>
+	<string name="tag_name_hint">Etichetă</string>
+	<string name="site_settings_amp_summary">Situl tău WordPress.com suportă folosirea Paginilor accelerate pentru mobil, o inițiativă condusă de Google care accelerează dramatic timpii de încărcare pe dispozitivele mobile</string>
+	<string name="site_settings_amp_title">Pagini accelerate pentru mobil (PAM)</string>
+	<string name="site_settings_timezones_error">Nu pot încărca fusurile orare</string>
+	<string name="site_settings_format_help">Află mai multe despre formatarea datei și orei</string>
+	<string name="site_settings_format_hint_custom">Format personalizat</string>
+	<string name="site_settings_format_entry_custom">Personalizat</string>
+	<string name="site_settings_posts_per_page_title">Articole per pagină</string>
+	<string name="site_settings_timezone_subtitle">Alege un oraș din zona ta de fus orar</string>
+	<string name="site_settings_timezone_title">Fus orar</string>
+	<string name="site_settings_time_format_title">Format oră</string>
+	<string name="site_settings_date_format_title">Format dată</string>
+	<string name="site_settings_week_start_title">Săptămâna începe</string>
+	<string name="site_settings_tags_title">Etichete</string>
+	<string name="site_settings_traffic_header">Trafic</string>
+	<string name="delete_no">Nu șterge</string>
+	<string name="delete_yes">Șterge</string>
 	<string name="plugin_external_link_icon_content_description">Legătură externă</string>
 	<string name="plugin_update_available_icon_content_description">Actualizare disponibilă</string>
 	<string name="plugin_icon_content_description">Icon modul</string>
@@ -294,16 +321,6 @@ Language: ro
 	<string name="format_bar_description_heading">Subtitlu</string>
 	<string name="format_bar_description_media">Media</string>
 	<string name="reader_view_comments">Vezi comentariile</string>
-	<string name="new_editor_promo_title_beta">Beta</string>
-	<string name="new_editor_promo_title">Încearcă noul editor</string>
-	<string name="new_editor_promo_link">Ce este nou?</string>
-	<string name="new_editor_promo_description_image">Scriere de mână pe imagine</string>
-	<string name="new_editor_promo_confirmation_message">Noul editor activat!</string>
-	<string name="new_editor_promo_confirmation_action">Setări</string>
-	<string name="new_editor_promo_button_positive">Încearcă-l</string>
-	<string name="new_editor_promo_button_negative">Nu acum</string>
-	<string name="new_editor_beta_message">Editor nou în Open Beta!</string>
-	<string name="new_editor_beta_action">Citește mai mult</string>
 	<string name="preference_editor_footer_description">Informații icon</string>
 	<string name="preference_editor_footer">Note de lansare și raportarea erorilor pentru editor</string>
 	<string name="site_settings_video_quality_hint">Calitatea videourilor. Valorile mai mari înseamnă videouri de calitate mai bună.</string>
@@ -384,7 +401,6 @@ Language: ro
 	<string name="smart_toast_photo_long_press">Atinge și ține apăsat pentru a selecta mai multe fotografii</string>
 	<string name="photo_picker_choose_video">Alege video de pe dispozitiv</string>
 	<string name="photo_picker_choose_photo">Alege fotografie de pe dispozitiv</string>
-	<string name="new_editor_promo_description">Acum aplicația WordPress include un editor nou, frumos. Încearcă-l prin crearea unui articol nou!</string>
 	<string name="wp_media_title">Media WordPress</string>
 	<string name="media_insert_as_gallery">Adaugă ca galerie</string>
 	<string name="media_insert_individually">Adaugă individual</string>

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2017-12-29 01:30:33+0000
+Translation-Revision-Date: 2018-01-18 13:53:04+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/2.4.0-alpha
 Language: nb_NO
@@ -19,15 +19,31 @@ Language: nb_NO
 	<string name="plugin_remove_failed">Feil under fjerning av %s.</string>
 	<string name="plugin_removed_successfully">Lyktes i å fjerne %s.</string>
 	<string name="plugin_available_version">Versjon %s er tilgjengelig.</string>
+	<string name="plugin_detail_label_state_autoupdates">Auto-oppdateringer</string>
 	<string name="plugin_detail_label_state_active">Aktiv</string>
 	<string name="my_site_btn_plugins">Utvidelser</string>
+	<string name="plugin_active">Aktiv</string>
+	<string name="plugins">Utvidelser</string>
+	<string name="media_edit_link_text">Lenk til</string>
+	<string name="notification_login_failed">En feil har oppstått.</string>
 	<string name="notification_2fa_needed">Vennligst skriv inn en autentiseringskode for å fortsette.</string>
+	<string name="notification_error_wrong_password">Vennligst dobbeltsjekk passordet ditt for å fortsette.</string>
+	<string name="site_creating_success">Suksess!</string>
 	<string name="site_creating_set_theme">Velger temaet …</string>
+	<string name="site_creating_label">Forbereder nettstedet ditt …</string>
 	<string name="login_empty_password">Vennligst skriv inn et passord</string>
 	<string name="login_text_otp_another">Send meg en annen kode i stedet.</string>
 	<string name="size_large">Stor</string>
 	<string name="size_medium">Middels</string>
 	<string name="image_size">Størrelse</string>
+	<string name="size_full">Full størrelse</string>
+	<string name="size_thumbnail">Miniatyrbilde</string>
+	<string name="uploading_subtitle_media_only_one">1 fil igjen</string>
+	<string name="uploading_subtitle_media_only">%1$d av %2$d filer igjen</string>
+	<string name="uploading_subtitle_posts_only">%1$d %2$s igjen</string>
+	<string name="media_file_uploaded">1 fil er lastet opp</string>
+	<string name="media_edit_customize_card_caption">Tilpass</string>
+	<string name="login_error_button">Lukk</string>
 	<string name="login_log_in_for_share_intent">Logg inn på WordPress.com for å dele innholdet.</string>
 	<string name="enter_site_address_share_intent">Skriv inn adressen til WordPress-siden din som du ønsker å dele innholdet til.</string>
 	<string name="jetpack_disconnect_error_toast">Feil under frakobling av siden.</string>
@@ -229,16 +245,6 @@ Language: nb_NO
 	<string name="format_bar_description_heading">Overskrift</string>
 	<string name="reader_view_comments">Vis kommentarer</string>
 	<string name="format_bar_description_media">Medie</string>
-	<string name="new_editor_promo_title_beta">Beta</string>
-	<string name="new_editor_promo_title">Prøv den nye redigereren</string>
-	<string name="new_editor_promo_link">Hva er nytt?</string>
-	<string name="new_editor_promo_description_image">Håndskrivingsbilde</string>
-	<string name="new_editor_promo_confirmation_message">Den nye redigereren er aktivert!</string>
-	<string name="new_editor_promo_confirmation_action">Innstillinger</string>
-	<string name="new_editor_promo_button_positive">Prøv det ut</string>
-	<string name="new_editor_promo_button_negative">Ikke nå</string>
-	<string name="new_editor_beta_action">Les mer</string>
-	<string name="new_editor_beta_message">En ny redigerer er i åpen beta!</string>
 	<string name="preference_editor_footer_description">Infoikon</string>
 	<string name="preference_editor_footer">Redaktørens lanseringsnotiser og bug-innmelding</string>
 	<string name="site_settings_video_quality_hint">Kvaliteten til videoer. Høyere verdier = bedre kvalitet.</string>
@@ -319,7 +325,6 @@ Language: nb_NO
 	<string name="smart_toast_photo_long_press">Trykk og hold nede for å velge flere bilder</string>
 	<string name="photo_picker_choose_video">Velg en video fra enheten</string>
 	<string name="photo_picker_choose_photo">Velg et bilde fra enheten</string>
-	<string name="new_editor_promo_description">WordPress-appen inkluderer nå en vakker ny redigerer. Prøv den ut ved å lage et nytt innlegg!</string>
 	<string name="media_insert_as_gallery">Legg til som et galleri</string>
 	<string name="wp_media_title">Wordpress-media</string>
 	<string name="media_insert_individually">Legg til individuelt</string>

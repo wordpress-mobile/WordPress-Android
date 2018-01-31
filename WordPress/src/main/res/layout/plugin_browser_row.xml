@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="wrap_content"
+    android:layout_width="@dimen/plugin_row_width"
     android:layout_height="match_parent"
     android:background="?android:attr/selectableItemBackground"
     android:paddingEnd="@dimen/margin_medium"
@@ -11,8 +11,8 @@
 
     <org.wordpress.android.widgets.WPNetworkImageView
         android:id="@+id/plugin_icon"
-        android:layout_width="96dp"
-        android:layout_height="96dp"
+        android:layout_width="@dimen/plugin_row_width"
+        android:layout_height="@dimen/plugin_row_width"
         android:contentDescription="@string/plugin_icon_content_description"
         tools:src="@drawable/plugin_placeholder" />
 
@@ -46,8 +46,8 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@+id/plugin_author"
-        android:layout_marginBottom="@dimen/margin_medium"
-        android:orientation="horizontal">
+        android:orientation="horizontal"
+        android:paddingBottom="@dimen/margin_large">
 
         <ImageView
             android:id="@+id/plugin_status_icon"
@@ -73,8 +73,8 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@+id/plugin_author"
-        android:layout_marginBottom="@dimen/margin_medium"
         android:numStars="5"
+        android:paddingBottom="@dimen/margin_large"
         tools:rating="3" />
 
 </RelativeLayout>
