@@ -251,7 +251,7 @@ public class WPMainActivity extends AppCompatActivity {
                     }
                 }
             } else {
-                if (hasMagicLinkLoginIntent()) {
+                if (hasMagicLinkLoginIntent() || hasMagicLinkSignupIntent()) {
                     authTokenToSet = getAuthToken();
                 } else {
                     ActivityLauncher.showSignInForResult(this);
@@ -282,7 +282,8 @@ public class WPMainActivity extends AppCompatActivity {
                     getIntent().getStringExtra(SignupEpilogueActivity.EXTRA_SIGNUP_DISPLAY_NAME),
                     getIntent().getStringExtra(SignupEpilogueActivity.EXTRA_SIGNUP_EMAIL_ADDRESS),
                     getIntent().getStringExtra(SignupEpilogueActivity.EXTRA_SIGNUP_PHOTO_URL),
-                    getIntent().getStringExtra(SignupEpilogueActivity.EXTRA_SIGNUP_USERNAME));
+                    getIntent().getStringExtra(SignupEpilogueActivity.EXTRA_SIGNUP_USERNAME),
+                    false);
         }
     }
 
@@ -291,6 +292,21 @@ public class WPMainActivity extends AppCompatActivity {
         Uri uri = getIntent().getData();
         String host = (uri != null && uri.getHost() != null) ? uri.getHost() : "";
         return Intent.ACTION_VIEW.equals(action) && host.contains(SignInActivity.MAGIC_LOGIN);
+    }
+
+    private boolean hasMagicLinkSignupIntent() {
+        String action = getIntent().getAction();
+        Uri uri = getIntent().getData();
+
+        if (uri != null) {
+            String parameter = SignupEpilogueActivity.MAGIC_SIGNUP_PARAMETER;
+            String value = (uri.getQueryParameterNames() != null && uri.getQueryParameter(parameter) != null)
+                    ? uri.getQueryParameter(parameter) : "";
+            return Intent.ACTION_VIEW.equals(action) && uri.getQueryParameterNames().contains(parameter)
+                    && value.equalsIgnoreCase(SignupEpilogueActivity.MAGIC_SIGNUP_VALUE);
+        } else {
+            return false;
+        }
     }
 
     private @Nullable String getAuthToken() {
@@ -695,9 +711,17 @@ public class WPMainActivity extends AppCompatActivity {
             return;
         }
 
-        if (mAccountStore.hasAccessToken() && hasMagicLinkLoginIntent()) {
-            AnalyticsTracker.track(AnalyticsTracker.Stat.LOGIN_MAGIC_LINK_SUCCEEDED);
-            ActivityLauncher.showLoginEpilogue(this, true, getIntent().getIntegerArrayListExtra(ARG_OLD_SITES_IDS));
+        if (mAccountStore.hasAccessToken()) {
+            // Check signup first since login and signup have the same action and host,
+            // but signup has an extra parameter.
+            if (hasMagicLinkSignupIntent()) {
+                AnalyticsTracker.track(AnalyticsTracker.Stat.SIGNUP_MAGIC_LINK_SUCCEEDED);
+                Intent intent = getIntent();
+                ActivityLauncher.showSignupEpilogue(this, null, null, null, null, true);
+            } else if (hasMagicLinkLoginIntent()) {
+                AnalyticsTracker.track(AnalyticsTracker.Stat.LOGIN_MAGIC_LINK_SUCCEEDED);
+                ActivityLauncher.showLoginEpilogue(this, true, getIntent().getIntegerArrayListExtra(ARG_OLD_SITES_IDS));
+            }
         }
     }
 
