@@ -29,7 +29,7 @@ import org.wordpress.android.util.HtmlUtils;
 import org.wordpress.android.widgets.DividerItemDecoration;
 import org.wordpress.android.widgets.WPNetworkImageView;
 
-import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 import javax.inject.Inject;
@@ -53,8 +53,8 @@ public class PluginListFragment extends Fragment {
     private boolean mIsLoadingMore;
 
     private SiteModel mSite;
-    private final List<SitePluginModel> mSitePlugins = new ArrayList<>();
-    private final List<WPOrgPluginModel> mWPOrgPlugins = new ArrayList<>();
+    private final HashMap<String, SitePluginModel> mSitePluginsMap = new HashMap<>();
+    private final HashMap<String, WPOrgPluginModel> mWPOrgPluginsMap = new HashMap<>();
 
     private PluginListFragmentListener mListener;
 
@@ -75,8 +75,12 @@ public class PluginListFragment extends Fragment {
         ((WordPress) getActivity().getApplication()).component().inject(this);
 
         mSite = (SiteModel) getArguments().getSerializable(WordPress.SITE);
-        mSitePlugins.addAll(mPluginStore.getSitePlugins(mSite));
         mListType = (PluginListType) getArguments().getSerializable(ARG_LIST_TYPE);
+
+        List<SitePluginModel> sitePlugins = mPluginStore.getSitePlugins(mSite);
+        for (SitePluginModel plugin: sitePlugins) {
+            mSitePluginsMap.put(plugin.getSlug(), plugin);
+        }
 
         if (savedInstanceState != null) {
             mCanLoadMore = savedInstanceState.getBoolean(KEY_CAN_LOAD_MORE);
@@ -137,13 +141,13 @@ public class PluginListFragment extends Fragment {
 
     private void setPlugins(@NonNull List<?> plugins) {
         // preload .org plugins for site plugins
-        mWPOrgPlugins.clear();
+        mWPOrgPluginsMap.clear();
         for (Object item: plugins) {
             if (item instanceof SitePluginModel) {
                 SitePluginModel sitePlugin = (SitePluginModel) item;
                 WPOrgPluginModel wpOrgPlugin = PluginUtils.getWPOrgPlugin(mPluginStore, sitePlugin);
                 if (wpOrgPlugin != null) {
-                    mWPOrgPlugins.add(wpOrgPlugin);
+                    mWPOrgPluginsMap.put(wpOrgPlugin.getSlug(), wpOrgPlugin);
                 }
             }
         }
@@ -159,25 +163,11 @@ public class PluginListFragment extends Fragment {
     }
 
     private SitePluginModel getSitePluginFromSlug(@Nullable String slug) {
-        if (slug != null) {
-            for (SitePluginModel plugin : mSitePlugins) {
-                if (slug.equals(plugin.getSlug())) {
-                    return plugin;
-                }
-            }
-        }
-        return null;
+        return mSitePluginsMap.get(slug);
     }
 
     private WPOrgPluginModel getWPOrgPluginFromSlug(@Nullable String slug) {
-        if (slug != null) {
-            for (WPOrgPluginModel plugin : mWPOrgPlugins) {
-                if (slug.equals(plugin.getSlug())) {
-                    return plugin;
-                }
-            }
-        }
-        return null;
+        return mWPOrgPluginsMap.get(slug);
     }
 
     private void showProgress(boolean show) {

@@ -53,6 +53,7 @@ import org.wordpress.android.widgets.WPNetworkImageView;
 import org.wordpress.android.widgets.WPNetworkImageView.ImageType;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 import javax.inject.Inject;
@@ -85,7 +86,8 @@ public class PluginBrowserActivity extends AppCompatActivity
     }
 
     private SiteModel mSite;
-    private final List<SitePluginModel> mSitePlugins = new ArrayList<>();
+    private final HashMap<String, SitePluginModel> mSitePluginsMap = new HashMap<>();
+    private final HashMap<String, WPOrgPluginModel> mWPOrgPluginsMap = new HashMap<>();
     private final List<WPOrgPluginModel> mSearchResults = new ArrayList<>();
 
     private final Handler mHandler = new Handler();
@@ -164,7 +166,10 @@ public class PluginBrowserActivity extends AppCompatActivity
         configureRecycler(mPopularPluginsRecycler);
         configureRecycler(mNewPluginsRecycler);
 
-        mSitePlugins.addAll(mPluginStore.getSitePlugins(mSite));
+        List<SitePluginModel> sitePlugins = mPluginStore.getSitePlugins(mSite);
+        for (SitePluginModel plugin: sitePlugins) {
+            mSitePluginsMap.put(plugin.getSlug(), plugin);
+        }
         refreshAllPlugins();
 
         if (savedInstanceState == null) {
@@ -323,14 +328,7 @@ public class PluginBrowserActivity extends AppCompatActivity
     }
 
     private SitePluginModel getSitePluginFromSlug(@Nullable String slug) {
-        if (slug != null) {
-            for (SitePluginModel plugin : mSitePlugins) {
-                if (slug.equals(plugin.getSlug())) {
-                    return plugin;
-                }
-            }
-        }
-        return null;
+        return mSitePluginsMap.get(slug);
     }
 
     @SuppressWarnings("unused")
