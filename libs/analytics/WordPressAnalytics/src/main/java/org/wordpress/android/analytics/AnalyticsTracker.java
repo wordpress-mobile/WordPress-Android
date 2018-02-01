@@ -302,12 +302,14 @@ public final class AnalyticsTracker {
     }
 
     public static void init(Context context) {
-        loadPrefHasUserOptedOut(context);
-    }
-
-    public static void loadPrefHasUserOptedOut(Context context) {
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
         boolean hasUserOptedOut = !prefs.getBoolean("wp_pref_send_usage_stats", true);
+        if (hasUserOptedOut != mHasUserOptedOut) {
+            mHasUserOptedOut = hasUserOptedOut;
+        }
+    }
+
+    public static void setHasUserOptedOut(boolean hasUserOptedOut){
         if (hasUserOptedOut != mHasUserOptedOut) {
             mHasUserOptedOut = hasUserOptedOut;
         }
