@@ -45,7 +45,7 @@ import org.wordpress.android.push.NotificationsProcessingService;
 import org.wordpress.android.ui.ActivityId;
 import org.wordpress.android.ui.ActivityLauncher;
 import org.wordpress.android.ui.RequestCodes;
-import org.wordpress.android.ui.accounts.SignInActivity;
+import org.wordpress.android.ui.accounts.LoginActivity;
 import org.wordpress.android.ui.accounts.SignupEpilogueActivity;
 import org.wordpress.android.ui.notifications.NotificationEvents;
 import org.wordpress.android.ui.notifications.NotificationsListFragment;
@@ -289,7 +289,7 @@ public class WPMainActivity extends AppCompatActivity {
         String action = getIntent().getAction();
         Uri uri = getIntent().getData();
         String host = (uri != null && uri.getHost() != null) ? uri.getHost() : "";
-        return Intent.ACTION_VIEW.equals(action) && host.contains(SignInActivity.MAGIC_LOGIN);
+        return Intent.ACTION_VIEW.equals(action) && host.contains(LoginActivity.MAGIC_LOGIN);
     }
 
     private boolean hasMagicLinkSignupIntent() {
@@ -309,7 +309,7 @@ public class WPMainActivity extends AppCompatActivity {
 
     private @Nullable String getAuthToken() {
         Uri uri = getIntent().getData();
-        return uri != null ? uri.getQueryParameter(SignInActivity.TOKEN_PARAMETER) : null;
+        return uri != null ? uri.getQueryParameter(LoginActivity.TOKEN_PARAMETER) : null;
     }
 
     private void setTabLayoutElevation(float newElevation){
@@ -513,7 +513,7 @@ public class WPMainActivity extends AppCompatActivity {
 
     private void checkMagicLinkSignIn() {
         if (getIntent() !=  null) {
-            if (getIntent().getBooleanExtra(SignInActivity.MAGIC_LOGIN, false)) {
+            if (getIntent().getBooleanExtra(LoginActivity.MAGIC_LOGIN, false)) {
                 AnalyticsTracker.track(AnalyticsTracker.Stat.LOGIN_MAGIC_LINK_SUCCEEDED);
                 startWithNewAccount();
             }

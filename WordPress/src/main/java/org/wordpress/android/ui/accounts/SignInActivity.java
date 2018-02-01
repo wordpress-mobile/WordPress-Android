@@ -46,8 +46,6 @@ public class SignInActivity extends AppCompatActivity implements ConnectionCallb
     public static final String EXTRA_IS_AUTH_ERROR = "EXTRA_IS_AUTH_ERROR";
     public static final String EXTRA_PREFILL_URL = "EXTRA_PREFILL_URL";
     public static final String EXTRA_INHIBIT_MAGIC_LOGIN = "INHIBIT_MAGIC_LOGIN";
-    public static final String MAGIC_LOGIN = "magic-login";
-    public static final String TOKEN_PARAMETER = "token";
 
     private SmartLockHelper mSmartLockHelper;
     private ProgressDialog mProgressDialog;
@@ -151,7 +149,7 @@ public class SignInActivity extends AppCompatActivity implements ConnectionCallb
     }
 
     private void attemptLoginWithToken(Uri uri) {
-        getSignInFragment().setToken(uri.getQueryParameter(TOKEN_PARAMETER));
+        getSignInFragment().setToken(uri.getQueryParameter(LoginActivity.TOKEN_PARAMETER));
         SignInFragment signInFragment = getSignInFragment();
         slideInFragment(signInFragment, false);
 
@@ -169,7 +167,7 @@ public class SignInActivity extends AppCompatActivity implements ConnectionCallb
         String action = getIntent().getAction();
         Uri uri = getIntent().getData();
 
-        return Intent.ACTION_VIEW.equals(action) && uri != null && uri.getHost().contains(MAGIC_LOGIN);
+        return Intent.ACTION_VIEW.equals(action) && uri != null && uri.getHost().contains(LoginActivity.MAGIC_LOGIN);
     }
 
     protected void actionMode(Bundle extras) {

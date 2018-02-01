@@ -67,6 +67,9 @@ import dagger.android.support.HasSupportFragmentInjector;
 public class LoginActivity extends AppCompatActivity implements ConnectionCallbacks, OnConnectionFailedListener,
         Callback, LoginListener, GoogleListener, LoginPrologueListener, SignupSheetListener,
         HasSupportFragmentInjector {
+    public static final String MAGIC_LOGIN = "magic-login";
+    public static final String TOKEN_PARAMETER = "token";
+
     private static final String KEY_SIGNUP_SHEET_DISPLAYED = "KEY_SIGNUP_SHEET_DISPLAYED";
     private static final String KEY_SMARTLOCK_COMPLETED = "KEY_SMARTLOCK_COMPLETED";
 

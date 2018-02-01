@@ -742,7 +742,7 @@ public class SignInFragment extends AbstractFragment implements TextWatcher {
             // move on the the main activity
             Intent intent = new Intent(getActivity(), WPMainActivity.class);
             intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
-            intent.putExtra(SignInActivity.MAGIC_LOGIN, mIsMagicLinksEnabled);
+            intent.putExtra(LoginActivity.MAGIC_LOGIN, mIsMagicLinksEnabled);
             getActivity().startActivity(intent);
         }
     }
