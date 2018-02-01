@@ -32,6 +32,8 @@
         android:layout_height="wrap_content"
         android:layout_width="match_parent"
         app:wpIconDrawable="@drawable/ic_user_grey_24dp"
+        android:textAlignment="viewStart"
+        android:gravity="start"
         tools:ignore="UnusedAttribute" >
     </org.wordpress.android.login.widgets.WPLoginInputRow>
 

@@ -27,5 +27,7 @@
         android:hint="@string/login_site_address"
         android:inputType="textUri"
         android:imeOptions="actionNext"
+        android:textAlignment="viewStart"
+        android:gravity="start"
         app:wpIconDrawable="@drawable/ic_globe_grey_24dp"/>
 </LinearLayout>
