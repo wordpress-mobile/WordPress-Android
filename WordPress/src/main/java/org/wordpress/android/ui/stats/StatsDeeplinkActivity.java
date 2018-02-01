@@ -103,9 +103,10 @@ public class StatsDeeplinkActivity extends AppCompatActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        // show the post if user is returning from successful login
-        if (requestCode == RequestCodes.JETPACK_LOGIN) {
+        if (requestCode == RequestCodes.JETPACK_LOGIN && resultCode == RESULT_OK) {
             showStats();
+        } else {
+            finish();
         }
     }
 
