@@ -70,9 +70,9 @@
                             android:id="@+id/signup_epilogue_header_avatar"
                             android:layout_height="match_parent"
                             android:layout_width="match_parent"
+                            app:srcCompat="@drawable/ic_gridicons_user_circle_100dp"
                             app:wpDefaultImageDrawable="@drawable/ic_gridicons_user_circle_100dp"
-                            app:wpErrorImageDrawable="@drawable/ic_gridicons_user_circle_100dp"
-                            tools:src="@drawable/ic_gridicons_user_circle_100dp" >
+                            app:wpErrorImageDrawable="@drawable/ic_gridicons_user_circle_100dp" >
                         </org.wordpress.android.widgets.WPNetworkImageView>
 
                         <ImageButton

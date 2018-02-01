@@ -25,6 +25,8 @@ import android.widget.ImageButton;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.android.volley.Cache;
+import com.android.volley.Request;
 import com.yalantis.ucrop.UCrop;
 import com.yalantis.ucrop.UCropActivity;
 
@@ -63,10 +65,17 @@ import org.wordpress.android.widgets.WPNetworkImageView;
 import org.wordpress.android.widgets.WPNetworkImageView.ImageType;
 import org.wordpress.android.widgets.WPTextView;
 
+import java.io.DataInputStream;
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.HashMap;
+import java.util.Locale;
+import java.util.TreeMap;
 
 import javax.inject.Inject;
 
@@ -162,7 +171,6 @@ public class SignupEpilogueFragment extends LoginBaseFormFragment<SignupEpilogue
         mHeaderAvatarAdd = rootView.findViewById(R.id.signup_epilogue_header_avatar_add);
         mHeaderAvatarAdd.setVisibility(mIsEmailSignup ? View.VISIBLE : View.GONE);
         mHeaderAvatar = rootView.findViewById(R.id.signup_epilogue_header_avatar);
-        mHeaderAvatar.setImageUrl(mPhotoUrl, WPNetworkImageView.ImageType.AVATAR);
         mHeaderDisplayName = rootView.findViewById(R.id.signup_epilogue_header_display);
         mHeaderDisplayName.setText(mDisplayName);
         mHeaderEmailAddress = rootView.findViewById(R.id.signup_epilogue_header_email);
@@ -254,6 +262,7 @@ public class SignupEpilogueFragment extends LoginBaseFormFragment<SignupEpilogue
             } else {
                 AnalyticsTracker.track(AnalyticsTracker.Stat.SIGNUP_SOCIAL_EPILOGUE_VIEWED);
                 new DownloadAvatarAndUploadGravatarThread(mPhotoUrl, mEmailAddress, mAccount.getAccessToken()).start();
+                mHeaderAvatar.setImageUrl(mPhotoUrl, WPNetworkImageView.ImageType.AVATAR);
             }
         } else {
             mDialog = (FullScreenDialogFragment) getFragmentManager().findFragmentByTag(FullScreenDialogFragment.TAG);
@@ -269,11 +278,12 @@ public class SignupEpilogueFragment extends LoginBaseFormFragment<SignupEpilogue
 
             if (mIsEmailSignup) {
                 mPhotoUrl = savedInstanceState.getString(KEY_PHOTO_URL);
-                mHeaderAvatar.setImageUrl(mPhotoUrl, WPNetworkImageView.ImageType.AVATAR);
                 mEmailAddress = savedInstanceState.getString(KEY_EMAIL_ADDRESS);
                 mHeaderEmailAddress.setText(mEmailAddress);
                 mHeaderAvatarAdd.setVisibility(mIsAvatarAdded ? View.GONE : View.VISIBLE);
             }
+
+            mHeaderAvatar.setImageUrl(mPhotoUrl, WPNetworkImageView.ImageType.AVATAR);
         }
     }
 
@@ -495,6 +505,48 @@ public class SignupEpilogueFragment extends LoginBaseFormFragment<SignupEpilogue
         return mEmailAddress.split("@")[0].replaceAll("[^A-Za-z0-9]", "").toLowerCase();
     }
 
+    private void injectCache(File file, String avatarUrl) throws IOException {
+        final SimpleDateFormat sdf = new SimpleDateFormat("E, dd MMM yyyy HH:mm:ss z", Locale.US);
+        final long currentTimeMs = System.currentTimeMillis();
+        final Date currentTime = new Date(currentTimeMs);
+        final long fiveMinutesLaterMs = currentTimeMs + 5 * 60 * 1000;
+        final Date fiveMinutesLater = new Date(fiveMinutesLaterMs);
+
+        Cache.Entry entry = new Cache.Entry();
+
+        entry.data = new byte[(int) file.length()];
+        DataInputStream dis = new DataInputStream(new FileInputStream(file));
+        dis.readFully(entry.data);
+        dis.close();
+
+        entry.etag = null;
+        entry.softTtl = fiveMinutesLaterMs;
+        entry.ttl = fiveMinutesLaterMs;
+        entry.serverDate = currentTimeMs;
+        entry.lastModified = currentTimeMs;
+
+        entry.responseHeaders = new TreeMap<>();
+        entry.responseHeaders.put("Accept-Ranges", "bytes");
+        entry.responseHeaders.put("Access-Control-Allow-Origin", "*");
+        entry.responseHeaders.put("Cache-Control", "max-age=300");
+        entry.responseHeaders.put("Content-Disposition", "inline; filename=\""
+                + mAccountStore.getAccount().getAvatarUrl() + ".jpeg\"");
+        entry.responseHeaders.put("Content-Length", String.valueOf(file.length()));
+        entry.responseHeaders.put("Content-Type", "image/jpeg");
+        entry.responseHeaders.put("Date", sdf.format(currentTime));
+        entry.responseHeaders.put("Expires", sdf.format(fiveMinutesLater));
+        entry.responseHeaders.put("Last-Modified", sdf.format(currentTime));
+        entry.responseHeaders.put("Link", "<" + avatarUrl + ">; rel=\"canonical\"");
+        entry.responseHeaders.put("Server", "injected cache");
+        entry.responseHeaders.put("Source-Age", "0");
+        entry.responseHeaders.put("X-Android-Received-Millis", String.valueOf(currentTimeMs));
+        entry.responseHeaders.put("X-Android-Response-Source", "NETWORK 200");
+        entry.responseHeaders.put("X-Android-Selected-Protocol", "http/1.1");
+        entry.responseHeaders.put("X-Android-Sent-Millis", String.valueOf(currentTimeMs));
+
+        WordPress.sRequestQueue.getCache().put(Request.Method.GET + ":" + avatarUrl, entry);
+    }
+
     protected void launchDialog() {
         final Bundle bundle = UsernameChangerFullScreenDialogFragment.newBundle(
                 mEditTextDisplayName.getText().toString(), mEditTextUsername.getText().toString());
@@ -508,6 +560,37 @@ public class SignupEpilogueFragment extends LoginBaseFormFragment<SignupEpilogue
                 .build();
 
         mDialog.show(getActivity().getSupportFragmentManager(), FullScreenDialogFragment.TAG);
+    }
+
+    protected void loadAvatar(String avatarUrl, String injectFilePath) {
+        if (injectFilePath != null && !injectFilePath.isEmpty()) {
+            // Remove specific URL entry from bitmap cache.  Update it via injected request cache.
+            WordPress.getBitmapCache().removeSimilar(avatarUrl);
+
+            try {
+                // Inject request cache with new image. Gravatar backend (plus CDNs) can't be
+                // trusted to update the image quick enough.
+                injectCache(new File(injectFilePath), avatarUrl);
+            } catch (IOException exception) {
+                AppLog.e(T.NUX, "Gravatar image could not be injected into request cache - " +
+                        exception.toString() + " - " + exception.getMessage());
+                showErrorDialogAvatar();
+            }
+
+            mHeaderAvatar.resetImage();
+            mHeaderAvatar.removeCurrentUrlFromSkiplist();
+        }
+
+        mHeaderAvatar.setImageUrl(avatarUrl, ImageType.AVATAR, new WPNetworkImageView.ImageLoadListener() {
+            @Override
+            public void onError() {
+                showErrorDialogAvatar();
+            }
+
+            @Override
+            public void onLoaded() {
+            }
+        });
     }
 
     protected void showErrorDialog(String message) {
@@ -563,7 +646,7 @@ public class SignupEpilogueFragment extends LoginBaseFormFragment<SignupEpilogue
 
     protected void startGravatarUpload(final String filePath) {
         if (!TextUtils.isEmpty(filePath)) {
-            File file = new File(filePath);
+            final File file = new File(filePath);
 
             if (file.exists()) {
                 startProgress();
@@ -575,7 +658,7 @@ public class SignupEpilogueFragment extends LoginBaseFormFragment<SignupEpilogue
                                 endProgress();
                                 mPhotoUrl = GravatarUtils.fixGravatarUrl(mAccount.getAccount().getAvatarUrl(),
                                         getResources().getDimensionPixelSize(R.dimen.avatar_sz_login_epilogue));
-                                mHeaderAvatar.setImageUrl(mPhotoUrl, ImageType.AVATAR);
+                                loadAvatar(mPhotoUrl, filePath);
                                 mHeaderAvatarAdd.setVisibility(View.GONE);
                                 mIsAvatarAdded = true;
                             }
