@@ -121,6 +121,8 @@
                         android:layout_height="wrap_content"
                         android:layout_marginTop="@dimen/margin_extra_small"
                         android:textColor="@color/grey_lighten_10"
+                        android:textAlignment="viewStart"
+                        android:gravity="start"
                         android:textSize="18sp" />
 
                     <org.wordpress.android.widgets.WPTextView
@@ -131,6 +133,8 @@
                         android:maxLines="2"
                         android:textColor="@color/grey_dark"
                         android:textSize="@dimen/text_sz_large"
+                        android:textAlignment="viewStart"
+                        android:gravity="start"
                         tools:text="Bob Ross commented on your post Happy Trees" />
 
                 </FrameLayout>

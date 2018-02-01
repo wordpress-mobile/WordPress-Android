@@ -62,7 +62,7 @@ public class WPActivityUtils {
         titleView.setText(title);
 
         toolbar.setTitle("");
-        toolbar.setNavigationIcon(org.wordpress.android.R.drawable.ic_arrow_left_white_24dp);
+        toolbar.setNavigationIcon(org.wordpress.android.R.drawable.ic_arrow_left_rtl_white_24dp);
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
