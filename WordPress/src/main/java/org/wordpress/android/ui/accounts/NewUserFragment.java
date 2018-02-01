@@ -660,9 +660,6 @@ public class NewUserFragment extends AbstractFragment {
     }
 
     private SmartLockHelper getSmartLockHelper() {
-        if (getActivity() != null && getActivity() instanceof SignInActivity) {
-            return ((SignInActivity) getActivity()).getSmartLockHelper();
-        }
         return null;
     }
 

@@ -179,9 +179,7 @@ public class SignInFragment extends AbstractFragment implements TextWatcher {
             mSelfHosted = savedInstanceState.getBoolean(KEY_IS_SELF_HOSTED);
         }
 
-        mInhibitMagicLogin = getActivity() != null
-                && (getActivity().getIntent().getBooleanExtra(SignInActivity.EXTRA_INHIBIT_MAGIC_LOGIN, false)
-                || !WPActivityUtils.isEmailClientAvailable(getActivity()));
+        mInhibitMagicLogin = getActivity() != null && !WPActivityUtils.isEmailClientAvailable(getActivity());
 
         AnalyticsTracker.track(Stat.LOGIN_ACCESSED);
     }
@@ -755,9 +753,6 @@ public class SignInFragment extends AbstractFragment implements TextWatcher {
     }
 
     private SmartLockHelper getSmartLockHelper() {
-        if (getActivity() != null && getActivity() instanceof SignInActivity) {
-            return ((SignInActivity) getActivity()).getSmartLockHelper();
-        }
         return null;
     }
 
