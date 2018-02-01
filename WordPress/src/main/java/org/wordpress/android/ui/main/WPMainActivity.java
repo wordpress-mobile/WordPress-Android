@@ -240,9 +240,7 @@ public class WPMainActivity extends AppCompatActivity {
                         mViewPager.setCurrentItem(position);
                     }
 
-                    if (!AppPrefs.isLoginWizardStyleActivated()) {
-                        checkMagicLinkSignIn();
-                    } else if (hasMagicLinkLoginIntent()) {
+                    if (hasMagicLinkLoginIntent()) {
                         if (mAccountStore.hasAccessToken()) {
                             ToastUtils.showToast(this, R.string.login_already_logged_in_wpcom);
                         } else {

@@ -51,7 +51,6 @@ import org.wordpress.android.fluxc.store.SiteStore.SuggestDomainsPayload;
 import org.wordpress.android.ui.ActivityLauncher;
 import org.wordpress.android.ui.accounts.login.LoginPrologueListener;
 import org.wordpress.android.ui.notifications.services.NotificationsUpdateService;
-import org.wordpress.android.ui.prefs.AppPrefs;
 import org.wordpress.android.ui.reader.services.ReaderUpdateService;
 import org.wordpress.android.ui.reader.services.ReaderUpdateService.UpdateTask;
 import org.wordpress.android.util.AlertUtils;
@@ -495,11 +494,10 @@ public class NewUserFragment extends AbstractFragment {
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-        if (AppPrefs.isLoginWizardStyleActivated()) {
-            if (context instanceof LoginPrologueListener) {
-                mUnderLoginWizard = true;
-                mLoginPrologueListener = (LoginPrologueListener) context;
-            }
+
+        if (context instanceof LoginPrologueListener) {
+            mUnderLoginWizard = true;
+            mLoginPrologueListener = (LoginPrologueListener) context;
         }
     }
 

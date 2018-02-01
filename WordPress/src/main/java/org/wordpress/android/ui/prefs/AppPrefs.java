@@ -5,7 +5,6 @@ import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 import android.text.TextUtils;
 
-import org.wordpress.android.BuildConfig;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.analytics.AnalyticsTracker.Stat;
@@ -419,10 +418,6 @@ public class AppPrefs {
         if (loginWizardActive) {
             AnalyticsTracker.track(Stat.LOGIN_WIZARD_STYLE_ACTIVATED);
         }
-    }
-
-    public static boolean isLoginWizardStyleActivated() {
-        return BuildConfig.LOGIN_WIZARD_STYLE_ACTIVE || getBoolean(UndeletablePrefKey.LOGIN_WIZARD_STYLE_ACTIVE, false);
     }
 
     // Aztec Editor
