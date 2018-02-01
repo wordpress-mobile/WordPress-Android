@@ -3,6 +3,7 @@ package org.wordpress.android.ui.reader;
 import android.app.Fragment;
 import android.content.Context;
 import android.os.AsyncTask;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.Snackbar;
@@ -563,6 +564,9 @@ public class ReaderPostListFragment extends Fragment
         mSearchView.setSubmitButtonEnabled(false);
         mSearchView.setIconifiedByDefault(true);
         mSearchView.setIconified(true);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
+            mSearchView.setTextDirection(View.TEXT_DIRECTION_LOCALE);
+        }
 
         // force the search view to take up as much horizontal space as possible (without this
         // it looks truncated on landscape)
