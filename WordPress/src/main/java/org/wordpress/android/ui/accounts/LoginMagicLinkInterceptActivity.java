@@ -8,8 +8,8 @@ import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.ui.main.WPMainActivity;
 
 /**
- * Temporary deeplink receiver for magiclinks. Routes to the proper activity based on the login feature flag. Will be
- *  removed after the feature flag gets removed.
+ * Deep link receiver for magic links.  Starts {@link WPMainActivity} where flow is routed to login
+ * or signup based on deep link scheme, host, and parameters.
  */
 public class LoginMagicLinkInterceptActivity extends Activity {
     @Override
