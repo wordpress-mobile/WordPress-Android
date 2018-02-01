@@ -33,6 +33,8 @@
         android:orientation="vertical">
 
         <org.wordpress.android.widgets.WPTextView
+            android:textAlignment="viewStart"
+            android:gravity="start"
             android:id="@+id/text_title"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -45,6 +47,8 @@
             android:layout_marginEnd="@dimen/margin_medium"/>
 
         <org.wordpress.android.widgets.WPTextView
+            android:textAlignment="viewStart"
+            android:gravity="start"
             android:id="@+id/text_url"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -55,6 +59,8 @@
             tools:text="text_url" />
 
         <org.wordpress.android.widgets.WPTextView
+            android:textAlignment="viewStart"
+            android:gravity="start"
             android:id="@+id/text_description"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

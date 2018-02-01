@@ -39,6 +39,8 @@
                 android:singleLine="true"
                 android:textColor="@color/grey_dark"
                 android:textSize="@dimen/text_sz_large"
+                android:textAlignment="viewStart"
+                android:gravity="start"
                 tools:text="Bob Ross" />
 
             <LinearLayout
@@ -56,6 +58,8 @@
                     android:textSize="@dimen/text_sz_large"
                     android:visibility="gone"
                     tools:text="5h"
+                    android:textAlignment="viewStart"
+                    android:gravity="start"
                     tools:visibility="visible" />
 
                 <org.wordpress.android.widgets.WPTextView
@@ -70,7 +74,9 @@
                     android:textSize="@dimen/text_sz_large"
                     android:textStyle="bold"
                     android:layout_marginStart="@dimen/margin_small"
-                    android:layout_marginEnd="@dimen/margin_small"/>
+                    android:layout_marginEnd="@dimen/margin_small"
+                    android:textAlignment="viewStart"
+                    android:gravity="start"/>
 
                 <org.wordpress.android.widgets.WPTextView
                     android:id="@+id/user_comment_site"
@@ -83,6 +89,8 @@
                     android:singleLine="true"
                     android:textColor="@color/grey"
                     android:textSize="@dimen/text_sz_large"
+                    android:textAlignment="viewStart"
+                    android:gravity="start"
                     tools:text="example.com" />
             </LinearLayout>
 
