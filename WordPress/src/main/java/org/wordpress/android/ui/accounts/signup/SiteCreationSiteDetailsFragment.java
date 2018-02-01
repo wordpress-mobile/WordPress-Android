@@ -57,7 +57,7 @@ public class SiteCreationSiteDetailsFragment extends SiteCreationBaseFormFragmen
     }
 
     @Override
-    protected void setupBottomButtons(Button primaryButton) {
+    protected void setupBottomButtons(Button secondaryButton, Button primaryButton) {
         primaryButton.setVisibility(View.VISIBLE);
         primaryButton.setEnabled(false); // "Next" is disabled on start until the site title field gets some valid data
         primaryButton.setOnClickListener(new View.OnClickListener() {

@@ -2150,5 +2150,9 @@
     <string name="site_creation_creating_failed">Something went wrong&#8230;</string>
     <string name="site_creation_creating_failed_extended">A parliament of owls distracted our servers with their superior oratory skills</string>
     <string name="site_creation_creating_modal">Please wait until site creation is completed.</string>
+    <string name="site_creation_epilogue_congrats">Congratulations!\nYour site is ready.</string>
+    <string name="site_creation_epilogue_configure">Configure</string>
+    <string name="site_creation_epilogue_write">Write first post</string>
+    <string name="site_creation_content_description_confetti">Site creation completed successfully!</string>
 
 </resources>

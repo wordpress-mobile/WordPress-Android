@@ -109,20 +109,41 @@ public class SiteCreationActivity extends AppCompatActivity implements SiteCreat
         startActivity(intent);
     }
 
-    private boolean isInSiteCreationModalMode() {
+    private enum SiteCreationBackStackMode {
+        NORMAL,
+        MODAL,
+        FINISH_OK
+    }
+
+    private SiteCreationBackStackMode getSiteCreationBackStackMode() {
         SiteCreationCreatingFragment siteCreationCreatingFragment =
                 (SiteCreationCreatingFragment) getSupportFragmentManager()
                         .findFragmentByTag(SiteCreationCreatingFragment.TAG);
 
-        return siteCreationCreatingFragment != null && siteCreationCreatingFragment.isInModalMode();
+        if (siteCreationCreatingFragment == null) {
+            return SiteCreationBackStackMode.NORMAL;
+        } else if (siteCreationCreatingFragment.isInModalMode()) {
+            return SiteCreationBackStackMode.MODAL;
+        } else if (siteCreationCreatingFragment.isCreationSucceeded()) {
+            return SiteCreationBackStackMode.FINISH_OK;
+        } else {
+            return SiteCreationBackStackMode.NORMAL;
+        }
     }
 
     @Override
     public void onBackPressed() {
-        if (!isInSiteCreationModalMode()) {
-            super.onBackPressed();
-        } else {
-            ToastUtils.showToast(this, R.string.site_creation_creating_modal);
+        switch (getSiteCreationBackStackMode()) {
+            case NORMAL:
+                super.onBackPressed();
+                break;
+            case MODAL:
+                ToastUtils.showToast(this, R.string.site_creation_creating_modal);
+                break;
+            case FINISH_OK:
+                setResult(RESULT_OK);
+                finish();
+                break;
         }
     }
 
@@ -180,8 +201,13 @@ public class SiteCreationActivity extends AppCompatActivity implements SiteCreat
     }
 
     @Override
-    public void creationSuccess() {
-        ToastUtils.showToast(this, "Success!");
+    public void doConfigureSite() {
+        // TODO: jump to MySite
+    }
+
+    @Override
+    public void doWriteFirstPost() {
+        // TODO: Jump directly to the editor
     }
 
     @Override
