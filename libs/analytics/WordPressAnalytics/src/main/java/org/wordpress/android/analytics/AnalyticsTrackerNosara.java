@@ -754,6 +754,14 @@ public class AnalyticsTrackerNosara extends Tracker {
                 return "signup_button_tapped";
             case SIGNUP_EMAIL_BUTTON_TAPPED:
                 return "signup_email_button_tapped";
+            case SIGNUP_EMAIL_EPILOGUE_GRAVATAR_CROPPED:
+                return "signup_email_epilogue_gravatar_cropped:";
+            case SIGNUP_EMAIL_EPILOGUE_GRAVATAR_GALLERY_PICKED:
+                return "signup_email_epilogue_gallery_picked";
+            case SIGNUP_EMAIL_EPILOGUE_GRAVATAR_SHOT_NEW:
+                return "signup_email_epilogue_shot_new";
+            case SIGNUP_EMAIL_EPILOGUE_VIEWED:
+                return "signup_email_epilogue_viewed";
             case SIGNUP_GOOGLE_BUTTON_TAPPED:
                 return "signup_google_button_tapped";
             case SIGNUP_TERMS_OF_SERVICE_TAPPED:
