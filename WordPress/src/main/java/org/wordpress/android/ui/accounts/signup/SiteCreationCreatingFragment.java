@@ -152,22 +152,16 @@ public class SiteCreationCreatingFragment extends SiteCreationBaseFormFragment<S
     public void onResume() {
         super.onResume();
 
-        if (!mCreationSucceeded) {
-            // connect to the Service. We'll receive updates via EventBus.
-            mServiceEventConnection = new ServiceEventConnection(getContext(), SiteCreationService.class, this);
-        } else {
-            disableUntil(R.id.site_creation_creating_preparing_frontend);
-        }
+        // connect to the Service. We'll receive updates via EventBus.
+        mServiceEventConnection = new ServiceEventConnection(getContext(), SiteCreationService.class, this);
     }
 
     @Override
     public void onPause() {
         super.onPause();
 
-        if (mServiceEventConnection != null) {
-            // disconnect from the Service
-            mServiceEventConnection.disconnect(getContext(), this);
-        }
+        // disconnect from the Service
+        mServiceEventConnection.disconnect(getContext(), this);
     }
 
     @Override
