@@ -29,7 +29,6 @@ import org.wordpress.android.WordPress;
 import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.store.SiteStore;
 import org.wordpress.android.fluxc.tools.FluxCImageLoader;
-import org.wordpress.android.ui.accounts.SignInActivity;
 import org.wordpress.android.ui.posts.EditPostActivity;
 import org.wordpress.android.util.SiteUtils;
 import org.wordpress.android.util.ToastUtils;
@@ -113,8 +112,7 @@ public class AddQuickPressShortcutActivity extends ListActivity {
 
         } else {
             // no account, load new account view
-            Intent i = new Intent(AddQuickPressShortcutActivity.this, SignInActivity.class);
-            startActivityForResult(i, ADD_ACCOUNT_REQUEST);
+            ActivityLauncher.showSignInForResult(AddQuickPressShortcutActivity.this);
         }
     }
 
