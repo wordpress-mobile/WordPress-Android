@@ -17,6 +17,7 @@ import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.store.AccountStore;
 import org.wordpress.android.ui.JetpackConnectionWebViewActivity;
+import org.wordpress.android.ui.WPWebViewActivity;
 
 import javax.inject.Inject;
 
@@ -30,7 +31,9 @@ import static org.wordpress.android.ui.JetpackConnectionWebViewActivity.JETPACK_
 
 public class StatsConnectJetpackActivity extends AppCompatActivity {
 
-    @Inject AccountStore mAccountStore;
+    public static final String MORE_INFORMATION_LINK = "https://apps.wordpress.com/support/#faq-ios-15";
+    @Inject
+    AccountStore mAccountStore;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -61,6 +64,12 @@ public class StatsConnectJetpackActivity extends AppCompatActivity {
         });
         TextView moreInfo = findViewById(R.id.jetpack_more_info);
         moreInfo.setPaintFlags(Paint.UNDERLINE_TEXT_FLAG);
+        moreInfo.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                WPWebViewActivity.openURL(StatsConnectJetpackActivity.this, MORE_INFORMATION_LINK);
+            }
+        });
     }
 
     private void startJetpackConnectionFlow() {
