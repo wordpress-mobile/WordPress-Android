@@ -657,7 +657,7 @@ public class SignupEpilogueFragment extends LoginBaseFormFragment<SignupEpilogue
                             public void onSuccess() {
                                 endProgress();
                                 mPhotoUrl = GravatarUtils.fixGravatarUrl(mAccount.getAccount().getAvatarUrl(),
-                                        getResources().getDimensionPixelSize(R.dimen.avatar_sz_login_epilogue));
+                                        getResources().getDimensionPixelSize(R.dimen.avatar_sz_large));
                                 loadAvatar(mPhotoUrl, filePath);
                                 mHeaderAvatarAdd.setVisibility(View.GONE);
                                 mIsAvatarAdded = true;
