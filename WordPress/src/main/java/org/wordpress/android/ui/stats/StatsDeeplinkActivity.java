@@ -18,13 +18,17 @@ import org.wordpress.android.fluxc.generated.SiteActionBuilder;
 import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.store.AccountStore;
 import org.wordpress.android.fluxc.store.SiteStore;
+import org.wordpress.android.login.LoginMode;
 import org.wordpress.android.ui.ActivityLauncher;
 import org.wordpress.android.ui.RequestCodes;
-import org.wordpress.android.ui.prefs.AppPrefs;
+import org.wordpress.android.ui.accounts.LoginActivity;
 import org.wordpress.android.util.AnalyticsUtils;
 import org.wordpress.android.util.ToastUtils;
 
 import javax.inject.Inject;
+
+import static org.wordpress.android.WordPress.SITE;
+import static org.wordpress.android.ui.RequestCodes.JETPACK_LOGIN;
 
 /**
  * An activity to handle Jetpack deeplink
@@ -39,8 +43,6 @@ public class StatsDeeplinkActivity extends AppCompatActivity {
     @Inject
     AccountStore mAccountStore;
     @Inject
-    SiteStore mSiteStore;
-    @Inject
     Dispatcher mDispatcher;
 
     @Override
@@ -51,7 +53,7 @@ public class StatsDeeplinkActivity extends AppCompatActivity {
         setContentView(R.layout.stats_loading);
 
 
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
         ActionBar actionBar = getSupportActionBar();
@@ -77,7 +79,9 @@ public class StatsDeeplinkActivity extends AppCompatActivity {
             if (mAccountStore.hasAccessToken()) {
                 showStats();
             } else {
-                ActivityLauncher.loginForDeeplink(this);
+                Intent loginIntent = new Intent(this, LoginActivity.class);
+                LoginMode.JETPACK_STATS.putInto(loginIntent);
+                this.startActivityForResult(loginIntent, JETPACK_LOGIN);
             }
         } else {
             finish();
@@ -100,11 +104,9 @@ public class StatsDeeplinkActivity extends AppCompatActivity {
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         // show the post if user is returning from successful login
-        if (requestCode == RequestCodes.DO_LOGIN && resultCode == RESULT_OK) {
+        if (requestCode == RequestCodes.JETPACK_LOGIN) {
             showStats();
         }
-
-        finish();
     }
 
     private void showStats() {
@@ -112,7 +114,7 @@ public class StatsDeeplinkActivity extends AppCompatActivity {
             ToastUtils.showToast(this, reason);
             finish();
         } else {
-            SiteModel site = mSiteStore.getSiteByLocalId(AppPrefs.getSelectedSite());
+            SiteModel site = (SiteModel) getIntent().getSerializableExtra(SITE);
             mDispatcher.dispatch(SiteActionBuilder.newFetchSiteAction(site));
         }
     }
@@ -126,7 +128,7 @@ public class StatsDeeplinkActivity extends AppCompatActivity {
     @SuppressWarnings("unused")
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onSiteChanged(SiteStore.OnSiteChanged event) {
-        SiteModel site = mSiteStore.getSiteByLocalId(AppPrefs.getSelectedSite());
+        SiteModel site = (SiteModel) getIntent().getSerializableExtra(SITE);
         ActivityLauncher.viewBlogStats(this, site);
         finish();
     }

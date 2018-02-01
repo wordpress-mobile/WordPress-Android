@@ -11,15 +11,14 @@ import android.webkit.WebViewClient;
 import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.store.AccountStore;
-import org.wordpress.android.fluxc.store.SiteStore;
 import org.wordpress.android.login.LoginMode;
 import org.wordpress.android.ui.accounts.LoginActivity;
-import org.wordpress.android.ui.prefs.AppPrefs;
 import org.wordpress.android.util.AppLog;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
 
+import static org.wordpress.android.WordPress.SITE;
 import static org.wordpress.android.ui.RequestCodes.JETPACK_LOGIN;
 
 class JetpackConnectionWebViewClient extends WebViewClient {
@@ -106,6 +105,7 @@ class JetpackConnectionWebViewClient extends WebViewClient {
                     && url.getScheme().equals(JETPACK_DEEPLINK_URI.getScheme())) {
                 Intent intent = new Intent(Intent.ACTION_VIEW);
                 intent.setData(url);
+                intent.putExtra(SITE, mSiteModel);
                 activity.startActivity(intent);
                 activity.finish();
                 flowFinished = true;

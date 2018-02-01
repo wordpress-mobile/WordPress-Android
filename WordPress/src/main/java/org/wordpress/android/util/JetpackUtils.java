@@ -85,6 +85,7 @@ public class JetpackUtils {
     private static void startJetpackFlow(SiteModel site, AccountStore mAccountStore, Activity activity) {
         String stringToLoad = "https://wordpress.com/jetpack/connect?"
                 + "url=" + site.getUrl()
+                + "&from=mobile"
                 + "&mobile_redirect="
                 + JETPACK_CONNECTION_DEEPLINK;
         if (mAccountStore.hasAccessToken()) {
