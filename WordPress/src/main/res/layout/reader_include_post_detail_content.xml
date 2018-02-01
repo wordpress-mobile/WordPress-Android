@@ -79,8 +79,6 @@
         tools:visibility="visible"/>
 
     <org.wordpress.android.widgets.WPTextView
-        android:textAlignment="viewStart"
-        android:gravity="start"
         android:id="@+id/text_liking_users_label"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
