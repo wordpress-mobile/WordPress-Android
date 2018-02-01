@@ -34,8 +34,10 @@
             android:layout_marginStart="@dimen/content_margin"/>
 
         <org.wordpress.android.widgets.SuggestionAutoCompleteText
+            android:textAlignment="viewStart"
+            android:gravity="start|center_vertical"
             android:id="@+id/edit_comment"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
             android:layout_weight="1"
