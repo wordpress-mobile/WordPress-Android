@@ -320,8 +320,7 @@ public class ActivityLauncher {
     }
 
     public static void showSignInForResult(Activity activity) {
-        Class<?> loginClass = LoginActivity.class;
-        Intent intent = new Intent(activity, loginClass);
+        Intent intent = new Intent(activity, LoginActivity.class);
         activity.startActivityForResult(intent, RequestCodes.ADD_ACCOUNT);
     }
 
