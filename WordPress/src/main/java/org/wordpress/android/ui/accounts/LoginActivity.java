@@ -227,15 +227,19 @@ public class LoginActivity extends AppCompatActivity implements ConnectionCallba
         slideInFragment(loginUsernamePasswordFragment, true, LoginUsernamePasswordFragment.TAG);
     }
 
-    private void initSmartLockHelperConnection() {
+    private boolean initSmartLockHelperConnection() {
         mSmartLockHelper = new SmartLockHelper(this);
-        mSmartLockHelper.initSmartLockForPasswords();
+        return mSmartLockHelper.initSmartLockForPasswords();
     }
 
     private void checkSmartLockPasswordAndStartLogin() {
         if (mSmartLockHelperState == SmartLockHelperState.NOT_TRIGGERED) {
-            initSmartLockHelperConnection();
-            mSmartLockHelperState = SmartLockHelperState.TRIGGER_FILL_IN_ON_CONNECT;
+            if (initSmartLockHelperConnection()) {
+                mSmartLockHelperState = SmartLockHelperState.TRIGGER_FILL_IN_ON_CONNECT;
+            } else {
+                // just shortcircuit the attempt to use SmartLockHelper
+                mSmartLockHelperState = SmartLockHelperState.FINISHED;
+            }
         }
 
         if (mSmartLockHelperState == SmartLockHelperState.FINISHED) {
