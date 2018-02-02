@@ -152,7 +152,7 @@ public class SiteCreationService extends AutoForeground<SiteCreationPhase, OnSit
     }
 
     public SiteCreationService() {
-        super(SiteCreationPhase.IDLE, OnSiteCreationStateUpdated.class);
+        super(new OnSiteCreationStateUpdated(SiteCreationPhase.IDLE));
     }
 
     @Override
@@ -166,13 +166,8 @@ public class SiteCreationService extends AutoForeground<SiteCreationPhase, OnSit
     }
 
     @Override
-    protected OnSiteCreationStateUpdated getStateEvent(SiteCreationPhase phase) {
-        return new OnSiteCreationStateUpdated(phase);
-    }
-
-    @Override
-    public Notification getNotification(SiteCreationPhase phase) {
-        switch (phase) {
+    public Notification getNotification(OnSiteCreationStateUpdated state) {
+        switch (state.getPhase()) {
             case NEW_SITE:
                 return SiteCreationNotification.progress(this, 25, R.string.site_creation_creating_laying_foundation,
                         R.string.notification_site_creation_step_creating);
@@ -199,6 +194,14 @@ public class SiteCreationService extends AutoForeground<SiteCreationPhase, OnSit
     @Override
     protected void trackPhaseUpdate(Map<String, ?> props) {
         AnalyticsTracker.track(AnalyticsTracker.Stat.SITE_CREATION_BACKGROUND_SERVICE_UPDATE, props);
+    }
+
+    /**
+     * Helper method to create a new State object and set it as the new state.
+     * @param phase The phase of the new state
+     */
+    private void setState(SiteCreationPhase phase) {
+        setState(new OnSiteCreationStateUpdated(phase));
     }
 
     @Override
@@ -283,7 +286,7 @@ public class SiteCreationService extends AutoForeground<SiteCreationPhase, OnSit
         }
 
         final SiteModel site = mSiteStore.getSiteBySiteId(mNewSiteRemoteId);
-        final SiteCreationPhase phase = getPhase();
+        final SiteCreationPhase phase = getState().getPhase();
 
         if (phase == SiteCreationPhase.FETCHING_NEW_SITE) {
             Intent intent = new Intent();

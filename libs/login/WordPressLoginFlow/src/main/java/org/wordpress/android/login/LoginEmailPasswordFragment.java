@@ -268,9 +268,9 @@ public class LoginEmailPasswordFragment extends LoginBaseFormFragment<LoginListe
     @SuppressWarnings("unused")
     @Subscribe(threadMode = ThreadMode.MAIN, sticky = true)
     public void onLoginStateUpdated(OnLoginStateUpdated event) {
-        AppLog.i(T.NUX, "Received state: " + event.getState().name());
+        AppLog.i(T.NUX, "Received state: " + event.getPhase().name());
 
-        switch (event.getState()) {
+        switch (event.getPhase()) {
             case IDLE:
                 // nothing special to do, we'll start the service on next()
                 break;
