@@ -41,6 +41,10 @@ public class SiteCreationService extends AutoForeground<SiteCreationPhase, OnSit
     private static final String ARG_SITE_SLUG = "ARG_SITE_SLUG";
     private static final String ARG_SITE_THEME_ID = "ARG_SITE_THEME_ID";
 
+    private static final String ARG_SITE_REMOTE_ID = "ARG_SITE_REMOTE_ID";
+
+    private static final String ARG_RESUME_PHASE = "ARG_RESUME_PHASE";
+
     private static final int PRELOAD_TIMEOUT_MS = 3000;
 
     public enum SiteCreationPhase implements AutoForeground.ServicePhase {
@@ -138,6 +142,7 @@ public class SiteCreationService extends AutoForeground<SiteCreationPhase, OnSit
     private String mSiteTagline;
     private ThemeModel mSiteTheme;
     private long mNewSiteRemoteId;
+    private SiteModel mNewSite;
 
     public static void createSite(
             Context context,
@@ -151,6 +156,22 @@ public class SiteCreationService extends AutoForeground<SiteCreationPhase, OnSit
         intent.putExtra(ARG_SITE_TITLE, siteTitle);
         intent.putExtra(ARG_SITE_TAGLINE, siteTagline);
         intent.putExtra(ARG_SITE_SLUG, siteSlug);
+        intent.putExtra(ARG_SITE_THEME_ID, siteThemeId);
+        context.startService(intent);
+    }
+
+    public static void retryFromPhase(
+            Context context,
+            SiteCreationPhase retryFromPhase,
+            long newSiteRemoteId,
+            String siteTagline,
+            String siteThemeId) {
+        clearSiteCreationServiceState();
+
+        Intent intent = new Intent(context, SiteCreationService.class);
+        intent.putExtra(ARG_RESUME_PHASE, retryFromPhase.name());
+        intent.putExtra(ARG_SITE_REMOTE_ID, newSiteRemoteId);
+        intent.putExtra(ARG_SITE_TAGLINE, siteTagline);
         intent.putExtra(ARG_SITE_THEME_ID, siteThemeId);
         context.startService(intent);
     }
@@ -235,17 +256,83 @@ public class SiteCreationService extends AutoForeground<SiteCreationPhase, OnSit
             return START_NOT_STICKY;
         }
 
-        setState(SiteCreationPhase.NEW_SITE, null);
-
-        final String siteTitle = intent.getStringExtra(ARG_SITE_TITLE);
-        final String siteSlug = intent.getStringExtra(ARG_SITE_SLUG);
         mSiteTagline = intent.getStringExtra(ARG_SITE_TAGLINE);
         String themeId = intent.getStringExtra(ARG_SITE_THEME_ID);
         mSiteTheme = mThemeStore.getWpComThemeByThemeId(themeId);
+        mNewSiteRemoteId = intent.getLongExtra(ARG_SITE_REMOTE_ID, -1);
 
+        if (mNewSiteRemoteId != -1) {
+            // load site from the DB. Note, this can be null if the site is not yet fetched from the network.
+            mNewSite = mSiteStore.getSiteBySiteId(mNewSiteRemoteId);
+        }
+
+        final SiteCreationPhase continueFromPhase = intent.hasExtra(ARG_RESUME_PHASE) ?
+                SiteCreationPhase.valueOf(intent.getStringExtra(ARG_RESUME_PHASE)) : SiteCreationPhase.IDLE;
+
+        if (continueFromPhase.isTerminal()) {
+            throw new RuntimeException("Internal inconsistency: SiteCreationService can't resume a terminal phase!");
+        } else if (continueFromPhase == SiteCreationPhase.IDLE || continueFromPhase == SiteCreationPhase.NEW_SITE) {
+            setState(SiteCreationPhase.NEW_SITE, null);
+            createNewSite(intent.getStringExtra(ARG_SITE_TITLE), intent.getStringExtra(ARG_SITE_SLUG));
+        } else {
+            executePhase(continueFromPhase);
+        }
+
+        return START_REDELIVER_INTENT;
+    }
+
+    private void executePhase(SiteCreationPhase phase) {
+        switch (phase) {
+            case FETCHING_NEW_SITE:
+                if (mNewSiteRemoteId == -1) {
+                    throw new RuntimeException("Internal inconsistency: Cannot resume, invalid site id!");
+                }
+                setState(SiteCreationPhase.FETCHING_NEW_SITE, mNewSiteRemoteId);
+                fetchNewSite();
+                break;
+            case SET_TAGLINE:
+                if (mNewSite == null) {
+                    AppLog.w(T.NUX, "SiteCreationService invoked to resume tagline setup but site not found locally!");
+                    notifyFailure();
+                    return;
+                }
+                setState(SiteCreationPhase.SET_TAGLINE, mNewSiteRemoteId);
+                setTagline();
+                break;
+            case SET_THEME:
+                if (mNewSite == null) {
+                    AppLog.w(T.NUX, "SiteCreationService invoked to resume theme setup but site not found locally!");
+                    notifyFailure();
+                    return;
+                }
+                setState(SiteCreationPhase.SET_THEME, mNewSiteRemoteId);
+                activateTheme(mSiteTheme);
+                break;
+            case PRELOAD:
+                if (mNewSite == null) {
+                    AppLog.w(T.NUX, "SiteCreationService invoked to resume theme setup but site not found locally!");
+                    notifyFailure();
+                    return;
+                }
+                setState(SiteCreationPhase.PRELOAD, mNewSiteRemoteId);
+                doPreloadDelay();
+                break;
+            case SUCCESS:
+                setState(SiteCreationPhase.SUCCESS, null);
+                break;
+        }
+    }
+
+    private void finishedPhase(SiteCreationPhase phase) {
+        // we'll go to the next phase in the sequence
+        SiteCreationPhase nextPhase = SiteCreationPhase.values()[phase.ordinal() + 1];
+        executePhase(nextPhase);
+    }
+
+    private void createNewSite(String siteTitle, String siteSlug) {
         final String language = LanguageUtils.getPatchedCurrentDeviceLanguage(this);
 
-        SiteStore.NewSitePayload newSitePayload =new SiteStore.NewSitePayload(
+        SiteStore.NewSitePayload newSitePayload = new SiteStore.NewSitePayload(
                 siteSlug,
                 siteTitle,
                 language,
@@ -253,16 +340,78 @@ public class SiteCreationService extends AutoForeground<SiteCreationPhase, OnSit
                 false);
         mDispatcher.dispatch(SiteActionBuilder.newCreateNewSiteAction(newSitePayload));
         AppLog.i(T.NUX, "User tries to create a new site, title: " + siteTitle + ", SiteName: " + siteSlug);
-
-        return START_REDELIVER_INTENT;
     }
 
-    private void activateTheme(final SiteModel site, final ThemeModel themeModel) {
+    private void fetchNewSite() {
+        // We can't get all the site information from the new site endpoint, so we have to fetch the site list.
+        mDispatcher.dispatch(SiteActionBuilder.newFetchSitesAction());
+    }
+
+    private void setTagline() {
+        if (!TextUtils.isEmpty(mSiteTagline)) {
+            SiteSettingsInterface siteSettings = SiteSettingsInterface.getInterface(this, mNewSite,
+                    new SiteSettingsInterface.SiteSettingsListener() {
+                        @Override
+                        public void onSaveError(Exception error) {
+                            notifyFailure();
+                        }
+
+                        @Override
+                        public void onFetchError(Exception error) {
+                            notifyFailure();
+                        }
+
+                        @Override
+                        public void onSettingsUpdated() {
+                            // we'll just handle onSettingsSaved()
+                        }
+
+                        @Override
+                        public void onSettingsSaved() {
+                            finishedPhase(SiteCreationPhase.SET_TAGLINE);
+                        }
+
+                        @Override
+                        public void onCredentialsValidated(Exception error) {
+                            if (error != null) {
+                                notifyFailure();
+                            }
+                        }
+                    });
+
+            if (siteSettings == null) {
+                notifyFailure();
+                return;
+            }
+
+            siteSettings.init(false);
+            siteSettings.setTagline(mSiteTagline);
+            siteSettings.saveSettings();
+        } else {
+            finishedPhase(SiteCreationPhase.SET_TAGLINE);
+        }
+    }
+
+    private void activateTheme(final ThemeModel themeModel) {
         mDispatcher.dispatch(
-                ThemeActionBuilder.newActivateThemeAction(new ThemeStore.SiteThemePayload(site, themeModel)));
+                ThemeActionBuilder.newActivateThemeAction(new ThemeStore.SiteThemePayload(mNewSite, themeModel)));
+    }
+
+    private void doPreloadDelay() {
+        new Handler(Looper.getMainLooper()).postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                finishedPhase(SiteCreationPhase.PRELOAD);
+            }
+        }, PRELOAD_TIMEOUT_MS);
     }
 
     private void notifyFailure() {
+        OnSiteCreationStateUpdated currentState = getState();
+
+        AppLog.e(T.NUX, "SiteCreationService entered state FAILURE while on phase: "
+                + (currentState == null ? "null" : currentState.getPhase().name()));
+
         // new state is FAILURE and pass the previous state as payload
         setState(SiteCreationPhase.FAILURE, getState());
     }
@@ -280,12 +429,9 @@ public class SiteCreationService extends AutoForeground<SiteCreationPhase, OnSit
 
         AnalyticsTracker.track(AnalyticsTracker.Stat.CREATED_SITE);
 
-        setState(SiteCreationPhase.FETCHING_NEW_SITE, event.newSiteRemoteId);
-
         mNewSiteRemoteId = event.newSiteRemoteId;
 
-        // We can't get all the site informations from the new site endpoint, so we have to fetch the site list.
-        mDispatcher.dispatch(SiteActionBuilder.newFetchSitesAction());
+        finishedPhase(SiteCreationPhase.NEW_SITE);
     }
 
     @SuppressWarnings("unused")
@@ -299,66 +445,13 @@ public class SiteCreationService extends AutoForeground<SiteCreationPhase, OnSit
             AppLog.e(T.NUX, event.error.type.toString());
         }
 
-        final SiteModel site = mSiteStore.getSiteBySiteId(mNewSiteRemoteId);
-
-        if (getState().getPhase() == SiteCreationPhase.FETCHING_NEW_SITE) {
-            Intent intent = new Intent();
-            if (site == null) {
-                notifyFailure();
-                return;
-            }
-
-            setState(SiteCreationPhase.SET_TAGLINE, null);
-
-            if (!TextUtils.isEmpty(mSiteTagline)) {
-                SiteSettingsInterface siteSettings = SiteSettingsInterface.getInterface(this, site,
-                        new SiteSettingsInterface.SiteSettingsListener() {
-                            @Override
-                            public void onSaveError(Exception error) {
-                                notifyFailure();
-                            }
-
-                            @Override
-                            public void onFetchError(Exception error) {
-                                notifyFailure();
-                            }
-
-                            @Override
-                            public void onSettingsUpdated() {
-                                // we'll just handle onSettingsSaved()
-                            }
-
-                            @Override
-                            public void onSettingsSaved() {
-                                setState(SiteCreationPhase.SET_THEME, null);
-                                SiteModel site = mSiteStore.getSiteBySiteId(mNewSiteRemoteId);
-                                activateTheme(site, mSiteTheme);
-                            }
-
-                            @Override
-                            public void onCredentialsValidated(Exception error) {
-                                if (error != null) {
-                                    notifyFailure();
-                                }
-                            }
-                        });
-
-                if (siteSettings == null) {
-                    notifyFailure();
-                    return;
-                }
-
-                siteSettings.init(false);
-                siteSettings.setTagline(mSiteTagline);
-                siteSettings.saveSettings();
-            } else {
-                setState(SiteCreationPhase.SET_THEME, null);
-                activateTheme(site, mSiteTheme);
-            }
-        } else {
-            AppLog.e(T.NUX, "Got onSiteChanged but not in FETCHING_NEW_SITE state!");
+        mNewSite = mSiteStore.getSiteBySiteId(mNewSiteRemoteId);
+        if (mNewSite == null) {
             notifyFailure();
+            return;
         }
+
+        finishedPhase(SiteCreationPhase.FETCHING_NEW_SITE);
     }
 
     @SuppressWarnings("unused")
@@ -367,15 +460,9 @@ public class SiteCreationService extends AutoForeground<SiteCreationPhase, OnSit
         if (event.isError()) {
             AppLog.e(T.THEMES, "Error setting new site's theme: " + event.error.message);
             notifyFailure();
-        } else {
-            setState(SiteCreationPhase.PRELOAD, null);
-
-            new Handler(Looper.getMainLooper()).postDelayed(new Runnable() {
-                @Override
-                public void run() {
-                    setState(SiteCreationPhase.SUCCESS, null);
-                }
-            }, PRELOAD_TIMEOUT_MS);
+            return;
         }
+
+        finishedPhase(SiteCreationPhase.SET_THEME);
     }
 }
