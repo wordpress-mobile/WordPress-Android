@@ -121,15 +121,15 @@ public class LoginWpcomService extends AutoForeground<LoginPhase, OnLoginStateUp
     }
 
     public static class OnLoginStateUpdated implements AutoForeground.ServiceEvent<LoginPhase> {
-        private final LoginPhase mState;
+        private final LoginPhase mPhase;
 
-        OnLoginStateUpdated(LoginPhase state) {
-            this.mState = state;
+        OnLoginStateUpdated(LoginPhase phase) {
+            this.mPhase = phase;
         }
 
         @Override
-        public LoginPhase getState() {
-            return mState;
+        public LoginPhase getPhase() {
+            return mPhase;
         }
     }
 
@@ -165,7 +165,7 @@ public class LoginWpcomService extends AutoForeground<LoginPhase, OnLoginStateUp
     }
 
     public LoginWpcomService() {
-        super(LoginPhase.IDLE, OnLoginStateUpdated.class);
+        super(new OnLoginStateUpdated(LoginPhase.IDLE));
     }
 
     @Override
@@ -179,19 +179,14 @@ public class LoginWpcomService extends AutoForeground<LoginPhase, OnLoginStateUp
     }
 
     @Override
-    protected OnLoginStateUpdated getStateEvent(LoginPhase phase) {
-        return new OnLoginStateUpdated(phase);
-    }
-
-    @Override
-    public Notification getNotification(LoginPhase phase) {
-        switch (phase) {
+    public Notification getNotification(OnLoginStateUpdated state) {
+        switch (state.getPhase()) {
             case AUTHENTICATING:
             case SOCIAL_LOGIN:
             case FETCHING_ACCOUNT:
             case FETCHING_SETTINGS:
             case FETCHING_SITES:
-                return LoginNotification.progress(this, phase.progressPercent);
+                return LoginNotification.progress(this, state.getPhase().progressPercent);
             case SUCCESS:
                 return LoginNotification.success(this);
             case FAILURE_EMAIL_WRONG_PASSWORD:
@@ -212,6 +207,10 @@ public class LoginWpcomService extends AutoForeground<LoginPhase, OnLoginStateUp
     @Override
     protected void trackPhaseUpdate(Map<String, ?> props) {
         mAnalyticsListener.trackWpComBackgroundServiceUpdate(props);
+    }
+
+    private void setState(LoginPhase phase) {
+        setState(new OnLoginStateUpdated(phase));
     }
 
     @Override
