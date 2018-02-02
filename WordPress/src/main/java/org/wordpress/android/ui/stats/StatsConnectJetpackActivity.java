@@ -84,7 +84,11 @@ public class StatsConnectJetpackActivity extends AppCompatActivity {
             JetpackConnectionWebViewActivity.openUnauthorizedJetpackConnectionFlow(StatsConnectJetpackActivity.this, stringToLoad, site);
         }
         finish();
-        AnalyticsTracker.track(AnalyticsTracker.Stat.STATS_SELECTED_INSTALL_JETPACK);
+        if (!site.isJetpackInstalled()) {
+            AnalyticsTracker.track(AnalyticsTracker.Stat.STATS_SELECTED_INSTALL_JETPACK);
+        } else {
+            AnalyticsTracker.track(AnalyticsTracker.Stat.STATS_SELECTED_CONNECT_JETPACK);
+        }
     }
 
 }

@@ -379,7 +379,6 @@ Language: nb_NO
 	<string name="checking_username">Sjekker brukernavnet</string>
 	<string name="jetpack_different_com_account">Jetpack-nettsteder som hører til andre WordPress.com-kontoer, er ikke støttet</string>
 	<string name="jetpack_use_com_account">For å legge til Jetpack-nettstedet ditt, logg inn på WordPress.com-kontoen du brukte til å tilkoble Jetpack.</string>
-	<string name="jetpack_message">Jetpack-utvidelsen må være installert og aktivert. Vil du installere eller aktivere Jetpack?</string>
 	<string name="error_media_load">Klarte ikke å laste inn mediet</string>
 	<string name="error_media_refresh_no_connection">Tilkobling er påkrevd for å oppfriske biblioteket</string>
 	<string name="error_media_unauthorized">Du har ikke tillatelse til å vise eller redigere medier</string>
@@ -559,8 +558,6 @@ Language: nb_NO
 	<string name="enter_your_password_instead">Skriv inn passordet ditt istedet</string>
 	<string name="web_address_dialog_hint">Vises offentlig når du kommenterer.</string>
 	<string name="username_email">E-post eller brukernavn</string>
-	<string name="jetpack_not_connected_message">Jetpack-utvidelsen er installert, men den er ikke koblet til WordPress.com. Vil du koble til JetPack?</string>
-	<string name="jetpack_not_connected">Jetpack-utvidelsen er ikke tilkoblet</string>
 	<string name="new_editor_reflection_error">Den visuelle redigereren er ikke kompatibel med\n   enheten din. Den ble automatisk skrudd av.</string>
 	<string name="stats_insights_latest_post_no_title">(ingen tittel)</string>
 	<string name="capture_or_pick_photo">Ta eller velg et bilde</string>
@@ -1296,7 +1293,6 @@ Language: nb_NO
 	<string name="fatal_db_error">En feil oppstod under oppretting av app-databasen. Prøv å reinstallere appen.</string>
 	<string name="blog_name_must_include_letters">Nettstedsadressen din må ha minst 1 engelsk bokstav (a-z)</string>
 	<string name="site_address">Din selvtjente adresse (URL)</string>
-	<string name="jetpack_message_not_admin">Jetpack-utvidelsen er påkrevd. Kontakt nettstedets administrator.</string>
 	<string name="themes_live_preview">Levende forhåndsvisning</string>
 	<string name="http_credentials">HTTP-legitimasjoner (Valgfritt)</string>
 	<string name="media_gallery_type_thumbnail_grid">Forhåndsvisningsnetting</string>
@@ -1336,7 +1332,6 @@ Language: nb_NO
 	<string name="nux_add_selfhosted_blog">Legg til selvtjent nettsted</string>
 	<string name="reader_btn_share">Del</string>
 	<string name="reader_btn_follow">Følg</string>
-	<string name="jetpack_not_found">Fant ikke utvidelsen Jetpack</string>
 	<string name="reader_untitled_post">(Uten tittel)</string>
 	<string name="nux_tutorial_get_started_title">Kom igang!</string>
 	<string name="username_invalid">Ugyldig brukernavn</string>

@@ -619,7 +619,6 @@ Language: hr
 	<string name="blog_name_invalid">Neispravna adresa web-stranice</string>
 	<string name="blog_name_must_include_letters">Adresa web-stranice mora sadržavati najmanje 1 slovo (a-z)</string>
 	<string name="site_address">Adresa vaše samostalno hostane web-stranice (URL)</string>
-	<string name="jetpack_message_not_admin">Za statistiku je potreban Jetpack dodatak. Kontaktirajte administratora web-stranice.</string>
 	<string name="blog_removed_successfully">Web-stranica uspješno uklonjena</string>
 	<string name="remove_account">Ukloni web-stranicu</string>
 	<string name="xmlrpc_error">Spajanje nije moguće. Unesite punu putanju do xmlrpc.php na vašoj web-stranici.</string>
@@ -660,7 +659,6 @@ Language: hr
 	<string name="reader_empty_followed_tags">Ne pratite ni jednu oznaku</string>
 	<string name="media_add_popup_title">Dodaj u medijske zapise</string>
 	<string name="empty_list_default">Popis je prazan</string>
-	<string name="jetpack_not_found">Dodatak Jetpack nije pronađen</string>
 	<string name="reader_untitled_post">(Bez naslova)</string>
 	<string name="reader_btn_share">Podjeli</string>
 	<string name="reader_btn_unfollow">Prati se</string>

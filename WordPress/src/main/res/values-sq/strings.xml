@@ -456,7 +456,6 @@ Language: sq_AL
 	<string name="checking_username">Po kontrollohet emri i përdoruesit</string>
 	<string name="jetpack_different_com_account">Nuk mbulohet sajtet me Jetpack që përkasin llogarive të ndryshme WordPress.com</string>
 	<string name="jetpack_use_com_account">Që të shtoni sajt Jetpack, bëni hyrjen te llogaria WordPress.com që përdorët për të lidhur Jetpack-un.</string>
-	<string name="jetpack_message">Shtojca Jetpack duhet të jetë e instaluar dhe e aktivizuar. Doni të instalohet ose të aktivizohet Jetpack-u?</string>
 	<string name="error_media_load">S’arrihet të ngarkohet media</string>
 	<string name="error_media_refresh_no_connection">Lypset lidhje që të rifreskohet mediateka</string>
 	<string name="error_media_unauthorized">S’keni leje të shihni ose përpunoni media</string>
@@ -636,8 +635,6 @@ Language: sq_AL
 	<string name="enter_your_password_instead">Në vend të kësaj, jepni fjalëkalimin tuaj</string>
 	<string name="web_address_dialog_hint">E shfaqur publikisht kur komentoni.</string>
 	<string name="username_email">Email ose emër përdoruesi</string>
-	<string name="jetpack_not_connected_message">Shtojca Jetpack është e instaluar, por jo e lidhur me WordPress.com-in. Doni të lidhet Jetpack-u?</string>
-	<string name="jetpack_not_connected">Shtojca Jetpack s’është e lidhur</string>
 	<string name="new_editor_reflection_error">Përpunuesi pamor s’është i përputhshëm me pajisjen tuaj.\n        U çaktivizua vetvetiu.</string>
 	<string name="stats_insights_latest_post_no_title">(pa titull)</string>
 	<string name="capture_or_pick_photo">Bëni ose përzgjidhni foto</string>
@@ -1299,7 +1296,6 @@ Language: sq_AL
 	<string name="reader_toast_err_remove_tag">I pazoti ta heqë këtë etiketë</string>
 	<string name="reader_toast_err_add_tag">I pazoti të shtojë këtë etiketë</string>
 	<string name="reader_title_applog">Regjistër aplikacioni</string>
-	<string name="jetpack_message_not_admin">Shtojca Jetpack është e domosdoshme. Lidhuni me përgjegjësin e sajtit.</string>
 	<string name="fatal_db_error">Ndodhi një gabim gjatë krijimit të bazës së të dhënave për aplikacionin. Provoni të riinstaloni aplikacionin.</string>
 	<string name="error_blog_hidden">Ky blog është i fshehur dhe s’u ngarkua dot. Aktivizojeni sërish te rregullimet dhe riprovoni.</string>
 	<string name="error_refresh_media">Media s’u rifreskua dot tani</string>
@@ -1435,7 +1431,6 @@ Language: sq_AL
 	<string name="reader_btn_follow">Ndiqe</string>
 	<string name="reader_btn_share">Ndajeni me të tjerët</string>
 	<string name="reader_untitled_post">(Pa titull)</string>
-	<string name="jetpack_not_found">S’u gjet shtojcë Jetpack</string>
 	<string name="empty_list_default">Kjo listë është e zbrazët</string>
 	<string name="media_add_popup_title">Shtojeni te mediateka</string>
 	<string name="passcode_turn_on">Çaktivizo kyçje PIN-i</string>

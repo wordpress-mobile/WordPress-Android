@@ -150,9 +150,7 @@ Language: gl_ES
 	<string name="get_a_link_sent_to_your_email_to_sign_in_instantly">Enviar un enlace ao teu correo para iniciar sesión de inmediato</string>
 	<string name="enter_your_password_instead">Introduce o teu contrasinal se non</string>
 	<string name="web_address_dialog_hint">Móstrase publicamente no teus comentarios.</string>
-	<string name="jetpack_not_connected_message">Jetpack está instalado, pero sen conexión a WordPress.com. Queres conectalo?</string>
 	<string name="username_email">Correo electrónico ou nome de usuario</string>
-	<string name="jetpack_not_connected">Jetpack non está conectado</string>
 	<string name="new_editor_reflection_error">O editor visual non é compatible co teu dispositivo. Foi\ndesactivado automaticamente.</string>
 	<string name="stats_insights_latest_post_no_title">(sen título)</string>
 	<string name="capture_or_pick_photo">Fai ou escolle unha foto</string>
@@ -881,7 +879,6 @@ Language: gl_ES
 	<string name="reader_title_applog">Rexistro da aplicación</string>
 	<string name="error_blog_hidden">Este blogue non se pode cargar porque está oculto. Habilítao de novo na configuración e proba outra vez.</string>
 	<string name="fatal_db_error">Houbo un erro mentres se creaba a base de datos da aplicación. Proba a reinstalar a aplicación.</string>
-	<string name="jetpack_message_not_admin">O plugin Jetppack é necesario para as estatísticas. Contacta co administrador do sitio.</string>
 	<string name="page_not_published">O estado da páxina non está publicado</string>
 	<string name="open_source_licenses">Licenzas de Código Aberto</string>
 	<string name="http_credentials">Credenciais HTTP (opcional)</string>
@@ -932,7 +929,6 @@ Language: gl_ES
 	<string name="button_next">Seguinte</string>
 	<string name="username_invalid">Nome de usuario non válido</string>
 	<string name="nux_tutorial_get_started_title">Comezar!</string>
-	<string name="jetpack_not_found">Non se atopou Jetpack</string>
 	<string name="reader_untitled_post">(Sen título)</string>
 	<string name="reader_btn_share">Compartir</string>
 	<string name="reader_btn_follow">Seguir</string>

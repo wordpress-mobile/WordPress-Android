@@ -204,8 +204,6 @@ Language: id
 	<string name="enter_your_password_instead">Sebaiknya masukkan kata sandi Anda</string>
 	<string name="web_address_dialog_hint">Ditampilkan secara publik saat Anda berkomentar.</string>
 	<string name="username_email">Surat elektronik atau nama pengguna</string>
-	<string name="jetpack_not_connected_message">Plugin Jetpack terpasang, tetapi tidak terhubung ke WordPress.com. Ingin menghubungkan Jetpack?</string>
-	<string name="jetpack_not_connected">Plugin Jetpack tidak terhubung</string>
 	<string name="new_editor_reflection_error">Visual editor tidak kompatibel dengan perangkat Anda. Ini\n dinonaktifkan secara otomatis.</string>
 	<string name="stats_insights_latest_post_no_title">(tanpa judul)</string>
 	<string name="capture_or_pick_photo">Ambil atau pilih foto</string>
@@ -988,7 +986,6 @@ Language: id
 	<string name="reader_btn_follow">Ikuti</string>
 	<string name="reader_btn_share">Bagikan</string>
 	<string name="reader_untitled_post">(Tanpa Judul)</string>
-	<string name="jetpack_not_found">Plugin Jetpack tidak ditemukan</string>
 	<string name="empty_list_default">List ini masih kosong</string>
 	<string name="media_add_popup_title">Tambah ke pustaka media</string>
 	<string name="passcode_turn_on">Nyalakan kunci PIN</string>
