@@ -625,6 +625,10 @@ public class AnalyticsTrackerNosara extends Tracker {
                 return "stats_scrolled_to_bottom";
             case STATS_SELECTED_INSTALL_JETPACK:
                 return "stats_install_jetpack_selected";
+            case STATS_CANCELED_INSTALL_JETPACK:
+                return "stats_install_jetpack_canceled";
+            case STATS_COMPLETED_INSTALL_JETPACK:
+                return "stats_install_jetpack_completed";
             case STATS_SELECTED_CONNECT_JETPACK:
                 return "stats_connect_jetpack_selected";
             case STATS_WIDGET_ADDED:
