@@ -103,7 +103,7 @@ public class SiteCreationThemeFragment extends SiteCreationBaseFormFragment<Site
             mSiteCreationThemeAdapter = new SiteCreationThemeAdapter(getContext(), mSiteCreationListener);
         }
 
-        switch (event.getState()) {
+        switch (event.getPhase()) {
             case UPDATING:
                 mSiteCreationThemeAdapter.setData(true, null);
                 break;

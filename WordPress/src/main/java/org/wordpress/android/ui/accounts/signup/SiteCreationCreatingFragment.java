@@ -228,12 +228,12 @@ public class SiteCreationCreatingFragment extends SiteCreationBaseFormFragment<S
     @SuppressWarnings("unused")
     @Subscribe(threadMode = ThreadMode.MAIN, sticky = true)
     public void onSiteCreationPhaseUpdated(OnSiteCreationStateUpdated event) {
-        AppLog.i(T.NUX, "Received state: " + event.getState().name());
+        AppLog.i(T.NUX, "Received state: " + event.getPhase().name());
 
         mProgressContainer.setVisibility(View.VISIBLE);
         mErrorContainer.setVisibility(View.GONE);
 
-        switch (event.getState()) {
+        switch (event.getPhase()) {
             case IDLE:
                 disableUntil(0);
                 break;

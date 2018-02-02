@@ -112,15 +112,14 @@ public class SiteCreationService extends AutoForeground<SiteCreationPhase, OnSit
     }
 
     public static class OnSiteCreationStateUpdated implements AutoForeground.ServiceEvent<SiteCreationPhase> {
-        private final SiteCreationPhase state;
+        private final SiteCreationPhase phase;
 
-        public OnSiteCreationStateUpdated(SiteCreationPhase state) {
-            this.state = state;
+        public OnSiteCreationStateUpdated(SiteCreationPhase phase) {
+            this.phase = phase;
         }
 
-        @Override
-        public SiteCreationPhase getState() {
-            return state;
+        public SiteCreationPhase getPhase() {
+            return phase;
         }
     }
 

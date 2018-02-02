@@ -31,8 +31,7 @@ public class SiteCreationThemeLoaderFragment extends Fragment {
             this.state = state;
         }
 
-        @Override
-        public ThemesUpdateState getState() {
+        public ThemesUpdateState getPhase() {
             return state;
         }
     }

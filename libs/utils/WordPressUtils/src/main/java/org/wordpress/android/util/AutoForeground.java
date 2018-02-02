@@ -36,7 +36,7 @@ public abstract class AutoForeground<PhaseClass extends ServicePhase, EventClass
     }
 
     public interface ServiceEvent<T> {
-        T getState();
+        T getPhase();
     }
 
     public static class ServiceEventConnection {
@@ -92,7 +92,7 @@ public abstract class AutoForeground<PhaseClass extends ServicePhase, EventClass
     }
 
     protected PhaseClass getPhase() {
-        return EventBus.getDefault().getStickyEvent(mEventClass).getState();
+        return EventBus.getDefault().getStickyEvent(mEventClass).getPhase();
     }
 
     @Override
