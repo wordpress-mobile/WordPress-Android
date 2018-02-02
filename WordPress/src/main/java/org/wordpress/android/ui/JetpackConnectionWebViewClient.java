@@ -80,21 +80,21 @@ class JetpackConnectionWebViewClient extends WebViewClient {
             final String currentSiteHost = Uri.parse(mSiteModel.getUrl()).getHost();
             if (loadedHost.equals(currentSiteHost)
                     && loadedPath != null
-                    && loadedPath.equals(LOGIN_PATH)
+                    && loadedPath.contains(LOGIN_PATH)
                     && stringUrl.contains(REDIRECT_PARAMETER)) {
                 redirectPage = extractRedirect(stringUrl);
                 loginToWPCom(view, mSiteModel);
                 return true;
             } else if (loadedHost.equals(currentSiteHost)
                     && loadedPath != null
-                    && loadedPath.equals(ADMIN_PATH)
+                    && loadedPath.contains(ADMIN_PATH)
                     && redirectPage != null) {
                 view.loadUrl(redirectPage);
                 redirectPage = null;
                 return true;
             } else if (loadedHost.equals(WORDPRESS_COM_HOST)
                     && loadedPath != null
-                    && loadedPath.equals(LOG_IN_PATH)
+                    && loadedPath.contains(LOG_IN_PATH)
                     && stringUrl.contains(REDIRECT_PARAMETER)) {
                 redirectPage = extractRedirect(stringUrl);
                 Intent loginIntent = new Intent(activity, LoginActivity.class);
