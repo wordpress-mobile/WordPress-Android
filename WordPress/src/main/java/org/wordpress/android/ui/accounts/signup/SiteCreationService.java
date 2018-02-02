@@ -113,14 +113,22 @@ public class SiteCreationService extends AutoForeground<SiteCreationPhase, OnSit
 
     public static class OnSiteCreationStateUpdated implements AutoForeground.ServiceEvent<SiteCreationPhase> {
         private final SiteCreationPhase phase;
+        private final Object payload;
 
-        public OnSiteCreationStateUpdated(SiteCreationPhase phase) {
+        OnSiteCreationStateUpdated(SiteCreationPhase phase, Object payload) {
             this.phase = phase;
+            this.payload = payload;
         }
 
+        @Override
         public SiteCreationPhase getPhase() {
             return phase;
         }
+
+        public Object getPayload() {
+            return payload;
+        }
+
     }
 
     @Inject Dispatcher mDispatcher;
@@ -152,7 +160,7 @@ public class SiteCreationService extends AutoForeground<SiteCreationPhase, OnSit
     }
 
     public SiteCreationService() {
-        super(new OnSiteCreationStateUpdated(SiteCreationPhase.IDLE));
+        super(new OnSiteCreationStateUpdated(SiteCreationPhase.IDLE, null));
     }
 
     @Override
@@ -199,9 +207,10 @@ public class SiteCreationService extends AutoForeground<SiteCreationPhase, OnSit
     /**
      * Helper method to create a new State object and set it as the new state.
      * @param phase The phase of the new state
+     * @param payload The payload to attach to the new state
      */
-    private void setState(SiteCreationPhase phase) {
-        setState(new OnSiteCreationStateUpdated(phase));
+    private void setState(SiteCreationPhase phase, Object payload) {
+        setState(new OnSiteCreationStateUpdated(phase, payload));
     }
 
     @Override
@@ -226,7 +235,7 @@ public class SiteCreationService extends AutoForeground<SiteCreationPhase, OnSit
             return START_NOT_STICKY;
         }
 
-        setState(SiteCreationPhase.NEW_SITE);
+        setState(SiteCreationPhase.NEW_SITE, null);
 
         final String siteTitle = intent.getStringExtra(ARG_SITE_TITLE);
         final String siteSlug = intent.getStringExtra(ARG_SITE_SLUG);
@@ -253,6 +262,11 @@ public class SiteCreationService extends AutoForeground<SiteCreationPhase, OnSit
                 ThemeActionBuilder.newActivateThemeAction(new ThemeStore.SiteThemePayload(site, themeModel)));
     }
 
+    private void notifyFailure() {
+        // new state is FAILURE and pass the previous state as payload
+        setState(SiteCreationPhase.FAILURE, getState());
+    }
+
     // OnChanged events
 
     @SuppressWarnings("unused")
@@ -260,13 +274,13 @@ public class SiteCreationService extends AutoForeground<SiteCreationPhase, OnSit
     public void onNewSiteCreated(SiteStore.OnNewSiteCreated event) {
         AppLog.i(T.NUX, event.toString());
         if (event.isError()) {
-            setState(SiteCreationPhase.FAILURE);
+            notifyFailure();
             return;
         }
 
         AnalyticsTracker.track(AnalyticsTracker.Stat.CREATED_SITE);
 
-        setState(SiteCreationPhase.FETCHING_NEW_SITE);
+        setState(SiteCreationPhase.FETCHING_NEW_SITE, event.newSiteRemoteId);
 
         mNewSiteRemoteId = event.newSiteRemoteId;
 
@@ -286,28 +300,27 @@ public class SiteCreationService extends AutoForeground<SiteCreationPhase, OnSit
         }
 
         final SiteModel site = mSiteStore.getSiteBySiteId(mNewSiteRemoteId);
-        final SiteCreationPhase phase = getState().getPhase();
 
-        if (phase == SiteCreationPhase.FETCHING_NEW_SITE) {
+        if (getState().getPhase() == SiteCreationPhase.FETCHING_NEW_SITE) {
             Intent intent = new Intent();
             if (site == null) {
-                setState(SiteCreationPhase.FAILURE);
+                notifyFailure();
                 return;
             }
 
-            setState(SiteCreationPhase.SET_TAGLINE);
+            setState(SiteCreationPhase.SET_TAGLINE, null);
 
             if (!TextUtils.isEmpty(mSiteTagline)) {
                 SiteSettingsInterface siteSettings = SiteSettingsInterface.getInterface(this, site,
                         new SiteSettingsInterface.SiteSettingsListener() {
                             @Override
                             public void onSaveError(Exception error) {
-                                setState(SiteCreationPhase.FAILURE);
+                                notifyFailure();
                             }
 
                             @Override
                             public void onFetchError(Exception error) {
-                                setState(SiteCreationPhase.FAILURE);
+                                notifyFailure();
                             }
 
                             @Override
@@ -317,7 +330,7 @@ public class SiteCreationService extends AutoForeground<SiteCreationPhase, OnSit
 
                             @Override
                             public void onSettingsSaved() {
-                                setState(SiteCreationPhase.SET_THEME);
+                                setState(SiteCreationPhase.SET_THEME, null);
                                 SiteModel site = mSiteStore.getSiteBySiteId(mNewSiteRemoteId);
                                 activateTheme(site, mSiteTheme);
                             }
@@ -325,13 +338,13 @@ public class SiteCreationService extends AutoForeground<SiteCreationPhase, OnSit
                             @Override
                             public void onCredentialsValidated(Exception error) {
                                 if (error != null) {
-                                    setState(SiteCreationPhase.FAILURE);
+                                    notifyFailure();
                                 }
                             }
                         });
 
                 if (siteSettings == null) {
-                    setState(SiteCreationPhase.FAILURE);
+                    notifyFailure();
                     return;
                 }
 
@@ -339,12 +352,12 @@ public class SiteCreationService extends AutoForeground<SiteCreationPhase, OnSit
                 siteSettings.setTagline(mSiteTagline);
                 siteSettings.saveSettings();
             } else {
-                setState(SiteCreationPhase.SET_THEME);
+                setState(SiteCreationPhase.SET_THEME, null);
                 activateTheme(site, mSiteTheme);
             }
         } else {
             AppLog.e(T.NUX, "Got onSiteChanged but not in FETCHING_NEW_SITE state!");
-            setState(SiteCreationPhase.FAILURE);
+            notifyFailure();
         }
     }
 
@@ -353,14 +366,14 @@ public class SiteCreationService extends AutoForeground<SiteCreationPhase, OnSit
     public void onThemeActivated(ThemeStore.OnThemeActivated event) {
         if (event.isError()) {
             AppLog.e(T.THEMES, "Error setting new site's theme: " + event.error.message);
-            setState(SiteCreationPhase.FAILURE);
+            notifyFailure();
         } else {
-            setState(SiteCreationPhase.PRELOAD);
+            setState(SiteCreationPhase.PRELOAD, null);
 
             new Handler(Looper.getMainLooper()).postDelayed(new Runnable() {
                 @Override
                 public void run() {
-                    setState(SiteCreationPhase.SUCCESS);
+                    setState(SiteCreationPhase.SUCCESS, null);
                 }
             }, PRELOAD_TIMEOUT_MS);
         }
