@@ -754,6 +754,7 @@ public class PostsListFragment extends Fragment
 
     @SuppressWarnings("unused")
     public void onEventMainThread(UploadService.UploadErrorEvent event) {
+        EventBus.getDefault().removeStickyEvent(event);
         if (event.post != null) {
             UploadUtils.onPostUploadedSnackbarHandler(getActivity(),
                     getActivity().findViewById(R.id.coordinator), true, event.post, event.errorMessage, mSite, mDispatcher);
@@ -767,6 +768,7 @@ public class PostsListFragment extends Fragment
 
     @SuppressWarnings("unused")
     public void onEventMainThread(UploadService.UploadMediaSuccessEvent event) {
+        EventBus.getDefault().removeStickyEvent(event);
         if (event.mediaModelList != null && !event.mediaModelList.isEmpty()) {
             UploadUtils.onMediaUploadedSnackbarHandler(getActivity(),
                     getActivity().findViewById(R.id.coordinator), false,

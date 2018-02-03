@@ -37,8 +37,8 @@ android {
 
     defaultConfig {
         applicationId "org.wordpress.android"
-        versionName "9.2-rc-3"
-        versionCode 518
+        versionName "9.3-rc-2"
+        versionCode 524
         minSdkVersion 16
         targetSdkVersion 25
 
@@ -118,6 +118,10 @@ dependencies {
         exclude group: 'com.squareup.okhttp3'
     }
 
+    compile 'com.github.bumptech.glide:glide:4.1.1'
+    apt 'com.github.bumptech.glide:compiler:4.1.1'
+    compile 'com.github.bumptech.glide:volley-integration:4.1.1@aar'
+
     testCompile 'junit:junit:4.12'
     testCompile 'org.robolectric:robolectric:3.3.2'
     testCompile 'org.robolectric:shadows-multidex:3.3.2'
@@ -138,7 +142,7 @@ dependencies {
     compile 'com.google.dagger:dagger-android-support:2.11'
     apt 'com.google.dagger:dagger-android-processor:2.11'
 
-    compile ('com.github.wordpress-mobile.WordPress-FluxC-Android:fluxc:3251d1575c5861344ae6f8ce7c76d130bb40a696') {
+    compile ("com.github.wordpress-mobile.WordPress-FluxC-Android:fluxc:$fluxCVersion") {
         exclude group: "com.android.volley"
     }
 
@@ -154,9 +158,11 @@ dependencies {
     debugCompile project(path:':libs:editor:WordPressEditor', configuration: 'debug')
     releaseCompile (project(path:':libs:login:WordPressLoginFlow', configuration: 'release')) {
         exclude group: "com.github.wordpress-mobile.WordPress-FluxC-Android", module: "fluxc";
+        exclude group: 'com.github.bumptech.glide'
     }
     debugCompile (project(path:':libs:login:WordPressLoginFlow', configuration: 'debug')) {
         exclude group: "com.github.wordpress-mobile.WordPress-FluxC-Android", module: "fluxc";
+        exclude group: 'com.github.bumptech.glide'
     }
 
     // Debug

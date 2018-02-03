@@ -1799,6 +1799,7 @@
 
     <!--Plugins-->
     <string name="plugins">Plugins</string>
+    <string name="plugin_byline">by %s</string>
     <string name="plugin_active">Active</string>
     <string name="plugin_inactive">Inactive</string>
     <string name="plugin_autoupdates_on">Autoupdates on</string>
@@ -1806,7 +1807,9 @@
     <string name="plugin_detail_label_state_active">Active</string>
     <string name="plugin_detail_label_state_autoupdates">Autoupdates</string>
     <string name="plugin_not_found">An error occurred when accessing this plugin</string>
-    <string name="plugin_installed_version">Plugin version %s</string>
+    <string name="plugin_version">Version %s</string>
+    <string name="plugin_installed_version">Version %s installed</string>
+    <string name="plugin_installed">Installed</string>
     <string name="plugin_available_version">Version %s is available.</string>
     <string name="plugin_updated_successfully">Successfully updated %s.</string>
     <string name="plugin_updated_failed">Error removing %s.</string>
@@ -1823,10 +1826,31 @@
 
     <string name="wordpress_dot_org_plugin_page">WordPress.org Plugin page</string>
     <string name="plugin_home_page">Plugin homepage</string>
+    <string name="plugin_settings">Settings</string>
+    <string name="plugin_description">Description</string>
+    <string name="plugin_installation">Installation</string>
+    <string name="plugin_whatsnew">What\'s New</string>
+    <string name="plugin_faq">Frequently Asked Questions</string>
+    <string name="plugin_read_reviews">Read Reviews</string>
+    <string name="plugin_num_ratings">%s ratings</string>
+    <string name="plugin_num_downloads">%s downloads</string>
+    <string name="plugin_empty_text">None provided</string>
+
+    <string name="plugin_one_stars">1 stars</string>
+    <string name="plugin_two_stars">2 stars</string>
+    <string name="plugin_three_stars">3 stars</string>
+    <string name="plugin_four_stars">4 stars</string>
+    <string name="plugin_five_stars">5 stars</string>
+
+    <string name="plugin_info_version">Version</string>
+    <string name="plugin_info_lastupdated">Last Updated</string>
+    <string name="plugin_info_requires_version">Requires WordPress Version</string>
+    <string name="plugin_info_your_version">Your WordPress Version</string>
 
     <string name="plugin_icon_content_description">Plugin icon</string>
     <string name="plugin_update_available_icon_content_description">Update available</string>
     <string name="plugin_external_link_icon_content_description">External link</string>
+    <string name="plugin_chevron_icon_content_description">Toggle text</string>
 
     <!--My profile-->
     <string name="my_profile">My Profile</string>

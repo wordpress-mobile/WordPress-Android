@@ -258,14 +258,11 @@ public abstract class LoginBaseFormFragment<LoginListenerType> extends Fragment 
     protected void onLoginFinished(boolean success) {
         mLoginFinished = true;
 
-        if (!success) {
-            endProgress();
-            return;
-        }
-
-        if (mLoginListener != null) {
+        if (success && mLoginListener != null) {
             onLoginFinished();
         }
+
+        endProgress();
     }
 
     protected void saveCredentialsInSmartLock(LoginListener loginListener, String username, String password) {

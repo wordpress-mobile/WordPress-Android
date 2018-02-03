@@ -44,6 +44,16 @@ dependencies {
 in your project, and prevents a duplicated dependency, forcing WordPress-Login-Flow-Android to use
 your project's FluxC config.)
 
+You can also force the login library to use the same FluxC version as your project by declaring the version
+in a `fluxCVersion` variable in your project's root `build.gradle` (and using that same variable anywhere
+else your project uses FluxC):
+
+```groovy
+ext {
+    fluxCVersion = '83baae61804b65cc73a7201a7252750c76066a30'
+}
+```
+
 ## Contributing ##
 
 You can fetch the latest changes made to this library into your project using:

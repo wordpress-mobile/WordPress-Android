@@ -17,6 +17,7 @@ import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.fluxc.model.TermModel;
 import org.wordpress.android.fluxc.store.TaxonomyStore;
+import org.wordpress.android.util.DisplayUtils;
 import org.wordpress.android.util.EditTextUtils;
 import org.wordpress.android.util.StringUtils;
 
@@ -82,6 +83,10 @@ public class SiteSettingsTagDetailFragment extends Fragment {
 
         mTerm = (TermModel) getArguments().getSerializable(ARGS_TERM);
         mIsNewTerm = getArguments().getBoolean(ARGS_IS_NEW_TERM);
+
+        if (savedInstanceState == null && !DisplayUtils.isLandscape(getActivity())) {
+            EditTextUtils.showSoftInput(mNameView);
+        }
 
         loadTagDetail();
     }
