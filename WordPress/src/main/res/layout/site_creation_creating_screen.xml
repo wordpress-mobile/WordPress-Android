@@ -87,7 +87,8 @@
                 android:paddingBottom="@dimen/margin_extra_large"
                 android:visibility="gone"
                 tools:visibility="visible"
-                android:orientation="vertical">
+                android:orientation="vertical"
+                android:clipToPadding="false">
 
                 <TextView
                     style="@style/Base.TextAppearance.AppCompat.Body2"
