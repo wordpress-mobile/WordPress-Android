@@ -3,6 +3,7 @@ package org.wordpress.android;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.robolectric.RobolectricTestRunner;
+import org.robolectric.annotation.Config;
 import org.wordpress.android.editor.EditorFragment;
 import org.wordpress.android.util.helpers.MediaFile;
 
@@ -11,6 +12,7 @@ import java.util.Locale;
 import static org.junit.Assert.assertEquals;
 
 @RunWith(RobolectricTestRunner.class)
+@Config(application = TestApplication.class)
 public class EditorAsyncMediaTest {
     @Test
     public void testHybridEditorUploadingImageSwap() {
