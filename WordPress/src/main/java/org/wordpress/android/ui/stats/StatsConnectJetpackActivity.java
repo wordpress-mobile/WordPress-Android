@@ -1,15 +1,12 @@
 package org.wordpress.android.ui.stats;
 
-import android.graphics.Paint;
 import android.os.Bundle;
-import android.os.PersistableBundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.Button;
-import android.widget.TextView;
 
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
@@ -17,7 +14,6 @@ import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.store.AccountStore;
 import org.wordpress.android.ui.JetpackConnectionWebViewActivity;
-import org.wordpress.android.ui.WPWebViewActivity;
 
 import javax.inject.Inject;
 
@@ -31,7 +27,6 @@ import static org.wordpress.android.ui.JetpackConnectionWebViewActivity.JETPACK_
 
 public class StatsConnectJetpackActivity extends AppCompatActivity {
 
-    public static final String MORE_INFORMATION_LINK = "https://apps.wordpress.com/support/#faq-ios-15";
     @Inject
     AccountStore mAccountStore;
 
@@ -60,14 +55,6 @@ public class StatsConnectJetpackActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 startJetpackConnectionFlow();
-            }
-        });
-        TextView moreInfo = findViewById(R.id.jetpack_more_info);
-        moreInfo.setPaintFlags(Paint.UNDERLINE_TEXT_FLAG);
-        moreInfo.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                WPWebViewActivity.openURL(StatsConnectJetpackActivity.this, MORE_INFORMATION_LINK);
             }
         });
     }
