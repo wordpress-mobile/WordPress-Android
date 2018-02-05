@@ -39,8 +39,6 @@ import java.util.List;
 import javax.inject.Inject;
 
 public class AddQuickPressShortcutActivity extends ListActivity {
-    static final int ADD_ACCOUNT_REQUEST = 0;
-
     public String[] blogNames;
     public int[] siteIds;
     public String[] accountUsers;
@@ -164,7 +162,7 @@ public class AddQuickPressShortcutActivity extends ListActivity {
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         switch (requestCode) {
-            case ADD_ACCOUNT_REQUEST:
+            case RequestCodes.ADD_ACCOUNT:
                 if (resultCode == RESULT_OK) {
                     if (mSiteStore.getVisibleSitesCount() > 0) {
                         displayAccounts();
