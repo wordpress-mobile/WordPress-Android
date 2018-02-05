@@ -130,6 +130,7 @@
                 <org.wordpress.android.widgets.WPTextView
                     android:id="@+id/my_site_plan_text_view"
                     style="@style/MySiteListRowTextView"
+                    android:layout_width="wrap_content"
                     android:text="@string/plan" />
 
                 <org.wordpress.android.widgets.WPTextView
