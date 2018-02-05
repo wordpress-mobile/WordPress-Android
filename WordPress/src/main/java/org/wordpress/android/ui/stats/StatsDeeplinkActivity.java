@@ -50,7 +50,7 @@ public class StatsDeeplinkActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         ((WordPress) getApplication()).component().inject(this);
 
-        setContentView(R.layout.stats_loading);
+        setContentView(R.layout.stats_loading_activity);
 
 
         Toolbar toolbar = findViewById(R.id.toolbar);

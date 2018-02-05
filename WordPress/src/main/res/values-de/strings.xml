@@ -417,8 +417,6 @@ Language: de
 	<string name="enter_your_password_instead">Gib stattdessen dein Passwort ein</string>
 	<string name="web_address_dialog_hint">Wird mit deinem Kommentar veröffentlicht.</string>
 	<string name="username_email">E-Mail-Adresse oder Benutzername</string>
-	<string name="jetpack_not_connected_message">Das Jetpack-Plugin ist installiert, aber nicht mit WordPress.com verbunden. Möchtest du es verbinden?</string>
-	<string name="jetpack_not_connected">Jetpack-Plugin nicht verbunden</string>
 	<string name="new_editor_reflection_error">Der visuelle Editor ist mit deinem Gerät nicht kompatibel.\nEr wurde automatisch deaktiviert.</string>
 	<string name="stats_insights_latest_post_no_title">(ohne Titel)</string>
 	<string name="capture_or_pick_photo">Foto aufnehmen oder auswählen</string>
@@ -1161,7 +1159,6 @@ Language: de
 	<string name="plugin_not_found">Beim Zugriff auf dieses Plugin ist ein Fehler aufgetreten</string>
 	<string name="error_deleting_page">Beim Löschen der Seite ist ein Fehler aufgetreten</string>
 	<string name="error_refresh_media">Die Medien konnten zu diesem Zeitpunkt nicht aktualisiert werden</string>
-	<string name="jetpack_message_not_admin">Das Jetpack Plugin wird benötigt. Kontaktiere den Website-Administrator.</string>
 	<string name="deleting_page">Lösche Seite</string>
 	<string name="share_url_post">Beitrag teilen</string>
 	<string name="share_link">Link teilen</string>
@@ -1218,7 +1215,6 @@ Language: de
 	<string name="reader_hint_comment_on_comment">Antwort auf Kommentar…</string>
 	<string name="button_next">Nächster</string>
 	<string name="connecting_wpcom">Bei WordPress.com anmelden</string>
-	<string name="jetpack_not_found">Jetpack-Plugin nicht gefunden</string>
 	<string name="themes">Themes</string>
 	<string name="media_gallery_type_squares">Quadrate</string>
 	<string name="media_gallery_type_tiled">Gekachelt</string>

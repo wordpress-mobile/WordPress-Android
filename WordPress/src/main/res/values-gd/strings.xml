@@ -437,7 +437,6 @@ Language: gd_GB
 	<string name="nux_welcome_create_account">Cruthaich cunntas</string>
 	<string name="nux_add_selfhosted_blog">Cuir làrach air fèin-òstaireachd ris</string>
 	<string name="media_add_popup_title">Cuir ri leabharlann nam meadhanan</string>
-	<string name="jetpack_not_found">Cha deach am plugan Jetpack a lorg</string>
 	<string name="reader_untitled_post">(Gun tiotal)</string>
 	<string name="reader_btn_share">Co-roinn</string>
 	<string name="reader_btn_follow">Lean</string>

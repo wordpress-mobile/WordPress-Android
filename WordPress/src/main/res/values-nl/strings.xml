@@ -456,7 +456,6 @@ Language: nl
 	<string name="checking_username">Gebruikersnaam controleren</string>
 	<string name="jetpack_different_com_account">Jetpack-sites die behoren tot verschillende WordPress.com-accounts, worden niet ondersteund</string>
 	<string name="jetpack_use_com_account">Log in op de WordPress.com-account die je gebruikte om verbinding te maken met Jetpack om je Jetpack-site toe te voegen.</string>
-	<string name="jetpack_message">De Jetpack-plugin moet worden geïnstalleerd en geactiveerd. Wil je Jetpack installeren of activeren?</string>
 	<string name="error_media_load">Kan media niet laden.</string>
 	<string name="error_media_refresh_no_connection">Een verbinding is vereist om de bibliotheek te vernieuwen</string>
 	<string name="error_media_unauthorized">Je bent niet gemachtigd media weer te geven of te bewerken</string>
@@ -636,8 +635,6 @@ Language: nl
 	<string name="enter_your_password_instead">Voer je wachtwoord in</string>
 	<string name="web_address_dialog_hint">Wordt openbaar getoond als je reageert.</string>
 	<string name="username_email">E-mail of gebruikersnaam</string>
-	<string name="jetpack_not_connected_message">De Jetpack-plugin is geïnstalleerd, maar niet verbonden met WordPress.com. Wil je Jetpack verbinden?</string>
-	<string name="jetpack_not_connected">Jetpack-plugin niet verbonden</string>
 	<string name="new_editor_reflection_error">Visual Editor is niet compatibel met uw apparaat. Het is\n automatisch uitgeschakeld.</string>
 	<string name="stats_insights_latest_post_no_title">(geen titel)</string>
 	<string name="capture_or_pick_photo">Neem of selecteer foto</string>
@@ -1299,7 +1296,6 @@ Language: nl
 	<string name="reader_toast_err_remove_tag">Deze tag kan niet worden verwijderd</string>
 	<string name="reader_toast_err_add_tag">Deze tag kan niet worden toegevoegd</string>
 	<string name="reader_title_applog">Applicatielogboek</string>
-	<string name="jetpack_message_not_admin">De Jetpack-plugin is vereist. Neem contact op met de sitebeheerder.</string>
 	<string name="fatal_db_error">Er heeft zich een fout voorgedaan bij het aanmaken van de database van de app. Probeer de app opnieuw te installeren.</string>
 	<string name="error_blog_hidden">Dit blog is verborgen en kan niet worden geladen. Schakel het blog in instellingen in en probeer het opnieuw.</string>
 	<string name="error_refresh_media">Media konden op dit moment niet worden vernieuwd</string>
@@ -1435,7 +1431,6 @@ Language: nl
 	<string name="reader_btn_follow">Volg</string>
 	<string name="reader_btn_share">Delen</string>
 	<string name="reader_untitled_post">(geen titel)</string>
-	<string name="jetpack_not_found">Jetpack plugin niet gevonden</string>
 	<string name="empty_list_default">Deze lijst is leeg</string>
 	<string name="media_add_popup_title">Toevoegen aan mediabibliotheek</string>
 	<string name="passcode_turn_on">Zet PIN slot aan</string>
