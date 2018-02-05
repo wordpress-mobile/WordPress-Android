@@ -1,6 +1,7 @@
 package org.wordpress.android.ui.stats;
 
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
 import android.text.Html;
 import android.text.TextUtils;
@@ -241,8 +242,14 @@ public abstract class StatsAbstractListFragment extends StatsAbstractFragment {
             params.weight = 1;
             if (i == 0) {
                 params.setMargins(0, 0, dp4, 0);
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
+                    params.setMarginEnd(dp4);
+                }
             } else {
                 params.setMargins(dp4, 0, 0, 0);
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
+                    params.setMarginStart(dp4);
+                }
             }
             rb.setMinimumWidth(dp80);
             rb.setGravity(Gravity.CENTER);
