@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <dimen name="toolbar_content_offset">72dp</dimen>
+    <dimen name="toolbar_content_offset_end">16dp</dimen>
 
     <dimen name="margin_none">0dp</dimen>
     <dimen name="margin_dialog">24dp</dimen>
