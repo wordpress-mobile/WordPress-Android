@@ -156,9 +156,6 @@ public class AppPrefs {
         ASKED_PERMISSION_LOCATION_COURSE,
         ASKED_PERMISSION_LOCATION_FINE,
 
-        // wizard style login flow active
-        LOGIN_WIZARD_STYLE_ACTIVE,
-
         // Updated after WP.com themes have been fetched
         LAST_WP_COM_THEMES_SYNC
     }
@@ -409,14 +406,6 @@ public class AppPrefs {
             return THEME_IMAGE_SIZE_WIDTH_DEFAULT;
         } else {
             return getInt(UndeletablePrefKey.THEME_IMAGE_SIZE_WIDTH);
-        }
-    }
-
-    // Wizard-style login flow
-    public static void setLoginWizardStyleActive(boolean loginWizardActive) {
-        setBoolean(UndeletablePrefKey.LOGIN_WIZARD_STYLE_ACTIVE, loginWizardActive);
-        if (loginWizardActive) {
-            AnalyticsTracker.track(Stat.LOGIN_WIZARD_STYLE_ACTIVATED);
         }
     }
 
