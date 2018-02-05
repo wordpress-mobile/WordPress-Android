@@ -207,11 +207,12 @@ public class MySiteFragment extends Fragment
         rootView.findViewById(R.id.row_stats).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (!mAccountStore.hasAccessToken()) {
+                SiteModel selectedSite = getSelectedSite();
+                if (!mAccountStore.hasAccessToken() && selectedSite != null && selectedSite.isJetpackConnected()) {
                     // If the user is not connected to WordPress.com, ask him to connect first.
                     startWPComLoginForJetpackStats();
                 } else {
-                    ActivityLauncher.viewBlogStats(getActivity(), getSelectedSite());
+                    ActivityLauncher.viewBlogStats(getActivity(), selectedSite);
                 }
             }
         });
@@ -522,8 +523,7 @@ public class MySiteFragment extends Fragment
                         getActivity().findViewById(R.id.coordinator), true,
                         event.post, event.errorMessage, site, mDispatcher);
             }
-        }
-        else if (event.mediaModelList != null && !event.mediaModelList.isEmpty()) {
+        } else if (event.mediaModelList != null && !event.mediaModelList.isEmpty()) {
             UploadUtils.onMediaUploadedSnackbarHandler(getActivity(),
                     getActivity().findViewById(R.id.coordinator), true,
                     event.mediaModelList, site, event.errorMessage);
