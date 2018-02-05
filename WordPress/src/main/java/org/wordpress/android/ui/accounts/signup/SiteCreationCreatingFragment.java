@@ -237,6 +237,11 @@ public class SiteCreationCreatingFragment extends SiteCreationBaseFormFragment<S
         showHomeButton(!mInModalMode);
     }
 
+    private void configureImage(boolean hasFailure) {
+        mImageView.setImageResource(hasFailure ? R.drawable.img_site_error_camera_pencils_226dp
+                : R.drawable.img_site_wordpress_camera_pencils_226dp);
+    }
+
     private void handleFailure(final OnSiteCreationStateUpdated failedState) {
         // update UI depending on which phase the process failed so to properly offer retry options
         mRetryButton.setOnClickListener(new View.OnClickListener() {
@@ -272,28 +277,34 @@ public class SiteCreationCreatingFragment extends SiteCreationBaseFormFragment<S
         switch (event.getPhase()) {
             case IDLE:
                 disableUntil(0);
+                configureImage(false);
                 break;
             case NEW_SITE:
                 disableUntil(R.id.site_creation_creating_laying_foundation);
+                configureImage(false);
                 break;
             case FETCHING_NEW_SITE:
                 disableUntil(R.id.site_creation_creating_fetching_info);
+                configureImage(false);
                 break;
             case SET_TAGLINE:
                 disableUntil(R.id.site_creation_creating_configuring_content);
+                configureImage(false);
                 break;
             case SET_THEME:
                 disableUntil(R.id.site_creation_creating_configuring_theme);
+                configureImage(false);
                 break;
             case FAILURE:
                 setModalMode(false);
-                mImageView.setImageResource(R.drawable.img_site_error_camera_pencils_226dp);
+                configureImage(true);
                 mProgressContainer.setVisibility(View.GONE);
                 mErrorContainer.setVisibility(View.VISIBLE);
                 handleFailure((OnSiteCreationStateUpdated) event.getPayload());
                 break;
             case PRELOAD:
                 disableUntil(R.id.site_creation_creating_preparing_frontend);
+                configureImage(false);
                 mPreviewWebViewClient = loadWebview();
                 break;
             case SUCCESS:
