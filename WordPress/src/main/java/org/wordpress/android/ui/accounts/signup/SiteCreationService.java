@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Handler;
 import android.os.Looper;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.annotation.StringRes;
 import android.text.TextUtils;
@@ -21,8 +22,7 @@ import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.model.ThemeModel;
 import org.wordpress.android.fluxc.store.SiteStore;
 import org.wordpress.android.fluxc.store.ThemeStore;
-import org.wordpress.android.ui.accounts.signup.SiteCreationService.OnSiteCreationStateUpdated;
-import org.wordpress.android.ui.accounts.signup.SiteCreationService.SiteCreationPhase;
+import org.wordpress.android.ui.accounts.signup.SiteCreationService.SiteCreationState;
 import org.wordpress.android.ui.prefs.SiteSettingsInterface;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
@@ -34,7 +34,7 @@ import java.util.Map;
 
 import javax.inject.Inject;
 
-public class SiteCreationService extends AutoForeground<SiteCreationPhase, OnSiteCreationStateUpdated> {
+public class SiteCreationService extends AutoForeground<SiteCreationState> {
 
     private static final String ARG_SITE_TITLE = "ARG_SITE_TITLE";
     private static final String ARG_SITE_TAGLINE = "ARG_SITE_TAGLINE";
@@ -47,7 +47,7 @@ public class SiteCreationService extends AutoForeground<SiteCreationPhase, OnSit
 
     private static final int PRELOAD_TIMEOUT_MS = 3000;
 
-    public enum SiteCreationPhase implements AutoForeground.ServicePhase {
+    public enum SiteCreationStep {
         IDLE,
         NEW_SITE(25),
         FETCHING_NEW_SITE(50),
@@ -59,32 +59,55 @@ public class SiteCreationService extends AutoForeground<SiteCreationPhase, OnSit
 
         public final int progressPercent;
 
-        SiteCreationPhase() {
+        SiteCreationStep() {
             this.progressPercent = 0;
         }
 
-        SiteCreationPhase(int progressPercent) {
+        SiteCreationStep(int progressPercent) {
             this.progressPercent = progressPercent;
+        }
+    }
+
+    public static class SiteCreationState implements AutoForeground.ServiceState {
+        private final SiteCreationStep mStep;
+        private final Object payload;
+
+        SiteCreationState(@NonNull SiteCreationStep step, @Nullable Object payload) {
+            this.mStep = step;
+            this.payload = payload;
+        }
+
+        SiteCreationStep getStep() {
+            return mStep;
+        }
+
+        public Object getPayload() {
+            return payload;
         }
 
         @Override
         public boolean isIdle() {
-            return this == IDLE;
+            return mStep == SiteCreationStep.IDLE;
         }
 
         @Override
         public boolean isInProgress() {
-            return this != IDLE && !isTerminal();
+            return mStep != SiteCreationStep.IDLE && !isTerminal();
         }
 
         @Override
         public boolean isError() {
-            return this == FAILURE;
+            return mStep == SiteCreationStep.FAILURE;
         }
 
         @Override
         public boolean isTerminal() {
-            return this == SUCCESS || isError();
+            return mStep == SiteCreationStep.SUCCESS || isError();
+        }
+
+        @Override
+        public String getStepName() {
+            return mStep.name();
         }
     }
 
@@ -115,26 +138,6 @@ public class SiteCreationService extends AutoForeground<SiteCreationPhase, OnSit
         }
     }
 
-    public static class OnSiteCreationStateUpdated implements AutoForeground.ServiceEvent<SiteCreationPhase> {
-        private final SiteCreationPhase phase;
-        private final Object payload;
-
-        OnSiteCreationStateUpdated(SiteCreationPhase phase, Object payload) {
-            this.phase = phase;
-            this.payload = payload;
-        }
-
-        @Override
-        public SiteCreationPhase getPhase() {
-            return phase;
-        }
-
-        public Object getPayload() {
-            return payload;
-        }
-
-    }
-
     @Inject Dispatcher mDispatcher;
     @Inject SiteStore mSiteStore;
     @Inject ThemeStore mThemeStore;
@@ -160,16 +163,16 @@ public class SiteCreationService extends AutoForeground<SiteCreationPhase, OnSit
         context.startService(intent);
     }
 
-    public static void retryFromPhase(
+    public static void retryFromState(
             Context context,
-            SiteCreationPhase retryFromPhase,
+            SiteCreationState retryFromState,
             long newSiteRemoteId,
             String siteTagline,
             String siteThemeId) {
         clearSiteCreationServiceState();
 
         Intent intent = new Intent(context, SiteCreationService.class);
-        intent.putExtra(ARG_RESUME_PHASE, retryFromPhase.name());
+        intent.putExtra(ARG_RESUME_PHASE, retryFromState.getStepName());
         intent.putExtra(ARG_SITE_REMOTE_ID, newSiteRemoteId);
         intent.putExtra(ARG_SITE_TAGLINE, siteTagline);
         intent.putExtra(ARG_SITE_THEME_ID, siteThemeId);
@@ -177,11 +180,11 @@ public class SiteCreationService extends AutoForeground<SiteCreationPhase, OnSit
     }
 
     public static void clearSiteCreationServiceState() {
-        clearServiceState(SiteCreationService.OnSiteCreationStateUpdated.class);
+        clearServiceState(SiteCreationState.class);
     }
 
     public SiteCreationService() {
-        super(new OnSiteCreationStateUpdated(SiteCreationPhase.IDLE, null));
+        super(new SiteCreationState(SiteCreationStep.IDLE, null));
     }
 
     @Override
@@ -195,8 +198,8 @@ public class SiteCreationService extends AutoForeground<SiteCreationPhase, OnSit
     }
 
     @Override
-    public Notification getNotification(OnSiteCreationStateUpdated state) {
-        switch (state.getPhase()) {
+    public Notification getNotification(SiteCreationState state) {
+        switch (state.getStep()) {
             case NEW_SITE:
                 return SiteCreationNotification.progress(this, 25, R.string.site_creation_creating_laying_foundation,
                         R.string.notification_site_creation_step_creating);
@@ -208,7 +211,7 @@ public class SiteCreationService extends AutoForeground<SiteCreationPhase, OnSit
                         R.string.notification_site_creation_step_tagline);
             case SET_THEME:
             case PRELOAD:
-                // treat PRELOAD phase as SET_THEME since when in background the UI isn't doing any preloading.
+                // treat PRELOAD step as SET_THEME since when in background the UI isn't doing any preloading.
                 return SiteCreationNotification.progress(this, 100, R.string.site_creation_creating_configuring_theme,
                         R.string.notification_site_creation_step_theme);
             case SUCCESS:
@@ -220,18 +223,17 @@ public class SiteCreationService extends AutoForeground<SiteCreationPhase, OnSit
         return null;
     }
 
-    @Override
-    protected void trackPhaseUpdate(Map<String, ?> props) {
+    protected void trackStateUpdate(Map<String, ?> props) {
         AnalyticsTracker.track(AnalyticsTracker.Stat.SITE_CREATION_BACKGROUND_SERVICE_UPDATE, props);
     }
 
     /**
      * Helper method to create a new State object and set it as the new state.
-     * @param phase The phase of the new state
+     * @param step The step of the new state
      * @param payload The payload to attach to the new state
      */
-    private void setState(SiteCreationPhase phase, Object payload) {
-        setState(new OnSiteCreationStateUpdated(phase, payload));
+    private void setState(SiteCreationStep step, Object payload) {
+        setState(new SiteCreationState(step, payload));
     }
 
     @Override
@@ -266,13 +268,13 @@ public class SiteCreationService extends AutoForeground<SiteCreationPhase, OnSit
             mNewSite = mSiteStore.getSiteBySiteId(mNewSiteRemoteId);
         }
 
-        final SiteCreationPhase continueFromPhase = intent.hasExtra(ARG_RESUME_PHASE) ?
-                SiteCreationPhase.valueOf(intent.getStringExtra(ARG_RESUME_PHASE)) : SiteCreationPhase.IDLE;
+        final SiteCreationStep continueFromPhase = intent.hasExtra(ARG_RESUME_PHASE) ?
+                SiteCreationStep.valueOf(intent.getStringExtra(ARG_RESUME_PHASE)) : SiteCreationStep.IDLE;
 
-        if (continueFromPhase.isTerminal()) {
-            throw new RuntimeException("Internal inconsistency: SiteCreationService can't resume a terminal phase!");
-        } else if (continueFromPhase == SiteCreationPhase.IDLE || continueFromPhase == SiteCreationPhase.NEW_SITE) {
-            setState(SiteCreationPhase.NEW_SITE, null);
+        if (new SiteCreationState(continueFromPhase, null).isTerminal()) {
+            throw new RuntimeException("Internal inconsistency: SiteCreationService can't resume a terminal step!");
+        } else if (continueFromPhase == SiteCreationStep.IDLE || continueFromPhase == SiteCreationStep.NEW_SITE) {
+            setState(SiteCreationStep.NEW_SITE, null);
             createNewSite(intent.getStringExtra(ARG_SITE_TITLE), intent.getStringExtra(ARG_SITE_SLUG));
         } else {
             executePhase(continueFromPhase);
@@ -281,13 +283,13 @@ public class SiteCreationService extends AutoForeground<SiteCreationPhase, OnSit
         return START_REDELIVER_INTENT;
     }
 
-    private void executePhase(SiteCreationPhase phase) {
+    private void executePhase(SiteCreationStep phase) {
         switch (phase) {
             case FETCHING_NEW_SITE:
                 if (mNewSiteRemoteId == -1) {
                     throw new RuntimeException("Internal inconsistency: Cannot resume, invalid site id!");
                 }
-                setState(SiteCreationPhase.FETCHING_NEW_SITE, mNewSiteRemoteId);
+                setState(SiteCreationStep.FETCHING_NEW_SITE, mNewSiteRemoteId);
                 fetchNewSite();
                 break;
             case SET_TAGLINE:
@@ -296,7 +298,7 @@ public class SiteCreationService extends AutoForeground<SiteCreationPhase, OnSit
                     notifyFailure();
                     return;
                 }
-                setState(SiteCreationPhase.SET_TAGLINE, mNewSiteRemoteId);
+                setState(SiteCreationStep.SET_TAGLINE, mNewSiteRemoteId);
                 setTagline();
                 break;
             case SET_THEME:
@@ -305,7 +307,7 @@ public class SiteCreationService extends AutoForeground<SiteCreationPhase, OnSit
                     notifyFailure();
                     return;
                 }
-                setState(SiteCreationPhase.SET_THEME, mNewSiteRemoteId);
+                setState(SiteCreationStep.SET_THEME, mNewSiteRemoteId);
                 activateTheme(mSiteTheme);
                 break;
             case PRELOAD:
@@ -314,18 +316,18 @@ public class SiteCreationService extends AutoForeground<SiteCreationPhase, OnSit
                     notifyFailure();
                     return;
                 }
-                setState(SiteCreationPhase.PRELOAD, mNewSiteRemoteId);
+                setState(SiteCreationStep.PRELOAD, mNewSiteRemoteId);
                 doPreloadDelay();
                 break;
             case SUCCESS:
-                setState(SiteCreationPhase.SUCCESS, null);
+                setState(SiteCreationStep.SUCCESS, null);
                 break;
         }
     }
 
-    private void finishedPhase(SiteCreationPhase phase) {
-        // we'll go to the next phase in the sequence
-        SiteCreationPhase nextPhase = SiteCreationPhase.values()[phase.ordinal() + 1];
+    private void finishedPhase(SiteCreationStep phase) {
+        // we'll go to the next step in the sequence
+        SiteCreationStep nextPhase = SiteCreationStep.values()[phase.ordinal() + 1];
         executePhase(nextPhase);
     }
 
@@ -368,7 +370,7 @@ public class SiteCreationService extends AutoForeground<SiteCreationPhase, OnSit
 
                         @Override
                         public void onSettingsSaved() {
-                            finishedPhase(SiteCreationPhase.SET_TAGLINE);
+                            finishedPhase(SiteCreationStep.SET_TAGLINE);
                         }
 
                         @Override
@@ -388,7 +390,7 @@ public class SiteCreationService extends AutoForeground<SiteCreationPhase, OnSit
             siteSettings.setTagline(mSiteTagline);
             siteSettings.saveSettings();
         } else {
-            finishedPhase(SiteCreationPhase.SET_TAGLINE);
+            finishedPhase(SiteCreationStep.SET_TAGLINE);
         }
     }
 
@@ -401,19 +403,19 @@ public class SiteCreationService extends AutoForeground<SiteCreationPhase, OnSit
         new Handler(Looper.getMainLooper()).postDelayed(new Runnable() {
             @Override
             public void run() {
-                finishedPhase(SiteCreationPhase.PRELOAD);
+                finishedPhase(SiteCreationStep.PRELOAD);
             }
         }, PRELOAD_TIMEOUT_MS);
     }
 
     private void notifyFailure() {
-        OnSiteCreationStateUpdated currentState = getState();
+        SiteCreationState currentState = getState();
 
-        AppLog.e(T.NUX, "SiteCreationService entered state FAILURE while on phase: "
-                + (currentState == null ? "null" : currentState.getPhase().name()));
+        AppLog.e(T.NUX, "SiteCreationService entered state FAILURE while on step: "
+                + (currentState == null ? "null" : currentState.getStep().name()));
 
         // new state is FAILURE and pass the previous state as payload
-        setState(SiteCreationPhase.FAILURE, getState());
+        setState(SiteCreationStep.FAILURE, getState());
     }
 
     // OnChanged events
@@ -431,7 +433,7 @@ public class SiteCreationService extends AutoForeground<SiteCreationPhase, OnSit
 
         mNewSiteRemoteId = event.newSiteRemoteId;
 
-        finishedPhase(SiteCreationPhase.NEW_SITE);
+        finishedPhase(SiteCreationStep.NEW_SITE);
     }
 
     @SuppressWarnings("unused")
@@ -451,7 +453,7 @@ public class SiteCreationService extends AutoForeground<SiteCreationPhase, OnSit
             return;
         }
 
-        finishedPhase(SiteCreationPhase.FETCHING_NEW_SITE);
+        finishedPhase(SiteCreationStep.FETCHING_NEW_SITE);
     }
 
     @SuppressWarnings("unused")
@@ -463,6 +465,6 @@ public class SiteCreationService extends AutoForeground<SiteCreationPhase, OnSit
             return;
         }
 
-        finishedPhase(SiteCreationPhase.SET_THEME);
+        finishedPhase(SiteCreationStep.SET_THEME);
     }
 }

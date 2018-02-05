@@ -190,7 +190,7 @@ public class SiteCreationDomainFragment extends SiteCreationBaseFormFragment<Sit
                     });
         }
 
-        switch (event.phase) {
+        switch (event.step) {
             case UPDATING:
                 mSelectedDomain = mCarryOverDomain;
                 mSiteCreationDomainAdapter.setData(true, mCarryOverDomain, mSelectedDomain, null);

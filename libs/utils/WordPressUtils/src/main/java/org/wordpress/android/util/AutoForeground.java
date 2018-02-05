@@ -14,29 +14,24 @@ import android.support.v4.app.NotificationManagerCompat;
 
 import org.greenrobot.eventbus.EventBus;
 
-import org.wordpress.android.util.AutoForeground.ServiceEvent;
-import org.wordpress.android.util.AutoForeground.ServicePhase;
+import org.wordpress.android.util.AutoForeground.ServiceState;
 
 import java.util.HashMap;
 import java.util.Map;
 
-public abstract class AutoForeground<PhaseClass extends ServicePhase, StateClass extends ServiceEvent<PhaseClass>>
+public abstract class AutoForeground<StateClass extends ServiceState>
         extends Service {
 
     public static final int NOTIFICATION_ID_PROGRESS = 1;
     public static final int NOTIFICATION_ID_SUCCESS = 2;
     public static final int NOTIFICATION_ID_FAILURE = 3;
 
-    public interface ServicePhase {
+    public interface ServiceState {
         boolean isIdle();
         boolean isInProgress();
         boolean isError();
         boolean isTerminal();
-        String name();
-    }
-
-    public interface ServiceEvent<T> {
-        T getPhase();
+        String getStepName();
     }
 
     public static class ServiceEventConnection {
@@ -78,7 +73,7 @@ public abstract class AutoForeground<PhaseClass extends ServicePhase, StateClass
     protected abstract void onProgressEnd();
 
     protected abstract Notification getNotification(StateClass state);
-    protected abstract void trackPhaseUpdate(Map<String, ?> props);
+    protected abstract void trackStateUpdate(Map<String, ?> props);
 
     @SuppressWarnings("unchecked")
     protected AutoForeground(StateClass initialState) {
@@ -141,7 +136,7 @@ public abstract class AutoForeground<PhaseClass extends ServicePhase, StateClass
 
     private void promoteForeground() {
         final StateClass state = getState();
-        if (state.getPhase().isInProgress()) {
+        if (state.isInProgress()) {
             startForeground(NOTIFICATION_ID_PROGRESS, getNotification(state));
             mIsForeground = true;
         }
@@ -155,24 +150,24 @@ public abstract class AutoForeground<PhaseClass extends ServicePhase, StateClass
     @CallSuper
     protected void setState(StateClass newState) {
         StateClass currentState = getState();
-        if ((currentState == null || !currentState.getPhase().isInProgress()) && newState.getPhase().isInProgress()) {
+        if ((currentState == null || !currentState.isInProgress()) && newState.isInProgress()) {
             onProgressStart();
         }
 
-        track(newState.getPhase());
+        track(newState);
         notifyState(newState);
 
-        if (newState.getPhase().isTerminal()) {
+        if (newState.isTerminal()) {
             onProgressEnd();
             stopSelf();
         }
     }
 
-    private void track(ServicePhase phase) {
+    private void track(ServiceState state) {
         Map<String, Object> props = new HashMap<>();
-        props.put("login_phase", phase == null ? "null" : phase.name());
+        props.put("login_phase", state == null ? "null" : state.getStepName());
         props.put("login_service_is_foreground", isForeground());
-        trackPhaseUpdate(props);
+        trackStateUpdate(props);
     }
 
     protected static <T> void clearServiceState(Class<T> klass) {
@@ -191,12 +186,12 @@ public abstract class AutoForeground<PhaseClass extends ServicePhase, StateClass
 
         // ok, no connected clients so, update might need to be delivered to a notification as well
 
-        if (state.getPhase().isIdle()) {
+        if (state.isIdle()) {
             // no need to have a notification when idle
             return;
         }
 
-        if (state.getPhase().isInProgress()) {
+        if (state.isInProgress()) {
             // operation still is progress so, update the notification
             NotificationManagerCompat.from(this).notify(NOTIFICATION_ID_PROGRESS, getNotification(state));
             return;
@@ -210,7 +205,7 @@ public abstract class AutoForeground<PhaseClass extends ServicePhase, StateClass
 
         // put out a simple success/failure notification
         NotificationManagerCompat.from(this).notify(
-                state.getPhase().isError() ? NOTIFICATION_ID_FAILURE : NOTIFICATION_ID_SUCCESS,
+                state.isError() ? NOTIFICATION_ID_FAILURE : NOTIFICATION_ID_SUCCESS,
                 getNotification(state));
     }
 }

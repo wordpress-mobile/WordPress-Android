@@ -15,8 +15,7 @@ import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 import org.wordpress.android.R;
 import org.wordpress.android.analytics.AnalyticsTracker;
-import org.wordpress.android.ui.accounts.signup.SiteCreationService.OnSiteCreationStateUpdated;
-import org.wordpress.android.ui.accounts.signup.SiteCreationService.SiteCreationPhase;
+import org.wordpress.android.ui.accounts.signup.SiteCreationService.SiteCreationState;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.AutoForeground.ServiceEventConnection;
@@ -179,10 +178,10 @@ public class SiteCreationCreatingFragment extends SiteCreationBaseFormFragment<S
         SiteCreationService.createSite(getContext(), siteTitle, siteTagline, siteSlug, themeId);
     }
 
-    private void retryFromPhase(SiteCreationPhase retryFromPhase, long newSiteRemoteId) {
+    private void retryFromState(SiteCreationState retryFromState, long newSiteRemoteId) {
         String siteTagline = getArguments().getString(ARG_SITE_TAGLINE);
         String themeId = getArguments().getString(ARG_SITE_THEME_ID);
-        SiteCreationService.retryFromPhase(getContext(), retryFromPhase, newSiteRemoteId, siteTagline, themeId);
+        SiteCreationService.retryFromState(getContext(), retryFromState, newSiteRemoteId, siteTagline, themeId);
     }
 
     private void mutateToCompleted(boolean showWebView) {
@@ -242,8 +241,8 @@ public class SiteCreationCreatingFragment extends SiteCreationBaseFormFragment<S
                 : R.drawable.img_site_wordpress_camera_pencils_226dp);
     }
 
-    private void handleFailure(final OnSiteCreationStateUpdated failedState) {
-        // update UI depending on which phase the process failed so to properly offer retry options
+    private void handleFailure(final SiteCreationState failedState) {
+        // update UI depending on which step the process failed so to properly offer retry options
         mRetryButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -252,15 +251,15 @@ public class SiteCreationCreatingFragment extends SiteCreationBaseFormFragment<S
                     return;
                 }
 
-                final SiteCreationPhase failedPhase = failedState.getPhase();
-                AppLog.d(T.NUX, "User retries failed site creation on phase: " + failedPhase.name());
-                if (failedPhase.isTerminal()) {
+                AppLog.d(T.NUX, "User retries failed site creation on step: " + failedState.getStepName());
+                if (failedState.isTerminal()) {
                     throw new RuntimeException("Internal inconsistency: Cannot resume site creation from "
-                            + failedPhase.name());
-                } else if (failedPhase == SiteCreationPhase.IDLE || failedPhase == SiteCreationPhase.NEW_SITE) {
+                            + failedState.getStepName());
+                } else if (failedState.getStep() == SiteCreationService.SiteCreationStep.IDLE
+                        || failedState.getStep() == SiteCreationService.SiteCreationStep.NEW_SITE) {
                     createSite();
                 } else {
-                    retryFromPhase(failedState.getPhase(), (long) failedState.getPayload());
+                    retryFromState(failedState, (long) failedState.getPayload());
                 }
             }
         });
@@ -268,13 +267,13 @@ public class SiteCreationCreatingFragment extends SiteCreationBaseFormFragment<S
 
     @SuppressWarnings("unused")
     @Subscribe(threadMode = ThreadMode.MAIN, sticky = true)
-    public void onSiteCreationPhaseUpdated(OnSiteCreationStateUpdated event) {
-        AppLog.i(T.NUX, "Received state: " + event.getPhase().name());
+    public void onSiteCreationStateUpdated(SiteCreationState event) {
+        AppLog.i(T.NUX, "Received state: " + event.getStepName());
 
         mProgressContainer.setVisibility(View.VISIBLE);
         mErrorContainer.setVisibility(View.GONE);
 
-        switch (event.getPhase()) {
+        switch (event.getStep()) {
             case IDLE:
                 disableUntil(0);
                 configureImage(false);
@@ -300,7 +299,7 @@ public class SiteCreationCreatingFragment extends SiteCreationBaseFormFragment<S
                 configureImage(true);
                 mProgressContainer.setVisibility(View.GONE);
                 mErrorContainer.setVisibility(View.VISIBLE);
-                handleFailure((OnSiteCreationStateUpdated) event.getPayload());
+                handleFailure((SiteCreationState) event.getPayload());
                 break;
             case PRELOAD:
                 disableUntil(R.id.site_creation_creating_preparing_frontend);

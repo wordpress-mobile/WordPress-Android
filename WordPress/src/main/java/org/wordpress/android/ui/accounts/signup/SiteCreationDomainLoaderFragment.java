@@ -20,19 +20,19 @@ public class SiteCreationDomainLoaderFragment extends Fragment {
 
     private static final String ARG_USERNAME = "ARG_USERNAME";
 
-    public enum DomainUpdatePhase {
+    public enum DomainUpdateStep {
         UPDATING,
         FINISHED,
         ERROR
     }
 
     static class DomainSuggestionEvent {
-        final DomainUpdatePhase phase;
+        final DomainUpdateStep step;
         final String query;
         final OnSuggestedDomains event;
 
-        DomainSuggestionEvent(DomainUpdatePhase phase, String query, OnSuggestedDomains event) {
-            this.phase = phase;
+        DomainSuggestionEvent(DomainUpdateStep step, String query, OnSuggestedDomains event) {
+            this.step = step;
             this.query = query;
             this.event = event;
         }
@@ -71,7 +71,7 @@ public class SiteCreationDomainLoaderFragment extends Fragment {
     }
 
     public void load(String keywords) {
-        postUpdate(new DomainSuggestionEvent(DomainUpdatePhase.UPDATING, keywords, null));
+        postUpdate(new DomainSuggestionEvent(DomainUpdateStep.UPDATING, keywords, null));
 
         SiteStore.SuggestDomainsPayload payload = new SiteStore.SuggestDomainsPayload(keywords, true, false, 20);
         mDispatcher.dispatch(SiteActionBuilder.newSuggestDomainsAction(payload));
@@ -82,10 +82,10 @@ public class SiteCreationDomainLoaderFragment extends Fragment {
     public void onSuggestedDomains(OnSuggestedDomains event) {
         if (event.isError()) {
             AppLog.e(AppLog.T.API, "Error fetching domain suggestions: " + event.error.message);
-            postUpdate(new DomainSuggestionEvent(DomainUpdatePhase.ERROR, event.query, event));
+            postUpdate(new DomainSuggestionEvent(DomainUpdateStep.ERROR, event.query, event));
         } else {
             AppLog.d(AppLog.T.API, "WordPress.com domain suggestions fetch successful!");
-            postUpdate(new DomainSuggestionEvent(DomainUpdatePhase.FINISHED, event.query, event));
+            postUpdate(new DomainSuggestionEvent(DomainUpdateStep.FINISHED, event.query, event));
         }
     }
 }

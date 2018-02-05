@@ -18,7 +18,7 @@ import android.widget.TextView;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 import org.wordpress.android.login.LoginWpcomService.OnCredentialsOK;
-import org.wordpress.android.login.LoginWpcomService.OnLoginStateUpdated;
+import org.wordpress.android.login.LoginWpcomService.LoginState;
 import org.wordpress.android.login.util.SiteUtils;
 import org.wordpress.android.login.widgets.WPLoginInputRow;
 import org.wordpress.android.login.widgets.WPLoginInputRow.OnEditorCommitListener;
@@ -267,10 +267,10 @@ public class LoginEmailPasswordFragment extends LoginBaseFormFragment<LoginListe
 
     @SuppressWarnings("unused")
     @Subscribe(threadMode = ThreadMode.MAIN, sticky = true)
-    public void onLoginStateUpdated(OnLoginStateUpdated event) {
-        AppLog.i(T.NUX, "Received state: " + event.getPhase().name());
+    public void onLoginStateUpdated(LoginState loginState) {
+        AppLog.i(T.NUX, "Received state: " + loginState.getStepName());
 
-        switch (event.getPhase()) {
+        switch (loginState.getStep()) {
             case IDLE:
                 // nothing special to do, we'll start the service on next()
                 break;

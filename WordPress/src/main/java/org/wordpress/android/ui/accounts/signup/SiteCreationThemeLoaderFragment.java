@@ -11,7 +11,6 @@ import org.wordpress.android.fluxc.Dispatcher;
 import org.wordpress.android.fluxc.generated.ThemeActionBuilder;
 import org.wordpress.android.fluxc.store.ThemeStore;
 import org.wordpress.android.util.AppLog;
-import org.wordpress.android.util.AutoForeground;
 
 import javax.inject.Inject;
 
@@ -24,14 +23,14 @@ public class SiteCreationThemeLoaderFragment extends Fragment {
         ERROR
     }
 
-    public static class OnThemeLoadingUpdated implements AutoForeground.ServiceEvent<ThemesUpdateState> {
+    static class OnThemeLoadingUpdated {
         private final ThemesUpdateState state;
 
         OnThemeLoadingUpdated(ThemesUpdateState state) {
             this.state = state;
         }
 
-        public ThemesUpdateState getPhase() {
+        ThemesUpdateState getPhase() {
             return state;
         }
     }
