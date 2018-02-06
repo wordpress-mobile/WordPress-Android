@@ -1,6 +1,5 @@
 package org.wordpress.android.fluxc.store;
 
-import android.database.Cursor;
 import android.support.annotation.NonNull;
 import android.text.TextUtils;
 
@@ -256,10 +255,6 @@ public class ThemeStore extends Store {
 
     public List<ThemeModel> getWpComMobileFriendlyThemes(String categorySlug) {
         return ThemeSqlUtils.getWpComMobileFriendlyThemes(categorySlug);
-    }
-
-    public Cursor getWpComThemesCursor() {
-        return ThemeSqlUtils.getWpComThemesCursor();
     }
 
     public List<ThemeModel> getThemesForSite(@NonNull SiteModel site) {
