@@ -408,7 +408,10 @@
         <item name="android:paddingTop">@dimen/margin_large</item>
         <item name="android:paddingBottom">@dimen/margin_large</item>
         <item name="android:paddingLeft">@dimen/margin_extra_large</item>
+        <item name="android:paddingRight">0dp</item>
         <item name="android:paddingStart" tools:targetApi="jelly_bean_mr1">@dimen/margin_extra_large</item>
+        <item name="android:paddingEnd" tools:targetApi="jelly_bean_mr1">0dp</item>
+
     </style>
 
     <style name="MySiteListRowSecondaryElement">
