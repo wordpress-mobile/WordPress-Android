@@ -69,8 +69,10 @@ public class SiteModel extends Payload<BaseNetworkError> implements Identifiable
     @Column private boolean mIsJetpackInstalled;
     // mIsJetpackConnected is true if Jetpack is installed, activated and connected to a WordPress.com account.
     @Column private boolean mIsJetpackConnected;
-    @Column private boolean mIsAutomatedTransfer;
     @Column private String mJetpackVersion;
+    @Column private boolean mIsAutomatedTransfer;
+    @Column private boolean mIsWpComStore;
+    @Column private boolean mHasWooCommerce;
 
     // WPCom specifics
     @Column private boolean mIsVisible = true;
@@ -521,6 +523,14 @@ public class SiteModel extends Payload<BaseNetworkError> implements Identifiable
         mIsJetpackConnected = jetpackConnected;
     }
 
+    public String getJetpackVersion() {
+        return mJetpackVersion;
+    }
+
+    public void setJetpackVersion(String jetpackVersion) {
+        mJetpackVersion = jetpackVersion;
+    }
+
     public boolean isAutomatedTransfer() {
         return mIsAutomatedTransfer;
     }
@@ -529,12 +539,20 @@ public class SiteModel extends Payload<BaseNetworkError> implements Identifiable
         mIsAutomatedTransfer = automatedTransfer;
     }
 
-    public String getJetpackVersion() {
-        return mJetpackVersion;
+    public boolean isWpComStore() {
+        return mIsWpComStore;
     }
 
-    public void setJetpackVersion(String jetpackVersion) {
-        mJetpackVersion = jetpackVersion;
+    public void setIsWpComStore(boolean isWpComStore) {
+        mIsWpComStore = isWpComStore;
+    }
+
+    public boolean getHasWooCommerce() {
+        return mHasWooCommerce;
+    }
+
+    public void setHasWooCommerce(boolean hasWooCommerce) {
+        mHasWooCommerce = hasWooCommerce;
     }
 
     @SiteOrigin
