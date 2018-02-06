@@ -87,7 +87,8 @@
                 android:paddingBottom="@dimen/margin_extra_large"
                 android:visibility="gone"
                 tools:visibility="visible"
-                android:orientation="vertical">
+                android:orientation="vertical"
+                android:clipToPadding="false">
 
                 <TextView
                     style="@style/Base.TextAppearance.AppCompat.Body2"
@@ -102,6 +103,15 @@
                     android:layout_marginTop="@dimen/margin_medium"
                     android:gravity="center"
                     android:text="@string/site_creation_creating_failed_extended"/>
+
+                <android.support.v7.widget.AppCompatButton
+                    style="@style/WordPress.Button.Primary"
+                    android:id="@+id/button_retry"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/margin_extra_extra_large"
+                    android:layout_gravity="center_horizontal"
+                    android:text="@string/site_creation_creating_retry"/>
             </LinearLayout>
         </LinearLayout>
     </ScrollView>

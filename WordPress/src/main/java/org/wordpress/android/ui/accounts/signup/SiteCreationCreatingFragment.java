@@ -15,7 +15,7 @@ import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 import org.wordpress.android.R;
 import org.wordpress.android.analytics.AnalyticsTracker;
-import org.wordpress.android.ui.accounts.signup.SiteCreationService.OnSiteCreationStateUpdated;
+import org.wordpress.android.ui.accounts.signup.SiteCreationService.SiteCreationState;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.AutoForeground.ServiceEventConnection;
@@ -38,6 +38,7 @@ public class SiteCreationCreatingFragment extends SiteCreationBaseFormFragment<S
     private ImageView mImageView;
     private View mProgressContainer;
     private View mErrorContainer;
+    private Button mRetryButton;
     private View mCompletedContainer;
     private WebView mWebView;
     private View mTadaContainer;
@@ -79,6 +80,7 @@ public class SiteCreationCreatingFragment extends SiteCreationBaseFormFragment<S
         mImageView = rootView.findViewById(R.id.image);
         mProgressContainer = rootView.findViewById(R.id.progress_container);
         mErrorContainer = rootView.findViewById(R.id.error_container);
+        mRetryButton = rootView.findViewById(R.id.button_retry);
         mCompletedContainer = rootView.findViewById(R.id.completed_container);
         mWebView = rootView.findViewById(R.id.webview);
         mTadaContainer = rootView.findViewById(R.id.tada_container);
@@ -122,14 +124,9 @@ public class SiteCreationCreatingFragment extends SiteCreationBaseFormFragment<S
         super.onCreate(savedInstanceState);
 
         if (savedInstanceState == null) {
-            String siteTitle = getArguments().getString(ARG_SITE_TITLE);
-            String siteTagline = getArguments().getString(ARG_SITE_TAGLINE);
-            String siteSlug = getArguments().getString(ARG_SITE_SLUG);
-            String themeId = getArguments().getString(ARG_SITE_THEME_ID);
-
             // on first appearance start the Service to perform the site creation
             mInModalMode = true;
-            SiteCreationService.createSite(getContext(), siteTitle, siteTagline, siteSlug, themeId);
+            createSite();
         } else {
             mInModalMode = savedInstanceState.getBoolean(KEY_IN_MODAL_MODE, false);
             mCreationSucceeded = savedInstanceState.getBoolean(KEY_CREATION_FINISHED, false);
@@ -171,6 +168,20 @@ public class SiteCreationCreatingFragment extends SiteCreationBaseFormFragment<S
         outState.putBoolean(KEY_IN_MODAL_MODE, mInModalMode);
         outState.putBoolean(KEY_CREATION_FINISHED, mCreationSucceeded);
         outState.putBoolean(KEY_WEBVIEW_LOADED_IN_TIME, mWebViewLoadedInTime);
+    }
+
+    private void createSite() {
+        String siteTitle = getArguments().getString(ARG_SITE_TITLE);
+        String siteTagline = getArguments().getString(ARG_SITE_TAGLINE);
+        String siteSlug = getArguments().getString(ARG_SITE_SLUG);
+        String themeId = getArguments().getString(ARG_SITE_THEME_ID);
+        SiteCreationService.createSite(getContext(), siteTitle, siteTagline, siteSlug, themeId);
+    }
+
+    private void retryFromState(SiteCreationState retryFromState, long newSiteRemoteId) {
+        String siteTagline = getArguments().getString(ARG_SITE_TAGLINE);
+        String themeId = getArguments().getString(ARG_SITE_THEME_ID);
+        SiteCreationService.retryFromState(getContext(), retryFromState, newSiteRemoteId, siteTagline, themeId);
     }
 
     private void mutateToCompleted(boolean showWebView) {
@@ -225,38 +236,74 @@ public class SiteCreationCreatingFragment extends SiteCreationBaseFormFragment<S
         showHomeButton(!mInModalMode);
     }
 
+    private void configureImage(boolean hasFailure) {
+        mImageView.setImageResource(hasFailure ? R.drawable.img_site_error_camera_pencils_226dp
+                : R.drawable.img_site_wordpress_camera_pencils_226dp);
+    }
+
+    private void handleFailure(final SiteCreationState failedState) {
+        // update UI depending on which step the process failed so to properly offer retry options
+        mRetryButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (failedState == null) {
+                    AppLog.d(T.NUX, "User retries site creation but failedState is null :(");
+                    return;
+                }
+
+                AppLog.d(T.NUX, "User retries failed site creation on step: " + failedState.getStepName());
+                if (failedState.isTerminal()) {
+                    throw new RuntimeException("Internal inconsistency: Cannot resume site creation from "
+                            + failedState.getStepName());
+                } else if (failedState.getStep() == SiteCreationService.SiteCreationStep.IDLE
+                        || failedState.getStep() == SiteCreationService.SiteCreationStep.NEW_SITE) {
+                    createSite();
+                } else {
+                    retryFromState(failedState, (long) failedState.getPayload());
+                }
+            }
+        });
+    }
+
     @SuppressWarnings("unused")
     @Subscribe(threadMode = ThreadMode.MAIN, sticky = true)
-    public void onSiteCreationPhaseUpdated(OnSiteCreationStateUpdated event) {
-        AppLog.i(T.NUX, "Received state: " + event.getState().name());
+    public void onSiteCreationStateUpdated(SiteCreationState event) {
+        AppLog.i(T.NUX, "Received state: " + event.getStepName());
 
         mProgressContainer.setVisibility(View.VISIBLE);
         mErrorContainer.setVisibility(View.GONE);
 
-        switch (event.getState()) {
+        switch (event.getStep()) {
             case IDLE:
                 disableUntil(0);
+                configureImage(false);
                 break;
             case NEW_SITE:
                 disableUntil(R.id.site_creation_creating_laying_foundation);
+                configureImage(false);
                 break;
             case FETCHING_NEW_SITE:
                 disableUntil(R.id.site_creation_creating_fetching_info);
+                configureImage(false);
                 break;
             case SET_TAGLINE:
                 disableUntil(R.id.site_creation_creating_configuring_content);
+                configureImage(false);
                 break;
             case SET_THEME:
                 disableUntil(R.id.site_creation_creating_configuring_theme);
+                configureImage(false);
                 break;
             case FAILURE:
                 setModalMode(false);
-                mImageView.setImageResource(R.drawable.img_site_error_camera_pencils_226dp);
+                configureImage(true);
                 mProgressContainer.setVisibility(View.GONE);
                 mErrorContainer.setVisibility(View.VISIBLE);
+                handleFailure((SiteCreationState) event.getPayload());
                 break;
             case PRELOAD:
                 disableUntil(R.id.site_creation_creating_preparing_frontend);
+                configureImage(false);
                 mPreviewWebViewClient = loadWebview();
                 break;
             case SUCCESS:
