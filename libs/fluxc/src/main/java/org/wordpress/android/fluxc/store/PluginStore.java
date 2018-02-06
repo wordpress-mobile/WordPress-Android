@@ -264,7 +264,8 @@ public class PluginStore extends Store {
 
     public enum FetchWPOrgPluginErrorType {
         EMPTY_RESPONSE,
-        GENERIC_ERROR
+        GENERIC_ERROR,
+        PLUGIN_DOES_NOT_EXIST
     }
 
     public enum FetchSitePluginsErrorType {
