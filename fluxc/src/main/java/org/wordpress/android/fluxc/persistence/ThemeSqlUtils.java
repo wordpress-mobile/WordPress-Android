@@ -1,6 +1,5 @@
 package org.wordpress.android.fluxc.persistence;
 
-import android.database.Cursor;
 import android.support.annotation.NonNull;
 import android.text.TextUtils;
 
@@ -84,13 +83,6 @@ public class ThemeSqlUtils {
                 .equals(ThemeModelTable.LOCAL_SITE_ID, site.getId())
                 .equals(ThemeModelTable.ACTIVE, true)
                 .endGroup().endWhere().getAsModel();
-    }
-
-    public static Cursor getWpComThemesCursor() {
-        return WellSql.select(ThemeModel.class)
-                .where()
-                .equals(ThemeModelTable.IS_WP_COM_THEME, true)
-                .endWhere().getAsCursor();
     }
 
     public static List<ThemeModel> getWpComThemes() {
