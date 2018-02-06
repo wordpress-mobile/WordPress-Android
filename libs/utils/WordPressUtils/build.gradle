@@ -29,8 +29,6 @@ dependencies {
 android {
     useLibrary 'org.apache.http.legacy'
 
-    publishNonDefault true
-
     compileSdkVersion 26
     buildToolsVersion '26.0.2'
 

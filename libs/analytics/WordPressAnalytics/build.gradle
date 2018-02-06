@@ -24,8 +24,6 @@ dependencies {
 }
 
 android {
-    publishNonDefault true
-
     compileSdkVersion 26
     buildToolsVersion "26.0.2"
 

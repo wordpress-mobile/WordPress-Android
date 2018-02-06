@@ -18,8 +18,6 @@ apply plugin: 'com.android.library'
 apply plugin: 'maven'
 
 android {
-    publishNonDefault true
-
     compileSdkVersion 26
     buildToolsVersion '26.0.2'
 
