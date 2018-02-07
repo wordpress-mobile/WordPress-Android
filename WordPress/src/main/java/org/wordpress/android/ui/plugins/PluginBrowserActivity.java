@@ -167,7 +167,7 @@ public class PluginBrowserActivity extends AppCompatActivity
         for (SitePluginModel plugin: sitePlugins) {
             mSitePluginsMap.put(plugin.getSlug(), plugin);
         }
-        refreshAllPlugins();
+        reloadAllPlugins();
 
         if (savedInstanceState == null) {
             fetchPlugins(PluginListType.SITE, false);
@@ -240,8 +240,8 @@ public class PluginBrowserActivity extends AppCompatActivity
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == RequestCodes.PLUGIN_DETAIL) {
-            refreshAllPlugins();
-            refreshListFragment();
+            reloadAllPlugins();
+            reloadListFragment();
         }
     }
 
@@ -273,13 +273,13 @@ public class PluginBrowserActivity extends AppCompatActivity
         }
     }
 
-    private void refreshAllPlugins() {
+    private void reloadAllPlugins() {
         for (PluginListType pluginType: PluginListType.values()) {
-            refreshPlugins(pluginType);
+            reloadPlugins(pluginType);
         }
     }
 
-    private void refreshPlugins(@NonNull PluginListType pluginType) {
+    private void reloadPlugins(@NonNull PluginListType pluginType) {
         PluginBrowserAdapter adapter;
         View cardView;
         switch (pluginType) {
@@ -320,7 +320,12 @@ public class PluginBrowserActivity extends AppCompatActivity
             case SEARCH:
                 return mSearchResults;
             default:
-                return mPluginStore.getSitePlugins(mSite);
+                List<SitePluginModel> sitePlugins = mPluginStore.getSitePlugins(mSite);
+                mSitePluginsMap.clear();
+                for (SitePluginModel plugin: sitePlugins) {
+                    mSitePluginsMap.put(plugin.getSlug(), plugin);
+                }
+                return sitePlugins;
         }
     }
 
@@ -340,7 +345,7 @@ public class PluginBrowserActivity extends AppCompatActivity
             ToastUtils.showToast(this, R.string.plugin_fetch_error);
             return;
         }
-        refreshPlugins(PluginListType.SITE);
+        reloadPlugins(PluginListType.SITE);
     }
 
     @SuppressWarnings("unused")
@@ -354,7 +359,7 @@ public class PluginBrowserActivity extends AppCompatActivity
             return;
         }
         if (!TextUtils.isEmpty(event.pluginSlug)) {
-            refreshPluginWithSlug(event.pluginSlug);
+            reloadPluginWithSlug(event.pluginSlug);
         }
     }
 
@@ -370,10 +375,10 @@ public class PluginBrowserActivity extends AppCompatActivity
         } else {
             switch (event.type) {
                 case POPULAR:
-                    refreshPlugins(PluginListType.POPULAR);
+                    reloadPlugins(PluginListType.POPULAR);
                     break;
                 case NEW:
-                    refreshPlugins(PluginListType.NEW);
+                    reloadPlugins(PluginListType.NEW);
                     break;
             }
         }
@@ -409,14 +414,14 @@ public class PluginBrowserActivity extends AppCompatActivity
             mSearchResults.clear();
             mSearchResults.addAll(event.plugins);
             fragment.showEmptyView(mSearchResults.isEmpty() && !TextUtils.isEmpty(mSearchQuery));
-            refreshListFragment();
+            reloadListFragment();
         }
     }
 
-    private void refreshPluginWithSlug(@NonNull String slug) {
-        ((PluginBrowserAdapter) mSitePluginsRecycler.getAdapter()).refreshPluginWithSlug(slug);
-        ((PluginBrowserAdapter) mPopularPluginsRecycler.getAdapter()).refreshPluginWithSlug(slug);
-        ((PluginBrowserAdapter) mNewPluginsRecycler.getAdapter()).refreshPluginWithSlug(slug);
+    private void reloadPluginWithSlug(@NonNull String slug) {
+        ((PluginBrowserAdapter) mSitePluginsRecycler.getAdapter()).reloadPluginWithSlug(slug);
+        ((PluginBrowserAdapter) mPopularPluginsRecycler.getAdapter()).reloadPluginWithSlug(slug);
+        ((PluginBrowserAdapter) mNewPluginsRecycler.getAdapter()).reloadPluginWithSlug(slug);
     }
 
     @Override
@@ -457,7 +462,7 @@ public class PluginBrowserActivity extends AppCompatActivity
         return listFragment;
     }
 
-    private void refreshListFragment() {
+    private void reloadListFragment() {
         PluginListFragment fragment = getListFragment();
         if (fragment != null) {
             fragment.requestPlugins();
@@ -630,7 +635,7 @@ public class PluginBrowserActivity extends AppCompatActivity
             }
         }
 
-        private void refreshPluginWithSlug(@NonNull String slug) {
+        private void reloadPluginWithSlug(@NonNull String slug) {
             int index = mItems.indexOfPluginWithSlug(slug);
             if (index != -1) {
                 notifyItemChanged(index);
