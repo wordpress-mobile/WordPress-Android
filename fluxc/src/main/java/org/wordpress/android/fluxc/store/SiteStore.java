@@ -92,12 +92,14 @@ public class SiteStore extends Store {
 
     public static class SuggestDomainsPayload extends Payload<BaseNetworkError> {
         public String query;
+        public boolean onlyWordpressCom;
         public boolean includeWordpressCom;
         public boolean includeDotBlogSubdomain;
         public int quantity;
-        public SuggestDomainsPayload(@NonNull String query, boolean includeWordpressCom,
+        public SuggestDomainsPayload(@NonNull String query, boolean onlyWordpressCom, boolean includeWordpressCom,
                                      boolean includeDotBlogSubdomain, int quantity) {
             this.query = query;
+            this.onlyWordpressCom = onlyWordpressCom;
             this.includeWordpressCom = includeWordpressCom;
             this.includeDotBlogSubdomain = includeDotBlogSubdomain;
             this.quantity = quantity;
@@ -1069,8 +1071,8 @@ public class SiteStore extends Store {
     }
 
     private void suggestDomains(SuggestDomainsPayload payload) {
-        mSiteRestClient.suggestDomains(payload.query, payload.includeWordpressCom, payload.includeDotBlogSubdomain,
-                payload.quantity);
+        mSiteRestClient.suggestDomains(payload.query, payload.onlyWordpressCom, payload.includeWordpressCom,
+                payload.includeDotBlogSubdomain, payload.quantity);
     }
 
     private void handleSuggestedDomains(SuggestDomainsResponsePayload payload) {
