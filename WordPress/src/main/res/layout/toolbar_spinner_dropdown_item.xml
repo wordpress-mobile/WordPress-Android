@@ -7,5 +7,7 @@
     android:padding="@dimen/margin_large"
     android:textColor="@color/grey_dark"
     android:textSize="@dimen/text_sz_large"
+    android:textAlignment="viewStart"
+    android:gravity="start"
     tools:text="spinner dropdown item" />
 

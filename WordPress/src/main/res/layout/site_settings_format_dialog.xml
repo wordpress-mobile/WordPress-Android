@@ -39,7 +39,9 @@
             android:imeOptions="flagNoExtractUi"
             android:paddingLeft="@dimen/margin_small"
             android:textSize="@dimen/text_sz_medium"
-            android:paddingStart="@dimen/margin_small"/>
+            android:paddingStart="@dimen/margin_small"
+            android:textAlignment="viewStart"
+            android:gravity="start"/>
 
         <TextView
             android:id="@+id/text_help"
@@ -48,12 +50,15 @@
             android:layout_marginBottom="@dimen/margin_extra_large"
             android:layout_marginLeft="@dimen/margin_extra_extra_large"
             android:layout_marginStart="@dimen/margin_extra_extra_large"
+            android:layout_marginRight="@dimen/margin_extra_large"
+            android:layout_marginEnd="@dimen/margin_extra_large"
             android:background="?android:selectableItemBackground"
-            android:gravity="center_vertical"
+            android:gravity="center_vertical|start"
             android:paddingLeft="@dimen/margin_small"
             android:text="@string/site_settings_format_help"
             android:textColor="@color/link"
             android:textSize="@dimen/text_sz_small"
+            android:textAlignment="viewStart"
             android:paddingStart="@dimen/margin_small"/>
     </LinearLayout>
 

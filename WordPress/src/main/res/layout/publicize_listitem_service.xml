@@ -43,6 +43,8 @@
             android:maxLines="1"
             android:textColor="@color/grey_dark"
             android:textSize="@dimen/text_sz_large"
+            android:textAlignment="viewStart"
+            android:layout_gravity="start"
             tools:text="text_service" />
 
         <org.wordpress.android.widgets.WPTextView
@@ -53,6 +55,8 @@
             android:maxLines="2"
             android:textColor="@color/grey"
             android:textSize="@dimen/text_sz_medium"
+            android:textAlignment="viewStart"
+            android:layout_gravity="start"
             tools:text="text_user" />
     </LinearLayout>
 

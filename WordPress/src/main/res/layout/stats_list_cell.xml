@@ -66,11 +66,12 @@
             android:layout_marginRight="@dimen/margin_large"
             android:layout_marginEnd="@dimen/margin_large"
             android:maxLines="3"
-            android:gravity="center_vertical"
+            android:gravity="center_vertical|start"
             android:autoLink="none"
             android:textColor="@color/stats_text_color"
             android:textColorLink="@color/stats_link_text_color"
             android:textColorHighlight="@color/transparent"
+            android:textAlignment="viewStart"
             android:textSize="@dimen/text_sz_medium" />
 
         <ImageView

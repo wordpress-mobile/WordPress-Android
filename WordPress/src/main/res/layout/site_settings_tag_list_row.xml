@@ -11,13 +11,14 @@
         android:layout_height="wrap_content"
         android:layout_toLeftOf="@+id/text_count"
         android:ellipsize="end"
-        android:gravity="center_vertical"
+        android:gravity="center_vertical|start"
         android:maxLines="1"
         android:minHeight="@dimen/min_touch_target_sz"
         android:padding="@dimen/margin_extra_large"
         android:textColor="@color/grey_dark"
         android:textSize="@dimen/text_sz_large"
         tools:text="text_tag"
+        android:textAlignment="viewStart"
         android:layout_toStartOf="@+id/text_count"/>
 
     <TextView

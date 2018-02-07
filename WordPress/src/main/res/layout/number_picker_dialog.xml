@@ -14,7 +14,9 @@
         android:textSize="@dimen/text_sz_large"
         android:textColor="@color/calypso_title_text"
         android:layout_marginEnd="24dp"
-        android:layout_marginStart="24dp"/>
+        android:layout_marginStart="24dp"
+        android:textAlignment="viewStart"
+        android:gravity="start"/>
 
     <org.wordpress.android.widgets.WPTextView
         android:id="@+id/number_picker_text"
