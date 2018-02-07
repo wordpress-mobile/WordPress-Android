@@ -100,7 +100,6 @@ public class PluginDetailActivity extends AppCompatActivity {
     private TextView mVersionBottomTextView;
     private TextView mUpdateButton;
     private TextView mInstallButton;
-    private ProgressBar mUpdateProgressBar;
     private Switch mSwitchActive;
     private Switch mSwitchAutoupdates;
     private ProgressDialog mRemovePluginProgressDialog;
@@ -145,20 +144,19 @@ public class PluginDetailActivity extends AppCompatActivity {
         }
 
         if (mSite == null) {
-            ToastUtils.showToast(this, R.string.blog_not_found, Duration.SHORT);
+            ToastUtils.showToast(this, R.string.blog_not_found);
+            finish();
+            return;
+        }
+
+        if (TextUtils.isEmpty(pluginSlug)) {
+            ToastUtils.showToast(this, R.string.plugin_not_found);
             finish();
             return;
         }
 
         mSitePlugin = mPluginStore.getSitePluginBySlug(mSite, pluginSlug);
         mWPOrgPlugin = mPluginStore.getWPOrgPluginBySlug(pluginSlug);
-
-        // we must have either a site plugin or a wporg plugin to continue
-        if (mSitePlugin == null && mWPOrgPlugin == null) {
-            ToastUtils.showToast(this, R.string.plugin_not_found, Duration.SHORT);
-            finish();
-            return;
-        }
 
         if (savedInstanceState == null) {
             mIsActive = mSitePlugin != null && mSitePlugin.isActive();
@@ -193,9 +191,8 @@ public class PluginDetailActivity extends AppCompatActivity {
         } else if (mIsRemovingPlugin) {
             // Show remove plugin progress dialog if it's dismissed while activity is re-created
             showRemovePluginProgressDialog();
-        } else if (savedInstanceState == null) {
-            // Refresh the plugin information to check if there is a newer version
-            mDispatcher.dispatch(PluginActionBuilder.newFetchWporgPluginAction(pluginSlug));
+        } else if (savedInstanceState == null || mWPOrgPlugin == null) {
+            fetchWPOrgPlugin(pluginSlug);
         }
     }
 
@@ -263,7 +260,6 @@ public class PluginDetailActivity extends AppCompatActivity {
         mVersionBottomTextView = findViewById(R.id.plugin_version_bottom);
         mUpdateButton = findViewById(R.id.plugin_btn_update);
         mInstallButton = findViewById(R.id.plugin_btn_install);
-        mUpdateProgressBar = findViewById(R.id.plugin_update_progress_bar);
         mSwitchActive = findViewById(R.id.plugin_state_active);
         mSwitchAutoupdates = findViewById(R.id.plugin_state_autoupdates);
         mImageBanner = findViewById(R.id.image_banner);
@@ -388,6 +384,14 @@ public class PluginDetailActivity extends AppCompatActivity {
     }
 
     private void refreshViews() {
+        boolean hasPlugin = mSitePlugin != null || mWPOrgPlugin != null;
+        View scrollView = findViewById(R.id.scroll_view);
+        if (hasPlugin && scrollView.getVisibility() != View.VISIBLE) {
+            AniUtils.fadeIn(scrollView, AniUtils.Duration.MEDIUM);
+        } else if (!hasPlugin) {
+            scrollView.setVisibility(View.GONE);
+        }
+
         if (mWPOrgPlugin != null) {
             mTitleTextView.setText(mWPOrgPlugin.getName());
             mImageBanner.setImageUrl(mWPOrgPlugin.getBanner(), PHOTO);
@@ -400,7 +404,7 @@ public class PluginDetailActivity extends AppCompatActivity {
 
             mByLineTextView.setMovementMethod(WPLinkMovementMethod.getInstance());
             mByLineTextView.setText(Html.fromHtml(mWPOrgPlugin.getAuthorAsHtml()));
-        } else {
+        } else if (mSitePlugin != null) {
             mTitleTextView.setText(mSitePlugin.getDisplayName());
 
             if (TextUtils.isEmpty(mSitePlugin.getAuthorUrl())) {
@@ -452,7 +456,7 @@ public class PluginDetailActivity extends AppCompatActivity {
                 mVersionTopTextView.setText(installedVersion);
                 mVersionBottomTextView.setVisibility(View.GONE);
             }
-        } else {
+        } else if (mWPOrgPlugin != null) {
             String version = String.format(getString(R.string.plugin_version), mWPOrgPlugin.getVersion());
             mVersionTopTextView.setText(version);
             mVersionBottomTextView.setVisibility(View.GONE);
@@ -476,7 +480,7 @@ public class PluginDetailActivity extends AppCompatActivity {
                     }
                 });
             }
-        } else {
+        } else if (mWPOrgPlugin != null) {
             mUpdateButton.setVisibility(View.GONE);
             mInstallButton.setVisibility(View.VISIBLE);
             mInstallButton.setOnClickListener(new View.OnClickListener() {
@@ -487,7 +491,7 @@ public class PluginDetailActivity extends AppCompatActivity {
             });
         }
 
-        mUpdateProgressBar.setVisibility(mIsUpdatingPlugin ? View.VISIBLE : View.GONE);
+        findViewById(R.id.plugin_update_progress_bar).setVisibility(mIsUpdatingPlugin ? View.VISIBLE : View.GONE);
     }
 
     private void refreshRatingsViews() {
@@ -536,6 +540,7 @@ public class PluginDetailActivity extends AppCompatActivity {
             return "?";
         }
     }
+
     private void showPluginInfoPopup() {
         if (mWPOrgPlugin == null) return;
 
@@ -602,10 +607,21 @@ public class PluginDetailActivity extends AppCompatActivity {
         animRotate.start();
     }
 
+    private void fetchWPOrgPlugin(@NonNull String pluginSlug) {
+        if (mWPOrgPlugin == null && mSitePlugin == null) {
+            showFetchProgress(true);
+        }
+        mDispatcher.dispatch(PluginActionBuilder.newFetchWporgPluginAction(pluginSlug));
+    }
+
     private void openUrl(@Nullable String url) {
         if (url != null) {
             ActivityLauncher.openUrlExternal(this, url);
         }
+    }
+
+    private void showFetchProgress(boolean show) {
+        findViewById(R.id.plugin_fetching_progress_bar).setVisibility(show ? View.VISIBLE : View.GONE);
     }
 
     private void confirmRemovePlugin() {
@@ -768,9 +784,8 @@ public class PluginDetailActivity extends AppCompatActivity {
     @SuppressWarnings("unused")
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onSitePluginConfigured(OnSitePluginConfigured event) {
-        if (isFinishing()) {
-            return;
-        }
+        if (isFinishing()) return;
+
         mIsConfiguringPlugin = false;
         if (event.isError()) {
             // The plugin was already removed in remote, there is no need to show an error to the user
@@ -821,24 +836,23 @@ public class PluginDetailActivity extends AppCompatActivity {
     @SuppressWarnings("unused")
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onWPOrgPluginFetched(PluginStore.OnWPOrgPluginFetched event) {
-        if (isFinishing()) {
-            return;
-        }
+        if (isFinishing()) return;
+
+        showFetchProgress(false);
         if (event.isError()) {
             AppLog.e(AppLog.T.PLUGINS, "An error occurred while fetching wporg plugin with type: "
                     + event.error.type);
-            return;
+        } else {
+            mWPOrgPlugin = mPluginStore.getWPOrgPluginBySlug(event.pluginSlug);
+            refreshViews();
         }
-        mWPOrgPlugin = mPluginStore.getWPOrgPluginBySlug(event.pluginSlug);
-        refreshViews();
     }
 
     @SuppressWarnings("unused")
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onSitePluginUpdated(OnSitePluginUpdated event) {
-        if (isFinishing()) {
-            return;
-        }
+        if (isFinishing()) return;
+
         mIsUpdatingPlugin = false;
         if (event.isError()) {
             AppLog.e(AppLog.T.PLUGINS, "An error occurred while updating the plugin with type: "
@@ -858,9 +872,8 @@ public class PluginDetailActivity extends AppCompatActivity {
     @SuppressWarnings("unused")
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void OnSitePluginInstalled(OnSitePluginInstalled event) {
-        if (isFinishing()) {
-            return;
-        }
+        if (isFinishing()) return;
+
         mIsUpdatingPlugin = false;
         if (event.isError()) {
             AppLog.e(AppLog.T.PLUGINS, "An error occurred while installing the plugin with type: "
@@ -881,9 +894,8 @@ public class PluginDetailActivity extends AppCompatActivity {
     @SuppressWarnings("unused")
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onSitePluginDeleted(OnSitePluginDeleted event) {
-        if (isFinishing()) {
-            return;
-        }
+        if (isFinishing()) return;
+
         mIsRemovingPlugin = false;
         cancelRemovePluginProgressDialog();
         if (event.isError()) {

@@ -427,4 +427,13 @@
         </LinearLayout>
     </android.support.v4.widget.NestedScrollView>
 
+    <ProgressBar
+        android:id="@+id/plugin_fetching_progress_bar"
+        style="?android:attr/progressBarStyleLarge"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:visibility="gone"
+        tools:visibility="visible" />
+
 </android.support.design.widget.CoordinatorLayout>
