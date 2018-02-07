@@ -318,7 +318,7 @@ public class NewBlogFragment extends AbstractFragment implements TextWatcher {
     private void getDomainSuggestionsFromTitle() {
         String title = EditTextUtils.getText(mSiteTitleTextField);
         if (!TextUtils.isEmpty(title)) {
-            SuggestDomainsPayload payload = new SuggestDomainsPayload(title, true, false, 5);
+            SuggestDomainsPayload payload = new SuggestDomainsPayload(title, false, true, false, 5);
             mDispatcher.dispatch(SiteActionBuilder.newSuggestDomainsAction(payload));
         }
     }

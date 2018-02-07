@@ -73,7 +73,7 @@ public class SiteCreationDomainLoaderFragment extends Fragment {
     public void load(String keywords) {
         postUpdate(new DomainSuggestionEvent(DomainUpdateStep.UPDATING, keywords, null));
 
-        SiteStore.SuggestDomainsPayload payload = new SiteStore.SuggestDomainsPayload(keywords, true, false, 20);
+        SiteStore.SuggestDomainsPayload payload = new SiteStore.SuggestDomainsPayload(keywords, true, true, false, 20);
         mDispatcher.dispatch(SiteActionBuilder.newSuggestDomainsAction(payload));
     }
 
