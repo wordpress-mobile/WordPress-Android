@@ -56,6 +56,32 @@ public class WPOrgPluginSqlUtilsTest {
         Assert.assertEquals(insertedPlugin.getName(), name);
     }
 
+    @Test
+    public void testUpdateWPOrgPlugin() {
+        String slug = randomString("slug");
+        String name = randomString("name");
+
+        WPOrgPluginModel plugin = new WPOrgPluginModel();
+        plugin.setSlug(slug);
+        plugin.setName(name);
+
+        // Insert a wporg plugin and assert the state
+        Assert.assertEquals(1, PluginSqlUtils.insertOrUpdateWPOrgPlugin(plugin));
+        WPOrgPluginModel insertedPlugin = PluginSqlUtils.getWPOrgPluginBySlug(slug);
+        Assert.assertNotNull(insertedPlugin);
+        Assert.assertEquals(insertedPlugin.getName(), name);
+
+        // Update the name of the plugin and try insertOrUpdate and make sure the plugin is updated
+        String name2 = randomString("name2");
+        Assert.assertTrue(!name.equals(name2));
+        insertedPlugin.setName(name2);
+        Assert.assertEquals(1, PluginSqlUtils.insertOrUpdateWPOrgPlugin(insertedPlugin));
+        WPOrgPluginModel updatedPlugin = PluginSqlUtils.getWPOrgPluginBySlug(slug);
+        Assert.assertNotNull(updatedPlugin);
+        Assert.assertEquals(insertedPlugin.getSlug(), updatedPlugin.getSlug());
+        Assert.assertEquals(updatedPlugin.getName(), name2);
+    }
+
     private String randomString(String prefix) {
         return prefix + "-" + mRandom.nextInt();
     }
