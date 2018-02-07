@@ -32,6 +32,11 @@ public class WPOrgPluginSqlUtilsTest {
     }
 
     @Test
+    public void testInsertNullWPOrgPlugin() {
+        Assert.assertEquals(0, PluginSqlUtils.insertOrUpdateWPOrgPlugin(null));
+    }
+
+    @Test
     public void testInsertWPOrgPlugin() {
         String slug = randomString("slug");
         String name = randomString("name");
