@@ -372,15 +372,16 @@ public class PluginBrowserActivity extends AppCompatActivity
 
         if (event.isError()) {
             AppLog.e(AppLog.T.PLUGINS, "An error occurred while fetching the plugin directory: " + event.type);
-        } else {
-            switch (event.type) {
-                case POPULAR:
-                    reloadPlugins(PluginListType.POPULAR);
-                    break;
-                case NEW:
-                    reloadPlugins(PluginListType.NEW);
-                    break;
-            }
+            return;
+        }
+
+        switch (event.type) {
+            case POPULAR:
+                reloadPlugins(PluginListType.POPULAR);
+                break;
+            case NEW:
+                reloadPlugins(PluginListType.NEW);
+                break;
         }
 
         PluginListType listType = event.type == PluginDirectoryType.POPULAR ?
