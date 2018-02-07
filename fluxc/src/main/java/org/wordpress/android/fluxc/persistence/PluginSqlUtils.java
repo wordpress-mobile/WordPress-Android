@@ -113,9 +113,9 @@ public class PluginSqlUtils {
         return wpOrgPluginModels;
     }
 
-    public static void insertOrUpdateWPOrgPlugin(WPOrgPluginModel wpOrgPluginModel) {
+    public static int insertOrUpdateWPOrgPlugin(WPOrgPluginModel wpOrgPluginModel) {
         if (wpOrgPluginModel == null) {
-            return;
+            return 0;
         }
 
         // Slug is the primary key in remote, so we should use that to identify WPOrgPluginModels
@@ -123,9 +123,10 @@ public class PluginSqlUtils {
 
         if (oldPlugin == null) {
             WellSql.insert(wpOrgPluginModel).execute();
+            return 1;
         } else {
             int oldId = oldPlugin.getId();
-            WellSql.update(WPOrgPluginModel.class).whereId(oldId)
+            return WellSql.update(WPOrgPluginModel.class).whereId(oldId)
                     .put(wpOrgPluginModel, new UpdateAllExceptId<>(WPOrgPluginModel.class)).execute();
         }
     }
@@ -135,9 +136,13 @@ public class PluginSqlUtils {
             return;
         }
 
+        WellSql.giveMeWritableDb().beginTransaction();
+
         for (WPOrgPluginModel pluginModel : wpOrgPluginModels) {
             insertOrUpdateWPOrgPlugin(pluginModel);
         }
+
+        WellSql.giveMeWritableDb().endTransaction();
     }
 
     // Plugin Directory
