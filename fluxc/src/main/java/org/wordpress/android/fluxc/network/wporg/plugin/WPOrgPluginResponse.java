@@ -1,6 +1,7 @@
 package org.wordpress.android.fluxc.network.wporg.plugin;
 
 import android.support.annotation.Nullable;
+import android.text.TextUtils;
 
 import com.google.gson.JsonDeserializationContext;
 import com.google.gson.JsonDeserializer;
@@ -39,6 +40,9 @@ public class WPOrgPluginResponse {
     public int numberOfRatingsOfThree;
     public int numberOfRatingsOfFour;
     public int numberOfRatingsOfFive;
+
+    // Errors are returned with success code
+    public String errorMessage;
 }
 
 class WPOrgPluginDeserializer implements JsonDeserializer<WPOrgPluginResponse> {
@@ -47,6 +51,11 @@ class WPOrgPluginDeserializer implements JsonDeserializer<WPOrgPluginResponse> {
                                            JsonDeserializationContext context) throws JsonParseException {
         JsonObject jsonObject = json.getAsJsonObject();
         WPOrgPluginResponse response = new WPOrgPluginResponse();
+        response.errorMessage = getStringFromJsonIfAvailable(jsonObject, "error");
+        // Response has an error instead of the plugin information
+        if (!TextUtils.isEmpty(response.errorMessage)) {
+            return response;
+        }
         response.authorAsHtml = getStringFromJsonIfAvailable(jsonObject, "author");
         response.banner = getBannerFromJson(jsonObject);
         response.downloadCount = getIntFromJsonIfAvailable(jsonObject, "downloaded");
