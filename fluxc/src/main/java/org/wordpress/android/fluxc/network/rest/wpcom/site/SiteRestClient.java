@@ -460,12 +460,13 @@ public class SiteRestClient extends BaseWPComRestClient {
         addUnauthedRequest(request);
     }
 
-    public void suggestDomains(@NonNull final String query, final boolean includeWordpressCom,
-                               final boolean includeDotBlogSubdomain, final int quantity) {
+    public void suggestDomains(@NonNull final String query, final boolean onlyWordpressCom,
+                               final boolean includeWordpressCom, final boolean includeDotBlogSubdomain,
+                               final int quantity) {
         String url = WPCOMREST.domains.suggestions.getUrlV1_1();
         Map<String, String> params = new HashMap<>(4);
         params.put("query", query);
-        // ugly trick to bypass checkstyle and its dot com rule
+        params.put("only_wordpressdotcom", String.valueOf(onlyWordpressCom));
         params.put("include_wordpressdotcom", String.valueOf(includeWordpressCom)); // CHECKSTYLE IGNORE
         params.put("include_dotblogsubdomain", String.valueOf(includeDotBlogSubdomain));
         params.put("quantity", String.valueOf(quantity));
