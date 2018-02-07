@@ -1,6 +1,7 @@
 package org.wordpress.android.fluxc.network.wporg.plugin;
 
 import android.support.annotation.NonNull;
+import android.text.TextUtils;
 
 import com.android.volley.Request.Method;
 import com.android.volley.RequestQueue;
@@ -93,6 +94,14 @@ public class PluginWPOrgClient extends BaseWPOrgAPIClient {
                                 if (response == null) {
                                     FetchWPOrgPluginError error = new FetchWPOrgPluginError(
                                             FetchWPOrgPluginErrorType.EMPTY_RESPONSE);
+                                    mDispatcher.dispatch(PluginActionBuilder.newFetchedWporgPluginAction(
+                                            new FetchedWPOrgPluginPayload(pluginSlug, error)));
+                                    return;
+                                }
+                                if (!TextUtils.isEmpty(response.errorMessage)) {
+                                    // Plugin does not exist error returned with success code
+                                    FetchWPOrgPluginError error = new FetchWPOrgPluginError(
+                                            FetchWPOrgPluginErrorType.PLUGIN_DOES_NOT_EXIST);
                                     mDispatcher.dispatch(PluginActionBuilder.newFetchedWporgPluginAction(
                                             new FetchedWPOrgPluginPayload(pluginSlug, error)));
                                     return;
