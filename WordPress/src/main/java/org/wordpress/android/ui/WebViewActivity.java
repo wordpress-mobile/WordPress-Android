@@ -143,18 +143,25 @@ public abstract class WebViewActivity extends AppCompatActivity {
 
     @Override
     public void onBackPressed() {
-        if (mWebView != null && mWebView.canGoBack())
+        if (mWebView != null && mWebView.canGoBack()) {
             mWebView.goBack();
-        else
+        } else {
+            cancel();
             super.onBackPressed();
+        }
     }
 
     @Override
     public boolean onOptionsItemSelected(final MenuItem item) {
         if (item.getItemId() == android.R.id.home) {
+            cancel();
             finish();
             return true;
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    protected void cancel() {
+        //nop
     }
 }

@@ -17,7 +17,6 @@ Language: el_GR
 	<string name="smart_toast_photo_long_press">Πατήστε και κρατήστε για να επιλέξετε πολλαπλές φωτογραφίες</string>
 	<string name="photo_picker_choose_video">Επιλέξτε βίντεο από τη συσκευή</string>
 	<string name="photo_picker_choose_photo">Επιλέξτε φωτογραφία από τη συσκευή</string>
-	<string name="new_editor_promo_description">Η εφαρμογή του WordPress περιλαμβάνει τώρα έναν καινούριο όμορφο επεξεργαστή. Δοκιμάστε τον δημιουργώντας ένα νέο άρθρο.</string>
 	<string name="wp_media_title">Πολυμέσα του WordPress </string>
 	<string name="media_insert_as_gallery">Προσθήκη ως συλλογή</string>
 	<string name="media_insert_individually">Προσθήκη ανεξάρτητα</string>

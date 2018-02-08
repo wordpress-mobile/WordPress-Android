@@ -1,6 +1,4 @@
-package org.wordpress.android.editor.legacy;
-
-import org.wordpress.android.editor.EditorImageMetaData;
+package org.wordpress.android.editor;
 
 public interface EditorImageSettingsListener {
     void onImageSettingsRequested(EditorImageMetaData editorImageMetaData);

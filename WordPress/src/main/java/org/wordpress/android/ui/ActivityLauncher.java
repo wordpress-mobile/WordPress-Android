@@ -44,11 +44,11 @@ import org.wordpress.android.ui.prefs.AccountSettingsActivity;
 import org.wordpress.android.ui.prefs.AppSettingsActivity;
 import org.wordpress.android.ui.prefs.BlogPreferencesActivity;
 import org.wordpress.android.ui.prefs.MyProfileActivity;
-import org.wordpress.android.ui.prefs.ReleaseNotesActivity;
 import org.wordpress.android.ui.prefs.notifications.NotificationsSettingsActivity;
 import org.wordpress.android.ui.publicize.PublicizeListActivity;
 import org.wordpress.android.ui.reader.ReaderPostPagerActivity;
 import org.wordpress.android.ui.stats.StatsActivity;
+import org.wordpress.android.ui.stats.StatsConnectJetpackActivity;
 import org.wordpress.android.ui.stats.StatsConstants;
 import org.wordpress.android.ui.stats.StatsSingleItemDetailsActivity;
 import org.wordpress.android.ui.stats.models.StatsPostModel;
@@ -112,6 +112,12 @@ public class ActivityLauncher {
 
     public static void viewBlogStats(Context context, SiteModel site) {
         Intent intent = new Intent(context, StatsActivity.class);
+        intent.putExtra(WordPress.SITE, site);
+        context.startActivity(intent);
+    }
+
+    public static void startJetpackConnectionFlow(Context context, SiteModel site) {
+        Intent intent = new Intent(context, StatsConnectJetpackActivity.class);
         intent.putExtra(WordPress.SITE, site);
         context.startActivity(intent);
     }
@@ -411,14 +417,6 @@ public class ActivityLauncher {
         intent = new Intent(activity, LoginActivity.class);
         LoginMode.WPCOM_LOGIN_DEEPLINK.putInto(intent);
         activity.startActivityForResult(intent, RequestCodes.DO_LOGIN);
-    }
-
-    public static void showAztecEditorReleaseNotes(Activity activity) {
-        Intent intent = new Intent(activity, ReleaseNotesActivity.class);
-        intent.putExtra(ReleaseNotesActivity.KEY_TARGET_URL,
-                "https://make.wordpress.org/mobile/whats-new-in-beta-android-editor/");
-        intent.putExtra(ReleaseNotesActivity.KEY_HELPSHIFT_TAG, HelpshiftHelper.Tag.ORIGIN_FEEDBACK_AZTEC);
-        activity.startActivity(intent);
     }
 
     /*

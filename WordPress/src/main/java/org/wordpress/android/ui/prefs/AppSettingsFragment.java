@@ -24,7 +24,6 @@ import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.analytics.AnalyticsTracker.Stat;
 import org.wordpress.android.fluxc.store.AccountStore;
 import org.wordpress.android.fluxc.store.SiteStore;
-import org.wordpress.android.ui.ActivityLauncher;
 import org.wordpress.android.util.AnalyticsUtils;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.LanguageUtils;
@@ -47,7 +46,6 @@ public class AppSettingsFragment extends PreferenceFragment implements OnPrefere
 
     private DetailListPreference mLanguagePreference;
     private SharedPreferences mSettings;
-    private Preference mEditorFooterPref;
 
     // This Device settings
     private WPSwitchPreference mOptimizedImage;
@@ -68,16 +66,25 @@ public class AppSettingsFragment extends PreferenceFragment implements OnPrefere
         setRetainInstance(true);
         addPreferencesFromResource(R.xml.app_settings);
 
+        findPreference(getString(R.string.pref_key_send_usage)).setOnPreferenceChangeListener(
+                new Preference.OnPreferenceChangeListener() {
+                    @Override
+                    public boolean onPreferenceChange(Preference preference, Object newValue) {
+                        if (newValue == null) return false;
+                        // flush gathered events (if any)
+                        AnalyticsTracker.flush();
+                        AnalyticsTracker.setHasUserOptedOut(!(boolean)newValue);
+                        return true;
+                    }
+                }
+        );
+
         mLanguagePreference = (DetailListPreference) findPreference(getString(R.string.pref_key_language));
         mLanguagePreference.setOnPreferenceChangeListener(this);
-
-        mEditorFooterPref = findPreference(getString(R.string.pref_key_editor_footer));
 
         findPreference(getString(R.string.pref_key_language))
                 .setOnPreferenceClickListener(this);
         findPreference(getString(R.string.pref_key_device_settings))
-                .setOnPreferenceClickListener(this);
-        findPreference(getString(R.string.pref_key_editor_footer))
                 .setOnPreferenceClickListener(this);
         findPreference(getString(R.string.pref_key_app_about))
                 .setOnPreferenceClickListener(this);
@@ -128,6 +135,8 @@ public class AppSettingsFragment extends PreferenceFragment implements OnPrefere
         super.onActivityCreated(savedInstanceState);
 
         updateLanguagePreference(getResources().getConfiguration().locale.toString());
+        // flush gathered events (if any)
+        AnalyticsTracker.flush();
     }
 
     @Override
@@ -136,8 +145,6 @@ public class AppSettingsFragment extends PreferenceFragment implements OnPrefere
 
         if (preferenceKey.equals(getString(R.string.pref_key_device_settings))) {
             return handleDevicePreferenceClick();
-        } else if (preferenceKey.equals(getString(R.string.pref_key_editor_footer))) {
-            return handleEditorFooterPreferenceClick();
         } else if (preferenceKey.equals(getString(R.string.pref_key_app_about))) {
             return handleAboutPreferenceClick();
         } else if (preferenceKey.equals(getString(R.string.pref_key_oss_licenses))) {
@@ -225,15 +232,12 @@ public class AppSettingsFragment extends PreferenceFragment implements OnPrefere
                             case IDX_AZTEC_EDITOR:
                                 AppPrefs.setAztecEditorEnabled(true);
                                 AppPrefs.setVisualEditorEnabled(false);
-                                AppPrefs.setNewEditorPromoRequired(false);
                                 break;
                             default:
                                 AppPrefs.setAztecEditorEnabled(false);
                                 AppPrefs.setVisualEditorEnabled(false);
                                 break;
                         }
-
-                        toggleEditorFooterPreference();
                         return true;
                     } else {
                         return false;
@@ -244,17 +248,15 @@ public class AppSettingsFragment extends PreferenceFragment implements OnPrefere
             final int editorTypeSetting;
             if (AppPrefs.isAztecEditorEnabled()) {
                 editorTypeSetting = IDX_AZTEC_EDITOR;
-            } else if(AppPrefs.isVisualEditorEnabled()) {
+            } else if (AppPrefs.isVisualEditorEnabled()) {
                 editorTypeSetting = IDX_VISUAL_EDITOR;
-            } else{
+            } else {
                 editorTypeSetting = IDX_LEGACY_EDITOR;
             }
 
             CharSequence[] entries = editorTypePreference.getEntries();
             editorTypePreference.setSummary(entries[editorTypeSetting]);
             editorTypePreference.setValueIndex(editorTypeSetting);
-
-            toggleEditorFooterPreference();
         }
     }
 
@@ -319,26 +321,6 @@ public class AppSettingsFragment extends PreferenceFragment implements OnPrefere
         mLanguagePreference.setValue(languageCode);
         mLanguagePreference.setSummary(WPPrefUtils.getLanguageString(languageCode, languageLocale));
         mLanguagePreference.refreshAdapter();
-    }
-
-    /*
-     * only show the editor footer when Aztec is enabled
-     */
-    private void toggleEditorFooterPreference() {
-        PreferenceCategory editorCategory = (PreferenceCategory) findPreference(getActivity().getString(R.string.pref_key_editor));
-        boolean showFooter = AppPrefs.isAztecEditorEnabled();
-        boolean isFooterShowing = editorCategory.findPreference(getString(R.string.pref_key_editor_footer)) != null;
-
-        if (showFooter && !isFooterShowing) {
-            editorCategory.addPreference(mEditorFooterPref);
-        } else if (!showFooter && isFooterShowing) {
-            editorCategory.removePreference(mEditorFooterPref);
-        }
-    }
-
-    private boolean handleEditorFooterPreferenceClick() {
-        ActivityLauncher.showAztecEditorReleaseNotes(getActivity());
-        return true;
     }
 
     private boolean handleAboutPreferenceClick() {

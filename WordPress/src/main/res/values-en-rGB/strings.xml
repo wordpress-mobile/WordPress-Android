@@ -1,11 +1,66 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2017-12-13 11:01:24+0000
+Translation-Revision-Date: 2018-01-25 15:01:32+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/2.4.0-alpha
 Language: en_GB
 -->
 <resources>
+	<string name="change_photo">Change photo</string>
+	<string name="plugin_fetch_error">Unable to load plugins</string>
+	<string name="my_site_btn_site_pages">Site Pages</string>
+	<string name="site_settings_tags_hint">Manage your site\'s tags</string>
+	<string name="dlg_saving_tag">Saving</string>
+	<string name="dlg_deleting_tag">Deleting</string>
+	<string name="dlg_confirm_delete_tag">Permanently delete \'%s\'?</string>
+	<string name="error_tag_exists">A tag with this name already exists</string>
+	<string name="add_new_tag">Add New Tag</string>
+	<string name="tag_description_hint">Description</string>
+	<string name="tag_name_hint">Tag</string>
+	<string name="site_settings_amp_summary">Your WordPress.com site supports the use of Accelerated Mobile Pages, a Google-led initiative that dramatically speeds up loading times on mobile devices</string>
+	<string name="site_settings_amp_title">Accelerated Mobile Pages (AMP)</string>
+	<string name="site_settings_timezones_error">Unable to load timezones</string>
+	<string name="site_settings_format_help">Learn more about date &amp; time formatting</string>
+	<string name="site_settings_format_hint_custom">Custom format</string>
+	<string name="site_settings_format_entry_custom">Custom</string>
+	<string name="site_settings_posts_per_page_title">Posts per page</string>
+	<string name="site_settings_timezone_subtitle">Choose a city in your timezone</string>
+	<string name="site_settings_timezone_title">Timezone</string>
+	<string name="site_settings_time_format_title">Time Format</string>
+	<string name="site_settings_date_format_title">Date Format</string>
+	<string name="site_settings_week_start_title">Week starts on</string>
+	<string name="site_settings_tags_title">Tags</string>
+	<string name="site_settings_traffic_header">Traffic</string>
+	<string name="delete_no">Don\'t Delete</string>
+	<string name="delete_yes">Delete</string>
+	<string name="plugin_external_link_icon_content_description">External link</string>
+	<string name="plugin_update_available_icon_content_description">Update available</string>
+	<string name="plugin_icon_content_description">Plugin icon</string>
+	<string name="plugin_home_page">Plugin homepage</string>
+	<string name="wordpress_dot_org_plugin_page">WordPress.org Plugin page</string>
+	<string name="plugin_remove_dialog_message">Are you sure you want to remove %1$s from %2$s?\n\nThis will deactivate the plugin and delete all associated files and data.</string>
+	<string name="plugin_remove_dialog_title">Remove Plugin</string>
+	<string name="plugin_remove_progress_dialog_message">Removing %s…</string>
+	<string name="plugin_disable_progress_dialog_message">Disabling %s…</string>
+	<string name="plugin_btn_remove">Remove Plugin</string>
+	<string name="plugin_configuration_failed">An error occurred while configuring the plugin: %s</string>
+	<string name="plugin_remove_failed">Error removing %s.</string>
+	<string name="plugin_removed_successfully">Successfully removed %s.</string>
+	<string name="plugin_updated_failed_detailed">Error removing %1$s: %2$s</string>
+	<string name="plugin_updated_failed">Error removing %s.</string>
+	<string name="plugin_updated_successfully">Successfully updated %s.</string>
+	<string name="plugin_available_version">Version %s is available.</string>
+	<string name="plugin_installed_version">Plugin version %s</string>
+	<string name="plugin_detail_label_state_autoupdates">Autoupdates</string>
+	<string name="plugin_detail_label_state_active">Active</string>
+	<string name="plugin_autoupdates_off">Autoupdates off</string>
+	<string name="plugin_autoupdates_on">Autoupdates on</string>
+	<string name="plugin_inactive">Inactive</string>
+	<string name="plugin_active">Active</string>
+	<string name="plugins">Plugins</string>
+	<string name="my_site_btn_plugins">Plugins</string>
+	<string name="media_edit_link_hint">Open link in a new window/tab</string>
+	<string name="media_edit_link_text">Link to</string>
 	<string name="notification_login_failed">An error has occurred.</string>
 	<string name="notification_2fa_needed">Please provide an authentication code to continue.</string>
 	<string name="notification_error_wrong_password">Please double check your password to continue.</string>
@@ -266,16 +321,6 @@ Language: en_GB
 	<string name="format_bar_description_heading">Heading</string>
 	<string name="format_bar_description_media">Media</string>
 	<string name="reader_view_comments">View comments</string>
-	<string name="new_editor_promo_title_beta">Beta</string>
-	<string name="new_editor_promo_title">Try the new Editor</string>
-	<string name="new_editor_promo_link">What\'s new?</string>
-	<string name="new_editor_promo_description_image">Hand Write Image</string>
-	<string name="new_editor_promo_confirmation_message">New Editor enabled!</string>
-	<string name="new_editor_promo_confirmation_action">Settings</string>
-	<string name="new_editor_promo_button_positive">Try It</string>
-	<string name="new_editor_promo_button_negative">Not Now</string>
-	<string name="new_editor_beta_message">New Editor in Open Beta!</string>
-	<string name="new_editor_beta_action">Read More</string>
 	<string name="preference_editor_footer_description">Info Icon</string>
 	<string name="preference_editor_footer">Editor release notes and bug reporting</string>
 	<string name="site_settings_video_quality_hint">Quality of videos. Higher values mean better quality videos.</string>
@@ -356,7 +401,6 @@ Language: en_GB
 	<string name="smart_toast_photo_long_press">Tap and hold to select multiple photos</string>
 	<string name="photo_picker_choose_video">Choose video from device</string>
 	<string name="photo_picker_choose_photo">Choose photo from device</string>
-	<string name="new_editor_promo_description">The WordPress app now includes a beautiful new editor. Try it out by creating a new post!</string>
 	<string name="wp_media_title">WordPress media</string>
 	<string name="media_insert_as_gallery">Add as gallery</string>
 	<string name="media_insert_individually">Add individually</string>
@@ -1328,6 +1372,7 @@ Language: en_GB
 	<string name="media_gallery_type_thumbnail_grid">Thumbnail grid</string>
 	<string name="learn_more">Learn more</string>
 	<string name="post_not_found">An error occurred when loading the post. Refresh your posts and try again.</string>
+	<string name="plugin_not_found">An error occurred when accessing this plugin</string>
 	<string name="scaled_image_error">Enter a valid scaled width value</string>
 	<string name="cancel_edit">Cancel edit</string>
 	<string name="connection_error">Connection error</string>

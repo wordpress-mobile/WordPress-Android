@@ -349,9 +349,9 @@
     <!--plugin-->
     <dimen name="plugin_icon_size">40dp</dimen>
     <dimen name="plugin_external_link_image_size">16dp</dimen>
+    <dimen name="plugin_banner_size">192dp</dimen>
 
     <dimen name="add_avatar_button_size">24dp</dimen>
 
     <dimen name="padding_input_row_start">60dp</dimen>
-
 </resources>

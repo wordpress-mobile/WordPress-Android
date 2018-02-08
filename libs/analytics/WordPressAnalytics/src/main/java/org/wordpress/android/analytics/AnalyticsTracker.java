@@ -128,11 +128,6 @@ public final class AnalyticsTracker {
         EDITOR_AZTEC_TOGGLED_OFF, // Aztec editor only
         EDITOR_AZTEC_TOGGLED_ON, // Aztec editor only
         EDITOR_AZTEC_ENABLED, // Aztec editor only
-        EDITOR_AZTEC_BETA_LABEL, // Aztec editor only
-        EDITOR_AZTEC_BETA_LINK, // Aztec editor only
-        EDITOR_AZTEC_PROMO_LINK, // Aztec editor only
-        EDITOR_AZTEC_PROMO_NEGATIVE, // Aztec editor only
-        EDITOR_AZTEC_PROMO_POSITIVE, // Aztec editor only
         ME_ACCESSED,
         ME_GRAVATAR_TAPPED,
         ME_GRAVATAR_SHOT_NEW,
@@ -191,6 +186,8 @@ public final class AnalyticsTracker {
         SIGNED_INTO_JETPACK,
         PERFORMED_JETPACK_SIGN_IN_FROM_STATS_SCREEN,
         STATS_SELECTED_INSTALL_JETPACK,
+        STATS_CANCELED_INSTALL_JETPACK,
+        STATS_COMPLETED_INSTALL_JETPACK,
         STATS_SELECTED_CONNECT_JETPACK,
         PUSH_NOTIFICATION_RECEIVED,
         PUSH_NOTIFICATION_TAPPED, // Same of opened
@@ -337,12 +334,14 @@ public final class AnalyticsTracker {
     }
 
     public static void init(Context context) {
-        loadPrefHasUserOptedOut(context);
-    }
-
-    public static void loadPrefHasUserOptedOut(Context context) {
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
         boolean hasUserOptedOut = !prefs.getBoolean("wp_pref_send_usage_stats", true);
+        if (hasUserOptedOut != mHasUserOptedOut) {
+            mHasUserOptedOut = hasUserOptedOut;
+        }
+    }
+
+    public static void setHasUserOptedOut(boolean hasUserOptedOut){
         if (hasUserOptedOut != mHasUserOptedOut) {
             mHasUserOptedOut = hasUserOptedOut;
         }

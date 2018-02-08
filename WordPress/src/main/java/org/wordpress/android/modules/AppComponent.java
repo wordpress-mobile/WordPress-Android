@@ -108,6 +108,8 @@ import org.wordpress.android.ui.reader.views.ReaderTagHeaderView;
 import org.wordpress.android.ui.reader.views.ReaderWebView;
 import org.wordpress.android.ui.stats.StatsAbstractFragment;
 import org.wordpress.android.ui.stats.StatsActivity;
+import org.wordpress.android.ui.stats.StatsConnectJetpackActivity;
+import org.wordpress.android.ui.stats.StatsDeeplinkActivity;
 import org.wordpress.android.ui.stats.StatsWidgetConfigureActivity;
 import org.wordpress.android.ui.stats.StatsWidgetConfigureAdapter;
 import org.wordpress.android.ui.stats.StatsWidgetProvider;
@@ -178,6 +180,8 @@ public interface AppComponent extends AndroidInjector<WordPress> {
     void inject(StatsWidgetConfigureActivity object);
     void inject(StatsWidgetConfigureAdapter object);
     void inject(StatsActivity object);
+    void inject(StatsDeeplinkActivity object);
+    void inject(StatsConnectJetpackActivity object);
     void inject(StatsAbstractFragment object);
     void inject(StatsService object);
     void inject(StatsWidgetProvider object);
@@ -278,6 +282,8 @@ public interface AppComponent extends AndroidInjector<WordPress> {
 
     void inject(PluginListActivity object);
     void inject(PluginDetailActivity object);
+
+    void inject(WordPressGlideModule object);
 
     // Allows us to inject the application without having to instantiate any modules, and provides the Application
     // in the app graph

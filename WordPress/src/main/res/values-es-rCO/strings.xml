@@ -207,16 +207,6 @@ Language: es_CO
 	<string name="format_bar_description_heading">Cabecera</string>
 	<string name="format_bar_description_media">Medios</string>
 	<string name="reader_view_comments">Ver comentarios</string>
-	<string name="new_editor_promo_title_beta">Beta</string>
-	<string name="new_editor_promo_title">Prueba el nuevo editor</string>
-	<string name="new_editor_promo_link">¿Qué hay de nuevo?</string>
-	<string name="new_editor_promo_description_image">Imagen a mano alzada</string>
-	<string name="new_editor_promo_confirmation_message">¡Nuevo editor activo!</string>
-	<string name="new_editor_promo_confirmation_action">Ajustes</string>
-	<string name="new_editor_promo_button_positive">Pruébalo</string>
-	<string name="new_editor_promo_button_negative">Ahora no</string>
-	<string name="new_editor_beta_message">¡Nuevo editor en beta abierta!</string>
-	<string name="new_editor_beta_action">Leer más</string>
 	<string name="preference_editor_footer_description">Icono de información</string>
 	<string name="preference_editor_footer">Notas del lanzamiento del editor e informe de fallos</string>
 	<string name="site_settings_video_quality_hint">Calidad de los vídeos. Valores más altos implican vídeos de mejor calidad.</string>
@@ -297,7 +287,6 @@ Language: es_CO
 	<string name="smart_toast_photo_long_press">Toca y mantiene para elegir varias fotos</string>
 	<string name="photo_picker_choose_video">Elige un vídeo del dispositivo</string>
 	<string name="photo_picker_choose_photo">Elige una foto del dispositivo</string>
-	<string name="new_editor_promo_description">La app WordPress ahora incluye un bonito nuevo editor. ¡Pruébalo creando una nueva entrada!</string>
 	<string name="wp_media_title">Medios de WordPress</string>
 	<string name="media_insert_as_gallery">Añadir como galería</string>
 	<string name="media_insert_individually">Añadir individualmente</string>
@@ -352,7 +341,6 @@ Language: es_CO
 	<string name="checking_username">Comprobar Nombre de usuario</string>
 	<string name="jetpack_different_com_account">No se admiten sitios de Jetpack pertenecientes a diferentes cuentas de WordPress.com</string>
 	<string name="jetpack_use_com_account">Para agregar su sitio Jetpack, inicie sesión la cuenta de WordPress.com que utilizó para conectar Jetpack.</string>
-	<string name="jetpack_message">El plugin Jetpack debe ser instalado y activado. ¿Quieres instalar o activar Jetpack?</string>
 	<string name="error_media_load">No se puede cargar archivos multimedia</string>
 	<string name="error_media_refresh_no_connection">Se necesita estar conectado para actualizar la biblioteca</string>
 	<string name="error_media_unauthorized">No tienes permiso para ver o editar archivos multimedia</string>
@@ -532,8 +520,6 @@ Language: es_CO
 	<string name="enter_your_password_instead">Introduce tu contraseña</string>
 	<string name="web_address_dialog_hint">Cuando comentes se hará público</string>
 	<string name="username_email">Correo electrónico o nombre de usuario</string>
-	<string name="jetpack_not_connected_message">El plugin Jetpack se ha instalado, pero no se ha conectado con WordPress.com. ¿Quieres conectar Jetpack?</string>
-	<string name="jetpack_not_connected">Plugin Jetpack no conectado</string>
 	<string name="new_editor_reflection_error">Editor visual no compatible con tu dispositivo. Se ha\ndesactivado automáticamente</string>
 	<string name="stats_insights_latest_post_no_title">(sin título)</string>
 	<string name="capture_or_pick_photo">Captura o elige imagen</string>
@@ -1195,7 +1181,6 @@ Language: es_CO
 	<string name="reader_toast_err_remove_tag">No se pudo eliminar esta etiqueta</string>
 	<string name="reader_toast_err_add_tag">No se pudo añadir esta etiqueta</string>
 	<string name="reader_title_applog">Registro de la aplicación</string>
-	<string name="jetpack_message_not_admin">Se necesita el plugin Jetpack. Contacta con el administrador del sitio.</string>
 	<string name="fatal_db_error">Hubo un error al crear la base de datos de la app. Por favor, intenta reinstalar la app. </string>
 	<string name="error_blog_hidden">Este blog está oculto y no se puede cargar. Actívalo de nuevo en ajustes y prueba de nuevo.</string>
 	<string name="error_refresh_media">No se pueden actualizar los medios en este momento</string>
@@ -1329,7 +1314,6 @@ Language: es_CO
 	<string name="reader_label_added_tag">Añadido %s</string>
 	<string name="reader_hint_comment_on_comment">Contestar al comentario </string>
 	<string name="reader_untitled_post">Sin título</string>
-	<string name="jetpack_not_found">No se ha encontrado el plugin Jetpack</string>
 	<string name="empty_list_default">Esta lista esta vacía</string>
 	<string name="media_add_popup_title">Añadir a biblioteca multimedia</string>
 	<string name="media_gallery_type">Tipo</string>
