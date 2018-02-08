@@ -5,14 +5,15 @@
 CMD_SETUP="setup"
 CMD_TAKE="take"
 CMD_PROCESS="process"
-CMD_PREPARE="prepare"
+CMD_PRODUCE="produce"
 
 # Config
 APK=../WordPress/build/outputs/apk/WordPress-wasabi-debug.apk
 AVD=Nexus_5X_API_25_SCREENSHOTS
-RUN_DEV=All
+RUN_DEV=ALL
 LOG_FILE="/tmp/android-screenshot.log"
 WORKING_DIR=./autoscreenshot
+TAKE_DIR=$WORKING_DIR/orig
 
 DEVICES=(PHONE TAB7 TAB10)
 LOCALES=(en-US el-GR it-IT)
@@ -106,7 +107,7 @@ function show_usage() {
     echo "      $CMD_SETUP:\tbrings up the required environment, with a local copy of the SDK and a dedicated device"
     echo "      $CMD_TAKE:\texecutes the app in the simulator and takes the screenshots"
     echo "      $CMD_PROCESS:\tprocesses the screenshots and generates the modded ones"
-    echo "      $CMD_PREPARE:\tautomatically runs the $CMD_TAKE and $CMD_PROCESS commands"
+    echo "      $CMD_PRODUCE:\tautomatically runs the $CMD_TAKE and $CMD_PROCESS commands"
     echo ""
     echo "   $CMD_SETUP command:"
     echo "   \tUsage: $exeName $CMD_SETUP"
@@ -114,8 +115,8 @@ function show_usage() {
     echo "   \tUsage: $exeName $CMD_TAKE [device-type] [avd-name] [apk-path]"
     echo "   $CMD_PROCESS command:"
     echo "   \tUsage: $exeName $CMD_PROCESS [device-type]"
-    echo "   $CMD_PREPARE command:"
-    echo "   \tUsage: $exeName $CMD_PREPARE [device-type] [avd-name] [apk-path]"
+    echo "   $CMD_PRODUCE command:"
+    echo "   \tUsage: $exeName $CMD_PRODUCE [device-type] [avd-name] [apk-path]"
     echo ""
     echo "   Params:"
     echo "   \t - device-type:"
@@ -129,7 +130,7 @@ function show_usage() {
     echo "   Example: $exeName $CMD_TAKE"
     echo "   Example: $exeName $CMD_TAKE phone"
     echo "   Example: $exeName $CMD_PROCESS tab7"
-    echo "   Example: $exeName $CMD_PREPARE all Android_Accelerated_x86"
+    echo "   Example: $exeName $CMD_PRODUCE all Android_Accelerated_x86"
     echo "   Example: $exeName $CMD_TAKE all Android_Accelerated_x86 ./app.apk"
     echo ""
     exit 1
@@ -193,6 +194,16 @@ function require_dirs {
   if [ ! -d "$WORKING_DIR" ]; then
     show_message Creating working directory...
     mkdir "$WORKING_DIR" >> $LOG_FILE 2>&1 || stop_on_error
+    show_message Done
+  fi 
+}
+
+# Checks and setups the working dir for taking the screenshots
+function require_take_dirs() {
+  require_dirs
+  if [ ! -d "$TAKE_DIR" ]; then
+    show_message Creating original screenshot directory...
+    mkdir "$TAKE_DIR" >> $LOG_FILE 2>&1 || stop_on_error
     show_message Done
   fi 
 }
@@ -262,7 +273,15 @@ function require_emu {
 function execute_setup() {
   show_title_message "Setting up the emulation environment..."
   require_dirs
-  require_sdk
+
+  needSdk=0
+  command -v avdmanager >/dev/null 2>&1 || needSdk=1
+  command -v adb >/dev/null 2>&1 || needSdk=1
+  command -v emulator >/dev/null 2>&1 || needSdk=1
+
+  if [ $needSdk -eq 1 ]; then
+    require_sdk
+  fi
   require_emu
   show_message "Done!"
 }
@@ -270,12 +289,12 @@ function execute_setup() {
 # Loads and checks the token for the magic login
 # Also loads other configuration that is in the screenshot-config.sh file
 function require_deeplink {
-  if [ -f "screenshot-config.sh" ]; then
-    . screenshot-config.sh
+  if [ -f "screenshots-config.sh" ]; then
+    . screenshots-config.sh
   fi
 
   if [ -z "$TOKEN_DEEPLINK" ]; then
-    show_error_message "TOKEN_DEEPLINK variable is not set correctly. Make sure the file screenshot-config.sh is present and looks like this:"
+    show_error_message "TOKEN_DEEPLINK variable is not set correctly. Make sure the file screenshots-config.sh is present and looks like this:"
     show_error_message ""
     show_error_message "#!/bin/sh"
     show_error_message "TOKEN_DEEPLINK=wordpress://magic-login?token=<secret login token>" 
@@ -289,20 +308,23 @@ function require_deeplink {
   fi
 }
 
+# Tries to start the selected emulator
 function start_emu {
-  echo -n Starting emulator... 
+  show_message "Starting emulator..." 
   device=$1
   device_app_height=$device\_APP_HEIGHT
   device_nav_height=$device\_NAV_HEIGHT
   device_skin_height=$((${!device_app_height}+${!device_nav_height}))
   device_skin_width=$device\_SKIN_WIDTH
   device_skin=${!device_skin_width}'x'$device_skin_height
-  $ANDROID_SDK_DIR/tools/emulator -verbose -no-boot-anim -timezone "Europe/UTC" -avd $AVD -skin $device_skin -qemu -lcd-density $LCD_DPI &>/dev/null &
-  echo Done
+  $ANDROID_SDK_DIR/tools/emulator -verbose -no-boot-anim -timezone "Europe/UTC" -avd $AVD -skin $device_skin -qemu -lcd-density $LCD_DPI >> $LOG_FILE 2>&1 || stop_on_error &
+  wait 5
+  show_message Done
 }
 
+# Waits for the emu to start
 function wait_emu {
-  echo -n Waiting for device boot... 
+  show_message "Waiting for device boot..." 
   adb $ADB_PARAMS wait-for-device
 
   # poll and wait until device has booted
@@ -311,67 +333,76 @@ function wait_emu {
     sleep 2
     A=$(adb $ADB_PARAMS shell getprop sys.boot_completed | tr -d '\r')
   done
-  echo Done
+  show_message "Done"
 }
 
+# Kills any running emu
 function kill_emus {
-  echo -n Killing emulators...
+  show_message "Killing emulators..."
   adb -e devices | grep emulator | cut -f1 | while read line; do adb -e -s $line emu kill; done
 	wait 10
-  echo Done
+  show_message "Done"
 }
 
+# Unistalls previous app instances
 function uninstall {
-  echo -n Uninstalling any previous app instances... 
-  adb $ADB_PARAMS shell pm uninstall $PKG &>/dev/null
-  echo Done
+  show_message "Uninstalling any previous app instances..." 
+  adb $ADB_PARAMS shell pm uninstall $PKG >> $LOG_FILE 2>&1 || stop_on_error
+  show_message "Done"
 }
 
+# Install the selected app
 function install {
-  echo -n Installing app... 
-  adb $ADB_PARAMS install -r $APK &>/dev/null
-  echo Done
+  show_message "Installing app..." 
+  adb $ADB_PARAMS install -r $APK >> $LOG_FILE 2>&1 || stop_on_error
+  show_message "Done"
 }
 
+# Tries to login via the magic link
 function login {
-  echo -n Logging in via magiclink... 
-  adb $ADB_PARAMS shell am start -W -a android.intent.action.VIEW -d $TOKEN_DEEPLINK $PKG &>/dev/null
+  show_message "Logging in via magiclink..." 
+  adb $ADB_PARAMS shell am start -W -a android.intent.action.VIEW -d $TOKEN_DEEPLINK $PKG >> $LOG_FILE 2>&1 || stop_on_error
   wait 5 # wait for app to finish logging in
-  echo Done
+  show_message "Done"
 }
 
+# Starts the app
 function start_app {
-  echo -n Starting app... 
-  adb $ADB_PARAMS shell am start -n $PKG/$ACTIVITY_LAUNCH &>/dev/null
+  show_message "Starting app..." 
+  adb $ADB_PARAMS shell am start -n $PKG/$ACTIVITY_LAUNCH >> $LOG_FILE 2>&1 || stop_on_error
   wait 5 # wait for app to finish start up
-  echo Done
+  show_message "Done"
 }
 
+# Kills the running app
 function kill_app {
-  echo -n Killing the app...
-  adb $ADB_PARAMS shell am force-stop $PKG &>/dev/null
-  echo Done
+  show_message "Killing the app..."
+  adb $ADB_PARAMS shell am force-stop $PKG >> $LOG_FILE 2>&1 || stop_on_error
+  show_message "Done"
 }
 
+# Tapping on the provided coordinates
 function tap_on {
-  echo -n Tapping on $1x$2...
-  adb $ADB_PARAMS shell input tap $1 $2 &>/dev/null
+  show_message "Tapping on $1x$2..."
+  adb $ADB_PARAMS shell input tap $1 $2 >> $LOG_FILE 2>&1 || stop_on_error
   wait 10
-  echo Done
+  show_message "Done"
 }
 
+# Simple wait
 function wait() {
   #echo -n Waiting for $1 seconds...
   sleep $1
   #echo Done
 }
 
+# Takes the actual screenshot
 function screenshot() {
-  echo -n Taking screenshot with name $1...
-  adb $ADB_PARAMS shell screencap -p /sdcard/$1.png &>/dev/null
-  echo -n  pulling the file...
-  adb $ADB_PARAMS pull /sdcard/$1.png ./$1.png &>/dev/null
-  echo Done
+  show_message "Taking screenshot with name $1..."
+  adb $ADB_PARAMS shell screencap -p /sdcard/$1.png >> $LOG_FILE 2>&1 || stop_on_error
+  show_message  "Pulling the file..."
+  adb $ADB_PARAMS pull /sdcard/$1.png $TAKE_DIR/$1.png >> $LOG_FILE 2>&1 || stop_on_error
+  show_message "Done"
 }
 
 function produce() {
@@ -413,6 +444,96 @@ function geekytime() {
   adb $ADB_PARAMS unroot &>/dev/null
 }
 
+# Checks the apk package exists
+function check_apk() {
+  if [ ! -f $APK ]; then
+    show_error_message "Apk file not found at $APK"
+    stop_on_error
+  fi
+}
+
+# Checks the device to be valid
+function check_device() {
+  if [ $RUN_DEV != "ALL" ] && [[ ! " ${DEVICES[@]} " =~ " ${RUN_DEV} " ]]; then
+    show_error_message "Unknown device $RUN_DEV"
+    stop_on_error
+  fi
+}
+
+# Checks for a command
+function check_command() {
+  cmdut=$1
+  command -v $cmdut >/dev/null 2>&1 || { show_message "$cmdut command not available. Please, assure it is in your path, or run '$exeName setup' to configure a local environment."; stop_on_error; }
+}
+
+# checks the emulator is available
+function check_emulator() {
+  check_command avdmanager
+  check_command adb
+  check_command emulator
+
+  # Update vars
+  EMU_PATH="$(which emulator)"
+  ANDROID_TOOL_DIR="$(dirname "${EMU_PATH}")"
+  ANDROID_SDK_DIR="${ANDROID_TOOL_DIR%/*}"
+}
+
+# Checks that parameters are meaningful
+function check_params() {
+  check_apk
+  check_device
+  check_emulator
+}
+
+# Takes the screenshot for the provided device
+function screenshot_device() {
+  device=$1
+
+  kill_emus
+  start_emu $device
+  wait_emu
+  uninstall
+  install
+  login
+
+  kill_app # kill the app so when restarting we don't have any first-time launch effects like promo dialogs and such
+
+  start_app
+
+  kill_app # kill the app so when restarting we don't have any first-time launch effects like promo dialogs and such
+
+  for loc in ${LOCALES[*]}; do
+    locale $loc
+
+    start_app
+
+    for screen in ${SCREENS[*]}; do
+      coords=$device\_COORDS_$screen
+      tap_on ${!coords}
+
+      geekytime
+      produce $device $loc $screen
+    done
+  done
+}
+
+# Takes the required screenshots
+function execute_take() {
+  require_font
+  require_imagemagick
+  require_take_dirs
+  check_params
+  show_title_message "Starting the screenshot taker process..."
+  if [ $RUN_DEV == "ALL" ]; then
+    for device in ${DEVICES[*]}; do
+      screenshot_device $device
+    done
+  else 
+    screenshot_device $RUN_DEV
+  fi
+  show_title_message "Done!"
+}
+
 ### Script main
 exeName=$(basename "$0" ".sh")
 
@@ -440,7 +561,7 @@ require_deeplink
 # Load params
 CMD=$1
 if ! [ -z $2 ]; then
-  RUN_DEV=$2
+  RUN_DEV=`echo "$2" | awk '{print toupper($0)}'`
 fi
 if ! [ -z $3 ]; then
   AVD=$3
@@ -455,43 +576,15 @@ show_config
 # Launch command
 if [ $CMD == $CMD_SETUP ]; then
   execute_setup 
+elif [ $CMD == $CMD_TAKE ]; then
+  execute_take
 else 
   show_usage
 fi
 stop_log
 exit 0
 
-require_font
-require_imagemagick
 
-require_emu
 
-for device in ${DEVICES[*]}; do
-  kill_emus
-  start_emu $device
-  wait_emu
-  uninstall
-  install
-  login
 
-  kill_app # kill the app so when restarting we don't have any first-time launch effects like promo dialogs and such
-
-  start_app
-
-  kill_app # kill the app so when restarting we don't have any first-time launch effects like promo dialogs and such
-
-  for loc in ${LOCALES[*]}; do
-    locale $loc
-
-    start_app
-
-    for screen in ${SCREENS[*]}; do
-      coords=$device\_COORDS_$screen
-      tap_on ${!coords}
-
-      geekytime
-      produce $device $loc $screen
-    done
-  done
-done
 
