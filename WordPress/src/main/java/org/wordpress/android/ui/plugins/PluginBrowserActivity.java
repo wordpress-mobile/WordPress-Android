@@ -311,7 +311,7 @@ public class PluginBrowserActivity extends AppCompatActivity
             ToastUtils.showToast(this, R.string.plugin_fetch_error);
             return;
         }
-        reloadPlugins(PluginListType.SITE);
+        mViewModel.setSitePlugins(mPluginStore.getSitePlugins(mViewModel.getSite()));
     }
 
     @SuppressWarnings("unused")
@@ -343,10 +343,10 @@ public class PluginBrowserActivity extends AppCompatActivity
 
         switch (event.type) {
             case POPULAR:
-                reloadPlugins(PluginListType.POPULAR);
+                mViewModel.setPopularPlugins(mPluginStore.getPluginDirectory(PluginDirectoryType.POPULAR));
                 break;
             case NEW:
-                reloadPlugins(PluginListType.NEW);
+                mViewModel.setNewPlugins(mPluginStore.getPluginDirectory(PluginDirectoryType.NEW));
                 break;
         }
 
@@ -354,6 +354,7 @@ public class PluginBrowserActivity extends AppCompatActivity
                 PluginListType.POPULAR : PluginListType.NEW;
         PluginListFragment fragment = getListFragment();
         if (fragment != null && fragment.getListType() == listType) {
+            // TODO: save this to the view model instead
             fragment.onLoadedMore(event.canLoadMore);
         }
     }
