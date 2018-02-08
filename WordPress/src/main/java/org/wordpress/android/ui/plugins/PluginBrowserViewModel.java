@@ -1,21 +1,34 @@
 package org.wordpress.android.ui.plugins;
 
-import android.arch.lifecycle.ViewModel;
+import android.app.Application;
+import android.arch.lifecycle.AndroidViewModel;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
+import org.wordpress.android.WordPress;
+import org.wordpress.android.fluxc.Dispatcher;
+import org.wordpress.android.fluxc.generated.PluginActionBuilder;
 import org.wordpress.android.fluxc.model.SiteModel;
+import org.wordpress.android.fluxc.model.plugin.PluginDirectoryType;
 import org.wordpress.android.fluxc.model.plugin.SitePluginModel;
 import org.wordpress.android.fluxc.model.plugin.WPOrgPluginModel;
+import org.wordpress.android.fluxc.store.PluginStore;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.inject.Inject;
+
 // ViewModel needs to be public to work with lower level APIs
 @SuppressWarnings("WeakerAccess")
-public class PluginBrowserViewModel extends ViewModel {
+public class PluginBrowserViewModel extends AndroidViewModel {
+    @Inject Dispatcher mDispatcher;
+    @Inject PluginStore mPluginStore;
+
     private String mSearchQuery;
     private SiteModel mSite;
 
@@ -30,6 +43,19 @@ public class PluginBrowserViewModel extends ViewModel {
     private List<WPOrgPluginModel> mPopularPlugins;
     private List<SitePluginModel> mSitePlugins;
     private final List<WPOrgPluginModel> mSearchResults = new ArrayList<>();
+
+    public PluginBrowserViewModel(@NonNull Application application) {
+        super(application);
+
+        ((WordPress) application).component().inject(this);
+        mDispatcher.register(this);
+    }
+
+    @Override
+    protected void onCleared() {
+        super.onCleared();
+        mDispatcher.unregister(this);
+    }
 
     String getSearchQuery() {
         return mSearchQuery;
@@ -141,5 +167,65 @@ public class PluginBrowserViewModel extends ViewModel {
             default:
                 return null;
         }
+    }
+
+    // Network
+
+    void fetchPlugins(@NonNull PluginBrowserActivity.PluginListType pluginType, boolean loadMore) {
+        if (loadMore && (!canLoadMorePlugins(pluginType) || isLoadingMorePlugins(pluginType))) {
+            // Either we can't load any more plugins or we are already loading more, so ignore
+            return;
+        }
+        setLoadingMorePlugins(pluginType, loadMore);
+        switch (pluginType) {
+            case SITE:
+//                if (mPluginStore.getSitePlugins(mViewModel.getSite()).size() == 0) {
+//                    showProgress(true);
+//                }
+                mDispatcher.dispatch(PluginActionBuilder.newFetchSitePluginsAction(getSite()));
+                break;
+            case POPULAR:
+                PluginStore.FetchPluginDirectoryPayload popularPayload =
+                        new PluginStore.FetchPluginDirectoryPayload(PluginDirectoryType.POPULAR, loadMore);
+                mDispatcher.dispatch(PluginActionBuilder.newFetchPluginDirectoryAction(popularPayload));
+                break;
+            case NEW:
+                PluginStore.FetchPluginDirectoryPayload newPayload =
+                        new PluginStore.FetchPluginDirectoryPayload(PluginDirectoryType.NEW, loadMore);
+                mDispatcher.dispatch(PluginActionBuilder.newFetchPluginDirectoryAction(newPayload));
+                break;
+            case SEARCH:
+//                if (mViewModel.getSearchResults().size() == 0) {
+//                    showProgress(true);
+//                }
+                PluginStore.SearchPluginDirectoryPayload searchPayload =
+                        new PluginStore.SearchPluginDirectoryPayload(getSearchQuery(), 1);
+                mDispatcher.dispatch(PluginActionBuilder.newSearchPluginDirectoryAction(searchPayload));
+                break;
+        }
+    }
+
+    void fetchWPOrgPlugin(String slug) {
+        mDispatcher.dispatch(PluginActionBuilder.newFetchWporgPluginAction(slug));
+    }
+
+    @SuppressWarnings("unused")
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onSitePluginsFetched(PluginStore.OnSitePluginsFetched event) {
+    }
+
+    @SuppressWarnings("unused")
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onWPOrgPluginFetched(PluginStore.OnWPOrgPluginFetched event) {
+    }
+
+    @SuppressWarnings("unused")
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onPluginDirectoryFetched(PluginStore.OnPluginDirectoryFetched event) {
+    }
+
+    @SuppressWarnings("unused")
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onPluginDirectorySearched(PluginStore.OnPluginDirectorySearched event) {
     }
 }

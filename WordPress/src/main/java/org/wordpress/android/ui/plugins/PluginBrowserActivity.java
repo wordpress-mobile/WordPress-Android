@@ -93,7 +93,6 @@ public class PluginBrowserActivity extends AppCompatActivity
     private SearchView mSearchView;
 
     @Inject PluginStore mPluginStore;
-    @Inject Dispatcher mDispatcher;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -101,7 +100,6 @@ public class PluginBrowserActivity extends AppCompatActivity
         ((WordPress) getApplication()).component().inject(this);
 
         setContentView(R.layout.plugin_browser_activity);
-        mDispatcher.register(this);
 
         mViewModel = ViewModelProviders.of(this).get(PluginBrowserViewModel.class);
 
@@ -159,9 +157,9 @@ public class PluginBrowserActivity extends AppCompatActivity
         reloadAllPluginsFromStore();
 
         if (savedInstanceState == null) {
-            fetchPlugins(PluginListType.SITE, false);
-            fetchPlugins(PluginListType.POPULAR, false);
-            fetchPlugins(PluginListType.NEW, false);
+            mViewModel.fetchPlugins(PluginListType.SITE, false);
+            mViewModel.fetchPlugins(PluginListType.POPULAR, false);
+            mViewModel.fetchPlugins(PluginListType.NEW, false);
         }
     }
 
@@ -173,7 +171,6 @@ public class PluginBrowserActivity extends AppCompatActivity
 
     @Override
     protected void onDestroy() {
-        mDispatcher.unregister(this);
         if (mSearchMenuItem != null) {
             mSearchMenuItem.setOnActionExpandListener(null);
         }
@@ -199,7 +196,7 @@ public class PluginBrowserActivity extends AppCompatActivity
         if (!TextUtils.isEmpty(mViewModel.getSearchQuery())) {
             mSearchMenuItem.expandActionView();
             mSearchView.setQuery(mViewModel.getSearchQuery(), false);
-            fetchPlugins(PluginListType.SEARCH, false);
+            mViewModel.fetchPlugins(PluginListType.SEARCH, false);
         }
 
         mSearchMenuItem.setOnActionExpandListener(this);
@@ -222,40 +219,6 @@ public class PluginBrowserActivity extends AppCompatActivity
         if (requestCode == RequestCodes.PLUGIN_DETAIL) {
             reloadAllPluginsFromStore();
             reloadListFragment();
-        }
-    }
-
-    private void fetchPlugins(@NonNull PluginListType pluginType, boolean loadMore) {
-        if (loadMore && (!mViewModel.canLoadMorePlugins(pluginType) || mViewModel.isLoadingMorePlugins(pluginType))) {
-            // Either we can't load any more plugins or we are already loading more, so ignore
-            return;
-        }
-        mViewModel.setLoadingMorePlugins(pluginType, loadMore);
-        switch (pluginType) {
-            case SITE:
-                if (mPluginStore.getSitePlugins(mViewModel.getSite()).size() == 0) {
-                    showProgress(true);
-                }
-                mDispatcher.dispatch(PluginActionBuilder.newFetchSitePluginsAction(mViewModel.getSite()));
-                break;
-            case POPULAR:
-                PluginStore.FetchPluginDirectoryPayload popularPayload =
-                        new PluginStore.FetchPluginDirectoryPayload(PluginDirectoryType.POPULAR, loadMore);
-                mDispatcher.dispatch(PluginActionBuilder.newFetchPluginDirectoryAction(popularPayload));
-                break;
-            case NEW:
-                PluginStore.FetchPluginDirectoryPayload newPayload =
-                        new PluginStore.FetchPluginDirectoryPayload(PluginDirectoryType.NEW, loadMore);
-                mDispatcher.dispatch(PluginActionBuilder.newFetchPluginDirectoryAction(newPayload));
-                break;
-            case SEARCH:
-                if (mViewModel.getSearchResults().size() == 0) {
-                    showProgress(true);
-                }
-                SearchPluginDirectoryPayload searchPayload =
-                        new SearchPluginDirectoryPayload(mViewModel.getSearchQuery(), 1);
-                mDispatcher.dispatch(PluginActionBuilder.newSearchPluginDirectoryAction(searchPayload));
-                break;
         }
     }
 
@@ -487,7 +450,7 @@ public class PluginBrowserActivity extends AppCompatActivity
             PluginListFragment fragment = showListFragment(PluginListType.SEARCH);
             fragment.showEmptyView(false);
             if (!TextUtils.isEmpty(mViewModel.getSearchQuery())) {
-                fetchPlugins(PluginListType.SEARCH, false);
+                mViewModel.fetchPlugins(PluginListType.SEARCH, false);
             }
         }
     }
@@ -506,7 +469,7 @@ public class PluginBrowserActivity extends AppCompatActivity
 
     @Override
     public void onListFragmentLoadMore(@NonNull PluginListType listType) {
-        fetchPlugins(listType, true);
+        mViewModel.fetchPlugins(listType, true);
     }
 
     private void showProgress(boolean show) {
@@ -590,7 +553,7 @@ public class PluginBrowserActivity extends AppCompatActivity
                 sitePlugin = (SitePluginModel) item;
                 wpOrgPlugin = PluginUtils.getWPOrgPlugin(mPluginStore, sitePlugin);
                 if (wpOrgPlugin == null) {
-                    mDispatcher.dispatch(PluginActionBuilder.newFetchWporgPluginAction(sitePlugin.getSlug()));
+                    mViewModel.fetchWPOrgPlugin(sitePlugin.getSlug());
                 }
                 name = sitePlugin.getDisplayName();
                 author = sitePlugin.getAuthorName();
