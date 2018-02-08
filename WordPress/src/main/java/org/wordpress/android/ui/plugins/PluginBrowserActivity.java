@@ -2,6 +2,7 @@ package org.wordpress.android.ui.plugins;
 
 import android.app.Fragment;
 import android.app.FragmentTransaction;
+import android.arch.lifecycle.ViewModelProviders;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -85,7 +86,7 @@ public class PluginBrowserActivity extends AppCompatActivity
         }
     }
 
-    private SiteModel mSite;
+    private PluginBrowserViewModel mViewModel;
     private final HashMap<String, SitePluginModel> mSitePluginsMap = new HashMap<>();
     private final List<WPOrgPluginModel> mSearchResults = new ArrayList<>();
 
@@ -109,6 +110,8 @@ public class PluginBrowserActivity extends AppCompatActivity
         setContentView(R.layout.plugin_browser_activity);
         mDispatcher.register(this);
 
+        mViewModel = ViewModelProviders.of(this).get(PluginBrowserViewModel.class);
+
         mSitePluginsRecycler = findViewById(R.id.installed_plugins_recycler);
         mPopularPluginsRecycler = findViewById(R.id.popular_plugins_recycler);
         mNewPluginsRecycler = findViewById(R.id.new_plugins_recycler);
@@ -123,13 +126,12 @@ public class PluginBrowserActivity extends AppCompatActivity
         }
 
         if (savedInstanceState == null) {
-            mSite = (SiteModel) getIntent().getSerializableExtra(WordPress.SITE);
+            mViewModel.setSite((SiteModel) getIntent().getSerializableExtra(WordPress.SITE));
         } else {
-            mSite = (SiteModel) savedInstanceState.getSerializable(WordPress.SITE);
             mSearchQuery = savedInstanceState.getString(KEY_SEARCH_QUERY);
         }
 
-        if (mSite == null) {
+        if (mViewModel.getSite() == null) {
             ToastUtils.showToast(this, R.string.blog_not_found, ToastUtils.Duration.SHORT);
             finish();
             return;
@@ -163,7 +165,7 @@ public class PluginBrowserActivity extends AppCompatActivity
         configureRecycler(mPopularPluginsRecycler);
         configureRecycler(mNewPluginsRecycler);
 
-        List<SitePluginModel> sitePlugins = mPluginStore.getSitePlugins(mSite);
+        List<SitePluginModel> sitePlugins = mPluginStore.getSitePlugins(mViewModel.getSite());
         for (SitePluginModel plugin: sitePlugins) {
             mSitePluginsMap.put(plugin.getSlug(), plugin);
         }
@@ -230,7 +232,6 @@ public class PluginBrowserActivity extends AppCompatActivity
     @Override
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
-        outState.putSerializable(WordPress.SITE, mSite);
         if (mSearchMenuItem != null && mSearchMenuItem.isActionViewExpanded()) {
             outState.putString(KEY_SEARCH_QUERY, mSearchView.getQuery().toString());
         }
@@ -248,10 +249,10 @@ public class PluginBrowserActivity extends AppCompatActivity
     private void fetchPlugins(@NonNull PluginListType pluginType, boolean loadMore) {
         switch (pluginType) {
             case SITE:
-                if (mPluginStore.getSitePlugins(mSite).size() == 0) {
+                if (mPluginStore.getSitePlugins(mViewModel.getSite()).size() == 0) {
                     showProgress(true);
                 }
-                mDispatcher.dispatch(PluginActionBuilder.newFetchSitePluginsAction(mSite));
+                mDispatcher.dispatch(PluginActionBuilder.newFetchSitePluginsAction(mViewModel.getSite()));
                 break;
             case POPULAR:
                 PluginStore.FetchPluginDirectoryPayload popularPayload =
@@ -320,7 +321,7 @@ public class PluginBrowserActivity extends AppCompatActivity
             case SEARCH:
                 return mSearchResults;
             default:
-                List<SitePluginModel> sitePlugins = mPluginStore.getSitePlugins(mSite);
+                List<SitePluginModel> sitePlugins = mPluginStore.getSitePlugins(mViewModel.getSite());
                 mSitePluginsMap.clear();
                 for (SitePluginModel plugin: sitePlugins) {
                     mSitePluginsMap.put(plugin.getSlug(), plugin);
@@ -453,7 +454,7 @@ public class PluginBrowserActivity extends AppCompatActivity
         if (listFragment != null) {
             listFragment.setListType(listType);
         } else {
-            listFragment = PluginListFragment.newInstance(mSite, listType);
+            listFragment = PluginListFragment.newInstance(mViewModel.getSite(), listType);
             getFragmentManager().beginTransaction()
                     .add(R.id.fragment_container, listFragment, PluginListFragment.TAG)
                     .addToBackStack(null)
@@ -678,9 +679,9 @@ public class PluginBrowserActivity extends AppCompatActivity
                             sitePlugin = getSitePluginFromSlug(wpOrgPlugin.getSlug());
                         }
                         if (sitePlugin != null) {
-                            ActivityLauncher.viewPluginDetailForResult(PluginBrowserActivity.this, mSite, sitePlugin);
+                            ActivityLauncher.viewPluginDetailForResult(PluginBrowserActivity.this, mViewModel.getSite(), sitePlugin);
                         } else {
-                            ActivityLauncher.viewPluginDetailForResult(PluginBrowserActivity.this, mSite, wpOrgPlugin);
+                            ActivityLauncher.viewPluginDetailForResult(PluginBrowserActivity.this, mViewModel.getSite(), wpOrgPlugin);
                         }
                     }
                 });
