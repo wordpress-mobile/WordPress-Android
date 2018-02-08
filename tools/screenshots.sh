@@ -1,6 +1,12 @@
-#!/bin/bash
+#!/bin/sh
 
 ### Misc defines
+# Commands
+CMD_SETUP="setup"
+CMD_TAKE="take"
+CMD_PROCESS="process"
+CMD_PREPARE="prepare"
+
 # Config
 APK=../WordPress/build/outputs/apk/WordPress-wasabi-debug.apk
 AVD=Nexus_5X_API_25_SCREENSHOTS
@@ -84,56 +90,110 @@ TAB7_OFFSET="+145+552"
 TAB10_TEMPLATE=android-tab10-template2.png
 TAB10_OFFSET="+148+622"
 
-# Commands
-CMD_SETUP="setup"
-CMD_TAKE="take"
-CMD_PROCESS="process"
-CMD_PREPARE="prepare"
+# Color/formatting support
+OUTPUT_NORM="\033[0m"
+OUTPUT_RED="\033[31m"
+OUTPUT_GREEN="\033[32m"
+OUTPUT_BOLD="\033[1m"
 
 ### Functions
 # Show script usage, commands and options
-function showUsage() {
+function show_usage() {
     # Help message
-    echo -e "Usage: $exeName command [options]"
-    echo -e ""
-    echo -e "   Available commands:"
-    echo -e "      $CMD_SETUP:\tbrings up the required environment, with a local copy of the SDK and a dedicated device"
-    echo -e "      $CMD_TAKE:\texecutes the app in the simulator and takes the screenshots"
-    echo -e "      $CMD_PROCESS:\tprocesses the screenshots and generates the modded ones"
-    echo -e "      $CMD_PREPARE:\tautomatically runs the $CMD_TAKE and $CMD_PROCESS commands"
-    echo -e ""
-    echo -e "   $CMD_SETUP command:"
-    echo -e "   \tUsage: $exeName $CMD_SETUP"
-    echo -e "   $CMD_TAKE command:"
-    echo -e "   \tUsage: $exeName $CMD_TAKE [device-type] [avd-name] [apk-path]"
-    echo -e "   $CMD_PROCESS command:"
-    echo -e "   \tUsage: $exeName $CMD_PROCESS [device-type]"
-    echo -e "   $CMD_PREPARE command:"
-    echo -e "   \tUsage: $exeName $CMD_PREPARE [device-type] [avd-name] [apk-path]"
-    echo -e ""
-    echo -e "   Params:"
-    echo -e "   \t - device-type:"
-    echo -e "   \t         all: runs on all the available device sizes"
-    echo -e "   \t         phone: runs on the phone size"
-    echo -e "   \t         tab7: runs on the Tab7 size"
-    echo -e "   \t         tab10: runs on the Tab10 size"
-    echo -e "   \t - avd-name: the name of the simulator device"
-    echo -e "   \t - apk-path: the path of the apk to use"
-    echo -e ""
-    echo -e "   Example: $exeName $CMD_TAKE"
-    echo -e "   Example: $exeName $CMD_TAKE phone"
-    echo -e "   Example: $exeName $CMD_PROCESS tab7"
-    echo -e "   Example: $exeName $CMD_PREPARE all Android_Accelerated_x86"
-    echo -e "   Example: $exeName $CMD_TAKE all Android_Accelerated_x86 ./app.apk"
+    echo "Usage: $exeName command [options]"
+    echo ""
+    echo "   Available commands:"
+    echo "      $CMD_SETUP:\tbrings up the required environment, with a local copy of the SDK and a dedicated device"
+    echo "      $CMD_TAKE:\texecutes the app in the simulator and takes the screenshots"
+    echo "      $CMD_PROCESS:\tprocesses the screenshots and generates the modded ones"
+    echo "      $CMD_PREPARE:\tautomatically runs the $CMD_TAKE and $CMD_PROCESS commands"
+    echo ""
+    echo "   $CMD_SETUP command:"
+    echo "   \tUsage: $exeName $CMD_SETUP"
+    echo "   $CMD_TAKE command:"
+    echo "   \tUsage: $exeName $CMD_TAKE [device-type] [avd-name] [apk-path]"
+    echo "   $CMD_PROCESS command:"
+    echo "   \tUsage: $exeName $CMD_PROCESS [device-type]"
+    echo "   $CMD_PREPARE command:"
+    echo "   \tUsage: $exeName $CMD_PREPARE [device-type] [avd-name] [apk-path]"
+    echo ""
+    echo "   Params:"
+    echo "   \t - device-type:"
+    echo "   \t         all: runs on all the available device sizes"
+    echo "   \t         phone: runs on the phone size"
+    echo "   \t         tab7: runs on the Tab7 size"
+    echo "   \t         tab10: runs on the Tab10 size"
+    echo "   \t - avd-name: the name of the simulator device"
+    echo "   \t - apk-path: the path of the apk to use"
+    echo ""
+    echo "   Example: $exeName $CMD_TAKE"
+    echo "   Example: $exeName $CMD_TAKE phone"
+    echo "   Example: $exeName $CMD_PROCESS tab7"
+    echo "   Example: $exeName $CMD_PREPARE all Android_Accelerated_x86"
+    echo "   Example: $exeName $CMD_TAKE all Android_Accelerated_x86 ./app.apk"
     echo ""
     exit 1
 }
 
+# Show Helpers
+function show_error_message() {
+    message=$1
+    echo "$OUTPUT_RED$message$OUTPUT_NORM"
+    echo $message >> $LOG_FILE
+}
+
+function show_ok_message() {
+    message=$1
+    echo "$OUTPUT_GREEN$message$OUTPUT_NORM" 
+    echo $message >> $LOG_FILE
+}
+
+function show_title_message() {
+    message=$1
+    echo "$OUTPUT_BOLD$message$OUTPUT_NORM" 
+    echo $message >> $LOG_FILE
+}
+
+function show_message() {
+    echo "$1" | tee -a $LOG_FILE
+}
+
+# Appends an init line to the log
+function start_log() {
+    dateTime=`date "+%d-%m-%Y - %H:%M:%S"`
+    echo "$exeName started at $dateTime" >> $LOG_FILE
+}
+
+# Appends a closing line to the log
+function stop_log() {
+    dateTime=`date "+%d-%m-%Y - %H:%M:%S"`
+    echo "$exeName terminated at $dateTime" >> $LOG_FILE
+    echo "" >> $LOG_FILE
+    echo "Log location: $LOG_FILE"
+}
+
+# Writes an error message and exits
+function stop_on_error() {
+    show_error_message "Operation failed. Aborting."
+    show_error_message "See log for further details."
+    stop_log
+    exit 1
+}
+
+# Shows the current configuration
+function show_config() {
+  show_title_message "Configuration:"
+  show_message "Device: $RUN_DEV"
+  show_message "Emulator: $AVD"
+  show_message "Package: $APK ($PKG)"
+}
+
+# Checks and setups the working dir
 function require_dirs {
   if [ ! -d "$WORKING_DIR" ]; then
-    echo -n Creating working directory...
-    mkdir "$WORKING_DIR"
-    echo Done
+    show_message Creating working directory...
+    mkdir "$WORKING_DIR" >> $LOG_FILE 2>&1 || stop_on_error
+    show_message Done
   fi 
 }
 
@@ -162,59 +222,71 @@ function require_imagemagick {
   fi
 }
 
-function require_sdk {
+# Setups the local sdk and configure the environment
+function require_sdk() {
   if [ -z "$ANDROID_SDK_DIR" ]; then
     require_dirs
 
     if [ ! -d "$WORKING_DIR/sdk/tools" ]; then
-      echo -n Downloading the Android SDK...
-      mkdir -p "$WORKING_DIR/sdk"
-      wget -qO- $SDK_ZIP_URL | tar xf - -C "$WORKING_DIR/sdk" #&>/dev/null
-      echo Done
+      command -v wget >/dev/null 2>&1 || { show_message "wget command not installed"; stop_on_error; }
 
-      echo 'Downloading the Android platform (over 2GB so, this might take a while)'
-      yes y | sdkmanager "platform-tools" "platforms;android-26" "system-images;android-25;google_apis;x86" "emulator" &>/dev/null
-      echo Done
+      show_message "Downloading the Android SDK..."
+      mkdir -p "$WORKING_DIR/sdk" >> $LOG_FILE 2>&1 || stop_on_error
+      wget -qO- $SDK_ZIP_URL | tar xf - -C "$WORKING_DIR/sdk" >> $LOG_FILE 2>&1 || stop_on_error
+      show_message Done
+
+      show_message "Downloading the Android platform (over 2GB so, this might take a while)"
+      yes y | sdkmanager "platform-tools" "platforms;android-26" "system-images;android-25;google_apis;x86" "emulator" >> $LOG_FILE 2>&1 || stop_on_error
+      show_message Done
     fi
-
-    echo Setting up SDK...
-    export ANDROID_SDK_DIR="$WORKING_DIR/sdk"
-    export PATH=$PATH:"$WORKING_DIR/sdk/tools":"$WORKING_DIR/sdk/tools/bin":"$WORKING_DIR/sdk/platform-tools/"
-    echo Done
   fi
 
-  export PATH=$PATH:$ANDROID_SDK_DIR/tools:$ANDROID_SDK_DIR/tools/bin
+  show_message "Setting up SDK..."
+  export ANDROID_SDK_DIR="$WORKING_DIR/sdk"
+  export PATH=$PATH:"$WORKING_DIR/sdk/tools":"$WORKING_DIR/sdk/tools/bin":"$WORKING_DIR/sdk/platform-tools/"
+  show_message "Done"
 }
 
+# Creates the local emulator
 function require_emu {
   avdmanager list avd -c | grep $AVD
   avdmissing=$?
 
   if [ $avdmissing = 1 ]; then
-    echo Creating AVD
-    echo no | avdmanager create avd -n $AVD -k "system-images;android-25;google_apis;x86" --tag "google_apis" &>/dev/null
+    show_message "Creating AVD..."
+    echo no | avdmanager create avd -n $AVD -k "system-images;android-25;google_apis;x86" --tag "google_apis" >> $LOG_FILE 2>&1 || stop_on_error
   fi
 }
 
+# Setups the environment
+function execute_setup() {
+  show_title_message "Setting up the emulation environment..."
+  require_dirs
+  require_sdk
+  require_emu
+  show_message "Done!"
+}
+
 # Loads and checks the token for the magic login
-# Also loads other configuration that is in the tokendeeplink.sh file
+# Also loads other configuration that is in the screenshot-config.sh file
 function require_deeplink {
-  if [ -f "tokendeeplink.sh" ]; then
-    . tokendeeplink.sh
+  if [ -f "screenshot-config.sh" ]; then
+    . screenshot-config.sh
   fi
 
   if [ -z "$TOKEN_DEEPLINK" ]; then
-    echo 'TOKEN_DEEPLINK variable is not set correctly. Make sure the file tokendeeplink.sh is present and looks like this:'
-    echo 
-    echo '#!/bin/sh'
-    echo 'TOKEN_DEEPLINK=wordpress://magic-login?token=<secret login token>' 
-    exit 1
+    show_error_message "TOKEN_DEEPLINK variable is not set correctly. Make sure the file screenshot-config.sh is present and looks like this:"
+    show_error_message ""
+    show_error_message "#!/bin/sh"
+    show_error_message "TOKEN_DEEPLINK=wordpress://magic-login?token=<secret login token>" 
+    show_error_message ""
+    stop_on_error
   fi
 
   if ! [[ "$TOKEN_DEEPLINK" =~ ^wordpress:\/\/magic-login\?token=* ]]; then
-    echo "TOKEN_DEEPLINK format is invalid.";
-    exit 1
-  fi;
+    show_error_message "TOKEN_DEEPLINK format is invalid.";
+    stop_on_error
+  fi
 }
 
 function start_emu {
@@ -346,21 +418,22 @@ exeName=$(basename "$0" ".sh")
 
 # Params check
 if [ "$#" -lt 1 ] || [ -z $1 ]; then
-  showUsage
+  show_usage
 fi
 
 if [ "$1" == $CMD_SETUP ] && [ "$#" -gt 1 ]; then
-  showUsage
+  show_usage
 fi
 
 if [ "$1" == $CMD_PROCESS ] && [ "$#" -gt 2 ]; then
-  showUsage
+  show_usage
 fi
 
 if [ "$#" -gt 4 ]; then
-  showUsage
+  show_usage
 fi
 
+start_log
 # Load deeplink and configuration
 require_deeplink
 
@@ -375,16 +448,22 @@ fi
 if ! [ -z $4 ]; then
   APK=$4
 fi
-echo "OK"
-echo "CMD: $CMD"
-echo "RUN_DEV: $RUN_DEV"
-echo "AVD: $AVD"
-echo "APK: $APK"
-echo "OK"
+
+# Update user
+show_config
+
+# Launch command
+if [ $CMD == $CMD_SETUP ]; then
+  execute_setup 
+else 
+  show_usage
+fi
+stop_log
 exit 0
+
 require_font
 require_imagemagick
-require_sdk
+
 require_emu
 
 for device in ${DEVICES[*]}; do
