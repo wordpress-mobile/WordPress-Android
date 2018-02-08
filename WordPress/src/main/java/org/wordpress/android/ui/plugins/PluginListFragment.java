@@ -1,6 +1,7 @@
 package org.wordpress.android.ui.plugins;
 
 import android.app.Fragment;
+import android.arch.lifecycle.ViewModelProviders;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.ColorRes;
@@ -8,6 +9,7 @@ import android.support.annotation.DrawableRes;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.annotation.StringRes;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -35,11 +37,12 @@ import java.util.List;
 import javax.inject.Inject;
 
 public class PluginListFragment extends Fragment {
-
     public static final String TAG = PluginListFragment.class.getName();
     private static final String ARG_LIST_TYPE = "list_type";
     private static final String KEY_CAN_LOAD_MORE = "can_load_more";
     private static final String KEY_IS_LOADING_MORE = "is_loading_more";
+
+    private PluginBrowserViewModel mViewModel;
 
     public interface PluginListFragmentListener {
         List<?> onListFragmentRequestPlugins(@NonNull PluginListType listType);
@@ -52,7 +55,6 @@ public class PluginListFragment extends Fragment {
     private boolean mCanLoadMore = true;
     private boolean mIsLoadingMore;
 
-    private SiteModel mSite;
     private final HashMap<String, SitePluginModel> mSitePluginsMap = new HashMap<>();
     private final HashMap<String, WPOrgPluginModel> mWPOrgPluginsMap = new HashMap<>();
 
@@ -74,10 +76,11 @@ public class PluginListFragment extends Fragment {
         super.onCreate(savedInstanceState);
         ((WordPress) getActivity().getApplication()).component().inject(this);
 
-        mSite = (SiteModel) getArguments().getSerializable(WordPress.SITE);
+        mViewModel = ViewModelProviders.of((AppCompatActivity) getActivity()).get(PluginBrowserViewModel.class);
+
         mListType = (PluginListType) getArguments().getSerializable(ARG_LIST_TYPE);
 
-        List<SitePluginModel> sitePlugins = mPluginStore.getSitePlugins(mSite);
+        List<SitePluginModel> sitePlugins = mPluginStore.getSitePlugins(mViewModel.getSite());
         for (SitePluginModel plugin: sitePlugins) {
             mSitePluginsMap.put(plugin.getSlug(), plugin);
         }
@@ -324,9 +327,9 @@ public class PluginListFragment extends Fragment {
                             sitePlugin = getSitePluginFromSlug(wpOrgPlugin.getSlug());
                         }
                         if (sitePlugin != null) {
-                            ActivityLauncher.viewPluginDetailForResult(getActivity(), mSite, sitePlugin);
+                            ActivityLauncher.viewPluginDetailForResult(getActivity(), mViewModel.getSite(), sitePlugin);
                         } else if (wpOrgPlugin != null) {
-                            ActivityLauncher.viewPluginDetailForResult(getActivity(), mSite, wpOrgPlugin);
+                            ActivityLauncher.viewPluginDetailForResult(getActivity(), mViewModel.getSite(), wpOrgPlugin);
                         }
                     }
                 });
