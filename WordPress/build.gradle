@@ -138,7 +138,7 @@ dependencies {
     compile 'com.google.dagger:dagger-android-support:2.11'
     apt 'com.google.dagger:dagger-android-processor:2.11'
 
-    compile ('com.github.wordpress-mobile.WordPress-FluxC-Android:fluxc:issue~706-support-only-wordpressdotcom-suggestions-SNAPSHOT') {
+    compile ('com.github.wordpress-mobile.WordPress-FluxC-Android:fluxc:54c164ccd8ee723fe74e297c0ac0736ce0f8f189') {
         exclude group: "com.android.volley"
     }
 
