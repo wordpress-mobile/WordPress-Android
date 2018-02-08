@@ -36,8 +36,9 @@ public class PluginBrowserViewModel extends AndroidViewModel {
 
     private Map<PluginBrowserActivity.PluginListType, Boolean> mLoadingMorePlugins = new HashMap<>();
 
-    private final HashMap<String, SitePluginModel> mSitePluginsMap = new HashMap<>();
-    private final HashMap<String, WPOrgPluginModel> mWPOrgPluginsForSitePluginsMap = new HashMap<>();
+    private final HashMap<String, SitePluginModel> mSitePluginsCache = new HashMap<>();
+    private final HashMap<String, WPOrgPluginModel> mWPOrgPluginsForSitePluginsCache = new HashMap<>();
+
     private MutableLiveData<List<WPOrgPluginModel>> mNewPlugins;
     private MutableLiveData<List<WPOrgPluginModel>> mPopularPlugins;
     private MutableLiveData<List<SitePluginModel>> mSitePlugins;
@@ -56,40 +57,6 @@ public class PluginBrowserViewModel extends AndroidViewModel {
         mDispatcher.unregister(this);
     }
 
-    List<?> getPluginsForListType(PluginBrowserActivity.PluginListType listType) {
-        switch (listType) {
-            case SITE:
-                return getSitePlugins().getValue();
-            case POPULAR:
-                return getPopularPlugins().getValue();
-            case NEW:
-                return getNewPlugins().getValue();
-            case SEARCH:
-                return getSearchResults().getValue();
-        }
-        return null;
-    }
-
-    void loadMore(PluginBrowserActivity.PluginListType listType) {
-        fetchPlugins(listType, true);
-    }
-
-    void reloadAndFetchAllPlugins() {
-        reloadAllPluginsFromStore();
-
-        fetchPlugins(PluginBrowserActivity.PluginListType.SITE, false);
-        fetchPlugins(PluginBrowserActivity.PluginListType.POPULAR, false);
-        fetchPlugins(PluginBrowserActivity.PluginListType.NEW, false);
-    }
-
-    String getSearchQuery() {
-        return mSearchQuery;
-    }
-
-    void setSearchQuery(String searchQuery) {
-        mSearchQuery = searchQuery;
-    }
-
     SiteModel getSite() {
         return mSite;
     }
@@ -99,27 +66,6 @@ public class PluginBrowserViewModel extends AndroidViewModel {
     }
 
     // Site & WPOrg plugin management
-
-    SitePluginModel getSitePluginFromSlug(String slug) {
-        return mSitePluginsMap.get(slug);
-    }
-
-    // This method is specifically taking SitePluginModel as parameter, so it's understood that not all plugins
-    // will be cached here
-    @Nullable WPOrgPluginModel getCachedWPOrgPluginForSitePlugin(@NonNull SitePluginModel sitePlugin) {
-        return mWPOrgPluginsForSitePluginsMap.get(sitePlugin.getSlug());
-    }
-
-    // In order to avoid hitting the DB in bindViewHolder multiple times for site plugins, we attempt to cache them here
-    void cacheWPOrgPluginIfNecessary(WPOrgPluginModel wpOrgPlugin) {
-        if (wpOrgPlugin == null) {
-            return;
-        }
-        String slug = wpOrgPlugin.getSlug();
-        if (mSitePluginsMap.containsKey(slug)) {
-            mWPOrgPluginsForSitePluginsMap.put(slug, wpOrgPlugin);
-        }
-    }
 
     MutableLiveData<List<SitePluginModel>> getSitePlugins() {
         if (mSitePlugins == null) {
@@ -149,6 +95,28 @@ public class PluginBrowserViewModel extends AndroidViewModel {
         return mSearchResults;
     }
 
+    List<?> getPluginsForListType(PluginBrowserActivity.PluginListType listType) {
+        switch (listType) {
+            case SITE:
+                return getSitePlugins().getValue();
+            case POPULAR:
+                return getPopularPlugins().getValue();
+            case NEW:
+                return getNewPlugins().getValue();
+            case SEARCH:
+                return getSearchResults().getValue();
+        }
+        return null;
+    }
+
+    void reloadAndFetchAllPlugins() {
+        reloadAllPluginsFromStore();
+
+        fetchPlugins(PluginBrowserActivity.PluginListType.SITE, false);
+        fetchPlugins(PluginBrowserActivity.PluginListType.POPULAR, false);
+        fetchPlugins(PluginBrowserActivity.PluginListType.NEW, false);
+    }
+
     void reloadAllPluginsFromStore() {
         reloadSitePlugins();
         reloadPopularPlugins();
@@ -161,9 +129,9 @@ public class PluginBrowserViewModel extends AndroidViewModel {
         for (SitePluginModel pluginModel : sitePlugins) {
             cacheWPOrgPluginIfNecessary(mPluginStore.getWPOrgPluginBySlug(pluginModel.getSlug()));
         }
-        mSitePluginsMap.clear();
+        mSitePluginsCache.clear();
         for (SitePluginModel plugin: sitePlugins) {
-            mSitePluginsMap.put(plugin.getSlug(), plugin);
+            mSitePluginsCache.put(plugin.getSlug(), plugin);
         }
         getSitePlugins().setValue(sitePlugins);
     }
@@ -174,16 +142,6 @@ public class PluginBrowserViewModel extends AndroidViewModel {
 
     private void reloadPopularPlugins() {
         getPopularPlugins().setValue(mPluginStore.getPluginDirectory(PluginDirectoryType.POPULAR));
-    }
-
-    void clearSearchResults() {
-        getSearchResults().setValue(new ArrayList<WPOrgPluginModel>());
-    }
-
-    private void setSearchResults(String searchQuery, List<WPOrgPluginModel> searchResults) {
-        if (mSearchQuery.equalsIgnoreCase(searchQuery)) {
-            getSearchResults().setValue(searchResults);
-        }
     }
 
     private boolean canLoadMorePlugins(PluginBrowserActivity.PluginListType listType) {
@@ -201,7 +159,7 @@ public class PluginBrowserViewModel extends AndroidViewModel {
         return mLoadingMorePlugins.get(listType);
     }
 
-    // Network
+    // Network Requests
 
     void fetchPlugins(@NonNull PluginBrowserActivity.PluginListType pluginType, boolean loadMore) {
         if (loadMore && (!canLoadMorePlugins(pluginType) || isLoadingMorePlugins(pluginType))) {
@@ -241,6 +199,12 @@ public class PluginBrowserViewModel extends AndroidViewModel {
     void fetchWPOrgPlugin(String slug) {
         mDispatcher.dispatch(PluginActionBuilder.newFetchWporgPluginAction(slug));
     }
+
+    void loadMore(PluginBrowserActivity.PluginListType listType) {
+        fetchPlugins(listType, true);
+    }
+
+    // Network Callbacks
 
     @SuppressWarnings("unused")
     @Subscribe(threadMode = ThreadMode.MAIN)
@@ -286,5 +250,48 @@ public class PluginBrowserViewModel extends AndroidViewModel {
             return;
         }
         setSearchResults(event.searchTerm, event.plugins);
+    }
+
+    // Search
+
+    String getSearchQuery() {
+        return mSearchQuery;
+    }
+
+    void setSearchQuery(String searchQuery) {
+        mSearchQuery = searchQuery;
+    }
+
+    void clearSearchResults() {
+        getSearchResults().setValue(new ArrayList<WPOrgPluginModel>());
+    }
+
+    private void setSearchResults(String searchQuery, List<WPOrgPluginModel> searchResults) {
+        if (mSearchQuery.equalsIgnoreCase(searchQuery)) {
+            getSearchResults().setValue(searchResults);
+        }
+    }
+
+    // Cache Management
+
+    SitePluginModel getSitePluginFromSlug(String slug) {
+        return mSitePluginsCache.get(slug);
+    }
+
+    // This method is specifically taking SitePluginModel as parameter, so it's understood that not all plugins
+    // will be cached here
+    @Nullable WPOrgPluginModel getCachedWPOrgPluginForSitePlugin(@NonNull SitePluginModel sitePlugin) {
+        return mWPOrgPluginsForSitePluginsCache.get(sitePlugin.getSlug());
+    }
+
+    // In order to avoid hitting the DB in bindViewHolder multiple times for site plugins, we attempt to cache them here
+    void cacheWPOrgPluginIfNecessary(WPOrgPluginModel wpOrgPlugin) {
+        if (wpOrgPlugin == null) {
+            return;
+        }
+        String slug = wpOrgPlugin.getSlug();
+        if (mSitePluginsCache.containsKey(slug)) {
+            mWPOrgPluginsForSitePluginsCache.put(slug, wpOrgPlugin);
+        }
     }
 }
