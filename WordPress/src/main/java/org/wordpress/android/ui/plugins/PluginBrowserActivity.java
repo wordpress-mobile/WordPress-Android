@@ -157,7 +157,6 @@ public class PluginBrowserActivity extends AppCompatActivity
         configureRecycler(mNewPluginsRecycler);
 
         reloadAllPluginsFromStore();
-        refreshPluginAdapterAndVisibilityForAllTypes();
 
         if (savedInstanceState == null) {
             fetchPlugins(PluginListType.SITE, false);
@@ -222,7 +221,6 @@ public class PluginBrowserActivity extends AppCompatActivity
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == RequestCodes.PLUGIN_DETAIL) {
             reloadAllPluginsFromStore();
-            refreshPluginAdapterAndVisibilityForAllTypes();
             reloadListFragment();
         }
     }
@@ -258,12 +256,6 @@ public class PluginBrowserActivity extends AppCompatActivity
                         new SearchPluginDirectoryPayload(mViewModel.getSearchQuery(), 1);
                 mDispatcher.dispatch(PluginActionBuilder.newSearchPluginDirectoryAction(searchPayload));
                 break;
-        }
-    }
-
-    private void refreshPluginAdapterAndVisibilityForAllTypes() {
-        for (PluginListType pluginType: PluginListType.values()) {
-            refreshPluginAdapterAndVisibility(pluginType);
         }
     }
 
@@ -313,7 +305,7 @@ public class PluginBrowserActivity extends AppCompatActivity
             ToastUtils.showToast(this, R.string.plugin_fetch_error);
             return;
         }
-        reloadSitePluginsFromStore();
+        reloadSitePluginsFromStoreAndRefreshRelatedViews();
     }
 
     @SuppressWarnings("unused")
@@ -355,6 +347,7 @@ public class PluginBrowserActivity extends AppCompatActivity
 
         PluginListType listType = event.type == PluginDirectoryType.POPULAR ?
                 PluginListType.POPULAR : PluginListType.NEW;
+        reloadPluginsFromStoreAndRefreshRelatedViews(listType);
         mViewModel.setCanLoadMorePlugins(listType, event.canLoadMore);
         mViewModel.setLoadingMorePlugins(listType, false);
         PluginListFragment fragment = getListFragment();
@@ -392,18 +385,38 @@ public class PluginBrowserActivity extends AppCompatActivity
     }
 
     private void reloadAllPluginsFromStore() {
-        reloadSitePluginsFromStore();
-        mViewModel.setNewPlugins(mPluginStore.getPluginDirectory(PluginDirectoryType.NEW));
-        mViewModel.setPopularPlugins(mPluginStore.getPluginDirectory(PluginDirectoryType.POPULAR));
+        reloadSitePluginsFromStoreAndRefreshRelatedViews();
+        reloadPluginsFromStoreAndRefreshRelatedViews(PluginListType.NEW);
+        reloadPluginsFromStoreAndRefreshRelatedViews(PluginListType.POPULAR);
     }
 
-    private void reloadSitePluginsFromStore() {
+    private void reloadPluginsFromStoreAndRefreshRelatedViews(PluginListType listType) {
+        switch (listType) {
+            case NEW:
+                mViewModel.setNewPlugins(mPluginStore.getPluginDirectory(PluginDirectoryType.NEW));
+                refreshPluginAdapterAndVisibility(PluginListType.NEW);
+                break;
+            case POPULAR:
+                mViewModel.setPopularPlugins(mPluginStore.getPluginDirectory(PluginDirectoryType.POPULAR));
+                refreshPluginAdapterAndVisibility(PluginListType.POPULAR);
+                break;
+            case SITE:
+                reloadSitePluginsFromStoreAndRefreshRelatedViews();
+                break;
+            case SEARCH:
+                // search results are not kept in store, so this shouldn't be called
+                break;
+        }
+    }
+
+    private void reloadSitePluginsFromStoreAndRefreshRelatedViews() {
         List<SitePluginModel> sitePlugins = mPluginStore.getSitePlugins(mViewModel.getSite());
         mViewModel.setSitePlugins(sitePlugins);
         // Preload the wporg plugins to avoid hitting the DB in onBindViewHolder
         for (SitePluginModel pluginModel : sitePlugins) {
             mViewModel.cacheWPOrgPluginIfNecessary(mPluginStore.getWPOrgPluginBySlug(pluginModel.getSlug()));
         }
+        refreshPluginAdapterAndVisibility(PluginListType.SITE);
     }
 
     private void reloadPluginWithSlug(@NonNull String slug) {

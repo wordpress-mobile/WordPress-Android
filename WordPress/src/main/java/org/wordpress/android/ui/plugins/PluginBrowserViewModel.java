@@ -13,7 +13,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-class PluginBrowserViewModel extends ViewModel {
+// ViewModel needs to be public to work with lower level APIs
+@SuppressWarnings("WeakerAccess")
+public class PluginBrowserViewModel extends ViewModel {
     private String mSearchQuery;
     private SiteModel mSite;
 
