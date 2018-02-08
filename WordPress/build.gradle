@@ -122,6 +122,9 @@ dependencies {
     apt 'com.github.bumptech.glide:compiler:4.1.1'
     compile 'com.github.bumptech.glide:volley-integration:4.1.1@aar'
 
+    // ViewModel and LiveData
+    compile 'android.arch.lifecycle:extensions:1.1.0'
+
     testCompile 'junit:junit:4.12'
     testCompile 'org.robolectric:robolectric:3.3.2'
     testCompile 'org.robolectric:shadows-multidex:3.3.2'
