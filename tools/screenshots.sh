@@ -1,9 +1,11 @@
 #!/bin/bash
 
+### Misc defines
+# Config
 APK=../WordPress/build/outputs/apk/WordPress-wasabi-debug.apk
-
 AVD=Nexus_5X_API_25_SCREENSHOTS
-
+RUN_DEV=All
+LOG_FILE="/tmp/android-screenshot.log"
 WORKING_DIR=./autoscreenshot
 
 DEVICES=(PHONE TAB7 TAB10)
@@ -82,6 +84,51 @@ TAB7_OFFSET="+145+552"
 TAB10_TEMPLATE=android-tab10-template2.png
 TAB10_OFFSET="+148+622"
 
+# Commands
+CMD_SETUP="setup"
+CMD_TAKE="take"
+CMD_PROCESS="process"
+CMD_PREPARE="prepare"
+
+### Functions
+# Show script usage, commands and options
+function showUsage() {
+    # Help message
+    echo -e "Usage: $exeName command [options]"
+    echo -e ""
+    echo -e "   Available commands:"
+    echo -e "      $CMD_SETUP:\tbrings up the required environment, with a local copy of the SDK and a dedicated device"
+    echo -e "      $CMD_TAKE:\texecutes the app in the simulator and takes the screenshots"
+    echo -e "      $CMD_PROCESS:\tprocesses the screenshots and generates the modded ones"
+    echo -e "      $CMD_PREPARE:\tautomatically runs the $CMD_TAKE and $CMD_PROCESS commands"
+    echo -e ""
+    echo -e "   $CMD_SETUP command:"
+    echo -e "   \tUsage: $exeName $CMD_SETUP"
+    echo -e "   $CMD_TAKE command:"
+    echo -e "   \tUsage: $exeName $CMD_TAKE [device-type] [avd-name] [apk-path]"
+    echo -e "   $CMD_PROCESS command:"
+    echo -e "   \tUsage: $exeName $CMD_PROCESS [device-type]"
+    echo -e "   $CMD_PREPARE command:"
+    echo -e "   \tUsage: $exeName $CMD_PREPARE [device-type] [avd-name] [apk-path]"
+    echo -e ""
+    echo -e "   Params:"
+    echo -e "   \t - device-type:"
+    echo -e "   \t         all: runs on all the available device sizes"
+    echo -e "   \t         phone: runs on the phone size"
+    echo -e "   \t         tab7: runs on the Tab7 size"
+    echo -e "   \t         tab10: runs on the Tab10 size"
+    echo -e "   \t - avd-name: the name of the simulator device"
+    echo -e "   \t - apk-path: the path of the apk to use"
+    echo -e ""
+    echo -e "   Example: $exeName $CMD_TAKE"
+    echo -e "   Example: $exeName $CMD_TAKE phone"
+    echo -e "   Example: $exeName $CMD_PROCESS tab7"
+    echo -e "   Example: $exeName $CMD_PREPARE all Android_Accelerated_x86"
+    echo -e "   Example: $exeName $CMD_TAKE all Android_Accelerated_x86 ./app.apk"
+    echo ""
+    exit 1
+}
+
 function require_dirs {
   if [ ! -d "$WORKING_DIR" ]; then
     echo -n Creating working directory...
@@ -149,6 +196,8 @@ function require_emu {
   fi
 }
 
+# Loads and checks the token for the magic login
+# Also loads other configuration that is in the tokendeeplink.sh file
 function require_deeplink {
   if [ -f "tokendeeplink.sh" ]; then
     . tokendeeplink.sh
@@ -292,7 +341,47 @@ function geekytime() {
   adb $ADB_PARAMS unroot &>/dev/null
 }
 
+### Script main
+exeName=$(basename "$0" ".sh")
+
+# Params check
+if [ "$#" -lt 1 ] || [ -z $1 ]; then
+  showUsage
+fi
+
+if [ "$1" == $CMD_SETUP ] && [ "$#" -gt 1 ]; then
+  showUsage
+fi
+
+if [ "$1" == $CMD_PROCESS ] && [ "$#" -gt 2 ]; then
+  showUsage
+fi
+
+if [ "$#" -gt 4 ]; then
+  showUsage
+fi
+
+# Load deeplink and configuration
 require_deeplink
+
+# Load params
+CMD=$1
+if ! [ -z $2 ]; then
+  RUN_DEV=$2
+fi
+if ! [ -z $3 ]; then
+  AVD=$3
+fi 
+if ! [ -z $4 ]; then
+  APK=$4
+fi
+echo "OK"
+echo "CMD: $CMD"
+echo "RUN_DEV: $RUN_DEV"
+echo "AVD: $AVD"
+echo "APK: $APK"
+echo "OK"
+exit 0
 require_font
 require_imagemagick
 require_sdk
