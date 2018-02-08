@@ -1,6 +1,5 @@
 package org.wordpress.android.ui.plugins;
 
-import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
 import org.wordpress.android.fluxc.model.plugin.SitePluginModel;
@@ -73,7 +72,10 @@ class PluginList extends ArrayList<Object> {
         }
     }
 
-    boolean isSameList(@NonNull List<?> items) {
+    boolean isSameList(@Nullable List<?> items) {
+        if (items == null) {
+            return false;
+        }
         if (this.size() != items.size()) {
             return false;
         }

@@ -56,8 +56,7 @@ import javax.inject.Inject;
 
 public class PluginBrowserActivity extends AppCompatActivity
         implements SearchView.OnQueryTextListener,
-        MenuItem.OnActionExpandListener,
-        PluginListFragment.PluginListFragmentListener {
+        MenuItem.OnActionExpandListener {
 
     public enum PluginListType {
         SITE,
@@ -233,7 +232,6 @@ public class PluginBrowserActivity extends AppCompatActivity
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == RequestCodes.PLUGIN_DETAIL) {
             mViewModel.reloadAllPluginsFromStore();
-            reloadListFragment();
         }
     }
 
@@ -340,7 +338,6 @@ public class PluginBrowserActivity extends AppCompatActivity
         // todo: observe in fragment and remove this
         fragment.showEmptyView(mViewModel.getSearchResults().getValue().isEmpty()
                 && !TextUtils.isEmpty(mViewModel.getSearchQuery()));
-        reloadListFragment();
     }
 
     private void reloadPluginWithSlug(@NonNull String slug) {
@@ -387,13 +384,6 @@ public class PluginBrowserActivity extends AppCompatActivity
         return listFragment;
     }
 
-    private void reloadListFragment() {
-        PluginListFragment fragment = getListFragment();
-        if (fragment != null) {
-            fragment.requestPlugins();
-        }
-    }
-
     private void submitSearch(@Nullable final String query, boolean delayed) {
         mViewModel.setSearchQuery(query);
 
@@ -420,19 +410,6 @@ public class PluginBrowserActivity extends AppCompatActivity
         if (getSupportFragmentManager().getBackStackEntryCount() > 0) {
             onBackPressed();
         }
-    }
-
-    @Override
-    public List<?> onListFragmentRequestPlugins(@NonNull PluginListType listType) {
-        // todo: observe in fragment and remove this
-        return null;
-//        setTitle(listType.getTitleRes());
-//        return mViewModel.getPluginsForListType(listType);
-    }
-
-    @Override
-    public void onListFragmentLoadMore(@NonNull PluginListType listType) {
-        mViewModel.fetchPlugins(listType, true);
     }
 
     private void showProgress(boolean show) {

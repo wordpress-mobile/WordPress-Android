@@ -56,6 +56,24 @@ public class PluginBrowserViewModel extends AndroidViewModel {
         mDispatcher.unregister(this);
     }
 
+    List<?> getPluginsForListType(PluginBrowserActivity.PluginListType listType) {
+        switch (listType) {
+            case SITE:
+                return getSitePlugins().getValue();
+            case POPULAR:
+                return getPopularPlugins().getValue();
+            case NEW:
+                return getNewPlugins().getValue();
+            case SEARCH:
+                return getSearchResults().getValue();
+        }
+        return null;
+    }
+
+    void loadMore(PluginBrowserActivity.PluginListType listType) {
+        fetchPlugins(listType, true);
+    }
+
     void reloadAndFetchAllPlugins() {
         reloadAllPluginsFromStore();
 

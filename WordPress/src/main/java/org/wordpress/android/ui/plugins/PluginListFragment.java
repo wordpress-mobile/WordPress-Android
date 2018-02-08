@@ -1,6 +1,7 @@
 package org.wordpress.android.ui.plugins;
 
 
+import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.Context;
 import android.os.Bundle;
@@ -41,15 +42,8 @@ public class PluginListFragment extends Fragment {
 
     private PluginBrowserViewModel mViewModel;
 
-    public interface PluginListFragmentListener {
-        List<?> onListFragmentRequestPlugins(@NonNull PluginListType listType);
-        void onListFragmentLoadMore(@NonNull PluginListType listType);
-    }
-
     private RecyclerView mRecycler;
     private PluginListType mListType;
-
-    private PluginListFragmentListener mListener;
 
     @Inject PluginStore mPluginStore;
 
@@ -69,6 +63,37 @@ public class PluginListFragment extends Fragment {
 
         mViewModel = ViewModelProviders.of(getActivity()).get(PluginBrowserViewModel.class);
         mListType = (PluginListType) getArguments().getSerializable(ARG_LIST_TYPE);
+
+        setupObservers();
+    }
+
+    private void setupObservers() {
+        mViewModel.getSitePlugins().observe(this, new Observer<List<SitePluginModel>>() {
+            @Override
+            public void onChanged(@Nullable final List<SitePluginModel> sitePlugins) {
+                if (mListType == PluginListType.SITE) {
+                    reloadPlugins();
+                }
+            }
+        });
+
+        mViewModel.getNewPlugins().observe(this, new Observer<List<WPOrgPluginModel>>() {
+            @Override
+            public void onChanged(@Nullable final List<WPOrgPluginModel> newPlugins) {
+                if (mListType == PluginListType.NEW) {
+                    reloadPlugins();
+                }
+            }
+        });
+
+        mViewModel.getPopularPlugins().observe(this, new Observer<List<WPOrgPluginModel>>() {
+            @Override
+            public void onChanged(@Nullable final List<WPOrgPluginModel> popularPlugins) {
+                if (mListType == PluginListType.POPULAR) {
+                    reloadPlugins();
+                }
+            }
+        });
     }
 
     @Override
@@ -82,32 +107,21 @@ public class PluginListFragment extends Fragment {
         return view;
     }
 
-    @Override
-    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
-        try {
-            mListener = (PluginListFragmentListener) getActivity();
-            requestPlugins();
-        } catch (ClassCastException e) {
-            throw new ClassCastException(getActivity().toString() + " must implement PluginListFragmentListener");
-        }
-    }
-
-    void requestPlugins() {
-        setPlugins(mListener.onListFragmentRequestPlugins(mListType));
+    void reloadPlugins() {
+        setPlugins(mViewModel.getPluginsForListType(mListType));
     }
 
     void setListType(@NonNull PluginListType listType) {
         mListType = listType;
         getArguments().putSerializable(ARG_LIST_TYPE, mListType);
-        requestPlugins();
+        reloadPlugins();
     }
 
     PluginListType getListType() {
         return mListType;
     }
 
-    private void setPlugins(@NonNull List<?> plugins) {
+    private void setPlugins(@Nullable List<?> plugins) {
         PluginListAdapter adapter;
         if (mRecycler.getAdapter() == null) {
             adapter = new PluginListAdapter(getActivity());
@@ -132,13 +146,13 @@ public class PluginListFragment extends Fragment {
 
     private void loadMore() {
         showProgress(true);
-        mListener.onListFragmentLoadMore(mListType);
+        mViewModel.loadMore(mListType);
     }
 
     void onLoadedMore() {
         if (isAdded()) {
             showProgress(false);
-            requestPlugins();
+            reloadPlugins();
         }
     }
 
@@ -161,7 +175,7 @@ public class PluginListFragment extends Fragment {
             setHasStableIds(true);
         }
 
-        public void setPlugins(List<?> plugins) {
+        public void setPlugins(@Nullable List<?> plugins) {
             if (!mItems.isSameList(plugins)) {
                 mItems.clear();
                 mItems.addAll(plugins);
