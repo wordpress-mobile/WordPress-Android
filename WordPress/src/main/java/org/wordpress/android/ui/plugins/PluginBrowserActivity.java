@@ -268,7 +268,6 @@ public class PluginBrowserActivity extends AppCompatActivity
             ToastUtils.showToast(this, R.string.plugin_fetch_error);
             return;
         }
-        reloadSitePluginsFromStoreAndRefreshRelatedViews();
     }
 
     @SuppressWarnings("unused")
@@ -348,7 +347,7 @@ public class PluginBrowserActivity extends AppCompatActivity
     }
 
     private void reloadAllPluginsFromStore() {
-        reloadSitePluginsFromStoreAndRefreshRelatedViews();
+//        reloadSitePluginsFromStoreAndRefreshRelatedViews();
         reloadPluginsFromStoreAndRefreshRelatedViews(PluginListType.NEW);
         reloadPluginsFromStoreAndRefreshRelatedViews(PluginListType.POPULAR);
     }
@@ -364,22 +363,13 @@ public class PluginBrowserActivity extends AppCompatActivity
                 refreshPluginAdapterAndVisibility(PluginListType.POPULAR);
                 break;
             case SITE:
-                reloadSitePluginsFromStoreAndRefreshRelatedViews();
+                // todo remove this
+                // handled differently
                 break;
             case SEARCH:
                 // search results are not kept in store, so this shouldn't be called
                 break;
         }
-    }
-
-    private void reloadSitePluginsFromStoreAndRefreshRelatedViews() {
-        List<SitePluginModel> sitePlugins = mPluginStore.getSitePlugins(mViewModel.getSite());
-        mViewModel.setSitePlugins(sitePlugins);
-        // Preload the wporg plugins to avoid hitting the DB in onBindViewHolder
-        for (SitePluginModel pluginModel : sitePlugins) {
-            mViewModel.cacheWPOrgPluginIfNecessary(mPluginStore.getWPOrgPluginBySlug(pluginModel.getSlug()));
-        }
-        refreshPluginAdapterAndVisibility(PluginListType.SITE);
     }
 
     private void reloadPluginWithSlug(@NonNull String slug) {

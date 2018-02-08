@@ -2,6 +2,7 @@ package org.wordpress.android.ui.plugins;
 
 import android.app.Application;
 import android.arch.lifecycle.AndroidViewModel;
+import android.arch.lifecycle.MutableLiveData;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
@@ -23,8 +24,6 @@ import java.util.Map;
 
 import javax.inject.Inject;
 
-// ViewModel needs to be public to work with lower level APIs
-@SuppressWarnings("WeakerAccess")
 public class PluginBrowserViewModel extends AndroidViewModel {
     @Inject Dispatcher mDispatcher;
     @Inject PluginStore mPluginStore;
@@ -41,7 +40,7 @@ public class PluginBrowserViewModel extends AndroidViewModel {
     private final HashMap<String, WPOrgPluginModel> mWPOrgPluginsForSitePluginsMap = new HashMap<>();
     private List<WPOrgPluginModel> mNewPlugins;
     private List<WPOrgPluginModel> mPopularPlugins;
-    private List<SitePluginModel> mSitePlugins;
+    private MutableLiveData<List<SitePluginModel>> mSitePlugins;
     private final List<WPOrgPluginModel> mSearchResults = new ArrayList<>();
 
     public PluginBrowserViewModel(@NonNull Application application) {
@@ -123,12 +122,24 @@ public class PluginBrowserViewModel extends AndroidViewModel {
         }
     }
 
-    void setSitePlugins(List<SitePluginModel> sitePlugins) {
-        mSitePlugins = sitePlugins;
+    MutableLiveData<List<SitePluginModel>> getSitePlugins() {
+        if (mSitePlugins == null) {
+            mSitePlugins = new MutableLiveData<>();
+        }
+        return mSitePlugins;
+    }
+
+    private void reloadSitePlugins() {
+        List<SitePluginModel> sitePlugins = mPluginStore.getSitePlugins(getSite());
+        // Preload the wporg plugins to avoid hitting the DB in onBindViewHolder
+        for (SitePluginModel pluginModel : sitePlugins) {
+            cacheWPOrgPluginIfNecessary(mPluginStore.getWPOrgPluginBySlug(pluginModel.getSlug()));
+        }
         mSitePluginsMap.clear();
         for (SitePluginModel plugin: sitePlugins) {
             mSitePluginsMap.put(plugin.getSlug(), plugin);
         }
+        getSitePlugins().setValue(sitePlugins);
     }
 
     void setNewPlugins(List<WPOrgPluginModel> newPlugins) {
@@ -212,6 +223,11 @@ public class PluginBrowserViewModel extends AndroidViewModel {
     @SuppressWarnings("unused")
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onSitePluginsFetched(PluginStore.OnSitePluginsFetched event) {
+        if (event.isError()) {
+            // todo: handle the error
+            return;
+        }
+        reloadSitePlugins();
     }
 
     @SuppressWarnings("unused")
