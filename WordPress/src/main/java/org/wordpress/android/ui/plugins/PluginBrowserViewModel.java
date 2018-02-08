@@ -20,7 +20,6 @@ import org.wordpress.android.fluxc.store.PluginStore;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import javax.inject.Inject;
 
@@ -34,7 +33,8 @@ public class PluginBrowserViewModel extends AndroidViewModel {
     private boolean mCanLoadMoreNewPlugins = true;
     private boolean mCanLoadMorePopularPlugins = true;
 
-    private Map<PluginBrowserActivity.PluginListType, Boolean> mLoadingMorePlugins = new HashMap<>();
+    private MutableLiveData<Boolean> mIsLoadingMoreNewPlugins;
+    private MutableLiveData<Boolean> mIsLoadingMorePopularPlugins;
 
     private final HashMap<String, SitePluginModel> mSitePluginsCache = new HashMap<>();
     private final HashMap<String, WPOrgPluginModel> mWPOrgPluginsForSitePluginsCache = new HashMap<>();
@@ -155,8 +155,29 @@ public class PluginBrowserViewModel extends AndroidViewModel {
         return false;
     }
 
+    MutableLiveData<Boolean> getIsLoadingMoreNewPlugins() {
+        if (mIsLoadingMoreNewPlugins == null) {
+            mIsLoadingMoreNewPlugins = new MutableLiveData<>();
+        }
+        return mIsLoadingMoreNewPlugins;
+    }
+
+    MutableLiveData<Boolean> getIsLoadingMorePopularPlugins() {
+        if (mIsLoadingMorePopularPlugins == null) {
+            mIsLoadingMorePopularPlugins = new MutableLiveData<>();
+        }
+        return mIsLoadingMorePopularPlugins;
+    }
+
     private boolean isLoadingMorePlugins(PluginBrowserActivity.PluginListType listType) {
-        return mLoadingMorePlugins.get(listType);
+        if (listType == PluginBrowserActivity.PluginListType.NEW) {
+            Boolean b = getIsLoadingMoreNewPlugins().getValue();
+            return b != null ? b : false;
+        } else if (listType == PluginBrowserActivity.PluginListType.POPULAR) {
+            Boolean b = getIsLoadingMorePopularPlugins().getValue();
+            return b != null ? b : false;
+        }
+        return false;
     }
 
     // Network Requests
@@ -174,13 +195,13 @@ public class PluginBrowserViewModel extends AndroidViewModel {
                 mDispatcher.dispatch(PluginActionBuilder.newFetchSitePluginsAction(getSite()));
                 break;
             case POPULAR:
-                mLoadingMorePlugins.put(PluginBrowserActivity.PluginListType.POPULAR, loadMore);
+                getIsLoadingMorePopularPlugins().setValue(loadMore);
                 PluginStore.FetchPluginDirectoryPayload popularPayload =
                         new PluginStore.FetchPluginDirectoryPayload(PluginDirectoryType.POPULAR, loadMore);
                 mDispatcher.dispatch(PluginActionBuilder.newFetchPluginDirectoryAction(popularPayload));
                 break;
             case NEW:
-                mLoadingMorePlugins.put(PluginBrowserActivity.PluginListType.NEW, loadMore);
+                getIsLoadingMoreNewPlugins().setValue(loadMore);
                 PluginStore.FetchPluginDirectoryPayload newPayload =
                         new PluginStore.FetchPluginDirectoryPayload(PluginDirectoryType.NEW, loadMore);
                 mDispatcher.dispatch(PluginActionBuilder.newFetchPluginDirectoryAction(newPayload));
@@ -231,12 +252,12 @@ public class PluginBrowserViewModel extends AndroidViewModel {
         switch (event.type) {
             case NEW:
                 mCanLoadMoreNewPlugins = event.canLoadMore;
-                mLoadingMorePlugins.put(PluginBrowserActivity.PluginListType.NEW, false);
+                getIsLoadingMoreNewPlugins().setValue(false);
                 reloadNewPlugins();
                 break;
             case POPULAR:
                 mCanLoadMorePopularPlugins = event.canLoadMore;
-                mLoadingMorePlugins.put(PluginBrowserActivity.PluginListType.POPULAR, false);
+                getIsLoadingMorePopularPlugins().setValue(false);
                 reloadPopularPlugins();
                 break;
         }

@@ -94,6 +94,24 @@ public class PluginListFragment extends Fragment {
                 }
             }
         });
+
+        mViewModel.getIsLoadingMoreNewPlugins().observe(this, new Observer<Boolean>() {
+            @Override
+            public void onChanged(@Nullable Boolean loadingMore) {
+                if (mListType == PluginListType.NEW) {
+                    showProgress(loadingMore != null ? loadingMore : false);
+                }
+            }
+        });
+
+        mViewModel.getIsLoadingMorePopularPlugins().observe(this, new Observer<Boolean>() {
+            @Override
+            public void onChanged(@Nullable Boolean loadingMore) {
+                if (mListType == PluginListType.POPULAR) {
+                    showProgress(loadingMore != null ? loadingMore : false);
+                }
+            }
+        });
     }
 
     @Override
@@ -112,6 +130,7 @@ public class PluginListFragment extends Fragment {
     }
 
     void setListType(@NonNull PluginListType listType) {
+        showProgress(false);
         mListType = listType;
         getArguments().putSerializable(ARG_LIST_TYPE, mListType);
         reloadPlugins();
@@ -141,18 +160,6 @@ public class PluginListFragment extends Fragment {
     void showEmptyView(boolean show) {
         if (isAdded()) {
             getView().findViewById(R.id.text_empty).setVisibility(show ? View.VISIBLE : View.GONE);
-        }
-    }
-
-    private void loadMore() {
-        showProgress(true);
-        mViewModel.loadMore(mListType);
-    }
-
-    void onLoadedMore() {
-        if (isAdded()) {
-            showProgress(false);
-            reloadPlugins();
         }
     }
 
@@ -259,7 +266,7 @@ public class PluginListFragment extends Fragment {
             }
 
             if (position == getItemCount() - 1) {
-                loadMore();
+                mViewModel.loadMore(mListType);
             }
         }
 
