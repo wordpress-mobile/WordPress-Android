@@ -165,9 +165,9 @@ public class PluginBrowserActivity extends AppCompatActivity
         configureRecycler(mPopularPluginsRecycler);
         configureRecycler(mNewPluginsRecycler);
 
-
-        List<SitePluginModel> sitePlugins = mPluginStore.getSitePlugins(mViewModel.getSite());
-        mViewModel.setSitePlugins(sitePlugins);
+        mViewModel.setSitePlugins(mPluginStore.getSitePlugins(mViewModel.getSite()));
+        mViewModel.setNewPlugins(mPluginStore.getPluginDirectory(PluginDirectoryType.NEW));
+        mViewModel.setPopularPlugins(mPluginStore.getPluginDirectory(PluginDirectoryType.POPULAR));
         reloadAllPlugins();
 
         if (savedInstanceState == null) {
@@ -299,7 +299,7 @@ public class PluginBrowserActivity extends AppCompatActivity
                 break;
         }
 
-        List<?> plugins = getPlugins(pluginType);
+        List<?> plugins = mViewModel.getPluginsForListType(pluginType);
         adapter.setPlugins(plugins);
 
         // TODO: handle the visibility with a subscription
@@ -310,19 +310,6 @@ public class PluginBrowserActivity extends AppCompatActivity
             AniUtils.fadeIn(cardView, AniUtils.Duration.MEDIUM);
         } else if (newVisibility != View.VISIBLE && oldVisibility == View.VISIBLE) {
             AniUtils.fadeOut(cardView, AniUtils.Duration.MEDIUM);
-        }
-    }
-
-    private List<?> getPlugins(@NonNull PluginListType pluginType) {
-        switch (pluginType) {
-            case POPULAR:
-                return mPluginStore.getPluginDirectory(PluginDirectoryType.POPULAR);
-            case NEW:
-                return mPluginStore.getPluginDirectory(PluginDirectoryType.NEW);
-            case SEARCH:
-                return mSearchResults;
-            default:
-                return mPluginStore.getSitePlugins(mViewModel.getSite());
         }
     }
 
@@ -494,7 +481,7 @@ public class PluginBrowserActivity extends AppCompatActivity
     @Override
     public List<?> onListFragmentRequestPlugins(@NonNull PluginListType listType) {
         setTitle(listType.getTitleRes());
-        return getPlugins(listType);
+        return mViewModel.getPluginsForListType(listType);
     }
 
     @Override
