@@ -1,7 +1,5 @@
 package org.wordpress.android.ui.plugins;
 
-import android.app.Fragment;
-import android.app.FragmentTransaction;
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.Context;
 import android.content.Intent;
@@ -12,6 +10,8 @@ import android.support.annotation.DrawableRes;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.annotation.StringRes;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
@@ -53,8 +53,6 @@ import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.widgets.WPNetworkImageView;
 import org.wordpress.android.widgets.WPNetworkImageView.ImageType;
 
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 
 import javax.inject.Inject;
@@ -409,7 +407,7 @@ public class PluginBrowserActivity extends AppCompatActivity
     }
 
     private PluginListFragment getListFragment() {
-        Fragment fragment = getFragmentManager().findFragmentByTag(PluginListFragment.TAG);
+        Fragment fragment = getSupportFragmentManager().findFragmentByTag(PluginListFragment.TAG);
         if (fragment != null) {
             return (PluginListFragment) fragment;
         }
@@ -422,7 +420,7 @@ public class PluginBrowserActivity extends AppCompatActivity
             listFragment.setListType(listType);
         } else {
             listFragment = PluginListFragment.newInstance(mViewModel.getSite(), listType);
-            getFragmentManager().beginTransaction()
+            getSupportFragmentManager().beginTransaction()
                     .add(R.id.fragment_container, listFragment, PluginListFragment.TAG)
                     .addToBackStack(null)
                     .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE)
@@ -461,7 +459,7 @@ public class PluginBrowserActivity extends AppCompatActivity
     }
 
     private void hideListFragment() {
-        if (getFragmentManager().getBackStackEntryCount() > 0) {
+        if (getSupportFragmentManager().getBackStackEntryCount() > 0) {
             onBackPressed();
         }
     }
