@@ -39,7 +39,6 @@ import javax.inject.Inject;
 public class PluginListFragment extends Fragment {
     public static final String TAG = PluginListFragment.class.getName();
     private static final String ARG_LIST_TYPE = "list_type";
-    private static final String KEY_IS_LOADING_MORE = "is_loading_more";
 
     private PluginBrowserViewModel mViewModel;
 
@@ -50,9 +49,6 @@ public class PluginListFragment extends Fragment {
 
     private RecyclerView mRecycler;
     private PluginListType mListType;
-
-    // todo move these to view model
-    private boolean mIsLoadingMore;
 
     private final HashMap<String, SitePluginModel> mSitePluginsMap = new HashMap<>();
     private final HashMap<String, WPOrgPluginModel> mWPOrgPluginsMap = new HashMap<>();
@@ -83,16 +79,6 @@ public class PluginListFragment extends Fragment {
         for (SitePluginModel plugin: sitePlugins) {
             mSitePluginsMap.put(plugin.getSlug(), plugin);
         }
-
-        if (savedInstanceState != null) {
-            mIsLoadingMore = savedInstanceState.getBoolean(KEY_IS_LOADING_MORE);
-        }
-    }
-
-    @Override
-    public void onSaveInstanceState(Bundle outState) {
-        super.onSaveInstanceState(outState);
-        outState.putBoolean(KEY_IS_LOADING_MORE, mIsLoadingMore);
     }
 
     @Override
@@ -176,12 +162,12 @@ public class PluginListFragment extends Fragment {
 
     private void loadMore() {
         showProgress(true);
-        mIsLoadingMore = true;
+        mViewModel.setLoadingMorePlugins(mListType, true);
         mListener.onListFragmentLoadMore(mListType);
     }
 
     void onLoadedMore() {
-        mIsLoadingMore = false;
+        mViewModel.setLoadingMorePlugins(mListType, false);
         if (isAdded()) {
             showProgress(false);
             requestPlugins();
@@ -281,7 +267,7 @@ public class PluginListFragment extends Fragment {
             }
 
             if (mViewModel.canLoadMorePlugins(mListType)
-                    && !mIsLoadingMore
+                    && !mViewModel.isLoadingMorePlugins(mListType)
                     && position == getItemCount() - 1) {
                 loadMore();
             }

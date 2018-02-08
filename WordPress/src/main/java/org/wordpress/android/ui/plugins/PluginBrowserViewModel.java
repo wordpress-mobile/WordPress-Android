@@ -9,6 +9,7 @@ import org.wordpress.android.fluxc.model.plugin.WPOrgPluginModel;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 class PluginBrowserViewModel extends ViewModel {
     private String mSearchQuery;
@@ -16,6 +17,8 @@ class PluginBrowserViewModel extends ViewModel {
 
     private boolean mCanLoadMoreNewPlugins = true;
     private boolean mCanLoadMorePopularPlugins = true;
+
+    private Map<PluginBrowserActivity.PluginListType, Boolean> mLoadingMorePlugins = new HashMap<>();
 
     private final HashMap<String, SitePluginModel> mSitePluginsMap = new HashMap<>();
     private List<WPOrgPluginModel> mNewPlugins;
@@ -56,6 +59,14 @@ class PluginBrowserViewModel extends ViewModel {
         } else if (listType == PluginBrowserActivity.PluginListType.POPULAR) {
             mCanLoadMorePopularPlugins = canLoadMore;
         }
+    }
+
+    boolean isLoadingMorePlugins(PluginBrowserActivity.PluginListType listType) {
+        return mLoadingMorePlugins.get(listType);
+    }
+
+    void setLoadingMorePlugins(PluginBrowserActivity.PluginListType listType, boolean isLoadingMore) {
+        mLoadingMorePlugins.put(listType, isLoadingMore);
     }
 
     SitePluginModel getSitePluginFromSlug(String slug) {
