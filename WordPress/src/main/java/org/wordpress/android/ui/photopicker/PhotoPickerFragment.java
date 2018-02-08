@@ -33,6 +33,7 @@ import org.wordpress.android.ui.photopicker.PhotoPickerAdapter.PhotoPickerAdapte
 import org.wordpress.android.util.AnalyticsUtils;
 import org.wordpress.android.util.AniUtils;
 import org.wordpress.android.util.AppLog;
+import org.wordpress.android.util.DisplayUtils;
 import org.wordpress.android.util.MediaUtils;
 import org.wordpress.android.util.WPActivityUtils;
 import org.wordpress.android.util.WPMediaUtils;
@@ -61,6 +62,7 @@ public class PhotoPickerFragment extends Fragment {
      */
     public interface PhotoPickerListener {
         void onPhotoPickerMediaChosen(@NonNull List<Uri> uriList);
+
         void onPhotoPickerIconClicked(@NonNull PhotoPickerIcon icon);
     }
 
@@ -128,44 +130,59 @@ public class PhotoPickerFragment extends Fragment {
         });
 
         mBottomBar = view.findViewById(R.id.bottom_bar);
-        mBottomBar.findViewById(R.id.icon_camera).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (mBrowserType.isSingleImagePicker()) {
-                    doIconClicked(PhotoPickerIcon.ANDROID_CAPTURE_PHOTO);
-                } else {
-                    showCameraPopupMenu(v);
-                }
-            }
-        });
-        mBottomBar.findViewById(R.id.icon_picker).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (mBrowserType.isSingleImagePicker()) {
-                    doIconClicked(PhotoPickerIcon.ANDROID_CHOOSE_PHOTO);
-                } else {
-                    showPickerPopupMenu(v);
-                }
 
-            }
-        });
-
-        // choosing from WP media requires a site
-        View wpMedia = mBottomBar.findViewById(R.id.icon_wpmedia);
-        if (mSite == null) {
-            wpMedia.setVisibility(View.GONE);
+        if (!canShowBottomBar()) {
+            mBottomBar.setVisibility(View.GONE);
         } else {
-            wpMedia.setOnClickListener(new View.OnClickListener() {
+            mBottomBar.findViewById(R.id.icon_camera).setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    doIconClicked(PhotoPickerIcon.WP_MEDIA);
+                    if (mBrowserType.isSingleImagePicker()) {
+                        doIconClicked(PhotoPickerIcon.ANDROID_CAPTURE_PHOTO);
+                    } else {
+                        showCameraPopupMenu(v);
+                    }
                 }
             });
+            mBottomBar.findViewById(R.id.icon_picker).setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if (mBrowserType.isSingleImagePicker()) {
+                        doIconClicked(PhotoPickerIcon.ANDROID_CHOOSE_PHOTO);
+                    } else {
+                        showPickerPopupMenu(v);
+                    }
+
+                }
+            });
+
+            // choosing from WP media requires a site
+            View wpMedia = mBottomBar.findViewById(R.id.icon_wpmedia);
+            if (mSite == null) {
+                wpMedia.setVisibility(View.GONE);
+            } else {
+                wpMedia.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        doIconClicked(PhotoPickerIcon.WP_MEDIA);
+                    }
+                });
+            }
         }
 
         mSoftAskContainer = (ViewGroup) view.findViewById(R.id.container_soft_ask);
 
         return view;
+    }
+
+    private boolean canShowBottomBar() {
+        if (mBrowserType == MediaBrowserType.AZTEC_EDITOR_PICKER && DisplayUtils.isLandscape(getActivity())) {
+            return true;
+        } else if (mBrowserType == MediaBrowserType.AZTEC_EDITOR_PICKER) {
+            return false;
+        }
+
+        return true;
     }
 
     @Override
@@ -174,7 +191,7 @@ public class PhotoPickerFragment extends Fragment {
         checkStoragePermission();
     }
 
-    private void doIconClicked(@NonNull PhotoPickerIcon icon) {
+    public void doIconClicked(@NonNull PhotoPickerIcon icon) {
         mLastTappedIcon = icon;
 
         if (icon == PhotoPickerIcon.ANDROID_CAPTURE_PHOTO || icon == PhotoPickerIcon.ANDROID_CAPTURE_VIDEO) {
@@ -208,7 +225,7 @@ public class PhotoPickerFragment extends Fragment {
         }
     }
 
-    private void showPickerPopupMenu(@NonNull View view) {
+    public void showPickerPopupMenu(@NonNull View view) {
         PopupMenu popup = new PopupMenu(getActivity(), view);
 
         MenuItem itemPhoto = popup.getMenu().add(R.string.photo_picker_choose_photo);
@@ -232,7 +249,7 @@ public class PhotoPickerFragment extends Fragment {
         popup.show();
     }
 
-    private void showCameraPopupMenu(@NonNull View view) {
+    public void showCameraPopupMenu(@NonNull View view) {
         PopupMenu popup = new PopupMenu(getActivity(), view);
 
         MenuItem itemPhoto = popup.getMenu().add(R.string.photo_picker_capture_photo);
@@ -261,13 +278,13 @@ public class PhotoPickerFragment extends Fragment {
     }
 
     private void showBottomBar() {
-        if (!isBottomBarShowing()) {
+        if (!isBottomBarShowing() && canShowBottomBar()) {
             AniUtils.animateBottomBar(mBottomBar, true);
         }
     }
 
     private void hideBottomBar() {
-        if (isBottomBarShowing()) {
+        if (isBottomBarShowing() && canShowBottomBar()) {
             AniUtils.animateBottomBar(mBottomBar, false);
         }
     }
@@ -444,13 +461,13 @@ public class PhotoPickerFragment extends Fragment {
     }
 
     private void requestStoragePermission() {
-        String[] permissions = new String[] { permission.WRITE_EXTERNAL_STORAGE };
+        String[] permissions = new String[]{permission.WRITE_EXTERNAL_STORAGE};
         FragmentCompat.requestPermissions(
                 this, permissions, WPPermissionUtils.PHOTO_PICKER_STORAGE_PERMISSION_REQUEST_CODE);
     }
 
     private void requestCameraPermission() {
-        String[] permissions = new String[] { permission.CAMERA };
+        String[] permissions = new String[]{permission.CAMERA};
         FragmentCompat.requestPermissions(
                 this, permissions, WPPermissionUtils.PHOTO_PICKER_CAMERA_PERMISSION_REQUEST_CODE);
     }

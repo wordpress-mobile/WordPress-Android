@@ -446,7 +446,6 @@ Language: sr_RS
 	<string name="reader_toast_err_view_image">Није могуће прегледати слику</string>
 	<string name="reader_btn_share">Поделите</string>
 	<string name="reader_untitled_post">(Без наслова)</string>
-	<string name="jetpack_not_found">Додатак Џетпек није пронађен</string>
 	<string name="reader_toast_err_share_intent">Није могуће делити</string>
 	<string name="reader_toast_err_tag_invalid">Ово није исправна ознака</string>
 	<string name="reader_toast_err_tag_exists">Већ пратите ову ознаку</string>

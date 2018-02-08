@@ -5,7 +5,6 @@ import android.content.res.Resources;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.CardView;
 import android.text.TextUtils;
-import android.util.SparseArray;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -39,28 +38,15 @@ class ThemeBrowserAdapter extends BaseAdapter implements Filterable {
 
     private int mViewWidth;
     private String mQuery;
-    private final boolean mIsWpCom;
 
     private final List<ThemeModel> mAllThemes = new ArrayList<>();
     private final List<ThemeModel> mFilteredThemes = new ArrayList<>();
-    private final SparseArray<ThemeSectionHeader> mHeaders = new SparseArray<>();
 
-    class ThemeSectionHeader {
-        final String text;
-        final int count;
-
-        ThemeSectionHeader(@NonNull String text, int count) {
-            this.text = text;
-            this.count = count;
-        }
-    }
-
-    ThemeBrowserAdapter(Context context, boolean isWpCom, ThemeBrowserFragmentCallback callback) {
+    ThemeBrowserAdapter(Context context,ThemeBrowserFragmentCallback callback) {
         mContext = context;
         mInflater = LayoutInflater.from(context);
         mCallback = callback;
         mViewWidth = AppPrefs.getThemeImageSizeWidth();
-        mIsWpCom = isWpCom;
     }
 
     private static class ThemeViewHolder {
@@ -73,10 +59,6 @@ class ThemeBrowserAdapter extends BaseAdapter implements Filterable {
         private final FrameLayout frameLayout;
         private final RelativeLayout detailsView;
 
-        private final ViewGroup headerView;
-        private final TextView headerText;
-        private final TextView headerCount;
-
         ThemeViewHolder(View view) {
             cardView = view.findViewById(R.id.theme_grid_card);
             imageView = view.findViewById(R.id.theme_grid_item_image);
@@ -86,10 +68,6 @@ class ThemeBrowserAdapter extends BaseAdapter implements Filterable {
             imageButton = view.findViewById(R.id.theme_grid_item_image_button);
             frameLayout = view.findViewById(R.id.theme_grid_item_image_layout);
             detailsView = view.findViewById(R.id.theme_grid_item_details);
-
-            headerView = view.findViewById(R.id.section_header);
-            headerText = headerView.findViewById(R.id.section_header_text);
-            headerCount = headerView.findViewById(R.id.section_header_count);
         }
     }
 
@@ -118,44 +96,7 @@ class ThemeBrowserAdapter extends BaseAdapter implements Filterable {
         if (!TextUtils.isEmpty(mQuery)) {
             getFilter().filter(mQuery);
         } else {
-            updateHeaders();
             notifyDataSetChanged();
-        }
-    }
-
-    /*
-     * jetpack sites have headers above the uploaded themes and wp.com themes
-     */
-    private void updateHeaders() {
-        if (mIsWpCom) return;
-
-        mHeaders.clear();
-        if (mFilteredThemes.size() == 0) return;
-
-        // first count the two types of themes
-        int numUploadedThemes = 0;
-        int numWpComThemes = 0;
-        for (ThemeModel theme: mFilteredThemes) {
-            if (theme.isWpComTheme()) {
-                numWpComThemes++;
-            } else {
-                numUploadedThemes++;
-            }
-        }
-
-        // then create the headers
-        for (int i = 0; i < mFilteredThemes.size(); i++) {
-            ThemeModel theme = mFilteredThemes.get(i);
-            if (i == 0 && !theme.isWpComTheme()) {
-                // add uploaded themes header if this is the first theme and it's not wp.com
-                String text = mContext.getString(R.string.uploaded_themes_header);
-                mHeaders.put(i, new ThemeSectionHeader(text, numUploadedThemes));
-            } else if (theme.isWpComTheme()) {
-                // add wp.com themes header if this is the first wp.com theme
-                String text = mContext.getString(R.string.wpcom_themes_header);
-                mHeaders.put(i, new ThemeSectionHeader(text, numWpComThemes));
-                break;
-            }
         }
     }
 
@@ -199,17 +140,6 @@ class ThemeBrowserAdapter extends BaseAdapter implements Filterable {
         configureImageView(holder, screenshotURL, themeId, isCurrent);
         configureImageButton(holder, themeId, isPremium, isCurrent);
         configureCardView(holder, isCurrent);
-
-        // show a section header if one exists at this position
-        ThemeSectionHeader header = mHeaders.get(position);
-        if (header != null) {
-            holder.headerView.setVisibility(View.VISIBLE);
-            holder.headerText.setText(header.text);
-            holder.headerCount.setText(String.valueOf(header.count));
-        } else {
-            holder.headerView.setVisibility(View.GONE);
-        }
-
         return convertView;
     }
 
@@ -332,7 +262,6 @@ class ThemeBrowserAdapter extends BaseAdapter implements Filterable {
             protected void publishResults(CharSequence constraint, FilterResults results) {
                 mFilteredThemes.clear();
                 mFilteredThemes.addAll((List<ThemeModel>) results.values);
-                updateHeaders();
                 ThemeBrowserAdapter.this.notifyDataSetChanged();
             }
 

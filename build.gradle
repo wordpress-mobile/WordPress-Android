@@ -9,3 +9,7 @@ subprojects {
         }
     }
 }
+
+ext {
+    fluxCVersion = '54c164ccd8ee723fe74e297c0ac0736ce0f8f189'
+}

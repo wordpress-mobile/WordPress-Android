@@ -5,7 +5,7 @@ import android.test.ActivityInstrumentationTestCase2;
 import android.view.View;
 import android.widget.ToggleButton;
 
-import org.wordpress.android.editor.EditorFragment.IllegalEditorStateException;
+import org.wordpress.android.editor.EditorFragment.EditorFragmentNotAddedException;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -101,7 +101,7 @@ public class EditorFragmentTest extends ActivityInstrumentationTestCase2<MockEdi
         assertTrue(htmlButton.isEnabled());
     }
 
-    public void testHtmlModeToggleTextTransfer() throws InterruptedException, IllegalEditorStateException {
+    public void testHtmlModeToggleTextTransfer() throws InterruptedException, EditorFragmentNotAddedException {
         waitForOnDomLoaded();
 
         final View view = mFragment.getView();
@@ -153,7 +153,7 @@ public class EditorFragmentTest extends ActivityInstrumentationTestCase2<MockEdi
                 try {
                     assertEquals("new title", mFragment.getTitle());
                     assertEquals("new <b>content</b>", mFragment.getContent());
-                } catch (IllegalEditorStateException e) {
+                } catch (EditorFragmentNotAddedException e) {
                     throw new RuntimeException();
                 }
 

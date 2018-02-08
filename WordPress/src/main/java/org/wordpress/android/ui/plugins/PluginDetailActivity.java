@@ -1,21 +1,31 @@
 package org.wordpress.android.ui.plugins;
 
+import android.animation.ObjectAnimator;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.support.annotation.IdRes;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.content.res.AppCompatResources;
 import android.support.v7.widget.Toolbar;
+import android.text.Html;
 import android.text.TextUtils;
+import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.Button;
+import android.view.ViewGroup;
 import android.widget.CompoundButton;
 import android.widget.CompoundButton.OnCheckedChangeListener;
+import android.widget.ImageView;
 import android.widget.ProgressBar;
-import android.widget.ScrollView;
+import android.widget.RatingBar;
+import android.widget.SimpleAdapter;
 import android.widget.Switch;
 import android.widget.TextView;
 
@@ -26,26 +36,46 @@ import org.wordpress.android.WordPress;
 import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.fluxc.Dispatcher;
 import org.wordpress.android.fluxc.generated.PluginActionBuilder;
-import org.wordpress.android.fluxc.model.WPOrgPluginModel;
-import org.wordpress.android.fluxc.model.SitePluginModel;
 import org.wordpress.android.fluxc.model.SiteModel;
+import org.wordpress.android.fluxc.model.SitePluginModel;
+import org.wordpress.android.fluxc.model.WPOrgPluginModel;
 import org.wordpress.android.fluxc.store.PluginStore;
 import org.wordpress.android.fluxc.store.PluginStore.ConfigureSitePluginPayload;
 import org.wordpress.android.fluxc.store.PluginStore.DeleteSitePluginPayload;
 import org.wordpress.android.fluxc.store.PluginStore.OnSitePluginConfigured;
 import org.wordpress.android.fluxc.store.PluginStore.OnSitePluginDeleted;
 import org.wordpress.android.fluxc.store.PluginStore.OnSitePluginUpdated;
-import org.wordpress.android.fluxc.store.PluginStore.OnWPOrgPluginFetched;
 import org.wordpress.android.fluxc.store.PluginStore.UpdateSitePluginPayload;
 import org.wordpress.android.ui.ActivityLauncher;
 import org.wordpress.android.util.AnalyticsUtils;
+import org.wordpress.android.util.AniUtils;
 import org.wordpress.android.util.AppLog;
+import org.wordpress.android.util.DateTimeUtils;
+import org.wordpress.android.util.DisplayUtils;
+import org.wordpress.android.util.FormatUtils;
 import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.SiteUtils;
+import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.ToastUtils.Duration;
+import org.wordpress.android.util.WPLinkMovementMethod;
+import org.wordpress.android.widgets.WPNetworkImageView;
+
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Locale;
+import java.util.Map;
+import java.util.TimeZone;
 
 import javax.inject.Inject;
+
+import static org.wordpress.android.widgets.WPNetworkImageView.ImageType.PHOTO;
+import static org.wordpress.android.widgets.WPNetworkImageView.ImageType.PLUGIN_ICON;
 
 public class PluginDetailActivity extends AppCompatActivity {
     public static final String KEY_PLUGIN_NAME = "KEY_PLUGIN_NAME";
@@ -61,14 +91,28 @@ public class PluginDetailActivity extends AppCompatActivity {
     private SitePluginModel mSitePlugin;
     private WPOrgPluginModel mWPOrgPlugin;
 
-    private ScrollView mContainer;
-    private TextView mInstalledVersionTextView;
-    private TextView mAvailableVersionTextView;
+    private ViewGroup mContainer;
+    private TextView mTitleTextView;
+    private TextView mByLineTextView;
+    private TextView mVersionTopTextView;
+    private TextView mVersionBottomTextView;
     private TextView mUpdateTextView;
     private ProgressBar mUpdateProgressBar;
     private Switch mSwitchActive;
     private Switch mSwitchAutoupdates;
     private ProgressDialog mRemovePluginProgressDialog;
+
+    private TextView mDescriptionTextView;
+    private ImageView mDescriptionChevron;
+    private TextView mInstallationTextView;
+    private ImageView mInstallationChevron;
+    private TextView mWhatsNewTextView;
+    private ImageView mWhatsNewChevron;
+    private TextView mFaqTextView;
+    private ImageView mFaqChevron;
+
+    private WPNetworkImageView mImageBanner;
+    private WPNetworkImageView mImageIcon;
 
     private boolean mIsConfiguringPlugin;
     private boolean mIsUpdatingPlugin;
@@ -114,9 +158,6 @@ public class PluginDetailActivity extends AppCompatActivity {
         if (savedInstanceState == null) {
             mIsActive = mSitePlugin.isActive();
             mIsAutoUpdateEnabled = mSitePlugin.isAutoUpdateEnabled();
-
-            // Refresh the wporg plugin to check if there is a newer version
-            mDispatcher.dispatch(PluginActionBuilder.newFetchWporgPluginAction(mSitePlugin.getSlug()));
         } else {
             mIsConfiguringPlugin = savedInstanceState.getBoolean(KEY_IS_CONFIGURING_PLUGIN);
             mIsUpdatingPlugin = savedInstanceState.getBoolean(KEY_IS_UPDATING_PLUGIN);
@@ -135,7 +176,7 @@ public class PluginDetailActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
         ActionBar actionBar = getSupportActionBar();
         if (actionBar != null) {
-            actionBar.setTitle(mSitePlugin.getDisplayName());
+            actionBar.setTitle(null);
             actionBar.setHomeButtonEnabled(true);
             actionBar.setDisplayHomeAsUpEnabled(true);
             actionBar.setElevation(0);
@@ -143,14 +184,15 @@ public class PluginDetailActivity extends AppCompatActivity {
 
         setupViews();
 
-        // Show remove plugin confirmation dialog if it's dismissed while activity is re-created
         if (mIsShowingRemovePluginConfirmationDialog) {
+            // Show remove plugin confirmation dialog if it's dismissed while activity is re-created
             confirmRemovePlugin();
-        }
-
-        // Show remove plugin progress dialog if it's dismissed while activity is re-created
-        if (mIsRemovingPlugin) {
+        } else if (mIsRemovingPlugin) {
+            // Show remove plugin progress dialog if it's dismissed while activity is re-created
             showRemovePluginProgressDialog();
+        } else if (savedInstanceState == null) {
+            // Refresh the plugin information to check if there is a newer version
+            mDispatcher.dispatch(PluginActionBuilder.newFetchWporgPluginAction(mSitePlugin.getSlug()));
         }
     }
 
@@ -166,6 +208,19 @@ public class PluginDetailActivity extends AppCompatActivity {
     }
 
     @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.plugin_detail, menu);
+        return super.onCreateOptionsMenu(menu);
+    }
+
+    @Override
+    public boolean onPrepareOptionsMenu(Menu menu) {
+        boolean showTrash = canPluginBeDisabledOrRemoved();
+        menu.findItem(R.id.menu_trash).setVisible(showTrash);
+        return super.onPrepareOptionsMenu(menu);
+    }
+
+    @Override
     public boolean onOptionsItemSelected(final MenuItem item) {
         if (item.getItemId() == android.R.id.home) {
             if (isPluginStateChangedSinceLastConfigurationDispatch()) {
@@ -174,6 +229,9 @@ public class PluginDetailActivity extends AppCompatActivity {
                 dispatchConfigurePluginAction(true);
             }
             onBackPressed();
+            return true;
+        } else if (item.getItemId() == R.id.menu_trash) {
+            confirmRemovePlugin();
             return true;
         }
         return super.onOptionsItemSelected(item);
@@ -196,22 +254,82 @@ public class PluginDetailActivity extends AppCompatActivity {
 
     private void setupViews() {
         mContainer = findViewById(R.id.plugin_detail_container);
-        mInstalledVersionTextView = findViewById(R.id.plugin_installed_version);
-        mAvailableVersionTextView = findViewById(R.id.plugin_available_version);
+        mTitleTextView = findViewById(R.id.text_title);
+        mByLineTextView = findViewById(R.id.text_byline);
+        mVersionTopTextView = findViewById(R.id.plugin_version_top);
+        mVersionBottomTextView = findViewById(R.id.plugin_version_bottom);
         mUpdateTextView = findViewById(R.id.plugin_btn_update);
         mUpdateProgressBar = findViewById(R.id.plugin_update_progress_bar);
         mSwitchActive = findViewById(R.id.plugin_state_active);
         mSwitchAutoupdates = findViewById(R.id.plugin_state_autoupdates);
+        mImageBanner = findViewById(R.id.image_banner);
+        mImageIcon = findViewById(R.id.image_icon);
 
-        mSwitchActive.setOnCheckedChangeListener(new OnCheckedChangeListener() {
+        // vector drawable has to be assigned at runtime for backwards compatibility
+        Drawable rightDrawable = AppCompatResources.getDrawable(this, R.drawable.ic_info_outline_grey_dark_18dp);
+        mVersionTopTextView.setCompoundDrawablesWithIntrinsicBounds(null, null, rightDrawable, null);
+
+        mDescriptionTextView = findViewById(R.id.plugin_description_text);
+        mDescriptionChevron = findViewById(R.id.plugin_description_chevron);
+        findViewById(R.id.plugin_description_container).setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
-                if (compoundButton.isPressed()) {
-                    mIsActive = b;
-                    dispatchConfigurePluginAction(false);
-                }
+            public void onClick(View v) {
+                toggleText(mDescriptionTextView, mDescriptionChevron);
             }
         });
+
+        mInstallationTextView = findViewById(R.id.plugin_installation_text);
+        mInstallationChevron = findViewById(R.id.plugin_installation_chevron);
+        findViewById(R.id.plugin_installation_container).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                toggleText(mInstallationTextView, mInstallationChevron);
+            }
+        });
+
+        mWhatsNewTextView = findViewById(R.id.plugin_whatsnew_text);
+        mWhatsNewChevron = findViewById(R.id.plugin_whatsnew_chevron);
+        findViewById(R.id.plugin_whatsnew_container).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                toggleText(mWhatsNewTextView, mWhatsNewChevron);
+            }
+        });
+
+        // expand "what's new" if there's an update available
+        if (PluginUtils.isUpdateAvailable(mSitePlugin, mWPOrgPlugin)) {
+            toggleText(mWhatsNewTextView, mWhatsNewChevron);
+        }
+
+        mFaqTextView = findViewById(R.id.plugin_faq_text);
+        mFaqChevron = findViewById(R.id.plugin_faq_chevron);
+        findViewById(R.id.plugin_faq_container).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                toggleText(mFaqTextView, mFaqChevron);
+            }
+        });
+
+        mVersionTopTextView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                showPluginInfoPopup();
+            }
+        });
+
+        if (!canPluginBeDisabledOrRemoved()) {
+            findViewById(R.id.plugin_state_active_container).setVisibility(View.GONE);
+        } else {
+            mSwitchActive.setOnCheckedChangeListener(new OnCheckedChangeListener() {
+                @Override
+                public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
+                    if (compoundButton.isPressed()) {
+                        mIsActive = b;
+                        dispatchConfigurePluginAction(false);
+                    }
+                }
+            });
+        }
 
         mSwitchAutoupdates.setOnCheckedChangeListener(new OnCheckedChangeListener() {
             @Override
@@ -230,6 +348,19 @@ public class PluginDetailActivity extends AppCompatActivity {
             }
         });
 
+        View settingsView = findViewById(R.id.plugin_settings_page);
+        if (canShowSettings()) {
+            settingsView.setVisibility(View.VISIBLE);
+            settingsView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    ActivityLauncher.openUrlExternal(PluginDetailActivity.this, mSitePlugin.getSettingsUrl());
+                }
+            });
+        } else {
+            settingsView.setVisibility(View.GONE);
+        }
+
         findViewById(R.id.plugin_wp_org_page).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -244,64 +375,201 @@ public class PluginDetailActivity extends AppCompatActivity {
             }
         });
 
-        Button removeBtn = findViewById(R.id.plugin_btn_remove);
-        removeBtn.setOnClickListener(new View.OnClickListener() {
+        findViewById(R.id.read_reviews_container).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                confirmRemovePlugin();
+                ActivityLauncher.openUrlExternal(PluginDetailActivity.this, getWpOrgReviewsUrl());
             }
         });
 
-        // Handle specific cases for Jetpack, Akismet and VaultPress
-        boolean canPluginBeDisabledOrRemoved = canPluginBeDisabledOrRemoved();
-        removeBtn.setVisibility(canPluginBeDisabledOrRemoved ? View.VISIBLE : View.GONE);
-        if (!canPluginBeDisabledOrRemoved) {
-            findViewById(R.id.plugin_state_active_container).setVisibility(View.GONE);
-        }
+        // set the height of the gradient scrim that appears atop the banner image
+        int toolbarHeight = DisplayUtils.getActionBarHeight(this);
+        ImageView imgScrim = findViewById(R.id.image_gradient_scrim);
+        imgScrim.getLayoutParams().height = toolbarHeight * 2;
 
         refreshViews();
     }
 
     private void refreshViews() {
+        mTitleTextView.setText(mSitePlugin.getDisplayName());
+
+        if (TextUtils.isEmpty(mSitePlugin.getAuthorUrl())) {
+            mByLineTextView.setText(String.format(getString(R.string.plugin_byline), mSitePlugin.getAuthorName()));
+        } else {
+            String authorLink = "<a href='" + mSitePlugin.getAuthorUrl() + "'>" + mSitePlugin.getAuthorName() + "</a>";
+            String byline = String.format(getString(R.string.plugin_byline), authorLink);
+            mByLineTextView.setMovementMethod(WPLinkMovementMethod.getInstance());
+            mByLineTextView.setText(Html.fromHtml(byline));
+        }
+
         mSwitchActive.setChecked(mIsActive);
         mSwitchAutoupdates.setChecked(mIsAutoUpdateEnabled);
 
-        refreshPluginVersionViews();
+        if (mWPOrgPlugin != null) {
+            mImageBanner.setImageUrl(mWPOrgPlugin.getBanner(), PHOTO);
+            mImageIcon.setImageUrl(mWPOrgPlugin.getIcon(), PLUGIN_ICON);
+
+            setCollapsibleHtmlText(mDescriptionTextView, mWPOrgPlugin.getDescriptionAsHtml());
+            setCollapsibleHtmlText(mInstallationTextView, mWPOrgPlugin.getInstallationInstructionsAsHtml());
+            setCollapsibleHtmlText(mWhatsNewTextView, mWPOrgPlugin.getWhatsNewAsHtml());
+            setCollapsibleHtmlText(mFaqTextView, mWPOrgPlugin.getFaqAsHtml());
+
+            refreshPluginVersionViews();
+            refreshRatingsViews();
+        }
+    }
+
+    private void setCollapsibleHtmlText(@NonNull TextView textView, @Nullable String htmlText) {
+        if (!TextUtils.isEmpty(htmlText)) {
+            textView.setTextColor(getResources().getColor(R.color.grey_dark));
+            textView.setMovementMethod(WPLinkMovementMethod.getInstance());
+            textView.setText(Html.fromHtml(htmlText));
+        } else {
+            textView.setTextColor(getResources().getColor(R.color.grey_lighten_10));
+            textView.setText(R.string.plugin_empty_text);
+        }
     }
 
     private void refreshPluginVersionViews() {
-        if (TextUtils.isEmpty(mSitePlugin.getVersion())) {
-            mInstalledVersionTextView.setVisibility(View.GONE);
-        } else {
-            mInstalledVersionTextView.setVisibility(View.VISIBLE);
-            mInstalledVersionTextView.setText(getString(R.string.plugin_installed_version,
-                    mSitePlugin.getVersion()));
-        }
+        String pluginVersion = TextUtils.isEmpty(mSitePlugin.getVersion()) ? "?" : mSitePlugin.getVersion();
+        String installedVersion;
 
-        if (!PluginUtils.isUpdateAvailable(mSitePlugin, mWPOrgPlugin)) {
-            mAvailableVersionTextView.setVisibility(View.GONE);
+        if (PluginUtils.isUpdateAvailable(mSitePlugin, mWPOrgPlugin)) {
+            installedVersion = String.format(getString(R.string.plugin_installed_version), pluginVersion);
+            String availableVersion = String.format(getString(R.string.plugin_available_version), mWPOrgPlugin.getVersion());
+            mVersionTopTextView.setText(availableVersion);
+            mVersionBottomTextView.setText(installedVersion);
+            mVersionBottomTextView.setVisibility(View.VISIBLE);
         } else {
-            mAvailableVersionTextView.setVisibility(View.VISIBLE);
-            mAvailableVersionTextView.setText(getString(R.string.plugin_available_version,
-                    mWPOrgPlugin.getVersion()));
+            installedVersion = String.format(getString(R.string.plugin_version), pluginVersion);
+            mVersionTopTextView.setText(installedVersion);
+            mVersionBottomTextView.setVisibility(View.GONE);
         }
 
         refreshUpdateVersionViews();
     }
 
     private void refreshUpdateVersionViews() {
+        if (mWPOrgPlugin == null) return;
+
         boolean isUpdateAvailable = PluginUtils.isUpdateAvailable(mSitePlugin, mWPOrgPlugin);
-        if (isUpdateAvailable && !mIsUpdatingPlugin) {
-            mUpdateTextView.setVisibility(View.VISIBLE);
+        mUpdateTextView.setVisibility(isUpdateAvailable && !mIsUpdatingPlugin ? View.VISIBLE : View.GONE);
+        mUpdateProgressBar.setVisibility(mIsUpdatingPlugin ? View.VISIBLE: View.GONE);
+        findViewById(R.id.plugin_installed).setVisibility(isUpdateAvailable || mIsUpdatingPlugin ? View.GONE : View.VISIBLE);
+    }
+
+    private void refreshRatingsViews() {
+        if (mWPOrgPlugin == null) return;
+
+        int numRatingsTotal = mWPOrgPlugin.getNumberOfRatings();
+
+        TextView txtNumRatings = findViewById(R.id.text_num_ratings);
+        String numRatings = FormatUtils.formatInt(numRatingsTotal);
+        txtNumRatings.setText(String.format(getString(R.string.plugin_num_ratings), numRatings));
+
+        TextView txtNumDownloads = findViewById(R.id.text_num_downloads);
+        String numDownloads = FormatUtils.formatInt(mWPOrgPlugin.getDownloadCount());
+        txtNumDownloads.setText(String.format(getString(R.string.plugin_num_downloads), numDownloads));
+
+        setRatingsProgressBar(R.id.progress5, mWPOrgPlugin.getNumberOfRatingsOfFive(), numRatingsTotal);
+        setRatingsProgressBar(R.id.progress4, mWPOrgPlugin.getNumberOfRatingsOfFour(), numRatingsTotal);
+        setRatingsProgressBar(R.id.progress3, mWPOrgPlugin.getNumberOfRatingsOfThree(), numRatingsTotal);
+        setRatingsProgressBar(R.id.progress2, mWPOrgPlugin.getNumberOfRatingsOfTwo(), numRatingsTotal);
+        setRatingsProgressBar(R.id.progress1, mWPOrgPlugin.getNumberOfRatingsOfOne(), numRatingsTotal);
+
+        int rating = StringUtils.stringToInt(mWPOrgPlugin.getRating(), 1);
+        int averageRating = Math.round(rating / 20f);
+        RatingBar ratingBar = findViewById(R.id.rating_bar);
+        ratingBar.setRating(averageRating);
+    }
+
+    private void setRatingsProgressBar(@IdRes int progressResId, int numRatingsForStar, int numRatingsTotal) {
+        ProgressBar bar = findViewById(progressResId);
+        bar.setMax(numRatingsTotal);
+        bar.setProgress(numRatingsForStar);
+    }
+
+    private static final String KEY_LABEL = "label";
+    private static final String KEY_TEXT = "text";
+
+    private String timespanFromUpdateDate(@NonNull String lastUpdated) {
+        // ex: 2017-12-13 2:55pm GMT
+        if (lastUpdated.endsWith(" GMT")) {
+            lastUpdated = lastUpdated.substring(0, lastUpdated.length() - 4);
+        }
+        DateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm", Locale.US);
+        try {
+            formatter.setTimeZone(TimeZone.getTimeZone("UTC"));
+            Date date = formatter.parse(lastUpdated);
+            return DateTimeUtils.javaDateToTimeSpan(date, this);
+        } catch (ParseException var2) {
+            return "?";
+        }
+    }
+    private void showPluginInfoPopup() {
+        if (mWPOrgPlugin == null) return;
+
+        List<Map<String, String>> data = new ArrayList<>();
+        int[] to = { R.id.text1, R.id.text2 };
+        String[] from = { KEY_LABEL, KEY_TEXT };
+        String[] labels = {
+                getString(R.string.plugin_info_version),
+                getString(R.string.plugin_info_lastupdated),
+                getString(R.string.plugin_info_requires_version),
+                getString(R.string.plugin_info_your_version)
+        };
+
+        Map<String,String> mapVersion = new HashMap<>();
+        mapVersion.put(KEY_LABEL, labels[0]);
+        mapVersion.put(KEY_TEXT, StringUtils.notNullStr(mWPOrgPlugin.getVersion()));
+        data.add(mapVersion);
+
+        Map<String,String> mapUpdated = new HashMap<>();
+        mapUpdated.put(KEY_LABEL, labels[1]);
+        mapUpdated.put(KEY_TEXT, timespanFromUpdateDate(StringUtils.notNullStr(mWPOrgPlugin.getLastUpdated())));
+        data.add(mapUpdated);
+
+        Map<String,String> mapRequiredVer = new HashMap<>();
+        mapRequiredVer.put(KEY_LABEL, labels[2]);
+        mapRequiredVer.put(KEY_TEXT, StringUtils.notNullStr(mWPOrgPlugin.getRequiredWordPressVersion()));
+        data.add(mapRequiredVer);
+
+        Map<String,String> mapThisVer = new HashMap<>();
+        mapThisVer.put(KEY_LABEL, labels[3]);
+        mapThisVer.put(KEY_TEXT, !TextUtils.isEmpty(mSite.getSoftwareVersion()) ? mSite.getSoftwareVersion() : "?");
+        data.add(mapThisVer);
+
+        SimpleAdapter adapter = new SimpleAdapter(this,
+                data,
+                R.layout.plugin_info_row,
+                from,
+                to);
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setCancelable(true);
+        builder.setAdapter(adapter, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.dismiss();
+            }
+        });
+        builder.show();
+
+    }
+
+    private void toggleText(@NonNull final TextView textView, @NonNull ImageView chevron) {
+        AniUtils.Duration duration = AniUtils.Duration.SHORT;
+        boolean isExpanded = textView.getVisibility() == View.VISIBLE;
+        if (isExpanded) {
+            AniUtils.fadeOut(textView, duration);
         } else {
-            mUpdateTextView.setVisibility(View.GONE);
+            AniUtils.fadeIn(textView, duration);
         }
 
-        if (mIsUpdatingPlugin) {
-            mUpdateProgressBar.setVisibility(View.VISIBLE);
-        } else {
-            mUpdateProgressBar.setVisibility(View.GONE);
-        }
+        float endRotate = isExpanded ? 360f : -180f;
+        ObjectAnimator animRotate = ObjectAnimator.ofFloat(chevron, View.ROTATION, 0f, endRotate);
+        animRotate.setDuration(duration.toMillis(this));
+        animRotate.start();
     }
 
     private void confirmRemovePlugin() {
@@ -485,7 +753,7 @@ public class PluginDetailActivity extends AppCompatActivity {
 
     @SuppressWarnings("unused")
     @Subscribe(threadMode = ThreadMode.MAIN)
-    public void onWPOrgPluginFetched(OnWPOrgPluginFetched event) {
+    public void onWPOrgPluginFetched(PluginStore.OnWPOrgPluginFetched event) {
         if (isFinishing()) {
             return;
         }
@@ -496,7 +764,7 @@ public class PluginDetailActivity extends AppCompatActivity {
         }
         if (!TextUtils.isEmpty(mSitePlugin.getSlug()) && mSitePlugin.getSlug().equals(event.pluginSlug)) {
             mWPOrgPlugin = mPluginStore.getWPOrgPluginBySlug(event.pluginSlug);
-            refreshPluginVersionViews();
+            refreshViews();
         }
     }
 
@@ -553,6 +821,10 @@ public class PluginDetailActivity extends AppCompatActivity {
         return "https://wordpress.org/plugins/" + mSitePlugin.getSlug();
     }
 
+    private String getWpOrgReviewsUrl() {
+        return "https://wordpress.org/plugins/" + mSitePlugin.getSlug() + "/#reviews";
+    }
+
     private String getRemovingPluginMessage() {
         return getString(R.string.plugin_remove_progress_dialog_message, mSitePlugin.getDisplayName());
     }
@@ -568,6 +840,11 @@ public class PluginDetailActivity extends AppCompatActivity {
                 || (!pluginName.equals("akismet/akismet") && !pluginName.equals("vaultpress/vaultpress"));
     }
 
+    // only show settings for active plugins on .org sites
+    private boolean canShowSettings() {
+        return mSitePlugin.isActive() && !mSite.isJetpackConnected() && !TextUtils.isEmpty(mSitePlugin.getSettingsUrl());
+    }
+
     private boolean isPluginStateChangedSinceLastConfigurationDispatch() {
         return mSitePlugin.isActive() != mIsActive || mSitePlugin.isAutoUpdateEnabled() != mIsAutoUpdateEnabled;
     }
@@ -575,10 +852,11 @@ public class PluginDetailActivity extends AppCompatActivity {
     private boolean refreshPluginFromStoreAndCheckForNull() {
         mSitePlugin = mPluginStore.getSitePluginByName(mSite, mSitePlugin.getName());
         if (mSitePlugin == null) {
-            ToastUtils.showToast(this, R.string.plugin_not_found, Duration.SHORT);
+            ToastUtils.showToast(this, R.string.plugin_not_found);
             finish();
             return true;
         }
         return false;
     }
+
 }

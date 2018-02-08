@@ -57,8 +57,8 @@ public class PhotonUtils {
             return imageUrl + "?w=" + width + "&h=" + height;
         }
 
-        // strip=all removes EXIF and other non-visual data from JPEGs
-        String query = "?strip=all";
+        // strip=info removes Exif, IPTC and comment data from the output image.
+        String query = "?strip=info";
 
         switch (quality) {
             case HIGH:

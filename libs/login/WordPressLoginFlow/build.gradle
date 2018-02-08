@@ -41,7 +41,12 @@ dependencies {
 
     compile 'com.google.android.gms:play-services-auth:10.0.1'
 
-    compile 'com.github.wordpress-mobile.WordPress-FluxC-Android:fluxc:3251d1575c5861344ae6f8ce7c76d130bb40a696'
+    // Share FluxC version from host project if defined, otherwise fallback to default
+    if (project.hasProperty("fluxCVersion")) {
+        compile "com.github.wordpress-mobile.WordPress-FluxC-Android:fluxc:$fluxCVersion"
+    } else {
+        compile 'com.github.wordpress-mobile.WordPress-FluxC-Android:fluxc:3251d1575c5861344ae6f8ce7c76d130bb40a696'
+    }
 
     compile 'com.github.bumptech.glide:glide:4.1.1'
     annotationProcessor 'com.github.bumptech.glide:compiler:4.1.1'

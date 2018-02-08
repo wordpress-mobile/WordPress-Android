@@ -1,11 +1,66 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2017-12-13 11:02:21+0000
+Translation-Revision-Date: 2018-01-25 15:16:32+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/2.4.0-alpha
 Language: sv_SE
 -->
 <resources>
+	<string name="plugin_fetch_error">Kan inte läsa in tillägg</string>
+	<string name="change_photo">Byt foto</string>
+	<string name="dlg_confirm_delete_tag">Radera ”%s” permanent?</string>
+	<string name="dlg_deleting_tag">Raderar</string>
+	<string name="dlg_saving_tag">Sparar</string>
+	<string name="site_settings_tags_hint">Hantera etiketterna för din webbplats</string>
+	<string name="my_site_btn_site_pages">Webbplatssidor</string>
+	<string name="error_tag_exists">Det finns redan en etikett med det namnet</string>
+	<string name="site_settings_amp_summary">Din webbplats på WordPress.com har stöd för Accelerated Mobile Pages, ett initiativ under ledning av Google som innebär mycket kortare sidladdningstider på mobila enheter.</string>
+	<string name="tag_name_hint">Etikett</string>
+	<string name="tag_description_hint">Beskrivning</string>
+	<string name="add_new_tag">Lägg till ny etikett</string>
+	<string name="site_settings_amp_title">Accelerated Mobile Pages (AMP)</string>
+	<string name="site_settings_format_help">Läs mer om formatering av datum och tid</string>
+	<string name="site_settings_timezones_error">Kan inte ladda in tidszoner</string>
+	<string name="site_settings_format_entry_custom">Anpassat</string>
+	<string name="site_settings_format_hint_custom">Anpassat format</string>
+	<string name="site_settings_posts_per_page_title">Inlägg per sida</string>
+	<string name="site_settings_timezone_subtitle">Välj en stad i din tidszon</string>
+	<string name="site_settings_time_format_title">Tidsformat</string>
+	<string name="site_settings_timezone_title">Tidszon</string>
+	<string name="site_settings_date_format_title">Datumformat</string>
+	<string name="site_settings_week_start_title">Veckan börjar på</string>
+	<string name="site_settings_traffic_header">Trafik</string>
+	<string name="site_settings_tags_title">Etiketter</string>
+	<string name="delete_yes">Radera</string>
+	<string name="delete_no">Radera inte</string>
+	<string name="plugin_external_link_icon_content_description">Extern länk</string>
+	<string name="plugin_update_available_icon_content_description">Uppdatering tillgänglig</string>
+	<string name="plugin_icon_content_description">Tilläggsikon</string>
+	<string name="plugin_home_page">Tilläggets hemsida</string>
+	<string name="wordpress_dot_org_plugin_page">Tilläggets sida på WordPress.org</string>
+	<string name="plugin_remove_dialog_message">Är du säker på att du vill ta bort %1$s från %2$s?\n\nDetta kommer att inaktivera tillägget och radera alla tillhörande filer och data.</string>
+	<string name="plugin_remove_dialog_title">Ta bort tillägg</string>
+	<string name="plugin_remove_progress_dialog_message">Tar bort %s...</string>
+	<string name="plugin_disable_progress_dialog_message">Inaktiverar %s…</string>
+	<string name="plugin_btn_remove">Ta bort tillägg</string>
+	<string name="plugin_configuration_failed">Ett fel inträffade när följande tillägg skulle konfigureras: %s</string>
+	<string name="plugin_remove_failed">Ett fel inträffade vid borttagning av %s.</string>
+	<string name="plugin_removed_successfully">%s har tagits bort.</string>
+	<string name="plugin_updated_failed_detailed">Ett fel inträffade när %1$s skulle tas bort: %2$s</string>
+	<string name="plugin_updated_failed">Fel vid borttagning av %s.</string>
+	<string name="plugin_updated_successfully">%s har uppdaterats.</string>
+	<string name="plugin_available_version">Version %s är tillgänglig.</string>
+	<string name="plugin_installed_version">Tilläggsversion %s</string>
+	<string name="plugin_detail_label_state_autoupdates">Automatiska uppdateringar</string>
+	<string name="plugin_detail_label_state_active">Aktivt</string>
+	<string name="plugin_autoupdates_on">Automatiska uppdateringar på</string>
+	<string name="plugin_autoupdates_off">Automatiska uppdateringar avstängda</string>
+	<string name="plugin_active">Aktivt</string>
+	<string name="plugin_inactive">Inaktivt</string>
+	<string name="plugins">Tillägg</string>
+	<string name="my_site_btn_plugins">Tillägg</string>
+	<string name="media_edit_link_hint">Öppna länk i nytt fönster/ny flik</string>
+	<string name="media_edit_link_text">Länka till</string>
 	<string name="notification_login_failed">Ett fel har inträffat.</string>
 	<string name="notification_2fa_needed">Fyll i en autentiseringskod för att fortsätta.</string>
 	<string name="notification_error_wrong_password">Dubbelkontrollera ditt lösenord för att fortsätta.</string>
@@ -266,16 +321,6 @@ Language: sv_SE
 	<string name="format_bar_description_heading">Rubrik</string>
 	<string name="format_bar_description_media">Media</string>
 	<string name="reader_view_comments">Visa kommentarer</string>
-	<string name="new_editor_promo_title_beta">Beta</string>
-	<string name="new_editor_promo_title">Prova den nya redigeraren</string>
-	<string name="new_editor_promo_link">Vad är nytt?</string>
-	<string name="new_editor_promo_description_image">Handskriven bild</string>
-	<string name="new_editor_promo_confirmation_message">Den nya redigeraren är aktiverad!</string>
-	<string name="new_editor_promo_confirmation_action">Inställningar</string>
-	<string name="new_editor_promo_button_positive">Prova den</string>
-	<string name="new_editor_promo_button_negative">Inte nu</string>
-	<string name="new_editor_beta_message">Ny redigerare i publik beta-testning!</string>
-	<string name="new_editor_beta_action">Läs vidare</string>
 	<string name="preference_editor_footer_description">Informationsikon</string>
 	<string name="preference_editor_footer">Releaseinformation för redigerare och felrapportering</string>
 	<string name="site_settings_video_quality_hint">Videokvalitet. Högre värde innebär video med högre kvalitet.</string>
@@ -356,7 +401,6 @@ Language: sv_SE
 	<string name="smart_toast_photo_long_press">Peka länge för att välja flera foton</string>
 	<string name="photo_picker_choose_video">Välj video från din enhet</string>
 	<string name="photo_picker_choose_photo">Välj foto från din enhet</string>
-	<string name="new_editor_promo_description">WordPress-appen innehåller nu en vacker ny redigerare. Prova den genom att skapa ett nytt inlägg!</string>
 	<string name="wp_media_title">WordPress-media</string>
 	<string name="media_insert_as_gallery">Lägg till som galleri</string>
 	<string name="media_insert_individually">Lägg till enstaka</string>
@@ -1336,6 +1380,7 @@ Language: sv_SE
 	<string name="error_refresh_media">Det gick inte att förnya medialistan just nu</string>
 	<string name="error_deleting_page">Ett fel inträffade när sidan skulle raderas</string>
 	<string name="file_not_found">Kunde inte hitta mediafilen att ladda upp. Kanske har den tagits bort eller flyttats?</string>
+	<string name="plugin_not_found">Ett fel inträffade vid åtkomsten till detta tillägg</string>
 	<string name="deleting_page">Tar bort sida</string>
 	<string name="deleting_post">Tar bort inlägg</string>
 	<string name="share_url_post">Dela inlägg</string>

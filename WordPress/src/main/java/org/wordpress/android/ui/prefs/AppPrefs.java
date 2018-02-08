@@ -5,7 +5,6 @@ import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 import android.text.TextUtils;
 
-import org.wordpress.android.BuildConfig;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.analytics.AnalyticsTracker.Stat;
@@ -119,15 +118,6 @@ public class AppPrefs {
         // aztec editor toolbar expanded state
         AZTEC_EDITOR_TOOLBAR_EXPANDED,
 
-        // When we need to show the new editor beta snackbar
-        AZTEC_EDITOR_BETA_REQUIRED,
-
-        // When we need to show the new editor promo dialog
-        AZTEC_EDITOR_PROMO_REQUIRED,
-
-        // counter which determines whether it's time to show the above promo
-        AZTEC_EDITOR_PROMO_COUNTER,
-
         // When we need to show the async promo dialog
         ASYNC_PROMO_REQUIRED,
 
@@ -156,9 +146,6 @@ public class AppPrefs {
         ASKED_PERMISSION_CAMERA,
         ASKED_PERMISSION_LOCATION_COURSE,
         ASKED_PERMISSION_LOCATION_FINE,
-
-        // wizard style login flow active
-        LOGIN_WIZARD_STYLE_ACTIVE,
 
         // Updated after WP.com themes have been fetched
         LAST_WP_COM_THEMES_SYNC
@@ -413,18 +400,6 @@ public class AppPrefs {
         }
     }
 
-    // Wizard-style login flow
-    public static void setLoginWizardStyleActive(boolean loginWizardActive) {
-        setBoolean(UndeletablePrefKey.LOGIN_WIZARD_STYLE_ACTIVE, loginWizardActive);
-        if (loginWizardActive) {
-            AnalyticsTracker.track(Stat.LOGIN_WIZARD_STYLE_ACTIVATED);
-        }
-    }
-
-    public static boolean isLoginWizardStyleActivated() {
-        return BuildConfig.LOGIN_WIZARD_STYLE_ACTIVE || getBoolean(UndeletablePrefKey.LOGIN_WIZARD_STYLE_ACTIVE, false);
-    }
-
     // Aztec Editor
     public static void setAztecEditorEnabled(boolean isEnabled) {
         setBoolean(UndeletablePrefKey.AZTEC_EDITOR_ENABLED, isEnabled);
@@ -464,25 +439,9 @@ public class AppPrefs {
         return isVisualEditorAvailable() && getBoolean(UndeletablePrefKey.VISUAL_EDITOR_ENABLED, !isAztecEditorEnabled());
     }
 
-    public static boolean isNewEditorBetaRequired() {
-        return getBoolean(UndeletablePrefKey.AZTEC_EDITOR_BETA_REQUIRED, true);
-    }
-
-    public static boolean isNewEditorPromoRequired() {
-       return getBoolean(UndeletablePrefKey.AZTEC_EDITOR_PROMO_REQUIRED, true);
-   }
-
     public static boolean isAsyncPromoRequired() {
         return getBoolean(UndeletablePrefKey.ASYNC_PROMO_REQUIRED, true);
     }
-
-    public static void setNewEditorBetaRequired(boolean required) {
-        setBoolean(UndeletablePrefKey.AZTEC_EDITOR_BETA_REQUIRED, required);
-    }
-
-    public static void setNewEditorPromoRequired(boolean required) {
-       setBoolean(UndeletablePrefKey.AZTEC_EDITOR_PROMO_REQUIRED, required);
-   }
 
     public static void setAsyncPromoRequired(boolean required) {
         setBoolean(UndeletablePrefKey.ASYNC_PROMO_REQUIRED, required);
@@ -504,12 +463,6 @@ public class AppPrefs {
 
     public static int getAnalyticsForStatsWidgetPromo() {
         return getInt(DeletablePrefKey.STATS_WIDGET_PROMO_ANALYTICS);
-    }
-
-    public static int bumpAndReturnAztecPromoCounter() {
-        int count = getInt(UndeletablePrefKey.AZTEC_EDITOR_PROMO_COUNTER) + 1;
-        setInt(UndeletablePrefKey.AZTEC_EDITOR_PROMO_COUNTER, count);
-        return count;
     }
 
     public static void setGlobalPlansFeatures(String jsonOfFeatures) {

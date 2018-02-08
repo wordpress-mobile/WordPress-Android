@@ -334,13 +334,12 @@ public class ThemeBrowserFragment extends Fragment
             return getSortedWpComThemes();
         }
 
-        // this is a Jetpack site, show two sections with headers
         return getSortedJetpackThemes();
     }
 
     private ThemeBrowserAdapter getAdapter() {
         if (mAdapter == null) {
-            mAdapter = new ThemeBrowserAdapter(getActivity(), mSite.isWPCom(), mCallback);
+            mAdapter = new ThemeBrowserAdapter(getActivity(), mCallback);
         }
         return mAdapter;
     }

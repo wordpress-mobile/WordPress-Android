@@ -108,7 +108,7 @@ public class WordPress extends MultiDexApplication implements HasServiceInjector
     public static final String SITE = "SITE";
     public static String versionName;
     public static WordPressDB wpDB;
-    public static boolean sAppIsInTheBackground;
+    public static boolean sAppIsInTheBackground = true;
 
     private static RestClientUtils sRestClientUtils;
     private static RestClientUtils sRestClientUtilsVersion1_1;
@@ -474,15 +474,8 @@ public class WordPress extends MultiDexApplication implements HasServiceInjector
 
     @SuppressWarnings("unused")
     @Subscribe(threadMode = ThreadMode.MAIN)
-    public void onParseError(OnUnexpectedError event) {
+    public void onUnexpectedError(OnUnexpectedError event) {
         AppLog.d(T.API, "Receiving OnUnexpectedError event, message: " + event.exception.getMessage());
-        String description = "FluxC: " + event.description;
-        if (event.extras != null) {
-            for (String key : event.extras.keySet()) {
-                CrashlyticsUtils.setString(key, event.extras.get(key));
-            }
-        }
-        CrashlyticsUtils.logException(event.exception, event.type, description);
     }
 
     public void removeWpComUserRelatedData(Context context) {

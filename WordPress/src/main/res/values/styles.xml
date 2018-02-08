@@ -46,12 +46,6 @@
         <item name="android:dropDownListViewStyle">@style/DropDownListView.Light.WordPress</item>
     </style>
 
-    <style name="SignInTheme" parent="Theme.AppCompat.NoActionBar">
-        <item name="colorControlActivated">@color/color_control_activated</item>
-        <item name="colorControlHighlight">@color/color_control_highlight</item>
-        <item name="android:statusBarColor">@color/status_bar_tint</item>
-    </style>
-
     <style name="SiteCreation.Heading" parent="TextAppearance.AppCompat.Body1">
         <item name="android:textColor">@color/grey_text_min</item>
     </style>
@@ -226,6 +220,10 @@
         <!-- Label color in TRUE state and bar color FALSE and TRUE State -->
         <item name="colorControlNormal">@color/grey_500</item>
         <item name="colorControlActivated">@color/blue_wordpress</item>
+
+        <!-- Fix for crash on ASUS devices - https://github.com/wordpress-mobile/WordPress-Android/issues/7038 -->
+        <item name="android:textColorHighlight">@color/transparent</item>
+        <item name="android:textColorLink">@color/transparent</item>
     </style>
     <style name="MediaSettings.Divider">
         <item name="android:background">@color/divider_grey</item>
@@ -613,10 +611,6 @@
         <item name="android:textStyle">bold</item>
     </style>
 
-    <style name="PromoDialogTitleBeta" parent="EditorTitleBeta">
-        <item name="android:layout_marginLeft">@dimen/margin_large</item>
-    </style>
-
     <style name="PromoDialogDescription" parent="WordPress">
         <item name="android:layout_height">wrap_content</item>
         <item name="android:layout_marginTop">@dimen/margin_extra_large</item>
@@ -673,6 +667,14 @@
         <item name="android:textSize">@dimen/text_sz_large</item>
     </style>
 
+    <style name="PluginCardViewSecondaryText">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:gravity">center_vertical</item>
+        <item name="android:textColor">@color/grey_darken_10</item>
+        <item name="android:textSize">@dimen/text_sz_medium</item>
+    </style>
+
     <style name="PluginCardViewSecondaryElement">
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
@@ -689,4 +691,8 @@
         <item name="android:layout_marginEnd">@dimen/margin_medium</item>
     </style>
 
+    <style name="PluginCardViewSecondaryElement.ChevronImage" parent="PluginCardViewSecondaryElement.ExternalLinkImage">
+        <item name="android:layout_marginTop">@dimen/margin_small</item>
+        <item name="android:layout_centerVertical">false</item>
+    </style>
 </resources>

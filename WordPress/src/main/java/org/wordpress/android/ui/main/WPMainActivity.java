@@ -14,7 +14,6 @@ import android.support.design.widget.TabLayout;
 import android.support.v4.app.RemoteInput;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.app.AppCompatDialogFragment;
 import android.text.TextUtils;
 import android.view.View;
 import android.widget.TextView;
@@ -45,7 +44,7 @@ import org.wordpress.android.push.NotificationsProcessingService;
 import org.wordpress.android.ui.ActivityId;
 import org.wordpress.android.ui.ActivityLauncher;
 import org.wordpress.android.ui.RequestCodes;
-import org.wordpress.android.ui.accounts.SignInActivity;
+import org.wordpress.android.ui.accounts.LoginActivity;
 import org.wordpress.android.ui.accounts.SignupEpilogueActivity;
 import org.wordpress.android.ui.notifications.NotificationEvents;
 import org.wordpress.android.ui.notifications.NotificationsListFragment;
@@ -54,7 +53,6 @@ import org.wordpress.android.ui.notifications.receivers.NotificationsPendingDraf
 import org.wordpress.android.ui.notifications.utils.NotificationsActions;
 import org.wordpress.android.ui.notifications.utils.NotificationsUtils;
 import org.wordpress.android.ui.notifications.utils.PendingDraftsNotificationsUtils;
-import org.wordpress.android.ui.posts.PromoDialogEditor;
 import org.wordpress.android.ui.prefs.AppPrefs;
 import org.wordpress.android.ui.prefs.AppSettingsFragment;
 import org.wordpress.android.ui.prefs.SiteSettingsFragment;
@@ -240,9 +238,7 @@ public class WPMainActivity extends AppCompatActivity {
                         mViewPager.setCurrentItem(position);
                     }
 
-                    if (!AppPrefs.isLoginWizardStyleActivated()) {
-                        checkMagicLinkSignIn();
-                    } else if (hasMagicLinkLoginIntent()) {
+                    if (hasMagicLinkLoginIntent()) {
                         if (mAccountStore.hasAccessToken()) {
                             ToastUtils.showToast(this, R.string.login_already_logged_in_wpcom);
                         } else {
@@ -291,7 +287,7 @@ public class WPMainActivity extends AppCompatActivity {
         String action = getIntent().getAction();
         Uri uri = getIntent().getData();
         String host = (uri != null && uri.getHost() != null) ? uri.getHost() : "";
-        return Intent.ACTION_VIEW.equals(action) && host.contains(SignInActivity.MAGIC_LOGIN);
+        return Intent.ACTION_VIEW.equals(action) && host.contains(LoginActivity.MAGIC_LOGIN);
     }
 
     private boolean hasMagicLinkSignupIntent() {
@@ -311,7 +307,7 @@ public class WPMainActivity extends AppCompatActivity {
 
     private @Nullable String getAuthToken() {
         Uri uri = getIntent().getData();
-        return uri != null ? uri.getQueryParameter(SignInActivity.TOKEN_PARAMETER) : null;
+        return uri != null ? uri.getQueryParameter(LoginActivity.TOKEN_PARAMETER) : null;
     }
 
     private void setTabLayoutElevation(float newElevation){
@@ -325,20 +321,6 @@ public class WPMainActivity extends AppCompatActivity {
                         .start();
             }
         }
-    }
-
-    private void showNewEditorPromoDialog() {
-        AppCompatDialogFragment newFragment = new PromoDialogEditor.Builder(
-                R.drawable.img_promo_editor,
-                R.string.new_editor_promo_title,
-                R.string.new_editor_promo_description,
-                R.string.new_editor_promo_button_positive)
-                .setLinkText(R.string.new_editor_promo_link)
-                .setNegativeButtonText(R.string.new_editor_promo_button_negative)
-                .setTitleBetaText(R.string.new_editor_promo_title_beta)
-                .build();
-        newFragment.show(getSupportFragmentManager(), "new-editor-promo");
-        AppPrefs.setNewEditorPromoRequired(false);
     }
 
     @Override
@@ -515,7 +497,7 @@ public class WPMainActivity extends AppCompatActivity {
 
     private void checkMagicLinkSignIn() {
         if (getIntent() !=  null) {
-            if (getIntent().getBooleanExtra(SignInActivity.MAGIC_LOGIN, false)) {
+            if (getIntent().getBooleanExtra(LoginActivity.MAGIC_LOGIN, false)) {
                 AnalyticsTracker.track(AnalyticsTracker.Stat.LOGIN_MAGIC_LINK_SUCCEEDED);
                 startWithNewAccount();
             }
@@ -525,16 +507,6 @@ public class WPMainActivity extends AppCompatActivity {
     private void trackLastVisibleTab(int position, boolean trackAnalytics) {
         switch (position) {
             case WPMainTabAdapter.TAB_MY_SITE:
-                // show the new editor promo if the user is logged in and this is at least the second time
-                // the my site tab has been visited
-                if (AppPrefs.isNewEditorPromoRequired()
-                        && !AppPrefs.isAztecEditorEnabled()
-                        && FluxCUtils.isSignedInWPComOrHasWPOrgSite(mAccountStore, mSiteStore)) {
-                    int count = AppPrefs.bumpAndReturnAztecPromoCounter();
-                    if (count >= 2)  {
-                        showNewEditorPromoDialog();
-                    }
-                }
                 ActivityId.trackLastActivity(ActivityId.MY_SITE);
                 if (trackAnalytics) {
                     AnalyticsUtils.trackWithSiteDetails(AnalyticsTracker.Stat.MY_SITE_ACCESSED,
@@ -728,7 +700,7 @@ public class WPMainActivity extends AppCompatActivity {
     @SuppressWarnings("unused")
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onAccountChanged(OnAccountChanged event) {
-        // Sign-out is handled in `handleSiteRemoved`, no need to show the `SignInActivity` here
+        // Sign-out is handled in `handleSiteRemoved`, no need to show the signup flow here
         if (mAccountStore.hasAccessToken()) {
             mTabLayout.showNoteBadge(mAccountStore.getAccount().getHasUnseenNotes());
         }

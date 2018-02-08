@@ -88,17 +88,8 @@ Language: bg
 	<string name="format_bar_description_link">Връзка</string>
 	<string name="format_bar_description_list">Лист</string>
 	<string name="format_bar_description_heading">Заглавие</string>
-	<string name="new_editor_promo_title_beta">Бета</string>
-	<string name="new_editor_promo_title">Пробвайте новия редактор</string>
 	<string name="format_bar_description_media">Медия</string>
 	<string name="reader_view_comments">Преглед на коментарите</string>
-	<string name="new_editor_promo_link">Какво ново?</string>
-	<string name="new_editor_promo_confirmation_message">Новият редактор е включен</string>
-	<string name="new_editor_promo_confirmation_action">Настройки</string>
-	<string name="new_editor_promo_button_positive">Пробвайте го</string>
-	<string name="new_editor_beta_action">Прочетете повече</string>
-	<string name="new_editor_promo_button_negative">Не сега</string>
-	<string name="new_editor_beta_message">Нов редактор в Open Beta!</string>
 	<string name="site_settings_optimize_videos">Оптимизиране на видео файловете</string>
 	<string name="draft_uploaded">Черновата е качена</string>
 	<string name="video_quality">Качество на видеото</string>
