@@ -59,3 +59,4 @@ google-services.json
 # Automatic Screenshots token file
 tools/tokendeeplink.sh
 tools/screenshots-config.sh
+tools/autoscreenshot/

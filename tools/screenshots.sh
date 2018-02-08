@@ -14,6 +14,7 @@ RUN_DEV=ALL
 LOG_FILE="/tmp/android-screenshot.log"
 WORKING_DIR=./autoscreenshot
 TAKE_DIR=$WORKING_DIR/orig
+PROD_DIR=$WORKING_DIR/final
 
 DEVICES=(PHONE TAB7 TAB10)
 LOCALES=(en-US el-GR it-IT)
@@ -91,10 +92,23 @@ TAB7_OFFSET="+145+552"
 TAB10_TEMPLATE=android-tab10-template2.png
 TAB10_OFFSET="+148+622"
 
+# Langs
+#LANG_FILE="exported-language-codes.csv"
+LANG_FILE="exported2.csv"
+LangGlotPress=("en-us" "ar" "az" "bg" "cs" "cy" "da" "de" "el" "en-au" "en-ca" "en-gb" "es" "es-cl" "es-co" "es-ve" "eu" "fi" \
+"fr" "gd" "gl" "hi" "he" "hr" "hu" "id" "is" "it" "ja" "ka" "ko" "lv" "lt" "mk" "ms" "nb" \
+"nl" "pl" "pt" "pt-br" "ro" "ru" "sk" "sl" "sq" "sr" "sv" "th" "tr" \
+"uk" "uz" "vi" "zh" "zh-cn" "zh-tw")
+LangGooglePlay=("en-US" "ar" "az-AZ" "bg" "cs-CZ" "cy" "da-DK" "de-DE" "el-GR" "en-AU" "en-CA" "en-GB" "es-ES" "es-rCL" "es-rVE" "es-rCO" "eu-ES" "fi-FI" \
+"fr-FR" "gd-GB" "gl-ES" "hi-IN" "iw-IL" "hr" "hu-HU" "id" "is-IS" "it-IT" "ja-JP" "ka-IN" "ko-KR" "lv" "lt" "mk-MK" "ms" "nb-NO" \
+"nl-NL" "pl-PL" "pt-PT" "pt-BR" "ro" "ru-RU" "sk" "sl" "sq" "sr" "sv-SE" "th" "tr-TR" \
+"uk" "uz" "vi" "zh-CN" "zh-CN" "zh-TW")
+
 # Color/formatting support
 OUTPUT_NORM="\033[0m"
 OUTPUT_RED="\033[31m"
 OUTPUT_GREEN="\033[32m"
+OUTPUT_YELLOW="\033[33m"
 OUTPUT_BOLD="\033[1m"
 
 ### Functions
@@ -140,6 +154,13 @@ function show_usage() {
 function show_error_message() {
     message=$1
     echo "$OUTPUT_RED$message$OUTPUT_NORM"
+    echo $message >> $LOG_FILE
+}
+
+
+function show_warning_message() {
+    message=$1
+    echo "$OUTPUT_YELLOW$message$OUTPUT_NORM"
     echo $message >> $LOG_FILE
 }
 
@@ -199,12 +220,14 @@ function require_dirs {
 }
 
 # Checks and setups the working dir for taking the screenshots
-function require_take_dirs() {
+function require_image_dirs() {
+  compDir=$1/$2/$3  
   require_dirs
-  if [ ! -d "$TAKE_DIR" ]; then
-    show_message Creating original screenshot directory...
-    mkdir "$TAKE_DIR" >> $LOG_FILE 2>&1 || stop_on_error
-    show_message Done
+
+  if [ ! -d "$compDir" ]; then
+    show_message "Creating screenshot directory..."
+    mkdir -p "$compDir" >> $LOG_FILE 2>&1 || stop_on_error
+    show_message "Done"
   fi 
 }
 
@@ -283,7 +306,7 @@ function execute_setup() {
     require_sdk
   fi
   require_emu
-  show_message "Done!"
+  show_ok_message "Done!"
 }
 
 # Loads and checks the token for the magic login
@@ -400,20 +423,22 @@ function wait() {
 function screenshot() {
   show_message "Taking screenshot with name $1..."
   adb $ADB_PARAMS shell screencap -p /sdcard/$1.png >> $LOG_FILE 2>&1 || stop_on_error
-  show_message  "Pulling the file..."
-  adb $ADB_PARAMS pull /sdcard/$1.png $TAKE_DIR/$1.png >> $LOG_FILE 2>&1 || stop_on_error
+  show_message  "Pulling the file to $TAKE_DIR/$2/$3/$1..."
+  adb $ADB_PARAMS pull /sdcard/$1.png $TAKE_DIR/$2/$3/$1.png >> $LOG_FILE 2>&1 || stop_on_error
   show_message "Done"
 }
 
 function produce() {
-  echo "Producing image for $1 $2 $3"
+  show_message "Producing image for $1 $2 $3"
   device=$1
   loc=${2/-/_} # replace the - with _
   screen=$3
   fn=wpandroid_$device\_$loc\_$screen
   
-  screenshot $fn
-  magick $fn.png -crop 0x$APP_HEIGHT+0+0 $fn\_cropped.png
+  screenshot $fn $1 $2
+  tn=$TAKE_DIR/$1/$2/$fn
+  fn=$PROD_DIR/$1/$2/$fn
+  magick $tn.png -crop 0x$APP_HEIGHT+0+0 $fn\_cropped.png
   template=$device\_TEMPLATE
   offset=$device\_OFFSET
   magick ${!template} $fn\_cropped.png -geometry ${!offset} -composite $fn\_comp1.png
@@ -422,26 +447,28 @@ function produce() {
   size=TEXT_SIZE_$loc
   magick $fn\_comp1.png -gravity north -pointsize ${!size} -font $FONT_FILE -draw "fill white text 0,$TEXT_OFFSET_Y \"${!text}\"" $fn\_final.png
 
-  rm $fn.png $fn\_cropped.png $fn\_comp1.png
-  echo Image ready: $fn\_final.png
+  rm $fn\_cropped.png $fn\_comp1.png
+  show_message "Image ready: $fn\_final.png"
 }
 
+# Sets the required locale
 function locale() {
-  echo -n Preparing to set locale...
-  adb $ADB_PARAMS root &>/dev/null
-  echo Done
-  echo -n Setting locale to $1...
-  adb $ADB_PARAMS shell "setprop ro.product.locale $1; setprop persist.sys.locale $1; stop; sleep 5; start" &>/dev/null
+  show_message "Preparing to set locale..."
+  adb $ADB_PARAMS root >> $LOG_FILE 2>&1 || stop_on_error
+  show_message "Done"
+  show_message "Setting locale to $1..."
+  adb $ADB_PARAMS shell "setprop ro.product.locale $1; setprop persist.sys.locale $1; stop; sleep 5; start" >> $LOG_FILE 2>&1 || stop_on_error
 	wait 10
 	wait_emu
 	wait 10
 }
 
+# Sets the "Geeky" time 
 function geekytime() {
-  echo Setting geeky time
-  adb $ADB_PARAMS root &>/dev/null
-  adb $ADB_PARAMS shell "date -u 0101$GEEKY_TIME\2017.00 ; am broadcast -a android.intent.action.TIME_SET" &>/dev/null
-  adb $ADB_PARAMS unroot &>/dev/null
+  show_message "Setting geeky time..."
+  adb $ADB_PARAMS root >> $LOG_FILE 2>&1 || stop_on_error
+  adb $ADB_PARAMS shell "date -u 0101$GEEKY_TIME\2017.00 ; am broadcast -a android.intent.action.TIME_SET" >> $LOG_FILE 2>&1 || stop_on_error
+  adb $ADB_PARAMS unroot >> $LOG_FILE 2>&1 || stop_on_error
 }
 
 # Checks the apk package exists
@@ -485,6 +512,19 @@ function check_params() {
   check_emulator
 }
 
+function glotPress_googlePlay() {
+  lang=$1
+  index=0
+  for data in "${LangGlotPress[@]}"; do
+    if [ $data == $lang ]; then
+      return $index
+    fi
+    index=$((index+1))
+  done
+
+  return 255
+}
+
 # Takes the screenshot for the provided device
 function screenshot_device() {
   device=$1
@@ -502,18 +542,31 @@ function screenshot_device() {
 
   kill_app # kill the app so when restarting we don't have any first-time launch effects like promo dialogs and such
 
-  for loc in ${LOCALES[*]}; do
-    locale $loc
+  for line in $(cat $LANG_FILE); do
+    cod=$(echo $line|cut -d "," -f1|tr -d " ")
+    glotPress_googlePlay $cod
+    locIdx=$?
 
-    start_app
+    if [ $locIdx -lt 255 ]; then
+      locLang=${LangGooglePlay[$locIdx]}
+      require_image_dirs $TAKE_DIR $device $locLang 
+      require_image_dirs $PROD_DIR $device $locLang
 
-    for screen in ${SCREENS[*]}; do
-      coords=$device\_COORDS_$screen
-      tap_on ${!coords}
+      locale $locLang
 
-      geekytime
-      produce $device $loc $screen
-    done
+      start_app
+
+      for screen in ${SCREENS[*]}; do
+        coords=$device\_COORDS_$screen
+        tap_on ${!coords}
+
+        geekytime
+        produce $device $locLang $screen
+      done
+
+    else
+      show_warning_message "Skipping language $cod/$loc as no Google Play pair was found."
+    fi
   done
 }
 
@@ -521,7 +574,6 @@ function screenshot_device() {
 function execute_take() {
   require_font
   require_imagemagick
-  require_take_dirs
   check_params
   show_title_message "Starting the screenshot taker process..."
   if [ $RUN_DEV == "ALL" ]; then
@@ -531,7 +583,7 @@ function execute_take() {
   else 
     screenshot_device $RUN_DEV
   fi
-  show_title_message "Done!"
+  show_ok_message "Done!"
 }
 
 ### Script main
