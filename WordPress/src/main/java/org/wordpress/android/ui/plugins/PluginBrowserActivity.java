@@ -1,5 +1,6 @@
 package org.wordpress.android.ui.plugins;
 
+import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.Context;
 import android.content.Intent;
@@ -33,15 +34,11 @@ import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
-import org.wordpress.android.fluxc.Dispatcher;
-import org.wordpress.android.fluxc.generated.PluginActionBuilder;
 import org.wordpress.android.fluxc.model.SiteModel;
-import org.wordpress.android.fluxc.model.plugin.PluginDirectoryType;
 import org.wordpress.android.fluxc.model.plugin.SitePluginModel;
 import org.wordpress.android.fluxc.model.plugin.WPOrgPluginModel;
 import org.wordpress.android.fluxc.store.PluginStore;
 import org.wordpress.android.fluxc.store.PluginStore.OnPluginDirectorySearched;
-import org.wordpress.android.fluxc.store.PluginStore.SearchPluginDirectoryPayload;
 import org.wordpress.android.ui.ActivityLauncher;
 import org.wordpress.android.ui.RequestCodes;
 import org.wordpress.android.util.ActivityUtils;
@@ -154,13 +151,31 @@ public class PluginBrowserActivity extends AppCompatActivity
         configureRecycler(mPopularPluginsRecycler);
         configureRecycler(mNewPluginsRecycler);
 
-        reloadAllPluginsFromStore();
+        setupObservers();
+        mViewModel.reloadAndFetchAllPlugins();
+    }
 
-        if (savedInstanceState == null) {
-            mViewModel.fetchPlugins(PluginListType.SITE, false);
-            mViewModel.fetchPlugins(PluginListType.POPULAR, false);
-            mViewModel.fetchPlugins(PluginListType.NEW, false);
-        }
+    private void setupObservers() {
+        mViewModel.getSitePlugins().observe(this, new Observer<List<SitePluginModel>>() {
+            @Override
+            public void onChanged(@Nullable final List<SitePluginModel> sitePlugins) {
+                refreshPluginAdapterAndVisibility(PluginListType.SITE, sitePlugins);
+            }
+        });
+
+        mViewModel.getNewPlugins().observe(this, new Observer<List<WPOrgPluginModel>>() {
+            @Override
+            public void onChanged(@Nullable final List<WPOrgPluginModel> newPlugins) {
+                refreshPluginAdapterAndVisibility(PluginListType.NEW, newPlugins);
+            }
+        });
+
+        mViewModel.getPopularPlugins().observe(this, new Observer<List<WPOrgPluginModel>>() {
+            @Override
+            public void onChanged(@Nullable final List<WPOrgPluginModel> popularPlugins) {
+                refreshPluginAdapterAndVisibility(PluginListType.POPULAR, popularPlugins);
+            }
+        });
     }
 
     private void configureRecycler(@NonNull RecyclerView recycler) {
@@ -217,12 +232,12 @@ public class PluginBrowserActivity extends AppCompatActivity
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == RequestCodes.PLUGIN_DETAIL) {
-            reloadAllPluginsFromStore();
+            mViewModel.reloadAllPluginsFromStore();
             reloadListFragment();
         }
     }
 
-    private void refreshPluginAdapterAndVisibility(@NonNull PluginListType pluginType) {
+    private void refreshPluginAdapterAndVisibility(@NonNull PluginListType pluginType, List<?> plugins) {
         PluginBrowserAdapter adapter;
         View cardView;
         switch (pluginType) {
@@ -241,11 +256,7 @@ public class PluginBrowserActivity extends AppCompatActivity
                 cardView = findViewById(R.id.installed_plugins_cardview);
                 break;
         }
-
-        List<?> plugins = mViewModel.getPluginsForListType(pluginType);
         adapter.setPlugins(plugins);
-
-        // TODO: handle the visibility with a subscription
 
         int newVisibility = plugins.size() > 0 ? View.VISIBLE : View.GONE;
         int oldVisibility = cardView.getVisibility();
@@ -289,19 +300,20 @@ public class PluginBrowserActivity extends AppCompatActivity
     @SuppressWarnings("unused")
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onPluginDirectoryFetched(PluginStore.OnPluginDirectoryFetched event) {
-        if (isFinishing()) {
-            return;
-        }
+//        if (isFinishing()) {
+//            return;
+//        }
+//
+//        if (event.isError()) {
+//            AppLog.e(AppLog.T.PLUGINS, "An error occurred while fetching the plugin directory: " + event.type);
+//            return;
+//        }
 
-        if (event.isError()) {
-            AppLog.e(AppLog.T.PLUGINS, "An error occurred while fetching the plugin directory: " + event.type);
-            return;
-        }
-
-        PluginListFragment fragment = getListFragment();
-        if (fragment != null && fragment.getListType() == listType) {
-            fragment.onLoadedMore();
-        }
+        // todo: observe in fragment and remove this
+//        PluginListFragment fragment = getListFragment();
+//        if (fragment != null && fragment.getListType() == listType) {
+//            fragment.onLoadedMore();
+//        }
     }
 
     @SuppressWarnings("unused")
@@ -325,33 +337,10 @@ public class PluginBrowserActivity extends AppCompatActivity
             return;
         }
 
-        fragment.showEmptyView(mViewModel.getSearchResults().isEmpty()
+        // todo: observe in fragment and remove this
+        fragment.showEmptyView(mViewModel.getSearchResults().getValue().isEmpty()
                 && !TextUtils.isEmpty(mViewModel.getSearchQuery()));
         reloadListFragment();
-    }
-
-    private void reloadAllPluginsFromStore() {
-//        reloadSitePluginsFromStoreAndRefreshRelatedViews();
-        reloadPluginsFromStoreAndRefreshRelatedViews(PluginListType.NEW);
-        reloadPluginsFromStoreAndRefreshRelatedViews(PluginListType.POPULAR);
-    }
-
-    private void reloadPluginsFromStoreAndRefreshRelatedViews(PluginListType listType) {
-        switch (listType) {
-            case NEW:
-                refreshPluginAdapterAndVisibility(PluginListType.NEW);
-                break;
-            case POPULAR:
-                refreshPluginAdapterAndVisibility(PluginListType.POPULAR);
-                break;
-            case SITE:
-                // todo remove this
-                // handled differently
-                break;
-            case SEARCH:
-                // search results are not kept in store, so this shouldn't be called
-                break;
-        }
     }
 
     private void reloadPluginWithSlug(@NonNull String slug) {
@@ -435,8 +424,10 @@ public class PluginBrowserActivity extends AppCompatActivity
 
     @Override
     public List<?> onListFragmentRequestPlugins(@NonNull PluginListType listType) {
-        setTitle(listType.getTitleRes());
-        return mViewModel.getPluginsForListType(listType);
+        // todo: observe in fragment and remove this
+        return null;
+//        setTitle(listType.getTitleRes());
+//        return mViewModel.getPluginsForListType(listType);
     }
 
     @Override

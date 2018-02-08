@@ -56,6 +56,14 @@ public class PluginBrowserViewModel extends AndroidViewModel {
         mDispatcher.unregister(this);
     }
 
+    void reloadAndFetchAllPlugins() {
+        reloadAllPluginsFromStore();
+
+        fetchPlugins(PluginBrowserActivity.PluginListType.SITE, false);
+        fetchPlugins(PluginBrowserActivity.PluginListType.POPULAR, false);
+        fetchPlugins(PluginBrowserActivity.PluginListType.NEW, false);
+    }
+
     String getSearchQuery() {
         return mSearchQuery;
     }
@@ -70,21 +78,6 @@ public class PluginBrowserViewModel extends AndroidViewModel {
 
     void setSite(SiteModel site) {
         mSite = site;
-    }
-
-    boolean canLoadMorePlugins(PluginBrowserActivity.PluginListType listType) {
-        if (listType == PluginBrowserActivity.PluginListType.NEW) {
-            return mCanLoadMoreNewPlugins;
-        } else if (listType == PluginBrowserActivity.PluginListType.POPULAR) {
-            return mCanLoadMorePopularPlugins;
-        }
-        // site plugins are retrieved all at once so "load more" isn't necessary, search returns
-        // the first 50 best matches which we've decided is enough
-        return false;
-    }
-
-    boolean isLoadingMorePlugins(PluginBrowserActivity.PluginListType listType) {
-        return mLoadingMorePlugins.get(listType);
     }
 
     // Site & WPOrg plugin management
@@ -138,6 +131,12 @@ public class PluginBrowserViewModel extends AndroidViewModel {
         return mSearchResults;
     }
 
+    void reloadAllPluginsFromStore() {
+        reloadSitePlugins();
+        reloadPopularPlugins();
+        reloadNewPlugins();
+    }
+
     private void reloadSitePlugins() {
         List<SitePluginModel> sitePlugins = mPluginStore.getSitePlugins(getSite());
         // Preload the wporg plugins to avoid hitting the DB in onBindViewHolder
@@ -163,10 +162,25 @@ public class PluginBrowserViewModel extends AndroidViewModel {
         getSearchResults().setValue(new ArrayList<WPOrgPluginModel>());
     }
 
-    void setSearchResults(String searchQuery, List<WPOrgPluginModel> searchResults) {
+    private void setSearchResults(String searchQuery, List<WPOrgPluginModel> searchResults) {
         if (mSearchQuery.equalsIgnoreCase(searchQuery)) {
             getSearchResults().setValue(searchResults);
         }
+    }
+
+    private boolean canLoadMorePlugins(PluginBrowserActivity.PluginListType listType) {
+        if (listType == PluginBrowserActivity.PluginListType.NEW) {
+            return mCanLoadMoreNewPlugins;
+        } else if (listType == PluginBrowserActivity.PluginListType.POPULAR) {
+            return mCanLoadMorePopularPlugins;
+        }
+        // site plugins are retrieved all at once so "load more" isn't necessary, search returns
+        // the first 50 best matches which we've decided is enough
+        return false;
+    }
+
+    private boolean isLoadingMorePlugins(PluginBrowserActivity.PluginListType listType) {
+        return mLoadingMorePlugins.get(listType);
     }
 
     // Network
