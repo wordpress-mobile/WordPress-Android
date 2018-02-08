@@ -298,20 +298,6 @@ public class PluginBrowserActivity extends AppCompatActivity
             return;
         }
 
-        switch (event.type) {
-            case POPULAR:
-                mViewModel.setPopularPlugins(mPluginStore.getPluginDirectory(PluginDirectoryType.POPULAR));
-                break;
-            case NEW:
-                mViewModel.setNewPlugins(mPluginStore.getPluginDirectory(PluginDirectoryType.NEW));
-                break;
-        }
-
-        PluginListType listType = event.type == PluginDirectoryType.POPULAR ?
-                PluginListType.POPULAR : PluginListType.NEW;
-        reloadPluginsFromStoreAndRefreshRelatedViews(listType);
-        mViewModel.setCanLoadMorePlugins(listType, event.canLoadMore);
-        mViewModel.setLoadingMorePlugins(listType, false);
         PluginListFragment fragment = getListFragment();
         if (fragment != null && fragment.getListType() == listType) {
             fragment.onLoadedMore();
@@ -330,8 +316,6 @@ public class PluginBrowserActivity extends AppCompatActivity
             ToastUtils.showToast(this, R.string.plugin_search_error);
             return;
         }
-
-        mViewModel.setSearchResults(event.searchTerm, event.plugins);
 
         // make sure the search list fragment is still active and that this is the same as the most
         // recent search (could be a stale response)
@@ -355,11 +339,9 @@ public class PluginBrowserActivity extends AppCompatActivity
     private void reloadPluginsFromStoreAndRefreshRelatedViews(PluginListType listType) {
         switch (listType) {
             case NEW:
-                mViewModel.setNewPlugins(mPluginStore.getPluginDirectory(PluginDirectoryType.NEW));
                 refreshPluginAdapterAndVisibility(PluginListType.NEW);
                 break;
             case POPULAR:
-                mViewModel.setPopularPlugins(mPluginStore.getPluginDirectory(PluginDirectoryType.POPULAR));
                 refreshPluginAdapterAndVisibility(PluginListType.POPULAR);
                 break;
             case SITE:

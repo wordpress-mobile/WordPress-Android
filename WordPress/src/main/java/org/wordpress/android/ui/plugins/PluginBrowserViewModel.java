@@ -38,10 +38,10 @@ public class PluginBrowserViewModel extends AndroidViewModel {
 
     private final HashMap<String, SitePluginModel> mSitePluginsMap = new HashMap<>();
     private final HashMap<String, WPOrgPluginModel> mWPOrgPluginsForSitePluginsMap = new HashMap<>();
-    private List<WPOrgPluginModel> mNewPlugins;
-    private List<WPOrgPluginModel> mPopularPlugins;
+    private MutableLiveData<List<WPOrgPluginModel>> mNewPlugins;
+    private MutableLiveData<List<WPOrgPluginModel>> mPopularPlugins;
     private MutableLiveData<List<SitePluginModel>> mSitePlugins;
-    private final List<WPOrgPluginModel> mSearchResults = new ArrayList<>();
+    private MutableLiveData<List<WPOrgPluginModel>> mSearchResults;
 
     public PluginBrowserViewModel(@NonNull Application application) {
         super(application);
@@ -83,20 +83,8 @@ public class PluginBrowserViewModel extends AndroidViewModel {
         return false;
     }
 
-    void setCanLoadMorePlugins(PluginBrowserActivity.PluginListType listType, boolean canLoadMore) {
-        if (listType == PluginBrowserActivity.PluginListType.NEW) {
-            mCanLoadMoreNewPlugins = canLoadMore;
-        } else if (listType == PluginBrowserActivity.PluginListType.POPULAR) {
-            mCanLoadMorePopularPlugins = canLoadMore;
-        }
-    }
-
     boolean isLoadingMorePlugins(PluginBrowserActivity.PluginListType listType) {
         return mLoadingMorePlugins.get(listType);
-    }
-
-    void setLoadingMorePlugins(PluginBrowserActivity.PluginListType listType, boolean isLoadingMore) {
-        mLoadingMorePlugins.put(listType, isLoadingMore);
     }
 
     // Site & WPOrg plugin management
@@ -129,6 +117,27 @@ public class PluginBrowserViewModel extends AndroidViewModel {
         return mSitePlugins;
     }
 
+    MutableLiveData<List<WPOrgPluginModel>> getNewPlugins() {
+        if (mNewPlugins == null) {
+            mNewPlugins = new MutableLiveData<>();
+        }
+        return mNewPlugins;
+    }
+
+    MutableLiveData<List<WPOrgPluginModel>> getPopularPlugins() {
+        if (mPopularPlugins == null) {
+            mPopularPlugins = new MutableLiveData<>();
+        }
+        return mPopularPlugins;
+    }
+
+    MutableLiveData<List<WPOrgPluginModel>> getSearchResults() {
+        if (mSearchResults == null) {
+            mSearchResults = new MutableLiveData<>();
+        }
+        return mSearchResults;
+    }
+
     private void reloadSitePlugins() {
         List<SitePluginModel> sitePlugins = mPluginStore.getSitePlugins(getSite());
         // Preload the wporg plugins to avoid hitting the DB in onBindViewHolder
@@ -142,41 +151,21 @@ public class PluginBrowserViewModel extends AndroidViewModel {
         getSitePlugins().setValue(sitePlugins);
     }
 
-    void setNewPlugins(List<WPOrgPluginModel> newPlugins) {
-        mNewPlugins = newPlugins;
+    private void reloadNewPlugins() {
+        getNewPlugins().setValue(mPluginStore.getPluginDirectory(PluginDirectoryType.NEW));
     }
 
-    void setPopularPlugins(List<WPOrgPluginModel> popularPlugins) {
-        mPopularPlugins = popularPlugins;
+    private void reloadPopularPlugins() {
+        getPopularPlugins().setValue(mPluginStore.getPluginDirectory(PluginDirectoryType.POPULAR));
     }
 
     void clearSearchResults() {
-        mSearchResults.clear();
-    }
-
-    List<WPOrgPluginModel> getSearchResults() {
-        return mSearchResults;
+        getSearchResults().setValue(new ArrayList<WPOrgPluginModel>());
     }
 
     void setSearchResults(String searchQuery, List<WPOrgPluginModel> searchResults) {
         if (mSearchQuery.equalsIgnoreCase(searchQuery)) {
-            mSearchResults.clear();
-            mSearchResults.addAll(searchResults);
-        }
-    }
-
-    @NonNull List<?> getPluginsForListType(PluginBrowserActivity.PluginListType listType) {
-        switch (listType) {
-            case NEW:
-                return mNewPlugins;
-            case SEARCH:
-                return getSearchResults();
-            case SITE:
-                return mSitePlugins;
-            case POPULAR:
-                return mPopularPlugins;
-            default:
-                return null;
+            getSearchResults().setValue(searchResults);
         }
     }
 
@@ -187,7 +176,6 @@ public class PluginBrowserViewModel extends AndroidViewModel {
             // Either we can't load any more plugins or we are already loading more, so ignore
             return;
         }
-        setLoadingMorePlugins(pluginType, loadMore);
         switch (pluginType) {
             case SITE:
 //                if (mPluginStore.getSitePlugins(mViewModel.getSite()).size() == 0) {
@@ -196,11 +184,13 @@ public class PluginBrowserViewModel extends AndroidViewModel {
                 mDispatcher.dispatch(PluginActionBuilder.newFetchSitePluginsAction(getSite()));
                 break;
             case POPULAR:
+                mLoadingMorePlugins.put(PluginBrowserActivity.PluginListType.POPULAR, loadMore);
                 PluginStore.FetchPluginDirectoryPayload popularPayload =
                         new PluginStore.FetchPluginDirectoryPayload(PluginDirectoryType.POPULAR, loadMore);
                 mDispatcher.dispatch(PluginActionBuilder.newFetchPluginDirectoryAction(popularPayload));
                 break;
             case NEW:
+                mLoadingMorePlugins.put(PluginBrowserActivity.PluginListType.NEW, loadMore);
                 PluginStore.FetchPluginDirectoryPayload newPayload =
                         new PluginStore.FetchPluginDirectoryPayload(PluginDirectoryType.NEW, loadMore);
                 mDispatcher.dispatch(PluginActionBuilder.newFetchPluginDirectoryAction(newPayload));
@@ -238,10 +228,31 @@ public class PluginBrowserViewModel extends AndroidViewModel {
     @SuppressWarnings("unused")
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onPluginDirectoryFetched(PluginStore.OnPluginDirectoryFetched event) {
+        if (event.isError()) {
+            // todo: handle error
+            return;
+        }
+        switch (event.type) {
+            case NEW:
+                mCanLoadMoreNewPlugins = event.canLoadMore;
+                mLoadingMorePlugins.put(PluginBrowserActivity.PluginListType.NEW, false);
+                reloadNewPlugins();
+                break;
+            case POPULAR:
+                mCanLoadMorePopularPlugins = event.canLoadMore;
+                mLoadingMorePlugins.put(PluginBrowserActivity.PluginListType.POPULAR, false);
+                reloadPopularPlugins();
+                break;
+        }
     }
 
     @SuppressWarnings("unused")
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onPluginDirectorySearched(PluginStore.OnPluginDirectorySearched event) {
+        if (event.isError()) {
+            // todo: handle error
+            return;
+        }
+        setSearchResults(event.searchTerm, event.plugins);
     }
 }
