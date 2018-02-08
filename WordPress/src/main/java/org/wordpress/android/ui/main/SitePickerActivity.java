@@ -21,6 +21,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.ArrayAdapter;
 import android.widget.SearchView;
 
 import com.android.volley.VolleyError;
@@ -634,15 +635,18 @@ public class SitePickerActivity extends AppCompatActivity
                             getString(R.string.site_picker_add_self_hosted)};
             AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
             builder.setTitle(R.string.site_picker_add_site);
-            builder.setItems(items, new DialogInterface.OnClickListener() {
-                @Override
-                public void onClick(DialogInterface dialog, int which) {
-                    if (which == 0) {
-                        ActivityLauncher.newBlogForResult(getActivity(), getArguments().getString(ARG_USERNAME));
-                    } else {
-                        ActivityLauncher.addSelfHostedSiteForResult(getActivity());
-                    }
-                }
+            builder.setAdapter(
+                    new ArrayAdapter<>(getActivity(), R.layout.add_new_site_dialog_item, R.id.text, items),
+                    new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            if (which == 0) {
+                                ActivityLauncher.newBlogForResult(getActivity(),
+                                        getArguments().getString(ARG_USERNAME));
+                            } else {
+                                ActivityLauncher.addSelfHostedSiteForResult(getActivity());
+                            }
+                        }
             });
             return builder.create();
         }
