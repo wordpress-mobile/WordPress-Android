@@ -381,6 +381,7 @@ public class PluginBrowserActivity extends AppCompatActivity
                     .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE)
                     .commit();
         }
+        setTitle(listType.getTitleRes());
         return listFragment;
     }
 
