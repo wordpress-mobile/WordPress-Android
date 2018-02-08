@@ -14,6 +14,9 @@ class PluginBrowserViewModel extends ViewModel {
     private String mSearchQuery;
     private SiteModel mSite;
 
+    private boolean mCanLoadMoreNewPlugins = true;
+    private boolean mCanLoadMorePopularPlugins = true;
+
     private final HashMap<String, SitePluginModel> mSitePluginsMap = new HashMap<>();
     private List<WPOrgPluginModel> mNewPlugins;
     private List<WPOrgPluginModel> mPopularPlugins;
@@ -34,6 +37,25 @@ class PluginBrowserViewModel extends ViewModel {
 
     void setSite(SiteModel site) {
         mSite = site;
+    }
+
+    boolean canLoadMorePlugins(PluginBrowserActivity.PluginListType listType) {
+        if (listType == PluginBrowserActivity.PluginListType.NEW) {
+            return mCanLoadMoreNewPlugins;
+        } else if (listType == PluginBrowserActivity.PluginListType.POPULAR) {
+            return mCanLoadMorePopularPlugins;
+        }
+        // site plugins are retrieved all at once so "load more" isn't necessary, search returns
+        // the first 50 best matches which we've decided is enough
+        return false;
+    }
+
+    void setCanLoadMorePlugins(PluginBrowserActivity.PluginListType listType, boolean canLoadMore) {
+        if (listType == PluginBrowserActivity.PluginListType.NEW) {
+            mCanLoadMoreNewPlugins = canLoadMore;
+        } else if (listType == PluginBrowserActivity.PluginListType.POPULAR) {
+            mCanLoadMorePopularPlugins = canLoadMore;
+        }
     }
 
     SitePluginModel getSitePluginFromSlug(String slug) {

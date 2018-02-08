@@ -350,10 +350,10 @@ public class PluginBrowserActivity extends AppCompatActivity
 
         PluginListType listType = event.type == PluginDirectoryType.POPULAR ?
                 PluginListType.POPULAR : PluginListType.NEW;
+        mViewModel.setCanLoadMorePlugins(listType, event.canLoadMore);
         PluginListFragment fragment = getListFragment();
         if (fragment != null && fragment.getListType() == listType) {
-            // TODO: save this to the view model instead
-            fragment.onLoadedMore(event.canLoadMore);
+            fragment.onLoadedMore();
         }
     }
 

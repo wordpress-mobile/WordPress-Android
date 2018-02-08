@@ -39,7 +39,6 @@ import javax.inject.Inject;
 public class PluginListFragment extends Fragment {
     public static final String TAG = PluginListFragment.class.getName();
     private static final String ARG_LIST_TYPE = "list_type";
-    private static final String KEY_CAN_LOAD_MORE = "can_load_more";
     private static final String KEY_IS_LOADING_MORE = "is_loading_more";
 
     private PluginBrowserViewModel mViewModel;
@@ -52,7 +51,7 @@ public class PluginListFragment extends Fragment {
     private RecyclerView mRecycler;
     private PluginListType mListType;
 
-    private boolean mCanLoadMore = true;
+    // todo move these to view model
     private boolean mIsLoadingMore;
 
     private final HashMap<String, SitePluginModel> mSitePluginsMap = new HashMap<>();
@@ -86,7 +85,6 @@ public class PluginListFragment extends Fragment {
         }
 
         if (savedInstanceState != null) {
-            mCanLoadMore = savedInstanceState.getBoolean(KEY_CAN_LOAD_MORE);
             mIsLoadingMore = savedInstanceState.getBoolean(KEY_IS_LOADING_MORE);
         }
     }
@@ -94,7 +92,6 @@ public class PluginListFragment extends Fragment {
     @Override
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
-        outState.putBoolean(KEY_CAN_LOAD_MORE, mCanLoadMore);
         outState.putBoolean(KEY_IS_LOADING_MORE, mIsLoadingMore);
     }
 
@@ -125,10 +122,6 @@ public class PluginListFragment extends Fragment {
     }
 
     void setListType(@NonNull PluginListType listType) {
-        // site plugins are retrieved all at once so "load more" isn't necessary, search returns
-        // the first 50 best matches which we've decided is enough
-        mCanLoadMore = !(listType == PluginListType.SITE || listType == PluginListType.SEARCH);
-
         mListType = listType;
         getArguments().putSerializable(ARG_LIST_TYPE, mListType);
         requestPlugins();
@@ -187,8 +180,7 @@ public class PluginListFragment extends Fragment {
         mListener.onListFragmentLoadMore(mListType);
     }
 
-    void onLoadedMore(boolean canLoadMore) {
-        mCanLoadMore = canLoadMore;
+    void onLoadedMore() {
         mIsLoadingMore = false;
         if (isAdded()) {
             showProgress(false);
@@ -288,7 +280,7 @@ public class PluginListFragment extends Fragment {
                 holder.ratingBar.setRating(PluginUtils.getAverageStarRating(wpOrgPlugin));
             }
 
-            if (mCanLoadMore
+            if (mViewModel.canLoadMorePlugins(mListType)
                     && !mIsLoadingMore
                     && position == getItemCount() - 1) {
                 loadMore();
