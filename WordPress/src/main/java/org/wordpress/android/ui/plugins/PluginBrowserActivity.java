@@ -156,7 +156,7 @@ public class PluginBrowserActivity extends AppCompatActivity
         configureRecycler(mPopularPluginsRecycler);
         configureRecycler(mNewPluginsRecycler);
 
-        mViewModel.setSitePlugins(mPluginStore.getSitePlugins(mViewModel.getSite()));
+        reloadSitePlugins();
         mViewModel.setNewPlugins(mPluginStore.getPluginDirectory(PluginDirectoryType.NEW));
         mViewModel.setPopularPlugins(mPluginStore.getPluginDirectory(PluginDirectoryType.POPULAR));
         reloadAllPlugins();
@@ -268,6 +268,7 @@ public class PluginBrowserActivity extends AppCompatActivity
         }
     }
 
+    // todo: get rid of this
     private void reloadPlugins(@NonNull PluginListType pluginType) {
         PluginBrowserAdapter adapter;
         View cardView;
@@ -314,7 +315,7 @@ public class PluginBrowserActivity extends AppCompatActivity
             ToastUtils.showToast(this, R.string.plugin_fetch_error);
             return;
         }
-        mViewModel.setSitePlugins(mPluginStore.getSitePlugins(mViewModel.getSite()));
+        reloadSitePlugins();
     }
 
     @SuppressWarnings("unused")
@@ -327,6 +328,7 @@ public class PluginBrowserActivity extends AppCompatActivity
             AppLog.e(AppLog.T.PLUGINS, "An error occurred while fetching the wporg plugin with type: " + event.error.type);
             return;
         }
+        mViewModel.cacheWPOrgPluginIfNecessary(mPluginStore.getWPOrgPluginBySlug(event.pluginSlug));
         if (!TextUtils.isEmpty(event.pluginSlug)) {
             reloadPluginWithSlug(event.pluginSlug);
         }
@@ -389,6 +391,15 @@ public class PluginBrowserActivity extends AppCompatActivity
         fragment.showEmptyView(mViewModel.getSearchResults().isEmpty()
                 && !TextUtils.isEmpty(mViewModel.getSearchQuery()));
         reloadListFragment();
+    }
+
+    private void reloadSitePlugins() {
+        List<SitePluginModel> sitePlugins = mPluginStore.getSitePlugins(mViewModel.getSite());
+        mViewModel.setSitePlugins(sitePlugins);
+        // Preload the wporg plugins to avoid hitting the DB in onBindViewHolder
+        for (SitePluginModel pluginModel : sitePlugins) {
+            mViewModel.cacheWPOrgPluginIfNecessary(mPluginStore.getWPOrgPluginBySlug(pluginModel.getSlug()));
+        }
     }
 
     private void reloadPluginWithSlug(@NonNull String slug) {

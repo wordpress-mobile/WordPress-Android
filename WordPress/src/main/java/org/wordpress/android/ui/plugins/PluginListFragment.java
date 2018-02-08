@@ -31,7 +31,6 @@ import org.wordpress.android.util.HtmlUtils;
 import org.wordpress.android.widgets.DividerItemDecoration;
 import org.wordpress.android.widgets.WPNetworkImageView;
 
-import java.util.HashMap;
 import java.util.List;
 
 import javax.inject.Inject;
@@ -49,9 +48,6 @@ public class PluginListFragment extends Fragment {
 
     private RecyclerView mRecycler;
     private PluginListType mListType;
-
-    private final HashMap<String, SitePluginModel> mSitePluginsMap = new HashMap<>();
-    private final HashMap<String, WPOrgPluginModel> mWPOrgPluginsMap = new HashMap<>();
 
     private PluginListFragmentListener mListener;
 
@@ -72,13 +68,7 @@ public class PluginListFragment extends Fragment {
         ((WordPress) getActivity().getApplication()).component().inject(this);
 
         mViewModel = ViewModelProviders.of(getActivity()).get(PluginBrowserViewModel.class);
-
         mListType = (PluginListType) getArguments().getSerializable(ARG_LIST_TYPE);
-
-        List<SitePluginModel> sitePlugins = mPluginStore.getSitePlugins(mViewModel.getSite());
-        for (SitePluginModel plugin: sitePlugins) {
-            mSitePluginsMap.put(plugin.getSlug(), plugin);
-        }
     }
 
     @Override
@@ -118,18 +108,6 @@ public class PluginListFragment extends Fragment {
     }
 
     private void setPlugins(@NonNull List<?> plugins) {
-        // preload .org plugins for site plugins
-        mWPOrgPluginsMap.clear();
-        for (Object item: plugins) {
-            if (item instanceof SitePluginModel) {
-                SitePluginModel sitePlugin = (SitePluginModel) item;
-                WPOrgPluginModel wpOrgPlugin = PluginUtils.getWPOrgPlugin(mPluginStore, sitePlugin);
-                if (wpOrgPlugin != null) {
-                    mWPOrgPluginsMap.put(wpOrgPlugin.getSlug(), wpOrgPlugin);
-                }
-            }
-        }
-
         PluginListAdapter adapter;
         if (mRecycler.getAdapter() == null) {
             adapter = new PluginListAdapter(getActivity());
@@ -138,14 +116,6 @@ public class PluginListFragment extends Fragment {
             adapter = (PluginListAdapter) mRecycler.getAdapter();
         }
         adapter.setPlugins(plugins);
-    }
-
-    private SitePluginModel getSitePluginFromSlug(@Nullable String slug) {
-        return mSitePluginsMap.get(slug);
-    }
-
-    private WPOrgPluginModel getWPOrgPluginFromSlug(@Nullable String slug) {
-        return mWPOrgPluginsMap.get(slug);
     }
 
     private void showProgress(boolean show) {
@@ -170,6 +140,16 @@ public class PluginListFragment extends Fragment {
             showProgress(false);
             requestPlugins();
         }
+    }
+
+    private WPOrgPluginModel getWPOrgPluginForSitePlugin(SitePluginModel sitePlugin) {
+        WPOrgPluginModel wpOrgPlugin = mViewModel.getCachedWPOrgPluginForSitePlugin(sitePlugin);
+        // In most cases, this check won't be necessary, but we should still do it as a fallback
+        if (wpOrgPlugin == null) {
+            wpOrgPlugin = mPluginStore.getWPOrgPluginBySlug(sitePlugin.getSlug());
+            mViewModel.cacheWPOrgPluginIfNecessary(wpOrgPlugin);
+        }
+        return wpOrgPlugin;
     }
 
     private class PluginListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
@@ -219,10 +199,10 @@ public class PluginListFragment extends Fragment {
             WPOrgPluginModel wpOrgPlugin;
             if (item instanceof SitePluginModel) {
                 sitePlugin = (SitePluginModel) item;
-                wpOrgPlugin = getWPOrgPluginFromSlug(sitePlugin.getSlug());
+                wpOrgPlugin = getWPOrgPluginForSitePlugin(sitePlugin);
             } else {
                 wpOrgPlugin = (WPOrgPluginModel) item;
-                sitePlugin = getSitePluginFromSlug(wpOrgPlugin.getSlug());
+                sitePlugin = mViewModel.getSitePluginFromSlug(wpOrgPlugin.getSlug());
             }
 
             String name = sitePlugin != null ? sitePlugin.getDisplayName() : wpOrgPlugin.getName();
@@ -298,11 +278,11 @@ public class PluginListFragment extends Fragment {
                             wpOrgPlugin = mPluginStore.getWPOrgPluginBySlug(sitePlugin.getSlug());
                         } else {
                             wpOrgPlugin = (WPOrgPluginModel) item;
-                            sitePlugin = getSitePluginFromSlug(wpOrgPlugin.getSlug());
+                            sitePlugin = mViewModel.getSitePluginFromSlug(wpOrgPlugin.getSlug());
                         }
                         if (sitePlugin != null) {
                             ActivityLauncher.viewPluginDetailForResult(getActivity(), mViewModel.getSite(), sitePlugin);
-                        } else if (wpOrgPlugin != null) {
+                        } else {
                             ActivityLauncher.viewPluginDetailForResult(getActivity(), mViewModel.getSite(), wpOrgPlugin);
                         }
                     }

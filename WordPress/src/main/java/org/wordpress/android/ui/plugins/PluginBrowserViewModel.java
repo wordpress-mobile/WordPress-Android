@@ -1,6 +1,8 @@
 package org.wordpress.android.ui.plugins;
 
 import android.arch.lifecycle.ViewModel;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 
 import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.model.plugin.SitePluginModel;
@@ -21,6 +23,7 @@ class PluginBrowserViewModel extends ViewModel {
     private Map<PluginBrowserActivity.PluginListType, Boolean> mLoadingMorePlugins = new HashMap<>();
 
     private final HashMap<String, SitePluginModel> mSitePluginsMap = new HashMap<>();
+    private final HashMap<String, WPOrgPluginModel> mWPOrgPluginsForSitePluginsMap = new HashMap<>();
     private List<WPOrgPluginModel> mNewPlugins;
     private List<WPOrgPluginModel> mPopularPlugins;
     private List<SitePluginModel> mSitePlugins;
@@ -69,8 +72,27 @@ class PluginBrowserViewModel extends ViewModel {
         mLoadingMorePlugins.put(listType, isLoadingMore);
     }
 
+    // Site & WPOrg plugin management
+
     SitePluginModel getSitePluginFromSlug(String slug) {
         return mSitePluginsMap.get(slug);
+    }
+
+    // This method is specifically taking SitePluginModel as parameter, so it's understood that not all plugins
+    // will be cached here
+    @Nullable WPOrgPluginModel getCachedWPOrgPluginForSitePlugin(@NonNull SitePluginModel sitePlugin) {
+        return mWPOrgPluginsForSitePluginsMap.get(sitePlugin.getSlug());
+    }
+
+    // In order to avoid hitting the DB in bindViewHolder multiple times for site plugins, we attempt to cache them here
+    void cacheWPOrgPluginIfNecessary(WPOrgPluginModel wpOrgPlugin) {
+        if (wpOrgPlugin == null) {
+            return;
+        }
+        String slug = wpOrgPlugin.getSlug();
+        if (mSitePluginsMap.containsKey(slug)) {
+            mWPOrgPluginsForSitePluginsMap.put(slug, wpOrgPlugin);
+        }
     }
 
     void setSitePlugins(List<SitePluginModel> sitePlugins) {
@@ -104,7 +126,7 @@ class PluginBrowserViewModel extends ViewModel {
         }
     }
 
-    List<?> getPluginsForListType(PluginBrowserActivity.PluginListType listType) {
+    @NonNull List<?> getPluginsForListType(PluginBrowserActivity.PluginListType listType) {
         switch (listType) {
             case NEW:
                 return mNewPlugins;
