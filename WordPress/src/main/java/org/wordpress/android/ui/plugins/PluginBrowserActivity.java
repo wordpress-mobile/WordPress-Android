@@ -268,28 +268,23 @@ public class PluginBrowserActivity extends AppCompatActivity
     @SuppressWarnings("unused")
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onSitePluginsFetched(PluginStore.OnSitePluginsFetched event) {
-        if (isFinishing()) {
-            return;
-        }
-        showProgress(false);
+        if (isFinishing()) return;
+
         if (event.isError()) {
             AppLog.e(AppLog.T.PLUGINS, "An error occurred while fetching site plugins with type: " + event.error.type);
             ToastUtils.showToast(this, R.string.plugin_fetch_error);
-            return;
         }
     }
 
     @SuppressWarnings("unused")
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onWPOrgPluginFetched(PluginStore.OnWPOrgPluginFetched event) {
-        if (isFinishing()) {
-            return;
-        }
+        if (isFinishing()) return;
+
         if (event.isError()) {
             AppLog.e(AppLog.T.PLUGINS, "An error occurred while fetching the wporg plugin with type: " + event.error.type);
             return;
         }
-        mViewModel.cacheWPOrgPluginIfNecessary(mPluginStore.getWPOrgPluginBySlug(event.pluginSlug));
         if (!TextUtils.isEmpty(event.pluginSlug)) {
             reloadPluginWithSlug(event.pluginSlug);
         }
@@ -298,28 +293,17 @@ public class PluginBrowserActivity extends AppCompatActivity
     @SuppressWarnings("unused")
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onPluginDirectoryFetched(PluginStore.OnPluginDirectoryFetched event) {
-//        if (isFinishing()) {
-//            return;
-//        }
-//
-//        if (event.isError()) {
-//            AppLog.e(AppLog.T.PLUGINS, "An error occurred while fetching the plugin directory: " + event.type);
-//            return;
-//        }
+        if (isFinishing()) return;
 
-        // todo: observe in fragment and remove this
-//        PluginListFragment fragment = getListFragment();
-//        if (fragment != null && fragment.getListType() == listType) {
-//            fragment.onLoadedMore();
-//        }
+        if (event.isError()) {
+            AppLog.e(AppLog.T.PLUGINS, "An error occurred while fetching the plugin directory: " + event.type);
+        }
     }
 
     @SuppressWarnings("unused")
     @Subscribe(threadMode = ThreadMode.MAIN)
-    public void onPluginDirectorySearched(OnPluginDirectorySearched event) throws InterruptedException {
+    public void onPluginDirectorySearched(OnPluginDirectorySearched event) {
         if (isFinishing()) return;
-
-        showProgress(false);
 
         if (event.isError()) {
             AppLog.e(AppLog.T.PLUGINS, "An error occurred while searching the plugin directory");

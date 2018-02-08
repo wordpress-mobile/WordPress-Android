@@ -230,23 +230,23 @@ public class PluginBrowserViewModel extends AndroidViewModel {
     @SuppressWarnings("unused")
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onSitePluginsFetched(PluginStore.OnSitePluginsFetched event) {
-        if (event.isError()) {
-            // todo: handle the error
-            return;
+        if (!event.isError()) {
+            reloadSitePlugins();
         }
-        reloadSitePlugins();
     }
 
     @SuppressWarnings("unused")
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onWPOrgPluginFetched(PluginStore.OnWPOrgPluginFetched event) {
+        if (!event.isError()) {
+            cacheWPOrgPluginIfNecessary(mPluginStore.getWPOrgPluginBySlug(event.pluginSlug));
+        }
     }
 
     @SuppressWarnings("unused")
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onPluginDirectoryFetched(PluginStore.OnPluginDirectoryFetched event) {
         if (event.isError()) {
-            // todo: handle error
             return;
         }
         switch (event.type) {
@@ -266,11 +266,9 @@ public class PluginBrowserViewModel extends AndroidViewModel {
     @SuppressWarnings("unused")
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onPluginDirectorySearched(PluginStore.OnPluginDirectorySearched event) {
-        if (event.isError()) {
-            // todo: handle error
-            return;
+        if (!event.isError()) {
+            setSearchResults(event.searchTerm, event.plugins);
         }
-        setSearchResults(event.searchTerm, event.plugins);
     }
 
     // Search
