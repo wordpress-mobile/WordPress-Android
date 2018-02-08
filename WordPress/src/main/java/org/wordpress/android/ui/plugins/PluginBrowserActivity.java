@@ -156,10 +156,8 @@ public class PluginBrowserActivity extends AppCompatActivity
         configureRecycler(mPopularPluginsRecycler);
         configureRecycler(mNewPluginsRecycler);
 
-        reloadSitePlugins();
-        mViewModel.setNewPlugins(mPluginStore.getPluginDirectory(PluginDirectoryType.NEW));
-        mViewModel.setPopularPlugins(mPluginStore.getPluginDirectory(PluginDirectoryType.POPULAR));
-        reloadAllPlugins();
+        reloadAllPluginsFromStore();
+        refreshPluginAdapterAndVisibilityForAllTypes();
 
         if (savedInstanceState == null) {
             fetchPlugins(PluginListType.SITE, false);
@@ -223,7 +221,8 @@ public class PluginBrowserActivity extends AppCompatActivity
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == RequestCodes.PLUGIN_DETAIL) {
-            reloadAllPlugins();
+            reloadAllPluginsFromStore();
+            refreshPluginAdapterAndVisibilityForAllTypes();
             reloadListFragment();
         }
     }
@@ -262,14 +261,13 @@ public class PluginBrowserActivity extends AppCompatActivity
         }
     }
 
-    private void reloadAllPlugins() {
+    private void refreshPluginAdapterAndVisibilityForAllTypes() {
         for (PluginListType pluginType: PluginListType.values()) {
-            reloadPlugins(pluginType);
+            refreshPluginAdapterAndVisibility(pluginType);
         }
     }
 
-    // todo: get rid of this
-    private void reloadPlugins(@NonNull PluginListType pluginType) {
+    private void refreshPluginAdapterAndVisibility(@NonNull PluginListType pluginType) {
         PluginBrowserAdapter adapter;
         View cardView;
         switch (pluginType) {
@@ -315,7 +313,7 @@ public class PluginBrowserActivity extends AppCompatActivity
             ToastUtils.showToast(this, R.string.plugin_fetch_error);
             return;
         }
-        reloadSitePlugins();
+        reloadSitePluginsFromStore();
     }
 
     @SuppressWarnings("unused")
@@ -393,7 +391,13 @@ public class PluginBrowserActivity extends AppCompatActivity
         reloadListFragment();
     }
 
-    private void reloadSitePlugins() {
+    private void reloadAllPluginsFromStore() {
+        reloadSitePluginsFromStore();
+        mViewModel.setNewPlugins(mPluginStore.getPluginDirectory(PluginDirectoryType.NEW));
+        mViewModel.setPopularPlugins(mPluginStore.getPluginDirectory(PluginDirectoryType.POPULAR));
+    }
+
+    private void reloadSitePluginsFromStore() {
         List<SitePluginModel> sitePlugins = mPluginStore.getSitePlugins(mViewModel.getSite());
         mViewModel.setSitePlugins(sitePlugins);
         // Preload the wporg plugins to avoid hitting the DB in onBindViewHolder
