@@ -8,9 +8,8 @@ import android.media.ThumbnailUtils;
 import android.os.AsyncTask;
 import android.provider.MediaStore;
 import android.text.TextUtils;
+import android.util.DisplayMetrics;
 
-import org.wordpress.android.R;
-import org.wordpress.android.editor.AztecEditorFragment;
 import org.wordpress.android.util.ImageUtils;
 import org.wordpress.aztec.Html;
 
@@ -19,39 +18,44 @@ import java.io.File;
 public class AztecVideoLoader implements Html.VideoThumbnailGetter {
 
     private Context context;
+    private final Drawable loadingInProgress;
 
-    public AztecVideoLoader(Context context) {
+    public AztecVideoLoader(Context context, Drawable loadingInProgressDrawable) {
         this.context = context;
+        this.loadingInProgress = loadingInProgressDrawable;
     }
 
-    public void loadVideoThumbnail(final String url, final Html.VideoThumbnailGetter.Callbacks callbacks, final int maxWidth) {
-        // Ignore the maxWidth passed from Aztec, since it's the MAX of screen width/height
-        final int maxWidthForEditor = ImageUtils.getMaximumThumbnailWidthForEditor(context);
-        if (TextUtils.isEmpty(url) || maxWidthForEditor <= 0) {
+    public void loadVideoThumbnail(final String url, final Html.VideoThumbnailGetter.Callbacks callbacks,
+                                   final int maxWidth) {
+        loadVideoThumbnail(url, callbacks, maxWidth, 0);
+    }
+
+    public void loadVideoThumbnail(final String url, final Html.VideoThumbnailGetter.Callbacks callbacks,
+                                   final int maxWidth, final int minWidth) {
+        if (TextUtils.isEmpty(url) || maxWidth <= 0) {
             callbacks.onThumbnailFailed();
             return;
         }
 
-        Drawable drawable = context.getResources().getDrawable(R.drawable.ic_gridicons_video_camera);
-        drawable.setBounds(0, 0,
-                AztecEditorFragment.DEFAULT_MEDIA_PLACEHOLDER_DIMENSION_DP,
-                AztecEditorFragment.DEFAULT_MEDIA_PLACEHOLDER_DIMENSION_DP);
-        callbacks.onThumbnailLoading(drawable);
+        callbacks.onThumbnailLoading(loadingInProgress);
 
         new AsyncTask<Void, Void, Bitmap>() {
             protected Bitmap doInBackground(Void... params) {
                 // If local file
                 if (new File(url).exists()) {
-                    Bitmap thumb = ThumbnailUtils.createVideoThumbnail(url, MediaStore.Images.Thumbnails.FULL_SCREEN_KIND);
-                    return ImageUtils.getScaledBitmapAtLongestSide(thumb, maxWidthForEditor);
+                   return ThumbnailUtils.createVideoThumbnail(url, MediaStore.Images.Thumbnails.FULL_SCREEN_KIND);
                 }
 
-                return ImageUtils.getVideoFrameFromVideo(url, maxWidthForEditor);
+                return ImageUtils.getVideoFrameFromVideo(url, maxWidth);
             }
+
             protected void onPostExecute(Bitmap thumb) {
                 if (thumb == null) {
                     callbacks.onThumbnailFailed();
+                    return;
                 }
+                thumb = ImageUtils.getScaledBitmapAtLongestSide(thumb, maxWidth);
+                thumb.setDensity(DisplayMetrics.DENSITY_DEFAULT);
                 BitmapDrawable bitmapDrawable = new BitmapDrawable(context.getResources(), thumb);
                 callbacks.onThumbnailLoaded(bitmapDrawable);
             }

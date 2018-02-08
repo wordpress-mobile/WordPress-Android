@@ -8,18 +8,12 @@ Language: ar
 <resources>
 	<string name="error_unknown_post">تعذر العثور على المقالة على الخادم</string>
 	<string name="error_post_does_not_exist">لم تعد هذه المقالة موجودة</string>
-	<string name="error_media_recover_page">تعذر علينا رفع الوسائط الخاصة بهذه المقالة. يرجى تحرير المقالة للمحاولة مجددًا.</string>
 	<string name="error_media_canceled">تم إلغاء رفع الوسائط</string>
 	<string name="async_promo_title">النشر مع التمتع بالثقة</string>
 	<string name="editor_uploading_post">يجري رفع مقالتك</string>
-	<string name="uploading_post_media">جارٍ رفع الوسائط…</string>
 	<string name="dialog_confirm_cancel_post_media_uploading">هل أنت متأكد من ذلك؟ سيؤدي حذف هذه المقالة إلى إلغاء رفع الوسائط كذلك.</string>
 	<string name="page_scheduled">تمت جدولة الصفحة</string>
 	<string name="post_scheduled">تمت جدولة المقالة</string>
-	<string name="post_draft_param">تم حفظ "%s" كمسودة!</string>
-	<string name="post_scheduled_param">تمت جدولة "%s"!</string>
-	<string name="post_updated_param">تم تحديث "%s"!</string>
-	<string name="post_published_param">تم نشر "%s"!</string>
 	<string name="button_retry">إعادة المحاولة</string>
 	<string name="smart_toast_comments_long_press">اضغط مع الاستمرار لتحديد العديد من التعليقات</string>
 	<string name="smart_toast_photo_long_press">اضغط مع الاستمرار لتحديد العديد من الصور</string>
@@ -48,7 +42,6 @@ Language: ar
 	<string name="media_encoder_quality_85">متوسط</string>
 	<string name="media_encoder_quality_80">منخفض</string>
 	<string name="media_upload_state_uploaded">تم التحميل</string>
-	<string name="media_upload_state_failed">فشل</string>
 	<string name="media_upload_state_deleted">محذوف</string>
 	<string name="media_upload_state_deleting">جارٍ الحذف</string>
 	<string name="media_upload_state_uploading">جارٍ الرفع</string>
@@ -73,7 +66,6 @@ Language: ar
 	<string name="confirm">تأكيد</string>
 	<string name="xmlrpc_endpoint_forbidden_error">تعذر الاتصال. تلقينا الخطأ 403 عند محاولة الوصول إلى\n نقطة نهاية موقعك XMLRPC. يحتاج التطبيق إلى ذلك للاتصال بموقعك. يُرجى الاتصال بالمضيف لحل\n هذه المشكلة.</string>
 	<string name="reader_photo_by">صورة بواسطة %s</string>
-	<string name="all_your_sites">جميع مواقعي</string>
 	<string name="reader_toast_err_already_liked">لقد قمت بالفعل بتسجيل إعجاب لذلك التعليق</string>
 	<string name="reader_toast_err_comment_not_found">لم يتم العثور على تعليق!</string>
 	<string name="reader_toast_err_cannot_like_post">تعذر تسجيل إعجاب بهذه المقالة</string>
@@ -264,9 +256,6 @@ Language: ar
 	<string name="post_format_status">الحالة</string>
 	<string name="post_format_video">الفيديو</string>
 	<string name="alignment_center">وسط</string>
-	<string name="theme_free">مجانًا</string>
-	<string name="theme_all">الكل</string>
-	<string name="theme_premium">Premium</string>
 	<string name="post_format_chat">محادثة</string>
 	<string name="post_format_gallery">معرض</string>
 	<string name="post_format_link">الرابط</string>
@@ -368,16 +357,16 @@ Language: ar
 	<string name="site_settings_paging_dialog_description">تحديد مناقشات التعليقات في صفحات متعددة.</string>
 	<string name="site_settings_paging_dialog_header">التعليقات لكل صفحة</string>
 	<string name="site_settings_close_after_dialog_title">إغلاق التعليق</string>
-	<string name="site_settings_blacklist_description">عندما يحتوي تعليق على أي من هذه الكلمات في محتواه أو اسمه أو عنوان URL أو عنوان البريد الإلكتروني أو بروتوكول IP الخاص به، سيتم وضع علامة عليه باعتباره تعليقًا مزعجًا. يمكنك إدخال كلمات غير مكتملة، إذ ستطابق كلمة "برس" كلمة "وردبرس".</string>
-	<string name="site_settings_hold_for_moderation_description">عندما يحتوي تعليق على أي من هذه الكلمات في محتواه أو اسمه أو عنوان URL أو عنوان البريد الإلكتروني أو بروتوكول IP الخاص به، سيتم حجزه في قائمة انتظار الإدارة. يمكنك إدخال كلمات غير مكتملة، إذ ستطابق كلمة "برس" كلمة "وردبرس".</string>
+	<string name="site_settings_blacklist_description">عندما يحتوي تعليق على أي من هذه الكلمات في محتواه أو اسمه أو عنوان URL أو عنوان البريد الإلكتروني أو بروتوكول IP الخاص به، سيتم وضع علامة عليه باعتباره تعليقًا مزعجًا. يمكنك إدخال كلمات غير مكتملة، إذ ستطابق كلمة \"برس\" كلمة \"وردبرس\".</string>
+	<string name="site_settings_hold_for_moderation_description">عندما يحتوي تعليق على أي من هذه الكلمات في محتواه أو اسمه أو عنوان URL أو عنوان البريد الإلكتروني أو بروتوكول IP الخاص به، سيتم حجزه في قائمة انتظار الإدارة. يمكنك إدخال كلمات غير مكتملة، إذ ستطابق كلمة \"برس\" كلمة \"وردبرس\".</string>
 	<string name="site_settings_list_editor_input_hint">أدخل كلمة أو عبارة</string>
 	<string name="site_settings_list_editor_no_items_text">لا توجد عناصر</string>
 	<string name="site_settings_learn_more_caption">يمكنك تجاوز هذه الإعدادات للمقالات الفردية.</string>
-	<string name="site_settings_rp_preview3_site">في "الترقية"</string>
+	<string name="site_settings_rp_preview3_site">في \"الترقية\"</string>
 	<string name="site_settings_rp_preview3_title">نطاق الترقية: فيديوبرس لحفلات الزفاف</string>
-	<string name="site_settings_rp_preview2_site">في "التطبيقات"</string>
+	<string name="site_settings_rp_preview2_site">في \"التطبيقات\"</string>
 	<string name="site_settings_rp_preview2_title">تجري حاليًا صيانة تطبيق وردبرس للأندرويد</string>
-	<string name="site_settings_rp_preview1_site">في "الجوال"</string>
+	<string name="site_settings_rp_preview1_site">في \"الجوال\"</string>
 	<string name="site_settings_rp_preview1_title">تحديث iPhone/iPad كبير متوفر الآن</string>
 	<string name="site_settings_rp_show_images_title">عرض الصور</string>
 	<string name="site_settings_rp_show_header_title">عرض الترويسة</string>
@@ -455,9 +444,7 @@ Language: ar
 	<string name="invalid_username_no_spaces">لا يمكن أن يحتوي اسم المستخدم على مسافات</string>
 	<string name="reader_empty_followed_blogs_no_recent_posts_description">لم تنشر المواقع التي تتابعها أي شيء مؤخرًا</string>
 	<string name="reader_empty_followed_blogs_no_recent_posts_title">لا توجد مقالات حديثة</string>
-	<string name="media_details_copy_url_toast">تم نسخ عنوان URL إلى الحافظة</string>
 	<string name="edit_media">تحرير الوسائط</string>
-	<string name="media_details_copy_url">نسخ عنوان URL</string>
 	<string name="media_details_label_date_uploaded">تم التحميل</string>
 	<string name="media_details_label_date_added">تمت الإضافة</string>
 	<string name="selected_theme">تحديد قالب</string>
@@ -496,7 +483,7 @@ Language: ar
 	<string name="media_dimensions">أبعاد: %s</string>
 	<string name="media_file_type">نوع الملف: %s</string>
 	<string name="reader_label_gap_marker">تحميل المزيد من المقالات</string>
-	<string name="notifications_no_search_results">لا توجد مواقع مطابقة "%s"</string>
+	<string name="notifications_no_search_results">لا توجد مواقع مطابقة \"%s\"</string>
 	<string name="search_sites">بحث في المواقع</string>
 	<string name="notifications_empty_view_reader">عرض القارئ</string>
 	<string name="notifications_empty_action_followers_likes">ملاحظة: التعليق على المقالات التي قرأتها.</string>
@@ -538,8 +525,8 @@ Language: ar
 	<string name="local_changes_explainer">تشتمل هذه المقالة على تغييرات محلية لم تُنشَر بعد</string>
 	<string name="notifications_push_summary">إعدادات للتنبيهات التي تظهر على جهازك.</string>
 	<string name="notifications_email_summary">إعدادات للتنبيهات التي يتم إرسالها إلى البريد الإلكتروني المرتبط بحسابك.</string>
-	<string name="notifications_tab_summary">إعدادات للتنبيهات التي تظهر في علامة تبويب "التنبيهات".</string>
-	<string name="notifications_disabled">تم تعطيل تنبيهات التطبيق. انقر هنا لتمكينها في "الإعدادات".</string>
+	<string name="notifications_tab_summary">إعدادات للتنبيهات التي تظهر في علامة تبويب \"التنبيهات\".</string>
+	<string name="notifications_disabled">تم تعطيل تنبيهات التطبيق. انقر هنا لتمكينها في \"الإعدادات\".</string>
 	<string name="notification_types">أنواع التنبيهات</string>
 	<string name="error_loading_notifications">تعذر تحميل إعدادات التنبيهات</string>
 	<string name="replies_to_your_comments">الردود على تعليقاتك</string>
@@ -547,13 +534,7 @@ Language: ar
 	<string name="app_notifications">تنبيهات التطبيق</string>
 	<string name="notifications_tab">علامة تبويب التنبيهات</string>
 	<string name="email">البريد الإلكتروني</string>
-	<string name="notifications_comments_other_blogs">التعليقات على المواقع الأخرى</string>
 	<string name="notifications_wpcom_updates">تحديثات وردبرس.كوم</string>
-	<string name="notifications_other">أخرى</string>
-	<string name="notifications_account_emails">بريد إلكتروني من WordPress.com</string>
-	<string name="notifications_account_emails_summary">نحن نرسل دومًا رسائل بريد إلكتروني مهمة بخصوص حسابك، ومع ذلك يمكنك الحصول على بعض الإضافات المفيدة أيضًا.</string>
-	<string name="notifications_sights_and_sounds">المناظر والأصوات</string>
-	<string name="your_sites">مواقعك</string>
 	<string name="stats_insights_latest_post_trend">لم يتم نشر %2$s منذ %1$s. فيما يلي بيان لمستوى أداء المقالة حتى الآن…</string>
 	<string name="stats_insights_latest_post_summary">ملخص آخر مقالة</string>
 	<string name="button_revert">إلغاء</string>
@@ -592,7 +573,7 @@ Language: ar
 	<string name="stats_other_recent_stats_moved_label">هل تبحث عن إحصاءاتك الحديثة الأخرى؟ لقد نقلناها إلى صفحة الرؤى.</string>
 	<string name="me_btn_login_logout">تسجيل الدخول/تسجيل الخروج</string>
 	<string name="me_btn_support">المساعدة والدعم</string>
-	<string name="site_picker_cant_hide_current_site">"%s" لم يكن مخفيًا لأنه الموقع الحالي</string>
+	<string name="site_picker_cant_hide_current_site">\"%s\" لم يكن مخفيًا لأنه الموقع الحالي</string>
 	<string name="account_settings">إعدادات الحساب</string>
 	<string name="site_picker_create_dotcom">إنشاء موقع وردبرس.كوم</string>
 	<string name="site_picker_add_site">إضافة موقع</string>
@@ -715,8 +696,6 @@ Language: ar
 	<string name="delete_sure_post">حذف هذه المقالة</string>
 	<string name="delete_sure">حذف هذه المسودة</string>
 	<string name="delete_sure_page">حذف هذه الصفحة</string>
-	<string name="confirm_delete_media">هل تريد حذف العنصر المحدد؟</string>
-	<string name="confirm_delete_multi_media">هل تريد حذف العناصر المحددة؟</string>
 	<string name="cab_selected">تم تحديد %d</string>
 	<string name="reader_empty_posts_liked">لم تُعجب بأي مقالات</string>
 	<string name="faq_button">الأسئلة المتكررّة</string>
@@ -827,7 +806,7 @@ Language: ar
 	<string name="error_edit_comment">حدث خطأ أثناء تعديل التعليق </string>
 	<string name="username_only_lowercase_letters_and_numbers">اسم المستخدم يمكن أن يحتوي على أحرف صغيرة فقط ( a - z ) وأرقام</string>
 	<string name="username_must_be_at_least_four_characters">يجب ألا يقل اسم المستخدم عن 4 أحرف</string>
-	<string name="username_contains_invalid_characters">لا يمكن أن يحتوي اسم المستخدم على الحرف  "_"</string>
+	<string name="username_contains_invalid_characters">لا يمكن أن يحتوي اسم المستخدم على الحرف  \"_\"</string>
 	<string name="username_must_include_letters">يجب أن يحتوي اسم المستخدم على الأقل على 1 حرف (a إلى z)</string>
 	<string name="email_exists">عنوان البريد الإلكتروني قيد الاستخدام بالفعل</string>
 	<string name="username_reserved_but_may_be_available">اسم المستخدم محجوز حاليًا ولكن قد يكون متاحًا في بضعة أيام</string>
@@ -840,7 +819,7 @@ Language: ar
 	<string name="error_refresh_notifications">التنبيهات لايمكن تحديثها في الوقت الحاضر</string>
 	<string name="theme_fetch_failed">فشل في إحضار القوالب</string>
 	<string name="error_refresh_comments">لا يمكن تحديث التعليقات في الوقت الحاضر</string>
-	<string name="blog_name_contains_invalid_characters">عنوان الموقع ربما لا يحتوي على حرف "_"</string>
+	<string name="blog_name_contains_invalid_characters">عنوان الموقع ربما لا يحتوي على حرف \"_\"</string>
 	<string name="blog_name_cant_be_used">ربما لا تستخدم عنوان هذا الموقع</string>
 	<string name="blog_name_only_lowercase_letters_and_numbers">عنوان الموقع يمكنه أن يحتوي فقط على حروف صغيرة (a-z) وأرقام</string>
 	<string name="blog_name_reserved_but_may_be_available">هذا الموقع محجوز حاليًا وممكن أن يكون متوفرًا خلال بضعة أيام</string>
@@ -856,8 +835,6 @@ Language: ar
 	<string name="local_draft">مسودة محلية</string>
 	<string name="new_post">مقال جديد</string>
 	<string name="wordpress_blog">مدونة ووردبريس</string>
-	<string name="share_action_post">مقال جديد</string>
-	<string name="share_action_media">مكتبة الوسائط</string>
 	<string name="hint_comment_content">تعليق</string>
 	<string name="trash_yes">سلة المهملات</string>
 	<string name="privacy_policy">سياسة الخصوصية</string>
@@ -925,7 +902,6 @@ Language: ar
 	<string name="fatal_db_error">حدث خطأ اثناء إنشاء قاعدة بيانات التطبيق. حاول إعادة تنصيب التطبيق.</string>
 	<string name="http_credentials">تفويضات HTTP  (إختياري)</string>
 	<string name="horizontal_alignment">المحاذاة الأفقية</string>
-	<string name="file_not_found">لايمكن إيجاد ملف الوسائط للرفع. هل تم حذفه أو نقله؟</string>
 	<string name="trash">سلة المهملات</string>
 	<string name="comment_status_spam">مزعج</string>
 	<string name="mnu_comment_spam">مزعج</string>
@@ -968,7 +944,6 @@ Language: ar
 	<string name="nux_add_selfhosted_blog">أضف موقعك المستضاف ذاتيًا</string>
 	<string name="password_invalid">تحتاج لكلمة مرور أكثر أمنًا. تأكدمن استخدام 7 رموز أو أكثر، اخلط الأحرف الكبيرة أو الأحرف الصغيرة أو الأرقام أو الرموز الخاصة</string>
 	<string name="media_add_popup_title">اضف إلى مكتبة الوسائط</string>
-	<string name="select_from_media_library">اختر من مكتبة الوسائط</string>
 	<string name="empty_list_default">هذه القائمة فارغة.</string>
 	<string name="username_invalid">اسم المستخدم غير صحيح</string>
 	<string name="reader_likes_one">شخص واحد اعجب بهذا</string>
@@ -1077,7 +1052,6 @@ Language: ar
 	<string name="version">النسخة</string>
 	<string name="tos">بنود الخدمة</string>
 	<string name="app_title">ووردبريس للآندرويد</string>
-	<string name="max_thumbnail_px_width">عرض الصورة الافتراضي</string>
 	<string name="image_alignment">المحاذاة</string>
 	<string name="refresh">تجديد</string>
 	<string name="untitled">بدون عنوان</string>
@@ -1095,9 +1069,6 @@ Language: ar
 	<string name="title">العنوان</string>
 	<string name="categories">التصنيفات</string>
 	<string name="dlg_deleting_comments">جارٍ حذف التعليقات</string>
-	<string name="notification_blink">وميض ضوء التنبيهات</string>
-	<string name="notification_vibrate">الهزاز</string>
-	<string name="notification_sound">صوت التنبيهات</string>
 	<string name="sdcard_title">بطاقة الذاكرة مطلوبة</string>
 	<string name="media">الوسائط</string>
 	<string name="delete">حذف</string>

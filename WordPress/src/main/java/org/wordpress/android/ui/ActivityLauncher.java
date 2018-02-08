@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.content.pm.ResolveInfo;
 import android.net.Uri;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.ActivityOptionsCompat;
 import android.text.TextUtils;
@@ -14,23 +15,28 @@ import android.text.TextUtils;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.analytics.AnalyticsTracker;
+import org.wordpress.android.fluxc.model.SitePluginModel;
 import org.wordpress.android.fluxc.model.PostModel;
 import org.wordpress.android.fluxc.model.SiteModel;
+import org.wordpress.android.login.LoginMode;
 import org.wordpress.android.networking.SSLCertsViewActivity;
 import org.wordpress.android.ui.accounts.HelpActivity;
 import org.wordpress.android.ui.accounts.LoginActivity;
 import org.wordpress.android.ui.accounts.LoginEpilogueActivity;
-import org.wordpress.android.ui.accounts.LoginMode;
 import org.wordpress.android.ui.accounts.NewBlogActivity;
 import org.wordpress.android.ui.accounts.SignInActivity;
 import org.wordpress.android.ui.comments.CommentsActivity;
 import org.wordpress.android.ui.main.SitePickerActivity;
 import org.wordpress.android.ui.main.WPMainActivity;
 import org.wordpress.android.ui.media.MediaBrowserActivity;
-import org.wordpress.android.ui.media.MediaBrowserActivity.MediaBrowserType;
+import org.wordpress.android.ui.media.MediaBrowserType;
 import org.wordpress.android.ui.people.PeopleManagementActivity;
 import org.wordpress.android.ui.photopicker.PhotoPickerActivity;
+import org.wordpress.android.ui.photopicker.PhotoPickerFragment;
 import org.wordpress.android.ui.plans.PlansActivity;
+import org.wordpress.android.ui.plugins.PluginDetailActivity;
+import org.wordpress.android.ui.plugins.PluginListActivity;
+import org.wordpress.android.ui.plugins.PluginUtils;
 import org.wordpress.android.ui.posts.EditPostActivity;
 import org.wordpress.android.ui.posts.PostPreviewActivity;
 import org.wordpress.android.ui.posts.PostsListActivity;
@@ -39,7 +45,6 @@ import org.wordpress.android.ui.prefs.AppPrefs;
 import org.wordpress.android.ui.prefs.AppSettingsActivity;
 import org.wordpress.android.ui.prefs.BlogPreferencesActivity;
 import org.wordpress.android.ui.prefs.MyProfileActivity;
-import org.wordpress.android.ui.prefs.ReleaseNotesActivity;
 import org.wordpress.android.ui.prefs.notifications.NotificationsSettingsActivity;
 import org.wordpress.android.ui.publicize.PublicizeListActivity;
 import org.wordpress.android.ui.reader.ReaderPostPagerActivity;
@@ -80,8 +85,14 @@ public class ActivityLauncher {
         ActivityCompat.startActivityForResult(activity, intent, RequestCodes.SITE_PICKER, options.toBundle());
     }
 
-    public static void showPhotoPickerForResult(Activity activity) {
+    public static void showPhotoPickerForResult(Activity activity,
+                                                @NonNull MediaBrowserType browserType,
+                                                @Nullable SiteModel site) {
         Intent intent = new Intent(activity, PhotoPickerActivity.class);
+        intent.putExtra(PhotoPickerFragment.ARG_BROWSER_TYPE, browserType);
+        if (site != null) {
+            intent.putExtra(WordPress.SITE, site);
+        }
         activity.startActivityForResult(intent, RequestCodes.PHOTO_PICKER);
     }
 
@@ -132,6 +143,7 @@ public class ActivityLauncher {
             Intent intent = new Intent(context, ThemeBrowserActivity.class);
             intent.putExtra(WordPress.SITE, site);
             context.startActivity(intent);
+            AnalyticsUtils.trackWithSiteDetails(AnalyticsTracker.Stat.THEMES_ACCESSED_THEMES_BROWSER, site);
         }
     }
 
@@ -140,6 +152,24 @@ public class ActivityLauncher {
         intent.putExtra(WordPress.SITE, site);
         context.startActivity(intent);
         AnalyticsUtils.trackWithSiteDetails(AnalyticsTracker.Stat.OPENED_PEOPLE_MANAGEMENT, site);
+    }
+
+    public static void viewCurrentBlogPlugins(Context context, SiteModel site) {
+        if (PluginUtils.isPluginFeatureAvailable(site)) {
+            AnalyticsUtils.trackWithSiteDetails(AnalyticsTracker.Stat.OPENED_PLUGINS, site);
+            Intent intent = new Intent(context, PluginListActivity.class);
+            intent.putExtra(WordPress.SITE, site);
+            context.startActivity(intent);
+        }
+    }
+
+    public static void viewPluginDetail(Context context, SiteModel site, SitePluginModel plugin) {
+        if (PluginUtils.isPluginFeatureAvailable(site)) {
+            Intent intent = new Intent(context, PluginDetailActivity.class);
+            intent.putExtra(WordPress.SITE, site);
+            intent.putExtra(PluginDetailActivity.KEY_PLUGIN_NAME, plugin.getName());
+            context.startActivity(intent);
+        }
     }
 
     public static void viewBlogSettingsForResult(Activity activity, SiteModel site) {
@@ -271,7 +301,6 @@ public class ActivityLauncher {
 
     public static void newBlogForResult(Activity activity) {
         Intent intent = new Intent(activity, NewBlogActivity.class);
-        intent.putExtra(NewBlogActivity.KEY_START_MODE, NewBlogActivity.CREATE_BLOG);
         activity.startActivityForResult(intent, RequestCodes.CREATE_SITE);
     }
 
@@ -318,11 +347,19 @@ public class ActivityLauncher {
         context.startActivity(statsPostViewIntent);
     }
 
-    public static void viewMediaPickerForResult(Activity activity, @NonNull SiteModel site) {
+    public static void viewMediaPickerForResult(Activity activity,
+                                                @NonNull SiteModel site,
+                                                @NonNull MediaBrowserType browserType) {
         Intent intent = new Intent(activity, MediaBrowserActivity.class);
         intent.putExtra(WordPress.SITE, site);
-        intent.putExtra(MediaBrowserActivity.ARG_BROWSER_TYPE, MediaBrowserType.MULTI_SELECT_IMAGE_AND_VIDEO_PICKER);
-        activity.startActivityForResult(intent, RequestCodes.MULTI_SELECT_MEDIA_PICKER);
+        intent.putExtra(MediaBrowserActivity.ARG_BROWSER_TYPE, browserType);
+        int requestCode;
+        if (browserType.canMultiselect()) {
+            requestCode = RequestCodes.MULTI_SELECT_MEDIA_PICKER;
+        } else {
+            requestCode = RequestCodes.SINGLE_SELECT_MEDIA_PICKER;
+        }
+        activity.startActivityForResult(intent, requestCode);
     }
 
     public static void addSelfHostedSiteForResult(Activity activity) {
@@ -352,6 +389,19 @@ public class ActivityLauncher {
         activity.startActivityForResult(intent, RequestCodes.DO_LOGIN);
     }
 
+    public static void loginForShareIntent(Activity activity) {
+        if (AppPrefs.isLoginWizardStyleActivated()) {
+            Intent intent = new Intent(activity, LoginActivity.class);
+            LoginMode.SHARE_INTENT.putInto(intent);
+            activity.startActivityForResult(intent, RequestCodes.DO_LOGIN);
+        } else {
+            ToastUtils.showToast(activity, R.string.no_account,
+                    ToastUtils.Duration.LONG);
+            activity.startActivity(new Intent(activity, SignInActivity.class));
+            activity.finish();
+        }
+    }
+
     public static void loginWithoutMagicLink(Activity activity) {
         Intent intent;
 
@@ -365,14 +415,6 @@ public class ActivityLauncher {
         }
 
         activity.startActivityForResult(intent, RequestCodes.DO_LOGIN);
-    }
-
-    public static void showAztecEditorReleaseNotes(Activity activity) {
-        Intent intent = new Intent(activity, ReleaseNotesActivity.class);
-        intent.putExtra(ReleaseNotesActivity.KEY_TARGET_URL,
-                "https://make.wordpress.org/mobile/whats-new-in-beta-android-editor/");
-        intent.putExtra(ReleaseNotesActivity.KEY_HELPSHIFT_TAG, HelpshiftHelper.Tag.ORIGIN_FEEDBACK_AZTEC);
-        activity.startActivity(intent);
     }
 
     /*

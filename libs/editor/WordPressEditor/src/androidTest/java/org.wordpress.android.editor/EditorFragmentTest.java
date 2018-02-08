@@ -5,7 +5,7 @@ import android.test.ActivityInstrumentationTestCase2;
 import android.view.View;
 import android.widget.ToggleButton;
 
-import org.wordpress.android.editor.EditorFragment.IllegalEditorStateException;
+import org.wordpress.android.editor.EditorFragment.EditorFragmentNotAddedException;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -101,7 +101,7 @@ public class EditorFragmentTest extends ActivityInstrumentationTestCase2<MockEdi
         assertTrue(htmlButton.isEnabled());
     }
 
-    public void testHtmlModeToggleTextTransfer() throws InterruptedException, IllegalEditorStateException {
+    public void testHtmlModeToggleTextTransfer() throws InterruptedException, EditorFragmentNotAddedException {
         waitForOnDomLoaded();
 
         final View view = mFragment.getView();
@@ -114,8 +114,8 @@ public class EditorFragmentTest extends ActivityInstrumentationTestCase2<MockEdi
 
         String content = mFragment.getContent().toString();
 
-        final SourceViewEditText titleText = (SourceViewEditText) view.findViewById(R.id.sourceview_title);
-        final SourceViewEditText contentText = (SourceViewEditText) view.findViewById(R.id.sourceview_content);
+        final EditTextWithKeyBackListener titleText = (EditTextWithKeyBackListener) view.findViewById(R.id.sourceview_title);
+        final EditTextWithKeyBackListener contentText = (EditTextWithKeyBackListener) view.findViewById(R.id.sourceview_content);
 
         // -- Check that title and content text is properly loaded into the EditTexts when switching to HTML mode
 
@@ -153,7 +153,7 @@ public class EditorFragmentTest extends ActivityInstrumentationTestCase2<MockEdi
                 try {
                     assertEquals("new title", mFragment.getTitle());
                     assertEquals("new <b>content</b>", mFragment.getContent());
-                } catch (IllegalEditorStateException e) {
+                } catch (EditorFragmentNotAddedException e) {
                     throw new RuntimeException();
                 }
 

@@ -15,48 +15,55 @@ import java.util.Map;
  */
 
 public class SiteSettingsModel {
-    public static final int RELATED_POSTS_ENABLED_FLAG = 0x1;
-    public static final int RELATED_POST_HEADER_FLAG = 0x2;
-    public static final int RELATED_POST_IMAGE_FLAG = 0x4;
+    private static final int RELATED_POSTS_ENABLED_FLAG = 0x1;
+    private static final int RELATED_POST_HEADER_FLAG = 0x2;
+    private static final int RELATED_POST_IMAGE_FLAG = 0x4;
 
     // Settings table column names
     public static final String ID_COLUMN_NAME = "id";
-    public static final String ADDRESS_COLUMN_NAME = "address";
-    public static final String USERNAME_COLUMN_NAME = "username";
-    public static final String PASSWORD_COLUMN_NAME = "password";
-    public static final String TITLE_COLUMN_NAME = "title";
-    public static final String TAGLINE_COLUMN_NAME = "tagline";
-    public static final String LANGUAGE_COLUMN_NAME = "language";
-    public static final String PRIVACY_COLUMN_NAME = "privacy";
-    public static final String LOCATION_COLUMN_NAME = "location";
-    public static final String DEF_CATEGORY_COLUMN_NAME = "defaultCategory";
-    public static final String DEF_POST_FORMAT_COLUMN_NAME = "defaultPostFormat";
-    public static final String CATEGORIES_COLUMN_NAME = "categories";
-    public static final String POST_FORMATS_COLUMN_NAME = "postFormats";
-    public static final String CREDS_VERIFIED_COLUMN_NAME = "credsVerified";
-    public static final String RELATED_POSTS_COLUMN_NAME = "relatedPosts";
-    public static final String ALLOW_COMMENTS_COLUMN_NAME = "allowComments";
-    public static final String SEND_PINGBACKS_COLUMN_NAME = "sendPingbacks";
-    public static final String RECEIVE_PINGBACKS_COLUMN_NAME = "receivePingbacks";
-    public static final String SHOULD_CLOSE_AFTER_COLUMN_NAME = "shouldCloseAfter";
-    public static final String CLOSE_AFTER_COLUMN_NAME = "closeAfter";
-    public static final String SORT_BY_COLUMN_NAME = "sortBy";
-    public static final String SHOULD_THREAD_COLUMN_NAME = "shouldThread";
-    public static final String THREADING_COLUMN_NAME = "threading";
-    public static final String SHOULD_PAGE_COLUMN_NAME = "shouldPage";
-    public static final String PAGING_COLUMN_NAME = "paging";
-    public static final String MANUAL_APPROVAL_COLUMN_NAME = "manualApproval";
-    public static final String IDENTITY_REQUIRED_COLUMN_NAME = "identityRequired";
-    public static final String USER_ACCOUNT_REQUIRED_COLUMN_NAME = "userAccountRequired";
-    public static final String WHITELIST_COLUMN_NAME = "whitelist";
-    public static final String MODERATION_KEYS_COLUMN_NAME = "moderationKeys";
-    public static final String BLACKLIST_KEYS_COLUMN_NAME = "blacklistKeys";
-    public static final String SHARING_LABEL_COLUMN_NAME = "sharingLabel";
-    public static final String SHARING_BUTTON_STYLE_COLUMN_NAME = "sharingButtonStyle";
-    public static final String ALLOW_REBLOG_BUTTON_COLUMN_NAME = "allowReblogButton";
-    public static final String ALLOW_LIKE_BUTTON_COLUMN_NAME = "allowLikeButton";
-    public static final String ALLOW_COMMENT_LIKES_COLUMN_NAME = "allowCommentLikes";
-    public static final String TWITTER_USERNAME_COLUMN_NAME = "twitterUsername";
+    private static final String ADDRESS_COLUMN_NAME = "address";
+    private static final String USERNAME_COLUMN_NAME = "username";
+    private static final String PASSWORD_COLUMN_NAME = "password";
+    private static final String TITLE_COLUMN_NAME = "title";
+    private static final String TAGLINE_COLUMN_NAME = "tagline";
+    private static final String LANGUAGE_COLUMN_NAME = "language";
+    private static final String PRIVACY_COLUMN_NAME = "privacy";
+    private static final String LOCATION_COLUMN_NAME = "location";
+    private static final String DEF_CATEGORY_COLUMN_NAME = "defaultCategory";
+    private static final String DEF_POST_FORMAT_COLUMN_NAME = "defaultPostFormat";
+    private static final String CATEGORIES_COLUMN_NAME = "categories";
+    private static final String POST_FORMATS_COLUMN_NAME = "postFormats";
+    private static final String CREDS_VERIFIED_COLUMN_NAME = "credsVerified";
+    private static final String RELATED_POSTS_COLUMN_NAME = "relatedPosts";
+    private static final String ALLOW_COMMENTS_COLUMN_NAME = "allowComments";
+    private static final String SEND_PINGBACKS_COLUMN_NAME = "sendPingbacks";
+    private static final String RECEIVE_PINGBACKS_COLUMN_NAME = "receivePingbacks";
+    private static final String SHOULD_CLOSE_AFTER_COLUMN_NAME = "shouldCloseAfter";
+    private static final String CLOSE_AFTER_COLUMN_NAME = "closeAfter";
+    private static final String SORT_BY_COLUMN_NAME = "sortBy";
+    private static final String SHOULD_THREAD_COLUMN_NAME = "shouldThread";
+    private static final String THREADING_COLUMN_NAME = "threading";
+    private static final String SHOULD_PAGE_COLUMN_NAME = "shouldPage";
+    private static final String PAGING_COLUMN_NAME = "paging";
+    private static final String MANUAL_APPROVAL_COLUMN_NAME = "manualApproval";
+    private static final String IDENTITY_REQUIRED_COLUMN_NAME = "identityRequired";
+    private static final String USER_ACCOUNT_REQUIRED_COLUMN_NAME = "userAccountRequired";
+    private static final String WHITELIST_COLUMN_NAME = "whitelist";
+    private static final String MODERATION_KEYS_COLUMN_NAME = "moderationKeys";
+    private static final String BLACKLIST_KEYS_COLUMN_NAME = "blacklistKeys";
+    private static final String SHARING_LABEL_COLUMN_NAME = "sharingLabel";
+    private static final String SHARING_BUTTON_STYLE_COLUMN_NAME = "sharingButtonStyle";
+    private static final String ALLOW_REBLOG_BUTTON_COLUMN_NAME = "allowReblogButton";
+    private static final String ALLOW_LIKE_BUTTON_COLUMN_NAME = "allowLikeButton";
+    private static final String ALLOW_COMMENT_LIKES_COLUMN_NAME = "allowCommentLikes";
+    private static final String TWITTER_USERNAME_COLUMN_NAME = "twitterUsername";
+    private static final String START_OF_WEEK_COLUMN_NAME = "startOfWeek";
+    private static final String DATE_FORMAT_COLUMN_NAME = "dateFormat";
+    private static final String TIME_FORMAT_COLUMN_NAME = "timeFormat";
+    private static final String TIMEZONE_COLUMN_NAME = "siteTimezone";
+    private static final String POSTS_PER_PAGE_COLUMN_NAME = "postsPerPage";
+    private static final String AMP_SUPPORTED_COLUMN_NAME = "ampSupported";
+    private static final String AMP_ENABLED_COLUMN_NAME = "ampEnabled";
 
     public static final String SETTINGS_TABLE_NAME = "site_settings";
 
@@ -72,6 +79,20 @@ public class SiteSettingsModel {
             " add " + ALLOW_COMMENT_LIKES_COLUMN_NAME + " BOOLEAN;";
     public static final String ADD_TWITTER_USERNAME = "alter table " + SETTINGS_TABLE_NAME +
             " add " + TWITTER_USERNAME_COLUMN_NAME + " TEXT;";
+    public static final String ADD_START_OF_WEEK = "alter table " + SETTINGS_TABLE_NAME +
+            " add " + START_OF_WEEK_COLUMN_NAME + " TEXT;";
+    public static final String ADD_TIME_FORMAT = "alter table " + SETTINGS_TABLE_NAME +
+            " add " + TIME_FORMAT_COLUMN_NAME + " TEXT;";
+    public static final String ADD_DATE_FORMAT = "alter table " + SETTINGS_TABLE_NAME +
+            " add " + DATE_FORMAT_COLUMN_NAME + " TEXT;";
+    public static final String ADD_TIMEZONE = "alter table " + SETTINGS_TABLE_NAME +
+            " add " + TIMEZONE_COLUMN_NAME + " TEXT;";
+    public static final String ADD_POSTS_PER_PAGE = "alter table " + SETTINGS_TABLE_NAME +
+            " add " + POSTS_PER_PAGE_COLUMN_NAME + " INTEGER;";
+    public static final String ADD_AMP_ENABLED = "alter table " + SETTINGS_TABLE_NAME +
+            " add " + AMP_ENABLED_COLUMN_NAME + " BOOLEAN;";
+    public static final String ADD_AMP_SUPPORTED = "alter table " + SETTINGS_TABLE_NAME +
+            " add " + AMP_SUPPORTED_COLUMN_NAME + " BOOLEAN;";
 
     public static final String CREATE_SETTINGS_TABLE_SQL =
             "CREATE TABLE IF NOT EXISTS " +
@@ -152,6 +173,13 @@ public class SiteSettingsModel {
     public boolean allowLikeButton;
     public boolean allowCommentLikes;
     public String twitterUsername;
+    public String startOfWeek;
+    public String dateFormat;
+    public String timeFormat;
+    public String timezone;
+    public int postsPerPage;
+    public boolean ampSupported;
+    public boolean ampEnabled;
 
     @Override
     public boolean equals(Object other) {
@@ -165,6 +193,10 @@ public class SiteSettingsModel {
                 equals(title, otherModel.title) &&
                 equals(tagline, otherModel.tagline) &&
                 equals(defaultPostFormat, otherModel.defaultPostFormat) &&
+                equals(startOfWeek, otherModel.startOfWeek) &&
+                equals(dateFormat, otherModel.dateFormat) &&
+                equals(timeFormat, otherModel.timeFormat) &&
+                equals(timezone, otherModel.timezone) &&
                 languageId == otherModel.languageId &&
                 privacy == otherModel.privacy &&
                 location == otherModel.location &&
@@ -183,6 +215,9 @@ public class SiteSettingsModel {
                 commentsRequireIdentity == otherModel.commentsRequireIdentity &&
                 commentsRequireUserAccount == otherModel.commentsRequireUserAccount &&
                 commentAutoApprovalKnownUsers == otherModel.commentAutoApprovalKnownUsers &&
+                postsPerPage == otherModel.postsPerPage &&
+                ampEnabled == otherModel.ampEnabled &&
+                ampSupported == otherModel.ampSupported &&
                 maxLinks == otherModel.maxLinks &&
                 equals(defaultPostFormat, otherModel.defaultPostFormat) &&
                 holdForModeration != null
@@ -236,6 +271,13 @@ public class SiteSettingsModel {
         commentsRequireUserAccount = other.commentsRequireUserAccount;
         commentAutoApprovalKnownUsers = other.commentAutoApprovalKnownUsers;
         maxLinks = other.maxLinks;
+        startOfWeek = other.startOfWeek;
+        dateFormat = other.dateFormat;
+        timeFormat = other.timeFormat;
+        timezone = other.timezone;
+        postsPerPage = other.postsPerPage;
+        ampSupported = other.ampSupported;
+        ampEnabled = other.ampEnabled;
         if (other.holdForModeration != null) {
             holdForModeration = new ArrayList<>(other.holdForModeration);
         }
@@ -288,6 +330,13 @@ public class SiteSettingsModel {
         commentsRequireIdentity = getBooleanFromCursor(cursor, IDENTITY_REQUIRED_COLUMN_NAME);
         commentsRequireUserAccount = getBooleanFromCursor(cursor, USER_ACCOUNT_REQUIRED_COLUMN_NAME);
         commentAutoApprovalKnownUsers = getBooleanFromCursor(cursor, WHITELIST_COLUMN_NAME);
+        startOfWeek = getStringFromCursor(cursor, START_OF_WEEK_COLUMN_NAME);
+        dateFormat = getStringFromCursor(cursor, DATE_FORMAT_COLUMN_NAME);
+        timeFormat = getStringFromCursor(cursor, TIME_FORMAT_COLUMN_NAME);
+        timezone = getStringFromCursor(cursor, TIMEZONE_COLUMN_NAME);
+        postsPerPage = getIntFromCursor(cursor, POSTS_PER_PAGE_COLUMN_NAME);
+        ampSupported = getBooleanFromCursor(cursor, AMP_SUPPORTED_COLUMN_NAME);
+        ampEnabled = getBooleanFromCursor(cursor, AMP_ENABLED_COLUMN_NAME);
 
         String moderationKeys = getStringFromCursor(cursor, MODERATION_KEYS_COLUMN_NAME);
         String blacklistKeys = getStringFromCursor(cursor, BLACKLIST_KEYS_COLUMN_NAME);
@@ -370,7 +419,14 @@ public class SiteSettingsModel {
         values.put(IDENTITY_REQUIRED_COLUMN_NAME, commentsRequireIdentity);
         values.put(USER_ACCOUNT_REQUIRED_COLUMN_NAME, commentsRequireUserAccount);
         values.put(WHITELIST_COLUMN_NAME, commentAutoApprovalKnownUsers);
-
+        values.put(START_OF_WEEK_COLUMN_NAME, startOfWeek);
+        values.put(DATE_FORMAT_COLUMN_NAME, dateFormat);
+        values.put(TIME_FORMAT_COLUMN_NAME, timeFormat);
+        values.put(TIMEZONE_COLUMN_NAME, timezone);
+        values.put(POSTS_PER_PAGE_COLUMN_NAME, postsPerPage);
+        values.put(AMP_SUPPORTED_COLUMN_NAME, ampSupported);
+        values.put(AMP_ENABLED_COLUMN_NAME, ampEnabled);
+        
         String moderationKeys = "";
         if (holdForModeration != null) {
             for (String key : holdForModeration) {
@@ -395,7 +451,7 @@ public class SiteSettingsModel {
         return values;
     }
 
-    public int getRelatedPostsFlags() {
+    private int getRelatedPostsFlags() {
         int flags = 0;
 
         if (showRelatedPosts) flags |= RELATED_POSTS_ENABLED_FLAG;
@@ -405,7 +461,7 @@ public class SiteSettingsModel {
         return flags;
     }
 
-    public void setRelatedPostsFlags(int flags) {
+    private void setRelatedPostsFlags(int flags) {
         showRelatedPosts = (flags & RELATED_POSTS_ENABLED_FLAG) > 0;
         showRelatedPostHeader = (flags & RELATED_POST_HEADER_FLAG) > 0;
         showRelatedPostImages = (flags & RELATED_POST_IMAGE_FLAG) > 0;

@@ -2,14 +2,17 @@ package org.wordpress.android.ui.themes;
 
 import android.content.Context;
 import android.content.res.Resources;
-import android.database.Cursor;
+import android.support.annotation.NonNull;
 import android.support.v7.widget.CardView;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.CursorAdapter;
+import android.widget.BaseAdapter;
+import android.widget.Filter;
+import android.widget.Filterable;
 import android.widget.FrameLayout;
 import android.widget.ImageButton;
 import android.widget.PopupMenu;
@@ -17,23 +20,30 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import org.wordpress.android.R;
-import org.wordpress.android.models.Theme;
+import org.wordpress.android.fluxc.model.ThemeModel;
 import org.wordpress.android.ui.prefs.AppPrefs;
+import org.wordpress.android.ui.themes.ThemeBrowserFragment.ThemeBrowserFragmentCallback;
 import org.wordpress.android.widgets.HeaderGridView;
 import org.wordpress.android.widgets.WPNetworkImageView;
 
-/**
- * Adapter for the {@link ThemeBrowserFragment}'s listview
- *
- */
-public class ThemeBrowserAdapter extends CursorAdapter {
-    private static final String THEME_IMAGE_PARAMETER = "?w=";
-    private final LayoutInflater mInflater;
-    private final ThemeBrowserFragment.ThemeBrowserFragmentCallback mCallback;
-    private int mViewWidth;
+import java.util.ArrayList;
+import java.util.List;
 
-    public ThemeBrowserAdapter(Context context, Cursor c, boolean autoRequery, ThemeBrowserFragment.ThemeBrowserFragmentCallback callback) {
-        super(context, c, autoRequery);
+class ThemeBrowserAdapter extends BaseAdapter implements Filterable {
+    private static final String THEME_IMAGE_PARAMETER = "?w=";
+
+    private final Context mContext;
+    private final LayoutInflater mInflater;
+    private final ThemeBrowserFragmentCallback mCallback;
+
+    private int mViewWidth;
+    private String mQuery;
+
+    private final List<ThemeModel> mAllThemes = new ArrayList<>();
+    private final List<ThemeModel> mFilteredThemes = new ArrayList<>();
+
+    ThemeBrowserAdapter(Context context,ThemeBrowserFragmentCallback callback) {
+        mContext = context;
         mInflater = LayoutInflater.from(context);
         mCallback = callback;
         mViewWidth = AppPrefs.getThemeImageSizeWidth();
@@ -50,49 +60,92 @@ public class ThemeBrowserAdapter extends CursorAdapter {
         private final RelativeLayout detailsView;
 
         ThemeViewHolder(View view) {
-            cardView = (CardView) view.findViewById(R.id.theme_grid_card);
-            imageView = (WPNetworkImageView) view.findViewById(R.id.theme_grid_item_image);
-            nameView = (TextView) view.findViewById(R.id.theme_grid_item_name);
-            priceView = (TextView) view.findViewById(R.id.theme_grid_item_price);
-            activeView = (TextView) view.findViewById(R.id.theme_grid_item_active);
-            imageButton = (ImageButton) view.findViewById(R.id.theme_grid_item_image_button);
-            frameLayout = (FrameLayout) view.findViewById(R.id.theme_grid_item_image_layout);
-            detailsView = (RelativeLayout) view.findViewById(R.id.theme_grid_item_details);
+            cardView = view.findViewById(R.id.theme_grid_card);
+            imageView = view.findViewById(R.id.theme_grid_item_image);
+            nameView = view.findViewById(R.id.theme_grid_item_name);
+            priceView = view.findViewById(R.id.theme_grid_item_price);
+            activeView = view.findViewById(R.id.theme_grid_item_active);
+            imageButton = view.findViewById(R.id.theme_grid_item_image_button);
+            frameLayout = view.findViewById(R.id.theme_grid_item_image_layout);
+            detailsView = view.findViewById(R.id.theme_grid_item_details);
         }
     }
 
     @Override
-    public View newView(Context context, Cursor cursor, ViewGroup parent) {
-        View view = mInflater.inflate(R.layout.theme_grid_item, parent, false);
-
-        configureThemeImageSize(parent);
-        ThemeViewHolder themeViewHolder = new ThemeViewHolder(view);
-        view.setTag(themeViewHolder);
-
-        return view;
+    public int getCount() {
+        return mFilteredThemes.size();
     }
 
     @Override
-    public void bindView(View view, Context context, Cursor cursor) {
-        final ThemeViewHolder themeViewHolder = (ThemeViewHolder) view.getTag();
-
-        final String screenshotURL = cursor.getString(cursor.getColumnIndex(Theme.SCREENSHOT));
-        final String name = cursor.getString(cursor.getColumnIndex(Theme.NAME));
-        final String price = cursor.getString(cursor.getColumnIndex(Theme.PRICE));
-        final String themeId = cursor.getString(cursor.getColumnIndex(Theme.ID));
-        final boolean isCurrent = cursor.getInt(cursor.getColumnIndex(Theme.IS_CURRENT)) == 1;
-        final boolean isPremium = !price.isEmpty();
-
-        themeViewHolder.nameView.setText(name);
-        themeViewHolder.priceView.setText(price);
-
-        configureImageView(themeViewHolder, screenshotURL, themeId, isCurrent);
-        configureImageButton(context, themeViewHolder, themeId, isPremium, isCurrent);
-        configureCardView(context, themeViewHolder, isCurrent);
+    public Object getItem(int position) {
+        return mFilteredThemes.get(position);
     }
 
-    private void configureCardView(Context context, ThemeViewHolder themeViewHolder, boolean isCurrent) {
-        Resources resources = context.getResources();
+    @Override
+    public long getItemId(int position) {
+        return position;
+    }
+
+    void setThemeList(@NonNull List<ThemeModel> themes) {
+        mAllThemes.clear();
+        mAllThemes.addAll(themes);
+
+        mFilteredThemes.clear();
+        mFilteredThemes.addAll(themes);
+
+        if (!TextUtils.isEmpty(mQuery)) {
+            getFilter().filter(mQuery);
+        } else {
+            notifyDataSetChanged();
+        }
+    }
+
+    @Override
+    public View getView(int position, View convertView, ViewGroup parent) {
+        ThemeViewHolder holder;
+        if (convertView == null || convertView.getTag() == null) {
+            convertView = mInflater.inflate(R.layout.theme_grid_item, parent, false);
+            holder = new ThemeViewHolder(convertView);
+            convertView.setTag(holder);
+        } else {
+            holder = (ThemeViewHolder) convertView.getTag();
+        }
+
+        configureThemeImageSize(parent);
+        ThemeModel theme = mFilteredThemes.get(position);
+
+        String screenshotURL = theme.getScreenshotUrl();
+        String themeId = theme.getThemeId();
+        boolean isPremium = !theme.isFree();
+        boolean isCurrent = theme.getActive();
+
+        holder.nameView.setText(theme.getName());
+        if (isPremium) {
+            holder.priceView.setText(theme.getPriceText());
+            holder.priceView.setVisibility(View.VISIBLE);
+        } else {
+            holder.priceView.setVisibility(View.GONE);
+        }
+
+        // catch the case where a URL has no protocol
+        if (!screenshotURL.startsWith(ThemeWebActivity.THEME_HTTP_PREFIX)) {
+            // some APIs return a URL starting with // so the protocol can be supplied by the client
+            // strip // before adding the protocol
+            if (screenshotURL.startsWith("//")) {
+                screenshotURL = screenshotURL.substring(2);
+            }
+            screenshotURL = ThemeWebActivity.THEME_HTTPS_PROTOCOL + screenshotURL;
+        }
+
+        configureImageView(holder, screenshotURL, themeId, isCurrent);
+        configureImageButton(holder, themeId, isPremium, isCurrent);
+        configureCardView(holder, isCurrent);
+        return convertView;
+    }
+
+    @SuppressWarnings("deprecation")
+    private void configureCardView(ThemeViewHolder themeViewHolder, boolean isCurrent) {
+        Resources resources = mContext.getResources();
         if (isCurrent) {
             themeViewHolder.detailsView.setBackgroundColor(resources.getColor(R.color.blue_wordpress));
             themeViewHolder.nameView.setTextColor(resources.getColor(R.color.white));
@@ -133,8 +186,8 @@ public class ThemeBrowserAdapter extends CursorAdapter {
         });
     }
 
-    private void configureImageButton(Context context, ThemeViewHolder themeViewHolder, final String themeId, final boolean isPremium, boolean isCurrent) {
-        final PopupMenu popupMenu = new PopupMenu(context, themeViewHolder.imageButton);
+    private void configureImageButton(ThemeViewHolder themeViewHolder, final String themeId, final boolean isPremium, boolean isCurrent) {
+        final PopupMenu popupMenu = new PopupMenu(mContext, themeViewHolder.imageButton);
         popupMenu.getMenuInflater().inflate(R.menu.theme_more, popupMenu.getMenu());
 
         configureMenuForTheme(popupMenu.getMenu(), isCurrent);
@@ -191,7 +244,7 @@ public class ThemeBrowserAdapter extends CursorAdapter {
     }
 
     private void configureThemeImageSize(ViewGroup parent) {
-        HeaderGridView gridView = (HeaderGridView) parent.findViewById(R.id.theme_listview);
+        HeaderGridView gridView = parent.findViewById(R.id.theme_listview);
         int numColumns = gridView.getNumColumns();
         int screenWidth = gridView.getWidth();
         int imageWidth = screenWidth / numColumns;
@@ -199,5 +252,40 @@ public class ThemeBrowserAdapter extends CursorAdapter {
             mViewWidth = imageWidth;
             AppPrefs.setThemeImageSizeWidth(mViewWidth);
         }
+    }
+
+    @Override
+    public Filter getFilter() {
+        return new Filter() {
+            @SuppressWarnings("unchecked")
+            @Override
+            protected void publishResults(CharSequence constraint, FilterResults results) {
+                mFilteredThemes.clear();
+                mFilteredThemes.addAll((List<ThemeModel>) results.values);
+                ThemeBrowserAdapter.this.notifyDataSetChanged();
+            }
+
+            @Override
+            protected FilterResults performFiltering(CharSequence constraint) {
+                List<ThemeModel> filtered = new ArrayList<>();
+                if (TextUtils.isEmpty(constraint)) {
+                    mQuery = null;
+                    filtered.addAll(mAllThemes);
+                } else {
+                    mQuery = constraint.toString();
+                    String lcConstraint = constraint.toString().toLowerCase();
+                    for (ThemeModel theme : mAllThemes) {
+                        if (theme.getName().toLowerCase().contains(lcConstraint)) {
+                            filtered.add(theme);
+                        }
+                    }
+                }
+
+                FilterResults results = new FilterResults();
+                results.values = filtered;
+
+                return results;
+            }
+        };
     }
 }

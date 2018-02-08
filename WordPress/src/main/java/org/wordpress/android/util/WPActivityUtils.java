@@ -13,7 +13,6 @@ import android.content.res.Configuration;
 import android.content.res.Resources;
 import android.os.Build;
 import android.preference.PreferenceManager;
-import android.support.annotation.Nullable;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -23,7 +22,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
-import android.view.inputmethod.InputMethodManager;
 import android.widget.TextView;
 
 import org.wordpress.android.R;
@@ -97,13 +95,6 @@ public class WPActivityUtils {
             //noinspection deprecation
             window.setStatusBarColor(window.getContext().getResources().getColor(color));
         }
-    }
-
-    public static void hideKeyboard(@Nullable final View view) {
-        if (view == null) return;
-        InputMethodManager inputMethodManager = (InputMethodManager) view.getContext()
-                .getSystemService(Context.INPUT_METHOD_SERVICE);
-        inputMethodManager.hideSoftInputFromWindow(view.getWindowToken(), 0);
     }
 
     public static void applyLocale(Context context) {

@@ -69,13 +69,7 @@ Language: es_CL
 	<string name="app_notifications">Avisos de la aplicación</string>
 	<string name="notifications_tab">Pestaña de avisos</string>
 	<string name="email">Correo electrónico</string>
-	<string name="notifications_comments_other_blogs">Comentarios en otros sitios</string>
 	<string name="notifications_wpcom_updates">Actualizaciones de WordPress.com</string>
-	<string name="notifications_other">Otras</string>
-	<string name="notifications_account_emails">Correo de WordPress.com</string>
-	<string name="notifications_account_emails_summary">Siempre enviamos correos electrónicos importantes relativos a tu cuenta, pero también obtendrás extras útiles.</string>
-	<string name="notifications_sights_and_sounds">Vistas y sonidos</string>
-	<string name="your_sites">Tus Sitios</string>
 	<string name="stats_insights_latest_post_trend">Ha pasado %1$s desde que se publicó %2$s. Aquí tienes el rendimiento de la entrada desde entonces…</string>
 	<string name="stats_insights_latest_post_summary">Sumario de la Última Entrada</string>
 	<string name="button_revert">Deshacer</string>
@@ -111,9 +105,9 @@ Language: es_CL
 	<string name="stats_insights_today">Estadísticas de hoy</string>
 	<string name="stats_insights_all_time">Entradas, vistas y visitantes de todos los tiempos</string>
 	<string name="stats_insights">Detalles</string>
-	<string name="stats_other_recent_stats_moved_label">¿Buscas tus otras estadísticas recientes? Las hemos trasladado a la página "Detalles".</string>
+	<string name="stats_other_recent_stats_moved_label">¿Buscas tus otras estadísticas recientes? Las hemos trasladado a la página \"Detalles\".</string>
 	<string name="me_btn_login_logout">Iniciar/Cerrar sesión</string>
-	<string name="site_picker_cant_hide_current_site">"%s" no se ocultó porque es el sitio actual</string>
+	<string name="site_picker_cant_hide_current_site">\"%s\" no se ocultó porque es el sitio actual</string>
 	<string name="me_btn_support">Ayuda y Soporte</string>
 	<string name="account_settings">Preferencias de la Cuenta</string>
 	<string name="site_picker_create_dotcom">Crear sitio en WordPress.com</string>
@@ -237,8 +231,6 @@ Language: es_CL
 	<string name="delete_sure_post">Eliminar esta entrada</string>
 	<string name="delete_sure">Eliminar este borrador</string>
 	<string name="delete_sure_page">Eliminar esta página</string>
-	<string name="confirm_delete_multi_media">¿Quieres eliminar los elementos seleccionados?</string>
-	<string name="confirm_delete_media">¿Quieres eliminar el elemento seleccionado?</string>
 	<string name="cab_selected">%d seleccionados</string>
 	<string name="reader_empty_followed_blogs_title">Todavía no sigues a ningún sitio.</string>
 	<string name="reader_empty_posts_liked">No te ha gustado ninguna entrada.</string>
@@ -389,7 +381,6 @@ Language: es_CL
 	<string name="local_draft">Borrador local</string>
 	<string name="upload_failed">Falló la subida</string>
 	<string name="horizontal_alignment">Alineación horizontal</string>
-	<string name="file_not_found">No ha sido posible encontrar el archivo multimedia para cargar. ¿Se ha borrado o cambiado de ubicación?</string>
 	<string name="post_settings">Ajustes de entrada</string>
 	<string name="delete_post">Borrar entrada</string>
 	<string name="delete_page">Borrar página</string>
@@ -429,8 +420,6 @@ Language: es_CL
 	<string name="view_in_browser">Ver en el navegador</string>
 	<string name="add_new_category">Añadir nueva categoría</string>
 	<string name="category_name">Nombre de la categoría</string>
-	<string name="share_action_post">Nueva entrada</string>
-	<string name="share_action_media">Librería multimedia</string>
 	<string name="file_error_create">No se pudo crear un archivo temporal para subir el archivo multimedia. Asegúrate que haya suficiente espacio libre en tu dispositivo.</string>
 	<string name="open_source_licenses">Licencias Open source</string>
 	<string name="http_credentials">Credenciales HTTP (opcional)</string>
@@ -488,7 +477,6 @@ Language: es_CL
 	<string name="nux_add_selfhosted_blog">Añade un sitio auto hospedado</string>
 	<string name="media_add_popup_title">Añadir a biblioteca multimedia</string>
 	<string name="empty_list_default">Esta lista esta vacía</string>
-	<string name="select_from_media_library">Seleccionar de la biblioteca multimedia</string>
 	<string name="jetpack_not_found">No se ha encontrado el plugin Jetpack</string>
 	<string name="reader_untitled_post">Sin título</string>
 	<string name="reader_btn_share">Compartir</string>
@@ -591,7 +579,6 @@ Language: es_CL
 	<string name="version">Versión</string>
 	<string name="app_title">WordPress para Android</string>
 	<string name="tos">Términos de Servicio</string>
-	<string name="max_thumbnail_px_size">Ancho de Imagen por Defecto</string>
 	<string name="image_alignment">Alineamiento</string>
 	<string name="refresh">Refrescar</string>
 	<string name="untitled">Sin Título</string>
@@ -607,9 +594,6 @@ Language: es_CL
 	<string name="upload_full_size_image">Subir y enlazar a la imagen completa</string>
 	<string name="title">Título</string>
 	<string name="categories">Categorías</string>
-	<string name="notification_blink">Notificación luminosa</string>
-	<string name="notification_vibrate">Vibrar</string>
-	<string name="notification_sound">Sonido de Notificación</string>
 	<string name="sdcard_title">Requiere tarjeta SD</string>
 	<string name="media">Multimedia</string>
 	<string name="delete">Eliminar</string>

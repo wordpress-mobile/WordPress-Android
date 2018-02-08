@@ -52,7 +52,6 @@ Language: zh_TW
 	<string name="media_encoder_quality_85">中</string>
 	<string name="media_encoder_quality_80">低</string>
 	<string name="media_upload_state_uploaded">已上傳</string>
-	<string name="media_upload_state_failed">失敗</string>
 	<string name="media_upload_state_deleted">已刪除</string>
 	<string name="media_upload_state_deleting">正在刪除</string>
 	<string name="media_upload_state_uploading">正在上傳</string>
@@ -101,9 +100,7 @@ Language: zh_TW
 	<string name="jetpack_info">Jetpack 資訊</string>
 	<string name="reader_photo_by">拍攝者：%s</string>
 	<string name="reader_label_visit">造訪</string>
-	<string name="all_your_sites">我所有的網站</string>
 	<string name="pending_draft_more">你有 %d 份草稿，卻從未發表。點選以查看。</string>
-	<string name="notification_pending_drafts">有待確認的草稿時通知我</string>
 	<string name="invalid_verification_code_format">必須是六位數字</string>
 	<string name="confirm_discard_changes">要捨棄未儲存的變更嗎？</string>
 	<string name="swipe_for_more">撥動以瞭解更多</string>
@@ -310,9 +307,6 @@ Language: zh_TW
 	<string name="post_format_status">狀態</string>
 	<string name="post_format_video">影片</string>
 	<string name="alignment_center">置中</string>
-	<string name="theme_free">免費</string>
-	<string name="theme_all">全部</string>
-	<string name="theme_premium">進階版</string>
 	<string name="post_format_chat">聊天</string>
 	<string name="post_format_gallery">圖庫</string>
 	<string name="post_format_image">圖片</string>
@@ -502,9 +496,7 @@ Language: zh_TW
 	<string name="invalid_username_no_spaces">使用者名稱不可包含空格</string>
 	<string name="reader_empty_followed_blogs_no_recent_posts_description">您所關注的網站最近未發表任何文章</string>
 	<string name="reader_empty_followed_blogs_no_recent_posts_title">沒有近期文章</string>
-	<string name="media_details_copy_url_toast">URL 已複製到剪貼簿</string>
 	<string name="edit_media">編輯媒體</string>
-	<string name="media_details_copy_url">複製 URL</string>
 	<string name="media_details_label_date_uploaded">已上傳</string>
 	<string name="media_details_label_date_added">已新增</string>
 	<string name="selected_theme">選取的佈景主題</string>
@@ -594,13 +586,7 @@ Language: zh_TW
 	<string name="app_notifications">應用程式通知</string>
 	<string name="notifications_tab">通知索引標籤</string>
 	<string name="email">電子郵件</string>
-	<string name="notifications_comments_other_blogs">其他網站上的留言</string>
-	<string name="notifications_other">其他</string>
 	<string name="notifications_wpcom_updates">WordPress.com 消息更新</string>
-	<string name="notifications_account_emails">WordPress.com 寄送的電子郵件</string>
-	<string name="notifications_account_emails_summary">我們會隨時傳送與帳號資訊相關的重要電子郵件，除此之外，你也能獲得實用的額外內容。</string>
-	<string name="your_sites">你的網站</string>
-	<string name="notifications_sights_and_sounds">提示與音效</string>
 	<string name="stats_insights_latest_post_trend">自從 %2$s 發表以來已經過了 %1$s。文章截至目前為止獲得的迴響如下…</string>
 	<string name="stats_insights_latest_post_summary">最新文章摘要</string>
 	<string name="button_revert">還原</string>
@@ -770,8 +756,6 @@ Language: zh_TW
 	<string name="delete_sure_post">刪除此文章</string>
 	<string name="delete_sure">刪除此草稿</string>
 	<string name="delete_sure_page">刪除此頁面</string>
-	<string name="confirm_delete_multi_media">要刪除選取的項目嗎？</string>
-	<string name="confirm_delete_media">要刪除選取的項目嗎？</string>
 	<string name="cab_selected">已選取：%d</string>
 	<string name="reader_empty_posts_liked">你未對任何文章按讚</string>
 	<string name="faq_button">常見問題集</string>
@@ -928,7 +912,6 @@ Language: zh_TW
 	<string name="local_draft">本機草稿</string>
 	<string name="upload_failed">上傳失敗</string>
 	<string name="horizontal_alignment">水平對齊</string>
-	<string name="file_not_found">找不到可上傳的媒體檔案。該檔案是否已刪除或移走？</string>
 	<string name="post_settings">文章設定</string>
 	<string name="delete_post">刪除文章</string>
 	<string name="delete_page">刪除頁面</string>
@@ -966,8 +949,6 @@ Language: zh_TW
 	<string name="view_in_browser">在瀏覽器中檢視</string>
 	<string name="add_new_category">新增類別</string>
 	<string name="category_name">類別名稱</string>
-	<string name="share_action_post">新文章</string>
-	<string name="share_action_media">媒體庫</string>
 	<string name="file_error_create">無法建立暫存檔進行媒體上傳。確認裝置上有足夠的可用空間。</string>
 	<string name="open_source_licenses">開啟來源授權</string>
 	<string name="http_credentials">HTTP 憑證 (選填)</string>
@@ -1030,7 +1011,6 @@ Language: zh_TW
 	<string name="signing_in">正在登入…</string>
 	<string name="media_add_popup_title">增加媒體庫</string>
 	<string name="empty_list_default">清單是空的</string>
-	<string name="select_from_media_library">從媒體庫選擇</string>
 	<string name="jetpack_not_found">找不到 Jetpack</string>
 	<string name="reader_untitled_post">（未命名）</string>
 	<string name="reader_btn_unfollow">追蹤</string>
@@ -1141,7 +1121,6 @@ Language: zh_TW
 	<string name="version">版本</string>
 	<string name="tos">服務條款</string>
 	<string name="app_title">WordPress for Android</string>
-	<string name="max_thumbnail_px_width">預設圖片寬度</string>
 	<string name="image_alignment">對齊</string>
 	<string name="refresh">更新</string>
 	<string name="untitled">無標題</string>
@@ -1159,9 +1138,6 @@ Language: zh_TW
 	<string name="title">標題</string>
 	<string name="categories">分類</string>
 	<string name="dlg_deleting_comments">刪除留言</string>
-	<string name="notification_blink">閃爍通知燈</string>
-	<string name="notification_vibrate">振動</string>
-	<string name="notification_sound">通知音效</string>
 	<string name="sdcard_title">需要 SD 卡</string>
 	<string name="media">媒體</string>
 	<string name="delete">刪除</string>

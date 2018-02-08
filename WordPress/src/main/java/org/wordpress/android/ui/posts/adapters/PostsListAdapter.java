@@ -25,8 +25,8 @@ import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
-import org.apache.commons.text.StringEscapeUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.text.StringEscapeUtils;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.fluxc.Dispatcher;
@@ -95,7 +95,7 @@ public class PostsListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
 
     private final boolean mIsPage;
     private final boolean mIsStatsSupported;
-    private final boolean mAlwaysShowAllButtons;
+    private final boolean mShowAllButtons;
 
     private boolean mIsLoadingPosts;
 
@@ -129,7 +129,7 @@ public class PostsListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
         mEndlistIndicatorHeight = DisplayUtils.dpToPx(context, mIsPage ? 82 : 74);
 
         // on larger displays we can always show all buttons
-        mAlwaysShowAllButtons = (displayWidth >= 1080);
+        mShowAllButtons = displayWidth >= 1080;
     }
 
     public void setOnLoadMoreListener(OnLoadMoreListener listener) {
@@ -205,10 +205,7 @@ public class PostsListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
     }
 
     private boolean canPublishPost(PostModel post) {
-        // TODO remove the hasMediaErrorForPost(post) check when we get a proper retry mechanism in place,
-        // that retried to upload any failed media along with the post
         return post != null && !UploadService.isPostUploadingOrQueued(post) &&
-                !UploadUtils.isMediaError(mUploadStore.getUploadErrorForPost(post)) &&
                 (post.isLocallyChanged() || post.isLocalDraft() || PostStatus.fromPost(post) == PostStatus.DRAFT);
     }
 
@@ -418,7 +415,8 @@ public class PostsListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
     }
 
     private void updatePostUploadProgressBar(ProgressBar view, PostModel post) {
-        if (UploadService.isPostUploadingOrQueued(post) || UploadService.hasInProgressMediaUploadsForPost(post)) {
+        if (!mUploadStore.isFailedPost(post) &&
+                (UploadService.isPostUploadingOrQueued(post) || UploadService.hasInProgressMediaUploadsForPost(post))) {
             view.setVisibility(View.VISIBLE);
             int overallProgress = Math.round(UploadService.getMediaUploadProgressForPost(post) * 100);
             // Sometimes the progress bar can be stuck at 100% for a long time while further processing happens
@@ -442,20 +440,20 @@ public class PostsListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
             String errorMessage = null;
 
             UploadError reason = mUploadStore.getUploadErrorForPost(post);
-            if (reason != null) {
+            if (reason != null && !UploadService.hasInProgressMediaUploadsForPost(post)) {
                 if (reason.mediaError != null) {
                     errorMessage = context.getString(post.isPage() ? R.string.error_media_recover_page
                             : R.string.error_media_recover_post);
                 } else if (reason.postError != null) {
                     errorMessage = UploadUtils.getErrorMessageFromPostError(context, post, reason.postError);
                 }
-                statusIconResId = R.drawable.ic_notice_48dp;
+                statusIconResId = R.drawable.ic_gridicons_cloud_upload;
                 statusColorResId = R.color.alert_red;
             } else if (UploadService.isPostUploading(post)) {
                 statusTextResId = R.string.post_uploading;
                 statusIconResId = R.drawable.ic_gridicons_cloud_upload;
             } else if (UploadService.hasInProgressMediaUploadsForPost(post)) {
-                statusTextResId = R.string.uploading_post_media;
+                statusTextResId = R.string.uploading_media;
                 statusIconResId = R.drawable.ic_gridicons_cloud_upload;
             } else if(UploadService.isPostQueued(post) || UploadService.hasPendingMediaUploadsForPost(post)) {
                 // the Post (or its related media if such a thing exist) *is strictly* queued
@@ -520,45 +518,51 @@ public class PostsListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
 
     private void configurePostButtons(final PostViewHolder holder,
                                       final PostModel post) {
-        // posts with local changes have preview rather than view button
-        if (post.isLocalDraft() || post.isLocallyChanged()) {
-            holder.btnView.setButtonType(PostListButton.BUTTON_PREVIEW);
-        } else {
-            holder.btnView.setButtonType(PostListButton.BUTTON_VIEW);
-        }
+        boolean canRetry = mUploadStore.getUploadErrorForPost(post) != null
+                && !UploadService.hasInProgressMediaUploadsForPost(post);
+        boolean canShowViewButton = !canRetry;
+        boolean canShowStatsButton = canShowStatsForPost(post);
+        boolean canShowPublishButton = canRetry || canPublishPost(post);
 
-        if (mUploadStore.getUploadErrorForPost(post) != null) {
-            holder.btnPublish.setButtonType(PostListButton.BUTTON_RETRY);
-        } else {
-            if (PostStatus.fromPost(post) == PostStatus.SCHEDULED && post.isLocallyChanged()) {
+        // publish button is re-purposed depending on the situation
+        if (canShowPublishButton) {
+            if (!mSite.getHasCapabilityPublishPosts()) {
+                holder.btnPublish.setButtonType(PostListButton.BUTTON_SUBMIT);
+            } else if (canRetry) {
+                holder.btnPublish.setButtonType(PostListButton.BUTTON_RETRY);
+            } else if (PostStatus.fromPost(post) == PostStatus.SCHEDULED && post.isLocallyChanged()) {
                 holder.btnPublish.setButtonType(PostListButton.BUTTON_SYNC);
             } else {
                 holder.btnPublish.setButtonType(PostListButton.BUTTON_PUBLISH);
             }
         }
 
-        boolean canShowStatsButton = canShowStatsForPost(post);
-        boolean canShowPublishButton = canPublishPost(post);
+        // posts with local changes have preview rather than view button
+        if (canShowViewButton) {
+            if (post.isLocalDraft() || post.isLocallyChanged()) {
+                holder.btnView.setButtonType(PostListButton.BUTTON_PREVIEW);
+            } else {
+                holder.btnView.setButtonType(PostListButton.BUTTON_VIEW);
+            }
+        }
 
-        int numVisibleButtons = 3;
+        // edit is always visible
+        holder.btnEdit.setVisibility(View.VISIBLE);
+        holder.btnView.setVisibility(canShowViewButton ? View.VISIBLE : View.GONE);
+
+        int numVisibleButtons = 2;
+        if (canShowViewButton) numVisibleButtons++;
         if (canShowPublishButton) numVisibleButtons++;
         if (canShowStatsButton) numVisibleButtons++;
 
-        // edit / view are always visible
-        holder.btnEdit.setVisibility(View.VISIBLE);
-        holder.btnView.setVisibility(View.VISIBLE);
-
-        // if we have enough room to show all buttons, hide the back/more buttons and show stats/trash/publish
-        if (mAlwaysShowAllButtons || numVisibleButtons <= 3) {
+        // if there's enough room to show all buttons then hide back/more and show stats/trash/publish,
+        // otherwise show the more button and hide stats/trash/publish
+        if (mShowAllButtons || numVisibleButtons <= 3) {
             holder.btnMore.setVisibility(View.GONE);
             holder.btnBack.setVisibility(View.GONE);
             holder.btnTrash.setVisibility(View.VISIBLE);
             holder.btnStats.setVisibility(canShowStatsButton ? View.VISIBLE : View.GONE);
             holder.btnPublish.setVisibility(canShowPublishButton ? View.VISIBLE : View.GONE);
-            if (!mSite.getHasCapabilityPublishPosts()) {
-                // Users with roles that lack permission to publish show Submit
-                holder.btnPublish.setButtonType(PostListButton.BUTTON_SUBMIT);
-            }
         } else {
             holder.btnMore.setVisibility(View.VISIBLE);
             holder.btnBack.setVisibility(View.GONE);
@@ -840,8 +844,8 @@ public class PostsListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
             }
 
             // Make sure we don't return any hidden posts
-            for (PostModel hiddenPost : mHiddenPosts) {
-                tmpPosts.remove(hiddenPost);
+            if (mHiddenPosts.size() > 0) {
+                tmpPosts.removeAll(mHiddenPosts);
             }
 
             // Go no further if existing post list is the same

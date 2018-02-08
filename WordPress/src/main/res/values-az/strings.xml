@@ -21,7 +21,6 @@ Language: az
 	<string name="reader_short_comment_count_one">1 Şərh</string>
 	<string name="reader_short_like_count_multi">%s Bəyənmə</string>
 	<string name="email">E-poçt</string>
-	<string name="notifications_other">Digər</string>
 	<string name="days_ago">%d gün öncə</string>
 	<string name="connectionbar_no_connection">Qoşulma yoxdur</string>
 	<string name="page_trashed">Səhifəni zibil qutusuna göndər</string>
@@ -56,7 +55,7 @@ Language: az
 	<string name="stats_other_recent_stats_moved_label">Digər Son Statistikaları axtarırsınızmı? Bu məlumatları Tək Baxışda səhifəsinə daşıdıq.</string>
 	<string name="me_btn_login_logout">Giriş/Çıxış</string>
 	<string name="me_btn_support">Yardım və Dəstək</string>
-	<string name="site_picker_cant_hide_current_site">"%s" hazırkı sayt olduğundan gizlədilə bilmədi</string>
+	<string name="site_picker_cant_hide_current_site">\"%s\" hazırkı sayt olduğundan gizlədilə bilmədi</string>
 	<string name="site_picker_create_dotcom">WordPress.com saytı yarat</string>
 	<string name="site_picker_add_site">Sayt əlavə et</string>
 	<string name="site_picker_add_self_hosted">İstifadəçinin öz hostundakı saytı əlavə et</string>
@@ -175,8 +174,6 @@ Language: az
 	<string name="delete_sure_post">Bu yazını sil</string>
 	<string name="delete_sure">Bu qaralamanı sil</string>
 	<string name="delete_sure_page">Bu səhifəni sil</string>
-	<string name="confirm_delete_multi_media">Seçilmiş maddələr silinsinmi?</string>
-	<string name="confirm_delete_media">Seçilmiş maddə silinsinmi?</string>
 	<string name="cab_selected">%d seçildi</string>
 	<string name="faq_button">ÇVS</string>
 	<string name="create_new_blog_wpcom">WordPress.com bloqu yarat</string>
@@ -283,7 +280,7 @@ Language: az
 	<string name="username_required">İstifadəçi adınızı daxil edin</string>
 	<string name="username_not_allowed">İstifadəçi adına izin verilmir</string>
 	<string name="username_must_be_at_least_four_characters">İstifadəçi adı ən az 4 simvol olmalıdır</string>
-	<string name="username_contains_invalid_characters">İstifadəçi adında "_" simvolu ola bilməz</string>
+	<string name="username_contains_invalid_characters">İstifadəçi adında \"_\" simvolu ola bilməz</string>
 	<string name="username_must_include_letters">İstifadəçi adında ən az 1 hərf(a-z) olmalıdır</string>
 	<string name="email_invalid">Etibarlı e-poçt ünvanı daxil edin</string>
 	<string name="email_not_allowed">Bu e-poçt ünvanına izin verilmir</string>
@@ -335,8 +332,6 @@ Language: az
 	<string name="view_in_browser">Brauzerdə bax</string>
 	<string name="add_new_category">Yeni kateqoriya əlavə et</string>
 	<string name="category_name">Kateqoriya adı</string>
-	<string name="share_action_post">Yeni yazı</string>
-	<string name="share_action_media">Media kitabxanası</string>
 	<string name="file_error_create">Müvəqqəti media faylı yaradıla bilmir. Cihazınızda yetərli böş sahə olduğundan əmin olun.</string>
 	<string name="open_source_licenses">Açıq mənbə lisenziyaları</string>
 	<string name="xmlrpc_error">Əlaqə qurula bilmədi. Saytınızdakı xmlrpc.php-nin tam yolunu daxil edib təkrar yoxlayın</string>
@@ -370,7 +365,6 @@ Language: az
 	<string name="local_draft">Yerli qaralama</string>
 	<string name="upload_failed">Yükləmə baş tutmadı</string>
 	<string name="horizontal_alignment">Üfüqi qruplaşma</string>
-	<string name="file_not_found">Yüklənəcək media faylı tapılmadı. Silinmiş vəya daşınmış ola bilərmi?</string>
 	<string name="post_settings">Yazı parametrləri</string>
 	<string name="delete_post">Yazını sil</string>
 	<string name="delete_page">Səhifəni sil</string>
@@ -426,7 +420,6 @@ Language: az
 	<string name="empty_list_default">Bu siyahı boşdur</string>
 	<string name="reader_btn_share">Paylaş</string>
 	<string name="jetpack_not_found">Jetpack plaqini tapılmadı</string>
-	<string name="select_from_media_library">Media kitabxanasından seç</string>
 	<string name="username_invalid">Keçərsiz istifadəçi adı</string>
 	<string name="nux_tutorial_get_started_title">Başlayın!</string>
 	<string name="reader_untitled_post">(adsız)</string>
@@ -545,8 +538,6 @@ Language: az
 	<string name="upload_full_size_image">Yüklə və tam təsvirə bağlantı ver</string>
 	<string name="categories">Kateqoriyalar</string>
 	<string name="title">Başlıq</string>
-	<string name="notification_vibrate">Vibrasiya</string>
-	<string name="notification_blink">Məlumatlandırma işığını parlat</string>
 	<string name="sdcard_title">SD Kart Gərəkdir</string>
 	<string name="media">Media</string>
 	<string name="delete">Sil</string>

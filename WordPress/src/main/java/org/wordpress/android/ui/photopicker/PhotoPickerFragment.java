@@ -25,18 +25,21 @@ import android.widget.PopupMenu;
 import android.widget.TextView;
 
 import org.wordpress.android.R;
+import org.wordpress.android.WordPress;
 import org.wordpress.android.analytics.AnalyticsTracker;
+import org.wordpress.android.fluxc.model.SiteModel;
+import org.wordpress.android.ui.media.MediaBrowserType;
 import org.wordpress.android.ui.photopicker.PhotoPickerAdapter.PhotoPickerAdapterListener;
 import org.wordpress.android.util.AnalyticsUtils;
 import org.wordpress.android.util.AniUtils;
 import org.wordpress.android.util.AppLog;
+import org.wordpress.android.util.DisplayUtils;
 import org.wordpress.android.util.MediaUtils;
-import org.wordpress.android.util.SmartToast;
+import org.wordpress.android.util.WPActivityUtils;
 import org.wordpress.android.util.WPMediaUtils;
 import org.wordpress.android.util.WPPermissionUtils;
 
 import java.util.ArrayList;
-import java.util.EnumSet;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -44,6 +47,7 @@ import java.util.Map;
 public class PhotoPickerFragment extends Fragment {
 
     static final int NUM_COLUMNS = 3;
+    public static final String ARG_BROWSER_TYPE = "browser_type";
 
     public enum PhotoPickerIcon {
         ANDROID_CHOOSE_PHOTO,
@@ -53,17 +57,12 @@ public class PhotoPickerFragment extends Fragment {
         WP_MEDIA
     }
 
-    public enum PhotoPickerOption {
-        ALLOW_MULTI_SELECT,     // allow selecting more than one item
-        PHOTOS_ONLY,            // show only photos (no videos)
-        DEVICE_ONLY             // no WP media
-    }
-
     /*
      * parent activity must implement this listener
      */
     public interface PhotoPickerListener {
         void onPhotoPickerMediaChosen(@NonNull List<Uri> uriList);
+
         void onPhotoPickerIconClicked(@NonNull PhotoPickerIcon icon);
     }
 
@@ -76,21 +75,17 @@ public class PhotoPickerFragment extends Fragment {
     private Parcelable mRestoreState;
     private PhotoPickerListener mListener;
     private PhotoPickerIcon mLastTappedIcon;
-
-    private boolean mAllowMultiSelect;
-    private boolean mPhotosOnly;
-    private boolean mDeviceOnly;
-
-    private static final String ARG_ALLOW_MULTI_SELECT = "allow_multi_select";
-    private static final String ARG_PHOTOS_ONLY = "photos_only";
-    private static final String ARG_DEVICE_ONLY = "device_only";
+    private MediaBrowserType mBrowserType;
+    private SiteModel mSite;
 
     public static PhotoPickerFragment newInstance(@NonNull PhotoPickerListener listener,
-                                                  @NonNull EnumSet<PhotoPickerOption> options) {
+                                                  @NonNull MediaBrowserType browserType,
+                                                  @Nullable SiteModel site) {
         Bundle args = new Bundle();
-        args.putBoolean(ARG_ALLOW_MULTI_SELECT, options.contains(PhotoPickerOption.ALLOW_MULTI_SELECT));
-        args.putBoolean(ARG_PHOTOS_ONLY, options.contains(PhotoPickerOption.PHOTOS_ONLY));
-        args.putBoolean(ARG_DEVICE_ONLY, options.contains(PhotoPickerOption.DEVICE_ONLY));
+        args.putSerializable(ARG_BROWSER_TYPE, browserType);
+        if (site != null) {
+            args.putSerializable(WordPress.SITE, site);
+        }
 
         PhotoPickerFragment fragment = new PhotoPickerFragment();
         fragment.setPhotoPickerListener(listener);
@@ -102,23 +97,8 @@ public class PhotoPickerFragment extends Fragment {
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        Bundle args = getArguments();
-        if (args != null) {
-            mAllowMultiSelect = args.getBoolean(ARG_ALLOW_MULTI_SELECT, false);
-            mPhotosOnly = args.getBoolean(ARG_PHOTOS_ONLY, false);
-            mDeviceOnly = args.getBoolean(ARG_DEVICE_ONLY, false);
-        }
-    }
-
-    public void setOptions(@NonNull EnumSet<PhotoPickerOption> options) {
-        mAllowMultiSelect = options.contains(PhotoPickerOption.ALLOW_MULTI_SELECT);
-        mPhotosOnly = options.contains(PhotoPickerOption.PHOTOS_ONLY);
-        mDeviceOnly = options.contains(PhotoPickerOption.DEVICE_ONLY);
-
-        if (hasAdapter()) {
-            getAdapter().setAllowMultiSelect(mAllowMultiSelect);
-            getAdapter().setShowPhotosOnly(mPhotosOnly);
-        }
+        mBrowserType = (MediaBrowserType) getArguments().getSerializable(ARG_BROWSER_TYPE);
+        mSite = (SiteModel) getArguments().getSerializable(WordPress.SITE);
     }
 
     @Override
@@ -150,43 +130,59 @@ public class PhotoPickerFragment extends Fragment {
         });
 
         mBottomBar = view.findViewById(R.id.bottom_bar);
-        mBottomBar.findViewById(R.id.icon_camera).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (mPhotosOnly) {
-                    doIconClicked(PhotoPickerIcon.ANDROID_CAPTURE_PHOTO);
-                } else {
-                    showCameraPopupMenu(v);
-                }
-            }
-        });
-        mBottomBar.findViewById(R.id.icon_picker).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (mPhotosOnly) {
-                    doIconClicked(PhotoPickerIcon.ANDROID_CHOOSE_PHOTO);
-                } else {
-                    showPickerPopupMenu(v);
-                }
 
+        if (!canShowBottomBar()) {
+            mBottomBar.setVisibility(View.GONE);
+        } else {
+            mBottomBar.findViewById(R.id.icon_camera).setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if (mBrowserType.isSingleImagePicker()) {
+                        doIconClicked(PhotoPickerIcon.ANDROID_CAPTURE_PHOTO);
+                    } else {
+                        showCameraPopupMenu(v);
+                    }
+                }
+            });
+            mBottomBar.findViewById(R.id.icon_picker).setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if (mBrowserType.isSingleImagePicker()) {
+                        doIconClicked(PhotoPickerIcon.ANDROID_CHOOSE_PHOTO);
+                    } else {
+                        showPickerPopupMenu(v);
+                    }
+
+                }
+            });
+
+            // choosing from WP media requires a site
+            View wpMedia = mBottomBar.findViewById(R.id.icon_wpmedia);
+            if (mSite == null) {
+                wpMedia.setVisibility(View.GONE);
+            } else {
+                wpMedia.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        doIconClicked(PhotoPickerIcon.WP_MEDIA);
+                    }
+                });
             }
-        });
+        }
 
         mSoftAskContainer = (ViewGroup) view.findViewById(R.id.container_soft_ask);
 
-        View wpMediaIcon = mBottomBar.findViewById(R.id.icon_wpmedia);
-        if (mDeviceOnly) {
-            wpMediaIcon.setVisibility(View.GONE);
-        } else {
-            wpMediaIcon.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    doIconClicked(PhotoPickerIcon.WP_MEDIA);
-                }
-            });
+        return view;
+    }
+
+    private boolean canShowBottomBar() {
+        if (mBrowserType == MediaBrowserType.AZTEC_EDITOR_PICKER && DisplayUtils.isLandscape(getActivity())) {
+            return true;
+        } else if (mBrowserType == MediaBrowserType.AZTEC_EDITOR_PICKER) {
+            return false;
         }
 
-        return view;
+        return true;
     }
 
     @Override
@@ -195,7 +191,7 @@ public class PhotoPickerFragment extends Fragment {
         checkStoragePermission();
     }
 
-    private void doIconClicked(@NonNull PhotoPickerIcon icon) {
+    public void doIconClicked(@NonNull PhotoPickerIcon icon) {
         mLastTappedIcon = icon;
 
         if (icon == PhotoPickerIcon.ANDROID_CAPTURE_PHOTO || icon == PhotoPickerIcon.ANDROID_CAPTURE_VIDEO) {
@@ -229,7 +225,7 @@ public class PhotoPickerFragment extends Fragment {
         }
     }
 
-    private void showPickerPopupMenu(@NonNull View view) {
+    public void showPickerPopupMenu(@NonNull View view) {
         PopupMenu popup = new PopupMenu(getActivity(), view);
 
         MenuItem itemPhoto = popup.getMenu().add(R.string.photo_picker_choose_photo);
@@ -253,7 +249,7 @@ public class PhotoPickerFragment extends Fragment {
         popup.show();
     }
 
-    private void showCameraPopupMenu(@NonNull View view) {
+    public void showCameraPopupMenu(@NonNull View view) {
         PopupMenu popup = new PopupMenu(getActivity(), view);
 
         MenuItem itemPhoto = popup.getMenu().add(R.string.photo_picker_capture_photo);
@@ -282,13 +278,13 @@ public class PhotoPickerFragment extends Fragment {
     }
 
     private void showBottomBar() {
-        if (!isBottomBarShowing()) {
+        if (!isBottomBarShowing() && canShowBottomBar()) {
             AniUtils.animateBottomBar(mBottomBar, true);
         }
     }
 
     private void hideBottomBar() {
-        if (isBottomBarShowing()) {
+        if (isBottomBarShowing() && canShowBottomBar()) {
             AniUtils.animateBottomBar(mBottomBar, false);
         }
     }
@@ -342,9 +338,7 @@ public class PhotoPickerFragment extends Fragment {
 
     private PhotoPickerAdapter getAdapter() {
         if (mAdapter == null) {
-            mAdapter = new PhotoPickerAdapter(getActivity(), mAdapterListener);
-            mAdapter.setAllowMultiSelect(mAllowMultiSelect);
-            mAdapter.setShowPhotosOnly(mPhotosOnly);
+            mAdapter = new PhotoPickerAdapter(getActivity(), mBrowserType, mAdapterListener);
         }
         return mAdapter;
     }
@@ -407,10 +401,10 @@ public class PhotoPickerFragment extends Fragment {
         @Override
         public boolean onCreateActionMode(ActionMode actionMode, Menu menu) {
             mActionMode = actionMode;
+            WPActivityUtils.setStatusBarColor(getActivity().getWindow(), R.color.grey_darken_30);
             MenuInflater inflater = actionMode.getMenuInflater();
             inflater.inflate(R.menu.photo_picker_action_mode, menu);
             hideBottomBar();
-            SmartToast.disableSmartToast(SmartToast.SmartToastType.MEDIA_LONG_PRESS);
             return true;
         }
 
@@ -432,6 +426,7 @@ public class PhotoPickerFragment extends Fragment {
 
         @Override
         public void onDestroyActionMode(ActionMode mode) {
+            WPActivityUtils.setStatusBarColor(getActivity().getWindow(), R.color.status_bar_tint);
             getAdapter().setMultiSelectEnabled(false);
             mActionMode = null;
             showBottomBar();
@@ -452,7 +447,7 @@ public class PhotoPickerFragment extends Fragment {
      * load the photos if we have the necessary permission, otherwise show the "soft ask" view
      * which asks the user to allow the permission
      */
-    public void checkStoragePermission() {
+    private void checkStoragePermission() {
         if (!isAdded()) return;
 
         if (hasStoragePermission()) {
@@ -466,13 +461,13 @@ public class PhotoPickerFragment extends Fragment {
     }
 
     private void requestStoragePermission() {
-        String[] permissions = new String[] { permission.WRITE_EXTERNAL_STORAGE };
+        String[] permissions = new String[]{permission.WRITE_EXTERNAL_STORAGE};
         FragmentCompat.requestPermissions(
                 this, permissions, WPPermissionUtils.PHOTO_PICKER_STORAGE_PERMISSION_REQUEST_CODE);
     }
 
     private void requestCameraPermission() {
-        String[] permissions = new String[] { permission.CAMERA };
+        String[] permissions = new String[]{permission.CAMERA};
         FragmentCompat.requestPermissions(
                 this, permissions, WPPermissionUtils.PHOTO_PICKER_CAMERA_PERMISSION_REQUEST_CODE);
     }

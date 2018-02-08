@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="?android:attr/selectableItemBackground"
+    android:orientation="vertical"
+    android:paddingBottom="@dimen/margin_extra_large"
+    android:paddingEnd="@dimen/margin_extra_large"
+    android:paddingLeft="@dimen/margin_extra_large"
+    android:paddingRight="@dimen/margin_extra_large"
+    android:paddingStart="@dimen/margin_extra_large"
+    android:paddingTop="@dimen/margin_extra_large">
+
+    <org.wordpress.android.widgets.WPNetworkImageView
+        android:id="@+id/plugin_icon"
+        android:layout_width="@dimen/plugin_icon_size"
+        android:layout_height="@dimen/plugin_icon_size"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_centerVertical="true"
+        android:contentDescription="@string/plugin_icon_content_description" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_centerVertical="true"
+        android:layout_marginLeft="@dimen/margin_extra_large"
+        android:layout_marginStart="@dimen/margin_extra_large"
+        android:layout_toEndOf="@id/plugin_icon"
+        android:layout_toRightOf="@id/plugin_icon"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/plugin_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/grey_dark"
+            android:textSize="@dimen/text_sz_large"/>
+
+        <TextView
+            android:id="@+id/plugin_status"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/grey_darken_10"
+            android:textSize="@dimen/text_sz_medium"/>
+    </LinearLayout>
+
+    <ImageView
+        android:id="@+id/plugin_update_available_icon"
+        android:layout_width="@dimen/margin_extra_medium_large"
+        android:layout_height="@dimen/margin_extra_medium_large"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentRight="true"
+        android:layout_centerVertical="true"
+        android:contentDescription="@string/plugin_update_available_icon_content_description"
+        android:visibility="gone"
+        app:srcCompat="@drawable/plugin_update_available_icon" />
+
+</RelativeLayout>

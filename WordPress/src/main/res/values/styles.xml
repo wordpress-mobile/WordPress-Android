@@ -52,62 +52,6 @@
         <item name="android:statusBarColor">@color/status_bar_tint</item>
     </style>
 
-    <style name="LoginTheme" parent="Theme.AppCompat.Light.NoActionBar">
-        <item name="colorPrimary">@color/color_primary</item>
-        <item name="colorAccent">@color/wp_blue_medium</item>
-
-        <item name="android:statusBarColor">@color/status_bar_tint</item>
-        <item name="android:windowBackground">@color/login_background_color</item>
-        <item name="actionMenuTextColor">@color/white</item>
-    </style>
-
-    <style name="LoginTheme.Toolbar" parent="LoginTheme">
-        <item name="colorControlNormal">@color/color_control_normal</item>
-    </style>
-
-    <style name="LoginTheme.Button" parent="Widget.AppCompat.Button.Colored">
-        <item name="colorControlHighlight">@color/color_control_highlight</item>
-    </style>
-
-    <style name="LoginTheme.TextLabel" parent="TextAppearance.AppCompat.Body1">
-        <item name="android:textColor">@color/grey_dark</item>
-        <item name="android:lineSpacingExtra">2dp</item>
-    </style>
-
-    <style name="LoginTheme.InputLabelStatic" parent="TextAppearance.AppCompat.Body1">
-        <item name="android:textColor">@color/wp_grey</item>
-    </style>
-
-    <style name="LoginTheme.EditText" parent="LoginTheme">
-        <item name="colorControlNormal">@color/grey</item>
-        <item name="android:textColor">@color/grey_dark</item>
-        <item name="android:textColorHint">@color/grey</item>
-        <item name="colorControlActivated">@color/blue_medium</item>
-        <item name="colorControlHighlight">@color/blue_medium</item>
-    </style>
-
-    <style name="LoginTheme.PromoText" parent="TextAppearance.AppCompat.Title">
-        <item name="android:gravity">center</item>
-        <item name="android:lineSpacingExtra">2dp</item>
-    </style>
-
-    <style name="LoginTheme.Heading" parent="TextAppearance.AppCompat.Body2">
-        <item name="android:textColor">@color/grey_darken_10</item>
-    </style>
-
-    <style name="LoginTheme.Subhead" parent="TextAppearance.AppCompat.Subhead">
-        <item name="android:textColor">@color/grey_dark</item>
-        <item name="android:textStyle">bold</item>
-    </style>
-
-    <style name="LoginTheme.Username" parent="TextAppearance.AppCompat.Body1">
-        <item name="android:textColor">@color/grey_darken_10</item>
-    </style>
-
-    <style name="LoginTheme.Footnote" parent="TextAppearance.AppCompat.Caption">
-        <item name="android:textColor">@color/grey_dark</item>
-    </style>
-
     <style name="NoDisplay" parent="Theme.AppCompat.Light.NoActionBar">
         <item name="android:windowNoTitle">true</item>
         <item name="android:windowBackground">@android:color/transparent</item>
@@ -121,7 +65,7 @@
         <item name="android:divider">@drawable/tab_divider_wordpress</item>
     </style>
 
-   <style name="PopupMenu.WordPress" parent="android:Widget.Holo.ListPopupWindow">
+    <style name="PopupMenu.WordPress" parent="android:Widget.Holo.ListPopupWindow">
         <item name="android:popupBackground">@drawable/menu_dropdown_panel_wordpress</item>
     </style>
 
@@ -255,6 +199,11 @@
     </style>
 
     <style name="MediaSettings" />
+    <style name="MediaSettings.Activity" parent="WordPress">
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
+        <item name="android:windowTranslucentStatus">true</item>
+    </style>
     <style name="MediaSettings.TextInputStyle">
         <item name="android:layout_marginTop">@dimen/margin_medium</item>
     </style>
@@ -264,6 +213,10 @@
         <!-- Label color in TRUE state and bar color FALSE and TRUE State -->
         <item name="colorControlNormal">@color/grey_500</item>
         <item name="colorControlActivated">@color/blue_wordpress</item>
+
+        <!-- Fix for crash on ASUS devices - https://github.com/wordpress-mobile/WordPress-Android/issues/7038 -->
+        <item name="android:textColorHighlight">@color/transparent</item>
+        <item name="android:textColorLink">@color/transparent</item>
     </style>
     <style name="MediaSettings.Divider">
         <item name="android:background">@color/divider_grey</item>
@@ -409,6 +362,7 @@
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:paddingLeft">@dimen/my_site_list_row_padding_left</item>
+        <item name="android:paddingStart">@dimen/my_site_list_row_padding_left</item>
         <item name="android:background">?android:attr/selectableItemBackground</item>
     </style>
 
@@ -416,10 +370,12 @@
         <item name="android:layout_width">@dimen/my_site_list_row_icon_size</item>
         <item name="android:layout_height">@dimen/my_site_list_row_icon_size</item>
         <item name="android:layout_alignParentLeft">true</item>
+        <item name="android:layout_alignParentStart">true</item>
         <item name="android:layout_centerVertical">true</item>
         <item name="android:layout_marginTop">@dimen/margin_large</item>
         <item name="android:layout_marginBottom">@dimen/margin_large</item>
         <item name="android:layout_marginRight">@dimen/margin_extra_large</item>
+        <item name="android:layout_marginEnd">@dimen/margin_extra_large</item>
         <item name="android:gravity">center_vertical</item>
     </style>
 
@@ -428,6 +384,7 @@
         <item name="android:layout_height">wrap_content</item>
         <item name="android:layout_centerVertical">true</item>
         <item name="android:layout_marginRight">@dimen/margin_medium</item>
+        <item name="android:layout_marginEnd">@dimen/margin_medium</item>
         <item name="android:ellipsize">end</item>
         <item name="android:gravity">center_vertical</item>
         <item name="android:maxLines">1</item>
@@ -436,16 +393,18 @@
         <item name="android:paddingTop">@dimen/margin_large</item>
         <item name="android:paddingBottom">@dimen/margin_large</item>
         <item name="android:paddingLeft">@dimen/margin_extra_large</item>
+        <item name="android:paddingStart">@dimen/margin_extra_large</item>
     </style>
 
     <style name="MySiteListRowSecondaryElement">
         <item name="android:layout_centerVertical">true</item>
         <item name="android:layout_marginRight">@dimen/margin_extra_large</item>
+        <item name="android:layout_marginEnd">@dimen/margin_extra_large</item>
         <item name="android:gravity">right|center_vertical</item>
     </style>
 
     <style name="MySiteListRowSecondaryTextView" parent="MySiteListRowSecondaryElement">
-        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:layout_alignParentEnd">true</item>
         <item name="android:layout_alignParentRight">true</item>
@@ -456,6 +415,7 @@
         <item name="android:paddingTop">@dimen/margin_large</item>
         <item name="android:paddingBottom">@dimen/margin_large</item>
         <item name="android:paddingLeft">@dimen/margin_extra_large</item>
+        <item name="android:paddingStart">@dimen/margin_extra_large</item>
     </style>
 
     <style name="MySiteListRowSecondaryIcon" parent="MySiteListRowSecondaryElement">
@@ -644,10 +604,6 @@
         <item name="android:textStyle">bold</item>
     </style>
 
-    <style name="PromoDialogTitleBeta" parent="EditorTitleBeta">
-        <item name="android:layout_marginLeft">@dimen/margin_large</item>
-    </style>
-
     <style name="PromoDialogDescription" parent="WordPress">
         <item name="android:layout_height">wrap_content</item>
         <item name="android:layout_marginTop">@dimen/margin_extra_large</item>
@@ -669,5 +625,67 @@
         <item name="android:indeterminateOnly">false</item>
         <item name="android:minHeight">8dip</item>
         <item name="android:maxHeight">8dip</item>
+    </style>
+
+    <!--Plugin Styles-->
+    <style name="PluginCardView">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_marginBottom">@dimen/margin_extra_large</item>
+    </style>
+
+    <style name="PluginCardViewVerticalContainer">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:orientation">vertical</item>
+    </style>
+
+    <style name="PluginCardViewHorizontalContainer">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:padding">@dimen/margin_extra_large</item>
+    </style>
+
+    <style name="PluginCardViewDivider">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">@dimen/list_divider_height</item>
+        <item name="android:background">@color/grey_lighten_20</item>
+    </style>
+
+    <style name="PluginCardViewPrimaryText">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:gravity">center_vertical</item>
+        <item name="android:textColor">@color/grey_dark</item>
+        <item name="android:textSize">@dimen/text_sz_large</item>
+    </style>
+
+    <style name="PluginCardViewSecondaryText">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:gravity">center_vertical</item>
+        <item name="android:textColor">@color/grey_darken_10</item>
+        <item name="android:textSize">@dimen/text_sz_medium</item>
+    </style>
+
+    <style name="PluginCardViewSecondaryElement">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_centerVertical">true</item>
+        <item name="android:layout_alignParentEnd">true</item>
+        <item name="android:layout_alignParentRight">true</item>
+    </style>
+
+    <style name="PluginCardViewSecondaryElement.ExternalLinkImage" parent="PluginCardViewSecondaryElement">
+        <item name="android:layout_width">@dimen/plugin_external_link_image_size</item>
+        <item name="android:layout_height">@dimen/plugin_external_link_image_size</item>
+        <item name="android:tint">@color/grey_darken_10</item>
+        <item name="android:layout_marginRight">@dimen/margin_medium</item>
+        <item name="android:layout_marginEnd">@dimen/margin_medium</item>
+    </style>
+
+    <style name="PluginCardViewSecondaryElement.ChevronImage" parent="PluginCardViewSecondaryElement.ExternalLinkImage">
+        <item name="android:layout_marginTop">@dimen/margin_small</item>
+        <item name="android:layout_centerVertical">false</item>
     </style>
 </resources>

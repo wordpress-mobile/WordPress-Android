@@ -30,8 +30,8 @@ import org.wordpress.android.fluxc.Dispatcher;
 import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.model.TermModel;
 import org.wordpress.android.fluxc.store.TaxonomyStore;
+import org.wordpress.android.util.ActivityUtils;
 import org.wordpress.android.util.ToastUtils;
-import org.wordpress.android.util.WPActivityUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -131,7 +131,7 @@ public class PostSettingsTagsActivity extends AppCompatActivity implements TextW
     }
 
     private void saveAndFinish() {
-        WPActivityUtils.hideKeyboard(mTagsEditText);
+        ActivityUtils.hideKeyboardForced(mTagsEditText);
 
         Bundle bundle = new Bundle();
         bundle.putString(KEY_SELECTED_TAGS, mTagsEditText.getText().toString());
@@ -247,16 +247,17 @@ public class PostSettingsTagsActivity extends AppCompatActivity implements TextW
         }
 
         public void filter(final String text) {
+            final List<TermModel> allTags = mAllTags;
             new Thread(new Runnable() {
                 @Override
                 public void run() {
-                    mFilteredTags.clear();
+                    final List<TermModel> filteredTags = new ArrayList<>();
                     if (TextUtils.isEmpty(text)) {
-                        mFilteredTags.addAll(mAllTags);
+                        filteredTags.addAll(allTags);
                     } else {
-                        for (TermModel tag : mAllTags) {
+                        for (TermModel tag : allTags) {
                             if (tag.getName().toLowerCase().contains(text.toLowerCase())) {
-                                mFilteredTags.add(tag);
+                                filteredTags.add(tag);
                             }
                         }
                     }
@@ -264,6 +265,7 @@ public class PostSettingsTagsActivity extends AppCompatActivity implements TextW
                     ((Activity) mContext).runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
+                            mFilteredTags = filteredTags;
                             notifyDataSetChanged();
                         }
                     });

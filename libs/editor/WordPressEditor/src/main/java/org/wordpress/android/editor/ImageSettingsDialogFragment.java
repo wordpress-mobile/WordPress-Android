@@ -40,6 +40,7 @@ import org.wordpress.android.util.MediaUtils;
 import org.wordpress.android.util.ToastUtils;
 
 import java.util.Arrays;
+import java.util.Locale;
 
 import static org.wordpress.android.editor.EditorFragmentAbstract.ATTR_ALIGN;
 import static org.wordpress.android.editor.EditorFragmentAbstract.ATTR_ALT;
@@ -161,7 +162,7 @@ public class ImageSettingsDialogFragment extends DialogFragment {
         mAltText = (EditText) view.findViewById(R.id.image_alt_text);
         mAlignmentSpinner = (Spinner) view.findViewById(R.id.alignment_spinner);
         mLinkTo = (EditText) view.findViewById(R.id.image_link_to);
-        SeekBar widthSeekBar = (SeekBar) view.findViewById(R.id.image_width_seekbar);
+        SeekBar widthSeekBar = (SeekBar) view.findViewById(R.id.image_size_seekbar);
         mWidthText = (EditText) view.findViewById(R.id.image_width_text);
         mFeaturedCheckBox = (CheckBox) view.findViewById(R.id.featuredImage);
 
@@ -388,7 +389,7 @@ public class ImageSettingsDialogFragment extends DialogFragment {
             mImageLoader.get(imageUrl, new ImageLoader.ImageListener() {
                 @Override
                 public void onResponse(ImageLoader.ImageContainer response, boolean isImmediate) {
-                    if (!isAdded())  {
+                    if (!isAdded()) {
                         return;
                     }
                     if (response.getBitmap() != null) {
@@ -401,10 +402,11 @@ public class ImageSettingsDialogFragment extends DialogFragment {
                         }
                     }
                 }
+
                 @Override
                 public void onErrorResponse(VolleyError error) {
                     AppLog.e(AppLog.T.MEDIA, error);
-                    if (!isAdded())  {
+                    if (!isAdded()) {
                         return;
                     }
                     showErrorImage();
@@ -431,7 +433,7 @@ public class ImageSettingsDialogFragment extends DialogFragment {
 
         if (imageWidth != 0) {
             widthSeekBar.setProgress(imageWidth / 10);
-            widthText.setText(String.valueOf(imageWidth) + "px");
+            widthText.setText(String.format(Locale.US, getString(R.string.pixel_suffix), imageWidth));
         }
 
         widthSeekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
@@ -448,7 +450,7 @@ public class ImageSettingsDialogFragment extends DialogFragment {
                 if (progress == 0) {
                     progress = 1;
                 }
-                widthText.setText(progress * 10 + "px");
+                widthText.setText(String.format(Locale.US, getString(R.string.pixel_suffix), progress * 10));
             }
         });
 
@@ -465,7 +467,16 @@ public class ImageSettingsDialogFragment extends DialogFragment {
             @Override
             public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
                 int width = getEditTextIntegerClamped(widthText, 10, mMaxImageWidth);
-                widthSeekBar.setProgress(width / 10);
+
+                int progress = width / 10;
+
+                //OnSeekBarChangeListener will not be triggered if progress have not changed
+                if (widthSeekBar.getProgress() == progress) {
+                    widthText.setText(String.format(Locale.US, getString(R.string.pixel_suffix), progress * 10));
+                } else {
+                    widthSeekBar.setProgress(progress);
+                }
+
                 widthText.setSelection((String.valueOf(width).length()));
 
                 InputMethodManager imm = (InputMethodManager) getActivity()
@@ -477,6 +488,7 @@ public class ImageSettingsDialogFragment extends DialogFragment {
             }
         });
     }
+
 
     /**
      * Return the integer value of the width EditText, adjusted to be within the given min and max, and stripped of the

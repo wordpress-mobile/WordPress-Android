@@ -34,13 +34,7 @@ Language: sr_RS
 	<string name="email">Е-пошта</string>
 	<string name="app_notifications">Обавештења апликације</string>
 	<string name="notifications_tab">Језичак обавештења</string>
-	<string name="notifications_comments_other_blogs">Коментари на другим веб местима</string>
 	<string name="notifications_wpcom_updates">WordPress.com ажурирања</string>
-	<string name="notifications_other">Друго</string>
-	<string name="notifications_account_emails">Е-пошта од WordPress.com</string>
-	<string name="notifications_account_emails_summary">Увек ћемо слати важну е-пошту везану за ваш налог, али такође можете да добијете неку додатну помоћ.</string>
-	<string name="your_sites">Ваша веб места</string>
-	<string name="notifications_sights_and_sounds">Слике и звуци</string>
 	<string name="stats_insights_latest_post_trend">Прошло је %1$s од када је %2$s је објављен. Ево какав је учинак чланка до сада…</string>
 	<string name="stats_insights_latest_post_summary">Резиме последњег чланка</string>
 	<string name="button_revert">Врати</string>
@@ -79,7 +73,7 @@ Language: sr_RS
 	<string name="stats_other_recent_stats_moved_label">Тражите своје друге скорашње статистике? Померили смо их на страницу Увиди.</string>
 	<string name="me_btn_login_logout">Пријава/одјава</string>
 	<string name="me_btn_support">Помоћ и подршка</string>
-	<string name="site_picker_cant_hide_current_site">"%s" није сакривен зато што је тренутно веб место</string>
+	<string name="site_picker_cant_hide_current_site">\"%s\" није сакривен зато што је тренутно веб место</string>
 	<string name="site_picker_create_dotcom">Направи WordPress.com веб место</string>
 	<string name="site_picker_add_self_hosted">Додај самостално угошћено веб место</string>
 	<string name="site_picker_add_site">Додај веб место</string>
@@ -198,8 +192,6 @@ Language: sr_RS
 	<string name="ssl_certificate_details">Детаљи</string>
 	<string name="delete_sure_page">Обриши ову страну</string>
 	<string name="cab_selected">%d изабрано</string>
-	<string name="confirm_delete_media">Обрисати изабрану ставку?</string>
-	<string name="confirm_delete_multi_media">Обрисати изабране ставке?</string>
 	<string name="delete_sure">Обриши овај нацрт</string>
 	<string name="delete_sure_post">Обриши овај чланак</string>
 	<string name="browse_our_faq_button">Прегледајте наша ЧПП</string>
@@ -282,7 +274,7 @@ Language: sr_RS
 	<string name="blog_name_reserved">То веб место је резервисано</string>
 	<string name="blog_name_exists">То веб место већ постоји</string>
 	<string name="blog_name_cant_be_used">Не смете употребити ту адресу веб места</string>
-	<string name="blog_name_contains_invalid_characters">Адреса веб места не сме да садржи знак "_"</string>
+	<string name="blog_name_contains_invalid_characters">Адреса веб места не сме да садржи знак \"_\"</string>
 	<string name="blog_name_must_be_less_than_sixty_four_characters">Адреса веб места мора бити дужине мање од 64 знака</string>
 	<string name="blog_name_must_be_at_least_four_characters">Адреса веб места мора бити дужине најмање 4 знака</string>
 	<string name="blog_name_not_allowed">Та адреса веб места није дозвољена</string>
@@ -292,7 +284,7 @@ Language: sr_RS
 	<string name="email_exists">Та адреса е-поште је већ у употреби</string>
 	<string name="username_reserved_but_may_be_available">То корисничко име је тренутно резервисано али ће можда бити слободно за пар дана</string>
 	<string name="email_invalid">Унесите исправну адресу е-поште</string>
-	<string name="username_contains_invalid_characters">Корисничко име не сме да садржи знак "_"</string>
+	<string name="username_contains_invalid_characters">Корисничко име не сме да садржи знак \"_\"</string>
 	<string name="username_not_allowed">Недозвољено корисничко име</string>
 	<string name="username_must_be_at_least_four_characters">Корисничко име мора садржати бар 4 знака</string>
 	<string name="username_required">Унесите корисничко име</string>
@@ -346,7 +338,6 @@ Language: sr_RS
 	<string name="blog_title_invalid">Неисправан наслов веб места</string>
 	<string name="blog_name_invalid">Неисправна адреса веб места</string>
 	<string name="email_hint">Адреса е-поште</string>
-	<string name="share_action_post">Нови чланак</string>
 	<string name="add_new_category">Додај нову категорију</string>
 	<string name="category_name">Име категорије</string>
 	<string name="post_not_published">Стање чланка није објављено</string>
@@ -361,7 +352,6 @@ Language: sr_RS
 	<string name="post_settings">Подешавања чланка</string>
 	<string name="local_draft">Локални нацрт</string>
 	<string name="upload_failed">Отпремање неуспешно</string>
-	<string name="file_not_found">Није могуће пронаћи медијску датотеку за отпремање. Да ли је можда обрисана или померена?</string>
 	<string name="create_a_link">Направите везу</string>
 	<string name="link_enter_url_text">Текст везе (опционо)</string>
 	<string name="cannot_delete_multi_media_items">Неки медији тренутно не могу бити обрисани. Пробајте поново касније.</string>
@@ -388,7 +378,6 @@ Language: sr_RS
 	<string name="author_name">Име аутора</string>
 	<string name="trash_no">Не шаљи на отпад</string>
 	<string name="delete_post">Обриши чланак</string>
-	<string name="share_action_media">Библиотека медија</string>
 	<string name="media_error_no_permission">Немате дозволу да прегледате библиотеку медија</string>
 	<string name="xmlrpc_error">Није могуће повезати се. Унесите пуну путању до xmlrpc.php на свом веб месту и покушајте поново.</string>
 	<string name="email_reserved">Та адреса веб-поште је већ у употреби. Проверите своје поштанско сандуче за поруку за активацију. Уколико не активирате, постаће доступна за неколико дана.</string>
@@ -469,7 +458,6 @@ Language: sr_RS
 	<string name="reader_btn_unfollow">Престани са праћењем</string>
 	<string name="reader_btn_follow">Прати</string>
 	<string name="media_add_popup_title">Додајте у библиотеку медија</string>
-	<string name="select_from_media_library">Одаберите из библиотеке медија</string>
 	<string name="reader_hint_comment_on_comment">Одговор на коментар…</string>
 	<string name="media_gallery_type_slideshow">Приказ слајдова</string>
 	<string name="media_gallery_type">Врста</string>
@@ -569,8 +557,6 @@ Language: sr_RS
 	<string name="upload_full_size_image">Отпреми и повежи са целокупном сликом</string>
 	<string name="categories">Категорије</string>
 	<string name="title">Наслов</string>
-	<string name="notification_vibrate">Вибрирај</string>
-	<string name="notification_blink">Трепћи светло за обавештење</string>
 	<string name="sdcard_title">SD картица неопходна</string>
 	<string name="media">Медији</string>
 	<string name="delete">Обриши</string>
