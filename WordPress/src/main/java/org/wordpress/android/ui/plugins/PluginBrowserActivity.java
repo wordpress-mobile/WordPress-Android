@@ -87,7 +87,7 @@ public class PluginBrowserActivity extends AppCompatActivity
     }
 
     private PluginBrowserViewModel mViewModel;
-    private final HashMap<String, SitePluginModel> mSitePluginsMap = new HashMap<>();
+
     private final List<WPOrgPluginModel> mSearchResults = new ArrayList<>();
 
     private final Handler mHandler = new Handler();
@@ -165,10 +165,9 @@ public class PluginBrowserActivity extends AppCompatActivity
         configureRecycler(mPopularPluginsRecycler);
         configureRecycler(mNewPluginsRecycler);
 
+
         List<SitePluginModel> sitePlugins = mPluginStore.getSitePlugins(mViewModel.getSite());
-        for (SitePluginModel plugin: sitePlugins) {
-            mSitePluginsMap.put(plugin.getSlug(), plugin);
-        }
+        mViewModel.setSitePlugins(sitePlugins);
         reloadAllPlugins();
 
         if (savedInstanceState == null) {
@@ -303,6 +302,8 @@ public class PluginBrowserActivity extends AppCompatActivity
         List<?> plugins = getPlugins(pluginType);
         adapter.setPlugins(plugins);
 
+        // TODO: handle the visibility with a subscription
+
         int newVisibility = plugins.size() > 0 ? View.VISIBLE : View.GONE;
         int oldVisibility = cardView.getVisibility();
         if (newVisibility == View.VISIBLE && oldVisibility != View.VISIBLE) {
@@ -321,17 +322,8 @@ public class PluginBrowserActivity extends AppCompatActivity
             case SEARCH:
                 return mSearchResults;
             default:
-                List<SitePluginModel> sitePlugins = mPluginStore.getSitePlugins(mViewModel.getSite());
-                mSitePluginsMap.clear();
-                for (SitePluginModel plugin: sitePlugins) {
-                    mSitePluginsMap.put(plugin.getSlug(), plugin);
-                }
-                return sitePlugins;
+                return mPluginStore.getSitePlugins(mViewModel.getSite());
         }
-    }
-
-    private SitePluginModel getSitePluginFromSlug(@Nullable String slug) {
-        return mSitePluginsMap.get(slug);
     }
 
     @SuppressWarnings("unused")
@@ -597,7 +589,7 @@ public class PluginBrowserActivity extends AppCompatActivity
                 author = sitePlugin.getAuthorName();
             } else {
                 wpOrgPlugin = (WPOrgPluginModel) item;
-                sitePlugin = getSitePluginFromSlug(wpOrgPlugin.getSlug());
+                sitePlugin = mViewModel.getSitePluginFromSlug(wpOrgPlugin.getSlug());
                 name = wpOrgPlugin.getName();
                 author = wpOrgPlugin.getAuthorAsHtml();
             }
@@ -676,7 +668,7 @@ public class PluginBrowserActivity extends AppCompatActivity
                             wpOrgPlugin = mPluginStore.getWPOrgPluginBySlug(sitePlugin.getSlug());
                         } else {
                             wpOrgPlugin = (WPOrgPluginModel) item;
-                            sitePlugin = getSitePluginFromSlug(wpOrgPlugin.getSlug());
+                            sitePlugin = mViewModel.getSitePluginFromSlug(wpOrgPlugin.getSlug());
                         }
                         if (sitePlugin != null) {
                             ActivityLauncher.viewPluginDetailForResult(PluginBrowserActivity.this, mViewModel.getSite(), sitePlugin);
