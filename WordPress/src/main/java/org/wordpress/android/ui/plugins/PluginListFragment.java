@@ -264,9 +264,7 @@ public class PluginListFragment extends Fragment {
                 holder.ratingBar.setRating(PluginUtils.getAverageStarRating(wpOrgPlugin));
             }
 
-            if (mViewModel.canLoadMorePlugins(mListType)
-                    && !mViewModel.isLoadingMorePlugins(mListType)
-                    && position == getItemCount() - 1) {
+            if (position == getItemCount() - 1) {
                 loadMore();
             }
         }

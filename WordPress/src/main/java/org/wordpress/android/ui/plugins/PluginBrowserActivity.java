@@ -229,6 +229,11 @@ public class PluginBrowserActivity extends AppCompatActivity
     }
 
     private void fetchPlugins(@NonNull PluginListType pluginType, boolean loadMore) {
+        if (loadMore && (!mViewModel.canLoadMorePlugins(pluginType) || mViewModel.isLoadingMorePlugins(pluginType))) {
+            // Either we can't load any more plugins or we are already loading more, so ignore
+            return;
+        }
+        mViewModel.setLoadingMorePlugins(pluginType, loadMore);
         switch (pluginType) {
             case SITE:
                 if (mPluginStore.getSitePlugins(mViewModel.getSite()).size() == 0) {
@@ -237,13 +242,11 @@ public class PluginBrowserActivity extends AppCompatActivity
                 mDispatcher.dispatch(PluginActionBuilder.newFetchSitePluginsAction(mViewModel.getSite()));
                 break;
             case POPULAR:
-                mViewModel.setLoadingMorePlugins(PluginListType.POPULAR, loadMore);
                 PluginStore.FetchPluginDirectoryPayload popularPayload =
                         new PluginStore.FetchPluginDirectoryPayload(PluginDirectoryType.POPULAR, loadMore);
                 mDispatcher.dispatch(PluginActionBuilder.newFetchPluginDirectoryAction(popularPayload));
                 break;
             case NEW:
-                mViewModel.setLoadingMorePlugins(PluginListType.NEW, loadMore);
                 PluginStore.FetchPluginDirectoryPayload newPayload =
                         new PluginStore.FetchPluginDirectoryPayload(PluginDirectoryType.NEW, loadMore);
                 mDispatcher.dispatch(PluginActionBuilder.newFetchPluginDirectoryAction(newPayload));
