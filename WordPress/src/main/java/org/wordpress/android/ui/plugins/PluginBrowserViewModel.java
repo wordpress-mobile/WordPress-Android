@@ -10,19 +10,29 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-public class PluginBrowserViewModel extends ViewModel {
+class PluginBrowserViewModel extends ViewModel {
+    private String mSearchQuery;
     private SiteModel mSite;
+
     private final HashMap<String, SitePluginModel> mSitePluginsMap = new HashMap<>();
     private List<WPOrgPluginModel> mNewPlugins;
     private List<WPOrgPluginModel> mPopularPlugins;
     private List<SitePluginModel> mSitePlugins;
-    private List<WPOrgPluginModel> mSearchPlugins = new ArrayList<>();
+    private final List<WPOrgPluginModel> mSearchResults = new ArrayList<>();
 
-    public SiteModel getSite() {
+    String getSearchQuery() {
+        return mSearchQuery;
+    }
+
+    void setSearchQuery(String searchQuery) {
+        mSearchQuery = searchQuery;
+    }
+
+    SiteModel getSite() {
         return mSite;
     }
 
-    public void setSite(SiteModel site) {
+    void setSite(SiteModel site) {
         mSite = site;
     }
 
@@ -46,8 +56,19 @@ public class PluginBrowserViewModel extends ViewModel {
         mPopularPlugins = popularPlugins;
     }
 
-    void setSearchPlugins(List<WPOrgPluginModel> searchPlugins) {
-        mSearchPlugins = searchPlugins;
+    void clearSearchResults() {
+        mSearchResults.clear();
+    }
+
+    List<WPOrgPluginModel> getSearchResults() {
+        return mSearchResults;
+    }
+
+    void setSearchResults(String searchQuery, List<WPOrgPluginModel> searchResults) {
+        if (mSearchQuery.equalsIgnoreCase(searchQuery)) {
+            mSearchResults.clear();
+            mSearchResults.addAll(searchResults);
+        }
     }
 
     List<?> getPluginsForListType(PluginBrowserActivity.PluginListType listType) {
@@ -55,10 +76,7 @@ public class PluginBrowserViewModel extends ViewModel {
             case NEW:
                 return mNewPlugins;
             case SEARCH:
-                if (mSearchPlugins == null) {
-                    return new ArrayList<WPOrgPluginModel>();
-                }
-                return mSearchPlugins;
+                return getSearchResults();
             case SITE:
                 return mSitePlugins;
             case POPULAR:

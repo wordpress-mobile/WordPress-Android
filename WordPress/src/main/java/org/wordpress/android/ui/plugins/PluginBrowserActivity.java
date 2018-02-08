@@ -64,8 +64,6 @@ public class PluginBrowserActivity extends AppCompatActivity
         MenuItem.OnActionExpandListener,
         PluginListFragment.PluginListFragmentListener {
 
-    private static final String KEY_SEARCH_QUERY = "search_query";
-
     public enum PluginListType {
         SITE,
         POPULAR,
@@ -88,14 +86,11 @@ public class PluginBrowserActivity extends AppCompatActivity
 
     private PluginBrowserViewModel mViewModel;
 
-    private final List<WPOrgPluginModel> mSearchResults = new ArrayList<>();
-
     private final Handler mHandler = new Handler();
     private RecyclerView mSitePluginsRecycler;
     private RecyclerView mPopularPluginsRecycler;
     private RecyclerView mNewPluginsRecycler;
 
-    private String mSearchQuery;
     private MenuItem mSearchMenuItem;
     private SearchView mSearchView;
 
@@ -127,8 +122,6 @@ public class PluginBrowserActivity extends AppCompatActivity
 
         if (savedInstanceState == null) {
             mViewModel.setSite((SiteModel) getIntent().getSerializableExtra(WordPress.SITE));
-        } else {
-            mSearchQuery = savedInstanceState.getString(KEY_SEARCH_QUERY);
         }
 
         if (mViewModel.getSite() == null) {
@@ -208,9 +201,9 @@ public class PluginBrowserActivity extends AppCompatActivity
         mSearchMenuItem = menu.findItem(R.id.menu_search);
         mSearchView = (SearchView) mSearchMenuItem.getActionView();
 
-        if (!TextUtils.isEmpty(mSearchQuery)) {
+        if (!TextUtils.isEmpty(mViewModel.getSearchQuery())) {
             mSearchMenuItem.expandActionView();
-            mSearchView.setQuery(mSearchQuery, false);
+            mSearchView.setQuery(mViewModel.getSearchQuery(), false);
             fetchPlugins(PluginListType.SEARCH, false);
         }
 
@@ -226,14 +219,6 @@ public class PluginBrowserActivity extends AppCompatActivity
             return true;
         }
         return super.onOptionsItemSelected(item);
-    }
-
-    @Override
-    public void onSaveInstanceState(Bundle outState) {
-        super.onSaveInstanceState(outState);
-        if (mSearchMenuItem != null && mSearchMenuItem.isActionViewExpanded()) {
-            outState.putString(KEY_SEARCH_QUERY, mSearchView.getQuery().toString());
-        }
     }
 
     @Override
@@ -264,10 +249,11 @@ public class PluginBrowserActivity extends AppCompatActivity
                 mDispatcher.dispatch(PluginActionBuilder.newFetchPluginDirectoryAction(newPayload));
                 break;
             case SEARCH:
-                if (mSearchResults.size() == 0) {
+                if (mViewModel.getSearchResults().size() == 0) {
                     showProgress(true);
                 }
-                SearchPluginDirectoryPayload searchPayload = new SearchPluginDirectoryPayload(mSearchQuery, 1);
+                SearchPluginDirectoryPayload searchPayload =
+                        new SearchPluginDirectoryPayload(mViewModel.getSearchQuery(), 1);
                 mDispatcher.dispatch(PluginActionBuilder.newSearchPluginDirectoryAction(searchPayload));
                 break;
         }
@@ -379,24 +365,25 @@ public class PluginBrowserActivity extends AppCompatActivity
 
         showProgress(false);
 
+        if (event.isError()) {
+            AppLog.e(AppLog.T.PLUGINS, "An error occurred while searching the plugin directory");
+            ToastUtils.showToast(this, R.string.plugin_search_error);
+            return;
+        }
+
+        mViewModel.setSearchResults(event.searchTerm, event.plugins);
+
         // make sure the search list fragment is still active and that this is the same as the most
         // recent search (could be a stale response)
         PluginListFragment fragment = getListFragment();
         if (fragment == null
-                || fragment.getListType() != PluginListType.SEARCH
-                || !StringUtils.equals(mSearchQuery, event.searchTerm)) {
+                || fragment.getListType() != PluginListType.SEARCH) {
             return;
         }
 
-        if (event.isError()) {
-            AppLog.e(AppLog.T.PLUGINS, "An error occurred while searching the plugin directory");
-            ToastUtils.showToast(this, R.string.plugin_search_error);
-        } else {
-            mSearchResults.clear();
-            mSearchResults.addAll(event.plugins);
-            fragment.showEmptyView(mSearchResults.isEmpty() && !TextUtils.isEmpty(mSearchQuery));
-            reloadListFragment();
-        }
+        fragment.showEmptyView(mViewModel.getSearchResults().isEmpty()
+                && !TextUtils.isEmpty(mViewModel.getSearchQuery()));
+        reloadListFragment();
     }
 
     private void reloadPluginWithSlug(@NonNull String slug) {
@@ -451,22 +438,22 @@ public class PluginBrowserActivity extends AppCompatActivity
     }
 
     private void submitSearch(@Nullable final String query, boolean delayed) {
-        mSearchQuery = query;
+        mViewModel.setSearchQuery(query);
 
         if (delayed) {
             mHandler.postDelayed(new Runnable() {
                 @Override
                 public void run() {
-                    if (StringUtils.equals(query, mSearchQuery)) {
+                    if (StringUtils.equals(query, mViewModel.getSearchQuery())) {
                         submitSearch(query, false);
                     }
                 }
             }, 250);
         } else {
-            mSearchResults.clear();
+            mViewModel.clearSearchResults();
             PluginListFragment fragment = showListFragment(PluginListType.SEARCH);
             fragment.showEmptyView(false);
-            if (!TextUtils.isEmpty(mSearchQuery)) {
+            if (!TextUtils.isEmpty(mViewModel.getSearchQuery())) {
                 fetchPlugins(PluginListType.SEARCH, false);
             }
         }
