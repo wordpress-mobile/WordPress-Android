@@ -237,11 +237,13 @@ public class PluginBrowserActivity extends AppCompatActivity
                 mDispatcher.dispatch(PluginActionBuilder.newFetchSitePluginsAction(mViewModel.getSite()));
                 break;
             case POPULAR:
+                mViewModel.setLoadingMorePlugins(PluginListType.POPULAR, loadMore);
                 PluginStore.FetchPluginDirectoryPayload popularPayload =
                         new PluginStore.FetchPluginDirectoryPayload(PluginDirectoryType.POPULAR, loadMore);
                 mDispatcher.dispatch(PluginActionBuilder.newFetchPluginDirectoryAction(popularPayload));
                 break;
             case NEW:
+                mViewModel.setLoadingMorePlugins(PluginListType.NEW, loadMore);
                 PluginStore.FetchPluginDirectoryPayload newPayload =
                         new PluginStore.FetchPluginDirectoryPayload(PluginDirectoryType.NEW, loadMore);
                 mDispatcher.dispatch(PluginActionBuilder.newFetchPluginDirectoryAction(newPayload));
@@ -351,6 +353,7 @@ public class PluginBrowserActivity extends AppCompatActivity
         PluginListType listType = event.type == PluginDirectoryType.POPULAR ?
                 PluginListType.POPULAR : PluginListType.NEW;
         mViewModel.setCanLoadMorePlugins(listType, event.canLoadMore);
+        mViewModel.setLoadingMorePlugins(listType, false);
         PluginListFragment fragment = getListFragment();
         if (fragment != null && fragment.getListType() == listType) {
             fragment.onLoadedMore();

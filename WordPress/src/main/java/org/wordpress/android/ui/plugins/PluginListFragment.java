@@ -162,12 +162,10 @@ public class PluginListFragment extends Fragment {
 
     private void loadMore() {
         showProgress(true);
-        mViewModel.setLoadingMorePlugins(mListType, true);
         mListener.onListFragmentLoadMore(mListType);
     }
 
     void onLoadedMore() {
-        mViewModel.setLoadingMorePlugins(mListType, false);
         if (isAdded()) {
             showProgress(false);
             requestPlugins();
