@@ -85,6 +85,8 @@ TEXT_it_IT_MYSITE="Gestisci il tuo sito\novunque tu sia"
 TEXT_it_IT_READER="Leggi i tuoi\nsiti preferiti"
 TEXT_it_IT_NOTIFS="Rimani aggiornato\nin tempo reale"
 
+TEXT_SIZE_default=70
+
 PHONE_TEMPLATE=android-phone-template2.png
 PHONE_OFFSET="+121+532"
 TAB7_TEMPLATE=android-tab7-template2.png
@@ -93,8 +95,7 @@ TAB10_TEMPLATE=android-tab10-template2.png
 TAB10_OFFSET="+148+622"
 
 # Langs
-#LANG_FILE="exported-language-codes.csv"
-LANG_FILE="exported2.csv"
+LANG_FILE="exported-language-codes.csv"
 LangGlotPress=("en-us" "ar" "az" "bg" "cs" "cy" "da" "de" "el" "en-au" "en-ca" "en-gb" "es" "es-cl" "es-co" "es-ve" "eu" "fi" \
 "fr" "gd" "gl" "hi" "he" "hr" "hu" "id" "is" "it" "ja" "ka" "ko" "lv" "lt" "mk" "ms" "nb" \
 "nl" "pl" "pt" "pt-br" "ro" "ru" "sk" "sl" "sq" "sr" "sv" "th" "tr" \
@@ -231,27 +232,30 @@ function require_image_dirs() {
   fi 
 }
 
+# Checks the availability of the promo font
 function require_font {
   if [ ! -f "$FONT_FILE" ]; then
-    echo Font file is missing.
+    show_message "Font file is missing."
     require_dirs
 
-    echo -n Downloading...
-    wget $FONT_ZIP_URL -O "$WORKING_DIR/noto.zip" &>/dev/null
-    echo Done
+    show_message "Downloading..."
+    command -v wget >/dev/null 2>&1 || { show_error_message "wget command not installed. Please, install it!"; stop_on_error; }
+    wget $FONT_ZIP_URL -O "$WORKING_DIR/noto.zip" >> $LOG_FILE 2>&1 || stop_on_error
+    show_message "Done"
 
-    echo -n Unzipping...
-    unzip "$WORKING_DIR/noto.zip" -d "$WORKING_DIR/$FONT_DIR/" &>/dev/null
-    echo Done
+    show_message "Unzipping..."
+    unzip "$WORKING_DIR/noto.zip" -d "$WORKING_DIR/$FONT_DIR/" >> $LOG_FILE 2>&1 || stop_on_error
+    show_message "Done"
   fi
 }
 
+# Checks for ImageMagick
 function require_imagemagick {
   which magick &>/dev/null
   immissing=$?
 
   if [ $immissing = 1 ]; then
-    echo Installing ImageMagick...
+    show_message "Installing ImageMagick..."
     exec brew install imagemagick
   fi
 }
@@ -428,27 +432,60 @@ function screenshot() {
   show_message "Done"
 }
 
-function produce() {
-  show_message "Producing image for $1 $2 $3"
+# Takes the screenshot
+function take_screenshot() {
+  show_message "Taking image for $1 $2 $3"
   device=$1
   loc=${2/-/_} # replace the - with _
   screen=$3
   fn=wpandroid_$device\_$loc\_$screen
   
   screenshot $fn $1 $2
+  show_message "Screenshot at: $TAKE_DIR/$1/$2/$fn.png"
+}
+
+# Process the screenshot adding the promo text
+function process_screenshot() {
+  show_message "Processing image for $1 $2 $3"
+  device=$1
+  loc=${2/-/_} # replace the - with _
+  screen=$3
+  fn=wpandroid_$device\_$loc\_$screen
+  
   tn=$TAKE_DIR/$1/$2/$fn
   fn=$PROD_DIR/$1/$2/$fn
-  magick $tn.png -crop 0x$APP_HEIGHT+0+0 $fn\_cropped.png
-  template=$device\_TEMPLATE
-  offset=$device\_OFFSET
-  magick ${!template} $fn\_cropped.png -geometry ${!offset} -composite $fn\_comp1.png
 
   text=TEXT_$loc\_$screen
-  size=TEXT_SIZE_$loc
-  magick $fn\_comp1.png -gravity north -pointsize ${!size} -font $FONT_FILE -draw "fill white text 0,$TEXT_OFFSET_Y \"${!text}\"" $fn\_final.png
+  
+  # Check text
+  if [ -z "${!text}" ]; then
+    show_warning_message "No traslation for $loc $screen: using default language"
+    text=TEXT_en_US\_$screen
+    size=TEXT_SIZE_en_US
+    warningCount=$((warningCount+1))
+  else
+    size=TEXT_SIZE_$loc
+  fi 
 
-  rm $fn\_cropped.png $fn\_comp1.png
-  show_message "Image ready: $fn\_final.png"
+  # Check size
+  if [ -z ${!size} ]; then
+    size=TEXT_SIZE_default
+  fi
+
+  # Check screenshot file and process
+  if [ -f $tn.png ]; then
+    magick $tn.png -crop 0x$APP_HEIGHT+0+0 $fn\_cropped.png || warningCount=$((warningCount+1))
+    template=$device\_TEMPLATE
+    offset=$device\_OFFSET
+    magick ${!template} $fn\_cropped.png -geometry ${!offset} -composite $fn\_comp1.png || warningCount=$((warningCount+1))
+    magick $fn\_comp1.png -gravity north -pointsize ${!size} -font $FONT_FILE -draw "fill white text 0,$TEXT_OFFSET_Y \"${!text}\"" $fn\_final.png || warningCount=$((warningCount+1))
+
+    rm $fn\_cropped.png $fn\_comp1.png
+    show_message "Image ready: $fn\_final.png"
+  else
+    show_warning_message "No screenshot for $device, $loc, $screen (file: $tn.jpg): skipping it."
+    warningCount=$((warningCount+1))
+  fi
 }
 
 # Sets the required locale
@@ -525,6 +562,30 @@ function glotPress_googlePlay() {
   return 255
 }
 
+# Processes the screenshot for the provided device
+function process_device() {
+  device=$1
+
+  for line in $(cat $LANG_FILE); do
+    cod=$(echo $line|cut -d "," -f1|tr -d " ")
+    glotPress_googlePlay $cod
+    locIdx=$?
+
+    if [ $locIdx -lt 255 ]; then
+      locLang=${LangGooglePlay[$locIdx]}
+      require_image_dirs $PROD_DIR $device $locLang
+
+      for screen in ${SCREENS[*]}; do
+        process_screenshot $device $locLang $screen
+      done
+
+    else
+      show_warning_message "Skipping language $cod as no Google Play pair was found."
+      warningCount=$((warningCount+1))
+    fi
+  done
+}
+
 # Takes the screenshot for the provided device
 function screenshot_device() {
   device=$1
@@ -550,7 +611,6 @@ function screenshot_device() {
     if [ $locIdx -lt 255 ]; then
       locLang=${LangGooglePlay[$locIdx]}
       require_image_dirs $TAKE_DIR $device $locLang 
-      require_image_dirs $PROD_DIR $device $locLang
 
       locale $locLang
 
@@ -561,21 +621,21 @@ function screenshot_device() {
         tap_on ${!coords}
 
         geekytime
-        produce $device $locLang $screen
+        take_screenshot $device $locLang $screen
       done
 
     else
-      show_warning_message "Skipping language $cod/$loc as no Google Play pair was found."
+      show_warning_message "Skipping language $cod as no Google Play pair was found."
+      warningCount=$((warningCount+1))
     fi
   done
 }
 
 # Takes the required screenshots
 function execute_take() {
-  require_font
-  require_imagemagick
   check_params
   show_title_message "Starting the screenshot taker process..."
+  warningCount=0
   if [ $RUN_DEV == "ALL" ]; then
     for device in ${DEVICES[*]}; do
       screenshot_device $device
@@ -583,7 +643,39 @@ function execute_take() {
   else 
     screenshot_device $RUN_DEV
   fi
-  show_ok_message "Done!"
+
+  if [ $CMD == $CMD_TAKE ]; then
+    if [ warningCount -eq 0]; then
+      show_ok_message "Done!"
+    else
+      show_ok_message "Done (with $warningCount warning(s))!"
+    fi
+  fi
+}
+
+# Processes the screenshots
+function execute_process() {
+  require_font
+  require_imagemagick
+
+  show_title_message "Starting the screenshot processor..."
+  if [ $CMD == $CMD_PROCESS ]; then
+    warningCount=0
+  fi
+
+  if [ $RUN_DEV == "ALL" ]; then
+    for device in ${DEVICES[*]}; do
+      process_device $device
+    done
+  else 
+    process_device $RUN_DEV
+  fi
+
+  if [ warningCount -eq 0 ]; then
+    show_ok_message "Done!"
+  else
+    show_ok_message "Done (with $warningCount warning(s))!"
+  fi
 }
 
 ### Script main
@@ -630,6 +722,11 @@ if [ $CMD == $CMD_SETUP ]; then
   execute_setup 
 elif [ $CMD == $CMD_TAKE ]; then
   execute_take
+elif [ $CMD == $CMD_PROCESS ]; then
+  execute_process
+elif [ $CMD == $CMD_PRODUCE ]; then
+  execute_take
+  execute_process
 else 
   show_usage
 fi
