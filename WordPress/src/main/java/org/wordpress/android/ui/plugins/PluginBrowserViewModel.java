@@ -269,7 +269,13 @@ public class PluginBrowserViewModel extends AndroidViewModel {
     void setSearchQuery(String searchQuery) {
         mSearchQuery = searchQuery;
 
-        submitSearch(searchQuery, true);
+        // Don't delay if the searchQuery is empty
+        submitSearch(searchQuery, !TextUtils.isEmpty(searchQuery));
+    }
+
+    boolean shouldSearch() {
+        // We need at least 2 characters to be able to search plugins
+        return getSearchQuery() != null && getSearchQuery().length() > 1;
     }
 
     private void submitSearch(@Nullable final String query, boolean delayed) {
@@ -284,8 +290,19 @@ public class PluginBrowserViewModel extends AndroidViewModel {
             }, 250);
         } else {
             clearSearchResults();
-            if (!TextUtils.isEmpty(getSearchQuery())) {
+
+            if (shouldSearch()) {
                 fetchPlugins(PluginBrowserActivity.PluginListType.SEARCH, false);
+            } else {
+                // Due to the query being changed after the last fetch, the status won't ever be updated, so we need
+                // to manually do it. Consider the following case:
+                // 1. Search the plugins for "contact" which will change the status to FETCHING
+                // 2. Before the fetch completes delete the text
+                // 3. In `onPluginDirectorySearched` the result will be ignored, because the query changed, but it won't
+                // be triggered again, because another fetch didn't happen (due to query being empty)
+                // 4. The status will be stuck in FETCHING until another search occurs. This following reset fixes the
+                // problem.
+                mSearchPluginsListStatus.setValue(PluginListStatus.DONE);
             }
         }
     }
@@ -295,7 +312,8 @@ public class PluginBrowserViewModel extends AndroidViewModel {
     }
 
     boolean shouldShowEmptySearchResultsView() {
-        if (TextUtils.isEmpty(mSearchQuery)) {
+        // Search query is less than 2 characters
+        if (!shouldSearch()) {
             return false;
         }
         if (mSearchPluginsListStatus.getValue() != PluginListStatus.DONE

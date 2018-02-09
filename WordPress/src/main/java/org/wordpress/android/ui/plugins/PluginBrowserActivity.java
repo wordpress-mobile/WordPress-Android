@@ -217,7 +217,7 @@ public class PluginBrowserActivity extends AppCompatActivity
         if (!TextUtils.isEmpty(mViewModel.getSearchQuery())) {
             mSearchMenuItem.expandActionView();
             mSearchView.setQuery(mViewModel.getSearchQuery(), false);
-            mViewModel.fetchPlugins(PluginListType.SEARCH, false);
+            mSearchView.setOnQueryTextListener(this);
         }
 
         mSearchMenuItem.setOnActionExpandListener(this);
