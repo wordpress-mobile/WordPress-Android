@@ -13,6 +13,7 @@ import android.support.annotation.StringRes;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -133,6 +134,16 @@ public class PluginListFragment extends Fragment {
                 }
             }
         });
+
+        mViewModel.getLastUpdatedWpOrgPluginSlug().observe(this, new Observer<String>() {
+            @Override
+            public void onChanged(@Nullable String slug) {
+                if (!TextUtils.isEmpty(slug) && mRecycler.getAdapter() != null) {
+                    showProgress(true);
+                    ((PluginListAdapter) mRecycler.getAdapter()).reloadPluginWithSlug(slug);
+                }
+            }
+        });
     }
 
     @Override
@@ -155,10 +166,6 @@ public class PluginListFragment extends Fragment {
         mListType = listType;
         getArguments().putSerializable(ARG_LIST_TYPE, mListType);
         reloadPlugins();
-    }
-
-    PluginListType getListType() {
-        return mListType;
     }
 
     private void setPlugins(@Nullable List<?> plugins) {
@@ -198,6 +205,13 @@ public class PluginListFragment extends Fragment {
                 mItems.clear();
                 mItems.addAll(plugins);
                 notifyDataSetChanged();
+            }
+        }
+
+        private void reloadPluginWithSlug(@NonNull String slug) {
+            int index = mItems.indexOfPluginWithSlug(slug);
+            if (index != -1) {
+                notifyItemChanged(index);
             }
         }
 

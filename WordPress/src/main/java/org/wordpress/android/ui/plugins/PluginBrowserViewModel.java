@@ -49,6 +49,8 @@ public class PluginBrowserViewModel extends AndroidViewModel {
     private MutableLiveData<List<SitePluginModel>> mSitePlugins;
     private MutableLiveData<List<WPOrgPluginModel>> mSearchResults;
 
+    private MutableLiveData<String> mLastUpdatedWpOrgPluginSlug;
+
     public PluginBrowserViewModel(@NonNull Application application) {
         super(application);
 
@@ -64,6 +66,7 @@ public class PluginBrowserViewModel extends AndroidViewModel {
         mPopularPluginsListStatus = new MutableLiveData<>();
         mSitePluginsListStatus = new MutableLiveData<>();
         mSearchPluginsListStatus = new MutableLiveData<>();
+        mLastUpdatedWpOrgPluginSlug = new MutableLiveData<>();
     }
 
     @Override
@@ -208,6 +211,10 @@ public class PluginBrowserViewModel extends AndroidViewModel {
             AppLog.e(AppLog.T.PLUGINS, "An error occurred while fetching the wporg plugin with type: " + event.error.type);
             return;
         }
+
+        if (!TextUtils.isEmpty(event.pluginSlug)) {
+            mLastUpdatedWpOrgPluginSlug.setValue(event.pluginSlug);
+        }
     }
 
     @SuppressWarnings("unused")
@@ -324,6 +331,10 @@ public class PluginBrowserViewModel extends AndroidViewModel {
         return mSearchPluginsListStatus;
     }
 
+    LiveData<String> getLastUpdatedWpOrgPluginSlug() {
+        return mLastUpdatedWpOrgPluginSlug;
+    }
+
     List<?> getPluginsForListType(PluginBrowserActivity.PluginListType listType) {
         switch (listType) {
             case SITE:
@@ -336,14 +347,5 @@ public class PluginBrowserViewModel extends AndroidViewModel {
                 return getSearchResults().getValue();
         }
         return null;
-    }
-
-    private boolean isLoadingMorePlugins(PluginBrowserActivity.PluginListType listType) {
-        if (listType == PluginBrowserActivity.PluginListType.NEW) {
-            return getNewPluginsListStatus().getValue() == PluginListStatus.LOADING_MORE;
-        } else if (listType == PluginBrowserActivity.PluginListType.POPULAR) {
-            return getPopularPluginsListStatus().getValue() == PluginListStatus.LOADING_MORE;
-        }
-        return false;
     }
 }

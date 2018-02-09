@@ -30,14 +30,11 @@ import android.widget.ImageView;
 import android.widget.RatingBar;
 import android.widget.TextView;
 
-import org.greenrobot.eventbus.Subscribe;
-import org.greenrobot.eventbus.ThreadMode;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.model.plugin.SitePluginModel;
 import org.wordpress.android.fluxc.model.plugin.WPOrgPluginModel;
-import org.wordpress.android.fluxc.store.PluginStore;
 import org.wordpress.android.ui.ActivityLauncher;
 import org.wordpress.android.ui.RequestCodes;
 import org.wordpress.android.util.ActivityUtils;
@@ -179,6 +176,15 @@ public class PluginBrowserActivity extends AppCompatActivity
                 }
             }
         });
+
+        mViewModel.getLastUpdatedWpOrgPluginSlug().observe(this, new Observer<String>() {
+            @Override
+            public void onChanged(@Nullable String slug) {
+                if (!TextUtils.isEmpty(slug)) {
+                    reloadPluginWithSlug(slug);
+                }
+            }
+        });
     }
 
     private void configureRecycler(@NonNull RecyclerView recycler) {
@@ -266,16 +272,6 @@ public class PluginBrowserActivity extends AppCompatActivity
             AniUtils.fadeIn(cardView, AniUtils.Duration.MEDIUM);
         } else if (newVisibility != View.VISIBLE && oldVisibility == View.VISIBLE) {
             AniUtils.fadeOut(cardView, AniUtils.Duration.MEDIUM);
-        }
-    }
-
-    @SuppressWarnings("unused")
-    @Subscribe(threadMode = ThreadMode.MAIN)
-    public void onWPOrgPluginFetched(PluginStore.OnWPOrgPluginFetched event) {
-        if (isFinishing()) return;
-
-        if (!TextUtils.isEmpty(event.pluginSlug)) {
-            reloadPluginWithSlug(event.pluginSlug);
         }
     }
 
@@ -432,6 +428,7 @@ public class PluginBrowserActivity extends AppCompatActivity
             if (item instanceof SitePluginModel) {
                 sitePlugin = (SitePluginModel) item;
                 wpOrgPlugin = mViewModel.getWPOrgPluginForSitePlugin(sitePlugin);
+                // todo: move this to view model
                 if (wpOrgPlugin == null) {
                     mViewModel.fetchWPOrgPlugin(sitePlugin.getSlug());
                 }
