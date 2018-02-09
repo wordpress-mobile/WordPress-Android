@@ -58,6 +58,9 @@ public class PluginBrowserActivity extends AppCompatActivity
         implements SearchView.OnQueryTextListener,
         MenuItem.OnActionExpandListener {
 
+    // Remaining: Show progressbar for search and fetching site plugins
+    // Show empty view for the search when necessary
+
     public enum PluginListType {
         SITE,
         POPULAR,
@@ -313,6 +316,7 @@ public class PluginBrowserActivity extends AppCompatActivity
 
         // make sure the search list fragment is still active and that this is the same as the most
         // recent search (could be a stale response)
+        // todo: remove getlisttype from fragment
         PluginListFragment fragment = getListFragment();
         if (fragment == null
                 || fragment.getListType() != PluginListType.SEARCH) {
