@@ -5,7 +5,6 @@ import android.arch.lifecycle.AndroidViewModel;
 import android.arch.lifecycle.LiveData;
 import android.arch.lifecycle.MutableLiveData;
 import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
@@ -19,7 +18,6 @@ import org.wordpress.android.fluxc.model.plugin.WPOrgPluginModel;
 import org.wordpress.android.fluxc.store.PluginStore;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 
 import javax.inject.Inject;
@@ -36,9 +34,6 @@ public class PluginBrowserViewModel extends AndroidViewModel {
 
     private MutableLiveData<Boolean> mIsLoadingMoreNewPlugins;
     private MutableLiveData<Boolean> mIsLoadingMorePopularPlugins;
-
-    private final HashMap<String, SitePluginModel> mSitePluginsCache = new HashMap<>();
-    private final HashMap<String, WPOrgPluginModel> mWPOrgPluginsForSitePluginsCache = new HashMap<>();
 
     private MutableLiveData<List<WPOrgPluginModel>> mNewPlugins;
     private MutableLiveData<List<WPOrgPluginModel>> mPopularPlugins;
@@ -80,12 +75,11 @@ public class PluginBrowserViewModel extends AndroidViewModel {
         if (sitePlugin == null) {
             return null;
         }
-        WPOrgPluginModel wpOrgPlugin = getCachedWPOrgPluginForSitePlugin(sitePlugin);
-        if (wpOrgPlugin == null) {
-            wpOrgPlugin = PluginUtils.getWPOrgPlugin(mPluginStore, sitePlugin);
-            cacheWPOrgPluginIfNecessary(wpOrgPlugin);
-        }
-        return wpOrgPlugin;
+        return PluginUtils.getWPOrgPlugin(mPluginStore, sitePlugin);
+    }
+
+    SitePluginModel getSitePluginFromSlug(String slug) {
+        return mPluginStore.getSitePluginBySlug(getSite(), slug);
     }
 
     void reloadAllPluginsFromStore() {
@@ -96,14 +90,6 @@ public class PluginBrowserViewModel extends AndroidViewModel {
 
     private void reloadSitePlugins() {
         List<SitePluginModel> sitePlugins = mPluginStore.getSitePlugins(getSite());
-        // Preload the wporg plugins to avoid hitting the DB in onBindViewHolder
-        for (SitePluginModel pluginModel : sitePlugins) {
-            cacheWPOrgPluginIfNecessary(mPluginStore.getWPOrgPluginBySlug(pluginModel.getSlug()));
-        }
-        mSitePluginsCache.clear();
-        for (SitePluginModel plugin: sitePlugins) {
-            mSitePluginsCache.put(plugin.getSlug(), plugin);
-        }
         mSitePlugins.setValue(sitePlugins);
     }
 
@@ -184,9 +170,6 @@ public class PluginBrowserViewModel extends AndroidViewModel {
     @SuppressWarnings("unused")
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onWPOrgPluginFetched(PluginStore.OnWPOrgPluginFetched event) {
-        if (!event.isError()) {
-            cacheWPOrgPluginIfNecessary(mPluginStore.getWPOrgPluginBySlug(event.pluginSlug));
-        }
     }
 
     @SuppressWarnings("unused")
@@ -226,29 +209,6 @@ public class PluginBrowserViewModel extends AndroidViewModel {
     private void setSearchResults(String searchQuery, List<WPOrgPluginModel> searchResults) {
         if (mSearchQuery.equalsIgnoreCase(searchQuery)) {
             mSearchResults.setValue(searchResults);
-        }
-    }
-
-    // Cache Management
-
-    SitePluginModel getSitePluginFromSlug(String slug) {
-        return mSitePluginsCache.get(slug);
-    }
-
-    // This method is specifically taking SitePluginModel as parameter, so it's understood that not all plugins
-    // will be cached here
-    private @Nullable WPOrgPluginModel getCachedWPOrgPluginForSitePlugin(@NonNull SitePluginModel sitePlugin) {
-        return mWPOrgPluginsForSitePluginsCache.get(sitePlugin.getSlug());
-    }
-
-    // In order to avoid hitting the DB in bindViewHolder multiple times for site plugins, we attempt to cache them here
-    private void cacheWPOrgPluginIfNecessary(WPOrgPluginModel wpOrgPlugin) {
-        if (wpOrgPlugin == null) {
-            return;
-        }
-        String slug = wpOrgPlugin.getSlug();
-        if (mSitePluginsCache.containsKey(slug)) {
-            mWPOrgPluginsForSitePluginsCache.put(slug, wpOrgPlugin);
         }
     }
 
