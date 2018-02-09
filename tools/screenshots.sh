@@ -722,6 +722,7 @@ if ! [ -z $4 ]; then
   APK=$4
 fi
 
+RUN_DEV=`echo "$RUN_DEV" | awk '{print toupper($0)}'`
 # Update user
 show_config
 

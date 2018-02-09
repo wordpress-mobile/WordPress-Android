@@ -18,4 +18,5 @@ TOKEN_DEEPLINK=
 #AVD=Nexus_5X_API_25_SCREENSHOTS
 
 # Uncomment the following RUN_DEV key in order to override the default device
-#RUN_DEV=All
+# Valid device are: PHONE, TAB7, TAB10 or ALL to run all of them
+#RUN_DEV=ALL
