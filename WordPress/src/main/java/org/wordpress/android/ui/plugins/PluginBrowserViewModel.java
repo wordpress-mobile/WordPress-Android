@@ -245,12 +245,15 @@ public class PluginBrowserViewModel extends AndroidViewModel {
     @SuppressWarnings("unused")
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onPluginDirectorySearched(PluginStore.OnPluginDirectorySearched event) {
+        if (!mSearchQuery.equals(event.searchTerm)) {
+            return;
+        }
         if (event.isError()) {
             AppLog.e(AppLog.T.PLUGINS, "An error occurred while searching the plugin directory");
             mSearchPluginsListStatus.setValue(PluginListStatus.ERROR);
             return;
         }
-        setSearchResults(event.searchTerm, event.plugins);
+        mSearchResults.setValue(event.plugins);
         mSearchPluginsListStatus.setValue(PluginListStatus.DONE);
     }
 
@@ -258,12 +261,6 @@ public class PluginBrowserViewModel extends AndroidViewModel {
 
     void clearSearchResults() {
         mSearchResults.setValue(new ArrayList<WPOrgPluginModel>());
-    }
-
-    private void setSearchResults(String searchQuery, List<WPOrgPluginModel> searchResults) {
-        if (mSearchQuery.equalsIgnoreCase(searchQuery)) {
-            mSearchResults.setValue(searchResults);
-        }
     }
 
     boolean shouldShowEmptySearchResultsView() {

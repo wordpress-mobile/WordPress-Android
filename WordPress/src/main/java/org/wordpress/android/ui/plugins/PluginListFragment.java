@@ -139,7 +139,6 @@ public class PluginListFragment extends Fragment {
             @Override
             public void onChanged(@Nullable String slug) {
                 if (!TextUtils.isEmpty(slug) && mRecycler.getAdapter() != null) {
-                    showProgress(true);
                     ((PluginListAdapter) mRecycler.getAdapter()).reloadPluginWithSlug(slug);
                 }
             }
