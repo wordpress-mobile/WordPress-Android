@@ -66,6 +66,14 @@ public class PluginBrowserViewModel extends AndroidViewModel {
         mDispatcher.unregister(this);
     }
 
+    void start() {
+        reloadAllPluginsFromStore();
+
+        fetchPlugins(PluginBrowserActivity.PluginListType.SITE, false);
+        fetchPlugins(PluginBrowserActivity.PluginListType.POPULAR, false);
+        fetchPlugins(PluginBrowserActivity.PluginListType.NEW, false);
+    }
+
     SiteModel getSite() {
         return mSite;
     }
@@ -104,14 +112,6 @@ public class PluginBrowserViewModel extends AndroidViewModel {
                 return getSearchResults().getValue();
         }
         return null;
-    }
-
-    void reloadAndFetchAllPlugins() {
-        reloadAllPluginsFromStore();
-
-        fetchPlugins(PluginBrowserActivity.PluginListType.SITE, false);
-        fetchPlugins(PluginBrowserActivity.PluginListType.POPULAR, false);
-        fetchPlugins(PluginBrowserActivity.PluginListType.NEW, false);
     }
 
     void reloadAllPluginsFromStore() {

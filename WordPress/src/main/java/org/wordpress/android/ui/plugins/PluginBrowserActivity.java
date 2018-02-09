@@ -152,9 +152,9 @@ public class PluginBrowserActivity extends AppCompatActivity
         configureRecycler(mSitePluginsRecycler);
         configureRecycler(mPopularPluginsRecycler);
         configureRecycler(mNewPluginsRecycler);
-
+        
+        mViewModel.start();
         setupObservers();
-        mViewModel.reloadAndFetchAllPlugins();
     }
 
     private void setupObservers() {
