@@ -124,7 +124,7 @@ public class PluginBrowserViewModel extends AndroidViewModel {
 
     // Network Requests
 
-    void fetchPlugins(@NonNull PluginBrowserActivity.PluginListType listType, boolean loadMore) {
+    private void fetchPlugins(@NonNull PluginBrowserActivity.PluginListType listType, boolean loadMore) {
         if (!shouldFetchPlugins(listType, loadMore)) {
             return;
         }
@@ -273,7 +273,7 @@ public class PluginBrowserViewModel extends AndroidViewModel {
         submitSearch(searchQuery, !TextUtils.isEmpty(searchQuery));
     }
 
-    boolean shouldSearch() {
+    private boolean shouldSearch() {
         // We need at least 2 characters to be able to search plugins
         return getSearchQuery() != null && getSearchQuery().length() > 1;
     }

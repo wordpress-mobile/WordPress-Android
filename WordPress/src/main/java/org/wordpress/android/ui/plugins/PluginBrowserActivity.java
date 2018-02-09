@@ -301,7 +301,7 @@ public class PluginBrowserActivity extends AppCompatActivity
         return null;
     }
 
-    private PluginListFragment showListFragment(@NonNull PluginListType listType) {
+    private void showListFragment(@NonNull PluginListType listType) {
         PluginListFragment listFragment = getListFragment();
         if (listFragment != null) {
             listFragment.setListType(listType);
@@ -314,7 +314,6 @@ public class PluginBrowserActivity extends AppCompatActivity
                     .commit();
         }
         setTitle(listType.getTitleRes());
-        return listFragment;
     }
 
     private void hideListFragment() {
