@@ -2,6 +2,7 @@ package org.wordpress.android.ui.stats;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.res.Configuration;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.os.Bundle;
@@ -33,6 +34,7 @@ import org.wordpress.android.util.FormatUtils;
 import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.SiteUtils;
 import org.wordpress.android.util.StringUtils;
+import org.wordpress.android.util.ViewUtils;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -324,7 +326,7 @@ public class StatsVisitorsAndViewsFragment extends StatsAbstractFragment
             visitModelsToShow[currentPointIndex] = currentVisitModel;
             currentPointIndex--;
         }
-        if(ViewCompat.getLayoutDirection(getView()) == ViewCompat.LAYOUT_DIRECTION_RTL) {
+        if (isRtl()) {
             ArrayUtils.reverse(visitModelsToShow);
         }
         return visitModelsToShow;
@@ -517,8 +519,17 @@ public class StatsVisitorsAndViewsFragment extends StatsAbstractFragment
     }
 
     private int getDefaultBarIndex(final VisitModel[] dataToShowOnGraph){
-        final boolean isRtl = ViewCompat.getLayoutDirection(getView()) == ViewCompat.LAYOUT_DIRECTION_RTL;
-        return isRtl && dataToShowOnGraph.length > 0 ? 0 : dataToShowOnGraph.length - 1;
+        return isRtl() && dataToShowOnGraph.length > 0 ? 0 : dataToShowOnGraph.length - 1;
+    }
+
+    private boolean isRtl() {
+        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
+            Configuration configuration = getResources().getConfiguration();
+            if (configuration.getLayoutDirection() == ViewCompat.LAYOUT_DIRECTION_RTL) {
+                return true;
+            }
+        }
+        return false;
     }
 
     // Find the max value in Visitors and Views data.
