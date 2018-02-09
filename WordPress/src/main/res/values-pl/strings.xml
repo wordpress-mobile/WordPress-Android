@@ -1,11 +1,34 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2018-01-31 21:27:37+0000
+Translation-Revision-Date: 2018-02-04 20:23:07+0000
 Plural-Forms: nplurals=3; plural=(n==1 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);
 Generator: GlotPress/2.4.0-alpha
 Language: pl
 -->
 <resources>
+	<string name="plugin_chevron_icon_content_description">Przełącz tekst </string>
+	<string name="plugin_info_your_version">Twoja wersja WordPressa</string>
+	<string name="plugin_info_requires_version">Wymagana wersja WordPressa</string>
+	<string name="plugin_info_lastupdated">Ostatnio zaktualizowano</string>
+	<string name="plugin_info_version">Wersja </string>
+	<string name="plugin_five_stars">5 gwiazdek</string>
+	<string name="plugin_four_stars">4 gwiazdki</string>
+	<string name="plugin_three_stars">3 gwiazdki</string>
+	<string name="plugin_two_stars">2 gwiazdki</string>
+	<string name="plugin_one_stars">1 gwiazdka</string>
+	<string name="plugin_empty_text">Brak opisu</string>
+	<string name="plugin_num_downloads">%s pobrań</string>
+	<string name="plugin_num_ratings">Ocena %s</string>
+	<string name="plugin_read_reviews">Przeczytaj Opinie</string>
+	<string name="plugin_faq">Najczęściej zadawane pytania</string>
+	<string name="plugin_whatsnew">Co nowego</string>
+	<string name="plugin_installation">Instalacja</string>
+	<string name="plugin_description">Opis</string>
+	<string name="plugin_settings">Ustawienia</string>
+	<string name="plugin_installed">Zainstalowano</string>
+	<string name="plugin_installed_version">Zainstalowano wersję %s</string>
+	<string name="plugin_version">Wersja %s</string>
+	<string name="plugin_byline">przez %s</string>
 	<string name="change_photo">Zmień zdjęcie</string>
 	<string name="plugin_fetch_error">Nie można było wczytać wtyczek</string>
 	<string name="my_site_btn_site_pages">Strony witryny</string>
@@ -17,6 +40,7 @@ Language: pl
 	<string name="add_new_tag">Dodaj nowy tag</string>
 	<string name="tag_description_hint">Opis </string>
 	<string name="tag_name_hint">Tag</string>
+	<string name="site_settings_amp_summary">Twoja WordPressowa witryna wspiera Przyspieszone Strony Mobile (AMP),  inicjatywę Google,  która znacznie przyspiesza ładowanie stron na urządzeniach mobilnych</string>
 	<string name="site_settings_amp_title">Przyspieszone Strony Mobilne (AMP)</string>
 	<string name="site_settings_timezones_error">Nie można było wczytać stref czasowych</string>
 	<string name="site_settings_format_help">Dowiedz się więcej o formatowaniu daty i czasu</string>
@@ -49,7 +73,6 @@ Language: pl
 	<string name="plugin_updated_failed">Błąd podczas usuwania %s.</string>
 	<string name="plugin_updated_successfully">Z powodzeniem zaktualizowano %s.</string>
 	<string name="plugin_available_version">Wersja %s jest dostępna.</string>
-	<string name="plugin_installed_version">Wersja %s wtyczki</string>
 	<string name="plugin_detail_label_state_autoupdates">Autoaktualizacja</string>
 	<string name="plugin_detail_label_state_active">Aktywne</string>
 	<string name="plugin_autoupdates_off">Autoaktualizacje są wyłączone</string>

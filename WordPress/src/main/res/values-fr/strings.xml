@@ -50,7 +50,6 @@ Language: fr
 	<string name="plugin_updated_failed">Erreur de suppression de %s.</string>
 	<string name="plugin_updated_successfully">Mise à jour effectuée pour %s.</string>
 	<string name="plugin_available_version">Version %s est disponible.</string>
-	<string name="plugin_installed_version">Extension version %s</string>
 	<string name="plugin_detail_label_state_autoupdates">Mises à jour automatiques</string>
 	<string name="plugin_detail_label_state_active">Actif</string>
 	<string name="plugin_autoupdates_off">Mises à jour automatiques désactivées</string>
