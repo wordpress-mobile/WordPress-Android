@@ -28,6 +28,7 @@ import org.wordpress.android.fluxc.model.plugin.WPOrgPluginModel;
 import org.wordpress.android.ui.ActivityLauncher;
 import org.wordpress.android.ui.plugins.PluginBrowserActivity.PluginListType;
 import org.wordpress.android.util.HtmlUtils;
+import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.widgets.DividerItemDecoration;
 import org.wordpress.android.widgets.WPNetworkImageView;
 
@@ -89,20 +90,46 @@ public class PluginListFragment extends Fragment {
             }
         });
 
-        mViewModel.getIsLoadingMoreNewPlugins().observe(this, new Observer<Boolean>() {
+        mViewModel.getSearchResults().observe(this, new Observer<List<WPOrgPluginModel>>() {
             @Override
-            public void onChanged(@Nullable Boolean loadingMore) {
-                if (mListType == PluginListType.NEW) {
-                    showProgress(loadingMore != null ? loadingMore : false);
+            public void onChanged(@Nullable final List<WPOrgPluginModel> popularPlugins) {
+                if (mListType == PluginListType.SEARCH) {
+                    reloadPlugins();
                 }
             }
         });
 
-        mViewModel.getIsLoadingMorePopularPlugins().observe(this, new Observer<Boolean>() {
+        mViewModel.getNewPluginsListStatus().observe(this, new Observer<PluginBrowserViewModel.PluginListStatus>() {
             @Override
-            public void onChanged(@Nullable Boolean loadingMore) {
+            public void onChanged(@Nullable PluginBrowserViewModel.PluginListStatus listStatus) {
+                if (mListType == PluginListType.NEW) {
+                    showProgress(listStatus == PluginBrowserViewModel.PluginListStatus.FETCHING
+                            || listStatus == PluginBrowserViewModel.PluginListStatus.LOADING_MORE);
+                }
+            }
+        });
+
+        mViewModel.getPopularPluginsListStatus().observe(this, new Observer<PluginBrowserViewModel.PluginListStatus>() {
+            @Override
+            public void onChanged(@Nullable PluginBrowserViewModel.PluginListStatus listStatus) {
                 if (mListType == PluginListType.POPULAR) {
-                    showProgress(loadingMore != null ? loadingMore : false);
+                    showProgress(listStatus == PluginBrowserViewModel.PluginListStatus.FETCHING
+                            || listStatus == PluginBrowserViewModel.PluginListStatus.LOADING_MORE);
+                }
+            }
+        });
+
+        mViewModel.getSearchPluginsListStatus().observe(this, new Observer<PluginBrowserViewModel.PluginListStatus>() {
+            @Override
+            public void onChanged(@Nullable PluginBrowserViewModel.PluginListStatus listStatus) {
+                if (mListType == PluginListType.SEARCH) {
+                    showProgress(listStatus == PluginBrowserViewModel.PluginListStatus.FETCHING
+                            || listStatus == PluginBrowserViewModel.PluginListStatus.LOADING_MORE);
+                    if (listStatus == PluginBrowserViewModel.PluginListStatus.ERROR) {
+                        ToastUtils.showToast(getActivity(), R.string.plugin_search_error);
+                    }
+
+                    showEmptyView(mViewModel.shouldShowEmptySearchResultsView());
                 }
             }
         });

@@ -38,12 +38,10 @@ import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.model.plugin.SitePluginModel;
 import org.wordpress.android.fluxc.model.plugin.WPOrgPluginModel;
 import org.wordpress.android.fluxc.store.PluginStore;
-import org.wordpress.android.fluxc.store.PluginStore.OnPluginDirectorySearched;
 import org.wordpress.android.ui.ActivityLauncher;
 import org.wordpress.android.ui.RequestCodes;
 import org.wordpress.android.util.ActivityUtils;
 import org.wordpress.android.util.AniUtils;
-import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.HtmlUtils;
 import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.ToastUtils;
@@ -55,11 +53,6 @@ import java.util.List;
 public class PluginBrowserActivity extends AppCompatActivity
         implements SearchView.OnQueryTextListener,
         MenuItem.OnActionExpandListener {
-
-    // Remaining: Show progressbar for search and fetching site plugins
-    // Show empty view for the search when necessary
-    // error handling
-    // slow startup
 
     public enum PluginListType {
         SITE,
@@ -174,6 +167,18 @@ public class PluginBrowserActivity extends AppCompatActivity
                 refreshPluginAdapterAndVisibility(PluginListType.POPULAR, popularPlugins);
             }
         });
+
+        mViewModel.getSitePluginsListStatus().observe(this, new Observer<PluginBrowserViewModel.PluginListStatus>() {
+            @Override
+            public void onChanged(@Nullable PluginBrowserViewModel.PluginListStatus listStatus) {
+                showProgress(listStatus == PluginBrowserViewModel.PluginListStatus.FETCHING
+                        && mViewModel.isSitePluginsEmpty());
+
+                if (listStatus == PluginBrowserViewModel.PluginListStatus.ERROR) {
+                    ToastUtils.showToast(PluginBrowserActivity.this, R.string.plugin_fetch_error);
+                }
+            }
+        });
     }
 
     private void configureRecycler(@NonNull RecyclerView recycler) {
@@ -266,62 +271,12 @@ public class PluginBrowserActivity extends AppCompatActivity
 
     @SuppressWarnings("unused")
     @Subscribe(threadMode = ThreadMode.MAIN)
-    public void onSitePluginsFetched(PluginStore.OnSitePluginsFetched event) {
-        if (isFinishing()) return;
-
-        if (event.isError()) {
-            AppLog.e(AppLog.T.PLUGINS, "An error occurred while fetching site plugins with type: " + event.error.type);
-            ToastUtils.showToast(this, R.string.plugin_fetch_error);
-        }
-    }
-
-    @SuppressWarnings("unused")
-    @Subscribe(threadMode = ThreadMode.MAIN)
     public void onWPOrgPluginFetched(PluginStore.OnWPOrgPluginFetched event) {
         if (isFinishing()) return;
 
-        if (event.isError()) {
-            AppLog.e(AppLog.T.PLUGINS, "An error occurred while fetching the wporg plugin with type: " + event.error.type);
-            return;
-        }
         if (!TextUtils.isEmpty(event.pluginSlug)) {
             reloadPluginWithSlug(event.pluginSlug);
         }
-    }
-
-    @SuppressWarnings("unused")
-    @Subscribe(threadMode = ThreadMode.MAIN)
-    public void onPluginDirectoryFetched(PluginStore.OnPluginDirectoryFetched event) {
-        if (isFinishing()) return;
-
-        if (event.isError()) {
-            AppLog.e(AppLog.T.PLUGINS, "An error occurred while fetching the plugin directory: " + event.type);
-        }
-    }
-
-    @SuppressWarnings("unused")
-    @Subscribe(threadMode = ThreadMode.MAIN)
-    public void onPluginDirectorySearched(OnPluginDirectorySearched event) {
-        if (isFinishing()) return;
-
-        if (event.isError()) {
-            AppLog.e(AppLog.T.PLUGINS, "An error occurred while searching the plugin directory");
-            ToastUtils.showToast(this, R.string.plugin_search_error);
-            return;
-        }
-
-        // make sure the search list fragment is still active and that this is the same as the most
-        // recent search (could be a stale response)
-        // todo: remove getlisttype from fragment
-        PluginListFragment fragment = getListFragment();
-        if (fragment == null
-                || fragment.getListType() != PluginListType.SEARCH) {
-            return;
-        }
-
-        // todo: observe in fragment and remove this
-        fragment.showEmptyView(mViewModel.getSearchResults().getValue().isEmpty()
-                && !TextUtils.isEmpty(mViewModel.getSearchQuery()));
     }
 
     private void reloadPluginWithSlug(@NonNull String slug) {

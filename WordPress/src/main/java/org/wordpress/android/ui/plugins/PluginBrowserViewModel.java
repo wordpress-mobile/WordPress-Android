@@ -5,6 +5,7 @@ import android.arch.lifecycle.AndroidViewModel;
 import android.arch.lifecycle.LiveData;
 import android.arch.lifecycle.MutableLiveData;
 import android.support.annotation.NonNull;
+import android.text.TextUtils;
 
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
@@ -16,6 +17,7 @@ import org.wordpress.android.fluxc.model.plugin.PluginDirectoryType;
 import org.wordpress.android.fluxc.model.plugin.SitePluginModel;
 import org.wordpress.android.fluxc.model.plugin.WPOrgPluginModel;
 import org.wordpress.android.fluxc.store.PluginStore;
+import org.wordpress.android.util.AppLog;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -23,17 +25,24 @@ import java.util.List;
 import javax.inject.Inject;
 
 public class PluginBrowserViewModel extends AndroidViewModel {
+    enum PluginListStatus {
+        CAN_LOAD_MORE,
+        DONE,
+        ERROR,
+        FETCHING,
+        LOADING_MORE
+    }
+
     @Inject Dispatcher mDispatcher;
     @Inject PluginStore mPluginStore;
 
     private String mSearchQuery;
     private SiteModel mSite;
 
-    private boolean mCanLoadMoreNewPlugins = true;
-    private boolean mCanLoadMorePopularPlugins = true;
-
-    private MutableLiveData<Boolean> mIsLoadingMoreNewPlugins;
-    private MutableLiveData<Boolean> mIsLoadingMorePopularPlugins;
+    private MutableLiveData<PluginListStatus> mNewPluginsListStatus;
+    private MutableLiveData<PluginListStatus> mPopularPluginsListStatus;
+    private MutableLiveData<PluginListStatus> mSitePluginsListStatus;
+    private MutableLiveData<PluginListStatus> mSearchPluginsListStatus;
 
     private MutableLiveData<List<WPOrgPluginModel>> mNewPlugins;
     private MutableLiveData<List<WPOrgPluginModel>> mPopularPlugins;
@@ -51,8 +60,10 @@ public class PluginBrowserViewModel extends AndroidViewModel {
         mPopularPlugins = new MutableLiveData<>();
         mSearchResults = new MutableLiveData<>();
 
-        mIsLoadingMoreNewPlugins = new MutableLiveData<>();
-        mIsLoadingMorePopularPlugins = new MutableLiveData<>();
+        mNewPluginsListStatus = new MutableLiveData<>();
+        mPopularPluginsListStatus = new MutableLiveData<>();
+        mSitePluginsListStatus = new MutableLiveData<>();
+        mSearchPluginsListStatus = new MutableLiveData<>();
     }
 
     @Override
@@ -101,52 +112,71 @@ public class PluginBrowserViewModel extends AndroidViewModel {
         mPopularPlugins.setValue(mPluginStore.getPluginDirectory(PluginDirectoryType.POPULAR));
     }
 
-    private boolean canLoadMorePlugins(PluginBrowserActivity.PluginListType listType) {
-        if (listType == PluginBrowserActivity.PluginListType.NEW) {
-            return mCanLoadMoreNewPlugins;
-        } else if (listType == PluginBrowserActivity.PluginListType.POPULAR) {
-            return mCanLoadMorePopularPlugins;
-        }
-        // site plugins are retrieved all at once so "load more" isn't necessary, search returns
-        // the first 50 best matches which we've decided is enough
-        return false;
-    }
-
     // Network Requests
 
-    void fetchPlugins(@NonNull PluginBrowserActivity.PluginListType pluginType, boolean loadMore) {
-        if (loadMore && (!canLoadMorePlugins(pluginType) || isLoadingMorePlugins(pluginType))) {
-            // Either we can't load any more plugins or we are already loading more, so ignore
+    void fetchPlugins(@NonNull PluginBrowserActivity.PluginListType listType, boolean loadMore) {
+        if (!shouldFetchPlugins(listType, loadMore)) {
             return;
         }
-        switch (pluginType) {
+        switch (listType) {
             case SITE:
-//                if (mPluginStore.getSitePlugins(mViewModel.getSite()).size() == 0) {
-//                    showProgress(true);
-//                }
+                mSitePluginsListStatus.setValue(PluginListStatus.FETCHING);
                 mDispatcher.dispatch(PluginActionBuilder.newFetchSitePluginsAction(getSite()));
                 break;
             case POPULAR:
-                mIsLoadingMorePopularPlugins.setValue(loadMore);
+                mPopularPluginsListStatus.setValue(loadMore ? PluginListStatus.LOADING_MORE : PluginListStatus.FETCHING);
                 PluginStore.FetchPluginDirectoryPayload popularPayload =
                         new PluginStore.FetchPluginDirectoryPayload(PluginDirectoryType.POPULAR, loadMore);
                 mDispatcher.dispatch(PluginActionBuilder.newFetchPluginDirectoryAction(popularPayload));
                 break;
             case NEW:
-                mIsLoadingMoreNewPlugins.setValue(loadMore);
+                mNewPluginsListStatus.setValue(loadMore ? PluginListStatus.LOADING_MORE : PluginListStatus.FETCHING);
                 PluginStore.FetchPluginDirectoryPayload newPayload =
                         new PluginStore.FetchPluginDirectoryPayload(PluginDirectoryType.NEW, loadMore);
                 mDispatcher.dispatch(PluginActionBuilder.newFetchPluginDirectoryAction(newPayload));
                 break;
             case SEARCH:
-//                if (mViewModel.getSearchResults().size() == 0) {
-//                    showProgress(true);
-//                }
+                mSearchPluginsListStatus.setValue(PluginListStatus.FETCHING);
                 PluginStore.SearchPluginDirectoryPayload searchPayload =
                         new PluginStore.SearchPluginDirectoryPayload(getSearchQuery(), 1);
                 mDispatcher.dispatch(PluginActionBuilder.newSearchPluginDirectoryAction(searchPayload));
                 break;
         }
+    }
+
+    private boolean shouldFetchPlugins(PluginBrowserActivity.PluginListType listType, boolean loadMore) {
+        switch (listType) {
+            case SITE:
+                if (getSitePluginsListStatus().getValue() == PluginListStatus.FETCHING) {
+                    // already fetching
+                    return false;
+                }
+                break;
+            case POPULAR:
+                if (!loadMore && getPopularPluginsListStatus().getValue() == PluginListStatus.FETCHING) {
+                    // already fetching first page
+                    return false;
+                }
+                if (loadMore && getPopularPluginsListStatus().getValue() != PluginListStatus.CAN_LOAD_MORE) {
+                    // We might be fetching the first page, loading more or done fetching
+                    return false;
+                }
+                break;
+            case NEW:
+                if (!loadMore && getNewPluginsListStatus().getValue() == PluginListStatus.FETCHING) {
+                    // already fetching first page
+                    return false;
+                }
+                if (loadMore && getNewPluginsListStatus().getValue() != PluginListStatus.CAN_LOAD_MORE) {
+                    // We might be fetching the first page, loading more or done fetching
+                    return false;
+                }
+                break;
+            case SEARCH:
+                // Since search query might have been changed, we should always fetch
+                return true;
+        }
+        return true;
     }
 
     void fetchWPOrgPlugin(String slug) {
@@ -162,32 +192,45 @@ public class PluginBrowserViewModel extends AndroidViewModel {
     @SuppressWarnings("unused")
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onSitePluginsFetched(PluginStore.OnSitePluginsFetched event) {
-        if (!event.isError()) {
-            reloadSitePlugins();
+        if (event.isError()) {
+            AppLog.e(AppLog.T.PLUGINS, "An error occurred while fetching site plugins with type: " + event.error.type);
+            mSitePluginsListStatus.setValue(PluginListStatus.ERROR);
+            return;
         }
+        mSitePluginsListStatus.setValue(PluginListStatus.DONE);
+        reloadSitePlugins();
     }
 
     @SuppressWarnings("unused")
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onWPOrgPluginFetched(PluginStore.OnWPOrgPluginFetched event) {
+        if (event.isError()) {
+            AppLog.e(AppLog.T.PLUGINS, "An error occurred while fetching the wporg plugin with type: " + event.error.type);
+            return;
+        }
     }
 
     @SuppressWarnings("unused")
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onPluginDirectoryFetched(PluginStore.OnPluginDirectoryFetched event) {
         if (event.isError()) {
+            AppLog.e(AppLog.T.PLUGINS, "An error occurred while fetching the plugin directory: " + event.type);
+            if (event.type == PluginDirectoryType.NEW) {
+                mNewPluginsListStatus.setValue(PluginListStatus.ERROR);
+            } else if (event.type == PluginDirectoryType.POPULAR) {
+                mPopularPluginsListStatus.setValue(PluginListStatus.ERROR);
+            }
             return;
         }
+        PluginListStatus listStatus = event.canLoadMore ? PluginListStatus.CAN_LOAD_MORE : PluginListStatus.DONE;
         switch (event.type) {
             case NEW:
-                mCanLoadMoreNewPlugins = event.canLoadMore;
-                mIsLoadingMoreNewPlugins.setValue(false);
                 reloadNewPlugins();
+                mNewPluginsListStatus.setValue(listStatus);
                 break;
             case POPULAR:
-                mCanLoadMorePopularPlugins = event.canLoadMore;
-                mIsLoadingMorePopularPlugins.setValue(false);
                 reloadPopularPlugins();
+                mPopularPluginsListStatus.setValue(listStatus);
                 break;
         }
     }
@@ -195,9 +238,13 @@ public class PluginBrowserViewModel extends AndroidViewModel {
     @SuppressWarnings("unused")
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onPluginDirectorySearched(PluginStore.OnPluginDirectorySearched event) {
-        if (!event.isError()) {
-            setSearchResults(event.searchTerm, event.plugins);
+        if (event.isError()) {
+            AppLog.e(AppLog.T.PLUGINS, "An error occurred while searching the plugin directory");
+            mSearchPluginsListStatus.setValue(PluginListStatus.ERROR);
+            return;
         }
+        setSearchResults(event.searchTerm, event.plugins);
+        mSearchPluginsListStatus.setValue(PluginListStatus.DONE);
     }
 
     // Search
@@ -210,6 +257,17 @@ public class PluginBrowserViewModel extends AndroidViewModel {
         if (mSearchQuery.equalsIgnoreCase(searchQuery)) {
             mSearchResults.setValue(searchResults);
         }
+    }
+
+    boolean shouldShowEmptySearchResultsView() {
+        if (TextUtils.isEmpty(mSearchQuery)) {
+            return false;
+        }
+        if (mSearchPluginsListStatus.getValue() != PluginListStatus.DONE
+                && mSearchPluginsListStatus.getValue() != PluginListStatus.ERROR) {
+            return false;
+        }
+        return getSearchResults().getValue() == null || getSearchResults().getValue().size() == 0;
     }
 
     // Simple Getters & Setters
@@ -234,6 +292,10 @@ public class PluginBrowserViewModel extends AndroidViewModel {
         return mSitePlugins;
     }
 
+    boolean isSitePluginsEmpty() {
+        return getSitePlugins().getValue() == null || getSitePlugins().getValue().size() == 0;
+    }
+
     LiveData<List<WPOrgPluginModel>> getNewPlugins() {
         return mNewPlugins;
     }
@@ -246,12 +308,20 @@ public class PluginBrowserViewModel extends AndroidViewModel {
         return mSearchResults;
     }
 
-    LiveData<Boolean> getIsLoadingMoreNewPlugins() {
-        return mIsLoadingMoreNewPlugins;
+    LiveData<PluginListStatus> getNewPluginsListStatus() {
+        return mNewPluginsListStatus;
     }
 
-    LiveData<Boolean> getIsLoadingMorePopularPlugins() {
-        return mIsLoadingMorePopularPlugins;
+    LiveData<PluginListStatus> getPopularPluginsListStatus() {
+        return mPopularPluginsListStatus;
+    }
+
+    LiveData<PluginListStatus> getSitePluginsListStatus() {
+        return mSitePluginsListStatus;
+    }
+
+    LiveData<PluginListStatus> getSearchPluginsListStatus() {
+        return mSearchPluginsListStatus;
     }
 
     List<?> getPluginsForListType(PluginBrowserActivity.PluginListType listType) {
@@ -270,11 +340,9 @@ public class PluginBrowserViewModel extends AndroidViewModel {
 
     private boolean isLoadingMorePlugins(PluginBrowserActivity.PluginListType listType) {
         if (listType == PluginBrowserActivity.PluginListType.NEW) {
-            Boolean b = getIsLoadingMoreNewPlugins().getValue();
-            return b != null ? b : false;
+            return getNewPluginsListStatus().getValue() == PluginListStatus.LOADING_MORE;
         } else if (listType == PluginBrowserActivity.PluginListType.POPULAR) {
-            Boolean b = getIsLoadingMorePopularPlugins().getValue();
-            return b != null ? b : false;
+            return getPopularPluginsListStatus().getValue() == PluginListStatus.LOADING_MORE;
         }
         return false;
     }
