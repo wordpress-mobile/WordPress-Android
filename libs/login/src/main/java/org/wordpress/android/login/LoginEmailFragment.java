@@ -271,8 +271,8 @@ public class LoginEmailFragment extends LoginBaseFormFragment<LoginListener> imp
         super.onDetach();
         mLoginListener = null;
 
+        mGoogleApiClient.stopAutoManage(getActivity());
         if (mGoogleApiClient.isConnected()) {
-            mGoogleApiClient.stopAutoManage(getActivity());
             mGoogleApiClient.disconnect();
         }
     }
