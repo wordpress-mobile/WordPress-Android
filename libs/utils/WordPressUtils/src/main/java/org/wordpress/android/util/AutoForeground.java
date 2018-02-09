@@ -89,8 +89,14 @@ public abstract class AutoForeground<StateClass extends ServiceState>
         return mIsForeground;
     }
 
-    protected StateClass getState() {
-        return EventBus.getDefault().getStickyEvent(mStateClass);
+    @Nullable
+    private StateClass getState() {
+        return getState(mStateClass);
+    }
+
+    @Nullable
+    protected static <StateClass> StateClass getState(Class<StateClass> stateClass) {
+        return EventBus.getDefault().getStickyEvent(stateClass);
     }
 
     @Nullable

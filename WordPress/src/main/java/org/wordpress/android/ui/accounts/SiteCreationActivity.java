@@ -112,7 +112,8 @@ public class SiteCreationActivity extends AppCompatActivity implements SiteCreat
     private enum SiteCreationBackStackMode {
         NORMAL,
         MODAL,
-        FINISH_OK
+        FINISH_OK,
+        FINISH_DISMISS
     }
 
     private SiteCreationBackStackMode getSiteCreationBackStackMode() {
@@ -120,14 +121,14 @@ public class SiteCreationActivity extends AppCompatActivity implements SiteCreat
                 (SiteCreationCreatingFragment) getSupportFragmentManager()
                         .findFragmentByTag(SiteCreationCreatingFragment.TAG);
 
-        if (siteCreationCreatingFragment == null) {
+        if (siteCreationCreatingFragment == null || siteCreationCreatingFragment.canGoBack()) {
             return SiteCreationBackStackMode.NORMAL;
         } else if (siteCreationCreatingFragment.isInModalMode()) {
             return SiteCreationBackStackMode.MODAL;
         } else if (siteCreationCreatingFragment.isCreationSucceeded()) {
             return SiteCreationBackStackMode.FINISH_OK;
         } else {
-            return SiteCreationBackStackMode.NORMAL;
+            return SiteCreationBackStackMode.FINISH_DISMISS;
         }
     }
 
@@ -142,6 +143,9 @@ public class SiteCreationActivity extends AppCompatActivity implements SiteCreat
                 break;
             case FINISH_OK:
                 setResult(RESULT_OK);
+                finish();
+                break;
+            case FINISH_DISMISS:
                 finish();
                 break;
         }
