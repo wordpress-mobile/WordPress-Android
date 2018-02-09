@@ -5,6 +5,7 @@ import android.content.Context;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.os.Bundle;
+import android.support.v4.view.ViewCompat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,6 +18,7 @@ import android.widget.TextView;
 import com.jjoe64.graphview.GraphView;
 import com.jjoe64.graphview.GraphViewSeries;
 
+import org.apache.commons.lang3.ArrayUtils;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.analytics.AnalyticsTracker;
@@ -322,6 +324,9 @@ public class StatsVisitorsAndViewsFragment extends StatsAbstractFragment
             visitModelsToShow[currentPointIndex] = currentVisitModel;
             currentPointIndex--;
         }
+        if(ViewCompat.getLayoutDirection(getView()) == ViewCompat.LAYOUT_DIRECTION_RTL) {
+            ArrayUtils.reverse(visitModelsToShow);
+        }
         return visitModelsToShow;
     }
 
@@ -489,8 +494,8 @@ public class StatsVisitorsAndViewsFragment extends StatsAbstractFragment
         if (mPrevNumberOfBarsGraph != -1 && mPrevNumberOfBarsGraph != dataToShowOnGraph.length) {
             mSelectedBarGraphBarIndex = -1;
             mPrevNumberOfBarsGraph = dataToShowOnGraph.length;
-            onBarTapped(dataToShowOnGraph.length - 1);
-            mGraphView.highlightBar(dataToShowOnGraph.length - 1);
+            onBarTapped(getDefaultBarIndex(dataToShowOnGraph));
+            mGraphView.highlightBar(getDefaultBarIndex(dataToShowOnGraph));
             return;
         }
 
@@ -498,17 +503,22 @@ public class StatsVisitorsAndViewsFragment extends StatsAbstractFragment
         int barSelectedOnGraph;
         if (mSelectedBarGraphBarIndex == -1) {
             // No previous bar was highlighted, highlight the most recent one
-            barSelectedOnGraph = dataToShowOnGraph.length - 1;
+            barSelectedOnGraph = getDefaultBarIndex(dataToShowOnGraph);
         } else if (mSelectedBarGraphBarIndex < dataToShowOnGraph.length) {
             barSelectedOnGraph = mSelectedBarGraphBarIndex;
         } else {
             // A previous bar was highlighted, but it's out of the screen now. This should never happen atm.
-            barSelectedOnGraph = dataToShowOnGraph.length - 1;
+            barSelectedOnGraph = getDefaultBarIndex(dataToShowOnGraph);
             mSelectedBarGraphBarIndex = barSelectedOnGraph;
         }
 
         updateUIBelowTheGraph(barSelectedOnGraph);
         mGraphView.highlightBar(barSelectedOnGraph);
+    }
+
+    private int getDefaultBarIndex(final VisitModel[] dataToShowOnGraph){
+        final boolean isRtl = ViewCompat.getLayoutDirection(getView()) == ViewCompat.LAYOUT_DIRECTION_RTL;
+        return isRtl && dataToShowOnGraph.length > 0 ? 0 : dataToShowOnGraph.length - 1;
     }
 
     // Find the max value in Visitors and Views data.
