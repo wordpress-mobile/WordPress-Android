@@ -5,7 +5,6 @@ import android.arch.lifecycle.ViewModelProviders;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.Handler;
 import android.support.annotation.ColorRes;
 import android.support.annotation.DrawableRes;
 import android.support.annotation.NonNull;
@@ -40,7 +39,6 @@ import org.wordpress.android.ui.RequestCodes;
 import org.wordpress.android.util.ActivityUtils;
 import org.wordpress.android.util.AniUtils;
 import org.wordpress.android.util.HtmlUtils;
-import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.widgets.WPNetworkImageView;
 import org.wordpress.android.widgets.WPNetworkImageView.ImageType;
@@ -73,7 +71,6 @@ public class PluginBrowserActivity extends AppCompatActivity
 
     private PluginBrowserViewModel mViewModel;
 
-    private final Handler mHandler = new Handler();
     private RecyclerView mSitePluginsRecycler;
     private RecyclerView mPopularPluginsRecycler;
     private RecyclerView mNewPluginsRecycler;
@@ -292,7 +289,7 @@ public class PluginBrowserActivity extends AppCompatActivity
 
     @Override
     public boolean onQueryTextChange(String query) {
-        submitSearch(query, true);
+        mViewModel.setSearchQuery(query);
         return true;
     }
 
@@ -320,28 +317,6 @@ public class PluginBrowserActivity extends AppCompatActivity
         return listFragment;
     }
 
-    private void submitSearch(@Nullable final String query, boolean delayed) {
-        mViewModel.setSearchQuery(query);
-
-        if (delayed) {
-            mHandler.postDelayed(new Runnable() {
-                @Override
-                public void run() {
-                    if (StringUtils.equals(query, mViewModel.getSearchQuery())) {
-                        submitSearch(query, false);
-                    }
-                }
-            }, 250);
-        } else {
-            mViewModel.clearSearchResults();
-            PluginListFragment fragment = showListFragment(PluginListType.SEARCH);
-            fragment.showEmptyView(false);
-            if (!TextUtils.isEmpty(mViewModel.getSearchQuery())) {
-                mViewModel.fetchPlugins(PluginListType.SEARCH, false);
-            }
-        }
-    }
-
     private void hideListFragment() {
         if (getSupportFragmentManager().getBackStackEntryCount() > 0) {
             onBackPressed();
@@ -354,7 +329,7 @@ public class PluginBrowserActivity extends AppCompatActivity
 
     @Override
     public boolean onMenuItemActionExpand(MenuItem menuItem) {
-        submitSearch(null, true);
+        showListFragment(PluginListType.SEARCH);
         mSearchView.setOnQueryTextListener(this);
         return true;
     }
@@ -363,6 +338,7 @@ public class PluginBrowserActivity extends AppCompatActivity
     public boolean onMenuItemActionCollapse(MenuItem menuItem) {
         mSearchView.setOnQueryTextListener(null);
         hideListFragment();
+        mViewModel.setSearchQuery(null);
         return true;
     }
 

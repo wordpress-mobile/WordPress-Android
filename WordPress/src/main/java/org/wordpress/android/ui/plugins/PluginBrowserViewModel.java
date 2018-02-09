@@ -4,7 +4,9 @@ import android.app.Application;
 import android.arch.lifecycle.AndroidViewModel;
 import android.arch.lifecycle.LiveData;
 import android.arch.lifecycle.MutableLiveData;
+import android.os.Handler;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.text.TextUtils;
 
 import org.greenrobot.eventbus.Subscribe;
@@ -18,6 +20,7 @@ import org.wordpress.android.fluxc.model.plugin.SitePluginModel;
 import org.wordpress.android.fluxc.model.plugin.WPOrgPluginModel;
 import org.wordpress.android.fluxc.store.PluginStore;
 import org.wordpress.android.util.AppLog;
+import org.wordpress.android.util.StringUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -39,6 +42,8 @@ public class PluginBrowserViewModel extends AndroidViewModel {
     private String mSearchQuery;
     private SiteModel mSite;
 
+    private final Handler mHandler;
+
     private MutableLiveData<PluginListStatus> mNewPluginsListStatus;
     private MutableLiveData<PluginListStatus> mPopularPluginsListStatus;
     private MutableLiveData<PluginListStatus> mSitePluginsListStatus;
@@ -56,6 +61,8 @@ public class PluginBrowserViewModel extends AndroidViewModel {
 
         ((WordPress) application).component().inject(this);
         mDispatcher.register(this);
+
+        mHandler = new Handler();
 
         mSitePlugins = new MutableLiveData<>();
         mNewPlugins = new MutableLiveData<>();
@@ -259,7 +266,31 @@ public class PluginBrowserViewModel extends AndroidViewModel {
 
     // Search
 
-    void clearSearchResults() {
+    void setSearchQuery(String searchQuery) {
+        mSearchQuery = searchQuery;
+
+        submitSearch(searchQuery, true);
+    }
+
+    private void submitSearch(@Nullable final String query, boolean delayed) {
+        if (delayed) {
+            mHandler.postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    if (StringUtils.equals(query, getSearchQuery())) {
+                        submitSearch(query, false);
+                    }
+                }
+            }, 250);
+        } else {
+            clearSearchResults();
+            if (!TextUtils.isEmpty(getSearchQuery())) {
+                fetchPlugins(PluginBrowserActivity.PluginListType.SEARCH, false);
+            }
+        }
+    }
+
+    private void clearSearchResults() {
         mSearchResults.setValue(new ArrayList<WPOrgPluginModel>());
     }
 
@@ -286,10 +317,6 @@ public class PluginBrowserViewModel extends AndroidViewModel {
 
     String getSearchQuery() {
         return mSearchQuery;
-    }
-
-    void setSearchQuery(String searchQuery) {
-        mSearchQuery = searchQuery;
     }
 
     LiveData<List<SitePluginModel>> getSitePlugins() {
