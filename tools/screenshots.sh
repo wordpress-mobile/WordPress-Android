@@ -70,22 +70,10 @@ TAB10_COORDS_NOTIFS="930 100"
 
 TEXT_OFFSET_Y=58
 
-TEXT_SIZE_en_US=80
-TEXT_en_US_MYSITE="Manage your site\neverywhere you go"
-TEXT_en_US_READER="Enjoy your\nfavourite sites"
-TEXT_en_US_NOTIFS="Get notified\nin real-time"
-
-TEXT_SIZE_el_GR=70
-TEXT_el_GR_MYSITE="Έλεγξε τον ιστότοπο σου\nαπ'οπουδήποτε βρίσκεσαι"
-TEXT_el_GR_READER="Απόλαυσε τις\nαγαπημένες σου σελίδες"
-TEXT_el_GR_NOTIFS="Ειδοποιήσεις σε\nπραγματικό χρόνο"
-
-TEXT_SIZE_it_IT=80
-TEXT_it_IT_MYSITE="Gestisci il tuo sito\novunque tu sia"
-TEXT_it_IT_READER="Leggi i tuoi\nsiti preferiti"
-TEXT_it_IT_NOTIFS="Rimani aggiornato\nin tempo reale"
-
 TEXT_SIZE_default=70
+TEXT_SIZE_en_US=80
+TEXT_SIZE_el_GR=70
+TEXT_SIZE_it_IT=80
 
 PHONE_TEMPLATE=android-phone-template2.png
 PHONE_OFFSET="+121+532"
@@ -101,7 +89,7 @@ LangGlotPress=("en-us" "ar" "az" "bg" "cs" "cy" "da" "de" "el" "en-au" "en-ca" "
 "nl" "pl" "pt" "pt-br" "ro" "ru" "sk" "sl" "sq" "sr" "sv" "th" "tr" \
 "uk" "uz" "vi" "zh" "zh-cn" "zh-tw")
 LangGooglePlay=("en-US" "ar" "az-AZ" "bg" "cs-CZ" "cy" "da-DK" "de-DE" "el-GR" "en-AU" "en-CA" "en-GB" "es-ES" "es-rCL" "es-rVE" "es-rCO" "eu-ES" "fi-FI" \
-"fr-FR" "gd-GB" "gl-ES" "hi-IN" "iw-IL" "hr" "hu-HU" "id" "is-IS" "it-IT" "ja-JP" "ka-IN" "ko-KR" "lv" "lt" "mk-MK" "ms" "nb-NO" \
+"fr-FR" "gd-GB" "gl-ES" "hi-IN" "iw-IL" "hr" "hu" "id" "is-IS" "it-IT" "ja-JP" "ka-IN" "ko-KR" "lv" "lt" "mk" "ms" "nb-NO" \
 "nl-NL" "pl-PL" "pt-PT" "pt-BR" "ro" "ru-RU" "sk" "sl" "sq" "sr" "sv-SE" "th" "tr-TR" \
 "uk" "uz" "vi" "zh-CN" "zh-CN" "zh-TW")
 
@@ -549,6 +537,24 @@ function check_params() {
   check_emulator
 }
 
+# Gets the promo strings
+function download_promo_strings() {
+  # This function will download strings from GlotPress
+  # In this version this is simulated and strings are embedded in the code
+  TEXT_en_US_MYSITE="Manage your site\neverywhere you go"
+  TEXT_en_US_READER="Enjoy your\nfavourite sites"
+  TEXT_en_US_NOTIFS="Get notified\nin real-time"
+
+  TEXT_el_GR_MYSITE="Έλεγξε τον ιστότοπο σου\nαπ'οπουδήποτε βρίσκεσαι"
+  TEXT_el_GR_READER="Απόλαυσε τις\nαγαπημένες σου σελίδες"
+  TEXT_el_GR_NOTIFS="Ειδοποιήσεις σε\nπραγματικό χρόνο"
+
+  TEXT_it_IT_MYSITE="Gestisci il tuo sito\novunque tu sia"
+  TEXT_it_IT_READER="Leggi i tuoi\nsiti preferiti"
+  TEXT_it_IT_NOTIFS="Rimani aggiornato\nin tempo reale"
+}
+
+# Translates language codes
 function glotPress_googlePlay() {
   lang=$1
   index=0
@@ -645,7 +651,7 @@ function execute_take() {
   fi
 
   if [ $CMD == $CMD_TAKE ]; then
-    if [ warningCount -eq 0]; then
+    if [ $warningCount -eq 0]; then
       show_ok_message "Done!"
     else
       show_ok_message "Done (with $warningCount warning(s))!"
@@ -657,6 +663,8 @@ function execute_take() {
 function execute_process() {
   require_font
   require_imagemagick
+  
+  download_promo_strings
 
   show_title_message "Starting the screenshot processor..."
   if [ $CMD == $CMD_PROCESS ]; then
@@ -671,7 +679,7 @@ function execute_process() {
     process_device $RUN_DEV
   fi
 
-  if [ warningCount -eq 0 ]; then
+  if [ $warningCount -eq 0 ]; then
     show_ok_message "Done!"
   else
     show_ok_message "Done (with $warningCount warning(s))!"
