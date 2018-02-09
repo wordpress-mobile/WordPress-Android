@@ -81,6 +81,8 @@ public class SiteCreationThemeAdapter extends RecyclerView.Adapter<RecyclerView.
             if (!mIsLoading && mThemes == null) {
                 // this is an error situation so, show an error
                 headerViewHolder.label.setText(R.string.error_generic);
+            } else {
+                headerViewHolder.label.setText(null);
             }
         } else {
             final ThemeModel theme = getItem(position);

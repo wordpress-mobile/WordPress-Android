@@ -110,6 +110,9 @@ public class SiteCreationThemeFragment extends SiteCreationBaseFormFragment<Site
             case ERROR:
                 mSiteCreationThemeAdapter.setData(false, null);
                 break;
+            case ERROR_NO_CONNECTIVITY:
+                mSiteCreationThemeAdapter.setData(false, null);
+                break;
             case FINISHED:
                 mSiteCreationThemeAdapter.setData(false, getThemes());
                 break;
