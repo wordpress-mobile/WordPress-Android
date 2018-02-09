@@ -74,14 +74,6 @@ public class PluginBrowserViewModel extends AndroidViewModel {
         fetchPlugins(PluginBrowserActivity.PluginListType.NEW, false);
     }
 
-    SiteModel getSite() {
-        return mSite;
-    }
-
-    void setSite(SiteModel site) {
-        mSite = site;
-    }
-
     // Site & WPOrg plugin management
 
     WPOrgPluginModel getWPOrgPluginForSitePlugin(SitePluginModel sitePlugin) {
@@ -94,36 +86,6 @@ public class PluginBrowserViewModel extends AndroidViewModel {
             cacheWPOrgPluginIfNecessary(wpOrgPlugin);
         }
         return wpOrgPlugin;
-    }
-
-    LiveData<List<SitePluginModel>> getSitePlugins() {
-        return mSitePlugins;
-    }
-
-    LiveData<List<WPOrgPluginModel>> getNewPlugins() {
-        return mNewPlugins;
-    }
-
-    LiveData<List<WPOrgPluginModel>> getPopularPlugins() {
-        return mPopularPlugins;
-    }
-
-    LiveData<List<WPOrgPluginModel>> getSearchResults() {
-        return mSearchResults;
-    }
-
-    List<?> getPluginsForListType(PluginBrowserActivity.PluginListType listType) {
-        switch (listType) {
-            case SITE:
-                return getSitePlugins().getValue();
-            case POPULAR:
-                return getPopularPlugins().getValue();
-            case NEW:
-                return getNewPlugins().getValue();
-            case SEARCH:
-                return getSearchResults().getValue();
-        }
-        return null;
     }
 
     void reloadAllPluginsFromStore() {
@@ -161,25 +123,6 @@ public class PluginBrowserViewModel extends AndroidViewModel {
         }
         // site plugins are retrieved all at once so "load more" isn't necessary, search returns
         // the first 50 best matches which we've decided is enough
-        return false;
-    }
-
-    LiveData<Boolean> getIsLoadingMoreNewPlugins() {
-        return mIsLoadingMoreNewPlugins;
-    }
-
-    LiveData<Boolean> getIsLoadingMorePopularPlugins() {
-        return mIsLoadingMorePopularPlugins;
-    }
-
-    private boolean isLoadingMorePlugins(PluginBrowserActivity.PluginListType listType) {
-        if (listType == PluginBrowserActivity.PluginListType.NEW) {
-            Boolean b = getIsLoadingMoreNewPlugins().getValue();
-            return b != null ? b : false;
-        } else if (listType == PluginBrowserActivity.PluginListType.POPULAR) {
-            Boolean b = getIsLoadingMorePopularPlugins().getValue();
-            return b != null ? b : false;
-        }
         return false;
     }
 
@@ -276,14 +219,6 @@ public class PluginBrowserViewModel extends AndroidViewModel {
 
     // Search
 
-    String getSearchQuery() {
-        return mSearchQuery;
-    }
-
-    void setSearchQuery(String searchQuery) {
-        mSearchQuery = searchQuery;
-    }
-
     void clearSearchResults() {
         mSearchResults.setValue(new ArrayList<WPOrgPluginModel>());
     }
@@ -302,12 +237,12 @@ public class PluginBrowserViewModel extends AndroidViewModel {
 
     // This method is specifically taking SitePluginModel as parameter, so it's understood that not all plugins
     // will be cached here
-    @Nullable WPOrgPluginModel getCachedWPOrgPluginForSitePlugin(@NonNull SitePluginModel sitePlugin) {
+    private @Nullable WPOrgPluginModel getCachedWPOrgPluginForSitePlugin(@NonNull SitePluginModel sitePlugin) {
         return mWPOrgPluginsForSitePluginsCache.get(sitePlugin.getSlug());
     }
 
     // In order to avoid hitting the DB in bindViewHolder multiple times for site plugins, we attempt to cache them here
-    void cacheWPOrgPluginIfNecessary(WPOrgPluginModel wpOrgPlugin) {
+    private void cacheWPOrgPluginIfNecessary(WPOrgPluginModel wpOrgPlugin) {
         if (wpOrgPlugin == null) {
             return;
         }
@@ -315,5 +250,72 @@ public class PluginBrowserViewModel extends AndroidViewModel {
         if (mSitePluginsCache.containsKey(slug)) {
             mWPOrgPluginsForSitePluginsCache.put(slug, wpOrgPlugin);
         }
+    }
+
+    // Simple Getters & Setters
+
+    SiteModel getSite() {
+        return mSite;
+    }
+
+    void setSite(SiteModel site) {
+        mSite = site;
+    }
+
+    String getSearchQuery() {
+        return mSearchQuery;
+    }
+
+    void setSearchQuery(String searchQuery) {
+        mSearchQuery = searchQuery;
+    }
+
+    LiveData<List<SitePluginModel>> getSitePlugins() {
+        return mSitePlugins;
+    }
+
+    LiveData<List<WPOrgPluginModel>> getNewPlugins() {
+        return mNewPlugins;
+    }
+
+    LiveData<List<WPOrgPluginModel>> getPopularPlugins() {
+        return mPopularPlugins;
+    }
+
+    LiveData<List<WPOrgPluginModel>> getSearchResults() {
+        return mSearchResults;
+    }
+
+    LiveData<Boolean> getIsLoadingMoreNewPlugins() {
+        return mIsLoadingMoreNewPlugins;
+    }
+
+    LiveData<Boolean> getIsLoadingMorePopularPlugins() {
+        return mIsLoadingMorePopularPlugins;
+    }
+
+    List<?> getPluginsForListType(PluginBrowserActivity.PluginListType listType) {
+        switch (listType) {
+            case SITE:
+                return getSitePlugins().getValue();
+            case POPULAR:
+                return getPopularPlugins().getValue();
+            case NEW:
+                return getNewPlugins().getValue();
+            case SEARCH:
+                return getSearchResults().getValue();
+        }
+        return null;
+    }
+
+    private boolean isLoadingMorePlugins(PluginBrowserActivity.PluginListType listType) {
+        if (listType == PluginBrowserActivity.PluginListType.NEW) {
+            Boolean b = getIsLoadingMoreNewPlugins().getValue();
+            return b != null ? b : false;
+        } else if (listType == PluginBrowserActivity.PluginListType.POPULAR) {
+            Boolean b = getIsLoadingMorePopularPlugins().getValue();
+            return b != null ? b : false;
+        }
+        return false;
     }
 }

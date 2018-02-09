@@ -52,8 +52,6 @@ import org.wordpress.android.widgets.WPNetworkImageView.ImageType;
 
 import java.util.List;
 
-import javax.inject.Inject;
-
 public class PluginBrowserActivity extends AppCompatActivity
         implements SearchView.OnQueryTextListener,
         MenuItem.OnActionExpandListener {
