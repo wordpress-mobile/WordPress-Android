@@ -60,6 +60,8 @@ public class PluginBrowserActivity extends AppCompatActivity
 
     // Remaining: Show progressbar for search and fetching site plugins
     // Show empty view for the search when necessary
+    // error handling
+    // slow startup
 
     public enum PluginListType {
         SITE,
@@ -91,13 +93,9 @@ public class PluginBrowserActivity extends AppCompatActivity
     private MenuItem mSearchMenuItem;
     private SearchView mSearchView;
 
-    @Inject PluginStore mPluginStore;
-
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        ((WordPress) getApplication()).component().inject(this);
-
         setContentView(R.layout.plugin_browser_activity);
 
         mViewModel = ViewModelProviders.of(this).get(PluginBrowserViewModel.class);
@@ -152,7 +150,7 @@ public class PluginBrowserActivity extends AppCompatActivity
         configureRecycler(mSitePluginsRecycler);
         configureRecycler(mPopularPluginsRecycler);
         configureRecycler(mNewPluginsRecycler);
-        
+
         mViewModel.start();
         setupObservers();
     }
@@ -480,7 +478,7 @@ public class PluginBrowserActivity extends AppCompatActivity
             String author;
             if (item instanceof SitePluginModel) {
                 sitePlugin = (SitePluginModel) item;
-                wpOrgPlugin = PluginUtils.getWPOrgPlugin(mPluginStore, sitePlugin);
+                wpOrgPlugin = mViewModel.getWPOrgPluginForSitePlugin(sitePlugin);
                 if (wpOrgPlugin == null) {
                     mViewModel.fetchWPOrgPlugin(sitePlugin.getSlug());
                 }
@@ -564,7 +562,7 @@ public class PluginBrowserActivity extends AppCompatActivity
                         WPOrgPluginModel wpOrgPlugin;
                         if (item instanceof SitePluginModel) {
                             sitePlugin = (SitePluginModel) item;
-                            wpOrgPlugin = mPluginStore.getWPOrgPluginBySlug(sitePlugin.getSlug());
+                            wpOrgPlugin = mViewModel.getWPOrgPluginForSitePlugin(sitePlugin);
                         } else {
                             wpOrgPlugin = (WPOrgPluginModel) item;
                             sitePlugin = mViewModel.getSitePluginFromSlug(wpOrgPlugin.getSlug());

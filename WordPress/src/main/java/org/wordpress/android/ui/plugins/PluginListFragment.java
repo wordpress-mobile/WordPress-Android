@@ -25,7 +25,6 @@ import org.wordpress.android.WordPress;
 import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.model.plugin.SitePluginModel;
 import org.wordpress.android.fluxc.model.plugin.WPOrgPluginModel;
-import org.wordpress.android.fluxc.store.PluginStore;
 import org.wordpress.android.ui.ActivityLauncher;
 import org.wordpress.android.ui.plugins.PluginBrowserActivity.PluginListType;
 import org.wordpress.android.util.HtmlUtils;
@@ -33,8 +32,6 @@ import org.wordpress.android.widgets.DividerItemDecoration;
 import org.wordpress.android.widgets.WPNetworkImageView;
 
 import java.util.List;
-
-import javax.inject.Inject;
 
 public class PluginListFragment extends Fragment {
     public static final String TAG = PluginListFragment.class.getName();
@@ -44,8 +41,6 @@ public class PluginListFragment extends Fragment {
 
     private RecyclerView mRecycler;
     private PluginListType mListType;
-
-    @Inject PluginStore mPluginStore;
 
     public static PluginListFragment newInstance(@NonNull SiteModel site, @NonNull PluginListType listType) {
         PluginListFragment fragment = new PluginListFragment();
@@ -59,7 +54,6 @@ public class PluginListFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        ((WordPress) getActivity().getApplication()).component().inject(this);
 
         mViewModel = ViewModelProviders.of(getActivity()).get(PluginBrowserViewModel.class);
         mListType = (PluginListType) getArguments().getSerializable(ARG_LIST_TYPE);
@@ -163,16 +157,6 @@ public class PluginListFragment extends Fragment {
         }
     }
 
-    private WPOrgPluginModel getWPOrgPluginForSitePlugin(SitePluginModel sitePlugin) {
-        WPOrgPluginModel wpOrgPlugin = mViewModel.getCachedWPOrgPluginForSitePlugin(sitePlugin);
-        // In most cases, this check won't be necessary, but we should still do it as a fallback
-        if (wpOrgPlugin == null) {
-            wpOrgPlugin = mPluginStore.getWPOrgPluginBySlug(sitePlugin.getSlug());
-            mViewModel.cacheWPOrgPluginIfNecessary(wpOrgPlugin);
-        }
-        return wpOrgPlugin;
-    }
-
     private class PluginListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
         private final PluginList mItems = new PluginList();
         private final LayoutInflater mLayoutInflater;
@@ -220,7 +204,7 @@ public class PluginListFragment extends Fragment {
             WPOrgPluginModel wpOrgPlugin;
             if (item instanceof SitePluginModel) {
                 sitePlugin = (SitePluginModel) item;
-                wpOrgPlugin = getWPOrgPluginForSitePlugin(sitePlugin);
+                wpOrgPlugin = mViewModel.getWPOrgPluginForSitePlugin(sitePlugin);
             } else {
                 wpOrgPlugin = (WPOrgPluginModel) item;
                 sitePlugin = mViewModel.getSitePluginFromSlug(wpOrgPlugin.getSlug());
@@ -296,7 +280,7 @@ public class PluginListFragment extends Fragment {
                         WPOrgPluginModel wpOrgPlugin;
                         if (item instanceof SitePluginModel) {
                             sitePlugin = (SitePluginModel) item;
-                            wpOrgPlugin = mPluginStore.getWPOrgPluginBySlug(sitePlugin.getSlug());
+                            wpOrgPlugin = mViewModel.getWPOrgPluginForSitePlugin(sitePlugin);
                         } else {
                             wpOrgPlugin = (WPOrgPluginModel) item;
                             sitePlugin = mViewModel.getSitePluginFromSlug(wpOrgPlugin.getSlug());

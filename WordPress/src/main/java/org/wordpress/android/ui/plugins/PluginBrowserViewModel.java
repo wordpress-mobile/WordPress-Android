@@ -84,6 +84,18 @@ public class PluginBrowserViewModel extends AndroidViewModel {
 
     // Site & WPOrg plugin management
 
+    WPOrgPluginModel getWPOrgPluginForSitePlugin(SitePluginModel sitePlugin) {
+        if (sitePlugin == null) {
+            return null;
+        }
+        WPOrgPluginModel wpOrgPlugin = getCachedWPOrgPluginForSitePlugin(sitePlugin);
+        if (wpOrgPlugin == null) {
+            wpOrgPlugin = PluginUtils.getWPOrgPlugin(mPluginStore, sitePlugin);
+            cacheWPOrgPluginIfNecessary(wpOrgPlugin);
+        }
+        return wpOrgPlugin;
+    }
+
     LiveData<List<SitePluginModel>> getSitePlugins() {
         return mSitePlugins;
     }
