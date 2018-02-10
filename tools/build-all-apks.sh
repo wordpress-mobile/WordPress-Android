@@ -43,7 +43,7 @@ function build_apk {
   ./gradlew lint >> $LOGFILE 2>&1
   echo "Building $version_name / $version_code - $apk..." | tee -a $LOGFILE
   ./gradlew assemble"$flavor"Release >> $LOGFILE 2>&1
-  cp -v $OUTDIR/$apk $BUILDDIR/$name | tee -a $LOGFILE
+  cp -v $OUTDIR/$flavor/release/$apk $BUILDDIR/$name | tee -a $LOGFILE
   echo "APK ready: $name" | tee -a $LOGFILE
   BUILD_APK_RET_VALUE=$version_code
 }
