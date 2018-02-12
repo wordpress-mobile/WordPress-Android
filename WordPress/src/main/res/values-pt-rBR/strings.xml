@@ -50,7 +50,6 @@ Language: pt_BR
 	<string name="plugin_updated_failed">Erro ao remover %s.</string>
 	<string name="plugin_updated_successfully">%s atualizado.</string>
 	<string name="plugin_available_version">A versão %s está disponível.</string>
-	<string name="plugin_installed_version">Versão do plugin %s</string>
 	<string name="plugin_detail_label_state_autoupdates">Atualizações automáticas</string>
 	<string name="plugin_detail_label_state_active">Ativo</string>
 	<string name="plugin_autoupdates_off">Atualizações automáticas desligadas</string>
@@ -456,7 +455,6 @@ Language: pt_BR
 	<string name="checking_username">Verificando nome de usuário</string>
 	<string name="jetpack_different_com_account">Sites Jetpack pertencentes a diferentes contas do WordPress.com não são suportados</string>
 	<string name="jetpack_use_com_account">Para adicionar seu site Jetpack, faça login na conta WordPress.com que você utiliza para conectar com o Jetpack.</string>
-	<string name="jetpack_message">O plugin Jetpack precisa estar instalado e ativo. Você quer instalar e ativar o Jetpack?</string>
 	<string name="error_media_load">Não foi possível carregar a mídia</string>
 	<string name="error_media_refresh_no_connection">Conexão necessária para a atualização da biblioteca</string>
 	<string name="error_media_unauthorized">Você não tem permissão para ver ou editar mídias</string>
@@ -636,8 +634,6 @@ Language: pt_BR
 	<string name="enter_your_password_instead">Digite sua senha ao invés disso</string>
 	<string name="web_address_dialog_hint">Exibido ao público quando você comentar.</string>
 	<string name="username_email">E-mail ou nome de usuário</string>
-	<string name="jetpack_not_connected_message">O plugin Jetpack esta instalado, mas não esta conectado com o WordPress.com. Você deseja conectar o Jetpack?</string>
-	<string name="jetpack_not_connected">O plugin Jetpack não esta conectado</string>
 	<string name="new_editor_reflection_error">O editor visual não é compatível com seu dispositivo. Ele foi\n        desativado automaticamente.</string>
 	<string name="stats_insights_latest_post_no_title">(sem título)</string>
 	<string name="capture_or_pick_photo">Tirar or selecionar uma foto</string>
@@ -1299,7 +1295,6 @@ Language: pt_BR
 	<string name="reader_toast_err_remove_tag">Não é possível remover a tag</string>
 	<string name="reader_toast_err_add_tag">Não é possível adicionar a tag</string>
 	<string name="reader_title_applog">Log do aplicativo</string>
-	<string name="jetpack_message_not_admin">É necessário o plugin Jetpack. Contate o administrador do site.</string>
 	<string name="fatal_db_error">Ocorreu um erro ao criar o banco de dados do aplicativo. Tente reinstalar o aplicativo.</string>
 	<string name="error_blog_hidden">Este blog está oculto e não foi possível carregá-lo. Habilite-o em configurações e tente novamente.</string>
 	<string name="error_refresh_media">Arquivo de mídia não pôde ser atualizado neste momento</string>
@@ -1435,7 +1430,6 @@ Language: pt_BR
 	<string name="reader_btn_follow">Seguir </string>
 	<string name="reader_btn_share">Compartilhar</string>
 	<string name="reader_untitled_post">(Sem título)</string>
-	<string name="jetpack_not_found">Plugin Jetpack não encontrado</string>
 	<string name="empty_list_default">Esta lista está vazia</string>
 	<string name="media_add_popup_title">Adicionar à biblioteca de mídia</string>
 	<string name="passcode_turn_on">Ligar o bloqueio do código PIN</string>

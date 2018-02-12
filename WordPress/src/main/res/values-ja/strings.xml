@@ -1,11 +1,34 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2018-01-24 06:46:10+0000
+Translation-Revision-Date: 2018-02-05 01:28:13+0000
 Plural-Forms: nplurals=1; plural=0;
 Generator: GlotPress/2.4.0-alpha
 Language: ja_JP
 -->
 <resources>
+	<string name="plugin_chevron_icon_content_description">テキストを切り替え</string>
+	<string name="plugin_info_your_version">お使いの WordPress バージョン</string>
+	<string name="plugin_info_requires_version">必須 WordPress バージョン</string>
+	<string name="plugin_info_lastupdated">最終更新</string>
+	<string name="plugin_info_version">バージョン</string>
+	<string name="plugin_five_stars">5つ星</string>
+	<string name="plugin_four_stars">4つ星</string>
+	<string name="plugin_three_stars">3つ星</string>
+	<string name="plugin_two_stars">2つ星</string>
+	<string name="plugin_one_stars">1つ星</string>
+	<string name="plugin_empty_text">何も入力されていません</string>
+	<string name="plugin_num_downloads">%s回ダウンロード</string>
+	<string name="plugin_num_ratings">%s評価</string>
+	<string name="plugin_read_reviews">レビューを読む</string>
+	<string name="plugin_faq">よくある質問</string>
+	<string name="plugin_whatsnew">新着情報</string>
+	<string name="plugin_installation">インストール</string>
+	<string name="plugin_description">説明</string>
+	<string name="plugin_settings">設定</string>
+	<string name="plugin_installed">インストール済み</string>
+	<string name="plugin_installed_version">バージョン %s インストール済み</string>
+	<string name="plugin_version">バージョン %s</string>
+	<string name="plugin_byline">作成者: %s</string>
 	<string name="change_photo">写真を変更</string>
 	<string name="plugin_fetch_error">プラグインを読み込めませんでした</string>
 	<string name="my_site_btn_site_pages">サイトページ</string>
@@ -50,7 +73,6 @@ Language: ja_JP
 	<string name="plugin_updated_failed">%s の削除中にエラーが発生しました。</string>
 	<string name="plugin_updated_successfully">%sが正常に更新されました。</string>
 	<string name="plugin_available_version">バージョン%sが利用できます。</string>
-	<string name="plugin_installed_version">プラグインのバージョン%s</string>
 	<string name="plugin_detail_label_state_autoupdates">自動更新</string>
 	<string name="plugin_detail_label_state_active">有効</string>
 	<string name="plugin_autoupdates_off">自動更新オフ</string>
@@ -59,6 +81,7 @@ Language: ja_JP
 	<string name="plugin_active">有効</string>
 	<string name="plugins">プラグイン</string>
 	<string name="my_site_btn_plugins">プラグイン</string>
+	<string name="media_edit_link_hint">リンクを新しいウィンドウまたはタブで開く</string>
 	<string name="media_edit_link_text">リンク先</string>
 	<string name="notification_login_failed">エラーが発生しました。</string>
 	<string name="notification_2fa_needed">続行するには認証コードを入力してください。</string>

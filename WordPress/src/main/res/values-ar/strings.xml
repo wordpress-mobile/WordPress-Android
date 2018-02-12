@@ -60,7 +60,6 @@ Language: ar
 	<string name="checking_username">التحقق من اسم المستخدم</string>
 	<string name="jetpack_different_com_account">مواقع Jetpack التي تنتمي إلى حسابات ووردبريس.كوم المختلفة غير مدعومة</string>
 	<string name="jetpack_use_com_account">لإضافة موقع Jetpack الخاص بك، سجل الدخول إلى حساب وردبرس.كوم الذي استخدمته للاتصال بـ Jetpack.</string>
-	<string name="jetpack_message">يجب تثبيت إضافة Jetpack وتفعيلها. هل ترغب في تثبيت Jetpack أو تفعيله؟</string>
 	<string name="error_media_load">تعذر تحميل الوسائط</string>
 	<string name="retry">إعادة المحاولة</string>
 	<string name="confirm">تأكيد</string>
@@ -192,9 +191,7 @@ Language: ar
 	<string name="logging_in">تسجيل الدخول</string>
 	<string name="enter_your_password_instead">أدخل كلمة مرورك بدلاً من ذلك</string>
 	<string name="web_address_dialog_hint">تظهر للعامة أثناء تعليقك.</string>
-	<string name="jetpack_not_connected_message">إضافة Jetpack مثبتة، ولكنها ليست متصلة بوردبرس.كوم. هل تريد توصيل Jetpack؟</string>
 	<string name="username_email">البريد الإلكتروني أو اسم المستخدم</string>
-	<string name="jetpack_not_connected">إضافة Jetpack غير متصلة</string>
 	<string name="new_editor_reflection_error">المحرر المرئي غير متوافق مع جهازك. كان\n معطلاً تلقائيًا.</string>
 	<string name="stats_insights_latest_post_no_title">(بلا عنوان)</string>
 	<string name="capture_or_pick_photo">التقاط صورة أو تحديدها</string>
@@ -962,7 +959,6 @@ Language: ar
 	<string name="reader_toast_err_view_image">لايمكن عرض الصورة</string>
 	<string name="reader_toast_err_share_intent">لايمكن المشاركة</string>
 	<string name="reader_toast_err_tag_invalid">هذا الوسم غير صالح</string>
-	<string name="jetpack_not_found">اضافة Jetpack غير موجودة</string>
 	<string name="limit_reached">وصلت للحد المسموح , يمكنك المحاولة مرة أخرى خلال 1 دقيقة. المحاولة مرة أخرى قبل ذلك ستؤدي لزيادة الوقت الواجب انتظاره قبل أن يتم رفع الحظر. إذا كنت تعتقد أن هذا هو الخطأ، اتصل بالدعم.</string>
 	<string name="nux_tutorial_get_started_title">ابدأ!</string>
 	<string name="reader_hint_comment_on_comment">رد على التعليق...</string>

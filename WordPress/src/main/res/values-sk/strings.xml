@@ -20,7 +20,6 @@ Language: sk
 	<string name="plugin_updated_successfully">Úspešne aktualizované %s.</string>
 	<string name="plugin_updated_failed">Chyba v odstraňovaní %s.</string>
 	<string name="plugin_available_version">Verzia %s je dostupná.</string>
-	<string name="plugin_installed_version">Verzia pluginu %s</string>
 	<string name="plugin_detail_label_state_autoupdates">Automatické aktualizácie</string>
 	<string name="plugin_detail_label_state_active">Aktívny</string>
 	<string name="plugin_autoupdates_off">Automatické aktuaizácie sú vypnuté</string>
@@ -786,7 +785,6 @@ Language: sk
 	<string name="reader_toast_err_tag_invalid">Toto nie je platná značka</string>
 	<string name="reader_toast_err_tag_exists">Túto značku už sledujete</string>
 	<string name="reader_toast_err_comment_failed">Váš komentár nemohol byť odoslaný</string>
-	<string name="jetpack_not_found">Modul Jetpack nebol nájdený</string>
 	<string name="reader_label_removed_tag">Odstránené %s</string>
 	<string name="username_invalid">Nesprávne použivateľské meno</string>
 	<string name="reader_toast_err_url_intent">Nie je možné otvoriť %s</string>
