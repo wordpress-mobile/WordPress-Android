@@ -11,6 +11,8 @@ import android.support.annotation.StringRes;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
@@ -77,6 +79,9 @@ public class PluginListFragment extends Fragment {
         mSite = (SiteModel) getArguments().getSerializable(WordPress.SITE);
         mListType = (PluginListType) getArguments().getSerializable(ARG_LIST_TYPE);
 
+        // this enables us to clear the search icon in onCreateOptionsMenu when the list isn't showing search results
+        setHasOptionsMenu(mListType != PluginListType.SEARCH);
+
         List<SitePluginModel> sitePlugins = mPluginStore.getSitePlugins(mSite);
         for (SitePluginModel plugin: sitePlugins) {
             mSitePluginsMap.put(plugin.getSlug(), plugin);
@@ -115,6 +120,12 @@ public class PluginListFragment extends Fragment {
         } catch (ClassCastException e) {
             throw new ClassCastException(getActivity().toString() + " must implement PluginListFragmentListener");
         }
+    }
+
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        menu.clear();
+        super.onCreateOptionsMenu(menu, inflater);
     }
 
     void requestPlugins() {

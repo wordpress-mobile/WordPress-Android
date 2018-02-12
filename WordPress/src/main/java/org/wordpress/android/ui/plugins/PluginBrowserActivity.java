@@ -1,6 +1,7 @@
 package org.wordpress.android.ui.plugins;
 
 import android.app.Fragment;
+import android.app.FragmentManager;
 import android.app.FragmentTransaction;
 import android.content.Context;
 import android.content.Intent;
@@ -174,6 +175,15 @@ public class PluginBrowserActivity extends AppCompatActivity
             fetchPlugins(PluginListType.POPULAR, false);
             fetchPlugins(PluginListType.NEW, false);
         }
+
+        getFragmentManager().addOnBackStackChangedListener(new FragmentManager.OnBackStackChangedListener() {
+            @Override
+            public void onBackStackChanged() {
+                if (getFragmentManager().getBackStackEntryCount() == 0) {
+                    setTitle(R.string.plugins);
+                }
+            }
+        });
     }
 
     private void configureRecycler(@NonNull RecyclerView recycler) {
@@ -192,12 +202,6 @@ public class PluginBrowserActivity extends AppCompatActivity
             mSearchView.setOnQueryTextListener(null);
         }
         super.onDestroy();
-    }
-
-    @Override
-    public void onBackPressed() {
-        setTitle(R.string.plugins);
-        super.onBackPressed();
     }
 
     @Override
