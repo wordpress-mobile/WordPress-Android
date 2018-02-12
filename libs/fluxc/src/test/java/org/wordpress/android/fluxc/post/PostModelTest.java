@@ -1,8 +1,6 @@
 package org.wordpress.android.fluxc.post;
 
 import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.robolectric.RobolectricTestRunner;
 import org.wordpress.android.fluxc.model.PostModel;
 import org.wordpress.android.fluxc.model.post.PostLocation;
 import org.wordpress.android.fluxc.model.post.PostStatus;
@@ -17,7 +15,6 @@ import static org.junit.Assert.assertTrue;
 import static org.wordpress.android.fluxc.post.PostTestUtils.EXAMPLE_LATITUDE;
 import static org.wordpress.android.fluxc.post.PostTestUtils.EXAMPLE_LONGITUDE;
 
-@RunWith(RobolectricTestRunner.class)
 public class PostModelTest {
     @Test
     public void testEquals() {
@@ -43,7 +40,7 @@ public class PostModelTest {
 
         testPost.error = new BaseRequest.BaseNetworkError(BaseRequest.GenericErrorType.PARSE_ERROR);
 
-        PostModel clonedPost = (PostModel) testPost.clone();
+        PostModel clonedPost = testPost.clone();
 
         assertFalse(testPost == clonedPost);
         assertTrue(testPost.equals(clonedPost));
