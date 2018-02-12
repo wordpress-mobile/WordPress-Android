@@ -42,7 +42,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:textColor="@color/grey_dark"
-            android:textSize="@dimen/text_sz_large"
+            android:textSize="14sp"
             tools:text="plugin_name" />
 
         <TextView
@@ -55,7 +55,7 @@
             android:ellipsize="end"
             android:lines="1"
             android:textColor="@color/grey_darken_10"
-            android:textSize="@dimen/text_sz_small"
+            android:textSize="12sp"
             tools:text="plugin_author" />
     </LinearLayout>
 
@@ -81,7 +81,7 @@
             android:layout_marginLeft="@dimen/margin_small"
             android:gravity="center_vertical"
             android:textColor="@color/alert_yellow"
-            android:textSize="@dimen/text_sz_small"
+            android:textSize="@dimen/text_sz_large"
             tools:text="@string/plugin_needs_update" />
 
         <RatingBar
