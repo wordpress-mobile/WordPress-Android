@@ -32,13 +32,13 @@ import org.wordpress.android.fluxc.store.AccountStore;
 import org.wordpress.android.fluxc.store.SiteStore;
 import org.wordpress.android.fluxc.store.SiteStore.OnSiteChanged;
 import org.wordpress.android.ui.ActivityId;
+import org.wordpress.android.ui.ActivityLauncher;
 import org.wordpress.android.ui.RequestCodes;
 import org.wordpress.android.ui.posts.PromoDialog;
 import org.wordpress.android.ui.prefs.AppPrefs;
 import org.wordpress.android.util.AnalyticsUtils;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
-import org.wordpress.android.util.JetpackUtils;
 import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.RateLimitedTask;
 import org.wordpress.android.util.SiteUtils;
@@ -276,18 +276,11 @@ public class StatsActivity extends AppCompatActivity
     }
 
     private boolean checkIfSiteHasAccessibleStats(SiteModel site) {
-        // If the site is not accessible via wpcom (Jetpack included), then show a dialog to the user.
         if (!SiteUtils.isAccessedViaWPComRest(mSite)) {
-            if (!site.isJetpackInstalled()) {
-                JetpackUtils.showInstallJetpackAlert(this, site, mAccountStore);
+            if (!site.isJetpackInstalled() || !site.isJetpackConnected()) {
+                ActivityLauncher.startJetpackConnectionFlow(this, site);
                 return false;
             }
-
-            if (!site.isJetpackConnected()) {
-                JetpackUtils.showJetpackNonConnectedAlert(this, site, mAccountStore);
-                return false;
-            }
-            // TODO: if Jetpack site, we should check the stats option is enabled
         }
         return true;
     }

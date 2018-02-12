@@ -1,11 +1,34 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2018-01-26 09:19:32+0000
+Translation-Revision-Date: 2018-02-05 15:32:29+0000
 Plural-Forms: nplurals=3; plural=(n==1 ? 0 : (n==0 || (n%100 > 0 && n%100 < 20)) ? 1 : 2);
 Generator: GlotPress/2.4.0-alpha
 Language: ro
 -->
 <resources>
+	<string name="plugin_chevron_icon_content_description">Comută textul</string>
+	<string name="plugin_info_your_version">Versiunea ta WordPress</string>
+	<string name="plugin_info_requires_version">Necesită versiunea WordPress</string>
+	<string name="plugin_info_lastupdated">Ultima actualizare</string>
+	<string name="plugin_info_version">Vesiune</string>
+	<string name="plugin_five_stars">5 stele</string>
+	<string name="plugin_four_stars">4 stele</string>
+	<string name="plugin_three_stars">3 stele</string>
+	<string name="plugin_two_stars">2 stele</string>
+	<string name="plugin_one_stars">O stea</string>
+	<string name="plugin_empty_text">Niciuna oferită</string>
+	<string name="plugin_num_downloads">%s de descărcări</string>
+	<string name="plugin_num_ratings">%s evaluări</string>
+	<string name="plugin_read_reviews">Citește recenziile</string>
+	<string name="plugin_faq">Întrebări frecvente</string>
+	<string name="plugin_whatsnew">Ce este nou</string>
+	<string name="plugin_installation">Instalare</string>
+	<string name="plugin_description">Descriere</string>
+	<string name="plugin_settings">Setări</string>
+	<string name="plugin_installed">Instalat</string>
+	<string name="plugin_installed_version">Este instalată versiunea %s</string>
+	<string name="plugin_version">Versiunea %s</string>
+	<string name="plugin_byline">de %s</string>
 	<string name="change_photo">Schimbă fotografia</string>
 	<string name="plugin_fetch_error">Nu pot încărca module</string>
 	<string name="my_site_btn_site_pages">Pagini sit</string>
@@ -50,7 +73,6 @@ Language: ro
 	<string name="plugin_updated_failed">Eroare la înlăturarea %s.</string>
 	<string name="plugin_updated_successfully">%s actualizat cu succes.</string>
 	<string name="plugin_available_version">Este disponibilă versiunea %s.</string>
-	<string name="plugin_installed_version">Versiune modul %s</string>
 	<string name="plugin_detail_label_state_autoupdates">Actualizări automate</string>
 	<string name="plugin_detail_label_state_active">Activ</string>
 	<string name="plugin_autoupdates_off">Actualizări automate oprite</string>

@@ -208,11 +208,15 @@ public class MySiteFragment extends Fragment
             @Override
             public void onClick(View v) {
                 SiteModel selectedSite = getSelectedSite();
-                if (!mAccountStore.hasAccessToken() && selectedSite != null && selectedSite.isJetpackConnected()) {
-                    // If the user is not connected to WordPress.com, ask him to connect first.
-                    startWPComLoginForJetpackStats();
-                } else {
-                    ActivityLauncher.viewBlogStats(getActivity(), selectedSite);
+                if (selectedSite != null) {
+                    if (!mAccountStore.hasAccessToken() && selectedSite.isJetpackConnected()) {
+                        // If the user is not connected to WordPress.com, ask him to connect first.
+                        startWPComLoginForJetpackStats();
+                    } else if (selectedSite.isWPCom() || (selectedSite.isJetpackInstalled() && selectedSite.isJetpackConnected())) {
+                        ActivityLauncher.viewBlogStats(getActivity(), selectedSite);
+                    } else {
+                        ActivityLauncher.startJetpackConnectionFlow(getActivity(), selectedSite);
+                    }
                 }
             }
         });
