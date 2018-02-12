@@ -455,6 +455,7 @@ Language: en_CA
 	<string name="checking_username">Checking username</string>
 	<string name="jetpack_different_com_account">Jetpack sites belonging to different WordPress.com accounts are not supported</string>
 	<string name="jetpack_use_com_account">To add your Jetpack site, log in to the WordPress.com account you used to connect Jetpack.</string>
+	<string name="jetpack_message">The Jetpack plugin must be installed and activated. Do you want to install or activate Jetpack?</string>
 	<string name="error_media_load">Unable to load media</string>
 	<string name="error_media_refresh_no_connection">Connection required to refresh library</string>
 	<string name="error_media_unauthorized">You don\'t have permission to view or edit media</string>
@@ -634,6 +635,8 @@ Language: en_CA
 	<string name="enter_your_password_instead">Enter your password instead</string>
 	<string name="web_address_dialog_hint">Shown publicly when you comment.</string>
 	<string name="username_email">Email or username</string>
+	<string name="jetpack_not_connected_message">The Jetpack plugin is installed, but not connected to WordPress.com. Do you want to connect Jetpack?</string>
+	<string name="jetpack_not_connected">Jetpack plugin not connected</string>
 	<string name="new_editor_reflection_error">Visual editor is not compatible with your device. It was\n        automatically disabled.</string>
 	<string name="stats_insights_latest_post_no_title">(no title)</string>
 	<string name="capture_or_pick_photo">Capture or select photo</string>
@@ -1295,6 +1298,7 @@ Language: en_CA
 	<string name="reader_toast_err_remove_tag">Unable to remove this tag</string>
 	<string name="reader_toast_err_add_tag">Unable to add this tag</string>
 	<string name="reader_title_applog">Application log</string>
+	<string name="jetpack_message_not_admin">The Jetpack plugin is required. Contact the site administrator.</string>
 	<string name="fatal_db_error">An error occurred while creating the app database. Try reinstalling the app.</string>
 	<string name="error_blog_hidden">This blog is hidden and couldn\'t be loaded. Enable it again in settings and try again.</string>
 	<string name="error_refresh_media">Media couldn\'t be refreshed at this time</string>
@@ -1430,6 +1434,7 @@ Language: en_CA
 	<string name="reader_btn_follow">Follow</string>
 	<string name="reader_btn_share">Share</string>
 	<string name="reader_untitled_post">(Untitled)</string>
+	<string name="jetpack_not_found">Jetpack plugin not found</string>
 	<string name="empty_list_default">This list is empty</string>
 	<string name="media_add_popup_title">Add to media library</string>
 	<string name="passcode_turn_on">Turn PIN lock on</string>

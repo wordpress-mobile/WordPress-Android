@@ -455,6 +455,7 @@ Language: sq_AL
 	<string name="checking_username">Po kontrollohet emri i përdoruesit</string>
 	<string name="jetpack_different_com_account">Nuk mbulohet sajtet me Jetpack që përkasin llogarive të ndryshme WordPress.com</string>
 	<string name="jetpack_use_com_account">Që të shtoni sajt Jetpack, bëni hyrjen te llogaria WordPress.com që përdorët për të lidhur Jetpack-un.</string>
+	<string name="jetpack_message">Shtojca Jetpack duhet të jetë e instaluar dhe e aktivizuar. Doni të instalohet ose të aktivizohet Jetpack-u?</string>
 	<string name="error_media_load">S’arrihet të ngarkohet media</string>
 	<string name="error_media_refresh_no_connection">Lypset lidhje që të rifreskohet mediateka</string>
 	<string name="error_media_unauthorized">S’keni leje të shihni ose përpunoni media</string>
