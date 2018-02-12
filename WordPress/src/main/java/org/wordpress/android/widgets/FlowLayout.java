@@ -7,7 +7,6 @@ package org.wordpress.android.widgets;
 
 import android.content.Context;
 import android.content.res.TypedArray;
-import android.os.Build;
 import android.support.v4.view.ViewCompat;
 import android.util.AttributeSet;
 import android.view.View;
@@ -92,8 +91,7 @@ public class FlowLayout extends ViewGroup {
             View child = getChildAt(i);
             LayoutParams lp = (LayoutParams) child.getLayoutParams();
 
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR2 &&
-                    ViewCompat.getLayoutDirection(this) == ViewCompat.LAYOUT_DIRECTION_RTL) {
+            if (ViewCompat.getLayoutDirection(this) == ViewCompat.LAYOUT_DIRECTION_RTL) {
                 child.layout(child.getMeasuredWidth() - lp.x - child.getMeasuredWidth(), lp.y, r - lp.x, lp.y + child.getMeasuredHeight());
             } else {
                 child.layout(lp.x, lp.y, lp.x + child.getMeasuredWidth(), lp.y + child.getMeasuredHeight());
