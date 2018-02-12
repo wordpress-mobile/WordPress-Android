@@ -1,9 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="@dimen/plugin_row_width"
     android:layout_height="match_parent"
     android:background="?android:attr/selectableItemBackground"
+    android:orientation="vertical"
     android:paddingLeft="@dimen/margin_extra_large"
     android:paddingStart="@dimen/margin_extra_large">
 
@@ -11,6 +12,7 @@
         android:id="@+id/plugin_icon"
         android:layout_width="@dimen/plugin_row_width"
         android:layout_height="@dimen/plugin_row_width"
+        android:layout_marginBottom="@dimen/margin_medium"
         android:contentDescription="@string/plugin_icon_content_description"
         tools:src="@drawable/plugin_placeholder" />
 
@@ -18,10 +20,9 @@
         android:id="@+id/plugin_name"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/plugin_icon"
         android:breakStrategy="simple"
         android:ellipsize="end"
-        android:lines="2"
+        android:maxLines="2"
         android:textColor="@color/grey_dark"
         android:textSize="@dimen/text_sz_medium"
         android:textStyle="bold"
@@ -31,7 +32,6 @@
         android:id="@+id/plugin_author"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/plugin_name"
         android:layout_marginBottom="@dimen/margin_medium"
         android:ellipsize="end"
         android:lines="1"
@@ -39,40 +39,45 @@
         android:textSize="@dimen/text_sz_small"
         tools:text="plugin_author" />
 
-    <LinearLayout
-        android:id="@+id/plugin_status_container"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/plugin_author"
-        android:orientation="horizontal"
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_alignParentBottom="true"
         android:paddingBottom="@dimen/margin_large">
 
-        <ImageView
-            android:id="@+id/plugin_status_icon"
-            android:layout_width="12dp"
-            android:layout_height="12dp"
-            android:layout_gravity="center_vertical"
-            tools:src="@drawable/plugin_update_available_icon" />
-
-        <TextView
-            android:id="@+id/plugin_status_text"
+        <LinearLayout
+            android:id="@+id/plugin_status_container"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="@dimen/margin_small"
-            android:gravity="center_vertical"
-            android:textColor="@color/alert_yellow"
-            android:textSize="@dimen/text_sz_extra_small"
-            tools:text="@string/plugin_needs_update" />
-    </LinearLayout>
+            android:layout_gravity="bottom"
+            android:orientation="horizontal">
 
-    <RatingBar
-        android:id="@+id/rating_bar"
-        style="@style/WPRatingBar.Small"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/plugin_author"
-        android:numStars="5"
-        android:paddingBottom="@dimen/margin_large"
-        tools:rating="3" />
+            <ImageView
+                android:id="@+id/plugin_status_icon"
+                android:layout_width="12dp"
+                android:layout_height="12dp"
+                android:layout_gravity="center_vertical"
+                tools:src="@drawable/plugin_update_available_icon" />
 
-</RelativeLayout>
+            <TextView
+                android:id="@+id/plugin_status_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/margin_small"
+                android:gravity="center_vertical"
+                android:textColor="@color/alert_yellow"
+                android:textSize="@dimen/text_sz_extra_small"
+                tools:text="@string/plugin_needs_update" />
+        </LinearLayout>
+
+        <RatingBar
+            android:id="@+id/rating_bar"
+            style="@style/WPRatingBar.Small"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom"
+            android:numStars="5"
+            tools:rating="3" />
+    </FrameLayout>
+
+</LinearLayout>
