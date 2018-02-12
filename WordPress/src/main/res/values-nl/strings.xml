@@ -455,6 +455,7 @@ Language: nl
 	<string name="checking_username">Gebruikersnaam controleren</string>
 	<string name="jetpack_different_com_account">Jetpack-sites die behoren tot verschillende WordPress.com-accounts, worden niet ondersteund</string>
 	<string name="jetpack_use_com_account">Log in op de WordPress.com-account die je gebruikte om verbinding te maken met Jetpack om je Jetpack-site toe te voegen.</string>
+	<string name="jetpack_message">De Jetpack-plugin moet worden geïnstalleerd en geactiveerd. Wil je Jetpack installeren of activeren?</string>
 	<string name="error_media_load">Kan media niet laden.</string>
 	<string name="error_media_refresh_no_connection">Een verbinding is vereist om de bibliotheek te vernieuwen</string>
 	<string name="error_media_unauthorized">Je bent niet gemachtigd media weer te geven of te bewerken</string>
