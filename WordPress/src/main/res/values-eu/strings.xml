@@ -15,8 +15,8 @@ Language: eu_ES
 	<string name="reader_label_visit">Bisitatu</string>
 	<string name="reader_toast_err_comment_not_found">Ez da iruzkina aurkitu!</string>
 	<string name="reader_title_post_detail_wpcom">WordPress.com postontzia</string>
-	<string name="error_notif_q_action_reply">Ezin izan da iruzkina erantzun. Mesedez saiatu berriro beranduago.</string>
 	<string name="reader_title_deeplink">WordPress Irakurtzailea</string>
+	<string name="error_notif_q_action_reply">Ezin izan da iruzkina erantzun. Mesedez saiatu berriro beranduago.</string>
 	<string name="error_notif_q_action_approve">Ezin izan da iruzkina onartu. Mesedez saiatu berriro beranduago.</string>
 	<string name="notifications_label_new_notifications_subtitle">Egin tap berauok ikusteko</string>
 	<string name="notifications_label_new_notifications">Jakinarazpen berriak</string>
