@@ -42,7 +42,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:textColor="@color/grey_dark"
-            android:textSize="14sp"
+            android:textSize="@dimen/text_sz_medium"
             tools:text="plugin_name" />
 
         <TextView
@@ -55,7 +55,7 @@
             android:ellipsize="end"
             android:lines="1"
             android:textColor="@color/grey_darken_10"
-            android:textSize="12sp"
+            android:textSize="@dimen/text_sz_small"
             tools:text="plugin_author" />
     </LinearLayout>
 

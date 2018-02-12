@@ -61,7 +61,7 @@
             android:layout_marginLeft="@dimen/margin_small"
             android:gravity="center_vertical"
             android:textColor="@color/alert_yellow"
-            android:textSize="@dimen/text_sz_small"
+            android:textSize="@dimen/text_sz_extra_small"
             tools:text="@string/plugin_needs_update" />
     </LinearLayout>
 
