@@ -1,8 +1,6 @@
 package org.wordpress.android.fluxc;
 
 import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.robolectric.RobolectricTestRunner;
 import org.wordpress.android.fluxc.network.BaseRequest;
 import org.wordpress.android.fluxc.network.BaseRequest.BaseNetworkError;
 
@@ -11,7 +9,6 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotEquals;
 import static org.junit.Assert.assertNull;
 
-@RunWith(RobolectricTestRunner.class)
 public class PayloadTest {
     private class CloneablePayload extends Payload<BaseNetworkError> implements Cloneable {
         @Override
