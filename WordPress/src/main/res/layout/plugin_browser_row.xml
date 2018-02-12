@@ -20,7 +20,6 @@
         android:layout_height="wrap_content"
         android:layout_below="@+id/plugin_icon"
         android:ellipsize="end"
-        android:gravity="bottom"
         android:lines="2"
         android:textColor="@color/grey_dark"
         android:textSize="@dimen/text_sz_medium"
