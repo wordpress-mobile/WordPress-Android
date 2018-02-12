@@ -59,6 +59,11 @@ public class PluginListFragment extends Fragment {
 
         mViewModel = ViewModelProviders.of(getActivity()).get(PluginBrowserViewModel.class);
         mListType = (PluginListType) getArguments().getSerializable(ARG_LIST_TYPE);
+    }
+
+    @Override
+    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
 
         setupObservers();
     }
