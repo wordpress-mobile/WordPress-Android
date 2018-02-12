@@ -1,10 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="@dimen/plugin_row_width"
     android:layout_height="match_parent"
     android:background="?android:attr/selectableItemBackground"
-    android:orientation="vertical"
     android:paddingLeft="@dimen/margin_extra_large"
     android:paddingStart="@dimen/margin_extra_large">
 
@@ -12,7 +11,6 @@
         android:id="@+id/plugin_icon"
         android:layout_width="@dimen/plugin_row_width"
         android:layout_height="@dimen/plugin_row_width"
-        android:layout_marginBottom="@dimen/margin_medium"
         android:contentDescription="@string/plugin_icon_content_description"
         tools:src="@drawable/plugin_placeholder" />
 
@@ -20,6 +18,7 @@
         android:id="@+id/plugin_name"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_below="@+id/plugin_icon"
         android:breakStrategy="simple"
         android:ellipsize="end"
         android:maxLines="2"
@@ -32,6 +31,7 @@
         android:id="@+id/plugin_author"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_below="@+id/plugin_name"
         android:layout_marginBottom="@dimen/margin_medium"
         android:ellipsize="end"
         android:lines="1"
@@ -43,6 +43,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_alignParentBottom="true"
+        android:layout_below="@+id/plugin_author"
         android:paddingBottom="@dimen/margin_large">
 
         <LinearLayout
@@ -80,4 +81,4 @@
             tools:rating="3" />
     </FrameLayout>
 
-</LinearLayout>
+</RelativeLayout>
