@@ -202,7 +202,9 @@ public class PluginListFragment extends Fragment {
         public void setPlugins(@Nullable List<?> plugins) {
             if (!mItems.isSameList(plugins)) {
                 mItems.clear();
-                mItems.addAll(plugins);
+                if (plugins != null) {
+                    mItems.addAll(plugins);
+                }
                 notifyDataSetChanged();
             }
         }
