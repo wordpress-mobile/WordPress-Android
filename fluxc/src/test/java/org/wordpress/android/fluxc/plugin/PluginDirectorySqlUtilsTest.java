@@ -17,6 +17,8 @@ import org.wordpress.android.fluxc.model.plugin.PluginDirectoryType;
 import org.wordpress.android.fluxc.persistence.PluginSqlUtils;
 import org.wordpress.android.fluxc.persistence.WellSqlConfig;
 
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
@@ -35,17 +37,52 @@ public class PluginDirectorySqlUtilsTest {
     }
 
     @Test
-    public void insertPluginDirectoryList() {
+    public void insertPluginDirectoryList() throws NoSuchMethodException,
+            InvocationTargetException, IllegalAccessException {
         int numberOfDirectories = 10;
         List<PluginDirectoryModel> pluginDirectoryList = new ArrayList<>();
+        PluginDirectoryType directoryType = PluginDirectoryType.NEW;
         for (int i = 0; i < numberOfDirectories; i++) {
             PluginDirectoryModel directoryModel = new PluginDirectoryModel();
             directoryModel.setSlug(randomSlug());
-            directoryModel.setDirectoryType(PluginDirectoryType.NEW.toString());
+            directoryModel.setDirectoryType(directoryType.toString());
             directoryModel.setPage(1);
             pluginDirectoryList.add(directoryModel);
         }
         Assert.assertEquals(numberOfDirectories, PluginSqlUtils.insertOrUpdatePluginDirectoryList(pluginDirectoryList));
+
+        // Use reflection to assert PluginSqlUtils.getPluginDirectoriesForType
+        Method getPluginDirectoriesForType = PluginSqlUtils.class.getDeclaredMethod("getPluginDirectoriesForType",
+                PluginDirectoryType.class);
+        getPluginDirectoriesForType.setAccessible(true);
+        Object directoryList = getPluginDirectoriesForType.invoke(PluginSqlUtils.class, directoryType);
+        Assert.assertTrue(directoryList instanceof List);
+        Assert.assertEquals(numberOfDirectories, ((List) directoryList).size());
+    }
+
+    @Test
+    public void testInsertSinglePluginDirectoryModel() throws NoSuchMethodException,
+            InvocationTargetException, IllegalAccessException {
+        String slug = randomSlug();
+        int page = 5;
+        List<PluginDirectoryModel> pluginDirectoryList = new ArrayList<>();
+        String directoryType = PluginDirectoryType.NEW.toString();
+        PluginDirectoryModel directoryModel = new PluginDirectoryModel();
+        directoryModel.setSlug(slug);
+        directoryModel.setDirectoryType(directoryType);
+        directoryModel.setPage(page);
+        pluginDirectoryList.add(directoryModel);
+        Assert.assertEquals(1, PluginSqlUtils.insertOrUpdatePluginDirectoryList(pluginDirectoryList));
+
+        // Use reflection to assert PluginSqlUtils.getPluginDirectoriesForType
+        Method getPluginDirectoryModel = PluginSqlUtils.class.getDeclaredMethod("getPluginDirectoryModel",
+                String.class, String.class);
+        getPluginDirectoryModel.setAccessible(true);
+        Object object = getPluginDirectoryModel.invoke(PluginSqlUtils.class, directoryType, slug);
+        Assert.assertNotNull(object);
+        Assert.assertTrue(object instanceof PluginDirectoryModel);
+        PluginDirectoryModel insertedDirectoryModel = (PluginDirectoryModel) object;
+        Assert.assertEquals(insertedDirectoryModel.getPage(), page);
     }
 
     @Test
