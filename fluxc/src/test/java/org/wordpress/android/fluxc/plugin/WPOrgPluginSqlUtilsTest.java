@@ -91,7 +91,7 @@ public class WPOrgPluginSqlUtilsTest {
         List<WPOrgPluginModel> plugins = new ArrayList<>();
         List<String> slugList = new ArrayList<>();
         for (int i = 0; i < numberOfPlugins; i++) {
-            String slug = randomString("slug");
+            String slug = randomString("slug") + i;
             slugList.add(slug);
             WPOrgPluginModel wpOrgPluginModel = new WPOrgPluginModel();
             wpOrgPluginModel.setSlug(slug);
@@ -112,8 +112,8 @@ public class WPOrgPluginSqlUtilsTest {
         List<String> slugList = new ArrayList<>();
         List<String> nameList = new ArrayList<>();
         for (int i = 0; i < numberOfPlugins; i++) {
-            String slug = randomString("slug");
-            String name = randomString("name");
+            String slug = randomString("slug") + i;
+            String name = randomString("name") + i;
             slugList.add(slug);
             nameList.add(name);
             WPOrgPluginModel wpOrgPluginModel = new WPOrgPluginModel();
@@ -126,8 +126,9 @@ public class WPOrgPluginSqlUtilsTest {
 
         List<String> updatedNameList = new ArrayList<>();
         List<WPOrgPluginModel> updatedPlugins = new ArrayList<>();
-        for (String slug : slugList) {
-            String newName = randomString("newName");
+        for (int i = 0; i < slugList.size(); i++) {
+            String slug = slugList.get(i);
+            String newName = randomString("newName") + i;
             updatedNameList.add(newName);
             WPOrgPluginModel wpOrgPluginModel = PluginSqlUtils.getWPOrgPluginBySlug(slug);
             Assert.assertNotNull(wpOrgPluginModel);
