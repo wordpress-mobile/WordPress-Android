@@ -16,6 +16,8 @@ import org.wordpress.android.fluxc.model.plugin.WPOrgPluginModel;
 import org.wordpress.android.fluxc.persistence.PluginSqlUtils;
 import org.wordpress.android.fluxc.persistence.WellSqlConfig;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Random;
 
 @RunWith(RobolectricTestRunner.class)
@@ -80,6 +82,26 @@ public class WPOrgPluginSqlUtilsTest {
         Assert.assertNotNull(updatedPlugin);
         Assert.assertEquals(insertedPlugin.getSlug(), updatedPlugin.getSlug());
         Assert.assertEquals(updatedPlugin.getName(), name2);
+    }
+
+    @Test
+    public void testInsertWPOrgPluginList() {
+        int numberOfPlugins = 10;
+        List<WPOrgPluginModel> plugins = new ArrayList<>();
+        List<String> slugList = new ArrayList<>();
+        for (int i = 0; i < numberOfPlugins; i++) {
+            String slug = randomString("slug" + i);
+            slugList.add(slug);
+            WPOrgPluginModel wpOrgPluginModel = new WPOrgPluginModel();
+            wpOrgPluginModel.setSlug(slug);
+            plugins.add(wpOrgPluginModel);
+        }
+        Assert.assertEquals(numberOfPlugins, PluginSqlUtils.insertOrUpdateWPOrgPluginList(plugins));
+
+        for (String slug : slugList) {
+            WPOrgPluginModel wpOrgPluginModel = PluginSqlUtils.getWPOrgPluginBySlug(slug);
+            Assert.assertNotNull(wpOrgPluginModel);
+        }
     }
 
     private String randomString(String prefix) {

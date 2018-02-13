@@ -131,18 +131,16 @@ public class PluginSqlUtils {
         }
     }
 
-    public static void insertOrUpdateWPOrgPluginList(List<WPOrgPluginModel> wpOrgPluginModels) {
+    public static int insertOrUpdateWPOrgPluginList(List<WPOrgPluginModel> wpOrgPluginModels) {
         if (wpOrgPluginModels == null) {
-            return;
+            return 0;
         }
 
-        WellSql.giveMeWritableDb().beginTransaction();
-
+        int result = 0;
         for (WPOrgPluginModel pluginModel : wpOrgPluginModels) {
-            insertOrUpdateWPOrgPlugin(pluginModel);
+            result += insertOrUpdateWPOrgPlugin(pluginModel);
         }
-
-        WellSql.giveMeWritableDb().endTransaction();
+        return result;
     }
 
     // Plugin Directory
