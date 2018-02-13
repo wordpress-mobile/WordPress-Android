@@ -15,6 +15,7 @@ import org.wordpress.android.fluxc.SingleStoreWellSqlConfigForTests;
 import org.wordpress.android.fluxc.model.plugin.WPOrgPluginModel;
 import org.wordpress.android.fluxc.persistence.PluginSqlUtils;
 import org.wordpress.android.fluxc.persistence.WellSqlConfig;
+import org.wordpress.android.util.StringUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -90,7 +91,7 @@ public class WPOrgPluginSqlUtilsTest {
         List<WPOrgPluginModel> plugins = new ArrayList<>();
         List<String> slugList = new ArrayList<>();
         for (int i = 0; i < numberOfPlugins; i++) {
-            String slug = randomString("slug" + i);
+            String slug = randomString("slug");
             slugList.add(slug);
             WPOrgPluginModel wpOrgPluginModel = new WPOrgPluginModel();
             wpOrgPluginModel.setSlug(slug);
@@ -101,6 +102,51 @@ public class WPOrgPluginSqlUtilsTest {
         for (String slug : slugList) {
             WPOrgPluginModel wpOrgPluginModel = PluginSqlUtils.getWPOrgPluginBySlug(slug);
             Assert.assertNotNull(wpOrgPluginModel);
+        }
+    }
+
+    @Test
+    public void testUpdateWPOrgPluginList() {
+        int numberOfPlugins = 2;
+        List<WPOrgPluginModel> plugins = new ArrayList<>();
+        List<String> slugList = new ArrayList<>();
+        List<String> nameList = new ArrayList<>();
+        for (int i = 0; i < numberOfPlugins; i++) {
+            String slug = randomString("slug");
+            String name = randomString("name");
+            slugList.add(slug);
+            nameList.add(name);
+            WPOrgPluginModel wpOrgPluginModel = new WPOrgPluginModel();
+            wpOrgPluginModel.setSlug(slug);
+            wpOrgPluginModel.setName(name);
+            plugins.add(wpOrgPluginModel);
+        }
+        // Insert plugins
+        Assert.assertEquals(numberOfPlugins, PluginSqlUtils.insertOrUpdateWPOrgPluginList(plugins));
+
+        List<String> updatedNameList = new ArrayList<>();
+        List<WPOrgPluginModel> updatedPlugins = new ArrayList<>();
+        for (String slug : slugList) {
+            String newName = randomString("newName");
+            updatedNameList.add(newName);
+            WPOrgPluginModel wpOrgPluginModel = PluginSqlUtils.getWPOrgPluginBySlug(slug);
+            Assert.assertNotNull(wpOrgPluginModel);
+            // Update plugin name
+            wpOrgPluginModel.setName(newName);
+            updatedPlugins.add(wpOrgPluginModel);
+        }
+        // Update plugins
+        Assert.assertEquals(numberOfPlugins, PluginSqlUtils.insertOrUpdateWPOrgPluginList(updatedPlugins));
+
+        // Assert the plugins are updated
+        for (int i = 0; i < numberOfPlugins; i++) {
+            String slug = slugList.get(i);
+            String previousName = nameList.get(i);
+            String expectedName = updatedNameList.get(i);
+            WPOrgPluginModel wpOrgPluginModel = PluginSqlUtils.getWPOrgPluginBySlug(slug);
+            Assert.assertNotNull(wpOrgPluginModel);
+            Assert.assertFalse(StringUtils.equals(wpOrgPluginModel.getName(), previousName));
+            Assert.assertTrue(StringUtils.equals(wpOrgPluginModel.getName(), expectedName));
         }
     }
 
