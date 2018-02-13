@@ -361,14 +361,14 @@ public class PeopleUtils {
                             switch (userError.optString("code")) {
                                 case "invalid_input":
                                     switch (userError.optString("message")) {
-                                        case "User not found":
-                                            callback.onUsernameValidation(username, ValidationResult.USER_NOT_FOUND);
-                                            continue;
                                         case "Invalid email":
                                             callback.onUsernameValidation(username, ValidationResult.INVALID_EMAIL);
                                             continue;
+                                        case "User not found":
+                                        default:
+                                            callback.onUsernameValidation(username, ValidationResult.USER_NOT_FOUND);
+                                            continue;
                                     }
-                                    break;
                                 case "invalid_input_has_role":
                                     callback.onUsernameValidation(username, ValidationResult.ALREADY_MEMBER);
                                     continue;
