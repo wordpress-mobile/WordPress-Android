@@ -11,6 +11,7 @@ import org.wordpress.android.fluxc.Dispatcher;
 import org.wordpress.android.fluxc.generated.SiteActionBuilder;
 import org.wordpress.android.fluxc.store.SiteStore;
 import org.wordpress.android.fluxc.store.SiteStore.OnSuggestedDomains;
+import org.wordpress.android.fluxc.store.SiteStore.SuggestDomainsPayload;
 import org.wordpress.android.util.AppLog;
 
 import javax.inject.Inject;
@@ -73,7 +74,7 @@ public class SiteCreationDomainLoaderFragment extends Fragment {
     public void load(String keywords) {
         postUpdate(new DomainSuggestionEvent(DomainUpdateStep.UPDATING, keywords, null));
 
-        SiteStore.SuggestDomainsPayload payload = new SiteStore.SuggestDomainsPayload(keywords, true, true, false, 20);
+        SuggestDomainsPayload payload = new SuggestDomainsPayload(keywords, true, true, false, 20);
         mDispatcher.dispatch(SiteActionBuilder.newSuggestDomainsAction(payload));
     }
 
