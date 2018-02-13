@@ -24,6 +24,7 @@ import android.widget.ListAdapter;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.util.DisplayUtils;
+import org.wordpress.android.util.RtlUtils;
 
 class StatsUIHelper {
     // Max number of rows to show in a stats fragment
@@ -252,9 +253,8 @@ class StatsUIHelper {
         if (animate) {
             // make sure we start with the correct chevron for the prior state before animating it
             chevron.setImageResource(isGroupExpanded ? R.drawable.ic_chevron_right_blue_wordpress_24dp : R.drawable.ic_chevron_down_blue_wordpress_24dp);
-            boolean isRtl = ViewCompat.getLayoutDirection(chevron) == ViewCompat.LAYOUT_DIRECTION_RTL;
             float start = (isGroupExpanded ? 0.0f : 0.0f);
-            float end = (isGroupExpanded ? 90.0f : -90.0f) * (isRtl ? -1 : 1);
+            float end = (isGroupExpanded ? 90.0f : -90.0f) * (RtlUtils.isRtl(groupView.getContext()) ? -1 : 1);
             Animation rotate = new RotateAnimation(start, end, Animation.RELATIVE_TO_SELF, 0.5f,
                     Animation.RELATIVE_TO_SELF, 0.5f);
             rotate.setDuration(ANIM_DURATION);

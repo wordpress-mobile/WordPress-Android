@@ -1,4 +1,4 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <bool name="min_sdk_18">false</bool>
+    <bool name="rtl_supported">false</bool>
 </resources>
