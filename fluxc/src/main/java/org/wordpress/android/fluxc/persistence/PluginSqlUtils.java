@@ -152,14 +152,16 @@ public class PluginSqlUtils {
                 .endWhere().execute();
     }
 
-    public static void insertOrUpdatePluginDirectoryList(List<PluginDirectoryModel> pluginDirectories) {
+    public static int insertOrUpdatePluginDirectoryList(List<PluginDirectoryModel> pluginDirectories) {
         if (pluginDirectories == null) {
-            return;
+            return 0;
         }
 
+        int result = 0;
         for (PluginDirectoryModel pluginDirectory : pluginDirectories) {
-            insertOrUpdatePluginDirectoryModel(pluginDirectory);
+            result += insertOrUpdatePluginDirectoryModel(pluginDirectory);
         }
+        return result;
     }
 
     public static int getLastRequestedPageForDirectoryType(PluginDirectoryType directoryType) {
@@ -189,17 +191,18 @@ public class PluginSqlUtils {
         return result.isEmpty() ? null : result.get(0);
     }
 
-    private static void insertOrUpdatePluginDirectoryModel(PluginDirectoryModel pluginDirectory) {
+    private static int insertOrUpdatePluginDirectoryModel(PluginDirectoryModel pluginDirectory) {
         if (pluginDirectory == null) {
-            return;
+            return 0;
         }
 
         PluginDirectoryModel existing = getPluginDirectoryModel(pluginDirectory.getDirectoryType(),
                 pluginDirectory.getDirectoryType());
         if (existing == null) {
             WellSql.insert(pluginDirectory).execute();
+            return 1;
         } else {
-            WellSql.update(WPOrgPluginModel.class).whereId(existing.getId())
+            return WellSql.update(WPOrgPluginModel.class).whereId(existing.getId())
                     .put(pluginDirectory, new UpdateAllExceptId<>(PluginDirectoryModel.class)).execute();
         }
     }
