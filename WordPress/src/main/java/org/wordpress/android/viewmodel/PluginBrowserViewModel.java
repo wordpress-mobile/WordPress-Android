@@ -1,4 +1,4 @@
-package org.wordpress.android.ui.plugins;
+package org.wordpress.android.viewmodel;
 
 import android.app.Application;
 import android.arch.lifecycle.AndroidViewModel;
@@ -19,6 +19,8 @@ import org.wordpress.android.fluxc.model.plugin.PluginDirectoryType;
 import org.wordpress.android.fluxc.model.plugin.SitePluginModel;
 import org.wordpress.android.fluxc.model.plugin.WPOrgPluginModel;
 import org.wordpress.android.fluxc.store.PluginStore;
+import org.wordpress.android.ui.plugins.PluginBrowserActivity;
+import org.wordpress.android.ui.plugins.PluginUtils;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.StringUtils;
 
@@ -28,7 +30,7 @@ import java.util.List;
 import javax.inject.Inject;
 
 public class PluginBrowserViewModel extends AndroidViewModel {
-    enum PluginListStatus {
+    public enum PluginListStatus {
         CAN_LOAD_MORE,
         DONE,
         ERROR,
@@ -82,7 +84,7 @@ public class PluginBrowserViewModel extends AndroidViewModel {
         mDispatcher.unregister(this);
     }
 
-    void start() {
+    public void start() {
         reloadAllPluginsFromStore();
 
         fetchPlugins(PluginBrowserActivity.PluginListType.SITE, false);
@@ -92,18 +94,18 @@ public class PluginBrowserViewModel extends AndroidViewModel {
 
     // Site & WPOrg plugin management
 
-    WPOrgPluginModel getWPOrgPluginForSitePlugin(SitePluginModel sitePlugin) {
+    public WPOrgPluginModel getWPOrgPluginForSitePlugin(SitePluginModel sitePlugin) {
         if (sitePlugin == null) {
             return null;
         }
         return PluginUtils.getWPOrgPlugin(mPluginStore, sitePlugin);
     }
 
-    SitePluginModel getSitePluginFromSlug(String slug) {
+    public SitePluginModel getSitePluginFromSlug(String slug) {
         return mPluginStore.getSitePluginBySlug(getSite(), slug);
     }
 
-    void reloadAllPluginsFromStore() {
+    public void reloadAllPluginsFromStore() {
         reloadSitePlugins();
         reloadPopularPlugins();
         reloadNewPlugins();
@@ -189,11 +191,11 @@ public class PluginBrowserViewModel extends AndroidViewModel {
         return true;
     }
 
-    void fetchWPOrgPlugin(String slug) {
+    public void fetchWPOrgPlugin(String slug) {
         mDispatcher.dispatch(PluginActionBuilder.newFetchWporgPluginAction(slug));
     }
 
-    void loadMore(PluginBrowserActivity.PluginListType listType) {
+    public void loadMore(PluginBrowserActivity.PluginListType listType) {
         fetchPlugins(listType, true);
     }
 
@@ -266,7 +268,7 @@ public class PluginBrowserViewModel extends AndroidViewModel {
 
     // Search
 
-    void setSearchQuery(String searchQuery) {
+    public void setSearchQuery(String searchQuery) {
         mSearchQuery = searchQuery;
 
         // Don't delay if the searchQuery is empty
@@ -311,7 +313,7 @@ public class PluginBrowserViewModel extends AndroidViewModel {
         mSearchResults.setValue(new ArrayList<WPOrgPluginModel>());
     }
 
-    boolean shouldShowEmptySearchResultsView() {
+    public boolean shouldShowEmptySearchResultsView() {
         // Search query is less than 2 characters
         if (!shouldSearch()) {
             return false;
@@ -325,59 +327,59 @@ public class PluginBrowserViewModel extends AndroidViewModel {
 
     // Simple Getters & Setters
 
-    SiteModel getSite() {
+    public SiteModel getSite() {
         return mSite;
     }
 
-    void setSite(SiteModel site) {
+    public void setSite(SiteModel site) {
         mSite = site;
     }
 
-    String getSearchQuery() {
+    public String getSearchQuery() {
         return mSearchQuery;
     }
 
-    LiveData<List<SitePluginModel>> getSitePlugins() {
+    public LiveData<List<SitePluginModel>> getSitePlugins() {
         return mSitePlugins;
     }
 
-    boolean isSitePluginsEmpty() {
+    public boolean isSitePluginsEmpty() {
         return getSitePlugins().getValue() == null || getSitePlugins().getValue().size() == 0;
     }
 
-    LiveData<List<WPOrgPluginModel>> getNewPlugins() {
+    public LiveData<List<WPOrgPluginModel>> getNewPlugins() {
         return mNewPlugins;
     }
 
-    LiveData<List<WPOrgPluginModel>> getPopularPlugins() {
+    public LiveData<List<WPOrgPluginModel>> getPopularPlugins() {
         return mPopularPlugins;
     }
 
-    LiveData<List<WPOrgPluginModel>> getSearchResults() {
+    public LiveData<List<WPOrgPluginModel>> getSearchResults() {
         return mSearchResults;
     }
 
-    LiveData<PluginListStatus> getNewPluginsListStatus() {
+    public LiveData<PluginListStatus> getNewPluginsListStatus() {
         return mNewPluginsListStatus;
     }
 
-    LiveData<PluginListStatus> getPopularPluginsListStatus() {
+    public LiveData<PluginListStatus> getPopularPluginsListStatus() {
         return mPopularPluginsListStatus;
     }
 
-    LiveData<PluginListStatus> getSitePluginsListStatus() {
+    public LiveData<PluginListStatus> getSitePluginsListStatus() {
         return mSitePluginsListStatus;
     }
 
-    LiveData<PluginListStatus> getSearchPluginsListStatus() {
+    public LiveData<PluginListStatus> getSearchPluginsListStatus() {
         return mSearchPluginsListStatus;
     }
 
-    LiveData<String> getLastUpdatedWpOrgPluginSlug() {
+    public LiveData<String> getLastUpdatedWpOrgPluginSlug() {
         return mLastUpdatedWpOrgPluginSlug;
     }
 
-    List<?> getPluginsForListType(PluginBrowserActivity.PluginListType listType) {
+    public List<?> getPluginsForListType(PluginBrowserActivity.PluginListType listType) {
         switch (listType) {
             case SITE:
                 return getSitePlugins().getValue();

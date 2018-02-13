@@ -35,7 +35,7 @@ public class PluginUtils {
         return false;
     }
 
-    static WPOrgPluginModel getWPOrgPlugin(@NonNull PluginStore pluginStore, @NonNull SitePluginModel plugin) {
+    public static WPOrgPluginModel getWPOrgPlugin(@NonNull PluginStore pluginStore, @NonNull SitePluginModel plugin) {
         String slug = plugin.getSlug();
         if (TextUtils.isEmpty(slug)) {
             return null;
