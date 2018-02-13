@@ -197,7 +197,7 @@ public class PluginSqlUtils {
         }
 
         PluginDirectoryModel existing = getPluginDirectoryModel(pluginDirectory.getDirectoryType(),
-                pluginDirectory.getDirectoryType());
+                pluginDirectory.getSlug());
         if (existing == null) {
             WellSql.insert(pluginDirectory).execute();
             return 1;
