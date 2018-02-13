@@ -44,7 +44,7 @@ public class PluginDirectorySqlUtilsTest {
         PluginDirectoryType directoryType = PluginDirectoryType.NEW;
         for (int i = 0; i < numberOfDirectories; i++) {
             PluginDirectoryModel directoryModel = new PluginDirectoryModel();
-            directoryModel.setSlug(randomSlug());
+            directoryModel.setSlug(randomString("slug" + i));
             directoryModel.setDirectoryType(directoryType.toString());
             directoryModel.setPage(1);
             pluginDirectoryList.add(directoryModel);
@@ -63,7 +63,7 @@ public class PluginDirectorySqlUtilsTest {
     @Test
     public void testInsertSinglePluginDirectoryModel() throws NoSuchMethodException,
             InvocationTargetException, IllegalAccessException {
-        String slug = randomSlug();
+        String slug = randomString("slug");
         int page = 5;
         List<PluginDirectoryModel> pluginDirectoryList = new ArrayList<>();
         String directoryType = PluginDirectoryType.NEW.toString();
@@ -95,7 +95,7 @@ public class PluginDirectorySqlUtilsTest {
         // value of the page we have set so far is always the last requested page
         for (int i = 0; i < numberOfTimesToTry; i++) {
             PluginDirectoryModel directoryModel = new PluginDirectoryModel();
-            directoryModel.setSlug(randomSlug());
+            directoryModel.setSlug(randomString("slug" + i));
             directoryModel.setDirectoryType(directoryType.toString());
             int page = mRandom.nextInt(maxPossiblePage);
             directoryModel.setPage(page);
@@ -109,7 +109,7 @@ public class PluginDirectorySqlUtilsTest {
         }
     }
 
-    private String randomSlug() {
-        return "slug-" + mRandom.nextInt();
+    private String randomString(String prefix) {
+        return prefix + "-" + mRandom.nextInt();
     }
 }
