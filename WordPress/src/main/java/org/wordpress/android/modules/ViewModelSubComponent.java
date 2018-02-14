@@ -1,6 +1,6 @@
 package org.wordpress.android.modules;
 
-import org.wordpress.android.ui.plugins.PluginBrowserViewModel;
+import org.wordpress.android.viewmodel.PluginBrowserViewModel;
 import org.wordpress.android.ui.stats.models.PostViewsModel;
 
 import dagger.Subcomponent;

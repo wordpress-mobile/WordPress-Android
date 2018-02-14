@@ -6,7 +6,7 @@ import android.arch.lifecycle.ViewModelProvider;
 import android.content.Context;
 import android.util.ArrayMap;
 
-import org.wordpress.android.ui.plugins.PluginBrowserViewModel;
+import org.wordpress.android.viewmodel.PluginBrowserViewModel;
 import org.wordpress.android.ui.stats.models.PostViewsModel;
 
 import javax.inject.Provider;
