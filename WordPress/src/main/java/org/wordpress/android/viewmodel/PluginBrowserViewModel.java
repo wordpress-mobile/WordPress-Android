@@ -63,6 +63,7 @@ public class PluginBrowserViewModel extends AndroidViewModel {
     private MutableLiveData<List<WPOrgPluginModel>> mSearchResults;
 
     private MutableLiveData<String> mLastUpdatedWpOrgPluginSlug;
+    private MutableLiveData<String> mTitle;
 
     public PluginBrowserViewModel(@NonNull Application application) {
         super(application);
@@ -82,6 +83,7 @@ public class PluginBrowserViewModel extends AndroidViewModel {
         mSitePluginsListStatus = new MutableLiveData<>();
         mSearchPluginsListStatus = new MutableLiveData<>();
         mLastUpdatedWpOrgPluginSlug = new MutableLiveData<>();
+        mTitle = new MutableLiveData<>();
     }
 
     @Override
@@ -383,6 +385,14 @@ public class PluginBrowserViewModel extends AndroidViewModel {
 
     public LiveData<String> getLastUpdatedWpOrgPluginSlug() {
         return mLastUpdatedWpOrgPluginSlug;
+    }
+
+    public void setTitle(String title) {
+        mTitle.setValue(title);
+    }
+
+    public LiveData<String> getTitle() {
+        return mTitle;
     }
 
     public List<?> getPluginsForListType(PluginListType listType) {

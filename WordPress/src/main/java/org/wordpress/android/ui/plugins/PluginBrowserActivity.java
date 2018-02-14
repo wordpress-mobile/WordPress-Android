@@ -118,7 +118,7 @@ public class PluginBrowserActivity extends AppCompatActivity
             @Override
             public void onBackStackChanged() {
                 if (getSupportFragmentManager().getBackStackEntryCount() == 0) {
-                    setTitle(R.string.plugins);
+                    mViewModel.setTitle(getString(R.string.plugins));
                 }
             }
         });
@@ -132,6 +132,13 @@ public class PluginBrowserActivity extends AppCompatActivity
     }
 
     private void setupObservers() {
+        mViewModel.getTitle().observe(this, new Observer<String>() {
+            @Override
+            public void onChanged(@Nullable String title) {
+                setTitle(title);
+            }
+        });
+
         mViewModel.getSitePlugins().observe(this, new Observer<List<SitePluginModel>>() {
             @Override
             public void onChanged(@Nullable final List<SitePluginModel> sitePlugins) {
@@ -298,6 +305,7 @@ public class PluginBrowserActivity extends AppCompatActivity
                     .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE)
                     .commit();
         }
+        mViewModel.setTitle(getTitleForListType(listType));
     }
 
     private void hideListFragment() {
@@ -487,4 +495,17 @@ public class PluginBrowserActivity extends AppCompatActivity
         }
     }
 
+    private String getTitleForListType(@NonNull PluginListType pluginListType) {
+        switch (pluginListType) {
+            case POPULAR:
+                return getString(R.string.plugin_caption_popular);
+            case NEW:
+                return getString(R.string.plugin_caption_new);
+            case SEARCH:
+                return getString(R.string.plugin_caption_search);
+            case SITE:
+                return getString(R.string.plugin_caption_installed);
+        }
+        return getString(R.string.plugins);
+    }
 }
