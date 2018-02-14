@@ -3,6 +3,7 @@ package org.wordpress.android.modules;
 import android.arch.lifecycle.ViewModel;
 import android.arch.lifecycle.ViewModelProvider;
 import android.support.annotation.NonNull;
+import android.support.v4.util.ArrayMap;
 
 import java.util.Map;
 
@@ -13,10 +14,10 @@ import javax.inject.Singleton;
 @Singleton
 public class ViewModelFactory implements ViewModelProvider.Factory {
 
-    private final Map<Class<? extends ViewModel>, Provider<ViewModel>> mViewModelsMap;
+    private final ArrayMap<Class<? extends ViewModel>, Provider<ViewModel>> mViewModelsMap;
 
     @Inject
-    public ViewModelFactory(Map<Class<? extends ViewModel>, Provider<ViewModel>> viewModelsMap) {
+    public ViewModelFactory(ArrayMap<Class<? extends ViewModel>, Provider<ViewModel>> viewModelsMap) {
         this.mViewModelsMap = viewModelsMap;
     }
 
