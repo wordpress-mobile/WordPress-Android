@@ -65,6 +65,13 @@ public class PluginSqlUtils {
         }
     }
 
+    public static int deleteSitePlugins(@NonNull SiteModel site) {
+        return WellSql.delete(SitePluginModel.class)
+                .where()
+                .equals(SitePluginModelTable.LOCAL_SITE_ID, site.getId())
+                .endWhere().execute();
+    }
+
     public static int deleteSitePlugin(SiteModel site, SitePluginModel plugin) {
         if (plugin == null) {
             return 0;
