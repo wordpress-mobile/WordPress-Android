@@ -32,6 +32,7 @@ import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.DisplayUtils;
 import org.wordpress.android.util.FormatUtils;
 import org.wordpress.android.util.NetworkUtils;
+import org.wordpress.android.util.RtlUtils;
 import org.wordpress.android.util.SiteUtils;
 import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.ViewUtils;
@@ -326,7 +327,7 @@ public class StatsVisitorsAndViewsFragment extends StatsAbstractFragment
             visitModelsToShow[currentPointIndex] = currentVisitModel;
             currentPointIndex--;
         }
-        if (isRtl()) {
+        if (RtlUtils.isRtl(getActivity())) {
             ArrayUtils.reverse(visitModelsToShow);
         }
         return visitModelsToShow;
@@ -519,17 +520,7 @@ public class StatsVisitorsAndViewsFragment extends StatsAbstractFragment
     }
 
     private int getDefaultBarIndex(final VisitModel[] dataToShowOnGraph){
-        return isRtl() && dataToShowOnGraph.length > 0 ? 0 : dataToShowOnGraph.length - 1;
-    }
-
-    private boolean isRtl() {
-        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
-            Configuration configuration = getResources().getConfiguration();
-            if (configuration.getLayoutDirection() == ViewCompat.LAYOUT_DIRECTION_RTL) {
-                return true;
-            }
-        }
-        return false;
+        return RtlUtils.isRtl(getActivity()) && dataToShowOnGraph.length > 0 ? 0 : dataToShowOnGraph.length - 1;
     }
 
     // Find the max value in Visitors and Views data.
