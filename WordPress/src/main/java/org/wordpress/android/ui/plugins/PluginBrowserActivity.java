@@ -1,6 +1,7 @@
 package org.wordpress.android.ui.plugins;
 
 import android.arch.lifecycle.Observer;
+import android.arch.lifecycle.ViewModelProvider;
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.Context;
 import android.content.Intent;
@@ -45,6 +46,10 @@ import org.wordpress.android.widgets.WPNetworkImageView.ImageType;
 
 import java.util.List;
 
+import javax.inject.Inject;
+
+import dagger.android.AndroidInjection;
+
 public class PluginBrowserActivity extends AppCompatActivity
         implements SearchView.OnQueryTextListener,
         MenuItem.OnActionExpandListener {
@@ -69,21 +74,25 @@ public class PluginBrowserActivity extends AppCompatActivity
         }
     }
 
-    private PluginBrowserViewModel mViewModel;
+    @Inject
+    ViewModelProvider.Factory viewModelFactory;
 
+    private PluginBrowserViewModel mViewModel;
     private RecyclerView mSitePluginsRecycler;
     private RecyclerView mPopularPluginsRecycler;
-    private RecyclerView mNewPluginsRecycler;
 
+    private RecyclerView mNewPluginsRecycler;
     private MenuItem mSearchMenuItem;
+
     private SearchView mSearchView;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        ((WordPress)getApplication()).component().inject(this);
         setContentView(R.layout.plugin_browser_activity);
 
-        mViewModel = ViewModelProviders.of(this).get(PluginBrowserViewModel.class);
+        mViewModel = ViewModelProviders.of(this, viewModelFactory).get(PluginBrowserViewModel.class);
 
         mSitePluginsRecycler = findViewById(R.id.installed_plugins_recycler);
         mPopularPluginsRecycler = findViewById(R.id.popular_plugins_recycler);

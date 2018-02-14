@@ -4,6 +4,7 @@ import android.app.Application;
 import android.arch.lifecycle.AndroidViewModel;
 import android.arch.lifecycle.LiveData;
 import android.arch.lifecycle.MutableLiveData;
+import android.arch.lifecycle.ViewModel;
 import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -27,7 +28,7 @@ import java.util.List;
 
 import javax.inject.Inject;
 
-public class PluginBrowserViewModel extends AndroidViewModel {
+public class PluginBrowserViewModel extends ViewModel {
     enum PluginListStatus {
         CAN_LOAD_MORE,
         DONE,
@@ -36,8 +37,8 @@ public class PluginBrowserViewModel extends AndroidViewModel {
         LOADING_MORE
     }
 
-    @Inject Dispatcher mDispatcher;
-    @Inject PluginStore mPluginStore;
+    private final Dispatcher mDispatcher;
+    private final PluginStore mPluginStore;
 
     private String mSearchQuery;
     private SiteModel mSite;
@@ -56,10 +57,12 @@ public class PluginBrowserViewModel extends AndroidViewModel {
 
     private MutableLiveData<String> mLastUpdatedWpOrgPluginSlug;
 
-    public PluginBrowserViewModel(@NonNull Application application) {
-        super(application);
+    @Inject
+    public PluginBrowserViewModel(@NonNull Dispatcher dispatcher, @NonNull PluginStore pluginStore) {
+        super();
+        mDispatcher = dispatcher;
+        mPluginStore = pluginStore;
 
-        ((WordPress) application).component().inject(this);
         mDispatcher.register(this);
 
         mHandler = new Handler();
