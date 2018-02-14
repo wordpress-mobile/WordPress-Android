@@ -55,5 +55,9 @@ public enum PluginAction implements IAction {
     @Action(payloadType = SearchedPluginDirectoryPayload.class)
     SEARCHED_PLUGIN_DIRECTORY,
     @Action(payloadType = UpdatedSitePluginPayload.class)
-    UPDATED_SITE_PLUGIN
+    UPDATED_SITE_PLUGIN,
+
+    // Local actions
+    @Action(payloadType = SiteModel.class)
+    REMOVE_SITE_PLUGINS
 }
