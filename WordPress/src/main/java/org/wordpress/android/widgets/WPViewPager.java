@@ -1,9 +1,10 @@
 package org.wordpress.android.widgets;
 
 import android.content.Context;
-import android.support.v4.view.ViewPager;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
+
+import com.duolingo.open.rtlviewpager.RtlViewPager;
 
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
@@ -13,8 +14,10 @@ import org.wordpress.android.util.AppLog.T;
  * https://code.google.com/p/android/issues/detail?id=16836
  * https://code.google.com/p/android/issues/detail?id=18990
  * https://github.com/chrisbanes/PhotoView/issues/31
+ *
+ * The class extends from RtlViewPager - fixes the scroll/swipe direction in the RtL mode.
  */
-public class WPViewPager extends ViewPager {
+public class WPViewPager extends RtlViewPager {
     private boolean mPagingEnabled = true;
 
     public WPViewPager(Context context) {
