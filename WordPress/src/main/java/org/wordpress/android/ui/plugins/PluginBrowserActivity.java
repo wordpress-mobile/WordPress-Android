@@ -42,6 +42,7 @@ import org.wordpress.android.util.AniUtils;
 import org.wordpress.android.util.HtmlUtils;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.viewmodel.PluginBrowserViewModel;
+import org.wordpress.android.viewmodel.PluginBrowserViewModel.PluginListType;
 import org.wordpress.android.widgets.WPNetworkImageView;
 import org.wordpress.android.widgets.WPNetworkImageView.ImageType;
 
@@ -50,27 +51,6 @@ import java.util.List;
 public class PluginBrowserActivity extends AppCompatActivity
         implements SearchView.OnQueryTextListener,
         MenuItem.OnActionExpandListener {
-
-    public enum PluginListType {
-        SITE,
-        POPULAR,
-        NEW,
-        SEARCH;
-
-        @StringRes int getTitleRes() {
-            switch (this) {
-                case POPULAR:
-                    return R.string.plugin_caption_popular;
-                case NEW:
-                    return R.string.plugin_caption_new;
-                case SEARCH:
-                    return R.string.plugin_caption_search;
-                default:
-                    return R.string.plugin_caption_installed;
-            }
-        }
-    }
-
     private PluginBrowserViewModel mViewModel;
 
     private RecyclerView mSitePluginsRecycler;
@@ -318,7 +298,6 @@ public class PluginBrowserActivity extends AppCompatActivity
                     .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE)
                     .commit();
         }
-        setTitle(listType.getTitleRes());
     }
 
     private void hideListFragment() {

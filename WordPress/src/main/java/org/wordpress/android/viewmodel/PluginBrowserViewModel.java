@@ -19,7 +19,6 @@ import org.wordpress.android.fluxc.model.plugin.PluginDirectoryType;
 import org.wordpress.android.fluxc.model.plugin.SitePluginModel;
 import org.wordpress.android.fluxc.model.plugin.WPOrgPluginModel;
 import org.wordpress.android.fluxc.store.PluginStore;
-import org.wordpress.android.ui.plugins.PluginBrowserActivity;
 import org.wordpress.android.ui.plugins.PluginUtils;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.StringUtils;
@@ -30,6 +29,13 @@ import java.util.List;
 import javax.inject.Inject;
 
 public class PluginBrowserViewModel extends AndroidViewModel {
+    public enum PluginListType {
+        SITE,
+        POPULAR,
+        NEW,
+        SEARCH
+    }
+
     public enum PluginListStatus {
         CAN_LOAD_MORE,
         DONE,
@@ -87,9 +93,9 @@ public class PluginBrowserViewModel extends AndroidViewModel {
     public void start() {
         reloadAllPluginsFromStore();
 
-        fetchPlugins(PluginBrowserActivity.PluginListType.SITE, false);
-        fetchPlugins(PluginBrowserActivity.PluginListType.POPULAR, false);
-        fetchPlugins(PluginBrowserActivity.PluginListType.NEW, false);
+        fetchPlugins(PluginListType.SITE, false);
+        fetchPlugins(PluginListType.POPULAR, false);
+        fetchPlugins(PluginListType.NEW, false);
     }
 
     // Site & WPOrg plugin management
@@ -126,7 +132,7 @@ public class PluginBrowserViewModel extends AndroidViewModel {
 
     // Network Requests
 
-    private void fetchPlugins(@NonNull PluginBrowserActivity.PluginListType listType, boolean loadMore) {
+    private void fetchPlugins(@NonNull PluginListType listType, boolean loadMore) {
         if (!shouldFetchPlugins(listType, loadMore)) {
             return;
         }
@@ -156,7 +162,7 @@ public class PluginBrowserViewModel extends AndroidViewModel {
         }
     }
 
-    private boolean shouldFetchPlugins(PluginBrowserActivity.PluginListType listType, boolean loadMore) {
+    private boolean shouldFetchPlugins(PluginListType listType, boolean loadMore) {
         switch (listType) {
             case SITE:
                 if (getSitePluginsListStatus().getValue() == PluginListStatus.FETCHING) {
@@ -195,7 +201,7 @@ public class PluginBrowserViewModel extends AndroidViewModel {
         mDispatcher.dispatch(PluginActionBuilder.newFetchWporgPluginAction(slug));
     }
 
-    public void loadMore(PluginBrowserActivity.PluginListType listType) {
+    public void loadMore(PluginListType listType) {
         fetchPlugins(listType, true);
     }
 
@@ -294,7 +300,7 @@ public class PluginBrowserViewModel extends AndroidViewModel {
             clearSearchResults();
 
             if (shouldSearch()) {
-                fetchPlugins(PluginBrowserActivity.PluginListType.SEARCH, false);
+                fetchPlugins(PluginListType.SEARCH, false);
             } else {
                 // Due to the query being changed after the last fetch, the status won't ever be updated, so we need
                 // to manually do it. Consider the following case:
@@ -379,7 +385,7 @@ public class PluginBrowserViewModel extends AndroidViewModel {
         return mLastUpdatedWpOrgPluginSlug;
     }
 
-    public List<?> getPluginsForListType(PluginBrowserActivity.PluginListType listType) {
+    public List<?> getPluginsForListType(PluginListType listType) {
         switch (listType) {
             case SITE:
                 return getSitePlugins().getValue();
