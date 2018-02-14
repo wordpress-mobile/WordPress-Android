@@ -59,8 +59,6 @@ public class PluginListFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-        mViewModel = ViewModelProviders.of(getActivity()).get(PluginBrowserViewModel.class);
         mListType = (PluginListType) getArguments().getSerializable(ARG_LIST_TYPE);
     }
 
@@ -70,6 +68,8 @@ public class PluginListFragment extends Fragment {
         // this enables us to clear the search icon in onCreateOptionsMenu when the list isn't showing search results
         setHasOptionsMenu(mListType != PluginListType.SEARCH);
 
+        // Use the same view model as the PluginBrowserActivity
+        mViewModel = ViewModelProviders.of(getActivity()).get(PluginBrowserViewModel.class);
         setupObservers();
     }
 
