@@ -66,8 +66,9 @@
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="@dimen/margin_small"
                 android:gravity="center_vertical"
+                android:maxLines="2"
                 android:textColor="@color/alert_yellow"
-                android:textSize="@dimen/text_sz_extra_small"
+                android:textSize="@dimen/text_sz_small"
                 tools:text="@string/plugin_needs_update" />
         </LinearLayout>
 

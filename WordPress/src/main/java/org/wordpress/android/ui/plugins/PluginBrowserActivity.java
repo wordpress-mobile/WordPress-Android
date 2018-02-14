@@ -11,6 +11,7 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.annotation.StringRes;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
@@ -133,6 +134,15 @@ public class PluginBrowserActivity extends AppCompatActivity
             }
         });
 
+        getSupportFragmentManager().addOnBackStackChangedListener(new FragmentManager.OnBackStackChangedListener() {
+            @Override
+            public void onBackStackChanged() {
+                if (getSupportFragmentManager().getBackStackEntryCount() == 0) {
+                    setTitle(R.string.plugins);
+                }
+            }
+        });
+
         configureRecycler(mSitePluginsRecycler);
         configureRecycler(mPopularPluginsRecycler);
         configureRecycler(mNewPluginsRecycler);
@@ -200,12 +210,6 @@ public class PluginBrowserActivity extends AppCompatActivity
             mSearchView.setOnQueryTextListener(null);
         }
         super.onDestroy();
-    }
-
-    @Override
-    public void onBackPressed() {
-        setTitle(R.string.plugins);
-        super.onBackPressed();
     }
 
     @Override
