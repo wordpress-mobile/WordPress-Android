@@ -1,6 +1,7 @@
 package org.wordpress.android.ui.plugins;
 
 import android.app.Fragment;
+import android.app.FragmentManager;
 import android.app.FragmentTransaction;
 import android.content.Context;
 import android.content.Intent;
@@ -63,7 +64,7 @@ public class PluginBrowserActivity extends AppCompatActivity
         MenuItem.OnActionExpandListener,
         PluginListFragment.PluginListFragmentListener {
 
-    private static final String KEY_SEARCH_QUERY = "search_query";
+    private static final String KEY_SAVED_SEARCH_QUERY = "search_query";
 
     public enum PluginListType {
         SITE,
@@ -95,6 +96,7 @@ public class PluginBrowserActivity extends AppCompatActivity
     private RecyclerView mNewPluginsRecycler;
 
     private String mSearchQuery;
+    private String mSavedSearchQuery;
     private MenuItem mSearchMenuItem;
     private SearchView mSearchView;
 
@@ -126,7 +128,7 @@ public class PluginBrowserActivity extends AppCompatActivity
             mSite = (SiteModel) getIntent().getSerializableExtra(WordPress.SITE);
         } else {
             mSite = (SiteModel) savedInstanceState.getSerializable(WordPress.SITE);
-            mSearchQuery = savedInstanceState.getString(KEY_SEARCH_QUERY);
+            mSavedSearchQuery = savedInstanceState.getString(KEY_SAVED_SEARCH_QUERY);
         }
 
         if (mSite == null) {
@@ -174,6 +176,15 @@ public class PluginBrowserActivity extends AppCompatActivity
             fetchPlugins(PluginListType.POPULAR, false);
             fetchPlugins(PluginListType.NEW, false);
         }
+
+        getFragmentManager().addOnBackStackChangedListener(new FragmentManager.OnBackStackChangedListener() {
+            @Override
+            public void onBackStackChanged() {
+                if (getFragmentManager().getBackStackEntryCount() == 0) {
+                    setTitle(R.string.plugins);
+                }
+            }
+        });
     }
 
     private void configureRecycler(@NonNull RecyclerView recycler) {
@@ -195,22 +206,17 @@ public class PluginBrowserActivity extends AppCompatActivity
     }
 
     @Override
-    public void onBackPressed() {
-        setTitle(R.string.plugins);
-        super.onBackPressed();
-    }
-
-    @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.search, menu);
 
         mSearchMenuItem = menu.findItem(R.id.menu_search);
         mSearchView = (SearchView) mSearchMenuItem.getActionView();
 
-        if (!TextUtils.isEmpty(mSearchQuery)) {
+        if (!TextUtils.isEmpty(mSavedSearchQuery)) {
             mSearchMenuItem.expandActionView();
-            mSearchView.setQuery(mSearchQuery, false);
+            mSearchView.setQuery(mSavedSearchQuery, false);
             fetchPlugins(PluginListType.SEARCH, false);
+            mSavedSearchQuery = null;
         }
 
         mSearchMenuItem.setOnActionExpandListener(this);
@@ -232,7 +238,7 @@ public class PluginBrowserActivity extends AppCompatActivity
         super.onSaveInstanceState(outState);
         outState.putSerializable(WordPress.SITE, mSite);
         if (mSearchMenuItem != null && mSearchMenuItem.isActionViewExpanded()) {
-            outState.putString(KEY_SEARCH_QUERY, mSearchView.getQuery().toString());
+            outState.putString(KEY_SAVED_SEARCH_QUERY, mSearchView.getQuery().toString());
         }
     }
 
