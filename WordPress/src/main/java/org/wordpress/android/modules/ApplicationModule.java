@@ -4,10 +4,9 @@ import android.app.Application;
 import android.arch.lifecycle.ViewModel;
 import android.arch.lifecycle.ViewModelProvider;
 import android.content.Context;
-import android.util.ArrayMap;
+import android.support.v4.util.ArrayMap;
 
 import org.wordpress.android.viewmodel.PluginBrowserViewModel;
-import org.wordpress.android.ui.stats.models.PostViewsModel;
 
 import javax.inject.Provider;
 import javax.inject.Singleton;
