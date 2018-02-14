@@ -76,15 +76,15 @@ public class PluginBrowserActivity extends AppCompatActivity
     }
 
     @Inject
-    ViewModelProvider.Factory viewModelFactory;
+    ViewModelProvider.Factory mViewModelFactory;
 
     private PluginBrowserViewModel mViewModel;
+
     private RecyclerView mSitePluginsRecycler;
     private RecyclerView mPopularPluginsRecycler;
-
     private RecyclerView mNewPluginsRecycler;
-    private MenuItem mSearchMenuItem;
 
+    private MenuItem mSearchMenuItem;
     private SearchView mSearchView;
 
     @Override
@@ -93,7 +93,7 @@ public class PluginBrowserActivity extends AppCompatActivity
         ((WordPress)getApplication()).component().inject(this);
         setContentView(R.layout.plugin_browser_activity);
 
-        mViewModel = ViewModelProviders.of(this, viewModelFactory).get(PluginBrowserViewModel.class);
+        mViewModel = ViewModelProviders.of(this, mViewModelFactory).get(PluginBrowserViewModel.class);
 
         mSitePluginsRecycler = findViewById(R.id.installed_plugins_recycler);
         mPopularPluginsRecycler = findViewById(R.id.popular_plugins_recycler);
