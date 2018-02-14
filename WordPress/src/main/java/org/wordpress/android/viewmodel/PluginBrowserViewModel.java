@@ -262,7 +262,7 @@ public class PluginBrowserViewModel extends AndroidViewModel {
     @SuppressWarnings("unused")
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onPluginDirectorySearched(PluginStore.OnPluginDirectorySearched event) {
-        if (!mSearchQuery.equals(event.searchTerm)) {
+        if (mSearchQuery == null || !mSearchQuery.equals(event.searchTerm)) {
             return;
         }
         if (event.isError()) {
