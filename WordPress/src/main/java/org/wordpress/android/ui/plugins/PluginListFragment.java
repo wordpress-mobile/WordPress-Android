@@ -30,6 +30,7 @@ import org.wordpress.android.ui.ActivityLauncher;
 import org.wordpress.android.ui.plugins.PluginBrowserActivity.PluginListType;
 import org.wordpress.android.util.HtmlUtils;
 import org.wordpress.android.util.ToastUtils;
+import org.wordpress.android.viewmodel.PluginBrowserViewModel;
 import org.wordpress.android.widgets.DividerItemDecoration;
 import org.wordpress.android.widgets.WPNetworkImageView;
 
