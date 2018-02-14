@@ -8,11 +8,14 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.res.Configuration;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v4.view.MenuItemCompat;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.content.res.AppCompatResources;
 import android.support.v7.view.ActionMode;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
@@ -20,9 +23,11 @@ import android.support.v7.widget.RecyclerView;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.ArrayAdapter;
 import android.widget.SearchView;
+import android.widget.TextView;
 
 import com.android.volley.VolleyError;
 import com.wordpress.rest.RestRequest;
@@ -636,7 +641,19 @@ public class SitePickerActivity extends AppCompatActivity
             AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
             builder.setTitle(R.string.site_picker_add_site);
             builder.setAdapter(
-                    new ArrayAdapter<>(getActivity(), R.layout.add_new_site_dialog_item, R.id.text, items),
+                    new ArrayAdapter<CharSequence>(getActivity(), R.layout.add_new_site_dialog_item, R.id.text, items) {
+                        @NonNull
+                        @Override
+                        public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
+                            TextView tv = (TextView) super.getView(position, convertView, parent);
+                            Drawable leftDrawable = AppCompatResources.getDrawable(tv.getContext(),
+                                    R.drawable.ic_add_outline_grey_dark_24dp);
+                            tv.setCompoundDrawablesWithIntrinsicBounds(leftDrawable, null, null, null);
+                            tv.setCompoundDrawablePadding(
+                                    getResources().getDimensionPixelSize(R.dimen.margin_extra_large));
+                            return tv;
+                        }
+                    },
                     new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {

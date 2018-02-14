@@ -7,9 +7,9 @@
     android:minHeight="?android:attr/listPreferredItemHeightSmall"
     android:textAppearance="?android:attr/textAppearanceListItem"
     android:textColor="?android:attr/textColorAlertDialogListItem"
-    android:drawableStart="@drawable/ic_add_outline_grey_dark_24dp"
-    android:drawablePadding="@dimen/margin_extra_large"
     android:gravity="center_vertical"
     android:paddingStart="@dimen/margin_extra_medium_large"
+    android:paddingLeft="@dimen/margin_extra_medium_large"
     android:paddingEnd="@dimen/margin_extra_large"
+    android:paddingRight="@dimen/margin_extra_large"
     tools:text="Dialog item"/>
