@@ -22,7 +22,7 @@ import java.util.List;
 import java.util.Random;
 
 @RunWith(RobolectricTestRunner.class)
-public class PluginSqlUtilsTest {
+public class SitePluginSqlUtilsTest {
     private static final int TEST_LOCAL_SITE_ID = 1;
     private static final int SMALL_TEST_POOL = 10;
 
