@@ -111,6 +111,15 @@ public class PluginBrowserViewModel extends AndroidViewModel {
     }
 
     public SitePluginModel getSitePluginFromSlug(String slug) {
+        List<SitePluginModel> sitePlugins = getSitePlugins().getValue();
+        if (sitePlugins != null) {
+            // TODO: if we ever add caching to PluginStore, remove this
+            for (SitePluginModel plugin : sitePlugins) {
+                if (plugin.getSlug().equals(slug)) {
+                    return plugin;
+                }
+            }
+        }
         return mPluginStore.getSitePluginBySlug(getSite(), slug);
     }
 
