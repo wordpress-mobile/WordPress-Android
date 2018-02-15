@@ -44,8 +44,7 @@ import javax.inject.Inject;
 public class PluginListFragment extends Fragment {
     public static final String TAG = PluginListFragment.class.getName();
 
-    @Inject
-    ViewModelProvider.Factory mViewModelFactory;
+    @Inject ViewModelProvider.Factory mViewModelFactory;
 
     private static final String ARG_LIST_TYPE = "list_type";
 

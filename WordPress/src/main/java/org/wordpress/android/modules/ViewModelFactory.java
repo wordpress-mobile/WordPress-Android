@@ -13,7 +13,6 @@ import javax.inject.Singleton;
 
 @Singleton
 public class ViewModelFactory implements ViewModelProvider.Factory {
-
     private final ArrayMap<Class<? extends ViewModel>, Provider<ViewModel>> mViewModelsMap;
 
     @Inject
@@ -36,7 +35,7 @@ public class ViewModelFactory implements ViewModelProvider.Factory {
         }
         if (creator == null) {
             throw new IllegalArgumentException("View model not found [" + viewModelClass
-                    + "]. Have you registered the viewModel in the ApplicationModule.provideViewModelFactory() "
+                    + "]. Have you registered the viewModel in the ViewModelModule.provideViewModelFactory() "
                     + "method? ");
         }
         return (T) creator.get();

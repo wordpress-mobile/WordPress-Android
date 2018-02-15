@@ -13,10 +13,10 @@ import dagger.Module;
 import dagger.Provides;
 
 @Module(subcomponents = ViewModelSubComponent.class)
-public abstract class ViewModelModule {
+abstract class ViewModelModule {
     @Provides
     @Singleton
-    public static ViewModelProvider.Factory provideViewModelFactory(ViewModelSubComponent.Builder subComponentBuilder) {
+    static ViewModelProvider.Factory provideViewModelFactory(ViewModelSubComponent.Builder subComponentBuilder) {
         ArrayMap<Class<? extends ViewModel>, Provider<ViewModel>> viewModelMap = new ArrayMap<>();
         final ViewModelSubComponent subComp = subComponentBuilder.build();
         viewModelMap.put(PluginBrowserViewModel.class, new Provider<ViewModel>() {
