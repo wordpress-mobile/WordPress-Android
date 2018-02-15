@@ -6,7 +6,7 @@ import android.content.Context;
 import dagger.Binds;
 import dagger.Module;
 
-@Module(subcomponents = ViewModelSubComponent.class)
+@Module
 public abstract class ApplicationModule {
     // Expose Application as an injectable context
     @Binds
