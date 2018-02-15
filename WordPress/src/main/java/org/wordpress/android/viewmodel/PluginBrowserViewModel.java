@@ -52,19 +52,20 @@ public class PluginBrowserViewModel extends AndroidViewModel {
 
     private final Handler mHandler;
 
-    private MutableLiveData<PluginListStatus> mNewPluginsListStatus;
-    private MutableLiveData<PluginListStatus> mPopularPluginsListStatus;
-    private MutableLiveData<PluginListStatus> mSitePluginsListStatus;
-    private MutableLiveData<PluginListStatus> mSearchPluginsListStatus;
+    private final MutableLiveData<PluginListStatus> mNewPluginsListStatus;
+    private final MutableLiveData<PluginListStatus> mPopularPluginsListStatus;
+    private final MutableLiveData<PluginListStatus> mSitePluginsListStatus;
+    private final MutableLiveData<PluginListStatus> mSearchPluginsListStatus;
 
-    private MutableLiveData<List<WPOrgPluginModel>> mNewPlugins;
-    private MutableLiveData<List<WPOrgPluginModel>> mPopularPlugins;
-    private MutableLiveData<List<SitePluginModel>> mSitePlugins;
-    private MutableLiveData<List<WPOrgPluginModel>> mSearchResults;
+    private final MutableLiveData<List<WPOrgPluginModel>> mNewPlugins;
+    private final MutableLiveData<List<WPOrgPluginModel>> mPopularPlugins;
+    private final MutableLiveData<List<SitePluginModel>> mSitePlugins;
+    private final MutableLiveData<List<WPOrgPluginModel>> mSearchResults;
 
-    private MutableLiveData<String> mLastUpdatedWpOrgPluginSlug;
-    private MutableLiveData<String> mTitle;
+    private final MutableLiveData<String> mLastUpdatedWpOrgPluginSlug;
+    private final MutableLiveData<String> mTitle;
 
+    @SuppressWarnings("WeakerAccess")
     public PluginBrowserViewModel(@NonNull Application application) {
         super(application);
 
