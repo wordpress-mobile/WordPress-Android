@@ -9,8 +9,7 @@ import android.support.v4.view.ViewCompat;
 public class RtlUtils {
 
     public static boolean isRtl(Context ctx) {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1 && ctx.getResources().getBoolean(
-                org.wordpress.android.R.bool.rtl_supported)) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
             Configuration configuration = ctx.getResources().getConfiguration();
             if (configuration.getLayoutDirection() == ViewCompat.LAYOUT_DIRECTION_RTL) {
                 return true;

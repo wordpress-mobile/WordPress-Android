@@ -59,7 +59,6 @@ android {
 
         wasabi { // "hot" version, can be installed along release, alpha or beta versions
             applicationId "org.wordpress.android.beta"
-            minSdkVersion 21 // to take advantage of "fast" multi dex (pre-dex each module)
         }
     }
 
@@ -206,20 +205,6 @@ apiKey=${crashlyticsApiKey}""")
 // Add generateCrashlyticsConfig to all generateBuildConfig tasks (all variants)
 android.applicationVariants.all { variant ->
     variant.generateBuildConfig.dependsOn(generateCrashlyticsConfig)
-}
-
-// SdkVersion >= 17 is more strict in regard to RtL issues. Wasabi flavor has minSdkVersion set to 21, so we need to
-// change the severity of RtlHardoced issues to warning. When the application minSdkVersion is set to 17, all
-// the left/right attributes in layouts can be removed and this task can be removed as well.
-tasks.whenTaskAdded { task ->
-    if (task.name.startsWith("lintWasabi")) {
-        task.doFirst {
-            android.lintOptions.warning('RtlHardcoded')
-        }
-        task.doLast {
-            android.lintOptions.error('RtlHardcoded')
-        }
-    }
 }
 
 android.buildTypes.all { buildType ->
