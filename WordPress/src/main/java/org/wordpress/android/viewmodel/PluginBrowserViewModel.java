@@ -298,7 +298,9 @@ public class PluginBrowserViewModel extends AndroidViewModel {
         return getSearchQuery() != null && getSearchQuery().length() > 1;
     }
 
-    private void submitSearch(@Nullable final String query, boolean delayed) {
+    // Make the method protected to avoid synthetic accessor methods
+    @SuppressWarnings("WeakerAccess")
+    protected void submitSearch(@Nullable final String query, boolean delayed) {
         if (delayed) {
             mHandler.postDelayed(new Runnable() {
                 @Override

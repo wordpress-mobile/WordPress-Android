@@ -51,7 +51,7 @@ import java.util.List;
 public class PluginBrowserActivity extends AppCompatActivity
         implements SearchView.OnQueryTextListener,
         MenuItem.OnActionExpandListener {
-    private PluginBrowserViewModel mViewModel;
+    protected PluginBrowserViewModel mViewModel;
 
     private RecyclerView mSitePluginsRecycler;
     private RecyclerView mPopularPluginsRecycler;
@@ -234,7 +234,7 @@ public class PluginBrowserActivity extends AppCompatActivity
         }
     }
 
-    private void reloadPluginAdapterAndVisibility(@NonNull PluginListType pluginType, List<?> plugins) {
+    protected void reloadPluginAdapterAndVisibility(@NonNull PluginListType pluginType, List<?> plugins) {
         PluginBrowserAdapter adapter;
         View cardView;
         switch (pluginType) {
@@ -264,7 +264,7 @@ public class PluginBrowserActivity extends AppCompatActivity
         }
     }
 
-    private void reloadPluginWithSlug(@NonNull String slug) {
+    protected void reloadPluginWithSlug(@NonNull String slug) {
         ((PluginBrowserAdapter) mSitePluginsRecycler.getAdapter()).reloadPluginWithSlug(slug);
         ((PluginBrowserAdapter) mPopularPluginsRecycler.getAdapter()).reloadPluginWithSlug(slug);
         ((PluginBrowserAdapter) mNewPluginsRecycler.getAdapter()).reloadPluginWithSlug(slug);
@@ -293,7 +293,7 @@ public class PluginBrowserActivity extends AppCompatActivity
         return null;
     }
 
-    private void showListFragment(@NonNull PluginListType listType) {
+    protected void showListFragment(@NonNull PluginListType listType) {
         PluginListFragment listFragment = getListFragment();
         if (listFragment != null) {
             listFragment.setListType(listType);
@@ -314,7 +314,7 @@ public class PluginBrowserActivity extends AppCompatActivity
         }
     }
 
-    private void showProgress(boolean show) {
+    protected void showProgress(boolean show) {
         findViewById(R.id.progress).setVisibility(show ? View.VISIBLE : View.GONE);
     }
 
@@ -443,7 +443,7 @@ public class PluginBrowserActivity extends AppCompatActivity
             }
         }
 
-        private void reloadPluginWithSlug(@NonNull String slug) {
+        void reloadPluginWithSlug(@NonNull String slug) {
             int index = mItems.indexOfPluginWithSlug(slug);
             if (index != -1) {
                 notifyItemChanged(index);

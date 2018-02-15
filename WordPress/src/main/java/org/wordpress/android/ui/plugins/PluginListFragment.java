@@ -42,10 +42,10 @@ public class PluginListFragment extends Fragment {
     public static final String TAG = PluginListFragment.class.getName();
     private static final String ARG_LIST_TYPE = "list_type";
 
-    private PluginBrowserViewModel mViewModel;
+    protected PluginBrowserViewModel mViewModel;
 
-    private RecyclerView mRecycler;
-    private PluginListType mListType;
+    protected RecyclerView mRecycler;
+    protected PluginListType mListType;
 
     public static PluginListFragment newInstance(@NonNull SiteModel site, @NonNull PluginListType listType) {
         PluginListFragment fragment = new PluginListFragment();
@@ -194,8 +194,8 @@ public class PluginListFragment extends Fragment {
         adapter.setPlugins(plugins);
     }
 
-    private void showProgress(boolean show) {
-        if (isAdded()) {
+    protected void showProgress(boolean show) {
+        if (isAdded() && getView() != null) {
             getView().findViewById(R.id.progress).setVisibility(show ? View.VISIBLE : View.GONE);
         }
     }
@@ -225,7 +225,7 @@ public class PluginListFragment extends Fragment {
             }
         }
 
-        private void reloadPluginWithSlug(@NonNull String slug) {
+        void reloadPluginWithSlug(@NonNull String slug) {
             int index = mItems.indexOfPluginWithSlug(slug);
             if (index != -1) {
                 notifyItemChanged(index);
