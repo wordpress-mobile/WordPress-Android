@@ -394,11 +394,7 @@ public class PluginBrowserActivity extends AppCompatActivity
             String author;
             if (item instanceof SitePluginModel) {
                 sitePlugin = (SitePluginModel) item;
-                wpOrgPlugin = mViewModel.getWPOrgPluginForSitePlugin(sitePlugin);
-                // todo: move this to view model
-                if (wpOrgPlugin == null) {
-                    mViewModel.fetchWPOrgPlugin(sitePlugin.getSlug());
-                }
+                wpOrgPlugin = mViewModel.getWPOrgPluginForSitePluginAndFetchIfNecessary(sitePlugin);
                 name = sitePlugin.getDisplayName();
                 author = sitePlugin.getAuthorName();
             } else {
@@ -479,7 +475,7 @@ public class PluginBrowserActivity extends AppCompatActivity
                         WPOrgPluginModel wpOrgPlugin;
                         if (item instanceof SitePluginModel) {
                             sitePlugin = (SitePluginModel) item;
-                            wpOrgPlugin = mViewModel.getWPOrgPluginForSitePlugin(sitePlugin);
+                            wpOrgPlugin = mViewModel.getWPOrgPluginForSitePluginAndFetchIfNecessary(sitePlugin);
                         } else {
                             wpOrgPlugin = (WPOrgPluginModel) item;
                             sitePlugin = mViewModel.getSitePluginFromSlug(wpOrgPlugin.getSlug());

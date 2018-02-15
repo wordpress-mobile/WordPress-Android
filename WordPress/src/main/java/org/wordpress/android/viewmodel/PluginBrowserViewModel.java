@@ -103,11 +103,15 @@ public class PluginBrowserViewModel extends AndroidViewModel {
 
     // Site & WPOrg plugin management
 
-    public WPOrgPluginModel getWPOrgPluginForSitePlugin(SitePluginModel sitePlugin) {
+    public WPOrgPluginModel getWPOrgPluginForSitePluginAndFetchIfNecessary(SitePluginModel sitePlugin) {
         if (sitePlugin == null) {
             return null;
         }
-        return PluginUtils.getWPOrgPlugin(mPluginStore, sitePlugin);
+        WPOrgPluginModel wpOrgPlugin = PluginUtils.getWPOrgPlugin(mPluginStore, sitePlugin);
+        if (wpOrgPlugin == null) {
+            fetchWPOrgPlugin(sitePlugin.getSlug());
+        }
+        return wpOrgPlugin;
     }
 
     public SitePluginModel getSitePluginFromSlug(String slug) {
@@ -209,7 +213,7 @@ public class PluginBrowserViewModel extends AndroidViewModel {
         return true;
     }
 
-    public void fetchWPOrgPlugin(String slug) {
+    private void fetchWPOrgPlugin(String slug) {
         mDispatcher.dispatch(PluginActionBuilder.newFetchWporgPluginAction(slug));
     }
 
