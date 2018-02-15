@@ -49,8 +49,6 @@ import java.util.List;
 
 import javax.inject.Inject;
 
-import dagger.android.AndroidInjection;
-
 public class PluginBrowserActivity extends AppCompatActivity
         implements SearchView.OnQueryTextListener,
         MenuItem.OnActionExpandListener {
@@ -75,8 +73,7 @@ public class PluginBrowserActivity extends AppCompatActivity
         }
     }
 
-    @Inject
-    ViewModelProvider.Factory mViewModelFactory;
+    @Inject ViewModelProvider.Factory mViewModelFactory;
 
     private PluginBrowserViewModel mViewModel;
 
@@ -90,7 +87,7 @@ public class PluginBrowserActivity extends AppCompatActivity
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        ((WordPress)getApplication()).component().inject(this);
+        ((WordPress) getApplication()).component().inject(this);
         setContentView(R.layout.plugin_browser_activity);
 
         mViewModel = ViewModelProviders.of(this, mViewModelFactory).get(PluginBrowserViewModel.class);
@@ -367,7 +364,7 @@ public class PluginBrowserActivity extends AppCompatActivity
             mItems.addAll(items);
 
             // strip HTML here so we don't have to do it in every call to onBindViewHolder
-            for (Object item: mItems) {
+            for (Object item : mItems) {
                 if (item instanceof WPOrgPluginModel) {
                     WPOrgPluginModel plugin = (WPOrgPluginModel) item;
                     plugin.setAuthorAsHtml(HtmlUtils.fastStripHtml(plugin.getAuthorAsHtml()));
@@ -503,9 +500,11 @@ public class PluginBrowserActivity extends AppCompatActivity
                             sitePlugin = mViewModel.getSitePluginFromSlug(wpOrgPlugin.getSlug());
                         }
                         if (sitePlugin != null) {
-                            ActivityLauncher.viewPluginDetailForResult(PluginBrowserActivity.this, mViewModel.getSite(), sitePlugin);
+                            ActivityLauncher.viewPluginDetailForResult(PluginBrowserActivity.this, mViewModel.getSite(),
+                                    sitePlugin);
                         } else {
-                            ActivityLauncher.viewPluginDetailForResult(PluginBrowserActivity.this, mViewModel.getSite(), wpOrgPlugin);
+                            ActivityLauncher.viewPluginDetailForResult(PluginBrowserActivity.this, mViewModel.getSite(),
+                                    wpOrgPlugin);
                         }
                     }
                 });

@@ -17,10 +17,11 @@ public class ViewModelFactory implements ViewModelProvider.Factory {
     private final ArrayMap<Class<? extends ViewModel>, Provider<ViewModel>> mViewModelsMap;
 
     @Inject
-    public ViewModelFactory(ArrayMap<Class<? extends ViewModel>, Provider<ViewModel>> viewModelsMap) {
+    ViewModelFactory(ArrayMap<Class<? extends ViewModel>, Provider<ViewModel>> viewModelsMap) {
         this.mViewModelsMap = viewModelsMap;
     }
 
+    @SuppressWarnings("unchecked")
     @NonNull
     @Override
     public <T extends ViewModel> T create(@NonNull Class<T> viewModelClass) {
