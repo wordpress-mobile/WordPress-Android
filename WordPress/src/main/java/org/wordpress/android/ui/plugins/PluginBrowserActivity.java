@@ -142,21 +142,21 @@ public class PluginBrowserActivity extends AppCompatActivity
         mViewModel.getSitePlugins().observe(this, new Observer<List<SitePluginModel>>() {
             @Override
             public void onChanged(@Nullable final List<SitePluginModel> sitePlugins) {
-                refreshPluginAdapterAndVisibility(PluginListType.SITE, sitePlugins);
+                reloadPluginAdapterAndVisibility(PluginListType.SITE, sitePlugins);
             }
         });
 
         mViewModel.getNewPlugins().observe(this, new Observer<List<WPOrgPluginModel>>() {
             @Override
             public void onChanged(@Nullable final List<WPOrgPluginModel> newPlugins) {
-                refreshPluginAdapterAndVisibility(PluginListType.NEW, newPlugins);
+                reloadPluginAdapterAndVisibility(PluginListType.NEW, newPlugins);
             }
         });
 
         mViewModel.getPopularPlugins().observe(this, new Observer<List<WPOrgPluginModel>>() {
             @Override
             public void onChanged(@Nullable final List<WPOrgPluginModel> popularPlugins) {
-                refreshPluginAdapterAndVisibility(PluginListType.POPULAR, popularPlugins);
+                reloadPluginAdapterAndVisibility(PluginListType.POPULAR, popularPlugins);
             }
         });
 
@@ -234,7 +234,7 @@ public class PluginBrowserActivity extends AppCompatActivity
         }
     }
 
-    private void refreshPluginAdapterAndVisibility(@NonNull PluginListType pluginType, List<?> plugins) {
+    private void reloadPluginAdapterAndVisibility(@NonNull PluginListType pluginType, List<?> plugins) {
         PluginBrowserAdapter adapter;
         View cardView;
         switch (pluginType) {
