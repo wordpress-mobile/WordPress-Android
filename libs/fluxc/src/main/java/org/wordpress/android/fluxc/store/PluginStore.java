@@ -303,6 +303,8 @@ public class PluginStore extends Store {
         }
     }
 
+    static class RemoveSitePluginsError implements OnChangedError {}
+
     // Error types
 
     public enum ConfigureSitePluginErrorType {
@@ -494,6 +496,16 @@ public class PluginStore extends Store {
         }
     }
 
+    @SuppressWarnings("WeakerAccess")
+    public static class OnSitePluginsRemoved extends OnChanged<RemoveSitePluginsError> {
+        public SiteModel site;
+        public int rowsAffected;
+        public OnSitePluginsRemoved(SiteModel site, int rowsAffected) {
+            this.site = site;
+            this.rowsAffected = rowsAffected;
+        }
+    }
+
     private final PluginRestClient mPluginRestClient;
     private final PluginWPOrgClient mPluginWPOrgClient;
 
@@ -541,6 +553,10 @@ public class PluginStore extends Store {
                 break;
             case UPDATE_SITE_PLUGIN:
                 updateSitePlugin((UpdateSitePluginPayload) action.getPayload());
+                break;
+            // Local actions
+            case REMOVE_SITE_PLUGINS:
+                removeSitePlugins((SiteModel) action.getPayload());
                 break;
             // Network callbacks
             case CONFIGURED_SITE_PLUGIN:
@@ -657,6 +673,15 @@ public class PluginStore extends Store {
             UpdatedSitePluginPayload errorPayload = new UpdatedSitePluginPayload(payload.site, error);
             updatedSitePlugin(errorPayload);
         }
+    }
+
+    // Local actions
+    private void removeSitePlugins(SiteModel site) {
+        if (site == null) {
+            return;
+        }
+        int rowsAffected = PluginSqlUtils.deleteSitePlugins(site);
+        emitChange(new OnSitePluginsRemoved(site, rowsAffected));
     }
 
     // Network callbacks
