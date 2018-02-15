@@ -20,7 +20,6 @@ import org.wordpress.android.fluxc.model.plugin.PluginDirectoryType;
 import org.wordpress.android.fluxc.model.plugin.SitePluginModel;
 import org.wordpress.android.fluxc.model.plugin.WPOrgPluginModel;
 import org.wordpress.android.fluxc.store.PluginStore;
-import org.wordpress.android.ui.plugins.PluginBrowserActivity;
 import org.wordpress.android.ui.plugins.PluginUtils;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.StringUtils;
@@ -31,6 +30,13 @@ import java.util.List;
 import javax.inject.Inject;
 
 public class PluginBrowserViewModel extends ViewModel {
+    public enum PluginListType {
+        SITE,
+        POPULAR,
+        NEW,
+        SEARCH
+    }
+
     public enum PluginListStatus {
         CAN_LOAD_MORE,
         DONE,
@@ -47,18 +53,20 @@ public class PluginBrowserViewModel extends ViewModel {
 
     private final Handler mHandler;
 
-    private MutableLiveData<PluginListStatus> mNewPluginsListStatus;
-    private MutableLiveData<PluginListStatus> mPopularPluginsListStatus;
-    private MutableLiveData<PluginListStatus> mSitePluginsListStatus;
-    private MutableLiveData<PluginListStatus> mSearchPluginsListStatus;
+    private final MutableLiveData<PluginListStatus> mNewPluginsListStatus;
+    private final MutableLiveData<PluginListStatus> mPopularPluginsListStatus;
+    private final MutableLiveData<PluginListStatus> mSitePluginsListStatus;
+    private final MutableLiveData<PluginListStatus> mSearchPluginsListStatus;
 
-    private MutableLiveData<List<WPOrgPluginModel>> mNewPlugins;
-    private MutableLiveData<List<WPOrgPluginModel>> mPopularPlugins;
-    private MutableLiveData<List<SitePluginModel>> mSitePlugins;
-    private MutableLiveData<List<WPOrgPluginModel>> mSearchResults;
+    private final MutableLiveData<List<WPOrgPluginModel>> mNewPlugins;
+    private final MutableLiveData<List<WPOrgPluginModel>> mPopularPlugins;
+    private final MutableLiveData<List<SitePluginModel>> mSitePlugins;
+    private final MutableLiveData<List<WPOrgPluginModel>> mSearchResults;
 
-    private MutableLiveData<String> mLastUpdatedWpOrgPluginSlug;
+    private final MutableLiveData<String> mLastUpdatedWpOrgPluginSlug;
+    private final MutableLiveData<String> mTitle;
 
+    @SuppressWarnings("WeakerAccess")
     @Inject
     public PluginBrowserViewModel(@NonNull Dispatcher dispatcher, @NonNull PluginStore pluginStore) {
         super();
@@ -79,6 +87,7 @@ public class PluginBrowserViewModel extends ViewModel {
         mSitePluginsListStatus = new MutableLiveData<>();
         mSearchPluginsListStatus = new MutableLiveData<>();
         mLastUpdatedWpOrgPluginSlug = new MutableLiveData<>();
+        mTitle = new MutableLiveData<>();
     }
 
     @Override
@@ -90,21 +99,34 @@ public class PluginBrowserViewModel extends ViewModel {
     public void start() {
         reloadAllPluginsFromStore();
 
-        fetchPlugins(PluginBrowserActivity.PluginListType.SITE, false);
-        fetchPlugins(PluginBrowserActivity.PluginListType.POPULAR, false);
-        fetchPlugins(PluginBrowserActivity.PluginListType.NEW, false);
+        fetchPlugins(PluginListType.SITE, false);
+        fetchPlugins(PluginListType.POPULAR, false);
+        fetchPlugins(PluginListType.NEW, false);
     }
 
     // Site & WPOrg plugin management
 
-    public WPOrgPluginModel getWPOrgPluginForSitePlugin(SitePluginModel sitePlugin) {
+    public WPOrgPluginModel getWPOrgPluginForSitePluginAndFetchIfNecessary(SitePluginModel sitePlugin) {
         if (sitePlugin == null) {
             return null;
         }
-        return PluginUtils.getWPOrgPlugin(mPluginStore, sitePlugin);
+        WPOrgPluginModel wpOrgPlugin = PluginUtils.getWPOrgPlugin(mPluginStore, sitePlugin);
+        if (wpOrgPlugin == null) {
+            fetchWPOrgPlugin(sitePlugin.getSlug());
+        }
+        return wpOrgPlugin;
     }
 
     public SitePluginModel getSitePluginFromSlug(String slug) {
+        List<SitePluginModel> sitePlugins = getSitePlugins().getValue();
+        if (sitePlugins != null) {
+            // TODO: if we ever add caching to PluginStore, remove this
+            for (SitePluginModel plugin : sitePlugins) {
+                if (plugin.getSlug().equals(slug)) {
+                    return plugin;
+                }
+            }
+        }
         return mPluginStore.getSitePluginBySlug(getSite(), slug);
     }
 
@@ -129,7 +151,7 @@ public class PluginBrowserViewModel extends ViewModel {
 
     // Network Requests
 
-    private void fetchPlugins(@NonNull PluginBrowserActivity.PluginListType listType, boolean loadMore) {
+    private void fetchPlugins(@NonNull PluginListType listType, boolean loadMore) {
         if (!shouldFetchPlugins(listType, loadMore)) {
             return;
         }
@@ -159,7 +181,7 @@ public class PluginBrowserViewModel extends ViewModel {
         }
     }
 
-    private boolean shouldFetchPlugins(PluginBrowserActivity.PluginListType listType, boolean loadMore) {
+    private boolean shouldFetchPlugins(PluginListType listType, boolean loadMore) {
         switch (listType) {
             case SITE:
                 if (getSitePluginsListStatus().getValue() == PluginListStatus.FETCHING) {
@@ -194,11 +216,11 @@ public class PluginBrowserViewModel extends ViewModel {
         return true;
     }
 
-    public void fetchWPOrgPlugin(String slug) {
+    private void fetchWPOrgPlugin(String slug) {
         mDispatcher.dispatch(PluginActionBuilder.newFetchWporgPluginAction(slug));
     }
 
-    public void loadMore(PluginBrowserActivity.PluginListType listType) {
+    public void loadMore(PluginListType listType) {
         fetchPlugins(listType, true);
     }
 
@@ -257,7 +279,7 @@ public class PluginBrowserViewModel extends ViewModel {
     @SuppressWarnings("unused")
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onPluginDirectorySearched(PluginStore.OnPluginDirectorySearched event) {
-        if (!mSearchQuery.equals(event.searchTerm)) {
+        if (mSearchQuery == null || !mSearchQuery.equals(event.searchTerm)) {
             return;
         }
         if (event.isError()) {
@@ -283,7 +305,9 @@ public class PluginBrowserViewModel extends ViewModel {
         return getSearchQuery() != null && getSearchQuery().length() > 1;
     }
 
-    private void submitSearch(@Nullable final String query, boolean delayed) {
+    // Make the method protected to avoid synthetic accessor methods
+    @SuppressWarnings("WeakerAccess")
+    protected void submitSearch(@Nullable final String query, boolean delayed) {
         if (delayed) {
             mHandler.postDelayed(new Runnable() {
                 @Override
@@ -297,7 +321,7 @@ public class PluginBrowserViewModel extends ViewModel {
             clearSearchResults();
 
             if (shouldSearch()) {
-                fetchPlugins(PluginBrowserActivity.PluginListType.SEARCH, false);
+                fetchPlugins(PluginListType.SEARCH, false);
             } else {
                 // Due to the query being changed after the last fetch, the status won't ever be updated, so we need
                 // to manually do it. Consider the following case:
@@ -382,7 +406,15 @@ public class PluginBrowserViewModel extends ViewModel {
         return mLastUpdatedWpOrgPluginSlug;
     }
 
-    public List<?> getPluginsForListType(PluginBrowserActivity.PluginListType listType) {
+    public void setTitle(String title) {
+        mTitle.setValue(title);
+    }
+
+    public LiveData<String> getTitle() {
+        return mTitle;
+    }
+
+    public List<?> getPluginsForListType(PluginListType listType) {
         switch (listType) {
             case SITE:
                 return getSitePlugins().getValue();

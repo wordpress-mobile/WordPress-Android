@@ -37,7 +37,9 @@ class PluginList extends ArrayList<Object> {
         if (position >= 0 && position < this.size()) {
             Object item = this.get(position);
             if (item instanceof WPOrgPluginModel) {
-                return ((WPOrgPluginModel) item).getId();
+                WPOrgPluginModel wpOrgPlugin = (WPOrgPluginModel) item;
+                // Search results won't have an id, so we can't rely on it
+                return wpOrgPlugin.getId() != 0 ? wpOrgPlugin.getId() : position;
             } else if (item instanceof SitePluginModel) {
                 return ((SitePluginModel) item).getId();
             }

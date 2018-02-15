@@ -11,7 +11,7 @@ import android.support.annotation.DrawableRes;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.annotation.StringRes;
-import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
@@ -42,6 +42,7 @@ import org.wordpress.android.util.AniUtils;
 import org.wordpress.android.util.HtmlUtils;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.viewmodel.PluginBrowserViewModel;
+import org.wordpress.android.viewmodel.PluginBrowserViewModel.PluginListType;
 import org.wordpress.android.widgets.WPNetworkImageView;
 import org.wordpress.android.widgets.WPNetworkImageView.ImageType;
 
@@ -53,29 +54,8 @@ public class PluginBrowserActivity extends AppCompatActivity
         implements SearchView.OnQueryTextListener,
         MenuItem.OnActionExpandListener {
 
-    public enum PluginListType {
-        SITE,
-        POPULAR,
-        NEW,
-        SEARCH;
-
-        @StringRes int getTitleRes() {
-            switch (this) {
-                case POPULAR:
-                    return R.string.plugin_caption_popular;
-                case NEW:
-                    return R.string.plugin_caption_new;
-                case SEARCH:
-                    return R.string.plugin_caption_search;
-                default:
-                    return R.string.plugin_caption_installed;
-            }
-        }
-    }
-
     @Inject ViewModelProvider.Factory mViewModelFactory;
-
-    private PluginBrowserViewModel mViewModel;
+    protected PluginBrowserViewModel mViewModel;
 
     private RecyclerView mSitePluginsRecycler;
     private RecyclerView mPopularPluginsRecycler;
@@ -110,7 +90,7 @@ public class PluginBrowserActivity extends AppCompatActivity
         }
 
         if (mViewModel.getSite() == null) {
-            ToastUtils.showToast(this, R.string.blog_not_found, ToastUtils.Duration.SHORT);
+            ToastUtils.showToast(this, R.string.blog_not_found);
             finish();
             return;
         }
@@ -139,6 +119,15 @@ public class PluginBrowserActivity extends AppCompatActivity
             }
         });
 
+        getSupportFragmentManager().addOnBackStackChangedListener(new FragmentManager.OnBackStackChangedListener() {
+            @Override
+            public void onBackStackChanged() {
+                if (getSupportFragmentManager().getBackStackEntryCount() == 0) {
+                    mViewModel.setTitle(getString(R.string.plugins));
+                }
+            }
+        });
+
         configureRecycler(mSitePluginsRecycler);
         configureRecycler(mPopularPluginsRecycler);
         configureRecycler(mNewPluginsRecycler);
@@ -148,24 +137,31 @@ public class PluginBrowserActivity extends AppCompatActivity
     }
 
     private void setupObservers() {
+        mViewModel.getTitle().observe(this, new Observer<String>() {
+            @Override
+            public void onChanged(@Nullable String title) {
+                setTitle(title);
+            }
+        });
+
         mViewModel.getSitePlugins().observe(this, new Observer<List<SitePluginModel>>() {
             @Override
             public void onChanged(@Nullable final List<SitePluginModel> sitePlugins) {
-                refreshPluginAdapterAndVisibility(PluginListType.SITE, sitePlugins);
+                reloadPluginAdapterAndVisibility(PluginListType.SITE, sitePlugins);
             }
         });
 
         mViewModel.getNewPlugins().observe(this, new Observer<List<WPOrgPluginModel>>() {
             @Override
             public void onChanged(@Nullable final List<WPOrgPluginModel> newPlugins) {
-                refreshPluginAdapterAndVisibility(PluginListType.NEW, newPlugins);
+                reloadPluginAdapterAndVisibility(PluginListType.NEW, newPlugins);
             }
         });
 
         mViewModel.getPopularPlugins().observe(this, new Observer<List<WPOrgPluginModel>>() {
             @Override
             public void onChanged(@Nullable final List<WPOrgPluginModel> popularPlugins) {
-                refreshPluginAdapterAndVisibility(PluginListType.POPULAR, popularPlugins);
+                reloadPluginAdapterAndVisibility(PluginListType.POPULAR, popularPlugins);
             }
         });
 
@@ -209,12 +205,6 @@ public class PluginBrowserActivity extends AppCompatActivity
     }
 
     @Override
-    public void onBackPressed() {
-        setTitle(R.string.plugins);
-        super.onBackPressed();
-    }
-
-    @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.search, menu);
 
@@ -249,7 +239,7 @@ public class PluginBrowserActivity extends AppCompatActivity
         }
     }
 
-    private void refreshPluginAdapterAndVisibility(@NonNull PluginListType pluginType, List<?> plugins) {
+    protected void reloadPluginAdapterAndVisibility(@NonNull PluginListType pluginType, List<?> plugins) {
         PluginBrowserAdapter adapter;
         View cardView;
         switch (pluginType) {
@@ -279,7 +269,7 @@ public class PluginBrowserActivity extends AppCompatActivity
         }
     }
 
-    private void reloadPluginWithSlug(@NonNull String slug) {
+    protected void reloadPluginWithSlug(@NonNull String slug) {
         ((PluginBrowserAdapter) mSitePluginsRecycler.getAdapter()).reloadPluginWithSlug(slug);
         ((PluginBrowserAdapter) mPopularPluginsRecycler.getAdapter()).reloadPluginWithSlug(slug);
         ((PluginBrowserAdapter) mNewPluginsRecycler.getAdapter()).reloadPluginWithSlug(slug);
@@ -300,27 +290,14 @@ public class PluginBrowserActivity extends AppCompatActivity
         return true;
     }
 
-    private PluginListFragment getListFragment() {
-        Fragment fragment = getSupportFragmentManager().findFragmentByTag(PluginListFragment.TAG);
-        if (fragment != null) {
-            return (PluginListFragment) fragment;
-        }
-        return null;
-    }
-
-    private void showListFragment(@NonNull PluginListType listType) {
-        PluginListFragment listFragment = getListFragment();
-        if (listFragment != null) {
-            listFragment.setListType(listType);
-        } else {
-            listFragment = PluginListFragment.newInstance(mViewModel.getSite(), listType);
-            getSupportFragmentManager().beginTransaction()
-                    .add(R.id.fragment_container, listFragment, PluginListFragment.TAG)
-                    .addToBackStack(null)
-                    .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE)
-                    .commit();
-        }
-        setTitle(listType.getTitleRes());
+    protected void showListFragment(@NonNull PluginListType listType) {
+        PluginListFragment listFragment = PluginListFragment.newInstance(mViewModel.getSite(), listType);
+        getSupportFragmentManager().beginTransaction()
+                .add(R.id.fragment_container, listFragment, PluginListFragment.TAG)
+                .addToBackStack(null)
+                .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE)
+                .commit();
+        mViewModel.setTitle(getTitleForListType(listType));
     }
 
     private void hideListFragment() {
@@ -329,7 +306,7 @@ public class PluginBrowserActivity extends AppCompatActivity
         }
     }
 
-    private void showProgress(boolean show) {
+    protected void showProgress(boolean show) {
         findViewById(R.id.progress).setVisibility(show ? View.VISIBLE : View.GONE);
     }
 
@@ -374,7 +351,7 @@ public class PluginBrowserActivity extends AppCompatActivity
             notifyDataSetChanged();
         }
 
-        private Object getItem(int position) {
+        protected @Nullable Object getItem(int position) {
             if (position < mItems.size()) {
                 return mItems.get(position);
             }
@@ -409,11 +386,7 @@ public class PluginBrowserActivity extends AppCompatActivity
             String author;
             if (item instanceof SitePluginModel) {
                 sitePlugin = (SitePluginModel) item;
-                wpOrgPlugin = mViewModel.getWPOrgPluginForSitePlugin(sitePlugin);
-                // todo: move this to view model
-                if (wpOrgPlugin == null) {
-                    mViewModel.fetchWPOrgPlugin(sitePlugin.getSlug());
-                }
+                wpOrgPlugin = mViewModel.getWPOrgPluginForSitePluginAndFetchIfNecessary(sitePlugin);
                 name = sitePlugin.getDisplayName();
                 author = sitePlugin.getAuthorName();
             } else {
@@ -458,7 +431,7 @@ public class PluginBrowserActivity extends AppCompatActivity
             }
         }
 
-        private void reloadPluginWithSlug(@NonNull String slug) {
+        void reloadPluginWithSlug(@NonNull String slug) {
             int index = mItems.indexOfPluginWithSlug(slug);
             if (index != -1) {
                 notifyItemChanged(index);
@@ -490,11 +463,12 @@ public class PluginBrowserActivity extends AppCompatActivity
                     public void onClick(View v) {
                         int position = getAdapterPosition();
                         Object item = getItem(position);
+                        if (item == null) return;
                         SitePluginModel sitePlugin;
                         WPOrgPluginModel wpOrgPlugin;
                         if (item instanceof SitePluginModel) {
                             sitePlugin = (SitePluginModel) item;
-                            wpOrgPlugin = mViewModel.getWPOrgPluginForSitePlugin(sitePlugin);
+                            wpOrgPlugin = mViewModel.getWPOrgPluginForSitePluginAndFetchIfNecessary(sitePlugin);
                         } else {
                             wpOrgPlugin = (WPOrgPluginModel) item;
                             sitePlugin = mViewModel.getSitePluginFromSlug(wpOrgPlugin.getSlug());
@@ -512,4 +486,17 @@ public class PluginBrowserActivity extends AppCompatActivity
         }
     }
 
+    private String getTitleForListType(@NonNull PluginListType pluginListType) {
+        switch (pluginListType) {
+            case POPULAR:
+                return getString(R.string.plugin_caption_popular);
+            case NEW:
+                return getString(R.string.plugin_caption_new);
+            case SEARCH:
+                return getString(R.string.plugin_caption_search);
+            case SITE:
+                return getString(R.string.plugin_caption_installed);
+        }
+        return getString(R.string.plugins);
+    }
 }

@@ -16,6 +16,8 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
@@ -28,10 +30,10 @@ import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.model.plugin.SitePluginModel;
 import org.wordpress.android.fluxc.model.plugin.WPOrgPluginModel;
 import org.wordpress.android.ui.ActivityLauncher;
-import org.wordpress.android.ui.plugins.PluginBrowserActivity.PluginListType;
 import org.wordpress.android.util.HtmlUtils;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.viewmodel.PluginBrowserViewModel;
+import org.wordpress.android.viewmodel.PluginBrowserViewModel.PluginListType;
 import org.wordpress.android.widgets.DividerItemDecoration;
 import org.wordpress.android.widgets.WPNetworkImageView;
 
@@ -47,10 +49,10 @@ public class PluginListFragment extends Fragment {
 
     private static final String ARG_LIST_TYPE = "list_type";
 
-    private PluginBrowserViewModel mViewModel;
+    protected PluginBrowserViewModel mViewModel;
 
-    private RecyclerView mRecycler;
-    private PluginListType mListType;
+    protected RecyclerView mRecycler;
+    protected PluginListType mListType;
 
     public static PluginListFragment newInstance(@NonNull SiteModel site, @NonNull PluginListType listType) {
         PluginListFragment fragment = new PluginListFragment();
@@ -66,14 +68,17 @@ public class PluginListFragment extends Fragment {
         super.onCreate(savedInstanceState);
         ((WordPress) getActivity().getApplication()).component().inject(this);
 
-        mViewModel = ViewModelProviders.of(getActivity(), mViewModelFactory).get(PluginBrowserViewModel.class);
         mListType = (PluginListType) getArguments().getSerializable(ARG_LIST_TYPE);
     }
 
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
+        // this enables us to clear the search icon in onCreateOptionsMenu when the list isn't showing search results
+        setHasOptionsMenu(mListType != PluginListType.SEARCH);
 
+        // Use the same view model as the PluginBrowserActivity
+        mViewModel = ViewModelProviders.of(getActivity(), mViewModelFactory).get(PluginBrowserViewModel.class);
         setupObservers();
     }
 
@@ -170,15 +175,14 @@ public class PluginListFragment extends Fragment {
         return view;
     }
 
-    void reloadPlugins() {
-        setPlugins(mViewModel.getPluginsForListType(mListType));
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        menu.clear();
+        super.onCreateOptionsMenu(menu, inflater);
     }
 
-    void setListType(@NonNull PluginListType listType) {
-        showProgress(false);
-        mListType = listType;
-        getArguments().putSerializable(ARG_LIST_TYPE, mListType);
-        reloadPlugins();
+    void reloadPlugins() {
+        setPlugins(mViewModel.getPluginsForListType(mListType));
     }
 
     private void setPlugins(@Nullable List<?> plugins) {
@@ -192,8 +196,8 @@ public class PluginListFragment extends Fragment {
         adapter.setPlugins(plugins);
     }
 
-    private void showProgress(boolean show) {
-        if (isAdded()) {
+    protected void showProgress(boolean show) {
+        if (isAdded() && getView() != null) {
             getView().findViewById(R.id.progress).setVisibility(show ? View.VISIBLE : View.GONE);
         }
     }
@@ -223,14 +227,14 @@ public class PluginListFragment extends Fragment {
             }
         }
 
-        private void reloadPluginWithSlug(@NonNull String slug) {
+        void reloadPluginWithSlug(@NonNull String slug) {
             int index = mItems.indexOfPluginWithSlug(slug);
             if (index != -1) {
                 notifyItemChanged(index);
             }
         }
 
-        private Object getItem(int position) {
+        protected @Nullable Object getItem(int position) {
             if (position < mItems.size()) {
                 return mItems.get(position);
             }
@@ -256,11 +260,12 @@ public class PluginListFragment extends Fragment {
         @Override
         public void onBindViewHolder(RecyclerView.ViewHolder viewHolder, int position) {
             Object item = getItem(position);
+            if (item == null) return;
             SitePluginModel sitePlugin;
             WPOrgPluginModel wpOrgPlugin;
             if (item instanceof SitePluginModel) {
                 sitePlugin = (SitePluginModel) item;
-                wpOrgPlugin = mViewModel.getWPOrgPluginForSitePlugin(sitePlugin);
+                wpOrgPlugin = mViewModel.getWPOrgPluginForSitePluginAndFetchIfNecessary(sitePlugin);
             } else {
                 wpOrgPlugin = (WPOrgPluginModel) item;
                 sitePlugin = mViewModel.getSitePluginFromSlug(wpOrgPlugin.getSlug());
@@ -332,11 +337,12 @@ public class PluginListFragment extends Fragment {
                     public void onClick(View v) {
                         int position = getAdapterPosition();
                         Object item = getItem(position);
+                        if (item == null) return;
                         SitePluginModel sitePlugin;
                         WPOrgPluginModel wpOrgPlugin;
                         if (item instanceof SitePluginModel) {
                             sitePlugin = (SitePluginModel) item;
-                            wpOrgPlugin = mViewModel.getWPOrgPluginForSitePlugin(sitePlugin);
+                            wpOrgPlugin = mViewModel.getWPOrgPluginForSitePluginAndFetchIfNecessary(sitePlugin);
                         } else {
                             wpOrgPlugin = (WPOrgPluginModel) item;
                             sitePlugin = mViewModel.getSitePluginFromSlug(wpOrgPlugin.getSlug());
