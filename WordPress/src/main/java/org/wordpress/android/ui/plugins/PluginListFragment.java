@@ -176,13 +176,6 @@ public class PluginListFragment extends Fragment {
         setPlugins(mViewModel.getPluginsForListType(mListType));
     }
 
-    void setListType(@NonNull PluginListType listType) {
-        showProgress(false);
-        mListType = listType;
-        getArguments().putSerializable(ARG_LIST_TYPE, mListType);
-        reloadPlugins();
-    }
-
     private void setPlugins(@Nullable List<?> plugins) {
         PluginListAdapter adapter;
         if (mRecycler.getAdapter() == null) {
