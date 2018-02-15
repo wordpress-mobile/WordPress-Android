@@ -345,7 +345,7 @@ public class PluginBrowserActivity extends AppCompatActivity
             notifyDataSetChanged();
         }
 
-        private Object getItem(int position) {
+        protected @Nullable Object getItem(int position) {
             if (position < mItems.size()) {
                 return mItems.get(position);
             }
@@ -457,6 +457,7 @@ public class PluginBrowserActivity extends AppCompatActivity
                     public void onClick(View v) {
                         int position = getAdapterPosition();
                         Object item = getItem(position);
+                        if (item == null) return;
                         SitePluginModel sitePlugin;
                         WPOrgPluginModel wpOrgPlugin;
                         if (item instanceof SitePluginModel) {

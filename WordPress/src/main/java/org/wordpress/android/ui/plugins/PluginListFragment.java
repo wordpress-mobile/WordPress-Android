@@ -225,7 +225,7 @@ public class PluginListFragment extends Fragment {
             }
         }
 
-        private Object getItem(int position) {
+        protected @Nullable Object getItem(int position) {
             if (position < mItems.size()) {
                 return mItems.get(position);
             }
@@ -251,6 +251,7 @@ public class PluginListFragment extends Fragment {
         @Override
         public void onBindViewHolder(RecyclerView.ViewHolder viewHolder, int position) {
             Object item = getItem(position);
+            if (item == null) return;
             SitePluginModel sitePlugin;
             WPOrgPluginModel wpOrgPlugin;
             if (item instanceof SitePluginModel) {
@@ -327,6 +328,7 @@ public class PluginListFragment extends Fragment {
                     public void onClick(View v) {
                         int position = getAdapterPosition();
                         Object item = getItem(position);
+                        if (item == null) return;
                         SitePluginModel sitePlugin;
                         WPOrgPluginModel wpOrgPlugin;
                         if (item instanceof SitePluginModel) {
