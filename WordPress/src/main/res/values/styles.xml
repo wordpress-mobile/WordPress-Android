@@ -688,4 +688,8 @@
         <item name="android:layout_marginTop">@dimen/margin_small</item>
         <item name="android:layout_centerVertical">false</item>
     </style>
+
+    <style name="WPRatingBar.Small" parent="Widget.AppCompat.RatingBar.Small">
+        <item name="android:progressTint">@color/blue_medium</item>
+    </style>
 </resources>
