@@ -3,8 +3,8 @@ package org.wordpress.android.ui.plugins;
 import android.support.annotation.NonNull;
 import android.text.TextUtils;
 
-import org.wordpress.android.fluxc.model.WPOrgPluginModel;
-import org.wordpress.android.fluxc.model.SitePluginModel;
+import org.wordpress.android.fluxc.model.plugin.WPOrgPluginModel;
+import org.wordpress.android.fluxc.model.plugin.SitePluginModel;
 import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.store.PluginStore;
 import org.wordpress.android.util.AppLog;
