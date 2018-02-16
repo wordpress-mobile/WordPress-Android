@@ -7,7 +7,7 @@
     <application
         tools:replace="android:name,android:supportsRtl"
         android:name=".WordPressDebug"
-        android:supportsRtl="@bool/rtl_supported"
+        android:supportsRtl="true"
         />
 
 </manifest>

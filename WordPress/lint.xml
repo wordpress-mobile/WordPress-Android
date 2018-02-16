@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <lint>
     <!-- WARNING -->
-    <issue id="RtlCompat" severity="warning" />
+    <issue id="RtlSymmetry" severity="warning" />
 
     <issue id="NewApi">
         <warning path="src/main/res/values/reader_styles.xml" />
@@ -9,6 +9,7 @@
     </issue>
 
     <!-- ERROR -->
+    <issue id="RtlHardcoded" severity="error" />
     <issue id="InconsistentArrays" severity="error" />
     <issue id="HardcodedText" severity="error" />
     <issue id="IconDuplicates" severity="error" />
