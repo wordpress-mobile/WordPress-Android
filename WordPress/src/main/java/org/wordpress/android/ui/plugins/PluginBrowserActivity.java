@@ -88,6 +88,7 @@ public class PluginBrowserActivity extends AppCompatActivity
         if (savedInstanceState == null) {
             mViewModel.setSite((SiteModel) getIntent().getSerializableExtra(WordPress.SITE));
         }
+        mViewModel.start(savedInstanceState);
 
         if (mViewModel.getSite() == null) {
             ToastUtils.showToast(this, R.string.blog_not_found);
@@ -132,8 +133,13 @@ public class PluginBrowserActivity extends AppCompatActivity
         configureRecycler(mPopularPluginsRecycler);
         configureRecycler(mNewPluginsRecycler);
 
-        mViewModel.start();
         setupObservers();
+    }
+
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        mViewModel.writeToBundle(outState);
     }
 
     private void setupObservers() {
