@@ -685,7 +685,7 @@ public class NewUserFragment extends AbstractFragment {
     private void getDomainSuggestionsFromTitle() {
         String username = EditTextUtils.getText(mUsernameTextField);
         if (!TextUtils.isEmpty(username)) {
-            SuggestDomainsPayload payload = new SuggestDomainsPayload(username, true, false, 5);
+            SuggestDomainsPayload payload = new SuggestDomainsPayload(username, false, true, false, 5);
             mDispatcher.dispatch(SiteActionBuilder.newSuggestDomainsAction(payload));
         }
     }
