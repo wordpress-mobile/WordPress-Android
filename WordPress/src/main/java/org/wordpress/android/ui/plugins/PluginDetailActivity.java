@@ -601,8 +601,9 @@ public class PluginDetailActivity extends AppCompatActivity {
             AniUtils.fadeIn(textView, duration);
         }
 
-        float endRotate = isExpanded ? 360f : -180f;
-        ObjectAnimator animRotate = ObjectAnimator.ofFloat(chevron, View.ROTATION, 0f, endRotate);
+        float startRotate = isExpanded ? -180f : 0f;
+        float endRotate = isExpanded ? 0f : -180f;
+        ObjectAnimator animRotate = ObjectAnimator.ofFloat(chevron, View.ROTATION, startRotate, endRotate);
         animRotate.setDuration(duration.toMillis(this));
         animRotate.start();
     }
