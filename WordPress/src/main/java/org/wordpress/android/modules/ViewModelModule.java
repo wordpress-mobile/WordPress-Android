@@ -4,6 +4,8 @@ import android.arch.lifecycle.ViewModel;
 import android.arch.lifecycle.ViewModelProvider;
 
 import org.wordpress.android.viewmodel.PluginBrowserViewModel;
+import org.wordpress.android.viewmodel.ViewModelFactory;
+import org.wordpress.android.viewmodel.ViewModelKey;
 
 import dagger.Binds;
 import dagger.Module;

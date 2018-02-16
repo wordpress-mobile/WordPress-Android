@@ -1,4 +1,4 @@
-package org.wordpress.android.modules;
+package org.wordpress.android.viewmodel;
 
 import android.arch.lifecycle.ViewModel;
 
@@ -14,6 +14,6 @@ import dagger.MapKey;
 @Target({ElementType.METHOD})
 @Retention(RetentionPolicy.RUNTIME)
 @MapKey
-@interface ViewModelKey {
+public @interface ViewModelKey {
     Class<? extends ViewModel> value();
 }

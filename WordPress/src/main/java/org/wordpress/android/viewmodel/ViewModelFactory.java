@@ -1,4 +1,4 @@
-package org.wordpress.android.modules;
+package org.wordpress.android.viewmodel;
 
 import android.arch.lifecycle.ViewModel;
 import android.arch.lifecycle.ViewModelProvider;
@@ -11,11 +11,11 @@ import javax.inject.Provider;
 import javax.inject.Singleton;
 
 @Singleton
-class ViewModelFactory implements ViewModelProvider.Factory {
+public class ViewModelFactory implements ViewModelProvider.Factory {
     private final Map<Class<? extends ViewModel>, Provider<ViewModel>> mViewModelsMap;
 
     @Inject
-    ViewModelFactory(Map<Class<? extends ViewModel>, Provider<ViewModel>> viewModelsMap) {
+    public ViewModelFactory(Map<Class<? extends ViewModel>, Provider<ViewModel>> viewModelsMap) {
         this.mViewModelsMap = viewModelsMap;
     }
 
