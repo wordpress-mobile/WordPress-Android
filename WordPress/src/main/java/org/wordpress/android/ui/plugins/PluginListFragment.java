@@ -123,6 +123,15 @@ public class PluginListFragment extends Fragment {
             }
         });
 
+        mViewModel.getSitePluginsListStatus().observe(this, new Observer<PluginBrowserViewModel.PluginListStatus>() {
+            @Override
+            public void onChanged(@Nullable PluginBrowserViewModel.PluginListStatus listStatus) {
+                if (mListType == PluginListType.SITE) {
+                    refreshProgressBars(listStatus);
+                }
+            }
+        });
+
         mViewModel.getNewPluginsListStatus().observe(this, new Observer<PluginBrowserViewModel.PluginListStatus>() {
             @Override
             public void onChanged(@Nullable PluginBrowserViewModel.PluginListStatus listStatus) {
