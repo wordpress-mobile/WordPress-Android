@@ -3,6 +3,7 @@ package org.wordpress.android.viewmodel;
 import android.arch.lifecycle.LiveData;
 import android.arch.lifecycle.MutableLiveData;
 import android.arch.lifecycle.ViewModel;
+import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -10,6 +11,7 @@ import android.text.TextUtils;
 
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
+import org.wordpress.android.WordPress;
 import org.wordpress.android.fluxc.Dispatcher;
 import org.wordpress.android.fluxc.generated.PluginActionBuilder;
 import org.wordpress.android.fluxc.model.SiteModel;
@@ -42,9 +44,13 @@ public class PluginBrowserViewModel extends ViewModel {
         LOADING_MORE
     }
 
+    private static final String KEY_SEARCH_QUERY = "KEY_SEARCH_QUERY";
+    private static final String KEY_TITLE = "KEY_TITLE";
+
     private final Dispatcher mDispatcher;
     private final PluginStore mPluginStore;
 
+    private boolean mIsStarted = false;
     private String mSearchQuery;
     private SiteModel mSite;
 
@@ -93,12 +99,38 @@ public class PluginBrowserViewModel extends ViewModel {
         mDispatcher.unregister(this);
     }
 
+    public void writeToBundle(@NonNull Bundle outState) {
+        outState.putSerializable(WordPress.SITE, mSite);
+        outState.putString(KEY_SEARCH_QUERY, mSearchQuery);
+        outState.putString(KEY_TITLE, mTitle.getValue());
+    }
+
+    public void readFromBundle(@NonNull Bundle savedInstanceState) {
+        if (mIsStarted) {
+            // This was called due to a config change where the data survived, we don't need to
+            // read from the bundle
+            return;
+        }
+        mSite = (SiteModel) savedInstanceState.getSerializable(WordPress.SITE);
+        mSearchQuery = savedInstanceState.getString(KEY_SEARCH_QUERY);
+        setTitle(savedInstanceState.getString(KEY_TITLE));
+    }
+
     public void start() {
+        if (mIsStarted) {
+            return;
+        }
         reloadAllPluginsFromStore();
 
         fetchPlugins(PluginListType.SITE, false);
         fetchPlugins(PluginListType.POPULAR, false);
         fetchPlugins(PluginListType.NEW, false);
+        // If activity is recreated we need to re-search
+        if (shouldSearch()) {
+            fetchPlugins(PluginListType.SEARCH, false);
+        }
+
+        mIsStarted = true;
     }
 
     // Site & WPOrg plugin management
