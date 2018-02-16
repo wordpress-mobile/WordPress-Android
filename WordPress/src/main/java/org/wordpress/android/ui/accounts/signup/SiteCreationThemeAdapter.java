@@ -1,6 +1,7 @@
 package org.wordpress.android.ui.accounts.signup;
 
 import android.content.Context;
+import android.support.annotation.StringRes;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -21,15 +22,18 @@ public class SiteCreationThemeAdapter extends RecyclerView.Adapter<RecyclerView.
 
     private boolean mIsLoading;
     private List<ThemeModel> mThemes;
+    private @StringRes int mErrorMessage;
     private SiteCreationListener mSiteCreationListener;
 
     public static class HeaderViewHolder extends RecyclerView.ViewHolder {
+        public final View progressContainer;
         public final View progress;
         public final TextView label;
 
         HeaderViewHolder(View itemView) {
             super(itemView);
-            this.progress = itemView.findViewById(R.id.progress_container);
+            this.progressContainer = itemView.findViewById(R.id.progress_container);
+            this.progress = itemView.findViewById(R.id.progress_bar);
             this.label = (TextView) itemView.findViewById(R.id.progress_label);
         }
     }
@@ -52,9 +56,10 @@ public class SiteCreationThemeAdapter extends RecyclerView.Adapter<RecyclerView.
         mSiteCreationListener = siteCreationListener;
     }
 
-    public void setData(boolean isLoading, List<ThemeModel> themes) {
+    public void setData(boolean isLoading, List<ThemeModel> themes, @StringRes int errorMessage) {
         mIsLoading = isLoading;
         mThemes = themes;
+        mErrorMessage = errorMessage;
         notifyDataSetChanged();
     }
 
@@ -77,10 +82,11 @@ public class SiteCreationThemeAdapter extends RecyclerView.Adapter<RecyclerView.
 
         if (viewType == VIEW_TYPE_HEADER) {
             final HeaderViewHolder headerViewHolder = (HeaderViewHolder) holder;
+            headerViewHolder.progressContainer.setVisibility(mIsLoading || mThemes == null ? View.VISIBLE : View.GONE);
             headerViewHolder.progress.setVisibility(mIsLoading ? View.VISIBLE : View.GONE);
             if (!mIsLoading && mThemes == null) {
                 // this is an error situation so, show an error
-                headerViewHolder.label.setText(R.string.error_generic);
+                headerViewHolder.label.setText(mErrorMessage);
             } else {
                 headerViewHolder.label.setText(null);
             }
