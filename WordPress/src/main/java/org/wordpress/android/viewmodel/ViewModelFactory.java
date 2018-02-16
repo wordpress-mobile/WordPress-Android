@@ -1,9 +1,8 @@
-package org.wordpress.android.modules;
+package org.wordpress.android.viewmodel;
 
 import android.arch.lifecycle.ViewModel;
 import android.arch.lifecycle.ViewModelProvider;
 import android.support.annotation.NonNull;
-import android.support.v4.util.ArrayMap;
 
 import java.util.Map;
 
@@ -13,10 +12,10 @@ import javax.inject.Singleton;
 
 @Singleton
 public class ViewModelFactory implements ViewModelProvider.Factory {
-    private final ArrayMap<Class<? extends ViewModel>, Provider<ViewModel>> mViewModelsMap;
+    private final Map<Class<? extends ViewModel>, Provider<ViewModel>> mViewModelsMap;
 
     @Inject
-    ViewModelFactory(ArrayMap<Class<? extends ViewModel>, Provider<ViewModel>> viewModelsMap) {
+    public ViewModelFactory(Map<Class<? extends ViewModel>, Provider<ViewModel>> viewModelsMap) {
         this.mViewModelsMap = viewModelsMap;
     }
 
@@ -35,8 +34,7 @@ public class ViewModelFactory implements ViewModelProvider.Factory {
         }
         if (creator == null) {
             throw new IllegalArgumentException("View model not found [" + viewModelClass
-                    + "]. Have you registered the viewModel in the ViewModelModule.provideViewModelFactory() "
-                    + "method? ");
+                    + "]. Have you added corresponding method into the ViewModelModule.");
         }
         return (T) creator.get();
     }
