@@ -178,6 +178,12 @@ public class PluginBrowserViewModel extends ViewModel {
         mPopularPlugins.setValue(mPluginStore.getPluginDirectory(PluginDirectoryType.POPULAR));
     }
 
+    // Pull to refresh
+
+    public void pullToRefresh(@NonNull PluginListType pluginListType) {
+        fetchPlugins(pluginListType, false);
+    }
+
     // Network Requests
 
     private void fetchPlugins(@NonNull PluginListType listType, boolean loadMore) {

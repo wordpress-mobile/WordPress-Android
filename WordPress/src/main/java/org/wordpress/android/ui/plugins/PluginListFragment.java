@@ -32,6 +32,8 @@ import org.wordpress.android.fluxc.model.plugin.WPOrgPluginModel;
 import org.wordpress.android.ui.ActivityLauncher;
 import org.wordpress.android.util.HtmlUtils;
 import org.wordpress.android.util.ToastUtils;
+import org.wordpress.android.util.helpers.SwipeToRefreshHelper;
+import org.wordpress.android.util.widgets.CustomSwipeRefreshLayout;
 import org.wordpress.android.viewmodel.PluginBrowserViewModel;
 import org.wordpress.android.viewmodel.PluginBrowserViewModel.PluginListType;
 import org.wordpress.android.widgets.DividerItemDecoration;
@@ -40,6 +42,8 @@ import org.wordpress.android.widgets.WPNetworkImageView;
 import java.util.List;
 
 import javax.inject.Inject;
+
+import static org.wordpress.android.util.WPSwipeToRefreshHelper.buildSwipeToRefreshHelper;
 
 public class PluginListFragment extends Fragment {
     public static final String TAG = PluginListFragment.class.getName();
@@ -52,6 +56,7 @@ public class PluginListFragment extends Fragment {
 
     protected RecyclerView mRecycler;
     protected PluginListType mListType;
+    private SwipeToRefreshHelper mSwipeToRefreshHelper;
 
     public static PluginListFragment newInstance(@NonNull SiteModel site, @NonNull PluginListType listType) {
         PluginListFragment fragment = new PluginListFragment();
@@ -170,6 +175,16 @@ public class PluginListFragment extends Fragment {
         mRecycler = view.findViewById(R.id.recycler);
         mRecycler.setLayoutManager(new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false));
         mRecycler.addItemDecoration(new DividerItemDecoration(getActivity(), DividerItemDecoration.VERTICAL_LIST));
+
+        mSwipeToRefreshHelper = buildSwipeToRefreshHelper(
+                (CustomSwipeRefreshLayout) view.findViewById(R.id.ptr_layout),
+                new SwipeToRefreshHelper.RefreshListener() {
+                    @Override
+                    public void onRefreshStarted() {
+                        mViewModel.pullToRefresh(mListType);
+                    }
+                }
+        );
 
         return view;
     }
