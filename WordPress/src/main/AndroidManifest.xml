@@ -135,7 +135,7 @@
         <activity
             android:name=".ui.accounts.NewBlogActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
-            android:theme="@style/SignInTheme"
+            android:theme="@style/LoginTheme"
             android:windowSoftInputMode="adjustResize" />
         <activity
             android:name=".ui.accounts.HelpActivity"
@@ -158,6 +158,9 @@
         <activity
             android:name=".ui.prefs.LicensesActivity"
             android:theme="@style/Calypso.NoActionBar" />
+        <activity android:name=".ui.prefs.SiteSettingsTagListActivity"
+            android:theme="@style/CalypsoTheme"
+            android:label="@string/site_settings_tags_title" />
         <activity
             android:name=".ui.prefs.AccountSettingsActivity"
             android:configChanges="orientation|screenSize"
@@ -188,6 +191,9 @@
         <activity
             android:name=".ui.comments.EditCommentActivity"
             android:theme="@style/CalypsoTheme" />
+        <activity
+            android:name=".ui.comments.CommentsDetailActivity"
+            android:theme="@style/CalypsoTheme" />
 
         <!-- Posts activities -->
         <activity
@@ -197,8 +203,7 @@
             android:windowSoftInputMode="stateVisible" />
         <activity
             android:name=".ui.posts.EditPostActivity"
-            android:configChanges="orientation|keyboardHidden|screenSize"
-            android:theme="@style/CalypsoTheme"
+            android:theme="@style/Calypso.ActionMode.Dark"
             android:windowSoftInputMode="stateHidden|adjustResize">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
@@ -258,11 +263,27 @@
         <activity
             android:name=".ui.WPWebViewActivity"
             android:theme="@style/Calypso.NoActionBar" />
+        <activity
+            android:name=".ui.JetpackConnectionWebViewActivity"
+            android:theme="@style/Calypso.NoActionBar" />
+        <activity
+            android:name=".ui.stats.StatsConnectJetpackActivity"
+            android:theme="@style/Calypso.NoActionBar" />
+        <activity android:name=".ui.stats.StatsDeeplinkActivity" android:theme="@style/Calypso.NoActionBar">
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+                <data
+                    android:host="jetpack-connection"
+                    android:scheme="wordpress" />
+            </intent-filter>
+        </activity>
 
         <!-- Media Activities -->
         <activity
             android:name=".ui.media.MediaBrowserActivity"
-            android:theme="@style/Calypso.NoActionBar"
+            android:theme="@style/Calypso.ActionMode.Dark.NoActionBar"
             android:label="@string/wp_media_title" />
         <activity
             android:name=".ui.media.MediaPreviewActivity"
@@ -272,7 +293,7 @@
             android:name=".ui.media.MediaSettingsActivity"
             android:windowSoftInputMode="stateHidden|adjustPan"
             android:label="@string/media"
-            android:theme="@style/WordPress" />
+            android:theme="@style/MediaSettings.Activity" />
 
         <!-- Theme Activities -->
         <activity
@@ -405,7 +426,8 @@
         <activity
             android:name=".ui.ShareIntentReceiverActivity"
             android:excludeFromRecents="true"
-            android:theme="@style/Calypso.FloatingActivity">
+            android:launchMode="singleTask"
+            android:theme="@style/NoDisplay">
             <intent-filter>
                 <action android:name="android.intent.action.SEND" />
                 <action android:name="android.intent.action.SEND_MULTIPLE" />
@@ -458,6 +480,16 @@
         <activity
             android:name=".ui.people.PeopleManagementActivity"
             android:label="@string/people"
+            android:theme="@style/Calypso.NoActionBar"/>
+
+        <!--Plugins-->
+        <activity
+            android:name=".ui.plugins.PluginListActivity"
+            android:label="@string/plugins"
+            android:theme="@style/Calypso.NoActionBar"/>
+
+        <activity
+            android:name=".ui.plugins.PluginDetailActivity"
             android:theme="@style/Calypso.NoActionBar"/>
 
         <!-- Me activities -->
@@ -534,6 +566,10 @@
             android:name=".ui.notifications.services.NotificationsUpdateService"
             android:exported="false"
             android:label="Notifications Update Service" />
+        <service
+            android:name=".login.LoginWpcomService"
+            android:exported="false"
+            android:label="Login to WPCOM Service" />
 
         <!-- Samsung multiwindow support -->
         <uses-library
@@ -583,8 +619,6 @@
         <service
             android:name=".push.GCMRegistrationIntentService"
             android:exported="false" />
-
-        <action android:name="com.google.android.c2dm.intent.REGISTRATION" />
 
         <service
             android:name=".push.GCMMessageService"

@@ -7,46 +7,33 @@
     android:layout_height="wrap_content"
     android:layout_margin="@dimen/photo_picker_item_padding">
 
-    <RelativeLayout
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content">
-
-        <ImageView
-            android:id="@+id/image_thumbnail"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:background="@drawable/photo_picker_item_background"
-            android:scaleType="centerCrop"
-            tools:src="@drawable/gravatar_placeholder" />
-
-        <org.wordpress.android.widgets.WPTextView
-            android:id="@+id/text_selection_count"
-            android:layout_width="32dp"
-            android:layout_height="32dp"
-            android:layout_alignParentRight="true"
-            android:background="@drawable/shape_oval_blue"
-            android:gravity="center"
-            android:textColor="@color/white"
-            android:textSize="@dimen/text_sz_large"
-            android:visibility="gone"
-            tools:text="5"
-            tools:visibility="visible" />
-    </RelativeLayout>
-
     <ImageView
-        android:id="@+id/image_preview"
-        android:layout_width="@dimen/photo_picker_preview_icon"
-        android:layout_height="@dimen/photo_picker_preview_icon"
-        android:layout_gravity="bottom"
-        android:background="@drawable/preview_icon_background"
-        android:padding="@dimen/margin_small"
-        app:srcCompat="@drawable/ic_fullscreen_white_24dp" />
+        android:id="@+id/image_thumbnail"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@drawable/photo_picker_item_background"
+        android:scaleType="centerCrop" />
+
+    <TextView
+        android:id="@+id/text_selection_count"
+        android:layout_width="@dimen/media_selection_dot"
+        android:layout_height="@dimen/media_selection_dot"
+        android:layout_gravity="bottom|left"
+        android:layout_marginBottom="@dimen/margin_medium"
+        android:layout_marginLeft="@dimen/margin_medium"
+        android:background="@drawable/photo_picker_circle_selector"
+        android:elevation="4dp"
+        android:gravity="center"
+        android:includeFontPadding="false"
+        android:textColor="@color/white"
+        android:textSize="@dimen/text_sz_small"
+        tools:text="5" />
 
     <ImageView
         android:id="@+id/image_video_overlay"
         android:layout_width="@dimen/photo_picker_preview_icon"
         android:layout_height="@dimen/photo_picker_preview_icon"
-        android:layout_gravity="bottom"
+        android:layout_gravity="center"
         android:padding="@dimen/margin_extra_small"
         android:src="@drawable/play_video_selector"
         android:visibility="gone"

@@ -37,8 +37,6 @@ import java.util.TimeZone;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import static android.os.Environment.isExternalStorageRemovable;
-
 public class MediaUtils {
     private static final int DEFAULT_MAX_IMAGE_WIDTH = 1024;
     private static final Pattern FILE_EXISTS_PATTERN = Pattern.compile("(.*?)(-([0-9]+))?(\\..*$)?");
@@ -206,20 +204,12 @@ public class MediaUtils {
         }
     }
 
-    public static File getDiskCacheDir(Context context) {
-        // Check if media is mounted or storage is built-in, if so, try and use external cache dir
-        // otherwise use internal cache dir
-        return Environment.MEDIA_MOUNTED.equals(Environment.getExternalStorageState()) ||
-                !isExternalStorageRemovable() ? context.getApplicationContext().getExternalCacheDir() :
-                context.getCacheDir();
-    }
-
     public static Uri downloadExternalMedia(Context context, Uri imageUri) {
         if (context == null || imageUri == null) {
             return null;
         }
         String mimeType = context.getContentResolver().getType(imageUri);
-        File cacheDir = getDiskCacheDir(context);
+        File cacheDir = context.getCacheDir();
 
         if (cacheDir != null && !cacheDir.exists()) {
             cacheDir.mkdirs();

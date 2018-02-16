@@ -3,6 +3,7 @@ package org.wordpress.android;
 import android.app.Activity;
 import android.app.Application;
 import android.app.Dialog;
+import android.app.Service;
 import android.content.ComponentCallbacks2;
 import android.content.Context;
 import android.content.Intent;
@@ -42,8 +43,8 @@ import org.wordpress.android.datasets.ReaderDatabase;
 import org.wordpress.android.fluxc.Dispatcher;
 import org.wordpress.android.fluxc.generated.AccountActionBuilder;
 import org.wordpress.android.fluxc.generated.SiteActionBuilder;
+import org.wordpress.android.fluxc.generated.ThemeActionBuilder;
 import org.wordpress.android.fluxc.model.SiteModel;
-import org.wordpress.android.fluxc.module.AppContextModule;
 import org.wordpress.android.fluxc.persistence.WellSqlConfig;
 import org.wordpress.android.fluxc.store.AccountStore;
 import org.wordpress.android.fluxc.store.AccountStore.OnAccountChanged;
@@ -97,13 +98,17 @@ import java.util.TimerTask;
 import javax.inject.Inject;
 import javax.inject.Named;
 
+import dagger.android.AndroidInjector;
+import dagger.android.DispatchingAndroidInjector;
+import dagger.android.HasServiceInjector;
 import de.greenrobot.event.EventBus;
 import io.fabric.sdk.android.Fabric;
 
-public class WordPress extends MultiDexApplication {
+public class WordPress extends MultiDexApplication implements HasServiceInjector {
     public static final String SITE = "SITE";
     public static String versionName;
     public static WordPressDB wpDB;
+    public static boolean sAppIsInTheBackground = true;
 
     private static RestClientUtils sRestClientUtils;
     private static RestClientUtils sRestClientUtilsVersion1_1;
@@ -120,11 +125,12 @@ public class WordPress extends MultiDexApplication {
 
     private static GoogleApiClient mCredentialsClient;
 
+    @Inject DispatchingAndroidInjector<Service> mServiceDispatchingAndroidInjector;
+
     @Inject Dispatcher mDispatcher;
     @Inject AccountStore mAccountStore;
     @Inject SiteStore mSiteStore;
     @Inject MediaStore mMediaStore;
-
 
     @Inject @Named("custom-ssl") RequestQueue mRequestQueue;
     public static RequestQueue sRequestQueue;
@@ -203,7 +209,7 @@ public class WordPress extends MultiDexApplication {
 
         // Init Dagger
         mAppComponent = DaggerAppComponent.builder()
-                .appContextModule(new AppContextModule(getApplicationContext()))
+                .application(this)
                 .build();
         component().inject(this);
         mDispatcher.register(this);
@@ -274,6 +280,9 @@ public class WordPress extends MultiDexApplication {
         // Note: if removed, this will cause crashes on Android < 21
         AppCompatDelegate.setCompatVectorFromResourcesEnabled(true);
 
+        // verify media is sanitized
+        sanitizeMediaUploadStateForSite();
+
         // setup the Credentials Client so we can clean it up on wpcom logout
         mCredentialsClient = new GoogleApiClient.Builder(this)
                 .addConnectionCallbacks(new GoogleApiClient.ConnectionCallbacks() {
@@ -283,6 +292,19 @@ public class WordPress extends MultiDexApplication {
                 .addApi(Auth.CREDENTIALS_API)
                 .build();
         mCredentialsClient.connect();
+    }
+
+    private void sanitizeMediaUploadStateForSite() {
+        int siteLocalId = AppPrefs.getSelectedSite();
+        final SiteModel selectedSite = mSiteStore.getSiteByLocalId(siteLocalId);
+        if (selectedSite != null) {
+            new Thread(new Runnable() {
+                @Override
+                public void run() {
+                    UploadService.sanitizeMediaUploadStateForSite(mMediaStore, mDispatcher, selectedSite);
+                }
+            }).start();
+        }
     }
 
     private void initAnalytics(final long elapsedTimeOnCreate) {
@@ -452,15 +474,8 @@ public class WordPress extends MultiDexApplication {
 
     @SuppressWarnings("unused")
     @Subscribe(threadMode = ThreadMode.MAIN)
-    public void onParseError(OnUnexpectedError event) {
+    public void onUnexpectedError(OnUnexpectedError event) {
         AppLog.d(T.API, "Receiving OnUnexpectedError event, message: " + event.exception.getMessage());
-        String description = "FluxC: " + event.description;
-        if (event.extras != null) {
-            for (String key : event.extras.keySet()) {
-                CrashlyticsUtils.setString(key, event.extras.get(key));
-            }
-        }
-        CrashlyticsUtils.logException(event.exception, event.type, description);
     }
 
     public void removeWpComUserRelatedData(Context context) {
@@ -480,6 +495,10 @@ public class WordPress extends MultiDexApplication {
 
         // reset default account
         mDispatcher.dispatch(AccountActionBuilder.newSignOutAction());
+        // delete site-associated themes (keep WP.com themes cached)
+        for (SiteModel site : mSiteStore.getSites()) {
+            mDispatcher.dispatch(ThemeActionBuilder.newRemoveSiteThemesAction(site));
+        }
         // delete wpcom and jetpack sites
         mDispatcher.dispatch(SiteActionBuilder.newRemoveWpcomAndJetpackSitesAction());
 
@@ -590,6 +609,31 @@ public class WordPress extends MultiDexApplication {
     }
 
     /**
+     * Gets a field from the project's BuildConfig using reflection. This is useful when flavors
+     * are used at the project level to set custom fields.
+     * based on: https://code.google.com/p/android/issues/detail?id=52962#c38
+     * @param activity            Used to get the Application instance
+     * @param configValueName     The name of the field-to-access
+     * @return                    The string value of the field, or empty string if the field is not found.
+     */
+    public static String getBuildConfigString(Activity activity, String configValueName) {
+        if (!BuildConfig.DEBUG) return "";
+
+        String value = (String) WordPress.getBuildConfigValue(activity.getApplication(), configValueName);
+        if (!TextUtils.isEmpty(value)) {
+            AppLog.d(AppLog.T.NUX, "Auto-filled from build config: " + configValueName);
+            return value;
+        }
+
+        return "";
+    }
+
+    @Override
+    public AndroidInjector<Service> serviceInjector() {
+        return mServiceDispatchingAndroidInjector;
+    }
+
+    /**
      * Detect when the app goes to the background and come back to the foreground.
      *
      * Turns out that when your app has no more visible UI, a callback is triggered.
@@ -610,7 +654,6 @@ public class WordPress extends MultiDexApplication {
         private boolean mConnectionReceiverRegistered;
 
         boolean mFirstActivityResumed = true;
-        boolean mIsInBackground = true;
 
         @Override
         public void onConfigurationChanged(final Configuration newConfig) {
@@ -668,14 +711,6 @@ public class WordPress extends MultiDexApplication {
             }
         }
 
-        private void sanitizeMediaUploadStateForSite() {
-            int siteLocalId = AppPrefs.getSelectedSite();
-            SiteModel selectedSite = mSiteStore.getSiteByLocalId(siteLocalId);
-            if (selectedSite != null) {
-                UploadService.sanitizeMediaUploadStateForSite(mMediaStore, mDispatcher, selectedSite);
-            }
-        }
-
         /**
          * The two methods below (startActivityTransitionTimer and stopActivityTransitionTimer)
          * are used to track when the app goes to background.
@@ -705,7 +740,7 @@ public class WordPress extends MultiDexApplication {
 
         private void onAppGoesToBackground() {
             AppLog.i(T.UTILS, "App goes to background");
-            mIsInBackground = true;
+            sAppIsInTheBackground = true;
             String lastActivityString = AppPrefs.getLastActivityStr();
             ActivityId lastActivity = ActivityId.getActivityIdFromName(lastActivityString);
             Map<String, Object> properties = new HashMap<String, Object>();
@@ -722,7 +757,13 @@ public class WordPress extends MultiDexApplication {
             // the receiver twice.
             if (mConnectionReceiverRegistered) {
                 mConnectionReceiverRegistered = false;
-                unregisterReceiver(ConnectionChangeReceiver.getInstance());
+                try {
+                    unregisterReceiver(ConnectionChangeReceiver.getInstance());
+                    AppLog.d(T.MAIN, "ConnectionChangeReceiver successfully unregistered");
+                } catch (IllegalArgumentException e) {
+                    AppLog.e(T.MAIN, "ConnectionChangeReceiver was already unregistered");
+                    Crashlytics.logException(e);
+                }
             }
         }
 
@@ -735,7 +776,7 @@ public class WordPress extends MultiDexApplication {
                 this.mActivityTransitionTimer.cancel();
             }
 
-            mIsInBackground = false;
+            sAppIsInTheBackground = false;
         }
 
         /**
@@ -799,13 +840,13 @@ public class WordPress extends MultiDexApplication {
 
         @Override
         public void onActivityResumed(Activity activity) {
-            if (mIsInBackground) {
+            if (sAppIsInTheBackground) {
                 // was in background before
                 onAppComesFromBackground(activity);
             }
             stopActivityTransitionTimer();
 
-            mIsInBackground = false;
+            sAppIsInTheBackground = false;
             if (mFirstActivityResumed) {
                 deferredInit(activity);
             }

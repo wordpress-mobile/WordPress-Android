@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+  android:id="@+id/layout_container"
+  android:layout_width="match_parent"
+  android:layout_height="wrap_content"
+  android:layout_marginTop="@dimen/margin_medium"
+  android:layout_marginBottom="@dimen/margin_medium"
+  android:layout_marginStart="@dimen/margin_extra_large"
+  android:layout_marginEnd="@dimen/margin_extra_large"
+  android:layout_marginLeft="@dimen/margin_extra_large"
+  android:layout_marginRight="@dimen/margin_extra_large"
+  android:orientation="horizontal">
+
+  <include
+    layout="@layout/login_epilogue_sites_listitem"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_toLeftOf="@+id/radio_selected"
+    android:layout_toStartOf="@+id/radio_selected"/>
+
+  <RadioButton
+    android:id="@+id/radio_selected"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_marginStart="@dimen/margin_small_medium"
+    android:layout_marginLeft="@dimen/margin_small_medium"
+    android:layout_marginEnd="@dimen/margin_small_medium"
+    android:layout_marginRight="@dimen/margin_small_medium"
+    android:layout_alignParentRight="true"
+    android:layout_alignParentEnd="true"
+    android:layout_centerVertical="true"
+    android:clickable="false"
+    android:focusableInTouchMode="false" />
+
+</RelativeLayout>

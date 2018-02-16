@@ -693,7 +693,7 @@ public class GCMMessageService extends GcmListenerService {
             resultIntent.putExtra(NotificationsListFragment.NOTE_ID_EXTRA, wpcomNoteID);
 
             SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
-            boolean shouldReceiveNotifications = prefs.getBoolean(context.getString(R.string.wp_pref_notification_receive), true);
+            boolean shouldReceiveNotifications = prefs.getBoolean(context.getString(R.string.wp_pref_notifications_master), true);
 
             if (shouldReceiveNotifications) {
                 if (notifyUser) {
@@ -831,8 +831,7 @@ public class GCMMessageService extends GcmListenerService {
 
         // Clear all notifications
         private void handleBadgeResetPN(Context context, Bundle data) {
-            if (data == null || !data.containsKey(PUSH_ARG_NOTE_ID))  {
-                // ignore the reset-badge PN if it's a global one
+            if (data == null)  {
                 return;
             }
 
@@ -844,12 +843,15 @@ public class GCMMessageService extends GcmListenerService {
                     note.setRead();
                     NotificationsTable.saveNote(note);
                 }
-            }
 
-            removeNotificationWithNoteIdFromSystemBar(context, noteID);
-            //now that we cleared the specific notif, we can check and make any visual updates
-            if (sActiveNotificationsMap.size() > 0) {
-                rebuildAndUpdateNotificationsOnSystemBar(context, data);
+
+                removeNotificationWithNoteIdFromSystemBar(context, noteID);
+                //now that we cleared the specific notif, we can check and make any visual updates
+                if (sActiveNotificationsMap.size() > 0) {
+                    rebuildAndUpdateNotificationsOnSystemBar(context, data);
+                }
+            } else {
+                removeAllNotifications(context);
             }
 
             EventBus.getDefault().post(new NotificationEvents.NotificationsChanged(sActiveNotificationsMap.size() > 0));

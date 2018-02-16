@@ -25,13 +25,16 @@
             android:background="@color/white"
             android:gravity="center_vertical"
             android:padding="1dp"
-            app:srcCompat="@drawable/ic_placeholder_blavatar_grey_lighten_20_40dp" />
+            app:srcCompat="@drawable/ic_placeholder_blavatar_grey_lighten_20_40dp"
+            android:layout_marginStart="@dimen/site_picker_blavatar_margin_left"
+            android:layout_marginEnd="@dimen/site_picker_blavatar_margin_right"/>
 
         <org.wordpress.android.widgets.WPTextView
             android:id="@+id/text_title"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_toRightOf="@id/image_blavatar"
+            android:layout_toEndOf="@id/image_blavatar"
             android:ellipsize="end"
             android:gravity="center_vertical"
             android:maxLines="1"
@@ -45,6 +48,7 @@
             android:layout_height="wrap_content"
             android:layout_below="@id/text_title"
             android:layout_toRightOf="@id/image_blavatar"
+            android:layout_toEndOf="@id/image_blavatar"
             android:ellipsize="end"
             android:gravity="center_vertical"
             android:maxLines="1"

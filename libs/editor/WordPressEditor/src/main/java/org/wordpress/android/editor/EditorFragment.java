@@ -72,7 +72,7 @@ public class EditorFragment extends EditorFragmentAbstract implements View.OnCli
         OnJsEditorStateChangedListener, OnImeBackListener, EditorWebViewAbstract.AuthHeaderRequestListener,
         EditorMediaUploadListener {
 
-    public class IllegalEditorStateException extends Exception {
+    public class EditorFragmentNotAddedException extends Exception {
 
     }
 
@@ -98,8 +98,8 @@ public class EditorFragment extends EditorFragmentAbstract implements View.OnCli
 
     private EditorWebViewAbstract mWebView;
     private View mSourceView;
-    private SourceViewEditText mSourceViewTitle;
-    private SourceViewEditText mSourceViewContent;
+    private EditTextWithKeyBackListener mSourceViewTitle;
+    private EditTextWithKeyBackListener mSourceViewContent;
 
     private int mSelectionStart;
     private int mSelectionEnd;
@@ -339,8 +339,8 @@ public class EditorFragment extends EditorFragmentAbstract implements View.OnCli
         // -- HTML mode configuration
 
         mSourceView = view.findViewById(R.id.sourceview);
-        mSourceViewTitle = (SourceViewEditText) view.findViewById(R.id.sourceview_title);
-        mSourceViewContent = (SourceViewEditText) view.findViewById(R.id.sourceview_content);
+        mSourceViewTitle = (EditTextWithKeyBackListener) view.findViewById(R.id.sourceview_title);
+        mSourceViewContent = (EditTextWithKeyBackListener) view.findViewById(R.id.sourceview_content);
 
         // Toggle format bar on/off as user changes focus between title and content in HTML mode
         mSourceViewTitle.setOnFocusChangeListener(new View.OnFocusChangeListener() {
@@ -418,7 +418,7 @@ public class EditorFragment extends EditorFragmentAbstract implements View.OnCli
         try {
             outState.putCharSequence(ATTR_TITLE, getTitle());
             outState.putCharSequence(ATTR_CONTENT, getContent());
-        } catch (IllegalEditorStateException e) {
+        } catch (EditorFragmentNotAddedException e) {
             AppLog.e(T.EDITOR, "onSaveInstanceState: unable to get title or content");
         }
     }
@@ -633,16 +633,16 @@ public class EditorFragment extends EditorFragmentAbstract implements View.OnCli
                     try {
                         getTitle();
                         getContent();
-                    } catch (IllegalEditorStateException e) {
+                    } catch (EditorFragmentNotAddedException e) {
                         AppLog.e(T.EDITOR, "toggleHtmlMode: unable to get title or content");
-                        getActivity().runOnUiThread(new Runnable() {
-                            @Override
-                            public void run() {
-                                toggleButton.setChecked(false);
-                            }
-                        });
                         return;
                     }
+
+                    //sanity check
+                    if (!isAdded()) {
+                        return;
+                    }
+
                     getActivity().runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
@@ -925,9 +925,9 @@ public class EditorFragment extends EditorFragmentAbstract implements View.OnCli
      * where possible.
      */
     @Override
-    public CharSequence getTitle() throws IllegalEditorStateException {
+    public CharSequence getTitle() throws EditorFragmentNotAddedException {
         if (!isAdded()) {
-            throw new IllegalEditorStateException();
+            throw new EditorFragmentNotAddedException();
         }
 
         if (mSourceView != null && mSourceView.getVisibility() == View.VISIBLE) {
@@ -964,9 +964,9 @@ public class EditorFragment extends EditorFragmentAbstract implements View.OnCli
      * where possible.
      */
     @Override
-    public CharSequence getContent() throws IllegalEditorStateException {
+    public CharSequence getContent() throws EditorFragmentNotAddedException {
         if (!isAdded()) {
-            throw new IllegalEditorStateException();
+            throw new EditorFragmentNotAddedException();
         }
 
         if (mSourceView != null && mSourceView.getVisibility() == View.VISIBLE) {
@@ -1113,6 +1113,11 @@ public class EditorFragment extends EditorFragmentAbstract implements View.OnCli
     @Override
     public void onMediaUploadReattached(String localId, float currentProgress) {
         // no op (no reattachment in Visual Editor)
+    }
+
+    @Override
+    public void onMediaUploadRetry(String localId, MediaType mediaType) {
+        retryMediaUpload(localId, mediaType);
     }
 
     @Override
@@ -1382,22 +1387,7 @@ public class EditorFragment extends EditorFragmentAbstract implements View.OnCli
                 // Retry media upload
                 boolean successfullyRetried = mEditorFragmentListener.onMediaRetryClicked(mediaId);
                 if (successfullyRetried) {
-                    mWebView.post(new Runnable() {
-                        @Override
-                        public void run() {
-                            switch (mediaType) {
-                                case IMAGE:
-                                    mWebView.execJavaScriptFromString("ZSSEditor.unmarkImageUploadFailed(" + mediaId
-                                            + ");");
-                                    break;
-                                case VIDEO:
-                                    mWebView.execJavaScriptFromString("ZSSEditor.unmarkVideoUploadFailed(" + mediaId
-                                            + ");");
-                            }
-                            mFailedMediaIds.remove(mediaId);
-                            mUploadingMedia.put(mediaId, mediaType);
-                        }
-                    });
+                    retryMediaUpload(mediaId, mediaType);
                 }
                 break;
             default:
@@ -1454,6 +1444,25 @@ public class EditorFragment extends EditorFragmentAbstract implements View.OnCli
                 mWebView.notifyVisibilityChanged(false);
                 break;
         }
+    }
+
+    private void retryMediaUpload(final String mediaId, final MediaType mediaType) {
+        mWebView.post(new Runnable() {
+            @Override
+            public void run() {
+                switch (mediaType) {
+                    case IMAGE:
+                        mWebView.execJavaScriptFromString("ZSSEditor.unmarkImageUploadFailed(" + mediaId
+                                + ");");
+                        break;
+                    case VIDEO:
+                        mWebView.execJavaScriptFromString("ZSSEditor.unmarkVideoUploadFailed(" + mediaId
+                                + ");");
+                }
+                mFailedMediaIds.remove(mediaId);
+                mUploadingMedia.put(mediaId, mediaType);
+            }
+        });
     }
 
     public void onLinkTapped(String url, String title) {

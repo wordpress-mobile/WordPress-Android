@@ -9,7 +9,7 @@
     <org.wordpress.aztec.toolbar.AztecToolbar
         android:id="@+id/formatting_toolbar"
         android:layout_alignParentBottom="true"
-        android:layout_height="@dimen/format_bar_height"
+        android:layout_height="wrap_content"
         android:layout_width="match_parent"
         aztec:advanced="true" >
     </org.wordpress.aztec.toolbar.AztecToolbar>
@@ -30,33 +30,22 @@
                 android:layout_height="wrap_content"
                 android:layout_width="match_parent" >
 
-                <org.wordpress.aztec.AztecText
+                <org.wordpress.android.editor.EditTextWithKeyBackListener
                     android:id="@+id/title"
                     android:hint="@string/post_title"
-                    android:inputType="textCapSentences"
+                    android:inputType="textCapSentences|textAutoCorrect|textMultiLine"
+                    android:background="@null"
                     android:layout_height="wrap_content"
-                    android:layout_toLeftOf="@+id/title_beta"
-                    android:layout_toStartOf="@+id/title_beta"
                     android:layout_width="match_parent"
-                    android:padding="16dp"
+                    android:padding="@dimen/margin_extra_large"
                     android:fontFamily="serif"
                     android:textStyle="bold"
                     android:textSize="@dimen/aztec_title_size"
-                    aztec:lineSpacingExtra="@dimen/spacing_extra_title"
-                    aztec:textColor="@color/grey_dark"
-                    aztec:textColorHint="@color/hint_text" >
-                </org.wordpress.aztec.AztecText>
-
-                <android.support.v7.widget.AppCompatTextView
-                    android:id="@+id/title_beta"
-                    android:clickable="true"
-                    android:layout_alignParentEnd="true"
-                    android:layout_alignParentRight="true"
-                    android:layout_centerVertical="true"
-                    android:text="@string/editor_title_beta"
-                    style="@style/EditorTitleBeta" >
-                </android.support.v7.widget.AppCompatTextView>
-
+                    android:imeOptions="flagNoExtractUi"
+                    android:lineSpacingExtra="@dimen/spacing_extra_title"
+                    android:textColor="@color/grey_dark"
+                    android:textColorHint="@color/hint_text">
+                </org.wordpress.android.editor.EditTextWithKeyBackListener>
             </RelativeLayout>
 
             <View
@@ -85,6 +74,7 @@
                     android:paddingTop="16dp"
                     android:scrollbars="vertical"
                     android:fontFamily="serif"
+                    android:imeOptions="flagNoExtractUi"
                     aztec:bulletColor="@color/bullet"
                     aztec:bulletMargin="@dimen/bullet_margin"
                     aztec:bulletPadding="@dimen/bullet_padding"
@@ -122,8 +112,8 @@
                     android:background="@null"
                     android:textSize="14sp"
                     android:visibility="gone"
-                    android:fontFamily="monospace">
-                </org.wordpress.aztec.source.SourceViewEditText>
+                    android:fontFamily="monospace"
+                    android:imeOptions="flagNoExtractUi" />
 
             </FrameLayout>
 

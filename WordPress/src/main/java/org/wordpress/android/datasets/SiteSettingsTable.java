@@ -16,8 +16,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 public final class SiteSettingsTable {
-    public static final String CATEGORIES_TABLE_NAME = "site_categories";
-
+    private static final String CATEGORIES_TABLE_NAME = "site_categories";
     private static final String CREATE_CATEGORIES_TABLE_SQL =
             "CREATE TABLE IF NOT EXISTS " +
             CATEGORIES_TABLE_NAME +
@@ -75,7 +74,8 @@ public final class SiteSettingsTable {
     public static Cursor getSettings(long id) {
         if (id < 0) return null;
 
-        String sqlCommand = sqlSelectAllSettings() + sqlWhere(SiteSettingsModel.ID_COLUMN_NAME, Long.toString(id)) + ";";
+        String whereClause = sqlWhere(SiteSettingsModel.ID_COLUMN_NAME, Long.toString(id));
+        String sqlCommand = sqlSelectAllSettings() + whereClause + ";";
         return WordPress.wpDB.getDatabase().rawQuery(sqlCommand, null);
     }
 

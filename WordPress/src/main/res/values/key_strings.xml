@@ -22,7 +22,6 @@
     <string name="pref_key_app_about" translatable="false">wp_pref_app_about</string>
     <string name="pref_key_oss_licenses" translatable="false">wp_pref_open_source_licenses</string>
     <string name="pref_key_editor" translatable="false">wp_pref_editor</string>
-    <string name="pref_key_editor_footer" translatable="false">wp_pref_editor_footer</string>
     <string name="pref_key_editor_type" translatable="false">pref_key_editor_type</string>
     <string name="pref_notification_blogs" translatable="false">wp_pref_notification_blogs</string>
     <string name="pref_notification_other_category" translatable="false">wp_pref_notification_other_category</string>
@@ -46,7 +45,15 @@
     <string name="pref_key_site_password" translatable="false">wp_pref_site_password</string>
     <string name="pref_key_site_related_posts" translatable="false">wp_pref_site_related_posts</string>
     <string name="pref_key_site_category" translatable="false">wp_pref_site_default_category</string>
+    <string name="pref_key_site_tags" translatable="false">wp_pref_site_tags</string>
     <string name="pref_key_site_format" translatable="false">wp_pref_site_default_format</string>
+    <string name="pref_key_site_week_start" translatable="false">wp_pref_site_week_start</string>
+    <string name="pref_key_site_date_format" translatable="false">wp_pref_site_date_format</string>
+    <string name="pref_key_site_time_format" translatable="false">wp_pref_site_time_format</string>
+    <string name="pref_key_site_timezone" translatable="false">wp_pref_site_timezone</string>
+    <string name="pref_key_site_posts_per_page" translatable="false">wp_pref_site_post_per_page</string>
+    <string name="pref_key_site_amp" translatable="false">wp_pref_site_amp</string>
+    <string name="pref_key_site_traffic" translatable="false">wp_pref_site_traffic</string>
     <string name="pref_key_optimize_media" translatable="false">wp_pref_optimize_media</string>
     <string name="pref_key_optimize_image" translatable="false">wp_pref_key_optimize_image</string>
     <string name="pref_key_site_image_width" translatable="false">wp_pref_site_default_image_width</string>
@@ -76,6 +83,7 @@
     <string name="pref_key_site_blacklist" translatable="false">wp_pref_site_blacklist</string>
     <string name="pref_key_site_danger" translatable="false">wp_pref_site_danger</string>
     <string name="pref_key_site_advanced" translatable="false">wp_pref_site_advanced</string>
+    <string name="pref_key_site_disconnect" translatable="false">wp_pref_site_disconnect</string>
     <string name="pref_key_site_start_over" translatable="false">wp_pref_site_start_over</string>
     <string name="pref_key_site_export_site" translatable="false">pref_key_site_export_site</string>
     <string name="pref_key_site_delete_site" translatable="false">wp_pref_site_delete_site</string>
@@ -93,9 +101,21 @@
     <string name="pref_key_more_buttons" translatable="false">wp_pref_more_buttons</string>
     <string name="pref_key_twitter_category" translatable="false">wp_pref_twitter_category</string>
 
+    <!-- Jetpack Security -->
+    <string name="pref_key_jetpack_settings" translatable="false">wp_pref_jetpack_settings</string>
+    <string name="pref_key_jetpack_security_screen" translatable="false">wp_pref_jetpack_security_screen</string>
+    <string name="pref_key_jetpack_monitor_uptime" translatable="false">wp_pref_jetpack_monitor_uptime</string>
+    <string name="pref_key_jetpack_send_email_notifications" translatable="false">wp_pref_jetpack_send_email_notifications</string>
+    <string name="pref_key_jetpack_send_wp_notifications" translatable="false">wp_pref_jetpack_send_wp_notifications</string>
+    <string name="pref_key_jetpack_prevent_brute_force" translatable="false">wp_pref_jetpack_prevent_brute_force</string>
+    <string name="pref_key_jetpack_brute_force_whitelist" translatable="false">wp_pref_jetpack_brute_force_whitelist</string>
+    <string name="pref_key_jetpack_allow_wpcom_sign_in" translatable="false">wp_pref_jetpack_allow_wpcom_sign_in</string>
+    <string name="pref_key_jetpack_match_via_email" translatable="false">wp_pref_jetpack_match_via_email</string>
+    <string name="pref_key_jetpack_require_two_factor" translatable="false">wp_pref_jetpack_require_two_factor</string>
+    <string name="pref_key_jetpack_learn_more" translatable="false">wp_pref_jetpack_learn_more</string>
+
     <string name="wp_pref_notifications_root" translatable="false">wp_pref_notifications_root</string>
     <string name="wp_pref_notifications_master" translatable="false">wp_pref_notifications_master</string>
-    <string name="wp_pref_notification_receive" translatable="false">wp_pref_notification_receive</string>
     <string name="wp_pref_custom_notification_sound" translatable="false">wp_pref_custom_notification_sound</string>
     <string name="wp_pref_notification_vibrate" translatable="false">wp_pref_notification_vibrate</string>
     <string name="wp_pref_notification_light" translatable="false">wp_pref_notification_light</string>
@@ -135,6 +155,56 @@
         <item>1</item>
         <item>0</item>
         <item>-1</item>
+    </string-array>
+
+    <string-array name="weekdays">
+        <item>Sunday</item>
+        <item>Monday</item>
+        <item>Tuesday</item>
+        <item>Wednesday</item>
+        <item>Thursday</item>
+        <item>Friday</item>
+        <item>Saturday</item>
+    </string-array>
+
+    <string-array name="weekday_values">
+        <item>0</item>
+        <item>1</item>
+        <item>2</item>
+        <item>3</item>
+        <item>4</item>
+        <item>5</item>
+        <item>6</item>
+    </string-array>
+
+    <string-array name="date_format_entries">
+        <item>December 31, 2017</item>
+        <item>2017–12–31</item>
+        <item>12/31/2017</item>
+        <item>31/12/2017</item>
+        <item>@string/site_settings_format_entry_custom</item>
+    </string-array>
+
+    <string-array name="date_format_values">
+        <item>F j, Y</item>
+        <item>Y-m-d</item>
+        <item>m/d/Y</item>
+        <item>d/m/Y</item>
+        <item>Custom</item>
+    </string-array>
+
+    <string-array name="time_format_entries">
+        <item>11:59 pm</item>
+        <item>11:59 PM</item>
+        <item>23:59</item>
+        <item>@string/site_settings_format_entry_custom</item>
+    </string-array>
+
+    <string-array name="time_format_values">
+        <item>g:i a</item>
+        <item>g:i A</item>
+        <item>H:i</item>
+        <item>Custom</item>
     </string-array>
 
     <!-- App Settings - Editor -->

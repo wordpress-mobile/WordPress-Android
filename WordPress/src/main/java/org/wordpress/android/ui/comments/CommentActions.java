@@ -22,9 +22,6 @@ public class CommentActions {
      * comments (moderated, deleted, added, etc.)
      */
     public enum ChangeType {EDITED, REPLIED}
-    public interface OnCommentChangeListener {
-        void onCommentChanged(ChangeType changeType);
-    }
 
     public interface OnCommentActionListener {
         void onModerateComment(SiteModel site, CommentModel comment, CommentStatus newStatus);

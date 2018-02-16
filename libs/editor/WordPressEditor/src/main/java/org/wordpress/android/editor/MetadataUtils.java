@@ -7,6 +7,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.aztec.AztecAttributes;
+import org.wordpress.aztec.plugins.shortcodes.extensions.VideoPressExtensionsKt;
 import org.xml.sax.Attributes;
 
 import java.util.ArrayList;
@@ -33,14 +34,19 @@ public class MetadataUtils {
         addMetadataProperty(metadata, "linkRel", "");            // The rel attribute for the link (if any)
         addMetadataProperty(metadata, "linkTargetBlank", false); // true if the link should open in a new window.
         addMetadataProperty(metadata, "linkUrl", "");            // The href attribute of the link
-        addMetadataProperty(metadata, "size", "custom");         // Accepted values: custom, medium, large, thumbnail, or empty string
+        addMetadataProperty(metadata, "size", "size-full");         // Accepted values: size-thumbnail, size-medium, size-large, size-full
         addMetadataProperty(metadata, "src", "");                // The src attribute of the image
         addMetadataProperty(metadata, "title", "");              // The title attribute of the image (if any)
         addMetadataProperty(metadata, "width", "");              // The image width attribute
         addMetadataProperty(metadata, "naturalWidth", "");       // The natural width of the image.
         addMetadataProperty(metadata, "naturalHeight", "");       // The natural height of the image.
 
-        addMetadataProperty(metadata, "src", attrs.getAttribute("src", ""));
+        String src = attrs.getAttribute("src", "");
+        if (TextUtils.isEmpty(src)) {
+            src = attrs.getAttribute(VideoPressExtensionsKt.getATTRIBUTE_VIDEOPRESS_HIDDEN_SRC(), "");
+        }
+        addMetadataProperty(metadata, "src", src);
+
         addMetadataProperty(metadata, "alt", attrs.getAttribute("alt", ""));
         addMetadataProperty(metadata, "title", attrs.getAttribute("title", ""));
         addMetadataProperty(metadata, "naturalWidth", naturalWidth);
@@ -75,7 +81,7 @@ public class MetadataUtils {
             } else if (Pattern.matches("^align.*", clazz)) {
                 addMetadataProperty(metadata, "align", clazz.replace("align-", ""));
             } else if (Pattern.matches("^size-.*", clazz)) {
-                addMetadataProperty(metadata, "size", clazz.replace("size-", ""));
+                addMetadataProperty(metadata, "size", clazz);
             } else {
                 extraClasses.add(clazz);
             }

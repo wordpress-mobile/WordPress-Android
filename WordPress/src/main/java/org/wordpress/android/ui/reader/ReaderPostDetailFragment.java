@@ -1294,7 +1294,6 @@ public class ReaderPostDetailFragment extends Fragment
             return mPost.numReplies > 0;
         }
         return mPost.isWP()
-                && !mPost.isJetpack
                 && !mPost.isDiscoverPost()
                 && (mPost.isCommentsOpen || mPost.numReplies > 0);
     }

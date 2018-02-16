@@ -49,7 +49,7 @@ import org.wordpress.android.fluxc.store.SiteStore.OnSuggestedDomains;
 import org.wordpress.android.fluxc.store.SiteStore.SiteVisibility;
 import org.wordpress.android.fluxc.store.SiteStore.SuggestDomainsPayload;
 import org.wordpress.android.ui.ActivityLauncher;
-import org.wordpress.android.ui.accounts.login.LoginListener;
+import org.wordpress.android.ui.accounts.login.LoginPrologueListener;
 import org.wordpress.android.ui.notifications.services.NotificationsUpdateService;
 import org.wordpress.android.ui.prefs.AppPrefs;
 import org.wordpress.android.ui.reader.services.ReaderUpdateService;
@@ -95,7 +95,7 @@ public class NewUserFragment extends AbstractFragment {
 
     private boolean mUnderLoginWizard;
 
-    private LoginListener mLoginListener;
+    private LoginPrologueListener mLoginPrologueListener;
 
     protected @Inject SiteStore mSiteStore;
     protected @Inject AccountStore mAccountStore;
@@ -419,9 +419,9 @@ public class NewUserFragment extends AbstractFragment {
         }
 
         if (mUnderLoginWizard) {
-            if (mLoginListener != null) {
+            if (mLoginPrologueListener != null) {
                 ArrayList<Integer> oldSitesIDs = SiteUtils.getCurrentSiteIds(mSiteStore, false);
-                mLoginListener.loggedInViaSignup(oldSitesIDs);
+                mLoginPrologueListener.loggedInViaSignup(oldSitesIDs);
             }
         } else {
             getActivity().setResult(Activity.RESULT_OK);
@@ -446,8 +446,8 @@ public class NewUserFragment extends AbstractFragment {
         }
 
         if (mUnderLoginWizard) {
-            if (mLoginListener != null) {
-                mLoginListener.newUserCreatedButErrored(getEmail(), getPassword());
+            if (mLoginPrologueListener != null) {
+                mLoginPrologueListener.newUserCreatedButErrored(getEmail(), getPassword());
             }
         } else {
             Intent intent = new Intent();
@@ -496,9 +496,9 @@ public class NewUserFragment extends AbstractFragment {
     public void onAttach(Context context) {
         super.onAttach(context);
         if (AppPrefs.isLoginWizardStyleActivated()) {
-            if (context instanceof LoginListener) {
+            if (context instanceof LoginPrologueListener) {
                 mUnderLoginWizard = true;
-                mLoginListener = (LoginListener) context;
+                mLoginPrologueListener = (LoginPrologueListener) context;
             }
         }
     }
@@ -506,7 +506,7 @@ public class NewUserFragment extends AbstractFragment {
     @Override
     public void onDetach() {
         super.onDetach();
-        mLoginListener = null;
+        mLoginPrologueListener = null;
     }
 
     @Override
@@ -538,8 +538,12 @@ public class NewUserFragment extends AbstractFragment {
         termsOfServiceTextView.setOnClickListener(new OnClickListener() {
                                                       @Override
                                                       public void onClick(View v) {
+                                                          String localString =  LanguageUtils.getPatchedCurrentDeviceLanguage(v.getContext());
+                                                          if (localString.contains("_")) {
+                                                              localString = localString.substring(0, localString.indexOf("_"));
+                                                          }
                                                           ActivityLauncher.openUrlExternal(getContext(),
-                                                                  getString(R.string.wordpresscom_tos_url));
+                                                                  String.format(getString(R.string.wordpresscom_tos_url ), localString));
                                                       }
                                                   }
         );

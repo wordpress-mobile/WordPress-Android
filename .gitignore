@@ -56,3 +56,5 @@ WordPress/src/androidTest/monkeys/*.png
 # Automatic Screenshots token file
 tools/tokendeeplink.sh
 
+# Google services configuration
+google-services.json
