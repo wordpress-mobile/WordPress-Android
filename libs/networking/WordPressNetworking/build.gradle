@@ -1,9 +1,10 @@
 buildscript {
     repositories {
         jcenter()
+        google()
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:2.3.3'
+        classpath 'com.android.tools.build:gradle:3.0.1'
     }
 }
 
@@ -17,10 +18,8 @@ apply plugin: 'com.android.library'
 apply plugin: 'maven'
 
 android {
-    publishNonDefault true
-
     compileSdkVersion 26
-    buildToolsVersion "25.0.3"
+    buildToolsVersion '26.0.2'
 
     defaultConfig {
         minSdkVersion 14
@@ -30,8 +29,8 @@ android {
 }
 
 dependencies {
-    compile 'org.wordpress:utils:1.18.1'
-    compile 'com.automattic:rest:1.0.7'
+    implementation 'org.wordpress:utils:1.18.1'
+    implementation 'com.automattic:rest:1.0.7'
 }
 
 uploadArchives {

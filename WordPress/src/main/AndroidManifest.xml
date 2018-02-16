@@ -267,6 +267,22 @@
         <activity
             android:name=".ui.WPWebViewActivity"
             android:theme="@style/Calypso.NoActionBar" />
+        <activity
+            android:name=".ui.JetpackConnectionWebViewActivity"
+            android:theme="@style/Calypso.NoActionBar" />
+        <activity
+            android:name=".ui.stats.StatsConnectJetpackActivity"
+            android:theme="@style/Calypso.NoActionBar" />
+        <activity android:name=".ui.stats.StatsDeeplinkActivity" android:theme="@style/Calypso.NoActionBar">
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+                <data
+                    android:host="jetpack-connection"
+                    android:scheme="wordpress" />
+            </intent-filter>
+        </activity>
 
         <!-- Media Activities -->
         <activity
@@ -607,8 +623,6 @@
         <service
             android:name=".push.GCMRegistrationIntentService"
             android:exported="false" />
-
-        <action android:name="com.google.android.c2dm.intent.REGISTRATION" />
 
         <service
             android:name=".push.GCMMessageService"

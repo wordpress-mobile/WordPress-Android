@@ -202,7 +202,16 @@ public class PostsListFragment extends Fragment
         });
 
         if (savedInstanceState == null) {
-            requestPosts(false);
+            if (UploadService.hasPendingOrInProgressPostUploads()) {
+                // if there are some in-progress uploads, we'd better just load the DB Posts and reflect upload
+                // changes there. Otherwise, a duplicate-post situation can happen when:
+                // a FETCH_POSTS completing *after* the post has been uploaded to the server but *before*
+                // the PUSH_POST action completes and a PUSHED_POST is emitted.
+                loadPosts(LoadMode.IF_CHANGED);
+            } else {
+                // refresh normally
+                requestPosts(false);
+            }
         }
 
         initSwipeToRefreshHelper(view);
@@ -754,6 +763,7 @@ public class PostsListFragment extends Fragment
 
     @SuppressWarnings("unused")
     public void onEventMainThread(UploadService.UploadErrorEvent event) {
+        EventBus.getDefault().removeStickyEvent(event);
         if (event.post != null) {
             UploadUtils.onPostUploadedSnackbarHandler(getActivity(),
                     getActivity().findViewById(R.id.coordinator), true, event.post, event.errorMessage, mSite, mDispatcher);
@@ -767,6 +777,7 @@ public class PostsListFragment extends Fragment
 
     @SuppressWarnings("unused")
     public void onEventMainThread(UploadService.UploadMediaSuccessEvent event) {
+        EventBus.getDefault().removeStickyEvent(event);
         if (event.mediaModelList != null && !event.mediaModelList.isEmpty()) {
             UploadUtils.onMediaUploadedSnackbarHandler(getActivity(),
                     getActivity().findViewById(R.id.coordinator), false,

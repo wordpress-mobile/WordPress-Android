@@ -5,6 +5,8 @@ import android.app.ListActivity;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v4.content.pm.ShortcutInfoCompat;
+import android.support.v4.content.pm.ShortcutManagerCompat;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -139,16 +141,19 @@ public class AddQuickPressShortcutActivity extends ListActivity {
                     shortcutIntent.putExtra(EditPostActivity.EXTRA_QUICKPRESS_BLOG_ID, siteIds[position]);
                     shortcutIntent.putExtra(EditPostActivity.EXTRA_IS_QUICKPRESS, true);
 
-                    Intent addIntent = new Intent();
-                    addIntent.putExtra(Intent.EXTRA_SHORTCUT_INTENT, shortcutIntent);
-                    addIntent.putExtra(Intent.EXTRA_SHORTCUT_NAME, quickPressShortcutName.getText().toString());
-                    addIntent.putExtra(Intent.EXTRA_SHORTCUT_ICON_RESOURCE, Intent.ShortcutIconResource.fromContext
-                            (AddQuickPressShortcutActivity.this, R.mipmap.app_icon));
+                    String shortcutName = quickPressShortcutName.getText().toString();
 
-                    WordPress.wpDB.addQuickPressShortcut(siteIds[position], quickPressShortcutName.getText().toString());
+                    WordPress.wpDB.addQuickPressShortcut(siteIds[position], shortcutName);
 
-                    addIntent.setAction("com.android.launcher.action.INSTALL_SHORTCUT");
-                    AddQuickPressShortcutActivity.this.sendBroadcast(addIntent);
+                    ShortcutInfoCompat pinShortcutInfo =
+                            new ShortcutInfoCompat.Builder(getApplicationContext(), shortcutName)
+                                    .setIcon(R.mipmap.app_icon)
+                                    .setShortLabel(shortcutName)
+                                    .setIntent(shortcutIntent)
+                                    .build();
+
+                    ShortcutManagerCompat.requestPinShortcut(getApplicationContext(), pinShortcutInfo, null);
+
                     AddQuickPressShortcutActivity.this.finish();
                 }
             }

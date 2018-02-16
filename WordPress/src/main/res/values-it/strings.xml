@@ -130,16 +130,6 @@ Language: it
 	<string name="format_bar_description_heading">Intestazione</string>
 	<string name="format_bar_description_media">File multimediali</string>
 	<string name="reader_view_comments">Visualizza commenti</string>
-	<string name="new_editor_promo_title_beta">Beta</string>
-	<string name="new_editor_promo_title">Prova il nuovo editor</string>
-	<string name="new_editor_promo_link">Quali sono le novità?</string>
-	<string name="new_editor_promo_description_image">Scrivi a mano l\'immagine</string>
-	<string name="new_editor_promo_confirmation_message">Nuovo editor abilitato.</string>
-	<string name="new_editor_promo_confirmation_action">Impostazioni</string>
-	<string name="new_editor_promo_button_positive">Provalo</string>
-	<string name="new_editor_promo_button_negative">Non ora</string>
-	<string name="new_editor_beta_message">Nuovo editor nella versione Open Beta!</string>
-	<string name="new_editor_beta_action">Scopri di più</string>
 	<string name="preference_editor_footer_description">Icona informazioni</string>
 	<string name="preference_editor_footer">Segnalazione di errori e note sull\'editor</string>
 	<string name="site_settings_video_quality_hint">Qualità dei video. Valori più alti comportano una migliore qualità dei video.</string>
@@ -220,7 +210,6 @@ Language: it
 	<string name="smart_toast_photo_long_press">Fai tap e tieni premuto per la selezione multipla delle fotografie</string>
 	<string name="photo_picker_choose_video">Scegli un video dal dispositivo</string>
 	<string name="photo_picker_choose_photo">Scegli una fotografia dal dispositivo</string>
-	<string name="new_editor_promo_description">L\'app di WordPress ora include un nuovo bellissimo editor. Provalo e creando un nuovo articolo.</string>
 	<string name="wp_media_title">Media di WordPress</string>
 	<string name="media_insert_as_gallery">Aggiungi una galleria</string>
 	<string name="media_insert_individually">Aggiungi uno per uno</string>

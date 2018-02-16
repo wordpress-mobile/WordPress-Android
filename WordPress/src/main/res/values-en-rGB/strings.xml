@@ -1,11 +1,61 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2017-12-19 15:42:45+0000
+Translation-Revision-Date: 2018-02-09 21:58:16+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/2.4.0-alpha
 Language: en_GB
 -->
 <resources>
+	<string name="plugin_chevron_icon_content_description">Toggle text</string>
+	<string name="plugin_info_your_version">Your WordPress Version</string>
+	<string name="plugin_info_requires_version">Requires WordPress Version</string>
+	<string name="plugin_info_lastupdated">Last Updated</string>
+	<string name="plugin_one_stars">1 stars</string>
+	<string name="plugin_two_stars">2 stars</string>
+	<string name="plugin_three_stars">3 stars</string>
+	<string name="plugin_four_stars">4 stars</string>
+	<string name="plugin_five_stars">5 stars</string>
+	<string name="plugin_info_version">Version</string>
+	<string name="plugin_num_downloads">%s downloads</string>
+	<string name="plugin_num_ratings">%s ratings</string>
+	<string name="plugin_faq">Frequently Asked Questions</string>
+	<string name="plugin_empty_text">None provided</string>
+	<string name="plugin_read_reviews">Read Reviews</string>
+	<string name="plugin_description">Description</string>
+	<string name="plugin_installation">Installation</string>
+	<string name="plugin_whatsnew">What\'s New</string>
+	<string name="plugin_installed">Installed</string>
+	<string name="plugin_settings">Settings</string>
+	<string name="plugin_installed_version">Version %s installed</string>
+	<string name="plugin_byline">by %s</string>
+	<string name="plugin_version">Version %s</string>
+	<string name="change_photo">Change photo</string>
+	<string name="plugin_fetch_error">Unable to load plugins</string>
+	<string name="dlg_deleting_tag">Deleting</string>
+	<string name="site_settings_tags_hint">Manage your site\'s tags</string>
+	<string name="dlg_confirm_delete_tag">Permanently delete \'%s\'?</string>
+	<string name="dlg_saving_tag">Saving</string>
+	<string name="my_site_btn_site_pages">Site Pages</string>
+	<string name="error_tag_exists">A tag with this name already exists</string>
+	<string name="add_new_tag">Add New Tag</string>
+	<string name="tag_description_hint">Description</string>
+	<string name="tag_name_hint">Tag</string>
+	<string name="site_settings_amp_summary">Your WordPress.com site supports the use of Accelerated Mobile Pages, a Google-led initiative that dramatically speeds up loading times on mobile devices</string>
+	<string name="site_settings_amp_title">Accelerated Mobile Pages (AMP)</string>
+	<string name="site_settings_format_help">Learn more about date &amp; time formatting</string>
+	<string name="site_settings_timezones_error">Unable to load timezones</string>
+	<string name="site_settings_format_entry_custom">Custom</string>
+	<string name="site_settings_format_hint_custom">Custom format</string>
+	<string name="site_settings_posts_per_page_title">Posts per page</string>
+	<string name="site_settings_timezone_subtitle">Choose a city in your timezone</string>
+	<string name="site_settings_time_format_title">Time Format</string>
+	<string name="site_settings_timezone_title">Timezone</string>
+	<string name="site_settings_date_format_title">Date Format</string>
+	<string name="site_settings_week_start_title">Week starts on</string>
+	<string name="site_settings_tags_title">Tags</string>
+	<string name="site_settings_traffic_header">Traffic</string>
+	<string name="delete_yes">Delete</string>
+	<string name="delete_no">Don\'t Delete</string>
 	<string name="plugin_external_link_icon_content_description">External link</string>
 	<string name="plugin_update_available_icon_content_description">Update available</string>
 	<string name="plugin_icon_content_description">Plugin icon</string>
@@ -23,7 +73,6 @@ Language: en_GB
 	<string name="plugin_updated_failed">Error removing %s.</string>
 	<string name="plugin_updated_successfully">Successfully updated %s.</string>
 	<string name="plugin_available_version">Version %s is available.</string>
-	<string name="plugin_installed_version">Plugin version %s</string>
 	<string name="plugin_detail_label_state_autoupdates">Autoupdates</string>
 	<string name="plugin_detail_label_state_active">Active</string>
 	<string name="plugin_autoupdates_off">Autoupdates off</string>
@@ -32,7 +81,7 @@ Language: en_GB
 	<string name="plugin_active">Active</string>
 	<string name="plugins">Plugins</string>
 	<string name="my_site_btn_plugins">Plugins</string>
-	<string name="media_edit_link_hint">Open link in a new window/tab\"</string>
+	<string name="media_edit_link_hint">Open link in a new window/tab</string>
 	<string name="media_edit_link_text">Link to</string>
 	<string name="notification_login_failed">An error has occurred.</string>
 	<string name="notification_2fa_needed">Please provide an authentication code to continue.</string>
@@ -292,18 +341,8 @@ Language: en_GB
 	<string name="format_bar_description_link">Link</string>
 	<string name="format_bar_description_heading">Heading</string>
 	<string name="format_bar_description_list">List</string>
-	<string name="new_editor_promo_title_beta">Beta</string>
 	<string name="format_bar_description_media">Media</string>
-	<string name="new_editor_promo_title">Try the new Editor</string>
 	<string name="reader_view_comments">View comments</string>
-	<string name="new_editor_promo_description_image">Hand Write Image</string>
-	<string name="new_editor_promo_link">What\'s new?</string>
-	<string name="new_editor_promo_confirmation_message">New Editor enabled!</string>
-	<string name="new_editor_promo_confirmation_action">Settings</string>
-	<string name="new_editor_promo_button_positive">Try It</string>
-	<string name="new_editor_beta_message">New Editor in Open Beta!</string>
-	<string name="new_editor_promo_button_negative">Not Now</string>
-	<string name="new_editor_beta_action">Read More</string>
 	<string name="preference_editor_footer">Editor release notes and bug reporting</string>
 	<string name="preference_editor_footer_description">Info Icon</string>
 	<string name="site_settings_video_quality_hint">Quality of videos. Higher values mean better quality videos.</string>
@@ -384,7 +423,6 @@ Language: en_GB
 	<string name="smart_toast_photo_long_press">Tap and hold to select multiple photos</string>
 	<string name="photo_picker_choose_video">Choose video from device</string>
 	<string name="photo_picker_choose_photo">Choose photo from device</string>
-	<string name="new_editor_promo_description">The WordPress app now includes a beautiful new editor. Try it out by creating a new post!</string>
 	<string name="wp_media_title">WordPress media</string>
 	<string name="media_insert_as_gallery">Add as gallery</string>
 	<string name="media_insert_individually">Add individually</string>
@@ -456,8 +494,8 @@ Language: en_GB
 	<string name="xmlrpc_post_blocked_error">Couldn\'t connect. Your host is blocking POST requests, and the app needs\n        that in order to communicate with your site. Contact your host to solve this problem.</string>
 	<string name="reader_empty_followed_blogs_search_title">No matching sites</string>
 	<string name="reader_hint_search_followed_sites">Search followed sites</string>
-	<string name="visual_editor_disabled">Visual Editor disabled</string>
 	<string name="preference_editor_visual">Visual</string>
+	<string name="visual_editor_disabled">Visual Editor disabled</string>
 	<string name="preference_editor_type">Set editor type</string>
 	<string name="preference_editor_legacy">Legacy</string>
 	<string name="pending_draft_one_generic">Don\'t leave it hanging! \'%1$s\' is waiting to be published.</string>

@@ -14,7 +14,6 @@ Language: da_DK
 	<string name="button_sync">Synkroniser</string>
 	<string name="photo_picker_choose_video">Vælg video fra enheden</string>
 	<string name="photo_picker_choose_photo">Vælg foto fra enheden</string>
-	<string name="new_editor_promo_description">WordPress app\'en indeholder nu en smuk, ny editor. Prøv den ved at oprette et nyt indlæg!</string>
 	<string name="wp_media_title">WordPress medie</string>
 	<string name="media_insert_as_gallery">Tilføj som galleri</string>
 	<string name="media_insert_title">Tilføj flere billeder</string>

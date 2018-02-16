@@ -51,6 +51,7 @@ import org.wordpress.android.util.AnalyticsUtils;
 import org.wordpress.android.util.AniUtils;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.DateTimeUtils;
+import org.wordpress.android.util.DisplayUtils;
 import org.wordpress.android.util.FormatUtils;
 import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.SiteUtils;
@@ -381,6 +382,11 @@ public class PluginDetailActivity extends AppCompatActivity {
             }
         });
 
+        // set the height of the gradient scrim that appears atop the banner image
+        int toolbarHeight = DisplayUtils.getActionBarHeight(this);
+        ImageView imgScrim = findViewById(R.id.image_gradient_scrim);
+        imgScrim.getLayoutParams().height = toolbarHeight * 2;
+
         refreshViews();
     }
 
@@ -415,6 +421,7 @@ public class PluginDetailActivity extends AppCompatActivity {
 
     private void setCollapsibleHtmlText(@NonNull TextView textView, @Nullable String htmlText) {
         if (!TextUtils.isEmpty(htmlText)) {
+            textView.setTextColor(getResources().getColor(R.color.grey_dark));
             textView.setMovementMethod(WPLinkMovementMethod.getInstance());
             textView.setText(Html.fromHtml(htmlText));
         } else {
