@@ -56,7 +56,7 @@ public class PluginListFragment extends Fragment {
 
     protected RecyclerView mRecycler;
     protected PluginListType mListType;
-    private SwipeToRefreshHelper mSwipeToRefreshHelper;
+    protected SwipeToRefreshHelper mSwipeToRefreshHelper;
 
     public static PluginListFragment newInstance(@NonNull SiteModel site, @NonNull PluginListType listType) {
         PluginListFragment fragment = new PluginListFragment();
@@ -127,8 +127,7 @@ public class PluginListFragment extends Fragment {
             @Override
             public void onChanged(@Nullable PluginBrowserViewModel.PluginListStatus listStatus) {
                 if (mListType == PluginListType.NEW) {
-                    showProgress(listStatus == PluginBrowserViewModel.PluginListStatus.FETCHING
-                            || listStatus == PluginBrowserViewModel.PluginListStatus.LOADING_MORE);
+                    refreshProgressBars(listStatus);
                 }
             }
         });
@@ -137,8 +136,7 @@ public class PluginListFragment extends Fragment {
             @Override
             public void onChanged(@Nullable PluginBrowserViewModel.PluginListStatus listStatus) {
                 if (mListType == PluginListType.POPULAR) {
-                    showProgress(listStatus == PluginBrowserViewModel.PluginListStatus.FETCHING
-                            || listStatus == PluginBrowserViewModel.PluginListStatus.LOADING_MORE);
+                    refreshProgressBars(listStatus);
                 }
             }
         });
@@ -147,8 +145,7 @@ public class PluginListFragment extends Fragment {
             @Override
             public void onChanged(@Nullable PluginBrowserViewModel.PluginListStatus listStatus) {
                 if (mListType == PluginListType.SEARCH) {
-                    showProgress(listStatus == PluginBrowserViewModel.PluginListStatus.FETCHING
-                            || listStatus == PluginBrowserViewModel.PluginListStatus.LOADING_MORE);
+                    refreshProgressBars(listStatus);
                     if (listStatus == PluginBrowserViewModel.PluginListStatus.ERROR) {
                         ToastUtils.showToast(getActivity(), R.string.plugin_search_error);
                     }
@@ -210,14 +207,19 @@ public class PluginListFragment extends Fragment {
         adapter.setPlugins(plugins);
     }
 
-    protected void showProgress(boolean show) {
-        if (isAdded() && getView() != null) {
-            getView().findViewById(R.id.progress).setVisibility(show ? View.VISIBLE : View.GONE);
+    protected void refreshProgressBars(PluginBrowserViewModel.PluginListStatus pluginListStatus) {
+        if (!isAdded() || getView() == null) {
+            return;
         }
+        // We want to show the swipe refresher for the initial fetch but not while loading more
+        mSwipeToRefreshHelper.setRefreshing(pluginListStatus == PluginBrowserViewModel.PluginListStatus.FETCHING);
+        // We want to show the progress bar in the middle while loading more but not for initial fetch
+        boolean showLoadMore = pluginListStatus == PluginBrowserViewModel.PluginListStatus.LOADING_MORE;
+        getView().findViewById(R.id.progress).setVisibility(showLoadMore ? View.VISIBLE : View.GONE);
     }
 
     void showEmptyView(boolean show) {
-        if (isAdded()) {
+        if (isAdded() && getView() != null) {
             getView().findViewById(R.id.text_empty).setVisibility(show ? View.VISIBLE : View.GONE);
         }
     }
