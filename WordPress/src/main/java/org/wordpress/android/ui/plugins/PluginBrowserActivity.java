@@ -87,8 +87,10 @@ public class PluginBrowserActivity extends AppCompatActivity
 
         if (savedInstanceState == null) {
             mViewModel.setSite((SiteModel) getIntent().getSerializableExtra(WordPress.SITE));
+        } else {
+            mViewModel.readFromBundle(savedInstanceState);
         }
-        mViewModel.start(savedInstanceState);
+        mViewModel.start();
 
         if (mViewModel.getSite() == null) {
             ToastUtils.showToast(this, R.string.blog_not_found);

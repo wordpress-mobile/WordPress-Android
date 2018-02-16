@@ -105,8 +105,10 @@ public class PluginBrowserViewModel extends ViewModel {
         outState.putString(KEY_TITLE, mTitle.getValue());
     }
 
-    private void readFromBundle(@Nullable Bundle savedInstanceState) {
-        if (savedInstanceState == null) {
+    public void readFromBundle(@NonNull Bundle savedInstanceState) {
+        if (mIsStarted) {
+            // This was called due to a config change where the data survived, we don't need to
+            // read from the bundle
             return;
         }
         mSite = (SiteModel) savedInstanceState.getSerializable(WordPress.SITE);
@@ -114,11 +116,10 @@ public class PluginBrowserViewModel extends ViewModel {
         setTitle(savedInstanceState.getString(KEY_TITLE));
     }
 
-    public void start(@Nullable Bundle savedInstanceState) {
+    public void start() {
         if (mIsStarted) {
             return;
         }
-        readFromBundle(savedInstanceState);
         reloadAllPluginsFromStore();
 
         fetchPlugins(PluginListType.SITE, false);
