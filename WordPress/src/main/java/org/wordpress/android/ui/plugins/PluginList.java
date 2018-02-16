@@ -1,6 +1,5 @@
 package org.wordpress.android.ui.plugins;
 
-import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
 import org.wordpress.android.fluxc.model.plugin.SitePluginModel;
@@ -38,7 +37,9 @@ class PluginList extends ArrayList<Object> {
         if (position >= 0 && position < this.size()) {
             Object item = this.get(position);
             if (item instanceof WPOrgPluginModel) {
-                return ((WPOrgPluginModel) item).getId();
+                WPOrgPluginModel wpOrgPlugin = (WPOrgPluginModel) item;
+                // Search results won't have an id, so we can't rely on it
+                return wpOrgPlugin.getId() != 0 ? wpOrgPlugin.getId() : position;
             } else if (item instanceof SitePluginModel) {
                 return ((SitePluginModel) item).getId();
             }
@@ -73,7 +74,10 @@ class PluginList extends ArrayList<Object> {
         }
     }
 
-    boolean isSameList(@NonNull List<?> items) {
+    boolean isSameList(@Nullable List<?> items) {
+        if (items == null) {
+            return false;
+        }
         if (this.size() != items.size()) {
             return false;
         }

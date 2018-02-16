@@ -128,6 +128,7 @@ import dagger.android.support.AndroidSupportInjectionModule;
         LegacyModule.class,
         ReleaseToolsModule.class,
         AndroidSupportInjectionModule.class,
+        ViewModelModule.class,
         // Login flow library
         LoginAnalyticsModule.class,
         LoginFragmentModule.class,
@@ -255,9 +256,9 @@ public interface AppComponent extends AndroidInjector<WordPress> {
 
     void inject(HtmlToSpannedConverter object);
 
-    void inject(PluginDetailActivity object);
     void inject(PluginBrowserActivity object);
     void inject(PluginListFragment object);
+    void inject(PluginDetailActivity object);
 
     void inject(WordPressGlideModule object);
 
