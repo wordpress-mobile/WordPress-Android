@@ -1,9 +1,8 @@
 package org.wordpress.android.viewmodel;
 
-import android.app.Application;
-import android.arch.lifecycle.AndroidViewModel;
 import android.arch.lifecycle.LiveData;
 import android.arch.lifecycle.MutableLiveData;
+import android.arch.lifecycle.ViewModel;
 import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -11,7 +10,6 @@ import android.text.TextUtils;
 
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
-import org.wordpress.android.WordPress;
 import org.wordpress.android.fluxc.Dispatcher;
 import org.wordpress.android.fluxc.generated.PluginActionBuilder;
 import org.wordpress.android.fluxc.model.SiteModel;
@@ -28,7 +26,7 @@ import java.util.List;
 
 import javax.inject.Inject;
 
-public class PluginBrowserViewModel extends AndroidViewModel {
+public class PluginBrowserViewModel extends ViewModel {
     public enum PluginListType {
         SITE,
         POPULAR,
@@ -44,8 +42,8 @@ public class PluginBrowserViewModel extends AndroidViewModel {
         LOADING_MORE
     }
 
-    @Inject Dispatcher mDispatcher;
-    @Inject PluginStore mPluginStore;
+    private final Dispatcher mDispatcher;
+    private final PluginStore mPluginStore;
 
     private String mSearchQuery;
     private SiteModel mSite;
@@ -66,10 +64,12 @@ public class PluginBrowserViewModel extends AndroidViewModel {
     private final MutableLiveData<String> mTitle;
 
     @SuppressWarnings("WeakerAccess")
-    public PluginBrowserViewModel(@NonNull Application application) {
-        super(application);
+    @Inject
+    public PluginBrowserViewModel(@NonNull Dispatcher dispatcher, @NonNull PluginStore pluginStore) {
+        super();
+        mDispatcher = dispatcher;
+        mPluginStore = pluginStore;
 
-        ((WordPress) application).component().inject(this);
         mDispatcher.register(this);
 
         mHandler = new Handler();

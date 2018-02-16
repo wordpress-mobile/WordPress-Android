@@ -2,6 +2,7 @@ package org.wordpress.android.ui.plugins;
 
 
 import android.arch.lifecycle.Observer;
+import android.arch.lifecycle.ViewModelProvider;
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.Context;
 import android.os.Bundle;
@@ -38,8 +39,13 @@ import org.wordpress.android.widgets.WPNetworkImageView;
 
 import java.util.List;
 
+import javax.inject.Inject;
+
 public class PluginListFragment extends Fragment {
     public static final String TAG = PluginListFragment.class.getName();
+
+    @Inject ViewModelProvider.Factory mViewModelFactory;
+
     private static final String ARG_LIST_TYPE = "list_type";
 
     protected PluginBrowserViewModel mViewModel;
@@ -59,6 +65,8 @@ public class PluginListFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        ((WordPress) getActivity().getApplication()).component().inject(this);
+
         mListType = (PluginListType) getArguments().getSerializable(ARG_LIST_TYPE);
     }
 
@@ -69,7 +77,7 @@ public class PluginListFragment extends Fragment {
         setHasOptionsMenu(mListType != PluginListType.SEARCH);
 
         // Use the same view model as the PluginBrowserActivity
-        mViewModel = ViewModelProviders.of(getActivity()).get(PluginBrowserViewModel.class);
+        mViewModel = ViewModelProviders.of(getActivity(), mViewModelFactory).get(PluginBrowserViewModel.class);
         setupObservers();
     }
 
