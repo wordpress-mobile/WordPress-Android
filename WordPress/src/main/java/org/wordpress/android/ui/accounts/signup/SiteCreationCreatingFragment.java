@@ -16,6 +16,7 @@ import org.greenrobot.eventbus.ThreadMode;
 import org.wordpress.android.R;
 import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.ui.accounts.signup.SiteCreationService.SiteCreationState;
+import org.wordpress.android.ui.accounts.signup.SiteCreationService.SiteCreationStep;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.AutoForeground.ServiceEventConnection;
@@ -29,8 +30,6 @@ public class SiteCreationCreatingFragment extends SiteCreationBaseFormFragment<S
     private static final String ARG_SITE_SLUG = "ARG_SITE_SLUG";
     private static final String ARG_SITE_THEME_ID = "ARG_SITE_THEME_ID";
 
-    private static final String KEY_IN_MODAL_MODE = "KEY_IN_MODAL_MODE";
-    private static final String KEY_CREATION_FINISHED = "KEY_CREATION_FINISHED";
     private static final String KEY_WEBVIEW_LOADED_IN_TIME = "KEY_WEBVIEW_LOADED_IN_TIME";
 
     private ServiceEventConnection mServiceEventConnection;
@@ -44,18 +43,31 @@ public class SiteCreationCreatingFragment extends SiteCreationBaseFormFragment<S
     private View mTadaContainer;
     private TextView[] mLabels;
 
-    private boolean mInModalMode;
-    private boolean mCreationSucceeded;
     private boolean mWebViewLoadedInTime;
 
     private PreviewWebViewClient mPreviewWebViewClient;
 
     public boolean isInModalMode() {
-        return mInModalMode;
+        SiteCreationState state = SiteCreationService.getState();
+        return state != null && SiteCreationService.getState().isInProgress();
     }
 
     public boolean isCreationSucceeded() {
-        return mCreationSucceeded;
+        SiteCreationState state = SiteCreationService.getState();
+        return state != null && SiteCreationService.getState().getStep() == SiteCreationStep.SUCCESS;
+    }
+
+    public boolean canGoBack() {
+        SiteCreationState state = SiteCreationService.getState();
+        if (state == null) {
+            return true;
+        }
+
+        if (state.getStep() == SiteCreationStep.FAILURE) {
+            state = (SiteCreationState) state.getPayload();
+        }
+
+        return !state.isAfterCreation();
     }
 
     public static SiteCreationCreatingFragment newInstance(String siteTitle, String siteTagline, String siteSlug,
@@ -125,11 +137,8 @@ public class SiteCreationCreatingFragment extends SiteCreationBaseFormFragment<S
 
         if (savedInstanceState == null) {
             // on first appearance start the Service to perform the site creation
-            mInModalMode = true;
             createSite();
         } else {
-            mInModalMode = savedInstanceState.getBoolean(KEY_IN_MODAL_MODE, false);
-            mCreationSucceeded = savedInstanceState.getBoolean(KEY_CREATION_FINISHED, false);
             mWebViewLoadedInTime = savedInstanceState.getBoolean(KEY_WEBVIEW_LOADED_IN_TIME, false);
         }
     }
@@ -138,7 +147,7 @@ public class SiteCreationCreatingFragment extends SiteCreationBaseFormFragment<S
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        showHomeButton(!mInModalMode);
+        showHomeButton(!isInModalMode(), false);
 
         if (savedInstanceState == null) {
             AnalyticsTracker.track(AnalyticsTracker.Stat.SITE_CREATION_CREATING_VIEWED);
@@ -165,8 +174,6 @@ public class SiteCreationCreatingFragment extends SiteCreationBaseFormFragment<S
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
 
-        outState.putBoolean(KEY_IN_MODAL_MODE, mInModalMode);
-        outState.putBoolean(KEY_CREATION_FINISHED, mCreationSucceeded);
         outState.putBoolean(KEY_WEBVIEW_LOADED_IN_TIME, mWebViewLoadedInTime);
     }
 
@@ -231,9 +238,17 @@ public class SiteCreationCreatingFragment extends SiteCreationBaseFormFragment<S
         }
     }
 
-    private void setModalMode(boolean inModalMode) {
-        mInModalMode = inModalMode;
-        showHomeButton(!mInModalMode);
+    private void configureBackButton() {
+        SiteCreationState currentState = SiteCreationService.getState();
+
+        SiteCreationState failedOnState = null;
+        if (currentState != null && currentState.getStep() == SiteCreationStep.FAILURE) {
+            failedOnState = (SiteCreationState) currentState.getPayload();
+        }
+
+        boolean isInModal = currentState != null && currentState.isInProgress();
+        boolean failedAfterCreation = failedOnState != null && failedOnState.isAfterCreation();
+        showHomeButton(!isInModal, failedAfterCreation);
     }
 
     private void configureImage(boolean hasFailure) {
@@ -255,8 +270,8 @@ public class SiteCreationCreatingFragment extends SiteCreationBaseFormFragment<S
                 if (failedState.isTerminal()) {
                     throw new RuntimeException("Internal inconsistency: Cannot resume site creation from "
                             + failedState.getStepName());
-                } else if (failedState.getStep() == SiteCreationService.SiteCreationStep.IDLE
-                        || failedState.getStep() == SiteCreationService.SiteCreationStep.NEW_SITE) {
+                } else if (failedState.getStep() == SiteCreationStep.IDLE
+                        || failedState.getStep() == SiteCreationStep.NEW_SITE) {
                     createSite();
                 } else {
                     retryFromState(failedState, (long) failedState.getPayload());
@@ -272,6 +287,8 @@ public class SiteCreationCreatingFragment extends SiteCreationBaseFormFragment<S
 
         mProgressContainer.setVisibility(View.VISIBLE);
         mErrorContainer.setVisibility(View.GONE);
+
+        configureBackButton();
 
         switch (event.getStep()) {
             case IDLE:
@@ -295,7 +312,6 @@ public class SiteCreationCreatingFragment extends SiteCreationBaseFormFragment<S
                 configureImage(false);
                 break;
             case FAILURE:
-                setModalMode(false);
                 configureImage(true);
                 mProgressContainer.setVisibility(View.GONE);
                 mErrorContainer.setVisibility(View.VISIBLE);
@@ -307,9 +323,6 @@ public class SiteCreationCreatingFragment extends SiteCreationBaseFormFragment<S
                 mPreviewWebViewClient = loadWebview();
                 break;
             case SUCCESS:
-                mCreationSucceeded = true;
-                setModalMode(false);
-
                 if (mPreviewWebViewClient == null) {
                     // Apparently view got rotated while at the final so, just reconfigure the WebView.
                     loadWebview();

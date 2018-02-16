@@ -69,7 +69,7 @@ public class SiteCreationService extends AutoForeground<SiteCreationState> {
     }
 
     public static class SiteCreationState implements AutoForeground.ServiceState {
-        private final SiteCreationStep mStep;
+        private @NonNull final SiteCreationStep mStep;
         private final Object payload;
 
         SiteCreationState(@NonNull SiteCreationStep step, @Nullable Object payload) {
@@ -77,6 +77,7 @@ public class SiteCreationService extends AutoForeground<SiteCreationState> {
             this.payload = payload;
         }
 
+        @NonNull
         SiteCreationStep getStep() {
             return mStep;
         }
@@ -108,6 +109,10 @@ public class SiteCreationService extends AutoForeground<SiteCreationState> {
         @Override
         public String getStepName() {
             return mStep.name();
+        }
+
+        boolean isAfterCreation() {
+            return mStep.ordinal() > SiteCreationStep.NEW_SITE.ordinal();
         }
     }
 
@@ -181,6 +186,10 @@ public class SiteCreationService extends AutoForeground<SiteCreationState> {
 
     public static void clearSiteCreationServiceState() {
         clearServiceState(SiteCreationState.class);
+    }
+
+    public static SiteCreationState getState() {
+        return getState(SiteCreationState.class);
     }
 
     public SiteCreationService() {
