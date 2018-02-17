@@ -1,9 +1,10 @@
 buildscript {
     repositories {
         jcenter()
+        google()
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:2.3.3'
+        classpath 'com.android.tools.build:gradle:3.0.1'
     }
 }
 
@@ -16,10 +17,8 @@ repositories {
 }
 
 android {
-    publishNonDefault true
-
     compileSdkVersion 26
-    buildToolsVersion "25.0.3"
+    buildToolsVersion "26.0.2"
 
     defaultConfig {
         minSdkVersion 16
@@ -32,30 +31,30 @@ android {
 }
 
 dependencies {
-    compile ('org.wordpress:utils:1.20.0-beta6') {
+    implementation ('org.wordpress:utils:1.20.0-beta6') {
         exclude group: "com.mcxiaoke.volley"
     }
 
-    compile 'com.android.support:appcompat-v7:26.1.0'
-    compile 'com.android.support:design:26.1.0'
+    implementation 'com.android.support:appcompat-v7:26.1.0'
+    implementation 'com.android.support:design:26.1.0'
 
-    compile 'com.google.android.gms:play-services-auth:10.0.1'
+    implementation 'com.google.android.gms:play-services-auth:10.0.1'
 
     // Share FluxC version from host project if defined, otherwise fallback to default
     if (project.hasProperty("fluxCVersion")) {
-        compile "com.github.wordpress-mobile.WordPress-FluxC-Android:fluxc:$fluxCVersion"
+        implementation "com.github.wordpress-mobile.WordPress-FluxC-Android:fluxc:$fluxCVersion"
     } else {
-        compile 'com.github.wordpress-mobile.WordPress-FluxC-Android:fluxc:3251d1575c5861344ae6f8ce7c76d130bb40a696'
+        implementation 'com.github.wordpress-mobile.WordPress-FluxC-Android:fluxc:918a9975bd5ac329006d39042b1312cc112781f6'
     }
 
-    compile 'com.github.bumptech.glide:glide:4.1.1'
+    implementation 'com.github.bumptech.glide:glide:4.1.1'
     annotationProcessor 'com.github.bumptech.glide:compiler:4.1.1'
 
     // Dagger
-    compile 'com.google.dagger:dagger:2.11'
+    implementation 'com.google.dagger:dagger:2.11'
     annotationProcessor 'com.google.dagger:dagger-compiler:2.11'
-    provided 'org.glassfish:javax.annotation:10.0-b28'
-    compile 'com.google.dagger:dagger-android-support:2.11'
+    compileOnly 'org.glassfish:javax.annotation:10.0-b28'
+    implementation 'com.google.dagger:dagger-android-support:2.11'
     annotationProcessor 'com.google.dagger:dagger-android-processor:2.11'
 }
 

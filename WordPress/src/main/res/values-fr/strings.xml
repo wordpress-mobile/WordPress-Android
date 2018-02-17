@@ -1,11 +1,32 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2018-01-30 20:41:28+0000
+Translation-Revision-Date: 2018-02-09 17:08:24+0000
 Plural-Forms: nplurals=2; plural=n > 1;
 Generator: GlotPress/2.4.0-alpha
 Language: fr
 -->
 <resources>
+	<string name="plugin_info_your_version">Votre version de WordPress</string>
+	<string name="plugin_info_requires_version">Nécessite WordPress version</string>
+	<string name="plugin_info_lastupdated">Dernière mise à jour</string>
+	<string name="plugin_info_version">Version</string>
+	<string name="plugin_five_stars">5 étoiles</string>
+	<string name="plugin_four_stars">4 étoiles</string>
+	<string name="plugin_three_stars">3 étoiles</string>
+	<string name="plugin_two_stars">2 étoiles</string>
+	<string name="plugin_one_stars">1 étoile</string>
+	<string name="plugin_num_downloads">%s téléchargements</string>
+	<string name="plugin_num_ratings">%s notes</string>
+	<string name="plugin_read_reviews">Lire les évaluations</string>
+	<string name="plugin_faq">Questions fréquemment posées</string>
+	<string name="plugin_whatsnew">Quoi de neuf</string>
+	<string name="plugin_installation">Installation</string>
+	<string name="plugin_description">Description</string>
+	<string name="plugin_settings">Réglages</string>
+	<string name="plugin_installed">Installée</string>
+	<string name="plugin_installed_version">Version %s installée</string>
+	<string name="plugin_version">Version %s</string>
+	<string name="plugin_byline">par %s</string>
 	<string name="change_photo">Changer la photo</string>
 	<string name="plugin_fetch_error">Impossible de charger les extensions</string>
 	<string name="my_site_btn_site_pages">Pages du site</string>
@@ -50,7 +71,6 @@ Language: fr
 	<string name="plugin_updated_failed">Erreur de suppression de %s.</string>
 	<string name="plugin_updated_successfully">Mise à jour effectuée pour %s.</string>
 	<string name="plugin_available_version">Version %s est disponible.</string>
-	<string name="plugin_installed_version">Extension version %s</string>
 	<string name="plugin_detail_label_state_autoupdates">Mises à jour automatiques</string>
 	<string name="plugin_detail_label_state_active">Actif</string>
 	<string name="plugin_autoupdates_off">Mises à jour automatiques désactivées</string>

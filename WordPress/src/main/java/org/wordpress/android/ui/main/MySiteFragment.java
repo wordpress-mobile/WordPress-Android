@@ -212,7 +212,7 @@ public class MySiteFragment extends Fragment
                     if (!mAccountStore.hasAccessToken() && selectedSite.isJetpackConnected()) {
                         // If the user is not connected to WordPress.com, ask him to connect first.
                         startWPComLoginForJetpackStats();
-                    } else if (selectedSite.isJetpackInstalled() && selectedSite.isJetpackConnected()) {
+                    } else if (selectedSite.isWPCom() || (selectedSite.isJetpackInstalled() && selectedSite.isJetpackConnected())) {
                         ActivityLauncher.viewBlogStats(getActivity(), selectedSite);
                     } else {
                         ActivityLauncher.startJetpackConnectionFlow(getActivity(), selectedSite);
@@ -273,7 +273,7 @@ public class MySiteFragment extends Fragment
         mPluginsContainer.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View view) {
-                ActivityLauncher.viewCurrentBlogPlugins(getActivity(), getSelectedSite());
+                ActivityLauncher.viewPluginBrowser(getActivity(), getSelectedSite());
             }
         });
 

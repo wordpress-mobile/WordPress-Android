@@ -163,7 +163,7 @@ public class ThemeBrowserFragment extends Fragment
 
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        inflater.inflate(R.menu.theme_search, menu);
+        inflater.inflate(R.menu.search, menu);
 
         mSearchMenuItem = menu.findItem(R.id.menu_search);
         mSearchView = (SearchView) mSearchMenuItem.getActionView();
