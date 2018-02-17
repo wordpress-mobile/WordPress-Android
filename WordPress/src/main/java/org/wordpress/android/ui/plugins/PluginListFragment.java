@@ -222,7 +222,7 @@ public class PluginListFragment extends Fragment {
         }
         // We want to show the swipe refresher for the initial fetch but not while loading more
         mSwipeToRefreshHelper.setRefreshing(pluginListStatus == PluginBrowserViewModel.PluginListStatus.FETCHING);
-        // We want to show the progress bar in the middle while loading more but not for initial fetch
+        // We want to show the progress bar at the bottom while loading more but not for initial fetch
         boolean showLoadMore = pluginListStatus == PluginBrowserViewModel.PluginListStatus.LOADING_MORE;
         getView().findViewById(R.id.progress).setVisibility(showLoadMore ? View.VISIBLE : View.GONE);
     }
