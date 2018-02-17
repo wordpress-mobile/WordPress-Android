@@ -20,6 +20,7 @@ import org.wordpress.android.ui.accounts.signup.SiteCreationService.SiteCreation
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.AutoForeground.ServiceEventConnection;
+import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.URLFilteredWebViewClient;
 
 public class SiteCreationCreatingFragment extends SiteCreationBaseFormFragment<SiteCreationListener> {
@@ -316,6 +317,7 @@ public class SiteCreationCreatingFragment extends SiteCreationBaseFormFragment<S
                 mProgressContainer.setVisibility(View.GONE);
                 mErrorContainer.setVisibility(View.VISIBLE);
                 handleFailure((SiteCreationState) event.getPayload());
+                NetworkUtils.checkConnection(getContext());
                 break;
             case PRELOAD:
                 disableUntil(R.id.site_creation_creating_preparing_frontend);
