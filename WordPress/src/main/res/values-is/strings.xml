@@ -68,8 +68,8 @@ Language: is
 	<string name="reader_hint_search_followed_sites">Leita í vefjum sem þú fylgir</string>
 	<string name="visual_editor_disabled">Slökkt er á sjónrænum ritli</string>
 	<string name="preference_editor_visual">Ritþór</string>
-	<string name="preference_editor_legacy">Eldri</string>
 	<string name="preference_editor_type">Skilgreina tegund ritils</string>
+	<string name="preference_editor_legacy">Eldri</string>
 	<string name="pending_draft_one_generic">Ekki láta færsluna sitja á hakanum! ‘%1$s’ bíður eftir að vera birt.</string>
 	<string name="pending_draft_one_month">Ekki láta færsluna sitja á hakanum! ‘%1$s’ bíður eftir að vera birt.</string>
 	<string name="pending_draft_one_week_2">‘%1$s’ er enn í drögum. Mundu eftir að birta hana!</string>

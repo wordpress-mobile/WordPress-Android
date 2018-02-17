@@ -186,6 +186,8 @@ public final class AnalyticsTracker {
         SIGNED_INTO_JETPACK,
         PERFORMED_JETPACK_SIGN_IN_FROM_STATS_SCREEN,
         STATS_SELECTED_INSTALL_JETPACK,
+        STATS_CANCELED_INSTALL_JETPACK,
+        STATS_COMPLETED_INSTALL_JETPACK,
         STATS_SELECTED_CONNECT_JETPACK,
         PUSH_NOTIFICATION_RECEIVED,
         PUSH_NOTIFICATION_TAPPED, // Same of opened
@@ -302,12 +304,14 @@ public final class AnalyticsTracker {
     }
 
     public static void init(Context context) {
-        loadPrefHasUserOptedOut(context);
-    }
-
-    public static void loadPrefHasUserOptedOut(Context context) {
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
         boolean hasUserOptedOut = !prefs.getBoolean("wp_pref_send_usage_stats", true);
+        if (hasUserOptedOut != mHasUserOptedOut) {
+            mHasUserOptedOut = hasUserOptedOut;
+        }
+    }
+
+    public static void setHasUserOptedOut(boolean hasUserOptedOut){
         if (hasUserOptedOut != mHasUserOptedOut) {
             mHasUserOptedOut = hasUserOptedOut;
         }

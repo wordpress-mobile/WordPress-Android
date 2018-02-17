@@ -66,6 +66,19 @@ public class AppSettingsFragment extends PreferenceFragment implements OnPrefere
         setRetainInstance(true);
         addPreferencesFromResource(R.xml.app_settings);
 
+        findPreference(getString(R.string.pref_key_send_usage)).setOnPreferenceChangeListener(
+                new Preference.OnPreferenceChangeListener() {
+                    @Override
+                    public boolean onPreferenceChange(Preference preference, Object newValue) {
+                        if (newValue == null) return false;
+                        // flush gathered events (if any)
+                        AnalyticsTracker.flush();
+                        AnalyticsTracker.setHasUserOptedOut(!(boolean)newValue);
+                        return true;
+                    }
+                }
+        );
+
         mLanguagePreference = (DetailListPreference) findPreference(getString(R.string.pref_key_language));
         mLanguagePreference.setOnPreferenceChangeListener(this);
 
@@ -122,6 +135,8 @@ public class AppSettingsFragment extends PreferenceFragment implements OnPrefere
         super.onActivityCreated(savedInstanceState);
 
         updateLanguagePreference(getResources().getConfiguration().locale.toString());
+        // flush gathered events (if any)
+        AnalyticsTracker.flush();
     }
 
     @Override
