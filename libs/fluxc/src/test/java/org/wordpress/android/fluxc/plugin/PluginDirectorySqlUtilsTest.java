@@ -87,6 +87,45 @@ public class PluginDirectorySqlUtilsTest {
     }
 
     @Test
+    public void testUpdatePluginDirectoryModel() throws NoSuchMethodException,
+            InvocationTargetException, IllegalAccessException {
+        String slug = randomString("slug");
+        int oldPage = 1;
+        String directoryType = PluginDirectoryType.NEW.toString();
+        PluginDirectoryModel directoryModel = new PluginDirectoryModel();
+        directoryModel.setSlug(slug);
+        directoryModel.setDirectoryType(directoryType);
+        directoryModel.setPage(oldPage);
+
+        Method insertOrUpdatePluginDirectoryModel =
+                PluginSqlUtils.class.getDeclaredMethod("insertOrUpdatePluginDirectoryModel",
+                        PluginDirectoryModel.class);
+        insertOrUpdatePluginDirectoryModel.setAccessible(true);
+        Assert.assertEquals(1, insertOrUpdatePluginDirectoryModel.invoke(PluginSqlUtils.class, directoryModel));
+
+        // Use reflection to assert PluginSqlUtils.getPluginDirectoriesForType
+        Method getPluginDirectoryModel = PluginSqlUtils.class.getDeclaredMethod("getPluginDirectoryModel",
+                String.class, String.class);
+        getPluginDirectoryModel.setAccessible(true);
+        Object firstObject = getPluginDirectoryModel.invoke(PluginSqlUtils.class, directoryType, slug);
+        Assert.assertNotNull(firstObject);
+        Assert.assertTrue(firstObject instanceof PluginDirectoryModel);
+        PluginDirectoryModel insertedDirectoryModel = (PluginDirectoryModel) firstObject;
+        Assert.assertEquals(insertedDirectoryModel.getPage(), oldPage);
+
+        int newPage = 2;
+        directoryModel.setPage(newPage);
+        Assert.assertEquals(1, insertOrUpdatePluginDirectoryModel.invoke(PluginSqlUtils.class, directoryModel));
+
+        Object secondObject = getPluginDirectoryModel.invoke(PluginSqlUtils.class, directoryType, slug);
+        Assert.assertNotNull(secondObject);
+        Assert.assertTrue(secondObject instanceof PluginDirectoryModel);
+        PluginDirectoryModel updatedDirectoryModel = (PluginDirectoryModel) secondObject;
+        Assert.assertEquals(updatedDirectoryModel.getPage(), newPage);
+        Assert.assertEquals(insertedDirectoryModel.getSlug(), updatedDirectoryModel.getSlug());
+    }
+
+    @Test
     public void testGetLastRequestedPageForDirectoryType() {
         int numberOfTimesToTry = 10;
         int lastRequestedPage = 0;
