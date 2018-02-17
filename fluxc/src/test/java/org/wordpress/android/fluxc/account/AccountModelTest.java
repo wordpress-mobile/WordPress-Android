@@ -4,11 +4,8 @@ import junit.framework.Assert;
 
 import org.junit.Before;
 import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.robolectric.RobolectricTestRunner;
 import org.wordpress.android.fluxc.model.AccountModel;
 
-@RunWith(RobolectricTestRunner.class)
 public class AccountModelTest {
     @Before
     public void setUp() {
@@ -19,7 +16,7 @@ public class AccountModelTest {
         AccountModel testAccount = getTestAccount();
         AccountModel testAccount2 = getTestAccount();
         Assert.assertFalse(testAccount.equals(new Object()));
-        Assert.assertFalse(testAccount.equals(null));
+        Assert.assertNotNull(testAccount);
         testAccount2.setUserId(testAccount.getUserId() + 1);
         Assert.assertFalse(testAccount.equals(testAccount2));
         testAccount2.setUserId(testAccount.getUserId());

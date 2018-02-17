@@ -1,13 +1,10 @@
 package org.wordpress.android.fluxc;
 
 import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.robolectric.RobolectricTestRunner;
 import org.wordpress.android.fluxc.generated.endpoint.WPAPI;
 
 import static org.junit.Assert.assertEquals;
 
-@RunWith(RobolectricTestRunner.class)
 public class WPAPIEndpointTest {
     @Test
     public void testAllEndpoints() {
