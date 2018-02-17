@@ -651,7 +651,7 @@ function execute_take() {
   fi
 
   if [ $CMD == $CMD_TAKE ]; then
-    if [ $warningCount -eq 0]; then
+    if [ $warningCount -eq 0 ]; then
       show_ok_message "Done!"
     else
       show_ok_message "Done (with $warningCount warning(s))!"
