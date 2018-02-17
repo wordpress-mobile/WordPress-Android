@@ -121,20 +121,26 @@
 
                     <RelativeLayout style="@style/PluginCardViewHorizontalContainer">
 
-                        <TextView
-                            android:id="@+id/plugin_version_top"
-                            style="@style/PluginCardViewPrimaryText"
-                            android:background="?android:attr/selectableItemBackground"
-                            android:drawablePadding="@dimen/margin_small"
-                            tools:drawableRight="@drawable/ic_info_outline_grey_dark_18dp"
-                            tools:text="plugin_installed_version" />
+                        <LinearLayout
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_centerVertical="true"
+                            android:orientation="vertical">
 
-                        <TextView
-                            android:id="@+id/plugin_version_bottom"
-                            style="@style/PluginCardViewSecondaryText"
-                            android:layout_below="@id/plugin_version_top"
-                            android:textColor="@color/grey_darken_10"
-                            tools:text="plugin_available_version" />
+                            <TextView
+                                android:id="@+id/plugin_version_top"
+                                style="@style/PluginCardViewPrimaryText"
+                                android:background="?android:attr/selectableItemBackground"
+                                android:drawablePadding="@dimen/margin_small"
+                                tools:drawableRight="@drawable/ic_info_outline_grey_dark_18dp"
+                                tools:text="plugin_version_top" />
+
+                            <TextView
+                                android:id="@+id/plugin_version_bottom"
+                                style="@style/PluginCardViewSecondaryText"
+                                android:textColor="@color/grey_darken_10"
+                                tools:text="plugin_version_bottom" />
+                        </LinearLayout>
 
                         <FrameLayout
                             android:layout_width="wrap_content"
@@ -153,6 +159,22 @@
                                 android:paddingRight="@dimen/margin_extra_large"
                                 android:paddingTop="@dimen/margin_large"
                                 android:text="@string/update_verb"
+                                android:textAllCaps="true"
+                                android:textColor="@color/white"
+                                android:textSize="@dimen/text_sz_medium"
+                                android:visibility="gone"
+                                tools:visibility="visible" />
+
+                            <TextView
+                                android:id="@+id/plugin_btn_install"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:background="@drawable/button_blue"
+                                android:paddingBottom="@dimen/margin_large"
+                                android:paddingLeft="@dimen/margin_extra_large"
+                                android:paddingRight="@dimen/margin_extra_large"
+                                android:paddingTop="@dimen/margin_large"
+                                android:text="@string/plugin_install"
                                 android:textAllCaps="true"
                                 android:textColor="@color/white"
                                 android:textSize="@dimen/text_sz_medium"
@@ -404,5 +426,14 @@
             <include layout="@layout/plugin_ratings_cardview" />
         </LinearLayout>
     </android.support.v4.widget.NestedScrollView>
+
+    <ProgressBar
+        android:id="@+id/plugin_fetching_progress_bar"
+        style="?android:attr/progressBarStyleLarge"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:visibility="gone"
+        tools:visibility="visible" />
 
 </android.support.design.widget.CoordinatorLayout>

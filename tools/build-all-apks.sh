@@ -38,12 +38,12 @@ function build_apk {
   apk="WordPress-$flavor-release.apk"
 
   echo "Cleaning in branch: $branch" | tee -a $LOGFILE
-  ./gradlew clean --offline >> $LOGFILE 2>&1
+  ./gradlew clean >> $LOGFILE 2>&1
   echo "Running lint in branch: $branch" | tee -a $LOGFILE
-  ./gradlew lint --offline >> $LOGFILE 2>&1
+  ./gradlew lint >> $LOGFILE 2>&1
   echo "Building $version_name / $version_code - $apk..." | tee -a $LOGFILE
-  ./gradlew assemble"$flavor"Release --offline >> $LOGFILE 2>&1
-  cp -v $OUTDIR/$apk $BUILDDIR/$name | tee -a $LOGFILE
+  ./gradlew assemble"$flavor"Release >> $LOGFILE 2>&1
+  cp -v $OUTDIR/$flavor/release/$apk $BUILDDIR/$name | tee -a $LOGFILE
   echo "APK ready: $name" | tee -a $LOGFILE
   BUILD_APK_RET_VALUE=$version_code
 }

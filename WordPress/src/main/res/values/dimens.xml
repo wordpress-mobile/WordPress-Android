@@ -346,7 +346,8 @@
     <dimen name="site_creation_creating_illustration_height">125dp</dimen>
     <dimen name="margin_tagline_left">40dp</dimen>
 
-    <!--plugin-->
+    <!--plugins-->
+    <dimen name="plugin_row_width">116dp</dimen>
     <dimen name="plugin_icon_size">40dp</dimen>
     <dimen name="plugin_external_link_image_size">16dp</dimen>
     <dimen name="plugin_banner_size">192dp</dimen>
