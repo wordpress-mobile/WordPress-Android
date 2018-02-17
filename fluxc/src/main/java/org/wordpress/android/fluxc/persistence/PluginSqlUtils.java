@@ -209,7 +209,7 @@ public class PluginSqlUtils {
             WellSql.insert(pluginDirectory).execute();
             return 1;
         } else {
-            return WellSql.update(WPOrgPluginModel.class).whereId(existing.getId())
+            return WellSql.update(PluginDirectoryModel.class).whereId(existing.getId())
                     .put(pluginDirectory, new UpdateAllExceptId<>(PluginDirectoryModel.class)).execute();
         }
     }
