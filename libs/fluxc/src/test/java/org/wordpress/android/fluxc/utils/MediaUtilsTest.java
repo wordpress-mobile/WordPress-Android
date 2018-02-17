@@ -3,10 +3,7 @@ package org.wordpress.android.fluxc.utils;
 import junit.framework.Assert;
 
 import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.robolectric.RobolectricTestRunner;
 
-@RunWith(RobolectricTestRunner.class)
 public class MediaUtilsTest {
     @Test
     public void testImageMimeTypeRecognition() {

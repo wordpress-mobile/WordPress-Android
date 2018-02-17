@@ -2,10 +2,7 @@ package org.wordpress.android.fluxc.upload;
 
 import android.text.TextUtils;
 
-import org.junit.Before;
 import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.robolectric.RobolectricTestRunner;
 import org.wordpress.android.fluxc.model.PostUploadModel;
 import org.wordpress.android.fluxc.store.PostStore.PostError;
 import org.wordpress.android.fluxc.store.PostStore.PostErrorType;
@@ -13,18 +10,13 @@ import org.wordpress.android.fluxc.store.PostStore.PostErrorType;
 import java.util.HashSet;
 import java.util.Set;
 
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
-@RunWith(RobolectricTestRunner.class)
 public class PostUploadModelTest {
-    @Before
-    public void setUp() {
-    }
-
     @Test
     public void testEquals() {
         PostUploadModel postUploadModel1 = new PostUploadModel(1);

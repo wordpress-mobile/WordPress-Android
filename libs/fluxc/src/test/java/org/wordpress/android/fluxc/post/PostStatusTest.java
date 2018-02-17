@@ -1,8 +1,6 @@
 package org.wordpress.android.fluxc.post;
 
 import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.robolectric.RobolectricTestRunner;
 import org.wordpress.android.fluxc.model.PostModel;
 import org.wordpress.android.fluxc.model.post.PostStatus;
 import org.wordpress.android.util.DateTimeUtils;
@@ -11,7 +9,6 @@ import java.util.Date;
 
 import static org.junit.Assert.assertEquals;
 
-@RunWith(RobolectricTestRunner.class)
 public class PostStatusTest {
     @Test
     public void testPostStatusFromPost() {

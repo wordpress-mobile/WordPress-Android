@@ -3,15 +3,12 @@ package org.wordpress.android.fluxc.post;
 import junit.framework.Assert;
 
 import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.robolectric.RobolectricTestRunner;
 import org.wordpress.android.fluxc.model.post.PostLocation;
 
 import static junit.framework.Assert.assertEquals;
 import static junit.framework.Assert.assertFalse;
 import static junit.framework.Assert.assertTrue;
 
-@RunWith(RobolectricTestRunner.class)
 public class PostLocationTest {
     private static final double MAX_LAT = 90;
     private static final double MIN_LAT = -90;
