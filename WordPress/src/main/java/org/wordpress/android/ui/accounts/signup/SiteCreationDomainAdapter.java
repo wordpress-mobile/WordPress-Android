@@ -1,6 +1,8 @@
 package org.wordpress.android.ui.accounts.signup;
 
 import android.content.Context;
+import android.os.Handler;
+import android.os.Looper;
 import android.support.v7.widget.RecyclerView;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -77,7 +79,13 @@ public class SiteCreationDomainAdapter extends RecyclerView.Adapter<RecyclerView
                     mDebouncer.debounce(Void.class, new Runnable() {
                         @Override
                         public void run() {
-                            mOnAdapterListener.onKeywordsChange(text);
+                            // post the action on an properly initialised Handler so UI thread operations can succeed
+                            new Handler(Looper.getMainLooper()).post(new Runnable() {
+                                @Override
+                                public void run() {
+                                    mOnAdapterListener.onKeywordsChange(text);
+                                }
+                            });
                         }
                     }, GET_SUGGESTIONS_INTERVAL_MS, TimeUnit.MILLISECONDS);
                 }
