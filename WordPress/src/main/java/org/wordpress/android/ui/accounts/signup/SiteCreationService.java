@@ -320,7 +320,7 @@ public class SiteCreationService extends AutoForeground<SiteCreationState> {
                 doPreloadDelay();
                 break;
             case SUCCESS:
-                setState(SiteCreationStep.SUCCESS, null);
+                setState(SiteCreationStep.SUCCESS, mSiteStore.getLocalIdForRemoteSiteId(mNewSiteRemoteId));
                 break;
         }
     }
