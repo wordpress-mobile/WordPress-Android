@@ -9,7 +9,7 @@ CMD_PRODUCE="produce"
 
 # Config
 APK=../WordPress/build/outputs/apk/WordPress-wasabi-debug.apk
-AVD=Nexus_5X_API_25_SCREENSHOTS
+DEV_NAME=Nexus_5X_API_25_SCREENSHOTS
 RUN_DEV=ALL
 LOG_FILE="/tmp/android-screenshot.log"
 WORKING_DIR=./autoscreenshot
@@ -17,7 +17,6 @@ TAKE_DIR=$WORKING_DIR/orig
 PROD_DIR=$WORKING_DIR/final
 
 DEVICES=(PHONE TAB7 TAB10)
-LOCALES=(en-US el-GR it-IT)
 SCREENS=(MYSITE READER NOTIFS)
 
 GEEKY_TIME='0830'
@@ -115,26 +114,29 @@ function show_usage() {
     echo "   $CMD_SETUP command:"
     echo "   \tUsage: $exeName $CMD_SETUP"
     echo "   $CMD_TAKE command:"
-    echo "   \tUsage: $exeName $CMD_TAKE [device-type] [avd-name] [apk-path]"
+    echo "   \tUsage: $exeName $CMD_TAKE [device] [device-name] [apk-path]"
     echo "   $CMD_PROCESS command:"
-    echo "   \tUsage: $exeName $CMD_PROCESS [device-type]"
+    echo "   \tUsage: $exeName $CMD_PROCESS [device]"
     echo "   $CMD_PRODUCE command:"
-    echo "   \tUsage: $exeName $CMD_PRODUCE [device-type] [avd-name] [apk-path]"
+    echo "   \tUsage: $exeName $CMD_PRODUCE [device] [device-name] [apk-path]"
     echo ""
     echo "   Params:"
-    echo "   \t - device-type:"
-    echo "   \t         all: runs on all the available device sizes"
-    echo "   \t         phone: runs on the phone size"
-    echo "   \t         tab7: runs on the Tab7 size"
-    echo "   \t         tab10: runs on the Tab10 size"
-    echo "   \t - avd-name: the name of the simulator device"
+    echo "   \t - device:"
+    echo "   \t         emu-all: runs on all the available emulated device sizes"
+    echo "   \t         emu-phone: runs on the emulated phone size"
+    echo "   \t         emu-tab7: runs on the emulated Tab7 size"
+    echo "   \t         emu-tab10: runs on the emulated Tab10 size"
+    echo "   \t         dev-phone: runs on the selected phone device"
+    echo "   \t         dev-tab7: runs on the selected Tab7 device"
+    echo "   \t         dev-tab10: runs on the selected Tab10 device"
+    echo "   \t - device-name: the name of the device to use (avd for simulated devices, id for other devices"
     echo "   \t - apk-path: the path of the apk to use"
     echo ""
     echo "   Example: $exeName $CMD_TAKE"
-    echo "   Example: $exeName $CMD_TAKE phone"
-    echo "   Example: $exeName $CMD_PROCESS tab7"
-    echo "   Example: $exeName $CMD_PRODUCE all Android_Accelerated_x86"
-    echo "   Example: $exeName $CMD_TAKE all Android_Accelerated_x86 ./app.apk"
+    echo "   Example: $exeName $CMD_TAKE emu-phone"
+    echo "   Example: $exeName $CMD_PROCESS emu-tab7"
+    echo "   Example: $exeName $CMD_PRODUCE emu-all Android_Accelerated_x86"
+    echo "   Example: $exeName $CMD_TAKE emu-all Android_Accelerated_x86 ./app.apk"
     echo ""
     exit 1
 }
@@ -194,8 +196,12 @@ function stop_on_error() {
 # Shows the current configuration
 function show_config() {
   show_title_message "Configuration:"
-  show_message "Device: $RUN_DEV"
-  show_message "Emulator: $AVD"
+  if [ $USE_EMU -eq 1 ]; then
+    show_message "Device: $RUN_DEV (emulated)"
+    show_message "Emulator: $DEV_NAME"
+  else
+    show_message "Device: $DEV_NAME"
+  fi 
   show_message "Package: $APK ($PKG)"
 }
 
@@ -273,14 +279,40 @@ function require_sdk() {
   show_message "Done"
 }
 
+# Checks the required AVD exists 
+function check_avd() {
+  avdmanager list avd -c | grep $DEV_NAME
+  avdmissing=$?
+
+  if [ $avdmissing = 1 ]; then
+    show_error_message "Emulator $DEV_NAME doesn't exist."
+    show_message "Available devices are:"
+    avdmanager list avd -c
+    stop_on_error
+  fi
+}
+
+# Checks the required device exists
+function check_real_dev() {
+  adb devices | grep $DEV_NAME
+  devmissing=$?
+
+  if [ $devmissing = 1 ]; then
+    show_error_message "Device $DEV_NAME doesn't exist."
+    show_message "Available devices are:"
+    adb devices
+    stop_on_error
+  fi
+}
+
 # Creates the local emulator
 function require_emu {
-  avdmanager list avd -c | grep $AVD
+  avdmanager list avd -c | grep $DEV_NAME
   avdmissing=$?
 
   if [ $avdmissing = 1 ]; then
     show_message "Creating AVD..."
-    echo no | avdmanager create avd -n $AVD -k "system-images;android-25;google_apis;x86" --tag "google_apis" >> $LOG_FILE 2>&1 || stop_on_error
+    echo no | avdmanager create avd -n $DEV_NAME -k "system-images;android-25;google_apis;x86" --tag "google_apis" >> $LOG_FILE 2>&1 || stop_on_error
   fi
 }
 
@@ -332,7 +364,7 @@ function start_emu {
   device_skin_height=$((${!device_app_height}+${!device_nav_height}))
   device_skin_width=$device\_SKIN_WIDTH
   device_skin=${!device_skin_width}'x'$device_skin_height
-  $ANDROID_SDK_DIR/tools/emulator -verbose -no-boot-anim -timezone "Europe/UTC" -avd $AVD -skin $device_skin -qemu -lcd-density $LCD_DPI >> $LOG_FILE 2>&1 || stop_on_error &
+  $ANDROID_SDK_DIR/tools/emulator -verbose -no-boot-anim -timezone "Europe/UTC" -avd $DEV_NAME -skin $device_skin -qemu -lcd-density $LCD_DPI >> $LOG_FILE 2>&1 || stop_on_error &
   wait 5
   show_message Done
 }
@@ -423,10 +455,10 @@ function screenshot() {
 # Takes the screenshot
 function take_screenshot() {
   show_message "Taking image for $1 $2 $3"
-  device=$1
+  locdevice=$1
   loc=${2/-/_} # replace the - with _
   screen=$3
-  fn=wpandroid_$device\_$loc\_$screen
+  fn=wpandroid_$locdevice\_$loc\_$screen
   
   screenshot $fn $1 $2
   show_message "Screenshot at: $TAKE_DIR/$1/$2/$fn.png"
@@ -462,13 +494,26 @@ function process_screenshot() {
 
   # Check screenshot file and process
   if [ -f $tn.png ]; then
-    magick $tn.png -crop 0x$APP_HEIGHT+0+0 $fn\_cropped.png || warningCount=$((warningCount+1))
+    if [ $USE_EMU -eq 0 ]; then
+      dev_target_height=$device\_APP\_HEIGHT
+      dev_target_width=$device\_SKIN\_WIDTH
+      magick $tn.png -resize ${!dev_target_width}x${!dev_target_height}\! $fn\_r.png || warningCount=$((warningCount+1))
+      tn=$fn\_r
+    fi
+
     template=$device\_TEMPLATE
     offset=$device\_OFFSET
+ 
+    magick $tn.png -crop 0x$APP_HEIGHT+0+0 $fn\_cropped.png || warningCount=$((warningCount+1))
     magick ${!template} $fn\_cropped.png -geometry ${!offset} -composite $fn\_comp1.png || warningCount=$((warningCount+1))
     magick $fn\_comp1.png -gravity north -pointsize ${!size} -font $FONT_FILE -draw "fill white text 0,$TEXT_OFFSET_Y \"${!text}\"" $fn\_final.png || warningCount=$((warningCount+1))
 
-    rm $fn\_cropped.png $fn\_comp1.png
+    if [ $USE_EMU -eq 0 ]; then
+      rm $fn\_cropped.png $fn\_comp1.png $fn\_r.png
+    else
+      rm $fn\_cropped.png $fn\_comp1.png
+    fi
+
     show_message "Image ready: $fn\_final.png"
   else
     show_warning_message "No screenshot for $device, $loc, $screen (file: $tn.jpg): skipping it."
@@ -493,7 +538,9 @@ function geekytime() {
   show_message "Setting geeky time..."
   adb $ADB_PARAMS root >> $LOG_FILE 2>&1 || stop_on_error
   adb $ADB_PARAMS shell "date -u 0101$GEEKY_TIME\2017.00 ; am broadcast -a android.intent.action.TIME_SET" >> $LOG_FILE 2>&1 || stop_on_error
-  adb $ADB_PARAMS unroot >> $LOG_FILE 2>&1 || stop_on_error
+  if [ $USE_EMU -eq 1 ]; then
+    adb $ADB_PARAMS unroot >> $LOG_FILE 2>&1 || stop_on_error
+  fi
 }
 
 # Checks the apk package exists
@@ -504,12 +551,39 @@ function check_apk() {
   fi
 }
 
+# Evaluate the device configuration
+function eval_dev() {
+  RUN_DEV=`echo "$RUN_DEV" | awk '{print toupper($0)}'`
+  
+  if [[ $RUN_DEV == EMU-* ]]; then
+    USE_EMU=1
+    RUN_DEV=${RUN_DEV#EMU-}
+  elif [[ $RUN_DEV == DEV-* ]]; then
+    USE_EMU=0
+    RUN_DEV=${RUN_DEV#DEV-}
+  else
+    show_usage
+  fi
+}
+
 # Checks the device to be valid
 function check_device() {
-  if [ $RUN_DEV != "ALL" ] && [[ ! " ${DEVICES[@]} " =~ " ${RUN_DEV} " ]]; then
-    show_error_message "Unknown device $RUN_DEV"
+  if [ $USE_EMU -eq 1 ] && [ $RUN_DEV != "ALL" ] && [[ ! " ${DEVICES[@]} " =~ " ${RUN_DEV} " ]]; then
+    show_error_message "Unknown emulated device $RUN_DEV"
     stop_on_error
   fi
+}
+
+# Evaluate proper tap coords for the current device
+function evalute_device_coords() {
+  # Retrieving screen size and density from the device
+  screen_size_string=`adb $ADB_PARAMS shell wm size | grep "Physical" | cut -d: -f2`
+  screen_size=$(echo $screen_size_string | tr "x" "\n")
+  screen_size_arr=($screen_size)
+
+  # Evaluating scale factors
+  width_mult=$(echo "scale=2; ${screen_size_arr[0]}/$PHONE_SKIN_WIDTH" | bc)
+  height_mult=$(echo "scale=2; ${screen_size_arr[1]}/$PHONE_APP_HEIGHT" | bc)
 }
 
 # Checks for a command
@@ -595,10 +669,19 @@ function process_device() {
 # Takes the screenshot for the provided device
 function screenshot_device() {
   device=$1
+  
+  if [ $USE_EMU -eq 1 ]; then
+    check_avd 
+    ADB_PARAMS="-e"
+    kill_emus
+    start_emu $device
+    wait_emu
+  else
+    ADB_PARAMS="-s $DEV_NAME"
+    check_real_dev 
+    evalute_device_coords
+  fi
 
-  kill_emus
-  start_emu $device
-  wait_emu
   uninstall
   install
   login
@@ -624,7 +707,15 @@ function screenshot_device() {
 
       for screen in ${SCREENS[*]}; do
         coords=$device\_COORDS_$screen
-        tap_on ${!coords}
+        if [ $USE_EMU -eq 0 ]; then
+          a1=(${!coords})
+          tap1x=$(echo "scale=0; ${a1[0]}*$width_mult" | bc)
+          tap1y=$(echo "scale=0; ${a1[1]}*$height_mult" | bc)
+          tap_coords="${tap1x%.*} ${tap1y%.*}"
+          tap_on $tap_coords
+        else
+          tap_on ${!coords}
+        fi
 
         geekytime
         take_screenshot $device $locLang $screen
@@ -713,17 +804,17 @@ require_deeplink
 # Load params
 CMD=$1
 if ! [ -z $2 ]; then
-  RUN_DEV=`echo "$2" | awk '{print toupper($0)}'`
+  RUN_DEV=$2
 fi
 if ! [ -z $3 ]; then
-  AVD=$3
+  DEV_NAME=$3
 fi 
 if ! [ -z $4 ]; then
   APK=$4
 fi
 
-RUN_DEV=`echo "$RUN_DEV" | awk '{print toupper($0)}'`
-# Update user
+# Evaluate the configuration
+eval_dev
 show_config
 
 # Launch command

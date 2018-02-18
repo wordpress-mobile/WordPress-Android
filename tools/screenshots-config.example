@@ -14,9 +14,10 @@ TOKEN_DEEPLINK=
 # Valid options are $PKG_DEBUG and $PKG_RELEASE
 # PKG=$PKG_DEBUG
 
-# Uncomment the following AVD key in order to override the default emulator
-#AVD=Nexus_5X_API_25_SCREENSHOTS
+# Uncomment the following DEV_NAME key in order to override the default device/emulator name
+# DEV_NAME=Nexus_5X_API_25_SCREENSHOTS
 
 # Uncomment the following RUN_DEV key in order to override the default device
-# Valid device are: PHONE, TAB7, TAB10 or ALL to run all of them
-#RUN_DEV=ALL
+# Valid emulator devices are: emu-phone, emu-tab7, emu-tab10 or emu-all to run all of them
+# Valid real devices are: dev-phone, dev-tab7, dev-tab10
+# RUN_DEV=emu-all
