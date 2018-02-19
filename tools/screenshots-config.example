@@ -2,7 +2,10 @@
 
 # Screenshot tool configuration file
 # In order to use the tool, copy this example to screenshots-config.sh
-# and fill the TOKEN_DEEPLINK field.
+# and fill the required fields.
+
+# Android SDK path (required)
+ANDROID_SDK_DIR=
 
 # Auth token (required)
 TOKEN_DEEPLINK=

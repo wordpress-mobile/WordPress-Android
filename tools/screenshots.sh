@@ -106,7 +106,7 @@ function show_usage() {
     echo "Usage: $exeName command [options]"
     echo ""
     echo "   Available commands:"
-    echo "      $CMD_SETUP:\tbrings up the required environment, with a local copy of the SDK and a dedicated device"
+    echo "      $CMD_SETUP:\tcreates this tool's standard AVD device"
     echo "      $CMD_TAKE:\texecutes the app in the simulator and takes the screenshots"
     echo "      $CMD_PROCESS:\tprocesses the screenshots and generates the modded ones"
     echo "      $CMD_PRODUCE:\tautomatically runs the $CMD_TAKE and $CMD_PROCESS commands"
@@ -254,31 +254,6 @@ function require_imagemagick {
   fi
 }
 
-# Setups the local sdk and configure the environment
-function require_sdk() {
-  if [ -z "$ANDROID_SDK_DIR" ]; then
-    require_dirs
-
-    if [ ! -d "$WORKING_DIR/sdk/tools" ]; then
-      command -v wget >/dev/null 2>&1 || { show_message "wget command not installed"; stop_on_error; }
-
-      show_message "Downloading the Android SDK..."
-      mkdir -p "$WORKING_DIR/sdk" >> $LOG_FILE 2>&1 || stop_on_error
-      wget -qO- $SDK_ZIP_URL | tar xf - -C "$WORKING_DIR/sdk" >> $LOG_FILE 2>&1 || stop_on_error
-      show_message Done
-
-      show_message "Downloading the Android platform (over 2GB so, this might take a while)"
-      yes y | sdkmanager "platform-tools" "platforms;android-26" "system-images;android-25;google_apis;x86" "emulator" >> $LOG_FILE 2>&1 || stop_on_error
-      show_message Done
-    fi
-  fi
-
-  show_message "Setting up SDK..."
-  export ANDROID_SDK_DIR="$WORKING_DIR/sdk"
-  export PATH=$PATH:"$WORKING_DIR/sdk/tools":"$WORKING_DIR/sdk/tools/bin":"$WORKING_DIR/sdk/platform-tools/"
-  show_message "Done"
-}
-
 # Checks the required AVD exists 
 function check_avd() {
   avdmanager list avd -c | grep $DEV_NAME
@@ -327,8 +302,10 @@ function execute_setup() {
   command -v emulator >/dev/null 2>&1 || needSdk=1
 
   if [ $needSdk -eq 1 ]; then
-    require_sdk
+    show_error_message "Android SDK not found. Please install it and configure the paht in the config file."
+    stop_on_error
   fi
+
   require_emu
   show_ok_message "Done!"
 }
@@ -589,7 +566,7 @@ function evalute_device_coords() {
 # Checks for a command
 function check_command() {
   cmdut=$1
-  command -v $cmdut >/dev/null 2>&1 || { show_message "$cmdut command not available. Please, assure it is in your path, or run '$exeName setup' to configure a local environment."; stop_on_error; }
+  command -v $cmdut >/dev/null 2>&1 || { show_message "$cmdut command not available. Please, assure the SDK is installed and the path in screenshot-config.sh is correct."; stop_on_error; }
 }
 
 # checks the emulator is available
@@ -599,9 +576,13 @@ function check_emulator() {
   check_command emulator
 
   # Update vars
-  EMU_PATH="$(which emulator)"
-  ANDROID_TOOL_DIR="$(dirname "${EMU_PATH}")"
-  ANDROID_SDK_DIR="${ANDROID_TOOL_DIR%/*}"
+  if [ -z $ANDROID_SDK_DIR ]; then
+    EMU_PATH="$(which emulator)"
+    ANDROID_TOOL_DIR="$(dirname "${EMU_PATH}")"
+    ANDROID_SDK_DIR="${ANDROID_TOOL_DIR%/*}"
+  else
+    PATH=$PATH:$ANDROID_SDK_DIR:$ANDROID_SDK_DIR/tools/bin/
+  fi
 }
 
 # Checks that parameters are meaningful
