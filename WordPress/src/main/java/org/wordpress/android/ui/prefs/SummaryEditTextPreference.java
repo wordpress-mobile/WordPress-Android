@@ -10,6 +10,7 @@ import android.os.Bundle;
 import android.preference.EditTextPreference;
 import android.support.annotation.NonNull;
 import android.support.v4.view.MarginLayoutParamsCompat;
+import android.support.v4.view.ViewCompat;
 import android.support.v7.app.AlertDialog;
 import android.text.TextUtils;
 import android.util.AttributeSet;
@@ -158,7 +159,7 @@ public class SummaryEditTextPreference extends EditTextPreference implements Pre
             if (oldParent != null && oldParent instanceof ViewGroup) {
                 ViewGroup groupParent = (ViewGroup) oldParent;
                 groupParent.removeView(editText);
-                groupParent.setPadding(groupParent.getPaddingLeft(), 0, groupParent.getPaddingRight(), groupParent.getPaddingBottom());
+                ViewCompat.setPaddingRelative(groupParent,groupParent.getPaddingLeft(), 0, groupParent.getPaddingRight(), groupParent.getPaddingBottom());
             }
             onAddEditTextToDialogView(view, editText);
         }

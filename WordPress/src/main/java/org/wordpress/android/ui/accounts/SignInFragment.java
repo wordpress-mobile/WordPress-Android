@@ -12,6 +12,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v4.view.ViewCompat;
 import android.text.Editable;
 import android.text.Html;
 import android.text.TextUtils;
@@ -148,11 +149,16 @@ public class SignInFragment extends AbstractFragment implements TextWatcher {
     protected ImageView mInfoButton;
     protected ImageView mInfoButtonSecondary;
 
-    protected @Inject SiteStore mSiteStore;
-    protected @Inject AccountStore mAccountStore;
-    protected @Inject Dispatcher mDispatcher;
-    protected @Inject HTTPAuthManager mHTTPAuthManager;
-    protected @Inject MemorizingTrustManager mMemorizingTrustManager;
+    protected @Inject
+    SiteStore mSiteStore;
+    protected @Inject
+    AccountStore mAccountStore;
+    protected @Inject
+    Dispatcher mDispatcher;
+    protected @Inject
+    HTTPAuthManager mHTTPAuthManager;
+    protected @Inject
+    MemorizingTrustManager mMemorizingTrustManager;
 
     private final Matcher mReservedNameMatcher = DOT_COM_RESERVED_NAMES.matcher("");
     private final Matcher mTwoStepAuthCodeMatcher = TWO_STEP_AUTH_CODE.matcher("");
@@ -246,38 +252,38 @@ public class SignInFragment extends AbstractFragment implements TextWatcher {
         mTwoStepEditText = (ContextMenuEditText) rootView.findViewById(R.id.nux_two_step);
         mTwoStepEditText.addTextChangedListener(this);
         mTwoStepEditText.setOnKeyListener(
-            new View.OnKeyListener() {
-                @Override
-                public boolean onKey(View v, int keyCode, KeyEvent event) {
-                    if ((event != null && (event.getKeyCode() == KeyEvent.KEYCODE_ENTER)) || (keyCode == EditorInfo.IME_ACTION_DONE)) {
-                        if (fieldsFilled()) {
-                            signIn();
+                new View.OnKeyListener() {
+                    @Override
+                    public boolean onKey(View v, int keyCode, KeyEvent event) {
+                        if ((event != null && (event.getKeyCode() == KeyEvent.KEYCODE_ENTER)) || (keyCode == EditorInfo.IME_ACTION_DONE)) {
+                            if (fieldsFilled()) {
+                                signIn();
+                            }
                         }
-                    }
 
-                    return false;
+                        return false;
+                    }
                 }
-            }
         );
         mTwoStepEditText.setOnContextMenuListener(
-            new ContextMenuEditText.OnContextMenuListener() {
-                @Override
-                public void onCut() {
-                }
+                new ContextMenuEditText.OnContextMenuListener() {
+                    @Override
+                    public void onCut() {
+                    }
 
-                @Override
-                public void onCopy() {
-                }
+                    @Override
+                    public void onCopy() {
+                    }
 
-                @Override
-                public void onPaste() {
-                    mTwoStepEditText.setText(getAuthCodeFromClipboard());
+                    @Override
+                    public void onPaste() {
+                        mTwoStepEditText.setText(getAuthCodeFromClipboard());
 
-                    if (TextUtils.isEmpty(mTwoStepEditText.getText().toString())) {
-                        showTwoStepCodeError(R.string.invalid_verification_code_format);
+                        if (TextUtils.isEmpty(mTwoStepEditText.getText().toString())) {
+                            showTwoStepCodeError(R.string.invalid_verification_code_format);
+                        }
                     }
                 }
-            }
         );
 
         WPTextView twoStepFooterButton = (WPTextView) rootView.findViewById(R.id.two_step_footer_button);
@@ -343,7 +349,7 @@ public class SignInFragment extends AbstractFragment implements TextWatcher {
         // Ensure two-step form is shown if needed
         if (!TextUtils.isEmpty(mTwoStepEditText.getText()) && mTwoStepLayout.getVisibility() == View.GONE) {
             setTwoStepAuthVisibility(true);
-        // Insert authentication code if copied to clipboard
+            // Insert authentication code if copied to clipboard
         } else if (TextUtils.isEmpty(mTwoStepEditText.getText()) && mTwoStepLayout.getVisibility() == View.VISIBLE) {
             mTwoStepEditText.setText(getAuthCodeFromClipboard());
         }
@@ -409,7 +415,7 @@ public class SignInFragment extends AbstractFragment implements TextWatcher {
         }
     }
 
-    protected void toggleSignInMode(){
+    protected void toggleSignInMode() {
         if (mUrlButtonLayout.getVisibility() == View.VISIBLE) {
             if (mInhibitMagicLogin) {
                 showDotComSignInForm();
@@ -427,7 +433,7 @@ public class SignInFragment extends AbstractFragment implements TextWatcher {
         }
     }
 
-    protected void showDotComSignInForm(){
+    protected void showDotComSignInForm() {
         mUrlButtonLayout.setVisibility(View.GONE);
         mAddSelfHostedButton.setText(getString(R.string.nux_add_selfhosted_blog));
         switchToDotOrgIcon(false);
@@ -435,7 +441,7 @@ public class SignInFragment extends AbstractFragment implements TextWatcher {
         showWPComLogoType(false);
     }
 
-    protected void showSelfHostedSignInForm(){
+    protected void showSelfHostedSignInForm() {
         endProgress();
         mSelfHosted = true;
         mUrlButtonLayout.setVisibility(View.VISIBLE);
@@ -526,11 +532,11 @@ public class SignInFragment extends AbstractFragment implements TextWatcher {
 
     public boolean canAutofillUsernameAndPassword() {
         return EditTextUtils.getText(mUsernameEditText).isEmpty()
-               && EditTextUtils.getText(mPasswordEditText).isEmpty()
-               && mUsernameEditText != null
-               && mPasswordEditText != null
-               && mSmartLockEnabled
-               && !mSelfHosted;
+                && EditTextUtils.getText(mPasswordEditText).isEmpty()
+                && mUsernameEditText != null
+                && mPasswordEditText != null
+                && mSmartLockEnabled
+                && !mSelfHosted;
     }
 
     public void onCredentialRetrieved(Credential credential) {
@@ -564,14 +570,14 @@ public class SignInFragment extends AbstractFragment implements TextWatcher {
             }
 
             // make the top padding match the bottom padding of the logo so the logo doesn't touch the screen top
-            mIconSwitcher.setPadding(mIconSwitcher.getPaddingLeft(), mIconSwitcher.getPaddingBottom(), mIconSwitcher
+            ViewCompat.setPaddingRelative(mIconSwitcher, mIconSwitcher.getPaddingLeft(), mIconSwitcher.getPaddingBottom(), mIconSwitcher
                     .getPaddingRight(), mIconSwitcher.getPaddingBottom());
         } else {
             mBottomButtonsLayout.setOrientation(LinearLayout.VERTICAL);
             setSecondaryButtonVisible(false);
 
             // revert the top padding to zero when in portrait
-            mIconSwitcher.setPadding(mIconSwitcher.getPaddingLeft(), 0, mIconSwitcher.getPaddingRight(), mIconSwitcher
+            ViewCompat.setPaddingRelative(mIconSwitcher, mIconSwitcher.getPaddingLeft(), 0, mIconSwitcher.getPaddingRight(), mIconSwitcher
                     .getPaddingBottom());
         }
     }
@@ -772,7 +778,7 @@ public class SignInFragment extends AbstractFragment implements TextWatcher {
         ClipboardManager clipboard = (ClipboardManager) getActivity().getSystemService(CLIPBOARD_SERVICE);
 
         if (clipboard.getPrimaryClip() != null && clipboard.getPrimaryClip().getItemAt(0) != null
-            && clipboard.getPrimaryClip().getItemAt(0).getText() != null) {
+                && clipboard.getPrimaryClip().getItemAt(0).getText() != null) {
             String code = clipboard.getPrimaryClip().getItemAt(0).getText().toString();
 
             mTwoStepAuthCodeMatcher.reset(code);
@@ -852,7 +858,7 @@ public class SignInFragment extends AbstractFragment implements TextWatcher {
         if (mAccountStore.hasAccessToken()) {
             String currentUsername = mAccountStore.getAccount().getUserName();
             AppLog.e(T.NUX, "User is already logged in WordPress.com: " + currentUsername
-                            + " - but tries to sign in again: " + mUsername);
+                    + " - but tries to sign in again: " + mUsername);
             if (getActivity() != null) {
                 if (currentUsername.equals(mUsername)) {
                     ToastUtils.showToast(getActivity(), R.string.already_logged_in_wpcom_same_username, Duration.LONG);
@@ -888,7 +894,7 @@ public class SignInFragment extends AbstractFragment implements TextWatcher {
             } else {
                 String selfHostedUrl = EditTextUtils.getText(mUrlEditText).trim();
                 AppLog.i(T.NUX, "User tries to sign in on Self Hosted: " + selfHostedUrl
-                                + " with username: " + mUsername);
+                        + " with username: " + mUsername);
                 signInAndFetchBlogListWPOrg();
             }
         } else {
@@ -972,8 +978,8 @@ public class SignInFragment extends AbstractFragment implements TextWatcher {
 
     private boolean fieldsFilled() {
         return EditTextUtils.getText(mUsernameEditText).trim().length() > 0
-               && (mPasswordLayout.getVisibility() == View.GONE || EditTextUtils.getText(mPasswordEditText).trim().length() > 0)
-               && (mTwoStepLayout.getVisibility() == View.GONE || EditTextUtils.getText(mTwoStepEditText).trim().length() > 0);
+                && (mPasswordLayout.getVisibility() == View.GONE || EditTextUtils.getText(mPasswordEditText).trim().length() > 0)
+                && (mTwoStepLayout.getVisibility() == View.GONE || EditTextUtils.getText(mTwoStepEditText).trim().length() > 0);
     }
 
     protected boolean isUserDataValid() {
@@ -1136,7 +1142,7 @@ public class SignInFragment extends AbstractFragment implements TextWatcher {
         String thirdButtonLabel = getString(R.string.contact_us);
         if (!TextUtils.isEmpty(faqId) || !TextUtils.isEmpty(faqSection)) {
             faqAction = SignInDialogFragment.ACTION_OPEN_FAQ_PAGE;
-            thirdButtonLabel =  getString(R.string.tell_me_more);
+            thirdButtonLabel = getString(R.string.tell_me_more);
         }
         nuxAlert = SignInDialogFragment.newInstance(getString(org.wordpress.android.R.string.nux_cannot_log_in),
                 errorMessage, R.drawable.ic_notice_white_64dp, 3,
@@ -1288,7 +1294,7 @@ public class SignInFragment extends AbstractFragment implements TextWatcher {
             AppLog.e(T.API, "OnAvailabilityChecked has error: " + event.error.type + " - " + event.error.message);
         }
 
-        switch(event.type) {
+        switch (event.type) {
             case EMAIL:
                 handleEmailAvailabilityEvent(event);
                 break;
@@ -1305,6 +1311,7 @@ public class SignInFragment extends AbstractFragment implements TextWatcher {
      * Handler for an email availability event. If a user enters an email address for their
      * username an API checks to see if it belongs to a wpcom account.  If it exists the magic links
      * flow is followed. Otherwise the self-hosted sign in form is shown.
+     *
      * @param event
      */
     private void handleEmailAvailabilityEvent(OnAvailabilityChecked event) {
@@ -1332,7 +1339,7 @@ public class SignInFragment extends AbstractFragment implements TextWatcher {
      */
     private void handleUsernameAvailabilityEvent(OnAvailabilityChecked event) {
         endProgress();
-        if (event.type != IsAvailable.USERNAME ) {
+        if (event.type != IsAvailable.USERNAME) {
             return;
         }
         if (event.isAvailable) {

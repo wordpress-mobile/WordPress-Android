@@ -1,6 +1,7 @@
 package org.wordpress.android.ui.notifications.blocks;
 
 import android.content.Context;
+import android.support.v4.view.ViewCompat;
 import android.text.Html;
 import android.text.TextUtils;
 import android.view.View;
@@ -131,8 +132,7 @@ public class CommentUserNoteBlock extends UserNoteBlock {
             noteBlockHolder.nameTextView.setTextColor(mNormalTextColor);
             noteBlockHolder.commentTextView.setTextColor(mNormalTextColor);
         }
-
-        view.setPadding(paddingLeft, paddingTop, paddingRight, paddingBottom);
+        ViewCompat.setPaddingRelative(view, paddingLeft, paddingTop, paddingRight, paddingBottom);
 
         // If status was changed, fade in the view
         if (mStatusChanged) {
