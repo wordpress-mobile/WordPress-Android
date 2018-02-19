@@ -10,8 +10,9 @@ import org.apache.commons.text.StringEscapeUtils;
 import org.wordpress.android.fluxc.Dispatcher;
 import org.wordpress.android.fluxc.generated.PluginActionBuilder;
 import org.wordpress.android.fluxc.generated.endpoint.WPCOMREST;
-import org.wordpress.android.fluxc.model.plugin.SitePluginModel;
 import org.wordpress.android.fluxc.model.SiteModel;
+import org.wordpress.android.fluxc.model.plugin.PluginDirectoryType;
+import org.wordpress.android.fluxc.model.plugin.SitePluginModel;
 import org.wordpress.android.fluxc.network.BaseRequest.BaseErrorListener;
 import org.wordpress.android.fluxc.network.BaseRequest.BaseNetworkError;
 import org.wordpress.android.fluxc.network.UserAgent;
@@ -20,14 +21,14 @@ import org.wordpress.android.fluxc.network.rest.wpcom.WPComGsonRequest;
 import org.wordpress.android.fluxc.network.rest.wpcom.WPComGsonRequest.WPComGsonNetworkError;
 import org.wordpress.android.fluxc.network.rest.wpcom.auth.AccessToken;
 import org.wordpress.android.fluxc.network.rest.wpcom.plugin.PluginWPComRestResponse.FetchPluginsResponse;
+import org.wordpress.android.fluxc.store.PluginStore.ConfigureSitePluginError;
 import org.wordpress.android.fluxc.store.PluginStore.ConfiguredSitePluginPayload;
 import org.wordpress.android.fluxc.store.PluginStore.DeleteSitePluginError;
 import org.wordpress.android.fluxc.store.PluginStore.DeletedSitePluginPayload;
-import org.wordpress.android.fluxc.store.PluginStore.FetchSitePluginsError;
-import org.wordpress.android.fluxc.store.PluginStore.FetchedSitePluginsPayload;
+import org.wordpress.android.fluxc.store.PluginStore.FetchedPluginDirectoryPayload;
 import org.wordpress.android.fluxc.store.PluginStore.InstallSitePluginError;
 import org.wordpress.android.fluxc.store.PluginStore.InstalledSitePluginPayload;
-import org.wordpress.android.fluxc.store.PluginStore.ConfigureSitePluginError;
+import org.wordpress.android.fluxc.store.PluginStore.PluginDirectoryError;
 import org.wordpress.android.fluxc.store.PluginStore.UpdateSitePluginError;
 import org.wordpress.android.fluxc.store.PluginStore.UpdatedSitePluginPayload;
 
@@ -62,17 +63,21 @@ public class PluginRestClient extends BaseWPComRestClient {
                                 plugins.add(pluginModelFromResponse(site, pluginResponse));
                             }
                         }
-                        mDispatcher.dispatch(PluginActionBuilder.newFetchedSitePluginsAction(
-                                new FetchedSitePluginsPayload(site, plugins)));
+                        FetchedPluginDirectoryPayload payload =
+                                new FetchedPluginDirectoryPayload(PluginDirectoryType.SITE, false);
+                        payload.site = site;
+                        payload.sitePlugins = plugins;
+                        mDispatcher.dispatch(PluginActionBuilder.newFetchedPluginDirectoryAction(payload));
                     }
                 },
                 new BaseErrorListener() {
                     @Override
                     public void onErrorResponse(@NonNull BaseNetworkError networkError) {
-                        FetchSitePluginsError fetchPluginsError = new FetchSitePluginsError(((WPComGsonNetworkError)
+                        FetchedPluginDirectoryPayload payload =
+                                new FetchedPluginDirectoryPayload(PluginDirectoryType.SITE, false);
+                        payload.error = new PluginDirectoryError(((WPComGsonNetworkError)
                                 networkError).apiError, networkError.message);
-                        FetchedSitePluginsPayload payload = new FetchedSitePluginsPayload(fetchPluginsError);
-                        mDispatcher.dispatch(PluginActionBuilder.newFetchedSitePluginsAction(payload));
+                        mDispatcher.dispatch(PluginActionBuilder.newFetchedPluginDirectoryAction(payload));
                     }
                 }
         );

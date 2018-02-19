@@ -60,7 +60,7 @@ public class PluginWPOrgClient extends BaseWPOrgAPIClient {
                                 if (response != null) {
                                     payload.canLoadMore = response.info.page < response.info.pages;
                                     payload.page = response.info.page;
-                                    payload.plugins = wpOrgPluginListFromResponse(response);
+                                    payload.wpOrgPlugins = wpOrgPluginListFromResponse(response);
                                 } else {
                                     payload.error = new PluginDirectoryError(
                                             PluginDirectoryErrorType.EMPTY_RESPONSE, null);
