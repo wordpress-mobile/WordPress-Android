@@ -57,12 +57,10 @@ public class WordPressRtlCodeDetector extends Detector implements UastScanner {
             Severity.ERROR,
             new Implementation(WordPressRtlCodeDetector.class, Scope.JAVA_FILE_SCOPE));
 
-
     @Override
     public List<Class<? extends UElement>> getApplicableUastTypes() {
         return Collections.singletonList(UCallExpression.class);
     }
-
 
     @Override
     public UElementHandler createUastHandler(JavaContext context) {

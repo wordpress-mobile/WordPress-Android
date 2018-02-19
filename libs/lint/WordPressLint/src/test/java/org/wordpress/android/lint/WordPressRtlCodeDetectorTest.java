@@ -32,7 +32,6 @@ public class WordPressRtlCodeDetectorTest extends LintDetectorTest {
                         "1 errors, 0 warnings");
     }
 
-
     public void testSetMargins() {
         lint().allowCompilationErrors(true).files(
                 java("" +
@@ -81,7 +80,6 @@ public class WordPressRtlCodeDetectorTest extends LintDetectorTest {
                         "2 errors, 0 warnings\n");
     }
 
-
     @Override
     protected Detector getDetector() {
         return new WordPressRtlCodeDetector();
@@ -89,7 +87,10 @@ public class WordPressRtlCodeDetectorTest extends LintDetectorTest {
 
     @Override
     protected List<Issue> getIssues() {
-        return Arrays.asList(WordPressRtlCodeDetector.SET_PADDING, WordPressRtlCodeDetector.SET_MARGIN,WordPressRtlCodeDetector.GET_PADDING);
+        return Arrays.asList(
+                WordPressRtlCodeDetector.SET_PADDING,
+                WordPressRtlCodeDetector.SET_MARGIN,
+                WordPressRtlCodeDetector.GET_PADDING);
     }
 
 }
