@@ -83,17 +83,17 @@ import javax.inject.Inject;
 
 /**
  * Allows interfacing with WordPress site settings. Works with WP.com and WP.org v4.5+ (pending).
- *
+ * <p>
  * Settings are synced automatically when local changes are made.
  */
 
 public class SiteSettingsFragment extends PreferenceFragment
         implements Preference.OnPreferenceChangeListener,
-                   Preference.OnPreferenceClickListener,
-                   AdapterView.OnItemLongClickListener,
-                   ViewGroup.OnHierarchyChangeListener,
-                   Dialog.OnDismissListener,
-                   SiteSettingsInterface.SiteSettingsListener {
+        Preference.OnPreferenceClickListener,
+        AdapterView.OnItemLongClickListener,
+        ViewGroup.OnHierarchyChangeListener,
+        Dialog.OnDismissListener,
+        SiteSettingsInterface.SiteSettingsListener {
     /**
      * When the user removes a site (by selecting Delete Site) the parent {@link Activity} result
      * is set to this value and {@link Activity#finish()} is invoked.
@@ -102,7 +102,7 @@ public class SiteSettingsFragment extends PreferenceFragment
 
     /**
      * Provides the regex to identify domain HTTP(S) protocol and/or 'www' sub-domain.
-     *
+     * <p>
      * Used to format user-facing {@link String}'s in certain preferences.
      */
     public static final String ADDRESS_FORMAT_REGEX = "^(https?://(w{3})?|www\\.)";
@@ -143,9 +143,12 @@ public class SiteSettingsFragment extends PreferenceFragment
 
     private static final long FETCH_DELAY = 1000;
 
-    @Inject AccountStore mAccountStore;
-    @Inject SiteStore mSiteStore;
-    @Inject Dispatcher mDispatcher;
+    @Inject
+    AccountStore mAccountStore;
+    @Inject
+    SiteStore mSiteStore;
+    @Inject
+    Dispatcher mDispatcher;
 
     public SiteModel mSite;
 
@@ -219,6 +222,11 @@ public class SiteSettingsFragment extends PreferenceFragment
     private WPSwitchPreference mJpSsoPref;
     private WPSwitchPreference mJpMatchEmailPref;
     private WPSwitchPreference mJpUseTwoFactorPref;
+
+    // Speed up settings
+    private PreferenceScreen mSpeedUpYourSiteSettings;
+    private WPSwitchPreference mServeImagesFromOurServers;
+    private WPSwitchPreference mLazyLoadImages;
 
     public boolean mEditingEnabled = true;
 
@@ -476,6 +484,8 @@ public class SiteSettingsFragment extends PreferenceFragment
             return setupMorePreferenceScreen();
         } else if (preference == mJpSecuritySettings) {
             setupJetpackSecurityScreen();
+        } else if (preference == mSpeedUpYourSiteSettings) {
+            setupSpeedUpScreen();
         } else if (preference == findPreference(getString(R.string.pref_key_site_start_over_screen))) {
             Dialog dialog = ((PreferenceScreen) preference).getDialog();
             if (mSite == null || dialog == null) return false;
@@ -491,7 +501,7 @@ public class SiteSettingsFragment extends PreferenceFragment
                 String title = getString(R.string.start_over);
                 WPActivityUtils.addToolbarToDialog(this, dialog, title);
             }
-        }  else if (preference == mDateFormatPref) {
+        } else if (preference == mDateFormatPref) {
             showDateOrTimeFormatDialog(FormatType.DATE_FORMAT);
         } else if (preference == mTimeFormatPref) {
             showDateOrTimeFormatDialog(FormatType.TIME_FORMAT);
@@ -550,26 +560,26 @@ public class SiteSettingsFragment extends PreferenceFragment
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         builder.setMessage(R.string.jetpack_disconnect_confirmation_message);
         builder.setPositiveButton(R.string.jetpack_disconnect_confirm, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                String url = String.format(Locale.US, "jetpack-blogs/%d/mine/delete", mSite.getSiteId());
+                WordPress.getRestClientUtilsV1_1().post(url, new RestRequest.Listener() {
                     @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        String url = String.format(Locale.US, "jetpack-blogs/%d/mine/delete", mSite.getSiteId());
-                        WordPress.getRestClientUtilsV1_1().post(url, new RestRequest.Listener() {
-                            @Override
-                            public void onResponse(JSONObject response) {
-                                AppLog.v(AppLog.T.API, "Successfully disconnected Jetpack site");
-                                ToastUtils.showToast(getActivity(), R.string.jetpack_disconnect_success_toast);
-                                mDispatcher.dispatch(SiteActionBuilder.newRemoveSiteAction(mSite));
-                                mSite = null;
-                            }
-                        }, new RestRequest.ErrorListener() {
-                            @Override
-                            public void onErrorResponse(VolleyError error) {
-                                AppLog.e(AppLog.T.API, "Error disconnecting Jetpack site");
-                                ToastUtils.showToast(getActivity(), R.string.jetpack_disconnect_error_toast);
-                            }
-                        });
+                    public void onResponse(JSONObject response) {
+                        AppLog.v(AppLog.T.API, "Successfully disconnected Jetpack site");
+                        ToastUtils.showToast(getActivity(), R.string.jetpack_disconnect_success_toast);
+                        mDispatcher.dispatch(SiteActionBuilder.newRemoveSiteAction(mSite));
+                        mSite = null;
+                    }
+                }, new RestRequest.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        AppLog.e(AppLog.T.API, "Error disconnecting Jetpack site");
+                        ToastUtils.showToast(getActivity(), R.string.jetpack_disconnect_error_toast);
                     }
                 });
+            }
+        });
         builder.setNegativeButton(android.R.string.cancel, null);
         builder.show();
     }
@@ -601,6 +611,12 @@ public class SiteSettingsFragment extends PreferenceFragment
         } else if (preference == mJpUseTwoFactorPref) {
             mJpUseTwoFactorPref.setChecked((Boolean) newValue);
             mSiteSettings.enableJetpackSsoTwoFactor((Boolean) newValue);
+        } else if (preference == mServeImagesFromOurServers) {
+            mServeImagesFromOurServers.setChecked((Boolean)newValue);
+            mSiteSettings.enableServeImagesFromOurServers((Boolean) newValue);
+        } else if (preference == mLazyLoadImages) {
+            mLazyLoadImages.setChecked((Boolean)newValue);
+            mSiteSettings.enableLazyLoadImages((Boolean) newValue);
         } else if (preference == mTitlePref) {
             mSiteSettings.setTitle(newValue.toString());
             changeEditTextPreferenceValue(mTitlePref, mSiteSettings.getTitle());
@@ -847,6 +863,9 @@ public class SiteSettingsFragment extends PreferenceFragment
         mPostsPerPagePref = getClickPref(R.string.pref_key_site_posts_per_page);
         mTimezonePref = getClickPref(R.string.pref_key_site_timezone);
         mAmpPref = (WPSwitchPreference) getChangePref(R.string.pref_key_site_amp);
+        mSpeedUpYourSiteSettings = (PreferenceScreen) getClickPref(R.string.pref_key_speed_up_your_site_screen);
+        mServeImagesFromOurServers = (WPSwitchPreference) getChangePref(R.string.pref_key_serve_images_from_our_servers);
+        mLazyLoadImages = (WPSwitchPreference) getChangePref(R.string.pref_key_lazy_load_images);
 
         sortLanguages();
 
@@ -866,7 +885,7 @@ public class SiteSettingsFragment extends PreferenceFragment
 
         // hide Admin options depending of capabilities on this site
         if ((!isAccessedViaWPComRest && !mSite.isSelfHostedAdmin())
-            || (isAccessedViaWPComRest && !mSite.getHasCapabilityManageOptions())) {
+                || (isAccessedViaWPComRest && !mSite.getHasCapabilityManageOptions())) {
             hideAdminRequiredPreferences();
         }
     }
@@ -874,7 +893,7 @@ public class SiteSettingsFragment extends PreferenceFragment
     public void setEditingEnabled(boolean enabled) {
         // excludes mAddressPref, mMorePreference, mJpSecuritySettings
         final Preference[] editablePreference = {
-                mTitlePref , mTaglinePref, mPrivacyPref, mLanguagePref, mUsernamePref,
+                mTitlePref, mTaglinePref, mPrivacyPref, mLanguagePref, mUsernamePref,
                 mPasswordPref, mCategoryPref, mTagsPref, mFormatPref, mAllowCommentsPref,
                 mAllowCommentsNested, mSendPingbacksPref, mSendPingbacksNested, mReceivePingbacksPref,
                 mReceivePingbacksNested, mIdentityRequiredPreference, mUserAccountRequiredPref,
@@ -1091,7 +1110,8 @@ public class SiteSettingsFragment extends PreferenceFragment
     }
 
     private void showDeleteSiteDialog() {
-        if (mIsFragmentPaused) return; // Do not show the DeleteSiteDialogFragment if the fragment was paused.
+        if (mIsFragmentPaused)
+            return; // Do not show the DeleteSiteDialogFragment if the fragment was paused.
         // DialogFragment internally uses commit(), and not commitAllowingStateLoss, crashing the app in case like that.
         Bundle args = new Bundle();
         args.putString(DeleteSiteDialogFragment.SITE_DOMAIN_KEY, UrlUtils.getHost(mSite.getUrl()));
@@ -1170,6 +1190,8 @@ public class SiteSettingsFragment extends PreferenceFragment
         mJpWhitelistPref.setSummary(mSiteSettings.getJetpackProtectWhitelistSummary());
         mWeekStartPref.setValue(mSiteSettings.getStartOfWeek());
         mWeekStartPref.setSummary(mWeekStartPref.getEntry());
+        mServeImagesFromOurServers.setChecked(mSiteSettings.isServeImagesFromOurServersEnabled());
+        mLazyLoadImages.setChecked(mSiteSettings.isLazyLoadImagesEnabled());
 
         if (mSiteSettings.getAmpSupported()) {
             mAmpPref.setChecked(mSiteSettings.getAmpEnabled());
@@ -1304,8 +1326,7 @@ public class SiteSettingsFragment extends PreferenceFragment
     /**
      * Detail strings for the dialog are generated in the selected language.
      *
-     * @param newValue
-     * languageCode
+     * @param newValue languageCode
      */
     private void changeLanguageValue(String newValue) {
         if (mLanguagePref == null || newValue == null) return;
@@ -1391,45 +1412,45 @@ public class SiteSettingsFragment extends PreferenceFragment
         mAdapter = null;
         final EmptyViewRecyclerView list = (EmptyViewRecyclerView) view.findViewById(android.R.id.list);
         list.setLayoutManager(
-            new SmoothScrollLinearLayoutManager(
-                getActivity(),
-                LinearLayoutManager.VERTICAL,
-                false,
-                getResources().getInteger(android.R.integer.config_mediumAnimTime)
-            )
+                new SmoothScrollLinearLayoutManager(
+                        getActivity(),
+                        LinearLayoutManager.VERTICAL,
+                        false,
+                        getResources().getInteger(android.R.integer.config_mediumAnimTime)
+                )
         );
         list.setAdapter(getAdapter());
         list.setEmptyView(view.findViewById(R.id.empty_view));
         list.addOnItemTouchListener(
-            new RecyclerViewItemClickListener(
-                getActivity(),
-                list,
-                new RecyclerViewItemClickListener.OnItemClickListener() {
-                    @Override
-                    public void onItemClick(View view, int position) {
-                        if (mActionMode != null) {
-                            getAdapter().toggleItemSelected(position);
-                            mActionMode.invalidate();
-                            if (getAdapter().getItemsSelected().size() <= 0) {
-                                mActionMode.finish();
-                            }
-                        }
-                    }
-
-                    @Override
-                    public void onLongItemClick(View view, int position) {
-                        if (mActionMode == null) {
-                            if (view.isHapticFeedbackEnabled()) {
-                                view.performHapticFeedback(HapticFeedbackConstants.LONG_PRESS);
+                new RecyclerViewItemClickListener(
+                        getActivity(),
+                        list,
+                        new RecyclerViewItemClickListener.OnItemClickListener() {
+                            @Override
+                            public void onItemClick(View view, int position) {
+                                if (mActionMode != null) {
+                                    getAdapter().toggleItemSelected(position);
+                                    mActionMode.invalidate();
+                                    if (getAdapter().getItemsSelected().size() <= 0) {
+                                        mActionMode.finish();
+                                    }
+                                }
                             }
 
-                            mDialog.getWindow().getDecorView().startActionMode(new ActionModeCallback());
-                            getAdapter().setItemSelected(position);
-                            mActionMode.invalidate();
+                            @Override
+                            public void onLongItemClick(View view, int position) {
+                                if (mActionMode == null) {
+                                    if (view.isHapticFeedbackEnabled()) {
+                                        view.performHapticFeedback(HapticFeedbackConstants.LONG_PRESS);
+                                    }
+
+                                    mDialog.getWindow().getDecorView().startActionMode(new ActionModeCallback());
+                                    getAdapter().setItemSelected(position);
+                                    mActionMode.invalidate();
+                                }
+                            }
                         }
-                    }
-                }
-            )
+                )
         );
         view.findViewById(R.id.fab_button).setOnClickListener(new View.OnClickListener() {
             @Override
@@ -1454,12 +1475,12 @@ public class SiteSettingsFragment extends PreferenceFragment
                             mEditingList.add(entry);
                             getAdapter().notifyItemInserted(getAdapter().getItemCount() - 1);
                             list.post(
-                                new Runnable() {
-                                    @Override
-                                    public void run() {
-                                        list.smoothScrollToPosition(getAdapter().getItemCount() - 1);
+                                    new Runnable() {
+                                        @Override
+                                        public void run() {
+                                            list.smoothScrollToPosition(getAdapter().getItemCount() - 1);
+                                        }
                                     }
-                                }
                             );
                             mSiteSettings.saveSettings();
                             AnalyticsUtils.trackWithSiteDetails(AnalyticsTracker.Stat.SITE_SETTINGS_ADDED_LIST_ITEM,
@@ -1528,6 +1549,16 @@ public class SiteSettingsFragment extends PreferenceFragment
         if (mJpSecuritySettings == null || !isAdded()) return;
         String title = getString(R.string.jetpack_security_setting_title);
         Dialog dialog = mJpSecuritySettings.getDialog();
+        if (dialog != null) {
+            setupPreferenceList((ListView) dialog.findViewById(android.R.id.list), getResources());
+            WPActivityUtils.addToolbarToDialog(this, dialog, title);
+        }
+    }
+
+    private void setupSpeedUpScreen() {
+        if (mSpeedUpYourSiteSettings == null || !isAdded()) return;
+        String title = getString(R.string.site_settings_speed_up_your_site);
+        Dialog dialog = mSpeedUpYourSiteSettings.getDialog();
         if (dialog != null) {
             setupPreferenceList((ListView) dialog.findViewById(android.R.id.list), getResources());
             WPActivityUtils.addToolbarToDialog(this, dialog, title);
@@ -1609,28 +1640,28 @@ public class SiteSettingsFragment extends PreferenceFragment
         if (mSite.isWPCom()) {
             final ProgressDialog progressDialog = ProgressDialog.show(getActivity(), "", getActivity().getString(R.string.exporting_content_progress), true, true);
             WordPress.getRestClientUtils().exportContentAll(mSite.getSiteId(), new RestRequest.Listener() {
-                        @Override
-                        public void onResponse(JSONObject response) {
-                            if (isAdded()) {
-                                AnalyticsUtils.trackWithSiteDetails(
-                                        AnalyticsTracker.Stat.SITE_SETTINGS_EXPORT_SITE_RESPONSE_OK, mSite);
-                                dismissProgressDialog(progressDialog);
-                                Snackbar.make(getView(), R.string.export_email_sent, Snackbar.LENGTH_LONG).show();
-                            }
-                        }
-                    }, new RestRequest.ErrorListener() {
-                        @Override
-                        public void onErrorResponse(VolleyError error) {
-                            if (isAdded()) {
-                                HashMap<String, Object> errorProperty = new HashMap<>();
-                                errorProperty.put(ANALYTICS_ERROR_PROPERTY_KEY, error.getMessage());
-                                AnalyticsUtils.trackWithSiteDetails(
-                                        AnalyticsTracker.Stat.SITE_SETTINGS_EXPORT_SITE_RESPONSE_ERROR,
-                                        mSite, errorProperty);
-                                dismissProgressDialog(progressDialog);
-                            }
-                        }
-                    });
+                @Override
+                public void onResponse(JSONObject response) {
+                    if (isAdded()) {
+                        AnalyticsUtils.trackWithSiteDetails(
+                                AnalyticsTracker.Stat.SITE_SETTINGS_EXPORT_SITE_RESPONSE_OK, mSite);
+                        dismissProgressDialog(progressDialog);
+                        Snackbar.make(getView(), R.string.export_email_sent, Snackbar.LENGTH_LONG).show();
+                    }
+                }
+            }, new RestRequest.ErrorListener() {
+                @Override
+                public void onErrorResponse(VolleyError error) {
+                    if (isAdded()) {
+                        HashMap<String, Object> errorProperty = new HashMap<>();
+                        errorProperty.put(ANALYTICS_ERROR_PROPERTY_KEY, error.getMessage());
+                        AnalyticsUtils.trackWithSiteDetails(
+                                AnalyticsTracker.Stat.SITE_SETTINGS_EXPORT_SITE_RESPONSE_ERROR,
+                                mSite, errorProperty);
+                        dismissProgressDialog(progressDialog);
+                    }
+                }
+            });
         }
     }
 
@@ -1753,7 +1784,9 @@ public class SiteSettingsFragment extends PreferenceFragment
         }
     }
 
-    /** Show Disconnect button for development purposes. Only available in debug builds on Jetpack sites. */
+    /**
+     * Show Disconnect button for development purposes. Only available in debug builds on Jetpack sites.
+     */
     private boolean shouldShowDisconnect() {
         return BuildConfig.DEBUG && mSite.isJetpackConnected() && mSite.isUsingWpComRestApi();
     }

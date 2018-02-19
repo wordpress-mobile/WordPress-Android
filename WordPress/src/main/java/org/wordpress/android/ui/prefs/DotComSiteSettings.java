@@ -63,6 +63,8 @@ class DotComSiteSettings extends SiteSettingsInterface {
     private static final String JP_MONITOR_EMAIL_NOTES_KEY = "email_notifications";
     private static final String JP_MONITOR_WP_NOTES_KEY = "wp_note_notifications";
     private static final String JP_PROTECT_WHITELIST_KEY = "jetpack_protect_whitelist";
+    private static final String SERVE_IMAGES_FROM_OUR_SERVERS = "photon";
+    private static final String LAZY_LOAD_IMAGES = "lazy-images";
     private static final String START_OF_WEEK_KEY = "start_of_week";
     private static final String DATE_FORMAT_KEY = "date_format";
     private static final String TIME_FORMAT_KEY = "time_format";
@@ -111,6 +113,8 @@ class DotComSiteSettings extends SiteSettingsInterface {
         if (mSite.isJetpackConnected()) {
             pushJetpackMonitorSettings();
             pushJetpackProtectAndSsoSettings();
+            pushServeImagesFromOurServersModuleSettings();
+            pushLazyLoadModule();
         }
 
         pushWpSettings();
@@ -197,6 +201,7 @@ class DotComSiteSettings extends SiteSettingsInterface {
     private void fetchJetpackSettings() {
         fetchJetpackMonitorSettings();
         fetchJetpackProtectAndSsoSettings();
+        fetchJetpackModuleSettings();
     }
 
     private void fetchJetpackProtectAndSsoSettings() {
@@ -272,6 +277,44 @@ class DotComSiteSettings extends SiteSettingsInterface {
                     @Override
                     public void onErrorResponse(VolleyError error) {
                         AppLog.w(AppLog.T.API, "Error fetching Jetpack Monitor module options: " + error);
+                        onFetchResponseReceived(error);
+                    }
+                });
+    }
+
+    private void fetchJetpackModuleSettings() {
+        ++mFetchRequestCount;
+        WordPress.getRestClientUtilsV1_1().getJetpackModuleSettings(
+                mSite.getSiteId(), new RestRequest.Listener() {
+                    @Override
+                    public void onResponse(JSONObject response) {
+                        AppLog.v(AppLog.T.API, "Received Jetpack speed-up options");
+                        if (response == null) return;
+                        JSONArray array = response.optJSONArray("modules");
+                        if (array == null) return;
+                        for (int i = 0; i < array.length(); i++) {
+                            JSONObject module = array.optJSONObject(i);
+                            if (module == null) {
+                                continue;
+                            }
+                            String id = module.optString("id");
+                            if (id == null) {
+                                continue;
+                            }
+                            if (id.equals(SERVE_IMAGES_FROM_OUR_SERVERS)) {
+                                mRemoteJpSettings.serveImagesFromOurServers = module.optBoolean("active", false);
+                            } else if (id.equals(LAZY_LOAD_IMAGES)) {
+                                mRemoteJpSettings.lazyLoadImages = module.optBoolean("active", false);
+                            }
+                        }
+                        mJpSettings.serveImagesFromOurServers = mRemoteJpSettings.serveImagesFromOurServers;
+                        mJpSettings.lazyLoadImages = mRemoteJpSettings.lazyLoadImages;
+                        onFetchResponseReceived(null);
+                    }
+                }, new RestRequest.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        AppLog.w(AppLog.T.API, "Error fetching Jetpack speed-up options: " + error);
                         onFetchResponseReceived(error);
                     }
                 });
@@ -376,10 +419,61 @@ class DotComSiteSettings extends SiteSettingsInterface {
                 }, new RestRequest.ErrorListener() {
                     @Override
                     public void onErrorResponse(VolleyError error) {
-                        AppLog.w(AppLog.T.API, "Error updating Jetpack Monitor module: " + error);
+                        AppLog.w(AppLog.T.API, "Error updating Jetpack Monitor module: " + error.getMessage());
                         onSaveResponseReceived(error);
                     }
                 });
+    }
+
+    private void pushServeImagesFromOurServersModuleSettings() {
+        ++mSaveRequestCount;
+        //The API returns 400 if we try to sync the same value twice so we need to keep it locally.
+        if (mJpSettings.serveImagesFromOurServers != mRemoteJpSettings.serveImagesFromOurServers) {
+            final boolean fallbackValue = mRemoteJpSettings.serveImagesFromOurServers;
+            mRemoteJpSettings.serveImagesFromOurServers = mJpSettings.serveImagesFromOurServers;
+            WordPress.getRestClientUtilsV1_1().setJetpackModuleSettings(
+                    mSite.getSiteId(), SERVE_IMAGES_FROM_OUR_SERVERS, mJpSettings.serveImagesFromOurServers,
+                    new RestRequest.Listener() {
+                        @Override
+                        public void onResponse(JSONObject response) {
+                            AppLog.d(AppLog.T.API, "Jetpack module updated - Serve images from our servers");
+                            onSaveResponseReceived(null);
+                        }
+                    }, new RestRequest.ErrorListener() {
+                        @Override
+                        public void onErrorResponse(VolleyError error) {
+                            mRemoteJpSettings.serveImagesFromOurServers = fallbackValue;
+                            error.printStackTrace();
+                            AppLog.w(AppLog.T.API, "Error updating Jetpack module - Serve images from our servers: " + error.getMessage());
+                            onSaveResponseReceived(error);
+                        }
+                    });
+        }
+    }
+
+    private void pushLazyLoadModule() {
+        ++mSaveRequestCount;
+        //The API returns 400 if we try to sync the same value twice so we need to keep it locally.
+        if (mJpSettings.lazyLoadImages != mRemoteJpSettings.lazyLoadImages) {
+            final boolean fallbackValue = mRemoteJpSettings.lazyLoadImages;
+            mRemoteJpSettings.lazyLoadImages = mJpSettings.lazyLoadImages;
+            WordPress.getRestClientUtilsV1_1().setJetpackModuleSettings(
+                    mSite.getSiteId(), LAZY_LOAD_IMAGES, mJpSettings.lazyLoadImages, new RestRequest.Listener() {
+                        @Override
+                        public void onResponse(JSONObject response) {
+                            AppLog.d(AppLog.T.API, "Jetpack module updated - Lazy load images");
+                            onSaveResponseReceived(null);
+                        }
+                    }, new RestRequest.ErrorListener() {
+                        @Override
+                        public void onErrorResponse(VolleyError error) {
+                            mRemoteJpSettings.lazyLoadImages = fallbackValue;
+                            error.printStackTrace();
+                            AppLog.w(AppLog.T.API, "Error updating Jetpack module - Lazy load images: " + error);
+                            onSaveResponseReceived(error);
+                        }
+                    });
+        }
     }
 
     private void onFetchResponseReceived(Exception error) {
@@ -505,7 +599,7 @@ class DotComSiteSettings extends SiteSettingsInterface {
     private JSONObject serializeDotComParamsToJSONObject() throws JSONException {
         JSONObject params = new JSONObject();
 
-        if (mSettings.title!= null && !mSettings.title.equals(mRemoteSettings.title)) {
+        if (mSettings.title != null && !mSettings.title.equals(mRemoteSettings.title)) {
             params.put(SET_TITLE_KEY, mSettings.title);
         }
         if (mSettings.tagline != null && !mSettings.tagline.equals(mRemoteSettings.tagline)) {

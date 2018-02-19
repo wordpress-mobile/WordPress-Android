@@ -165,6 +165,12 @@ public class RestClientUtils {
         get(path, listener, errorListener);
     }
 
+
+    public void getJetpackModuleSettings(long siteId, Listener listener, ErrorListener errorListener) {
+        String path = String.format(Locale.US, "sites/%d/jetpack/modules", siteId);
+        get(path, listener, errorListener);
+    }
+
     public void setGeneralSiteSettings(long siteId, JSONObject params, Listener listener, ErrorListener errorListener) {
         String path = String.format(Locale.US, "sites/%d/settings", siteId);
         post(path, params, null, listener, errorListener);
@@ -195,6 +201,14 @@ public class RestClientUtils {
     public void setJetpackMonitorSettings(long siteId, Map<String, String> params,
                                           Listener listener, ErrorListener errorListener) {
         String path = String.format(Locale.US, "jetpack-blogs/%d", siteId);
+        post(path, params, null, listener, errorListener);
+    }
+
+    public void setJetpackModuleSettings(long siteId, String module, boolean active,
+                                         Listener listener, ErrorListener errorListener) {
+        String path = String.format(Locale.US, "sites/%d/jetpack/modules/%s", siteId, module);
+        HashMap<String, String> params = new HashMap<>();
+        params.put("active", String.valueOf(active));
         post(path, params, null, listener, errorListener);
     }
 
@@ -233,7 +247,7 @@ public class RestClientUtils {
      * Make GET request with params
      */
     public Request<JSONObject> get(String path, Map<String, String> params, RetryPolicy retryPolicy, Listener listener,
-                    ErrorListener errorListener) {
+                                   ErrorListener errorListener) {
         // turn params into query string
         HashMap<String, String> paramsWithLocale = getRestLocaleParams(mContext);
         if (params != null) {
@@ -247,7 +261,7 @@ public class RestClientUtils {
         paramsWithLocale.putAll(getSanitizedParameters(path));
 
         RestRequest request = mRestClient.makeRequest(Method.GET, mRestClient
-                        .getAbsoluteURL(realPath, paramsWithLocale), null, listener, errorListener);
+                .getAbsoluteURL(realPath, paramsWithLocale), null, listener, errorListener);
 
         if (retryPolicy == null) {
             retryPolicy = new DefaultRetryPolicy(REST_TIMEOUT_MS, REST_MAX_RETRIES_GET, REST_BACKOFF_MULT);
@@ -271,7 +285,7 @@ public class RestClientUtils {
     public void post(final String path, Map<String, String> params, RetryPolicy retryPolicy, Listener listener,
                      ErrorListener errorListener) {
         final RestRequest request = mRestClient.makeRequest(Method.POST, mRestClient
-                        .getAbsoluteURL(path, getRestLocaleParams(mContext)), params, listener, errorListener);
+                .getAbsoluteURL(path, getRestLocaleParams(mContext)), params, listener, errorListener);
         if (retryPolicy == null) {
             retryPolicy = new DefaultRetryPolicy(REST_TIMEOUT_MS, REST_MAX_RETRIES_POST,
                     REST_BACKOFF_MULT); //Do not retry on failure
@@ -288,7 +302,7 @@ public class RestClientUtils {
     public void post(final String path, JSONObject params, RetryPolicy retryPolicy, Listener listener,
                      ErrorListener errorListener) {
         final JsonRestRequest request = mRestClient.makeRequest(mRestClient
-                        .getAbsoluteURL(path, getRestLocaleParams(mContext)), params, listener, errorListener);
+                .getAbsoluteURL(path, getRestLocaleParams(mContext)), params, listener, errorListener);
         if (retryPolicy == null) {
             retryPolicy = new DefaultRetryPolicy(REST_TIMEOUT_MS, REST_MAX_RETRIES_POST,
                     REST_BACKOFF_MULT); //Do not retry on failure
@@ -301,11 +315,11 @@ public class RestClientUtils {
     /**
      * Takes a URL and returns the path within, or an empty string (not null)
      */
-    private static String getSanitizedPath(String unsanitizedPath){
+    private static String getSanitizedPath(String unsanitizedPath) {
         if (unsanitizedPath != null) {
             int qmarkPos = unsanitizedPath.indexOf('?');
             if (qmarkPos > -1) { //strip any query string params off this to obtain the path
-                return unsanitizedPath.substring(0, qmarkPos+1);
+                return unsanitizedPath.substring(0, qmarkPos + 1);
             } else {
                 // return the string as is, consider the whole string as the path
                 return unsanitizedPath;
@@ -317,17 +331,17 @@ public class RestClientUtils {
     /**
      * Takes a URL with query strings and returns a Map of query string values.
      */
-    private static HashMap<String, String> getSanitizedParameters(String unsanitizedPath){
+    private static HashMap<String, String> getSanitizedParameters(String unsanitizedPath) {
         HashMap<String, String> queryParams = new HashMap<>();
 
         Uri uri = Uri.parse(unsanitizedPath);
 
         if (uri.getHost() == null) {
             uri = Uri.parse("://" + unsanitizedPath); // path may contain a ":" leading to Uri.parse to misinterpret
-                    // it as opaque so, try it with a empty scheme in front
+            // it as opaque so, try it with a empty scheme in front
         }
 
-        if (uri.getQueryParameterNames() != null ) {
+        if (uri.getQueryParameterNames() != null) {
             for (String paramName : uri.getQueryParameterNames()) {
                 String value = uri.getQueryParameter(paramName);
                 queryParams.put(paramName, value);
