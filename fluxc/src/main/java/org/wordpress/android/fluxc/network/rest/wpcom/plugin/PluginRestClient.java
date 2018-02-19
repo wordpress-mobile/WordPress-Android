@@ -137,8 +137,8 @@ public class PluginRestClient extends BaseWPComRestClient {
         add(request);
     }
 
-    public void installSitePlugin(@NonNull final SiteModel site, final String pluginName) {
-        String url = WPCOMREST.sites.site(site.getSiteId()).plugins.name(pluginName).install.getUrlV1_2();
+    public void installSitePlugin(@NonNull final SiteModel site, final String pluginSlug) {
+        String url = WPCOMREST.sites.site(site.getSiteId()).plugins.slug(pluginSlug).install.getUrlV1_2();
         final WPComGsonRequest<PluginWPComRestResponse> request = WPComGsonRequest.buildPostRequest(url, null,
                 PluginWPComRestResponse.class,
                 new Listener<PluginWPComRestResponse>() {
@@ -154,7 +154,7 @@ public class PluginRestClient extends BaseWPComRestClient {
                     public void onErrorResponse(@NonNull BaseNetworkError networkError) {
                         InstallSitePluginError installPluginError = new InstallSitePluginError(((WPComGsonNetworkError)
                                 networkError).apiError, networkError.message);
-                        InstalledSitePluginPayload payload = new InstalledSitePluginPayload(site, pluginName,
+                        InstalledSitePluginPayload payload = new InstalledSitePluginPayload(site, pluginSlug,
                                 installPluginError);
                         mDispatcher.dispatch(PluginActionBuilder.newInstalledSitePluginAction(payload));
                     }

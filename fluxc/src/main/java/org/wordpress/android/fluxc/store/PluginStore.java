@@ -68,11 +68,11 @@ public class PluginStore extends Store {
     @SuppressWarnings("WeakerAccess")
     public static class InstallSitePluginPayload extends Payload<BaseNetworkError> {
         public SiteModel site;
-        public String pluginName;
+        public String slug;
 
-        public InstallSitePluginPayload(SiteModel site, String pluginName) {
+        public InstallSitePluginPayload(SiteModel site, String slug) {
             this.site = site;
-            this.pluginName = pluginName;
+            this.slug = slug;
         }
     }
 
@@ -183,18 +183,18 @@ public class PluginStore extends Store {
 
     public static class InstalledSitePluginPayload extends Payload<InstallSitePluginError> {
         public SiteModel site;
-        public String pluginName;
+        public String slug;
         public SitePluginModel plugin;
 
         public InstalledSitePluginPayload(SiteModel site, SitePluginModel plugin) {
             this.site = site;
             this.plugin = plugin;
-            this.pluginName = this.plugin.getName();
+            this.slug = this.plugin.getSlug();
         }
 
-        public InstalledSitePluginPayload(SiteModel site, String name, InstallSitePluginError error) {
+        public InstalledSitePluginPayload(SiteModel site, String slug, InstallSitePluginError error) {
             this.site = site;
-            this.pluginName = name;
+            this.slug = slug;
             this.error = error;
         }
     }
@@ -474,10 +474,10 @@ public class PluginStore extends Store {
     @SuppressWarnings("WeakerAccess")
     public static class OnSitePluginInstalled extends OnChanged<InstallSitePluginError> {
         public SiteModel site;
-        public String pluginName;
-        public OnSitePluginInstalled(SiteModel site, String pluginName) {
+        public String slug;
+        public OnSitePluginInstalled(SiteModel site, String slug) {
             this.site = site;
-            this.pluginName = pluginName;
+            this.slug = slug;
         }
     }
 
@@ -673,11 +673,11 @@ public class PluginStore extends Store {
 
     private void installSitePlugin(InstallSitePluginPayload payload) {
         if (payload.site.isUsingWpComRestApi() && payload.site.isJetpackConnected()) {
-            mPluginRestClient.installSitePlugin(payload.site, payload.pluginName);
+            mPluginRestClient.installSitePlugin(payload.site, payload.slug);
         } else {
             InstallSitePluginError error = new InstallSitePluginError(InstallSitePluginErrorType.NOT_AVAILABLE);
             InstalledSitePluginPayload errorPayload = new InstalledSitePluginPayload(payload.site,
-                    payload.pluginName, error);
+                    payload.slug, error);
             installedSitePlugin(errorPayload);
         }
     }
@@ -773,7 +773,7 @@ public class PluginStore extends Store {
     }
 
     private void installedSitePlugin(InstalledSitePluginPayload payload) {
-        OnSitePluginInstalled event = new OnSitePluginInstalled(payload.site, payload.pluginName);
+        OnSitePluginInstalled event = new OnSitePluginInstalled(payload.site, payload.slug);
         if (payload.isError()) {
             event.error = payload.error;
         } else {
