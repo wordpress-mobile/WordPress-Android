@@ -55,10 +55,12 @@ public class PluginStore extends Store {
     @SuppressWarnings("WeakerAccess")
     public static class FetchPluginDirectoryPayload extends Payload<BaseNetworkError> {
         public PluginDirectoryType type;
+        public @Nullable SiteModel site;
         public boolean loadMore;
 
-        public FetchPluginDirectoryPayload(PluginDirectoryType type, boolean loadMore) {
+        public FetchPluginDirectoryPayload(PluginDirectoryType type, @Nullable SiteModel site, boolean loadMore) {
             this.type = type;
+            this.site = site;
             this.loadMore = loadMore;
         }
     }
@@ -134,25 +136,14 @@ public class PluginStore extends Store {
         public boolean loadMore;
         public boolean canLoadMore;
         public int page;
-        public List<WPOrgPluginModel> plugins;
+        public List<WPOrgPluginModel> wpOrgPlugins;
+
+        public SiteModel site;
+        public List<SitePluginModel> sitePlugins;
 
         public FetchedPluginDirectoryPayload(PluginDirectoryType type, boolean loadMore) {
             this.type = type;
             this.loadMore = loadMore;
-        }
-    }
-
-    public static class FetchedSitePluginsPayload extends Payload<FetchSitePluginsError> {
-        public SiteModel site;
-        public List<SitePluginModel> plugins;
-
-        public FetchedSitePluginsPayload(FetchSitePluginsError error) {
-            this.error = error;
-        }
-
-        public FetchedSitePluginsPayload(@NonNull SiteModel site, @NonNull List<SitePluginModel> plugins) {
-            this.site = site;
-            this.plugins = plugins;
         }
     }
 
@@ -253,18 +244,9 @@ public class PluginStore extends Store {
             this.type = type;
             this.message = message;
         }
-    }
 
-    public static class FetchSitePluginsError implements OnChangedError {
-        public FetchSitePluginsErrorType type;
-        @Nullable public String message;
-
-        FetchSitePluginsError(FetchSitePluginsErrorType type) {
-            this.type = type;
-        }
-
-        public FetchSitePluginsError(String type, @Nullable String message) {
-            this.type = FetchSitePluginsErrorType.fromString(type);
+        public PluginDirectoryError(String type, @Nullable String message) {
+            this.type = PluginDirectoryErrorType.fromString(type);
             this.message = message;
         }
     }
@@ -349,18 +331,14 @@ public class PluginStore extends Store {
     }
 
     public enum PluginDirectoryErrorType {
-        EMPTY_RESPONSE,
-        GENERIC_ERROR
-    }
-
-    public enum FetchSitePluginsErrorType {
+        EMPTY_RESPONSE, // Should be used for NEW & POPULAR plugin directory
         GENERIC_ERROR,
-        UNAUTHORIZED,
-        NOT_AVAILABLE; // Return for non-jetpack sites
+        NOT_AVAILABLE, // Return for non-jetpack sites for SITE plugin directory
+        UNAUTHORIZED; // Should only be used for SITE plugin directory
 
-        public static FetchSitePluginsErrorType fromString(String string) {
+        public static PluginDirectoryErrorType fromString(String string) {
             if (string != null) {
-                for (FetchSitePluginsErrorType v : FetchSitePluginsErrorType.values()) {
+                for (PluginDirectoryErrorType v : PluginDirectoryErrorType.values()) {
                     if (string.equalsIgnoreCase(v.name())) {
                         return v;
                     }
@@ -464,14 +442,6 @@ public class PluginStore extends Store {
     }
 
     @SuppressWarnings("WeakerAccess")
-    public static class OnSitePluginsFetched extends OnChanged<FetchSitePluginsError> {
-        public SiteModel site;
-        public OnSitePluginsFetched(SiteModel site) {
-            this.site = site;
-        }
-    }
-
-    @SuppressWarnings("WeakerAccess")
     public static class OnSitePluginInstalled extends OnChanged<InstallSitePluginError> {
         public SiteModel site;
         public SitePluginModel plugin;
@@ -541,9 +511,6 @@ public class PluginStore extends Store {
             case FETCH_PLUGIN_DIRECTORY:
                 fetchPluginDirectory((FetchPluginDirectoryPayload) action.getPayload());
                 break;
-            case FETCH_SITE_PLUGINS:
-                fetchSitePlugins((SiteModel) action.getPayload());
-                break;
             case FETCH_WPORG_PLUGIN:
                 fetchWPOrgPlugin((String) action.getPayload());
                 break;
@@ -569,9 +536,6 @@ public class PluginStore extends Store {
                 break;
             case FETCHED_PLUGIN_DIRECTORY:
                 fetchedPluginDirectory((FetchedPluginDirectoryPayload) action.getPayload());
-                break;
-            case FETCHED_SITE_PLUGINS:
-                fetchedSitePlugins((FetchedSitePluginsPayload) action.getPayload());
                 break;
             case FETCHED_WPORG_PLUGIN:
                 fetchedWPOrgPlugin((FetchedWPOrgPluginPayload) action.getPayload());
@@ -646,20 +610,24 @@ public class PluginStore extends Store {
     }
 
     private void fetchPluginDirectory(FetchPluginDirectoryPayload payload) {
-        int page = 1;
-        if (payload.loadMore) {
-            page = PluginSqlUtils.getLastRequestedPageForDirectoryType(payload.type) + 1;
+        if (payload.type == PluginDirectoryType.SITE) {
+            fetchSitePlugins(payload.site);
+        } else {
+            int page = 1;
+            if (payload.loadMore) {
+                page = PluginSqlUtils.getLastRequestedPageForDirectoryType(payload.type) + 1;
+            }
+            mPluginWPOrgClient.fetchPluginDirectory(payload.type, page);
         }
-        mPluginWPOrgClient.fetchPluginDirectory(payload.type, page);
     }
 
-    private void fetchSitePlugins(SiteModel site) {
-        if (site.isUsingWpComRestApi() && site.isJetpackConnected()) {
+    private void fetchSitePlugins(@Nullable SiteModel site) {
+        if (site != null && site.isUsingWpComRestApi() && site.isJetpackConnected()) {
             mPluginRestClient.fetchSitePlugins(site);
         } else {
-            FetchSitePluginsError error = new FetchSitePluginsError(FetchSitePluginsErrorType.NOT_AVAILABLE);
-            FetchedSitePluginsPayload payload = new FetchedSitePluginsPayload(error);
-            fetchedSitePlugins(payload);
+            FetchedPluginDirectoryPayload payload = new FetchedPluginDirectoryPayload(PluginDirectoryType.SITE, false);
+            payload.error = new PluginDirectoryError(PluginDirectoryErrorType.NOT_AVAILABLE, null);
+            fetchedPluginDirectory(payload);
         }
     }
 
@@ -736,30 +704,24 @@ public class PluginStore extends Store {
             event.error = payload.error;
         } else {
             event.canLoadMore = payload.canLoadMore;
-            if (!payload.loadMore) {
-                // This is a fresh list, we need to remove the directory records for the fetched type
-                PluginSqlUtils.deletePluginDirectoryForType(payload.type);
+            if (event.type == PluginDirectoryType.SITE) {
+                PluginSqlUtils.insertOrReplaceSitePlugins(payload.site, payload.sitePlugins);
+            } else {
+                if (!payload.loadMore) {
+                    // This is a fresh list, we need to remove the directory records for the fetched type
+                    PluginSqlUtils.deletePluginDirectoryForType(payload.type);
+                }
+                if (payload.wpOrgPlugins != null) {
+                    // For pagination to work correctly, we need to separate the actual plugin data from the list of
+                    // plugins for each directory type. This is important because the same data will be fetched from
+                    // multiple sources. We fetch different directory types (same plugin can be in both new and popular)
+                    // as well as do standalone fetches for plugins with `FETCH_WPORG_PLUGIN` action. We also need to
+                    // keep track of the page the plugin belongs to, because the `per_page` parameter is unreliable.
+                    PluginSqlUtils.insertOrUpdatePluginDirectoryList(
+                            pluginDirectoryListFromWPOrgPlugins(payload.wpOrgPlugins, payload.type, payload.page));
+                    PluginSqlUtils.insertOrUpdateWPOrgPluginList(payload.wpOrgPlugins);
+                }
             }
-            if (payload.plugins != null) {
-                // For pagination to work correctly, we need to separate the actual plugin data from the list of plugins
-                // for each directory type. This is important because the same data will be fetched from multiple
-                // sources. We fetch different directory types (same plugin can be in both new and popular) as well as
-                // do standalone fetches for plugins with `FETCH_WPORG_PLUGIN` action. We also need to keep track of the
-                // page the plugin belongs to, because the `per_page` parameter is unreliable.
-                PluginSqlUtils.insertOrUpdatePluginDirectoryList(pluginDirectoryListFromWPOrgPlugins(payload.plugins,
-                        payload.type, payload.page));
-                PluginSqlUtils.insertOrUpdateWPOrgPluginList(payload.plugins);
-            }
-        }
-        emitChange(event);
-    }
-
-    private void fetchedSitePlugins(FetchedSitePluginsPayload payload) {
-        OnSitePluginsFetched event = new OnSitePluginsFetched(payload.site);
-        if (payload.isError()) {
-            event.error = payload.error;
-        } else {
-            PluginSqlUtils.insertOrReplaceSitePlugins(payload.site, payload.plugins);
         }
         emitChange(event);
     }
