@@ -288,7 +288,7 @@ class DotComSiteSettings extends SiteSettingsInterface {
                 mSite.getSiteId(), new RestRequest.Listener() {
                     @Override
                     public void onResponse(JSONObject response) {
-                        AppLog.v(AppLog.T.API, "Received Jetpack speed-up options");
+                        AppLog.v(AppLog.T.API, "Received Jetpack module settings");
                         if (response == null) return;
                         JSONArray array = response.optJSONArray("modules");
                         if (array == null) return;
@@ -314,7 +314,7 @@ class DotComSiteSettings extends SiteSettingsInterface {
                 }, new RestRequest.ErrorListener() {
                     @Override
                     public void onErrorResponse(VolleyError error) {
-                        AppLog.w(AppLog.T.API, "Error fetching Jetpack speed-up options: " + error);
+                        AppLog.w(AppLog.T.API, "Error fetching Jetpack module settings: " + error);
                         onFetchResponseReceived(error);
                     }
                 });
@@ -444,7 +444,7 @@ class DotComSiteSettings extends SiteSettingsInterface {
                         public void onErrorResponse(VolleyError error) {
                             mRemoteJpSettings.serveImagesFromOurServers = fallbackValue;
                             error.printStackTrace();
-                            AppLog.w(AppLog.T.API, "Error updating Jetpack module - Serve images from our servers: " + error.getMessage());
+                            AppLog.w(AppLog.T.API, "Error updating Jetpack module - Serve images from our servers: " + error);
                             onSaveResponseReceived(error);
                         }
                     });
