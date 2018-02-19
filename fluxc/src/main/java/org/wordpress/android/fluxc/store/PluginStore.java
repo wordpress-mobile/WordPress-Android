@@ -11,6 +11,7 @@ import org.wordpress.android.fluxc.action.PluginAction;
 import org.wordpress.android.fluxc.annotations.action.Action;
 import org.wordpress.android.fluxc.annotations.action.IAction;
 import org.wordpress.android.fluxc.model.SiteModel;
+import org.wordpress.android.fluxc.model.plugin.DualPluginModel;
 import org.wordpress.android.fluxc.model.plugin.PluginDirectoryModel;
 import org.wordpress.android.fluxc.model.plugin.PluginDirectoryType;
 import org.wordpress.android.fluxc.model.plugin.SitePluginModel;
@@ -590,16 +591,14 @@ public class PluginStore extends Store {
         return PluginSqlUtils.getWPOrgPluginsForDirectory(type);
     }
 
-    public @Nullable SitePluginModel getSitePluginBySlug(SiteModel site, String slug) {
-        return PluginSqlUtils.getSitePluginBySlug(site, slug);
+    public @NonNull DualPluginModel getDualPluginBySlug(@Nullable SiteModel site, String slug) {
+        SitePluginModel sitePlugin = PluginSqlUtils.getSitePluginBySlug(site, slug);
+        WPOrgPluginModel wpOrgPlugin = PluginSqlUtils.getWPOrgPluginBySlug(slug);
+        return new DualPluginModel(sitePlugin, wpOrgPlugin);
     }
 
     public @NonNull List<SitePluginModel> getSitePlugins(SiteModel site) {
         return PluginSqlUtils.getSitePlugins(site);
-    }
-
-    public @Nullable WPOrgPluginModel getWPOrgPluginBySlug(String slug) {
-        return PluginSqlUtils.getWPOrgPluginBySlug(slug);
     }
 
     // Remote actions
