@@ -81,6 +81,8 @@ import java.util.Map;
 
 import javax.inject.Inject;
 
+import static org.wordpress.android.ui.prefs.DotComSiteSettings.supportsJetpackSpeedUpSettings;
+
 /**
  * Allows interfacing with WordPress site settings. Works with WP.com and WP.org v4.5+ (pending).
  *
@@ -885,6 +887,11 @@ public class SiteSettingsFragment extends PreferenceFragment
             || (isAccessedViaWPComRest && !mSite.getHasCapabilityManageOptions())) {
             hideAdminRequiredPreferences();
         }
+
+        // hide speed-up jetpack settings if plugin version < 5.8
+        if (!supportsJetpackSpeedUpSettings(mSite)) {
+            removeSpeedUpJetpackPreferences();
+        }
     }
 
     public void setEditingEnabled(boolean enabled) {
@@ -1609,6 +1616,10 @@ public class SiteSettingsFragment extends PreferenceFragment
         WPPrefUtils.removePreference(this, R.string.pref_key_site_screen, R.string.pref_key_site_advanced);
         WPPrefUtils.removePreference(this, R.string.pref_key_site_screen, R.string.pref_key_site_account);
         WPPrefUtils.removePreference(this, R.string.pref_key_site_general, R.string.pref_key_site_language);
+    }
+
+    private void removeSpeedUpJetpackPreferences() {
+        WPPrefUtils.removePreference(this, R.string.pref_key_site_writing, R.string.pref_key_speed_up_your_site_screen);
     }
 
     private void removePrivateOptionFromPrivacySetting() {

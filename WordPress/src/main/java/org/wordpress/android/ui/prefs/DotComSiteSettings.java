@@ -18,7 +18,9 @@ import org.wordpress.android.models.CategoryModel;
 import org.wordpress.android.models.JetpackSettingsModel;
 import org.wordpress.android.util.AnalyticsUtils;
 import org.wordpress.android.util.AppLog;
+import org.wordpress.android.util.CrashlyticsUtils;
 import org.wordpress.android.util.StringUtils;
+import org.wordpress.android.util.helpers.Version;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -100,7 +102,9 @@ class DotComSiteSettings extends SiteSettingsInterface {
     private Exception mFetchError = null;
     private Exception mSaveError = null;
 
-    /** Only instantiated by {@link SiteSettingsInterface}. */
+    /**
+     * Only instantiated by {@link SiteSettingsInterface}.
+     */
     DotComSiteSettings(Context host, SiteModel site, SiteSettingsListener listener) {
         super(host, site, listener);
     }
@@ -113,14 +117,18 @@ class DotComSiteSettings extends SiteSettingsInterface {
         if (mSite.isJetpackConnected()) {
             pushJetpackMonitorSettings();
             pushJetpackProtectAndSsoSettings();
-            pushServeImagesFromOurServersModuleSettings();
-            pushLazyLoadModule();
+            if (supportsJetpackSpeedUpSettings(mSite)) {
+                pushServeImagesFromOurServersModuleSettings();
+                pushLazyLoadModule();
+            }
         }
 
         pushWpSettings();
     }
 
-    /** Request remote site data via the WordPress REST API. */
+    /**
+     * Request remote site data via the WordPress REST API.
+     */
     @Override
     protected void fetchRemoteData() {
         if (mFetchRequestCount > 0) {
@@ -134,6 +142,28 @@ class DotComSiteSettings extends SiteSettingsInterface {
         if (mSite.isJetpackConnected()) {
             fetchJetpackSettings();
         }
+    }
+
+    static boolean supportsJetpackSpeedUpSettings(SiteModel site) {
+        String jetpackVersion = site.getJetpackVersion();
+        if (site.isUsingWpComRestApi() && site.isJetpackConnected() && !TextUtils.isEmpty(jetpackVersion)) {
+            try {
+                // strip any trailing "-beta" or "-alpha" from the version
+                int index = jetpackVersion.lastIndexOf("-");
+                if (index > 0) {
+                    jetpackVersion = jetpackVersion.substring(0, index);
+                }
+                Version siteJetpackVersion = new Version(jetpackVersion);
+                Version minVersion = new Version("5.8");
+                return siteJetpackVersion.compareTo(minVersion) >= 0; // if the site has Jetpack 5.8 or newer installed
+            } catch (IllegalArgumentException e) {
+                String errorStr = "Invalid site jetpack version " + jetpackVersion;
+                AppLog.e(AppLog.T.UTILS, errorStr, e);
+                CrashlyticsUtils.logException(e, AppLog.T.UTILS, errorStr);
+                return true;
+            }
+        }
+        return false;
     }
 
     private void fetchWpSettings() {
@@ -170,7 +200,9 @@ class DotComSiteSettings extends SiteSettingsInterface {
                 });
     }
 
-    /** Request a list of post categories for a site via the WordPress REST API. */
+    /**
+     * Request a list of post categories for a site via the WordPress REST API.
+     */
     private void fetchCategories() {
         ++mFetchRequestCount;
         // TODO: Replace with FluxC (GET_CATEGORIES + TaxonomyStore.getCategoriesForSite())
@@ -201,7 +233,9 @@ class DotComSiteSettings extends SiteSettingsInterface {
     private void fetchJetpackSettings() {
         fetchJetpackMonitorSettings();
         fetchJetpackProtectAndSsoSettings();
-        fetchJetpackModuleSettings();
+        if (supportsJetpackSpeedUpSettings(mSite)) {
+            fetchJetpackModuleSettings();
+        }
     }
 
     private void fetchJetpackProtectAndSsoSettings() {
@@ -747,7 +781,8 @@ class DotComSiteSettings extends SiteSettingsInterface {
         mRemoteJpSettings.wpNotifications = settingsObject.optBoolean(JP_MONITOR_WP_NOTES_KEY, false);
     }
 
-    private @NonNull Map<String, String> serializeJetpackMonitorParams() {
+    private @NonNull
+    Map<String, String> serializeJetpackMonitorParams() {
         Map<String, String> params = new HashMap<>();
         params.put(JP_MONITOR_EMAIL_NOTES_KEY, String.valueOf(mJpSettings.emailNotifications));
         params.put(JP_MONITOR_WP_NOTES_KEY, String.valueOf(mJpSettings.wpNotifications));
