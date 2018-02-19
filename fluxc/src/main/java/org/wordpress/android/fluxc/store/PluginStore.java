@@ -103,32 +103,29 @@ public class PluginStore extends Store {
 
     public static class ConfiguredSitePluginPayload extends Payload<ConfigureSitePluginError> {
         public SiteModel site;
+        public String slug;
         public SitePluginModel plugin;
 
         public ConfiguredSitePluginPayload(SiteModel site, SitePluginModel plugin) {
             this.site = site;
             this.plugin = plugin;
+            this.slug = this.plugin.getSlug();
         }
 
-        public ConfiguredSitePluginPayload(SiteModel site, ConfigureSitePluginError error) {
+        public ConfiguredSitePluginPayload(SiteModel site, String slug, ConfigureSitePluginError error) {
             this.site = site;
+            this.slug = slug;
             this.error = error;
         }
     }
 
     public static class DeletedSitePluginPayload extends Payload<DeleteSitePluginError> {
         public SiteModel site;
-        public SitePluginModel plugin;
+        public String slug;
 
-        public DeletedSitePluginPayload(SiteModel site, SitePluginModel plugin) {
+        public DeletedSitePluginPayload(SiteModel site, String slug) {
             this.site = site;
-            this.plugin = plugin;
-        }
-
-        public DeletedSitePluginPayload(SiteModel site, SitePluginModel plugin, DeleteSitePluginError error) {
-            this.site = site;
-            this.plugin = plugin;
-            this.error = error;
+            this.slug = slug;
         }
     }
 
@@ -186,15 +183,18 @@ public class PluginStore extends Store {
 
     public static class InstalledSitePluginPayload extends Payload<InstallSitePluginError> {
         public SiteModel site;
+        public String pluginName;
         public SitePluginModel plugin;
 
         public InstalledSitePluginPayload(SiteModel site, SitePluginModel plugin) {
             this.site = site;
             this.plugin = plugin;
+            this.pluginName = this.plugin.getName();
         }
 
-        public InstalledSitePluginPayload(SiteModel site, InstallSitePluginError error) {
+        public InstalledSitePluginPayload(SiteModel site, String name, InstallSitePluginError error) {
             this.site = site;
+            this.pluginName = name;
             this.error = error;
         }
     }
@@ -216,15 +216,18 @@ public class PluginStore extends Store {
 
     public static class UpdatedSitePluginPayload extends Payload<UpdateSitePluginError> {
         public SiteModel site;
+        public String slug;
         public SitePluginModel plugin;
 
         public UpdatedSitePluginPayload(SiteModel site, SitePluginModel plugin) {
             this.site = site;
             this.plugin = plugin;
+            this.slug = this.plugin.getSlug();
         }
 
-        public UpdatedSitePluginPayload(SiteModel site, UpdateSitePluginError error) {
+        public UpdatedSitePluginPayload(SiteModel site, String slug, UpdateSitePluginError error) {
             this.site = site;
+            this.slug = slug;
             this.error = error;
         }
     }
@@ -451,36 +454,40 @@ public class PluginStore extends Store {
     @SuppressWarnings("WeakerAccess")
     public static class OnSitePluginConfigured extends OnChanged<ConfigureSitePluginError> {
         public SiteModel site;
-        public SitePluginModel plugin;
-        public OnSitePluginConfigured(SiteModel site) {
+        public String slug;
+        public OnSitePluginConfigured(SiteModel site, String slug) {
             this.site = site;
+            this.slug = slug;
         }
     }
 
     @SuppressWarnings("WeakerAccess")
     public static class OnSitePluginDeleted extends OnChanged<DeleteSitePluginError> {
         public SiteModel site;
-        public SitePluginModel plugin;
-        public OnSitePluginDeleted(SiteModel site) {
+        public String slug;
+        public OnSitePluginDeleted(SiteModel site, String slug) {
             this.site = site;
+            this.slug = slug;
         }
     }
 
     @SuppressWarnings("WeakerAccess")
     public static class OnSitePluginInstalled extends OnChanged<InstallSitePluginError> {
         public SiteModel site;
-        public SitePluginModel plugin;
-        public OnSitePluginInstalled(SiteModel site) {
+        public String pluginName;
+        public OnSitePluginInstalled(SiteModel site, String pluginName) {
             this.site = site;
+            this.pluginName = pluginName;
         }
     }
 
     @SuppressWarnings("WeakerAccess")
     public static class OnSitePluginUpdated extends OnChanged<UpdateSitePluginError> {
         public SiteModel site;
-        public SitePluginModel plugin;
-        public OnSitePluginUpdated(SiteModel site) {
+        public String slug;
+        public OnSitePluginUpdated(SiteModel site, String slug) {
             this.site = site;
+            this.slug = slug;
         }
     }
 
@@ -619,7 +626,8 @@ public class PluginStore extends Store {
             mPluginRestClient.configureSitePlugin(payload.site, payload.plugin);
         } else {
             ConfigureSitePluginError error = new ConfigureSitePluginError(ConfigureSitePluginErrorType.NOT_AVAILABLE);
-            ConfiguredSitePluginPayload errorPayload = new ConfiguredSitePluginPayload(payload.site, error);
+            ConfiguredSitePluginPayload errorPayload = new ConfiguredSitePluginPayload(payload.site,
+                    payload.plugin.getSlug(), error);
             configuredSitePlugin(errorPayload);
         }
     }
@@ -629,7 +637,9 @@ public class PluginStore extends Store {
             mPluginRestClient.deleteSitePlugin(payload.site, payload.plugin);
         } else {
             DeleteSitePluginError error = new DeleteSitePluginError(DeleteSitePluginErrorType.NOT_AVAILABLE);
-            DeletedSitePluginPayload errorPayload = new DeletedSitePluginPayload(payload.site, payload.plugin, error);
+            DeletedSitePluginPayload errorPayload = new DeletedSitePluginPayload(payload.site,
+                    payload.plugin.getSlug());
+            errorPayload.error = error;
             deletedSitePlugin(errorPayload);
         }
     }
@@ -666,7 +676,8 @@ public class PluginStore extends Store {
             mPluginRestClient.installSitePlugin(payload.site, payload.pluginName);
         } else {
             InstallSitePluginError error = new InstallSitePluginError(InstallSitePluginErrorType.NOT_AVAILABLE);
-            InstalledSitePluginPayload errorPayload = new InstalledSitePluginPayload(payload.site, error);
+            InstalledSitePluginPayload errorPayload = new InstalledSitePluginPayload(payload.site,
+                    payload.pluginName, error);
             installedSitePlugin(errorPayload);
         }
     }
@@ -681,7 +692,8 @@ public class PluginStore extends Store {
         } else {
             UpdateSitePluginError error = new UpdateSitePluginError(
                     UpdateSitePluginErrorType.NOT_AVAILABLE);
-            UpdatedSitePluginPayload errorPayload = new UpdatedSitePluginPayload(payload.site, error);
+            UpdatedSitePluginPayload errorPayload = new UpdatedSitePluginPayload(payload.site,
+                    payload.plugin.getSlug(), error);
             updatedSitePlugin(errorPayload);
         }
     }
@@ -698,19 +710,18 @@ public class PluginStore extends Store {
     // Network callbacks
 
     private void configuredSitePlugin(ConfiguredSitePluginPayload payload) {
-        OnSitePluginConfigured event = new OnSitePluginConfigured(payload.site);
+        OnSitePluginConfigured event = new OnSitePluginConfigured(payload.site, payload.slug);
         if (payload.isError()) {
             event.error = payload.error;
         } else {
             payload.plugin.setLocalSiteId(payload.site.getId());
-            event.plugin = payload.plugin;
             PluginSqlUtils.insertOrUpdateSitePlugin(payload.plugin);
         }
         emitChange(event);
     }
 
     private void deletedSitePlugin(DeletedSitePluginPayload payload) {
-        OnSitePluginDeleted event = new OnSitePluginDeleted(payload.site);
+        OnSitePluginDeleted event = new OnSitePluginDeleted(payload.site, payload.slug);
         // If the remote returns `UNKNOWN_PLUGIN` error, it means the plugin is not installed in remote anymore
         // most likely because the plugin is already removed on a different client and it was not synced yet.
         // Since we are trying to remove an already removed plugin, we should just remove it from DB and treat it as a
@@ -718,8 +729,7 @@ public class PluginStore extends Store {
         if (payload.isError() && payload.error.type != DeleteSitePluginErrorType.UNKNOWN_PLUGIN) {
             event.error = payload.error;
         } else {
-            event.plugin = payload.plugin;
-            PluginSqlUtils.deleteSitePlugin(payload.site, payload.plugin);
+            PluginSqlUtils.deleteSitePlugin(payload.site, payload.slug);
         }
         emitChange(event);
     }
@@ -763,11 +773,10 @@ public class PluginStore extends Store {
     }
 
     private void installedSitePlugin(InstalledSitePluginPayload payload) {
-        OnSitePluginInstalled event = new OnSitePluginInstalled(payload.site);
+        OnSitePluginInstalled event = new OnSitePluginInstalled(payload.site, payload.pluginName);
         if (payload.isError()) {
             event.error = payload.error;
         } else {
-            event.plugin = payload.plugin;
             PluginSqlUtils.insertOrUpdateSitePlugin(payload.plugin);
         }
         emitChange(event);
@@ -793,11 +802,10 @@ public class PluginStore extends Store {
     }
 
     private void updatedSitePlugin(UpdatedSitePluginPayload payload) {
-        OnSitePluginUpdated event = new OnSitePluginUpdated(payload.site);
+        OnSitePluginUpdated event = new OnSitePluginUpdated(payload.site, payload.slug);
         if (payload.isError()) {
             event.error = payload.error;
         } else {
-            event.plugin = payload.plugin;
             PluginSqlUtils.insertOrUpdateSitePlugin(payload.plugin);
         }
         emitChange(event);
