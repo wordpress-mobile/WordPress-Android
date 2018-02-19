@@ -38,15 +38,8 @@ public class WordPressRtlCodeDetector extends Detector implements UastScanner {
             new Implementation(WordPressRtlCodeDetector.class, Scope.JAVA_FILE_SCOPE));
 
     static final Issue SET_MARGIN = Issue.create(
-            // ID: used in @SuppressLint warnings etc
             "RtlSetMargins",
-
-            // Title -- shown in the IDE's preference dialog, as category headers in the
-            // Analysis results window, etc
             "Using setPadding in RtL context.",
-
-            // Full explanation of the issue; you can use some markdown markup such as
-            // `monospace`, *italic*, and **bold**.
             "For compatibility with RtL layout direction, use setMarginStart() and setMarginStart()" +
                     " or MarginLayoutParamsCompat version, when setting left/right margins.",
             Category.RTL,
@@ -79,7 +72,7 @@ public class WordPressRtlCodeDetector extends Detector implements UastScanner {
                         UExpression right = uCallExpression.getValueArguments().get(2);
 
                         //we can't evaluate variables that are passed to the method, so the next best thing is to compare
-                        //passed values as strings
+                        //passed values as strings. We are looking for cases where padding or margin are not same.
                         if (!left.asRenderString().equals(right.asRenderString())) {
                             Issue issueToReport;
                             if (methodName.equals("setPadding")) {
