@@ -78,10 +78,12 @@ public class PluginStore extends Store {
 
     @SuppressWarnings("WeakerAccess")
     public static class SearchPluginDirectoryPayload extends Payload<BaseNetworkError> {
+        public SiteModel site; // required to add the SitePluginModels to the OnPluginDirectorySearched
         public String searchTerm;
         public int page;
 
-        public SearchPluginDirectoryPayload(String searchTerm, int page) {
+        public SearchPluginDirectoryPayload(@Nullable SiteModel site, String searchTerm, int page) {
+            this.site = site;
             this.searchTerm = searchTerm;
             this.page = page;
         }
@@ -199,12 +201,14 @@ public class PluginStore extends Store {
 
     @SuppressWarnings("WeakerAccess")
     public static class SearchedPluginDirectoryPayload extends Payload<PluginDirectoryError> {
+        public SiteModel site;
         public String searchTerm;
         public int page;
         public boolean canLoadMore;
         public List<WPOrgPluginModel> plugins;
 
-        public SearchedPluginDirectoryPayload(String searchTerm, int page) {
+        public SearchedPluginDirectoryPayload(@Nullable SiteModel site, String searchTerm, int page) {
+            this.site = site;
             this.searchTerm = searchTerm;
             this.page = page;
         }
@@ -431,12 +435,14 @@ public class PluginStore extends Store {
 
     @SuppressWarnings("WeakerAccess")
     public static class OnPluginDirectorySearched extends OnChanged<PluginDirectoryError> {
+        public @Nullable SiteModel site;
         public String searchTerm;
         public int page;
         public boolean canLoadMore;
-        public List<WPOrgPluginModel> plugins;
+        public List<DualPluginModel> plugins;
 
-        public OnPluginDirectorySearched(String searchTerm, int page) {
+        public OnPluginDirectorySearched(@Nullable SiteModel site, String searchTerm, int page) {
+            this.site = site;
             this.searchTerm = searchTerm;
             this.page = page;
         }
@@ -666,7 +672,7 @@ public class PluginStore extends Store {
     }
 
     private void searchPluginDirectory(SearchPluginDirectoryPayload payload) {
-        mPluginWPOrgClient.searchPluginDirectory(payload.searchTerm, payload.page);
+        mPluginWPOrgClient.searchPluginDirectory(payload.site, payload.searchTerm, payload.page);
     }
 
     private void updateSitePlugin(UpdateSitePluginPayload payload) {
@@ -768,12 +774,20 @@ public class PluginStore extends Store {
     }
 
     private void searchedPluginDirectory(SearchedPluginDirectoryPayload payload) {
-        OnPluginDirectorySearched event = new OnPluginDirectorySearched(payload.searchTerm, payload.page);
+        OnPluginDirectorySearched event = new OnPluginDirectorySearched(payload.site, payload.searchTerm, payload.page);
         if (payload.isError()) {
             event.error = payload.error;
         } else {
             event.canLoadMore = payload.canLoadMore;
-            event.plugins = payload.plugins;
+            List<DualPluginModel> dualPluginList = new ArrayList<>();
+            for (WPOrgPluginModel wpOrgPlugin : payload.plugins) {
+                SitePluginModel sitePlugin = null;
+                if (payload.site != null) {
+                    sitePlugin = PluginSqlUtils.getSitePluginBySlug(payload.site, wpOrgPlugin.getSlug());
+                }
+                dualPluginList.add(new DualPluginModel(sitePlugin, wpOrgPlugin));
+            }
+            event.plugins = dualPluginList;
         }
         emitChange(event);
     }
