@@ -133,17 +133,36 @@ public class PluginStore extends Store {
     @SuppressWarnings("WeakerAccess")
     public static class FetchedPluginDirectoryPayload extends Payload<PluginDirectoryError> {
         public PluginDirectoryType type;
-        public boolean loadMore;
-        public boolean canLoadMore;
+        public boolean loadMore = false;
+        public boolean canLoadMore = false;
+
+        // Used for PluginDirectoryType.NEW & PluginDirectoryType.Popular
         public int page;
         public List<WPOrgPluginModel> wpOrgPlugins;
 
+        // Used for PluginDirectoryType.SITE
         public SiteModel site;
         public List<SitePluginModel> sitePlugins;
 
-        public FetchedPluginDirectoryPayload(PluginDirectoryType type, boolean loadMore) {
+        public FetchedPluginDirectoryPayload(PluginDirectoryType type, List<WPOrgPluginModel> wpOrgPlugins,
+                                             boolean loadMore, boolean canLoadMore, int page) {
+            this.type = type;
+            this.wpOrgPlugins = wpOrgPlugins;
+            this.loadMore = loadMore;
+            this.canLoadMore = canLoadMore;
+            this.page = page;
+        }
+
+        public FetchedPluginDirectoryPayload(SiteModel site, List<SitePluginModel> sitePlugins) {
+            this.type = PluginDirectoryType.SITE;
+            this.site = site;
+            this.sitePlugins = sitePlugins;
+        }
+
+        public FetchedPluginDirectoryPayload(PluginDirectoryType type, boolean loadMore, PluginDirectoryError error) {
             this.type = type;
             this.loadMore = loadMore;
+            this.error = error;
         }
     }
 
@@ -625,8 +644,9 @@ public class PluginStore extends Store {
         if (site != null && site.isUsingWpComRestApi() && site.isJetpackConnected()) {
             mPluginRestClient.fetchSitePlugins(site);
         } else {
-            FetchedPluginDirectoryPayload payload = new FetchedPluginDirectoryPayload(PluginDirectoryType.SITE, false);
-            payload.error = new PluginDirectoryError(PluginDirectoryErrorType.NOT_AVAILABLE, null);
+            PluginDirectoryError error = new PluginDirectoryError(PluginDirectoryErrorType.NOT_AVAILABLE, null);
+            FetchedPluginDirectoryPayload payload = new FetchedPluginDirectoryPayload(PluginDirectoryType.SITE, false,
+                    error);
             fetchedPluginDirectory(payload);
         }
     }

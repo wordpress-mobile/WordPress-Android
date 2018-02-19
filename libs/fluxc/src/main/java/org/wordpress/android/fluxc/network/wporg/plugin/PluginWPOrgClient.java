@@ -55,15 +55,17 @@ public class PluginWPOrgClient extends BaseWPOrgAPIClient {
                         new Listener<FetchPluginDirectoryResponse>() {
                             @Override
                             public void onResponse(FetchPluginDirectoryResponse response) {
-                                FetchedPluginDirectoryPayload payload =
-                                        new FetchedPluginDirectoryPayload(directoryType, loadMore);
+                                FetchedPluginDirectoryPayload payload;
                                 if (response != null) {
-                                    payload.canLoadMore = response.info.page < response.info.pages;
-                                    payload.page = response.info.page;
-                                    payload.wpOrgPlugins = wpOrgPluginListFromResponse(response);
+                                    boolean canLoadMore = response.info.page < response.info.pages;
+                                    List<WPOrgPluginModel> wpOrgPlugins = wpOrgPluginListFromResponse(response);
+                                    payload = new FetchedPluginDirectoryPayload(directoryType, wpOrgPlugins,
+                                            loadMore, canLoadMore, response.info.page);
                                 } else {
-                                    payload.error = new PluginDirectoryError(
+                                    PluginDirectoryError directoryError = new PluginDirectoryError(
                                             PluginDirectoryErrorType.EMPTY_RESPONSE, null);
+                                    payload = new FetchedPluginDirectoryPayload(directoryType, loadMore,
+                                            directoryError);
                                 }
                                 mDispatcher.dispatch(PluginActionBuilder.newFetchedPluginDirectoryAction(payload));
                             }
@@ -71,10 +73,10 @@ public class PluginWPOrgClient extends BaseWPOrgAPIClient {
                         new BaseErrorListener() {
                             @Override
                             public void onErrorResponse(@NonNull BaseNetworkError networkError) {
-                                FetchedPluginDirectoryPayload payload =
-                                        new FetchedPluginDirectoryPayload(directoryType, loadMore);
-                                payload.error = new PluginDirectoryError(
+                                PluginDirectoryError directoryError = new PluginDirectoryError(
                                         PluginDirectoryErrorType.GENERIC_ERROR, networkError.message);
+                                FetchedPluginDirectoryPayload payload =
+                                        new FetchedPluginDirectoryPayload(directoryType, loadMore, directoryError);
                                 mDispatcher.dispatch(PluginActionBuilder.newFetchedPluginDirectoryAction(payload));
                             }
                         }
