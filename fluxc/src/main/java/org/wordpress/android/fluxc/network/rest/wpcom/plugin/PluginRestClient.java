@@ -64,19 +64,18 @@ public class PluginRestClient extends BaseWPComRestClient {
                             }
                         }
                         FetchedPluginDirectoryPayload payload =
-                                new FetchedPluginDirectoryPayload(PluginDirectoryType.SITE, false);
-                        payload.site = site;
-                        payload.sitePlugins = plugins;
+                                new FetchedPluginDirectoryPayload(site, plugins);
                         mDispatcher.dispatch(PluginActionBuilder.newFetchedPluginDirectoryAction(payload));
                     }
                 },
                 new BaseErrorListener() {
                     @Override
                     public void onErrorResponse(@NonNull BaseNetworkError networkError) {
-                        FetchedPluginDirectoryPayload payload =
-                                new FetchedPluginDirectoryPayload(PluginDirectoryType.SITE, false);
-                        payload.error = new PluginDirectoryError(((WPComGsonNetworkError)
+
+                        PluginDirectoryError directoryError = new PluginDirectoryError(((WPComGsonNetworkError)
                                 networkError).apiError, networkError.message);
+                        FetchedPluginDirectoryPayload payload =
+                                new FetchedPluginDirectoryPayload(PluginDirectoryType.SITE, false, directoryError);
                         mDispatcher.dispatch(PluginActionBuilder.newFetchedPluginDirectoryAction(payload));
                     }
                 }
