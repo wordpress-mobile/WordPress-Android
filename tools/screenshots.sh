@@ -2,7 +2,6 @@
 
 ### Misc defines
 # Commands
-CMD_SETUP="setup"
 CMD_TAKE="take"
 CMD_PROCESS="process"
 CMD_PRODUCE="produce"
@@ -106,13 +105,10 @@ function show_usage() {
     echo "Usage: $exeName command [options]"
     echo ""
     echo "   Available commands:"
-    echo "      $CMD_SETUP:\tcreates this tool's standard AVD device"
     echo "      $CMD_TAKE:\texecutes the app in the simulator and takes the screenshots"
     echo "      $CMD_PROCESS:\tprocesses the screenshots and generates the modded ones"
     echo "      $CMD_PRODUCE:\tautomatically runs the $CMD_TAKE and $CMD_PROCESS commands"
     echo ""
-    echo "   $CMD_SETUP command:"
-    echo "   \tUsage: $exeName $CMD_SETUP"
     echo "   $CMD_TAKE command:"
     echo "   \tUsage: $exeName $CMD_TAKE [device] [device-name] [apk-path]"
     echo "   $CMD_PROCESS command:"
@@ -278,36 +274,6 @@ function check_real_dev() {
     adb devices
     stop_on_error
   fi
-}
-
-# Creates the local emulator
-function require_emu {
-  avdmanager list avd -c | grep $DEV_NAME
-  avdmissing=$?
-
-  if [ $avdmissing = 1 ]; then
-    show_message "Creating AVD..."
-    echo no | avdmanager create avd -n $DEV_NAME -k "system-images;android-25;google_apis;x86" --tag "google_apis" >> $LOG_FILE 2>&1 || stop_on_error
-  fi
-}
-
-# Setups the environment
-function execute_setup() {
-  show_title_message "Setting up the emulation environment..."
-  require_dirs
-
-  needSdk=0
-  command -v avdmanager >/dev/null 2>&1 || needSdk=1
-  command -v adb >/dev/null 2>&1 || needSdk=1
-  command -v emulator >/dev/null 2>&1 || needSdk=1
-
-  if [ $needSdk -eq 1 ]; then
-    show_error_message "Android SDK not found. Please install it and configure the paht in the config file."
-    stop_on_error
-  fi
-
-  require_emu
-  show_ok_message "Done!"
 }
 
 # Loads and checks the token for the magic login
@@ -766,10 +732,6 @@ if [ "$#" -lt 1 ] || [ -z $1 ]; then
   show_usage
 fi
 
-if [ "$1" == $CMD_SETUP ] && [ "$#" -gt 1 ]; then
-  show_usage
-fi
-
 if [ "$1" == $CMD_PROCESS ] && [ "$#" -gt 2 ]; then
   show_usage
 fi
@@ -799,9 +761,7 @@ eval_dev
 show_config
 
 # Launch command
-if [ $CMD == $CMD_SETUP ]; then
-  execute_setup 
-elif [ $CMD == $CMD_TAKE ]; then
+if [ $CMD == $CMD_TAKE ]; then
   execute_take
 elif [ $CMD == $CMD_PROCESS ]; then
   execute_process
