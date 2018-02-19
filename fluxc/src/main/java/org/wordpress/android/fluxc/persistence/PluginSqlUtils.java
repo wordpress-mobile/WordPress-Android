@@ -85,10 +85,7 @@ public class PluginSqlUtils {
                 .endWhere().execute();
     }
 
-    public static SitePluginModel getSitePluginBySlug(@Nullable SiteModel site, String slug) {
-        if (site == null) {
-            return null;
-        }
+    public static SitePluginModel getSitePluginBySlug(@NonNull SiteModel site, String slug) {
         List<SitePluginModel> result = WellSql.select(SitePluginModel.class)
                 .where().equals(SitePluginModelTable.SLUG, slug)
                 .equals(SitePluginModelTable.LOCAL_SITE_ID, site.getId())
