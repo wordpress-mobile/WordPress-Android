@@ -82,7 +82,6 @@ public class PluginBrowserActivity extends AppCompatActivity
         if (actionBar != null) {
             actionBar.setHomeButtonEnabled(true);
             actionBar.setDisplayHomeAsUpEnabled(true);
-            actionBar.setElevation(0);
         }
 
         if (savedInstanceState == null) {
