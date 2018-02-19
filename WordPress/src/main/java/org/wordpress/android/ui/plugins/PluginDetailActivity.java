@@ -83,6 +83,7 @@ import static org.wordpress.android.widgets.WPNetworkImageView.ImageType.PLUGIN_
 public class PluginDetailActivity extends AppCompatActivity {
     public static final String KEY_PLUGIN_SLUG = "KEY_PLUGIN_SLUG";
     private static final String KEY_IS_CONFIGURING_PLUGIN = "KEY_IS_CONFIGURING_PLUGIN";
+    private static final String KEY_IS_INSTALLING_PLUGIN = "KEY_IS_INSTALLING_PLUGIN";
     private static final String KEY_IS_UPDATING_PLUGIN = "KEY_IS_UPDATING_PLUGIN";
     private static final String KEY_IS_REMOVING_PLUGIN = "KEY_IS_REMOVING_PLUGIN";
     private static final String KEY_IS_ACTIVE = "KEY_IS_ACTIVE";
@@ -118,6 +119,7 @@ public class PluginDetailActivity extends AppCompatActivity {
     private WPNetworkImageView mImageIcon;
 
     private boolean mIsConfiguringPlugin;
+    private boolean mIsInstallingPlugin;
     private boolean mIsUpdatingPlugin;
     private boolean mIsRemovingPlugin;
     protected boolean mIsShowingRemovePluginConfirmationDialog;
@@ -162,6 +164,7 @@ public class PluginDetailActivity extends AppCompatActivity {
             mIsAutoUpdateEnabled = getSitePlugin() != null && getSitePlugin().isAutoUpdateEnabled();
         } else {
             mIsConfiguringPlugin = savedInstanceState.getBoolean(KEY_IS_CONFIGURING_PLUGIN);
+            mIsInstallingPlugin = savedInstanceState.getBoolean(KEY_IS_INSTALLING_PLUGIN);
             mIsUpdatingPlugin = savedInstanceState.getBoolean(KEY_IS_UPDATING_PLUGIN);
             mIsRemovingPlugin = savedInstanceState.getBoolean(KEY_IS_REMOVING_PLUGIN);
             mIsActive = savedInstanceState.getBoolean(KEY_IS_ACTIVE);
@@ -240,6 +243,7 @@ public class PluginDetailActivity extends AppCompatActivity {
         outState.putSerializable(WordPress.SITE, mSite);
         outState.putString(KEY_PLUGIN_SLUG, mSlug);
         outState.putBoolean(KEY_IS_CONFIGURING_PLUGIN, mIsConfiguringPlugin);
+        outState.putBoolean(KEY_IS_INSTALLING_PLUGIN, mIsInstallingPlugin);
         outState.putBoolean(KEY_IS_UPDATING_PLUGIN, mIsUpdatingPlugin);
         outState.putBoolean(KEY_IS_REMOVING_PLUGIN, mIsRemovingPlugin);
         outState.putBoolean(KEY_IS_ACTIVE, mIsActive);
@@ -748,11 +752,11 @@ public class PluginDetailActivity extends AppCompatActivity {
     }
 
     protected void dispatchInstallPluginAction() {
-        if (!NetworkUtils.checkConnection(this)) {
+        if (!NetworkUtils.checkConnection(this) || mIsInstallingPlugin) {
             return;
         }
 
-        mIsUpdatingPlugin = true;
+        mIsInstallingPlugin = true;
         refreshUpdateVersionViews();
         PluginStore.InstallSitePluginPayload payload = new InstallSitePluginPayload(mSite, mSlug);
         mDispatcher.dispatch(PluginActionBuilder.newInstallSitePluginAction(payload));
@@ -892,7 +896,7 @@ public class PluginDetailActivity extends AppCompatActivity {
             return;
         }
 
-        mIsUpdatingPlugin = false;
+        mIsInstallingPlugin = false;
         if (event.isError()) {
             AppLog.e(AppLog.T.PLUGINS, "An error occurred while installing the plugin with type: "
                     + event.error.type);
