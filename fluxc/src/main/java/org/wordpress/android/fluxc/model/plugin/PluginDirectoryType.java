@@ -4,7 +4,8 @@ import java.util.Locale;
 
 public enum PluginDirectoryType {
     NEW,
-    POPULAR;
+    POPULAR,
+    SITE;
 
     @Override
     public String toString() {
