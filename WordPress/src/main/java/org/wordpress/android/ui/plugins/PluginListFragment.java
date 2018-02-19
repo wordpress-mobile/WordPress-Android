@@ -27,6 +27,7 @@ import android.widget.TextView;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.fluxc.model.SiteModel;
+import org.wordpress.android.fluxc.model.plugin.DualPluginModel;
 import org.wordpress.android.fluxc.model.plugin.SitePluginModel;
 import org.wordpress.android.fluxc.model.plugin.WPOrgPluginModel;
 import org.wordpress.android.ui.ActivityLauncher;
@@ -87,36 +88,36 @@ public class PluginListFragment extends Fragment {
     }
 
     private void setupObservers() {
-        mViewModel.getSitePlugins().observe(this, new Observer<List<SitePluginModel>>() {
+        mViewModel.getSitePlugins().observe(this, new Observer<List<DualPluginModel>>() {
             @Override
-            public void onChanged(@Nullable final List<SitePluginModel> sitePlugins) {
+            public void onChanged(@Nullable final List<DualPluginModel> sitePlugins) {
                 if (mListType == PluginListType.SITE) {
                     reloadPlugins();
                 }
             }
         });
 
-        mViewModel.getNewPlugins().observe(this, new Observer<List<WPOrgPluginModel>>() {
+        mViewModel.getNewPlugins().observe(this, new Observer<List<DualPluginModel>>() {
             @Override
-            public void onChanged(@Nullable final List<WPOrgPluginModel> newPlugins) {
+            public void onChanged(@Nullable final List<DualPluginModel> newPlugins) {
                 if (mListType == PluginListType.NEW) {
                     reloadPlugins();
                 }
             }
         });
 
-        mViewModel.getPopularPlugins().observe(this, new Observer<List<WPOrgPluginModel>>() {
+        mViewModel.getPopularPlugins().observe(this, new Observer<List<DualPluginModel>>() {
             @Override
-            public void onChanged(@Nullable final List<WPOrgPluginModel> popularPlugins) {
+            public void onChanged(@Nullable final List<DualPluginModel> popularPlugins) {
                 if (mListType == PluginListType.POPULAR) {
                     reloadPlugins();
                 }
             }
         });
 
-        mViewModel.getSearchResults().observe(this, new Observer<List<WPOrgPluginModel>>() {
+        mViewModel.getSearchResults().observe(this, new Observer<List<DualPluginModel>>() {
             @Override
-            public void onChanged(@Nullable final List<WPOrgPluginModel> popularPlugins) {
+            public void onChanged(@Nullable final List<DualPluginModel> popularPlugins) {
                 if (mListType == PluginListType.SEARCH) {
                     reloadPlugins();
                 }
@@ -205,7 +206,7 @@ public class PluginListFragment extends Fragment {
         setPlugins(mViewModel.getPluginsForListType(mListType));
     }
 
-    private void setPlugins(@Nullable List<?> plugins) {
+    private void setPlugins(@Nullable List<DualPluginModel> plugins) {
         PluginListAdapter adapter;
         if (mRecycler.getAdapter() == null) {
             adapter = new PluginListAdapter(getActivity());
@@ -242,14 +243,21 @@ public class PluginListFragment extends Fragment {
             setHasStableIds(true);
         }
 
-        public void setPlugins(@Nullable List<?> plugins) {
-            if (!mItems.isSameList(plugins)) {
-                mItems.clear();
-                if (plugins != null) {
-                    mItems.addAll(plugins);
+        void setPlugins(@Nullable List<DualPluginModel> items) {
+            if (mItems.isSameList(items)) return;
+
+            // TODO: Get rid of this and handle in FluxC
+            // strip HTML here so we don't have to do it in every call to onBindViewHolder
+            for (DualPluginModel dualPluginModel : mItems) {
+                WPOrgPluginModel wpOrgPluginModel = dualPluginModel.getWPOrgPlugin();
+                if (wpOrgPluginModel != null) {
+                    wpOrgPluginModel.setAuthorAsHtml(HtmlUtils.fastStripHtml(wpOrgPluginModel.getAuthorAsHtml()));
                 }
-                notifyDataSetChanged();
             }
+
+            mItems.clear();
+            mItems.addAll(items);
+            notifyDataSetChanged();
         }
 
         void reloadPluginWithSlug(@NonNull String slug) {
@@ -284,20 +292,20 @@ public class PluginListFragment extends Fragment {
 
         @Override
         public void onBindViewHolder(RecyclerView.ViewHolder viewHolder, int position) {
-            Object item = getItem(position);
+            DualPluginModel item = (DualPluginModel) getItem(position);
             if (item == null) return;
-            SitePluginModel sitePlugin;
-            WPOrgPluginModel wpOrgPlugin;
-            if (item instanceof SitePluginModel) {
-                sitePlugin = (SitePluginModel) item;
-                wpOrgPlugin = mViewModel.getWPOrgPluginForSitePluginAndFetchIfNecessary(sitePlugin);
-            } else {
-                wpOrgPlugin = (WPOrgPluginModel) item;
-                sitePlugin = mViewModel.getSitePluginFromSlug(wpOrgPlugin.getSlug());
-            }
 
-            String name = sitePlugin != null ? sitePlugin.getDisplayName() : wpOrgPlugin.getName();
-            String author = sitePlugin != null ? sitePlugin.getAuthorName() : HtmlUtils.fastStripHtml(wpOrgPlugin.getAuthorAsHtml());
+            SitePluginModel sitePlugin = item.getSitePlugin();
+            WPOrgPluginModel wpOrgPlugin = item.getWPOrgPlugin();
+            String name = null;
+            String author = null;
+            if (sitePlugin != null) {
+                name = sitePlugin.getDisplayName();
+                author = sitePlugin.getAuthorName();
+            } else if (wpOrgPlugin != null){
+                name = wpOrgPlugin.getName();
+                author = wpOrgPlugin.getAuthorAsHtml();
+            }
             String iconUrl = wpOrgPlugin != null ? wpOrgPlugin.getIcon() : null;
 
             PluginViewHolder holder = (PluginViewHolder) viewHolder;
@@ -361,21 +369,15 @@ public class PluginListFragment extends Fragment {
                     @Override
                     public void onClick(View v) {
                         int position = getAdapterPosition();
-                        Object item = getItem(position);
+                        DualPluginModel item = (DualPluginModel) getItem(position);
                         if (item == null) return;
-                        SitePluginModel sitePlugin;
-                        WPOrgPluginModel wpOrgPlugin;
-                        if (item instanceof SitePluginModel) {
-                            sitePlugin = (SitePluginModel) item;
-                            wpOrgPlugin = mViewModel.getWPOrgPluginForSitePluginAndFetchIfNecessary(sitePlugin);
-                        } else {
-                            wpOrgPlugin = (WPOrgPluginModel) item;
-                            sitePlugin = mViewModel.getSitePluginFromSlug(wpOrgPlugin.getSlug());
-                        }
-                        if (sitePlugin != null) {
-                            ActivityLauncher.viewPluginDetailForResult(getActivity(), mViewModel.getSite(), sitePlugin);
-                        } else {
-                            ActivityLauncher.viewPluginDetailForResult(getActivity(), mViewModel.getSite(), wpOrgPlugin);
+
+                        if (item.getSitePlugin() != null) {
+                            ActivityLauncher.viewPluginDetailForResult(getActivity(), mViewModel.getSite(),
+                                    item.getSitePlugin());
+                        } else if (item.getWPOrgPlugin() != null){
+                            ActivityLauncher.viewPluginDetailForResult(getActivity(), mViewModel.getSite(),
+                                    item.getWPOrgPlugin());
                         }
                     }
                 });

@@ -17,10 +17,7 @@ import org.wordpress.android.fluxc.generated.PluginActionBuilder;
 import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.model.plugin.DualPluginModel;
 import org.wordpress.android.fluxc.model.plugin.PluginDirectoryType;
-import org.wordpress.android.fluxc.model.plugin.SitePluginModel;
-import org.wordpress.android.fluxc.model.plugin.WPOrgPluginModel;
 import org.wordpress.android.fluxc.store.PluginStore;
-import org.wordpress.android.ui.plugins.PluginUtils;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.StringUtils;
 
@@ -136,30 +133,6 @@ public class PluginBrowserViewModel extends ViewModel {
 
     // Site & WPOrg plugin management
 
-    public WPOrgPluginModel getWPOrgPluginForSitePluginAndFetchIfNecessary(SitePluginModel sitePlugin) {
-        if (sitePlugin == null) {
-            return null;
-        }
-        WPOrgPluginModel wpOrgPlugin = PluginUtils.getWPOrgPlugin(mPluginStore, sitePlugin);
-        if (wpOrgPlugin == null) {
-            fetchWPOrgPlugin(sitePlugin.getSlug());
-        }
-        return wpOrgPlugin;
-    }
-
-    public SitePluginModel getSitePluginFromSlug(String slug) {
-        List<SitePluginModel> sitePlugins = getSitePlugins().getValue();
-        if (sitePlugins != null) {
-            // TODO: if we ever add caching to PluginStore, remove this
-            for (SitePluginModel plugin : sitePlugins) {
-                if (plugin.getSlug().equals(slug)) {
-                    return plugin;
-                }
-            }
-        }
-        return mPluginStore.getSitePluginBySlug(getSite(), slug);
-    }
-
     public void reloadAllPluginsFromStore() {
         reloadPluginDirectory(PluginDirectoryType.NEW);
         reloadPluginDirectory(PluginDirectoryType.POPULAR);
@@ -257,10 +230,6 @@ public class PluginBrowserViewModel extends ViewModel {
                 return true;
         }
         return true;
-    }
-
-    private void fetchWPOrgPlugin(String slug) {
-        mDispatcher.dispatch(PluginActionBuilder.newFetchWporgPluginAction(slug));
     }
 
     public void loadMore(PluginListType listType) {
@@ -460,7 +429,7 @@ public class PluginBrowserViewModel extends ViewModel {
         return mTitle;
     }
 
-    public List<?> getPluginsForListType(PluginListType listType) {
+    public List<DualPluginModel> getPluginsForListType(PluginListType listType) {
         switch (listType) {
             case SITE:
                 return getSitePlugins().getValue();

@@ -1,12 +1,11 @@
 package org.wordpress.android.ui.plugins;
 
-import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.text.TextUtils;
 
 import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.model.plugin.SitePluginModel;
 import org.wordpress.android.fluxc.model.plugin.WPOrgPluginModel;
-import org.wordpress.android.fluxc.store.PluginStore;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.CrashlyticsUtils;
 import org.wordpress.android.util.StringUtils;
@@ -35,21 +34,16 @@ public class PluginUtils {
         return false;
     }
 
-    public static WPOrgPluginModel getWPOrgPlugin(@NonNull PluginStore pluginStore, @NonNull SitePluginModel plugin) {
-        String slug = plugin.getSlug();
-        if (TextUtils.isEmpty(slug)) {
-            return null;
+    static int getAverageStarRating(@Nullable WPOrgPluginModel wpOrgPlugin) {
+        if (wpOrgPlugin == null) {
+            return 0;
         }
-        return pluginStore.getWPOrgPluginBySlug(slug);
-    }
-
-    static int getAverageStarRating(@NonNull WPOrgPluginModel wpOrgPlugin) {
         int rating = StringUtils.stringToInt(wpOrgPlugin.getRating(), 1);
         return Math.round(rating / 20f);
     }
 
-    static boolean isUpdateAvailable(SitePluginModel plugin, WPOrgPluginModel wpOrgPlugin) {
-        if (wpOrgPlugin == null
+    static boolean isUpdateAvailable(@Nullable SitePluginModel plugin, @Nullable WPOrgPluginModel wpOrgPlugin) {
+        if (plugin == null || wpOrgPlugin == null
                 || TextUtils.isEmpty(plugin.getVersion())
                 || TextUtils.isEmpty(wpOrgPlugin.getVersion())) {
             return false;

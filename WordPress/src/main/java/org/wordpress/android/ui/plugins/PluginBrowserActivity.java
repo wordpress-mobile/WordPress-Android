@@ -33,6 +33,7 @@ import android.widget.TextView;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.fluxc.model.SiteModel;
+import org.wordpress.android.fluxc.model.plugin.DualPluginModel;
 import org.wordpress.android.fluxc.model.plugin.SitePluginModel;
 import org.wordpress.android.fluxc.model.plugin.WPOrgPluginModel;
 import org.wordpress.android.ui.ActivityLauncher;
@@ -151,23 +152,23 @@ public class PluginBrowserActivity extends AppCompatActivity
             }
         });
 
-        mViewModel.getSitePlugins().observe(this, new Observer<List<SitePluginModel>>() {
+        mViewModel.getSitePlugins().observe(this, new Observer<List<DualPluginModel>>() {
             @Override
-            public void onChanged(@Nullable final List<SitePluginModel> sitePlugins) {
+            public void onChanged(@Nullable final List<DualPluginModel> sitePlugins) {
                 reloadPluginAdapterAndVisibility(PluginListType.SITE, sitePlugins);
             }
         });
 
-        mViewModel.getNewPlugins().observe(this, new Observer<List<WPOrgPluginModel>>() {
+        mViewModel.getNewPlugins().observe(this, new Observer<List<DualPluginModel>>() {
             @Override
-            public void onChanged(@Nullable final List<WPOrgPluginModel> newPlugins) {
+            public void onChanged(@Nullable final List<DualPluginModel> newPlugins) {
                 reloadPluginAdapterAndVisibility(PluginListType.NEW, newPlugins);
             }
         });
 
-        mViewModel.getPopularPlugins().observe(this, new Observer<List<WPOrgPluginModel>>() {
+        mViewModel.getPopularPlugins().observe(this, new Observer<List<DualPluginModel>>() {
             @Override
-            public void onChanged(@Nullable final List<WPOrgPluginModel> popularPlugins) {
+            public void onChanged(@Nullable final List<DualPluginModel> popularPlugins) {
                 reloadPluginAdapterAndVisibility(PluginListType.POPULAR, popularPlugins);
             }
         });
@@ -246,7 +247,7 @@ public class PluginBrowserActivity extends AppCompatActivity
         }
     }
 
-    protected void reloadPluginAdapterAndVisibility(@NonNull PluginListType pluginType, List<?> plugins) {
+    protected void reloadPluginAdapterAndVisibility(@NonNull PluginListType pluginType, @Nullable List<DualPluginModel> plugins) {
         PluginBrowserAdapter adapter;
         View cardView;
         switch (pluginType) {
@@ -341,17 +342,18 @@ public class PluginBrowserActivity extends AppCompatActivity
             setHasStableIds(true);
         }
 
-        void setPlugins(@NonNull List<?> items) {
+        void setPlugins(@Nullable List<DualPluginModel> items) {
             if (mItems.isSameList(items)) return;
 
             mItems.clear();
             mItems.addAll(items);
 
+            // TODO: Get rid of this and handle in FluxC
             // strip HTML here so we don't have to do it in every call to onBindViewHolder
-            for (Object item : mItems) {
-                if (item instanceof WPOrgPluginModel) {
-                    WPOrgPluginModel plugin = (WPOrgPluginModel) item;
-                    plugin.setAuthorAsHtml(HtmlUtils.fastStripHtml(plugin.getAuthorAsHtml()));
+            for (DualPluginModel dualPluginModel : mItems) {
+                WPOrgPluginModel wpOrgPluginModel = dualPluginModel.getWPOrgPlugin();
+                if (wpOrgPluginModel != null) {
+                    wpOrgPluginModel.setAuthorAsHtml(HtmlUtils.fastStripHtml(wpOrgPluginModel.getAuthorAsHtml()));
                 }
             }
 
@@ -384,21 +386,17 @@ public class PluginBrowserActivity extends AppCompatActivity
         @Override
         public void onBindViewHolder(ViewHolder viewHolder, int position) {
             PluginBrowserViewHolder holder = (PluginBrowserViewHolder) viewHolder;
-            Object item = getItem(position);
+            DualPluginModel item = (DualPluginModel) getItem(position);
             if (item == null) return;
 
-            SitePluginModel sitePlugin;
-            WPOrgPluginModel wpOrgPlugin;
-            String name;
-            String author;
-            if (item instanceof SitePluginModel) {
-                sitePlugin = (SitePluginModel) item;
-                wpOrgPlugin = mViewModel.getWPOrgPluginForSitePluginAndFetchIfNecessary(sitePlugin);
+            SitePluginModel sitePlugin = item.getSitePlugin();
+            WPOrgPluginModel wpOrgPlugin = item.getWPOrgPlugin();
+            String name = null;
+            String author = null;
+            if (sitePlugin != null) {
                 name = sitePlugin.getDisplayName();
                 author = sitePlugin.getAuthorName();
-            } else {
-                wpOrgPlugin = (WPOrgPluginModel) item;
-                sitePlugin = mViewModel.getSitePluginFromSlug(wpOrgPlugin.getSlug());
+            } else if (wpOrgPlugin != null){
                 name = wpOrgPlugin.getName();
                 author = wpOrgPlugin.getAuthorAsHtml();
             }
@@ -469,23 +467,15 @@ public class PluginBrowserActivity extends AppCompatActivity
                     @Override
                     public void onClick(View v) {
                         int position = getAdapterPosition();
-                        Object item = getItem(position);
+                        DualPluginModel item = (DualPluginModel) getItem(position);
                         if (item == null) return;
-                        SitePluginModel sitePlugin;
-                        WPOrgPluginModel wpOrgPlugin;
-                        if (item instanceof SitePluginModel) {
-                            sitePlugin = (SitePluginModel) item;
-                            wpOrgPlugin = mViewModel.getWPOrgPluginForSitePluginAndFetchIfNecessary(sitePlugin);
-                        } else {
-                            wpOrgPlugin = (WPOrgPluginModel) item;
-                            sitePlugin = mViewModel.getSitePluginFromSlug(wpOrgPlugin.getSlug());
-                        }
-                        if (sitePlugin != null) {
+
+                        if (item.getSitePlugin() != null) {
                             ActivityLauncher.viewPluginDetailForResult(PluginBrowserActivity.this, mViewModel.getSite(),
-                                    sitePlugin);
-                        } else {
+                                    item.getSitePlugin());
+                        } else if (item.getWPOrgPlugin() != null){
                             ActivityLauncher.viewPluginDetailForResult(PluginBrowserActivity.this, mViewModel.getSite(),
-                                    wpOrgPlugin);
+                                    item.getWPOrgPlugin());
                         }
                     }
                 });

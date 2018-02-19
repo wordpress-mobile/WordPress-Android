@@ -2,6 +2,7 @@ package org.wordpress.android.ui.plugins;
 
 import android.support.annotation.Nullable;
 
+import org.wordpress.android.fluxc.model.plugin.DualPluginModel;
 import org.wordpress.android.fluxc.model.plugin.SitePluginModel;
 import org.wordpress.android.fluxc.model.plugin.WPOrgPluginModel;
 import org.wordpress.android.util.StringUtils;
@@ -13,17 +14,16 @@ import java.util.List;
  * List containing either SitePluginModels or WPOrgPluginModels - used to simplify adapters
  * which can show both models
  */
-class PluginList extends ArrayList<Object> {
-
+class PluginList extends ArrayList<DualPluginModel> {
     int indexOfPluginWithSlug(@Nullable String slug) {
         if (slug != null) {
             for (int i = 0; i < this.size(); i++) {
-                Object item = this.get(i);
+                DualPluginModel item = this.get(i);
                 String itemSlug = null;
-                if ((item instanceof SitePluginModel)) {
-                    itemSlug = ((SitePluginModel) item).getSlug();
-                } else if (item instanceof WPOrgPluginModel) {
-                    itemSlug = ((WPOrgPluginModel) item).getSlug();
+                if (item.getSitePlugin() != null) {
+                    itemSlug = item.getSitePlugin().getSlug();
+                } else if (item.getWPOrgPlugin() != null) {
+                    itemSlug = item.getWPOrgPlugin().getSlug();
                 }
                 if (slug.equalsIgnoreCase(itemSlug)) {
                     return i;
