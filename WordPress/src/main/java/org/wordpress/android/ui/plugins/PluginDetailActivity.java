@@ -890,8 +890,7 @@ public class PluginDetailActivity extends AppCompatActivity {
     public void OnSitePluginInstalled(OnSitePluginInstalled event) {
         if (isFinishing()) return;
 
-        if (mSite.getId() != event.site.getId() || getWPOrgPlugin() == null
-                || !getWPOrgPlugin().getName().equals(event.pluginName)) {
+        if (mSite.getId() != event.site.getId() || !mSlug.equals(event.slug)) {
             // Not the event we are interested in
             return;
         }
