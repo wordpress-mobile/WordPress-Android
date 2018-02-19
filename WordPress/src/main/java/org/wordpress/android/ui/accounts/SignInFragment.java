@@ -570,14 +570,13 @@ public class SignInFragment extends AbstractFragment implements TextWatcher {
             }
 
             // make the top padding match the bottom padding of the logo so the logo doesn't touch the screen top
-            ViewCompat.setPaddingRelative(mIconSwitcher, mIconSwitcher.getPaddingLeft(), mIconSwitcher.getPaddingBottom(), mIconSwitcher
-                    .getPaddingRight(), mIconSwitcher.getPaddingBottom());
+            ViewCompat.setPaddingRelative(mIconSwitcher, ViewCompat.getPaddingStart(mIconSwitcher), mIconSwitcher.getPaddingBottom(), ViewCompat.getPaddingEnd(mIconSwitcher), mIconSwitcher.getPaddingBottom());
         } else {
             mBottomButtonsLayout.setOrientation(LinearLayout.VERTICAL);
             setSecondaryButtonVisible(false);
 
             // revert the top padding to zero when in portrait
-            ViewCompat.setPaddingRelative(mIconSwitcher, mIconSwitcher.getPaddingLeft(), 0, mIconSwitcher.getPaddingRight(), mIconSwitcher
+            ViewCompat.setPaddingRelative(mIconSwitcher, ViewCompat.getPaddingStart(mIconSwitcher), 0, ViewCompat.getPaddingEnd(mIconSwitcher), mIconSwitcher
                     .getPaddingBottom());
         }
     }

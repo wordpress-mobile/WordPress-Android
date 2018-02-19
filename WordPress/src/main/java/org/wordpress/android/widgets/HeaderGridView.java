@@ -19,6 +19,7 @@ package org.wordpress.android.widgets;
 import android.content.Context;
 import android.database.DataSetObservable;
 import android.database.DataSetObserver;
+import android.support.v4.view.ViewCompat;
 import android.util.AttributeSet;
 import android.view.View;
 import android.view.ViewGroup;
@@ -197,8 +198,8 @@ public class HeaderGridView extends GridView {
         @Override
         protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
             int targetWidth = HeaderGridView.this.getMeasuredWidth()
-                    - HeaderGridView.this.getPaddingLeft()
-                    - HeaderGridView.this.getPaddingRight();
+                    - ViewCompat.getPaddingStart(HeaderGridView.this)
+                    - ViewCompat.getPaddingEnd(HeaderGridView.this);
             widthMeasureSpec = MeasureSpec.makeMeasureSpec(targetWidth,
                     MeasureSpec.getMode(widthMeasureSpec));
             super.onMeasure(widthMeasureSpec, heightMeasureSpec);

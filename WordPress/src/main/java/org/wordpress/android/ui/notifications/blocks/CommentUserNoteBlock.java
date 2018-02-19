@@ -97,13 +97,13 @@ public class CommentUserNoteBlock extends UserNoteBlock {
         // Change display based on comment status and type:
         // 1. Comment replies are indented and have a 'pipe' background
         // 2. Unapproved comments have different background and text color
-        int paddingLeft = view.getPaddingLeft();
+        int paddingStart = ViewCompat.getPaddingStart(view);
         int paddingTop = view.getPaddingTop();
-        int paddingRight = view.getPaddingRight();
+        int paddingEnd = ViewCompat.getPaddingEnd(view);
         int paddingBottom = view.getPaddingBottom();
         if (mCommentStatus == CommentStatus.UNAPPROVED) {
             if (hasCommentNestingLevel()) {
-                paddingLeft = mIndentedLeftPadding;
+                paddingStart = mIndentedLeftPadding;
                 view.setBackgroundResource(R.drawable.comment_reply_unapproved_background);
             } else {
                 view.setBackgroundResource(R.drawable.comment_unapproved_background);
@@ -118,7 +118,7 @@ public class CommentUserNoteBlock extends UserNoteBlock {
             noteBlockHolder.commentTextView.setTextColor(mUnapprovedTextColor);
         } else {
             if (hasCommentNestingLevel()) {
-                paddingLeft = mIndentedLeftPadding;
+                paddingStart = mIndentedLeftPadding;
                 view.setBackgroundResource(R.drawable.comment_reply_background);
                 noteBlockHolder.dividerView.setVisibility(View.INVISIBLE);
             } else {
@@ -132,7 +132,7 @@ public class CommentUserNoteBlock extends UserNoteBlock {
             noteBlockHolder.nameTextView.setTextColor(mNormalTextColor);
             noteBlockHolder.commentTextView.setTextColor(mNormalTextColor);
         }
-        ViewCompat.setPaddingRelative(view, paddingLeft, paddingTop, paddingRight, paddingBottom);
+        ViewCompat.setPaddingRelative(view, paddingStart, paddingTop, paddingEnd, paddingBottom);
 
         // If status was changed, fade in the view
         if (mStatusChanged) {

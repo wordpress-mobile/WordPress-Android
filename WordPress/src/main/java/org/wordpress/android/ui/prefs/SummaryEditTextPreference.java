@@ -159,7 +159,7 @@ public class SummaryEditTextPreference extends EditTextPreference implements Pre
             if (oldParent != null && oldParent instanceof ViewGroup) {
                 ViewGroup groupParent = (ViewGroup) oldParent;
                 groupParent.removeView(editText);
-                ViewCompat.setPaddingRelative(groupParent,groupParent.getPaddingLeft(), 0, groupParent.getPaddingRight(), groupParent.getPaddingBottom());
+                ViewCompat.setPaddingRelative(groupParent, ViewCompat.getPaddingStart(groupParent), 0, ViewCompat.getPaddingEnd(groupParent), groupParent.getPaddingBottom());
             }
             onAddEditTextToDialogView(view, editText);
         }

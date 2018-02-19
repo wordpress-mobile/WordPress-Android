@@ -99,8 +99,8 @@ class StatsUIHelper {
      * @param backgroundResId The resource ID
      */
     private static void setViewBackgroundWithoutResettingPadding(final View v, final int backgroundResId) {
-        final int paddingBottom = v.getPaddingBottom(), paddingLeft = v.getPaddingLeft();
-        final int paddingRight = v.getPaddingRight(), paddingTop = v.getPaddingTop();
+        final int paddingBottom = v.getPaddingBottom(), paddingLeft = ViewCompat.getPaddingStart(v);
+        final int paddingRight = ViewCompat.getPaddingEnd(v), paddingTop = v.getPaddingTop();
         v.setBackgroundResource(backgroundResId);
         ViewCompat.setPaddingRelative(v, paddingLeft, paddingTop, paddingRight, paddingBottom);
     }
