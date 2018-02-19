@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.net.http.SslError;
 import android.os.Build;
 import android.os.Bundle;
+import android.support.v4.view.MarginLayoutParamsCompat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -37,12 +38,14 @@ public class StatsGeoviewsFragment extends StatsAbstractListFragment {
     protected boolean hasDataAvailable() {
         return mCountries != null;
     }
+
     @Override
     protected void saveStatsData(Bundle outState) {
         if (hasDataAvailable()) {
             outState.putSerializable(ARG_REST_RESPONSE, mCountries);
         }
     }
+
     @Override
     protected void restoreStatsData(Bundle savedInstanceState) {
         if (savedInstanceState.containsKey(ARG_REST_RESPONSE)) {
@@ -95,7 +98,7 @@ public class StatsGeoviewsFragment extends StatsAbstractListFragment {
         int dp4 = DisplayUtils.dpToPx(mTopPagerContainer.getContext(), 4);
         LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(
                 LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
-        layoutParams.setMargins(0, 0, dp4, 0);
+        MarginLayoutParamsCompat.setMarginEnd(layoutParams, dp4);
         mTopPagerContainer.setLayoutParams(layoutParams);
 
         mTopPagerContainer.removeAllViews();
@@ -129,19 +132,19 @@ public class StatsGeoviewsFragment extends StatsAbstractListFragment {
                         "<script type=\"text/javascript\" src=\"https://www.gstatic.com/charts/loader.js\"></script>" +
                         "<script type=\"text/javascript\" src=\"https://www.google.com/jsapi\"></script>" +
                         "<script type=\"text/javascript\">" +
-                            "google.charts.load('42', {'packages':['geochart']});" +
-                            "google.charts.setOnLoadCallback(drawRegionsMap);" +
-                            "function drawRegionsMap() {" +
-                                "var data = google.visualization.arrayToDataTable(" +
-                                "[" +
-                                "['Country', '" + label + "']," +
-                                        dataToLoad +
-                                "]);" +
-                                "var options = {keepAspectRatio: true, region: 'world', colorAxis: { colors: [ '#FFF088', '#F34605' ] }, enableRegionInteractivity: true};" +
-                                "var chart = new google.visualization.GeoChart(document.getElementById('regions_div'));" +
-                                "chart.draw(data, options);" +
-                            "}" +
-                            "</script>" +
+                        "google.charts.load('42', {'packages':['geochart']});" +
+                        "google.charts.setOnLoadCallback(drawRegionsMap);" +
+                        "function drawRegionsMap() {" +
+                        "var data = google.visualization.arrayToDataTable(" +
+                        "[" +
+                        "['Country', '" + label + "']," +
+                        dataToLoad +
+                        "]);" +
+                        "var options = {keepAspectRatio: true, region: 'world', colorAxis: { colors: [ '#FFF088', '#F34605' ] }, enableRegionInteractivity: true};" +
+                        "var chart = new google.visualization.GeoChart(document.getElementById('regions_div'));" +
+                        "chart.draw(data, options);" +
+                        "}" +
+                        "</script>" +
                         "</head>" +
                         "<body>" +
                         "<div id=\"regions_div\" style=\"width: 100%; height: 100%;\"></div>" +
@@ -181,6 +184,7 @@ public class StatsGeoviewsFragment extends StatsAbstractListFragment {
                     + " Description: " + description
                     + " Failing URL: " + failingUrl);
         }
+
         @Override
         public void onReceivedSslError(WebView view, SslErrorHandler handler, SslError error) {
             super.onReceivedSslError(view, handler, error);
