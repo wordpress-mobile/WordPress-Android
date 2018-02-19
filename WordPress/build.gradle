@@ -165,6 +165,8 @@ dependencies {
         exclude group: 'com.github.bumptech.glide'
     }
 
+    lintChecks project(path:':libs:lint:WordPressLint')
+
     // Debug
     debugImplementation 'com.facebook.stetho:stetho:1.4.2'
 }
