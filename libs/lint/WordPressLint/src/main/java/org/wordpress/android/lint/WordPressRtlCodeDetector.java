@@ -57,6 +57,11 @@ public class WordPressRtlCodeDetector extends Detector implements UastScanner {
             Severity.ERROR,
             new Implementation(WordPressRtlCodeDetector.class, Scope.JAVA_FILE_SCOPE));
 
+    private static final String SET_PADDING_METHOD = "setPadding";
+    private static final String SET_MARGINS_METHOD = "setMargins";
+    private static final String GET_PADDING_LEFT_METHOD = "getPaddingLeft";
+    private static final String GET_PADDING_RIGHT_METHOD = "getPaddingRight";
+
     @Override
     public List<Class<? extends UElement>> getApplicableUastTypes() {
         return Collections.singletonList(UCallExpression.class);
@@ -73,7 +78,7 @@ public class WordPressRtlCodeDetector extends Detector implements UastScanner {
 
                 if (methodName == null) return;
 
-                if (methodName.equals("setPadding") || methodName.equals("setMargins")) {
+                if (methodName.equals(SET_PADDING_METHOD) || methodName.equals(SET_MARGINS_METHOD)) {
 
                     //trying to make sure it's the right method
                     if (uCallExpression.getValueArgumentCount() == 4) {
@@ -85,7 +90,7 @@ public class WordPressRtlCodeDetector extends Detector implements UastScanner {
                         //passed values as strings. We are looking for cases where padding or margin are not same.
                         if (!left.asRenderString().equals(right.asRenderString())) {
                             Issue issueToReport;
-                            if (methodName.equals("setPadding")) {
+                            if (methodName.equals(SET_PADDING_METHOD)) {
                                 issueToReport = SET_PADDING;
                             } else {
                                 issueToReport = SET_MARGIN;
@@ -93,7 +98,7 @@ public class WordPressRtlCodeDetector extends Detector implements UastScanner {
                             context.report(issueToReport, uCallExpression, context.getLocation(uCallExpression), issueToReport.getExplanation(TextFormat.TEXT));
                         }
                     }
-                } else if (methodName.equals("getPaddingLeft") || methodName.equals("getPaddingRight")) {
+                } else if (methodName.equals(GET_PADDING_LEFT_METHOD) || methodName.equals(GET_PADDING_RIGHT_METHOD)) {
                     context.report(GET_PADDING, uCallExpression, context.getLocation(uCallExpression), GET_PADDING.getExplanation(TextFormat.TEXT));
                 }
             }
