@@ -71,7 +71,6 @@ public class PluginRestClient extends BaseWPComRestClient {
                 new BaseErrorListener() {
                     @Override
                     public void onErrorResponse(@NonNull BaseNetworkError networkError) {
-
                         PluginDirectoryError directoryError = new PluginDirectoryError(((WPComGsonNetworkError)
                                 networkError).apiError, networkError.message);
                         FetchedPluginDirectoryPayload payload =
