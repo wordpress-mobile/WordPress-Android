@@ -35,7 +35,7 @@ class PluginList extends ArrayList<DualPluginModel> {
     }
 
     @Nullable Object getItem(int position) {
-        if (position < size()) {
+        if (position >= 0 && position < size()) {
             return get(position);
         }
         return null;
