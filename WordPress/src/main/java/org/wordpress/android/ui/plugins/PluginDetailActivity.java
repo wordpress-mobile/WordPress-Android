@@ -105,14 +105,14 @@ public class PluginDetailActivity extends AppCompatActivity {
     private Switch mSwitchAutoupdates;
     private ProgressDialog mRemovePluginProgressDialog;
 
-    private TextView mDescriptionTextView;
-    private ImageView mDescriptionChevron;
-    private TextView mInstallationTextView;
-    private ImageView mInstallationChevron;
-    private TextView mWhatsNewTextView;
-    private ImageView mWhatsNewChevron;
-    private TextView mFaqTextView;
-    private ImageView mFaqChevron;
+    protected TextView mDescriptionTextView;
+    protected ImageView mDescriptionChevron;
+    protected TextView mInstallationTextView;
+    protected ImageView mInstallationChevron;
+    protected TextView mWhatsNewTextView;
+    protected ImageView mWhatsNewChevron;
+    protected TextView mFaqTextView;
+    protected ImageView mFaqChevron;
 
     private WPNetworkImageView mImageBanner;
     private WPNetworkImageView mImageIcon;
@@ -120,11 +120,11 @@ public class PluginDetailActivity extends AppCompatActivity {
     private boolean mIsConfiguringPlugin;
     private boolean mIsUpdatingPlugin;
     private boolean mIsRemovingPlugin;
-    private boolean mIsShowingRemovePluginConfirmationDialog;
+    protected boolean mIsShowingRemovePluginConfirmationDialog;
 
     // These flags reflects the UI state
-    private boolean mIsActive;
-    private boolean mIsAutoUpdateEnabled;
+    protected boolean mIsActive;
+    protected boolean mIsAutoUpdateEnabled;
 
     @Inject PluginStore mPluginStore;
     @Inject Dispatcher mDispatcher;
@@ -366,9 +366,7 @@ public class PluginDetailActivity extends AppCompatActivity {
                 } else if (getWPOrgPlugin() != null) {
                     url = getWPOrgPlugin().getHomepageUrl();
                 }
-                if (TextUtils.isEmpty(url)) {
-                    openUrl(url);
-                }
+                openUrl(url);
             }
         });
 
@@ -545,7 +543,7 @@ public class PluginDetailActivity extends AppCompatActivity {
         }
     }
 
-    private void showPluginInfoPopup() {
+    protected void showPluginInfoPopup() {
         if (getWPOrgPlugin() == null) return;
 
         List<Map<String, String>> data = new ArrayList<>();
@@ -596,7 +594,7 @@ public class PluginDetailActivity extends AppCompatActivity {
 
     }
 
-    private void toggleText(@NonNull final TextView textView, @NonNull ImageView chevron) {
+    protected void toggleText(@NonNull final TextView textView, @NonNull ImageView chevron) {
         AniUtils.Duration duration = AniUtils.Duration.SHORT;
         boolean isExpanded = textView.getVisibility() == View.VISIBLE;
         if (isExpanded) {
@@ -612,7 +610,7 @@ public class PluginDetailActivity extends AppCompatActivity {
         animRotate.start();
     }
 
-    private void openUrl(@Nullable String url) {
+    protected void openUrl(@Nullable String url) {
         if (url != null) {
             ActivityLauncher.openUrlExternal(this, url);
         }
@@ -718,7 +716,7 @@ public class PluginDetailActivity extends AppCompatActivity {
 
     // Network Helpers
 
-    private void dispatchConfigurePluginAction(boolean forceUpdate) {
+    protected void dispatchConfigurePluginAction(boolean forceUpdate) {
         if (!NetworkUtils.checkConnection(this)) {
             return;
         }
@@ -735,7 +733,7 @@ public class PluginDetailActivity extends AppCompatActivity {
                 new ConfigureSitePluginPayload(mSite, getSitePlugin())));
     }
 
-    private void dispatchUpdatePluginAction() {
+    protected void dispatchUpdatePluginAction() {
         if (!NetworkUtils.checkConnection(this)) {
             return;
         }
@@ -749,7 +747,7 @@ public class PluginDetailActivity extends AppCompatActivity {
         mDispatcher.dispatch(PluginActionBuilder.newUpdateSitePluginAction(payload));
     }
 
-    private void dispatchInstallPluginAction() {
+    protected void dispatchInstallPluginAction() {
         if (!NetworkUtils.checkConnection(this)) {
             return;
         }
@@ -760,7 +758,7 @@ public class PluginDetailActivity extends AppCompatActivity {
         mDispatcher.dispatch(PluginActionBuilder.newInstallSitePluginAction(payload));
     }
 
-    private void dispatchRemovePluginAction() {
+    protected void dispatchRemovePluginAction() {
         if (!NetworkUtils.checkConnection(this)) {
             return;
         }
@@ -769,7 +767,7 @@ public class PluginDetailActivity extends AppCompatActivity {
         mDispatcher.dispatch(PluginActionBuilder.newDeleteSitePluginAction(payload));
     }
 
-    private void disableAndRemovePlugin() {
+    protected void disableAndRemovePlugin() {
         // This is only a sanity check as the remove button should not be visible. It's important to disable removing
         // plugins in certain cases, so we should still make this sanity check
         if (!canPluginBeDisabledOrRemoved()) {
@@ -946,11 +944,11 @@ public class PluginDetailActivity extends AppCompatActivity {
         return null;
     }
 
-    private String getWpOrgPluginUrl() {
+    protected String getWpOrgPluginUrl() {
         return "https://wordpress.org/plugins/" + mSlug;
     }
 
-    private String getWpOrgReviewsUrl() {
+    protected String getWpOrgReviewsUrl() {
         return "https://wordpress.org/plugins/" + mSlug + "/#reviews";
     }
 
