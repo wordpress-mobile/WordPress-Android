@@ -5,6 +5,7 @@ import android.support.annotation.Nullable;
 
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
+import org.jetbrains.annotations.NotNull;
 import org.wordpress.android.fluxc.Dispatcher;
 import org.wordpress.android.fluxc.Payload;
 import org.wordpress.android.fluxc.action.PluginAction;
@@ -588,8 +589,15 @@ public class PluginStore extends Store {
         }
     }
 
-    public @NonNull List<WPOrgPluginModel> getPluginDirectory(PluginDirectoryType type) {
-        return PluginSqlUtils.getWPOrgPluginsForDirectory(type);
+    public @NonNull List<DualPluginModel> getPluginDirectory(@Nullable SiteModel site, PluginDirectoryType type) {
+        List<DualPluginModel> dualPlugins = new ArrayList<>();
+        List<WPOrgPluginModel> wpOrgPlugins = PluginSqlUtils.getWPOrgPluginsForDirectory(type);
+        for (WPOrgPluginModel wpOrgPlugin : wpOrgPlugins) {
+            String slug = wpOrgPlugin.getSlug();
+            SitePluginModel sitePlugin = PluginSqlUtils.getSitePluginBySlug(site, slug);
+            dualPlugins.add(new DualPluginModel(sitePlugin, wpOrgPlugin));
+        }
+        return dualPlugins;
     }
 
     public @NonNull DualPluginModel getDualPluginBySlug(@Nullable SiteModel site, String slug) {
@@ -598,7 +606,7 @@ public class PluginStore extends Store {
         return new DualPluginModel(sitePlugin, wpOrgPlugin);
     }
 
-    public @NonNull List<DualPluginModel> getSitePlugins(SiteModel site) {
+    public @NonNull List<DualPluginModel> getSitePlugins(@NotNull SiteModel site) {
         List<DualPluginModel> dualPlugins = new ArrayList<>();
         List<SitePluginModel> sitePlugins = PluginSqlUtils.getSitePlugins(site);
         for (SitePluginModel sitePluginModel : sitePlugins) {
