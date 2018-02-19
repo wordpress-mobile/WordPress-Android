@@ -240,11 +240,12 @@ public class PluginListFragment extends Fragment {
 
         PluginListAdapter(Context context) {
             mLayoutInflater = LayoutInflater.from(context);
-            setHasStableIds(true);
+            setHasStableIds(false);
         }
 
         void setPlugins(@Nullable List<DualPluginModel> items) {
-            if (mItems.isSameList(items)) return;
+            mItems.clear();
+            mItems.addAll(items);
 
             // TODO: Get rid of this and handle in FluxC
             // strip HTML here so we don't have to do it in every call to onBindViewHolder
@@ -254,9 +255,6 @@ public class PluginListFragment extends Fragment {
                     wpOrgPluginModel.setAuthorAsHtml(HtmlUtils.fastStripHtml(wpOrgPluginModel.getAuthorAsHtml()));
                 }
             }
-
-            mItems.clear();
-            mItems.addAll(items);
             notifyDataSetChanged();
         }
 
@@ -268,10 +266,7 @@ public class PluginListFragment extends Fragment {
         }
 
         protected @Nullable Object getItem(int position) {
-            if (position < mItems.size()) {
-                return mItems.get(position);
-            }
-            return null;
+            return mItems.getItem(position);
         }
 
         @Override

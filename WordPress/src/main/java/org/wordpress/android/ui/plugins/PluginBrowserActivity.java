@@ -268,7 +268,7 @@ public class PluginBrowserActivity extends AppCompatActivity
         }
         adapter.setPlugins(plugins);
 
-        int newVisibility = plugins.size() > 0 ? View.VISIBLE : View.GONE;
+        int newVisibility = plugins != null && plugins.size() > 0 ? View.VISIBLE : View.GONE;
         int oldVisibility = cardView.getVisibility();
         if (newVisibility == View.VISIBLE && oldVisibility != View.VISIBLE) {
             AniUtils.fadeIn(cardView, AniUtils.Duration.MEDIUM);
@@ -339,12 +339,10 @@ public class PluginBrowserActivity extends AppCompatActivity
 
         PluginBrowserAdapter(Context context) {
             mLayoutInflater = LayoutInflater.from(context);
-            setHasStableIds(true);
+            setHasStableIds(false);
         }
 
         void setPlugins(@Nullable List<DualPluginModel> items) {
-            if (mItems.isSameList(items)) return;
-
             mItems.clear();
             mItems.addAll(items);
 
@@ -361,10 +359,7 @@ public class PluginBrowserActivity extends AppCompatActivity
         }
 
         protected @Nullable Object getItem(int position) {
-            if (position < mItems.size()) {
-                return mItems.get(position);
-            }
-            return null;
+            return mItems.getItem(position);
         }
 
         @Override
