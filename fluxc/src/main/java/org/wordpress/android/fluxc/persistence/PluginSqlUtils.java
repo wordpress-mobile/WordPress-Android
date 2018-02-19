@@ -77,20 +77,12 @@ public class PluginSqlUtils {
             return 0;
         }
         // The local id of the plugin might not be set if it's coming from a network request,
-        // using site id and name is a safer approach here
+        // using site id and slug is a safer approach here
         return WellSql.delete(SitePluginModel.class)
                 .where()
-                .equals(SitePluginModelTable.NAME, plugin.getName())
+                .equals(SitePluginModelTable.SLUG, plugin.getSlug())
                 .equals(SitePluginModelTable.LOCAL_SITE_ID, site.getId())
                 .endWhere().execute();
-    }
-
-    public static @Nullable SitePluginModel getSitePluginByName(SiteModel site, String name) {
-        List<SitePluginModel> result = WellSql.select(SitePluginModel.class)
-                .where().equals(SitePluginModelTable.NAME, name)
-                .equals(SitePluginModelTable.LOCAL_SITE_ID, site.getId())
-                .endWhere().getAsModel();
-        return result.isEmpty() ? null : result.get(0);
     }
 
     public static SitePluginModel getSitePluginBySlug(SiteModel site, String slug) {
