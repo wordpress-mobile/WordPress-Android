@@ -26,11 +26,11 @@ public class WordPressRtlCodeDetector extends Detector implements UastScanner {
 
             // Title -- shown in the IDE's preference dialog, as category headers in the
             // Analysis results window, etc
-            "Using setPadding in RtL context.",
+            "Using setPadding instead of setPaddingRelative.",
 
             // Full explanation of the issue; you can use some markdown markup such as
             // `monospace`, *italic*, and **bold**.
-            "For compatibility with RtL layout direction, use setPaddingRelative" +
+            "For RtL compatibility, use setPaddingRelative" +
                     "or ViewCompat.setPaddingRelative() when setting left/right padding.",
             Category.RTL,
             6,
@@ -39,9 +39,19 @@ public class WordPressRtlCodeDetector extends Detector implements UastScanner {
 
     static final Issue SET_MARGIN = Issue.create(
             "RtlSetMargins",
-            "Using setPadding in RtL context.",
-            "For compatibility with RtL layout direction, use setMarginStart() and setMarginStart()" +
-                    " or MarginLayoutParamsCompat version, when setting left/right margins.",
+            "Incorrect use of setMargin in RtL context.",
+            "For RtL compatibility, use setMarginStart() and setMarginEnd()" +
+                    " or their MarginLayoutParamsCompat version, when setting left/right margins.",
+            Category.RTL,
+            6,
+            Severity.ERROR,
+            new Implementation(WordPressRtlCodeDetector.class, Scope.JAVA_FILE_SCOPE));
+
+    static final Issue GET_PADDING = Issue.create(
+            "RtlGetPadding",
+            "Using getPaddingLeft/Right instead of getPaddingStart/End.",
+            "For RtL compatibility, use getPaddingStart() and getPaddingEnd()" +
+                    " or their ViewCompat version, when getting left/right padding.",
             Category.RTL,
             6,
             Severity.ERROR,
@@ -63,7 +73,9 @@ public class WordPressRtlCodeDetector extends Detector implements UastScanner {
             public void visitCallExpression(UCallExpression uCallExpression) {
                 String methodName = uCallExpression.getMethodName();
 
-                if (methodName != null && (methodName.equals("setPadding") || methodName.equals("setMargins"))) {
+                if (methodName == null) return;
+
+                if (methodName.equals("setPadding") || methodName.equals("setMargins")) {
 
                     //trying to make sure it's the right method
                     if (uCallExpression.getValueArgumentCount() == 4) {
@@ -83,6 +95,8 @@ public class WordPressRtlCodeDetector extends Detector implements UastScanner {
                             context.report(issueToReport, uCallExpression, context.getLocation(uCallExpression), issueToReport.getExplanation(TextFormat.TEXT));
                         }
                     }
+                } else if (methodName.equals("getPaddingLeft") || methodName.equals("getPaddingRight")) {
+                    context.report(GET_PADDING, uCallExpression, context.getLocation(uCallExpression), GET_PADDING.getExplanation(TextFormat.TEXT));
                 }
             }
         };

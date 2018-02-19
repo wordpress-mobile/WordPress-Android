@@ -11,6 +11,9 @@ public class WordPressIssueRegistry extends IssueRegistry {
 
     @Override
     public List<Issue> getIssues() {
-        return Arrays.asList(WordPressRtlCodeDetector.SET_PADDING, WordPressRtlCodeDetector.SET_MARGIN);
+        return Arrays.asList(
+                WordPressRtlCodeDetector.SET_PADDING,
+                WordPressRtlCodeDetector.SET_MARGIN,
+                WordPressRtlCodeDetector.GET_PADDING);
     }
 }

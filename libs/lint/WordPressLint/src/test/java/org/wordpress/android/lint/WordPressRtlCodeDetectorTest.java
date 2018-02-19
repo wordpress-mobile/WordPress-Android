@@ -24,7 +24,9 @@ public class WordPressRtlCodeDetectorTest extends LintDetectorTest {
                         "        }\n" +
                         "}"))
                 .run()
-                .expect("src/test/pkg/TestClass1.java:9: Error: For compatibility with RtL layout direction, use setPaddingRelativeor ViewCompat.setPaddingRelative() when setting left/right padding. [RtlSetPadding]\n" +
+                .expect("src/test/pkg/TestClass1.java:9: Error: For RtL compatibility," +
+                        " use setPaddingRelativeor ViewCompat.setPaddingRelative() when setting left/right padding." +
+                        " [RtlSetPadding]\n" +
                         "            setPadding(1, 1, 2, 2);\n" +
                         "            ~~~~~~~~~~~~~~~~~~~~~~\n" +
                         "1 errors, 0 warnings");
@@ -46,11 +48,37 @@ public class WordPressRtlCodeDetectorTest extends LintDetectorTest {
                         "        }\n" +
                         "}"))
                 .run()
-                .expect("src/test/pkg/TestClass1.java:9: Error: For compatibility with RtL layout direction, use setMarginStart/End() " +
-                        "or  MarginLayoutParamsCompat.setMarginStart/End() when setting left/right margins. [RtlSetMargins]\n" +
+                .expect("src/test/pkg/TestClass1.java:9: Error: For RtL compatibility," +
+                        " use setMarginStart() and setMarginEnd() or their MarginLayoutParamsCompat version, when setting" +
+                        " left/right margins. [RtlSetMargins]\n" +
                         "            setMargins(1, 1, 2, 2);\n" +
                         "            ~~~~~~~~~~~~~~~~~~~~~~\n" +
-                        "1 errors, 0 warnings");
+                        "1 errors, 0 warnings\n");
+    }
+
+    public void testGetPadding() {
+        lint().allowCompilationErrors(true).files(
+                java("" +
+                        "package test.pkg;\n" +
+                        "public class TestClass1 {\n" +
+                        "    // In a comment, mentioning \"lint\" has no effect\n" +
+                        "    private static String s1 = \"Ignore non-word usages: linting\";\n" +
+                        "    private static String s2 = \"Let's say it: lint\";\n" +
+                        "public void testMethod() {\n" +
+                        "            getPaddingRight();\n" + //NG
+                        "            getPaddingLeft();\n" + //NG
+                        "            getPaddingBottom();\n" + //OK
+                        "            getPaddingTop();\n" + //OK
+                        "        }\n" +
+                        "}"))
+                .run()
+                .expect("src/test/pkg/TestClass1.java:7: Error: For RtL compatibility, use getPaddingStart() and getPaddingEnd() or their ViewCompat version, when getting left/right padding. [RtlGetPadding]\n" +
+                        "            getPaddingRight();\n" +
+                        "            ~~~~~~~~~~~~~~~~~\n" +
+                        "src/test/pkg/TestClass1.java:8: Error: For RtL compatibility, use getPaddingStart() and getPaddingEnd() or their ViewCompat version, when getting left/right padding. [RtlGetPadding]\n" +
+                        "            getPaddingLeft();\n" +
+                        "            ~~~~~~~~~~~~~~~~\n" +
+                        "2 errors, 0 warnings\n");
     }
 
 
@@ -61,7 +89,7 @@ public class WordPressRtlCodeDetectorTest extends LintDetectorTest {
 
     @Override
     protected List<Issue> getIssues() {
-        return Arrays.asList(WordPressRtlCodeDetector.SET_PADDING, WordPressRtlCodeDetector.SET_MARGIN);
+        return Arrays.asList(WordPressRtlCodeDetector.SET_PADDING, WordPressRtlCodeDetector.SET_MARGIN,WordPressRtlCodeDetector.GET_PADDING);
     }
 
 }
