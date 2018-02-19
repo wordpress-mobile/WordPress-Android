@@ -54,6 +54,27 @@ PKG=$PKG_DEBUG
 
 ACTIVITY_LAUNCH=org.wordpress.android.ui.WPLaunchActivity
 
+PHONE_COORDS_LOGIN1="420 1100"
+PHONE_COORDS_LOGIN2="220 385"
+PHONE_COORDS_LOGIN3="735 680"
+PHONE_COORDS_LOGIN4="425 700"
+PHONE_COORDS_LOGIN5="250 470"
+PHONE_COORDS_LOGIN6="735 680"
+
+TAB7_COORDS_LOGIN1="453 1078"
+TAB7_COORDS_LOGIN2="237 377"
+TAB7_COORDS_LOGIN3="793 666"
+TAB7_COORDS_LOGIN4="459 686"
+TAB7_COORDS_LOGIN5="270 460"
+TAB7_COORDS_LOGIN6="793 666"
+
+TAB10_COORDS_LOGIN1="621 1130"
+TAB10_COORDS_LOGIN2="325 396"
+TAB10_COORDS_LOGIN3="1086 698"
+TAB10_COORDS_LOGIN4="628 719"
+TAB10_COORDS_LOGIN5="369 483"
+TAB10_COORDS_LOGIN6="1086 698"
+
 PHONE_COORDS_MYSITE="100 100"
 PHONE_COORDS_READER="300 100"
 PHONE_COORDS_NOTIFS="700 100"
@@ -276,24 +297,15 @@ function check_real_dev() {
   fi
 }
 
-# Loads and checks the token for the magic login
-# Also loads other configuration that is in the screenshot-config.sh file
-function require_deeplink {
+# Loads and checks configuration that is in the screenshot-config.sh file
+function require_config {
   if [ -f "screenshots-config.sh" ]; then
     . screenshots-config.sh
   fi
 
-  if [ -z "$TOKEN_DEEPLINK" ]; then
-    show_error_message "TOKEN_DEEPLINK variable is not set correctly. Make sure the file screenshots-config.sh is present and looks like this:"
+  if [ -z "$LOGIN_USERNAME" ] || [ -z "$LOGIN_PASSWORD" ]; then
+    show_error_message "LOGIN_USERNAME variable is not set correctly. Make sure the file screenshots-config.sh is present and the login data is filled"
     show_error_message ""
-    show_error_message "#!/bin/sh"
-    show_error_message "TOKEN_DEEPLINK=wordpress://magic-login?token=<secret login token>" 
-    show_error_message ""
-    stop_on_error
-  fi
-
-  if ! [[ "$TOKEN_DEEPLINK" =~ ^wordpress:\/\/magic-login\?token=* ]]; then
-    show_error_message "TOKEN_DEEPLINK format is invalid.";
     stop_on_error
   fi
 }
@@ -348,11 +360,51 @@ function install {
   show_message "Done"
 }
 
+# Exeutes the taps for the login steps
+function login_tap() {
+  login_offest=$1
+  fast_tap_on ${!login_coords} $login_offest
+}
+
 # Tries to login via the magic link
 function login {
-  show_message "Logging in via magiclink..." 
-  adb $ADB_PARAMS shell am start -W -a android.intent.action.VIEW -d $TOKEN_DEEPLINK $PKG >> $LOG_FILE 2>&1 || stop_on_error
+  show_message "Logging in..." 
+
+  if [ $USE_EMU -eq 0 ]; then
+   dev_h=$device\_APP_HEIGHT
+   dev_w=$device\_SKIN_WIDTH
+   adb $ADB_PARAMS shell wm size ${!dev_w}x${!dev_h} >> $LOG_FILE 2>&1 || stop_on_error
+   adb $ADB_PARAMS shell wm density $LCD_DPI >> $LOG_FILE 2>&1 || stop_on_error
+   wait 5
+  fi
+  
+  device=$1
+  login_coords=$device\_COORDS_LOGIN1
+  login_tap
+  login_coords=$device\_COORDS_LOGIN2
+  login_tap
+  login_tap
+  show_message "Setting username..."
+  adb $ADB_PARAMS shell input text $LOGIN_USERNAME >> $LOG_FILE 2>&1 || stop_on_error
+  login_coords=$device\_COORDS_LOGIN3
+  login_tap
+  login_coords=$device\_COORDS_LOGIN4 
+  login_tap 100
+  login_coords=$device\_COORDS_LOGIN5
+  login_tap
+  show_message "Setting password..."
+  adb $ADB_PARAMS shell input text $LOGIN_PASSWORD >> $LOG_FILE 2>&1 || stop_on_error
+  login_coords=$device\_COORDS_LOGIN6
+  login_tap
+
   wait 5 # wait for app to finish logging in
+  
+  if [ $USE_EMU -eq 0 ]; then
+    adb $ADB_PARAMS shell wm size reset >> $LOG_FILE 2>&1 || stop_on_error
+    adb $ADB_PARAMS shell wm density reset >> $LOG_FILE 2>&1 || stop_on_error
+    wait 5
+  fi
+
   show_message "Done"
 }
 
@@ -376,6 +428,19 @@ function tap_on {
   show_message "Tapping on $1x$2..."
   adb $ADB_PARAMS shell input tap $1 $2 >> $LOG_FILE 2>&1 || stop_on_error
   wait 10
+  show_message "Done"
+}
+
+# Tapping on the provided coordinates
+function fast_tap_on {
+  if [ x$3 == x ]; then
+    fty=$2
+  else
+    fty=$(($2+$3))
+  fi
+  show_message "Tapping on $1x$fty..."
+  adb $ADB_PARAMS shell input tap $1 $fty >> $LOG_FILE 2>&1 || stop_on_error
+  wait 3
   show_message "Done"
 }
 
@@ -631,7 +696,8 @@ function screenshot_device() {
 
   uninstall
   install
-  login
+  start_app
+  login $device
 
   kill_app # kill the app so when restarting we don't have any first-time launch effects like promo dialogs and such
 
@@ -741,8 +807,8 @@ if [ "$#" -gt 4 ]; then
 fi
 
 start_log
-# Load deeplink and configuration
-require_deeplink
+# Load configuration
+require_config
 
 # Load params
 CMD=$1

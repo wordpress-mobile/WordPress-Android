@@ -7,8 +7,9 @@
 # Android SDK path (required)
 ANDROID_SDK_DIR=
 
-# Auth token (required)
-TOKEN_DEEPLINK=
+# Login (required)
+LOGIN_USERNAME=
+LOGIN_PASSWORD=
 
 # Uncomment the following APK key in order to override the default used apk
 # APK=../WordPress/build/outputs/apk/WordPress-wasabi-debug.apk
