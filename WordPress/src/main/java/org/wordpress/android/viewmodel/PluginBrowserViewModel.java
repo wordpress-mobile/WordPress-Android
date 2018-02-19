@@ -193,24 +193,26 @@ public class PluginBrowserViewModel extends ViewModel {
         switch (listType) {
             case SITE:
                 mSitePluginsListStatus.setValue(PluginListStatus.FETCHING);
-                mDispatcher.dispatch(PluginActionBuilder.newFetchSitePluginsAction(getSite()));
+                PluginStore.FetchPluginDirectoryPayload payload =
+                        new PluginStore.FetchPluginDirectoryPayload(PluginDirectoryType.SITE, getSite(), false);
+                mDispatcher.dispatch(PluginActionBuilder.newFetchPluginDirectoryAction(payload));
                 break;
             case POPULAR:
                 mPopularPluginsListStatus.setValue(loadMore ? PluginListStatus.LOADING_MORE : PluginListStatus.FETCHING);
                 PluginStore.FetchPluginDirectoryPayload popularPayload =
-                        new PluginStore.FetchPluginDirectoryPayload(PluginDirectoryType.POPULAR, loadMore);
+                        new PluginStore.FetchPluginDirectoryPayload(PluginDirectoryType.POPULAR, getSite(), loadMore);
                 mDispatcher.dispatch(PluginActionBuilder.newFetchPluginDirectoryAction(popularPayload));
                 break;
             case NEW:
                 mNewPluginsListStatus.setValue(loadMore ? PluginListStatus.LOADING_MORE : PluginListStatus.FETCHING);
                 PluginStore.FetchPluginDirectoryPayload newPayload =
-                        new PluginStore.FetchPluginDirectoryPayload(PluginDirectoryType.NEW, loadMore);
+                        new PluginStore.FetchPluginDirectoryPayload(PluginDirectoryType.NEW, getSite(), loadMore);
                 mDispatcher.dispatch(PluginActionBuilder.newFetchPluginDirectoryAction(newPayload));
                 break;
             case SEARCH:
                 mSearchPluginsListStatus.setValue(PluginListStatus.FETCHING);
                 PluginStore.SearchPluginDirectoryPayload searchPayload =
-                        new PluginStore.SearchPluginDirectoryPayload(getSearchQuery(), 1);
+                        new PluginStore.SearchPluginDirectoryPayload(getSite(), getSearchQuery(), 1);
                 mDispatcher.dispatch(PluginActionBuilder.newSearchPluginDirectoryAction(searchPayload));
                 break;
         }
@@ -274,18 +276,6 @@ public class PluginBrowserViewModel extends ViewModel {
 
     @SuppressWarnings("unused")
     @Subscribe(threadMode = ThreadMode.MAIN)
-    public void onSitePluginsFetched(PluginStore.OnSitePluginsFetched event) {
-        if (event.isError()) {
-            AppLog.e(AppLog.T.PLUGINS, "An error occurred while fetching site plugins with type: " + event.error.type);
-            mSitePluginsListStatus.setValue(PluginListStatus.ERROR);
-            return;
-        }
-        mSitePluginsListStatus.setValue(PluginListStatus.DONE);
-        reloadSitePlugins();
-    }
-
-    @SuppressWarnings("unused")
-    @Subscribe(threadMode = ThreadMode.MAIN)
     public void onWPOrgPluginFetched(PluginStore.OnWPOrgPluginFetched event) {
         if (event.isError()) {
             AppLog.e(AppLog.T.PLUGINS, "An error occurred while fetching the wporg plugin with type: " + event.error.type);
@@ -301,11 +291,18 @@ public class PluginBrowserViewModel extends ViewModel {
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onPluginDirectoryFetched(PluginStore.OnPluginDirectoryFetched event) {
         if (event.isError()) {
-            AppLog.e(AppLog.T.PLUGINS, "An error occurred while fetching the plugin directory: " + event.type);
-            if (event.type == PluginDirectoryType.NEW) {
-                mNewPluginsListStatus.setValue(PluginListStatus.ERROR);
-            } else if (event.type == PluginDirectoryType.POPULAR) {
-                mPopularPluginsListStatus.setValue(PluginListStatus.ERROR);
+            AppLog.e(AppLog.T.PLUGINS, "An error occurred while fetching the plugin directory " + event.type + ": "
+                    + event.error.type);
+            switch (event.type) {
+                case NEW:
+                    mNewPluginsListStatus.setValue(PluginListStatus.ERROR);
+                    break;
+                case POPULAR:
+                    mPopularPluginsListStatus.setValue(PluginListStatus.ERROR);
+                    break;
+                case SITE:
+                    mSitePluginsListStatus.setValue(PluginListStatus.ERROR);
+                    break;
             }
             return;
         }
@@ -319,6 +316,9 @@ public class PluginBrowserViewModel extends ViewModel {
                 reloadPopularPlugins();
                 mPopularPluginsListStatus.setValue(listStatus);
                 break;
+            case SITE:
+                reloadSitePlugins();
+                mSitePluginsListStatus.setValue(listStatus);
         }
     }
 
