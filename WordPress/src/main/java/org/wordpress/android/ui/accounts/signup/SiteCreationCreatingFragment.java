@@ -21,6 +21,8 @@ import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.AutoForeground.ServiceEventConnection;
 import org.wordpress.android.util.URLFilteredWebViewClient;
 
+import java.util.HashMap;
+
 public class SiteCreationCreatingFragment extends SiteCreationBaseFormFragment<SiteCreationListener> {
     public static final String TAG = "site_creating_fragment_tag";
 
@@ -32,6 +34,7 @@ public class SiteCreationCreatingFragment extends SiteCreationBaseFormFragment<S
     private static final String KEY_IN_MODAL_MODE = "KEY_IN_MODAL_MODE";
     private static final String KEY_CREATION_FINISHED = "KEY_CREATION_FINISHED";
     private static final String KEY_WEBVIEW_LOADED_IN_TIME = "KEY_WEBVIEW_LOADED_IN_TIME";
+    private static final String KEY_TRACKED_SUCCESS = "KEY_TRACKED_SUCCESS";
 
     private ServiceEventConnection mServiceEventConnection;
 
@@ -44,6 +47,7 @@ public class SiteCreationCreatingFragment extends SiteCreationBaseFormFragment<S
     private View mTadaContainer;
     private TextView[] mLabels;
 
+    private boolean mTrackedSuccess;
     private boolean mInModalMode;
     private boolean mCreationSucceeded;
     private boolean mWebViewLoadedInTime;
@@ -131,6 +135,7 @@ public class SiteCreationCreatingFragment extends SiteCreationBaseFormFragment<S
             mInModalMode = savedInstanceState.getBoolean(KEY_IN_MODAL_MODE, false);
             mCreationSucceeded = savedInstanceState.getBoolean(KEY_CREATION_FINISHED, false);
             mWebViewLoadedInTime = savedInstanceState.getBoolean(KEY_WEBVIEW_LOADED_IN_TIME, false);
+            mTrackedSuccess = savedInstanceState.getBoolean(KEY_TRACKED_SUCCESS, false);
         }
     }
 
@@ -168,6 +173,7 @@ public class SiteCreationCreatingFragment extends SiteCreationBaseFormFragment<S
         outState.putBoolean(KEY_IN_MODAL_MODE, mInModalMode);
         outState.putBoolean(KEY_CREATION_FINISHED, mCreationSucceeded);
         outState.putBoolean(KEY_WEBVIEW_LOADED_IN_TIME, mWebViewLoadedInTime);
+        outState.putBoolean(KEY_TRACKED_SUCCESS, mTrackedSuccess);
     }
 
     private void createSite() {
@@ -191,6 +197,13 @@ public class SiteCreationCreatingFragment extends SiteCreationBaseFormFragment<S
             mCompletedContainer.setVisibility(View.VISIBLE);
             mWebView.setVisibility(showWebView ? View.VISIBLE : View.INVISIBLE);
             mTadaContainer.setVisibility(showWebView ? View.INVISIBLE : View.VISIBLE);
+        }
+
+        if (!mTrackedSuccess) {
+            mTrackedSuccess = true;
+            HashMap<String, Object> successProperties = new HashMap<>();
+            successProperties.put("loaded_in_time", showWebView);
+            AnalyticsTracker.track(AnalyticsTracker.Stat.SITE_CREATION_SUCCESS_VIEWED, successProperties);
         }
     }
 
