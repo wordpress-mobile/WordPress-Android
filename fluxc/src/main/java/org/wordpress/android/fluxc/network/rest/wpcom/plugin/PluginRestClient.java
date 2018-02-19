@@ -102,7 +102,7 @@ public class PluginRestClient extends BaseWPComRestClient {
                         ConfigureSitePluginError configurePluginError = new ConfigureSitePluginError(((
                                 WPComGsonNetworkError) networkError).apiError, networkError.message);
                         ConfiguredSitePluginPayload payload =
-                                new ConfiguredSitePluginPayload(site, configurePluginError);
+                                new ConfiguredSitePluginPayload(site, plugin.getSlug(), configurePluginError);
                         mDispatcher.dispatch(PluginActionBuilder.newConfiguredSitePluginAction(payload));
                     }
                 }
@@ -119,18 +119,17 @@ public class PluginRestClient extends BaseWPComRestClient {
                     @Override
                     public void onResponse(PluginWPComRestResponse response) {
                         SitePluginModel pluginFromResponse = pluginModelFromResponse(site, response);
-                        pluginFromResponse.setId(plugin.getId());
                         mDispatcher.dispatch(PluginActionBuilder.newDeletedSitePluginAction(
-                                new DeletedSitePluginPayload(site, pluginFromResponse)));
+                                new DeletedSitePluginPayload(site, pluginFromResponse.getSlug())));
                     }
                 },
                 new BaseErrorListener() {
                     @Override
                     public void onErrorResponse(@NonNull BaseNetworkError networkError) {
-                        DeleteSitePluginError deletePluginError = new DeleteSitePluginError(((WPComGsonNetworkError)
-                                networkError).apiError, networkError.message);
                         DeletedSitePluginPayload payload =
-                                new DeletedSitePluginPayload(site, plugin, deletePluginError);
+                                new DeletedSitePluginPayload(site, plugin.getSlug());
+                        payload.error = new DeleteSitePluginError(((WPComGsonNetworkError)
+                                networkError).apiError, networkError.message);
                         mDispatcher.dispatch(PluginActionBuilder.newDeletedSitePluginAction(payload));
                     }
                 }
@@ -138,7 +137,7 @@ public class PluginRestClient extends BaseWPComRestClient {
         add(request);
     }
 
-    public void installSitePlugin(@NonNull final SiteModel site, String pluginName) {
+    public void installSitePlugin(@NonNull final SiteModel site, final String pluginName) {
         String url = WPCOMREST.sites.site(site.getSiteId()).plugins.name(pluginName).install.getUrlV1_2();
         final WPComGsonRequest<PluginWPComRestResponse> request = WPComGsonRequest.buildPostRequest(url, null,
                 PluginWPComRestResponse.class,
@@ -155,7 +154,8 @@ public class PluginRestClient extends BaseWPComRestClient {
                     public void onErrorResponse(@NonNull BaseNetworkError networkError) {
                         InstallSitePluginError installPluginError = new InstallSitePluginError(((WPComGsonNetworkError)
                                 networkError).apiError, networkError.message);
-                        InstalledSitePluginPayload payload = new InstalledSitePluginPayload(site, installPluginError);
+                        InstalledSitePluginPayload payload = new InstalledSitePluginPayload(site, pluginName,
+                                installPluginError);
                         mDispatcher.dispatch(PluginActionBuilder.newInstalledSitePluginAction(payload));
                     }
                 }
@@ -183,7 +183,7 @@ public class PluginRestClient extends BaseWPComRestClient {
                         UpdateSitePluginError updatePluginError
                                 = new UpdateSitePluginError(((WPComGsonNetworkError) networkError).apiError,
                                 networkError.message);
-                        UpdatedSitePluginPayload payload = new UpdatedSitePluginPayload(site,
+                        UpdatedSitePluginPayload payload = new UpdatedSitePluginPayload(site, plugin.getSlug(),
                                 updatePluginError);
                         mDispatcher.dispatch(PluginActionBuilder.newUpdatedSitePluginAction(payload));
                     }

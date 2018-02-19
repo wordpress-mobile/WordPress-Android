@@ -2,6 +2,7 @@ package org.wordpress.android.fluxc.persistence;
 
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.text.TextUtils;
 
 import com.wellsql.generated.PluginDirectoryModelTable;
 import com.wellsql.generated.SitePluginModelTable;
@@ -72,15 +73,15 @@ public class PluginSqlUtils {
                 .endWhere().execute();
     }
 
-    public static int deleteSitePlugin(SiteModel site, SitePluginModel plugin) {
-        if (plugin == null) {
+    public static int deleteSitePlugin(SiteModel site, String slug) {
+        if (TextUtils.isEmpty(slug)) {
             return 0;
         }
         // The local id of the plugin might not be set if it's coming from a network request,
         // using site id and slug is a safer approach here
         return WellSql.delete(SitePluginModel.class)
                 .where()
-                .equals(SitePluginModelTable.SLUG, plugin.getSlug())
+                .equals(SitePluginModelTable.SLUG, slug)
                 .equals(SitePluginModelTable.LOCAL_SITE_ID, site.getId())
                 .endWhere().execute();
     }

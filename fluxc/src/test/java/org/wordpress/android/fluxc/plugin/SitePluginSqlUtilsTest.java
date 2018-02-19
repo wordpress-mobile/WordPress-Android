@@ -141,7 +141,7 @@ public class SitePluginSqlUtilsTest {
         Assert.assertEquals(1, PluginSqlUtils.getSitePlugins(site).size());
 
         // Delete the plugin and verify that site plugin list is empty
-        Assert.assertEquals(1, PluginSqlUtils.deleteSitePlugin(site, plugin));
+        Assert.assertEquals(1, PluginSqlUtils.deleteSitePlugin(site, slug));
         Assert.assertTrue(PluginSqlUtils.getSitePlugins(site).isEmpty());
     }
 
