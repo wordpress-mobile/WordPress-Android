@@ -20,7 +20,7 @@ public class WordPressRtlCodeDetectorTest extends LintDetectorTest {
                         "public void testMethod() {\n" +
                         "            setPadding(0, 1, 0, 2);\n" + //should be fine
                         "            setPadding(1, 2, 1, 2);\n" + //still ok (left and right padding is the same)
-                        "            setPadding(1, 1, 2, 2);\n" + //oh-oh, Danger zone!
+                        "            setPadding(1, 1, 2, 2);\n" + //Danger!
                         "        }\n" +
                         "}"))
                 .run()
@@ -43,7 +43,7 @@ public class WordPressRtlCodeDetectorTest extends LintDetectorTest {
                         "public void testMethod() {\n" +
                         "            setMargins(0, 1, 0, 2);\n" + //should be fine
                         "            setMargins(1, 2, 1, 2);\n" + //still ok (left and right margin is the same)
-                        "            setMargins(1, 1, 2, 2);\n" + //oh-oh, Danger zone!
+                        "            setMargins(1, 1, 2, 2);\n" + //Danger!
                         "        }\n" +
                         "}"))
                 .run()
