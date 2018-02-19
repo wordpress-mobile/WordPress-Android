@@ -787,6 +787,11 @@ public class PluginDetailActivity extends AppCompatActivity {
     public void onSitePluginConfigured(OnSitePluginConfigured event) {
         if (isFinishing()) return;
 
+        if (mSite.getId() != event.site.getId() || !mSlug.equals(event.slug)) {
+            // Not the event we are interested in
+            return;
+        }
+
         mIsConfiguringPlugin = false;
         if (event.isError()) {
             // The plugin was already removed in remote, there is no need to show an error to the user
@@ -855,6 +860,11 @@ public class PluginDetailActivity extends AppCompatActivity {
     public void onSitePluginUpdated(OnSitePluginUpdated event) {
         if (isFinishing()) return;
 
+        if (mSite.getId() != event.site.getId() || !mSlug.equals(event.slug)) {
+            // Not the event we are interested in
+            return;
+        }
+
         mIsUpdatingPlugin = false;
         if (event.isError()) {
             AppLog.e(AppLog.T.PLUGINS, "An error occurred while updating the plugin with type: "
@@ -863,8 +873,6 @@ public class PluginDetailActivity extends AppCompatActivity {
             showUpdateFailedSnackbar();
             return;
         }
-
-        // TODO: check if the updated plugin is the one we are interested in
 
         refreshPluginFromStore();
         refreshViews();
@@ -878,6 +886,12 @@ public class PluginDetailActivity extends AppCompatActivity {
     public void OnSitePluginInstalled(OnSitePluginInstalled event) {
         if (isFinishing()) return;
 
+        if (mSite.getId() != event.site.getId() || getWPOrgPlugin() == null
+                || !getWPOrgPlugin().getName().equals(event.pluginName)) {
+            // Not the event we are interested in
+            return;
+        }
+
         mIsUpdatingPlugin = false;
         if (event.isError()) {
             AppLog.e(AppLog.T.PLUGINS, "An error occurred while installing the plugin with type: "
@@ -886,8 +900,6 @@ public class PluginDetailActivity extends AppCompatActivity {
             showInstallFailedSnackbar();
             return;
         }
-
-        // TODO: check if the installed plugin is the one we are interested in
 
         refreshPluginFromStore();
         refreshViews();
@@ -901,6 +913,11 @@ public class PluginDetailActivity extends AppCompatActivity {
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onSitePluginDeleted(OnSitePluginDeleted event) {
         if (isFinishing()) return;
+
+        if (mSite.getId() != event.site.getId() || !mSlug.equals(event.slug)) {
+            // Not the event we are interested in
+            return;
+        }
 
         mIsRemovingPlugin = false;
         cancelRemovePluginProgressDialog();
