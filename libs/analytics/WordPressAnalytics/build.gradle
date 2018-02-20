@@ -21,6 +21,8 @@ repositories {
 dependencies {
     implementation 'com.automattic:tracks:1.1.3'
     implementation 'org.wordpress:utils:1.18.1'
+
+    lintChecks project(path:':libs:lint:WordPressLint')
 }
 
 android {
