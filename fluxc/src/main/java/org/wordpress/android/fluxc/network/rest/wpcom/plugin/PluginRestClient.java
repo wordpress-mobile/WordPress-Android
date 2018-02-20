@@ -122,14 +122,14 @@ public class PluginRestClient extends BaseWPComRestClient {
                     @Override
                     public void onResponse(PluginWPComRestResponse response) {
                         mDispatcher.dispatch(PluginActionBuilder.newDeletedSitePluginAction(
-                                new DeletedSitePluginPayload(site, slug)));
+                                new DeletedSitePluginPayload(site, slug, pluginName)));
                     }
                 },
                 new BaseErrorListener() {
                     @Override
                     public void onErrorResponse(@NonNull BaseNetworkError networkError) {
                         DeletedSitePluginPayload payload =
-                                new DeletedSitePluginPayload(site, slug);
+                                new DeletedSitePluginPayload(site, slug, pluginName);
                         payload.error = new DeleteSitePluginError(((WPComGsonNetworkError)
                                 networkError).apiError, networkError.message);
                         mDispatcher.dispatch(PluginActionBuilder.newDeletedSitePluginAction(payload));
@@ -165,16 +165,15 @@ public class PluginRestClient extends BaseWPComRestClient {
         add(request);
     }
 
-    public void updateSitePlugin(@NonNull final SiteModel site, @NonNull final SitePluginModel plugin) {
+    public void updateSitePlugin(@NonNull final SiteModel site, @NonNull final String pluginName) {
         String url = WPCOMREST.sites.site(site.getSiteId()).
-                plugins.name(getEncodedPluginName(plugin.getName())).update.getUrlV1_2();
+                plugins.name(getEncodedPluginName(pluginName)).update.getUrlV1_2();
         final WPComGsonRequest<PluginWPComRestResponse> request = WPComGsonRequest.buildPostRequest(url, null,
                 PluginWPComRestResponse.class,
                 new Listener<PluginWPComRestResponse>() {
                     @Override
                     public void onResponse(PluginWPComRestResponse response) {
                         SitePluginModel pluginFromResponse = pluginModelFromResponse(site, response);
-                        pluginFromResponse.setId(plugin.getId());
                         mDispatcher.dispatch(PluginActionBuilder.newUpdatedSitePluginAction(
                                 new UpdatedSitePluginPayload(site, pluginFromResponse)));
                     }
@@ -185,7 +184,7 @@ public class PluginRestClient extends BaseWPComRestClient {
                         UpdateSitePluginError updatePluginError
                                 = new UpdateSitePluginError(((WPComGsonNetworkError) networkError).apiError,
                                 networkError.message);
-                        UpdatedSitePluginPayload payload = new UpdatedSitePluginPayload(site, plugin.getSlug(),
+                        UpdatedSitePluginPayload payload = new UpdatedSitePluginPayload(site, pluginName,
                                 updatePluginError);
                         mDispatcher.dispatch(PluginActionBuilder.newUpdatedSitePluginAction(payload));
                     }
