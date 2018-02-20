@@ -178,7 +178,7 @@ public class SiteCreationCreatingFragment extends SiteCreationBaseFormFragment<S
         outState.putBoolean(KEY_WEBVIEW_LOADED_IN_TIME, mWebViewLoadedInTime);
     }
 
-    private void createSite() {
+    void createSite() {
         String siteTitle = getArguments().getString(ARG_SITE_TITLE);
         String siteTagline = getArguments().getString(ARG_SITE_TAGLINE);
         String siteSlug = getArguments().getString(ARG_SITE_SLUG);
@@ -186,7 +186,7 @@ public class SiteCreationCreatingFragment extends SiteCreationBaseFormFragment<S
         SiteCreationService.createSite(getContext(), siteTitle, siteTagline, siteSlug, themeId);
     }
 
-    private void retryFromState(SiteCreationState retryFromState, long newSiteRemoteId) {
+    void retryFromState(SiteCreationState retryFromState, long newSiteRemoteId) {
         String siteTagline = getArguments().getString(ARG_SITE_TAGLINE);
         String themeId = getArguments().getString(ARG_SITE_THEME_ID);
         SiteCreationService.retryFromState(getContext(), retryFromState, newSiteRemoteId, siteTagline, themeId);
@@ -211,7 +211,7 @@ public class SiteCreationCreatingFragment extends SiteCreationBaseFormFragment<S
     }
 
     private static class PreviewWebViewClient extends URLFilteredWebViewClient {
-        private boolean mIsPageFinished;
+        boolean mIsPageFinished;
 
         PreviewWebViewClient(String siteAddress) {
             super(siteAddress);
