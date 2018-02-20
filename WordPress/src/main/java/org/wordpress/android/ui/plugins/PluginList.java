@@ -2,7 +2,7 @@ package org.wordpress.android.ui.plugins;
 
 import android.support.annotation.Nullable;
 
-import org.wordpress.android.fluxc.model.plugin.DualPluginModel;
+import org.wordpress.android.fluxc.model.plugin.ImmutablePluginModel;
 
 import java.util.ArrayList;
 
@@ -10,18 +10,12 @@ import java.util.ArrayList;
  * List containing either SitePluginModels or WPOrgPluginModels - used to simplify adapters
  * which can show both models
  */
-class PluginList extends ArrayList<DualPluginModel> {
+class PluginList extends ArrayList<ImmutablePluginModel> {
     int indexOfPluginWithSlug(@Nullable String slug) {
         if (slug != null) {
             for (int i = 0; i < this.size(); i++) {
-                DualPluginModel item = this.get(i);
-                String itemSlug = null;
-                if (item.getSitePlugin() != null) {
-                    itemSlug = item.getSitePlugin().getSlug();
-                } else if (item.getWPOrgPlugin() != null) {
-                    itemSlug = item.getWPOrgPlugin().getSlug();
-                }
-                if (slug.equalsIgnoreCase(itemSlug)) {
+                ImmutablePluginModel item = this.get(i);
+                if (slug.equalsIgnoreCase(item.getSlug())) {
                     return i;
                 }
             }
@@ -30,7 +24,8 @@ class PluginList extends ArrayList<DualPluginModel> {
     }
 
     long getItemId(int position) {
-        // The ids of the plugins are unreliable. Search results will not have any and we might have one or the other plugin type, we shouldn't rely on this
+        // Because ids of the plugins are unreliable (sometimes doesn't exist and multiple models combined)
+        // ImmutablePluginModel doesn't expose an id. We need to use the position here and use setHasStableIds(false);
         return position;
     }
 

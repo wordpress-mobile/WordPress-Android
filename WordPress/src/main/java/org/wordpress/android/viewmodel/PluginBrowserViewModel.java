@@ -15,7 +15,7 @@ import org.wordpress.android.WordPress;
 import org.wordpress.android.fluxc.Dispatcher;
 import org.wordpress.android.fluxc.generated.PluginActionBuilder;
 import org.wordpress.android.fluxc.model.SiteModel;
-import org.wordpress.android.fluxc.model.plugin.DualPluginModel;
+import org.wordpress.android.fluxc.model.plugin.ImmutablePluginModel;
 import org.wordpress.android.fluxc.model.plugin.PluginDirectoryType;
 import org.wordpress.android.fluxc.store.PluginStore;
 import org.wordpress.android.util.AppLog;
@@ -59,10 +59,10 @@ public class PluginBrowserViewModel extends ViewModel {
     private final MutableLiveData<PluginListStatus> mSitePluginsListStatus;
     private final MutableLiveData<PluginListStatus> mSearchPluginsListStatus;
 
-    private final MutableLiveData<List<DualPluginModel>> mNewPlugins;
-    private final MutableLiveData<List<DualPluginModel>> mPopularPlugins;
-    private final MutableLiveData<List<DualPluginModel>> mSitePlugins;
-    private final MutableLiveData<List<DualPluginModel>> mSearchResults;
+    private final MutableLiveData<List<ImmutablePluginModel>> mNewPlugins;
+    private final MutableLiveData<List<ImmutablePluginModel>> mPopularPlugins;
+    private final MutableLiveData<List<ImmutablePluginModel>> mSitePlugins;
+    private final MutableLiveData<List<ImmutablePluginModel>> mSearchResults;
 
     private final MutableLiveData<String> mLastUpdatedWpOrgPluginSlug;
     private final MutableLiveData<String> mTitle;
@@ -352,7 +352,7 @@ public class PluginBrowserViewModel extends ViewModel {
     }
 
     private void clearSearchResults() {
-        mSearchResults.setValue(new ArrayList<DualPluginModel>());
+        mSearchResults.setValue(new ArrayList<ImmutablePluginModel>());
     }
 
     public boolean shouldShowEmptySearchResultsView() {
@@ -381,7 +381,7 @@ public class PluginBrowserViewModel extends ViewModel {
         return mSearchQuery;
     }
 
-    public LiveData<List<DualPluginModel>> getSitePlugins() {
+    public LiveData<List<ImmutablePluginModel>> getSitePlugins() {
         return mSitePlugins;
     }
 
@@ -389,15 +389,15 @@ public class PluginBrowserViewModel extends ViewModel {
         return getSitePlugins().getValue() == null || getSitePlugins().getValue().size() == 0;
     }
 
-    public LiveData<List<DualPluginModel>> getNewPlugins() {
+    public LiveData<List<ImmutablePluginModel>> getNewPlugins() {
         return mNewPlugins;
     }
 
-    public LiveData<List<DualPluginModel>> getPopularPlugins() {
+    public LiveData<List<ImmutablePluginModel>> getPopularPlugins() {
         return mPopularPlugins;
     }
 
-    public LiveData<List<DualPluginModel>> getSearchResults() {
+    public LiveData<List<ImmutablePluginModel>> getSearchResults() {
         return mSearchResults;
     }
 
@@ -429,7 +429,7 @@ public class PluginBrowserViewModel extends ViewModel {
         return mTitle;
     }
 
-    public List<DualPluginModel> getPluginsForListType(PluginListType listType) {
+    public List<ImmutablePluginModel> getPluginsForListType(PluginListType listType) {
         switch (listType) {
             case SITE:
                 return getSitePlugins().getValue();
