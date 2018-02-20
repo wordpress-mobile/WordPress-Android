@@ -17,6 +17,7 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -152,13 +153,11 @@ public class LoginEmailFragment extends LoginBaseFormFragment<LoginListener> imp
                 }
             }
         });
-    }
 
-    @Override
-    protected void setupBottomButtons(Button secondaryButton, Button primaryButton) {
-        secondaryButton.setOnClickListener(new OnClickListener() {
+        LinearLayout siteLoginButton = rootView.findViewById(R.id.login_site_button);
+        siteLoginButton.setOnClickListener(new OnClickListener() {
             @Override
-            public void onClick(View v) {
+            public void onClick(View view) {
                 if (mLoginListener != null) {
                     if (mLoginListener.getLoginMode() == LoginMode.JETPACK_STATS) {
                         mLoginListener.loginViaWpcomUsernameInstead();
@@ -169,22 +168,29 @@ public class LoginEmailFragment extends LoginBaseFormFragment<LoginListener> imp
             }
         });
 
+        ImageView siteLoginButtonIcon = rootView.findViewById(R.id.login_site_button_icon);
+        TextView siteLoginButtonText = rootView.findViewById(R.id.login_site_button_text);
+
         switch (mLoginListener.getLoginMode()) {
             case FULL:
             case SHARE_INTENT:
-                // all features enabled and with typical values
-                secondaryButton.setText(R.string.enter_site_address_instead);
+                siteLoginButtonIcon.setImageResource(R.drawable.ic_domains_grey_24dp);
+                siteLoginButtonText.setText(R.string.enter_site_address_instead);
                 break;
             case JETPACK_STATS:
-                secondaryButton.setText(R.string.enter_username_instead);
+                siteLoginButtonIcon.setImageResource(R.drawable.ic_user_circle_grey_24dp);
+                siteLoginButtonText.setText(R.string.enter_username_instead);
                 break;
             case WPCOM_LOGIN_DEEPLINK:
-                secondaryButton.setVisibility(View.GONE);
-                break;
             case WPCOM_REAUTHENTICATE:
-                secondaryButton.setVisibility(View.GONE);
+                siteLoginButton.setVisibility(View.GONE);
                 break;
         }
+    }
+
+    @Override
+    protected void setupBottomButtons(Button secondaryButton, Button primaryButton) {
+        secondaryButton.setVisibility(View.GONE);
 
         primaryButton.setOnClickListener(new OnClickListener() {
             @SuppressWarnings("PrivateMemberAccessBetweenOuterAndInnerClass")
