@@ -1703,6 +1703,7 @@
     <string name="publicize_label" translatable="false">publicize_label</string>
     <string name="publicize_button_style" translatable="false">publicize_button_style</string>
     <string name="site_settings_reblog_and_like_header">Reblog &amp; Like</string>
+    <string name="site_settings_like_header">Like</string>
     <string name="site_settings_reblog">Show Reblog Button</string>
     <string name="site_settings_like">Show Like Button</string>
     <string name="manage">Manage</string>
