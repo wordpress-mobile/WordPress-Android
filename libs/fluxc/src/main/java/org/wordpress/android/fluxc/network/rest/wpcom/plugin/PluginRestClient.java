@@ -83,7 +83,7 @@ public class PluginRestClient extends BaseWPComRestClient {
     }
 
     public void configureSitePlugin(@NonNull final SiteModel site, @NonNull final String pluginName, boolean isActive,
-                                    boolean isAutoUpdatesEnabled ) {
+                                    boolean isAutoUpdatesEnabled) {
         String url = WPCOMREST.sites.site(site.getSiteId()).plugins.name(getEncodedPluginName(pluginName)).getUrlV1_2();
         Map<String, Object> params = new HashMap<>();
         params.put("active", isActive);
