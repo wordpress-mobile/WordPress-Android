@@ -52,12 +52,13 @@ public class PluginSqlUtils {
             return 0;
         }
 
-        SitePluginModel sitePlugin = getSitePluginBySlug(site, plugin.getSlug());
-        if (sitePlugin == null) {
+        SitePluginModel oldPlugin = getSitePluginBySlug(site, plugin.getSlug());
+        plugin.setLocalSiteId(site.getId()); // Make sure the site id is set (if the plugin is retrieved from network)
+        if (oldPlugin == null) {
             WellSql.insert(plugin).execute();
             return 1;
         } else {
-            int oldId = plugin.getId();
+            int oldId = oldPlugin.getId();
             return WellSql.update(SitePluginModel.class).whereId(oldId)
                     .put(plugin, new UpdateAllExceptId<>(SitePluginModel.class)).execute();
         }
