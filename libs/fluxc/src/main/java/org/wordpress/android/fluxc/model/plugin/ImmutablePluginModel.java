@@ -22,11 +22,11 @@ public class ImmutablePluginModel {
         mWPOrgPlugin = wpOrgPlugin;
     }
 
-    public boolean doesHaveSitePlugin() {
+    public boolean isInstalled() {
         return mSitePlugin != null;
     }
 
-    public boolean doesHaveWPOrgPlugin() {
+    public boolean doesHaveWPOrgPluginDetails() {
         return mWPOrgPlugin != null;
     }
 
