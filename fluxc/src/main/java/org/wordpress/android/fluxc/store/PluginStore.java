@@ -721,7 +721,6 @@ public class PluginStore extends Store {
         if (payload.isError()) {
             event.error = payload.error;
         } else {
-            payload.plugin.setLocalSiteId(payload.site.getId());
             PluginSqlUtils.insertOrUpdateSitePlugin(payload.site, payload.plugin);
         }
         emitChange(event);
