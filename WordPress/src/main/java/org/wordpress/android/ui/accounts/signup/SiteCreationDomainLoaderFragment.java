@@ -13,6 +13,7 @@ import org.wordpress.android.fluxc.store.SiteStore;
 import org.wordpress.android.fluxc.store.SiteStore.OnSuggestedDomains;
 import org.wordpress.android.fluxc.store.SiteStore.SuggestDomainsPayload;
 import org.wordpress.android.util.AppLog;
+import org.wordpress.android.util.NetworkUtils;
 
 import javax.inject.Inject;
 
@@ -72,6 +73,9 @@ public class SiteCreationDomainLoaderFragment extends Fragment {
     }
 
     public void load(String keywords) {
+        // notify if no connectivity but continue anyway
+        NetworkUtils.checkConnection(getActivity());
+
         postUpdate(new DomainSuggestionEvent(DomainUpdateStep.UPDATING, keywords, null));
 
         SuggestDomainsPayload payload = new SuggestDomainsPayload(keywords, true, true, false, 20);

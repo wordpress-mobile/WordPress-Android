@@ -105,13 +105,16 @@ public class SiteCreationThemeFragment extends SiteCreationBaseFormFragment<Site
 
         switch (event.getPhase()) {
             case UPDATING:
-                mSiteCreationThemeAdapter.setData(true, null);
+                mSiteCreationThemeAdapter.setData(true, null, 0);
                 break;
             case ERROR:
-                mSiteCreationThemeAdapter.setData(false, null);
+                mSiteCreationThemeAdapter.setData(false, null, R.string.error_generic);
+                break;
+            case ERROR_NO_CONNECTIVITY:
+                mSiteCreationThemeAdapter.setData(false, null, R.string.error_generic_network);
                 break;
             case FINISHED:
-                mSiteCreationThemeAdapter.setData(false, getThemes());
+                mSiteCreationThemeAdapter.setData(false, getThemes(), 0);
                 break;
         }
     }

@@ -78,10 +78,13 @@ public abstract class SiteCreationBaseFormFragment<SiteCreationListenerType> ext
         }
     }
 
-    protected void showHomeButton(boolean visible) {
+    protected void showHomeButton(boolean visible, boolean isCloseButton) {
         ActionBar actionBar = ((AppCompatActivity) getActivity()).getSupportActionBar();
         if (actionBar != null) {
             actionBar.setDisplayHomeAsUpEnabled(visible);
+            if (isCloseButton) {
+                actionBar.setHomeAsUpIndicator(R.drawable.ic_close_white_24dp);
+            }
         }
     }
 

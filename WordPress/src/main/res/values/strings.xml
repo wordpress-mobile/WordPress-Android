@@ -2135,7 +2135,7 @@
     <string name="site_creation_label_site_details">Tell us more about what you\'re creating. What\'s the title and tagline?</string>
     <string name="site_creation_label_domain_selection_title">Step 4 of 4</string>
     <string name="site_creation_label_domain_selection">Pick an available \"yourname.wordpress.com\" address to let people find you on the web.</string>
-    <string name="site_creation_domain_keywords_hint">Type to get more suggestions</string>
+    <string name="site_creation_domain_keywords_hint">Type a keyword for more ideas</string>
     <string name="site_creation_domain_finish_button">Create site</string>
     <string name="site_creation_title_hint">Site title</string>
     <string name="site_creation_tagline_hint">Site tagline (optional)</string>
