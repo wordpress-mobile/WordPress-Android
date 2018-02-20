@@ -635,7 +635,7 @@ public class PluginStore extends Store {
             ConfigureSitePluginError error = new ConfigureSitePluginError(ConfigureSitePluginErrorType.NOT_AVAILABLE);
             ConfiguredSitePluginPayload errorPayload = new ConfiguredSitePluginPayload(payload.site,
                     payload.pluginName, error);
-            configuredSitePlugin(errorPayload);
+            mDispatcher.dispatch(PluginActionBuilder.newConfiguredSitePluginAction(errorPayload));
         }
     }
 
@@ -647,7 +647,7 @@ public class PluginStore extends Store {
             DeletedSitePluginPayload errorPayload = new DeletedSitePluginPayload(payload.site,
                     payload.plugin.getSlug());
             errorPayload.error = error;
-            deletedSitePlugin(errorPayload);
+            mDispatcher.dispatch(PluginActionBuilder.newDeletedSitePluginAction(errorPayload));
         }
     }
 
@@ -668,9 +668,9 @@ public class PluginStore extends Store {
             mPluginRestClient.fetchSitePlugins(site);
         } else {
             PluginDirectoryError error = new PluginDirectoryError(PluginDirectoryErrorType.NOT_AVAILABLE, null);
-            FetchedPluginDirectoryPayload payload = new FetchedPluginDirectoryPayload(PluginDirectoryType.SITE, false,
-                    error);
-            fetchedPluginDirectory(payload);
+            FetchedPluginDirectoryPayload errorPayload = new FetchedPluginDirectoryPayload(PluginDirectoryType.SITE,
+                    false, error);
+            mDispatcher.dispatch(PluginActionBuilder.newFetchedPluginDirectoryAction(errorPayload));
         }
     }
 
@@ -685,7 +685,7 @@ public class PluginStore extends Store {
             InstallSitePluginError error = new InstallSitePluginError(InstallSitePluginErrorType.NOT_AVAILABLE);
             InstalledSitePluginPayload errorPayload = new InstalledSitePluginPayload(payload.site,
                     payload.slug, error);
-            installedSitePlugin(errorPayload);
+            mDispatcher.dispatch(PluginActionBuilder.newInstalledSitePluginAction(errorPayload));
         }
     }
 
@@ -701,7 +701,7 @@ public class PluginStore extends Store {
                     UpdateSitePluginErrorType.NOT_AVAILABLE);
             UpdatedSitePluginPayload errorPayload = new UpdatedSitePluginPayload(payload.site,
                     payload.plugin.getSlug(), error);
-            updatedSitePlugin(errorPayload);
+            mDispatcher.dispatch(PluginActionBuilder.newUpdatedSitePluginAction(errorPayload));
         }
     }
 
