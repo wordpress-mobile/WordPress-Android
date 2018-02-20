@@ -84,6 +84,10 @@ android {
             includeAndroidResources = true
         }
     }
+
+    lintOptions{
+        checkDependencies = true
+    }
 }
 
 dependencies {
@@ -164,6 +168,8 @@ dependencies {
         exclude group: "com.github.wordpress-mobile.WordPress-FluxC-Android", module: "fluxc"
         exclude group: 'com.github.bumptech.glide'
     }
+
+    lintChecks project(path:':libs:lint:WordPressLint')
 
     // Debug
     debugImplementation 'com.facebook.stetho:stetho:1.4.2'

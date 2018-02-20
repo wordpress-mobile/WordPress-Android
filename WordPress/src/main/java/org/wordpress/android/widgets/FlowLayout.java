@@ -33,7 +33,7 @@ public class FlowLayout extends ViewGroup {
 
     @Override
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
-        int widthSize = MeasureSpec.getSize(widthMeasureSpec) - getPaddingRight() - getPaddingLeft();
+        int widthSize = MeasureSpec.getSize(widthMeasureSpec) - ViewCompat.getPaddingEnd(this) - ViewCompat.getPaddingStart(this);
         int widthMode = MeasureSpec.getMode(widthMeasureSpec);
 
         boolean growHeight = widthMode != MeasureSpec.UNSPECIFIED;
@@ -41,7 +41,7 @@ public class FlowLayout extends ViewGroup {
         int width = 0;
         int height = getPaddingTop();
 
-        int currentWidth = getPaddingLeft();
+        int currentWidth = ViewCompat.getPaddingStart(this);
         int currentHeight = 0;
 
         boolean newLine = false;
@@ -62,7 +62,7 @@ public class FlowLayout extends ViewGroup {
                 height += currentHeight + mVerticalSpacing;
                 currentHeight = 0;
                 width = Math.max(width, currentWidth - spacing);
-                currentWidth = getPaddingLeft();
+                currentWidth = ViewCompat.getPaddingStart(this);
                 newLine = true;
             } else {
                 newLine = false;
@@ -78,7 +78,7 @@ public class FlowLayout extends ViewGroup {
         if (!newLine) {
             width = Math.max(width, currentWidth - spacing);
         }
-        width += getPaddingRight();
+        width += ViewCompat.getPaddingEnd(this);
         height += currentHeight + getPaddingBottom();
 
         setMeasuredDimension(resolveSize(width, widthMeasureSpec), resolveSize(height, heightMeasureSpec));

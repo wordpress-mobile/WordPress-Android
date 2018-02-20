@@ -89,21 +89,20 @@ class StatsUIHelper {
     }
 
     /**
-     *
      * Padding information are reset when changing the background Drawable on a View.
      * The reason why setting an image resets the padding is because 9-patch images can encode padding.
-     *
+     * <p>
      * See http://stackoverflow.com/a/10469121 and
      * http://www.mail-archive.com/android-developers@googlegroups.com/msg09595.html
      *
-     * @param v The view to apply the background resource
+     * @param v               The view to apply the background resource
      * @param backgroundResId The resource ID
      */
     private static void setViewBackgroundWithoutResettingPadding(final View v, final int backgroundResId) {
-        final int paddingBottom = v.getPaddingBottom(), paddingLeft = v.getPaddingLeft();
-        final int paddingRight = v.getPaddingRight(), paddingTop = v.getPaddingTop();
+        final int paddingBottom = v.getPaddingBottom(), paddingLeft = ViewCompat.getPaddingStart(v);
+        final int paddingRight = ViewCompat.getPaddingEnd(v), paddingTop = v.getPaddingTop();
         v.setBackgroundResource(backgroundResId);
-        v.setPadding(paddingLeft, paddingTop, paddingRight, paddingBottom);
+        ViewCompat.setPaddingRelative(v, paddingLeft, paddingTop, paddingRight, paddingBottom);
     }
 
     public static void reloadLinearLayout(Context ctx, ListAdapter adapter, LinearLayout linearLayout) {
@@ -218,13 +217,17 @@ class StatsUIHelper {
                 expand.setInterpolator(getInterpolator());
                 expand.setAnimationListener(new Animation.AnimationListener() {
                     @Override
-                    public void onAnimationStart(Animation animation) { }
+                    public void onAnimationStart(Animation animation) {
+                    }
+
                     @Override
                     public void onAnimationEnd(Animation animation) {
                         childContainer.setVisibility(View.GONE);
                     }
+
                     @Override
-                    public void onAnimationRepeat(Animation animation) { }
+                    public void onAnimationRepeat(Animation animation) {
+                    }
                 });
                 childContainer.startAnimation(expand);
             } else {
@@ -320,12 +323,12 @@ class StatsUIHelper {
      * URLSpanNoUnderline objects.
      *
      * @param pText A Spannable object. For example, a TextView casted as
-     *               Spannable.
+     *              Spannable.
      */
     public static void removeUnderlines(Spannable pText) {
         URLSpan[] spans = pText.getSpans(0, pText.length(), URLSpan.class);
 
-        for(URLSpan span:spans) {
+        for (URLSpan span : spans) {
             int start = pText.getSpanStart(span);
             int end = pText.getSpanEnd(span);
             pText.removeSpan(span);

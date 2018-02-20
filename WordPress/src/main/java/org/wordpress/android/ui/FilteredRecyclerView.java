@@ -301,11 +301,11 @@ public class FilteredRecyclerView extends RelativeLayout {
     }
 
     public void setToolbarLeftPadding(int paddingLeft){
-        ViewCompat.setPaddingRelative(mToolbar, paddingLeft, mToolbar.getPaddingTop(), mToolbar.getPaddingRight(), mToolbar.getPaddingBottom());
+        ViewCompat.setPaddingRelative(mToolbar, paddingLeft, mToolbar.getPaddingTop(), ViewCompat.getPaddingEnd(mToolbar), mToolbar.getPaddingBottom());
     }
 
     public void setToolbarRightPadding(int paddingRight){
-        ViewCompat.setPaddingRelative(mToolbar, mToolbar.getPaddingLeft(), mToolbar.getPaddingTop(), paddingRight, mToolbar.getPaddingBottom());
+        ViewCompat.setPaddingRelative(mToolbar, ViewCompat.getPaddingStart(mToolbar), mToolbar.getPaddingTop(), paddingRight, mToolbar.getPaddingBottom());
     }
 
     public void setToolbarLeftAndRightPadding(int paddingLeft, int paddingRight){

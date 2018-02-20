@@ -62,6 +62,8 @@ dependencies {
     implementation "org.jsoup:jsoup:1.10.3"
 
     implementation 'com.google.code.gson:gson:2.6.+'
+
+    lintChecks project(path:':libs:lint:WordPressLint')
 }
 
 signing {

@@ -23,6 +23,7 @@ import android.support.design.widget.TabLayout;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.view.MenuItemCompat;
 import android.support.v4.view.MenuItemCompat.OnActionExpandListener;
+import android.support.v4.view.ViewCompat;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.view.ActionMode;
@@ -249,7 +250,7 @@ public class MediaBrowserActivity extends AppCompatActivity implements MediaGrid
                         LinearLayout tabFirstChild = (LinearLayout) mTabLayout.getChildAt(0);
                         for (int i = 0; i < mTabLayout.getTabCount(); i++) {
                             LinearLayout tabView = (LinearLayout) (tabFirstChild.getChildAt(i));
-                            tabLayoutWidth += (tabView.getMeasuredWidth() + tabView.getPaddingLeft() + tabView.getPaddingRight());
+                            tabLayoutWidth += (tabView.getMeasuredWidth() + ViewCompat.getPaddingStart(tabView) + ViewCompat.getPaddingEnd(tabView));
                         }
 
                         int displayWidth = DisplayUtils.getDisplayPixelWidth(MediaBrowserActivity.this);

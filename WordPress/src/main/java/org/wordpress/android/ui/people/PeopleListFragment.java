@@ -6,6 +6,7 @@ import android.graphics.Canvas;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
+import android.support.v4.view.ViewCompat;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -444,8 +445,8 @@ public class PeopleListFragment extends Fragment {
 
         @Override
         public void onDraw(Canvas c, RecyclerView parent, RecyclerView.State state) {
-            int left = parent.getPaddingLeft();
-            int right = parent.getWidth() - parent.getPaddingRight();
+            int left = ViewCompat.getPaddingStart(parent);
+            int right = parent.getWidth() - ViewCompat.getPaddingEnd(parent);
 
             int childCount = parent.getChildCount();
             for (int i = 0; i < childCount; i++) {
