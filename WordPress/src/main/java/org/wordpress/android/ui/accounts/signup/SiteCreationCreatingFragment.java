@@ -50,7 +50,7 @@ public class SiteCreationCreatingFragment extends SiteCreationBaseFormFragment<S
 
     public boolean isInModalMode() {
         SiteCreationState state = SiteCreationService.getState();
-        return state != null && SiteCreationService.getState().isInProgress();
+        return state != null && state.isInProgress();
     }
 
     public boolean isCreationSucceeded() {
