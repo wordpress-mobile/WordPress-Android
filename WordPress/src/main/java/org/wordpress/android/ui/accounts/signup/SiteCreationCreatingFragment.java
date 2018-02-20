@@ -51,6 +51,7 @@ public class SiteCreationCreatingFragment extends SiteCreationBaseFormFragment<S
     private boolean mInModalMode;
     private boolean mCreationSucceeded;
     private boolean mWebViewLoadedInTime;
+    private int mNewSiteLocalId;
 
     private PreviewWebViewClient mPreviewWebViewClient;
 
@@ -103,14 +104,14 @@ public class SiteCreationCreatingFragment extends SiteCreationBaseFormFragment<S
         secondaryButton.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 if (isAdded()) {
-                    mSiteCreationListener.doConfigureSite();
+                    mSiteCreationListener.doConfigureSite(mNewSiteLocalId);
                 }
             }
         });
         primaryButton.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 if (isAdded()) {
-                    mSiteCreationListener.doWriteFirstPost();
+                    mSiteCreationListener.doWriteFirstPost(mNewSiteLocalId);
                 }
             }
         });
@@ -321,6 +322,7 @@ public class SiteCreationCreatingFragment extends SiteCreationBaseFormFragment<S
                 break;
             case SUCCESS:
                 mCreationSucceeded = true;
+                mNewSiteLocalId = (Integer) event.getPayload();
                 setModalMode(false);
 
                 if (mPreviewWebViewClient == null) {
