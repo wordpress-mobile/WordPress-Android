@@ -28,9 +28,9 @@ public class JetpackConnectionWebViewActivity extends WPWebViewActivity {
 
         @Nullable
         public static Source fromString(String value) {
-            if (value.equals(STATS.value)) {
+            if (STATS.value.equals(value)) {
                 return STATS;
-            } else if (value.equals(NOTIFICATIONS.value)) {
+            } else if (NOTIFICATIONS.value.equals(value)) {
                 return NOTIFICATIONS;
             } else {
                 return null;

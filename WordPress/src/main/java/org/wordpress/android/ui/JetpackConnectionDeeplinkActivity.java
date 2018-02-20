@@ -1,4 +1,4 @@
-package org.wordpress.android.ui.stats;
+package org.wordpress.android.ui;
 
 import android.content.Intent;
 import android.net.Uri;
@@ -19,9 +19,7 @@ import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.store.AccountStore;
 import org.wordpress.android.fluxc.store.SiteStore;
 import org.wordpress.android.login.LoginMode;
-import org.wordpress.android.ui.ActivityLauncher;
 import org.wordpress.android.ui.JetpackConnectionWebViewActivity.Source;
-import org.wordpress.android.ui.RequestCodes;
 import org.wordpress.android.ui.accounts.LoginActivity;
 import org.wordpress.android.util.AnalyticsUtils;
 import org.wordpress.android.util.ToastUtils;
