@@ -50,11 +50,13 @@ public class PluginStore extends Store {
 
     public static class DeleteSitePluginPayload extends Payload<BaseNetworkError> {
         public SiteModel site;
-        public SitePluginModel plugin;
+        public String slug;
+        public String pluginName;
 
-        public DeleteSitePluginPayload(SiteModel site, SitePluginModel plugin) {
+        public DeleteSitePluginPayload(SiteModel site, String slug, String pluginName) {
             this.site = site;
-            this.plugin = plugin;
+            this.slug = slug;
+            this.pluginName = pluginName;
         }
     }
 
@@ -641,11 +643,11 @@ public class PluginStore extends Store {
 
     private void deleteSitePlugin(DeleteSitePluginPayload payload) {
         if (payload.site.isUsingWpComRestApi() && payload.site.isJetpackConnected()) {
-            mPluginRestClient.deleteSitePlugin(payload.site, payload.plugin);
+            mPluginRestClient.deleteSitePlugin(payload.site, payload.slug, payload.pluginName);
         } else {
             DeleteSitePluginError error = new DeleteSitePluginError(DeleteSitePluginErrorType.NOT_AVAILABLE);
             DeletedSitePluginPayload errorPayload = new DeletedSitePluginPayload(payload.site,
-                    payload.plugin.getSlug());
+                    payload.slug);
             errorPayload.error = error;
             mDispatcher.dispatch(PluginActionBuilder.newDeletedSitePluginAction(errorPayload));
         }
