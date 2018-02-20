@@ -8,7 +8,15 @@ public class ImmutablePluginModel {
     private final SitePluginModel mSitePlugin;
     private final WPOrgPluginModel mWPOrgPlugin;
 
-    public ImmutablePluginModel(@Nullable SitePluginModel sitePlugin, @Nullable WPOrgPluginModel wpOrgPlugin) {
+    public static @Nullable ImmutablePluginModel newInstance(@Nullable SitePluginModel sitePlugin,
+                                                             @Nullable WPOrgPluginModel wpOrgPlugin) {
+        if (sitePlugin == null && wpOrgPlugin == null) {
+            return null;
+        }
+        return new ImmutablePluginModel(sitePlugin, wpOrgPlugin);
+    }
+
+    private ImmutablePluginModel(@Nullable SitePluginModel sitePlugin, @Nullable WPOrgPluginModel wpOrgPlugin) {
         mSitePlugin = sitePlugin;
         mWPOrgPlugin = wpOrgPlugin;
     }
