@@ -356,7 +356,7 @@ function uninstall {
 # Install the selected app
 function install {
   show_message "Installing app..." 
-  adb $ADB_PARAMS install -r $APK >> $LOG_FILE 2>&1 || stop_on_error
+  adb $ADB_PARAMS install -t -r $APK >> $LOG_FILE 2>&1 || stop_on_error
   show_message "Done"
 }
 
