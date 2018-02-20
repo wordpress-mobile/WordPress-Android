@@ -46,10 +46,17 @@
         <item name="android:dropDownListViewStyle">@style/DropDownListView.Light.WordPress</item>
     </style>
 
-    <style name="SignInTheme" parent="Theme.AppCompat.NoActionBar">
-        <item name="colorControlActivated">@color/color_control_activated</item>
-        <item name="colorControlHighlight">@color/color_control_highlight</item>
-        <item name="android:statusBarColor">@color/status_bar_tint</item>
+    <style name="SiteCreation.Heading" parent="TextAppearance.AppCompat.Body1">
+        <item name="android:textColor">@color/grey_text_min</item>
+    </style>
+
+    <style name="SiteCreation.Subhead" parent="TextAppearance.AppCompat.Small">
+        <item name="android:textColor">@color/grey_text_min</item>
+        <item name="android:lineSpacingExtra">4dp</item>
+    </style>
+
+    <style name="SiteCreation.CardTitle" parent="TextAppearance.AppCompat.Subhead">
+        <item name="android:textColor">@color/grey_dark</item>
     </style>
 
     <style name="NoDisplay" parent="Theme.AppCompat.Light.NoActionBar">

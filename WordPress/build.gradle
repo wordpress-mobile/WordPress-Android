@@ -41,8 +41,6 @@ android {
 
         multiDexEnabled true
         vectorDrawables.useSupportLibrary = true
-
-        buildConfigField "boolean", "LOGIN_WIZARD_STYLE_ACTIVE", "true"
     }
 
     flavorDimensions "buildType"

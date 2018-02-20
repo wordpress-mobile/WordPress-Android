@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_height="wrap_content"
+    android:layout_width="match_parent"
+    android:orientation="vertical"
+    android:clipChildren="false"
+    android:animateLayoutChanges="true"
+    android:paddingTop="@dimen/margin_extra_large" >
+
+    <TextView
+        android:id="@+id/label_title"
+        android:layout_height="wrap_content"
+        android:layout_width="match_parent"
+        android:paddingEnd="@dimen/margin_extra_large"
+        android:paddingLeft="@dimen/margin_extra_large"
+        android:paddingRight="@dimen/margin_extra_large"
+        android:paddingStart="@dimen/margin_extra_large"
+        android:text="@string/site_creation_label_theme_selection_title"
+        style="@style/SiteCreation.Heading" />
+
+    <TextView
+        android:id="@+id/label"
+        android:layout_height="wrap_content"
+        android:layout_width="match_parent"
+        android:layout_marginBottom="@dimen/margin_extra_large"
+        android:paddingEnd="@dimen/margin_extra_large"
+        android:paddingLeft="@dimen/margin_extra_large"
+        android:paddingRight="@dimen/margin_extra_large"
+        android:paddingStart="@dimen/margin_extra_large"
+        android:text="@string/site_creation_label_theme_selection"
+        style="@style/LoginTheme.TextLabel" />
+
+    <LinearLayout
+        android:id="@+id/progress_container"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingEnd="@dimen/margin_extra_large"
+        android:paddingLeft="@dimen/margin_extra_large"
+        android:paddingRight="@dimen/margin_extra_large"
+        android:paddingStart="@dimen/margin_extra_large"
+        android:layout_marginBottom="@dimen/margin_extra_large"
+        android:orientation="vertical"
+        android:visibility="gone"
+        tools:visibility="visible">
+
+        <ProgressBar
+            android:id="@+id/progress_bar"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:layout_gravity="center_horizontal"/>
+
+        <TextView
+            android:id="@+id/progress_label"
+            android:layout_height="wrap_content"
+            android:layout_width="match_parent"
+            android:text="@string/site_creation_label_theme_loading"
+            android:gravity="center_horizontal"
+            style="@style/LoginTheme.TextLabel" />
+    </LinearLayout>
+</LinearLayout>

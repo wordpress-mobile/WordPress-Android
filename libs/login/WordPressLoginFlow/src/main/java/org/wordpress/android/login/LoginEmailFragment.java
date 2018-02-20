@@ -371,7 +371,7 @@ public class LoginEmailFragment extends LoginBaseFormFragment<LoginListener> imp
     @Override
     protected void onLoginFinished() {
         mAnalyticsListener.trackAnalyticsSignIn(mAccountStore, mSiteStore, true);
-        mLoginListener.loggedInViaSocialAccount(mOldSitesIDs);
+        mLoginListener.loggedInViaSocialAccount(mOldSitesIDs, false);
     }
 
     @Override
