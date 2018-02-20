@@ -82,16 +82,18 @@ public class PluginRestClient extends BaseWPComRestClient {
         add(request);
     }
 
-    public void configureSitePlugin(@NonNull final SiteModel site, @NonNull final SitePluginModel plugin) {
-        String url = WPCOMREST.sites.site(site.getSiteId()).plugins.name(getEncodedPluginName(plugin)).getUrlV1_2();
-        Map<String, Object> params = paramsFromPluginModel(plugin);
+    public void configureSitePlugin(@NonNull final SiteModel site, @NonNull final String pluginName, boolean isActive,
+                                    boolean isAutoUpdatesEnabled ) {
+        String url = WPCOMREST.sites.site(site.getSiteId()).plugins.name(getEncodedPluginName(pluginName)).getUrlV1_2();
+        Map<String, Object> params = new HashMap<>();
+        params.put("active", isActive);
+        params.put("autoupdate", isAutoUpdatesEnabled);
         final WPComGsonRequest<PluginWPComRestResponse> request = WPComGsonRequest.buildPostRequest(url, params,
                 PluginWPComRestResponse.class,
                 new Listener<PluginWPComRestResponse>() {
                     @Override
                     public void onResponse(PluginWPComRestResponse response) {
                         SitePluginModel pluginFromResponse = pluginModelFromResponse(site, response);
-                        pluginFromResponse.setId(plugin.getId());
                         mDispatcher.dispatch(PluginActionBuilder.newConfiguredSitePluginAction(
                                 new ConfiguredSitePluginPayload(site, pluginFromResponse)));
                     }
@@ -102,7 +104,7 @@ public class PluginRestClient extends BaseWPComRestClient {
                         ConfigureSitePluginError configurePluginError = new ConfigureSitePluginError(((
                                 WPComGsonNetworkError) networkError).apiError, networkError.message);
                         ConfiguredSitePluginPayload payload =
-                                new ConfiguredSitePluginPayload(site, plugin.getSlug(), configurePluginError);
+                                new ConfiguredSitePluginPayload(site, pluginName, configurePluginError);
                         mDispatcher.dispatch(PluginActionBuilder.newConfiguredSitePluginAction(payload));
                     }
                 }
@@ -112,7 +114,7 @@ public class PluginRestClient extends BaseWPComRestClient {
 
     public void deleteSitePlugin(@NonNull final SiteModel site, @NonNull final SitePluginModel plugin) {
         String url = WPCOMREST.sites.site(site.getSiteId()).
-                plugins.name(getEncodedPluginName(plugin)).delete.getUrlV1_2();
+                plugins.name(getEncodedPluginName(plugin.getName())).delete.getUrlV1_2();
         final WPComGsonRequest<PluginWPComRestResponse> request = WPComGsonRequest.buildPostRequest(url, null,
                 PluginWPComRestResponse.class,
                 new Listener<PluginWPComRestResponse>() {
@@ -165,7 +167,7 @@ public class PluginRestClient extends BaseWPComRestClient {
 
     public void updateSitePlugin(@NonNull final SiteModel site, @NonNull final SitePluginModel plugin) {
         String url = WPCOMREST.sites.site(site.getSiteId()).
-                plugins.name(getEncodedPluginName(plugin)).update.getUrlV1_2();
+                plugins.name(getEncodedPluginName(plugin.getName())).update.getUrlV1_2();
         final WPComGsonRequest<PluginWPComRestResponse> request = WPComGsonRequest.buildPostRequest(url, null,
                 PluginWPComRestResponse.class,
                 new Listener<PluginWPComRestResponse>() {
@@ -211,19 +213,12 @@ public class PluginRestClient extends BaseWPComRestClient {
         return sitePluginModel;
     }
 
-    private Map<String, Object> paramsFromPluginModel(SitePluginModel sitePluginModel) {
-        Map<String, Object> params = new HashMap<>();
-        params.put("active", sitePluginModel.isActive());
-        params.put("autoupdate", sitePluginModel.isAutoUpdateEnabled());
-        return params;
-    }
-
-    private String getEncodedPluginName(SitePluginModel plugin) {
+    private String getEncodedPluginName(String pluginName) {
         try {
             // We need to encode plugin name otherwise names like "akismet/akismet" would fail
-            return URLEncoder.encode(plugin.getName(), "UTF-8");
+            return URLEncoder.encode(pluginName, "UTF-8");
         } catch (UnsupportedEncodingException e) {
-            return plugin.getName();
+            return pluginName;
         }
     }
 }
