@@ -112,24 +112,24 @@ public class PluginRestClient extends BaseWPComRestClient {
         add(request);
     }
 
-    public void deleteSitePlugin(@NonNull final SiteModel site, @NonNull final SitePluginModel plugin) {
+    public void deleteSitePlugin(@NonNull final SiteModel site, @NonNull final String slug,
+                                 @NonNull final String pluginName) {
         String url = WPCOMREST.sites.site(site.getSiteId()).
-                plugins.name(getEncodedPluginName(plugin.getName())).delete.getUrlV1_2();
+                plugins.name(getEncodedPluginName(pluginName)).delete.getUrlV1_2();
         final WPComGsonRequest<PluginWPComRestResponse> request = WPComGsonRequest.buildPostRequest(url, null,
                 PluginWPComRestResponse.class,
                 new Listener<PluginWPComRestResponse>() {
                     @Override
                     public void onResponse(PluginWPComRestResponse response) {
-                        SitePluginModel pluginFromResponse = pluginModelFromResponse(site, response);
                         mDispatcher.dispatch(PluginActionBuilder.newDeletedSitePluginAction(
-                                new DeletedSitePluginPayload(site, pluginFromResponse.getSlug())));
+                                new DeletedSitePluginPayload(site, slug)));
                     }
                 },
                 new BaseErrorListener() {
                     @Override
                     public void onErrorResponse(@NonNull BaseNetworkError networkError) {
                         DeletedSitePluginPayload payload =
-                                new DeletedSitePluginPayload(site, plugin.getSlug());
+                                new DeletedSitePluginPayload(site, slug);
                         payload.error = new DeleteSitePluginError(((WPComGsonNetworkError)
                                 networkError).apiError, networkError.message);
                         mDispatcher.dispatch(PluginActionBuilder.newDeletedSitePluginAction(payload));
