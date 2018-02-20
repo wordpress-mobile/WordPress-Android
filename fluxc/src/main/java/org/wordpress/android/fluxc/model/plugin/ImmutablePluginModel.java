@@ -4,6 +4,7 @@ import android.support.annotation.Nullable;
 
 import org.wordpress.android.util.HtmlUtils;
 
+@SuppressWarnings("unused")
 public class ImmutablePluginModel {
     private final SitePluginModel mSitePlugin;
     private final WPOrgPluginModel mWPOrgPlugin;
@@ -228,13 +229,5 @@ public class ImmutablePluginModel {
 
     public boolean isAutoUpdateEnabled() {
         return mSitePlugin != null && mSitePlugin.isAutoUpdateEnabled();
-    }
-
-    public @Nullable SitePluginModel getSitePlugin() {
-        return mSitePlugin;
-    }
-
-    public @Nullable WPOrgPluginModel getWPOrgPlugin() {
-        return mWPOrgPlugin;
     }
 }
