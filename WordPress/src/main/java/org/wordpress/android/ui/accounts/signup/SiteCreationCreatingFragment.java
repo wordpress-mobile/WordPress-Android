@@ -23,6 +23,8 @@ import org.wordpress.android.util.AutoForeground.ServiceEventConnection;
 import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.URLFilteredWebViewClient;
 
+import java.util.HashMap;
+
 public class SiteCreationCreatingFragment extends SiteCreationBaseFormFragment<SiteCreationListener> {
     public static final String TAG = "site_creating_fragment_tag";
 
@@ -32,6 +34,7 @@ public class SiteCreationCreatingFragment extends SiteCreationBaseFormFragment<S
     private static final String ARG_SITE_THEME_ID = "ARG_SITE_THEME_ID";
 
     private static final String KEY_WEBVIEW_LOADED_IN_TIME = "KEY_WEBVIEW_LOADED_IN_TIME";
+    private static final String KEY_TRACKED_SUCCESS = "KEY_TRACKED_SUCCESS";
 
     private ServiceEventConnection mServiceEventConnection;
 
@@ -44,7 +47,9 @@ public class SiteCreationCreatingFragment extends SiteCreationBaseFormFragment<S
     private View mTadaContainer;
     private TextView[] mLabels;
 
+    private boolean mTrackedSuccess;
     private boolean mWebViewLoadedInTime;
+    int mNewSiteLocalId;
 
     private PreviewWebViewClient mPreviewWebViewClient;
 
@@ -112,14 +117,14 @@ public class SiteCreationCreatingFragment extends SiteCreationBaseFormFragment<S
         secondaryButton.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 if (isAdded()) {
-                    mSiteCreationListener.doConfigureSite();
+                    mSiteCreationListener.doConfigureSite(mNewSiteLocalId);
                 }
             }
         });
         primaryButton.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 if (isAdded()) {
-                    mSiteCreationListener.doWriteFirstPost();
+                    mSiteCreationListener.doWriteFirstPost(mNewSiteLocalId);
                 }
             }
         });
@@ -141,6 +146,7 @@ public class SiteCreationCreatingFragment extends SiteCreationBaseFormFragment<S
             createSite();
         } else {
             mWebViewLoadedInTime = savedInstanceState.getBoolean(KEY_WEBVIEW_LOADED_IN_TIME, false);
+            mTrackedSuccess = savedInstanceState.getBoolean(KEY_TRACKED_SUCCESS, false);
         }
     }
 
@@ -176,6 +182,7 @@ public class SiteCreationCreatingFragment extends SiteCreationBaseFormFragment<S
         super.onSaveInstanceState(outState);
 
         outState.putBoolean(KEY_WEBVIEW_LOADED_IN_TIME, mWebViewLoadedInTime);
+        outState.putBoolean(KEY_TRACKED_SUCCESS, mTrackedSuccess);
     }
 
     void createSite() {
@@ -199,6 +206,13 @@ public class SiteCreationCreatingFragment extends SiteCreationBaseFormFragment<S
             mCompletedContainer.setVisibility(View.VISIBLE);
             mWebView.setVisibility(showWebView ? View.VISIBLE : View.INVISIBLE);
             mTadaContainer.setVisibility(showWebView ? View.INVISIBLE : View.VISIBLE);
+        }
+
+        if (!mTrackedSuccess) {
+            mTrackedSuccess = true;
+            HashMap<String, Object> successProperties = new HashMap<>();
+            successProperties.put("loaded_in_time", showWebView);
+            AnalyticsTracker.track(AnalyticsTracker.Stat.SITE_CREATION_SUCCESS_VIEWED, successProperties);
         }
     }
 
@@ -325,6 +339,8 @@ public class SiteCreationCreatingFragment extends SiteCreationBaseFormFragment<S
                 mPreviewWebViewClient = loadWebview();
                 break;
             case SUCCESS:
+                mNewSiteLocalId = (Integer) event.getPayload();
+
                 if (mPreviewWebViewClient == null) {
                     // Apparently view got rotated while at the final so, just reconfigure the WebView.
                     loadWebview();

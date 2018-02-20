@@ -46,6 +46,7 @@ import org.wordpress.android.ui.ActivityLauncher;
 import org.wordpress.android.ui.RequestCodes;
 import org.wordpress.android.ui.accounts.LoginActivity;
 import org.wordpress.android.ui.accounts.SignupEpilogueActivity;
+import org.wordpress.android.ui.accounts.SiteCreationActivity;
 import org.wordpress.android.ui.notifications.NotificationEvents;
 import org.wordpress.android.ui.notifications.NotificationsListFragment;
 import org.wordpress.android.ui.notifications.adapters.NotesAdapter;
@@ -574,16 +575,37 @@ public class WPMainActivity extends AppCompatActivity {
         }
     }
 
+    private void setSite(Intent data) {
+        if (data != null) {
+            int selectedSite = data.getIntExtra(SitePickerActivity.KEY_LOCAL_ID, -1);
+            setSelectedSite(selectedSite);
+        }
+    }
+
+    private void jumpNewPost(Intent data) {
+        if (data != null && data.getBooleanExtra(SiteCreationActivity.KEY_DO_NEW_POST, false)) {
+            ActivityLauncher.addNewPostOrPageForResult(this, mSelectedSite, false, false);
+        }
+    }
+
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         switch (requestCode) {
             case RequestCodes.EDIT_POST:
-            case RequestCodes.CREATE_SITE:
                 MySiteFragment mySiteFragment = getMySiteFragment();
                 if (mySiteFragment != null) {
                     mySiteFragment.onActivityResult(requestCode, resultCode, data);
                 }
+                break;
+            case RequestCodes.CREATE_SITE:
+                mySiteFragment = getMySiteFragment();
+                if (mySiteFragment != null) {
+                    mySiteFragment.onActivityResult(requestCode, resultCode, data);
+                }
+
+                setSite(data);
+                jumpNewPost(data);
                 break;
             case RequestCodes.ADD_ACCOUNT:
                 if (resultCode == RESULT_OK) {
@@ -603,10 +625,9 @@ public class WPMainActivity extends AppCompatActivity {
             case RequestCodes.SITE_PICKER:
                 if (getMySiteFragment() != null) {
                     getMySiteFragment().onActivityResult(requestCode, resultCode, data);
-                    if (data != null) {
-                        int selectedSite = data.getIntExtra(SitePickerActivity.KEY_LOCAL_ID, -1);
-                        setSelectedSite(selectedSite);
-                    }
+
+                    setSite(data);
+                    jumpNewPost(data);
                 }
                 break;
             case RequestCodes.SITE_SETTINGS:

@@ -19,8 +19,8 @@ public interface SiteCreationListener {
 
     // Site Creation Creating and epilogue screen callbacks
     void helpSiteCreatingScreen();
-    void doConfigureSite();
-    void doWriteFirstPost();
+    void doConfigureSite(int siteLocalId);
+    void doWriteFirstPost(int siteLocalId);
 
     void setHelpContext(String faqId, String faqSection);
 }

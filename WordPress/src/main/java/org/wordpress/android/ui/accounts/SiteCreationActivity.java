@@ -17,12 +17,15 @@ import org.wordpress.android.ui.accounts.signup.SiteCreationListener;
 import org.wordpress.android.ui.accounts.signup.SiteCreationSiteDetailsFragment;
 import org.wordpress.android.ui.accounts.signup.SiteCreationThemeFragment;
 import org.wordpress.android.ui.accounts.signup.SiteCreationThemeLoaderFragment;
+import org.wordpress.android.ui.main.SitePickerActivity;
 import org.wordpress.android.util.HelpshiftHelper;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.UrlUtils;
 
 public class SiteCreationActivity extends AppCompatActivity implements SiteCreationListener {
     public static final String ARG_USERNAME = "ARG_USERNAME";
+
+    public static final String KEY_DO_NEW_POST = "KEY_DO_NEW_POST";
 
     private static final String KEY_CATERGORY = "KEY_CATERGORY";
     private static final String KEY_THEME_ID = "KEY_THEME_ID";
@@ -205,13 +208,20 @@ public class SiteCreationActivity extends AppCompatActivity implements SiteCreat
     }
 
     @Override
-    public void doConfigureSite() {
-        // TODO: jump to MySite
+    public void doConfigureSite(int siteLocalId) {
+        Intent intent = new Intent();
+        intent.putExtra(SitePickerActivity.KEY_LOCAL_ID, siteLocalId);
+        setResult(RESULT_OK, intent);
+        finish();
     }
 
     @Override
-    public void doWriteFirstPost() {
-        // TODO: Jump directly to the editor
+    public void doWriteFirstPost(int siteLocalId) {
+        Intent intent = new Intent();
+        intent.putExtra(SitePickerActivity.KEY_LOCAL_ID, siteLocalId);
+        intent.putExtra(KEY_DO_NEW_POST, true);
+        setResult(RESULT_OK, intent);
+        finish();
     }
 
     @Override
