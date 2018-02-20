@@ -12,7 +12,7 @@ import org.wordpress.android.fluxc.annotations.action.Action;
 import org.wordpress.android.fluxc.annotations.action.IAction;
 import org.wordpress.android.fluxc.generated.PluginActionBuilder;
 import org.wordpress.android.fluxc.model.SiteModel;
-import org.wordpress.android.fluxc.model.plugin.DualPluginModel;
+import org.wordpress.android.fluxc.model.plugin.ImmutablePluginModel;
 import org.wordpress.android.fluxc.model.plugin.PluginDirectoryModel;
 import org.wordpress.android.fluxc.model.plugin.PluginDirectoryType;
 import org.wordpress.android.fluxc.model.plugin.SitePluginModel;
@@ -442,7 +442,7 @@ public class PluginStore extends Store {
         public String searchTerm;
         public int page;
         public boolean canLoadMore;
-        public List<DualPluginModel> plugins;
+        public List<ImmutablePluginModel> plugins;
 
         public OnPluginDirectorySearched(@Nullable SiteModel site, String searchTerm, int page) {
             this.site = site;
@@ -584,29 +584,29 @@ public class PluginStore extends Store {
         }
     }
 
-    public @NonNull List<DualPluginModel> getPluginDirectory(@NonNull SiteModel site, PluginDirectoryType type) {
+    public @NonNull List<ImmutablePluginModel> getPluginDirectory(@NonNull SiteModel site, PluginDirectoryType type) {
         // Site plugins are handled differently
         if (type == PluginDirectoryType.SITE) {
             return getSitePlugins(site);
         }
-        List<DualPluginModel> dualPlugins = new ArrayList<>();
+        List<ImmutablePluginModel> immutablePlugins = new ArrayList<>();
         List<WPOrgPluginModel> wpOrgPlugins = PluginSqlUtils.getWPOrgPluginsForDirectory(type);
         for (WPOrgPluginModel wpOrgPlugin : wpOrgPlugins) {
             String slug = wpOrgPlugin.getSlug();
             SitePluginModel sitePlugin = PluginSqlUtils.getSitePluginBySlug(site, slug);
-            dualPlugins.add(new DualPluginModel(sitePlugin, wpOrgPlugin));
+            immutablePlugins.add(new ImmutablePluginModel(sitePlugin, wpOrgPlugin));
         }
-        return dualPlugins;
+        return immutablePlugins;
     }
 
-    public @NonNull DualPluginModel getDualPluginBySlug(@NonNull SiteModel site, String slug) {
+    public @NonNull ImmutablePluginModel getImmutablePluginBySlug(@NonNull SiteModel site, String slug) {
         SitePluginModel sitePlugin = PluginSqlUtils.getSitePluginBySlug(site, slug);
         WPOrgPluginModel wpOrgPlugin = PluginSqlUtils.getWPOrgPluginBySlug(slug);
-        return new DualPluginModel(sitePlugin, wpOrgPlugin);
+        return new ImmutablePluginModel(sitePlugin, wpOrgPlugin);
     }
 
-    private @NonNull List<DualPluginModel> getSitePlugins(@NonNull SiteModel site) {
-        List<DualPluginModel> dualPlugins = new ArrayList<>();
+    private @NonNull List<ImmutablePluginModel> getSitePlugins(@NonNull SiteModel site) {
+        List<ImmutablePluginModel> immutablePlugins = new ArrayList<>();
         List<SitePluginModel> sitePlugins = PluginSqlUtils.getSitePlugins(site);
         for (SitePluginModel sitePluginModel : sitePlugins) {
             String slug = sitePluginModel.getSlug();
@@ -614,9 +614,9 @@ public class PluginStore extends Store {
             if (wpOrgPluginModel == null) {
                 mDispatcher.dispatch(PluginActionBuilder.newFetchWporgPluginAction(slug));
             }
-            dualPlugins.add(new DualPluginModel(sitePluginModel, wpOrgPluginModel));
+            immutablePlugins.add(new ImmutablePluginModel(sitePluginModel, wpOrgPluginModel));
         }
-        return dualPlugins;
+        return immutablePlugins;
     }
 
     // Remote actions
@@ -788,15 +788,15 @@ public class PluginStore extends Store {
             event.error = payload.error;
         } else {
             event.canLoadMore = payload.canLoadMore;
-            List<DualPluginModel> dualPluginList = new ArrayList<>();
+            List<ImmutablePluginModel> immutablePluginList = new ArrayList<>();
             for (WPOrgPluginModel wpOrgPlugin : payload.plugins) {
                 SitePluginModel sitePlugin = null;
                 if (payload.site != null) {
                     sitePlugin = PluginSqlUtils.getSitePluginBySlug(payload.site, wpOrgPlugin.getSlug());
                 }
-                dualPluginList.add(new DualPluginModel(sitePlugin, wpOrgPlugin));
+                immutablePluginList.add(new ImmutablePluginModel(sitePlugin, wpOrgPlugin));
             }
-            event.plugins = dualPluginList;
+            event.plugins = immutablePluginList;
         }
         emitChange(event);
     }

@@ -4,11 +4,11 @@ import android.support.annotation.Nullable;
 
 import org.wordpress.android.util.HtmlUtils;
 
-public class DualPluginModel {
+public class ImmutablePluginModel {
     private final SitePluginModel mSitePlugin;
     private final WPOrgPluginModel mWPOrgPlugin;
 
-    public DualPluginModel(@Nullable SitePluginModel sitePlugin, @Nullable WPOrgPluginModel wpOrgPlugin) {
+    public ImmutablePluginModel(@Nullable SitePluginModel sitePlugin, @Nullable WPOrgPluginModel wpOrgPlugin) {
         mSitePlugin = sitePlugin;
         mWPOrgPlugin = wpOrgPlugin;
     }
