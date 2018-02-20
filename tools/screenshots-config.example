@@ -12,7 +12,7 @@ LOGIN_USERNAME=
 LOGIN_PASSWORD=
 
 # Uncomment the following APK key in order to override the default used apk
-# APK=../WordPress/build/outputs/apk/WordPress-wasabi-debug.apk
+# APK=../WordPress/build/outputs/apk/wasabi/debug/WordPress-wasabi-debug.apk
 
 # Uncomment the following PKG key in order to override the default used package config
 # Valid options are $PKG_DEBUG and $PKG_RELEASE

@@ -7,7 +7,7 @@ CMD_PROCESS="process"
 CMD_PRODUCE="produce"
 
 # Config
-APK=../WordPress/build/outputs/apk/WordPress-wasabi-debug.apk
+APK=../WordPress/build/outputs/apk/wasabi/debug/WordPress-wasabi-debug.apk
 DEV_NAME=Nexus_5X_API_25_SCREENSHOTS
 RUN_DEV=ALL
 LOG_FILE="/tmp/android-screenshot.log"
@@ -602,6 +602,8 @@ function check_command() {
 
 # checks the emulator is available
 function check_emulator() {
+  PATH=$PATH:$ANDROID_SDK_DIR:$ANDROID_SDK_DIR/tools/:$ANDROID_SDK_DIR/tools/bin/:$ANDROID_SDK_DIR/platform-tools/
+  
   check_command avdmanager
   check_command adb
   check_command emulator
@@ -611,8 +613,6 @@ function check_emulator() {
     EMU_PATH="$(which emulator)"
     ANDROID_TOOL_DIR="$(dirname "${EMU_PATH}")"
     ANDROID_SDK_DIR="${ANDROID_TOOL_DIR%/*}"
-  else
-    PATH=$PATH:$ANDROID_SDK_DIR:$ANDROID_SDK_DIR/tools/bin/
   fi
 }
 
