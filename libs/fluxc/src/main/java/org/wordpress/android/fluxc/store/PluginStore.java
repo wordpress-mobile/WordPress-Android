@@ -594,15 +594,15 @@ public class PluginStore extends Store {
         for (WPOrgPluginModel wpOrgPlugin : wpOrgPlugins) {
             String slug = wpOrgPlugin.getSlug();
             SitePluginModel sitePlugin = PluginSqlUtils.getSitePluginBySlug(site, slug);
-            immutablePlugins.add(new ImmutablePluginModel(sitePlugin, wpOrgPlugin));
+            immutablePlugins.add(ImmutablePluginModel.newInstance(sitePlugin, wpOrgPlugin));
         }
         return immutablePlugins;
     }
 
-    public @NonNull ImmutablePluginModel getImmutablePluginBySlug(@NonNull SiteModel site, String slug) {
+    public @Nullable ImmutablePluginModel getImmutablePluginBySlug(@NonNull SiteModel site, String slug) {
         SitePluginModel sitePlugin = PluginSqlUtils.getSitePluginBySlug(site, slug);
         WPOrgPluginModel wpOrgPlugin = PluginSqlUtils.getWPOrgPluginBySlug(slug);
-        return new ImmutablePluginModel(sitePlugin, wpOrgPlugin);
+        return ImmutablePluginModel.newInstance(sitePlugin, wpOrgPlugin);
     }
 
     private @NonNull List<ImmutablePluginModel> getSitePlugins(@NonNull SiteModel site) {
@@ -614,7 +614,7 @@ public class PluginStore extends Store {
             if (wpOrgPluginModel == null) {
                 mDispatcher.dispatch(PluginActionBuilder.newFetchWporgPluginAction(slug));
             }
-            immutablePlugins.add(new ImmutablePluginModel(sitePluginModel, wpOrgPluginModel));
+            immutablePlugins.add(ImmutablePluginModel.newInstance(sitePluginModel, wpOrgPluginModel));
         }
         return immutablePlugins;
     }
@@ -794,7 +794,7 @@ public class PluginStore extends Store {
                 if (payload.site != null) {
                     sitePlugin = PluginSqlUtils.getSitePluginBySlug(payload.site, wpOrgPlugin.getSlug());
                 }
-                immutablePluginList.add(new ImmutablePluginModel(sitePlugin, wpOrgPlugin));
+                immutablePluginList.add(ImmutablePluginModel.newInstance(sitePlugin, wpOrgPlugin));
             }
             event.plugins = immutablePluginList;
         }
