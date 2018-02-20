@@ -149,16 +149,11 @@ public class SignInFragment extends AbstractFragment implements TextWatcher {
     protected ImageView mInfoButton;
     protected ImageView mInfoButtonSecondary;
 
-    protected @Inject
-    SiteStore mSiteStore;
-    protected @Inject
-    AccountStore mAccountStore;
-    protected @Inject
-    Dispatcher mDispatcher;
-    protected @Inject
-    HTTPAuthManager mHTTPAuthManager;
-    protected @Inject
-    MemorizingTrustManager mMemorizingTrustManager;
+    protected @Inject SiteStore mSiteStore;
+    protected @Inject AccountStore mAccountStore;
+    protected @Inject Dispatcher mDispatcher;
+    protected @Inject HTTPAuthManager mHTTPAuthManager;
+    protected @Inject MemorizingTrustManager mMemorizingTrustManager;
 
     private final Matcher mReservedNameMatcher = DOT_COM_RESERVED_NAMES.matcher("");
     private final Matcher mTwoStepAuthCodeMatcher = TWO_STEP_AUTH_CODE.matcher("");

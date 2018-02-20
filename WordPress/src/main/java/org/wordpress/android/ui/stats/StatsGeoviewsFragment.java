@@ -133,18 +133,18 @@ public class StatsGeoviewsFragment extends StatsAbstractListFragment {
                         "<script type=\"text/javascript\" src=\"https://www.gstatic.com/charts/loader.js\"></script>" +
                         "<script type=\"text/javascript\" src=\"https://www.google.com/jsapi\"></script>" +
                         "<script type=\"text/javascript\">" +
-                        "google.charts.load('42', {'packages':['geochart']});" +
-                        "google.charts.setOnLoadCallback(drawRegionsMap);" +
-                        "function drawRegionsMap() {" +
-                        "var data = google.visualization.arrayToDataTable(" +
-                        "[" +
-                        "['Country', '" + label + "']," +
+                        "   google.charts.load('42', {'packages':['geochart']});" +
+                        "   google.charts.setOnLoadCallback(drawRegionsMap);" +
+                        "   function drawRegionsMap() {" +
+                        "       var data = google.visualization.arrayToDataTable(" +
+                        "       [" +
+                        "       ['Country', '" + label + "']," +
                         dataToLoad +
-                        "]);" +
-                        "var options = {keepAspectRatio: true, region: 'world', colorAxis: { colors: [ '#FFF088', '#F34605' ] }, enableRegionInteractivity: true};" +
-                        "var chart = new google.visualization.GeoChart(document.getElementById('regions_div'));" +
-                        "chart.draw(data, options);" +
-                        "}" +
+                        "       ]);" +
+                        "       var options = {keepAspectRatio: true, region: 'world', colorAxis: { colors: [ '#FFF088', '#F34605' ] }, enableRegionInteractivity: true};" +
+                        "       var chart = new google.visualization.GeoChart(document.getElementById('regions_div'));" +
+                        "       chart.draw(data, options);" +
+                        "   }" +
                         "</script>" +
                         "</head>" +
                         "<body>" +
