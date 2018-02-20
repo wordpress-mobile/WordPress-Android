@@ -32,13 +32,19 @@ import javax.inject.Singleton;
 @Singleton
 public class PluginStore extends Store {
     // Request payloads
+    @SuppressWarnings("WeakerAccess")
     public static class ConfigureSitePluginPayload extends Payload<BaseNetworkError> {
         public SiteModel site;
-        public SitePluginModel plugin;
+        public String pluginName;
+        public boolean isActive;
+        public boolean isAutoUpdateEnabled;
 
-        public ConfigureSitePluginPayload(SiteModel site, SitePluginModel plugin) {
+        public ConfigureSitePluginPayload(SiteModel site, String pluginName, boolean isActive,
+                                          boolean isAutoUpdateEnabled) {
             this.site = site;
-            this.plugin = plugin;
+            this.pluginName = pluginName;
+            this.isActive = isActive;
+            this.isAutoUpdateEnabled = isAutoUpdateEnabled;
         }
     }
 
@@ -103,18 +109,18 @@ public class PluginStore extends Store {
 
     public static class ConfiguredSitePluginPayload extends Payload<ConfigureSitePluginError> {
         public SiteModel site;
-        public String slug;
+        public String pluginName;
         public SitePluginModel plugin;
 
         public ConfiguredSitePluginPayload(SiteModel site, SitePluginModel plugin) {
             this.site = site;
             this.plugin = plugin;
-            this.slug = this.plugin.getSlug();
+            this.pluginName = this.plugin.getName();
         }
 
-        public ConfiguredSitePluginPayload(SiteModel site, String slug, ConfigureSitePluginError error) {
+        public ConfiguredSitePluginPayload(SiteModel site, String pluginName, ConfigureSitePluginError error) {
             this.site = site;
-            this.slug = slug;
+            this.pluginName = pluginName;
             this.error = error;
         }
     }
@@ -454,10 +460,10 @@ public class PluginStore extends Store {
     @SuppressWarnings("WeakerAccess")
     public static class OnSitePluginConfigured extends OnChanged<ConfigureSitePluginError> {
         public SiteModel site;
-        public String slug;
-        public OnSitePluginConfigured(SiteModel site, String slug) {
+        public String pluginName;
+        public OnSitePluginConfigured(SiteModel site, String pluginName) {
             this.site = site;
-            this.slug = slug;
+            this.pluginName = pluginName;
         }
     }
 
@@ -623,11 +629,12 @@ public class PluginStore extends Store {
 
     private void configureSitePlugin(ConfigureSitePluginPayload payload) {
         if (payload.site.isUsingWpComRestApi() && payload.site.isJetpackConnected()) {
-            mPluginRestClient.configureSitePlugin(payload.site, payload.plugin);
+            mPluginRestClient.configureSitePlugin(payload.site, payload.pluginName, payload.isActive,
+                    payload.isAutoUpdateEnabled);
         } else {
             ConfigureSitePluginError error = new ConfigureSitePluginError(ConfigureSitePluginErrorType.NOT_AVAILABLE);
             ConfiguredSitePluginPayload errorPayload = new ConfiguredSitePluginPayload(payload.site,
-                    payload.plugin.getSlug(), error);
+                    payload.pluginName, error);
             configuredSitePlugin(errorPayload);
         }
     }
@@ -710,12 +717,12 @@ public class PluginStore extends Store {
     // Network callbacks
 
     private void configuredSitePlugin(ConfiguredSitePluginPayload payload) {
-        OnSitePluginConfigured event = new OnSitePluginConfigured(payload.site, payload.slug);
+        OnSitePluginConfigured event = new OnSitePluginConfigured(payload.site, payload.pluginName);
         if (payload.isError()) {
             event.error = payload.error;
         } else {
             payload.plugin.setLocalSiteId(payload.site.getId());
-            PluginSqlUtils.insertOrUpdateSitePlugin(payload.plugin);
+            PluginSqlUtils.insertOrUpdateSitePlugin(payload.site, payload.plugin);
         }
         emitChange(event);
     }
@@ -777,7 +784,7 @@ public class PluginStore extends Store {
         if (payload.isError()) {
             event.error = payload.error;
         } else {
-            PluginSqlUtils.insertOrUpdateSitePlugin(payload.plugin);
+            PluginSqlUtils.insertOrUpdateSitePlugin(payload.site, payload.plugin);
         }
         emitChange(event);
     }
@@ -806,7 +813,7 @@ public class PluginStore extends Store {
         if (payload.isError()) {
             event.error = payload.error;
         } else {
-            PluginSqlUtils.insertOrUpdateSitePlugin(payload.plugin);
+            PluginSqlUtils.insertOrUpdateSitePlugin(payload.site, payload.plugin);
         }
         emitChange(event);
     }
