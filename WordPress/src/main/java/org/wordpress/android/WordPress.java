@@ -205,8 +205,6 @@ public class WordPress extends MultiDexApplication implements HasServiceInjector
         mContext = this;
         long startDate = SystemClock.elapsedRealtime();
 
-        disableRtlLayoutDirectionOnSdk17();
-
         // Init WellSql
         WellSql.init(new WellSqlConfig(getApplicationContext()));
 
@@ -276,6 +274,8 @@ public class WordPress extends MultiDexApplication implements HasServiceInjector
 
         // If users uses a custom locale set it on start of application
         WPActivityUtils.applyLocale(getContext());
+
+        disableRtlLayoutDirectionOnSdk17();
 
         // Allows vector drawable from resources (in selectors for instance) on Android < 21 (can cause issues
         // with memory usage and the use of Configuration). More informations:

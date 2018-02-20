@@ -6,6 +6,7 @@ import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.content.res.Resources;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.preference.ListPreference;
 import android.preference.Preference;
@@ -283,6 +284,9 @@ public class AppSettingsFragment extends PreferenceFragment implements OnPrefere
 
         // update configuration
         conf.locale = newLocale;
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
+            conf.setLayoutDirection(newLocale);
+        }
         res.updateConfiguration(conf, res.getDisplayMetrics());
 
         // Track language change on Analytics because we have both the device language and app selected language
