@@ -146,6 +146,13 @@ public class ImmutablePluginModel {
         return null;
     }
 
+    public @Nullable String getRating() {
+        if (mWPOrgPlugin != null) {
+            return mWPOrgPlugin.getRating();
+        }
+        return null;
+    }
+
     public @Nullable String getRequiredWordPressVersion() {
         if (mWPOrgPlugin != null) {
             return mWPOrgPlugin.getRequiredWordPressVersion();
