@@ -31,14 +31,14 @@
 
                 <RelativeLayout
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/margin_extra_large">
+                    android:layout_height="wrap_content">
 
                     <TextView
                         android:id="@+id/text_installed"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="@dimen/margin_extra_large"
+                        android:layout_marginTop="@dimen/margin_extra_large"
                         android:text="@string/plugin_caption_installed"
                         android:textColor="@color/grey_dark"
                         android:textSize="@dimen/text_sz_large" />
@@ -47,8 +47,13 @@
                         android:id="@+id/text_manage"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:minHeight="@dimen/min_touch_target_sz"
                         android:layout_alignParentRight="true"
-                        android:layout_marginRight="@dimen/margin_extra_large"
+                        android:paddingEnd="@dimen/margin_extra_large"
+                        android:paddingLeft="@dimen/margin_extra_large"
+                        android:paddingRight="@dimen/margin_extra_large"
+                        android:paddingStart="@dimen/margin_extra_large"
+                        android:paddingTop="@dimen/margin_extra_large"
                         android:background="?android:attr/selectableItemBackground"
                         android:text="@string/plugin_manage"
                         android:textAllCaps="true"
@@ -60,7 +65,7 @@
                         android:id="@+id/installed_plugins_recycler"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_below="@+id/text_installed"
+                        android:layout_below="@+id/text_manage"
                         android:layout_marginBottom="@dimen/margin_small"
                         android:layout_marginTop="@dimen/margin_small"
                         android:scrollbars="none" />
@@ -79,14 +84,14 @@
 
                 <RelativeLayout
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/margin_extra_large">
+                    android:layout_height="wrap_content">
 
                     <TextView
                         android:id="@+id/text_popular"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="@dimen/margin_extra_large"
+                        android:layout_marginTop="@dimen/margin_extra_large"
                         android:text="@string/plugin_caption_popular"
                         android:textColor="@color/grey_dark"
                         android:textSize="@dimen/text_sz_large" />
@@ -95,8 +100,13 @@
                         android:id="@+id/text_all_popular"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:minHeight="@dimen/min_touch_target_sz"
                         android:layout_alignParentRight="true"
-                        android:layout_marginRight="@dimen/margin_extra_large"
+                        android:paddingEnd="@dimen/margin_extra_large"
+                        android:paddingLeft="@dimen/margin_extra_large"
+                        android:paddingRight="@dimen/margin_extra_large"
+                        android:paddingStart="@dimen/margin_extra_large"
+                        android:paddingTop="@dimen/margin_extra_large"
                         android:background="?android:attr/selectableItemBackground"
                         android:text="@string/plugin_see_all"
                         android:textAllCaps="true"
@@ -108,7 +118,7 @@
                         android:id="@+id/popular_plugins_recycler"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_below="@+id/text_popular"
+                        android:layout_below="@+id/text_all_popular"
                         android:layout_marginBottom="@dimen/margin_small"
                         android:layout_marginTop="@dimen/margin_small"
                         android:scrollbars="none" />
@@ -128,7 +138,6 @@
                 <RelativeLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/margin_extra_large"
                     android:orientation="vertical">
 
                     <TextView
@@ -136,6 +145,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="@dimen/margin_extra_large"
+                        android:layout_marginTop="@dimen/margin_extra_large"
                         android:text="@string/plugin_caption_new"
                         android:textColor="@color/grey_dark"
                         android:textSize="@dimen/text_sz_large" />
@@ -144,8 +154,13 @@
                         android:id="@+id/text_all_new"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:minHeight="@dimen/min_touch_target_sz"
                         android:layout_alignParentRight="true"
-                        android:layout_marginRight="@dimen/margin_extra_large"
+                        android:paddingEnd="@dimen/margin_extra_large"
+                        android:paddingLeft="@dimen/margin_extra_large"
+                        android:paddingRight="@dimen/margin_extra_large"
+                        android:paddingStart="@dimen/margin_extra_large"
+                        android:paddingTop="@dimen/margin_extra_large"
                         android:background="?android:attr/selectableItemBackground"
                         android:text="@string/plugin_see_all"
                         android:textAllCaps="true"
@@ -157,7 +172,7 @@
                         android:id="@+id/new_plugins_recycler"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_below="@+id/text_new"
+                        android:layout_below="@+id/text_all_new"
                         android:layout_marginBottom="@dimen/margin_small"
                         android:layout_marginTop="@dimen/margin_small"
                         android:scrollbars="none" />

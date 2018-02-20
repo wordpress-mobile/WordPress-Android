@@ -178,6 +178,12 @@ public class PluginBrowserViewModel extends ViewModel {
         mPopularPlugins.setValue(mPluginStore.getPluginDirectory(PluginDirectoryType.POPULAR));
     }
 
+    // Pull to refresh
+
+    public void pullToRefresh(@NonNull PluginListType pluginListType) {
+        fetchPlugins(pluginListType, false);
+    }
+
     // Network Requests
 
     private void fetchPlugins(@NonNull PluginListType listType, boolean loadMore) {
@@ -211,6 +217,10 @@ public class PluginBrowserViewModel extends ViewModel {
     }
 
     private boolean shouldFetchPlugins(PluginListType listType, boolean loadMore) {
+        if (loadMore && !isLoadMoreEnabled(listType)) {
+            // If we are trying to load more and it's not allowed
+            return false;
+        }
         switch (listType) {
             case SITE:
                 if (getSitePluginsListStatus().getValue() == PluginListStatus.FETCHING) {
@@ -250,7 +260,14 @@ public class PluginBrowserViewModel extends ViewModel {
     }
 
     public void loadMore(PluginListType listType) {
-        fetchPlugins(listType, true);
+        if (isLoadMoreEnabled(listType)) {
+            fetchPlugins(listType, true);
+        }
+    }
+
+    private boolean isLoadMoreEnabled(PluginListType listType) {
+        // We don't use pagination for Site plugins or Search results
+        return listType != PluginListType.SITE && listType != PluginListType.SEARCH;
     }
 
     // Network Callbacks
