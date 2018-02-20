@@ -1,0 +1,27 @@
+#!/bin/sh
+
+# Screenshot tool configuration file
+# In order to use the tool, copy this example to screenshots-config.sh
+# and fill the required fields.
+
+# Android SDK path (required)
+ANDROID_SDK_DIR=
+
+# Login (required)
+LOGIN_USERNAME=
+LOGIN_PASSWORD=
+
+# Uncomment the following APK key in order to override the default used apk
+# APK=../WordPress/build/outputs/apk/wasabi/debug/WordPress-wasabi-debug.apk
+
+# Uncomment the following PKG key in order to override the default used package config
+# Valid options are $PKG_DEBUG and $PKG_RELEASE
+# PKG=$PKG_DEBUG
+
+# Uncomment the following DEV_NAME key in order to override the default device/emulator name
+# DEV_NAME=Nexus_5X_API_25_SCREENSHOTS
+
+# Uncomment the following RUN_DEV key in order to override the default device
+# Valid emulator devices are: emu-phone, emu-tab7, emu-tab10 or emu-all to run all of them
+# Valid real devices are: dev-phone, dev-tab7, dev-tab10
+# RUN_DEV=emu-all

@@ -53,8 +53,10 @@ WordPress/src/androidTest/monkeys/*.png
 # Windows Backup
 *.bak
 
-# Automatic Screenshots token file
-tools/tokendeeplink.sh
-
 # Google services configuration
 google-services.json
+
+# Automatic Screenshots token file
+tools/tokendeeplink.sh
+tools/screenshots-config.sh
+tools/autoscreenshot/
