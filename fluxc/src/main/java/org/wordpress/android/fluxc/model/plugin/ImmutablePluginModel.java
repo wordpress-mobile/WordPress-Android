@@ -3,6 +3,7 @@ package org.wordpress.android.fluxc.model.plugin;
 import android.support.annotation.Nullable;
 
 import org.wordpress.android.util.HtmlUtils;
+import org.wordpress.android.util.StringUtils;
 
 @SuppressWarnings("unused")
 public class ImmutablePluginModel {
@@ -38,6 +39,14 @@ public class ImmutablePluginModel {
             return mWPOrgPlugin.getSlug();
         }
         return null;
+    }
+
+    public int getAverageStarRating() {
+        if (mWPOrgPlugin == null) {
+            return 0;
+        }
+        int rating = StringUtils.stringToInt(mWPOrgPlugin.getRating(), 1);
+        return Math.round(rating / 20f);
     }
 
     public @Nullable String getAuthorAsHtml() {
