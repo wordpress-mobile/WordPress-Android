@@ -89,12 +89,6 @@ public class UserNoteBlock extends NoteBlock {
             String imageUrl = GravatarUtils.fixGravatarUrl(getNoteMediaItem().optString("url", ""), getAvatarSize());
             noteBlockHolder.avatarImageView.setImageUrl(imageUrl, WPNetworkImageView.ImageType.AVATAR);
             if (!TextUtils.isEmpty(getUserUrl())) {
-                noteBlockHolder.avatarImageView.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        showBlogPreview();
-                    }
-                });
                 //noinspection AndroidLintClickableViewAccessibility
                 noteBlockHolder.avatarImageView.setOnTouchListener(mOnGravatarTouchListener);
                 noteBlockHolder.rootView.setEnabled(true);
@@ -107,6 +101,7 @@ public class UserNoteBlock extends NoteBlock {
             }
         } else {
             noteBlockHolder.avatarImageView.showDefaultGravatarImageAndNullifyUrl();
+            noteBlockHolder.rootView.setOnClickListener(null);
             //noinspection AndroidLintClickableViewAccessibility
             noteBlockHolder.avatarImageView.setOnTouchListener(null);
         }

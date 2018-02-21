@@ -75,6 +75,7 @@ public class HeaderNoteBlock extends NoteBlock {
             //noinspection AndroidLintClickableViewAccessibility
             noteBlockHolder.avatarImageView.setOnTouchListener(mOnGravatarTouchListener);
         } else {
+            noteBlockHolder.avatarImageView.setOnClickListener(null);
             //noinspection AndroidLintClickableViewAccessibility
             noteBlockHolder.avatarImageView.setOnTouchListener(null);
         }

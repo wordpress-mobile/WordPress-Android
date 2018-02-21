@@ -87,11 +87,13 @@ public class CommentUserNoteBlock extends UserNoteBlock {
                 //noinspection AndroidLintClickableViewAccessibility
                 noteBlockHolder.avatarImageView.setOnTouchListener(mOnGravatarTouchListener);
             } else {
+                noteBlockHolder.avatarImageView.setOnClickListener(null);
                 //noinspection AndroidLintClickableViewAccessibility
                 noteBlockHolder.avatarImageView.setOnTouchListener(null);
             }
         } else {
             noteBlockHolder.avatarImageView.showDefaultGravatarImageAndNullifyUrl();
+            noteBlockHolder.avatarImageView.setOnClickListener(null);
             //noinspection AndroidLintClickableViewAccessibility
             noteBlockHolder.avatarImageView.setOnTouchListener(null);
         }
