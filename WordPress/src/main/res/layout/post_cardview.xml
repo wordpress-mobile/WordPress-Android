@@ -24,6 +24,7 @@
             android:layout_below="@+id/layout_post_header"
             android:scaleType="centerCrop"
             android:visibility="gone"
+            android:contentDescription="@string/post_cardview_featured_desc"
             tools:visibility="visible" />
 
         <org.wordpress.android.widgets.WPTextView
@@ -69,6 +70,7 @@
                 android:layout_height="16dp"
                 android:layout_gravity="center"
                 android:layout_marginRight="@dimen/margin_small"
+                android:contentDescription="@null"
                 tools:src="@drawable/ic_gridicons_cloud_upload"
                 />
 

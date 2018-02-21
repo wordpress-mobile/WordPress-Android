@@ -20,7 +20,8 @@
         <ImageView
             android:layout_width="@dimen/stats_widget_icon_size"
             android:layout_height="@dimen/stats_widget_icon_size"
-            app:srcCompat="@drawable/ic_my_sites_white_32dp" />
+            app:srcCompat="@drawable/ic_my_sites_white_32dp"
+            android:contentDescription="@null"/>
 
         <TextView
             android:id="@+id/blog_title"
@@ -72,6 +73,7 @@
                     android:layout_height="@dimen/stats_widget_image_layout_size"
                     android:layout_marginRight="@dimen/stats_widget_image_layout_margin"
                     android:layout_marginEnd="@dimen/stats_widget_image_layout_margin"
+                    android:contentDescription="@null"
                     app:srcCompat="@drawable/ic_visible_on_grey_dark_12dp" />
 
                 <TextView
@@ -118,6 +120,7 @@
                     android:layout_height="@dimen/stats_widget_image_layout_size"
                     android:layout_marginRight="@dimen/stats_widget_image_layout_margin"
                     android:layout_marginEnd="@dimen/stats_widget_image_layout_margin"
+                    android:contentDescription="@null"
                     app:srcCompat="@drawable/ic_user_grey_dark_12dp" />
 
                 <TextView
@@ -164,6 +167,7 @@
                     android:layout_height="@dimen/stats_widget_image_layout_size"
                     android:layout_marginRight="@dimen/stats_widget_image_layout_margin"
                     android:layout_marginEnd="@dimen/stats_widget_image_layout_margin"
+                    android:contentDescription="@null"
                     app:srcCompat="@drawable/ic_star_grey_dark_12dp" />
 
                 <TextView
@@ -210,6 +214,7 @@
                     android:layout_height="@dimen/stats_widget_image_layout_size"
                     android:layout_marginRight="@dimen/stats_widget_image_layout_margin"
                     android:layout_marginEnd="@dimen/stats_widget_image_layout_margin"
+                    android:contentDescription="@null"
                     app:srcCompat="@drawable/ic_comment_grey_dark_12dp" />
 
                 <TextView

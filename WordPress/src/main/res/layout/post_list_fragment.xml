@@ -23,6 +23,7 @@
             android:layout_width="112dp"
             android:layout_height="86dp"
             android:layout_marginBottom="@dimen/margin_medium"
+            android:contentDescription="@null"
             app:srcCompat="@drawable/penandink_223dp" />
 
         <org.wordpress.android.widgets.WPTextView

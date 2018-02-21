@@ -23,5 +23,6 @@
         android:layout_height="wrap_content"
         android:layout_gravity="top"
         android:src="@drawable/ic_cross_grey_600_24dp"
+        android:contentDescription="@string/invite_user_delete_desc"
         android:background="?attr/selectableItemBackgroundBorderless"/>
 </LinearLayout>

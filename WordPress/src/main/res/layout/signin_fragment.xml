@@ -65,6 +65,7 @@
                         android:layout_height="72dp"
                         android:layout_width="wrap_content"
                         android:scaleType="fitCenter"
+                        android:contentDescription="@string/sign_in_logo_desc"
                         app:srcCompat="@drawable/img_wordpress_com_white_144dp" >
                     </ImageView>
 
@@ -73,6 +74,7 @@
                         android:layout_height="50dp"
                         android:layout_width="50dp"
                         android:scaleType="fitCenter"
+                        android:contentDescription="@null"
                         app:srcCompat="@drawable/img_wordpress_org_blue_wordpress_50dp" >
                     </ImageView>
 
@@ -134,6 +136,7 @@
                     android:layout_gravity="center_horizontal"
                     android:layout_marginLeft="10dp"
                     android:layout_marginStart="10dp"
+                    android:contentDescription="@null"
                     app:srcCompat="@drawable/ic_user_black_24dp"
                     android:tint="@color/grey_darken_10" />
             </RelativeLayout>
@@ -167,6 +170,7 @@
                     android:layout_gravity="center_horizontal"
                     android:layout_marginLeft="10dp"
                     android:layout_marginStart="10dp"
+                    android:contentDescription="@null"
                     app:srcCompat="@drawable/ic_lock_black_24dp"
                     android:tint="@color/grey_darken_10" />
 
@@ -182,6 +186,7 @@
                     android:layout_gravity="center_horizontal"
                     android:layout_marginRight="16dp"
                     android:layout_marginEnd="16dp"
+                    android:contentDescription="@string/sign_in_password_visibility_desc"
                     app:srcCompat="@drawable/ic_visible_off_black_24dp"
                     android:tint="@color/nux_eye_icon_color_closed" />
             </RelativeLayout>
@@ -235,6 +240,7 @@
                     android:layout_gravity="center_horizontal"
                     android:layout_marginLeft="10dp"
                     android:layout_marginStart="10dp"
+                    android:contentDescription="@null"
                     app:srcCompat="@drawable/ic_globe_black_24dp"
                     android:tint="@color/grey_darken_10" />
             </RelativeLayout>
