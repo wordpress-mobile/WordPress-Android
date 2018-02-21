@@ -12,6 +12,7 @@ import org.wordpress.android.fluxc.annotations.action.Action;
 import org.wordpress.android.fluxc.annotations.action.IAction;
 import org.wordpress.android.fluxc.generated.PluginActionBuilder;
 import org.wordpress.android.fluxc.model.SiteModel;
+import org.wordpress.android.fluxc.model.plugin.ImmutablePluginModel;
 import org.wordpress.android.fluxc.model.plugin.PluginDirectoryModel;
 import org.wordpress.android.fluxc.model.plugin.PluginDirectoryType;
 import org.wordpress.android.fluxc.model.plugin.SitePluginModel;
@@ -457,7 +458,7 @@ public class PluginStore extends Store {
         public String searchTerm;
         public int page;
         public boolean canLoadMore;
-        public List<WPOrgPluginModel> plugins;
+        public List<ImmutablePluginModel> plugins;
 
         public OnPluginDirectorySearched(@Nullable SiteModel site, String searchTerm, int page) {
             this.site = site;
@@ -600,20 +601,39 @@ public class PluginStore extends Store {
         }
     }
 
-    public @NonNull List<WPOrgPluginModel> getPluginDirectory(PluginDirectoryType type) {
-        return PluginSqlUtils.getWPOrgPluginsForDirectory(type);
+    public @NonNull List<ImmutablePluginModel> getPluginDirectory(@NonNull SiteModel site, PluginDirectoryType type) {
+        // Site plugins are handled differently
+        if (type == PluginDirectoryType.SITE) {
+            return getSitePlugins(site);
+        }
+        List<ImmutablePluginModel> immutablePlugins = new ArrayList<>();
+        List<WPOrgPluginModel> wpOrgPlugins = PluginSqlUtils.getWPOrgPluginsForDirectory(type);
+        for (WPOrgPluginModel wpOrgPlugin : wpOrgPlugins) {
+            String slug = wpOrgPlugin.getSlug();
+            SitePluginModel sitePlugin = PluginSqlUtils.getSitePluginBySlug(site, slug);
+            immutablePlugins.add(ImmutablePluginModel.newInstance(sitePlugin, wpOrgPlugin));
+        }
+        return immutablePlugins;
     }
 
-    public SitePluginModel getSitePluginBySlug(SiteModel site, String slug) {
-        return PluginSqlUtils.getSitePluginBySlug(site, slug);
+    public @Nullable ImmutablePluginModel getImmutablePluginBySlug(@NonNull SiteModel site, String slug) {
+        SitePluginModel sitePlugin = PluginSqlUtils.getSitePluginBySlug(site, slug);
+        WPOrgPluginModel wpOrgPlugin = PluginSqlUtils.getWPOrgPluginBySlug(slug);
+        return ImmutablePluginModel.newInstance(sitePlugin, wpOrgPlugin);
     }
 
-    public @NonNull List<SitePluginModel> getSitePlugins(SiteModel site) {
-        return PluginSqlUtils.getSitePlugins(site);
-    }
-
-    public @Nullable WPOrgPluginModel getWPOrgPluginBySlug(String slug) {
-        return PluginSqlUtils.getWPOrgPluginBySlug(slug);
+    private @NonNull List<ImmutablePluginModel> getSitePlugins(@NonNull SiteModel site) {
+        List<ImmutablePluginModel> immutablePlugins = new ArrayList<>();
+        List<SitePluginModel> sitePlugins = PluginSqlUtils.getSitePlugins(site);
+        for (SitePluginModel sitePluginModel : sitePlugins) {
+            String slug = sitePluginModel.getSlug();
+            WPOrgPluginModel wpOrgPluginModel = PluginSqlUtils.getWPOrgPluginBySlug(slug);
+            if (wpOrgPluginModel == null) {
+                mDispatcher.dispatch(PluginActionBuilder.newFetchWporgPluginAction(slug));
+            }
+            immutablePlugins.add(ImmutablePluginModel.newInstance(sitePluginModel, wpOrgPluginModel));
+        }
+        return immutablePlugins;
     }
 
     // Remote actions
@@ -785,7 +805,15 @@ public class PluginStore extends Store {
             event.error = payload.error;
         } else {
             event.canLoadMore = payload.canLoadMore;
-            event.plugins = payload.plugins;
+            List<ImmutablePluginModel> immutablePluginList = new ArrayList<>();
+            for (WPOrgPluginModel wpOrgPlugin : payload.plugins) {
+                SitePluginModel sitePlugin = null;
+                if (payload.site != null) {
+                    sitePlugin = PluginSqlUtils.getSitePluginBySlug(payload.site, wpOrgPlugin.getSlug());
+                }
+                immutablePluginList.add(ImmutablePluginModel.newInstance(sitePlugin, wpOrgPlugin));
+            }
+            event.plugins = immutablePluginList;
         }
         emitChange(event);
     }
