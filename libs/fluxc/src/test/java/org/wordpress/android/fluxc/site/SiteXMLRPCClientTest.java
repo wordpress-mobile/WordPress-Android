@@ -158,7 +158,7 @@ public class SiteXMLRPCClientTest {
             @Override
             public Object answer(InvocationOnMock invocation) throws Throwable {
                 // Expect an OnUnexpectedError to be emitted with a parse error
-                OnUnexpectedError event = invocation.getArgumentAt(0, OnUnexpectedError.class);
+                OnUnexpectedError event = invocation.getArgument(0);
                 assertEquals(site.getXmlRpcUrl(), event.extras.get(OnUnexpectedError.KEY_URL));
                 assertEquals("whoops", event.extras.get(OnUnexpectedError.KEY_RESPONSE));
                 assertEquals(ClassCastException.class, event.exception.getClass());
@@ -172,7 +172,7 @@ public class SiteXMLRPCClientTest {
             @Override
             public Object answer(InvocationOnMock invocation) throws Throwable {
                 // Expect UPDATE_SITE to be dispatched with an INVALID_RESPONSE error
-                Action action = invocation.getArgumentAt(0, Action.class);
+                Action action = invocation.getArgument(0);
                 assertEquals(SiteAction.UPDATE_SITE, action.getType());
 
                 SiteModel result = (SiteModel) action.getPayload();
@@ -223,7 +223,7 @@ public class SiteXMLRPCClientTest {
             @Override
             public Object answer(InvocationOnMock invocation) throws Throwable {
                 // Expect an OnUnexpectedError to be emitted with a parse error
-                OnUnexpectedError event = invocation.getArgumentAt(0, OnUnexpectedError.class);
+                OnUnexpectedError event = invocation.getArgument(0);
                 assertEquals(xmlrpcUrl, event.extras.get(OnUnexpectedError.KEY_URL));
                 assertEquals("disaster!", event.extras.get(OnUnexpectedError.KEY_RESPONSE));
                 assertEquals(ClassCastException.class, event.exception.getClass());
@@ -237,7 +237,7 @@ public class SiteXMLRPCClientTest {
             @Override
             public Object answer(InvocationOnMock invocation) throws Throwable {
                 // Expect UPDATE_SITES to be dispatched with an INVALID_RESPONSE error
-                Action action = invocation.getArgumentAt(0, Action.class);
+                Action action = invocation.getArgument(0);
                 assertEquals(SiteAction.FETCHED_SITES_XML_RPC, action.getType());
 
                 SitesModel result = (SitesModel) action.getPayload();

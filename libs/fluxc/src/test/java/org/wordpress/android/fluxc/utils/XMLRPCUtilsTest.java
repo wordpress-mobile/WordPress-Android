@@ -1,8 +1,6 @@
 package org.wordpress.android.fluxc.utils;
 
 import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.robolectric.RobolectricTestRunner;
 import org.wordpress.android.fluxc.network.xmlrpc.XMLRPCUtils;
 
 import java.sql.Time;
@@ -14,7 +12,6 @@ import java.util.Random;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.core.IsEqual.equalTo;
 
-@RunWith(RobolectricTestRunner.class)
 public class XMLRPCUtilsTest {
     @Test
     public void testDefaultValueString() {

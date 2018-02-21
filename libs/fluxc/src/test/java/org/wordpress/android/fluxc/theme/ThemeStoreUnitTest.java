@@ -139,26 +139,11 @@ public class ThemeStoreUnitTest {
     }
 
     @Test
-    public void testGetWpThemesAsCursor() {
-        final List<ThemeModel> firstTestThemes = generateThemesTestList(20);
-        final List<ThemeModel> secondTestThemes = generateThemesTestList(30);
-
-        // insert themes and verify count
-        assertEquals(0, mThemeStore.getWpComThemesCursor().getCount());
-        ThemeSqlUtils.insertOrReplaceWpComThemes(firstTestThemes);
-        assertEquals(firstTestThemes.size(), mThemeStore.getWpComThemesCursor().getCount());
-
-        // insert new themes list and verify count
-        ThemeSqlUtils.insertOrReplaceWpComThemes(secondTestThemes);
-        assertEquals(secondTestThemes.size(), mThemeStore.getWpComThemesCursor().getCount());
-    }
-
-    @Test
     public void testRemoveThemesWithNoSite() {
         final List<ThemeModel> testThemes = generateThemesTestList(20);
 
         // insert and verify count
-        assertEquals(0, mThemeStore.getWpComThemesCursor().getCount());
+        assertEquals(0, mThemeStore.getWpComThemes().size());
         ThemeSqlUtils.insertOrReplaceWpComThemes(testThemes);
         assertEquals(testThemes.size(), mThemeStore.getWpComThemes().size());
 
