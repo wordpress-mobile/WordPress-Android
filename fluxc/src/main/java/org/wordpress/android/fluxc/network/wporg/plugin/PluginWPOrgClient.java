@@ -1,6 +1,7 @@
 package org.wordpress.android.fluxc.network.wporg.plugin;
 
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.text.TextUtils;
 
 import com.android.volley.Request.Method;
@@ -11,6 +12,7 @@ import org.apache.commons.text.StringEscapeUtils;
 import org.wordpress.android.fluxc.Dispatcher;
 import org.wordpress.android.fluxc.generated.PluginActionBuilder;
 import org.wordpress.android.fluxc.generated.endpoint.WPORGAPI;
+import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.model.plugin.PluginDirectoryType;
 import org.wordpress.android.fluxc.model.plugin.WPOrgPluginModel;
 import org.wordpress.android.fluxc.network.BaseRequest.BaseErrorListener;
@@ -55,15 +57,17 @@ public class PluginWPOrgClient extends BaseWPOrgAPIClient {
                         new Listener<FetchPluginDirectoryResponse>() {
                             @Override
                             public void onResponse(FetchPluginDirectoryResponse response) {
-                                FetchedPluginDirectoryPayload payload =
-                                        new FetchedPluginDirectoryPayload(directoryType, loadMore);
+                                FetchedPluginDirectoryPayload payload;
                                 if (response != null) {
-                                    payload.canLoadMore = response.info.page < response.info.pages;
-                                    payload.page = response.info.page;
-                                    payload.plugins = wpOrgPluginListFromResponse(response);
+                                    boolean canLoadMore = response.info.page < response.info.pages;
+                                    List<WPOrgPluginModel> wpOrgPlugins = wpOrgPluginListFromResponse(response);
+                                    payload = new FetchedPluginDirectoryPayload(directoryType, wpOrgPlugins,
+                                            loadMore, canLoadMore, response.info.page);
                                 } else {
-                                    payload.error = new PluginDirectoryError(
+                                    PluginDirectoryError directoryError = new PluginDirectoryError(
                                             PluginDirectoryErrorType.EMPTY_RESPONSE, null);
+                                    payload = new FetchedPluginDirectoryPayload(directoryType, loadMore,
+                                            directoryError);
                                 }
                                 mDispatcher.dispatch(PluginActionBuilder.newFetchedPluginDirectoryAction(payload));
                             }
@@ -71,10 +75,10 @@ public class PluginWPOrgClient extends BaseWPOrgAPIClient {
                         new BaseErrorListener() {
                             @Override
                             public void onErrorResponse(@NonNull BaseNetworkError networkError) {
-                                FetchedPluginDirectoryPayload payload =
-                                        new FetchedPluginDirectoryPayload(directoryType, loadMore);
-                                payload.error = new PluginDirectoryError(
+                                PluginDirectoryError directoryError = new PluginDirectoryError(
                                         PluginDirectoryErrorType.GENERIC_ERROR, networkError.message);
+                                FetchedPluginDirectoryPayload payload =
+                                        new FetchedPluginDirectoryPayload(directoryType, loadMore, directoryError);
                                 mDispatcher.dispatch(PluginActionBuilder.newFetchedPluginDirectoryAction(payload));
                             }
                         }
@@ -125,7 +129,7 @@ public class PluginWPOrgClient extends BaseWPOrgAPIClient {
         add(request);
     }
 
-    public void searchPluginDirectory(final String searchTerm, final int page) {
+    public void searchPluginDirectory(@Nullable final SiteModel site, final String searchTerm, final int page) {
         String url = WPORGAPI.plugins.info.version("1.1").getUrl();
         final Map<String, String> params = getCommonPluginDirectoryParams(page);
         params.put("request[search]", searchTerm);
@@ -135,7 +139,7 @@ public class PluginWPOrgClient extends BaseWPOrgAPIClient {
                             @Override
                             public void onResponse(FetchPluginDirectoryResponse response) {
                                 SearchedPluginDirectoryPayload payload =
-                                        new SearchedPluginDirectoryPayload(searchTerm, page);
+                                        new SearchedPluginDirectoryPayload(site, searchTerm, page);
                                 if (response != null) {
                                     payload.canLoadMore = response.info.page < response.info.pages;
                                     payload.plugins = wpOrgPluginListFromResponse(response);
@@ -150,7 +154,7 @@ public class PluginWPOrgClient extends BaseWPOrgAPIClient {
                             @Override
                             public void onErrorResponse(@NonNull BaseNetworkError networkError) {
                                 SearchedPluginDirectoryPayload payload =
-                                        new SearchedPluginDirectoryPayload(searchTerm, page);
+                                        new SearchedPluginDirectoryPayload(site, searchTerm, page);
                                 payload.error = new PluginDirectoryError(
                                         PluginDirectoryErrorType.GENERIC_ERROR, networkError.message);
                                 mDispatcher.dispatch(PluginActionBuilder.newSearchedPluginDirectoryAction(payload));

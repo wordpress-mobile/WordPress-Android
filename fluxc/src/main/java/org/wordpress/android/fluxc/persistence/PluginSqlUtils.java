@@ -2,6 +2,7 @@ package org.wordpress.android.fluxc.persistence;
 
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.text.TextUtils;
 
 import com.wellsql.generated.PluginDirectoryModelTable;
 import com.wellsql.generated.SitePluginModelTable;
@@ -46,20 +47,18 @@ public class PluginSqlUtils {
                 .endWhere().execute();
     }
 
-    public static int insertOrUpdateSitePlugin(SitePluginModel plugin) {
+    public static int insertOrUpdateSitePlugin(SiteModel site, SitePluginModel plugin) {
         if (plugin == null) {
             return 0;
         }
 
-        List<SitePluginModel> pluginResult = WellSql.select(SitePluginModel.class)
-                .where()
-                .equals(SitePluginModelTable.ID, plugin.getId())
-                .endWhere().getAsModel();
-        if (pluginResult.isEmpty()) {
+        SitePluginModel oldPlugin = getSitePluginBySlug(site, plugin.getSlug());
+        plugin.setLocalSiteId(site.getId()); // Make sure the site id is set (if the plugin is retrieved from network)
+        if (oldPlugin == null) {
             WellSql.insert(plugin).execute();
             return 1;
         } else {
-            int oldId = plugin.getId();
+            int oldId = oldPlugin.getId();
             return WellSql.update(SitePluginModel.class).whereId(oldId)
                     .put(plugin, new UpdateAllExceptId<>(SitePluginModel.class)).execute();
         }
@@ -72,28 +71,20 @@ public class PluginSqlUtils {
                 .endWhere().execute();
     }
 
-    public static int deleteSitePlugin(SiteModel site, SitePluginModel plugin) {
-        if (plugin == null) {
+    public static int deleteSitePlugin(SiteModel site, String slug) {
+        if (TextUtils.isEmpty(slug)) {
             return 0;
         }
         // The local id of the plugin might not be set if it's coming from a network request,
-        // using site id and name is a safer approach here
+        // using site id and slug is a safer approach here
         return WellSql.delete(SitePluginModel.class)
                 .where()
-                .equals(SitePluginModelTable.NAME, plugin.getName())
+                .equals(SitePluginModelTable.SLUG, slug)
                 .equals(SitePluginModelTable.LOCAL_SITE_ID, site.getId())
                 .endWhere().execute();
     }
 
-    public static @Nullable SitePluginModel getSitePluginByName(SiteModel site, String name) {
-        List<SitePluginModel> result = WellSql.select(SitePluginModel.class)
-                .where().equals(SitePluginModelTable.NAME, name)
-                .equals(SitePluginModelTable.LOCAL_SITE_ID, site.getId())
-                .endWhere().getAsModel();
-        return result.isEmpty() ? null : result.get(0);
-    }
-
-    public static SitePluginModel getSitePluginBySlug(SiteModel site, String slug) {
+    public static SitePluginModel getSitePluginBySlug(@NonNull SiteModel site, String slug) {
         List<SitePluginModel> result = WellSql.select(SitePluginModel.class)
                 .where().equals(SitePluginModelTable.SLUG, slug)
                 .equals(SitePluginModelTable.LOCAL_SITE_ID, site.getId())
