@@ -577,6 +577,8 @@ public class AnalyticsTrackerNosara extends Tracker {
                 return "people_management_details_opened";
             case OPENED_PLUGINS:
                 return "plugins_opened";
+            case OPENED_PLUGIN_DETAIL:
+                return "plugin_detail_opened";
             case CREATE_ACCOUNT_INITIATED:
                 return "account_create_initiated";
             case CREATE_ACCOUNT_EMAIL_EXISTS:
@@ -875,6 +877,8 @@ public class AnalyticsTrackerNosara extends Tracker {
                 return "plugin_removed";
             case PLUGIN_UPDATED:
                 return "plugin_updated";
+            case PLUGIN_INSTALLED:
+                return "plugin_installed";
             default:
                 return null;
         }
