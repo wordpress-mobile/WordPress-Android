@@ -109,4 +109,5 @@
 
     <!-- Image Descriptions for Accessibility -->
     <string name="login_site_address_help_image">The site address can be found in the navigation bar of your web browser</string>
+    <string name="toolbar_login_logo_desc">WordPress logo</string>
 </resources>
