@@ -18,6 +18,7 @@ public class JetpackSettingsModel {
     public boolean ssoRequireTwoFactor;
     public boolean serveImagesFromOurServers;
     public boolean lazyLoadImages;
+    public boolean commentLikes;
 
     public JetpackSettingsModel() {
         super();
@@ -37,6 +38,7 @@ public class JetpackSettingsModel {
         ssoActive = other.ssoActive;
         ssoMatchEmail = other.ssoMatchEmail;
         ssoRequireTwoFactor = other.ssoRequireTwoFactor;
+        commentLikes = other.commentLikes;
         jetpackProtectWhitelist.addAll(other.jetpackProtectWhitelist);
         serveImagesFromOurServers = other.serveImagesFromOurServers;
         lazyLoadImages = other.lazyLoadImages;
@@ -55,6 +57,7 @@ public class JetpackSettingsModel {
                 ssoRequireTwoFactor == otherModel.ssoRequireTwoFactor &&
                 serveImagesFromOurServers == otherModel.serveImagesFromOurServers &&
                 lazyLoadImages == otherModel.lazyLoadImages &&
+                commentLikes == otherModel.commentLikes &&
                 whitelistMatches(otherModel.jetpackProtectWhitelist);
     }
 

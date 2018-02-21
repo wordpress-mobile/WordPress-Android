@@ -241,6 +241,7 @@ class DotComSiteSettings extends SiteSettingsInterface {
                 mRemoteJpSettings.ssoActive = data.optBoolean("sso", false);
                 mRemoteJpSettings.ssoMatchEmail = data.optBoolean("jetpack_sso_match_by_email", false);
                 mRemoteJpSettings.ssoRequireTwoFactor = data.optBoolean("jetpack_sso_require_two_step", false);
+                mRemoteJpSettings.commentLikes = data.optBoolean("comment-likes", false);
 
                 JSONObject jetpackProtectWhitelist = data.optJSONObject("jetpack_protect_global_whitelist");
                 if (jetpackProtectWhitelist != null) {
@@ -265,6 +266,7 @@ class DotComSiteSettings extends SiteSettingsInterface {
                 mJpSettings.ssoActive = mRemoteJpSettings.ssoActive;
                 mJpSettings.ssoMatchEmail = mRemoteJpSettings.ssoMatchEmail;
                 mJpSettings.ssoRequireTwoFactor = mRemoteJpSettings.ssoRequireTwoFactor;
+                mJpSettings.commentLikes = mRemoteJpSettings.commentLikes;
                 onFetchResponseReceived(null);
             }
         }, new RestRequest.ErrorListener() {
