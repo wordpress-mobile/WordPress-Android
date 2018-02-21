@@ -97,7 +97,7 @@ public class ImmutablePluginModel {
         if (mSitePlugin != null) {
             return mSitePlugin.getDisplayName();
         } else if (mWPOrgPlugin != null) {
-            return mWPOrgPlugin.getName();
+            return mWPOrgPlugin.getDisplayName();
         }
         return null;
     }

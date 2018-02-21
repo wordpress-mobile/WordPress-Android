@@ -16,12 +16,12 @@ public class WPOrgPluginModel implements Identifiable, Serializable {
     @Column private String mAuthorName;
     @Column private String mBanner;
     @Column private String mDescriptionAsHtml;
+    @Column private String mDisplayName;
     @Column private String mFaqAsHtml;
     @Column private String mHomepageUrl;
     @Column private String mIcon;
     @Column private String mInstallationInstructionsAsHtml;
     @Column private String mLastUpdated;
-    @Column private String mName;
     @Column private String mRating;
     @Column private String mRequiredWordPressVersion;
     @Column private String mSlug;
@@ -77,6 +77,14 @@ public class WPOrgPluginModel implements Identifiable, Serializable {
         mDescriptionAsHtml = descriptionAsHtml;
     }
 
+    public String getDisplayName() {
+        return mDisplayName;
+    }
+
+    public void setDisplayName(String displayName) {
+        mDisplayName = displayName;
+    }
+
     public String getFaqAsHtml() {
         return mFaqAsHtml;
     }
@@ -115,14 +123,6 @@ public class WPOrgPluginModel implements Identifiable, Serializable {
 
     public void setLastUpdated(String lastUpdated) {
         mLastUpdated = lastUpdated;
-    }
-
-    public String getName() {
-        return mName;
-    }
-
-    public void setName(String name) {
-        mName = name;
     }
 
     public String getRating() {
