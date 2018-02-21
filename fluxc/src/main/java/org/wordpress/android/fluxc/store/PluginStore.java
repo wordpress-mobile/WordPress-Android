@@ -770,7 +770,7 @@ public class PluginStore extends Store {
                     // multiple sources. We fetch different directory types (same plugin can be in both new and popular)
                     // as well as do standalone fetches for plugins with `FETCH_WPORG_PLUGIN` action. We also need to
                     // keep track of the page the plugin belongs to, because the `per_page` parameter is unreliable.
-                    PluginSqlUtils.insertOrUpdatePluginDirectoryList(
+                    PluginSqlUtils.insertPluginDirectoryList(
                             pluginDirectoryListFromWPOrgPlugins(payload.wpOrgPlugins, payload.type, payload.page));
                     PluginSqlUtils.insertOrUpdateWPOrgPluginList(payload.wpOrgPlugins);
                 }
