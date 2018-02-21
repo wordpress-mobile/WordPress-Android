@@ -195,6 +195,7 @@ public class PluginStore extends Store {
         }
     }
 
+    @SuppressWarnings("WeakerAccess")
     public static class InstalledSitePluginPayload extends Payload<InstallSitePluginError> {
         public SiteModel site;
         public String slug;
@@ -529,6 +530,7 @@ public class PluginStore extends Store {
     private final PluginWPOrgClient mPluginWPOrgClient;
 
     @Inject
+    @SuppressWarnings("WeakerAccess")
     public PluginStore(Dispatcher dispatcher, PluginRestClient pluginRestClient, PluginWPOrgClient pluginWPOrgClient) {
         super(dispatcher);
         mPluginRestClient = pluginRestClient;
