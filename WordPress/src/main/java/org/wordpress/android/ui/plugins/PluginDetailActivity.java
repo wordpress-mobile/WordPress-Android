@@ -507,7 +507,7 @@ public class PluginDetailActivity extends AppCompatActivity {
         setRatingsProgressBar(R.id.progress1, mPlugin.getNumberOfRatingsOfOne(), numRatingsTotal);
 
         RatingBar ratingBar = findViewById(R.id.rating_bar);
-        ratingBar.setRating(PluginUtils.getAverageStarRating(mPlugin));
+        ratingBar.setRating(mPlugin.getAverageStarRating());
     }
 
     private void setRatingsProgressBar(@IdRes int progressResId, int numRatingsForStar, int numRatingsTotal) {

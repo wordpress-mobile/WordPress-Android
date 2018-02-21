@@ -310,7 +310,7 @@ public class PluginListFragment extends Fragment {
                 holder.statusText.setVisibility(View.GONE);
                 holder.statusIcon.setVisibility(View.GONE);
                 holder.ratingBar.setVisibility(View.VISIBLE);
-                holder.ratingBar.setRating(PluginUtils.getAverageStarRating(plugin));
+                holder.ratingBar.setRating(plugin.getAverageStarRating());
             }
 
             if (position == getItemCount() - 1) {

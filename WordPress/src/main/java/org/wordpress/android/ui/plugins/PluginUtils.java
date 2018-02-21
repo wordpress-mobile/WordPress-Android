@@ -5,10 +5,8 @@ import android.text.TextUtils;
 
 import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.model.plugin.ImmutablePluginModel;
-import org.wordpress.android.fluxc.model.plugin.WPOrgPluginModel;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.CrashlyticsUtils;
-import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.helpers.Version;
 
 public class PluginUtils {
@@ -32,14 +30,6 @@ public class PluginUtils {
             }
         }
         return false;
-    }
-
-    static int getAverageStarRating(@Nullable ImmutablePluginModel immutablePlugin) {
-        if (immutablePlugin == null || !immutablePlugin.doesHaveWPOrgPluginDetails()) {
-            return 0;
-        }
-        int rating = StringUtils.stringToInt(immutablePlugin.getRating(), 1);
-        return Math.round(rating / 20f);
     }
 
     static boolean isUpdateAvailable(@Nullable ImmutablePluginModel immutablePlugin) {
