@@ -112,6 +112,10 @@ public class PluginDirectorySqlUtilsTest {
         int numberOfNewPlugins = 30;
         int numberOfPopularPlugins = 40;
 
+        // Assert empty state - SQLite's WHERE IN query could crash if the empty list is not handled properly
+        Assert.assertEquals(0, PluginSqlUtils.getWPOrgPluginsForDirectory(PluginDirectoryType.NEW).size());
+        Assert.assertEquals(0, PluginSqlUtils.getWPOrgPluginsForDirectory(PluginDirectoryType.POPULAR).size());
+
         // Add plugin directory models for NEW type
         final List<String> slugListForNewPlugins = randomSlugsFromList(slugList, numberOfNewPlugins);
         List<PluginDirectoryModel> directoryListForNewPlugins = new ArrayList<>();
