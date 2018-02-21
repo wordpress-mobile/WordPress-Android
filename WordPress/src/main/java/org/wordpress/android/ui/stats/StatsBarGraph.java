@@ -95,7 +95,7 @@ class StatsBarGraph extends GraphView {
         }
     }
 
-    //TODO suppressed for now, as this will take us a bit more to make this view accessible
+    //TODO suppressed for now, as this will take us a bit more effort to make this view accessible
     //https://developer.android.com/guide/topics/ui/accessibility/custom-views.html
     @SuppressLint("ClickableViewAccessibility")
     @Override
