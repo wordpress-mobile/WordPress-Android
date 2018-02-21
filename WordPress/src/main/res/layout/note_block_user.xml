@@ -10,6 +10,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:clickable="true"
+        android:focusable="true"
         android:orientation="vertical"
         android:background="?android:selectableItemBackground"
         android:paddingLeft="@dimen/margin_extra_large"

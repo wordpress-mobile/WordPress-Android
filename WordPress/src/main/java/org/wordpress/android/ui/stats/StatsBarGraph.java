@@ -1,5 +1,6 @@
 package org.wordpress.android.ui.stats;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Color;
@@ -94,6 +95,9 @@ class StatsBarGraph extends GraphView {
         }
     }
 
+    //TODO suppressed for now, as this will take us a bit more effort to make this view accessible
+    //https://developer.android.com/guide/topics/ui/accessibility/custom-views.html
+    @SuppressLint("ClickableViewAccessibility")
     @Override
     public boolean onTouchEvent (MotionEvent event) {
         boolean handled = super.onTouchEvent(event);

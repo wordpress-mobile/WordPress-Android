@@ -1,5 +1,6 @@
 package org.wordpress.android.ui.notifications.blocks;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.text.Html;
 import android.text.TextUtils;
@@ -52,6 +53,7 @@ public class CommentUserNoteBlock extends UserNoteBlock {
         return R.layout.note_block_comment_user;
     }
 
+    @SuppressLint("ClickableViewAccessibility") //fixed by setting a click listener to avatarImageView
     @Override
     public View configureView(View view) {
         final CommentUserNoteBlockHolder noteBlockHolder = (CommentUserNoteBlockHolder)view.getTag();
@@ -76,12 +78,23 @@ public class CommentUserNoteBlock extends UserNoteBlock {
             String imageUrl = GravatarUtils.fixGravatarUrl(getNoteMediaItem().optString("url", ""), getAvatarSize());
             noteBlockHolder.avatarImageView.setImageUrl(imageUrl, WPNetworkImageView.ImageType.AVATAR);
             if (!TextUtils.isEmpty(getUserUrl())) {
+                noteBlockHolder.avatarImageView.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        showBlogPreview();
+                    }
+                });
+                //noinspection AndroidLintClickableViewAccessibility
                 noteBlockHolder.avatarImageView.setOnTouchListener(mOnGravatarTouchListener);
             } else {
+                noteBlockHolder.avatarImageView.setOnClickListener(null);
+                //noinspection AndroidLintClickableViewAccessibility
                 noteBlockHolder.avatarImageView.setOnTouchListener(null);
             }
         } else {
             noteBlockHolder.avatarImageView.showDefaultGravatarImageAndNullifyUrl();
+            noteBlockHolder.avatarImageView.setOnClickListener(null);
+            //noinspection AndroidLintClickableViewAccessibility
             noteBlockHolder.avatarImageView.setOnTouchListener(null);
         }
 

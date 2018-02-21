@@ -6,7 +6,8 @@
     android:layout_weight="1"
     android:orientation="horizontal"
     android:gravity="center"
-    android:clickable="true">
+    android:clickable="true"
+    android:focusable="true">
 
     <LinearLayout
         android:id="@+id/stats_visitors_and_views_tab_inner_container"

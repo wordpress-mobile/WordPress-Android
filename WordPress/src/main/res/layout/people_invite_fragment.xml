@@ -7,6 +7,7 @@
     android:layout_height="match_parent"
     android:background="@color/white"
     android:clickable="true"
+    android:focusable="true"
     android:clipToPadding="false"
     android:paddingLeft="16dp"
     android:paddingRight="16dp"

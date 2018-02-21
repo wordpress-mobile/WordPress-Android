@@ -1,5 +1,6 @@
 package org.wordpress.android.ui.notifications.blocks;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.text.Spannable;
 import android.text.TextUtils;
@@ -50,17 +51,32 @@ public class HeaderNoteBlock extends NoteBlock {
         return R.layout.note_block_header;
     }
 
+    @SuppressLint("ClickableViewAccessibility") //fixed by setting a click listener to avatarImageView
     @Override
     public View configureView(View view) {
-        final NoteHeaderBlockHolder noteBlockHolder = (NoteHeaderBlockHolder)view.getTag();
+        final NoteHeaderBlockHolder noteBlockHolder = (NoteHeaderBlockHolder) view.getTag();
 
         Spannable spannable = NotificationsUtils.getSpannableContentForRanges(mHeaderArray.optJSONObject(0));
         noteBlockHolder.nameTextView.setText(spannable);
 
         noteBlockHolder.avatarImageView.setImageUrl(getAvatarUrl(), mImageType);
         if (!TextUtils.isEmpty(getUserUrl())) {
+            noteBlockHolder.avatarImageView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    long siteId = Long.valueOf(JSONUtils.queryJSON(mHeaderArray, "[0].ranges[0].site_id", 0));
+                    long userId = Long.valueOf(JSONUtils.queryJSON(mHeaderArray, "[0].ranges[0].id", 0));
+                    String siteUrl = getUserUrl();
+                    if (siteId > 0 && userId > 0) {
+                        mGravatarClickedListener.onGravatarClicked(siteId, userId, siteUrl);
+                    }
+                }
+            });
+            //noinspection AndroidLintClickableViewAccessibility
             noteBlockHolder.avatarImageView.setOnTouchListener(mOnGravatarTouchListener);
         } else {
+            noteBlockHolder.avatarImageView.setOnClickListener(null);
+            //noinspection AndroidLintClickableViewAccessibility
             noteBlockHolder.avatarImageView.setOnTouchListener(null);
         }
 
@@ -118,9 +134,9 @@ public class HeaderNoteBlock extends NoteBlock {
         public NoteHeaderBlockHolder(View view) {
             View rootView = view.findViewById(R.id.header_root_view);
             rootView.setOnClickListener(mOnClickListener);
-            nameTextView = (TextView)view.findViewById(R.id.header_user);
-            snippetTextView = (TextView)view.findViewById(R.id.header_snippet);
-            avatarImageView = (WPNetworkImageView)view.findViewById(R.id.header_avatar);
+            nameTextView = (TextView) view.findViewById(R.id.header_user);
+            snippetTextView = (TextView) view.findViewById(R.id.header_snippet);
+            avatarImageView = (WPNetworkImageView) view.findViewById(R.id.header_avatar);
         }
     }
 
@@ -149,12 +165,7 @@ public class HeaderNoteBlock extends NoteBlock {
                 if (event.getActionMasked() == MotionEvent.ACTION_UP && mGravatarClickedListener != null) {
                     // Fire the listener, which will load the site preview for the user's site
                     // In the future we can use this to load a 'profile view' (currently in R&D)
-                    long siteId = Long.valueOf(JSONUtils.queryJSON(mHeaderArray, "[0].ranges[0].site_id", 0));
-                    long userId = Long.valueOf(JSONUtils.queryJSON(mHeaderArray, "[0].ranges[0].id", 0));
-                    String siteUrl = getUserUrl();
-                    if (siteId > 0 && userId > 0) {
-                        mGravatarClickedListener.onGravatarClicked(siteId, userId, siteUrl);
-                    }
+                    v.performClick();
                 }
             }
 

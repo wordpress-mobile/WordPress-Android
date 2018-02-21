@@ -74,6 +74,7 @@
                     android:layout_height="wrap_content"
                     android:background="?android:attr/selectableItemBackground"
                     android:clickable="true"
+                    android:focusable="true"
                     android:ellipsize="end"
                     android:includeFontPadding="false"
                     android:singleLine="true"
