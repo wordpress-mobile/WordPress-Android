@@ -53,6 +53,7 @@ public class CommentUserNoteBlock extends UserNoteBlock {
         return R.layout.note_block_comment_user;
     }
 
+    @SuppressLint("ClickableViewAccessibility") //fixed by setting a click listener to avatarImageView
     @Override
     public View configureView(View view) {
         final CommentUserNoteBlockHolder noteBlockHolder = (CommentUserNoteBlockHolder)view.getTag();
@@ -94,9 +95,6 @@ public class CommentUserNoteBlock extends UserNoteBlock {
             //noinspection AndroidLintClickableViewAccessibility
             noteBlockHolder.avatarImageView.setOnTouchListener(null);
         }
-
-        noteBlockHolder.avatarImageView.setFocusable(true);
-        noteBlockHolder.avatarImageView.setClickable(true);
 
         noteBlockHolder.commentTextView.setText(
                 NotificationsUtils.getSpannableContentForRanges(

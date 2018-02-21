@@ -1,5 +1,6 @@
 package org.wordpress.android.ui.notifications.blocks;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.text.TextUtils;
 import android.view.MotionEvent;
@@ -56,6 +57,7 @@ public class UserNoteBlock extends NoteBlock {
         return R.layout.note_block_user;
     }
 
+    @SuppressLint("ClickableViewAccessibility") //fixed by setting a click listener to avatarImageView
     @Override
     public View configureView(View view) {
         final UserActionNoteBlockHolder noteBlockHolder = (UserActionNoteBlockHolder)view.getTag();
