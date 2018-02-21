@@ -87,16 +87,25 @@ public class UserNoteBlock extends NoteBlock {
             String imageUrl = GravatarUtils.fixGravatarUrl(getNoteMediaItem().optString("url", ""), getAvatarSize());
             noteBlockHolder.avatarImageView.setImageUrl(imageUrl, WPNetworkImageView.ImageType.AVATAR);
             if (!TextUtils.isEmpty(getUserUrl())) {
+                noteBlockHolder.avatarImageView.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        showBlogPreview();
+                    }
+                });
+                //noinspection AndroidLintClickableViewAccessibility
                 noteBlockHolder.avatarImageView.setOnTouchListener(mOnGravatarTouchListener);
                 noteBlockHolder.rootView.setEnabled(true);
                 noteBlockHolder.rootView.setOnClickListener(mOnClickListener);
             } else {
+                //noinspection AndroidLintClickableViewAccessibility
                 noteBlockHolder.avatarImageView.setOnTouchListener(null);
                 noteBlockHolder.rootView.setEnabled(false);
                 noteBlockHolder.rootView.setOnClickListener(null);
             }
         } else {
             noteBlockHolder.avatarImageView.showDefaultGravatarImageAndNullifyUrl();
+            //noinspection AndroidLintClickableViewAccessibility
             noteBlockHolder.avatarImageView.setOnTouchListener(null);
         }
 
@@ -179,7 +188,7 @@ public class UserNoteBlock extends NoteBlock {
                 if (event.getActionMasked() == MotionEvent.ACTION_UP && mGravatarClickedListener != null) {
                     // Fire the listener, which will load the site preview for the user's site
                     // In the future we can use this to load a 'profile view' (currently in R&D)
-                    showBlogPreview();
+                    v.performClick();
                 }
             }
 
@@ -187,7 +196,7 @@ public class UserNoteBlock extends NoteBlock {
         }
     };
 
-    private void showBlogPreview() {
+    protected void showBlogPreview() {
         long siteId = Long.valueOf(JSONUtils.queryJSON(getNoteData(), "meta.ids.site", 0));
         long userId = Long.valueOf(JSONUtils.queryJSON(getNoteData(), "meta.ids.user", 0));
         String siteUrl = getUserUrl();

@@ -59,8 +59,23 @@ public class HeaderNoteBlock extends NoteBlock {
 
         noteBlockHolder.avatarImageView.setImageUrl(getAvatarUrl(), mImageType);
         if (!TextUtils.isEmpty(getUserUrl())) {
+            noteBlockHolder.avatarImageView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    // Fire the listener, which will load the site preview for the user's site
+                    // In the future we can use this to load a 'profile view' (currently in R&D)
+                    long siteId = Long.valueOf(JSONUtils.queryJSON(mHeaderArray, "[0].ranges[0].site_id", 0));
+                    long userId = Long.valueOf(JSONUtils.queryJSON(mHeaderArray, "[0].ranges[0].id", 0));
+                    String siteUrl = getUserUrl();
+                    if (siteId > 0 && userId > 0) {
+                        mGravatarClickedListener.onGravatarClicked(siteId, userId, siteUrl);
+                    }
+                }
+            });
+            //noinspection AndroidLintClickableViewAccessibility
             noteBlockHolder.avatarImageView.setOnTouchListener(mOnGravatarTouchListener);
         } else {
+            //noinspection AndroidLintClickableViewAccessibility
             noteBlockHolder.avatarImageView.setOnTouchListener(null);
         }
 
@@ -147,14 +162,7 @@ public class HeaderNoteBlock extends NoteBlock {
                         .setInterpolator(new DecelerateInterpolator());
 
                 if (event.getActionMasked() == MotionEvent.ACTION_UP && mGravatarClickedListener != null) {
-                    // Fire the listener, which will load the site preview for the user's site
-                    // In the future we can use this to load a 'profile view' (currently in R&D)
-                    long siteId = Long.valueOf(JSONUtils.queryJSON(mHeaderArray, "[0].ranges[0].site_id", 0));
-                    long userId = Long.valueOf(JSONUtils.queryJSON(mHeaderArray, "[0].ranges[0].id", 0));
-                    String siteUrl = getUserUrl();
-                    if (siteId > 0 && userId > 0) {
-                        mGravatarClickedListener.onGravatarClicked(siteId, userId, siteUrl);
-                    }
+                  v.performClick();
                 }
             }
 

@@ -1,5 +1,6 @@
 package org.wordpress.android.ui.notifications.blocks;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.text.Html;
 import android.text.TextUtils;
@@ -76,14 +77,26 @@ public class CommentUserNoteBlock extends UserNoteBlock {
             String imageUrl = GravatarUtils.fixGravatarUrl(getNoteMediaItem().optString("url", ""), getAvatarSize());
             noteBlockHolder.avatarImageView.setImageUrl(imageUrl, WPNetworkImageView.ImageType.AVATAR);
             if (!TextUtils.isEmpty(getUserUrl())) {
+                noteBlockHolder.avatarImageView.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        showBlogPreview();
+                    }
+                });
+                //noinspection AndroidLintClickableViewAccessibility
                 noteBlockHolder.avatarImageView.setOnTouchListener(mOnGravatarTouchListener);
             } else {
+                //noinspection AndroidLintClickableViewAccessibility
                 noteBlockHolder.avatarImageView.setOnTouchListener(null);
             }
         } else {
             noteBlockHolder.avatarImageView.showDefaultGravatarImageAndNullifyUrl();
+            //noinspection AndroidLintClickableViewAccessibility
             noteBlockHolder.avatarImageView.setOnTouchListener(null);
         }
+
+        noteBlockHolder.avatarImageView.setFocusable(true);
+        noteBlockHolder.avatarImageView.setClickable(true);
 
         noteBlockHolder.commentTextView.setText(
                 NotificationsUtils.getSpannableContentForRanges(
