@@ -11,6 +11,7 @@ import java.io.Serializable;
 public class WPOrgPluginModel implements Identifiable, Serializable {
     @PrimaryKey @Column private int mId;
     @Column private String mAuthorAsHtml;
+    @Column private String mAuthorName;
     @Column private String mBanner;
     @Column private String mDescriptionAsHtml;
     @Column private String mFaqAsHtml;
@@ -48,6 +49,14 @@ public class WPOrgPluginModel implements Identifiable, Serializable {
 
     public void setAuthorAsHtml(String authorAsHtml) {
         mAuthorAsHtml = authorAsHtml;
+    }
+
+    public String getAuthorName() {
+        return mAuthorName;
+    }
+
+    public void setAuthorName(String authorName) {
+        mAuthorName = authorName;
     }
 
     public String getBanner() {
