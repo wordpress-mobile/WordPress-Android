@@ -163,16 +163,12 @@ public class PluginSqlUtils {
                 .endWhere().execute();
     }
 
-    public static int insertOrUpdatePluginDirectoryList(List<PluginDirectoryModel> pluginDirectories) {
+    public static void insertPluginDirectoryList(@Nullable List<PluginDirectoryModel> pluginDirectories) {
         if (pluginDirectories == null) {
-            return 0;
+            return;
         }
 
-        int result = 0;
-        for (PluginDirectoryModel pluginDirectory : pluginDirectories) {
-            result += insertOrUpdatePluginDirectoryModel(pluginDirectory);
-        }
-        return result;
+        WellSql.insert(pluginDirectories).asSingleTransaction(true).execute();
     }
 
     public static int getLastRequestedPageForDirectoryType(PluginDirectoryType directoryType) {
@@ -190,31 +186,5 @@ public class PluginSqlUtils {
                 .equals(PluginDirectoryModelTable.DIRECTORY_TYPE, directoryType)
                 .endWhere()
                 .getAsModel();
-    }
-
-    private static @Nullable PluginDirectoryModel getPluginDirectoryModel(String directoryType, String slug) {
-        List<PluginDirectoryModel> result = WellSql.select(PluginDirectoryModel.class)
-                .where()
-                .equals(PluginDirectoryModelTable.SLUG, slug)
-                .equals(PluginDirectoryModelTable.DIRECTORY_TYPE, directoryType)
-                .endWhere()
-                .getAsModel();
-        return result.isEmpty() ? null : result.get(0);
-    }
-
-    private static int insertOrUpdatePluginDirectoryModel(PluginDirectoryModel pluginDirectory) {
-        if (pluginDirectory == null) {
-            return 0;
-        }
-
-        PluginDirectoryModel existing = getPluginDirectoryModel(pluginDirectory.getDirectoryType(),
-                pluginDirectory.getSlug());
-        if (existing == null) {
-            WellSql.insert(pluginDirectory).execute();
-            return 1;
-        } else {
-            return WellSql.update(PluginDirectoryModel.class).whereId(existing.getId())
-                    .put(pluginDirectory, new UpdateAllExceptId<>(PluginDirectoryModel.class)).execute();
-        }
     }
 }
