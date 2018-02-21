@@ -2,7 +2,6 @@ package org.wordpress.android.fluxc.model.plugin;
 
 import android.support.annotation.Nullable;
 
-import org.wordpress.android.util.HtmlUtils;
 import org.wordpress.android.util.StringUtils;
 
 @SuppressWarnings("unused")
@@ -61,8 +60,7 @@ public class ImmutablePluginModel {
             return mSitePlugin.getAuthorName();
         }
         if (mWPOrgPlugin != null) {
-            // TODO: Save authorName in WPOrgPluginModel
-            return HtmlUtils.fastStripHtml(mWPOrgPlugin.getAuthorAsHtml());
+            return mWPOrgPlugin.getAuthorName();
         }
         return null;
     }
