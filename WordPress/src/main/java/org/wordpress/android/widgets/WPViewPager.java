@@ -1,5 +1,6 @@
 package org.wordpress.android.widgets;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.support.v4.view.ViewPager;
 import android.util.AttributeSet;
@@ -37,6 +38,7 @@ public class WPViewPager extends ViewPager {
         return false;
     }
 
+    @SuppressLint("ClickableViewAccessibility") // we are not detecting tap events, so can ignore this one
     @Override
     public boolean onTouchEvent(MotionEvent ev) {
         if (mPagingEnabled) {
