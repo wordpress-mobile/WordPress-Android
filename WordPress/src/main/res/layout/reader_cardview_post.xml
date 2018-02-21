@@ -36,7 +36,6 @@
                 android:id="@+id/image_avatar_or_blavatar"
                 style="@style/ReaderImageView.Avatar"
                 android:layout_marginRight="@dimen/margin_large"
-                android:contentDescription="@string/reader_cardview_post_avatar_desc"
                 app:srcCompat="@drawable/ic_placeholder_blavatar_grey_lighten_20_40dp" />
 
             <org.wordpress.android.ui.reader.views.ReaderFollowButton
@@ -156,7 +155,6 @@
                 style="@style/ReaderImageView.Avatar.Small"
                 android:layout_marginRight="@dimen/margin_large"
                 android:background="?android:selectableItemBackground"
-                android:contentDescription="@string/reader_cardview_post_discover_avatar_desc"
                 app:srcCompat="@drawable/ic_placeholder_gravatar_grey_lighten_20_100dp" />
 
             <org.wordpress.android.widgets.WPTextView

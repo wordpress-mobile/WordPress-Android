@@ -2107,7 +2107,6 @@
     <string name="notification_login_failed">An error has occurred.</string>
     <string name="change_photo">Change photo</string>
 
-    <string name="comment_avatar_desc">avatar</string>
     <string name="comment_checkmark_desc">check mark</string>
     <string name="invite_user_delete_desc">remove user</string>
     <string name="media_grid_item_image_desc">media preview</string>
@@ -2126,12 +2125,9 @@
     <string name="plugin_detail_banner_desc">plugin banner</string>
     <string name="plugin_detail_logo_desc">plugin logo</string>
     <string name="post_cardview_featured_desc">featured</string>
-    <string name="reader_cardview_post_avatar_desc">user avatar</string>
     <string name="reader_cardview_post_featured_desc">featured</string>
     <string name="reader_cardview_post_play_video_desc">play featured video</string>
-    <string name="reader_cardview_post_discover_avatar_desc">avatar</string>
     <string name="photo_picker_thumbnail_desc">Play video</string>
-    <string name="reader_listitem_comment_avatar_desc">avatar</string>
     <string name="reader_list_item_suggestion_remove_desc">delete</string>
     <string name="reader_photo_view_desc">photo</string>
     <string name="sign_in_dialog_logo_desc">WordPress logo</string>

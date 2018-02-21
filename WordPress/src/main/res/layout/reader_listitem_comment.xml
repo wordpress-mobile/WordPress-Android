@@ -39,7 +39,6 @@
                 android:layout_width="@dimen/avatar_sz_extra_small"
                 android:layout_height="@dimen/avatar_sz_extra_small"
                 android:layout_marginRight="@dimen/margin_small"
-                android:contentDescription="@string/reader_listitem_comment_avatar_desc"
                 tools:src="@drawable/ic_placeholder_gravatar_grey_lighten_20_100dp" />
 
             <org.wordpress.android.widgets.WPTextView
