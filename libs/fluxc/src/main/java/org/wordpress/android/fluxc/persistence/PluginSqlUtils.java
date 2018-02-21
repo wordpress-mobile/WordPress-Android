@@ -16,6 +16,9 @@ import org.wordpress.android.fluxc.model.plugin.SitePluginModel;
 import org.wordpress.android.fluxc.model.plugin.WPOrgPluginModel;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.HashMap;
 import java.util.List;
 
 import static com.yarolegovich.wellsql.SelectQuery.ORDER_ASCENDING;
@@ -101,14 +104,24 @@ public class PluginSqlUtils {
 
     public static @NonNull List<WPOrgPluginModel> getWPOrgPluginsForDirectory(PluginDirectoryType directoryType) {
         List<PluginDirectoryModel> directoryModels = getPluginDirectoriesForType(directoryType);
-        List<WPOrgPluginModel> wpOrgPluginModels = new ArrayList<>(directoryModels.size());
-        for (PluginDirectoryModel pluginDirectoryModel : directoryModels) {
-            WPOrgPluginModel wpOrgPluginModel = getWPOrgPluginBySlug(pluginDirectoryModel.getSlug());
-            if (wpOrgPluginModel != null) {
-                wpOrgPluginModels.add(wpOrgPluginModel);
-            }
+        List<String> slugList = new ArrayList<>(directoryModels.size());
+        final HashMap<String, Integer> orderMap = new HashMap<>();
+        for (int i = 0; i < directoryModels.size(); i++) {
+            String slug = directoryModels.get(i).getSlug();
+            slugList.add(slug);
+            orderMap.put(slug, i);
         }
-        return wpOrgPluginModels;
+        List<WPOrgPluginModel> wpOrgPlugins = WellSql.select(WPOrgPluginModel.class)
+                .where().isIn(WPOrgPluginModelTable.SLUG, slugList)
+                .endWhere().getAsModel();
+        // We need to manually order the list according to the directory models since SQLite will return mixed results
+        Collections.sort(wpOrgPlugins, new Comparator<WPOrgPluginModel>() {
+            @Override
+            public int compare(WPOrgPluginModel plugin1, WPOrgPluginModel plugin2) {
+                return orderMap.get(plugin1.getSlug()).compareTo(orderMap.get(plugin2.getSlug()));
+            }
+        });
+        return wpOrgPlugins;
     }
 
     public static int insertOrUpdateWPOrgPlugin(WPOrgPluginModel wpOrgPluginModel) {
