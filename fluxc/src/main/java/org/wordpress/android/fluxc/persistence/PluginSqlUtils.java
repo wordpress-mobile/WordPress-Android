@@ -104,6 +104,10 @@ public class PluginSqlUtils {
 
     public static @NonNull List<WPOrgPluginModel> getWPOrgPluginsForDirectory(PluginDirectoryType directoryType) {
         List<PluginDirectoryModel> directoryModels = getPluginDirectoriesForType(directoryType);
+        if (directoryModels.size() == 0) {
+            // No directories found, return an empty list
+            return new ArrayList<>();
+        }
         List<String> slugList = new ArrayList<>(directoryModels.size());
         final HashMap<String, Integer> orderMap = new HashMap<>();
         for (int i = 0; i < directoryModels.size(); i++) {
