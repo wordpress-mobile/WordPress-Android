@@ -23,6 +23,7 @@
             android:layout_height="@dimen/start_over_icon_size"
             android:layout_marginRight="@dimen/start_over_icon_margin_right"
             android:padding="@dimen/start_over_icon_padding"
+            android:contentDescription="@null"
             android:layout_gravity="center_vertical"
             android:tint="@color/grey_darken_30"/>
 

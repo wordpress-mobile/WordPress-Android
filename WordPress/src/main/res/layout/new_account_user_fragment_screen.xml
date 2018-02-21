@@ -77,6 +77,7 @@
                     android:layout_centerVertical="true"
                     android:layout_marginLeft="10dp"
                     android:layout_marginStart="10dp"
+                    android:contentDescription="@null"
                     android:tint="@color/grey_darken_10"/>
 
             </RelativeLayout>
@@ -111,6 +112,7 @@
                     android:layout_centerVertical="true"
                     android:layout_marginLeft="10dp"
                     android:layout_marginStart="10dp"
+                    android:contentDescription="@null"
                     android:tint="@color/grey_darken_10"/>
             </RelativeLayout>
 
@@ -144,6 +146,7 @@
                     android:layout_centerVertical="true"
                     android:layout_marginLeft="10dp"
                     android:layout_marginStart="10dp"
+                    android:contentDescription="@null"
                     android:tint="@color/grey_darken_10"/>
 
                 <ImageView
@@ -159,6 +162,7 @@
                     android:layout_centerVertical="true"
                     android:layout_marginRight="16dp"
                     android:layout_marginEnd="16dp"
+                    android:contentDescription="@string/new_account_user_password_visibility_desc"
                     android:tint="@color/nux_eye_icon_color_closed"/>
             </RelativeLayout>
 
@@ -219,6 +223,7 @@
                     android:layout_centerVertical="true"
                     android:layout_marginLeft="10dp"
                     android:layout_marginStart="10dp"
+                    android:contentDescription="@null"
                     android:tint="@color/grey_darken_10"/>
             </RelativeLayout>
 

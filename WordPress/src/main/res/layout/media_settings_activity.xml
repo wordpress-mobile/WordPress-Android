@@ -37,6 +37,7 @@
                     android:scaleType="centerCrop"
                     tools:layout_height="224dp"
                     tools:src="@drawable/ic_gridicons_audio"
+                    android:contentDescription="@string/media_settings_image_preview_desc"
                     tools:targetApi="lollipop" />
 
                 <ImageView
@@ -45,6 +46,7 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="top"
                     android:background="@drawable/media_settings_gradient_scrim"
+                    android:contentDescription="@null"
                     tools:layout_height="74dp" />
 
                 <ImageView
@@ -54,6 +56,7 @@
                     android:layout_gravity="center"
                     android:visibility="gone"
                     app:srcCompat="@drawable/play_video_selector_large"
+                    android:contentDescription="@string/media_settings_play"
                     tools:visibility="visible" />
             </FrameLayout>
 

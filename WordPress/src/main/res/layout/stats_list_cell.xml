@@ -25,6 +25,7 @@
             android:layout_marginRight="10dp"
             android:layout_marginEnd="10dp"
             android:visibility="gone"
+            android:contentDescription="@string/open_external_link_desc"
             app:srcCompat="@drawable/ic_external_blue_wordpress_18dp" />
 
         <ImageView
@@ -34,6 +35,7 @@
             android:layout_marginRight="@dimen/margin_large"
             android:layout_marginEnd="@dimen/margin_large"
             android:visibility="gone"
+            android:contentDescription="@string/stats_list_cell_chevron_desc"
             app:srcCompat="@drawable/ic_chevron_right_blue_wordpress_24dp" />
 
         <org.wordpress.android.widgets.WPNetworkImageView
@@ -42,6 +44,7 @@
             android:layout_height="@dimen/avatar_sz_small"
             android:layout_marginRight="@dimen/margin_large"
             android:layout_marginEnd="@dimen/margin_large"
+            android:contentDescription="@null"
             android:visibility="gone" />
 
         <!-- Alternative to the Network image view above, can be used to display emojis (flags for instance) -->
@@ -84,7 +87,7 @@
             android:background="?android:selectableItemBackground"
             android:paddingLeft="@dimen/margin_small"
             android:paddingRight="@dimen/margin_small"
-            android:contentDescription="@string/more"
+            android:contentDescription="@string/show_more_desc"
             app:srcCompat="@drawable/ic_ellipsis_blue_wordpress_32dp" />
 
         <LinearLayout

@@ -87,6 +87,7 @@
                     android:layout_gravity="center_vertical|right"
                     android:layout_marginRight="@dimen/margin_extra_large"
                     android:tint="@color/grey_darken_10"
+                    android:contentDescription="@null"
                     tools:src="@drawable/gallery_icon_thumbnailgrid" />
             </FrameLayout>
 

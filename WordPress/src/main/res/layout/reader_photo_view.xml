@@ -8,7 +8,8 @@
     <ImageView
         android:id="@+id/image_photo"
         android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+        android:layout_height="match_parent"
+        android:contentDescription="@string/reader_photo_view_desc"/>
 
     <org.wordpress.android.widgets.WPTextView
         android:id="@+id/text_error"

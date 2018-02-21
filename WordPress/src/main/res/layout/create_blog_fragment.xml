@@ -57,7 +57,8 @@
                     app:srcCompat="@drawable/ic_pencil_white_24dp"
                     android:layout_centerVertical="true"
                     android:layout_marginLeft="10dp"
-                    android:tint="@color/grey_darken_10"/>
+                    android:tint="@color/grey_darken_10"
+                    android:contentDescription="@null"/>
             </RelativeLayout>
 
 
@@ -111,6 +112,7 @@
                     android:layout_alignParentStart="false"
                     android:layout_alignParentLeft="false"
                     app:srcCompat="@drawable/ic_globe_black_24dp"
+                    android:contentDescription="@null"
                     android:layout_centerVertical="true"
                     android:layout_marginLeft="10dp"
                     android:tint="@color/grey_darken_10"/>

@@ -11,6 +11,7 @@
         android:layout_width="@dimen/reader_count_icon"
         android:layout_height="@dimen/reader_count_icon"
         android:layout_gravity="center_vertical"
+        android:contentDescription="@null"
         tools:src="@drawable/reader_button_comment" />
 
     <TextView

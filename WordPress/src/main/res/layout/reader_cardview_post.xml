@@ -88,7 +88,8 @@
 
             <org.wordpress.android.widgets.WPNetworkImageView
                 android:id="@+id/image_featured"
-                style="@style/ReaderImageView.Featured.CardView" />
+                style="@style/ReaderImageView.Featured.CardView"
+                android:contentDescription="@string/reader_cardview_post_featured_desc"/>
 
             <org.wordpress.android.widgets.WPTextView
                 android:id="@+id/text_photo_title"
@@ -113,6 +114,7 @@
                 android:layout_height="@dimen/reader_video_overlay_size"
                 android:layout_gravity="center"
                 android:src="@drawable/play_video_selector"
+                android:contentDescription="@string/reader_cardview_post_play_video_desc"
                 android:visibility="gone"
                 tools:visibility="visible" />
         </FrameLayout>
@@ -189,6 +191,7 @@
                     android:layout_marginLeft="-2dp"
                     android:layout_marginRight="@dimen/margin_extra_small"
                     android:background="?android:selectableItemBackground"
+                    android:contentDescription="@null"
                     app:srcCompat="@drawable/reader_visit" />
 
                 <org.wordpress.android.widgets.WPTextView
@@ -230,7 +233,7 @@
                 android:layout_alignParentRight="true"
                 android:layout_centerVertical="true"
                 android:background="?android:selectableItemBackground"
-                android:contentDescription="@string/more"
+                android:contentDescription="@string/show_more_desc"
                 android:paddingBottom="@dimen/margin_medium"
                 android:paddingTop="@dimen/margin_medium"
                 app:srcCompat="@drawable/ic_ellipsis_grey_lighten_10_24dp" />
