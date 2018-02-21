@@ -46,7 +46,7 @@ import javax.inject.Singleton;
 public class PluginRestClient extends BaseWPComRestClient {
     @Inject
     public PluginRestClient(Context appContext, Dispatcher dispatcher, RequestQueue requestQueue,
-                              AccessToken accessToken, UserAgent userAgent) {
+                            AccessToken accessToken, UserAgent userAgent) {
         super(appContext, dispatcher, requestQueue, accessToken, userAgent);
     }
 
