@@ -198,7 +198,7 @@ public class PluginWPOrgClient extends BaseWPOrgAPIClient {
         wpOrgPluginModel.setIcon(response.icon);
         wpOrgPluginModel.setInstallationInstructionsAsHtml(response.installationInstructionsAsHtml);
         wpOrgPluginModel.setLastUpdated(response.lastUpdated);
-        wpOrgPluginModel.setName(StringEscapeUtils.unescapeHtml4(response.name));
+        wpOrgPluginModel.setDisplayName(StringEscapeUtils.unescapeHtml4(response.name));
         wpOrgPluginModel.setRating(response.rating);
         wpOrgPluginModel.setRequiredWordPressVersion(response.requiredWordPressVersion);
         wpOrgPluginModel.setSlug(response.slug);
