@@ -42,7 +42,7 @@ public class WPOrgPluginSqlUtilsTest {
     @Test
     public void testInsertWPOrgPlugin() {
         String slug = randomString("slug");
-        String name = randomString("name");
+        String displayName = randomString("displayName");
 
         // Assert no plugin exist with the slug
         Assert.assertNull(PluginSqlUtils.getWPOrgPluginBySlug(slug));
@@ -50,39 +50,39 @@ public class WPOrgPluginSqlUtilsTest {
         // Create wporg plugin
         WPOrgPluginModel plugin = new WPOrgPluginModel();
         plugin.setSlug(slug);
-        plugin.setName(name);
+        plugin.setDisplayName(displayName);
 
         // Insert the plugin and assert that it was successful
         Assert.assertEquals(1, PluginSqlUtils.insertOrUpdateWPOrgPlugin(plugin));
         WPOrgPluginModel insertedPlugin = PluginSqlUtils.getWPOrgPluginBySlug(slug);
         Assert.assertNotNull(insertedPlugin);
-        Assert.assertEquals(insertedPlugin.getName(), name);
+        Assert.assertEquals(insertedPlugin.getDisplayName(), displayName);
     }
 
     @Test
     public void testUpdateWPOrgPlugin() {
         String slug = randomString("slug");
-        String name = randomString("name");
+        String displayName = randomString("displayName");
 
         WPOrgPluginModel plugin = new WPOrgPluginModel();
         plugin.setSlug(slug);
-        plugin.setName(name);
+        plugin.setDisplayName(displayName);
 
         // Insert a wporg plugin and assert the state
         Assert.assertEquals(1, PluginSqlUtils.insertOrUpdateWPOrgPlugin(plugin));
         WPOrgPluginModel insertedPlugin = PluginSqlUtils.getWPOrgPluginBySlug(slug);
         Assert.assertNotNull(insertedPlugin);
-        Assert.assertEquals(insertedPlugin.getName(), name);
+        Assert.assertEquals(insertedPlugin.getDisplayName(), displayName);
 
         // Update the name of the plugin and try insertOrUpdate and make sure the plugin is updated
-        String name2 = randomString("name2");
-        Assert.assertTrue(!name.equals(name2));
-        insertedPlugin.setName(name2);
+        String displayName2 = randomString("displayName2-");
+        Assert.assertTrue(!displayName.equals(displayName2));
+        insertedPlugin.setDisplayName(displayName2);
         Assert.assertEquals(1, PluginSqlUtils.insertOrUpdateWPOrgPlugin(insertedPlugin));
         WPOrgPluginModel updatedPlugin = PluginSqlUtils.getWPOrgPluginBySlug(slug);
         Assert.assertNotNull(updatedPlugin);
         Assert.assertEquals(insertedPlugin.getSlug(), updatedPlugin.getSlug());
-        Assert.assertEquals(updatedPlugin.getName(), name2);
+        Assert.assertEquals(updatedPlugin.getDisplayName(), displayName2);
     }
 
     @Test
@@ -110,15 +110,15 @@ public class WPOrgPluginSqlUtilsTest {
         int numberOfPlugins = 2;
         List<WPOrgPluginModel> plugins = new ArrayList<>();
         List<String> slugList = new ArrayList<>();
-        List<String> nameList = new ArrayList<>();
+        List<String> displayNameList = new ArrayList<>();
         for (int i = 0; i < numberOfPlugins; i++) {
             String slug = randomString("slug") + i;
-            String name = randomString("name") + i;
+            String displayName = randomString("name") + i;
             slugList.add(slug);
-            nameList.add(name);
+            displayNameList.add(displayName);
             WPOrgPluginModel wpOrgPluginModel = new WPOrgPluginModel();
             wpOrgPluginModel.setSlug(slug);
-            wpOrgPluginModel.setName(name);
+            wpOrgPluginModel.setDisplayName(displayName);
             plugins.add(wpOrgPluginModel);
         }
         // Insert plugins
@@ -128,12 +128,12 @@ public class WPOrgPluginSqlUtilsTest {
         List<WPOrgPluginModel> updatedPlugins = new ArrayList<>();
         for (int i = 0; i < slugList.size(); i++) {
             String slug = slugList.get(i);
-            String newName = randomString("newName") + i;
-            updatedNameList.add(newName);
+            String newDisplayName = randomString("newDisplayName" + i + "-");
+            updatedNameList.add(newDisplayName);
             WPOrgPluginModel wpOrgPluginModel = PluginSqlUtils.getWPOrgPluginBySlug(slug);
             Assert.assertNotNull(wpOrgPluginModel);
             // Update plugin name
-            wpOrgPluginModel.setName(newName);
+            wpOrgPluginModel.setDisplayName(newDisplayName);
             updatedPlugins.add(wpOrgPluginModel);
         }
         // Update plugins
@@ -142,12 +142,12 @@ public class WPOrgPluginSqlUtilsTest {
         // Assert the plugins are updated
         for (int i = 0; i < numberOfPlugins; i++) {
             String slug = slugList.get(i);
-            String previousName = nameList.get(i);
+            String previousName = displayNameList.get(i);
             String expectedName = updatedNameList.get(i);
             WPOrgPluginModel wpOrgPluginModel = PluginSqlUtils.getWPOrgPluginBySlug(slug);
             Assert.assertNotNull(wpOrgPluginModel);
-            Assert.assertFalse(StringUtils.equals(wpOrgPluginModel.getName(), previousName));
-            Assert.assertTrue(StringUtils.equals(wpOrgPluginModel.getName(), expectedName));
+            Assert.assertFalse(StringUtils.equals(wpOrgPluginModel.getDisplayName(), previousName));
+            Assert.assertTrue(StringUtils.equals(wpOrgPluginModel.getDisplayName(), expectedName));
         }
     }
 

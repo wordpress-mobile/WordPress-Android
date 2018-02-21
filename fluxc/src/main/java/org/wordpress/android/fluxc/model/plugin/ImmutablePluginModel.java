@@ -2,7 +2,7 @@ package org.wordpress.android.fluxc.model.plugin;
 
 import android.support.annotation.Nullable;
 
-import org.wordpress.android.util.HtmlUtils;
+import org.wordpress.android.util.StringUtils;
 
 @SuppressWarnings("unused")
 public class ImmutablePluginModel {
@@ -40,6 +40,14 @@ public class ImmutablePluginModel {
         return null;
     }
 
+    public int getAverageStarRating() {
+        if (mWPOrgPlugin == null) {
+            return 0;
+        }
+        int rating = StringUtils.stringToInt(mWPOrgPlugin.getRating(), 1);
+        return Math.round(rating / 20f);
+    }
+
     public @Nullable String getAuthorAsHtml() {
         if (mWPOrgPlugin != null) {
             return mWPOrgPlugin.getAuthorAsHtml();
@@ -52,8 +60,7 @@ public class ImmutablePluginModel {
             return mSitePlugin.getAuthorName();
         }
         if (mWPOrgPlugin != null) {
-            // TODO: Save authorName in WPOrgPluginModel
-            return HtmlUtils.fastStripHtml(mWPOrgPlugin.getAuthorAsHtml());
+            return mWPOrgPlugin.getAuthorName();
         }
         return null;
     }
@@ -90,7 +97,7 @@ public class ImmutablePluginModel {
         if (mSitePlugin != null) {
             return mSitePlugin.getDisplayName();
         } else if (mWPOrgPlugin != null) {
-            return mWPOrgPlugin.getName();
+            return mWPOrgPlugin.getDisplayName();
         }
         return null;
     }
