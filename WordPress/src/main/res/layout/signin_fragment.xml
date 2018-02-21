@@ -108,8 +108,7 @@
                 android:id="@+id/nux_username_layout"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
-                android:background="@color/white"
-                android:clickable="true">
+                android:background="@color/white">
 
                 <EditText
                     android:id="@+id/nux_username"
@@ -142,8 +141,7 @@
                 android:id="@+id/nux_password_layout"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
-                android:background="@color/white"
-                android:clickable="true">
+                android:background="@color/white">
 
                 <EditText
                     android:id="@+id/nux_password"
@@ -251,6 +249,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="@dimen/nux_main_button_height"
                     android:clickable="true"
+                    android:focusable="true"
                     android:enabled="false"
                     android:gravity="center"
                     android:text="@string/sign_in" />

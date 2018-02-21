@@ -176,7 +176,6 @@
                     android:hint="@string/add_account_blog_url"
                     android:inputType="textUri"
                     android:digits="0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"
-                    android:clickable="true"
                     android:paddingLeft="0dp"
                     android:paddingTop="12dp"
                     android:paddingRight="0dp"
@@ -234,6 +233,7 @@
                     android:layout_width="match_parent"
                     android:text="@string/nux_welcome_create_account"
                     android:clickable="true"
+                    android:focusable="true"
                     android:gravity="center"
                     android:enabled="false"/>
 
