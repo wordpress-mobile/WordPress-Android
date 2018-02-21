@@ -16,6 +16,9 @@ import org.wordpress.android.fluxc.model.plugin.SitePluginModel;
 import org.wordpress.android.fluxc.model.plugin.WPOrgPluginModel;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.HashMap;
 import java.util.List;
 
 import static com.yarolegovich.wellsql.SelectQuery.ORDER_ASCENDING;
@@ -101,14 +104,28 @@ public class PluginSqlUtils {
 
     public static @NonNull List<WPOrgPluginModel> getWPOrgPluginsForDirectory(PluginDirectoryType directoryType) {
         List<PluginDirectoryModel> directoryModels = getPluginDirectoriesForType(directoryType);
-        List<WPOrgPluginModel> wpOrgPluginModels = new ArrayList<>(directoryModels.size());
-        for (PluginDirectoryModel pluginDirectoryModel : directoryModels) {
-            WPOrgPluginModel wpOrgPluginModel = getWPOrgPluginBySlug(pluginDirectoryModel.getSlug());
-            if (wpOrgPluginModel != null) {
-                wpOrgPluginModels.add(wpOrgPluginModel);
-            }
+        if (directoryModels.size() == 0) {
+            // No directories found, return an empty list
+            return new ArrayList<>();
         }
-        return wpOrgPluginModels;
+        List<String> slugList = new ArrayList<>(directoryModels.size());
+        final HashMap<String, Integer> orderMap = new HashMap<>();
+        for (int i = 0; i < directoryModels.size(); i++) {
+            String slug = directoryModels.get(i).getSlug();
+            slugList.add(slug);
+            orderMap.put(slug, i);
+        }
+        List<WPOrgPluginModel> wpOrgPlugins = WellSql.select(WPOrgPluginModel.class)
+                .where().isIn(WPOrgPluginModelTable.SLUG, slugList)
+                .endWhere().getAsModel();
+        // We need to manually order the list according to the directory models since SQLite will return mixed results
+        Collections.sort(wpOrgPlugins, new Comparator<WPOrgPluginModel>() {
+            @Override
+            public int compare(WPOrgPluginModel plugin1, WPOrgPluginModel plugin2) {
+                return orderMap.get(plugin1.getSlug()).compareTo(orderMap.get(plugin2.getSlug()));
+            }
+        });
+        return wpOrgPlugins;
     }
 
     public static int insertOrUpdateWPOrgPlugin(WPOrgPluginModel wpOrgPluginModel) {
@@ -150,16 +167,12 @@ public class PluginSqlUtils {
                 .endWhere().execute();
     }
 
-    public static int insertOrUpdatePluginDirectoryList(List<PluginDirectoryModel> pluginDirectories) {
+    public static void insertPluginDirectoryList(@Nullable List<PluginDirectoryModel> pluginDirectories) {
         if (pluginDirectories == null) {
-            return 0;
+            return;
         }
 
-        int result = 0;
-        for (PluginDirectoryModel pluginDirectory : pluginDirectories) {
-            result += insertOrUpdatePluginDirectoryModel(pluginDirectory);
-        }
-        return result;
+        WellSql.insert(pluginDirectories).asSingleTransaction(true).execute();
     }
 
     public static int getLastRequestedPageForDirectoryType(PluginDirectoryType directoryType) {
@@ -177,31 +190,5 @@ public class PluginSqlUtils {
                 .equals(PluginDirectoryModelTable.DIRECTORY_TYPE, directoryType)
                 .endWhere()
                 .getAsModel();
-    }
-
-    private static @Nullable PluginDirectoryModel getPluginDirectoryModel(String directoryType, String slug) {
-        List<PluginDirectoryModel> result = WellSql.select(PluginDirectoryModel.class)
-                .where()
-                .equals(PluginDirectoryModelTable.SLUG, slug)
-                .equals(PluginDirectoryModelTable.DIRECTORY_TYPE, directoryType)
-                .endWhere()
-                .getAsModel();
-        return result.isEmpty() ? null : result.get(0);
-    }
-
-    private static int insertOrUpdatePluginDirectoryModel(PluginDirectoryModel pluginDirectory) {
-        if (pluginDirectory == null) {
-            return 0;
-        }
-
-        PluginDirectoryModel existing = getPluginDirectoryModel(pluginDirectory.getDirectoryType(),
-                pluginDirectory.getSlug());
-        if (existing == null) {
-            WellSql.insert(pluginDirectory).execute();
-            return 1;
-        } else {
-            return WellSql.update(PluginDirectoryModel.class).whereId(existing.getId())
-                    .put(pluginDirectory, new UpdateAllExceptId<>(PluginDirectoryModel.class)).execute();
-        }
     }
 }

@@ -3,22 +3,25 @@ package org.wordpress.android.fluxc.model.plugin;
 import com.yarolegovich.wellsql.core.Identifiable;
 import com.yarolegovich.wellsql.core.annotation.Column;
 import com.yarolegovich.wellsql.core.annotation.PrimaryKey;
+import com.yarolegovich.wellsql.core.annotation.RawConstraints;
 import com.yarolegovich.wellsql.core.annotation.Table;
 
 import java.io.Serializable;
 
 @Table
+@RawConstraints({"UNIQUE (SLUG)"})
 public class WPOrgPluginModel implements Identifiable, Serializable {
     @PrimaryKey @Column private int mId;
     @Column private String mAuthorAsHtml;
+    @Column private String mAuthorName;
     @Column private String mBanner;
     @Column private String mDescriptionAsHtml;
+    @Column private String mDisplayName;
     @Column private String mFaqAsHtml;
     @Column private String mHomepageUrl;
     @Column private String mIcon;
     @Column private String mInstallationInstructionsAsHtml;
     @Column private String mLastUpdated;
-    @Column private String mName;
     @Column private String mRating;
     @Column private String mRequiredWordPressVersion;
     @Column private String mSlug;
@@ -50,6 +53,14 @@ public class WPOrgPluginModel implements Identifiable, Serializable {
         mAuthorAsHtml = authorAsHtml;
     }
 
+    public String getAuthorName() {
+        return mAuthorName;
+    }
+
+    public void setAuthorName(String authorName) {
+        mAuthorName = authorName;
+    }
+
     public String getBanner() {
         return mBanner;
     }
@@ -64,6 +75,14 @@ public class WPOrgPluginModel implements Identifiable, Serializable {
 
     public void setDescriptionAsHtml(String descriptionAsHtml) {
         mDescriptionAsHtml = descriptionAsHtml;
+    }
+
+    public String getDisplayName() {
+        return mDisplayName;
+    }
+
+    public void setDisplayName(String displayName) {
+        mDisplayName = displayName;
     }
 
     public String getFaqAsHtml() {
@@ -104,14 +123,6 @@ public class WPOrgPluginModel implements Identifiable, Serializable {
 
     public void setLastUpdated(String lastUpdated) {
         mLastUpdated = lastUpdated;
-    }
-
-    public String getName() {
-        return mName;
-    }
-
-    public void setName(String name) {
-        mName = name;
     }
 
     public String getRating() {
