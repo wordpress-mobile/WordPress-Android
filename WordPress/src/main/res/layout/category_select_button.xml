@@ -4,6 +4,7 @@
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     android:layout_marginLeft="16dp"
+    android:focusable="true"
     android:clickable="true"
     android:drawableEnd="@drawable/ic_plus_grey_600_24dp"
     android:drawableRight="@drawable/ic_plus_grey_600_24dp"

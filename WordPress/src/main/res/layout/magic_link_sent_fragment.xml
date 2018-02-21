@@ -45,6 +45,7 @@
                 style="@style/WordPress.NUXTitle"
                 android:layout_width="match_parent"
                 android:clickable="true"
+                android:focusable="true"
                 android:gravity="center"
                 android:text="@string/check_your_email"
                 android:layout_height="wrap_content" />
@@ -64,6 +65,7 @@
                 android:layout_width="wrap_content"
                 android:padding="12dp"
                 android:clickable="true"
+                android:focusable="true"
                 android:gravity="center"
                 android:text="@string/launch_your_email_app" />
 
