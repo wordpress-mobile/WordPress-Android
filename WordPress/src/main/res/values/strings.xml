@@ -956,7 +956,7 @@
     <string name="notifications_empty_action_comments">Join a conversation: comment on posts from blogs you follow.</string>
     <string name="notifications_empty_action_followers_likes">Get noticed: comment on posts you\'ve read.</string>
     <string name="notifications_account_required">Log in to WordPress.com for notifications</string>
-    <string name="notifications_jetpack_connection_setup_info">To get helpful notifications on your phone from your WordPress site, you\'ll need to install the Jetpack plugin. Would you like to set up Jetpack?</string>
+    <string name="notifications_jetpack_connection_setup_info">To get helpful notifications on your device from your WordPress site, you\'ll need to install the Jetpack plugin. Would you like to set up Jetpack?</string>
     <string name="notifications_empty_view_reader">View Reader</string>
     <string name="older_two_days">Older than 2 days</string>
     <string name="older_last_week">Older than a week</string>
