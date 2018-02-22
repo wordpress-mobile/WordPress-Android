@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.annotation.WorkerThread;
 import android.text.TextUtils;
 
 import org.greenrobot.eventbus.Subscribe;
@@ -26,6 +27,7 @@ import java.util.List;
 
 import javax.inject.Inject;
 
+@WorkerThread
 public class PluginBrowserViewModel extends ViewModel {
     public enum PluginListType {
         SITE,
@@ -142,13 +144,13 @@ public class PluginBrowserViewModel extends ViewModel {
     private void reloadPluginDirectory(PluginDirectoryType directoryType) {
         switch (directoryType) {
             case NEW:
-                mNewPlugins.setValue(mPluginStore.getPluginDirectory(getSite(), PluginDirectoryType.NEW));
+                mNewPlugins.postValue(mPluginStore.getPluginDirectory(getSite(), PluginDirectoryType.NEW));
                 break;
             case POPULAR:
-                mPopularPlugins.setValue(mPluginStore.getPluginDirectory(getSite(), PluginDirectoryType.POPULAR));
+                mPopularPlugins.postValue(mPluginStore.getPluginDirectory(getSite(), PluginDirectoryType.POPULAR));
                 break;
             case SITE:
-                mSitePlugins.setValue(mPluginStore.getPluginDirectory(getSite(), PluginDirectoryType.SITE));
+                mSitePlugins.postValue(mPluginStore.getPluginDirectory(getSite(), PluginDirectoryType.SITE));
                 break;
         }
     }
@@ -167,25 +169,25 @@ public class PluginBrowserViewModel extends ViewModel {
         }
         switch (listType) {
             case SITE:
-                mSitePluginsListStatus.setValue(PluginListStatus.FETCHING);
+                mSitePluginsListStatus.postValue(PluginListStatus.FETCHING);
                 PluginStore.FetchPluginDirectoryPayload payload =
                         new PluginStore.FetchPluginDirectoryPayload(PluginDirectoryType.SITE, getSite(), false);
                 mDispatcher.dispatch(PluginActionBuilder.newFetchPluginDirectoryAction(payload));
                 break;
             case POPULAR:
-                mPopularPluginsListStatus.setValue(loadMore ? PluginListStatus.LOADING_MORE : PluginListStatus.FETCHING);
+                mPopularPluginsListStatus.postValue(loadMore ? PluginListStatus.LOADING_MORE : PluginListStatus.FETCHING);
                 PluginStore.FetchPluginDirectoryPayload popularPayload =
                         new PluginStore.FetchPluginDirectoryPayload(PluginDirectoryType.POPULAR, getSite(), loadMore);
                 mDispatcher.dispatch(PluginActionBuilder.newFetchPluginDirectoryAction(popularPayload));
                 break;
             case NEW:
-                mNewPluginsListStatus.setValue(loadMore ? PluginListStatus.LOADING_MORE : PluginListStatus.FETCHING);
+                mNewPluginsListStatus.postValue(loadMore ? PluginListStatus.LOADING_MORE : PluginListStatus.FETCHING);
                 PluginStore.FetchPluginDirectoryPayload newPayload =
                         new PluginStore.FetchPluginDirectoryPayload(PluginDirectoryType.NEW, getSite(), loadMore);
                 mDispatcher.dispatch(PluginActionBuilder.newFetchPluginDirectoryAction(newPayload));
                 break;
             case SEARCH:
-                mSearchPluginsListStatus.setValue(PluginListStatus.FETCHING);
+                mSearchPluginsListStatus.postValue(PluginListStatus.FETCHING);
                 PluginStore.SearchPluginDirectoryPayload searchPayload =
                         new PluginStore.SearchPluginDirectoryPayload(getSite(), getSearchQuery(), 1);
                 mDispatcher.dispatch(PluginActionBuilder.newSearchPluginDirectoryAction(searchPayload));
@@ -246,7 +248,7 @@ public class PluginBrowserViewModel extends ViewModel {
     // Network Callbacks
 
     @SuppressWarnings("unused")
-    @Subscribe(threadMode = ThreadMode.MAIN)
+    @Subscribe(threadMode = ThreadMode.BACKGROUND)
     public void onWPOrgPluginFetched(PluginStore.OnWPOrgPluginFetched event) {
         if (event.isError()) {
             AppLog.e(AppLog.T.PLUGINS, "An error occurred while fetching the wporg plugin with type: " + event.error.type);
@@ -254,12 +256,12 @@ public class PluginBrowserViewModel extends ViewModel {
         }
 
         if (!TextUtils.isEmpty(event.pluginSlug)) {
-            mLastUpdatedWpOrgPluginSlug.setValue(event.pluginSlug);
+            mLastUpdatedWpOrgPluginSlug.postValue(event.pluginSlug);
         }
     }
 
     @SuppressWarnings("unused")
-    @Subscribe(threadMode = ThreadMode.MAIN)
+    @Subscribe(threadMode = ThreadMode.BACKGROUND)
     public void onPluginDirectoryFetched(PluginStore.OnPluginDirectoryFetched event) {
         PluginListStatus listStatus;
         if (event.isError()) {
@@ -271,13 +273,13 @@ public class PluginBrowserViewModel extends ViewModel {
         }
         switch (event.type) {
             case NEW:
-                mNewPluginsListStatus.setValue(listStatus);
+                mNewPluginsListStatus.postValue(listStatus);
                 break;
             case POPULAR:
-                mPopularPluginsListStatus.setValue(listStatus);
+                mPopularPluginsListStatus.postValue(listStatus);
                 break;
             case SITE:
-                mSitePluginsListStatus.setValue(listStatus);
+                mSitePluginsListStatus.postValue(listStatus);
         }
         if (!event.isError()) {
             reloadPluginDirectory(event.type);
@@ -285,18 +287,18 @@ public class PluginBrowserViewModel extends ViewModel {
     }
 
     @SuppressWarnings("unused")
-    @Subscribe(threadMode = ThreadMode.MAIN)
+    @Subscribe(threadMode = ThreadMode.BACKGROUND)
     public void onPluginDirectorySearched(PluginStore.OnPluginDirectorySearched event) {
         if (mSearchQuery == null || !mSearchQuery.equals(event.searchTerm)) {
             return;
         }
         if (event.isError()) {
             AppLog.e(AppLog.T.PLUGINS, "An error occurred while searching the plugin directory");
-            mSearchPluginsListStatus.setValue(PluginListStatus.ERROR);
+            mSearchPluginsListStatus.postValue(PluginListStatus.ERROR);
             return;
         }
-        mSearchResults.setValue(event.plugins);
-        mSearchPluginsListStatus.setValue(PluginListStatus.DONE);
+        mSearchResults.postValue(event.plugins);
+        mSearchPluginsListStatus.postValue(PluginListStatus.DONE);
     }
 
     // Search
@@ -339,13 +341,13 @@ public class PluginBrowserViewModel extends ViewModel {
                 // be triggered again, because another fetch didn't happen (due to query being empty)
                 // 4. The status will be stuck in FETCHING until another search occurs. This following reset fixes the
                 // problem.
-                mSearchPluginsListStatus.setValue(PluginListStatus.DONE);
+                mSearchPluginsListStatus.postValue(PluginListStatus.DONE);
             }
         }
     }
 
     private void clearSearchResults() {
-        mSearchResults.setValue(new ArrayList<ImmutablePluginModel>());
+        mSearchResults.postValue(new ArrayList<ImmutablePluginModel>());
     }
 
     public boolean shouldShowEmptySearchResultsView() {
@@ -415,7 +417,7 @@ public class PluginBrowserViewModel extends ViewModel {
     }
 
     public void setTitle(String title) {
-        mTitle.setValue(title);
+        mTitle.postValue(title);
     }
 
     public LiveData<String> getTitle() {
