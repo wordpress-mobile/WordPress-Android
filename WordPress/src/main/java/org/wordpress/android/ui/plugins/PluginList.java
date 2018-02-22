@@ -1,15 +1,12 @@
 package org.wordpress.android.ui.plugins;
 
 import android.support.annotation.Nullable;
+import android.text.TextUtils;
 
 import org.wordpress.android.fluxc.model.plugin.ImmutablePluginModel;
 
 import java.util.ArrayList;
 
-/*
- * List containing either SitePluginModels or WPOrgPluginModels - used to simplify adapters
- * which can show both models
- */
 class PluginList extends ArrayList<ImmutablePluginModel> {
     int indexOfPluginWithSlug(@Nullable String slug) {
         if (slug != null) {
@@ -24,9 +21,12 @@ class PluginList extends ArrayList<ImmutablePluginModel> {
     }
 
     long getItemId(int position) {
-        // Because ids of the plugins are unreliable (sometimes doesn't exist and multiple models combined)
-        // ImmutablePluginModel doesn't expose an id. We need to use the position here and use setHasStableIds(false);
-        return position;
+        ImmutablePluginModel plugin = (ImmutablePluginModel) getItem(position);
+        if (plugin == null || TextUtils.isEmpty(plugin.getSlug())) {
+            // This should never happen
+            return -1;
+        }
+        return plugin.getSlug().hashCode();
     }
 
     @Nullable Object getItem(int position) {

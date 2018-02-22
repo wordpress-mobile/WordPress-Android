@@ -237,7 +237,7 @@ public class PluginListFragment extends Fragment {
 
         PluginListAdapter(Context context) {
             mLayoutInflater = LayoutInflater.from(context);
-            setHasStableIds(false);
+            setHasStableIds(true);
         }
 
         void setPlugins(@Nullable List<ImmutablePluginModel> items) {

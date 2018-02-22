@@ -337,7 +337,7 @@ public class PluginBrowserActivity extends AppCompatActivity
 
         PluginBrowserAdapter(Context context) {
             mLayoutInflater = LayoutInflater.from(context);
-            setHasStableIds(false);
+            setHasStableIds(true);
         }
 
         void setPlugins(@Nullable List<ImmutablePluginModel> items) {
