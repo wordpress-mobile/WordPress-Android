@@ -333,9 +333,26 @@
     <dimen name="promo_indicator_bullet_size">4dp</dimen>
     <dimen name="magic_link_sent_illustration_sz">120dp</dimen>
 
+    <dimen name="button_container_shadow_height">5dp</dimen>
+
+    <dimen name="bottom_sheet_dialog_width">0dp</dimen>
+
+    <!-- signup -->
+    <dimen name="progress_spinner_small">24dp</dimen>
+
+    <!-- Site Creation -->
+    <dimen name="site_creation_category_illustration_sz">80dp</dimen>
+    <dimen name="site_creation_creating_illustration_width">200dp</dimen>
+    <dimen name="site_creation_creating_illustration_height">125dp</dimen>
+    <dimen name="margin_tagline_left">40dp</dimen>
+
     <!--plugins-->
     <dimen name="plugin_row_width">116dp</dimen>
     <dimen name="plugin_icon_size">40dp</dimen>
     <dimen name="plugin_external_link_image_size">16dp</dimen>
     <dimen name="plugin_banner_size">192dp</dimen>
+
+    <dimen name="add_avatar_button_size">24dp</dimen>
+
+    <dimen name="padding_input_row_start">60dp</dimen>
 </resources>

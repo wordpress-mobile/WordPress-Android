@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:clickable="true"
+    android:descendantFocusability="afterDescendants"
+    android:focusable="true"
+    android:layout_height="match_parent"
+    android:layout_width="match_parent" >
+
+    <android.support.v7.widget.Toolbar
+        android:id="@+id/full_screen_dialog_fragment_toolbar"
+        android:elevation="@dimen/appbar_elevation"
+        android:layout_height="?attr/actionBarSize"
+        android:layout_width="match_parent"
+        style="@style/Toolbar.Primary" >
+    </android.support.v7.widget.Toolbar>
+
+    <FrameLayout
+        android:id="@+id/full_screen_dialog_fragment_content"
+        android:inflatedId="@+id/full_screen_dialog_fragment_content"
+        android:layout_below="@id/full_screen_dialog_fragment_toolbar"
+        android:layout_height="match_parent"
+        android:layout_width="match_parent" >
+    </FrameLayout>
+
+</RelativeLayout>

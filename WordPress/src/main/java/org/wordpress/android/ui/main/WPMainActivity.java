@@ -44,7 +44,9 @@ import org.wordpress.android.push.NotificationsProcessingService;
 import org.wordpress.android.ui.ActivityId;
 import org.wordpress.android.ui.ActivityLauncher;
 import org.wordpress.android.ui.RequestCodes;
-import org.wordpress.android.ui.accounts.SignInActivity;
+import org.wordpress.android.ui.accounts.LoginActivity;
+import org.wordpress.android.ui.accounts.SignupEpilogueActivity;
+import org.wordpress.android.ui.accounts.SiteCreationActivity;
 import org.wordpress.android.ui.notifications.NotificationEvents;
 import org.wordpress.android.ui.notifications.NotificationsListFragment;
 import org.wordpress.android.ui.notifications.adapters.NotesAdapter;
@@ -80,9 +82,11 @@ import de.greenrobot.event.EventBus;
  * Main activity which hosts sites, reader, me and notifications tabs
  */
 public class WPMainActivity extends AppCompatActivity {
+    public static final String ARG_DO_LOGIN_UPDATE = "ARG_DO_LOGIN_UPDATE";
+    public static final String ARG_OLD_SITES_IDS = "ARG_OLD_SITES_IDS";
     public static final String ARG_OPENED_FROM_PUSH = "opened_from_push";
     public static final String ARG_SHOW_LOGIN_EPILOGUE = "show_login_epilogue";
-    public static final String ARG_OLD_SITES_IDS = "ARG_OLD_SITES_IDS";
+    public static final String ARG_SHOW_SIGNUP_EPILOGUE = "show_signup_epilogue";
 
     private WPViewPager mViewPager;
     private WPMainTabLayout mTabLayout;
@@ -235,9 +239,7 @@ public class WPMainActivity extends AppCompatActivity {
                         mViewPager.setCurrentItem(position);
                     }
 
-                    if (!AppPrefs.isLoginWizardStyleActivated()) {
-                        checkMagicLinkSignIn();
-                    } else if (hasMagicLinkLoginIntent()) {
+                    if (hasMagicLinkLoginIntent()) {
                         if (mAccountStore.hasAccessToken()) {
                             ToastUtils.showToast(this, R.string.login_already_logged_in_wpcom);
                         } else {
@@ -270,7 +272,15 @@ public class WPMainActivity extends AppCompatActivity {
             AccountStore.UpdateTokenPayload payload = new AccountStore.UpdateTokenPayload(authTokenToSet);
             mDispatcher.dispatch(AccountActionBuilder.newUpdateAccessTokenAction(payload));
         } else if (getIntent().getBooleanExtra(ARG_SHOW_LOGIN_EPILOGUE, false) && savedInstanceState == null) {
-            ActivityLauncher.showLoginEpilogue(this, false, getIntent().getIntegerArrayListExtra(ARG_OLD_SITES_IDS));
+            ActivityLauncher.showLoginEpilogue(this, getIntent().getBooleanExtra(ARG_DO_LOGIN_UPDATE, false),
+                    getIntent().getIntegerArrayListExtra(ARG_OLD_SITES_IDS));
+        } else if (getIntent().getBooleanExtra(ARG_SHOW_SIGNUP_EPILOGUE, false) && savedInstanceState == null) {
+            ActivityLauncher.showSignupEpilogue(this,
+                    getIntent().getStringExtra(SignupEpilogueActivity.EXTRA_SIGNUP_DISPLAY_NAME),
+                    getIntent().getStringExtra(SignupEpilogueActivity.EXTRA_SIGNUP_EMAIL_ADDRESS),
+                    getIntent().getStringExtra(SignupEpilogueActivity.EXTRA_SIGNUP_PHOTO_URL),
+                    getIntent().getStringExtra(SignupEpilogueActivity.EXTRA_SIGNUP_USERNAME),
+                    false);
         }
     }
 
@@ -278,12 +288,27 @@ public class WPMainActivity extends AppCompatActivity {
         String action = getIntent().getAction();
         Uri uri = getIntent().getData();
         String host = (uri != null && uri.getHost() != null) ? uri.getHost() : "";
-        return Intent.ACTION_VIEW.equals(action) && host.contains(SignInActivity.MAGIC_LOGIN);
+        return Intent.ACTION_VIEW.equals(action) && host.contains(LoginActivity.MAGIC_LOGIN);
+    }
+
+    private boolean hasMagicLinkSignupIntent() {
+        String action = getIntent().getAction();
+        Uri uri = getIntent().getData();
+
+        if (uri != null) {
+            String parameter = SignupEpilogueActivity.MAGIC_SIGNUP_PARAMETER;
+            String value = (uri.getQueryParameterNames() != null && uri.getQueryParameter(parameter) != null)
+                    ? uri.getQueryParameter(parameter) : "";
+            return Intent.ACTION_VIEW.equals(action) && uri.getQueryParameterNames().contains(parameter)
+                    && value.equalsIgnoreCase(SignupEpilogueActivity.MAGIC_SIGNUP_VALUE);
+        } else {
+            return false;
+        }
     }
 
     private @Nullable String getAuthToken() {
         Uri uri = getIntent().getData();
-        return uri != null ? uri.getQueryParameter(SignInActivity.TOKEN_PARAMETER) : null;
+        return uri != null ? uri.getQueryParameter(LoginActivity.TOKEN_PARAMETER) : null;
     }
 
     private void setTabLayoutElevation(float newElevation){
@@ -473,7 +498,7 @@ public class WPMainActivity extends AppCompatActivity {
 
     private void checkMagicLinkSignIn() {
         if (getIntent() !=  null) {
-            if (getIntent().getBooleanExtra(SignInActivity.MAGIC_LOGIN, false)) {
+            if (getIntent().getBooleanExtra(LoginActivity.MAGIC_LOGIN, false)) {
                 AnalyticsTracker.track(AnalyticsTracker.Stat.LOGIN_MAGIC_LINK_SUCCEEDED);
                 startWithNewAccount();
             }
@@ -550,16 +575,37 @@ public class WPMainActivity extends AppCompatActivity {
         }
     }
 
+    private void setSite(Intent data) {
+        if (data != null) {
+            int selectedSite = data.getIntExtra(SitePickerActivity.KEY_LOCAL_ID, -1);
+            setSelectedSite(selectedSite);
+        }
+    }
+
+    private void jumpNewPost(Intent data) {
+        if (data != null && data.getBooleanExtra(SiteCreationActivity.KEY_DO_NEW_POST, false)) {
+            ActivityLauncher.addNewPostOrPageForResult(this, mSelectedSite, false, false);
+        }
+    }
+
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         switch (requestCode) {
             case RequestCodes.EDIT_POST:
-            case RequestCodes.CREATE_SITE:
                 MySiteFragment mySiteFragment = getMySiteFragment();
                 if (mySiteFragment != null) {
                     mySiteFragment.onActivityResult(requestCode, resultCode, data);
                 }
+                break;
+            case RequestCodes.CREATE_SITE:
+                mySiteFragment = getMySiteFragment();
+                if (mySiteFragment != null) {
+                    mySiteFragment.onActivityResult(requestCode, resultCode, data);
+                }
+
+                setSite(data);
+                jumpNewPost(data);
                 break;
             case RequestCodes.ADD_ACCOUNT:
                 if (resultCode == RESULT_OK) {
@@ -579,10 +625,9 @@ public class WPMainActivity extends AppCompatActivity {
             case RequestCodes.SITE_PICKER:
                 if (getMySiteFragment() != null) {
                     getMySiteFragment().onActivityResult(requestCode, resultCode, data);
-                    if (data != null) {
-                        int selectedSite = data.getIntExtra(SitePickerActivity.KEY_LOCAL_ID, -1);
-                        setSelectedSite(selectedSite);
-                    }
+
+                    setSite(data);
+                    jumpNewPost(data);
                 }
                 break;
             case RequestCodes.SITE_SETTINGS:
@@ -659,16 +704,24 @@ public class WPMainActivity extends AppCompatActivity {
             return;
         }
 
-        if (mAccountStore.hasAccessToken() && hasMagicLinkLoginIntent()) {
-            AnalyticsTracker.track(AnalyticsTracker.Stat.LOGIN_MAGIC_LINK_SUCCEEDED);
-            ActivityLauncher.showLoginEpilogue(this, true, getIntent().getIntegerArrayListExtra(ARG_OLD_SITES_IDS));
+        if (mAccountStore.hasAccessToken()) {
+            if (hasMagicLinkLoginIntent()) {
+                if (hasMagicLinkSignupIntent()) {
+                    AnalyticsTracker.track(AnalyticsTracker.Stat.SIGNUP_MAGIC_LINK_SUCCEEDED);
+                    Intent intent = getIntent();
+                    ActivityLauncher.showSignupEpilogue(this, null, null, null, null, true);
+                } else {
+                    AnalyticsTracker.track(AnalyticsTracker.Stat.LOGIN_MAGIC_LINK_SUCCEEDED);
+                    ActivityLauncher.showLoginEpilogue(this, true, getIntent().getIntegerArrayListExtra(ARG_OLD_SITES_IDS));
+                }
+            }
         }
     }
 
     @SuppressWarnings("unused")
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onAccountChanged(OnAccountChanged event) {
-        // Sign-out is handled in `handleSiteRemoved`, no need to show the `SignInActivity` here
+        // Sign-out is handled in `handleSiteRemoved`, no need to show the signup flow here
         if (mAccountStore.hasAccessToken()) {
             mTabLayout.showNoteBadge(mAccountStore.getAccount().getHasUnseenNotes());
         }
