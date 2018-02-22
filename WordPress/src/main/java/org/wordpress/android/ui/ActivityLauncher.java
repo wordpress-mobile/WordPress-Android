@@ -182,13 +182,13 @@ public class ActivityLauncher {
         }
     }
 
-    public static void viewPluginDetailForResult(Activity context, SiteModel site, String slug) {
+    public static void viewPluginDetail(Activity context, SiteModel site, String slug) {
         if (PluginUtils.isPluginFeatureAvailable(site)) {
             AnalyticsUtils.trackWithSiteDetails(AnalyticsTracker.Stat.OPENED_PLUGIN_DETAIL, site);
             Intent intent = new Intent(context, PluginDetailActivity.class);
             intent.putExtra(WordPress.SITE, site);
             intent.putExtra(PluginDetailActivity.KEY_PLUGIN_SLUG, slug);
-            context.startActivityForResult(intent, RequestCodes.PLUGIN_DETAIL);
+            context.startActivity(intent);
         }
     }
 

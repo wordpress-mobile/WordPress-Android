@@ -66,7 +66,6 @@ public class PluginBrowserViewModel extends ViewModel {
     private final MutableLiveData<List<ImmutablePluginModel>> mSitePlugins;
     private final MutableLiveData<List<ImmutablePluginModel>> mSearchResults;
 
-    private final MutableLiveData<String> mLastUpdatedWpOrgPluginSlug;
     private final MutableLiveData<String> mTitle;
 
     @SuppressWarnings("WeakerAccess")
@@ -89,7 +88,6 @@ public class PluginBrowserViewModel extends ViewModel {
         mPopularPluginsListStatus = new MutableLiveData<>();
         mSitePluginsListStatus = new MutableLiveData<>();
         mSearchPluginsListStatus = new MutableLiveData<>();
-        mLastUpdatedWpOrgPluginSlug = new MutableLiveData<>();
         mTitle = new MutableLiveData<>();
     }
 
@@ -135,7 +133,7 @@ public class PluginBrowserViewModel extends ViewModel {
 
     // Site & WPOrg plugin management
 
-    public void reloadAllPluginsFromStore() {
+    private void reloadAllPluginsFromStore() {
         reloadPluginDirectory(PluginDirectoryType.NEW);
         reloadPluginDirectory(PluginDirectoryType.POPULAR);
         reloadPluginDirectory(PluginDirectoryType.SITE);
@@ -256,7 +254,7 @@ public class PluginBrowserViewModel extends ViewModel {
         }
 
         if (!TextUtils.isEmpty(event.pluginSlug)) {
-            mLastUpdatedWpOrgPluginSlug.postValue(event.pluginSlug);
+            // TODO: update live data lists
         }
     }
 
@@ -410,10 +408,6 @@ public class PluginBrowserViewModel extends ViewModel {
 
     public LiveData<PluginListStatus> getSearchPluginsListStatus() {
         return mSearchPluginsListStatus;
-    }
-
-    public LiveData<String> getLastUpdatedWpOrgPluginSlug() {
-        return mLastUpdatedWpOrgPluginSlug;
     }
 
     public void setTitle(String title) {
