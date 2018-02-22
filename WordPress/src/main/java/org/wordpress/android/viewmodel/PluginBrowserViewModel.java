@@ -27,7 +27,6 @@ import java.util.List;
 
 import javax.inject.Inject;
 
-@WorkerThread
 public class PluginBrowserViewModel extends ViewModel {
     public enum PluginListType {
         SITE,
@@ -114,11 +113,14 @@ public class PluginBrowserViewModel extends ViewModel {
         setTitle(savedInstanceState.getString(KEY_TITLE));
     }
 
+    @WorkerThread
     public void start() {
         if (mIsStarted) {
             return;
         }
-        reloadAllPluginsFromStore();
+        reloadPluginDirectory(PluginDirectoryType.NEW);
+        reloadPluginDirectory(PluginDirectoryType.POPULAR);
+        reloadPluginDirectory(PluginDirectoryType.SITE);
 
         fetchPlugins(PluginListType.SITE, false);
         fetchPlugins(PluginListType.POPULAR, false);
@@ -133,12 +135,7 @@ public class PluginBrowserViewModel extends ViewModel {
 
     // Site & WPOrg plugin management
 
-    private void reloadAllPluginsFromStore() {
-        reloadPluginDirectory(PluginDirectoryType.NEW);
-        reloadPluginDirectory(PluginDirectoryType.POPULAR);
-        reloadPluginDirectory(PluginDirectoryType.SITE);
-    }
-
+    @WorkerThread
     private void reloadPluginDirectory(PluginDirectoryType directoryType) {
         switch (directoryType) {
             case NEW:
@@ -161,6 +158,7 @@ public class PluginBrowserViewModel extends ViewModel {
 
     // Network Requests
 
+    @WorkerThread
     private void fetchPlugins(@NonNull PluginListType listType, boolean loadMore) {
         if (!shouldFetchPlugins(listType, loadMore)) {
             return;
@@ -193,6 +191,7 @@ public class PluginBrowserViewModel extends ViewModel {
         }
     }
 
+    @WorkerThread
     private boolean shouldFetchPlugins(PluginListType listType, boolean loadMore) {
         if (loadMore && !isLoadMoreEnabled(listType)) {
             // If we are trying to load more and it's not allowed
@@ -315,6 +314,7 @@ public class PluginBrowserViewModel extends ViewModel {
 
     // Make the method protected to avoid synthetic accessor methods
     @SuppressWarnings("WeakerAccess")
+    @WorkerThread
     protected void submitSearch(@Nullable final String query, boolean delayed) {
         if (delayed) {
             mHandler.postDelayed(new Runnable() {
@@ -344,6 +344,7 @@ public class PluginBrowserViewModel extends ViewModel {
         }
     }
 
+    @WorkerThread
     private void clearSearchResults() {
         mSearchResults.postValue(new ArrayList<ImmutablePluginModel>());
     }
