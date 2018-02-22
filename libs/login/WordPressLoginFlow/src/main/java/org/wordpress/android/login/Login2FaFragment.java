@@ -500,7 +500,7 @@ public class Login2FaFragment extends LoginBaseFormFragment<LoginListener> imple
         mLoginListener.startPostLoginServices();
 
         if (mIsSocialLogin) {
-            mLoginListener.loggedInViaSocialAccount(mOldSitesIDs);
+            mLoginListener.loggedInViaSocialAccount(mOldSitesIDs, false);
         } else {
             mLoginListener.loggedInViaPassword(mOldSitesIDs);
         }
