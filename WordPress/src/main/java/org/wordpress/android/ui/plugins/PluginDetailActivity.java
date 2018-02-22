@@ -732,7 +732,7 @@ public class PluginDetailActivity extends AppCompatActivity {
         }
         mIsConfiguringPlugin = true;
         mDispatcher.dispatch(PluginActionBuilder.newConfigureSitePluginAction(
-                new ConfigureSitePluginPayload(mSite, mSlug, mIsActive, mIsAutoUpdateEnabled)));
+                new ConfigureSitePluginPayload(mSite, mPlugin.getName(), mIsActive, mIsAutoUpdateEnabled)));
     }
 
     protected void dispatchUpdatePluginAction() {
