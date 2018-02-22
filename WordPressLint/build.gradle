@@ -40,7 +40,7 @@ publish {
     uploadName = 'lint'
     description = 'Lint module for WordPress-Android'
     publishVersion = project.version
-    licences = ['GPL']
+    licences = ['GPL-2.0']
     website = 'https://github.com/wordpress-mobile/WordPress-Lint-Android'
     dryRun = 'false'
     autoPublish = 'true'
