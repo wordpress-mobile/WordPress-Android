@@ -261,23 +261,14 @@ public class PluginBrowserViewModel extends ViewModel {
     @SuppressWarnings("unused")
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onPluginDirectoryFetched(PluginStore.OnPluginDirectoryFetched event) {
+        PluginListStatus listStatus;
         if (event.isError()) {
             AppLog.e(AppLog.T.PLUGINS, "An error occurred while fetching the plugin directory " + event.type + ": "
                     + event.error.type);
-            switch (event.type) {
-                case NEW:
-                    mNewPluginsListStatus.setValue(PluginListStatus.ERROR);
-                    break;
-                case POPULAR:
-                    mPopularPluginsListStatus.setValue(PluginListStatus.ERROR);
-                    break;
-                case SITE:
-                    mSitePluginsListStatus.setValue(PluginListStatus.ERROR);
-                    break;
-            }
-            return;
+            listStatus = PluginListStatus.ERROR;
+        } else {
+            listStatus = event.canLoadMore ? PluginListStatus.CAN_LOAD_MORE : PluginListStatus.DONE;
         }
-        PluginListStatus listStatus = event.canLoadMore ? PluginListStatus.CAN_LOAD_MORE : PluginListStatus.DONE;
         switch (event.type) {
             case NEW:
                 mNewPluginsListStatus.setValue(listStatus);
@@ -288,7 +279,9 @@ public class PluginBrowserViewModel extends ViewModel {
             case SITE:
                 mSitePluginsListStatus.setValue(listStatus);
         }
-        reloadPluginDirectory(event.type);
+        if (!event.isError()) {
+            reloadPluginDirectory(event.type);
+        }
     }
 
     @SuppressWarnings("unused")
