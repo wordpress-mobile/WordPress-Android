@@ -1,0 +1,32 @@
+buildscript {
+    repositories {
+        jcenter()
+        google()
+    }
+    dependencies {
+        classpath 'com.android.tools.build:gradle:3.0.1'
+    }
+}
+
+apply plugin: 'java-library'
+
+version = "0.1"
+
+repositories {
+    google()
+    jcenter()
+}
+
+dependencies {
+    compileOnly "com.android.tools.lint:lint-api:26.0.1"
+    compileOnly "com.android.tools.lint:lint-checks:26.0.1"
+    testCompile "com.android.tools.lint:lint:26.0.1"
+    testCompile "com.android.tools.lint:lint-tests:26.0.1"
+    testCompile "com.android.tools:testutils:26.0.1"
+}
+
+jar {
+    manifest {
+        attributes("Lint-Registry-v2": "org.wordpress.android.lint.WordPressIssueRegistry")
+    }
+}
