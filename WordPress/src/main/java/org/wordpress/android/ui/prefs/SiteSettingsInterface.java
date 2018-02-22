@@ -539,7 +539,8 @@ public abstract class SiteSettingsInterface {
     }
 
     public boolean getAllowCommentLikes() {
-        return mJpSettings.commentLikes;
+        //We have different settings for comment likes for dotcom and Jetpack sites
+        return mSite.isJetpackConnected() ? mJpSettings.commentLikes : mSettings.allowCommentLikes;
     }
 
     public @NonNull String getTwitterUsername() {
@@ -822,8 +823,12 @@ public abstract class SiteSettingsInterface {
     }
 
     public void setAllowCommentLikes(boolean allowCommentLikes) {
-        mSettings.allowCommentLikes = allowCommentLikes;
-        mJpSettings.commentLikes = allowCommentLikes;
+        //We have different settings for comment likes for dotcom and Jetpack sites
+        if (mSite.isJetpackConnected()) {
+            mJpSettings.commentLikes = allowCommentLikes;
+        } else {
+            mSettings.allowCommentLikes = allowCommentLikes;
+        }
     }
 
     public void setTwitterUsername(String twitterUsername) {
