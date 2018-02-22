@@ -88,7 +88,9 @@ public class WPLoginInputRow extends RelativeLayout {
                 }
 
                 if (a.hasValue(R.styleable.wpLoginInputRow_android_hint)) {
-                    mTextInputLayout.setHint(a.getString(R.styleable.wpLoginInputRow_android_hint));
+                    String hint = a.getString(R.styleable.wpLoginInputRow_android_hint);
+                    mTextInputLayout.setHint(hint);
+                    mEditText.setContentDescription(hint);
                 }
 
                 if (a.hasValue(R.styleable.wpLoginInputRow_passwordToggleEnabled)) {

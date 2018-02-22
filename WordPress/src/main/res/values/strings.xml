@@ -2117,7 +2117,7 @@
     <string name="notification_login_failed">An error has occurred.</string>
     <string name="change_photo">Change photo</string>
 
-    <!-- ImageView content description  -->
+    <!-- Content description for accessibility  -->
     <string name="comment_checkmark_desc">check mark</string>
     <string name="invite_user_delete_desc">remove user</string>
     <string name="media_grid_item_image_desc">media preview</string>
@@ -2144,11 +2144,12 @@
     <string name="sign_in_dialog_logo_desc">WordPress logo</string>
     <string name="sign_in_logo_desc">WordPress logo</string>
     <string name="sign_in_password_visibility_desc">change password visibility</string>
-    <string name="stats_list_cell_chevron_desc">expand</string>
+    <string name="stats_list_cell_chevron_expand_desc">expand</string>
     <string name="show_more_desc">show more</string>
     <string name="open_external_link_desc">open external link</string>
     <string name="notification_settings_switch_desc">Notifications %s</string>
     <string name="navigate_up_desc">navigate up</string>
+    <string name="stats_list_cell_chevron_collapse_desc">collapse</string>
 
     <!-- Site Creation -->
     <string name="site_creation_title">Create New Site</string>
