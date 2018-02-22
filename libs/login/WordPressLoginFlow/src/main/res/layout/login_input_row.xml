@@ -30,6 +30,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginRight="@dimen/textinputlayout_correction_margin_right"
+            android:importantForAccessibility="no"
             android:layout_marginEnd="@dimen/textinputlayout_correction_margin_right"
             android:hint="@string/email_address"/>
     </org.wordpress.android.util.widgets.WPTextInputLayout>

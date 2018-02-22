@@ -27,6 +27,7 @@
                 style="@android:style/TextAppearance.Medium"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:labelFor="@+id/notifications_switch"
                 tools:text="Comments" />
 
             <TextView

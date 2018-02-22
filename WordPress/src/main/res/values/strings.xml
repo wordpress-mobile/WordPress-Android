@@ -2137,5 +2137,7 @@
     <string name="stats_list_cell_chevron_desc">expand</string>
     <string name="show_more_desc">show more</string>
     <string name="open_external_link_desc">open external link</string>
+    <string name="notification_settings_switch_desc">Notifications %s</string>
+    <string name="navigate_up_desc">navigate up</string>
 
 </resources>

@@ -50,7 +50,7 @@ public class NotificationsSettingsActivity extends AppCompatActivity {
         }
 
         mMessageContainer = findViewById(R.id.notifications_settings_message_container);
-        mMessageTextView = (TextView)findViewById(R.id.notifications_settings_message);
+        mMessageTextView = findViewById(R.id.notifications_settings_message);
     }
 
     @Override
@@ -89,7 +89,7 @@ public class NotificationsSettingsActivity extends AppCompatActivity {
      * Set up both primary toolbar for navigation and search, and secondary toolbar for master switch.
      */
     private void setUpToolbars() {
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar_with_search);
+        Toolbar toolbar = findViewById(R.id.toolbar_with_search);
 
         if (toolbar != null) {
             setSupportActionBar(toolbar);
@@ -107,11 +107,13 @@ public class NotificationsSettingsActivity extends AppCompatActivity {
         boolean isMasterChecked = mSharedPreferences.getBoolean(getString(R.string.wp_pref_notifications_master), true);
         hideDisabledView(isMasterChecked);
 
-        mToolbarSwitch = (Toolbar) findViewById(R.id.toolbar_with_switch);
+        mToolbarSwitch = findViewById(R.id.toolbar_with_switch);
         mToolbarSwitch.inflateMenu(R.menu.notifications_settings_secondary);
-        mToolbarSwitch.setTitle(isMasterChecked ?
+        String stateString = isMasterChecked ?
                 getString(R.string.notification_settings_master_status_on) :
-                getString(R.string.notification_settings_master_status_off));
+                getString(R.string.notification_settings_master_status_off);
+        mToolbarSwitch.setContentDescription(getString(R.string.notification_settings_switch_desc, stateString));
+        mToolbarSwitch.setTitle(stateString);
 
         MenuItem menuItem = mToolbarSwitch.getMenu().findItem(R.id.master_switch);
         mMasterSwitch = (SwitchCompat) menuItem.getActionView();
@@ -120,9 +122,11 @@ public class NotificationsSettingsActivity extends AppCompatActivity {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 hideDisabledView(isChecked);
-                mToolbarSwitch.setTitle(isChecked ?
+                String stateString = isChecked ?
                         getString(R.string.notification_settings_master_status_on) :
-                        getString(R.string.notification_settings_master_status_off));
+                        getString(R.string.notification_settings_master_status_off);
+                mToolbarSwitch.setContentDescription(getString(R.string.notification_settings_switch_desc, stateString));
+                mToolbarSwitch.setTitle(stateString);
                 mSharedPreferences.edit().putBoolean(getString(R.string.wp_pref_notifications_master), isChecked).apply();
 
                 if (isChecked) {
@@ -150,7 +154,7 @@ public class NotificationsSettingsActivity extends AppCompatActivity {
      * @param isMasterChecked   TRUE to hide disabled view, FALSE to show disabled view
      */
     protected void hideDisabledView(boolean isMasterChecked) {
-        LinearLayout notificationsDisabledView = (LinearLayout) findViewById(R.id.notification_settings_disabled_view);
+        LinearLayout notificationsDisabledView = findViewById(R.id.notification_settings_disabled_view);
         notificationsDisabledView.setVisibility(isMasterChecked ? View.INVISIBLE : View.VISIBLE);
     }
 }

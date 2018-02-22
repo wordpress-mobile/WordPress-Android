@@ -14,7 +14,7 @@
         android:layout_marginStart="@dimen/margin_small"
         android:fontFamily="sans-serif-light"
         android:textColor="@color/grey_dark"
-        android:labelFor="@+id/my_profile_dialog_hint"
+        android:labelFor="@+id/my_profile_dialog_input"
         android:textSize="@dimen/text_sz_extra_large"
         android:textStyle="bold"/>
 
