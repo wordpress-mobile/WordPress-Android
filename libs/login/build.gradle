@@ -57,7 +57,7 @@ dependencies {
     implementation 'com.google.dagger:dagger-android-support:2.11'
     annotationProcessor 'com.google.dagger:dagger-android-processor:2.11'
 
-    lintChecks project(path:':libs:lint:WordPressLint')
+//    lintChecks 'org.wordpress:lint:1.0.0'
 }
 
 // Add properties named "wp.xxx" to our BuildConfig
