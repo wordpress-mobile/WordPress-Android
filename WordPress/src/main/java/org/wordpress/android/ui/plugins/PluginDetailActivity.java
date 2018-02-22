@@ -160,6 +160,8 @@ public class PluginDetailActivity extends AppCompatActivity {
         if (savedInstanceState == null) {
             mIsActive = mPlugin.isActive();
             mIsAutoUpdateEnabled = mPlugin.isAutoUpdateEnabled();
+            // Refresh the wporg plugin which should also fetch fields such as descriptionAsHtml if it's missing
+            mDispatcher.dispatch(PluginActionBuilder.newFetchWporgPluginAction(mSlug));
         } else {
             mIsConfiguringPlugin = savedInstanceState.getBoolean(KEY_IS_CONFIGURING_PLUGIN);
             mIsInstallingPlugin = savedInstanceState.getBoolean(KEY_IS_INSTALLING_PLUGIN);
