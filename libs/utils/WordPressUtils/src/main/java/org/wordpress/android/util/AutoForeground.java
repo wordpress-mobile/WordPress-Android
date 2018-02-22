@@ -120,7 +120,10 @@ public abstract class AutoForeground<StateClass extends ServiceState>
     @Override
     public boolean onUnbind(Intent intent) {
         if (!hasConnectedClients()) {
-            promoteForeground();
+            final StateClass state = getState();
+            if (state != null && state.isInProgress()) {
+                promoteForeground(state);
+            }
         }
 
         return true; // call onRebind() if new clients connect
@@ -140,12 +143,9 @@ public abstract class AutoForeground<StateClass extends ServiceState>
         return getEventBus().hasSubscriberForEvent(mStateClass);
     }
 
-    private void promoteForeground() {
-        final StateClass state = getState();
-        if (state.isInProgress()) {
-            startForeground(NOTIFICATION_ID_PROGRESS, getNotification(state));
-            mIsForeground = true;
-        }
+    private void promoteForeground(StateClass currentState) {
+        startForeground(NOTIFICATION_ID_PROGRESS, getNotification(currentState));
+        mIsForeground = true;
     }
 
     private void background() {
