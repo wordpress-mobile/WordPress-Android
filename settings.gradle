@@ -1,5 +1,4 @@
 include ':WordPress'
-include ':libs:lint:WordPressLint'
 include ':libs:utils:WordPressUtils'
 include ':libs:networking:WordPressNetworking'
 include ':libs:analytics:WordPressAnalytics'
