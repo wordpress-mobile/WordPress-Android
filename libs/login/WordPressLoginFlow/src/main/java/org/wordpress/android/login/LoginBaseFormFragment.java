@@ -210,7 +210,10 @@ public abstract class LoginBaseFormFragment<LoginListenerType> extends Fragment 
 
     protected void startProgress(boolean cancellable) {
         mPrimaryButton.setEnabled(false);
-        mSecondaryButton.setEnabled(false);
+
+        if (mSecondaryButton != null) {
+            mSecondaryButton.setEnabled(false);
+        }
 
         mProgressDialog =
                 ProgressDialog.show(getActivity(), "", getActivity().getString(getProgressBarText()), true, cancellable,
@@ -235,7 +238,10 @@ public abstract class LoginBaseFormFragment<LoginListenerType> extends Fragment 
         }
 
         mPrimaryButton.setEnabled(true);
-        mSecondaryButton.setEnabled(true);
+
+        if (mSecondaryButton != null) {
+            mSecondaryButton.setEnabled(true);
+        }
     }
 
     protected void doFinishLogin() {
