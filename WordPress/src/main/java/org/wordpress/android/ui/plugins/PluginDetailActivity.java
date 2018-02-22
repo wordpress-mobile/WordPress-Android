@@ -100,6 +100,7 @@ public class PluginDetailActivity extends AppCompatActivity {
     private TextView mByLineTextView;
     private TextView mVersionTopTextView;
     private TextView mVersionBottomTextView;
+    private TextView mInstalledText;
     private TextView mUpdateButton;
     private TextView mInstallButton;
     private Switch mSwitchActive;
@@ -264,6 +265,7 @@ public class PluginDetailActivity extends AppCompatActivity {
         mByLineTextView = findViewById(R.id.text_byline);
         mVersionTopTextView = findViewById(R.id.plugin_version_top);
         mVersionBottomTextView = findViewById(R.id.plugin_version_bottom);
+        mInstalledText = findViewById(R.id.plugin_installed);
         mUpdateButton = findViewById(R.id.plugin_btn_update);
         mInstallButton = findViewById(R.id.plugin_btn_install);
         mSwitchActive = findViewById(R.id.plugin_state_active);
@@ -425,14 +427,11 @@ public class PluginDetailActivity extends AppCompatActivity {
             }
         }
 
-        if (!canPluginBeDisabledOrRemoved()) {
-            findViewById(R.id.plugin_state_active_container).setVisibility(View.GONE);
-        } else {
-            mSwitchActive.setChecked(mIsActive);
-        }
+        findViewById(R.id.plugin_card_site).setVisibility(mPlugin.isInstalled() ? View.VISIBLE : View.GONE);
+        findViewById(R.id.plugin_state_active_container).setVisibility(canPluginBeDisabledOrRemoved() ? View.VISIBLE : View.GONE);
+        mSwitchActive.setChecked(mIsActive);
         mSwitchAutoupdates.setChecked(mIsAutoUpdateEnabled);
 
-        findViewById(R.id.plugin_card_site).setVisibility(mPlugin.isInstalled() ? View.VISIBLE : View.GONE);
         refreshPluginVersionViews();
         refreshRatingsViews();
     }
@@ -476,7 +475,7 @@ public class PluginDetailActivity extends AppCompatActivity {
             boolean isUpdateAvailable = PluginUtils.isUpdateAvailable(mPlugin);
             boolean canUpdate = isUpdateAvailable && !mIsUpdatingPlugin;
             mUpdateButton.setVisibility(canUpdate ? View.VISIBLE : View.GONE);
-            findViewById(R.id.plugin_installed).setVisibility(isUpdateAvailable || mIsUpdatingPlugin ? View.GONE : View.VISIBLE);
+            mInstalledText.setVisibility(isUpdateAvailable || mIsUpdatingPlugin ? View.GONE : View.VISIBLE);
             if (canUpdate) {
                 mUpdateButton.setOnClickListener(new View.OnClickListener() {
                     @Override
@@ -487,6 +486,7 @@ public class PluginDetailActivity extends AppCompatActivity {
             }
         } else {
             mUpdateButton.setVisibility(View.GONE);
+            mInstalledText.setVisibility(View.GONE);
             mInstallButton.setVisibility(mIsInstallingPlugin ? View.GONE : View.VISIBLE);
             mInstallButton.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -667,6 +667,13 @@ public class PluginDetailActivity extends AppCompatActivity {
                 .show();
     }
 
+    private void showSuccessfulPluginRemovedSnackbar() {
+        Snackbar.make(mContainer,
+                getString(R.string.plugin_removed_successfully, mPlugin.getDisplayName()),
+                Snackbar.LENGTH_LONG)
+                .show();
+    }
+
     private void showUpdateFailedSnackbar() {
         Snackbar.make(mContainer,
                 getString(R.string.plugin_updated_failed, mPlugin.getDisplayName()),
@@ -838,6 +845,10 @@ public class PluginDetailActivity extends AppCompatActivity {
         } else if (mIsRemovingPlugin && !mPlugin.isActive()) {
             // We don't want to trigger the remove plugin action before configuration changes are reflected in network
             dispatchRemovePluginAction();
+
+            // The plugin should be disabled if it was active, we should show that to the user
+            mIsActive = mPlugin.isActive();
+            mSwitchActive.setChecked(mIsActive);
         }
     }
 
@@ -936,10 +947,15 @@ public class PluginDetailActivity extends AppCompatActivity {
         }
         AnalyticsUtils.trackWithSiteDetails(AnalyticsTracker.Stat.PLUGIN_REMOVED, mSite);
 
-        // Plugin removed we need to go back to the plugin list
-        String toastMessage = getString(R.string.plugin_removed_successfully, mPlugin.getDisplayName());
-        ToastUtils.showToast(this, toastMessage, Duration.LONG);
-        finish();
+        refreshPluginFromStore();
+        if (mPlugin == null) {
+            // A plugin that doesn't exist in the directory is removed, go back to plugin list
+            finish();
+        } else {
+            // Refresh the views to show wporg plugin details
+            refreshViews();
+        }
+        showSuccessfulPluginRemovedSnackbar();
     }
 
     // Utils
