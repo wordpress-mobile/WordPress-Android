@@ -487,7 +487,7 @@ public class PluginDetailActivity extends AppCompatActivity {
             }
         } else {
             mUpdateButton.setVisibility(View.GONE);
-            mInstallButton.setVisibility(View.VISIBLE);
+            mInstallButton.setVisibility(mIsInstallingPlugin ? View.GONE : View.VISIBLE);
             mInstallButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -496,7 +496,8 @@ public class PluginDetailActivity extends AppCompatActivity {
             });
         }
 
-        findViewById(R.id.plugin_update_progress_bar).setVisibility(mIsUpdatingPlugin ? View.VISIBLE : View.GONE);
+        findViewById(R.id.plugin_update_progress_bar).setVisibility(mIsUpdatingPlugin || mIsInstallingPlugin
+                ? View.VISIBLE : View.GONE);
     }
 
     private void refreshRatingsViews() {
