@@ -13,6 +13,7 @@ import android.support.v7.app.ActionBar;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.content.res.AppCompatResources;
+import android.support.v7.widget.CardView;
 import android.support.v7.widget.Toolbar;
 import android.text.Html;
 import android.text.TextUtils;
@@ -25,6 +26,7 @@ import android.widget.CompoundButton.OnCheckedChangeListener;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.RatingBar;
+import android.widget.RelativeLayout;
 import android.widget.SimpleAdapter;
 import android.widget.Switch;
 import android.widget.TextView;
@@ -103,6 +105,9 @@ public class PluginDetailActivity extends AppCompatActivity {
     private Switch mSwitchActive;
     private Switch mSwitchAutoupdates;
     private ProgressDialog mRemovePluginProgressDialog;
+
+    private CardView mWPOrgPluginDetailsContainer;
+    private RelativeLayout mRatingsSectionContainer;
 
     protected TextView mDescriptionTextView;
     protected ImageView mDescriptionChevron;
@@ -270,6 +275,9 @@ public class PluginDetailActivity extends AppCompatActivity {
         Drawable rightDrawable = AppCompatResources.getDrawable(this, R.drawable.ic_info_outline_grey_dark_18dp);
         mVersionTopTextView.setCompoundDrawablesWithIntrinsicBounds(null, null, rightDrawable, null);
 
+        mWPOrgPluginDetailsContainer = findViewById(R.id.plugin_wp_org_details_container);
+        mRatingsSectionContainer = findViewById(R.id.plugin_ratings_section_container);
+
         mDescriptionTextView = findViewById(R.id.plugin_description_text);
         mDescriptionChevron = findViewById(R.id.plugin_description_chevron);
         findViewById(R.id.plugin_description_container).setOnClickListener(new View.OnClickListener() {
@@ -392,11 +400,15 @@ public class PluginDetailActivity extends AppCompatActivity {
         mTitleTextView.setText(mPlugin.getDisplayName());
         mImageBanner.setImageUrl(mPlugin.getBanner(), PHOTO);
         mImageIcon.setImageUrl(mPlugin.getIcon(), PLUGIN_ICON);
-        setCollapsibleHtmlText(mDescriptionTextView, mPlugin.getDescriptionAsHtml());
-        setCollapsibleHtmlText(mInstallationTextView, mPlugin.getInstallationInstructionsAsHtml());
-        setCollapsibleHtmlText(mWhatsNewTextView, mPlugin.getWhatsNewAsHtml());
-        setCollapsibleHtmlText(mFaqTextView, mPlugin.getFaqAsHtml());
-
+        if (mPlugin.doesHaveWPOrgPluginDetails()) {
+            mWPOrgPluginDetailsContainer.setVisibility(View.VISIBLE);
+            setCollapsibleHtmlText(mDescriptionTextView, mPlugin.getDescriptionAsHtml());
+            setCollapsibleHtmlText(mInstallationTextView, mPlugin.getInstallationInstructionsAsHtml());
+            setCollapsibleHtmlText(mWhatsNewTextView, mPlugin.getWhatsNewAsHtml());
+            setCollapsibleHtmlText(mFaqTextView, mPlugin.getFaqAsHtml());
+        } else {
+            mWPOrgPluginDetailsContainer.setVisibility(View.GONE);
+        }
         mByLineTextView.setMovementMethod(WPLinkMovementMethod.getInstance());
         if (!TextUtils.isEmpty(mPlugin.getAuthorAsHtml())) {
             mByLineTextView.setText(Html.fromHtml(mPlugin.getAuthorAsHtml()));
@@ -488,6 +500,11 @@ public class PluginDetailActivity extends AppCompatActivity {
     }
 
     private void refreshRatingsViews() {
+        if (!mPlugin.doesHaveWPOrgPluginDetails()) {
+            mRatingsSectionContainer.setVisibility(View.GONE);
+            return;
+        }
+        mRatingsSectionContainer.setVisibility(View.VISIBLE);
         int numRatingsTotal = mPlugin.getNumberOfRatings();
 
         TextView txtNumRatings = findViewById(R.id.text_num_ratings);

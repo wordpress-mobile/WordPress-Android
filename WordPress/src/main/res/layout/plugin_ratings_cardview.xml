@@ -8,6 +8,7 @@
     card_view:cardCornerRadius="@dimen/cardview_default_radius">
 
     <RelativeLayout
+        android:id="@+id/plugin_ratings_section_container"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:padding="@dimen/margin_extra_large">
