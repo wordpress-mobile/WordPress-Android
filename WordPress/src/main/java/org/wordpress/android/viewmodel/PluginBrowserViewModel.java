@@ -361,15 +361,12 @@ public class PluginBrowserViewModel extends ViewModel {
 
     @WorkerThread
     private void updateAllPluginListsIfNecessary() {
-        final int previousSetSize = mUpdatedPluginSlugSet.size();
+        final Set<String> copiedSet = new HashSet<>(mUpdatedPluginSlugSet);
         mHandler.postDelayed(new Runnable() {
             @Override
             public void run() {
-                // If the updated plugin set hasn't changed
-                if (previousSetSize == mUpdatedPluginSlugSet.size()) {
-                    // By using a copy of the list and clearing it immediately we attempt to avoid the set being changed
-                    // by another thread
-                    Set<String> copiedSet = new HashSet<>(mUpdatedPluginSlugSet);
+                // Using the size of the set for comparison might fail since we clear the mUpdatedPluginSlugSet
+                if (copiedSet.equals(mUpdatedPluginSlugSet)) {
                     updateAllPluginListsWithNewPlugins(copiedSet);
                     mUpdatedPluginSlugSet.clear();
                 }
@@ -380,6 +377,9 @@ public class PluginBrowserViewModel extends ViewModel {
     @WorkerThread
     @SuppressWarnings("WeakerAccess") // To avoid synthetic accessor
     protected void updateAllPluginListsWithNewPlugins(@NonNull Set<String> updatedPluginSlugSet) {
+        if (updatedPluginSlugSet.size() == 0) {
+            return;
+        }
         Map<String, ImmutablePluginModel> newPluginMap = new HashMap<>(updatedPluginSlugSet.size());
         for (String slug : updatedPluginSlugSet) {
             ImmutablePluginModel immutablePlugin = mPluginStore.getImmutablePluginBySlug(getSite(), slug);
@@ -387,11 +387,15 @@ public class PluginBrowserViewModel extends ViewModel {
                 newPluginMap.put(slug, immutablePlugin);
             }
         }
-        // By combining all the updated plugins into one map and we can post a single update to the UI after changes are reflected
-        updatePluginListWithNewPlugin(mSitePlugins, newPluginMap);
+        // By combining all the updated plugins into one map, we can post a single update to the UI after changes are reflected
         updatePluginListWithNewPlugin(mNewPlugins, newPluginMap);
         updatePluginListWithNewPlugin(mPopularPlugins, newPluginMap);
         updatePluginListWithNewPlugin(mSearchResults, newPluginMap);
+
+        // Unfortunately we can't use the same method to update the site plugins because removing/installing plugins can
+        // mess up the list. Also we care most about the Site Plugins and using the store to get the correct plugin information
+        // is much more reliable than any manual update we can make
+        reloadPluginDirectory(PluginDirectoryType.SITE);
     }
 
     @WorkerThread
