@@ -18,9 +18,8 @@ import org.wordpress.android.models.CategoryModel;
 import org.wordpress.android.models.JetpackSettingsModel;
 import org.wordpress.android.util.AnalyticsUtils;
 import org.wordpress.android.util.AppLog;
-import org.wordpress.android.util.CrashlyticsUtils;
+import org.wordpress.android.util.SiteUtils;
 import org.wordpress.android.util.StringUtils;
-import org.wordpress.android.util.helpers.Version;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -94,6 +93,8 @@ class DotComSiteSettings extends SiteSettingsInterface {
     private static final String CATEGORIES_KEY = "categories";
     private static final String DEFAULT_SHARING_BUTTON_STYLE = "icon-only";
 
+    private static final String SPEED_UP_SETTINGS_JETPACK_VERSION = "5.8";
+
     // used to track network fetches to prevent multiple errors from generating multiple toasts
     private int mFetchRequestCount = 0;
     private int mSaveRequestCount = 0;
@@ -145,25 +146,7 @@ class DotComSiteSettings extends SiteSettingsInterface {
     }
 
     static boolean supportsJetpackSpeedUpSettings(SiteModel site) {
-        String jetpackVersion = site.getJetpackVersion();
-        if (site.isUsingWpComRestApi() && site.isJetpackConnected() && !TextUtils.isEmpty(jetpackVersion)) {
-            try {
-                // strip any trailing "-beta" or "-alpha" from the version
-                int index = jetpackVersion.lastIndexOf("-");
-                if (index > 0) {
-                    jetpackVersion = jetpackVersion.substring(0, index);
-                }
-                Version siteJetpackVersion = new Version(jetpackVersion);
-                Version minVersion = new Version("5.8");
-                return siteJetpackVersion.compareTo(minVersion) >= 0; // if the site has Jetpack 5.8 or newer installed
-            } catch (IllegalArgumentException e) {
-                String errorStr = "Invalid site jetpack version " + jetpackVersion;
-                AppLog.e(AppLog.T.UTILS, errorStr, e);
-                CrashlyticsUtils.logException(e, AppLog.T.UTILS, errorStr);
-                return true;
-            }
-        }
-        return false;
+        return SiteUtils.checkMinimalJetpackVersion(site, SPEED_UP_SETTINGS_JETPACK_VERSION);
     }
 
     private void fetchWpSettings() {
@@ -322,27 +305,32 @@ class DotComSiteSettings extends SiteSettingsInterface {
                 mSite.getSiteId(), new RestRequest.Listener() {
                     @Override
                     public void onResponse(JSONObject response) {
-                        AppLog.v(AppLog.T.API, "Received Jetpack module settings");
-                        if (response == null) return;
-                        JSONArray array = response.optJSONArray("modules");
-                        if (array == null) return;
-                        for (int i = 0; i < array.length(); i++) {
-                            JSONObject module = array.optJSONObject(i);
-                            if (module == null) {
-                                continue;
-                            }
-                            String id = module.optString("id");
-                            if (id == null) {
-                                continue;
-                            }
-                            if (id.equals(SERVE_IMAGES_FROM_OUR_SERVERS)) {
-                                mRemoteJpSettings.serveImagesFromOurServers = module.optBoolean("active", false);
-                            } else if (id.equals(LAZY_LOAD_IMAGES)) {
-                                mRemoteJpSettings.lazyLoadImages = module.optBoolean("active", false);
-                            }
+                        if (response == null) {
+                            AppLog.w(AppLog.T.API, "Unexpected state: Received empty Jetpack modules response");
+                            onFetchResponseReceived(null);
+                            return;
                         }
-                        mJpSettings.serveImagesFromOurServers = mRemoteJpSettings.serveImagesFromOurServers;
-                        mJpSettings.lazyLoadImages = mRemoteJpSettings.lazyLoadImages;
+                        AppLog.v(AppLog.T.API, "Received Jetpack module settings");
+                        JSONArray array = response.optJSONArray("modules");
+                        if (array != null) {
+                            for (int i = 0; i < array.length(); i++) {
+                                JSONObject module = array.optJSONObject(i);
+                                if (module == null) {
+                                    continue;
+                                }
+                                String id = module.optString("id");
+                                if (id == null) {
+                                    continue;
+                                }
+                                if (id.equals(SERVE_IMAGES_FROM_OUR_SERVERS)) {
+                                    mRemoteJpSettings.serveImagesFromOurServers = module.optBoolean("active", false);
+                                } else if (id.equals(LAZY_LOAD_IMAGES)) {
+                                    mRemoteJpSettings.lazyLoadImages = module.optBoolean("active", false);
+                                }
+                            }
+                            mJpSettings.serveImagesFromOurServers = mRemoteJpSettings.serveImagesFromOurServers;
+                            mJpSettings.lazyLoadImages = mRemoteJpSettings.lazyLoadImages;
+                        }
                         onFetchResponseReceived(null);
                     }
                 }, new RestRequest.ErrorListener() {
