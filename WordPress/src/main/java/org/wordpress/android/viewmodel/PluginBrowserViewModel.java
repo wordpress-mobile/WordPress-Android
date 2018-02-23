@@ -253,7 +253,8 @@ public class PluginBrowserViewModel extends ViewModel {
         }
 
         if (!TextUtils.isEmpty(event.pluginSlug)) {
-            // TODO: update live data lists
+            ImmutablePluginModel newPlugin = mPluginStore.getImmutablePluginBySlug(getSite(), event.pluginSlug);
+            updateAllPluginListsWithNewPlugin(newPlugin);
         }
     }
 
@@ -296,6 +297,41 @@ public class PluginBrowserViewModel extends ViewModel {
         }
         mSearchResults.postValue(event.plugins);
         mSearchPluginsListStatus.postValue(PluginListStatus.DONE);
+    }
+
+    // Keeping the data up to date
+
+    private void updateAllPluginListsWithNewPlugin(@Nullable final ImmutablePluginModel newPlugin) {
+        updatePluginListWithNewPlugin(mSitePlugins, newPlugin);
+        updatePluginListWithNewPlugin(mPopularPlugins, newPlugin);
+        updatePluginListWithNewPlugin(mNewPlugins, newPlugin);
+        updatePluginListWithNewPlugin(mSearchResults, newPlugin);
+    }
+
+    private void updatePluginListWithNewPlugin(@NonNull final MutableLiveData<List<ImmutablePluginModel>> mutableLiveData,
+                                               @Nullable final ImmutablePluginModel newPlugin) {
+        List<ImmutablePluginModel> pluginList = mutableLiveData.getValue();
+        if (newPlugin == null || newPlugin.getSlug() == null || pluginList == null || pluginList.size() == 0) {
+            // Nothing to update
+            return;
+        }
+        // When a site or wporg plugin is updated we need to update every list that contains that item
+        List<ImmutablePluginModel> newList = new ArrayList<>(pluginList.size());
+        boolean isChanged = false;
+        for (ImmutablePluginModel immutablePlugin : pluginList) {
+            if (newPlugin.getSlug().equals(immutablePlugin.getSlug())) {
+                // add new item
+                newList.add(newPlugin);
+                isChanged = true;
+            } else {
+                // add old item
+                newList.add(immutablePlugin);
+            }
+        }
+        // Only update if the list is actually changed
+        if (isChanged) {
+            mutableLiveData.postValue(newList);
+        }
     }
 
     // Search
