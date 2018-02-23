@@ -56,10 +56,10 @@ public class PluginStore extends Store {
         public String slug;
         public String pluginName;
 
-        public DeleteSitePluginPayload(SiteModel site, String slug, String pluginName) {
+        public DeleteSitePluginPayload(SiteModel site, String pluginName, String slug) {
             this.site = site;
-            this.slug = slug;
             this.pluginName = pluginName;
+            this.slug = slug;
         }
     }
 
