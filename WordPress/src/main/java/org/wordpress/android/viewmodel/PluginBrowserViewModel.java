@@ -251,11 +251,7 @@ public class PluginBrowserViewModel extends ViewModel {
             AppLog.e(AppLog.T.PLUGINS, "An error occurred while fetching the wporg plugin with type: " + event.error.type);
             return;
         }
-
-        if (!TextUtils.isEmpty(event.pluginSlug)) {
-            ImmutablePluginModel newPlugin = mPluginStore.getImmutablePluginBySlug(getSite(), event.pluginSlug);
-            updateAllPluginListsWithNewPlugin(newPlugin);
-        }
+        updateAllPluginListsWithNewPluginForSlug(event.pluginSlug);
     }
 
     @SuppressWarnings("unused")
@@ -299,19 +295,65 @@ public class PluginBrowserViewModel extends ViewModel {
         mSearchPluginsListStatus.postValue(PluginListStatus.DONE);
     }
 
+    @SuppressWarnings("unused")
+    @Subscribe(threadMode = ThreadMode.BACKGROUND)
+    public void onSitePluginConfigured(PluginStore.OnSitePluginConfigured event) {
+        if (event.isError()) {
+            // The error should be handled wherever the action has been triggered from which should be PluginDetailActivity
+            return;
+        }
+        updateAllPluginListsWithNewPluginForSlug(event.slug);
+    }
+
+    @SuppressWarnings("unused")
+    @Subscribe(threadMode = ThreadMode.BACKGROUND)
+    public void onSitePluginDeleted(PluginStore.OnSitePluginDeleted event) {
+        if (event.isError()) {
+            // The error should be handled wherever the action has been triggered from which should be PluginDetailActivity
+            return;
+        }
+        updateAllPluginListsWithNewPluginForSlug(event.slug);
+    }
+
+    @SuppressWarnings("unused")
+    @Subscribe(threadMode = ThreadMode.BACKGROUND)
+    public void onSitePluginInstalled(PluginStore.OnSitePluginInstalled event) {
+        if (event.isError()) {
+            // The error should be handled wherever the action has been triggered from which should be PluginDetailActivity
+            return;
+        }
+        updateAllPluginListsWithNewPluginForSlug(event.slug);
+    }
+
+    @SuppressWarnings("unused")
+    @Subscribe(threadMode = ThreadMode.BACKGROUND)
+    public void onSitePluginUpdated(PluginStore.OnSitePluginUpdated event) {
+        if (event.isError()) {
+            // The error should be handled wherever the action has been triggered from which should be PluginDetailActivity
+            return;
+        }
+        updateAllPluginListsWithNewPluginForSlug(event.slug);
+    }
+
     // Keeping the data up to date
 
-    private void updateAllPluginListsWithNewPlugin(@Nullable final ImmutablePluginModel newPlugin) {
+    @WorkerThread
+    private void updateAllPluginListsWithNewPluginForSlug(@Nullable final String slug) {
+        ImmutablePluginModel newPlugin = mPluginStore.getImmutablePluginBySlug(getSite(), slug);
+        if (newPlugin == null) {
+            return;
+        }
         updatePluginListWithNewPlugin(mSitePlugins, newPlugin);
         updatePluginListWithNewPlugin(mPopularPlugins, newPlugin);
         updatePluginListWithNewPlugin(mNewPlugins, newPlugin);
         updatePluginListWithNewPlugin(mSearchResults, newPlugin);
     }
 
+    @WorkerThread
     private void updatePluginListWithNewPlugin(@NonNull final MutableLiveData<List<ImmutablePluginModel>> mutableLiveData,
-                                               @Nullable final ImmutablePluginModel newPlugin) {
+                                               @NonNull final ImmutablePluginModel newPlugin) {
         List<ImmutablePluginModel> pluginList = mutableLiveData.getValue();
-        if (newPlugin == null || newPlugin.getSlug() == null || pluginList == null || pluginList.size() == 0) {
+        if (newPlugin.getSlug() == null || pluginList == null || pluginList.size() == 0) {
             // Nothing to update
             return;
         }
