@@ -916,6 +916,12 @@ public class PluginDetailActivity extends AppCompatActivity {
         }
 
         refreshPluginFromStore();
+
+        // We want to activate and enable auto updates for the plugin after install
+        mIsActive = true;
+        mIsAutoUpdateEnabled = true;
+        dispatchConfigurePluginAction(true);
+
         refreshViews();
         showSuccessfulInstallSnackbar();
         invalidateOptionsMenu();
