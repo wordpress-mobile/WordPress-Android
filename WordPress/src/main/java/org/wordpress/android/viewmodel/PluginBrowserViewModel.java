@@ -23,8 +23,10 @@ import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.StringUtils;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import javax.inject.Inject;
@@ -378,32 +380,35 @@ public class PluginBrowserViewModel extends ViewModel {
     @WorkerThread
     @SuppressWarnings("WeakerAccess") // To avoid synthetic accessor
     protected void updateAllPluginListsWithNewPlugins(@NonNull Set<String> updatedPluginSlugSet) {
+        Map<String, ImmutablePluginModel> newPluginMap = new HashMap<>(updatedPluginSlugSet.size());
         for (String slug : updatedPluginSlugSet) {
             ImmutablePluginModel immutablePlugin = mPluginStore.getImmutablePluginBySlug(getSite(), slug);
-            if (immutablePlugin == null) {
-                // This shouldn't happen, but we guard against it just in case
-                continue;
+            if (immutablePlugin != null) {
+                newPluginMap.put(slug, immutablePlugin);
             }
-            updatePluginListWithNewPlugin(mSitePlugins, immutablePlugin);
-            updatePluginListWithNewPlugin(mNewPlugins, immutablePlugin);
-            updatePluginListWithNewPlugin(mPopularPlugins, immutablePlugin);
-            updatePluginListWithNewPlugin(mSearchResults, immutablePlugin);
         }
+        // By combining all the updated plugins into one map and we can post a single update to the UI after changes are reflected
+        updatePluginListWithNewPlugin(mSitePlugins, newPluginMap);
+        updatePluginListWithNewPlugin(mNewPlugins, newPluginMap);
+        updatePluginListWithNewPlugin(mPopularPlugins, newPluginMap);
+        updatePluginListWithNewPlugin(mSearchResults, newPluginMap);
     }
 
     @WorkerThread
     private void updatePluginListWithNewPlugin(@NonNull final MutableLiveData<List<ImmutablePluginModel>> mutableLiveData,
-                                               @NonNull final ImmutablePluginModel newPlugin) {
+                                               @NonNull final Map<String, ImmutablePluginModel> newPluginMap) {
         List<ImmutablePluginModel> pluginList = mutableLiveData.getValue();
-        if (newPlugin.getSlug() == null || pluginList == null || pluginList.size() == 0) {
+        if (pluginList == null || pluginList.size() == 0 || newPluginMap.size() == 0) {
             // Nothing to update
             return;
         }
-        // When a site or wporg plugin is updated we need to update every list that contains that item
+        // When a site or wporg plugin is updated we need to update every occurrence of that item
         List<ImmutablePluginModel> newList = new ArrayList<>(pluginList.size());
         boolean isChanged = false;
         for (ImmutablePluginModel immutablePlugin : pluginList) {
-            if (newPlugin.getSlug().equals(immutablePlugin.getSlug())) {
+            String slug = immutablePlugin.getSlug();
+            ImmutablePluginModel newPlugin = newPluginMap.get(slug);
+            if (newPlugin != null) {
                 // add new item
                 newList.add(newPlugin);
                 isChanged = true;
