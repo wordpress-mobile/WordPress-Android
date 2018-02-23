@@ -740,7 +740,8 @@ public class PluginDetailActivity extends AppCompatActivity {
         }
         mIsConfiguringPlugin = true;
         mDispatcher.dispatch(PluginActionBuilder.newConfigureSitePluginAction(
-                new ConfigureSitePluginPayload(mSite, mPlugin.getName(), mIsActive, mIsAutoUpdateEnabled)));
+                new ConfigureSitePluginPayload(mSite, mPlugin.getName(), mPlugin.getSlug(),
+                        mIsActive, mIsAutoUpdateEnabled)));
     }
 
     protected void dispatchUpdatePluginAction() {
@@ -753,7 +754,7 @@ public class PluginDetailActivity extends AppCompatActivity {
 
         mIsUpdatingPlugin = true;
         refreshUpdateVersionViews();
-        UpdateSitePluginPayload payload = new UpdateSitePluginPayload(mSite, mPlugin.getName());
+        UpdateSitePluginPayload payload = new UpdateSitePluginPayload(mSite, mPlugin.getName(), mPlugin.getSlug());
         mDispatcher.dispatch(PluginActionBuilder.newUpdateSitePluginAction(payload));
     }
 
@@ -773,7 +774,7 @@ public class PluginDetailActivity extends AppCompatActivity {
             return;
         }
         mRemovePluginProgressDialog.setMessage(getRemovingPluginMessage());
-        DeleteSitePluginPayload payload = new DeleteSitePluginPayload(mSite, mSlug, mPlugin.getName());
+        DeleteSitePluginPayload payload = new DeleteSitePluginPayload(mSite, mPlugin.getName(), mSlug);
         mDispatcher.dispatch(PluginActionBuilder.newDeleteSitePluginAction(payload));
     }
 
