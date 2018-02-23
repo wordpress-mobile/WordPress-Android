@@ -32,7 +32,7 @@ dependencies {
     implementation 'org.wordpress:utils:1.18.1'
     implementation 'com.automattic:rest:1.0.7'
 
-    lintChecks project(path:':libs:lint:WordPressLint')
+    lintChecks 'org.wordpress:lint:1.0.0'
 }
 
 uploadArchives {
