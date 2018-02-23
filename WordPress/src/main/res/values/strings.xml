@@ -2141,8 +2141,6 @@
     <string name="photo_picker_thumbnail_desc">Play video</string>
     <string name="reader_list_item_suggestion_remove_desc">delete</string>
     <string name="reader_photo_view_desc">photo</string>
-    <string name="sign_in_dialog_logo_desc">WordPress logo</string>
-    <string name="sign_in_logo_desc">WordPress logo</string>
     <string name="sign_in_password_visibility_desc">change password visibility</string>
     <string name="stats_list_cell_chevron_expand_desc">expand</string>
     <string name="show_more_desc">show more</string>

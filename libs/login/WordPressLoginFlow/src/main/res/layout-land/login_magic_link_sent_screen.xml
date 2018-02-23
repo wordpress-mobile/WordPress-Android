@@ -20,7 +20,7 @@
             android:layout_width="@dimen/magic_link_sent_illustration_sz"
             android:layout_height="@dimen/magic_link_sent_illustration_sz"
             android:scaleType="centerInside"
-            android:contentDescription="@string/login_magic_links_sent_description"
+            android:contentDescription="@null"
             app:srcCompat="@drawable/img_email_alert_120dp"/>
 
         <TextView
