@@ -76,7 +76,7 @@ public class SiteUtils {
                 }
                 Version siteJetpackVersion = new Version(jetpackVersion);
                 Version minVersion = new Version(limitVersion);
-                return siteJetpackVersion.compareTo(minVersion) >= 0; // if the site has Jetpack 5.8 or newer installed
+                return siteJetpackVersion.compareTo(minVersion) >= 0;
             } catch (IllegalArgumentException e) {
                 String errorStr = "Invalid site jetpack version " + jetpackVersion + ", expected " + limitVersion;
                 AppLog.e(AppLog.T.UTILS, errorStr, e);
