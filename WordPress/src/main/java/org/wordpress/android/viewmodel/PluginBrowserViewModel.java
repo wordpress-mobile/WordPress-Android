@@ -23,7 +23,9 @@ import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.StringUtils;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import javax.inject.Inject;
 
@@ -54,6 +56,8 @@ public class PluginBrowserViewModel extends ViewModel {
     private SiteModel mSite;
 
     private final Handler mHandler;
+    @SuppressWarnings("WeakerAccess") // To avoid synthetic accessor
+    protected final Set<String> mUpdatedPluginSlugSet;
 
     private final MutableLiveData<PluginListStatus> mNewPluginsListStatus;
     private final MutableLiveData<PluginListStatus> mPopularPluginsListStatus;
@@ -77,6 +81,7 @@ public class PluginBrowserViewModel extends ViewModel {
         mDispatcher.register(this);
 
         mHandler = new Handler();
+        mUpdatedPluginSlugSet = new HashSet<>();
 
         mSitePlugins = new MutableLiveData<>();
         mNewPlugins = new MutableLiveData<>();
@@ -251,7 +256,10 @@ public class PluginBrowserViewModel extends ViewModel {
             AppLog.e(AppLog.T.PLUGINS, "An error occurred while fetching the wporg plugin with type: " + event.error.type);
             return;
         }
-        updateAllPluginListsWithNewPluginForSlug(event.pluginSlug);
+        // Check if the slug is empty, if not add it to the set and only trigger the update if the slug is not in the set
+        if (!TextUtils.isEmpty(event.pluginSlug) && mUpdatedPluginSlugSet.add(event.pluginSlug)) {
+            updateAllPluginListsIfNecessary();
+        }
     }
 
     @SuppressWarnings("unused")
@@ -302,7 +310,10 @@ public class PluginBrowserViewModel extends ViewModel {
             // The error should be handled wherever the action has been triggered from which should be PluginDetailActivity
             return;
         }
-        updateAllPluginListsWithNewPluginForSlug(event.slug);
+        // Check if the slug is empty, if not add it to the set and only trigger the update if the slug is not in the set
+        if (!TextUtils.isEmpty(event.slug) && mUpdatedPluginSlugSet.add(event.slug)) {
+            updateAllPluginListsIfNecessary();
+        }
     }
 
     @SuppressWarnings("unused")
@@ -312,7 +323,10 @@ public class PluginBrowserViewModel extends ViewModel {
             // The error should be handled wherever the action has been triggered from which should be PluginDetailActivity
             return;
         }
-        updateAllPluginListsWithNewPluginForSlug(event.slug);
+        // Check if the slug is empty, if not add it to the set and only trigger the update if the slug is not in the set
+        if (!TextUtils.isEmpty(event.slug) && mUpdatedPluginSlugSet.add(event.slug)) {
+            updateAllPluginListsIfNecessary();
+        }
     }
 
     @SuppressWarnings("unused")
@@ -322,7 +336,10 @@ public class PluginBrowserViewModel extends ViewModel {
             // The error should be handled wherever the action has been triggered from which should be PluginDetailActivity
             return;
         }
-        updateAllPluginListsWithNewPluginForSlug(event.slug);
+        // Check if the slug is empty, if not add it to the set and only trigger the update if the slug is not in the set
+        if (!TextUtils.isEmpty(event.slug) && mUpdatedPluginSlugSet.add(event.slug)) {
+            updateAllPluginListsIfNecessary();
+        }
     }
 
     @SuppressWarnings("unused")
@@ -332,21 +349,46 @@ public class PluginBrowserViewModel extends ViewModel {
             // The error should be handled wherever the action has been triggered from which should be PluginDetailActivity
             return;
         }
-        updateAllPluginListsWithNewPluginForSlug(event.slug);
+        // Check if the slug is empty, if not add it to the set and only trigger the update if the slug is not in the set
+        if (!TextUtils.isEmpty(event.slug) && mUpdatedPluginSlugSet.add(event.slug)) {
+            updateAllPluginListsIfNecessary();
+        }
     }
 
     // Keeping the data up to date
 
     @WorkerThread
-    private void updateAllPluginListsWithNewPluginForSlug(@Nullable final String slug) {
-        ImmutablePluginModel newPlugin = mPluginStore.getImmutablePluginBySlug(getSite(), slug);
-        if (newPlugin == null) {
-            return;
+    private void updateAllPluginListsIfNecessary() {
+        final int previousSetSize = mUpdatedPluginSlugSet.size();
+        mHandler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                // If the updated plugin set hasn't changed
+                if (previousSetSize == mUpdatedPluginSlugSet.size()) {
+                    // By using a copy of the list and clearing it immediately we attempt to avoid the set being changed
+                    // by another thread
+                    Set<String> copiedSet = new HashSet<>(mUpdatedPluginSlugSet);
+                    updateAllPluginListsWithNewPlugins(copiedSet);
+                    mUpdatedPluginSlugSet.clear();
+                }
+            }
+        }, 250);
+    }
+
+    @WorkerThread
+    @SuppressWarnings("WeakerAccess") // To avoid synthetic accessor
+    protected void updateAllPluginListsWithNewPlugins(@NonNull Set<String> updatedPluginSlugSet) {
+        for (String slug : updatedPluginSlugSet) {
+            ImmutablePluginModel immutablePlugin = mPluginStore.getImmutablePluginBySlug(getSite(), slug);
+            if (immutablePlugin == null) {
+                // This shouldn't happen, but we guard against it just in case
+                continue;
+            }
+            updatePluginListWithNewPlugin(mSitePlugins, immutablePlugin);
+            updatePluginListWithNewPlugin(mNewPlugins, immutablePlugin);
+            updatePluginListWithNewPlugin(mPopularPlugins, immutablePlugin);
+            updatePluginListWithNewPlugin(mSearchResults, immutablePlugin);
         }
-        updatePluginListWithNewPlugin(mSitePlugins, newPlugin);
-        updatePluginListWithNewPlugin(mPopularPlugins, newPlugin);
-        updatePluginListWithNewPlugin(mNewPlugins, newPlugin);
-        updatePluginListWithNewPlugin(mSearchResults, newPlugin);
     }
 
     @WorkerThread
