@@ -4,6 +4,7 @@ import android.text.TextUtils;
 
 import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.store.SiteStore;
+import org.wordpress.android.util.helpers.Version;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -56,5 +57,33 @@ public class SiteUtils {
         }
 
         return siteIDs;
+    }
+
+    /**
+     * Checks if site Jetpack version is higher than limit version
+     * @param site
+     * @param limitVersion minimal acceptable Jetpack version
+     * @return
+     */
+    public static boolean checkMinimalJetpackVersion(SiteModel site, String limitVersion) {
+        String jetpackVersion = site.getJetpackVersion();
+        if (site.isUsingWpComRestApi() && site.isJetpackConnected() && !TextUtils.isEmpty(jetpackVersion)) {
+            try {
+                // strip any trailing "-beta" or "-alpha" from the version
+                int index = jetpackVersion.lastIndexOf("-");
+                if (index > 0) {
+                    jetpackVersion = jetpackVersion.substring(0, index);
+                }
+                Version siteJetpackVersion = new Version(jetpackVersion);
+                Version minVersion = new Version(limitVersion);
+                return siteJetpackVersion.compareTo(minVersion) >= 0;
+            } catch (IllegalArgumentException e) {
+                String errorStr = "Invalid site jetpack version " + jetpackVersion + ", expected " + limitVersion;
+                AppLog.e(AppLog.T.UTILS, errorStr, e);
+                CrashlyticsUtils.logException(e, AppLog.T.UTILS, errorStr);
+                return true;
+            }
+        }
+        return false;
     }
 }

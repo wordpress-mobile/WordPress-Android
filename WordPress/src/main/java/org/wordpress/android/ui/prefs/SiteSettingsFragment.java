@@ -81,6 +81,8 @@ import java.util.Map;
 
 import javax.inject.Inject;
 
+import static org.wordpress.android.ui.prefs.DotComSiteSettings.supportsJetpackSpeedUpSettings;
+
 /**
  * Allows interfacing with WordPress site settings. Works with WP.com and WP.org v4.5+ (pending).
  *
@@ -219,6 +221,11 @@ public class SiteSettingsFragment extends PreferenceFragment
     private WPSwitchPreference mJpSsoPref;
     private WPSwitchPreference mJpMatchEmailPref;
     private WPSwitchPreference mJpUseTwoFactorPref;
+
+    // Speed up settings
+    private PreferenceScreen mSpeedUpYourSiteSettings;
+    private WPSwitchPreference mServeImagesFromOurServers;
+    private WPSwitchPreference mLazyLoadImages;
 
     public boolean mEditingEnabled = true;
 
@@ -476,6 +483,8 @@ public class SiteSettingsFragment extends PreferenceFragment
             return setupMorePreferenceScreen();
         } else if (preference == mJpSecuritySettings) {
             setupJetpackSecurityScreen();
+        } else if (preference == mSpeedUpYourSiteSettings) {
+            setupSpeedUpScreen();
         } else if (preference == findPreference(getString(R.string.pref_key_site_start_over_screen))) {
             Dialog dialog = ((PreferenceScreen) preference).getDialog();
             if (mSite == null || dialog == null) return false;
@@ -491,7 +500,7 @@ public class SiteSettingsFragment extends PreferenceFragment
                 String title = getString(R.string.start_over);
                 WPActivityUtils.addToolbarToDialog(this, dialog, title);
             }
-        }  else if (preference == mDateFormatPref) {
+        } else if (preference == mDateFormatPref) {
             showDateOrTimeFormatDialog(FormatType.DATE_FORMAT);
         } else if (preference == mTimeFormatPref) {
             showDateOrTimeFormatDialog(FormatType.TIME_FORMAT);
@@ -601,6 +610,12 @@ public class SiteSettingsFragment extends PreferenceFragment
         } else if (preference == mJpUseTwoFactorPref) {
             mJpUseTwoFactorPref.setChecked((Boolean) newValue);
             mSiteSettings.enableJetpackSsoTwoFactor((Boolean) newValue);
+        } else if (preference == mServeImagesFromOurServers) {
+            mServeImagesFromOurServers.setChecked((Boolean)newValue);
+            mSiteSettings.enableServeImagesFromOurServers((Boolean) newValue);
+        } else if (preference == mLazyLoadImages) {
+            mLazyLoadImages.setChecked((Boolean)newValue);
+            mSiteSettings.enableLazyLoadImages((Boolean) newValue);
         } else if (preference == mTitlePref) {
             mSiteSettings.setTitle(newValue.toString());
             changeEditTextPreferenceValue(mTitlePref, mSiteSettings.getTitle());
@@ -847,6 +862,9 @@ public class SiteSettingsFragment extends PreferenceFragment
         mPostsPerPagePref = getClickPref(R.string.pref_key_site_posts_per_page);
         mTimezonePref = getClickPref(R.string.pref_key_site_timezone);
         mAmpPref = (WPSwitchPreference) getChangePref(R.string.pref_key_site_amp);
+        mSpeedUpYourSiteSettings = (PreferenceScreen) getClickPref(R.string.pref_key_speed_up_your_site_screen);
+        mServeImagesFromOurServers = (WPSwitchPreference) getChangePref(R.string.pref_key_serve_images_from_our_servers);
+        mLazyLoadImages = (WPSwitchPreference) getChangePref(R.string.pref_key_lazy_load_images);
 
         sortLanguages();
 
@@ -869,12 +887,17 @@ public class SiteSettingsFragment extends PreferenceFragment
             || (isAccessedViaWPComRest && !mSite.getHasCapabilityManageOptions())) {
             hideAdminRequiredPreferences();
         }
+
+        // hide speed-up jetpack settings if plugin version < 5.8
+        if (!supportsJetpackSpeedUpSettings(mSite)) {
+            removeSpeedUpJetpackPreferences();
+        }
     }
 
     public void setEditingEnabled(boolean enabled) {
         // excludes mAddressPref, mMorePreference, mJpSecuritySettings
         final Preference[] editablePreference = {
-                mTitlePref , mTaglinePref, mPrivacyPref, mLanguagePref, mUsernamePref,
+                mTitlePref, mTaglinePref, mPrivacyPref, mLanguagePref, mUsernamePref,
                 mPasswordPref, mCategoryPref, mTagsPref, mFormatPref, mAllowCommentsPref,
                 mAllowCommentsNested, mSendPingbacksPref, mSendPingbacksNested, mReceivePingbacksPref,
                 mReceivePingbacksNested, mIdentityRequiredPreference, mUserAccountRequiredPref,
@@ -1170,6 +1193,8 @@ public class SiteSettingsFragment extends PreferenceFragment
         mJpWhitelistPref.setSummary(mSiteSettings.getJetpackProtectWhitelistSummary());
         mWeekStartPref.setValue(mSiteSettings.getStartOfWeek());
         mWeekStartPref.setSummary(mWeekStartPref.getEntry());
+        mServeImagesFromOurServers.setChecked(mSiteSettings.isServeImagesFromOurServersEnabled());
+        mLazyLoadImages.setChecked(mSiteSettings.isLazyLoadImagesEnabled());
 
         if (mSiteSettings.getAmpSupported()) {
             mAmpPref.setChecked(mSiteSettings.getAmpEnabled());
@@ -1534,6 +1559,16 @@ public class SiteSettingsFragment extends PreferenceFragment
         }
     }
 
+    private void setupSpeedUpScreen() {
+        if (mSpeedUpYourSiteSettings == null || !isAdded()) return;
+        String title = getString(R.string.site_settings_speed_up_your_site);
+        Dialog dialog = mSpeedUpYourSiteSettings.getDialog();
+        if (dialog != null) {
+            setupPreferenceList((ListView) dialog.findViewById(android.R.id.list), getResources());
+            WPActivityUtils.addToolbarToDialog(this, dialog, title);
+        }
+    }
+
     private boolean setupMorePreferenceScreen() {
         if (mMorePreference == null || !isAdded()) return false;
         String title = getString(R.string.site_settings_discussion_title);
@@ -1581,6 +1616,10 @@ public class SiteSettingsFragment extends PreferenceFragment
         WPPrefUtils.removePreference(this, R.string.pref_key_site_screen, R.string.pref_key_site_advanced);
         WPPrefUtils.removePreference(this, R.string.pref_key_site_screen, R.string.pref_key_site_account);
         WPPrefUtils.removePreference(this, R.string.pref_key_site_general, R.string.pref_key_site_language);
+    }
+
+    private void removeSpeedUpJetpackPreferences() {
+        WPPrefUtils.removePreference(this, R.string.pref_key_site_writing, R.string.pref_key_speed_up_your_site_screen);
     }
 
     private void removePrivateOptionFromPrivacySetting() {

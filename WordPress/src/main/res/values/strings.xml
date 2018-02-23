@@ -558,6 +558,12 @@
     <string name="site_settings_timezones_error">Unable to load timezones</string>
     <string name="site_settings_amp_title">Accelerated Mobile Pages (AMP)</string>
     <string name="site_settings_amp_summary">Your WordPress.com site supports the use of Accelerated Mobile Pages, a Google-led initiative that dramatically speeds up loading times on mobile devices</string>
+    <!-- Speed up your site -->
+    <string name="site_settings_speed_up_your_site">Speed up your site</string>
+    <string name="site_settings_serve_images_from_our_servers">Serve images from our servers</string>
+    <string name="site_settings_serve_images_from_our_servers_summary">Jetpack will optimize your images and serve them from the server location nearest to your visitors. Using our global content delivery network will boost the loading speed of your site.</string>
+    <string name="site_settings_lazy_load_images">"Lazy-load" images</string>
+    <string name="site_settings_lazy_load_images_summary">Improve your site\'s speed by only loading images visible on the screen. New images will load just before they scroll into view. This prevents viewers from having to download all the images on a page all at once, even ones they can\'t see.</string>
 
     <!-- tag list and detail -->
     <string name="tag_name_hint">Tag</string>

@@ -16,6 +16,8 @@ public class JetpackSettingsModel {
     public boolean ssoActive;
     public boolean ssoMatchEmail;
     public boolean ssoRequireTwoFactor;
+    public boolean serveImagesFromOurServers;
+    public boolean lazyLoadImages;
 
     public JetpackSettingsModel() {
         super();
@@ -36,6 +38,8 @@ public class JetpackSettingsModel {
         ssoMatchEmail = other.ssoMatchEmail;
         ssoRequireTwoFactor = other.ssoRequireTwoFactor;
         jetpackProtectWhitelist.addAll(other.jetpackProtectWhitelist);
+        serveImagesFromOurServers = other.serveImagesFromOurServers;
+        lazyLoadImages = other.lazyLoadImages;
     }
 
     @Override
@@ -49,6 +53,8 @@ public class JetpackSettingsModel {
                 ssoActive == otherModel.ssoActive &&
                 ssoMatchEmail == otherModel.ssoMatchEmail &&
                 ssoRequireTwoFactor == otherModel.ssoRequireTwoFactor &&
+                serveImagesFromOurServers == otherModel.serveImagesFromOurServers &&
+                lazyLoadImages == otherModel.lazyLoadImages &&
                 whitelistMatches(otherModel.jetpackProtectWhitelist);
     }
 

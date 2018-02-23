@@ -677,6 +677,22 @@ public abstract class SiteSettingsInterface {
         return mJpSettings.ssoRequireTwoFactor;
     }
 
+    public void enableServeImagesFromOurServers(boolean enabled) {
+        mJpSettings.serveImagesFromOurServers = enabled;
+    }
+
+    public boolean isServeImagesFromOurServersEnabled() {
+        return mJpSettings.serveImagesFromOurServers;
+    }
+
+    public void enableLazyLoadImages(boolean enabled) {
+        mJpSettings.lazyLoadImages = enabled;
+    }
+
+    public boolean isLazyLoadImagesEnabled() {
+        return mJpSettings.lazyLoadImages;
+    }
+
     public void setTitle(String title) {
         mSettings.title = title;
     }
