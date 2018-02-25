@@ -16,6 +16,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.BaseAdapter;
+import android.widget.EditText;
 import android.widget.Filter;
 import android.widget.Filterable;
 import android.widget.ListView;
@@ -116,6 +117,8 @@ public class SiteSettingsTimezoneDialog extends DialogFragment implements Dialog
         });
         mSearchView.setEnabled(false);
         mSearchView.setIconifiedByDefault(false);
+        setSearchViewContentDescription(mSearchView);
+
 
         mEmptyView = view.findViewById(R.id.empty_view);
         mProgressView = view.findViewById(R.id.progress_view);
@@ -168,6 +171,17 @@ public class SiteSettingsTimezoneDialog extends DialogFragment implements Dialog
         showProgressView(true);
         RequestQueue queue = Volley.newRequestQueue(getActivity());
         queue.add(request);
+    }
+
+    private void setSearchViewContentDescription(ViewGroup group) {
+        for (int i = 0; i < group.getChildCount(); i++) {
+            View child = group.getChildAt(i);
+            if (child instanceof EditText) {
+                child.setContentDescription(getString(R.string.search));
+            } else if (child instanceof ViewGroup) {
+                setSearchViewContentDescription((ViewGroup) child);
+            }
+        }
     }
 
     private void loadTimezones(@NonNull String responseJson) {

@@ -109,14 +109,14 @@ public class NotificationsSettingsActivity extends AppCompatActivity {
 
         mToolbarSwitch = findViewById(R.id.toolbar_with_switch);
         mToolbarSwitch.inflateMenu(R.menu.notifications_settings_secondary);
-        String stateString = isMasterChecked ?
+        mToolbarSwitch.setContentDescription(getString(R.string.notification_settings_switch_desc));
+        mToolbarSwitch.setTitle(isMasterChecked ?
                 getString(R.string.notification_settings_master_status_on) :
-                getString(R.string.notification_settings_master_status_off);
-        mToolbarSwitch.setContentDescription(getString(R.string.notification_settings_switch_desc, stateString));
-        mToolbarSwitch.setTitle(stateString);
+                getString(R.string.notification_settings_master_status_off));
 
         MenuItem menuItem = mToolbarSwitch.getMenu().findItem(R.id.master_switch);
         mMasterSwitch = (SwitchCompat) menuItem.getActionView();
+        mToolbarSwitch.setLabelFor(mMasterSwitch.getId());
         mMasterSwitch.setChecked(isMasterChecked);
         mMasterSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override

@@ -2145,9 +2145,12 @@
     <string name="stats_list_cell_chevron_expand_desc">expand</string>
     <string name="show_more_desc">show more</string>
     <string name="open_external_link_desc">open external link</string>
-    <string name="notification_settings_switch_desc">Notifications %s</string>
+    <string name="notification_settings_switch_desc">Notifications</string>
     <string name="navigate_up_desc">navigate up</string>
     <string name="stats_list_cell_chevron_collapse_desc">collapse</string>
+    <string name="fab_add_tag_desc">create tag</string>
+    <string name="fab_create_page_desc">create page</string>
+    <string name="my_site_fab_desc">create post</string>
 
     <!-- Site Creation -->
     <string name="site_creation_title">Create New Site</string>
@@ -2185,5 +2188,4 @@
     <string name="site_creation_epilogue_configure">Configure</string>
     <string name="site_creation_epilogue_write">Write first post</string>
     <string name="site_creation_content_description_confetti">Site creation completed successfully!</string>
-
 </resources>
