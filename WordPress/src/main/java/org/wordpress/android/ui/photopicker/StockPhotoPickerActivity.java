@@ -1,6 +1,5 @@
 package org.wordpress.android.ui.photopicker;
 
-import android.content.Context;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.NonNull;
@@ -11,11 +10,11 @@ import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
-import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.SearchView;
+import android.widget.TextView;
 
 import com.android.volley.VolleyError;
 import com.wordpress.rest.RestRequest;
@@ -26,6 +25,7 @@ import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.fluxc.model.MediaModel;
 import org.wordpress.android.fluxc.model.SiteModel;
+import org.wordpress.android.util.AniUtils;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.DisplayUtils;
 import org.wordpress.android.util.PhotonUtils;
@@ -45,6 +45,8 @@ public class StockPhotoPickerActivity extends AppCompatActivity {
 
     private int mThumbWidth;
     private int mThumbHeight;
+
+    private boolean mInMultiSelect;
 
     private SearchView mSearchView;
     private String mSearchQuery;
@@ -72,7 +74,7 @@ public class StockPhotoPickerActivity extends AppCompatActivity {
         mRecycler = findViewById(R.id.recycler);
         mRecycler.setLayoutManager(new GridLayoutManager(this, getColumnCount()));
 
-        mAdapter = new StockPhotoAdapter(this);
+        mAdapter = new StockPhotoAdapter();
         mRecycler.setAdapter(mAdapter);
 
         mSearchView = findViewById(R.id.search_view);
@@ -205,22 +207,26 @@ public class StockPhotoPickerActivity extends AppCompatActivity {
             }
         }
 
-
         mAdapter.setMediaList(mediaList);
     }
 
     private class StockPhotoAdapter extends RecyclerView.Adapter<StockViewHolder> {
-        private final List<MediaModel> mItems = new ArrayList<>();
-        private final LayoutInflater mLayoutInflater;
+        private static final float SCALE_NORMAL = 1.0f;
+        private static final float SCALE_SELECTED = .8f;
 
-        StockPhotoAdapter(Context context) {
-            mLayoutInflater = LayoutInflater.from(context);
+        private final long mAniDelayMs;
+        private final List<MediaModel> mItems = new ArrayList<>();
+        private final ArrayList<Integer> mSelectedItems = new ArrayList<>();
+
+        StockPhotoAdapter() {
             setHasStableIds(false);
+            mAniDelayMs = AniUtils.Duration.SHORT.toMillis(StockPhotoPickerActivity.this);
         }
 
         public void setMediaList(@NonNull List<MediaModel> mediaList) {
             mItems.clear();
             mItems.addAll(mediaList);
+            mSelectedItems.clear();
             notifyDataSetChanged();
         }
 
@@ -236,7 +242,7 @@ public class StockPhotoPickerActivity extends AppCompatActivity {
 
         @Override
         public StockViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-            View view = mLayoutInflater.inflate(R.layout.stock_photo_picker_thumbnail, parent, false);
+            View view = getLayoutInflater().inflate(R.layout.stock_photo_picker_thumbnail, parent, false);
             return new StockViewHolder(view);
         }
 
@@ -250,16 +256,97 @@ public class StockPhotoPickerActivity extends AppCompatActivity {
         private String getBestImageUrl(@NonNull MediaModel media) {
             return PhotonUtils.getPhotonImageUrl(media.getThumbnailUrl(), mThumbWidth, mThumbHeight);
         }
+
+        void setInMultiSelect(boolean value) {
+            if (mInMultiSelect != value) {
+                mInMultiSelect = value;
+                clearSelection();
+            }
+        }
+
+        void clearSelection() {
+            if (mSelectedItems.size() > 0) {
+                mSelectedItems.clear();
+                notifyDataSetChanged();
+            }
+        }
+
+        public boolean isItemSelected(int position) {
+            return mSelectedItems.contains(position);
+        }
+
+        public void removeSelectionByLocalId(int localMediaId) {
+            if (isItemSelected(localMediaId)) {
+                mSelectedItems.remove(Integer.valueOf(localMediaId));
+                notifyDataSetChanged();
+            }
+        }
+
+        private void setItemSelected(StockViewHolder holder, int position, boolean selected) {
+            if (selected) {
+                mSelectedItems.add(position);
+            } else {
+                mSelectedItems.remove(position);
+            }
+
+            // show and animate the count
+            if (selected) {
+                holder.selectionCountTextView.setText(Integer.toString(mSelectedItems.indexOf(position) + 1));
+            } else {
+                holder.selectionCountTextView.setText(null);
+            }
+            AniUtils.startAnimation(holder.selectionCountTextView, R.anim.pop);
+            holder.selectionCountTextView.setVisibility(selected ? View.VISIBLE : View.GONE);
+
+            // scale the thumbnail
+            if (selected) {
+                AniUtils.scale(holder.imageView, SCALE_NORMAL, SCALE_SELECTED, AniUtils.Duration.SHORT);
+            } else {
+                AniUtils.scale(holder.imageView, SCALE_SELECTED, SCALE_NORMAL, AniUtils.Duration.SHORT);
+            }
+
+            // redraw after the scale animation completes
+            new Handler().postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    notifyDataSetChanged();
+                }
+            }, mAniDelayMs);
+
+        }
+
+        private void toggleItemSelected(StockViewHolder holder, int position) {
+            boolean isSelected = isItemSelected(position);
+            setItemSelected(holder, position, !isSelected);
+        }
+
+        public void setSelectedItems(ArrayList<Integer> selectedItems) {
+            mSelectedItems.clear();
+            mSelectedItems.addAll(selectedItems);
+            notifyDataSetChanged();
+        }
     }
 
     class StockViewHolder extends RecyclerView.ViewHolder {
         private final WPNetworkImageView imageView;
+        private final TextView selectionCountTextView;
 
         public StockViewHolder(View view) {
             super(view);
+
             imageView = view.findViewById(R.id.image_thumbnail);
             imageView.getLayoutParams().width = mThumbWidth;
             imageView.getLayoutParams().height = mThumbHeight;
+
+            selectionCountTextView = view.findViewById(R.id.text_selection_count);
+            selectionCountTextView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    int position = getAdapterPosition();
+                    mAdapter.setInMultiSelect(true);
+                    mAdapter.toggleItemSelected(StockViewHolder.this, position);
+                }
+            });
         }
     }
 
