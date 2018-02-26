@@ -3,6 +3,7 @@ package org.wordpress.android.ui.prefs.notifications;
 import android.app.FragmentManager;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.support.v4.view.ViewCompat;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.preference.PreferenceManager;
@@ -116,7 +117,7 @@ public class NotificationsSettingsActivity extends AppCompatActivity {
 
         MenuItem menuItem = mToolbarSwitch.getMenu().findItem(R.id.master_switch);
         mMasterSwitch = (SwitchCompat) menuItem.getActionView();
-        mToolbarSwitch.setLabelFor(mMasterSwitch.getId());
+        ViewCompat.setLabelFor(mToolbarSwitch, mMasterSwitch.getId());
         mMasterSwitch.setChecked(isMasterChecked);
         mMasterSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
