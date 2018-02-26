@@ -264,7 +264,6 @@ Language: it
 	<string name="checking_username">Controllo del nome utente in corso</string>
 	<string name="jetpack_different_com_account">I siti Jetpack che appartengono a diversi account WordPress.com non sono supportati</string>
 	<string name="jetpack_use_com_account">Per aggiungere il tuo sito Jetpack, accedi all\'account WordPress.com che hai usato per connettere Jetpack.</string>
-	<string name="jetpack_message">Il plugin Jetpack deve essere installato e attivato. Vuoi installare o attivare Jetpack?</string>
 	<string name="error_media_load">Non è possibile caricare il media</string>
 	<string name="error_media_refresh_no_connection">Per aggiornare la libreria è necessaria la connessione </string>
 	<string name="error_media_unauthorized">Non hai i permessi per visualizzare o modificare i media</string>
@@ -444,8 +443,6 @@ Language: it
 	<string name="enter_your_password_instead">Oppure inserisci la tua password</string>
 	<string name="web_address_dialog_hint">Mostrato pubblicamente quando si commenta.</string>
 	<string name="username_email">Email o nome utente</string>
-	<string name="jetpack_not_connected_message">Il plugin Jetpack è installato ma non è connesso a WordPress.com. Desideri connettere Jetpack?</string>
-	<string name="jetpack_not_connected">Il plugin Jetpack non è connesso</string>
 	<string name="new_editor_reflection_error">L\'editor visuale non è compatibile con il tuo device. &amp;Egrave; stato automaticamente disabilitato.</string>
 	<string name="stats_insights_latest_post_no_title">(nessun titolo)</string>
 	<string name="capture_or_pick_photo">Catturare o selezionare una foto</string>
@@ -1104,7 +1101,6 @@ Language: it
 	<string name="reader_toast_err_remove_tag">Impossibile rimuovere questo tag</string>
 	<string name="reader_toast_err_add_tag">Impossibile aggiungere questo tag</string>
 	<string name="reader_title_applog">Registro applicazione</string>
-	<string name="jetpack_message_not_admin">Il plugin Jetpack è necessario per le statistiche. Contatta l\'amministratore del sito.</string>
 	<string name="fatal_db_error">Si è verificato un errore durante la creazione del database delle app. Prova a reinstallare l\'app.</string>
 	<string name="error_blog_hidden">Questo blog è nascosto e non può essere caricato. Abilitalo nuovamente nelle impostazioni e riprova.</string>
 	<string name="error_refresh_media">Al momento non è stato possibile aggiornare l\'elemento multimediale</string>
@@ -1237,7 +1233,6 @@ Language: it
 	<string name="reader_btn_follow">Segui</string>
 	<string name="reader_btn_share">Condividi</string>
 	<string name="reader_untitled_post">(Senza titolo)</string>
-	<string name="jetpack_not_found">Il plugin Jetpack non è stato trovato</string>
 	<string name="empty_list_default">Questo elenco è vuoto</string>
 	<string name="media_add_popup_title">Aggiungi alla libreria multimediale</string>
 	<string name="passcode_turn_on">Attiva il blocco PIN</string>

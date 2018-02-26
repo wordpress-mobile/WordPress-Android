@@ -1,11 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2018-02-03 18:47:29+0000
+Translation-Revision-Date: 2018-02-12 16:59:43+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/2.4.0-alpha
 Language: sv_SE
 -->
 <resources>
+	<string name="stats_jetpack_more_info">Mer information</string>
+	<string name="stats_jetpack_connection_setup_info">För att använda statistik på din WordPress webbplats behöver du installera tillägget Jetpack. Vill du konfigurera Jetpack?</string>
+	<string name="stats_jetpack_connection_setup">Konfigurera Jetpack</string>
 	<string name="plugin_chevron_icon_content_description">Text på/av</string>
 	<string name="plugin_info_your_version">Din WordPress-version</string>
 	<string name="plugin_info_requires_version">Kräver WordPress-version</string>
@@ -478,7 +481,6 @@ Language: sv_SE
 	<string name="checking_username">Användarnamnet kontrolleras</string>
 	<string name="jetpack_different_com_account">Det finns inte stöd för att ha samtidigt ha Jetpack-webbplatser som hör till olika konton på WordPress.com</string>
 	<string name="jetpack_use_com_account">För att lägga till din Jetpack-webbplats behöver du logga in till det konto på WordPress.com du använde när du anslöt Jetpack.</string>
-	<string name="jetpack_message">Tillägget Jetpack behöver bara installerat och aktiverat. Vill du installera eller aktivera Jetpack?</string>
 	<string name="error_media_load">Det går inte att läsa in media</string>
 	<string name="error_media_refresh_no_connection">Anslutning krävs för uppdatering av biblioteket</string>
 	<string name="error_media_unauthorized">Du saknar behörighet att se eller redigera aktuellt media</string>
@@ -658,8 +660,6 @@ Language: sv_SE
 	<string name="enter_your_password_instead">Ange ditt lösenord istället</string>
 	<string name="web_address_dialog_hint">Visas offentligt när du kommenterar.</string>
 	<string name="username_email">E-post eller användarnamn</string>
-	<string name="jetpack_not_connected_message">Jetpack-tillägget är installerat men inte anslutet till WordPress.com. Vill du ansluta Jetpack?</string>
-	<string name="jetpack_not_connected">Jetpack-tillägget är inte anslutet</string>
 	<string name="new_editor_reflection_error">Den visuella redigeraren är inte kompatibel med din enhet. Den\n inaktiverades automatiskt.</string>
 	<string name="stats_insights_latest_post_no_title">(ingen rubrik)</string>
 	<string name="capture_or_pick_photo">Ta eller välj ett foto</string>
@@ -1321,7 +1321,6 @@ Language: sv_SE
 	<string name="reader_toast_err_remove_tag">Kunde inte ta bort etiketten</string>
 	<string name="reader_toast_err_add_tag">Kunde inte lägga till etiketten</string>
 	<string name="reader_title_applog">Programlogg</string>
-	<string name="jetpack_message_not_admin">Tillägget Jetpack krävs. Kontakta webbplatsens administratör.</string>
 	<string name="fatal_db_error">Ett fel uppstod vid skapandet av app-databasen. Försök återinstallera appen.</string>
 	<string name="error_blog_hidden">Den här bloggen är dold och kunde inte laddas. Aktivera den igen i inställningarna och försök igen.</string>
 	<string name="error_refresh_media">Det gick inte att förnya medialistan just nu</string>
@@ -1457,7 +1456,6 @@ Language: sv_SE
 	<string name="reader_btn_follow">Följ</string>
 	<string name="reader_btn_share">Dela</string>
 	<string name="reader_untitled_post">(Ingen titel)</string>
-	<string name="jetpack_not_found">Jetpack-tillägget kunde inte hittas</string>
 	<string name="empty_list_default">Listan är tom</string>
 	<string name="media_add_popup_title">Lägg till i mediebiblioteket</string>
 	<string name="passcode_turn_on">Slå på PIN-kodlås</string>

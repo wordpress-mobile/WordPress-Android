@@ -1,11 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2018-02-09 21:32:07+0000
+Translation-Revision-Date: 2018-02-13 01:24:24+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/2.4.0-alpha
 Language: en_AU
 -->
 <resources>
+	<string name="stats_jetpack_more_info">More information</string>
+	<string name="stats_jetpack_connection_setup_info">To use Stats on your WordPress site, you\'ll need to install the Jetpack plugin. Would you like to setup Jetpack?</string>
+	<string name="stats_jetpack_connection_setup">Set up Jetpack</string>
 	<string name="plugin_chevron_icon_content_description">Toggle text</string>
 	<string name="plugin_info_your_version">Your WordPress Version</string>
 	<string name="plugin_info_requires_version">Requires WordPress Version</string>
@@ -478,7 +481,6 @@ Language: en_AU
 	<string name="checking_username">Checking username</string>
 	<string name="jetpack_different_com_account">Jetpack sites belonging to different WordPress.com accounts are not supported</string>
 	<string name="jetpack_use_com_account">To add your Jetpack site, log in to the WordPress.com account you used to connect Jetpack.</string>
-	<string name="jetpack_message">The Jetpack plugin must be installed and activated. Do you want to install or activate Jetpack?</string>
 	<string name="error_media_load">Unable to load media</string>
 	<string name="error_media_refresh_no_connection">Connection required to refresh library</string>
 	<string name="error_media_unauthorized">You don\'t have permission to view or edit media</string>
@@ -657,9 +659,7 @@ Language: en_AU
 	<string name="get_a_link_sent_to_your_email_to_sign_in_instantly">Get a link sent to your email to log in instantly</string>
 	<string name="enter_your_password_instead">Enter your password instead</string>
 	<string name="web_address_dialog_hint">Shown publicly when you comment.</string>
-	<string name="jetpack_not_connected_message">The Jetpack plugin is installed, but not connected to WordPress.com. Do you want to connect Jetpack?</string>
 	<string name="username_email">Email or username</string>
-	<string name="jetpack_not_connected">Jetpack plugin not connected</string>
 	<string name="new_editor_reflection_error">Visual editor is not compatible with your device. It was\n        automatically disabled.</string>
 	<string name="stats_insights_latest_post_no_title">(no title)</string>
 	<string name="capture_or_pick_photo">Capture or select photo</string>
@@ -1398,7 +1398,6 @@ Language: en_AU
 	<string name="blog_title_invalid">Invalid site title</string>
 	<string name="notifications_empty_all">No notifications…yet.</string>
 	<string name="invalid_site_url_message">Check that the site URL entered is valid</string>
-	<string name="jetpack_message_not_admin">The Jetpack plugin is required. Contact the site administrator.</string>
 	<string name="error_refresh_media">Media couldn\'t be refreshed at this time</string>
 	<string name="error_deleting_page">An error occurred while deleting the page</string>
 	<string name="file_not_found">Couldn\'t find the file for upload. Was it deleted or moved?</string>
@@ -1437,7 +1436,6 @@ Language: en_AU
 	<string name="nux_oops_not_selfhosted_blog">Log in to WordPress.com</string>
 	<string name="media_add_popup_title">Add to media library</string>
 	<string name="empty_list_default">This list is empty</string>
-	<string name="jetpack_not_found">Jetpack plugin not found</string>
 	<string name="reader_untitled_post">(Untitled)</string>
 	<string name="reader_btn_share">Share</string>
 	<string name="reader_btn_follow">Follow</string>

@@ -71,7 +71,6 @@ Language: el_GR
 	<string name="checking_username">Έλεγχος ονόματος χρήστη</string>
 	<string name="jetpack_different_com_account">Ιστότοποι του Jetpack που ανήκουν σε διαφορετικούς λογαριασμούς του WordPress.com δεν υποστηρίζονται</string>
 	<string name="jetpack_use_com_account">Για να προσθέσετε τον ιστότοπό σας του Jetpack, συνδεθείτε στον λογαριασμό του WordPress.com που χρησιμοποιήσατε για να συνδεθείτε στο Jetpack.</string>
-	<string name="jetpack_message">Το πρόσθετο Jetpack πρέπει να εγκατασταθεί και να ενεργοποιηθεί. Θέλετε να εγκαταστήσετε και να ενεργοποιήσετε το Jetpack;</string>
 	<string name="error_media_load">Αδυναμία φόρτωσης πολυμέσων</string>
 	<string name="error_media_refresh_no_connection">Απαιτείται σύνδεση για ανανέωση της βιβλιοθήκης</string>
 	<string name="error_media_unauthorized">Δεν έχετε άδεια να δείτε ή επεξεργαστείτε πολυμέσα</string>
@@ -241,9 +240,7 @@ Language: el_GR
 	<string name="logging_in">Γίνεται σύνδεση</string>
 	<string name="enter_your_password_instead">Εναλλακτικά, εισάγετε το συνθηματικό σας</string>
 	<string name="web_address_dialog_hint">Εμφανίζεται δημοσίως όταν σχολιάζετε.</string>
-	<string name="jetpack_not_connected_message">Το πρόσθετο Jetpack είναι εγκατεστημένο αλλά όχι συνδεδεμένο με το WordPress.com. Θέλετε να συνδέσετε το Jetpack;</string>
 	<string name="username_email">E-mail ή όνομα χρήστη</string>
-	<string name="jetpack_not_connected">Το πρόσθετο Jetpack δεν είναι συνδεδεμένο</string>
 	<string name="new_editor_reflection_error">Ο κειμενογράφος δεν είναι συμβατός με τη συσκευή σας.\nΑπενεργοποιήθηκε αυτόματα.</string>
 	<string name="stats_insights_latest_post_no_title">(δίχως τίτλο)</string>
 	<string name="capture_or_pick_photo">Τραβήξτε ή επιλέξτε φωτογραφία</string>
@@ -993,7 +990,6 @@ Language: el_GR
 	<string name="nux_add_selfhosted_blog">Προσθέστε έναν ιστότοπο που φιλοξενείτε μόνοι σας</string>
 	<string name="reader_toast_err_share_intent">Δεν ήταν δυνατός ο διαμοιρασμός</string>
 	<string name="media_add_popup_title">Προσθήκη στην Βιβλιοθήκη Ππολυμέσων</string>
-	<string name="jetpack_not_found">Δεν βρέθηκε το Jetpack plugin</string>
 	<string name="reader_btn_share">Μοιράσου</string>
 	<string name="reader_btn_follow">Ακολουθήστε</string>
 	<string name="reader_btn_unfollow">Ακολουθούν</string>

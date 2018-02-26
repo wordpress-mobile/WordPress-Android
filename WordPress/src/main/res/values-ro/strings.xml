@@ -1,11 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2018-02-05 15:32:29+0000
+Translation-Revision-Date: 2018-02-12 19:19:19+0000
 Plural-Forms: nplurals=3; plural=(n==1 ? 0 : (n==0 || (n%100 > 0 && n%100 < 20)) ? 1 : 2);
 Generator: GlotPress/2.4.0-alpha
 Language: ro
 -->
 <resources>
+	<string name="stats_jetpack_more_info">Mai multe informații</string>
+	<string name="stats_jetpack_connection_setup_info">Pentru a folosi Statisticile pe situl tău WordPress, va trebui să instalezi modulul Jetpack. Vrei să inițializezi Jetpack?</string>
+	<string name="stats_jetpack_connection_setup">Inițializează Jetpack</string>
 	<string name="plugin_chevron_icon_content_description">Comută textul</string>
 	<string name="plugin_info_your_version">Versiunea ta WordPress</string>
 	<string name="plugin_info_requires_version">Necesită versiunea WordPress</string>
@@ -478,7 +481,6 @@ Language: ro
 	<string name="checking_username">Verific numele de utilizator</string>
 	<string name="jetpack_different_com_account">Siturile Jetpack aparținând altor conturi WordPress.com nu sunt suportate.</string>
 	<string name="jetpack_use_com_account">Pentru a-ți adăuga situl Jetpack, autentifică-te în contul WordPress.com pe care l-ai folosit pentru a te conecta la Jetpack.</string>
-	<string name="jetpack_message">Modulul Jetpack trebuie să fie instalat și activat. Vrei să instalezi sau să activezi Jetpack?</string>
 	<string name="error_media_load">Nu pot încărca media</string>
 	<string name="error_media_refresh_no_connection">Este necesară o conexiune pentru a împrospăta biblioteca</string>
 	<string name="error_media_unauthorized">Nu ai permisiunea de a vedea sau edita media</string>
@@ -658,8 +660,6 @@ Language: ro
 	<string name="enter_your_password_instead">Introdu-ți parola în schimb</string>
 	<string name="web_address_dialog_hint">Făcută publică atunci când comentezi.</string>
 	<string name="username_email">Email sau nume utilizator</string>
-	<string name="jetpack_not_connected_message">Modulul Jetpack este instalat, dar nu este conectat cu WordPress.com. Vrei să conectezi Jetpack?</string>
-	<string name="jetpack_not_connected">Modulul Jetpack nu este conectat</string>
 	<string name="new_editor_reflection_error">Editorul vizual nu este compatibil cu dispozitivul tău. A fost\n        dezactivat automat.</string>
 	<string name="stats_insights_latest_post_no_title">(fără titlu)</string>
 	<string name="capture_or_pick_photo">Selectează sau fă o fotografie</string>
@@ -1321,7 +1321,6 @@ Language: ro
 	<string name="reader_toast_err_remove_tag">Nu pot înlătura această etichetă</string>
 	<string name="reader_toast_err_add_tag">Nu pot adăuga această etichetă</string>
 	<string name="reader_title_applog">Jurnal aplicație</string>
-	<string name="jetpack_message_not_admin">Este necesar modulul Jetpack. Contactează administratorul sitului.</string>
 	<string name="fatal_db_error">A apărut o eroare în timp ce se creea baza de date a aplicației. Încearcă reinstalarea ei.</string>
 	<string name="error_blog_hidden">Acest blog este ascuns și nu poate fi încărcat. Validează-l din nou din setări și încearcă din nou.</string>
 	<string name="error_refresh_media">Media nu a putut fi reîmprospătată în acest moment</string>
@@ -1457,7 +1456,6 @@ Language: ro
 	<string name="reader_btn_follow">Urmărește</string>
 	<string name="reader_btn_share">Partajare</string>
 	<string name="reader_untitled_post">(Fără titlu)</string>
-	<string name="jetpack_not_found">Modulul Jetpack nu e găsit</string>
 	<string name="empty_list_default">Această listă e goală</string>
 	<string name="media_add_popup_title">Adaugă în biblioteca media</string>
 	<string name="passcode_turn_on">Pune blocarea PIN-ului</string>

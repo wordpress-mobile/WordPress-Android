@@ -478,7 +478,6 @@ Language: tr
 	<string name="checking_username">Kullanıcı adı kontrol ediliyor</string>
 	<string name="jetpack_different_com_account">Başka WordPress.com hesaplarına ait Jetpack siteleri desteklenmiyor.</string>
 	<string name="jetpack_use_com_account">Jetpack sitenizi eklemek için Jetpack bağlantısı kurduğunuz WordPress.com hesabınıza giriş yapın.</string>
-	<string name="jetpack_message">Jetpack eklentisi kurulmuş ve etkinleştirilmiş olmalıdır. Jetpack eklentisini kurmak ya da etkinleştirmek ister misiniz?</string>
 	<string name="error_media_load">Ortam dosyası yüklenemiyor</string>
 	<string name="error_media_refresh_no_connection">Kütüphaneyi yenilemek için bağlantı gereklidir</string>
 	<string name="error_media_unauthorized">Ortamı görüntülemek ya da düzenlemek için izniniz yok</string>
@@ -657,9 +656,7 @@ Language: tr
 	<string name="get_a_link_sent_to_your_email_to_sign_in_instantly">Anında giriş için e-postanıza bir bağlantı gönderilmesini sağlayın</string>
 	<string name="enter_your_password_instead">Bunun yerine parola gir</string>
 	<string name="web_address_dialog_hint">Yorum yaptığınızda herkes tarafından görülebilir.</string>
-	<string name="jetpack_not_connected_message">Jetpack eklentisi yüklenmiş fakat WordPress.com\'a bağlanmamış. Jetpack\'i bağlamak ister misiniz?</string>
 	<string name="username_email">E-posta ya da kullanıcı adı</string>
-	<string name="jetpack_not_connected">Jetpack eklentisi bağlanmamış</string>
 	<string name="new_editor_reflection_error">Görsel düzenleyici cihazınız ile uyumsuz. Otomatik\n olarak etkisizleştirildi.</string>
 	<string name="stats_insights_latest_post_no_title">(başlıksız)</string>
 	<string name="capture_or_pick_photo">Fotoğraf seç ya da yakala</string>
@@ -1398,7 +1395,6 @@ Language: tr
 	<string name="page_not_published">Sayfa durumu yayımlanmadı</string>
 	<string name="notifications_empty_all">Bildirim yok...henüz.</string>
 	<string name="invalid_site_url_message">Girdiğiniz site URL\'sinin geçerli olduğunu kontrol edin</string>
-	<string name="jetpack_message_not_admin">Jetpack eklentisi gerekli. Site yöneticisi ile iletişim kurun.</string>
 	<string name="error_refresh_media">Ortam dosyaları şu an yenilenemiyor</string>
 	<string name="error_deleting_page">Sayfayı silinirken bir hata oluştu</string>
 	<string name="file_not_found">Yükleme için dosya bulunamadı. Silindi veya taşındı mı?</string>
@@ -1437,7 +1433,6 @@ Language: tr
 	<string name="signing_in">Giriş yapılıyor...</string>
 	<string name="media_add_popup_title">Medya kütüphanesine ekle</string>
 	<string name="empty_list_default">Bu liste boş</string>
-	<string name="jetpack_not_found">Jetpack eklentisi bulunamadı</string>
 	<string name="reader_untitled_post">(Başlıksız)</string>
 	<string name="reader_btn_share">Paylaş</string>
 	<string name="reader_toast_err_tag_exists">Bu etiketi zaten takip ediyorsunuz</string>

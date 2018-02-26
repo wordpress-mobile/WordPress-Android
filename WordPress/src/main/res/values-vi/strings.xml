@@ -81,9 +81,7 @@ Language: vi_VN
 	<string name="get_a_link_sent_to_your_email_to_sign_in_instantly">Lấy 1 liên kết được gửi tới email của bạn để đăng nhập ngay lập tức</string>
 	<string name="enter_your_password_instead">Nhập mật khẩu thay thế của bạn</string>
 	<string name="web_address_dialog_hint">Được hiển thị công khai khi bạn bình luận.</string>
-	<string name="jetpack_not_connected_message">Plugin Jetpack đã được cài, nhưng không được kết nối tới WordPress.com. Bạn có muốn kết nối Jetpack?</string>
 	<string name="username_email">Email hoặc tên người dùng</string>
-	<string name="jetpack_not_connected">Plugin Jetpack không được kết nối</string>
 	<string name="new_editor_reflection_error">Trình biên tập trực quan không tương thích với thiết bị của bạn. \nNó bị vô hiệu tự động.</string>
 	<string name="stats_insights_latest_post_no_title">(không tiêu đề)</string>
 	<string name="capture_or_pick_photo">Chụp ảnh hoặc chọn hình ảnh</string>
@@ -851,7 +849,6 @@ Language: vi_VN
 	<string name="button_next">Tiếp</string>
 	<string name="connecting_wpcom">Đang kết nối tới WordPress.com</string>
 	<string name="username_invalid">Tên người dùng không hợp lệ</string>
-	<string name="jetpack_not_found">Plugin Jetpack không tìm thấy</string>
 	<string name="reader_btn_share">Chia sẻ</string>
 	<string name="reader_btn_follow">Theo dõi</string>
 	<string name="reader_btn_unfollow">Đang theo dõi</string>

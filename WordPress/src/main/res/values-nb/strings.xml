@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2018-01-18 13:53:04+0000
+Translation-Revision-Date: 2018-02-14 17:21:17+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/2.4.0-alpha
 Language: nb_NO
@@ -127,6 +127,7 @@ Language: nb_NO
 	<string name="async_promo_description">Du kan forlate redigereren, og innlegget ditt vil lagre og publisere bak kulissene! Prøv det ut, da vel!</string>
 	<string name="async_promo_title">Publiser med sikkerhet</string>
 	<string name="editor_uploading_post">Innlegget ditt lastes opp</string>
+	<string name="uploading_media">Laster opp medie …</string>
 	<string name="dialog_confirm_cancel_post_media_uploading">Er du sikker? Å slette dette innlegget vil også avbryte medieopplastingen.</string>
 	<string name="page_scheduled">Siden har blitt planlagt</string>
 	<string name="post_scheduled">Innlegget har blitt planlagt</string>
@@ -364,6 +365,7 @@ Language: nb_NO
 	<string name="media_upload_state_deleted">Slettet</string>
 	<string name="media_upload_state_deleting">Sletter</string>
 	<string name="media_upload_state_uploading">Laster opp</string>
+	<string name="media_upload_state_failed">Opplastingmislyktes</string>
 	<string name="update_draft">Oppdater utkastet</string>
 	<string name="keep_editing">Fortsett å redigere</string>
 	<string name="image_quality">Bildekvalitet</string>
@@ -379,7 +381,6 @@ Language: nb_NO
 	<string name="checking_username">Sjekker brukernavnet</string>
 	<string name="jetpack_different_com_account">Jetpack-nettsteder som hører til andre WordPress.com-kontoer, er ikke støttet</string>
 	<string name="jetpack_use_com_account">For å legge til Jetpack-nettstedet ditt, logg inn på WordPress.com-kontoen du brukte til å tilkoble Jetpack.</string>
-	<string name="jetpack_message">Jetpack-utvidelsen må være installert og aktivert. Vil du installere eller aktivere Jetpack?</string>
 	<string name="error_media_load">Klarte ikke å laste inn mediet</string>
 	<string name="error_media_refresh_no_connection">Tilkobling er påkrevd for å oppfriske biblioteket</string>
 	<string name="error_media_unauthorized">Du har ikke tillatelse til å vise eller redigere medier</string>
@@ -559,8 +560,6 @@ Language: nb_NO
 	<string name="enter_your_password_instead">Skriv inn passordet ditt istedet</string>
 	<string name="web_address_dialog_hint">Vises offentlig når du kommenterer.</string>
 	<string name="username_email">E-post eller brukernavn</string>
-	<string name="jetpack_not_connected_message">Jetpack-utvidelsen er installert, men den er ikke koblet til WordPress.com. Vil du koble til JetPack?</string>
-	<string name="jetpack_not_connected">Jetpack-utvidelsen er ikke tilkoblet</string>
 	<string name="new_editor_reflection_error">Den visuelle redigereren er ikke kompatibel med\n   enheten din. Den ble automatisk skrudd av.</string>
 	<string name="stats_insights_latest_post_no_title">(ingen tittel)</string>
 	<string name="capture_or_pick_photo">Ta eller velg et bilde</string>
@@ -1296,12 +1295,12 @@ Language: nb_NO
 	<string name="fatal_db_error">En feil oppstod under oppretting av app-databasen. Prøv å reinstallere appen.</string>
 	<string name="blog_name_must_include_letters">Nettstedsadressen din må ha minst 1 engelsk bokstav (a-z)</string>
 	<string name="site_address">Din selvtjente adresse (URL)</string>
-	<string name="jetpack_message_not_admin">Jetpack-utvidelsen er påkrevd. Kontakt nettstedets administrator.</string>
 	<string name="themes_live_preview">Levende forhåndsvisning</string>
 	<string name="http_credentials">HTTP-legitimasjoner (Valgfritt)</string>
 	<string name="media_gallery_type_thumbnail_grid">Forhåndsvisningsnetting</string>
 	<string name="file_error_create">Klarte ikke å lage en midlertidig fil for medieopplastning. Vennligst sørg for at det er nok ledig lagring på enheten din.</string>
 	<string name="scaled_image_error">Skriv en gyldig skalert breddeverdi</string>
+	<string name="file_not_found">Klarte ikke å finne filen som skulle lastes opp. Ble den kanskje slettet eller flyttet?</string>
 	<string name="share_url_post">Del innlegg</string>
 	<string name="share_url_page">Del side</string>
 	<string name="share_link">Del lenke</string>
@@ -1336,7 +1335,6 @@ Language: nb_NO
 	<string name="nux_add_selfhosted_blog">Legg til selvtjent nettsted</string>
 	<string name="reader_btn_share">Del</string>
 	<string name="reader_btn_follow">Følg</string>
-	<string name="jetpack_not_found">Fant ikke utvidelsen Jetpack</string>
 	<string name="reader_untitled_post">(Uten tittel)</string>
 	<string name="nux_tutorial_get_started_title">Kom igang!</string>
 	<string name="username_invalid">Ugyldig brukernavn</string>

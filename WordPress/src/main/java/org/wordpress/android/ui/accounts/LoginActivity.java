@@ -47,6 +47,7 @@ import org.wordpress.android.ui.accounts.signup.SignupMagicLinkFragment;
 import org.wordpress.android.ui.notifications.services.NotificationsUpdateService;
 import org.wordpress.android.ui.reader.services.ReaderUpdateService;
 import org.wordpress.android.util.AppLog;
+import org.wordpress.android.util.CrashlyticsUtils;
 import org.wordpress.android.util.HelpshiftHelper;
 import org.wordpress.android.util.HelpshiftHelper.Tag;
 import org.wordpress.android.util.NetworkUtils;
@@ -595,6 +596,28 @@ public class LoginActivity extends AppCompatActivity implements ConnectionCallba
     @Override
     public void saveCredentialsInSmartLock(@Nullable final String username, @Nullable final String password,
                                            @NonNull final String displayName, @Nullable final Uri profilePicture) {
+        if (getLoginMode() == LoginMode.SELFHOSTED_ONLY) {
+            // bail if we are on the selfhosted flow since we haven't initialized SmartLock-for-Passwords for it.
+            //  Otherwise, logging in to WPCOM via the site-picker flow (for example) results in a crash.
+            //  See https://github.com/wordpress-mobile/WordPress-Android/issues/7182#issuecomment-362791364
+            //  There might be more circumstances that lead to this crash though. Not all Crashlytics reports seem to
+            //  originate from the site-picker.
+            return;
+        }
+
+        if (mSmartLockHelper == null) {
+            // log some data to help us debug https://github.com/wordpress-mobile/WordPress-Android/issues/7182
+            final String loginModeStr = "LoginMode: " + (getLoginMode() != null ? getLoginMode().name() : "null");
+            AppLog.w(AppLog.T.NUX, "Internal inconsistency error! mSmartLockHelper found null!" + loginModeStr);
+            CrashlyticsUtils.logException(
+                    new RuntimeException("Internal inconsistency error! mSmartLockHelper found null!"),
+                    AppLog.T.NUX,
+                    loginModeStr);
+
+            // bail
+            return;
+        }
+
         mSmartLockHelper.saveCredentialsInSmartLock(StringUtils.notNullStr(username), StringUtils.notNullStr(password),
                 displayName, profilePicture);
     }
