@@ -33,6 +33,7 @@
             android:paddingTop="@dimen/margin_large">
 
             <org.wordpress.android.widgets.WPNetworkImageView
+                android:layout_centerVertical="true"
                 android:id="@+id/image_avatar_or_blavatar"
                 style="@style/ReaderImageView.Avatar"
                 android:layout_marginRight="@dimen/margin_large"
@@ -151,6 +152,7 @@
             tools:visibility="gone">
 
             <org.wordpress.android.widgets.WPNetworkImageView
+                android:layout_gravity="center_vertical"
                 android:id="@+id/image_discover_avatar"
                 style="@style/ReaderImageView.Avatar.Small"
                 android:layout_marginRight="@dimen/margin_large"
@@ -185,6 +187,7 @@
                 android:contentDescription="@string/view_in_browser">
 
                 <ImageView
+                    android:layout_gravity="center_vertical"
                     android:id="@+id/image_visit_icon"
                     android:layout_width="@dimen/reader_count_icon"
                     android:layout_height="@dimen/reader_count_icon"
