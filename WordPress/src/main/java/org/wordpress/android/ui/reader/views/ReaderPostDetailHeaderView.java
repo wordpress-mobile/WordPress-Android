@@ -54,6 +54,7 @@ public class ReaderPostDetailHeaderView extends LinearLayout {
 
         TextView txtTitle = (TextView) findViewById(R.id.text_header_title);
         TextView txtSubtitle = (TextView) findViewById(R.id.text_header_subtitle);
+        View avatarFrame = findViewById(R.id.frame_avatar);
 
         boolean hasBlogName = mPost.hasBlogName();
         boolean hasAuthorName = mPost.hasAuthorName();
@@ -67,14 +68,18 @@ public class ReaderPostDetailHeaderView extends LinearLayout {
                 txtTitle.setText(mPost.getAuthorName());
                 txtSubtitle.setText(mPost.getBlogName());
             }
+            avatarFrame.setContentDescription(mPost.getBlogName());
         } else if (hasBlogName) {
             txtTitle.setText(mPost.getBlogName());
+            avatarFrame.setContentDescription(mPost.getBlogName());
             txtSubtitle.setVisibility(View.GONE);
         } else if (hasAuthorName) {
             txtTitle.setText(mPost.getAuthorName());
+            avatarFrame.setContentDescription(mPost.getAuthorName());
             txtSubtitle.setVisibility(View.GONE);
         } else {
             txtTitle.setText(R.string.untitled);
+            avatarFrame.setContentDescription(getContext().getString(R.string.untitled));
             txtSubtitle.setVisibility(View.GONE);
         }
 
@@ -164,8 +169,7 @@ public class ReaderPostDetailHeaderView extends LinearLayout {
         avatarFrame.setVisibility(hasAvatar || hasBlavatar ? View.VISIBLE : View.GONE);
 
         if (mEnableBlogPreview) {
-            imgBlavatar.setOnClickListener(mClickListener);
-            imgAvatar.setOnClickListener(mClickListener);
+            avatarFrame.setOnClickListener(mClickListener);
         }
     }
 
