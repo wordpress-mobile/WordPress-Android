@@ -59,6 +59,7 @@ import org.wordpress.android.ui.reader.services.ReaderUpdateService;
 import org.wordpress.android.ui.reader.services.ReaderUpdateService.UpdateTask;
 import org.wordpress.android.ui.reader.utils.ReaderUtils;
 import org.wordpress.android.ui.reader.views.ReaderSiteHeaderView;
+import org.wordpress.android.util.AccessibilityUtils;
 import org.wordpress.android.util.AnalyticsUtils;
 import org.wordpress.android.util.AniUtils;
 import org.wordpress.android.util.AppLog;
@@ -812,7 +813,8 @@ public class ReaderPostListFragment extends Fragment
                 refreshPosts();
             }
         };
-        Snackbar.make(getView(), getString(R.string.reader_toast_blog_blocked), Snackbar.LENGTH_LONG)
+        Snackbar.make(getView(), getString(R.string.reader_toast_blog_blocked),
+                AccessibilityUtils.getSnackbarDuration(getActivity()))
                 .setAction(R.string.undo, undoListener)
                 .show();
     }

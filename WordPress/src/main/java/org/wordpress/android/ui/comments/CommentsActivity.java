@@ -31,6 +31,7 @@ import org.wordpress.android.ui.comments.CommentsListFragment.OnCommentSelectedL
 import org.wordpress.android.ui.notifications.NotificationFragment;
 import org.wordpress.android.ui.prefs.AppPrefs;
 import org.wordpress.android.ui.reader.ReaderPostDetailFragment;
+import org.wordpress.android.util.AccessibilityUtils;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.ToastUtils;
 
@@ -258,7 +259,8 @@ public class CommentsActivity extends AppCompatActivity
                 }
             };
 
-            Snackbar snackbar = Snackbar.make(getListFragment().getView(), message, Snackbar.LENGTH_LONG)
+            Snackbar snackbar = Snackbar.make(getListFragment().getView(), message,
+                    AccessibilityUtils.getSnackbarDuration(this))
                     .setAction(R.string.undo, undoListener);
 
             // do the actual moderation once the undo bar has been hidden

@@ -23,6 +23,7 @@ import org.wordpress.android.ui.ActivityLauncher;
 import org.wordpress.android.ui.posts.EditPostActivity;
 import org.wordpress.android.ui.posts.PostUtils;
 import org.wordpress.android.ui.prefs.AppPrefs;
+import org.wordpress.android.util.AccessibilityUtils;
 import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.WPMediaUtils;
@@ -183,7 +184,7 @@ public class UploadUtils {
 
     private static void showSnackbarError(View view, String message, int buttonTitleRes,
                                           View.OnClickListener onClickListener) {
-        Snackbar.make(view, message, K_SNACKBAR_WAIT_TIME_MS)
+        Snackbar.make(view, message, AccessibilityUtils.getSnackbarDuration(view.getContext(), K_SNACKBAR_WAIT_TIME_MS))
                 .setAction(buttonTitleRes, onClickListener).show();
     }
 
@@ -193,13 +194,13 @@ public class UploadUtils {
 
     private static void showSnackbar(View view, int messageRes, int buttonTitleRes,
                                      View.OnClickListener onClickListener) {
-        Snackbar.make(view, messageRes, Snackbar.LENGTH_LONG)
+        Snackbar.make(view, messageRes, AccessibilityUtils.getSnackbarDuration(view.getContext(), K_SNACKBAR_WAIT_TIME_MS))
                 .setAction(buttonTitleRes, onClickListener).show();
     }
 
     private static void showSnackbarSuccessAction(View view, int messageRes, int buttonTitleRes,
                                                   View.OnClickListener onClickListener) {
-        Snackbar.make(view, messageRes, K_SNACKBAR_WAIT_TIME_MS)
+        Snackbar.make(view, messageRes, AccessibilityUtils.getSnackbarDuration(view.getContext(), K_SNACKBAR_WAIT_TIME_MS))
                 .setAction(buttonTitleRes, onClickListener).
                 setActionTextColor(view.getResources().getColor(R.color.blue_medium))
                 .show();
@@ -207,7 +208,7 @@ public class UploadUtils {
 
     private static void showSnackbarSuccessAction(View view, String message, int buttonTitleRes,
                                                   View.OnClickListener onClickListener) {
-        Snackbar.make(view, message, K_SNACKBAR_WAIT_TIME_MS)
+        Snackbar.make(view, message, AccessibilityUtils.getSnackbarDuration(view.getContext(), K_SNACKBAR_WAIT_TIME_MS))
                 .setAction(buttonTitleRes, onClickListener).
                 setActionTextColor(view.getResources().getColor(R.color.blue_medium))
                 .show();
