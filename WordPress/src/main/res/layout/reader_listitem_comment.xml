@@ -9,7 +9,8 @@
     android:layout_marginRight="@dimen/reader_card_margin"
     android:background="@color/white"
     android:paddingLeft="@dimen/margin_medium"
-    android:paddingRight="@dimen/margin_medium">
+    android:paddingRight="@dimen/margin_medium"
+    android:importantForAccessibility="no">
 
     <!-- spacer_comment_indent width and visibility set at run-time based on comment indent level -->
     <View
@@ -35,6 +36,7 @@
             android:orientation="horizontal">
 
             <org.wordpress.android.widgets.WPNetworkImageView
+                android:importantForAccessibility="no"
                 android:id="@+id/image_comment_avatar"
                 android:layout_width="@dimen/avatar_sz_extra_small"
                 android:layout_height="@dimen/avatar_sz_extra_small"
@@ -70,8 +72,7 @@
 
         <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal">
+            android:layout_height="wrap_content">
 
             <org.wordpress.android.widgets.WPTextView
                 android:id="@+id/text_comment_date"
