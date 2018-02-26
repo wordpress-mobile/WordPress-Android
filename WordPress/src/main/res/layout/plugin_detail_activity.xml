@@ -302,6 +302,7 @@
 
             <android.support.v7.widget.CardView
                 style="@style/PluginCardView"
+                android:id="@+id/plugin_wp_org_details_container"
                 card_view:cardBackgroundColor="@color/white"
                 card_view:cardCornerRadius="@dimen/cardview_default_radius">
 
@@ -426,14 +427,5 @@
             <include layout="@layout/plugin_ratings_cardview" />
         </LinearLayout>
     </android.support.v4.widget.NestedScrollView>
-
-    <ProgressBar
-        android:id="@+id/plugin_fetching_progress_bar"
-        style="?android:attr/progressBarStyleLarge"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:visibility="gone"
-        tools:visibility="visible" />
 
 </android.support.design.widget.CoordinatorLayout>

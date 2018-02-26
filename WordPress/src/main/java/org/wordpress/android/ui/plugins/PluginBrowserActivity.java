@@ -33,13 +33,11 @@ import android.widget.TextView;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.fluxc.model.SiteModel;
-import org.wordpress.android.fluxc.model.plugin.SitePluginModel;
-import org.wordpress.android.fluxc.model.plugin.WPOrgPluginModel;
+import org.wordpress.android.fluxc.model.plugin.ImmutablePluginModel;
 import org.wordpress.android.ui.ActivityLauncher;
 import org.wordpress.android.ui.RequestCodes;
 import org.wordpress.android.util.ActivityUtils;
 import org.wordpress.android.util.AniUtils;
-import org.wordpress.android.util.HtmlUtils;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.viewmodel.PluginBrowserViewModel;
 import org.wordpress.android.viewmodel.PluginBrowserViewModel.PluginListType;
@@ -151,23 +149,23 @@ public class PluginBrowserActivity extends AppCompatActivity
             }
         });
 
-        mViewModel.getSitePlugins().observe(this, new Observer<List<SitePluginModel>>() {
+        mViewModel.getSitePlugins().observe(this, new Observer<List<ImmutablePluginModel>>() {
             @Override
-            public void onChanged(@Nullable final List<SitePluginModel> sitePlugins) {
+            public void onChanged(@Nullable final List<ImmutablePluginModel> sitePlugins) {
                 reloadPluginAdapterAndVisibility(PluginListType.SITE, sitePlugins);
             }
         });
 
-        mViewModel.getNewPlugins().observe(this, new Observer<List<WPOrgPluginModel>>() {
+        mViewModel.getNewPlugins().observe(this, new Observer<List<ImmutablePluginModel>>() {
             @Override
-            public void onChanged(@Nullable final List<WPOrgPluginModel> newPlugins) {
+            public void onChanged(@Nullable final List<ImmutablePluginModel> newPlugins) {
                 reloadPluginAdapterAndVisibility(PluginListType.NEW, newPlugins);
             }
         });
 
-        mViewModel.getPopularPlugins().observe(this, new Observer<List<WPOrgPluginModel>>() {
+        mViewModel.getPopularPlugins().observe(this, new Observer<List<ImmutablePluginModel>>() {
             @Override
-            public void onChanged(@Nullable final List<WPOrgPluginModel> popularPlugins) {
+            public void onChanged(@Nullable final List<ImmutablePluginModel> popularPlugins) {
                 reloadPluginAdapterAndVisibility(PluginListType.POPULAR, popularPlugins);
             }
         });
@@ -246,7 +244,8 @@ public class PluginBrowserActivity extends AppCompatActivity
         }
     }
 
-    protected void reloadPluginAdapterAndVisibility(@NonNull PluginListType pluginType, List<?> plugins) {
+    protected void reloadPluginAdapterAndVisibility(@NonNull PluginListType pluginType,
+                                                    @Nullable List<ImmutablePluginModel> plugins) {
         PluginBrowserAdapter adapter;
         View cardView;
         switch (pluginType) {
@@ -267,7 +266,7 @@ public class PluginBrowserActivity extends AppCompatActivity
         }
         adapter.setPlugins(plugins);
 
-        int newVisibility = plugins.size() > 0 ? View.VISIBLE : View.GONE;
+        int newVisibility = plugins != null && plugins.size() > 0 ? View.VISIBLE : View.GONE;
         int oldVisibility = cardView.getVisibility();
         if (newVisibility == View.VISIBLE && oldVisibility != View.VISIBLE) {
             AniUtils.fadeIn(cardView, AniUtils.Duration.MEDIUM);
@@ -341,28 +340,14 @@ public class PluginBrowserActivity extends AppCompatActivity
             setHasStableIds(true);
         }
 
-        void setPlugins(@NonNull List<?> items) {
-            if (mItems.isSameList(items)) return;
-
+        void setPlugins(@Nullable List<ImmutablePluginModel> items) {
             mItems.clear();
             mItems.addAll(items);
-
-            // strip HTML here so we don't have to do it in every call to onBindViewHolder
-            for (Object item : mItems) {
-                if (item instanceof WPOrgPluginModel) {
-                    WPOrgPluginModel plugin = (WPOrgPluginModel) item;
-                    plugin.setAuthorAsHtml(HtmlUtils.fastStripHtml(plugin.getAuthorAsHtml()));
-                }
-            }
-
             notifyDataSetChanged();
         }
 
         protected @Nullable Object getItem(int position) {
-            if (position < mItems.size()) {
-                return mItems.get(position);
-            }
-            return null;
+            return mItems.getItem(position);
         }
 
         @Override
@@ -384,40 +369,22 @@ public class PluginBrowserActivity extends AppCompatActivity
         @Override
         public void onBindViewHolder(ViewHolder viewHolder, int position) {
             PluginBrowserViewHolder holder = (PluginBrowserViewHolder) viewHolder;
-            Object item = getItem(position);
-            if (item == null) return;
+            ImmutablePluginModel plugin = (ImmutablePluginModel) getItem(position);
+            if (plugin == null) return;
 
-            SitePluginModel sitePlugin;
-            WPOrgPluginModel wpOrgPlugin;
-            String name;
-            String author;
-            if (item instanceof SitePluginModel) {
-                sitePlugin = (SitePluginModel) item;
-                wpOrgPlugin = mViewModel.getWPOrgPluginForSitePluginAndFetchIfNecessary(sitePlugin);
-                name = sitePlugin.getDisplayName();
-                author = sitePlugin.getAuthorName();
-            } else {
-                wpOrgPlugin = (WPOrgPluginModel) item;
-                sitePlugin = mViewModel.getSitePluginFromSlug(wpOrgPlugin.getSlug());
-                name = wpOrgPlugin.getName();
-                author = wpOrgPlugin.getAuthorAsHtml();
-            }
+            holder.nameText.setText(plugin.getDisplayName());
+            holder.authorText.setText(plugin.getAuthorName());
+            holder.icon.setImageUrl(plugin.getIcon(), ImageType.PLUGIN_ICON);
 
-            String iconUrl = wpOrgPlugin != null ? wpOrgPlugin.getIcon() : null;
-
-            holder.nameText.setText(name);
-            holder.authorText.setText(author);
-            holder.icon.setImageUrl(iconUrl, ImageType.PLUGIN_ICON);
-
-            if (sitePlugin != null) {
+            if (plugin.isInstalled()) {
                 @StringRes int textResId;
                 @ColorRes int colorResId;
                 @DrawableRes int drawableResId;
-                if (PluginUtils.isUpdateAvailable(sitePlugin, wpOrgPlugin)) {
+                if (PluginUtils.isUpdateAvailable(plugin)) {
                     textResId = R.string.plugin_needs_update;
                     colorResId = R.color.alert_yellow;
                     drawableResId = R.drawable.plugin_update_available_icon;
-                } else if (sitePlugin.isActive()) {
+                } else if (plugin.isActive()) {
                     textResId = R.string.plugin_active;
                     colorResId = R.color.alert_green;
                     drawableResId = R.drawable.ic_checkmark_green_24dp;
@@ -434,7 +401,7 @@ public class PluginBrowserActivity extends AppCompatActivity
             } else {
                 holder.statusContainer.setVisibility(View.GONE);
                 holder.ratingBar.setVisibility(View.VISIBLE);
-                holder.ratingBar.setRating(PluginUtils.getAverageStarRating(wpOrgPlugin));
+                holder.ratingBar.setRating(plugin.getAverageStarRating());
             }
         }
 
@@ -469,24 +436,11 @@ public class PluginBrowserActivity extends AppCompatActivity
                     @Override
                     public void onClick(View v) {
                         int position = getAdapterPosition();
-                        Object item = getItem(position);
-                        if (item == null) return;
-                        SitePluginModel sitePlugin;
-                        WPOrgPluginModel wpOrgPlugin;
-                        if (item instanceof SitePluginModel) {
-                            sitePlugin = (SitePluginModel) item;
-                            wpOrgPlugin = mViewModel.getWPOrgPluginForSitePluginAndFetchIfNecessary(sitePlugin);
-                        } else {
-                            wpOrgPlugin = (WPOrgPluginModel) item;
-                            sitePlugin = mViewModel.getSitePluginFromSlug(wpOrgPlugin.getSlug());
-                        }
-                        if (sitePlugin != null) {
-                            ActivityLauncher.viewPluginDetailForResult(PluginBrowserActivity.this, mViewModel.getSite(),
-                                    sitePlugin);
-                        } else {
-                            ActivityLauncher.viewPluginDetailForResult(PluginBrowserActivity.this, mViewModel.getSite(),
-                                    wpOrgPlugin);
-                        }
+                        ImmutablePluginModel plugin = (ImmutablePluginModel) getItem(position);
+                        if (plugin == null) return;
+
+                        ActivityLauncher.viewPluginDetailForResult(PluginBrowserActivity.this, mViewModel.getSite(),
+                                plugin.getSlug());
                     }
                 });
             }
