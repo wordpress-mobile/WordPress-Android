@@ -122,11 +122,10 @@ public class NotificationsSettingsActivity extends AppCompatActivity {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 hideDisabledView(isChecked);
-                String stateString = isChecked ?
+                mToolbarSwitch.setContentDescription(getString(R.string.notification_settings_switch_desc));
+                mToolbarSwitch.setTitle(isChecked ?
                         getString(R.string.notification_settings_master_status_on) :
-                        getString(R.string.notification_settings_master_status_off);
-                mToolbarSwitch.setContentDescription(getString(R.string.notification_settings_switch_desc, stateString));
-                mToolbarSwitch.setTitle(stateString);
+                        getString(R.string.notification_settings_master_status_off));
                 mSharedPreferences.edit().putBoolean(getString(R.string.wp_pref_notifications_master), isChecked).apply();
 
                 if (isChecked) {
