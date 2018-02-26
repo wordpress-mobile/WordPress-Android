@@ -365,6 +365,7 @@ public class PeopleUtils {
                                             callback.onUsernameValidation(username, ValidationResult.INVALID_EMAIL);
                                             continue;
                                         case "User not found":
+                                            // fall through to the default case
                                         default:
                                             callback.onUsernameValidation(username, ValidationResult.USER_NOT_FOUND);
                                             continue;
