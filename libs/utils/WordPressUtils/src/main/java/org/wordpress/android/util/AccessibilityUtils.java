@@ -8,7 +8,7 @@ import android.view.accessibility.AccessibilityManager;
 
 public class AccessibilityUtils {
 
-    public static final int SNACKBAR_WITH_ACTION_DURATION_IN_MILLIS = 10000;
+    private static final int SNACKBAR_WITH_ACTION_DURATION_IN_MILLIS = 10000;
 
     public static boolean isAccessibilityEnabled(Context ctx) {
         AccessibilityManager am = (AccessibilityManager) ctx.getSystemService(ACCESSIBILITY_SERVICE);
