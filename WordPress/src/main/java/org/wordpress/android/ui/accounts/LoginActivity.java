@@ -515,6 +515,15 @@ public class LoginActivity extends AppCompatActivity implements ConnectionCallba
     @Override
     public void saveCredentialsInSmartLock(@Nullable final String username, @Nullable final String password,
                                            @NonNull final String displayName, @Nullable final Uri profilePicture) {
+        if (getLoginMode() == LoginMode.SELFHOSTED_ONLY) {
+            // bail if we are on the selfhosted flow since we haven't initialized SmartLock-for-Passwords for it.
+            //  Otherwise, logging in to WPCOM via the site-picker flow (for example) results in a crash.
+            //  See https://github.com/wordpress-mobile/WordPress-Android/issues/7182#issuecomment-362791364
+            //  There might be more circumstances that lead to this crash though. Not all Crashlytics reports seem to
+            //  originate from the site-picker.
+            return;
+        }
+
         mSmartLockHelper.saveCredentialsInSmartLock(StringUtils.notNullStr(username), StringUtils.notNullStr(password),
                 displayName, profilePicture);
     }
