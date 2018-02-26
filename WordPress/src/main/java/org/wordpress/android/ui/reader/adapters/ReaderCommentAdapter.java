@@ -269,7 +269,6 @@ public class ReaderCommentAdapter extends RecyclerView.Adapter<RecyclerView.View
             commentHolder.spacerIndent.setVisibility(View.GONE);
         }
 
-
         int maxImageWidth = mContentWidth - indentWidth;
         CommentUtils.displayHtmlComment(commentHolder.txtText, comment.getText(), maxImageWidth, mImageLoader);
 
