@@ -349,8 +349,6 @@ Language: bg
 	<string name="enter_your_password_instead">Въведете паролата си</string>
 	<string name="web_address_dialog_hint">Ще се показва когато коментирате.</string>
 	<string name="username_email">Имейл или потребителско име</string>
-	<string name="jetpack_not_connected_message">Разширенитео Jetpack е инсталирано, но не е свързано с WordPress.com. Желаете ли да свържете Jetpack?</string>
-	<string name="jetpack_not_connected">Разширението Jetpack не е свързано</string>
 	<string name="new_editor_reflection_error">Визуалният редактор не е съвместим с устройството ви. \n        Беше изключен автоматично.</string>
 	<string name="stats_insights_latest_post_no_title">(без заглавие)</string>
 	<string name="capture_or_pick_photo">Заснемане или избор на снимка</string>
@@ -1090,7 +1088,6 @@ Language: bg
 	<string name="notifications_empty_all">Все още няма известявания.</string>
 	<string name="invalid_site_url_message">Уверете се че въведения URL адрес на сайт е валиден</string>
 	<string name="error_deleting_page">Възникна грешка при изтриването на страницата.</string>
-	<string name="jetpack_message_not_admin">Разширението Jetpack е нужен за събиране/изобразяване на статистики. Моля свържете се с администратора на уебсайта.</string>
 	<string name="deleting_page">Изтриване на страница</string>
 	<string name="deleting_post">Изтриване на статия</string>
 	<string name="share_url_post">Споделяне на статия</string>
@@ -1127,7 +1124,6 @@ Language: bg
 	<string name="reader_likes_one">Едно лице хареса това</string>
 	<string name="username_invalid">Невалидно потребителско име</string>
 	<string name="reader_untitled_post">(Неозаглавен)</string>
-	<string name="jetpack_not_found">Jetpack не беше намерен</string>
 	<string name="reader_toast_err_url_intent">%s не може да се отвори</string>
 	<string name="create_account_wpcom">Създайте профил в WordPress.com</string>
 	<string name="reader_empty_followed_tags">Вие не следвате етикети</string>

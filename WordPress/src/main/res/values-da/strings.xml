@@ -457,7 +457,6 @@ Language: da_DK
 	<string name="connecting_wpcom">Forbinder til WordPress.com</string>
 	<string name="create_account_wpcom">Opret en konto på WordPress.com</string>
 	<string name="reader_toast_err_tag_invalid">Dette er ikke et gyldigt tag</string>
-	<string name="jetpack_not_found">Jetpack-pluginnet blev ikke fundet</string>
 	<string name="reader_untitled_post">(Ingen titel)</string>
 	<string name="media_add_popup_title">Tilføj til mediebibliotek</string>
 	<string name="empty_list_default">Listen er tom</string>

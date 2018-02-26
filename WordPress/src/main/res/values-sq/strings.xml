@@ -1,11 +1,37 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2018-01-31 10:46:27+0000
+Translation-Revision-Date: 2018-02-15 10:34:01+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/2.4.0-alpha
 Language: sq_AL
 -->
 <resources>
+	<string name="stats_jetpack_more_info">Më tepër të dhëna</string>
+	<string name="stats_jetpack_connection_setup_info">Që të përdorni Statistikat te sajti juaj WordPress, do t’ju duhet të instaloni shtojcën Jetpack. Doni të rregullohet Jetpack-u?</string>
+	<string name="stats_jetpack_connection_setup">Rregulloni Jetpack-un</string>
+	<string name="plugin_chevron_icon_content_description">Shfaq/fshih tekstin</string>
+	<string name="plugin_info_your_version">Versioni Juaj i WordPress-it</string>
+	<string name="plugin_info_requires_version">Version WordPress i Domosdoshëm:</string>
+	<string name="plugin_info_lastupdated">Përditësuar Së Fundi</string>
+	<string name="plugin_info_version">Version</string>
+	<string name="plugin_five_stars">5 yje</string>
+	<string name="plugin_four_stars">4 yje</string>
+	<string name="plugin_three_stars">3 yje</string>
+	<string name="plugin_two_stars">2 yje</string>
+	<string name="plugin_one_stars">1 yll</string>
+	<string name="plugin_empty_text">S’u dha gjë</string>
+	<string name="plugin_num_downloads">%s shkarkime</string>
+	<string name="plugin_num_ratings">%s vlerësime</string>
+	<string name="plugin_read_reviews">Lexoni Shqyrtime</string>
+	<string name="plugin_faq">Pyetje të Bëra Shpesh</string>
+	<string name="plugin_whatsnew">Ç’ka të Re</string>
+	<string name="plugin_installation">Instalim</string>
+	<string name="plugin_description">Përshkrim</string>
+	<string name="plugin_settings">Rregullime</string>
+	<string name="plugin_installed">E instaluar</string>
+	<string name="plugin_installed_version">Version i instaluar %s</string>
+	<string name="plugin_version">Versioni %s</string>
+	<string name="plugin_byline">nga %s</string>
 	<string name="change_photo">Ndryshoni foton</string>
 	<string name="plugin_fetch_error">S’arrihet të ngarkohe shtojca</string>
 	<string name="my_site_btn_site_pages">Faqe Sajti</string>
@@ -455,7 +481,6 @@ Language: sq_AL
 	<string name="checking_username">Po kontrollohet emri i përdoruesit</string>
 	<string name="jetpack_different_com_account">Nuk mbulohet sajtet me Jetpack që përkasin llogarive të ndryshme WordPress.com</string>
 	<string name="jetpack_use_com_account">Që të shtoni sajt Jetpack, bëni hyrjen te llogaria WordPress.com që përdorët për të lidhur Jetpack-un.</string>
-	<string name="jetpack_message">Shtojca Jetpack duhet të jetë e instaluar dhe e aktivizuar. Doni të instalohet ose të aktivizohet Jetpack-u?</string>
 	<string name="error_media_load">S’arrihet të ngarkohet media</string>
 	<string name="error_media_refresh_no_connection">Lypset lidhje që të rifreskohet mediateka</string>
 	<string name="error_media_unauthorized">S’keni leje të shihni ose përpunoni media</string>
@@ -634,9 +659,7 @@ Language: sq_AL
 	<string name="get_a_link_sent_to_your_email_to_sign_in_instantly">Merrni një lidhje dërguar te email-i juaj, që të hyni në çast</string>
 	<string name="enter_your_password_instead">Në vend të kësaj, jepni fjalëkalimin tuaj</string>
 	<string name="web_address_dialog_hint">E shfaqur publikisht kur komentoni.</string>
-	<string name="jetpack_not_connected_message">Shtojca Jetpack është e instaluar, por jo e lidhur me WordPress.com-in. Doni të lidhet Jetpack-u?</string>
 	<string name="username_email">Email ose emër përdoruesi</string>
-	<string name="jetpack_not_connected">Shtojca Jetpack s’është e lidhur</string>
 	<string name="new_editor_reflection_error">Përpunuesi pamor s’është i përputhshëm me pajisjen tuaj.\n        U çaktivizua vetvetiu.</string>
 	<string name="stats_insights_latest_post_no_title">(pa titull)</string>
 	<string name="capture_or_pick_photo">Bëni ose përzgjidhni foto</string>
@@ -1364,7 +1387,6 @@ Language: sq_AL
 	<string name="http_credentials">Kredenciale HTTP (opsional)</string>
 	<string name="http_authorization_required">Lypset autorizim</string>
 	<string name="notifications_empty_all">Ende pa njoftime.</string>
-	<string name="jetpack_message_not_admin">Shtojca Jetpack është e domosdoshme. Lidhuni me përgjegjësin e sajtit.</string>
 	<string name="error_refresh_media">Media s’u rifreskua dot tani</string>
 	<string name="error_deleting_page">Ndodhi një gabim teksa fshihej faqja</string>
 	<string name="email_reserved">Kjo adresë email është tashmë e përdorur. Kontrolloni email-et e marrë për një email aktivizimi. Nëse s’e aktivizoni, mund të riprovoni pas pak ditësh.</string>
@@ -1436,7 +1458,6 @@ Language: sq_AL
 	<string name="reader_toast_err_share_intent">S’arrin të ndajë me të tjerët</string>
 	<string name="reader_toast_err_tag_invalid">Kjo s’është etiketë e vlefshme</string>
 	<string name="reader_toast_err_comment_failed">S’u postua dot komenti juaj</string>
-	<string name="jetpack_not_found">S’u gjet shtojcë Jetpack</string>
 	<string name="themes">Tema</string>
 	<string name="media_gallery_type">Lloj</string>
 	<string name="media_gallery_type_squares">Katrorë</string>

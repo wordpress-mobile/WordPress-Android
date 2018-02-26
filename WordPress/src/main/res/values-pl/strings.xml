@@ -1,11 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2018-02-04 20:23:07+0000
+Translation-Revision-Date: 2018-02-18 21:57:39+0000
 Plural-Forms: nplurals=3; plural=(n==1 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);
 Generator: GlotPress/2.4.0-alpha
 Language: pl
 -->
 <resources>
+	<string name="stats_jetpack_more_info">Więcej informacji</string>
+	<string name="stats_jetpack_connection_setup_info">Aby rozpocząć korzystanie ze Statystyk na swojej witrynie WordPressowej, musisz zainstalować wtyczkę Jetpack. Czy chciałbyś skonfigurować Jetpacka?</string>
+	<string name="stats_jetpack_connection_setup">Skonfiguruj Jetpack</string>
 	<string name="plugin_chevron_icon_content_description">Przełącz tekst </string>
 	<string name="plugin_info_your_version">Twoja wersja WordPressa</string>
 	<string name="plugin_info_requires_version">Wymagana wersja WordPressa</string>
@@ -437,7 +440,7 @@ Language: pl
 	<string name="toast_verification_email_sent">Wysłano email weryfikacyjny, sprawdź swoją skrzynkę</string>
 	<string name="toast_saving_post_as_draft">Zapisywanie wpisu jako szkic</string>
 	<string name="photo_picker_capture_video">Nagraj film</string>
-	<string name="photo_picker_capture_photo">Wykonaj zdjęcie</string>
+	<string name="photo_picker_capture_photo">Zrób zdjęcie</string>
 	<string name="delete_site_warning_subtitle">Uwaga! Usunięcie witryny to proces nieodwracalny.</string>
 	<string name="delete_site_warning">Wszystkie twoje wpisy, zdjęcia oraz dane zostaną usunięte. Adres twojej witryny (%s) również zostanie skasowany. </string>
 	<string name="delete_site_warning_title">Usunąć witrynę?</string>
@@ -478,7 +481,6 @@ Language: pl
 	<string name="checking_username">Sprawdzanie nazwy użytkownika</string>
 	<string name="jetpack_different_com_account">Witryny Jetpack należące do różnych kont WordPress.com nie są wspierane</string>
 	<string name="jetpack_use_com_account">Aby dodać witrynę Jetpack, zaloguj się na swoje konto WordPress.com, które użyłeś do połączenia Jetpacka.</string>
-	<string name="jetpack_message">Wtyczka Jetpack musi być zainstalowana oraz uruchomiona. Czy chcesz zainstalować lub uruchomić Jetpack?</string>
 	<string name="error_media_load">Nie można wyczytać mediów</string>
 	<string name="error_media_refresh_no_connection">Aby odświeżyć bibliotekę wymagane jest połączenie internetowe</string>
 	<string name="error_media_unauthorized">Nie masz uprawnień do poglądi lub edycji mediów</string>
@@ -658,8 +660,6 @@ Language: pl
 	<string name="enter_your_password_instead">Wprowadź swoje hasło</string>
 	<string name="web_address_dialog_hint">Prezentowany kiedy dodajesz komentarze.</string>
 	<string name="username_email">Email lub użytkownik</string>
-	<string name="jetpack_not_connected_message">Wtyczka Jetpack jest zainstalowana, ale nie jest połączona z WordPress.com. Czy chcesz włączyć Jetpack?</string>
-	<string name="jetpack_not_connected">Wtyczka Jetpack nie jest podłączona</string>
 	<string name="new_editor_reflection_error">Edytor widoku nie jest kompatybilny z twoim urządzeniem. Został automatycznie wyłączony.</string>
 	<string name="stats_insights_latest_post_no_title">(brak tytułu)</string>
 	<string name="capture_or_pick_photo">Wykonaj lub wybierz zdjęcie</string>
@@ -1321,7 +1321,6 @@ Language: pl
 	<string name="reader_toast_err_remove_tag">Nie udało się usunąć tagu</string>
 	<string name="reader_toast_err_add_tag">Nie udało się dodać tagu</string>
 	<string name="reader_title_applog">Dziennik aplikacji</string>
-	<string name="jetpack_message_not_admin">Wymagana jest wtyczka Jetpack. Skontaktuj się z administratorem witryny.</string>
 	<string name="fatal_db_error">Wystąpił błąd podczas tworzenia bazy danych. Spróbuj przeinstalować aplikacje.</string>
 	<string name="error_blog_hidden">Ten blog jest ukryty i nie mógł zostać wczytany. Włącz go ponownie w ustawieniach i spróbuj ponownie.</string>
 	<string name="error_refresh_media">Nie można było odświeżyć mediów w tym momencie</string>
@@ -1457,7 +1456,6 @@ Language: pl
 	<string name="reader_btn_follow">Obserwuj</string>
 	<string name="reader_btn_share">Udostępnij</string>
 	<string name="reader_untitled_post">(Brak tytułu)</string>
-	<string name="jetpack_not_found">Wtyczka Jetpack nie została znaleziona</string>
 	<string name="empty_list_default">Lista jest pusta</string>
 	<string name="media_add_popup_title">Dodaj do biblioteki mediów</string>
 	<string name="passcode_turn_on">Włącz blokadę PIN</string>

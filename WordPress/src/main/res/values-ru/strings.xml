@@ -1,11 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2018-02-03 13:36:45+0000
+Translation-Revision-Date: 2018-02-12 16:54:10+0000
 Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);
 Generator: GlotPress/2.4.0-alpha
 Language: ru
 -->
 <resources>
+	<string name="stats_jetpack_more_info">Больше информации</string>
+	<string name="stats_jetpack_connection_setup_info">Чтобы использовать статистику на вашем сайте WordPress, вам необходимо установить плагин Jetpack. Вы хотите установить Jetpack?</string>
+	<string name="stats_jetpack_connection_setup">Установить Jetpack</string>
 	<string name="plugin_chevron_icon_content_description">Включить/Выключить текст</string>
 	<string name="plugin_info_your_version">Ваша версия WordPress</string>
 	<string name="plugin_info_requires_version">Требует версии WordPress</string>
@@ -478,7 +481,6 @@ Language: ru
 	<string name="checking_username">Проверка имени пользователя</string>
 	<string name="jetpack_different_com_account">Сайты Jetpack, привязанные к другим учетным записям WordPress.com, не поддерживаются</string>
 	<string name="jetpack_use_com_account">Чтобы добавить свой сайт Jetpack, войдите в учетную запись WordPress.com, которую вы использовали для подключения Jetpack.</string>
-	<string name="jetpack_message">Необходимо установить и активировать плагин Jetpack. Установить и активировать Jetpack?</string>
 	<string name="error_media_load">Не удается загрузить медиафайлы</string>
 	<string name="error_media_refresh_no_connection">Для обновления библиотеки требуется подключение</string>
 	<string name="error_media_unauthorized">У вас нет прав на просмотр или редактирование медиасодержимого</string>
@@ -658,8 +660,6 @@ Language: ru
 	<string name="enter_your_password_instead">Введите пароль.</string>
 	<string name="web_address_dialog_hint">Отображается для всех пользователей, когда вы добавляете комментарии.</string>
 	<string name="username_email">Адрес эл. почты или имя пользователя</string>
-	<string name="jetpack_not_connected_message">Плагин Jetpack установлен, но не подключен к WordPress.com. Подключить Jetpack?</string>
-	<string name="jetpack_not_connected">Плагин Jetpack не подключен</string>
 	<string name="new_editor_reflection_error">Визуальный редактор не поддерживается на вашем устройстве. Он был\n автоматически отключен.</string>
 	<string name="stats_insights_latest_post_no_title">(без заголовка)</string>
 	<string name="capture_or_pick_photo">Сделайте снимок или выберите фото</string>
@@ -1321,7 +1321,6 @@ Language: ru
 	<string name="reader_toast_err_remove_tag">Не удается удалить эту метку</string>
 	<string name="reader_toast_err_add_tag">Не удается добавить эту метку</string>
 	<string name="reader_title_applog">Лог приложения</string>
-	<string name="jetpack_message_not_admin">Для статистики нужен плагин Jetpack- свяжитесь с администрацией сайта.</string>
 	<string name="fatal_db_error">Произошла ошибка при создании базы данных приложения- попробуйте его переустановить.</string>
 	<string name="error_blog_hidden">Этот блог является скрытым и не может быть загружен. Откройте его через настройки и попробуйте снова.</string>
 	<string name="error_refresh_media">В данный момент не удалось обновить медиафайлы.</string>
@@ -1457,7 +1456,6 @@ Language: ru
 	<string name="reader_btn_follow">Подписаться</string>
 	<string name="reader_btn_share">Поделиться</string>
 	<string name="reader_untitled_post">(Без названия)</string>
-	<string name="jetpack_not_found">Плагин Jetpack не найден</string>
 	<string name="empty_list_default">Этот список пуст</string>
 	<string name="media_add_popup_title">Добавить в медиа-библиотеку</string>
 	<string name="passcode_turn_on">Включить блокировку PIN</string>

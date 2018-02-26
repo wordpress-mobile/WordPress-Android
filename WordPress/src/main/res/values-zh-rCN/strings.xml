@@ -386,7 +386,6 @@ Language: zh_CN
 	<string name="checking_username">正在检查用户名</string>
 	<string name="jetpack_different_com_account">不支持属于不同 WordPress.com 帐户的 Jetpack 站点</string>
 	<string name="jetpack_use_com_account">要添加 Jetpack 站点，请登录您用于连接 Jetpack 的 WordPress.com 帐户。</string>
-	<string name="jetpack_message">必须安装并激活 Jetpack 插件。是否要安装或激活 Jetpack？</string>
 	<string name="error_media_load">无法加载媒体</string>
 	<string name="error_media_refresh_no_connection">需有网络连接才能刷新库</string>
 	<string name="error_media_unauthorized">您没有查看或编辑媒体的权限</string>
@@ -565,9 +564,7 @@ Language: zh_CN
 	<string name="get_a_link_sent_to_your_email_to_sign_in_instantly">通过邮箱获取可直接登录的链接</string>
 	<string name="enter_your_password_instead">改为输入密码</string>
 	<string name="web_address_dialog_hint">公开显示您的评论。</string>
-	<string name="jetpack_not_connected_message">已安装 Jetpack 插件，但未连接至 WordPress.com。要连接 Jetpack 吗？</string>
 	<string name="username_email">电子邮件或用户名</string>
-	<string name="jetpack_not_connected">未连接 Jetpack 插件</string>
 	<string name="new_editor_reflection_error">可视化编辑器与您的设备不兼容。已\n自动停用。</string>
 	<string name="stats_insights_latest_post_no_title">（无标题）</string>
 	<string name="capture_or_pick_photo">拍摄或选择照片</string>
@@ -1305,7 +1302,6 @@ Language: zh_CN
 	<string name="invalid_site_url_message">请检查输入的站点 URL 是否有效</string>
 	<string name="error_refresh_media">此时无法刷新媒体</string>
 	<string name="error_deleting_page">删除页面时出现错误</string>
-	<string name="jetpack_message_not_admin">需要 Jetpack 插件。请联系站点管理员。</string>
 	<string name="image_settings">图片设置</string>
 	<string name="post_settings">文章设置</string>
 	<string name="file_not_found">无法找到要上传到文件。是否已删除或被移走?</string>
@@ -1341,7 +1337,6 @@ Language: zh_CN
 	<string name="nux_add_selfhosted_blog">添加一个自己的站点</string>
 	<string name="nux_oops_not_selfhosted_blog">登录 WordPress.com</string>
 	<string name="signing_in">正在登录…</string>
-	<string name="jetpack_not_found">没有找到Jetpack插件</string>
 	<string name="reader_untitled_post">(未命名)</string>
 	<string name="reader_label_removed_tag">已移除 %s</string>
 	<string name="reader_label_added_tag">已添加 %s</string>

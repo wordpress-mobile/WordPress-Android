@@ -1,12 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2018-02-04 20:45:46+0000
+Translation-Revision-Date: 2018-02-26 12:27:04+0000
 Plural-Forms: nplurals=3; plural=(n==1) ? 0 : (n>=2 && n<=4) ? 1 : 2;
 Generator: GlotPress/2.4.0-alpha
 Language: cs_CZ
 -->
 <resources>
 	<string name="plugin_info_your_version">Verze WordPressu</string>
+	<string name="plugin_info_requires_version">Požadovaná verze WordPressu</string>
 	<string name="plugin_info_lastupdated">Poslední aktualizace</string>
 	<string name="plugin_info_version">Verze</string>
 	<string name="plugin_five_stars">5 hvězdiček</string>
@@ -497,9 +498,7 @@ Language: cs_CZ
 	<string name="get_a_link_sent_to_your_email_to_sign_in_instantly">Odkaz byl zaslán na váš email, přihlašte se co nejdříve</string>
 	<string name="enter_your_password_instead">Zadejte vaše heslo místo tohoto</string>
 	<string name="web_address_dialog_hint">Veřejně se zobrazí při komentování.</string>
-	<string name="jetpack_not_connected_message">Jetpack plugin je nainstalován, ale není propojen s WordPress.com. Chcete jej propojit?</string>
 	<string name="username_email">Email nebo uživatelské jméno</string>
-	<string name="jetpack_not_connected">Jetpack není připojen</string>
 	<string name="new_editor_reflection_error">Vizuální editor není kompatibilní s vaším zařízením.\n        Proto byl automaticky zakázán.</string>
 	<string name="stats_insights_latest_post_no_title">(žádný nadpis)</string>
 	<string name="capture_or_pick_photo">Vyfoťte nebo vyberte fotku</string>
@@ -1209,7 +1208,6 @@ Language: cs_CZ
 	<string name="sure_to_cancel_edit_comment">Ukončit úpravy tohoto komentáře?</string>
 	<string name="image_settings">Vlastnosti obrázku</string>
 	<string name="fatal_db_error">Vyskytla se chyba při vytváření databáze aplikace. Zkuste přeinstalovat tuto aplikaci.</string>
-	<string name="jetpack_message_not_admin">Plugin Jetpack je pro statistiky vyžadován. Kontaktujte administrátora webu.</string>
 	<string name="reader_toast_err_add_tag">Nelze přidat tento štítek</string>
 	<string name="required_field">Povinné pole</string>
 	<string name="reader_toast_err_remove_tag">Nelze odstranit tento štítek</string>
@@ -1280,7 +1278,6 @@ Language: cs_CZ
 	<string name="username_invalid">Špatné uživatelské jméno</string>
 	<string name="media_add_popup_title">Přidat do knihovny medií</string>
 	<string name="empty_list_default">Tento seznam je prázdný</string>
-	<string name="jetpack_not_found">Plugin Jetpack nebyl nalezen</string>
 	<string name="reader_untitled_post">(bez názvu)</string>
 	<string name="reader_btn_follow">Sledovat</string>
 	<string name="reader_btn_unfollow">Sleduji</string>

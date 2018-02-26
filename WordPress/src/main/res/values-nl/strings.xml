@@ -1,11 +1,28 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2018-01-25 15:07:08+0000
+Translation-Revision-Date: 2018-02-13 15:11:26+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/2.4.0-alpha
 Language: nl
 -->
 <resources>
+	<string name="stats_jetpack_more_info">Meer informatie</string>
+	<string name="plugin_info_your_version">Jouw WordPress versie</string>
+	<string name="plugin_info_requires_version">Vereist WordPress versie</string>
+	<string name="plugin_five_stars">5 sterren</string>
+	<string name="plugin_four_stars">4 sterren</string>
+	<string name="plugin_three_stars">3 sterren</string>
+	<string name="plugin_two_stars">2 sterren</string>
+	<string name="plugin_one_stars">1 ster</string>
+	<string name="plugin_info_version">Versie</string>
+	<string name="plugin_whatsnew">Wat is nieuw</string>
+	<string name="plugin_installation">Installatie</string>
+	<string name="plugin_description">Omschrijving</string>
+	<string name="plugin_settings">Instellingen</string>
+	<string name="plugin_installed">Geïnstalleerd</string>
+	<string name="plugin_installed_version">Versie %s geïnstalleerd</string>
+	<string name="plugin_version">Versie %s</string>
+	<string name="plugin_byline">door %s</string>
 	<string name="change_photo">Wijzig foto</string>
 	<string name="plugin_fetch_error">Niet mogelijk om plugins te laden</string>
 	<string name="my_site_btn_site_pages">Site pagina\'s</string>
@@ -455,7 +472,6 @@ Language: nl
 	<string name="checking_username">Gebruikersnaam controleren</string>
 	<string name="jetpack_different_com_account">Jetpack-sites die behoren tot verschillende WordPress.com-accounts, worden niet ondersteund</string>
 	<string name="jetpack_use_com_account">Log in op de WordPress.com-account die je gebruikte om verbinding te maken met Jetpack om je Jetpack-site toe te voegen.</string>
-	<string name="jetpack_message">De Jetpack-plugin moet worden geïnstalleerd en geactiveerd. Wil je Jetpack installeren of activeren?</string>
 	<string name="error_media_load">Kan media niet laden.</string>
 	<string name="error_media_refresh_no_connection">Een verbinding is vereist om de bibliotheek te vernieuwen</string>
 	<string name="error_media_unauthorized">Je bent niet gemachtigd media weer te geven of te bewerken</string>
@@ -634,9 +650,7 @@ Language: nl
 	<string name="logging_in">Inloggen</string>
 	<string name="enter_your_password_instead">Voer je wachtwoord in</string>
 	<string name="web_address_dialog_hint">Wordt openbaar getoond als je reageert.</string>
-	<string name="jetpack_not_connected_message">De Jetpack-plugin is geïnstalleerd, maar niet verbonden met WordPress.com. Wil je Jetpack verbinden?</string>
 	<string name="username_email">E-mail of gebruikersnaam</string>
-	<string name="jetpack_not_connected">Jetpack-plugin niet verbonden</string>
 	<string name="new_editor_reflection_error">Visual Editor is niet compatibel met uw apparaat. Het is\n automatisch uitgeschakeld.</string>
 	<string name="stats_insights_latest_post_no_title">(geen titel)</string>
 	<string name="capture_or_pick_photo">Neem of selecteer foto</string>
@@ -1375,7 +1389,6 @@ Language: nl
 	<string name="blog_title_invalid">Ongeldige sitetitel</string>
 	<string name="notifications_empty_all">Nog geen meldingen.</string>
 	<string name="invalid_site_url_message">Controleer of de ingevoerde site-URL geldig is</string>
-	<string name="jetpack_message_not_admin">De Jetpack-plugin is vereist. Neem contact op met de sitebeheerder.</string>
 	<string name="error_refresh_media">Media konden op dit moment niet worden vernieuwd</string>
 	<string name="error_deleting_page">Er is een fout opgetreden bij het verwijderen van de pagina</string>
 	<string name="plugin_not_found">Er is een fout opgetreden bij het openen van deze plugin</string>
@@ -1424,7 +1437,6 @@ Language: nl
 	<string name="reader_toast_err_view_image">Onmogelijk afbeelding te bekijken</string>
 	<string name="reader_empty_followed_tags">Je volgt geen enkele tags</string>
 	<string name="empty_list_default">Deze lijst is leeg</string>
-	<string name="jetpack_not_found">Jetpack plugin niet gevonden</string>
 	<string name="reader_likes_one">1 persoon vindt dit leuk</string>
 	<string name="reader_likes_only_you">Je vindt dit leuk</string>
 	<string name="reader_toast_err_comment_failed">Je reactie kon niet gepost worden</string>

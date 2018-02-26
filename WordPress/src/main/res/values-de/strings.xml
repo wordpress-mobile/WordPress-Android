@@ -478,7 +478,6 @@ Language: de
 	<string name="checking_username">Überprüfen des Benutzernamens</string>
 	<string name="jetpack_different_com_account">Jetpack-Websites, die zu anderen WordPress.com-Konten gehören, werden nicht unterstützt</string>
 	<string name="jetpack_use_com_account">Um deine Jetpack-Website hinzuzufügen, melde dich bei dem WordPress.com-Konto an, das du zum Verbinden von Jetpack verwendet hast.</string>
-	<string name="jetpack_message">Das Jetpack-Plugin muss installiert und aktiviert sein. Möchtest du Jetpack installieren oder aktivieren?</string>
 	<string name="error_media_load">Medien können nicht geladen werden</string>
 	<string name="error_media_refresh_no_connection">Verbindung erforderlich, um Bibliothek zu aktualisieren</string>
 	<string name="error_media_unauthorized">Du hast keine Berechtigung Medien anzuzeigen oder zu bearbeiten</string>
@@ -658,8 +657,6 @@ Language: de
 	<string name="enter_your_password_instead">Gib stattdessen dein Passwort ein</string>
 	<string name="web_address_dialog_hint">Wird mit deinem Kommentar veröffentlicht.</string>
 	<string name="username_email">E-Mail-Adresse oder Benutzername</string>
-	<string name="jetpack_not_connected_message">Das Jetpack-Plugin ist installiert, aber nicht mit WordPress.com verbunden. Möchtest du es verbinden?</string>
-	<string name="jetpack_not_connected">Jetpack-Plugin nicht verbunden</string>
 	<string name="new_editor_reflection_error">Der visuelle Editor ist mit deinem Gerät nicht kompatibel.\nEr wurde automatisch deaktiviert.</string>
 	<string name="stats_insights_latest_post_no_title">(ohne Titel)</string>
 	<string name="capture_or_pick_photo">Foto aufnehmen oder auswählen</string>
@@ -1321,7 +1318,6 @@ Language: de
 	<string name="reader_toast_err_remove_tag">Tag konnte nicht entfernt werden</string>
 	<string name="reader_toast_err_add_tag">Hinzufügen des Tags nicht möglich</string>
 	<string name="reader_title_applog">Anwendungslog</string>
-	<string name="jetpack_message_not_admin">Das Jetpack Plugin wird benötigt. Kontaktiere den Website-Administrator.</string>
 	<string name="fatal_db_error">Bei der Erstellung der App-Datenbank ist ein Fehler aufgetreten. Versuche die App erneut zu installieren.</string>
 	<string name="error_blog_hidden">Dieser Blog ist versteckt und konnte nicht geladen werden. Aktivierte ihn erneut in den Einstellungen und versuche es nochmal.</string>
 	<string name="error_refresh_media">Die Medien konnten zu diesem Zeitpunkt nicht aktualisiert werden</string>
@@ -1457,7 +1453,6 @@ Language: de
 	<string name="reader_btn_follow">Folgen</string>
 	<string name="reader_btn_share">Teilen</string>
 	<string name="reader_untitled_post">(Ohne Titel)</string>
-	<string name="jetpack_not_found">Jetpack-Plugin nicht gefunden</string>
 	<string name="empty_list_default">Diese Liste ist leer</string>
 	<string name="media_add_popup_title">Zur Mediathek hinzufügen</string>
 	<string name="passcode_turn_on">Stelle PIN-Sperre an</string>
