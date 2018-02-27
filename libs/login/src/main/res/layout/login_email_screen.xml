@@ -43,7 +43,7 @@
         android:layout_marginBottom="@dimen/margin_medium"
         android:layout_marginTop="@dimen/margin_extra_large"
         android:layout_width="wrap_content"
-        android:text="Alternatively:"
+        android:text="@string/alternatively"
         style="@style/LoginTheme.TextLabel" >
     </TextView>
 
