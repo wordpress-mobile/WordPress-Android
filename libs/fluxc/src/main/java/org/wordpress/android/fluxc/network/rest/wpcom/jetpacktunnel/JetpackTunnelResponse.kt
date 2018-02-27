@@ -1,5 +1,5 @@
 package org.wordpress.android.fluxc.network.rest.wpcom.jetpacktunnel
 
-class JPTunnelWPComRestResponse<T> {
+class JetpackTunnelResponse<T> {
     val data: T? = null
 }
