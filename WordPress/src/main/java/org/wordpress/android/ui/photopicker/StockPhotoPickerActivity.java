@@ -99,6 +99,9 @@ public class StockPhotoPickerActivity extends AppCompatActivity {
         } else {
             mSite = (SiteModel) savedInstanceState.getSerializable(WordPress.SITE);
         }
+
+        // TODO: remove
+        submitSearch("hedgehog", true);
     }
 
     @Override
@@ -141,7 +144,7 @@ public class StockPhotoPickerActivity extends AppCompatActivity {
         mSearchQuery = query;
 
         if (TextUtils.isEmpty(query)) {
-            // TODO: clear search results
+            mAdapter.clear();
             return;
         }
 
@@ -190,7 +193,8 @@ public class StockPhotoPickerActivity extends AppCompatActivity {
                 JSONObject jsonMedia = jsonMediaList.optJSONObject(i);
                 if (jsonMedia != null) {
                     MediaModel media = new MediaModel();
-                    media.setMediaId(jsonMedia.optLong("ID"));
+                    String id = jsonMedia.optString("ID");
+                    media.setMediaId(id.hashCode());
                     media.setUrl(jsonMedia.optString("URL"));
                     media.setFileExtension(jsonMedia.optString("extension"));
                     media.setTitle(jsonMedia.optString("title"));
@@ -210,29 +214,33 @@ public class StockPhotoPickerActivity extends AppCompatActivity {
         mAdapter.setMediaList(mediaList);
     }
 
-    private class StockPhotoAdapter extends RecyclerView.Adapter<StockViewHolder> {
+    class StockPhotoAdapter extends RecyclerView.Adapter<StockViewHolder> {
         private static final float SCALE_NORMAL = 1.0f;
         private static final float SCALE_SELECTED = .8f;
 
-        private final long mAniDelayMs;
         private final List<MediaModel> mItems = new ArrayList<>();
         private final ArrayList<Integer> mSelectedItems = new ArrayList<>();
 
         StockPhotoAdapter() {
-            setHasStableIds(false);
-            mAniDelayMs = AniUtils.Duration.SHORT.toMillis(StockPhotoPickerActivity.this);
+            setHasStableIds(true);
         }
 
-        public void setMediaList(@NonNull List<MediaModel> mediaList) {
+        void setMediaList(@NonNull List<MediaModel> mediaList) {
             mItems.clear();
             mItems.addAll(mediaList);
             mSelectedItems.clear();
             notifyDataSetChanged();
         }
 
+        void clear() {
+            mItems.clear();
+            mSelectedItems.clear();
+            notifyDataSetChanged();
+        }
+
         @Override
         public long getItemId(int position) {
-            return position;
+            return mItems.get(position).getId();
         }
 
         @Override
@@ -249,12 +257,27 @@ public class StockPhotoPickerActivity extends AppCompatActivity {
         @Override
         public void onBindViewHolder(StockViewHolder holder, int position) {
             MediaModel media = mItems.get(position);
-            String imageUrl = getBestImageUrl(media);
+            String imageUrl = PhotonUtils.getPhotonImageUrl(media.getThumbnailUrl(), mThumbWidth, mThumbHeight);
             holder.imageView.setImageUrl(imageUrl, WPNetworkImageView.ImageType.PHOTO);
+
+            boolean isSelected = isItemSelected(position);
+            holder.selectionCountTextView.setSelected(isSelected);
+            if (isSelected) {
+                int count = mSelectedItems.indexOf(position) + 1;
+                holder.selectionCountTextView.setText(Integer.toString(count));
+            } else {
+                holder.selectionCountTextView.setText(null);
+            }
+
+            float scale = isSelected ? SCALE_SELECTED : SCALE_NORMAL;
+            if (holder.imageView.getScaleX() != scale) {
+                holder.imageView.setScaleX(scale);
+                holder.imageView.setScaleY(scale);
+            }
         }
 
-        private String getBestImageUrl(@NonNull MediaModel media) {
-            return PhotonUtils.getPhotonImageUrl(media.getThumbnailUrl(), mThumbWidth, mThumbHeight);
+        boolean isValidPosition(int position) {
+            return position >= 0 && position < getItemCount();
         }
 
         void setInMultiSelect(boolean value) {
@@ -271,22 +294,19 @@ public class StockPhotoPickerActivity extends AppCompatActivity {
             }
         }
 
-        public boolean isItemSelected(int position) {
+        boolean isItemSelected(int position) {
             return mSelectedItems.contains(position);
         }
 
-        public void removeSelectionByLocalId(int localMediaId) {
-            if (isItemSelected(localMediaId)) {
-                mSelectedItems.remove(Integer.valueOf(localMediaId));
-                notifyDataSetChanged();
-            }
-        }
+        void setItemSelected(StockViewHolder holder, int position, boolean selected) {
+            if (!isValidPosition(position)) return;
 
-        private void setItemSelected(StockViewHolder holder, int position, boolean selected) {
             if (selected) {
                 mSelectedItems.add(position);
-            } else {
+            } else if (mSelectedItems.contains(position)) {
                 mSelectedItems.remove(position);
+            } else {
+                return;
             }
 
             // show and animate the count
@@ -306,21 +326,24 @@ public class StockPhotoPickerActivity extends AppCompatActivity {
             }
 
             // redraw after the scale animation completes
+            long delayMs = AniUtils.Duration.SHORT.toMillis(StockPhotoPickerActivity.this);
             new Handler().postDelayed(new Runnable() {
                 @Override
                 public void run() {
                     notifyDataSetChanged();
                 }
-            }, mAniDelayMs);
+            }, delayMs);
 
         }
 
-        private void toggleItemSelected(StockViewHolder holder, int position) {
+        void toggleItemSelected(StockViewHolder holder, int position) {
+            if (!isValidPosition(position)) return;
+
             boolean isSelected = isItemSelected(position);
             setItemSelected(holder, position, !isSelected);
         }
 
-        public void setSelectedItems(ArrayList<Integer> selectedItems) {
+        void setSelectedItems(ArrayList<Integer> selectedItems) {
             mSelectedItems.clear();
             mSelectedItems.addAll(selectedItems);
             notifyDataSetChanged();
@@ -343,8 +366,10 @@ public class StockPhotoPickerActivity extends AppCompatActivity {
                 @Override
                 public void onClick(View v) {
                     int position = getAdapterPosition();
-                    mAdapter.setInMultiSelect(true);
-                    mAdapter.toggleItemSelected(StockViewHolder.this, position);
+                    if (mAdapter.isValidPosition(position)) {
+                        mAdapter.setInMultiSelect(true);
+                        mAdapter.toggleItemSelected(StockViewHolder.this, position);
+                    }
                 }
             });
         }
