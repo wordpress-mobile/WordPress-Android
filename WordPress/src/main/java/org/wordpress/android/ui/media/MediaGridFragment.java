@@ -468,6 +468,7 @@ public class MediaGridFragment extends Fragment implements MediaGridAdapterCallb
     void reload() {
         if (isAdded()) {
             getAdapter().setMediaList(getFilteredMedia());
+            setFilter(mFilter);
         }
     }
 
