@@ -6,6 +6,13 @@ import org.wordpress.android.fluxc.network.Response;
  * Response to GET request for stock media items
  */
 public class StockMediaWPComRestResponse implements Response {
+    public class Thumbnails {
+        public String thumbnail;
+        public String medium;
+        public String large;
+        public String post_thumbnail;
+    }
+
     public String ID;
     public String date;
     public String extension;
@@ -19,5 +26,5 @@ public class StockMediaWPComRestResponse implements Response {
     public int height;
     public int width;
 
-    public MediaWPComRestResponse.Thumbnails thumbnails;
+    public Thumbnails thumbnails;
 }
