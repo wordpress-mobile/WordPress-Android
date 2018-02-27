@@ -51,6 +51,7 @@ import org.wordpress.android.ui.uploads.PostEvents;
 import org.wordpress.android.ui.uploads.UploadService;
 import org.wordpress.android.ui.uploads.UploadUtils;
 import org.wordpress.android.ui.uploads.VideoOptimizer;
+import org.wordpress.android.util.AccessibilityUtils;
 import org.wordpress.android.util.AniUtils;
 import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.ToastUtils;
@@ -599,7 +600,8 @@ public class PostsListFragment extends Fragment
             text = mIsPage ? getString(R.string.page_trashed) : getString(R.string.post_trashed);
         }
 
-        Snackbar snackbar = Snackbar.make(getView().findViewById(R.id.coordinator), text, Snackbar.LENGTH_LONG)
+        Snackbar snackbar = Snackbar.make(getView().findViewById(R.id.coordinator), text,
+                AccessibilityUtils.getSnackbarDuration(getActivity()))
                 .setAction(R.string.undo, undoListener);
 
         // wait for the undo snackbar to disappear before actually deleting the post

@@ -82,6 +82,7 @@
         tools:visibility="visible"/>
 
     <org.wordpress.android.widgets.WPTextView
+        android:labelFor="@+id/layout_liking_users_view"
         android:id="@+id/text_liking_users_label"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
