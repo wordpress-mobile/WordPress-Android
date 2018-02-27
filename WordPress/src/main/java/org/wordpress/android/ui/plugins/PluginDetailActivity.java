@@ -49,6 +49,7 @@ import org.wordpress.android.fluxc.store.PluginStore.OnSitePluginInstalled;
 import org.wordpress.android.fluxc.store.PluginStore.OnSitePluginUpdated;
 import org.wordpress.android.fluxc.store.PluginStore.UpdateSitePluginPayload;
 import org.wordpress.android.ui.ActivityLauncher;
+import org.wordpress.android.util.AccessibilityUtils;
 import org.wordpress.android.util.AnalyticsUtils;
 import org.wordpress.android.util.AniUtils;
 import org.wordpress.android.util.AppLog;
@@ -668,7 +669,7 @@ public class PluginDetailActivity extends AppCompatActivity {
     private void showUpdateFailedSnackbar() {
         Snackbar.make(mContainer,
                 getString(R.string.plugin_updated_failed, mSitePlugin.getDisplayName()),
-                Snackbar.LENGTH_LONG)
+                AccessibilityUtils.getSnackbarDuration(this))
                 .setAction(R.string.retry, new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
@@ -681,7 +682,7 @@ public class PluginDetailActivity extends AppCompatActivity {
     private void showInstallFailedSnackbar() {
         Snackbar.make(mContainer,
                 getString(R.string.plugin_installed_failed, mWPOrgPlugin.getName()),
-                Snackbar.LENGTH_LONG)
+                AccessibilityUtils.getSnackbarDuration(this))
                 .setAction(R.string.retry, new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
