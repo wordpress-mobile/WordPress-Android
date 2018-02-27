@@ -64,13 +64,15 @@
                         android:layout_height="@dimen/avatar_sz_login_epilogue"
                         android:layout_marginBottom="@dimen/margin_medium"
                         android:layout_marginTop="@dimen/margin_extra_medium_large"
-                        android:layout_width="@dimen/avatar_sz_login_epilogue" >
+                        android:contentDescription="@string/content_description_add_avatar"
+                        android:layout_width="@dimen/avatar_sz_login_epilogue">
 
                         <org.wordpress.android.widgets.WPNetworkImageView
                             android:id="@+id/signup_epilogue_header_avatar"
                             android:layout_height="match_parent"
                             android:layout_width="match_parent"
                             app:srcCompat="@drawable/ic_gridicons_user_circle_100dp"
+                            android:importantForAccessibility="no"
                             app:wpDefaultImageDrawable="@drawable/ic_gridicons_user_circle_100dp"
                             app:wpErrorImageDrawable="@drawable/ic_gridicons_user_circle_100dp" >
                         </org.wordpress.android.widgets.WPNetworkImageView>
@@ -78,12 +80,12 @@
                         <ImageButton
                             android:id="@+id/signup_epilogue_header_avatar_add"
                             android:background="@drawable/bg_oval_white"
-                            android:contentDescription="@string/content_description_add_avatar"
                             android:layout_alignParentEnd="true"
                             android:layout_alignParentTop="true"
                             android:layout_height="@dimen/add_avatar_button_size"
                             android:layout_width="@dimen/add_avatar_button_size"
                             android:tint="@color/grey_lighten_10"
+                            android:importantForAccessibility="no"
                             android:visibility="gone"
                             app:srcCompat="@drawable/ic_add_grey_24dp"
                             tools:visibility="visible" >
