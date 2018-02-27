@@ -73,6 +73,7 @@ class DotComSiteSettings extends SiteSettingsInterface {
     private static final String POSTS_PER_PAGE_KEY = "posts_per_page";
     private static final String AMP_SUPPORTED_KEY = "amp_is_supported";
     private static final String AMP_ENABLED_KEY = "amp_is_enabled";
+    private static final String COMMENT_LIKES = "comment-likes";
 
     // WP.com REST keys used to GET certain site settings
     private static final String GET_TITLE_KEY = "name";
@@ -241,6 +242,7 @@ class DotComSiteSettings extends SiteSettingsInterface {
                 mRemoteJpSettings.ssoActive = data.optBoolean("sso", false);
                 mRemoteJpSettings.ssoMatchEmail = data.optBoolean("jetpack_sso_match_by_email", false);
                 mRemoteJpSettings.ssoRequireTwoFactor = data.optBoolean("jetpack_sso_require_two_step", false);
+                mRemoteJpSettings.commentLikes = data.optBoolean(COMMENT_LIKES, false);
 
                 JSONObject jetpackProtectWhitelist = data.optJSONObject("jetpack_protect_global_whitelist");
                 if (jetpackProtectWhitelist != null) {
@@ -265,6 +267,7 @@ class DotComSiteSettings extends SiteSettingsInterface {
                 mJpSettings.ssoActive = mRemoteJpSettings.ssoActive;
                 mJpSettings.ssoMatchEmail = mRemoteJpSettings.ssoMatchEmail;
                 mJpSettings.ssoRequireTwoFactor = mRemoteJpSettings.ssoRequireTwoFactor;
+                mJpSettings.commentLikes = mRemoteJpSettings.commentLikes;
                 onFetchResponseReceived(null);
             }
         }, new RestRequest.ErrorListener() {
@@ -413,6 +416,7 @@ class DotComSiteSettings extends SiteSettingsInterface {
                         mRemoteJpSettings.ssoActive = sentJpData.ssoActive;
                         mRemoteJpSettings.ssoMatchEmail = sentJpData.ssoMatchEmail;
                         mRemoteJpSettings.ssoRequireTwoFactor = sentJpData.ssoRequireTwoFactor;
+                        mRemoteJpSettings.commentLikes = sentJpData.commentLikes;
                         onSaveResponseReceived(null);
                     }
                 }, new RestRequest.ErrorListener() {
@@ -797,6 +801,9 @@ class DotComSiteSettings extends SiteSettingsInterface {
         }
         if (mJpSettings.ssoRequireTwoFactor != mRemoteJpSettings.ssoRequireTwoFactor) {
             params.put("jetpack_sso_require_two_step", mJpSettings.ssoRequireTwoFactor);
+        }
+        if (mJpSettings.commentLikes != mRemoteJpSettings.commentLikes) {
+            params.put(COMMENT_LIKES, mJpSettings.commentLikes);
         }
         return params;
     }
