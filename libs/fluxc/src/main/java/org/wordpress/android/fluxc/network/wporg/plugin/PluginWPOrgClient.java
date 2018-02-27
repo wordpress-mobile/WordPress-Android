@@ -94,13 +94,18 @@ public class PluginWPOrgClient extends BaseWPOrgAPIClient {
 
     public void fetchFeaturedPlugins() {
         String url = WPCOMV2.plugins.featured.getUrl();
-        final WPOrgAPIGsonRequest<FetchFeaturedPluginsResponse> request =
-                new WPOrgAPIGsonRequest<>(Method.GET, url, null, null, FetchFeaturedPluginsResponse.class,
-                        new Listener<FetchFeaturedPluginsResponse>() {
+        final WPOrgAPIGsonRequest<WPOrgPluginResponse[]> request =
+                new WPOrgAPIGsonRequest<>(Method.GET, url, null, null, WPOrgPluginResponse[].class,
+                        new Listener<WPOrgPluginResponse[]>() {
                             @Override
-                            public void onResponse(FetchFeaturedPluginsResponse response) {
+                            public void onResponse(WPOrgPluginResponse[] response) {
                                 FetchedPluginDirectoryPayload payload;
-                                List<WPOrgPluginModel> wpOrgPlugins = wpOrgPluginListFromResponse(response);
+                                List<WPOrgPluginModel> wpOrgPlugins = new ArrayList<>();
+                                if (response != null) {
+                                    for (WPOrgPluginResponse wpOrgPluginResponse : response) {
+                                        wpOrgPlugins.add(wpOrgPluginFromResponse(wpOrgPluginResponse));
+                                    }
+                                }
                                 payload = new FetchedPluginDirectoryPayload(PluginDirectoryType.FEATURED, wpOrgPlugins,
                                         false, false, 1);
                                 mDispatcher.dispatch(PluginActionBuilder.newFetchedPluginDirectoryAction(payload));
@@ -214,16 +219,6 @@ public class PluginWPOrgClient extends BaseWPOrgAPIClient {
     }
 
     private List<WPOrgPluginModel> wpOrgPluginListFromResponse(@NonNull FetchPluginDirectoryResponse response) {
-        List<WPOrgPluginModel> pluginList = new ArrayList<>();
-        if (response.plugins != null) {
-            for (WPOrgPluginResponse wpOrgPluginResponse : response.plugins) {
-                pluginList.add(wpOrgPluginFromResponse(wpOrgPluginResponse));
-            }
-        }
-        return pluginList;
-    }
-
-    private List<WPOrgPluginModel> wpOrgPluginListFromResponse(@NonNull FetchFeaturedPluginsResponse response) {
         List<WPOrgPluginModel> pluginList = new ArrayList<>();
         if (response.plugins != null) {
             for (WPOrgPluginResponse wpOrgPluginResponse : response.plugins) {
