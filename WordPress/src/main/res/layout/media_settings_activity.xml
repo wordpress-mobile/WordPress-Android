@@ -196,6 +196,7 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:importantForAccessibility="no"
+                            android:hint="@string/media_edit_link_text"
                             app:theme="@style/MediaSettings.TextInputTheme">
 
                             <android.support.design.widget.TextInputEditText
@@ -204,7 +205,7 @@
                                 android:layout_height="wrap_content"
                                 android:gravity="top|start"
                                 android:hint="@string/media_edit_link_text"
-                                android:contentDescription="@string/media_edit_link_text"
+                                android:textColorHint="@color/transparent"
                                 android:inputType="textUri"
                                 tools:text="edit_link" />
 
@@ -257,6 +258,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:importantForAccessibility="no"
+                        android:hint="@string/media_edit_title_text"
                         app:theme="@style/MediaSettings.TextInputTheme">
 
                         <android.support.design.widget.TextInputEditText
@@ -264,7 +266,7 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:hint="@string/media_edit_title_text"
-                            android:contentDescription="@string/media_edit_title_text"
+                            android:textColorHint="@color/transparent"
                             android:inputType="textCapSentences|textAutoCorrect"
                             tools:text="edit_title" />
 
@@ -276,6 +278,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:importantForAccessibility="no"
+                        android:hint="@string/media_edit_caption_text"
                         app:theme="@style/MediaSettings.TextInputTheme">
 
                         <android.support.design.widget.TextInputEditText
@@ -283,7 +286,7 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:hint="@string/media_edit_caption_text"
-                            android:contentDescription="@string/media_edit_caption_text"
+                            android:textColorHint="@color/transparent"
                             android:inputType="textCapSentences|textAutoCorrect"
                             tools:text="edit_caption" />
 
@@ -295,6 +298,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:importantForAccessibility="no"
+                        android:hint="@string/media_edit_alttext_text"
                         app:theme="@style/MediaSettings.TextInputTheme">
 
                         <android.support.design.widget.TextInputEditText
@@ -302,7 +306,7 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:hint="@string/media_edit_alttext_text"
-                            android:contentDescription="@string/media_edit_alttext_text"
+                            android:textColorHint="@color/transparent"
                             android:inputType="textCapSentences|textAutoCorrect"
                             tools:text="edit_alt_text" />
 
@@ -314,6 +318,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:importantForAccessibility="no"
+                        android:hint="@string/media_edit_description_text"
                         app:theme="@style/MediaSettings.TextInputTheme">
 
                         <android.support.design.widget.TextInputEditText
@@ -322,7 +327,7 @@
                             android:layout_height="wrap_content"
                             android:gravity="top|start"
                             android:hint="@string/media_edit_description_text"
-                            android:contentDescription="@string/media_edit_description_text"
+                            android:textColorHint="@color/transparent"
                             android:inputType="textCapSentences|textAutoCorrect"
                             android:lines="3"
                             tools:text="edit_description" />
