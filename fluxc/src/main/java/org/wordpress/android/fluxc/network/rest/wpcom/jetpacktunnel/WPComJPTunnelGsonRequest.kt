@@ -7,6 +7,7 @@ import org.wordpress.android.fluxc.generated.endpoint.WPCOMREST
 import org.wordpress.android.fluxc.network.BaseRequest.BaseErrorListener
 import org.wordpress.android.fluxc.network.rest.wpcom.WPComGsonRequest
 import java.lang.reflect.Type
+import java.net.URLEncoder
 
 /**
  * A request making a WP-API call to a Jetpack site via the WordPress.com /jetpack-blogs/$site/rest-api/ tunnel.
@@ -228,7 +229,7 @@ object WPComJPTunnelGsonRequest {
         var result = path + "&_method=" + method
         if (params.isNotEmpty()) {
             for (param in params) {
-                result += "&" + param.key + "=" + param.value
+                result += "&" + URLEncoder.encode(param.key, "UTF-8") + "=" + URLEncoder.encode(param.value, "UTF-8")
             }
         }
         return result
