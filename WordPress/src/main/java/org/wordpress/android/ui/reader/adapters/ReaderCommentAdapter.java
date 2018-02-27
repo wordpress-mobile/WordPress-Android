@@ -31,6 +31,7 @@ import org.wordpress.android.ui.reader.actions.ReaderActions;
 import org.wordpress.android.ui.reader.actions.ReaderCommentActions;
 import org.wordpress.android.ui.reader.utils.ReaderCommentLeveler;
 import org.wordpress.android.ui.reader.utils.ReaderLinkMovementMethod;
+import org.wordpress.android.ui.reader.utils.ReaderUtils;
 import org.wordpress.android.ui.reader.views.ReaderCommentsPostHeaderView;
 import org.wordpress.android.ui.reader.views.ReaderIconCountView;
 import org.wordpress.android.util.AnalyticsUtils;
@@ -92,6 +93,7 @@ public class ReaderCommentAdapter extends RecyclerView.Adapter<RecyclerView.View
 
         private final WPNetworkImageView imgAvatar;
         private final View spacerIndent;
+        private final View authorContainer;
         private final ProgressBar progress;
 
         private final ViewGroup replyView;
@@ -109,6 +111,8 @@ public class ReaderCommentAdapter extends RecyclerView.Adapter<RecyclerView.View
             imgAvatar = (WPNetworkImageView) view.findViewById(R.id.image_comment_avatar);
             spacerIndent = view.findViewById(R.id.spacer_comment_indent);
             progress = (ProgressBar) view.findViewById(R.id.progress_comment);
+
+            authorContainer = view.findViewById(R.id.layout_author);
 
             replyView = (ViewGroup) view.findViewById(R.id.reply_container);
             countLikes = (ReaderIconCountView) view.findViewById(R.id.count_likes);
@@ -241,11 +245,9 @@ public class ReaderCommentAdapter extends RecyclerView.Adapter<RecyclerView.View
                     ReaderActivityLauncher.showReaderBlogPreview(view.getContext(), comment.authorBlogId);
                 }
             };
-            commentHolder.imgAvatar.setOnClickListener(authorListener);
-            commentHolder.txtAuthor.setOnClickListener(authorListener);
+            commentHolder.authorContainer.setOnClickListener(authorListener);
         } else {
-            commentHolder.imgAvatar.setOnClickListener(null);
-            commentHolder.txtAuthor.setOnClickListener(null);
+            commentHolder.authorContainer.setOnClickListener(null);
         }
 
         // author name uses different color for comments from the post's author
@@ -350,6 +352,8 @@ public class ReaderCommentAdapter extends RecyclerView.Adapter<RecyclerView.View
             holder.countLikes.setVisibility(View.VISIBLE);
             holder.countLikes.setSelected(comment.isLikedByCurrentUser);
             holder.countLikes.setCount(comment.numLikes);
+            holder.countLikes.setContentDescription(ReaderUtils.getLongLikeLabelText(
+                    holder.countLikes.getContext(), comment.numLikes, comment.isLikedByCurrentUser));
 
             if (!mAccountStore.hasAccessToken()) {
                 holder.countLikes.setEnabled(false);

@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
-    android:orientation="horizontal">
+              xmlns:tools="http://schemas.android.com/tools"
+              android:layout_width="wrap_content"
+              android:layout_height="wrap_content"
+              android:orientation="horizontal">
 
     <ImageView
         android:id="@+id/image_count"
@@ -14,12 +14,14 @@
         android:contentDescription="@null"
         tools:src="@drawable/reader_button_comment" />
 
+    <!--Set appropriate verbose content description to whole layout programmatically ex. "321 people liked this"-->
     <TextView
         android:id="@+id/text_count"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center_vertical"
         android:layout_marginLeft="@dimen/margin_extra_small"
+        android:importantForAccessibility="no"
         android:textColor="@color/reader_count_text"
         android:textSize="@dimen/text_sz_medium"
         tools:text="2" />

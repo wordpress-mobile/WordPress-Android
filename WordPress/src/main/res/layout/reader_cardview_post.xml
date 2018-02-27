@@ -33,6 +33,7 @@
             android:paddingTop="@dimen/margin_large">
 
             <org.wordpress.android.widgets.WPNetworkImageView
+                android:layout_centerVertical="true"
                 android:id="@+id/image_avatar_or_blavatar"
                 style="@style/ReaderImageView.Avatar"
                 android:layout_marginRight="@dimen/margin_large"
@@ -89,7 +90,7 @@
             <org.wordpress.android.widgets.WPNetworkImageView
                 android:id="@+id/image_featured"
                 style="@style/ReaderImageView.Featured.CardView"
-                android:contentDescription="@string/reader_cardview_post_featured_desc"/>
+                android:contentDescription="@null"/>
 
             <org.wordpress.android.widgets.WPTextView
                 android:id="@+id/text_photo_title"
@@ -120,6 +121,7 @@
         </FrameLayout>
 
         <org.wordpress.android.ui.reader.views.ReaderThumbnailStrip
+            android:contentDescription="@null"
             android:id="@+id/thumbnail_strip"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -133,6 +135,7 @@
             tools:text="text_title" />
 
         <org.wordpress.android.widgets.WPTextView
+            android:importantForAccessibility="no"
             android:id="@+id/text_excerpt"
             style="@style/ReaderTextView.Post.Excerpt"
             android:layout_height="wrap_content"
@@ -151,6 +154,7 @@
             tools:visibility="gone">
 
             <org.wordpress.android.widgets.WPNetworkImageView
+                android:layout_gravity="center_vertical"
                 android:id="@+id/image_discover_avatar"
                 style="@style/ReaderImageView.Avatar.Small"
                 android:layout_marginRight="@dimen/margin_large"
@@ -185,6 +189,7 @@
                 android:contentDescription="@string/view_in_browser">
 
                 <ImageView
+                    android:layout_gravity="center_vertical"
                     android:id="@+id/image_visit_icon"
                     android:layout_width="@dimen/reader_count_icon"
                     android:layout_height="@dimen/reader_count_icon"
