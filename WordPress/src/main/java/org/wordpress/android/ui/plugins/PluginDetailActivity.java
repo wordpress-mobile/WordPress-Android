@@ -392,6 +392,20 @@ public class PluginDetailActivity extends AppCompatActivity {
             scrollView.setVisibility(View.GONE);
         }
 
+        if (mWPOrgPlugin != null && !TextUtils.isEmpty(mWPOrgPlugin.getAuthorAsHtml())) {
+            mByLineTextView.setMovementMethod(WPLinkMovementMethod.getInstance());
+            mByLineTextView.setText(Html.fromHtml(mWPOrgPlugin.getAuthorAsHtml()));
+        } else if (mSitePlugin != null) {
+            if(!TextUtils.isEmpty(mSitePlugin.getAuthorUrl())) {
+                String authorLink = "<a href='" + mSitePlugin.getAuthorUrl() + "'>" + mSitePlugin.getAuthorName() + "</a>";
+                String byline = String.format(getString(R.string.plugin_byline), authorLink);
+                mByLineTextView.setMovementMethod(WPLinkMovementMethod.getInstance());
+                mByLineTextView.setText(Html.fromHtml(byline));
+            } else {
+                mByLineTextView.setText(String.format(getString(R.string.plugin_byline), mSitePlugin.getAuthorName()));
+            }
+        }
+
         if (mWPOrgPlugin != null) {
             mTitleTextView.setText(mWPOrgPlugin.getName());
             mImageBanner.setImageUrl(mWPOrgPlugin.getBanner(), PHOTO);
@@ -401,20 +415,8 @@ public class PluginDetailActivity extends AppCompatActivity {
             setCollapsibleHtmlText(mInstallationTextView, mWPOrgPlugin.getInstallationInstructionsAsHtml());
             setCollapsibleHtmlText(mWhatsNewTextView, mWPOrgPlugin.getWhatsNewAsHtml());
             setCollapsibleHtmlText(mFaqTextView, mWPOrgPlugin.getFaqAsHtml());
-
-            mByLineTextView.setMovementMethod(WPLinkMovementMethod.getInstance());
-            mByLineTextView.setText(Html.fromHtml(mWPOrgPlugin.getAuthorAsHtml()));
         } else if (mSitePlugin != null) {
             mTitleTextView.setText(mSitePlugin.getDisplayName());
-
-            if (TextUtils.isEmpty(mSitePlugin.getAuthorUrl())) {
-                mByLineTextView.setText(String.format(getString(R.string.plugin_byline), mSitePlugin.getAuthorName()));
-            } else {
-                String authorLink = "<a href='" + mSitePlugin.getAuthorUrl() + "'>" + mSitePlugin.getAuthorName() + "</a>";
-                String byline = String.format(getString(R.string.plugin_byline), authorLink);
-                mByLineTextView.setMovementMethod(WPLinkMovementMethod.getInstance());
-                mByLineTextView.setText(Html.fromHtml(byline));
-            }
         }
 
         if (!canPluginBeDisabledOrRemoved()) {
