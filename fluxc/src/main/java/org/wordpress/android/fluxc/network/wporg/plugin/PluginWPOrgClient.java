@@ -50,6 +50,7 @@ public class PluginWPOrgClient extends BaseWPOrgAPIClient {
 
     public void fetchPluginDirectory(final PluginDirectoryType directoryType, int page) {
         if (directoryType == PluginDirectoryType.FEATURED) {
+            // This check is not really necessary currently - but defensive programming ftw
             fetchFeaturedPlugins();
             return;
         }
@@ -91,7 +92,7 @@ public class PluginWPOrgClient extends BaseWPOrgAPIClient {
         add(request);
     }
 
-    private void fetchFeaturedPlugins() {
+    public void fetchFeaturedPlugins() {
         String url = WPCOMV2.plugins.featured.getUrl();
         final WPOrgAPIGsonRequest<FetchFeaturedPluginsResponse> request =
                 new WPOrgAPIGsonRequest<>(Method.GET, url, null, null, FetchFeaturedPluginsResponse.class,
