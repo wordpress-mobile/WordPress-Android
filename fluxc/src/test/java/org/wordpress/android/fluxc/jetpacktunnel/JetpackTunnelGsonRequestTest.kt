@@ -7,7 +7,7 @@ import org.junit.runner.RunWith
 import org.robolectric.RobolectricTestRunner
 import org.wordpress.android.fluxc.generated.endpoint.WPCOMREST
 import org.wordpress.android.fluxc.network.BaseRequest.BaseErrorListener
-import org.wordpress.android.fluxc.network.rest.wpcom.jetpacktunnel.WPComJPTunnelGsonRequest
+import org.wordpress.android.fluxc.network.rest.wpcom.jetpacktunnel.JetpackTunnelGsonRequest
 import org.wordpress.android.util.UrlUtils
 import kotlin.test.assertEquals
 import kotlin.test.assertNull
@@ -21,7 +21,7 @@ class JetpackTunnelGsonRequestTest {
         val url = "/"
         val params = mapOf("context" to "view")
 
-        val request = WPComJPTunnelGsonRequest.buildGetRequest(url, 567, params,
+        val request = JetpackTunnelGsonRequest.buildGetRequest(url, 567, params,
                 Any::class.java,
                 { _: Any? -> },
                 BaseErrorListener { _ -> }
@@ -46,7 +46,7 @@ class JetpackTunnelGsonRequestTest {
 
         val requestBody = mapOf<String, Any>("title" to "New Title", "description" to "New Description")
 
-        val request = WPComJPTunnelGsonRequest.buildPostRequest(url, 567, requestBody,
+        val request = JetpackTunnelGsonRequest.buildPostRequest(url, 567, requestBody,
                 Any::class.java,
                 { _: Any? -> },
                 BaseErrorListener { _ -> }
@@ -70,7 +70,7 @@ class JetpackTunnelGsonRequestTest {
 
         val requestBody = mapOf<String, Any>("title" to "New Title", "description" to "New Description")
 
-        val request = WPComJPTunnelGsonRequest.buildPutRequest(url, 567, requestBody,
+        val request = JetpackTunnelGsonRequest.buildPutRequest(url, 567, requestBody,
                 Any::class.java,
                 { _: Any? -> },
                 BaseErrorListener { _ -> }
@@ -94,7 +94,7 @@ class JetpackTunnelGsonRequestTest {
 
         val requestBody = mapOf<String, Any>("title" to "New Title", "description" to "New Description")
 
-        val request = WPComJPTunnelGsonRequest.buildPatchRequest(url, 567, requestBody,
+        val request = JetpackTunnelGsonRequest.buildPatchRequest(url, 567, requestBody,
                 Any::class.java,
                 { _: Any? -> },
                 BaseErrorListener { _ -> }
@@ -117,7 +117,7 @@ class JetpackTunnelGsonRequestTest {
         val url = "/wp/v2/posts/6"
         val params = mapOf("force" to "true")
 
-        val request = WPComJPTunnelGsonRequest.buildDeleteRequest(url, 567, params,
+        val request = JetpackTunnelGsonRequest.buildDeleteRequest(url, 567, params,
                 Any::class.java,
                 { _: Any? -> },
                 BaseErrorListener { _ -> }
