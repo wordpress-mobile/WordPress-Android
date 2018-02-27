@@ -90,7 +90,7 @@
             <org.wordpress.android.widgets.WPNetworkImageView
                 android:id="@+id/image_featured"
                 style="@style/ReaderImageView.Featured.CardView"
-                android:contentDescription="@string/reader_cardview_post_featured_desc"/>
+                android:contentDescription="@null"/>
 
             <org.wordpress.android.widgets.WPTextView
                 android:id="@+id/text_photo_title"
@@ -135,6 +135,7 @@
             tools:text="text_title" />
 
         <org.wordpress.android.widgets.WPTextView
+            android:importantForAccessibility="no"
             android:id="@+id/text_excerpt"
             style="@style/ReaderTextView.Post.Excerpt"
             android:layout_height="wrap_content"
