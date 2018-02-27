@@ -682,6 +682,8 @@ public class PluginStore extends Store {
     private void fetchPluginDirectory(FetchPluginDirectoryPayload payload) {
         if (payload.type == PluginDirectoryType.SITE) {
             fetchSitePlugins(payload.site);
+        } else if (payload.type == PluginDirectoryType.FEATURED) {
+            mPluginWPOrgClient.fetchFeaturedPlugins();
         } else {
             int page = 1;
             if (payload.loadMore) {
