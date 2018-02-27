@@ -82,8 +82,8 @@ public class PluginRestClient extends BaseWPComRestClient {
         add(request);
     }
 
-    public void configureSitePlugin(@NonNull final SiteModel site, @NonNull final String pluginName, boolean isActive,
-                                    boolean isAutoUpdatesEnabled) {
+    public void configureSitePlugin(@NonNull final SiteModel site, @NonNull final String pluginName,
+                                    @NonNull final String slug, boolean isActive, boolean isAutoUpdatesEnabled) {
         String url = WPCOMREST.sites.site(site.getSiteId()).plugins.name(getEncodedPluginName(pluginName)).getUrlV1_2();
         Map<String, Object> params = new HashMap<>();
         params.put("active", isActive);
@@ -104,7 +104,7 @@ public class PluginRestClient extends BaseWPComRestClient {
                         ConfigureSitePluginError configurePluginError = new ConfigureSitePluginError(((
                                 WPComGsonNetworkError) networkError).apiError, networkError.message);
                         ConfiguredSitePluginPayload payload =
-                                new ConfiguredSitePluginPayload(site, pluginName, configurePluginError);
+                                new ConfiguredSitePluginPayload(site, pluginName, slug, configurePluginError);
                         mDispatcher.dispatch(PluginActionBuilder.newConfiguredSitePluginAction(payload));
                     }
                 }
@@ -112,8 +112,8 @@ public class PluginRestClient extends BaseWPComRestClient {
         add(request);
     }
 
-    public void deleteSitePlugin(@NonNull final SiteModel site, @NonNull final String slug,
-                                 @NonNull final String pluginName) {
+    public void deleteSitePlugin(@NonNull final SiteModel site, @NonNull final String pluginName,
+                                 @NonNull final String slug) {
         String url = WPCOMREST.sites.site(site.getSiteId()).
                 plugins.name(getEncodedPluginName(pluginName)).delete.getUrlV1_2();
         final WPComGsonRequest<PluginWPComRestResponse> request = WPComGsonRequest.buildPostRequest(url, null,
@@ -165,7 +165,8 @@ public class PluginRestClient extends BaseWPComRestClient {
         add(request);
     }
 
-    public void updateSitePlugin(@NonNull final SiteModel site, @NonNull final String pluginName) {
+    public void updateSitePlugin(@NonNull final SiteModel site, @NonNull final String pluginName,
+                                 @NonNull final String slug) {
         String url = WPCOMREST.sites.site(site.getSiteId()).
                 plugins.name(getEncodedPluginName(pluginName)).update.getUrlV1_2();
         final WPComGsonRequest<PluginWPComRestResponse> request = WPComGsonRequest.buildPostRequest(url, null,
@@ -184,7 +185,7 @@ public class PluginRestClient extends BaseWPComRestClient {
                         UpdateSitePluginError updatePluginError
                                 = new UpdateSitePluginError(((WPComGsonNetworkError) networkError).apiError,
                                 networkError.message);
-                        UpdatedSitePluginPayload payload = new UpdatedSitePluginPayload(site, pluginName,
+                        UpdatedSitePluginPayload payload = new UpdatedSitePluginPayload(site, pluginName, slug,
                                 updatePluginError);
                         mDispatcher.dispatch(PluginActionBuilder.newUpdatedSitePluginAction(payload));
                     }

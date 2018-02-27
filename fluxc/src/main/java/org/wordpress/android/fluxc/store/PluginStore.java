@@ -36,13 +36,15 @@ public class PluginStore extends Store {
     public static class ConfigureSitePluginPayload extends Payload<BaseNetworkError> {
         public SiteModel site;
         public String pluginName;
+        public String slug;
         public boolean isActive;
         public boolean isAutoUpdateEnabled;
 
-        public ConfigureSitePluginPayload(SiteModel site, String pluginName, boolean isActive,
+        public ConfigureSitePluginPayload(SiteModel site, String pluginName, String slug, boolean isActive,
                                           boolean isAutoUpdateEnabled) {
             this.site = site;
             this.pluginName = pluginName;
+            this.slug = slug;
             this.isActive = isActive;
             this.isAutoUpdateEnabled = isAutoUpdateEnabled;
         }
@@ -54,10 +56,10 @@ public class PluginStore extends Store {
         public String slug;
         public String pluginName;
 
-        public DeleteSitePluginPayload(SiteModel site, String slug, String pluginName) {
+        public DeleteSitePluginPayload(SiteModel site, String pluginName, String slug) {
             this.site = site;
-            this.slug = slug;
             this.pluginName = pluginName;
+            this.slug = slug;
         }
     }
 
@@ -102,10 +104,12 @@ public class PluginStore extends Store {
     public static class UpdateSitePluginPayload extends Payload<BaseNetworkError> {
         public SiteModel site;
         public String pluginName;
+        public String slug;
 
-        public UpdateSitePluginPayload(SiteModel site, String pluginName) {
+        public UpdateSitePluginPayload(SiteModel site, String pluginName, String slug) {
             this.site = site;
             this.pluginName = pluginName;
+            this.slug = slug;
         }
     }
 
@@ -115,17 +119,21 @@ public class PluginStore extends Store {
     public static class ConfiguredSitePluginPayload extends Payload<ConfigureSitePluginError> {
         public SiteModel site;
         public String pluginName;
+        public String slug;
         public SitePluginModel plugin;
 
         public ConfiguredSitePluginPayload(SiteModel site, SitePluginModel plugin) {
             this.site = site;
             this.plugin = plugin;
             this.pluginName = this.plugin.getName();
+            this.slug = this.plugin.getSlug();
         }
 
-        public ConfiguredSitePluginPayload(SiteModel site, String pluginName, ConfigureSitePluginError error) {
+        public ConfiguredSitePluginPayload(SiteModel site, String pluginName, String slug,
+                                           ConfigureSitePluginError error) {
             this.site = site;
             this.pluginName = pluginName;
+            this.slug = slug;
             this.error = error;
         }
     }
@@ -233,17 +241,20 @@ public class PluginStore extends Store {
     public static class UpdatedSitePluginPayload extends Payload<UpdateSitePluginError> {
         public SiteModel site;
         public String pluginName;
+        public String slug;
         public SitePluginModel plugin;
 
         public UpdatedSitePluginPayload(SiteModel site, SitePluginModel plugin) {
             this.site = site;
             this.plugin = plugin;
             this.pluginName = this.plugin.getName();
+            this.slug = this.plugin.getSlug();
         }
 
-        public UpdatedSitePluginPayload(SiteModel site, String pluginName, UpdateSitePluginError error) {
+        public UpdatedSitePluginPayload(SiteModel site, String pluginName, String slug, UpdateSitePluginError error) {
             this.site = site;
             this.pluginName = pluginName;
+            this.slug = slug;
             this.error = error;
         }
     }
@@ -471,9 +482,11 @@ public class PluginStore extends Store {
     public static class OnSitePluginConfigured extends OnChanged<ConfigureSitePluginError> {
         public SiteModel site;
         public String pluginName;
-        public OnSitePluginConfigured(SiteModel site, String pluginName) {
+        public String slug;
+        public OnSitePluginConfigured(SiteModel site, String pluginName, String slug) {
             this.site = site;
             this.pluginName = pluginName;
+            this.slug = slug;
         }
     }
 
@@ -481,9 +494,11 @@ public class PluginStore extends Store {
     public static class OnSitePluginDeleted extends OnChanged<DeleteSitePluginError> {
         public SiteModel site;
         public String pluginName;
-        public OnSitePluginDeleted(SiteModel site, String pluginName) {
+        public String slug;
+        public OnSitePluginDeleted(SiteModel site, String pluginName, String slug) {
             this.site = site;
             this.pluginName = pluginName;
+            this.slug = slug;
         }
     }
 
@@ -501,9 +516,11 @@ public class PluginStore extends Store {
     public static class OnSitePluginUpdated extends OnChanged<UpdateSitePluginError> {
         public SiteModel site;
         public String pluginName;
-        public OnSitePluginUpdated(SiteModel site, String pluginName) {
+        public String slug;
+        public OnSitePluginUpdated(SiteModel site, String pluginName, String slug) {
             this.site = site;
             this.pluginName = pluginName;
+            this.slug = slug;
         }
     }
 
@@ -640,11 +657,11 @@ public class PluginStore extends Store {
 
     private void configureSitePlugin(ConfigureSitePluginPayload payload) {
         if (payload.site.isUsingWpComRestApi() && payload.site.isJetpackConnected()) {
-            mPluginRestClient.configureSitePlugin(payload.site, payload.pluginName, payload.isActive,
+            mPluginRestClient.configureSitePlugin(payload.site, payload.pluginName, payload.slug, payload.isActive,
                     payload.isAutoUpdateEnabled);
         } else {
             ConfigureSitePluginError error = new ConfigureSitePluginError(ConfigureSitePluginErrorType.NOT_AVAILABLE);
-            ConfiguredSitePluginPayload errorPayload = new ConfiguredSitePluginPayload(payload.site,
+            ConfiguredSitePluginPayload errorPayload = new ConfiguredSitePluginPayload(payload.site, payload.slug,
                     payload.pluginName, error);
             mDispatcher.dispatch(PluginActionBuilder.newConfiguredSitePluginAction(errorPayload));
         }
@@ -652,7 +669,7 @@ public class PluginStore extends Store {
 
     private void deleteSitePlugin(DeleteSitePluginPayload payload) {
         if (payload.site.isUsingWpComRestApi() && payload.site.isJetpackConnected()) {
-            mPluginRestClient.deleteSitePlugin(payload.site, payload.slug, payload.pluginName);
+            mPluginRestClient.deleteSitePlugin(payload.site, payload.pluginName, payload.slug);
         } else {
             DeleteSitePluginError error = new DeleteSitePluginError(DeleteSitePluginErrorType.NOT_AVAILABLE);
             DeletedSitePluginPayload errorPayload = new DeletedSitePluginPayload(payload.site, payload.slug,
@@ -706,12 +723,12 @@ public class PluginStore extends Store {
 
     private void updateSitePlugin(UpdateSitePluginPayload payload) {
         if (payload.site.isUsingWpComRestApi() && payload.site.isJetpackConnected()) {
-            mPluginRestClient.updateSitePlugin(payload.site, payload.pluginName);
+            mPluginRestClient.updateSitePlugin(payload.site, payload.pluginName, payload.slug);
         } else {
             UpdateSitePluginError error = new UpdateSitePluginError(
                     UpdateSitePluginErrorType.NOT_AVAILABLE);
             UpdatedSitePluginPayload errorPayload = new UpdatedSitePluginPayload(payload.site,
-                    payload.pluginName, error);
+                    payload.pluginName, payload.slug, error);
             mDispatcher.dispatch(PluginActionBuilder.newUpdatedSitePluginAction(errorPayload));
         }
     }
@@ -728,7 +745,7 @@ public class PluginStore extends Store {
     // Network callbacks
 
     private void configuredSitePlugin(ConfiguredSitePluginPayload payload) {
-        OnSitePluginConfigured event = new OnSitePluginConfigured(payload.site, payload.pluginName);
+        OnSitePluginConfigured event = new OnSitePluginConfigured(payload.site, payload.pluginName, payload.slug);
         if (payload.isError()) {
             event.error = payload.error;
         } else {
@@ -738,7 +755,7 @@ public class PluginStore extends Store {
     }
 
     private void deletedSitePlugin(DeletedSitePluginPayload payload) {
-        OnSitePluginDeleted event = new OnSitePluginDeleted(payload.site, payload.pluginName);
+        OnSitePluginDeleted event = new OnSitePluginDeleted(payload.site, payload.pluginName, payload.slug);
         // If the remote returns `UNKNOWN_PLUGIN` error, it means the plugin is not installed in remote anymore
         // most likely because the plugin is already removed on a different client and it was not synced yet.
         // Since we are trying to remove an already removed plugin, we should just remove it from DB and treat it as a
@@ -819,7 +836,7 @@ public class PluginStore extends Store {
     }
 
     private void updatedSitePlugin(UpdatedSitePluginPayload payload) {
-        OnSitePluginUpdated event = new OnSitePluginUpdated(payload.site, payload.pluginName);
+        OnSitePluginUpdated event = new OnSitePluginUpdated(payload.site, payload.pluginName, payload.slug);
         if (payload.isError()) {
             event.error = payload.error;
         } else {
