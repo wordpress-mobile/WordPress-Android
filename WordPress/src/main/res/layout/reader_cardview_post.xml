@@ -121,7 +121,7 @@
         </FrameLayout>
 
         <org.wordpress.android.ui.reader.views.ReaderThumbnailStrip
-            android:contentDescription="@string/reader_cardview_post_featured_desc"
+            android:contentDescription="@null"
             android:id="@+id/thumbnail_strip"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
