@@ -453,7 +453,6 @@ Language: he_IL
 	<string name="checking_username">בדיקת שמות משתמש</string>
 	<string name="jetpack_different_com_account">אין תמיכה באתרי Jetpack ששייכים לחשבונות WordPress.com שונים</string>
 	<string name="jetpack_use_com_account">כדי להוסיף אתר Jetpack שברשותך, יש להתחבר לחשבון WordPress.com שבאמצעותו בוצע החיבור ל-Jetpack.</string>
-	<string name="jetpack_message">התוסף של Jetpack חייב להיות מותקן ומופעל. האם ברצונך להתקין ולהפעיל את Jetpack?</string>
 	<string name="error_media_load">לא ניתן לטעון את פריטי המדיה</string>
 	<string name="error_media_refresh_no_connection">נדרש חיבור כדי לרענן את הספרייה</string>
 	<string name="error_media_unauthorized">אין לך הרשאה לערוך או לצפות בפריטי מדיה</string>
@@ -632,9 +631,7 @@ Language: he_IL
 	<string name="get_a_link_sent_to_your_email_to_sign_in_instantly">קבלת קישור להתחברות מיידית באימייל</string>
 	<string name="enter_your_password_instead">במקום זאת יש להזין סיסמה</string>
 	<string name="web_address_dialog_hint">תוצג באופן ציבורי בעת פרסום תגובות שלך.</string>
-	<string name="jetpack_not_connected_message">תוסף Jetpack מותקן אבל לא מחובר ל-WordPress.com. האם ברצונך לחבר את Jetpack?</string>
 	<string name="username_email">אימייל או שם משתמש</string>
-	<string name="jetpack_not_connected">תוסף Jetpack לא מחובר</string>
 	<string name="new_editor_reflection_error">עורך ויזואלי לא תואם למכשיר שלך. הוא\n הושבת אוטומטית.</string>
 	<string name="stats_insights_latest_post_no_title">(חסרה כותרת)</string>
 	<string name="capture_or_pick_photo">בחירה או לכידה של תמונה</string>
@@ -1361,7 +1358,6 @@ Language: he_IL
 	<string name="local_changes">שינויים מקומיים</string>
 	<string name="image_settings">הגדרות תמונה</string>
 	<string name="fatal_db_error">אירעה שגיאה בזמן יצירת מסד הנתונים של היישום. נסה להתקין מחדש את היישום.</string>
-	<string name="jetpack_message_not_admin">התוסף Jetpack נדרש לקבלת נתונים סטטיסטיים. פנה למנהל האתר.</string>
 	<string name="reader_title_applog">יומן יישום</string>
 	<string name="reader_toast_err_add_tag">לא ניתן להוסיף תגית זו</string>
 	<string name="reader_toast_err_remove_tag">לא ניתן להסיר תגית זו</string>
@@ -1412,7 +1408,6 @@ Language: he_IL
 	<string name="nux_oops_not_selfhosted_blog">התחבר לוורדפרס.קום</string>
 	<string name="media_add_popup_title">הוסף לספריית המדיה</string>
 	<string name="empty_list_default">רשימה זו ריקה</string>
-	<string name="jetpack_not_found">התוסף Jetpack לא נמצא</string>
 	<string name="reader_untitled_post">(ללא כותרת)</string>
 	<string name="reader_btn_share">שתף</string>
 	<string name="reader_btn_follow">עקוב</string>

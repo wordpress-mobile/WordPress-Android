@@ -2,13 +2,12 @@
     android:id="@+id/main_view"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/nux_background"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    android:baselineAligned="true">
 
-    <fragment
-        android:name="org.wordpress.android.ui.accounts.NewBlogFragment"
-        android:id="@+id/new_blog_fragment"
+    <FrameLayout
+        android:id="@+id/fragment_container"
         android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+        android:layout_height="match_parent"/>
 
 </LinearLayout>

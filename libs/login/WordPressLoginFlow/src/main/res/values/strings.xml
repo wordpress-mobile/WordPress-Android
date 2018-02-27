@@ -18,8 +18,8 @@
     <string name="enter_email_wordpress_com">Log in to WordPress.com using an email address to manage all your WordPress sites.</string>
     <string name="next">Next</string>
     <string name="open_mail">Open mail</string>
-    <string name="enter_site_address_instead">Log in to your site by entering your site address instead.</string>
-    <string name="enter_username_instead">Log in with username instead.</string>
+    <string name="enter_site_address_instead">Log in by entering your site address.</string>
+    <string name="enter_username_instead">Log in with your username.</string>
     <string name="enter_the_address_of_your_wordpress_site">Enter the address of your WordPress site</string>
     <string name="enter_verification_code">Almost there! Please enter the verification code from your Authenticator app.</string>
     <string name="enter_verification_code_sms">We sent a text message to the phone number ending in %s. Please enter the verification code in the SMS.</string>
@@ -64,6 +64,9 @@
     <string name="login_error_generic">There was some trouble connecting with the Google account.</string>
     <string name="login_error_generic_start">Google login could not be started.</string>
     <string name="login_error_suffix">\nMaybe try a different account?</string>
+
+    <string name="google_error_timeout">Google took too long to respond. You may need to wait until you have a stronger internet connection.</string>
+
     <string name="username_or_password_incorrect">The username or password you entered is incorrect</string>
     <string name="cannot_add_duplicate_site">This site already exists in the app, you can\'t add it.</string>
     <string name="duplicate_site_detected">A duplicate site has been detected.</string>

@@ -8,4 +8,6 @@
     <dimen name="fab_margin">@dimen/fab_margin_tablet</dimen>
     <dimen name="menu_item_margin">@dimen/menu_item_margin_tablet</dimen>
     <dimen name="media_settings_margin">@dimen/media_settings_margin_tablet</dimen>
+
+    <dimen name="bottom_sheet_dialog_width">300dp</dimen>
 </resources>
