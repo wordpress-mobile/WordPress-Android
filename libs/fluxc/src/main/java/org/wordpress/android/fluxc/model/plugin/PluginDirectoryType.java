@@ -3,6 +3,7 @@ package org.wordpress.android.fluxc.model.plugin;
 import java.util.Locale;
 
 public enum PluginDirectoryType {
+    FEATURED,
     NEW,
     POPULAR,
     SITE;
