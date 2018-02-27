@@ -67,7 +67,7 @@
             android:layout_marginBottom="@dimen/fab_margin"
             android:layout_marginRight="@dimen/fab_margin"
             app:srcCompat="@drawable/ic_create_white_24dp"
-            android:contentDescription="@string/fab_create_page_desc"
+            android:contentDescription="@string/fab_create_desc"
             app:borderWidth="0dp"
             app:rippleColor="@color/fab_pressed" />
 

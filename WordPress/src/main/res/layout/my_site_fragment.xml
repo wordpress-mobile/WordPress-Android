@@ -479,7 +479,7 @@
             android:layout_marginRight="@dimen/fab_margin"
             android:layout_marginEnd="@dimen/fab_margin"
             app:srcCompat="@drawable/ic_create_white_24dp"
-            android:contentDescription="@string/my_site_fab_desc"
+            android:contentDescription="@string/fab_create_post_desc"
             app:borderWidth="0dp"
             app:rippleColor="@color/fab_pressed" />
     </android.support.design.widget.CoordinatorLayout>

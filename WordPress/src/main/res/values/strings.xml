@@ -2148,8 +2148,8 @@
     <string name="navigate_up_desc">navigate up</string>
     <string name="stats_list_cell_chevron_collapse_desc">collapse</string>
     <string name="fab_add_tag_desc">create tag</string>
-    <string name="fab_create_page_desc">create page</string>
-    <string name="my_site_fab_desc">create post</string>
+    <string name="fab_create_post_desc">create post</string>
+    <string name="fab_create_desc">create</string>
 
     <!-- Site Creation -->
     <string name="site_creation_title">Create New Site</string>
