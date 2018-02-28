@@ -58,7 +58,8 @@ public class PluginBrowserViewModel extends ViewModel {
     private SiteModel mSite;
 
     private final Handler mHandler;
-    @SuppressWarnings("WeakerAccess") // To avoid synthetic accessor
+    // We don't want synthetic accessor methods to be introduced, so `protected` is used over `private` and the warning suppressed
+    @SuppressWarnings("WeakerAccess")
     protected final Set<String> mUpdatedPluginSlugSet;
 
     private final MutableLiveData<PluginListStatus> mNewPluginsListStatus;
@@ -374,8 +375,9 @@ public class PluginBrowserViewModel extends ViewModel {
         }, 250);
     }
 
+    // We don't want synthetic accessor methods to be introduced, so `protected` is used over `private` and the warning suppressed
     @WorkerThread
-    @SuppressWarnings("WeakerAccess") // To avoid synthetic accessor
+    @SuppressWarnings("WeakerAccess")
     protected void updateAllPluginListsWithNewPlugins(@NonNull Set<String> updatedPluginSlugSet) {
         if (updatedPluginSlugSet.size() == 0) {
             return;
@@ -441,7 +443,7 @@ public class PluginBrowserViewModel extends ViewModel {
         return getSearchQuery() != null && getSearchQuery().length() > 1;
     }
 
-    // Make the method protected to avoid synthetic accessor methods
+    // We don't want synthetic accessor methods to be introduced, so `protected` is used over `private` and the warning suppressed
     @SuppressWarnings("WeakerAccess")
     @WorkerThread
     protected void submitSearch(@Nullable final String query, boolean delayed) {
