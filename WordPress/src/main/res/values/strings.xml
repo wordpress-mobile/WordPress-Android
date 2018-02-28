@@ -2066,7 +2066,7 @@
     <string name="login_error_suffix">\nMaybe try a different account?</string>
 
     <!-- Signup -->
-    <string name="sign_up">Sign Up</string>
+    <string name="sign_up">Sign Up for WordPress.com</string>
     <string name="signup_creating_account">Creating account&#8230;</string>
     <string name="signup_email_error_generic">There was some trouble checking the email address.</string>
     <string name="signup_email_header">To create your new WordPress.com account, please enter your email address.</string>
@@ -2077,12 +2077,12 @@
     <string name="signup_epilogue_heading">New account</string>
     <string name="signup_epilogue_hint_display">Display Name</string>
     <string name="signup_epilogue_hint_password">Password (optional)</string>
-    <string name="signup_epilogue_hint_password_detail">Log in will be possible by getting a new email link like the one you just used, but you can set up a password if you prefer.</string>
+    <string name="signup_epilogue_hint_password_detail">You can always log in with a magic link like the one you just used, but you can also set up a password if you prefer.</string>
     <string name="signup_epilogue_hint_username">Username</string>
     <string name="signup_magic_link_error">There was some trouble sending the email.  You can retry now or close and try again later.</string>
     <string name="signup_magic_link_error_button_negative">Close</string>
     <string name="signup_magic_link_error_button_positive">Retry</string>
-    <string name="signup_magic_link_message">We sent an email with a link, open it to proceed with your new WordPress.com account.</string>
+    <string name="signup_magic_link_message">We sent you a magic signup link! Check your email on this device, and tap the link in the email to finish signing up.</string>
     <string name="signup_magic_link_progress">Sending email</string>
     <string name="signup_terms_of_service_text">By signing up, you agree to our %1$sTerms of Service%2$s.</string>
     <string name="signup_updating_account">Updating account&#8230;</string>
@@ -2097,7 +2097,7 @@
     <string name="username_changer_dismiss_message">Discard changing username?</string>
     <string name="username_changer_error_generic">An error occurred while retrieving username suggestions.</string>
     <string name="username_changer_error_none">No usernames are suggested from %1$s%2$s%3$s. Please enter more letters or numbers to get suggestions.</string>
-    <string name="username_changer_header">Your username will be %1$s%2$s%3$s. It will be used for mentions and links, but otherwise people will just see your display name, %4$s%5$s%6$s.</string>
+    <string name="username_changer_header">Your current username is %1$s%2$s%3$s. With few exceptions, others will only ever see your display name, %4$s%5$s%6$s.</string>
     <string name="username_changer_hint">Type to get more suggestions</string>
     <string name="username_changer_title">Change username</string>
 
