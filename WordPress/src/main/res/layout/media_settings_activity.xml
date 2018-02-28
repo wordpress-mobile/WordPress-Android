@@ -358,47 +358,53 @@
                     android:paddingTop="@dimen/margin_extra_large">
 
                     <!-- url -->
-                    <TextView
-                        style="@style/MediaSettings.Label"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="@string/media_edit_url_caption" />
-
-                    <RelativeLayout
+                    <LinearLayout
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content">
-
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:focusable="true">
                         <TextView
-                            android:id="@+id/text_url"
-                            style="@style/MediaSettings.Value"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_centerVertical="true"
-                            android:layout_toLeftOf="@+id/text_copy_url"
-                            android:layout_toStartOf="@+id/text_copy_url"
-                            android:ellipsize="end"
-                            android:singleLine="true"
-                            tools:text="text_url" />
-
-                        <TextView
-                            android:id="@+id/text_copy_url"
+                            style="@style/MediaSettings.Label"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_alignParentEnd="true"
-                            android:layout_alignParentRight="true"
-                            android:layout_centerVertical="true"
-                            android:layout_marginEnd="@dimen/margin_extra_large"
-                            android:layout_marginRight="@dimen/margin_extra_large"
-                            android:background="@drawable/button_frame"
-                            android:paddingBottom="@dimen/margin_small"
-                            android:paddingLeft="@dimen/margin_extra_large"
-                            android:paddingRight="@dimen/margin_extra_large"
-                            android:paddingTop="@dimen/margin_small"
-                            android:text="@string/copy"
-                            android:textAllCaps="true"
-                            android:textColor="@color/grey_dark"
-                            android:textSize="@dimen/text_sz_medium" />
-                    </RelativeLayout>
+                            android:text="@string/media_edit_url_caption" />
+
+                        <RelativeLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content">
+
+                            <TextView
+                                android:id="@+id/text_url"
+                                style="@style/MediaSettings.Value"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_centerVertical="true"
+                                android:layout_toLeftOf="@+id/text_copy_url"
+                                android:layout_toStartOf="@+id/text_copy_url"
+                                android:ellipsize="end"
+                                android:singleLine="true"
+                                tools:text="text_url" />
+
+                            <TextView
+                                android:id="@+id/text_copy_url"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_alignParentEnd="true"
+                                android:layout_alignParentRight="true"
+                                android:layout_centerVertical="true"
+                                android:layout_marginEnd="@dimen/margin_extra_large"
+                                android:layout_marginRight="@dimen/margin_extra_large"
+                                android:background="@drawable/button_frame"
+                                android:paddingBottom="@dimen/margin_small"
+                                android:paddingLeft="@dimen/margin_extra_large"
+                                android:paddingRight="@dimen/margin_extra_large"
+                                android:paddingTop="@dimen/margin_small"
+                                android:text="@string/copy"
+                                android:textAllCaps="true"
+                                android:textColor="@color/grey_dark"
+                                android:textSize="@dimen/text_sz_medium" />
+                        </RelativeLayout>
+                    </LinearLayout>
 
                     <View
                         style="@style/MediaSettings.Divider"
@@ -406,58 +412,74 @@
                         android:layout_height="1dp" />
 
                     <!-- filename -->
-                    <TextView
-                        style="@style/MediaSettings.Label"
-                        android:layout_width="wrap_content"
+                    <LinearLayout
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="@string/media_edit_filename_caption" />
+                        android:orientation="vertical"
+                        android:focusable="true">
+                        <TextView
+                            style="@style/MediaSettings.Label"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/media_edit_filename_caption" />
 
-                    <TextView
-                        android:id="@+id/text_filename"
-                        style="@style/MediaSettings.Value"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        tools:text="text_filename" />
-
+                        <TextView
+                            android:id="@+id/text_filename"
+                            style="@style/MediaSettings.Value"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            tools:text="text_filename" />
+                    </LinearLayout>
                     <View
                         style="@style/MediaSettings.Divider"
                         android:layout_width="match_parent"
                         android:layout_height="1dp" />
 
                     <!-- file type -->
-                    <TextView
-                        style="@style/MediaSettings.Label"
-                        android:layout_width="wrap_content"
+                    <LinearLayout
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="@string/media_edit_filetype_caption" />
+                        android:orientation="vertical"
+                        android:focusable="true">
+                            <TextView
+                                style="@style/MediaSettings.Label"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="@string/media_edit_filetype_caption" />
 
-                    <TextView
-                        android:id="@+id/text_filetype"
-                        style="@style/MediaSettings.Value"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        tools:text="text_filetype" />
-
+                            <TextView
+                                android:id="@+id/text_filetype"
+                                style="@style/MediaSettings.Value"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                tools:text="text_filetype" />
+                    </LinearLayout>
                     <View
                         style="@style/MediaSettings.Divider"
                         android:layout_width="match_parent"
                         android:layout_height="1dp" />
 
                     <!-- dimensions -->
-                    <TextView
-                        android:id="@+id/text_image_dimensions_label"
-                        style="@style/MediaSettings.Label"
-                        android:layout_width="wrap_content"
+                    <LinearLayout
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="@string/media_edit_image_dimensions_caption" />
+                        android:orientation="vertical"
+                        android:focusable="true">
+                            <TextView
+                                android:id="@+id/text_image_dimensions_label"
+                                style="@style/MediaSettings.Label"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="@string/media_edit_image_dimensions_caption" />
 
-                    <TextView
-                        android:id="@+id/text_image_dimensions"
-                        style="@style/MediaSettings.Value"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        tools:text="text_image_dimensions" />
+                            <TextView
+                                android:id="@+id/text_image_dimensions"
+                                style="@style/MediaSettings.Value"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                tools:text="text_image_dimensions" />
 
+                    </LinearLayout>
                     <View
                         android:id="@+id/divider_dimensions"
                         style="@style/MediaSettings.Divider"
@@ -465,20 +487,25 @@
                         android:layout_height="1dp" />
 
                     <!-- duration -->
-                    <TextView
-                        android:id="@+id/text_duration_label"
-                        style="@style/MediaSettings.Label"
-                        android:layout_width="wrap_content"
+                    <LinearLayout
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="@string/media_edit_duration_caption" />
+                        android:orientation="vertical"
+                        android:focusable="true">
+                        <TextView
+                            android:id="@+id/text_duration_label"
+                            style="@style/MediaSettings.Label"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/media_edit_duration_caption" />
 
-                    <TextView
-                        android:id="@+id/text_duration"
-                        style="@style/MediaSettings.Value"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        tools:text="text_image_dimensions" />
-
+                        <TextView
+                            android:id="@+id/text_duration"
+                            style="@style/MediaSettings.Value"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            tools:text="text_image_dimensions" />
+                    </LinearLayout>
                     <View
                         android:id="@+id/divider_duration"
                         style="@style/MediaSettings.Divider"
@@ -486,20 +513,25 @@
                         android:layout_height="1dp" />
 
                     <!-- upload date -->
-                    <TextView
-                        android:id="@+id/text_upload_date_label"
-                        style="@style/MediaSettings.Label"
-                        android:layout_width="wrap_content"
+                    <LinearLayout
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="@string/media_edit_upload_date_caption" />
+                        android:orientation="vertical"
+                        android:focusable="true">
+                        <TextView
+                            android:id="@+id/text_upload_date_label"
+                            style="@style/MediaSettings.Label"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/media_edit_upload_date_caption" />
 
-                    <TextView
-                        android:id="@+id/text_upload_date"
-                        style="@style/MediaSettings.Value"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        tools:text="text_upload_date" />
-
+                        <TextView
+                            android:id="@+id/text_upload_date"
+                            style="@style/MediaSettings.Value"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            tools:text="text_upload_date" />
+                    </LinearLayout>
                 </LinearLayout>
 
             </android.support.v7.widget.CardView>
