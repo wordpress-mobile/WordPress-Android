@@ -38,14 +38,16 @@ class JetpackConnectionWebViewClient extends WebViewClient {
     private Activity activity;
     private final AccountStore accountStore;
     private final SiteModel mSiteModel;
+    private final JetpackConnectionWebViewActivity.Source source;
 
     private String redirectPage;
     private boolean flowFinished = false;
 
-    JetpackConnectionWebViewClient(Activity activity, AccountStore accountStore, SiteModel mSiteModel) {
+    JetpackConnectionWebViewClient(Activity activity, AccountStore accountStore, SiteModel mSiteModel, JetpackConnectionWebViewActivity.Source source) {
         this.activity = activity;
         this.accountStore = accountStore;
         this.mSiteModel = mSiteModel;
+        this.source = source;
     }
 
     private void loginToWPCom(WebView view, SiteModel site) {
@@ -110,7 +112,7 @@ class JetpackConnectionWebViewClient extends WebViewClient {
                 activity.startActivity(intent);
                 activity.finish();
                 flowFinished = true;
-                AnalyticsTracker.track(AnalyticsTracker.Stat.STATS_COMPLETED_INSTALL_JETPACK);
+                JetpackConnectionWebViewActivity.trackWithSource(AnalyticsTracker.Stat.INSTALL_JETPACK_COMPLETED, this.source);
                 return true;
             }
         } catch (UnsupportedEncodingException e) {
@@ -121,14 +123,14 @@ class JetpackConnectionWebViewClient extends WebViewClient {
 
     void activityResult(Context context, int requestCode) {
         if (requestCode == JETPACK_LOGIN) {
-            JetpackConnectionWebViewActivity.openJetpackConnectionFlow(context, redirectPage, mSiteModel);
+            JetpackConnectionWebViewActivity.openJetpackConnectionFlow(context, redirectPage, mSiteModel, source);
             activity.finish();
         }
     }
 
     public void cancel() {
         if (!flowFinished) {
-            AnalyticsTracker.track(AnalyticsTracker.Stat.STATS_CANCELED_INSTALL_JETPACK);
+            JetpackConnectionWebViewActivity.trackWithSource(AnalyticsTracker.Stat.INSTALL_JETPACK_CANCELLED, source);
         }
     }
 

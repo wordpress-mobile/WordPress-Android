@@ -8,8 +8,10 @@ import android.view.Menu;
 import android.webkit.WebViewClient;
 
 import org.wordpress.android.WordPress;
+import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.fluxc.model.SiteModel;
 
+import java.util.HashMap;
 import java.util.List;
 
 /**
@@ -20,10 +22,15 @@ public class JetpackConnectionWebViewActivity extends WPWebViewActivity {
 
     public enum Source {
         STATS("stats"), NOTIFICATIONS("notifications");
+        public static final String KEY = "tracking_source";
         private final String value;
 
         Source(String value) {
             this.value = value;
+        }
+
+        public String value() {
+            return value;
         }
 
         @Nullable
@@ -43,15 +50,15 @@ public class JetpackConnectionWebViewActivity extends WPWebViewActivity {
     private JetpackConnectionWebViewClient mWebViewClient;
 
     public static void openJetpackConnectionFlow(Context context, Source source, SiteModel site) {
-        openJetpackConnectionFlow(context, urlFromSiteAndSource(site, source), site, true);
+        openJetpackConnectionFlow(context, urlFromSiteAndSource(site, source), site, true, source);
     }
 
-    public static void openJetpackConnectionFlow(Context context, String url, SiteModel site) {
-        openJetpackConnectionFlow(context, url, site, true);
+    public static void openJetpackConnectionFlow(Context context, String url, SiteModel site, Source source) {
+        openJetpackConnectionFlow(context, url, site, true, source);
     }
 
     public static void openUnauthorizedJetpackConnectionFlow(Context context, Source source, SiteModel site) {
-        openJetpackConnectionFlow(context, urlFromSiteAndSource(site, source), site, false);
+        openJetpackConnectionFlow(context, urlFromSiteAndSource(site, source), site, false, source);
     }
 
     private static String urlFromSiteAndSource(SiteModel site, Source source) {
@@ -63,7 +70,7 @@ public class JetpackConnectionWebViewActivity extends WPWebViewActivity {
                 + source.value;
     }
 
-    private static void openJetpackConnectionFlow(Context context, String url, SiteModel site, boolean authorized) {
+    private static void openJetpackConnectionFlow(Context context, String url, SiteModel site, boolean authorized, Source source) {
         if (!checkContextAndUrl(context, url)) {
             return;
         }
@@ -77,12 +84,31 @@ public class JetpackConnectionWebViewActivity extends WPWebViewActivity {
         if (site != null) {
             intent.putExtra(WordPress.SITE, site);
         }
+        intent.putExtra(Source.KEY, source);
         context.startActivity(intent);
+        trackJetpackConnectionFlowStart(site, source);
+    }
+
+    static void trackWithSource(AnalyticsTracker.Stat stat, Source source) {
+        HashMap<String, String> sourceMap = new HashMap<>();
+        sourceMap.put("source", source.value());
+        AnalyticsTracker.track(stat, sourceMap);
+    }
+
+    private static void trackJetpackConnectionFlowStart(SiteModel site, Source source) {
+        if (!site.isJetpackInstalled()) {
+            trackWithSource(AnalyticsTracker.Stat.INSTALL_JETPACK_SELECTED, source);
+        } else {
+            trackWithSource(AnalyticsTracker.Stat.CONNECT_JETPACK_SELECTED, source);
+        }
     }
 
     @Override
     protected WebViewClient createWebViewClient(List<String> allowedURL) {
-        mWebViewClient = new JetpackConnectionWebViewClient(this, mAccountStore, (SiteModel) getIntent().getSerializableExtra(WordPress.SITE));
+        mWebViewClient = new JetpackConnectionWebViewClient(this,
+                mAccountStore,
+                (SiteModel) getIntent().getSerializableExtra(WordPress.SITE),
+                (Source) getIntent().getSerializableExtra(Source.KEY));
         return mWebViewClient;
     }
 

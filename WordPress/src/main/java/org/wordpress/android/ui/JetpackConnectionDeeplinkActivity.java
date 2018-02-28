@@ -78,6 +78,7 @@ public class JetpackConnectionDeeplinkActivity extends AppCompatActivity {
             // if user is signed in wpcom show the post right away - otherwise show welcome activity
             // and then show the post once the user has signed in
             if (mAccountStore.hasAccessToken()) {
+                trackSuccess(source);
                 if (source == Source.STATS) {
                     showStats();
                 } else {
@@ -108,6 +109,9 @@ public class JetpackConnectionDeeplinkActivity extends AppCompatActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == RequestCodes.JETPACK_LOGIN && resultCode == RESULT_OK) {
+            trackSuccess(source);
+        }
         if (requestCode == RequestCodes.JETPACK_LOGIN && resultCode == RESULT_OK && source == Source.STATS) {
             showStats();
         } else {
@@ -137,5 +141,9 @@ public class JetpackConnectionDeeplinkActivity extends AppCompatActivity {
         SiteModel site = (SiteModel) getIntent().getSerializableExtra(SITE);
         ActivityLauncher.viewBlogStats(this, site);
         finish();
+    }
+
+    private void trackSuccess(Source source) {
+        JetpackConnectionWebViewActivity.trackWithSource(AnalyticsTracker.Stat.SIGNED_INTO_JETPACK, source);
     }
 }

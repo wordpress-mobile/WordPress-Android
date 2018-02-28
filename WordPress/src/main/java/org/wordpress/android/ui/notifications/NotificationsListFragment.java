@@ -348,7 +348,6 @@ public class NotificationsListFragment extends Fragment implements WPMainActivit
                 public void onClick(View v) {
                     SiteModel siteModel = getSelectedSite();
                     JetpackConnectionWebViewActivity.openUnauthorizedJetpackConnectionFlow(getActivity(), NOTIFICATIONS, siteModel);
-                    AnalyticsTracker.track(AnalyticsTracker.Stat.NOTIFICATIONS_SCREEN_SIGNED_INTO_JETPACK);
                 }
             });
         }
