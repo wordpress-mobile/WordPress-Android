@@ -99,7 +99,9 @@
                         android:orientation="vertical"
                         android:paddingLeft="@dimen/media_settings_margin"
                         android:paddingRight="@dimen/media_settings_margin"
-                        android:paddingTop="@dimen/margin_extra_large">
+                        android:paddingTop="@dimen/margin_extra_large"
+                        android:paddingStart="@dimen/media_settings_margin"
+                        android:paddingEnd="@dimen/media_settings_margin">
 
                         <TextView
                             android:layout_width="wrap_content"
@@ -138,7 +140,9 @@
                             android:layout_marginLeft="-8dp"
                             android:layout_marginRight="-8dp"
                             android:layout_marginTop="@dimen/margin_large"
-                            tools:max="3" />
+                            tools:max="3"
+                            android:layout_marginStart="-8dp"
+                            android:layout_marginEnd="-8dp"/>
 
                     </LinearLayout>
 
@@ -152,7 +156,9 @@
                         android:layout_height="match_parent"
                         android:orientation="vertical"
                         android:paddingLeft="@dimen/media_settings_margin"
-                        android:paddingRight="@dimen/media_settings_margin">
+                        android:paddingRight="@dimen/media_settings_margin"
+                        android:paddingStart="@dimen/media_settings_margin"
+                        android:paddingEnd="@dimen/media_settings_margin">
 
                         <TextView
                             android:id="@+id/alignment_spinner_label"
@@ -186,7 +192,9 @@
                         android:orientation="vertical"
                         android:paddingBottom="@dimen/margin_extra_large"
                         android:paddingLeft="@dimen/media_settings_margin"
-                        android:paddingRight="@dimen/media_settings_margin">
+                        android:paddingRight="@dimen/media_settings_margin"
+                        android:paddingStart="@dimen/media_settings_margin"
+                        android:paddingEnd="@dimen/media_settings_margin">
 
                         <android.support.design.widget.TextInputLayout
                             android:id="@+id/edit_link_container"
@@ -234,7 +242,9 @@
                     android:paddingBottom="@dimen/margin_extra_large"
                     android:paddingLeft="@dimen/media_settings_margin"
                     android:paddingRight="@dimen/media_settings_margin"
-                    android:paddingTop="@dimen/margin_extra_large">
+                    android:paddingTop="@dimen/margin_extra_large"
+                    android:paddingEnd="@dimen/media_settings_margin"
+                    android:paddingStart="@dimen/media_settings_margin">
 
                     <TextView
                         android:layout_width="wrap_content"
@@ -379,7 +389,9 @@
                             android:text="@string/copy"
                             android:textAllCaps="true"
                             android:textColor="@color/grey_dark"
-                            android:textSize="@dimen/text_sz_medium" />
+                            android:textSize="@dimen/text_sz_medium"
+                            android:paddingEnd="@dimen/margin_extra_large"
+                            android:paddingStart="@dimen/margin_extra_large"/>
                     </RelativeLayout>
 
                     <View

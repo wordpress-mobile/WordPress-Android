@@ -39,7 +39,10 @@
         android:layout_toRightOf="@id/person_avatar"
         android:textColor="@color/grey_dark"
         android:textSize="@dimen/text_sz_large"
-        tools:text="display_name" />
+        tools:text="display_name"
+        android:textAlignment="viewStart"
+        android:gravity="start"
+        android:layout_toStartOf="@id/person_role"/>
 
     <org.wordpress.android.widgets.WPTextView
         android:id="@+id/person_username"
@@ -50,7 +53,10 @@
         android:layout_toLeftOf="@id/person_role"
         android:textColor="@color/grey"
         android:textSize="@dimen/text_sz_medium"
-        tools:text="username" />
+        tools:text="username"
+        android:textAlignment="viewStart"
+        android:gravity="start"
+        android:layout_toStartOf="@id/person_role"/>
 
     <org.wordpress.android.widgets.WPTextView
         android:id="@+id/follower_subscribed_date"
@@ -63,7 +69,10 @@
         android:layout_toLeftOf="@id/person_role"
         android:textColor="@color/grey"
         android:textSize="@dimen/text_sz_small"
-        tools:text="Since {date}" />
+        tools:text="Since {date}"
+        android:textAlignment="viewStart"
+        android:gravity="start"
+        android:layout_toStartOf="@id/person_role"/>
 
 
 </RelativeLayout>

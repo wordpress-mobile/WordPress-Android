@@ -83,10 +83,13 @@
             android:layout_toLeftOf="@+id/layout_date_status"
             android:layout_toRightOf="@+id/frame_avatar"
             android:ellipsize="end"
+            android:lines="2"
             android:maxLines="2"
             android:textColor="@color/grey_dark"
             android:textSize="@dimen/text_sz_large"
             tools:text="title"
+            android:textAlignment="viewStart"
+            android:gravity="start"
             android:layout_toStartOf="@+id/layout_date_status"
             android:layout_toEndOf="@+id/frame_avatar"/>
 
@@ -95,7 +98,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@+id/title"
-            android:layout_marginRight="@dimen/margin_large"
+            android:paddingRight="@dimen/margin_large"
             android:layout_marginTop="@dimen/margin_extra_small"
             android:layout_toRightOf="@+id/frame_avatar"
             android:ellipsize="end"
@@ -103,7 +106,7 @@
             android:textColor="@color/grey_darken_10"
             android:textSize="@dimen/text_sz_medium"
             tools:text="comment"
-            android:layout_marginEnd="@dimen/margin_large"
+            android:paddingEnd="@dimen/margin_large"
             android:layout_toEndOf="@+id/frame_avatar"/>
 
     </RelativeLayout>

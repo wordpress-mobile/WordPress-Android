@@ -2,6 +2,7 @@ package org.wordpress.android.ui.stats;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v4.view.MarginLayoutParamsCompat;
 import android.text.Html;
 import android.text.TextUtils;
 import android.util.SparseBooleanArray;
@@ -53,10 +54,15 @@ public abstract class StatsAbstractListFragment extends StatsAbstractFragment {
     SparseBooleanArray mGroupIdToExpandedMap;
 
     protected abstract int getEntryLabelResId();
+
     protected abstract int getTotalsLabelResId();
+
     protected abstract int getEmptyLabelTitleResId();
+
     protected abstract int getEmptyLabelDescResId();
+
     protected abstract boolean isExpandableList();
+
     protected abstract boolean isViewAllOptionAvailable();
 
     @Override
@@ -240,9 +246,9 @@ public abstract class StatsAbstractListFragment extends StatsAbstractFragment {
                     RadioGroup.LayoutParams.WRAP_CONTENT);
             params.weight = 1;
             if (i == 0) {
-                params.setMargins(0, 0, dp4, 0);
+                MarginLayoutParamsCompat.setMarginEnd(params, dp4);
             } else {
-                params.setMargins(dp4, 0, 0, 0);
+                MarginLayoutParamsCompat.setMarginStart(params, dp4);
             }
             rb.setMinimumWidth(dp80);
             rb.setGravity(Gravity.CENTER);
@@ -271,7 +277,7 @@ public abstract class StatsAbstractListFragment extends StatsAbstractFragment {
             int numberOfButtons = mTopPagerContainer.getChildCount();
             int checkedId = -1;
             for (int i = 0; i < numberOfButtons; i++) {
-                CheckedTextView currentCheckedTextView = (CheckedTextView)mTopPagerContainer.getChildAt(i);
+                CheckedTextView currentCheckedTextView = (CheckedTextView) mTopPagerContainer.getChildAt(i);
                 if (ctv == currentCheckedTextView) {
                     checkedId = i;
                     currentCheckedTextView.setChecked(true);
