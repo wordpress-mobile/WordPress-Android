@@ -285,6 +285,7 @@ public class MediaGridAdapter extends RecyclerView.Adapter<MediaGridAdapter.Grid
 
             videoOverlayContainer = (ViewGroup) view.findViewById(R.id.frame_video_overlay);
             selectionCountContainer = (ViewGroup) view.findViewById(R.id.frame_selection_count);
+            selectionCountContainer.setVisibility(mBrowserType.isPicker() ? View.VISIBLE : View.GONE);
 
             imageView.setErrorImageResId(R.drawable.media_item_background);
             imageView.setDefaultImageResId(R.drawable.media_item_background);
