@@ -76,7 +76,9 @@ public class SignupMagicLinkFragment extends Fragment {
         mTryAgainButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                sendMagicLinkEmail();
+                if (mLoginListener != null) {
+                    mLoginListener.openEmailClient();
+                }
             }
         });
 
