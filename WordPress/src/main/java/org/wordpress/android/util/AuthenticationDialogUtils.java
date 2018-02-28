@@ -10,8 +10,6 @@ import org.wordpress.android.login.LoginMode;
 import org.wordpress.android.ui.ActivityLauncher;
 import org.wordpress.android.ui.RequestCodes;
 import org.wordpress.android.ui.accounts.LoginActivity;
-import org.wordpress.android.ui.accounts.SignInActivity;
-import org.wordpress.android.ui.prefs.AppPrefs;
 import org.wordpress.android.widgets.AuthErrorDialogFragment;
 
 public class AuthenticationDialogUtils {
@@ -38,17 +36,9 @@ public class AuthenticationDialogUtils {
                 ActivityLauncher.showSitePickerForResult(activity, site);
             } else {
                 // only WPCOM sites are available so, need to ask the user to log in again
-
-                if (AppPrefs.isLoginWizardStyleActivated()) {
-                    Intent intent = new Intent(activity, LoginActivity.class);
-                    LoginMode.WPCOM_REAUTHENTICATE.putInto(intent);
-                    activity.startActivityForResult(intent, RequestCodes.REAUTHENTICATE);
-                } else {
-                    Intent signInIntent = new Intent(activity, SignInActivity.class);
-                    signInIntent.putExtra(SignInActivity.EXTRA_IS_AUTH_ERROR, true);
-                    signInIntent.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
-                    activity.startActivityForResult(signInIntent, SignInActivity.REQUEST_CODE);
-                }
+                Intent intent = new Intent(activity, LoginActivity.class);
+                LoginMode.WPCOM_REAUTHENTICATE.putInto(intent);
+                activity.startActivityForResult(intent, RequestCodes.REAUTHENTICATE);
             }
 
             return;

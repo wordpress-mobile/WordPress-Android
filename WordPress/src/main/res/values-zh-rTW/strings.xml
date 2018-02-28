@@ -70,7 +70,6 @@ Language: zh_TW
 	<string name="checking_username">正在檢查使用者名稱</string>
 	<string name="jetpack_different_com_account">並不支援屬於不同 WordPress.com 帳號的 Jetpack 網站</string>
 	<string name="jetpack_use_com_account">若要新增 Jetpack 網站，請登入連結 Jetpack 的 WordPress.com 帳號。</string>
-	<string name="jetpack_message">必須安裝並啟用 Jetpack 外掛程式。是否要安裝或啟用 Jetpack？</string>
 	<string name="error_media_load">無法載入媒體</string>
 	<string name="error_media_refresh_no_connection">需要網路連線，才能重新整理媒體庫</string>
 	<string name="error_media_unauthorized">你沒有查看或編輯媒體的權限</string>
@@ -243,9 +242,7 @@ Language: zh_TW
 	<string name="logging_in">正在登入</string>
 	<string name="enter_your_password_instead">改為輸入你的密碼</string>
 	<string name="web_address_dialog_hint">當你留言時公開顯示。</string>
-	<string name="jetpack_not_connected_message">已安裝 Jetpack 外掛程式，但未連結至 WordPress.com。是否要連結 Jetpack？</string>
 	<string name="username_email">電子郵件或使用者名稱</string>
-	<string name="jetpack_not_connected">Jetpack 外掛程式未連結</string>
 	<string name="new_editor_reflection_error">視覺化編輯器與你的裝置不相容，已\n自動停用。</string>
 	<string name="stats_insights_latest_post_no_title">(無標題)</string>
 	<string name="capture_or_pick_photo">拍攝或選取照片</string>
@@ -963,7 +960,6 @@ Language: zh_TW
 	<string name="wordpress_blog">WordPress 網誌</string>
 	<string name="error_blog_hidden">此網誌已隱藏，無法載入。請在設定中啟用網誌，然後再試一次。</string>
 	<string name="fatal_db_error">建立應用程式資料庫時發生錯誤。請嘗試重新安裝應用程式。</string>
-	<string name="jetpack_message_not_admin">統計需要 Jetpack 外掛程式。請聯絡網站管理員。</string>
 	<string name="reader_title_applog">應用程式記錄檔</string>
 	<string name="reader_toast_err_add_tag">無法新增此標籤</string>
 	<string name="reader_toast_err_remove_tag">無法移除此標籤</string>
@@ -1011,7 +1007,6 @@ Language: zh_TW
 	<string name="signing_in">正在登入…</string>
 	<string name="media_add_popup_title">增加媒體庫</string>
 	<string name="empty_list_default">清單是空的</string>
-	<string name="jetpack_not_found">找不到 Jetpack</string>
 	<string name="reader_untitled_post">（未命名）</string>
 	<string name="reader_btn_unfollow">追蹤</string>
 	<string name="reader_label_added_tag">新增 %s</string>

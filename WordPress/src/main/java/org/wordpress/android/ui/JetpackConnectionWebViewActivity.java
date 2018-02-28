@@ -3,6 +3,7 @@ package org.wordpress.android.ui;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.view.Menu;
 import android.webkit.WebViewClient;
 
@@ -17,16 +18,49 @@ import java.util.List;
  */
 public class JetpackConnectionWebViewActivity extends WPWebViewActivity {
 
+    public enum Source {
+        STATS("stats"), NOTIFICATIONS("notifications");
+        private final String value;
+
+        Source(String value) {
+            this.value = value;
+        }
+
+        @Nullable
+        public static Source fromString(String value) {
+            if (STATS.value.equals(value)) {
+                return STATS;
+            } else if (NOTIFICATIONS.value.equals(value)) {
+                return NOTIFICATIONS;
+            } else {
+                return null;
+            }
+        }
+    }
+
     public static final String JETPACK_CONNECTION_DEEPLINK = "wordpress://jetpack-connection";
 
     private JetpackConnectionWebViewClient mWebViewClient;
+
+    public static void openJetpackConnectionFlow(Context context, Source source, SiteModel site) {
+        openJetpackConnectionFlow(context, urlFromSiteAndSource(site, source), site, true);
+    }
 
     public static void openJetpackConnectionFlow(Context context, String url, SiteModel site) {
         openJetpackConnectionFlow(context, url, site, true);
     }
 
-    public static void openUnauthorizedJetpackConnectionFlow(Context context, String url, SiteModel site) {
-        openJetpackConnectionFlow(context, url, site, false);
+    public static void openUnauthorizedJetpackConnectionFlow(Context context, Source source, SiteModel site) {
+        openJetpackConnectionFlow(context, urlFromSiteAndSource(site, source), site, false);
+    }
+
+    private static String urlFromSiteAndSource(SiteModel site, Source source) {
+        return "https://wordpress.com/jetpack/connect?"
+                + "url=" + site.getUrl()
+                + "&mobile_redirect="
+                + JETPACK_CONNECTION_DEEPLINK
+                + "?source="
+                + source.value;
     }
 
     private static void openJetpackConnectionFlow(Context context, String url, SiteModel site, boolean authorized) {

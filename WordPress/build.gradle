@@ -34,15 +34,13 @@ android {
 
     defaultConfig {
         applicationId "org.wordpress.android"
-        versionName "alpha-97"
-        versionCode 528
+        versionName "alpha-100"
+        versionCode 533
         minSdkVersion 16
         targetSdkVersion 25
 
         multiDexEnabled true
         vectorDrawables.useSupportLibrary = true
-
-        buildConfigField "boolean", "LOGIN_WIZARD_STYLE_ACTIVE", "true"
     }
 
     flavorDimensions "buildType"
@@ -87,6 +85,7 @@ android {
 
     lintOptions{
         checkDependencies = true
+        lintConfig file('lint.xml')
     }
 }
 

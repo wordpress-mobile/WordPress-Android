@@ -116,6 +116,11 @@ public class PublicizeButtonPrefsFragment extends Fragment implements
         mPrefAllowCommentLikes = (WPPrefView) view.findViewById(R.id.pref_allow_comment_likes);
         mPrefTwitterName = (WPPrefView) view.findViewById(R.id.pref_twitter_name);
 
+        if (!mSite.isWPCom() && mSite.isJetpackConnected()) {
+            mPrefShowLike.setHeading(getString(R.string.site_settings_like_header));
+            mPrefShowReblog.setVisibility(View.GONE);
+        }
+
         return view;
     }
 

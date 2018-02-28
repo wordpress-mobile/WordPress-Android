@@ -731,6 +731,66 @@ public class AnalyticsTrackerNosara extends Tracker {
                 return "login_social_error_unknown_user";
             case LOGIN_WPCOM_BACKGROUND_SERVICE_UPDATE:
                 return "login_wpcom_background_service_update";
+            case SIGNUP_BUTTON_TAPPED:
+                return "signup_button_tapped";
+            case SIGNUP_EMAIL_BUTTON_TAPPED:
+                return "signup_email_button_tapped";
+            case SIGNUP_EMAIL_EPILOGUE_GRAVATAR_CROPPED:
+                return "signup_email_epilogue_gravatar_cropped:";
+            case SIGNUP_EMAIL_EPILOGUE_GRAVATAR_GALLERY_PICKED:
+                return "signup_email_epilogue_gallery_picked";
+            case SIGNUP_EMAIL_EPILOGUE_GRAVATAR_SHOT_NEW:
+                return "signup_email_epilogue_shot_new";
+            case SIGNUP_EMAIL_EPILOGUE_VIEWED:
+                return "signup_email_epilogue_viewed";
+            case SIGNUP_GOOGLE_BUTTON_TAPPED:
+                return "signup_google_button_tapped";
+            case SIGNUP_TERMS_OF_SERVICE_TAPPED:
+                return "signup_terms_of_service_tapped";
+            case SIGNUP_CANCELED:
+                return "signup_canceled";
+            case SIGNUP_EMAIL_TO_LOGIN:
+                return "signup_email_to_login";
+            case SIGNUP_MAGIC_LINK_FAILED:
+                return "signup_magic_link_failed";
+            case SIGNUP_MAGIC_LINK_SUCCEEDED:
+                return "signup_magic_link_succeeded";
+            case SIGNUP_SOCIAL_2FA_NEEDED:
+                return "signup_social_2fa_needed";
+            case SIGNUP_SOCIAL_ACCOUNTS_NEED_CONNECTING:
+                return "signup_social_accounts_need_connecting";
+            case SIGNUP_SOCIAL_EPILOGUE_UNCHANGED:
+                return "signup_social_epilogue_unchanged";
+            case SIGNUP_SOCIAL_EPILOGUE_UPDATE_DISPLAY_NAME_FAILED:
+                return "signup_social_epilogue_update_display_name_failed";
+            case SIGNUP_SOCIAL_EPILOGUE_UPDATE_DISPLAY_NAME_SUCCEEDED:
+                return "signup_social_epilogue_update_display_name_succeeded";
+            case SIGNUP_SOCIAL_EPILOGUE_UPDATE_USERNAME_FAILED:
+                return "signup_social_epilogue_update_username_failed";
+            case SIGNUP_SOCIAL_EPILOGUE_UPDATE_USERNAME_SUCCEEDED:
+                return "signup_social_epilogue_update_username_succeeded";
+            case SIGNUP_SOCIAL_EPILOGUE_USERNAME_SUGGESTIONS_FAILED:
+                return "signup_social_epilogue_username_suggestions_failed";
+            case SIGNUP_SOCIAL_EPILOGUE_VIEWED:
+                return "signup_social_epilogue_viewed";
+            case SIGNUP_SOCIAL_SUCCESS:
+                return "signup_social_success";
+            case SIGNUP_SOCIAL_TO_LOGIN:
+                return "signup_social_to_login";
+            case SITE_CREATION_ACCESSED:
+                return "site_creation_accessed";
+            case SITE_CREATION_CATEGORY_VIEWED:
+                return "site_creation_category_viewed";
+            case SITE_CREATION_THEME_VIEWED:
+                return "site_creation_theme_viewed";
+            case SITE_CREATION_DETAILS_VIEWED:
+                return "site_creation_details_viewed";
+            case SITE_CREATION_DOMAIN_VIEWED:
+                return "site_creation_domain_viewed";
+            case SITE_CREATION_CREATING_VIEWED:
+                return "site_creation_creating_viewed";
+            case SITE_CREATION_SUCCESS_VIEWED:
+                return "site_creation_success_viewed";
             case PERSON_REMOVED:
                 return "people_management_person_removed";
             case PERSON_UPDATED:
@@ -789,6 +849,8 @@ public class AnalyticsTrackerNosara extends Tracker {
                 return "themes_details_accessed";
             case ACCOUNT_SETTINGS_LANGUAGE_CHANGED:
                 return "account_settings_language_changed";
+            case SITE_CREATION_BACKGROUND_SERVICE_UPDATE:
+                return "site_creation_background_service_update";
             case SITE_SETTINGS_ACCESSED:
                 return "site_settings_accessed";
             case SITE_SETTINGS_ACCESSED_MORE_SETTINGS:
