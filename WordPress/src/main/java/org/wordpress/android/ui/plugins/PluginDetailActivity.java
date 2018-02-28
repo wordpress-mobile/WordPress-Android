@@ -859,7 +859,7 @@ public class PluginDetailActivity extends AppCompatActivity {
         mIsUpdatingPlugin = false;
         if (event.isError()) {
             AppLog.e(AppLog.T.PLUGINS, "An error occurred while updating the plugin with type: "
-                    + event.error.type);
+                    + event.error.type + " and message: " + event.error.message);
             refreshPluginVersionViews();
             showUpdateFailedSnackbar();
             return;
@@ -880,7 +880,7 @@ public class PluginDetailActivity extends AppCompatActivity {
         mIsUpdatingPlugin = false;
         if (event.isError()) {
             AppLog.e(AppLog.T.PLUGINS, "An error occurred while installing the plugin with type: "
-                    + event.error.type);
+                    + event.error.type + " and message: " + event.error.message);
             refreshPluginVersionViews();
             showInstallFailedSnackbar();
             return;
@@ -903,7 +903,7 @@ public class PluginDetailActivity extends AppCompatActivity {
         cancelRemovePluginProgressDialog();
         if (event.isError()) {
             AppLog.e(AppLog.T.PLUGINS, "An error occurred while removing the plugin with type: "
-                    + event.error.type);
+                    + event.error.type + " and message: " + event.error.message);
             String toastMessage = getString(R.string.plugin_updated_failed_detailed,
                     mSitePlugin.getDisplayName(), event.error.message);
             ToastUtils.showToast(this, toastMessage, Duration.LONG);
