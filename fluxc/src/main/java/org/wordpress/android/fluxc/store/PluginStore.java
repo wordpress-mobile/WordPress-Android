@@ -816,6 +816,14 @@ public class PluginStore extends Store {
             PluginSqlUtils.insertOrUpdateSitePlugin(payload.site, payload.plugin);
         }
         emitChange(event);
+
+        // Once the plugin is installed activate it and enable autoupdates
+        // This is only a temporary solution as we are trying to get this implemented on the server side
+        if (!payload.isError() && payload.plugin != null) {
+            ConfigureSitePluginPayload configurePayload = new ConfigureSitePluginPayload(payload.site,
+                    payload.plugin.getName(), payload.plugin.getSlug(), true, true);
+            mDispatcher.dispatch(PluginActionBuilder.newConfigureSitePluginAction(configurePayload));
+        }
     }
 
     private void searchedPluginDirectory(SearchedPluginDirectoryPayload payload) {
