@@ -37,7 +37,7 @@
     <!-- Primary Greys -->
     <color name="grey">#87a6bc</color>
     <color name="grey_light">#f3f6f8</color>
-    <color name="grey_dark">#2e4453</color>
+    <color name="grey_dark">#3c3c3c</color>
     <color name="grey_disabled">@color/grey_darken_10</color>
 
     <!-- Secondary Greys -->
