@@ -1,11 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2018-02-05 15:32:29+0000
+Translation-Revision-Date: 2018-02-12 19:19:19+0000
 Plural-Forms: nplurals=3; plural=(n==1 ? 0 : (n==0 || (n%100 > 0 && n%100 < 20)) ? 1 : 2);
 Generator: GlotPress/2.4.0-alpha
 Language: ro
 -->
 <resources>
+	<string name="stats_jetpack_more_info">Mai multe informații</string>
+	<string name="stats_jetpack_connection_setup_info">Pentru a folosi Statisticile pe situl tău WordPress, va trebui să instalezi modulul Jetpack. Vrei să inițializezi Jetpack?</string>
+	<string name="stats_jetpack_connection_setup">Inițializează Jetpack</string>
 	<string name="plugin_chevron_icon_content_description">Comută textul</string>
 	<string name="plugin_info_your_version">Versiunea ta WordPress</string>
 	<string name="plugin_info_requires_version">Necesită versiunea WordPress</string>

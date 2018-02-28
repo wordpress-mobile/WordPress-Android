@@ -22,7 +22,7 @@
 
     <View
         android:layout_width="match_parent"
-        android:layout_height="5dp"
+        android:layout_height="@dimen/button_container_shadow_height"
         android:background="@drawable/login_shadow"
         android:layout_above="@+id/bottom_buttons"/>
 
@@ -44,7 +44,7 @@
             android:layout_weight="1"
             android:layout_marginRight="@dimen/margin_medium"
             android:layout_marginEnd="@dimen/margin_medium"
-            android:text="@string/create_wordpress_site"/>
+            android:text="@string/sign_up"/>
 
         <android.support.v7.widget.AppCompatButton
             android:id="@+id/login_button"

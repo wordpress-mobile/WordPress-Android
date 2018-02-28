@@ -1,11 +1,37 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2018-01-25 15:23:30+0000
+Translation-Revision-Date: 2018-02-15 16:18:40+0000
 Plural-Forms: nplurals=2; plural=(n > 1);
 Generator: GlotPress/2.4.0-alpha
 Language: pt_BR
 -->
 <resources>
+	<string name="stats_jetpack_more_info">Mais informações</string>
+	<string name="stats_jetpack_connection_setup_info">Para usar as estatísticas no seu site WordPress, você precisa instalar o plugin Jetpack. Gostaria de configurar o Jetpack?</string>
+	<string name="stats_jetpack_connection_setup">Configurar Jetpack</string>
+	<string name="plugin_chevron_icon_content_description">Alternar texto</string>
+	<string name="plugin_info_your_version">Versão do seu WordPress</string>
+	<string name="plugin_info_requires_version">Requer a versão do WordPress</string>
+	<string name="plugin_info_lastupdated">Última atualização</string>
+	<string name="plugin_info_version">Versão</string>
+	<string name="plugin_five_stars">5 estrelas</string>
+	<string name="plugin_four_stars">4 estrelas</string>
+	<string name="plugin_three_stars">3 estrelas</string>
+	<string name="plugin_two_stars">2 estrelas</string>
+	<string name="plugin_one_stars">1 estrela</string>
+	<string name="plugin_empty_text">Nada foi fornecido</string>
+	<string name="plugin_num_downloads">%s downloads</string>
+	<string name="plugin_num_ratings">%s classificações</string>
+	<string name="plugin_read_reviews">Ler avaliações</string>
+	<string name="plugin_faq">Perguntas frequentes</string>
+	<string name="plugin_whatsnew">Novidades</string>
+	<string name="plugin_installation">Instalação</string>
+	<string name="plugin_description">Descrição</string>
+	<string name="plugin_settings">Configurações</string>
+	<string name="plugin_installed">Instalado</string>
+	<string name="plugin_installed_version">Versão %s instalada</string>
+	<string name="plugin_version">Versão %s</string>
+	<string name="plugin_byline">por %s</string>
 	<string name="change_photo">Alterar foto</string>
 	<string name="plugin_fetch_error">Não foi possível carregar os plugins</string>
 	<string name="my_site_btn_site_pages">Páginas do site</string>

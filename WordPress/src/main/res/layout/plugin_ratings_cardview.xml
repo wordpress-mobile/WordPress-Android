@@ -14,7 +14,7 @@
 
         <RatingBar
             android:id="@+id/rating_bar"
-            style="?android:attr/ratingBarStyleSmall"
+            style="@style/WPRatingBar.Small"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginBottom="@dimen/margin_medium"

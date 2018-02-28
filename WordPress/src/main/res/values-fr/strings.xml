@@ -1,11 +1,32 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2018-01-30 20:41:28+0000
+Translation-Revision-Date: 2018-02-09 17:08:24+0000
 Plural-Forms: nplurals=2; plural=n > 1;
 Generator: GlotPress/2.4.0-alpha
 Language: fr
 -->
 <resources>
+	<string name="plugin_info_your_version">Votre version de WordPress</string>
+	<string name="plugin_info_requires_version">Nécessite WordPress version</string>
+	<string name="plugin_info_lastupdated">Dernière mise à jour</string>
+	<string name="plugin_info_version">Version</string>
+	<string name="plugin_five_stars">5 étoiles</string>
+	<string name="plugin_four_stars">4 étoiles</string>
+	<string name="plugin_three_stars">3 étoiles</string>
+	<string name="plugin_two_stars">2 étoiles</string>
+	<string name="plugin_one_stars">1 étoile</string>
+	<string name="plugin_num_downloads">%s téléchargements</string>
+	<string name="plugin_num_ratings">%s notes</string>
+	<string name="plugin_read_reviews">Lire les évaluations</string>
+	<string name="plugin_faq">Questions fréquemment posées</string>
+	<string name="plugin_whatsnew">Quoi de neuf</string>
+	<string name="plugin_installation">Installation</string>
+	<string name="plugin_description">Description</string>
+	<string name="plugin_settings">Réglages</string>
+	<string name="plugin_installed">Installée</string>
+	<string name="plugin_installed_version">Version %s installée</string>
+	<string name="plugin_version">Version %s</string>
+	<string name="plugin_byline">par %s</string>
 	<string name="change_photo">Changer la photo</string>
 	<string name="plugin_fetch_error">Impossible de charger les extensions</string>
 	<string name="my_site_btn_site_pages">Pages du site</string>
@@ -455,7 +476,6 @@ Language: fr
 	<string name="checking_username">Vérification du nom d’utilisateur</string>
 	<string name="jetpack_different_com_account">Les sites Jetpack liés à des comptes WordPress.com différents ne sont pas supportés</string>
 	<string name="jetpack_use_com_account">Pour ajouter votre site Jetpack, connectez-vous au même compte WordPress.com que vous utilisez pour vous connecter à Jetpack.</string>
-	<string name="jetpack_message">L’extension Jetpack doit être installée et activée. Voulez-vous installer ou activer Jetpack&amp;nbsp;?</string>
 	<string name="error_media_load">Impossible de charger le média</string>
 	<string name="error_media_refresh_no_connection">Connexion obligatoire pour actualiser la bibliothèque</string>
 	<string name="error_media_unauthorized">Vous n’avez pas le droit de voir ni de modifier le média</string>
@@ -635,8 +655,6 @@ Language: fr
 	<string name="enter_your_password_instead">Saisissez votre mot de passe à la place</string>
 	<string name="web_address_dialog_hint">Affiché publiquement quand vous commentez.</string>
 	<string name="username_email">Adresse e-mail ou identifiant</string>
-	<string name="jetpack_not_connected_message">L\'extension Jetpack est installée, mais pas connecté à WordPress.com. Voulez-vous connecter Jetpack ?</string>
-	<string name="jetpack_not_connected">L\'extension Jetpack n\'est pas connectée</string>
 	<string name="new_editor_reflection_error">L\'éditeur visuel n\'est pas compatible avec votre appareil.\nIl a été automatiquement désactivé.</string>
 	<string name="stats_insights_latest_post_no_title">(pas de titre)</string>
 	<string name="capture_or_pick_photo">Prenez une photo ou choisissez-en une</string>
@@ -1298,7 +1316,6 @@ Language: fr
 	<string name="reader_toast_err_remove_tag">Impossible de supprimer ce mot-clé </string>
 	<string name="reader_toast_err_add_tag">Impossible d\'ajouter ce mot-clé</string>
 	<string name="reader_title_applog">Journal de l\'application</string>
-	<string name="jetpack_message_not_admin">L\'extension Jetpack est requise. Contactez l\'administrateur du site.</string>
 	<string name="fatal_db_error">Une erreur s\'est produite lors de la création de la base de données de l\'app. Essayez de réinstaller l\'app.</string>
 	<string name="error_blog_hidden">Ce blog est caché et ne peut être chargé. Activez-le dans les paramètres et réessayez.</string>
 	<string name="error_refresh_media">Impossible d’actualiser le contenu multimédia pour l’instant.</string>
@@ -1434,7 +1451,6 @@ Language: fr
 	<string name="reader_btn_follow">Suivre</string>
 	<string name="reader_btn_share">Partager</string>
 	<string name="reader_untitled_post">(Sans Titre)</string>
-	<string name="jetpack_not_found">Le module Jetpack est introuvable</string>
 	<string name="empty_list_default">Cette liste est vide</string>
 	<string name="media_add_popup_title">Ajouter à la bibliothèque média</string>
 	<string name="passcode_turn_on">Activer le code PIN</string>

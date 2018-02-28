@@ -469,6 +469,10 @@ public class UploadService extends Service {
         return MediaUploadHandler.getPendingOrInProgressMediaUploadsForPost(post);
     }
 
+    public static boolean hasPendingOrInProgressPostUploads() {
+        return PostUploadHandler.hasPendingOrInProgressPostUploads();
+    }
+
     public static float getMediaUploadProgressForPost(PostModel postModel) {
         if (postModel == null || sInstance == null) {
             // If the UploadService isn't running, there's no progress for this post

@@ -202,7 +202,16 @@ public class PostsListFragment extends Fragment
         });
 
         if (savedInstanceState == null) {
-            requestPosts(false);
+            if (UploadService.hasPendingOrInProgressPostUploads()) {
+                // if there are some in-progress uploads, we'd better just load the DB Posts and reflect upload
+                // changes there. Otherwise, a duplicate-post situation can happen when:
+                // a FETCH_POSTS completing *after* the post has been uploaded to the server but *before*
+                // the PUSH_POST action completes and a PUSHED_POST is emitted.
+                loadPosts(LoadMode.IF_CHANGED);
+            } else {
+                // refresh normally
+                requestPosts(false);
+            }
         }
 
         initSwipeToRefreshHelper(view);

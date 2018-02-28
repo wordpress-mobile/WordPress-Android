@@ -273,7 +273,7 @@ public class MySiteFragment extends Fragment
         mPluginsContainer.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View view) {
-                ActivityLauncher.viewCurrentBlogPlugins(getActivity(), getSelectedSite());
+                ActivityLauncher.viewPluginBrowser(getActivity(), getSelectedSite());
             }
         });
 
@@ -301,7 +301,8 @@ public class MySiteFragment extends Fragment
         rootView.findViewById(R.id.my_site_add_site_btn).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                SitePickerActivity.addSite(getActivity(), mAccountStore.hasAccessToken());
+                SitePickerActivity.addSite(getActivity(), mAccountStore.hasAccessToken(),
+                        mAccountStore.getAccount().getUserName());
             }
         });
 

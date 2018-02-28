@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2018-01-18 13:53:04+0000
+Translation-Revision-Date: 2018-02-14 17:21:17+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/2.4.0-alpha
 Language: nb_NO
@@ -127,6 +127,7 @@ Language: nb_NO
 	<string name="async_promo_description">Du kan forlate redigereren, og innlegget ditt vil lagre og publisere bak kulissene! Prøv det ut, da vel!</string>
 	<string name="async_promo_title">Publiser med sikkerhet</string>
 	<string name="editor_uploading_post">Innlegget ditt lastes opp</string>
+	<string name="uploading_media">Laster opp medie …</string>
 	<string name="dialog_confirm_cancel_post_media_uploading">Er du sikker? Å slette dette innlegget vil også avbryte medieopplastingen.</string>
 	<string name="page_scheduled">Siden har blitt planlagt</string>
 	<string name="post_scheduled">Innlegget har blitt planlagt</string>
@@ -364,6 +365,7 @@ Language: nb_NO
 	<string name="media_upload_state_deleted">Slettet</string>
 	<string name="media_upload_state_deleting">Sletter</string>
 	<string name="media_upload_state_uploading">Laster opp</string>
+	<string name="media_upload_state_failed">Opplastingmislyktes</string>
 	<string name="update_draft">Oppdater utkastet</string>
 	<string name="keep_editing">Fortsett å redigere</string>
 	<string name="image_quality">Bildekvalitet</string>
@@ -1298,6 +1300,7 @@ Language: nb_NO
 	<string name="media_gallery_type_thumbnail_grid">Forhåndsvisningsnetting</string>
 	<string name="file_error_create">Klarte ikke å lage en midlertidig fil for medieopplastning. Vennligst sørg for at det er nok ledig lagring på enheten din.</string>
 	<string name="scaled_image_error">Skriv en gyldig skalert breddeverdi</string>
+	<string name="file_not_found">Klarte ikke å finne filen som skulle lastes opp. Ble den kanskje slettet eller flyttet?</string>
 	<string name="share_url_post">Del innlegg</string>
 	<string name="share_url_page">Del side</string>
 	<string name="share_link">Del lenke</string>

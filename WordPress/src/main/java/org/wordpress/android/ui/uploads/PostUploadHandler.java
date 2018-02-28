@@ -155,6 +155,10 @@ public class PostUploadHandler implements UploadHandler<PostModel> {
         return post != null && sCurrentUploadingPost != null && sCurrentUploadingPost.getId() == post.getId();
     }
 
+    static boolean hasPendingOrInProgressPostUploads() {
+        return sCurrentUploadingPost != null || !sQueuedPostsList.isEmpty() ;
+    }
+
     private void uploadNextPost() {
         synchronized (sQueuedPostsList) {
             if (mCurrentTask == null) { //make sure nothing is running

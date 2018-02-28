@@ -34,15 +34,13 @@ android {
 
     defaultConfig {
         applicationId "org.wordpress.android"
-        versionName "9.4-rc-1"
-        versionCode 527
+        versionName "9.5-rc-1"
+        versionCode 532
         minSdkVersion 16
         targetSdkVersion 25
 
         multiDexEnabled true
         vectorDrawables.useSupportLibrary = true
-
-        buildConfigField "boolean", "LOGIN_WIZARD_STYLE_ACTIVE", "true"
     }
 
     flavorDimensions "buildType"
@@ -108,6 +106,8 @@ dependencies {
     implementation 'com.android.support:design:26.1.0'
     implementation 'com.android.support:percent:26.1.0'
     implementation 'com.android.support:preference-v7:26.1.0'
+    // ViewModel and LiveData
+    implementation 'android.arch.lifecycle:extensions:1.1.0'
 
     implementation 'com.google.android.gms:play-services-gcm:10.0.1'
     implementation 'com.google.android.gms:play-services-auth:10.0.1'

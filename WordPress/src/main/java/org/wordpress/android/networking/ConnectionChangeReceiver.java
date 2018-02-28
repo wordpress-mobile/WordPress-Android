@@ -56,4 +56,8 @@ public class ConnectionChangeReceiver extends BroadcastReceiver {
         }
         return sInstance;
     }
+
+    public static EventBus getEventBus() {
+        return EventBus.getDefault();
+    }
 }

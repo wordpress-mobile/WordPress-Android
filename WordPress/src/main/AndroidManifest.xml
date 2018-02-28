@@ -95,21 +95,6 @@
 
         <!-- Account activities -->
         <activity
-            android:name=".ui.accounts.SignInActivity"
-            android:configChanges="orientation|keyboardHidden|screenSize"
-            android:theme="@style/SignInTheme"
-            android:windowSoftInputMode="adjustResize">
-            <intent-filter>
-                <action android:name="android.intent.action.VIEW" />
-                <category android:name="android.intent.category.DEFAULT" />
-                <category android:name="android.intent.category.BROWSABLE" />
-                <data
-                    android:host="signin"
-                    android:scheme="wordpress" />
-            </intent-filter>
-        </activity>
-
-        <activity
             android:name=".ui.accounts.LoginActivity"
             android:theme="@style/LoginTheme"
             android:windowSoftInputMode="adjustResize" />
@@ -137,6 +122,16 @@
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:theme="@style/LoginTheme"
             android:windowSoftInputMode="adjustResize" />
+
+        <activity
+            android:name=".ui.accounts.SignupEpilogueActivity"
+            android:theme="@style/LoginTheme" />
+
+        <activity
+            android:name=".ui.accounts.SiteCreationActivity"
+            android:theme="@style/LoginTheme"
+            android:windowSoftInputMode="adjustResize" />
+
         <activity
             android:name=".ui.accounts.HelpActivity"
             android:label=""
@@ -269,7 +264,7 @@
         <activity
             android:name=".ui.stats.StatsConnectJetpackActivity"
             android:theme="@style/Calypso.NoActionBar" />
-        <activity android:name=".ui.stats.StatsDeeplinkActivity" android:theme="@style/Calypso.NoActionBar">
+        <activity android:name=".ui.JetpackConnectionDeeplinkActivity" android:theme="@style/Calypso.NoActionBar">
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
                 <category android:name="android.intent.category.DEFAULT" />
@@ -484,12 +479,11 @@
 
         <!--Plugins-->
         <activity
-            android:name=".ui.plugins.PluginListActivity"
-            android:label="@string/plugins"
-            android:theme="@style/Calypso.NoActionBar"/>
-
-        <activity
             android:name=".ui.plugins.PluginDetailActivity"
+            android:theme="@style/Calypso.NoActionBar"/>
+        <activity
+            android:name=".ui.plugins.PluginBrowserActivity"
+            android:label="@string/plugins"
             android:theme="@style/Calypso.NoActionBar"/>
 
         <!-- Me activities -->
@@ -570,6 +564,10 @@
             android:name=".login.LoginWpcomService"
             android:exported="false"
             android:label="Login to WPCOM Service" />
+        <service
+            android:name=".ui.accounts.signup.SiteCreationService"
+            android:exported="false"
+            android:label="Site Creation Service" />
 
         <!-- Samsung multiwindow support -->
         <uses-library

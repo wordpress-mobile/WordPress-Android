@@ -51,7 +51,6 @@ Language: is
 	<string name="checking_username">Athuga notandanafn</string>
 	<string name="jetpack_different_com_account">Jetpack vefir sem tilheyra öðrum WordPress.com aðgöngum eru ekki studdir</string>
 	<string name="jetpack_use_com_account">Til þess að bæta Jetpack vefnum þínum við, skráðu þig inn í WordPress.com aðganginn sem þú notaðir til þess að tengja Jetpack.</string>
-	<string name="jetpack_message">Jetpack viðbótin verður að vera uppsett og virk. Viltu setja upp eða virkja Jetpack?</string>
 	<string name="error_media_load">Get ekki hlaðið skrá</string>
 	<string name="error_media_refresh_no_connection">Tenging þarf að vera til staðar til að endurfríska safn</string>
 	<string name="error_media_unauthorized">Þú hefur ekki heimild til þess að skoða eða breyta skrá</string>
@@ -225,8 +224,6 @@ Language: is
 	<string name="enter_your_password_instead">Sláðu inn lykilorðið þitt í staðinn</string>
 	<string name="web_address_dialog_hint">Birt öllum þegar þú skrifar athugasemd.</string>
 	<string name="username_email">Netfang eða notandanafn</string>
-	<string name="jetpack_not_connected_message">Jetpack viðbótin er uppsett en ekki tengd við WordPress.com. Viltu tengja Jetpack?</string>
-	<string name="jetpack_not_connected">Jetpack viðbótin er ótengd</string>
 	<string name="new_editor_reflection_error">Sjónrænn ritill er ekki samhæfður þínu tæki. Hann var\n	sjálfvirkt gerður óvirkur.</string>
 	<string name="stats_insights_latest_post_no_title">(án titils)</string>
 	<string name="capture_or_pick_photo">Taka eða velja mynd</string>
@@ -956,7 +953,6 @@ Language: is
 	<string name="media_error_no_permission">Þú hefur ekki heimild til þess að skoða skráarsafnið</string>
 	<string name="media_gallery_type_thumbnail_grid">Þumlur á grind</string>
 	<string name="invalid_site_url_message">Athugaðu að innslegið veffang sé gilt</string>
-	<string name="jetpack_message_not_admin">Jetpack viðbótin er nauðsynleg. Hafðu samband við vefstjóra.</string>
 	<string name="deleting_page">Eyði síðu</string>
 	<string name="deleting_post">Eyði færslu</string>
 	<string name="share_link">Deila tengli</string>
@@ -1008,7 +1004,6 @@ Language: is
 	<string name="reader_toast_err_url_intent">Gat ekki opnað %s</string>
 	<string name="reader_toast_err_view_image">Gat ekki skoðað mynd</string>
 	<string name="nux_tutorial_get_started_title">Hefjast handa!</string>
-	<string name="jetpack_not_found">Jetpack viðbót finnst ekki</string>
 	<string name="reader_label_removed_tag">Fjarlægja %s</string>
 	<string name="reader_empty_followed_tags">Þú fylgir engum merkjum</string>
 	<string name="reader_toast_err_comment_failed">Gat ekki birt athugasemdina þína</string>

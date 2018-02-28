@@ -18,13 +18,6 @@
     <string name="sign_out_wpcom_confirm">Logging out from your account will remove all of @%s’s WordPress.com data from this device, including local drafts and local changes.</string>
     <string name="account_two_step_auth_enabled">This account has two step authentication enabled. Visit your security settings on WordPress.com and generate an application-specific password.</string>
 
-    <string name="site_creating_label">Preparing your site…</string>
-    <string name="site_creating_fetching_info">Fetching site info…</string>
-    <string name="site_creating_set_tagline">Setting the tagline…</string>
-    <string name="site_creating_set_theme">Setting the theme…</string>
-    <string name="site_creating_failed">Sorry, failed to properly create your site :(</string>
-    <string name="site_creating_success">Success!</string>
-
     <!-- form labels -->
     <string name="select_categories">Select categories</string>
     <string name="tags_separate_with_commas">Separate tags with commas</string>
@@ -108,9 +101,6 @@
     <string name="delete_yes">Delete</string>
     <string name="delete_no">Don\'t Delete</string>
 
-    <string name="button_skip">Skip</string>
-    <string name="button_next">Next</string>
-    <string name="button_done">Done</string>
     <string name="button_not_now">Not now</string>
 
     <!-- timestamps for posts / pages -->
@@ -459,7 +449,6 @@
     <string name="uploading_media">Uploading media…</string>
 
     <!-- new account view -->
-    <string name="signing_in">Logging in…</string>
     <string name="no_site_error">Couldn\'t connect to the WordPress site. There is no valid WordPress site at this
         address. Check the site address (URL) you entered.</string>
 
@@ -486,7 +475,6 @@
     <string name="share_action">Share</string>
     <string name="cant_share_no_visible_blog">You can\'t share to WordPress without a visible blog</string>
     <string name="cant_share_unknown_action">Unrecognized action requested, ignoring</string>
-    <string name="no_account">No WordPress account found, add an account and try again</string>
 
     <!-- file errors -->
     <string name="file_error_create">Couldn\'t create temp file for media upload. Make sure there is enough free space on your device.</string>
@@ -570,6 +558,12 @@
     <string name="site_settings_timezones_error">Unable to load timezones</string>
     <string name="site_settings_amp_title">Accelerated Mobile Pages (AMP)</string>
     <string name="site_settings_amp_summary">Your WordPress.com site supports the use of Accelerated Mobile Pages, a Google-led initiative that dramatically speeds up loading times on mobile devices</string>
+    <!-- Speed up your site -->
+    <string name="site_settings_speed_up_your_site">Speed up your site</string>
+    <string name="site_settings_serve_images_from_our_servers">Serve images from our servers</string>
+    <string name="site_settings_serve_images_from_our_servers_summary">Jetpack will optimize your images and serve them from the server location nearest to your visitors. Using our global content delivery network will boost the loading speed of your site.</string>
+    <string name="site_settings_lazy_load_images">"Lazy-load" images</string>
+    <string name="site_settings_lazy_load_images_summary">Improve your site\'s speed by only loading images visible on the screen. New images will load just before they scroll into view. This prevents viewers from having to download all the images on a page all at once, even ones they can\'t see.</string>
 
     <!-- tag list and detail -->
     <string name="tag_name_hint">Tag</string>
@@ -956,6 +950,7 @@
     <string name="notifications_empty_action_comments">Join a conversation: comment on posts from blogs you follow.</string>
     <string name="notifications_empty_action_followers_likes">Get noticed: comment on posts you\'ve read.</string>
     <string name="notifications_account_required">Log in to WordPress.com for notifications</string>
+    <string name="notifications_jetpack_connection_setup_info">To get helpful notifications on your device from your WordPress site, you\'ll need to install the Jetpack plugin. Would you like to set up Jetpack?</string>
     <string name="notifications_empty_view_reader">View Reader</string>
     <string name="older_two_days">Older than 2 days</string>
     <string name="older_last_week">Older than a week</string>
@@ -1501,21 +1496,13 @@
     <string name="create_account_wpcom">Create an account on WordPress.com</string>
     <string name="create_new_blog_wpcom">Create WordPress.com blog</string>
     <string name="new_blog_wpcom_created">WordPress.com blog created!</string>
-    <string name="validating_user_data">Validating user data</string>
-    <string name="validating_site_data">Validating site data</string>
-    <string name="creating_your_account">Creating your account</string>
     <string name="creating_your_site">Creating your site</string>
     <string name="required_field">Required field</string>
     <string name="invalid_email_message">Your email address isn\'t valid</string>
-    <string name="invalid_password_message">Password must contain at least 4 characters</string>
-    <string name="invalid_username_too_short">Username must be longer than 4 characters</string>
-    <string name="invalid_username_too_long">Username must be shorter than 61 characters</string>
-    <string name="invalid_username_no_spaces">Username can\'t contain spaces</string>
     <string name="email_hint">Email address</string>
     <string name="agree_terms_of_service">By creating an account you agree to the fascinating %1$sTerms of Service%2$s</string>
     <string name="username_email">Email or username</string>
     <string name="site_address">Your self-hosted address (URL)</string>
-    <string name="connecting_wpcom">Logging in to WordPress.com</string>
     <string name="username_only_lowercase_letters_and_numbers">Username can only contain lowercase letters (a-z) and numbers</string>
     <string name="username_required">Enter a username</string>
     <string name="username_not_allowed">Username not allowed</string>
@@ -1532,7 +1519,6 @@
     <string name="email_reserved">That email address has already been used. Check your inbox for an activation email. If you don\'t activate you can try again in a few days.</string>
     <string name="blog_name_required">Enter a site address</string>
     <string name="blog_name_not_allowed">That site address isn\'t allowed</string>
-    <string name="blog_name_no_spaced_allowed">Site address can\'t contain spaces</string>
     <string name="blog_name_must_be_at_least_four_characters">Site address must be at least 4 characters</string>
     <string name="blog_name_must_be_less_than_sixty_four_characters">The site address must be shorter than 64 characters</string>
     <string name="blog_name_contains_invalid_characters">Site address may not contain the character “_”</string>
@@ -1546,30 +1532,18 @@
     <string name="blog_name_invalid">Invalid site address</string>
     <string name="blog_title_invalid">Invalid site title</string>
     <string name="username_invalid">Invalid username</string>
-    <string name="checking_username">Checking username</string>
     <string name="limit_reached">Limit reached. You can try again in 1 minute. Trying again before that will only increase the time you have to wait before the ban is lifted. If you think this is in error, contact support.</string>
     <string name="username_or_password_incorrect">The username or password you entered is incorrect</string>
     <string name="nux_tap_continue">Continue</string>
-    <string name="nux_cannot_log_in">We can\'t log you in</string>
     <string name="nux_tutorial_get_started_title">Get started!</string>
     <string name="nux_welcome_create_account">Create account</string>
-    <string name="nux_add_selfhosted_blog">Add self-hosted site</string>
-    <string name="nux_oops_not_selfhosted_blog">Log in to WordPress.com</string>
     <string name="ssl_certificate_details">Details</string>
     <string name="ssl_certificate_error">Invalid SSL certificate</string>
     <string name="ssl_certificate_ask_trust">If you usually connect to this site without problems, this error could mean that someone is trying to impersonate the site, and you shouldn\'t continue. Would you like to trust the certificate anyway?</string>
     <string name="ptr_tip_message">Tip: Pull down to refresh</string>
     <string name="verification_code">Verification code</string>
-    <string name="invalid_verification_code">Invalid verification code</string>
-    <string name="invalid_verification_code_format">Must be six-digit number</string>
-    <string name="verify">Verify</string>
-    <string name="two_step_footer_label">Enter the code from your authenticator app.</string>
-    <string name="two_step_footer_button">Send code via text message</string>
-    <string name="two_step_sms_sent">Check your text messages for the verification code.</string>
     <string name="sign_in_jetpack">Log in to your WordPress.com account to connect to Jetpack.</string>
     <string name="auth_required">Log in again to continue.</string>
-    <string name="signup_succeed_signin_failed">Your account has been created but an error occured while we loggged you
-        in. Try to log in with your newly created username and password.</string>
     <string name="send_link">Send link</string>
     <string name="get_a_link_sent_to_your_email_to_sign_in_instantly">Get a link sent to your email to log in instantly</string>
     <string name="logging_in">Logging in</string>
@@ -1579,7 +1553,6 @@
     <string name="checking_email">Checking email</string>
     <string name="not_on_wordpress_com">Not on WordPress.com?</string>
     <string name="already_logged_in_wpcom">You\'re already logged in a WordPress.com account, you can\'t add a WordPress.com site bound to another account.</string>
-    <string name="already_logged_in_wpcom_same_username">You\'re already logged in your WordPress.com account. Your site should appear in the site picker, make sure it\'s not hidden.</string>
     <string name="cannot_add_duplicate_site">This site already exists in the app, you can\'t add it.</string>
     <string name="duplicate_site_detected">A duplicate site has been detected.</string>
 
@@ -1592,7 +1565,6 @@
     <string name="help_center">Help center</string>
     <string name="browse_our_faq_button">Browse our FAQ</string>
     <string name="faq_button">FAQ</string>
-    <string name="tell_me_more">Tell me more</string>
 
     <!--My Site-->
     <string name="my_site_header_external">External</string>
@@ -1608,15 +1580,14 @@
     <string name="my_site_btn_view_admin">View Admin</string>
     <string name="my_site_btn_view_site">View Site</string>
     <string name="my_site_btn_plugins">Plugins</string>
-    <string name="my_site_no_sites_view_drake">Illustration</string>
-    <string name="my_site_no_sites_view_title">You don\'t have any WordPress sites yet.</string>
-    <string name="my_site_no_sites_view_subtitle">Would you like to add one?</string>
+    <string name="my_site_create_new_site">Create a new site for your business, magazine, or personal blog; or connect an existing WordPress installation.</string>
+    <string name="my_site_add_new_site">Add new site</string>
     <string name="fab_content_description_write">Write</string>
 
     <!-- site picker -->
     <string name="site_picker_title">Choose site</string>
     <string name="site_picker_edit_visibility">Show/hide sites</string>
-    <string name="site_picker_add_site">Add site</string>
+    <string name="site_picker_add_site">Add new site</string>
     <string name="site_picker_add_self_hosted">Add self-hosted site</string>
     <string name="site_picker_create_dotcom">Create WordPress.com site</string>
     <string name="site_picker_cant_hide_current_site">\"%s\" wasn\'t hidden because it\'s the current site</string>
@@ -1703,6 +1674,7 @@
     <string name="publicize_label" translatable="false">publicize_label</string>
     <string name="publicize_button_style" translatable="false">publicize_button_style</string>
     <string name="site_settings_reblog_and_like_header">Reblog &amp; Like</string>
+    <string name="site_settings_like_header">Like</string>
     <string name="site_settings_reblog">Show Reblog Button</string>
     <string name="site_settings_like">Show Like Button</string>
     <string name="manage">Manage</string>
@@ -1808,12 +1780,15 @@
     <string name="plugin_version">Version %s</string>
     <string name="plugin_installed_version">Version %s installed</string>
     <string name="plugin_installed">Installed</string>
-    <string name="plugin_available_version">Version %s is available.</string>
-    <string name="plugin_updated_successfully">Successfully updated %s.</string>
-    <string name="plugin_updated_failed">Error removing %s.</string>
-    <string name="plugin_updated_failed_detailed">Error removing %1$s: %2$s</string>
-    <string name="plugin_removed_successfully">Successfully removed %s.</string>
-    <string name="plugin_remove_failed">Error removing %s.</string>
+    <string name="plugin_install">Install</string>
+    <string name="plugin_available_version">Version %s is available</string>
+    <string name="plugin_updated_successfully">Successfully updated %s</string>
+    <string name="plugin_installed_successfully">Successfully installed %s</string>
+    <string name="plugin_updated_failed">Error updating %s.</string>
+    <string name="plugin_updated_failed_detailed">Error updating %1$s: %2$s</string>
+    <string name="plugin_removed_successfully">Successfully removed %s</string>
+    <string name="plugin_remove_failed">Error removing %s</string>
+    <string name="plugin_installed_failed">Error installing %s</string>
     <string name="plugin_configuration_failed">An error occurred while configuring the plugin: %s</string>
     <string name="plugin_btn_remove">Remove Plugin</string>
     <string name="plugin_disable_progress_dialog_message">Disabling %s&#8230;</string>
@@ -1821,6 +1796,15 @@
     <string name="plugin_remove_dialog_title">Remove Plugin</string>
     <string name="plugin_remove_dialog_message">Are you sure you want to remove %1$s from %2$s?\n\nThis will deactivate the plugin and delete all associated files and data.</string>
     <string name="plugin_fetch_error">Unable to load plugins</string>
+    <string name="plugin_search_error">Unable to search plugins</string>
+    <string name="plugin_manage">Manage</string>
+    <string name="plugin_see_all">See All</string>
+    <string name="plugins_empty_search_list">No matches</string>
+
+    <string name="plugin_caption_installed" translatable="false">@string/plugin_installed</string>
+    <string name="plugin_caption_popular">Popular</string>
+    <string name="plugin_caption_new">New</string>
+    <string name="plugin_caption_search">Search Plugins</string>
 
     <string name="wordpress_dot_org_plugin_page">WordPress.org Plugin page</string>
     <string name="plugin_home_page">Plugin homepage</string>
@@ -1833,6 +1817,7 @@
     <string name="plugin_num_ratings">%s ratings</string>
     <string name="plugin_num_downloads">%s downloads</string>
     <string name="plugin_empty_text">None provided</string>
+    <string name="plugin_needs_update">Needs update</string>
 
     <string name="plugin_one_stars">1 stars</string>
     <string name="plugin_two_stars">2 stars</string>
@@ -2025,7 +2010,6 @@
 
     <!-- Login -->
     <string name="log_in">Log In</string>
-    <string name="create_wordpress_site">Create a WordPress site</string>
     <string name="login_promo_text_onthego">Publish from the park. Blog from the bus. Comment from the café. WordPress goes where you go.</string>
     <string name="login_promo_text_realtime">Watch readers from around the world read and interact with your site — in realtime.</string>
     <string name="login_promo_text_anytime">Catch up with your favorite sites and join the conversation anywhere, any time.</string>
@@ -2034,8 +2018,8 @@
     <string name="enter_email_wordpress_com">Log in to WordPress.com using an email address to manage all your WordPress sites.</string>
     <string name="next">Next</string>
     <string name="open_mail">Open mail</string>
-    <string name="enter_site_address_instead">Log in to your site by entering your site address instead.</string>
-    <string name="enter_username_instead">Log in with username instead.</string>
+    <string name="enter_site_address_instead">Log in by entering your site address.</string>
+    <string name="enter_username_instead">Log in with your username.</string>
     <string name="enter_the_address_of_your_wordpress_site">Enter the address of your WordPress site</string>
     <string name="enter_verification_code">Almost there! Please enter the verification code from your Authenticator app.</string>
     <string name="enter_verification_code_sms">We sent a text message to the phone number ending in %s. Please enter the verification code in the SMS.</string>
@@ -2074,7 +2058,6 @@
     <string name="login_logged_in_as">Logged in as</string>
     <string name="login_epilogue_mysites_one">My site</string>
     <string name="login_epilogue_mysites_other">My sites</string>
-    <string name="login_google_button_prefix">Or you can</string>
     <string name="login_google_button_suffix">Log in with Google.</string>
     <string name="login_error_button">Close</string>
     <string name="login_error_email_not_found">The Google account \'%s\' doesn\'t match any existing account on WordPress.com.</string>
@@ -2082,16 +2065,101 @@
     <string name="login_error_generic_start">Google login could not be started.</string>
     <string name="login_error_suffix">\nMaybe try a different account?</string>
 
+    <!-- Signup -->
+    <string name="sign_up">Sign Up</string>
+    <string name="signup_creating_account">Creating account&#8230;</string>
+    <string name="signup_email_error_generic">There was some trouble checking the email address.</string>
+    <string name="signup_email_header">To create your new WordPress.com account, please enter your email address.</string>
+    <string name="signup_epilogue_error_avatar">There was some trouble uploading your avatar.</string>
+    <string name="signup_epilogue_error_generic">There was some trouble updating your account. You can retry or revert your changes to continue.</string>
+    <string name="signup_epilogue_error_button_negative">Revert</string>
+    <string name="signup_epilogue_error_button_positive">Retry</string>
+    <string name="signup_epilogue_heading">New account</string>
+    <string name="signup_epilogue_hint_display">Display Name</string>
+    <string name="signup_epilogue_hint_password">Password (optional)</string>
+    <string name="signup_epilogue_hint_password_detail">Log in will be possible by getting a new email link like the one you just used, but you can set up a password if you prefer.</string>
+    <string name="signup_epilogue_hint_username">Username</string>
+    <string name="signup_magic_link_error">There was some trouble sending the email.  You can retry now or close and try again later.</string>
+    <string name="signup_magic_link_error_button_negative">Close</string>
+    <string name="signup_magic_link_error_button_positive">Retry</string>
+    <string name="signup_magic_link_message">We sent an email with a link, open it to proceed with your new WordPress.com account.</string>
+    <string name="signup_magic_link_progress">Sending email</string>
+    <string name="signup_terms_of_service_text">By signing up, you agree to our %1$sTerms of Service%2$s.</string>
+    <string name="signup_updating_account">Updating account&#8230;</string>
+    <string name="signup_user_exists">Email already exists on WordPress.com.\nProceeding with login.</string>
+    <string name="signup_with_email_button">Sign Up with Email</string>
+    <string name="signup_with_google_button">Sign Up with Google</string>
+    <string name="content_description_add_avatar">Add avatar</string>
+    <string name="try_again">Try again</string>
+
+    <string name="username_changer_action">Save</string>
+    <string name="username_changer_dismiss_button_positive">Discard</string>
+    <string name="username_changer_dismiss_message">Discard changing username?</string>
+    <string name="username_changer_error_generic">An error occurred while retrieving username suggestions.</string>
+    <string name="username_changer_error_none">No usernames are suggested from %1$s%2$s%3$s. Please enter more letters or numbers to get suggestions.</string>
+    <string name="username_changer_header">Your username will be %1$s%2$s%3$s. It will be used for mentions and links, but otherwise people will just see your display name, %4$s%5$s%6$s.</string>
+    <string name="username_changer_hint">Type to get more suggestions</string>
+    <string name="username_changer_title">Change username</string>
+
+    <string name="google_error_timeout">Google took too long to respond. You may need to wait until you have a stronger internet connection.</string>
+
+    <!-- Site Creation notifications -->
+    <string name="notification_site_creation_title_success">Site created!</string>
+    <string name="notification_site_creation_created">Tap to continue.</string>
+    <string name="notification_site_creation_title_in_progress">Creating site…</string>
+    <string name="notification_site_creation_step_creating">Step 1 of 4</string>
+    <string name="notification_site_creation_step_fetching">Step 2 of 4</string>
+    <string name="notification_site_creation_step_tagline">Step 3 of 4</string>
+    <string name="notification_site_creation_step_theme">Step 4 of 4</string>
+    <string name="notification_site_creation_title_stopped">Site creation stopped</string>
+    <string name="notification_site_creation_failed">An error has occurred.</string>
+
+    <!-- Login notifications -->
     <string name="notification_login_title_success">Logged in!</string>
     <string name="notification_logged_in">Tap to continue.</string>
-
     <string name="notification_login_title_in_progress">Login in progress…</string>
     <string name="notification_logging_in">Please wait while logging in.</string>
-
     <string name="notification_login_title_stopped">Login stopped</string>
     <string name="notification_error_wrong_password">Please double check your password to continue.</string>
     <string name="notification_2fa_needed">Please provide an authentication code to continue.</string>
     <string name="notification_login_failed">An error has occurred.</string>
     <string name="change_photo">Change photo</string>
+
+    <!-- Site Creation -->
+    <string name="site_creation_title">Create New Site</string>
+    <string name="site_creation_label_category_title">Step 1 of 4</string>
+    <string name="site_creation_label_category">What kind of site do you need?\nChoose an option below:</string>
+    <string name="site_creation_title_blog">Start with a Blog</string>
+    <string name="site_creation_subtitle_blog">To share your ideas, stories and photographs with your followers.</string>
+    <string name="site_creation_title_website">Start with a Website</string>
+    <string name="site_creation_subtitle_website">To promote your business or brand and connect with your audience.</string>
+    <string name="site_creation_title_portfolio">Start with a Portfolio</string>
+    <string name="site_creation_subtitle_portfolio">To present your creative projects in a visual showcase.</string>
+    <string name="site_creation_label_theme_selection_title">Step 2 of 4</string>
+    <string name="site_creation_label_theme_selection">Get started fast with one of our popular themes. Once your site is created, you can browse and choose from hundreds more.</string>
+    <string name="site_creation_label_theme_loading">Please wait while loading themes</string>
+    <string name="site_creation_label_site_details_title">Step 3 of 4</string>
+    <string name="site_creation_label_site_details">Tell us more about what you\'re creating. What\'s the title and tagline?</string>
+    <string name="site_creation_label_domain_selection_title">Step 4 of 4</string>
+    <string name="site_creation_label_domain_selection">Pick an available \"yourname.wordpress.com\" address to let people find you on the web.</string>
+    <string name="site_creation_domain_keywords_hint">Type a keyword for more ideas</string>
+    <string name="site_creation_domain_finish_button">Create site</string>
+    <string name="site_creation_title_hint">Site title</string>
+    <string name="site_creation_tagline_hint">Site tagline (optional)</string>
+    <string name="site_creation_tagline_helper">The tagline is a short line of text shown right below the title in most themes, and act as site metadata on search engines.</string>
+    <string name="site_creation_empty_site_title">Please enter a site title</string>
+    <string name="site_creation_creating_laying_foundation">Laying site foundation…</string>
+    <string name="site_creation_creating_fetching_info">Retrieving site information…</string>
+    <string name="site_creation_creating_configuring_content">Configuring site content…</string>
+    <string name="site_creation_creating_configuring_theme">Configuring site style…</string>
+    <string name="site_creation_creating_preparing_frontend">Preparing frontend…</string>
+    <string name="site_creation_creating_failed">Something went wrong&#8230;</string>
+    <string name="site_creation_creating_failed_extended">A parliament of owls distracted our servers with their superior oratory skills</string>
+    <string name="site_creation_creating_retry">Try again</string>
+    <string name="site_creation_creating_modal">Please wait until site creation is completed.</string>
+    <string name="site_creation_epilogue_congrats">Congratulations!\nYour site is ready.</string>
+    <string name="site_creation_epilogue_configure">Configure</string>
+    <string name="site_creation_epilogue_write">Write first post</string>
+    <string name="site_creation_content_description_confetti">Site creation completed successfully!</string>
 
 </resources>

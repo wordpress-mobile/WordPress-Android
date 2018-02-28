@@ -23,7 +23,7 @@
 
     <View
         android:layout_width="match_parent"
-        android:layout_height="5dp"
+        android:layout_height="@dimen/button_container_shadow_height"
         android:background="@drawable/login_shadow"
         android:layout_above="@+id/bottom_buttons"/>
 
@@ -52,6 +52,6 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="@dimen/margin_extra_small"
-            android:text="@string/create_wordpress_site"/>
+            android:text="@string/sign_up"/>
     </LinearLayout>
 </RelativeLayout>

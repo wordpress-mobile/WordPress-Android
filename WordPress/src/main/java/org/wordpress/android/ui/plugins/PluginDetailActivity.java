@@ -37,13 +37,15 @@ import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.fluxc.Dispatcher;
 import org.wordpress.android.fluxc.generated.PluginActionBuilder;
 import org.wordpress.android.fluxc.model.SiteModel;
-import org.wordpress.android.fluxc.model.SitePluginModel;
-import org.wordpress.android.fluxc.model.WPOrgPluginModel;
+import org.wordpress.android.fluxc.model.plugin.SitePluginModel;
+import org.wordpress.android.fluxc.model.plugin.WPOrgPluginModel;
 import org.wordpress.android.fluxc.store.PluginStore;
 import org.wordpress.android.fluxc.store.PluginStore.ConfigureSitePluginPayload;
 import org.wordpress.android.fluxc.store.PluginStore.DeleteSitePluginPayload;
+import org.wordpress.android.fluxc.store.PluginStore.InstallSitePluginPayload;
 import org.wordpress.android.fluxc.store.PluginStore.OnSitePluginConfigured;
 import org.wordpress.android.fluxc.store.PluginStore.OnSitePluginDeleted;
+import org.wordpress.android.fluxc.store.PluginStore.OnSitePluginInstalled;
 import org.wordpress.android.fluxc.store.PluginStore.OnSitePluginUpdated;
 import org.wordpress.android.fluxc.store.PluginStore.UpdateSitePluginPayload;
 import org.wordpress.android.ui.ActivityLauncher;
@@ -78,7 +80,7 @@ import static org.wordpress.android.widgets.WPNetworkImageView.ImageType.PHOTO;
 import static org.wordpress.android.widgets.WPNetworkImageView.ImageType.PLUGIN_ICON;
 
 public class PluginDetailActivity extends AppCompatActivity {
-    public static final String KEY_PLUGIN_NAME = "KEY_PLUGIN_NAME";
+    public static final String KEY_PLUGIN_SLUG = "KEY_PLUGIN_SLUG";
     private static final String KEY_IS_CONFIGURING_PLUGIN = "KEY_IS_CONFIGURING_PLUGIN";
     private static final String KEY_IS_UPDATING_PLUGIN = "KEY_IS_UPDATING_PLUGIN";
     private static final String KEY_IS_REMOVING_PLUGIN = "KEY_IS_REMOVING_PLUGIN";
@@ -96,8 +98,8 @@ public class PluginDetailActivity extends AppCompatActivity {
     private TextView mByLineTextView;
     private TextView mVersionTopTextView;
     private TextView mVersionBottomTextView;
-    private TextView mUpdateTextView;
-    private ProgressBar mUpdateProgressBar;
+    private TextView mUpdateButton;
+    private TextView mInstallButton;
     private Switch mSwitchActive;
     private Switch mSwitchAutoupdates;
     private ProgressDialog mRemovePluginProgressDialog;
@@ -132,32 +134,33 @@ public class PluginDetailActivity extends AppCompatActivity {
         ((WordPress) getApplication()).component().inject(this);
         mDispatcher.register(this);
 
-        String pluginName;
-
+        String pluginSlug;
         if (savedInstanceState == null) {
             mSite = (SiteModel) getIntent().getSerializableExtra(WordPress.SITE);
-            pluginName = getIntent().getStringExtra(KEY_PLUGIN_NAME);
+            pluginSlug = getIntent().getStringExtra(KEY_PLUGIN_SLUG);
         } else {
             mSite = (SiteModel) savedInstanceState.getSerializable(WordPress.SITE);
-            pluginName = savedInstanceState.getString(KEY_PLUGIN_NAME);
+            pluginSlug = savedInstanceState.getString(KEY_PLUGIN_SLUG);
         }
 
         if (mSite == null) {
-            ToastUtils.showToast(this, R.string.blog_not_found, Duration.SHORT);
+            ToastUtils.showToast(this, R.string.blog_not_found);
             finish();
             return;
         }
 
-        mSitePlugin = mPluginStore.getSitePluginByName(mSite, pluginName);
-        if (mSitePlugin == null) {
-            ToastUtils.showToast(this, R.string.plugin_not_found, Duration.SHORT);
+        if (TextUtils.isEmpty(pluginSlug)) {
+            ToastUtils.showToast(this, R.string.plugin_not_found);
             finish();
             return;
         }
+
+        mSitePlugin = mPluginStore.getSitePluginBySlug(mSite, pluginSlug);
+        mWPOrgPlugin = mPluginStore.getWPOrgPluginBySlug(pluginSlug);
 
         if (savedInstanceState == null) {
-            mIsActive = mSitePlugin.isActive();
-            mIsAutoUpdateEnabled = mSitePlugin.isAutoUpdateEnabled();
+            mIsActive = mSitePlugin != null && mSitePlugin.isActive();
+            mIsAutoUpdateEnabled = mSitePlugin != null && mSitePlugin.isAutoUpdateEnabled();
         } else {
             mIsConfiguringPlugin = savedInstanceState.getBoolean(KEY_IS_CONFIGURING_PLUGIN);
             mIsUpdatingPlugin = savedInstanceState.getBoolean(KEY_IS_UPDATING_PLUGIN);
@@ -167,8 +170,6 @@ public class PluginDetailActivity extends AppCompatActivity {
             mIsShowingRemovePluginConfirmationDialog =
                     savedInstanceState.getBoolean(KEY_IS_SHOWING_REMOVE_PLUGIN_CONFIRMATION_DIALOG);
         }
-
-        mWPOrgPlugin = PluginUtils.getWPOrgPlugin(mPluginStore, mSitePlugin);
 
         setContentView(R.layout.plugin_detail_activity);
 
@@ -190,9 +191,8 @@ public class PluginDetailActivity extends AppCompatActivity {
         } else if (mIsRemovingPlugin) {
             // Show remove plugin progress dialog if it's dismissed while activity is re-created
             showRemovePluginProgressDialog();
-        } else if (savedInstanceState == null) {
-            // Refresh the plugin information to check if there is a newer version
-            mDispatcher.dispatch(PluginActionBuilder.newFetchWporgPluginAction(mSitePlugin.getSlug()));
+        } else if (savedInstanceState == null || mWPOrgPlugin == null) {
+            fetchWPOrgPlugin(pluginSlug);
         }
     }
 
@@ -241,7 +241,7 @@ public class PluginDetailActivity extends AppCompatActivity {
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
         outState.putSerializable(WordPress.SITE, mSite);
-        outState.putString(KEY_PLUGIN_NAME, mSitePlugin.getName());
+        outState.putString(KEY_PLUGIN_SLUG, getPluginSlug());
         outState.putBoolean(KEY_IS_CONFIGURING_PLUGIN, mIsConfiguringPlugin);
         outState.putBoolean(KEY_IS_UPDATING_PLUGIN, mIsUpdatingPlugin);
         outState.putBoolean(KEY_IS_REMOVING_PLUGIN, mIsRemovingPlugin);
@@ -258,8 +258,8 @@ public class PluginDetailActivity extends AppCompatActivity {
         mByLineTextView = findViewById(R.id.text_byline);
         mVersionTopTextView = findViewById(R.id.plugin_version_top);
         mVersionBottomTextView = findViewById(R.id.plugin_version_bottom);
-        mUpdateTextView = findViewById(R.id.plugin_btn_update);
-        mUpdateProgressBar = findViewById(R.id.plugin_update_progress_bar);
+        mUpdateButton = findViewById(R.id.plugin_btn_update);
+        mInstallButton = findViewById(R.id.plugin_btn_install);
         mSwitchActive = findViewById(R.id.plugin_state_active);
         mSwitchAutoupdates = findViewById(R.id.plugin_state_autoupdates);
         mImageBanner = findViewById(R.id.image_banner);
@@ -296,8 +296,11 @@ public class PluginDetailActivity extends AppCompatActivity {
             }
         });
 
-        // expand "what's new" if there's an update available
-        if (PluginUtils.isUpdateAvailable(mSitePlugin, mWPOrgPlugin)) {
+        // expand description if this plugin isn't installed, otherwise expand "what's new" if
+        // this is an installed plugin and there's an update available
+        if (mSitePlugin == null) {
+            toggleText(mDescriptionTextView, mDescriptionChevron);
+        } else if (PluginUtils.isUpdateAvailable(mSitePlugin, mWPOrgPlugin)) {
             toggleText(mWhatsNewTextView, mWhatsNewChevron);
         }
 
@@ -317,19 +320,15 @@ public class PluginDetailActivity extends AppCompatActivity {
             }
         });
 
-        if (!canPluginBeDisabledOrRemoved()) {
-            findViewById(R.id.plugin_state_active_container).setVisibility(View.GONE);
-        } else {
-            mSwitchActive.setOnCheckedChangeListener(new OnCheckedChangeListener() {
-                @Override
-                public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
-                    if (compoundButton.isPressed()) {
-                        mIsActive = b;
-                        dispatchConfigurePluginAction(false);
-                    }
+        mSwitchActive.setOnCheckedChangeListener(new OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
+                if (compoundButton.isPressed()) {
+                    mIsActive = b;
+                    dispatchConfigurePluginAction(false);
                 }
-            });
-        }
+            }
+        });
 
         mSwitchAutoupdates.setOnCheckedChangeListener(new OnCheckedChangeListener() {
             @Override
@@ -341,20 +340,13 @@ public class PluginDetailActivity extends AppCompatActivity {
             }
         });
 
-        mUpdateTextView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                dispatchUpdatePluginAction();
-            }
-        });
-
         View settingsView = findViewById(R.id.plugin_settings_page);
         if (canShowSettings()) {
             settingsView.setVisibility(View.VISIBLE);
             settingsView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    ActivityLauncher.openUrlExternal(PluginDetailActivity.this, mSitePlugin.getSettingsUrl());
+                    openUrl(mSitePlugin.getSettingsUrl());
                 }
             });
         } else {
@@ -364,21 +356,22 @@ public class PluginDetailActivity extends AppCompatActivity {
         findViewById(R.id.plugin_wp_org_page).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                ActivityLauncher.openUrlExternal(PluginDetailActivity.this, getWpOrgPluginUrl());
+                openUrl(getWpOrgPluginUrl());
             }
         });
 
         findViewById(R.id.plugin_home_page).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                ActivityLauncher.openUrlExternal(PluginDetailActivity.this, mSitePlugin.getPluginUrl());
+                String url = mSitePlugin != null ? mSitePlugin.getPluginUrl() : mWPOrgPlugin.getHomepageUrl();
+                openUrl(url);
             }
         });
 
         findViewById(R.id.read_reviews_container).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                ActivityLauncher.openUrlExternal(PluginDetailActivity.this, getWpOrgReviewsUrl());
+                openUrl(getWpOrgReviewsUrl());
             }
         });
 
@@ -391,21 +384,16 @@ public class PluginDetailActivity extends AppCompatActivity {
     }
 
     private void refreshViews() {
-        mTitleTextView.setText(mSitePlugin.getDisplayName());
-
-        if (TextUtils.isEmpty(mSitePlugin.getAuthorUrl())) {
-            mByLineTextView.setText(String.format(getString(R.string.plugin_byline), mSitePlugin.getAuthorName()));
-        } else {
-            String authorLink = "<a href='" + mSitePlugin.getAuthorUrl() + "'>" + mSitePlugin.getAuthorName() + "</a>";
-            String byline = String.format(getString(R.string.plugin_byline), authorLink);
-            mByLineTextView.setMovementMethod(WPLinkMovementMethod.getInstance());
-            mByLineTextView.setText(Html.fromHtml(byline));
+        boolean hasPlugin = mSitePlugin != null || mWPOrgPlugin != null;
+        View scrollView = findViewById(R.id.scroll_view);
+        if (hasPlugin && scrollView.getVisibility() != View.VISIBLE) {
+            AniUtils.fadeIn(scrollView, AniUtils.Duration.MEDIUM);
+        } else if (!hasPlugin) {
+            scrollView.setVisibility(View.GONE);
         }
 
-        mSwitchActive.setChecked(mIsActive);
-        mSwitchAutoupdates.setChecked(mIsAutoUpdateEnabled);
-
         if (mWPOrgPlugin != null) {
+            mTitleTextView.setText(mWPOrgPlugin.getName());
             mImageBanner.setImageUrl(mWPOrgPlugin.getBanner(), PHOTO);
             mImageIcon.setImageUrl(mWPOrgPlugin.getIcon(), PLUGIN_ICON);
 
@@ -414,9 +402,31 @@ public class PluginDetailActivity extends AppCompatActivity {
             setCollapsibleHtmlText(mWhatsNewTextView, mWPOrgPlugin.getWhatsNewAsHtml());
             setCollapsibleHtmlText(mFaqTextView, mWPOrgPlugin.getFaqAsHtml());
 
-            refreshPluginVersionViews();
-            refreshRatingsViews();
+            mByLineTextView.setMovementMethod(WPLinkMovementMethod.getInstance());
+            mByLineTextView.setText(Html.fromHtml(mWPOrgPlugin.getAuthorAsHtml()));
+        } else if (mSitePlugin != null) {
+            mTitleTextView.setText(mSitePlugin.getDisplayName());
+
+            if (TextUtils.isEmpty(mSitePlugin.getAuthorUrl())) {
+                mByLineTextView.setText(String.format(getString(R.string.plugin_byline), mSitePlugin.getAuthorName()));
+            } else {
+                String authorLink = "<a href='" + mSitePlugin.getAuthorUrl() + "'>" + mSitePlugin.getAuthorName() + "</a>";
+                String byline = String.format(getString(R.string.plugin_byline), authorLink);
+                mByLineTextView.setMovementMethod(WPLinkMovementMethod.getInstance());
+                mByLineTextView.setText(Html.fromHtml(byline));
+            }
         }
+
+        if (!canPluginBeDisabledOrRemoved()) {
+            findViewById(R.id.plugin_state_active_container).setVisibility(View.GONE);
+        } else if (mSitePlugin != null) {
+            mSwitchActive.setChecked(mIsActive);
+        }
+        mSwitchAutoupdates.setChecked(mIsAutoUpdateEnabled);
+
+        findViewById(R.id.plugin_card_site).setVisibility(mSitePlugin != null ? View.VISIBLE : View.GONE);
+        refreshPluginVersionViews();
+        refreshRatingsViews();
     }
 
     private void setCollapsibleHtmlText(@NonNull TextView textView, @Nullable String htmlText) {
@@ -431,18 +441,24 @@ public class PluginDetailActivity extends AppCompatActivity {
     }
 
     private void refreshPluginVersionViews() {
-        String pluginVersion = TextUtils.isEmpty(mSitePlugin.getVersion()) ? "?" : mSitePlugin.getVersion();
-        String installedVersion;
+        if (mSitePlugin != null) {
+            String pluginVersion = TextUtils.isEmpty(mSitePlugin.getVersion()) ? "?" : mSitePlugin.getVersion();
+            String installedVersion;
 
-        if (PluginUtils.isUpdateAvailable(mSitePlugin, mWPOrgPlugin)) {
-            installedVersion = String.format(getString(R.string.plugin_installed_version), pluginVersion);
-            String availableVersion = String.format(getString(R.string.plugin_available_version), mWPOrgPlugin.getVersion());
-            mVersionTopTextView.setText(availableVersion);
-            mVersionBottomTextView.setText(installedVersion);
-            mVersionBottomTextView.setVisibility(View.VISIBLE);
-        } else {
-            installedVersion = String.format(getString(R.string.plugin_version), pluginVersion);
-            mVersionTopTextView.setText(installedVersion);
+            if (PluginUtils.isUpdateAvailable(mSitePlugin, mWPOrgPlugin)) {
+                installedVersion = String.format(getString(R.string.plugin_installed_version), pluginVersion);
+                String availableVersion = String.format(getString(R.string.plugin_available_version), mWPOrgPlugin.getVersion());
+                mVersionTopTextView.setText(availableVersion);
+                mVersionBottomTextView.setText(installedVersion);
+                mVersionBottomTextView.setVisibility(View.VISIBLE);
+            } else {
+                installedVersion = String.format(getString(R.string.plugin_version), pluginVersion);
+                mVersionTopTextView.setText(installedVersion);
+                mVersionBottomTextView.setVisibility(View.GONE);
+            }
+        } else if (mWPOrgPlugin != null) {
+            String version = String.format(getString(R.string.plugin_version), mWPOrgPlugin.getVersion());
+            mVersionTopTextView.setText(version);
             mVersionBottomTextView.setVisibility(View.GONE);
         }
 
@@ -450,12 +466,32 @@ public class PluginDetailActivity extends AppCompatActivity {
     }
 
     private void refreshUpdateVersionViews() {
-        if (mWPOrgPlugin == null) return;
+        if (mSitePlugin != null) {
+            mInstallButton.setVisibility(View.GONE);
+            boolean isUpdateAvailable = PluginUtils.isUpdateAvailable(mSitePlugin, mWPOrgPlugin);
+            boolean canUpdate = isUpdateAvailable && !mIsUpdatingPlugin;
+            mUpdateButton.setVisibility(canUpdate ? View.VISIBLE : View.GONE);
+            findViewById(R.id.plugin_installed).setVisibility(isUpdateAvailable || mIsUpdatingPlugin ? View.GONE : View.VISIBLE);
+            if (canUpdate) {
+                mUpdateButton.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        dispatchUpdatePluginAction();
+                    }
+                });
+            }
+        } else if (mWPOrgPlugin != null) {
+            mUpdateButton.setVisibility(View.GONE);
+            mInstallButton.setVisibility(View.VISIBLE);
+            mInstallButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    dispatchInstallPluginAction();
+                }
+            });
+        }
 
-        boolean isUpdateAvailable = PluginUtils.isUpdateAvailable(mSitePlugin, mWPOrgPlugin);
-        mUpdateTextView.setVisibility(isUpdateAvailable && !mIsUpdatingPlugin ? View.VISIBLE : View.GONE);
-        mUpdateProgressBar.setVisibility(mIsUpdatingPlugin ? View.VISIBLE: View.GONE);
-        findViewById(R.id.plugin_installed).setVisibility(isUpdateAvailable || mIsUpdatingPlugin ? View.GONE : View.VISIBLE);
+        findViewById(R.id.plugin_update_progress_bar).setVisibility(mIsUpdatingPlugin ? View.VISIBLE : View.GONE);
     }
 
     private void refreshRatingsViews() {
@@ -477,10 +513,8 @@ public class PluginDetailActivity extends AppCompatActivity {
         setRatingsProgressBar(R.id.progress2, mWPOrgPlugin.getNumberOfRatingsOfTwo(), numRatingsTotal);
         setRatingsProgressBar(R.id.progress1, mWPOrgPlugin.getNumberOfRatingsOfOne(), numRatingsTotal);
 
-        int rating = StringUtils.stringToInt(mWPOrgPlugin.getRating(), 1);
-        int averageRating = Math.round(rating / 20f);
         RatingBar ratingBar = findViewById(R.id.rating_bar);
-        ratingBar.setRating(averageRating);
+        ratingBar.setRating(PluginUtils.getAverageStarRating(mWPOrgPlugin));
     }
 
     private void setRatingsProgressBar(@IdRes int progressResId, int numRatingsForStar, int numRatingsTotal) {
@@ -506,6 +540,7 @@ public class PluginDetailActivity extends AppCompatActivity {
             return "?";
         }
     }
+
     private void showPluginInfoPopup() {
         if (mWPOrgPlugin == null) return;
 
@@ -566,10 +601,28 @@ public class PluginDetailActivity extends AppCompatActivity {
             AniUtils.fadeIn(textView, duration);
         }
 
-        float endRotate = isExpanded ? 360f : -180f;
-        ObjectAnimator animRotate = ObjectAnimator.ofFloat(chevron, View.ROTATION, 0f, endRotate);
+        float startRotate = isExpanded ? -180f : 0f;
+        float endRotate = isExpanded ? 0f : -180f;
+        ObjectAnimator animRotate = ObjectAnimator.ofFloat(chevron, View.ROTATION, startRotate, endRotate);
         animRotate.setDuration(duration.toMillis(this));
         animRotate.start();
+    }
+
+    private void fetchWPOrgPlugin(@NonNull String pluginSlug) {
+        if (mWPOrgPlugin == null && mSitePlugin == null) {
+            showFetchProgress(true);
+        }
+        mDispatcher.dispatch(PluginActionBuilder.newFetchWporgPluginAction(pluginSlug));
+    }
+
+    private void openUrl(@Nullable String url) {
+        if (url != null) {
+            ActivityLauncher.openUrlExternal(this, url);
+        }
+    }
+
+    private void showFetchProgress(boolean show) {
+        findViewById(R.id.plugin_fetching_progress_bar).setVisibility(show ? View.VISIBLE : View.GONE);
     }
 
     private void confirmRemovePlugin() {
@@ -605,6 +658,13 @@ public class PluginDetailActivity extends AppCompatActivity {
                 .show();
     }
 
+    private void showSuccessfulInstallSnackbar() {
+        Snackbar.make(mContainer,
+                getString(R.string.plugin_installed_successfully, mWPOrgPlugin.getName()),
+                Snackbar.LENGTH_LONG)
+                .show();
+    }
+
     private void showUpdateFailedSnackbar() {
         Snackbar.make(mContainer,
                 getString(R.string.plugin_updated_failed, mSitePlugin.getDisplayName()),
@@ -613,6 +673,19 @@ public class PluginDetailActivity extends AppCompatActivity {
                     @Override
                     public void onClick(View view) {
                         dispatchUpdatePluginAction();
+                    }
+                })
+                .show();
+    }
+
+    private void showInstallFailedSnackbar() {
+        Snackbar.make(mContainer,
+                getString(R.string.plugin_installed_failed, mWPOrgPlugin.getName()),
+                Snackbar.LENGTH_LONG)
+                .setAction(R.string.retry, new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        dispatchInstallPluginAction();
                     }
                 })
                 .show();
@@ -674,6 +747,17 @@ public class PluginDetailActivity extends AppCompatActivity {
         mDispatcher.dispatch(PluginActionBuilder.newUpdateSitePluginAction(payload));
     }
 
+    private void dispatchInstallPluginAction() {
+        if (!NetworkUtils.checkConnection(this)) {
+            return;
+        }
+
+        mIsUpdatingPlugin = true;
+        refreshUpdateVersionViews();
+        PluginStore.InstallSitePluginPayload payload = new InstallSitePluginPayload(mSite, getPluginSlug());
+        mDispatcher.dispatch(PluginActionBuilder.newInstallSitePluginAction(payload));
+    }
+
     private void dispatchRemovePluginAction() {
         if (!NetworkUtils.checkConnection(this)) {
             return;
@@ -701,9 +785,8 @@ public class PluginDetailActivity extends AppCompatActivity {
     @SuppressWarnings("unused")
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onSitePluginConfigured(OnSitePluginConfigured event) {
-        if (isFinishing()) {
-            return;
-        }
+        if (isFinishing()) return;
+
         mIsConfiguringPlugin = false;
         if (event.isError()) {
             // The plugin was already removed in remote, there is no need to show an error to the user
@@ -719,7 +802,7 @@ public class PluginDetailActivity extends AppCompatActivity {
             ToastUtils.showToast(this, getString(R.string.plugin_configuration_failed, event.error.message));
 
             // Refresh the UI to plugin's last known state
-            if (refreshPluginFromStoreAndCheckForNull()) {
+            if (!refreshSitePluginFromStore()) {
                 return;
             }
             mIsActive = mSitePlugin.isActive();
@@ -734,7 +817,7 @@ public class PluginDetailActivity extends AppCompatActivity {
             return;
         }
 
-        if (refreshPluginFromStoreAndCheckForNull()) {
+        if (!refreshSitePluginFromStore()) {
             return;
         }
 
@@ -754,15 +837,13 @@ public class PluginDetailActivity extends AppCompatActivity {
     @SuppressWarnings("unused")
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onWPOrgPluginFetched(PluginStore.OnWPOrgPluginFetched event) {
-        if (isFinishing()) {
-            return;
-        }
+        if (isFinishing()) return;
+
+        showFetchProgress(false);
         if (event.isError()) {
-            AppLog.e(AppLog.T.API, "An error occurred while fetching wporg plugin with type: "
+            AppLog.e(AppLog.T.PLUGINS, "An error occurred while fetching wporg plugin with type: "
                     + event.error.type);
-            return;
-        }
-        if (!TextUtils.isEmpty(mSitePlugin.getSlug()) && mSitePlugin.getSlug().equals(event.pluginSlug)) {
+        } else {
             mWPOrgPlugin = mPluginStore.getWPOrgPluginBySlug(event.pluginSlug);
             refreshViews();
         }
@@ -771,36 +852,55 @@ public class PluginDetailActivity extends AppCompatActivity {
     @SuppressWarnings("unused")
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onSitePluginUpdated(OnSitePluginUpdated event) {
-        if (isFinishing()) {
-            return;
-        }
+        if (isFinishing()) return;
+
         mIsUpdatingPlugin = false;
         if (event.isError()) {
-            AppLog.e(AppLog.T.API, "An error occurred while updating the plugin with type: "
+            AppLog.e(AppLog.T.PLUGINS, "An error occurred while updating the plugin with type: "
                     + event.error.type);
             refreshPluginVersionViews();
             showUpdateFailedSnackbar();
             return;
         }
-        if (refreshPluginFromStoreAndCheckForNull()) {
+
+        refreshSitePluginFromStore();
+        refreshViews();
+        showSuccessfulUpdateSnackbar();
+
+        AnalyticsUtils.trackWithSiteDetails(AnalyticsTracker.Stat.PLUGIN_UPDATED, mSite);
+    }
+
+    @SuppressWarnings("unused")
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void OnSitePluginInstalled(OnSitePluginInstalled event) {
+        if (isFinishing()) return;
+
+        mIsUpdatingPlugin = false;
+        if (event.isError()) {
+            AppLog.e(AppLog.T.PLUGINS, "An error occurred while installing the plugin with type: "
+                    + event.error.type);
+            refreshPluginVersionViews();
+            showInstallFailedSnackbar();
             return;
         }
 
-        AnalyticsUtils.trackWithSiteDetails(AnalyticsTracker.Stat.PLUGIN_UPDATED, mSite);
+        mSitePlugin = event.plugin;
         refreshViews();
-        showSuccessfulUpdateSnackbar();
+        showSuccessfulInstallSnackbar();
+        invalidateOptionsMenu();
+
+        AnalyticsUtils.trackWithSiteDetails(AnalyticsTracker.Stat.PLUGIN_INSTALLED, mSite);
     }
 
     @SuppressWarnings("unused")
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onSitePluginDeleted(OnSitePluginDeleted event) {
-        if (isFinishing()) {
-            return;
-        }
+        if (isFinishing()) return;
+
         mIsRemovingPlugin = false;
         cancelRemovePluginProgressDialog();
         if (event.isError()) {
-            AppLog.e(AppLog.T.API, "An error occurred while removing the plugin with type: "
+            AppLog.e(AppLog.T.PLUGINS, "An error occurred while removing the plugin with type: "
                     + event.error.type);
             String toastMessage = getString(R.string.plugin_updated_failed_detailed,
                     mSitePlugin.getDisplayName(), event.error.message);
@@ -817,12 +917,20 @@ public class PluginDetailActivity extends AppCompatActivity {
 
     // Utils
 
+    private String getPluginName() {
+        return mSitePlugin != null ? mSitePlugin.getName() : mWPOrgPlugin.getName();
+    }
+
+    private String getPluginSlug() {
+        return mSitePlugin != null ? mSitePlugin.getSlug() : mWPOrgPlugin.getSlug();
+    }
+
     private String getWpOrgPluginUrl() {
-        return "https://wordpress.org/plugins/" + mSitePlugin.getSlug();
+        return "https://wordpress.org/plugins/" + getPluginSlug();
     }
 
     private String getWpOrgReviewsUrl() {
-        return "https://wordpress.org/plugins/" + mSitePlugin.getSlug() + "/#reviews";
+        return "https://wordpress.org/plugins/" + getPluginSlug() + "/#reviews";
     }
 
     private String getRemovingPluginMessage() {
@@ -830,6 +938,10 @@ public class PluginDetailActivity extends AppCompatActivity {
     }
 
     private boolean canPluginBeDisabledOrRemoved() {
+        if (mSitePlugin == null) {
+            return false;
+        }
+
         String pluginName = mSitePlugin.getName();
         // Disable removing jetpack as the site will stop working in the client
         if (pluginName.equals("jetpack/jetpack")) {
@@ -842,21 +954,22 @@ public class PluginDetailActivity extends AppCompatActivity {
 
     // only show settings for active plugins on .org sites
     private boolean canShowSettings() {
-        return mSitePlugin.isActive() && !mSite.isJetpackConnected() && !TextUtils.isEmpty(mSitePlugin.getSettingsUrl());
+        return mSitePlugin != null
+                && mSitePlugin.isActive()
+                && !mSite.isJetpackConnected()
+                && !TextUtils.isEmpty(mSitePlugin.getSettingsUrl());
     }
 
     private boolean isPluginStateChangedSinceLastConfigurationDispatch() {
+        if (mSitePlugin == null) {
+            return false;
+        }
         return mSitePlugin.isActive() != mIsActive || mSitePlugin.isAutoUpdateEnabled() != mIsAutoUpdateEnabled;
     }
 
-    private boolean refreshPluginFromStoreAndCheckForNull() {
-        mSitePlugin = mPluginStore.getSitePluginByName(mSite, mSitePlugin.getName());
-        if (mSitePlugin == null) {
-            ToastUtils.showToast(this, R.string.plugin_not_found);
-            finish();
-            return true;
-        }
-        return false;
+    private boolean refreshSitePluginFromStore() {
+        mSitePlugin = mPluginStore.getSitePluginByName(mSite, getPluginName());
+        return mSitePlugin != null;
     }
 
 }
