@@ -13,5 +13,5 @@
     android:paddingLeft="@dimen/margin_extra_large"
     android:paddingStart="@dimen/margin_extra_large"
     android:maxLines="2"
-    android:text="yourname.wordpress.com"
+    tools:text="yourname.wordpress.com"
     android:textColor="@color/grey_dark" />
