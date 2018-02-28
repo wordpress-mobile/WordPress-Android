@@ -14,7 +14,6 @@ import android.support.annotation.StringRes;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -161,15 +160,6 @@ public class PluginListFragment extends Fragment {
                 }
             }
         });
-
-        mViewModel.getLastUpdatedWpOrgPluginSlug().observe(this, new Observer<String>() {
-            @Override
-            public void onChanged(@Nullable String slug) {
-                if (!TextUtils.isEmpty(slug) && mRecycler.getAdapter() != null) {
-                    ((PluginListAdapter) mRecycler.getAdapter()).reloadPluginWithSlug(slug);
-                }
-            }
-        });
     }
 
     @Override
@@ -244,13 +234,6 @@ public class PluginListFragment extends Fragment {
             mItems.clear();
             mItems.addAll(items);
             notifyDataSetChanged();
-        }
-
-        void reloadPluginWithSlug(@NonNull String slug) {
-            int index = mItems.indexOfPluginWithSlug(slug);
-            if (index != -1) {
-                notifyItemChanged(index);
-            }
         }
 
         protected @Nullable Object getItem(int position) {
@@ -342,7 +325,7 @@ public class PluginListFragment extends Fragment {
                         ImmutablePluginModel plugin = (ImmutablePluginModel) getItem(position);
                         if (plugin == null) return;
 
-                        ActivityLauncher.viewPluginDetailForResult(getActivity(), mViewModel.getSite(),
+                        ActivityLauncher.viewPluginDetail(getActivity(), mViewModel.getSite(),
                                 plugin.getSlug());
                     }
                 });

@@ -4,7 +4,6 @@ import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModelProvider;
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.Context;
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.ColorRes;
 import android.support.annotation.DrawableRes;
@@ -35,7 +34,6 @@ import org.wordpress.android.WordPress;
 import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.model.plugin.ImmutablePluginModel;
 import org.wordpress.android.ui.ActivityLauncher;
-import org.wordpress.android.ui.RequestCodes;
 import org.wordpress.android.util.ActivityUtils;
 import org.wordpress.android.util.AniUtils;
 import org.wordpress.android.util.ToastUtils;
@@ -181,15 +179,6 @@ public class PluginBrowserActivity extends AppCompatActivity
                 }
             }
         });
-
-        mViewModel.getLastUpdatedWpOrgPluginSlug().observe(this, new Observer<String>() {
-            @Override
-            public void onChanged(@Nullable String slug) {
-                if (!TextUtils.isEmpty(slug)) {
-                    reloadPluginWithSlug(slug);
-                }
-            }
-        });
     }
 
     private void configureRecycler(@NonNull RecyclerView recycler) {
@@ -236,14 +225,6 @@ public class PluginBrowserActivity extends AppCompatActivity
         return super.onOptionsItemSelected(item);
     }
 
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == RequestCodes.PLUGIN_DETAIL) {
-            mViewModel.reloadAllPluginsFromStore();
-        }
-    }
-
     protected void reloadPluginAdapterAndVisibility(@NonNull PluginListType pluginType,
                                                     @Nullable List<ImmutablePluginModel> plugins) {
         PluginBrowserAdapter adapter;
@@ -273,12 +254,6 @@ public class PluginBrowserActivity extends AppCompatActivity
         } else if (newVisibility != View.VISIBLE && oldVisibility == View.VISIBLE) {
             AniUtils.fadeOut(cardView, AniUtils.Duration.MEDIUM);
         }
-    }
-
-    protected void reloadPluginWithSlug(@NonNull String slug) {
-        ((PluginBrowserAdapter) mSitePluginsRecycler.getAdapter()).reloadPluginWithSlug(slug);
-        ((PluginBrowserAdapter) mPopularPluginsRecycler.getAdapter()).reloadPluginWithSlug(slug);
-        ((PluginBrowserAdapter) mNewPluginsRecycler.getAdapter()).reloadPluginWithSlug(slug);
     }
 
     @Override
@@ -405,13 +380,6 @@ public class PluginBrowserActivity extends AppCompatActivity
             }
         }
 
-        void reloadPluginWithSlug(@NonNull String slug) {
-            int index = mItems.indexOfPluginWithSlug(slug);
-            if (index != -1) {
-                notifyItemChanged(index);
-            }
-        }
-
         private class PluginBrowserViewHolder extends ViewHolder {
             final TextView nameText;
             final TextView authorText;
@@ -439,7 +407,7 @@ public class PluginBrowserActivity extends AppCompatActivity
                         ImmutablePluginModel plugin = (ImmutablePluginModel) getItem(position);
                         if (plugin == null) return;
 
-                        ActivityLauncher.viewPluginDetailForResult(PluginBrowserActivity.this, mViewModel.getSite(),
+                        ActivityLauncher.viewPluginDetail(PluginBrowserActivity.this, mViewModel.getSite(),
                                 plugin.getSlug());
                     }
                 });
