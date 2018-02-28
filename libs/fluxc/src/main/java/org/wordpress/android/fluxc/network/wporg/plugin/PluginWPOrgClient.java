@@ -11,6 +11,7 @@ import com.android.volley.Response.Listener;
 import org.apache.commons.text.StringEscapeUtils;
 import org.wordpress.android.fluxc.Dispatcher;
 import org.wordpress.android.fluxc.generated.PluginActionBuilder;
+import org.wordpress.android.fluxc.generated.endpoint.WPCOMV2;
 import org.wordpress.android.fluxc.generated.endpoint.WPORGAPI;
 import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.model.plugin.PluginDirectoryType;
@@ -48,6 +49,11 @@ public class PluginWPOrgClient extends BaseWPOrgAPIClient {
     }
 
     public void fetchPluginDirectory(final PluginDirectoryType directoryType, int page) {
+        if (directoryType == PluginDirectoryType.FEATURED) {
+            // This check is not really necessary currently - but defensive programming ftw
+            fetchFeaturedPlugins();
+            return;
+        }
         String url = WPORGAPI.plugins.info.version("1.1").getUrl();
         final boolean loadMore = page > 1;
         final Map<String, String> params = getCommonPluginDirectoryParams(page);
@@ -79,6 +85,40 @@ public class PluginWPOrgClient extends BaseWPOrgAPIClient {
                                         PluginDirectoryErrorType.GENERIC_ERROR, networkError.message);
                                 FetchedPluginDirectoryPayload payload =
                                         new FetchedPluginDirectoryPayload(directoryType, loadMore, directoryError);
+                                mDispatcher.dispatch(PluginActionBuilder.newFetchedPluginDirectoryAction(payload));
+                            }
+                        }
+                );
+        add(request);
+    }
+
+    public void fetchFeaturedPlugins() {
+        String url = WPCOMV2.plugins.featured.getUrl();
+        final WPOrgAPIGsonRequest<WPOrgPluginResponse[]> request =
+                new WPOrgAPIGsonRequest<>(Method.GET, url, null, null, WPOrgPluginResponse[].class,
+                        new Listener<WPOrgPluginResponse[]>() {
+                            @Override
+                            public void onResponse(WPOrgPluginResponse[] response) {
+                                FetchedPluginDirectoryPayload payload;
+                                List<WPOrgPluginModel> wpOrgPlugins = new ArrayList<>();
+                                if (response != null) {
+                                    for (WPOrgPluginResponse wpOrgPluginResponse : response) {
+                                        wpOrgPlugins.add(wpOrgPluginFromResponse(wpOrgPluginResponse));
+                                    }
+                                }
+                                payload = new FetchedPluginDirectoryPayload(PluginDirectoryType.FEATURED, wpOrgPlugins,
+                                        false, false, 1);
+                                mDispatcher.dispatch(PluginActionBuilder.newFetchedPluginDirectoryAction(payload));
+                            }
+                        },
+                        new BaseErrorListener() {
+                            @Override
+                            public void onErrorResponse(@NonNull BaseNetworkError networkError) {
+                                PluginDirectoryError directoryError = new PluginDirectoryError(
+                                        PluginDirectoryErrorType.GENERIC_ERROR, networkError.message);
+                                FetchedPluginDirectoryPayload payload =
+                                        new FetchedPluginDirectoryPayload(PluginDirectoryType.FEATURED, false,
+                                                directoryError);
                                 mDispatcher.dispatch(PluginActionBuilder.newFetchedPluginDirectoryAction(payload));
                             }
                         }
