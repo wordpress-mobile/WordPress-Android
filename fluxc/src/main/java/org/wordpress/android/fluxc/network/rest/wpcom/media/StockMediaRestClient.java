@@ -13,16 +13,11 @@ import org.wordpress.android.fluxc.network.rest.wpcom.auth.AccessToken;
 
 import javax.inject.Singleton;
 
-import okhttp3.OkHttpClient;
-
 @Singleton
 public class StockMediaRestClient extends BaseWPComRestClient {
-    private OkHttpClient mOkHttpClient;
-
     public StockMediaRestClient(Context appContext, Dispatcher dispatcher, RequestQueue requestQueue,
-                                OkHttpClient okHttpClient, AccessToken accessToken, UserAgent userAgent) {
+                                AccessToken accessToken, UserAgent userAgent) {
         super(appContext, dispatcher, requestQueue, accessToken, userAgent);
-        mOkHttpClient = okHttpClient;
     }
 
     /**
