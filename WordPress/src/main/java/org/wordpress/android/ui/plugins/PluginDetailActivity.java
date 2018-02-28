@@ -484,7 +484,7 @@ public class PluginDetailActivity extends AppCompatActivity {
             }
         } else if (mWPOrgPlugin != null) {
             mUpdateButton.setVisibility(View.GONE);
-            mInstallButton.setVisibility(View.VISIBLE);
+            mInstallButton.setVisibility(mIsUpdatingPlugin ? View.GONE : View.VISIBLE);
             mInstallButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
