@@ -40,7 +40,7 @@ public class SignupMagicLinkFragment extends Fragment {
 
     public static final String TAG = "signup_magic_link_fragment_tag";
 
-    private Button mTryAgainButton;
+    private Button mOpenMailButton;
     private ProgressDialog mProgressDialog;
 
     protected @Inject Dispatcher mDispatcher;
@@ -72,11 +72,13 @@ public class SignupMagicLinkFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View layout = inflater.inflate(R.layout.signup_magic_link, container, false);
 
-        mTryAgainButton = layout.findViewById(R.id.signup_magic_link_button);
-        mTryAgainButton.setOnClickListener(new View.OnClickListener() {
+        mOpenMailButton = layout.findViewById(R.id.signup_magic_link_button);
+        mOpenMailButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                sendMagicLinkEmail();
+                if (mLoginListener != null) {
+                    mLoginListener.openEmailClient();
+                }
             }
         });
 
@@ -146,7 +148,7 @@ public class SignupMagicLinkFragment extends Fragment {
     }
 
     protected void startProgress(String message) {
-        mTryAgainButton.setEnabled(false);
+        mOpenMailButton.setEnabled(false);
 
         mProgressDialog = ProgressDialog.show(getActivity(), "", message, true, true,
                 new DialogInterface.OnCancelListener() {
@@ -169,7 +171,7 @@ public class SignupMagicLinkFragment extends Fragment {
         }
 
         mProgressDialog = null;
-        mTryAgainButton.setEnabled(true);
+        mOpenMailButton.setEnabled(true);
     }
 
     protected void sendMagicLinkEmail() {
