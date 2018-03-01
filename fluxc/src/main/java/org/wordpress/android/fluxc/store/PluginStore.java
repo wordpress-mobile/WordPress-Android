@@ -832,6 +832,7 @@ public class PluginStore extends Store {
             event.error = payload.error;
         } else {
             event.canLoadMore = payload.canLoadMore;
+            PluginSqlUtils.insertOrUpdateWPOrgPluginList(payload.plugins);
             List<ImmutablePluginModel> immutablePluginList = new ArrayList<>();
             for (WPOrgPluginModel wpOrgPlugin : payload.plugins) {
                 SitePluginModel sitePlugin = null;
