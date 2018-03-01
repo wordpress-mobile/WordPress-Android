@@ -343,7 +343,8 @@ public class SiteRestClient extends BaseWPComRestClient {
                         new Listener<ArrayList<DomainSuggestionResponse>>() {
                             @Override
                             public void onResponse(ArrayList<DomainSuggestionResponse> response) {
-                                SuggestDomainsResponsePayload payload = new SuggestDomainsResponsePayload(query, response);
+                                SuggestDomainsResponsePayload payload = new SuggestDomainsResponsePayload(query,
+                                        response);
                                 mDispatcher.dispatch(SiteActionBuilder.newSuggestedDomainsAction(payload));
                             }
                         },
