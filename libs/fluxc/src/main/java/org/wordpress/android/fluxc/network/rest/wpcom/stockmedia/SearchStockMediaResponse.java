@@ -10,5 +10,13 @@ import java.util.List;
 public class SearchStockMediaResponse implements Response {
     public List<StockMediaResponse> media;
     public int found;
-    public int nextPage;
+    public Meta meta;
+
+    public class Meta {
+        public int next_page;
+    }
+
+    public int getNextPage() {
+        return meta != null ? meta.next_page : 1;
+    }
 }
