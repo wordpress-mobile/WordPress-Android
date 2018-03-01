@@ -6,6 +6,7 @@ import org.wordpress.android.fluxc.Dispatcher;
 import org.wordpress.android.fluxc.Payload;
 import org.wordpress.android.fluxc.annotations.action.Action;
 import org.wordpress.android.fluxc.model.StockMediaModel;
+import org.wordpress.android.fluxc.network.BaseRequest;
 import org.wordpress.android.fluxc.network.BaseRequest.BaseNetworkError;
 
 import java.util.List;
@@ -27,12 +28,17 @@ public class StockMediaStore extends Store {
         public boolean canLoadMore;
         public int nextPage;
         public List<StockMediaModel> mediaList;
+        public BaseRequest.BaseNetworkError error;
         public int number = DEFAULT_NUM_STOCK_MEDIA_PER_FETCH;
 
         public FetchStockMediaListPayload(@NonNull List<StockMediaModel> mediaList, int nextPage, boolean canLoadMore) {
             this.mediaList = mediaList;
             this.canLoadMore = canLoadMore;
             this.nextPage = nextPage;
+        }
+
+        public FetchStockMediaListPayload(@NonNull BaseRequest.BaseNetworkError error) {
+            this.error = error;
         }
     }
 
