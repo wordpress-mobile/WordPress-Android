@@ -333,7 +333,6 @@ public class ActivityLauncher {
 
     public static void newBlogForResult(Activity activity, String username) {
         Intent intent = new Intent(activity, SiteCreationActivity.class);
-        intent.putExtra(SiteCreationActivity.ARG_USERNAME, username);
         activity.startActivityForResult(intent, RequestCodes.CREATE_SITE);
     }
 
