@@ -11,7 +11,6 @@ import org.wordpress.android.WordPress;
 import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.fluxc.model.SiteModel;
 
-import java.util.HashMap;
 import java.util.List;
 
 /**
@@ -22,7 +21,6 @@ public class JetpackConnectionWebViewActivity extends WPWebViewActivity {
 
     public enum Source {
         STATS("stats"), NOTIFICATIONS("notifications");
-        public static final String KEY = "tracking_source";
         private final String value;
 
         Source(String value) {
@@ -46,6 +44,8 @@ public class JetpackConnectionWebViewActivity extends WPWebViewActivity {
     }
 
     public static final String JETPACK_CONNECTION_DEEPLINK = "wordpress://jetpack-connection";
+
+    private static final String TRACKING_SOURCE_KEY = "tracking_source";
 
     private JetpackConnectionWebViewClient mWebViewClient;
 
@@ -84,22 +84,16 @@ public class JetpackConnectionWebViewActivity extends WPWebViewActivity {
         if (site != null) {
             intent.putExtra(WordPress.SITE, site);
         }
-        intent.putExtra(Source.KEY, source);
+        intent.putExtra(TRACKING_SOURCE_KEY, source);
         context.startActivity(intent);
         trackJetpackConnectionFlowStart(site, source);
     }
 
-    static void trackWithSource(AnalyticsTracker.Stat stat, Source source) {
-        HashMap<String, String> sourceMap = new HashMap<>();
-        sourceMap.put("source", source.value());
-        AnalyticsTracker.track(stat, sourceMap);
-    }
-
     private static void trackJetpackConnectionFlowStart(SiteModel site, Source source) {
         if (!site.isJetpackInstalled()) {
-            trackWithSource(AnalyticsTracker.Stat.INSTALL_JETPACK_SELECTED, source);
+            JetpackUtils.trackWithSource(AnalyticsTracker.Stat.INSTALL_JETPACK_SELECTED, source);
         } else {
-            trackWithSource(AnalyticsTracker.Stat.CONNECT_JETPACK_SELECTED, source);
+            JetpackUtils.trackWithSource(AnalyticsTracker.Stat.CONNECT_JETPACK_SELECTED, source);
         }
     }
 
@@ -108,7 +102,7 @@ public class JetpackConnectionWebViewActivity extends WPWebViewActivity {
         mWebViewClient = new JetpackConnectionWebViewClient(this,
                 mAccountStore,
                 (SiteModel) getIntent().getSerializableExtra(WordPress.SITE),
-                (Source) getIntent().getSerializableExtra(Source.KEY));
+                (Source) getIntent().getSerializableExtra(TRACKING_SOURCE_KEY));
         return mWebViewClient;
     }
 

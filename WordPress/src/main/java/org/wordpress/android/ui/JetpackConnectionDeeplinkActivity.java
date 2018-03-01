@@ -12,7 +12,7 @@ import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
-import org.wordpress.android.analytics.AnalyticsTracker;
+import org.wordpress.android.analytics.AnalyticsTracker.Stat;
 import org.wordpress.android.fluxc.Dispatcher;
 import org.wordpress.android.fluxc.generated.SiteActionBuilder;
 import org.wordpress.android.fluxc.model.SiteModel;
@@ -22,11 +22,13 @@ import org.wordpress.android.login.LoginMode;
 import org.wordpress.android.ui.JetpackConnectionWebViewActivity.Source;
 import org.wordpress.android.ui.accounts.LoginActivity;
 import org.wordpress.android.util.AnalyticsUtils;
+import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.ToastUtils;
 
 import javax.inject.Inject;
 
 import static org.wordpress.android.WordPress.SITE;
+import static org.wordpress.android.ui.JetpackUtils.trackWithSource;
 import static org.wordpress.android.ui.RequestCodes.JETPACK_LOGIN;
 
 /**
@@ -67,29 +69,41 @@ public class JetpackConnectionDeeplinkActivity extends AppCompatActivity {
         String action = getIntent().getAction();
         Uri uri = getIntent().getData();
 
-        AnalyticsUtils.trackWithDeepLinkData(AnalyticsTracker.Stat.DEEP_LINKED, action, uri);
+        AnalyticsUtils.trackWithDeepLinkData(Stat.DEEP_LINKED, action, uri);
 
         // check if this intent is started via custom scheme link
         if (Intent.ACTION_VIEW.equals(action) && uri != null) {
 
+            //Non-empty reason does not mean we're not connected to Jetpack
+            //- one of the errors is "already-connected"
             reason = uri.getQueryParameter("reason");
             source = Source.fromString(uri.getQueryParameter("source"));
-
-            // if user is signed in wpcom show the post right away - otherwise show welcome activity
-            // and then show the post once the user has signed in
             if (mAccountStore.hasAccessToken()) {
-                trackSuccess(source);
-                if (source == Source.STATS) {
-                    showStats();
-                } else {
-                    finish();
-                }
+                // if user is signed in wpcom show the stats or notifications right away
+                trackResultAndFinish();
             } else {
+                // An edgecase when the user is logged out in the app but logged in in webview
                 Intent loginIntent = new Intent(this, LoginActivity.class);
                 LoginMode.JETPACK_STATS.putInto(loginIntent);
                 this.startActivityForResult(loginIntent, JETPACK_LOGIN);
             }
         } else {
+            finish();
+        }
+    }
+
+    private void trackResultAndFinish() {
+        if (!TextUtils.isEmpty(reason)) {
+            AppLog.e(AppLog.T.API, "Could not connect to Jetpack, reason: "+reason);
+            ToastUtils.showToast(this, reason);
+        } else {
+            trackWithSource(Stat.SIGNED_INTO_JETPACK, source);
+        }
+        if (source == Source.STATS) {
+            //Reload the site to get new stats
+            reloadSite();
+        } else {
+            //In case of coming from anywhere else, we finish the activity
             finish();
         }
     }
@@ -110,40 +124,35 @@ public class JetpackConnectionDeeplinkActivity extends AppCompatActivity {
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == RequestCodes.JETPACK_LOGIN && resultCode == RESULT_OK) {
-            trackSuccess(source);
-        }
-        if (requestCode == RequestCodes.JETPACK_LOGIN && resultCode == RESULT_OK && source == Source.STATS) {
-            showStats();
+            trackResultAndFinish();
         } else {
-            finish();
+            finishAndGoBackToSource();
         }
     }
 
-    private void showStats() {
-        if (!TextUtils.isEmpty(reason)) {
-            ToastUtils.showToast(this, reason);
-            finish();
-        } else {
-            SiteModel site = (SiteModel) getIntent().getSerializableExtra(SITE);
-            mDispatcher.dispatch(SiteActionBuilder.newFetchSiteAction(site));
-        }
+    private void reloadSite() {
+        //Reloads the site
+        SiteModel site = (SiteModel) getIntent().getSerializableExtra(SITE);
+        mDispatcher.dispatch(SiteActionBuilder.newFetchSiteAction(site));
     }
 
     @Override
     public void onBackPressed() {
         super.onBackPressed();
-        finish();
+        finishAndGoBackToSource();
     }
 
     @SuppressWarnings("unused")
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onSiteChanged(SiteStore.OnSiteChanged event) {
-        SiteModel site = (SiteModel) getIntent().getSerializableExtra(SITE);
-        ActivityLauncher.viewBlogStats(this, site);
-        finish();
+        finishAndGoBackToSource();
     }
 
-    private void trackSuccess(Source source) {
-        JetpackConnectionWebViewActivity.trackWithSource(AnalyticsTracker.Stat.SIGNED_INTO_JETPACK, source);
+    private void finishAndGoBackToSource() {
+        if (source != null && source == Source.STATS) {
+            SiteModel site = (SiteModel) getIntent().getSerializableExtra(SITE);
+            ActivityLauncher.viewBlogStats(this, site);
+        }
+        finish();
     }
 }

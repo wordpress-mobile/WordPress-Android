@@ -112,7 +112,7 @@ class JetpackConnectionWebViewClient extends WebViewClient {
                 activity.startActivity(intent);
                 activity.finish();
                 flowFinished = true;
-                JetpackConnectionWebViewActivity.trackWithSource(AnalyticsTracker.Stat.INSTALL_JETPACK_COMPLETED, this.source);
+                JetpackUtils.trackWithSource(AnalyticsTracker.Stat.INSTALL_JETPACK_COMPLETED, this.source);
                 return true;
             }
         } catch (UnsupportedEncodingException e) {
@@ -130,7 +130,7 @@ class JetpackConnectionWebViewClient extends WebViewClient {
 
     public void cancel() {
         if (!flowFinished) {
-            JetpackConnectionWebViewActivity.trackWithSource(AnalyticsTracker.Stat.INSTALL_JETPACK_CANCELLED, source);
+            JetpackUtils.trackWithSource(AnalyticsTracker.Stat.INSTALL_JETPACK_CANCELLED, source);
         }
     }
 
