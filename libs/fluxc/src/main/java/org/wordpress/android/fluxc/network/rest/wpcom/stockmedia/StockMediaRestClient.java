@@ -1,33 +1,89 @@
 package org.wordpress.android.fluxc.network.rest.wpcom.stockmedia;
 
 import android.content.Context;
+import android.support.annotation.NonNull;
 
 import com.android.volley.RequestQueue;
+import com.android.volley.Response;
 
 import org.apache.commons.text.StringEscapeUtils;
 import org.wordpress.android.fluxc.Dispatcher;
+import org.wordpress.android.fluxc.generated.MediaActionBuilder;
+import org.wordpress.android.fluxc.generated.endpoint.WPCOMREST;
 import org.wordpress.android.fluxc.model.StockMediaModel;
+import org.wordpress.android.fluxc.network.BaseRequest;
 import org.wordpress.android.fluxc.network.UserAgent;
 import org.wordpress.android.fluxc.network.rest.wpcom.BaseWPComRestClient;
+import org.wordpress.android.fluxc.network.rest.wpcom.WPComGsonRequest;
 import org.wordpress.android.fluxc.network.rest.wpcom.auth.AccessToken;
+import org.wordpress.android.fluxc.store.StockMediaStore;
+import org.wordpress.android.util.AppLog;
+import org.wordpress.android.util.UrlUtils;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.inject.Singleton;
 
-import okhttp3.OkHttpClient;
-
 @Singleton
 public class StockMediaRestClient extends BaseWPComRestClient {
-    private OkHttpClient mOkHttpClient;
-
     public StockMediaRestClient(Context appContext, Dispatcher dispatcher, RequestQueue requestQueue,
-                                OkHttpClient okHttpClient, AccessToken accessToken, UserAgent userAgent) {
+                                AccessToken accessToken, UserAgent userAgent) {
         super(appContext, dispatcher, requestQueue, accessToken, userAgent);
-        mOkHttpClient = okHttpClient;
     }
 
     /**
-     * Creates a {@link StockMediaModel} from a WP.com REST response to a fetch request.
+     * Gets a list of stock media items matching a query string
      */
+    public void searchStockMedia(final String searchTerm, final int number, final int page) {
+        String url = WPCOMREST.meta.external_media.pexels.getUrlV1_1()
+                + "?number=" + number
+                + "&page="
+                + page + UrlUtils.urlEncode(searchTerm);
+        add(WPComGsonRequest.buildGetRequest(url, null, SearchStockMediaResponse.class,
+                new Response.Listener<SearchStockMediaResponse>() {
+                    @Override
+                    public void onResponse(SearchStockMediaResponse response) {
+                        List<StockMediaModel> mediaList = getStockMediaListFromRestResponse(response);
+                        if (mediaList != null) {
+                            AppLog.v(AppLog.T.MEDIA, "Fetched stock media list with size: " + mediaList.size());
+                            boolean canLoadMore = mediaList.size() == number;
+                        } else {
+                            // TODO: handle error
+                        }
+                    }
+                }, new BaseRequest.BaseErrorListener() {
+                    @Override
+                    public void onErrorResponse(@NonNull BaseRequest.BaseNetworkError error) {
+                        AppLog.e(AppLog.T.MEDIA, "VolleyError Fetching stock media: " + error);
+                        // TODO: handle error
+                    }
+                }
+        ));
+    }
+
+    private void notifyStockMediaListFetched(@NonNull List<StockMediaModel> media,
+                                             int nextPage,
+                                             boolean canLoadMore) {
+        StockMediaStore.FetchStockMediaListPayload payload = new StockMediaStore.FetchStockMediaListPayload(media,
+                nextPage, canLoadMore);
+        mDispatcher.dispatch(MediaActionBuilder.newFetchedMediaListAction(payload));
+    }
+
+    /**
+     * Creates a {@link StockMediaModel} list from a WP.com REST response to a request for all media.
+     */
+    private List<StockMediaModel> getStockMediaListFromRestResponse(final SearchStockMediaResponse from) {
+        if (from == null || from.stockMedia == null) return null;
+
+        final List<StockMediaModel> mediaList = new ArrayList<>();
+        for (StockMediaResponse mediaItem : from.stockMedia) {
+            StockMediaModel mediaModel = getStockMediaFromRestResponse(mediaItem);
+            mediaList.add(mediaModel);
+        }
+        return mediaList;
+    }
+
     private StockMediaModel getStockMediaFromRestResponse(final StockMediaResponse from) {
         if (from == null) return null;
 
