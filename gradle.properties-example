@@ -26,8 +26,8 @@ wp.oauth.app_secret = wordpress
 wp.gcm.id = wordpress
 wp.db_secret = wordpress
 wp.helpshift.api.key = wordpress
-wp.helpshift.api.domain = wordpress.org
-wp.helpshift.api.id = wordpress
+wp.helpshift.api.domain = wordpressorg.helpshift.com
+wp.helpshift.api.id = wordpressorg_platform_20030527000000000-000000000000000
 wp.app_license_key = wordpress
 
 # Needed to use the Google Maps component aka the PlacePicker (Post Settings -> Location)

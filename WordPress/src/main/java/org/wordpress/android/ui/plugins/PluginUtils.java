@@ -7,29 +7,12 @@ import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.model.plugin.ImmutablePluginModel;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.CrashlyticsUtils;
+import org.wordpress.android.util.SiteUtils;
 import org.wordpress.android.util.helpers.Version;
 
 public class PluginUtils {
     public static boolean isPluginFeatureAvailable(SiteModel site) {
-        String jetpackVersion = site.getJetpackVersion();
-        if (site.isUsingWpComRestApi() && site.isJetpackConnected() && !TextUtils.isEmpty(jetpackVersion)) {
-            try {
-                // strip any trailing "-beta" or "-alpha" from the version
-                int index = jetpackVersion.lastIndexOf("-");
-                if (index > 0) {
-                    jetpackVersion = jetpackVersion.substring(0, index);
-                }
-                Version siteJetpackVersion = new Version(jetpackVersion);
-                Version minVersion = new Version("5.6");
-                return siteJetpackVersion.compareTo(minVersion) >= 0; // if the site has Jetpack 5.6 or newer installed
-            } catch (IllegalArgumentException e) {
-                String errorStr = "Invalid site jetpack version " + jetpackVersion;
-                AppLog.e(AppLog.T.UTILS, errorStr, e);
-                CrashlyticsUtils.logException(e, AppLog.T.UTILS, errorStr);
-                return true;
-            }
-        }
-        return false;
+        return SiteUtils.checkMinimalJetpackVersion(site, "5.6");
     }
 
     static boolean isUpdateAvailable(@Nullable ImmutablePluginModel immutablePlugin) {

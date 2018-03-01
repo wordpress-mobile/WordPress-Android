@@ -1,11 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2018-02-08 12:31:36+0000
+Translation-Revision-Date: 2018-02-14 10:04:44+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/2.4.0-alpha
 Language: es
 -->
 <resources>
+	<string name="stats_jetpack_more_info">Más información</string>
+	<string name="stats_jetpack_connection_setup_info">Para usar las estadísticas en tu sitio WordPress tendrás que instalar el plugin Jetpack. ¿Te gustaría configurar Jetpack?</string>
+	<string name="stats_jetpack_connection_setup">Configurar Jetpack</string>
 	<string name="plugin_chevron_icon_content_description">Alternar texto</string>
 	<string name="plugin_info_your_version">Tu versión de WordPress</string>
 	<string name="plugin_info_requires_version">Requiere la versión de WordPress</string>
@@ -478,7 +481,6 @@ Language: es
 	<string name="checking_username">Comprobar Nombre de usuario</string>
 	<string name="jetpack_different_com_account">No se admiten sitios de Jetpack pertenecientes a diferentes cuentas de WordPress.com</string>
 	<string name="jetpack_use_com_account">Para agregar su sitio Jetpack, inicie sesión la cuenta de WordPress.com que utilizó para conectar Jetpack.</string>
-	<string name="jetpack_message">El plugin Jetpack debe ser instalado y activado. ¿Quieres instalar o activar Jetpack?</string>
 	<string name="error_media_load">No se puede cargar archivos multimedia</string>
 	<string name="error_media_refresh_no_connection">Se necesita estar conectado para actualizar la biblioteca</string>
 	<string name="error_media_unauthorized">No tienes permiso para ver o editar archivos multimedia</string>
@@ -658,8 +660,6 @@ Language: es
 	<string name="enter_your_password_instead">Introduce tu contraseña</string>
 	<string name="web_address_dialog_hint">Cuando comentes se hará público</string>
 	<string name="username_email">Correo electrónico o nombre de usuario</string>
-	<string name="jetpack_not_connected_message">El plugin Jetpack se ha instalado, pero no se ha conectado con WordPress.com. ¿Quieres conectar Jetpack?</string>
-	<string name="jetpack_not_connected">Plugin Jetpack no conectado</string>
 	<string name="new_editor_reflection_error">Editor visual no compatible con tu dispositivo. Se ha\ndesactivado automáticamente</string>
 	<string name="stats_insights_latest_post_no_title">(sin título)</string>
 	<string name="capture_or_pick_photo">Captura o elige imagen</string>
@@ -1321,7 +1321,6 @@ Language: es
 	<string name="reader_toast_err_remove_tag">No se pudo eliminar esta etiqueta</string>
 	<string name="reader_toast_err_add_tag">No se pudo añadir esta etiqueta</string>
 	<string name="reader_title_applog">Registro de la aplicación</string>
-	<string name="jetpack_message_not_admin">Se necesita el plugin Jetpack. Contacta con el administrador del sitio.</string>
 	<string name="fatal_db_error">Hubo un error al crear la base de datos de la app. Por favor, intenta reinstalar la app. </string>
 	<string name="error_blog_hidden">Este blog está oculto y no se puede cargar. Actívalo de nuevo en ajustes y prueba de nuevo.</string>
 	<string name="error_refresh_media">No se pueden actualizar los medios en este momento</string>
@@ -1457,7 +1456,6 @@ Language: es
 	<string name="reader_btn_follow">Seguir</string>
 	<string name="reader_btn_share">Compartir</string>
 	<string name="reader_untitled_post">Sin título</string>
-	<string name="jetpack_not_found">No se ha encontrado el plugin Jetpack</string>
 	<string name="empty_list_default">Esta lista esta vacía</string>
 	<string name="media_add_popup_title">Añadir a biblioteca multimedia</string>
 	<string name="passcode_turn_on">Bloquear PIN</string>

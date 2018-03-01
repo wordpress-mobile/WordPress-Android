@@ -14,7 +14,6 @@ Language: cy_GB
 	<string name="checking_username">Gwirio enw defnyddiwr</string>
 	<string name="jetpack_different_com_account">Nid yw gwefannau Jetpack sy\'n perthyn i gyfrifon WordPress gwahanol yn cael eu cynnal</string>
 	<string name="jetpack_use_com_account">I ychwanegu eich gwefan Jetpack, mewngofnodwch i gyfrif WordPress.com a ddefnyddiwyd gennych i gysylltu Jetpack.</string>
-	<string name="jetpack_message">Rhaid bod yr ategyn Jetpack wedi ei osod a\'i agor. Ydych chi am ei osod neu agor Jetpack?</string>
 	<string name="error_media_load">Methu llwytho cyfrwng</string>
 	<string name="error_media_refresh_no_connection">Mae angen cysylltiader mwyn adnewyddu\'r llyfrgell.</string>
 	<string name="error_media_unauthorized">Nid oes gennych ganiatâd i weld y na golygu  cyfryngau</string>
@@ -187,9 +186,7 @@ Language: cy_GB
 	<string name="logging_in">Mewngofnodi</string>
 	<string name="enter_your_password_instead">Rhowch eich cyfrinair yn hytrach</string>
 	<string name="web_address_dialog_hint">Dangos yn gyhoeddus pan fyddwch yn gwneud sylw</string>
-	<string name="jetpack_not_connected_message">Mae\'r ategyn Jetpack wedi\'i osod, ond heb ei gysylltu â WordPress.com. Ydych chi am gysylltu Jetpack?</string>
 	<string name="username_email">E-bost neu enw defnyddiwr</string>
-	<string name="jetpack_not_connected">Nid yw\'r ategyn jetpack wedi ei gysylltu</string>
 	<string name="new_editor_reflection_error">Nid yw\'r golygydd gweledol yn gydnaws â\'ch dyfais. Cafodd\n         ei analluogi\'n awtomatig.</string>
 	<string name="stats_insights_latest_post_no_title">(dim teit)</string>
 	<string name="capture_or_pick_photo">Cipio neu ddewis llun</string>
@@ -841,7 +838,6 @@ Language: cy_GB
 	<string name="reader_toast_err_remove_tag">Methu tynnu\'r tag hwn</string>
 	<string name="reader_toast_err_add_tag">Methu ychwanegu\'r tag hwn</string>
 	<string name="reader_title_applog">Cofnod yr ap</string>
-	<string name="jetpack_message_not_admin">Mae angen yr ategyn Jetpack ar gyfer adrodd ar yr ystadegau. Cysylltwch â gweinyddwr y wefan.</string>
 	<string name="fatal_db_error">Digwyddodd gwall wrth greu cronfa ddata\'r ap. Ceisiwch ailosod yr ap.</string>
 	<string name="error_blog_hidden">Mae\'r blog hwn yn gudd ac nid oes modd ei lwytho. Galluogwch y blog eto o fewn y gosodiadau a cheisiwch eto.</string>
 	<string name="wordpress_blog">Blog WordPress</string>
@@ -970,7 +966,6 @@ Language: cy_GB
 	<string name="reader_btn_unfollow">Yn dilyn</string>
 	<string name="reader_btn_share">Rhannu</string>
 	<string name="reader_untitled_post">(Dideitl)</string>
-	<string name="jetpack_not_found">Heb ganfod ategyn jetpack</string>
 	<string name="empty_list_default">Mae\'r rhestr hon yn wag</string>
 	<string name="media_add_popup_title">Ychwanegu at y llyfrgell cyfryngau</string>
 	<string name="reader_hint_comment_on_comment">Ateb sylw…</string>

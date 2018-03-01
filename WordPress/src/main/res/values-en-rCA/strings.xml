@@ -1,11 +1,37 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2018-01-27 00:31:10+0000
+Translation-Revision-Date: 2018-02-15 23:38:46+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/2.4.0-alpha
 Language: en_CA
 -->
 <resources>
+	<string name="stats_jetpack_more_info">More information</string>
+	<string name="stats_jetpack_connection_setup_info">To use Stats on your WordPress site, you\'ll need to install the Jetpack plugin. Would you like to setup Jetpack?</string>
+	<string name="stats_jetpack_connection_setup">Set up Jetpack</string>
+	<string name="plugin_chevron_icon_content_description">Toggle text</string>
+	<string name="plugin_info_your_version">Your WordPress Version</string>
+	<string name="plugin_info_requires_version">Requires WordPress Version</string>
+	<string name="plugin_info_lastupdated">Last Updated</string>
+	<string name="plugin_info_version">Version</string>
+	<string name="plugin_five_stars">5 stars</string>
+	<string name="plugin_four_stars">4 stars</string>
+	<string name="plugin_three_stars">3 stars</string>
+	<string name="plugin_two_stars">2 stars</string>
+	<string name="plugin_one_stars">1 stars</string>
+	<string name="plugin_empty_text">None provided</string>
+	<string name="plugin_num_downloads">%s downloads</string>
+	<string name="plugin_num_ratings">%s ratings</string>
+	<string name="plugin_read_reviews">Read Reviews</string>
+	<string name="plugin_faq">Frequently Asked Questions</string>
+	<string name="plugin_whatsnew">What\'s New</string>
+	<string name="plugin_installation">Installation</string>
+	<string name="plugin_description">Description</string>
+	<string name="plugin_settings">Settings</string>
+	<string name="plugin_installed">Installed</string>
+	<string name="plugin_installed_version">Version %s installed</string>
+	<string name="plugin_version">Version %s</string>
+	<string name="plugin_byline">by %s</string>
 	<string name="change_photo">Change photo</string>
 	<string name="plugin_fetch_error">Unable to load plugins</string>
 	<string name="my_site_btn_site_pages">Site Pages</string>
@@ -455,7 +481,6 @@ Language: en_CA
 	<string name="checking_username">Checking username</string>
 	<string name="jetpack_different_com_account">Jetpack sites belonging to different WordPress.com accounts are not supported</string>
 	<string name="jetpack_use_com_account">To add your Jetpack site, log in to the WordPress.com account you used to connect Jetpack.</string>
-	<string name="jetpack_message">The Jetpack plugin must be installed and activated. Do you want to install or activate Jetpack?</string>
 	<string name="error_media_load">Unable to load media</string>
 	<string name="error_media_refresh_no_connection">Connection required to refresh library</string>
 	<string name="error_media_unauthorized">You don\'t have permission to view or edit media</string>
@@ -635,8 +660,6 @@ Language: en_CA
 	<string name="enter_your_password_instead">Enter your password instead</string>
 	<string name="web_address_dialog_hint">Shown publicly when you comment.</string>
 	<string name="username_email">Email or username</string>
-	<string name="jetpack_not_connected_message">The Jetpack plugin is installed, but not connected to WordPress.com. Do you want to connect Jetpack?</string>
-	<string name="jetpack_not_connected">Jetpack plugin not connected</string>
 	<string name="new_editor_reflection_error">Visual editor is not compatible with your device. It was\n        automatically disabled.</string>
 	<string name="stats_insights_latest_post_no_title">(no title)</string>
 	<string name="capture_or_pick_photo">Capture or select photo</string>
@@ -1298,7 +1321,6 @@ Language: en_CA
 	<string name="reader_toast_err_remove_tag">Unable to remove this tag</string>
 	<string name="reader_toast_err_add_tag">Unable to add this tag</string>
 	<string name="reader_title_applog">Application log</string>
-	<string name="jetpack_message_not_admin">The Jetpack plugin is required. Contact the site administrator.</string>
 	<string name="fatal_db_error">An error occurred while creating the app database. Try reinstalling the app.</string>
 	<string name="error_blog_hidden">This blog is hidden and couldn\'t be loaded. Enable it again in settings and try again.</string>
 	<string name="error_refresh_media">Media couldn\'t be refreshed at this time</string>
@@ -1434,7 +1456,6 @@ Language: en_CA
 	<string name="reader_btn_follow">Follow</string>
 	<string name="reader_btn_share">Share</string>
 	<string name="reader_untitled_post">(Untitled)</string>
-	<string name="jetpack_not_found">Jetpack plugin not found</string>
 	<string name="empty_list_default">This list is empty</string>
 	<string name="media_add_popup_title">Add to media library</string>
 	<string name="passcode_turn_on">Turn PIN lock on</string>
@@ -1460,7 +1481,7 @@ Language: en_CA
 	<string name="stats_timeframe_yesterday">Yesterday</string>
 	<string name="stats_timeframe_today">Today</string>
 	<string name="stats_view_referrers">Referrers</string>
-	<string name="stats_view_tags_and_categories">Tags &amp; Categoriess</string>
+	<string name="stats_view_tags_and_categories">Tags &amp; Categories</string>
 	<string name="stats_view_clicks">Clicks</string>
 	<string name="stats_view_visitors_and_views">Visitors and Views</string>
 	<string name="stats">Stats</string>

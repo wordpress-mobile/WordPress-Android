@@ -27,7 +27,8 @@ class JetpackConnectionWebViewClient extends WebViewClient {
     private static final String ADMIN_PATH = "/wp-admin/admin.php";
     private static final String REDIRECT_PARAMETER = "redirect_to=";
     private static final String WORDPRESS_COM_HOST = "wordpress.com";
-    private static final String LOG_IN_PATH = "/log-in";
+    private static final String WPCOM_LOG_IN_PATH_1 = "/log-in";
+    private static final String WPCOM_LOG_IN_PATH_2 = "/log-in/jetpack";
     private static final String JETPACK_PATH = "/jetpack";
     private static final String WORDPRESS_COM_PREFIX = "https://wordpress.com";
     private static final Uri JETPACK_DEEPLINK_URI = Uri.parse(JetpackConnectionWebViewActivity.JETPACK_CONNECTION_DEEPLINK);
@@ -94,7 +95,7 @@ class JetpackConnectionWebViewClient extends WebViewClient {
                 return true;
             } else if (loadedHost.equals(WORDPRESS_COM_HOST)
                     && loadedPath != null
-                    && loadedPath.contains(LOG_IN_PATH)
+                    && (loadedPath.equals(WPCOM_LOG_IN_PATH_1) || loadedPath.equals(WPCOM_LOG_IN_PATH_2))
                     && stringUrl.contains(REDIRECT_PARAMETER)) {
                 redirectPage = extractRedirect(stringUrl);
                 Intent loginIntent = new Intent(activity, LoginActivity.class);

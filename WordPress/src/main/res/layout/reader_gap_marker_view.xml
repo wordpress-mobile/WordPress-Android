@@ -27,7 +27,9 @@
         android:paddingTop="@dimen/margin_medium"
         android:text="@string/reader_label_gap_marker"
         android:textColor="@color/white"
-        android:textSize="@dimen/text_sz_large" />
+        android:textSize="@dimen/text_sz_large"
+        android:paddingStart="@dimen/margin_extra_large"
+        android:paddingEnd="@dimen/margin_extra_large"/>
 
     <ProgressBar
         android:id="@+id/progress_gap_marker"

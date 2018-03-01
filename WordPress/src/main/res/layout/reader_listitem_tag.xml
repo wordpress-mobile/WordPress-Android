@@ -14,9 +14,13 @@
     android:paddingBottom="@dimen/margin_medium"
     android:paddingLeft="@dimen/margin_extra_large"
     android:paddingRight="@dimen/margin_extra_large"
-    android:paddingTop="@dimen/margin_medium">
+    android:paddingTop="@dimen/margin_medium"
+    android:paddingEnd="@dimen/margin_extra_large"
+    android:paddingStart="@dimen/margin_extra_large">
 
     <org.wordpress.android.widgets.WPTextView
+        android:textAlignment="viewStart"
+        android:gravity="start"
         android:id="@+id/text_topic"
         android:layout_width="0dp"
         android:layout_height="wrap_content"

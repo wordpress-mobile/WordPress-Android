@@ -34,7 +34,9 @@
             android:layout_marginLeft="@dimen/empty_list_title_side_margin"
             android:layout_marginRight="@dimen/empty_list_title_side_margin"
             android:text="@string/empty_list_default"
-            app:fixWidowWords="true" />
+            app:fixWidowWords="true"
+            android:layout_marginEnd="@dimen/empty_list_title_side_margin"
+            android:layout_marginStart="@dimen/empty_list_title_side_margin"/>
 
     </LinearLayout>
 
@@ -68,7 +70,8 @@
             app:srcCompat="@drawable/ic_create_white_24dp"
             android:contentDescription="@string/fab_content_description_write"
             app:borderWidth="0dp"
-            app:rippleColor="@color/fab_pressed" />
+            app:rippleColor="@color/fab_pressed"
+            android:layout_marginEnd="@dimen/fab_margin"/>
 
     </android.support.design.widget.CoordinatorLayout>
 

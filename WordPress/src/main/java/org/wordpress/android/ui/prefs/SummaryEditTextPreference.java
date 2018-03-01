@@ -9,6 +9,8 @@ import android.os.Build;
 import android.os.Bundle;
 import android.preference.EditTextPreference;
 import android.support.annotation.NonNull;
+import android.support.v4.view.MarginLayoutParamsCompat;
+import android.support.v4.view.ViewCompat;
 import android.support.v7.app.AlertDialog;
 import android.text.TextUtils;
 import android.util.AttributeSet;
@@ -25,16 +27,16 @@ import org.wordpress.android.util.WPPrefUtils;
 
 /**
  * Standard EditTextPreference that has attributes to limit summary length.
- *
+ * <p>
  * Created for and used by {@link SiteSettingsFragment} to style some Preferences.
- *
+ * <p>
  * When declaring this class in a layout file you can use the following attributes:
- *  - app:summaryLines : sets the number of lines to display in the Summary field
- *                       (see {@link TextView#setLines(int)} for details)
- *  - app:maxSummaryLines : sets the maximum number of lines the Summary field can display
- *                       (see {@link TextView#setMaxLines(int)} for details)
- *  - app:longClickHint : sets the string to be shown in a Toast when preference is long clicked
- *  - app:dialogSummary : sets the summary text in the dialog
+ * - app:summaryLines : sets the number of lines to display in the Summary field
+ * (see {@link TextView#setLines(int)} for details)
+ * - app:maxSummaryLines : sets the maximum number of lines the Summary field can display
+ * (see {@link TextView#setMaxLines(int)} for details)
+ * - app:longClickHint : sets the string to be shown in a Toast when preference is long clicked
+ * - app:dialogSummary : sets the summary text in the dialog
  */
 
 public class SummaryEditTextPreference extends EditTextPreference implements PreferenceHint {
@@ -157,12 +159,16 @@ public class SummaryEditTextPreference extends EditTextPreference implements Pre
             if (oldParent != null && oldParent instanceof ViewGroup) {
                 ViewGroup groupParent = (ViewGroup) oldParent;
                 groupParent.removeView(editText);
-                groupParent.setPadding(groupParent.getPaddingLeft(), 0, groupParent.getPaddingRight(), groupParent.getPaddingBottom());
+                ViewCompat.setPaddingRelative(groupParent, ViewCompat.getPaddingStart(groupParent), 0, ViewCompat.getPaddingEnd(groupParent), groupParent.getPaddingBottom());
             }
             onAddEditTextToDialogView(view, editText);
         }
         WPPrefUtils.layoutAsInput(editText);
         editText.setSelection(editText.getText().length());
+        // RtL language support
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
+            editText.setTextAlignment(View.TEXT_ALIGNMENT_VIEW_START);
+        }
 
         TextView message = (TextView) view.findViewById(android.R.id.message);
         WPPrefUtils.layoutAsDialogMessage(message);
@@ -179,7 +185,10 @@ public class SummaryEditTextPreference extends EditTextPreference implements Pre
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) {
             leftMargin = view.getResources().getDimensionPixelSize(R.dimen.margin_large);
         }
-        layoutParams.setMargins(leftMargin, layoutParams.topMargin, layoutParams.rightMargin, bottomMargin);
+        layoutParams.setMargins(0, layoutParams.topMargin, 0, bottomMargin);
+        MarginLayoutParamsCompat.setMarginStart(layoutParams, leftMargin);
+        MarginLayoutParamsCompat.setMarginEnd(layoutParams, layoutParams.rightMargin);
+
         message.setLayoutParams(layoutParams);
     }
 

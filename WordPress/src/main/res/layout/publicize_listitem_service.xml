@@ -12,14 +12,16 @@
         android:layout_height="@dimen/blavatar_sz_small"
         android:layout_centerVertical="true"
         android:layout_marginRight="@dimen/margin_large"
-        tools:src="@drawable/ic_placeholder_blavatar_grey_lighten_20_32dp" />
+        tools:src="@drawable/ic_placeholder_blavatar_grey_lighten_20_32dp"
+        android:layout_marginEnd="@dimen/margin_large"/>
 
     <View
         android:id="@+id/divider"
         android:layout_width="match_parent"
         android:layout_height="@dimen/list_divider_height"
         android:layout_toRightOf="@+id/image_icon"
-        android:background="@color/divider_grey" />
+        android:background="@color/divider_grey"
+        android:layout_toEndOf="@+id/image_icon"/>
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -29,7 +31,9 @@
         android:layout_marginRight="@dimen/margin_extra_large"
         android:layout_marginTop="20dp"
         android:layout_toRightOf="@+id/image_icon"
-        android:orientation="vertical">
+        android:orientation="vertical"
+        android:layout_toEndOf="@+id/image_icon"
+        android:layout_marginEnd="@dimen/margin_extra_large">
 
         <org.wordpress.android.widgets.WPTextView
             android:id="@+id/text_service"
@@ -39,6 +43,8 @@
             android:maxLines="1"
             android:textColor="@color/grey_dark"
             android:textSize="@dimen/text_sz_large"
+            android:textAlignment="viewStart"
+            android:layout_gravity="start"
             tools:text="text_service" />
 
         <org.wordpress.android.widgets.WPTextView
@@ -49,6 +55,8 @@
             android:maxLines="2"
             android:textColor="@color/grey"
             android:textSize="@dimen/text_sz_medium"
+            android:textAlignment="viewStart"
+            android:layout_gravity="start"
             tools:text="text_user" />
     </LinearLayout>
 

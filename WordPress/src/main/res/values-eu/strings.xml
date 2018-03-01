@@ -116,8 +116,6 @@ Language: eu_ES
 	<string name="enter_your_password_instead">Sartu zure pasahitza ordez</string>
 	<string name="web_address_dialog_hint">Publikoki erakusten da iruzkinak egitean.</string>
 	<string name="username_email">E-posta edo erabiltzailea</string>
-	<string name="jetpack_not_connected_message">Jetpack plugina instalatuta dago baina ez dago WordPress.com-era konektatuta. Jetpack konektatu nahi al duzu?</string>
-	<string name="jetpack_not_connected">Jetpack plugina konektatu gabe</string>
 	<string name="stats_insights_latest_post_no_title">(izenbururik gabe)</string>
 	<string name="plans_post_purchase_button_themes">Arakatu itxurak</string>
 	<string name="plans_post_purchase_button_video">Hasi bidalketa berria</string>
@@ -613,7 +611,6 @@ Language: eu_ES
 	<string name="image_settings">Irudiaren ezarpenak</string>
 	<string name="invalid_site_url_message">Egiaztatu sartutako URL gunea baliozkoa dela</string>
 	<string name="theme_premium_theme">Ordainpeko itxura</string>
-	<string name="jetpack_message_not_admin">Jetpack plugina beharrezkoa da. Jarri harremanetan guneko administratzailearekin.</string>
 	<string name="share_url_page">Partekatu orrialdea</string>
 	<string name="share_link">Partekatu esteka</string>
 	<string name="deleting_page">Orrialdea ezabatzen</string>
@@ -657,7 +654,6 @@ Language: eu_ES
 	<string name="reader_btn_follow">Jarraitu</string>
 	<string name="connecting_wpcom">WordPress.com-en saioa hasten</string>
 	<string name="media_add_popup_title">Gehitu media bildumara</string>
-	<string name="jetpack_not_found">Ez da Jetpack plugina aurkitu</string>
 	<string name="reader_untitled_post">(Izenbururik gabe)</string>
 	<string name="reader_btn_unfollow">Jarraitzen</string>
 	<string name="reader_label_removed_tag">%s ezabatua</string>

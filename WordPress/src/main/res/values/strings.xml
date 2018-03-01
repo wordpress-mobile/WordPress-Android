@@ -558,6 +558,12 @@
     <string name="site_settings_timezones_error">Unable to load timezones</string>
     <string name="site_settings_amp_title">Accelerated Mobile Pages (AMP)</string>
     <string name="site_settings_amp_summary">Your WordPress.com site supports the use of Accelerated Mobile Pages, a Google-led initiative that dramatically speeds up loading times on mobile devices</string>
+    <!-- Speed up your site -->
+    <string name="site_settings_speed_up_your_site">Speed up your site</string>
+    <string name="site_settings_serve_images_from_our_servers">Serve images from our servers</string>
+    <string name="site_settings_serve_images_from_our_servers_summary">Jetpack will optimize your images and serve them from the server location nearest to your visitors. Using our global content delivery network will boost the loading speed of your site.</string>
+    <string name="site_settings_lazy_load_images">"Lazy-load" images</string>
+    <string name="site_settings_lazy_load_images_summary">Improve your site\'s speed by only loading images visible on the screen. New images will load just before they scroll into view. This prevents viewers from having to download all the images on a page all at once, even ones they can\'t see.</string>
 
     <!-- tag list and detail -->
     <string name="tag_name_hint">Tag</string>
@@ -1629,6 +1635,8 @@
 
     <!-- Publicize and sharing -->
     <string name="sharing">Sharing</string>
+    <string name="sharing_disabled">Sharing module disabled</string>
+    <string name="sharing_disabled_description">You cannot access your sharing settings because your Sharing Jetpack module is disabled.</string>
     <string name="connections_label">Connections</string>
     <string name="connections_description">Connect your favorite social media services to automatically share new posts with friends.</string>
     <string name="connected_accounts_label">Connected accounts</string>
@@ -1668,6 +1676,7 @@
     <string name="publicize_label" translatable="false">publicize_label</string>
     <string name="publicize_button_style" translatable="false">publicize_button_style</string>
     <string name="site_settings_reblog_and_like_header">Reblog &amp; Like</string>
+    <string name="site_settings_like_header">Like</string>
     <string name="site_settings_reblog">Show Reblog Button</string>
     <string name="site_settings_like">Show Like Button</string>
     <string name="manage">Manage</string>

@@ -41,6 +41,7 @@
             android:textSize="@dimen/text_sz_large"
             android:textColor="@color/grey_dark"
             android:gravity="start"
+            android:textAlignment="viewStart"
             tools:text="Main Text" />
 
         <TextView
@@ -50,6 +51,7 @@
             android:textSize="@dimen/text_sz_small"
             android:textColor="@color/grey_darken_10"
             android:gravity="start"
+            android:textAlignment="viewStart"
             tools:text="Detail Text" />
 
     </LinearLayout>

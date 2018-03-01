@@ -57,6 +57,7 @@
             android:layout_width="match_parent"
             android:layout_marginTop="@dimen/margin_small"
             android:layout_marginStart="@dimen/margin_tagline_left"
+            android:layout_marginLeft="@dimen/margin_tagline_left"
             android:text="@string/site_creation_tagline_helper"/>
     </LinearLayout>
 </ScrollView>
