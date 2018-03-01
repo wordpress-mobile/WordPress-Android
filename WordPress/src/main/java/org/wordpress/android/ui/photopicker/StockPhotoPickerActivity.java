@@ -16,25 +16,27 @@ import android.view.ViewGroup;
 import android.widget.SearchView;
 import android.widget.TextView;
 
-import com.android.volley.VolleyError;
-import com.wordpress.rest.RestRequest;
-
-import org.json.JSONArray;
-import org.json.JSONObject;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
-import org.wordpress.android.fluxc.model.MediaModel;
+import org.wordpress.android.fluxc.Dispatcher;
+import org.wordpress.android.fluxc.generated.StockMediaActionBuilder;
 import org.wordpress.android.fluxc.model.SiteModel;
+import org.wordpress.android.fluxc.model.StockMediaModel;
+import org.wordpress.android.fluxc.store.StockMediaStore;
 import org.wordpress.android.util.AniUtils;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.DisplayUtils;
+import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.PhotonUtils;
 import org.wordpress.android.util.StringUtils;
-import org.wordpress.android.util.UrlUtils;
 import org.wordpress.android.widgets.WPNetworkImageView;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import javax.inject.Inject;
 
 public class StockPhotoPickerActivity extends AppCompatActivity {
 
@@ -52,10 +54,13 @@ public class StockPhotoPickerActivity extends AppCompatActivity {
     private String mSearchQuery;
     private final Handler mHandler = new Handler();
 
+    @Inject Dispatcher mDispatcher;
+    @Inject StockMediaStore mStockMediaStore;
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        //((WordPress) getApplication()).component().inject(this);
+        ((WordPress) getApplication()).component().inject(this);
         setContentView(R.layout.stock_photo_picker_activity);
 
         int displayWidth = DisplayUtils.getDisplayPixelWidth(this);
@@ -107,12 +112,12 @@ public class StockPhotoPickerActivity extends AppCompatActivity {
     @Override
     protected void onStart() {
         super.onStart();
-        //mDispatcher.register(this);
+        mDispatcher.register(this);
     }
 
     @Override
     protected void onStop() {
-        //Dispatcher.unregister(this);
+        mDispatcher.unregister(this);
         super.onStop();
     }
 
@@ -158,74 +163,44 @@ public class StockPhotoPickerActivity extends AppCompatActivity {
                 }
             }, 500);
         } else {
-            requestStockPhotos(query);
+            requestStockPhotos(query, 1);
         }
     }
 
-    private void requestStockPhotos(@Nullable String query) {
-        RestRequest.Listener listener = new RestRequest.Listener() {
-            @Override
-            public void onResponse(JSONObject jsonObject) {
-                showProgress(false);
-                parseResponse(jsonObject);
-            }
-        };
-        RestRequest.ErrorListener errorListener = new RestRequest.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError volleyError) {
-                AppLog.e(AppLog.T.READER, volleyError);
-                showProgress(false);
-
-            }
-        };
+    private void requestStockPhotos(@Nullable String searchTerm, int page) {
+        if (!NetworkUtils.checkConnection(this)) return;
 
         showProgress(true);
-        String path = "/meta/external-media/pexels?number=20&search=" + UrlUtils.urlEncode(query);
-        WordPress.getRestClientUtilsV1_1().get(path, null, null, listener, errorListener);
+        StockMediaStore.FetchStockMediaListPayload payload =
+                new StockMediaStore.FetchStockMediaListPayload(searchTerm, page);
+        mDispatcher.dispatch(new StockMediaActionBuilder.newFetchStockMediaAction(payload));
     }
 
-    private void parseResponse(@NonNull JSONObject jsonObject) {
-        List<MediaModel> mediaList = new ArrayList<>();
-
-        JSONArray jsonMediaList = jsonObject.optJSONArray("media");
-        if (jsonMediaList != null) {
-            for (int i = 0; i < jsonMediaList.length(); i++) {
-                JSONObject jsonMedia = jsonMediaList.optJSONObject(i);
-                if (jsonMedia != null) {
-                    MediaModel media = new MediaModel();
-                    String id = jsonMedia.optString("ID");
-                    media.setMediaId(id.hashCode());
-                    media.setUrl(jsonMedia.optString("URL"));
-                    media.setFileExtension(jsonMedia.optString("extension"));
-                    media.setTitle(jsonMedia.optString("title"));
-                    media.setFileName(jsonMedia.optString("file"));
-                    media.setHeight(jsonMedia.optInt("height"));
-                    media.setWidth(jsonMedia.optInt("width"));
-                    media.setGuid(jsonMedia.optString("guid"));
-                    JSONObject jsonThumbnail = jsonMedia.optJSONObject("thumbnails");
-                    if (jsonThumbnail != null) {
-                        media.setThumbnailUrl(jsonThumbnail.optString("thumbnail"));
-                    }
-                    mediaList.add(media);
-                }
-            }
+    @SuppressWarnings("unused")
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void OnStockMediaListFetched(StockMediaStore.OnStockMediaListFetched event) {
+        if (mSearchQuery == null || !mSearchQuery.equals(event.searchTerm)) {
+            return;
         }
-
-        mAdapter.setMediaList(mediaList);
+        if (event.isError()) {
+            AppLog.e(AppLog.T.MEDIA, "An error occurred while searching stock media");
+            return;
+        }
+        mAdapter.setMediaList(event.mediaList);
     }
 
     class StockPhotoAdapter extends RecyclerView.Adapter<StockViewHolder> {
         private static final float SCALE_NORMAL = 1.0f;
         private static final float SCALE_SELECTED = .8f;
 
-        private final List<MediaModel> mItems = new ArrayList<>();
+        private final List<StockMediaModel> mItems = new ArrayList<>();
         private final ArrayList<Integer> mSelectedItems = new ArrayList<>();
 
         StockPhotoAdapter() {
             setHasStableIds(true);
         }
 
-        void setMediaList(@NonNull List<MediaModel> mediaList) {
+        void setMediaList(@NonNull List<StockMediaModel> mediaList) {
             mItems.clear();
             mItems.addAll(mediaList);
             mSelectedItems.clear();
@@ -240,7 +215,8 @@ public class StockPhotoPickerActivity extends AppCompatActivity {
 
         @Override
         public long getItemId(int position) {
-            return mItems.get(position).getId();
+            // TODO: not sure we can guarantee uniqueness
+            return mItems.get(position).getId().hashCode();
         }
 
         @Override
@@ -256,8 +232,8 @@ public class StockPhotoPickerActivity extends AppCompatActivity {
 
         @Override
         public void onBindViewHolder(StockViewHolder holder, int position) {
-            MediaModel media = mItems.get(position);
-            String imageUrl = PhotonUtils.getPhotonImageUrl(media.getThumbnailUrl(), mThumbWidth, mThumbHeight);
+            StockMediaModel media = mItems.get(position);
+            String imageUrl = PhotonUtils.getPhotonImageUrl(media.getThumbnail(), mThumbWidth, mThumbHeight);
             holder.imageView.setImageUrl(imageUrl, WPNetworkImageView.ImageType.PHOTO);
 
             boolean isSelected = isItemSelected(position);
