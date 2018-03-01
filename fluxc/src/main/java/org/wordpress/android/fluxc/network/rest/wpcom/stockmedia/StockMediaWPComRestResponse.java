@@ -1,9 +1,9 @@
-package org.wordpress.android.fluxc.network.rest.wpcom.media;
+package org.wordpress.android.fluxc.network.rest.wpcom.stockmedia;
 
 import org.wordpress.android.fluxc.network.Response;
 
 /**
- * Response to GET request for stock media items
+ * Response to GET request for stock media item
  */
 public class StockMediaWPComRestResponse implements Response {
     public class Thumbnails {
