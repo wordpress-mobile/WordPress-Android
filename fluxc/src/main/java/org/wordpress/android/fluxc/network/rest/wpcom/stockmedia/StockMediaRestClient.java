@@ -8,7 +8,7 @@ import com.android.volley.Response;
 
 import org.apache.commons.text.StringEscapeUtils;
 import org.wordpress.android.fluxc.Dispatcher;
-import org.wordpress.android.fluxc.generated.MediaActionBuilder;
+import org.wordpress.android.fluxc.generated.StockMediaActionBuilder;
 import org.wordpress.android.fluxc.generated.endpoint.WPCOMREST;
 import org.wordpress.android.fluxc.model.StockMediaModel;
 import org.wordpress.android.fluxc.network.BaseRequest;
@@ -45,29 +45,31 @@ public class StockMediaRestClient extends BaseWPComRestClient {
                     @Override
                     public void onResponse(SearchStockMediaResponse response) {
                         List<StockMediaModel> mediaList = getStockMediaListFromRestResponse(response);
-                        if (mediaList != null) {
-                            AppLog.v(AppLog.T.MEDIA, "Fetched stock media list with size: " + mediaList.size());
-                            boolean canLoadMore = mediaList.size() == number;
-                        } else {
-                            // TODO: handle error
-                        }
+                        AppLog.v(AppLog.T.MEDIA, "Fetched stock media list with size: " + mediaList.size());
+                        boolean canLoadMore = mediaList.size() == number;
+                        notifyStockMediaListFetched(mediaList, response.nextPage, canLoadMore);
                     }
                 }, new BaseRequest.BaseErrorListener() {
                     @Override
                     public void onErrorResponse(@NonNull BaseRequest.BaseNetworkError error) {
                         AppLog.e(AppLog.T.MEDIA, "VolleyError Fetching stock media: " + error);
-                        // TODO: handle error
+                        notifyStockMediaListFetched(error);
                     }
                 }
         ));
     }
 
-    private void notifyStockMediaListFetched(@NonNull List<StockMediaModel> media,
+    private void notifyStockMediaListFetched(@NonNull List<StockMediaModel> mediaList,
                                              int nextPage,
                                              boolean canLoadMore) {
-        StockMediaStore.FetchStockMediaListPayload payload = new StockMediaStore.FetchStockMediaListPayload(media,
+        StockMediaStore.FetchStockMediaListPayload payload = new StockMediaStore.FetchStockMediaListPayload(mediaList,
                 nextPage, canLoadMore);
-        mDispatcher.dispatch(MediaActionBuilder.newFetchedMediaListAction(payload));
+        mDispatcher.dispatch(StockMediaActionBuilder.newFetchStockMediaAction(payload));
+    }
+
+    private void notifyStockMediaListFetched(BaseRequest.BaseNetworkError error) {
+        StockMediaStore.FetchStockMediaListPayload payload = new StockMediaStore.FetchStockMediaListPayload(error);
+        mDispatcher.dispatch(StockMediaActionBuilder.newFetchStockMediaAction(payload));
     }
 
     /**
