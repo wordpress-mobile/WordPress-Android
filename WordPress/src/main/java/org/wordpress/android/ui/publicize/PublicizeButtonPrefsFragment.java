@@ -328,10 +328,9 @@ public class PublicizeButtonPrefsFragment extends Fragment implements
     private void setPreferencesFromSiteSettings() {
         assignPrefListeners(false);
         try {
-            if (!mSiteSettings.isSharingModuleEnabled()) {
-                mSharingDisabledNotification.setVisibility(View.VISIBLE);
-                mSharingSettingsWrapper.setVisibility(View.GONE);
-            }
+            boolean sharingModuleEnabled = mSiteSettings.isSharingModuleEnabled();
+            mSharingDisabledNotification.setVisibility(sharingModuleEnabled ? View.GONE : View.VISIBLE);
+            mSharingSettingsWrapper.setVisibility(sharingModuleEnabled ? View.VISIBLE : View.GONE);
 
             mPrefLabel.setTextEntry(mSiteSettings.getSharingLabel());
             mPrefButtonStyle.setSummary(mSiteSettings.getSharingButtonStyleDisplayText(getActivity()));
