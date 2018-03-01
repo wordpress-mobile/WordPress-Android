@@ -8,7 +8,7 @@ import java.util.List;
  * Response to GET request to search for stock media item
  */
 public class SearchStockMediaResponse implements Response {
-    public List<StockMediaResponse> stockMedia;
+    public List<StockMediaResponse> media;
     public int found;
     public int nextPage;
 }

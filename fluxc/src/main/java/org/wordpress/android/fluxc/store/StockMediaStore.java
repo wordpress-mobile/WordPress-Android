@@ -17,6 +17,7 @@ import org.wordpress.android.util.AppLog;
 
 import java.util.List;
 
+import javax.inject.Inject;
 import javax.inject.Singleton;
 
 @Singleton
@@ -24,7 +25,8 @@ public class StockMediaStore extends Store {
     public static final int DEFAULT_NUM_STOCK_MEDIA_PER_FETCH = 20;
     private final StockMediaRestClient mMediaRestClient;
 
-    StockMediaStore(Dispatcher dispatcher, StockMediaRestClient restClient) {
+    @Inject
+    public StockMediaStore(Dispatcher dispatcher, StockMediaRestClient restClient) {
         super(dispatcher);
         mMediaRestClient = restClient;
     }
@@ -106,7 +108,7 @@ public class StockMediaStore extends Store {
     }
 
     private void performFetchStockMediaList(StockMediaStore.FetchStockMediaListPayload payload) {
-        mMediaRestClient.searchStockMedia(payload.searchTerm, payload.page, payload.number);
+        mMediaRestClient.searchStockMedia(payload.searchTerm, payload.number, payload.page);
     }
 
     private void handleStockMediaListFetched(@NonNull StockMediaStore.FetchedStockMediaListPayload payload) {

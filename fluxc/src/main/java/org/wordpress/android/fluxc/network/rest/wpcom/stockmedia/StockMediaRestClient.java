@@ -39,8 +39,8 @@ public class StockMediaRestClient extends BaseWPComRestClient {
     public void searchStockMedia(final String searchTerm, final int number, final int page) {
         String url = WPCOMREST.meta.external_media.pexels.getUrlV1_1()
                 + "?number=" + number
-                + "&page="
-                + page + UrlUtils.urlEncode(searchTerm);
+                + "&page=" + page
+                + "&search=" + UrlUtils.urlEncode(searchTerm);
         add(WPComGsonRequest.buildGetRequest(url, null, SearchStockMediaResponse.class,
                 new Response.Listener<SearchStockMediaResponse>() {
                     @Override
@@ -80,10 +80,10 @@ public class StockMediaRestClient extends BaseWPComRestClient {
      * Creates a {@link StockMediaModel} list from a WP.com REST response to a request for all media.
      */
     private List<StockMediaModel> getStockMediaListFromRestResponse(final SearchStockMediaResponse from) {
-        if (from == null || from.stockMedia == null) return null;
+        if (from == null || from.media == null) return null;
 
         final List<StockMediaModel> mediaList = new ArrayList<>();
-        for (StockMediaResponse mediaItem : from.stockMedia) {
+        for (StockMediaResponse mediaItem : from.media) {
             StockMediaModel mediaModel = getStockMediaFromRestResponse(mediaItem);
             mediaList.add(mediaModel);
         }
