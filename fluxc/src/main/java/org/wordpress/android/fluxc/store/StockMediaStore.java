@@ -52,12 +52,15 @@ public class StockMediaStore extends Store {
     public static class FetchedStockMediaListPayload extends Payload<MediaStore.MediaError> {
         public boolean canLoadMore;
         public int nextPage;
+        public String searchTerm;
         public List<StockMediaModel> mediaList;
 
         public FetchedStockMediaListPayload(@NonNull List<StockMediaModel> mediaList,
+                                            @NonNull String searchTerm,
                                             int nextPage,
                                             boolean canLoadMore) {
             this.mediaList = mediaList;
+            this.searchTerm = searchTerm;
             this.canLoadMore = canLoadMore;
             this.nextPage = nextPage;
         }
@@ -70,12 +73,15 @@ public class StockMediaStore extends Store {
     public static class OnStockMediaListFetched extends OnChanged<MediaStore.MediaError> {
         public boolean canLoadMore;
         public int nextPage;
+        public String searchTerm;
         public List<StockMediaModel> mediaList;
 
         public OnStockMediaListFetched(@NonNull List<StockMediaModel> mediaList,
+                                       @NonNull String searchTerm,
                                        int nextPage,
                                        boolean canLoadMore) {
             this.mediaList = mediaList;
+            this.searchTerm = searchTerm;
             this.canLoadMore = canLoadMore;
             this.nextPage = nextPage;
         }
@@ -119,6 +125,7 @@ public class StockMediaStore extends Store {
         } else {
             onStockMediaListFetched = new OnStockMediaListFetched(
                     payload.mediaList,
+                    payload.searchTerm,
                     payload.nextPage,
                     payload.canLoadMore);
         }
