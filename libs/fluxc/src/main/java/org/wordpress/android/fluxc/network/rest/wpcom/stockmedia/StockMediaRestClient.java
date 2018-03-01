@@ -56,7 +56,8 @@ public class StockMediaRestClient extends BaseWPComRestClient {
                     @Override
                     public void onErrorResponse(@NonNull BaseRequest.BaseNetworkError error) {
                         AppLog.e(AppLog.T.MEDIA, "VolleyError Fetching stock media: " + error);
-                        MediaStore.MediaError mediaError = new MediaStore.MediaError(MediaStore.MediaErrorType.fromBaseNetworkError(error));
+                        MediaStore.MediaError mediaError =
+                                new MediaStore.MediaError(MediaStore.MediaErrorType.fromBaseNetworkError(error));
                         notifyStockMediaListFetched(mediaError);
                     }
                 }
