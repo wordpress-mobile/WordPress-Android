@@ -3,7 +3,7 @@ package org.wordpress.android.fluxc.network.rest.wpcom.stockmedia;
 import org.wordpress.android.fluxc.network.Response;
 
 /**
- * Response to GET request for stock media item
+ * Response to GET request for a single stock media item
  */
 public class StockMediaResponse implements Response {
     public class Thumbnails {
