@@ -152,18 +152,19 @@ public class PluginBrowserViewModel extends ViewModel {
 
     @WorkerThread
     private void reloadPluginDirectory(PluginDirectoryType directoryType) {
+        List<ImmutablePluginModel> pluginList = mPluginStore.getPluginDirectory(getSite(), directoryType);
         switch (directoryType) {
             case FEATURED:
-                mFeaturedPlugins.postValue(mPluginStore.getPluginDirectory(getSite(), PluginDirectoryType.FEATURED));
+                mFeaturedPlugins.postValue(pluginList);
                 break;
             case NEW:
-                mNewPlugins.postValue(mPluginStore.getPluginDirectory(getSite(), PluginDirectoryType.NEW));
+                mNewPlugins.postValue(pluginList);
                 break;
             case POPULAR:
-                mPopularPlugins.postValue(mPluginStore.getPluginDirectory(getSite(), PluginDirectoryType.POPULAR));
+                mPopularPlugins.postValue(pluginList);
                 break;
             case SITE:
-                mSitePlugins.postValue(mPluginStore.getPluginDirectory(getSite(), PluginDirectoryType.SITE));
+                mSitePlugins.postValue(pluginList);
                 break;
         }
     }
@@ -181,33 +182,34 @@ public class PluginBrowserViewModel extends ViewModel {
         if (!shouldFetchPlugins(listType, loadMore)) {
             return;
         }
+        PluginListStatus newStatus = loadMore ? PluginListStatus.LOADING_MORE : PluginListStatus.FETCHING;
         switch (listType) {
             case SITE:
-                mSitePluginsListStatus.postValue(PluginListStatus.FETCHING);
+                mSitePluginsListStatus.postValue(newStatus);
                 PluginStore.FetchPluginDirectoryPayload payload =
-                        new PluginStore.FetchPluginDirectoryPayload(PluginDirectoryType.SITE, getSite(), false);
+                        new PluginStore.FetchPluginDirectoryPayload(PluginDirectoryType.SITE, getSite(), loadMore);
                 mDispatcher.dispatch(PluginActionBuilder.newFetchPluginDirectoryAction(payload));
                 break;
             case FEATURED:
-                mFeaturedPluginsListStatus.postValue(PluginListStatus.FETCHING);
+                mFeaturedPluginsListStatus.postValue(newStatus);
                 PluginStore.FetchPluginDirectoryPayload featuredPayload =
-                        new PluginStore.FetchPluginDirectoryPayload(PluginDirectoryType.FEATURED, getSite(), false);
+                        new PluginStore.FetchPluginDirectoryPayload(PluginDirectoryType.FEATURED, getSite(), loadMore);
                 mDispatcher.dispatch(PluginActionBuilder.newFetchPluginDirectoryAction(featuredPayload));
                 break;
             case POPULAR:
-                mPopularPluginsListStatus.postValue(loadMore ? PluginListStatus.LOADING_MORE : PluginListStatus.FETCHING);
+                mPopularPluginsListStatus.postValue(newStatus);
                 PluginStore.FetchPluginDirectoryPayload popularPayload =
                         new PluginStore.FetchPluginDirectoryPayload(PluginDirectoryType.POPULAR, getSite(), loadMore);
                 mDispatcher.dispatch(PluginActionBuilder.newFetchPluginDirectoryAction(popularPayload));
                 break;
             case NEW:
-                mNewPluginsListStatus.postValue(loadMore ? PluginListStatus.LOADING_MORE : PluginListStatus.FETCHING);
+                mNewPluginsListStatus.postValue(newStatus);
                 PluginStore.FetchPluginDirectoryPayload newPayload =
                         new PluginStore.FetchPluginDirectoryPayload(PluginDirectoryType.NEW, getSite(), loadMore);
                 mDispatcher.dispatch(PluginActionBuilder.newFetchPluginDirectoryAction(newPayload));
                 break;
             case SEARCH:
-                mSearchPluginsListStatus.postValue(PluginListStatus.FETCHING);
+                mSearchPluginsListStatus.postValue(newStatus);
                 PluginStore.SearchPluginDirectoryPayload searchPayload =
                         new PluginStore.SearchPluginDirectoryPayload(getSite(), getSearchQuery(), 1);
                 mDispatcher.dispatch(PluginActionBuilder.newSearchPluginDirectoryAction(searchPayload));
@@ -217,59 +219,38 @@ public class PluginBrowserViewModel extends ViewModel {
 
     @WorkerThread
     private boolean shouldFetchPlugins(PluginListType listType, boolean loadMore) {
-        if (loadMore && !isLoadMoreEnabled(listType)) {
-            // If we are trying to load more and it's not allowed
-            return false;
-        }
+        PluginListStatus currentStatus = null;
         switch (listType) {
             case SITE:
-                if (getSitePluginsListStatus().getValue() == PluginListStatus.FETCHING) {
-                    // already fetching
-                    return false;
-                }
+                currentStatus = getSitePluginsListStatus().getValue();
                 break;
             case FEATURED:
-                if (getFeaturedPluginsListStatus().getValue() == PluginListStatus.FETCHING) {
-                    // already fetching
-                    return false;
-                }
+                currentStatus = getFeaturedPluginsListStatus().getValue();
                 break;
             case POPULAR:
-                if (!loadMore && getPopularPluginsListStatus().getValue() == PluginListStatus.FETCHING) {
-                    // already fetching first page
-                    return false;
-                }
-                if (loadMore && getPopularPluginsListStatus().getValue() != PluginListStatus.CAN_LOAD_MORE) {
-                    // We might be fetching the first page, loading more or done fetching
-                    return false;
-                }
+                currentStatus = getPopularPluginsListStatus().getValue();
                 break;
             case NEW:
-                if (!loadMore && getNewPluginsListStatus().getValue() == PluginListStatus.FETCHING) {
-                    // already fetching first page
-                    return false;
-                }
-                if (loadMore && getNewPluginsListStatus().getValue() != PluginListStatus.CAN_LOAD_MORE) {
-                    // We might be fetching the first page, loading more or done fetching
-                    return false;
-                }
+                currentStatus = getNewPluginsListStatus().getValue();
                 break;
             case SEARCH:
-                // Since search query might have been changed, we should always fetch
-                return true;
+                currentStatus = getSearchPluginsListStatus().getValue();
+                break;
+        }
+        if (currentStatus == PluginListStatus.FETCHING || currentStatus == PluginListStatus.LOADING_MORE) {
+            // if we are already fetching something we shouldn't start a new one. Even if we are loading more plugins
+            // and the user pulled to refresh, we don't want (or need) the 2 requests colliding
+            return false;
+        }
+        if (loadMore && currentStatus != PluginListStatus.CAN_LOAD_MORE) {
+            // There is nothing to load more
+            return false;
         }
         return true;
     }
 
     public void loadMore(PluginListType listType) {
-        if (isLoadMoreEnabled(listType)) {
-            fetchPlugins(listType, true);
-        }
-    }
-
-    private boolean isLoadMoreEnabled(PluginListType listType) {
-        // We don't use pagination for Site plugins, Featured plugins or Search results
-        return listType == PluginListType.NEW || listType == PluginListType.POPULAR;
+        fetchPlugins(listType, true);
     }
 
     // Network Callbacks
