@@ -1,4 +1,4 @@
-package org.wordpress.android.fluxc.network.rest.wpcom.media;
+package org.wordpress.android.fluxc.network.rest.wpcom.stockmedia;
 
 import android.content.Context;
 
