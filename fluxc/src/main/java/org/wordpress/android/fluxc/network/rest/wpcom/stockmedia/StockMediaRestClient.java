@@ -40,6 +40,8 @@ public class StockMediaRestClient extends BaseWPComRestClient {
         String url = WPCOMREST.meta.external_media.pexels.getUrlV1_1()
                 + "?number=" + number
                 + "&page=" + page
+                + "&source=pexels"
+                + "&path=recent"
                 + "&search=" + UrlUtils.urlEncode(searchTerm);
         add(WPComGsonRequest.buildGetRequest(url, null, SearchStockMediaResponse.class,
                 new Response.Listener<SearchStockMediaResponse>() {
@@ -48,7 +50,7 @@ public class StockMediaRestClient extends BaseWPComRestClient {
                         List<StockMediaModel> mediaList = getStockMediaListFromRestResponse(response);
                         AppLog.v(AppLog.T.MEDIA, "Fetched stock media list with size: " + mediaList.size());
                         boolean canLoadMore = mediaList.size() == number;
-                        notifyStockMediaListFetched(mediaList, response.nextPage, canLoadMore);
+                        notifyStockMediaListFetched(mediaList, response.getNextPage(), canLoadMore);
                     }
                 }, new BaseRequest.BaseErrorListener() {
                     @Override
