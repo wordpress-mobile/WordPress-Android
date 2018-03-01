@@ -39,7 +39,7 @@ public class StockMediaRestClient extends BaseWPComRestClient {
     public void searchStockMedia(final String searchTerm, final int number, final int page) {
         String url = WPCOMREST.meta.external_media.pexels.getUrlV1_1()
                 + "?number=" + number
-                + "&page=" + page
+                + "&page_handle=" + page
                 + "&source=pexels"
                 + "&path=recent"
                 + "&search=" + UrlUtils.urlEncode(searchTerm);
