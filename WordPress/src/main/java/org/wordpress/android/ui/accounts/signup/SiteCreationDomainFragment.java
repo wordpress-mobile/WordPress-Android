@@ -29,14 +29,14 @@ import javax.inject.Inject;
 public class SiteCreationDomainFragment extends SiteCreationBaseFormFragment<SiteCreationListener> {
     public static final String TAG = "site_creation_domain_fragment_tag";
 
-    private static final String ARG_USERNAME = "ARG_USERNAME";
+    private static final String ARG_SITE_TITLE = "ARG_SITE_TITLE";
 
     private static final String KEY_QUERY_STRING = "KEY_QUERY_STRING";
     private static final String KEY_KEYWORDS = "KEY_KEYWORDS";
     private static final String KEY_CARRY_OVER_DOMAIN = "KEY_CARRY_OVER_DOMAIN";
     private static final String KEY_SELECTED_DOMAIN = "KEY_SELECTED_DOMAIN";
 
-    private String mUsername;
+    private String mSiteTitle;
     private String mKeywords = "";
 
     private String mQueryString;
@@ -50,10 +50,10 @@ public class SiteCreationDomainFragment extends SiteCreationBaseFormFragment<Sit
 
     @Inject SiteStore mSiteStore;
 
-    public static SiteCreationDomainFragment newInstance(String username) {
+    public static SiteCreationDomainFragment newInstance(String siteTitle) {
         SiteCreationDomainFragment fragment = new SiteCreationDomainFragment();
         Bundle args = new Bundle();
-        args.putString(ARG_USERNAME, username);
+        args.putString(ARG_SITE_TITLE, siteTitle);
         fragment.setArguments(args);
         return fragment;
     }
@@ -99,7 +99,7 @@ public class SiteCreationDomainFragment extends SiteCreationBaseFormFragment<Sit
         ((WordPress) getActivity().getApplication()).component().inject(this);
 
         if (getArguments() != null) {
-            mUsername = getArguments().getString(ARG_USERNAME);
+            mSiteTitle = getArguments().getString(ARG_SITE_TITLE);
         }
 
         if (savedInstanceState != null) {
@@ -108,7 +108,7 @@ public class SiteCreationDomainFragment extends SiteCreationBaseFormFragment<Sit
             mCarryOverDomain = savedInstanceState.getString(KEY_CARRY_OVER_DOMAIN);
             mSelectedDomain = savedInstanceState.getString(KEY_SELECTED_DOMAIN);
         } else {
-            mQueryString = mUsername;
+            mQueryString = mSiteTitle;
         }
 
         // Need to do this early so the mSiteCreationDomainAdapter gets initialized before RecyclerView needs it. This
@@ -119,7 +119,7 @@ public class SiteCreationDomainFragment extends SiteCreationBaseFormFragment<Sit
         if (savedInstanceState == null) {
             FragmentManager fragmentManager = getChildFragmentManager();
             FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-            SiteCreationDomainLoaderFragment loaderFragment = SiteCreationDomainLoaderFragment.newInstance(mUsername);
+            SiteCreationDomainLoaderFragment loaderFragment = SiteCreationDomainLoaderFragment.newInstance(mSiteTitle);
             loaderFragment.setRetainInstance(true);
             fragmentTransaction.add(loaderFragment, SiteCreationDomainLoaderFragment.TAG);
             fragmentTransaction.commitNow();
@@ -176,8 +176,8 @@ public class SiteCreationDomainFragment extends SiteCreationBaseFormFragment<Sit
                             mKeywords = keywords;
                             mCarryOverDomain = mSelectedDomain;
 
-                            // fallback to using the provided username as query if text is empty
-                            mQueryString = TextUtils.isEmpty(keywords.trim()) ? mUsername : keywords;
+                            // fallback to using the provided site title as query if text is empty
+                            mQueryString = TextUtils.isEmpty(keywords.trim()) ? mSiteTitle : keywords;
 
                             getLoaderFragment().load(mQueryString);
                         }
