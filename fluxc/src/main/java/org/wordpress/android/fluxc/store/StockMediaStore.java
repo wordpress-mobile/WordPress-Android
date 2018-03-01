@@ -22,7 +22,7 @@ import javax.inject.Singleton;
 
 @Singleton
 public class StockMediaStore extends Store {
-    public static final int DEFAULT_NUM_STOCK_MEDIA_PER_FETCH = 20;
+    public static final int DEFAULT_NUM_STOCK_MEDIA_PER_FETCH = 1; // TODO: change to 20
     private final StockMediaRestClient mMediaRestClient;
 
     @Inject
