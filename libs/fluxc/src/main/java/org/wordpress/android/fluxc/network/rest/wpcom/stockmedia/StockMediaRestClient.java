@@ -50,7 +50,7 @@ public class StockMediaRestClient extends BaseWPComRestClient {
                         List<StockMediaModel> mediaList = getStockMediaListFromRestResponse(response);
                         AppLog.v(AppLog.T.MEDIA, "Fetched stock media list with size: " + mediaList.size());
                         boolean canLoadMore = mediaList.size() == number;
-                        notifyStockMediaListFetched(mediaList, response.getNextPage(), canLoadMore);
+                        notifyStockMediaListFetched(mediaList, searchTerm, response.getNextPage(), canLoadMore);
                     }
                 }, new BaseRequest.BaseErrorListener() {
                     @Override
@@ -65,10 +65,12 @@ public class StockMediaRestClient extends BaseWPComRestClient {
     }
 
     private void notifyStockMediaListFetched(@NonNull List<StockMediaModel> mediaList,
+                                             @NonNull String searchTerm,
                                              int nextPage,
                                              boolean canLoadMore) {
         StockMediaStore.FetchedStockMediaListPayload payload = new StockMediaStore.FetchedStockMediaListPayload(
                 mediaList,
+                searchTerm,
                 nextPage,
                 canLoadMore);
         mDispatcher.dispatch(StockMediaActionBuilder.newFetchedStockMediaAction(payload));
