@@ -16,6 +16,7 @@ import org.wordpress.android.fluxc.network.UserAgent;
 import org.wordpress.android.fluxc.network.rest.wpcom.BaseWPComRestClient;
 import org.wordpress.android.fluxc.network.rest.wpcom.WPComGsonRequest;
 import org.wordpress.android.fluxc.network.rest.wpcom.auth.AccessToken;
+import org.wordpress.android.fluxc.store.MediaStore;
 import org.wordpress.android.fluxc.store.StockMediaStore;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.UrlUtils;
@@ -53,7 +54,8 @@ public class StockMediaRestClient extends BaseWPComRestClient {
                     @Override
                     public void onErrorResponse(@NonNull BaseRequest.BaseNetworkError error) {
                         AppLog.e(AppLog.T.MEDIA, "VolleyError Fetching stock media: " + error);
-                        notifyStockMediaListFetched(error);
+                        MediaStore.MediaError mediaError = new MediaStore.MediaError(MediaStore.MediaErrorType.fromBaseNetworkError(error));
+                        notifyStockMediaListFetched(mediaError);
                     }
                 }
         ));
@@ -62,14 +64,16 @@ public class StockMediaRestClient extends BaseWPComRestClient {
     private void notifyStockMediaListFetched(@NonNull List<StockMediaModel> mediaList,
                                              int nextPage,
                                              boolean canLoadMore) {
-        StockMediaStore.FetchStockMediaListPayload payload = new StockMediaStore.FetchStockMediaListPayload(mediaList,
-                nextPage, canLoadMore);
-        mDispatcher.dispatch(StockMediaActionBuilder.newFetchStockMediaAction(payload));
+        StockMediaStore.FetchedStockMediaListPayload payload = new StockMediaStore.FetchedStockMediaListPayload(
+                mediaList,
+                nextPage,
+                canLoadMore);
+        mDispatcher.dispatch(StockMediaActionBuilder.newFetchedStockMediaAction(payload));
     }
 
-    private void notifyStockMediaListFetched(BaseRequest.BaseNetworkError error) {
-        StockMediaStore.FetchStockMediaListPayload payload = new StockMediaStore.FetchStockMediaListPayload(error);
-        mDispatcher.dispatch(StockMediaActionBuilder.newFetchStockMediaAction(payload));
+    private void notifyStockMediaListFetched(MediaStore.MediaError error) {
+        StockMediaStore.FetchedStockMediaListPayload payload = new StockMediaStore.FetchedStockMediaListPayload(error);
+        mDispatcher.dispatch(StockMediaActionBuilder.newFetchedStockMediaAction(payload));
     }
 
     /**
