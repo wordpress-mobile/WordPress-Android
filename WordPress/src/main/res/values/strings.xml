@@ -1635,6 +1635,8 @@
 
     <!-- Publicize and sharing -->
     <string name="sharing">Sharing</string>
+    <string name="sharing_disabled">Sharing module disabled</string>
+    <string name="sharing_disabled_description">You cannot access your sharing settings because your Sharing Jetpack module is disabled.</string>
     <string name="connections_label">Connections</string>
     <string name="connections_description">Connect your favorite social media services to automatically share new posts with friends.</string>
     <string name="connected_accounts_label">Connected accounts</string>

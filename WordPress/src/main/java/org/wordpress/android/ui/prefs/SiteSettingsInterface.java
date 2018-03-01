@@ -678,20 +678,24 @@ public abstract class SiteSettingsInterface {
         return mJpSettings.ssoRequireTwoFactor;
     }
 
-    public void enableServeImagesFromOurServers(boolean enabled) {
+    void enableServeImagesFromOurServers(boolean enabled) {
         mJpSettings.serveImagesFromOurServers = enabled;
     }
 
-    public boolean isServeImagesFromOurServersEnabled() {
+    boolean isServeImagesFromOurServersEnabled() {
         return mJpSettings.serveImagesFromOurServers;
     }
 
-    public void enableLazyLoadImages(boolean enabled) {
+    void enableLazyLoadImages(boolean enabled) {
         mJpSettings.lazyLoadImages = enabled;
     }
 
-    public boolean isLazyLoadImagesEnabled() {
+    boolean isLazyLoadImagesEnabled() {
         return mJpSettings.lazyLoadImages;
+    }
+
+    public boolean isSharingModuleEnabled() {
+        return mJpSettings.sharingEnabled;
     }
 
     public void setTitle(String title) {
