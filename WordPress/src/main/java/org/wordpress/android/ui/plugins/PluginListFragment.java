@@ -93,6 +93,15 @@ public class PluginListFragment extends Fragment {
             }
         });
 
+        mViewModel.getFeaturedPlugins().observe(this, new Observer<List<ImmutablePluginModel>>() {
+            @Override
+            public void onChanged(@Nullable final List<ImmutablePluginModel> featuredPlugins) {
+                if (mListType == PluginListType.FEATURED) {
+                    reloadPlugins();
+                }
+            }
+        });
+
         mViewModel.getNewPlugins().observe(this, new Observer<List<ImmutablePluginModel>>() {
             @Override
             public void onChanged(@Nullable final List<ImmutablePluginModel> newPlugins) {
@@ -124,6 +133,15 @@ public class PluginListFragment extends Fragment {
             @Override
             public void onChanged(@Nullable PluginBrowserViewModel.PluginListStatus listStatus) {
                 if (mListType == PluginListType.SITE) {
+                    refreshProgressBars(listStatus);
+                }
+            }
+        });
+
+        mViewModel.getFeaturedPluginsListStatus().observe(this, new Observer<PluginBrowserViewModel.PluginListStatus>() {
+            @Override
+            public void onChanged(@Nullable PluginBrowserViewModel.PluginListStatus listStatus) {
+                if (mListType == PluginListType.FEATURED) {
                     refreshProgressBars(listStatus);
                 }
             }
