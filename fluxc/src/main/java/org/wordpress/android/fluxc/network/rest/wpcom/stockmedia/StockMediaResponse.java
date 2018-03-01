@@ -5,7 +5,7 @@ import org.wordpress.android.fluxc.network.Response;
 /**
  * Response to GET request for stock media item
  */
-public class StockMediaWPComRestResponse implements Response {
+public class StockMediaResponse implements Response {
     public class Thumbnails {
         public String thumbnail;
         public String medium;

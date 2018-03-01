@@ -28,7 +28,7 @@ public class StockMediaRestClient extends BaseWPComRestClient {
     /**
      * Creates a {@link StockMediaModel} from a WP.com REST response to a fetch request.
      */
-    private StockMediaModel getStockMediaFromRestResponse(final StockMediaWPComRestResponse from) {
+    private StockMediaModel getStockMediaFromRestResponse(final StockMediaResponse from) {
         if (from == null) return null;
 
         final StockMediaModel media = new StockMediaModel();
