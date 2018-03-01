@@ -898,7 +898,7 @@ public class PluginDetailActivity extends AppCompatActivity {
 
     @SuppressWarnings("unused")
     @Subscribe(threadMode = ThreadMode.MAIN)
-    public void OnSitePluginInstalled(OnSitePluginInstalled event) {
+    public void onSitePluginInstalled(OnSitePluginInstalled event) {
         if (isFinishing()) return;
 
         if (mSite.getId() != event.site.getId() || !mSlug.equals(event.slug)) {
@@ -916,6 +916,12 @@ public class PluginDetailActivity extends AppCompatActivity {
         }
 
         refreshPluginFromStore();
+
+        // FluxC will try to activate and enable autoupdates for the plugin after it's installed, let's assume that
+        // it'll be successful.
+        mIsActive = true;
+        mIsAutoUpdateEnabled = true;
+
         refreshViews();
         showSuccessfulInstallSnackbar();
         invalidateOptionsMenu();
