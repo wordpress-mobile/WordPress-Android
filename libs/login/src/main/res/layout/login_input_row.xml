@@ -33,6 +33,8 @@
             android:layout_height="wrap_content"
             android:layout_marginRight="@dimen/textinputlayout_correction_margin_right"
             android:layout_marginEnd="@dimen/textinputlayout_correction_margin_right"
+            android:paddingRight="@dimen/textinputlayout_correction_padding_right"
+            android:paddingEnd="@dimen/textinputlayout_correction_padding_right"
             tools:hint="@string/email_address"/>
     </org.wordpress.android.util.widgets.WPTextInputLayout>
 </RelativeLayout>
