@@ -68,7 +68,7 @@
         android:background="@color/grey_lighten_30" />
 
     <LinearLayout
-        android:gravity="end|right"
+        android:gravity="end|end"
         android:layout_below="@+id/divider"
         android:layout_height="wrap_content"
         android:layout_width="@dimen/default_dialog_width"

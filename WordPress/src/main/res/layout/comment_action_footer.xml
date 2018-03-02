@@ -27,7 +27,9 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:orientation="vertical">
+            android:orientation="vertical"
+            android:paddingEnd="@dimen/margin_small"
+            android:paddingStart="@dimen/margin_small">
             <ImageView
                 android:id="@+id/btn_like_icon"
                 android:layout_width="wrap_content"
@@ -37,7 +39,9 @@
                 android:paddingRight="@dimen/margin_medium"
                 android:paddingBottom="0dp"
                 app:srcCompat="@drawable/ic_star_outline_grey_24dp"
-                android:contentDescription="@string/reader_label_like" />
+                android:contentDescription="@string/reader_label_like"
+                android:paddingStart="@dimen/margin_medium"
+                android:paddingEnd="@dimen/margin_medium"/>
 
             <org.wordpress.android.widgets.WPTextView
                 android:id="@+id/btn_like_text"
@@ -61,7 +65,9 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:orientation="vertical">
+            android:orientation="vertical"
+            android:paddingStart="@dimen/margin_small"
+            android:paddingEnd="@dimen/margin_small">
             <ImageView
                 android:id="@+id/btn_moderate_icon"
                 android:layout_width="wrap_content"
@@ -71,7 +77,9 @@
                 android:paddingRight="@dimen/margin_medium"
                 android:paddingBottom="0dp"
                 app:srcCompat="@drawable/ic_checkmark_grey_24dp"
-                android:contentDescription="@string/reader_label_like" />
+                android:contentDescription="@string/reader_label_like"
+                android:paddingStart="@dimen/margin_medium"
+                android:paddingEnd="@dimen/margin_medium"/>
 
             <org.wordpress.android.widgets.WPTextView
                 android:id="@+id/btn_moderate_text"
@@ -96,7 +104,9 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:orientation="vertical"
-            android:visibility="gone" >
+            android:visibility="gone"
+            android:paddingStart="@dimen/margin_small"
+            android:paddingEnd="@dimen/margin_small">
 
             <ImageView
                 android:id="@+id/btn_edit_icon"
@@ -107,7 +117,9 @@
                 android:paddingRight="@dimen/margin_medium"
                 android:paddingBottom="0dp"
                 app:srcCompat="@drawable/ic_pencil_grey_24dp"
-                android:contentDescription="@string/edit_comment" />
+                android:contentDescription="@string/edit_comment"
+                android:paddingStart="@dimen/margin_medium"
+                android:paddingEnd="@dimen/margin_medium"/>
 
             <org.wordpress.android.widgets.WPTextView
                 android:id="@+id/btn_edit_text"
@@ -132,7 +144,9 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:orientation="vertical"
-            android:visibility="gone" >
+            android:visibility="gone"
+            android:paddingStart="@dimen/margin_small"
+            android:paddingEnd="@dimen/margin_small">
 
             <ImageView
                 android:id="@+id/btn_trash_icon"
@@ -143,7 +157,9 @@
                 android:paddingRight="@dimen/margin_medium"
                 android:paddingBottom="0dp"
                 app:srcCompat="@drawable/ic_trash_grey_24dp"
-                android:contentDescription="@string/edit_comment" />
+                android:contentDescription="@string/edit_comment"
+                android:paddingStart="@dimen/margin_medium"
+                android:paddingEnd="@dimen/margin_medium"/>
 
             <org.wordpress.android.widgets.WPTextView
                 android:id="@+id/btn_trash_text"
@@ -168,7 +184,9 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:orientation="vertical"
-            android:visibility="gone" >
+            android:visibility="gone"
+            android:paddingStart="@dimen/margin_small"
+            android:paddingEnd="@dimen/margin_small">
 
             <ImageView
                 android:id="@+id/btn_spam_icon"
@@ -179,7 +197,9 @@
                 android:paddingRight="@dimen/margin_medium"
                 android:paddingBottom="0dp"
                 app:srcCompat="@drawable/ic_spam_grey_24dp"
-                android:contentDescription="@string/mnu_comment_spam" />
+                android:contentDescription="@string/mnu_comment_spam"
+                android:paddingStart="@dimen/margin_medium"
+                android:paddingEnd="@dimen/margin_medium"/>
 
             <org.wordpress.android.widgets.WPTextView
                 android:id="@+id/btn_spam_text"

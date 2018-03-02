@@ -12,7 +12,7 @@
         android:background="?android:attr/selectableItemBackground"
         android:clickable="true"
         android:focusable="true"
-        android:gravity="center_vertical"
+        android:gravity="center_vertical|start"
         android:layout_height="wrap_content"
         android:layout_width="match_parent"
         android:minHeight="?android:attr/listPreferredItemHeightSmall"
@@ -20,7 +20,8 @@
         android:paddingStart="?android:attr/listPreferredItemPaddingStart"
         android:textAppearance="?android:attr/textAppearanceListItemSmall"
         android:paddingRight="?android:attr/listPreferredItemPaddingRight"
-        android:paddingLeft="?android:attr/listPreferredItemPaddingLeft">
+        android:paddingLeft="?android:attr/listPreferredItemPaddingLeft"
+        android:textAlignment="viewStart">
     </org.wordpress.android.widgets.WPTextView>
 
     <View

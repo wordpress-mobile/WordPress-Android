@@ -3,6 +3,7 @@ package org.wordpress.android.ui;
 import android.content.Context;
 import android.support.annotation.MenuRes;
 import android.support.design.widget.AppBarLayout;
+import android.support.v4.view.ViewCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
@@ -300,26 +301,15 @@ public class FilteredRecyclerView extends RelativeLayout {
     }
 
     public void setToolbarLeftPadding(int paddingLeft){
-        mToolbar.setPadding(paddingLeft,
-                mToolbar.getPaddingTop(),
-                mToolbar.getPaddingRight(),
-                mToolbar.getPaddingBottom());
+        ViewCompat.setPaddingRelative(mToolbar, paddingLeft, mToolbar.getPaddingTop(), ViewCompat.getPaddingEnd(mToolbar), mToolbar.getPaddingBottom());
     }
 
     public void setToolbarRightPadding(int paddingRight){
-        mToolbar.setPadding(
-                mToolbar.getPaddingLeft(),
-                mToolbar.getPaddingTop(),
-                paddingRight,
-                mToolbar.getPaddingBottom());
+        ViewCompat.setPaddingRelative(mToolbar, ViewCompat.getPaddingStart(mToolbar), mToolbar.getPaddingTop(), paddingRight, mToolbar.getPaddingBottom());
     }
 
     public void setToolbarLeftAndRightPadding(int paddingLeft, int paddingRight){
-        mToolbar.setPadding(
-                paddingLeft,
-                mToolbar.getPaddingTop(),
-                paddingRight,
-                mToolbar.getPaddingBottom());
+        ViewCompat.setPaddingRelative(mToolbar, paddingLeft, mToolbar.getPaddingTop(), paddingRight, mToolbar.getPaddingBottom());
     }
 
     public void scrollRecycleViewToPosition(int position) {
@@ -422,9 +412,8 @@ public class FilteredRecyclerView extends RelativeLayout {
                 }
 
                 if (mSpinnerDrawableRight != 0){
-                    text.setCompoundDrawablesWithIntrinsicBounds(0, 0, mSpinnerDrawableRight, 0);
                     text.setCompoundDrawablePadding(getResources().getDimensionPixelSize(R.dimen.margin_medium));
-                    text.setGravity(Gravity.CENTER_VERTICAL | Gravity.LEFT);
+                    text.setGravity(Gravity.CENTER_VERTICAL | Gravity.START);
                 }
 
             } else {

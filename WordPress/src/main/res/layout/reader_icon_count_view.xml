@@ -24,6 +24,7 @@
         android:importantForAccessibility="no"
         android:textColor="@color/reader_count_text"
         android:textSize="@dimen/text_sz_medium"
-        tools:text="2" />
+        tools:text="2"
+        android:layout_marginStart="@dimen/margin_extra_small"/>
 
 </LinearLayout>

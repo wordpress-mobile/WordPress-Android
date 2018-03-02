@@ -12,7 +12,11 @@
         android:layout_marginLeft="24dp"
         android:layout_marginRight="24dp"
         android:textSize="@dimen/text_sz_large"
-        android:textColor="@color/calypso_title_text" />
+        android:textColor="@color/calypso_title_text"
+        android:layout_marginEnd="24dp"
+        android:layout_marginStart="24dp"
+        android:textAlignment="viewStart"
+        android:gravity="start"/>
 
     <org.wordpress.android.widgets.WPTextView
         android:id="@+id/number_picker_text"
@@ -21,7 +25,9 @@
         android:layout_marginLeft="24dp"
         android:layout_marginRight="24dp"
         android:textSize="@dimen/text_sz_small"
-        android:textColor="@color/grey_darken_10" />
+        android:textColor="@color/grey_darken_10"
+        android:layout_marginStart="24dp"
+        android:layout_marginEnd="24dp"/>
 
     <LinearLayout
         android:id="@+id/number_picker_toggleable"
@@ -39,7 +45,9 @@
             android:layout_marginBottom="8dp"
             android:duplicateParentState="true"
             android:textSize="@dimen/text_sz_large"
-            android:textColor="@color/calypso_title_text" />
+            android:textColor="@color/calypso_title_text"
+            android:layout_marginEnd="24dp"
+            android:layout_marginStart="24dp"/>
 
         <View
             android:layout_width="match_parent"

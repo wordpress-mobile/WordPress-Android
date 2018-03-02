@@ -55,6 +55,9 @@ public class PublicizeButtonPrefsFragment extends Fragment implements
     private WPPrefView mPrefAllowCommentLikes;
     private WPPrefView mPrefTwitterName;
 
+    private View mSharingDisabledNotification;
+    private View mSharingSettingsWrapper;
+
     private SiteModel mSite;
     private SiteSettingsInterface mSiteSettings;
 
@@ -115,6 +118,14 @@ public class PublicizeButtonPrefsFragment extends Fragment implements
         mPrefShowLike = (WPPrefView) view.findViewById(R.id.pref_show_like);
         mPrefAllowCommentLikes = (WPPrefView) view.findViewById(R.id.pref_allow_comment_likes);
         mPrefTwitterName = (WPPrefView) view.findViewById(R.id.pref_twitter_name);
+
+        if (!mSite.isWPCom() && mSite.isJetpackConnected()) {
+            mPrefShowLike.setHeading(getString(R.string.site_settings_like_header));
+            mPrefShowReblog.setVisibility(View.GONE);
+        }
+
+        mSharingDisabledNotification = view.findViewById(R.id.sharing_disabled_notification);
+        mSharingSettingsWrapper = view.findViewById(R.id.sharing_settings_wrapper);
 
         return view;
     }
@@ -317,6 +328,10 @@ public class PublicizeButtonPrefsFragment extends Fragment implements
     private void setPreferencesFromSiteSettings() {
         assignPrefListeners(false);
         try {
+            boolean sharingModuleEnabled = mSiteSettings.isSharingModuleEnabled();
+            mSharingDisabledNotification.setVisibility(sharingModuleEnabled ? View.GONE : View.VISIBLE);
+            mSharingSettingsWrapper.setVisibility(sharingModuleEnabled ? View.VISIBLE : View.GONE);
+
             mPrefLabel.setTextEntry(mSiteSettings.getSharingLabel());
             mPrefButtonStyle.setSummary(mSiteSettings.getSharingButtonStyleDisplayText(getActivity()));
 

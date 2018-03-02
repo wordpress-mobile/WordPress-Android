@@ -10,6 +10,7 @@ import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.ui.notifications.utils.NotificationsUtils;
 import org.wordpress.android.util.JSONUtils;
+import org.wordpress.android.util.RtlUtils;
 
 public class FooterNoteBlock extends NoteBlock {
     private NoteBlockClickableSpan mClickableSpan;
@@ -57,6 +58,10 @@ public class FooterNoteBlock extends NoteBlock {
         if (!TextUtils.isEmpty(noticonGlyph)) {
             noteBlockHolder.getNoticonView().setVisibility(View.VISIBLE);
             noteBlockHolder.getNoticonView().setText(noticonGlyph);
+            // mirror noticon in the rtl mode
+            if (RtlUtils.isRtl(noteBlockHolder.getNoticonView().getContext())) {
+                noteBlockHolder.getNoticonView().setScaleX(-1);
+            }
         } else {
             noteBlockHolder.getNoticonView().setVisibility(View.GONE);
         }
