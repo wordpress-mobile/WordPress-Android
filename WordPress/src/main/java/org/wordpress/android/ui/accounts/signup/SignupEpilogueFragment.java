@@ -258,7 +258,15 @@ public class SignupEpilogueFragment extends LoginBaseFormFragment<SignupEpilogue
         if (savedInstanceState == null) {
             if (mIsEmailSignup) {
                 AnalyticsTracker.track(AnalyticsTracker.Stat.SIGNUP_EMAIL_EPILOGUE_VIEWED);
-                startProgress();
+
+                // Start progress and wait for account to be fetched before populating views when
+                // email does not exist in account store.
+                if (TextUtils.isEmpty(mAccountStore.getAccount().getEmail())) {
+                    startProgress();
+                // Skip progress and populate views when email does exist in account store.
+                } else {
+                    populateViews();
+                }
             } else {
                 AnalyticsTracker.track(AnalyticsTracker.Stat.SIGNUP_SOCIAL_EPILOGUE_VIEWED);
                 new DownloadAvatarAndUploadGravatarThread(mPhotoUrl, mEmailAddress, mAccount.getAccessToken()).start();
@@ -421,22 +429,7 @@ public class SignupEpilogueFragment extends LoginBaseFormFragment<SignupEpilogue
         } else if (event.causeOfChange == AccountAction.FETCH_ACCOUNT
                 && !TextUtils.isEmpty(mAccountStore.getAccount().getEmail())) {
             endProgress();
-            mEmailAddress = mAccountStore.getAccount().getEmail();
-            mDisplayName = createDisplayNameFromEmail();
-            mUsername = !TextUtils.isEmpty(mAccountStore.getAccount().getUserName())
-                    ? mAccountStore.getAccount().getUserName() : createUsernameFromEmail();
-            mHeaderDisplayName.setText(mDisplayName);
-            mHeaderEmailAddress.setText(mEmailAddress);
-            mEditTextDisplayName.setText(mDisplayName);
-            mEditTextUsername.setText(mUsername);
-            // Set fragment arguments to know if account should be updated when values change.
-            Bundle args = new Bundle();
-            args.putString(ARG_DISPLAY_NAME, mDisplayName);
-            args.putString(ARG_EMAIL_ADDRESS, mEmailAddress);
-            args.putString(ARG_PHOTO_URL, mPhotoUrl);
-            args.putString(ARG_USERNAME, mUsername);
-            args.putBoolean(ARG_IS_EMAIL_SIGNUP, mIsEmailSignup);
-            setArguments(args);
+            populateViews();
         } else if (changedUsername()) {
             startProgress();
             PushUsernamePayload payload = new PushUsernamePayload(mUsername,
@@ -591,6 +584,25 @@ public class SignupEpilogueFragment extends LoginBaseFormFragment<SignupEpilogue
             public void onLoaded() {
             }
         });
+    }
+
+    private void populateViews() {
+        mEmailAddress = mAccountStore.getAccount().getEmail();
+        mDisplayName = createDisplayNameFromEmail();
+        mUsername = !TextUtils.isEmpty(mAccountStore.getAccount().getUserName())
+                ? mAccountStore.getAccount().getUserName() : createUsernameFromEmail();
+        mHeaderDisplayName.setText(mDisplayName);
+        mHeaderEmailAddress.setText(mEmailAddress);
+        mEditTextDisplayName.setText(mDisplayName);
+        mEditTextUsername.setText(mUsername);
+        // Set fragment arguments to know if account should be updated when values change.
+        Bundle args = new Bundle();
+        args.putString(ARG_DISPLAY_NAME, mDisplayName);
+        args.putString(ARG_EMAIL_ADDRESS, mEmailAddress);
+        args.putString(ARG_PHOTO_URL, mPhotoUrl);
+        args.putString(ARG_USERNAME, mUsername);
+        args.putBoolean(ARG_IS_EMAIL_SIGNUP, mIsEmailSignup);
+        setArguments(args);
     }
 
     protected void showErrorDialog(String message) {
