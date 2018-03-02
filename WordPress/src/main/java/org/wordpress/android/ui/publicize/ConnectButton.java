@@ -1,7 +1,7 @@
 package org.wordpress.android.ui.publicize;
 
 import android.content.Context;
-import android.support.annotation.IdRes;
+import android.support.annotation.StringRes;
 import android.util.AttributeSet;
 import android.widget.FrameLayout;
 import android.widget.TextView;
@@ -37,7 +37,7 @@ public class ConnectButton extends FrameLayout {
     }
 
     private void updateView() {
-        @IdRes int captionResId;
+        @StringRes int captionResId;
         switch (mConnectAction) {
             case CONNECT:
                 captionResId = R.string.share_btn_connect;

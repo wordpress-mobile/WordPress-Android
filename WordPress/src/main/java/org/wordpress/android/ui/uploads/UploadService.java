@@ -43,6 +43,7 @@ import org.wordpress.android.util.WPMediaUtils;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -66,6 +67,11 @@ public class UploadService extends Service {
 
     // we hold this reference here for the success notification for Media uploads
     private List<MediaModel> mMediaBatchUploaded = new ArrayList<>();
+
+    // we keep this list so we don't tell the user an error happened when we find a FAILED media item
+    // for media that the user actively cancelled uploads for
+    private static HashSet<String> mUserDeletedMediaItemIds = new HashSet<>();
+
 
     @Inject Dispatcher mDispatcher;
     @Inject MediaStore mMediaStore;
@@ -188,27 +194,32 @@ public class UploadService extends Service {
                 mMediaBatchUploaded.addAll(mediaList);
             }
 
-            if (intent.getBooleanExtra(KEY_SHOULD_RETRY, false)) {
-                // Bump analytics
-                AnalyticsTracker.track(AnalyticsTracker.Stat.NOTIFICATION_UPLOAD_MEDIA_ERROR_RETRY);
-
-                // send event so Editors can handle clearing Failed statuses properly if Post is being edited right now
-                if (mediaList != null && !mediaList.isEmpty()) {
-                    Set<PostModel> postsToRefresh = PostUtils.getPostsThatIncludeThisMedia(mPostStore, mediaList);
-                    for (PostModel post : postsToRefresh) {
-                        mUploadStore.registerPostModel(post, mediaList);
-                        if (isThisPostTotallyNewOrFailed(post)) {
-                            mPostUploadNotifier.addPostInfoToForegroundNotification(post, null);
-                        }
-                    }
-                    EventBus.getDefault().post(new UploadService.UploadMediaRetryEvent(mediaList));
-                }
-            }
+            // if this media belongs to some post, register such Post
+            registerPostModelsForMedia(mediaList, intent.getBooleanExtra(KEY_SHOULD_RETRY, false));
 
             for (MediaModel media : mediaList) {
                 mMediaUploadHandler.upload(media);
             }
             mPostUploadNotifier.addMediaInfoToForegroundNotification(mediaList);
+        }
+    }
+
+    private void registerPostModelsForMedia(List<MediaModel> mediaList, boolean isRetry) {
+        if (mediaList != null && !mediaList.isEmpty()) {
+            Set<PostModel> postsToRefresh = PostUtils.getPostsThatIncludeAnyOfTheseMedia(mPostStore, mediaList);
+            for (PostModel post : postsToRefresh) {
+                if (!mUploadStore.isRegisteredPostModel(post)) {
+                    mUploadStore.registerPostModel(post, mediaList);
+                }
+            }
+
+            if (isRetry) {
+                // Bump analytics
+                AnalyticsTracker.track(AnalyticsTracker.Stat.NOTIFICATION_UPLOAD_MEDIA_ERROR_RETRY);
+
+                // send event so Editors can handle clearing Failed statuses properly if Post is being edited right now
+                EventBus.getDefault().post(new UploadService.UploadMediaRetryEvent(mediaList));
+            }
         }
     }
 
@@ -247,7 +258,7 @@ public class UploadService extends Service {
             // is this a new post? only add count to the notification when the post is totally new
             // i.e. it still doesn't have any tracked state in the UploadStore
             // or it's a failed one the user is actively retrying.
-            if (isThisPostTotallyNewOrFailed(post)) {
+            if (isThisPostTotallyNewOrFailed(post) && !PostUploadHandler.isPostUploadingOrQueued(post)) {
                 mPostUploadNotifier.addPostInfoToForegroundNotification(post, null);
             }
 
@@ -456,6 +467,10 @@ public class UploadService extends Service {
 
     public static List<MediaModel> getPendingOrInProgressMediaUploadsForPost(PostModel post){
         return MediaUploadHandler.getPendingOrInProgressMediaUploadsForPost(post);
+    }
+
+    public static boolean hasPendingOrInProgressPostUploads() {
+        return PostUploadHandler.hasPendingOrInProgressPostUploads();
     }
 
     public static float getMediaUploadProgressForPost(PostModel postModel) {
@@ -737,6 +752,10 @@ public class UploadService extends Service {
             // If the post is already registered, the new media will be added to its list
             mUploadStore.registerPostModel(post, mediaToRetry);
             mPostUploadNotifier.addPostInfoToForegroundNotification(post, mediaToRetry);
+
+            // send event so Editors can handle clearing Failed statuses properly if Post is being edited right now
+            EventBus.getDefault().post(new UploadService.UploadMediaRetryEvent(mediaToRetry));
+
         } else {
             // retry uploading the Post
             mPostUploadHandler.upload(post);
@@ -842,6 +861,11 @@ public class UploadService extends Service {
         // If this was the last media upload a post was waiting for, update the post content
         // This done for pending as well as cancelled and failed posts
         for (PostModel postModel : mUploadStore.getAllRegisteredPosts()) {
+            if (isPostCurrentlyBeingEdited(postModel)) {
+                // don't touch a Post that is being currently open in the Editor.
+                break;
+            }
+
             if (!UploadService.hasPendingOrInProgressMediaUploadsForPost(postModel)) {
                 // Replace local with remote media in the post content
                 PostModel updatedPost = updateOnePostModelWithCompletedAndFailedUploads(postModel);
@@ -853,10 +877,12 @@ public class UploadService extends Service {
                         // but tell the user about the error
                         cancelQueuedPostUpload(postModel);
 
-                        // update error notification for Post
-                        SiteModel site = mSiteStore.getSiteByLocalId(postModel.getLocalSiteId());
-                        String message = UploadUtils.getErrorMessage(this, postModel, getString(R.string.error_generic_error), true);
-                        mPostUploadNotifier.updateNotificationErrorForPost(postModel, site, message, 0);
+                        // update error notification for Post, unless the media is in the user-deleted media set
+                        if (!isAllFailedMediaUserDeleted(failedMedia)) {
+                            SiteModel site = mSiteStore.getSiteByLocalId(postModel.getLocalSiteId());
+                            String message = UploadUtils.getErrorMessage(this, postModel, getString(R.string.error_generic_error), true);
+                            mPostUploadNotifier.updateNotificationErrorForPost(postModel, site, message, 0);
+                        }
 
                         mPostUploadHandler.unregisterPostForAnalyticsTracking(postModel);
                         EventBus.getDefault().post(
@@ -874,6 +900,27 @@ public class UploadService extends Service {
         return false;
     }
 
+    private boolean isAllFailedMediaUserDeleted(Set<MediaModel> failedMediaSet) {
+        if (failedMediaSet != null && failedMediaSet.size() == mUserDeletedMediaItemIds.size()) {
+            int numberOfMatches = 0;
+            for (MediaModel media : failedMediaSet) {
+                String mediaIdToCompare = String.valueOf(media.getId());
+                if (mUserDeletedMediaItemIds.contains(mediaIdToCompare)) {
+                    numberOfMatches++;
+                }
+            }
+
+            if (numberOfMatches == mUserDeletedMediaItemIds.size()) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public static void setDeletedMediaItemIds(List<String> mediaIds) {
+        mUserDeletedMediaItemIds.clear();
+        mUserDeletedMediaItemIds.addAll(mediaIds);
+    }
 
     private List<MediaModel> getRetriableStandaloneMedia(SiteModel selectedSite) {
         // get all retriable media ? To retry or not to retry, that is the question
@@ -892,6 +939,16 @@ public class UploadService extends Service {
         }
 
         return failedStandAloneMedia;
+    }
+
+    private boolean isPostCurrentlyBeingEdited(PostModel post) {
+        PostEvents.PostOpenedInEditor flag = EventBus.getDefault().getStickyEvent(PostEvents.PostOpenedInEditor.class);
+        if (flag != null && post != null
+                && post.getLocalSiteId() == flag.localSiteId
+                && post.getId() == flag.postId) {
+            return true;
+        }
+        return false;
     }
 
     /**

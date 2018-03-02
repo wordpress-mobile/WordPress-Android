@@ -284,7 +284,7 @@ public class WPPrefView extends LinearLayout implements
     /*
      * blue heading text that should appear above the preference when it's the first in a group
      */
-    private void setHeading(String heading) {
+    public void setHeading(String heading) {
         mHeadingTextView.setText(heading);
         mHeadingTextView.setVisibility(TextUtils.isEmpty(heading) ? GONE : VISIBLE);
     }

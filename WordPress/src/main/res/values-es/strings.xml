@@ -1,11 +1,91 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2017-12-13 09:36:03+0000
+Translation-Revision-Date: 2018-02-14 10:04:44+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/2.4.0-alpha
 Language: es
 -->
 <resources>
+	<string name="stats_jetpack_more_info">Más información</string>
+	<string name="stats_jetpack_connection_setup_info">Para usar las estadísticas en tu sitio WordPress tendrás que instalar el plugin Jetpack. ¿Te gustaría configurar Jetpack?</string>
+	<string name="stats_jetpack_connection_setup">Configurar Jetpack</string>
+	<string name="plugin_chevron_icon_content_description">Alternar texto</string>
+	<string name="plugin_info_your_version">Tu versión de WordPress</string>
+	<string name="plugin_info_requires_version">Requiere la versión de WordPress</string>
+	<string name="plugin_info_lastupdated">Actualizado por última vez</string>
+	<string name="plugin_info_version">Versión</string>
+	<string name="plugin_five_stars">5 estrellas</string>
+	<string name="plugin_four_stars">4 estrellas</string>
+	<string name="plugin_three_stars">3 estrellas</string>
+	<string name="plugin_two_stars">2 estrellas</string>
+	<string name="plugin_one_stars">1 estrella</string>
+	<string name="plugin_empty_text">Ninguno</string>
+	<string name="plugin_num_downloads">%s descargas</string>
+	<string name="plugin_num_ratings">%s valoraciones</string>
+	<string name="plugin_read_reviews">Leer valoraciones</string>
+	<string name="plugin_faq">Preguntas frecuentes</string>
+	<string name="plugin_whatsnew">Novedades</string>
+	<string name="plugin_installation">Instalación</string>
+	<string name="plugin_description">Descripción</string>
+	<string name="plugin_settings">Ajustes</string>
+	<string name="plugin_installed">Instalado</string>
+	<string name="plugin_installed_version">Versión %s instalada</string>
+	<string name="plugin_version">Versión %s</string>
+	<string name="plugin_byline">por %s</string>
+	<string name="change_photo">Cambiar foto</string>
+	<string name="plugin_fetch_error">No es posible cargar plugins</string>
+	<string name="my_site_btn_site_pages">Páginas del sitio</string>
+	<string name="site_settings_tags_hint">Gestiona las etiquetas de tu sitio</string>
+	<string name="dlg_saving_tag">Guardando</string>
+	<string name="dlg_deleting_tag">Borrando</string>
+	<string name="dlg_confirm_delete_tag">¿Borrar permanentemente \'%s\'?</string>
+	<string name="error_tag_exists">Ya existe una etiqueta con este nombre</string>
+	<string name="add_new_tag">Añadir nueva etiqueta</string>
+	<string name="tag_description_hint">Descripción</string>
+	<string name="tag_name_hint">Etiqueta</string>
+	<string name="site_settings_amp_summary">Tu sitio WordPress.com es compatible con el uso de páginas aceleradas para móviles, una iniciativa de Google que acelera enormemente la carga de las páginas en dispositivos móviles</string>
+	<string name="site_settings_amp_title">Páginas móviles aceleradas (AMP)</string>
+	<string name="site_settings_timezones_error">No es posible cargar las zonas horarias</string>
+	<string name="site_settings_format_help">Aprende más sobre formatos de fecha y hora</string>
+	<string name="site_settings_format_hint_custom">Formato personalizado</string>
+	<string name="site_settings_format_entry_custom">Personalizador</string>
+	<string name="site_settings_posts_per_page_title">Entradas por página</string>
+	<string name="site_settings_timezone_subtitle">Elige una ciudad en tu zona horaria</string>
+	<string name="site_settings_timezone_title">Zona horaria</string>
+	<string name="site_settings_time_format_title">Formato de hora</string>
+	<string name="site_settings_date_format_title">Formato de fecha</string>
+	<string name="site_settings_week_start_title">La semana empieza el</string>
+	<string name="site_settings_tags_title">Etiquetas</string>
+	<string name="site_settings_traffic_header">Tráfico</string>
+	<string name="delete_no">No borrar</string>
+	<string name="delete_yes">Borrar</string>
+	<string name="plugin_external_link_icon_content_description">Enlace externo</string>
+	<string name="plugin_update_available_icon_content_description">Actualización disponible</string>
+	<string name="plugin_icon_content_description">Icono del plugin</string>
+	<string name="plugin_home_page">Web del plugin</string>
+	<string name="wordpress_dot_org_plugin_page">Página del plugin en WordPress.org</string>
+	<string name="plugin_remove_dialog_message">¿Estás seguro de querer borrar %1$s de %2$s?\n\nEsto desactivará el plugin y todos los archivos y datos asociados.</string>
+	<string name="plugin_remove_dialog_title">Borrar plugin</string>
+	<string name="plugin_remove_progress_dialog_message">Borrando %s…</string>
+	<string name="plugin_disable_progress_dialog_message">Desactivando %s…</string>
+	<string name="plugin_btn_remove">Borrar plugin</string>
+	<string name="plugin_configuration_failed">Ocurrió un error al configurar el plugin: %s</string>
+	<string name="plugin_remove_failed">Error al borrar %s.</string>
+	<string name="plugin_removed_successfully">%s borrado con éxito</string>
+	<string name="plugin_updated_failed_detailed">Error al borrar %1$s: %2$s</string>
+	<string name="plugin_updated_failed">Error al borrar %s.</string>
+	<string name="plugin_updated_successfully">%s actualizado con éxito.</string>
+	<string name="plugin_available_version">La versión %s está disponible.</string>
+	<string name="plugin_detail_label_state_autoupdates">Actualizaciones automáticas</string>
+	<string name="plugin_detail_label_state_active">Activo</string>
+	<string name="plugin_autoupdates_off">Actualizaciones automáticas inactivas</string>
+	<string name="plugin_autoupdates_on">Actualizaciones automáticas activas</string>
+	<string name="plugin_inactive">Inactivo</string>
+	<string name="plugin_active">Activo</string>
+	<string name="plugins">Plugins</string>
+	<string name="my_site_btn_plugins">Plugins</string>
+	<string name="media_edit_link_hint">Abrir enlace en nueva ventana/pestaña</string>
+	<string name="media_edit_link_text">Enlace a</string>
 	<string name="notification_login_failed">Ocurrió un error.</string>
 	<string name="notification_2fa_needed">Por favor, facilita un código de identificación para continuar.</string>
 	<string name="notification_error_wrong_password">Por favor, vuelve a teclear tu contraseña para continuar.</string>
@@ -266,16 +346,6 @@ Language: es
 	<string name="format_bar_description_heading">Cabecera</string>
 	<string name="format_bar_description_media">Medios</string>
 	<string name="reader_view_comments">Ver comentarios</string>
-	<string name="new_editor_promo_title_beta">Beta</string>
-	<string name="new_editor_promo_title">Prueba el nuevo editor</string>
-	<string name="new_editor_promo_link">¿Qué hay de nuevo?</string>
-	<string name="new_editor_promo_description_image">Imagen a mano alzada</string>
-	<string name="new_editor_promo_confirmation_message">¡Nuevo editor activo!</string>
-	<string name="new_editor_promo_confirmation_action">Ajustes</string>
-	<string name="new_editor_promo_button_positive">Pruébalo</string>
-	<string name="new_editor_promo_button_negative">Ahora no</string>
-	<string name="new_editor_beta_message">¡Nuevo editor en beta abierta!</string>
-	<string name="new_editor_beta_action">Leer más</string>
 	<string name="preference_editor_footer_description">Icono de información</string>
 	<string name="preference_editor_footer">Notas del lanzamiento del editor e informe de fallos</string>
 	<string name="site_settings_video_quality_hint">Calidad de los vídeos. Valores más altos implican vídeos de mejor calidad.</string>
@@ -356,7 +426,6 @@ Language: es
 	<string name="smart_toast_photo_long_press">Toca y mantiene para elegir varias fotos</string>
 	<string name="photo_picker_choose_video">Elige un vídeo del dispositivo</string>
 	<string name="photo_picker_choose_photo">Elige una foto del dispositivo</string>
-	<string name="new_editor_promo_description">La app WordPress ahora incluye un bonito nuevo editor. ¡Pruébalo creando una nueva entrada!</string>
 	<string name="wp_media_title">Medios de WordPress</string>
 	<string name="media_insert_as_gallery">Añadir como galería</string>
 	<string name="media_insert_individually">Añadir individualmente</string>
@@ -412,7 +481,6 @@ Language: es
 	<string name="checking_username">Comprobar Nombre de usuario</string>
 	<string name="jetpack_different_com_account">No se admiten sitios de Jetpack pertenecientes a diferentes cuentas de WordPress.com</string>
 	<string name="jetpack_use_com_account">Para agregar su sitio Jetpack, inicie sesión la cuenta de WordPress.com que utilizó para conectar Jetpack.</string>
-	<string name="jetpack_message">El plugin Jetpack debe ser instalado y activado. ¿Quieres instalar o activar Jetpack?</string>
 	<string name="error_media_load">No se puede cargar archivos multimedia</string>
 	<string name="error_media_refresh_no_connection">Se necesita estar conectado para actualizar la biblioteca</string>
 	<string name="error_media_unauthorized">No tienes permiso para ver o editar archivos multimedia</string>
@@ -592,8 +660,6 @@ Language: es
 	<string name="enter_your_password_instead">Introduce tu contraseña</string>
 	<string name="web_address_dialog_hint">Cuando comentes se hará público</string>
 	<string name="username_email">Correo electrónico o nombre de usuario</string>
-	<string name="jetpack_not_connected_message">El plugin Jetpack se ha instalado, pero no se ha conectado con WordPress.com. ¿Quieres conectar Jetpack?</string>
-	<string name="jetpack_not_connected">Plugin Jetpack no conectado</string>
 	<string name="new_editor_reflection_error">Editor visual no compatible con tu dispositivo. Se ha\ndesactivado automáticamente</string>
 	<string name="stats_insights_latest_post_no_title">(sin título)</string>
 	<string name="capture_or_pick_photo">Captura o elige imagen</string>
@@ -633,7 +699,7 @@ Language: es
 	<string name="error_deleting_site_summary">Hubo un error eliminando tu sitio. Por favor, contacta con el soporte para más asistencia</string>
 	<string name="error_deleting_site">Error borrando sitio</string>
 	<string name="site_settings_export_content_title">Exportar contenido</string>
-	<string name="confirm_delete_site_prompt">Por favor, escribe en %1$s en el campo arriba para confirmar. Tu sitio desaparecerá para siempre.</string>
+	<string name="confirm_delete_site_prompt">Por favor, escribe: %1$s en el campo de abajo para confirmar. Tu sitio desaparecerá para siempre.</string>
 	<string name="confirm_delete_site">Confirmar borrado del sitio</string>
 	<string name="contact_support">Contactar con el soporte</string>
 	<string name="start_over_text">Si quieres un sitio, pero no quieres ninguna de las entradas y las páginas que tiene ahora, nuestro equipo de soporte puede borrar sus mensajes, páginas, archivos multimedia y tus comentarios.\n\nEsto mantendrá su sitio y la URL activos, pero tendrás un nuevo comienzo en la creación de contenidos. Sólo tienes que contactar con nosotros para limpiar tu contenido actual..</string>
@@ -1255,7 +1321,6 @@ Language: es
 	<string name="reader_toast_err_remove_tag">No se pudo eliminar esta etiqueta</string>
 	<string name="reader_toast_err_add_tag">No se pudo añadir esta etiqueta</string>
 	<string name="reader_title_applog">Registro de la aplicación</string>
-	<string name="jetpack_message_not_admin">Se necesita el plugin Jetpack. Contacta con el administrador del sitio.</string>
 	<string name="fatal_db_error">Hubo un error al crear la base de datos de la app. Por favor, intenta reinstalar la app. </string>
 	<string name="error_blog_hidden">Este blog está oculto y no se puede cargar. Actívalo de nuevo en ajustes y prueba de nuevo.</string>
 	<string name="error_refresh_media">No se pueden actualizar los medios en este momento</string>
@@ -1328,6 +1393,7 @@ Language: es
 	<string name="media_gallery_type_thumbnail_grid">Malla (red) de miniaturas</string>
 	<string name="learn_more">Aprender más</string>
 	<string name="post_not_found">Ocurrió un error al cargar la entrada. Actualiza tus entradas e intenta nuevamente.</string>
+	<string name="plugin_not_found">Ocurrió un error al acceder a este plugin</string>
 	<string name="scaled_image_error">Introduce un valor válido de ancho a escala</string>
 	<string name="cancel_edit">Cancelar edición</string>
 	<string name="connection_error">Error de conexión</string>
@@ -1390,7 +1456,6 @@ Language: es
 	<string name="reader_btn_follow">Seguir</string>
 	<string name="reader_btn_share">Compartir</string>
 	<string name="reader_untitled_post">Sin título</string>
-	<string name="jetpack_not_found">No se ha encontrado el plugin Jetpack</string>
 	<string name="empty_list_default">Esta lista esta vacía</string>
 	<string name="media_add_popup_title">Añadir a biblioteca multimedia</string>
 	<string name="passcode_turn_on">Bloquear PIN</string>

@@ -315,7 +315,6 @@ Language: mk
 	<string name="reader_label_removed_tag">Одстранети %s</string>
 	<string name="media_add_popup_title">Додади во медиа библиотеката</string>
 	<string name="empty_list_default">Оваа листа е празна</string>
-	<string name="jetpack_not_found">Jetpack додатокот не е пронајден</string>
 	<string name="reader_untitled_post">(без наслов)</string>
 	<string name="reader_btn_share">Сподели</string>
 	<string name="reader_btn_follow">Следи</string>

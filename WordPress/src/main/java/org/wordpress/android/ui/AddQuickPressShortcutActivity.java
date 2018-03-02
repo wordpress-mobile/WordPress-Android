@@ -5,6 +5,8 @@ import android.app.ListActivity;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v4.content.pm.ShortcutInfoCompat;
+import android.support.v4.content.pm.ShortcutManagerCompat;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -29,7 +31,6 @@ import org.wordpress.android.WordPress;
 import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.store.SiteStore;
 import org.wordpress.android.fluxc.tools.FluxCImageLoader;
-import org.wordpress.android.ui.accounts.SignInActivity;
 import org.wordpress.android.ui.posts.EditPostActivity;
 import org.wordpress.android.util.SiteUtils;
 import org.wordpress.android.util.ToastUtils;
@@ -40,8 +41,6 @@ import java.util.List;
 import javax.inject.Inject;
 
 public class AddQuickPressShortcutActivity extends ListActivity {
-    static final int ADD_ACCOUNT_REQUEST = 0;
-
     public String[] blogNames;
     public int[] siteIds;
     public String[] accountUsers;
@@ -113,8 +112,7 @@ public class AddQuickPressShortcutActivity extends ListActivity {
 
         } else {
             // no account, load new account view
-            Intent i = new Intent(AddQuickPressShortcutActivity.this, SignInActivity.class);
-            startActivityForResult(i, ADD_ACCOUNT_REQUEST);
+            ActivityLauncher.showSignInForResult(AddQuickPressShortcutActivity.this);
         }
     }
 
@@ -139,16 +137,19 @@ public class AddQuickPressShortcutActivity extends ListActivity {
                     shortcutIntent.putExtra(EditPostActivity.EXTRA_QUICKPRESS_BLOG_ID, siteIds[position]);
                     shortcutIntent.putExtra(EditPostActivity.EXTRA_IS_QUICKPRESS, true);
 
-                    Intent addIntent = new Intent();
-                    addIntent.putExtra(Intent.EXTRA_SHORTCUT_INTENT, shortcutIntent);
-                    addIntent.putExtra(Intent.EXTRA_SHORTCUT_NAME, quickPressShortcutName.getText().toString());
-                    addIntent.putExtra(Intent.EXTRA_SHORTCUT_ICON_RESOURCE, Intent.ShortcutIconResource.fromContext
-                            (AddQuickPressShortcutActivity.this, R.mipmap.app_icon));
+                    String shortcutName = quickPressShortcutName.getText().toString();
 
-                    WordPress.wpDB.addQuickPressShortcut(siteIds[position], quickPressShortcutName.getText().toString());
+                    WordPress.wpDB.addQuickPressShortcut(siteIds[position], shortcutName);
 
-                    addIntent.setAction("com.android.launcher.action.INSTALL_SHORTCUT");
-                    AddQuickPressShortcutActivity.this.sendBroadcast(addIntent);
+                    ShortcutInfoCompat pinShortcutInfo =
+                            new ShortcutInfoCompat.Builder(getApplicationContext(), shortcutName)
+                                    .setIcon(R.mipmap.app_icon)
+                                    .setShortLabel(shortcutName)
+                                    .setIntent(shortcutIntent)
+                                    .build();
+
+                    ShortcutManagerCompat.requestPinShortcut(getApplicationContext(), pinShortcutInfo, null);
+
                     AddQuickPressShortcutActivity.this.finish();
                 }
             }
@@ -166,7 +167,7 @@ public class AddQuickPressShortcutActivity extends ListActivity {
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         switch (requestCode) {
-            case ADD_ACCOUNT_REQUEST:
+            case RequestCodes.ADD_ACCOUNT:
                 if (resultCode == RESULT_OK) {
                     if (mSiteStore.getVisibleSitesCount() > 0) {
                         displayAccounts();

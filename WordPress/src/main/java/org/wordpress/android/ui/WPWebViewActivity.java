@@ -82,8 +82,7 @@ public class WPWebViewActivity extends WebViewActivity {
     public static final String REFERRER_URL = "referrer_url";
     public static final String DISABLE_LINKS_ON_PAGE = "DISABLE_LINKS_ON_PAGE";
     public static final String ALLOWED_URLS = "allowed_urls";
-
-    private static final String ENCODING_UTF8 = "UTF-8";
+    public static final String ENCODING_UTF8 = "UTF-8";
 
     @Inject AccountStore mAccountStore;
     @Inject SiteStore mSiteStore;
@@ -148,7 +147,7 @@ public class WPWebViewActivity extends WebViewActivity {
         intent.putExtra(WPWebViewActivity.AUTHENTICATION_URL, authURL);
         intent.putExtra(WPWebViewActivity.LOCAL_BLOG_ID, site.getId());
         intent.putExtra(WPWebViewActivity.DISABLE_LINKS_ON_PAGE, true);
-            intent.putExtra(ALLOWED_URLS, listOfAllowedURLs);
+        intent.putExtra(ALLOWED_URLS, listOfAllowedURLs);
         if (post != null) {
             intent.putExtra(WPWebViewActivity.SHAREABLE_URL, post.getLink());
             if (!TextUtils.isEmpty(post.getTitle())) {
@@ -182,7 +181,7 @@ public class WPWebViewActivity extends WebViewActivity {
         context.startActivity(intent);
     }
 
-    private static boolean checkContextAndUrl(Context context, String url) {
+    protected static boolean checkContextAndUrl(Context context, String url) {
         if (context == null) {
             AppLog.e(AppLog.T.UTILS, "Context is null");
             return false;
@@ -220,8 +219,7 @@ public class WPWebViewActivity extends WebViewActivity {
         mWebView.getSettings().setJavaScriptEnabled(true);
         mWebView.getSettings().setDomStorageEnabled(true);
 
-        WebViewClient webViewClient;
-        Bundle extras = getIntent().getExtras();
+        final Bundle extras = getIntent().getExtras();
 
         // Configure the allowed URLs if available
         ArrayList<String> allowedURL = null;
@@ -236,27 +234,31 @@ public class WPWebViewActivity extends WebViewActivity {
                 allowedURL.add(authURL);
             }
 
-            if(extras.getStringArray(ALLOWED_URLS) != null) {
+            if (extras.getStringArray(ALLOWED_URLS) != null) {
                 String[] urls = extras.getStringArray(ALLOWED_URLS);
-                for (String currentURL: urls) {
+                for (String currentURL : urls) {
                     allowedURL.add(currentURL);
                 }
             }
         }
 
+        WebViewClient webViewClient = createWebViewClient(allowedURL);
+
+        mWebView.setWebViewClient(webViewClient);
+        mWebView.setWebChromeClient(new WPWebChromeClient(this, (ProgressBar) findViewById(R.id.progress_bar)));
+    }
+
+    protected WebViewClient createWebViewClient(List<String> allowedURL) {
         if (getIntent().hasExtra(LOCAL_BLOG_ID)) {
             SiteModel site = mSiteStore.getSiteByLocalId(getIntent().getIntExtra(LOCAL_BLOG_ID, -1));
             if (site == null) {
                 AppLog.e(AppLog.T.UTILS, "No valid blog passed to WPWebViewActivity");
                 finish();
             }
-            webViewClient = new WPWebViewClient(site, mAccountStore.getAccessToken(), allowedURL);
+            return new WPWebViewClient(site, mAccountStore.getAccessToken(), allowedURL);
         } else {
-            webViewClient = new URLFilteredWebViewClient(allowedURL);
+            return new URLFilteredWebViewClient(allowedURL);
         }
-
-        mWebView.setWebViewClient(webViewClient);
-        mWebView.setWebChromeClient(new WPWebChromeClient(this, (ProgressBar) findViewById(R.id.progress_bar)));
     }
 
     @Override
@@ -336,7 +338,7 @@ public class WPWebViewActivity extends WebViewActivity {
     }
 
     public static String getAuthenticationPostData(String authenticationUrl, String urlToLoad, String username,
-            String password, String token) {
+                                                   String password, String token) {
         if (TextUtils.isEmpty(authenticationUrl)) return "";
 
         try {

@@ -1002,7 +1002,7 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
         if (status == CommentStatus.APPROVED) {
             mBtnModerateIcon.setImageResource(R.drawable.ic_checkmark_orange_jazzy_24dp);
             mBtnModerateTextView.setText(R.string.comment_status_approved);
-            mBtnModerateTextView.setTextColor(ContextCompat.getColor(getActivity(), R.color.notification_status_unapproved_dark));
+            mBtnModerateTextView.setTextColor(ContextCompat.getColor(getActivity(), R.color.orange_jazzy));
         } else {
             mBtnModerateIcon.setImageResource(R.drawable.ic_checkmark_grey_24dp);
             mBtnModerateTextView.setText(R.string.mnu_comment_approve);

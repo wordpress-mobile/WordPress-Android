@@ -22,7 +22,6 @@
     <string name="pref_key_app_about" translatable="false">wp_pref_app_about</string>
     <string name="pref_key_oss_licenses" translatable="false">wp_pref_open_source_licenses</string>
     <string name="pref_key_editor" translatable="false">wp_pref_editor</string>
-    <string name="pref_key_editor_footer" translatable="false">wp_pref_editor_footer</string>
     <string name="pref_key_editor_type" translatable="false">pref_key_editor_type</string>
     <string name="pref_notification_blogs" translatable="false">wp_pref_notification_blogs</string>
     <string name="pref_notification_other_category" translatable="false">wp_pref_notification_other_category</string>
@@ -46,12 +45,15 @@
     <string name="pref_key_site_password" translatable="false">wp_pref_site_password</string>
     <string name="pref_key_site_related_posts" translatable="false">wp_pref_site_related_posts</string>
     <string name="pref_key_site_category" translatable="false">wp_pref_site_default_category</string>
+    <string name="pref_key_site_tags" translatable="false">wp_pref_site_tags</string>
     <string name="pref_key_site_format" translatable="false">wp_pref_site_default_format</string>
     <string name="pref_key_site_week_start" translatable="false">wp_pref_site_week_start</string>
     <string name="pref_key_site_date_format" translatable="false">wp_pref_site_date_format</string>
     <string name="pref_key_site_time_format" translatable="false">wp_pref_site_time_format</string>
     <string name="pref_key_site_timezone" translatable="false">wp_pref_site_timezone</string>
     <string name="pref_key_site_posts_per_page" translatable="false">wp_pref_site_post_per_page</string>
+    <string name="pref_key_site_amp" translatable="false">wp_pref_site_amp</string>
+    <string name="pref_key_site_traffic" translatable="false">wp_pref_site_traffic</string>
     <string name="pref_key_optimize_media" translatable="false">wp_pref_optimize_media</string>
     <string name="pref_key_optimize_image" translatable="false">wp_pref_key_optimize_image</string>
     <string name="pref_key_site_image_width" translatable="false">wp_pref_site_default_image_width</string>
@@ -98,6 +100,10 @@
     <string name="pref_key_comment_likes" translatable="false">wp_pref_comment_likes</string>
     <string name="pref_key_more_buttons" translatable="false">wp_pref_more_buttons</string>
     <string name="pref_key_twitter_category" translatable="false">wp_pref_twitter_category</string>
+    <!-- Speed up your site -->
+    <string name="pref_key_speed_up_your_site_screen" translatable="false">wp_pref_speed_up_your_site_screen</string>
+    <string name="pref_key_serve_images_from_our_servers" translatable="false">wp_pref_serve_images_from_our_servers</string>
+    <string name="pref_key_lazy_load_images" translatable="false">wp_pref_lazy_load_images</string>
 
     <!-- Jetpack Security -->
     <string name="pref_key_jetpack_settings" translatable="false">wp_pref_jetpack_settings</string>

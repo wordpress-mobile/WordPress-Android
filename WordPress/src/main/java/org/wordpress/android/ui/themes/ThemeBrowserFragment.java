@@ -3,18 +3,16 @@ package org.wordpress.android.ui.themes;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.Fragment;
-import android.content.Context;
-import android.database.Cursor;
-import android.database.MatrixCursor;
-import android.database.MergeCursor;
-import android.os.Build;
 import android.os.Bundle;
+import android.support.v7.widget.SearchView;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AbsListView.RecyclerListener;
-import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -25,10 +23,12 @@ import com.android.volley.toolbox.ImageLoader.ImageListener;
 
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
+import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.model.ThemeModel;
 import org.wordpress.android.fluxc.store.ThemeStore;
 import org.wordpress.android.ui.plans.PlansConstants;
+import org.wordpress.android.util.AnalyticsUtils;
 import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.ToastUtils;
@@ -38,6 +38,7 @@ import org.wordpress.android.util.widgets.CustomSwipeRefreshLayout;
 import org.wordpress.android.widgets.HeaderGridView;
 import org.wordpress.android.widgets.WPNetworkImageView;
 
+import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
@@ -48,7 +49,12 @@ import static org.wordpress.android.util.WPSwipeToRefreshHelper.buildSwipeToRefr
 /**
  * A fragment display the themes on a grid view.
  */
-public class ThemeBrowserFragment extends Fragment implements RecyclerListener {
+public class ThemeBrowserFragment extends Fragment
+        implements RecyclerListener, SearchView.OnQueryTextListener {
+
+    public static final String TAG = ThemeBrowserFragment.class.getName();
+    private static final String KEY_LAST_SEARCH = "last_search";
+
     public static ThemeBrowserFragment newInstance(SiteModel site) {
         ThemeBrowserFragment fragment = new ThemeBrowserFragment();
         Bundle bundle = new Bundle();
@@ -63,21 +69,27 @@ public class ThemeBrowserFragment extends Fragment implements RecyclerListener {
         void onViewSelected(String themeId);
         void onDetailsSelected(String themeId);
         void onSupportSelected(String themeId);
-        void onSearchClicked();
+        void onSwipeToRefresh();
     }
 
-    protected SwipeToRefreshHelper mSwipeToRefreshHelper;
-    protected ThemeBrowserActivity mThemeBrowserActivity;
+    private SwipeToRefreshHelper mSwipeToRefreshHelper;
     private String mCurrentThemeId;
+    private String mLastSearch;
+
     private HeaderGridView mGridView;
     private RelativeLayout mEmptyView;
     private TextView mNoResultText;
     private TextView mCurrentThemeTextView;
+
     private ThemeBrowserAdapter mAdapter;
-    private ThemeBrowserFragmentCallback mCallback;
     private boolean mShouldRefreshOnStart;
     private TextView mEmptyTextView;
     private SiteModel mSite;
+
+    private MenuItem mSearchMenuItem;
+    private SearchView mSearchView;
+
+    private ThemeBrowserFragmentCallback mCallback;
 
     @Inject ThemeStore mThemeStore;
 
@@ -86,40 +98,24 @@ public class ThemeBrowserFragment extends Fragment implements RecyclerListener {
         super.onCreate(savedInstanceState);
         ((WordPress) getActivity().getApplication()).component().inject(this);
 
-        if (savedInstanceState == null) {
-            mSite = (SiteModel) getArguments().getSerializable(WordPress.SITE);
-        } else {
-            mSite = (SiteModel) savedInstanceState.getSerializable(WordPress.SITE);
-        }
-
+        mSite = (SiteModel) getArguments().getSerializable(WordPress.SITE);
         if (mSite == null) {
             ToastUtils.showToast(getActivity(), R.string.blog_not_found, ToastUtils.Duration.SHORT);
             getActivity().finish();
         }
-    }
 
-    @Override
-    public void onAttach(Context context) {
-        super.onAttach(context);
+        setHasOptionsMenu(true);
 
-        attachActivity((ThemeBrowserActivity) context);
+        if (savedInstanceState != null) {
+            mLastSearch = savedInstanceState.getString(KEY_LAST_SEARCH);
+        }
     }
 
     @Override
     public void onAttach(Activity activity) {
         super.onAttach(activity);
-
-        // This version of onAttach will be called for all Android versions but it's deprecated, so we only want to
-        // use it when we have to. https://github.com/wordpress-mobile/WordPress-Android/issues/6937
-        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M) {
-            attachActivity((ThemeBrowserActivity) activity);
-        }
-    }
-
-    private void attachActivity(ThemeBrowserActivity activity) {
         try {
-            mCallback = activity;
-            mThemeBrowserActivity = activity;
+            mCallback = (ThemeBrowserFragmentCallback) activity;
         } catch (ClassCastException e) {
             throw new ClassCastException(activity.toString() + " must implement ThemeBrowserFragmentCallback");
         }
@@ -128,6 +124,9 @@ public class ThemeBrowserFragment extends Fragment implements RecyclerListener {
     @Override
     public void onDetach() {
         super.onDetach();
+        if (mSearchView != null) {
+            mSearchView.setOnQueryTextListener(null);
+        }
         mCallback = null;
     }
 
@@ -135,10 +134,9 @@ public class ThemeBrowserFragment extends Fragment implements RecyclerListener {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.theme_browser_fragment, container, false);
 
-        setRetainInstance(true);
-        mNoResultText = (TextView) view.findViewById(R.id.theme_no_search_result_text);
-        mEmptyTextView = (TextView) view.findViewById(R.id.text_empty);
-        mEmptyView = (RelativeLayout) view.findViewById(R.id.empty_view);
+        mNoResultText = view.findViewById(R.id.theme_no_search_result_text);
+        mEmptyTextView = view.findViewById(R.id.text_empty);
+        mEmptyView = view.findViewById(R.id.empty_view);
 
         configureGridView(inflater, view);
         configureSwipeToRefresh(view);
@@ -150,38 +148,62 @@ public class ThemeBrowserFragment extends Fragment implements RecyclerListener {
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
-        if (this instanceof ThemeSearchFragment) {
-            mThemeBrowserActivity.setThemeSearchFragment((ThemeSearchFragment) this);
-        } else {
-            mThemeBrowserActivity.setThemeBrowserFragment(this);
-        }
-
-        Cursor cursor = fetchThemes();
-        if (cursor == null) {
-            return;
-        }
-
-        mAdapter = new ThemeBrowserAdapter(mThemeBrowserActivity, cursor, false, mCallback);
-        setEmptyViewVisible(mAdapter.getCount() == 0);
-        mGridView.setAdapter(mAdapter);
-    }
-
-    @Override
-    public void onResume() {
-        super.onResume();
-        mThemeBrowserActivity.fetchCurrentTheme();
+        getAdapter().setThemeList(fetchThemes());
+        setEmptyViewVisible(getAdapter().getCount() == 0);
+        mGridView.setAdapter(getAdapter());
     }
 
     @Override
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
-        outState.putSerializable(WordPress.SITE, mSite);
+        if (mSearchMenuItem != null && mSearchMenuItem.isActionViewExpanded()) {
+            outState.putString(KEY_LAST_SEARCH, mSearchView.getQuery().toString());
+        }
+    }
+
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        inflater.inflate(R.menu.search, menu);
+
+        mSearchMenuItem = menu.findItem(R.id.menu_search);
+        mSearchView = (SearchView) mSearchMenuItem.getActionView();
+        mSearchView.setOnQueryTextListener(this);
+
+        if (!TextUtils.isEmpty(mLastSearch)) {
+            mSearchMenuItem.expandActionView();
+            onQueryTextSubmit(mLastSearch);
+            mSearchView.setQuery(mLastSearch, true);
+        }
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if (item.getItemId() == R.id.menu_search) {
+            AnalyticsUtils.trackWithSiteDetails(AnalyticsTracker.Stat.THEMES_ACCESSED_SEARCH, mSite);
+            return true;
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public boolean onQueryTextSubmit(String query) {
+        getAdapter().getFilter().filter(query);
+        if (mSearchView != null) {
+            mSearchView.clearFocus();
+        }
+        return true;
+    }
+
+    @Override
+    public boolean onQueryTextChange(String newText) {
+        getAdapter().getFilter().filter(newText);
+        return true;
     }
 
     @Override
     public void onMovedToScrapHeap(View view) {
         // cancel image fetch requests if the view has been moved to recycler.
-        WPNetworkImageView niv = (WPNetworkImageView) view.findViewById(R.id.theme_grid_item_image);
+        WPNetworkImageView niv = view.findViewById(R.id.theme_grid_item_image);
         if (niv != null) {
             // this tag is set in the ThemeBrowserAdapter class
             String requestUrl = (String) niv.getTag();
@@ -210,12 +232,11 @@ public class ThemeBrowserFragment extends Fragment implements RecyclerListener {
         refreshView();
     }
 
-    protected void addHeaderViews(LayoutInflater inflater) {
+    private void addHeaderViews(LayoutInflater inflater) {
         addMainHeader(inflater);
-        configureAndAddSearchHeader(inflater);
     }
 
-    protected void configureSwipeToRefresh(View view) {
+    private void configureSwipeToRefresh(View view) {
         mSwipeToRefreshHelper = buildSwipeToRefreshHelper(
                 (CustomSwipeRefreshLayout) view.findViewById(R.id.ptr_layout),
                 new RefreshListener() {
@@ -224,14 +245,13 @@ public class ThemeBrowserFragment extends Fragment implements RecyclerListener {
                         if (!isAdded()) {
                             return;
                         }
-                        if (!NetworkUtils.checkConnection(mThemeBrowserActivity)) {
+                        if (!NetworkUtils.checkConnection(getActivity())) {
                             mSwipeToRefreshHelper.setRefreshing(false);
                             mEmptyTextView.setText(R.string.no_network_title);
                             return;
                         }
                         setRefreshing(true);
-                        mThemeBrowserActivity.fetchInstalledThemesIfJetpackSite();
-                        mThemeBrowserActivity.fetchWpComThemesIfSyncTimedOut(true);
+                        mCallback.onSwipeToRefresh();
                     }
                 }
         );
@@ -239,7 +259,7 @@ public class ThemeBrowserFragment extends Fragment implements RecyclerListener {
     }
 
     private void configureGridView(LayoutInflater inflater, View view) {
-        mGridView = (HeaderGridView) view.findViewById(R.id.theme_listview);
+        mGridView = view.findViewById(R.id.theme_listview);
         addHeaderViews(inflater);
         mGridView.setRecyclerListener(this);
     }
@@ -247,10 +267,10 @@ public class ThemeBrowserFragment extends Fragment implements RecyclerListener {
     private void addMainHeader(LayoutInflater inflater) {
         @SuppressLint("InflateParams")
         View header = inflater.inflate(R.layout.theme_grid_cardview_header, null);
-        mCurrentThemeTextView = (TextView) header.findViewById(R.id.header_theme_text);
+        mCurrentThemeTextView = header.findViewById(R.id.header_theme_text);
 
         setThemeNameIfAlreadyAvailable();
-        LinearLayout customize = (LinearLayout) header.findViewById(R.id.customize);
+        LinearLayout customize = header.findViewById(R.id.customize);
         customize.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -258,7 +278,7 @@ public class ThemeBrowserFragment extends Fragment implements RecyclerListener {
             }
         });
 
-        LinearLayout details = (LinearLayout) header.findViewById(R.id.details);
+        LinearLayout details = header.findViewById(R.id.details);
         details.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -266,7 +286,7 @@ public class ThemeBrowserFragment extends Fragment implements RecyclerListener {
             }
         });
 
-        LinearLayout support = (LinearLayout) header.findViewById(R.id.support);
+        LinearLayout support = header.findViewById(R.id.support);
         support.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -294,67 +314,46 @@ public class ThemeBrowserFragment extends Fragment implements RecyclerListener {
         }
     }
 
-    private void configureAndAddSearchHeader(LayoutInflater inflater) {
-        @SuppressLint("InflateParams")
-        View headerSearch = inflater.inflate(R.layout.theme_grid_cardview_header_search, null);
-        headerSearch.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                mCallback.onSearchClicked();
-            }
-        });
-        mGridView.addHeaderView(headerSearch);
-        ImageButton searchButton = (ImageButton) headerSearch.findViewById(R.id.theme_search);
-        searchButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                mCallback.onSearchClicked();
-            }
-        });
-    }
-
     private void setEmptyViewVisible(boolean visible) {
         if (!isAdded() || getView() == null) {
             return;
         }
         mEmptyView.setVisibility(visible ? RelativeLayout.VISIBLE : RelativeLayout.GONE);
         mGridView.setVisibility(visible ? View.GONE : View.VISIBLE);
-        if (visible && !NetworkUtils.isNetworkAvailable(mThemeBrowserActivity)) {
+        if (visible && !NetworkUtils.isNetworkAvailable(getActivity())) {
             mEmptyTextView.setText(R.string.no_network_title);
         }
     }
 
-    protected Cursor fetchThemes() {
+    private List<ThemeModel> fetchThemes() {
         if (mSite == null) {
-            return null;
+            return new ArrayList<>();
         }
 
         if (mSite.isWPCom()) {
-            return getSortedWpComThemesCursor();
+            return getSortedWpComThemes();
         }
 
-        // this is a Jetpack site, show two sections with headers
-        return getSortedJetpackCursor();
+        return getSortedJetpackThemes();
+    }
+
+    private ThemeBrowserAdapter getAdapter() {
+        if (mAdapter == null) {
+            mAdapter = new ThemeBrowserAdapter(getActivity(), mCallback);
+        }
+        return mAdapter;
     }
 
     protected void refreshView() {
-        Cursor cursor = fetchThemes();
-        if (cursor == null) {
-            return;
-        }
-        if (mAdapter == null) {
-            mAdapter = new ThemeBrowserAdapter(mThemeBrowserActivity, cursor, false, mCallback);
-        }
         if (mNoResultText.isShown()) {
             mNoResultText.setVisibility(View.GONE);
         }
-        mAdapter.changeCursor(cursor);
-        mAdapter.notifyDataSetChanged();
-        setEmptyViewVisible(mAdapter.getCount() == 0);
+        getAdapter().setThemeList(fetchThemes());
+        setEmptyViewVisible(getAdapter().getCount() == 0);
     }
 
-    private Cursor getSortedWpComThemesCursor() {
-        final List<ThemeModel> wpComThemes = mThemeStore.getWpComThemes();
+    private List<ThemeModel> getSortedWpComThemes() {
+        List<ThemeModel> wpComThemes = mThemeStore.getWpComThemes();
 
         // first thing to do is attempt to find the active theme and move it to the front of the list
         moveActiveThemeToFront(wpComThemes);
@@ -364,13 +363,12 @@ public class ThemeBrowserFragment extends Fragment implements RecyclerListener {
             removeNonActivePremiumThemes(wpComThemes);
         }
 
-        // lastly convert the list into a Cursor for the adapter
-        return createCursorForThemesList(wpComThemes);
+        return wpComThemes;
     }
 
-    private Cursor getSortedJetpackCursor() {
-        final List<ThemeModel> wpComThemes = mThemeStore.getWpComThemes();
-        final List<ThemeModel> uploadedThemes = mThemeStore.getThemesForSite(mSite);
+    private List<ThemeModel> getSortedJetpackThemes() {
+        List<ThemeModel> wpComThemes = mThemeStore.getWpComThemes();
+        List<ThemeModel> uploadedThemes = mThemeStore.getThemesForSite(mSite);
 
         // put the active theme at the top of the uploaded themes list
         moveActiveThemeToFront(uploadedThemes);
@@ -381,25 +379,13 @@ public class ThemeBrowserFragment extends Fragment implements RecyclerListener {
         // remove uploaded themes from WP.com themes list (including active theme)
         removeDuplicateThemes(wpComThemes, uploadedThemes);
 
-        // 1. Uploaded header
-        // 2. Uploaded themes
-        // 3. WP.com header
-        // 4. WP.com themes
-        final Cursor[] cursors = new Cursor[4];
-        final Cursor uploadedThemesCursor = createCursorForThemesList(uploadedThemes);
-        final Cursor wpComThemesCursor = createCursorForThemesList(wpComThemes);
-
-        cursors[0] = ThemeBrowserAdapter.createHeaderCursor(
-                getString(R.string.uploaded_themes_header), uploadedThemesCursor.getCount());
-        cursors[1] = uploadedThemesCursor;
-        cursors[2] = ThemeBrowserAdapter.createHeaderCursor(
-                getString(R.string.wpcom_themes_header), wpComThemesCursor.getCount());
-        cursors[3] = wpComThemesCursor;
-
-        return new MergeCursor(cursors);
+        List<ThemeModel> allThemes = new ArrayList<>();
+        allThemes.addAll(uploadedThemes);
+        allThemes.addAll(wpComThemes);
+        return allThemes;
     }
 
-    protected void moveActiveThemeToFront(final List<ThemeModel> themes) {
+    private void moveActiveThemeToFront(final List<ThemeModel> themes) {
         if (themes == null || themes.isEmpty() || TextUtils.isEmpty(mCurrentThemeId)) {
             return;
         }
@@ -420,7 +406,7 @@ public class ThemeBrowserFragment extends Fragment implements RecyclerListener {
         }
     }
 
-    protected void removeNonActivePremiumThemes(final List<ThemeModel> themes) {
+    private void removeNonActivePremiumThemes(final List<ThemeModel> themes) {
         if (themes == null || themes.isEmpty()) {
             return;
         }
@@ -451,7 +437,7 @@ public class ThemeBrowserFragment extends Fragment implements RecyclerListener {
         }
     }
 
-    protected boolean shouldShowPremiumThemes() {
+    private boolean shouldShowPremiumThemes() {
         if (mSite == null) {
             return false;
         }
@@ -460,13 +446,5 @@ public class ThemeBrowserFragment extends Fragment implements RecyclerListener {
                 || planId == PlansConstants.BUSINESS_PLAN_ID
                 || planId == PlansConstants.JETPACK_PREMIUM_PLAN_ID
                 || planId == PlansConstants.JETPACK_BUSINESS_PLAN_ID;
-    }
-
-    protected Cursor createCursorForThemesList(List<ThemeModel> themes) {
-        final MatrixCursor cursor = new MatrixCursor(ThemeBrowserAdapter.THEME_COLUMNS);
-        for (ThemeModel theme : themes) {
-            cursor.addRow(ThemeBrowserAdapter.createThemeCursorRow(theme));
-        }
-        return cursor;
     }
 }

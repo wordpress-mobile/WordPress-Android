@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2017-09-01 20:24:27+0000
+Translation-Revision-Date: 2018-01-12 18:27:03+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/2.4.0-alpha
 Language: eu_ES
@@ -15,8 +15,8 @@ Language: eu_ES
 	<string name="reader_label_visit">Bisitatu</string>
 	<string name="reader_toast_err_comment_not_found">Ez da iruzkina aurkitu!</string>
 	<string name="reader_title_post_detail_wpcom">WordPress.com postontzia</string>
-	<string name="error_notif_q_action_reply">Ezin izan da iruzkina erantzun. Mesedez saiatu berriro beranduago.</string>
 	<string name="reader_title_deeplink">WordPress Irakurtzailea</string>
+	<string name="error_notif_q_action_reply">Ezin izan da iruzkina erantzun. Mesedez saiatu berriro beranduago.</string>
 	<string name="error_notif_q_action_approve">Ezin izan da iruzkina onartu. Mesedez saiatu berriro beranduago.</string>
 	<string name="notifications_label_new_notifications_subtitle">Egin tap berauok ikusteko</string>
 	<string name="notifications_label_new_notifications">Jakinarazpen berriak</string>
@@ -58,6 +58,7 @@ Language: eu_ES
 	<string name="error_fetch_email_followers_list">Ezin izan dira guneko e-posta jarraitzaileak eskuratu</string>
 	<string name="error_fetch_followers_list">Ezin izan dira guneko jarraitzaileak eskuratu</string>
 	<string name="visual_editor">Editore bisuala</string>
+	<string name="format_bar_description_html">HTML</string>
 	<string name="format_bar_description_ul">Ordenarik gabeko zerrenda</string>
 	<string name="format_bar_description_ol">Zerrenda ordenatua</string>
 	<string name="format_bar_description_more">Irakurri gehiago</string>
@@ -115,8 +116,6 @@ Language: eu_ES
 	<string name="enter_your_password_instead">Sartu zure pasahitza ordez</string>
 	<string name="web_address_dialog_hint">Publikoki erakusten da iruzkinak egitean.</string>
 	<string name="username_email">E-posta edo erabiltzailea</string>
-	<string name="jetpack_not_connected_message">Jetpack plugina instalatuta dago baina ez dago WordPress.com-era konektatuta. Jetpack konektatu nahi al duzu?</string>
-	<string name="jetpack_not_connected">Jetpack plugina konektatu gabe</string>
 	<string name="stats_insights_latest_post_no_title">(izenbururik gabe)</string>
 	<string name="plans_post_purchase_button_themes">Arakatu itxurak</string>
 	<string name="plans_post_purchase_button_video">Hasi bidalketa berria</string>
@@ -255,6 +254,7 @@ Language: eu_ES
 	<string name="reader_err_get_post_not_authorized">Ez daukazu bidalketa hau ikusteko baimenik</string>
 	<string name="reader_empty_followed_blogs_no_recent_posts_title">Ez dago bidalketa berririk</string>
 	<string name="edit_media">Editatu media</string>
+	<string name="media_edit_copy_url_toast">URLa arbelera kopiatu da</string>
 	<string name="media_details_label_date_uploaded">Igota</string>
 	<string name="media_details_label_date_added">Gehituta</string>
 	<string name="selected_theme">Hautatutako itxura</string>
@@ -346,7 +346,7 @@ Language: eu_ES
 	<string name="my_site_header_look_and_feel">Itxura</string>
 	<string name="my_site_header_publish">Argitaratu</string>
 	<string name="my_site_btn_site_settings">Ezarpenak</string>
-	<string name="my_site_btn_blog_posts">Blogeko bidalketak</string>
+	<string name="my_site_btn_blog_posts">Bidalketak</string>
 	<string name="my_site_header_configuration">Konfigurazioa</string>
 	<string name="reader_label_new_posts_subtitle">Egin tap berauek erakusteko</string>
 	<string name="notifications_account_required">Hasi saioa WordPress.com-en jakinarazpenentzako</string>
@@ -521,6 +521,7 @@ Language: eu_ES
 	<string name="username_reserved_but_may_be_available">Momentu honetan erabiltzaile-izen hori erreserbatuta dago baina pare bat egunetan eskuragarri egon daiteke</string>
 	<string name="username_or_password_incorrect">Sartutako erabiltzaile-izena edo pasahitza ez dira zuzenak</string>
 	<string name="invalid_url_message">Ziurtatu sartutako URLa zuzena dela</string>
+	<string name="error_deleting_post">Bidalketa ezabatzean errore bat gertatu da</string>
 	<string name="add_comment">Gehitu iruzkina</string>
 	<string name="comment_status_approved">Onartua</string>
 	<string name="comment_status_unapproved">Onartzeko zain</string>
@@ -553,6 +554,7 @@ Language: eu_ES
 	<string name="reader_toast_err_remove_tag">Ezin izna da etiketa hau kendu</string>
 	<string name="upload_failed">Igoerak huts egin du</string>
 	<string name="horizontal_alignment">Lerrokatze horizontala</string>
+	<string name="file_not_found">Ezin izan da igotzeko fitxategia aurkitu. Mugitua edo ezabatua izan da?</string>
 	<string name="trash_yes">Zakarrontzira bidali</string>
 	<string name="trash_no">Ez bidali zakarrontzira</string>
 	<string name="content_required">Iruzkina beharrezkoa da</string>
@@ -609,7 +611,6 @@ Language: eu_ES
 	<string name="image_settings">Irudiaren ezarpenak</string>
 	<string name="invalid_site_url_message">Egiaztatu sartutako URL gunea baliozkoa dela</string>
 	<string name="theme_premium_theme">Ordainpeko itxura</string>
-	<string name="jetpack_message_not_admin">Jetpack plugina beharrezkoa da. Jarri harremanetan guneko administratzailearekin.</string>
 	<string name="share_url_page">Partekatu orrialdea</string>
 	<string name="share_link">Partekatu esteka</string>
 	<string name="deleting_page">Orrialdea ezabatzen</string>
@@ -653,7 +654,6 @@ Language: eu_ES
 	<string name="reader_btn_follow">Jarraitu</string>
 	<string name="connecting_wpcom">WordPress.com-en saioa hasten</string>
 	<string name="media_add_popup_title">Gehitu media bildumara</string>
-	<string name="jetpack_not_found">Ez da Jetpack plugina aurkitu</string>
 	<string name="reader_untitled_post">(Izenbururik gabe)</string>
 	<string name="reader_btn_unfollow">Jarraitzen</string>
 	<string name="reader_label_removed_tag">%s ezabatua</string>
@@ -714,6 +714,7 @@ Language: eu_ES
 	<string name="passcode_preference_title">PINaren blokeoa</string>
 	<string name="passcode_turn_off">Desblokeatu PINa</string>
 	<string name="passcode_turn_on">Blokeatu PINa</string>
+	<string name="share_action_title">Gehitu hona:</string>
 	<string name="upload">Igo</string>
 	<string name="manage">Kudeatu</string>
 	<string name="discard">Baztertu</string>

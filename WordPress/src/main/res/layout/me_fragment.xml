@@ -29,11 +29,6 @@
                     android:layout_height="wrap_content"
                     android:layout_centerHorizontal="true">
 
-                    <ImageView
-                        android:layout_width="@dimen/avatar_sz_circle"
-                        android:layout_height="@dimen/avatar_sz_circle"
-                        android:src="@drawable/gravatar_background_circle"/>
-
                     <FrameLayout
                         android:id="@+id/avatar_container"
                         android:layout_width="wrap_content"
@@ -45,7 +40,9 @@
                         <org.wordpress.android.widgets.WPNetworkImageView
                             android:id="@+id/me_avatar"
                             android:layout_width="@dimen/avatar_sz_inner_circle"
-                            android:layout_height="@dimen/avatar_sz_inner_circle" />
+                            android:layout_height="@dimen/avatar_sz_inner_circle"
+                            app:wpDefaultImageDrawable="@drawable/ic_gridicons_user_circle_100dp"
+                            app:wpErrorImageDrawable="@drawable/ic_gridicons_user_circle_100dp" />
                     </FrameLayout>
 
                     <ProgressBar

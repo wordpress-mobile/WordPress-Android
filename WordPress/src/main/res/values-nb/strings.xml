@@ -1,16 +1,49 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2017-11-27 04:07:31+0000
+Translation-Revision-Date: 2018-02-14 17:21:17+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/2.4.0-alpha
 Language: nb_NO
 -->
 <resources>
+	<string name="plugin_external_link_icon_content_description">Ekstern lenke</string>
+	<string name="plugin_update_available_icon_content_description">Oppdatering er tilgjengelig</string>
+	<string name="plugin_icon_content_description">Utvidelsesikon</string>
+	<string name="plugin_home_page">Utvidelsens hjemmeside</string>
+	<string name="wordpress_dot_org_plugin_page">WordPress.org-utvidelsesside</string>
+	<string name="plugin_remove_dialog_title">Fjerner utvidelsen</string>
+	<string name="plugin_remove_progress_dialog_message">Fjerner %s …</string>
+	<string name="plugin_disable_progress_dialog_message">Skrur av %s …</string>
+	<string name="plugin_btn_remove">Fjern utvidelsen</string>
+	<string name="plugin_configuration_failed">En feil oppstod under oppsett av utvidelsen: %s</string>
+	<string name="plugin_remove_failed">Feil under fjerning av %s.</string>
+	<string name="plugin_removed_successfully">Lyktes i å fjerne %s.</string>
+	<string name="plugin_available_version">Versjon %s er tilgjengelig.</string>
+	<string name="plugin_detail_label_state_autoupdates">Auto-oppdateringer</string>
+	<string name="plugin_detail_label_state_active">Aktiv</string>
+	<string name="my_site_btn_plugins">Utvidelser</string>
+	<string name="plugin_active">Aktiv</string>
+	<string name="plugins">Utvidelser</string>
+	<string name="media_edit_link_text">Lenk til</string>
+	<string name="notification_login_failed">En feil har oppstått.</string>
+	<string name="notification_2fa_needed">Vennligst skriv inn en autentiseringskode for å fortsette.</string>
+	<string name="notification_error_wrong_password">Vennligst dobbeltsjekk passordet ditt for å fortsette.</string>
+	<string name="site_creating_success">Suksess!</string>
+	<string name="site_creating_set_theme">Velger temaet …</string>
+	<string name="site_creating_label">Forbereder nettstedet ditt …</string>
 	<string name="login_empty_password">Vennligst skriv inn et passord</string>
 	<string name="login_text_otp_another">Send meg en annen kode i stedet.</string>
 	<string name="size_large">Stor</string>
 	<string name="size_medium">Middels</string>
 	<string name="image_size">Størrelse</string>
+	<string name="size_full">Full størrelse</string>
+	<string name="size_thumbnail">Miniatyrbilde</string>
+	<string name="uploading_subtitle_media_only_one">1 fil igjen</string>
+	<string name="uploading_subtitle_media_only">%1$d av %2$d filer igjen</string>
+	<string name="uploading_subtitle_posts_only">%1$d %2$s igjen</string>
+	<string name="media_file_uploaded">1 fil er lastet opp</string>
+	<string name="media_edit_customize_card_caption">Tilpass</string>
+	<string name="login_error_button">Lukk</string>
 	<string name="login_log_in_for_share_intent">Logg inn på WordPress.com for å dele innholdet.</string>
 	<string name="enter_site_address_share_intent">Skriv inn adressen til WordPress-siden din som du ønsker å dele innholdet til.</string>
 	<string name="jetpack_disconnect_error_toast">Feil under frakobling av siden.</string>
@@ -94,6 +127,7 @@ Language: nb_NO
 	<string name="async_promo_description">Du kan forlate redigereren, og innlegget ditt vil lagre og publisere bak kulissene! Prøv det ut, da vel!</string>
 	<string name="async_promo_title">Publiser med sikkerhet</string>
 	<string name="editor_uploading_post">Innlegget ditt lastes opp</string>
+	<string name="uploading_media">Laster opp medie …</string>
 	<string name="dialog_confirm_cancel_post_media_uploading">Er du sikker? Å slette dette innlegget vil også avbryte medieopplastingen.</string>
 	<string name="page_scheduled">Siden har blitt planlagt</string>
 	<string name="post_scheduled">Innlegget har blitt planlagt</string>
@@ -212,16 +246,6 @@ Language: nb_NO
 	<string name="format_bar_description_heading">Overskrift</string>
 	<string name="reader_view_comments">Vis kommentarer</string>
 	<string name="format_bar_description_media">Medie</string>
-	<string name="new_editor_promo_title_beta">Beta</string>
-	<string name="new_editor_promo_title">Prøv den nye redigereren</string>
-	<string name="new_editor_promo_link">Hva er nytt?</string>
-	<string name="new_editor_promo_description_image">Håndskrivingsbilde</string>
-	<string name="new_editor_promo_confirmation_message">Den nye redigereren er aktivert!</string>
-	<string name="new_editor_promo_confirmation_action">Innstillinger</string>
-	<string name="new_editor_promo_button_positive">Prøv det ut</string>
-	<string name="new_editor_promo_button_negative">Ikke nå</string>
-	<string name="new_editor_beta_action">Les mer</string>
-	<string name="new_editor_beta_message">En ny redigerer er i åpen beta!</string>
 	<string name="preference_editor_footer_description">Infoikon</string>
 	<string name="preference_editor_footer">Redaktørens lanseringsnotiser og bug-innmelding</string>
 	<string name="site_settings_video_quality_hint">Kvaliteten til videoer. Høyere verdier = bedre kvalitet.</string>
@@ -302,7 +326,6 @@ Language: nb_NO
 	<string name="smart_toast_photo_long_press">Trykk og hold nede for å velge flere bilder</string>
 	<string name="photo_picker_choose_video">Velg en video fra enheten</string>
 	<string name="photo_picker_choose_photo">Velg et bilde fra enheten</string>
-	<string name="new_editor_promo_description">WordPress-appen inkluderer nå en vakker ny redigerer. Prøv den ut ved å lage et nytt innlegg!</string>
 	<string name="media_insert_as_gallery">Legg til som et galleri</string>
 	<string name="wp_media_title">Wordpress-media</string>
 	<string name="media_insert_individually">Legg til individuelt</string>
@@ -342,6 +365,7 @@ Language: nb_NO
 	<string name="media_upload_state_deleted">Slettet</string>
 	<string name="media_upload_state_deleting">Sletter</string>
 	<string name="media_upload_state_uploading">Laster opp</string>
+	<string name="media_upload_state_failed">Opplastingmislyktes</string>
 	<string name="update_draft">Oppdater utkastet</string>
 	<string name="keep_editing">Fortsett å redigere</string>
 	<string name="image_quality">Bildekvalitet</string>
@@ -357,7 +381,6 @@ Language: nb_NO
 	<string name="checking_username">Sjekker brukernavnet</string>
 	<string name="jetpack_different_com_account">Jetpack-nettsteder som hører til andre WordPress.com-kontoer, er ikke støttet</string>
 	<string name="jetpack_use_com_account">For å legge til Jetpack-nettstedet ditt, logg inn på WordPress.com-kontoen du brukte til å tilkoble Jetpack.</string>
-	<string name="jetpack_message">Jetpack-utvidelsen må være installert og aktivert. Vil du installere eller aktivere Jetpack?</string>
 	<string name="error_media_load">Klarte ikke å laste inn mediet</string>
 	<string name="error_media_refresh_no_connection">Tilkobling er påkrevd for å oppfriske biblioteket</string>
 	<string name="error_media_unauthorized">Du har ikke tillatelse til å vise eller redigere medier</string>
@@ -537,8 +560,6 @@ Language: nb_NO
 	<string name="enter_your_password_instead">Skriv inn passordet ditt istedet</string>
 	<string name="web_address_dialog_hint">Vises offentlig når du kommenterer.</string>
 	<string name="username_email">E-post eller brukernavn</string>
-	<string name="jetpack_not_connected_message">Jetpack-utvidelsen er installert, men den er ikke koblet til WordPress.com. Vil du koble til JetPack?</string>
-	<string name="jetpack_not_connected">Jetpack-utvidelsen er ikke tilkoblet</string>
 	<string name="new_editor_reflection_error">Den visuelle redigereren er ikke kompatibel med\n   enheten din. Den ble automatisk skrudd av.</string>
 	<string name="stats_insights_latest_post_no_title">(ingen tittel)</string>
 	<string name="capture_or_pick_photo">Ta eller velg et bilde</string>
@@ -1274,12 +1295,12 @@ Language: nb_NO
 	<string name="fatal_db_error">En feil oppstod under oppretting av app-databasen. Prøv å reinstallere appen.</string>
 	<string name="blog_name_must_include_letters">Nettstedsadressen din må ha minst 1 engelsk bokstav (a-z)</string>
 	<string name="site_address">Din selvtjente adresse (URL)</string>
-	<string name="jetpack_message_not_admin">Jetpack-utvidelsen er påkrevd. Kontakt nettstedets administrator.</string>
 	<string name="themes_live_preview">Levende forhåndsvisning</string>
 	<string name="http_credentials">HTTP-legitimasjoner (Valgfritt)</string>
 	<string name="media_gallery_type_thumbnail_grid">Forhåndsvisningsnetting</string>
 	<string name="file_error_create">Klarte ikke å lage en midlertidig fil for medieopplastning. Vennligst sørg for at det er nok ledig lagring på enheten din.</string>
 	<string name="scaled_image_error">Skriv en gyldig skalert breddeverdi</string>
+	<string name="file_not_found">Klarte ikke å finne filen som skulle lastes opp. Ble den kanskje slettet eller flyttet?</string>
 	<string name="share_url_post">Del innlegg</string>
 	<string name="share_url_page">Del side</string>
 	<string name="share_link">Del lenke</string>
@@ -1314,7 +1335,6 @@ Language: nb_NO
 	<string name="nux_add_selfhosted_blog">Legg til selvtjent nettsted</string>
 	<string name="reader_btn_share">Del</string>
 	<string name="reader_btn_follow">Følg</string>
-	<string name="jetpack_not_found">Fant ikke utvidelsen Jetpack</string>
 	<string name="reader_untitled_post">(Uten tittel)</string>
 	<string name="nux_tutorial_get_started_title">Kom igang!</string>
 	<string name="username_invalid">Ugyldig brukernavn</string>

@@ -49,19 +49,4 @@
     <style name="ImageOptionsDialogInput">
         <item name="android:layout_marginBottom">@dimen/image_settings_dialog_input_margin_bottom</item>
     </style>
-
-    <style name="EditorTitleBeta">
-        <item name="android:background">@drawable/bg_beta_label</item>
-        <item name="android:foreground">?attr/selectableItemBackground</item>
-        <item name="android:layout_height">wrap_content</item>
-        <item name="android:layout_marginRight">@dimen/margin_extra_large</item>
-        <item name="android:layout_width">wrap_content</item>
-        <item name="android:paddingBottom">@dimen/dialog_beta_padding_vertical</item>
-        <item name="android:paddingLeft">@dimen/dialog_beta_padding_horizontal</item>
-        <item name="android:paddingRight">@dimen/dialog_beta_padding_horizontal</item>
-        <item name="android:paddingTop">@dimen/dialog_beta_padding_vertical</item>
-        <item name="android:textColor">@color/wp_grey_dark</item>
-        <item name="android:textSize">@dimen/text_small</item>
-    </style>
-
 </resources>

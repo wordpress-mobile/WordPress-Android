@@ -597,6 +597,21 @@ public abstract class SiteSettingsInterface {
         mSettings.postsPerPage = postsPerPage;
     }
 
+    public boolean getAmpSupported() {
+        return mSettings.ampSupported;
+    }
+
+    public void setAmpSupported(boolean supported) {
+        mSettings.ampSupported = supported;
+    }
+
+    public boolean getAmpEnabled() {
+        return mSettings.ampEnabled;
+    }
+
+    public void setAmpEnabled(boolean enabled) {
+        mSettings.ampEnabled = enabled;
+    }
     public boolean isJetpackMonitorEnabled() {
         return mJpSettings.monitorActive;
     }
@@ -660,6 +675,22 @@ public abstract class SiteSettingsInterface {
 
     public boolean isJetpackSsoTwoFactorEnabled() {
         return mJpSettings.ssoRequireTwoFactor;
+    }
+
+    public void enableServeImagesFromOurServers(boolean enabled) {
+        mJpSettings.serveImagesFromOurServers = enabled;
+    }
+
+    public boolean isServeImagesFromOurServersEnabled() {
+        return mJpSettings.serveImagesFromOurServers;
+    }
+
+    public void enableLazyLoadImages(boolean enabled) {
+        mJpSettings.lazyLoadImages = enabled;
+    }
+
+    public boolean isLazyLoadImagesEnabled() {
+        return mJpSettings.lazyLoadImages;
     }
 
     public void setTitle(String title) {

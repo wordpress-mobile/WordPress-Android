@@ -91,6 +91,10 @@
     <string name="format_bar_description_ellipsis_collapse">Collapse Toolbar</string>
     <string name="format_bar_description_ellipsis_expand">Expand Toolbar</string>
 
+    <string name="media_bar_description_camera">Take Photo or Video with camera</string>
+    <string name="media_bar_description_gallery">Pick a media from gallery</string>
+    <string name="media_bar_description_library">Pick a media from WordPress media library</string>
+
     <string name="visual_editor">Visual editor</string>
     <string name="image_thumbnail">Image thumbnail</string>
 

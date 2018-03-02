@@ -150,21 +150,6 @@ public class AnalyticsTrackerNosara extends Tracker {
             case EDITOR_TAPPED_HTML:
                 predefinedEventProperties.put("button", "html");
                 break;
-            case EDITOR_AZTEC_BETA_LABEL:
-                predefinedEventProperties.put("source", "beta_label");
-                break;
-            case EDITOR_AZTEC_BETA_LINK:
-                predefinedEventProperties.put("source", "beta_link");
-                break;
-            case EDITOR_AZTEC_PROMO_LINK:
-                predefinedEventProperties.put("source", "promo_link");
-                break;
-            case EDITOR_AZTEC_PROMO_NEGATIVE:
-                predefinedEventProperties.put("source", "promo_negative");
-                break;
-            case EDITOR_AZTEC_PROMO_POSITIVE:
-                predefinedEventProperties.put("source", "promo_positive");
-                break;
             case OPENED_POSTS:
                 predefinedEventProperties.put("menu_item", "posts");
                 break;
@@ -439,16 +424,6 @@ public class AnalyticsTrackerNosara extends Tracker {
                 return "editor_aztec_toggled_off";
             case EDITOR_AZTEC_TOGGLED_ON:
                 return "editor_aztec_toggled_on";
-            case EDITOR_AZTEC_BETA_LABEL:
-                return "editor_aztec_beta_label";
-            case EDITOR_AZTEC_BETA_LINK:
-                return "editor_aztec_beta_link";
-            case EDITOR_AZTEC_PROMO_LINK:
-                return "editor_aztec_promo_link";
-            case EDITOR_AZTEC_PROMO_NEGATIVE:
-                return "editor_aztec_promo_negative";
-            case EDITOR_AZTEC_PROMO_POSITIVE:
-                return "editor_aztec_promo_positive";
             case EDITOR_UPLOAD_MEDIA_FAILED:
                 return "editor_upload_media_failed";
             case EDITOR_UPLOAD_MEDIA_RETRIED:
@@ -602,6 +577,8 @@ public class AnalyticsTrackerNosara extends Tracker {
                 return "people_management_details_opened";
             case OPENED_PLUGINS:
                 return "plugins_opened";
+            case OPENED_PLUGIN_DETAIL:
+                return "plugin_detail_opened";
             case CREATE_ACCOUNT_INITIATED:
                 return "account_create_initiated";
             case CREATE_ACCOUNT_EMAIL_EXISTS:
@@ -648,6 +625,10 @@ public class AnalyticsTrackerNosara extends Tracker {
                 return "stats_scrolled_to_bottom";
             case STATS_SELECTED_INSTALL_JETPACK:
                 return "stats_install_jetpack_selected";
+            case STATS_CANCELED_INSTALL_JETPACK:
+                return "stats_install_jetpack_canceled";
+            case STATS_COMPLETED_INSTALL_JETPACK:
+                return "stats_install_jetpack_completed";
             case STATS_SELECTED_CONNECT_JETPACK:
                 return "stats_connect_jetpack_selected";
             case STATS_WIDGET_ADDED:
@@ -750,6 +731,66 @@ public class AnalyticsTrackerNosara extends Tracker {
                 return "login_social_error_unknown_user";
             case LOGIN_WPCOM_BACKGROUND_SERVICE_UPDATE:
                 return "login_wpcom_background_service_update";
+            case SIGNUP_BUTTON_TAPPED:
+                return "signup_button_tapped";
+            case SIGNUP_EMAIL_BUTTON_TAPPED:
+                return "signup_email_button_tapped";
+            case SIGNUP_EMAIL_EPILOGUE_GRAVATAR_CROPPED:
+                return "signup_email_epilogue_gravatar_cropped:";
+            case SIGNUP_EMAIL_EPILOGUE_GRAVATAR_GALLERY_PICKED:
+                return "signup_email_epilogue_gallery_picked";
+            case SIGNUP_EMAIL_EPILOGUE_GRAVATAR_SHOT_NEW:
+                return "signup_email_epilogue_shot_new";
+            case SIGNUP_EMAIL_EPILOGUE_VIEWED:
+                return "signup_email_epilogue_viewed";
+            case SIGNUP_GOOGLE_BUTTON_TAPPED:
+                return "signup_google_button_tapped";
+            case SIGNUP_TERMS_OF_SERVICE_TAPPED:
+                return "signup_terms_of_service_tapped";
+            case SIGNUP_CANCELED:
+                return "signup_canceled";
+            case SIGNUP_EMAIL_TO_LOGIN:
+                return "signup_email_to_login";
+            case SIGNUP_MAGIC_LINK_FAILED:
+                return "signup_magic_link_failed";
+            case SIGNUP_MAGIC_LINK_SUCCEEDED:
+                return "signup_magic_link_succeeded";
+            case SIGNUP_SOCIAL_2FA_NEEDED:
+                return "signup_social_2fa_needed";
+            case SIGNUP_SOCIAL_ACCOUNTS_NEED_CONNECTING:
+                return "signup_social_accounts_need_connecting";
+            case SIGNUP_SOCIAL_EPILOGUE_UNCHANGED:
+                return "signup_social_epilogue_unchanged";
+            case SIGNUP_SOCIAL_EPILOGUE_UPDATE_DISPLAY_NAME_FAILED:
+                return "signup_social_epilogue_update_display_name_failed";
+            case SIGNUP_SOCIAL_EPILOGUE_UPDATE_DISPLAY_NAME_SUCCEEDED:
+                return "signup_social_epilogue_update_display_name_succeeded";
+            case SIGNUP_SOCIAL_EPILOGUE_UPDATE_USERNAME_FAILED:
+                return "signup_social_epilogue_update_username_failed";
+            case SIGNUP_SOCIAL_EPILOGUE_UPDATE_USERNAME_SUCCEEDED:
+                return "signup_social_epilogue_update_username_succeeded";
+            case SIGNUP_SOCIAL_EPILOGUE_USERNAME_SUGGESTIONS_FAILED:
+                return "signup_social_epilogue_username_suggestions_failed";
+            case SIGNUP_SOCIAL_EPILOGUE_VIEWED:
+                return "signup_social_epilogue_viewed";
+            case SIGNUP_SOCIAL_SUCCESS:
+                return "signup_social_success";
+            case SIGNUP_SOCIAL_TO_LOGIN:
+                return "signup_social_to_login";
+            case SITE_CREATION_ACCESSED:
+                return "site_creation_accessed";
+            case SITE_CREATION_CATEGORY_VIEWED:
+                return "site_creation_category_viewed";
+            case SITE_CREATION_THEME_VIEWED:
+                return "site_creation_theme_viewed";
+            case SITE_CREATION_DETAILS_VIEWED:
+                return "site_creation_details_viewed";
+            case SITE_CREATION_DOMAIN_VIEWED:
+                return "site_creation_domain_viewed";
+            case SITE_CREATION_CREATING_VIEWED:
+                return "site_creation_creating_viewed";
+            case SITE_CREATION_SUCCESS_VIEWED:
+                return "site_creation_success_viewed";
             case PERSON_REMOVED:
                 return "people_management_person_removed";
             case PERSON_UPDATED:
@@ -808,6 +849,8 @@ public class AnalyticsTrackerNosara extends Tracker {
                 return "themes_details_accessed";
             case ACCOUNT_SETTINGS_LANGUAGE_CHANGED:
                 return "account_settings_language_changed";
+            case SITE_CREATION_BACKGROUND_SERVICE_UPDATE:
+                return "site_creation_background_service_update";
             case SITE_SETTINGS_ACCESSED:
                 return "site_settings_accessed";
             case SITE_SETTINGS_ACCESSED_MORE_SETTINGS:
@@ -896,6 +939,8 @@ public class AnalyticsTrackerNosara extends Tracker {
                 return "plugin_removed";
             case PLUGIN_UPDATED:
                 return "plugin_updated";
+            case PLUGIN_INSTALLED:
+                return "plugin_installed";
             default:
                 return null;
         }

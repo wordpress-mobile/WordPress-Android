@@ -3,6 +3,7 @@ package org.wordpress.android;
 import android.app.Activity;
 import android.app.Application;
 import android.app.Dialog;
+import android.app.Service;
 import android.content.ComponentCallbacks2;
 import android.content.Context;
 import android.content.Intent;
@@ -44,7 +45,6 @@ import org.wordpress.android.fluxc.generated.AccountActionBuilder;
 import org.wordpress.android.fluxc.generated.SiteActionBuilder;
 import org.wordpress.android.fluxc.generated.ThemeActionBuilder;
 import org.wordpress.android.fluxc.model.SiteModel;
-import org.wordpress.android.fluxc.module.AppContextModule;
 import org.wordpress.android.fluxc.persistence.WellSqlConfig;
 import org.wordpress.android.fluxc.store.AccountStore;
 import org.wordpress.android.fluxc.store.AccountStore.OnAccountChanged;
@@ -98,14 +98,17 @@ import java.util.TimerTask;
 import javax.inject.Inject;
 import javax.inject.Named;
 
+import dagger.android.AndroidInjector;
+import dagger.android.DispatchingAndroidInjector;
+import dagger.android.HasServiceInjector;
 import de.greenrobot.event.EventBus;
 import io.fabric.sdk.android.Fabric;
 
-public class WordPress extends MultiDexApplication {
+public class WordPress extends MultiDexApplication implements HasServiceInjector {
     public static final String SITE = "SITE";
     public static String versionName;
     public static WordPressDB wpDB;
-    public static boolean sAppIsInTheBackground;
+    public static boolean sAppIsInTheBackground = true;
 
     private static RestClientUtils sRestClientUtils;
     private static RestClientUtils sRestClientUtilsVersion1_1;
@@ -121,6 +124,8 @@ public class WordPress extends MultiDexApplication {
     private static BitmapLruCache mBitmapCache;
 
     private static GoogleApiClient mCredentialsClient;
+
+    @Inject DispatchingAndroidInjector<Service> mServiceDispatchingAndroidInjector;
 
     @Inject Dispatcher mDispatcher;
     @Inject AccountStore mAccountStore;
@@ -204,7 +209,7 @@ public class WordPress extends MultiDexApplication {
 
         // Init Dagger
         mAppComponent = DaggerAppComponent.builder()
-                .appContextModule(new AppContextModule(getApplicationContext()))
+                .application(this)
                 .build();
         component().inject(this);
         mDispatcher.register(this);
@@ -469,15 +474,8 @@ public class WordPress extends MultiDexApplication {
 
     @SuppressWarnings("unused")
     @Subscribe(threadMode = ThreadMode.MAIN)
-    public void onParseError(OnUnexpectedError event) {
+    public void onUnexpectedError(OnUnexpectedError event) {
         AppLog.d(T.API, "Receiving OnUnexpectedError event, message: " + event.exception.getMessage());
-        String description = "FluxC: " + event.description;
-        if (event.extras != null) {
-            for (String key : event.extras.keySet()) {
-                CrashlyticsUtils.setString(key, event.extras.get(key));
-            }
-        }
-        CrashlyticsUtils.logException(event.exception, event.type, description);
     }
 
     public void removeWpComUserRelatedData(Context context) {
@@ -628,6 +626,11 @@ public class WordPress extends MultiDexApplication {
         }
 
         return "";
+    }
+
+    @Override
+    public AndroidInjector<Service> serviceInjector() {
+        return mServiceDispatchingAndroidInjector;
     }
 
     /**

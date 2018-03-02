@@ -247,16 +247,17 @@ public class PostSettingsTagsActivity extends AppCompatActivity implements TextW
         }
 
         public void filter(final String text) {
+            final List<TermModel> allTags = mAllTags;
             new Thread(new Runnable() {
                 @Override
                 public void run() {
-                    mFilteredTags.clear();
+                    final List<TermModel> filteredTags = new ArrayList<>();
                     if (TextUtils.isEmpty(text)) {
-                        mFilteredTags.addAll(mAllTags);
+                        filteredTags.addAll(allTags);
                     } else {
-                        for (TermModel tag : mAllTags) {
+                        for (TermModel tag : allTags) {
                             if (tag.getName().toLowerCase().contains(text.toLowerCase())) {
-                                mFilteredTags.add(tag);
+                                filteredTags.add(tag);
                             }
                         }
                     }
@@ -264,6 +265,7 @@ public class PostSettingsTagsActivity extends AppCompatActivity implements TextW
                     ((Activity) mContext).runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
+                            mFilteredTags = filteredTags;
                             notifyDataSetChanged();
                         }
                     });

@@ -71,7 +71,6 @@ Language: hi_IN
 	<string name="format_bar_description_heading">शीर्षक</string>
 	<string name="format_bar_description_list">सूची</string>
 	<string name="format_bar_description_media">मीडिया</string>
-	<string name="new_editor_promo_confirmation_action">सेटिंग्स</string>
 	<string name="permission_camera">कैमरा</string>
 	<string name="twitter">ट्विटर</string>
 	<string name="editor_draft_saved_locally">ड्राफ़्ट डिवाइस पर सहेजा गया</string>
@@ -456,7 +455,6 @@ Language: hi_IN
 	<string name="email_reserved">यह ईमेल पता पहले से ही इस्तेमाल में है. सक्रियण ईमेल के लिए अपने इनबॉक्स की जाँच करें. यदि आप सक्रिय नहीं करेंगे, तो आप कुछ दिनों में फिर से कोशिश कर सकते हैं.</string>
 	<string name="remove_account">ब्लॉग हटाये</string>
 	<string name="blog_removed_successfully">ब्लॉग सफलतापूर्वक हटा दिया गया</string>
-	<string name="jetpack_message_not_admin">Jetpack प्लगइन आवश्यक है. साइट व्यवस्थापक से संपर्क करें.</string>
 	<string name="deleting_page">पृष्ठ हटाया जा रहा है</string>
 	<string name="deleting_post">पोस्ट हटाया जा रहा है</string>
 	<string name="share_link">कड़ी साझा करे</string>
@@ -491,7 +489,6 @@ Language: hi_IN
 	<string name="reader_label_added_tag">जोड़ा गया %s</string>
 	<string name="reader_toast_err_comment_failed">आपकी टिप्पणी पोस्ट नहीं कर सके</string>
 	<string name="username_invalid">अमान्य उपयोगकर्ता नाम</string>
-	<string name="jetpack_not_found">जेटपैक प्लगइन नहीं मिला</string>
 	<string name="reader_likes_one">एक व्यक्ति ने पसंद किया</string>
 	<string name="reader_btn_share">साझा करे</string>
 	<string name="reader_likes_only_you">आपने इसे पसंद किया</string>

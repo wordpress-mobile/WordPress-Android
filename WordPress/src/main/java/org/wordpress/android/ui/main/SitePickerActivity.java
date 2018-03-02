@@ -8,11 +8,14 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.res.Configuration;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v4.view.MenuItemCompat;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.content.res.AppCompatResources;
 import android.support.v7.view.ActionMode;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
@@ -20,8 +23,11 @@ import android.support.v7.widget.RecyclerView;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.ArrayAdapter;
 import android.widget.SearchView;
+import android.widget.TextView;
 
 import com.android.volley.VolleyError;
 import com.wordpress.rest.RestRequest;
@@ -180,7 +186,7 @@ public class SitePickerActivity extends AppCompatActivity
             showSoftKeyboard();
             return true;
         } else if (itemId == R.id.menu_add) {
-            addSite(this, mAccountStore.hasAccessToken());
+            addSite(this, mAccountStore.hasAccessToken(), mAccountStore.getAccount().getUserName());
             return true;
         }
         return super.onOptionsItemSelected(item);
@@ -597,11 +603,11 @@ public class SitePickerActivity extends AppCompatActivity
         }
     }
 
-    public static void addSite(Activity activity, boolean isSignedInWpCom) {
+    public static void addSite(Activity activity, boolean isSignedInWpCom, String username) {
         // if user is signed into wp.com use the dialog to enable choosing whether to
         // create a new wp.com blog or add a self-hosted one
         if (isSignedInWpCom) {
-            DialogFragment dialog = new AddSiteDialog();
+            DialogFragment dialog = AddSiteDialog.newInstance(username);
             dialog.show(activity.getFragmentManager(), AddSiteDialog.ADD_SITE_DIALOG_TAG);
         } else {
             // user isn't signed into wp.com, so simply enable adding self-hosted
@@ -616,6 +622,16 @@ public class SitePickerActivity extends AppCompatActivity
     public static class AddSiteDialog extends DialogFragment {
         static final String ADD_SITE_DIALOG_TAG = "add_site_dialog";
 
+        private static final String ARG_USERNAME = "ARG_USERNAME";
+
+        public static AddSiteDialog newInstance(String username) {
+            AddSiteDialog fragment = new AddSiteDialog();
+            Bundle args = new Bundle();
+            args.putString(ARG_USERNAME, username);
+            fragment.setArguments(args);
+            return fragment;
+        }
+
         @NonNull
         @Override
         public Dialog onCreateDialog(Bundle savedInstanceState) {
@@ -624,15 +640,30 @@ public class SitePickerActivity extends AppCompatActivity
                             getString(R.string.site_picker_add_self_hosted)};
             AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
             builder.setTitle(R.string.site_picker_add_site);
-            builder.setItems(items, new DialogInterface.OnClickListener() {
-                @Override
-                public void onClick(DialogInterface dialog, int which) {
-                    if (which == 0) {
-                        ActivityLauncher.newBlogForResult(getActivity());
-                    } else {
-                        ActivityLauncher.addSelfHostedSiteForResult(getActivity());
-                    }
-                }
+            builder.setAdapter(
+                    new ArrayAdapter<CharSequence>(getActivity(), R.layout.add_new_site_dialog_item, R.id.text, items) {
+                        @NonNull
+                        @Override
+                        public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
+                            TextView tv = (TextView) super.getView(position, convertView, parent);
+                            Drawable leftDrawable = AppCompatResources.getDrawable(tv.getContext(),
+                                    R.drawable.ic_add_outline_grey_dark_24dp);
+                            tv.setCompoundDrawablesWithIntrinsicBounds(leftDrawable, null, null, null);
+                            tv.setCompoundDrawablePadding(
+                                    getResources().getDimensionPixelSize(R.dimen.margin_extra_large));
+                            return tv;
+                        }
+                    },
+                    new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            if (which == 0) {
+                                ActivityLauncher.newBlogForResult(getActivity(),
+                                        getArguments().getString(ARG_USERNAME));
+                            } else {
+                                ActivityLauncher.addSelfHostedSiteForResult(getActivity());
+                            }
+                        }
             });
             return builder.create();
         }

@@ -75,11 +75,6 @@ public class PublicizeButtonPrefsFragment extends Fragment implements
 
         setRetainInstance(true);
 
-        if (!NetworkUtils.checkConnection(getActivity())) {
-            getActivity().finish();
-            return;
-        }
-
         if (savedInstanceState == null) {
             mSite = (SiteModel) getArguments().getSerializable(WordPress.SITE);
         } else {
@@ -88,6 +83,11 @@ public class PublicizeButtonPrefsFragment extends Fragment implements
 
         if (mSite == null) {
             ToastUtils.showToast(getActivity(), R.string.blog_not_found, ToastUtils.Duration.SHORT);
+            getActivity().finish();
+            return;
+        }
+
+        if (!NetworkUtils.checkConnection(getActivity())) {
             getActivity().finish();
             return;
         }
@@ -115,6 +115,11 @@ public class PublicizeButtonPrefsFragment extends Fragment implements
         mPrefShowLike = (WPPrefView) view.findViewById(R.id.pref_show_like);
         mPrefAllowCommentLikes = (WPPrefView) view.findViewById(R.id.pref_allow_comment_likes);
         mPrefTwitterName = (WPPrefView) view.findViewById(R.id.pref_twitter_name);
+
+        if (!mSite.isWPCom() && mSite.isJetpackConnected()) {
+            mPrefShowLike.setHeading(getString(R.string.site_settings_like_header));
+            mPrefShowReblog.setVisibility(View.GONE);
+        }
 
         return view;
     }

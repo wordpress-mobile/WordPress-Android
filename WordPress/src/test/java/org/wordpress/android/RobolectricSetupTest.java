@@ -14,7 +14,7 @@ import org.robolectric.RuntimeEnvironment;
 import org.robolectric.annotation.Config;
 
 @RunWith(RobolectricTestRunner.class)
-@Config(constants = BuildConfig.class, manifest = "src/main/AndroidManifest.xml", sdk = Build.VERSION_CODES.JELLY_BEAN)
+@Config(application = TestApplication.class, sdk = Build.VERSION_CODES.JELLY_BEAN)
 public class RobolectricSetupTest {
 
     @Rule

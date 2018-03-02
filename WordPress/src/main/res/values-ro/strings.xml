@@ -1,11 +1,91 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2017-12-13 09:35:47+0000
+Translation-Revision-Date: 2018-02-12 19:19:19+0000
 Plural-Forms: nplurals=3; plural=(n==1 ? 0 : (n==0 || (n%100 > 0 && n%100 < 20)) ? 1 : 2);
 Generator: GlotPress/2.4.0-alpha
 Language: ro
 -->
 <resources>
+	<string name="stats_jetpack_more_info">Mai multe informații</string>
+	<string name="stats_jetpack_connection_setup_info">Pentru a folosi Statisticile pe situl tău WordPress, va trebui să instalezi modulul Jetpack. Vrei să inițializezi Jetpack?</string>
+	<string name="stats_jetpack_connection_setup">Inițializează Jetpack</string>
+	<string name="plugin_chevron_icon_content_description">Comută textul</string>
+	<string name="plugin_info_your_version">Versiunea ta WordPress</string>
+	<string name="plugin_info_requires_version">Necesită versiunea WordPress</string>
+	<string name="plugin_info_lastupdated">Ultima actualizare</string>
+	<string name="plugin_info_version">Vesiune</string>
+	<string name="plugin_five_stars">5 stele</string>
+	<string name="plugin_four_stars">4 stele</string>
+	<string name="plugin_three_stars">3 stele</string>
+	<string name="plugin_two_stars">2 stele</string>
+	<string name="plugin_one_stars">O stea</string>
+	<string name="plugin_empty_text">Niciuna oferită</string>
+	<string name="plugin_num_downloads">%s de descărcări</string>
+	<string name="plugin_num_ratings">%s evaluări</string>
+	<string name="plugin_read_reviews">Citește recenziile</string>
+	<string name="plugin_faq">Întrebări frecvente</string>
+	<string name="plugin_whatsnew">Ce este nou</string>
+	<string name="plugin_installation">Instalare</string>
+	<string name="plugin_description">Descriere</string>
+	<string name="plugin_settings">Setări</string>
+	<string name="plugin_installed">Instalat</string>
+	<string name="plugin_installed_version">Este instalată versiunea %s</string>
+	<string name="plugin_version">Versiunea %s</string>
+	<string name="plugin_byline">de %s</string>
+	<string name="change_photo">Schimbă fotografia</string>
+	<string name="plugin_fetch_error">Nu pot încărca module</string>
+	<string name="my_site_btn_site_pages">Pagini sit</string>
+	<string name="site_settings_tags_hint">Administrează-ți etichetele sitului</string>
+	<string name="dlg_saving_tag">Salvez</string>
+	<string name="dlg_deleting_tag">Șterg</string>
+	<string name="dlg_confirm_delete_tag">Ștergi definitiv „%s”?</string>
+	<string name="error_tag_exists">Există deja o etichetă cu acest nume</string>
+	<string name="add_new_tag">Adaugă o etichetă nouă</string>
+	<string name="tag_description_hint">Descriere</string>
+	<string name="tag_name_hint">Etichetă</string>
+	<string name="site_settings_amp_summary">Situl tău WordPress.com suportă folosirea Paginilor accelerate pentru mobil, o inițiativă condusă de Google care accelerează dramatic timpii de încărcare pe dispozitivele mobile</string>
+	<string name="site_settings_amp_title">Pagini accelerate pentru mobil (PAM)</string>
+	<string name="site_settings_timezones_error">Nu pot încărca fusurile orare</string>
+	<string name="site_settings_format_help">Află mai multe despre formatarea datei și orei</string>
+	<string name="site_settings_format_hint_custom">Format personalizat</string>
+	<string name="site_settings_format_entry_custom">Personalizat</string>
+	<string name="site_settings_posts_per_page_title">Articole per pagină</string>
+	<string name="site_settings_timezone_subtitle">Alege un oraș din zona ta de fus orar</string>
+	<string name="site_settings_timezone_title">Fus orar</string>
+	<string name="site_settings_time_format_title">Format oră</string>
+	<string name="site_settings_date_format_title">Format dată</string>
+	<string name="site_settings_week_start_title">Săptămâna începe</string>
+	<string name="site_settings_tags_title">Etichete</string>
+	<string name="site_settings_traffic_header">Trafic</string>
+	<string name="delete_no">Nu șterge</string>
+	<string name="delete_yes">Șterge</string>
+	<string name="plugin_external_link_icon_content_description">Legătură externă</string>
+	<string name="plugin_update_available_icon_content_description">Actualizare disponibilă</string>
+	<string name="plugin_icon_content_description">Icon modul</string>
+	<string name="plugin_home_page">Prima pagină a modulului</string>
+	<string name="wordpress_dot_org_plugin_page">Pagină modul WordPress.org</string>
+	<string name="plugin_remove_dialog_message">Sigur vrei să înlături %1$s din %2$s?\n\nAsta va dezactiva modulul și va șterge toate fișierele și datele asociate.</string>
+	<string name="plugin_remove_dialog_title">Înlătură modulul</string>
+	<string name="plugin_remove_progress_dialog_message">Înlătur %s…</string>
+	<string name="plugin_disable_progress_dialog_message">Dezactivez %s…</string>
+	<string name="plugin_btn_remove">Înlătură modulul</string>
+	<string name="plugin_configuration_failed">A apărut o eroare în timpul configurării modulului: %s</string>
+	<string name="plugin_remove_failed">Eroare la înlăturarea %s.</string>
+	<string name="plugin_removed_successfully">%s înlăturat cu succes.</string>
+	<string name="plugin_updated_failed_detailed">Eroare la înlăturarea %1$s: %2$s</string>
+	<string name="plugin_updated_failed">Eroare la înlăturarea %s.</string>
+	<string name="plugin_updated_successfully">%s actualizat cu succes.</string>
+	<string name="plugin_available_version">Este disponibilă versiunea %s.</string>
+	<string name="plugin_detail_label_state_autoupdates">Actualizări automate</string>
+	<string name="plugin_detail_label_state_active">Activ</string>
+	<string name="plugin_autoupdates_off">Actualizări automate oprite</string>
+	<string name="plugin_autoupdates_on">Actualizări automate pornite</string>
+	<string name="plugin_inactive">Inactiv</string>
+	<string name="plugin_active">Activ</string>
+	<string name="plugins">Module</string>
+	<string name="my_site_btn_plugins">Module</string>
+	<string name="media_edit_link_hint">Deschide legătura într-o fereastră/filă nouă</string>
+	<string name="media_edit_link_text">Legătură la</string>
 	<string name="notification_login_failed">A apărut o eroare.</string>
 	<string name="notification_2fa_needed">Te rog furnizează codul de autentificare pentru a continua.</string>
 	<string name="notification_error_wrong_password">Te rog verifică-ți de două ori parola înainte de a continua.</string>
@@ -266,16 +346,6 @@ Language: ro
 	<string name="format_bar_description_heading">Subtitlu</string>
 	<string name="format_bar_description_media">Media</string>
 	<string name="reader_view_comments">Vezi comentariile</string>
-	<string name="new_editor_promo_title_beta">Beta</string>
-	<string name="new_editor_promo_title">Încearcă noul editor</string>
-	<string name="new_editor_promo_link">Ce este nou?</string>
-	<string name="new_editor_promo_description_image">Scriere de mână pe imagine</string>
-	<string name="new_editor_promo_confirmation_message">Noul editor activat!</string>
-	<string name="new_editor_promo_confirmation_action">Setări</string>
-	<string name="new_editor_promo_button_positive">Încearcă-l</string>
-	<string name="new_editor_promo_button_negative">Nu acum</string>
-	<string name="new_editor_beta_message">Editor nou în Open Beta!</string>
-	<string name="new_editor_beta_action">Citește mai mult</string>
 	<string name="preference_editor_footer_description">Informații icon</string>
 	<string name="preference_editor_footer">Note de lansare și raportarea erorilor pentru editor</string>
 	<string name="site_settings_video_quality_hint">Calitatea videourilor. Valorile mai mari înseamnă videouri de calitate mai bună.</string>
@@ -356,7 +426,6 @@ Language: ro
 	<string name="smart_toast_photo_long_press">Atinge și ține apăsat pentru a selecta mai multe fotografii</string>
 	<string name="photo_picker_choose_video">Alege video de pe dispozitiv</string>
 	<string name="photo_picker_choose_photo">Alege fotografie de pe dispozitiv</string>
-	<string name="new_editor_promo_description">Acum aplicația WordPress include un editor nou, frumos. Încearcă-l prin crearea unui articol nou!</string>
 	<string name="wp_media_title">Media WordPress</string>
 	<string name="media_insert_as_gallery">Adaugă ca galerie</string>
 	<string name="media_insert_individually">Adaugă individual</string>
@@ -412,7 +481,6 @@ Language: ro
 	<string name="checking_username">Verific numele de utilizator</string>
 	<string name="jetpack_different_com_account">Siturile Jetpack aparținând altor conturi WordPress.com nu sunt suportate.</string>
 	<string name="jetpack_use_com_account">Pentru a-ți adăuga situl Jetpack, autentifică-te în contul WordPress.com pe care l-ai folosit pentru a te conecta la Jetpack.</string>
-	<string name="jetpack_message">Modulul Jetpack trebuie să fie instalat și activat. Vrei să instalezi sau să activezi Jetpack?</string>
 	<string name="error_media_load">Nu pot încărca media</string>
 	<string name="error_media_refresh_no_connection">Este necesară o conexiune pentru a împrospăta biblioteca</string>
 	<string name="error_media_unauthorized">Nu ai permisiunea de a vedea sau edita media</string>
@@ -592,8 +660,6 @@ Language: ro
 	<string name="enter_your_password_instead">Introdu-ți parola în schimb</string>
 	<string name="web_address_dialog_hint">Făcută publică atunci când comentezi.</string>
 	<string name="username_email">Email sau nume utilizator</string>
-	<string name="jetpack_not_connected_message">Modulul Jetpack este instalat, dar nu este conectat cu WordPress.com. Vrei să conectezi Jetpack?</string>
-	<string name="jetpack_not_connected">Modulul Jetpack nu este conectat</string>
 	<string name="new_editor_reflection_error">Editorul vizual nu este compatibil cu dispozitivul tău. A fost\n        dezactivat automat.</string>
 	<string name="stats_insights_latest_post_no_title">(fără titlu)</string>
 	<string name="capture_or_pick_photo">Selectează sau fă o fotografie</string>
@@ -1255,7 +1321,6 @@ Language: ro
 	<string name="reader_toast_err_remove_tag">Nu pot înlătura această etichetă</string>
 	<string name="reader_toast_err_add_tag">Nu pot adăuga această etichetă</string>
 	<string name="reader_title_applog">Jurnal aplicație</string>
-	<string name="jetpack_message_not_admin">Este necesar modulul Jetpack. Contactează administratorul sitului.</string>
 	<string name="fatal_db_error">A apărut o eroare în timp ce se creea baza de date a aplicației. Încearcă reinstalarea ei.</string>
 	<string name="error_blog_hidden">Acest blog este ascuns și nu poate fi încărcat. Validează-l din nou din setări și încearcă din nou.</string>
 	<string name="error_refresh_media">Media nu a putut fi reîmprospătată în acest moment</string>
@@ -1328,6 +1393,7 @@ Language: ro
 	<string name="media_gallery_type_thumbnail_grid">Grilă miniaturi</string>
 	<string name="learn_more">Află mai mult</string>
 	<string name="post_not_found">A apărut o eroare la încărcarea articolului. Reîmprospătează articolele și încearcă din nou.</string>
+	<string name="plugin_not_found">A apărut o eroare la accesarea acestui modul</string>
 	<string name="scaled_image_error">Introdu o valoare validă de lățime</string>
 	<string name="cancel_edit">Abandonează editarea</string>
 	<string name="connection_error">Eroare de conectare</string>
@@ -1390,7 +1456,6 @@ Language: ro
 	<string name="reader_btn_follow">Urmărește</string>
 	<string name="reader_btn_share">Partajare</string>
 	<string name="reader_untitled_post">(Fără titlu)</string>
-	<string name="jetpack_not_found">Modulul Jetpack nu e găsit</string>
 	<string name="empty_list_default">Această listă e goală</string>
 	<string name="media_add_popup_title">Adaugă în biblioteca media</string>
 	<string name="passcode_turn_on">Pune blocarea PIN-ului</string>

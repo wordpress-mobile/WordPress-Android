@@ -3,39 +3,52 @@ package org.wordpress.android.ui.plugins;
 import android.support.annotation.NonNull;
 import android.text.TextUtils;
 
-import org.wordpress.android.fluxc.model.PluginInfoModel;
-import org.wordpress.android.fluxc.model.PluginModel;
 import org.wordpress.android.fluxc.model.SiteModel;
+import org.wordpress.android.fluxc.model.plugin.SitePluginModel;
+import org.wordpress.android.fluxc.model.plugin.WPOrgPluginModel;
 import org.wordpress.android.fluxc.store.PluginStore;
+import org.wordpress.android.util.AppLog;
+import org.wordpress.android.util.CrashlyticsUtils;
+import org.wordpress.android.util.SiteUtils;
+import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.helpers.Version;
 
 public class PluginUtils {
     public static boolean isPluginFeatureAvailable(SiteModel site) {
-        String jetpackVersion = site.getJetpackVersion();
-        if (site.isUsingWpComRestApi() && site.isJetpackConnected() && !TextUtils.isEmpty(jetpackVersion)) {
-            Version siteJetpackVersion = new Version(jetpackVersion);
-            Version minVersion = new Version("5.6");
-            return siteJetpackVersion.compareTo(minVersion) >= 0; // if the site has Jetpack 5.6 or newer installed
-        }
-        return false;
+        return SiteUtils.checkMinimalJetpackVersion(site, "5.6");
     }
 
-    static PluginInfoModel getPluginInfo(@NonNull PluginStore pluginStore, @NonNull PluginModel plugin) {
+    public static WPOrgPluginModel getWPOrgPlugin(@NonNull PluginStore pluginStore, @NonNull SitePluginModel plugin) {
         String slug = plugin.getSlug();
         if (TextUtils.isEmpty(slug)) {
             return null;
         }
-        return pluginStore.getPluginInfoBySlug(slug);
+        return pluginStore.getWPOrgPluginBySlug(slug);
     }
 
-    static boolean isUpdateAvailable(PluginModel plugin, PluginInfoModel pluginInfo) {
-        if (pluginInfo == null
+    static int getAverageStarRating(@NonNull WPOrgPluginModel wpOrgPlugin) {
+        int rating = StringUtils.stringToInt(wpOrgPlugin.getRating(), 1);
+        return Math.round(rating / 20f);
+    }
+
+    static boolean isUpdateAvailable(SitePluginModel plugin, WPOrgPluginModel wpOrgPlugin) {
+        if (wpOrgPlugin == null
                 || TextUtils.isEmpty(plugin.getVersion())
-                || TextUtils.isEmpty(pluginInfo.getVersion())) {
+                || TextUtils.isEmpty(wpOrgPlugin.getVersion())) {
             return false;
         }
-        Version currentVersion = new Version(plugin.getVersion());
-        Version availableVersion = new Version(pluginInfo.getVersion());
-        return currentVersion.compareTo(availableVersion) == -1;
+        try {
+            Version currentVersion = new Version(plugin.getVersion());
+            Version availableVersion = new Version(wpOrgPlugin.getVersion());
+            return currentVersion.compareTo(availableVersion) == -1;
+        } catch (IllegalArgumentException e) {
+            String errorStr = String.format("An IllegalArgumentException occurred while trying to compare site" +
+                    " plugin version: %s with wporg plugin version: %s", plugin.getVersion(), wpOrgPlugin.getVersion());
+            AppLog.e(AppLog.T.PLUGINS, errorStr, e);
+            CrashlyticsUtils.logException(e, AppLog.T.PLUGINS, errorStr);
+            // If the versions are not in the expected format, we can assume that an update is available if the version
+            // values for the site plugin and wporg plugin are not the same
+            return !plugin.getVersion().equalsIgnoreCase(wpOrgPlugin.getVersion());
+        }
     }
 }

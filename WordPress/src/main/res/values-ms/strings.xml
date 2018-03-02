@@ -1,11 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2017-11-23 17:01:04+0000
+Translation-Revision-Date: 2017-12-20 12:00:40+0000
 Plural-Forms: nplurals=1; plural=0;
 Generator: GlotPress/2.4.0-alpha
 Language: ms
 -->
 <resources>
+	<string name="plugin_external_link_icon_content_description">Pautan luaran</string>
+	<string name="plugin_update_available_icon_content_description">Kemaskini tersedia</string>
+	<string name="plugin_icon_content_description">Ikon pemalam</string>
+	<string name="plugin_home_page">Laman hadapan pemalam</string>
+	<string name="wordpress_dot_org_plugin_page">Halaman Pemalam WordPress.org</string>
+	<string name="plugin_remove_progress_dialog_message">Membuang %s…</string>
+	<string name="plugin_remove_dialog_title">Buang Pemalam</string>
+	<string name="plugin_btn_remove">Buang Pemalam</string>
+	<string name="plugin_remove_failed">Ralat membuang %s.</string>
 	<string name="email_not_registered_wpcom">Hmm, alamat emel ini tidak didaftarkan dengan WordPress.com.\nAdakah anda sedang cuba mencapai laman yang dihos sendiri? Log masuk menggunakan pautan di bawah skrin ini.</string>
 	<string name="login_empty_password">Sila masukkan kata laluan</string>
 	<string name="login_text_otp_another">Sebaliknya tekskan saya kod sekali lagi.</string>
@@ -249,18 +258,8 @@ Language: ms
 	<string name="format_bar_description_link">Pautan</string>
 	<string name="format_bar_description_heading">Tajuk</string>
 	<string name="format_bar_description_list">Senarai</string>
-	<string name="new_editor_promo_title_beta">Beta</string>
 	<string name="format_bar_description_media">Media</string>
-	<string name="new_editor_promo_title">Cuba Penyunting baharu</string>
 	<string name="reader_view_comments">Lihat ulasan</string>
-	<string name="new_editor_promo_description_image">Tulis Tangan Imej</string>
-	<string name="new_editor_promo_link">Apa yang baharu?</string>
-	<string name="new_editor_promo_confirmation_message">Penyunting baharu dibolehkan!</string>
-	<string name="new_editor_promo_confirmation_action">Tetapan</string>
-	<string name="new_editor_promo_button_positive">Cubanya</string>
-	<string name="new_editor_beta_message">Penyunting baharu dalam Beta Terbuka!</string>
-	<string name="new_editor_promo_button_negative">Bukan Sekarang</string>
-	<string name="new_editor_beta_action">Baca Lebih Lanjut</string>
 	<string name="preference_editor_footer">Nota keluaran penyunting dan pelaporan pepijat</string>
 	<string name="preference_editor_footer_description">Ikon Maklumat</string>
 	<string name="site_settings_video_quality_hint">Kualiti video. Nilai lebih tinggi bermakna kualiti video yang lebih baik.</string>
@@ -341,7 +340,6 @@ Language: ms
 	<string name="smart_toast_photo_long_press">Tap dan tahan untuk memilih gambar berbilang</string>
 	<string name="photo_picker_choose_video">Pilih video dari peranti</string>
 	<string name="photo_picker_choose_photo">Pilih gambar dari peranti</string>
-	<string name="new_editor_promo_description">Aplikasi WordPress kini terdiri daripada penyunting baharu yang indah. Cubalah ia dengan mencipta kiriman baharu!</string>
 	<string name="media_insert_as_gallery">Tambah sebagai galeri</string>
 	<string name="media_insert_individually">Tambah sebagai individu</string>
 	<string name="wp_media_title">Media WordPress</string>
@@ -397,7 +395,6 @@ Language: ms
 	<string name="checking_username">Memeriksa nama pengguna</string>
 	<string name="jetpack_different_com_account">Laman-laman Jetpack kepunyaan akaun WordPress.com yang berlainan adalah tidak disokong</string>
 	<string name="jetpack_use_com_account">Untuk menambah laman Jetpack anda, log masuk ke akaun WordPress.com yang anda gunakan untuk menyambung Jetpack.</string>
-	<string name="jetpack_message">Pemalam Jetpack mesti dipasang dan diaktifkan. Anda ingin memasang atau mengaktifkan Jetpack?</string>
 	<string name="error_media_load">Tidak dapat memuat media</string>
 	<string name="error_media_refresh_no_connection">Sambungan diperlukan untuk menyegar semula pustaka</string>
 	<string name="error_media_unauthorized">Anda tidak mempunyai kebenaran melihat atau menyunting media</string>
@@ -577,8 +574,6 @@ Language: ms
 	<string name="enter_your_password_instead">Sebaliknya masukkan kata laluan anda</string>
 	<string name="web_address_dialog_hint">Tunjukkan kepada umum apabila anda mengulas.</string>
 	<string name="username_email">Emel atau nama pengguna</string>
-	<string name="jetpack_not_connected_message">Pemalam Jetpack telah dipasang, tetapi tidak dihubungkan ke WordPress.com. Adakah anda ingin menghubungkan Jetpack?</string>
-	<string name="jetpack_not_connected">Pemalam Jetpack tidak dihubungkan</string>
 	<string name="new_editor_reflection_error">Penyunting visual tidak serasi dengan peranti anda. Ia dinyah boleh\nsecara automatik</string>
 	<string name="stats_insights_latest_post_no_title">(tiada tajuk)</string>
 	<string name="capture_or_pick_photo">Tangkap atau pilih gambar</string>
@@ -1315,7 +1310,6 @@ Language: ms
 	<string name="invalid_site_url_message">Periksa bahawa URL laman yang dimasukkan adalah sah</string>
 	<string name="notifications_empty_all">Belum ada pemberitahuan.</string>
 	<string name="media_error_no_permission">Anda tidak mempunyai kebenaran untuk melihat pustaka media</string>
-	<string name="jetpack_message_not_admin">Pemalan Jetpack diperlukan. Hubungi pentadbir laman.</string>
 	<string name="error_deleting_page">Ralat berlaku semasa menghapuskan halaman</string>
 	<string name="connection_error">Ralat sambungan</string>
 	<string name="xmlrpc_error">Tidak boleh berhubung. Masukkan laluan penuh ke xmlrpc.php di laman anda dan cuba lagi.</string>
@@ -1354,7 +1348,6 @@ Language: ms
 	<string name="signing_in">Melog masuk...</string>
 	<string name="nux_oops_not_selfhosted_blog">Log masuk ke WordPress.com</string>
 	<string name="empty_list_default">Senarai ini kosong</string>
-	<string name="jetpack_not_found">Pemalam Jetpack tidak dijumpai</string>
 	<string name="reader_untitled_post">(Tanpa tajuk)</string>
 	<string name="reader_btn_share">Kongsi</string>
 	<string name="reader_btn_follow">Ikut</string>

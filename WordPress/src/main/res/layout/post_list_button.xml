@@ -20,8 +20,7 @@
         android:id="@+id/text"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:ellipsize="none"
-        android:maxLines="1"
+        android:singleLine="true"
         android:textColor="@color/blue_wordpress"
         android:textSize="@dimen/text_sz_small"
         tools:text="text" />

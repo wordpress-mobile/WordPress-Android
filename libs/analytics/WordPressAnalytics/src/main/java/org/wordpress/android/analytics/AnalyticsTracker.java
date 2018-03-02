@@ -128,11 +128,6 @@ public final class AnalyticsTracker {
         EDITOR_AZTEC_TOGGLED_OFF, // Aztec editor only
         EDITOR_AZTEC_TOGGLED_ON, // Aztec editor only
         EDITOR_AZTEC_ENABLED, // Aztec editor only
-        EDITOR_AZTEC_BETA_LABEL, // Aztec editor only
-        EDITOR_AZTEC_BETA_LINK, // Aztec editor only
-        EDITOR_AZTEC_PROMO_LINK, // Aztec editor only
-        EDITOR_AZTEC_PROMO_NEGATIVE, // Aztec editor only
-        EDITOR_AZTEC_PROMO_POSITIVE, // Aztec editor only
         ME_ACCESSED,
         ME_GRAVATAR_TAPPED,
         ME_GRAVATAR_SHOT_NEW,
@@ -164,6 +159,7 @@ public final class AnalyticsTracker {
         NOTIFICATION_UPLOAD_MEDIA_SUCCESS_WRITE_POST,
         NOTIFICATION_UPLOAD_POST_ERROR_RETRY,
         NOTIFICATION_UPLOAD_MEDIA_ERROR_RETRY,
+        NOTIFICATIONS_SCREEN_SIGNED_INTO_JETPACK,
         OPENED_POSTS,
         OPENED_PAGES,
         OPENED_COMMENTS,
@@ -178,6 +174,7 @@ public final class AnalyticsTracker {
         OPENED_PEOPLE_MANAGEMENT,
         OPENED_PERSON,
         OPENED_PLUGINS,
+        OPENED_PLUGIN_DETAIL,
         CREATE_ACCOUNT_INITIATED,
         CREATE_ACCOUNT_EMAIL_EXISTS,
         CREATE_ACCOUNT_USERNAME_EXISTS,
@@ -191,6 +188,8 @@ public final class AnalyticsTracker {
         SIGNED_INTO_JETPACK,
         PERFORMED_JETPACK_SIGN_IN_FROM_STATS_SCREEN,
         STATS_SELECTED_INSTALL_JETPACK,
+        STATS_CANCELED_INSTALL_JETPACK,
+        STATS_COMPLETED_INSTALL_JETPACK,
         STATS_SELECTED_CONNECT_JETPACK,
         PUSH_NOTIFICATION_RECEIVED,
         PUSH_NOTIFICATION_TAPPED, // Same of opened
@@ -200,7 +199,6 @@ public final class AnalyticsTracker {
         SUPPORT_USER_SENT_SCREENSHOT,
         SUPPORT_USER_REVIEWED_THE_APP,
         SUPPORT_USER_REPLIED_TO_HELPSHIFT,
-        LOGIN_WIZARD_STYLE_ACTIVATED,
         LOGIN_ACCESSED,
         LOGIN_MAGIC_LINK_EXITED,
         LOGIN_MAGIC_LINK_FAILED,
@@ -240,6 +238,37 @@ public final class AnalyticsTracker {
         LOGIN_SOCIAL_ACCOUNTS_NEED_CONNECTING,
         LOGIN_SOCIAL_ERROR_UNKNOWN_USER,
         LOGIN_WPCOM_BACKGROUND_SERVICE_UPDATE,
+        SIGNUP_BUTTON_TAPPED,
+        SIGNUP_EMAIL_BUTTON_TAPPED,
+        SIGNUP_EMAIL_EPILOGUE_GRAVATAR_CROPPED,
+        SIGNUP_EMAIL_EPILOGUE_GRAVATAR_GALLERY_PICKED,
+        SIGNUP_EMAIL_EPILOGUE_GRAVATAR_SHOT_NEW,
+        SIGNUP_EMAIL_EPILOGUE_VIEWED,
+        SIGNUP_GOOGLE_BUTTON_TAPPED,
+        SIGNUP_TERMS_OF_SERVICE_TAPPED,
+        SIGNUP_CANCELED,
+        SIGNUP_EMAIL_TO_LOGIN,
+        SIGNUP_MAGIC_LINK_FAILED,
+        SIGNUP_MAGIC_LINK_SUCCEEDED,
+        SIGNUP_SOCIAL_2FA_NEEDED,
+        SIGNUP_SOCIAL_ACCOUNTS_NEED_CONNECTING,
+        SIGNUP_SOCIAL_BUTTON_FAILURE,
+        SIGNUP_SOCIAL_EPILOGUE_UNCHANGED,
+        SIGNUP_SOCIAL_EPILOGUE_UPDATE_DISPLAY_NAME_FAILED,
+        SIGNUP_SOCIAL_EPILOGUE_UPDATE_DISPLAY_NAME_SUCCEEDED,
+        SIGNUP_SOCIAL_EPILOGUE_UPDATE_USERNAME_FAILED,
+        SIGNUP_SOCIAL_EPILOGUE_UPDATE_USERNAME_SUCCEEDED,
+        SIGNUP_SOCIAL_EPILOGUE_USERNAME_SUGGESTIONS_FAILED,
+        SIGNUP_SOCIAL_EPILOGUE_VIEWED,
+        SIGNUP_SOCIAL_SUCCESS,
+        SIGNUP_SOCIAL_TO_LOGIN,
+        SITE_CREATION_ACCESSED,
+        SITE_CREATION_CATEGORY_VIEWED,
+        SITE_CREATION_THEME_VIEWED,
+        SITE_CREATION_DETAILS_VIEWED,
+        SITE_CREATION_DOMAIN_VIEWED,
+        SITE_CREATION_CREATING_VIEWED,
+        SITE_CREATION_SUCCESS_VIEWED,
         MEDIA_LIBRARY_ADDED_PHOTO,
         MEDIA_LIBRARY_ADDED_VIDEO,
         PERSON_REMOVED,
@@ -262,6 +291,7 @@ public final class AnalyticsTracker {
         THEMES_SUPPORT_ACCESSED,
         THEMES_DETAILS_ACCESSED,
         ACCOUNT_SETTINGS_LANGUAGE_CHANGED,
+        SITE_CREATION_BACKGROUND_SERVICE_UPDATE,
         SITE_SETTINGS_ACCESSED,
         SITE_SETTINGS_ACCESSED_MORE_SETTINGS,
         SITE_SETTINGS_LEARN_MORE_CLICKED,
@@ -298,7 +328,8 @@ public final class AnalyticsTracker {
         APP_PERMISSION_DENIED,
         SHARE_TO_WP_SUCCEEDED,
         PLUGIN_REMOVED,
-        PLUGIN_UPDATED
+        PLUGIN_UPDATED,
+        PLUGIN_INSTALLED
     }
 
     private static final List<Tracker> TRACKERS = new ArrayList<>();
@@ -307,12 +338,14 @@ public final class AnalyticsTracker {
     }
 
     public static void init(Context context) {
-        loadPrefHasUserOptedOut(context);
-    }
-
-    public static void loadPrefHasUserOptedOut(Context context) {
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
         boolean hasUserOptedOut = !prefs.getBoolean("wp_pref_send_usage_stats", true);
+        if (hasUserOptedOut != mHasUserOptedOut) {
+            mHasUserOptedOut = hasUserOptedOut;
+        }
+    }
+
+    public static void setHasUserOptedOut(boolean hasUserOptedOut){
         if (hasUserOptedOut != mHasUserOptedOut) {
             mHasUserOptedOut = hasUserOptedOut;
         }

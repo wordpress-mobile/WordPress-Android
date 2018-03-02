@@ -1,3 +1,14 @@
+buildscript {
+    repositories {
+        jcenter()
+        google()
+    }
+
+    dependencies {
+        classpath 'com.android.tools.build:gradle:3.0.1'
+    }
+}
+
 project.ext.preDexLibs = !project.hasProperty('disablePreDex')
 
 allprojects {
@@ -33,4 +44,8 @@ subprojects {
             project.android.dexOptions.preDexLibraries = rootProject.ext.preDexLibs
         }
     }
+}
+
+ext {
+    fluxCVersion = '9d90f262c86c284eae06776e68ab604ef5a3907c'
 }

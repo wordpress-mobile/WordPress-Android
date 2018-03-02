@@ -19,7 +19,6 @@
 
         <ImageView
             android:id="@+id/promo_dialog_image"
-            android:contentDescription="@string/new_editor_promo_description_image"
             android:layout_height="wrap_content"
             android:layout_width="wrap_content"
             android:layout_gravity="center"

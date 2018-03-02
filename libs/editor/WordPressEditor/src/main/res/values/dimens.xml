@@ -29,12 +29,6 @@
     <dimen name="sourceview_top_margin">15dp</dimen>
     <dimen name="sourceview_title_bottom_margin">15dp</dimen>
 
-    <dimen name="dialog_beta_padding_horizontal">8dp</dimen>
-    <dimen name="dialog_beta_padding_vertical">6dp</dimen>
-
-    <dimen name="link_dialog_margin_inner">4dp</dimen>
-    <dimen name="link_dialog_margin_outer">16dp</dimen>
-
     <dimen name="image_settings_dialog_padding">16dp</dimen>
     <dimen name="image_settings_dialog_extra_margin">0dp</dimen>
     <dimen name="image_settings_dialog_extra_margin_tablet">84dp</dimen>

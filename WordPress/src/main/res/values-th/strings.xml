@@ -625,7 +625,6 @@ Language: th
 	<string name="reader_btn_share">แบ่งปัน</string>
 	<string name="reader_btn_follow">ติดตาม</string>
 	<string name="reader_btn_unfollow">กำลังติดตาม</string>
-	<string name="jetpack_not_found">ไม่พบปลั๊กอิน Jetpack</string>
 	<string name="reader_untitled_post">(ไม่มีหัวข้อ)</string>
 	<string name="media_add_popup_title">เพิ่มไปยังคลังสื่อ</string>
 	<string name="empty_list_default">รายชื่อนี้ว่างเปล่า</string>

@@ -719,6 +719,7 @@ public class ImageUtils {
 
     /**
      * Get the maximum size a thumbnail can be to fit in either portrait or landscape orientations.
+     * @deprecated Use `getMaximumThumbnailSizeForEditor` available in MediaUtils class in Editors project
      */
     public static int getMaximumThumbnailWidthForEditor(Context context) {
         int maximumThumbnailWidthForEditor;

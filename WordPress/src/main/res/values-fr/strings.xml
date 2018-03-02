@@ -1,11 +1,86 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2017-12-13 09:44:36+0000
+Translation-Revision-Date: 2018-02-09 17:08:24+0000
 Plural-Forms: nplurals=2; plural=n > 1;
 Generator: GlotPress/2.4.0-alpha
 Language: fr
 -->
 <resources>
+	<string name="plugin_info_your_version">Votre version de WordPress</string>
+	<string name="plugin_info_requires_version">Nécessite WordPress version</string>
+	<string name="plugin_info_lastupdated">Dernière mise à jour</string>
+	<string name="plugin_info_version">Version</string>
+	<string name="plugin_five_stars">5 étoiles</string>
+	<string name="plugin_four_stars">4 étoiles</string>
+	<string name="plugin_three_stars">3 étoiles</string>
+	<string name="plugin_two_stars">2 étoiles</string>
+	<string name="plugin_one_stars">1 étoile</string>
+	<string name="plugin_num_downloads">%s téléchargements</string>
+	<string name="plugin_num_ratings">%s notes</string>
+	<string name="plugin_read_reviews">Lire les évaluations</string>
+	<string name="plugin_faq">Questions fréquemment posées</string>
+	<string name="plugin_whatsnew">Quoi de neuf</string>
+	<string name="plugin_installation">Installation</string>
+	<string name="plugin_description">Description</string>
+	<string name="plugin_settings">Réglages</string>
+	<string name="plugin_installed">Installée</string>
+	<string name="plugin_installed_version">Version %s installée</string>
+	<string name="plugin_version">Version %s</string>
+	<string name="plugin_byline">par %s</string>
+	<string name="change_photo">Changer la photo</string>
+	<string name="plugin_fetch_error">Impossible de charger les extensions</string>
+	<string name="my_site_btn_site_pages">Pages du site</string>
+	<string name="site_settings_tags_hint">Gérez les étiquettes de votre site</string>
+	<string name="dlg_saving_tag">Enregistrement</string>
+	<string name="dlg_deleting_tag">Suppression</string>
+	<string name="dlg_confirm_delete_tag">Supprimer définitivement \'%s\' ?</string>
+	<string name="error_tag_exists">Une étiquette avec ce nom existe déjà</string>
+	<string name="add_new_tag">Ajout de nouvelle étiquette</string>
+	<string name="tag_description_hint">Description</string>
+	<string name="tag_name_hint">Étiquette</string>
+	<string name="site_settings_amp_summary">Votre site WordPress.com prend en charge l’utilisation d’Accelerated Mobile Pages, une initiative de Google qui accélère considérablement les temps de chargements sur les périphériques mobiles.</string>
+	<string name="site_settings_amp_title">Accelerated Mobile Pages (AMP)</string>
+	<string name="site_settings_timezones_error">Impossible de charger les fuseaux horaires</string>
+	<string name="site_settings_format_help">En savoir plus sur le formatage de date et heure</string>
+	<string name="site_settings_format_hint_custom">Format personnalisé</string>
+	<string name="site_settings_format_entry_custom">Personnalisé</string>
+	<string name="site_settings_posts_per_page_title">Articles par page</string>
+	<string name="site_settings_timezone_subtitle">Choisissez une ville dans votre fuseau horaire</string>
+	<string name="site_settings_timezone_title">Fuseau horaire</string>
+	<string name="site_settings_time_format_title">Format horaire</string>
+	<string name="site_settings_date_format_title">Format de date</string>
+	<string name="site_settings_week_start_title">La semaine commence le</string>
+	<string name="site_settings_tags_title">Étiquettes</string>
+	<string name="site_settings_traffic_header">Trafic</string>
+	<string name="delete_no">Ne pas supprimer</string>
+	<string name="delete_yes">Supprimer</string>
+	<string name="plugin_external_link_icon_content_description">Lien externe</string>
+	<string name="plugin_update_available_icon_content_description">Mise à jour disponible</string>
+	<string name="plugin_icon_content_description">Icône de l’extension</string>
+	<string name="plugin_home_page">Page de l’extension</string>
+	<string name="wordpress_dot_org_plugin_page">Page WordPress.org de l’extension</string>
+	<string name="plugin_remove_dialog_message">Voulez vous vraiment supprimer %1$s depuis %2$s ?\n\nCette action désactivera l’extension et supprimera tous les fichiers et données associés.</string>
+	<string name="plugin_remove_dialog_title">Supprimer l’extension</string>
+	<string name="plugin_remove_progress_dialog_message">Suppression de %s ...</string>
+	<string name="plugin_disable_progress_dialog_message">Désactivation de %s ...</string>
+	<string name="plugin_btn_remove">Supprimer l’extension</string>
+	<string name="plugin_configuration_failed">Une erreur est survenue pendant la configuration de l\'extension : %s</string>
+	<string name="plugin_remove_failed">Erreur durant la suppression de %s.</string>
+	<string name="plugin_removed_successfully">Suppression réussie de %s.</string>
+	<string name="plugin_updated_failed_detailed">Erreur de suppression de %1$s : %2$s</string>
+	<string name="plugin_updated_failed">Erreur de suppression de %s.</string>
+	<string name="plugin_updated_successfully">Mise à jour effectuée pour %s.</string>
+	<string name="plugin_available_version">Version %s est disponible.</string>
+	<string name="plugin_detail_label_state_autoupdates">Mises à jour automatiques</string>
+	<string name="plugin_detail_label_state_active">Actif</string>
+	<string name="plugin_autoupdates_off">Mises à jour automatiques désactivées</string>
+	<string name="plugin_autoupdates_on">Mises à jour automatiques activées</string>
+	<string name="plugin_inactive">Inactif</string>
+	<string name="plugin_active">Actif</string>
+	<string name="plugins">Extensions</string>
+	<string name="my_site_btn_plugins">Extensions</string>
+	<string name="media_edit_link_hint">Ouvrir le lien dans une nouvelle fenêtre/onglet</string>
+	<string name="media_edit_link_text">Lien vers</string>
 	<string name="notification_login_failed">Une erreur est survenue.</string>
 	<string name="notification_2fa_needed">Veuillez fournir un code d\'authentification pour continuer. </string>
 	<string name="notification_error_wrong_password">Veuillez confirmer deux fois votre mot de passe pour continuer.</string>
@@ -266,16 +341,6 @@ Language: fr
 	<string name="format_bar_description_heading">En-tête</string>
 	<string name="format_bar_description_media">Média</string>
 	<string name="reader_view_comments">Afficher les commentaires</string>
-	<string name="new_editor_promo_title_beta">Beta</string>
-	<string name="new_editor_promo_title">Essayer le nouvel éditeur</string>
-	<string name="new_editor_promo_link">Quoi de neuf ?</string>
-	<string name="new_editor_promo_description_image">Création manuelle d\'une image</string>
-	<string name="new_editor_promo_confirmation_message">Nouvel éditeur activé !</string>
-	<string name="new_editor_promo_confirmation_action">Réglages</string>
-	<string name="new_editor_promo_button_positive">Essayez-le</string>
-	<string name="new_editor_promo_button_negative">Pas maintenant</string>
-	<string name="new_editor_beta_message">Nouvel éditeur en bêta ouverte !</string>
-	<string name="new_editor_beta_action">Lire la suite</string>
 	<string name="preference_editor_footer_description">Icône d’informations</string>
 	<string name="preference_editor_footer">Notes de version de l’éditeur et signalement des bugs</string>
 	<string name="site_settings_video_quality_hint">Qualité des vidéos. Des valeurs élevées signifient une meilleure qualité des vidéos.</string>
@@ -356,7 +421,6 @@ Language: fr
 	<string name="smart_toast_photo_long_press">Touchez et maintenez la pression pour sélectionner plusieurs photos</string>
 	<string name="photo_picker_choose_video">Choisissez une vidéo sur votre appareil</string>
 	<string name="photo_picker_choose_photo">Choisissez une photo sur votre appareil</string>
-	<string name="new_editor_promo_description">L\'app WordPress comprend maintenant un superbe éditeur. Essayez-le en créant un nouvel article !</string>
 	<string name="wp_media_title">Média WordPress</string>
 	<string name="media_insert_as_gallery">Ajouter en tant que galerie</string>
 	<string name="media_insert_individually">Ajouter individuellement</string>
@@ -412,7 +476,6 @@ Language: fr
 	<string name="checking_username">Vérification du nom d’utilisateur</string>
 	<string name="jetpack_different_com_account">Les sites Jetpack liés à des comptes WordPress.com différents ne sont pas supportés</string>
 	<string name="jetpack_use_com_account">Pour ajouter votre site Jetpack, connectez-vous au même compte WordPress.com que vous utilisez pour vous connecter à Jetpack.</string>
-	<string name="jetpack_message">L’extension Jetpack doit être installée et activée. Voulez-vous installer ou activer Jetpack&amp;nbsp;?</string>
 	<string name="error_media_load">Impossible de charger le média</string>
 	<string name="error_media_refresh_no_connection">Connexion obligatoire pour actualiser la bibliothèque</string>
 	<string name="error_media_unauthorized">Vous n’avez pas le droit de voir ni de modifier le média</string>
@@ -592,8 +655,6 @@ Language: fr
 	<string name="enter_your_password_instead">Saisissez votre mot de passe à la place</string>
 	<string name="web_address_dialog_hint">Affiché publiquement quand vous commentez.</string>
 	<string name="username_email">Adresse e-mail ou identifiant</string>
-	<string name="jetpack_not_connected_message">L\'extension Jetpack est installée, mais pas connecté à WordPress.com. Voulez-vous connecter Jetpack ?</string>
-	<string name="jetpack_not_connected">L\'extension Jetpack n\'est pas connectée</string>
 	<string name="new_editor_reflection_error">L\'éditeur visuel n\'est pas compatible avec votre appareil.\nIl a été automatiquement désactivé.</string>
 	<string name="stats_insights_latest_post_no_title">(pas de titre)</string>
 	<string name="capture_or_pick_photo">Prenez une photo ou choisissez-en une</string>
@@ -1255,7 +1316,6 @@ Language: fr
 	<string name="reader_toast_err_remove_tag">Impossible de supprimer ce mot-clé </string>
 	<string name="reader_toast_err_add_tag">Impossible d\'ajouter ce mot-clé</string>
 	<string name="reader_title_applog">Journal de l\'application</string>
-	<string name="jetpack_message_not_admin">L\'extension Jetpack est requise. Contactez l\'administrateur du site.</string>
 	<string name="fatal_db_error">Une erreur s\'est produite lors de la création de la base de données de l\'app. Essayez de réinstaller l\'app.</string>
 	<string name="error_blog_hidden">Ce blog est caché et ne peut être chargé. Activez-le dans les paramètres et réessayez.</string>
 	<string name="error_refresh_media">Impossible d’actualiser le contenu multimédia pour l’instant.</string>
@@ -1328,6 +1388,7 @@ Language: fr
 	<string name="media_gallery_type_thumbnail_grid">Grille de vignettes</string>
 	<string name="learn_more">En savoir plus</string>
 	<string name="post_not_found">Une erreur s\'est produite en chargeant cet article. Actualisez vos articles et essayez de nouveau.</string>
+	<string name="plugin_not_found">Une erreur s’est produite en accédant à cette extension.</string>
 	<string name="scaled_image_error">Saisir une largeur valide d\'image à l\'échelle</string>
 	<string name="cancel_edit">Annuler la modification</string>
 	<string name="connection_error">Erreur de connexion</string>
@@ -1390,7 +1451,6 @@ Language: fr
 	<string name="reader_btn_follow">Suivre</string>
 	<string name="reader_btn_share">Partager</string>
 	<string name="reader_untitled_post">(Sans Titre)</string>
-	<string name="jetpack_not_found">Le module Jetpack est introuvable</string>
 	<string name="empty_list_default">Cette liste est vide</string>
 	<string name="media_add_popup_title">Ajouter à la bibliothèque média</string>
 	<string name="passcode_turn_on">Activer le code PIN</string>

@@ -477,7 +477,6 @@ Language: es_CL
 	<string name="nux_add_selfhosted_blog">Añade un sitio auto hospedado</string>
 	<string name="media_add_popup_title">Añadir a biblioteca multimedia</string>
 	<string name="empty_list_default">Esta lista esta vacía</string>
-	<string name="jetpack_not_found">No se ha encontrado el plugin Jetpack</string>
 	<string name="reader_untitled_post">Sin título</string>
 	<string name="reader_btn_share">Compartir</string>
 	<string name="reader_btn_follow">Seguir</string>

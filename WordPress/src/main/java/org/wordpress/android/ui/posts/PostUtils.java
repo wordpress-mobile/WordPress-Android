@@ -335,7 +335,7 @@ public class PostUtils {
                 || (PostStatus.fromPost(post) == PostStatus.PUBLISHED && post.isLocalDraft());
     }
 
-    public static Set<PostModel> getPostsThatIncludeThisMedia(PostStore postStore, List<MediaModel> mediaModelList) {
+    public static Set<PostModel> getPostsThatIncludeAnyOfTheseMedia(PostStore postStore, List<MediaModel> mediaModelList) {
         // if there' a Post to which the retried media belongs, clear their status
         HashSet<PostModel> postsThatContainListedMedia = new HashSet<>();
         for (MediaModel media : mediaModelList) {

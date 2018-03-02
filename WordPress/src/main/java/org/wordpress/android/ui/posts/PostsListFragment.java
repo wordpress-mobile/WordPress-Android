@@ -202,7 +202,16 @@ public class PostsListFragment extends Fragment
         });
 
         if (savedInstanceState == null) {
-            requestPosts(false);
+            if (UploadService.hasPendingOrInProgressPostUploads()) {
+                // if there are some in-progress uploads, we'd better just load the DB Posts and reflect upload
+                // changes there. Otherwise, a duplicate-post situation can happen when:
+                // a FETCH_POSTS completing *after* the post has been uploaded to the server but *before*
+                // the PUSH_POST action completes and a PUSHED_POST is emitted.
+                loadPosts(LoadMode.IF_CHANGED);
+            } else {
+                // refresh normally
+                requestPosts(false);
+            }
         }
 
         initSwipeToRefreshHelper(view);
@@ -647,8 +656,12 @@ public class PostsListFragment extends Fragment
         switch (event.causeOfChange) {
             // if a Post is updated, let's refresh the whole list, because we can't really know
             // from FluxC which post has changed, or when. So to make sure, we go to the source,
-            // which is the FkuxC PostStore.
+            // which is the FluxC PostStore.
             case UPDATE_POST:
+                if (!event.isError()) {
+                    loadPosts(LoadMode.IF_CHANGED);
+                }
+                break;
             case FETCH_POSTS:
             case FETCH_PAGES:
                 mIsFetchingPosts = false;
@@ -750,6 +763,7 @@ public class PostsListFragment extends Fragment
 
     @SuppressWarnings("unused")
     public void onEventMainThread(UploadService.UploadErrorEvent event) {
+        EventBus.getDefault().removeStickyEvent(event);
         if (event.post != null) {
             UploadUtils.onPostUploadedSnackbarHandler(getActivity(),
                     getActivity().findViewById(R.id.coordinator), true, event.post, event.errorMessage, mSite, mDispatcher);
@@ -763,6 +777,7 @@ public class PostsListFragment extends Fragment
 
     @SuppressWarnings("unused")
     public void onEventMainThread(UploadService.UploadMediaSuccessEvent event) {
+        EventBus.getDefault().removeStickyEvent(event);
         if (event.mediaModelList != null && !event.mediaModelList.isEmpty()) {
             UploadUtils.onMediaUploadedSnackbarHandler(getActivity(),
                     getActivity().findViewById(R.id.coordinator), false,
@@ -778,7 +793,7 @@ public class PostsListFragment extends Fragment
 
         if (event.mediaModelList != null && !event.mediaModelList.isEmpty()) {
             // if there' a Post to which the retried media belongs, clear their status
-            Set<PostModel> postsToRefresh = PostUtils.getPostsThatIncludeThisMedia(mPostStore, event.mediaModelList);
+            Set<PostModel> postsToRefresh = PostUtils.getPostsThatIncludeAnyOfTheseMedia(mPostStore, event.mediaModelList);
             // now that we know which Posts  to refresh, let's do it
             for (PostModel post : postsToRefresh) {
                 int position = getPostListAdapter().getPositionForPost(post);

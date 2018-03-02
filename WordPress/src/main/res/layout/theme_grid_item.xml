@@ -9,9 +9,9 @@
         android:id="@+id/theme_grid_card"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/theme_browser_cardview_margin_large"
         android:layout_marginLeft="@dimen/theme_browser_cardview_margin_large"
         android:layout_marginRight="@dimen/theme_browser_cardview_margin_large"
+        android:layout_marginTop="@dimen/theme_browser_cardview_margin_large"
         card_view:cardCornerRadius="@dimen/cardview_default_radius"
         card_view:cardElevation="@dimen/card_elevation">
 
@@ -46,36 +46,36 @@
                 <LinearLayout
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_centerVertical="true"
-                    android:layout_alignParentLeft="true">
+                    android:layout_alignParentLeft="true"
+                    android:layout_centerVertical="true">
 
                     <org.wordpress.android.widgets.WPTextView
                         android:id="@+id/theme_grid_item_name"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:layout_marginLeft="@dimen/theme_browser_cardview_header_margin"
                         android:textColor="@color/black"
-                        android:textStyle="bold"
-                        android:layout_marginLeft="@dimen/theme_browser_cardview_header_margin" />
+                        android:textStyle="bold" />
 
                     <org.wordpress.android.widgets.WPTextView
                         android:id="@+id/theme_grid_item_price"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:textStyle="bold"
+                        android:layout_marginLeft="@dimen/theme_browser_cardview_margin_large"
                         android:textColor="@color/theme_price"
-                        android:layout_marginLeft="@dimen/theme_browser_cardview_margin_large"/>
+                        android:textStyle="bold" />
 
                     <org.wordpress.android.widgets.WPTextView
                         android:id="@+id/theme_grid_item_active"
-                        android:textSize="@dimen/text_sz_extra_small"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:textColor="@color/theme_active"
-                        android:textStyle="bold"
-                        android:visibility="gone"
-                        android:textAllCaps="true"
+                        android:layout_marginLeft="@dimen/theme_browser_cardview_margin_large"
                         android:text="@string/active"
-                        android:layout_marginLeft="@dimen/theme_browser_cardview_margin_large"/>
+                        android:textAllCaps="true"
+                        android:textColor="@color/theme_active"
+                        android:textSize="@dimen/text_sz_extra_small"
+                        android:textStyle="bold"
+                        android:visibility="gone" />
 
                 </LinearLayout>
 
@@ -94,10 +94,10 @@
                         android:id="@+id/theme_grid_item_image_button"
                         android:layout_width="@dimen/theme_browser_more_button_width"
                         android:layout_height="@dimen/theme_browser_more_button_height"
-                        android:padding="@dimen/theme_browser_more_button_padding"
-                        android:background="?android:attr/selectableItemBackground"
                         android:adjustViewBounds="true"
+                        android:background="?android:attr/selectableItemBackground"
                         android:contentDescription="@string/button_more"
+                        android:padding="@dimen/theme_browser_more_button_padding"
                         card_view:srcCompat="@drawable/ic_ellipsis_grey_lighten_10_24dp" />
 
                 </LinearLayout>

@@ -18,6 +18,7 @@ import org.wordpress.android.models.CategoryModel;
 import org.wordpress.android.models.JetpackSettingsModel;
 import org.wordpress.android.util.AnalyticsUtils;
 import org.wordpress.android.util.AppLog;
+import org.wordpress.android.util.SiteUtils;
 import org.wordpress.android.util.StringUtils;
 
 import java.util.ArrayList;
@@ -63,11 +64,15 @@ class DotComSiteSettings extends SiteSettingsInterface {
     private static final String JP_MONITOR_EMAIL_NOTES_KEY = "email_notifications";
     private static final String JP_MONITOR_WP_NOTES_KEY = "wp_note_notifications";
     private static final String JP_PROTECT_WHITELIST_KEY = "jetpack_protect_whitelist";
+    private static final String SERVE_IMAGES_FROM_OUR_SERVERS = "photon";
+    private static final String LAZY_LOAD_IMAGES = "lazy-images";
     private static final String START_OF_WEEK_KEY = "start_of_week";
     private static final String DATE_FORMAT_KEY = "date_format";
     private static final String TIME_FORMAT_KEY = "time_format";
     private static final String TIMEZONE_KEY = "timezone_string";
     private static final String POSTS_PER_PAGE_KEY = "posts_per_page";
+    private static final String AMP_SUPPORTED_KEY = "amp_is_supported";
+    private static final String AMP_ENABLED_KEY = "amp_is_enabled";
 
     // WP.com REST keys used to GET certain site settings
     private static final String GET_TITLE_KEY = "name";
@@ -88,6 +93,8 @@ class DotComSiteSettings extends SiteSettingsInterface {
     private static final String CATEGORIES_KEY = "categories";
     private static final String DEFAULT_SHARING_BUTTON_STYLE = "icon-only";
 
+    private static final String SPEED_UP_SETTINGS_JETPACK_VERSION = "5.8";
+
     // used to track network fetches to prevent multiple errors from generating multiple toasts
     private int mFetchRequestCount = 0;
     private int mSaveRequestCount = 0;
@@ -96,7 +103,9 @@ class DotComSiteSettings extends SiteSettingsInterface {
     private Exception mFetchError = null;
     private Exception mSaveError = null;
 
-    /** Only instantiated by {@link SiteSettingsInterface}. */
+    /**
+     * Only instantiated by {@link SiteSettingsInterface}.
+     */
     DotComSiteSettings(Context host, SiteModel site, SiteSettingsListener listener) {
         super(host, site, listener);
     }
@@ -109,12 +118,18 @@ class DotComSiteSettings extends SiteSettingsInterface {
         if (mSite.isJetpackConnected()) {
             pushJetpackMonitorSettings();
             pushJetpackProtectAndSsoSettings();
+            if (supportsJetpackSpeedUpSettings(mSite)) {
+                pushServeImagesFromOurServersModuleSettings();
+                pushLazyLoadModule();
+            }
         }
 
         pushWpSettings();
     }
 
-    /** Request remote site data via the WordPress REST API. */
+    /**
+     * Request remote site data via the WordPress REST API.
+     */
     @Override
     protected void fetchRemoteData() {
         if (mFetchRequestCount > 0) {
@@ -128,6 +143,10 @@ class DotComSiteSettings extends SiteSettingsInterface {
         if (mSite.isJetpackConnected()) {
             fetchJetpackSettings();
         }
+    }
+
+    static boolean supportsJetpackSpeedUpSettings(SiteModel site) {
+        return SiteUtils.checkMinimalJetpackVersion(site, SPEED_UP_SETTINGS_JETPACK_VERSION);
     }
 
     private void fetchWpSettings() {
@@ -164,7 +183,9 @@ class DotComSiteSettings extends SiteSettingsInterface {
                 });
     }
 
-    /** Request a list of post categories for a site via the WordPress REST API. */
+    /**
+     * Request a list of post categories for a site via the WordPress REST API.
+     */
     private void fetchCategories() {
         ++mFetchRequestCount;
         // TODO: Replace with FluxC (GET_CATEGORIES + TaxonomyStore.getCategoriesForSite())
@@ -195,6 +216,9 @@ class DotComSiteSettings extends SiteSettingsInterface {
     private void fetchJetpackSettings() {
         fetchJetpackMonitorSettings();
         fetchJetpackProtectAndSsoSettings();
+        if (supportsJetpackSpeedUpSettings(mSite)) {
+            fetchJetpackModuleSettings();
+        }
     }
 
     private void fetchJetpackProtectAndSsoSettings() {
@@ -270,6 +294,49 @@ class DotComSiteSettings extends SiteSettingsInterface {
                     @Override
                     public void onErrorResponse(VolleyError error) {
                         AppLog.w(AppLog.T.API, "Error fetching Jetpack Monitor module options: " + error);
+                        onFetchResponseReceived(error);
+                    }
+                });
+    }
+
+    private void fetchJetpackModuleSettings() {
+        ++mFetchRequestCount;
+        WordPress.getRestClientUtilsV1_1().getJetpackModuleSettings(
+                mSite.getSiteId(), new RestRequest.Listener() {
+                    @Override
+                    public void onResponse(JSONObject response) {
+                        if (response == null) {
+                            AppLog.w(AppLog.T.API, "Unexpected state: Received empty Jetpack modules response");
+                            onFetchResponseReceived(null);
+                            return;
+                        }
+                        AppLog.v(AppLog.T.API, "Received Jetpack module settings");
+                        JSONArray array = response.optJSONArray("modules");
+                        if (array != null) {
+                            for (int i = 0; i < array.length(); i++) {
+                                JSONObject module = array.optJSONObject(i);
+                                if (module == null) {
+                                    continue;
+                                }
+                                String id = module.optString("id");
+                                if (id == null) {
+                                    continue;
+                                }
+                                if (id.equals(SERVE_IMAGES_FROM_OUR_SERVERS)) {
+                                    mRemoteJpSettings.serveImagesFromOurServers = module.optBoolean("active", false);
+                                } else if (id.equals(LAZY_LOAD_IMAGES)) {
+                                    mRemoteJpSettings.lazyLoadImages = module.optBoolean("active", false);
+                                }
+                            }
+                            mJpSettings.serveImagesFromOurServers = mRemoteJpSettings.serveImagesFromOurServers;
+                            mJpSettings.lazyLoadImages = mRemoteJpSettings.lazyLoadImages;
+                        }
+                        onFetchResponseReceived(null);
+                    }
+                }, new RestRequest.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        AppLog.w(AppLog.T.API, "Error fetching Jetpack module settings: " + error);
                         onFetchResponseReceived(error);
                     }
                 });
@@ -374,10 +441,61 @@ class DotComSiteSettings extends SiteSettingsInterface {
                 }, new RestRequest.ErrorListener() {
                     @Override
                     public void onErrorResponse(VolleyError error) {
-                        AppLog.w(AppLog.T.API, "Error updating Jetpack Monitor module: " + error);
+                        AppLog.w(AppLog.T.API, "Error updating Jetpack Monitor module: " + error.getMessage());
                         onSaveResponseReceived(error);
                     }
                 });
+    }
+
+    private void pushServeImagesFromOurServersModuleSettings() {
+        ++mSaveRequestCount;
+        //The API returns 400 if we try to sync the same value twice so we need to keep it locally.
+        if (mJpSettings.serveImagesFromOurServers != mRemoteJpSettings.serveImagesFromOurServers) {
+            final boolean fallbackValue = mRemoteJpSettings.serveImagesFromOurServers;
+            mRemoteJpSettings.serveImagesFromOurServers = mJpSettings.serveImagesFromOurServers;
+            WordPress.getRestClientUtilsV1_1().setJetpackModuleSettings(
+                    mSite.getSiteId(), SERVE_IMAGES_FROM_OUR_SERVERS, mJpSettings.serveImagesFromOurServers,
+                    new RestRequest.Listener() {
+                        @Override
+                        public void onResponse(JSONObject response) {
+                            AppLog.d(AppLog.T.API, "Jetpack module updated - Serve images from our servers");
+                            onSaveResponseReceived(null);
+                        }
+                    }, new RestRequest.ErrorListener() {
+                        @Override
+                        public void onErrorResponse(VolleyError error) {
+                            mRemoteJpSettings.serveImagesFromOurServers = fallbackValue;
+                            error.printStackTrace();
+                            AppLog.w(AppLog.T.API, "Error updating Jetpack module - Serve images from our servers: " + error);
+                            onSaveResponseReceived(error);
+                        }
+                    });
+        }
+    }
+
+    private void pushLazyLoadModule() {
+        ++mSaveRequestCount;
+        //The API returns 400 if we try to sync the same value twice so we need to keep it locally.
+        if (mJpSettings.lazyLoadImages != mRemoteJpSettings.lazyLoadImages) {
+            final boolean fallbackValue = mRemoteJpSettings.lazyLoadImages;
+            mRemoteJpSettings.lazyLoadImages = mJpSettings.lazyLoadImages;
+            WordPress.getRestClientUtilsV1_1().setJetpackModuleSettings(
+                    mSite.getSiteId(), LAZY_LOAD_IMAGES, mJpSettings.lazyLoadImages, new RestRequest.Listener() {
+                        @Override
+                        public void onResponse(JSONObject response) {
+                            AppLog.d(AppLog.T.API, "Jetpack module updated - Lazy load images");
+                            onSaveResponseReceived(null);
+                        }
+                    }, new RestRequest.ErrorListener() {
+                        @Override
+                        public void onErrorResponse(VolleyError error) {
+                            mRemoteJpSettings.lazyLoadImages = fallbackValue;
+                            error.printStackTrace();
+                            AppLog.w(AppLog.T.API, "Error updating Jetpack module - Lazy load images: " + error);
+                            onSaveResponseReceived(error);
+                        }
+                    });
+        }
     }
 
     private void onFetchResponseReceived(Exception error) {
@@ -454,6 +572,8 @@ class DotComSiteSettings extends SiteSettingsInterface {
         mRemoteSettings.timeFormat = settingsObject.optString(TIME_FORMAT_KEY, "");
         mRemoteSettings.timezone = settingsObject.optString(TIMEZONE_KEY, "");
         mRemoteSettings.postsPerPage = settingsObject.optInt(POSTS_PER_PAGE_KEY, 0);
+        mRemoteSettings.ampSupported = settingsObject.optBoolean(AMP_SUPPORTED_KEY, false);
+        mRemoteSettings.ampEnabled = settingsObject.optBoolean(AMP_ENABLED_KEY, false);
 
         boolean reblogsDisabled = settingsObject.optBoolean(SHARING_REBLOGS_DISABLED_KEY, false);
         boolean likesDisabled = settingsObject.optBoolean(SHARING_LIKES_DISABLED_KEY, false);
@@ -501,7 +621,7 @@ class DotComSiteSettings extends SiteSettingsInterface {
     private JSONObject serializeDotComParamsToJSONObject() throws JSONException {
         JSONObject params = new JSONObject();
 
-        if (mSettings.title!= null && !mSettings.title.equals(mRemoteSettings.title)) {
+        if (mSettings.title != null && !mSettings.title.equals(mRemoteSettings.title)) {
             params.put(SET_TITLE_KEY, mSettings.title);
         }
         if (mSettings.tagline != null && !mSettings.tagline.equals(mRemoteSettings.tagline)) {
@@ -632,6 +752,12 @@ class DotComSiteSettings extends SiteSettingsInterface {
         if (mSettings.postsPerPage != mRemoteSettings.postsPerPage) {
             params.put(POSTS_PER_PAGE_KEY, String.valueOf(mSettings.postsPerPage));
         }
+        if (mSettings.ampSupported != mRemoteSettings.ampSupported) {
+            params.put(AMP_SUPPORTED_KEY, String.valueOf(mSettings.ampSupported));
+        }
+        if (mSettings.ampEnabled != mRemoteSettings.ampEnabled) {
+            params.put(AMP_ENABLED_KEY, String.valueOf(mSettings.ampEnabled));
+        }
 
         return params;
     }
@@ -643,7 +769,8 @@ class DotComSiteSettings extends SiteSettingsInterface {
         mRemoteJpSettings.wpNotifications = settingsObject.optBoolean(JP_MONITOR_WP_NOTES_KEY, false);
     }
 
-    private @NonNull Map<String, String> serializeJetpackMonitorParams() {
+    private @NonNull
+    Map<String, String> serializeJetpackMonitorParams() {
         Map<String, String> params = new HashMap<>();
         params.put(JP_MONITOR_EMAIL_NOTES_KEY, String.valueOf(mJpSettings.emailNotifications));
         params.put(JP_MONITOR_WP_NOTES_KEY, String.valueOf(mJpSettings.wpNotifications));

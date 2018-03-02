@@ -72,7 +72,7 @@ public class EditorFragment extends EditorFragmentAbstract implements View.OnCli
         OnJsEditorStateChangedListener, OnImeBackListener, EditorWebViewAbstract.AuthHeaderRequestListener,
         EditorMediaUploadListener {
 
-    public class IllegalEditorStateException extends Exception {
+    public class EditorFragmentNotAddedException extends Exception {
 
     }
 
@@ -418,7 +418,7 @@ public class EditorFragment extends EditorFragmentAbstract implements View.OnCli
         try {
             outState.putCharSequence(ATTR_TITLE, getTitle());
             outState.putCharSequence(ATTR_CONTENT, getContent());
-        } catch (IllegalEditorStateException e) {
+        } catch (EditorFragmentNotAddedException e) {
             AppLog.e(T.EDITOR, "onSaveInstanceState: unable to get title or content");
         }
     }
@@ -633,16 +633,16 @@ public class EditorFragment extends EditorFragmentAbstract implements View.OnCli
                     try {
                         getTitle();
                         getContent();
-                    } catch (IllegalEditorStateException e) {
+                    } catch (EditorFragmentNotAddedException e) {
                         AppLog.e(T.EDITOR, "toggleHtmlMode: unable to get title or content");
-                        getActivity().runOnUiThread(new Runnable() {
-                            @Override
-                            public void run() {
-                                toggleButton.setChecked(false);
-                            }
-                        });
                         return;
                     }
+
+                    //sanity check
+                    if (!isAdded()) {
+                        return;
+                    }
+
                     getActivity().runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
@@ -925,9 +925,9 @@ public class EditorFragment extends EditorFragmentAbstract implements View.OnCli
      * where possible.
      */
     @Override
-    public CharSequence getTitle() throws IllegalEditorStateException {
+    public CharSequence getTitle() throws EditorFragmentNotAddedException {
         if (!isAdded()) {
-            throw new IllegalEditorStateException();
+            throw new EditorFragmentNotAddedException();
         }
 
         if (mSourceView != null && mSourceView.getVisibility() == View.VISIBLE) {
@@ -964,9 +964,9 @@ public class EditorFragment extends EditorFragmentAbstract implements View.OnCli
      * where possible.
      */
     @Override
-    public CharSequence getContent() throws IllegalEditorStateException {
+    public CharSequence getContent() throws EditorFragmentNotAddedException {
         if (!isAdded()) {
-            throw new IllegalEditorStateException();
+            throw new EditorFragmentNotAddedException();
         }
 
         if (mSourceView != null && mSourceView.getVisibility() == View.VISIBLE) {

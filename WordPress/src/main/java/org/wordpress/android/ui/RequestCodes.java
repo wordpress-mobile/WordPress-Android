@@ -18,7 +18,6 @@ public class RequestCodes {
     public static final int SHOW_LOGIN_EPILOGUE_AND_RETURN = 1300;
     public static final int SMART_LOCK_SAVE = 1400;
     public static final int SMART_LOCK_READ = 1500;
-    public static final int EMAIL_CREDENTIALS = 1600;
 
     // Media
     public static final int PICTURE_LIBRARY = 2000;
@@ -33,4 +32,7 @@ public class RequestCodes {
 
     // Jetpack
     public static final int REQUEST_JETPACK = 3000;
+    public static final int JETPACK_LOGIN = 3100;
+    public static final int PLUGIN_DETAIL = 3200;
+
 }

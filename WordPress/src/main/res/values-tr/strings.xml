@@ -1,11 +1,103 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2017-11-29 15:33:20+0000
+Translation-Revision-Date: 2018-02-04 10:49:00+0000
 Plural-Forms: nplurals=2; plural=(n > 1);
 Generator: GlotPress/2.4.0-alpha
 Language: tr
 -->
 <resources>
+	<string name="plugin_chevron_icon_content_description">Değiştir metni</string>
+	<string name="plugin_info_your_version">WordPress sürümünüz</string>
+	<string name="plugin_info_requires_version">Gerekli WordPress sürümü</string>
+	<string name="plugin_info_lastupdated">Son güncelleme</string>
+	<string name="plugin_info_version">Sürüm</string>
+	<string name="plugin_five_stars">5 yıldız</string>
+	<string name="plugin_four_stars">4 yıldız</string>
+	<string name="plugin_three_stars">3 yıldız</string>
+	<string name="plugin_two_stars">2 yıldız</string>
+	<string name="plugin_one_stars">1 yıldız</string>
+	<string name="plugin_num_downloads">%s indirme</string>
+	<string name="plugin_num_ratings">%s puan</string>
+	<string name="plugin_read_reviews">İncelemeleri okuyun</string>
+	<string name="plugin_faq">Sık sorulan sorular</string>
+	<string name="plugin_empty_text">Hiç biri sağlanmadı</string>
+	<string name="plugin_whatsnew">Neler yeni</string>
+	<string name="plugin_installation">Kurulum</string>
+	<string name="plugin_description">Açıklama</string>
+	<string name="plugin_settings">Ayarlar</string>
+	<string name="plugin_installed">Kuruldu</string>
+	<string name="plugin_installed_version">%s sürümü kuruldu</string>
+	<string name="plugin_version">Sürüm %s</string>
+	<string name="plugin_byline">%s tarafından</string>
+	<string name="plugin_fetch_error">Eklentiler yüklenemedi</string>
+	<string name="change_photo">Fotoğrafı değiştir</string>
+	<string name="dlg_confirm_delete_tag">\'%s\' tamamen silinsin mi?</string>
+	<string name="dlg_deleting_tag">Siliniyor</string>
+	<string name="dlg_saving_tag">Kaydediliyor</string>
+	<string name="site_settings_tags_hint">Sitenizin etiketlerini yönetin</string>
+	<string name="my_site_btn_site_pages">Site sayfaları</string>
+	<string name="error_tag_exists">Bu isimdeki bir etiket zaten mevcut.</string>
+	<string name="tag_name_hint">Etiket</string>
+	<string name="tag_description_hint">Açıklama</string>
+	<string name="add_new_tag">Yeni etiket ekle</string>
+	<string name="site_settings_amp_summary">WordPress.com siteniz, mobil cihazlarda yüklenme sürelerini önemli ölçüde hızlandıran, Google liderliğindeki bir girişim olan Hızlandırılmış Mobil Sayfalar kullanımını desteklemektedir</string>
+	<string name="site_settings_amp_title">Accelerated Mobile Pages (AMP)</string>
+	<string name="site_settings_format_help">Tarih ve zaman biçimi hakkında daha fazlasını öğrenin</string>
+	<string name="site_settings_timezones_error">Saat dilimleri yüklenemedi</string>
+	<string name="site_settings_format_entry_custom">Özel</string>
+	<string name="site_settings_format_hint_custom">Özel biçim</string>
+	<string name="site_settings_posts_per_page_title">Sayfa başına yazı</string>
+	<string name="site_settings_timezone_subtitle">Saat diliminizden bir şehir seçin</string>
+	<string name="site_settings_time_format_title">Zaman biçimi</string>
+	<string name="site_settings_timezone_title">Saat dilimi</string>
+	<string name="site_settings_date_format_title">Tarih biçimi</string>
+	<string name="site_settings_week_start_title">Hafta başlangıcı</string>
+	<string name="site_settings_traffic_header">Trafik</string>
+	<string name="site_settings_tags_title">Etiketler</string>
+	<string name="delete_yes">Sil</string>
+	<string name="delete_no">Silme</string>
+	<string name="plugin_external_link_icon_content_description">Harici bağlantı</string>
+	<string name="plugin_update_available_icon_content_description">Güncelleme mevcut</string>
+	<string name="plugin_icon_content_description">Eklenti simgesi</string>
+	<string name="wordpress_dot_org_plugin_page">WordPress.org eklenti sayfası</string>
+	<string name="plugin_home_page">Eklenti ana sayfası</string>
+	<string name="plugin_remove_dialog_message">%1$s içinden %2$s eklentisini kaldırmak istediğinizden emin misiniz?\n\nBu eklentiyi devre dışı bırakır ve tüm ilişkili dosyaları ve verileri siler.</string>
+	<string name="plugin_remove_progress_dialog_message">Kaldırılıyor %s...</string>
+	<string name="plugin_remove_dialog_title">Eklentiyi kaldır</string>
+	<string name="plugin_disable_progress_dialog_message">Etkisizleştiriliyor %s...</string>
+	<string name="plugin_btn_remove">Eklentiyi kaldır</string>
+	<string name="plugin_configuration_failed">Eklentiyi yapılandırılırken bir hata oluştu: %s</string>
+	<string name="plugin_remove_failed">%s kaldırılmasında hata.</string>
+	<string name="plugin_removed_successfully">Başarıyla kaldırıldı %s.</string>
+	<string name="plugin_updated_failed_detailed">%1$s kaldırılması sırasında hata: %2$s</string>
+	<string name="plugin_updated_successfully">Başarıyla güncellendi %s.</string>
+	<string name="plugin_updated_failed">%s kaldırılması sırasında hata.</string>
+	<string name="plugin_available_version">%s sürümü mevcut.</string>
+	<string name="plugin_detail_label_state_autoupdates">Otomatik güncellemeler</string>
+	<string name="plugin_detail_label_state_active">Aktif</string>
+	<string name="plugin_autoupdates_off">Otomatik güncellemeler kapalı</string>
+	<string name="plugin_autoupdates_on">Otomatik güncellemeler açık</string>
+	<string name="my_site_btn_plugins">Eklentiler</string>
+	<string name="plugins">Eklentiler</string>
+	<string name="plugin_active">Aktif</string>
+	<string name="media_edit_link_hint">Bağlantıyı yeni sekmede/pencere aç</string>
+	<string name="plugin_inactive">Etkin değil</string>
+	<string name="media_edit_link_text">Bağlantı</string>
+	<string name="notification_login_failed">Bir hata oluştu.</string>
+	<string name="notification_2fa_needed">Lütfen devam etmek için bir kimlik doğrulama kodu sağlayın.</string>
+	<string name="notification_error_wrong_password">Lütfen devam etmek için parolanızı iki kere kontrol edin.</string>
+	<string name="notification_login_title_stopped">Giriş durdu</string>
+	<string name="notification_logging_in">Giriş yaparken lütfen bekleyin.</string>
+	<string name="notification_login_title_in_progress">Giriş işlemi devam ediyor...</string>
+	<string name="notification_logged_in">Devam etmek için dokunun.</string>
+	<string name="notification_login_title_success">Oturum açıldı!</string>
+	<string name="login_error_generic_start">Google giriş başlatılamadı.</string>
+	<string name="site_creating_success">Başarılı!</string>
+	<string name="site_creating_failed">Maalesef siteniz düzgün bir şekilde oluşturulamadı :(</string>
+	<string name="site_creating_set_theme">Tema ayarlanıyor...</string>
+	<string name="site_creating_set_tagline">Slogan ayarlanıyor...</string>
+	<string name="site_creating_fetching_info">Site bilgisi getiriliyor...</string>
+	<string name="site_creating_label">Siteniz hazırlanıyor...</string>
 	<string name="login_empty_password">Lütfen bir parola girin</string>
 	<string name="email_not_registered_wpcom">Bu e-posta adresi WordPress.com\'da kayıtlı değil. Kullanıcı tarafından barındırılan bir siteye mi ulaşmaya çalışıyorsunuz? Ekranın altındaki bağlantıyı kullanarak giriş yapın.</string>
 	<string name="login_text_otp_another">Bana SMS ile başka bir kod gönder.</string>
@@ -251,16 +343,6 @@ Language: tr
 	<string name="format_bar_description_heading">Başlık</string>
 	<string name="format_bar_description_media">Ortam</string>
 	<string name="reader_view_comments">Yorumları görüntüle</string>
-	<string name="new_editor_promo_title_beta">Beta</string>
-	<string name="new_editor_promo_title">Yeni metin düzenleyiciyi deneyin</string>
-	<string name="new_editor_promo_link">Neler yeni?</string>
-	<string name="new_editor_promo_description_image">El yazısı görseli</string>
-	<string name="new_editor_promo_confirmation_message">Yeni metin düzenleyici etkinleştirildi!</string>
-	<string name="new_editor_promo_confirmation_action">Ayarlar</string>
-	<string name="new_editor_promo_button_positive">Deneyin</string>
-	<string name="new_editor_promo_button_negative">Şimdi değil</string>
-	<string name="new_editor_beta_message">Yeni düzenleyici açık beta döneminde!</string>
-	<string name="new_editor_beta_action">Devamını oku</string>
 	<string name="preference_editor_footer">Düzenleyici sürüm notları ve hata bildirimi</string>
 	<string name="preference_editor_footer_description">Bilgi simgesi</string>
 	<string name="site_settings_video_quality_hint">Videoların kalitesi. Daha yüksek değerler daha kaliteli videolar demektir.</string>
@@ -341,7 +423,6 @@ Language: tr
 	<string name="smart_toast_photo_long_press">Birden çok fotoğraf seçmek için dokunun ve basılı tutun</string>
 	<string name="photo_picker_choose_video">Cihazdan bir video seçin</string>
 	<string name="photo_picker_choose_photo">Cihazdan bir fotoğraf seçin</string>
-	<string name="new_editor_promo_description">WordPress uygulaması artık beraberinde yeni bir düzenleyici içeriyor. Yeni bir yazı oluşturup deneyimleyin.</string>
 	<string name="wp_media_title">WordPress ortam dosyaları</string>
 	<string name="media_insert_as_gallery">Galeri olarak ekle</string>
 	<string name="media_insert_individually">Tekil olarak ekle</string>
@@ -397,7 +478,6 @@ Language: tr
 	<string name="checking_username">Kullanıcı adı kontrol ediliyor</string>
 	<string name="jetpack_different_com_account">Başka WordPress.com hesaplarına ait Jetpack siteleri desteklenmiyor.</string>
 	<string name="jetpack_use_com_account">Jetpack sitenizi eklemek için Jetpack bağlantısı kurduğunuz WordPress.com hesabınıza giriş yapın.</string>
-	<string name="jetpack_message">Jetpack eklentisi kurulmuş ve etkinleştirilmiş olmalıdır. Jetpack eklentisini kurmak ya da etkinleştirmek ister misiniz?</string>
 	<string name="error_media_load">Ortam dosyası yüklenemiyor</string>
 	<string name="error_media_refresh_no_connection">Kütüphaneyi yenilemek için bağlantı gereklidir</string>
 	<string name="error_media_unauthorized">Ortamı görüntülemek ya da düzenlemek için izniniz yok</string>
@@ -576,9 +656,7 @@ Language: tr
 	<string name="get_a_link_sent_to_your_email_to_sign_in_instantly">Anında giriş için e-postanıza bir bağlantı gönderilmesini sağlayın</string>
 	<string name="enter_your_password_instead">Bunun yerine parola gir</string>
 	<string name="web_address_dialog_hint">Yorum yaptığınızda herkes tarafından görülebilir.</string>
-	<string name="jetpack_not_connected_message">Jetpack eklentisi yüklenmiş fakat WordPress.com\'a bağlanmamış. Jetpack\'i bağlamak ister misiniz?</string>
 	<string name="username_email">E-posta ya da kullanıcı adı</string>
-	<string name="jetpack_not_connected">Jetpack eklentisi bağlanmamış</string>
 	<string name="new_editor_reflection_error">Görsel düzenleyici cihazınız ile uyumsuz. Otomatik\n olarak etkisizleştirildi.</string>
 	<string name="stats_insights_latest_post_no_title">(başlıksız)</string>
 	<string name="capture_or_pick_photo">Fotoğraf seç ya da yakala</string>
@@ -1317,10 +1395,10 @@ Language: tr
 	<string name="page_not_published">Sayfa durumu yayımlanmadı</string>
 	<string name="notifications_empty_all">Bildirim yok...henüz.</string>
 	<string name="invalid_site_url_message">Girdiğiniz site URL\'sinin geçerli olduğunu kontrol edin</string>
-	<string name="jetpack_message_not_admin">Jetpack eklentisi gerekli. Site yöneticisi ile iletişim kurun.</string>
 	<string name="error_refresh_media">Ortam dosyaları şu an yenilenemiyor</string>
 	<string name="error_deleting_page">Sayfayı silinirken bir hata oluştu</string>
 	<string name="file_not_found">Yükleme için dosya bulunamadı. Silindi veya taşındı mı?</string>
+	<string name="plugin_not_found">Bu eklentiye erişirken bir hata oluştu </string>
 	<string name="share_url_page">Sayfayı paylaş</string>
 	<string name="share_link">Bağlantıyı paylaş</string>
 	<string name="deleting_page">Sayfa siliniyor</string>
@@ -1355,7 +1433,6 @@ Language: tr
 	<string name="signing_in">Giriş yapılıyor...</string>
 	<string name="media_add_popup_title">Medya kütüphanesine ekle</string>
 	<string name="empty_list_default">Bu liste boş</string>
-	<string name="jetpack_not_found">Jetpack eklentisi bulunamadı</string>
 	<string name="reader_untitled_post">(Başlıksız)</string>
 	<string name="reader_btn_share">Paylaş</string>
 	<string name="reader_toast_err_tag_exists">Bu etiketi zaten takip ediyorsunuz</string>

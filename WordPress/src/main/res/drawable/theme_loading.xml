@@ -2,11 +2,15 @@
 <layer-list
     xmlns:android="http://schemas.android.com/apk/res/android">
 
+    <item>
+        <shape android:shape="rectangle">
+            <solid android:color="@color/grey_lighten_20" />
+            <size android:height="75dp" android:width="100dp" />
+        </shape>
+    </item>
+
     <item
         android:drawable="@drawable/ic_themes_grey_lighten_30_18dp"
         android:gravity="center" />
-
-    <item
-        android:drawable="@drawable/theme_loading_background" />
 
 </layer-list>
