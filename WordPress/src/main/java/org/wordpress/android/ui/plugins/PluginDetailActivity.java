@@ -237,7 +237,9 @@ public class PluginDetailActivity extends AppCompatActivity {
             onBackPressed();
             return true;
         } else if (item.getItemId() == R.id.menu_trash) {
-            confirmRemovePlugin();
+            if (NetworkUtils.checkConnection(this)) {
+                confirmRemovePlugin();
+            }
             return true;
         }
         return super.onOptionsItemSelected(item);
@@ -356,6 +358,20 @@ public class PluginDetailActivity extends AppCompatActivity {
                         compoundButton.setChecked(mIsAutoUpdateEnabled);
                     }
                 }
+            }
+        });
+
+        mUpdateButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                dispatchUpdatePluginAction();
+            }
+        });
+
+        mInstallButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dispatchInstallPluginAction();
             }
         });
 
@@ -484,24 +500,10 @@ public class PluginDetailActivity extends AppCompatActivity {
             boolean canUpdate = isUpdateAvailable && !mIsUpdatingPlugin;
             mUpdateButton.setVisibility(canUpdate ? View.VISIBLE : View.GONE);
             mInstalledText.setVisibility(isUpdateAvailable || mIsUpdatingPlugin ? View.GONE : View.VISIBLE);
-            if (canUpdate) {
-                mUpdateButton.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        dispatchUpdatePluginAction();
-                    }
-                });
-            }
         } else {
             mUpdateButton.setVisibility(View.GONE);
             mInstalledText.setVisibility(View.GONE);
             mInstallButton.setVisibility(mIsInstallingPlugin ? View.GONE : View.VISIBLE);
-            mInstallButton.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    dispatchInstallPluginAction();
-                }
-            });
         }
 
         findViewById(R.id.plugin_update_progress_bar).setVisibility(mIsUpdatingPlugin || mIsInstallingPlugin
@@ -767,7 +769,7 @@ public class PluginDetailActivity extends AppCompatActivity {
     }
 
     protected void dispatchInstallPluginAction() {
-        if (!NetworkUtils.checkConnection(this) || mIsInstallingPlugin) {
+        if (!NetworkUtils.checkConnection(this) || mPlugin.isInstalled() || mIsInstallingPlugin) {
             return;
         }
 
