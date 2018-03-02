@@ -24,6 +24,8 @@ dependencies {
     implementation 'com.android.support:design:26.1.0'
     implementation 'com.android.support:recyclerview-v7:26.1.0'
     implementation 'org.greenrobot:eventbus:3.0.0'
+
+    lintChecks 'org.wordpress:lint:1.0.0'
 }
 
 android {
@@ -33,7 +35,7 @@ android {
     buildToolsVersion '26.0.2'
 
     defaultConfig {
-        versionName "1.20.0-beta6"
+        versionName "1.20.0-beta7"
         minSdkVersion 15
         targetSdkVersion 25
     }

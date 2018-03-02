@@ -5,6 +5,7 @@ import android.content.res.Resources;
 import android.content.res.TypedArray;
 import android.preference.SwitchPreference;
 import android.support.annotation.NonNull;
+import android.support.v4.view.ViewCompat;
 import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.util.TypedValue;
@@ -42,7 +43,7 @@ public class WPSwitchPreference extends SwitchPreference implements PreferenceHi
 
             // add padding to the start of nested preferences
             if (!TextUtils.isEmpty(getDependency())) {
-                titleView.setPadding(res.getDimensionPixelSize(R.dimen.margin_large), 0, 0, 0);
+                ViewCompat.setPaddingRelative(titleView, res.getDimensionPixelSize(R.dimen.margin_large), 0, 0, 0);
             }
         }
     }

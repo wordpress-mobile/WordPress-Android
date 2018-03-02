@@ -404,7 +404,9 @@ public class PluginDetailActivity extends AppCompatActivity {
             setCollapsibleHtmlText(mFaqTextView, mWPOrgPlugin.getFaqAsHtml());
 
             mByLineTextView.setMovementMethod(WPLinkMovementMethod.getInstance());
-            mByLineTextView.setText(Html.fromHtml(mWPOrgPlugin.getAuthorAsHtml()));
+            if (mWPOrgPlugin.getAuthorAsHtml() != null) {
+                mByLineTextView.setText(Html.fromHtml(mWPOrgPlugin.getAuthorAsHtml()));
+            }
         } else if (mSitePlugin != null) {
             mTitleTextView.setText(mSitePlugin.getDisplayName());
 

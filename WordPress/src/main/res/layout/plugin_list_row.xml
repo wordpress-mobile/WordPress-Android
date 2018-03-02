@@ -39,7 +39,7 @@
 
         <TextView
             android:id="@+id/plugin_name"
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textColor="@color/grey_dark"
             android:textSize="@dimen/text_sz_medium"
@@ -50,6 +50,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignLeft="@+id/plugin_name"
+            android:layout_alignStart="@+id/plugin_name"
             android:layout_below="@+id/plugin_name"
             android:layout_marginTop="@dimen/margin_extra_small"
             android:ellipsize="end"
@@ -65,6 +66,7 @@
         android:layout_height="wrap_content"
         android:layout_alignBottom="@+id/plugin_name_container"
         android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true"
         android:orientation="horizontal">
 
         <ImageView
@@ -80,6 +82,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginLeft="@dimen/margin_small"
+            android:layout_marginStart="@dimen/margin_small"
             android:gravity="center_vertical"
             android:textColor="@color/alert_yellow"
             android:textSize="@dimen/text_sz_large"

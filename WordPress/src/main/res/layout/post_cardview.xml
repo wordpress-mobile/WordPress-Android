@@ -33,7 +33,9 @@
             android:layout_marginLeft="@dimen/margin_extra_large"
             android:layout_marginRight="@dimen/margin_extra_large"
             android:layout_marginTop="@dimen/margin_extra_large"
-            tools:text="text_title" />
+            tools:text="text_title"
+            android:layout_marginEnd="@dimen/margin_extra_large"
+            android:layout_marginStart="@dimen/margin_extra_large"/>
 
         <org.wordpress.android.widgets.WPTextView
             android:id="@+id/text_excerpt"
@@ -44,7 +46,9 @@
             android:layout_marginTop="@dimen/margin_medium"
             android:maxLines="4"
             android:importantForAccessibility="no"
-            tools:text="text_excerpt" />
+            tools:text="text_excerpt"
+            android:layout_marginEnd="@dimen/margin_extra_large"
+            android:layout_marginStart="@dimen/margin_extra_large"/>
 
         <org.wordpress.android.widgets.WPTextView
             android:id="@+id/text_date"
@@ -55,7 +59,9 @@
             android:layout_marginLeft="@dimen/margin_extra_large"
             android:layout_marginRight="@dimen/margin_extra_large"
             android:layout_marginTop="@dimen/margin_medium"
-            tools:text="text_date" />
+            tools:text="text_date"
+            android:layout_marginEnd="@dimen/margin_extra_large"
+            android:layout_marginStart="@dimen/margin_extra_large"/>
 
         <LinearLayout
             android:layout_width="wrap_content"
@@ -63,7 +69,9 @@
             android:layout_marginLeft="@dimen/margin_extra_large"
             android:layout_marginRight="@dimen/margin_extra_large"
             android:layout_marginTop="@dimen/margin_medium"
-            android:orientation="horizontal">
+            android:orientation="horizontal"
+            android:layout_marginStart="@dimen/margin_extra_large"
+            android:layout_marginEnd="@dimen/margin_extra_large">
 
             <ImageView
                 android:id="@+id/image_status"
@@ -73,7 +81,7 @@
                 android:layout_marginRight="@dimen/margin_small"
                 android:contentDescription="@null"
                 tools:src="@drawable/ic_gridicons_cloud_upload"
-                />
+                android:layout_marginEnd="@dimen/margin_small"/>
 
             <org.wordpress.android.widgets.WPTextView
                 android:id="@+id/text_status"

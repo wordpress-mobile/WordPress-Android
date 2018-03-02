@@ -9,7 +9,9 @@
     android:paddingRight="@dimen/margin_extra_large"
     android:paddingTop="@dimen/margin_large"
     android:background="@color/white"
-    android:scrollbarStyle="outsideInset" >
+    android:scrollbarStyle="outsideInset"
+    android:paddingStart="@dimen/margin_extra_large"
+    android:paddingEnd="@dimen/margin_extra_large">
 
     <RelativeLayout
         android:layout_width="match_parent"

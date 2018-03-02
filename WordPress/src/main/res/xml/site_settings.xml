@@ -144,6 +144,27 @@
             android:key="@string/pref_key_site_posts_per_page"
             android:title="@string/site_settings_posts_per_page_title" />
 
+        <PreferenceScreen
+            android:id="@+id/speed_up_your_site_screen"
+            android:key="@string/pref_key_speed_up_your_site_screen"
+            android:title="@string/site_settings_speed_up_your_site">
+
+            <org.wordpress.android.ui.prefs.WPSwitchPreference
+                android:id="@+id/pref_serve_images_from_our_servers"
+                android:key="@string/pref_key_serve_images_from_our_servers"
+                android:layout="@layout/preference_layout"
+                android:summary="@string/site_settings_serve_images_from_our_servers_summary"
+                android:title="@string/site_settings_serve_images_from_our_servers" />
+
+            <org.wordpress.android.ui.prefs.WPSwitchPreference
+                android:id="@+id/pref_lazy_load_images"
+                android:key="@string/pref_key_lazy_load_images"
+                android:layout="@layout/preference_layout"
+                android:summary="@string/site_settings_lazy_load_images_summary"
+                android:title="@string/site_settings_lazy_load_images" />
+        </PreferenceScreen>
+
+
     </PreferenceCategory>
 
     <!-- Traffic settings -->

@@ -37,6 +37,8 @@
                     android:hint="@string/tag_name_hint"
                     android:textColorHint="@color/transparent"
                     android:inputType="textCapSentences|textAutoCorrect"
+                    android:textAlignment="viewStart"
+                    android:gravity="start"
                     tools:text="edit_name" />
 
             </android.support.design.widget.TextInputLayout>
@@ -57,6 +59,7 @@
                     android:textColorHint="@color/transparent"
                     android:inputType="textCapSentences|textAutoCorrect"
                     android:lines="3"
+                    android:textAlignment="viewStart"
                     tools:text="edit_description" />
 
             </android.support.design.widget.TextInputLayout>

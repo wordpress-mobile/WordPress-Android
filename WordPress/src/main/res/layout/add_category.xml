@@ -20,7 +20,9 @@
             android:textColor="@color/grey_dark"
             android:textStyle="bold"
             android:labelFor="@+id/category_name"
-            android:textSize="@dimen/text_sz_large" />
+            android:textSize="@dimen/text_sz_large"
+            android:paddingEnd="4dp"
+            android:paddingStart="4dp"/>
 
         <!-- Category name -->
         <EditText
@@ -48,7 +50,9 @@
             android:textColor="@color/grey_dark"
             android:textStyle="bold"
             android:labelFor="@+id/parent_category"
-            android:textSize="@dimen/text_sz_large" />
+            android:textSize="@dimen/text_sz_large"
+            android:paddingEnd="4dp"
+            android:paddingStart="4dp"/>
 
         <Spinner
             android:id="@+id/parent_category"
@@ -61,6 +65,8 @@
             android:paddingRight="0dp"
             android:textColor="@color/grey_darken_20"
             android:textSize="@dimen/text_sz_large"
-            tools:listitem="@layout/wp_simple_list_item_1" />
+            tools:listitem="@layout/wp_simple_list_item_1"
+            android:paddingStart="0dp"
+            android:paddingEnd="0dp"/>
     </RelativeLayout>
 </ScrollView>

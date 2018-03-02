@@ -10,6 +10,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginLeft="@dimen/start_over_url_margin"
-        android:layout_marginRight="@dimen/start_over_url_margin" />
+        android:layout_marginRight="@dimen/start_over_url_margin"
+        android:layout_marginEnd="@dimen/start_over_url_margin"
+        android:layout_marginStart="@dimen/start_over_url_margin"/>
 
 </LinearLayout>

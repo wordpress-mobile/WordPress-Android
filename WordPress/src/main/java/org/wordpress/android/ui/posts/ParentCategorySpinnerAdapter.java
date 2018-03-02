@@ -1,6 +1,7 @@
 package org.wordpress.android.ui.posts;
 
 import android.content.Context;
+import android.support.v4.view.ViewCompat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -50,7 +51,7 @@ public class ParentCategorySpinnerAdapter extends BaseAdapter implements Spinner
         CategoryNode node = getItem(position);
         if (node != null) {
             textView.setText(StringEscapeUtils.unescapeHtml4(node.getName()));
-            textView.setPadding(DisplayUtils.dpToPx(getContext(), 16) * (node.getLevel() + 1), 0,
+            ViewCompat.setPaddingRelative(textView, DisplayUtils.dpToPx(getContext(), 16) * (node.getLevel() + 1), 0,
                     DisplayUtils.dpToPx(getContext(), 16), 0);
         }
         return rowView;

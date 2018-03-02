@@ -419,7 +419,6 @@ Language: az
 	<string name="media_add_popup_title">Media kitabxanasına əlavə et</string>
 	<string name="empty_list_default">Bu siyahı boşdur</string>
 	<string name="reader_btn_share">Paylaş</string>
-	<string name="jetpack_not_found">Jetpack plaqini tapılmadı</string>
 	<string name="username_invalid">Keçərsiz istifadəçi adı</string>
 	<string name="nux_tutorial_get_started_title">Başlayın!</string>
 	<string name="reader_untitled_post">(adsız)</string>

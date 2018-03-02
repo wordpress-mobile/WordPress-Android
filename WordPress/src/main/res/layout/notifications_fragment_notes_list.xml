@@ -20,7 +20,9 @@
             android:paddingRight="@dimen/notifications_content_margin"
             android:scrollbarStyle="outsideOverlay"
             android:scrollbars="vertical"
-            app:layout_behavior="@string/appbar_scrolling_view_behavior" />
+            app:layout_behavior="@string/appbar_scrolling_view_behavior"
+            android:paddingStart="@dimen/notifications_content_margin"
+            android:paddingEnd="@dimen/notifications_content_margin"/>
 
     </org.wordpress.android.util.widgets.CustomSwipeRefreshLayout>
 
@@ -40,7 +42,9 @@
         android:paddingTop="@dimen/margin_large"
         android:visibility="gone"
         tools:targetApi="LOLLIPOP"
-        tools:visibility="visible">
+        tools:visibility="visible"
+        android:paddingStart="24dp"
+        android:paddingEnd="24dp">
 
         <org.wordpress.android.widgets.WPTextView
             android:layout_width="wrap_content"
@@ -63,7 +67,9 @@
         android:layout_marginLeft="@dimen/notifications_content_margin"
         android:layout_marginRight="@dimen/notifications_content_margin"
         android:background="@color/white"
-        app:elevation="0dp">
+        app:elevation="0dp"
+        android:layout_marginStart="@dimen/notifications_content_margin"
+        android:layout_marginEnd="@dimen/notifications_content_margin">
 
         <LinearLayout
             android:id="@+id/notifications_filter"
@@ -80,7 +86,9 @@
                 android:layout_marginLeft="@dimen/margin_extra_large"
                 android:layout_marginRight="@dimen/margin_extra_large"
                 android:layout_marginTop="@dimen/margin_medium"
-                android:fillViewport="true">
+                android:fillViewport="true"
+                android:layout_marginStart="@dimen/margin_extra_large"
+                android:layout_marginEnd="@dimen/margin_extra_large">
 
                 <RadioGroup
                     android:id="@+id/notifications_radio_group"
@@ -148,7 +156,9 @@
         android:gravity="center"
         android:orientation="vertical"
         android:visibility="gone"
-        tools:visibility="visible">
+        tools:visibility="visible"
+        android:layout_marginStart="@dimen/empty_list_title_side_margin"
+        android:layout_marginEnd="@dimen/empty_list_title_side_margin">
 
         <org.wordpress.android.widgets.WPTextView
             android:id="@+id/text_empty"
@@ -187,9 +197,55 @@
                 android:paddingRight="@dimen/margin_large"
                 android:paddingTop="@dimen/margin_medium"
                 android:textAllCaps="true"
-                android:textColor="@color/white" />
+                android:textColor="@color/white"
+                android:paddingEnd="@dimen/margin_large"
+                android:paddingStart="@dimen/margin_large"/>
 
         </android.support.v7.widget.CardView>
 
+    </LinearLayout>
+
+
+    <LinearLayout
+        android:id="@+id/connect_jetpack"
+        android:visibility="gone"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="center"
+        android:orientation="vertical">
+
+        <ScrollView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:orientation="vertical">
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/margin_extra_large"
+                    app:srcCompat="@drawable/jetpack_connection_notifications" />
+
+                <TextView
+                    style="@style/JetpackConnectionText"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:maxWidth="290dp"
+                    android:text="@string/notifications_jetpack_connection_setup_info"
+                    android:textAlignment="center" />
+
+                <android.support.v7.widget.AppCompatButton
+                    android:id="@+id/jetpack_setup"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/stats_jetpack_connection_setup"
+                    android:layout_marginBottom="@dimen/margin_extra_large"
+                    android:theme="@style/JetpackConnectionButton" />
+            </LinearLayout>
+        </ScrollView>
     </LinearLayout>
 </android.support.design.widget.CoordinatorLayout>
