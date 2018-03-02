@@ -1,4 +1,4 @@
-package org.wordpress.android.ui.photopicker;
+package org.wordpress.android.ui.stockphotos;
 
 import android.os.Bundle;
 import android.os.Handler;
@@ -173,19 +173,24 @@ public class StockPhotoPickerActivity extends AppCompatActivity {
         showProgress(true);
         StockMediaStore.FetchStockMediaListPayload payload =
                 new StockMediaStore.FetchStockMediaListPayload(searchTerm, page);
-        mDispatcher.dispatch(new StockMediaActionBuilder.newFetchStockMediaAction(payload));
+        mDispatcher.dispatch(StockMediaActionBuilder.newFetchStockMediaAction(payload));
     }
 
     @SuppressWarnings("unused")
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void OnStockMediaListFetched(StockMediaStore.OnStockMediaListFetched event) {
-        if (mSearchQuery == null || !mSearchQuery.equals(event.searchTerm)) {
-            return;
-        }
+        if (isFinishing()) return;
+
+        showProgress(false);
+
         if (event.isError()) {
             AppLog.e(AppLog.T.MEDIA, "An error occurred while searching stock media");
             return;
         }
+        if (mSearchQuery == null || !mSearchQuery.equals(event.searchTerm)) {
+            return;
+        }
+
         mAdapter.setMediaList(event.mediaList);
     }
 

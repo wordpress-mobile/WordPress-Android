@@ -455,7 +455,7 @@
             android:label="@string/photo_picker_title"
             android:theme="@style/Calypso.NoActionBar" />
         <activity
-            android:name=".ui.photopicker.StockPhotoPickerActivity"
+            android:name=".ui.stockphotos.StockPhotoPickerActivity"
             android:label="@string/photo_picker_title"
             android:theme="@style/Calypso.NoActionBar" />
 
