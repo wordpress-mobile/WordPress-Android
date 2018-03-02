@@ -143,7 +143,7 @@ public class SiteCreationCreatingFragment extends SiteCreationBaseFormFragment<S
 
         if (savedInstanceState == null) {
             // on first appearance start the Service to perform the site creation
-            createSite();
+            createSite(null);
         } else {
             mWebViewLoadedInTime = savedInstanceState.getBoolean(KEY_WEBVIEW_LOADED_IN_TIME, false);
             mTrackedSuccess = savedInstanceState.getBoolean(KEY_TRACKED_SUCCESS, false);
@@ -185,18 +185,12 @@ public class SiteCreationCreatingFragment extends SiteCreationBaseFormFragment<S
         outState.putBoolean(KEY_TRACKED_SUCCESS, mTrackedSuccess);
     }
 
-    void createSite() {
+    void createSite(SiteCreationState retryFromState) {
         String siteTitle = getArguments().getString(ARG_SITE_TITLE);
         String siteTagline = getArguments().getString(ARG_SITE_TAGLINE);
         String siteSlug = getArguments().getString(ARG_SITE_SLUG);
         String themeId = getArguments().getString(ARG_SITE_THEME_ID);
-        SiteCreationService.createSite(getContext(), siteTitle, siteTagline, siteSlug, themeId);
-    }
-
-    void retryFromState(SiteCreationState retryFromState, long newSiteRemoteId) {
-        String siteTagline = getArguments().getString(ARG_SITE_TAGLINE);
-        String themeId = getArguments().getString(ARG_SITE_THEME_ID);
-        SiteCreationService.retryFromState(getContext(), retryFromState, newSiteRemoteId, siteTagline, themeId);
+        SiteCreationService.createSite(getContext(), retryFromState, siteTitle, siteTagline, siteSlug, themeId);
     }
 
     private void mutateToCompleted(boolean showWebView) {
@@ -285,11 +279,8 @@ public class SiteCreationCreatingFragment extends SiteCreationBaseFormFragment<S
                 if (failedState.isTerminal()) {
                     throw new RuntimeException("Internal inconsistency: Cannot resume site creation from "
                             + failedState.getStepName());
-                } else if (failedState.getStep() == SiteCreationStep.IDLE
-                        || failedState.getStep() == SiteCreationStep.NEW_SITE) {
-                    createSite();
                 } else {
-                    retryFromState(failedState, (long) failedState.getPayload());
+                    createSite(failedState);
                 }
             }
         });

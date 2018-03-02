@@ -744,7 +744,7 @@ public class SignupEpilogueFragment extends LoginBaseFormFragment<SignupEpilogue
                             AppLog.i(T.NUX, "Google avatar download and Gravatar upload failed.");
                         }
                     });
-            } catch (URISyntaxException exception) {
+            } catch (NullPointerException | URISyntaxException exception) {
                 AppLog.e(T.NUX, "Google avatar download and Gravatar upload failed - " +
                         exception.toString() + " - " + exception.getMessage());
             }

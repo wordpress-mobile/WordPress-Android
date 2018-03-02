@@ -607,7 +607,7 @@ public class SitePickerActivity extends AppCompatActivity
         // if user is signed into wp.com use the dialog to enable choosing whether to
         // create a new wp.com blog or add a self-hosted one
         if (isSignedInWpCom) {
-            DialogFragment dialog = AddSiteDialog.newInstance(username);
+            DialogFragment dialog = new AddSiteDialog();
             dialog.show(activity.getFragmentManager(), AddSiteDialog.ADD_SITE_DIALOG_TAG);
         } else {
             // user isn't signed into wp.com, so simply enable adding self-hosted
@@ -621,16 +621,6 @@ public class SitePickerActivity extends AppCompatActivity
      */
     public static class AddSiteDialog extends DialogFragment {
         static final String ADD_SITE_DIALOG_TAG = "add_site_dialog";
-
-        private static final String ARG_USERNAME = "ARG_USERNAME";
-
-        public static AddSiteDialog newInstance(String username) {
-            AddSiteDialog fragment = new AddSiteDialog();
-            Bundle args = new Bundle();
-            args.putString(ARG_USERNAME, username);
-            fragment.setArguments(args);
-            return fragment;
-        }
 
         @NonNull
         @Override
@@ -658,8 +648,7 @@ public class SitePickerActivity extends AppCompatActivity
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
                             if (which == 0) {
-                                ActivityLauncher.newBlogForResult(getActivity(),
-                                        getArguments().getString(ARG_USERNAME));
+                                ActivityLauncher.newBlogForResult(getActivity());
                             } else {
                                 ActivityLauncher.addSelfHostedSiteForResult(getActivity());
                             }
