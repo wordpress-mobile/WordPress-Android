@@ -1,6 +1,7 @@
 package org.wordpress.android.util.widgets;
 
 import android.content.Context;
+import android.support.v4.view.ViewCompat;
 import android.support.v7.widget.AppCompatTextView;
 import android.text.Layout;
 import android.text.StaticLayout;
@@ -205,7 +206,7 @@ public class AutoResizeTextView extends AppCompatTextView {
      */
     public void resizeText() {
         int heightLimit = getHeight() - getPaddingBottom() - getPaddingTop();
-        int widthLimit = getWidth() - getPaddingLeft() - getPaddingRight();
+        int widthLimit = getWidth() - ViewCompat.getPaddingStart(this) - ViewCompat.getPaddingStart(this);
         resizeText(widthLimit, heightLimit);
     }
 

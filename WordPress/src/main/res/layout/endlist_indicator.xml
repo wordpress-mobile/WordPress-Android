@@ -27,7 +27,8 @@
         android:layout_marginRight="@dimen/margin_medium"
         app:srcCompat="@drawable/ic_wordpress_grey_20dp"
         android:contentDescription="@null"
-        />
+        android:layout_marginEnd="@dimen/margin_medium"
+        android:layout_marginStart="@dimen/margin_medium"/>
 
     <View
         android:layout_width="match_parent"

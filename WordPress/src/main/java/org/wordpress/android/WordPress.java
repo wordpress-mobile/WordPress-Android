@@ -23,6 +23,7 @@ import android.webkit.WebSettings;
 import android.webkit.WebView;
 
 import com.android.volley.RequestQueue;
+
 import com.crashlytics.android.Crashlytics;
 import com.google.android.gms.auth.api.Auth;
 import com.google.android.gms.common.ConnectionResult;
@@ -274,6 +275,8 @@ public class WordPress extends MultiDexApplication implements HasServiceInjector
         // If users uses a custom locale set it on start of application
         WPActivityUtils.applyLocale(getContext());
 
+        disableRtlLayoutDirectionOnSdk17();
+
         // Allows vector drawable from resources (in selectors for instance) on Android < 21 (can cause issues
         // with memory usage and the use of Configuration). More informations:
         // https://developer.android.com/reference/android/support/v7/app/AppCompatDelegate.html#setCompatVectorFromResourcesEnabled(boolean)
@@ -292,6 +295,12 @@ public class WordPress extends MultiDexApplication implements HasServiceInjector
                 .addApi(Auth.CREDENTIALS_API)
                 .build();
         mCredentialsClient.connect();
+    }
+
+    private void disableRtlLayoutDirectionOnSdk17() {
+        if (Build.VERSION.SDK_INT == Build.VERSION_CODES.JELLY_BEAN_MR1) {
+            getResources().getConfiguration().setLayoutDirection(null);
+        }
     }
 
     private void sanitizeMediaUploadStateForSite() {

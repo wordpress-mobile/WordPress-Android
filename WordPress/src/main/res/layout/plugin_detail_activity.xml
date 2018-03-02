@@ -97,7 +97,8 @@
                             android:layout_height="wrap_content"
                             android:layout_centerVertical="true"
                             android:layout_toRightOf="@+id/image_icon"
-                            android:orientation="vertical">
+                            android:orientation="vertical"
+                            android:layout_toEndOf="@+id/image_icon">
 
                             <TextView
                                 android:id="@+id/text_title"
@@ -107,7 +108,8 @@
                                 android:textColor="@color/grey_dark"
                                 android:textSize="@dimen/text_sz_large"
                                 android:textStyle="bold"
-                                tools:text="text_title" />
+                                tools:text="text_title"
+                                android:layout_marginStart="@dimen/margin_extra_large"/>
 
                             <TextView
                                 android:id="@+id/text_byline"
@@ -118,7 +120,8 @@
                                 android:textColor="@color/grey_dark"
                                 android:textColorLink="@color/blue_wordpress"
                                 android:textSize="@dimen/text_sz_medium"
-                                tools:text="text_byline" />
+                                tools:text="text_byline"
+                                android:layout_marginStart="@dimen/margin_extra_large"/>
                         </LinearLayout>
                     </RelativeLayout>
 
@@ -136,6 +139,7 @@
                                 android:background="?android:attr/selectableItemBackground"
                                 android:drawablePadding="@dimen/margin_small"
                                 tools:drawableRight="@drawable/ic_info_outline_grey_dark_18dp"
+                                tools:drawableEnd="@drawable/ic_info_outline_grey_dark_18dp"
                                 tools:text="plugin_version_top" />
 
                             <TextView
@@ -166,7 +170,9 @@
                                 android:textColor="@color/white"
                                 android:textSize="@dimen/text_sz_medium"
                                 android:visibility="gone"
-                                tools:visibility="visible" />
+                                tools:visibility="visible"
+                                android:paddingEnd="@dimen/margin_extra_large"
+                                android:paddingStart="@dimen/margin_extra_large"/>
 
                             <TextView
                                 android:id="@+id/plugin_btn_install"

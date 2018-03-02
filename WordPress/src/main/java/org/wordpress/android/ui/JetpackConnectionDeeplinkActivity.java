@@ -1,4 +1,4 @@
-package org.wordpress.android.ui.stats;
+package org.wordpress.android.ui;
 
 import android.content.Intent;
 import android.net.Uri;
@@ -19,8 +19,7 @@ import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.store.AccountStore;
 import org.wordpress.android.fluxc.store.SiteStore;
 import org.wordpress.android.login.LoginMode;
-import org.wordpress.android.ui.ActivityLauncher;
-import org.wordpress.android.ui.RequestCodes;
+import org.wordpress.android.ui.JetpackConnectionWebViewActivity.Source;
 import org.wordpress.android.ui.accounts.LoginActivity;
 import org.wordpress.android.util.AnalyticsUtils;
 import org.wordpress.android.util.ToastUtils;
@@ -37,8 +36,9 @@ import static org.wordpress.android.ui.RequestCodes.JETPACK_LOGIN;
  * <p>
  * Redirects users to the stats activity if the jetpack connection was succesful
  */
-public class StatsDeeplinkActivity extends AppCompatActivity {
+public class JetpackConnectionDeeplinkActivity extends AppCompatActivity {
     private String reason;
+    private Source source;
 
     @Inject
     AccountStore mAccountStore;
@@ -73,11 +73,16 @@ public class StatsDeeplinkActivity extends AppCompatActivity {
         if (Intent.ACTION_VIEW.equals(action) && uri != null) {
 
             reason = uri.getQueryParameter("reason");
+            source = Source.fromString(uri.getQueryParameter("source"));
 
             // if user is signed in wpcom show the post right away - otherwise show welcome activity
             // and then show the post once the user has signed in
             if (mAccountStore.hasAccessToken()) {
-                showStats();
+                if (source == Source.STATS) {
+                    showStats();
+                } else {
+                    finish();
+                }
             } else {
                 Intent loginIntent = new Intent(this, LoginActivity.class);
                 LoginMode.JETPACK_STATS.putInto(loginIntent);
@@ -103,7 +108,7 @@ public class StatsDeeplinkActivity extends AppCompatActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == RequestCodes.JETPACK_LOGIN && resultCode == RESULT_OK) {
+        if (requestCode == RequestCodes.JETPACK_LOGIN && resultCode == RESULT_OK && source == Source.STATS) {
             showStats();
         } else {
             finish();

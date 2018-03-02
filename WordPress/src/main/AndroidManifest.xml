@@ -4,7 +4,9 @@
           xmlns:tools="http://schemas.android.com/tools"
           android:installLocation="auto">
 
-    <uses-sdk tools:overrideLibrary="org.m4m.android" />
+    <uses-sdk
+        tools:overrideLibrary="org.m4m.android"
+        android:targetSdkVersion="17"/>
 
     <supports-screens
         android:anyDensity="true"
@@ -70,7 +72,9 @@
         android:largeHeap="true"
         android:networkSecurityConfig="@xml/network_security_config"
         android:theme="@style/WordPress"
-        tools:replace="allowBackup, icon">
+        tools:replace="allowBackup, icon,android:supportsRtl"
+        android:supportsRtl="true"
+        >
 
         <meta-data
             android:name="com.google.android.geo.API_KEY"
@@ -264,7 +268,7 @@
         <activity
             android:name=".ui.stats.StatsConnectJetpackActivity"
             android:theme="@style/Calypso.NoActionBar" />
-        <activity android:name=".ui.stats.StatsDeeplinkActivity" android:theme="@style/Calypso.NoActionBar">
+        <activity android:name=".ui.JetpackConnectionDeeplinkActivity" android:theme="@style/Calypso.NoActionBar">
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
                 <category android:name="android.intent.category.DEFAULT" />

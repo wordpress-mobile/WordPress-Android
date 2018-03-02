@@ -18,6 +18,7 @@
     <string name="enter_email_wordpress_com">Log in to WordPress.com using an email address to manage all your WordPress sites.</string>
     <string name="next">Next</string>
     <string name="open_mail">Open mail</string>
+    <string name="alternatively">Alternatively:</string>
     <string name="enter_site_address_instead">Log in by entering your site address.</string>
     <string name="enter_username_instead">Log in with your username.</string>
     <string name="enter_the_address_of_your_wordpress_site">Enter the address of your WordPress site</string>

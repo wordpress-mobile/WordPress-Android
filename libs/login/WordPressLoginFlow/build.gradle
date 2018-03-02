@@ -31,7 +31,7 @@ android {
 }
 
 dependencies {
-    implementation ('org.wordpress:utils:1.20.0-beta6') {
+    implementation ('org.wordpress:utils:1.20.0-beta7') {
         exclude group: "com.mcxiaoke.volley"
     }
 
@@ -56,6 +56,8 @@ dependencies {
     compileOnly 'org.glassfish:javax.annotation:10.0-b28'
     implementation 'com.google.dagger:dagger-android-support:2.11'
     annotationProcessor 'com.google.dagger:dagger-android-processor:2.11'
+
+    lintChecks 'org.wordpress:lint:1.0.0'
 }
 
 // Add properties named "wp.xxx" to our BuildConfig

@@ -148,9 +148,7 @@ Language: es_VE
 	<string name="logging_in">Accediendo</string>
 	<string name="enter_your_password_instead">Introduce tu contraseña</string>
 	<string name="web_address_dialog_hint">Cuando comentes se hará público</string>
-	<string name="jetpack_not_connected_message">El plugin Jetpack se ha instalado, pero no se ha conectado con WordPress.com. ¿Quieres conectar Jetpack?</string>
 	<string name="username_email">Correo electrónico o nombre de usuario</string>
-	<string name="jetpack_not_connected">Plugin Jetpack no conectado</string>
 	<string name="new_editor_reflection_error">Editor visual no compatible con tu dispositivo. Se ha\ndesactivado automáticamente</string>
 	<string name="stats_insights_latest_post_no_title">(sin título)</string>
 	<string name="capture_or_pick_photo">Captura o elige imagen</string>
@@ -913,7 +911,6 @@ Language: es_VE
 	<string name="nux_oops_not_selfhosted_blog">Accede a WordPress.com</string>
 	<string name="media_add_popup_title">Añadir a biblioteca multimedia</string>
 	<string name="empty_list_default">Esta lista esta vacía</string>
-	<string name="jetpack_not_found">No se ha encontrado el plugin Jetpack</string>
 	<string name="reader_untitled_post">Sin título</string>
 	<string name="reader_btn_share">Compartir</string>
 	<string name="reader_btn_follow">Seguir</string>

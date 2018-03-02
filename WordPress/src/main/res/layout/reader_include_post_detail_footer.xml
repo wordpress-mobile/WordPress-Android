@@ -24,7 +24,9 @@
         android:layout_centerHorizontal="true"
         android:layout_marginLeft="@dimen/reader_detail_margin"
         android:layout_marginRight="@dimen/reader_detail_margin"
-        android:layout_marginTop="@dimen/margin_medium">
+        android:layout_marginTop="@dimen/margin_medium"
+        android:layout_marginEnd="@dimen/reader_detail_margin"
+        android:layout_marginStart="@dimen/reader_detail_margin">
 
         <LinearLayout
             android:id="@+id/layout_icons"
@@ -32,7 +34,8 @@
             android:layout_height="wrap_content"
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
-            android:orientation="horizontal">
+            android:orientation="horizontal"
+            android:layout_alignParentEnd="true">
 
             <org.wordpress.android.ui.reader.views.ReaderIconCountView
                 android:contentDescription="@string/reader_view_comments"
@@ -52,7 +55,9 @@
                 android:paddingLeft="@dimen/margin_medium"
                 android:paddingRight="0dp"
                 android:paddingTop="@dimen/margin_medium"
-                wp:readerIcon="like" />
+                wp:readerIcon="like"
+                android:paddingStart="@dimen/margin_medium"
+                android:paddingEnd="0dp"/>
 
         </LinearLayout>
     </RelativeLayout>

@@ -29,7 +29,8 @@
             android:layout_height="wrap_content"
             android:layout_alignParentRight="true"
             android:background="?android:attr/selectableItemBackground"
-            android:orientation="horizontal">
+            android:orientation="horizontal"
+            android:layout_alignParentEnd="true">
 
             <TextView
                 android:layout_width="wrap_content"
@@ -69,7 +70,8 @@
                     android:layout_marginRight="@dimen/margin_large"
                     android:text="@string/plugin_five_stars"
                     android:textColor="@color/grey"
-                    android:textSize="@dimen/text_sz_medium" />
+                    android:textSize="@dimen/text_sz_medium"
+                    android:layout_marginEnd="@dimen/margin_large"/>
 
                 <ProgressBar
                     android:id="@+id/progress5"
@@ -96,7 +98,8 @@
                     android:layout_marginRight="@dimen/margin_large"
                     android:text="@string/plugin_four_stars"
                     android:textColor="@color/grey"
-                    android:textSize="@dimen/text_sz_medium" />
+                    android:textSize="@dimen/text_sz_medium"
+                    android:layout_marginEnd="@dimen/margin_large"/>
 
                 <ProgressBar
                     android:id="@+id/progress4"
@@ -123,7 +126,8 @@
                     android:layout_marginRight="@dimen/margin_large"
                     android:text="@string/plugin_three_stars"
                     android:textColor="@color/grey"
-                    android:textSize="@dimen/text_sz_medium" />
+                    android:textSize="@dimen/text_sz_medium"
+                    android:layout_marginEnd="@dimen/margin_large"/>
 
                 <ProgressBar
                     android:id="@+id/progress3"
@@ -150,7 +154,8 @@
                     android:layout_marginRight="@dimen/margin_large"
                     android:text="@string/plugin_two_stars"
                     android:textColor="@color/grey"
-                    android:textSize="@dimen/text_sz_medium" />
+                    android:textSize="@dimen/text_sz_medium"
+                    android:layout_marginEnd="@dimen/margin_large"/>
 
                 <ProgressBar
                     android:id="@+id/progress2"
@@ -177,7 +182,8 @@
                     android:layout_marginRight="@dimen/margin_large"
                     android:text="@string/plugin_one_stars"
                     android:textColor="@color/grey"
-                    android:textSize="@dimen/text_sz_medium" />
+                    android:textSize="@dimen/text_sz_medium"
+                    android:layout_marginEnd="@dimen/margin_large"/>
 
                 <ProgressBar
                     android:id="@+id/progress1"
@@ -215,7 +221,8 @@
                 android:layout_gravity="center_vertical"
                 android:textColor="@color/grey"
                 android:textSize="@dimen/text_sz_medium"
-                tools:text="text_num_downloads" />
+                tools:text="text_num_downloads"
+                android:layout_alignParentEnd="true"/>
 
         </RelativeLayout>
     </RelativeLayout>

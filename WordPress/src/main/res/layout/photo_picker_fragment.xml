@@ -56,7 +56,9 @@
             android:gravity="center"
             android:text="@string/photo_picker_soft_ask_label"
             android:textColor="@color/grey_dark"
-            android:textSize="@dimen/text_sz_large" />
+            android:textSize="@dimen/text_sz_large"
+            android:layout_marginEnd="@dimen/margin_extra_extra_large"
+            android:layout_marginStart="@dimen/margin_extra_extra_large"/>
 
         <org.wordpress.android.widgets.WPTextView
             android:id="@+id/text_soft_ask_allow"
