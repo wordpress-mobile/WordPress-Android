@@ -38,6 +38,7 @@ import org.wordpress.android.ui.ActivityLauncher;
 import org.wordpress.android.util.ActivityUtils;
 import org.wordpress.android.util.AnalyticsUtils;
 import org.wordpress.android.util.AniUtils;
+import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.viewmodel.PluginBrowserViewModel;
 import org.wordpress.android.viewmodel.PluginBrowserViewModel.PluginListType;
@@ -196,7 +197,10 @@ public class PluginBrowserActivity extends AppCompatActivity
                 showProgress(listStatus == PluginBrowserViewModel.PluginListStatus.FETCHING
                         && mViewModel.isSitePluginsEmpty());
 
-                if (listStatus == PluginBrowserViewModel.PluginListStatus.ERROR) {
+                // We should ignore the errors due to network condition, unless this is the first fetch, the user can
+                // use the cached version of them and showing the error while the data is loaded might cause confusion
+                if (listStatus == PluginBrowserViewModel.PluginListStatus.ERROR
+                        && NetworkUtils.isNetworkAvailable(PluginBrowserActivity.this)) {
                     ToastUtils.showToast(PluginBrowserActivity.this, R.string.plugin_fetch_error);
                 }
             }
