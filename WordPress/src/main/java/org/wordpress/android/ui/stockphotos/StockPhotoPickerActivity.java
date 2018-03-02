@@ -71,7 +71,7 @@ public class StockPhotoPickerActivity extends AppCompatActivity {
         mThumbWidth = displayWidth / getColumnCount();
         mThumbHeight = (int) (mThumbWidth * 0.75f);
 
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        Toolbar toolbar = findViewById(R.id.toolbar);
         toolbar.setNavigationIcon(R.drawable.ic_close_white_24dp);
         setSupportActionBar(toolbar);
         ActionBar actionBar = getSupportActionBar();
@@ -108,9 +108,6 @@ public class StockPhotoPickerActivity extends AppCompatActivity {
         } else {
             mSite = (SiteModel) savedInstanceState.getSerializable(WordPress.SITE);
         }
-
-        // TODO: remove
-        submitSearch("hedgehog", true);
     }
 
     @Override
@@ -143,13 +140,13 @@ public class StockPhotoPickerActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
-    void showProgress(boolean show) {
+    private void showProgress(boolean show) {
         if (!isFinishing()) {
             findViewById(R.id.progress).setVisibility(show ? View.VISIBLE : View.GONE);
         }
     }
 
-    void submitSearch(@Nullable final String query, boolean delayed) {
+    private void submitSearch(@Nullable final String query, boolean delayed) {
         mSearchQuery = query;
 
         if (TextUtils.isEmpty(query) || query.length() <= 2) {
@@ -201,7 +198,7 @@ public class StockPhotoPickerActivity extends AppCompatActivity {
         mNextPage = event.nextPage;
         mCanLoadMore = event.canLoadMore;
 
-        if (mNextPage == 2) {
+        if (mNextPage <= 2) {
             mAdapter.setMediaList(event.mediaList);
         } else {
             mAdapter.addMediaList(event.mediaList);
@@ -340,14 +337,14 @@ public class StockPhotoPickerActivity extends AppCompatActivity {
 
         }
 
-        void toggleItemSelected(StockViewHolder holder, int position) {
+        private void toggleItemSelected(StockViewHolder holder, int position) {
             if (!isValidPosition(position)) return;
 
             boolean isSelected = isItemSelected(position);
             setItemSelected(holder, position, !isSelected);
         }
 
-        void setSelectedItems(ArrayList<Integer> selectedItems) {
+        private void setSelectedItems(ArrayList<Integer> selectedItems) {
             mSelectedItems.clear();
             mSelectedItems.addAll(selectedItems);
             notifyDataSetChanged();
@@ -379,7 +376,7 @@ public class StockPhotoPickerActivity extends AppCompatActivity {
         }
     }
 
-    public int getColumnCount() {
+    private int getColumnCount() {
         return DisplayUtils.isLandscape(this) ? 4 : 3;
     }
 
