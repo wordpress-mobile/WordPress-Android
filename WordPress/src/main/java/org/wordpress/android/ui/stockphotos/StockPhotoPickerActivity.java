@@ -49,6 +49,10 @@ public class StockPhotoPickerActivity extends AppCompatActivity {
     private int mThumbHeight;
 
     private boolean mInMultiSelect;
+    private boolean mIsFetching;
+
+    private int mNextPage;
+    private boolean mCanLoadMore;
 
     private SearchView mSearchView;
     private String mSearchQuery;
@@ -148,7 +152,7 @@ public class StockPhotoPickerActivity extends AppCompatActivity {
     void submitSearch(@Nullable final String query, boolean delayed) {
         mSearchQuery = query;
 
-        if (TextUtils.isEmpty(query)) {
+        if (TextUtils.isEmpty(query) || query.length() <= 2) {
             mAdapter.clear();
             return;
         }
@@ -170,7 +174,9 @@ public class StockPhotoPickerActivity extends AppCompatActivity {
     private void requestStockPhotos(@Nullable String searchTerm, int page) {
         if (!NetworkUtils.checkConnection(this)) return;
 
+        mIsFetching = true;
         showProgress(true);
+
         StockMediaStore.FetchStockMediaListPayload payload =
                 new StockMediaStore.FetchStockMediaListPayload(searchTerm, page);
         mDispatcher.dispatch(StockMediaActionBuilder.newFetchStockMediaAction(payload));
@@ -179,6 +185,7 @@ public class StockPhotoPickerActivity extends AppCompatActivity {
     @SuppressWarnings("unused")
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void OnStockMediaListFetched(StockMediaStore.OnStockMediaListFetched event) {
+        mIsFetching = false;
         if (isFinishing()) return;
 
         showProgress(false);
@@ -191,7 +198,14 @@ public class StockPhotoPickerActivity extends AppCompatActivity {
             return;
         }
 
-        mAdapter.setMediaList(event.mediaList);
+        mNextPage = event.nextPage;
+        mCanLoadMore = event.canLoadMore;
+
+        if (mNextPage == 2) {
+            mAdapter.setMediaList(event.mediaList);
+        } else {
+            mAdapter.addMediaList(event.mediaList);
+        }
     }
 
     class StockPhotoAdapter extends RecyclerView.Adapter<StockViewHolder> {
@@ -209,6 +223,11 @@ public class StockPhotoPickerActivity extends AppCompatActivity {
             mItems.clear();
             mItems.addAll(mediaList);
             mSelectedItems.clear();
+            notifyDataSetChanged();
+        }
+
+        void addMediaList(@NonNull List<StockMediaModel> mediaList) {
+            mItems.addAll(mediaList);
             notifyDataSetChanged();
         }
 
@@ -254,6 +273,10 @@ public class StockPhotoPickerActivity extends AppCompatActivity {
             if (holder.imageView.getScaleX() != scale) {
                 holder.imageView.setScaleX(scale);
                 holder.imageView.setScaleY(scale);
+            }
+
+            if (mCanLoadMore && !mIsFetching && position == getItemCount() - 1) {
+                requestStockPhotos(mSearchQuery, mNextPage);
             }
         }
 
