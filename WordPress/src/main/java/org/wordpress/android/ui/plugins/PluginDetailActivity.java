@@ -830,7 +830,26 @@ public class PluginDetailActivity extends AppCompatActivity {
             return;
         }
 
-        refreshPluginFromStore();
+        // Sanity check
+        ImmutablePluginModel configuredPlugin = mPluginStore.getImmutablePluginBySlug(mSite, mSlug);
+        if (configuredPlugin == null) {
+            ToastUtils.showToast(this, R.string.plugin_not_found);
+            finish();
+            return;
+        }
+        // Before refreshing the plugin from store, check the changes and track them
+        if (mPlugin.isActive() != configuredPlugin.isActive()) {
+            AnalyticsTracker.Stat stat = configuredPlugin.isActive()
+                    ? AnalyticsTracker.Stat.PLUGIN_ACTIVATED : AnalyticsTracker.Stat.PLUGIN_DEACTIVATED;
+            AnalyticsUtils.trackWithSiteDetails(stat, mSite);
+        }
+        if (mPlugin.isAutoUpdateEnabled() != configuredPlugin.isAutoUpdateEnabled()) {
+            AnalyticsTracker.Stat stat = configuredPlugin.isAutoUpdateEnabled()
+                    ? AnalyticsTracker.Stat.PLUGIN_AUTOUPDATE_ENABLED : AnalyticsTracker.Stat.PLUGIN_AUTOUPDATE_DISABLED;
+            AnalyticsUtils.trackWithSiteDetails(stat, mSite);
+        }
+        // Now we can update the plugin with the new one from store
+        mPlugin = configuredPlugin;
 
         // The plugin state has been changed while a configuration network call is going on, we need to dispatch another
         // configure plugin action since we don't allow multiple configure actions to happen at the same time

@@ -31,10 +31,12 @@ import android.widget.TextView;
 
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
+import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.model.plugin.ImmutablePluginModel;
 import org.wordpress.android.ui.ActivityLauncher;
 import org.wordpress.android.util.ActivityUtils;
+import org.wordpress.android.util.AnalyticsUtils;
 import org.wordpress.android.util.AniUtils;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.viewmodel.PluginBrowserViewModel;
@@ -42,7 +44,9 @@ import org.wordpress.android.viewmodel.PluginBrowserViewModel.PluginListType;
 import org.wordpress.android.widgets.WPNetworkImageView;
 import org.wordpress.android.widgets.WPNetworkImageView.ImageType;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.inject.Inject;
 
@@ -301,6 +305,7 @@ public class PluginBrowserActivity extends AppCompatActivity
                 .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE)
                 .commit();
         mViewModel.setTitle(getTitleForListType(listType));
+        trackPluginListOpened(listType);
     }
 
     private void hideListFragment() {
@@ -451,5 +456,31 @@ public class PluginBrowserActivity extends AppCompatActivity
                 return getString(R.string.plugin_caption_installed);
         }
         return getString(R.string.plugins);
+    }
+
+    void trackPluginListOpened(PluginListType listType) {
+        if (listType == PluginListType.SEARCH) {
+            // Although it's named as "search performed" we are actually only tracking the first search
+            AnalyticsUtils.trackWithSiteDetails(AnalyticsTracker.Stat.PLUGIN_SEARCH_PERFORMED, mViewModel.getSite());
+            return;
+        }
+        Map<String, Object> properties = new HashMap<>();
+        String type = null;
+        switch (listType) {
+            case SITE:
+                type = "installed";
+                break;
+            case FEATURED:
+                type = "installed";
+                break;
+            case POPULAR:
+                type = "installed";
+                break;
+            case NEW:
+                type = "installed";
+                break;
+        }
+        properties.put("type", type);
+        AnalyticsUtils.trackWithSiteDetails(AnalyticsTracker.Stat.OPENED_PLUGIN_LIST, mViewModel.getSite(), properties);
     }
 }
