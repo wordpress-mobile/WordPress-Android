@@ -11,4 +11,6 @@
     android:minWidth="48dp"
     android:paddingRight="12dp"
     android:contentDescription="@string/add_category"
-    android:tag="select-category" />
+    android:tag="select-category"
+    android:paddingEnd="12dp"
+    android:layout_marginStart="16dp"/>

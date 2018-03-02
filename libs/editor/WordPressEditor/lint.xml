@@ -7,4 +7,8 @@
     <issue id="MissingPrefix">
         <ignore regexp="Unexpected namespace prefix &quot;app&quot; found for tag `Image.*`" />
     </issue>
+
+    <!--TODO ignoring issue with format_bar_chevron.png. Remove this when we remove legacy editors. -->
+    <issue id="IconDipSize" severity="warning" />
+
 </lint>

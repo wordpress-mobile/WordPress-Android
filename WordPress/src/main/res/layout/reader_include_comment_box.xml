@@ -30,11 +30,14 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
             android:layout_marginLeft="@dimen/content_margin"
-            app:srcCompat="@drawable/ic_reply_grey_24dp" />
+            app:srcCompat="@drawable/ic_reply_grey_24dp"
+            android:layout_marginStart="@dimen/content_margin"/>
 
         <org.wordpress.android.widgets.SuggestionAutoCompleteText
+            android:textAlignment="viewStart"
+            android:gravity="start|center_vertical"
             android:id="@+id/edit_comment"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
             android:layout_weight="1"
@@ -49,7 +52,8 @@
             android:paddingLeft="@dimen/margin_small"
             android:paddingTop="@dimen/margin_extra_small"
             android:textColorHint="@color/grey_lighten_10"
-            android:textSize="@dimen/text_sz_large" />
+            android:textSize="@dimen/text_sz_large"
+            android:paddingStart="@dimen/margin_small"/>
 
         <org.wordpress.android.widgets.WPTextView
             android:id="@+id/btn_submit_reply"
@@ -61,7 +65,8 @@
             android:padding="@dimen/margin_medium"
             android:text="@string/reader_label_submit_comment"
             android:textColor="@color/grey_darken_10"
-            android:textSize="@dimen/text_sz_medium" />
+            android:textSize="@dimen/text_sz_medium"
+            android:layout_marginEnd="@dimen/content_margin"/>
     </LinearLayout>
 
     <ProgressBar
@@ -71,6 +76,8 @@
         android:layout_alignParentRight="true"
         android:layout_centerVertical="true"
         android:layout_marginRight="@dimen/margin_medium"
-        android:visibility="gone" />
+        android:visibility="gone"
+        android:layout_marginEnd="@dimen/margin_medium"
+        android:layout_alignParentEnd="true"/>
 
 </RelativeLayout>

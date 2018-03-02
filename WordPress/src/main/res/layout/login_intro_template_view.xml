@@ -13,7 +13,9 @@
         android:layout_marginRight="24dp"
         android:layout_marginTop="70dp"
         android:minLines="3"
-        tools:text="@string/login_promo_text_anytime"/>
+        tools:text="@string/login_promo_text_anytime"
+        android:layout_marginStart="24dp"
+        android:layout_marginEnd="24dp"/>
 
     <com.airbnb.lottie.LottieAnimationView
         android:id="@+id/animation_view"

@@ -5,7 +5,9 @@
           package="org.wordpress.android">
 
     <application
-        tools:replace="android:name"
-        android:name=".WordPressDebug" />
+        tools:replace="android:name,android:supportsRtl"
+        android:name=".WordPressDebug"
+        android:supportsRtl="true"
+        />
 
 </manifest>

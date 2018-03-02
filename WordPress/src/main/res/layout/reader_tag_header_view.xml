@@ -34,7 +34,8 @@
         android:shadowRadius="@dimen/reader_photo_title_shadow_radius"
         android:textColor="@color/white"
         android:textSize="@dimen/text_sz_double_extra_large"
-        tools:text="text_tag" />
+        tools:text="text_tag"
+        android:drawableStart="@drawable/ic_tag_white_24dp"/>
 
     <org.wordpress.android.widgets.WPTextView
         android:id="@+id/text_attribution"
@@ -53,6 +54,8 @@
         android:shadowRadius="@dimen/reader_photo_title_shadow_radius"
         android:textColor="@color/white"
         android:textSize="@dimen/text_sz_medium"
-        tools:text="text_attribution" />
+        tools:text="text_attribution"
+        android:layout_marginEnd="@dimen/margin_medium"
+        android:layout_alignParentEnd="true"/>
 
 </RelativeLayout>

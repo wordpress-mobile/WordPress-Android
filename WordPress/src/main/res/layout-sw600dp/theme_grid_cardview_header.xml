@@ -12,7 +12,9 @@
         android:layout_marginRight="@dimen/theme_browser_cardview_margin_large"
         android:layout_marginLeft="@dimen/theme_browser_cardview_margin_large"
         card_view:cardCornerRadius="@dimen/cardview_default_radius"
-        card_view:cardElevation="@dimen/card_elevation">
+        card_view:cardElevation="@dimen/card_elevation"
+        android:layout_marginStart="@dimen/theme_browser_cardview_margin_large"
+        android:layout_marginEnd="@dimen/theme_browser_cardview_margin_large">
 
         <RelativeLayout
             android:layout_width="match_parent"
@@ -23,7 +25,8 @@
                 android:layout_height="wrap_content"
                 android:layout_alignParentLeft="true"
                 android:orientation="vertical"
-                android:layout_margin="@dimen/theme_browser_cardview_header_margin">
+                android:layout_margin="@dimen/theme_browser_cardview_header_margin"
+                android:layout_alignParentStart="true">
 
                 <org.wordpress.android.widgets.WPTextView
                     android:layout_width="wrap_content"
@@ -48,7 +51,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:layout_alignParentRight="true"
-                android:orientation="horizontal">
+                android:orientation="horizontal"
+                android:layout_alignParentEnd="true">
 
                 <View
                     android:layout_width="@dimen/theme_browser_separator_thickness"

@@ -5,6 +5,7 @@ import android.content.Context;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.os.Bundle;
+import android.support.v4.view.ViewCompat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,6 +18,7 @@ import android.widget.TextView;
 import com.jjoe64.graphview.GraphView;
 import com.jjoe64.graphview.GraphViewSeries;
 
+import org.apache.commons.lang3.ArrayUtils;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.analytics.AnalyticsTracker;
@@ -29,6 +31,7 @@ import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.DisplayUtils;
 import org.wordpress.android.util.FormatUtils;
 import org.wordpress.android.util.NetworkUtils;
+import org.wordpress.android.util.RtlUtils;
 import org.wordpress.android.util.SiteUtils;
 import org.wordpress.android.util.StringUtils;
 
@@ -126,7 +129,7 @@ public class StatsVisitorsAndViewsFragment extends StatsAbstractFragment
         // Fix an issue on devices with 4.1 or lower, where the Checkbox already uses padding by default internally and overriding it with paddingLeft
         // causes the issue report here https://github.com/wordpress-mobile/WordPress-Android/pull/2377#issuecomment-77067993
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
-            mVisitorsCheckbox.setPadding(getResources().getDimensionPixelSize(R.dimen.margin_medium), 0, 0, 0);
+            ViewCompat.setPaddingRelative(mVisitorsCheckbox,getResources().getDimensionPixelSize(R.dimen.margin_medium), 0, 0, 0);
         }
 
         // Make sure we've all the info to build the tab correctly. This is ALWAYS true
@@ -322,6 +325,9 @@ public class StatsVisitorsAndViewsFragment extends StatsAbstractFragment
             visitModelsToShow[currentPointIndex] = currentVisitModel;
             currentPointIndex--;
         }
+        if (RtlUtils.isRtl(getActivity())) {
+            ArrayUtils.reverse(visitModelsToShow);
+        }
         return visitModelsToShow;
     }
 
@@ -489,8 +495,8 @@ public class StatsVisitorsAndViewsFragment extends StatsAbstractFragment
         if (mPrevNumberOfBarsGraph != -1 && mPrevNumberOfBarsGraph != dataToShowOnGraph.length) {
             mSelectedBarGraphBarIndex = -1;
             mPrevNumberOfBarsGraph = dataToShowOnGraph.length;
-            onBarTapped(dataToShowOnGraph.length - 1);
-            mGraphView.highlightBar(dataToShowOnGraph.length - 1);
+            onBarTapped(getDefaultBarIndex(dataToShowOnGraph));
+            mGraphView.highlightBar(getDefaultBarIndex(dataToShowOnGraph));
             return;
         }
 
@@ -498,17 +504,21 @@ public class StatsVisitorsAndViewsFragment extends StatsAbstractFragment
         int barSelectedOnGraph;
         if (mSelectedBarGraphBarIndex == -1) {
             // No previous bar was highlighted, highlight the most recent one
-            barSelectedOnGraph = dataToShowOnGraph.length - 1;
+            barSelectedOnGraph = getDefaultBarIndex(dataToShowOnGraph);
         } else if (mSelectedBarGraphBarIndex < dataToShowOnGraph.length) {
             barSelectedOnGraph = mSelectedBarGraphBarIndex;
         } else {
             // A previous bar was highlighted, but it's out of the screen now. This should never happen atm.
-            barSelectedOnGraph = dataToShowOnGraph.length - 1;
+            barSelectedOnGraph = getDefaultBarIndex(dataToShowOnGraph);
             mSelectedBarGraphBarIndex = barSelectedOnGraph;
         }
 
         updateUIBelowTheGraph(barSelectedOnGraph);
         mGraphView.highlightBar(barSelectedOnGraph);
+    }
+
+    private int getDefaultBarIndex(final VisitModel[] dataToShowOnGraph){
+        return RtlUtils.isRtl(getActivity()) && dataToShowOnGraph.length > 0 ? 0 : dataToShowOnGraph.length - 1;
     }
 
     // Find the max value in Visitors and Views data.
