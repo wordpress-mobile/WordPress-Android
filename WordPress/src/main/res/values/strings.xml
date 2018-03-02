@@ -2139,7 +2139,7 @@
     <!-- Content description for accessibility  -->
     <string name="comment_checkmark_desc">check mark</string>
     <string name="invite_user_delete_desc">remove user</string>
-    <string name="media_grid_item_image_desc">media preview</string>
+    <string name="media_grid_item_image_desc">media preview, filename %s</string>
     <string name="media_grid_item_retry_desc">retry</string>
     <string name="media_grid_item_trash_desc">trash</string>
     <string name="media_grid_item_play_video_desc">play video</string>
