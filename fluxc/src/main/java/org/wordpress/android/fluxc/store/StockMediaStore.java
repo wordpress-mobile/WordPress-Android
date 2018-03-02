@@ -10,7 +10,6 @@ import org.wordpress.android.fluxc.action.StockMediaAction;
 import org.wordpress.android.fluxc.annotations.action.Action;
 import org.wordpress.android.fluxc.annotations.action.IAction;
 import org.wordpress.android.fluxc.model.StockMediaModel;
-import org.wordpress.android.fluxc.network.BaseRequest;
 import org.wordpress.android.fluxc.network.BaseRequest.BaseNetworkError;
 import org.wordpress.android.fluxc.network.rest.wpcom.stockmedia.StockMediaRestClient;
 import org.wordpress.android.util.AppLog;
@@ -35,10 +34,9 @@ public class StockMediaStore extends Store {
      * Actions: FETCH_MEDIA_LIST
      */
     public static class FetchStockMediaListPayload extends Payload<BaseNetworkError> {
-        public String searchTerm;
-        public int page;
-        public BaseRequest.BaseNetworkError error;
-        public int number = DEFAULT_NUM_STOCK_MEDIA_PER_FETCH;
+        public final String searchTerm;
+        public final int page;
+        public final int number = DEFAULT_NUM_STOCK_MEDIA_PER_FETCH;
 
         public FetchStockMediaListPayload(@NonNull String searchTerm, int page) {
             this.searchTerm = searchTerm;
