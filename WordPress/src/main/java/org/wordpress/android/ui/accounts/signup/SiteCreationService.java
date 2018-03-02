@@ -11,6 +11,7 @@ import android.support.annotation.Nullable;
 import android.support.annotation.StringRes;
 import android.text.TextUtils;
 
+import org.greenrobot.eventbus.EventBusException;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 import org.wordpress.android.R;
@@ -29,6 +30,7 @@ import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.AutoForeground;
 import org.wordpress.android.util.AutoForegroundNotification;
+import org.wordpress.android.util.CrashlyticsUtils;
 import org.wordpress.android.util.LanguageUtils;
 
 import java.util.Map;
@@ -189,11 +191,20 @@ public class SiteCreationService extends AutoForeground<SiteCreationState> {
 
     @Override
     protected void onProgressStart() {
-        mDispatcher.register(this);
+        AppLog.i(T.NUX, "SiteCreationService registering on EventBus");
+        try {
+            // it seems that for some users, the Service tries to register more than once. Let's guard to collect info
+            //  on this. Ticket: https://github.com/wordpress-mobile/WordPress-Android/issues/7353
+            mDispatcher.register(this);
+        } catch (EventBusException e) {
+            AppLog.w(T.NUX, "Registering SiteCreationService to EventBus failed! " + e.getMessage());
+            CrashlyticsUtils.logException(e, T.NUX);
+        }
     }
 
     @Override
     protected void onProgressEnd() {
+        AppLog.i(T.NUX, "SiteCreationService deregistering from EventBus");
         mDispatcher.unregister(this);
     }
 
