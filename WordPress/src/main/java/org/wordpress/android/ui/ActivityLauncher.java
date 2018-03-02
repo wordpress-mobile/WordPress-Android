@@ -66,6 +66,8 @@ import org.wordpress.passcodelock.AppLockManager;
 import java.util.ArrayList;
 import java.util.List;
 
+import static org.wordpress.android.ui.stats.StatsActivity.LOGGED_INTO_JETPACK;
+
 public class ActivityLauncher {
 
     public static void showMainActivityAndLoginEpilogue(Activity activity,  ArrayList<Integer> oldSitesIds,
@@ -114,6 +116,13 @@ public class ActivityLauncher {
     public static void viewBlogStats(Context context, SiteModel site) {
         Intent intent = new Intent(context, StatsActivity.class);
         intent.putExtra(WordPress.SITE, site);
+        context.startActivity(intent);
+    }
+
+    public static void viewBlogStatsAfterJetpackSetup(Context context, SiteModel site) {
+        Intent intent = new Intent(context, StatsActivity.class);
+        intent.putExtra(WordPress.SITE, site);
+        intent.putExtra(LOGGED_INTO_JETPACK, true);
         context.startActivity(intent);
     }
 

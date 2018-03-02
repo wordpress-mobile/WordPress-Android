@@ -8,8 +8,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
 
-import org.greenrobot.eventbus.Subscribe;
-import org.greenrobot.eventbus.ThreadMode;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.analytics.AnalyticsTracker.Stat;
@@ -17,7 +15,6 @@ import org.wordpress.android.fluxc.Dispatcher;
 import org.wordpress.android.fluxc.generated.SiteActionBuilder;
 import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.store.AccountStore;
-import org.wordpress.android.fluxc.store.SiteStore;
 import org.wordpress.android.login.LoginMode;
 import org.wordpress.android.ui.JetpackConnectionWebViewActivity.Source;
 import org.wordpress.android.ui.accounts.LoginActivity;
@@ -80,7 +77,8 @@ public class JetpackConnectionDeeplinkActivity extends AppCompatActivity {
             source = Source.fromString(uri.getQueryParameter("source"));
             if (mAccountStore.hasAccessToken()) {
                 // if user is signed in wpcom show the stats or notifications right away
-                trackResultAndFinish();
+                trackResult();
+                finishAndGoBackToSource();
             } else {
                 // An edgecase when the user is logged out in the app but logged in in webview
                 Intent loginIntent = new Intent(this, LoginActivity.class);
@@ -92,48 +90,13 @@ public class JetpackConnectionDeeplinkActivity extends AppCompatActivity {
         }
     }
 
-    private void trackResultAndFinish() {
-        if (!TextUtils.isEmpty(reason)) {
-            AppLog.e(AppLog.T.API, "Could not connect to Jetpack, reason: "+reason);
-            ToastUtils.showToast(this, reason);
-        } else {
-            trackWithSource(Stat.SIGNED_INTO_JETPACK, source);
-        }
-        if (source == Source.STATS) {
-            //Reload the site to get new stats
-            reloadSite();
-        } else {
-            //In case of coming from anywhere else, we finish the activity
-            finish();
-        }
-    }
-
-    @Override
-    protected void onStop() {
-        mDispatcher.unregister(this);
-        super.onStop();
-    }
-
-    @Override
-    protected void onStart() {
-        super.onStart();
-        mDispatcher.register(this);
-    }
-
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == RequestCodes.JETPACK_LOGIN && resultCode == RESULT_OK) {
-            trackResultAndFinish();
-        } else {
-            finishAndGoBackToSource();
+            trackResult();
         }
-    }
-
-    private void reloadSite() {
-        //Reloads the site
-        SiteModel site = (SiteModel) getIntent().getSerializableExtra(SITE);
-        mDispatcher.dispatch(SiteActionBuilder.newFetchSiteAction(site));
+        finishAndGoBackToSource();
     }
 
     @Override
@@ -142,16 +105,20 @@ public class JetpackConnectionDeeplinkActivity extends AppCompatActivity {
         finishAndGoBackToSource();
     }
 
-    @SuppressWarnings("unused")
-    @Subscribe(threadMode = ThreadMode.MAIN)
-    public void onSiteChanged(SiteStore.OnSiteChanged event) {
-        finishAndGoBackToSource();
+    private void trackResult() {
+        if (!TextUtils.isEmpty(reason)) {
+            AppLog.e(AppLog.T.API, "Could not connect to Jetpack, reason: "+reason);
+            ToastUtils.showToast(this, reason);
+        } else {
+            trackWithSource(Stat.SIGNED_INTO_JETPACK, source);
+        }
     }
 
     private void finishAndGoBackToSource() {
-        if (source != null && source == Source.STATS) {
+        if (source == Source.STATS) {
             SiteModel site = (SiteModel) getIntent().getSerializableExtra(SITE);
-            ActivityLauncher.viewBlogStats(this, site);
+            mDispatcher.dispatch(SiteActionBuilder.newFetchSiteAction(site));
+            ActivityLauncher.viewBlogStatsAfterJetpackSetup(this, site);
         }
         finish();
     }
