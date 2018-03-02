@@ -854,9 +854,14 @@ public class PluginDetailActivity extends AppCompatActivity {
     public void onWPOrgPluginFetched(PluginStore.OnWPOrgPluginFetched event) {
         if (isFinishing()) return;
 
+        if (!mSlug.equals(event.pluginSlug)) {
+            // another plugin fetched, no need to handle it
+            return;
+        }
+
         if (event.isError()) {
-            AppLog.e(AppLog.T.PLUGINS, "An error occurred while fetching wporg plugin with type: "
-                    + event.error.type);
+            AppLog.e(AppLog.T.PLUGINS, "An error occurred while fetching wporg plugin" + event.pluginSlug
+                    + " with type: " + event.error.type);
         } else {
             refreshPluginFromStore();
             refreshViews();
