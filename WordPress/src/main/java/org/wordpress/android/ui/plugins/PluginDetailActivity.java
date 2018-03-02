@@ -335,8 +335,12 @@ public class PluginDetailActivity extends AppCompatActivity {
             @Override
             public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
                 if (compoundButton.isPressed()) {
-                    mIsActive = b;
-                    dispatchConfigurePluginAction(false);
+                    if (NetworkUtils.checkConnection(PluginDetailActivity.this)) {
+                        mIsActive = b;
+                        dispatchConfigurePluginAction(false);
+                    } else {
+                        compoundButton.setChecked(mIsActive);
+                    }
                 }
             }
         });
@@ -345,8 +349,12 @@ public class PluginDetailActivity extends AppCompatActivity {
             @Override
             public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
                 if (compoundButton.isPressed()) {
-                    mIsAutoUpdateEnabled = b;
-                    dispatchConfigurePluginAction(false);
+                    if (NetworkUtils.checkConnection(PluginDetailActivity.this)) {
+                        mIsAutoUpdateEnabled = b;
+                        dispatchConfigurePluginAction(false);
+                    } else {
+                        compoundButton.setChecked(mIsAutoUpdateEnabled);
+                    }
                 }
             }
         });
@@ -729,7 +737,7 @@ public class PluginDetailActivity extends AppCompatActivity {
     // Network Helpers
 
     protected void dispatchConfigurePluginAction(boolean forceUpdate) {
-        if (!NetworkUtils.checkConnection(this)) {
+        if (!NetworkUtils.isNetworkAvailable(this)) {
             return;
         }
         if (!forceUpdate && mIsConfiguringPlugin) {
