@@ -25,7 +25,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
-                android:layout_margin="@dimen/theme_browser_cardview_header_margin">
+                android:layout_margin="@dimen/theme_browser_cardview_header_margin"
+                android:focusable="true">
 
                 <org.wordpress.android.widgets.WPTextView
                     android:layout_width="wrap_content"
