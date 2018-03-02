@@ -262,7 +262,7 @@ public class SignupEpilogueFragment extends LoginBaseFormFragment<SignupEpilogue
                 // Start progress and wait for account to be fetched before populating views when
                 // email does not exist in account store.
                 if (TextUtils.isEmpty(mAccountStore.getAccount().getEmail())) {
-                    startProgress();
+                    startProgress(false);
                 // Skip progress and populate views when email does exist in account store.
                 } else {
                     populateViews();
@@ -431,7 +431,7 @@ public class SignupEpilogueFragment extends LoginBaseFormFragment<SignupEpilogue
             endProgress();
             populateViews();
         } else if (changedUsername()) {
-            startProgress();
+            startProgress(false);
             PushUsernamePayload payload = new PushUsernamePayload(mUsername,
                     AccountUsernameActionType.KEEP_OLD_SITE_AND_ADDRESS);
             mDispatcher.dispatch(AccountActionBuilder.newPushUsernameAction(payload));
@@ -661,7 +661,7 @@ public class SignupEpilogueFragment extends LoginBaseFormFragment<SignupEpilogue
             final File file = new File(filePath);
 
             if (file.exists()) {
-                startProgress();
+                startProgress(false);
 
                 GravatarApi.uploadGravatar(file, mAccountStore.getAccount().getEmail(), mAccountStore.getAccessToken(),
                         new GravatarApi.GravatarUploadListener() {
@@ -701,7 +701,7 @@ public class SignupEpilogueFragment extends LoginBaseFormFragment<SignupEpilogue
 
     protected void updateAccountOrContinue() {
         if (changedDisplayName()) {
-            startProgress();
+            startProgress(false);
             PushAccountSettingsPayload payload = new PushAccountSettingsPayload();
             payload.params = new HashMap<>();
             payload.params.put("display_name", mDisplayName);
@@ -712,13 +712,13 @@ public class SignupEpilogueFragment extends LoginBaseFormFragment<SignupEpilogue
 
             mDispatcher.dispatch(AccountActionBuilder.newPushSettingsAction(payload));
         } else if (changedPassword()) {
-            startProgress();
+            startProgress(false);
             PushAccountSettingsPayload payload = new PushAccountSettingsPayload();
             payload.params = new HashMap<>();
             payload.params.put("password", mInputPassword.getEditText().getText().toString());
             mDispatcher.dispatch(AccountActionBuilder.newPushSettingsAction(payload));
         } else if (changedUsername()) {
-            startProgress();
+            startProgress(false);
             PushUsernamePayload payload = new PushUsernamePayload(mUsername,
                     AccountUsernameActionType.KEEP_OLD_SITE_AND_ADDRESS);
             mDispatcher.dispatch(AccountActionBuilder.newPushUsernameAction(payload));
