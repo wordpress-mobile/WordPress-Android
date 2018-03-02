@@ -471,13 +471,13 @@ public class PluginBrowserActivity extends AppCompatActivity
                 type = "installed";
                 break;
             case FEATURED:
-                type = "installed";
+                type = "featured";
                 break;
             case POPULAR:
-                type = "installed";
+                type = "popular";
                 break;
             case NEW:
-                type = "installed";
+                type = "newest";
                 break;
         }
         properties.put("type", type);
