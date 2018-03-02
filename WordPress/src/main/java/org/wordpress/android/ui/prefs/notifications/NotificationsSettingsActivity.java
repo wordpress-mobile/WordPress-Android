@@ -31,11 +31,13 @@ public class NotificationsSettingsActivity extends AppCompatActivity {
     protected SharedPreferences mSharedPreferences;
     protected SwitchCompat mMasterSwitch;
     protected Toolbar mToolbarSwitch;
+    protected View mFragmentContainer;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.notifications_settings_activity);
+        mFragmentContainer = findViewById(R.id.fragment_container);
 
         // Get shared preferences for master switch.
         mSharedPreferences = PreferenceManager.getDefaultSharedPreferences(NotificationsSettingsActivity.this);
@@ -110,7 +112,6 @@ public class NotificationsSettingsActivity extends AppCompatActivity {
 
         mToolbarSwitch = findViewById(R.id.toolbar_with_switch);
         mToolbarSwitch.inflateMenu(R.menu.notifications_settings_secondary);
-        mToolbarSwitch.setContentDescription(getString(R.string.notification_settings_switch_desc));
         mToolbarSwitch.setTitle(isMasterChecked ?
                 getString(R.string.notification_settings_master_status_on) :
                 getString(R.string.notification_settings_master_status_off));
@@ -119,11 +120,14 @@ public class NotificationsSettingsActivity extends AppCompatActivity {
         mMasterSwitch = (SwitchCompat) menuItem.getActionView();
         ViewCompat.setLabelFor(mToolbarSwitch, mMasterSwitch.getId());
         mMasterSwitch.setChecked(isMasterChecked);
+
+        setToolbarTitleContentDescription();
+        setupFocusabilityForTalkBack();
+
         mMasterSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 hideDisabledView(isChecked);
-                mToolbarSwitch.setContentDescription(getString(R.string.notification_settings_switch_desc));
                 mToolbarSwitch.setTitle(isChecked ?
                         getString(R.string.notification_settings_master_status_on) :
                         getString(R.string.notification_settings_master_status_off));
@@ -136,7 +140,14 @@ public class NotificationsSettingsActivity extends AppCompatActivity {
                 }
             }
         });
-        mMasterSwitch.setOnLongClickListener(new View.OnLongClickListener() {
+
+        mToolbarSwitch.setOnClickListener(new View.OnClickListener() {
+            @Override public void onClick(View v) {
+                mMasterSwitch.setChecked(!mMasterSwitch.isChecked());
+            }
+        });
+
+        mToolbarSwitch.setOnLongClickListener(new View.OnLongClickListener() {
             @Override
             public boolean onLongClick(View view) {
                 Toast.makeText(NotificationsSettingsActivity.this, mMasterSwitch.isChecked() ?
@@ -148,6 +159,23 @@ public class NotificationsSettingsActivity extends AppCompatActivity {
         });
     }
 
+    private void setToolbarTitleContentDescription() {
+        for (int i = 0; i < mToolbarSwitch.getChildCount(); i++) {
+            if (mToolbarSwitch.getChildAt(i) instanceof TextView) {
+                mToolbarSwitch.getChildAt(i).setContentDescription(
+                        getString(R.string.notification_settings_switch_desc));
+            }
+        }
+    }
+
+    private void setupFocusabilityForTalkBack() {
+        mMasterSwitch.setFocusable(false);
+        mMasterSwitch.setClickable(false);
+        mToolbarSwitch.setFocusableInTouchMode(false);
+        mToolbarSwitch.setFocusable(true);
+        mToolbarSwitch.setClickable(true);
+    }
+
     /**
      * Hide view when Notification Settings are disabled by toggling the master switch off.
      *
@@ -156,5 +184,6 @@ public class NotificationsSettingsActivity extends AppCompatActivity {
     protected void hideDisabledView(boolean isMasterChecked) {
         LinearLayout notificationsDisabledView = findViewById(R.id.notification_settings_disabled_view);
         notificationsDisabledView.setVisibility(isMasterChecked ? View.INVISIBLE : View.VISIBLE);
+        mFragmentContainer.setVisibility(isMasterChecked ? View.VISIBLE : View.GONE);
     }
 }
