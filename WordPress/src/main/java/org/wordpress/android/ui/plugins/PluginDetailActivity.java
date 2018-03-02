@@ -798,11 +798,7 @@ public class PluginDetailActivity extends AppCompatActivity {
     public void onSitePluginConfigured(OnSitePluginConfigured event) {
         if (isFinishing()) return;
 
-        if (mSite.getId() != event.site.getId() // Wrong site
-                || !mPlugin.isInstalled() // Plugin is not installed, this event can't be about this plugin
-                || mPlugin.getName() == null // Sanity check for NPE, but if the plugin is installed name will be there
-                || !mPlugin.getName().equals(event.pluginName)) { // Checking if the configured plugin is the one we are showing
-            // Not the event we are interested in
+        if (!shouldHandleFluxCSitePluginEvent(event.site, event.pluginName)) {
             return;
         }
 
@@ -872,11 +868,7 @@ public class PluginDetailActivity extends AppCompatActivity {
     public void onSitePluginUpdated(OnSitePluginUpdated event) {
         if (isFinishing()) return;
 
-        if (mSite.getId() != event.site.getId() // Wrong site
-                || !mPlugin.isInstalled() // Plugin is not installed, this event can't be about this plugin
-                || mPlugin.getName() == null // Sanity check for NPE, but if the plugin is installed name will be there
-                || !mPlugin.getName().equals(event.pluginName)) { // Checking if the configured plugin is the one we are showing
-            // Not the event we are interested in
+        if (!shouldHandleFluxCSitePluginEvent(event.site, event.pluginName)) {
             return;
         }
 
@@ -934,11 +926,7 @@ public class PluginDetailActivity extends AppCompatActivity {
     public void onSitePluginDeleted(OnSitePluginDeleted event) {
         if (isFinishing()) return;
 
-        if (mSite.getId() != event.site.getId() // Wrong site
-                || !mPlugin.isInstalled() // Plugin is not installed, this event can't be about this plugin
-                || mPlugin.getName() == null // Sanity check for NPE, but if the plugin is installed name will be there
-                || !mPlugin.getName().equals(event.pluginName)) { // Checking if the configured plugin is the one we are showing
-            // Not the event we are interested in
+        if (!shouldHandleFluxCSitePluginEvent(event.site, event.pluginName)) {
             return;
         }
 
@@ -963,6 +951,14 @@ public class PluginDetailActivity extends AppCompatActivity {
             refreshViews();
         }
         showSuccessfulPluginRemovedSnackbar();
+    }
+
+    // This check should only handle events for already installed plugins - onSitePluginConfigured, onSitePluginUpdated, onSitePluginDeleted
+    private boolean shouldHandleFluxCSitePluginEvent(SiteModel eventSite, String eventPluginName) {
+        return mSite.getId() == eventSite.getId() // correct site
+                && mPlugin.isInstalled() // needs plugin to be already installed
+                && mPlugin.getName() != null // sanity check for NPE since if plugin is installed it'll have the name
+                && mPlugin.getName().equals(eventPluginName); // event is for the plugin we are showing
     }
 
     // Utils
