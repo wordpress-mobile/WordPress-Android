@@ -19,7 +19,7 @@ import org.wordpress.android.widgets.WPNetworkImageView;
  * owner must call setUsers() with the list of
  * users to display
  */
-public class ReaderUserAdapter  extends RecyclerView.Adapter<ReaderUserAdapter.UserViewHolder> {
+public class ReaderUserAdapter extends RecyclerView.Adapter<ReaderUserAdapter.UserViewHolder> {
     private final ReaderUserList mUsers = new ReaderUserList();
     private DataLoadedListener mDataLoadedListener;
     private final int mAvatarSz;
@@ -57,17 +57,20 @@ public class ReaderUserAdapter  extends RecyclerView.Adapter<ReaderUserAdapter.U
         if (user.hasUrl()) {
             holder.txtUrl.setVisibility(View.VISIBLE);
             holder.txtUrl.setText(user.getUrlDomain());
-            holder.itemView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    if (user.hasBlogId()) {
-                        ReaderActivityLauncher.showReaderBlogPreview(
-                                v.getContext(),
-                                user.blogId);
+            if (user.hasBlogId()) {
+                holder.itemView.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        ReaderActivityLauncher.showReaderBlogPreview(v.getContext(), user.blogId);
                     }
-                }
-            });
+                });
+                holder.rootView.setEnabled(true);
+            } else {
+                holder.itemView.setOnClickListener(null);
+                holder.rootView.setEnabled(false);
+            }
         } else {
+            holder.rootView.setEnabled(false);
             holder.txtUrl.setVisibility(View.GONE);
             holder.itemView.setOnClickListener(null);
         }
@@ -90,9 +93,11 @@ public class ReaderUserAdapter  extends RecyclerView.Adapter<ReaderUserAdapter.U
         private final TextView txtName;
         private final TextView txtUrl;
         private final WPNetworkImageView imgAvatar;
+        private final View rootView;
 
         public UserViewHolder(View view) {
             super(view);
+            rootView = view;
             txtName = (TextView) view.findViewById(R.id.text_name);
             txtUrl = (TextView) view.findViewById(R.id.text_url);
             imgAvatar = (WPNetworkImageView) view.findViewById(R.id.image_avatar);

@@ -6,6 +6,9 @@
     android:background="@color/white">
 
     <LinearLayout
+        android:contentDescription="@null"
+        android:focusable="true"
+        android:clickable="true"
         android:id="@+id/user_block_root_view"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -17,7 +20,6 @@
         android:paddingEnd="@dimen/margin_extra_large">
 
         <LinearLayout
-            android:focusable="true"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
