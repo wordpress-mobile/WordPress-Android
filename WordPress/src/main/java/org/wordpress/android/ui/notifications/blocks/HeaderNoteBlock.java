@@ -60,21 +60,23 @@ public class HeaderNoteBlock extends NoteBlock {
         noteBlockHolder.nameTextView.setText(spannable);
 
         noteBlockHolder.avatarImageView.setImageUrl(getAvatarUrl(), mImageType);
-        if (!TextUtils.isEmpty(getUserUrl())) {
+        final long siteId = Long.valueOf(JSONUtils.queryJSON(mHeaderArray, "[0].ranges[0].site_id", 0));
+        final long userId = Long.valueOf(JSONUtils.queryJSON(mHeaderArray, "[0].ranges[0].id", 0));
+
+        if (!TextUtils.isEmpty(getUserUrl()) && siteId > 0 && userId > 0) {
             noteBlockHolder.avatarImageView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    long siteId = Long.valueOf(JSONUtils.queryJSON(mHeaderArray, "[0].ranges[0].site_id", 0));
-                    long userId = Long.valueOf(JSONUtils.queryJSON(mHeaderArray, "[0].ranges[0].id", 0));
                     String siteUrl = getUserUrl();
-                    if (siteId > 0 && userId > 0) {
-                        mGravatarClickedListener.onGravatarClicked(siteId, userId, siteUrl);
-                    }
+                    mGravatarClickedListener.onGravatarClicked(siteId, userId, siteUrl);
                 }
             });
             //noinspection AndroidLintClickableViewAccessibility
             noteBlockHolder.avatarImageView.setOnTouchListener(mOnGravatarTouchListener);
+            noteBlockHolder.avatarImageView.setImportantForAccessibility(View.IMPORTANT_FOR_ACCESSIBILITY_YES);
         } else {
+            noteBlockHolder.avatarImageView.setImportantForAccessibility(View.IMPORTANT_FOR_ACCESSIBILITY_NO);
+
             noteBlockHolder.avatarImageView.setOnClickListener(null);
             //noinspection AndroidLintClickableViewAccessibility
             noteBlockHolder.avatarImageView.setOnTouchListener(null);

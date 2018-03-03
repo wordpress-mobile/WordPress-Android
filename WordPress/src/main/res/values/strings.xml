@@ -2129,6 +2129,7 @@
 
     <!-- ImageView content description  -->
     <string name="comment_checkmark_desc">check mark</string>
+    <string name="profile_picture">profile picture</string>
     <string name="invite_user_delete_desc">remove user</string>
     <string name="media_grid_item_image_desc">media preview</string>
     <string name="media_grid_item_retry_desc">retry</string>
