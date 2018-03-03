@@ -327,6 +327,38 @@ public class SiteRestClient extends BaseWPComRestClient {
         add(request);
     }
 
+    public void suggestDomains(@NonNull final String query, final boolean onlyWordpressCom,
+                               final boolean includeWordpressCom, final boolean includeDotBlogSubdomain,
+                               final int quantity) {
+        String url = WPCOMREST.domains.suggestions.getUrlV1_1();
+        Map<String, String> params = new HashMap<>(4);
+        params.put("query", query);
+        params.put("only_wordpressdotcom", String.valueOf(onlyWordpressCom)); // CHECKSTYLE IGNORE
+        params.put("include_wordpressdotcom", String.valueOf(includeWordpressCom)); // CHECKSTYLE IGNORE
+        params.put("include_dotblogsubdomain", String.valueOf(includeDotBlogSubdomain));
+        params.put("quantity", String.valueOf(quantity));
+        final WPComGsonRequest<ArrayList<DomainSuggestionResponse>> request =
+                WPComGsonRequest.buildGetRequest(url, params,
+                        new TypeToken<ArrayList<DomainSuggestionResponse>>(){}.getType(),
+                        new Listener<ArrayList<DomainSuggestionResponse>>() {
+                            @Override
+                            public void onResponse(ArrayList<DomainSuggestionResponse> response) {
+                                SuggestDomainsResponsePayload payload = new SuggestDomainsResponsePayload(query,
+                                        response);
+                                mDispatcher.dispatch(SiteActionBuilder.newSuggestedDomainsAction(payload));
+                            }
+                        },
+                        new BaseErrorListener() {
+                            @Override
+                            public void onErrorResponse(@NonNull BaseNetworkError error) {
+                                SuggestDomainsResponsePayload payload = new SuggestDomainsResponsePayload(query, error);
+                                mDispatcher.dispatch(SiteActionBuilder.newSuggestedDomainsAction(payload));
+                            }
+                        }
+                );
+        add(request);
+    }
+
     //
     // Unauthenticated network calls
     //
@@ -454,37 +486,6 @@ public class SiteRestClient extends BaseWPComRestClient {
                             payload.error = error;
                         }
                         mDispatcher.dispatch(SiteActionBuilder.newCheckedIsWpcomUrlAction(payload));
-                    }
-                }
-        );
-        addUnauthedRequest(request);
-    }
-
-    public void suggestDomains(@NonNull final String query, final boolean onlyWordpressCom,
-                               final boolean includeWordpressCom, final boolean includeDotBlogSubdomain,
-                               final int quantity) {
-        String url = WPCOMREST.domains.suggestions.getUrlV1_1();
-        Map<String, String> params = new HashMap<>(4);
-        params.put("query", query);
-        params.put("only_wordpressdotcom", String.valueOf(onlyWordpressCom)); // CHECKSTYLE IGNORE
-        params.put("include_wordpressdotcom", String.valueOf(includeWordpressCom)); // CHECKSTYLE IGNORE
-        params.put("include_dotblogsubdomain", String.valueOf(includeDotBlogSubdomain));
-        params.put("quantity", String.valueOf(quantity));
-        final WPComGsonRequest<ArrayList<DomainSuggestionResponse>> request =
-                WPComGsonRequest.buildGetRequest(url, params,
-                        new TypeToken<ArrayList<DomainSuggestionResponse>>(){}.getType(),
-                new Listener<ArrayList<DomainSuggestionResponse>>() {
-                    @Override
-                    public void onResponse(ArrayList<DomainSuggestionResponse> response) {
-                        SuggestDomainsResponsePayload payload = new SuggestDomainsResponsePayload(query, response);
-                        mDispatcher.dispatch(SiteActionBuilder.newSuggestedDomainsAction(payload));
-                    }
-                },
-                new BaseErrorListener() {
-                    @Override
-                    public void onErrorResponse(@NonNull BaseNetworkError error) {
-                        SuggestDomainsResponsePayload payload = new SuggestDomainsResponsePayload(query, error);
-                        mDispatcher.dispatch(SiteActionBuilder.newSuggestedDomainsAction(payload));
                     }
                 }
         );
