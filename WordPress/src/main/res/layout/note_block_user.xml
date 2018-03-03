@@ -9,8 +9,6 @@
         android:id="@+id/user_block_root_view"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:clickable="true"
-        android:focusable="true"
         android:orientation="vertical"
         android:background="?android:selectableItemBackground"
         android:paddingLeft="@dimen/margin_extra_large"
@@ -19,6 +17,7 @@
         android:paddingEnd="@dimen/margin_extra_large">
 
         <LinearLayout
+            android:focusable="true"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
@@ -26,6 +25,7 @@
             android:paddingTop="@dimen/margin_medium">
 
             <org.wordpress.android.widgets.WPNetworkImageView
+                android:importantForAccessibility="no"
                 android:id="@+id/user_avatar"
                 android:layout_width="@dimen/notifications_avatar_sz"
                 android:layout_height="@dimen/notifications_avatar_sz"
