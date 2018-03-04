@@ -244,12 +244,6 @@ public class DetailListPreference extends ListPreference
 
             if (radioButton != null) {
                 radioButton.setChecked(mSelectedIndex == position);
-                radioButton.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        changeSelection(position);
-                    }
-                });
             }
 
             convertView.setOnClickListener(new View.OnClickListener() {
