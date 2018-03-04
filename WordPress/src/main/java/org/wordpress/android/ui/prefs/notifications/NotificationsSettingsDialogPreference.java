@@ -127,10 +127,17 @@ public class NotificationsSettingsDialogPreference extends DialogPreference {
                     summary.setText(summaryText);
                 }
 
-                Switch toggleSwitch = (Switch) commentsSetting.findViewById(R.id.notifications_switch);
+                final Switch toggleSwitch = (Switch) commentsSetting.findViewById(R.id.notifications_switch);
                 toggleSwitch.setChecked(JSONUtils.queryJSON(settingsJson, settingValue, true));
                 toggleSwitch.setTag(settingValue);
                 toggleSwitch.setOnCheckedChangeListener(mOnCheckedChangedListener);
+
+                View rowContainer = commentsSetting.findViewById(R.id.row_container);
+                rowContainer.setOnClickListener(new View.OnClickListener() {
+                    @Override public void onClick(View v) {
+                        toggleSwitch.setChecked(!toggleSwitch.isChecked());
+                    }
+                });
 
                 view.addView(commentsSetting);
             }
