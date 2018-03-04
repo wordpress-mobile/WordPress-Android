@@ -1278,7 +1278,7 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
                 // ignore
                 break;
             default:
-                AppLog.w(T.COMMENTS, "AnnounceForAccessibility - Missing switch branch.");
+                AppLog.w(T.COMMENTS, "AnnounceCommentStatusChangeForAccessibility - Missing switch branch for comment status: " + newStatus);
         }
         if (resId != -1) {
             getView().announceForAccessibility(getText(resId));
