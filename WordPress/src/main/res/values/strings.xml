@@ -1002,7 +1002,7 @@
     <string name="notifications_push_summary">Settings for notifications that appear on your device.</string>
     <string name="search_sites">Search sites</string>
     <string name="notifications_no_search_results">No sites matched \'%s\'</string>
-    <string name="notification_sound_has_invalid_path">Invalid sound path. Please choose another.</string>
+    <string name="notification_sound_has_invalid_path">The chosen sound has invalid path. Please choose another.</string>
 
     <string name="comments_on_my_site">Comments on my site</string>
     <string name="likes_on_my_comments">Likes on my comments</string>
