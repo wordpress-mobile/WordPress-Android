@@ -21,22 +21,20 @@ import javax.inject.Singleton;
 
 @Singleton
 public class StockMediaStore extends Store {
-    public static final int DEFAULT_NUM_STOCK_MEDIA_PER_FETCH = 20;
-    private final StockMediaRestClient mMediaRestClient;
+    private final StockMediaRestClient mStockMediaRestClient;
 
     @Inject
     public StockMediaStore(Dispatcher dispatcher, StockMediaRestClient restClient) {
         super(dispatcher);
-        mMediaRestClient = restClient;
+        mStockMediaRestClient = restClient;
     }
 
     /**
      * Actions: FETCH_MEDIA_LIST
      */
     public static class FetchStockMediaListPayload extends Payload<BaseNetworkError> {
-        public final String searchTerm;
+        @NonNull public final String searchTerm;
         public final int page;
-        public final int number = DEFAULT_NUM_STOCK_MEDIA_PER_FETCH;
 
         public FetchStockMediaListPayload(@NonNull String searchTerm, int page) {
             this.searchTerm = searchTerm;
@@ -47,11 +45,11 @@ public class StockMediaStore extends Store {
     /**
      * Actions: FETCHED_MEDIA_LIST
      */
-    public static class FetchedStockMediaListPayload extends Payload<MediaStore.MediaError> {
+    public static class FetchedStockMediaListPayload extends Payload<StockMediaError> {
+        @NonNull public String searchTerm;
+        @NonNull public List<StockMediaModel> mediaList;
         public boolean canLoadMore;
         public int nextPage;
-        public String searchTerm;
-        public List<StockMediaModel> mediaList;
 
         public FetchedStockMediaListPayload(@NonNull List<StockMediaModel> mediaList,
                                             @NonNull String searchTerm,
@@ -63,16 +61,16 @@ public class StockMediaStore extends Store {
             this.nextPage = nextPage;
         }
 
-        public FetchedStockMediaListPayload(@NonNull MediaStore.MediaError error) {
+        public FetchedStockMediaListPayload(@NonNull StockMediaError error) {
             this.error = error;
         }
     }
 
-    public static class OnStockMediaListFetched extends OnChanged<MediaStore.MediaError> {
+    public static class OnStockMediaListFetched extends OnChanged<StockMediaError> {
+        @NonNull public String searchTerm;
+        @NonNull public List<StockMediaModel> mediaList;
         public boolean canLoadMore;
         public int nextPage;
-        public String searchTerm;
-        public List<StockMediaModel> mediaList;
 
         public OnStockMediaListFetched(@NonNull List<StockMediaModel> mediaList,
                                        @NonNull String searchTerm,
@@ -83,8 +81,51 @@ public class StockMediaStore extends Store {
             this.canLoadMore = canLoadMore;
             this.nextPage = nextPage;
         }
-        public OnStockMediaListFetched(MediaStore.MediaError error) {
+        public OnStockMediaListFetched(StockMediaError error) {
             this.error = error;
+        }
+    }
+
+    public enum StockMediaErrorType {
+        AUTHORIZATION_REQUIRED,
+        CONNECTION_ERROR,
+        NOT_AUTHENTICATED,
+        NOT_FOUND,
+        PARSE_ERROR,
+        REQUEST_TOO_LARGE,
+        SERVER_ERROR,
+        TIMEOUT,
+        GENERIC_ERROR;
+
+        public static StockMediaErrorType fromBaseNetworkError(BaseNetworkError baseError) {
+            switch (baseError.type) {
+                case NOT_FOUND:
+                    return StockMediaErrorType.NOT_FOUND;
+                case NOT_AUTHENTICATED:
+                    return StockMediaErrorType.NOT_AUTHENTICATED;
+                case AUTHORIZATION_REQUIRED:
+                    return StockMediaErrorType.AUTHORIZATION_REQUIRED;
+                case PARSE_ERROR:
+                    return StockMediaErrorType.PARSE_ERROR;
+                case SERVER_ERROR:
+                    return StockMediaErrorType.SERVER_ERROR;
+                case TIMEOUT:
+                    return StockMediaErrorType.TIMEOUT;
+                default:
+                    return StockMediaErrorType.GENERIC_ERROR;
+            }
+        }
+    }
+
+    public static class StockMediaError implements OnChangedError {
+        public StockMediaErrorType type;
+        public String message;
+        public StockMediaError(StockMediaErrorType type) {
+            this.type = type;
+        }
+        public StockMediaError(StockMediaErrorType type, String message) {
+            this.type = type;
+            this.message = message;
         }
     }
 
@@ -112,7 +153,7 @@ public class StockMediaStore extends Store {
     }
 
     private void performFetchStockMediaList(StockMediaStore.FetchStockMediaListPayload payload) {
-        mMediaRestClient.searchStockMedia(payload.searchTerm, payload.number, payload.page);
+        mStockMediaRestClient.searchStockMedia(payload.searchTerm, payload.page);
     }
 
     private void handleStockMediaListFetched(@NonNull StockMediaStore.FetchedStockMediaListPayload payload) {
