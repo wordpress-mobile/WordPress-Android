@@ -16,6 +16,7 @@ import org.wordpress.android.fluxc.model.StockMediaModel;
 import org.wordpress.android.fluxc.store.StockMediaStore;
 import org.wordpress.android.util.AppLog;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.inject.Inject;
@@ -61,12 +62,21 @@ public class StockMediaViewModel extends ViewModel {
         mSearchQuery = savedInstanceState.getString(KEY_SEARCH_QUERY);
     }
 
-    public void fetchStockPhotos(@Nullable String searchTerm, int page) {
+    public void fetchStockPhotos(@Nullable String searchQuery, int page) {
+        if (page == 1) {
+            clearSearchResults();
+        }
+
         mIsFetching = true;
-        mSearchQuery = searchTerm;
+        mSearchQuery = searchQuery;
+
         StockMediaStore.FetchStockMediaListPayload payload =
-                new StockMediaStore.FetchStockMediaListPayload(searchTerm, page);
+                new StockMediaStore.FetchStockMediaListPayload(searchQuery, page);
         mDispatcher.dispatch(StockMediaActionBuilder.newFetchStockMediaAction(payload));
+    }
+
+    private void clearSearchResults() {
+        mSearchResults.setValue(new ArrayList<StockMediaModel>());
     }
 
     @SuppressWarnings("unused")
@@ -76,6 +86,7 @@ public class StockMediaViewModel extends ViewModel {
 
         if (event.isError()) {
             AppLog.e(AppLog.T.MEDIA, "An error occurred while searching stock media");
+            mCanLoadMore = false;
             return;
         }
         if (mSearchQuery == null || !mSearchQuery.equals(event.searchTerm)) {
@@ -85,6 +96,14 @@ public class StockMediaViewModel extends ViewModel {
         mNextPage = event.nextPage;
         mCanLoadMore = event.canLoadMore;
         mSearchResults.setValue(event.mediaList);
+
+        if (event.nextPage == 2) {
+            mSearchResults.setValue(event.mediaList);
+        } else {
+            List<StockMediaModel> allMedia = mSearchResults.getValue();
+            allMedia.addAll(event.mediaList);
+            mSearchResults.setValue(allMedia);
+        }
     }
 
     public int getNextPage() {

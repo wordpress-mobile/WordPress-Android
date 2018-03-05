@@ -123,12 +123,10 @@ public class StockPhotoPickerActivity extends AppCompatActivity {
         mViewModel.getSearchResults().observe(this, new Observer<List<StockMediaModel>>() {
             @Override
             public void onChanged(@Nullable final List<StockMediaModel> mediaList) {
+                if (isFinishing()) return;
+                mIsFetching = false;
                 showProgress(false);
-                if (mViewModel.getNextPage() == 2) {
-                    mAdapter.setMediaList(mediaList);
-                } else {
-                    mAdapter.addMediaList(mediaList);
-                }
+                mAdapter.addMediaList(mediaList);
             }
         });
     }
@@ -174,6 +172,10 @@ public class StockPhotoPickerActivity extends AppCompatActivity {
     private void requestStockPhotos(@Nullable String searchTerm, int page) {
         if (!NetworkUtils.checkConnection(this)) return;
 
+        if (page == 1) {
+            mAdapter.clear();
+        }
+
         mIsFetching = true;
         showProgress(true);
         mViewModel.fetchStockPhotos(searchTerm, page);
@@ -188,13 +190,6 @@ public class StockPhotoPickerActivity extends AppCompatActivity {
 
         StockPhotoAdapter() {
             setHasStableIds(true);
-        }
-
-        void setMediaList(@NonNull List<StockMediaModel> mediaList) {
-            mItems.clear();
-            mItems.addAll(mediaList);
-            mSelectedItems.clear();
-            notifyDataSetChanged();
         }
 
         void addMediaList(@NonNull List<StockMediaModel> mediaList) {
