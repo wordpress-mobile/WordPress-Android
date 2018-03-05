@@ -1,5 +1,6 @@
 package org.wordpress.android.ui.prefs.notifications;
 
+import android.app.Application;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
@@ -40,6 +41,8 @@ import org.wordpress.android.ui.notifications.utils.NotificationsUtils;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.SiteUtils;
+import org.wordpress.android.util.ToastUtils;
+import org.wordpress.android.util.ToastUtils.Duration;
 import org.wordpress.android.util.WPActivityUtils;
 
 import java.util.ArrayList;
@@ -105,19 +108,24 @@ public class NotificationsSettingsFragment extends PreferenceFragment implements
         }
     }
 
+    @Override
+    public void onStart() {
+        super.onStart();
+
+        getPreferenceManager().getSharedPreferences().registerOnSharedPreferenceChangeListener(this);
+    }
 
     @Override
     public void onResume() {
         super.onResume();
-        getPreferenceManager().getSharedPreferences().registerOnSharedPreferenceChangeListener(this);
 
         mNotificationsEnabled = NotificationsUtils.isNotificationsEnabled(getActivity());
         refreshSettings();
     }
 
     @Override
-    public void onPause() {
-        super.onPause();
+    public void onStop() {
+        super.onStop();
 
         getPreferenceManager().getSharedPreferences().unregisterOnSharedPreferenceChangeListener(this);
     }
@@ -530,6 +538,22 @@ public class NotificationsSettingsFragment extends PreferenceFragment implements
                     AnalyticsTracker.track(AnalyticsTracker.Stat.NOTIFICATION_PENDING_DRAFTS_SETTINGS_ENABLED);
                 } else {
                     AnalyticsTracker.track(AnalyticsTracker.Stat.NOTIFICATION_PENDING_DRAFTS_SETTINGS_DISABLED);
+                }
+            }
+        } else if (key.equals(getString(R.string.wp_pref_custom_notification_sound))) {
+            final String defaultPath =
+                    getString(R.string.notification_settings_item_sights_and_sounds_choose_sound_default);
+            final String value = sharedPreferences.getString(key, defaultPath);
+
+            if (value.trim().toLowerCase().startsWith("file://")) {
+                // sound path begins with 'file://` which will lead to FileUriExposedException when used. Revert to
+                //  default and let the user know.
+                AppLog.w(T.NOTIFS, "Notification sound starts with unacceptable scheme: " + value);
+
+                Context context = WordPress.getContext();
+                if (context != null) {
+                    // let the user know we won't be using the selected sound
+                    ToastUtils.showToast(context, R.string.notification_sound_has_invalid_path, Duration.LONG);
                 }
             }
         }

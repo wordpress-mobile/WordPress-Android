@@ -25,7 +25,9 @@
                 android:layout_marginLeft="16dp"
                 android:layout_marginRight="16dp"
                 android:orientation="vertical"
-                android:gravity="center">
+                android:gravity="center"
+                android:layout_marginEnd="16dp"
+                android:layout_marginStart="16dp">
 
                 <org.wordpress.android.widgets.WPTextView
                     style="@style/WordPress.NUXTitle"
@@ -42,7 +44,9 @@
                     android:layout_marginLeft="16dp"
                     android:layout_marginRight="16dp"
                     android:layout_marginBottom="16dp"
-                    app:fixWidowWords="true"/>
+                    app:fixWidowWords="true"
+                    android:layout_marginEnd="16dp"
+                    android:layout_marginStart="16dp"/>
 
                 <org.wordpress.android.widgets.WPTextView
                     style="@style/WordPress.NUXPrimaryButton"

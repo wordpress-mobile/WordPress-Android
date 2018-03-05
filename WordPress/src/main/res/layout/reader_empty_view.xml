@@ -32,7 +32,9 @@
             android:layout_alignParentBottom="true"
             android:layout_alignParentLeft="true"
             android:layout_marginLeft="2dp"
-            app:srcCompat="@drawable/box_with_pages_page3" />
+            app:srcCompat="@drawable/box_with_pages_page3"
+            android:layout_marginStart="2dp"
+            android:layout_alignParentStart="true"/>
 
         <ImageView
             android:id="@+id/empty_tags_box_page2"
@@ -42,7 +44,9 @@
             android:layout_alignParentLeft="true"
             android:layout_marginBottom="15dp"
             android:layout_marginLeft="17dp"
-            app:srcCompat="@drawable/box_with_pages_page2" />
+            app:srcCompat="@drawable/box_with_pages_page2"
+            android:layout_alignParentStart="true"
+            android:layout_marginStart="17dp"/>
 
         <ImageView
             android:id="@+id/empty_tags_box_page1"
@@ -51,7 +55,9 @@
             android:layout_alignParentBottom="true"
             android:layout_alignParentLeft="true"
             android:layout_marginLeft="28dp"
-            app:srcCompat="@drawable/box_with_pages_page1" />
+            app:srcCompat="@drawable/box_with_pages_page1"
+            android:layout_alignParentStart="true"
+            android:layout_marginStart="28dp"/>
 
         <ImageView
             android:id="@+id/empty_tags_box_top"
@@ -71,7 +77,9 @@
         android:layout_marginRight="@dimen/empty_list_title_side_margin"
         android:layout_marginTop="@dimen/margin_medium"
         android:text="@string/reader_empty_posts_in_tag"
-        app:fixWidowWords="true" />
+        app:fixWidowWords="true"
+        android:layout_marginEnd="@dimen/empty_list_title_side_margin"
+        android:layout_marginStart="@dimen/empty_list_title_side_margin"/>
 
     <org.wordpress.android.widgets.WPTextView
         android:id="@+id/description_empty"
@@ -82,6 +90,8 @@
         android:layout_marginLeft="@dimen/empty_list_description_side_margin"
         android:layout_marginRight="@dimen/empty_list_description_side_margin"
         android:text="@string/reader_empty_posts_in_tag"
-        app:fixWidowWords="true" />
+        app:fixWidowWords="true"
+        android:layout_marginEnd="@dimen/empty_list_description_side_margin"
+        android:layout_marginStart="@dimen/empty_list_description_side_margin"/>
 
 </LinearLayout>

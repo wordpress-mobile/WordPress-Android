@@ -984,6 +984,7 @@
     <string name="notification_settings_item_other_account_emails_summary">We\'ll always send important emails regarding your account, but you can get some helpful extras, too.</string>
     <string name="notification_settings_category_sights_and_sounds">Sights and Sounds</string>
     <string name="notification_settings_item_sights_and_sounds_choose_sound">Choose sound</string>
+    <string name="notification_settings_item_sights_and_sounds_choose_sound_default" translatable="false">content://settings/system/notification_sound</string>
     <string name="notification_settings_item_sights_and_sounds_vibrate_device">Vibrate device</string>
     <string name="notification_settings_item_sights_and_sounds_blink_light">Blink light</string>
     <string name="notifications_wpcom_updates">WordPress.com Updates</string>
@@ -1001,6 +1002,7 @@
     <string name="notifications_push_summary">Settings for notifications that appear on your device.</string>
     <string name="search_sites">Search sites</string>
     <string name="notifications_no_search_results">No sites matched \'%s\'</string>
+    <string name="notification_sound_has_invalid_path">The chosen sound has invalid path. Please choose another.</string>
 
     <string name="comments_on_my_site">Comments on my site</string>
     <string name="likes_on_my_comments">Likes on my comments</string>
@@ -1635,6 +1637,8 @@
 
     <!-- Publicize and sharing -->
     <string name="sharing">Sharing</string>
+    <string name="sharing_disabled">Sharing module disabled</string>
+    <string name="sharing_disabled_description">You cannot access your sharing settings because your Sharing Jetpack module is disabled.</string>
     <string name="connections_label">Connections</string>
     <string name="connections_description">Connect your favorite social media services to automatically share new posts with friends.</string>
     <string name="connected_accounts_label">Connected accounts</string>

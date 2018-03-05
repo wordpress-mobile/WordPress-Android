@@ -64,8 +64,11 @@ class DotComSiteSettings extends SiteSettingsInterface {
     private static final String JP_MONITOR_EMAIL_NOTES_KEY = "email_notifications";
     private static final String JP_MONITOR_WP_NOTES_KEY = "wp_note_notifications";
     private static final String JP_PROTECT_WHITELIST_KEY = "jetpack_protect_whitelist";
+    //Jetpack modules
     private static final String SERVE_IMAGES_FROM_OUR_SERVERS = "photon";
     private static final String LAZY_LOAD_IMAGES = "lazy-images";
+    private static final String SHARING_MODULE = "sharedaddy";
+
     private static final String START_OF_WEEK_KEY = "start_of_week";
     private static final String DATE_FORMAT_KEY = "date_format";
     private static final String TIME_FORMAT_KEY = "time_format";
@@ -95,6 +98,7 @@ class DotComSiteSettings extends SiteSettingsInterface {
     private static final String DEFAULT_SHARING_BUTTON_STYLE = "icon-only";
 
     private static final String SPEED_UP_SETTINGS_JETPACK_VERSION = "5.8";
+    private static final String ACTIVE = "active";
 
     // used to track network fetches to prevent multiple errors from generating multiple toasts
     private int mFetchRequestCount = 0;
@@ -217,9 +221,7 @@ class DotComSiteSettings extends SiteSettingsInterface {
     private void fetchJetpackSettings() {
         fetchJetpackMonitorSettings();
         fetchJetpackProtectAndSsoSettings();
-        if (supportsJetpackSpeedUpSettings(mSite)) {
-            fetchJetpackModuleSettings();
-        }
+        fetchJetpackModuleSettings();
     }
 
     private void fetchJetpackProtectAndSsoSettings() {
@@ -325,14 +327,22 @@ class DotComSiteSettings extends SiteSettingsInterface {
                                 if (id == null) {
                                     continue;
                                 }
-                                if (id.equals(SERVE_IMAGES_FROM_OUR_SERVERS)) {
-                                    mRemoteJpSettings.serveImagesFromOurServers = module.optBoolean("active", false);
-                                } else if (id.equals(LAZY_LOAD_IMAGES)) {
-                                    mRemoteJpSettings.lazyLoadImages = module.optBoolean("active", false);
+                                boolean isActive = module.optBoolean(ACTIVE, false);
+                                switch (id) {
+                                    case SERVE_IMAGES_FROM_OUR_SERVERS:
+                                        mRemoteJpSettings.serveImagesFromOurServers = isActive;
+                                        break;
+                                    case LAZY_LOAD_IMAGES:
+                                        mRemoteJpSettings.lazyLoadImages = isActive;
+                                        break;
+                                    case SHARING_MODULE:
+                                        mRemoteJpSettings.sharingEnabled = isActive;
+                                        break;
                                 }
                             }
                             mJpSettings.serveImagesFromOurServers = mRemoteJpSettings.serveImagesFromOurServers;
                             mJpSettings.lazyLoadImages = mRemoteJpSettings.lazyLoadImages;
+                            mJpSettings.sharingEnabled = mRemoteJpSettings.sharingEnabled;
                         }
                         onFetchResponseReceived(null);
                     }

@@ -31,7 +31,9 @@
                 android:layout_marginRight="@dimen/content_margin"
                 android:textColor="@color/grey_darken_20"
                 android:gravity="center"
-                tools:text="Title"/>
+                tools:text="Title"
+                android:layout_marginStart="@dimen/content_margin"
+                android:layout_marginEnd="@dimen/content_margin"/>
 
             <!-- Graph -->
             <LinearLayout
@@ -43,7 +45,9 @@
                 android:layout_marginBottom="@dimen/margin_medium"
                 android:layout_marginTop="@dimen/margin_medium"
                 android:layout_marginLeft="@dimen/content_margin"
-                android:layout_marginRight="@dimen/content_margin">
+                android:layout_marginRight="@dimen/content_margin"
+                android:layout_marginStart="@dimen/content_margin"
+                android:layout_marginEnd="@dimen/content_margin">
 
                 <LinearLayout
                     android:id="@+id/stats_bar_chart_fragment_container"
@@ -58,7 +62,9 @@
                     android:layout_marginLeft="@dimen/margin_medium"
                     android:layout_marginRight="@dimen/margin_medium"
                     android:layout_marginTop="@dimen/margin_medium"
-                    android:layout_marginBottom="@dimen/margin_small">
+                    android:layout_marginBottom="@dimen/margin_small"
+                    android:layout_marginStart="@dimen/margin_medium"
+                    android:layout_marginEnd="@dimen/margin_medium">
 
                     <org.wordpress.android.widgets.WPTextView
                         android:id="@+id/stats_views_label"
@@ -67,7 +73,8 @@
                         android:layout_height="wrap_content"
                         android:text="@string/stats_default_number_zero"
                         android:textColor="@color/grey_dark"
-                        android:layout_alignParentLeft="true" />
+                        android:layout_alignParentLeft="true"
+                        android:layout_alignParentStart="true"/>
 
                     <org.wordpress.android.widgets.WPTextView
                         android:id="@+id/stats_views_totals"
@@ -76,7 +83,8 @@
                         android:layout_height="wrap_content"
                         android:textColor="@color/notification_status_unapproved_dark"
                         android:text="@string/stats_default_number_zero"
-                        android:layout_alignParentRight="true" />
+                        android:layout_alignParentRight="true"
+                        android:layout_alignParentEnd="true"/>
 
                 </RelativeLayout>
 
@@ -93,12 +101,15 @@
                 android:layout_marginBottom="@dimen/margin_medium"
                 android:layout_marginTop="@dimen/margin_medium"
                 android:layout_marginLeft="@dimen/content_margin"
-                android:layout_marginRight="@dimen/content_margin">
+                android:layout_marginRight="@dimen/content_margin"
+                android:layout_marginStart="@dimen/content_margin"
+                android:layout_marginEnd="@dimen/content_margin">
 
                 <org.wordpress.android.widgets.WPTextView
                     android:layout_marginLeft="@dimen/margin_large"
                     style="@style/StatsModuleTitle"
-                    android:text="@string/stats_months_and_years" />
+                    android:text="@string/stats_months_and_years"
+                    android:layout_marginStart="@dimen/margin_large"/>
 
                 <include
                     android:id="@+id/stats_months_years_empty_module_placeholder"
@@ -116,21 +127,25 @@
                     android:layout_marginLeft="@dimen/margin_large"
                     android:layout_marginRight="@dimen/margin_large"
                     android:paddingBottom="@dimen/margin_small"
-                    android:paddingTop="@dimen/margin_small">
+                    android:paddingTop="@dimen/margin_small"
+                    android:layout_marginStart="@dimen/margin_large"
+                    android:layout_marginEnd="@dimen/margin_large">
 
                     <org.wordpress.android.widgets.WPTextView
                         style="@style/StatsHeader"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_alignParentLeft="true"
-                        android:text="@string/stats_period" />
+                        android:text="@string/stats_period"
+                        android:layout_alignParentStart="true"/>
 
                     <org.wordpress.android.widgets.WPTextView
                         style="@style/StatsHeader"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_alignParentRight="true"
-                        android:text="@string/stats_total" />
+                        android:text="@string/stats_total"
+                        android:layout_alignParentEnd="true"/>
                 </RelativeLayout>
 
                 <LinearLayout
@@ -155,12 +170,15 @@
                 android:layout_marginBottom="@dimen/margin_medium"
                 android:layout_marginTop="@dimen/margin_medium"
                 android:layout_marginLeft="@dimen/content_margin"
-                android:layout_marginRight="@dimen/content_margin">
+                android:layout_marginRight="@dimen/content_margin"
+                android:layout_marginEnd="@dimen/content_margin"
+                android:layout_marginStart="@dimen/content_margin">
 
                 <org.wordpress.android.widgets.WPTextView
                     android:layout_marginLeft="@dimen/margin_large"
                     style="@style/StatsModuleTitle"
-                    android:text="@string/stats_average_per_day" />
+                    android:text="@string/stats_average_per_day"
+                    android:layout_marginStart="@dimen/margin_large"/>
 
                 <include
                     android:id="@+id/stats_averages_empty_module_placeholder"
@@ -178,21 +196,25 @@
                     android:layout_marginLeft="@dimen/margin_large"
                     android:layout_marginRight="@dimen/margin_large"
                     android:paddingBottom="@dimen/margin_small"
-                    android:paddingTop="@dimen/margin_small">
+                    android:paddingTop="@dimen/margin_small"
+                    android:layout_marginEnd="@dimen/margin_large"
+                    android:layout_marginStart="@dimen/margin_large">
 
                     <org.wordpress.android.widgets.WPTextView
                         style="@style/StatsHeader"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_alignParentLeft="true"
-                        android:text="@string/stats_period" />
+                        android:text="@string/stats_period"
+                        android:layout_alignParentStart="true"/>
 
                     <org.wordpress.android.widgets.WPTextView
                         style="@style/StatsHeader"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_alignParentRight="true"
-                        android:text="@string/stats_overall" />
+                        android:text="@string/stats_overall"
+                        android:layout_alignParentEnd="true"/>
                 </RelativeLayout>
 
                 <LinearLayout
@@ -217,12 +239,15 @@
                 android:layout_marginBottom="@dimen/margin_medium"
                 android:layout_marginTop="@dimen/margin_medium"
                 android:layout_marginLeft="@dimen/content_margin"
-                android:layout_marginRight="@dimen/content_margin">
+                android:layout_marginRight="@dimen/content_margin"
+                android:layout_marginEnd="@dimen/content_margin"
+                android:layout_marginStart="@dimen/content_margin">
 
                 <org.wordpress.android.widgets.WPTextView
                     android:layout_marginLeft="@dimen/margin_large"
                     style="@style/StatsModuleTitle"
-                    android:text="@string/stats_recent_weeks" />
+                    android:text="@string/stats_recent_weeks"
+                    android:layout_marginStart="@dimen/margin_large"/>
 
                 <include
                     android:id="@+id/stats_recent_weeks_empty_module_placeholder"
@@ -240,21 +265,25 @@
                     android:layout_marginLeft="@dimen/margin_large"
                     android:layout_marginRight="@dimen/margin_large"
                     android:paddingBottom="@dimen/margin_small"
-                    android:paddingTop="@dimen/margin_small">
+                    android:paddingTop="@dimen/margin_small"
+                    android:layout_marginEnd="@dimen/margin_large"
+                    android:layout_marginStart="@dimen/margin_large">
 
                     <org.wordpress.android.widgets.WPTextView
                         style="@style/StatsHeader"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_alignParentLeft="true"
-                        android:text="@string/stats_period" />
+                        android:text="@string/stats_period"
+                        android:layout_alignParentStart="true"/>
 
                     <org.wordpress.android.widgets.WPTextView
                         style="@style/StatsHeader"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_alignParentRight="true"
-                        android:text="@string/stats_total" />
+                        android:text="@string/stats_total"
+                        android:layout_alignParentEnd="true"/>
                 </RelativeLayout>
 
                 <LinearLayout
