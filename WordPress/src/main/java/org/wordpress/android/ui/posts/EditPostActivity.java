@@ -177,6 +177,7 @@ public class EditPostActivity extends AppCompatActivity implements
     public static final String EXTRA_SAVED_AS_LOCAL_DRAFT = "savedAsLocalDraft";
     public static final String EXTRA_HAS_FAILED_MEDIA = "hasFailedMedia";
     public static final String EXTRA_HAS_CHANGES = "hasChanges";
+    public static final String EXTRA_IS_DISCARDABLE = "isDiscardable";
     public static final String EXTRA_INSERT_MEDIA = "insertMedia";
     private static final String STATE_KEY_EDITOR_FRAGMENT = "editorFragment";
     private static final String STATE_KEY_DROPPED_MEDIA_URIS = "stateKeyDroppedMediaUri";
@@ -1264,7 +1265,7 @@ public class EditPostActivity extends AppCompatActivity implements
 
         @Override
         protected void onPostExecute(Void saved) {
-            saveResult(true, false);
+            saveResult(true, false,false);
             removePostOpenInEditorStickyEvent();
             finish();
         }
@@ -1299,19 +1300,20 @@ public class EditPostActivity extends AppCompatActivity implements
 
         @Override
         protected void onPostExecute(Boolean saved) {
-            saveResult(saved, true);
+            saveResult(saved, false,true);
             removePostOpenInEditorStickyEvent();
             finish();
         }
     }
 
-    private void saveResult(boolean saved, boolean savedLocally) {
+    private void saveResult(boolean saved, boolean discardable, boolean savedLocally) {
         Intent i = getIntent();
         i.putExtra(EXTRA_SAVED_AS_LOCAL_DRAFT, savedLocally);
         i.putExtra(EXTRA_HAS_FAILED_MEDIA, hasFailedMedia());
         i.putExtra(EXTRA_IS_PAGE, mIsPage);
         i.putExtra(EXTRA_HAS_CHANGES, saved);
         i.putExtra(EXTRA_POST_LOCAL_ID, mPost.getId());
+        i.putExtra(EXTRA_IS_DISCARDABLE, discardable);
         setResult(RESULT_OK, i);
     }
 
@@ -1368,7 +1370,7 @@ public class EditPostActivity extends AppCompatActivity implements
                 boolean isPublishable = PostUtils.isPublishable(mPost);
 
                 // if post was modified or has unsaved local changes and is publishable, save it
-                saveResult(isPublishable, false);
+                saveResult(isPublishable, false,false);
 
                 if (isPublishable) {
                     if (NetworkUtils.isNetworkAvailable(getBaseContext())) {
@@ -1440,7 +1442,7 @@ public class EditPostActivity extends AppCompatActivity implements
                 // if post is publishable or not new, sync it
                 boolean shouldSync = isPublishable || !isNewPost();
 
-                saveResult(shouldSave && shouldSync, false);
+                saveResult(shouldSave && shouldSync, isDiscardable(), false);
 
                 definitelyDeleteBackspaceDeletedMediaItems();
 
@@ -1467,7 +1469,7 @@ public class EditPostActivity extends AppCompatActivity implements
                     }
                 } else {
                     // discard post if new & empty
-                    if (!isPublishable && isNewPost()) {
+                    if (isDiscardable()) {
                         mDispatcher.dispatch(PostActionBuilder.newRemovePostAction(mPost));
                     }
                     removePostOpenInEditorStickyEvent();
@@ -1475,6 +1477,13 @@ public class EditPostActivity extends AppCompatActivity implements
                 }
             }
         }).start();
+    }
+
+    private boolean isDiscardable() {
+        if (!PostUtils.isPublishable(mPost) && isNewPost()) {
+            return true;
+        }
+        return false;
     }
 
     private boolean isFirstTimePublish() {
