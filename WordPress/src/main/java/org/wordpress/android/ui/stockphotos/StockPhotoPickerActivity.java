@@ -1,5 +1,8 @@
 package org.wordpress.android.ui.stockphotos;
 
+import android.arch.lifecycle.Observer;
+import android.arch.lifecycle.ViewModelProvider;
+import android.arch.lifecycle.ViewModelProviders;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.NonNull;
@@ -16,22 +19,17 @@ import android.view.ViewGroup;
 import android.widget.SearchView;
 import android.widget.TextView;
 
-import org.greenrobot.eventbus.Subscribe;
-import org.greenrobot.eventbus.ThreadMode;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
-import org.wordpress.android.fluxc.Dispatcher;
-import org.wordpress.android.fluxc.generated.StockMediaActionBuilder;
 import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.model.StockMediaModel;
-import org.wordpress.android.fluxc.store.StockMediaStore;
 import org.wordpress.android.ui.media.MediaPreviewActivity;
 import org.wordpress.android.util.AniUtils;
-import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.DisplayUtils;
 import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.PhotonUtils;
 import org.wordpress.android.util.StringUtils;
+import org.wordpress.android.viewmodel.StockMediaViewModel;
 import org.wordpress.android.widgets.WPNetworkImageView;
 
 import java.util.ArrayList;
@@ -49,25 +47,23 @@ public class StockPhotoPickerActivity extends AppCompatActivity {
     private int mThumbWidth;
     private int mThumbHeight;
 
-    private boolean mInMultiSelect;
     private boolean mIsFetching;
     private boolean mIsSelecting;
-
-    private int mNextPage;
-    private boolean mCanLoadMore;
 
     private SearchView mSearchView;
     private String mSearchQuery;
     private final Handler mHandler = new Handler();
 
-    @Inject Dispatcher mDispatcher;
-    @Inject StockMediaStore mStockMediaStore;
+    @Inject ViewModelProvider.Factory mViewModelFactory;
+    private StockMediaViewModel mViewModel;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         ((WordPress) getApplication()).component().inject(this);
         setContentView(R.layout.stock_photo_picker_activity);
+
+        mViewModel = ViewModelProviders.of(this, mViewModelFactory).get(StockMediaViewModel.class);
 
         int displayWidth = DisplayUtils.getDisplayPixelWidth(this);
         mThumbWidth = displayWidth / getColumnCount();
@@ -109,19 +105,10 @@ public class StockPhotoPickerActivity extends AppCompatActivity {
             mSite = (SiteModel) getIntent().getSerializableExtra(WordPress.SITE);
         } else {
             mSite = (SiteModel) savedInstanceState.getSerializable(WordPress.SITE);
+            mViewModel.readFromBundle(savedInstanceState);
         }
-    }
 
-    @Override
-    protected void onStart() {
-        super.onStart();
-        mDispatcher.register(this);
-    }
-
-    @Override
-    protected void onStop() {
-        mDispatcher.unregister(this);
-        super.onStop();
+        setupObservers();
     }
 
     @Override
@@ -130,6 +117,20 @@ public class StockPhotoPickerActivity extends AppCompatActivity {
         if (mSite != null) {
             outState.putSerializable(WordPress.SITE, mSite);
         }
+    }
+
+    private void setupObservers() {
+        mViewModel.getSearchResults().observe(this, new Observer<List<StockMediaModel>>() {
+            @Override
+            public void onChanged(@Nullable final List<StockMediaModel> mediaList) {
+                showProgress(false);
+                if (mViewModel.getNextPage() == 2) {
+                    mAdapter.setMediaList(mediaList);
+                } else {
+                    mAdapter.addMediaList(mediaList);
+                }
+            }
+        });
     }
 
     @Override
@@ -175,41 +176,7 @@ public class StockPhotoPickerActivity extends AppCompatActivity {
 
         mIsFetching = true;
         showProgress(true);
-
-        StockMediaStore.FetchStockMediaListPayload payload =
-                new StockMediaStore.FetchStockMediaListPayload(searchTerm, page);
-        mDispatcher.dispatch(StockMediaActionBuilder.newFetchStockMediaAction(payload));
-    }
-
-    @SuppressWarnings("unused")
-    @Subscribe(threadMode = ThreadMode.MAIN)
-    public void OnStockMediaListFetched(StockMediaStore.OnStockMediaListFetched event) {
-        mIsFetching = false;
-        if (isFinishing()) return;
-
-        showProgress(false);
-
-        if (event.isError()) {
-            AppLog.e(AppLog.T.MEDIA, "An error occurred while searching stock media");
-            mCanLoadMore = false;
-            return;
-        }
-        if (mSearchQuery == null || !mSearchQuery.equals(event.searchTerm)) {
-            return;
-        }
-
-        if (!event.canLoadMore) {
-            AppLog.d(AppLog.T.MEDIA, "can't load more");
-        }
-
-        mNextPage = event.nextPage;
-        mCanLoadMore = event.canLoadMore;
-
-        if (mNextPage == 2) {
-            mAdapter.setMediaList(event.mediaList);
-        } else {
-            mAdapter.addMediaList(event.mediaList);
-        }
+        mViewModel.fetchStockPhotos(searchTerm, page);
     }
 
     class StockPhotoAdapter extends RecyclerView.Adapter<StockViewHolder> {
@@ -279,27 +246,13 @@ public class StockPhotoPickerActivity extends AppCompatActivity {
                 holder.imageView.setScaleY(scale);
             }
 
-            if (mCanLoadMore && !mIsFetching && position == getItemCount() - 1) {
-                requestStockPhotos(mSearchQuery, mNextPage);
+            if (!mIsFetching && mViewModel.canLoadMore() && position == getItemCount() - 1) {
+                requestStockPhotos(mSearchQuery, mViewModel.getNextPage());
             }
         }
 
         boolean isValidPosition(int position) {
             return position >= 0 && position < getItemCount();
-        }
-
-        void setInMultiSelect(boolean value) {
-            if (mInMultiSelect != value) {
-                mInMultiSelect = value;
-                clearSelection();
-            }
-        }
-
-        void clearSelection() {
-            if (mSelectedItems.size() > 0) {
-                mSelectedItems.clear();
-                notifyDataSetChanged();
-            }
         }
 
         boolean isItemSelected(int position) {
@@ -353,12 +306,6 @@ public class StockPhotoPickerActivity extends AppCompatActivity {
             boolean isSelected = isItemSelected(position);
             setItemSelected(holder, position, !isSelected);
         }
-
-        private void setSelectedItems(ArrayList<Integer> selectedItems) {
-            mSelectedItems.clear();
-            mSelectedItems.addAll(selectedItems);
-            notifyDataSetChanged();
-        }
     }
 
     class StockViewHolder extends RecyclerView.ViewHolder {
@@ -378,7 +325,6 @@ public class StockPhotoPickerActivity extends AppCompatActivity {
                 public void onClick(View v) {
                     int position = getAdapterPosition();
                     if (mAdapter.isValidPosition(position)) {
-                        mAdapter.setInMultiSelect(true);
                         mAdapter.toggleItemSelected(StockViewHolder.this, position);
                     }
                 }
