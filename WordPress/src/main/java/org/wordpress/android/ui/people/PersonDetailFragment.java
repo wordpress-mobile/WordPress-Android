@@ -30,10 +30,10 @@ import java.util.List;
 import javax.inject.Inject;
 
 public class PersonDetailFragment extends Fragment {
-    private static String ARG_CURRENT_USER_ID = "current_user_id";
-    private static String ARG_PERSON_ID = "person_id";
-    private static String ARG_LOCAL_TABLE_BLOG_ID = "local_table_blog_id";
-    private static String ARG_PERSON_TYPE = "person_type";
+    private static final String ARG_CURRENT_USER_ID = "current_user_id";
+    private static final String ARG_PERSON_ID = "person_id";
+    private static final String ARG_LOCAL_TABLE_BLOG_ID = "local_table_blog_id";
+    private static final String ARG_PERSON_TYPE = "person_type";
 
     private long mCurrentUserId;
     private long mPersonId;

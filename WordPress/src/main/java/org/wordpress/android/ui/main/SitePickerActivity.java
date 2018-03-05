@@ -638,7 +638,7 @@ public class SitePickerActivity extends AppCompatActivity
         @Override
         public Dialog onCreateDialog(Bundle savedInstanceState) {
             CharSequence[] items =
-                    {getString(R.string.site_picker_create_dotcom),
+                    {getString(R.string.site_picker_create_wpcom),
                             getString(R.string.site_picker_add_self_hosted)};
             AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
             builder.setTitle(R.string.site_picker_add_site);
@@ -648,8 +648,8 @@ public class SitePickerActivity extends AppCompatActivity
                         @Override
                         public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
                             TextView tv = (TextView) super.getView(position, convertView, parent);
-                            Drawable leftDrawable = AppCompatResources.getDrawable(tv.getContext(),
-                                                                                   R.drawable.ic_add_outline_grey_dark_24dp);
+                            Drawable leftDrawable = AppCompatResources
+                                    .getDrawable(tv.getContext(), R.drawable.ic_add_outline_grey_dark_24dp);
                             tv.setCompoundDrawablesWithIntrinsicBounds(leftDrawable, null, null, null);
                             tv.setCompoundDrawablePadding(
                                     getResources().getDimensionPixelSize(R.dimen.margin_extra_large));

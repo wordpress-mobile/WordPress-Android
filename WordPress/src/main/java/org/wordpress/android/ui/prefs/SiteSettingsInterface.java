@@ -591,7 +591,7 @@ public abstract class SiteSettingsInterface {
     }
 
     public boolean getAllowCommentLikes() {
-        // We have different settings for comment likes for dotcom and Jetpack sites
+        // We have different settings for comment likes for wpcom and Jetpack sites
         return mSite.isJetpackConnected() ? mJpSettings.commentLikes : mSettings.allowCommentLikes;
     }
 
@@ -887,7 +887,7 @@ public abstract class SiteSettingsInterface {
     }
 
     public void setAllowCommentLikes(boolean allowCommentLikes) {
-        // We have different settings for comment likes for dotcom and Jetpack sites
+        // We have different settings for comment likes for wpcom and Jetpack sites
         if (mSite.isJetpackConnected()) {
             mJpSettings.commentLikes = allowCommentLikes;
         } else {
@@ -1021,7 +1021,7 @@ public abstract class SiteSettingsInterface {
 
     /**
      * Language IDs, used only by WordPress, are integer values that map to a language code.
-     * https://github.com/Automattic/calypso-pre-oss/blob/72c2029b0805a73b749a2b64dd1d8655cae528d0/config/production.json#L86-L227
+     * http://bit.ly/2H7gksN
      * <p>
      * Language codes are unique two-letter identifiers defined by ISO 639-1. Region dialects can
      * be defined by appending a -** where ** is the region code (en-GB -> English, Great Britain).

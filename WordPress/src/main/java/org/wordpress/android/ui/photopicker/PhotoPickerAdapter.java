@@ -83,7 +83,7 @@ class PhotoPickerAdapter extends RecyclerView.Adapter<PhotoPickerAdapter.Thumbna
 
     private final ArrayList<PhotoPickerItem> mMediaList = new ArrayList<>();
 
-    public PhotoPickerAdapter(Context context,
+    PhotoPickerAdapter(Context context,
                               MediaBrowserType browserType,
                               PhotoPickerAdapterListener listener) {
         super();
@@ -304,7 +304,7 @@ class PhotoPickerAdapter extends RecyclerView.Adapter<PhotoPickerAdapter.Thumbna
         private final TextView txtSelectionCount;
         private final ImageView videoOverlay;
 
-        public ThumbnailViewHolder(View view) {
+        ThumbnailViewHolder(View view) {
             super(view);
 
             imgThumbnail = (ImageView) view.findViewById(R.id.image_thumbnail);

@@ -112,12 +112,10 @@ public class Feature {
         fallback = StringUtils.notNullStr(fallback);
         if (mPlanIDToDescription != null && mPlanIDToDescription.has(planIdAsString)) {
             JSONObject plan = mPlanIDToDescription.optJSONObject(planIdAsString);
-            if (plan
-                != null) { // It's not a JSON object. Just `true` in the response. That means the plan has this feature with generic description/title/icon.
-                return plan.optString(
-                        propertyName,
-                        fallback
-                                     );
+            if (plan != null) {
+                // It's not a JSON object. Just `true` in the response. That means the plan has this feature
+                // with generic description/title/icon.
+                return plan.optString(propertyName, fallback);
             }
         }
         return fallback;

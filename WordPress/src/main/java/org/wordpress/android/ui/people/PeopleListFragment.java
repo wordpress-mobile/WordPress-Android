@@ -442,7 +442,7 @@ public class PeopleListFragment extends Fragment {
         private Drawable mDivider;
 
         // use a custom drawable
-        public PeopleItemDecoration(Context context, int resId) {
+        PeopleItemDecoration(Context context, int resId) {
             mDivider = ContextCompat.getDrawable(context, resId);
         }
 

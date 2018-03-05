@@ -275,7 +275,7 @@ Language: it
 	<string name="media_upload_error">Si è verificato un errore durante il caricamento dei media</string>
 	<string name="retry">Riprova</string>
 	<string name="confirm">Conferma</string>
-	<string name="xmlrpc_endpoint_forbidden_error">Non è possibile connettersi. Abbiamo ricevuto un messaggio di errore 403 durante il tentativo di accedere\n all\'endpoint XMLRPC del tuo sito. Per l\'app questo è necessario per comunicare con il tuo sito. Contatta il tuo host per risolvere\n questo problema.</string>
+	<string name="xmlrpc_endpoint_forbidden_error">Non è possibile connettersi. Abbiamo ricevuto un messaggio di errore 403 durante il tentativo di accedere\n all\'mEndpoint XMLRPC del tuo sito. Per l\'app questo è necessario per comunicare con il tuo sito. Contatta il tuo host per risolvere\n questo problema.</string>
 	<string name="xmlrpc_post_blocked_error">Non è possibile connettersi. Il tuo host sta bloccando le richieste POST ma queste sono necessarie al corretto funzionamento dell\'app\n per comunicare con il tuo sito. Contatta il tuo fornitore del servizio di hosting per risolvere questo problema.</string>
 	<string name="reader_empty_followed_blogs_search_title">Nessun sito corrispondente</string>
 	<string name="reader_hint_search_followed_sites">Ricerca nei siti che segui</string>
@@ -831,7 +831,7 @@ Language: it
 	<string name="site_picker_cant_hide_current_site">\"%s\" non è stato nascosto perchè è il sito corrente</string>
 	<string name="me_btn_support">Aiuto e supporto</string>
 	<string name="account_settings">Impostazioni account</string>
-	<string name="site_picker_create_dotcom">Crea un sito su WordPress.com</string>
+	<string name="site_picker_create_wpcom">Crea un sito su WordPress.com</string>
 	<string name="site_picker_edit_visibility">Mostra/nascondi siti</string>
 	<string name="site_picker_add_self_hosted">Aggiungi un sito self-hosted</string>
 	<string name="site_picker_add_site">Aggiungi sito</string>

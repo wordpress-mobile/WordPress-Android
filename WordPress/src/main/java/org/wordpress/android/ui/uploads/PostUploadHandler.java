@@ -56,8 +56,8 @@ import javax.inject.Inject;
 import de.greenrobot.event.EventBus;
 
 public class PostUploadHandler implements UploadHandler<PostModel> {
-    private static final ArrayList<PostModel> sQueuedPostsList = new ArrayList<>();
-    private static final Set<Integer> sFirstPublishPosts = new HashSet<>();
+    private static ArrayList<PostModel> sQueuedPostsList = new ArrayList<>();
+    private static Set<Integer> sFirstPublishPosts = new HashSet<>();
     private static PostModel sCurrentUploadingPost = null;
     private static Map<String, Object> sCurrentUploadingPostAnalyticsProperties;
 
@@ -492,7 +492,8 @@ public class PostUploadHandler implements UploadHandler<PostModel> {
                 return "[wpvideo " + finishedMedia.getVideoPressGuid() + "]\n";
             } else {
                 return String.format(
-                        "<video width=\"%s\" height=\"%s\" controls=\"controls\"><source src=\"%s\" type=\"%s\" /><a href=\"%s\">Click to view video</a>.</video>",
+                        "<video width=\"%s\" height=\"%s\" controls=\"controls\"><source src=\"%s\" type=\"%s\" />"
+                        + "<a href=\"%s\">Click to view video</a>.</video>",
                         xRes, yRes, finishedMedia.getUrl(), mimeType, finishedMedia.getUrl());
             }
         }

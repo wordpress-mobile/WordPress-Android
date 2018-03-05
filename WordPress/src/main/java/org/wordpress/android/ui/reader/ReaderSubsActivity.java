@@ -340,7 +340,7 @@ public class ReaderSubsActivity extends AppCompatActivity
                 if (succeeded) {
                     AnalyticsTracker.track(AnalyticsTracker.Stat.READER_TAG_FOLLOWED);
                     showInfoToast(getString(R.string.reader_label_added_tag, tag.getLabel()));
-                    mLastAddedTagName = tag.getTagSlug();
+                    mLastAddedTagName = tag.getmTagSlug();
                 } else {
                     ToastUtils.showToast(ReaderSubsActivity.this, R.string.reader_toast_err_add_tag);
                     mLastAddedTagName = null;
@@ -459,7 +459,7 @@ public class ReaderSubsActivity extends AppCompatActivity
     @Override
     public void onTagDeleted(ReaderTag tag) {
         AnalyticsTracker.track(AnalyticsTracker.Stat.READER_TAG_UNFOLLOWED);
-        if (mLastAddedTagName != null && mLastAddedTagName.equalsIgnoreCase(tag.getTagSlug())) {
+        if (mLastAddedTagName != null && mLastAddedTagName.equalsIgnoreCase(tag.getmTagSlug())) {
             mLastAddedTagName = null;
         }
         String labelRemovedTag = getString(R.string.reader_label_removed_tag);

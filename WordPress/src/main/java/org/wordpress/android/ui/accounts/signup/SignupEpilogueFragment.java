@@ -306,22 +306,20 @@ public class SignupEpilogueFragment extends LoginBaseFormFragment<SignupEpilogue
                                             data.getStringExtra(PhotoPickerActivity.EXTRA_MEDIA_SOURCE));
                                     AnalyticsTracker.Stat stat =
                                             source == PhotoPickerActivity.PhotoPickerMediaSource.ANDROID_CAMERA
-                                                    ? AnalyticsTracker.Stat.SIGNUP_EMAIL_EPILOGUE_GRAVATAR_SHOT_NEW
-
-                                                    : AnalyticsTracker.Stat.SIGNUP_EMAIL_EPILOGUE_GRAVATAR_GALLERY_PICKED;
+                                                ? AnalyticsTracker.Stat.SIGNUP_EMAIL_EPILOGUE_GRAVATAR_SHOT_NEW
+                                                : AnalyticsTracker.Stat.SIGNUP_EMAIL_EPILOGUE_GRAVATAR_GALLERY_PICKED;
                                     AnalyticsTracker.track(stat);
                                     Uri imageUri = Uri.parse(mediaUriString);
 
                                     if (imageUri != null) {
-                                        boolean wasSuccess = WPMediaUtils.fetchMediaAndDoNext(getActivity(), imageUri,
-                                                                                              new WPMediaUtils.MediaFetchDoNext() {
-                                                                                                  @Override
-                                                                                                  public void doNext(
-                                                                                                          Uri uri) {
-                                                                                                      startCropActivity(
-                                                                                                              uri);
-                                                                                                  }
-                                                                                              });
+                                        boolean wasSuccess = WPMediaUtils.fetchMediaAndDoNext(
+                                                getActivity(), imageUri,
+                                                new WPMediaUtils.MediaFetchDoNext() {
+                                                    @Override
+                                                    public void doNext(Uri uri) {
+                                                        startCropActivity(uri);
+                                                    }
+                                                });
 
                                         if (!wasSuccess) {
                                             AppLog.e(T.UTILS, "Can't download picked or captured image");

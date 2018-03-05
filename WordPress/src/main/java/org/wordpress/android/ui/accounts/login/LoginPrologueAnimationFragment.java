@@ -13,9 +13,9 @@ import com.airbnb.lottie.LottieAnimationView;
 import org.wordpress.android.R;
 
 public class LoginPrologueAnimationFragment extends Fragment {
-    private final static String KEY_ANIMATION_FILENAME = "KEY_ANIMATION_FILENAME";
-    private final static String KEY_PROMO_TEXT = "KEY_PROMO_TEXT";
-    private final static String KEY_LIGHT_BACKGROUND = "KEY_LIGHT_BACKGROUND";
+    private static final String KEY_ANIMATION_FILENAME = "KEY_ANIMATION_FILENAME";
+    private static final String KEY_PROMO_TEXT = "KEY_PROMO_TEXT";
+    private static final String KEY_LIGHT_BACKGROUND = "KEY_LIGHT_BACKGROUND";
 
     private LottieAnimationView mLottieAnimationView;
 

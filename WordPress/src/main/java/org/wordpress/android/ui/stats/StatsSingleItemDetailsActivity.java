@@ -519,7 +519,7 @@ public class StatsSingleItemDetailsActivity extends AppCompatActivity
         private final List<PostViewsModel.Week> groups;
         private final int maxReachedValue;
 
-        public RecentWeeksListAdapter(Context context, List<PostViewsModel.Week> groups, int maxReachedValue) {
+        RecentWeeksListAdapter(Context context, List<PostViewsModel.Week> groups, int maxReachedValue) {
             this.groups = groups;
             this.inflater = LayoutInflater.from(context);
             this.maxReachedValue = maxReachedValue;
@@ -679,7 +679,7 @@ public class StatsSingleItemDetailsActivity extends AppCompatActivity
         private final List<PostViewsModel.Year> groups;
         private final int maxReachedValue;
 
-        public MonthsAndYearsListAdapter(Context context, List<PostViewsModel.Year> groups, int maxReachedValue) {
+        MonthsAndYearsListAdapter(Context context, List<PostViewsModel.Year> groups, int maxReachedValue) {
             this.groups = groups;
             this.inflater = LayoutInflater.from(context);
             this.maxReachedValue = maxReachedValue;
@@ -825,7 +825,7 @@ public class StatsSingleItemDetailsActivity extends AppCompatActivity
     private class RestBatchCallListener implements RestRequest.Listener, RestRequest.ErrorListener {
         private final WeakReference<Activity> mActivityRef;
 
-        public RestBatchCallListener(Activity activity) {
+        RestBatchCallListener(Activity activity) {
             mActivityRef = new WeakReference<>(activity);
         }
 

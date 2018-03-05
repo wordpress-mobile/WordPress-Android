@@ -20,12 +20,12 @@ import org.wordpress.android.widgets.WPTextView;
  * Similar to {@link PromoDialog}, but with an optional link field and negative button.
  */
 public class PromoDialogAdvanced extends PromoDialog {
-    protected static final String KEY_LINK_RES_ID = "linkResId";
-    protected static final String KEY_BUTTON_NEGATIVE_RES_ID = "buttonNegativeResId";
+    protected static final String KEY_LINK_RES_ID = "mLinkResId";
+    protected static final String KEY_BUTTON_NEGATIVE_RES_ID = "mButtonNegativeResId";
 
     public static class Builder extends PromoDialog.Builder {
-        @StringRes int linkResId;
-        @StringRes int buttonNegativeResId;
+        @StringRes int mLinkResId;
+        @StringRes int mButtonNegativeResId;
 
         public Builder(@DrawableRes int drawableResId, @StringRes int titleResId, @StringRes int descriptionResId,
                        @StringRes int buttonPositiveResId) {
@@ -33,12 +33,12 @@ public class PromoDialogAdvanced extends PromoDialog {
         }
 
         public Builder setLinkText(@StringRes int linkResId) {
-            this.linkResId = linkResId;
+            this.mLinkResId = linkResId;
             return this;
         }
 
         public Builder setNegativeButtonText(@StringRes int buttonNegativeResId) {
-            this.buttonNegativeResId = buttonNegativeResId;
+            this.mButtonNegativeResId = buttonNegativeResId;
             return this;
         }
 
@@ -60,8 +60,8 @@ public class PromoDialogAdvanced extends PromoDialog {
         args.putInt(KEY_DRAWABLE_RES_ID, builder.drawableResId);
         args.putInt(KEY_TITLE_RES_ID, builder.titleResId);
         args.putInt(KEY_DESCRIPTION_RES_ID, builder.descriptionResId);
-        args.putInt(KEY_LINK_RES_ID, builder.linkResId);
-        args.putInt(KEY_BUTTON_NEGATIVE_RES_ID, builder.buttonNegativeResId);
+        args.putInt(KEY_LINK_RES_ID, builder.mLinkResId);
+        args.putInt(KEY_BUTTON_NEGATIVE_RES_ID, builder.mButtonNegativeResId);
         args.putInt(KEY_BUTTON_POSITIVE_RES_ID, builder.buttonPositiveResId);
         fragment.setArguments(args);
         return fragment;

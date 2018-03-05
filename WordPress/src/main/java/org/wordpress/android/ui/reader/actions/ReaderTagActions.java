@@ -29,7 +29,7 @@ public class ReaderTagActions {
             return false;
         }
 
-        final String tagNameForApi = ReaderUtils.sanitizeWithDashes(tag.getTagSlug());
+        final String tagNameForApi = ReaderUtils.sanitizeWithDashes(tag.getmTagSlug());
         final String path = "read/tags/" + tagNameForApi + "/mine/delete";
 
         com.wordpress.rest.RestRequest.Listener listener = new RestRequest.Listener() {
@@ -74,14 +74,14 @@ public class ReaderTagActions {
             return false;
         }
 
-        final String tagNameForApi = ReaderUtils.sanitizeWithDashes(tag.getTagSlug());
+        final String tagNameForApi = ReaderUtils.sanitizeWithDashes(tag.getmTagSlug());
         final String path = "read/tags/" + tagNameForApi + "/mine/new";
         String endpoint = "/read/tags/" + tagNameForApi + "/posts";
 
         ReaderTag newTag = new ReaderTag(
-                tag.getTagSlug(),
-                tag.getTagDisplayName(),
-                tag.getTagTitle(),
+                tag.getmTagSlug(),
+                tag.getmTagDisplayName(),
+                tag.getmTagTitle(),
                 endpoint,
                 ReaderTagType.FOLLOWED);
 

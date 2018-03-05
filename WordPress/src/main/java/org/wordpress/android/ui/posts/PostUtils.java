@@ -36,7 +36,7 @@ import java.util.regex.Pattern;
 public class PostUtils {
     private static final int MAX_EXCERPT_LEN = 150;
 
-    private static final HashSet<String> mShortcodeTable = new HashSet<>();
+    private static final HashSet<String> SHORTCODE_TABLE = new HashSet<>();
 
     /*
      * collapses shortcodes in the passed post content, stripping anything between the
@@ -72,43 +72,43 @@ public class PostUtils {
         }
 
         // populate on first use
-        if (mShortcodeTable.size() == 0) {
+        if (SHORTCODE_TABLE.size() == 0) {
             // default shortcodes
-            mShortcodeTable.add("audio");
-            mShortcodeTable.add("caption");
-            mShortcodeTable.add("embed");
-            mShortcodeTable.add("gallery");
-            mShortcodeTable.add("playlist");
-            mShortcodeTable.add("video");
-            mShortcodeTable.add("wp_caption");
+            SHORTCODE_TABLE.add("audio");
+            SHORTCODE_TABLE.add("caption");
+            SHORTCODE_TABLE.add("embed");
+            SHORTCODE_TABLE.add("gallery");
+            SHORTCODE_TABLE.add("playlist");
+            SHORTCODE_TABLE.add("video");
+            SHORTCODE_TABLE.add("wp_caption");
             // audio/video
-            mShortcodeTable.add("dailymotion");
-            mShortcodeTable.add("flickr");
-            mShortcodeTable.add("hulu");
-            mShortcodeTable.add("kickstarter");
-            mShortcodeTable.add("soundcloud");
-            mShortcodeTable.add("vimeo");
-            mShortcodeTable.add("vine");
-            mShortcodeTable.add("wpvideo");
-            mShortcodeTable.add("youtube");
+            SHORTCODE_TABLE.add("dailymotion");
+            SHORTCODE_TABLE.add("flickr");
+            SHORTCODE_TABLE.add("hulu");
+            SHORTCODE_TABLE.add("kickstarter");
+            SHORTCODE_TABLE.add("soundcloud");
+            SHORTCODE_TABLE.add("vimeo");
+            SHORTCODE_TABLE.add("vine");
+            SHORTCODE_TABLE.add("wpvideo");
+            SHORTCODE_TABLE.add("youtube");
             // images and documents
-            mShortcodeTable.add("instagram");
-            mShortcodeTable.add("scribd");
-            mShortcodeTable.add("slideshare");
-            mShortcodeTable.add("slideshow");
-            mShortcodeTable.add("presentation");
-            mShortcodeTable.add("googleapps");
-            mShortcodeTable.add("office");
+            SHORTCODE_TABLE.add("instagram");
+            SHORTCODE_TABLE.add("scribd");
+            SHORTCODE_TABLE.add("slideshare");
+            SHORTCODE_TABLE.add("slideshow");
+            SHORTCODE_TABLE.add("presentation");
+            SHORTCODE_TABLE.add("googleapps");
+            SHORTCODE_TABLE.add("office");
             // other
-            mShortcodeTable.add("googlemaps");
-            mShortcodeTable.add("polldaddy");
-            mShortcodeTable.add("recipe");
-            mShortcodeTable.add("sitemap");
-            mShortcodeTable.add("twitter-timeline");
-            mShortcodeTable.add("upcomingevents");
+            SHORTCODE_TABLE.add("googlemaps");
+            SHORTCODE_TABLE.add("polldaddy");
+            SHORTCODE_TABLE.add("recipe");
+            SHORTCODE_TABLE.add("sitemap");
+            SHORTCODE_TABLE.add("twitter-timeline");
+            SHORTCODE_TABLE.add("upcomingevents");
         }
 
-        return mShortcodeTable.contains(shortCode);
+        return SHORTCODE_TABLE.contains(shortCode);
     }
 
     public static void trackSavePostAnalytics(PostModel post, SiteModel site) {

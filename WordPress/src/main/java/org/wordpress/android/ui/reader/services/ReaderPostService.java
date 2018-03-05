@@ -348,8 +348,8 @@ public class ReaderPostService extends Service {
         }
 
         // if passed tag has an assigned endpoint, return it and be done
-        if (!TextUtils.isEmpty(tag.getEndpoint())) {
-            return getRelativeEndpoint(tag.getEndpoint());
+        if (!TextUtils.isEmpty(tag.getmEndpoint())) {
+            return getRelativeEndpoint(tag.getmEndpoint());
         }
 
         // check the db for the endpoint
@@ -364,7 +364,7 @@ public class ReaderPostService extends Service {
             return null;
         }
 
-        return String.format("read/tags/%s/posts", ReaderUtils.sanitizeWithDashes(tag.getTagSlug()));
+        return String.format("read/tags/%s/posts", ReaderUtils.sanitizeWithDashes(tag.getmTagSlug()));
     }
 
     /*

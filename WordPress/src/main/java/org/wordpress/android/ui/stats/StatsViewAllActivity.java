@@ -187,7 +187,7 @@ public class StatsViewAllActivity extends AppCompatActivity {
         switch (timeframe) {
             case DAY:
                 return String.format(prefix, StatsUtils.parseDate(date, StatsConstants.STATS_INPUT_DATE_FORMAT,
-                                                                  StatsConstants.STATS_OUTPUT_DATE_MONTH_LONG_DAY_SHORT_FORMAT));
+                                              StatsConstants.STATS_OUTPUT_DATE_MONTH_LONG_DAY_SHORT_FORMAT));
             case WEEK:
                 try {
                     SimpleDateFormat sdf = new SimpleDateFormat(StatsConstants.STATS_INPUT_DATE_FORMAT);
@@ -195,11 +195,11 @@ public class StatsViewAllActivity extends AppCompatActivity {
                     Calendar c = Calendar.getInstance();
                     c.setTime(parsedDate);
                     String endDateLabel = StatsUtils.msToString(c.getTimeInMillis(),
-                                                                StatsConstants.STATS_OUTPUT_DATE_MONTH_LONG_DAY_LONG_FORMAT);
+                                                        StatsConstants.STATS_OUTPUT_DATE_MONTH_LONG_DAY_LONG_FORMAT);
                     // last day of this week
                     c.add(Calendar.DAY_OF_WEEK, -6);
                     String startDateLabel = StatsUtils.msToString(c.getTimeInMillis(),
-                                                                  StatsConstants.STATS_OUTPUT_DATE_MONTH_LONG_DAY_LONG_FORMAT);
+                                                      StatsConstants.STATS_OUTPUT_DATE_MONTH_LONG_DAY_LONG_FORMAT);
                     return String.format(prefix, startDateLabel + " - " + endDateLabel);
                 } catch (ParseException e) {
                     AppLog.e(AppLog.T.UTILS, e);

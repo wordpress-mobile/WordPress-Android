@@ -157,7 +157,7 @@ public class StatsFollowersFragment extends StatsAbstractListFragment {
 
         if (followersModel != null && followersModel.getFollowers() != null
             && followersModel.getFollowers().size() > 0) {
-            ArrayAdapter adapter = new DotComFollowerAdapter(getActivity(), followersModel.getFollowers());
+            ArrayAdapter adapter = new WPComFollowerAdapter(getActivity(), followersModel.getFollowers());
             StatsUIHelper.reloadLinearLayout(getActivity(), adapter, mList, getMaxNumberOfItemsToShowInList());
             showHideNoResultsUI(false);
 
@@ -300,12 +300,12 @@ public class StatsFollowersFragment extends StatsAbstractListFragment {
         return false;
     }
 
-    private class DotComFollowerAdapter extends ArrayAdapter<FollowerModel> {
+    private class WPComFollowerAdapter extends ArrayAdapter<FollowerModel> {
         private final List<FollowerModel> list;
         private final Activity context;
         private final LayoutInflater inflater;
 
-        public DotComFollowerAdapter(Activity context, List<FollowerModel> list) {
+        WPComFollowerAdapter(Activity context, List<FollowerModel> list) {
             super(context, R.layout.stats_list_cell, list);
             this.context = context;
             this.list = list;

@@ -130,7 +130,7 @@ public class ReaderActivityLauncher {
             return;
         }
         Map<String, String> properties = new HashMap<>();
-        properties.put("tag", tag.getTagSlug());
+        properties.put("tag", tag.getmTagSlug());
         AnalyticsTracker.track(AnalyticsTracker.Stat.READER_TAG_PREVIEWED, properties);
         Intent intent = new Intent(context, ReaderPostListActivity.class);
         intent.putExtra(ReaderConstants.ARG_TAG, tag);

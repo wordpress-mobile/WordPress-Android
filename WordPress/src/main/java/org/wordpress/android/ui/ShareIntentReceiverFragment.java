@@ -143,50 +143,44 @@ public class ShareIntentReceiverFragment extends Fragment {
     }
 
     private Adapter createSiteAdapter() {
-        mAdapter = new SitePickerAdapter(getActivity(), R.layout.share_intent_sites_listitem, 0, "", false,
-                                         new SitePickerAdapter.OnDataLoadedListener() {
-                                             @Override
-                                             public void onBeforeLoad(boolean isEmpty) {
-                                             }
+        mAdapter = new SitePickerAdapter(
+                getActivity(), R.layout.share_intent_sites_listitem, 0, "", false,
+                new SitePickerAdapter.OnDataLoadedListener() {
+                    @Override
+                    public void onBeforeLoad(boolean isEmpty) {
+                    }
 
-                                             @Override
-                                             public void onAfterLoad() {
-                                                 mRecyclerView.post(new Runnable() {
-                                                     @Override
-                                                     public void run() {
-                                                         if (!isAdded()) {
-                                                             return;
-                                                         }
+                    @Override
+                    public void onAfterLoad() {
+                        mRecyclerView.post(new Runnable() {
+                            @Override
+                            public void run() {
+                                if (!isAdded()) {
+                                    return;
+                                }
 
-                                                         if (mRecyclerView.computeVerticalScrollRange() > mRecyclerView
-                                                                 .getHeight()) {
-                                                             mBottomButtonsShadow.setVisibility(View.VISIBLE);
-                                                             mBottomButtonsContainer
-                                                                     .setBackgroundResource(R.color.white);
-                                                             mShareMediaBtn.setTextColor(
-                                                                     getResources().getColor(R.color.blue_wordpress));
-                                                             ViewUtils.setButtonBackgroundColor(getContext(),
-                                                                                                mShareMediaBtn,
-                                                                                                R.style.WordPress_Button_Grey,
-                                                                                                R.attr.colorButtonNormal);
-                                                         } else {
-                                                             mBottomButtonsShadow.setVisibility(View.GONE);
-                                                             mBottomButtonsContainer.setBackground(null);
-                                                             mShareMediaBtn.setTextColor(
-                                                                     getResources().getColor(R.color.grey_dark));
-                                                             ViewUtils
-                                                                     .setButtonBackgroundColor(getContext(),
-                                                                                               mShareMediaBtn,
-                                                                                               R.style.WordPress_Button,
-                                                                                               R.attr.colorButtonNormal);
-                                                         }
-                                                     }
-                                                 });
-                                                 mAdapter.findAndSelect(mLastUsedBlogLocalId);
-                                             }
-                                         },
-                                         createHeaderHandler(),
-                                         null
+                                if (mRecyclerView.computeVerticalScrollRange() > mRecyclerView.getHeight()) {
+                                    mBottomButtonsShadow.setVisibility(View.VISIBLE);
+                                    mBottomButtonsContainer.setBackgroundResource(R.color.white);
+                                    mShareMediaBtn.setTextColor(getResources().getColor(R.color.blue_wordpress));
+                                    ViewUtils.setButtonBackgroundColor(getContext(), mShareMediaBtn,
+                                                                       R.style.WordPress_Button_Grey,
+                                                                       R.attr.colorButtonNormal);
+                                } else {
+                                    mBottomButtonsShadow.setVisibility(View.GONE);
+                                    mBottomButtonsContainer.setBackground(null);
+                                    mShareMediaBtn.setTextColor(getResources().getColor(R.color.grey_dark));
+                                    ViewUtils.setButtonBackgroundColor(getContext(), mShareMediaBtn,
+                                                                       R.style.WordPress_Button,
+                                                                       R.attr.colorButtonNormal);
+                                }
+                            }
+                        });
+                        mAdapter.findAndSelect(mLastUsedBlogLocalId);
+                    }
+                },
+                createHeaderHandler(),
+                null
         );
         mAdapter.setSingleItemSelectionEnabled(true);
         return mAdapter;

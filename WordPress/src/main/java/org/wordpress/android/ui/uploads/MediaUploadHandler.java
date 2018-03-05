@@ -33,10 +33,9 @@ import javax.inject.Inject;
 import de.greenrobot.event.EventBus;
 
 public class MediaUploadHandler implements UploadHandler<MediaModel>, VideoOptimizer.VideoOptimizationListener {
-    private static final List<MediaModel> sPendingUploads = new ArrayList<>();
-    private static final List<MediaModel> sInProgressUploads = new ArrayList<>();
-
-    private static final ConcurrentHashMap<Integer, Float> sOptimizationProgressByMediaId = new ConcurrentHashMap<>();
+    private static List<MediaModel> sPendingUploads = new ArrayList<>();
+    private static List<MediaModel> sInProgressUploads = new ArrayList<>();
+    private static ConcurrentHashMap<Integer, Float> sOptimizationProgressByMediaId = new ConcurrentHashMap<>();
 
     @Inject Dispatcher mDispatcher;
     @Inject SiteStore mSiteStore;

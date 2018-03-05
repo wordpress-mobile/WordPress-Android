@@ -13,10 +13,10 @@ public class ReaderTag implements Serializable, FilterCriteria {
     public static final String TAG_TITLE_FOLLOWED_SITES = "Followed Sites";
     public static final String TAG_TITLE_DEFAULT = TAG_TITLE_FOLLOWED_SITES;
 
-    private String tagSlug; // tag for API calls
-    private String tagDisplayName; // tag for display, usually the same as the slug
-    private String tagTitle; // title, used for default tags
-    private String endpoint; // endpoint for updating posts with this tag
+    private String mTagSlug; // tag for API calls
+    private String mTagDisplayName; // tag for display, usually the same as the slug
+    private String mTagTitle; // title, used for default tags
+    private String mEndpoint; // mEndpoint for updating posts with this tag
 
     public final ReaderTagType tagType;
 
@@ -29,54 +29,54 @@ public class ReaderTag implements Serializable, FilterCriteria {
         // primary key in the tag table)
         if (TextUtils.isEmpty(slug)) {
             if (!TextUtils.isEmpty(title)) {
-                setTagSlug(ReaderUtils.sanitizeWithDashes(title));
+                setmTagSlug(ReaderUtils.sanitizeWithDashes(title));
             } else {
-                setTagSlug(getTagSlugFromEndpoint(endpoint));
+                setmTagSlug(getTagSlugFromEndpoint(endpoint));
             }
         } else {
-            setTagSlug(slug);
+            setmTagSlug(slug);
         }
 
-        setTagDisplayName(displayName);
-        setTagTitle(title);
-        setEndpoint(endpoint);
+        setmTagDisplayName(displayName);
+        setmTagTitle(title);
+        setmEndpoint(endpoint);
         this.tagType = tagType;
     }
 
-    public String getEndpoint() {
-        return StringUtils.notNullStr(endpoint);
+    public String getmEndpoint() {
+        return StringUtils.notNullStr(mEndpoint);
     }
 
-    private void setEndpoint(String endpoint) {
-        this.endpoint = StringUtils.notNullStr(endpoint);
+    private void setmEndpoint(String mEndpoint) {
+        this.mEndpoint = StringUtils.notNullStr(mEndpoint);
     }
 
-    public String getTagTitle() {
-        return StringUtils.notNullStr(tagTitle);
+    public String getmTagTitle() {
+        return StringUtils.notNullStr(mTagTitle);
     }
 
-    private void setTagTitle(String title) {
-        this.tagTitle = StringUtils.notNullStr(title);
+    private void setmTagTitle(String title) {
+        this.mTagTitle = StringUtils.notNullStr(title);
     }
 
     private boolean hasTagTitle() {
-        return !TextUtils.isEmpty(tagTitle);
+        return !TextUtils.isEmpty(mTagTitle);
     }
 
-    public String getTagDisplayName() {
-        return StringUtils.notNullStr(tagDisplayName);
+    public String getmTagDisplayName() {
+        return StringUtils.notNullStr(mTagDisplayName);
     }
 
-    private void setTagDisplayName(String displayName) {
-        this.tagDisplayName = StringUtils.notNullStr(displayName);
+    private void setmTagDisplayName(String displayName) {
+        this.mTagDisplayName = StringUtils.notNullStr(displayName);
     }
 
-    public String getTagSlug() {
-        return StringUtils.notNullStr(tagSlug);
+    public String getmTagSlug() {
+        return StringUtils.notNullStr(mTagSlug);
     }
 
-    private void setTagSlug(String slug) {
-        this.tagSlug = StringUtils.notNullStr(slug);
+    private void setmTagSlug(String slug) {
+        this.mTagSlug = StringUtils.notNullStr(slug);
     }
 
     /*
@@ -85,7 +85,7 @@ public class ReaderTag implements Serializable, FilterCriteria {
      * in the log could be considered a privacy issue
      */
     public String getTagNameForLog() {
-        String tagSlug = getTagSlug();
+        String tagSlug = getmTagSlug();
         if (tagType == ReaderTagType.DEFAULT) {
             return tagSlug;
         } else if (tagSlug.length() >= 6) {
@@ -110,14 +110,14 @@ public class ReaderTag implements Serializable, FilterCriteria {
     }
 
     /*
-     * extracts the tag slug from a valid read/tags/[tagSlug]/posts endpoint
+     * extracts the tag slug from a valid read/tags/[mTagSlug]/posts mEndpoint
      */
     private static String getTagSlugFromEndpoint(final String endpoint) {
         if (TextUtils.isEmpty(endpoint)) {
             return "";
         }
 
-        // make sure passed endpoint is valid
+        // make sure passed mEndpoint is valid
         if (!endpoint.endsWith("/posts")) {
             return "";
         }
@@ -141,28 +141,28 @@ public class ReaderTag implements Serializable, FilterCriteria {
             return false;
         }
         return tag1.tagType == tag2.tagType
-               && tag1.getTagSlug().equalsIgnoreCase(tag2.getTagSlug());
+               && tag1.getmTagSlug().equalsIgnoreCase(tag2.getmTagSlug());
     }
 
     public boolean isPostsILike() {
-        return tagType == ReaderTagType.DEFAULT && getEndpoint().endsWith("/read/liked");
+        return tagType == ReaderTagType.DEFAULT && getmEndpoint().endsWith("/read/liked");
     }
 
     public boolean isFollowedSites() {
-        return tagType == ReaderTagType.DEFAULT && getEndpoint().endsWith("/read/following");
+        return tagType == ReaderTagType.DEFAULT && getmEndpoint().endsWith("/read/following");
     }
 
     public boolean isDiscover() {
-        return tagType == ReaderTagType.DEFAULT && getTagSlug().equals(TAG_TITLE_DISCOVER);
+        return tagType == ReaderTagType.DEFAULT && getmTagSlug().equals(TAG_TITLE_DISCOVER);
     }
 
     public boolean isTagTopic() {
-        String endpoint = getEndpoint();
+        String endpoint = getmEndpoint();
         return endpoint.toLowerCase().contains("/read/tags/");
     }
 
     public boolean isListTopic() {
-        String endpoint = getEndpoint();
+        String endpoint = getmEndpoint();
         return endpoint.toLowerCase().contains("/read/list/");
     }
 
@@ -172,11 +172,11 @@ public class ReaderTag implements Serializable, FilterCriteria {
     @Override
     public String getLabel() {
         if (isTagDisplayNameAlphaNumeric()) {
-            return getTagDisplayName().toLowerCase();
+            return getmTagDisplayName().toLowerCase();
         } else if (hasTagTitle()) {
-            return getTagTitle();
+            return getmTagTitle();
         } else {
-            return getTagDisplayName();
+            return getmTagDisplayName();
         }
     }
 
@@ -184,12 +184,12 @@ public class ReaderTag implements Serializable, FilterCriteria {
      * returns true if the tag display name contains only alpha-numeric characters or hyphens
      */
     private boolean isTagDisplayNameAlphaNumeric() {
-        if (TextUtils.isEmpty(tagDisplayName)) {
+        if (TextUtils.isEmpty(mTagDisplayName)) {
             return false;
         }
 
-        for (int i = 0; i < tagDisplayName.length(); i++) {
-            char c = tagDisplayName.charAt(i);
+        for (int i = 0; i < mTagDisplayName.length(); i++) {
+            char c = mTagDisplayName.charAt(i);
             if (!Character.isLetterOrDigit(c) && c != '-') {
                 return false;
             }
