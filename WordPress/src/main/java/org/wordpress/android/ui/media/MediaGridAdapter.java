@@ -185,6 +185,7 @@ public class MediaGridAdapter extends RecyclerView.Adapter<MediaGridAdapter.Grid
         }
 
         if (mBrowserType.canMultiselect() && canSelect) {
+            holder.selectionCountContainer.setVisibility(View.VISIBLE);
             holder.selectionCountTextView.setVisibility(View.VISIBLE);
             holder.selectionCountTextView.setSelected(isSelected);
             if (isSelected) {
@@ -194,6 +195,7 @@ public class MediaGridAdapter extends RecyclerView.Adapter<MediaGridAdapter.Grid
                 holder.selectionCountTextView.setText(null);
             }
         } else {
+            holder.selectionCountContainer.setVisibility(View.GONE);
             holder.selectionCountTextView.setVisibility(View.GONE);
         }
 
@@ -285,7 +287,6 @@ public class MediaGridAdapter extends RecyclerView.Adapter<MediaGridAdapter.Grid
 
             videoOverlayContainer = (ViewGroup) view.findViewById(R.id.frame_video_overlay);
             selectionCountContainer = (ViewGroup) view.findViewById(R.id.frame_selection_count);
-            selectionCountContainer.setVisibility(mBrowserType.isPicker() ? View.VISIBLE : View.GONE);
 
             imageView.setErrorImageResId(R.drawable.media_item_background);
             imageView.setDefaultImageResId(R.drawable.media_item_background);
