@@ -41,7 +41,11 @@ class SearchStockMediaDeserializer implements JsonDeserializer<SearchStockMediaR
         if (jsonObject.has("meta")) {
             JsonElement jsonMeta = jsonObject.get("meta");
             // note that "next_page" will be "false" rather than an int if this is the last page
-            response.nextPage = getJsonInt(jsonMeta, "next_page");
+            try {
+                response.nextPage = getJsonInt(jsonMeta, "next_page");
+            } catch (NumberFormatException e) {
+                response.nextPage = 0;
+            }
         }
 
         // parse the media list
