@@ -39,6 +39,7 @@ import javax.inject.Inject;
 
 public class StockPhotoPickerActivity extends AppCompatActivity {
 
+    private static final String KEY_SELECTED_ITEMS = "selected_items";
     private SiteModel mSite;
 
     private RecyclerView mRecycler;
@@ -48,7 +49,6 @@ public class StockPhotoPickerActivity extends AppCompatActivity {
     private int mThumbHeight;
 
     private boolean mIsFetching;
-    private boolean mIsSelecting;
 
     private SearchView mSearchView;
     private String mSearchQuery;
@@ -101,25 +101,26 @@ public class StockPhotoPickerActivity extends AppCompatActivity {
             }
         });
 
+        setupObserver();
+
         if (savedInstanceState == null) {
             mSite = (SiteModel) getIntent().getSerializableExtra(WordPress.SITE);
         } else {
             mSite = (SiteModel) savedInstanceState.getSerializable(WordPress.SITE);
             mViewModel.readFromBundle(savedInstanceState);
         }
-
-        setupObservers();
     }
 
     @Override
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
+        mViewModel.writeToBundle(outState);
         if (mSite != null) {
             outState.putSerializable(WordPress.SITE, mSite);
         }
     }
 
-    private void setupObservers() {
+    private void setupObserver() {
         mViewModel.getSearchResults().observe(this, new Observer<List<StockMediaModel>>() {
             @Override
             public void onChanged(@Nullable final List<StockMediaModel> mediaList) {
@@ -256,14 +257,15 @@ public class StockPhotoPickerActivity extends AppCompatActivity {
 
         void setItemSelected(StockViewHolder holder, int position, boolean selected) {
             if (!isValidPosition(position)) return;
-            if (mIsSelecting) return;
 
             if (selected) {
                 mSelectedItems.add(position);
-            } else if (mSelectedItems.contains(position)) {
-                mSelectedItems.remove(position);
             } else {
-                return;
+                int index = mSelectedItems.indexOf(position);
+                if (index == -1) {
+                    return;
+                }
+                mSelectedItems.remove(index);
             }
 
             // show and animate the count
@@ -283,12 +285,10 @@ public class StockPhotoPickerActivity extends AppCompatActivity {
             }
 
             // redraw after the scale animation completes
-            mIsSelecting = true;
             long delayMs = AniUtils.Duration.SHORT.toMillis(StockPhotoPickerActivity.this);
             new Handler().postDelayed(new Runnable() {
                 @Override
                 public void run() {
-                    mIsSelecting = false;
                     notifyDataSetChanged();
                 }
             }, delayMs);
