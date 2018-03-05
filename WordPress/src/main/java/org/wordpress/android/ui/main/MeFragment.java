@@ -66,7 +66,7 @@ public class MeFragment extends Fragment {
     private static final String IS_DISCONNECTING = "IS_DISCONNECTING";
     private static final String IS_UPDATING_GRAVATAR = "IS_UPDATING_GRAVATAR";
 
-    private ViewGroup mAvatarFrame;
+    private ViewGroup mAvatarCard;
     private View mProgressBar;
     private ViewGroup mAvatarContainer;
     private WPNetworkImageView mAvatarImageView;
@@ -114,9 +114,9 @@ public class MeFragment extends Fragment {
                              Bundle savedInstanceState) {
         final ViewGroup rootView = (ViewGroup) inflater.inflate(R.layout.me_fragment, container, false);
 
-        mAvatarFrame = (ViewGroup) rootView.findViewById(R.id.frame_avatar);
         mAvatarContainer = (ViewGroup) rootView.findViewById(R.id.avatar_container);
         mAvatarImageView = (WPNetworkImageView) rootView.findViewById(R.id.me_avatar);
+        mAvatarCard = rootView.findViewById(R.id.card_avatar);
         mProgressBar = rootView.findViewById(R.id.avatar_progress);
         mDisplayNameTextView = (TextView) rootView.findViewById(R.id.me_display_name);
         mUsernameTextView = (TextView) rootView.findViewById(R.id.me_username);
@@ -245,7 +245,7 @@ public class MeFragment extends Fragment {
 
             mDisplayNameTextView.setVisibility(View.VISIBLE);
             mUsernameTextView.setVisibility(View.VISIBLE);
-            mAvatarFrame.setVisibility(View.VISIBLE);
+            mAvatarCard.setVisibility(View.VISIBLE);
             mMyProfileView.setVisibility(View.VISIBLE);
             mNotificationsView.setVisibility(View.VISIBLE);
             mNotificationsDividerView.setVisibility(View.VISIBLE);
@@ -265,7 +265,7 @@ public class MeFragment extends Fragment {
         } else {
             mDisplayNameTextView.setVisibility(View.GONE);
             mUsernameTextView.setVisibility(View.GONE);
-            mAvatarFrame.setVisibility(View.GONE);
+            mAvatarCard.setVisibility(View.GONE);
             mProgressBar.setVisibility(View.GONE);
             mMyProfileView.setVisibility(View.GONE);
             mAccountSettingsView.setVisibility(View.GONE);
