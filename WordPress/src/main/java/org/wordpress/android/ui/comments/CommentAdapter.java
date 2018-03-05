@@ -405,7 +405,7 @@ public class CommentAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
     private boolean mIsLoadTaskRunning = false;
 
     private class LoadCommentsTask extends AsyncTask<Void, Void, Boolean> {
-        CommentList tmpComments;
+        private CommentList mTmpComments;
         final CommentStatus mStatusFilter;
 
         LoadCommentsTask(CommentStatus statusFilter) {
@@ -433,17 +433,17 @@ public class CommentAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
                 comments = mCommentStore.getCommentsForSite(mSite, false, mStatusFilter);
             }
 
-            tmpComments = new CommentList();
-            tmpComments.addAll(comments);
+            mTmpComments = new CommentList();
+            mTmpComments.addAll(comments);
 
-            return !mComments.isSameList(tmpComments);
+            return !mComments.isSameList(mTmpComments);
         }
 
         @Override
         protected void onPostExecute(Boolean result) {
             if (result) {
                 mComments.clear();
-                mComments.addAll(tmpComments);
+                mComments.addAll(mTmpComments);
                 // Sort by date
                 Collections.sort(mComments, new Comparator<CommentModel>() {
                     @Override

@@ -662,8 +662,8 @@ public class WordPress extends MultiDexApplication implements HasServiceInjector
      * to make sure to detect the send to background event and not other events.
      */
     private class ApplicationLifecycleMonitor implements Application.ActivityLifecycleCallbacks, ComponentCallbacks2 {
-        private final int DEFAULT_TIMEOUT = 2 * 60; // 2 minutes
-        private final long MAX_ACTIVITY_TRANSITION_TIME_MS = 2000;
+        private static final int DEFAULT_TIMEOUT = 2 * 60; // 2 minutes
+        private static final long MAX_ACTIVITY_TRANSITION_TIME_MS = 2000;
 
         private Date mLastPingDate;
         private Date mApplicationOpenedDate;

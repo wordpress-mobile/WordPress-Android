@@ -54,16 +54,16 @@ public class HeaderNoteBlock extends NoteBlock {
         final NoteHeaderBlockHolder noteBlockHolder = (NoteHeaderBlockHolder) view.getTag();
 
         Spannable spannable = NotificationsUtils.getSpannableContentForRanges(mHeaderArray.optJSONObject(0));
-        noteBlockHolder.nameTextView.setText(spannable);
+        noteBlockHolder.mNameTextView.setText(spannable);
 
-        noteBlockHolder.avatarImageView.setImageUrl(getAvatarUrl(), mImageType);
+        noteBlockHolder.mAvatarImageView.setImageUrl(getAvatarUrl(), mImageType);
         if (!TextUtils.isEmpty(getUserUrl())) {
-            noteBlockHolder.avatarImageView.setOnTouchListener(mOnGravatarTouchListener);
+            noteBlockHolder.mAvatarImageView.setOnTouchListener(mOnGravatarTouchListener);
         } else {
-            noteBlockHolder.avatarImageView.setOnTouchListener(null);
+            noteBlockHolder.mAvatarImageView.setOnTouchListener(null);
         }
 
-        noteBlockHolder.snippetTextView.setText(getSnippet());
+        noteBlockHolder.mSnippetTextView.setText(getSnippet());
 
         if (mIsComment) {
             View footerView = view.findViewById(R.id.header_footer);
@@ -110,16 +110,16 @@ public class HeaderNoteBlock extends NoteBlock {
     }
 
     private class NoteHeaderBlockHolder {
-        private final TextView nameTextView;
-        private final TextView snippetTextView;
-        private final WPNetworkImageView avatarImageView;
+        private final TextView mNameTextView;
+        private final TextView mSnippetTextView;
+        private final WPNetworkImageView mAvatarImageView;
 
         NoteHeaderBlockHolder(View view) {
             View rootView = view.findViewById(R.id.header_root_view);
             rootView.setOnClickListener(mOnClickListener);
-            nameTextView = (TextView) view.findViewById(R.id.header_user);
-            snippetTextView = (TextView) view.findViewById(R.id.header_snippet);
-            avatarImageView = (WPNetworkImageView) view.findViewById(R.id.header_avatar);
+            mNameTextView = (TextView) view.findViewById(R.id.header_user);
+            mSnippetTextView = (TextView) view.findViewById(R.id.header_snippet);
+            mAvatarImageView = (WPNetworkImageView) view.findViewById(R.id.header_avatar);
         }
     }
 

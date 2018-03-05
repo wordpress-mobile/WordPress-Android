@@ -37,13 +37,11 @@ import static org.wordpress.android.ui.RequestCodes.JETPACK_LOGIN;
  * Redirects users to the stats activity if the jetpack connection was succesful
  */
 public class JetpackConnectionDeeplinkActivity extends AppCompatActivity {
-    private String reason;
-    private Source source;
+    private String mReason;
+    private Source mSource;
 
-    @Inject
-    AccountStore mAccountStore;
-    @Inject
-    Dispatcher mDispatcher;
+    @Inject AccountStore mAccountStore;
+    @Inject Dispatcher mDispatcher;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -71,13 +69,13 @@ public class JetpackConnectionDeeplinkActivity extends AppCompatActivity {
 
         // check if this intent is started via custom scheme link
         if (Intent.ACTION_VIEW.equals(action) && uri != null) {
-            reason = uri.getQueryParameter("reason");
-            source = Source.fromString(uri.getQueryParameter("source"));
+            mReason = uri.getQueryParameter("reason");
+            mSource = Source.fromString(uri.getQueryParameter("source"));
 
             // if user is signed in wpcom show the post right away - otherwise show welcome activity
             // and then show the post once the user has signed in
             if (mAccountStore.hasAccessToken()) {
-                if (source == Source.STATS) {
+                if (mSource == Source.STATS) {
                     showStats();
                 } else {
                     finish();
@@ -107,7 +105,7 @@ public class JetpackConnectionDeeplinkActivity extends AppCompatActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == RequestCodes.JETPACK_LOGIN && resultCode == RESULT_OK && source == Source.STATS) {
+        if (requestCode == RequestCodes.JETPACK_LOGIN && resultCode == RESULT_OK && mSource == Source.STATS) {
             showStats();
         } else {
             finish();
@@ -115,8 +113,8 @@ public class JetpackConnectionDeeplinkActivity extends AppCompatActivity {
     }
 
     private void showStats() {
-        if (!TextUtils.isEmpty(reason)) {
-            ToastUtils.showToast(this, reason);
+        if (!TextUtils.isEmpty(mReason)) {
+            ToastUtils.showToast(this, mReason);
             finish();
         } else {
             SiteModel site = (SiteModel) getIntent().getSerializableExtra(SITE);

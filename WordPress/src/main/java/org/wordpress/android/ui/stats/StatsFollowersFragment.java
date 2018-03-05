@@ -34,7 +34,7 @@ public class StatsFollowersFragment extends StatsAbstractListFragment {
     public static final String TAG = StatsFollowersFragment.class.getSimpleName();
 
     private static final String ARG_REST_RESPONSE_FOLLOWERS_EMAIL = "ARG_REST_RESPONSE_FOLLOWERS_EMAIL";
-    private final Map<String, Long> userBlogs = new HashMap<>();
+    private final Map<String, Long> mUserBlogs = new HashMap<>();
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -73,7 +73,7 @@ public class StatsFollowersFragment extends StatsAbstractListFragment {
                     if (site.getUrl() != null && site.getSiteId() != 0) {
                         String normURL = normalizeAndRemoveScheme(site.getUrl());
                         long blogID = site.getSiteId();
-                        userBlogs.put(normURL, blogID);
+                        mUserBlogs.put(normURL, blogID);
                     }
                 }
             }
@@ -301,15 +301,15 @@ public class StatsFollowersFragment extends StatsAbstractListFragment {
     }
 
     private class WPComFollowerAdapter extends ArrayAdapter<FollowerModel> {
-        private final List<FollowerModel> list;
-        private final Activity context;
-        private final LayoutInflater inflater;
+        private final List<FollowerModel> mList;
+        private final Activity mContext;
+        private final LayoutInflater mInflater;
 
         WPComFollowerAdapter(Activity context, List<FollowerModel> list) {
             super(context, R.layout.stats_list_cell, list);
-            this.context = context;
-            this.list = list;
-            inflater = LayoutInflater.from(context);
+            mContext = context;
+            mList = list;
+            mInflater = LayoutInflater.from(context);
         }
 
         @Override
@@ -317,7 +317,7 @@ public class StatsFollowersFragment extends StatsAbstractListFragment {
             View rowView = convertView;
             // reuse views
             if (rowView == null) {
-                rowView = inflater.inflate(R.layout.stats_list_cell, parent, false);
+                rowView = mInflater.inflate(R.layout.stats_list_cell, parent, false);
                 // set a min-width value that is large enough to contains the "since" string
                 LinearLayout totalContainer = (LinearLayout) rowView.findViewById(R.id.stats_list_cell_total_container);
                 int dp64 = DisplayUtils.dpToPx(rowView.getContext(), 64);
@@ -327,10 +327,10 @@ public class StatsFollowersFragment extends StatsAbstractListFragment {
                 rowView.setTag(viewHolder);
             }
 
-            final FollowerModel currentRowData = list.get(position);
+            final FollowerModel currentRowData = mList.get(position);
             final StatsViewHolder holder = (StatsViewHolder) rowView.getTag();
 
-            holder.entryTextView.setTextColor(context.getResources().getColor(R.color.stats_text_color));
+            holder.entryTextView.setTextColor(mContext.getResources().getColor(R.color.stats_text_color));
             holder.rowContent.setClickable(false);
 
             final FollowDataModel followData = currentRowData.getFollowData();
@@ -346,7 +346,7 @@ public class StatsFollowersFragment extends StatsAbstractListFragment {
                     // We need to check if the user is a member of this blog.
                     // If so, we can launch open the reader, otherwise open the blog in the in-app browser.
                     String normURL = normalizeAndRemoveScheme(currentRowData.getURL());
-                    blogID = userBlogs.containsKey(normURL) ? userBlogs.get(normURL) : -1;
+                    blogID = mUserBlogs.containsKey(normURL) ? mUserBlogs.get(normURL) : -1;
                 } else {
                     blogID = followData.getSiteID();
                 }
@@ -359,7 +359,7 @@ public class StatsFollowersFragment extends StatsAbstractListFragment {
                                 @Override
                                 public void onClick(View view) {
                                     ReaderActivityLauncher.showReaderBlogPreview(
-                                            context,
+                                            mContext,
                                             blogID
                                                                                 );
                                 }
@@ -368,7 +368,7 @@ public class StatsFollowersFragment extends StatsAbstractListFragment {
                     // Open the in-app web browser
                     holder.setEntryTextOrLink(currentRowData.getURL(), currentRowData.getLabel());
                 }
-                holder.entryTextView.setTextColor(context.getResources().getColor(R.color.stats_link_text_color));
+                holder.entryTextView.setTextColor(mContext.getResources().getColor(R.color.stats_link_text_color));
             } else {
                 // Email followers, or wpcom followers with empty URL and no blogID
                 holder.setEntryText(currentRowData.getLabel());
@@ -377,7 +377,7 @@ public class StatsFollowersFragment extends StatsAbstractListFragment {
             // since date
             holder.totalsTextView.setText(
                     StatsUtils.getSinceLabel(
-                            context,
+                            mContext,
                             currentRowData.getDateSubscribed()
                                             )
                                          );
@@ -396,7 +396,7 @@ public class StatsFollowersFragment extends StatsAbstractListFragment {
                 holder.imgMore.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
-                        FollowHelper fh = new FollowHelper(context);
+                        FollowHelper fh = new FollowHelper(mContext);
                         fh.showPopup(holder.imgMore, followData);
                     }
                 });

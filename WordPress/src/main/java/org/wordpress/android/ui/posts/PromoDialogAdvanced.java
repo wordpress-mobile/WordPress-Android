@@ -57,12 +57,12 @@ public class PromoDialogAdvanced extends PromoDialog {
     protected static PromoDialogAdvanced newInstance(Builder builder) {
         PromoDialogAdvanced fragment = new PromoDialogAdvanced();
         Bundle args = new Bundle();
-        args.putInt(KEY_DRAWABLE_RES_ID, builder.drawableResId);
-        args.putInt(KEY_TITLE_RES_ID, builder.titleResId);
-        args.putInt(KEY_DESCRIPTION_RES_ID, builder.descriptionResId);
+        args.putInt(KEY_DRAWABLE_RES_ID, builder.mDrawableResId);
+        args.putInt(KEY_TITLE_RES_ID, builder.mTitleResId);
+        args.putInt(KEY_DESCRIPTION_RES_ID, builder.mDescriptionResId);
         args.putInt(KEY_LINK_RES_ID, builder.mLinkResId);
         args.putInt(KEY_BUTTON_NEGATIVE_RES_ID, builder.mButtonNegativeResId);
-        args.putInt(KEY_BUTTON_POSITIVE_RES_ID, builder.buttonPositiveResId);
+        args.putInt(KEY_BUTTON_POSITIVE_RES_ID, builder.mButtonPositiveResId);
         fragment.setArguments(args);
         return fragment;
     }

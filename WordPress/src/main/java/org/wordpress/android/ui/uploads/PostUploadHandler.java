@@ -192,7 +192,7 @@ public class PostUploadHandler implements UploadHandler<PostModel> {
 
         private String mErrorMessage = "";
         private boolean mIsMediaError = false;
-        private long featuredImageID = -1;
+        private long mFeaturedImageID = -1;
 
         // Used for analytics
         private boolean mHasImage, mHasVideo, mHasCategory;
@@ -244,8 +244,8 @@ public class PostUploadHandler implements UploadHandler<PostModel> {
             }
 
             // Support for legacy editor - images are identified as featured as they're being uploaded with the post
-            if (sUseLegacyMode && featuredImageID != -1) {
-                mPost.setFeaturedImageId(featuredImageID);
+            if (sUseLegacyMode && mFeaturedImageID != -1) {
+                mPost.setFeaturedImageId(mFeaturedImageID);
             }
 
             // Track analytics only if the post is newly published
@@ -523,7 +523,7 @@ public class PostUploadHandler implements UploadHandler<PostModel> {
             String pictureURL = finishedMedia.getUrl();
 
             if (mediaFile.isFeatured()) {
-                featuredImageID = finishedMedia.getMediaId();
+                mFeaturedImageID = finishedMedia.getMediaId();
                 if (!mediaFile.isFeaturedInPost()) {
                     return "";
                 }

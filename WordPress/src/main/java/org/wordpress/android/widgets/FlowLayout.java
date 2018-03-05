@@ -122,9 +122,8 @@ public class FlowLayout extends ViewGroup {
     }
 
     public static class LayoutParams extends ViewGroup.MarginLayoutParams {
-        int x;
-        int y;
-
+        public int x;
+        public int y;
         public int horizontalSpacing;
 
         public LayoutParams(Context context, AttributeSet attrs) {

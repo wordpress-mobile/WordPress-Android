@@ -3,6 +3,7 @@ package org.wordpress.android.ui.stats;
 import android.app.Activity;
 import android.content.res.Resources;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -192,29 +193,30 @@ public class StatsCommentsFragment extends StatsAbstractListFragment {
     }
 
     private class AuthorsAdapter extends ArrayAdapter<AuthorModel> {
-        private final List<AuthorModel> list;
-        private final Activity context;
-        private final LayoutInflater inflater;
+        private final List<AuthorModel> mList;
+        private final Activity mContext;
+        private final LayoutInflater mInflater;
 
         AuthorsAdapter(Activity context, List<AuthorModel> list) {
             super(context, R.layout.stats_list_cell, list);
-            this.context = context;
-            this.list = list;
-            inflater = LayoutInflater.from(context);
+            mContext = context;
+            mList = list;
+            mInflater = LayoutInflater.from(context);
         }
 
+        @NonNull
         @Override
-        public View getView(int position, View convertView, ViewGroup parent) {
+        public View getView(int position, View convertView, @NonNull ViewGroup parent) {
             View rowView = convertView;
             // reuse views
             if (rowView == null) {
-                rowView = inflater.inflate(R.layout.stats_list_cell, parent, false);
+                rowView = mInflater.inflate(R.layout.stats_list_cell, parent, false);
                 // configure view holder
                 StatsViewHolder viewHolder = new StatsViewHolder(rowView);
                 rowView.setTag(viewHolder);
             }
 
-            final AuthorModel currentRowData = list.get(position);
+            final AuthorModel currentRowData = mList.get(position);
             final StatsViewHolder holder = (StatsViewHolder) rowView.getTag();
 
             // entries
@@ -238,7 +240,7 @@ public class StatsCommentsFragment extends StatsAbstractListFragment {
                 holder.imgMore.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
-                        FollowHelper fh = new FollowHelper(context);
+                        FollowHelper fh = new FollowHelper(mContext);
                         fh.showPopup(holder.imgMore, followData);
                     }
                 });

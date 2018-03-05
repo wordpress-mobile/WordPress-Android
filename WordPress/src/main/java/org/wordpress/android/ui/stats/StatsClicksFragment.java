@@ -127,16 +127,16 @@ public class StatsClicksFragment extends StatsAbstractListFragment {
 
     private class MyExpandableListAdapter extends BaseExpandableListAdapter {
         public final LayoutInflater inflater;
-        private final List<ClickGroupModel> clickGroups;
+        private final List<ClickGroupModel> mClickGroups;
 
         MyExpandableListAdapter(Context context, List<ClickGroupModel> clickGroups) {
-            this.clickGroups = clickGroups;
+            mClickGroups = clickGroups;
             this.inflater = LayoutInflater.from(context);
         }
 
         @Override
         public Object getChild(int groupPosition, int childPosition) {
-            ClickGroupModel currentGroup = clickGroups.get(groupPosition);
+            ClickGroupModel currentGroup = mClickGroups.get(groupPosition);
             List<SingleItemModel> results = currentGroup.getClicks();
             return results.get(childPosition);
         }
@@ -179,7 +179,7 @@ public class StatsClicksFragment extends StatsAbstractListFragment {
 
         @Override
         public int getChildrenCount(int groupPosition) {
-            ClickGroupModel currentGroup = clickGroups.get(groupPosition);
+            ClickGroupModel currentGroup = mClickGroups.get(groupPosition);
             List<SingleItemModel> clicks = currentGroup.getClicks();
             if (clicks == null) {
                 return 0;
@@ -190,12 +190,12 @@ public class StatsClicksFragment extends StatsAbstractListFragment {
 
         @Override
         public Object getGroup(int groupPosition) {
-            return clickGroups.get(groupPosition);
+            return mClickGroups.get(groupPosition);
         }
 
         @Override
         public int getGroupCount() {
-            return clickGroups.size();
+            return mClickGroups.size();
         }
 
 

@@ -35,8 +35,8 @@ import org.wordpress.android.R;
 public class FullScreenDialogFragment extends DialogFragment {
     private Fragment mFragment;
     private FullScreenDialogController mController;
-    private OnConfirmListener onConfirmListener;
-    private OnDismissListener onDismissListener;
+    private OnConfirmListener mOnConfirmListener;
+    private OnDismissListener mOnDismissListener;
     private String mAction;
     private String mTitle;
 
@@ -157,8 +157,8 @@ public class FullScreenDialogFragment extends DialogFragment {
 
     @Override
     public void dismiss() {
-        if (onDismissListener != null) {
-            onDismissListener.onDismiss();
+        if (mOnDismissListener != null) {
+            mOnDismissListener.onDismiss();
         }
 
         getFragmentManager().popBackStackImmediate();
@@ -179,8 +179,8 @@ public class FullScreenDialogFragment extends DialogFragment {
     }
 
     protected void confirm(Bundle result) {
-        if (onConfirmListener != null) {
-            onConfirmListener.onConfirm(result);
+        if (mOnConfirmListener != null) {
+            mOnConfirmListener.onConfirm(result);
         }
 
         dismiss();
@@ -275,7 +275,7 @@ public class FullScreenDialogFragment extends DialogFragment {
      * @param listener {@link OnConfirmListener} interface to call on confirm click
      */
     public void setOnConfirmListener(@Nullable OnConfirmListener listener) {
-        this.onConfirmListener = listener;
+        this.mOnConfirmListener = listener;
     }
 
     /**
@@ -284,7 +284,7 @@ public class FullScreenDialogFragment extends DialogFragment {
      * @param listener {@link OnDismissListener} interface to call on dismiss click
      */
     public void setOnDismissListener(@Nullable OnDismissListener listener) {
-        this.onDismissListener = listener;
+        this.mOnDismissListener = listener;
     }
 
     /**

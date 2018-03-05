@@ -255,14 +255,14 @@ public class MediaSettingsActivity extends AppCompatActivity
         final CollapsingToolbarLayout collapsingToolbar = findViewById(R.id.collapsing_toolbar);
         AppBarLayout appBarLayout = findViewById(R.id.app_bar_layout);
         appBarLayout.addOnOffsetChangedListener(new AppBarLayout.OnOffsetChangedListener() {
-            int scrollRange = -1;
+            int mScrollRange = -1;
 
             @Override
             public void onOffsetChanged(AppBarLayout appBarLayout, int verticalOffset) {
-                if (scrollRange == -1) {
-                    scrollRange = appBarLayout.getTotalScrollRange();
+                if (mScrollRange == -1) {
+                    mScrollRange = appBarLayout.getTotalScrollRange();
                 }
-                if (scrollRange + verticalOffset == 0) {
+                if (mScrollRange + verticalOffset == 0) {
                     collapsingToolbar.setTitle(mTitle);
                 } else {
                     collapsingToolbar.setTitle(" "); // space between double quotes is on purpose

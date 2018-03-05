@@ -18,11 +18,11 @@ public class ReaderBlog {
     public boolean isFollowing;
     public int numSubscribers;
 
-    private String name;
-    private String description;
-    private String url;
-    private String imageUrl;
-    private String feedUrl;
+    private String mName;
+    private String mDescription;
+    private String mUrl;
+    private String mImageUrl;
+    private String mFeedUrl;
 
     public static ReaderBlog fromJson(JSONObject json) {
         ReaderBlog blog = new ReaderBlog();
@@ -86,63 +86,63 @@ public class ReaderBlog {
     }
 
     public String getName() {
-        return StringUtils.notNullStr(name);
+        return StringUtils.notNullStr(mName);
     }
 
     public void setName(String blogName) {
-        this.name = StringUtils.notNullStr(blogName).trim();
+        this.mName = StringUtils.notNullStr(blogName).trim();
     }
 
     public String getDescription() {
-        return StringUtils.notNullStr(description);
+        return StringUtils.notNullStr(mDescription);
     }
 
     public void setDescription(String description) {
-        this.description = StringUtils.notNullStr(description).trim();
+        this.mDescription = StringUtils.notNullStr(description).trim();
     }
 
     public String getImageUrl() {
-        return StringUtils.notNullStr(imageUrl);
+        return StringUtils.notNullStr(mImageUrl);
     }
 
     public void setImageUrl(String imageUrl) {
-        this.imageUrl = StringUtils.notNullStr(imageUrl);
+        this.mImageUrl = StringUtils.notNullStr(imageUrl);
     }
 
     public String getUrl() {
-        return StringUtils.notNullStr(url);
+        return StringUtils.notNullStr(mUrl);
     }
 
     public void setUrl(String url) {
-        this.url = StringUtils.notNullStr(url);
+        this.mUrl = StringUtils.notNullStr(url);
     }
 
     public String getFeedUrl() {
-        return StringUtils.notNullStr(feedUrl);
+        return StringUtils.notNullStr(mFeedUrl);
     }
 
     public void setFeedUrl(String feedUrl) {
-        this.feedUrl = StringUtils.notNullStr(feedUrl);
+        this.mFeedUrl = StringUtils.notNullStr(feedUrl);
     }
 
     public boolean hasUrl() {
-        return !TextUtils.isEmpty(url);
+        return !TextUtils.isEmpty(mUrl);
     }
 
     public boolean hasFeedUrl() {
-        return !TextUtils.isEmpty(feedUrl);
+        return !TextUtils.isEmpty(mFeedUrl);
     }
 
     public boolean hasImageUrl() {
-        return !TextUtils.isEmpty(imageUrl);
+        return !TextUtils.isEmpty(mImageUrl);
     }
 
     public boolean hasName() {
-        return !TextUtils.isEmpty(name);
+        return !TextUtils.isEmpty(mName);
     }
 
     public boolean hasDescription() {
-        return !TextUtils.isEmpty(description);
+        return !TextUtils.isEmpty(mDescription);
     }
 
     public boolean isExternal() {

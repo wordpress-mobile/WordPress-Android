@@ -80,14 +80,14 @@ public class MediaGridFragment extends Fragment implements MediaGridAdapterCallb
         FILTER_VIDEOS(3),
         FILTER_AUDIO(4);
 
-        private final int value;
+        private final int mValue;
 
         MediaFilter(int value) {
-            this.value = value;
+            this.mValue = value;
         }
 
         int getValue() {
-            return value;
+            return mValue;
         }
 
         private String toMimeType() {
@@ -409,7 +409,7 @@ public class MediaGridFragment extends Fragment implements MediaGridAdapterCallb
             updateEmptyView(mEmptyViewMessageType);
         }
 
-        boolean hasFetchedThisFilter = mFetchedFilters[filter.value];
+        boolean hasFetchedThisFilter = mFetchedFilters[filter.getValue()];
         if (!hasFetchedThisFilter && NetworkUtils.isNetworkAvailable(getActivity())) {
             if (isEmpty()) {
                 mSwipeToRefreshHelper.setRefreshing(true);
@@ -420,7 +420,7 @@ public class MediaGridFragment extends Fragment implements MediaGridAdapterCallb
 
     @Override
     public void onAdapterFetchMoreData() {
-        boolean hasFetchedAll = mFetchedAllFilters[mFilter.value];
+        boolean hasFetchedAll = mFetchedAllFilters[mFilter.getValue()];
         if (!hasFetchedAll) {
             fetchMediaList(true);
         }

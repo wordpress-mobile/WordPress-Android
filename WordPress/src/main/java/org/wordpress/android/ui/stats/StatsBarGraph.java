@@ -123,18 +123,18 @@ class StatsBarGraph extends GraphView {
         gStyle.setNumVerticalLabels(3);
 
         setCustomLabelFormatter(new CustomLabelFormatter() {
-            private NumberFormat numberFormatter;
+            private NumberFormat mNumberFormatter;
 
             @Override
             public String formatLabel(double value, boolean isValueX) {
                 if (isValueX) {
                     return null;
                 }
-                if (numberFormatter == null) {
-                    numberFormatter = NumberFormat.getNumberInstance();
-                    numberFormatter.setMaximumFractionDigits(0);
+                if (mNumberFormatter == null) {
+                    mNumberFormatter = NumberFormat.getNumberInstance();
+                    mNumberFormatter.setMaximumFractionDigits(0);
                 }
-                return numberFormatter.format(value);
+                return mNumberFormatter.format(value);
             }
         });
     }

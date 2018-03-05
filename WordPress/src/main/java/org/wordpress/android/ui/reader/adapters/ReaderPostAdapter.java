@@ -911,7 +911,7 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
     private boolean mIsTaskRunning = false;
 
     private class LoadPostsTask extends AsyncTask<Void, Void, Boolean> {
-        ReaderPostList allPosts;
+        private ReaderPostList mAllPosts;
 
         @Override
         protected void onPreExecute() {
@@ -930,15 +930,15 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                 case TAG_PREVIEW:
                 case TAG_FOLLOWED:
                 case SEARCH_RESULTS:
-                    allPosts = ReaderPostTable.getPostsWithTag(mCurrentTag, MAX_ROWS, EXCLUDE_TEXT_COLUMN);
+                    mAllPosts = ReaderPostTable.getPostsWithTag(mCurrentTag, MAX_ROWS, EXCLUDE_TEXT_COLUMN);
                     numExisting = ReaderPostTable.getNumPostsWithTag(mCurrentTag);
                     break;
                 case BLOG_PREVIEW:
                     if (mCurrentFeedId != 0) {
-                        allPosts = ReaderPostTable.getPostsInFeed(mCurrentFeedId, MAX_ROWS, EXCLUDE_TEXT_COLUMN);
+                        mAllPosts = ReaderPostTable.getPostsInFeed(mCurrentFeedId, MAX_ROWS, EXCLUDE_TEXT_COLUMN);
                         numExisting = ReaderPostTable.getNumPostsInFeed(mCurrentFeedId);
                     } else {
-                        allPosts = ReaderPostTable.getPostsInBlog(mCurrentBlogId, MAX_ROWS, EXCLUDE_TEXT_COLUMN);
+                        mAllPosts = ReaderPostTable.getPostsInBlog(mCurrentBlogId, MAX_ROWS, EXCLUDE_TEXT_COLUMN);
                         numExisting = ReaderPostTable.getNumPostsInBlog(mCurrentBlogId);
                     }
                     break;
@@ -946,7 +946,7 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                     return false;
             }
 
-            if (mPosts.isSameList(allPosts)) {
+            if (mPosts.isSameList(mAllPosts)) {
                 return false;
             }
 
@@ -971,7 +971,7 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
             }
 
             // find the position of the gap marker post
-            int gapPosition = allPosts.indexOfIds(gapMarkerIds);
+            int gapPosition = mAllPosts.indexOfIds(gapMarkerIds);
             if (gapPosition > -1) {
                 // increment it because we want the gap marker to appear *below* this post
                 gapPosition++;
@@ -981,7 +981,7 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                 }
                 // remove the gap marker if it's on the last post (edge case but
                 // it can happen following a purge)
-                if (gapPosition >= allPosts.size() - 1) {
+                if (gapPosition >= mAllPosts.size() - 1) {
                     gapPosition = -1;
                     AppLog.w(AppLog.T.READER, "gap marker at/after last post, removed");
                     ReaderPostTable.removeGapMarkerForTag(mCurrentTag);
@@ -996,7 +996,7 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         protected void onPostExecute(Boolean result) {
             if (result) {
                 mPosts.clear();
-                mPosts.addAll(allPosts);
+                mPosts.addAll(mAllPosts);
                 notifyDataSetChanged();
             }
 

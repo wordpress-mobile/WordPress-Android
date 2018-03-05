@@ -89,7 +89,7 @@ public class LoginActivity extends AppCompatActivity implements ConnectionCallba
 
     private LoginMode mLoginMode;
 
-    @Inject DispatchingAndroidInjector<Fragment> fragmentInjector;
+    @Inject DispatchingAndroidInjector<Fragment> mFragmentInjector;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -714,6 +714,6 @@ public class LoginActivity extends AppCompatActivity implements ConnectionCallba
 
     @Override
     public AndroidInjector<Fragment> supportFragmentInjector() {
-        return fragmentInjector;
+        return mFragmentInjector;
     }
 }

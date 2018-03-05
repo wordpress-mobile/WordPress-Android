@@ -132,7 +132,7 @@ public class StatsInsightsLatestPostSummaryFragment extends StatsAbstractInsight
         }
 
         TextView moduleTitle = (TextView) getView().findViewById(R.id.stats_module_title);
-        moduleTitle.setOnClickListener(ViewsTabOnClickListener);
+        moduleTitle.setOnClickListener(mViewsTabOnClickListener);
         moduleTitle.setTextColor(getResources().getColor(R.color.stats_link_text_color));
 
         // update the tabs and the text now
@@ -206,7 +206,7 @@ public class StatsInsightsLatestPostSummaryFragment extends StatsAbstractInsight
         currentTab.setTag(itemType);
         // Only Views is clickable here
         if (itemType == StatsVisitorsAndViewsFragment.OverviewLabel.VIEWS) {
-            currentTab.setOnClickListener(ViewsTabOnClickListener);
+            currentTab.setOnClickListener(mViewsTabOnClickListener);
         } else {
             currentTab.setClickable(false);
         }
@@ -237,7 +237,7 @@ public class StatsInsightsLatestPostSummaryFragment extends StatsAbstractInsight
         }
     }
 
-    private final View.OnClickListener ViewsTabOnClickListener = new View.OnClickListener() {
+    private final View.OnClickListener mViewsTabOnClickListener = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
             if (!isAdded()) {

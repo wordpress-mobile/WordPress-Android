@@ -103,13 +103,13 @@ class ReferrerSpamHelper {
     private class ReferrerSpamRestListener implements RestRequest.Listener, RestRequest.ErrorListener {
         private final WeakReference<Activity> mActivityRef;
         private final ReferrerGroupModel mReferrerGroup;
-        private final boolean isMarkingAsSpamInProgress;
+        private final boolean mIsMarkingAsSpamInProgress;
 
         ReferrerSpamRestListener(Activity activity, final ReferrerGroupModel referrerGroup,
                                         final boolean isMarkingAsSpamInProgress) {
-            this.mActivityRef = new WeakReference<>(activity);
-            this.mReferrerGroup = referrerGroup;
-            this.isMarkingAsSpamInProgress = isMarkingAsSpamInProgress;
+            mActivityRef = new WeakReference<>(activity);
+            mReferrerGroup = referrerGroup;
+            mIsMarkingAsSpamInProgress = isMarkingAsSpamInProgress;
         }
 
         @Override
@@ -122,7 +122,7 @@ class ReferrerSpamHelper {
             if (response != null) {
                 boolean success = response.optBoolean("success");
                 if (success) {
-                    mReferrerGroup.isMarkedAsSpam = isMarkingAsSpamInProgress;
+                    mReferrerGroup.isMarkedAsSpam = mIsMarkingAsSpamInProgress;
                     StatsTable.deleteStatsForBlog(mActivityRef.get(), mReferrerGroup.getBlogId(),
                                                   StatsService.StatsEndpointsEnum.REFERRERS);
                 } else {
@@ -145,7 +145,7 @@ class ReferrerSpamHelper {
         public void onErrorResponse(final VolleyError volleyError) {
             if (volleyError != null) {
                 AppLog.e(AppLog.T.STATS, "Error while marking the referrer " + getDomain(mReferrerGroup) + " as "
-                                         + (isMarkingAsSpamInProgress ? " spam " : " unspam ")
+                                         + (mIsMarkingAsSpamInProgress ? " spam " : " unspam ")
                                          + volleyError.getMessage(), volleyError);
             }
             if (mActivityRef.get() == null || mActivityRef.get().isFinishing()) {

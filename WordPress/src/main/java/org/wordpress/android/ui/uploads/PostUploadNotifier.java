@@ -50,12 +50,12 @@ class PostUploadNotifier {
     private static NotificationData sNotificationData;
 
     private class NotificationData {
-        int notificationId;
-        int totalMediaItems;
-        int currentMediaItem;
-        int totalPostItems;
-        int totalPageItemsIncludedInPostCount;
-        int currentPostItem;
+        int mNotificationId;
+        int mTotalMediaItems;
+        int mCurrentMediaItem;
+        int mTotalPostItems;
+        int mTotalPageItemsIncludedInPostCount;
+        int mCurrentPostItem;
         final Map<Integer, Float> mediaItemToProgressMap = new HashMap<>();
         final List<PostModel> mUploadedPostsCounted = new ArrayList<>();
     }
@@ -79,20 +79,20 @@ class PostUploadNotifier {
 
     private void updateNotificationBuilder(@Nullable PostModel post) {
         // set the Notification's title and prepare the Notifications message text, i.e. "1/3 Posts, 4/17 media items"
-        if (sNotificationData.totalMediaItems > 0 && sNotificationData.totalPostItems == 0) {
+        if (sNotificationData.mTotalMediaItems > 0 && sNotificationData.mTotalPostItems == 0) {
             // only media items are being uploaded
             // check if special case for ONE media item
-            if (sNotificationData.totalMediaItems == 1) {
+            if (sNotificationData.mTotalMediaItems == 1) {
                 mNotificationBuilder.setContentTitle(buildNotificationTitleForMedia());
                 mNotificationBuilder.setContentText(buildNotificationSubtitleForMedia());
             } else {
                 mNotificationBuilder.setContentTitle(buildNotificationTitleForMixedContent());
                 mNotificationBuilder.setContentText(buildNotificationSubtitleForMedia());
             }
-        } else if (sNotificationData.totalMediaItems == 0 && sNotificationData.totalPostItems > 0) {
+        } else if (sNotificationData.mTotalMediaItems == 0 && sNotificationData.mTotalPostItems > 0) {
             // only Post / Pages are being uploaded
             // check if special case for ONE Post
-            if (sNotificationData.totalPostItems == 1) {
+            if (sNotificationData.mTotalPostItems == 1) {
                 mNotificationBuilder.setContentTitle(buildNotificationTitleForPost(post));
                 mNotificationBuilder.setContentText(buildNotificationSubtitleForPost(post));
             } else {
@@ -108,20 +108,20 @@ class PostUploadNotifier {
 
     private synchronized void startOrUpdateForegroundNotification(@Nullable PostModel post) {
         updateNotificationBuilder(post);
-        if (sNotificationData.notificationId == 0) {
-            sNotificationData.notificationId = (new Random()).nextInt();
-            mService.startForeground(sNotificationData.notificationId, mNotificationBuilder.build());
+        if (sNotificationData.mNotificationId == 0) {
+            sNotificationData.mNotificationId = (new Random()).nextInt();
+            mService.startForeground(sNotificationData.mNotificationId, mNotificationBuilder.build());
         } else {
             // service was already started, let's just modify the notification
-            doNotify(sNotificationData.notificationId, mNotificationBuilder.build());
+            doNotify(sNotificationData.mNotificationId, mNotificationBuilder.build());
         }
     }
 
     void removePostInfoFromForegroundNotificationData(@NonNull PostModel post, @Nullable List<MediaModel> media) {
-        if (sNotificationData.totalPostItems > 0) {
-            sNotificationData.totalPostItems--;
+        if (sNotificationData.mTotalPostItems > 0) {
+            sNotificationData.mTotalPostItems--;
             if (post.isPage()) {
-                sNotificationData.totalPageItemsIncludedInPostCount--;
+                sNotificationData.mTotalPageItemsIncludedInPostCount--;
             }
         }
         if (media != null) {
@@ -131,9 +131,9 @@ class PostUploadNotifier {
 
     // Post could have initial media, or not (nullable)
     void addPostInfoToForegroundNotification(@NonNull PostModel post, @Nullable List<MediaModel> media) {
-        sNotificationData.totalPostItems++;
+        sNotificationData.mTotalPostItems++;
         if (post.isPage()) {
-            sNotificationData.totalPageItemsIncludedInPostCount++;
+            sNotificationData.mTotalPageItemsIncludedInPostCount++;
         }
         if (media != null) {
             addMediaInfoToForegroundNotification(media);
@@ -147,23 +147,23 @@ class PostUploadNotifier {
     }
 
     void removeMediaInfoFromForegroundNotification(@NonNull List<MediaModel> mediaList) {
-        if (sNotificationData.totalMediaItems >= mediaList.size()) {
-            sNotificationData.totalMediaItems -= mediaList.size();
+        if (sNotificationData.mTotalMediaItems >= mediaList.size()) {
+            sNotificationData.mTotalMediaItems -= mediaList.size();
             // update Notification now
             updateForegroundNotification(null);
         }
     }
 
     void removeOneMediaItemInfoFromForegroundNotification() {
-        if (sNotificationData.totalMediaItems >= 1) {
-            sNotificationData.totalMediaItems--;
+        if (sNotificationData.mTotalMediaItems >= 1) {
+            sNotificationData.mTotalMediaItems--;
             // update Notification now
             updateForegroundNotification(null);
         }
     }
 
     void addMediaInfoToForegroundNotification(@NonNull List<MediaModel> mediaList) {
-        sNotificationData.totalMediaItems += mediaList.size();
+        sNotificationData.mTotalMediaItems += mediaList.size();
         // setup progresses for each media item
         for (MediaModel media : mediaList) {
             setProgressForMediaItem(media.getId(), 0.0f);
@@ -172,7 +172,7 @@ class PostUploadNotifier {
     }
 
     void addMediaInfoToForegroundNotification(@NonNull MediaModel media) {
-        sNotificationData.totalMediaItems++;
+        sNotificationData.mTotalMediaItems++;
         // setup progress for media item
         setProgressForMediaItem(media.getId(), 0.0f);
         startOrUpdateForegroundNotification(null);
@@ -188,7 +188,7 @@ class PostUploadNotifier {
         } else {
             addPostToPostCount(post);
         }
-        sNotificationData.currentPostItem++;
+        sNotificationData.mCurrentPostItem++;
 
         // update Notification now
         if (!removeNotificationAndStopForegroundServiceIfNoItemsInQueue()) {
@@ -197,7 +197,7 @@ class PostUploadNotifier {
     }
 
     void incrementUploadedMediaCountFromProgressNotification(int mediaId) {
-        sNotificationData.currentMediaItem++;
+        sNotificationData.mCurrentMediaItem++;
         if (!removeNotificationAndStopForegroundServiceIfNoItemsInQueue()) {
             // update Notification now
             updateForegroundNotification(null);
@@ -205,11 +205,11 @@ class PostUploadNotifier {
     }
 
     private boolean removeNotificationAndStopForegroundServiceIfNoItemsInQueue() {
-        if (sNotificationData.currentPostItem == sNotificationData.totalPostItems
-            && sNotificationData.currentMediaItem == sNotificationData.totalMediaItems) {
-            mNotificationManager.cancel(sNotificationData.notificationId);
+        if (sNotificationData.mCurrentPostItem == sNotificationData.mTotalPostItems
+            && sNotificationData.mCurrentMediaItem == sNotificationData.mTotalMediaItems) {
+            mNotificationManager.cancel(sNotificationData.mNotificationId);
             // reset the notification id so a new one is generated next time the service is started
-            sNotificationData.notificationId = 0;
+            sNotificationData.mNotificationId = 0;
             resetNotificationCounters();
             mService.stopForeground(true);
             return true;
@@ -218,11 +218,11 @@ class PostUploadNotifier {
     }
 
     private void resetNotificationCounters() {
-        sNotificationData.currentPostItem = 0;
-        sNotificationData.currentMediaItem = 0;
-        sNotificationData.totalMediaItems = 0;
-        sNotificationData.totalPostItems = 0;
-        sNotificationData.totalPageItemsIncludedInPostCount = 0;
+        sNotificationData.mCurrentPostItem = 0;
+        sNotificationData.mCurrentMediaItem = 0;
+        sNotificationData.mTotalMediaItems = 0;
+        sNotificationData.mTotalPostItems = 0;
+        sNotificationData.mTotalPageItemsIncludedInPostCount = 0;
         sNotificationData.mediaItemToProgressMap.clear();
         sNotificationData.mUploadedPostsCounted.clear();
     }
@@ -532,10 +532,10 @@ class PostUploadNotifier {
         // first we build a summary of what failed and what went OK, like this:
         // i.e. "1 post, with 3 media files not uploaded (9 successfully uploaded)"
         String newErrorMessage = "";
-        int postItemsNotUploaded = sNotificationData.totalPostItems > 0
-                ? sNotificationData.totalPostItems - getCurrentPostItem() : 0;
+        int postItemsNotUploaded = sNotificationData.mTotalPostItems > 0
+                ? sNotificationData.mTotalPostItems - getCurrentPostItem() : 0;
         int mediaItemsNotUploaded = overrideMediaNotUploadedCount > 0
-                ? overrideMediaNotUploadedCount : sNotificationData.totalMediaItems - getCurrentMediaItem();
+                ? overrideMediaNotUploadedCount : sNotificationData.mTotalMediaItems - getCurrentMediaItem();
 
         if (postItemsNotUploaded > 0 && mediaItemsNotUploaded > 0) {
             newErrorMessage = String.format(mContext.getString(R.string.media_file_post_mixed_not_uploaded),
@@ -556,7 +556,7 @@ class PostUploadNotifier {
             && (getCurrentMediaItem()) > 0) {
             // some media items were uploaded successfully
             newErrorMessage += String.format(mContext.getString(R.string.media_files_uploaded_successfully),
-                                             sNotificationData.currentMediaItem);
+                                             sNotificationData.mCurrentMediaItem);
         }
 
         return newErrorMessage;
@@ -572,10 +572,10 @@ class PostUploadNotifier {
                         String.format(mContext.getString(R.string.media_files_not_uploaded), mediaItemsNotUploaded);
             }
 
-            if (mediaItemsNotUploaded <= sNotificationData.currentMediaItem) {
+            if (mediaItemsNotUploaded <= sNotificationData.mCurrentMediaItem) {
                 // some media items were uploaded successfully
                 newErrorMessage += " " + String.format(mContext.getString(R.string.media_files_uploaded_successfully),
-                                                       sNotificationData.currentMediaItem);
+                                                       sNotificationData.mCurrentMediaItem);
             }
         }
 
@@ -616,7 +616,7 @@ class PostUploadNotifier {
 
 
     void updateNotificationProgressForMedia(MediaModel media, float progress) {
-        if (sNotificationData.totalMediaItems == 0 && sNotificationData.totalPostItems == 0) {
+        if (sNotificationData.mTotalMediaItems == 0 && sNotificationData.mTotalPostItems == 0) {
             return;
         }
 
@@ -632,12 +632,12 @@ class PostUploadNotifier {
     }
 
     private void updateNotificationProgress() {
-        if (sNotificationData.totalMediaItems == 0 && sNotificationData.totalPostItems == 0) {
+        if (sNotificationData.mTotalMediaItems == 0 && sNotificationData.mTotalPostItems == 0) {
             return;
         }
 
         mNotificationBuilder.setProgress(100, (int) Math.ceil(getCurrentOverallProgress() * 100), false);
-        doNotify(sNotificationData.notificationId, mNotificationBuilder.build());
+        doNotify(sNotificationData.mNotificationId, mNotificationBuilder.build());
     }
 
     private void setProgressForMediaItem(int mediaId, float progress) {
@@ -645,13 +645,13 @@ class PostUploadNotifier {
     }
 
     private float getCurrentOverallProgress() {
-        int totalItemCount = sNotificationData.totalPostItems + sNotificationData.totalMediaItems;
+        int totalItemCount = sNotificationData.mTotalPostItems + sNotificationData.mTotalMediaItems;
         float currentMediaProgress = getCurrentMediaProgress();
         float overAllProgress;
-        overAllProgress = sNotificationData.totalPostItems > 0
-                ? (sNotificationData.currentPostItem / sNotificationData.totalPostItems) * totalItemCount : 0;
-        overAllProgress += sNotificationData.totalMediaItems > 0
-                ? (sNotificationData.currentMediaItem / sNotificationData.totalMediaItems) * totalItemCount : 0;
+        overAllProgress = sNotificationData.mTotalPostItems > 0
+                ? (sNotificationData.mCurrentPostItem / sNotificationData.mTotalPostItems) * totalItemCount : 0;
+        overAllProgress += sNotificationData.mTotalMediaItems > 0
+                ? (sNotificationData.mCurrentMediaItem / sNotificationData.mTotalMediaItems) * totalItemCount : 0;
         overAllProgress += currentMediaProgress;
         return overAllProgress;
     }
@@ -676,12 +676,12 @@ class PostUploadNotifier {
 
     void setTotalMediaItems(PostModel post, int totalMediaItems) {
         if (post != null) {
-            sNotificationData.totalPostItems = 1;
+            sNotificationData.mTotalPostItems = 1;
             if (post.isPage()) {
-                sNotificationData.totalPageItemsIncludedInPostCount = 1;
+                sNotificationData.mTotalPageItemsIncludedInPostCount = 1;
             }
         }
-        sNotificationData.totalMediaItems = totalMediaItems;
+        sNotificationData.mTotalMediaItems = totalMediaItems;
     }
 
     private String buildNotificationTitleForPost(PostModel post) {
@@ -702,7 +702,7 @@ class PostUploadNotifier {
     private String buildNotificationSubtitleForPost(PostModel post) {
         String uploadingMessage = String.format(
                 mContext.getString(R.string.uploading_subtitle_posts_only),
-                sNotificationData.totalPostItems - getCurrentPostItem(),
+                sNotificationData.mTotalPostItems - getCurrentPostItem(),
                 (post != null && post.isPage()) ? mContext.getString(R.string.page).toLowerCase()
                         : mContext.getString(R.string.post).toLowerCase()
                                                );
@@ -710,7 +710,7 @@ class PostUploadNotifier {
     }
 
     private String buildNotificationSubtitleForPosts() {
-        int remaining = sNotificationData.totalPostItems - getCurrentPostItem();
+        int remaining = sNotificationData.mTotalPostItems - getCurrentPostItem();
         String pagesAndOrPosts = getPagesAndOrPostsString(remaining);
         String uploadingMessage = String.format(
                 mContext.getString(R.string.uploading_subtitle_posts_only),
@@ -722,12 +722,12 @@ class PostUploadNotifier {
 
     private String getPagesAndOrPostsString(int remaining) {
         String pagesAndOrPosts;
-        if (sNotificationData.totalPageItemsIncludedInPostCount > 0 && sNotificationData.totalPostItems > 0
-            && sNotificationData.totalPostItems > sNotificationData.totalPageItemsIncludedInPostCount) {
+        if (sNotificationData.mTotalPageItemsIncludedInPostCount > 0 && sNotificationData.mTotalPostItems > 0
+            && sNotificationData.mTotalPostItems > sNotificationData.mTotalPageItemsIncludedInPostCount) {
             // we have both pages and posts
             pagesAndOrPosts = mContext.getString(R.string.posts).toLowerCase() + "/"
                               + mContext.getString(R.string.pages).toLowerCase();
-        } else if (sNotificationData.totalPageItemsIncludedInPostCount > 0) {
+        } else if (sNotificationData.mTotalPageItemsIncludedInPostCount > 0) {
             // we have only pages
             if (remaining == 1) {
                 // only one page
@@ -749,22 +749,22 @@ class PostUploadNotifier {
 
     private String buildNotificationSubtitleForMedia() {
         String uploadingMessage;
-        if (sNotificationData.totalMediaItems == 1) {
+        if (sNotificationData.mTotalMediaItems == 1) {
             uploadingMessage = mContext.getString(R.string.uploading_subtitle_media_only_one);
         } else {
             uploadingMessage = String.format(
                     mContext.getString(R.string.uploading_subtitle_media_only),
-                    sNotificationData.totalMediaItems - getCurrentMediaItem(),
-                    sNotificationData.totalMediaItems
+                    sNotificationData.mTotalMediaItems - getCurrentMediaItem(),
+                    sNotificationData.mTotalMediaItems
                                             );
         }
         return uploadingMessage;
     }
 
     private String buildNotificationSubtitleForMixedContent() {
-        int remaining = sNotificationData.totalPostItems - getCurrentPostItem();
+        int remaining = sNotificationData.mTotalPostItems - getCurrentPostItem();
         String uploadingMessage;
-        if (sNotificationData.totalMediaItems == 1) {
+        if (sNotificationData.mTotalMediaItems == 1) {
             uploadingMessage = String.format(
                     mContext.getString(R.string.uploading_subtitle_mixed_one),
                     remaining,
@@ -773,24 +773,24 @@ class PostUploadNotifier {
         } else {
             uploadingMessage = String.format(
                     mContext.getString(R.string.uploading_subtitle_mixed),
-                    sNotificationData.totalPostItems - getCurrentPostItem(),
+                    sNotificationData.mTotalPostItems - getCurrentPostItem(),
                     getPagesAndOrPostsString(remaining),
-                    sNotificationData.totalMediaItems - getCurrentMediaItem(),
-                    sNotificationData.totalMediaItems
+                    sNotificationData.mTotalMediaItems - getCurrentMediaItem(),
+                    sNotificationData.mTotalMediaItems
                                             );
         }
         return uploadingMessage;
     }
 
     private int getCurrentPostItem() {
-        int currentPostItem = sNotificationData.currentPostItem >= sNotificationData.totalPostItems
-                ? sNotificationData.totalPostItems - 1 : sNotificationData.currentPostItem;
+        int currentPostItem = sNotificationData.mCurrentPostItem >= sNotificationData.mTotalPostItems
+                ? sNotificationData.mTotalPostItems - 1 : sNotificationData.mCurrentPostItem;
         return currentPostItem;
     }
 
     private int getCurrentMediaItem() {
-        int currentMediaItem = sNotificationData.currentMediaItem >= sNotificationData.totalMediaItems
-                ? sNotificationData.totalMediaItems - 1 : sNotificationData.currentMediaItem;
+        int currentMediaItem = sNotificationData.mCurrentMediaItem >= sNotificationData.mTotalMediaItems
+                ? sNotificationData.mTotalMediaItems - 1 : sNotificationData.mCurrentMediaItem;
         return currentMediaItem;
     }
 }

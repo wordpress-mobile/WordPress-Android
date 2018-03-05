@@ -44,7 +44,7 @@ public class StatsInsightsTodayFragment extends StatsAbstractInsightsFragment {
         View view = super.onCreateView(inflater, container, savedInstanceState);
         TextView moduleTitle = (TextView) view.findViewById(R.id.stats_module_title);
         moduleTitle.setTag(StatsVisitorsAndViewsFragment.OverviewLabel.VIEWS);
-        moduleTitle.setOnClickListener(ButtonsOnClickListener);
+        moduleTitle.setOnClickListener(mButtonsOnClickListener);
         moduleTitle.setTextColor(getResources().getColor(R.color.stats_link_text_color));
         return view;
     }
@@ -144,7 +144,7 @@ public class StatsInsightsTodayFragment extends StatsAbstractInsightsFragment {
         final ImageView icon;
 
         currentTab.setTag(itemType);
-        currentTab.setOnClickListener(ButtonsOnClickListener);
+        currentTab.setOnClickListener(mButtonsOnClickListener);
 
         label = (TextView) currentTab.findViewById(R.id.stats_visitors_and_views_tab_label);
         label.setText(itemType.getLabel());
@@ -165,7 +165,7 @@ public class StatsInsightsTodayFragment extends StatsAbstractInsightsFragment {
         }
     }
 
-    private final View.OnClickListener ButtonsOnClickListener = new View.OnClickListener() {
+    private final View.OnClickListener mButtonsOnClickListener = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
             if (!isAdded()) {

@@ -53,7 +53,7 @@ public class RemoteTests extends DefaultMocksInstrumentationTestCase {
                 (RestClientCustomizableMock) RestClientFactory.instantiate(null, RestClient.REST_CLIENT_VERSIONS.V1_1);
     }
 
-    private RestRequest.ErrorListener errListener = new RestRequest.ErrorListener() {
+    private RestRequest.ErrorListener mErrListener = new RestRequest.ErrorListener() {
         @Override
         public void onErrorResponse(VolleyError response) {
             AppLog.e(AppLog.T.STATS, "The Rest Client returned an error from a mock call: " + response.getMessage());
@@ -108,7 +108,7 @@ public class RemoteTests extends DefaultMocksInstrumentationTestCase {
                                 "https://public-api.wordpress.com/rest/v1.1/sites/123456/stats/clicks",
                                 null,
                                 listener,
-                                errListener
+                                mErrListener
                                );
     }
 
@@ -162,7 +162,7 @@ public class RemoteTests extends DefaultMocksInstrumentationTestCase {
                                 "https://public-api.wordpress.com/rest/v1.1/sites/1234567890/stats/clicks",
                                 null,
                                 listener,
-                                errListener);
+                                mErrListener);
     }
 
     public void testCommentsDay() throws Exception {
@@ -203,7 +203,7 @@ public class RemoteTests extends DefaultMocksInstrumentationTestCase {
                                 "https://public-api.wordpress.com/rest/v1.1/sites/123456/stats/comments",
                                 null,
                                 listener,
-                                errListener
+                                mErrListener
                                );
     }
 
@@ -238,7 +238,7 @@ public class RemoteTests extends DefaultMocksInstrumentationTestCase {
                                 "https://public-api.wordpress.com/rest/v1.1/sites/123456/stats/country-views",
                                 null,
                                 listener,
-                                errListener
+                                mErrListener
                                );
     }
 
@@ -280,7 +280,7 @@ public class RemoteTests extends DefaultMocksInstrumentationTestCase {
                                 "https://public-api.wordpress.com/rest/v1.1/sites/123456/stats/followers",
                                 null,
                                 listener,
-                                errListener
+                                mErrListener
                                );
     }
 
@@ -316,7 +316,7 @@ public class RemoteTests extends DefaultMocksInstrumentationTestCase {
                                 "https://public-api.wordpress.com/rest/v1.1/sites/1234567890/stats/followers",
                                 null,
                                 listener,
-                                errListener
+                                mErrListener
                                );
     }
 
@@ -361,7 +361,7 @@ public class RemoteTests extends DefaultMocksInstrumentationTestCase {
                                 "https://public-api.wordpress.com/rest/v1.1/sites/123456/stats/post/123",
                                 null,
                                 listener,
-                                errListener
+                                mErrListener
                                );
     }
 
@@ -431,7 +431,7 @@ public class RemoteTests extends DefaultMocksInstrumentationTestCase {
                                 "https://public-api.wordpress.com/rest/v1.1/sites/123456/stats/referrers",
                                 null,
                                 listener,
-                                errListener
+                                mErrListener
                                );
     }
 
@@ -468,7 +468,7 @@ public class RemoteTests extends DefaultMocksInstrumentationTestCase {
                 .makeRequest(Request.Method.POST, "https://public-api.wordpress.com/rest/v1.1/sites/123456/stats/tags",
                              null,
                              listener,
-                             errListener
+                             mErrListener
                             );
     }
 
@@ -502,7 +502,7 @@ public class RemoteTests extends DefaultMocksInstrumentationTestCase {
                                 "https://public-api.wordpress.com/rest/v1.1/sites/123456/stats/top-posts",
                                 null,
                                 listener,
-                                errListener
+                                mErrListener
                                );
     }
 
@@ -529,7 +529,7 @@ public class RemoteTests extends DefaultMocksInstrumentationTestCase {
                                 "https://public-api.wordpress.com/rest/v1.1/sites/1234567890/stats/top-posts",
                                 null,
                                 listener,
-                                errListener
+                                mErrListener
                                );
     }
 
@@ -549,7 +549,7 @@ public class RemoteTests extends DefaultMocksInstrumentationTestCase {
         mRestClient.makeRequest(Request.Method.POST, "https://public-api.wordpress.com/rest/v1.1/sites/123456/stats",
                                 null,
                                 listener,
-                                errListener
+                                mErrListener
                                );
     }
 
@@ -573,7 +573,7 @@ public class RemoteTests extends DefaultMocksInstrumentationTestCase {
                                 "https://public-api.wordpress.com/rest/v1.1/sites/123456/stats/summary",
                                 null,
                                 listener,
-                                errListener
+                                mErrListener
                                );
     }
 
@@ -592,7 +592,7 @@ public class RemoteTests extends DefaultMocksInstrumentationTestCase {
                                 "https://public-api.wordpress.com/rest/v1.1/sites/123456/stats/insights",
                                 null,
                                 listener,
-                                errListener
+                                mErrListener
                                );
     }
 
@@ -612,7 +612,7 @@ public class RemoteTests extends DefaultMocksInstrumentationTestCase {
                                 "https://public-api.wordpress.com/rest/v1.1/sites/123456/stats/video-plays",
                                 null,
                                 listener,
-                                errListener
+                                mErrListener
                                );
     }
 
@@ -638,7 +638,7 @@ public class RemoteTests extends DefaultMocksInstrumentationTestCase {
                                 "https://public-api.wordpress.com/rest/v1.1/sites/1234567890/stats/video-plays",
                                 null,
                                 listener,
-                                errListener
+                                mErrListener
                                );
     }
 
@@ -667,7 +667,7 @@ public class RemoteTests extends DefaultMocksInstrumentationTestCase {
                                 "https://public-api.wordpress.com/rest/v1.1/sites/123456/stats/visits",
                                 null,
                                 listener,
-                                errListener
+                                mErrListener
                                );
     }
 }

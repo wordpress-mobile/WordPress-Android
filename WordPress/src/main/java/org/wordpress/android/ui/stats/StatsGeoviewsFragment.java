@@ -237,15 +237,15 @@ public class StatsGeoviewsFragment extends StatsAbstractListFragment {
     }
 
     private class GeoviewsAdapter extends ArrayAdapter<GeoviewModel> {
-        private final List<GeoviewModel> list;
-        private final Activity context;
-        private final LayoutInflater inflater;
+        private final List<GeoviewModel> mList;
+        private final Activity mContext;
+        private final LayoutInflater mInflater;
 
         GeoviewsAdapter(Activity context, List<GeoviewModel> list) {
             super(context, R.layout.stats_list_cell, list);
-            this.context = context;
-            this.list = list;
-            inflater = LayoutInflater.from(context);
+            mContext = context;
+            mList = list;
+            mInflater = LayoutInflater.from(context);
         }
 
         @Override
@@ -253,13 +253,13 @@ public class StatsGeoviewsFragment extends StatsAbstractListFragment {
             View rowView = convertView;
             // reuse views
             if (rowView == null) {
-                rowView = inflater.inflate(R.layout.stats_list_cell, parent, false);
+                rowView = mInflater.inflate(R.layout.stats_list_cell, parent, false);
                 // configure view holder
                 StatsViewHolder viewHolder = new StatsViewHolder(rowView);
                 rowView.setTag(viewHolder);
             }
 
-            final GeoviewModel currentRowData = list.get(position);
+            final GeoviewModel currentRowData = mList.get(position);
             StatsViewHolder holder = (StatsViewHolder) rowView.getTag();
             // fill data
             String entry = currentRowData.getCountryFullName();

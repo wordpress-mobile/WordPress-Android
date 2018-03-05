@@ -94,7 +94,7 @@ public class StatsActivity extends AppCompatActivity
     private boolean mIsUpdatingStats;
     private SwipeToRefreshHelper mSwipeToRefreshHelper;
     private TimeframeSpinnerAdapter mTimeframeSpinnerAdapter;
-    private final StatsTimeframe[] timeframes = {StatsTimeframe.INSIGHTS, StatsTimeframe.DAY, StatsTimeframe.WEEK,
+    private final StatsTimeframe[] mTimeframes = {StatsTimeframe.INSIGHTS, StatsTimeframe.DAY, StatsTimeframe.WEEK,
             StatsTimeframe.MONTH, StatsTimeframe.YEAR};
     private StatsVisitorsAndViewsFragment.OverviewLabel mTabToSelectOnGraph =
             StatsVisitorsAndViewsFragment.OverviewLabel.VIEWS;
@@ -201,7 +201,7 @@ public class StatsActivity extends AppCompatActivity
         if (mSpinner == null) {
             mSpinner = (Spinner) findViewById(R.id.filter_spinner);
 
-            mTimeframeSpinnerAdapter = new TimeframeSpinnerAdapter(this, timeframes);
+            mTimeframeSpinnerAdapter = new TimeframeSpinnerAdapter(this, mTimeframes);
 
             mSpinner.setAdapter(mTimeframeSpinnerAdapter);
             mSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
@@ -251,8 +251,8 @@ public class StatsActivity extends AppCompatActivity
         otherRecentStatsMovedLabel.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                for (int i = 0; i < timeframes.length; i++) {
-                    if (timeframes[i] == StatsTimeframe.INSIGHTS) {
+                for (int i = 0; i < mTimeframes.length; i++) {
+                    if (mTimeframes[i] == StatsTimeframe.INSIGHTS) {
                         mSpinner.setSelection(i);
                         break;
                     }
@@ -561,8 +561,8 @@ public class StatsActivity extends AppCompatActivity
     @Override
     public void onInsightsTodayClicked(final StatsVisitorsAndViewsFragment.OverviewLabel item) {
         mTabToSelectOnGraph = item;
-        for (int i = 0; i < timeframes.length; i++) {
-            if (timeframes[i] == StatsTimeframe.DAY) {
+        for (int i = 0; i < mTimeframes.length; i++) {
+            if (mTimeframes[i] == StatsTimeframe.DAY) {
                 mSpinner.setSelection(i);
                 break;
             }

@@ -435,14 +435,15 @@ public class FilteredRecyclerView extends RelativeLayout {
                 holder = (TagViewHolder) convertView.getTag();
             }
 
-            holder.textView.setText(selectedCriteria.getLabel());
+            holder.mTextView.setText(selectedCriteria.getLabel());
             return convertView;
         }
 
         private class TagViewHolder {
-            private final TextView textView;
+            private final TextView mTextView;
+
             TagViewHolder(View view) {
-                textView = (TextView) view.findViewById(R.id.text);
+                mTextView = (TextView) view.findViewById(R.id.text);
             }
         }
 

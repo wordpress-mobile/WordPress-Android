@@ -226,7 +226,7 @@ public class StatsService extends Service {
 
     private int mServiceStartId;
     private final LinkedList<Request<JSONObject>> mStatsNetworkRequests = new LinkedList<>();
-    private final ThreadPoolExecutor singleThreadNetworkHandler = (ThreadPoolExecutor) Executors.newFixedThreadPool(1);
+    private final ThreadPoolExecutor mSingleThreadNetworkHandler = (ThreadPoolExecutor) Executors.newFixedThreadPool(1);
 
     @Inject SiteStore mSiteStore;
 
@@ -299,7 +299,7 @@ public class StatsService extends Service {
         this.mServiceStartId = startId;
         for (int i = 0; i < sectionFromIntent.length; i++) {
             final StatsEndpointsEnum currentSectionsToUpdate = StatsEndpointsEnum.values()[sectionFromIntent[i]];
-            singleThreadNetworkHandler.submit(new Thread() {
+            mSingleThreadNetworkHandler.submit(new Thread() {
                 @Override
                 public void run() {
                     startTasks(siteId, period, requestedDate, currentSectionsToUpdate, maxResultsRequested,
@@ -445,7 +445,7 @@ public class StatsService extends Service {
             if (checkIfRequestShouldBeEnqueued(restClientUtils, path)) {
                 AppLog.d(AppLog.T.STATS, "Enqueuing the following Stats request " + path);
                 Request<JSONObject> currentRequest = restClientUtils.get(path, vListener, vListener);
-                vListener.currentRequest = currentRequest;
+                vListener.mCurrentRequest = currentRequest;
                 currentRequest.setTag("StatsCall");
                 mStatsNetworkRequests.add(currentRequest);
             } else {
@@ -537,7 +537,7 @@ public class StatsService extends Service {
         private final StatsTimeframe mTimeframe;
         final StatsEndpointsEnum mEndpointName;
         private final String mDate;
-        private Request<JSONObject> currentRequest;
+        private Request<JSONObject> mCurrentRequest;
         private final int mMaxResultsRequested, mPageRequested;
 
         RestListener(StatsEndpointsEnum endpointName, long blogId, StatsTimeframe timeframe, String date,
@@ -552,7 +552,7 @@ public class StatsService extends Service {
 
         @Override
         public void onResponse(final JSONObject response) {
-            singleThreadNetworkHandler.submit(new Thread() {
+            mSingleThreadNetworkHandler.submit(new Thread() {
                 @Override
                 public void run() {
                     // do other stuff here
@@ -579,14 +579,14 @@ public class StatsService extends Service {
 
                     updateWidgetsUI(mRequestBlogId, mEndpointName, mTimeframe, mDate, mPageRequested,
                                     mResponseObjectModel);
-                    checkAllRequestsFinished(currentRequest);
+                    checkAllRequestsFinished(mCurrentRequest);
                 }
             });
         }
 
         @Override
         public void onErrorResponse(final VolleyError volleyError) {
-            singleThreadNetworkHandler.submit(new Thread() {
+            mSingleThreadNetworkHandler.submit(new Thread() {
                 @Override
                 public void run() {
                     AppLog.e(T.STATS, "Error while loading Stats!");
@@ -598,7 +598,7 @@ public class StatsService extends Service {
                                                                      volleyError));
                     updateWidgetsUI(mRequestBlogId, mEndpointName, mTimeframe, mDate, mPageRequested,
                                     mResponseObjectModel);
-                    checkAllRequestsFinished(currentRequest);
+                    checkAllRequestsFinished(mCurrentRequest);
                 }
             });
         }
@@ -623,7 +623,7 @@ public class StatsService extends Service {
                 mStatsNetworkRequests.remove(req);
             }
             boolean isStillWorking =
-                    mStatsNetworkRequests.size() > 0 || singleThreadNetworkHandler.getQueue().size() > 0;
+                    mStatsNetworkRequests.size() > 0 || mSingleThreadNetworkHandler.getQueue().size() > 0;
             EventBus.getDefault().post(new StatsEvents.UpdateStatusChanged(isStillWorking));
         }
     }

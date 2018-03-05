@@ -8,7 +8,7 @@ import android.widget.GridView;
 // based on http://stackoverflow.com/questions/8481844/gridview-height-gets-cut
 
 public class ExpandableHeightGridView extends GridView {
-    boolean expanded = false;
+    boolean mIsExpanded = false;
 
     public ExpandableHeightGridView(Context context) {
         super(context);
@@ -24,7 +24,7 @@ public class ExpandableHeightGridView extends GridView {
     }
 
     public boolean isExpanded() {
-        return expanded;
+        return mIsExpanded;
     }
 
     @Override
@@ -44,6 +44,6 @@ public class ExpandableHeightGridView extends GridView {
     }
 
     public void setExpanded(boolean expanded) {
-        this.expanded = expanded;
+        this.mIsExpanded = expanded;
     }
 }

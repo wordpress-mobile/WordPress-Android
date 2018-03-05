@@ -516,18 +516,18 @@ public class StatsSingleItemDetailsActivity extends AppCompatActivity
     private class RecentWeeksListAdapter extends BaseExpandableListAdapter {
         public static final String GROUP_DATE_FORMAT = "MMM dd";
         public final LayoutInflater inflater;
-        private final List<PostViewsModel.Week> groups;
+        private final List<PostViewsModel.Week> mGroups;
         private final int maxReachedValue;
 
         RecentWeeksListAdapter(Context context, List<PostViewsModel.Week> groups, int maxReachedValue) {
-            this.groups = groups;
+            mGroups = groups;
             this.inflater = LayoutInflater.from(context);
             this.maxReachedValue = maxReachedValue;
         }
 
         @Override
         public Object getChild(int groupPosition, int childPosition) {
-            PostViewsModel.Week currentWeek = groups.get(groupPosition);
+            PostViewsModel.Week currentWeek = mGroups.get(groupPosition);
             return currentWeek.getDays().get(childPosition);
         }
 
@@ -580,18 +580,18 @@ public class StatsSingleItemDetailsActivity extends AppCompatActivity
 
         @Override
         public int getChildrenCount(int groupPosition) {
-            PostViewsModel.Week week = groups.get(groupPosition);
+            PostViewsModel.Week week = mGroups.get(groupPosition);
             return week.getDays().size();
         }
 
         @Override
         public Object getGroup(int groupPosition) {
-            return groups.get(groupPosition);
+            return mGroups.get(groupPosition);
         }
 
         @Override
         public int getGroupCount() {
-            return groups.size();
+            return mGroups.size();
         }
 
 
@@ -676,18 +676,18 @@ public class StatsSingleItemDetailsActivity extends AppCompatActivity
 
     private class MonthsAndYearsListAdapter extends BaseExpandableListAdapter {
         public final LayoutInflater inflater;
-        private final List<PostViewsModel.Year> groups;
+        private final List<PostViewsModel.Year> mGroups;
         private final int maxReachedValue;
 
         MonthsAndYearsListAdapter(Context context, List<PostViewsModel.Year> groups, int maxReachedValue) {
-            this.groups = groups;
+            mGroups = groups;
             this.inflater = LayoutInflater.from(context);
             this.maxReachedValue = maxReachedValue;
         }
 
         @Override
         public Object getChild(int groupPosition, int childPosition) {
-            PostViewsModel.Year currentYear = groups.get(groupPosition);
+            PostViewsModel.Year currentYear = mGroups.get(groupPosition);
             return currentYear.getMonths().get(childPosition);
         }
 
@@ -740,18 +740,18 @@ public class StatsSingleItemDetailsActivity extends AppCompatActivity
 
         @Override
         public int getChildrenCount(int groupPosition) {
-            PostViewsModel.Year currentYear = groups.get(groupPosition);
+            PostViewsModel.Year currentYear = mGroups.get(groupPosition);
             return currentYear.getMonths().size();
         }
 
         @Override
         public Object getGroup(int groupPosition) {
-            return groups.get(groupPosition);
+            return mGroups.get(groupPosition);
         }
 
         @Override
         public int getGroupCount() {
-            return groups.size();
+            return mGroups.size();
         }
 
 

@@ -172,7 +172,7 @@ public class MediaPreviewActivity extends AppCompatActivity implements MediaPrev
             showPreviewFragment();
         }
 
-        mFadeHandler.postDelayed(fadeOutRunnable, FADE_DELAY_MS);
+        mFadeHandler.postDelayed(mFadeOutRunnable, FADE_DELAY_MS);
     }
 
     @Override
@@ -231,7 +231,7 @@ public class MediaPreviewActivity extends AppCompatActivity implements MediaPrev
         fragment.setOnMediaTappedListener(this);
     }
 
-    private final Runnable fadeOutRunnable = new Runnable() {
+    private final Runnable mFadeOutRunnable = new Runnable() {
         @Override
         public void run() {
             if (!isFinishing() && mToolbar.getVisibility() == View.VISIBLE) {
@@ -255,8 +255,8 @@ public class MediaPreviewActivity extends AppCompatActivity implements MediaPrev
 
     private void showToolbar() {
         if (!isFinishing()) {
-            mFadeHandler.removeCallbacks(fadeOutRunnable);
-            mFadeHandler.postDelayed(fadeOutRunnable, FADE_DELAY_MS);
+            mFadeHandler.removeCallbacks(mFadeOutRunnable);
+            mFadeHandler.postDelayed(mFadeOutRunnable, FADE_DELAY_MS);
             if (mToolbar.getVisibility() != View.VISIBLE) {
                 AniUtils.startAnimation(mToolbar, R.anim.toolbar_fade_in_and_down, new Animation.AnimationListener() {
                     @Override

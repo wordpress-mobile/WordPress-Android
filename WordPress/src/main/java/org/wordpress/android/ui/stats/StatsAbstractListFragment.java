@@ -256,13 +256,13 @@ public abstract class StatsAbstractListFragment extends StatsAbstractFragment {
             rb.setLayoutParams(params);
             rb.setText(buttonTitles[i]);
             rb.setChecked(i == mTopPagerSelectedButtonIndex);
-            rb.setOnClickListener(TopModulePagerOnClickListener);
+            rb.setOnClickListener(mTopModulePagerOnClickListener);
             mTopPagerContainer.addView(rb);
         }
         mTopPagerContainer.setVisibility(View.VISIBLE);
     }
 
-    private final View.OnClickListener TopModulePagerOnClickListener = new View.OnClickListener() {
+    private final View.OnClickListener mTopModulePagerOnClickListener = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
             if (!isAdded()) {

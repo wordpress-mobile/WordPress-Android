@@ -181,7 +181,7 @@ public class PeopleInviteFragment extends Fragment implements RoleSelectDialogFr
         });
 
         mUsernameEditText.addTextChangedListener(new TextWatcher() {
-            private boolean shouldIgnoreChanges = false;
+            private boolean mShouldIgnoreChanges = false;
 
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
@@ -189,17 +189,17 @@ public class PeopleInviteFragment extends Fragment implements RoleSelectDialogFr
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
-                if (shouldIgnoreChanges) { // used to avoid double call after calling setText from this method
+                if (mShouldIgnoreChanges) { // used to avoid double call after calling setText from this method
                     return;
                 }
 
-                shouldIgnoreChanges = true;
+                mShouldIgnoreChanges = true;
                 if (mUsernameButtons.size() >= MAX_NUMBER_OF_INVITEES && !TextUtils.isEmpty(s)) {
                     resetEditTextContent(mUsernameEditText);
                 } else if (endsWithDelimiter(mUsernameEditText.getText().toString())) {
                     addUsername(mUsernameEditText, null);
                 }
-                shouldIgnoreChanges = false;
+                mShouldIgnoreChanges = false;
             }
 
             @Override

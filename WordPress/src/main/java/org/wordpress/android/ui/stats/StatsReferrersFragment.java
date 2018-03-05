@@ -137,11 +137,11 @@ public class StatsReferrersFragment extends StatsAbstractListFragment {
     private class MyExpandableListAdapter extends BaseExpandableListAdapter {
         public final LayoutInflater inflater;
         public final Activity act;
-        private final List<ReferrerGroupModel> groups;
+        private final List<ReferrerGroupModel> mGroups;
         private final List<List<MyChildModel>> mChildren;
 
         MyExpandableListAdapter(Activity act, List<ReferrerGroupModel> groups) {
-            this.groups = groups;
+            mGroups = groups;
             this.inflater = LayoutInflater.from(act);
             this.act = act;
 
@@ -249,12 +249,12 @@ public class StatsReferrersFragment extends StatsAbstractListFragment {
 
         @Override
         public Object getGroup(int groupPosition) {
-            return groups.get(groupPosition);
+            return mGroups.get(groupPosition);
         }
 
         @Override
         public int getGroupCount() {
-            return groups.size();
+            return mGroups.size();
         }
 
 

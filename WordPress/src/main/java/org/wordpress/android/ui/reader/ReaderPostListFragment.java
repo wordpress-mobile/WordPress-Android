@@ -124,16 +124,16 @@ public class ReaderPostListFragment extends Fragment
     @Inject AccountStore mAccountStore;
 
     private static class HistoryStack extends Stack<String> {
-        private final String keyName;
+        private final String mKeyName;
 
         HistoryStack(@SuppressWarnings("SameParameterValue") String keyName) {
-            this.keyName = keyName;
+            mKeyName = keyName;
         }
 
         void restoreInstance(Bundle bundle) {
             clear();
-            if (bundle.containsKey(keyName)) {
-                ArrayList<String> history = bundle.getStringArrayList(keyName);
+            if (bundle.containsKey(mKeyName)) {
+                ArrayList<String> history = bundle.getStringArrayList(mKeyName);
                 if (history != null) {
                     this.addAll(history);
                 }
@@ -144,7 +144,7 @@ public class ReaderPostListFragment extends Fragment
             if (!isEmpty()) {
                 ArrayList<String> history = new ArrayList<>();
                 history.addAll(this);
-                bundle.putStringArrayList(keyName, history);
+                bundle.putStringArrayList(mKeyName, history);
             }
         }
     }

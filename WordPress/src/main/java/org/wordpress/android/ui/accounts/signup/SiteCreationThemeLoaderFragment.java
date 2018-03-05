@@ -29,14 +29,14 @@ public class SiteCreationThemeLoaderFragment extends Fragment {
     }
 
     static class OnThemeLoadingUpdated {
-        private final ThemesUpdateState state;
+        private final ThemesUpdateState mState;
 
         OnThemeLoadingUpdated(ThemesUpdateState state) {
-            this.state = state;
+            mState = state;
         }
 
         ThemesUpdateState getPhase() {
-            return state;
+            return mState;
         }
     }
 
