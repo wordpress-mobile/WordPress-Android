@@ -51,6 +51,7 @@ public class StockPhotoPickerActivity extends AppCompatActivity {
 
     private boolean mInMultiSelect;
     private boolean mIsFetching;
+    private boolean mIsSelecting;
 
     private int mNextPage;
     private boolean mCanLoadMore;
@@ -216,7 +217,7 @@ public class StockPhotoPickerActivity extends AppCompatActivity {
         private static final float SCALE_SELECTED = .8f;
 
         private final List<StockMediaModel> mItems = new ArrayList<>();
-        private final ArrayList<Integer> mSelectedItems = new ArrayList<>();
+        private final List<Integer> mSelectedItems = new ArrayList<>();
 
         StockPhotoAdapter() {
             setHasStableIds(true);
@@ -307,6 +308,7 @@ public class StockPhotoPickerActivity extends AppCompatActivity {
 
         void setItemSelected(StockViewHolder holder, int position, boolean selected) {
             if (!isValidPosition(position)) return;
+            if (mIsSelecting) return;
 
             if (selected) {
                 mSelectedItems.add(position);
@@ -333,10 +335,12 @@ public class StockPhotoPickerActivity extends AppCompatActivity {
             }
 
             // redraw after the scale animation completes
+            mIsSelecting = true;
             long delayMs = AniUtils.Duration.SHORT.toMillis(StockPhotoPickerActivity.this);
             new Handler().postDelayed(new Runnable() {
                 @Override
                 public void run() {
+                    mIsSelecting = false;
                     notifyDataSetChanged();
                 }
             }, delayMs);
