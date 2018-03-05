@@ -584,6 +584,7 @@ public class SignupEpilogueFragment extends LoginBaseFormFragment<SignupEpilogue
         mHeaderAvatar.setImageUrl(avatarUrl, ImageType.AVATAR, new WPNetworkImageView.ImageLoadListener() {
             @Override
             public void onError() {
+                AppLog.e(T.NUX, "Uploading image to Gravatar succeeded, but setting image view failed");
                 showErrorDialogAvatar(getString(R.string.signup_epilogue_error_avatar_view));
             }
 
