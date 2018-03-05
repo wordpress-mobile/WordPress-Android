@@ -127,7 +127,7 @@ public class StockPhotoPickerActivity extends AppCompatActivity {
                 if (isFinishing()) return;
                 mIsFetching = false;
                 showProgress(false);
-                mAdapter.addMediaList(mediaList);
+                mAdapter.setMediaList(mediaList);
             }
         });
     }
@@ -193,9 +193,11 @@ public class StockPhotoPickerActivity extends AppCompatActivity {
             setHasStableIds(true);
         }
 
-        void addMediaList(@NonNull List<StockMediaModel> mediaList) {
+        void setMediaList(@NonNull List<StockMediaModel> mediaList) {
+            mItems.clear();
             mItems.addAll(mediaList);
             notifyDataSetChanged();
+
         }
 
         void clear() {
@@ -206,7 +208,6 @@ public class StockPhotoPickerActivity extends AppCompatActivity {
 
         @Override
         public long getItemId(int position) {
-            // TODO: not sure we can guarantee uniqueness
             return mItems.get(position).getId().hashCode();
         }
 

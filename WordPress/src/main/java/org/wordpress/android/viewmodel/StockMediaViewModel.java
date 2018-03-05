@@ -75,6 +75,7 @@ public class StockMediaViewModel extends ViewModel {
 
         mIsFetching = true;
         mSearchQuery = searchQuery;
+        AppLog.d(AppLog.T.MEDIA, "Fetching stock media page " + page);
 
         StockMediaStore.FetchStockMediaListPayload payload =
                 new StockMediaStore.FetchStockMediaListPayload(searchQuery, page);
@@ -101,7 +102,6 @@ public class StockMediaViewModel extends ViewModel {
 
         mNextPage = event.nextPage;
         mCanLoadMore = event.canLoadMore;
-        mSearchResults.setValue(event.mediaList);
 
         if (event.nextPage == 2 || mSearchResults.getValue() == null) {
             mSearchResults.setValue(event.mediaList);
