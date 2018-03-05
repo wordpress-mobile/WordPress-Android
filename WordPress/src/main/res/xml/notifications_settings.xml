@@ -29,7 +29,7 @@
 
         <RingtonePreference
             android:key="@string/wp_pref_custom_notification_sound"
-            android:defaultValue="content://settings/system/notification_sound"
+            android:defaultValue="@string/notification_settings_item_sights_and_sounds_choose_sound_default"
             android:ringtoneType="notification"
             android:showDefault="true"
             android:title="@string/notification_settings_item_sights_and_sounds_choose_sound" />
