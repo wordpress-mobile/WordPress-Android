@@ -117,7 +117,7 @@ public class ActivityLauncher {
         context.startActivity(intent);
     }
 
-    public static void startJetpackConnectionFlow(Context context, SiteModel site) {
+    public static void viewConnectJetpackForStats(Context context, SiteModel site) {
         Intent intent = new Intent(context, StatsConnectJetpackActivity.class);
         intent.putExtra(WordPress.SITE, site);
         context.startActivity(intent);

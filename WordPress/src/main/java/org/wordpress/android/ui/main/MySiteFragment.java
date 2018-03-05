@@ -215,7 +215,7 @@ public class MySiteFragment extends Fragment
                     } else if (selectedSite.isWPCom() || (selectedSite.isJetpackInstalled() && selectedSite.isJetpackConnected())) {
                         ActivityLauncher.viewBlogStats(getActivity(), selectedSite);
                     } else {
-                        ActivityLauncher.startJetpackConnectionFlow(getActivity(), selectedSite);
+                        ActivityLauncher.viewConnectJetpackForStats(getActivity(), selectedSite);
                     }
                 }
             }
