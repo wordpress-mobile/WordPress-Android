@@ -37,6 +37,7 @@ import org.wordpress.android.fluxc.utils.MediaUtils;
 import org.wordpress.android.ui.EmptyViewMessageType;
 import org.wordpress.android.ui.media.MediaGridAdapter.MediaGridAdapterCallback;
 import org.wordpress.android.ui.media.services.MediaDeleteService;
+import org.wordpress.android.ui.prefs.EmptyViewRecyclerView;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.ListUtils;
 import org.wordpress.android.util.NetworkUtils;
@@ -128,7 +129,7 @@ public class MediaGridFragment extends Fragment implements MediaGridAdapterCallb
 
     private MediaBrowserType mBrowserType;
 
-    private RecyclerView mRecycler;
+    private EmptyViewRecyclerView mRecycler;
     private GridLayoutManager mGridManager;
     private MediaGridAdapter mGridAdapter;
     private MediaGridListener mListener;
@@ -205,13 +206,14 @@ public class MediaGridFragment extends Fragment implements MediaGridAdapterCallb
 
         View view = inflater.inflate(R.layout.media_grid_fragment, container, false);
 
-        mRecycler = (RecyclerView) view.findViewById(R.id.recycler);
+        mRecycler = view.findViewById(R.id.recycler);
         mRecycler.setHasFixedSize(true);
 
         int numColumns = MediaGridAdapter.getColumnCount(getActivity());
         mGridManager = new GridLayoutManager(getActivity(), numColumns);
         mRecycler.setLayoutManager(mGridManager);
         mRecycler.setAdapter(getAdapter());
+        mRecycler.setEmptyView(view.findViewById(R.id.empty_view));
 
         // disable thumbnail loading during a fling to conserve memory
         final int minDistance = WPMediaUtils.getFlingDistanceToDisableThumbLoading(getActivity());
@@ -468,7 +470,6 @@ public class MediaGridFragment extends Fragment implements MediaGridAdapterCallb
     void reload() {
         if (isAdded()) {
             getAdapter().setMediaList(getFilteredMedia());
-            setFilter(mFilter);
         }
     }
 
