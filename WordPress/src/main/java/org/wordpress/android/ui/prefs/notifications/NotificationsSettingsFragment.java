@@ -1,5 +1,6 @@
 package org.wordpress.android.ui.prefs.notifications;
 
+import android.app.Application;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
@@ -548,8 +549,8 @@ public class NotificationsSettingsFragment extends PreferenceFragment implements
                 //  default and let the user know.
                 AppLog.w(T.NOTIFS, "Notification sound starts with unacceptable scheme: " + value);
 
-                Context context = getActivity();
-                if (context != null && isAdded()) {
+                Context context = WordPress.getContext();
+                if (context != null) {
                     // let the user know we won't be using the selected sound
                     ToastUtils.showToast(context, R.string.notification_sound_has_invalid_path);
                 }
