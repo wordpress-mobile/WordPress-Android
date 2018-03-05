@@ -129,10 +129,9 @@ public class FlowLayout extends ViewGroup {
 
         public LayoutParams(Context context, AttributeSet attrs) {
             super(context, attrs);
-            TypedArray a = context.obtainStyledAttributes(attrs, R.styleable.FlowLayout_LayoutParams);
+            TypedArray a = context.obtainStyledAttributes(attrs, R.styleable.FlowLayout_Layout);
             try {
-                horizontalSpacing =
-                        a.getDimensionPixelSize(R.styleable.FlowLayout_LayoutParams_layout_horizontalSpacing, -1);
+                horizontalSpacing = a.getDimensionPixelSize(R.styleable.FlowLayout_Layout_layout_horizontalSpacing, -1);
             } finally {
                 a.recycle();
             }
