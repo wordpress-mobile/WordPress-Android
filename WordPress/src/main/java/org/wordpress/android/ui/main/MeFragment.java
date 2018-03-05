@@ -114,13 +114,13 @@ public class MeFragment extends Fragment {
                              Bundle savedInstanceState) {
         final ViewGroup rootView = (ViewGroup) inflater.inflate(R.layout.me_fragment, container, false);
 
-        mAvatarContainer = (ViewGroup) rootView.findViewById(R.id.avatar_container);
-        mAvatarImageView = (WPNetworkImageView) rootView.findViewById(R.id.me_avatar);
         mAvatarCard = rootView.findViewById(R.id.card_avatar);
+        mAvatarContainer = rootView.findViewById(R.id.avatar_container);
+        mAvatarImageView = rootView.findViewById(R.id.me_avatar);
         mProgressBar = rootView.findViewById(R.id.avatar_progress);
-        mDisplayNameTextView = (TextView) rootView.findViewById(R.id.me_display_name);
-        mUsernameTextView = (TextView) rootView.findViewById(R.id.me_username);
-        mLoginLogoutTextView = (TextView) rootView.findViewById(R.id.me_login_logout_text_view);
+        mDisplayNameTextView = rootView.findViewById(R.id.me_display_name);
+        mUsernameTextView = rootView.findViewById(R.id.me_username);
+        mLoginLogoutTextView = rootView.findViewById(R.id.me_login_logout_text_view);
         mMyProfileView = rootView.findViewById(R.id.row_my_profile);
         mAccountSettingsView = rootView.findViewById(R.id.row_account_settings);
         mNotificationsView = rootView.findViewById(R.id.row_notifications);
