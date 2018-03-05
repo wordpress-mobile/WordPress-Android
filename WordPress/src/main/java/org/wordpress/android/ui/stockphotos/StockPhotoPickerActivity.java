@@ -25,6 +25,7 @@ import org.wordpress.android.fluxc.generated.StockMediaActionBuilder;
 import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.model.StockMediaModel;
 import org.wordpress.android.fluxc.store.StockMediaStore;
+import org.wordpress.android.ui.media.MediaPreviewActivity;
 import org.wordpress.android.util.AniUtils;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.DisplayUtils;
@@ -376,6 +377,17 @@ public class StockPhotoPickerActivity extends AppCompatActivity {
                         mAdapter.setInMultiSelect(true);
                         mAdapter.toggleItemSelected(StockViewHolder.this, position);
                     }
+                }
+            });
+
+            imageView.setOnLongClickListener(new View.OnLongClickListener() {
+                @Override
+                public boolean onLongClick(View v) {
+                    int position = getAdapterPosition();
+                    if (mAdapter.isValidPosition(position)) {
+                        MediaPreviewActivity.showPreview(v.getContext(), mSite, mAdapter.mItems.get(position).getUrl());
+                    }
+                    return true;
                 }
             });
         }

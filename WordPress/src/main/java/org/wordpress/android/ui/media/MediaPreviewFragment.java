@@ -287,7 +287,7 @@ public class MediaPreviewFragment extends Fragment implements MediaController.Me
         if (mediaUri.startsWith("http")) {
             showProgress(true);
             String imageUrl = mediaUri;
-            if (SiteUtils.isPhotonCapable(mSite)) {
+            if (mSite != null && SiteUtils.isPhotonCapable(mSite)) {
                 imageUrl = PhotonUtils.getPhotonImageUrl(mediaUri, size, 0);
             }
             mImageLoader.get(imageUrl, new ImageLoader.ImageListener() {
