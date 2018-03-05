@@ -1480,10 +1480,7 @@ public class EditPostActivity extends AppCompatActivity implements
     }
 
     private boolean isDiscardable() {
-        if (!PostUtils.isPublishable(mPost) && isNewPost()) {
-            return true;
-        }
-        return false;
+        return !PostUtils.isPublishable(mPost) && isNewPost();
     }
 
     private boolean isFirstTimePublish() {
