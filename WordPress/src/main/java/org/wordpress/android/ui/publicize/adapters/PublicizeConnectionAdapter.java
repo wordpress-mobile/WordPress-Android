@@ -115,7 +115,7 @@ public class PublicizeConnectionAdapter extends RecyclerView.Adapter<PublicizeCo
         private final WPNetworkImageView imgAvatar;
         private final View divider;
 
-        public ConnectionViewHolder(View view) {
+        ConnectionViewHolder(View view) {
             super(view);
             txtUser = (TextView) view.findViewById(R.id.text_user);
             imgAvatar = (WPNetworkImageView) view.findViewById(R.id.image_avatar);

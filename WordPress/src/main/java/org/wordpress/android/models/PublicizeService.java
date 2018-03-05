@@ -41,8 +41,8 @@ public class PublicizeService {
         return StringUtils.notNullStr(mGenericon);
     }
 
-    public void setGenericon(String Genericon) {
-        mGenericon = StringUtils.notNullStr(Genericon);
+    public void setGenericon(String genericon) {
+        mGenericon = StringUtils.notNullStr(genericon);
     }
 
     public String getIconUrl() {

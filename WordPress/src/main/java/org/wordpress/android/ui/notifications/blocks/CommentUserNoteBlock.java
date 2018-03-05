@@ -170,7 +170,7 @@ public class CommentUserNoteBlock extends UserNoteBlock {
         private final TextView commentTextView;
         private final View dividerView;
 
-        public CommentUserNoteBlockHolder(View view) {
+        CommentUserNoteBlockHolder(View view) {
             nameTextView = (TextView) view.findViewById(R.id.user_name);
             agoTextView = (TextView) view.findViewById(R.id.user_comment_ago);
             agoTextView.setVisibility(View.VISIBLE);

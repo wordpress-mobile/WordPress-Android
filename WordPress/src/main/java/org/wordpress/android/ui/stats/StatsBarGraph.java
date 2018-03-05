@@ -37,7 +37,7 @@ class StatsBarGraph extends GraphView {
     private final GestureDetectorCompat mDetector;
     private OnGestureListener mGestureListener;
 
-    public StatsBarGraph(Context context) {
+    StatsBarGraph(Context context) {
         super(context, "");
 
         int width = LayoutParams.MATCH_PARENT;

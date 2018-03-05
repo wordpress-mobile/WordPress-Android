@@ -104,7 +104,7 @@ public class StatsVideoplaysFragment extends StatsAbstractListFragment {
         private final List<SingleItemModel> list;
         private final LayoutInflater inflater;
 
-        public TopPostsAndPagesAdapter(Context context, List<SingleItemModel> list) {
+        TopPostsAndPagesAdapter(Context context, List<SingleItemModel> list) {
             super(context, R.layout.stats_list_cell, list);
             this.list = list;
             inflater = LayoutInflater.from(context);

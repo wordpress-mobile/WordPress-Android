@@ -412,8 +412,8 @@ public class ReaderPost {
         return StringUtils.notNullStr(shortUrl);
     }
 
-    public void setShortUrl(String url) {
-        this.shortUrl = StringUtils.notNullStr(url);
+    public void setShortUrl(String shortUrl) {
+        this.shortUrl = StringUtils.notNullStr(shortUrl);
     }
 
     public boolean hasShortUrl() {

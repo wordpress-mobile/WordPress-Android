@@ -272,7 +272,7 @@ public class MediaGridAdapter extends RecyclerView.Adapter<MediaGridAdapter.Grid
         private final ImageView imgRetry;
         private final ImageView imgTrash;
 
-        public GridViewHolder(View view) {
+        GridViewHolder(View view) {
             super(view);
 
             imageView = (WPNetworkImageView) view.findViewById(R.id.media_grid_item_image);

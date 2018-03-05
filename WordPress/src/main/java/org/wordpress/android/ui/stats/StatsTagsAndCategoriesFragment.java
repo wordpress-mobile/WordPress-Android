@@ -134,7 +134,7 @@ public class StatsTagsAndCategoriesFragment extends StatsAbstractListFragment {
         public final LayoutInflater inflater;
         private final List<TagsModel> groups;
 
-        public MyExpandableListAdapter(Context context, List<TagsModel> groups) {
+        MyExpandableListAdapter(Context context, List<TagsModel> groups) {
             this.groups = groups;
             this.inflater = LayoutInflater.from(context);
         }

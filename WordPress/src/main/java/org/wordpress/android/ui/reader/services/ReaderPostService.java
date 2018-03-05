@@ -42,7 +42,8 @@ public class ReaderPostService extends Service {
     public enum UpdateAction {
         REQUEST_NEWER, // request the newest posts for this tag/blog/feed
         REQUEST_OLDER, // request posts older than the oldest existing one for this tag/blog/feed
-        REQUEST_OLDER_THAN_GAP // request posts older than the one with the gap marker for this tag (not supported for blog/feed)
+        REQUEST_OLDER_THAN_GAP // request posts older than the one with the gap marker for this tag
+                               // (not supported for blog/feed)
     }
 
     /*

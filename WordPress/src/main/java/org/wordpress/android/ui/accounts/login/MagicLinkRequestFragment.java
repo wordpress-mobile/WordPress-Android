@@ -120,8 +120,8 @@ public class MagicLinkRequestFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(getActivity(), HelpActivity.class);
-                intent.putExtra(HelpshiftHelper.ORIGIN_KEY, HelpshiftHelper.chooseHelpshiftLoginTag
-                        (mJetpackCallbacks.isJetpackAuth(), true));
+                intent.putExtra(HelpshiftHelper.ORIGIN_KEY,
+                                HelpshiftHelper.chooseHelpshiftLoginTag(mJetpackCallbacks.isJetpackAuth(), true));
                 startActivity(intent);
             }
         };

@@ -91,7 +91,7 @@ public class ReaderUserAdapter extends RecyclerView.Adapter<ReaderUserAdapter.Us
         private final TextView txtUrl;
         private final WPNetworkImageView imgAvatar;
 
-        public UserViewHolder(View view) {
+        UserViewHolder(View view) {
             super(view);
             txtName = (TextView) view.findViewById(R.id.text_name);
             txtUrl = (TextView) view.findViewById(R.id.text_url);

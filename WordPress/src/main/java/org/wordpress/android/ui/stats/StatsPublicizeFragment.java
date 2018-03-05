@@ -105,7 +105,7 @@ public class StatsPublicizeFragment extends StatsAbstractListFragment {
         private final List<SingleItemModel> list;
         private final LayoutInflater inflater;
 
-        public PublicizeAdapter(Activity context, List<SingleItemModel> list) {
+        PublicizeAdapter(Activity context, List<SingleItemModel> list) {
             super(context, R.layout.stats_list_cell, list);
             this.list = list;
             inflater = LayoutInflater.from(context);

@@ -39,7 +39,7 @@ public class SmoothScrollLinearLayoutManager extends LinearLayoutManager {
         private final float mDistanceInPixels;
         private final float mDuration;
 
-        public SmoothScroller(Context context, int distanceInPixels, int duration) {
+        SmoothScroller(Context context, int distanceInPixels, int duration) {
             super(context);
             this.mDistanceInPixels = distanceInPixels;
             this.mDuration = duration;

@@ -134,7 +134,7 @@ public class StatsAuthorsFragment extends StatsAbstractListFragment {
         public final Activity activity;
         private final List<AuthorModel> authors;
 
-        public MyExpandableListAdapter(Activity act, List<AuthorModel> authors) {
+        MyExpandableListAdapter(Activity act, List<AuthorModel> authors) {
             this.activity = act;
             this.authors = authors;
             this.inflater = act.getLayoutInflater();

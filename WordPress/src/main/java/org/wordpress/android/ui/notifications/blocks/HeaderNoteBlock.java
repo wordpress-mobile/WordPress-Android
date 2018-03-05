@@ -114,7 +114,7 @@ public class HeaderNoteBlock extends NoteBlock {
         private final TextView snippetTextView;
         private final WPNetworkImageView avatarImageView;
 
-        public NoteHeaderBlockHolder(View view) {
+        NoteHeaderBlockHolder(View view) {
             View rootView = view.findViewById(R.id.header_root_view);
             rootView.setOnClickListener(mOnClickListener);
             nameTextView = (TextView) view.findViewById(R.id.header_user);

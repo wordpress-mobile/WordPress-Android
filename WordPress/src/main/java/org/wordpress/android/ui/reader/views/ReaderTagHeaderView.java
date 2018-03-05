@@ -30,7 +30,7 @@ public class ReaderTagHeaderView extends RelativeLayout {
     private TextView mTxtAttribution;
     private ReaderTag mCurrentTag;
 
-    private static final ReaderTagHeaderInfoList mTagInfoCache = new ReaderTagHeaderInfoList();
+    private static final ReaderTagHeaderInfoList TAG_INFO_CACHE = new ReaderTagHeaderInfoList();
 
     public ReaderTagHeaderView(Context context) {
         super(context);
@@ -70,8 +70,8 @@ public class ReaderTagHeaderView extends RelativeLayout {
         txtTagName.setText(tag.getLabel());
 
         // use cached info if it's available, otherwise request it if the tag has changed
-        if (mTagInfoCache.hasInfoForTag(tag)) {
-            setTagHeaderInfo(mTagInfoCache.getInfoForTag(tag));
+        if (TAG_INFO_CACHE.hasInfoForTag(tag)) {
+            setTagHeaderInfo(TAG_INFO_CACHE.getInfoForTag(tag));
         } else if (isTagChanged) {
             getTagHeaderInfo();
         }
@@ -146,7 +146,7 @@ public class ReaderTagHeaderView extends RelativeLayout {
                 info.setSourcePostId(jsonImage.optLong("post_id"));
 
                 // add to cached list then display it
-                mTagInfoCache.setInfoForTag(mCurrentTag, info);
+                TAG_INFO_CACHE.setInfoForTag(mCurrentTag, info);
                 setTagHeaderInfo(info);
             }
         }, null);

@@ -227,7 +227,6 @@ public abstract class StatsAbstractListFragment extends StatsAbstractFragment {
                 if (mTopPagerContainer.getVisibility() == View.VISIBLE) {
                     viewAllIntent.putExtra(ARGS_TOP_PAGER_SELECTED_BUTTON_INDEX, mTopPagerSelectedButtonIndex);
                 }
-                // viewAllIntent.putExtra(StatsAbstractFragment.ARG_REST_RESPONSE, mDatamodels[mTopPagerSelectedButtonIndex]);
                 getActivity().startActivity(viewAllIntent);
             }
         });

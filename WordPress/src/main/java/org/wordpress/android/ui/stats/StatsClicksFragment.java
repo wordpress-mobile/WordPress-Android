@@ -129,7 +129,7 @@ public class StatsClicksFragment extends StatsAbstractListFragment {
         public final LayoutInflater inflater;
         private final List<ClickGroupModel> clickGroups;
 
-        public MyExpandableListAdapter(Context context, List<ClickGroupModel> clickGroups) {
+        MyExpandableListAdapter(Context context, List<ClickGroupModel> clickGroups) {
             this.clickGroups = clickGroups;
             this.inflater = LayoutInflater.from(context);
         }

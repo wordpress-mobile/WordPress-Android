@@ -196,7 +196,7 @@ public class StatsCommentsFragment extends StatsAbstractListFragment {
         private final Activity context;
         private final LayoutInflater inflater;
 
-        public AuthorsAdapter(Activity context, List<AuthorModel> list) {
+        AuthorsAdapter(Activity context, List<AuthorModel> list) {
             super(context, R.layout.stats_list_cell, list);
             this.context = context;
             this.list = list;

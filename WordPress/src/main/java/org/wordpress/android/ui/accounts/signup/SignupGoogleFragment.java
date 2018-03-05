@@ -58,9 +58,8 @@ public class SignupGoogleFragment extends GoogleFragment {
                                 mDisplayName = account.getDisplayName() != null ? account.getDisplayName() : "";
                                 mGoogleEmail = account.getEmail() != null ? account.getEmail() : "";
                                 mIdToken = account.getIdToken() != null ? account.getIdToken() : "";
-                                mPhotoUrl = removeScaleFromGooglePhotoUrl(account.getPhotoUrl() != null
-                                                                                  ? account.getPhotoUrl().toString() : ""
-                                                                         );
+                                mPhotoUrl = removeScaleFromGooglePhotoUrl(
+                                        account.getPhotoUrl() != null ? account.getPhotoUrl().toString() : "");
                             }
 
                             PushSocialPayload payload = new PushSocialPayload(mIdToken, SERVICE_TYPE_GOOGLE);

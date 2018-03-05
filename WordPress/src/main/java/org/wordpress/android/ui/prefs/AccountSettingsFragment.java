@@ -260,7 +260,8 @@ public class AccountSettingsFragment extends PreferenceFragment implements Prefe
                     break;
                 case SETTINGS_POST_ERROR:
                     ToastUtils.showToast(getActivity(), R.string.error_post_account_settings, ToastUtils.Duration.LONG);
-                    // we optimistically show the email change snackbar, if that request fails, we should remove the snackbar
+                    // we optimistically show the email change snackbar, if that request fails, we should
+                    // remove the snackbar
                     checkIfEmailChangeIsPending();
                     break;
             }

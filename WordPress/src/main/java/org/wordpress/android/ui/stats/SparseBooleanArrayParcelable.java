@@ -5,7 +5,7 @@ import android.os.Parcelable;
 import android.util.SparseBooleanArray;
 
 public class SparseBooleanArrayParcelable extends SparseBooleanArray implements Parcelable {
-    public static Parcelable.Creator<SparseBooleanArrayParcelable> CREATOR =
+    public static final Parcelable.Creator<SparseBooleanArrayParcelable> CREATOR =
             new Parcelable.Creator<SparseBooleanArrayParcelable>() {
                 @Override
                 public SparseBooleanArrayParcelable createFromParcel(Parcel source) {

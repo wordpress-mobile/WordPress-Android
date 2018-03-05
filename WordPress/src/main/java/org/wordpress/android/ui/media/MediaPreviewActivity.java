@@ -333,7 +333,7 @@ public class MediaPreviewActivity extends AppCompatActivity implements MediaPrev
         private final SparseArray<Fragment> mFragmentMap = new SparseArray<>();
         private boolean mDidAutoPlay;
 
-        public MediaPagerAdapter(FragmentManager fm) {
+        MediaPagerAdapter(FragmentManager fm) {
             super(fm);
         }
 

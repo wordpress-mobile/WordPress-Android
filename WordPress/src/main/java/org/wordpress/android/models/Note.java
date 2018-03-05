@@ -30,7 +30,7 @@ public class Note {
     private static final String TAG = "NoteModel";
 
     // Maximum character length for a comment preview
-    static private final int MAX_COMMENT_PREVIEW_LENGTH = 200;
+    private static final int MAX_COMMENT_PREVIEW_LENGTH = 200;
 
     // Note types
     public static final String NOTE_FOLLOW_TYPE = "follow";

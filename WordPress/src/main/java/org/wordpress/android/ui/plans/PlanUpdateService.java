@@ -142,38 +142,35 @@ public class PlanUpdateService extends Service {
     private void downloadAvailablePlansForSite() {
         // This should live in a PlanStore (FluxC side)
         long remoteBlogId = mSite.getSiteId();
-        WordPress.getRestClientUtilsV1_2().get("sites/" + remoteBlogId + "/plans",
-                                               RestClientUtils.getRestLocaleParams(PlanUpdateService.this), null,
-                                               new RestRequest.Listener() {
-                                                   @Override
-                                                   public void onResponse(JSONObject response) {
-                                                       if (response == null) {
-                                                           AppLog.w(AppLog.T.PLANS,
-                                                                    "Unexpected empty response from server");
-                                                           requestFailed();
-                                                           return;
-                                                       }
+        WordPress.getRestClientUtilsV1_2().get(
+                "sites/" + remoteBlogId + "/plans",
+                RestClientUtils.getRestLocaleParams(PlanUpdateService.this), null,
+                new RestRequest.Listener() {
+                    @Override
+                    public void onResponse(JSONObject response) {
+                        if (response == null) {
+                            AppLog.w(AppLog.T.PLANS, "Unexpected empty response from server");
+                            requestFailed();
+                            return;
+                        }
 
-                                                       AppLog.d(AppLog.T.PLANS, response.toString());
-                                                       mSitePlans.clear();
+                        AppLog.d(AppLog.T.PLANS, response.toString());
+                        mSitePlans.clear();
 
-                                                       try {
-                                                           JSONArray plansArray =
-                                                                   response.getJSONArray("originalResponse");
-                                                           for (int i = 0; i < plansArray.length(); i++) {
-                                                               JSONObject currentPlanJSON = plansArray.getJSONObject(i);
-                                                               Plan currentPlan = new Plan(currentPlanJSON);
-                                                               mSitePlans.add(currentPlan);
-                                                           }
-                                                           requestCompleted();
-                                                       } catch (JSONException e) {
-                                                           AppLog.e(AppLog.T.PLANS,
-                                                                    "Can't parse the plans list returned from the server",
-                                                                    e);
-                                                           requestFailed();
-                                                       }
-                                                   }
-                                               }, new RestRequest.ErrorListener() {
+                        try {
+                            JSONArray plansArray = response.getJSONArray("originalResponse");
+                            for (int i = 0; i < plansArray.length(); i++) {
+                                JSONObject currentPlanJSON = plansArray.getJSONObject(i);
+                                Plan currentPlan = new Plan(currentPlanJSON);
+                                mSitePlans.add(currentPlan);
+                            }
+                            requestCompleted();
+                        } catch (JSONException e) {
+                            AppLog.e(AppLog.T.PLANS, "Can't parse the plans list returned from the server", e);
+                            requestFailed();
+                        }
+                    }
+                }, new RestRequest.ErrorListener() {
                     @Override
                     public void onErrorResponse(VolleyError volleyError) {
                         AppLog.e(AppLog.T.UTILS, "Error downloading site plans", volleyError);

@@ -130,7 +130,7 @@ public class ReaderTagAdapter extends RecyclerView.Adapter<ReaderTagAdapter.TagV
         private final TextView txtTagName;
         private final ImageButton btnRemove;
 
-        public TagViewHolder(View view) {
+        TagViewHolder(View view) {
             super(view);
             txtTagName = (TextView) view.findViewById(R.id.text_topic);
             btnRemove = (ImageButton) view.findViewById(R.id.btn_remove);
