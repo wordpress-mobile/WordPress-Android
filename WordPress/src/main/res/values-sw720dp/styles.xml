@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources>
+<resources xmlns:tools="http://schemas.android.com/tools">
     <style name="WordPressTitleAppearance" parent="@android:style/TextAppearance">
         <item name="android:singleLine">true</item>
         <item name="android:shadowColor">#BB000000</item>
@@ -10,7 +10,7 @@
     </style>
 
     <style name="WordPressSectionHeader" parent="@android:style/Widget.TextView">
-        <item name="android:textSize">16dp</item>
+        <item name="android:textSize">16sp</item>
         <item name="android:textStyle">bold</item>
         <item name="android:shadowColor">#FFFFFFFF</item>
         <item name="android:shadowDx">0</item>
@@ -19,7 +19,9 @@
         <item name="android:layout_marginTop">1px</item>
         <item name="android:layout_marginRight">1px</item>
         <item name="android:layout_marginLeft">1px</item>
+        <item name="android:layout_marginStart" tools:targetApi="jelly_bean_mr1">1px</item>
         <item name="android:paddingLeft">6dp</item>
+        <item name="android:paddingStart" tools:targetApi="jelly_bean_mr1">6dp</item>
         <item name="android:paddingRight">4dp</item>
         <item name="android:paddingBottom">6dp</item>
         <item name="android:paddingTop">2dp</item>

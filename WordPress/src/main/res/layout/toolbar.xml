@@ -10,6 +10,8 @@
     android:elevation="@dimen/appbar_elevation"
     app:contentInsetLeft="@dimen/toolbar_content_offset"
     app:contentInsetStart="@dimen/toolbar_content_offset"
+    app:contentInsetRight="@dimen/toolbar_content_offset_end"
+    app:contentInsetEnd="@dimen/toolbar_content_offset_end"
     app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
     app:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
     tools:targetApi="LOLLIPOP">

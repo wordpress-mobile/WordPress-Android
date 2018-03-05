@@ -404,7 +404,6 @@ public class StatsFollowersFragment extends StatsAbstractListFragment {
 
             return rowView;
         }
-
     }
 
     private static String normalizeAndRemoveScheme(String url) {

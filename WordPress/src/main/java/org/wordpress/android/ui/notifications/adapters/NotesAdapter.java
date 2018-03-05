@@ -2,11 +2,14 @@ package org.wordpress.android.ui.notifications.adapters;
 
 import android.content.Context;
 import android.os.AsyncTask;
+import android.support.v4.text.BidiFormatter;
+import android.support.v4.view.ViewCompat;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewParent;
 import android.widget.TextView;
 
 import org.wordpress.android.R;
@@ -16,6 +19,7 @@ import org.wordpress.android.models.Note;
 import org.wordpress.android.ui.comments.CommentUtils;
 import org.wordpress.android.ui.notifications.NotificationsListFragment;
 import org.wordpress.android.util.GravatarUtils;
+import org.wordpress.android.util.RtlUtils;
 import org.wordpress.android.widgets.NoticonTextView;
 import org.wordpress.android.widgets.WPNetworkImageView;
 
@@ -223,6 +227,17 @@ public class NotesAdapter extends RecyclerView.Adapter<NotesAdapter.NoteViewHold
 
         String noteSubjectNoticon = note.getCommentSubjectNoticon();
         if (!TextUtils.isEmpty(noteSubjectNoticon)) {
+            ViewParent parent = noteViewHolder.txtSubject.getParent();
+            // Fix position of the subject noticon in the RtL mode
+            if (parent instanceof ViewGroup) {
+                int textDirection = BidiFormatter.getInstance().isRtl(noteViewHolder.txtSubject.getText())
+                        ? ViewCompat.LAYOUT_DIRECTION_RTL : ViewCompat.LAYOUT_DIRECTION_LTR;
+                ViewCompat.setLayoutDirection((ViewGroup) parent, textDirection);
+            }
+            // mirror noticon in the rtl mode
+            if (RtlUtils.isRtl(noteViewHolder.itemView.getContext())) {
+                noteViewHolder.txtSubjectNoticon.setScaleX(-1);
+            }
             CommentUtils.indentTextViewFirstLine(noteViewHolder.txtSubject, mTextIndentSize);
             noteViewHolder.txtSubjectNoticon.setText(noteSubjectNoticon);
             noteViewHolder.txtSubjectNoticon.setVisibility(View.VISIBLE);

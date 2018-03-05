@@ -1,6 +1,7 @@
 package org.wordpress.android.ui.prefs;
 
 import android.os.AsyncTask;
+import android.os.Build;
 import android.os.Bundle;
 import android.preference.Preference;
 import android.preference.PreferenceFragment;
@@ -8,10 +9,12 @@ import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.Snackbar;
 import android.support.v4.content.ContextCompat;
 import android.text.InputType;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.EditText;
 import android.widget.TextView;
 
 import org.greenrobot.eventbus.Subscribe;
@@ -72,6 +75,9 @@ public class AccountSettingsFragment extends PreferenceFragment implements Prefe
         mEmailPreference.setOnPreferenceChangeListener(this);
         mPrimarySitePreference.setOnPreferenceChangeListener(this);
         mWebAddressPreference.setOnPreferenceChangeListener(this);
+
+        setTextAlignement(mEmailPreference.getEditText());
+        setTextAlignement(mWebAddressPreference.getEditText());
 
         // load site list asynchronously
         new LoadSitesTask().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
@@ -143,6 +149,14 @@ public class AccountSettingsFragment extends PreferenceFragment implements Prefe
                 getActivity().finish();
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    private void setTextAlignement(EditText editText) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
+            editText.setTextAlignment(View.TEXT_ALIGNMENT_VIEW_START);
+        } else {
+            editText.setGravity(Gravity.START);
+        }
     }
 
     private void refreshAccountDetails() {

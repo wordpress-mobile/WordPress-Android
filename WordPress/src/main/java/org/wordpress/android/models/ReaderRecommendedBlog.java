@@ -78,5 +78,4 @@ public class ReaderRecommendedBlog {
                 && blog.score == this.score
                 && blog.followRecoId == this.followRecoId);
     }
-
 }

@@ -2,6 +2,7 @@ package org.wordpress.android.ui.stats;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v4.view.MarginLayoutParamsCompat;
 import android.text.Html;
 import android.text.TextUtils;
 import android.util.SparseBooleanArray;
@@ -247,9 +248,9 @@ public abstract class StatsAbstractListFragment extends StatsAbstractFragment {
                                                                          RadioGroup.LayoutParams.WRAP_CONTENT);
             params.weight = 1;
             if (i == 0) {
-                params.setMargins(0, 0, dp4, 0);
+                MarginLayoutParamsCompat.setMarginEnd(params, dp4);
             } else {
-                params.setMargins(dp4, 0, 0, 0);
+                MarginLayoutParamsCompat.setMarginStart(params, dp4);
             }
             rb.setMinimumWidth(dp80);
             rb.setGravity(Gravity.CENTER);

@@ -12,20 +12,21 @@
         android:layout_width="@dimen/reader_detail_header_avatar_frame"
         android:layout_height="@dimen/reader_detail_header_avatar_frame"
         android:layout_centerVertical="true"
-        android:layout_marginRight="@dimen/margin_extra_large">
+        android:layout_marginRight="@dimen/margin_extra_large"
+        android:layout_marginEnd="@dimen/margin_extra_large">
 
         <org.wordpress.android.widgets.WPNetworkImageView
             android:id="@+id/image_header_blavatar"
             android:layout_width="@dimen/reader_detail_header_blavatar"
             android:layout_height="@dimen/reader_detail_header_blavatar"
-            android:layout_gravity="top|left"
+            android:layout_gravity="top|start"
             app:srcCompat="@drawable/ic_placeholder_blavatar_grey_lighten_20_40dp" />
 
         <org.wordpress.android.widgets.WPNetworkImageView
             android:id="@+id/image_header_avatar"
             android:layout_width="@dimen/reader_detail_header_avatar"
             android:layout_height="@dimen/reader_detail_header_avatar"
-            android:layout_gravity="bottom|right"
+            android:layout_gravity="bottom|end"
             android:background="@drawable/shape_oval_white"
             android:padding="2dp"
             app:srcCompat="@drawable/ic_placeholder_gravatar_grey_lighten_20_100dp" />
@@ -38,7 +39,8 @@
         android:layout_height="wrap_content"
         android:layout_centerVertical="true"
         android:layout_toRightOf="@+id/frame_avatar"
-        android:orientation="vertical">
+        android:orientation="vertical"
+        android:layout_toEndOf="@+id/frame_avatar">
 
         <org.wordpress.android.widgets.WPTextView
             android:id="@+id/text_header_title"

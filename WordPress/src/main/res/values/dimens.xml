@@ -9,6 +9,7 @@
     <dimen name="toolbar_height">56dp</dimen>
     <dimen name="toolbar_subtitle_height">48dp</dimen>
     <dimen name="toolbar_content_offset">72dp</dimen>
+    <dimen name="toolbar_content_offset_end">0dp</dimen>
 
     <dimen name="fab_margin">@dimen/fab_margin_default</dimen>
     <dimen name="fab_margin_default">16dp</dimen>
@@ -213,8 +214,8 @@
 
     <!-- stats widget-->
     <dimen name="stats_widget_icon_size">18dp</dimen>
-    <dimen name="stats_widget_text_sz">14dp</dimen>
-    <dimen name="stats_widget_text_sz_small">10dp</dimen>
+    <dimen name="stats_widget_text_sz">14sp</dimen>
+    <dimen name="stats_widget_text_sz_small">10sp</dimen>
     <dimen name="stats_widget_min_height">62dp</dimen>
     <dimen name="stats_widget_main_container_min_size">38dp</dimen>
     <dimen name="stats_widget_main_container_size">48dp</dimen>

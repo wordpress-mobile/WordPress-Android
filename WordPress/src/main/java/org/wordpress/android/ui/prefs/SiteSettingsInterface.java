@@ -591,7 +591,8 @@ public abstract class SiteSettingsInterface {
     }
 
     public boolean getAllowCommentLikes() {
-        return mSettings.allowCommentLikes;
+        // We have different settings for comment likes for dotcom and Jetpack sites
+        return mSite.isJetpackConnected() ? mJpSettings.commentLikes : mSettings.allowCommentLikes;
     }
 
     public @NonNull
@@ -735,20 +736,24 @@ public abstract class SiteSettingsInterface {
         return mJpSettings.ssoRequireTwoFactor;
     }
 
-    public void enableServeImagesFromOurServers(boolean enabled) {
+    void enableServeImagesFromOurServers(boolean enabled) {
         mJpSettings.serveImagesFromOurServers = enabled;
     }
 
-    public boolean isServeImagesFromOurServersEnabled() {
+    boolean isServeImagesFromOurServersEnabled() {
         return mJpSettings.serveImagesFromOurServers;
     }
 
-    public void enableLazyLoadImages(boolean enabled) {
+    void enableLazyLoadImages(boolean enabled) {
         mJpSettings.lazyLoadImages = enabled;
     }
 
-    public boolean isLazyLoadImagesEnabled() {
+    boolean isLazyLoadImagesEnabled() {
         return mJpSettings.lazyLoadImages;
+    }
+
+    public boolean isSharingModuleEnabled() {
+        return mJpSettings.sharingEnabled;
     }
 
     public void setTitle(String title) {
@@ -882,7 +887,12 @@ public abstract class SiteSettingsInterface {
     }
 
     public void setAllowCommentLikes(boolean allowCommentLikes) {
-        mSettings.allowCommentLikes = allowCommentLikes;
+        // We have different settings for comment likes for dotcom and Jetpack sites
+        if (mSite.isJetpackConnected()) {
+            mJpSettings.commentLikes = allowCommentLikes;
+        } else {
+            mSettings.allowCommentLikes = allowCommentLikes;
+        }
     }
 
     public void setTwitterUsername(String twitterUsername) {

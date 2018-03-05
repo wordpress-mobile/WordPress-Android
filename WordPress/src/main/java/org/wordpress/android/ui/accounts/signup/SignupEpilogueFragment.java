@@ -307,7 +307,7 @@ public class SignupEpilogueFragment extends LoginBaseFormFragment<SignupEpilogue
                                     AnalyticsTracker.Stat stat =
                                             source == PhotoPickerActivity.PhotoPickerMediaSource.ANDROID_CAMERA
                                                     ? AnalyticsTracker.Stat.SIGNUP_EMAIL_EPILOGUE_GRAVATAR_SHOT_NEW
-                                                   
+
                                                     : AnalyticsTracker.Stat.SIGNUP_EMAIL_EPILOGUE_GRAVATAR_GALLERY_PICKED;
                                     AnalyticsTracker.track(stat);
                                     Uri imageUri = Uri.parse(mediaUriString);

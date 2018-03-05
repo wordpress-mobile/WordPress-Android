@@ -7,7 +7,7 @@ package org.wordpress.android.widgets;
 
 import android.content.Context;
 import android.content.res.TypedArray;
-import android.graphics.Paint;
+import android.support.v4.view.ViewCompat;
 import android.util.AttributeSet;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,10 +17,11 @@ import org.wordpress.android.R;
 public class FlowLayout extends ViewGroup {
     private int mHorizontalSpacing;
     private int mVerticalSpacing;
-    private Paint mPaint;
 
     public FlowLayout(Context context, AttributeSet attrs) {
         super(context, attrs);
+
+
         TypedArray a = context.obtainStyledAttributes(attrs, R.styleable.FlowLayout);
         try {
             mHorizontalSpacing = a.getDimensionPixelSize(R.styleable.FlowLayout_horizontalSpacing, 0);
@@ -32,7 +33,7 @@ public class FlowLayout extends ViewGroup {
 
     @Override
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
-        int widthSize = MeasureSpec.getSize(widthMeasureSpec) - getPaddingRight() - getPaddingLeft();
+        int widthSize = MeasureSpec.getSize(widthMeasureSpec) - ViewCompat.getPaddingEnd(this) - ViewCompat.getPaddingStart(this);
         int widthMode = MeasureSpec.getMode(widthMeasureSpec);
 
         boolean growHeight = widthMode != MeasureSpec.UNSPECIFIED;
@@ -40,7 +41,7 @@ public class FlowLayout extends ViewGroup {
         int width = 0;
         int height = getPaddingTop();
 
-        int currentWidth = getPaddingLeft();
+        int currentWidth = ViewCompat.getPaddingStart(this);
         int currentHeight = 0;
 
         boolean newLine = false;
@@ -61,7 +62,7 @@ public class FlowLayout extends ViewGroup {
                 height += currentHeight + mVerticalSpacing;
                 currentHeight = 0;
                 width = Math.max(width, currentWidth - spacing);
-                currentWidth = getPaddingLeft();
+                currentWidth = ViewCompat.getPaddingStart(this);
                 newLine = true;
             } else {
                 newLine = false;
@@ -77,7 +78,7 @@ public class FlowLayout extends ViewGroup {
         if (!newLine) {
             width = Math.max(width, currentWidth - spacing);
         }
-        width += getPaddingRight();
+        width += ViewCompat.getPaddingEnd(this);
         height += currentHeight + getPaddingBottom();
 
         setMeasuredDimension(resolveSize(width, widthMeasureSpec), resolveSize(height, heightMeasureSpec));
@@ -89,7 +90,12 @@ public class FlowLayout extends ViewGroup {
         for (int i = 0; i < count; i++) {
             View child = getChildAt(i);
             LayoutParams lp = (LayoutParams) child.getLayoutParams();
-            child.layout(lp.x, lp.y, lp.x + child.getMeasuredWidth(), lp.y + child.getMeasuredHeight());
+
+            if (ViewCompat.getLayoutDirection(this) == ViewCompat.LAYOUT_DIRECTION_RTL) {
+                child.layout(child.getMeasuredWidth() - lp.x - child.getMeasuredWidth(), lp.y, r - lp.x, lp.y + child.getMeasuredHeight());
+            } else {
+                child.layout(lp.x, lp.y, lp.x + child.getMeasuredWidth(), lp.y + child.getMeasuredHeight());
+            }
         }
     }
 
@@ -123,8 +129,7 @@ public class FlowLayout extends ViewGroup {
             super(context, attrs);
             TypedArray a = context.obtainStyledAttributes(attrs, R.styleable.FlowLayout_LayoutParams);
             try {
-                horizontalSpacing =
-                        a.getDimensionPixelSize(R.styleable.FlowLayout_LayoutParams_layout_horizontalSpacing, -1);
+                horizontalSpacing = a.getDimensionPixelSize(R.styleable.FlowLayout_LayoutParams_layout_horizontalSpacing, -1);
             } finally {
                 a.recycle();
             }

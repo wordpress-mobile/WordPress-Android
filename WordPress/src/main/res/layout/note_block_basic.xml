@@ -8,7 +8,9 @@
               android:paddingRight="@dimen/margin_extra_large"
               android:paddingTop="@dimen/margin_medium"
               android:paddingBottom="@dimen/margin_medium"
-              android:orientation="vertical">
+              android:orientation="vertical"
+    android:paddingEnd="@dimen/margin_extra_large"
+    android:paddingStart="@dimen/margin_extra_large">
 
     <org.wordpress.android.widgets.WPTextView
         android:id="@+id/note_text"

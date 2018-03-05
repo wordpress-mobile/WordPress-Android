@@ -31,5 +31,4 @@ public class ReaderUrlList extends HashSet<String> {
             return super.contains(object);
         }
     }
-
 }

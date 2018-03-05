@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.graphics.Color;
 import android.graphics.Point;
+import android.support.v4.view.ViewCompat;
 import android.text.Spannable;
 import android.text.style.URLSpan;
 import android.util.SparseBooleanArray;
@@ -23,6 +24,7 @@ import android.widget.ListAdapter;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.util.DisplayUtils;
+import org.wordpress.android.util.RtlUtils;
 
 class StatsUIHelper {
     // Max number of rows to show in a stats fragment
@@ -46,8 +48,7 @@ class StatsUIHelper {
         return (StatsUtils.getSmallestWidthDP() >= TABLET_720DP);
     }
 
-    public static void reloadLinearLayout(Context ctx, ListAdapter adapter, LinearLayout linearLayout,
-                                          int maxNumberOfItemsToshow) {
+    public static void reloadLinearLayout(Context ctx, ListAdapter adapter, LinearLayout linearLayout, int maxNumberOfItemsToshow) {
         if (ctx == null || linearLayout == null || adapter == null) {
             return;
         }
@@ -98,10 +99,10 @@ class StatsUIHelper {
      * @param backgroundResId The resource ID
      */
     private static void setViewBackgroundWithoutResettingPadding(final View v, final int backgroundResId) {
-        final int paddingBottom = v.getPaddingBottom(), paddingLeft = v.getPaddingLeft();
-        final int paddingRight = v.getPaddingRight(), paddingTop = v.getPaddingTop();
+        final int paddingBottom = v.getPaddingBottom(), paddingLeft = ViewCompat.getPaddingStart(v);
+        final int paddingRight = ViewCompat.getPaddingEnd(v), paddingTop = v.getPaddingTop();
         v.setBackgroundResource(backgroundResId);
-        v.setPadding(paddingLeft, paddingTop, paddingRight, paddingBottom);
+        ViewCompat.setPaddingRelative(v, paddingLeft, paddingTop, paddingRight, paddingBottom);
     }
 
     public static void reloadLinearLayout(Context ctx, ListAdapter adapter, LinearLayout linearLayout) {
@@ -239,8 +240,7 @@ class StatsUIHelper {
     /*
      * shows the correct up/down chevron for the passed group
      */
-    private static void setGroupChevron(final boolean isGroupExpanded, View groupView, int groupPosition,
-                                        boolean animate) {
+    private static void setGroupChevron(final boolean isGroupExpanded, View groupView, int groupPosition, boolean animate) {
         final ImageView chevron = (ImageView) groupView.findViewById(R.id.stats_list_cell_chevron);
         if (chevron == null) {
             return;
@@ -249,26 +249,23 @@ class StatsUIHelper {
             // change the background of the parent
             setViewBackgroundWithoutResettingPadding(groupView, R.drawable.stats_list_item_expanded_background);
         } else {
-            setViewBackgroundWithoutResettingPadding(groupView,
-                                                     groupPosition == 0 ? 0 : R.drawable.stats_list_item_background);
+            setViewBackgroundWithoutResettingPadding(groupView, groupPosition == 0 ? 0 : R.drawable.stats_list_item_background);
         }
 
         chevron.clearAnimation(); // Remove any other prev animations set on the chevron
         if (animate) {
             // make sure we start with the correct chevron for the prior state before animating it
-            chevron.setImageResource(isGroupExpanded ? R.drawable.ic_chevron_right_blue_wordpress_24dp
-                                             : R.drawable.ic_chevron_down_blue_wordpress_24dp);
+            chevron.setImageResource(isGroupExpanded ? R.drawable.ic_chevron_right_blue_wordpress_24dp : R.drawable.ic_chevron_down_blue_wordpress_24dp);
             float start = (isGroupExpanded ? 0.0f : 0.0f);
-            float end = (isGroupExpanded ? 90.0f : -90.0f);
+            float end = (isGroupExpanded ? 90.0f : -90.0f) * (RtlUtils.isRtl(groupView.getContext()) ? -1 : 1);
             Animation rotate = new RotateAnimation(start, end, Animation.RELATIVE_TO_SELF, 0.5f,
-                                                   Animation.RELATIVE_TO_SELF, 0.5f);
+                    Animation.RELATIVE_TO_SELF, 0.5f);
             rotate.setDuration(ANIM_DURATION);
             rotate.setInterpolator(getInterpolator());
             rotate.setFillAfter(true);
             chevron.startAnimation(rotate);
         } else {
-            chevron.setImageResource(isGroupExpanded ? R.drawable.ic_chevron_down_blue_wordpress_24dp
-                                             : R.drawable.ic_chevron_right_blue_wordpress_24dp);
+            chevron.setImageResource(isGroupExpanded ? R.drawable.ic_chevron_down_blue_wordpress_24dp : R.drawable.ic_chevron_right_blue_wordpress_24dp);
         }
     }
 
@@ -300,9 +297,9 @@ class StatsUIHelper {
                 View childView = mAdapter.getChildView(groupPosition, i, isLastChild, null, mLinearLayout);
                 // remove the right/left padding so the child total aligns to left
                 childView.setPadding(0,
-                                     childView.getPaddingTop(),
-                                     0,
-                                     isLastChild ? 0 : childView.getPaddingBottom()); // No padding bottom on last child
+                        childView.getPaddingTop(),
+                        0,
+                        isLastChild ? 0 : childView.getPaddingBottom()); // No padding bottom on last child
                 setViewBackgroundWithoutResettingPadding(childView, R.drawable.stats_list_item_child_background);
                 childContainer.addView(childView);
             }

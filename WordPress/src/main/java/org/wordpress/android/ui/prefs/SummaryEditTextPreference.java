@@ -9,6 +9,8 @@ import android.os.Build;
 import android.os.Bundle;
 import android.preference.EditTextPreference;
 import android.support.annotation.NonNull;
+import android.support.v4.view.MarginLayoutParamsCompat;
+import android.support.v4.view.ViewCompat;
 import android.support.v7.app.AlertDialog;
 import android.text.TextUtils;
 import android.util.AttributeSet;
@@ -84,20 +86,14 @@ public class SummaryEditTextPreference extends EditTextPreference implements Pre
         TextView titleView = (TextView) view.findViewById(android.R.id.title);
         TextView summaryView = (TextView) view.findViewById(android.R.id.summary);
 
-        if (titleView != null) {
-            WPPrefUtils.layoutAsSubhead(titleView);
-        }
+        if (titleView != null) WPPrefUtils.layoutAsSubhead(titleView);
 
         if (summaryView != null) {
             WPPrefUtils.layoutAsBody1(summaryView);
             summaryView.setEllipsize(TextUtils.TruncateAt.END);
             summaryView.setInputType(getEditText().getInputType());
-            if (mLines != -1) {
-                summaryView.setLines(mLines);
-            }
-            if (mMaxLines != -1) {
-                summaryView.setMaxLines(mMaxLines);
-            }
+            if (mLines != -1) summaryView.setLines(mLines);
+            if (mMaxLines != -1) summaryView.setMaxLines(mMaxLines);
         }
     }
 
@@ -137,9 +133,7 @@ public class SummaryEditTextPreference extends EditTextPreference implements Pre
             builder.setView(view);
         }
 
-        if ((mDialog = builder.create()) == null) {
-            return;
-        }
+        if ((mDialog = builder.create()) == null) return;
 
         if (state != null) {
             mDialog.onRestoreInstanceState(state);
@@ -150,20 +144,14 @@ public class SummaryEditTextPreference extends EditTextPreference implements Pre
 
         Button positive = mDialog.getButton(DialogInterface.BUTTON_POSITIVE);
         Button negative = mDialog.getButton(DialogInterface.BUTTON_NEGATIVE);
-        if (positive != null) {
-            WPPrefUtils.layoutAsFlatButton(positive);
-        }
-        if (negative != null) {
-            WPPrefUtils.layoutAsFlatButton(negative);
-        }
+        if (positive != null) WPPrefUtils.layoutAsFlatButton(positive);
+        if (negative != null) WPPrefUtils.layoutAsFlatButton(negative);
     }
 
     @Override
     protected void onBindDialogView(final View view) {
         super.onBindDialogView(view);
-        if (view == null) {
-            return;
-        }
+        if (view == null) return;
 
         EditText editText = getEditText();
         ViewParent oldParent = editText.getParent();
@@ -171,13 +159,16 @@ public class SummaryEditTextPreference extends EditTextPreference implements Pre
             if (oldParent != null && oldParent instanceof ViewGroup) {
                 ViewGroup groupParent = (ViewGroup) oldParent;
                 groupParent.removeView(editText);
-                groupParent.setPadding(groupParent.getPaddingLeft(), 0, groupParent.getPaddingRight(),
-                                       groupParent.getPaddingBottom());
+                ViewCompat.setPaddingRelative(groupParent, ViewCompat.getPaddingStart(groupParent), 0, ViewCompat.getPaddingEnd(groupParent), groupParent.getPaddingBottom());
             }
             onAddEditTextToDialogView(view, editText);
         }
         WPPrefUtils.layoutAsInput(editText);
         editText.setSelection(editText.getText().length());
+        // RtL language support
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
+            editText.setTextAlignment(View.TEXT_ALIGNMENT_VIEW_START);
+        }
 
         TextView message = (TextView) view.findViewById(android.R.id.message);
         WPPrefUtils.layoutAsDialogMessage(message);
@@ -194,7 +185,10 @@ public class SummaryEditTextPreference extends EditTextPreference implements Pre
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) {
             leftMargin = view.getResources().getDimensionPixelSize(R.dimen.margin_large);
         }
-        layoutParams.setMargins(leftMargin, layoutParams.topMargin, layoutParams.rightMargin, bottomMargin);
+        layoutParams.setMargins(0, layoutParams.topMargin, 0, bottomMargin);
+        MarginLayoutParamsCompat.setMarginStart(layoutParams, leftMargin);
+        MarginLayoutParamsCompat.setMarginEnd(layoutParams, layoutParams.rightMargin);
+
         message.setLayoutParams(layoutParams);
     }
 

@@ -64,8 +64,11 @@ class DotComSiteSettings extends SiteSettingsInterface {
     private static final String JP_MONITOR_EMAIL_NOTES_KEY = "email_notifications";
     private static final String JP_MONITOR_WP_NOTES_KEY = "wp_note_notifications";
     private static final String JP_PROTECT_WHITELIST_KEY = "jetpack_protect_whitelist";
+    // Jetpack modules
     private static final String SERVE_IMAGES_FROM_OUR_SERVERS = "photon";
     private static final String LAZY_LOAD_IMAGES = "lazy-images";
+    private static final String SHARING_MODULE = "sharedaddy";
+
     private static final String START_OF_WEEK_KEY = "start_of_week";
     private static final String DATE_FORMAT_KEY = "date_format";
     private static final String TIME_FORMAT_KEY = "time_format";
@@ -73,6 +76,7 @@ class DotComSiteSettings extends SiteSettingsInterface {
     private static final String POSTS_PER_PAGE_KEY = "posts_per_page";
     private static final String AMP_SUPPORTED_KEY = "amp_is_supported";
     private static final String AMP_ENABLED_KEY = "amp_is_enabled";
+    private static final String COMMENT_LIKES = "comment-likes";
 
     // WP.com REST keys used to GET certain site settings
     private static final String GET_TITLE_KEY = "name";
@@ -94,6 +98,7 @@ class DotComSiteSettings extends SiteSettingsInterface {
     private static final String DEFAULT_SHARING_BUTTON_STYLE = "icon-only";
 
     private static final String SPEED_UP_SETTINGS_JETPACK_VERSION = "5.8";
+    private static final String ACTIVE = "active";
 
     // used to track network fetches to prevent multiple errors from generating multiple toasts
     private int mFetchRequestCount = 0;
@@ -190,24 +195,21 @@ class DotComSiteSettings extends SiteSettingsInterface {
         ++mFetchRequestCount;
         // TODO: Replace with FluxC (GET_CATEGORIES + TaxonomyStore.getCategoriesForSite())
         WordPress.getRestClientUtilsV1_1().getCategories(mSite.getSiteId(),
-                                                         new RestRequest.Listener() {
-                                                             @Override
-                                                             public void onResponse(JSONObject response) {
-                                                                 AppLog.v(AppLog.T.API, "Received site Categories");
-                                                                 credentialsVerified(true);
+                new RestRequest.Listener() {
+                    @Override
+                    public void onResponse(JSONObject response) {
+                        AppLog.v(AppLog.T.API, "Received site Categories");
+                        credentialsVerified(true);
 
-                                                                 CategoryModel[] models =
-                                                                         deserializeCategoryRestResponse(response);
-                                                                 if (models == null) {
-                                                                     return;
-                                                                 }
+                        CategoryModel[] models = deserializeCategoryRestResponse(response);
+                        if (models == null) return;
 
-                                                                 SiteSettingsTable.saveCategories(models);
-                                                                 mRemoteSettings.categories = models;
-                                                                 mSettings.categories = models;
-                                                                 onFetchResponseReceived(null);
-                                                             }
-                                                         }, new RestRequest.ErrorListener() {
+                        SiteSettingsTable.saveCategories(models);
+                        mRemoteSettings.categories = models;
+                        mSettings.categories = models;
+                        onFetchResponseReceived(null);
+                    }
+                }, new RestRequest.ErrorListener() {
                     @Override
                     public void onErrorResponse(VolleyError error) {
                         AppLog.d(AppLog.T.API, "Error fetching WP.com categories:" + error);
@@ -219,9 +221,7 @@ class DotComSiteSettings extends SiteSettingsInterface {
     private void fetchJetpackSettings() {
         fetchJetpackMonitorSettings();
         fetchJetpackProtectAndSsoSettings();
-        if (supportsJetpackSpeedUpSettings(mSite)) {
-            fetchJetpackModuleSettings();
-        }
+        fetchJetpackModuleSettings();
     }
 
     private void fetchJetpackProtectAndSsoSettings() {
@@ -244,6 +244,7 @@ class DotComSiteSettings extends SiteSettingsInterface {
                 mRemoteJpSettings.ssoActive = data.optBoolean("sso", false);
                 mRemoteJpSettings.ssoMatchEmail = data.optBoolean("jetpack_sso_match_by_email", false);
                 mRemoteJpSettings.ssoRequireTwoFactor = data.optBoolean("jetpack_sso_require_two_step", false);
+                mRemoteJpSettings.commentLikes = data.optBoolean(COMMENT_LIKES, false);
 
                 JSONObject jetpackProtectWhitelist = data.optJSONObject("jetpack_protect_global_whitelist");
                 if (jetpackProtectWhitelist != null) {
@@ -268,6 +269,7 @@ class DotComSiteSettings extends SiteSettingsInterface {
                 mJpSettings.ssoActive = mRemoteJpSettings.ssoActive;
                 mJpSettings.ssoMatchEmail = mRemoteJpSettings.ssoMatchEmail;
                 mJpSettings.ssoRequireTwoFactor = mRemoteJpSettings.ssoRequireTwoFactor;
+                mJpSettings.commentLikes = mRemoteJpSettings.commentLikes;
                 onFetchResponseReceived(null);
             }
         }, new RestRequest.ErrorListener() {
@@ -325,14 +327,22 @@ class DotComSiteSettings extends SiteSettingsInterface {
                                 if (id == null) {
                                     continue;
                                 }
-                                if (id.equals(SERVE_IMAGES_FROM_OUR_SERVERS)) {
-                                    mRemoteJpSettings.serveImagesFromOurServers = module.optBoolean("active", false);
-                                } else if (id.equals(LAZY_LOAD_IMAGES)) {
-                                    mRemoteJpSettings.lazyLoadImages = module.optBoolean("active", false);
+                                boolean isActive = module.optBoolean(ACTIVE, false);
+                                switch (id) {
+                                    case SERVE_IMAGES_FROM_OUR_SERVERS:
+                                        mRemoteJpSettings.serveImagesFromOurServers = isActive;
+                                        break;
+                                    case LAZY_LOAD_IMAGES:
+                                        mRemoteJpSettings.lazyLoadImages = isActive;
+                                        break;
+                                    case SHARING_MODULE:
+                                        mRemoteJpSettings.sharingEnabled = isActive;
+                                        break;
                                 }
                             }
                             mJpSettings.serveImagesFromOurServers = mRemoteJpSettings.serveImagesFromOurServers;
                             mJpSettings.lazyLoadImages = mRemoteJpSettings.lazyLoadImages;
+                            mJpSettings.sharingEnabled = mRemoteJpSettings.sharingEnabled;
                         }
                         onFetchResponseReceived(null);
                     }
@@ -369,9 +379,7 @@ class DotComSiteSettings extends SiteSettingsInterface {
 
                         if (response != null) {
                             JSONObject updated = response.optJSONObject("updated");
-                            if (updated == null) {
-                                return;
-                            }
+                            if (updated == null) return;
                             HashMap<String, Object> properties = new HashMap<>();
                             Iterator<String> keys = updated.keys();
                             while (keys.hasNext()) {
@@ -407,27 +415,21 @@ class DotComSiteSettings extends SiteSettingsInterface {
         final JetpackSettingsModel sentJpData = new JetpackSettingsModel(mJpSettings);
         ++mSaveRequestCount;
         WordPress.getRestClientUtilsV1_1().setJetpackSettings(mSite.getSiteId(), params,
-                                                              new RestRequest.Listener() {
-                                                                  @Override
-                                                                  public void onResponse(JSONObject response) {
-                                                                      AppLog.d(AppLog.T.API,
-                                                                               "Jetpack settings updated");
-                                                                      mRemoteJpSettings.monitorActive =
-                                                                              sentJpData.monitorActive;
-                                                                      mRemoteJpSettings.jetpackProtectEnabled =
-                                                                              sentJpData.jetpackProtectEnabled;
-                                                                      mRemoteJpSettings.jetpackProtectWhitelist.clear();
-                                                                      mRemoteJpSettings.jetpackProtectWhitelist
-                                                                              .addAll(sentJpData.jetpackProtectWhitelist);
-                                                                      mRemoteJpSettings.ssoActive =
-                                                                              sentJpData.ssoActive;
-                                                                      mRemoteJpSettings.ssoMatchEmail =
-                                                                              sentJpData.ssoMatchEmail;
-                                                                      mRemoteJpSettings.ssoRequireTwoFactor =
-                                                                              sentJpData.ssoRequireTwoFactor;
-                                                                      onSaveResponseReceived(null);
-                                                                  }
-                                                              }, new RestRequest.ErrorListener() {
+                new RestRequest.Listener() {
+                    @Override
+                    public void onResponse(JSONObject response) {
+                        AppLog.d(AppLog.T.API, "Jetpack settings updated");
+                        mRemoteJpSettings.monitorActive = sentJpData.monitorActive;
+                        mRemoteJpSettings.jetpackProtectEnabled = sentJpData.jetpackProtectEnabled;
+                        mRemoteJpSettings.jetpackProtectWhitelist.clear();
+                        mRemoteJpSettings.jetpackProtectWhitelist.addAll(sentJpData.jetpackProtectWhitelist);
+                        mRemoteJpSettings.ssoActive = sentJpData.ssoActive;
+                        mRemoteJpSettings.ssoMatchEmail = sentJpData.ssoMatchEmail;
+                        mRemoteJpSettings.ssoRequireTwoFactor = sentJpData.ssoRequireTwoFactor;
+                        mRemoteJpSettings.commentLikes = sentJpData.commentLikes;
+                        onSaveResponseReceived(null);
+                    }
+                }, new RestRequest.ErrorListener() {
                     @Override
                     public void onErrorResponse(VolleyError error) {
                         AppLog.w(AppLog.T.API, "Error updating Jetpack settings: " + error);
@@ -478,8 +480,7 @@ class DotComSiteSettings extends SiteSettingsInterface {
                         public void onErrorResponse(VolleyError error) {
                             mRemoteJpSettings.serveImagesFromOurServers = fallbackValue;
                             error.printStackTrace();
-                            AppLog.w(AppLog.T.API,
-                                     "Error updating Jetpack module - Serve images from our servers: " + error);
+                            AppLog.w(AppLog.T.API, "Error updating Jetpack module - Serve images from our servers: " + error);
                             onSaveResponseReceived(error);
                         }
                     });
@@ -547,9 +548,7 @@ class DotComSiteSettings extends SiteSettingsInterface {
      * Sets values from a .com REST response object.
      */
     private void deserializeDotComRestResponse(SiteModel site, JSONObject response) {
-        if (site == null || response == null) {
-            return;
-        }
+        if (site == null || response == null) return;
         JSONObject settingsObject = response.optJSONObject("settings");
 
         mRemoteSettings.username = site.getUsername();
@@ -579,8 +578,7 @@ class DotComSiteSettings extends SiteSettingsInterface {
         mRemoteSettings.holdForModeration = new ArrayList<>();
         mRemoteSettings.blacklist = new ArrayList<>();
         mRemoteSettings.sharingLabel = settingsObject.optString(SHARING_LABEL_KEY, "");
-        mRemoteSettings.sharingButtonStyle =
-                settingsObject.optString(SHARING_BUTTON_STYLE_KEY, DEFAULT_SHARING_BUTTON_STYLE);
+        mRemoteSettings.sharingButtonStyle = settingsObject.optString(SHARING_BUTTON_STYLE_KEY, DEFAULT_SHARING_BUTTON_STYLE);
         mRemoteSettings.allowCommentLikes = settingsObject.optBoolean(SHARING_COMMENT_LIKES_KEY, false);
         mRemoteSettings.twitterUsername = settingsObject.optString(TWITTER_USERNAME_KEY, "");
         mRemoteSettings.startOfWeek = settingsObject.optString(START_OF_WEEK_KEY, "");
@@ -655,13 +653,12 @@ class DotComSiteSettings extends SiteSettingsInterface {
         if (mSettings.defaultCategory != mRemoteSettings.defaultCategory) {
             params.put(DEF_CATEGORY_KEY, String.valueOf(mSettings.defaultCategory));
         }
-        if (mSettings.defaultPostFormat != null && !mSettings.defaultPostFormat
-                .equals(mRemoteSettings.defaultPostFormat)) {
+        if (mSettings.defaultPostFormat != null && !mSettings.defaultPostFormat.equals(mRemoteSettings.defaultPostFormat)) {
             params.put(DEF_POST_FORMAT_KEY, mSettings.defaultPostFormat);
         }
         if (mSettings.showRelatedPosts != mRemoteSettings.showRelatedPosts
-            || mSettings.showRelatedPostHeader != mRemoteSettings.showRelatedPostHeader
-            || mSettings.showRelatedPostImages != mRemoteSettings.showRelatedPostImages) {
+                || mSettings.showRelatedPostHeader != mRemoteSettings.showRelatedPostHeader
+                || mSettings.showRelatedPostImages != mRemoteSettings.showRelatedPostImages) {
             params.put(RELATED_POSTS_ENABLED_KEY, String.valueOf(mSettings.showRelatedPosts));
             params.put(RELATED_POSTS_HEADER_KEY, String.valueOf(mSettings.showRelatedPostHeader));
             params.put(RELATED_POSTS_IMAGES_KEY, String.valueOf(mSettings.showRelatedPostImages));
@@ -679,7 +676,7 @@ class DotComSiteSettings extends SiteSettingsInterface {
             params.put(COMMENT_MODERATION_KEY, String.valueOf(mSettings.commentApprovalRequired));
         }
         if (mSettings.closeCommentAfter != mRemoteSettings.closeCommentAfter
-            || mSettings.shouldCloseAfter != mRemoteSettings.shouldCloseAfter) {
+                || mSettings.shouldCloseAfter != mRemoteSettings.shouldCloseAfter) {
             params.put(CLOSE_OLD_COMMENTS_KEY, String.valueOf(mSettings.shouldCloseAfter));
             params.put(CLOSE_OLD_COMMENTS_DAYS_KEY, String.valueOf(mSettings.closeCommentAfter));
         }
@@ -691,12 +688,12 @@ class DotComSiteSettings extends SiteSettingsInterface {
             }
         }
         if (mSettings.threadingLevels != mRemoteSettings.threadingLevels
-            || mSettings.shouldThreadComments != mRemoteSettings.shouldThreadComments) {
+                || mSettings.shouldThreadComments != mRemoteSettings.shouldThreadComments) {
             params.put(THREAD_COMMENTS_KEY, String.valueOf(mSettings.shouldThreadComments));
             params.put(THREAD_COMMENTS_DEPTH_KEY, String.valueOf(mSettings.threadingLevels));
         }
         if (mSettings.commentsPerPage != mRemoteSettings.commentsPerPage
-            || mSettings.shouldPageComments != mRemoteSettings.shouldPageComments) {
+                || mSettings.shouldPageComments != mRemoteSettings.shouldPageComments) {
             params.put(PAGE_COMMENTS_KEY, String.valueOf(mSettings.shouldPageComments));
             params.put(PAGE_COMMENT_COUNT_KEY, String.valueOf(mSettings.commentsPerPage));
         }
@@ -712,8 +709,7 @@ class DotComSiteSettings extends SiteSettingsInterface {
         if (mSettings.maxLinks != mRemoteSettings.maxLinks) {
             params.put(MAX_LINKS_KEY, String.valueOf(mSettings.maxLinks));
         }
-        if (mSettings.holdForModeration != null && !mSettings.holdForModeration
-                .equals(mRemoteSettings.holdForModeration)) {
+        if (mSettings.holdForModeration != null && !mSettings.holdForModeration.equals(mRemoteSettings.holdForModeration)) {
             StringBuilder builder = new StringBuilder();
             for (String key : mSettings.holdForModeration) {
                 builder.append(key);
@@ -740,8 +736,7 @@ class DotComSiteSettings extends SiteSettingsInterface {
         if (mSettings.sharingLabel != null && !mSettings.sharingLabel.equals(mRemoteSettings.sharingLabel)) {
             params.put(SHARING_LABEL_KEY, String.valueOf(mSettings.sharingLabel));
         }
-        if (mSettings.sharingButtonStyle != null && !mSettings.sharingButtonStyle
-                .equals(mRemoteSettings.sharingButtonStyle)) {
+        if (mSettings.sharingButtonStyle != null && !mSettings.sharingButtonStyle.equals(mRemoteSettings.sharingButtonStyle)) {
             params.put(SHARING_BUTTON_STYLE_KEY, mSettings.sharingButtonStyle);
         }
         if (mSettings.allowReblogButton != mRemoteSettings.allowReblogButton) {
@@ -782,9 +777,7 @@ class DotComSiteSettings extends SiteSettingsInterface {
     }
 
     private void deserializeJetpackRestResponse(SiteModel site, JSONObject response) {
-        if (site == null || response == null) {
-            return;
-        }
+        if (site == null || response == null) return;
         JSONObject settingsObject = response.optJSONObject("settings");
         mRemoteJpSettings.emailNotifications = settingsObject.optBoolean(JP_MONITOR_EMAIL_NOTES_KEY, false);
         mRemoteJpSettings.wpNotifications = settingsObject.optBoolean(JP_MONITOR_WP_NOTES_KEY, false);
@@ -819,13 +812,14 @@ class DotComSiteSettings extends SiteSettingsInterface {
         if (mJpSettings.ssoRequireTwoFactor != mRemoteJpSettings.ssoRequireTwoFactor) {
             params.put("jetpack_sso_require_two_step", mJpSettings.ssoRequireTwoFactor);
         }
+        if (mJpSettings.commentLikes != mRemoteJpSettings.commentLikes) {
+            params.put(COMMENT_LIKES, mJpSettings.commentLikes);
+        }
         return params;
     }
 
     private CategoryModel deserializeCategoryFromJson(JSONObject category) throws JSONException {
-        if (category == null) {
-            return null;
-        }
+        if (category == null) return null;
 
         CategoryModel model = new CategoryModel();
         model.id = category.getInt(CAT_ID_KEY);

@@ -14,7 +14,9 @@
         android:paddingTop="@dimen/margin_large"
         android:text="@string/media_add_popup_title"
         android:textSize="@dimen/text_sz_large"
-        android:textStyle="bold" />
+        android:textStyle="bold"
+        android:paddingEnd="@dimen/margin_extra_large"
+        android:paddingStart="@dimen/margin_extra_large"/>
 
     <View
         android:layout_width="match_parent"
@@ -26,6 +28,8 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:paddingLeft="@dimen/margin_extra_large"
-        android:paddingRight="@dimen/margin_extra_large" />
+        android:paddingRight="@dimen/margin_extra_large"
+        android:paddingStart="@dimen/margin_extra_large"
+        android:paddingEnd="@dimen/margin_extra_large"/>
 
 </LinearLayout>

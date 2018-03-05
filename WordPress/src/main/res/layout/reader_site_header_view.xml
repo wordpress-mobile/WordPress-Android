@@ -19,16 +19,21 @@
         android:paddingLeft="@dimen/reader_card_content_padding"
         android:paddingRight="@dimen/reader_card_content_padding"
         android:paddingTop="@dimen/margin_large"
-        tools:targetApi="LOLLIPOP">
+        tools:targetApi="LOLLIPOP"
+        android:paddingEnd="@dimen/reader_card_content_padding"
+        android:paddingStart="@dimen/reader_card_content_padding">
 
         <org.wordpress.android.widgets.WPNetworkImageView
             android:id="@+id/image_blavatar"
             style="@style/ReaderImageView.Avatar"
             android:layout_centerVertical="true"
             android:layout_marginRight="@dimen/margin_large"
-            app:srcCompat="@drawable/ic_placeholder_blavatar_grey_lighten_20_40dp" />
+            app:srcCompat="@drawable/ic_placeholder_blavatar_grey_lighten_20_40dp"
+            android:layout_marginEnd="@dimen/margin_large"/>
 
         <org.wordpress.android.widgets.WPTextView
+            android:textAlignment="viewStart"
+            android:gravity="start"
             android:id="@+id/text_blog_name"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -36,9 +41,13 @@
             android:layout_toRightOf="@+id/image_blavatar"
             android:textColor="@color/grey_dark"
             android:textSize="@dimen/text_sz_large"
-            tools:text="Loading..." />
+            tools:text="Loading..."
+            android:layout_toStartOf="@+id/follow_button"
+            android:layout_toEndOf="@+id/image_blavatar"/>
 
         <org.wordpress.android.widgets.WPTextView
+            android:textAlignment="viewStart"
+            android:gravity="start"
             android:id="@+id/text_domain"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -47,7 +56,9 @@
             android:layout_toRightOf="@+id/image_blavatar"
             android:textColor="@color/grey_darken_10"
             android:textSize="@dimen/text_sz_small"
-            tools:text="text_domain" />
+            tools:text="text_domain"
+            android:layout_toStartOf="@+id/follow_button"
+            android:layout_toEndOf="@+id/image_blavatar"/>
 
         <org.wordpress.android.ui.reader.views.ReaderFollowButton
             android:id="@+id/follow_button"
@@ -57,7 +68,8 @@
             android:layout_centerVertical="true"
             android:padding="@dimen/reader_follow_button_padding"
             android:visibility="gone"
-            tools:visibility="visible" />
+            tools:visibility="visible"
+            android:layout_alignParentEnd="true"/>
 
     </RelativeLayout>
 
@@ -81,7 +93,9 @@
             android:textColor="@color/grey_dark"
             android:textSize="@dimen/text_sz_medium"
             android:fontFamily="serif"
-            tools:text="text_description" />
+            tools:text="text_description"
+            android:layout_marginStart="@dimen/reader_card_content_padding"
+            android:layout_marginEnd="@dimen/reader_card_content_padding"/>
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -100,7 +114,6 @@
                 android:id="@+id/text_blog_follow_count"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_below="@+id/text_domain"
                 android:textColor="@color/grey_darken_10"
                 android:textSize="@dimen/text_sz_small"
                 tools:text="12 followers" />

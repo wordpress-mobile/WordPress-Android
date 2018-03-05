@@ -19,6 +19,7 @@ package org.wordpress.android.widgets;
 import android.content.Context;
 import android.database.DataSetObservable;
 import android.database.DataSetObserver;
+import android.support.v4.view.ViewCompat;
 import android.util.AttributeSet;
 import android.view.View;
 import android.view.ViewGroup;
@@ -46,18 +47,12 @@ public class HeaderGridView extends GridView {
      * or a footer at the bottom.
      */
     private static class FixedViewInfo {
-        /**
-         * The view to add to the grid
-         */
+        /** The view to add to the grid */
         public View view;
         public ViewGroup viewContainer;
-        /**
-         * The data backing the view. This is returned from {@link ListAdapter#getItem(int)}.
-         */
+        /** The data backing the view. This is returned from {@link ListAdapter#getItem(int)}. */
         public Object data;
-        /**
-         * <code>true</code> if the fixed view should be selectable in the grid
-         */
+        /** <code>true</code> if the fixed view should be selectable in the grid */
         public boolean isSelectable;
     }
 
@@ -111,7 +106,7 @@ public class HeaderGridView extends GridView {
     public void addHeaderView(View v, Object data, boolean isSelectable) {
         ListAdapter adapter = getAdapter();
 
-        if (adapter != null && !(adapter instanceof HeaderViewGridAdapter)) {
+        if (adapter != null && ! (adapter instanceof HeaderViewGridAdapter)) {
             throw new IllegalStateException(
                     "Cannot add header view to grid -- setAdapter has already been called.");
         }
@@ -203,10 +198,10 @@ public class HeaderGridView extends GridView {
         @Override
         protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
             int targetWidth = HeaderGridView.this.getMeasuredWidth()
-                              - HeaderGridView.this.getPaddingLeft()
-                              - HeaderGridView.this.getPaddingRight();
+                    - ViewCompat.getPaddingStart(HeaderGridView.this)
+                    - ViewCompat.getPaddingEnd(HeaderGridView.this);
             widthMeasureSpec = MeasureSpec.makeMeasureSpec(targetWidth,
-                                                           MeasureSpec.getMode(widthMeasureSpec));
+                    MeasureSpec.getMode(widthMeasureSpec));
             super.onMeasure(widthMeasureSpec, heightMeasureSpec);
         }
     }
@@ -215,7 +210,7 @@ public class HeaderGridView extends GridView {
      * ListAdapter used when a HeaderGridView has header views. This ListAdapter
      * wraps another one and also keeps track of the header views and their
      * associated data objects.
-     * <p>This is intended as a base class; you will probably not need to
+     *<p>This is intended as a base class; you will probably not need to
      * use this class directly in your own code.
      */
     private static class HeaderViewGridAdapter implements WrapperListAdapter, Filterable {
@@ -315,7 +310,7 @@ public class HeaderGridView extends GridView {
             int numHeadersAndPlaceholders = getHeadersCount() * mNumColumns;
             if (position < numHeadersAndPlaceholders) {
                 return (position % mNumColumns == 0)
-                       && mHeaderViewInfos.get(position / mNumColumns).isSelectable;
+                        && mHeaderViewInfos.get(position / mNumColumns).isSelectable;
             }
 
             // Adapter
@@ -379,7 +374,7 @@ public class HeaderGridView extends GridView {
         @Override
         public View getView(int position, View convertView, ViewGroup parent) {
             // Header (negative positions will throw an ArrayIndexOutOfBoundsException)
-            int numHeadersAndPlaceholders = getHeadersCount() * mNumColumns;
+            int numHeadersAndPlaceholders = getHeadersCount() * mNumColumns ;
             if (position < numHeadersAndPlaceholders) {
                 View headerViewContainer = mHeaderViewInfos
                         .get(position / mNumColumns).viewContainer;

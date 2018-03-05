@@ -276,5 +276,4 @@ public class ShareIntentReceiverActivity extends AppCompatActivity implements Sh
         }
         return mediaShared;
     }
-
 }

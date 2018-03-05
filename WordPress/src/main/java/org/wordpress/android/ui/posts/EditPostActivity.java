@@ -1972,9 +1972,9 @@ public class EditPostActivity extends AppCompatActivity implements
     /**
      * Analytics about media from device
      *
-     * @param isNew   Whether is a fresh media
+     * @param isNew Whether is a fresh media
      * @param isVideo Whether is a video or not
-     * @param uri     The URI of the media on the device, or null
+     * @param uri The URI of the media on the device, or null
      */
     private void trackAddMediaFromDeviceEvents(boolean isNew, boolean isVideo, Uri uri) {
         if (uri == null) {

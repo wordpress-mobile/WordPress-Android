@@ -261,5 +261,4 @@ public class ReaderDatabase extends SQLiteOpenHelper {
             AppLog.e(T.DB, "failed to copy reader database", e);
         }
     }
-
 }

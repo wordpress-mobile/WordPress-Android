@@ -36,7 +36,9 @@
                         android:layout_alignLeft="@+id/layout_post_detail_content"
                         android:layout_alignRight="@+id/layout_post_detail_content"
                         android:layout_marginBottom="@dimen/margin_large"
-                        android:layout_marginTop="@dimen/margin_large" />
+                        android:layout_marginTop="@dimen/margin_large"
+                        android:layout_alignEnd="@+id/layout_post_detail_content"
+                        android:layout_alignStart="@+id/layout_post_detail_content"/>
 
                     <include
                         layout="@layout/reader_include_post_detail_content"
@@ -54,7 +56,9 @@
                         android:layout_alignLeft="@+id/layout_post_detail_content"
                         android:layout_alignRight="@+id/layout_post_detail_content"
                         android:layout_below="@+id/layout_post_detail_content"
-                        android:orientation="vertical">
+                        android:orientation="vertical"
+                        android:layout_alignEnd="@+id/layout_post_detail_content"
+                        android:layout_alignStart="@+id/layout_post_detail_content">
 
                         <org.wordpress.android.ui.reader.views.ReaderSimplePostContainerView
                             android:id="@+id/related_posts_view_local"
@@ -117,7 +121,9 @@
         android:textSize="@dimen/text_sz_extra_large"
         android:visibility="gone"
         tools:text="Error message"
-        tools:visibility="visible" />
+        tools:visibility="visible"
+        android:layout_marginStart="@dimen/reader_detail_margin"
+        android:layout_marginEnd="@dimen/reader_detail_margin"/>
 
     <org.wordpress.android.widgets.WPTextView
         android:id="@+id/nux_sign_in_button"
@@ -130,7 +136,9 @@
         android:clickable="true"
         android:gravity="center"
         android:text="@string/sign_in_wpcom"
-        android:visibility="gone" />
+        android:visibility="gone"
+        android:layout_marginEnd="@dimen/reader_detail_margin"
+        android:layout_marginStart="@dimen/reader_detail_margin"/>
 
     <!-- container for webView custom view - this is where fullscreen video will appear -->
     <FrameLayout

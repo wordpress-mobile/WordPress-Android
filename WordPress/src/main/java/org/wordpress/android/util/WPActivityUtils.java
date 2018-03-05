@@ -13,6 +13,7 @@ import android.content.res.Configuration;
 import android.content.res.Resources;
 import android.os.Build;
 import android.preference.PreferenceManager;
+import android.support.v4.text.TextUtilsCompat;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -118,7 +119,11 @@ public class WPActivityUtils {
             if (!locale.equals(contextLanguage)) {
                 Resources resources = context.getResources();
                 Configuration conf = resources.getConfiguration();
-                conf.locale = WPPrefUtils.languageLocale(locale);
+                Locale newLocale = WPPrefUtils.languageLocale(locale);
+                conf.locale = newLocale;
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
+                    conf.setLayoutDirection(newLocale);
+                }
                 resources.updateConfiguration(conf, resources.getDisplayMetrics());
             }
         }

@@ -3,6 +3,7 @@ package org.wordpress.android.ui;
 import android.content.Context;
 import android.support.annotation.MenuRes;
 import android.support.design.widget.AppBarLayout;
+import android.support.v4.view.ViewCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
@@ -154,7 +155,7 @@ public class FilteredRecyclerView extends RelativeLayout {
                         });
                     }
                 }
-                                                         );
+        );
 
         if (mSpinner == null) {
             mSpinner = (Spinner) findViewById(R.id.filter_spinner);
@@ -202,7 +203,7 @@ public class FilteredRecyclerView extends RelativeLayout {
 
                 if (mCurrentFilter == selectedCriteria) {
                     AppLog.d(mTAG, "The selected STATUS is already active: "
-                                   + selectedCriteria.getLabel());
+                            + selectedCriteria.getLabel());
                     return;
                 }
 
@@ -237,9 +238,7 @@ public class FilteredRecyclerView extends RelativeLayout {
     }
 
     public void updateEmptyView(EmptyViewMessageType emptyViewMessageType) {
-        if (mEmptyView == null) {
-            return;
-        }
+        if (mEmptyView == null) return;
 
         if ((hasAdapter() && mAdapter.getItemCount() == 0) || !hasAdapter()) {
             if (mFilterListener != null) {
@@ -250,7 +249,8 @@ public class FilteredRecyclerView extends RelativeLayout {
                     }
                     mEmptyView.setText(msg);
                     mEmptyView.setVisibility(View.VISIBLE);
-                } else {
+                }
+                else {
                     mEmptyView.setVisibility(View.GONE);
                     mFilterListener.onShowCustomEmptyView(emptyViewMessageType);
                 }
@@ -297,32 +297,19 @@ public class FilteredRecyclerView extends RelativeLayout {
     }
 
     public void setToolbarLeftPadding(int paddingLeft) {
-        mToolbar.setPadding(paddingLeft,
-                            mToolbar.getPaddingTop(),
-                            mToolbar.getPaddingRight(),
-                            mToolbar.getPaddingBottom());
+        ViewCompat.setPaddingRelative(mToolbar, paddingLeft, mToolbar.getPaddingTop(), ViewCompat.getPaddingEnd(mToolbar), mToolbar.getPaddingBottom());
     }
 
     public void setToolbarRightPadding(int paddingRight) {
-        mToolbar.setPadding(
-                mToolbar.getPaddingLeft(),
-                mToolbar.getPaddingTop(),
-                paddingRight,
-                mToolbar.getPaddingBottom());
+        ViewCompat.setPaddingRelative(mToolbar, ViewCompat.getPaddingStart(mToolbar), mToolbar.getPaddingTop(), paddingRight, mToolbar.getPaddingBottom());
     }
 
     public void setToolbarLeftAndRightPadding(int paddingLeft, int paddingRight) {
-        mToolbar.setPadding(
-                paddingLeft,
-                mToolbar.getPaddingTop(),
-                paddingRight,
-                mToolbar.getPaddingBottom());
+        ViewCompat.setPaddingRelative(mToolbar, paddingLeft, mToolbar.getPaddingTop(), paddingRight, mToolbar.getPaddingBottom());
     }
 
     public void scrollRecycleViewToPosition(int position) {
-        if (mRecyclerView == null) {
-            return;
-        }
+        if (mRecyclerView == null) return;
 
         mRecyclerView.scrollToPosition(position);
     }
@@ -342,9 +329,7 @@ public class FilteredRecyclerView extends RelativeLayout {
     }
 
     public void addItemDecoration(RecyclerView.ItemDecoration decor) {
-        if (mRecyclerView == null) {
-            return;
-        }
+        if (mRecyclerView == null) return;
 
         mRecyclerView.addItemDecoration(decor);
     }
@@ -423,9 +408,8 @@ public class FilteredRecyclerView extends RelativeLayout {
                 }
 
                 if (mSpinnerDrawableRight != 0) {
-                    text.setCompoundDrawablesWithIntrinsicBounds(0, 0, mSpinnerDrawableRight, 0);
                     text.setCompoundDrawablePadding(getResources().getDimensionPixelSize(R.dimen.margin_medium));
-                    text.setGravity(Gravity.CENTER_VERTICAL | Gravity.LEFT);
+                    text.setGravity(Gravity.CENTER_VERTICAL | Gravity.START);
                 }
             } else {
                 view = convertView;
@@ -453,7 +437,6 @@ public class FilteredRecyclerView extends RelativeLayout {
 
         private class TagViewHolder {
             private final TextView textView;
-
             TagViewHolder(View view) {
                 textView = (TextView) view.findViewById(R.id.text);
             }
@@ -478,7 +461,7 @@ public class FilteredRecyclerView extends RelativeLayout {
      */
     public boolean isFirstItemVisible() {
         if (mRecyclerView == null
-            || mRecyclerView.getLayoutManager() == null) {
+                || mRecyclerView.getLayoutManager() == null) {
             return false;
         }
 
@@ -564,7 +547,7 @@ public class FilteredRecyclerView extends RelativeLayout {
     /**
      * implement this interface to load filtering options (that is, an array of FilterCriteria) asynchronously
      */
-    public interface FilterCriteriaAsyncLoaderListener {
+    public interface FilterCriteriaAsyncLoaderListener{
         /**
          * Will be called during initialization of FilteredRecyclerView once you're ready building the FilterCriteria array
          *
