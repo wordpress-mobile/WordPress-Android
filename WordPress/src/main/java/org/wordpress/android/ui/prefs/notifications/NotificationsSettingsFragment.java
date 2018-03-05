@@ -543,7 +543,7 @@ public class NotificationsSettingsFragment extends PreferenceFragment implements
                     getString(R.string.notification_settings_item_sights_and_sounds_choose_sound_default);
             final String value = sharedPreferences.getString(key, defaultPath);
 
-            if (value.trim().startsWith("file://")) {
+            if (value.trim().toLowerCase().startsWith("file://")) {
                 // sound path begins with 'file://` which will lead to FileUriExposedException when used. Revert to
                 //  default and let the user know.
                 AppLog.w(T.NOTIFS, "Notification sound starts with unacceptable scheme: " + value);

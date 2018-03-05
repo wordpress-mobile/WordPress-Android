@@ -702,7 +702,8 @@ public class GCMMessageService extends GcmListenerService {
                     String notificationSound = prefs.getString(context.getString(R.string.wp_pref_custom_notification_sound),
                             context.getString(R.string.notification_settings_item_sights_and_sounds_choose_sound_default));
 
-                    if (!TextUtils.isEmpty(notificationSound) && !notificationSound.trim().startsWith("file://")) {
+                    if (!TextUtils.isEmpty(notificationSound)
+                            && !notificationSound.trim().toLowerCase().startsWith("file://")) {
                         builder.setSound(Uri.parse(notificationSound));
                     }
 
