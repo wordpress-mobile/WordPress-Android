@@ -60,10 +60,10 @@ public class TextDrawable extends Drawable {
     private CharSequence mText = "";
 
     /* Attribute lists to pull default values from the current theme */
-    private static final int[] themeAttributes = {
+    private static final int[] THEME_ATTRIBUTES = {
             android.R.attr.textAppearance
     };
-    private static final int[] appearanceAttributes = {
+    private static final int[] APPEARANCE_ATTRIBUTES = {
             android.R.attr.textSize,
             android.R.attr.typeface,
             android.R.attr.textStyle,
@@ -88,13 +88,13 @@ public class TextDrawable extends Drawable {
         int typefaceIndex = -1;
 
         // Set default parameters from the current theme
-        TypedArray a = context.getTheme().obtainStyledAttributes(themeAttributes);
+        TypedArray a = context.getTheme().obtainStyledAttributes(THEME_ATTRIBUTES);
         int appearanceId = a.getResourceId(0, -1);
         a.recycle();
 
         TypedArray ap = null;
         if (appearanceId != -1) {
-            ap = context.obtainStyledAttributes(appearanceId, appearanceAttributes);
+            ap = context.obtainStyledAttributes(appearanceId, APPEARANCE_ATTRIBUTES);
         }
         if (ap != null) {
             for (int i = 0; i < ap.getIndexCount(); i++) {

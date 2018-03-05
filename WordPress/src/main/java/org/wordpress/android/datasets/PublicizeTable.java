@@ -22,9 +22,9 @@ public class PublicizeTable {
                    + " id TEXT NOT NULL COLLATE NOCASE,"
                    + " label TEXT NOT NULL COLLATE NOCASE,"
                    + " description TEXT NOT NULL,"
-                   + "	genericon	 TEXT NOT NULL,"
+                   + " genericon TEXT NOT NULL,"
                    + " icon_url TEXT NOT NULL,"
-                   + "	connect_url	 TEXT NOT NULL,"
+                   + " connect_url TEXT NOT NULL,"
                    + " is_jetpack_supported INTEGER DEFAULT 0,"
                    + " is_multi_user_id_supported INTEGER DEFAULT 0,"
                    + " PRIMARY KEY (id))");
@@ -69,7 +69,7 @@ public class PublicizeTable {
             return null;
         }
 
-        String args[] = {serviceId};
+        String[] args = {serviceId};
         Cursor c = getReadableDb().rawQuery("SELECT * FROM " + SERVICES_TABLE + " WHERE id=?", args);
         try {
             if (c.moveToFirst()) {
@@ -152,7 +152,7 @@ public class PublicizeTable {
             return "";
         }
         String sql = "SELECT connect_url FROM " + SERVICES_TABLE + " WHERE id=?";
-        String args[] = {serviceId};
+        String[] args = {serviceId};
         return SqlUtils.stringForQuery(getReadableDb(), sql, args);
     }
 
@@ -163,7 +163,7 @@ public class PublicizeTable {
     // ********************************************************************************************
 
     public static PublicizeConnection getConnection(int connectionId) {
-        String args[] = {Integer.toString(connectionId)};
+        String[] args = {Integer.toString(connectionId)};
         Cursor c = getReadableDb().rawQuery("SELECT * FROM " + CONNECTIONS_TABLE + " WHERE id=?", args);
         try {
             if (c.moveToFirst()) {
@@ -178,12 +178,12 @@ public class PublicizeTable {
 
     public static String getRefreshUrlForConnection(int connectionId) {
         String sql = "SELECT refresh_url FROM " + CONNECTIONS_TABLE + " WHERE id=?";
-        String args[] = {Integer.toString(connectionId)};
+        String[] args = {Integer.toString(connectionId)};
         return SqlUtils.stringForQuery(getReadableDb(), sql, args);
     }
 
     public static boolean deleteConnection(int connectionId) {
-        String args[] = {Integer.toString(connectionId)};
+        String[] args = {Integer.toString(connectionId)};
         int numDeleted = getReadableDb().delete(CONNECTIONS_TABLE, "id=?", args);
         return numDeleted > 0;
     }
@@ -214,7 +214,7 @@ public class PublicizeTable {
 
     public static PublicizeConnectionList getConnectionsForSite(long siteId) {
         PublicizeConnectionList connectionList = new PublicizeConnectionList();
-        String args[] = {Long.toString(siteId)};
+        String[] args = {Long.toString(siteId)};
         Cursor c = getReadableDb().rawQuery("SELECT * FROM " + CONNECTIONS_TABLE + " WHERE site_id=?", args);
         try {
             while (c.moveToNext()) {

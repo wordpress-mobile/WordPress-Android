@@ -249,8 +249,7 @@ public class FilteredRecyclerView extends RelativeLayout {
                     }
                     mEmptyView.setText(msg);
                     mEmptyView.setVisibility(View.VISIBLE);
-                }
-                else {
+                } else {
                     mEmptyView.setVisibility(View.GONE);
                     mFilterListener.onShowCustomEmptyView(emptyViewMessageType);
                 }
@@ -297,19 +296,24 @@ public class FilteredRecyclerView extends RelativeLayout {
     }
 
     public void setToolbarLeftPadding(int paddingLeft) {
-        ViewCompat.setPaddingRelative(mToolbar, paddingLeft, mToolbar.getPaddingTop(), ViewCompat.getPaddingEnd(mToolbar), mToolbar.getPaddingBottom());
+        ViewCompat.setPaddingRelative(mToolbar, paddingLeft, mToolbar.getPaddingTop(),
+                                      ViewCompat.getPaddingEnd(mToolbar), mToolbar.getPaddingBottom());
     }
 
     public void setToolbarRightPadding(int paddingRight) {
-        ViewCompat.setPaddingRelative(mToolbar, ViewCompat.getPaddingStart(mToolbar), mToolbar.getPaddingTop(), paddingRight, mToolbar.getPaddingBottom());
+        ViewCompat.setPaddingRelative(mToolbar, ViewCompat.getPaddingStart(mToolbar), mToolbar.getPaddingTop(),
+                                      paddingRight, mToolbar.getPaddingBottom());
     }
 
     public void setToolbarLeftAndRightPadding(int paddingLeft, int paddingRight) {
-        ViewCompat.setPaddingRelative(mToolbar, paddingLeft, mToolbar.getPaddingTop(), paddingRight, mToolbar.getPaddingBottom());
+        ViewCompat.setPaddingRelative(mToolbar, paddingLeft, mToolbar.getPaddingTop(), paddingRight,
+                                      mToolbar.getPaddingBottom());
     }
 
     public void scrollRecycleViewToPosition(int position) {
-        if (mRecyclerView == null) return;
+        if (mRecyclerView == null) {
+            return;
+        }
 
         mRecyclerView.scrollToPosition(position);
     }
@@ -547,9 +551,10 @@ public class FilteredRecyclerView extends RelativeLayout {
     /**
      * implement this interface to load filtering options (that is, an array of FilterCriteria) asynchronously
      */
-    public interface FilterCriteriaAsyncLoaderListener{
+    public interface FilterCriteriaAsyncLoaderListener {
         /**
-         * Will be called during initialization of FilteredRecyclerView once you're ready building the FilterCriteria array
+         * Will be called during initialization of FilteredRecyclerView once you're ready building the
+         * FilterCriteria array
          *
          * @param criteriaList the array of FilterCriteria objects you just built
          */

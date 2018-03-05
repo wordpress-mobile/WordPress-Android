@@ -249,7 +249,8 @@ public class MediaBrowserActivity extends AppCompatActivity implements MediaGrid
                         LinearLayout tabFirstChild = (LinearLayout) mTabLayout.getChildAt(0);
                         for (int i = 0; i < mTabLayout.getTabCount(); i++) {
                             LinearLayout tabView = (LinearLayout) (tabFirstChild.getChildAt(i));
-                            tabLayoutWidth += (tabView.getMeasuredWidth() + ViewCompat.getPaddingStart(tabView) + ViewCompat.getPaddingEnd(tabView));
+                            tabLayoutWidth += (tabView.getMeasuredWidth() + ViewCompat.getPaddingStart(tabView)
+                                               + ViewCompat.getPaddingEnd(tabView));
                         }
 
                         int displayWidth = DisplayUtils.getDisplayPixelWidth(MediaBrowserActivity.this);
@@ -270,7 +271,7 @@ public class MediaBrowserActivity extends AppCompatActivity implements MediaGrid
     }
 
     private MediaFilter getFilterForPosition(int position) {
-        for (MediaFilter filter: MediaFilter.values()) {
+        for (MediaFilter filter : MediaFilter.values()) {
             if (filter.getValue() == position) {
                 return filter;
             }
@@ -429,7 +430,7 @@ public class MediaBrowserActivity extends AppCompatActivity implements MediaGrid
     }
 
     @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String permissions[], @NonNull int[] results) {
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] results) {
         boolean allGranted = WPPermissionUtils.setPermissionListAsked(
                 this, requestCode, permissions, results, true);
 
@@ -591,7 +592,7 @@ public class MediaBrowserActivity extends AppCompatActivity implements MediaGrid
     private void showMediaSettings(@NonNull MediaModel media) {
         List<MediaModel> mediaList = mMediaGridFragment.getFilteredMedia();
         ArrayList<String> idList = new ArrayList<>();
-        for (MediaModel thisMedia: mediaList) {
+        for (MediaModel thisMedia : mediaList) {
             idList.add(Integer.toString(thisMedia.getId()));
         }
         MediaSettingsActivity.showForResult(this, mSite, media, idList);
@@ -819,9 +820,9 @@ public class MediaBrowserActivity extends AppCompatActivity implements MediaGrid
 
         String[] permissions;
         if (item == AddMenuItem.ITEM_CAPTURE_PHOTO || item == AddMenuItem.ITEM_CAPTURE_VIDEO) {
-            permissions = new String[]{ Manifest.permission.CAMERA, Manifest.permission.WRITE_EXTERNAL_STORAGE };
+            permissions = new String[] {Manifest.permission.CAMERA, Manifest.permission.WRITE_EXTERNAL_STORAGE};
         } else {
-            permissions = new String[] { Manifest.permission.WRITE_EXTERNAL_STORAGE };
+            permissions = new String[] {Manifest.permission.WRITE_EXTERNAL_STORAGE};
         }
         if (PermissionUtils.checkAndRequestPermissions(
                 this, WPPermissionUtils.MEDIA_BROWSER_PERMISSION_REQUEST_CODE, permissions)) {
@@ -894,18 +895,18 @@ public class MediaBrowserActivity extends AppCompatActivity implements MediaGrid
     private void handleSharedMedia() {
         Intent intent = getIntent();
 
-        final List<Uri> multi_stream;
+        final List<Uri> multiStream;
         if (Intent.ACTION_SEND_MULTIPLE.equals(intent.getAction())) {
-            multi_stream = intent.getParcelableArrayListExtra((Intent.EXTRA_STREAM));
+            multiStream = intent.getParcelableArrayListExtra((Intent.EXTRA_STREAM));
         } else if (Intent.ACTION_SEND.equals(intent.getAction())) {
-            multi_stream = new ArrayList<>();
-            multi_stream.add((Uri) intent.getParcelableExtra(Intent.EXTRA_STREAM));
+            multiStream = new ArrayList<>();
+            multiStream.add((Uri) intent.getParcelableExtra(Intent.EXTRA_STREAM));
         } else {
-            multi_stream = null;
+            multiStream = null;
         }
 
-        if (multi_stream != null) {
-            uploadList(multi_stream);
+        if (multiStream != null) {
+            uploadList(multiStream);
         }
 
         // clear the intent's action, so that in case the user rotates, we don't re-upload the same files

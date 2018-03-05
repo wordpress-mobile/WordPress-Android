@@ -21,7 +21,7 @@ public class ReaderSearchTable {
     protected static void createTables(SQLiteDatabase db) {
         db.execSQL("CREATE TABLE tbl_search_suggestions ("
                    + " _id INTEGER PRIMARY KEY AUTOINCREMENT,"
-                   + "	query_string TEXT NOT NULL COLLATE NOCASE,"
+                   + " query_string TEXT NOT NULL COLLATE NOCASE,"
                    + " date_used TEXT)");
         db.execSQL("CREATE UNIQUE INDEX idx_search_suggestions_query ON tbl_search_suggestions(query_string)");
     }

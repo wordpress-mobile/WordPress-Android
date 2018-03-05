@@ -31,7 +31,8 @@ public class WordPressDB {
 
     // add new table for QuickPress homescreen shortcuts
     private static final String CREATE_TABLE_QUICKPRESS_SHORTCUTS =
-            "create table if not exists quickpress_shortcuts (id integer primary key autoincrement, accountId text, name text);";
+            "create table if not exists quickpress_shortcuts (id integer primary key autoincrement, "
+            + "accountId text, name text);";
     private static final String QUICKPRESS_SHORTCUTS_TABLE = "quickpress_shortcuts";
 
     private static final String DROP_TABLE_PREFIX = "DROP TABLE IF EXISTS ";
@@ -101,8 +102,9 @@ public class WordPressDB {
             case 25:
                 // ver 26 "virtually" remove columns 'lastCommentId' and 'runService' from the DB
                 // SQLite supports a limited subset of ALTER TABLE.
-                // The ALTER TABLE command in SQLite allows the user to rename a table or to add a new column to an existing table.
-                // It is not possible to rename a column, remove a column, or add or remove constraints from a table.
+                // The ALTER TABLE command in SQLite allows the user to rename a table or to add a new column to
+                // an existing table. It is not possible to rename a column, remove a column, or add or remove
+                // constraints from a table.
                 currentVersion++;
             case 26:
                 // Drop the notes table, no longer needed with Simperium.
@@ -112,7 +114,7 @@ public class WordPressDB {
                 currentVersion++;
             case 28:
                 // Remove WordPress.com credentials
-                // NOPE: removeDotComCredentials();
+                // NOPE: removeWPComCredentials();
                 currentVersion++;
             case 29:
                 currentVersion++;

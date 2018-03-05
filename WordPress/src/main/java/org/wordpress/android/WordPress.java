@@ -23,7 +23,6 @@ import android.webkit.WebSettings;
 import android.webkit.WebView;
 
 import com.android.volley.RequestQueue;
-
 import com.crashlytics.android.Crashlytics;
 import com.google.android.gms.auth.api.Auth;
 import com.google.android.gms.common.ConnectionResult;
@@ -112,9 +111,9 @@ public class WordPress extends MultiDexApplication implements HasServiceInjector
     public static boolean sAppIsInTheBackground = true;
 
     private static RestClientUtils sRestClientUtils;
-    private static RestClientUtils sRestClientUtilsVersion1_1;
-    private static RestClientUtils sRestClientUtilsVersion1_2;
-    private static RestClientUtils sRestClientUtilsVersion1_3;
+    private static RestClientUtils sRestClientUtilsVersion1p1;
+    private static RestClientUtils sRestClientUtilsVersion1p2;
+    private static RestClientUtils sRestClientUtilsVersion1p3;
     private static RestClientUtils sRestClientUtilsVersion0;
 
     private static final int SECONDS_BETWEEN_SITE_UPDATE = 60 * 60; // 1 hour
@@ -279,8 +278,7 @@ public class WordPress extends MultiDexApplication implements HasServiceInjector
         disableRtlLayoutDirectionOnSdk17();
 
         // Allows vector drawable from resources (in selectors for instance) on Android < 21 (can cause issues
-        // with memory usage and the use of Configuration). More informations:
-        // https://developer.android.com/reference/android/support/v7/app/AppCompatDelegate.html#setCompatVectorFromResourcesEnabled(boolean)
+        // with memory usage and the use of Configuration). More informations: http://bit.ly/2H1KTQo
         // Note: if removed, this will cause crashes on Android < 21
         AppCompatDelegate.setCompatVectorFromResourcesEnabled(true);
 
@@ -400,27 +398,27 @@ public class WordPress extends MultiDexApplication implements HasServiceInjector
     }
 
     public static RestClientUtils getRestClientUtilsV1_1() {
-        if (sRestClientUtilsVersion1_1 == null) {
-            sRestClientUtilsVersion1_1 = new RestClientUtils(mContext, sRequestQueue, sOAuthAuthenticator,
+        if (sRestClientUtilsVersion1p1 == null) {
+            sRestClientUtilsVersion1p1 = new RestClientUtils(mContext, sRequestQueue, sOAuthAuthenticator,
                                                              null, RestClient.REST_CLIENT_VERSIONS.V1_1);
         }
-        return sRestClientUtilsVersion1_1;
+        return sRestClientUtilsVersion1p1;
     }
 
     public static RestClientUtils getRestClientUtilsV1_2() {
-        if (sRestClientUtilsVersion1_2 == null) {
-            sRestClientUtilsVersion1_2 = new RestClientUtils(mContext, sRequestQueue, sOAuthAuthenticator,
+        if (sRestClientUtilsVersion1p2 == null) {
+            sRestClientUtilsVersion1p2 = new RestClientUtils(mContext, sRequestQueue, sOAuthAuthenticator,
                                                              null, RestClient.REST_CLIENT_VERSIONS.V1_2);
         }
-        return sRestClientUtilsVersion1_2;
+        return sRestClientUtilsVersion1p2;
     }
 
     public static RestClientUtils getRestClientUtilsV1_3() {
-        if (sRestClientUtilsVersion1_3 == null) {
-            sRestClientUtilsVersion1_3 = new RestClientUtils(mContext, sRequestQueue, sOAuthAuthenticator,
+        if (sRestClientUtilsVersion1p3 == null) {
+            sRestClientUtilsVersion1p3 = new RestClientUtils(mContext, sRequestQueue, sOAuthAuthenticator,
                                                              null, RestClient.REST_CLIENT_VERSIONS.V1_3);
         }
-        return sRestClientUtilsVersion1_3;
+        return sRestClientUtilsVersion1p3;
     }
 
     public static RestClientUtils getRestClientUtilsV0() {
@@ -444,6 +442,7 @@ public class WordPress extends MultiDexApplication implements HasServiceInjector
                 if (dialog != null) {
                     dialog.show();
                 }
+                // fall through
             default:
             case ConnectionResult.SERVICE_MISSING:
             case ConnectionResult.SERVICE_DISABLED:

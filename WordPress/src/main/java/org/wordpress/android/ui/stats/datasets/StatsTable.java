@@ -116,21 +116,21 @@ public class StatsTable {
          * with a very large text column, causing an IllegalStateException when the
          * row is read - prevent this by limiting the amount of text that's stored in
          * the text column - note that this situation very rarely occurs
-         * https://github.com/android/platform_frameworks_base/blob/master/core/res/res/values/config.xml#L1268
-         * https://github.com/android/platform_frameworks_base/blob/3bdbf644d61f46b531838558fabbd5b990fc4913/core/java/android/database/CursorWindow.java#L103
+         * http://bit.ly/2oOKCJc
          */
 
         // Check if the response document from the server is less than 1.8MB. getBytes uses UTF-8 on Android.
         if (jsonResponse.getBytes().length > MAX_RESPONSE_LEN) {
-            AppLog.w(AppLog.T.STATS,
-                     "Stats JSON response length > max allowed length of 1.8MB. Current response will not be stored in cache.");
+            AppLog.w(AppLog.T.STATS, "Stats JSON response length > max allowed length of 1.8MB."
+                                     + " Current response will not be stored in cache.");
             return;
         }
 
         SQLiteDatabase db = StatsDatabaseHelper.getWritableDb(ctx);
         db.beginTransaction();
         SQLiteStatement stmt = db.compileStatement("INSERT INTO " + TABLE_NAME + " (blogID, type, timeframe, date, "
-                                                   + "jsonData, maxResult, page, timestamp) VALUES (?1,?2,?3,?4,?5,?6,?7,?8)");
+                                                   + "jsonData, maxResult, page, timestamp) "
+                                                   + "VALUES (?1,?2,?3,?4,?5,?6,?7,?8)");
         try {
             stmt.bindLong(1, blogId);
             stmt.bindLong(2, sectionToUpdate.ordinal());

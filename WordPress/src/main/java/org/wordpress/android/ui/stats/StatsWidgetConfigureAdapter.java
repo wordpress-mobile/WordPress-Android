@@ -58,7 +58,7 @@ public class StatsWidgetConfigureAdapter extends RecyclerView.Adapter<StatsWidge
         private final View divider;
         private Boolean isSiteHidden;
 
-        public SiteViewHolder(View view) {
+        SiteViewHolder(View view) {
             super(view);
             layoutContainer = (ViewGroup) view.findViewById(R.id.layout_container);
             txtTitle = (TextView) view.findViewById(R.id.text_title);
@@ -237,7 +237,7 @@ public class StatsWidgetConfigureAdapter extends RecyclerView.Adapter<StatsWidge
         final String homeURL;
         final String url;
         final String blavatarUrl;
-        final boolean isDotComOrJetpack;
+        final boolean isWPComOrJetpack;
         final boolean isHidden;
 
         SiteRecord(SiteModel site) {
@@ -247,7 +247,7 @@ public class StatsWidgetConfigureAdapter extends RecyclerView.Adapter<StatsWidge
             homeURL = SiteUtils.getHomeURLOrHostName(site);
             url = site.getUrl();
             blavatarUrl = SiteUtils.getSiteIconUrl(site, mBlavatarSz);
-            isDotComOrJetpack = SiteUtils.isAccessedViaWPComRest(site);
+            isWPComOrJetpack = SiteUtils.isAccessedViaWPComRest(site);
             isHidden = !site.isVisible();
         }
 

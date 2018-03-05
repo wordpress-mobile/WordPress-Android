@@ -45,7 +45,7 @@ public class WPPermissionUtils {
      */
     public static boolean setPermissionListAsked(@NonNull Activity activity,
                                                  int requestCode,
-                                                 @NonNull String permissions[],
+                                                 @NonNull String[] permissions,
                                                  @NonNull int[] grantResults,
                                                  boolean checkForAlwaysDenied) {
         for (int i = 0; i < permissions.length; i++) {

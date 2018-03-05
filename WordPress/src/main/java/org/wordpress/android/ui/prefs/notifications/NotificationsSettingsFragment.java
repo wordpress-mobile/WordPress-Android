@@ -387,7 +387,7 @@ public class NotificationsSettingsFragment extends PreferenceFragment
         PreferenceCategory otherPreferenceCategory = (PreferenceCategory) findPreference(
                 getString(R.string.pref_notification_other_category));
         NotificationsSettingsDialogPreference devicePreference = new NotificationsSettingsDialogPreference(
-                getActivity(), null, Channel.DOTCOM, NotificationsSettings.Type.DEVICE, 0, mNotificationsSettings,
+                getActivity(), null, Channel.WPCOM, NotificationsSettings.Type.DEVICE, 0, mNotificationsSettings,
                 mOnSettingsChangedListener
         );
         devicePreference.setTitle(R.string.notification_settings_item_other_account_emails);
@@ -510,9 +510,9 @@ public class NotificationsSettingsFragment extends PreferenceFragment
                                 AppLog.e(T.NOTIFS, "Could not build notification settings object");
                             }
                             break;
-                        case DOTCOM:
+                        case WPCOM:
                             try {
-                                settingsObject.put(NotificationsSettings.KEY_DOTCOM, newValues);
+                                settingsObject.put(NotificationsSettings.KEY_WPCOM, newValues);
                             } catch (JSONException e) {
                                 AppLog.e(T.NOTIFS, "Could not build notification settings object");
                             }

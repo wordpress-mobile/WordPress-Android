@@ -34,7 +34,7 @@ public class ReaderBlogTable {
         db.execSQL("CREATE TABLE tbl_blog_info ("
                    + " blog_id INTEGER DEFAULT 0," // will be same as feedId for feeds
                    + " feed_id INTEGER DEFAULT 0," // will be 0 for blogs
-                   + "	blog_url TEXT NOT NULL COLLATE NOCASE,"
+                   + " blog_url TEXT NOT NULL COLLATE NOCASE,"
                    + " image_url TEXT,"
                    + " feed_url TEXT,"
                    + " name TEXT,"
@@ -43,7 +43,7 @@ public class ReaderBlogTable {
                    + " is_jetpack INTEGER DEFAULT 0,"
                    + " is_following INTEGER DEFAULT 0,"
                    + " num_followers INTEGER DEFAULT 0,"
-                   + " 	date_updated TEXT,"
+                   + " date_updated TEXT,"
                    + " PRIMARY KEY (blog_id)"
                    + ")");
 
@@ -51,10 +51,10 @@ public class ReaderBlogTable {
                    + " blog_id INTEGER DEFAULT 0,"
                    + " follow_reco_id INTEGER DEFAULT 0,"
                    + " score INTEGER DEFAULT 0,"
-                   + "	 title TEXT COLLATE NOCASE,"
-                   + "	 blog_url TEXT COLLATE NOCASE,"
-                   + "	 image_url TEXT,"
-                   + "	 reason TEXT,"
+                   + " title TEXT COLLATE NOCASE,"
+                   + " blog_url TEXT COLLATE NOCASE,"
+                   + " image_url TEXT,"
+                   + " reason TEXT,"
                    + " PRIMARY KEY (blog_id)"
                    + ")");
     }
@@ -132,7 +132,8 @@ public class ReaderBlogTable {
             return;
         }
         String sql = "INSERT OR REPLACE INTO tbl_blog_info"
-                     + " (blog_id, feed_id, blog_url, image_url, feed_url, name, description, is_private, is_jetpack, is_following, num_followers, date_updated)"
+                     + " (blog_id, feed_id, blog_url, image_url, feed_url, name, description, is_private, is_jetpack, "
+                     + "  is_following, num_followers, date_updated)"
                      + " VALUES (?1, ?2, ?3, ?4, ?5, ?6, ?7, ?8, ?9, ?10, ?11, ?12)";
         SQLiteStatement stmt = ReaderDatabase.getWritableDb().compileStatement(sql);
         try {

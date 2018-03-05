@@ -94,8 +94,8 @@ public class CommentsActivity extends AppCompatActivity
             // initialize comment status filter first time
             commentsListFragment.setCommentStatusFilter(mCurrentCommentStatusType);
             getFragmentManager().beginTransaction()
-                                .add(R.id.layout_fragment_container, commentsListFragment, getString(R.string
-                                                                                                             .fragment_tag_comment_list))
+                                .add(R.id.layout_fragment_container, commentsListFragment,
+                                     getString(R.string.fragment_tag_comment_list))
                                 .commitAllowingStateLoss();
         } else {
             getIntent().putExtra(KEY_AUTO_REFRESHED, savedInstanceState.getBoolean(KEY_AUTO_REFRESHED));

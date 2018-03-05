@@ -68,7 +68,7 @@ public class WPNetworkImageView extends AppCompatImageView {
     private int mCropWidth;
     private int mCropHeight;
 
-    private static final HashSet<String> mUrlSkipList = new HashSet<>();
+    private static final HashSet<String> URL_SKIP_LIST = new HashSet<>();
 
     public WPNetworkImageView(Context context) {
         this(context, null);
@@ -214,8 +214,8 @@ public class WPNetworkImageView extends AppCompatImageView {
             if (mImageContainer.getRequestUrl().equals(mUrl)) {
                 // if the request is from the same URL and it's not GONE_UNTIL_AVAILABLE, return.
                 if (mImageType != ImageType.GONE_UNTIL_AVAILABLE) {
-                    // GONE_UNTIL_AVAILABLE image type will make a new request if the previous response wasn't a 404 response,
-                    // Volley usually returns it from cache.
+                    // GONE_UNTIL_AVAILABLE image type will make a new request if the previous response wasn't
+                    // a 404 response, Volley usually returns it from cache.
                     return;
                 }
             } else {
@@ -226,7 +226,7 @@ public class WPNetworkImageView extends AppCompatImageView {
         }
 
         // skip this URL if a previous request for it returned a 404
-        if (mUrlSkipList.contains(mUrl)) {
+        if (URL_SKIP_LIST.contains(mUrl)) {
             AppLog.d(AppLog.T.UTILS, "skipping image request " + mUrl);
             showErrorImage();
             if (imageLoadListener != null) {
@@ -242,11 +242,9 @@ public class WPNetworkImageView extends AppCompatImageView {
 
         // The pre-existing content of this view didn't match the current URL. Load the new image
         // from the network.
-        ImageLoader.ImageContainer newContainer = WordPress.sImageLoader.get(mUrl,
-                                                                             new WPNetworkImageLoaderListener(mUrl,
-                                                                                                              isInLayoutPass,
-                                                                                                              imageLoadListener),
-                                                                             maxWidth, maxHeight, scaleType);
+        ImageLoader.ImageContainer newContainer = WordPress.sImageLoader.get(
+                mUrl, new WPNetworkImageLoaderListener(mUrl, isInLayoutPass, imageLoadListener),
+                maxWidth, maxHeight, scaleType);
         // update the ImageContainer to be the new bitmap container.
         mImageContainer = newContainer;
     }
@@ -278,7 +276,7 @@ public class WPNetworkImageView extends AppCompatImageView {
             // keep track of URLs that 404 so we can skip them the next time
             int statusCode = VolleyUtils.statusCodeFromVolleyError(error);
             if (statusCode == 404) {
-                mUrlSkipList.add(mRequestedURL);
+                URL_SKIP_LIST.add(mRequestedURL);
             }
 
             if (mUrl == null || !mUrl.equals(mRequestedURL)) {
@@ -377,7 +375,7 @@ public class WPNetworkImageView extends AppCompatImageView {
 
     public void removeCurrentUrlFromSkiplist() {
         if (!TextUtils.isEmpty(mUrl)) {
-            mUrlSkipList.remove(mUrl);
+            URL_SKIP_LIST.remove(mUrl);
         }
     }
 
@@ -534,7 +532,7 @@ public class WPNetworkImageView extends AppCompatImageView {
         private int mRoundedCornerRadiusPx;
         private static final int ROUNDED_CORNER_RADIUS_DP = 2;
 
-        public ShapeBitmapTask(ShapeType shapeType, ImageLoadListener imageLoadListener) {
+        ShapeBitmapTask(ShapeType shapeType, ImageLoadListener imageLoadListener) {
             mImageLoadListener = imageLoadListener;
             mShapeType = shapeType;
             if (mShapeType == ShapeType.ROUNDED) {

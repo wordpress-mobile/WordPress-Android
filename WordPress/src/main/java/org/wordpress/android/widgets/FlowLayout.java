@@ -33,7 +33,8 @@ public class FlowLayout extends ViewGroup {
 
     @Override
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
-        int widthSize = MeasureSpec.getSize(widthMeasureSpec) - ViewCompat.getPaddingEnd(this) - ViewCompat.getPaddingStart(this);
+        int widthSize = MeasureSpec.getSize(widthMeasureSpec) - ViewCompat.getPaddingEnd(this) - ViewCompat
+                .getPaddingStart(this);
         int widthMode = MeasureSpec.getMode(widthMeasureSpec);
 
         boolean growHeight = widthMode != MeasureSpec.UNSPECIFIED;
@@ -92,7 +93,8 @@ public class FlowLayout extends ViewGroup {
             LayoutParams lp = (LayoutParams) child.getLayoutParams();
 
             if (ViewCompat.getLayoutDirection(this) == ViewCompat.LAYOUT_DIRECTION_RTL) {
-                child.layout(child.getMeasuredWidth() - lp.x - child.getMeasuredWidth(), lp.y, r - lp.x, lp.y + child.getMeasuredHeight());
+                child.layout(child.getMeasuredWidth() - lp.x - child.getMeasuredWidth(), lp.y, r - lp.x,
+                             lp.y + child.getMeasuredHeight());
             } else {
                 child.layout(lp.x, lp.y, lp.x + child.getMeasuredWidth(), lp.y + child.getMeasuredHeight());
             }

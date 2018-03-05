@@ -139,20 +139,20 @@ public class RemoteTests extends DefaultMocksInstrumentationTestCase {
 
                 SingleItemModel firstChild = second.getClicks().get(0);
                 assertNotNull(firstChild);
-                assertEquals(firstChild.getUrl(),
-                             "http://blog.wordpress.tv/2014/10/03/build-your-audience-recent-wordcamp-videos-from-experienced-content-creators/");
-                assertEquals(firstChild.getTitle(),
-                             "blog.wordpress.tv/2014/10/03/build-your-audience-recent-wordcamp-videos-from-experienced-content-creators/");
+                assertEquals(firstChild.getUrl(), "http://blog.wordpress.tv/2014/10/03/"
+                             + "build-your-audience-recent-wordcamp-videos-from-experienced-content-creators/");
+                assertEquals(firstChild.getTitle(), "blog.wordpress.tv/2014/10/03/"
+                             + "build-your-audience-recent-wordcamp-videos-from-experienced-content-creators/");
                 assertEquals(firstChild.getTotals(), 1);
                 assertEquals(firstChild.getIcon(), "");
 
 
                 SingleItemModel secondChild = second.getClicks().get(1);
                 assertNotNull(secondChild);
-                assertEquals(secondChild.getUrl(),
-                             "http://blog.wordpress.tv/2014/10/29/wordcamp-san-francisco-2014-state-of-the-word-keynote/");
-                assertEquals(secondChild.getTitle(),
-                             "blog.wordpress.tv/2014/10/29/wordcamp-san-francisco-2014-state-of-the-word-keynote/");
+                assertEquals(secondChild.getUrl(), "http://blog.wordpress.tv/"
+                             + "2014/10/29/wordcamp-san-francisco-2014-state-of-the-word-keynote/");
+                assertEquals(secondChild.getTitle(), "blog.wordpress.tv/"
+                             + "2014/10/29/wordcamp-san-francisco-2014-state-of-the-word-keynote/");
                 assertEquals(secondChild.getTotals(), 1);
                 assertEquals(secondChild.getIcon(), "");
             }
@@ -162,8 +162,7 @@ public class RemoteTests extends DefaultMocksInstrumentationTestCase {
                                 "https://public-api.wordpress.com/rest/v1.1/sites/1234567890/stats/clicks",
                                 null,
                                 listener,
-                                errListener
-                               );
+                                errListener);
     }
 
     public void testCommentsDay() throws Exception {
@@ -183,7 +182,8 @@ public class RemoteTests extends DefaultMocksInstrumentationTestCase {
                 assertEquals(author.getViews(), 20);
                 assertEquals(author.getAvatar(),
                              "https://1.gravatar.com/avatar/db127a496309f2717657d6f6167abd49?s=64&amp;"
-                             + "d=https%3A%2F%2F1.gravatar.com%2Favatar%2Fad516503a11cd5ca435acc9bb6523536%3Fs%3D64&amp;r=R"
+                             + "d=https%3A%2F%2F1.gravatar.com%2Favatar%2F"
+                             + "ad516503a11cd5ca435acc9bb6523536%3Fs%3D64&amp;r=R"
                             );
                 assertNull(author.getFollowData());
                 assertNull(author.getPosts());
@@ -256,15 +256,19 @@ public class RemoteTests extends DefaultMocksInstrumentationTestCase {
                 assertNotNull(model.getFollowers());
                 assertEquals(model.getFollowers().size(), 7);
                 FollowerModel first = model.getFollowers().get(0);
-                assertEquals(first.getAvatar(), "https://2.gravatar.com/avatar/e82142697283897ad7444810e5975895?s=64"
-                                                + "&amp;d=https%3A%2F%2F2.gravatar.com%2Favatar%2Fad516503a11cd5ca435acc9bb6523536%3Fs%3D64&amp;r=G");
+                assertEquals(first.getAvatar(), "https://2.gravatar.com/avatar/"
+                                                + "e82142697283897ad7444810e5975895?s=64"
+                                                + "&amp;d=https%3A%2F%2F2.gravatar.com%2Favatar%2F"
+                                                + "ad516503a11cd5ca435acc9bb6523536%3Fs%3D64&amp;r=G");
                 assertEquals(first.getLabel(), "user1@example.com");
                 assertNull(first.getURL());
                 assertNull(first.getFollowData());
                 assertEquals(first.getDateSubscribed(), "2014-12-16T11:24:41+00:00");
                 FollowerModel last = model.getFollowers().get(6);
-                assertEquals(last.getAvatar(), "https://0.gravatar.com/avatar/3b37f38b63ce4f595cc5cfbaadb10938?s=64"
-                                               + "&amp;d=https%3A%2F%2F0.gravatar.com%2Favatar%2Fad516503a11cd5ca435acc9bb6523536%3Fs%3D64&amp;r=G");
+                assertEquals(last.getAvatar(), "https://0.gravatar.com/avatar/"
+                                               + "3b37f38b63ce4f595cc5cfbaadb10938?s=64"
+                                               + "&amp;d=https%3A%2F%2F0.gravatar.com%2Favatar%2F"
+                                               + "ad516503a11cd5ca435acc9bb6523536%3Fs%3D64&amp;r=G");
                 assertEquals(last.getLabel(), "user7@example.com");
                 assertNull(last.getURL());
                 assertNull(last.getFollowData());
@@ -294,8 +298,10 @@ public class RemoteTests extends DefaultMocksInstrumentationTestCase {
                 assertNotNull(model.getFollowers());
                 assertEquals(model.getFollowers().size(), 7);
                 FollowerModel first = model.getFollowers().get(0);
-                assertEquals(first.getAvatar(), "https://0.gravatar.com/avatar/624b89cb0c8b9136f9629dd7bcab0517?s=64"
-                                                + "&amp;d=https%3A%2F%2F0.gravatar.com%2Favatar%2Fad516503a11cd5ca435acc9bb6523536%3Fs%3D64&amp;r=G");
+                assertEquals(first.getAvatar(), "https://0.gravatar.com/avatar/"
+                                                + "624b89cb0c8b9136f9629dd7bcab0517?s=64"
+                                                + "&amp;d=https%3A%2F%2F0.gravatar.com%2Favatar%2F"
+                                                + "ad516503a11cd5ca435acc9bb6523536%3Fs%3D64&amp;r=G");
                 assertEquals(first.getLabel(), "ritu929");
                 assertEquals(first.getURL(), "http://ritu9blog.wordpress.com");
                 assertEquals(first.getDateSubscribed(), "2014-12-16T14:53:21+00:00");

@@ -99,8 +99,8 @@ public class NotificationsSettingsDialogPreference extends DialogPreference {
                 settingsValues =
                         getContext().getResources().getStringArray(R.array.notifications_other_settings_values);
                 break;
-            case DOTCOM:
-                settingsJson = mSettings.getDotcomSettings();
+            case WPCOM:
+                settingsJson = mSettings.getWPComSettings();
                 settingsArray = getContext().getResources().getStringArray(R.array.notifications_wpcom_settings);
                 settingsValues =
                         getContext().getResources().getStringArray(R.array.notifications_wpcom_settings_values);
@@ -123,8 +123,8 @@ public class NotificationsSettingsDialogPreference extends DialogPreference {
                 TextView title = (TextView) commentsSetting.findViewById(R.id.notifications_switch_title);
                 title.setText(settingName);
 
-                // Add special summary text for the DOTCOM section
-                if (mChannel == Channel.DOTCOM && i < summaryArray.length) {
+                // Add special summary text for the WPCOM section
+                if (mChannel == Channel.WPCOM && i < summaryArray.length) {
                     String summaryText = summaryArray[i];
                     TextView summary = (TextView) commentsSetting.findViewById(R.id.notifications_switch_summary);
                     summary.setVisibility(View.VISIBLE);

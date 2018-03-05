@@ -80,13 +80,13 @@ public class NotificationsPendingDraftsReceiver extends BroadcastReceiver {
                 if (daysInDraft < MAX_DAYS_TO_SHOW_DAYS_IN_MESSAGE) {
                     String formattedString = context.getString(R.string.pending_draft_one_generic);
 
-                    long one_day_ago = now - ONE_DAY;
-                    long one_week_ago = now - ONE_WEEK;
-                    long one_month_ago = now - ONE_MONTH;
+                    long oneDayAgo = now - ONE_DAY;
+                    long oneWeekAgo = now - ONE_WEEK;
+                    long oneMonthAgo = now - ONE_MONTH;
 
-                    if (dateLastUpdated < one_month_ago) {
+                    if (dateLastUpdated < oneMonthAgo) {
                         formattedString = context.getString(R.string.pending_draft_one_month);
-                    } else if (dateLastUpdated < one_week_ago) {
+                    } else if (dateLastUpdated < oneWeekAgo) {
                         // use any of the available 2 string formats, randomly
                         Random randomNum = new Random();
                         int result = randomNum.nextInt(2);
@@ -95,7 +95,7 @@ public class NotificationsPendingDraftsReceiver extends BroadcastReceiver {
                         } else {
                             formattedString = context.getString(R.string.pending_draft_one_week_2);
                         }
-                    } else if (dateLastUpdated < one_day_ago) {
+                    } else if (dateLastUpdated < oneDayAgo) {
                         // use any of the available 2 string formats, randomly
                         Random randomNum = new Random();
                         int result = randomNum.nextInt(2);
@@ -108,8 +108,8 @@ public class NotificationsPendingDraftsReceiver extends BroadcastReceiver {
 
                     buildSinglePendingDraftNotification(context, post.getTitle(), formattedString, postId, isPage);
                 } else {
-                    // if it's been more than MAX_DAYS_TO_SHOW_DAYS_IN_MESSAGE days, or if we don't know (i.e. value for lastUpdated
-                    // is zero) then just show a generic message
+                    // if it's been more than MAX_DAYS_TO_SHOW_DAYS_IN_MESSAGE days, or if we don't know
+                    // (i.e. value for lastUpdated is zero) then just show a generic message
                     buildSinglePendingDraftNotificationGeneric(context, post.getTitle(), postId, isPage);
                 }
             }
@@ -147,12 +147,10 @@ public class NotificationsPendingDraftsReceiver extends BroadcastReceiver {
         resultIntent.addCategory("android.intent.category.LAUNCHER");
         resultIntent.putExtra(POST_ID_EXTRA, postId);
         resultIntent.putExtra(IS_PAGE_EXTRA, isPage);
-        PendingIntent pendingIntent = PendingIntent.getActivity(context,
-                                                                BASE_REQUEST_CODE + PendingDraftsNotificationsUtils
-                                                                        .makePendingDraftNotificationId(postId),
-                                                                resultIntent,
-                                                                PendingIntent.FLAG_CANCEL_CURRENT
-                                                                | PendingIntent.FLAG_UPDATE_CURRENT);
+        PendingIntent pendingIntent = PendingIntent
+                .getActivity(context, BASE_REQUEST_CODE + PendingDraftsNotificationsUtils
+                                     .makePendingDraftNotificationId(postId),
+                             resultIntent, PendingIntent.FLAG_CANCEL_CURRENT | PendingIntent.FLAG_UPDATE_CURRENT);
 
         return pendingIntent;
     }
@@ -183,13 +181,13 @@ public class NotificationsPendingDraftsReceiver extends BroadcastReceiver {
         openDraftIntent.putExtra(POST_ID_EXTRA, postId);
         openDraftIntent.putExtra(IS_PAGE_EXTRA, isPage);
 
-        PendingIntent pendingIntent = PendingIntent.getActivity(context,
-                                                                // need to add + 2 so the request code is different, otherwise they overlap
-                                                                BASE_REQUEST_CODE + 1 + PendingDraftsNotificationsUtils
-                                                                        .makePendingDraftNotificationId(postId),
-                                                                openDraftIntent,
-                                                                PendingIntent.FLAG_CANCEL_CURRENT
-                                                                | PendingIntent.FLAG_UPDATE_CURRENT);
+        PendingIntent pendingIntent = PendingIntent
+                .getActivity(context,
+                             // need to add + 2 so the request code is different, otherwise they overlap
+                             BASE_REQUEST_CODE + 1 + PendingDraftsNotificationsUtils
+                                     .makePendingDraftNotificationId(postId),
+                             openDraftIntent,
+                             PendingIntent.FLAG_CANCEL_CURRENT | PendingIntent.FLAG_UPDATE_CURRENT);
         builder.addAction(R.drawable.ic_pencil_white, context.getText(R.string.edit),
                           pendingIntent);
     }
@@ -202,13 +200,12 @@ public class NotificationsPendingDraftsReceiver extends BroadcastReceiver {
                               NotificationsProcessingService.ARG_ACTION_DRAFT_PENDING_IGNORE);
         ignoreIntent.putExtra(POST_ID_EXTRA, postId);
         ignoreIntent.putExtra(IS_PAGE_EXTRA, isPage);
-        PendingIntent ignorePendingIntent = PendingIntent.getService(context,
-                                                                     // need to add + 2 so the request code is different, otherwise they overlap
-                                                                     BASE_REQUEST_CODE + 2
-                                                                     + PendingDraftsNotificationsUtils
-                                                                             .makePendingDraftNotificationId(postId),
-                                                                     ignoreIntent, PendingIntent.FLAG_CANCEL_CURRENT
-                                                                                   | PendingIntent.FLAG_UPDATE_CURRENT);
+        PendingIntent ignorePendingIntent = PendingIntent
+                .getService(context,
+                            // need to add + 2 so the request code is different, otherwise they overlap
+                            BASE_REQUEST_CODE + 2
+                            + PendingDraftsNotificationsUtils.makePendingDraftNotificationId(postId),
+                            ignoreIntent, PendingIntent.FLAG_CANCEL_CURRENT | PendingIntent.FLAG_UPDATE_CURRENT);
         builder.addAction(R.drawable.ic_close_white_24dp, context.getText(R.string.ignore),
                           ignorePendingIntent);
     }
@@ -221,13 +218,12 @@ public class NotificationsPendingDraftsReceiver extends BroadcastReceiver {
                                            NotificationsProcessingService.ARG_ACTION_DRAFT_PENDING_DISMISS);
         notificationDeletedIntent.putExtra(POST_ID_EXTRA, postId);
         notificationDeletedIntent.putExtra(IS_PAGE_EXTRA, isPage);
-        PendingIntent dismissPendingIntent = PendingIntent.getService(context,
-                                                                      // need to add + 3 so the request code is different, otherwise they overlap
-                                                                      BASE_REQUEST_CODE + 3
-                                                                      + PendingDraftsNotificationsUtils
-                                                                              .makePendingDraftNotificationId(postId),
-                                                                      notificationDeletedIntent,
-                                                                      PendingIntent.FLAG_CANCEL_CURRENT);
+        PendingIntent dismissPendingIntent = PendingIntent
+                .getService(context,
+                            // need to add + 3 so the request code is different, otherwise they overlap
+                            BASE_REQUEST_CODE + 3
+                            + PendingDraftsNotificationsUtils.makePendingDraftNotificationId(postId),
+                            notificationDeletedIntent, PendingIntent.FLAG_CANCEL_CURRENT);
         builder.setDeleteIntent(dismissPendingIntent);
     }
 }

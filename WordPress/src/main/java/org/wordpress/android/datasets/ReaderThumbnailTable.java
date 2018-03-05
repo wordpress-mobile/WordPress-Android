@@ -12,7 +12,7 @@ import org.wordpress.android.util.SqlUtils;
 public class ReaderThumbnailTable {
     protected static void createTables(SQLiteDatabase db) {
         db.execSQL("CREATE TABLE tbl_thumbnails ("
-                   + "	full_url	 TEXT COLLATE NOCASE PRIMARY KEY,"
+                   + " full_url TEXT COLLATE NOCASE PRIMARY KEY,"
                    + " thumbnail_url TEXT NOT NULL,"
                    + " post_id INTEGER DEFAULT 0)");
     }

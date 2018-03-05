@@ -130,10 +130,10 @@ public abstract class SiteSettingsInterface {
         }
 
         if (SiteUtils.isAccessedViaWPComRest(site)) {
-            return new DotComSiteSettings(host, site, listener);
+            return new WPComSiteSettings(host, site, listener);
         }
 
-        return new DotOrgSiteSettings(host, site, listener);
+        return new SelfHostedSiteSettings(host, site, listener);
     }
 
     /**

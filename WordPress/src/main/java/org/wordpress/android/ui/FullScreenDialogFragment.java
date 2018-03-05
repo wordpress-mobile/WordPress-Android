@@ -360,7 +360,8 @@ public class FullScreenDialogFragment extends DialogFragment {
          * @param contentClass Fragment class to be instantiated
          * @param contentArguments arguments to be added to Fragment
          * @return {@link Builder} object to allow for chaining of calls to set methods
-         * @throws IllegalArgumentException if content class does not implement {@link FullScreenDialogContent} interface
+         * @throws IllegalArgumentException if content class does not implement
+         * {@link FullScreenDialogContent} interface
          */
         public Builder setContent(Class<? extends Fragment> contentClass, @Nullable Bundle contentArguments) {
             if (!FullScreenDialogContent.class.isAssignableFrom(contentClass)) {

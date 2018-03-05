@@ -92,7 +92,7 @@ public class CommentAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
         private final ImageView imgCheckmark;
         private final ViewGroup containerView;
 
-        public CommentHolder(View view) {
+        CommentHolder(View view) {
             super(view);
             txtTitle = (TextView) view.findViewById(R.id.title);
             txtComment = (TextView) view.findViewById(R.id.comment);
@@ -408,7 +408,7 @@ public class CommentAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
         CommentList tmpComments;
         final CommentStatus mStatusFilter;
 
-        public LoadCommentsTask(CommentStatus statusFilter) {
+        LoadCommentsTask(CommentStatus statusFilter) {
             mStatusFilter = statusFilter;
         }
 

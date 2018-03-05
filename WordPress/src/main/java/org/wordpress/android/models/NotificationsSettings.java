@@ -13,21 +13,21 @@ import java.util.Map;
 public class NotificationsSettings {
     public static final String KEY_BLOGS = "blogs";
     public static final String KEY_OTHER = "other";
-    public static final String KEY_DOTCOM = "wpcom";
+    public static final String KEY_WPCOM = "wpcom";
     public static final String KEY_DEVICES = "devices";
 
     public static final String KEY_DEVICE_ID = "device_id";
     public static final String KEY_BLOG_ID = "blog_id";
 
     private JSONObject mOtherSettings;
-    private JSONObject mDotcomSettings;
+    private JSONObject mWPComSettings;
     private Map<Long, JSONObject> mBlogSettings;
 
     // The main notification settings channels (displayed at root of NoticationsSettingsFragment)
     public enum Channel {
         OTHER,
         BLOGS,
-        DOTCOM
+        WPCOM
     }
 
     // The notification setting type, used in BLOGS and OTHER channels
@@ -59,7 +59,7 @@ public class NotificationsSettings {
         mBlogSettings = new HashMap<>();
 
         mOtherSettings = JSONUtils.queryJSON(json, KEY_OTHER, new JSONObject());
-        mDotcomSettings = JSONUtils.queryJSON(json, KEY_DOTCOM, new JSONObject());
+        mWPComSettings = JSONUtils.queryJSON(json, KEY_WPCOM, new JSONObject());
 
         JSONArray siteSettingsArray = JSONUtils.queryJSON(json, KEY_BLOGS, new JSONArray());
         for (int i = 0; i < siteSettingsArray.length(); i++) {
@@ -93,8 +93,8 @@ public class NotificationsSettings {
                     otherSetting.put(settingName, newValue);
                     getOtherSettings().put(typeName, otherSetting);
                     break;
-                case DOTCOM:
-                    getDotcomSettings().put(settingName, newValue);
+                case WPCOM:
+                    getWPComSettings().put(settingName, newValue);
             }
         } catch (JSONException e) {
             AppLog.e(AppLog.T.NOTIFS, "Could not update notifications settings JSON");
@@ -109,7 +109,7 @@ public class NotificationsSettings {
         return mBlogSettings;
     }
 
-    public JSONObject getDotcomSettings() {
-        return mDotcomSettings;
+    public JSONObject getWPComSettings() {
+        return mWPComSettings;
     }
 }
