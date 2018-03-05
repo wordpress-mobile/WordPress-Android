@@ -42,6 +42,7 @@ import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.SiteUtils;
 import org.wordpress.android.util.ToastUtils;
+import org.wordpress.android.util.ToastUtils.Duration;
 import org.wordpress.android.util.WPActivityUtils;
 
 import java.util.ArrayList;
@@ -552,7 +553,7 @@ public class NotificationsSettingsFragment extends PreferenceFragment implements
                 Context context = WordPress.getContext();
                 if (context != null) {
                     // let the user know we won't be using the selected sound
-                    ToastUtils.showToast(context, R.string.notification_sound_has_invalid_path);
+                    ToastUtils.showToast(context, R.string.notification_sound_has_invalid_path, Duration.LONG);
                 }
             }
         }
