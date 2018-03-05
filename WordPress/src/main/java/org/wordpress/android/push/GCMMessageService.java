@@ -699,9 +699,11 @@ public class GCMMessageService extends GcmListenerService {
                 if (notifyUser) {
                     boolean shouldVibrate = prefs.getBoolean(context.getString(R.string.wp_pref_notification_vibrate), false);
                     boolean shouldBlinkLight = prefs.getBoolean(context.getString(R.string.wp_pref_notification_light), true);
-                    String notificationSound = prefs.getString(context.getString(R.string.wp_pref_custom_notification_sound), "content://settings/system/notification_sound"); //"" if None is selected
+                    String notificationSound = prefs.getString(context.getString(R.string.wp_pref_custom_notification_sound),
+                            context.getString(R.string.notification_settings_item_sights_and_sounds_choose_sound_default));
 
-                    if (!TextUtils.isEmpty(notificationSound)) {
+                    if (!TextUtils.isEmpty(notificationSound)
+                            && !notificationSound.trim().toLowerCase().startsWith("file://")) {
                         builder.setSound(Uri.parse(notificationSound));
                     }
 
