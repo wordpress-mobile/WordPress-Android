@@ -54,12 +54,10 @@
     </style>
 
     <style name="Calypso.AlertDialog" parent="@style/Theme.AppCompat.Light.Dialog.Alert">
-        <item name="windowActionBar">false</item>
-        <item name="colorPrimary">@color/white</item>
-        <item name="colorPrimaryDark">@color/grey_darken_10</item>
+        <item name="colorPrimary">@color/color_primary</item>
+        <item name="colorPrimaryDark">@color/color_primary_dark</item>
         <item name="colorAccent">@color/blue_medium</item>
         <item name="actionModeStyle">@style/Calypso.ActionMode</item>
-        <item name="android:background">@color/white</item>
         <item name="android:listDivider">@drawable/preferences_divider</item>
         <item name="android:dividerHeight">@dimen/site_settings_divider_height</item>
     </style>
