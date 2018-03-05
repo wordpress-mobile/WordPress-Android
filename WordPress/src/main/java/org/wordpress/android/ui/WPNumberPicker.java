@@ -38,6 +38,7 @@ public class WPNumberPicker extends NumberPicker {
     private Formatter mFormatter;
     private Paint mPaint;
     private int[] mDisplayValues;
+    private int[] mEmptyIndices = new int[0];
 
     public WPNumberPicker(Context context, AttributeSet attrs) {
         super(context, attrs);
@@ -77,7 +78,7 @@ public class WPNumberPicker extends NumberPicker {
     @Override
     protected void onDraw(Canvas canvas) {
         int[] selectorIndices = getIndices();
-        setIndices(new int[0]);
+        setIndices(mEmptyIndices);
         setIndices(selectorIndices);
 
         // Draw the middle number with a different font
