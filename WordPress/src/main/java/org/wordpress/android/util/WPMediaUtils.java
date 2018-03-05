@@ -231,7 +231,9 @@ public class WPMediaUtils {
         Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
         intent.setType("video/*");
         if (multiSelect) {
-            intent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true);
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR2) {
+                intent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true);
+            }
         }
         return Intent.createChooser(intent, context.getString(R.string.pick_video));
     }
@@ -256,7 +258,9 @@ public class WPMediaUtils {
         Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
         intent.setType("image/*");
         if (multiSelect) {
-            intent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true);
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR2) {
+                intent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true);
+            }
         }
         return Intent.createChooser(intent, title);
     }
