@@ -457,7 +457,7 @@ public class MeFragment extends Fragment {
                                    });
     }
 
-    static public class GravatarUploadFinished {
+    public static class GravatarUploadFinished {
         public final String filePath;
         public final boolean success;
 
@@ -478,7 +478,7 @@ public class MeFragment extends Fragment {
         }
     }
 
-    static public class GravatarLoadFinished {
+    public static class GravatarLoadFinished {
         public final boolean success;
 
         public GravatarLoadFinished(boolean success) {
@@ -539,7 +539,7 @@ public class MeFragment extends Fragment {
     private class SignOutWordPressComAsync extends AsyncTask<Void, Void, Void> {
         WeakReference<Context> mWeakContext;
 
-        public SignOutWordPressComAsync(Context context) {
+        SignOutWordPressComAsync(Context context) {
             mWeakContext = new WeakReference<Context>(context);
         }
 

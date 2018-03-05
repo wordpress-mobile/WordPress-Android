@@ -9,7 +9,9 @@ import org.wordpress.android.util.DateTimeUtils;
 import org.wordpress.android.util.StringUtils;
 
 public class Person {
-    public enum PersonType {USER, FOLLOWER, EMAIL_FOLLOWER, VIEWER}
+    public enum PersonType {
+        USER, FOLLOWER, EMAIL_FOLLOWER, VIEWER
+    }
 
     private long personID;
     private int localTableBlogId;

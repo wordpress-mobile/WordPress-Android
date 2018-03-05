@@ -45,7 +45,7 @@ public class MultiUsernameEditText extends AppCompatEditText {
 
 
     private class MultiUsernameEditTextInputConnection extends BaseInputConnection {
-        public MultiUsernameEditTextInputConnection(View targetView, boolean fullEditor) {
+        MultiUsernameEditTextInputConnection(View targetView, boolean fullEditor) {
             super(targetView, fullEditor);
         }
 

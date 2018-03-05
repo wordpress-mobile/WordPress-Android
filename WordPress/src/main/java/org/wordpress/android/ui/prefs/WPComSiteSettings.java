@@ -27,7 +27,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 
-class DotComSiteSettings extends SiteSettingsInterface {
+class WPComSiteSettings extends SiteSettingsInterface {
     // WP.com REST keys used in response to a settings GET and POST request
     private static final String LANGUAGE_ID_KEY = "lang_id";
     private static final String PRIVACY_KEY = "blog_public";
@@ -111,7 +111,7 @@ class DotComSiteSettings extends SiteSettingsInterface {
     /**
      * Only instantiated by {@link SiteSettingsInterface}.
      */
-    DotComSiteSettings(Context host, SiteModel site, SiteSettingsListener listener) {
+    WPComSiteSettings(Context host, SiteModel site, SiteSettingsListener listener) {
         super(host, site, listener);
     }
 
@@ -164,7 +164,7 @@ class DotComSiteSettings extends SiteSettingsInterface {
                         credentialsVerified(true);
 
                         mRemoteSettings.localTableId = mSite.getId();
-                        deserializeDotComRestResponse(mSite, response);
+                        deserializeWpComRestResponse(mSite, response);
                         if (!mRemoteSettings.equals(mSettings)) {
                             // postFormats setting is not returned by this api call so copy it over
                             final Map<String, String> currentPostFormats = mSettings.postFormats;
@@ -358,7 +358,7 @@ class DotComSiteSettings extends SiteSettingsInterface {
     private void pushWpSettings() {
         JSONObject jsonParams;
         try {
-            jsonParams = serializeDotComParamsToJSONObject();
+            jsonParams = serializeWpComParamsToJSONObject();
             // skip network requests if there are no changes
             if (jsonParams.length() <= 0) {
                 return;
@@ -480,7 +480,8 @@ class DotComSiteSettings extends SiteSettingsInterface {
                         public void onErrorResponse(VolleyError error) {
                             mRemoteJpSettings.serveImagesFromOurServers = fallbackValue;
                             error.printStackTrace();
-                            AppLog.w(AppLog.T.API, "Error updating Jetpack module - Serve images from our servers: " + error);
+                            AppLog.w(AppLog.T.API,
+                                     "Error updating Jetpack module - Serve images from our servers: " + error);
                             onSaveResponseReceived(error);
                         }
                     });
@@ -547,7 +548,7 @@ class DotComSiteSettings extends SiteSettingsInterface {
     /**
      * Sets values from a .com REST response object.
      */
-    private void deserializeDotComRestResponse(SiteModel site, JSONObject response) {
+    private void deserializeWpComRestResponse(SiteModel site, JSONObject response) {
         if (site == null || response == null) return;
         JSONObject settingsObject = response.optJSONObject("settings");
 
@@ -578,7 +579,8 @@ class DotComSiteSettings extends SiteSettingsInterface {
         mRemoteSettings.holdForModeration = new ArrayList<>();
         mRemoteSettings.blacklist = new ArrayList<>();
         mRemoteSettings.sharingLabel = settingsObject.optString(SHARING_LABEL_KEY, "");
-        mRemoteSettings.sharingButtonStyle = settingsObject.optString(SHARING_BUTTON_STYLE_KEY, DEFAULT_SHARING_BUTTON_STYLE);
+        mRemoteSettings.sharingButtonStyle = settingsObject.optString(SHARING_BUTTON_STYLE_KEY,
+                                                                      DEFAULT_SHARING_BUTTON_STYLE);
         mRemoteSettings.allowCommentLikes = settingsObject.optBoolean(SHARING_COMMENT_LIKES_KEY, false);
         mRemoteSettings.twitterUsername = settingsObject.optString(TWITTER_USERNAME_KEY, "");
         mRemoteSettings.startOfWeek = settingsObject.optString(START_OF_WEEK_KEY, "");
@@ -632,7 +634,7 @@ class DotComSiteSettings extends SiteSettingsInterface {
     /**
      * Need to use JSONObject's instead of HashMap<String, String> to serialize array values (Jetpack Whitelist)
      */
-    private JSONObject serializeDotComParamsToJSONObject() throws JSONException {
+    private JSONObject serializeWpComParamsToJSONObject() throws JSONException {
         JSONObject params = new JSONObject();
 
         if (mSettings.title != null && !mSettings.title.equals(mRemoteSettings.title)) {
@@ -653,7 +655,8 @@ class DotComSiteSettings extends SiteSettingsInterface {
         if (mSettings.defaultCategory != mRemoteSettings.defaultCategory) {
             params.put(DEF_CATEGORY_KEY, String.valueOf(mSettings.defaultCategory));
         }
-        if (mSettings.defaultPostFormat != null && !mSettings.defaultPostFormat.equals(mRemoteSettings.defaultPostFormat)) {
+        if (mSettings.defaultPostFormat != null && !mSettings.defaultPostFormat
+                .equals(mRemoteSettings.defaultPostFormat)) {
             params.put(DEF_POST_FORMAT_KEY, mSettings.defaultPostFormat);
         }
         if (mSettings.showRelatedPosts != mRemoteSettings.showRelatedPosts
@@ -709,7 +712,8 @@ class DotComSiteSettings extends SiteSettingsInterface {
         if (mSettings.maxLinks != mRemoteSettings.maxLinks) {
             params.put(MAX_LINKS_KEY, String.valueOf(mSettings.maxLinks));
         }
-        if (mSettings.holdForModeration != null && !mSettings.holdForModeration.equals(mRemoteSettings.holdForModeration)) {
+        if (mSettings.holdForModeration != null && !mSettings.holdForModeration
+                .equals(mRemoteSettings.holdForModeration)) {
             StringBuilder builder = new StringBuilder();
             for (String key : mSettings.holdForModeration) {
                 builder.append(key);
@@ -736,7 +740,8 @@ class DotComSiteSettings extends SiteSettingsInterface {
         if (mSettings.sharingLabel != null && !mSettings.sharingLabel.equals(mRemoteSettings.sharingLabel)) {
             params.put(SHARING_LABEL_KEY, String.valueOf(mSettings.sharingLabel));
         }
-        if (mSettings.sharingButtonStyle != null && !mSettings.sharingButtonStyle.equals(mRemoteSettings.sharingButtonStyle)) {
+        if (mSettings.sharingButtonStyle != null && !mSettings.sharingButtonStyle
+                .equals(mRemoteSettings.sharingButtonStyle)) {
             params.put(SHARING_BUTTON_STYLE_KEY, mSettings.sharingButtonStyle);
         }
         if (mSettings.allowReblogButton != mRemoteSettings.allowReblogButton) {

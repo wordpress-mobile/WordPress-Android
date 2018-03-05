@@ -23,7 +23,7 @@ public class NotificationsTable {
         return WordPress.wpDB.getDatabase();
     }
 
-    public static int NOTES_TO_RETRIEVE = 200;
+    public static final int NOTES_TO_RETRIEVE = 200;
 
     public static void createTables(SQLiteDatabase db) {
         db.execSQL("CREATE TABLE IF NOT EXISTS " + NOTIFICATIONS_TABLE + " ("
@@ -49,13 +49,13 @@ public class NotificationsTable {
                                       null, null, null, null, "timestamp DESC", "" + limit);
         ArrayList<Note> notes = new ArrayList<Note>();
         while (cursor.moveToNext()) {
-            String note_id = cursor.getString(0);
-            String raw_note_data = cursor.getString(1);
+            String noteId = cursor.getString(0);
+            String rawNoteData = cursor.getString(1);
             try {
-                Note note = new Note(note_id, new JSONObject(raw_note_data));
+                Note note = new Note(noteId, new JSONObject(rawNoteData));
                 notes.add(note);
             } catch (JSONException e) {
-                AppLog.e(AppLog.T.DB, "Can't parse notification with note_id:" + note_id + ", exception:" + e);
+                AppLog.e(AppLog.T.DB, "Can't parse notification with noteId:" + noteId + ", exception:" + e);
             }
         }
         cursor.close();

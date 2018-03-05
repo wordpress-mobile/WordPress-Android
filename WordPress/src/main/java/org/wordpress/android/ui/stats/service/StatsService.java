@@ -56,7 +56,8 @@ import de.greenrobot.event.EventBus;
 
 /**
  * Background service to retrieve Stats.
- * Parsing of response(s) and submission of new network calls are done by using a ThreadPoolExecutor with a single thread.
+ * Parsing of response(s) and submission of new network calls are done by using a ThreadPoolExecutor
+ * with a single thread.
  */
 
 public class StatsService extends Service {
@@ -68,7 +69,8 @@ public class StatsService extends Service {
     public static final String ARG_PAGE_REQUESTED = "stats_page_requested";
 
     private static final int DEFAULT_NUMBER_OF_RESULTS = 12;
-    // The number of results to return per page for Paged REST endpoints. Numbers larger than 20 will default to 20 on the server.
+    // The number of results to return per page for Paged REST endpoints. Numbers larger than 20 will
+    // default to 20 on the server.
     public static final int MAX_RESULTS_REQUESTED_PER_PAGE = 20;
 
     public enum StatsEndpointsEnum {
@@ -251,11 +253,12 @@ public class StatsService extends Service {
     public int onStartCommand(Intent intent, int flags, int startId) {
         if (intent == null) {
             AppLog.e(T.STATS, "StatsService was killed and restarted with a null intent.");
-            // if this service's process is killed while it is started (after returning from onStartCommand(Intent, int, int)),
-            // then leave it in the started state but don't retain this delivered intent.
-            // Later the system will try to re-create the service.
-            // Because it is in the started state, it will guarantee to call onStartCommand(Intent, int, int) after creating the new service instance;
-            // if there are not any pending start commands to be delivered to the service, it will be called with a null intent object.
+            // if this service's process is killed while it is started (after returning
+            // from onStartCommand(Intent, int, int)), then leave it in the started state but don't retain
+            // this delivered intent. Later the system will try to re-create the service. Because it is in the
+            // started state, it will guarantee to call onStartCommand(Intent, int, int) after
+            // creating the new service instance; if there are not any pending start commands to be delivered to
+            // the service, it will be called with a null intent object.
             stopRefresh();
             return START_NOT_STICKY;
         }
@@ -425,8 +428,9 @@ public class StatsService extends Service {
                     break;
                 case INSIGHTS_LATEST_POST_SUMMARY:
                     // This is an edge cases since we're not loading stats but posts
-                    path = String.format(Locale.US, "/sites/%s/%s", blogId, sectionToUpdate.getRestEndpointPath()
-                                                                            + "?order_by=date&number=1&type=post&fields=ID,title,URL,discussion,like_count,date");
+                    path = String.format(Locale.US, "/sites/%s/%s", blogId,
+                            sectionToUpdate.getRestEndpointPath()
+                                + "?order_by=date&number=1&type=post&fields=ID,title,URL,discussion,like_count,date");
                     break;
                 case INSIGHTS_LATEST_POST_VIEWS:
                     // This is a kind of edge case, since we used the pageRequested parameter to request a single postID
@@ -456,12 +460,13 @@ public class StatsService extends Service {
      * <p>
      * This method is a kind of tricky, since it does the comparison by checking the origin URL of requests.
      * To do that we had to get the fullURL of the new request by calling a method of the REST client `getAbsoluteURL`.
-     * That's good for now, but could lead to errors if the RestClient changes the way the URL is constructed internally,
-     * by calling `getAbsoluteURL`.
+     * That's good for now, but could lead to errors if the RestClient changes the way the URL is constructed
+     * internally, by calling `getAbsoluteURL`.
      * <p>
      * - Another approach would involve the get of the requests ErrorListener and the check Listener's parameters.
-     * - Cleanest approach is for sure to create a new class that extends Request<JSONObject> and stores parameters for later comparison,
-     * unfortunately we have to change the REST Client and RestClientUtils a lot if we want follow this way...
+     * - Cleanest approach is for sure to create a new class that extends Request<JSONObject> and stores parameters
+     * for later comparison, unfortunately we have to change the REST Client and RestClientUtils
+     * a lot if we want follow this way...
      */
     private boolean checkIfRequestShouldBeEnqueued(final RestClientUtils restClientUtils, String path) {
         String absoluteRequestPath = restClientUtils.getRestClient().getAbsoluteURL(path);
@@ -504,8 +509,9 @@ public class StatsService extends Service {
         }
 
         if (!StatsWidgetProvider.isBlogDisplayedInWidget(siteId)) {
-            AppLog.d(AppLog.T.STATS, "The blog with remoteID " + siteId
-                                     + " is NOT displayed in any widget. Stats Service doesn't call an update of the widget.");
+            AppLog.d(AppLog.T.STATS,
+                     "The blog with remoteID " + siteId
+                     + " is NOT displayed in any widget. Stats Service doesn't call an update of the widget.");
             return;
         }
 
@@ -534,8 +540,8 @@ public class StatsService extends Service {
         private Request<JSONObject> currentRequest;
         private final int mMaxResultsRequested, mPageRequested;
 
-        public RestListener(StatsEndpointsEnum endpointName, long blogId, StatsTimeframe timeframe, String date,
-                            final int maxResultsRequested, final int pageRequested) {
+        RestListener(StatsEndpointsEnum endpointName, long blogId, StatsTimeframe timeframe, String date,
+                     final int maxResultsRequested, final int pageRequested) {
             mRequestBlogId = blogId;
             mTimeframe = timeframe;
             mEndpointName = endpointName;

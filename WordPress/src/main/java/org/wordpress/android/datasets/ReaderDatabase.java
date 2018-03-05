@@ -89,16 +89,17 @@ public class ReaderDatabase extends SQLiteOpenHelper {
 
     /*
      * database singleton
-	 */
+     */
     private static ReaderDatabase mReaderDb;
-    private final static Object mDbLock = new Object();
+    private static final Object DB_LOCK = new Object();
 
     public static ReaderDatabase getDatabase() {
         if (mReaderDb == null) {
-            synchronized (mDbLock) {
+            synchronized (DB_LOCK) {
                 if (mReaderDb == null) {
                     mReaderDb = new ReaderDatabase(WordPress.getContext());
-                    // this ensures that onOpen() is called with a writable database (open will fail if app calls getReadableDb() first)
+                    // this ensures that onOpen() is called with a writable database
+                    // (open will fail if app calls getReadableDb() first)
                     mReaderDb.getWritableDatabase();
                 }
             }

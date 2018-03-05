@@ -18,10 +18,10 @@ import java.util.ArrayList;
 public class ReaderUserTable {
     protected static void createTables(SQLiteDatabase db) {
         db.execSQL("CREATE TABLE tbl_users ("
-                   + "	user_id	 INTEGER PRIMARY KEY,"
+                   + " user_id INTEGER PRIMARY KEY,"
                    + " blog_id INTEGER DEFAULT 0,"
-                   + "	user_name	 TEXT,"
-                   + "	display_name	TEXT COLLATE NOCASE,"
+                   + " user_name TEXT,"
+                   + " display_name TEXT COLLATE NOCASE,"
                    + " url TEXT,"
                    + " profile_url TEXT,"
                    + " avatar_url TEXT)");
@@ -138,7 +138,7 @@ public class ReaderUserTable {
     }
 
     private static ReaderUser getUser(long userId) {
-        String args[] = {Long.toString(userId)};
+        String[] args = {Long.toString(userId)};
         Cursor c = ReaderDatabase.getReadableDb().rawQuery("SELECT * FROM tbl_users WHERE user_id=?", args);
         try {
             if (!c.moveToFirst()) {
@@ -151,7 +151,7 @@ public class ReaderUserTable {
     }
 
     private static String getAvatarForUser(long userId) {
-        String args[] = {Long.toString(userId)};
+        String[] args = {Long.toString(userId)};
         return SqlUtils
                 .stringForQuery(ReaderDatabase.getReadableDb(), "SELECT avatar_url FROM tbl_users WHERE user_id=?",
                                 args);
@@ -159,8 +159,8 @@ public class ReaderUserTable {
 
     public static ReaderUserList getUsersWhoLikePost(long blogId, long postId, int max) {
         String[] args = {Long.toString(blogId), Long.toString(postId)};
-        String sql =
-                "SELECT * from tbl_users WHERE user_id IN (SELECT user_id FROM tbl_post_likes WHERE blog_id=? AND post_id=?) ORDER BY display_name";
+        String sql = "SELECT * from tbl_users WHERE user_id IN "
+                     + "(SELECT user_id FROM tbl_post_likes WHERE blog_id=? AND post_id=?) ORDER BY display_name";
         if (max > 0) {
             sql += " LIMIT " + Integer.toString(max);
         }

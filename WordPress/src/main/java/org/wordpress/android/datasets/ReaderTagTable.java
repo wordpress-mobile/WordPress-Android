@@ -34,7 +34,7 @@ public class ReaderTagTable {
                    + ")");
 
         db.execSQL("CREATE TABLE tbl_tags_recommended ("
-                   + " tag_slug	 TEXT COLLATE NOCASE,"
+                   + " tag_slug TEXT COLLATE NOCASE,"
                    + " tag_display_name TEXT COLLATE NOCASE,"
                    + " tag_title TEXT COLLATE NOCASE,"
                    + " tag_type INTEGER DEFAULT 0,"
@@ -120,8 +120,8 @@ public class ReaderTagTable {
         SQLiteStatement stmt = null;
         try {
             stmt = ReaderDatabase.getWritableDb().compileStatement(
-                    "INSERT OR REPLACE INTO tbl_tags (tag_slug, tag_display_name, tag_title, tag_type, endpoint) VALUES (?1,?2,?3,?4,?5)"
-                                                                  );
+                    "INSERT OR REPLACE INTO tbl_tags (tag_slug, tag_display_name, tag_title, tag_type, endpoint) "
+                    + "VALUES (?1,?2,?3,?4,?5)");
 
             for (ReaderTag tag : tagList) {
                 stmt.bindString(1, tag.getTagSlug());
@@ -329,8 +329,8 @@ public class ReaderTagTable {
         Cursor c;
         if (excludeSubscribed) {
             c = ReaderDatabase.getReadableDb().rawQuery(
-                    "SELECT * FROM tbl_tags_recommended WHERE tag_slug NOT IN (SELECT tag_slug FROM tbl_tags) ORDER BY tag_slug",
-                    null);
+                    "SELECT * FROM tbl_tags_recommended WHERE tag_slug NOT IN (SELECT tag_slug FROM tbl_tags) "
+                    + "ORDER BY tag_slug", null);
         } else {
             c = ReaderDatabase.getReadableDb().rawQuery("SELECT * FROM tbl_tags_recommended ORDER BY tag_slug", null);
         }
@@ -353,8 +353,8 @@ public class ReaderTagTable {
         }
 
         SQLiteDatabase db = ReaderDatabase.getWritableDb();
-        SQLiteStatement stmt = db.compileStatement
-                ("INSERT INTO tbl_tags_recommended (tag_slug, tag_display_name, tag_title, tag_type, endpoint) VALUES (?1,?2,?3,?4,?5)");
+        SQLiteStatement stmt = db.compileStatement("INSERT INTO tbl_tags_recommended (tag_slug, tag_display_name, "
+                                                   + "tag_title, tag_type, endpoint) VALUES (?1,?2,?3,?4,?5)");
         db.beginTransaction();
         try {
             try {

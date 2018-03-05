@@ -28,14 +28,15 @@ public class RemoteTests extends DefaultMocksInstrumentationTestCase {
 
         // Set the version of the REST client to v1.2
         RestClientFactoryTest.sVersion = RestClient.REST_CLIENT_VERSIONS.V1_2;
-        mRestClientV1_2 =
-                (RestClientCustomizableMock) RestClientFactory.instantiate(null, RestClient.REST_CLIENT_VERSIONS.V1_2);
+        mRestClientV1_2 = (RestClientCustomizableMock) RestClientFactory
+                .instantiate(null, RestClient.REST_CLIENT_VERSIONS.V1_2);
     }
 
     private RestRequest.ErrorListener errListener = new RestRequest.ErrorListener() {
         @Override
         public void onErrorResponse(VolleyError response) {
-            AppLog.e(AppLog.T.PLANS, "The Rest Client returned an error from a mock call: " + response.getMessage());
+            AppLog.e(AppLog.T.PLANS, "The Rest Client returned an error from a mock call: "
+                                     + response.getMessage());
             assertFalse(response.getMessage(), true); // force the test to fails in this case
         }
     };
@@ -72,8 +73,8 @@ public class RemoteTests extends DefaultMocksInstrumentationTestCase {
                 assertEquals(3, plans.size());
 
                 Plan currentPlan = plans.get(0);
-                assertEquals(currentPlan.getDescription(),
-                             "Get a free blog and be on your way to publishing your first post in less than five minutes.");
+                assertEquals(currentPlan.getDescription(), "Get a free blog and be on your way to publishing "
+                                                           + "your first post in less than five minutes.");
                 assertEquals(currentPlan.getProductID(), 1L);
                 assertEquals(currentPlan.getProductName(), "WordPress.com Free");
                 assertEquals(currentPlan.getBillPeriod(), -1);
@@ -89,8 +90,8 @@ public class RemoteTests extends DefaultMocksInstrumentationTestCase {
                 assertEquals(currentPlan.getSubscribedDate(), "2016-03-07 08:56:13");
 
                 currentPlan = plans.get(2);
-                assertEquals(currentPlan.getDescription(),
-                             "Everything included with Premium, as well as live chat support, and unlimited access to our premium themes.");
+                assertEquals(currentPlan.getDescription(), "Everything included with Premium, as well as live "
+                                                       + "chat support, and unlimited access to our premium themes.");
                 assertEquals(currentPlan.getProductID(), 1008L);
                 assertEquals(currentPlan.getProductName(), "WordPress.com Business");
                 assertEquals(currentPlan.getBillPeriod(), 365);

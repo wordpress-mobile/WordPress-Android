@@ -37,11 +37,11 @@ public class ReaderCommentTable {
         db.execSQL("CREATE TABLE tbl_comments ("
                    + " blog_id INTEGER DEFAULT 0,"
                    + " post_id INTEGER DEFAULT 0,"
-                   + "	comment_id		 INTEGER DEFAULT 0,"
+                   + " comment_id INTEGER DEFAULT 0,"
                    + " parent_id INTEGER DEFAULT 0,"
-                   + "	author_name	 TEXT,"
+                   + " author_name TEXT,"
                    + " author_avatar TEXT,"
-                   + "	author_url	 TEXT,"
+                   + " author_url TEXT,"
                    + " author_id INTEGER DEFAULT 0,"
                    + " author_blog_id INTEGER DEFAULT 0,"
                    + " published TEXT,"
@@ -98,7 +98,8 @@ public class ReaderCommentTable {
     public static int getPageNumberForComment(long blogId, long postId, long commentId) {
         String[] args = {Long.toString(blogId), Long.toString(postId), Long.toString(commentId)};
         return SqlUtils.intForQuery(ReaderDatabase.getReadableDb(),
-                                    "SELECT page_number FROM tbl_comments WHERE blog_id=? AND post_id=? AND comment_id=?",
+                                    "SELECT page_number FROM tbl_comments "
+                                    + " WHERE blog_id=? AND post_id=? AND comment_id=?",
                                     args);
     }
 
@@ -164,9 +165,8 @@ public class ReaderCommentTable {
 
         SQLiteDatabase db = ReaderDatabase.getWritableDb();
         db.beginTransaction();
-        SQLiteStatement stmt = db.compileStatement("INSERT OR REPLACE INTO tbl_comments ("
-                                                   + COLUMN_NAMES
-                                                   + ") VALUES (?1,?2,?3,?4,?5,?6,?7,?8,?9,?10,?11,?12,?13,?14,?15,?16)");
+        SQLiteStatement stmt = db.compileStatement("INSERT OR REPLACE INTO tbl_comments (" + COLUMN_NAMES + ") "
+                                                   + "VALUES (?1,?2,?3,?4,?5,?6,?7,?8,?9,?10,?11,?12,?13,?14,?15,?16)");
         try {
             for (ReaderComment comment : comments) {
                 stmt.bindLong(1, comment.blogId);

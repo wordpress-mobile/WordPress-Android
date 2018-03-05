@@ -106,7 +106,7 @@ public class HeaderGridView extends GridView {
     public void addHeaderView(View v, Object data, boolean isSelectable) {
         ListAdapter adapter = getAdapter();
 
-        if (adapter != null && ! (adapter instanceof HeaderViewGridAdapter)) {
+        if (adapter != null && !(adapter instanceof HeaderViewGridAdapter)) {
             throw new IllegalStateException(
                     "Cannot add header view to grid -- setAdapter has already been called.");
         }
@@ -191,7 +191,7 @@ public class HeaderGridView extends GridView {
     }
 
     private class FullWidthFixedViewLayout extends FrameLayout {
-        public FullWidthFixedViewLayout(Context context) {
+        FullWidthFixedViewLayout(Context context) {
             super(context);
         }
 
@@ -228,7 +228,7 @@ public class HeaderGridView extends GridView {
 
         private final boolean mIsFilterable;
 
-        public HeaderViewGridAdapter(ArrayList<FixedViewInfo> headerViewInfos, ListAdapter adapter) {
+        HeaderViewGridAdapter(ArrayList<FixedViewInfo> headerViewInfos, ListAdapter adapter) {
             mAdapter = adapter;
             mIsFilterable = adapter instanceof Filterable;
 
@@ -374,7 +374,7 @@ public class HeaderGridView extends GridView {
         @Override
         public View getView(int position, View convertView, ViewGroup parent) {
             // Header (negative positions will throw an ArrayIndexOutOfBoundsException)
-            int numHeadersAndPlaceholders = getHeadersCount() * mNumColumns ;
+            int numHeadersAndPlaceholders = getHeadersCount() * mNumColumns;
             if (position < numHeadersAndPlaceholders) {
                 View headerViewContainer = mHeaderViewInfos
                         .get(position / mNumColumns).viewContainer;

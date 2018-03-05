@@ -462,7 +462,8 @@ public class WPMediaUtils {
 
     public static boolean fetchMediaAndDoNext(Context context, Uri mediaUri, MediaFetchDoNext listener) {
         if (!MediaUtils.isInMediaStore(mediaUri)) {
-            // Do not download the file in async task. See https://github.com/wordpress-mobile/WordPress-Android/issues/5818
+            // Do not download the file in async task. See
+            // https://github.com/wordpress-mobile/WordPress-Android/issues/5818
             Uri downloadedUri = null;
             try {
                 downloadedUri = MediaUtils.downloadExternalMedia(context, mediaUri);

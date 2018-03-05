@@ -93,7 +93,7 @@ public class ReaderLikeTable {
             values.put("user_id", wpComUserId);
             ReaderDatabase.getWritableDb().insert("tbl_post_likes", null, values);
         } else {
-            String args[] = {Long.toString(post.blogId), Long.toString(post.postId), Long.toString(wpComUserId)};
+            String[] args = {Long.toString(post.blogId), Long.toString(post.postId), Long.toString(wpComUserId)};
             ReaderDatabase.getWritableDb().delete("tbl_post_likes", "blog_id=? AND post_id=? AND user_id=?", args);
         }
     }
@@ -179,7 +179,7 @@ public class ReaderLikeTable {
             values.put("user_id", wpComUserId);
             ReaderDatabase.getWritableDb().insert("tbl_comment_likes", null, values);
         } else {
-            String args[] = {Long.toString(comment.blogId),
+            String[] args = {Long.toString(comment.blogId),
                     Long.toString(comment.commentId),
                     Long.toString(wpComUserId)};
             ReaderDatabase.getWritableDb().delete("tbl_comment_likes",

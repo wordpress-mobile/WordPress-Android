@@ -235,7 +235,7 @@ public class CommentsDetailActivity extends AppCompatActivity
 
 
     @Override
-    public void onModerateComment(final SiteModel mSite,
+    public void onModerateComment(final SiteModel site,
                                   final CommentModel comment,
                                   final CommentStatus newStatus) {
         Intent resultIntent = new Intent();

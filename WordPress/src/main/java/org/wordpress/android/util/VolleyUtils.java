@@ -15,9 +15,9 @@ public class VolleyUtils {
      * Returns REST API 'error' string code from the response in the passed VolleyError
      * for example, returns "already_subscribed" from this response:
      * {
-	 * "error": "already_subscribed",
-	 * "message": "You are already subscribed to the specified topic."
-	 * }
+     * "error": "already_subscribed",
+     * "message": "You are already subscribed to the specified topic."
+     * }
      */
     public static String errStringFromVolleyError(VolleyError volleyError) {
         JSONObject json = volleyErrorToJSON(volleyError);

@@ -81,7 +81,7 @@ import java.util.Map;
 
 import javax.inject.Inject;
 
-import static org.wordpress.android.ui.prefs.DotComSiteSettings.supportsJetpackSpeedUpSettings;
+import static org.wordpress.android.ui.prefs.WPComSiteSettings.supportsJetpackSpeedUpSettings;
 
 /**
  * Allows interfacing with WordPress site settings. Works with WP.com and WP.org v4.5+ (pending).
@@ -316,7 +316,8 @@ public class SiteSettingsFragment extends PreferenceFragment
         super.onResume();
 
         // Fragment#onResume() is called after FragmentActivity#onPostResume().
-        // The latter is the most secure way of keeping track of the activity's state, and avoid calls to commitAllowingStateLoss.
+        // The latter is the most secure way of keeping track of the activity's state, and
+        // avoid calls to commitAllowingStateLoss.
         mIsFragmentPaused = false;
 
         // always load cached settings
@@ -358,21 +359,17 @@ public class SiteSettingsFragment extends PreferenceFragment
                     break;
                 case THREADING_REQUEST_CODE:
                     int levels = data.getIntExtra(NumberPickerDialog.CUR_VALUE_KEY, -1);
-                    mSiteSettings.setShouldThreadComments(levels > 1 && data.getBooleanExtra
-                            (NumberPickerDialog.SWITCH_ENABLED_KEY, false));
+                    mSiteSettings.setShouldThreadComments(levels > 1 && data.getBooleanExtra(NumberPickerDialog.SWITCH_ENABLED_KEY, false));
                     onPreferenceChange(mThreadingPref, levels);
                     break;
                 case PAGING_REQUEST_CODE:
-                    mSiteSettings.setShouldPageComments(data.getBooleanExtra
-                            (NumberPickerDialog.SWITCH_ENABLED_KEY, false));
+                    mSiteSettings.setShouldPageComments(data.getBooleanExtra(NumberPickerDialog.SWITCH_ENABLED_KEY, false));
                     onPreferenceChange(mPagingPref, data.getIntExtra(
                             NumberPickerDialog.CUR_VALUE_KEY, -1));
                     break;
                 case CLOSE_AFTER_REQUEST_CODE:
-                    mSiteSettings.setShouldCloseAfter(data.getBooleanExtra
-                            (NumberPickerDialog.SWITCH_ENABLED_KEY, false));
-                    onPreferenceChange(mCloseAfterPref, data.getIntExtra(
-                            NumberPickerDialog.CUR_VALUE_KEY, -1));
+                    mSiteSettings.setShouldCloseAfter(data.getBooleanExtra(NumberPickerDialog.SWITCH_ENABLED_KEY, false));
+                    onPreferenceChange(mCloseAfterPref, data.getIntExtra(NumberPickerDialog.CUR_VALUE_KEY, -1));
                     break;
                 case MULTIPLE_LINKS_REQUEST_CODE:
                     int numLinks = data.getIntExtra(NumberPickerDialog.CUR_VALUE_KEY, -1);
@@ -894,7 +891,7 @@ public class SiteSettingsFragment extends PreferenceFragment
             removeNonJetpackPreferences();
         } else {
             // wp.com site
-            removeNonDotComPreferences();
+            removeNonWPComPreferences();
         }
 
         // hide Admin options depending of capabilities on this site
@@ -1681,7 +1678,7 @@ public class SiteSettingsFragment extends PreferenceFragment
         mPrivacyPref.remove(ArrayUtils.indexOf(entries, getString(R.string.site_settings_privacy_private_summary)));
     }
 
-    private void removeNonDotComPreferences() {
+    private void removeNonWPComPreferences() {
         WPPrefUtils.removePreference(this, R.string.pref_key_site_screen, R.string.pref_key_site_account);
         WPPrefUtils.removePreference(this, R.string.pref_key_site_screen, R.string.pref_key_jetpack_settings);
     }

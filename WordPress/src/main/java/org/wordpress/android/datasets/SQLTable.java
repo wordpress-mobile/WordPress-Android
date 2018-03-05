@@ -19,7 +19,7 @@ public abstract class SQLTable {
     protected abstract Map<String, String> getColumnMapping();
 
     protected static class BaseColumns {
-        protected final static String _ID = "_id";
+        protected static final String ID = "_id";
     }
 
     public String toCreateQuery() {

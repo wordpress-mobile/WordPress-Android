@@ -554,11 +554,8 @@ public class CommentsListFragment extends Fragment {
         }
         mFilteredCommentsView.setRefreshing(true);
 
-        mDispatcher.dispatch(CommentActionBuilder.newFetchCommentsAction(new FetchCommentsPayload(mSite,
-                                                                                                  mCommentStatusFilter
-                                                                                                          .toCommentStatus(),
-                                                                                                  COMMENTS_PER_PAGE,
-                                                                                                  offset)));
+        mDispatcher.dispatch(CommentActionBuilder.newFetchCommentsAction(
+                 new FetchCommentsPayload(mSite, mCommentStatusFilter.toCommentStatus(), COMMENTS_PER_PAGE, offset)));
     }
 
 

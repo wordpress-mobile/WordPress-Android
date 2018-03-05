@@ -126,10 +126,12 @@ public class StatsVisitorsAndViewsFragment extends StatsAbstractFragment
         mVisitorsCheckbox = (CheckBox) view.findViewById(R.id.stats_checkbox_visitors);
         mVisitorsCheckbox.setOnClickListener(onCheckboxClicked);
 
-        // Fix an issue on devices with 4.1 or lower, where the Checkbox already uses padding by default internally and overriding it with paddingLeft
-        // causes the issue report here https://github.com/wordpress-mobile/WordPress-Android/pull/2377#issuecomment-77067993
+        // Fix an issue on devices with 4.1 or lower, where the Checkbox already uses padding by default
+        // internally and overriding it with paddingLeft causes the issue report here
+        // https://github.com/wordpress-mobile/WordPress-Android/pull/2377#issuecomment-77067993
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
-            ViewCompat.setPaddingRelative(mVisitorsCheckbox,getResources().getDimensionPixelSize(R.dimen.margin_medium), 0, 0, 0);
+            ViewCompat.setPaddingRelative(mVisitorsCheckbox,
+                                          getResources().getDimensionPixelSize(R.dimen.margin_medium), 0, 0, 0);
         }
 
         // Make sure we've all the info to build the tab correctly. This is ALWAYS true
@@ -159,7 +161,7 @@ public class StatsVisitorsAndViewsFragment extends StatsAbstractFragment
         boolean isChecked = false;
         boolean isLastItem = false;
 
-        public TabViewHolder(LinearLayout currentTab, OverviewLabel labelItem, boolean checked, boolean isLastItem) {
+        TabViewHolder(LinearLayout currentTab, OverviewLabel labelItem, boolean checked, boolean isLastItem) {
             tab = currentTab;
             innerContainer = (LinearLayout) currentTab.findViewById(R.id.stats_visitors_and_views_tab_inner_container);
             label = (TextView) currentTab.findViewById(R.id.stats_visitors_and_views_tab_label);
@@ -608,7 +610,7 @@ public class StatsVisitorsAndViewsFragment extends StatsAbstractFragment
         switch (timeframe) {
             case DAY:
                 return String.format(prefix, StatsUtils.parseDate(date, StatsConstants.STATS_INPUT_DATE_FORMAT,
-                                                                  StatsConstants.STATS_OUTPUT_DATE_MONTH_LONG_DAY_SHORT_FORMAT));
+                                                StatsConstants.STATS_OUTPUT_DATE_MONTH_LONG_DAY_SHORT_FORMAT));
             case WEEK:
                 try {
                     SimpleDateFormat sdf;
@@ -628,11 +630,11 @@ public class StatsVisitorsAndViewsFragment extends StatsAbstractFragment
                     // first day of this week
                     c.set(Calendar.DAY_OF_WEEK, Calendar.MONDAY);
                     String startDateLabel = StatsUtils.msToString(c.getTimeInMillis(),
-                                                                  StatsConstants.STATS_OUTPUT_DATE_MONTH_LONG_DAY_LONG_FORMAT);
+                                                 StatsConstants.STATS_OUTPUT_DATE_MONTH_LONG_DAY_LONG_FORMAT);
                     // last day of this week
                     c.add(Calendar.DAY_OF_WEEK, +6);
                     String endDateLabel = StatsUtils.msToString(c.getTimeInMillis(),
-                                                                StatsConstants.STATS_OUTPUT_DATE_MONTH_LONG_DAY_LONG_FORMAT);
+                                                  StatsConstants.STATS_OUTPUT_DATE_MONTH_LONG_DAY_LONG_FORMAT);
                     return String.format(prefix, startDateLabel + " - " + endDateLabel);
                 } catch (ParseException e) {
                     AppLog.e(AppLog.T.UTILS, e);

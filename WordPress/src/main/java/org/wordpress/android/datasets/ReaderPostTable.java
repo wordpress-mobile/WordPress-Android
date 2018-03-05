@@ -124,18 +124,18 @@ public class ReaderPostTable {
 
     protected static void createTables(SQLiteDatabase db) {
         db.execSQL("CREATE TABLE tbl_posts ("
-                   + "	post_id		 INTEGER DEFAULT 0,"
+                   + " post_id INTEGER DEFAULT 0,"
                    + " blog_id INTEGER DEFAULT 0,"
                    + " feed_id INTEGER DEFAULT 0,"
                    + " feed_item_id INTEGER DEFAULT 0,"
                    + " pseudo_id TEXT NOT NULL,"
-                   + "	author_name	 TEXT,"
-                   + "	author_first_name	TEXT,"
+                   + " author_name TEXT,"
+                   + " author_first_name TEXT,"
                    + " author_id INTEGER DEFAULT 0,"
-                   + "	title	 TEXT,"
-                   + "	text TEXT,"
-                   + "	excerpt TEXT,"
-                   + "	format TEXT,"
+                   + " title  TEXT,"
+                   + " text TEXT,"
+                   + " excerpt TEXT,"
+                   + " format TEXT,"
                    + " url TEXT,"
                    + " short_url TEXT,"
                    + " blog_name TEXT,"
@@ -161,7 +161,7 @@ public class ReaderPostTable {
                    + " secondary_tag TEXT,"
                    + " attachments_json TEXT,"
                    + " discover_json TEXT,"
-                   + "	xpost_post_id		INTEGER DEFAULT 0,"
+                   + " xpost_post_id INTEGER DEFAULT 0,"
                    + " xpost_blog_id INTEGER DEFAULT 0,"
                    + " railcar_json TEXT,"
                    + " tag_name TEXT NOT NULL COLLATE NOCASE,"
@@ -692,13 +692,13 @@ public class ReaderPostTable {
         }
     }
 
-    /*
+    /**
      * Android's CursorWindow has a max size of 2MB per row which can be exceeded
      * with a very large text column, causing an IllegalStateException when the
      * row is read - prevent this by limiting the amount of text that's stored in
      * the text column - note that this situation very rarely occurs
-     * https://github.com/android/platform_frameworks_base/blob/b77bc869241644a662f7e615b0b00ecb5aee373d/core/res/res/values/config.xml#L1268
-     * https://github.com/android/platform_frameworks_base/blob/3bdbf644d61f46b531838558fabbd5b990fc4913/core/java/android/database/CursorWindow.java#L103
+     * http://bit.ly/2Fs7B78
+     * http://bit.ly/2oOKCJc
      */
     private static final int MAX_TEXT_LEN = (1024 * 1024) / 2;
 
@@ -729,7 +729,8 @@ public class ReaderPostTable {
         SQLiteStatement stmtPosts = db.compileStatement(
                 "INSERT OR REPLACE INTO tbl_posts ("
                 + COLUMN_NAMES
-                + ") VALUES (?1,?2,?3,?4,?5,?6,?7,?8,?9,?10,?11,?12,?13,?14,?15,?16,?17,?18,?19,?20,?21,?22,?23,?24,?25,?26,?27,?28,?29,?30,?31,?32,?33,?34,?35,?36,?37,?38,?39,?40,?41,?42,?43,?44)");
+                + ") VALUES (?1,?2,?3,?4,?5,?6,?7,?8,?9,?10,?11,?12,?13,?14,?15,?16,?17,?18,?19,?20,?21,?22,?23,?24,"
+                + "?25,?26,?27,?28,?29,?30,?31,?32,?33,?34,?35,?36,?37,?38,?39,?40,?41,?42,?43,?44)");
 
         db.beginTransaction();
         try {

@@ -49,8 +49,7 @@ import java.util.HashMap;
 import javax.inject.Inject;
 
 public class HtmlToSpannedConverter implements ContentHandler {
-    private static final float[] HEADER_SIZES = {1.5f, 1.4f, 1.3f, 1.2f, 1.1f,
-            1f,};
+    private static final float[] HEADER_SIZES = {1.5f, 1.4f, 1.3f, 1.2f, 1.1f, 1f};
 
     private String mSource;
     private XMLReader mReader;
@@ -348,11 +347,11 @@ public class HtmlToSpannedConverter implements ContentHandler {
             resizedBitmap = ImageUtils.getWPImageSpanThumbnailFromFilePath(mContext, src, mMaxImageWidth);
             if (resizedBitmap == null && src != null) {
                 if (src.contains("video")) {
-                    resizedBitmap = BitmapFactory.decodeResource(mContext.getResources(),
-                                                                 org.wordpress.android.editor.R.drawable.media_movieclip);
+                    resizedBitmap = BitmapFactory.decodeResource(
+                            mContext.getResources(), org.wordpress.android.editor.R.drawable.media_movieclip);
                 } else {
-                    resizedBitmap = BitmapFactory.decodeResource(mContext.getResources(),
-                                                                 org.wordpress.android.R.drawable.media_image_placeholder);
+                    resizedBitmap = BitmapFactory.decodeResource(
+                            mContext.getResources(), org.wordpress.android.R.drawable.media_image_placeholder);
                 }
             }
         } catch (OutOfMemoryError e) {
@@ -568,7 +567,7 @@ public class HtmlToSpannedConverter implements ContentHandler {
         handleEndTag(localName);
     }
 
-    public void characters(char ch[], int start, int length)
+    public void characters(char[] ch, int start, int length)
             throws SAXException {
         StringBuilder sb = new StringBuilder();
 
@@ -620,7 +619,7 @@ public class HtmlToSpannedConverter implements ContentHandler {
         }
     }
 
-    public void ignorableWhitespace(char ch[], int start, int length)
+    public void ignorableWhitespace(char[] ch, int start, int length)
             throws SAXException {
     }
 
@@ -665,7 +664,7 @@ public class HtmlToSpannedConverter implements ContentHandler {
         public String mColor;
         public String mFace;
 
-        public Font(String color, String face) {
+        Font(String color, String face) {
             mColor = color;
             mFace = face;
         }
@@ -674,7 +673,7 @@ public class HtmlToSpannedConverter implements ContentHandler {
     private static class Href {
         public String mHref;
 
-        public Href(String href) {
+        Href(String href) {
             mHref = href;
         }
     }
@@ -682,12 +681,12 @@ public class HtmlToSpannedConverter implements ContentHandler {
     private static class Header {
         private int mLevel;
 
-        public Header(int level) {
+        Header(int level) {
             mLevel = level;
         }
     }
 
-    private static HashMap<String, Integer> COLORS = buildColorMap();
+    private static final HashMap<String, Integer> COLORS = buildColorMap();
 
     private static HashMap<String, Integer> buildColorMap() {
         HashMap<String, Integer> map = new HashMap<String, Integer>();

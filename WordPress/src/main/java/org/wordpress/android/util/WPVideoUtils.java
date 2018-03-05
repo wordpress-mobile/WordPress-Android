@@ -22,7 +22,8 @@ import java.io.IOException;
  * This class implements functionality for simple video transcoding.
  * <p>
  * Input video is transcoded by using the H.264 Advanced Video Coding encoder.
- * Audio track is encoded with Advanced Audio Coding (AAC). Not resampled. Output sample rate and channel count are the same as for input.
+ * Audio track is encoded with Advanced Audio Coding (AAC). Not resampled. Output sample rate and channel
+ * count are the same as for input.
  */
 @TargetApi(Build.VERSION_CODES.JELLY_BEAN_MR2)
 public class WPVideoUtils {
@@ -71,8 +72,8 @@ public class WPVideoUtils {
             return null;
         }
         if (videoFormat.getVideoFrameSize().height() == 0) {
-            AppLog.w(AppLog.T.MEDIA,
-                     "Input file height is unknown. Can't calculate the correct ratio for resizing. Keeping the original file");
+            AppLog.w(AppLog.T.MEDIA, "Input file height is unknown. Can't calculate the correct "
+                                     + "ratio for resizing. Keeping the original file");
             return null;
         }
         // Calculate the height keeping the correct aspect ratio

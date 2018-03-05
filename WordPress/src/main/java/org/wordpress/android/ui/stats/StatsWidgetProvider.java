@@ -130,7 +130,7 @@ public class StatsWidgetProvider extends AppWidgetProvider {
         }
     }
 
-    private static void ShowCacheIfAvailableOrGenericError(Context context, SiteModel site, SiteStore siteStore) {
+    private static void showCacheIfAvailableOrGenericError(Context context, SiteModel site, SiteStore siteStore) {
         if (site == null) {
             AppLog.e(T.STATS, "Invalid site.");
             return;
@@ -182,7 +182,7 @@ public class StatsWidgetProvider extends AppWidgetProvider {
             }
             return;
         }
-        ShowCacheIfAvailableOrGenericError(context, site, siteStore);
+        showCacheIfAvailableOrGenericError(context, site, siteStore);
     }
 
     // This is called by the Stats service in case of error
@@ -192,7 +192,7 @@ public class StatsWidgetProvider extends AppWidgetProvider {
             return;
         }
 
-        ShowCacheIfAvailableOrGenericError(context, site, siteStore);
+        showCacheIfAvailableOrGenericError(context, site, siteStore);
     }
 
     // This is called by the Stats service to keep widgets updated
@@ -246,8 +246,8 @@ public class StatsWidgetProvider extends AppWidgetProvider {
         }
     }
 
-    // This is called to update the App Widget at intervals defined by the updatePeriodMillis attribute in the AppWidgetProviderInfo.
-    // Also called at booting time!
+    // This is called to update the App Widget at intervals defined by the updatePeriodMillis attribute
+    // in the AppWidgetProviderInfo. Also called at booting time!
     // This method is NOT called when the user adds the App Widget.
     @Override
     public void onUpdate(Context context, AppWidgetManager appWidgetManager, int[] appWidgetIds) {

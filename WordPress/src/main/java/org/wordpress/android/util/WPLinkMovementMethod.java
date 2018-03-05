@@ -46,7 +46,7 @@ public class WPLinkMovementMethod extends LinkMovementMethod {
             return null;
         }
 
-        URLSpan urlSpans[] = buffer.getSpans(0, buffer.length(), URLSpan.class);
+        URLSpan[] urlSpans = buffer.getSpans(0, buffer.length(), URLSpan.class);
         if (urlSpans.length == 0) {
             return null;
         }

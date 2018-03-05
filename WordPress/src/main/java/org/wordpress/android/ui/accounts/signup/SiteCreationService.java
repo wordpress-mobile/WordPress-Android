@@ -360,39 +360,36 @@ public class SiteCreationService extends AutoForeground<SiteCreationState> {
 
     private void setTagline() {
         if (!TextUtils.isEmpty(mSiteTagline)) {
-            SiteSettingsInterface siteSettings = SiteSettingsInterface.getInterface(this, mNewSite,
-                                                                                    new SiteSettingsInterface.SiteSettingsListener() {
-                                                                                        @Override
-                                                                                        public void onSaveError(
-                                                                                                Exception error) {
-                                                                                            notifyFailure();
-                                                                                        }
+            SiteSettingsInterface siteSettings = SiteSettingsInterface.getInterface(
+                    this, mNewSite,
+                    new SiteSettingsInterface.SiteSettingsListener() {
+                        @Override
+                        public void onSaveError(Exception error) {
+                            notifyFailure();
+                        }
 
-                                                                                        @Override
-                                                                                        public void onFetchError(
-                                                                                                Exception error) {
-                                                                                            notifyFailure();
-                                                                                        }
+                        @Override
+                        public void onFetchError(Exception error) {
+                            notifyFailure();
+                        }
 
-                                                                                        @Override
-                                                                                        public void onSettingsUpdated() {
-                                                                                            // we'll just handle onSettingsSaved()
-                                                                                        }
+                        @Override
+                        public void onSettingsUpdated() {
+                            // we'll just handle onSettingsSaved()
+                        }
 
-                                                                                        @Override
-                                                                                        public void onSettingsSaved() {
-                                                                                            finishedPhase(
-                                                                                                    SiteCreationStep.SET_TAGLINE);
-                                                                                        }
+                        @Override
+                        public void onSettingsSaved() {
+                            finishedPhase(SiteCreationStep.SET_TAGLINE);
+                        }
 
-                                                                                        @Override
-                                                                                        public void onCredentialsValidated(
-                                                                                                Exception error) {
-                                                                                            if (error != null) {
-                                                                                                notifyFailure();
-                                                                                            }
-                                                                                        }
-                                                                                    });
+                        @Override
+                        public void onCredentialsValidated(Exception error) {
+                            if (error != null) {
+                                notifyFailure();
+                            }
+                        }
+                    });
 
             if (siteSettings == null) {
                 notifyFailure();
