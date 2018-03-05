@@ -189,16 +189,21 @@ public class StockPhotoPickerActivity extends AppCompatActivity {
 
         if (event.isError()) {
             AppLog.e(AppLog.T.MEDIA, "An error occurred while searching stock media");
+            mCanLoadMore = false;
             return;
         }
         if (mSearchQuery == null || !mSearchQuery.equals(event.searchTerm)) {
             return;
         }
 
+        if (!event.canLoadMore) {
+            AppLog.d(AppLog.T.MEDIA, "can't load more");
+        }
+
         mNextPage = event.nextPage;
         mCanLoadMore = event.canLoadMore;
 
-        if (mNextPage <= 2) {
+        if (mNextPage == 2) {
             mAdapter.setMediaList(event.mediaList);
         } else {
             mAdapter.addMediaList(event.mediaList);
