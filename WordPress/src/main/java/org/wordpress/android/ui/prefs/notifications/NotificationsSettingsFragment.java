@@ -260,7 +260,7 @@ public class NotificationsSettingsFragment extends PreferenceFragment
 
             configureBlogsSettings(mBlogsCategory, false);
             configureOtherSettings();
-            configureDotcomSettings();
+            configureWPComSettings();
         }
     }
 
@@ -383,7 +383,7 @@ public class NotificationsSettingsFragment extends PreferenceFragment
         addPreferencesForPreferenceScreen(otherBlogsScreen, Channel.OTHER, 0);
     }
 
-    private void configureDotcomSettings() {
+    private void configureWPComSettings() {
         PreferenceCategory otherPreferenceCategory = (PreferenceCategory) findPreference(
                 getString(R.string.pref_notification_other_category));
         NotificationsSettingsDialogPreference devicePreference = new NotificationsSettingsDialogPreference(

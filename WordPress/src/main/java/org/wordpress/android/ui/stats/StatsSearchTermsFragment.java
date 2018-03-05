@@ -20,7 +20,7 @@ import java.util.List;
 public class StatsSearchTermsFragment extends StatsAbstractListFragment {
     public static final String TAG = StatsSearchTermsFragment.class.getSimpleName();
 
-    private final static String UNKNOWN_SEARCH_TERMS_HELP_PAGE =
+    private static final String UNKNOWN_SEARCH_TERMS_HELP_PAGE =
             "https://en.support.wordpress.com/stats/#search-engine-terms";
 
     private SearchTermsModel mSearchTerms;
@@ -144,7 +144,7 @@ public class StatsSearchTermsFragment extends StatsAbstractListFragment {
         private final LayoutInflater inflater;
         private final int encryptedSearchTerms;
 
-        public SearchTermsAdapter(Activity context, List<SearchTermModel> list, int encryptedSearchTerms) {
+        SearchTermsAdapter(Activity context, List<SearchTermModel> list, int encryptedSearchTerms) {
             super(context, R.layout.stats_list_cell, list);
             this.list = list;
             this.encryptedSearchTerms = encryptedSearchTerms;

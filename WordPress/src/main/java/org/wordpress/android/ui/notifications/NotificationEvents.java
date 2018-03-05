@@ -8,12 +8,10 @@ import java.util.List;
 
 public class NotificationEvents {
     public static class NotificationsChanged {
-        final public boolean hasUnseenNotes;
-
-        public NotificationsChanged() {
+        public final boolean hasUnseenNotes;
+        NotificationsChanged() {
             this.hasUnseenNotes = false;
         }
-
         public NotificationsChanged(boolean hasUnseenNotes) {
             this.hasUnseenNotes = hasUnseenNotes;
         }
@@ -40,7 +38,7 @@ public class NotificationEvents {
     }
 
     public static class NotificationsUnseenStatus {
-        final public boolean hasUnseenNotes;
+        public final boolean hasUnseenNotes;
 
         public NotificationsUnseenStatus(boolean hasUnseenNotes) {
             this.hasUnseenNotes = hasUnseenNotes;

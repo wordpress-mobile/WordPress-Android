@@ -175,8 +175,8 @@ public class NotificationsUtils {
      * @return Spannable string with formatted content
      */
     public static Spannable getSpannableContentForRanges(JSONObject blockObject, TextView textView,
-                                                         final NoteBlock.OnNoteBlockTextClickListener onNoteBlockTextClickListener,
-                                                         boolean isFooter) {
+                                 final NoteBlock.OnNoteBlockTextClickListener onNoteBlockTextClickListener,
+                                 boolean isFooter) {
         if (blockObject == null) {
             return new SpannableStringBuilder();
         }
@@ -396,14 +396,14 @@ public class NotificationsUtils {
         Map<String, String> tokenMap = new HashMap<>();
         tokenMap.put("action", "authorize_login");
         tokenMap.put("push_token", token);
-        WordPress.getRestClientUtilsV1_1().post(PUSH_AUTH_ENDPOINT, tokenMap, null, null,
-                                                new RestRequest.ErrorListener() {
-                                                    @Override
-                                                    public void onErrorResponse(VolleyError error) {
-                                                        AnalyticsTracker
-                                                                .track(AnalyticsTracker.Stat.PUSH_AUTHENTICATION_FAILED);
-                                                    }
-                                                });
+        WordPress.getRestClientUtilsV1_1().post(
+                PUSH_AUTH_ENDPOINT, tokenMap, null, null,
+                new RestRequest.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        AnalyticsTracker.track(AnalyticsTracker.Stat.PUSH_AUTHENTICATION_FAILED);
+                    }
+                });
 
         AnalyticsTracker.track(AnalyticsTracker.Stat.PUSH_AUTHENTICATION_APPROVED);
     }

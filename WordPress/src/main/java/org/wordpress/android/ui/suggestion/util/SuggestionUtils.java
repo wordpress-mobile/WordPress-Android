@@ -19,8 +19,8 @@ public class SuggestionUtils {
 
     public static SuggestionAdapter setupSuggestions(final long siteId, Context context,
                                                      SuggestionServiceConnectionManager serviceConnectionManager,
-                                                     boolean isDotcomFlag) {
-        if (!isDotcomFlag) {
+                                                     boolean isWPComFlag) {
+        if (!isWPComFlag) {
             return null;
         }
 

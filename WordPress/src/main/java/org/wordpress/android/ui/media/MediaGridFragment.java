@@ -82,7 +82,7 @@ public class MediaGridFragment extends Fragment implements MediaGridAdapterCallb
 
         private final int value;
 
-        private MediaFilter(int value) {
+        MediaFilter(int value) {
             this.value = value;
         }
 
@@ -620,9 +620,8 @@ public class MediaGridFragment extends Fragment implements MediaGridAdapterCallb
         mFetchedFilters = savedInstanceState.getBooleanArray(BUNDLE_FETCHED_FILTERS);
         mFetchedAllFilters = savedInstanceState.getBooleanArray(BUNDLE_RETRIEVED_ALL_FILTERS);
 
-        EmptyViewMessageType emptyType = EmptyViewMessageType.getEnumFromString(savedInstanceState.
-                                                                                                          getString(
-                                                                                                                  BUNDLE_EMPTY_VIEW_MESSAGE));
+        EmptyViewMessageType emptyType = EmptyViewMessageType.getEnumFromString(
+                savedInstanceState.getString(BUNDLE_EMPTY_VIEW_MESSAGE));
         updateEmptyView(emptyType);
     }
 

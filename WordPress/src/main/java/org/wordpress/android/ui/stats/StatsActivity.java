@@ -194,8 +194,8 @@ public class StatsActivity extends AppCompatActivity
         checkIfSiteHasAccessibleStats(mSite);
 
         // create the fragments without forcing the re-creation. If the activity is restarted fragments can already
-        // be there, and ready to be displayed without making any network connections. A fragment calls the stats service
-        // if its internal datamodel is empty.
+        // be there, and ready to be displayed without making any network connections. A fragment calls the
+        // stats service if its internal datamodel is empty.
         createFragments(false);
 
         if (mSpinner == null) {
@@ -769,7 +769,7 @@ public class StatsActivity extends AppCompatActivity
         }
     }
 
-    private static final RateLimitedTask sTrackBottomReachedStats = new RateLimitedTask(2) {
+    private static RateLimitedTask sTrackBottomReachedStats = new RateLimitedTask(2) {
         protected boolean run() {
             AnalyticsTracker.track(AnalyticsTracker.Stat.STATS_SCROLLED_TO_BOTTOM);
             return true;

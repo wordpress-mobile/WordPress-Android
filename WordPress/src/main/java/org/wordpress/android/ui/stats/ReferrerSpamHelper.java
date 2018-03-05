@@ -26,7 +26,7 @@ import java.util.Locale;
 class ReferrerSpamHelper {
     private final WeakReference<Activity> mActivityRef;
 
-    public ReferrerSpamHelper(Activity activity) {
+    ReferrerSpamHelper(Activity activity) {
         mActivityRef = new WeakReference<>(activity);
     }
 
@@ -105,7 +105,7 @@ class ReferrerSpamHelper {
         private final ReferrerGroupModel mReferrerGroup;
         private final boolean isMarkingAsSpamInProgress;
 
-        public ReferrerSpamRestListener(Activity activity, final ReferrerGroupModel referrerGroup,
+        ReferrerSpamRestListener(Activity activity, final ReferrerGroupModel referrerGroup,
                                         final boolean isMarkingAsSpamInProgress) {
             this.mActivityRef = new WeakReference<>(activity);
             this.mReferrerGroup = referrerGroup;

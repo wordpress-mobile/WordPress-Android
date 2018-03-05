@@ -359,16 +359,19 @@ public class SiteSettingsFragment extends PreferenceFragment
                     break;
                 case THREADING_REQUEST_CODE:
                     int levels = data.getIntExtra(NumberPickerDialog.CUR_VALUE_KEY, -1);
-                    mSiteSettings.setShouldThreadComments(levels > 1 && data.getBooleanExtra(NumberPickerDialog.SWITCH_ENABLED_KEY, false));
+                    mSiteSettings.setShouldThreadComments(levels > 1 && data.getBooleanExtra(
+                            NumberPickerDialog.SWITCH_ENABLED_KEY, false));
                     onPreferenceChange(mThreadingPref, levels);
                     break;
                 case PAGING_REQUEST_CODE:
-                    mSiteSettings.setShouldPageComments(data.getBooleanExtra(NumberPickerDialog.SWITCH_ENABLED_KEY, false));
+                    mSiteSettings.setShouldPageComments(data.getBooleanExtra(NumberPickerDialog.SWITCH_ENABLED_KEY,
+                                                                             false));
                     onPreferenceChange(mPagingPref, data.getIntExtra(
                             NumberPickerDialog.CUR_VALUE_KEY, -1));
                     break;
                 case CLOSE_AFTER_REQUEST_CODE:
-                    mSiteSettings.setShouldCloseAfter(data.getBooleanExtra(NumberPickerDialog.SWITCH_ENABLED_KEY, false));
+                    mSiteSettings.setShouldCloseAfter(data.getBooleanExtra(NumberPickerDialog.SWITCH_ENABLED_KEY,
+                                                                           false));
                     onPreferenceChange(mCloseAfterPref, data.getIntExtra(NumberPickerDialog.CUR_VALUE_KEY, -1));
                     break;
                 case MULTIPLE_LINKS_REQUEST_CODE:

@@ -252,7 +252,9 @@ public class ReaderActivityLauncher {
         showReaderPhotoViewer(context, imageUrl, null, null, imageOptions, 0, 0);
     }
 
-    public enum OpenUrlType {INTERNAL, EXTERNAL}
+    public enum OpenUrlType {
+        INTERNAL, EXTERNAL
+    }
 
     public static void openUrl(Context context, String url) {
         openUrl(context, url, OpenUrlType.INTERNAL);

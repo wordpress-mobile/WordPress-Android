@@ -706,8 +706,8 @@ public class MediaSettingsActivity extends AppCompatActivity
         mAlignmentKeyArray = getResources().getStringArray(R.array.alignment_key_array);
         int alignmentIndex = Arrays.asList(mAlignmentKeyArray).indexOf(alignment);
 
-        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this, R.array.alignment_array,
-                                                                             R.layout.media_settings_alignment_spinner_item);
+        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(
+                this, R.array.alignment_array, R.layout.media_settings_alignment_spinner_item);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
 
         mAlignmentSpinnerView.setAdapter(adapter);
@@ -858,8 +858,7 @@ public class MediaSettingsActivity extends AppCompatActivity
     }
 
     @Override
-    public void onRequestPermissionsResult(int requestCode,
-                                           @NonNull String permissions[],
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions,
                                            @NonNull int[] grantResults) {
         boolean allGranted = WPPermissionUtils.setPermissionListAsked(
                 this, requestCode, permissions, grantResults, true);
