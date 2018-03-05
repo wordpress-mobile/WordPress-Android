@@ -2,17 +2,20 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="@dimen/menu_item_height"
-    android:gravity="left|center_vertical"
+    android:gravity="start|center_vertical"
     android:orientation="horizontal"
     android:paddingLeft="@dimen/menu_item_margin"
-    android:paddingRight="@dimen/menu_item_margin">
+    android:paddingRight="@dimen/menu_item_margin"
+    android:paddingStart="@dimen/menu_item_margin"
+    android:paddingEnd="@dimen/menu_item_margin">
 
     <ImageView
         android:id="@+id/image"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginRight="@dimen/margin_large"
-        tools:src="@drawable/ic_reader_following_alert_green_24dp" />
+        tools:src="@drawable/ic_reader_following_alert_green_24dp"
+        android:layout_marginEnd="@dimen/margin_large"/>
 
     <org.wordpress.android.widgets.WPTextView
         android:id="@+id/text"

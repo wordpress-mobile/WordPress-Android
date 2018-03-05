@@ -71,7 +71,9 @@
         <item name="android:textStyle">bold</item>
         <item name="android:textColor">@color/grey_dark</item>
         <item name="android:paddingLeft">@dimen/dlp_title_padding_start</item>
+        <item name="android:paddingStart" tools:targetApi="jelly_bean_mr1">@dimen/dlp_title_padding_start</item>
         <item name="android:paddingRight">@dimen/dlp_title_padding_end</item>
+        <item name="android:paddingEnd" tools:targetApi="jelly_bean_mr1">@dimen/dlp_title_padding_end</item>
     </style>
 
     <style name="CalypsoTheme.NoActionBarShadow" parent="CalypsoTheme">
