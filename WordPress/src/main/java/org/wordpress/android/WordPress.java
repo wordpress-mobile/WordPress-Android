@@ -676,6 +676,8 @@ public class WordPress extends MultiDexApplication implements HasServiceInjector
                 case TRIM_MEMORY_RUNNING_LOW:
                     evictBitmaps = true;
                     break;
+                case TRIM_MEMORY_BACKGROUND:
+                case TRIM_MEMORY_UI_HIDDEN:
                 default:
                     break;
             }
