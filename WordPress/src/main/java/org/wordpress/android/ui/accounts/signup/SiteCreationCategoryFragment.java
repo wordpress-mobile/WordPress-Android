@@ -15,7 +15,8 @@ public class SiteCreationCategoryFragment extends SiteCreationBaseFormFragment<S
     public static final String TAG = "site_creation_category_fragment_tag";
 
     @Override
-    protected @LayoutRes int getContentLayout() {
+    protected @LayoutRes
+    int getContentLayout() {
         return R.layout.site_creation_category_screen;
     }
 

@@ -62,7 +62,7 @@ public class MagicLinkSentFragment extends Fragment {
                 openEmailClient();
             }
         });
-        
+
         initInfoButtons(view);
 
         return view;

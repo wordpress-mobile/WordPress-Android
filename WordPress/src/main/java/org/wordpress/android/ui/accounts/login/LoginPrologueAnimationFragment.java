@@ -24,7 +24,7 @@ public class LoginPrologueAnimationFragment extends Fragment {
     private Boolean mLightBackground;
 
     static LoginPrologueAnimationFragment newInstance(String animationFilename, @StringRes int promoText,
-            boolean lightBackground) {
+                                                      boolean lightBackground) {
         LoginPrologueAnimationFragment fragment = new LoginPrologueAnimationFragment();
         Bundle bundle = new Bundle();
         bundle.putString(KEY_ANIMATION_FILENAME, animationFilename);
@@ -47,7 +47,8 @@ public class LoginPrologueAnimationFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle
             savedInstanceState) {
         ViewGroup rootView = (ViewGroup) inflater.inflate(R.layout.login_intro_template_view, container, false);
-        rootView.setBackgroundColor(getResources().getColor(mLightBackground ? R.color.blue_light : R.color.blue_medium));
+        rootView.setBackgroundColor(
+                getResources().getColor(mLightBackground ? R.color.blue_light : R.color.blue_medium));
 
         TextView promoText = (TextView) rootView.findViewById(R.id.promo_text);
         promoText.setText(mPromoText);
@@ -64,7 +65,7 @@ public class LoginPrologueAnimationFragment extends Fragment {
         super.setUserVisibleHint(isVisibleToUser);
 
         // toggle the animation but only if already resumed.
-        //  Needed because setUserVisibleHint is called before onCreateView
+        // Needed because setUserVisibleHint is called before onCreateView
         if (isResumed()) {
             toggleAnimation(isVisibleToUser);
         }

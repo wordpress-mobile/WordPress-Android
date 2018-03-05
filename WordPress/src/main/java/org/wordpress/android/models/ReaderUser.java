@@ -18,8 +18,9 @@ public class ReaderUser {
 
     public static ReaderUser fromJson(JSONObject json) {
         ReaderUser user = new ReaderUser();
-        if (json==null)
+        if (json == null) {
             return user;
+        }
 
         user.userId = json.optLong("ID");
         user.blogId = json.optLong("site_ID");
@@ -42,6 +43,7 @@ public class ReaderUser {
     public String getUserName() {
         return StringUtils.notNullStr(userName);
     }
+
     public void setUserName(String userName) {
         this.userName = StringUtils.notNullStr(userName);
     }
@@ -49,6 +51,7 @@ public class ReaderUser {
     public String getDisplayName() {
         return StringUtils.notNullStr(displayName);
     }
+
     public void setDisplayName(String displayName) {
         this.displayName = StringUtils.notNullStr(displayName);
     }
@@ -56,6 +59,7 @@ public class ReaderUser {
     public String getUrl() {
         return StringUtils.notNullStr(url);
     }
+
     public void setUrl(String url) {
         this.url = StringUtils.notNullStr(url);
     }
@@ -63,6 +67,7 @@ public class ReaderUser {
     public String getProfileUrl() {
         return StringUtils.notNullStr(profileUrl);
     }
+
     public void setProfileUrl(String profileUrl) {
         this.profileUrl = StringUtils.notNullStr(profileUrl);
     }
@@ -70,6 +75,7 @@ public class ReaderUser {
     public String getAvatarUrl() {
         return StringUtils.notNullStr(avatarUrl);
     }
+
     public void setAvatarUrl(String avatarUrl) {
         this.avatarUrl = StringUtils.notNullStr(avatarUrl);
     }
@@ -90,6 +96,7 @@ public class ReaderUser {
      * not stored - used by ReaderUserAdapter for performance
      */
     private transient String urlDomain;
+
     public String getUrlDomain() {
         if (urlDomain == null) {
             if (hasUrl()) {
@@ -102,20 +109,27 @@ public class ReaderUser {
     }
 
     public boolean isSameUser(ReaderUser user) {
-        if (user == null)
+        if (user == null) {
             return false;
-        if (this.userId != user.userId)
+        }
+        if (this.userId != user.userId) {
             return false;
-        if (!this.getAvatarUrl().equals(user.getAvatarUrl()))
+        }
+        if (!this.getAvatarUrl().equals(user.getAvatarUrl())) {
             return false;
-        if (!this.getDisplayName().equals(user.getDisplayName()))
+        }
+        if (!this.getDisplayName().equals(user.getDisplayName())) {
             return false;
-        if (!this.getUserName().equals(user.getUserName()))
+        }
+        if (!this.getUserName().equals(user.getUserName())) {
             return false;
-        if (!this.getUrl().equals(user.getUrl()))
+        }
+        if (!this.getUrl().equals(user.getUrl())) {
             return false;
-        if (!this.getProfileUrl().equals(user.getProfileUrl()))
+        }
+        if (!this.getProfileUrl().equals(user.getProfileUrl())) {
             return false;
+        }
         return true;
     }
 }

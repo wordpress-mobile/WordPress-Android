@@ -61,11 +61,16 @@ public class Suggestion {
     public String getUserLogin() {
         return StringUtils.notNullStr(userLogin);
     }
+
     public String getDisplayName() {
         return StringUtils.notNullStr(displayName);
     }
+
     public String getImageUrl() {
         return StringUtils.notNullStr(imageUrl);
     }
-    public String getTaxonomy() { return StringUtils.notNullStr(taxonomy); }
+
+    public String getTaxonomy() {
+        return StringUtils.notNullStr(taxonomy);
+    }
 }

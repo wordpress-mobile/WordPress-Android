@@ -71,7 +71,6 @@ public class JetpackConnectionDeeplinkActivity extends AppCompatActivity {
 
         // check if this intent is started via custom scheme link
         if (Intent.ACTION_VIEW.equals(action) && uri != null) {
-
             reason = uri.getQueryParameter("reason");
             source = Source.fromString(uri.getQueryParameter("source"));
 

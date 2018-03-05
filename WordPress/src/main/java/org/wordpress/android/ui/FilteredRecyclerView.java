@@ -35,7 +35,6 @@ import static org.wordpress.android.util.WPSwipeToRefreshHelper.buildSwipeToRefr
 
 
 public class FilteredRecyclerView extends RelativeLayout {
-
     private ProgressBar mProgressLoadMore;
     private SwipeToRefreshHelper mSwipeToRefreshHelper;
     private Spinner mSpinner;
@@ -75,7 +74,7 @@ public class FilteredRecyclerView extends RelativeLayout {
         mSwipeToRefreshHelper.setRefreshing(refreshing);
     }
 
-    public boolean isRefreshing(){
+    public boolean isRefreshing() {
         return mSwipeToRefreshHelper.isRefreshing();
     }
 
@@ -91,29 +90,29 @@ public class FilteredRecyclerView extends RelativeLayout {
         return mCurrentFilter;
     }
 
-    public void setFilterListener(FilterListener filterListener){
+    public void setFilterListener(FilterListener filterListener) {
         mFilterListener = filterListener;
         setup(false);
     }
 
-    public void setAdapter(RecyclerView.Adapter<RecyclerView.ViewHolder> adapter){
+    public void setAdapter(RecyclerView.Adapter<RecyclerView.ViewHolder> adapter) {
         mAdapter = adapter;
         mRecyclerView.setAdapter(mAdapter);
     }
 
-    public RecyclerView.Adapter<RecyclerView.ViewHolder> getAdapter(){
+    public RecyclerView.Adapter<RecyclerView.ViewHolder> getAdapter() {
         return mAdapter;
     }
 
-    public void setSwipeToRefreshEnabled(boolean enable){
+    public void setSwipeToRefreshEnabled(boolean enable) {
         mSwipeToRefreshHelper.setEnabled(enable);
     }
 
-    public void setLogT(AppLog.T tag){
+    public void setLogT(AppLog.T tag) {
         mTAG = tag;
     }
 
-    public void setCustomEmptyView(View v){
+    public void setCustomEmptyView(View v) {
         mCustomEmptyView = v;
     }
 
@@ -148,27 +147,26 @@ public class FilteredRecyclerView extends RelativeLayout {
                                     updateEmptyView(EmptyViewMessageType.NETWORK_ERROR);
                                     return;
                                 }
-                                if (mFilterListener != null){
+                                if (mFilterListener != null) {
                                     mFilterListener.onLoadData();
                                 }
                             }
                         });
                     }
                 }
-        );
+                                                         );
 
         if (mSpinner == null) {
             mSpinner = (Spinner) findViewById(R.id.filter_spinner);
         }
-
     }
 
-    private void setup(boolean refresh){
+    private void setup(boolean refresh) {
         List<FilterCriteria> criterias = mFilterListener.onLoadFilterCriteriaOptions(refresh);
-        if (criterias != null){
+        if (criterias != null) {
             mFilterCriteriaOptions = criterias;
         }
-        if (criterias == null){
+        if (criterias == null) {
             mFilterListener.onLoadFilterCriteriaOptionsAsync(new FilterCriteriaAsyncLoaderListener() {
                 @Override
                 public void onFilterCriteriasLoaded(List<FilterCriteria> criteriaList) {
@@ -186,7 +184,7 @@ public class FilteredRecyclerView extends RelativeLayout {
         }
     }
 
-    private void initSpinnerAdapter(){
+    private void initSpinnerAdapter() {
         mSpinnerAdapter = new SpinnerAdapter(getContext(), mFilterCriteriaOptions);
 
         mSelectingRememberedFilterOnCreate = true;
@@ -203,8 +201,8 @@ public class FilteredRecyclerView extends RelativeLayout {
                         (FilterCriteria) mSpinnerAdapter.getItem(position);
 
                 if (mCurrentFilter == selectedCriteria) {
-                    AppLog.d(mTAG, "The selected STATUS is already active: " +
-                            selectedCriteria.getLabel());
+                    AppLog.d(mTAG, "The selected STATUS is already active: "
+                                   + selectedCriteria.getLabel());
                     return;
                 }
 
@@ -222,14 +220,13 @@ public class FilteredRecyclerView extends RelativeLayout {
                 // nop
             }
         });
-
     }
 
     private boolean hasAdapter() {
         return (mAdapter != null);
     }
 
-    public boolean emptyViewIsVisible(){
+    public boolean emptyViewIsVisible() {
         return (mEmptyView != null && mEmptyView.getVisibility() == View.VISIBLE);
     }
 
@@ -240,24 +237,24 @@ public class FilteredRecyclerView extends RelativeLayout {
     }
 
     public void updateEmptyView(EmptyViewMessageType emptyViewMessageType) {
-        if (mEmptyView == null) return;
+        if (mEmptyView == null) {
+            return;
+        }
 
         if ((hasAdapter() && mAdapter.getItemCount() == 0) || !hasAdapter()) {
-            if (mFilterListener != null){
-                if (mCustomEmptyView == null){
+            if (mFilterListener != null) {
+                if (mCustomEmptyView == null) {
                     String msg = mFilterListener.onShowEmptyViewMessage(emptyViewMessageType);
-                    if (msg == null){
+                    if (msg == null) {
                         msg = getContext().getString(R.string.empty_list_default);
                     }
                     mEmptyView.setText(msg);
                     mEmptyView.setVisibility(View.VISIBLE);
-                }
-                else {
+                } else {
                     mEmptyView.setVisibility(View.GONE);
                     mFilterListener.onShowCustomEmptyView(emptyViewMessageType);
                 }
             }
-
         } else {
             mEmptyView.setVisibility(View.GONE);
         }
@@ -287,26 +284,26 @@ public class FilteredRecyclerView extends RelativeLayout {
         return mToolbar.getMenu();
     }
 
-    public void setToolbarBackgroundColor(int color){
+    public void setToolbarBackgroundColor(int color) {
         mToolbar.setBackgroundColor(color);
     }
 
-    public void setToolbarSpinnerTextColor(int color){
+    public void setToolbarSpinnerTextColor(int color) {
         mSpinnerTextColor = color;
     }
 
-    public void setToolbarSpinnerDrawable(int drawableResId){
+    public void setToolbarSpinnerDrawable(int drawableResId) {
         mSpinnerDrawableRight = drawableResId;
     }
 
-    public void setToolbarLeftPadding(int paddingLeft){
+    public void setToolbarLeftPadding(int paddingLeft) {
         mToolbar.setPadding(paddingLeft,
-                mToolbar.getPaddingTop(),
-                mToolbar.getPaddingRight(),
-                mToolbar.getPaddingBottom());
+                            mToolbar.getPaddingTop(),
+                            mToolbar.getPaddingRight(),
+                            mToolbar.getPaddingBottom());
     }
 
-    public void setToolbarRightPadding(int paddingRight){
+    public void setToolbarRightPadding(int paddingRight) {
         mToolbar.setPadding(
                 mToolbar.getPaddingLeft(),
                 mToolbar.getPaddingTop(),
@@ -314,7 +311,7 @@ public class FilteredRecyclerView extends RelativeLayout {
                 mToolbar.getPaddingBottom());
     }
 
-    public void setToolbarLeftAndRightPadding(int paddingLeft, int paddingRight){
+    public void setToolbarLeftAndRightPadding(int paddingLeft, int paddingRight) {
         mToolbar.setPadding(
                 paddingLeft,
                 mToolbar.getPaddingTop(),
@@ -323,7 +320,9 @@ public class FilteredRecyclerView extends RelativeLayout {
     }
 
     public void scrollRecycleViewToPosition(int position) {
-        if (mRecyclerView == null) return;
+        if (mRecyclerView == null) {
+            return;
+        }
 
         mRecyclerView.scrollToPosition(position);
     }
@@ -336,14 +335,16 @@ public class FilteredRecyclerView extends RelativeLayout {
         }
     }
 
-    public void smoothScrollToPosition(int position){
+    public void smoothScrollToPosition(int position) {
         if (mRecyclerView != null && mRecyclerView.getLayoutManager() != null) {
             mRecyclerView.getLayoutManager().smoothScrollToPosition(mRecyclerView, null, position);
         }
     }
 
-    public void addItemDecoration(RecyclerView.ItemDecoration decor){
-        if (mRecyclerView == null) return;
+    public void addItemDecoration(RecyclerView.ItemDecoration decor) {
+        if (mRecyclerView == null) {
+            return;
+        }
 
         mRecyclerView.addItemDecoration(decor);
     }
@@ -360,11 +361,11 @@ public class FilteredRecyclerView extends RelativeLayout {
         }
     }
 
-    public void hideToolbar(){
+    public void hideToolbar() {
         mAppBarLayout.setExpanded(false, true);
     }
 
-    public void showToolbar(){
+    public void showToolbar() {
         mAppBarLayout.setExpanded(true, true);
     }
 
@@ -374,9 +375,9 @@ public class FilteredRecyclerView extends RelativeLayout {
     *
     * - FilterCriteriaAsyncLoaderListener
     * and
-    *  - FilterListener.onLoadFilterCriteriaOptions
+    * - FilterListener.onLoadFilterCriteriaOptions
     * */
-    public void refreshFilterCriteriaOptions(){
+    public void refreshFilterCriteriaOptions() {
         setup(true);
     }
 
@@ -389,7 +390,7 @@ public class FilteredRecyclerView extends RelativeLayout {
 
         SpinnerAdapter(Context context, List<FilterCriteria> filterValues) {
             super();
-            mInflater = (LayoutInflater)context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+            mInflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
             mFilterValues = filterValues;
         }
 
@@ -415,18 +416,17 @@ public class FilteredRecyclerView extends RelativeLayout {
                 view = mInflater.inflate(R.layout.filter_spinner_item, parent, false);
 
                 final TextView text = (TextView) view.findViewById(R.id.text);
-                FilterCriteria selectedCriteria = (FilterCriteria)getItem(position);
+                FilterCriteria selectedCriteria = (FilterCriteria) getItem(position);
                 text.setText(selectedCriteria.getLabel());
-                if (mSpinnerTextColor != 0){
+                if (mSpinnerTextColor != 0) {
                     text.setTextColor(mSpinnerTextColor);
                 }
 
-                if (mSpinnerDrawableRight != 0){
+                if (mSpinnerDrawableRight != 0) {
                     text.setCompoundDrawablesWithIntrinsicBounds(0, 0, mSpinnerDrawableRight, 0);
                     text.setCompoundDrawablePadding(getResources().getDimensionPixelSize(R.dimen.margin_medium));
                     text.setGravity(Gravity.CENTER_VERTICAL | Gravity.LEFT);
                 }
-
             } else {
                 view = convertView;
             }
@@ -436,7 +436,7 @@ public class FilteredRecyclerView extends RelativeLayout {
 
         @Override
         public View getDropDownView(int position, View convertView, ViewGroup parent) {
-            FilterCriteria selectedCriteria = (FilterCriteria)getItem(position);
+            FilterCriteria selectedCriteria = (FilterCriteria) getItem(position);
             final TagViewHolder holder;
 
             if (convertView == null) {
@@ -453,13 +453,14 @@ public class FilteredRecyclerView extends RelativeLayout {
 
         private class TagViewHolder {
             private final TextView textView;
+
             TagViewHolder(View view) {
                 textView = (TextView) view.findViewById(R.id.text);
             }
         }
 
         public int getIndexOfCriteria(FilterCriteria tm) {
-            if (tm != null && mFilterValues != null){
+            if (tm != null && mFilterValues != null) {
                 for (int i = 0; i < mFilterValues.size(); i++) {
                     FilterCriteria criteria = mFilterValues.get(i);
                     if (criteria != null && criteria.equals(tm)) {
@@ -477,7 +478,7 @@ public class FilteredRecyclerView extends RelativeLayout {
      */
     public boolean isFirstItemVisible() {
         if (mRecyclerView == null
-                || mRecyclerView.getLayoutManager() == null) {
+            || mRecyclerView.getLayoutManager() == null) {
             return false;
         }
 
@@ -496,7 +497,7 @@ public class FilteredRecyclerView extends RelativeLayout {
          *
          * @param refresh "true"if the criterias need be refreshed
          * @return an array of FilterCriteria to be used on Spinner initialization, or null if going to use the
-         *          Async method below
+         * Async method below
          */
         List<FilterCriteria> onLoadFilterCriteriaOptions(boolean refresh);
 
@@ -544,7 +545,7 @@ public class FilteredRecyclerView extends RelativeLayout {
          * Called when there's no data to show.
          *
          * @param emptyViewMsgType this will hint you on the reason why no data is being shown, so you can return
-         *                         a proper message to be displayed to the user
+         * a proper message to be displayed to the user
          * @return the message to be displayed to the user, or null if using a Custom Empty View (see below)
          */
         String onShowEmptyViewMessage(EmptyViewMessageType emptyViewMsgType);
@@ -554,17 +555,16 @@ public class FilteredRecyclerView extends RelativeLayout {
          * be called otherwise).
          *
          * @param emptyViewMsgType this will hint you on the reason why no data is being shown, and
-         *                         also here you should perform any actions on your custom empty view
+         * also here you should perform any actions on your custom empty view
          * @return nothing
          */
         void onShowCustomEmptyView(EmptyViewMessageType emptyViewMsgType);
-
     }
 
     /**
      * implement this interface to load filtering options (that is, an array of FilterCriteria) asynchronously
      */
-    public interface FilterCriteriaAsyncLoaderListener{
+    public interface FilterCriteriaAsyncLoaderListener {
         /**
          * Will be called during initialization of FilteredRecyclerView once you're ready building the FilterCriteria array
          *
@@ -572,5 +572,4 @@ public class FilteredRecyclerView extends RelativeLayout {
          */
         void onFilterCriteriasLoaded(List<FilterCriteria> criteriaList);
     }
-
 }

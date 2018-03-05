@@ -28,7 +28,6 @@ import java.util.List;
 import javax.inject.Inject;
 
 public class StatsWidgetConfigureAdapter extends RecyclerView.Adapter<StatsWidgetConfigureAdapter.SiteViewHolder> {
-
     interface OnSiteClickListener {
         void onSiteClick(SiteRecord site);
     }
@@ -93,7 +92,8 @@ public class StatsWidgetConfigureAdapter extends RecyclerView.Adapter<StatsWidge
         mTextColorNormal = context.getResources().getColor(R.color.grey_dark);
         mTextColorHidden = context.getResources().getColor(R.color.grey);
 
-        mSelectedItemBackground = new ColorDrawable(context.getResources().getColor(R.color.grey_lighten_20_translucent_50));
+        mSelectedItemBackground =
+                new ColorDrawable(context.getResources().getColor(R.color.grey_lighten_20_translucent_50));
 
         loadSites();
     }
@@ -146,7 +146,7 @@ public class StatsWidgetConfigureAdapter extends RecyclerView.Adapter<StatsWidge
 
         // hide the divider for the last item
         boolean isLastItem = (position == getItemCount() - 1);
-        holder.divider.setVisibility(isLastItem ?  View.INVISIBLE : View.VISIBLE);
+        holder.divider.setVisibility(isLastItem ? View.INVISIBLE : View.VISIBLE);
     }
 
 
@@ -162,6 +162,7 @@ public class StatsWidgetConfigureAdapter extends RecyclerView.Adapter<StatsWidge
      * AsyncTask which loads sites from database and populates the adapter
      */
     private boolean mIsTaskRunning;
+
     private class LoadSitesTask extends AsyncTask<Void, Void, Void> {
         @Override
         protected void onPreExecute() {
@@ -229,7 +230,7 @@ public class StatsWidgetConfigureAdapter extends RecyclerView.Adapter<StatsWidge
     /**
      * SiteRecord is a simplified version of the full account (blog) record
      */
-     static class SiteRecord {
+    static class SiteRecord {
         final int localId;
         final long blogId;
         final String blogName;
@@ -258,8 +259,10 @@ public class StatsWidgetConfigureAdapter extends RecyclerView.Adapter<StatsWidge
         }
     }
 
-   static class SiteList extends ArrayList<SiteRecord> {
-        SiteList() { }
+    static class SiteList extends ArrayList<SiteRecord> {
+        SiteList() {
+        }
+
         SiteList(List<SiteModel> sites) {
             if (sites != null) {
                 for (SiteModel site : sites) {
@@ -273,7 +276,7 @@ public class StatsWidgetConfigureAdapter extends RecyclerView.Adapter<StatsWidge
                 return false;
             }
             int i;
-            for (SiteRecord site: sites) {
+            for (SiteRecord site : sites) {
                 i = indexOfSite(site);
                 if (i == -1 || this.get(i).isHidden != site.isHidden) {
                     return false;

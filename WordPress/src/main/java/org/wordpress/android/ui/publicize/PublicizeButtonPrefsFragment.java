@@ -36,7 +36,6 @@ import javax.inject.Inject;
 public class PublicizeButtonPrefsFragment extends Fragment implements
         SiteSettingsInterface.SiteSettingsListener,
         WPPrefView.OnPrefChangedListener {
-
     private static final String TWITTER_PREFIX = "@";
     private static final String SHARING_BUTTONS_KEY = "sharing_buttons";
     private static final String SHARING_BUTTONS_UPDATED_KEY = "updated";
@@ -104,7 +103,8 @@ public class PublicizeButtonPrefsFragment extends Fragment implements
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container,
+                             @Nullable Bundle savedInstanceState) {
         ViewGroup view = (ViewGroup) inflater.inflate(R.layout.publicize_button_prefs_fragment, container, false);
 
         mPrefButtonStyle = (WPPrefView) view.findViewById(R.id.pref_button_style);
@@ -149,6 +149,7 @@ public class PublicizeButtonPrefsFragment extends Fragment implements
 
     /**
      * save both the sharing & more buttons
+     *
      * @param isSharingButtons true if called by mPrefSharingButtons, false if by mPrefMoreButtons
      */
     private void saveSharingButtons(boolean isSharingButtons) {
@@ -157,7 +158,7 @@ public class PublicizeButtonPrefsFragment extends Fragment implements
 
         // sharing and more buttons are mutually exclusive
         if (isSharingButtons) {
-             moreButtons.removeItems(sharingButtons);
+            moreButtons.removeItems(sharingButtons);
         } else {
             sharingButtons.removeItems(moreButtons);
         }
@@ -165,7 +166,7 @@ public class PublicizeButtonPrefsFragment extends Fragment implements
         // sharing buttons are visible and enabled, more buttons are invisible and enabled,
         // all others are invisible and disabled
         JSONArray jsonArray = new JSONArray();
-        for (PublicizeButton button: mPublicizeButtons) {
+        for (PublicizeButton button : mPublicizeButtons) {
             if (sharingButtons.containsValue(button.getId())) {
                 button.setVisibility(true);
                 button.setEnabled(true);
@@ -189,24 +190,27 @@ public class PublicizeButtonPrefsFragment extends Fragment implements
             AppLog.e(AppLog.T.SETTINGS, e);
         }
 
-        WordPress.getRestClientUtilsV1_1().setSharingButtons(Long.toString(mSite.getSiteId()), jsonObject, new RestRequest.Listener() {
-            @Override
-            public void onResponse(JSONObject response) {
-                configureSharingButtonsFromResponse(response);
-            }
-        }, new RestRequest.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError error) {
-                AppLog.e(AppLog.T.SETTINGS, error.getMessage());
-            }
-        });
+        WordPress.getRestClientUtilsV1_1()
+                 .setSharingButtons(Long.toString(mSite.getSiteId()), jsonObject, new RestRequest.Listener() {
+                     @Override
+                     public void onResponse(JSONObject response) {
+                         configureSharingButtonsFromResponse(response);
+                     }
+                 }, new RestRequest.ErrorListener() {
+                     @Override
+                     public void onErrorResponse(VolleyError error) {
+                         AppLog.e(AppLog.T.SETTINGS, error.getMessage());
+                     }
+                 });
     }
 
     /*
      * show the twitter username pref only if there's a twitter sharing button enabled
      */
     private void toggleTwitterPreference() {
-        if (!isAdded()) return;
+        if (!isAdded()) {
+            return;
+        }
 
         View view = getView();
         if (view != null) {
@@ -226,17 +230,18 @@ public class PublicizeButtonPrefsFragment extends Fragment implements
      * calls the backend to determine which sharing and more buttons are enabled
      */
     private void configureSharingButtons() {
-        WordPress.getRestClientUtilsV1_1().getSharingButtons(Long.toString(mSite.getSiteId()), new RestRequest.Listener() {
-            @Override
-            public void onResponse(JSONObject response) {
-                configureSharingButtonsFromResponse(response);
-            }
-        }, new RestRequest.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError error) {
-                AppLog.e(AppLog.T.SETTINGS, error);
-            }
-        });
+        WordPress.getRestClientUtilsV1_1()
+                 .getSharingButtons(Long.toString(mSite.getSiteId()), new RestRequest.Listener() {
+                     @Override
+                     public void onResponse(JSONObject response) {
+                         configureSharingButtonsFromResponse(response);
+                     }
+                 }, new RestRequest.ErrorListener() {
+                     @Override
+                     public void onErrorResponse(VolleyError error) {
+                         AppLog.e(AppLog.T.SETTINGS, error);
+                     }
+                 });
     }
 
     private void configureSharingButtonsFromResponse(JSONObject response) {
@@ -263,7 +268,7 @@ public class PublicizeButtonPrefsFragment extends Fragment implements
         }
 
         PrefListItems sharingListItems = new PrefListItems();
-        for (PublicizeButton button: mPublicizeButtons) {
+        for (PublicizeButton button : mPublicizeButtons) {
             String itemName = button.getName();
             String itemValue = button.getId();
             boolean isChecked = button.isEnabled() && button.isVisible();
@@ -273,7 +278,7 @@ public class PublicizeButtonPrefsFragment extends Fragment implements
         mPrefSharingButtons.setListItems(sharingListItems);
 
         PrefListItems moreListItems = new PrefListItems();
-        for (PublicizeButton button: mPublicizeButtons) {
+        for (PublicizeButton button : mPublicizeButtons) {
             String itemName = button.getName();
             String itemValue = button.getId();
             boolean isChecked = button.isEnabled() && !button.isVisible();

@@ -53,7 +53,6 @@ import javax.inject.Inject;
 public class PluginBrowserActivity extends AppCompatActivity
         implements SearchView.OnQueryTextListener,
         MenuItem.OnActionExpandListener {
-
     @Inject ViewModelProvider.Factory mViewModelFactory;
     protected PluginBrowserViewModel mViewModel;
 
@@ -176,7 +175,7 @@ public class PluginBrowserActivity extends AppCompatActivity
             @Override
             public void onChanged(@Nullable PluginBrowserViewModel.PluginListStatus listStatus) {
                 showProgress(listStatus == PluginBrowserViewModel.PluginListStatus.FETCHING
-                        && mViewModel.isSitePluginsEmpty());
+                             && mViewModel.isSitePluginsEmpty());
 
                 if (listStatus == PluginBrowserViewModel.PluginListStatus.ERROR) {
                     ToastUtils.showToast(PluginBrowserActivity.this, R.string.plugin_fetch_error);
@@ -300,10 +299,10 @@ public class PluginBrowserActivity extends AppCompatActivity
     protected void showListFragment(@NonNull PluginListType listType) {
         PluginListFragment listFragment = PluginListFragment.newInstance(mViewModel.getSite(), listType);
         getSupportFragmentManager().beginTransaction()
-                .add(R.id.fragment_container, listFragment, PluginListFragment.TAG)
-                .addToBackStack(null)
-                .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE)
-                .commit();
+                                   .add(R.id.fragment_container, listFragment, PluginListFragment.TAG)
+                                   .addToBackStack(null)
+                                   .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE)
+                                   .commit();
         mViewModel.setTitle(getTitleForListType(listType));
     }
 
@@ -342,7 +341,9 @@ public class PluginBrowserActivity extends AppCompatActivity
         }
 
         void setPlugins(@NonNull List<?> items) {
-            if (mItems.isSameList(items)) return;
+            if (mItems.isSameList(items)) {
+                return;
+            }
 
             mItems.clear();
             mItems.addAll(items);
@@ -358,7 +359,8 @@ public class PluginBrowserActivity extends AppCompatActivity
             notifyDataSetChanged();
         }
 
-        protected @Nullable Object getItem(int position) {
+        protected @Nullable
+        Object getItem(int position) {
             if (position < mItems.size()) {
                 return mItems.get(position);
             }
@@ -385,7 +387,9 @@ public class PluginBrowserActivity extends AppCompatActivity
         public void onBindViewHolder(ViewHolder viewHolder, int position) {
             PluginBrowserViewHolder holder = (PluginBrowserViewHolder) viewHolder;
             Object item = getItem(position);
-            if (item == null) return;
+            if (item == null) {
+                return;
+            }
 
             SitePluginModel sitePlugin;
             WPOrgPluginModel wpOrgPlugin;
@@ -470,7 +474,9 @@ public class PluginBrowserActivity extends AppCompatActivity
                     public void onClick(View v) {
                         int position = getAdapterPosition();
                         Object item = getItem(position);
-                        if (item == null) return;
+                        if (item == null) {
+                            return;
+                        }
                         SitePluginModel sitePlugin;
                         WPOrgPluginModel wpOrgPlugin;
                         if (item instanceof SitePluginModel) {
@@ -482,10 +488,10 @@ public class PluginBrowserActivity extends AppCompatActivity
                         }
                         if (sitePlugin != null) {
                             ActivityLauncher.viewPluginDetailForResult(PluginBrowserActivity.this, mViewModel.getSite(),
-                                    sitePlugin);
+                                                                       sitePlugin);
                         } else {
                             ActivityLauncher.viewPluginDetailForResult(PluginBrowserActivity.this, mViewModel.getSite(),
-                                    wpOrgPlugin);
+                                                                       wpOrgPlugin);
                         }
                     }
                 });

@@ -25,10 +25,10 @@ import java.util.Collections;
 import java.util.Comparator;
 
 public class PublicizeServiceAdapter extends RecyclerView.Adapter<PublicizeServiceAdapter.SharingViewHolder> {
-
     public interface OnAdapterLoadedListener {
         void onAdapterLoaded(boolean isEmpty);
     }
+
     public interface OnServiceClickListener {
         void onServiceClicked(PublicizeService service);
     }
@@ -99,14 +99,16 @@ public class PublicizeServiceAdapter extends RecyclerView.Adapter<PublicizeServi
 
     @Override
     public SharingViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.publicize_listitem_service, parent, false);
+        View view =
+                LayoutInflater.from(parent.getContext()).inflate(R.layout.publicize_listitem_service, parent, false);
         return new SharingViewHolder(view);
     }
 
     @Override
     public void onBindViewHolder(final SharingViewHolder holder, int position) {
         final PublicizeService service = mServices.get(position);
-        final PublicizeConnectionList connections = mConnections.getServiceConnectionsForUser(mCurrentUserId, service.getId());
+        final PublicizeConnectionList connections =
+                mConnections.getServiceConnectionsForUser(mCurrentUserId, service.getId());
 
         holder.txtService.setText(service.getLabel());
         String iconUrl = PhotonUtils.getPhotonImageUrl(service.getIconUrl(), mBlavatarSz, mBlavatarSz);
@@ -155,6 +157,7 @@ public class PublicizeServiceAdapter extends RecyclerView.Adapter<PublicizeServi
      * AsyncTask to load services
      */
     private boolean mIsTaskRunning = false;
+
     private class LoadServicesTask extends AsyncTask<Void, Void, Boolean> {
         private final PublicizeServiceList tmpServices = new PublicizeServiceList();
         private final PublicizeConnectionList tmpConnections = new PublicizeConnectionList();
@@ -163,10 +166,12 @@ public class PublicizeServiceAdapter extends RecyclerView.Adapter<PublicizeServi
         protected void onPreExecute() {
             mIsTaskRunning = true;
         }
+
         @Override
         protected void onCancelled() {
             mIsTaskRunning = false;
         }
+
         @Override
         protected Boolean doInBackground(Void... params) {
             // G+ no longers supports authentication via a WebView, so we hide it here unless the
@@ -174,7 +179,7 @@ public class PublicizeServiceAdapter extends RecyclerView.Adapter<PublicizeServi
             boolean hideGPlus = true;
 
             PublicizeConnectionList connections = PublicizeTable.getConnectionsForSite(mSiteId);
-            for (PublicizeConnection connection: connections) {
+            for (PublicizeConnection connection : connections) {
                 if (connection.getService().equals(PublicizeConstants.GOOGLE_PLUS_ID)) {
                     hideGPlus = false;
                 }
@@ -182,7 +187,7 @@ public class PublicizeServiceAdapter extends RecyclerView.Adapter<PublicizeServi
             }
 
             PublicizeServiceList services = PublicizeTable.getServiceList();
-            for (PublicizeService service: services) {
+            for (PublicizeService service : services) {
                 if (!service.getId().equals(PublicizeConstants.GOOGLE_PLUS_ID) || !hideGPlus) {
                     tmpServices.add(service);
                 }
@@ -190,6 +195,7 @@ public class PublicizeServiceAdapter extends RecyclerView.Adapter<PublicizeServi
 
             return !(tmpServices.isSameAs(mServices) && tmpConnections.isSameAs(mConnections));
         }
+
         @Override
         protected void onPostExecute(Boolean result) {
             if (result) {
@@ -230,5 +236,4 @@ public class PublicizeServiceAdapter extends RecyclerView.Adapter<PublicizeServi
             });
         }
     }
-
 }

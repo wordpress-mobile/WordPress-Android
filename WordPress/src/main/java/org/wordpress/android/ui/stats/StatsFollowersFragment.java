@@ -87,6 +87,7 @@ public class StatsFollowersFragment extends StatsAbstractListFragment {
     protected boolean hasDataAvailable() {
         return mFollowersWPCOM != null || mFollowersEmail != null;
     }
+
     @Override
     protected void saveStatsData(Bundle outState) {
         if (mFollowersWPCOM != null) {
@@ -96,6 +97,7 @@ public class StatsFollowersFragment extends StatsAbstractListFragment {
             outState.putSerializable(ARG_REST_RESPONSE_FOLLOWERS_EMAIL, mFollowersEmail);
         }
     }
+
     @Override
     protected void restoreStatsData(Bundle savedInstanceState) {
         if (savedInstanceState.containsKey(ARG_REST_RESPONSE)) {
@@ -153,8 +155,8 @@ public class StatsFollowersFragment extends StatsAbstractListFragment {
 
         final FollowersModel followersModel = getCurrentDataModel();
 
-        if (followersModel != null && followersModel.getFollowers() != null &&
-                followersModel.getFollowers().size() > 0) {
+        if (followersModel != null && followersModel.getFollowers() != null
+            && followersModel.getFollowers().size() > 0) {
             ArrayAdapter adapter = new DotComFollowerAdapter(getActivity(), followersModel.getFollowers());
             StatsUIHelper.reloadLinearLayout(getActivity(), adapter, mList, getMaxNumberOfItemsToShowInList());
             showHideNoResultsUI(false);
@@ -173,7 +175,7 @@ public class StatsFollowersFragment extends StatsAbstractListFragment {
                             getString(R.string.stats_pagination_label),
                             FormatUtils.formatDecimal(followersModel.getPage()),
                             FormatUtils.formatDecimal(followersModel.getPages())
-                    );
+                                                          );
                     mBottomPaginationText.setText(paginationLabel);
                     mTopPaginationText.setText(paginationLabel);
                     setNavigationButtonsEnabled(true);
@@ -190,8 +192,9 @@ public class StatsFollowersFragment extends StatsAbstractListFragment {
                                 setNavigationButtonsEnabled(false);
                                 refreshStats(
                                         followersModel.getPage() - 1,
-                                        new StatsService.StatsEndpointsEnum[]{sectionsToUpdate()[mTopPagerSelectedButtonIndex]}
-                                );
+                                        new StatsService.StatsEndpointsEnum[]{
+                                                sectionsToUpdate()[mTopPagerSelectedButtonIndex]}
+                                            );
                             }
                         };
                         mBottomPaginationGoBackButton.setOnClickListener(clickListener);
@@ -210,8 +213,9 @@ public class StatsFollowersFragment extends StatsAbstractListFragment {
                                 setNavigationButtonsEnabled(false);
                                 refreshStats(
                                         followersModel.getPage() + 1,
-                                        new StatsService.StatsEndpointsEnum[]{sectionsToUpdate()[mTopPagerSelectedButtonIndex]}
-                                );
+                                        new StatsService.StatsEndpointsEnum[]{
+                                                sectionsToUpdate()[mTopPagerSelectedButtonIndex]}
+                                            );
                             }
                         };
                         mBottomPaginationGoForwardButton.setOnClickListener(clickListener);
@@ -219,14 +223,18 @@ public class StatsFollowersFragment extends StatsAbstractListFragment {
                     }
 
                     // Change the total number of followers label by adding the current paging info
-                    int startIndex = followersModel.getPage() * StatsService.MAX_RESULTS_REQUESTED_PER_PAGE - StatsService.MAX_RESULTS_REQUESTED_PER_PAGE + 1;
+                    int startIndex = followersModel.getPage() * StatsService.MAX_RESULTS_REQUESTED_PER_PAGE
+                                     - StatsService.MAX_RESULTS_REQUESTED_PER_PAGE + 1;
                     int endIndex = startIndex + followersModel.getFollowers().size() - 1;
-                    String pagedLabel  = getString(
-                            mTopPagerSelectedButtonIndex == 0 ? R.string.stats_followers_total_wpcom_paged : R.string.stats_followers_total_email_paged,
+                    String pagedLabel = getString(
+                            mTopPagerSelectedButtonIndex == 0 ? R.string.stats_followers_total_wpcom_paged
+                                    : R.string.stats_followers_total_email_paged,
                             startIndex,
                             endIndex,
-                            FormatUtils.formatDecimal(mTopPagerSelectedButtonIndex == 0 ? followersModel.getTotalWPCom() : followersModel.getTotalEmail())
-                    );
+                            FormatUtils.formatDecimal(
+                                    mTopPagerSelectedButtonIndex == 0 ? followersModel.getTotalWPCom()
+                                            : followersModel.getTotalEmail())
+                                                 );
                     mTotalsLabel.setText(pagedLabel);
                 } else {
                     // No paging required. Hide the controls.
@@ -272,8 +280,7 @@ public class StatsFollowersFragment extends StatsAbstractListFragment {
         }
         FollowersModel followersModel = getCurrentDataModel();
         return !(followersModel == null || followersModel.getFollowers() == null
-                || followersModel.getFollowers().size() < MAX_NUM_OF_ITEMS_DISPLAYED_IN_LIST);
-
+                 || followersModel.getFollowers().size() < MAX_NUM_OF_ITEMS_DISPLAYED_IN_LIST);
     }
 
     private String getTotalFollowersLabel(int total) {
@@ -294,7 +301,6 @@ public class StatsFollowersFragment extends StatsAbstractListFragment {
     }
 
     private class DotComFollowerAdapter extends ArrayAdapter<FollowerModel> {
-
         private final List<FollowerModel> list;
         private final Activity context;
         private final LayoutInflater inflater;
@@ -330,7 +336,8 @@ public class StatsFollowersFragment extends StatsAbstractListFragment {
             final FollowDataModel followData = currentRowData.getFollowData();
 
             // entries
-            if (mTopPagerSelectedButtonIndex == 0 && !(TextUtils.isEmpty(currentRowData.getURL()) && followData == null)) {
+            if (mTopPagerSelectedButtonIndex == 0 && !(TextUtils.isEmpty(currentRowData.getURL())
+                                                       && followData == null)) {
                 // WPCOM followers with no empty URL or empty follow data
 
                 final long blogID;
@@ -354,7 +361,7 @@ public class StatsFollowersFragment extends StatsAbstractListFragment {
                                     ReaderActivityLauncher.showReaderBlogPreview(
                                             context,
                                             blogID
-                                    );
+                                                                                );
                                 }
                             });
                 } else {
@@ -372,8 +379,8 @@ public class StatsFollowersFragment extends StatsAbstractListFragment {
                     StatsUtils.getSinceLabel(
                             context,
                             currentRowData.getDateSubscribed()
-                    )
-            );
+                                            )
+                                         );
 
             // Avatar
             holder.networkImageView.setImageUrl(
@@ -397,7 +404,6 @@ public class StatsFollowersFragment extends StatsAbstractListFragment {
 
             return rowView;
         }
-
 
     }
 

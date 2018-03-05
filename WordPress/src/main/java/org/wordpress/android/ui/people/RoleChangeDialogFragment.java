@@ -116,11 +116,11 @@ public class RoleChangeDialogFragment extends DialogFragment {
             TextView mainText = (TextView) convertView.findViewById(R.id.role_label);
             final RadioButton radioButton = (RadioButton) convertView.findViewById(R.id.radio);
             radioButton.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        changeSelection(position);
-                    }
-                });
+                @Override
+                public void onClick(View v) {
+                    changeSelection(position);
+                }
+            });
             convertView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {

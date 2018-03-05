@@ -18,7 +18,6 @@ import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.widgets.WPNetworkImageView;
 
 public class PublicizeConnectionAdapter extends RecyclerView.Adapter<PublicizeConnectionAdapter.ConnectionViewHolder> {
-
     public interface OnAdapterLoadedListener {
         void onAdapterLoaded(boolean isEmpty);
     }
@@ -80,7 +79,8 @@ public class PublicizeConnectionAdapter extends RecyclerView.Adapter<PublicizeCo
 
     @Override
     public ConnectionViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.publicize_listitem_connection, parent, false);
+        View view =
+                LayoutInflater.from(parent.getContext()).inflate(R.layout.publicize_listitem_connection, parent, false);
         return new ConnectionViewHolder(view);
     }
 
@@ -93,7 +93,7 @@ public class PublicizeConnectionAdapter extends RecyclerView.Adapter<PublicizeCo
 
         if (connection.hasExternalProfilePictureUrl()) {
             holder.imgAvatar.setImageUrl(connection.getExternalProfilePictureUrl(),
-                    WPNetworkImageView.ImageType.AVATAR);
+                                         WPNetworkImageView.ImageType.AVATAR);
         } else {
             holder.imgAvatar.showDefaultGravatarImageAndNullifyUrl();
         }
@@ -123,5 +123,4 @@ public class PublicizeConnectionAdapter extends RecyclerView.Adapter<PublicizeCo
             divider = view.findViewById(R.id.divider);
         }
     }
-
 }

@@ -88,7 +88,7 @@ public class ReaderTagActions {
         com.wordpress.rest.RestRequest.Listener listener = new RestRequest.Listener() {
             @Override
             public void onResponse(JSONObject jsonObject) {
-                AppLog.i(T.READER, "add tag  succeeded");
+                AppLog.i(T.READER, "add tag succeeded");
                 // the response will contain the list of the user's followed tags
                 ReaderTagList tags = parseFollowedTags(jsonObject);
                 ReaderTagTable.replaceFollowedTags(tags);
@@ -153,7 +153,7 @@ public class ReaderTagActions {
         }
 
         ReaderTagList tags = new ReaderTagList();
-        for (int i=0; i < jsonTags.length(); i++) {
+        for (int i = 0; i < jsonTags.length(); i++) {
             JSONObject jsonThisTag = jsonTags.optJSONObject(i);
             String tagTitle = JSONUtils.getStringDecoded(jsonThisTag, ReaderConstants.JSON_TAG_TITLE);
             String tagDisplayName = JSONUtils.getStringDecoded(jsonThisTag, ReaderConstants.JSON_TAG_DISPLAY_NAME);
@@ -164,5 +164,4 @@ public class ReaderTagActions {
 
         return tags;
     }
-
 }

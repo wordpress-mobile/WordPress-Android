@@ -6,9 +6,10 @@ import java.util.ArrayList;
 import java.util.Iterator;
 
 public class PublicizeServiceList extends ArrayList<PublicizeService> {
-
     private int indexOfService(PublicizeService service) {
-        if (service == null) return -1;
+        if (service == null) {
+            return -1;
+        }
 
         for (int i = 0; i < this.size(); i++) {
             if (service.getId().equalsIgnoreCase(this.get(i).getId())) {
@@ -24,7 +25,7 @@ public class PublicizeServiceList extends ArrayList<PublicizeService> {
             return false;
         }
 
-        for (PublicizeService otherService: otherList) {
+        for (PublicizeService otherService : otherList) {
             int i = this.indexOfService(otherService);
             if (i == -1) {
                 return false;
@@ -58,10 +59,14 @@ public class PublicizeServiceList extends ArrayList<PublicizeService> {
      */
     public static PublicizeServiceList fromJson(JSONObject json) {
         PublicizeServiceList serviceList = new PublicizeServiceList();
-        if (json == null) return serviceList;
+        if (json == null) {
+            return serviceList;
+        }
 
         JSONObject jsonServiceList = json.optJSONObject("services");
-        if (jsonServiceList == null) return serviceList;
+        if (jsonServiceList == null) {
+            return serviceList;
+        }
 
         Iterator<String> it = jsonServiceList.keys();
         while (it.hasNext()) {
@@ -82,7 +87,7 @@ public class PublicizeServiceList extends ArrayList<PublicizeService> {
             if (jsonGenericon != null) {
                 service.setGenericon(jsonGenericon.optString("unicode"));
             }
-                    serviceList.add(service);
+            serviceList.add(service);
         }
 
         return serviceList;

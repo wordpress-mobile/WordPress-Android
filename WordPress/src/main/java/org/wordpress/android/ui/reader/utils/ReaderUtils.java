@@ -20,16 +20,15 @@ import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.UrlUtils;
 
 public class ReaderUtils {
-
     public static String getResizedImageUrl(final String imageUrl, int width, int height, boolean isPrivate) {
         return getResizedImageUrl(imageUrl, width, height, isPrivate, PhotonUtils.Quality.MEDIUM);
     }
+
     public static String getResizedImageUrl(final String imageUrl,
                                             int width,
                                             int height,
                                             boolean isPrivate,
                                             PhotonUtils.Quality quality) {
-
         final String unescapedUrl = StringEscapeUtils.unescapeHtml4(imageUrl);
         if (isPrivate) {
             return getPrivateImageForDisplay(unescapedUrl, width, height);
@@ -72,10 +71,11 @@ public class ReaderUtils {
         }
 
         return title.trim()
-                .replaceAll("&[^\\s]*;", "")            // remove html entities
-                .replaceAll("[\\.\\s]+", "-")           // replace periods and whitespace with a dash
-                .replaceAll("[^\\p{L}\\p{Nd}\\-]+", "") // remove remaining non-alphanum/non-dash chars (Unicode aware)
-                .replaceAll("--", "-");                 // reduce double dashes potentially added above
+                    .replaceAll("&[^\\s]*;", "") // remove html entities
+                    .replaceAll("[\\.\\s]+", "-") // replace periods and whitespace with a dash
+                    .replaceAll("[^\\p{L}\\p{Nd}\\-]+",
+                                "") // remove remaining non-alphanum/non-dash chars (Unicode aware)
+                    .replaceAll("--", "-"); // reduce double dashes potentially added above
     }
 
     /*
@@ -131,8 +131,8 @@ public class ReaderUtils {
      * returns true if a ReaderPost and ReaderComment exist for the passed Ids
      */
     public static boolean postAndCommentExists(long blogId, long postId, long commentId) {
-        return ReaderPostTable.postExists(blogId, postId) &&
-                ReaderCommentTable.commentExists(blogId, postId, commentId);
+        return ReaderPostTable.postExists(blogId, postId)
+               && ReaderCommentTable.commentExists(blogId, postId, commentId);
     }
 
     /*

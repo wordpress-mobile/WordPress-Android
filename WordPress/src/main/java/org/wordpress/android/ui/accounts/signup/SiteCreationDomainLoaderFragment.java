@@ -39,6 +39,7 @@ public class SiteCreationDomainLoaderFragment extends Fragment {
             this.event = event;
         }
     }
+
     @Inject Dispatcher mDispatcher;
 
     // need to inject it even though we're not using it directly, otherwise we can't listen for its event responses

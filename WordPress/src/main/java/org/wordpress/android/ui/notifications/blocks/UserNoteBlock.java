@@ -58,7 +58,7 @@ public class UserNoteBlock extends NoteBlock {
 
     @Override
     public View configureView(View view) {
-        final UserActionNoteBlockHolder noteBlockHolder = (UserActionNoteBlockHolder)view.getTag();
+        final UserActionNoteBlockHolder noteBlockHolder = (UserActionNoteBlockHolder) view.getTag();
         noteBlockHolder.nameTextView.setText(getNoteText().toString());
 
 
@@ -124,10 +124,10 @@ public class UserNoteBlock extends NoteBlock {
 
         public UserActionNoteBlockHolder(View view) {
             rootView = view.findViewById(R.id.user_block_root_view);
-            nameTextView = (TextView)view.findViewById(R.id.user_name);
-            urlTextView = (TextView)view.findViewById(R.id.user_blog_url);
-            taglineTextView = (TextView)view.findViewById(R.id.user_blog_tagline);
-            avatarImageView = (WPNetworkImageView)view.findViewById(R.id.user_avatar);
+            nameTextView = (TextView) view.findViewById(R.id.user_name);
+            urlTextView = (TextView) view.findViewById(R.id.user_blog_url);
+            taglineTextView = (TextView) view.findViewById(R.id.user_blog_tagline);
+            avatarImageView = (WPNetworkImageView) view.findViewById(R.id.user_avatar);
         }
     }
 
@@ -158,23 +158,23 @@ public class UserNoteBlock extends NoteBlock {
     final View.OnTouchListener mOnGravatarTouchListener = new View.OnTouchListener() {
         @Override
         public boolean onTouch(View v, MotionEvent event) {
-
             int animationDuration = 150;
 
             if (event.getAction() == MotionEvent.ACTION_DOWN) {
                 v.animate()
-                        .scaleX(0.9f)
-                        .scaleY(0.9f)
-                        .alpha(0.5f)
-                        .setDuration(animationDuration)
-                        .setInterpolator(new DecelerateInterpolator());
-            } else if (event.getActionMasked() == MotionEvent.ACTION_UP || event.getActionMasked() == MotionEvent.ACTION_CANCEL) {
+                 .scaleX(0.9f)
+                 .scaleY(0.9f)
+                 .alpha(0.5f)
+                 .setDuration(animationDuration)
+                 .setInterpolator(new DecelerateInterpolator());
+            } else if (event.getActionMasked() == MotionEvent.ACTION_UP
+                       || event.getActionMasked() == MotionEvent.ACTION_CANCEL) {
                 v.animate()
-                        .scaleX(1.0f)
-                        .scaleY(1.0f)
-                        .alpha(1.0f)
-                        .setDuration(animationDuration)
-                        .setInterpolator(new DecelerateInterpolator());
+                 .scaleX(1.0f)
+                 .scaleY(1.0f)
+                 .alpha(1.0f)
+                 .setDuration(animationDuration)
+                 .setInterpolator(new DecelerateInterpolator());
 
                 if (event.getActionMasked() == MotionEvent.ACTION_UP && mGravatarClickedListener != null) {
                     // Fire the listener, which will load the site preview for the user's site

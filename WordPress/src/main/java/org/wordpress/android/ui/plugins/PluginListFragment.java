@@ -190,7 +190,7 @@ public class PluginListFragment extends Fragment {
                         mViewModel.pullToRefresh(mListType);
                     }
                 }
-        );
+                                                         );
 
         return view;
     }
@@ -259,7 +259,8 @@ public class PluginListFragment extends Fragment {
             }
         }
 
-        protected @Nullable Object getItem(int position) {
+        protected @Nullable
+        Object getItem(int position) {
             if (position < mItems.size()) {
                 return mItems.get(position);
             }
@@ -285,7 +286,9 @@ public class PluginListFragment extends Fragment {
         @Override
         public void onBindViewHolder(RecyclerView.ViewHolder viewHolder, int position) {
             Object item = getItem(position);
-            if (item == null) return;
+            if (item == null) {
+                return;
+            }
             SitePluginModel sitePlugin;
             WPOrgPluginModel wpOrgPlugin;
             if (item instanceof SitePluginModel) {
@@ -297,7 +300,8 @@ public class PluginListFragment extends Fragment {
             }
 
             String name = sitePlugin != null ? sitePlugin.getDisplayName() : wpOrgPlugin.getName();
-            String author = sitePlugin != null ? sitePlugin.getAuthorName() : HtmlUtils.fastStripHtml(wpOrgPlugin.getAuthorAsHtml());
+            String author = sitePlugin != null ? sitePlugin.getAuthorName()
+                    : HtmlUtils.fastStripHtml(wpOrgPlugin.getAuthorAsHtml());
             String iconUrl = wpOrgPlugin != null ? wpOrgPlugin.getIcon() : null;
 
             PluginViewHolder holder = (PluginViewHolder) viewHolder;
@@ -362,7 +366,9 @@ public class PluginListFragment extends Fragment {
                     public void onClick(View v) {
                         int position = getAdapterPosition();
                         Object item = getItem(position);
-                        if (item == null) return;
+                        if (item == null) {
+                            return;
+                        }
                         SitePluginModel sitePlugin;
                         WPOrgPluginModel wpOrgPlugin;
                         if (item instanceof SitePluginModel) {
@@ -375,7 +381,8 @@ public class PluginListFragment extends Fragment {
                         if (sitePlugin != null) {
                             ActivityLauncher.viewPluginDetailForResult(getActivity(), mViewModel.getSite(), sitePlugin);
                         } else {
-                            ActivityLauncher.viewPluginDetailForResult(getActivity(), mViewModel.getSite(), wpOrgPlugin);
+                            ActivityLauncher
+                                    .viewPluginDetailForResult(getActivity(), mViewModel.getSite(), wpOrgPlugin);
                         }
                     }
                 });

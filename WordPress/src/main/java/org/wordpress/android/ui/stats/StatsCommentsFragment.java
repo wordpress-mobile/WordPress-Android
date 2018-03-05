@@ -35,6 +35,7 @@ public class StatsCommentsFragment extends StatsAbstractListFragment {
     protected boolean hasDataAvailable() {
         return mCommentsModel != null && mCommentFollowersModel != null;
     }
+
     @Override
     protected void saveStatsData(Bundle outState) {
         if (mCommentsModel != null) {
@@ -44,13 +45,15 @@ public class StatsCommentsFragment extends StatsAbstractListFragment {
             outState.putSerializable(ARG_REST_RESPONSE_FOLLOWERS, mCommentFollowersModel);
         }
     }
+
     @Override
     protected void restoreStatsData(Bundle savedInstanceState) {
         if (savedInstanceState.containsKey(ARG_REST_RESPONSE)) {
             mCommentsModel = (CommentsModel) savedInstanceState.getSerializable(ARG_REST_RESPONSE);
         }
         if (savedInstanceState.containsKey(ARG_REST_RESPONSE_FOLLOWERS)) {
-            mCommentFollowersModel = (CommentFollowersModel) savedInstanceState.getSerializable(ARG_REST_RESPONSE_FOLLOWERS);
+            mCommentFollowersModel =
+                    (CommentFollowersModel) savedInstanceState.getSerializable(ARG_REST_RESPONSE_FOLLOWERS);
         }
     }
 
@@ -126,7 +129,7 @@ public class StatsCommentsFragment extends StatsAbstractListFragment {
             String totalCommentsFollowers = getString(R.string.stats_comments_total_comments_followers);
             mTotalsLabel.setText(
                     String.format(totalCommentsFollowers, FormatUtils.formatDecimal(totalNumberOfFollowers))
-            );
+                                );
         }
 
         ArrayAdapter adapter = null;
@@ -147,8 +150,8 @@ public class StatsCommentsFragment extends StatsAbstractListFragment {
 
     private boolean hasAuthors() {
         return mCommentsModel != null
-                && mCommentsModel.getAuthors() != null
-                && mCommentsModel.getAuthors().size() > 0;
+               && mCommentsModel.getAuthors() != null
+               && mCommentsModel.getAuthors().size() > 0;
     }
 
     private List<AuthorModel> getAuthors() {
@@ -159,9 +162,9 @@ public class StatsCommentsFragment extends StatsAbstractListFragment {
     }
 
     private boolean hasPosts() {
-        return  mCommentsModel != null
-                && mCommentsModel.getPosts() != null
-                && mCommentsModel.getPosts().size() > 0;
+        return mCommentsModel != null
+               && mCommentsModel.getPosts() != null
+               && mCommentsModel.getPosts().size() > 0;
     }
 
     private List<StatsPostModel> getPosts() {
@@ -173,9 +176,11 @@ public class StatsCommentsFragment extends StatsAbstractListFragment {
 
     @Override
     protected boolean isViewAllOptionAvailable() {
-        if (mTopPagerSelectedButtonIndex == 0 && hasAuthors() && getAuthors().size() > MAX_NUM_OF_ITEMS_DISPLAYED_IN_LIST) {
+        if (mTopPagerSelectedButtonIndex == 0 && hasAuthors()
+            && getAuthors().size() > MAX_NUM_OF_ITEMS_DISPLAYED_IN_LIST) {
             return true;
-        } else if (mTopPagerSelectedButtonIndex == 1 && hasPosts() && getPosts().size() > MAX_NUM_OF_ITEMS_DISPLAYED_IN_LIST) {
+        } else if (mTopPagerSelectedButtonIndex == 1 && hasPosts()
+                   && getPosts().size() > MAX_NUM_OF_ITEMS_DISPLAYED_IN_LIST) {
             return true;
         }
         return false;
@@ -187,7 +192,6 @@ public class StatsCommentsFragment extends StatsAbstractListFragment {
     }
 
     private class AuthorsAdapter extends ArrayAdapter<AuthorModel> {
-
         private final List<AuthorModel> list;
         private final Activity context;
         private final LayoutInflater inflater;
@@ -220,7 +224,9 @@ public class StatsCommentsFragment extends StatsAbstractListFragment {
             holder.totalsTextView.setText(FormatUtils.formatDecimal(currentRowData.getViews()));
 
             // avatar
-            holder.networkImageView.setImageUrl(GravatarUtils.fixGravatarUrl(currentRowData.getAvatar(), mResourceVars.headerAvatarSizePx), WPNetworkImageView.ImageType.AVATAR);
+            holder.networkImageView.setImageUrl(
+                    GravatarUtils.fixGravatarUrl(currentRowData.getAvatar(), mResourceVars.headerAvatarSizePx),
+                    WPNetworkImageView.ImageType.AVATAR);
             holder.networkImageView.setVisibility(View.VISIBLE);
 
             final FollowDataModel followData = currentRowData.getFollowData();

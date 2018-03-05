@@ -107,20 +107,19 @@ public class SuggestionAdapter extends BaseAdapter implements Filterable {
             if (mOrigSuggestionList == null) {
                 results.values = null;
                 results.count = 0;
-            }
-            else if (constraint == null || constraint.length() == 0) {
+            } else if (constraint == null || constraint.length() == 0) {
                 results.values = mOrigSuggestionList;
                 results.count = mOrigSuggestionList.size();
-            }
-            else {
+            } else {
                 List<Suggestion> nSuggestionList = new ArrayList<Suggestion>();
 
                 for (Suggestion suggestion : mOrigSuggestionList) {
                     String lowerCaseConstraint = constraint.toString().toLowerCase();
                     if (suggestion.getUserLogin().toLowerCase().startsWith(lowerCaseConstraint)
-                            || suggestion.getDisplayName().toLowerCase().startsWith(lowerCaseConstraint)
-                            || suggestion.getDisplayName().toLowerCase().contains(" " + lowerCaseConstraint))
+                        || suggestion.getDisplayName().toLowerCase().startsWith(lowerCaseConstraint)
+                        || suggestion.getDisplayName().toLowerCase().contains(" " + lowerCaseConstraint)) {
                         nSuggestionList.add(suggestion);
+                    }
                 }
 
                 results.values = nSuggestionList;
@@ -133,16 +132,16 @@ public class SuggestionAdapter extends BaseAdapter implements Filterable {
         @Override
         protected void publishResults(CharSequence constraint,
                                       FilterResults results) {
-            if (results.count == 0)
+            if (results.count == 0) {
                 notifyDataSetInvalidated();
-            else {
+            } else {
                 mSuggestionList = (List<Suggestion>) results.values;
                 notifyDataSetChanged();
             }
         }
 
         @Override
-        public CharSequence convertResultToString (Object resultValue) {
+        public CharSequence convertResultToString(Object resultValue) {
             Suggestion suggestion = (Suggestion) resultValue;
             return suggestion.getUserLogin();
         }

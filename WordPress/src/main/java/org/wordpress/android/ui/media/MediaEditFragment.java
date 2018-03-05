@@ -75,7 +75,7 @@ public class MediaEditFragment extends Fragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View view  = inflater.inflate(R.layout.media_edit_fragment, container, false);
+        View view = inflater.inflate(R.layout.media_edit_fragment, container, false);
 
         mTitleView = (EditText) view.findViewById(R.id.media_edit_fragment_title);
         mCaptionView = (EditText) view.findViewById(R.id.media_edit_fragment_caption);
@@ -103,7 +103,9 @@ public class MediaEditFragment extends Fragment {
     }
 
     void loadMedia() {
-        if (!isAdded()) return;
+        if (!isAdded()) {
+            return;
+        }
 
         MediaModel media = mMediaStore.getMediaWithLocalId(mLocalMediaId);
         if (media != null) {
@@ -119,7 +121,9 @@ public class MediaEditFragment extends Fragment {
     }
 
     public void saveChanges() {
-        if (!isAdded()) return;
+        if (!isAdded()) {
+            return;
+        }
 
         MediaModel media = mMediaStore.getMediaWithLocalId(mLocalMediaId);
         if (media == null) {
@@ -133,8 +137,8 @@ public class MediaEditFragment extends Fragment {
         String thisDescription = EditTextUtils.getText(mDescriptionView);
 
         boolean hasChanged = !StringUtils.equals(media.getTitle(), thisTitle)
-                || !StringUtils.equals(media.getCaption(), thisCaption)
-                || !StringUtils.equals(media.getDescription(), thisDescription);
+                             || !StringUtils.equals(media.getCaption(), thisCaption)
+                             || !StringUtils.equals(media.getDescription(), thisDescription);
         if (hasChanged) {
             AppLog.d(AppLog.T.MEDIA, "MediaEditFragment > Saving changes");
             media.setTitle(thisTitle);

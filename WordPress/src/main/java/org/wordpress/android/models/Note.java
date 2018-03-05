@@ -76,7 +76,7 @@ public class Note {
         mNoteJSON = noteJSON;
     }
 
-    public Note(JSONObject noteJSON){
+    public Note(JSONObject noteJSON) {
         mNoteJSON = noteJSON;
         mKey = mNoteJSON.optString("id", "");
     }
@@ -99,8 +99,8 @@ public class Note {
 
     public Boolean isCommentType() {
         synchronized (mSyncLock) {
-            return (isAutomattcherType() && JSONUtils.queryJSON(mNoteJSON, "meta.ids.comment", -1) != -1) ||
-                    isType(NOTE_COMMENT_TYPE);
+            return (isAutomattcherType() && JSONUtils.queryJSON(mNoteJSON, "meta.ids.comment", -1) != -1)
+                   || isType(NOTE_COMMENT_TYPE);
         }
     }
 
@@ -146,7 +146,8 @@ public class Note {
      */
     public boolean canModerate() {
         EnumSet<EnabledActions> enabledActions = getEnabledActions();
-        return enabledActions != null && (enabledActions.contains(EnabledActions.ACTION_APPROVE) || enabledActions.contains(EnabledActions.ACTION_UNAPPROVE));
+        return enabledActions != null && (enabledActions.contains(EnabledActions.ACTION_APPROVE) || enabledActions
+                .contains(EnabledActions.ACTION_UNAPPROVE));
     }
 
     public boolean canMarkAsSpam() {
@@ -216,7 +217,6 @@ public class Note {
 
                 return commentSubject;
             }
-
         }
 
         return "";
@@ -225,7 +225,7 @@ public class Note {
     public String getCommentSubjectNoticon() {
         JSONArray subjectRanges = queryJSON("subject[0].ranges", new JSONArray());
         if (subjectRanges != null) {
-            for (int i=0; i < subjectRanges.length(); i++) {
+            for (int i = 0; i < subjectRanges.length(); i++) {
                 try {
                     JSONObject rangeItem = subjectRanges.getJSONObject(i);
                     if (rangeItem.has("type") && rangeItem.optString("type").equals("noticon")) {
@@ -256,7 +256,7 @@ public class Note {
         } else if (then.compareTo(DateUtils.addWeeks(today, -1)) < 0) {
             return NoteTimeGroup.GROUP_OLDER_WEEK;
         } else if (then.compareTo(DateUtils.addDays(today, -2)) < 0
-                || DateUtils.isSameDay(DateUtils.addDays(today, -2), then)) {
+                   || DateUtils.isSameDay(DateUtils.addDays(today, -2), then)) {
             return NoteTimeGroup.GROUP_OLDER_TWO_DAYS;
         } else if (DateUtils.isSameDay(DateUtils.addDays(today, -1), then)) {
             return NoteTimeGroup.GROUP_YESTERDAY;
@@ -283,10 +283,10 @@ public class Note {
         return queryJSON("read", 0) == 1;
     }
 
-    public void setRead(){
+    public void setRead() {
         try {
             mNoteJSON.putOpt("read", 1);
-        } catch (JSONException e){
+        } catch (JSONException e) {
             AppLog.e(AppLog.T.NOTIFS, "Failed to set 'read' property", e);
         }
     }
@@ -326,7 +326,7 @@ public class Note {
                 try {
                     JSONObject bodyItem = bodyArray.getJSONObject(i);
                     if (bodyItem.has("type") && bodyItem.optString("type").equals("comment")
-                            && commentId == JSONUtils.queryJSON(bodyItem, "meta.ids.comment", 0)) {
+                        && commentId == JSONUtils.queryJSON(bodyItem, "meta.ids.comment", 0)) {
                         mActions = JSONUtils.queryJSON(bodyItem, "actions", new JSONObject());
                         break;
                     }
@@ -393,7 +393,9 @@ public class Note {
      */
     private <U> U queryJSON(String query, U defaultObject) {
         synchronized (mSyncLock) {
-            if (mNoteJSON == null) return defaultObject;
+            if (mNoteJSON == null) {
+                return defaultObject;
+            }
             return JSONUtils.queryJSON(mNoteJSON, query, defaultObject);
         }
     }
@@ -420,7 +422,7 @@ public class Note {
     public String getCommentAuthorName() {
         JSONArray bodyArray = getBody();
 
-        for (int i=0; i < bodyArray.length(); i++) {
+        for (int i = 0; i < bodyArray.length(); i++) {
             try {
                 JSONObject bodyItem = bodyArray.getJSONObject(i);
                 if (bodyItem.has("type") && bodyItem.optString("type").equals("user")) {
@@ -441,7 +443,7 @@ public class Note {
     private String getCommentAuthorUrl() {
         JSONArray bodyArray = getBody();
 
-        for (int i=0; i < bodyArray.length(); i++) {
+        for (int i = 0; i < bodyArray.length(); i++) {
             try {
                 JSONObject bodyItem = bodyArray.getJSONObject(i);
                 if (bodyItem.has("type") && bodyItem.optString("type").equals("user")) {
@@ -491,7 +493,7 @@ public class Note {
         }
 
         if (this.getTimestampString().equalsIgnoreCase(note.getTimestampString())
-                && this.getJSON().length() == note.getJSON().length()) {
+            && this.getJSON().length() == note.getJSON().length()) {
             return true;
         }
         return false;
@@ -500,14 +502,16 @@ public class Note {
     public static synchronized Note buildFromBase64EncodedData(String noteId, String base64FullNoteData) {
         Note note = null;
 
-        if (base64FullNoteData == null) return null;
+        if (base64FullNoteData == null) {
+            return null;
+        }
 
         byte[] b64DecodedPayload = Base64.decode(base64FullNoteData, Base64.DEFAULT);
 
         // Decompress the payload
         Inflater decompresser = new Inflater();
         decompresser.setInput(b64DecodedPayload, 0, b64DecodedPayload.length);
-        byte[] result = new byte[4096]; //max length an Android PN payload can have
+        byte[] result = new byte[4096]; // max length an Android PN payload can have
         int resultLength = 0;
         try {
             resultLength = decompresser.inflate(result);
@@ -533,7 +537,6 @@ public class Note {
                     }
                 }
                 note = new Note(noteId, jsonObject);
-
             } catch (JSONException e) {
                 AppLog.e(AppLog.T.NOTIFS, "Can't parse the Note JSON received in the PN", e);
             }

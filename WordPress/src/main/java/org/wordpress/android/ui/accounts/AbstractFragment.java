@@ -54,7 +54,8 @@ public abstract class AbstractFragment extends Fragment {
 
     protected boolean didPressEnterKey(int actionId, KeyEvent event) {
         return actionId == EditorInfo.IME_ACTION_DONE || event != null && (event.getAction() == KeyEvent.ACTION_DOWN
-                && event.getKeyCode() == KeyEvent.KEYCODE_ENTER);
+                                                                           && event.getKeyCode()
+                                                                              == KeyEvent.KEYCODE_ENTER);
     }
 
     protected void lowerCaseEditable(Editable editable) {

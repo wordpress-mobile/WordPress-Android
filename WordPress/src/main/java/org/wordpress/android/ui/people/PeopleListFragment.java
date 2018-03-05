@@ -92,10 +92,11 @@ public class PeopleListFragment extends Fragment {
         final ViewGroup rootView = (ViewGroup) inflater.inflate(R.layout.people_list_fragment, container, false);
 
         mSite = (SiteModel) getArguments().getSerializable(WordPress.SITE);
-        final boolean isPrivate =  mSite != null && mSite.isPrivate();
+        final boolean isPrivate = mSite != null && mSite.isPrivate();
 
         mFilteredRecyclerView = (FilteredRecyclerView) rootView.findViewById(R.id.filtered_recycler_view);
-        mFilteredRecyclerView.addItemDecoration(new PeopleItemDecoration(getActivity(), R.drawable.people_list_divider));
+        mFilteredRecyclerView
+                .addItemDecoration(new PeopleItemDecoration(getActivity(), R.drawable.people_list_divider));
         mFilteredRecyclerView.setLogT(AppLog.T.PEOPLE);
         mFilteredRecyclerView.setSwipeToRefreshEnabled(false);
 
@@ -120,7 +121,8 @@ public class PeopleListFragment extends Fragment {
             }
 
             @Override
-            public void onLoadFilterCriteriaOptionsAsync(FilteredRecyclerView.FilterCriteriaAsyncLoaderListener listener, boolean refresh) {
+            public void onLoadFilterCriteriaOptionsAsync(
+                    FilteredRecyclerView.FilterCriteriaAsyncLoaderListener listener, boolean refresh) {
                 // no-op
             }
 
@@ -195,7 +197,6 @@ public class PeopleListFragment extends Fragment {
 
             @Override
             public void onShowCustomEmptyView(EmptyViewMessageType emptyViewMsgType) {
-
             }
         });
 
@@ -236,7 +237,9 @@ public class PeopleListFragment extends Fragment {
     }
 
     public void refreshPeopleList(boolean isFetching) {
-        if (!isAdded()) return;
+        if (!isAdded()) {
+            return;
+        }
 
         List<Person> peopleList;
         switch (mPeopleListFilter) {
@@ -389,7 +392,7 @@ public class PeopleListFragment extends Fragment {
                     peopleViewHolder.txtUsername.setVisibility(View.GONE);
                 }
                 if (person.getPersonType() == Person.PersonType.USER
-                        || person.getPersonType() == Person.PersonType.VIEWER) {
+                    || person.getPersonType() == Person.PersonType.VIEWER) {
                     peopleViewHolder.txtSubscribed.setVisibility(View.GONE);
                 } else {
                     peopleViewHolder.txtSubscribed.setVisibility(View.VISIBLE);

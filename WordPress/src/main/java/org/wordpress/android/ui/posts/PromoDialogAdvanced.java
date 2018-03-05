@@ -68,7 +68,8 @@ public class PromoDialogAdvanced extends PromoDialog {
     }
 
     @Override
-    public @NonNull Dialog onCreateDialog(Bundle savedInstanceState) {
+    public @NonNull
+    Dialog onCreateDialog(Bundle savedInstanceState) {
         mLinkResId = getArguments().getInt(KEY_LINK_RES_ID);
         mButtonNegativeResId = getArguments().getInt(KEY_BUTTON_NEGATIVE_RES_ID);
         return super.onCreateDialog(savedInstanceState);

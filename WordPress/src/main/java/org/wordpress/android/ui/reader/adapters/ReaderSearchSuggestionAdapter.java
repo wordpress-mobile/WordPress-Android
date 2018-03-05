@@ -21,7 +21,7 @@ public class ReaderSearchSuggestionAdapter extends CursorAdapter {
     private static final int MAX_SUGGESTIONS = 5;
     private static final int CLEAR_ALL_ROW_ID = -1;
 
-    private static final int NUM_VIEW_TYPES  = 2;
+    private static final int NUM_VIEW_TYPES = 2;
     private static final int VIEW_TYPE_QUERY = 0;
     private static final int VIEW_TYPE_CLEAR = 1;
 

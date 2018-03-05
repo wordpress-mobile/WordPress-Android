@@ -48,12 +48,15 @@ public class FullScreenDialogFragment extends DialogFragment {
 
     public interface FullScreenDialogContent {
         boolean onConfirmClicked(FullScreenDialogController controller);
+
         boolean onDismissClicked(FullScreenDialogController controller);
+
         void onViewCreated(FullScreenDialogController controller);
     }
 
     public interface FullScreenDialogController {
         void confirm(@Nullable Bundle result);
+
         void dismiss();
     }
 
@@ -88,7 +91,8 @@ public class FullScreenDialogFragment extends DialogFragment {
         if (savedInstanceState == null) {
             getChildFragmentManager()
                     .beginTransaction()
-                    .setCustomAnimations(R.anim.full_screen_dialog_fragment_none, 0, 0, R.anim.full_screen_dialog_fragment_none)
+                    .setCustomAnimations(R.anim.full_screen_dialog_fragment_none, 0, 0,
+                                         R.anim.full_screen_dialog_fragment_none)
                     .add(R.id.full_screen_dialog_fragment_content, mFragment)
                     .commitNow();
         }
@@ -133,7 +137,8 @@ public class FullScreenDialogFragment extends DialogFragment {
 
     @Nullable
     @Override
-    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container,
+                             @Nullable Bundle savedInstanceState) {
         initBuilderArguments();
 
         ViewGroup view = (ViewGroup) inflater.inflate(R.layout.full_screen_dialog_fragment, container, false);
@@ -168,7 +173,8 @@ public class FullScreenDialogFragment extends DialogFragment {
     @Override
     public int show(FragmentTransaction transaction, String tag) {
         initBuilderArguments();
-        transaction.setCustomAnimations(R.anim.full_screen_dialog_fragment_slide_up, 0, 0, R.anim.full_screen_dialog_fragment_slide_down);
+        transaction.setCustomAnimations(R.anim.full_screen_dialog_fragment_slide_up, 0, 0,
+                                        R.anim.full_screen_dialog_fragment_slide_down);
         return transaction.add(android.R.id.content, this, tag).addToBackStack(null).commit();
     }
 
@@ -218,18 +224,18 @@ public class FullScreenDialogFragment extends DialogFragment {
         MenuItem action = menu.add(0, ID_ACTION, 0, this.mAction);
         action.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
         action.setOnMenuItemClickListener(
-            new MenuItem.OnMenuItemClickListener() {
-                @Override
-                public boolean onMenuItemClick(MenuItem item) {
-                    if (item.getItemId() == ID_ACTION) {
-                        onConfirmClicked();
-                        return true;
-                    } else {
-                        return false;
+                new MenuItem.OnMenuItemClickListener() {
+                    @Override
+                    public boolean onMenuItemClick(MenuItem item) {
+                        if (item.getItemId() == ID_ACTION) {
+                            onConfirmClicked();
+                            return true;
+                        } else {
+                            return false;
+                        }
                     }
                 }
-            }
-        );
+                                         );
     }
 
     public void onBackPressed() {
@@ -294,7 +300,8 @@ public class FullScreenDialogFragment extends DialogFragment {
             view.setBackgroundColor(value.data);
         } else {
             try {
-                Drawable drawable = ResourcesCompat.getDrawable(getActivity().getResources(), value.resourceId, getActivity().getTheme());
+                Drawable drawable = ResourcesCompat
+                        .getDrawable(getActivity().getResources(), value.resourceId, getActivity().getTheme());
                 ViewCompat.setBackground(view, drawable);
             } catch (Resources.NotFoundException ignore) {
             }
@@ -350,16 +357,15 @@ public class FullScreenDialogFragment extends DialogFragment {
         /**
          * Set {@link Fragment} to be added as dialog, which must implement {@link FullScreenDialogContent}.
          *
-         * @param contentClass     Fragment class to be instantiated
+         * @param contentClass Fragment class to be instantiated
          * @param contentArguments arguments to be added to Fragment
-         *
          * @return {@link Builder} object to allow for chaining of calls to set methods
-         *
          * @throws IllegalArgumentException if content class does not implement {@link FullScreenDialogContent} interface
          */
         public Builder setContent(Class<? extends Fragment> contentClass, @Nullable Bundle contentArguments) {
             if (!FullScreenDialogContent.class.isAssignableFrom(contentClass)) {
-                throw new IllegalArgumentException("The fragment class must implement FullScreenDialogContent interface");
+                throw new IllegalArgumentException(
+                        "The fragment class must implement FullScreenDialogContent interface");
             }
 
             this.mClass = contentClass;
@@ -391,7 +397,6 @@ public class FullScreenDialogFragment extends DialogFragment {
          * Set callback to call when dialog is closed due to confirm click.
          *
          * @param listener {@link OnConfirmListener} interface to call on confirm click
-         *
          * @return {@link Builder} object to allow for chaining of calls to set methods
          */
         public Builder setOnConfirmListener(@Nullable OnConfirmListener listener) {
@@ -403,7 +408,6 @@ public class FullScreenDialogFragment extends DialogFragment {
          * Set callback to call when dialog is closed due to dismiss click.
          *
          * @param listener {@link OnDismissListener} interface to call on dismiss click
-         *
          * @return {@link Builder} object to allow for chaining of calls to set methods
          */
         public Builder setOnDismissListener(@Nullable OnDismissListener listener) {

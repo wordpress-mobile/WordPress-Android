@@ -49,8 +49,8 @@ import java.util.HashMap;
 import javax.inject.Inject;
 
 public class HtmlToSpannedConverter implements ContentHandler {
-    private static final float[] HEADER_SIZES = { 1.5f, 1.4f, 1.3f, 1.2f, 1.1f,
-            1f, };
+    private static final float[] HEADER_SIZES = {1.5f, 1.4f, 1.3f, 1.2f, 1.1f,
+            1f,};
 
     private String mSource;
     private XMLReader mReader;
@@ -96,7 +96,7 @@ public class HtmlToSpannedConverter implements ContentHandler {
 
         // Fix flags and range for paragraph-type markup.
         Object[] obj = mSpannableStringBuilder.getSpans(0,
-                mSpannableStringBuilder.length(), ParagraphStyle.class);
+                                                        mSpannableStringBuilder.length(), ParagraphStyle.class);
         for (int i = 0; i < obj.length; i++) {
             int start = mSpannableStringBuilder.getSpanStart(obj[i]);
             int end = mSpannableStringBuilder.getSpanEnd(obj[i]);
@@ -104,7 +104,7 @@ public class HtmlToSpannedConverter implements ContentHandler {
             // If the last line of the range is blank, back off by one.
             if (end - 2 >= 0) {
                 if (mSpannableStringBuilder.charAt(end - 1) == '\n'
-                        && mSpannableStringBuilder.charAt(end - 2) == '\n') {
+                    && mSpannableStringBuilder.charAt(end - 2) == '\n') {
                     end--;
                 }
             }
@@ -114,7 +114,7 @@ public class HtmlToSpannedConverter implements ContentHandler {
             } else {
                 try {
                     mSpannableStringBuilder.setSpan(obj[i], start, end,
-                            Spannable.SPAN_PARAGRAPH);
+                                                    Spannable.SPAN_PARAGRAPH);
                 } catch (Exception e) {
                 }
             }
@@ -127,9 +127,10 @@ public class HtmlToSpannedConverter implements ContentHandler {
         if (!mysteryTagFound) {
             if (mPost != null) {
                 if (!mPost.isLocalDraft()) {
-                    if (tag.equalsIgnoreCase("img"))
+                    if (tag.equalsIgnoreCase("img")) {
                         startImg(mSpannableStringBuilder, attributes,
-                                mImageGetter);
+                                 mImageGetter);
+                    }
 
                     return;
                 }
@@ -180,8 +181,8 @@ public class HtmlToSpannedConverter implements ContentHandler {
             } else if (tag.equalsIgnoreCase("strike")) {
                 start(mSpannableStringBuilder, new Strike());
             } else if (tag.length() == 2
-                    && Character.toLowerCase(tag.charAt(0)) == 'h'
-                    && tag.charAt(1) >= '1' && tag.charAt(1) <= '6') {
+                       && Character.toLowerCase(tag.charAt(0)) == 'h'
+                       && tag.charAt(1) >= '1' && tag.charAt(1) <= '6') {
                 handleP(mSpannableStringBuilder);
                 start(mSpannableStringBuilder, new Header(tag.charAt(1) - '1'));
             } else if (tag.equalsIgnoreCase("img")) {
@@ -201,8 +202,9 @@ public class HtmlToSpannedConverter implements ContentHandler {
 
     private void handleEndTag(String tag) {
         if (mPost != null) {
-            if (!mPost.isLocalDraft())
+            if (!mPost.isLocalDraft()) {
                 return;
+            }
         }
         if (!mysteryTagFound) {
             if (tag.equalsIgnoreCase("br")) {
@@ -247,17 +249,17 @@ public class HtmlToSpannedConverter implements ContentHandler {
                 endA(mSpannableStringBuilder);
             } else if (tag.equalsIgnoreCase("u")) {
                 end(mSpannableStringBuilder, Underline.class,
-                        new WPUnderlineSpan());
+                    new WPUnderlineSpan());
             } else if (tag.equalsIgnoreCase("sup")) {
                 end(mSpannableStringBuilder, Super.class, new SuperscriptSpan());
             } else if (tag.equalsIgnoreCase("sub")) {
                 end(mSpannableStringBuilder, Sub.class, new SubscriptSpan());
             } else if (tag.equalsIgnoreCase("strike")) {
                 end(mSpannableStringBuilder, Strike.class,
-                        new StrikethroughSpan());
+                    new StrikethroughSpan());
             } else if (tag.length() == 2
-                    && Character.toLowerCase(tag.charAt(0)) == 'h'
-                    && tag.charAt(1) >= '1' && tag.charAt(1) <= '6') {
+                       && Character.toLowerCase(tag.charAt(0)) == 'h'
+                       && tag.charAt(1) >= '1' && tag.charAt(1) <= '6') {
                 handleP(mSpannableStringBuilder);
                 endHeader(mSpannableStringBuilder);
             }
@@ -321,8 +323,9 @@ public class HtmlToSpannedConverter implements ContentHandler {
         int len = text.length();
         Object obj = getLast(text, kind);
         int where = text.getSpanStart(obj);
-        if (where < 0)
+        if (where < 0) {
             where = 0;
+        }
 
         text.removeSpan(obj);
 
@@ -334,7 +337,9 @@ public class HtmlToSpannedConverter implements ContentHandler {
     }
 
     private void startImg(SpannableStringBuilder text, Attributes attributes, WPHtml.ImageGetter img) {
-        if (mContext == null) return;
+        if (mContext == null) {
+            return;
+        }
 
         String src = attributes.getValue("android-uri");
 
@@ -343,9 +348,11 @@ public class HtmlToSpannedConverter implements ContentHandler {
             resizedBitmap = ImageUtils.getWPImageSpanThumbnailFromFilePath(mContext, src, mMaxImageWidth);
             if (resizedBitmap == null && src != null) {
                 if (src.contains("video")) {
-                    resizedBitmap = BitmapFactory.decodeResource(mContext.getResources(), org.wordpress.android.editor.R.drawable.media_movieclip);
+                    resizedBitmap = BitmapFactory.decodeResource(mContext.getResources(),
+                                                                 org.wordpress.android.editor.R.drawable.media_movieclip);
                 } else {
-                    resizedBitmap = BitmapFactory.decodeResource(mContext.getResources(), org.wordpress.android.R.drawable.media_image_placeholder);
+                    resizedBitmap = BitmapFactory.decodeResource(mContext.getResources(),
+                                                                 org.wordpress.android.R.drawable.media_image_placeholder);
                 }
             }
         } catch (OutOfMemoryError e) {
@@ -372,11 +379,11 @@ public class HtmlToSpannedConverter implements ContentHandler {
                 is.setMediaFile(mediaFile);
                 is.setImageSource(curStream);
                 text.setSpan(is, len, text.length(),
-                        Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+                             Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
                 AlignmentSpan.Standard as = new AlignmentSpan.Standard(
                         Layout.Alignment.ALIGN_CENTER);
                 text.setSpan(as, text.getSpanStart(is), text.getSpanEnd(is),
-                        Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+                             Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
             }
         } else if (mPost != null) {
             if (mPost.isLocalDraft()) {
@@ -384,8 +391,9 @@ public class HtmlToSpannedConverter implements ContentHandler {
                     text.append("<img");
                     for (int i = 0; i < attributes.getLength(); i++) {
                         String aName = attributes.getLocalName(i); // Attr name
-                        if ("".equals(aName))
+                        if ("".equals(aName)) {
                             aName = attributes.getQName(i);
+                        }
                         text.append(" ");
                         text.append(aName + "=\"" + attributes.getValue(i) + "\"");
                     }
@@ -393,8 +401,7 @@ public class HtmlToSpannedConverter implements ContentHandler {
                 }
             }
         } else if (src == null) {
-
-            //get regular src value from <img/> tag's src attribute
+            // get regular src value from <img/> tag's src attribute
             src = attributes.getValue("", "src");
             Drawable d = null;
 
@@ -407,11 +414,10 @@ public class HtmlToSpannedConverter implements ContentHandler {
                 text.append("\uFFFC");
 
                 text.setSpan(new ImageSpan(d, src), len, text.length(),
-                        Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+                             Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
             } else {
                 // noop - we're not showing a default image here
             }
-
         }
     }
 
@@ -442,21 +448,21 @@ public class HtmlToSpannedConverter implements ContentHandler {
                     if (colorRes != 0) {
                         ColorStateList colors = res.getColorStateList(colorRes);
                         text.setSpan(new TextAppearanceSpan(null, 0, 0, colors,
-                                        null), where, len,
-                                Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+                                                            null), where, len,
+                                     Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
                     }
                 } else {
                     int c = getHtmlColor(f.mColor);
                     if (c != -1) {
                         text.setSpan(new ForegroundColorSpan(c | 0xFF000000),
-                                where, len, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+                                     where, len, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
                     }
                 }
             }
 
             if (f.mFace != null) {
                 text.setSpan(new TypefaceSpan(f.mFace), where, len,
-                        Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+                             Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
             }
         }
     }
@@ -482,7 +488,7 @@ public class HtmlToSpannedConverter implements ContentHandler {
             if (h != null) {
                 if (h.mHref != null) {
                     text.setSpan(new URLSpan(h.mHref), where, len,
-                            Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+                                 Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
                 }
             }
         }
@@ -505,9 +511,9 @@ public class HtmlToSpannedConverter implements ContentHandler {
             Header h = (Header) obj;
 
             text.setSpan(new RelativeSizeSpan(HEADER_SIZES[h.mLevel]), where,
-                    len, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+                         len, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
             text.setSpan(new StyleSpan(Typeface.BOLD), where, len,
-                    Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+                         Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
         }
     }
 
@@ -534,17 +540,19 @@ public class HtmlToSpannedConverter implements ContentHandler {
         }
 
         String eName = localName; // element name
-        if ("".equals(eName))
+        if ("".equals(eName)) {
             eName = qName; // not namespace-aware
+        }
         mysteryTagContent += "<" + eName;
         if (attributes != null) {
             for (int i = 0; i < attributes.getLength(); i++) {
                 String aName = attributes.getLocalName(i); // Attr name
-                if ("".equals(aName))
+                if ("".equals(aName)) {
                     aName = attributes.getQName(i);
+                }
                 mysteryTagContent += " ";
                 mysteryTagContent += aName + "=\"" + attributes.getValue(i)
-                        + "\"";
+                                     + "\"";
             }
         }
         mysteryTagContent += ">";
@@ -598,13 +606,15 @@ public class HtmlToSpannedConverter implements ContentHandler {
 
         try {
             if (mysteryTagFound) {
-                if (sb.length() < length)
+                if (sb.length() < length) {
                     mysteryTagContent += sb.toString().substring(start,
-                            length - 1);
-                else
+                                                                 length - 1);
+                } else {
                     mysteryTagContent += sb.toString().substring(start, length);
-            } else
+                }
+            } else {
                 mSpannableStringBuilder.append(sb);
+            }
         } catch (RuntimeException e) {
             AppLog.e(AppLog.T.UTILS, e);
         }
@@ -703,10 +713,9 @@ public class HtmlToSpannedConverter implements ContentHandler {
     /**
      * Converts an HTML color (named or numeric) to an integer RGB value.
      *
-     * @param color
-     *            Non-null color string.
+     * @param color Non-null color string.
      * @return A color value, or {@code -1} if the color string could not be
-     *         interpreted.
+     * interpreted.
      */
     private static int getHtmlColor(String color) {
         Integer i = COLORS.get(color.toLowerCase());
@@ -723,8 +732,9 @@ public class HtmlToSpannedConverter implements ContentHandler {
 
     public static final int convertValueToInt(CharSequence charSeq,
                                               int defaultValue) {
-        if (null == charSeq)
+        if (null == charSeq) {
             return defaultValue;
+        }
 
         String nm = charSeq.toString();
 
@@ -743,8 +753,9 @@ public class HtmlToSpannedConverter implements ContentHandler {
 
         if ('0' == nm.charAt(index)) {
             // Quick check for a zero by itself
-            if (index == (len - 1))
+            if (index == (len - 1)) {
                 return 0;
+            }
 
             char c = nm.charAt(index + 1);
 

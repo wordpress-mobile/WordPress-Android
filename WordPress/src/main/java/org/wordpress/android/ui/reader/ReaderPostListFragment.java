@@ -84,10 +84,9 @@ import de.greenrobot.event.EventBus;
 
 public class ReaderPostListFragment extends Fragment
         implements ReaderInterfaces.OnPostSelectedListener,
-                   ReaderInterfaces.OnPostPopupListener,
-                   WPMainActivity.OnActivityBackPressedListener,
-                   WPMainActivity.OnScrollToTopListener {
-
+        ReaderInterfaces.OnPostPopupListener,
+        WPMainActivity.OnActivityBackPressedListener,
+        WPMainActivity.OnScrollToTopListener {
     private ReaderPostAdapter mPostAdapter;
     private ReaderSearchSuggestionAdapter mSearchSuggestionAdapter;
 
@@ -126,9 +125,11 @@ public class ReaderPostListFragment extends Fragment
 
     private static class HistoryStack extends Stack<String> {
         private final String keyName;
+
         HistoryStack(@SuppressWarnings("SameParameterValue") String keyName) {
             this.keyName = keyName;
         }
+
         void restoreInstance(Bundle bundle) {
             clear();
             if (bundle.containsKey(keyName)) {
@@ -138,6 +139,7 @@ public class ReaderPostListFragment extends Fragment
                 }
             }
         }
+
         void saveInstance(Bundle bundle) {
             if (!isEmpty()) {
                 ArrayList<String> history = new ArrayList<>();
@@ -243,7 +245,8 @@ public class ReaderPostListFragment extends Fragment
                 mCurrentSearchQuery = savedInstanceState.getString(ReaderConstants.ARG_SEARCH_QUERY);
             }
             if (savedInstanceState.containsKey(ReaderConstants.ARG_POST_LIST_TYPE)) {
-                mPostListType = (ReaderPostListType) savedInstanceState.getSerializable(ReaderConstants.ARG_POST_LIST_TYPE);
+                mPostListType =
+                        (ReaderPostListType) savedInstanceState.getSerializable(ReaderConstants.ARG_POST_LIST_TYPE);
             }
             if (getPostListType() == ReaderPostListType.TAG_PREVIEW) {
                 mTagPreviewHistory.restoreInstance(savedInstanceState);
@@ -330,7 +333,7 @@ public class ReaderPostListFragment extends Fragment
     /*
      * ensures the adapter is created and posts are updated if they haven't already been
      */
-    private void checkPostAdapter()  {
+    private void checkPostAdapter() {
         if (isAdded() && mRecyclerView.getAdapter() == null) {
             mRecyclerView.setAdapter(getPostAdapter());
 
@@ -374,8 +377,8 @@ public class ReaderPostListFragment extends Fragment
     public void onEventMainThread(ReaderEvents.FollowedBlogsChanged event) {
         // refresh posts if user is viewing "Followed Sites"
         if (getPostListType() == ReaderPostListType.TAG_FOLLOWED
-                && hasCurrentTag()
-                && getCurrentTag().isFollowedSites()) {
+            && hasCurrentTag()
+            && getCurrentTag().isFollowedSites()) {
             refreshPosts();
         }
     }
@@ -434,7 +437,6 @@ public class ReaderPostListFragment extends Fragment
             @Override
             public void onLoadFilterCriteriaOptionsAsync(
                     FilteredRecyclerView.FilterCriteriaAsyncLoaderListener listener, boolean refresh) {
-
                 loadTags(listener);
             }
 
@@ -448,7 +450,7 @@ public class ReaderPostListFragment extends Fragment
                     return;
                 }
 
-                if (mFirstLoad){
+                if (mFirstLoad) {
                     /* let onResume() take care of this logic, as the FilteredRecyclerView.FilterListener onLoadData method
                     * is called on two moments: once for first time load, and then each time the swipe to refresh gesture
                     * triggers a refresh
@@ -472,7 +474,7 @@ public class ReaderPostListFragment extends Fragment
 
             @Override
             public void onFilterSelected(int position, FilterCriteria criteria) {
-                onTagChanged((ReaderTag)criteria);
+                onTagChanged((ReaderTag) criteria);
             }
 
             @Override
@@ -491,13 +493,12 @@ public class ReaderPostListFragment extends Fragment
             }
 
             @Override
-            public void onShowCustomEmptyView (EmptyViewMessageType emptyViewMsgType) {
+            public void onShowCustomEmptyView(EmptyViewMessageType emptyViewMsgType) {
                 setEmptyTitleAndDescription(
                         EmptyViewMessageType.NETWORK_ERROR.equals(emptyViewMsgType)
-                                || EmptyViewMessageType.PERMISSION_ERROR.equals(emptyViewMsgType)
-                                || EmptyViewMessageType.GENERIC_ERROR.equals(emptyViewMsgType));
+                        || EmptyViewMessageType.PERMISSION_ERROR.equals(emptyViewMsgType)
+                        || EmptyViewMessageType.GENERIC_ERROR.equals(emptyViewMsgType));
             }
-
         });
 
         // add the item decoration (dividers) to the recycler, skipping the first item if the first
@@ -516,8 +517,8 @@ public class ReaderPostListFragment extends Fragment
                 getResources().getDimensionPixelSize(R.dimen.margin_extra_large) + spacingHorizontal);
 
         // add a menu to the filtered recycler's toolbar
-        if (mAccountStore.hasAccessToken() && (getPostListType() == ReaderPostListType.TAG_FOLLOWED ||
-                getPostListType() == ReaderPostListType.SEARCH_RESULTS)) {
+        if (mAccountStore.hasAccessToken() && (getPostListType() == ReaderPostListType.TAG_FOLLOWED
+                                               || getPostListType() == ReaderPostListType.SEARCH_RESULTS)) {
             setupRecyclerToolbar();
         }
 
@@ -603,23 +604,23 @@ public class ReaderPostListFragment extends Fragment
         });
 
         mSearchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
-               @Override
-               public boolean onQueryTextSubmit(String query) {
-                   submitSearchQuery(query);
-                   return true;
-               }
+                                               @Override
+                                               public boolean onQueryTextSubmit(String query) {
+                                                   submitSearchQuery(query);
+                                                   return true;
+                                               }
 
-               @Override
-               public boolean onQueryTextChange(String newText) {
-                   if (TextUtils.isEmpty(newText)) {
-                       showSearchMessage();
-                   } else {
-                       populateSearchSuggestionAdapter(newText);
-                   }
-                   return true;
-               }
-           }
-        );
+                                               @Override
+                                               public boolean onQueryTextChange(String newText) {
+                                                   if (TextUtils.isEmpty(newText)) {
+                                                       showSearchMessage();
+                                                   } else {
+                                                       populateSearchSuggestionAdapter(newText);
+                                                   }
+                                                   return true;
+                                               }
+                                           }
+                                          );
     }
 
     /*
@@ -631,7 +632,9 @@ public class ReaderPostListFragment extends Fragment
     }
 
     private void submitSearchQuery(@NonNull String query) {
-        if (!isAdded()) return;
+        if (!isAdded()) {
+            return;
+        }
 
         mSearchView.clearFocus(); // this will hide suggestions and the virtual keyboard
         hideSearchMessage();
@@ -661,7 +664,9 @@ public class ReaderPostListFragment extends Fragment
      * reuse "empty" view to let user know what they're querying
      */
     private void showSearchMessage() {
-        if (!isAdded()) return;
+        if (!isAdded()) {
+            return;
+        }
 
         // clear posts so only the empty view is visible
         getPostAdapter().clear();
@@ -723,7 +728,9 @@ public class ReaderPostListFragment extends Fragment
 
     @SuppressWarnings("unused")
     public void onEventMainThread(ReaderEvents.SearchPostsStarted event) {
-        if (!isAdded()) return;
+        if (!isAdded()) {
+            return;
+        }
 
         UpdateAction updateAction = event.getOffset() == 0 ? UpdateAction.REQUEST_NEWER : UpdateAction.REQUEST_OLDER;
         setIsUpdating(true, updateAction);
@@ -732,7 +739,9 @@ public class ReaderPostListFragment extends Fragment
 
     @SuppressWarnings("unused")
     public void onEventMainThread(ReaderEvents.SearchPostsEnded event) {
-        if (!isAdded()) return;
+        if (!isAdded()) {
+            return;
+        }
 
         UpdateAction updateAction = event.getOffset() == 0 ? UpdateAction.REQUEST_NEWER : UpdateAction.REQUEST_OLDER;
         setIsUpdating(false, updateAction);
@@ -741,8 +750,8 @@ public class ReaderPostListFragment extends Fragment
         // means the search didn't fail, not necessarily that is has results - which is fine because
         // if there aren't results then refreshing will show the empty message
         if (event.didSucceed()
-                && getPostListType() == ReaderPostListType.SEARCH_RESULTS
-                && event.getQuery().equals(mCurrentSearchQuery)) {
+            && getPostListType() == ReaderPostListType.SEARCH_RESULTS
+            && event.getQuery().equals(mCurrentSearchQuery)) {
             refreshPosts();
         }
     }
@@ -752,8 +761,8 @@ public class ReaderPostListFragment extends Fragment
      */
     private void toggleFollowStatusForPost(final ReaderPost post) {
         if (post == null
-                || !hasPostAdapter()
-                || !NetworkUtils.checkConnection(getActivity())) {
+            || !hasPostAdapter()
+            || !NetworkUtils.checkConnection(getActivity())) {
             return;
         }
 
@@ -763,7 +772,8 @@ public class ReaderPostListFragment extends Fragment
             @Override
             public void onActionResult(boolean succeeded) {
                 if (isAdded() && !succeeded) {
-                    int resId = (isAskingToFollow ? R.string.reader_toast_err_follow_blog : R.string.reader_toast_err_unfollow_blog);
+                    int resId = (isAskingToFollow ? R.string.reader_toast_err_follow_blog
+                            : R.string.reader_toast_err_unfollow_blog);
                     ToastUtils.showToast(getActivity(), resId);
                     getPostAdapter().setFollowStatusForBlog(post.blogId, !isAskingToFollow);
                 }
@@ -781,9 +791,9 @@ public class ReaderPostListFragment extends Fragment
      */
     private void blockBlogForPost(final ReaderPost post) {
         if (post == null
-                || !isAdded()
-                || !hasPostAdapter()
-                || !NetworkUtils.checkConnection(getActivity())) {
+            || !isAdded()
+            || !hasPostAdapter()
+            || !NetworkUtils.checkConnection(getActivity())) {
             return;
         }
 
@@ -825,7 +835,9 @@ public class ReaderPostListFragment extends Fragment
     }
 
     private void startBoxAndPagesAnimation() {
-        if (!isAdded()) return;
+        if (!isAdded()) {
+            return;
+        }
 
         ImageView page1 = (ImageView) mEmptyView.findViewById(R.id.empty_tags_box_page1);
         ImageView page2 = (ImageView) mEmptyView.findViewById(R.id.empty_tags_box_page2);
@@ -837,7 +849,9 @@ public class ReaderPostListFragment extends Fragment
     }
 
     private void setEmptyTitleAndDescription(boolean requestFailed) {
-        if (!isAdded()) return;
+        if (!isAdded()) {
+            return;
+        }
 
         String title;
         String description = null;
@@ -880,7 +894,8 @@ public class ReaderPostListFragment extends Fragment
                     } else {
                         title = getString(R.string.reader_empty_posts_in_search_title);
                         String formattedQuery = "<em>" + mCurrentSearchQuery + "</em>";
-                        description = String.format(getString(R.string.reader_empty_posts_in_search_description), formattedQuery);
+                        description = String.format(getString(R.string.reader_empty_posts_in_search_description),
+                                                    formattedQuery);
                     }
                     break;
 
@@ -894,7 +909,9 @@ public class ReaderPostListFragment extends Fragment
     }
 
     private void setEmptyTitleAndDescription(@NonNull String title, String description) {
-        if (!isAdded()) return;
+        if (!isAdded()) {
+            return;
+        }
 
         TextView titleView = (TextView) mEmptyView.findViewById(R.id.title_empty);
         titleView.setText(title);
@@ -956,49 +973,51 @@ public class ReaderPostListFragment extends Fragment
     /*
      * called by post adapter to load older posts when user scrolls to the last post
      */
-    private final ReaderActions.DataRequestedListener mDataRequestedListener = new ReaderActions.DataRequestedListener() {
-        @Override
-        public void onRequestData() {
-            // skip if update is already in progress
-            if (isUpdating()) {
-                return;
-            }
+    private final ReaderActions.DataRequestedListener mDataRequestedListener =
+            new ReaderActions.DataRequestedListener() {
+                @Override
+                public void onRequestData() {
+                    // skip if update is already in progress
+                    if (isUpdating()) {
+                        return;
+                    }
 
-            // request older posts unless we already have the max # to show
-            switch (getPostListType()) {
-                case TAG_FOLLOWED:
-                case TAG_PREVIEW:
-                    if (ReaderPostTable.getNumPostsWithTag(mCurrentTag) < ReaderConstants.READER_MAX_POSTS_TO_DISPLAY) {
-                        // request older posts
-                        updatePostsWithTag(getCurrentTag(), UpdateAction.REQUEST_OLDER);
-                        AnalyticsTracker.track(AnalyticsTracker.Stat.READER_INFINITE_SCROLL);
-                    }
-                    break;
+                    // request older posts unless we already have the max # to show
+                    switch (getPostListType()) {
+                        case TAG_FOLLOWED:
+                        case TAG_PREVIEW:
+                            if (ReaderPostTable.getNumPostsWithTag(mCurrentTag)
+                                < ReaderConstants.READER_MAX_POSTS_TO_DISPLAY) {
+                                // request older posts
+                                updatePostsWithTag(getCurrentTag(), UpdateAction.REQUEST_OLDER);
+                                AnalyticsTracker.track(AnalyticsTracker.Stat.READER_INFINITE_SCROLL);
+                            }
+                            break;
 
-                case BLOG_PREVIEW:
-                    int numPosts;
-                    if (mCurrentFeedId != 0) {
-                        numPosts = ReaderPostTable.getNumPostsInFeed(mCurrentFeedId);
-                    } else {
-                        numPosts = ReaderPostTable.getNumPostsInBlog(mCurrentBlogId);
-                    }
-                    if (numPosts < ReaderConstants.READER_MAX_POSTS_TO_DISPLAY) {
-                        updatePostsInCurrentBlogOrFeed(UpdateAction.REQUEST_OLDER);
-                        AnalyticsTracker.track(AnalyticsTracker.Stat.READER_INFINITE_SCROLL);
-                    }
-                    break;
+                        case BLOG_PREVIEW:
+                            int numPosts;
+                            if (mCurrentFeedId != 0) {
+                                numPosts = ReaderPostTable.getNumPostsInFeed(mCurrentFeedId);
+                            } else {
+                                numPosts = ReaderPostTable.getNumPostsInBlog(mCurrentBlogId);
+                            }
+                            if (numPosts < ReaderConstants.READER_MAX_POSTS_TO_DISPLAY) {
+                                updatePostsInCurrentBlogOrFeed(UpdateAction.REQUEST_OLDER);
+                                AnalyticsTracker.track(AnalyticsTracker.Stat.READER_INFINITE_SCROLL);
+                            }
+                            break;
 
-                case SEARCH_RESULTS:
-                    ReaderTag searchTag = ReaderSearchService.getTagForSearchQuery(mCurrentSearchQuery);
-                    int offset = ReaderPostTable.getNumPostsWithTag(searchTag);
-                    if (offset < ReaderConstants.READER_MAX_POSTS_TO_DISPLAY) {
-                        updatePostsInCurrentSearch(offset);
-                        AnalyticsTracker.track(AnalyticsTracker.Stat.READER_INFINITE_SCROLL);
+                        case SEARCH_RESULTS:
+                            ReaderTag searchTag = ReaderSearchService.getTagForSearchQuery(mCurrentSearchQuery);
+                            int offset = ReaderPostTable.getNumPostsWithTag(searchTag);
+                            if (offset < ReaderConstants.READER_MAX_POSTS_TO_DISPLAY) {
+                                updatePostsInCurrentSearch(offset);
+                                AnalyticsTracker.track(AnalyticsTracker.Stat.READER_INFINITE_SCROLL);
+                            }
+                            break;
                     }
-                    break;
-            }
-        }
-    };
+                }
+            };
 
     private ReaderPostAdapter getPostAdapter() {
         if (mPostAdapter == null) {
@@ -1035,6 +1054,7 @@ public class ReaderPostListFragment extends Fragment
     private boolean isCurrentTag(final ReaderTag tag) {
         return ReaderTag.isSameTag(tag, mCurrentTag);
     }
+
     private boolean isCurrentTagName(String tagName) {
         return (tagName != null && tagName.equalsIgnoreCase(getCurrentTagName()));
     }
@@ -1058,8 +1078,8 @@ public class ReaderPostListFragment extends Fragment
 
         // skip if this is already the current tag and the post adapter is already showing it
         if (isCurrentTag(tag)
-                && hasPostAdapter()
-                && getPostAdapter().isCurrentTag(tag)) {
+            && hasPostAdapter()
+            && getPostAdapter().isCurrentTag(tag)) {
             return;
         }
 
@@ -1175,7 +1195,9 @@ public class ReaderPostListFragment extends Fragment
 
     @SuppressWarnings("unused")
     public void onEventMainThread(ReaderEvents.UpdatePostsStarted event) {
-        if (!isAdded()) return;
+        if (!isAdded()) {
+            return;
+        }
 
         setIsUpdating(true, event.getAction());
         setEmptyTitleAndDescription(false);
@@ -1183,7 +1205,9 @@ public class ReaderPostListFragment extends Fragment
 
     @SuppressWarnings("unused")
     public void onEventMainThread(ReaderEvents.UpdatePostsEnded event) {
-        if (!isAdded()) return;
+        if (!isAdded()) {
+            return;
+        }
 
         setIsUpdating(false, event.getAction());
         if (event.getReaderTag() != null && !isCurrentTag(event.getReaderTag())) {
@@ -1193,7 +1217,7 @@ public class ReaderPostListFragment extends Fragment
         // don't show new posts if user is searching - posts will automatically
         // appear when search is exited
         if (isSearchViewExpanded()
-                || getPostListType() == ReaderPostListType.SEARCH_RESULTS) {
+            || getPostListType() == ReaderPostListType.SEARCH_RESULTS) {
             return;
         }
 
@@ -1202,10 +1226,10 @@ public class ReaderPostListFragment extends Fragment
         // when there are new posts in a followed tag and the user has scrolled the list
         // beyond the first post
         if (event.getResult() == ReaderActions.UpdateResult.HAS_NEW
-                && event.getAction() == UpdateAction.REQUEST_NEWER
-                && getPostListType() == ReaderPostListType.TAG_FOLLOWED
-                && !isPostAdapterEmpty()
-                && (!isAdded() || !mRecyclerView.isFirstItemVisible())) {
+            && event.getAction() == UpdateAction.REQUEST_NEWER
+            && getPostListType() == ReaderPostListType.TAG_FOLLOWED
+            && !isPostAdapterEmpty()
+            && (!isAdded() || !mRecyclerView.isFirstItemVisible())) {
             showNewPostsBar();
         } else if (event.getResult().isNewOrChanged()) {
             refreshPosts();
@@ -1225,7 +1249,9 @@ public class ReaderPostListFragment extends Fragment
      * get latest posts for this tag from the server
      */
     private void updatePostsWithTag(ReaderTag tag, UpdateAction updateAction) {
-        if (!isAdded()) return;
+        if (!isAdded()) {
+            return;
+        }
 
         if (!NetworkUtils.isNetworkAvailable(getActivity())) {
             AppLog.i(T.READER, "reader post list > network unavailable, canceled tag update");
@@ -1235,7 +1261,8 @@ public class ReaderPostListFragment extends Fragment
             AppLog.w(T.READER, "null tag passed to updatePostsWithTag");
             return;
         }
-        AppLog.d(T.READER, "reader post list > updating tag " + tag.getTagNameForLog() + ", updateAction=" + updateAction.name());
+        AppLog.d(T.READER,
+                 "reader post list > updating tag " + tag.getTagNameForLog() + ", updateAction=" + updateAction.name());
         ReaderPostService.startServiceForTag(getActivity(), tag, updateAction);
     }
 
@@ -1372,7 +1399,9 @@ public class ReaderPostListFragment extends Fragment
 
         Animation.AnimationListener listener = new Animation.AnimationListener() {
             @Override
-            public void onAnimationStart(Animation animation) { }
+            public void onAnimationStart(Animation animation) {
+            }
+
             @Override
             public void onAnimationEnd(Animation animation) {
                 if (isAdded()) {
@@ -1380,8 +1409,10 @@ public class ReaderPostListFragment extends Fragment
                     mIsAnimatingOutNewPostsBar = false;
                 }
             }
+
             @Override
-            public void onAnimationRepeat(Animation animation) { }
+            public void onAnimationRepeat(Animation animation) {
+            }
         };
         AniUtils.startAnimation(mNewPostsBar, R.anim.reader_top_bar_out, listener);
     }
@@ -1399,12 +1430,15 @@ public class ReaderPostListFragment extends Fragment
      */
     @Override
     public void onPostSelected(ReaderPost post) {
-        if (!isAdded() || post == null) return;
+        if (!isAdded() || post == null) {
+            return;
+        }
 
         // "discover" posts that highlight another post should open the original (source) post when tapped
         if (post.isDiscoverPost()) {
             ReaderPostDiscoverData discoverData = post.getDiscoverData();
-            if (discoverData != null && discoverData.getDiscoverType() == ReaderPostDiscoverData.DiscoverType.EDITOR_PICK) {
+            if (discoverData != null
+                && discoverData.getDiscoverType() == ReaderPostDiscoverData.DiscoverType.EDITOR_PICK) {
                 if (discoverData.getBlogId() != 0 && discoverData.getPostId() != 0) {
                     ReaderActivityLauncher.showReaderPostDetail(
                             getActivity(),
@@ -1455,7 +1489,9 @@ public class ReaderPostListFragment extends Fragment
      * called when user selects a tag from the tag toolbar
      */
     private void onTagChanged(ReaderTag tag) {
-        if (!isAdded() || isCurrentTag(tag)) return;
+        if (!isAdded() || isCurrentTag(tag)) {
+            return;
+        }
 
         trackTagLoaded(tag);
         AppLog.d(T.READER, String.format("reader post list > tag %s displayed", tag.getTagNameForLog()));
@@ -1473,7 +1509,9 @@ public class ReaderPostListFragment extends Fragment
             stat = AnalyticsTracker.Stat.READER_LIST_LOADED;
         }
 
-        if (stat == null) return;
+        if (stat == null) {
+            return;
+        }
 
         Map<String, String> properties = new HashMap<>();
         properties.put("tag", tag.getTagSlug());
@@ -1486,7 +1524,9 @@ public class ReaderPostListFragment extends Fragment
      */
     @Override
     public void onShowPostPopup(View view, final ReaderPost post) {
-        if (view == null || post == null || !isAdded()) return;
+        if (view == null || post == null || !isAdded()) {
+            return;
+        }
 
         Context context = view.getContext();
         final ListPopupWindow listPopup = new ListPopupWindow(context);
@@ -1508,10 +1548,12 @@ public class ReaderPostListFragment extends Fragment
         listPopup.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                if (!isAdded()) return;
+                if (!isAdded()) {
+                    return;
+                }
 
                 listPopup.dismiss();
-                switch((int) id) {
+                switch ((int) id) {
                     case ReaderMenuAdapter.ITEM_FOLLOW:
                     case ReaderMenuAdapter.ITEM_UNFOLLOW:
                         toggleFollowStatusForPost(post);
@@ -1565,10 +1607,9 @@ public class ReaderPostListFragment extends Fragment
     }
 
     private class LoadTagsTask extends AsyncTask<Void, Void, ReaderTagList> {
-
         private final FilteredRecyclerView.FilterCriteriaAsyncLoaderListener mFilterCriteriaLoaderListener;
 
-        public LoadTagsTask(FilteredRecyclerView.FilterCriteriaAsyncLoaderListener listener){
+        public LoadTagsTask(FilteredRecyclerView.FilterCriteriaAsyncLoaderListener listener) {
             mFilterCriteriaLoaderListener = listener;
         }
 
@@ -1586,11 +1627,12 @@ public class ReaderPostListFragment extends Fragment
                 mTags.clear();
                 mTags.addAll(tagList);
                 if (mFilterCriteriaLoaderListener != null)
-                    //noinspection unchecked
-                    mFilterCriteriaLoaderListener.onFilterCriteriasLoaded((List)mTags);
+                // noinspection unchecked
+                {
+                    mFilterCriteriaLoaderListener.onFilterCriteriasLoaded((List) mTags);
+                }
             }
         }
     }
-
 }
 

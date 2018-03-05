@@ -11,7 +11,6 @@ import java.util.Map;
 
 // Maps to notification settings returned from the /me/notifications/settings endpoint on wp.com
 public class NotificationsSettings {
-
     public static final String KEY_BLOGS = "blogs";
     public static final String KEY_OTHER = "other";
     public static final String KEY_DOTCOM = "wpcom";
@@ -63,7 +62,7 @@ public class NotificationsSettings {
         mDotcomSettings = JSONUtils.queryJSON(json, KEY_DOTCOM, new JSONObject());
 
         JSONArray siteSettingsArray = JSONUtils.queryJSON(json, KEY_BLOGS, new JSONArray());
-        for (int i=0; i < siteSettingsArray.length(); i++) {
+        for (int i = 0; i < siteSettingsArray.length(); i++) {
             try {
                 JSONObject siteSetting = siteSettingsArray.getJSONObject(i);
                 mBlogSettings.put(siteSetting.optLong(KEY_BLOG_ID), siteSetting);
@@ -74,7 +73,8 @@ public class NotificationsSettings {
     }
 
     // Updates a specific notification setting after a user makes a change
-    public void updateSettingForChannelAndType(Channel channel, Type type, String settingName, boolean newValue, long blogId) {
+    public void updateSettingForChannelAndType(Channel channel, Type type, String settingName, boolean newValue,
+                                               long blogId) {
         String typeName = type.toString();
         try {
             switch (channel) {

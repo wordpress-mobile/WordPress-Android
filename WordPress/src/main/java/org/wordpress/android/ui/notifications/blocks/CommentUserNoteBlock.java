@@ -18,7 +18,6 @@ import org.wordpress.android.widgets.WPNetworkImageView;
 
 // A user block with slightly different formatting for display in a comment detail
 public class CommentUserNoteBlock extends UserNoteBlock {
-
     private CommentStatus mCommentStatus = CommentStatus.APPROVED;
     private int mNormalBackgroundColor;
     private int mNormalTextColor;
@@ -29,7 +28,7 @@ public class CommentUserNoteBlock extends UserNoteBlock {
     private boolean mStatusChanged;
 
     public interface OnCommentStatusChangeListener {
-         void onCommentStatusChanged(CommentStatus newStatus);
+        void onCommentStatusChanged(CommentStatus newStatus);
     }
 
     public CommentUserNoteBlock(Context context, JSONObject noteObject,
@@ -54,11 +53,11 @@ public class CommentUserNoteBlock extends UserNoteBlock {
 
     @Override
     public View configureView(View view) {
-        final CommentUserNoteBlockHolder noteBlockHolder = (CommentUserNoteBlockHolder)view.getTag();
+        final CommentUserNoteBlockHolder noteBlockHolder = (CommentUserNoteBlockHolder) view.getTag();
 
         noteBlockHolder.nameTextView.setText(Html.fromHtml("<strong>" + getNoteText().toString() + "</strong>"));
         noteBlockHolder.agoTextView.setText(DateTimeUtils.timeSpanFromTimestamp(getTimestamp(),
-                WordPress.getContext()));
+                                                                                WordPress.getContext()));
         if (!TextUtils.isEmpty(getMetaHomeTitle()) || !TextUtils.isEmpty(getMetaSiteUrl())) {
             noteBlockHolder.bulletTextView.setVisibility(View.VISIBLE);
             noteBlockHolder.siteTextView.setVisibility(View.VISIBLE);
@@ -91,7 +90,7 @@ public class CommentUserNoteBlock extends UserNoteBlock {
                         noteBlockHolder.commentTextView,
                         getOnNoteBlockTextClickListener(),
                         false)
-        );
+                                               );
 
         // Change display based on comment status and type:
         // 1. Comment replies are indented and have a 'pipe' background
@@ -172,14 +171,14 @@ public class CommentUserNoteBlock extends UserNoteBlock {
         private final View dividerView;
 
         public CommentUserNoteBlockHolder(View view) {
-            nameTextView = (TextView)view.findViewById(R.id.user_name);
-            agoTextView = (TextView)view.findViewById(R.id.user_comment_ago);
+            nameTextView = (TextView) view.findViewById(R.id.user_name);
+            agoTextView = (TextView) view.findViewById(R.id.user_comment_ago);
             agoTextView.setVisibility(View.VISIBLE);
-            bulletTextView = (TextView)view.findViewById(R.id.user_comment_bullet);
-            siteTextView = (TextView)view.findViewById(R.id.user_comment_site);
-            commentTextView = (TextView)view.findViewById(R.id.user_comment);
+            bulletTextView = (TextView) view.findViewById(R.id.user_comment_bullet);
+            siteTextView = (TextView) view.findViewById(R.id.user_comment_site);
+            commentTextView = (TextView) view.findViewById(R.id.user_comment);
             commentTextView.setMovementMethod(new NoteBlockLinkMovementMethod());
-            avatarImageView = (WPNetworkImageView)view.findViewById(R.id.user_avatar);
+            avatarImageView = (WPNetworkImageView) view.findViewById(R.id.user_avatar);
             dividerView = view.findViewById(R.id.divider_view);
 
             siteTextView.setOnClickListener(new View.OnClickListener() {
@@ -204,7 +203,9 @@ public class CommentUserNoteBlock extends UserNoteBlock {
     }
 
     public void configureResources(Context context) {
-        if (context == null) return;
+        if (context == null) {
+            return;
+        }
 
         mNormalTextColor = context.getResources().getColor(R.color.grey_dark);
         mNormalBackgroundColor = context.getResources().getColor(R.color.white);

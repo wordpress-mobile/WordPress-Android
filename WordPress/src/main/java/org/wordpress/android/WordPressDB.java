@@ -30,7 +30,8 @@ public class WordPressDB {
     private static final String THEMES_TABLE = "themes";
 
     // add new table for QuickPress homescreen shortcuts
-    private static final String CREATE_TABLE_QUICKPRESS_SHORTCUTS = "create table if not exists quickpress_shortcuts (id integer primary key autoincrement, accountId text, name text);";
+    private static final String CREATE_TABLE_QUICKPRESS_SHORTCUTS =
+            "create table if not exists quickpress_shortcuts (id integer primary key autoincrement, accountId text, name text);";
     private static final String QUICKPRESS_SHORTCUTS_TABLE = "quickpress_shortcuts";
 
     private static final String DROP_TABLE_PREFIX = "DROP TABLE IF EXISTS ";
@@ -98,10 +99,10 @@ public class WordPressDB {
             case 24:
                 currentVersion++;
             case 25:
-                //ver 26 "virtually" remove columns 'lastCommentId' and 'runService' from the DB
-                //SQLite supports a limited subset of ALTER TABLE.
-                //The ALTER TABLE command in SQLite allows the user to rename a table or to add a new column to an existing table.
-                //It is not possible to rename a column, remove a column, or add or remove constraints from a table.
+                // ver 26 "virtually" remove columns 'lastCommentId' and 'runService' from the DB
+                // SQLite supports a limited subset of ALTER TABLE.
+                // The ALTER TABLE command in SQLite allows the user to rename a table or to add a new column to an existing table.
+                // It is not possible to rename a column, remove a column, or add or remove constraints from a table.
                 currentVersion++;
             case 26:
                 // Drop the notes table, no longer needed with Simperium.
@@ -251,7 +252,8 @@ public class WordPressDB {
      */
     protected void copyDatabase() {
         String copyFrom = db.getPath();
-        String copyTo = WordPress.getContext().getExternalFilesDir(null).getAbsolutePath() + "/" + DATABASE_NAME + ".db";
+        String copyTo =
+                WordPress.getContext().getExternalFilesDir(null).getAbsolutePath() + "/" + DATABASE_NAME + ".db";
 
         try {
             InputStream input = new FileInputStream(copyFrom);
@@ -259,8 +261,9 @@ public class WordPressDB {
 
             byte[] buffer = new byte[1024];
             int length;
-            while ((length = input.read(buffer)) > 0)
+            while ((length = input.read(buffer)) > 0) {
                 output.write(buffer, 0, length);
+            }
 
             output.flush();
             output.close();

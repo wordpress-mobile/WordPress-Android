@@ -23,13 +23,13 @@ public class URLFilteredWebViewClient extends WebViewClient {
     }
 
     public URLFilteredWebViewClient(String url) {
-       allowedURLs.add(url);
+        allowedURLs.add(url);
     }
 
     public URLFilteredWebViewClient(Collection<String> urls) {
         if (urls == null || urls.size() == 0) {
-            AppLog.w(AppLog.T.UTILS, "No valid URLs passed to URLFilteredWebViewClient! " +
-                    "HTTP Links in the page are NOT disabled, and ALL URLs could be loaded by the user!!");
+            AppLog.w(AppLog.T.UTILS, "No valid URLs passed to URLFilteredWebViewClient! "
+                                     + "HTTP Links in the page are NOT disabled, and ALL URLs could be loaded by the user!!");
             return;
         }
         allowedURLs.addAll(urls);

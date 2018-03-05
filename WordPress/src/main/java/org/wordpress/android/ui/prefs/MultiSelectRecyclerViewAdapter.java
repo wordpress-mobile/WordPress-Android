@@ -51,15 +51,16 @@ public class MultiSelectRecyclerViewAdapter extends RecyclerView.Adapter<MultiSe
         String item = getItem(holder.getAdapterPosition());
         holder.text.setText(item);
         holder.container.setBackgroundColor(
-                isItemSelected(position) ?
-                mSelectedColor :
-                mUnselectedColor
-        );
+                isItemSelected(position)
+                        ? mSelectedColor
+                        : mUnselectedColor
+                                           );
     }
 
     @Override
     public ItemHolder onCreateViewHolder(ViewGroup parent, int type) {
-        return new ItemHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.wp_simple_list_item_1, parent, false));
+        return new ItemHolder(
+                LayoutInflater.from(parent.getContext()).inflate(R.layout.wp_simple_list_item_1, parent, false));
     }
 
     public String getItem(int position) {

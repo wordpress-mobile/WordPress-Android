@@ -19,7 +19,9 @@ public class FooterNoteBlock extends NoteBlock {
     }
 
     public void setClickableSpan(JSONObject rangeObject, String noteType) {
-        if (rangeObject == null) return;
+        if (rangeObject == null) {
+            return;
+        }
 
         mClickableSpan = new NoteBlockClickableSpan(
                 WordPress.getContext(),
@@ -43,7 +45,7 @@ public class FooterNoteBlock extends NoteBlock {
 
     @Override
     public View configureView(final View view) {
-        final FooterNoteBlockHolder noteBlockHolder = (FooterNoteBlockHolder)view.getTag();
+        final FooterNoteBlockHolder noteBlockHolder = (FooterNoteBlockHolder) view.getTag();
 
         // Note text
         if (!TextUtils.isEmpty(getNoteText())) {
@@ -65,7 +67,9 @@ public class FooterNoteBlock extends NoteBlock {
     }
 
     private String getNoticonGlyph() {
-        if (getNoteData() == null) return "";
+        if (getNoteData() == null) {
+            return "";
+        }
 
         return JSONUtils.queryJSON(getNoteData(), "ranges[first].value", "");
     }
@@ -73,7 +77,7 @@ public class FooterNoteBlock extends NoteBlock {
     @Override
     Spannable getNoteText() {
         return NotificationsUtils.getSpannableContentForRanges(getNoteData(), null,
-                getOnNoteBlockTextClickListener(), true);
+                                                               getOnNoteBlockTextClickListener(), true);
     }
 
     public Object getViewHolder(View view) {
@@ -100,6 +104,7 @@ public class FooterNoteBlock extends NoteBlock {
         public TextView getTextView() {
             return mTextView;
         }
+
         public TextView getNoticonView() {
             return mNoticonView;
         }
@@ -112,5 +117,4 @@ public class FooterNoteBlock extends NoteBlock {
 
         getOnNoteBlockTextClickListener().onNoteBlockTextClicked(mClickableSpan);
     }
-
 }

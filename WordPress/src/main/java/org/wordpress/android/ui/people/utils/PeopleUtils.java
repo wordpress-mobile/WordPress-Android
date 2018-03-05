@@ -36,8 +36,7 @@ public class PeopleUtils {
                         int numberOfUsers = jsonObject.optInt("found");
                         boolean isEndOfList = (people.size() + offset) >= numberOfUsers;
                         callback.onSuccess(people, isEndOfList);
-                    }
-                    catch (JSONException e) {
+                    } catch (JSONException e) {
                         AppLog.e(T.API, "JSON exception occurred while parsing the response for sites/%s/users: " + e);
                         callback.onError();
                     }
@@ -81,17 +80,16 @@ public class PeopleUtils {
                 if (jsonObject != null && callback != null) {
                     try {
                         JSONArray jsonArray = jsonObject.getJSONArray("subscribers");
-                        Person.PersonType personType = isEmailFollower ?
-                                Person.PersonType.EMAIL_FOLLOWER : Person.PersonType.FOLLOWER;
+                        Person.PersonType personType = isEmailFollower
+                                ? Person.PersonType.EMAIL_FOLLOWER : Person.PersonType.FOLLOWER;
                         List<Person> people = peopleListFromJSON(jsonArray, site.getId(), personType);
                         int pageFetched = jsonObject.optInt("page");
                         int numberOfPages = jsonObject.optInt("pages");
                         boolean isEndOfList = page >= numberOfPages || page >= FOLLOWER_PAGE_LIMIT;
                         callback.onSuccess(people, pageFetched, isEndOfList);
-                    }
-                    catch (JSONException e) {
-                        AppLog.e(T.API, "JSON exception occurred while parsing the response for " +
-                                "sites/%s/stats/followers: " + e);
+                    } catch (JSONException e) {
+                        AppLog.e(T.API, "JSON exception occurred while parsing the response for "
+                                        + "sites/%s/stats/followers: " + e);
                         callback.onError();
                     }
                 }
@@ -127,10 +125,9 @@ public class PeopleUtils {
                         int numberOfUsers = jsonObject.optInt("found");
                         boolean isEndOfList = (people.size() + offset) >= numberOfUsers;
                         callback.onSuccess(people, isEndOfList);
-                    }
-                    catch (JSONException e) {
-                        AppLog.e(T.API, "JSON exception occurred while parsing the response for " +
-                                "sites/%s/viewers: " + e);
+                    } catch (JSONException e) {
+                        AppLog.e(T.API, "JSON exception occurred while parsing the response for "
+                                        + "sites/%s/viewers: " + e);
                         callback.onError();
                     }
                 }
@@ -339,7 +336,7 @@ public class PeopleUtils {
     }
 
     public static void validateUsernames(final List<String> usernames, String role, long dotComBlogId, final
-            ValidateUsernameCallback callback) {
+    ValidateUsernameCallback callback) {
         com.wordpress.rest.RestRequest.Listener listener = new RestRequest.Listener() {
             @Override
             public void onResponse(JSONObject jsonObject) {
@@ -444,7 +441,9 @@ public class PeopleUtils {
         }
 
         void onUsernameValidation(String username, ValidationResult validationResult);
+
         void onValidationFinished();
+
         void onError();
     }
 
@@ -519,6 +518,7 @@ public class PeopleUtils {
 
     public interface InvitationsSendCallback {
         void onSent(List<String> succeededUsernames, Map<String, String> failedUsernameErrors);
+
         void onError();
     }
 }

@@ -94,9 +94,9 @@ public class CommentsActivity extends AppCompatActivity
             // initialize comment status filter first time
             commentsListFragment.setCommentStatusFilter(mCurrentCommentStatusType);
             getFragmentManager().beginTransaction()
-                    .add(R.id.layout_fragment_container, commentsListFragment, getString(R.string
-                            .fragment_tag_comment_list))
-                    .commitAllowingStateLoss();
+                                .add(R.id.layout_fragment_container, commentsListFragment, getString(R.string
+                                                                                                             .fragment_tag_comment_list))
+                                .commitAllowingStateLoss();
         } else {
             getIntent().putExtra(KEY_AUTO_REFRESHED, savedInstanceState.getBoolean(KEY_AUTO_REFRESHED));
             getIntent().putExtra(KEY_EMPTY_VIEW_MESSAGE, savedInstanceState.getString(KEY_EMPTY_VIEW_MESSAGE));
@@ -155,8 +155,8 @@ public class CommentsActivity extends AppCompatActivity
         FragmentTransaction ft = fm.beginTransaction();
         String tagForFragment = getString(R.string.fragment_tag_reader_post_detail);
         ft.add(R.id.layout_fragment_container, fragment, tagForFragment)
-                .addToBackStack(tagForFragment)
-                .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
+          .addToBackStack(tagForFragment)
+          .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
         ft.commit();
     }
 
@@ -186,8 +186,9 @@ public class CommentsActivity extends AppCompatActivity
      */
     private void reloadCommentList() {
         CommentsListFragment listFragment = getListFragment();
-        if (listFragment != null)
+        if (listFragment != null) {
             listFragment.loadComments();
+        }
     }
 
     /*
@@ -196,7 +197,7 @@ public class CommentsActivity extends AppCompatActivity
     private void updateCommentList() {
         CommentsListFragment listFragment = getListFragment();
         if (listFragment != null) {
-            //listFragment.setRefreshing(true);
+            // listFragment.setRefreshing(true);
             listFragment.setCommentStatusFilter(mCurrentCommentStatusType);
             listFragment.updateComments(false);
         }
@@ -217,8 +218,9 @@ public class CommentsActivity extends AppCompatActivity
     @Override
     protected Dialog onCreateDialog(int id) {
         Dialog dialog = CommentDialogs.createCommentDialog(this, id);
-        if (dialog != null)
+        if (dialog != null) {
             return dialog;
+        }
         return super.onCreateDialog(id);
     }
 
@@ -229,27 +231,26 @@ public class CommentsActivity extends AppCompatActivity
             String newStatus = data.getStringExtra(COMMENT_MODERATE_STATUS_EXTRA);
             if (commentId >= 0 && !TextUtils.isEmpty(newStatus)) {
                 onModerateComment(mCommentStore.getCommentBySiteAndRemoteId(mSite, commentId),
-                        CommentStatus.fromString(newStatus));
+                                  CommentStatus.fromString(newStatus));
             }
         }
     }
 
     public void onModerateComment(final CommentModel comment,
                                   final CommentStatus newStatus) {
-
         if (newStatus == CommentStatus.APPROVED || newStatus == CommentStatus.UNAPPROVED) {
             getListFragment().updateEmptyView();
             comment.setStatus(newStatus.toString());
             mDispatcher.dispatch(CommentActionBuilder.newUpdateCommentAction(comment));
             mDispatcher.dispatch(CommentActionBuilder.newPushCommentAction(new RemoteCommentPayload(mSite, comment)));
         } else if (newStatus == CommentStatus.SPAM || newStatus == CommentStatus.TRASH
-                || newStatus == CommentStatus.DELETED) {
+                   || newStatus == CommentStatus.DELETED) {
             mTrashedComments.add(comment);
             getListFragment().removeComment(comment);
 
-            String message = (newStatus == CommentStatus.TRASH ? getString(R.string.comment_trashed) :
-                    newStatus == CommentStatus.SPAM ? getString(R.string.comment_spammed) :
-                            getString(R.string.comment_deleted_permanently));
+            String message = (newStatus == CommentStatus.TRASH ? getString(R.string.comment_trashed)
+                    : newStatus == CommentStatus.SPAM ? getString(R.string.comment_spammed)
+                            : getString(R.string.comment_deleted_permanently));
             View.OnClickListener undoListener = new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -259,7 +260,7 @@ public class CommentsActivity extends AppCompatActivity
             };
 
             Snackbar snackbar = Snackbar.make(getListFragment().getView(), message, Snackbar.LENGTH_LONG)
-                    .setAction(R.string.undo, undoListener);
+                                        .setAction(R.string.undo, undoListener);
 
             // do the actual moderation once the undo bar has been hidden
             snackbar.setCallback(new Snackbar.Callback() {

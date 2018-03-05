@@ -67,11 +67,11 @@ public class SiteCreationThemeAdapter extends RecyclerView.Adapter<RecyclerView.
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         if (viewType == VIEW_TYPE_HEADER) {
             View itemView = LayoutInflater.from(parent.getContext()).inflate(R.layout.site_creation_theme_header,
-                    parent, false);
+                                                                             parent, false);
             return new HeaderViewHolder(itemView);
         } else {
             View itemView = LayoutInflater.from(parent.getContext()).inflate(R.layout.site_creation_theme_item, parent,
-                    false);
+                                                                             false);
             return new ThemeViewHolder(itemView);
         }
     }
@@ -141,6 +141,6 @@ public class SiteCreationThemeAdapter extends RecyclerView.Adapter<RecyclerView.
 
         int mViewWidth = AppPrefs.getThemeImageSizeWidth();
         themeViewHolder.imageView.setImageUrl(requestURL + THEME_IMAGE_PARAMETER + mViewWidth,
-                WPNetworkImageView.ImageType.PHOTO);
+                                              WPNetworkImageView.ImageType.PHOTO);
     }
 }

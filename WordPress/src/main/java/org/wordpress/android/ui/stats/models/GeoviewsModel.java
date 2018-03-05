@@ -51,9 +51,9 @@ public class GeoviewsModel extends BaseStatsModel {
                     flatFlagIcon = currentCountryDetails.optString("flat_flag_icon");
                     countryFullName = currentCountryDetails.optString("country_full");
                 }
-                GeoviewModel m = new GeoviewModel(currentCountryCode, countryFullName, currentCountryViews, flagIcon, flatFlagIcon);
+                GeoviewModel m = new GeoviewModel(currentCountryCode, countryFullName, currentCountryViews, flagIcon,
+                                                  flatFlagIcon);
                 countries.add(m);
-
             }
 
             // Sort the countries by views.

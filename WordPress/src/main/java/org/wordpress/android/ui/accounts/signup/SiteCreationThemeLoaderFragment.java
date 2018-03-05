@@ -81,9 +81,9 @@ public class SiteCreationThemeLoaderFragment extends Fragment {
     public void onEventMainThread(ConnectionChangeEvent event) {
         OnThemeLoadingUpdated onThemeLoadingUpdated = getState();
         if (isAdded()
-                && event.isConnected()
-                && onThemeLoadingUpdated != null
-                && onThemeLoadingUpdated.getPhase() == ThemesUpdateState.ERROR_NO_CONNECTIVITY) {
+            && event.isConnected()
+            && onThemeLoadingUpdated != null
+            && onThemeLoadingUpdated.getPhase() == ThemesUpdateState.ERROR_NO_CONNECTIVITY) {
             update();
         }
     }
@@ -100,7 +100,7 @@ public class SiteCreationThemeLoaderFragment extends Fragment {
                 postUpdate(ThemesUpdateState.ERROR);
             } else {
                 AppLog.e(AppLog.T.THEMES, "Error fetching themes: " + event.error.message
-                        + ". Seems connectivity is off though so, will try again when back online");
+                                          + ". Seems connectivity is off though so, will try again when back online");
                 postUpdate(ThemesUpdateState.ERROR_NO_CONNECTIVITY);
             }
         } else {

@@ -53,6 +53,7 @@ public class CommentAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
 
     interface OnCommentPressedListener {
         void onCommentPressed(int position, View view);
+
         void onCommentLongPressed(int position, View view);
     }
 
@@ -268,8 +269,8 @@ public class CommentAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
         }
 
         // request to load more comments when we near the end
-        if (mOnLoadMoreListener != null && position >= getItemCount()-1
-                && position >= CommentsListFragment.COMMENTS_PER_PAGE - 1) {
+        if (mOnLoadMoreListener != null && position >= getItemCount() - 1
+            && position >= CommentsListFragment.COMMENTS_PER_PAGE - 1) {
             mOnLoadMoreListener.onLoadMore();
         }
     }
@@ -297,7 +298,9 @@ public class CommentAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
     }
 
     void setEnableSelection(boolean enable) {
-        if (enable == mEnableSelection) return;
+        if (enable == mEnableSelection) {
+            return;
+        }
 
         mEnableSelection = enable;
         if (mEnableSelection) {
@@ -327,9 +330,10 @@ public class CommentAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
             return comments;
         }
 
-        for (Integer position: mSelectedPositions) {
-            if (isPositionValid(position))
+        for (Integer position : mSelectedPositions) {
+            if (isPositionValid(position)) {
                 comments.add(mComments.get(position));
+            }
         }
 
         return comments;
@@ -340,7 +344,9 @@ public class CommentAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
     }
 
     void setItemSelected(int position, boolean isSelected, View view) {
-        if (isItemSelected(position) == isSelected) return;
+        if (isItemSelected(position) == isSelected) {
+            return;
+        }
 
         if (isSelected) {
             mSelectedPositions.add(position);
@@ -397,6 +403,7 @@ public class CommentAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
      * AsyncTask to load comments from SQLite
      */
     private boolean mIsLoadTaskRunning = false;
+
     private class LoadCommentsTask extends AsyncTask<Void, Void, Boolean> {
         CommentList tmpComments;
         final CommentStatus mStatusFilter;
@@ -409,17 +416,19 @@ public class CommentAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
         protected void onPreExecute() {
             mIsLoadTaskRunning = true;
         }
+
         @Override
         protected void onCancelled() {
             mIsLoadTaskRunning = false;
         }
+
         @Override
         protected Boolean doInBackground(Void... params) {
             List<CommentModel> comments;
             if (mStatusFilter == null || mStatusFilter == CommentStatus.ALL) {
                 // The "all" filter actually means "approved" + "unapproved" (but not "spam", "trash" or "deleted")
                 comments = mCommentStore.getCommentsForSite(mSite, false,
-                        CommentStatus.APPROVED, CommentStatus.UNAPPROVED);
+                                                            CommentStatus.APPROVED, CommentStatus.UNAPPROVED);
             } else {
                 comments = mCommentStore.getCommentsForSite(mSite, false, mStatusFilter);
             }
@@ -429,6 +438,7 @@ public class CommentAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
 
             return !mComments.isSameList(tmpComments);
         }
+
         @Override
         protected void onPostExecute(Boolean result) {
             if (result) {
@@ -456,5 +466,4 @@ public class CommentAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
             mIsLoadTaskRunning = false;
         }
     }
-
 }

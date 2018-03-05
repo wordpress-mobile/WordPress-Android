@@ -53,7 +53,6 @@ import javax.inject.Inject;
 public class SiteSettingsTagListActivity extends AppCompatActivity
         implements SearchView.OnQueryTextListener, MenuItem.OnActionExpandListener,
         SiteSettingsTagDetailFragment.OnTagDetailListener {
-
     @Inject Dispatcher mDispatcher;
     @Inject SiteStore mSiteStore;
     @Inject TaxonomyStore mTaxonomyStore;
@@ -280,7 +279,8 @@ public class SiteSettingsTagListActivity extends AppCompatActivity
     }
 
     private SiteSettingsTagDetailFragment getDetailFragment() {
-        return (SiteSettingsTagDetailFragment) getFragmentManager().findFragmentByTag(SiteSettingsTagDetailFragment.TAG);
+        return (SiteSettingsTagDetailFragment) getFragmentManager()
+                .findFragmentByTag(SiteSettingsTagDetailFragment.TAG);
     }
 
     /*
@@ -291,10 +291,10 @@ public class SiteSettingsTagListActivity extends AppCompatActivity
         fragment.setOnTagDetailListener(this);
 
         getFragmentManager().beginTransaction()
-                .add(R.id.container, fragment, SiteSettingsTagDetailFragment.TAG)
-                .addToBackStack(null)
-                .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE)
-                .commitAllowingStateLoss();
+                            .add(R.id.container, fragment, SiteSettingsTagDetailFragment.TAG)
+                            .addToBackStack(null)
+                            .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE)
+                            .commitAllowingStateLoss();
 
         mSearchMenuItem.collapseActionView();
         mFabView.setVisibility(View.GONE);
@@ -371,13 +371,14 @@ public class SiteSettingsTagListActivity extends AppCompatActivity
         AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(this);
         dialogBuilder.setMessage(message);
         dialogBuilder.setPositiveButton(getResources().getText(R.string.delete_yes),
-                new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int whichButton) {
-                        showProgressDialog(R.string.dlg_deleting_tag);
-                        Action action = TaxonomyActionBuilder.newDeleteTermAction(new TaxonomyStore.RemoteTermPayload(term, mSite));
-                        mDispatcher.dispatch(action);
-                    }
-                });
+                                        new DialogInterface.OnClickListener() {
+                                            public void onClick(DialogInterface dialog, int whichButton) {
+                                                showProgressDialog(R.string.dlg_deleting_tag);
+                                                Action action = TaxonomyActionBuilder.newDeleteTermAction(
+                                                        new TaxonomyStore.RemoteTermPayload(term, mSite));
+                                                mDispatcher.dispatch(action);
+                                            }
+                                        });
         dialogBuilder.setNegativeButton(getResources().getText(R.string.delete_no), null);
         dialogBuilder.setCancelable(true);
         dialogBuilder.create().show();
@@ -396,7 +397,7 @@ public class SiteSettingsTagListActivity extends AppCompatActivity
 
     private boolean tagExists(@NonNull String termName) {
         List<TermModel> terms = mTaxonomyStore.getTagsForSite(mSite);
-        for (TermModel term: terms) {
+        for (TermModel term : terms) {
             if (termName.equalsIgnoreCase(term.getName())) {
                 return true;
             }
@@ -415,7 +416,8 @@ public class SiteSettingsTagListActivity extends AppCompatActivity
 
         @Override
         public TagViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-            View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.site_settings_tag_list_row, parent, false);
+            View view = LayoutInflater.from(parent.getContext())
+                                      .inflate(R.layout.site_settings_tag_list_row, parent, false);
             return new TagListAdapter.TagViewHolder(view);
         }
 

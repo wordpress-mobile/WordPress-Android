@@ -9,7 +9,7 @@ import org.wordpress.android.util.DateTimeUtils;
 import org.wordpress.android.util.StringUtils;
 
 public class Person {
-    public enum PersonType { USER, FOLLOWER, EMAIL_FOLLOWER, VIEWER }
+    public enum PersonType {USER, FOLLOWER, EMAIL_FOLLOWER, VIEWER}
 
     private long personID;
     private int localTableBlogId;
@@ -158,9 +158,11 @@ public class Person {
      * converts iso8601 subscribed date to an actual java date
      */
     private transient java.util.Date dtSubscribed;
+
     public java.util.Date getDateSubscribed() {
-        if (dtSubscribed == null)
+        if (dtSubscribed == null) {
             dtSubscribed = DateTimeUtils.dateFromIso8601(subscribed);
+        }
         return dtSubscribed;
     }
 

@@ -59,12 +59,13 @@ public class NotificationsSettingsDialogPreference extends DialogPreference {
 
     @Override
     protected View onCreateDialogView() {
-
         ScrollView outerView = new ScrollView(getContext());
-        outerView.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT));
+        outerView.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT,
+                                                                LinearLayout.LayoutParams.WRAP_CONTENT));
 
         LinearLayout innerView = new LinearLayout(getContext());
-        innerView.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT));
+        innerView.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT,
+                                                                LinearLayout.LayoutParams.MATCH_PARENT));
         innerView.setOrientation(LinearLayout.VERTICAL);
 
         View spacerView = new View(getContext());
@@ -87,21 +88,24 @@ public class NotificationsSettingsDialogPreference extends DialogPreference {
         switch (mChannel) {
             case BLOGS:
                 settingsJson = JSONUtils.queryJSON(mSettings.getBlogSettings().get(mBlogId),
-                        typeString, new JSONObject());
+                                                   typeString, new JSONObject());
                 settingsArray = getContext().getResources().getStringArray(R.array.notifications_blog_settings);
                 settingsValues = getContext().getResources().getStringArray(R.array.notifications_blog_settings_values);
                 break;
             case OTHER:
                 settingsJson = JSONUtils.queryJSON(mSettings.getOtherSettings(),
-                        typeString, new JSONObject());
+                                                   typeString, new JSONObject());
                 settingsArray = getContext().getResources().getStringArray(R.array.notifications_other_settings);
-                settingsValues = getContext().getResources().getStringArray(R.array.notifications_other_settings_values);
+                settingsValues =
+                        getContext().getResources().getStringArray(R.array.notifications_other_settings_values);
                 break;
             case DOTCOM:
                 settingsJson = mSettings.getDotcomSettings();
                 settingsArray = getContext().getResources().getStringArray(R.array.notifications_wpcom_settings);
-                settingsValues = getContext().getResources().getStringArray(R.array.notifications_wpcom_settings_values);
-                summaryArray = getContext().getResources().getStringArray(R.array.notifications_wpcom_settings_summaries);
+                settingsValues =
+                        getContext().getResources().getStringArray(R.array.notifications_wpcom_settings_values);
+                summaryArray =
+                        getContext().getResources().getStringArray(R.array.notifications_wpcom_settings_summaries);
                 break;
         }
 
@@ -139,16 +143,17 @@ public class NotificationsSettingsDialogPreference extends DialogPreference {
         return view;
     }
 
-    private CompoundButton.OnCheckedChangeListener mOnCheckedChangedListener = new CompoundButton.OnCheckedChangeListener() {
-        @Override
-        public void onCheckedChanged(CompoundButton compoundButton, boolean isChecked) {
-            try {
-                mUpdatedJson.put(compoundButton.getTag().toString(), isChecked);
-            } catch (JSONException e) {
-                AppLog.e(AppLog.T.NOTIFS, "Could not add notification setting change to JSONObject");
-            }
-        }
-    };
+    private CompoundButton.OnCheckedChangeListener mOnCheckedChangedListener =
+            new CompoundButton.OnCheckedChangeListener() {
+                @Override
+                public void onCheckedChanged(CompoundButton compoundButton, boolean isChecked) {
+                    try {
+                        mUpdatedJson.put(compoundButton.getTag().toString(), isChecked);
+                    } catch (JSONException e) {
+                        AppLog.e(AppLog.T.NOTIFS, "Could not add notification setting change to JSONObject");
+                    }
+                }
+            };
 
     @Override
     protected void onDialogClosed(boolean positiveResult) {
@@ -157,14 +162,13 @@ public class NotificationsSettingsDialogPreference extends DialogPreference {
 
             // Update the settings json
             Iterator<?> keys = mUpdatedJson.keys();
-            while( keys.hasNext() ) {
-                String settingName = (String)keys.next();
+            while (keys.hasNext()) {
+                String settingName = (String) keys.next();
                 mSettings.updateSettingForChannelAndType(
                         mChannel, mType, settingName,
                         mUpdatedJson.optBoolean(settingName), mBlogId
-                );
+                                                        );
             }
-
         }
     }
 }

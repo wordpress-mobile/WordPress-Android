@@ -41,6 +41,7 @@ public class ReaderRecommendedBlog {
     public String getTitle() {
         return StringUtils.notNullStr(title);
     }
+
     public void setTitle(String title) {
         this.title = StringUtils.notNullStr(title);
     }
@@ -48,6 +49,7 @@ public class ReaderRecommendedBlog {
     public String getReason() {
         return StringUtils.notNullStr(reason);
     }
+
     public void setReason(String reason) {
         this.reason = StringUtils.notNullStr(reason);
     }
@@ -55,6 +57,7 @@ public class ReaderRecommendedBlog {
     public String getBlogUrl() {
         return StringUtils.notNullStr(blogUrl);
     }
+
     public void setBlogUrl(String blogUrl) {
         this.blogUrl = StringUtils.notNullStr(blogUrl);
     }
@@ -62,6 +65,7 @@ public class ReaderRecommendedBlog {
     public String getImageUrl() {
         return StringUtils.notNullStr(imageUrl);
     }
+
     public void setImageUrl(String imageUrl) {
         this.imageUrl = StringUtils.notNullStr(imageUrl);
     }
@@ -71,9 +75,8 @@ public class ReaderRecommendedBlog {
             return false;
         }
         return (blog.blogId == this.blogId
-             && blog.score == this.score
-             && blog.followRecoId == this.followRecoId);
+                && blog.score == this.score
+                && blog.followRecoId == this.followRecoId);
     }
-
 
 }

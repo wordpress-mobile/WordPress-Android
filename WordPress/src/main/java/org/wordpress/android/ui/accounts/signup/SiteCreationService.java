@@ -35,7 +35,6 @@ import java.util.Map;
 import javax.inject.Inject;
 
 public class SiteCreationService extends AutoForeground<SiteCreationState> {
-
     private static final String ARG_SITE_TITLE = "ARG_SITE_TITLE";
     private static final String ARG_SITE_TAGLINE = "ARG_SITE_TAGLINE";
     private static final String ARG_SITE_SLUG = "ARG_SITE_SLUG";
@@ -118,28 +117,28 @@ public class SiteCreationService extends AutoForeground<SiteCreationState> {
 
     private static class SiteCreationNotification {
         static Notification progress(Context context, int progress, @StringRes int titleString,
-                @StringRes int stepString) {
+                                     @StringRes int stepString) {
             return AutoForegroundNotification.progress(context, progress,
-                    titleString,
-                    stepString,
-                    R.drawable.ic_my_sites_24dp,
-                    R.color.blue_wordpress);
+                                                       titleString,
+                                                       stepString,
+                                                       R.drawable.ic_my_sites_24dp,
+                                                       R.color.blue_wordpress);
         }
 
         static Notification success(Context context) {
             return AutoForegroundNotification.success(context,
-                    R.string.notification_site_creation_title_success,
-                    R.string.notification_site_creation_created,
-                    R.drawable.ic_my_sites_24dp,
-                    R.color.blue_wordpress);
+                                                      R.string.notification_site_creation_title_success,
+                                                      R.string.notification_site_creation_created,
+                                                      R.drawable.ic_my_sites_24dp,
+                                                      R.color.blue_wordpress);
         }
 
         static Notification failure(Context context, @StringRes int content) {
             return AutoForegroundNotification.failure(context,
-                    R.string.notification_site_creation_title_stopped,
-                    content,
-                    R.drawable.ic_my_sites_24dp,
-                    R.color.blue_wordpress);
+                                                      R.string.notification_site_creation_title_stopped,
+                                                      content,
+                                                      R.drawable.ic_my_sites_24dp,
+                                                      R.color.blue_wordpress);
         }
     }
 
@@ -211,18 +210,18 @@ public class SiteCreationService extends AutoForeground<SiteCreationState> {
         switch (state.getStep()) {
             case NEW_SITE:
                 return SiteCreationNotification.progress(this, 25, R.string.site_creation_creating_laying_foundation,
-                        R.string.notification_site_creation_step_creating);
+                                                         R.string.notification_site_creation_step_creating);
             case FETCHING_NEW_SITE:
                 return SiteCreationNotification.progress(this, 50, R.string.site_creation_creating_fetching_info,
-                        R.string.notification_site_creation_step_fetching);
+                                                         R.string.notification_site_creation_step_fetching);
             case SET_TAGLINE:
                 return SiteCreationNotification.progress(this, 75, R.string.site_creation_creating_configuring_content,
-                        R.string.notification_site_creation_step_tagline);
+                                                         R.string.notification_site_creation_step_tagline);
             case SET_THEME:
             case PRELOAD:
                 // treat PRELOAD step as SET_THEME since when in background the UI isn't doing any preloading.
                 return SiteCreationNotification.progress(this, 100, R.string.site_creation_creating_configuring_theme,
-                        R.string.notification_site_creation_step_theme);
+                                                         R.string.notification_site_creation_step_theme);
             case SUCCESS:
                 return SiteCreationNotification.success(this);
             case FAILURE:
@@ -238,6 +237,7 @@ public class SiteCreationService extends AutoForeground<SiteCreationState> {
 
     /**
      * Helper method to create a new State object and set it as the new state.
+     *
      * @param step The step of the new state
      * @param payload The payload to attach to the new state
      */
@@ -277,8 +277,8 @@ public class SiteCreationService extends AutoForeground<SiteCreationState> {
             mNewSite = mSiteStore.getSiteBySiteId(mNewSiteRemoteId);
         }
 
-        final SiteCreationStep continueFromPhase = intent.hasExtra(ARG_RESUME_PHASE) ?
-                SiteCreationStep.valueOf(intent.getStringExtra(ARG_RESUME_PHASE)) : SiteCreationStep.IDLE;
+        final SiteCreationStep continueFromPhase = intent.hasExtra(ARG_RESUME_PHASE)
+                ? SiteCreationStep.valueOf(intent.getStringExtra(ARG_RESUME_PHASE)) : SiteCreationStep.IDLE;
 
         if (new SiteCreationState(continueFromPhase, null).isTerminal()) {
             throw new RuntimeException("Internal inconsistency: SiteCreationService can't resume a terminal step!");
@@ -361,34 +361,38 @@ public class SiteCreationService extends AutoForeground<SiteCreationState> {
     private void setTagline() {
         if (!TextUtils.isEmpty(mSiteTagline)) {
             SiteSettingsInterface siteSettings = SiteSettingsInterface.getInterface(this, mNewSite,
-                    new SiteSettingsInterface.SiteSettingsListener() {
-                        @Override
-                        public void onSaveError(Exception error) {
-                            notifyFailure();
-                        }
+                                                                                    new SiteSettingsInterface.SiteSettingsListener() {
+                                                                                        @Override
+                                                                                        public void onSaveError(
+                                                                                                Exception error) {
+                                                                                            notifyFailure();
+                                                                                        }
 
-                        @Override
-                        public void onFetchError(Exception error) {
-                            notifyFailure();
-                        }
+                                                                                        @Override
+                                                                                        public void onFetchError(
+                                                                                                Exception error) {
+                                                                                            notifyFailure();
+                                                                                        }
 
-                        @Override
-                        public void onSettingsUpdated() {
-                            // we'll just handle onSettingsSaved()
-                        }
+                                                                                        @Override
+                                                                                        public void onSettingsUpdated() {
+                                                                                            // we'll just handle onSettingsSaved()
+                                                                                        }
 
-                        @Override
-                        public void onSettingsSaved() {
-                            finishedPhase(SiteCreationStep.SET_TAGLINE);
-                        }
+                                                                                        @Override
+                                                                                        public void onSettingsSaved() {
+                                                                                            finishedPhase(
+                                                                                                    SiteCreationStep.SET_TAGLINE);
+                                                                                        }
 
-                        @Override
-                        public void onCredentialsValidated(Exception error) {
-                            if (error != null) {
-                                notifyFailure();
-                            }
-                        }
-                    });
+                                                                                        @Override
+                                                                                        public void onCredentialsValidated(
+                                                                                                Exception error) {
+                                                                                            if (error != null) {
+                                                                                                notifyFailure();
+                                                                                            }
+                                                                                        }
+                                                                                    });
 
             if (siteSettings == null) {
                 notifyFailure();
@@ -421,7 +425,7 @@ public class SiteCreationService extends AutoForeground<SiteCreationState> {
         SiteCreationState currentState = getState();
 
         AppLog.e(T.NUX, "SiteCreationService entered state FAILURE while on step: "
-                + (currentState == null ? "null" : currentState.getStep().name()));
+                        + (currentState == null ? "null" : currentState.getStep().name()));
 
         // new state is FAILURE and pass the previous state as payload
         setState(SiteCreationStep.FAILURE, getState());

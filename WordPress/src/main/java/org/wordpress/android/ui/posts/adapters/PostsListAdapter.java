@@ -199,14 +199,14 @@ public class PostsListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
 
     private boolean canShowStatsForPost(PostModel post) {
         return mIsStatsSupported
-                && PostStatus.fromPost(post) == PostStatus.PUBLISHED
-                && !post.isLocalDraft()
-                && !post.isLocallyChanged();
+               && PostStatus.fromPost(post) == PostStatus.PUBLISHED
+               && !post.isLocalDraft()
+               && !post.isLocallyChanged();
     }
 
     private boolean canPublishPost(PostModel post) {
-        return post != null && !UploadService.isPostUploadingOrQueued(post) &&
-                (post.isLocallyChanged() || post.isLocalDraft() || PostStatus.fromPost(post) == PostStatus.DRAFT);
+        return post != null && !UploadService.isPostUploadingOrQueued(post)
+               && (post.isLocallyChanged() || post.isLocalDraft() || PostStatus.fromPost(post) == PostStatus.DRAFT);
     }
 
     @Override
@@ -294,8 +294,8 @@ public class PostsListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
             pageHolder.dateHeader.setVisibility(showDate ? View.VISIBLE : View.GONE);
 
             // no "..." more button when uploading
-            pageHolder.btnMore.setVisibility(UploadService.isPostUploadingOrQueued(post) ? View.GONE :
-                    View.VISIBLE);
+            pageHolder.btnMore.setVisibility(UploadService.isPostUploadingOrQueued(post) ? View.GONE
+                                                     : View.VISIBLE);
             pageHolder.btnMore.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -320,7 +320,7 @@ public class PostsListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
 
         // load more posts when we near the end
         if (mOnLoadMoreListener != null && position >= mPosts.size() - 1
-                && position >= PostsListFragment.POSTS_REQUEST_COUNT - 1) {
+            && position >= PostsListFragment.POSTS_REQUEST_COUNT - 1) {
             mOnLoadMoreListener.onLoadMore();
         }
 
@@ -339,7 +339,7 @@ public class PostsListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
         if (imageUrl == null) {
             imgFeatured.setVisibility(View.GONE);
         } else if (imageUrl.startsWith("http")) {
-            String photonUrl =  ReaderUtils.getResizedImageUrl(
+            String photonUrl = ReaderUtils.getResizedImageUrl(
                     imageUrl, mPhotonWidth, mPhotonHeight, !SiteUtils.isPhotonCapable(mSite));
             imgFeatured.setVisibility(View.VISIBLE);
             imgFeatured.setImageUrl(photonUrl, WPNetworkImageView.ImageType.PHOTO);
@@ -359,19 +359,19 @@ public class PostsListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
     /*
      * returns the caption to show in the date header for the passed page - pages with the same
      * caption will be grouped together
-     *  - if page is local draft, returns "Local draft"
-     *  - if page is scheduled, returns formatted date w/o time
-     *  - if created today or yesterday, returns "Today" or "Yesterday"
-     *  - if created this month, returns the number of days ago
-     *  - if created this year, returns the month name
-     *  - if created before this year, returns the month name with year
+     * - if page is local draft, returns "Local draft"
+     * - if page is scheduled, returns formatted date w/o time
+     * - if created today or yesterday, returns "Today" or "Yesterday"
+     * - if created this month, returns the number of days ago
+     * - if created this year, returns the month name
+     * - if created before this year, returns the month name with year
      */
     private static String getPageDateHeaderText(Context context, PostModel page) {
         if (page.isLocalDraft()) {
             return context.getString(R.string.local_draft);
         } else if (PostStatus.fromPost(page) == PostStatus.SCHEDULED) {
             return DateUtils.formatDateTime(context, DateTimeUtils.timestampFromIso8601Millis(page.getDateCreated()),
-                    DateUtils.FORMAT_ABBREV_ALL);
+                                            DateUtils.FORMAT_ABBREV_ALL);
         } else {
             Date dtCreated = DateTimeUtils.dateUTCFromIso8601(page.getDateCreated());
             Date dtNow = DateTimeUtils.nowUTC();
@@ -415,8 +415,8 @@ public class PostsListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
     }
 
     private void updatePostUploadProgressBar(ProgressBar view, PostModel post) {
-        if (!mUploadStore.isFailedPost(post) &&
-                (UploadService.isPostUploadingOrQueued(post) || UploadService.hasInProgressMediaUploadsForPost(post))) {
+        if (!mUploadStore.isFailedPost(post)
+            && (UploadService.isPostUploadingOrQueued(post) || UploadService.hasInProgressMediaUploadsForPost(post))) {
             view.setVisibility(View.VISIBLE);
             int overallProgress = Math.round(UploadService.getMediaUploadProgressForPost(post) * 100);
             // Sometimes the progress bar can be stuck at 100% for a long time while further processing happens
@@ -443,7 +443,7 @@ public class PostsListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
             if (reason != null && !UploadService.hasInProgressMediaUploadsForPost(post)) {
                 if (reason.mediaError != null) {
                     errorMessage = context.getString(post.isPage() ? R.string.error_media_recover_page
-                            : R.string.error_media_recover_post);
+                                                             : R.string.error_media_recover_post);
                 } else if (reason.postError != null) {
                     errorMessage = UploadUtils.getErrorMessageFromPostError(context, post, reason.postError);
                 }
@@ -455,7 +455,7 @@ public class PostsListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
             } else if (UploadService.hasInProgressMediaUploadsForPost(post)) {
                 statusTextResId = R.string.uploading_media;
                 statusIconResId = R.drawable.ic_gridicons_cloud_upload;
-            } else if(UploadService.isPostQueued(post) || UploadService.hasPendingMediaUploadsForPost(post)) {
+            } else if (UploadService.isPostQueued(post) || UploadService.hasPendingMediaUploadsForPost(post)) {
                 // the Post (or its related media if such a thing exist) *is strictly* queued
                 statusTextResId = R.string.post_queued;
                 statusIconResId = R.drawable.ic_gridicons_cloud_upload;
@@ -519,7 +519,7 @@ public class PostsListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
     private void configurePostButtons(final PostViewHolder holder,
                                       final PostModel post) {
         boolean canRetry = mUploadStore.getUploadErrorForPost(post) != null
-                && !UploadService.hasInProgressMediaUploadsForPost(post);
+                           && !UploadService.hasInProgressMediaUploadsForPost(post);
         boolean canShowViewButton = !canRetry;
         boolean canShowStatsButton = canShowStatsForPost(post);
         boolean canShowPublishButton = canRetry || canPublishPost(post);
@@ -551,9 +551,15 @@ public class PostsListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
         holder.btnView.setVisibility(canShowViewButton ? View.VISIBLE : View.GONE);
 
         int numVisibleButtons = 2;
-        if (canShowViewButton) numVisibleButtons++;
-        if (canShowPublishButton) numVisibleButtons++;
-        if (canShowStatsButton) numVisibleButtons++;
+        if (canShowViewButton) {
+            numVisibleButtons++;
+        }
+        if (canShowPublishButton) {
+            numVisibleButtons++;
+        }
+        if (canShowStatsButton) {
+            numVisibleButtons++;
+        }
 
         // if there's enough room to show all buttons then hide back/more and show stats/trash/publish,
         // otherwise show the more button and hide stats/trash/publish
@@ -619,7 +625,6 @@ public class PostsListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
         animOut.addListener(new AnimatorListenerAdapter() {
             @Override
             public void onAnimationEnd(Animator animation) {
-
                 // row 1
                 holder.btnEdit.setVisibility(showRow1 ? View.VISIBLE : View.GONE);
                 holder.btnView.setVisibility(showRow1 ? View.VISIBLE : View.GONE);
@@ -681,7 +686,7 @@ public class PostsListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
             if (mPosts.size() > 0) {
                 notifyItemRemoved(position);
 
-                //when page is removed update the next one in case we need to show a header
+                // when page is removed update the next one in case we need to show a header
                 if (mIsPage) {
                     notifyItemChanged(position);
                 }

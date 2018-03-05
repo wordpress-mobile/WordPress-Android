@@ -30,12 +30,14 @@ public class StatsReferrersFragment extends StatsAbstractListFragment {
     protected boolean hasDataAvailable() {
         return mReferrers != null;
     }
+
     @Override
     protected void saveStatsData(Bundle outState) {
         if (hasDataAvailable()) {
             outState.putSerializable(ARG_REST_RESPONSE, mReferrers);
         }
     }
+
     @Override
     protected void restoreStatsData(Bundle savedInstanceState) {
         if (savedInstanceState.containsKey(ARG_REST_RESPONSE)) {
@@ -74,7 +76,8 @@ public class StatsReferrersFragment extends StatsAbstractListFragment {
 
         if (hasReferrers()) {
             BaseExpandableListAdapter adapter = new MyExpandableListAdapter(getActivity(), getReferrersGroups());
-            StatsUIHelper.reloadGroupViews(getActivity(), adapter, mGroupIdToExpandedMap, mList, getMaxNumberOfItemsToShowInList());
+            StatsUIHelper.reloadGroupViews(getActivity(), adapter, mGroupIdToExpandedMap, mList,
+                                           getMaxNumberOfItemsToShowInList());
             showHideNoResultsUI(false);
         } else {
             showHideNoResultsUI(true);
@@ -83,8 +86,8 @@ public class StatsReferrersFragment extends StatsAbstractListFragment {
 
     private boolean hasReferrers() {
         return mReferrers != null
-                && mReferrers.getGroups() != null
-                && mReferrers.getGroups().size() > 0;
+               && mReferrers.getGroups() != null
+               && mReferrers.getGroups().size() > 0;
     }
 
     private List<ReferrerGroupModel> getReferrersGroups() {
@@ -115,14 +118,17 @@ public class StatsReferrersFragment extends StatsAbstractListFragment {
     protected int getEntryLabelResId() {
         return R.string.stats_entry_referrers;
     }
+
     @Override
     protected int getTotalsLabelResId() {
         return R.string.stats_totals_views;
     }
+
     @Override
     protected int getEmptyLabelTitleResId() {
         return R.string.stats_empty_referrers_title;
     }
+
     @Override
     protected int getEmptyLabelDescResId() {
         return R.string.stats_empty_referrers_desc;
@@ -196,7 +202,6 @@ public class StatsReferrersFragment extends StatsAbstractListFragment {
         @Override
         public View getChildView(int groupPosition, final int childPosition,
                                  boolean isLastChild, View convertView, ViewGroup parent) {
-
             final MyChildModel currentChild = (MyChildModel) getChild(groupPosition, childPosition);
 
             if (convertView == null) {
@@ -261,7 +266,6 @@ public class StatsReferrersFragment extends StatsAbstractListFragment {
         @Override
         public View getGroupView(final int groupPosition, boolean isExpanded,
                                  View convertView, ViewGroup parent) {
-
             final StatsViewHolder holder;
             if (convertView == null) {
                 convertView = inflater.inflate(R.layout.stats_list_cell, parent, false);
@@ -312,7 +316,6 @@ public class StatsReferrersFragment extends StatsAbstractListFragment {
                         rp.showPopup(holder.imgMore, group);
                     }
                 });
-
             } else {
                 holder.imgMore.setVisibility(View.GONE);
                 holder.imgMore.setClickable(false);
@@ -330,7 +333,6 @@ public class StatsReferrersFragment extends StatsAbstractListFragment {
         public boolean isChildSelectable(int groupPosition, int childPosition) {
             return false;
         }
-
     }
 
     @Override

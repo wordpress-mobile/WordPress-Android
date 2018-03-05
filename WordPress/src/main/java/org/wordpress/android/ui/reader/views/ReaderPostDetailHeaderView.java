@@ -24,7 +24,6 @@ import org.wordpress.android.widgets.WPNetworkImageView;
  * topmost view in post detail - shows blavatar + avatar, author name, blog name, and follow button
  */
 public class ReaderPostDetailHeaderView extends LinearLayout {
-
     private ReaderPost mPost;
     private ReaderFollowButton mFollowButton;
     private boolean mEnableBlogPreview = true;
@@ -116,10 +115,10 @@ public class ReaderPostDetailHeaderView extends LinearLayout {
         WPNetworkImageView imgAvatar = (WPNetworkImageView) findViewById(R.id.image_header_avatar);
 
         /*
-         *  - if there's a blavatar and an avatar, show both of them overlaid using default sizing
-         *  - if there's only a blavatar, show it the full size of the parent frame and hide the avatar
-         *  - if there's only an avatar, show it the full size of the parent frame and hide the blavatar
-         *  - if there's neither a blavatar nor an avatar, hide them both
+         * - if there's a blavatar and an avatar, show both of them overlaid using default sizing
+         * - if there's only a blavatar, show it the full size of the parent frame and hide the avatar
+         * - if there's only an avatar, show it the full size of the parent frame and hide the blavatar
+         * - if there's neither a blavatar nor an avatar, hide them both
          */
         if (hasBlavatar && hasAvatar) {
             int blavatarSz = getResources().getDimensionPixelSize(R.dimen.reader_detail_header_blavatar);
@@ -182,20 +181,25 @@ public class ReaderPostDetailHeaderView extends LinearLayout {
     };
 
     private void toggleFollowStatus() {
-        if (!NetworkUtils.checkConnection(getContext())) return;
+        if (!NetworkUtils.checkConnection(getContext())) {
+            return;
+        }
 
         final boolean isAskingToFollow = !mPost.isFollowedByCurrentUser;
 
         ReaderActions.ActionListener listener = new ReaderActions.ActionListener() {
             @Override
             public void onActionResult(boolean succeeded) {
-                if (getContext() == null) return;
+                if (getContext() == null) {
+                    return;
+                }
 
                 mFollowButton.setEnabled(true);
                 if (succeeded) {
                     mPost.isFollowedByCurrentUser = isAskingToFollow;
                 } else {
-                    int errResId = isAskingToFollow ? R.string.reader_toast_err_follow_blog : R.string.reader_toast_err_unfollow_blog;
+                    int errResId = isAskingToFollow ? R.string.reader_toast_err_follow_blog
+                            : R.string.reader_toast_err_unfollow_blog;
                     ToastUtils.showToast(getContext(), errResId);
                     mFollowButton.setIsFollowed(!isAskingToFollow);
                 }

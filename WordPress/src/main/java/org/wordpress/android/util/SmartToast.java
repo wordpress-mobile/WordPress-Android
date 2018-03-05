@@ -16,11 +16,10 @@ import org.wordpress.android.ui.prefs.AppPrefs.UndeletablePrefKey;
  */
 
 public class SmartToast {
-
     public enum SmartToastType {
         COMMENTS_LONG_PRESS
                 (UndeletablePrefKey.SMART_TOAST_COMMENTS_LONG_PRESS_USAGE_COUNTER,
-                        UndeletablePrefKey.SMART_TOAST_COMMENTS_LONG_PRESS_TOAST_COUNTER);
+                 UndeletablePrefKey.SMART_TOAST_COMMENTS_LONG_PRESS_TOAST_COUNTER);
 
         // key which stores the number of times the feature associated with the smart toast has been used
         private final UndeletablePrefKey usageKey;
@@ -37,7 +36,7 @@ public class SmartToast {
     private static final int MAX_TIMES_TO_SHOW_TOAST = 2;
 
     public static void reset() {
-        for (SmartToastType type: SmartToastType.values()) {
+        for (SmartToastType type : SmartToastType.values()) {
             AppPrefs.setInt(type.shownKey, 0);
             AppPrefs.setInt(type.usageKey, 0);
         }

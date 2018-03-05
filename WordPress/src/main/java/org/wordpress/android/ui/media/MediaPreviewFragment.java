@@ -40,7 +40,6 @@ import javax.inject.Inject;
 import uk.co.senab.photoview.PhotoViewAttacher;
 
 public class MediaPreviewFragment extends Fragment implements MediaController.MediaPlayerControl {
-
     public static final String TAG = "media_preview_fragment";
 
     static final String ARG_MEDIA_CONTENT_URI = "content_uri";
@@ -48,7 +47,7 @@ public class MediaPreviewFragment extends Fragment implements MediaController.Me
     private static final String ARG_TITLE = "title";
     private static final String ARG_POSITION = "position";
     private static final String ARG_AUTOPLAY = "autoplay";
-    private static final String ARG_VIDEO_THUMB ="video_thumb";
+    private static final String ARG_VIDEO_THUMB = "video_thumb";
 
     public interface OnMediaTappedListener {
         void onMediaTapped();
@@ -79,8 +78,8 @@ public class MediaPreviewFragment extends Fragment implements MediaController.Me
     @Inject FluxCImageLoader mImageLoader;
 
     /**
-     * @param site        optional site this media is associated with
-     * @param contentUri  URI of media - can be local or remote
+     * @param site optional site this media is associated with
+     * @param contentUri URI of media - can be local or remote
      */
     public static MediaPreviewFragment newInstance(
             SiteModel site,
@@ -97,9 +96,9 @@ public class MediaPreviewFragment extends Fragment implements MediaController.Me
     }
 
     /**
-     * @param site        optional site this media is associated with
-     * @param media       media model
-     * @param autoPlay    true = play video/audio after fragment is created
+     * @param site optional site this media is associated with
+     * @param media media model
+     * @param autoPlay true = play video/audio after fragment is created
      */
     public static MediaPreviewFragment newInstance(
             SiteModel site,
@@ -298,6 +297,7 @@ public class MediaPreviewFragment extends Fragment implements MediaController.Me
                         setBitmap(response.getBitmap());
                     }
                 }
+
                 @Override
                 public void onErrorResponse(VolleyError error) {
                     AppLog.e(AppLog.T.MEDIA, error);
@@ -514,5 +514,4 @@ public class MediaPreviewFragment extends Fragment implements MediaController.Me
     public int getAudioSessionId() {
         return 0;
     }
-
 }

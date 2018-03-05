@@ -1,10 +1,8 @@
 package org.wordpress.android.ui.uploads;
 
 import org.wordpress.android.fluxc.model.PostModel;
-import org.wordpress.android.util.StringUtils;
 
 public class PostEvents {
-
     public static class PostUploadStarted {
         public final int mLocalBlogId;
 

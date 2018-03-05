@@ -59,7 +59,8 @@ public class SiteCreationDomainFragment extends SiteCreationBaseFormFragment<Sit
     }
 
     @Override
-    protected @LayoutRes int getContentLayout() {
+    protected @LayoutRes
+    int getContentLayout() {
         return R.layout.site_creation_domain_screen;
     }
 
@@ -112,8 +113,8 @@ public class SiteCreationDomainFragment extends SiteCreationBaseFormFragment<Sit
         }
 
         // Need to do this early so the mSiteCreationDomainAdapter gets initialized before RecyclerView needs it. This
-        //  ensures that on rotation, the RecyclerView will have its data ready before layout and scroll position will
-        //  hold correctly automatically.
+        // ensures that on rotation, the RecyclerView will have its data ready before layout and scroll position will
+        // hold correctly automatically.
         EventBus.getDefault().register(this);
 
         if (savedInstanceState == null) {
@@ -170,24 +171,28 @@ public class SiteCreationDomainFragment extends SiteCreationBaseFormFragment<Sit
         if (mSiteCreationDomainAdapter == null) {
             // Fragment is initializing or rotating so, just instantiate a new adapter.
             mSiteCreationDomainAdapter = new SiteCreationDomainAdapter(getContext(), mKeywords,
-                    new SiteCreationDomainAdapter.OnAdapterListener() {
-                        @Override
-                        public void onKeywordsChange(String keywords) {
-                            mKeywords = keywords;
-                            mCarryOverDomain = mSelectedDomain;
+                                                                       new SiteCreationDomainAdapter.OnAdapterListener() {
+                                                                           @Override
+                                                                           public void onKeywordsChange(
+                                                                                   String keywords) {
+                                                                               mKeywords = keywords;
+                                                                               mCarryOverDomain = mSelectedDomain;
 
-                            // fallback to using the provided username as query if text is empty
-                            mQueryString = TextUtils.isEmpty(keywords.trim()) ? mUsername : keywords;
+                                                                               // fallback to using the provided username as query if text is empty
+                                                                               mQueryString = TextUtils
+                                                                                       .isEmpty(keywords.trim())
+                                                                                       ? mUsername : keywords;
 
-                            getLoaderFragment().load(mQueryString);
-                        }
+                                                                               getLoaderFragment().load(mQueryString);
+                                                                           }
 
-                        @Override
-                        public void onSelectionChange(String domain) {
-                            mSelectedDomain = domain;
-                            updateFinishButton();
-                        }
-                    });
+                                                                           @Override
+                                                                           public void onSelectionChange(
+                                                                                   String domain) {
+                                                                               mSelectedDomain = domain;
+                                                                               updateFinishButton();
+                                                                           }
+                                                                       });
         }
 
         switch (event.step) {

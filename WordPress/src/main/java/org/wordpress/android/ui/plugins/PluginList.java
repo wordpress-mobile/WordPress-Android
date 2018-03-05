@@ -14,7 +14,6 @@ import java.util.List;
  * which can show both models
  */
 class PluginList extends ArrayList<Object> {
-
     int indexOfPluginWithSlug(@Nullable String slug) {
         if (slug != null) {
             for (int i = 0; i < this.size(); i++) {
@@ -56,19 +55,18 @@ class PluginList extends ArrayList<Object> {
             SitePluginModel plugin1 = (SitePluginModel) item1;
             SitePluginModel plugin2 = (SitePluginModel) item2;
             return StringUtils.equals(plugin1.getSlug(), plugin2.getSlug())
-                    && plugin1.getLocalSiteId() == plugin2.getLocalSiteId()
-                    && plugin1.isActive() == plugin2.isActive()
-                    && plugin1.isAutoUpdateEnabled() == plugin2.isAutoUpdateEnabled()
-                    && StringUtils.equals(plugin1.getVersion(), plugin2.getVersion());
+                   && plugin1.getLocalSiteId() == plugin2.getLocalSiteId()
+                   && plugin1.isActive() == plugin2.isActive()
+                   && plugin1.isAutoUpdateEnabled() == plugin2.isAutoUpdateEnabled()
+                   && StringUtils.equals(plugin1.getVersion(), plugin2.getVersion());
         } else if (item1 instanceof WPOrgPluginModel && item2 instanceof WPOrgPluginModel) {
             WPOrgPluginModel plugin1 = (WPOrgPluginModel) item1;
             WPOrgPluginModel plugin2 = (WPOrgPluginModel) item2;
             return StringUtils.equals(plugin1.getSlug(), plugin2.getSlug())
-                    && plugin1.getDownloadCount() == plugin2.getDownloadCount()
-                    && plugin1.getNumberOfRatings() == plugin2.getNumberOfRatings()
-                    && StringUtils.equals(plugin1.getRating(), plugin2.getRating())
-                    && StringUtils.equals(plugin1.getVersion(), plugin2.getVersion());
-
+                   && plugin1.getDownloadCount() == plugin2.getDownloadCount()
+                   && plugin1.getNumberOfRatings() == plugin2.getNumberOfRatings()
+                   && StringUtils.equals(plugin1.getRating(), plugin2.getRating())
+                   && StringUtils.equals(plugin1.getVersion(), plugin2.getVersion());
         } else {
             return false;
         }

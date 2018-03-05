@@ -1,6 +1,5 @@
 package org.wordpress.android.ui.prefs;
 
-import android.app.Activity;
 import android.content.Context;
 
 import org.wordpress.android.datasets.SiteSettingsTable;
@@ -16,7 +15,7 @@ class DotOrgSiteSettings extends SiteSettingsInterface {
 
     @Override
     protected void fetchRemoteData() {
-        // TODO - Call the XML-RPC endpoint  
+        // TODO - Call the XML-RPC endpoint
         SiteSettingsTable.saveSettings(mSettings);
     }
 

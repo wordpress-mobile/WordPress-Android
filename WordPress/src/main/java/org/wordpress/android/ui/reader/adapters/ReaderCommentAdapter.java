@@ -97,7 +97,7 @@ public class ReaderCommentAdapter extends RecyclerView.Adapter<RecyclerView.View
         private final ViewGroup replyView;
         private final ReaderIconCountView countLikes;
 
-        public CommentHolder(View view) {
+        CommentHolder(View view) {
             super(view);
 
             container = (ViewGroup) view.findViewById(R.id.layout_container);
@@ -121,7 +121,7 @@ public class ReaderCommentAdapter extends RecyclerView.Adapter<RecyclerView.View
     class PostHeaderHolder extends RecyclerView.ViewHolder {
         private final ReaderCommentsPostHeaderView mHeaderView;
 
-        public PostHeaderHolder(View view) {
+        PostHeaderHolder(View view) {
             super(view);
             mHeaderView = (ReaderCommentsPostHeaderView) view;
         }
@@ -191,10 +191,12 @@ public class ReaderCommentAdapter extends RecyclerView.Adapter<RecyclerView.View
         switch (viewType) {
             case VIEW_TYPE_HEADER:
                 View headerView = new ReaderCommentsPostHeaderView(parent.getContext());
-                headerView.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
+                headerView.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
+                                                                      ViewGroup.LayoutParams.WRAP_CONTENT));
                 return new PostHeaderHolder(headerView);
             default:
-                View commentView = LayoutInflater.from(parent.getContext()).inflate(R.layout.reader_listitem_comment, parent, false);
+                View commentView = LayoutInflater.from(parent.getContext())
+                                                 .inflate(R.layout.reader_listitem_comment, parent, false);
                 return new CommentHolder(commentView);
         }
     }
@@ -259,7 +261,8 @@ public class ReaderCommentAdapter extends RecyclerView.Adapter<RecyclerView.View
         int indentWidth;
         if (comment.parentId != 0 && comment.level > 0) {
             indentWidth = Math.min(MAX_INDENT_LEVEL, comment.level) * mIndentPerLevel;
-            RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) commentHolder.spacerIndent.getLayoutParams();
+            RelativeLayout.LayoutParams params =
+                    (RelativeLayout.LayoutParams) commentHolder.spacerIndent.getLayoutParams();
             params.width = indentWidth;
             commentHolder.spacerIndent.setVisibility(View.VISIBLE);
         } else {
@@ -394,8 +397,9 @@ public class ReaderCommentAdapter extends RecyclerView.Adapter<RecyclerView.View
             showLikeStatus(holder, position);
         }
 
-        AnalyticsUtils.trackWithReaderPostDetails(isAskingToLike ? AnalyticsTracker.Stat.READER_ARTICLE_COMMENT_LIKED :
-                AnalyticsTracker.Stat.READER_ARTICLE_COMMENT_UNLIKED, mPost);
+        AnalyticsUtils.trackWithReaderPostDetails(isAskingToLike
+                                                    ? AnalyticsTracker.Stat.READER_ARTICLE_COMMENT_LIKED
+                                                    : AnalyticsTracker.Stat.READER_ARTICLE_COMMENT_UNLIKED, mPost);
     }
 
     public boolean refreshComment(long commentId) {
@@ -543,13 +547,12 @@ public class ReaderCommentAdapter extends RecyclerView.Adapter<RecyclerView.View
     }
 
     /*
-    *  Set a post to adapter and update relevant information in the post header
+    * Set a post to adapter and update relevant information in the post header
     */
     public void setPost(ReaderPost post) {
         if (post != null) {
             mPost = post;
-            notifyItemChanged(0); //notify header to update itself
+            notifyItemChanged(0); // notify header to update itself
         }
-
     }
 }

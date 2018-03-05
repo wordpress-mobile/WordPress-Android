@@ -46,7 +46,6 @@ import javax.inject.Inject;
 
 public class PhotoPickerActivity extends AppCompatActivity
         implements PhotoPickerFragment.PhotoPickerListener {
-
     private static final String PICKER_FRAGMENT_TAG = "picker_fragment_tag";
     private static final String KEY_MEDIA_CAPTURE_PATH = "media_capture_path";
     private static final String EXTRA_SHOW_PROGRESS_DIALOG = "show_progress_dialog";
@@ -114,9 +113,9 @@ public class PhotoPickerActivity extends AppCompatActivity
         if (fragment == null) {
             fragment = PhotoPickerFragment.newInstance(this, mBrowserType, mSite);
             getFragmentManager().beginTransaction()
-                    .replace(R.id.fragment_container, fragment, PICKER_FRAGMENT_TAG)
-                    .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE)
-                    .commitAllowingStateLoss();
+                                .replace(R.id.fragment_container, fragment, PICKER_FRAGMENT_TAG)
+                                .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE)
+                                .commitAllowingStateLoss();
         } else {
             fragment.setPhotoPickerListener(this);
         }
@@ -217,13 +216,13 @@ public class PhotoPickerActivity extends AppCompatActivity
 
     private void launchCamera() {
         WPMediaUtils.launchCamera(this, BuildConfig.APPLICATION_ID,
-                new WPMediaUtils.LaunchCameraCallback() {
-                    @Override
-                    public void onMediaCapturePathReady(String mediaCapturePath) {
-                        mMediaCapturePath = mediaCapturePath;
-                        AppLockManager.getInstance().setExtendedTimeout();
-                    }
-                });
+                                  new WPMediaUtils.LaunchCameraCallback() {
+                                      @Override
+                                      public void onMediaCapturePathReady(String mediaCapturePath) {
+                                          mMediaCapturePath = mediaCapturePath;
+                                          AppLockManager.getInstance().setExtendedTimeout();
+                                      }
+                                  });
     }
 
     private void launchPictureLibrary() {
@@ -241,13 +240,12 @@ public class PhotoPickerActivity extends AppCompatActivity
         // if user chose a featured image, we need to upload it and return the uploaded media object
         if (mBrowserType == MediaBrowserType.FEATURED_IMAGE_PICKER) {
             WPMediaUtils.fetchMediaAndDoNext(this, mediaUri,
-                    new WPMediaUtils.MediaFetchDoNext() {
-                        @Override
-                        public void doNext(Uri uri) {
-                            uploadMedia(uri);
-                        }
-                    });
-
+                                             new WPMediaUtils.MediaFetchDoNext() {
+                                                 @Override
+                                                 public void doNext(Uri uri) {
+                                                     uploadMedia(uri);
+                                                 }
+                                             });
         } else {
             Intent intent = new Intent()
                     .putExtra(EXTRA_MEDIA_URI, mediaUri.toString())

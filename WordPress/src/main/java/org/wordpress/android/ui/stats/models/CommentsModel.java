@@ -40,7 +40,8 @@ public class CommentsModel extends BaseStatsModel {
                 String name = currentPostJSON.getString("name");
                 int totals = currentPostJSON.getInt("comments");
                 String link = currentPostJSON.getString("link");
-                StatsPostModel currentPost = new StatsPostModel(blogID, mDate, itemID, name, totals, link, StatsConstants.ITEM_TYPE_POST);
+                StatsPostModel currentPost =
+                        new StatsPostModel(blogID, mDate, itemID, name, totals, link, StatsConstants.ITEM_TYPE_POST);
                 mPosts.add(currentPost);
             }
         }

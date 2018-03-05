@@ -86,7 +86,7 @@ public class CategoryNode {
         }
 
         // Second pass associate nodes to form a tree
-        for (int i = 0; i < categoryMap.size(); i++){
+        for (int i = 0; i < categoryMap.size(); i++) {
             CategoryNode category = categoryMap.valueAt(i);
             if (category.getParentId() == 0) { // root node
                 currentRootNode = rootCategory;
@@ -103,7 +103,7 @@ public class CategoryNode {
 
     private static void preOrderTreeTraversal(CategoryNode node, int level, ArrayList<CategoryNode> returnValue) {
         if (node == null) {
-            return ;
+            return;
         }
         if (node.parentId != -1) {
             node.level = level;

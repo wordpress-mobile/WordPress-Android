@@ -24,7 +24,6 @@ import java.util.Collections;
 import java.util.List;
 
 public class NotesAdapter extends RecyclerView.Adapter<NotesAdapter.NoteViewHolder> {
-
     private final int mAvatarSz;
     private final int mColorRead;
     private final int mColorUnread;
@@ -110,7 +109,7 @@ public class NotesAdapter extends RecyclerView.Adapter<NotesAdapter.NoteViewHold
             filteredNotes.addAll(notes);
             return;
         }
-        for( Note currentNote : notes) {
+        for (Note currentNote : notes) {
             switch (filter) {
                 case FILTER_COMMENT:
                     if (currentNote.isCommentType()) {
@@ -297,7 +296,6 @@ public class NotesAdapter extends RecyclerView.Adapter<NotesAdapter.NoteViewHold
     }
 
     private class ReloadNotesFromDBTask extends AsyncTask<Void, Void, ArrayList<Note>> {
-
         @Override
         protected ArrayList<Note> doInBackground(Void... voids) {
             return NotificationsTable.getLatestNotes();
@@ -326,7 +324,7 @@ public class NotesAdapter extends RecyclerView.Adapter<NotesAdapter.NoteViewHold
             super(view);
             headerView = view.findViewById(R.id.time_header);
             contentView = view.findViewById(R.id.note_content_container);
-            headerText = (TextView)view.findViewById(R.id.header_date_text);
+            headerText = (TextView) view.findViewById(R.id.header_date_text);
             txtSubject = (TextView) view.findViewById(R.id.note_subject);
             txtSubjectNoticon = (TextView) view.findViewById(R.id.note_subject_noticon);
             txtDetail = (TextView) view.findViewById(R.id.note_detail);
@@ -341,7 +339,7 @@ public class NotesAdapter extends RecyclerView.Adapter<NotesAdapter.NoteViewHold
         @Override
         public void onClick(View v) {
             if (mOnNoteClickListener != null && v.getTag() instanceof String) {
-                mOnNoteClickListener.onClickNote((String)v.getTag());
+                mOnNoteClickListener.onClickNote((String) v.getTag());
             }
         }
     };

@@ -25,16 +25,16 @@ import org.wordpress.android.util.WPPrefUtils;
 
 /**
  * Standard EditTextPreference that has attributes to limit summary length.
- *
+ * <p>
  * Created for and used by {@link SiteSettingsFragment} to style some Preferences.
- *
+ * <p>
  * When declaring this class in a layout file you can use the following attributes:
- *  - app:summaryLines : sets the number of lines to display in the Summary field
- *                       (see {@link TextView#setLines(int)} for details)
- *  - app:maxSummaryLines : sets the maximum number of lines the Summary field can display
- *                       (see {@link TextView#setMaxLines(int)} for details)
- *  - app:longClickHint : sets the string to be shown in a Toast when preference is long clicked
- *  - app:dialogSummary : sets the summary text in the dialog
+ * - app:summaryLines : sets the number of lines to display in the Summary field
+ * (see {@link TextView#setLines(int)} for details)
+ * - app:maxSummaryLines : sets the maximum number of lines the Summary field can display
+ * (see {@link TextView#setMaxLines(int)} for details)
+ * - app:longClickHint : sets the string to be shown in a Toast when preference is long clicked
+ * - app:dialogSummary : sets the summary text in the dialog
  */
 
 public class SummaryEditTextPreference extends EditTextPreference implements PreferenceHint {
@@ -84,14 +84,20 @@ public class SummaryEditTextPreference extends EditTextPreference implements Pre
         TextView titleView = (TextView) view.findViewById(android.R.id.title);
         TextView summaryView = (TextView) view.findViewById(android.R.id.summary);
 
-        if (titleView != null) WPPrefUtils.layoutAsSubhead(titleView);
+        if (titleView != null) {
+            WPPrefUtils.layoutAsSubhead(titleView);
+        }
 
         if (summaryView != null) {
             WPPrefUtils.layoutAsBody1(summaryView);
             summaryView.setEllipsize(TextUtils.TruncateAt.END);
             summaryView.setInputType(getEditText().getInputType());
-            if (mLines != -1) summaryView.setLines(mLines);
-            if (mMaxLines != -1) summaryView.setMaxLines(mMaxLines);
+            if (mLines != -1) {
+                summaryView.setLines(mLines);
+            }
+            if (mMaxLines != -1) {
+                summaryView.setMaxLines(mMaxLines);
+            }
         }
     }
 
@@ -131,7 +137,9 @@ public class SummaryEditTextPreference extends EditTextPreference implements Pre
             builder.setView(view);
         }
 
-        if ((mDialog = builder.create()) == null) return;
+        if ((mDialog = builder.create()) == null) {
+            return;
+        }
 
         if (state != null) {
             mDialog.onRestoreInstanceState(state);
@@ -142,14 +150,20 @@ public class SummaryEditTextPreference extends EditTextPreference implements Pre
 
         Button positive = mDialog.getButton(DialogInterface.BUTTON_POSITIVE);
         Button negative = mDialog.getButton(DialogInterface.BUTTON_NEGATIVE);
-        if (positive != null) WPPrefUtils.layoutAsFlatButton(positive);
-        if (negative != null) WPPrefUtils.layoutAsFlatButton(negative);
+        if (positive != null) {
+            WPPrefUtils.layoutAsFlatButton(positive);
+        }
+        if (negative != null) {
+            WPPrefUtils.layoutAsFlatButton(negative);
+        }
     }
 
     @Override
     protected void onBindDialogView(final View view) {
         super.onBindDialogView(view);
-        if (view == null) return;
+        if (view == null) {
+            return;
+        }
 
         EditText editText = getEditText();
         ViewParent oldParent = editText.getParent();
@@ -157,7 +171,8 @@ public class SummaryEditTextPreference extends EditTextPreference implements Pre
             if (oldParent != null && oldParent instanceof ViewGroup) {
                 ViewGroup groupParent = (ViewGroup) oldParent;
                 groupParent.removeView(editText);
-                groupParent.setPadding(groupParent.getPaddingLeft(), 0, groupParent.getPaddingRight(), groupParent.getPaddingBottom());
+                groupParent.setPadding(groupParent.getPaddingLeft(), 0, groupParent.getPaddingRight(),
+                                       groupParent.getPaddingBottom());
             }
             onAddEditTextToDialogView(view, editText);
         }

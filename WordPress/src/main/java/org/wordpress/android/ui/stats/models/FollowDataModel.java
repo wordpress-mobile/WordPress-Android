@@ -6,7 +6,6 @@ import org.json.JSONObject;
 import java.io.Serializable;
 
 public class FollowDataModel implements Serializable {
-
        /*
      "following-text": "Following",
       "is_following": false,

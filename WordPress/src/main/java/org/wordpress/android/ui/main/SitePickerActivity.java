@@ -74,7 +74,6 @@ public class SitePickerActivity extends AppCompatActivity
         implements SitePickerAdapter.OnSiteClickListener,
         SitePickerAdapter.OnSelectedCountChangedListener,
         SearchView.OnQueryTextListener {
-
     public static final String KEY_LOCAL_ID = "local_id";
     private static final String KEY_IS_IN_SEARCH_MODE = "is_in_search_mode";
     private static final String KEY_LAST_SEARCH = "last_search";
@@ -157,7 +156,9 @@ public class SitePickerActivity extends AppCompatActivity
     }
 
     private void updateMenuItemVisibility() {
-        if (mMenuAdd == null || mMenuEdit == null || mMenuSearch == null) return;
+        if (mMenuAdd == null || mMenuEdit == null || mMenuSearch == null) {
+            return;
+        }
 
         if (getAdapter().getIsInSearchMode()) {
             mMenuEdit.setVisible(false);
@@ -272,7 +273,7 @@ public class SitePickerActivity extends AppCompatActivity
                         mDispatcher.dispatch(SiteActionBuilder.newFetchSitesAction());
                     }
                 }
-        );
+                                                         );
     }
 
     private void setupRecycleView() {
@@ -328,17 +329,18 @@ public class SitePickerActivity extends AppCompatActivity
                 lastSearch,
                 isInSearchMode,
                 new SitePickerAdapter.OnDataLoadedListener() {
-            @Override
-            public void onBeforeLoad(boolean isEmpty) {
-                if (isEmpty) {
-                    showProgress(true);
-                }
-            }
-            @Override
-            public void onAfterLoad() {
-                showProgress(false);
-            }
-        });
+                    @Override
+                    public void onBeforeLoad(boolean isEmpty) {
+                        if (isEmpty) {
+                            showProgress(true);
+                        }
+                    }
+
+                    @Override
+                    public void onAfterLoad() {
+                        showProgress(false);
+                    }
+                });
         mAdapter.setOnSiteClickListener(this);
         mAdapter.setOnSelectedCountChangedListener(this);
     }
@@ -379,8 +381,8 @@ public class SitePickerActivity extends AppCompatActivity
         if (skippedCurrentSite) {
             String cantHideCurrentSite = getString(R.string.site_picker_cant_hide_current_site);
             ToastUtils.showToast(this,
-                    String.format(cantHideCurrentSite, currentSiteName),
-                    ToastUtils.Duration.LONG);
+                                 String.format(cantHideCurrentSite, currentSiteName),
+                                 ToastUtils.Duration.LONG);
         }
     }
 
@@ -647,7 +649,7 @@ public class SitePickerActivity extends AppCompatActivity
                         public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
                             TextView tv = (TextView) super.getView(position, convertView, parent);
                             Drawable leftDrawable = AppCompatResources.getDrawable(tv.getContext(),
-                                    R.drawable.ic_add_outline_grey_dark_24dp);
+                                                                                   R.drawable.ic_add_outline_grey_dark_24dp);
                             tv.setCompoundDrawablesWithIntrinsicBounds(leftDrawable, null, null, null);
                             tv.setCompoundDrawablePadding(
                                     getResources().getDimensionPixelSize(R.dimen.margin_extra_large));
@@ -659,12 +661,12 @@ public class SitePickerActivity extends AppCompatActivity
                         public void onClick(DialogInterface dialog, int which) {
                             if (which == 0) {
                                 ActivityLauncher.newBlogForResult(getActivity(),
-                                        getArguments().getString(ARG_USERNAME));
+                                                                  getArguments().getString(ARG_USERNAME));
                             } else {
                                 ActivityLauncher.addSelfHostedSiteForResult(getActivity());
                             }
                         }
-            });
+                    });
             return builder.create();
         }
     }

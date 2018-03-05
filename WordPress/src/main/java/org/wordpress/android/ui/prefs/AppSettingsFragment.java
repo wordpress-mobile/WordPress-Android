@@ -36,7 +36,8 @@ import java.util.Map;
 
 import javax.inject.Inject;
 
-public class AppSettingsFragment extends PreferenceFragment implements OnPreferenceClickListener, Preference.OnPreferenceChangeListener {
+public class AppSettingsFragment extends PreferenceFragment
+        implements OnPreferenceClickListener, Preference.OnPreferenceChangeListener {
     public static final String LANGUAGE_PREF_KEY = "language-pref";
     public static final int LANGUAGE_CHANGED = 1000;
 
@@ -70,14 +71,16 @@ public class AppSettingsFragment extends PreferenceFragment implements OnPrefere
                 new Preference.OnPreferenceChangeListener() {
                     @Override
                     public boolean onPreferenceChange(Preference preference, Object newValue) {
-                        if (newValue == null) return false;
+                        if (newValue == null) {
+                            return false;
+                        }
                         // flush gathered events (if any)
                         AnalyticsTracker.flush();
-                        AnalyticsTracker.setHasUserOptedOut(!(boolean)newValue);
+                        AnalyticsTracker.setHasUserOptedOut(!(boolean) newValue);
                         return true;
                     }
                 }
-        );
+                                                                                             );
 
         mLanguagePreference = (DetailListPreference) findPreference(getString(R.string.pref_key_language));
         mLanguagePreference.setOnPreferenceChangeListener(this);
@@ -92,37 +95,44 @@ public class AppSettingsFragment extends PreferenceFragment implements OnPrefere
                 .setOnPreferenceClickListener(this);
 
         mOptimizedImage =
-                (WPSwitchPreference) WPPrefUtils.getPrefAndSetChangeListener(this, R.string.pref_key_optimize_image, this);
-        mImageMaxSizePref = (DetailListPreference) WPPrefUtils.getPrefAndSetChangeListener(this, R.string.pref_key_site_image_width, this);
+                (WPSwitchPreference) WPPrefUtils
+                        .getPrefAndSetChangeListener(this, R.string.pref_key_optimize_image, this);
+        mImageMaxSizePref = (DetailListPreference) WPPrefUtils
+                .getPrefAndSetChangeListener(this, R.string.pref_key_site_image_width, this);
         mImageQualityPref =
-                (DetailListPreference) WPPrefUtils.getPrefAndSetChangeListener(this, R.string.pref_key_site_image_quality, this);
+                (DetailListPreference) WPPrefUtils
+                        .getPrefAndSetChangeListener(this, R.string.pref_key_site_image_quality, this);
         mOptimizedVideo =
-                (WPSwitchPreference) WPPrefUtils.getPrefAndSetChangeListener(this, R.string.pref_key_optimize_video, this);
+                (WPSwitchPreference) WPPrefUtils
+                        .getPrefAndSetChangeListener(this, R.string.pref_key_optimize_video, this);
         mVideoWidthPref =
-                (DetailListPreference) WPPrefUtils.getPrefAndSetChangeListener(this, R.string.pref_key_site_video_width, this);
+                (DetailListPreference) WPPrefUtils
+                        .getPrefAndSetChangeListener(this, R.string.pref_key_site_video_width, this);
         mVideoEncorderBitratePref =
-                (DetailListPreference) WPPrefUtils.getPrefAndSetChangeListener(this, R.string.pref_key_site_video_encoder_bitrate, this);
+                (DetailListPreference) WPPrefUtils
+                        .getPrefAndSetChangeListener(this, R.string.pref_key_site_video_encoder_bitrate, this);
 
         // Set Local settings
         mOptimizedImage.setChecked(AppPrefs.isImageOptimize());
         setDetailListPreferenceValue(mImageMaxSizePref,
-                String.valueOf(AppPrefs.getImageOptimizeMaxSize()),
-                getLabelForImageMaxSizeValue(AppPrefs.getImageOptimizeMaxSize()));
+                                     String.valueOf(AppPrefs.getImageOptimizeMaxSize()),
+                                     getLabelForImageMaxSizeValue(AppPrefs.getImageOptimizeMaxSize()));
         setDetailListPreferenceValue(mImageQualityPref,
-                String.valueOf(AppPrefs.getImageOptimizeQuality()),
-                getLabelForImageQualityValue(AppPrefs.getImageOptimizeQuality()));
+                                     String.valueOf(AppPrefs.getImageOptimizeQuality()),
+                                     getLabelForImageQualityValue(AppPrefs.getImageOptimizeQuality()));
 
         mOptimizedVideo.setChecked(AppPrefs.isVideoOptimize());
         setDetailListPreferenceValue(mVideoWidthPref,
-                String.valueOf(AppPrefs.getVideoOptimizeWidth()),
-                getLabelForVideoMaxWidthValue(AppPrefs.getVideoOptimizeWidth()));
+                                     String.valueOf(AppPrefs.getVideoOptimizeWidth()),
+                                     getLabelForVideoMaxWidthValue(AppPrefs.getVideoOptimizeWidth()));
         setDetailListPreferenceValue(mVideoEncorderBitratePref,
-                String.valueOf(AppPrefs.getVideoOptimizeQuality()),
-                getLabelForVideoEncoderBitrateValue(AppPrefs.getVideoOptimizeQuality()));
+                                     String.valueOf(AppPrefs.getVideoOptimizeQuality()),
+                                     getLabelForVideoEncoderBitrateValue(AppPrefs.getVideoOptimizeQuality()));
         if (!WPMediaUtils.isVideoOptimizationAvailable()) {
             WPPrefUtils.removePreference(this, R.string.pref_key_optimize_media, R.string.pref_key_optimize_video);
             WPPrefUtils.removePreference(this, R.string.pref_key_optimize_media, R.string.pref_key_site_video_width);
-            WPPrefUtils.removePreference(this, R.string.pref_key_optimize_media, R.string.pref_key_site_video_encoder_bitrate);
+            WPPrefUtils.removePreference(this, R.string.pref_key_optimize_media,
+                                         R.string.pref_key_site_video_encoder_bitrate);
         }
 
         mSettings = PreferenceManager.getDefaultSharedPreferences(getActivity());
@@ -156,7 +166,9 @@ public class AppSettingsFragment extends PreferenceFragment implements OnPrefere
 
     @Override
     public boolean onPreferenceChange(Preference preference, Object newValue) {
-        if (newValue == null) return false;
+        if (newValue == null) {
+            return false;
+        }
 
         if (preference == mLanguagePreference) {
             changeLanguage(newValue.toString());
@@ -171,13 +183,13 @@ public class AppSettingsFragment extends PreferenceFragment implements OnPrefere
             int newWidth = Integer.parseInt(newValue.toString());
             AppPrefs.setImageOptimizeMaxSize(newWidth);
             setDetailListPreferenceValue(mImageMaxSizePref,
-                    newValue.toString(),
-                    getLabelForImageMaxSizeValue(AppPrefs.getImageOptimizeMaxSize()));
+                                         newValue.toString(),
+                                         getLabelForImageMaxSizeValue(AppPrefs.getImageOptimizeMaxSize()));
         } else if (preference == mImageQualityPref) {
             AppPrefs.setImageOptimizeQuality(Integer.parseInt(newValue.toString()));
             setDetailListPreferenceValue(mImageQualityPref,
-                    newValue.toString(),
-                    getLabelForImageQualityValue(AppPrefs.getImageOptimizeQuality()));
+                                         newValue.toString(),
+                                         getLabelForImageQualityValue(AppPrefs.getImageOptimizeQuality()));
         } else if (preference == mOptimizedVideo) {
             AppPrefs.setVideoOptimize((Boolean) newValue);
             mVideoEncorderBitratePref.setEnabled((Boolean) newValue);
@@ -185,13 +197,13 @@ public class AppSettingsFragment extends PreferenceFragment implements OnPrefere
             int newWidth = Integer.parseInt(newValue.toString());
             AppPrefs.setVideoOptimizeWidth(newWidth);
             setDetailListPreferenceValue(mVideoWidthPref,
-                    newValue.toString(),
-                    getLabelForVideoMaxWidthValue(AppPrefs.getVideoOptimizeWidth()));
+                                         newValue.toString(),
+                                         getLabelForVideoMaxWidthValue(AppPrefs.getVideoOptimizeWidth()));
         } else if (preference == mVideoEncorderBitratePref) {
             AppPrefs.setVideoOptimizeQuality(Integer.parseInt(newValue.toString()));
             setDetailListPreferenceValue(mVideoEncorderBitratePref,
-                    newValue.toString(),
-                    getLabelForVideoEncoderBitrateValue(AppPrefs.getVideoOptimizeQuality()));
+                                         newValue.toString(),
+                                         getLabelForVideoEncoderBitrateValue(AppPrefs.getVideoOptimizeQuality()));
         }
         return true;
     }
@@ -207,14 +219,17 @@ public class AppSettingsFragment extends PreferenceFragment implements OnPrefere
     private void updateEditorSettings() {
         if (!AppPrefs.isVisualEditorAvailable()) {
             PreferenceScreen preferenceScreen = (PreferenceScreen) findPreference(getActivity()
-                    .getString(R.string.pref_key_account_settings_root));
+                                                                                          .getString(
+                                                                                                  R.string.pref_key_account_settings_root));
             PreferenceCategory editor = (PreferenceCategory) findPreference(getActivity()
-                    .getString(R.string.pref_key_editor));
+                                                                                    .getString(
+                                                                                            R.string.pref_key_editor));
             if (preferenceScreen != null && editor != null) {
                 preferenceScreen.removePreference(editor);
             }
         } else {
-            final ListPreference editorTypePreference = (ListPreference) findPreference(getActivity().getString(R.string.pref_key_editor_type));
+            final ListPreference editorTypePreference =
+                    (ListPreference) findPreference(getActivity().getString(R.string.pref_key_editor_type));
 
             editorTypePreference.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
                 @Override
@@ -261,7 +276,9 @@ public class AppSettingsFragment extends PreferenceFragment implements OnPrefere
     }
 
     private void changeLanguage(String languageCode) {
-        if (mLanguagePreference == null || TextUtils.isEmpty(languageCode)) return;
+        if (mLanguagePreference == null || TextUtils.isEmpty(languageCode)) {
+            return;
+        }
 
         Resources res = getResources();
         Configuration conf = res.getConfiguration();
@@ -302,14 +319,19 @@ public class AppSettingsFragment extends PreferenceFragment implements OnPrefere
     }
 
     private void updateLanguagePreference(String languageCode) {
-        if (mLanguagePreference == null || TextUtils.isEmpty(languageCode)) return;
+        if (mLanguagePreference == null || TextUtils.isEmpty(languageCode)) {
+            return;
+        }
 
         Locale languageLocale = WPPrefUtils.languageLocale(languageCode);
         String[] availableLocales = getResources().getStringArray(R.array.available_languages);
 
-        Pair<String[], String[]> pair = WPPrefUtils.createSortedLanguageDisplayStrings(availableLocales, languageLocale);
+        Pair<String[], String[]> pair =
+                WPPrefUtils.createSortedLanguageDisplayStrings(availableLocales, languageLocale);
         // check for a possible NPE
-        if (pair == null) return;
+        if (pair == null) {
+            return;
+        }
 
         String[] sortedEntries = pair.first;
         String[] sortedValues = pair.second;
@@ -352,7 +374,7 @@ public class AppSettingsFragment extends PreferenceFragment implements OnPrefere
     private String getLabelForImageMaxSizeValue(int newValue) {
         String[] values = getActivity().getResources().getStringArray(R.array.site_settings_image_max_size_values);
         String[] entries = getActivity().getResources().getStringArray(R.array.site_settings_image_max_size_entries);
-        for (int i = 0; i < values.length ; i++) {
+        for (int i = 0; i < values.length; i++) {
             if (values[i].equals(String.valueOf(newValue))) {
                 return entries[i];
             }
@@ -364,7 +386,7 @@ public class AppSettingsFragment extends PreferenceFragment implements OnPrefere
     private String getLabelForImageQualityValue(int newValue) {
         String[] values = getActivity().getResources().getStringArray(R.array.site_settings_image_quality_values);
         String[] entries = getActivity().getResources().getStringArray(R.array.site_settings_image_quality_entries);
-        for (int i = 0; i < values.length ; i++) {
+        for (int i = 0; i < values.length; i++) {
             if (values[i].equals(String.valueOf(newValue))) {
                 return entries[i];
             }
@@ -376,7 +398,7 @@ public class AppSettingsFragment extends PreferenceFragment implements OnPrefere
     private String getLabelForVideoMaxWidthValue(int newValue) {
         String[] values = getActivity().getResources().getStringArray(R.array.site_settings_video_width_values);
         String[] entries = getActivity().getResources().getStringArray(R.array.site_settings_video_width_entries);
-        for (int i = 0; i < values.length ; i++) {
+        for (int i = 0; i < values.length; i++) {
             if (values[i].equals(String.valueOf(newValue))) {
                 return entries[i];
             }
@@ -388,7 +410,7 @@ public class AppSettingsFragment extends PreferenceFragment implements OnPrefere
     private String getLabelForVideoEncoderBitrateValue(int newValue) {
         String[] values = getActivity().getResources().getStringArray(R.array.site_settings_video_bitrate_values);
         String[] entries = getActivity().getResources().getStringArray(R.array.site_settings_video_bitrate_entries);
-        for (int i = 0; i < values.length ; i++) {
+        for (int i = 0; i < values.length; i++) {
             if (values[i].equals(String.valueOf(newValue))) {
                 return entries[i];
             }

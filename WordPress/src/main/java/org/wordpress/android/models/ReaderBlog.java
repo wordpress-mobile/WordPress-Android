@@ -88,6 +88,7 @@ public class ReaderBlog {
     public String getName() {
         return StringUtils.notNullStr(name);
     }
+
     public void setName(String blogName) {
         this.name = StringUtils.notNullStr(blogName).trim();
     }
@@ -95,6 +96,7 @@ public class ReaderBlog {
     public String getDescription() {
         return StringUtils.notNullStr(description);
     }
+
     public void setDescription(String description) {
         this.description = StringUtils.notNullStr(description).trim();
     }
@@ -102,6 +104,7 @@ public class ReaderBlog {
     public String getImageUrl() {
         return StringUtils.notNullStr(imageUrl);
     }
+
     public void setImageUrl(String imageUrl) {
         this.imageUrl = StringUtils.notNullStr(imageUrl);
     }
@@ -109,6 +112,7 @@ public class ReaderBlog {
     public String getUrl() {
         return StringUtils.notNullStr(url);
     }
+
     public void setUrl(String url) {
         this.url = StringUtils.notNullStr(url);
     }
@@ -116,6 +120,7 @@ public class ReaderBlog {
     public String getFeedUrl() {
         return StringUtils.notNullStr(feedUrl);
     }
+
     public void setFeedUrl(String feedUrl) {
         this.feedUrl = StringUtils.notNullStr(feedUrl);
     }
@@ -131,9 +136,11 @@ public class ReaderBlog {
     public boolean hasImageUrl() {
         return !TextUtils.isEmpty(imageUrl);
     }
+
     public boolean hasName() {
         return !TextUtils.isEmpty(name);
     }
+
     public boolean hasDescription() {
         return !TextUtils.isEmpty(description);
     }
@@ -144,28 +151,28 @@ public class ReaderBlog {
 
     /*
      * returns the mshot url to use for this blog, ex:
-     *   http://s.wordpress.com/mshots/v1/http%3A%2F%2Fnickbradbury.com?w=600
+     * http://s.wordpress.com/mshots/v1/http%3A%2F%2Fnickbradbury.com?w=600
      * note that while mshots support a "h=" parameter, this crops rather than
      * scales the image to that height
-     *   https://github.com/Automattic/mShots
+     * https://github.com/Automattic/mShots
      */
     public String getMshotsUrl(int width) {
         return "http://s.wordpress.com/mshots/v1/"
-             + UrlUtils.urlEncode(getUrl())
-             + String.format(Locale.US, "?w=%d", width);
+               + UrlUtils.urlEncode(getUrl())
+               + String.format(Locale.US, "?w=%d", width);
     }
 
     public boolean isSameAs(ReaderBlog blogInfo) {
         return blogInfo != null
-            && this.blogId == blogInfo.blogId
-            && this.feedId == blogInfo.feedId
-            && this.isFollowing == blogInfo.isFollowing
-            && this.isPrivate == blogInfo.isPrivate
-            && this.numSubscribers == blogInfo.numSubscribers
-            && this.getName().equals(blogInfo.getName())
-            && this.getDescription().equals(blogInfo.getDescription())
-            && this.getUrl().equals(blogInfo.getUrl())
-            && this.getFeedUrl().equals(blogInfo.getFeedUrl())
-            && this.getImageUrl().equals(blogInfo.getImageUrl());
+               && this.blogId == blogInfo.blogId
+               && this.feedId == blogInfo.feedId
+               && this.isFollowing == blogInfo.isFollowing
+               && this.isPrivate == blogInfo.isPrivate
+               && this.numSubscribers == blogInfo.numSubscribers
+               && this.getName().equals(blogInfo.getName())
+               && this.getDescription().equals(blogInfo.getDescription())
+               && this.getUrl().equals(blogInfo.getUrl())
+               && this.getFeedUrl().equals(blogInfo.getFeedUrl())
+               && this.getImageUrl().equals(blogInfo.getImageUrl());
     }
 }

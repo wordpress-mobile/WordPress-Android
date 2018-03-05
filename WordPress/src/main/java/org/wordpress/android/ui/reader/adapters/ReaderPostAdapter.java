@@ -81,13 +81,13 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
     private static final boolean EXCLUDE_TEXT_COLUMN = true;
     private static final int MAX_ROWS = ReaderConstants.READER_MAX_POSTS_TO_DISPLAY;
 
-    private static final int VIEW_TYPE_POST        = 0;
-    private static final int VIEW_TYPE_XPOST       = 1;
+    private static final int VIEW_TYPE_POST = 0;
+    private static final int VIEW_TYPE_XPOST = 1;
     private static final int VIEW_TYPE_SITE_HEADER = 2;
-    private static final int VIEW_TYPE_TAG_HEADER  = 3;
-    private static final int VIEW_TYPE_GAP_MARKER  = 4;
+    private static final int VIEW_TYPE_TAG_HEADER = 3;
+    private static final int VIEW_TYPE_GAP_MARKER = 4;
 
-    private static final long ITEM_ID_HEADER     = -1L;
+    private static final long ITEM_ID_HEADER = -1L;
     private static final long ITEM_ID_GAP_MARKER = -2L;
 
     @Inject AccountStore mAccountStore;
@@ -239,6 +239,7 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
 
     private class SiteHeaderViewHolder extends RecyclerView.ViewHolder {
         private final ReaderSiteHeaderView mSiteHeaderView;
+
         SiteHeaderViewHolder(View itemView) {
             super(itemView);
             mSiteHeaderView = (ReaderSiteHeaderView) itemView;
@@ -247,6 +248,7 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
 
     private class TagHeaderViewHolder extends RecyclerView.ViewHolder {
         private final ReaderTagHeaderView mTagHeaderView;
+
         TagHeaderViewHolder(View itemView) {
             super(itemView);
             mTagHeaderView = (ReaderTagHeaderView) itemView;
@@ -255,6 +257,7 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
 
     private class GapMarkerViewHolder extends RecyclerView.ViewHolder {
         private final ReaderGapMarkerView mGapMarkerView;
+
         GapMarkerViewHolder(View itemView) {
             super(itemView);
             mGapMarkerView = (ReaderGapMarkerView) itemView;
@@ -509,8 +512,8 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
      */
     private boolean shouldShowFollowButton() {
         return mCurrentTag != null
-                && (mCurrentTag.isTagTopic() || mCurrentTag.isPostsILike())
-                && !mIsLoggedOutReader;
+               && (mCurrentTag.isTagTopic() || mCurrentTag.isPostsILike())
+               && !mIsLoggedOutReader;
     }
 
     /*
@@ -518,8 +521,8 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
      */
     private void checkLoadMore(int position) {
         if (mCanRequestMorePosts
-                && mDataRequestedListener != null
-                && (position >= getItemCount() - 1)) {
+            && mDataRequestedListener != null
+            && (position >= getItemCount() - 1)) {
             mDataRequestedListener.onRequestData();
         }
     }
@@ -538,7 +541,9 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         switch (discoverData.getDiscoverType()) {
             case EDITOR_PICK:
                 if (discoverData.hasAvatarUrl()) {
-                    postHolder.imgDiscoverAvatar.setImageUrl(GravatarUtils.fixGravatarUrl(discoverData.getAvatarUrl(), mAvatarSzSmall), WPNetworkImageView.ImageType.AVATAR);
+                    postHolder.imgDiscoverAvatar
+                            .setImageUrl(GravatarUtils.fixGravatarUrl(discoverData.getAvatarUrl(), mAvatarSzSmall),
+                                         WPNetworkImageView.ImageType.AVATAR);
                 } else {
                     postHolder.imgDiscoverAvatar.showDefaultGravatarImageAndNullifyUrl();
                 }
@@ -557,7 +562,8 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
             case SITE_PICK:
                 if (discoverData.hasAvatarUrl()) {
                     postHolder.imgDiscoverAvatar.setImageUrl(
-                            GravatarUtils.fixGravatarUrl(discoverData.getAvatarUrl(), mAvatarSzSmall), WPNetworkImageView.ImageType.BLAVATAR);
+                            GravatarUtils.fixGravatarUrl(discoverData.getAvatarUrl(), mAvatarSzSmall),
+                            WPNetworkImageView.ImageType.BLAVATAR);
                 } else {
                     postHolder.imgDiscoverAvatar.showDefaultBlavatarImageAndNullifyUrl();
                 }
@@ -739,10 +745,10 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
     @Override
     public long getItemId(int position) {
         switch (getItemViewType(position)) {
-            case VIEW_TYPE_TAG_HEADER :
-            case VIEW_TYPE_SITE_HEADER :
+            case VIEW_TYPE_TAG_HEADER:
+            case VIEW_TYPE_SITE_HEADER:
                 return ITEM_ID_HEADER;
-            case VIEW_TYPE_GAP_MARKER :
+            case VIEW_TYPE_GAP_MARKER:
                 return ITEM_ID_GAP_MARKER;
             default:
                 ReaderPost post = getItem(position);
@@ -764,7 +770,9 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
             holder.likeCount.setCount(post.numLikes);
             holder.likeCount.setSelected(post.isLikedByCurrentUser);
             holder.likeCount.setVisibility(View.VISIBLE);
-            holder.likeCount.setContentDescription(ReaderUtils.getLongLikeLabelText(holder.cardView.getContext(), post.numLikes, post.isLikedByCurrentUser));
+            holder.likeCount.setContentDescription(ReaderUtils.getLongLikeLabelText(holder.cardView.getContext(),
+                                                                                    post.numLikes,
+                                                                                    post.isLikedByCurrentUser));
             // can't like when logged out
             if (!mIsLoggedOutReader) {
                 holder.likeCount.setOnClickListener(new View.OnClickListener() {
@@ -856,7 +864,8 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
             public void onActionResult(boolean succeeded) {
                 followButton.setEnabled(true);
                 if (!succeeded) {
-                    int resId = (isAskingToFollow ? R.string.reader_toast_err_follow_blog : R.string.reader_toast_err_unfollow_blog);
+                    int resId = (isAskingToFollow ? R.string.reader_toast_err_follow_blog
+                            : R.string.reader_toast_err_unfollow_blog);
                     ToastUtils.showToast(context, resId);
                     setFollowStatusForBlog(post.blogId, !isAskingToFollow);
                 }
@@ -885,7 +894,9 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
     }
 
     public void removeGapMarker() {
-        if (mGapMarkerPosition == -1) return;
+        if (mGapMarkerPosition == -1) {
+            return;
+        }
 
         int position = mGapMarkerPosition;
         mGapMarkerPosition = -1;

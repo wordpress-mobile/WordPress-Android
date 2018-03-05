@@ -171,14 +171,14 @@ public class MediaUploadHandler implements UploadHandler<MediaModel>, VideoOptim
         if (event.canceled) {
             AppLog.i(T.MEDIA, "MediaUploadHandler > Upload successfully canceled");
             trackUploadMediaEvents(AnalyticsTracker.Stat.MEDIA_UPLOAD_CANCELED,
-                    getMediaFromInProgressQueueById(event.media.getId()), null);
+                                   getMediaFromInProgressQueueById(event.media.getId()), null);
             completeUploadWithId(event.media.getId());
             uploadNextInQueue();
         } else if (event.completed) {
             AppLog.i(T.MEDIA, "MediaUploadHandler > Upload completed - localId=" + event.media.getId() + " title="
-                    + event.media.getTitle());
+                              + event.media.getTitle());
             trackUploadMediaEvents(AnalyticsTracker.Stat.MEDIA_UPLOAD_SUCCESS,
-                    getMediaFromInProgressQueueById(event.media.getId()), null);
+                                   getMediaFromInProgressQueueById(event.media.getId()), null);
             completeUploadWithId(event.media.getId());
             uploadNextInQueue();
         } else {
@@ -223,8 +223,9 @@ public class MediaUploadHandler implements UploadHandler<MediaModel>, VideoOptim
 
     private MediaModel getMediaFromInProgressQueueById(int id) {
         for (MediaModel media : sInProgressUploads) {
-            if (media.getId() == id)
+            if (media.getId() == id) {
                 return media;
+            }
         }
         return null;
     }
@@ -265,7 +266,7 @@ public class MediaUploadHandler implements UploadHandler<MediaModel>, VideoOptim
                 dispatchCancelAction(oneUpload, site, delete);
             } else {
                 AppLog.w(T.MEDIA, "MediaUploadHandler > Unexpected state, site is null. "
-                        + "Skipping cancellation of this request.");
+                                  + "Skipping cancellation of this request.");
             }
         }
     }
@@ -290,7 +291,7 @@ public class MediaUploadHandler implements UploadHandler<MediaModel>, VideoOptim
         }
 
         AppLog.i(T.MEDIA, "MediaUploadHandler > Dispatching upload action for media with local id: "
-                + media.getId() + " and path: " + media.getFilePath());
+                          + media.getId() + " and path: " + media.getFilePath());
         addUniqueMediaToInProgressUploads(media);
 
         mDispatcher.dispatch(MediaActionBuilder.newUpdateMediaAction(media));
@@ -300,7 +301,7 @@ public class MediaUploadHandler implements UploadHandler<MediaModel>, VideoOptim
 
     private void dispatchCancelAction(@NonNull final MediaModel media, @NonNull final SiteModel site, boolean delete) {
         AppLog.i(T.MEDIA, "MediaUploadHandler > Dispatching cancel upload action for media with local id: "
-                + media.getId() + " and path: " + media.getFilePath());
+                          + media.getId() + " and path: " + media.getFilePath());
         CancelMediaPayload payload = new CancelMediaPayload(site, media, delete);
         mDispatcher.dispatch(MediaActionBuilder.newCancelMediaUploadAction(payload));
     }
@@ -365,11 +366,12 @@ public class MediaUploadHandler implements UploadHandler<MediaModel>, VideoOptim
     private void trackUploadMediaEvents(AnalyticsTracker.Stat stat, MediaModel media, Map<String, Object> properties) {
         if (media == null) {
             AppLog.e(T.MEDIA, "MediaUploadHandler > Cannot track media upload handler events if the original media"
-                    + "is null");
+                              + "is null");
             return;
         }
         Map<String, Object> mediaProperties = AnalyticsUtils.getMediaProperties(WordPress.getContext(),
-                media.isVideo(), null, media.getFilePath());
+                                                                                media.isVideo(), null,
+                                                                                media.getFilePath());
         if (properties != null) {
             mediaProperties.putAll(properties);
         }
@@ -379,8 +381,9 @@ public class MediaUploadHandler implements UploadHandler<MediaModel>, VideoOptim
     private boolean mediaAlreadyQueuedOrUploading(MediaModel mediaModel) {
         for (MediaModel queuedMedia : sInProgressUploads) {
             AppLog.i(T.MEDIA, "MediaUploadHandler > Attempting to add media with path " + mediaModel.getFilePath()
-                    + " and site id " + mediaModel.getLocalSiteId() + ". Comparing with " + queuedMedia.getFilePath()
-                    + ", " + queuedMedia.getLocalSiteId());
+                              + " and site id " + mediaModel.getLocalSiteId() + ". Comparing with " + queuedMedia
+                                      .getFilePath()
+                              + ", " + queuedMedia.getLocalSiteId());
             if (compareBySiteAndFilePath(queuedMedia, mediaModel)) {
                 return true;
             }
@@ -388,8 +391,9 @@ public class MediaUploadHandler implements UploadHandler<MediaModel>, VideoOptim
 
         for (MediaModel queuedMedia : sPendingUploads) {
             AppLog.i(T.MEDIA, "MediaUploadHandler > Attempting to add media with path " + mediaModel.getFilePath()
-                    + " and site id " + mediaModel.getLocalSiteId() + ". Comparing with " + queuedMedia.getFilePath()
-                    + ", " + queuedMedia.getLocalSiteId());
+                              + " and site id " + mediaModel.getLocalSiteId() + ". Comparing with " + queuedMedia
+                                      .getFilePath()
+                              + ", " + queuedMedia.getLocalSiteId());
             if (compareBySiteAndFilePath(queuedMedia, mediaModel)) {
                 return true;
             }
@@ -398,8 +402,8 @@ public class MediaUploadHandler implements UploadHandler<MediaModel>, VideoOptim
     }
 
     private boolean compareBySiteAndFilePath(MediaModel media1, MediaModel media2) {
-        return (media1.getLocalSiteId() == media2.getLocalSiteId() &&
-                StringUtils.equals(media1.getFilePath(), media2.getFilePath()));
+        return (media1.getLocalSiteId() == media2.getLocalSiteId()
+                && StringUtils.equals(media1.getFilePath(), media2.getFilePath()));
     }
 
     @Override

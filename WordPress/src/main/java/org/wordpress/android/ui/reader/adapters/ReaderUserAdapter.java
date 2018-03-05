@@ -19,7 +19,7 @@ import org.wordpress.android.widgets.WPNetworkImageView;
  * owner must call setUsers() with the list of
  * users to display
  */
-public class ReaderUserAdapter  extends RecyclerView.Adapter<ReaderUserAdapter.UserViewHolder> {
+public class ReaderUserAdapter extends RecyclerView.Adapter<ReaderUserAdapter.UserViewHolder> {
     private final ReaderUserList mUsers = new ReaderUserList();
     private DataLoadedListener mDataLoadedListener;
     private final int mAvatarSz;

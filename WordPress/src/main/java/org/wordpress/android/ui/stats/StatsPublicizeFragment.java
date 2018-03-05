@@ -28,12 +28,14 @@ public class StatsPublicizeFragment extends StatsAbstractListFragment {
     protected boolean hasDataAvailable() {
         return mPublicizeData != null;
     }
+
     @Override
     protected void saveStatsData(Bundle outState) {
         if (mPublicizeData != null) {
             outState.putSerializable(ARG_REST_RESPONSE, mPublicizeData);
         }
     }
+
     @Override
     protected void restoreStatsData(Bundle savedInstanceState) {
         if (savedInstanceState.containsKey(ARG_REST_RESPONSE)) {
@@ -78,8 +80,8 @@ public class StatsPublicizeFragment extends StatsAbstractListFragment {
 
     private boolean hasPublicize() {
         return mPublicizeData != null
-                && mPublicizeData.getServices() != null
-                && mPublicizeData.getServices().size() > 0;
+               && mPublicizeData.getServices() != null
+               && mPublicizeData.getServices().size() > 0;
     }
 
     private List<SingleItemModel> getPublicize() {
@@ -100,7 +102,6 @@ public class StatsPublicizeFragment extends StatsAbstractListFragment {
     }
 
     private class PublicizeAdapter extends ArrayAdapter<SingleItemModel> {
-
         private final List<SingleItemModel> list;
         private final LayoutInflater inflater;
 

@@ -17,7 +17,7 @@ public class FollowerModel implements Serializable {
     private FollowDataModel mFollowData;
     private String mDateSubscribed;
 
-    public FollowerModel(long mBlogId, JSONObject followerJSONData) throws JSONException{
+    public FollowerModel(long mBlogId, JSONObject followerJSONData) throws JSONException {
         this.mBlogId = mBlogId;
         this.mLabel = followerJSONData.getString("label");
 

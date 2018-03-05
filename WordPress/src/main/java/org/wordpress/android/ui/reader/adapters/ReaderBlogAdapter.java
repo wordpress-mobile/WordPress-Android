@@ -28,10 +28,11 @@ import java.util.Comparator;
  * adapter which shows either recommended or followed blogs - used by ReaderBlogFragment
  */
 public class ReaderBlogAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
-
     private static final int VIEW_TYPE_ITEM = 0;
 
-    public enum ReaderBlogType {RECOMMENDED, FOLLOWED}
+    public enum ReaderBlogType {
+        RECOMMENDED, FOLLOWED
+    }
 
     public interface BlogClickListener {
         void onBlogClicked(Object blog);
@@ -103,7 +104,8 @@ public class ReaderBlogAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         switch (viewType) {
             case VIEW_TYPE_ITEM:
-                View itemView = LayoutInflater.from(parent.getContext()).inflate(R.layout.reader_listitem_blog, parent, false);
+                View itemView =
+                        LayoutInflater.from(parent.getContext()).inflate(R.layout.reader_listitem_blog, parent, false);
                 return new BlogViewHolder(itemView);
             default:
                 return null;
@@ -169,7 +171,7 @@ public class ReaderBlogAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         private final TextView txtUrl;
         private final WPNetworkImageView imgBlog;
 
-        public BlogViewHolder(View view) {
+        BlogViewHolder(View view) {
             super(view);
 
             txtTitle = (TextView) view.findViewById(R.id.text_title);
@@ -190,6 +192,7 @@ public class ReaderBlogAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
     }
 
     private boolean mIsTaskRunning = false;
+
     private class LoadBlogsTask extends AsyncTask<Void, Void, Boolean> {
         ReaderRecommendBlogList tmpRecommendedBlogs;
         ReaderBlogList tmpFollowedBlogs;
@@ -216,7 +219,7 @@ public class ReaderBlogAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                     ReaderBlogList allFollowedBlogs = ReaderBlogTable.getFollowedBlogs();
                     if (hasSearchFilter()) {
                         String query = mSearchFilter.toLowerCase();
-                        for (ReaderBlog blog: allFollowedBlogs) {
+                        for (ReaderBlog blog : allFollowedBlogs) {
                             if (blog.getName().toLowerCase().contains(query)) {
                                 tmpFollowedBlogs.add(blog);
                             } else if (UrlUtils.getHost(blog.getUrl()).toLowerCase().contains(query)) {
@@ -293,5 +296,4 @@ public class ReaderBlogAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
     public boolean hasSearchFilter() {
         return !TextUtils.isEmpty(mSearchFilter);
     }
-
 }

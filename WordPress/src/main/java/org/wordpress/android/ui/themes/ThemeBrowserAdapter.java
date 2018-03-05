@@ -42,7 +42,7 @@ class ThemeBrowserAdapter extends BaseAdapter implements Filterable {
     private final List<ThemeModel> mAllThemes = new ArrayList<>();
     private final List<ThemeModel> mFilteredThemes = new ArrayList<>();
 
-    ThemeBrowserAdapter(Context context,ThemeBrowserFragmentCallback callback) {
+    ThemeBrowserAdapter(Context context, ThemeBrowserFragmentCallback callback) {
         mContext = context;
         mInflater = LayoutInflater.from(context);
         mCallback = callback;
@@ -161,7 +161,8 @@ class ThemeBrowserAdapter extends BaseAdapter implements Filterable {
         }
     }
 
-    private void configureImageView(ThemeViewHolder themeViewHolder, String screenshotURL, final String themeId, final boolean isCurrent) {
+    private void configureImageView(ThemeViewHolder themeViewHolder, String screenshotURL, final String themeId,
+                                    final boolean isCurrent) {
         String requestURL = (String) themeViewHolder.imageView.getTag();
         if (requestURL == null) {
             requestURL = screenshotURL;
@@ -173,7 +174,8 @@ class ThemeBrowserAdapter extends BaseAdapter implements Filterable {
             requestURL = screenshotURL;
         }
 
-        themeViewHolder.imageView.setImageUrl(requestURL + THEME_IMAGE_PARAMETER + mViewWidth, WPNetworkImageView.ImageType.PHOTO);
+        themeViewHolder.imageView
+                .setImageUrl(requestURL + THEME_IMAGE_PARAMETER + mViewWidth, WPNetworkImageView.ImageType.PHOTO);
         themeViewHolder.frameLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -186,7 +188,8 @@ class ThemeBrowserAdapter extends BaseAdapter implements Filterable {
         });
     }
 
-    private void configureImageButton(ThemeViewHolder themeViewHolder, final String themeId, final boolean isPremium, boolean isCurrent) {
+    private void configureImageButton(ThemeViewHolder themeViewHolder, final String themeId, final boolean isPremium,
+                                      boolean isCurrent) {
         final PopupMenu popupMenu = new PopupMenu(mContext, themeViewHolder.imageButton);
         popupMenu.getMenuInflater().inflate(R.menu.theme_more, popupMenu.getMenu());
 

@@ -15,7 +15,6 @@ import org.wordpress.android.util.FormatUtils;
 import java.util.List;
 
 public class PostsAndPagesAdapter extends ArrayAdapter<StatsPostModel> {
-
     private final List<StatsPostModel> list;
     private final LayoutInflater inflater;
 

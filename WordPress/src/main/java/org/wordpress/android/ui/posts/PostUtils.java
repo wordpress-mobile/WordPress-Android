@@ -67,7 +67,9 @@ public class PostUtils {
     }
 
     private static boolean isKnownShortcode(String shortCode) {
-        if (shortCode == null) return false;
+        if (shortCode == null) {
+            return false;
+        }
 
         // populate on first use
         if (mShortcodeTable.size() == 0) {
@@ -127,11 +129,11 @@ public class PostUtils {
                     AnalyticsUtils.trackWithSiteDetails(AnalyticsTracker.Stat.EDITOR_UPDATED_POST, site, properties);
                 } else {
                     properties.put("word_count", AnalyticsUtils.getWordCount(post.getContent()));
-                    properties.put("editor_source", AppPrefs.isAztecEditorEnabled() ? "aztec" :
-                            AppPrefs.isVisualEditorEnabled() ? "hybrid" : "legacy");
+                    properties.put("editor_source", AppPrefs.isAztecEditorEnabled() ? "aztec"
+                            : AppPrefs.isVisualEditorEnabled() ? "hybrid" : "legacy");
 
                     AnalyticsUtils.trackWithSiteDetails(AnalyticsTracker.Stat.EDITOR_SCHEDULED_POST, site,
-                            properties);
+                                                        properties);
                 }
                 break;
             case DRAFT:
@@ -148,7 +150,6 @@ public class PostUtils {
         FragmentManager fm = activity.getFragmentManager();
         WPAlertDialogFragment saveDialog = (WPAlertDialogFragment) fm.findFragmentByTag(tag);
         if (saveDialog == null) {
-
             saveDialog = WPAlertDialogFragment.newCustomDialog(title, message, positiveButton, negativeButton);
         }
         if (!saveDialog.isAdded()) {
@@ -158,7 +159,7 @@ public class PostUtils {
 
     public static boolean isPublishable(PostModel post) {
         return post != null
-                && !(post.getContent().isEmpty() && post.getExcerpt().isEmpty() && post.getTitle().isEmpty());
+               && !(post.getContent().isEmpty() && post.getExcerpt().isEmpty() && post.getTitle().isEmpty());
     }
 
     public static boolean hasEmptyContentFields(PostModel post) {
@@ -174,18 +175,18 @@ public class PostUtils {
         }
 
         return newPost == null || !(StringUtils.equals(oldPost.getTitle(), newPost.getTitle())
-                && StringUtils.equals(oldPost.getContent(), newPost.getContent())
-                && StringUtils.equals(oldPost.getExcerpt(), newPost.getExcerpt())
-                && StringUtils.equals(oldPost.getStatus(), newPost.getStatus())
-                && StringUtils.equals(oldPost.getPassword(), newPost.getPassword())
-                && StringUtils.equals(oldPost.getPostFormat(), newPost.getPostFormat())
-                && StringUtils.equals(oldPost.getDateCreated(), newPost.getDateCreated())
-                && oldPost.getFeaturedImageId() == newPost.getFeaturedImageId()
-                && oldPost.getTagNameList().containsAll(newPost.getTagNameList())
-                && newPost.getTagNameList().containsAll(oldPost.getTagNameList())
-                && oldPost.getCategoryIdList().containsAll(newPost.getCategoryIdList())
-                && newPost.getCategoryIdList().containsAll(oldPost.getCategoryIdList())
-                && PostLocation.equals(oldPost.getLocation(), newPost.getLocation())
+                                    && StringUtils.equals(oldPost.getContent(), newPost.getContent())
+                                    && StringUtils.equals(oldPost.getExcerpt(), newPost.getExcerpt())
+                                    && StringUtils.equals(oldPost.getStatus(), newPost.getStatus())
+                                    && StringUtils.equals(oldPost.getPassword(), newPost.getPassword())
+                                    && StringUtils.equals(oldPost.getPostFormat(), newPost.getPostFormat())
+                                    && StringUtils.equals(oldPost.getDateCreated(), newPost.getDateCreated())
+                                    && oldPost.getFeaturedImageId() == newPost.getFeaturedImageId()
+                                    && oldPost.getTagNameList().containsAll(newPost.getTagNameList())
+                                    && newPost.getTagNameList().containsAll(oldPost.getTagNameList())
+                                    && oldPost.getCategoryIdList().containsAll(newPost.getCategoryIdList())
+                                    && newPost.getCategoryIdList().containsAll(oldPost.getCategoryIdList())
+                                    && PostLocation.equals(oldPost.getLocation(), newPost.getLocation())
         );
     }
 
@@ -244,10 +245,11 @@ public class PostUtils {
     public static String getFormattedDate(PostModel post) {
         if (PostStatus.fromPost(post) == PostStatus.SCHEDULED) {
             return DateUtils.formatDateTime(WordPress.getContext(),
-                    DateTimeUtils.timestampFromIso8601Millis(post.getDateCreated()), DateUtils.FORMAT_ABBREV_ALL);
+                                            DateTimeUtils.timestampFromIso8601Millis(post.getDateCreated()),
+                                            DateUtils.FORMAT_ABBREV_ALL);
         } else {
             return DateTimeUtils.javaDateToTimeSpan(DateTimeUtils.dateUTCFromIso8601(post.getDateCreated()),
-                    WordPress.getContext());
+                                                    WordPress.getContext());
         }
     }
 
@@ -272,15 +274,16 @@ public class PostUtils {
             return -1;
         }
         for (int i = 0; i < posts.size(); i++) {
-            if (posts.get(i).getId() == post.getId() &&
-                    posts.get(i).getLocalSiteId() == post.getLocalSiteId()) {
+            if (posts.get(i).getId() == post.getId()
+                && posts.get(i).getLocalSiteId() == post.getLocalSiteId()) {
                 return i;
             }
         }
         return -1;
     }
 
-    public static @NotNull List<Integer> indexesOfFeaturedMediaIdInList(final long mediaId, List<PostModel> posts) {
+    public static @NotNull
+    List<Integer> indexesOfFeaturedMediaIdInList(final long mediaId, List<PostModel> posts) {
         List<Integer> list = new ArrayList<>();
         if (mediaId == 0) {
             return list;
@@ -332,10 +335,11 @@ public class PostUtils {
 
     public static boolean isFirstTimePublish(PostModel post) {
         return PostStatus.fromPost(post) == PostStatus.DRAFT
-                || (PostStatus.fromPost(post) == PostStatus.PUBLISHED && post.isLocalDraft());
+               || (PostStatus.fromPost(post) == PostStatus.PUBLISHED && post.isLocalDraft());
     }
 
-    public static Set<PostModel> getPostsThatIncludeAnyOfTheseMedia(PostStore postStore, List<MediaModel> mediaModelList) {
+    public static Set<PostModel> getPostsThatIncludeAnyOfTheseMedia(PostStore postStore,
+                                                                    List<MediaModel> mediaModelList) {
         // if there' a Post to which the retried media belongs, clear their status
         HashSet<PostModel> postsThatContainListedMedia = new HashSet<>();
         for (MediaModel media : mediaModelList) {

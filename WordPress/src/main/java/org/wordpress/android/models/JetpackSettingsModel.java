@@ -44,18 +44,20 @@ public class JetpackSettingsModel {
 
     @Override
     public boolean equals(Object other) {
-        if (!(other instanceof JetpackSettingsModel)) return false;
+        if (!(other instanceof JetpackSettingsModel)) {
+            return false;
+        }
         JetpackSettingsModel otherModel = (JetpackSettingsModel) other;
-        return monitorActive == otherModel.monitorActive &&
-                emailNotifications == otherModel.emailNotifications &&
-                wpNotifications == otherModel.wpNotifications &&
-                jetpackProtectEnabled == otherModel.jetpackProtectEnabled &&
-                ssoActive == otherModel.ssoActive &&
-                ssoMatchEmail == otherModel.ssoMatchEmail &&
-                ssoRequireTwoFactor == otherModel.ssoRequireTwoFactor &&
-                serveImagesFromOurServers == otherModel.serveImagesFromOurServers &&
-                lazyLoadImages == otherModel.lazyLoadImages &&
-                whitelistMatches(otherModel.jetpackProtectWhitelist);
+        return monitorActive == otherModel.monitorActive
+               && emailNotifications == otherModel.emailNotifications
+               && wpNotifications == otherModel.wpNotifications
+               && jetpackProtectEnabled == otherModel.jetpackProtectEnabled
+               && ssoActive == otherModel.ssoActive
+               && ssoMatchEmail == otherModel.ssoMatchEmail
+               && ssoRequireTwoFactor == otherModel.ssoRequireTwoFactor
+               && serveImagesFromOurServers == otherModel.serveImagesFromOurServers
+               && lazyLoadImages == otherModel.lazyLoadImages
+               && whitelistMatches(otherModel.jetpackProtectWhitelist);
     }
 
     public boolean whitelistMatches(List<String> otherWhitelist) {

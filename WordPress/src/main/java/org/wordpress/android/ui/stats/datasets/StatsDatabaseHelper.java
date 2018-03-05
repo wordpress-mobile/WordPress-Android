@@ -20,7 +20,7 @@ public class StatsDatabaseHelper extends SQLiteOpenHelper {
     private static final int DB_VERSION = 1;
 
     /*
-	 *  database singleton
+     * database singleton
 	 */
     private static StatsDatabaseHelper mDatabaseHelper;
     private final static Object mDbLock = new Object();
@@ -28,7 +28,7 @@ public class StatsDatabaseHelper extends SQLiteOpenHelper {
 
     public static StatsDatabaseHelper getDatabase(Context ctx) {
         if (mDatabaseHelper == null) {
-            synchronized(mDbLock) {
+            synchronized (mDbLock) {
                 if (mDatabaseHelper == null) {
                     mDatabaseHelper = new StatsDatabaseHelper(ctx);
                     // this ensures that onOpen() is called with a writable database (open will fail if app calls getReadableDb() first)
@@ -48,6 +48,7 @@ public class StatsDatabaseHelper extends SQLiteOpenHelper {
     public static SQLiteDatabase getReadableDb(Context ctx) {
         return getDatabase(ctx).getReadableDatabase();
     }
+
     public static SQLiteDatabase getWritableDb(Context ctx) {
         return getDatabase(ctx).getWritableDatabase();
     }

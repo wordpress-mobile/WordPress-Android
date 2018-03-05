@@ -22,7 +22,6 @@ import static org.wordpress.android.WordPress.SITE;
 import static org.wordpress.android.ui.RequestCodes.JETPACK_LOGIN;
 
 class JetpackConnectionWebViewClient extends WebViewClient {
-
     private static final String LOGIN_PATH = "/wp-login.php";
     private static final String ADMIN_PATH = "/wp-admin/admin.php";
     private static final String REDIRECT_PARAMETER = "redirect_to=";
@@ -30,7 +29,8 @@ class JetpackConnectionWebViewClient extends WebViewClient {
     private static final String LOG_IN_PATH = "/log-in";
     private static final String JETPACK_PATH = "/jetpack";
     private static final String WORDPRESS_COM_PREFIX = "https://wordpress.com";
-    private static final Uri JETPACK_DEEPLINK_URI = Uri.parse(JetpackConnectionWebViewActivity.JETPACK_CONNECTION_DEEPLINK);
+    private static final Uri JETPACK_DEEPLINK_URI =
+            Uri.parse(JetpackConnectionWebViewActivity.JETPACK_CONNECTION_DEEPLINK);
     private static final String REDIRECT_PAGE_STATE_ITEM = "redirectPage";
     private static final String FLOW_FINISHED = "FLOW_FINISHED";
 
@@ -49,7 +49,9 @@ class JetpackConnectionWebViewClient extends WebViewClient {
 
     private void loginToWPCom(WebView view, SiteModel site) {
         String authenticationURL = WPWebViewActivity.getSiteLoginUrl(site);
-        String postData = WPWebViewActivity.getAuthenticationPostData(authenticationURL, redirectPage, site.getUsername(), site.getPassword(), accountStore.getAccessToken());
+        String postData = WPWebViewActivity
+                .getAuthenticationPostData(authenticationURL, redirectPage, site.getUsername(), site.getPassword(),
+                                           accountStore.getAccessToken());
         view.postUrl(authenticationURL, postData.getBytes());
     }
 
@@ -79,30 +81,30 @@ class JetpackConnectionWebViewClient extends WebViewClient {
             final String loadedPath = url.getPath();
             final String currentSiteHost = Uri.parse(mSiteModel.getUrl()).getHost();
             if (loadedHost.equals(currentSiteHost)
-                    && loadedPath != null
-                    && loadedPath.contains(LOGIN_PATH)
-                    && stringUrl.contains(REDIRECT_PARAMETER)) {
+                && loadedPath != null
+                && loadedPath.contains(LOGIN_PATH)
+                && stringUrl.contains(REDIRECT_PARAMETER)) {
                 redirectPage = extractRedirect(stringUrl);
                 loginToWPCom(view, mSiteModel);
                 return true;
             } else if (loadedHost.equals(currentSiteHost)
-                    && loadedPath != null
-                    && loadedPath.contains(ADMIN_PATH)
-                    && redirectPage != null) {
+                       && loadedPath != null
+                       && loadedPath.contains(ADMIN_PATH)
+                       && redirectPage != null) {
                 view.loadUrl(redirectPage);
                 redirectPage = null;
                 return true;
             } else if (loadedHost.equals(WORDPRESS_COM_HOST)
-                    && loadedPath != null
-                    && loadedPath.contains(LOG_IN_PATH)
-                    && stringUrl.contains(REDIRECT_PARAMETER)) {
+                       && loadedPath != null
+                       && loadedPath.contains(LOG_IN_PATH)
+                       && stringUrl.contains(REDIRECT_PARAMETER)) {
                 redirectPage = extractRedirect(stringUrl);
                 Intent loginIntent = new Intent(activity, LoginActivity.class);
                 LoginMode.JETPACK_STATS.putInto(loginIntent);
                 activity.startActivityForResult(loginIntent, JETPACK_LOGIN);
                 return true;
             } else if (loadedHost.equals(JETPACK_DEEPLINK_URI.getHost())
-                    && url.getScheme().equals(JETPACK_DEEPLINK_URI.getScheme())) {
+                       && url.getScheme().equals(JETPACK_DEEPLINK_URI.getScheme())) {
                 Intent intent = new Intent(Intent.ACTION_VIEW);
                 intent.setData(url);
                 intent.putExtra(SITE, mSiteModel);

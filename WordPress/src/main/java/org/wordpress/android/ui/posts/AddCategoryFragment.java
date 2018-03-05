@@ -57,8 +57,8 @@ public class AddCategoryFragment extends AppCompatDialogFragment {
         loadCategories();
 
         builder.setView(view)
-                .setPositiveButton(android.R.string.ok, null)
-                .setNegativeButton(android.R.string.cancel, null);
+               .setPositiveButton(android.R.string.ok, null)
+               .setNegativeButton(android.R.string.cancel, null);
 
         return builder.create();
     }
@@ -119,7 +119,8 @@ public class AddCategoryFragment extends AppCompatDialogFragment {
         categoryLevels.add(0, new CategoryNode(0, 0, getString(R.string.top_level_category_name)));
         if (categoryLevels.size() > 0) {
             ParentCategorySpinnerAdapter categoryAdapter = new ParentCategorySpinnerAdapter(getActivity(),
-                    R.layout.categories_row_parent, categoryLevels);
+                                                                                            R.layout.categories_row_parent,
+                                                                                            categoryLevels);
             mParentSpinner.setAdapter(categoryAdapter);
         }
     }

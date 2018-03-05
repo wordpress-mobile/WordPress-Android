@@ -20,7 +20,7 @@ public class PostViewsModel implements Serializable {
 
     private int mHighestMonth, mHighestDayAverage, mHighestWeekAverage;
     private String mDate;
-    private VisitModel[] mDayViews; //Used to build the graph
+    private VisitModel[] mDayViews; // Used to build the graph
     private List<Year> mYears;
     private List<Year> mAverages;
     private List<Week> mWeeks;
@@ -63,12 +63,12 @@ public class PostViewsModel implements Serializable {
 
 
     public PostViewsModel(String response) throws JSONException {
-            this.mOriginalResponse = response;
-            JSONObject responseObj = new JSONObject(response);
-            parseResponseObject(responseObj);
+        this.mOriginalResponse = response;
+        JSONObject responseObj = new JSONObject(response);
+        parseResponseObject(responseObj);
     }
 
-    public PostViewsModel(JSONObject response) throws JSONException  {
+    public PostViewsModel(JSONObject response) throws JSONException {
         if (response == null) {
             return;
         }
@@ -76,8 +76,7 @@ public class PostViewsModel implements Serializable {
         parseResponseObject(response);
     }
 
-    private void parseResponseObject(JSONObject response) throws JSONException  {
-
+    private void parseResponseObject(JSONObject response) throws JSONException {
         mDate = response.getString("date");
         mHighestDayAverage = response.getInt("highest_day_average");
         mHighestWeekAverage = response.getInt("highest_week_average");
@@ -86,7 +85,7 @@ public class PostViewsModel implements Serializable {
         mAverages = new LinkedList<>();
         mWeeks = new LinkedList<>();
 
-        JSONArray dataJSON =  response.getJSONArray("data");
+        JSONArray dataJSON = response.getJSONArray("data");
         if (dataJSON != null) {
             // Read the position/index of each field in the response
             JSONArray fieldsJSON = response.getJSONArray("fields");
@@ -132,7 +131,7 @@ public class PostViewsModel implements Serializable {
         String[] orderedKeys = new String[numberOfKeys];
         int i = 0;
         while (keys.hasNext()) {
-            orderedKeys[i] = (String)keys.next();
+            orderedKeys[i] = (String) keys.next();
             i++;
         }
         Arrays.sort(orderedKeys);
@@ -230,14 +229,15 @@ public class PostViewsModel implements Serializable {
                 currentWeek.setTotal(currentWeekJSON.getInt("total"));
                 currentWeek.setAverage(currentWeekJSON.getInt("average"));
                 try {
-                    if (i == 0 ) {
+                    if (i == 0) {
                         currentWeek.setChange(0);
                     } else {
                         currentWeek.setChange(currentWeekJSON.getInt("change"));
                     }
-                } catch (JSONException e){
-                    AppLog.w(AppLog.T.STATS, "Cannot parse the change value in weeks section. Trying to understand the meaning: 42!!");
-                    //  if i == 0 is the first week. if not it could mean infinity
+                } catch (JSONException e) {
+                    AppLog.w(AppLog.T.STATS,
+                             "Cannot parse the change value in weeks section. Trying to understand the meaning: 42!!");
+                    // if i == 0 is the first week. if not it could mean infinity
                     String aProblematicValue = currentWeekJSON.get("change").toString();
                     if (aProblematicValue.contains("infinity")) {
                         currentWeek.setChange(Integer.MAX_VALUE);
@@ -363,6 +363,7 @@ public class PostViewsModel implements Serializable {
         public String getMonth() {
             return mMonth;
         }
+
         public int getCount() {
             return mCount;
         }

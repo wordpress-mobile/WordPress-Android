@@ -65,8 +65,12 @@ public class WPNumberPicker extends NumberPicker {
 
     @Override
     public void setValue(int value) {
-        if (value < getMinValue()) value = getMinValue();
-        if (value > getMaxValue()) value = getMaxValue();
+        if (value < getMinValue()) {
+            value = getMinValue();
+        }
+        if (value > getMaxValue()) {
+            value = getMaxValue();
+        }
         super.setValue(value);
     }
 
@@ -83,7 +87,7 @@ public class WPNumberPicker extends NumberPicker {
         float y = getScrollOffset();
         Paint paint = mInputView.getPaint();
         paint.setTextAlign(Paint.Align.CENTER);
-        //noinspection deprecation
+        // noinspection deprecation
         paint.setColor(getResources().getColor(R.color.blue_medium));
         int alpha = isEnabled() ? 255 : 96;
         paint.setAlpha(alpha);
@@ -101,7 +105,8 @@ public class WPNumberPicker extends NumberPicker {
             if (i == MIDDLE_INDEX) {
                 canvas.drawText(scrollSelectorValue, x, y - ((paint.descent() + paint.ascent()) / 2) - offset, paint);
             } else {
-                canvas.drawText(scrollSelectorValue, x, y - ((mPaint.descent() + mPaint.ascent()) / 2) - offset, mPaint);
+                canvas.drawText(scrollSelectorValue, x, y - ((mPaint.descent() + mPaint.ascent()) / 2) - offset,
+                                mPaint);
             }
             y += elementHeight;
         }
@@ -246,7 +251,9 @@ public class WPNumberPicker extends NumberPicker {
         } catch (ClassNotFoundException e) {
             AppLog.e(AppLog.T.MAIN, e.getMessage());
         }
-        if (numberPickerClass == null) return;
+        if (numberPickerClass == null) {
+            return;
+        }
 
         mSelectorHeight = getFieldAndSetAccessible(numberPickerClass, SELECTOR_HEIGHT_FIELD);
         mOffsetField = getFieldAndSetAccessible(numberPickerClass, CUR_OFFSET_FIELD);

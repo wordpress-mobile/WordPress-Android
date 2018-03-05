@@ -37,12 +37,14 @@ public class StatsGeoviewsFragment extends StatsAbstractListFragment {
     protected boolean hasDataAvailable() {
         return mCountries != null;
     }
+
     @Override
     protected void saveStatsData(Bundle outState) {
         if (hasDataAvailable()) {
             outState.putSerializable(ARG_REST_RESPONSE, mCountries);
         }
     }
+
     @Override
     protected void restoreStatsData(Bundle savedInstanceState) {
         if (savedInstanceState.containsKey(ARG_REST_RESPONSE)) {
@@ -102,71 +104,78 @@ public class StatsGeoviewsFragment extends StatsAbstractListFragment {
 
         // must wait for mTopPagerContainer to be fully laid out (ie: measured). Then we can read the width and
         // calculate the right height for the map div
-        mTopPagerContainer.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
-            @Override
-            public void onGlobalLayout() {
-                mTopPagerContainer.getViewTreeObserver().removeGlobalOnLayoutListener(this);
-                if (!isAdded()) {
-                    return;
-                }
+        mTopPagerContainer.getViewTreeObserver()
+                          .addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
+                              @Override
+                              public void onGlobalLayout() {
+                                  mTopPagerContainer.getViewTreeObserver().removeGlobalOnLayoutListener(this);
+                                  if (!isAdded()) {
+                                      return;
+                                  }
 
-                StringBuilder dataToLoad = new StringBuilder();
+                                  StringBuilder dataToLoad = new StringBuilder();
 
-                for (int i = 0; i < countries.size(); i++) {
-                    final GeoviewModel currentCountry = countries.get(i);
-                    dataToLoad.append("['").append(currentCountry.getCountryFullName()).append("',")
-                            .append(currentCountry.getViews()).append("],");
-                }
+                                  for (int i = 0; i < countries.size(); i++) {
+                                      final GeoviewModel currentCountry = countries.get(i);
+                                      dataToLoad.append("['").append(currentCountry.getCountryFullName()).append("',")
+                                                .append(currentCountry.getViews()).append("],");
+                                  }
 
-                // This is the label that is shown when the user taps on a region
-                String label = getResources().getString(getTotalsLabelResId());
+                                  // This is the label that is shown when the user taps on a region
+                                  String label = getResources().getString(getTotalsLabelResId());
 
-                // See: https://developers.google.com/chart/interactive/docs/gallery/geochart
-                // Loading the v42 of the Google Charts API, since the latest stable version has a problem with the legend. https://github.com/wordpress-mobile/WordPress-Android/issues/4131
-                // https://developers.google.com/chart/interactive/docs/release_notes#release-candidate-details
-                String htmlPage = "<html>" +
-                        "<head>" +
-                        "<script type=\"text/javascript\" src=\"https://www.gstatic.com/charts/loader.js\"></script>" +
-                        "<script type=\"text/javascript\" src=\"https://www.google.com/jsapi\"></script>" +
-                        "<script type=\"text/javascript\">" +
-                            "google.charts.load('42', {'packages':['geochart']});" +
-                            "google.charts.setOnLoadCallback(drawRegionsMap);" +
-                            "function drawRegionsMap() {" +
-                                "var data = google.visualization.arrayToDataTable(" +
-                                "[" +
-                                "['Country', '" + label + "']," +
-                                        dataToLoad +
-                                "]);" +
-                                "var options = {keepAspectRatio: true, region: 'world', colorAxis: { colors: [ '#FFF088', '#F34605' ] }, enableRegionInteractivity: true};" +
-                                "var chart = new google.visualization.GeoChart(document.getElementById('regions_div'));" +
-                                "chart.draw(data, options);" +
-                            "}" +
-                            "</script>" +
-                        "</head>" +
-                        "<body>" +
-                        "<div id=\"regions_div\" style=\"width: 100%; height: 100%;\"></div>" +
-                        "</body>" +
-                        "</html>";
+                                  // See: https://developers.google.com/chart/interactive/docs/gallery/geochart
+                                  // Loading the v42 of the Google Charts API, since the latest stable version has a problem with the legend. https://github.com/wordpress-mobile/WordPress-Android/issues/4131
+                                  // https://developers.google.com/chart/interactive/docs/release_notes#release-candidate-details
+                                  String htmlPage = "<html>"
+                                                    + "<head>"
+                                                    + "<script type=\"text/javascript\" src=\"https://www.gstatic.com/charts/loader.js\"></script>"
 
-                WebView webView = new WebView(getActivity());
-                mTopPagerContainer.addView(webView);
+                                                    + "<script type=\"text/javascript\" src=\"https://www.google.com/jsapi\"></script>"
 
-                int width = mTopPagerContainer.getWidth();
-                int height = width * 3 / 4;
+                                                    + "<script type=\"text/javascript\">"
+                                                    + "google.charts.load('42', {'packages':['geochart']});"
+                                                    + "google.charts.setOnLoadCallback(drawRegionsMap);"
+                                                    + "function drawRegionsMap() {"
+                                                    + "var data = google.visualization.arrayToDataTable("
+                                                    + "["
+                                                    + "['Country', '" + label + "'],"
+                                                    + dataToLoad
+                                                    + "]);"
+                                                    + "var options = {keepAspectRatio: true, region: 'world', colorAxis: { colors: [ '#FFF088', '#F34605' ] }, enableRegionInteractivity: true};"
 
-                LinearLayout.LayoutParams params = (LinearLayout.LayoutParams) webView.getLayoutParams();
-                params.width = WebView.LayoutParams.MATCH_PARENT;
-                params.height = height;
+                                                    + "var chart = new google.visualization.GeoChart(document.getElementById('regions_div'));"
 
-                webView.setLayoutParams(params);
+                                                    + "chart.draw(data, options);"
+                                                    + "}"
+                                                    + "</script>"
+                                                    + "</head>"
+                                                    + "<body>"
+                                                    + "<div id=\"regions_div\" style=\"width: 100%; height: 100%;\"></div>"
 
-                webView.setWebViewClient(new MyWebViewClient()); // Hide map in case of unrecoverable errors
-                webView.getSettings().setJavaScriptEnabled(true);
-                webView.getSettings().setCacheMode(WebSettings.LOAD_NO_CACHE);
-                webView.loadData(htmlPage, "text/html", "UTF-8");
+                                                    + "</body>"
+                                                    + "</html>";
 
-            }
-        });
+                                  WebView webView = new WebView(getActivity());
+                                  mTopPagerContainer.addView(webView);
+
+                                  int width = mTopPagerContainer.getWidth();
+                                  int height = width * 3 / 4;
+
+                                  LinearLayout.LayoutParams params =
+                                          (LinearLayout.LayoutParams) webView.getLayoutParams();
+                                  params.width = WebView.LayoutParams.MATCH_PARENT;
+                                  params.height = height;
+
+                                  webView.setLayoutParams(params);
+
+                                  webView.setWebViewClient(
+                                          new MyWebViewClient()); // Hide map in case of unrecoverable errors
+                                  webView.getSettings().setJavaScriptEnabled(true);
+                                  webView.getSettings().setCacheMode(WebSettings.LOAD_NO_CACHE);
+                                  webView.loadData(htmlPage, "text/html", "UTF-8");
+                              }
+                          });
         mTopPagerContainer.setVisibility(View.VISIBLE);
     }
 
@@ -177,10 +186,11 @@ public class StatsGeoviewsFragment extends StatsAbstractListFragment {
             super.onReceivedError(view, errorCode, description, failingUrl);
             mTopPagerContainer.setVisibility(View.GONE);
             AppLog.e(AppLog.T.STATS, "Cannot load geochart."
-                    + " ErrorCode: " + errorCode
-                    + " Description: " + description
-                    + " Failing URL: " + failingUrl);
+                                     + " ErrorCode: " + errorCode
+                                     + " Description: " + description
+                                     + " Failing URL: " + failingUrl);
         }
+
         @Override
         public void onReceivedSslError(WebView view, SslErrorHandler handler, SslError error) {
             super.onReceivedSslError(view, handler, error);
@@ -230,7 +240,6 @@ public class StatsGeoviewsFragment extends StatsAbstractListFragment {
     }
 
     private class GeoviewsAdapter extends ArrayAdapter<GeoviewModel> {
-
         private final List<GeoviewModel> list;
         private final Activity context;
         private final LayoutInflater inflater;

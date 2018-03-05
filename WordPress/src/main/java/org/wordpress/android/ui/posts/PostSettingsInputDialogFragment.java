@@ -57,8 +57,8 @@ public class PostSettingsInputDialogFragment extends DialogFragment implements T
         outState.putBoolean(DISABLE_EMPTY_INPUT_TAG, mDisableEmptyInput);
     }
 
-    public static PostSettingsInputDialogFragment newInstance(String currentText, String title, String hint
-            , boolean disableEmptyInput) {
+    public static PostSettingsInputDialogFragment newInstance(String currentText, String title, String hint,
+                                                              boolean disableEmptyInput) {
         PostSettingsInputDialogFragment dialogFragment = new PostSettingsInputDialogFragment();
         Bundle args = new Bundle();
         args.putString(INPUT_TAG, currentText);

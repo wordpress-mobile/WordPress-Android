@@ -51,7 +51,7 @@ public class ParentCategorySpinnerAdapter extends BaseAdapter implements Spinner
         if (node != null) {
             textView.setText(StringEscapeUtils.unescapeHtml4(node.getName()));
             textView.setPadding(DisplayUtils.dpToPx(getContext(), 16) * (node.getLevel() + 1), 0,
-                    DisplayUtils.dpToPx(getContext(), 16), 0);
+                                DisplayUtils.dpToPx(getContext(), 16), 0);
         }
         return rowView;
     }

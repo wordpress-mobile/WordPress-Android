@@ -50,11 +50,10 @@ import static org.wordpress.android.util.WPSwipeToRefreshHelper.buildSwipeToRefr
 
 
 /**
- *  Single item details activity.
+ * Single item details activity.
  */
 public class StatsSingleItemDetailsActivity extends AppCompatActivity
-        implements StatsBarGraph.OnGestureListener{
-
+        implements StatsBarGraph.OnGestureListener {
     public static final String ARG_REMOTE_BLOG_ID = "ARG_REMOTE_BLOG_ID";
     public static final String ARG_REMOTE_ITEM_ID = "ARG_REMOTE_ITEM_ID";
     public static final String ARG_REMOTE_ITEM_TYPE = "ARG_REMOTE_ITEM_TYPE";
@@ -128,7 +127,7 @@ public class StatsSingleItemDetailsActivity extends AppCompatActivity
                         refreshStats();
                     }
                 }
-        );
+                                                         );
 
         TextView mStatsForLabel = (TextView) findViewById(R.id.stats_summary_title);
         mGraphContainer = (LinearLayout) findViewById(R.id.stats_bar_chart_fragment_container);
@@ -168,7 +167,7 @@ public class StatsSingleItemDetailsActivity extends AppCompatActivity
             mPrevNumberOfBarsGraph = savedInstanceState.getInt(ARG_PREV_NUMBER_OF_BARS, -1);
 
             final int yScrollPosition = savedInstanceState.getInt(SAVED_STATS_SCROLL_POSITION);
-            if(yScrollPosition != 0) {
+            if (yScrollPosition != 0) {
                 mOuterScrollView.postDelayed(new Runnable() {
                     public void run() {
                         if (!isFinishing()) {
@@ -210,7 +209,7 @@ public class StatsSingleItemDetailsActivity extends AppCompatActivity
         // Setup the main top label that opens the post in the Reader where possible
         if (mItemTitle != null || mItemURL != null) {
             mStatsForLabel.setVisibility(View.VISIBLE);
-            mStatsForLabel.setText(mItemTitle != null ? mItemTitle : mItemURL );
+            mStatsForLabel.setText(mItemTitle != null ? mItemTitle : mItemURL);
             // make the label clickable if the URL is available
             if (mItemURL != null) {
                 mStatsForLabel.setTextColor(getResources().getColor(R.color.stats_link_text_color));
@@ -219,10 +218,10 @@ public class StatsSingleItemDetailsActivity extends AppCompatActivity
                     public void onClick(View v) {
                         final Context ctx = v.getContext();
                         StatsUtils.openPostInReaderOrInAppWebview(ctx,
-                                mRemoteBlogID,
-                                mRemoteItemID,
-                                mRemoteItemType,
-                                mItemURL);
+                                                                  mRemoteBlogID,
+                                                                  mRemoteItemID,
+                                                                  mRemoteItemType,
+                                                                  mItemURL);
                     }
                 });
             } else {
@@ -248,11 +247,13 @@ public class StatsSingleItemDetailsActivity extends AppCompatActivity
             outState.putInt(SAVED_STATS_SCROLL_POSITION, mOuterScrollView.getScrollY());
         }
 
-        if (mAveragesIdToExpandedMap.size() > 0){
-            outState.putParcelable(ARG_AVERAGES_EXPANDED_ROWS, new SparseBooleanArrayParcelable(mAveragesIdToExpandedMap));
+        if (mAveragesIdToExpandedMap.size() > 0) {
+            outState.putParcelable(ARG_AVERAGES_EXPANDED_ROWS,
+                                   new SparseBooleanArrayParcelable(mAveragesIdToExpandedMap));
         }
         if (mRecentWeeksIdToExpandedMap.size() > 0) {
-            outState.putParcelable(ARG_RECENT_EXPANDED_ROWS, new SparseBooleanArrayParcelable(mRecentWeeksIdToExpandedMap));
+            outState.putParcelable(ARG_RECENT_EXPANDED_ROWS,
+                                   new SparseBooleanArrayParcelable(mRecentWeeksIdToExpandedMap));
         }
         if (mYearsIdToExpandedMap.size() > 0) {
             outState.putParcelable(ARG_YEARS_EXPANDED_ROWS, new SparseBooleanArrayParcelable(mYearsIdToExpandedMap));
@@ -299,10 +300,9 @@ public class StatsSingleItemDetailsActivity extends AppCompatActivity
     }
 
     private void refreshStats() {
-
         if (mIsUpdatingStats) {
             AppLog.w(AppLog.T.STATS, "stats details are already updating for the following postID "
-                    + mRemoteItemID + ", refresh cancelled.");
+                                     + mRemoteItemID + ", refresh cancelled.");
             return;
         }
 
@@ -374,7 +374,8 @@ public class StatsSingleItemDetailsActivity extends AppCompatActivity
             LayoutInflater inflater = LayoutInflater.from(context);
             View emptyBarGraphView = inflater.inflate(R.layout.stats_bar_graph_empty, mGraphContainer, false);
             if (emptyLabel != null) {
-                final TextView emptyLabelField = (TextView) emptyBarGraphView.findViewById(R.id.stats_bar_graph_empty_label);
+                final TextView emptyLabelField =
+                        (TextView) emptyBarGraphView.findViewById(R.id.stats_bar_graph_empty_label);
                 emptyLabelField.setText(emptyLabel);
             }
             mGraphContainer.removeAllViews();
@@ -384,7 +385,7 @@ public class StatsSingleItemDetailsActivity extends AppCompatActivity
         mStatsViewsTotals.setText("");
     }
 
-    private VisitModel[] getDataToShowOnGraph () {
+    private VisitModel[] getDataToShowOnGraph() {
         if (mRestResponseParsed == null) {
             return new VisitModel[0];
         }
@@ -430,14 +431,16 @@ public class StatsSingleItemDetailsActivity extends AppCompatActivity
                     currentItemStatsDate,
                     StatsConstants.STATS_INPUT_DATE_FORMAT,
                     StatsConstants.STATS_OUTPUT_DATE_MONTH_SHORT_DAY_SHORT_FORMAT
-            );
+                                               );
             mStatsDate[i] = currentItemStatsDate;
         }
 
         GraphViewSeries mCurrentSeriesOnScreen = new GraphViewSeries(views);
         mCurrentSeriesOnScreen.getStyle().color = getResources().getColor(R.color.stats_bar_graph_main_series);
-        mCurrentSeriesOnScreen.getStyle().highlightColor = getResources().getColor(R.color.stats_bar_graph_main_series_highlight);
-        mCurrentSeriesOnScreen.getStyle().outerhighlightColor = getResources().getColor(R.color.stats_bar_graph_outer_highlight);
+        mCurrentSeriesOnScreen.getStyle().highlightColor =
+                getResources().getColor(R.color.stats_bar_graph_main_series_highlight);
+        mCurrentSeriesOnScreen.getStyle().outerhighlightColor =
+                getResources().getColor(R.color.stats_bar_graph_outer_highlight);
         mCurrentSeriesOnScreen.getStyle().padding = DisplayUtils.dpToPx(this, 5);
 
         StatsBarGraph mGraphView;
@@ -452,11 +455,11 @@ public class StatsSingleItemDetailsActivity extends AppCompatActivity
 
         mGraphView.removeAllSeries();
         mGraphView.addSeries(mCurrentSeriesOnScreen);
-        //mGraphView.getGraphViewStyle().setNumHorizontalLabels(getNumOfHorizontalLabels(dataToShowOnGraph.length));
+        // mGraphView.getGraphViewStyle().setNumHorizontalLabels(getNumOfHorizontalLabels(dataToShowOnGraph.length));
         mGraphView.getGraphViewStyle().setNumHorizontalLabels(dataToShowOnGraph.length);
         mGraphView.getGraphViewStyle().setMaxColumnWidth(
                 DisplayUtils.dpToPx(this, StatsConstants.STATS_GRAPH_BAR_MAX_COLUMN_WIDTH_DP)
-        );
+                                                        );
         mGraphView.setHorizontalLabels(horLabels);
         mGraphView.setGestureListener(this);
 
@@ -465,7 +468,8 @@ public class StatsSingleItemDetailsActivity extends AppCompatActivity
         if (mPrevNumberOfBarsGraph != -1 && mPrevNumberOfBarsGraph != dataToShowOnGraph.length) {
             mSelectedBarGraphIndex = dataToShowOnGraph.length - 1;
         } else {
-            mSelectedBarGraphIndex = (mSelectedBarGraphIndex != -1) ? mSelectedBarGraphIndex : dataToShowOnGraph.length - 1;
+            mSelectedBarGraphIndex =
+                    (mSelectedBarGraphIndex != -1) ? mSelectedBarGraphIndex : dataToShowOnGraph.length - 1;
         }
 
         mGraphView.highlightBar(mSelectedBarGraphIndex);
@@ -476,32 +480,35 @@ public class StatsSingleItemDetailsActivity extends AppCompatActivity
                         mStatsDate[mSelectedBarGraphIndex],
                         StatsConstants.STATS_INPUT_DATE_FORMAT,
                         StatsConstants.STATS_OUTPUT_DATE_MONTH_LONG_DAY_SHORT_FORMAT
-                ),
+                                    ),
                 dataToShowOnGraph[mSelectedBarGraphIndex].getViews()
-        );
+                         );
 
         showHideEmptyModulesIndicator(false);
 
         mMonthsAndYearsList.setVisibility(View.VISIBLE);
         List<PostViewsModel.Year> years = mRestResponseParsed.getYears();
-        MonthsAndYearsListAdapter monthsAndYearsListAdapter = new MonthsAndYearsListAdapter(this, years, mRestResponseParsed.getHighestMonth());
+        MonthsAndYearsListAdapter monthsAndYearsListAdapter =
+                new MonthsAndYearsListAdapter(this, years, mRestResponseParsed.getHighestMonth());
         StatsUIHelper.reloadGroupViews(this, monthsAndYearsListAdapter, mYearsIdToExpandedMap, mMonthsAndYearsList);
 
         mAveragesList.setVisibility(View.VISIBLE);
         List<PostViewsModel.Year> averages = mRestResponseParsed.getAverages();
-        MonthsAndYearsListAdapter averagesListAdapter = new MonthsAndYearsListAdapter(this, averages, mRestResponseParsed.getHighestDayAverage());
+        MonthsAndYearsListAdapter averagesListAdapter =
+                new MonthsAndYearsListAdapter(this, averages, mRestResponseParsed.getHighestDayAverage());
         StatsUIHelper.reloadGroupViews(this, averagesListAdapter, mAveragesIdToExpandedMap, mAveragesList);
 
         mRecentWeeksList.setVisibility(View.VISIBLE);
         List<PostViewsModel.Week> recentWeeks = mRestResponseParsed.getWeeks();
-        RecentWeeksListAdapter recentWeeksListAdapter = new RecentWeeksListAdapter(this, recentWeeks, mRestResponseParsed.getHighestWeekAverage());
+        RecentWeeksListAdapter recentWeeksListAdapter =
+                new RecentWeeksListAdapter(this, recentWeeks, mRestResponseParsed.getHighestWeekAverage());
         StatsUIHelper.reloadGroupViews(this, recentWeeksListAdapter, mRecentWeeksIdToExpandedMap, mRecentWeeksList);
-     }
+    }
 
 
     private void setMainViewsLabel(String dateFormatted, int totals) {
         mStatsViewsLabel.setText(getString(R.string.stats_views) + ": "
-                + dateFormatted);
+                                 + dateFormatted);
         mStatsViewsTotals.setText(FormatUtils.formatDecimal(totals));
     }
 
@@ -532,7 +539,6 @@ public class StatsSingleItemDetailsActivity extends AppCompatActivity
         @Override
         public View getChildView(int groupPosition, final int childPosition,
                                  boolean isLastChild, View convertView, ViewGroup parent) {
-
             final PostViewsModel.Day currentDay = (PostViewsModel.Day) getChild(groupPosition, childPosition);
 
             final StatsViewHolder holder;
@@ -544,14 +550,14 @@ public class StatsSingleItemDetailsActivity extends AppCompatActivity
                 holder = (StatsViewHolder) convertView.getTag();
             }
 
-            holder.setEntryText(StatsUtils.parseDate(currentDay.getDay(), StatsConstants.STATS_INPUT_DATE_FORMAT, "EEE, MMM dd"));
+            holder.setEntryText(
+                    StatsUtils.parseDate(currentDay.getDay(), StatsConstants.STATS_INPUT_DATE_FORMAT, "EEE, MMM dd"));
 
             // Intercept clicks at row level and eat the event. We don't want to show the ripple here.
             holder.rowContent.setOnClickListener(
                     new View.OnClickListener() {
                         @Override
                         public void onClick(View view) {
-
                         }
                     });
             holder.rowContent.setBackgroundColor(Color.TRANSPARENT);
@@ -597,7 +603,6 @@ public class StatsSingleItemDetailsActivity extends AppCompatActivity
         @Override
         public View getGroupView(final int groupPosition, boolean isExpanded,
                                  View convertView, ViewGroup parent) {
-
             final StatsViewHolder holder;
             if (convertView == null) {
                 convertView = inflater.inflate(R.layout.stats_list_cell, parent, false);
@@ -627,11 +632,15 @@ public class StatsSingleItemDetailsActivity extends AppCompatActivity
             String name;
             PostViewsModel.Day firstChild = (PostViewsModel.Day) getChild(groupPosition, 0);
             if (numberOfChilds > 1) {
-                PostViewsModel.Day lastChild = (PostViewsModel.Day) getChild(groupPosition, getChildrenCount(groupPosition) - 1);
-                name = StatsUtils.parseDate(firstChild.getDay(), StatsConstants.STATS_INPUT_DATE_FORMAT, GROUP_DATE_FORMAT)
-                        + " - " + StatsUtils.parseDate(lastChild.getDay(), StatsConstants.STATS_INPUT_DATE_FORMAT, GROUP_DATE_FORMAT);
+                PostViewsModel.Day lastChild =
+                        (PostViewsModel.Day) getChild(groupPosition, getChildrenCount(groupPosition) - 1);
+                name = StatsUtils.parseDate(firstChild.getDay(), StatsConstants.STATS_INPUT_DATE_FORMAT,
+                                            GROUP_DATE_FORMAT)
+                       + " - " + StatsUtils.parseDate(lastChild.getDay(), StatsConstants.STATS_INPUT_DATE_FORMAT,
+                                                      GROUP_DATE_FORMAT);
             } else {
-                name = StatsUtils.parseDate(firstChild.getDay(), StatsConstants.STATS_INPUT_DATE_FORMAT, GROUP_DATE_FORMAT);
+                name = StatsUtils
+                        .parseDate(firstChild.getDay(), StatsConstants.STATS_INPUT_DATE_FORMAT, GROUP_DATE_FORMAT);
             }
 
             holder.setEntryText(name, getResources().getColor(R.color.stats_link_text_color));
@@ -662,7 +671,6 @@ public class StatsSingleItemDetailsActivity extends AppCompatActivity
         public boolean isChildSelectable(int groupPosition, int childPosition) {
             return false;
         }
-
     }
 
 
@@ -691,7 +699,6 @@ public class StatsSingleItemDetailsActivity extends AppCompatActivity
         @Override
         public View getChildView(int groupPosition, final int childPosition,
                                  boolean isLastChild, View convertView, ViewGroup parent) {
-
             final PostViewsModel.Month currentMonth = (PostViewsModel.Month) getChild(groupPosition, childPosition);
 
             final StatsViewHolder holder;
@@ -703,14 +710,14 @@ public class StatsSingleItemDetailsActivity extends AppCompatActivity
                 holder = (StatsViewHolder) convertView.getTag();
             }
 
-            holder.setEntryText(StatsUtils.parseDate(currentMonth.getMonth(), "MM", StatsConstants.STATS_OUTPUT_DATE_MONTH_LONG_FORMAT));
+            holder.setEntryText(StatsUtils.parseDate(currentMonth.getMonth(), "MM",
+                                                     StatsConstants.STATS_OUTPUT_DATE_MONTH_LONG_FORMAT));
 
             // Intercept clicks at row level and eat the event. We don't want to show the ripple here.
             holder.rowContent.setOnClickListener(
                     new View.OnClickListener() {
                         @Override
                         public void onClick(View view) {
-
                         }
                     });
             holder.rowContent.setBackgroundColor(Color.TRANSPARENT);
@@ -756,7 +763,6 @@ public class StatsSingleItemDetailsActivity extends AppCompatActivity
         @Override
         public View getGroupView(final int groupPosition, boolean isExpanded,
                                  View convertView, ViewGroup parent) {
-
             final StatsViewHolder holder;
             if (convertView == null) {
                 convertView = inflater.inflate(R.layout.stats_list_cell, parent, false);
@@ -813,12 +819,10 @@ public class StatsSingleItemDetailsActivity extends AppCompatActivity
         public boolean isChildSelectable(int groupPosition, int childPosition) {
             return false;
         }
-
     }
 
 
     private class RestBatchCallListener implements RestRequest.Listener, RestRequest.ErrorListener {
-
         private final WeakReference<Activity> mActivityRef;
 
         public RestBatchCallListener(Activity activity) {
@@ -837,7 +841,7 @@ public class StatsSingleItemDetailsActivity extends AppCompatActivity
             parseResponseExecutor.submit(new Thread() {
                 @Override
                 public void run() {
-                    //AppLog.d(AppLog.T.STATS, "The REST response: " + response.toString());
+                    // AppLog.d(AppLog.T.STATS, "The REST response: " + response.toString());
                     mSelectedBarGraphIndex = -1;
                     try {
                         mRestResponseParsed = new PostViewsModel(response);
@@ -900,8 +904,7 @@ public class StatsSingleItemDetailsActivity extends AppCompatActivity
                 currentItemStatsDate,
                 StatsConstants.STATS_INPUT_DATE_FORMAT,
                 StatsConstants.STATS_OUTPUT_DATE_MONTH_LONG_DAY_SHORT_FORMAT
-        );
+                                                   );
         setMainViewsLabel(currentItemStatsDate, dataToShowOnGraph[mSelectedBarGraphIndex].getViews());
     }
-
 }

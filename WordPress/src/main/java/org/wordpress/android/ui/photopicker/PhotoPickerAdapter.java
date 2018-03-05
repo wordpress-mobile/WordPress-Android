@@ -34,7 +34,6 @@ import static android.support.v7.widget.RecyclerView.NO_POSITION;
 import static org.wordpress.android.ui.photopicker.PhotoPickerFragment.NUM_COLUMNS;
 
 class PhotoPickerAdapter extends RecyclerView.Adapter<PhotoPickerAdapter.ThumbnailViewHolder> {
-
     private static final float SCALE_NORMAL = 1.0f;
     private static final float SCALE_SELECTED = .8f;
 
@@ -43,7 +42,9 @@ class PhotoPickerAdapter extends RecyclerView.Adapter<PhotoPickerAdapter.Thumbna
      */
     interface PhotoPickerAdapterListener {
         void onItemTapped(Uri mediaUri);
+
         void onSelectedCountChanged(int count);
+
         void onAdapterLoaded(boolean isEmpty);
     }
 
@@ -212,7 +213,9 @@ class PhotoPickerAdapter extends RecyclerView.Adapter<PhotoPickerAdapter.Thumbna
     }
 
     void setMultiSelectEnabled(boolean enabled) {
-        if (mIsMultiSelectEnabled == enabled) return;
+        if (mIsMultiSelectEnabled == enabled) {
+            return;
+        }
 
         mIsMultiSelectEnabled = enabled;
 
@@ -270,8 +273,8 @@ class PhotoPickerAdapter extends RecyclerView.Adapter<PhotoPickerAdapter.Thumbna
 
     @NonNull
     ArrayList<Uri> getSelectedURIs() {
-        //noinspection unchecked
-        return (ArrayList<Uri>)mSelectedUris.clone();
+        // noinspection unchecked
+        return (ArrayList<Uri>) mSelectedUris.clone();
     }
 
     int getNumSelected() {
@@ -368,7 +371,8 @@ class PhotoPickerAdapter extends RecyclerView.Adapter<PhotoPickerAdapter.Thumbna
 
         new Thread(new Runnable() {
             public void run() {
-                Map<String, Object> properties = AnalyticsUtils.getMediaProperties(mContext, item.isVideo, item.uri, null);
+                Map<String, Object> properties =
+                        AnalyticsUtils.getMediaProperties(mContext, item.isVideo, item.uri, null);
                 properties.put("is_video", item.isVideo);
                 AnalyticsTracker.track(AnalyticsTracker.Stat.MEDIA_PICKER_PREVIEW_OPENED, properties);
             }
@@ -414,7 +418,7 @@ class PhotoPickerAdapter extends RecyclerView.Adapter<PhotoPickerAdapter.Thumbna
         }
 
         private void addMedia(Uri baseUri, boolean isVideo) {
-            String[] projection = { ID_COL };
+            String[] projection = {ID_COL};
             Cursor cursor = null;
             try {
                 cursor = mContext.getContentResolver().query(

@@ -18,7 +18,6 @@ import org.wordpress.aztec.Html;
 import java.io.File;
 
 public class AztecImageLoader implements Html.ImageGetter {
-
     private final Drawable loadingInProgress;
     private Context context;
 
@@ -47,7 +46,7 @@ public class AztecImageLoader implements Html.ImageGetter {
         if (new File(url).exists()) {
             int orientation = ImageUtils.getImageOrientation(this.context, url);
             byte[] bytes = ImageUtils.createThumbnailFromUri(
-                   context, Uri.parse(url), maxWidth, null, orientation);
+                    context, Uri.parse(url), maxWidth, null, orientation);
             if (bytes != null) {
                 Bitmap bitmap = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
                 if (bitmap != null) {

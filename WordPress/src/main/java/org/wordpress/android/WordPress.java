@@ -140,12 +140,13 @@ public class WordPress extends MultiDexApplication implements HasServiceInjector
     public static OAuthAuthenticator sOAuthAuthenticator;
 
     private AppComponent mAppComponent;
+
     public AppComponent component() {
         return mAppComponent;
     }
 
     /**
-     *  Update site list in a background task. (WPCOM site list, and eventually self hosted multisites)
+     * Update site list in a background task. (WPCOM site list, and eventually self hosted multisites)
      */
     public RateLimitedTask mUpdateSiteList = new RateLimitedTask(SECONDS_BETWEEN_BLOGLIST_UPDATE) {
         protected boolean run() {
@@ -157,7 +158,7 @@ public class WordPress extends MultiDexApplication implements HasServiceInjector
     };
 
     /**
-     *  Update site infos in a background task.
+     * Update site infos in a background task.
      */
     public RateLimitedTask mUpdateSelectedSite = new RateLimitedTask(SECONDS_BETWEEN_SITE_UPDATE) {
         protected boolean run() {
@@ -171,7 +172,7 @@ public class WordPress extends MultiDexApplication implements HasServiceInjector
     };
 
     /**
-     *  Delete stats cache that is already expired
+     * Delete stats cache that is already expired
      */
     public static RateLimitedTask sDeleteExpiredStats = new RateLimitedTask(SECONDS_BETWEEN_DELETE_STATS) {
         protected boolean run() {
@@ -192,7 +193,7 @@ public class WordPress extends MultiDexApplication implements HasServiceInjector
             // The cache size will be measured in kilobytes rather than
             // number of items. See http://developer.android.com/training/displaying-bitmaps/cache-bitmap.html
             int maxMemory = (int) (Runtime.getRuntime().maxMemory() / 1024);
-            int cacheSize = maxMemory / 4;  //Use 1/4th of the available memory for this memory cache.
+            int cacheSize = maxMemory / 4; // Use 1/4th of the available memory for this memory cache.
             mBitmapCache = new BitmapLruCache(cacheSize);
         }
         return mBitmapCache;
@@ -209,8 +210,8 @@ public class WordPress extends MultiDexApplication implements HasServiceInjector
 
         // Init Dagger
         mAppComponent = DaggerAppComponent.builder()
-                .application(this)
-                .build();
+                                          .application(this)
+                                          .build();
         component().inject(this);
         mDispatcher.register(this);
 
@@ -231,7 +232,7 @@ public class WordPress extends MultiDexApplication implements HasServiceInjector
             public void onLog(T tag, LogLevel logLevel, String message) {
                 StringBuffer sb = new StringBuffer();
                 sb.append(logLevel.toString()).append("/").append(AppLog.TAG).append("-")
-                        .append(tag.toString()).append(": ").append(message);
+                  .append(tag.toString()).append(": ").append(message);
                 CrashlyticsUtils.log(sb.toString());
             }
         });
@@ -253,7 +254,7 @@ public class WordPress extends MultiDexApplication implements HasServiceInjector
         RestClientUtils.setUserAgent(getUserAgent());
 
         // PasscodeLock setup
-        if(!AppLockManager.getInstance().isAppLockFeatureEnabled()) {
+        if (!AppLockManager.getInstance().isAppLockFeatureEnabled()) {
             // Make sure that PasscodeLock isn't already in place.
             // Notifications services can enable it before the app is started.
             AppLockManager.getInstance().enableDefaultAppLockIfAvailable(this);
@@ -286,8 +287,13 @@ public class WordPress extends MultiDexApplication implements HasServiceInjector
         // setup the Credentials Client so we can clean it up on wpcom logout
         mCredentialsClient = new GoogleApiClient.Builder(this)
                 .addConnectionCallbacks(new GoogleApiClient.ConnectionCallbacks() {
-                    @Override public void onConnected(@Nullable Bundle bundle) {}
-                    @Override public void onConnectionSuspended(int i) {}
+                    @Override
+                    public void onConnected(@Nullable Bundle bundle) {
+                    }
+
+                    @Override
+                    public void onConnectionSuspended(int i) {
+                    }
                 })
                 .addApi(Auth.CREDENTIALS_API)
                 .build();
@@ -334,7 +340,7 @@ public class WordPress extends MultiDexApplication implements HasServiceInjector
      * Application.onCreate is called before any activity, service, or receiver - it can be called while the app
      * is in background by a sticky service or a receiver, so we don't want Application.onCreate to make network request
      * or other heavy tasks.
-     *
+     * <p>
      * This deferredInit method is called when a user starts an activity for the first time, ie. when he sees a
      * screen for the first time. This allows us to have heavy calls on first activity startup instead of app startup.
      */
@@ -387,7 +393,7 @@ public class WordPress extends MultiDexApplication implements HasServiceInjector
     public static RestClientUtils getRestClientUtilsV1_1() {
         if (sRestClientUtilsVersion1_1 == null) {
             sRestClientUtilsVersion1_1 = new RestClientUtils(mContext, sRequestQueue, sOAuthAuthenticator,
-                    null, RestClient.REST_CLIENT_VERSIONS.V1_1);
+                                                             null, RestClient.REST_CLIENT_VERSIONS.V1_1);
         }
         return sRestClientUtilsVersion1_1;
     }
@@ -395,7 +401,7 @@ public class WordPress extends MultiDexApplication implements HasServiceInjector
     public static RestClientUtils getRestClientUtilsV1_2() {
         if (sRestClientUtilsVersion1_2 == null) {
             sRestClientUtilsVersion1_2 = new RestClientUtils(mContext, sRequestQueue, sOAuthAuthenticator,
-                    null, RestClient.REST_CLIENT_VERSIONS.V1_2);
+                                                             null, RestClient.REST_CLIENT_VERSIONS.V1_2);
         }
         return sRestClientUtilsVersion1_2;
     }
@@ -403,7 +409,7 @@ public class WordPress extends MultiDexApplication implements HasServiceInjector
     public static RestClientUtils getRestClientUtilsV1_3() {
         if (sRestClientUtilsVersion1_3 == null) {
             sRestClientUtilsVersion1_3 = new RestClientUtils(mContext, sRequestQueue, sOAuthAuthenticator,
-                    null, RestClient.REST_CLIENT_VERSIONS.V1_3);
+                                                             null, RestClient.REST_CLIENT_VERSIONS.V1_3);
         }
         return sRestClientUtilsVersion1_3;
     }
@@ -411,7 +417,7 @@ public class WordPress extends MultiDexApplication implements HasServiceInjector
     public static RestClientUtils getRestClientUtilsV0() {
         if (sRestClientUtilsVersion0 == null) {
             sRestClientUtilsVersion0 = new RestClientUtils(mContext, sRequestQueue, sOAuthAuthenticator,
-                    null, RestClient.REST_CLIENT_VERSIONS.V0);
+                                                           null, RestClient.REST_CLIENT_VERSIONS.V0);
         }
         return sRestClientUtilsVersion0;
     }
@@ -434,7 +440,7 @@ public class WordPress extends MultiDexApplication implements HasServiceInjector
             case ConnectionResult.SERVICE_DISABLED:
             case ConnectionResult.SERVICE_INVALID:
                 AppLog.w(T.NOTIFS, "Google Play Services unavailable, connection result: "
-                        + googleApiAvailability.getErrorString(connectionResult));
+                                   + googleApiAvailability.getErrorString(connectionResult));
         }
         return false;
     }
@@ -517,11 +523,12 @@ public class WordPress extends MultiDexApplication implements HasServiceInjector
     /**
      * Device's default User-Agent string.
      * E.g.:
-     *    "Mozilla/5.0 (Linux; Android 6.0; Android SDK built for x86_64 Build/MASTER; wv)
-     *    AppleWebKit/537.36 (KHTML, like Gecko) Version/4.0 Chrome/44.0.2403.119 Mobile
-     *    Safari/537.36"
+     * "Mozilla/5.0 (Linux; Android 6.0; Android SDK built for x86_64 Build/MASTER; wv)
+     * AppleWebKit/537.36 (KHTML, like Gecko) Version/4.0 Chrome/44.0.2403.119 Mobile
+     * Safari/537.36"
      */
     private static String mDefaultUserAgent;
+
     public static String getDefaultUserAgent() {
         if (mDefaultUserAgent == null) {
             try {
@@ -530,7 +537,7 @@ public class WordPress extends MultiDexApplication implements HasServiceInjector
                 } else {
                     mDefaultUserAgent = new WebView(getContext()).getSettings().getUserAgentString();
                 }
-            } catch (AndroidRuntimeException |  NullPointerException e) {
+            } catch (AndroidRuntimeException | NullPointerException e) {
                 // Catch AndroidRuntimeException that could be raised by the WebView() constructor.
                 // See https://github.com/wordpress-mobile/WordPress-Android/issues/3594
                 // Catch NullPointerException that could be raised by WebSettings.getDefaultUserAgent()
@@ -539,7 +546,6 @@ public class WordPress extends MultiDexApplication implements HasServiceInjector
                 // init with the empty string, it's a rare issue
                 mDefaultUserAgent = "";
             }
-
         }
         return mDefaultUserAgent;
     }
@@ -548,21 +554,22 @@ public class WordPress extends MultiDexApplication implements HasServiceInjector
      * User-Agent string when making HTTP connections, for both API traffic and WebViews.
      * Appends "wp-android/version" to WebView's default User-Agent string for the webservers
      * to get the full feature list of the browser and serve content accordingly, e.g.:
-     *    "Mozilla/5.0 (Linux; Android 6.0; Android SDK built for x86_64 Build/MASTER; wv)
-     *    AppleWebKit/537.36 (KHTML, like Gecko) Version/4.0 Chrome/44.0.2403.119 Mobile
-     *    Safari/537.36 wp-android/4.7"
+     * "Mozilla/5.0 (Linux; Android 6.0; Android SDK built for x86_64 Build/MASTER; wv)
+     * AppleWebKit/537.36 (KHTML, like Gecko) Version/4.0 Chrome/44.0.2403.119 Mobile
+     * Safari/537.36 wp-android/4.7"
      * Note that app versions prior to 2.7 simply used "wp-android" as the user agent
      **/
     private static final String USER_AGENT_APPNAME = "wp-android";
     private static String mUserAgent;
+
     public static String getUserAgent() {
         if (mUserAgent == null) {
             String defaultUserAgent = getDefaultUserAgent();
             if (TextUtils.isEmpty(defaultUserAgent)) {
                 mUserAgent = USER_AGENT_APPNAME + "/" + PackageUtils.getVersionName(getContext());
             } else {
-                mUserAgent = defaultUserAgent + " "+ USER_AGENT_APPNAME + "/"
-                        + PackageUtils.getVersionName(getContext());
+                mUserAgent = defaultUserAgent + " " + USER_AGENT_APPNAME + "/"
+                             + PackageUtils.getVersionName(getContext());
             }
         }
         return mUserAgent;
@@ -593,9 +600,10 @@ public class WordPress extends MultiDexApplication implements HasServiceInjector
      * Gets a field from the project's BuildConfig using reflection. This is useful when flavors
      * are used at the project level to set custom fields.
      * based on: https://code.google.com/p/android/issues/detail?id=52962#c38
-     * @param application   Used to find the correct file
-     * @param fieldName     The name of the field-to-access
-     * @return              The value of the field, or {@code null} if the field is not found.
+     *
+     * @param application Used to find the correct file
+     * @param fieldName The name of the field-to-access
+     * @return The value of the field, or {@code null} if the field is not found.
      */
     public static Object getBuildConfigValue(Application application, String fieldName) {
         try {
@@ -612,12 +620,15 @@ public class WordPress extends MultiDexApplication implements HasServiceInjector
      * Gets a field from the project's BuildConfig using reflection. This is useful when flavors
      * are used at the project level to set custom fields.
      * based on: https://code.google.com/p/android/issues/detail?id=52962#c38
-     * @param activity            Used to get the Application instance
-     * @param configValueName     The name of the field-to-access
-     * @return                    The string value of the field, or empty string if the field is not found.
+     *
+     * @param activity Used to get the Application instance
+     * @param configValueName The name of the field-to-access
+     * @return The string value of the field, or empty string if the field is not found.
      */
     public static String getBuildConfigString(Activity activity, String configValueName) {
-        if (!BuildConfig.DEBUG) return "";
+        if (!BuildConfig.DEBUG) {
+            return "";
+        }
 
         String value = (String) WordPress.getBuildConfigValue(activity.getApplication(), configValueName);
         if (!TextUtils.isEmpty(value)) {
@@ -635,13 +646,12 @@ public class WordPress extends MultiDexApplication implements HasServiceInjector
 
     /**
      * Detect when the app goes to the background and come back to the foreground.
-     *
+     * <p>
      * Turns out that when your app has no more visible UI, a callback is triggered.
      * The callback, implemented in this custom class, is called ComponentCallbacks2 (yes, with a two).
-     *
+     * <p>
      * This class also uses ActivityLifecycleCallbacks and a timer used as guard,
      * to make sure to detect the send to background event and not other events.
-     *
      */
     private class ApplicationLifecycleMonitor implements Application.ActivityLifecycleCallbacks, ComponentCallbacks2 {
         private final int DEFAULT_TIMEOUT = 2 * 60; // 2 minutes
@@ -714,15 +724,15 @@ public class WordPress extends MultiDexApplication implements HasServiceInjector
         /**
          * The two methods below (startActivityTransitionTimer and stopActivityTransitionTimer)
          * are used to track when the app goes to background.
-         *
+         * <p>
          * Our implementation uses `onActivityPaused` and `onActivityResumed` of ApplicationLifecycleMonitor
          * to start and stop the timer that detects when the app goes to background.
-         *
+         * <p>
          * So when the user is simply navigating between the activities, the onActivityPaused()
          * calls `startActivityTransitionTimer` and starts the timer, but almost immediately the new activity being
          * entered, the ApplicationLifecycleMonitor cancels the timer in its onActivityResumed method, that in order
          * calls `stopActivityTransitionTimer` and so mIsInBackground would be false.
-         *
+         * <p>
          * In the case the app is sent to background, the TimerTask is instead executed, and the code that handles all
          * the background logic is run.
          */
@@ -735,7 +745,7 @@ public class WordPress extends MultiDexApplication implements HasServiceInjector
             };
 
             this.mActivityTransitionTimer.schedule(mActivityTransitionTimerTask,
-                    MAX_ACTIVITY_TRANSITION_TIME_MS);
+                                                   MAX_ACTIVITY_TRANSITION_TIME_MS);
         }
 
         private void onAppGoesToBackground() {
@@ -793,13 +803,13 @@ public class WordPress extends MultiDexApplication implements HasServiceInjector
             if (!mConnectionReceiverRegistered) {
                 mConnectionReceiverRegistered = true;
                 registerReceiver(ConnectionChangeReceiver.getInstance(),
-                        new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION));
+                                 new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION));
             }
             AnalyticsUtils.refreshMetadata(mAccountStore, mSiteStore);
             mApplicationOpenedDate = new Date();
             Map<String, Boolean> properties = new HashMap<>(1);
             properties.put("pin_lock_enabled", AppLockManager.getInstance().getAppLock() != null
-                    && AppLockManager.getInstance().getAppLock().isPasswordLocked());
+                                               && AppLockManager.getInstance().getAppLock().isPasswordLocked());
             AnalyticsTracker.track(Stat.APPLICATION_OPENED, properties);
             if (NetworkUtils.isNetworkAvailable(mContext)) {
                 // Refresh account informations and Notifications
@@ -807,7 +817,8 @@ public class WordPress extends MultiDexApplication implements HasServiceInjector
                     Intent intent = activity.getIntent();
                     if (intent != null && intent.hasExtra(NotificationsListFragment.NOTE_ID_EXTRA)) {
                         NotificationsUpdateService.startService(getContext(),
-                                getNoteIdFromNoteDetailActivityIntent(activity.getIntent()));
+                                                                getNoteIdFromNoteDetailActivityIntent(
+                                                                        activity.getIntent()));
                     } else {
                         NotificationsUpdateService.startService(getContext());
                     }

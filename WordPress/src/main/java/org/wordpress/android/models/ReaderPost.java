@@ -38,8 +38,8 @@ public class ReaderPost {
     private String blogImageUrl;
     private String postAvatar;
 
-    private String primaryTag;    // most popular tag on this post based on usage in blog
-    private String secondaryTag;  // second most popular tag on this post based on usage in blog
+    private String primaryTag; // most popular tag on this post based on usage in blog
+    private String secondaryTag; // second most popular tag on this post based on usage in blog
 
     private String dateLiked;
     private String dateTagged;
@@ -51,7 +51,7 @@ public class ReaderPost {
     private String featuredImage;
     private String featuredVideo;
 
-    public int numReplies;        // includes comments, trackbacks & pingbacks
+    public int numReplies; // includes comments, trackbacks & pingbacks
     public int numLikes;
 
     public boolean isLikedByCurrentUser;
@@ -85,9 +85,9 @@ public class ReaderPost {
         post.feedItemId = json.optLong("feed_item_ID");
 
         if (json.has("pseudo_ID")) {
-            post.pseudoId = JSONUtils.getString(json, "pseudo_ID");  // read/ endpoint
+            post.pseudoId = JSONUtils.getString(json, "pseudo_ID"); // read/ endpoint
         } else {
-            post.pseudoId = JSONUtils.getString(json, "global_ID");  // sites/ endpoint
+            post.pseudoId = JSONUtils.getString(json, "global_ID"); // sites/ endpoint
         }
 
         // remove HTML from the excerpt
@@ -182,8 +182,8 @@ public class ReaderPost {
         // if there's no featured image or featured video and the post contains an iframe, scan
         // the content for a suitable featured video
         if (!post.hasFeaturedImage()
-                && !post.hasFeaturedVideo()
-                && post.getText().contains("<iframe")) {
+            && !post.hasFeaturedVideo()
+            && post.getText().contains("<iframe")) {
             post.setFeaturedVideo(new ReaderIframeScanner(post.getText()).getFirstUsableVideo());
         }
 
@@ -206,16 +206,18 @@ public class ReaderPost {
 
     /*
      * assigns cross post blog & post IDs from post's metadata section
-     *  "metadata": [
-     *       {
-     *           "id": "21192",
-     *           "key": "xpost_origin",
-     *           "value": "11326809:18427"
-     *       }
-     *     ],
+     * "metadata": [
+     * {
+     * "id": "21192",
+     * "key": "xpost_origin",
+     * "value": "11326809:18427"
+     * }
+     * ],
      */
     private static void assignXpostIdsFromJson(ReaderPost post, JSONArray jsonMetadata) {
-        if (jsonMetadata ==  null) return;
+        if (jsonMetadata == null) {
+            return;
+        }
 
         for (int i = 0; i < jsonMetadata.length(); i++) {
             JSONObject jsonMetaItem = jsonMetadata.optJSONObject(i);
@@ -234,11 +236,13 @@ public class ReaderPost {
         }
     }
 
-     /*
-      * assigns author-related info to the passed post from the passed JSON "author" object
-      */
+    /*
+     * assigns author-related info to the passed post from the passed JSON "author" object
+     */
     private static void assignAuthorFromJson(ReaderPost post, JSONObject jsonAuthor) {
-        if (jsonAuthor == null) return;
+        if (jsonAuthor == null) {
+            return;
+        }
 
         post.authorName = JSONUtils.getStringDecoded(jsonAuthor, "name");
         post.authorFirstName = JSONUtils.getStringDecoded(jsonAuthor, "first_name");
@@ -309,11 +313,13 @@ public class ReaderPost {
      * extracts a title from a post's excerpt - used when the post has no title
      */
     private static String extractTitle(final String excerpt, int maxLen) {
-        if (TextUtils.isEmpty(excerpt))
+        if (TextUtils.isEmpty(excerpt)) {
             return null;
+        }
 
-        if (excerpt.length() < maxLen)
+        if (excerpt.length() < maxLen) {
             return excerpt.trim();
+        }
 
         StringBuilder result = new StringBuilder();
         BreakIterator wordIterator = BreakIterator.getWordInstance();
@@ -325,14 +331,16 @@ public class ReaderPost {
             String word = excerpt.substring(start, end);
             result.append(word);
             totalLen += word.length();
-            if (totalLen >= maxLen)
+            if (totalLen >= maxLen) {
                 break;
+            }
             start = end;
             end = wordIterator.next();
         }
 
-        if (totalLen==0)
+        if (totalLen == 0) {
             return null;
+        }
         return result.toString().trim() + "...";
     }
 
@@ -341,6 +349,7 @@ public class ReaderPost {
     public String getAuthorName() {
         return StringUtils.notNullStr(authorName);
     }
+
     public void setAuthorName(String name) {
         this.authorName = StringUtils.notNullStr(name);
     }
@@ -348,6 +357,7 @@ public class ReaderPost {
     public String getAuthorFirstName() {
         return StringUtils.notNullStr(authorFirstName);
     }
+
     public void setAuthorFirstName(String name) {
         this.authorFirstName = StringUtils.notNullStr(name);
     }
@@ -355,6 +365,7 @@ public class ReaderPost {
     public String getTitle() {
         return StringUtils.notNullStr(title);
     }
+
     public void setTitle(String title) {
         this.title = StringUtils.notNullStr(title);
     }
@@ -362,6 +373,7 @@ public class ReaderPost {
     public String getText() {
         return StringUtils.notNullStr(text);
     }
+
     public void setText(String text) {
         this.text = StringUtils.notNullStr(text);
     }
@@ -369,6 +381,7 @@ public class ReaderPost {
     public String getExcerpt() {
         return StringUtils.notNullStr(excerpt);
     }
+
     public void setExcerpt(String excerpt) {
         this.excerpt = StringUtils.notNullStr(excerpt);
     }
@@ -377,6 +390,7 @@ public class ReaderPost {
     public String getFormat() {
         return StringUtils.notNullStr(format);
     }
+
     public void setFormat(String format) {
         this.format = StringUtils.notNullStr(format);
     }
@@ -389,6 +403,7 @@ public class ReaderPost {
     public String getUrl() {
         return StringUtils.notNullStr(url);
     }
+
     public void setUrl(String url) {
         this.url = StringUtils.notNullStr(url);
     }
@@ -396,9 +411,11 @@ public class ReaderPost {
     public String getShortUrl() {
         return StringUtils.notNullStr(shortUrl);
     }
+
     public void setShortUrl(String url) {
         this.shortUrl = StringUtils.notNullStr(url);
     }
+
     public boolean hasShortUrl() {
         return !TextUtils.isEmpty(shortUrl);
     }
@@ -406,6 +423,7 @@ public class ReaderPost {
     public String getFeaturedImage() {
         return StringUtils.notNullStr(featuredImage);
     }
+
     public void setFeaturedImage(String featuredImage) {
         this.featuredImage = StringUtils.notNullStr(featuredImage);
     }
@@ -413,6 +431,7 @@ public class ReaderPost {
     public String getFeaturedVideo() {
         return StringUtils.notNullStr(featuredVideo);
     }
+
     public void setFeaturedVideo(String featuredVideo) {
         this.featuredVideo = StringUtils.notNullStr(featuredVideo);
     }
@@ -420,6 +439,7 @@ public class ReaderPost {
     public String getBlogName() {
         return StringUtils.notNullStr(blogName);
     }
+
     public void setBlogName(String blogName) {
         this.blogName = StringUtils.notNullStr(blogName);
     }
@@ -427,6 +447,7 @@ public class ReaderPost {
     public String getBlogUrl() {
         return StringUtils.notNullStr(blogUrl);
     }
+
     public void setBlogUrl(String blogUrl) {
         this.blogUrl = StringUtils.notNullStr(blogUrl);
     }
@@ -434,6 +455,7 @@ public class ReaderPost {
     public String getBlogImageUrl() {
         return StringUtils.notNullStr(blogImageUrl);
     }
+
     public void setBlogImageUrl(String imageUrl) {
         this.blogImageUrl = StringUtils.notNullStr(imageUrl);
     }
@@ -441,6 +463,7 @@ public class ReaderPost {
     public String getPostAvatar() {
         return StringUtils.notNullStr(postAvatar);
     }
+
     public void setPostAvatar(String postAvatar) {
         this.postAvatar = StringUtils.notNullStr(postAvatar);
     }
@@ -448,6 +471,7 @@ public class ReaderPost {
     public String getPseudoId() {
         return StringUtils.notNullStr(pseudoId);
     }
+
     public void setPseudoId(String pseudoId) {
         this.pseudoId = StringUtils.notNullStr(pseudoId);
     }
@@ -455,6 +479,7 @@ public class ReaderPost {
     public String getDatePublished() {
         return StringUtils.notNullStr(datePublished);
     }
+
     public void setDatePublished(String dateStr) {
         this.datePublished = StringUtils.notNullStr(dateStr);
     }
@@ -462,6 +487,7 @@ public class ReaderPost {
     public String getDateLiked() {
         return StringUtils.notNullStr(dateLiked);
     }
+
     public void setDateLiked(String dateStr) {
         this.dateLiked = StringUtils.notNullStr(dateStr);
     }
@@ -469,6 +495,7 @@ public class ReaderPost {
     public String getDateTagged() {
         return StringUtils.notNullStr(dateTagged);
     }
+
     public void setDateTagged(String dateStr) {
         this.dateTagged = StringUtils.notNullStr(dateStr);
     }
@@ -476,9 +503,11 @@ public class ReaderPost {
     public String getPrimaryTag() {
         return StringUtils.notNullStr(primaryTag);
     }
+
     public void setPrimaryTag(String tagName) {
         this.primaryTag = StringUtils.notNullStr(tagName);
     }
+
     public boolean hasPrimaryTag() {
         return !TextUtils.isEmpty(primaryTag);
     }
@@ -486,9 +515,11 @@ public class ReaderPost {
     public String getSecondaryTag() {
         return StringUtils.notNullStr(secondaryTag);
     }
+
     public void setSecondaryTag(String tagName) {
         this.secondaryTag = StringUtils.notNullStr(tagName);
     }
+
     public boolean hasSecondaryTag() {
         return !TextUtils.isEmpty(secondaryTag);
     }
@@ -500,9 +531,11 @@ public class ReaderPost {
     public String getAttachmentsJson() {
         return StringUtils.notNullStr(attachmentsJson);
     }
+
     public void setAttachmentsJson(String json) {
         attachmentsJson = StringUtils.notNullStr(json);
     }
+
     public boolean hasAttachments() {
         return !TextUtils.isEmpty(attachmentsJson);
     }
@@ -513,14 +546,17 @@ public class ReaderPost {
     public String getDiscoverJson() {
         return StringUtils.notNullStr(discoverJson);
     }
+
     public void setDiscoverJson(String json) {
         discoverJson = StringUtils.notNullStr(json);
     }
+
     public boolean isDiscoverPost() {
         return !TextUtils.isEmpty(discoverJson);
     }
 
     private transient ReaderPostDiscoverData discoverData;
+
     public ReaderPostDiscoverData getDiscoverData() {
         if (discoverData == null && !TextUtils.isEmpty(discoverJson)) {
             try {
@@ -607,24 +643,24 @@ public class ReaderPost {
      */
     public boolean isSamePost(ReaderPost post) {
         return post != null
-                && post.blogId == this.blogId
-                && post.postId == this.postId
-                && post.feedId == this.feedId
-                && post.feedItemId == this.feedItemId
-                && post.numLikes == this.numLikes
-                && post.numReplies == this.numReplies
-                && post.isFollowedByCurrentUser == this.isFollowedByCurrentUser
-                && post.isLikedByCurrentUser == this.isLikedByCurrentUser
-                && post.isCommentsOpen == this.isCommentsOpen
-                && post.getTitle().equals(this.getTitle())
-                && post.getExcerpt().equals(this.getExcerpt())
-                && post.getText().equals(this.getText());
+               && post.blogId == this.blogId
+               && post.postId == this.postId
+               && post.feedId == this.feedId
+               && post.feedItemId == this.feedItemId
+               && post.numLikes == this.numLikes
+               && post.numReplies == this.numReplies
+               && post.isFollowedByCurrentUser == this.isFollowedByCurrentUser
+               && post.isLikedByCurrentUser == this.isLikedByCurrentUser
+               && post.isCommentsOpen == this.isCommentsOpen
+               && post.getTitle().equals(this.getTitle())
+               && post.getExcerpt().equals(this.getExcerpt())
+               && post.getText().equals(this.getText());
     }
 
     public boolean hasIds(ReaderBlogIdPostId ids) {
         return ids != null
-                && ids.getBlogId() == this.blogId
-                && ids.getPostId() == this.postId;
+               && ids.getBlogId() == this.blogId
+               && ids.getPostId() == this.postId;
     }
 
     /*
@@ -638,9 +674,11 @@ public class ReaderPost {
     public String getRailcarJson() {
         return StringUtils.notNullStr(railcarJson);
     }
+
     public void setRailcarJson(String jsonRailcar) {
         this.railcarJson = StringUtils.notNullStr(jsonRailcar);
     }
+
     public boolean hasRailcar() {
         return !TextUtils.isEmpty(railcarJson);
     }
@@ -648,6 +686,7 @@ public class ReaderPost {
     public ReaderCardType getCardType() {
         return cardType != null ? cardType : ReaderCardType.DEFAULT;
     }
+
     public void setCardType(ReaderCardType cardType) {
         this.cardType = cardType;
     }
@@ -662,6 +701,7 @@ public class ReaderPost {
      * returns the featured image url as a photon url set to the passed width/height
      */
     private transient String featuredImageForDisplay;
+
     public String getFeaturedImageForDisplay(int width, int height) {
         if (featuredImageForDisplay == null) {
             if (!hasFeaturedImage()) {
@@ -677,6 +717,7 @@ public class ReaderPost {
      * returns the avatar url as a photon url set to the passed size
      */
     private transient String avatarForDisplay;
+
     public String getPostAvatarForDisplay(int size) {
         if (avatarForDisplay == null) {
             if (!hasPostAvatar()) {
@@ -691,6 +732,7 @@ public class ReaderPost {
      * returns the blog's blavatar url as a photon url set to the passed size
      */
     private transient String blavatarForDisplay;
+
     public String getPostBlavatarForDisplay(int size) {
         if (blavatarForDisplay == null) {
             if (!hasBlogUrl()) {
@@ -705,6 +747,7 @@ public class ReaderPost {
      * converts iso8601 pubDate to a java date for display - this is the date that appears on posts
      */
     private transient java.util.Date dtDisplay;
+
     public java.util.Date getDisplayDate() {
         if (dtDisplay == null) {
             dtDisplay = DateTimeUtils.dateFromIso8601(this.datePublished);
@@ -716,11 +759,11 @@ public class ReaderPost {
      * used when a unique numeric id is required by an adapter (when hasStableIds() = true)
      */
     private transient long stableId;
+
     public long getStableId() {
         if (stableId == 0) {
             stableId = (pseudoId != null ? pseudoId.hashCode() : 0);
         }
         return stableId;
     }
-
 }

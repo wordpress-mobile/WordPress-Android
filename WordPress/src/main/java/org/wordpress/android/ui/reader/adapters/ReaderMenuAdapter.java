@@ -18,7 +18,6 @@ import java.util.List;
  * adapter for the popup menu that appears when clicking "..." in the reader
  */
 public class ReaderMenuAdapter extends BaseAdapter {
-
     private final LayoutInflater mInflater;
     private final List<Integer> mMenuItems = new ArrayList<>();
 

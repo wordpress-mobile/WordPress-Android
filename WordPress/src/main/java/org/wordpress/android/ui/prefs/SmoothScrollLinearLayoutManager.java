@@ -29,7 +29,8 @@ public class SmoothScrollLinearLayoutManager extends LinearLayoutManager {
             distanceInPixels = (int) Math.abs(firstVisibleChild.getY());
         }
 
-        final SmoothScroller smoothScroller = new SmoothScroller(recyclerView.getContext(), distanceInPixels, mDuration);
+        final SmoothScroller smoothScroller =
+                new SmoothScroller(recyclerView.getContext(), distanceInPixels, mDuration);
         smoothScroller.setTargetPosition(position);
         startSmoothScroll(smoothScroller);
     }

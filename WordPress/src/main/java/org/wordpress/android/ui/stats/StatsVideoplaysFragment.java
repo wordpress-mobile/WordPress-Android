@@ -26,12 +26,14 @@ public class StatsVideoplaysFragment extends StatsAbstractListFragment {
     protected boolean hasDataAvailable() {
         return mVideos != null;
     }
+
     @Override
     protected void saveStatsData(Bundle outState) {
         if (hasDataAvailable()) {
             outState.putSerializable(ARG_REST_RESPONSE, mVideos);
         }
     }
+
     @Override
     protected void restoreStatsData(Bundle savedInstanceState) {
         if (savedInstanceState.containsKey(ARG_REST_RESPONSE)) {
@@ -77,8 +79,8 @@ public class StatsVideoplaysFragment extends StatsAbstractListFragment {
 
     private boolean hasVideoplays() {
         return mVideos != null
-                && mVideos.getPlays() != null
-                && mVideos.getPlays().size() > 0;
+               && mVideos.getPlays() != null
+               && mVideos.getPlays().size() > 0;
     }
 
     private List<SingleItemModel> getVideoplays() {
@@ -99,7 +101,6 @@ public class StatsVideoplaysFragment extends StatsAbstractListFragment {
     }
 
     private class TopPostsAndPagesAdapter extends ArrayAdapter<SingleItemModel> {
-
         private final List<SingleItemModel> list;
         private final LayoutInflater inflater;
 

@@ -69,9 +69,13 @@ public class MediaGridAdapter extends RecyclerView.Adapter<MediaGridAdapter.Grid
 
     public interface MediaGridAdapterCallback {
         void onAdapterFetchMoreData();
+
         void onAdapterItemClicked(int position, boolean isLongClick);
+
         void onAdapterSelectionCountChanged(int count);
+
         void onAdapterRequestRetry(int position);
+
         void onAdapterRequestDelete(int position);
     }
 
@@ -231,8 +235,8 @@ public class MediaGridAdapter extends RecyclerView.Adapter<MediaGridAdapter.Grid
 
         // if we are near the end, make a call to fetch more
         if (position == getItemCount() - 1
-                && !mHasRetrievedAll
-                && mCallback != null) {
+            && !mHasRetrievedAll
+            && mCallback != null) {
             mCallback.onAdapterFetchMoreData();
         }
     }
@@ -339,7 +343,6 @@ public class MediaGridAdapter extends RecyclerView.Adapter<MediaGridAdapter.Grid
                     if (isValidPosition(position) && mCallback != null) {
                         mCallback.onAdapterRequestRetry(position);
                     }
-
                 }
             });
 
@@ -436,8 +439,8 @@ public class MediaGridAdapter extends RecyclerView.Adapter<MediaGridAdapter.Grid
                             public void run() {
                                 WordPress.getBitmapCache().put(path, bitmap);
                                 if (imageView != null
-                                        && imageView.getTag() instanceof String
-                                        && ((String) imageView.getTag()).equalsIgnoreCase(path)) {
+                                    && imageView.getTag() instanceof String
+                                    && ((String) imageView.getTag()).equalsIgnoreCase(path)) {
                                     imageView.setImageBitmap(bitmap);
                                 }
                             }
@@ -495,7 +498,7 @@ public class MediaGridAdapter extends RecyclerView.Adapter<MediaGridAdapter.Grid
                         public void run() {
                             WordPress.getBitmapCache().put(filePath, thumb);
                             if (imageView.getTag() instanceof String
-                                    && (imageView.getTag()).equals(filePath)) {
+                                && (imageView.getTag()).equals(filePath)) {
                                 imageView.setImageBitmap(thumb);
                             }
                         }
@@ -656,7 +659,7 @@ public class MediaGridAdapter extends RecyclerView.Adapter<MediaGridAdapter.Grid
     }
 
     private int indexOfMedia(@NonNull MediaModel media) {
-        for (int i = 0 ; i < mMediaList.size(); i++) {
+        for (int i = 0; i < mMediaList.size(); i++) {
             if (media.getId() == mMediaList.get(i).getId()) {
                 return i;
             }

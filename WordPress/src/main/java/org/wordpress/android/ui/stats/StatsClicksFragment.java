@@ -28,12 +28,14 @@ public class StatsClicksFragment extends StatsAbstractListFragment {
     protected boolean hasDataAvailable() {
         return mClicks != null;
     }
+
     @Override
     protected void saveStatsData(Bundle outState) {
         if (hasDataAvailable()) {
             outState.putSerializable(ARG_REST_RESPONSE, mClicks);
         }
     }
+
     @Override
     protected void restoreStatsData(Bundle savedInstanceState) {
         if (savedInstanceState.containsKey(ARG_REST_RESPONSE)) {
@@ -72,7 +74,8 @@ public class StatsClicksFragment extends StatsAbstractListFragment {
 
         if (hasClicks()) {
             BaseExpandableListAdapter adapter = new MyExpandableListAdapter(getActivity(), mClicks.getClickGroups());
-            StatsUIHelper.reloadGroupViews(getActivity(), adapter, mGroupIdToExpandedMap, mList, getMaxNumberOfItemsToShowInList());
+            StatsUIHelper.reloadGroupViews(getActivity(), adapter, mGroupIdToExpandedMap, mList,
+                                           getMaxNumberOfItemsToShowInList());
             showHideNoResultsUI(false);
         } else {
             showHideNoResultsUI(true);
@@ -81,8 +84,8 @@ public class StatsClicksFragment extends StatsAbstractListFragment {
 
     private boolean hasClicks() {
         return mClicks != null
-                && mClicks.getClickGroups() != null
-                && mClicks.getClickGroups().size() > 0;
+               && mClicks.getClickGroups() != null
+               && mClicks.getClickGroups().size() > 0;
     }
 
     @Override
@@ -106,14 +109,17 @@ public class StatsClicksFragment extends StatsAbstractListFragment {
     protected int getEntryLabelResId() {
         return R.string.stats_entry_clicks_link;
     }
+
     @Override
     protected int getTotalsLabelResId() {
         return R.string.stats_totals_clicks;
     }
+
     @Override
     protected int getEmptyLabelTitleResId() {
         return R.string.stats_empty_clicks_title;
     }
+
     @Override
     protected int getEmptyLabelDescResId() {
         return R.string.stats_empty_clicks_desc;
@@ -143,7 +149,6 @@ public class StatsClicksFragment extends StatsAbstractListFragment {
         @Override
         public View getChildView(int groupPosition, final int childPosition,
                                  boolean isLastChild, View convertView, ViewGroup parent) {
-
             final SingleItemModel children = (SingleItemModel) getChild(groupPosition, childPosition);
 
             if (convertView == null) {
@@ -164,7 +169,7 @@ public class StatsClicksFragment extends StatsAbstractListFragment {
             // totals
             holder.totalsTextView.setText(FormatUtils.formatDecimal(
                     children.getTotals()
-            ));
+                                                                   ));
 
             // no icon
             holder.networkImageView.setVisibility(View.GONE);
@@ -202,7 +207,6 @@ public class StatsClicksFragment extends StatsAbstractListFragment {
         @Override
         public View getGroupView(int groupPosition, boolean isExpanded,
                                  View convertView, ViewGroup parent) {
-
             final StatsViewHolder holder;
             if (convertView == null) {
                 convertView = inflater.inflate(R.layout.stats_list_cell, parent, false);
@@ -235,7 +239,7 @@ public class StatsClicksFragment extends StatsAbstractListFragment {
                 holder.networkImageView.setImageUrl(
                         GravatarUtils.fixGravatarUrl(icon, mResourceVars.headerAvatarSizePx),
                         WPNetworkImageView.ImageType.GONE_UNTIL_AVAILABLE
-                );
+                                                   );
             }
 
             if (children == 0) {
@@ -256,7 +260,6 @@ public class StatsClicksFragment extends StatsAbstractListFragment {
         public boolean isChildSelectable(int groupPosition, int childPosition) {
             return false;
         }
-
     }
 
     @Override

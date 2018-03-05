@@ -33,13 +33,12 @@ import java.util.regex.Pattern;
  * generates and displays the HTML for post detail content - main purpose is to assign the
  * height/width attributes on image tags to (1) avoid the webView resizing as images are
  * loaded, and (2) avoid requesting images at a size larger than the display
- *
+ * <p>
  * important to note that displayed images rely on dp rather than px sizes due to the
  * fact that WebView "converts CSS pixel values to density-independent pixel values"
  * http://developer.android.com/guide/webapps/targeting.html
  */
 class ReaderPostRenderer {
-
     private final ReaderResourceVars mResourceVars;
     private final ReaderPost mPost;
     private final int mMinFullSizeWidthDp;
@@ -90,7 +89,8 @@ class ReaderPostRenderer {
                 // Get the set of JS scripts to inject in our Webview to support some specific Embeds.
                 Set<String> jsToInject = injectJSForSpecificEmbedSupport(content);
 
-                final String htmlContent = formatPostContentForWebView(content, jsToInject, hasTiledGallery, mResourceVars.isWideDisplay);
+                final String htmlContent =
+                        formatPostContentForWebView(content, jsToInject, hasTiledGallery, mResourceVars.isWideDisplay);
                 mRenderBuilder = null;
                 handler.post(new Runnable() {
                     @Override
@@ -180,8 +180,8 @@ class ReaderPostRenderer {
         boolean hasWidth = (origSize != null && origSize.width > 0);
         boolean isFullSize = hasWidth && (origSize.width >= mMinFullSizeWidthDp);
         boolean isMidSize = hasWidth
-                && (origSize.width >= mMinMidSizeWidthDp)
-                && (origSize.width < mMinFullSizeWidthDp);
+                            && (origSize.width >= mMinMidSizeWidthDp)
+                            && (origSize.width < mMinFullSizeWidthDp);
 
         final String newImageTag;
         if (isFullSize) {
@@ -206,14 +206,14 @@ class ReaderPostRenderer {
     private String makeImageTag(final String imageUrl, int width, int height, final String imageClass) {
         String newImageUrl = ReaderUtils.getResizedImageUrl(imageUrl, width, height, mPost.isPrivate);
         if (height > 0) {
-            return "<img class='" + imageClass + "'" +
-                    " src='" + newImageUrl + "'" +
-                    " width='" + pxToDp(width) + "'" +
-                    " height='" + pxToDp(height) + "' />";
+            return "<img class='" + imageClass + "'"
+                   + " src='" + newImageUrl + "'"
+                   + " width='" + pxToDp(width) + "'"
+                   + " height='" + pxToDp(height) + "' />";
         } else {
-            return "<img class='" + imageClass + "'" +
-                    "src='" + newImageUrl + "'" +
-                    " width='" + pxToDp(width) + "' />";
+            return "<img class='" + imageClass + "'"
+                   + "src='" + newImageUrl + "'"
+                   + " width='" + pxToDp(width) + "' />";
         }
     }
 
@@ -222,7 +222,7 @@ class ReaderPostRenderer {
         int newHeight;
         if (width > 0 && height > 0) {
             if (height > width) {
-                //noinspection SuspiciousNameCombination
+                // noinspection SuspiciousNameCombination
                 newHeight = mResourceVars.fullSizeImageWidthPx;
                 float ratio = ((float) width / (float) height);
                 newWidth = (int) (newHeight * ratio);
@@ -246,8 +246,8 @@ class ReaderPostRenderer {
      */
     private boolean shouldAddFeaturedImage() {
         return mPost.hasFeaturedImage()
-            && !mPost.getText().contains("<img")
-            && !PhotonUtils.isMshotsUrl(mPost.getFeaturedImage());
+               && !mPost.getText().contains("<img")
+               && !PhotonUtils.isMshotsUrl(mPost.getFeaturedImage());
     }
 
     /*
@@ -270,12 +270,13 @@ class ReaderPostRenderer {
             ReaderPostDiscoverData discoverData = mPost.getDiscoverData();
             if (discoverData != null && discoverData.getBlogId() != 0 && discoverData.hasBlogName()) {
                 String label = String.format(
-                        WordPress.getContext().getString(R.string.reader_discover_visit_blog), discoverData.getBlogName());
+                        WordPress.getContext().getString(R.string.reader_discover_visit_blog),
+                        discoverData.getBlogName());
                 String url = ReaderUtils.makeBlogPreviewUrl(discoverData.getBlogId());
 
                 String htmlDiscover = "<div id='discover'>"
-                        + "<a href='" + url + "'>" + label + "</a>"
-                        + "</div>";
+                                      + "<a href='" + url + "'>" + label + "</a>"
+                                      + "</div>";
                 content += htmlDiscover;
             }
         }
@@ -321,10 +322,10 @@ class ReaderPostRenderer {
             newHeight = mResourceVars.videoHeightPx;
         }
 
-        String newTag = "<iframe src='" + src + "'" +
-                " frameborder='0' allowfullscreen='true' allowtransparency='true'" +
-                " width='" + pxToDp(newWidth) + "'" +
-                " height='" + pxToDp(newHeight) + "' />";
+        String newTag = "<iframe src='" + src + "'"
+                        + " frameborder='0' allowfullscreen='true' allowtransparency='true'"
+                        + " width='" + pxToDp(newWidth) + "'"
+                        + " height='" + pxToDp(newHeight) + "' />";
 
         int start = mRenderBuilder.indexOf(tag);
         if (start == -1) {
@@ -350,185 +351,169 @@ class ReaderPostRenderer {
 
         // title isn't necessary, but it's invalid html5 without one
         sbHtml.append("<title>Reader Post</title>")
-
-        // https://developers.google.com/chrome/mobile/docs/webview/pixelperfect
-        .append("<meta name='viewport' content='width=device-width, initial-scale=1'>")
-
-        .append("<style type='text/css'>")
-        .append("  body { font-family: 'Noto Serif', serif; font-weight: 400; margin: 0px; padding: 0px;}")
-        .append("  body, p, div { max-width: 100% !important; word-wrap: break-word; }")
-
-        // set line-height, font-size but not for .tiled-gallery divs when rendering as tiled gallery as those will be
-        // handled with the .tiled-gallery rules bellow.
-        .append("  p, div" + (renderAsTiledGallery ? ":not(." + galleryOnlyClass + ")" : "") +
-                ", li { line-height: 1.6em; font-size: 100%; }")
-
-        .append("  h1, h2 { line-height: 1.2em; }")
-
-        // counteract pre-defined height/width styles, expect for the tiled-gallery divs when rendering as tiled gallery
-        // as those will be handled with the .tiled-gallery rules bellow.
-        .append("  p, div" + (renderAsTiledGallery ? ":not(.tiled-gallery.*)" : "") +
-                ", dl, table { width: auto !important; height: auto !important; }")
-
-        // make sure long strings don't force the user to scroll horizontally
-        .append("  body, p, div, a { word-wrap: break-word; }")
-
-        // use a consistent top/bottom margin for paragraphs, with no top margin for the first one
-        .append("  p { margin-top: ").append(mResourceVars.marginMediumPx).append("px;")
-        .append("      margin-bottom: ").append(mResourceVars.marginMediumPx).append("px; }")
-        .append("  p:first-child { margin-top: 0px; }")
-
-        // add background color and padding to pre blocks, and add overflow scrolling
-        // so user can scroll the block if it's wider than the display
-        .append("  pre { overflow-x: scroll;")
-        .append("        background-color: ").append(mResourceVars.greyExtraLightStr).append("; ")
-        .append("        padding: ").append(mResourceVars.marginMediumPx).append("px; }")
-
-        // add a left border to blockquotes
-        .append("  blockquote { color: ").append(mResourceVars.greyMediumDarkStr).append("; ")
-        .append("               padding-left: 32px; ")
-        .append("               margin-left: 0px; ")
-        .append("               border-left: 3px solid ").append(mResourceVars.greyExtraLightStr).append("; }")
-
-        // show links in the same color they are elsewhere in the app
-        .append("  a { text-decoration: none; color: ").append(mResourceVars.linkColorStr).append("; }")
-
-        // make sure images aren't wider than the display, strictly enforced for images without size
-        .append("  img { max-width: 100%; width: auto; height: auto; }")
-        .append("  img.size-none { max-width: 100% !important; height: auto !important; }")
-
-        // center large/medium images, provide a small bottom margin, and add a background color
-        // so the user sees something while they're loading
-        .append("  img.size-full, img.size-large, img.size-medium {")
-        .append("     display: block; margin-left: auto; margin-right: auto;")
-        .append("     background-color: ").append(mResourceVars.greyExtraLightStr).append(";")
-        .append("     margin-bottom: ").append(mResourceVars.marginMediumPx).append("px; }");
+              // https://developers.google.com/chrome/mobile/docs/webview/pixelperfect
+              .append("<meta name='viewport' content='width=device-width, initial-scale=1'>")
+              .append("<style type='text/css'>")
+              .append(" body { font-family: 'Noto Serif', serif; font-weight: 400; margin: 0px; padding: 0px;}")
+              .append(" body, p, div { max-width: 100% !important; word-wrap: break-word; }")
+              // set line-height, font-size but not for .tiled-gallery divs when rendering as tiled
+              // gallery as those will be handled with the .tiled-gallery rules bellow.
+              .append(" p, div" + (renderAsTiledGallery ? ":not(." + galleryOnlyClass + ")" : "")
+                      + ", li { line-height: 1.6em; font-size: 100%; }")
+              .append(" h1, h2 { line-height: 1.2em; }")
+              // counteract pre-defined height/width styles, expect for the tiled-gallery divs when rendering as
+              // tiled gallery as those will be handled with the .tiled-gallery rules bellow.
+              .append(" p, div" + (renderAsTiledGallery ? ":not(.tiled-gallery.*)" : "")
+                      + ", dl, table { width: auto !important; height: auto !important; }")
+              // make sure long strings don't force the user to scroll horizontally
+              .append(" body, p, div, a { word-wrap: break-word; }")
+              // use a consistent top/bottom margin for paragraphs, with no top margin for the first one
+              .append(" p { margin-top: ").append(mResourceVars.marginMediumPx).append("px;")
+              .append(" margin-bottom: ").append(mResourceVars.marginMediumPx).append("px; }")
+              .append(" p:first-child { margin-top: 0px; }")
+              // add background color and padding to pre blocks, and add overflow scrolling
+              // so user can scroll the block if it's wider than the display
+              .append(" pre { overflow-x: scroll;")
+              .append(" background-color: ").append(mResourceVars.greyExtraLightStr).append("; ")
+              .append(" padding: ").append(mResourceVars.marginMediumPx).append("px; }")
+              // add a left border to blockquotes
+              .append(" blockquote { color: ").append(mResourceVars.greyMediumDarkStr).append("; ")
+              .append(" padding-left: 32px; ")
+              .append(" margin-left: 0px; ")
+              .append(" border-left: 3px solid ").append(mResourceVars.greyExtraLightStr).append("; }")
+              // show links in the same color they are elsewhere in the app
+              .append(" a { text-decoration: none; color: ").append(mResourceVars.linkColorStr).append("; }")
+              // make sure images aren't wider than the display, strictly enforced for images without size
+              .append(" img { max-width: 100%; width: auto; height: auto; }")
+              .append(" img.size-none { max-width: 100% !important; height: auto !important; }")
+              // center large/medium images, provide a small bottom margin, and add a background color
+              // so the user sees something while they're loading
+              .append(" img.size-full, img.size-large, img.size-medium {")
+              .append(" display: block; margin-left: auto; margin-right: auto;")
+              .append(" background-color: ").append(mResourceVars.greyExtraLightStr).append(";")
+              .append(" margin-bottom: ").append(mResourceVars.marginMediumPx).append("px; }");
 
         if (isWideDisplay) {
             sbHtml
-            .append(".alignleft {")
-            .append("    max-width: 100%;")
-            .append("    float: left;")
-            .append("    margin-top: 12px;")
-            .append("    margin-bottom: 12px;")
-            .append("    margin-right: 32px;}")
-            .append(".alignright {")
-            .append("    max-width: 100%;")
-            .append("    float: right;")
-            .append("    margin-top: 12px;")
-            .append("    margin-bottom: 12px;")
-            .append("    margin-left: 32px;}");
+                    .append(".alignleft {")
+                    .append(" max-width: 100%;")
+                    .append(" float: left;")
+                    .append(" margin-top: 12px;")
+                    .append(" margin-bottom: 12px;")
+                    .append(" margin-right: 32px;}")
+                    .append(".alignright {")
+                    .append(" max-width: 100%;")
+                    .append(" float: right;")
+                    .append(" margin-top: 12px;")
+                    .append(" margin-bottom: 12px;")
+                    .append(" margin-left: 32px;}");
         }
 
         if (renderAsTiledGallery) {
             // tiled-gallery related styles
             sbHtml
-            .append(".tiled-gallery {")
-            .append("    clear:both;")
-            .append("    overflow:hidden;}")
-            .append(".tiled-gallery img {")
-            .append("    margin:2px !important;}")
-            .append(".tiled-gallery .gallery-group {")
-            .append("    float:left;")
-            .append("    position:relative;}")
-            .append(".tiled-gallery .tiled-gallery-item {")
-            .append("    float:left;")
-            .append("    margin:0;")
-            .append("    position:relative;")
-            .append("    width:inherit;}")
-            .append(".tiled-gallery .gallery-row {")
-            .append("    position: relative;")
-            .append("    left: 50%;")
-            .append("    -webkit-transform: translateX(-50%);")
-            .append("    -moz-transform: translateX(-50%);")
-            .append("    transform: translateX(-50%);")
-            .append("    overflow:hidden;}")
-            .append(".tiled-gallery .tiled-gallery-item a {")
-            .append("    background:transparent;")
-            .append("    border:none;")
-            .append("    color:inherit;")
-            .append("    margin:0;")
-            .append("    padding:0;")
-            .append("    text-decoration:none;")
-            .append("    width:auto;}")
-            .append(".tiled-gallery .tiled-gallery-item img,")
-            .append(".tiled-gallery .tiled-gallery-item img:hover {")
-            .append("    background:none;")
-            .append("    border:none;")
-            .append("    box-shadow:none;")
-            .append("    max-width:100%;")
-            .append("    padding:0;")
-            .append("    vertical-align:middle;}")
-            .append(".tiled-gallery-caption {")
-            .append("    background:#eee;")
-            .append("    background:rgba( 255,255,255,0.8 );")
-            .append("    color:#333;")
-            .append("    font-size:13px;")
-            .append("    font-weight:400;")
-            .append("    overflow:hidden;")
-            .append("    padding:10px 0;")
-            .append("    position:absolute;")
-            .append("    bottom:0;")
-            .append("    text-indent:10px;")
-            .append("    text-overflow:ellipsis;")
-            .append("    width:100%;")
-            .append("    white-space:nowrap;}")
-            .append(".tiled-gallery .tiled-gallery-item-small .tiled-gallery-caption {")
-            .append("    font-size:11px;}")
-            .append(".widget-gallery .tiled-gallery-unresized {")
-            .append("    visibility:hidden;")
-            .append("    height:0px;")
-            .append("    overflow:hidden;}")
-            .append(".tiled-gallery .tiled-gallery-item img.grayscale {")
-            .append("    position:absolute;")
-            .append("    left:0;")
-            .append("    top:0;}")
-            .append(".tiled-gallery .tiled-gallery-item img.grayscale:hover {")
-            .append("    opacity:0;}")
-            .append(".tiled-gallery.type-circle .tiled-gallery-item img {")
-            .append("    border-radius:50% !important;}")
-            .append(".tiled-gallery.type-circle .tiled-gallery-caption {")
-            .append("    display:none;")
-            .append("    opacity:0;}");
+                    .append(".tiled-gallery {")
+                    .append(" clear:both;")
+                    .append(" overflow:hidden;}")
+                    .append(".tiled-gallery img {")
+                    .append(" margin:2px !important;}")
+                    .append(".tiled-gallery .gallery-group {")
+                    .append(" float:left;")
+                    .append(" position:relative;}")
+                    .append(".tiled-gallery .tiled-gallery-item {")
+                    .append(" float:left;")
+                    .append(" margin:0;")
+                    .append(" position:relative;")
+                    .append(" width:inherit;}")
+                    .append(".tiled-gallery .gallery-row {")
+                    .append(" position: relative;")
+                    .append(" left: 50%;")
+                    .append(" -webkit-transform: translateX(-50%);")
+                    .append(" -moz-transform: translateX(-50%);")
+                    .append(" transform: translateX(-50%);")
+                    .append(" overflow:hidden;}")
+                    .append(".tiled-gallery .tiled-gallery-item a {")
+                    .append(" background:transparent;")
+                    .append(" border:none;")
+                    .append(" color:inherit;")
+                    .append(" margin:0;")
+                    .append(" padding:0;")
+                    .append(" text-decoration:none;")
+                    .append(" width:auto;}")
+                    .append(".tiled-gallery .tiled-gallery-item img,")
+                    .append(".tiled-gallery .tiled-gallery-item img:hover {")
+                    .append(" background:none;")
+                    .append(" border:none;")
+                    .append(" box-shadow:none;")
+                    .append(" max-width:100%;")
+                    .append(" padding:0;")
+                    .append(" vertical-align:middle;}")
+                    .append(".tiled-gallery-caption {")
+                    .append(" background:#eee;")
+                    .append(" background:rgba( 255,255,255,0.8 );")
+                    .append(" color:#333;")
+                    .append(" font-size:13px;")
+                    .append(" font-weight:400;")
+                    .append(" overflow:hidden;")
+                    .append(" padding:10px 0;")
+                    .append(" position:absolute;")
+                    .append(" bottom:0;")
+                    .append(" text-indent:10px;")
+                    .append(" text-overflow:ellipsis;")
+                    .append(" width:100%;")
+                    .append(" white-space:nowrap;}")
+                    .append(".tiled-gallery .tiled-gallery-item-small .tiled-gallery-caption {")
+                    .append(" font-size:11px;}")
+                    .append(".widget-gallery .tiled-gallery-unresized {")
+                    .append(" visibility:hidden;")
+                    .append(" height:0px;")
+                    .append(" overflow:hidden;}")
+                    .append(".tiled-gallery .tiled-gallery-item img.grayscale {")
+                    .append(" position:absolute;")
+                    .append(" left:0;")
+                    .append(" top:0;}")
+                    .append(".tiled-gallery .tiled-gallery-item img.grayscale:hover {")
+                    .append(" opacity:0;}")
+                    .append(".tiled-gallery.type-circle .tiled-gallery-item img {")
+                    .append(" border-radius:50% !important;}")
+                    .append(".tiled-gallery.type-circle .tiled-gallery-caption {")
+                    .append(" display:none;")
+                    .append(" opacity:0;}");
         }
 
         // see http://codex.wordpress.org/CSS#WordPress_Generated_Classes
         sbHtml
-        .append("  .wp-caption img { margin-top: 0px; margin-bottom: 0px; }")
-        .append("  .wp-caption .wp-caption-text {")
-        .append("       font-size: smaller; line-height: 1.2em; margin: 0px;")
-        .append("       text-align: center;")
-        .append("       padding: ").append(mResourceVars.marginMediumPx).append("px; ")
-        .append("       color: ").append(mResourceVars.greyMediumDarkStr).append("; }")
-
-        // attribution for Discover posts
-        .append("  div#discover { ")
-        .append("       margin-top: ").append(mResourceVars.marginMediumPx).append("px;")
-        .append("       font-family: sans-serif;")
-        .append(" }")
-
-        // horizontally center iframes
-        .append("   iframe { display: block; margin: 0 auto; }")
-
-        // make sure html5 videos fit the browser width and use 16:9 ratio (YouTube standard)
-        .append("  video {")
-        .append("     width: ").append(pxToDp(mResourceVars.videoWidthPx)).append("px !important;")
-        .append("     height: ").append(pxToDp(mResourceVars.videoHeightPx)).append("px !important; }")
-
-        // hide forms, form-related elements, legacy RSS sharing links and other ad-related content
-        // https://github.com/Automattic/wp-calypso/blob/f51293caa87edcd4f0c117aaea8cf65d26e33520/client/lib/post-normalizer/rule-content-sanitize.js
-        .append("   form, input, select, button textarea { display: none; }")
-        .append("   div.feedflare { display: none; }")
-        .append("   .sharedaddy, .jp-relatedposts, .mc4wp-form, .wpcnt, .OUTBRAIN, .adsbygoogle { display: none; }")
-
-        .append("</style>");
+                .append(" .wp-caption img { margin-top: 0px; margin-bottom: 0px; }")
+                .append(" .wp-caption .wp-caption-text {")
+                .append(" font-size: smaller; line-height: 1.2em; margin: 0px;")
+                .append(" text-align: center;")
+                .append(" padding: ").append(mResourceVars.marginMediumPx).append("px; ")
+                .append(" color: ").append(mResourceVars.greyMediumDarkStr).append("; }")
+                // attribution for Discover posts
+                .append(" div#discover { ")
+                .append(" margin-top: ").append(mResourceVars.marginMediumPx).append("px;")
+                .append(" font-family: sans-serif;")
+                .append(" }")
+                // horizontally center iframes
+                .append(" iframe { display: block; margin: 0 auto; }")
+                // make sure html5 videos fit the browser width and use 16:9 ratio (YouTube standard)
+                .append(" video {")
+                .append(" width: ").append(pxToDp(mResourceVars.videoWidthPx)).append("px !important;")
+                .append(" height: ").append(pxToDp(mResourceVars.videoHeightPx)).append("px !important; }")
+                // hide forms, form-related elements, legacy RSS sharing links and other ad-related content
+                // http://bit.ly/2FUTvsP
+                .append(" form, input, select, button textarea { display: none; }")
+                .append(" div.feedflare { display: none; }")
+                .append(" .sharedaddy, .jp-relatedposts, .mc4wp-form, .wpcnt, ")
+                .append(" .OUTBRAIN, .adsbygoogle { display: none; }")
+                .append("</style>");
 
         // add a custom CSS class to (any) tiled gallery elements to make them easier selectable for various rules
         final List<String> classAmendRegexes = Arrays.asList(
-                "(tiled-gallery)([\\s\"\'])",
-                "(gallery-row)([\\s\"'])",
-                "(gallery-group)([\\s\"'])",
-                "(tiled-gallery-item)([\\s\"'])");
+                "(tiled-gallery) ([\\s\"\'])",
+                "(gallery-row) ([\\s\"'])",
+                "(gallery-group) ([\\s\"'])",
+                "(tiled-gallery-item) ([\\s\"'])");
         String contentCustomised = content;
         for (String classToAmend : classAmendRegexes) {
             contentCustomised = contentCustomised.replaceAll(classToAmend, "$1 " + galleryOnlyClass + "$2");
@@ -539,8 +524,8 @@ class ReaderPostRenderer {
         }
 
         sbHtml.append("</head><body>")
-        .append(contentCustomised)
-        .append("</body></html>");
+              .append(contentCustomised)
+              .append("</body></html>");
 
         return sbHtml.toString();
     }
@@ -606,5 +591,4 @@ class ReaderPostRenderer {
         }
         return DisplayUtils.pxToDp(WordPress.getContext(), px);
     }
-
 }

@@ -51,9 +51,9 @@ public class CommentUtils {
         final Spanned html;
         if (maxImageSize > 0 && content.contains("<img")) {
             Drawable loading = ContextCompat.getDrawable(textView.getContext(),
-                    R.drawable.legacy_dashicon_format_image_big_grey);
+                                                         R.drawable.legacy_dashicon_format_image_big_grey);
             Drawable failed = ContextCompat.getDrawable(textView.getContext(),
-                    R.drawable.ic_notice_grey_500_48dp);
+                                                        R.drawable.ic_notice_grey_500_48dp);
             html = HtmlUtils.fromHtml(content, new WPImageGetter(textView, maxImageSize, imageLoader, loading, failed));
         } else {
             html = HtmlUtils.fromHtml(content);
@@ -74,10 +74,13 @@ public class CommentUtils {
 
     // Assumes all lines after first line will not be indented
     public static void indentTextViewFirstLine(TextView textView, int textOffsetX) {
-        if (textView == null || textOffsetX < 0) return;
+        if (textView == null || textOffsetX < 0) {
+            return;
+        }
 
         SpannableString text = new SpannableString(textView.getText());
-        text.setSpan(new TextWrappingLeadingMarginSpan(textOffsetX), 0, text.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+        text.setSpan(new TextWrappingLeadingMarginSpan(textOffsetX), 0, text.length(),
+                     Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
         textView.setText(text);
     }
 
@@ -96,8 +99,8 @@ public class CommentUtils {
         }
 
         @Override
-        public void drawLeadingMargin(Canvas c, Paint p, int x, int dir, int top, int baseline, int bottom, CharSequence text, int start, int end, boolean first, Layout layout) {
-
+        public void drawLeadingMargin(Canvas c, Paint p, int x, int dir, int top, int baseline, int bottom,
+                                      CharSequence text, int start, int end, boolean first, Layout layout) {
         }
 
         @Override

@@ -26,7 +26,6 @@ import org.wordpress.android.util.ToastUtils;
 import java.lang.ref.WeakReference;
 
 public class ReaderTagAdapter extends RecyclerView.Adapter<ReaderTagAdapter.TagViewHolder> {
-
     public interface TagDeletedListener {
         void onTagDeleted(ReaderTag tag);
     }
@@ -94,7 +93,6 @@ public class ReaderTagAdapter extends RecyclerView.Adapter<ReaderTagAdapter.TagV
             @Override
             public void onClick(View v) {
                 performDeleteTag(tag);
-
             }
         });
     }
@@ -144,19 +142,23 @@ public class ReaderTagAdapter extends RecyclerView.Adapter<ReaderTagAdapter.TagV
      * AsyncTask to load tags
      */
     private boolean mIsTaskRunning = false;
+
     private class LoadTagsTask extends AsyncTask<Void, Void, ReaderTagList> {
         @Override
         protected void onPreExecute() {
             mIsTaskRunning = true;
         }
+
         @Override
         protected void onCancelled() {
             mIsTaskRunning = false;
         }
+
         @Override
         protected ReaderTagList doInBackground(Void... params) {
             return ReaderTagTable.getFollowedTags();
         }
+
         @Override
         protected void onPostExecute(ReaderTagList tagList) {
             if (tagList != null && !tagList.isSameList(mTags)) {
@@ -170,5 +172,4 @@ public class ReaderTagAdapter extends RecyclerView.Adapter<ReaderTagAdapter.TagV
             }
         }
     }
-
 }

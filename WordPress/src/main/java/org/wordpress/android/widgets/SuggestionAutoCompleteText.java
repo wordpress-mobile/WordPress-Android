@@ -84,12 +84,12 @@ public class SuggestionAutoCompleteText extends AppCompatMultiAutoCompleteTextVi
 
     @Override
     public void onRestoreInstanceState(Parcelable state) {
-        if(!(state instanceof SavedState)) {
+        if (!(state instanceof SavedState)) {
             super.onRestoreInstanceState(state);
             return;
         }
 
-        SavedState savedState = (SavedState)state;
+        SavedState savedState = (SavedState) state;
         super.onRestoreInstanceState(savedState.getSuperState());
 
         // if we were focused, setup a properly timed future request for focus
@@ -103,7 +103,7 @@ public class SuggestionAutoCompleteText extends AppCompatMultiAutoCompleteTextVi
     private final OnLayoutChangeListener mOneoffFocusRequest = new OnLayoutChangeListener() {
         @Override
         public void onLayoutChange(View v, int left, int top, int right, int bottom, int oldLeft, int oldTop,
-                int oldRight, int oldBottom) {
+                                   int oldRight, int oldBottom) {
             // we're now at a good point in time to launch a focus request
             post(new Runnable() {
                 @Override
@@ -144,7 +144,7 @@ public class SuggestionAutoCompleteText extends AppCompatMultiAutoCompleteTextVi
             }
         }
 
-        return super.onKeyPreIme(keyCode,event);
+        return super.onKeyPreIme(keyCode, event);
     }
 
     @Override

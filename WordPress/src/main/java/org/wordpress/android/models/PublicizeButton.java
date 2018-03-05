@@ -118,5 +118,4 @@ public class PublicizeButton {
         this.mGenericon = genericon;
     }
 
-
 }

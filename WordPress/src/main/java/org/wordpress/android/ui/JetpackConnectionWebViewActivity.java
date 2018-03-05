@@ -17,7 +17,6 @@ import java.util.List;
  * Use one of the static factory methods to start the flow.
  */
 public class JetpackConnectionWebViewActivity extends WPWebViewActivity {
-
     public enum Source {
         STATS("stats"), NOTIFICATIONS("notifications");
         private final String value;
@@ -56,11 +55,11 @@ public class JetpackConnectionWebViewActivity extends WPWebViewActivity {
 
     private static String urlFromSiteAndSource(SiteModel site, Source source) {
         return "https://wordpress.com/jetpack/connect?"
-                + "url=" + site.getUrl()
-                + "&mobile_redirect="
-                + JETPACK_CONNECTION_DEEPLINK
-                + "?source="
-                + source.value;
+               + "url=" + site.getUrl()
+               + "&mobile_redirect="
+               + JETPACK_CONNECTION_DEEPLINK
+               + "?source="
+               + source.value;
     }
 
     private static void openJetpackConnectionFlow(Context context, String url, SiteModel site, boolean authorized) {
@@ -82,7 +81,8 @@ public class JetpackConnectionWebViewActivity extends WPWebViewActivity {
 
     @Override
     protected WebViewClient createWebViewClient(List<String> allowedURL) {
-        mWebViewClient = new JetpackConnectionWebViewClient(this, mAccountStore, (SiteModel) getIntent().getSerializableExtra(WordPress.SITE));
+        mWebViewClient = new JetpackConnectionWebViewClient(this, mAccountStore, (SiteModel) getIntent()
+                .getSerializableExtra(WordPress.SITE));
         return mWebViewClient;
     }
 

@@ -5,7 +5,7 @@
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *      http://www.apache.org/licenses/LICENSE-2.0
+ * http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -46,12 +46,18 @@ public class HeaderGridView extends GridView {
      * or a footer at the bottom.
      */
     private static class FixedViewInfo {
-        /** The view to add to the grid */
+        /**
+         * The view to add to the grid
+         */
         public View view;
         public ViewGroup viewContainer;
-        /** The data backing the view. This is returned from {@link ListAdapter#getItem(int)}. */
+        /**
+         * The data backing the view. This is returned from {@link ListAdapter#getItem(int)}.
+         */
         public Object data;
-        /** <code>true</code> if the fixed view should be selectable in the grid */
+        /**
+         * <code>true</code> if the fixed view should be selectable in the grid
+         */
         public boolean isSelectable;
     }
 
@@ -105,7 +111,7 @@ public class HeaderGridView extends GridView {
     public void addHeaderView(View v, Object data, boolean isSelectable) {
         ListAdapter adapter = getAdapter();
 
-        if (adapter != null && ! (adapter instanceof HeaderViewGridAdapter)) {
+        if (adapter != null && !(adapter instanceof HeaderViewGridAdapter)) {
             throw new IllegalStateException(
                     "Cannot add header view to grid -- setAdapter has already been called.");
         }
@@ -149,7 +155,7 @@ public class HeaderGridView extends GridView {
      *
      * @param v The view to remove
      * @return true if the view was removed, false if the view was not a header
-     *         view
+     * view
      */
     public boolean removeHeaderView(View v) {
         if (mHeaderViewInfos.size() > 0) {
@@ -197,10 +203,10 @@ public class HeaderGridView extends GridView {
         @Override
         protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
             int targetWidth = HeaderGridView.this.getMeasuredWidth()
-                    - HeaderGridView.this.getPaddingLeft()
-                    - HeaderGridView.this.getPaddingRight();
+                              - HeaderGridView.this.getPaddingLeft()
+                              - HeaderGridView.this.getPaddingRight();
             widthMeasureSpec = MeasureSpec.makeMeasureSpec(targetWidth,
-                    MeasureSpec.getMode(widthMeasureSpec));
+                                                           MeasureSpec.getMode(widthMeasureSpec));
             super.onMeasure(widthMeasureSpec, heightMeasureSpec);
         }
     }
@@ -209,11 +215,10 @@ public class HeaderGridView extends GridView {
      * ListAdapter used when a HeaderGridView has header views. This ListAdapter
      * wraps another one and also keeps track of the header views and their
      * associated data objects.
-     *<p>This is intended as a base class; you will probably not need to
+     * <p>This is intended as a base class; you will probably not need to
      * use this class directly in your own code.
      */
     private static class HeaderViewGridAdapter implements WrapperListAdapter, Filterable {
-
         // This is used to notify the container of updates relating to number of columns
         // or headers changing, which changes the number of placeholders needed
         private final DataSetObservable mDataSetObservable = new DataSetObservable();
@@ -310,7 +315,7 @@ public class HeaderGridView extends GridView {
             int numHeadersAndPlaceholders = getHeadersCount() * mNumColumns;
             if (position < numHeadersAndPlaceholders) {
                 return (position % mNumColumns == 0)
-                        && mHeaderViewInfos.get(position / mNumColumns).isSelectable;
+                       && mHeaderViewInfos.get(position / mNumColumns).isSelectable;
             }
 
             // Adapter
@@ -374,7 +379,7 @@ public class HeaderGridView extends GridView {
         @Override
         public View getView(int position, View convertView, ViewGroup parent) {
             // Header (negative positions will throw an ArrayIndexOutOfBoundsException)
-            int numHeadersAndPlaceholders = getHeadersCount() * mNumColumns ;
+            int numHeadersAndPlaceholders = getHeadersCount() * mNumColumns;
             if (position < numHeadersAndPlaceholders) {
                 View headerViewContainer = mHeaderViewInfos
                         .get(position / mNumColumns).viewContainer;

@@ -8,14 +8,14 @@ import java.net.URISyntaxException;
 import java.net.URL;
 
 public class WPUrlUtilsTest extends InstrumentationTestCase {
-
     private static final String wpcomAddress1 = "http://wordpress.com/xmlrpc.php";
     private static final String wpcomAddress2 = "http://wordpress.com#.b.com/test";
     private static final String wpcomAddress3 = "http://wordpress.com/xmlrpc.php";
     private static final String wpcomAddress4 = "https://wordpress.com";
     private static final String wpcomAddress5 = "https://wordpress.com/test#test";
     private static final String wpcomAddress6 = "https://developer.wordpress.com";
-    private static final String notWpcomAddress1 = "http://i2.wp.com.eritreo.it#.files.wordpress.com/testpicture.gif?strip=all&quality=100&resize=1024,768";
+    private static final String notWpcomAddress1 =
+            "http://i2.wp.com.eritreo.it#.files.wordpress.com/testpicture.gif?strip=all&quality=100&resize=1024,768";
     private static final String notWpcomAddress2 = "wordpress.com";
     private static final String notWpcomAddress3 = "https://thisisnotwordpress.com";
 
@@ -38,6 +38,7 @@ public class WPUrlUtilsTest extends InstrumentationTestCase {
     public void testSafeToAddAuthToken4() {
         assertTrue(WPUrlUtils.safeToAddWordPressComAuthToken(wpcomAddress4));
     }
+
     public void testSafeToAddAuthToken5() {
         assertTrue(WPUrlUtils.safeToAddWordPressComAuthToken(wpcomAddress5));
     }
@@ -70,6 +71,7 @@ public class WPUrlUtilsTest extends InstrumentationTestCase {
     public void testSafeToAddAuthToken11() {
         assertTrue(WPUrlUtils.safeToAddWordPressComAuthToken(buildURL(wpcomAddress4)));
     }
+
     public void testSafeToAddAuthToken12() {
         assertTrue(WPUrlUtils.safeToAddWordPressComAuthToken(buildURL(wpcomAddress5)));
     }
@@ -102,6 +104,7 @@ public class WPUrlUtilsTest extends InstrumentationTestCase {
     public void testSafeToAddAuthToken18() {
         assertTrue(WPUrlUtils.safeToAddWordPressComAuthToken(buildURI(wpcomAddress4)));
     }
+
     public void testSafeToAddAuthToken19() {
         assertTrue(WPUrlUtils.safeToAddWordPressComAuthToken(buildURI(wpcomAddress5)));
     }
@@ -172,7 +175,8 @@ public class WPUrlUtilsTest extends InstrumentationTestCase {
         URL url = null;
         try {
             url = new URL(address);
-        } catch (MalformedURLException e) {}
+        } catch (MalformedURLException e) {
+        }
         return url;
     }
 
@@ -205,7 +209,8 @@ public class WPUrlUtilsTest extends InstrumentationTestCase {
         URI uri = null;
         try {
             uri = new URI(address);
-        } catch (URISyntaxException e) {}
+        } catch (URISyntaxException e) {
+        }
         return uri;
     }
 
@@ -268,5 +273,4 @@ public class WPUrlUtilsTest extends InstrumentationTestCase {
     public void testIsNOTWPCOM9() {
         assertFalse(WPUrlUtils.isWordPressCom(buildURI(notWpcomAddress3)));
     }
-
 }

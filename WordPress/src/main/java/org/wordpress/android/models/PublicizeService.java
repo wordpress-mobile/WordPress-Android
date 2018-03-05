@@ -16,6 +16,7 @@ public class PublicizeService {
     public String getId() {
         return StringUtils.notNullStr(mId);
     }
+
     public void setId(String id) {
         mId = StringUtils.notNullStr(id);
     }
@@ -23,6 +24,7 @@ public class PublicizeService {
     public String getLabel() {
         return StringUtils.notNullStr(mLabel);
     }
+
     public void setLabel(String label) {
         mLabel = StringUtils.notNullStr(label);
     }
@@ -30,6 +32,7 @@ public class PublicizeService {
     public String getDescription() {
         return StringUtils.notNullStr(mDescription);
     }
+
     public void setDescription(String description) {
         mDescription = StringUtils.notNullStr(description);
     }
@@ -37,6 +40,7 @@ public class PublicizeService {
     public String getGenericon() {
         return StringUtils.notNullStr(mGenericon);
     }
+
     public void setGenericon(String Genericon) {
         mGenericon = StringUtils.notNullStr(Genericon);
     }
@@ -44,6 +48,7 @@ public class PublicizeService {
     public String getIconUrl() {
         return StringUtils.notNullStr(mIconUrl);
     }
+
     public void setIconUrl(String url) {
         mIconUrl = StringUtils.notNullStr(url);
     }
@@ -51,6 +56,7 @@ public class PublicizeService {
     public String getConnectUrl() {
         return StringUtils.notNullStr(mConnectUrl);
     }
+
     public void setConnectUrl(String url) {
         mConnectUrl = StringUtils.notNullStr(url);
     }
@@ -58,6 +64,7 @@ public class PublicizeService {
     public boolean isJetpackSupported() {
         return mIsJetpackSupported;
     }
+
     public void setIsJetpackSupported(boolean supported) {
         mIsJetpackSupported = supported;
     }
@@ -65,18 +72,19 @@ public class PublicizeService {
     public boolean isMultiExternalUserIdSupported() {
         return mIsMultiExternalUserIdSupported;
     }
+
     public void setIsMultiExternalUserIdSupported(boolean supported) {
         mIsMultiExternalUserIdSupported = supported;
     }
 
     public boolean isSameAs(PublicizeService other) {
         return other != null
-                && other.getId().equals(this.getId())
-                && other.getLabel().equals(this.getLabel())
-                && other.getDescription().equals(this.getDescription())
-                && other.getGenericon().equals(this.getGenericon())
-                && other.getIconUrl().equals(this.getIconUrl())
-                && other.getConnectUrl().equals(this.getConnectUrl())
-                && other.isJetpackSupported() == this.isJetpackSupported();
+               && other.getId().equals(this.getId())
+               && other.getLabel().equals(this.getLabel())
+               && other.getDescription().equals(this.getDescription())
+               && other.getGenericon().equals(this.getGenericon())
+               && other.getIconUrl().equals(this.getIconUrl())
+               && other.getConnectUrl().equals(this.getConnectUrl())
+               && other.isJetpackSupported() == this.isJetpackSupported();
     }
 }

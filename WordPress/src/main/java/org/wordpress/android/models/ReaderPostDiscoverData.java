@@ -20,7 +20,6 @@ import org.wordpress.android.util.StringUtils;
  * and comment counts come from the original post
  */
 public class ReaderPostDiscoverData {
-
     public enum DiscoverType {
         EDITOR_PICK,
         SITE_PICK,
@@ -66,9 +65,9 @@ public class ReaderPostDiscoverData {
         }
 
         // walk the post formats array until we find one we know we should handle differently
-        //  - image-pick, quote-pick, and standard-pick all display as editors picks
-        //  - site-pick displays as a site pick
-        //  - collection + feature can be ignored because those display the same as normal posts
+        // - image-pick, quote-pick, and standard-pick all display as editors picks
+        // - site-pick displays as a site pick
+        // - collection + feature can be ignored because those display the same as normal posts
         JSONArray jsonPostFormats = json.optJSONArray("discover_fp_post_formats");
         if (jsonPostFormats != null) {
             for (int i = 0; i < jsonPostFormats.length(); i++) {
@@ -144,6 +143,7 @@ public class ReaderPostDiscoverData {
      * returns the spanned html for the attribution line
      */
     private transient Spanned attributionHtml;
+
     public Spanned getAttributionHtml() {
         if (attributionHtml == null) {
             String html;
@@ -155,7 +155,8 @@ public class ReaderPostDiscoverData {
                 case EDITOR_PICK:
                     if (hasBlogName() && hasAuthorName()) {
                         // "Originally posted by [AuthorName] on [BlogName]"
-                        html = String.format(context.getString(R.string.reader_discover_attribution_author_and_blog), author, blog);
+                        html = String.format(context.getString(R.string.reader_discover_attribution_author_and_blog),
+                                             author, blog);
                     } else if (hasBlogName()) {
                         // "Originally posted on [BlogName]"
                         html = String.format(context.getString(R.string.reader_discover_attribution_blog), blog);

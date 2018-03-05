@@ -56,12 +56,14 @@ public class StatsInsightsTodayFragment extends StatsAbstractInsightsFragment {
     protected boolean hasDataAvailable() {
         return mVisitsModel != null;
     }
+
     @Override
     protected void saveStatsData(Bundle outState) {
         if (hasDataAvailable()) {
             outState.putSerializable(ARG_REST_RESPONSE, mVisitsModel);
         }
     }
+
     @Override
     protected void restoreStatsData(Bundle savedInstanceState) {
         if (savedInstanceState.containsKey(ARG_REST_RESPONSE)) {
@@ -105,7 +107,8 @@ public class StatsInsightsTodayFragment extends StatsAbstractInsightsFragment {
         VisitModel data = visits.get(visits.size() - 1);
 
         LinearLayout ll = (LinearLayout) getActivity().getLayoutInflater()
-                .inflate(R.layout.stats_insights_today_item, (ViewGroup) mResultContainer.getRootView(), false);
+                                                      .inflate(R.layout.stats_insights_today_item,
+                                                               (ViewGroup) mResultContainer.getRootView(), false);
 
         LinearLayout tabs = (LinearLayout) ll.findViewById(R.id.stats_post_tabs);
 
@@ -113,16 +116,20 @@ public class StatsInsightsTodayFragment extends StatsAbstractInsightsFragment {
             LinearLayout currentTab = (LinearLayout) tabs.getChildAt(i);
             switch (i) {
                 case 0:
-                    setupTab(currentTab, FormatUtils.formatDecimal(data.getViews()), StatsVisitorsAndViewsFragment.OverviewLabel.VIEWS);
+                    setupTab(currentTab, FormatUtils.formatDecimal(data.getViews()),
+                             StatsVisitorsAndViewsFragment.OverviewLabel.VIEWS);
                     break;
                 case 1:
-                    setupTab(currentTab, FormatUtils.formatDecimal(data.getVisitors()), StatsVisitorsAndViewsFragment.OverviewLabel.VISITORS );
+                    setupTab(currentTab, FormatUtils.formatDecimal(data.getVisitors()),
+                             StatsVisitorsAndViewsFragment.OverviewLabel.VISITORS);
                     break;
                 case 2:
-                    setupTab(currentTab, FormatUtils.formatDecimal(data.getLikes()), StatsVisitorsAndViewsFragment.OverviewLabel.LIKES );
+                    setupTab(currentTab, FormatUtils.formatDecimal(data.getLikes()),
+                             StatsVisitorsAndViewsFragment.OverviewLabel.LIKES);
                     break;
                 case 3:
-                    setupTab(currentTab, FormatUtils.formatDecimal(data.getComments()), StatsVisitorsAndViewsFragment.OverviewLabel.COMMENTS );
+                    setupTab(currentTab, FormatUtils.formatDecimal(data.getComments()),
+                             StatsVisitorsAndViewsFragment.OverviewLabel.COMMENTS);
                     break;
             }
         }
@@ -130,7 +137,8 @@ public class StatsInsightsTodayFragment extends StatsAbstractInsightsFragment {
         mResultContainer.addView(ll);
     }
 
-    private void setupTab(LinearLayout currentTab, String total, final StatsVisitorsAndViewsFragment.OverviewLabel itemType) {
+    private void setupTab(LinearLayout currentTab, String total,
+                          final StatsVisitorsAndViewsFragment.OverviewLabel itemType) {
         final TextView label;
         final TextView value;
         final ImageView icon;
@@ -196,5 +204,4 @@ public class StatsInsightsTodayFragment extends StatsAbstractInsightsFragment {
     public String getTitle() {
         return getString(R.string.stats_insights_today);
     }
-
 }

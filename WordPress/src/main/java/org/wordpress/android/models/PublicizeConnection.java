@@ -10,14 +10,13 @@ import org.wordpress.android.util.JSONUtils;
 import org.wordpress.android.util.StringUtils;
 
 public class PublicizeConnection {
-
     public enum ConnectStatus {
         OK {
             public String toString() {
                 return "ok";
             }
         },
-        BROKEN{
+        BROKEN {
             public String toString() {
                 return "broken";
             }
@@ -50,6 +49,7 @@ public class PublicizeConnection {
     public String getService() {
         return StringUtils.notNullStr(mService);
     }
+
     public void setService(String service) {
         this.mService = StringUtils.notNullStr(service);
     }
@@ -57,6 +57,7 @@ public class PublicizeConnection {
     public String getLabel() {
         return StringUtils.notNullStr(mLabel);
     }
+
     public void setLabel(String label) {
         this.mLabel = StringUtils.notNullStr(label);
     }
@@ -64,6 +65,7 @@ public class PublicizeConnection {
     public String getExternalName() {
         return StringUtils.notNullStr(mExternalName);
     }
+
     public void setExternalName(String name) {
         this.mExternalName = StringUtils.notNullStr(name);
     }
@@ -71,9 +73,11 @@ public class PublicizeConnection {
     public String getExternalDisplayName() {
         return StringUtils.notNullStr(mExternalDisplayName);
     }
+
     public void setExternalDisplayName(String name) {
         this.mExternalDisplayName = StringUtils.notNullStr(name);
     }
+
     public boolean hasExternalDisplayName() {
         return !TextUtils.isEmpty(mExternalDisplayName);
     }
@@ -81,6 +85,7 @@ public class PublicizeConnection {
     public String getExternalId() {
         return StringUtils.notNullStr(mExternalId);
     }
+
     public void setExternalId(String id) {
         this.mExternalId = StringUtils.notNullStr(id);
     }
@@ -88,9 +93,11 @@ public class PublicizeConnection {
     public String getRefreshUrl() {
         return StringUtils.notNullStr(mRefreshUrl);
     }
+
     public void setRefreshUrl(String url) {
         this.mRefreshUrl = StringUtils.notNullStr(url);
     }
+
     public boolean hasRefreshUrl() {
         return !TextUtils.isEmpty(mRefreshUrl);
     }
@@ -98,9 +105,11 @@ public class PublicizeConnection {
     public String getExternalProfilePictureUrl() {
         return StringUtils.notNullStr(mExternalProfilePictureUrl);
     }
+
     public void setExternalProfilePictureUrl(String url) {
         this.mExternalProfilePictureUrl = StringUtils.notNullStr(url);
     }
+
     public boolean hasExternalProfilePictureUrl() {
         return !TextUtils.isEmpty(mExternalProfilePictureUrl);
     }
@@ -108,6 +117,7 @@ public class PublicizeConnection {
     public String getStatus() {
         return StringUtils.notNullStr(mStatus);
     }
+
     public void setStatus(String status) {
         this.mStatus = StringUtils.notNullStr(status);
     }
@@ -119,24 +129,25 @@ public class PublicizeConnection {
             return ConnectStatus.OK;
         }
     }
+
     public void setStatusEnum(@NonNull ConnectStatus status) {
         this.mStatus = status.toString();
     }
 
     public boolean isSameAs(PublicizeConnection other) {
         return other != null
-                && other.connectionId == this.connectionId
-                && other.userId == this.userId
-                && other.keyringConnectionId == this.keyringConnectionId
-                && other.keyringConnectionUserId == this.keyringConnectionUserId
-                && other.isShared == this.isShared
-                && other.getStatus().equals(this.getStatus())
-                && other.getExternalDisplayName().equals(this.getExternalDisplayName())
-                && other.getExternalName().equals(this.getExternalName())
-                && other.getLabel().equals(this.getLabel())
-                && other.getExternalProfilePictureUrl().equals(this.getExternalProfilePictureUrl())
-                && other.getRefreshUrl().equals(this.getRefreshUrl())
-                && other.getService().equals(this.getService());
+               && other.connectionId == this.connectionId
+               && other.userId == this.userId
+               && other.keyringConnectionId == this.keyringConnectionId
+               && other.keyringConnectionUserId == this.keyringConnectionUserId
+               && other.isShared == this.isShared
+               && other.getStatus().equals(this.getStatus())
+               && other.getExternalDisplayName().equals(this.getExternalDisplayName())
+               && other.getExternalName().equals(this.getExternalName())
+               && other.getLabel().equals(this.getLabel())
+               && other.getExternalProfilePictureUrl().equals(this.getExternalProfilePictureUrl())
+               && other.getRefreshUrl().equals(this.getRefreshUrl())
+               && other.getService().equals(this.getService());
     }
 
     public void setSites(long[] sites) {

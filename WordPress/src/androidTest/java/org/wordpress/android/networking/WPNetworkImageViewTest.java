@@ -37,10 +37,12 @@ public class WPNetworkImageViewTest extends InstrumentationTestCase {
                     // This call crash on old volley versions
                     WordPress.sImageLoader.get("http;///hello/null/host", new ImageListener() {
                         @Override
-                        public void onResponse(ImageContainer imageContainer, boolean b) {}
+                        public void onResponse(ImageContainer imageContainer, boolean b) {
+                        }
 
                         @Override
-                        public void onErrorResponse(VolleyError volleyError) {}
+                        public void onErrorResponse(VolleyError volleyError) {
+                        }
                     }, 1, 1);
                     success[0] = true;
                 } catch (Exception e) {

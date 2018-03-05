@@ -149,7 +149,7 @@ public class LoginActivity extends AppCompatActivity implements ConnectionCallba
     private void slideInFragment(Fragment fragment, boolean shouldAddToBackStack, String tag) {
         FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
         fragmentTransaction.setCustomAnimations(R.anim.activity_slide_in_from_right, R.anim.activity_slide_out_to_left,
-                R.anim.activity_slide_in_from_left, R.anim.activity_slide_out_to_right);
+                                                R.anim.activity_slide_in_from_left, R.anim.activity_slide_out_to_right);
         fragmentTransaction.replace(R.id.fragment_container, fragment, tag);
         if (shouldAddToBackStack) {
             fragmentTransaction.addToBackStack(null);
@@ -439,14 +439,16 @@ public class LoginActivity extends AppCompatActivity implements ConnectionCallba
         dismissSignupSheet();
         AnalyticsTracker.track(AnalyticsTracker.Stat.LOGIN_SOCIAL_2FA_NEEDED);
         Login2FaFragment login2FaFragment = Login2FaFragment.newInstanceSocial(email, userId,
-                nonceAuthenticator, nonceBackup, nonceSms);
+                                                                               nonceAuthenticator, nonceBackup,
+                                                                               nonceSms);
         slideInFragment(login2FaFragment, true, Login2FaFragment.TAG);
     }
 
     @Override
     public void needs2faSocialConnect(String email, String password, String idToken, String service) {
         AnalyticsTracker.track(AnalyticsTracker.Stat.LOGIN_SOCIAL_2FA_NEEDED);
-        Login2FaFragment login2FaFragment = Login2FaFragment.newInstanceSocialConnect(email, password, idToken, service);
+        Login2FaFragment login2FaFragment =
+                Login2FaFragment.newInstanceSocialConnect(email, password, idToken, service);
         slideInFragment(login2FaFragment, true, Login2FaFragment.TAG);
     }
 
@@ -598,10 +600,10 @@ public class LoginActivity extends AppCompatActivity implements ConnectionCallba
                                            @NonNull final String displayName, @Nullable final Uri profilePicture) {
         if (getLoginMode() == LoginMode.SELFHOSTED_ONLY) {
             // bail if we are on the selfhosted flow since we haven't initialized SmartLock-for-Passwords for it.
-            //  Otherwise, logging in to WPCOM via the site-picker flow (for example) results in a crash.
-            //  See https://github.com/wordpress-mobile/WordPress-Android/issues/7182#issuecomment-362791364
-            //  There might be more circumstances that lead to this crash though. Not all Crashlytics reports seem to
-            //  originate from the site-picker.
+            // Otherwise, logging in to WPCOM via the site-picker flow (for example) results in a crash.
+            // See https://github.com/wordpress-mobile/WordPress-Android/issues/7182#issuecomment-362791364
+            // There might be more circumstances that lead to this crash though. Not all Crashlytics reports seem to
+            // originate from the site-picker.
             return;
         }
 
@@ -619,7 +621,7 @@ public class LoginActivity extends AppCompatActivity implements ConnectionCallba
         }
 
         mSmartLockHelper.saveCredentialsInSmartLock(StringUtils.notNullStr(username), StringUtils.notNullStr(password),
-                displayName, profilePicture);
+                                                    displayName, profilePicture);
     }
 
     @Override

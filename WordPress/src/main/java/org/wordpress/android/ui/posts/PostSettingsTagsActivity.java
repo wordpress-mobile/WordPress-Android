@@ -143,8 +143,8 @@ public class PostSettingsTagsActivity extends AppCompatActivity implements TextW
 
     @Override
     public boolean onKey(View view, int keyCode, KeyEvent keyEvent) {
-        if ((keyEvent.getAction() == KeyEvent.ACTION_DOWN) &&
-                (keyCode == KeyEvent.KEYCODE_ENTER)) {
+        if ((keyEvent.getAction() == KeyEvent.ACTION_DOWN)
+            && (keyCode == KeyEvent.KEYCODE_ENTER)) {
             // Since we don't allow new lines, we should add comma on "enter" to separate the tags
             String currentText = mTagsEditText.getText().toString();
             if (!currentText.isEmpty() && !currentText.endsWith(",")) {
@@ -183,7 +183,7 @@ public class PostSettingsTagsActivity extends AppCompatActivity implements TextW
         }
     }
 
-    private void onTagSelected(@NonNull String selectedTag){
+    private void onTagSelected(@NonNull String selectedTag) {
         String text = mTagsEditText.getText().toString();
         String updatedText;
         int endIndex = text.lastIndexOf(",");
@@ -271,7 +271,6 @@ public class PostSettingsTagsActivity extends AppCompatActivity implements TextW
                     });
                 }
             }).start();
-
         }
 
         class TagViewHolder extends RecyclerView.ViewHolder {

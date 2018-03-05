@@ -20,7 +20,8 @@ import java.util.List;
 public class StatsSearchTermsFragment extends StatsAbstractListFragment {
     public static final String TAG = StatsSearchTermsFragment.class.getSimpleName();
 
-    private final static String UNKNOWN_SEARCH_TERMS_HELP_PAGE = "https://en.support.wordpress.com/stats/#search-engine-terms";
+    private final static String UNKNOWN_SEARCH_TERMS_HELP_PAGE =
+            "https://en.support.wordpress.com/stats/#search-engine-terms";
 
     private SearchTermsModel mSearchTerms;
 
@@ -28,12 +29,14 @@ public class StatsSearchTermsFragment extends StatsAbstractListFragment {
     protected boolean hasDataAvailable() {
         return mSearchTerms != null;
     }
+
     @Override
     protected void saveStatsData(Bundle outState) {
         if (hasDataAvailable()) {
             outState.putSerializable(ARG_REST_RESPONSE, mSearchTerms);
         }
     }
+
     @Override
     protected void restoreStatsData(Bundle savedInstanceState) {
         if (savedInstanceState.containsKey(ARG_REST_RESPONSE)) {
@@ -68,17 +71,16 @@ public class StatsSearchTermsFragment extends StatsAbstractListFragment {
         }
 
         if (hasSearchTerms()) {
-
             /**
-             *  At this point we can have:
-             *  - A list of search terms
-             *  - A list of search terms + Encrypted item
-             *  - Encrypted item only
+             * At this point we can have:
+             * - A list of search terms
+             * - A list of search terms + Encrypted item
+             * - Encrypted item only
              *
-             *  We want to display max 10 items regardless the kind of the items, AND Encrypted
-             *  must be present if available.
+             * We want to display max 10 items regardless the kind of the items, AND Encrypted
+             * must be present if available.
              *
-             *  We need to do some counts then...
+             * We need to do some counts then...
              */
 
             List<SearchTermModel> originalSearchTermList = mSearchTerms.getSearchTerms();
@@ -89,7 +91,8 @@ public class StatsSearchTermsFragment extends StatsAbstractListFragment {
             } else {
                 // Make sure the list has MAX 9 items if the "Encrypted" is available
                 // we want to show exactly 10 items per module
-                if (mSearchTerms.getEncryptedSearchTerms() > 0 && originalSearchTermList.size() > getMaxNumberOfItemsToShowInList() - 1) {
+                if (mSearchTerms.getEncryptedSearchTerms() > 0
+                    && originalSearchTermList.size() > getMaxNumberOfItemsToShowInList() - 1) {
                     mySearchTermList = new ArrayList<>();
                     int minIndex = Math.min(originalSearchTermList.size(), getMaxNumberOfItemsToShowInList() - 1);
                     for (int i = 0; i < minIndex; i++) {
@@ -99,7 +102,8 @@ public class StatsSearchTermsFragment extends StatsAbstractListFragment {
                     mySearchTermList = originalSearchTermList;
                 }
             }
-            ArrayAdapter adapter = new SearchTermsAdapter(getActivity(), mySearchTermList, mSearchTerms.getEncryptedSearchTerms());
+            ArrayAdapter adapter =
+                    new SearchTermsAdapter(getActivity(), mySearchTermList, mSearchTerms.getEncryptedSearchTerms());
             StatsUIHelper.reloadLinearLayout(getActivity(), adapter, mList, getMaxNumberOfItemsToShowInList());
             showHideNoResultsUI(false);
         } else {
@@ -109,9 +113,9 @@ public class StatsSearchTermsFragment extends StatsAbstractListFragment {
 
     private boolean hasSearchTerms() {
         return mSearchTerms != null
-                && ((mSearchTerms.getSearchTerms() != null && mSearchTerms.getSearchTerms().size() > 0)
-                        ||  mSearchTerms.getEncryptedSearchTerms() > 0
-                );
+               && ((mSearchTerms.getSearchTerms() != null && mSearchTerms.getSearchTerms().size() > 0)
+                   || mSearchTerms.getEncryptedSearchTerms() > 0
+               );
     }
 
     @Override
@@ -136,7 +140,6 @@ public class StatsSearchTermsFragment extends StatsAbstractListFragment {
     }
 
     private class SearchTermsAdapter extends ArrayAdapter<SearchTermModel> {
-
         private final List<SearchTermModel> list;
         private final LayoutInflater inflater;
         private final int encryptedSearchTerms;
@@ -189,7 +192,8 @@ public class StatsSearchTermsFragment extends StatsAbstractListFragment {
             String term = currentRowData.getTitle();
 
             if (currentRowData.isEncriptedTerms()) {
-                holder.setEntryTextOrLink(UNKNOWN_SEARCH_TERMS_HELP_PAGE, getString(R.string.stats_search_terms_unknown_search_terms));
+                holder.setEntryTextOrLink(UNKNOWN_SEARCH_TERMS_HELP_PAGE,
+                                          getString(R.string.stats_search_terms_unknown_search_terms));
             } else {
                 holder.setEntryText(term, getResources().getColor(R.color.stats_text_color));
             }

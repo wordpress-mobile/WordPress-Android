@@ -16,7 +16,6 @@ import org.wordpress.aztec.Html;
 import java.io.File;
 
 public class AztecVideoLoader implements Html.VideoThumbnailGetter {
-
     private Context context;
     private final Drawable loadingInProgress;
 
@@ -43,7 +42,7 @@ public class AztecVideoLoader implements Html.VideoThumbnailGetter {
             protected Bitmap doInBackground(Void... params) {
                 // If local file
                 if (new File(url).exists()) {
-                   return ThumbnailUtils.createVideoThumbnail(url, MediaStore.Images.Thumbnails.FULL_SCREEN_KIND);
+                    return ThumbnailUtils.createVideoThumbnail(url, MediaStore.Images.Thumbnails.FULL_SCREEN_KIND);
                 }
 
                 return ImageUtils.getVideoFrameFromVideo(url, maxWidth);

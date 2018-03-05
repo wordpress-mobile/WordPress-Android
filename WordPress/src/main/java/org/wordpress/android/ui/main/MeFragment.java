@@ -320,7 +320,7 @@ public class MeFragment extends Fragment {
 
     private void signOutWordPressComWithConfirmation() {
         String message = String.format(getString(R.string.sign_out_wpcom_confirm),
-                mAccountStore.getAccount().getUserName());
+                                       mAccountStore.getAccount().getUserName());
 
         new AlertDialog.Builder(getActivity())
                 .setMessage(message)
@@ -372,12 +372,12 @@ public class MeFragment extends Fragment {
                     Uri imageUri = Uri.parse(strMediaUri);
                     if (imageUri != null) {
                         boolean didGoWell = WPMediaUtils.fetchMediaAndDoNext(getActivity(), imageUri,
-                                new WPMediaUtils.MediaFetchDoNext() {
-                                    @Override
-                                    public void doNext(Uri uri) {
-                                        startCropActivity(uri);
-                                    }
-                                });
+                                                                             new WPMediaUtils.MediaFetchDoNext() {
+                                                                                 @Override
+                                                                                 public void doNext(Uri uri) {
+                                                                                     startCropActivity(uri);
+                                                                                 }
+                                                                             });
 
                         if (!didGoWell) {
                             AppLog.e(AppLog.T.UTILS, "Can't download picked or captured image");
@@ -390,13 +390,13 @@ public class MeFragment extends Fragment {
 
                 if (resultCode == Activity.RESULT_OK) {
                     WPMediaUtils.fetchMediaAndDoNext(getActivity(), UCrop.getOutput(data),
-                            new WPMediaUtils.MediaFetchDoNext() {
-                                @Override
-                                public void doNext(Uri uri) {
-                                    startGravatarUpload(MediaUtils.getRealPathFromURI(getActivity(), uri));
-                                }
-                            });
-
+                                                     new WPMediaUtils.MediaFetchDoNext() {
+                                                         @Override
+                                                         public void doNext(Uri uri) {
+                                                             startGravatarUpload(
+                                                                     MediaUtils.getRealPathFromURI(getActivity(), uri));
+                                                         }
+                                                     });
                 } else if (resultCode == UCrop.RESULT_ERROR) {
                     AppLog.e(AppLog.T.MAIN, "Image cropping failed!", UCrop.getError(data));
                     ToastUtils.showToast(getActivity(), R.string.error_cropping_image, Duration.SHORT);
@@ -424,9 +424,9 @@ public class MeFragment extends Fragment {
         options.setHideBottomControls(true);
 
         UCrop.of(uri, Uri.fromFile(new File(context.getCacheDir(), "cropped_for_gravatar.jpg")))
-                .withAspectRatio(1, 1)
-                .withOptions(options)
-                .start(getActivity(), this);
+             .withAspectRatio(1, 1)
+             .withOptions(options)
+             .start(getActivity(), this);
     }
 
     private void startGravatarUpload(final String filePath) {
@@ -444,17 +444,17 @@ public class MeFragment extends Fragment {
         showGravatarProgressBar(true);
 
         GravatarApi.uploadGravatar(file, mAccountStore.getAccount().getEmail(), mAccountStore.getAccessToken(),
-                new GravatarApi.GravatarUploadListener() {
-                    @Override
-                    public void onSuccess() {
-                        EventBus.getDefault().post(new GravatarUploadFinished(filePath, true));
-                    }
+                                   new GravatarApi.GravatarUploadListener() {
+                                       @Override
+                                       public void onSuccess() {
+                                           EventBus.getDefault().post(new GravatarUploadFinished(filePath, true));
+                                       }
 
-                    @Override
-                    public void onError() {
-                        EventBus.getDefault().post(new GravatarUploadFinished(filePath, false));
-                    }
-                });
+                                       @Override
+                                       public void onError() {
+                                           EventBus.getDefault().post(new GravatarUploadFinished(filePath, false));
+                                       }
+                                   });
     }
 
     static public class GravatarUploadFinished {
@@ -519,7 +519,7 @@ public class MeFragment extends Fragment {
         entry.responseHeaders.put("Access-Control-Allow-Origin", "*");
         entry.responseHeaders.put("Cache-Control", "max-age=300");
         entry.responseHeaders.put("Content-Disposition", "inline; filename=\""
-                + mAccountStore.getAccount().getAvatarUrl() + ".jpeg\"");
+                                                         + mAccountStore.getAccount().getAvatarUrl() + ".jpeg\"");
         entry.responseHeaders.put("Content-Length", String.valueOf(file.length()));
         entry.responseHeaders.put("Content-Type", "image/jpeg");
         entry.responseHeaders.put("Date", sdf.format(currentTime));

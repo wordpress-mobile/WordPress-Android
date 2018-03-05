@@ -156,12 +156,12 @@ public class PostUploadHandler implements UploadHandler<PostModel> {
     }
 
     static boolean hasPendingOrInProgressPostUploads() {
-        return sCurrentUploadingPost != null || !sQueuedPostsList.isEmpty() ;
+        return sCurrentUploadingPost != null || !sQueuedPostsList.isEmpty();
     }
 
     private void uploadNextPost() {
         synchronized (sQueuedPostsList) {
-            if (mCurrentTask == null) { //make sure nothing is running
+            if (mCurrentTask == null) { // make sure nothing is running
                 sCurrentUploadingPost = null;
                 sCurrentUploadingPostAnalyticsProperties = null;
                 if (sQueuedPostsList.size() > 0) {
@@ -271,8 +271,8 @@ public class PostUploadHandler implements UploadHandler<PostModel> {
             // Calculate the words count
             sCurrentUploadingPostAnalyticsProperties = new HashMap<>();
             sCurrentUploadingPostAnalyticsProperties.put("word_count", AnalyticsUtils.getWordCount(mPost.getContent()));
-            sCurrentUploadingPostAnalyticsProperties.put("editor_source", AppPrefs.isAztecEditorEnabled() ? "aztec" :
-                    AppPrefs.isVisualEditorEnabled() ? "hybrid" : "legacy");
+            sCurrentUploadingPostAnalyticsProperties.put("editor_source", AppPrefs.isAztecEditorEnabled() ? "aztec"
+                    : AppPrefs.isVisualEditorEnabled() ? "hybrid" : "legacy");
 
             if (hasGallery()) {
                 sCurrentUploadingPostAnalyticsProperties.put("with_galleries", true);
@@ -476,14 +476,14 @@ public class PostUploadHandler implements UploadHandler<PostModel> {
                 countDownLatch.await();
             } catch (InterruptedException e) {
                 AppLog.e(T.POSTS, "PostUploadHandler > CountDownLatch await interrupted for media file: "
-                        + mediaFile.getId() + " - " + e);
+                                  + mediaFile.getId() + " - " + e);
                 mIsMediaError = true;
             }
 
             MediaModel finishedMedia = mMediaStore.getMediaWithLocalId(mediaFile.getId());
 
-            if (finishedMedia == null || finishedMedia.getUploadState() == null ||
-                    !finishedMedia.getUploadState().equals(MediaUploadState.UPLOADED.toString())) {
+            if (finishedMedia == null || finishedMedia.getUploadState() == null
+                || !finishedMedia.getUploadState().equals(MediaUploadState.UPLOADED.toString())) {
                 mIsMediaError = true;
                 return null;
             }
@@ -507,14 +507,14 @@ public class PostUploadHandler implements UploadHandler<PostModel> {
                 countDownLatch.await();
             } catch (InterruptedException e) {
                 AppLog.e(T.POSTS, "PostUploadHandler > CountDownLatch await interrupted for media file: "
-                        + mediaFile.getId() + " - " + e);
+                                  + mediaFile.getId() + " - " + e);
                 mIsMediaError = true;
             }
 
             MediaModel finishedMedia = mMediaStore.getMediaWithLocalId(mediaFile.getId());
 
-            if (finishedMedia == null || finishedMedia.getUploadState() == null ||
-                    !finishedMedia.getUploadState().equals(MediaUploadState.UPLOADED.toString())) {
+            if (finishedMedia == null || finishedMedia.getUploadState() == null
+                || !finishedMedia.getUploadState().equals(MediaUploadState.UPLOADED.toString())) {
                 mIsMediaError = true;
                 return null;
             }
@@ -543,7 +543,7 @@ public class PostUploadHandler implements UploadHandler<PostModel> {
 
         if (event.isError()) {
             AppLog.w(T.POSTS, "PostUploadHandler > Post upload failed. " + event.error.type + ": "
-                    + event.error.message);
+                              + event.error.message);
             Context context = WordPress.getContext();
             String errorMessage = UploadUtils.getErrorMessageFromPostError(context, event.post, event.error);
             String notificationMessage = UploadUtils.getErrorMessage(context, event.post, errorMessage, false);
@@ -555,12 +555,12 @@ public class PostUploadHandler implements UploadHandler<PostModel> {
             boolean isFirstTimePublish = sFirstPublishPosts.remove(event.post.getId());
             mPostUploadNotifier.updateNotificationSuccessForPost(event.post, site, isFirstTimePublish);
             if (isFirstTimePublish) {
-                if (sCurrentUploadingPostAnalyticsProperties != null){
+                if (sCurrentUploadingPostAnalyticsProperties != null) {
                     sCurrentUploadingPostAnalyticsProperties.put("post_id", event.post.getRemotePostId());
                 }
                 AnalyticsUtils.trackWithSiteDetails(Stat.EDITOR_PUBLISHED_POST,
-                        mSiteStore.getSiteByLocalId(event.post.getLocalSiteId()),
-                        sCurrentUploadingPostAnalyticsProperties);
+                                                    mSiteStore.getSiteByLocalId(event.post.getLocalSiteId()),
+                                                    sCurrentUploadingPostAnalyticsProperties);
             }
         }
 
@@ -592,7 +592,7 @@ public class PostUploadHandler implements UploadHandler<PostModel> {
 
         if (event.isError()) {
             AppLog.w(T.POSTS, "PostUploadHandler > Media upload failed. " + event.error.type + ": "
-                    + event.error.message);
+                              + event.error.message);
             SiteModel site = mSiteStore.getSiteByLocalId(sCurrentUploadingPost.getLocalSiteId());
             Context context = WordPress.getContext();
             String errorMessage = UploadUtils.getErrorMessageFromMediaError(context, event.media, event.error);
@@ -612,7 +612,7 @@ public class PostUploadHandler implements UploadHandler<PostModel> {
 
         if (event.completed) {
             AppLog.i(T.POSTS, "PostUploadHandler > Media upload completed for post. Media id: " + event.media.getId()
-                    + ", post id: " + sCurrentUploadingPost.getId());
+                              + ", post id: " + sCurrentUploadingPost.getId());
             mMediaLatchMap.get(event.media.getId()).countDown();
             mMediaLatchMap.remove(event.media.getId());
         }

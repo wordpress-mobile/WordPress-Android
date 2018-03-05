@@ -22,7 +22,6 @@ import java.util.List;
  * in the menu item array is an integer that matches a specific PostListButton button type
  */
 public class PageMenuAdapter extends BaseAdapter {
-
     private final LayoutInflater mInflater;
     private final List<Integer> mMenuItems = new ArrayList<>();
 
