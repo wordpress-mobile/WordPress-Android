@@ -45,6 +45,7 @@ public class JetpackConnectionWebViewActivity extends WPWebViewActivity {
 
     public static final String JETPACK_CONNECTION_DEEPLINK = "wordpress://jetpack-connection";
 
+    private SiteModel mSite;
     private JetpackConnectionWebViewClient mWebViewClient;
 
     public static void openJetpackConnectionFlow(Context context, Source source, SiteModel site) {
@@ -86,8 +87,15 @@ public class JetpackConnectionWebViewActivity extends WPWebViewActivity {
     }
 
     @Override
+    public void onCreate(Bundle savedInstanceState) {
+        mSite = (SiteModel) getIntent().getSerializableExtra(WordPress.SITE);
+        // We need to get the site before calling super since it'll create the web client
+        super.onCreate(savedInstanceState);
+    }
+
+    @Override
     protected WebViewClient createWebViewClient(List<String> allowedURL) {
-        mWebViewClient = new JetpackConnectionWebViewClient(this, mAccountStore, (SiteModel) getIntent().getSerializableExtra(WordPress.SITE));
+        mWebViewClient = new JetpackConnectionWebViewClient(this, mAccountStore, mSite);
         return mWebViewClient;
     }
 
