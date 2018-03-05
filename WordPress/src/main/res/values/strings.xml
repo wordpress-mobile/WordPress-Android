@@ -2071,6 +2071,7 @@
     <string name="signup_email_error_generic">There was some trouble checking the email address.</string>
     <string name="signup_email_header">To create your new WordPress.com account, please enter your email address.</string>
     <string name="signup_epilogue_error_avatar">There was some trouble uploading your avatar.</string>
+    <string name="signup_epilogue_error_avatar_view">Your avatar has been uploaded and will be available shortly.</string>
     <string name="signup_epilogue_error_generic">There was some trouble updating your account. You can retry or revert your changes to continue.</string>
     <string name="signup_epilogue_error_button_negative">Revert</string>
     <string name="signup_epilogue_error_button_positive">Retry</string>

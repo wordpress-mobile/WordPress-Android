@@ -574,7 +574,7 @@ public class SignupEpilogueFragment extends LoginBaseFormFragment<SignupEpilogue
             } catch (IOException exception) {
                 AppLog.e(T.NUX, "Gravatar image could not be injected into request cache - " +
                         exception.toString() + " - " + exception.getMessage());
-                showErrorDialogAvatar();
+                showErrorDialogAvatar(getString(R.string.signup_epilogue_error_avatar));
             }
 
             mHeaderAvatar.resetImage();
@@ -584,7 +584,7 @@ public class SignupEpilogueFragment extends LoginBaseFormFragment<SignupEpilogue
         mHeaderAvatar.setImageUrl(avatarUrl, ImageType.AVATAR, new WPNetworkImageView.ImageLoadListener() {
             @Override
             public void onError() {
-                showErrorDialogAvatar();
+                showErrorDialogAvatar(getString(R.string.signup_epilogue_error_avatar_view));
             }
 
             @Override
@@ -618,9 +618,9 @@ public class SignupEpilogueFragment extends LoginBaseFormFragment<SignupEpilogue
         dialog.show();
     }
 
-    protected void showErrorDialogAvatar() {
+    protected void showErrorDialogAvatar(String message) {
         AlertDialog dialog = new AlertDialog.Builder(new ContextThemeWrapper(getActivity(), R.style.LoginTheme))
-                .setMessage(R.string.signup_epilogue_error_avatar)
+                .setMessage(message)
                 .setPositiveButton(R.string.login_error_button, null)
                 .create();
         dialog.show();
@@ -666,7 +666,7 @@ public class SignupEpilogueFragment extends LoginBaseFormFragment<SignupEpilogue
                             @Override
                             public void onError() {
                                 endProgress();
-                                showErrorDialogAvatar();
+                                showErrorDialogAvatar(getString(R.string.signup_epilogue_error_avatar));
                                 AppLog.e(T.NUX, "Uploading image to Gravatar failed");
                             }
                         });
