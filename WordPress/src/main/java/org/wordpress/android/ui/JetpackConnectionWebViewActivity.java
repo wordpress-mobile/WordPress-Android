@@ -36,6 +36,11 @@ public class JetpackConnectionWebViewActivity extends WPWebViewActivity {
                 return null;
             }
         }
+
+        @Override
+        public String toString() {
+            return value;
+        }
     }
 
     public static final String JETPACK_CONNECTION_DEEPLINK = "wordpress://jetpack-connection";
@@ -60,7 +65,7 @@ public class JetpackConnectionWebViewActivity extends WPWebViewActivity {
                 + "&mobile_redirect="
                 + JETPACK_CONNECTION_DEEPLINK
                 + "?source="
-                + source.value;
+                + source.toString();
     }
 
     private static void openJetpackConnectionFlow(Context context, String url, SiteModel site, boolean authorized) {
