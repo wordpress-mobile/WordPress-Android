@@ -543,10 +543,21 @@ public class PostsListFragment extends Fragment
             case PostListButton.BUTTON_TRASH:
             case PostListButton.BUTTON_DELETE:
                 if (!UploadService.isPostUploadingOrQueued(post)) {
-                    trashPost(post);
+                    AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+                    builder.setTitle(getText(R.string.delete_post))
+                            .setMessage(R.string.dialog_confirm_delete_post)
+                            .setPositiveButton(R.string.delete, new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialogInterface, int i) {
+                                    trashPost(post);
+                                }
+                            })
+                            .setNegativeButton(R.string.cancel, null)
+                            .setCancelable(true);
+                    builder.create().show();
                 } else {
                     AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-                    builder.setTitle(getResources().getText(R.string.delete_post))
+                    builder.setTitle(getText(R.string.delete_post))
                             .setMessage(R.string.dialog_confirm_cancel_post_media_uploading)
                             .setPositiveButton(R.string.delete, new DialogInterface.OnClickListener() {
                                 @Override
