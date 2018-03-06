@@ -18,7 +18,6 @@ import org.wordpress.android.widgets.WPNetworkImageView;
 
 // Note header, displayed at top of detail view
 public class HeaderNoteBlock extends NoteBlock {
-
     private final JSONArray mHeaderArray;
 
     private final UserNoteBlock.OnGravatarClickedListener mGravatarClickedListener;
@@ -52,19 +51,19 @@ public class HeaderNoteBlock extends NoteBlock {
 
     @Override
     public View configureView(View view) {
-        final NoteHeaderBlockHolder noteBlockHolder = (NoteHeaderBlockHolder)view.getTag();
+        final NoteHeaderBlockHolder noteBlockHolder = (NoteHeaderBlockHolder) view.getTag();
 
         Spannable spannable = NotificationsUtils.getSpannableContentForRanges(mHeaderArray.optJSONObject(0));
-        noteBlockHolder.nameTextView.setText(spannable);
+        noteBlockHolder.mNameTextView.setText(spannable);
 
-        noteBlockHolder.avatarImageView.setImageUrl(getAvatarUrl(), mImageType);
+        noteBlockHolder.mAvatarImageView.setImageUrl(getAvatarUrl(), mImageType);
         if (!TextUtils.isEmpty(getUserUrl())) {
-            noteBlockHolder.avatarImageView.setOnTouchListener(mOnGravatarTouchListener);
+            noteBlockHolder.mAvatarImageView.setOnTouchListener(mOnGravatarTouchListener);
         } else {
-            noteBlockHolder.avatarImageView.setOnTouchListener(null);
+            noteBlockHolder.mAvatarImageView.setOnTouchListener(null);
         }
 
-        noteBlockHolder.snippetTextView.setText(getSnippet());
+        noteBlockHolder.mSnippetTextView.setText(getSnippet());
 
         if (mIsComment) {
             View footerView = view.findViewById(R.id.header_footer);
@@ -111,40 +110,39 @@ public class HeaderNoteBlock extends NoteBlock {
     }
 
     private class NoteHeaderBlockHolder {
-        private final TextView nameTextView;
-        private final TextView snippetTextView;
-        private final WPNetworkImageView avatarImageView;
+        private final TextView mNameTextView;
+        private final TextView mSnippetTextView;
+        private final WPNetworkImageView mAvatarImageView;
 
-        public NoteHeaderBlockHolder(View view) {
+        NoteHeaderBlockHolder(View view) {
             View rootView = view.findViewById(R.id.header_root_view);
             rootView.setOnClickListener(mOnClickListener);
-            nameTextView = (TextView)view.findViewById(R.id.header_user);
-            snippetTextView = (TextView)view.findViewById(R.id.header_snippet);
-            avatarImageView = (WPNetworkImageView)view.findViewById(R.id.header_avatar);
+            mNameTextView = (TextView) view.findViewById(R.id.header_user);
+            mSnippetTextView = (TextView) view.findViewById(R.id.header_snippet);
+            mAvatarImageView = (WPNetworkImageView) view.findViewById(R.id.header_avatar);
         }
     }
 
     private final View.OnTouchListener mOnGravatarTouchListener = new View.OnTouchListener() {
         @Override
         public boolean onTouch(View v, MotionEvent event) {
-
             int animationDuration = 150;
 
             if (event.getAction() == MotionEvent.ACTION_DOWN) {
                 v.animate()
-                        .scaleX(0.9f)
-                        .scaleY(0.9f)
-                        .alpha(0.5f)
-                        .setDuration(animationDuration)
-                        .setInterpolator(new DecelerateInterpolator());
+                 .scaleX(0.9f)
+                 .scaleY(0.9f)
+                 .alpha(0.5f)
+                 .setDuration(animationDuration)
+                 .setInterpolator(new DecelerateInterpolator());
             } else if (event.getActionMasked() == MotionEvent.ACTION_UP
-                    || event.getActionMasked() == MotionEvent.ACTION_CANCEL) {
+                       || event.getActionMasked() == MotionEvent.ACTION_CANCEL) {
                 v.animate()
-                        .scaleX(1.0f)
-                        .scaleY(1.0f)
-                        .alpha(1.0f)
-                        .setDuration(animationDuration)
-                        .setInterpolator(new DecelerateInterpolator());
+                 .scaleX(1.0f)
+                 .scaleY(1.0f)
+                 .alpha(1.0f)
+                 .setDuration(animationDuration)
+                 .setInterpolator(new DecelerateInterpolator());
 
                 if (event.getActionMasked() == MotionEvent.ACTION_UP && mGravatarClickedListener != null) {
                     // Fire the listener, which will load the site preview for the user's site

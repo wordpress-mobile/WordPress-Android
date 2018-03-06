@@ -39,13 +39,13 @@ public class SiteCreationThemeAdapter extends RecyclerView.Adapter<RecyclerView.
     }
 
     public static class ThemeViewHolder extends RecyclerView.ViewHolder {
-        private final WPNetworkImageView imageView;
-        private final TextView nameView;
+        private final WPNetworkImageView mImageView;
+        private final TextView mNameView;
 
         ThemeViewHolder(View view) {
             super(view);
-            imageView = (WPNetworkImageView) view.findViewById(R.id.theme_grid_item_image);
-            nameView = (TextView) view.findViewById(R.id.theme_grid_item_name);
+            mImageView = (WPNetworkImageView) view.findViewById(R.id.theme_grid_item_image);
+            mNameView = (TextView) view.findViewById(R.id.theme_grid_item_name);
         }
     }
 
@@ -67,11 +67,11 @@ public class SiteCreationThemeAdapter extends RecyclerView.Adapter<RecyclerView.
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         if (viewType == VIEW_TYPE_HEADER) {
             View itemView = LayoutInflater.from(parent.getContext()).inflate(R.layout.site_creation_theme_header,
-                    parent, false);
+                                                                             parent, false);
             return new HeaderViewHolder(itemView);
         } else {
             View itemView = LayoutInflater.from(parent.getContext()).inflate(R.layout.site_creation_theme_item, parent,
-                    false);
+                                                                             false);
             return new ThemeViewHolder(itemView);
         }
     }
@@ -93,7 +93,7 @@ public class SiteCreationThemeAdapter extends RecyclerView.Adapter<RecyclerView.
         } else {
             final ThemeModel theme = getItem(position);
             final ThemeViewHolder themeViewHolder = (ThemeViewHolder) holder;
-            themeViewHolder.nameView.setText(theme.getName());
+            themeViewHolder.mNameView.setText(theme.getName());
             configureImageView(themeViewHolder, theme.getScreenshotUrl());
 
             holder.itemView.setOnClickListener(new View.OnClickListener() {
@@ -127,12 +127,12 @@ public class SiteCreationThemeAdapter extends RecyclerView.Adapter<RecyclerView.
     private static final String THEME_IMAGE_PARAMETER = "?w=";
 
     private void configureImageView(ThemeViewHolder themeViewHolder, String screenshotURL) {
-        String requestURL = (String) themeViewHolder.imageView.getTag();
+        String requestURL = (String) themeViewHolder.mImageView.getTag();
         if (requestURL == null) {
             requestURL = screenshotURL;
-            themeViewHolder.imageView.setDefaultImageResId(R.drawable.theme_loading);
-            themeViewHolder.imageView.showDefaultImage(); // force showing the default image so layout is computed
-            themeViewHolder.imageView.setTag(requestURL);
+            themeViewHolder.mImageView.setDefaultImageResId(R.drawable.theme_loading);
+            themeViewHolder.mImageView.showDefaultImage(); // force showing the default image so layout is computed
+            themeViewHolder.mImageView.setTag(requestURL);
         }
 
         if (!requestURL.equals(screenshotURL)) {
@@ -140,7 +140,7 @@ public class SiteCreationThemeAdapter extends RecyclerView.Adapter<RecyclerView.
         }
 
         int mViewWidth = AppPrefs.getThemeImageSizeWidth();
-        themeViewHolder.imageView.setImageUrl(requestURL + THEME_IMAGE_PARAMETER + mViewWidth,
-                WPNetworkImageView.ImageType.PHOTO);
+        themeViewHolder.mImageView.setImageUrl(requestURL + THEME_IMAGE_PARAMETER + mViewWidth,
+                                               WPNetworkImageView.ImageType.PHOTO);
     }
 }

@@ -63,7 +63,8 @@ public class NoteBlockClickableSpan extends ClickableSpan {
             mShouldLink = shouldLinkRangeType();
 
             // Apply grey color to some types
-            if (mIsFooter || getRangeType() == NoteBlockRangeType.BLOCKQUOTE || getRangeType() == NoteBlockRangeType.POST) {
+            if (mIsFooter || getRangeType() == NoteBlockRangeType.BLOCKQUOTE
+                || getRangeType() == NoteBlockRangeType.POST) {
                 mTextColor = mLightTextColor;
             }
         }
@@ -71,17 +72,17 @@ public class NoteBlockClickableSpan extends ClickableSpan {
 
     // Don't link certain range types, or unknown ones, unless we have a URL
     private boolean shouldLinkRangeType() {
-        return  mShouldLink &&
-                mRangeType != NoteBlockRangeType.BLOCKQUOTE &&
-                mRangeType != NoteBlockRangeType.MATCH &&
-                (mRangeType != NoteBlockRangeType.UNKNOWN || !TextUtils.isEmpty(mUrl));
+        return mShouldLink
+               && mRangeType != NoteBlockRangeType.BLOCKQUOTE
+               && mRangeType != NoteBlockRangeType.MATCH
+               && (mRangeType != NoteBlockRangeType.UNKNOWN || !TextUtils.isEmpty(mUrl));
     }
 
     @Override
     public void updateDrawState(@NonNull TextPaint textPaint) {
         // Set background color
-        textPaint.bgColor = mShouldLink && mPressed && !isBlockquoteType() ?
-                mBackgroundColor : Color.TRANSPARENT;
+        textPaint.bgColor = mShouldLink && mPressed && !isBlockquoteType()
+                ? mBackgroundColor : Color.TRANSPARENT;
         textPaint.setColor(mShouldLink && !mIsFooter ? mLinkColor : mTextColor);
         // No underlines
         textPaint.setUnderlineText(mIsFooter);

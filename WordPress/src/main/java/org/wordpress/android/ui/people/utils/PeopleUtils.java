@@ -22,8 +22,8 @@ import java.util.Map;
 
 public class PeopleUtils {
     // We limit followers we display to 1000 to avoid API performance issues
-    public static int FOLLOWER_PAGE_LIMIT = 50;
-    public static int FETCH_LIMIT = 20;
+    public static final int FOLLOWER_PAGE_LIMIT = 50;
+    public static final int FETCH_LIMIT = 20;
 
     public static void fetchUsers(final SiteModel site, final int offset, final FetchUsersCallback callback) {
         com.wordpress.rest.RestRequest.Listener listener = new RestRequest.Listener() {
@@ -36,8 +36,7 @@ public class PeopleUtils {
                         int numberOfUsers = jsonObject.optInt("found");
                         boolean isEndOfList = (people.size() + offset) >= numberOfUsers;
                         callback.onSuccess(people, isEndOfList);
-                    }
-                    catch (JSONException e) {
+                    } catch (JSONException e) {
                         AppLog.e(T.API, "JSON exception occurred while parsing the response for sites/%s/users: " + e);
                         callback.onError();
                     }
@@ -81,17 +80,16 @@ public class PeopleUtils {
                 if (jsonObject != null && callback != null) {
                     try {
                         JSONArray jsonArray = jsonObject.getJSONArray("subscribers");
-                        Person.PersonType personType = isEmailFollower ?
-                                Person.PersonType.EMAIL_FOLLOWER : Person.PersonType.FOLLOWER;
+                        Person.PersonType personType = isEmailFollower
+                                ? Person.PersonType.EMAIL_FOLLOWER : Person.PersonType.FOLLOWER;
                         List<Person> people = peopleListFromJSON(jsonArray, site.getId(), personType);
                         int pageFetched = jsonObject.optInt("page");
                         int numberOfPages = jsonObject.optInt("pages");
                         boolean isEndOfList = page >= numberOfPages || page >= FOLLOWER_PAGE_LIMIT;
                         callback.onSuccess(people, pageFetched, isEndOfList);
-                    }
-                    catch (JSONException e) {
-                        AppLog.e(T.API, "JSON exception occurred while parsing the response for " +
-                                "sites/%s/stats/followers: " + e);
+                    } catch (JSONException e) {
+                        AppLog.e(T.API, "JSON exception occurred while parsing the response for "
+                                        + "sites/%s/stats/followers: " + e);
                         callback.onError();
                     }
                 }
@@ -127,10 +125,9 @@ public class PeopleUtils {
                         int numberOfUsers = jsonObject.optInt("found");
                         boolean isEndOfList = (people.size() + offset) >= numberOfUsers;
                         callback.onSuccess(people, isEndOfList);
-                    }
-                    catch (JSONException e) {
-                        AppLog.e(T.API, "JSON exception occurred while parsing the response for " +
-                                "sites/%s/viewers: " + e);
+                    } catch (JSONException e) {
+                        AppLog.e(T.API, "JSON exception occurred while parsing the response for "
+                                        + "sites/%s/viewers: " + e);
                         callback.onError();
                     }
                 }
@@ -338,8 +335,8 @@ public class PeopleUtils {
         void onError();
     }
 
-    public static void validateUsernames(final List<String> usernames, String role, long dotComBlogId, final
-            ValidateUsernameCallback callback) {
+    public static void validateUsernames(final List<String> usernames, String role, long wpComBlogId, final
+    ValidateUsernameCallback callback) {
         com.wordpress.rest.RestRequest.Listener listener = new RestRequest.Listener() {
             @Override
             public void onResponse(JSONObject jsonObject) {
@@ -424,7 +421,7 @@ public class PeopleUtils {
             }
         };
 
-        String path = String.format(Locale.US, "sites/%d/invites/validate", dotComBlogId);
+        String path = String.format(Locale.US, "sites/%d/invites/validate", wpComBlogId);
         Map<String, String> params = new HashMap<>();
         for (String username : usernames) {
             params.put("invitees[" + username + "]", username); // specify an array key so to make the map key unique
@@ -444,11 +441,13 @@ public class PeopleUtils {
         }
 
         void onUsernameValidation(String username, ValidationResult validationResult);
+
         void onValidationFinished();
+
         void onError();
     }
 
-    public static void sendInvitations(final List<String> usernames, String role, String message, long dotComBlogId,
+    public static void sendInvitations(final List<String> usernames, String role, String message, long wpComBlogId,
                                        final InvitationsSendCallback callback) {
         com.wordpress.rest.RestRequest.Listener listener = new RestRequest.Listener() {
             @Override
@@ -507,7 +506,7 @@ public class PeopleUtils {
             }
         };
 
-        String path = String.format(Locale.US, "sites/%s/invites/new", dotComBlogId);
+        String path = String.format(Locale.US, "sites/%s/invites/new", wpComBlogId);
         Map<String, String> params = new HashMap<>();
         for (String username : usernames) {
             params.put("invitees[" + username + "]", username); // specify an array key so to make the map key unique
@@ -519,6 +518,7 @@ public class PeopleUtils {
 
     public interface InvitationsSendCallback {
         void onSent(List<String> succeededUsernames, Map<String, String> failedUsernameErrors);
+
         void onError();
     }
 }

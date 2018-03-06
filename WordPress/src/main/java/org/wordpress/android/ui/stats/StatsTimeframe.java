@@ -11,8 +11,7 @@ public enum StatsTimeframe {
     DAY(R.string.stats_timeframe_days),
     WEEK(R.string.stats_timeframe_weeks),
     MONTH(R.string.stats_timeframe_months),
-    YEAR(R.string.stats_timeframe_years),
-    ;
+    YEAR(R.string.stats_timeframe_years),;
 
     private final int mLabelResId;
 

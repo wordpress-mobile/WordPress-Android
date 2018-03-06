@@ -12,9 +12,9 @@ import org.wordpress.android.util.SqlUtils;
 public class ReaderThumbnailTable {
     protected static void createTables(SQLiteDatabase db) {
         db.execSQL("CREATE TABLE tbl_thumbnails ("
-                + "	full_url	  TEXT COLLATE NOCASE PRIMARY KEY,"
-                + " thumbnail_url TEXT NOT NULL,"
-                + " post_id       INTEGER DEFAULT 0)");
+                   + " full_url TEXT COLLATE NOCASE PRIMARY KEY,"
+                   + " thumbnail_url TEXT NOT NULL,"
+                   + " post_id INTEGER DEFAULT 0)");
     }
 
     protected static void dropTables(SQLiteDatabase db) {
@@ -29,14 +29,16 @@ public class ReaderThumbnailTable {
     }
 
     public static void addThumbnail(long postId, String fullUrl, String thumbnailUrl) {
-        if (TextUtils.isEmpty(fullUrl) || TextUtils.isEmpty(thumbnailUrl))
+        if (TextUtils.isEmpty(fullUrl) || TextUtils.isEmpty(thumbnailUrl)) {
             return;
+        }
 
-        SQLiteStatement stmt = ReaderDatabase.getWritableDb().compileStatement("INSERT OR REPLACE INTO tbl_thumbnails (full_url, thumbnail_url, post_id) VALUES (?1,?2,?3)");
+        SQLiteStatement stmt = ReaderDatabase.getWritableDb().compileStatement(
+                "INSERT OR REPLACE INTO tbl_thumbnails (full_url, thumbnail_url, post_id) VALUES (?1,?2,?3)");
         try {
             stmt.bindString(1, fullUrl);
             stmt.bindString(2, thumbnailUrl);
-            stmt.bindLong  (3, postId);
+            stmt.bindLong(3, postId);
             stmt.execute();
         } finally {
             SqlUtils.closeStatement(stmt);
@@ -52,5 +54,4 @@ public class ReaderThumbnailTable {
                 "SELECT thumbnail_url FROM tbl_thumbnails WHERE full_url=?",
                 new String[]{fullUrl});
     }
-
 }

@@ -74,7 +74,7 @@ Language: sr_RS
 	<string name="me_btn_login_logout">Пријава/одјава</string>
 	<string name="me_btn_support">Помоћ и подршка</string>
 	<string name="site_picker_cant_hide_current_site">\"%s\" није сакривен зато што је тренутно веб место</string>
-	<string name="site_picker_create_dotcom">Направи WordPress.com веб место</string>
+	<string name="site_picker_create_wpcom">Направи WordPress.com веб место</string>
 	<string name="site_picker_add_self_hosted">Додај самостално угошћено веб место</string>
 	<string name="site_picker_add_site">Додај веб место</string>
 	<string name="site_picker_edit_visibility">Прикажи/сакриј веб места</string>

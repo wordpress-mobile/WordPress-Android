@@ -11,8 +11,9 @@ public class ReaderUserList extends ArrayList<ReaderUser> {
      */
     public ReaderUserIdList getUserIds() {
         ReaderUserIdList ids = new ReaderUserIdList();
-        for (ReaderUser user: this)
+        for (ReaderUser user : this) {
             ids.add(user.userId);
+        }
         return ids;
     }
 
@@ -30,13 +31,15 @@ public class ReaderUserList extends ArrayList<ReaderUser> {
      */
     public static ReaderUserList fromJsonLikes(JSONObject json) {
         ReaderUserList users = new ReaderUserList();
-        if (json==null)
+        if (json == null) {
             return users;
+        }
 
         JSONArray jsonLikes = json.optJSONArray("likes");
-        if (jsonLikes!=null) {
-            for (int i=0; i < jsonLikes.length(); i++)
+        if (jsonLikes != null) {
+            for (int i = 0; i < jsonLikes.length(); i++) {
                 users.add(ReaderUser.fromJson(jsonLikes.optJSONObject(i)));
+            }
         }
 
         return users;

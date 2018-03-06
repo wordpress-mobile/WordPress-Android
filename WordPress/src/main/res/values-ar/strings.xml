@@ -572,7 +572,7 @@ Language: ar
 	<string name="me_btn_support">المساعدة والدعم</string>
 	<string name="site_picker_cant_hide_current_site">\"%s\" لم يكن مخفيًا لأنه الموقع الحالي</string>
 	<string name="account_settings">إعدادات الحساب</string>
-	<string name="site_picker_create_dotcom">إنشاء موقع وردبرس.كوم</string>
+	<string name="site_picker_create_wpcom">إنشاء موقع وردبرس.كوم</string>
 	<string name="site_picker_add_site">إضافة موقع</string>
 	<string name="site_picker_edit_visibility">إظهار/إخفاء المواقع</string>
 	<string name="site_picker_add_self_hosted">إضافة موقع مستضاف ذاتيًا</string>

@@ -51,7 +51,6 @@ import static org.wordpress.android.util.WPSwipeToRefreshHelper.buildSwipeToRefr
  */
 public class ThemeBrowserFragment extends Fragment
         implements RecyclerListener, SearchView.OnQueryTextListener {
-
     public static final String TAG = ThemeBrowserFragment.class.getName();
     private static final String KEY_LAST_SEARCH = "last_search";
 
@@ -65,10 +64,15 @@ public class ThemeBrowserFragment extends Fragment
 
     interface ThemeBrowserFragmentCallback {
         void onActivateSelected(String themeId);
+
         void onTryAndCustomizeSelected(String themeId);
+
         void onViewSelected(String themeId);
+
         void onDetailsSelected(String themeId);
+
         void onSupportSelected(String themeId);
+
         void onSwipeToRefresh();
     }
 
@@ -254,7 +258,7 @@ public class ThemeBrowserFragment extends Fragment
                         mCallback.onSwipeToRefresh();
                     }
                 }
-        );
+                                                         );
         mSwipeToRefreshHelper.setRefreshing(mShouldRefreshOnStart);
     }
 
@@ -443,8 +447,8 @@ public class ThemeBrowserFragment extends Fragment
         }
         long planId = mSite.getPlanId();
         return planId == PlansConstants.PREMIUM_PLAN_ID
-                || planId == PlansConstants.BUSINESS_PLAN_ID
-                || planId == PlansConstants.JETPACK_PREMIUM_PLAN_ID
-                || planId == PlansConstants.JETPACK_BUSINESS_PLAN_ID;
+               || planId == PlansConstants.BUSINESS_PLAN_ID
+               || planId == PlansConstants.JETPACK_PREMIUM_PLAN_ID
+               || planId == PlansConstants.JETPACK_BUSINESS_PLAN_ID;
     }
 }

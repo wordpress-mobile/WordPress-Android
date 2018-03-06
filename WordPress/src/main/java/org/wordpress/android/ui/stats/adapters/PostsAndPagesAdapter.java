@@ -2,6 +2,7 @@ package org.wordpress.android.ui.stats.adapters;
 
 
 import android.content.Context;
+import android.support.annotation.NonNull;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,28 +16,28 @@ import org.wordpress.android.util.FormatUtils;
 import java.util.List;
 
 public class PostsAndPagesAdapter extends ArrayAdapter<StatsPostModel> {
-
-    private final List<StatsPostModel> list;
-    private final LayoutInflater inflater;
+    private final List<StatsPostModel> mList;
+    private final LayoutInflater mInflater;
 
     public PostsAndPagesAdapter(Context context, List<StatsPostModel> list) {
         super(context, R.layout.stats_list_cell, list);
-        this.list = list;
-        inflater = LayoutInflater.from(context);
+        mList = list;
+        mInflater = LayoutInflater.from(context);
     }
 
     @Override
-    public View getView(int position, View convertView, ViewGroup parent) {
+    @NonNull
+    public View getView(int position, View convertView, @NonNull ViewGroup parent) {
         View rowView = convertView;
         // reuse views
         if (rowView == null) {
-            rowView = inflater.inflate(R.layout.stats_list_cell, parent, false);
+            rowView = mInflater.inflate(R.layout.stats_list_cell, parent, false);
             // configure view holder
             StatsViewHolder viewHolder = new StatsViewHolder(rowView);
             rowView.setTag(viewHolder);
         }
 
-        final StatsPostModel currentRowData = list.get(position);
+        final StatsPostModel currentRowData = mList.get(position);
         StatsViewHolder holder = (StatsViewHolder) rowView.getTag();
 
         // Entry

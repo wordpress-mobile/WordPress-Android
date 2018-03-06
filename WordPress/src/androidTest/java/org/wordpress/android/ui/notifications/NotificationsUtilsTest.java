@@ -15,5 +15,4 @@ public class NotificationsUtilsTest extends AndroidTestCase {
         // Test with bogus params
         assertFalse(NotificationsUtils.spannableHasCharacterAtIndex(null, 'b', -1));
     }
-
 }

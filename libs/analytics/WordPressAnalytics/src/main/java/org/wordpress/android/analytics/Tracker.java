@@ -4,11 +4,11 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 
-import java.util.Map;
-import java.util.UUID;
-
 import org.wordpress.android.analytics.AnalyticsTracker.Stat;
 import org.wordpress.android.util.AppLog;
+
+import java.util.Map;
+import java.util.UUID;
 
 public abstract class Tracker {
     abstract void track(Stat stat);
@@ -42,7 +42,7 @@ public abstract class Tracker {
         if (preferences.contains(getAnonIdPrefKey())) {
             final SharedPreferences.Editor editor = preferences.edit();
             editor.remove(getAnonIdPrefKey());
-            editor.commit();
+            editor.apply();
         }
     }
 
@@ -61,7 +61,7 @@ public abstract class Tracker {
         SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(mContext);
         final SharedPreferences.Editor editor = preferences.edit();
         editor.putString(getAnonIdPrefKey(), uuid);
-        editor.commit();
+        editor.apply();
 
         mAnonID = uuid;
         return uuid;

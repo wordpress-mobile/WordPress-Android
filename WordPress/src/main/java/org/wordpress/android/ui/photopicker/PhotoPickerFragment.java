@@ -158,7 +158,6 @@ public class PhotoPickerFragment extends Fragment {
                     } else {
                         showPickerPopupMenu(v);
                     }
-
                 }
             });
 
@@ -365,7 +364,9 @@ public class PhotoPickerFragment extends Fragment {
             return;
         }
 
-        if (!hasStoragePermission()) return;
+        if (!hasStoragePermission()) {
+            return;
+        }
 
         // save the current state so we can restore it after loading
         if (mGridManager != null) {
@@ -387,7 +388,9 @@ public class PhotoPickerFragment extends Fragment {
             return;
         }
 
-        if (!hasStoragePermission()) return;
+        if (!hasStoragePermission()) {
+            return;
+        }
 
         if (mGridManager == null || mAdapter == null) {
             reload();
@@ -403,7 +406,9 @@ public class PhotoPickerFragment extends Fragment {
     }
 
     private void updateActionModeTitle() {
-        if (mActionMode == null) return;
+        if (mActionMode == null) {
+            return;
+        }
 
         int numSelected = getAdapter().getNumSelected();
         String title = String.format(getString(R.string.cab_selected), numSelected);
@@ -461,7 +466,9 @@ public class PhotoPickerFragment extends Fragment {
      * which asks the user to allow the permission
      */
     private void checkStoragePermission() {
-        if (!isAdded()) return;
+        if (!isAdded()) {
+            return;
+        }
 
         if (hasStoragePermission()) {
             showSoftAskView(false);
@@ -486,8 +493,7 @@ public class PhotoPickerFragment extends Fragment {
     }
 
     @Override
-    public void onRequestPermissionsResult(int requestCode,
-                                           @NonNull String permissions[],
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions,
                                            @NonNull int[] grantResults) {
         boolean checkForAlwaysDenied =
                 requestCode == WPPermissionUtils.PHOTO_PICKER_CAMERA_PERMISSION_REQUEST_CODE;
@@ -510,7 +516,9 @@ public class PhotoPickerFragment extends Fragment {
      * shows the "soft ask" view which should appear when storage permission hasn't been granted
      */
     private void showSoftAskView(boolean show) {
-        if (!isAdded()) return;
+        if (!isAdded()) {
+            return;
+        }
 
         boolean isAlwaysDenied = isStoragePermissionAlwaysDenied();
 
@@ -520,8 +528,9 @@ public class PhotoPickerFragment extends Fragment {
             String label;
             if (isAlwaysDenied) {
                 String permissionName = "<strong>"
-                        + WPPermissionUtils.getPermissionName(getActivity(), permission.WRITE_EXTERNAL_STORAGE)
-                        + "</strong>";
+                                        + WPPermissionUtils
+                                                .getPermissionName(getActivity(), permission.WRITE_EXTERNAL_STORAGE)
+                                        + "</strong>";
                 label = String.format(
                         getString(R.string.photo_picker_soft_ask_permissions_denied), appName, permissionName);
             } else {
@@ -533,8 +542,8 @@ public class PhotoPickerFragment extends Fragment {
             // denied them permanently, in which case take them to the device settings for this
             // app so the user can change permissions there
             TextView txtAllow = (TextView) mSoftAskContainer.findViewById(R.id.text_soft_ask_allow);
-            int allowId = isAlwaysDenied ?
-                    R.string.button_edit_permissions : R.string.photo_picker_soft_ask_allow;
+            int allowId = isAlwaysDenied
+                    ? R.string.button_edit_permissions : R.string.photo_picker_soft_ask_allow;
             txtAllow.setText(allowId);
             txtAllow.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -566,7 +575,8 @@ public class PhotoPickerFragment extends Fragment {
         for (Uri mediaUri : uriList) {
             if (mediaUri != null) {
                 boolean isVideo = MediaUtils.isVideo(mediaUri.toString());
-                Map<String, Object> properties = AnalyticsUtils.getMediaProperties(getActivity(), isVideo, mediaUri, null);
+                Map<String, Object> properties =
+                        AnalyticsUtils.getMediaProperties(getActivity(), isVideo, mediaUri, null);
                 properties.put("is_part_of_multiselection", isMultiselection);
                 if (isMultiselection) {
                     properties.put("number_of_media_selected", uriList.size());

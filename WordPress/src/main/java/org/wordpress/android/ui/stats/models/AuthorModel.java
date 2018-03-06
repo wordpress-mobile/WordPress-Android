@@ -23,7 +23,8 @@ public class AuthorModel implements Serializable {
     private FollowDataModel mFollowData;
     private List<StatsPostModel> mPosts;
 
-    public AuthorModel(long mBlogId, String date, String mGroupId, String mName, String mAvatar, int mViews, JSONObject followData) throws JSONException {
+    public AuthorModel(long mBlogId, String date, String mGroupId, String mName, String mAvatar, int mViews,
+                       JSONObject followData) throws JSONException {
         this.mBlogId = mBlogId;
         setDate(StatsUtils.toMs(date));
         this.mGroupId = mGroupId;
@@ -115,5 +116,7 @@ public class AuthorModel implements Serializable {
         this.mAvatar = icon;
     }
 
-    public List<StatsPostModel> getPosts() { return mPosts; }
+    public List<StatsPostModel> getPosts() {
+        return mPosts;
+    }
 }

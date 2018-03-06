@@ -88,7 +88,8 @@ public class ThemeWebActivity extends WPWebViewActivity {
             switch (type) {
                 case PREVIEW:
                     String domain = isPremium ? THEME_DOMAIN_PREMIUM : THEME_DOMAIN_PUBLIC;
-                    return String.format(THEME_URL_PREVIEW, UrlUtils.getHost(site.getUrl()), domain, theme.getThemeId());
+                    return String
+                            .format(THEME_URL_PREVIEW, UrlUtils.getHost(site.getUrl()), domain, theme.getThemeId());
                 case DEMO:
                     String url = theme.getDemoUrl();
                     if (url.contains("?")) {
@@ -129,7 +130,7 @@ public class ThemeWebActivity extends WPWebViewActivity {
             Intent returnIntent = new Intent();
             setResult(RESULT_OK, returnIntent);
             returnIntent.putExtra(ThemeBrowserActivity.THEME_ID,
-                    getIntent().getStringExtra(ThemeBrowserActivity.THEME_ID));
+                                  getIntent().getStringExtra(ThemeBrowserActivity.THEME_ID));
             finish();
             return true;
         }
@@ -149,7 +150,9 @@ public class ThemeWebActivity extends WPWebViewActivity {
         }
     }
 
-    /** Show Activate in the Action Bar menu if the theme is free and not the current theme. */
+    /**
+     * Show Activate in the Action Bar menu if the theme is free and not the current theme.
+     */
     private boolean shouldShowActivateMenuItem() {
         Boolean isPremiumTheme = getIntent().getBooleanExtra(IS_PREMIUM_THEME, false);
         Boolean isCurrentTheme = getIntent().getBooleanExtra(IS_CURRENT_THEME, false);

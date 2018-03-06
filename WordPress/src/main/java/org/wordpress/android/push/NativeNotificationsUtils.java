@@ -10,7 +10,6 @@ import org.wordpress.android.R;
 import static org.wordpress.android.push.GCMMessageService.ACTIONS_PROGRESS_NOTIFICATION_ID;
 
 public class NativeNotificationsUtils {
-
     public static void showIntermediateMessageToUser(String message, Context context) {
         showMessageToUser(message, true, ACTIONS_PROGRESS_NOTIFICATION_ID, context);
     }
@@ -54,5 +53,4 @@ public class NativeNotificationsUtils {
         Intent closeIntent = new Intent(Intent.ACTION_CLOSE_SYSTEM_DIALOGS);
         context.sendBroadcast(closeIntent);
     }
-
 }

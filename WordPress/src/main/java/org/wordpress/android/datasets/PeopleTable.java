@@ -24,50 +24,51 @@ public class PeopleTable {
     private static SQLiteDatabase getReadableDb() {
         return WordPress.wpDB.getDatabase();
     }
+
     private static SQLiteDatabase getWritableDb() {
         return WordPress.wpDB.getDatabase();
     }
 
     public static void createTables(SQLiteDatabase db) {
         db.execSQL("CREATE TABLE " + TEAM_TABLE + " ("
-                + "person_id               INTEGER DEFAULT 0,"
-                + "local_blog_id           INTEGER DEFAULT 0,"
-                + "user_name               TEXT,"
-                + "display_name            TEXT,"
-                + "avatar_url              TEXT,"
-                + "role                    TEXT,"
-                + "PRIMARY KEY (person_id, local_blog_id)"
-                + ");");
+                   + "person_id INTEGER DEFAULT 0,"
+                   + "local_blog_id INTEGER DEFAULT 0,"
+                   + "user_name TEXT,"
+                   + "display_name TEXT,"
+                   + "avatar_url TEXT,"
+                   + "role TEXT,"
+                   + "PRIMARY KEY (person_id, local_blog_id)"
+                   + ");");
 
         db.execSQL("CREATE TABLE " + FOLLOWERS_TABLE + " ("
-                + "person_id               INTEGER DEFAULT 0,"
-                + "local_blog_id           INTEGER DEFAULT 0,"
-                + "user_name               TEXT,"
-                + "display_name            TEXT,"
-                + "avatar_url              TEXT,"
-                + "subscribed              TEXT,"
-                + "PRIMARY KEY (person_id, local_blog_id)"
-                + ");");
+                   + "person_id INTEGER DEFAULT 0,"
+                   + "local_blog_id INTEGER DEFAULT 0,"
+                   + "user_name TEXT,"
+                   + "display_name TEXT,"
+                   + "avatar_url TEXT,"
+                   + "subscribed TEXT,"
+                   + "PRIMARY KEY (person_id, local_blog_id)"
+                   + ");");
 
         db.execSQL("CREATE TABLE " + EMAIL_FOLLOWERS_TABLE + " ("
-                + "person_id               INTEGER DEFAULT 0,"
-                + "local_blog_id           INTEGER DEFAULT 0,"
-                + "display_name            TEXT,"
-                + "avatar_url              TEXT,"
-                + "subscribed              TEXT,"
-                + "PRIMARY KEY (person_id, local_blog_id)"
-                + ");");
+                   + "person_id INTEGER DEFAULT 0,"
+                   + "local_blog_id INTEGER DEFAULT 0,"
+                   + "display_name TEXT,"
+                   + "avatar_url TEXT,"
+                   + "subscribed TEXT,"
+                   + "PRIMARY KEY (person_id, local_blog_id)"
+                   + ");");
     }
 
     public static void createViewersTable(SQLiteDatabase db) {
         db.execSQL("CREATE TABLE " + VIEWERS_TABLE + " ("
-                + "person_id               INTEGER DEFAULT 0,"
-                + "local_blog_id           INTEGER DEFAULT 0,"
-                + "user_name               TEXT,"
-                + "display_name            TEXT,"
-                + "avatar_url              TEXT,"
-                + "PRIMARY KEY (person_id, local_blog_id)"
-                + ");");
+                   + "person_id INTEGER DEFAULT 0,"
+                   + "local_blog_id INTEGER DEFAULT 0,"
+                   + "user_name TEXT,"
+                   + "display_name TEXT,"
+                   + "avatar_url TEXT,"
+                   + "PRIMARY KEY (person_id, local_blog_id)"
+                   + ");");
     }
 
     private static void dropTables(SQLiteDatabase db) {
@@ -168,6 +169,7 @@ public class PeopleTable {
      * In order to avoid syncing issues, this method will be called when People page is created. We only keep
      * the first page of users, so we don't show an empty screen. When fresh data is received, it'll replace
      * the existing page.
+     *
      * @param localTableBlogId - the local blog id people will be deleted from
      */
     public static void deletePeopleExceptForFirstPage(int localTableBlogId) {
@@ -189,9 +191,9 @@ public class PeopleTable {
                         orderBy = "ROWID DESC";
                     }
                     String inQuery = SQLiteQueryBuilder.buildQueryString(false, table, columns, where, null, null,
-                            orderBy, limit);
+                                                                         orderBy, limit);
 
-                    String[] args = new String[] {Integer.toString(localTableBlogId)};
+                    String[] args = new String[]{Integer.toString(localTableBlogId)};
                     getWritableDb().delete(table, "local_blog_id=?1 AND person_id IN (" + inQuery + ")", args);
                 }
             }
@@ -281,15 +283,16 @@ public class PeopleTable {
 
     /**
      * retrieve a person
+     *
      * @param table - sql table the person record is in
      * @param personId - id of a person in a particular blog
      * @param localTableBlogId - the local blog id the user belongs to
      * @return Person if found, null otherwise
      */
     private static Person getPerson(String table, long personId, int localTableBlogId) {
-        String[] args = { Long.toString(personId), Integer.toString(localTableBlogId)};
-        Cursor c = getReadableDb().rawQuery("SELECT * FROM " + table +
-                " WHERE person_id=? AND local_blog_id=?", args);
+        String[] args = {Long.toString(personId), Integer.toString(localTableBlogId)};
+        Cursor c = getReadableDb().rawQuery("SELECT * FROM " + table
+                                            + " WHERE person_id=? AND local_blog_id=?", args);
         try {
             if (!c.moveToFirst()) {
                 return null;
@@ -333,7 +336,7 @@ public class PeopleTable {
 
     // order is disabled for followers & viewers for now since the API is not supporting it
     private static boolean shouldOrderAlphabetically(String table) {
-       return table.equals(TEAM_TABLE);
+        return table.equals(TEAM_TABLE);
     }
 
     @Nullable

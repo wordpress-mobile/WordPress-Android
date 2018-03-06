@@ -19,7 +19,7 @@ public class SingleItemModel implements Serializable {
     private final String mIcon;
 
     public SingleItemModel(long blogId, String date, String itemID, String title, int totals, String url, String icon) {
-       this(blogId, StatsUtils.toMs(date), itemID, title, totals, url, icon);
+        this(blogId, StatsUtils.toMs(date), itemID, title, totals, url, icon);
     }
 
     SingleItemModel(long blogId, long date, String itemID, String title, int totals, String url, String icon) {
@@ -66,5 +66,4 @@ public class SingleItemModel implements Serializable {
     public long getDate() {
         return mDate;
     }
-
 }

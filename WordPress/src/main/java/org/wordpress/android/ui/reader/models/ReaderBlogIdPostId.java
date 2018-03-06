@@ -5,19 +5,19 @@ import java.io.Serializable;
 public class ReaderBlogIdPostId implements Serializable {
     private static final long serialVersionUID = 0L;
 
-    private final long blogId;
-    private final long postId;
+    private final long mBlogId;
+    private final long mPostId;
 
     public ReaderBlogIdPostId(long blogId, long postId) {
-        this.blogId = blogId;
-        this.postId = postId;
+        mBlogId = blogId;
+        mPostId = postId;
     }
 
     public long getBlogId() {
-        return blogId;
+        return mBlogId;
     }
 
     public long getPostId() {
-        return postId;
+        return mPostId;
     }
 }

@@ -1050,7 +1050,7 @@ Language: sq_AL
 	<string name="account_settings">Rregullime Llogarie</string>
 	<string name="me_btn_support">Ndihmë &amp; Asistencë</string>
 	<string name="site_picker_cant_hide_current_site">\"%s\" s’u fsheh, ngaqë është sajti i tanishëm</string>
-	<string name="site_picker_create_dotcom">Ndërtoni një sajt te WordPress.com</string>
+	<string name="site_picker_create_wpcom">Ndërtoni një sajt te WordPress.com</string>
 	<string name="site_picker_add_self_hosted">Shto sajt të vetëstrehuar</string>
 	<string name="site_picker_edit_visibility">Shfaq/fshih sajte</string>
 	<string name="site_picker_add_site">Shtoni sajt</string>

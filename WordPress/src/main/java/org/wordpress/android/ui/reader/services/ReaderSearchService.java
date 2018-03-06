@@ -29,9 +29,8 @@ import de.greenrobot.event.EventBus;
  */
 
 public class ReaderSearchService extends Service {
-
-    private static final String ARG_QUERY   = "query";
-    private static final String ARG_OFFSET  = "offset";
+    private static final String ARG_QUERY = "query";
+    private static final String ARG_OFFSET = "offset";
 
     public static void startService(Context context, @NonNull String query, int offset) {
         Intent intent = new Intent(context, ReaderSearchService.class);
@@ -41,7 +40,9 @@ public class ReaderSearchService extends Service {
     }
 
     public static void stopService(Context context) {
-        if (context == null) return;
+        if (context == null) {
+            return;
+        }
 
         Intent intent = new Intent(context, ReaderSearchService.class);
         context.stopService(intent);
@@ -79,10 +80,10 @@ public class ReaderSearchService extends Service {
 
     private void startSearch(final String query, final int offset) {
         String path = "read/search?q="
-                + UrlUtils.urlEncode(query)
-                + "&number=" + ReaderConstants.READER_MAX_SEARCH_POSTS_TO_REQUEST
-                + "&offset=" + offset
-                + "&meta=site,likes";
+                      + UrlUtils.urlEncode(query)
+                      + "&number=" + ReaderConstants.READER_MAX_SEARCH_POSTS_TO_REQUEST
+                      + "&offset=" + offset
+                      + "&meta=site,likes";
 
         RestRequest.Listener listener = new RestRequest.Listener() {
             @Override

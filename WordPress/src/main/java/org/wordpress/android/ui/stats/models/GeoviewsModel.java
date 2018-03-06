@@ -13,13 +13,13 @@ import java.util.List;
 public class GeoviewsModel extends BaseStatsModel {
     private String mDate;
     private long mBlogID;
-    private int otherViews;
-    private int totalViews;
-    private List<GeoviewModel> countries;
+    private int mOtherViews;
+    private int mTotalViews;
+    private List<GeoviewModel> mCountries;
 
     public GeoviewsModel(long blogID, JSONObject response) throws JSONException {
-        this.mBlogID = blogID;
-        this.mDate = response.getString("date");
+        mBlogID = blogID;
+        mDate = response.getString("date");
 
         JSONObject jDaysObject = response.getJSONObject("days");
         if (jDaysObject.length() == 0) {
@@ -30,14 +30,14 @@ public class GeoviewsModel extends BaseStatsModel {
         Iterator<String> keys = jDaysObject.keys();
         String firstDayKey = keys.next();
         JSONObject firstDayObject = jDaysObject.getJSONObject(firstDayKey);
-        this.otherViews = firstDayObject.getInt("other_views");
-        this.totalViews = firstDayObject.getInt("total_views");
+        mOtherViews = firstDayObject.getInt("other_views");
+        mTotalViews = firstDayObject.getInt("total_views");
 
         JSONObject countryInfoJSON = response.optJSONObject("country-info");
         JSONArray viewsJSON = firstDayObject.optJSONArray("views");
 
         if (viewsJSON != null && countryInfoJSON != null) {
-            countries = new ArrayList<>(viewsJSON.length());
+            mCountries = new ArrayList<>(viewsJSON.length());
             for (int i = 0; i < viewsJSON.length(); i++) {
                 JSONObject currentCountryJSON = viewsJSON.getJSONObject(i);
                 String currentCountryCode = currentCountryJSON.getString("country_code");
@@ -51,13 +51,13 @@ public class GeoviewsModel extends BaseStatsModel {
                     flatFlagIcon = currentCountryDetails.optString("flat_flag_icon");
                     countryFullName = currentCountryDetails.optString("country_full");
                 }
-                GeoviewModel m = new GeoviewModel(currentCountryCode, countryFullName, currentCountryViews, flagIcon, flatFlagIcon);
-                countries.add(m);
-
+                GeoviewModel m = new GeoviewModel(currentCountryCode, countryFullName, currentCountryViews, flagIcon,
+                                                  flatFlagIcon);
+                mCountries.add(m);
             }
 
             // Sort the countries by views.
-            Collections.sort(countries, new java.util.Comparator<GeoviewModel>() {
+            Collections.sort(mCountries, new java.util.Comparator<GeoviewModel>() {
                 public int compare(GeoviewModel o1, GeoviewModel o2) {
                     // descending order
                     return o2.getViews() - o1.getViews();
@@ -71,7 +71,7 @@ public class GeoviewsModel extends BaseStatsModel {
     }
 
     public void setBlogID(long blogID) {
-        this.mBlogID = blogID;
+        mBlogID = blogID;
     }
 
     public String getDate() {
@@ -79,18 +79,18 @@ public class GeoviewsModel extends BaseStatsModel {
     }
 
     public void setDate(String date) {
-        this.mDate = date;
+        mDate = date;
     }
 
     public List<GeoviewModel> getCountries() {
-        return this.countries;
+        return mCountries;
     }
 
     public int getOtherViews() {
-        return otherViews;
+        return mOtherViews;
     }
 
     public int getTotalViews() {
-        return totalViews;
+        return mTotalViews;
     }
 }

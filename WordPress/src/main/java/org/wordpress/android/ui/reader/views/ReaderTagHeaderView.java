@@ -26,12 +26,11 @@ import java.util.HashMap;
  * topmost view in post adapter when showing tag preview - displays tag name and follow button
  */
 public class ReaderTagHeaderView extends RelativeLayout {
-
     private WPNetworkImageView mImageView;
     private TextView mTxtAttribution;
     private ReaderTag mCurrentTag;
 
-    private static final ReaderTagHeaderInfoList mTagInfoCache = new ReaderTagHeaderInfoList();
+    private static final ReaderTagHeaderInfoList TAG_INFO_CACHE = new ReaderTagHeaderInfoList();
 
     public ReaderTagHeaderView(Context context) {
         super(context);
@@ -55,7 +54,9 @@ public class ReaderTagHeaderView extends RelativeLayout {
     }
 
     public void setCurrentTag(final ReaderTag tag) {
-        if (tag == null) return;
+        if (tag == null) {
+            return;
+        }
 
         boolean isTagChanged = !ReaderTag.isSameTag(tag, mCurrentTag);
 
@@ -69,8 +70,8 @@ public class ReaderTagHeaderView extends RelativeLayout {
         txtTagName.setText(tag.getLabel());
 
         // use cached info if it's available, otherwise request it if the tag has changed
-        if (mTagInfoCache.hasInfoForTag(tag)) {
-            setTagHeaderInfo(mTagInfoCache.getInfoForTag(tag));
+        if (TAG_INFO_CACHE.hasInfoForTag(tag)) {
+            setTagHeaderInfo(TAG_INFO_CACHE.getInfoForTag(tag));
         } else if (isTagChanged) {
             getTagHeaderInfo();
         }
@@ -94,7 +95,8 @@ public class ReaderTagHeaderView extends RelativeLayout {
             mTxtAttribution.setOnClickListener(new OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    ReaderActivityLauncher.showReaderPostDetail(view.getContext(), info.getSourceBlogId(), info.getSourcePostId());
+                    ReaderActivityLauncher
+                            .showReaderPostDetail(view.getContext(), info.getSourceBlogId(), info.getSourcePostId());
                 }
             });
         } else {
@@ -106,7 +108,9 @@ public class ReaderTagHeaderView extends RelativeLayout {
      * performs a GET request for the info we display here
      */
     private void getTagHeaderInfo() {
-        if (mCurrentTag == null) return;
+        if (mCurrentTag == null) {
+            return;
+        }
 
         String tagNameForApi = ReaderUtils.sanitizeWithDashes(mCurrentTag.getTagSlug());
         String path = "read/tags/" + tagNameForApi + "/images?number=1";
@@ -114,13 +118,19 @@ public class ReaderTagHeaderView extends RelativeLayout {
         WordPress.getRestClientUtilsV1_2().get(path, new RestRequest.Listener() {
             @Override
             public void onResponse(JSONObject jsonObject) {
-                if (jsonObject == null) return;
+                if (jsonObject == null) {
+                    return;
+                }
 
                 JSONArray jsonArray = jsonObject.optJSONArray("images");
-                if (jsonArray == null) return;
+                if (jsonArray == null) {
+                    return;
+                }
 
                 JSONObject jsonImage = jsonArray.optJSONObject(0);
-                if (jsonImage == null) return;
+                if (jsonImage == null) {
+                    return;
+                }
 
                 // current endpoint doesn't include the protocol
                 String url = JSONUtils.getString(jsonImage, "url");
@@ -136,7 +146,7 @@ public class ReaderTagHeaderView extends RelativeLayout {
                 info.setSourcePostId(jsonImage.optLong("post_id"));
 
                 // add to cached list then display it
-                mTagInfoCache.setInfoForTag(mCurrentTag, info);
+                TAG_INFO_CACHE.setInfoForTag(mCurrentTag, info);
                 setTagHeaderInfo(info);
             }
         }, null);
@@ -149,12 +159,15 @@ public class ReaderTagHeaderView extends RelativeLayout {
         public ReaderTagHeaderInfo getInfoForTag(ReaderTag tag) {
             return this.get(getKeyForTag(tag));
         }
+
         public boolean hasInfoForTag(ReaderTag tag) {
             return this.containsKey(getKeyForTag(tag));
         }
+
         public void setInfoForTag(ReaderTag tag, ReaderTagHeaderInfo info) {
             this.put(getKeyForTag(tag), info);
         }
+
         private String getKeyForTag(ReaderTag tag) {
             return tag.getTagSlug();
         }

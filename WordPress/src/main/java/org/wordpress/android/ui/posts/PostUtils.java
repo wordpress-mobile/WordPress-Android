@@ -36,7 +36,7 @@ import java.util.regex.Pattern;
 public class PostUtils {
     private static final int MAX_EXCERPT_LEN = 150;
 
-    private static final HashSet<String> mShortcodeTable = new HashSet<>();
+    private static final HashSet<String> SHORTCODE_TABLE = new HashSet<>();
 
     /*
      * collapses shortcodes in the passed post content, stripping anything between the
@@ -67,46 +67,48 @@ public class PostUtils {
     }
 
     private static boolean isKnownShortcode(String shortCode) {
-        if (shortCode == null) return false;
-
-        // populate on first use
-        if (mShortcodeTable.size() == 0) {
-            // default shortcodes
-            mShortcodeTable.add("audio");
-            mShortcodeTable.add("caption");
-            mShortcodeTable.add("embed");
-            mShortcodeTable.add("gallery");
-            mShortcodeTable.add("playlist");
-            mShortcodeTable.add("video");
-            mShortcodeTable.add("wp_caption");
-            // audio/video
-            mShortcodeTable.add("dailymotion");
-            mShortcodeTable.add("flickr");
-            mShortcodeTable.add("hulu");
-            mShortcodeTable.add("kickstarter");
-            mShortcodeTable.add("soundcloud");
-            mShortcodeTable.add("vimeo");
-            mShortcodeTable.add("vine");
-            mShortcodeTable.add("wpvideo");
-            mShortcodeTable.add("youtube");
-            // images and documents
-            mShortcodeTable.add("instagram");
-            mShortcodeTable.add("scribd");
-            mShortcodeTable.add("slideshare");
-            mShortcodeTable.add("slideshow");
-            mShortcodeTable.add("presentation");
-            mShortcodeTable.add("googleapps");
-            mShortcodeTable.add("office");
-            // other
-            mShortcodeTable.add("googlemaps");
-            mShortcodeTable.add("polldaddy");
-            mShortcodeTable.add("recipe");
-            mShortcodeTable.add("sitemap");
-            mShortcodeTable.add("twitter-timeline");
-            mShortcodeTable.add("upcomingevents");
+        if (shortCode == null) {
+            return false;
         }
 
-        return mShortcodeTable.contains(shortCode);
+        // populate on first use
+        if (SHORTCODE_TABLE.size() == 0) {
+            // default shortcodes
+            SHORTCODE_TABLE.add("audio");
+            SHORTCODE_TABLE.add("caption");
+            SHORTCODE_TABLE.add("embed");
+            SHORTCODE_TABLE.add("gallery");
+            SHORTCODE_TABLE.add("playlist");
+            SHORTCODE_TABLE.add("video");
+            SHORTCODE_TABLE.add("wp_caption");
+            // audio/video
+            SHORTCODE_TABLE.add("dailymotion");
+            SHORTCODE_TABLE.add("flickr");
+            SHORTCODE_TABLE.add("hulu");
+            SHORTCODE_TABLE.add("kickstarter");
+            SHORTCODE_TABLE.add("soundcloud");
+            SHORTCODE_TABLE.add("vimeo");
+            SHORTCODE_TABLE.add("vine");
+            SHORTCODE_TABLE.add("wpvideo");
+            SHORTCODE_TABLE.add("youtube");
+            // images and documents
+            SHORTCODE_TABLE.add("instagram");
+            SHORTCODE_TABLE.add("scribd");
+            SHORTCODE_TABLE.add("slideshare");
+            SHORTCODE_TABLE.add("slideshow");
+            SHORTCODE_TABLE.add("presentation");
+            SHORTCODE_TABLE.add("googleapps");
+            SHORTCODE_TABLE.add("office");
+            // other
+            SHORTCODE_TABLE.add("googlemaps");
+            SHORTCODE_TABLE.add("polldaddy");
+            SHORTCODE_TABLE.add("recipe");
+            SHORTCODE_TABLE.add("sitemap");
+            SHORTCODE_TABLE.add("twitter-timeline");
+            SHORTCODE_TABLE.add("upcomingevents");
+        }
+
+        return SHORTCODE_TABLE.contains(shortCode);
     }
 
     public static void trackSavePostAnalytics(PostModel post, SiteModel site) {
@@ -127,11 +129,11 @@ public class PostUtils {
                     AnalyticsUtils.trackWithSiteDetails(AnalyticsTracker.Stat.EDITOR_UPDATED_POST, site, properties);
                 } else {
                     properties.put("word_count", AnalyticsUtils.getWordCount(post.getContent()));
-                    properties.put("editor_source", AppPrefs.isAztecEditorEnabled() ? "aztec" :
-                            AppPrefs.isVisualEditorEnabled() ? "hybrid" : "legacy");
+                    properties.put("editor_source", AppPrefs.isAztecEditorEnabled() ? "aztec"
+                            : AppPrefs.isVisualEditorEnabled() ? "hybrid" : "legacy");
 
                     AnalyticsUtils.trackWithSiteDetails(AnalyticsTracker.Stat.EDITOR_SCHEDULED_POST, site,
-                            properties);
+                                                        properties);
                 }
                 break;
             case DRAFT:
@@ -148,7 +150,6 @@ public class PostUtils {
         FragmentManager fm = activity.getFragmentManager();
         WPAlertDialogFragment saveDialog = (WPAlertDialogFragment) fm.findFragmentByTag(tag);
         if (saveDialog == null) {
-
             saveDialog = WPAlertDialogFragment.newCustomDialog(title, message, positiveButton, negativeButton);
         }
         if (!saveDialog.isAdded()) {
@@ -157,8 +158,9 @@ public class PostUtils {
     }
 
     public static boolean isPublishable(PostModel post) {
-        return post != null
-                && !(post.getContent().trim().isEmpty() && post.getExcerpt().trim().isEmpty() && post.getTitle().trim().isEmpty());
+        return post != null && !(post.getContent().trim().isEmpty()
+                                 && post.getExcerpt().trim().isEmpty()
+                                 && post.getTitle().trim().isEmpty());
     }
 
     public static boolean hasEmptyContentFields(PostModel post) {
@@ -174,18 +176,18 @@ public class PostUtils {
         }
 
         return newPost == null || !(StringUtils.equals(oldPost.getTitle(), newPost.getTitle())
-                && StringUtils.equals(oldPost.getContent(), newPost.getContent())
-                && StringUtils.equals(oldPost.getExcerpt(), newPost.getExcerpt())
-                && StringUtils.equals(oldPost.getStatus(), newPost.getStatus())
-                && StringUtils.equals(oldPost.getPassword(), newPost.getPassword())
-                && StringUtils.equals(oldPost.getPostFormat(), newPost.getPostFormat())
-                && StringUtils.equals(oldPost.getDateCreated(), newPost.getDateCreated())
-                && oldPost.getFeaturedImageId() == newPost.getFeaturedImageId()
-                && oldPost.getTagNameList().containsAll(newPost.getTagNameList())
-                && newPost.getTagNameList().containsAll(oldPost.getTagNameList())
-                && oldPost.getCategoryIdList().containsAll(newPost.getCategoryIdList())
-                && newPost.getCategoryIdList().containsAll(oldPost.getCategoryIdList())
-                && PostLocation.equals(oldPost.getLocation(), newPost.getLocation())
+                                    && StringUtils.equals(oldPost.getContent(), newPost.getContent())
+                                    && StringUtils.equals(oldPost.getExcerpt(), newPost.getExcerpt())
+                                    && StringUtils.equals(oldPost.getStatus(), newPost.getStatus())
+                                    && StringUtils.equals(oldPost.getPassword(), newPost.getPassword())
+                                    && StringUtils.equals(oldPost.getPostFormat(), newPost.getPostFormat())
+                                    && StringUtils.equals(oldPost.getDateCreated(), newPost.getDateCreated())
+                                    && oldPost.getFeaturedImageId() == newPost.getFeaturedImageId()
+                                    && oldPost.getTagNameList().containsAll(newPost.getTagNameList())
+                                    && newPost.getTagNameList().containsAll(oldPost.getTagNameList())
+                                    && oldPost.getCategoryIdList().containsAll(newPost.getCategoryIdList())
+                                    && newPost.getCategoryIdList().containsAll(oldPost.getCategoryIdList())
+                                    && PostLocation.equals(oldPost.getLocation(), newPost.getLocation())
         );
     }
 
@@ -244,10 +246,11 @@ public class PostUtils {
     public static String getFormattedDate(PostModel post) {
         if (PostStatus.fromPost(post) == PostStatus.SCHEDULED) {
             return DateUtils.formatDateTime(WordPress.getContext(),
-                    DateTimeUtils.timestampFromIso8601Millis(post.getDateCreated()), DateUtils.FORMAT_ABBREV_ALL);
+                                            DateTimeUtils.timestampFromIso8601Millis(post.getDateCreated()),
+                                            DateUtils.FORMAT_ABBREV_ALL);
         } else {
             return DateTimeUtils.javaDateToTimeSpan(DateTimeUtils.dateUTCFromIso8601(post.getDateCreated()),
-                    WordPress.getContext());
+                                                    WordPress.getContext());
         }
     }
 
@@ -272,15 +275,16 @@ public class PostUtils {
             return -1;
         }
         for (int i = 0; i < posts.size(); i++) {
-            if (posts.get(i).getId() == post.getId() &&
-                    posts.get(i).getLocalSiteId() == post.getLocalSiteId()) {
+            if (posts.get(i).getId() == post.getId()
+                && posts.get(i).getLocalSiteId() == post.getLocalSiteId()) {
                 return i;
             }
         }
         return -1;
     }
 
-    public static @NotNull List<Integer> indexesOfFeaturedMediaIdInList(final long mediaId, List<PostModel> posts) {
+    public static @NotNull
+    List<Integer> indexesOfFeaturedMediaIdInList(final long mediaId, List<PostModel> posts) {
         List<Integer> list = new ArrayList<>();
         if (mediaId == 0) {
             return list;
@@ -332,10 +336,11 @@ public class PostUtils {
 
     public static boolean isFirstTimePublish(PostModel post) {
         return PostStatus.fromPost(post) == PostStatus.DRAFT
-                || (PostStatus.fromPost(post) == PostStatus.PUBLISHED && post.isLocalDraft());
+               || (PostStatus.fromPost(post) == PostStatus.PUBLISHED && post.isLocalDraft());
     }
 
-    public static Set<PostModel> getPostsThatIncludeAnyOfTheseMedia(PostStore postStore, List<MediaModel> mediaModelList) {
+    public static Set<PostModel> getPostsThatIncludeAnyOfTheseMedia(PostStore postStore,
+                                                                    List<MediaModel> mediaModelList) {
         // if there' a Post to which the retried media belongs, clear their status
         HashSet<PostModel> postsThatContainListedMedia = new HashSet<>();
         for (MediaModel media : mediaModelList) {
