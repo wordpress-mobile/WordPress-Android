@@ -30,7 +30,7 @@ public class LoginProloguePagerAdapter extends FragmentPagerAdapter {
             R.string.login_promo_text_jetpack
     };
 
-    private static final String[] sTags = {
+    private static final String[] TAGS = {
             LOGIN_PROLOGUE_POST_TAG,
             LOGIN_PROLOGUE_STATS_TAG,
             LOGIN_PROLOGUE_READER_TAG,
@@ -53,6 +53,6 @@ public class LoginProloguePagerAdapter extends FragmentPagerAdapter {
     }
 
     public static String getTag(int position) {
-        return sTags[position];
+        return TAGS[position];
     }
 }

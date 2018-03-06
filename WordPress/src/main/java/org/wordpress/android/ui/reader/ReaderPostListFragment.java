@@ -124,16 +124,16 @@ public class ReaderPostListFragment extends Fragment
     @Inject AccountStore mAccountStore;
 
     private static class HistoryStack extends Stack<String> {
-        private final String keyName;
+        private final String mKeyName;
 
         HistoryStack(@SuppressWarnings("SameParameterValue") String keyName) {
-            this.keyName = keyName;
+            mKeyName = keyName;
         }
 
         void restoreInstance(Bundle bundle) {
             clear();
-            if (bundle.containsKey(keyName)) {
-                ArrayList<String> history = bundle.getStringArrayList(keyName);
+            if (bundle.containsKey(mKeyName)) {
+                ArrayList<String> history = bundle.getStringArrayList(mKeyName);
                 if (history != null) {
                     this.addAll(history);
                 }
@@ -144,7 +144,7 @@ public class ReaderPostListFragment extends Fragment
             if (!isEmpty()) {
                 ArrayList<String> history = new ArrayList<>();
                 history.addAll(this);
-                bundle.putStringArrayList(keyName, history);
+                bundle.putStringArrayList(mKeyName, history);
             }
         }
     }
@@ -451,10 +451,9 @@ public class ReaderPostListFragment extends Fragment
                 }
 
                 if (mFirstLoad) {
-                    /* let onResume() take care of this logic, as the FilteredRecyclerView.FilterListener onLoadData method
-                    * is called on two moments: once for first time load, and then each time the swipe to refresh gesture
-                    * triggers a refresh
-                    */
+                    // let onResume() take care of this logic, as the FilteredRecyclerView.FilterListener onLoadData
+                    // method is called on two moments: once for first time load, and then each time the swipe to
+                    // refresh gesture triggers a refresh.
                     mRecyclerView.setRefreshing(false);
                     mFirstLoad = false;
                 } else {
@@ -1064,7 +1063,7 @@ public class ReaderPostListFragment extends Fragment
     }
 
     private String getCurrentTagName() {
-        return (mCurrentTag != null ? mCurrentTag.getTagSlug() : "");
+        return (mCurrentTag != null ? mCurrentTag.getmTagSlug() : "");
     }
 
     private boolean hasCurrentTag() {
@@ -1091,7 +1090,7 @@ public class ReaderPostListFragment extends Fragment
                 AppPrefs.setReaderTag(tag);
                 break;
             case TAG_PREVIEW:
-                mTagPreviewHistory.push(tag.getTagSlug());
+                mTagPreviewHistory.push(tag.getmTagSlug());
                 break;
         }
 
@@ -1111,11 +1110,7 @@ public class ReaderPostListFragment extends Fragment
         if (isSearchViewExpanded()) {
             mSearchMenuItem.collapseActionView();
             return true;
-        } else if (goBackInTagHistory()) {
-            return true;
-        } else {
-            return false;
-        }
+        } else return goBackInTagHistory();
     }
 
     /*
@@ -1514,7 +1509,7 @@ public class ReaderPostListFragment extends Fragment
         }
 
         Map<String, String> properties = new HashMap<>();
-        properties.put("tag", tag.getTagSlug());
+        properties.put("tag", tag.getmTagSlug());
 
         AnalyticsTracker.track(stat, properties);
     }
@@ -1609,7 +1604,7 @@ public class ReaderPostListFragment extends Fragment
     private class LoadTagsTask extends AsyncTask<Void, Void, ReaderTagList> {
         private final FilteredRecyclerView.FilterCriteriaAsyncLoaderListener mFilterCriteriaLoaderListener;
 
-        public LoadTagsTask(FilteredRecyclerView.FilterCriteriaAsyncLoaderListener listener) {
+        LoadTagsTask(FilteredRecyclerView.FilterCriteriaAsyncLoaderListener listener) {
             mFilterCriteriaLoaderListener = listener;
         }
 
@@ -1626,9 +1621,8 @@ public class ReaderPostListFragment extends Fragment
             if (tagList != null && !tagList.isSameList(mTags)) {
                 mTags.clear();
                 mTags.addAll(tagList);
-                if (mFilterCriteriaLoaderListener != null)
-                // noinspection unchecked
-                {
+                if (mFilterCriteriaLoaderListener != null) {
+                    // noinspection unchecked
                     mFilterCriteriaLoaderListener.onFilterCriteriasLoaded((List) mTags);
                 }
             }

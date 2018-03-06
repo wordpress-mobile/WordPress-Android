@@ -132,17 +132,17 @@ public class StatsAuthorsFragment extends StatsAbstractListFragment {
     private class MyExpandableListAdapter extends BaseExpandableListAdapter {
         public final LayoutInflater inflater;
         public final Activity activity;
-        private final List<AuthorModel> authors;
+        private final List<AuthorModel> mAuthors;
 
-        public MyExpandableListAdapter(Activity act, List<AuthorModel> authors) {
+        MyExpandableListAdapter(Activity act, List<AuthorModel> authors) {
             this.activity = act;
-            this.authors = authors;
+            mAuthors = authors;
             this.inflater = act.getLayoutInflater();
         }
 
         @Override
         public Object getChild(int groupPosition, int childPosition) {
-            AuthorModel currentGroup = authors.get(groupPosition);
+            AuthorModel currentGroup = mAuthors.get(groupPosition);
             List<StatsPostModel> posts = currentGroup.getPosts();
             return posts.get(childPosition);
         }
@@ -187,7 +187,7 @@ public class StatsAuthorsFragment extends StatsAbstractListFragment {
 
         @Override
         public int getChildrenCount(int groupPosition) {
-            AuthorModel currentGroup = authors.get(groupPosition);
+            AuthorModel currentGroup = mAuthors.get(groupPosition);
             List<StatsPostModel> posts = currentGroup.getPosts();
             if (posts == null) {
                 return 0;
@@ -198,12 +198,12 @@ public class StatsAuthorsFragment extends StatsAbstractListFragment {
 
         @Override
         public Object getGroup(int groupPosition) {
-            return authors.get(groupPosition);
+            return mAuthors.get(groupPosition);
         }
 
         @Override
         public int getGroupCount() {
-            return authors.size();
+            return mAuthors.size();
         }
 
 

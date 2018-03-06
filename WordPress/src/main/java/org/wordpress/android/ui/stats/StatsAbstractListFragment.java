@@ -227,7 +227,6 @@ public abstract class StatsAbstractListFragment extends StatsAbstractFragment {
                 if (mTopPagerContainer.getVisibility() == View.VISIBLE) {
                     viewAllIntent.putExtra(ARGS_TOP_PAGER_SELECTED_BUTTON_INDEX, mTopPagerSelectedButtonIndex);
                 }
-                // viewAllIntent.putExtra(StatsAbstractFragment.ARG_REST_RESPONSE, mDatamodels[mTopPagerSelectedButtonIndex]);
                 getActivity().startActivity(viewAllIntent);
             }
         });
@@ -257,13 +256,13 @@ public abstract class StatsAbstractListFragment extends StatsAbstractFragment {
             rb.setLayoutParams(params);
             rb.setText(buttonTitles[i]);
             rb.setChecked(i == mTopPagerSelectedButtonIndex);
-            rb.setOnClickListener(TopModulePagerOnClickListener);
+            rb.setOnClickListener(mTopModulePagerOnClickListener);
             mTopPagerContainer.addView(rb);
         }
         mTopPagerContainer.setVisibility(View.VISIBLE);
     }
 
-    private final View.OnClickListener TopModulePagerOnClickListener = new View.OnClickListener() {
+    private final View.OnClickListener mTopModulePagerOnClickListener = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
             if (!isAdded()) {

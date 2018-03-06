@@ -176,6 +176,7 @@ public class EditPostActivity extends AppCompatActivity implements
     public static final String EXTRA_SAVED_AS_LOCAL_DRAFT = "savedAsLocalDraft";
     public static final String EXTRA_HAS_FAILED_MEDIA = "hasFailedMedia";
     public static final String EXTRA_HAS_CHANGES = "hasChanges";
+    public static final String EXTRA_IS_DISCARDABLE = "isDiscardable";
     public static final String EXTRA_INSERT_MEDIA = "insertMedia";
     private static final String STATE_KEY_EDITOR_FRAGMENT = "editorFragment";
     private static final String STATE_KEY_DROPPED_MEDIA_URIS = "stateKeyDroppedMediaUri";
@@ -1236,10 +1237,10 @@ public class EditPostActivity extends AppCompatActivity implements
     }
 
     private class SavePostOnlineAndFinishTask extends AsyncTask<Void, Void, Void> {
-        boolean isFirstTimePublish;
+        boolean mIsFirstTimePublish;
 
         SavePostOnlineAndFinishTask(boolean isFirstTimePublish) {
-            this.isFirstTimePublish = isFirstTimePublish;
+            this.mIsFirstTimePublish = isFirstTimePublish;
         }
 
         @Override
@@ -1256,7 +1257,7 @@ public class EditPostActivity extends AppCompatActivity implements
             PostUtils.trackSavePostAnalytics(mPost, mSiteStore.getSiteByLocalId(mPost.getLocalSiteId()));
 
             UploadService.setLegacyMode(!mShowNewEditor && !mShowAztecEditor);
-            if (isFirstTimePublish) {
+            if (mIsFirstTimePublish) {
                 UploadService.uploadPostAndTrackAnalytics(EditPostActivity.this, mPost);
             } else {
                 UploadService.uploadPost(EditPostActivity.this, mPost);
@@ -1269,7 +1270,7 @@ public class EditPostActivity extends AppCompatActivity implements
 
         @Override
         protected void onPostExecute(Void saved) {
-            saveResult(true, false);
+            saveResult(true, false,false);
             removePostOpenInEditorStickyEvent();
             finish();
         }
@@ -1302,19 +1303,20 @@ public class EditPostActivity extends AppCompatActivity implements
 
         @Override
         protected void onPostExecute(Boolean saved) {
-            saveResult(saved, true);
+            saveResult(saved, false,true);
             removePostOpenInEditorStickyEvent();
             finish();
         }
     }
 
-    private void saveResult(boolean saved, boolean savedLocally) {
+    private void saveResult(boolean saved, boolean discardable, boolean savedLocally) {
         Intent i = getIntent();
         i.putExtra(EXTRA_SAVED_AS_LOCAL_DRAFT, savedLocally);
         i.putExtra(EXTRA_HAS_FAILED_MEDIA, hasFailedMedia());
         i.putExtra(EXTRA_IS_PAGE, mIsPage);
         i.putExtra(EXTRA_HAS_CHANGES, saved);
         i.putExtra(EXTRA_POST_LOCAL_ID, mPost.getId());
+        i.putExtra(EXTRA_IS_DISCARDABLE, discardable);
         setResult(RESULT_OK, i);
     }
 
@@ -1374,7 +1376,7 @@ public class EditPostActivity extends AppCompatActivity implements
                 boolean isPublishable = PostUtils.isPublishable(mPost);
 
                 // if post was modified or has unsaved local changes and is publishable, save it
-                saveResult(isPublishable, false);
+                saveResult(isPublishable, false,false);
 
                 if (isPublishable) {
                     if (NetworkUtils.isNetworkAvailable(getBaseContext())) {
@@ -1447,7 +1449,7 @@ public class EditPostActivity extends AppCompatActivity implements
                 // if post is publishable or not new, sync it
                 boolean shouldSync = isPublishable || !isNewPost();
 
-                saveResult(shouldSave && shouldSync, false);
+                saveResult(shouldSave && shouldSync, isDiscardable(), false);
 
                 definitelyDeleteBackspaceDeletedMediaItems();
 
@@ -1474,7 +1476,7 @@ public class EditPostActivity extends AppCompatActivity implements
                     }
                 } else {
                     // discard post if new & empty
-                    if (!isPublishable && isNewPost()) {
+                    if (isDiscardable()) {
                         mDispatcher.dispatch(PostActionBuilder.newRemovePostAction(mPost));
                     }
                     removePostOpenInEditorStickyEvent();
@@ -1482,6 +1484,10 @@ public class EditPostActivity extends AppCompatActivity implements
                 }
             }
         }).start();
+    }
+
+    private boolean isDiscardable() {
+        return !PostUtils.isPublishable(mPost) && isNewPost();
     }
 
     private boolean isFirstTimePublish() {
@@ -2055,14 +2061,14 @@ public class EditPostActivity extends AppCompatActivity implements
      * the editor one at a time
      */
     private class AddMediaListThread extends Thread {
-        private final List<Uri> uriList = new ArrayList<>();
-        private final boolean isNew;
-        private ProgressDialog progressDialog;
-        private boolean didAnyFail;
+        private final List<Uri> mUriList = new ArrayList<>();
+        private final boolean mIsNew;
+        private ProgressDialog mProgressDialog;
+        private boolean mDidAnyFail;
 
         AddMediaListThread(@NonNull List<Uri> uriList, boolean isNew) {
-            this.uriList.addAll(uriList);
-            this.isNew = isNew;
+            this.mUriList.addAll(uriList);
+            this.mIsNew = isNew;
             showOverlay(false);
         }
 
@@ -2072,13 +2078,13 @@ public class EditPostActivity extends AppCompatActivity implements
                 public void run() {
                     try {
                         if (show) {
-                            progressDialog = new ProgressDialog(EditPostActivity.this);
-                            progressDialog.setCancelable(false);
-                            progressDialog.setIndeterminate(true);
-                            progressDialog.setMessage(getString(R.string.add_media_progress));
-                            progressDialog.show();
-                        } else if (progressDialog != null && progressDialog.isShowing()) {
-                            progressDialog.dismiss();
+                            mProgressDialog = new ProgressDialog(EditPostActivity.this);
+                            mProgressDialog.setCancelable(false);
+                            mProgressDialog.setIndeterminate(true);
+                            mProgressDialog.setMessage(getString(R.string.add_media_progress));
+                            mProgressDialog.show();
+                        } else if (mProgressDialog != null && mProgressDialog.isShowing()) {
+                            mProgressDialog.dismiss();
                         }
                     } catch (IllegalArgumentException e) {
                         AppLog.e(T.MEDIA, e);
@@ -2092,17 +2098,17 @@ public class EditPostActivity extends AppCompatActivity implements
             // adding multiple media items at once can take several seconds on slower devices, so we show a blocking
             // progress dialog in this situation - otherwise the user could accidentally back out of the process
             // before all items were added
-            boolean shouldShowProgress = uriList.size() > 2;
+            boolean shouldShowProgress = mUriList.size() > 2;
             if (shouldShowProgress) {
                 showProgressDialog(true);
             }
             try {
-                for (Uri mediaUri : uriList) {
+                for (Uri mediaUri : mUriList) {
                     if (isInterrupted()) {
                         return;
                     }
                     if (!processMedia(mediaUri)) {
-                        didAnyFail = true;
+                        mDidAnyFail = true;
                     }
                 }
             } finally {
@@ -2118,7 +2124,7 @@ public class EditPostActivity extends AppCompatActivity implements
                     if (!isInterrupted()) {
                         savePostAsync(null);
                         hideOverlay();
-                        if (didAnyFail) {
+                        if (mDidAnyFail) {
                             ToastUtils.showToast(EditPostActivity.this, R.string.gallery_error,
                                                  ToastUtils.Duration.SHORT);
                         }
@@ -2168,7 +2174,7 @@ public class EditPostActivity extends AppCompatActivity implements
                 return false;
             }
 
-            trackAddMediaFromDeviceEvents(isNew, isVideo, mediaUri);
+            trackAddMediaFromDeviceEvents(mIsNew, isVideo, mediaUri);
             postProcessMedia(mediaUri, path, isVideo);
 
             return true;

@@ -132,16 +132,16 @@ public class StatsTagsAndCategoriesFragment extends StatsAbstractListFragment {
 
     private class MyExpandableListAdapter extends BaseExpandableListAdapter {
         public final LayoutInflater inflater;
-        private final List<TagsModel> groups;
+        private final List<TagsModel> mGroups;
 
-        public MyExpandableListAdapter(Context context, List<TagsModel> groups) {
-            this.groups = groups;
+        MyExpandableListAdapter(Context context, List<TagsModel> groups) {
+            mGroups = groups;
             this.inflater = LayoutInflater.from(context);
         }
 
         @Override
         public Object getChild(int groupPosition, int childPosition) {
-            TagsModel currentGroup = groups.get(groupPosition);
+            TagsModel currentGroup = mGroups.get(groupPosition);
             List<TagModel> results = currentGroup.getTags();
             return results.get(childPosition);
         }
@@ -187,7 +187,7 @@ public class StatsTagsAndCategoriesFragment extends StatsAbstractListFragment {
 
         @Override
         public int getChildrenCount(int groupPosition) {
-            TagsModel currentGroup = groups.get(groupPosition);
+            TagsModel currentGroup = mGroups.get(groupPosition);
             List<TagModel> tags = currentGroup.getTags();
             if (tags == null || tags.size() == 1) {
                 return 0;
@@ -198,12 +198,12 @@ public class StatsTagsAndCategoriesFragment extends StatsAbstractListFragment {
 
         @Override
         public Object getGroup(int groupPosition) {
-            return groups.get(groupPosition);
+            return mGroups.get(groupPosition);
         }
 
         @Override
         public int getGroupCount() {
-            return groups.size();
+            return mGroups.size();
         }
 
 

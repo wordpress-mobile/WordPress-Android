@@ -23,7 +23,7 @@ class WPMainTabAdapter extends FragmentStatePagerAdapter {
 
     private final SparseArray<Fragment> mFragments = new SparseArray<>(NUM_TABS);
 
-    public WPMainTabAdapter(FragmentManager fm) {
+    WPMainTabAdapter(FragmentManager fm) {
         super(fm);
     }
 

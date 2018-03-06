@@ -162,7 +162,7 @@ public class NotificationsProcessingService extends Service {
         private final Context mContext;
         private final Intent mIntent;
 
-        public QuickActionProcessor(Context ctx, Intent intent, int taskId) {
+        QuickActionProcessor(Context ctx, Intent intent, int taskId) {
             mContext = ctx;
             mIntent = intent;
             mTaskId = taskId;

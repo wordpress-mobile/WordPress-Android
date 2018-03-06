@@ -8,19 +8,17 @@ import java.util.List;
 
 public class NotificationEvents {
     public static class NotificationsChanged {
-        final public boolean hasUnseenNotes;
-
-        public NotificationsChanged() {
+        public final boolean hasUnseenNotes;
+        NotificationsChanged() {
             this.hasUnseenNotes = false;
         }
-
         public NotificationsChanged(boolean hasUnseenNotes) {
             this.hasUnseenNotes = hasUnseenNotes;
         }
     }
 
     public static class NoteLikeOrModerationStatusChanged {
-        final String noteId;
+        public final String noteId;
 
         public NoteLikeOrModerationStatusChanged(String noteId) {
             this.noteId = noteId;
@@ -40,7 +38,7 @@ public class NotificationEvents {
     }
 
     public static class NotificationsUnseenStatus {
-        final public boolean hasUnseenNotes;
+        public final boolean hasUnseenNotes;
 
         public NotificationsUnseenStatus(boolean hasUnseenNotes) {
             this.hasUnseenNotes = hasUnseenNotes;
@@ -48,7 +46,7 @@ public class NotificationEvents {
     }
 
     public static class NotificationsRefreshCompleted {
-        final List<Note> notes;
+        public final List<Note> notes;
 
         public NotificationsRefreshCompleted(List<Note> notes) {
             this.notes = notes;
@@ -56,13 +54,12 @@ public class NotificationEvents {
     }
 
     public static class NotificationsRefreshError {
-        VolleyError error;
+        public VolleyError error;
 
         public NotificationsRefreshError(VolleyError error) {
             this.error = error;
         }
 
-        public NotificationsRefreshError() {
-        }
+        public NotificationsRefreshError() {}
     }
 }

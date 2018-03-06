@@ -118,9 +118,8 @@ public class AddCategoryFragment extends AppCompatDialogFragment {
         ArrayList<CategoryNode> categoryLevels = CategoryNode.getSortedListOfCategoriesFromRoot(rootCategory);
         categoryLevels.add(0, new CategoryNode(0, 0, getString(R.string.top_level_category_name)));
         if (categoryLevels.size() > 0) {
-            ParentCategorySpinnerAdapter categoryAdapter = new ParentCategorySpinnerAdapter(getActivity(),
-                                                                                            R.layout.categories_row_parent,
-                                                                                            categoryLevels);
+            ParentCategorySpinnerAdapter categoryAdapter =
+                    new ParentCategorySpinnerAdapter(getActivity(), R.layout.categories_row_parent, categoryLevels);
             mParentSpinner.setAdapter(categoryAdapter);
         }
     }

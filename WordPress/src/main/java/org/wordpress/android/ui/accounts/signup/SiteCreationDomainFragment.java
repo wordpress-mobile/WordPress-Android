@@ -170,29 +170,25 @@ public class SiteCreationDomainFragment extends SiteCreationBaseFormFragment<Sit
     public void onDomainSuggestionEvent(DomainSuggestionEvent event) {
         if (mSiteCreationDomainAdapter == null) {
             // Fragment is initializing or rotating so, just instantiate a new adapter.
-            mSiteCreationDomainAdapter = new SiteCreationDomainAdapter(getContext(), mKeywords,
-                                                                       new SiteCreationDomainAdapter.OnAdapterListener() {
-                                                                           @Override
-                                                                           public void onKeywordsChange(
-                                                                                   String keywords) {
-                                                                               mKeywords = keywords;
-                                                                               mCarryOverDomain = mSelectedDomain;
+            mSiteCreationDomainAdapter = new SiteCreationDomainAdapter(
+                    getContext(), mKeywords,
+                    new SiteCreationDomainAdapter.OnAdapterListener() {
+                        @Override
+                        public void onKeywordsChange(String keywords) {
+                            mKeywords = keywords;
+                            mCarryOverDomain = mSelectedDomain;
 
-                                                                               // fallback to using the provided username as query if text is empty
-                                                                               mQueryString = TextUtils
-                                                                                       .isEmpty(keywords.trim())
-                                                                                       ? mUsername : keywords;
+                            // fallback to using the provided username as query if text is empty
+                            mQueryString = TextUtils.isEmpty(keywords.trim()) ? mUsername : keywords;
+                            getLoaderFragment().load(mQueryString);
+                        }
 
-                                                                               getLoaderFragment().load(mQueryString);
-                                                                           }
-
-                                                                           @Override
-                                                                           public void onSelectionChange(
-                                                                                   String domain) {
-                                                                               mSelectedDomain = domain;
-                                                                               updateFinishButton();
-                                                                           }
-                                                                       });
+                        @Override
+                        public void onSelectionChange(String domain) {
+                            mSelectedDomain = domain;
+                            updateFinishButton();
+                        }
+                    });
         }
 
         switch (event.step) {

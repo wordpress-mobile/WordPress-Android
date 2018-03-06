@@ -85,17 +85,17 @@ public class CommentUtils {
     }
 
     private static class TextWrappingLeadingMarginSpan implements LeadingMarginSpan.LeadingMarginSpan2 {
-        private final int margin;
-        private final int lines;
+        private final int mMargin;
+        private final int mLines;
 
         TextWrappingLeadingMarginSpan(int margin) {
-            this.margin = margin;
-            this.lines = 1;
+            this.mMargin = margin;
+            this.mLines = 1;
         }
 
         @Override
         public int getLeadingMargin(boolean first) {
-            return first ? margin : 0;
+            return first ? mMargin : 0;
         }
 
         @Override
@@ -105,7 +105,7 @@ public class CommentUtils {
 
         @Override
         public int getLeadingMarginLineCount() {
-            return lines;
+            return mLines;
         }
     }
 }

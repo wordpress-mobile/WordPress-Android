@@ -29,7 +29,7 @@ public class WPNetworkImageViewTest extends InstrumentationTestCase {
     public void testVolleyImageLoaderGetNullHost() throws InterruptedException {
         Handler mainLooperHandler = new Handler(WordPress.getContext().getMainLooper());
         final CountDownLatch countDownLatch = new CountDownLatch(1);
-        final boolean success[] = new boolean[1];
+        final boolean[] success = new boolean[1];
         Runnable getImage = new Runnable() {
             @Override
             public void run() {

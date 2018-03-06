@@ -107,10 +107,11 @@ public abstract class StatsAbstractFragment extends Fragment {
 
         // Do not pass the array of StatsEndpointsEnum to the Service. Otherwise we get
         // java.lang.RuntimeException: Unable to start service org.wordpress.android.ui.stats.service.StatsService
-        // with Intent { cmp=org.wordpress.android/.ui.stats.service.StatsService (has extras) }: java.lang.ClassCastException:
-        // java.lang.Object[] cannot be cast to org.wordpress.android.ui.stats.service.StatsService$StatsEndpointsEnum[]
-        // on older devices.
-        // We should use Enumset, or array of int. Going for the latter, since we have an array and cannot create an Enumset easily.
+        // with Intent { cmp=org.wordpress.android/.ui.stats.service.StatsService (has extras) }:
+        // java.lang.ClassCastException: java.lang.Object[] cannot be cast to
+        // org.wordpress.android.ui.stats.service.StatsService$StatsEndpointsEnum[] on older devices.
+        // We should use Enumset, or array of int. Going for the latter, since we have an array and cannot create
+        // an Enumset easily.
         int[] sectionsForTheService = new int[sections.length];
         for (int i = 0; i < sections.length; i++) {
             sectionsForTheService[i] = sections[i].ordinal();
@@ -122,7 +123,8 @@ public abstract class StatsAbstractFragment extends Fragment {
         intent.putExtra(StatsService.ARG_PERIOD, mStatsTimeframe);
         intent.putExtra(StatsService.ARG_DATE, mDate);
         if (isSingleView()) {
-            // Single Item screen: request 20 items per page on paged requests. Default to the first 100 items otherwise.
+            // Single Item screen: request 20 items per page on paged requests.
+            // Default to the first 100 items otherwise.
             int maxElementsToRetrieve =
                     pageNumberRequested > 0 ? StatsService.MAX_RESULTS_REQUESTED_PER_PAGE : MAX_RESULTS_REQUESTED;
             intent.putExtra(StatsService.ARG_MAX_RESULTS, maxElementsToRetrieve);
@@ -262,8 +264,7 @@ public abstract class StatsAbstractFragment extends Fragment {
     }
 
     public static StatsAbstractFragment newVisitorsAndViewsInstance(StatsViewType viewType, int localTableBlogID,
-                                                                    StatsTimeframe timeframe, String date,
-                                                                    StatsVisitorsAndViewsFragment.OverviewLabel itemToSelect) {
+                  StatsTimeframe timeframe, String date, StatsVisitorsAndViewsFragment.OverviewLabel itemToSelect) {
         StatsVisitorsAndViewsFragment fragment =
                 (StatsVisitorsAndViewsFragment) newInstance(viewType, localTableBlogID, timeframe, date);
         fragment.setSelectedOverviewItem(itemToSelect);

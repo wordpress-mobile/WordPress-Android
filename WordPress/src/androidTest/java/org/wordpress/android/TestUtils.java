@@ -28,7 +28,7 @@ import static junit.framework.Assert.assertNotNull;
 import static junit.framework.Assert.assertTrue;
 
 public class TestUtils {
-    private static String DATABASE_NAME = "wordpress";
+    private static final String DATABASE_NAME = "wordpress";
 
     public static SQLiteDatabase loadDBFromDump(Context targetContext, Context testContext, String filename) {
         targetContext.deleteDatabase(DATABASE_NAME);

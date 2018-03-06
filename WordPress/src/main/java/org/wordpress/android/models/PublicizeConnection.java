@@ -159,9 +159,9 @@ public class PublicizeConnection {
         return mSites;
     }
 
-    public boolean isInSite(long siteId) {
+    public boolean isInSite(long remoteSiteId) {
         for (int i = 0; i < mSites.length; i++) {
-            if (siteId == mSites[i]) {
+            if (remoteSiteId == mSites[i]) {
                 return true;
             }
         }

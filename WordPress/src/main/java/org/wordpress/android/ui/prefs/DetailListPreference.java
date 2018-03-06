@@ -217,7 +217,7 @@ public class DetailListPreference extends ListPreference
     }
 
     private class DetailListAdapter extends ArrayAdapter<String> {
-        public DetailListAdapter(Context context, int resource, String[] objects) {
+        DetailListAdapter(Context context, int resource, String[] objects) {
             super(context, resource, objects);
         }
 

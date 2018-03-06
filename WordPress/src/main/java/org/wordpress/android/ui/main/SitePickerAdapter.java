@@ -55,8 +55,7 @@ public class SitePickerAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
     public interface HeaderHandler {
         RecyclerView.ViewHolder onCreateViewHolder(LayoutInflater layoutInflater, ViewGroup parent,
                                                    boolean attachToRoot);
-
-        void onBindViewHolder(final RecyclerView.ViewHolder holder, SiteList sites);
+        void onBindViewHolder(RecyclerView.ViewHolder holder, SiteList sites);
     }
 
     private final int mTextColorNormal;
@@ -107,7 +106,7 @@ public class SitePickerAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         private Boolean isSiteHidden;
         private final RadioButton selectedRadioButton;
 
-        public SiteViewHolder(View view) {
+        SiteViewHolder(View view) {
             super(view);
             layoutContainer = (ViewGroup) view.findViewById(R.id.layout_container);
             txtTitle = (TextView) view.findViewById(R.id.text_title);

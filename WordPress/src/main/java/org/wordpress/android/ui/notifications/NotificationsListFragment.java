@@ -411,7 +411,7 @@ public class NotificationsListFragment extends Fragment implements WPMainActivit
                     R.string.notifications_empty_action_all,
                     R.string.notifications_empty_view_reader
                          );
-        } else if (i == R.id.notifications_filter_unread) {// User might not have a blog, if so just show the title
+        } else if (i == R.id.notifications_filter_unread) { // User might not have a blog, if so just show the title
             if (getSelectedSite() == null) {
                 showEmptyView(R.string.notifications_empty_unread);
             } else {
@@ -457,7 +457,7 @@ public class NotificationsListFragment extends Fragment implements WPMainActivit
         int i = mFilterRadioGroup.getCheckedRadioButtonId();
         if (i == R.id.notifications_filter_unread) { // Create a new post
             ActivityLauncher.addNewPostOrPageForResult(getActivity(), getSelectedSite(), false, false);
-        } else {// Switch to Reader tab
+        } else { // Switch to Reader tab
             if (getActivity() instanceof WPMainActivity) {
                 ((WPMainActivity) getActivity()).setReaderTabActive();
             }
@@ -560,26 +560,26 @@ public class NotificationsListFragment extends Fragment implements WPMainActivit
     @SuppressWarnings("unused")
     public void onEventMainThread(final NotificationEvents.NoteLikeOrModerationStatusChanged event) {
         // Like/unlike done -> refresh the note and update db
-        NotificationsActions.downloadNoteAndUpdateDB(event.noteId,
-                                                     new RestRequest.Listener() {
-                                                         @Override
-                                                         public void onResponse(JSONObject response) {
-                                                             EventBus.getDefault().removeStickyEvent(
-                                                                     NotificationEvents.NoteLikeOrModerationStatusChanged.class);
-                                                             // now re-set the object in our list adapter with the note saved in the updated DB
-                                                             Note note = NotificationsTable.getNoteById(event.noteId);
-                                                             if (note != null) {
-                                                                 mNotesAdapter.replaceNote(note);
-                                                             }
-                                                         }
-                                                     }, new RestRequest.ErrorListener() {
+        NotificationsActions.downloadNoteAndUpdateDB(
+                event.noteId,
+                new RestRequest.Listener() {
+                    @Override
+                    public void onResponse(JSONObject response) {
+                        EventBus.getDefault().removeStickyEvent(
+                                NotificationEvents.NoteLikeOrModerationStatusChanged.class);
+                        // now re-set the object in our list adapter with the note saved in the updated DB
+                        Note note = NotificationsTable.getNoteById(event.noteId);
+                        if (note != null) {
+                            mNotesAdapter.replaceNote(note);
+                        }
+                    }
+                }, new RestRequest.ErrorListener() {
                     @Override
                     public void onErrorResponse(VolleyError error) {
-                        EventBus.getDefault()
-                                .removeStickyEvent(NotificationEvents.NoteLikeOrModerationStatusChanged.class);
+                        EventBus.getDefault().removeStickyEvent(
+                                NotificationEvents.NoteLikeOrModerationStatusChanged.class);
                     }
-                }
-                                                    );
+                });
     }
 
     public SiteModel getSelectedSite() {

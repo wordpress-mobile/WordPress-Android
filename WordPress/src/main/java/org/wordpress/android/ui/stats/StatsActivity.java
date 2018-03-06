@@ -94,7 +94,7 @@ public class StatsActivity extends AppCompatActivity
     private boolean mIsUpdatingStats;
     private SwipeToRefreshHelper mSwipeToRefreshHelper;
     private TimeframeSpinnerAdapter mTimeframeSpinnerAdapter;
-    private final StatsTimeframe[] timeframes = {StatsTimeframe.INSIGHTS, StatsTimeframe.DAY, StatsTimeframe.WEEK,
+    private final StatsTimeframe[] mTimeframes = {StatsTimeframe.INSIGHTS, StatsTimeframe.DAY, StatsTimeframe.WEEK,
             StatsTimeframe.MONTH, StatsTimeframe.YEAR};
     private StatsVisitorsAndViewsFragment.OverviewLabel mTabToSelectOnGraph =
             StatsVisitorsAndViewsFragment.OverviewLabel.VIEWS;
@@ -194,14 +194,14 @@ public class StatsActivity extends AppCompatActivity
         checkIfSiteHasAccessibleStats(mSite);
 
         // create the fragments without forcing the re-creation. If the activity is restarted fragments can already
-        // be there, and ready to be displayed without making any network connections. A fragment calls the stats service
-        // if its internal datamodel is empty.
+        // be there, and ready to be displayed without making any network connections. A fragment calls the
+        // stats service if its internal datamodel is empty.
         createFragments(false);
 
         if (mSpinner == null) {
             mSpinner = (Spinner) findViewById(R.id.filter_spinner);
 
-            mTimeframeSpinnerAdapter = new TimeframeSpinnerAdapter(this, timeframes);
+            mTimeframeSpinnerAdapter = new TimeframeSpinnerAdapter(this, mTimeframes);
 
             mSpinner.setAdapter(mTimeframeSpinnerAdapter);
             mSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
@@ -251,8 +251,8 @@ public class StatsActivity extends AppCompatActivity
         otherRecentStatsMovedLabel.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                for (int i = 0; i < timeframes.length; i++) {
-                    if (timeframes[i] == StatsTimeframe.INSIGHTS) {
+                for (int i = 0; i < mTimeframes.length; i++) {
+                    if (mTimeframes[i] == StatsTimeframe.INSIGHTS) {
                         mSpinner.setSelection(i);
                         break;
                     }
@@ -561,8 +561,8 @@ public class StatsActivity extends AppCompatActivity
     @Override
     public void onInsightsTodayClicked(final StatsVisitorsAndViewsFragment.OverviewLabel item) {
         mTabToSelectOnGraph = item;
-        for (int i = 0; i < timeframes.length; i++) {
-            if (timeframes[i] == StatsTimeframe.DAY) {
+        for (int i = 0; i < mTimeframes.length; i++) {
+            if (mTimeframes[i] == StatsTimeframe.DAY) {
                 mSpinner.setSelection(i);
                 break;
             }
@@ -769,7 +769,7 @@ public class StatsActivity extends AppCompatActivity
         }
     }
 
-    private static final RateLimitedTask sTrackBottomReachedStats = new RateLimitedTask(2) {
+    private static RateLimitedTask sTrackBottomReachedStats = new RateLimitedTask(2) {
         protected boolean run() {
             AnalyticsTracker.track(AnalyticsTracker.Stat.STATS_SCROLLED_TO_BOTTOM);
             return true;

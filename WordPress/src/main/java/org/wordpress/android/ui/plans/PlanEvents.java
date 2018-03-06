@@ -15,7 +15,7 @@ class PlanEvents {
         private final List<Plan> mPlans;
         private final SiteModel mSite;
 
-        public PlansUpdated(SiteModel site, @NonNull List<Plan> plans) {
+        PlansUpdated(SiteModel site, @NonNull List<Plan> plans) {
             mSite = site;
             mPlans = plans;
         }

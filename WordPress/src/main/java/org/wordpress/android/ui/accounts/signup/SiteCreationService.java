@@ -69,11 +69,11 @@ public class SiteCreationService extends AutoForeground<SiteCreationState> {
 
     public static class SiteCreationState implements AutoForeground.ServiceState {
         private @NonNull final SiteCreationStep mStep;
-        private final Object payload;
+        private final Object mPayload;
 
         SiteCreationState(@NonNull SiteCreationStep step, @Nullable Object payload) {
             this.mStep = step;
-            this.payload = payload;
+            this.mPayload = payload;
         }
 
         @NonNull
@@ -82,7 +82,7 @@ public class SiteCreationService extends AutoForeground<SiteCreationState> {
         }
 
         public Object getPayload() {
-            return payload;
+            return mPayload;
         }
 
         @Override

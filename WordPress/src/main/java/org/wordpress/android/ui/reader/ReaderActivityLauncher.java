@@ -130,7 +130,7 @@ public class ReaderActivityLauncher {
             return;
         }
         Map<String, String> properties = new HashMap<>();
-        properties.put("tag", tag.getTagSlug());
+        properties.put("tag", tag.getmTagSlug());
         AnalyticsTracker.track(AnalyticsTracker.Stat.READER_TAG_PREVIEWED, properties);
         Intent intent = new Intent(context, ReaderPostListActivity.class);
         intent.putExtra(ReaderConstants.ARG_TAG, tag);
@@ -252,7 +252,9 @@ public class ReaderActivityLauncher {
         showReaderPhotoViewer(context, imageUrl, null, null, imageOptions, 0, 0);
     }
 
-    public enum OpenUrlType {INTERNAL, EXTERNAL}
+    public enum OpenUrlType {
+        INTERNAL, EXTERNAL
+    }
 
     public static void openUrl(Context context, String url) {
         openUrl(context, url, OpenUrlType.INTERNAL);

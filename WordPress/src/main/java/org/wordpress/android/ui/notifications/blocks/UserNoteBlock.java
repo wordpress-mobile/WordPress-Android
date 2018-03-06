@@ -122,7 +122,7 @@ public class UserNoteBlock extends NoteBlock {
         private final TextView taglineTextView;
         private final WPNetworkImageView avatarImageView;
 
-        public UserActionNoteBlockHolder(View view) {
+        UserActionNoteBlockHolder(View view) {
             rootView = view.findViewById(R.id.user_block_root_view);
             nameTextView = (TextView) view.findViewById(R.id.user_name);
             urlTextView = (TextView) view.findViewById(R.id.user_blog_url);

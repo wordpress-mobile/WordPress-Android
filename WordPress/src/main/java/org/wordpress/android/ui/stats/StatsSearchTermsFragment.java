@@ -2,6 +2,7 @@ package org.wordpress.android.ui.stats;
 
 import android.app.Activity;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -20,7 +21,7 @@ import java.util.List;
 public class StatsSearchTermsFragment extends StatsAbstractListFragment {
     public static final String TAG = StatsSearchTermsFragment.class.getSimpleName();
 
-    private final static String UNKNOWN_SEARCH_TERMS_HELP_PAGE =
+    private static final String UNKNOWN_SEARCH_TERMS_HELP_PAGE =
             "https://en.support.wordpress.com/stats/#search-engine-terms";
 
     private SearchTermsModel mSearchTerms;
@@ -140,20 +141,18 @@ public class StatsSearchTermsFragment extends StatsAbstractListFragment {
     }
 
     private class SearchTermsAdapter extends ArrayAdapter<SearchTermModel> {
-        private final List<SearchTermModel> list;
-        private final LayoutInflater inflater;
-        private final int encryptedSearchTerms;
+        private final LayoutInflater mInflater;
+        private final int mEncryptedSearchTerms;
 
-        public SearchTermsAdapter(Activity context, List<SearchTermModel> list, int encryptedSearchTerms) {
+        SearchTermsAdapter(Activity context, List<SearchTermModel> list, int encryptedSearchTerms) {
             super(context, R.layout.stats_list_cell, list);
-            this.list = list;
-            this.encryptedSearchTerms = encryptedSearchTerms;
-            this.inflater = LayoutInflater.from(context);
+            mEncryptedSearchTerms = encryptedSearchTerms;
+            mInflater = LayoutInflater.from(context);
         }
 
         @Override
         public int getCount() {
-            return super.getCount() + (encryptedSearchTerms > 0 ? 1 : 0);
+            return super.getCount() + (mEncryptedSearchTerms > 0 ? 1 : 0);
         }
 
         @Override
@@ -163,7 +162,7 @@ public class StatsSearchTermsFragment extends StatsAbstractListFragment {
                 return super.getItem(position);
             }
 
-            return new SearchTermModel(0, null, "Unknown Search Terms", encryptedSearchTerms, true);
+            return new SearchTermModel(0, null, "Unknown Search Terms", mEncryptedSearchTerms, true);
         }
 
         @Override
@@ -175,12 +174,13 @@ public class StatsSearchTermsFragment extends StatsAbstractListFragment {
             return super.getPosition(item);
         }
 
+        @NonNull
         @Override
-        public View getView(int position, View convertView, ViewGroup parent) {
+        public View getView(int position, View convertView, @NonNull ViewGroup parent) {
             View rowView = convertView;
             // reuse views
             if (rowView == null) {
-                rowView = inflater.inflate(R.layout.stats_list_cell, parent, false);
+                rowView = mInflater.inflate(R.layout.stats_list_cell, parent, false);
                 // configure view holder
                 StatsViewHolder viewHolder = new StatsViewHolder(rowView);
                 rowView.setTag(viewHolder);

@@ -44,8 +44,6 @@ public class ReaderEvents {
     public static class SinglePostDownloaded {
     }
 
-    ;
-
     public static class UpdatePostsStarted {
         private final ReaderPostService.UpdateAction mAction;
 

@@ -89,7 +89,7 @@ public class LoginActivity extends AppCompatActivity implements ConnectionCallba
 
     private LoginMode mLoginMode;
 
-    @Inject DispatchingAndroidInjector<Fragment> fragmentInjector;
+    @Inject DispatchingAndroidInjector<Fragment> mFragmentInjector;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -217,7 +217,8 @@ public class LoginActivity extends AppCompatActivity implements ConnectionCallba
 
         switch (requestCode) {
             case RequestCodes.SHOW_LOGIN_EPILOGUE_AND_RETURN:
-                // we showed the epilogue screen as informational and sites got loaded so, just return to login caller now
+                // we showed the epilogue screen as informational and sites got loaded so, just
+                // return to login caller now
                 setResult(RESULT_OK);
                 finish();
                 break;
@@ -713,6 +714,6 @@ public class LoginActivity extends AppCompatActivity implements ConnectionCallba
 
     @Override
     public AndroidInjector<Fragment> supportFragmentInjector() {
-        return fragmentInjector;
+        return mFragmentInjector;
     }
 }

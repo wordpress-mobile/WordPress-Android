@@ -66,7 +66,7 @@ public class StatsVisitorsAndViewsFragment extends StatsAbstractFragment
     private OnDateChangeListener mListener;
     private OnOverviewItemChangeListener mOverviewItemChangeListener;
 
-    private final OverviewLabel[] overviewItems = {OverviewLabel.VIEWS, OverviewLabel.VISITORS, OverviewLabel.LIKES,
+    private final OverviewLabel[] mOverviewItems = {OverviewLabel.VIEWS, OverviewLabel.VISITORS, OverviewLabel.LIKES,
             OverviewLabel.COMMENTS};
 
     // Restore the following variables on restart
@@ -101,8 +101,8 @@ public class StatsVisitorsAndViewsFragment extends StatsAbstractFragment
     }
 
     void setSelectedOverviewItem(OverviewLabel itemToSelect) {
-        for (int i = 0; i < overviewItems.length; i++) {
-            if (overviewItems[i] == itemToSelect) {
+        for (int i = 0; i < mOverviewItems.length; i++) {
+            if (mOverviewItems[i] == itemToSelect) {
                 mSelectedOverviewItemIndex = i;
                 return;
             }
@@ -124,7 +124,7 @@ public class StatsVisitorsAndViewsFragment extends StatsAbstractFragment
                 null); // Make sure to set a null drawable here. Otherwise the touching area is the same of a TextView
         mVisitorsCheckboxContainer = (LinearLayout) view.findViewById(R.id.stats_checkbox_visitors_container);
         mVisitorsCheckbox = (CheckBox) view.findViewById(R.id.stats_checkbox_visitors);
-        mVisitorsCheckbox.setOnClickListener(onCheckboxClicked);
+        mVisitorsCheckbox.setOnClickListener(mOnCheckboxClicked);
 
         // Fix an issue on devices with 4.1 or lower, where the Checkbox already uses padding by default
         // internally and overriding it with paddingLeft causes the issue report here
@@ -135,14 +135,14 @@ public class StatsVisitorsAndViewsFragment extends StatsAbstractFragment
         }
 
         // Make sure we've all the info to build the tab correctly. This is ALWAYS true
-        if (mModuleButtonsContainer.getChildCount() == overviewItems.length) {
+        if (mModuleButtonsContainer.getChildCount() == mOverviewItems.length) {
             for (int i = 0; i < mModuleButtonsContainer.getChildCount(); i++) {
                 LinearLayout currentTab = (LinearLayout) mModuleButtonsContainer.getChildAt(i);
-                boolean isLastItem = i == (overviewItems.length - 1);
+                boolean isLastItem = i == (mOverviewItems.length - 1);
                 boolean isChecked = i == mSelectedOverviewItemIndex;
                 TabViewHolder currentTabViewHolder =
-                        new TabViewHolder(currentTab, overviewItems[i], isChecked, isLastItem);
-                currentTab.setOnClickListener(TopButtonsOnClickListener);
+                        new TabViewHolder(currentTab, mOverviewItems[i], isChecked, isLastItem);
+                currentTab.setOnClickListener(mTopButtonsOnClickListener);
                 currentTab.setTag(currentTabViewHolder);
             }
             mModuleButtonsContainer.setVisibility(View.VISIBLE);
@@ -221,7 +221,7 @@ public class StatsVisitorsAndViewsFragment extends StatsAbstractFragment
         }
     }
 
-    private final View.OnClickListener TopButtonsOnClickListener = new View.OnClickListener() {
+    private final View.OnClickListener mTopButtonsOnClickListener = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
             if (!isAdded()) {
@@ -256,7 +256,7 @@ public class StatsVisitorsAndViewsFragment extends StatsAbstractFragment
             mSelectedOverviewItemIndex = checkedId;
             if (mOverviewItemChangeListener != null) {
                 mOverviewItemChangeListener.onOverviewItemChanged(
-                        overviewItems[mSelectedOverviewItemIndex]
+                        mOverviewItems[mSelectedOverviewItemIndex]
                                                                  );
             }
             updateUI();
@@ -264,7 +264,7 @@ public class StatsVisitorsAndViewsFragment extends StatsAbstractFragment
     };
 
 
-    private final View.OnClickListener onCheckboxClicked = new View.OnClickListener() {
+    private final View.OnClickListener mOnCheckboxClicked = new View.OnClickListener() {
         @Override
         public void onClick(View view) {
             // Is the view now checked?
@@ -357,7 +357,7 @@ public class StatsVisitorsAndViewsFragment extends StatsAbstractFragment
         mNoActivtyThisPeriodContainer.setVisibility(View.GONE);
 
         // Read the selected Tab in the UI
-        OverviewLabel selectedStatsType = overviewItems[mSelectedOverviewItemIndex];
+        OverviewLabel selectedStatsType = mOverviewItems[mSelectedOverviewItemIndex];
 
         // Update the Legend and enable/disable the visitors checkboxes
         mLegendContainer.setVisibility(View.VISIBLE);

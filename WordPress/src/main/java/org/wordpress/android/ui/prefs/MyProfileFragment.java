@@ -27,7 +27,7 @@ import java.util.HashMap;
 import javax.inject.Inject;
 
 public class MyProfileFragment extends Fragment implements ProfileInputDialogFragment.Callback {
-    private final String DIALOG_TAG = "DIALOG";
+    private static final String DIALOG_TAG = "DIALOG";
 
     private WPTextView mFirstName;
     private WPTextView mLastName;

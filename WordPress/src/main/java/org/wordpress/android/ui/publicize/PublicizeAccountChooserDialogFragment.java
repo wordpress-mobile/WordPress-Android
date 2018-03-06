@@ -28,7 +28,7 @@ import de.greenrobot.event.EventBus;
 
 public class PublicizeAccountChooserDialogFragment extends DialogFragment
         implements PublicizeAccountChooserListAdapter.OnPublicizeAccountChooserListener {
-    public static String TAG = "publicize-account-chooser-dialog-fragment";
+    public static final String TAG = "publicize-account-chooser-dialog-fragment";
     private RecyclerView mNotConnectedRecyclerView;
     private ArrayList<PublicizeConnection> mNotConnectedAccounts;
     private ArrayList<PublicizeConnection> mConnectedAccounts;

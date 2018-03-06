@@ -106,7 +106,8 @@ public class StatsGeoviewsFragment extends StatsAbstractListFragment {
 
         // must wait for mTopPagerContainer to be fully laid out (ie: measured). Then we can read the width and
         // calculate the right height for the map div
-        mTopPagerContainer.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
+        mTopPagerContainer.getViewTreeObserver().addOnGlobalLayoutListener(
+                new ViewTreeObserver.OnGlobalLayoutListener() {
             @Override
             public void onGlobalLayout() {
                 mTopPagerContainer.getViewTreeObserver().removeGlobalOnLayoutListener(this);
@@ -126,7 +127,8 @@ public class StatsGeoviewsFragment extends StatsAbstractListFragment {
                 String label = getResources().getString(getTotalsLabelResId());
 
                 // See: https://developers.google.com/chart/interactive/docs/gallery/geochart
-                // Loading the v42 of the Google Charts API, since the latest stable version has a problem with the legend. https://github.com/wordpress-mobile/WordPress-Android/issues/4131
+                // Loading the v42 of the Google Charts API, since the latest stable version has a problem with
+                // the legend. https://github.com/wordpress-mobile/WordPress-Android/issues/4131
                 // https://developers.google.com/chart/interactive/docs/release_notes#release-candidate-details
                 String htmlPage = "<html>"
                         + "<head>"
@@ -141,7 +143,8 @@ public class StatsGeoviewsFragment extends StatsAbstractListFragment {
                         + " ['Country', '" + label + "'],"
                         + dataToLoad
                         + " ]);"
-                        + " var options = {keepAspectRatio: true, region: 'world', colorAxis: { colors: [ '#FFF088', '#F34605' ] }, enableRegionInteractivity: true};"
+                        + " var options = {keepAspectRatio: true, region: 'world', colorAxis:"
+                                  + " { colors: [ '#FFF088', '#F34605' ] }, enableRegionInteractivity: true};"
                         + " var chart = new google.visualization.GeoChart(document.getElementById('regions_div'));"
                         + " chart.draw(data, options);"
                         + " }"
@@ -234,15 +237,15 @@ public class StatsGeoviewsFragment extends StatsAbstractListFragment {
     }
 
     private class GeoviewsAdapter extends ArrayAdapter<GeoviewModel> {
-        private final List<GeoviewModel> list;
-        private final Activity context;
-        private final LayoutInflater inflater;
+        private final List<GeoviewModel> mList;
+        private final Activity mContext;
+        private final LayoutInflater mInflater;
 
-        public GeoviewsAdapter(Activity context, List<GeoviewModel> list) {
+        GeoviewsAdapter(Activity context, List<GeoviewModel> list) {
             super(context, R.layout.stats_list_cell, list);
-            this.context = context;
-            this.list = list;
-            inflater = LayoutInflater.from(context);
+            mContext = context;
+            mList = list;
+            mInflater = LayoutInflater.from(context);
         }
 
         @Override
@@ -250,13 +253,13 @@ public class StatsGeoviewsFragment extends StatsAbstractListFragment {
             View rowView = convertView;
             // reuse views
             if (rowView == null) {
-                rowView = inflater.inflate(R.layout.stats_list_cell, parent, false);
+                rowView = mInflater.inflate(R.layout.stats_list_cell, parent, false);
                 // configure view holder
                 StatsViewHolder viewHolder = new StatsViewHolder(rowView);
                 rowView.setTag(viewHolder);
             }
 
-            final GeoviewModel currentRowData = list.get(position);
+            final GeoviewModel currentRowData = mList.get(position);
             StatsViewHolder holder = (StatsViewHolder) rowView.getTag();
             // fill data
             String entry = currentRowData.getCountryFullName();

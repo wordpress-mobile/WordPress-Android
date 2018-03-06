@@ -23,7 +23,7 @@ import java.util.Locale;
 class FollowHelper {
     private final WeakReference<Activity> mActivityRef;
 
-    public FollowHelper(Activity activity) {
+    FollowHelper(Activity activity) {
         mActivityRef = new WeakReference<>(activity);
     }
 
@@ -76,7 +76,7 @@ class FollowHelper {
         private final WeakReference<Activity> mActivityRef;
         private final FollowDataModel mFollowData;
 
-        public FollowRestListener(Activity activity, final FollowDataModel followData) {
+        FollowRestListener(Activity activity, final FollowDataModel followData) {
             this.mActivityRef = new WeakReference<>(activity);
             this.mFollowData = followData;
         }

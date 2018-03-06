@@ -42,9 +42,9 @@ public class PendingDraftsNotificationsUtils {
         Intent intent = getNotificationsPendingDraftReceiverIntent(context, post.getId());
 
         long now = System.currentTimeMillis();
-        long one_day_ago = now - NotificationsPendingDraftsReceiver.ONE_DAY;
-        long one_week_ago = now - NotificationsPendingDraftsReceiver.ONE_WEEK;
-        long one_month_ago = now - NotificationsPendingDraftsReceiver.ONE_MONTH;
+        long oneDayAgo = now - NotificationsPendingDraftsReceiver.ONE_DAY;
+        long oneWeekAgo = now - NotificationsPendingDraftsReceiver.ONE_WEEK;
+        long oneMonthAgo = now - NotificationsPendingDraftsReceiver.ONE_MONTH;
 
         long dateLastUpdated = DateTimeUtils.timestampFromIso8601(post.getDateLocallyChanged());
 
@@ -52,7 +52,7 @@ public class PendingDraftsNotificationsUtils {
         // set alarms for a week and another for a month, if over a week but less than a month
         // set alarm for a month for anything further than a month
         int postId = post.getId();
-        if (dateLastUpdated > one_day_ago) {
+        if (dateLastUpdated > oneDayAgo) {
             // last updated is within a 24 hour timeframe
             PendingIntent alarmIntentOneDay = getOneDayAlarmIntent(context, intent, postId);
             alarmManager.set(AlarmManager.RTC_WAKEUP, dateLastUpdated + NotificationsPendingDraftsReceiver.ONE_DAY,
@@ -65,7 +65,7 @@ public class PendingDraftsNotificationsUtils {
             PendingIntent alarmIntentOneMonth = getOneMonthAlarmIntent(context, intent, postId);
             alarmManager.set(AlarmManager.RTC_WAKEUP, dateLastUpdated + NotificationsPendingDraftsReceiver.ONE_MONTH,
                              alarmIntentOneMonth);
-        } else if (dateLastUpdated > one_week_ago) {
+        } else if (dateLastUpdated > oneWeekAgo) {
             // last updated is within a 1 week timeframe (between 1 day and 7 days)
             PendingIntent alarmIntentOneWeek = getOneWeekAlarmIntent(context, intent, postId);
             alarmManager.set(AlarmManager.RTC_WAKEUP, dateLastUpdated + NotificationsPendingDraftsReceiver.ONE_WEEK,
@@ -74,7 +74,7 @@ public class PendingDraftsNotificationsUtils {
             PendingIntent alarmIntentOneMonth = getOneMonthAlarmIntent(context, intent, postId);
             alarmManager.set(AlarmManager.RTC_WAKEUP, dateLastUpdated + NotificationsPendingDraftsReceiver.ONE_MONTH,
                              alarmIntentOneMonth);
-        } else if (dateLastUpdated > one_month_ago) {
+        } else if (dateLastUpdated > oneMonthAgo) {
             // last updated is within a 1 month timeframe (between 7 days and 30 days)
             PendingIntent alarmIntentOneMonth = getOneMonthAlarmIntent(context, intent, postId);
             alarmManager.set(AlarmManager.RTC_WAKEUP, dateLastUpdated + NotificationsPendingDraftsReceiver.ONE_MONTH,
@@ -121,25 +121,23 @@ public class PendingDraftsNotificationsUtils {
 
     private static PendingIntent getOneWeekAlarmIntent(Context context, Intent notifPendingDraftReceiverIntent,
                                                        int postId) {
-        PendingIntent alarmIntentOneWeek = PendingIntent.getBroadcast(context,
-                                                                      BROADCAST_BASE_REQUEST_CODE + 1
-                                                                      + makePendingDraftNotificationId(postId),
-                                                                      // need to add + 1 so the request code is different from oneDay and oneMonth pendingIntents,
-                                                                      // otherwise they overlap
-                                                                      notifPendingDraftReceiverIntent,
-                                                                      PendingIntent.FLAG_UPDATE_CURRENT);
+        PendingIntent alarmIntentOneWeek = PendingIntent
+                .getBroadcast(context,
+                              BROADCAST_BASE_REQUEST_CODE + 1 + makePendingDraftNotificationId(postId),
+                              // need to add + 1 so the request code is different from oneDay and oneMonth
+                              // pendingIntents, otherwise they overlap
+                              notifPendingDraftReceiverIntent, PendingIntent.FLAG_UPDATE_CURRENT);
         return alarmIntentOneWeek;
     }
 
     private static PendingIntent getOneMonthAlarmIntent(Context context, Intent notifPendingDraftReceiverIntent,
                                                         int postId) {
-        PendingIntent alarmIntentOneMonth = PendingIntent.getBroadcast(context,
-                                                                       BROADCAST_BASE_REQUEST_CODE + 2
-                                                                       + makePendingDraftNotificationId(postId),
-                                                                       // need to add + 2 so the request code is different from oneDay and oneWeek pendingIntents,
-                                                                       // otherwise they overlap
-                                                                       notifPendingDraftReceiverIntent,
-                                                                       PendingIntent.FLAG_UPDATE_CURRENT);
+        PendingIntent alarmIntentOneMonth = PendingIntent
+                .getBroadcast(context,
+                              BROADCAST_BASE_REQUEST_CODE + 2 + makePendingDraftNotificationId(postId),
+                              // need to add + 2 so the request code is different from oneDay and oneWeek
+                              // pendingIntents, otherwise they overlap
+                              notifPendingDraftReceiverIntent, PendingIntent.FLAG_UPDATE_CURRENT);
         return alarmIntentOneMonth;
     }
 }

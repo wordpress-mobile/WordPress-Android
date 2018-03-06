@@ -803,8 +803,8 @@ public class PluginDetailActivity extends AppCompatActivity {
             if (mIsRemovingPlugin
                 && event.error.type == PluginStore.ConfigureSitePluginErrorType.UNKNOWN_PLUGIN) {
                 // We still need to dispatch the remove plugin action to remove the local copy
-                // and complete the flow gracefully
-                // We can ignore `!mSitePlugin.isActive()` check here since the plugin is not installed anymore on remote
+                // and complete the flow gracefully. We can ignore `!mSitePlugin.isActive()` check here since the
+                // plugin is not installed anymore on remote
                 dispatchRemovePluginAction();
                 return;
             }
@@ -886,7 +886,7 @@ public class PluginDetailActivity extends AppCompatActivity {
 
     @SuppressWarnings("unused")
     @Subscribe(threadMode = ThreadMode.MAIN)
-    public void OnSitePluginInstalled(OnSitePluginInstalled event) {
+    public void onSitePluginInstalled(OnSitePluginInstalled event) {
         if (isFinishing()) {
             return;
         }

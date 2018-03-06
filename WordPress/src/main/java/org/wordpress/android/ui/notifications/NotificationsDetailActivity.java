@@ -458,7 +458,7 @@ public class NotificationsDetailActivity extends AppCompatActivity implements
     }
 
     private class NotificationDetailFragmentAdapter extends FragmentStatePagerAdapter {
-        final private ArrayList<Note> mNoteList;
+        private final ArrayList<Note> mNoteList;
 
         NotificationDetailFragmentAdapter(FragmentManager fm, ArrayList<Note> notes) {
             super(fm);

@@ -197,10 +197,8 @@ public class SiteCreationActivity extends AppCompatActivity implements SiteCreat
         mSiteDomain = domain;
         String siteSlug = UrlUtils.extractSubDomain(domain);
 
-        SiteCreationCreatingFragment siteCreationCreatingFragment = SiteCreationCreatingFragment.newInstance(mSiteTitle,
-                                                                                                             mSiteTagline,
-                                                                                                             siteSlug,
-                                                                                                             mThemeId);
+        SiteCreationCreatingFragment siteCreationCreatingFragment =
+                SiteCreationCreatingFragment.newInstance(mSiteTitle, mSiteTagline, siteSlug, mThemeId);
         slideInFragment(siteCreationCreatingFragment, SiteCreationCreatingFragment.TAG);
     }
 

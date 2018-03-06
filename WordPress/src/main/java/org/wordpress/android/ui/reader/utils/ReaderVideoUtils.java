@@ -89,7 +89,8 @@ public class ReaderVideoUtils {
                 return path.replace("/", "");
             }
 
-            // YouTube mobile urls include video id in fragment, ex: http://m.youtube.com/?dc=organic&source=mog#/watch?v=t77Vlme_pf8
+            // YouTube mobile urls include video id in fragment, ex:
+            // http://m.youtube.com/?dc=organic&source=mog#/watch?v=t77Vlme_pf8
             if (host.equals("m.youtube.com")) {
                 String fragment = uri.getFragment();
                 if (fragment == null) {

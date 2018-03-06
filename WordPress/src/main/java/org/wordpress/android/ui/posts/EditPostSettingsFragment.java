@@ -991,7 +991,7 @@ public class EditPostSettingsFragment extends Fragment {
                 return;
             }
             StringBuilder sb = new StringBuilder();
-            for (int i = 0; ; ++i) {
+            for (int i = 0;; ++i) {
                 sb.append(address.getAddressLine(i));
                 if (i == address.getMaxAddressLineIndex()) {
                     sb.append(".");

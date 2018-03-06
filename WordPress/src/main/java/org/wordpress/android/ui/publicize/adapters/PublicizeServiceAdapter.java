@@ -144,7 +144,7 @@ public class PublicizeServiceAdapter extends RecyclerView.Adapter<PublicizeServi
         private final View divider;
         private final WPNetworkImageView imgIcon;
 
-        public SharingViewHolder(View view) {
+        SharingViewHolder(View view) {
             super(view);
             txtService = (TextView) view.findViewById(R.id.text_service);
             txtUser = (TextView) view.findViewById(R.id.text_user);

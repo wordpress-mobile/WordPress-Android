@@ -16,12 +16,12 @@ import org.wordpress.aztec.Html;
 import java.io.File;
 
 public class AztecVideoLoader implements Html.VideoThumbnailGetter {
-    private Context context;
-    private final Drawable loadingInProgress;
+    private Context mContext;
+    private final Drawable mLoadingInProgress;
 
     public AztecVideoLoader(Context context, Drawable loadingInProgressDrawable) {
-        this.context = context;
-        this.loadingInProgress = loadingInProgressDrawable;
+        this.mContext = context;
+        this.mLoadingInProgress = loadingInProgressDrawable;
     }
 
     public void loadVideoThumbnail(final String url, final Html.VideoThumbnailGetter.Callbacks callbacks,
@@ -36,7 +36,7 @@ public class AztecVideoLoader implements Html.VideoThumbnailGetter {
             return;
         }
 
-        callbacks.onThumbnailLoading(loadingInProgress);
+        callbacks.onThumbnailLoading(mLoadingInProgress);
 
         new AsyncTask<Void, Void, Bitmap>() {
             protected Bitmap doInBackground(Void... params) {
@@ -55,7 +55,7 @@ public class AztecVideoLoader implements Html.VideoThumbnailGetter {
                 }
                 thumb = ImageUtils.getScaledBitmapAtLongestSide(thumb, maxWidth);
                 thumb.setDensity(DisplayMetrics.DENSITY_DEFAULT);
-                BitmapDrawable bitmapDrawable = new BitmapDrawable(context.getResources(), thumb);
+                BitmapDrawable bitmapDrawable = new BitmapDrawable(mContext.getResources(), thumb);
                 callbacks.onThumbnailLoaded(bitmapDrawable);
             }
         }.execute();

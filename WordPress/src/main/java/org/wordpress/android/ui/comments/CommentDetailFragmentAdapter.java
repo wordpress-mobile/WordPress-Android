@@ -39,8 +39,8 @@ public class CommentDetailFragmentAdapter extends FragmentStatePagerAdapter {
 
     boolean isAddingNewComments(CommentList newComments) {
         for (int index = 0; index < mCommentList.size(); index++) {
-            if (newComments.size() <= index || mCommentList.get(index).getRemoteCommentId() != newComments.get(index)
-                                                                                                          .getRemoteCommentId()) {
+            if (newComments.size() <= index
+                || mCommentList.get(index).getRemoteCommentId() != newComments.get(index).getRemoteCommentId()) {
                 return false;
             }
         }

@@ -9,7 +9,7 @@ public class ReaderTagList extends ArrayList<ReaderTag> {
         }
 
         for (int i = 0; i < size(); i++) {
-            if (tagName.equals(this.get(i).getTagSlug())) {
+            if (tagName.equals(this.get(i).getmTagSlug())) {
                 return i;
             }
         }
@@ -40,7 +40,7 @@ public class ReaderTagList extends ArrayList<ReaderTag> {
             int i = this.indexOfTag(otherTag);
             if (i == -1) {
                 return false;
-            } else if (!otherTag.getEndpoint().equals(this.get(i).getEndpoint())) {
+            } else if (!otherTag.getmEndpoint().equals(this.get(i).getmEndpoint())) {
                 return false;
             }
         }

@@ -86,7 +86,7 @@ public class CommentsListFragment extends Fragment {
     private boolean mCanLoadMoreComments = true;
     boolean mHasAutoRefreshedComments = false;
 
-    private final CommentStatusCriteria[] commentStatuses = {
+    private final CommentStatusCriteria[] mCommentStatuses = {
             CommentStatusCriteria.ALL, CommentStatusCriteria.UNAPPROVED, CommentStatusCriteria.APPROVED,
             CommentStatusCriteria.TRASH, CommentStatusCriteria.SPAM};
 
@@ -281,7 +281,7 @@ public class CommentsListFragment extends Fragment {
             public List<FilterCriteria> onLoadFilterCriteriaOptions(boolean refresh) {
                 @SuppressWarnings("unchecked")
                 ArrayList<FilterCriteria> criteria = new ArrayList();
-                Collections.addAll(criteria, commentStatuses);
+                Collections.addAll(criteria, mCommentStatuses);
                 return criteria;
             }
 

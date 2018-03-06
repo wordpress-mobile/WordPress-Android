@@ -137,20 +137,20 @@ public class StatsReferrersFragment extends StatsAbstractListFragment {
     private class MyExpandableListAdapter extends BaseExpandableListAdapter {
         public final LayoutInflater inflater;
         public final Activity act;
-        private final List<ReferrerGroupModel> groups;
-        private final List<List<MyChildModel>> children;
+        private final List<ReferrerGroupModel> mGroups;
+        private final List<List<MyChildModel>> mChildren;
 
-        public MyExpandableListAdapter(Activity act, List<ReferrerGroupModel> groups) {
-            this.groups = groups;
+        MyExpandableListAdapter(Activity act, List<ReferrerGroupModel> groups) {
+            mGroups = groups;
             this.inflater = LayoutInflater.from(act);
             this.act = act;
 
             // The code below flattens the 3-levels tree of children to a 2-levels structure
             // that will be used later to populate the UI
-            this.children = new ArrayList<>(groups.size());
+            this.mChildren = new ArrayList<>(groups.size());
             // pre-populate the structure with null values
             for (int i = 0; i < groups.size(); i++) {
-                this.children.add(null);
+                this.mChildren.add(null);
             }
 
             for (int i = 0; i < groups.size(); i++) {
@@ -177,7 +177,7 @@ public class StatsReferrersFragment extends StatsAbstractListFragment {
                         currentGroupChildren.add(myChild);
                     }
                 }
-                this.children.set(i, currentGroupChildren);
+                this.mChildren.set(i, currentGroupChildren);
             }
         }
 
@@ -190,7 +190,7 @@ public class StatsReferrersFragment extends StatsAbstractListFragment {
 
         @Override
         public Object getChild(int groupPosition, int childPosition) {
-            List<MyChildModel> currentGroupChildren = children.get(groupPosition);
+            List<MyChildModel> currentGroupChildren = mChildren.get(groupPosition);
             return currentGroupChildren.get(childPosition);
         }
 
@@ -239,7 +239,7 @@ public class StatsReferrersFragment extends StatsAbstractListFragment {
 
         @Override
         public int getChildrenCount(int groupPosition) {
-            List<MyChildModel> currentGroupChildren = children.get(groupPosition);
+            List<MyChildModel> currentGroupChildren = mChildren.get(groupPosition);
             if (currentGroupChildren == null) {
                 return 0;
             } else {
@@ -249,12 +249,12 @@ public class StatsReferrersFragment extends StatsAbstractListFragment {
 
         @Override
         public Object getGroup(int groupPosition) {
-            return groups.get(groupPosition);
+            return mGroups.get(groupPosition);
         }
 
         @Override
         public int getGroupCount() {
-            return groups.size();
+            return mGroups.size();
         }
 
 

@@ -219,9 +219,8 @@ public class AppSettingsFragment extends PreferenceFragment
 
     private void updateEditorSettings() {
         if (!AppPrefs.isVisualEditorAvailable()) {
-            PreferenceScreen preferenceScreen = (PreferenceScreen) findPreference(getActivity()
-                                                                                          .getString(
-                                                                                                  R.string.pref_key_account_settings_root));
+            PreferenceScreen preferenceScreen =
+                    (PreferenceScreen) findPreference(getActivity().getString(R.string.pref_key_account_settings_root));
             PreferenceCategory editor = (PreferenceCategory) findPreference(getActivity()
                                                                                     .getString(
                                                                                             R.string.pref_key_editor));
