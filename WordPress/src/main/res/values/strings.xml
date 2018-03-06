@@ -328,8 +328,8 @@
     <string name="pages_fetching">Fetching pages…</string>
     <string name="toast_err_post_uploading">Unable to open post while it\'s uploading</string>
     <string name="dialog_confirm_cancel_post_media_uploading">Are you sure? Deleting this post will also cancel the media upload.</string>
-    <string name="dialog_confirm_publish_title">Confirmation</string>
-    <string name="dialog_confirm_publish_message">Are you sure you want to publish now?</string>
+    <string name="dialog_confirm_publish_title">Ready to Publish?</string>
+    <string name="dialog_confirm_publish_message">This post will be published immediately.</string>
     <string name="dialog_confirm_publish_yes">Publish now</string>
 
     <!-- reload drop down -->
