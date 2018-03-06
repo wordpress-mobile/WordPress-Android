@@ -1981,6 +1981,8 @@
     <string name="photo_picker_soft_ask_allow">Allow</string>
     <string name="photo_picker_soft_ask_permissions_denied">%1$s was denied access to your photos. To fix this, edit your permissions and turn on %2$s.</string>
 
+    <string name="stock_photo_picker_search_hint">Search free photo library</string>
+
     <!-- E-mail verification reminder dialog -->
     <string name="toast_saving_post_as_draft">Saving post as draft</string>
     <string name="toast_verification_email_sent">Verification email sent, check your inbox</string>

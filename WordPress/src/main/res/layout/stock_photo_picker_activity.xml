@@ -7,19 +7,11 @@
 
     <include layout="@layout/toolbar" />
 
-    <android.widget.SearchView
-        android:id="@+id/search_view"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/toolbar"
-        android:focusable="false"
-        android:imeOptions="flagNoExtractUi" />
-
     <android.support.v7.widget.RecyclerView
         android:id="@+id/recycler"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_below="@+id/search_view"
+        android:layout_below="@+id/toolbar"
         android:fadeScrollbars="true"
         android:scrollbars="vertical"
         tools:listitem="@layout/stock_photo_picker_thumbnail" />

@@ -82,7 +82,8 @@ public class StockMediaViewModel extends ViewModel {
         mDispatcher.dispatch(StockMediaActionBuilder.newFetchStockMediaAction(payload));
     }
 
-    private void clearSearchResults() {
+    public void clearSearchResults() {
+        mSearchQuery = null;
         mSearchResults.setValue(new ArrayList<StockMediaModel>());
     }
 

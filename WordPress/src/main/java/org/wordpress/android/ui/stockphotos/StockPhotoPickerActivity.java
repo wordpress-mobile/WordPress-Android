@@ -11,12 +11,13 @@ import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
+import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.SearchView;
 import android.widget.TextView;
 
 import org.wordpress.android.R;
@@ -24,6 +25,7 @@ import org.wordpress.android.WordPress;
 import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.model.StockMediaModel;
 import org.wordpress.android.ui.media.MediaPreviewActivity;
+import org.wordpress.android.util.ActivityUtils;
 import org.wordpress.android.util.AniUtils;
 import org.wordpress.android.util.DisplayUtils;
 import org.wordpress.android.util.NetworkUtils;
@@ -37,7 +39,8 @@ import java.util.List;
 
 import javax.inject.Inject;
 
-public class StockPhotoPickerActivity extends AppCompatActivity {
+public class StockPhotoPickerActivity extends AppCompatActivity
+        implements SearchView.OnQueryTextListener, MenuItem.OnActionExpandListener {
 
     private static final String KEY_SELECTED_ITEMS = "selected_items";
     private SiteModel mSite;
@@ -45,14 +48,15 @@ public class StockPhotoPickerActivity extends AppCompatActivity {
     private RecyclerView mRecycler;
     private StockPhotoAdapter mAdapter;
 
+    private MenuItem mSearchMenuItem;
+    private SearchView mSearchView;
+    private String mSearchQuery;
+    private final Handler mHandler = new Handler();
+
     private int mThumbWidth;
     private int mThumbHeight;
 
     private boolean mIsFetching;
-
-    private SearchView mSearchView;
-    private String mSearchQuery;
-    private final Handler mHandler = new Handler();
 
     @Inject ViewModelProvider.Factory mViewModelFactory;
     private StockMediaViewModel mViewModel;
@@ -84,23 +88,6 @@ public class StockPhotoPickerActivity extends AppCompatActivity {
         mAdapter = new StockPhotoAdapter();
         mRecycler.setAdapter(mAdapter);
 
-        mSearchView = findViewById(R.id.search_view);
-        mSearchView.setEnabled(false);
-        mSearchView.setIconifiedByDefault(false);
-
-        mSearchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
-            @Override
-            public boolean onQueryTextSubmit(String query) {
-                submitSearch(query, false);
-                return true;
-            }
-            @Override
-            public boolean onQueryTextChange(String query) {
-                submitSearch(query, true);
-                return true;
-            }
-        });
-
         setupObserver();
 
         if (savedInstanceState == null) {
@@ -109,6 +96,17 @@ public class StockPhotoPickerActivity extends AppCompatActivity {
             mSite = (SiteModel) savedInstanceState.getSerializable(WordPress.SITE);
             mViewModel.readFromBundle(savedInstanceState);
         }
+    }
+
+    @Override
+    protected void onDestroy() {
+        if (mSearchView != null) {
+            mSearchView.setOnQueryTextListener(null);
+        }
+        if (mSearchView != null) {
+            mSearchView.setOnQueryTextListener(null);
+        }
+        super.onDestroy();
     }
 
     @Override
@@ -133,6 +131,27 @@ public class StockPhotoPickerActivity extends AppCompatActivity {
     }
 
     @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.search, menu);
+
+        mSearchMenuItem = menu.findItem(R.id.menu_search);
+        mSearchView = (SearchView) mSearchMenuItem.getActionView();
+        mSearchView.setEnabled(false);
+        mSearchView.setIconifiedByDefault(false);
+        mSearchView.setQueryHint(getString(R.string.stock_photo_picker_search_hint));
+
+        if (!TextUtils.isEmpty(mViewModel.getSearchQuery())) {
+            mSearchMenuItem.expandActionView();
+            mSearchView.setQuery(mViewModel.getSearchQuery(), false);
+            mSearchView.setOnQueryTextListener(this);
+        }
+
+        mSearchMenuItem.setOnActionExpandListener(this);
+
+        return super.onCreateOptionsMenu(menu);
+    }
+
+    @Override
     public boolean onOptionsItemSelected(final MenuItem item) {
         if (item.getItemId() == android.R.id.home) {
             setResult(RESULT_CANCELED);
@@ -140,6 +159,34 @@ public class StockPhotoPickerActivity extends AppCompatActivity {
             return true;
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public boolean onQueryTextSubmit(String query) {
+        if (mSearchView != null) {
+            mSearchView.clearFocus();
+        }
+        ActivityUtils.hideKeyboard(this);
+        return true;
+    }
+
+    @Override
+    public boolean onQueryTextChange(String query) {
+        submitSearch(query, true);
+        return true;
+    }
+
+    @Override
+    public boolean onMenuItemActionExpand(MenuItem menuItem) {
+        mSearchView.setOnQueryTextListener(this);
+        return true;
+    }
+
+    @Override
+    public boolean onMenuItemActionCollapse(MenuItem menuItem) {
+        mSearchView.setOnQueryTextListener(null);
+        mViewModel.clearSearchResults();
+        return true;
     }
 
     private void showProgress(boolean show) {
