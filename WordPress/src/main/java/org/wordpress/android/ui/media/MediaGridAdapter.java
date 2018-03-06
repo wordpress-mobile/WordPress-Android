@@ -189,6 +189,7 @@ public class MediaGridAdapter extends RecyclerView.Adapter<MediaGridAdapter.Grid
         }
 
         if (mBrowserType.canMultiselect() && canSelect) {
+            holder.mSelectionCountContainer.setVisibility(View.VISIBLE);
             holder.mSelectionCountTextView.setVisibility(View.VISIBLE);
             holder.mSelectionCountTextView.setSelected(isSelected);
             if (isSelected) {
@@ -198,6 +199,7 @@ public class MediaGridAdapter extends RecyclerView.Adapter<MediaGridAdapter.Grid
                 holder.mSelectionCountTextView.setText(null);
             }
         } else {
+            holder.mSelectionCountContainer.setVisibility(View.GONE);
             holder.mSelectionCountTextView.setVisibility(View.GONE);
         }
 
