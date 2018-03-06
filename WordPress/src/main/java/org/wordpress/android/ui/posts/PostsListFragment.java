@@ -559,7 +559,7 @@ public class PostsListFragment extends Fragment
                 } else {
                     AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
                     builder.setTitle(post.isPage() ? getText(R.string.delete_page) : getText(R.string.delete_post))
-                            .setMessage(getString(R.string.dialog_confirm_cancel_post_media_uploading))
+                            .setMessage(R.string.dialog_confirm_cancel_post_media_uploading)
                             .setPositiveButton(R.string.delete, new DialogInterface.OnClickListener() {
                                 @Override
                                 public void onClick(DialogInterface dialogInterface, int i) {
