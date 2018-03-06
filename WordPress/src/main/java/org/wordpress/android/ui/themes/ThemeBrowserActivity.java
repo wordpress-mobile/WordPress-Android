@@ -10,6 +10,7 @@ import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
+import android.view.ContextThemeWrapper;
 import android.view.MenuItem;
 
 import org.greenrobot.eventbus.Subscribe;
@@ -336,7 +337,7 @@ public class ThemeBrowserActivity extends AppCompatActivity implements ThemeBrow
     }
 
     private void showAlertDialogOnNewSettingNewTheme(ThemeModel newTheme) {
-        AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(this);
+        AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(new ContextThemeWrapper(this, R.style.Calypso_Dialog));
 
         String thanksMessage = String.format(getString(R.string.theme_prompt), newTheme.getName());
         if (!TextUtils.isEmpty(newTheme.getAuthorName())) {
