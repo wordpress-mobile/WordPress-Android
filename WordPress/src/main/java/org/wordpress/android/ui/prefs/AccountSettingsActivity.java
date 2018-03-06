@@ -22,13 +22,14 @@ public class AccountSettingsActivity extends AppCompatActivity {
         }
 
         FragmentManager fragmentManager = getFragmentManager();
-        AccountSettingsFragment accountSettingsFragment = (AccountSettingsFragment) fragmentManager.findFragmentByTag(KEY_ACCOUNT_SETTINGS_FRAGMENT);
+        AccountSettingsFragment accountSettingsFragment =
+                (AccountSettingsFragment) fragmentManager.findFragmentByTag(KEY_ACCOUNT_SETTINGS_FRAGMENT);
         if (accountSettingsFragment == null) {
             accountSettingsFragment = new AccountSettingsFragment();
 
             fragmentManager.beginTransaction()
-                    .add(android.R.id.content, accountSettingsFragment, KEY_ACCOUNT_SETTINGS_FRAGMENT)
-                    .commit();
+                           .add(android.R.id.content, accountSettingsFragment, KEY_ACCOUNT_SETTINGS_FRAGMENT)
+                           .commit();
         }
     }
 

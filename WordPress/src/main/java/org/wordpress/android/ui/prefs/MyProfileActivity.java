@@ -43,8 +43,8 @@ public class MyProfileActivity extends AppCompatActivity {
             myProfileFragment = MyProfileFragment.newInstance();
 
             fragmentManager.beginTransaction()
-                    .add(android.R.id.content, myProfileFragment, KEY_MY_PROFILE_FRAGMENT)
-                    .commit();
+                           .add(android.R.id.content, myProfileFragment, KEY_MY_PROFILE_FRAGMENT)
+                           .commit();
         }
     }
 

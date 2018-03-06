@@ -11,17 +11,16 @@ import org.wordpress.android.util.SiteUtils;
 import java.util.List;
 
 public class SuggestionUtils {
-
     public static SuggestionAdapter setupSuggestions(SiteModel site, Context context,
                                                      SuggestionServiceConnectionManager serviceConnectionManager) {
         return SuggestionUtils.setupSuggestions(site.getSiteId(), context, serviceConnectionManager,
-                SiteUtils.isAccessedViaWPComRest(site));
+                                                SiteUtils.isAccessedViaWPComRest(site));
     }
 
     public static SuggestionAdapter setupSuggestions(final long siteId, Context context,
                                                      SuggestionServiceConnectionManager serviceConnectionManager,
-                                                     boolean isDotcomFlag) {
-        if (!isDotcomFlag) {
+                                                     boolean isWPComFlag) {
+        if (!isWPComFlag) {
             return null;
         }
 

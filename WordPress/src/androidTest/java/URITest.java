@@ -8,7 +8,8 @@ public class URITest extends InstrumentationTestCase {
         URI uri = null;
         try {
             uri = new URI("https://wordpress.com");
-        } catch (URISyntaxException e) {}
+        } catch (URISyntaxException e) {
+        }
         assertNotNull(uri);
 
         assertEquals("wordpress.com", uri.getHost());
@@ -18,7 +19,8 @@ public class URITest extends InstrumentationTestCase {
         URI uri = null;
         try {
             uri = new URI("http://a.com#.b.com/test");
-        } catch (URISyntaxException e) {}
+        } catch (URISyntaxException e) {
+        }
         assertNotNull(uri);
 
         assertEquals("a.com", uri.getHost());
@@ -28,7 +30,8 @@ public class URITest extends InstrumentationTestCase {
         URI uri = null;
         try {
             uri = new URI("https://a.com");
-        } catch (URISyntaxException e) {}
+        } catch (URISyntaxException e) {
+        }
         assertNotNull(uri);
 
         assertEquals("a.com", uri.getHost());
@@ -38,7 +41,8 @@ public class URITest extends InstrumentationTestCase {
         URI uri = null;
         try {
             uri = new URI("https://a.com/test#test");
-        } catch (URISyntaxException e) {}
+        } catch (URISyntaxException e) {
+        }
         assertNotNull(uri);
 
         assertEquals("a.com", uri.getHost());
@@ -48,7 +52,8 @@ public class URITest extends InstrumentationTestCase {
         URI uri = null;
         try {
             uri = new URI("a.com");
-        } catch (URISyntaxException e) {}
+        } catch (URISyntaxException e) {
+        }
         assertNotNull(uri);
 
         assertNull(uri.getHost());

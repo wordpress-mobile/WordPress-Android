@@ -22,7 +22,7 @@ public class InsightsLatestPostModel extends BaseStatsModel {
         mPostsFound = response.optInt("found", 0);
         if (mPostsFound == 0) {
             // No latest post found!
-           return;
+            return;
         }
 
         JSONArray postsObject = response.getJSONArray("posts");

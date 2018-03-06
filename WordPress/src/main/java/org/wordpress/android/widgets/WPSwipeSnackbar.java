@@ -16,7 +16,6 @@ import org.wordpress.android.R;
  * Snackbar used with a ViewPager to indicate to the user they can swipe to see more pages
  */
 public class WPSwipeSnackbar {
-
     public enum SwipeArrows {
         LEFT, RIGHT, BOTH, NONE
     }
@@ -49,13 +48,13 @@ public class WPSwipeSnackbar {
         String text;
         switch (arrows) {
             case LEFT:
-                text = arrowLeft + "  " + swipeText;
+                text = arrowLeft + " " + swipeText;
                 break;
             case RIGHT:
-                text = swipeText + "  " + arrowRight;
+                text = swipeText + " " + arrowRight;
                 break;
             case BOTH:
-                text = arrowLeft + "  " + swipeText + "  " + arrowRight;
+                text = arrowLeft + " " + swipeText + " " + arrowRight;
                 break;
             default:
                 text = swipeText;

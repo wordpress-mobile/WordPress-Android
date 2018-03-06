@@ -2,7 +2,8 @@ package org.wordpress.android.ui.notifications.blocks;
 
 import android.text.TextUtils;
 
-/** BlockTypes that we know about
+/**
+ * BlockTypes that we know about
  * Unknown blocks will still be displayed using the rules for BASIC blocks
  */
 public enum BlockType {
@@ -14,7 +15,9 @@ public enum BlockType {
     FOOTER;
 
     public static BlockType fromString(String blockType) {
-        if (TextUtils.isEmpty(blockType)) return UNKNOWN;
+        if (TextUtils.isEmpty(blockType)) {
+            return UNKNOWN;
+        }
 
         switch (blockType) {
             case "basic":

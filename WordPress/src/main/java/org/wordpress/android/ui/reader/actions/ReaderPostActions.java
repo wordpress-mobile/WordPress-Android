@@ -41,9 +41,8 @@ import java.util.Random;
 import de.greenrobot.event.EventBus;
 
 public class ReaderPostActions {
-
     private static final String TRACKING_REFERRER = "https://wordpress.com/";
-    private static final Random mRandom = new Random();
+    private static final Random RANDOM = new Random();
 
     private static final int NUM_RELATED_POSTS_TO_REQUEST = 2;
 
@@ -230,8 +229,8 @@ public class ReaderPostActions {
      * similar to updatePost, but used when post doesn't already exist in local db
      **/
     public static void requestBlogPost(final long blogId,
-            final long postId,
-            final ReaderActions.OnRequestListener requestListener) {
+                                       final long postId,
+                                       final ReaderActions.OnRequestListener requestListener) {
         String path = "read/sites/" + blogId + "/posts/" + postId + "/?meta=site,likes";
         requestPost(WordPress.getRestClientUtilsV1_1(), path, requestListener);
     }
@@ -240,7 +239,7 @@ public class ReaderPostActions {
      * similar to updatePost, but used when post doesn't already exist in local db
      **/
     public static void requestFeedPost(final long feedId, final long feedItemId,
-            final ReaderActions.OnRequestListener requestListener) {
+                                       final ReaderActions.OnRequestListener requestListener) {
         String path = "read/feed/" + feedId + "/posts/" + feedItemId + "/?meta=site,likes";
         requestPost(WordPress.getRestClientUtilsV1_3(), path, requestListener);
     }
@@ -249,8 +248,8 @@ public class ReaderPostActions {
      * similar to updatePost, but used when post doesn't already exist in local db
      **/
     public static void requestBlogPost(final String blogSlug,
-            final String postSlug,
-            final ReaderActions.OnRequestListener requestListener) {
+                                       final String postSlug,
+                                       final ReaderActions.OnRequestListener requestListener) {
         String path = "sites/" + blogSlug + "/posts/slug:" + postSlug + "/?meta=site,likes";
         requestPost(WordPress.getRestClientUtilsV1_1(), path, requestListener);
     }
@@ -275,8 +274,8 @@ public class ReaderPostActions {
                 if (requestListener != null) {
                     int statusCode = 0;
                     // first try to get the error code from the JSON response, example:
-                    //   {"code":403,"headers":[{"name":"Content-Type","value":"application\/json"}],
-                    //    "body":{"error":"unauthorized","message":"User cannot access this private blog."}}
+                    // {"code":403,"headers":[{"name":"Content-Type","value":"application\/json"}],
+                    // "body":{"error":"unauthorized","message":"User cannot access this private blog."}}
                     JSONObject jsonObject = VolleyUtils.volleyErrorToJSON(volleyError);
                     if (jsonObject != null && jsonObject.has("code")) {
                         statusCode = jsonObject.optInt("code");
@@ -295,11 +294,11 @@ public class ReaderPostActions {
 
     private static String getTrackingPixelForPost(@NonNull ReaderPost post) {
         return "https://pixel.wp.com/g.gif?v=wpcom&reader=1"
-                + "&blog=" + post.blogId
-                + "&post=" + post.postId
-                + "&host=" + UrlUtils.urlEncode(UrlUtils.getHost(post.getBlogUrl()))
-                + "&ref="  + UrlUtils.urlEncode(TRACKING_REFERRER)
-                + "&t="    + mRandom.nextInt();
+               + "&blog=" + post.blogId
+               + "&post=" + post.postId
+               + "&host=" + UrlUtils.urlEncode(UrlUtils.getHost(post.getBlogUrl()))
+               + "&ref=" + UrlUtils.urlEncode(TRACKING_REFERRER)
+               + "&t=" + RANDOM.nextInt();
     }
 
     public static void bumpPageViewForPost(SiteStore siteStore, long blogId, long postId) {
@@ -341,7 +340,7 @@ public class ReaderPostActions {
                 errorListener) {
             @Override
             public Map<String, String> getHeaders() throws AuthFailureError {
-                // call will fail without correct refer(r)er
+                // call will fail without correct refer(r) er
                 Map<String, String> headers = new HashMap<>();
                 headers.put("Referer", TRACKING_REFERRER);
                 return headers;
@@ -356,12 +355,14 @@ public class ReaderPostActions {
      * posts from across wp.com and related posts from the same site as the passed post
      */
     public static void requestRelatedPosts(final ReaderPost sourcePost) {
-        if (sourcePost == null) return;
+        if (sourcePost == null) {
+            return;
+        }
 
         RestRequest.Listener listener = new RestRequest.Listener() {
             @Override
             public void onResponse(JSONObject jsonObject) {
-               handleRelatedPostsResponse(sourcePost, jsonObject);
+                handleRelatedPostsResponse(sourcePost, jsonObject);
             }
         };
         RestRequest.ErrorListener errorListener = new RestRequest.ErrorListener() {
@@ -369,22 +370,23 @@ public class ReaderPostActions {
             public void onErrorResponse(VolleyError volleyError) {
                 AppLog.w(T.READER, "updateRelatedPosts failed");
                 AppLog.e(T.READER, volleyError);
-
             }
         };
 
         String path = "/read/site/" + sourcePost.blogId
-                + "/post/" + sourcePost.postId
-                + "/related"
-                + "?size_local=" + NUM_RELATED_POSTS_TO_REQUEST
-                + "&size_global=" + NUM_RELATED_POSTS_TO_REQUEST
-                + "&fields=" + ReaderSimplePost.SIMPLE_POST_FIELDS;
+                      + "/post/" + sourcePost.postId
+                      + "/related"
+                      + "?size_local=" + NUM_RELATED_POSTS_TO_REQUEST
+                      + "&size_global=" + NUM_RELATED_POSTS_TO_REQUEST
+                      + "&fields=" + ReaderSimplePost.SIMPLE_POST_FIELDS;
         WordPress.getRestClientUtilsV1_2().get(path, null, null, listener, errorListener);
     }
 
     private static void handleRelatedPostsResponse(final ReaderPost sourcePost,
                                                    final JSONObject jsonObject) {
-        if (jsonObject == null) return;
+        if (jsonObject == null) {
+            return;
+        }
 
         new Thread() {
             @Override
@@ -402,10 +404,10 @@ public class ReaderPostActions {
                             globalRelatedPosts.add(relatedPost);
                         }
                     }
-                    EventBus.getDefault().post(new ReaderEvents.RelatedPostsUpdated(sourcePost, localRelatedPosts, globalRelatedPosts));
+                    EventBus.getDefault().post(new ReaderEvents.RelatedPostsUpdated(sourcePost, localRelatedPosts,
+                                                                                    globalRelatedPosts));
                 }
             }
         }.start();
-
     }
 }

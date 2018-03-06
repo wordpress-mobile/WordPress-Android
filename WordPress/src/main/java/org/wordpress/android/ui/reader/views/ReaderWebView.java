@@ -32,17 +32,20 @@ import javax.inject.Inject;
  * displaying fullscreen video and detecting url/image clicks
  */
 public class ReaderWebView extends WebView {
-
     public interface ReaderWebViewUrlClickListener {
         @SuppressWarnings("SameReturnValue")
         boolean onUrlClick(String url);
+
         boolean onImageUrlClick(String imageUrl, View view, int x, int y);
     }
 
     public interface ReaderCustomViewListener {
         void onCustomViewShown();
+
         void onCustomViewHidden();
+
         ViewGroup onRequestCustomView();
+
         ViewGroup onRequestContentView();
     }
 
@@ -50,7 +53,9 @@ public class ReaderWebView extends WebView {
         void onPageFinished(WebView view, String url);
     }
 
-    /** Timeout in milliseconds for read / connect timeouts */
+    /**
+     * Timeout in milliseconds for read / connect timeouts
+     */
     private static final int TIMEOUT_MS = 30000;
 
     private ReaderWebChromeClient mReaderChromeClient;
@@ -93,10 +98,9 @@ public class ReaderWebView extends WebView {
             this.getSettings().setUserAgentString(WordPress.getUserAgent());
 
             // Adjust content font size on APIs 19 and below as those do not do it automatically.
-            //  If fontScale is close to 1, just let it be 1.
+            // If fontScale is close to 1, just let it be 1.
             final float fontScale = getResources().getConfiguration().fontScale;
             if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.KITKAT && ((int) (fontScale * 10000)) != 10000) {
-
                 this.getSettings().setDefaultFontSize((int) (this.getSettings().getDefaultFontSize() * fontScale));
                 this.getSettings().setDefaultFixedFontSize(
                         (int) (this.getSettings().getDefaultFixedFontSize() * fontScale));
@@ -230,15 +234,15 @@ public class ReaderWebView extends WebView {
             // automatically try to open urls (without being clicked)
             // before the page has loaded
             return view.getVisibility() == View.VISIBLE
-                    && mReaderWebView.hasUrlClickListener()
-                    && isValidClickedUrl(url)
-                    && mReaderWebView.getUrlClickListener().onUrlClick(url);
+                   && mReaderWebView.hasUrlClickListener()
+                   && isValidClickedUrl(url)
+                   && mReaderWebView.getUrlClickListener().onUrlClick(url);
         }
 
         @SuppressWarnings("deprecation")
         @Override
         public WebResourceResponse shouldInterceptRequest(WebView view, String url) {
-            URL imageUrl  = null;
+            URL imageUrl = null;
             if (mIsPrivatePost && mBlogSchemeIsHttps && UrlUtils.isImageUrl(url)) {
                 try {
                     imageUrl = new URL(UrlUtils.makeHttps(url));
@@ -247,8 +251,8 @@ public class ReaderWebView extends WebView {
                 }
             }
             // Intercept requests for private images and add the WP.com authorization header
-            if (imageUrl != null && WPUrlUtils.safeToAddWordPressComAuthToken(imageUrl) &&
-                    !TextUtils.isEmpty(mToken)) {
+            if (imageUrl != null && WPUrlUtils.safeToAddWordPressComAuthToken(imageUrl)
+                && !TextUtils.isEmpty(mToken)) {
                 try {
                     HttpURLConnection conn = (HttpURLConnection) imageUrl.openConnection();
                     conn.setRequestProperty("Authorization", "Bearer " + mToken);
@@ -257,8 +261,8 @@ public class ReaderWebView extends WebView {
                     conn.setRequestProperty("User-Agent", WordPress.getUserAgent());
                     conn.setRequestProperty("Connection", "Keep-Alive");
                     return new WebResourceResponse(conn.getContentType(),
-                            conn.getContentEncoding(),
-                            conn.getInputStream());
+                                                   conn.getContentEncoding(),
+                                                   conn.getInputStream());
                 } catch (IOException e) {
                     AppLog.e(AppLog.T.READER, e);
                 }

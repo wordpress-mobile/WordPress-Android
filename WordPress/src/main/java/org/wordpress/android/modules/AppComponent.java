@@ -14,6 +14,7 @@ import org.wordpress.android.push.GCMRegistrationIntentService;
 import org.wordpress.android.push.NotificationsProcessingService;
 import org.wordpress.android.ui.AddQuickPressShortcutActivity;
 import org.wordpress.android.ui.DeepLinkingIntentReceiverActivity;
+import org.wordpress.android.ui.JetpackConnectionDeeplinkActivity;
 import org.wordpress.android.ui.ShareIntentReceiverActivity;
 import org.wordpress.android.ui.ShareIntentReceiverFragment;
 import org.wordpress.android.ui.WPWebViewActivity;
@@ -108,7 +109,6 @@ import org.wordpress.android.ui.reader.views.ReaderLikingUsersView;
 import org.wordpress.android.ui.reader.views.ReaderSiteHeaderView;
 import org.wordpress.android.ui.reader.views.ReaderTagHeaderView;
 import org.wordpress.android.ui.reader.views.ReaderWebView;
-import org.wordpress.android.ui.JetpackConnectionDeeplinkActivity;
 import org.wordpress.android.ui.stats.StatsAbstractFragment;
 import org.wordpress.android.ui.stats.StatsActivity;
 import org.wordpress.android.ui.stats.StatsConnectJetpackActivity;
@@ -152,140 +152,230 @@ public interface AppComponent extends AndroidInjector<WordPress> {
     void inject(WordPress instance);
 
     void inject(WPMainActivity object);
+
     void inject(NewBlogFragment object);
+
     void inject(SignInDialogFragment object);
+
     void inject(SignupEmailFragment object);
+
     void inject(SignupMagicLinkFragment object);
+
     void inject(SiteCreationService object);
 
     void inject(UploadService object);
+
     void inject(MediaUploadHandler object);
+
     void inject(PostUploadHandler object);
 
     void inject(LoginActivity object);
+
     void inject(LoginEpilogueActivity object);
+
     void inject(LoginEpilogueFragment object);
+
     void inject(SignupEpilogueFragment object);
+
     void inject(UsernameChangerFullScreenDialogFragment object);
 
     void inject(SignupGoogleFragment object);
 
     void inject(SiteCreationActivity object);
+
     void inject(SiteCreationCategoryFragment object);
+
     void inject(SiteCreationThemeFragment object);
+
     void inject(SiteCreationThemeLoaderFragment object);
+
     void inject(SiteCreationThemeAdapter object);
+
     void inject(SiteCreationSiteDetailsFragment object);
+
     void inject(SiteCreationDomainFragment object);
+
     void inject(SiteCreationDomainLoaderFragment object);
+
     void inject(SiteCreationDomainAdapter object);
 
     void inject(StatsWidgetConfigureActivity object);
+
     void inject(StatsWidgetConfigureAdapter object);
+
     void inject(StatsActivity object);
+
     void inject(JetpackConnectionDeeplinkActivity object);
+
     void inject(StatsConnectJetpackActivity object);
+
     void inject(StatsAbstractFragment object);
+
     void inject(StatsService object);
+
     void inject(StatsWidgetProvider object);
 
     void inject(GCMMessageService object);
+
     void inject(GCMRegistrationIntentService object);
+
     void inject(DeepLinkingIntentReceiverActivity object);
+
     void inject(ShareIntentReceiverActivity object);
+
     void inject(ShareIntentReceiverFragment object);
+
     void inject(AddQuickPressShortcutActivity object);
 
     void inject(HelpActivity object);
 
     void inject(CommentDetailFragment object);
+
     void inject(EditCommentActivity object);
+
     void inject(CommentAdapter object);
+
     void inject(CommentsListFragment object);
+
     void inject(CommentsActivity object);
+
     void inject(CommentsDetailActivity object);
 
     void inject(MeFragment object);
+
     void inject(MyProfileActivity object);
+
     void inject(MyProfileFragment object);
+
     void inject(AccountSettingsFragment object);
+
     void inject(MySiteFragment object);
+
     void inject(SitePickerActivity object);
+
     void inject(SitePickerAdapter object);
+
     void inject(SiteSettingsFragment object);
+
     void inject(SiteSettingsInterface object);
+
     void inject(BlogPreferencesActivity object);
+
     void inject(AppSettingsFragment object);
+
     void inject(PeopleManagementActivity object);
+
     void inject(PeopleListFragment object);
+
     void inject(PersonDetailFragment object);
+
     void inject(RoleChangeDialogFragment object);
+
     void inject(PeopleInviteFragment object);
+
     void inject(RoleSelectDialogFragment object);
+
     void inject(PlansActivity object);
+
     void inject(MediaBrowserActivity object);
+
     void inject(MediaGridFragment object);
+
     void inject(MediaEditFragment object);
+
     void inject(MediaPreviewActivity object);
+
     void inject(MediaPreviewFragment object);
+
     void inject(MediaSettingsActivity object);
+
     void inject(PhotoPickerActivity object);
     void inject(StockPhotoPickerActivity object);
 
     void inject(SiteSettingsTagListActivity object);
+
     void inject(SiteSettingsTagDetailFragment object);
 
     void inject(PublicizeListActivity object);
+
     void inject(PublicizeWebViewFragment object);
+
     void inject(PublicizeDetailFragment object);
+
     void inject(PublicizeListFragment object);
+
     void inject(PublicizeButtonPrefsFragment object);
 
     void inject(EditPostActivity object);
+
     void inject(EditPostSettingsFragment object);
+
     void inject(PostSettingsTagsActivity object);
 
     void inject(PostPreviewActivity object);
+
     void inject(PostPreviewFragment object);
 
     void inject(PostsListActivity object);
+
     void inject(PostsListFragment object);
+
     void inject(PostsListAdapter object);
 
     void inject(NotificationsListFragment object);
+
     void inject(NotificationsSettingsFragment object);
+
     void inject(NotificationsDetailActivity object);
+
     void inject(NotificationsProcessingService object);
+
     void inject(NotificationsPendingDraftsReceiver object);
 
     void inject(ReaderCommentListActivity object);
+
     void inject(ReaderUpdateService object);
+
     void inject(ReaderPostDetailFragment object);
+
     void inject(ReaderPostListFragment object);
+
     void inject(ReaderCommentAdapter object);
+
     void inject(ReaderPostAdapter object);
+
     void inject(ReaderSiteHeaderView object);
+
     void inject(ReaderTagHeaderView object);
+
     void inject(ReaderLikingUsersView object);
+
     void inject(ReaderWebView object);
+
     void inject(ReaderPostPagerActivity object);
 
     void inject(ReleaseNotesActivity object);
+
     void inject(WPWebViewActivity object);
+
     void inject(WPWebViewClient object);
 
     void inject(ThemeBrowserActivity object);
+
     void inject(ThemeBrowserFragment object);
 
     void inject(MediaDeleteService object);
 
     void inject(SelectCategoriesActivity object);
+
     void inject(AddCategoryFragment object);
 
     void inject(HtmlToSpannedConverter object);
 
     void inject(PluginBrowserActivity object);
+
     void inject(PluginListFragment object);
+
     void inject(PluginDetailActivity object);
 
     void inject(WordPressGlideModule object);

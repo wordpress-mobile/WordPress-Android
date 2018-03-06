@@ -35,7 +35,9 @@ public class ReaderTagFragment extends Fragment implements ReaderTagAdapter.TagD
     }
 
     private void checkEmptyView() {
-        if (!isAdded()) return;
+        if (!isAdded()) {
+            return;
+        }
 
         TextView emptyView = (TextView) getView().findViewById(R.id.text_empty);
         if (emptyView != null) {

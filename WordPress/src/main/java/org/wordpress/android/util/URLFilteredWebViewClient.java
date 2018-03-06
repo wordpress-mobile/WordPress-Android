@@ -16,27 +16,27 @@ import java.util.Set;
  * Generally used to disable links and navigation in admin pages.
  */
 public class URLFilteredWebViewClient extends WebViewClient {
-    private Set<String> allowedURLs = new LinkedHashSet<>();
-    private int linksDisabledMessageResId = org.wordpress.android.R.string.preview_screen_links_disabled;
+    private Set<String> mAllowedURLs = new LinkedHashSet<>();
+    private int mLinksDisabledMessageResId = org.wordpress.android.R.string.preview_screen_links_disabled;
 
     public URLFilteredWebViewClient() {
     }
 
     public URLFilteredWebViewClient(String url) {
-       allowedURLs.add(url);
+        mAllowedURLs.add(url);
     }
 
     public URLFilteredWebViewClient(Collection<String> urls) {
         if (urls == null || urls.size() == 0) {
-            AppLog.w(AppLog.T.UTILS, "No valid URLs passed to URLFilteredWebViewClient! " +
-                    "HTTP Links in the page are NOT disabled, and ALL URLs could be loaded by the user!!");
+            AppLog.w(AppLog.T.UTILS, "No valid URLs passed to URLFilteredWebViewClient! HTTP Links in the"
+                                     + " page are NOT disabled, and ALL URLs could be loaded by the user!!");
             return;
         }
-        allowedURLs.addAll(urls);
+        mAllowedURLs.addAll(urls);
     }
 
     protected boolean isAllURLsAllowed() {
-        return allowedURLs.size() == 0;
+        return mAllowedURLs.size() == 0;
     }
 
     @Override
@@ -47,17 +47,17 @@ public class URLFilteredWebViewClient extends WebViewClient {
             return true;
         }
 
-        if (isAllURLsAllowed() || allowedURLs.contains(url)) {
+        if (isAllURLsAllowed() || mAllowedURLs.contains(url)) {
             view.loadUrl(url);
         } else {
             // show "links are disabled" message.
             Context ctx = WordPress.getContext();
-            Toast.makeText(ctx, ctx.getText(linksDisabledMessageResId), Toast.LENGTH_SHORT).show();
+            Toast.makeText(ctx, ctx.getText(mLinksDisabledMessageResId), Toast.LENGTH_SHORT).show();
         }
         return true;
     }
 
     public void setLinksDisabledMessageResId(int resId) {
-        linksDisabledMessageResId = resId;
+        mLinksDisabledMessageResId = resId;
     }
 }

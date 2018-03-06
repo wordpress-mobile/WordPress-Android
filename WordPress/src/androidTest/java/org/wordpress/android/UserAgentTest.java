@@ -3,7 +3,6 @@ package org.wordpress.android;
 import junit.framework.TestCase;
 
 public class UserAgentTest extends TestCase {
-
     /**
      * Copy of {@link WordPress#USER_AGENT_APPNAME}.
      * Copied here in order to be able to catch User-Agent changes and verify that they're intentional.

@@ -35,8 +35,8 @@ public class FollowersModel extends BaseStatsModel {
                     FollowerModel currentFollower = new FollowerModel(mBlogID, currentAuthorJSON);
                     mSubscribers.add(currentFollower);
                 } catch (JSONException e) {
-                    AppLog.e(AppLog.T.STATS, "Unexpected Follower object " +
-                            "at position " + i + " Response: " + response.toString(), e);
+                    AppLog.e(AppLog.T.STATS, "Unexpected Follower object "
+                                             + "at position " + i + " Response: " + response.toString(), e);
                 }
             }
         }

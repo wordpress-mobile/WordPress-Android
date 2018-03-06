@@ -149,14 +149,14 @@ public class SignupMagicLinkFragment extends Fragment {
         mTryAgainButton.setEnabled(false);
 
         mProgressDialog = ProgressDialog.show(getActivity(), "", message, true, true,
-                new DialogInterface.OnCancelListener() {
-                    @Override
-                    public void onCancel(DialogInterface dialog) {
-                        if (mInProgress) {
-                            endProgress();
-                        }
-                    }
-                });
+                                              new DialogInterface.OnCancelListener() {
+                                                  @Override
+                                                  public void onCancel(DialogInterface dialog) {
+                                                      if (mInProgress) {
+                                                          endProgress();
+                                                      }
+                                                  }
+                                              });
 
         mInProgress = true;
     }
@@ -188,7 +188,7 @@ public class SignupMagicLinkFragment extends Fragment {
                     case DialogInterface.BUTTON_POSITIVE:
                         sendMagicLinkEmail();
                         break;
-                    // DialogInterface.BUTTON_NEGATIVE is intentionally ignored.  Just dismiss dialog.
+                    // DialogInterface.BUTTON_NEGATIVE is intentionally ignored. Just dismiss dialog.
                 }
             }
         };

@@ -38,6 +38,7 @@ public class MagicLinkRequestFragment extends Fragment {
 
     public interface OnMagicLinkFragmentInteraction {
         void onMagicLinkSent();
+
         void onEnterPasswordRequested();
     }
 
@@ -119,8 +120,8 @@ public class MagicLinkRequestFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(getActivity(), HelpActivity.class);
-                intent.putExtra(HelpshiftHelper.ORIGIN_KEY, HelpshiftHelper.chooseHelpshiftLoginTag
-                        (mJetpackCallbacks.isJetpackAuth(), true));
+                intent.putExtra(HelpshiftHelper.ORIGIN_KEY,
+                                HelpshiftHelper.chooseHelpshiftLoginTag(mJetpackCallbacks.isJetpackAuth(), true));
                 startActivity(intent);
             }
         };
@@ -157,7 +158,8 @@ public class MagicLinkRequestFragment extends Fragment {
                 AnalyticsTracker.track(AnalyticsTracker.Stat.LOGIN_MAGIC_LINK_FAILED, errorProperties);
                 mProgressDialog.cancel();
                 if (isAdded()) {
-                    ToastUtils.showToast(getActivity(), R.string.magic_link_unavailable_error_message, ToastUtils.Duration.LONG);
+                    ToastUtils.showToast(getActivity(), R.string.magic_link_unavailable_error_message,
+                                         ToastUtils.Duration.LONG);
                 }
                 if (mListener != null) {
                     mListener.onEnterPasswordRequested();
@@ -168,11 +170,12 @@ public class MagicLinkRequestFragment extends Fragment {
 
     private void disableRequestEmailButtonAndShowProgressDialog() {
         mRequestEmailView.setClickable(false);
-        mProgressDialog = ProgressDialog.show(getActivity(), "", "Requesting log-in email", true, true, new DialogInterface.OnCancelListener() {
-            @Override
-            public void onCancel(DialogInterface dialog) {
-                mRequestEmailView.setClickable(true);
-            }
-        });
+        mProgressDialog = ProgressDialog
+                .show(getActivity(), "", "Requesting log-in email", true, true, new DialogInterface.OnCancelListener() {
+                    @Override
+                    public void onCancel(DialogInterface dialog) {
+                        mRequestEmailView.setClickable(true);
+                    }
+                });
     }
 }

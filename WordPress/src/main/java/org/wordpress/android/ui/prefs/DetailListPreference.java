@@ -63,9 +63,9 @@ public class DetailListPreference extends ListPreference
         super.onBindView(view);
 
         setupView((TextView) view.findViewById(android.R.id.title),
-                R.dimen.text_sz_large, R.color.grey_dark, R.color.grey_lighten_10);
+                  R.dimen.text_sz_large, R.color.grey_dark, R.color.grey_lighten_10);
         setupView((TextView) view.findViewById(android.R.id.summary),
-                R.dimen.text_sz_medium, R.color.grey_darken_10, R.color.grey_lighten_10);
+                  R.dimen.text_sz_medium, R.color.grey_darken_10, R.color.grey_lighten_10);
     }
 
     @Override
@@ -98,11 +98,11 @@ public class DetailListPreference extends ListPreference
         mSelectedIndex = findIndexOfValue(mStartingValue);
 
         builder.setSingleChoiceItems(mListAdapter, mSelectedIndex,
-                new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int which) {
-                        mSelectedIndex = which;
-                    }
-                });
+                                     new DialogInterface.OnClickListener() {
+                                         public void onClick(DialogInterface dialog, int which) {
+                                             mSelectedIndex = which;
+                                         }
+                                     });
 
         View titleView = View.inflate(getContext(), R.layout.detail_list_preference_title, null);
 
@@ -117,7 +117,9 @@ public class DetailListPreference extends ListPreference
             builder.setTitle(getTitle());
         }
 
-        if ((mDialog = builder.create()) == null) return;
+        if ((mDialog = builder.create()) == null) {
+            return;
+        }
 
         if (state != null) {
             mDialog.onRestoreInstanceState(state);
@@ -136,12 +138,12 @@ public class DetailListPreference extends ListPreference
         }
 
         if (positive != null) {
-            //noinspection deprecation
+            // noinspection deprecation
             positive.setTextColor(res.getColor(R.color.blue_medium));
         }
 
         if (negative != null) {
-            //noinspection deprecation
+            // noinspection deprecation
             negative.setTextColor(res.getColor(R.color.blue_medium));
         }
     }
@@ -209,13 +211,13 @@ public class DetailListPreference extends ListPreference
         if (view != null) {
             Resources res = getContext().getResources();
             view.setTextSize(TypedValue.COMPLEX_UNIT_PX, res.getDimensionPixelSize(sizeRes));
-            //noinspection deprecation
+            // noinspection deprecation
             view.setTextColor(res.getColor(isEnabled() ? enabledColorRes : disabledColorRes));
         }
     }
 
     private class DetailListAdapter extends ArrayAdapter<String> {
-        public DetailListAdapter(Context context, int resource, String[] objects) {
+        DetailListAdapter(Context context, int resource, String[] objects) {
             super(context, resource, objects);
         }
 

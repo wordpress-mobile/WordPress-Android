@@ -5,7 +5,6 @@ import android.view.View;
 import org.wordpress.android.models.ReaderPost;
 
 public class ReaderInterfaces {
-
     private ReaderInterfaces() {
         throw new AssertionError();
     }
@@ -34,5 +33,4 @@ public class ReaderInterfaces {
     public interface DataLoadedListener {
         void onDataLoaded(boolean isEmpty);
     }
-
 }

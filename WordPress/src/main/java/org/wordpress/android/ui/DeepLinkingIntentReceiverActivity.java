@@ -20,9 +20,9 @@ import javax.inject.Inject;
 
 /**
  * An activity to handle deep linking and intercepting
- *
+ * <p>
  * wordpress://viewpost?blogId={blogId}&postId={postId}
- *
+ * <p>
  * Redirects users to the reader activity along with IDs passed in the intent
  */
 public class DeepLinkingIntentReceiverActivity extends AppCompatActivity {
@@ -80,10 +80,10 @@ public class DeepLinkingIntentReceiverActivity extends AppCompatActivity {
                 final long postId = Long.parseLong(mPostId);
 
                 AnalyticsUtils.trackWithBlogPostDetails(AnalyticsTracker.Stat.READER_VIEWPOST_INTERCEPTED,
-                        blogId, postId);
+                                                        blogId, postId);
 
                 ReaderActivityLauncher.showReaderPostDetail(this, false, blogId, postId, null, 0, false,
-                        mInterceptedUri);
+                                                            mInterceptedUri);
             } catch (NumberFormatException e) {
                 AppLog.e(T.READER, e);
             }

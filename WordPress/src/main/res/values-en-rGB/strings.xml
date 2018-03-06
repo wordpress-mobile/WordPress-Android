@@ -492,7 +492,7 @@ Language: en_GB
 	<string name="media_upload_error">Media upload error occurred</string>
 	<string name="retry">Retry</string>
 	<string name="confirm">Confirm</string>
-	<string name="xmlrpc_endpoint_forbidden_error">Couldn\'t connect. We received a 403 error when trying to access your\n        site XMLRPC endpoint. The app needs that in order to communicate with your site. Contact your host to solve\n        this problem.</string>
+	<string name="xmlrpc_endpoint_forbidden_error">Couldn\'t connect. We received a 403 error when trying to access your\n        site XMLRPC mEndpoint. The app needs that in order to communicate with your site. Contact your host to solve\n        this problem.</string>
 	<string name="xmlrpc_post_blocked_error">Couldn\'t connect. Your host is blocking POST requests, and the app needs\n        that in order to communicate with your site. Contact your host to solve this problem.</string>
 	<string name="reader_empty_followed_blogs_search_title">No matching sites</string>
 	<string name="reader_hint_search_followed_sites">Search followed sites</string>
@@ -1050,7 +1050,7 @@ Language: en_GB
 	<string name="account_settings">Account Settings</string>
 	<string name="me_btn_support">Help &amp; Support</string>
 	<string name="site_picker_cant_hide_current_site">\"%s\" wasn\'t hidden because it\'s the current site</string>
-	<string name="site_picker_create_dotcom">Create WordPress.com site</string>
+	<string name="site_picker_create_wpcom">Create WordPress.com site</string>
 	<string name="site_picker_add_site">Add site</string>
 	<string name="site_picker_add_self_hosted">Add self-hosted site</string>
 	<string name="site_picker_edit_visibility">Show/hide sites</string>

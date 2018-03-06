@@ -20,7 +20,6 @@ import org.wordpress.android.R;
 import org.wordpress.android.util.DisplayUtils;
 
 public abstract class StatsAbstractListFragment extends StatsAbstractFragment {
-
     // Used when the fragment has 2 pages/kind of stats in it. Not meaning the bottom pagination.
     static final String ARGS_TOP_PAGER_SELECTED_BUTTON_INDEX = "ARGS_TOP_PAGER_SELECTED_BUTTON_INDEX";
     private static final String ARGS_EXPANDED_ROWS = "ARGS_EXPANDED_ROWS";
@@ -93,7 +92,8 @@ public abstract class StatsAbstractListFragment extends StatsAbstractFragment {
         // Load pagination items
         mBottomPaginationContainer = (LinearLayout) view.findViewById(R.id.stats_bottom_pagination_container);
         mBottomPaginationGoBackButton = (Button) mBottomPaginationContainer.findViewById(R.id.stats_pagination_go_back);
-        mBottomPaginationGoForwardButton = (Button) mBottomPaginationContainer.findViewById(R.id.stats_pagination_go_forward);
+        mBottomPaginationGoForwardButton =
+                (Button) mBottomPaginationContainer.findViewById(R.id.stats_pagination_go_forward);
         mBottomPaginationText = (TextView) mBottomPaginationContainer.findViewById(R.id.stats_pagination_text);
         mTopPaginationContainer = (LinearLayout) view.findViewById(R.id.stats_top_pagination_container);
         mTopPaginationContainer.setBackgroundResource(R.drawable.stats_pagination_item_background);
@@ -147,7 +147,8 @@ public abstract class StatsAbstractListFragment extends StatsAbstractFragment {
             if (getEmptyLabelDescResId() == NO_STRING_ID) {
                 label = "<b>" + getString(getEmptyLabelTitleResId()) + "</b><br/><br/>";
             } else {
-                label = "<b>" + getString(getEmptyLabelTitleResId()) + "</b><br/><br/>" + getString(getEmptyLabelDescResId());
+                label = "<b>" + getString(getEmptyLabelTitleResId()) + "</b><br/><br/>" + getString(
+                        getEmptyLabelDescResId());
             }
             if (label.contains("<")) {
                 mEmptyLabel.setText(Html.fromHtml(label));
@@ -226,7 +227,6 @@ public abstract class StatsAbstractListFragment extends StatsAbstractFragment {
                 if (mTopPagerContainer.getVisibility() == View.VISIBLE) {
                     viewAllIntent.putExtra(ARGS_TOP_PAGER_SELECTED_BUTTON_INDEX, mTopPagerSelectedButtonIndex);
                 }
-                //viewAllIntent.putExtra(StatsAbstractFragment.ARG_REST_RESPONSE, mDatamodels[mTopPagerSelectedButtonIndex]);
                 getActivity().startActivity(viewAllIntent);
             }
         });
@@ -241,9 +241,10 @@ public abstract class StatsAbstractListFragment extends StatsAbstractFragment {
         int dp80 = DisplayUtils.dpToPx(view.getContext(), 80);
 
         for (int i = 0; i < buttonTitles.length; i++) {
-            CheckedTextView rb = (CheckedTextView) inflater.inflate(R.layout.stats_top_module_pager_button, container, false);
+            CheckedTextView rb =
+                    (CheckedTextView) inflater.inflate(R.layout.stats_top_module_pager_button, container, false);
             RadioGroup.LayoutParams params = new RadioGroup.LayoutParams(RadioGroup.LayoutParams.MATCH_PARENT,
-                    RadioGroup.LayoutParams.WRAP_CONTENT);
+                                                                         RadioGroup.LayoutParams.WRAP_CONTENT);
             params.weight = 1;
             if (i == 0) {
                 MarginLayoutParamsCompat.setMarginEnd(params, dp4);
@@ -255,13 +256,13 @@ public abstract class StatsAbstractListFragment extends StatsAbstractFragment {
             rb.setLayoutParams(params);
             rb.setText(buttonTitles[i]);
             rb.setChecked(i == mTopPagerSelectedButtonIndex);
-            rb.setOnClickListener(TopModulePagerOnClickListener);
+            rb.setOnClickListener(mTopModulePagerOnClickListener);
             mTopPagerContainer.addView(rb);
         }
         mTopPagerContainer.setVisibility(View.VISIBLE);
     }
 
-    private final View.OnClickListener TopModulePagerOnClickListener = new View.OnClickListener() {
+    private final View.OnClickListener mTopModulePagerOnClickListener = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
             if (!isAdded()) {
@@ -286,8 +287,9 @@ public abstract class StatsAbstractListFragment extends StatsAbstractFragment {
                 }
             }
 
-            if (checkedId == -1)
+            if (checkedId == -1) {
                 return;
+            }
 
             mTopPagerSelectedButtonIndex = checkedId;
 

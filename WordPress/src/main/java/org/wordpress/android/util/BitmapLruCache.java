@@ -16,9 +16,9 @@ public class BitmapLruCache extends LruCache<String, Bitmap> implements ImageCac
         Map<String, Bitmap> map = snapshot();
 
         for (String key : map.keySet()) {
-           if (key.contains(keyLike)) {
-               remove(key);
-           }
+            if (key.contains(keyLike)) {
+                remove(key);
+            }
         }
     }
 
@@ -27,7 +27,7 @@ public class BitmapLruCache extends LruCache<String, Bitmap> implements ImageCac
         // The cache size will be measured in kilobytes rather than
         // number of items.
         int bytes = (value.getRowBytes() * value.getHeight());
-        return (bytes / 1024); //value.getByteCount() introduced in HONEYCOMB_MR1 or higher.
+        return (bytes / 1024); // value.getByteCount() introduced in HONEYCOMB_MR1 or higher.
     }
 
     @Override

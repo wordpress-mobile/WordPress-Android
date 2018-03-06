@@ -61,6 +61,7 @@ public class SiteUtils {
 
     /**
      * Checks if site Jetpack version is higher than limit version
+     *
      * @param site
      * @param limitVersion minimal acceptable Jetpack version
      * @return

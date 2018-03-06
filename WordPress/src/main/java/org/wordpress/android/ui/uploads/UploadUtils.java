@@ -31,12 +31,13 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class UploadUtils {
+    private static final int K_SNACKBAR_WAIT_TIME_MS = 5000;
 
-    private static int K_SNACKBAR_WAIT_TIME_MS = 5000;
     /**
      * Returns a post-type specific error message string.
      */
-    static @NonNull String getErrorMessage(Context context, PostModel post, String errorMessage, boolean isMediaError) {
+    static @NonNull
+    String getErrorMessage(Context context, PostModel post, String errorMessage, boolean isMediaError) {
         String baseErrorString;
         if (post.isPage()) {
             if (isMediaError) {
@@ -57,15 +58,17 @@ public class UploadUtils {
     /**
      * Returns an error message string for a failed post upload.
      */
-    public static @NonNull String getErrorMessageFromPostError(Context context, PostModel post, PostError error) {
+    public static @NonNull
+    String getErrorMessageFromPostError(Context context, PostModel post, PostError error) {
         switch (error.type) {
             case UNKNOWN_POST:
-                return post.isPage() ? context.getString(R.string.error_unknown_page) : context.getString(R.string.error_unknown_post);
+                return post.isPage() ? context.getString(R.string.error_unknown_page)
+                        : context.getString(R.string.error_unknown_post);
             case UNKNOWN_POST_TYPE:
                 return context.getString(R.string.error_unknown_post_type);
             case UNAUTHORIZED:
-                return post.isPage() ? context.getString(R.string.error_refresh_unauthorized_pages) :
-                        context.getString(R.string.error_refresh_unauthorized_posts);
+                return post.isPage() ? context.getString(R.string.error_refresh_unauthorized_pages)
+                        : context.getString(R.string.error_refresh_unauthorized_posts);
         }
         // In case of a generic or uncaught error, return the message from the API response or the error type
         return TextUtils.isEmpty(error.message) ? error.type.toString() : error.message;
@@ -74,7 +77,8 @@ public class UploadUtils {
     /**
      * Returns an error message string for a failed media upload.
      */
-    public static @NonNull String getErrorMessageFromMediaError(Context context, MediaModel media, MediaError error) {
+    public static @NonNull
+    String getErrorMessageFromMediaError(Context context, MediaModel media, MediaError error) {
         String errorMessage = WPMediaUtils.getErrorMessage(context, media, error);
 
         if (errorMessage == null) {
@@ -106,19 +110,19 @@ public class UploadUtils {
         if (savedLocally && !NetworkUtils.isNetworkAvailable(activity)) {
             // The network is not available, we can't do anything
             ToastUtils.showToast(activity, R.string.error_publish_no_network,
-                    ToastUtils.Duration.SHORT);
+                                 ToastUtils.Duration.SHORT);
             return;
         }
 
         boolean hasFailedMedia = data.getBooleanExtra(EditPostActivity.EXTRA_HAS_FAILED_MEDIA, false);
         if (hasFailedMedia) {
             showSnackbar(snackbarAttachView, R.string.editor_post_saved_locally_failed_media, R.string.button_edit,
-                    new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-                            ActivityLauncher.editPostOrPageForResult(activity, site, post);
-                        }
-                    });
+                         new View.OnClickListener() {
+                             @Override
+                             public void onClick(View v) {
+                                 ActivityLauncher.editPostOrPageForResult(activity, site, post);
+                             }
+                         });
             return;
         }
 
@@ -127,7 +131,7 @@ public class UploadUtils {
             // if it's a scheduled post, we only want to show a "Sync" button if it's locally saved
             if (savedLocally) {
                 showSnackbar(snackbarAttachView, R.string.editor_post_saved_locally, R.string.button_sync,
-                        publishPostListener);
+                             publishPostListener);
             }
             return;
         }
@@ -137,7 +141,7 @@ public class UploadUtils {
             // if it's a published post, we only want to show a "Sync" button if it's locally saved
             if (savedLocally) {
                 showSnackbar(snackbarAttachView, R.string.editor_post_saved_locally, R.string.button_sync,
-                        publishPostListener);
+                             publishPostListener);
             } else {
                 showSnackbar(snackbarAttachView, R.string.editor_uploading_post);
             }
@@ -149,16 +153,17 @@ public class UploadUtils {
             if (PostUtils.isPublishable(post)) {
                 // if the post is publishable, we offer the PUBLISH button
                 if (savedLocally) {
-                    showSnackbarSuccessAction(snackbarAttachView, R.string.editor_draft_saved_locally, R.string.button_publish,
-                            publishPostListener);
-                }
-                else {
-                    if (UploadService.hasPendingOrInProgressMediaUploadsForPost(post) ||
-                            UploadService.isPostUploadingOrQueued(post)) {
+                    showSnackbarSuccessAction(snackbarAttachView, R.string.editor_draft_saved_locally,
+                                              R.string.button_publish,
+                                              publishPostListener);
+                } else {
+                    if (UploadService.hasPendingOrInProgressMediaUploadsForPost(post)
+                        || UploadService.isPostUploadingOrQueued(post)) {
                         showSnackbar(snackbarAttachView, R.string.editor_uploading_post);
                     } else {
-                        showSnackbarSuccessAction(snackbarAttachView, R.string.editor_draft_saved_online, R.string.button_publish,
-                                publishPostListener);
+                        showSnackbarSuccessAction(snackbarAttachView, R.string.editor_draft_saved_online,
+                                                  R.string.button_publish,
+                                                  publishPostListener);
                     }
                 }
             } else {
@@ -167,15 +172,15 @@ public class UploadUtils {
         } else {
             if (savedLocally) {
                 showSnackbar(snackbarAttachView, R.string.editor_post_saved_locally, R.string.button_publish,
-                        publishPostListener);
-            }
-            else {
-                if (UploadService.hasPendingOrInProgressMediaUploadsForPost(post) ||
-                        UploadService.isPostUploadingOrQueued(post)) {
+                             publishPostListener);
+            } else {
+                if (UploadService.hasPendingOrInProgressMediaUploadsForPost(post)
+                    || UploadService.isPostUploadingOrQueued(post)) {
                     showSnackbar(snackbarAttachView, R.string.editor_uploading_post);
                 } else {
-                    showSnackbarSuccessAction(snackbarAttachView, R.string.editor_post_saved_online, R.string.button_publish,
-                            publishPostListener);
+                    showSnackbarSuccessAction(snackbarAttachView, R.string.editor_post_saved_online,
+                                              R.string.button_publish,
+                                              publishPostListener);
                 }
             }
         }
@@ -201,7 +206,7 @@ public class UploadUtils {
                                                   View.OnClickListener onClickListener) {
         Snackbar.make(view, messageRes, K_SNACKBAR_WAIT_TIME_MS)
                 .setAction(buttonTitleRes, onClickListener).
-                setActionTextColor(view.getResources().getColor(R.color.blue_medium))
+                        setActionTextColor(view.getResources().getColor(R.color.blue_medium))
                 .show();
     }
 
@@ -209,32 +214,33 @@ public class UploadUtils {
                                                   View.OnClickListener onClickListener) {
         Snackbar.make(view, message, K_SNACKBAR_WAIT_TIME_MS)
                 .setAction(buttonTitleRes, onClickListener).
-                setActionTextColor(view.getResources().getColor(R.color.blue_medium))
+                        setActionTextColor(view.getResources().getColor(R.color.blue_medium))
                 .show();
     }
 
     private static void showSnackbar(View view, int messageRes) {
         Snackbar.make(view,
-                messageRes, Snackbar.LENGTH_LONG).show();
+                      messageRes, Snackbar.LENGTH_LONG).show();
     }
 
     public static void publishPost(Activity activity, final PostModel post, SiteModel site, Dispatcher dispatcher) {
         if (!NetworkUtils.isNetworkAvailable(activity)) {
             ToastUtils.showToast(activity, R.string.error_publish_no_network,
-                    ToastUtils.Duration.SHORT);
+                                 ToastUtils.Duration.SHORT);
             return;
         }
 
         // If the post is empty, don't publish
         if (!PostUtils.isPublishable(post)) {
-            String message = activity.getString(post.isPage() ? R.string.error_publish_empty_page : R.string.error_publish_empty_post);
+            String message = activity.getString(
+                    post.isPage() ? R.string.error_publish_empty_page : R.string.error_publish_empty_post);
             ToastUtils.showToast(activity, message, ToastUtils.Duration.SHORT);
             return;
         }
 
         PostUtils.updatePublishDateIfShouldBePublishedImmediately(post);
         boolean isFirstTimePublish = PostStatus.fromPost(post) == PostStatus.DRAFT
-                || (PostStatus.fromPost(post) == PostStatus.PUBLISHED && post.isLocalDraft());
+                                     || (PostStatus.fromPost(post) == PostStatus.PUBLISHED && post.isLocalDraft());
         post.setStatus(PostStatus.PUBLISHED.toString());
 
         // save the post in the DB so the UploadService will get the latest change
@@ -258,14 +264,16 @@ public class UploadUtils {
             if (errorMessage != null) {
                 // RETRY only available for Aztec
                 if (AppPrefs.isAztecEditorEnabled()) {
-                    UploadUtils.showSnackbarError(snackbarAttachView, errorMessage, R.string.retry, new View.OnClickListener() {
-                        @Override
-                        public void onClick(View view) {
-                            Intent intent = UploadService.getUploadPostServiceIntent(
-                                    activity, post, PostUtils.isFirstTimePublish(post), false, true);
-                            activity.startService(intent);
-                        }
-                    });
+                    UploadUtils.showSnackbarError(snackbarAttachView, errorMessage, R.string.retry,
+                                                  new View.OnClickListener() {
+                                                      @Override
+                                                      public void onClick(View view) {
+                                                          Intent intent = UploadService.getUploadPostServiceIntent(
+                                                                  activity, post, PostUtils.isFirstTimePublish(post),
+                                                                  false, true);
+                                                          activity.startService(intent);
+                                                      }
+                                                  });
                 } else {
                     UploadUtils.showSnackbarError(snackbarAttachView, errorMessage);
                 }
@@ -283,11 +291,11 @@ public class UploadUtils {
                         }
                     };
                     UploadUtils.showSnackbarSuccessAction(snackbarAttachView, R.string.editor_draft_saved_online,
-                            R.string.button_publish, publishPostListener);
+                                                          R.string.button_publish, publishPostListener);
                 } else {
                     int messageRes = post.isPage() ? R.string.page_published : R.string.post_published;
                     UploadUtils.showSnackbarSuccessAction(snackbarAttachView, messageRes,
-                            R.string.button_view, new View.OnClickListener() {
+                                                          R.string.button_view, new View.OnClickListener() {
                                 @Override
                                 public void onClick(View view) {
                                     // jump to Editor Preview mode to show this Post
@@ -300,22 +308,25 @@ public class UploadUtils {
     }
 
     public static void onMediaUploadedSnackbarHandler(final Activity activity, View snackbarAttachView,
-                                                     boolean isError,
-                                                     final List<MediaModel> mediaList, final SiteModel site,
-                                                     final String messageForUser) {
+                                                      boolean isError,
+                                                      final List<MediaModel> mediaList, final SiteModel site,
+                                                      final String messageForUser) {
         if (isError) {
             if (messageForUser != null) {
                 // RETRY only available for Aztec
                 if (mediaList != null && !mediaList.isEmpty()) {
-                    UploadUtils.showSnackbarError(snackbarAttachView, messageForUser, R.string.retry, new View.OnClickListener() {
-                        @Override
-                        public void onClick(View view) {
-                            ArrayList<MediaModel> mediaListToRetry = new ArrayList<>();
-                            mediaListToRetry.addAll(mediaList);
-                            Intent retryIntent = UploadService.getUploadMediaServiceIntent(activity, mediaListToRetry, true);
-                            activity.startService(retryIntent);
-                        }
-                    });
+                    UploadUtils.showSnackbarError(snackbarAttachView, messageForUser, R.string.retry,
+                                                  new View.OnClickListener() {
+                                                      @Override
+                                                      public void onClick(View view) {
+                                                          ArrayList<MediaModel> mediaListToRetry = new ArrayList<>();
+                                                          mediaListToRetry.addAll(mediaList);
+                                                          Intent retryIntent = UploadService
+                                                                  .getUploadMediaServiceIntent(activity,
+                                                                                               mediaListToRetry, true);
+                                                          activity.startService(retryIntent);
+                                                      }
+                                                  });
                 } else {
                     UploadUtils.showSnackbarError(snackbarAttachView, messageForUser);
                 }
@@ -329,7 +340,7 @@ public class UploadUtils {
 
             // show success snackbar for media only items and offer the WRITE POST functionality)
             UploadUtils.showSnackbarSuccessAction(snackbarAttachView, messageForUser,
-                    R.string.media_files_uploaded_write_post, new View.OnClickListener() {
+                                                  R.string.media_files_uploaded_write_post, new View.OnClickListener() {
                         @Override
                         public void onClick(View view) {
                             // WRITE POST functionality: show pre-populated Post
@@ -347,5 +358,4 @@ public class UploadUtils {
                     });
         }
     }
-
 }

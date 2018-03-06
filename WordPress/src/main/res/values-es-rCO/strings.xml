@@ -352,7 +352,7 @@ Language: es_CO
 	<string name="media_upload_error">Hubo un error al cargar el archivo multimedia</string>
 	<string name="retry">Reintentar</string>
 	<string name="confirm">Confirmar</string>
-	<string name="xmlrpc_endpoint_forbidden_error">No se pudo conectar. Se ha recibidoun error 403 cuando se intenta acceder a \n        su endpoint del XMLRPC de sitio. La aplicación lo necesita para comunicarse con su sitio. Póngase en contacto con su anfitrión para solucionar este problema.</string>
+	<string name="xmlrpc_endpoint_forbidden_error">No se pudo conectar. Se ha recibidoun error 403 cuando se intenta acceder a \n        su mEndpoint del XMLRPC de sitio. La aplicación lo necesita para comunicarse con su sitio. Póngase en contacto con su anfitrión para solucionar este problema.</string>
 	<string name="xmlrpc_post_blocked_error">No se pudo conectar. Su alojamiento está bloqueando las peticiones POST, y la aplicación las necesita \n        para comunicarse con su sitio. Póngase en contacto con su alojamiento para solucionar este problema.</string>
 	<string name="reader_empty_followed_blogs_search_title">Ningún sitio coincide con tu búsqueda</string>
 	<string name="reader_hint_search_followed_sites">Busca en los sitios que sigues</string>
@@ -910,7 +910,7 @@ Language: es_CO
 	<string name="site_picker_cant_hide_current_site">\"%s\" no se ocultó porque es el sitio actual</string>
 	<string name="me_btn_support">Ayuda y soporte</string>
 	<string name="account_settings">Configuración de la cuenta</string>
-	<string name="site_picker_create_dotcom">Crear sitio en WordPress.com</string>
+	<string name="site_picker_create_wpcom">Crear sitio en WordPress.com</string>
 	<string name="site_picker_edit_visibility">Mostrar/Ocultar sitios</string>
 	<string name="site_picker_add_self_hosted">Añadir sitio autoalojado</string>
 	<string name="site_picker_add_site">Añadir sitio</string>

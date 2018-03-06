@@ -799,6 +799,14 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
 
     @Override
     public void appendMediaFile(final MediaFile mediaFile, final String mediaUrl, ImageLoader imageLoader) {
+        if (getActivity() == null) {
+            // appendMediaFile may be called from a background thread (example: EditPostActivity.java#L2165) and
+            //  Activity may have already be gone.
+            //  Ticket: https://github.com/wordpress-mobile/WordPress-Android/issues/7386
+            AppLog.d(T.MEDIA, "appendMediaFile() called but Activity is null! mediaUrl: " + mediaUrl);
+            return;
+        }
+
         if (URLUtil.isNetworkUrl(mediaUrl)) {
             AztecAttributes attributes = new AztecAttributes();
             attributes.setValue(ATTR_SRC, mediaUrl);

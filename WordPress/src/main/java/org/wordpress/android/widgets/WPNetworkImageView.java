@@ -36,9 +36,9 @@ import java.util.concurrent.RejectedExecutionException;
 
 /**
  * most of the code below is from Volley's NetworkImageView, but it's modified to support:
- *  (1) fading in downloaded images
- *  (2) manipulating images before display
- *  (3) automatically retrieving the thumbnail for YouTube & Vimeo videos
+ * (1) fading in downloaded images
+ * (2) manipulating images before display
+ * (3) automatically retrieving the thumbnail for YouTube & Vimeo videos
  */
 public class WPNetworkImageView extends AppCompatImageView {
     public enum ImageType {
@@ -54,6 +54,7 @@ public class WPNetworkImageView extends AppCompatImageView {
 
     public interface ImageLoadListener {
         void onLoaded();
+
         void onError();
     }
 
@@ -67,14 +68,16 @@ public class WPNetworkImageView extends AppCompatImageView {
     private int mCropWidth;
     private int mCropHeight;
 
-    private static final HashSet<String> mUrlSkipList = new HashSet<>();
+    private static final HashSet<String> URL_SKIP_LIST = new HashSet<>();
 
     public WPNetworkImageView(Context context) {
         this(context, null);
     }
+
     public WPNetworkImageView(Context context, AttributeSet attrs) {
         this(context, attrs, 0);
     }
+
     public WPNetworkImageView(Context context, AttributeSet attrs, int defStyle) {
         super(context, attrs, defStyle);
 
@@ -168,6 +171,7 @@ public class WPNetworkImageView extends AppCompatImageView {
 
     /**
      * Loads the image for the view if it isn't already loaded.
+     *
      * @param isInLayoutPass True if this was invoked from a layout pass, false otherwise.
      */
     private void loadImageIfNecessary(final boolean isInLayoutPass,
@@ -210,8 +214,8 @@ public class WPNetworkImageView extends AppCompatImageView {
             if (mImageContainer.getRequestUrl().equals(mUrl)) {
                 // if the request is from the same URL and it's not GONE_UNTIL_AVAILABLE, return.
                 if (mImageType != ImageType.GONE_UNTIL_AVAILABLE) {
-                    // GONE_UNTIL_AVAILABLE image type will make a new request if the previous response wasn't a 404 response,
-                    // Volley usually returns it from cache.
+                    // GONE_UNTIL_AVAILABLE image type will make a new request if the previous response wasn't
+                    // a 404 response, Volley usually returns it from cache.
                     return;
                 }
             } else {
@@ -222,7 +226,7 @@ public class WPNetworkImageView extends AppCompatImageView {
         }
 
         // skip this URL if a previous request for it returned a 404
-        if (mUrlSkipList.contains(mUrl)) {
+        if (URL_SKIP_LIST.contains(mUrl)) {
             AppLog.d(AppLog.T.UTILS, "skipping image request " + mUrl);
             showErrorImage();
             if (imageLoadListener != null) {
@@ -238,8 +242,9 @@ public class WPNetworkImageView extends AppCompatImageView {
 
         // The pre-existing content of this view didn't match the current URL. Load the new image
         // from the network.
-        ImageLoader.ImageContainer newContainer = WordPress.sImageLoader.get(mUrl,
-                new WPNetworkImageLoaderListener(mUrl, isInLayoutPass, imageLoadListener), maxWidth, maxHeight, scaleType);
+        ImageLoader.ImageContainer newContainer = WordPress.sImageLoader.get(
+                mUrl, new WPNetworkImageLoaderListener(mUrl, isInLayoutPass, imageLoadListener),
+                maxWidth, maxHeight, scaleType);
         // update the ImageContainer to be the new bitmap container.
         mImageContainer = newContainer;
     }
@@ -247,7 +252,7 @@ public class WPNetworkImageView extends AppCompatImageView {
     /**
      * Our implementation of ImageLoader.ImageListener that keeps a reference to the requested URL
      * and makes sure we're setting the correct requested picture on response.
-     *
+     * <p>
      * Ref: https://github.com/wordpress-mobile/WordPress-Android/issues/5100
      * This is a fix for those cases when WPNetworkImageView instances are used in UI items that can be recycled.
      * The cell containing WPNetworkImageView could be recycled while the image request was still underway,
@@ -271,7 +276,7 @@ public class WPNetworkImageView extends AppCompatImageView {
             // keep track of URLs that 404 so we can skip them the next time
             int statusCode = VolleyUtils.statusCodeFromVolleyError(error);
             if (statusCode == 404) {
-                mUrlSkipList.add(mRequestedURL);
+                URL_SKIP_LIST.add(mRequestedURL);
             }
 
             if (mUrl == null || !mUrl.equals(mRequestedURL)) {
@@ -310,7 +315,7 @@ public class WPNetworkImageView extends AppCompatImageView {
 
     private static boolean canFadeInImageType(ImageType imageType) {
         return imageType == ImageType.PHOTO
-                || imageType == ImageType.VIDEO;
+               || imageType == ImageType.VIDEO;
     }
 
     private void handleResponse(ImageLoader.ImageContainer response, boolean isCached, ImageLoadListener
@@ -321,7 +326,7 @@ public class WPNetworkImageView extends AppCompatImageView {
             if (mImageType == ImageType.GONE_UNTIL_AVAILABLE) {
                 setVisibility(View.VISIBLE);
             }
-            
+
             // if cropping is requested, do it before further manipulation
             if (mCropWidth > 0 && mCropHeight > 0) {
                 bitmap = ThumbnailUtils.extractThumbnail(bitmap, mCropWidth, mCropHeight);
@@ -330,15 +335,18 @@ public class WPNetworkImageView extends AppCompatImageView {
             try {
                 // Apply circular rounding to avatars in a background task
                 if (mImageType == ImageType.AVATAR) {
-                    new ShapeBitmapTask(ShapeType.CIRCLE, imageLoadListener).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, bitmap);
+                    new ShapeBitmapTask(ShapeType.CIRCLE, imageLoadListener)
+                            .executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, bitmap);
                     return;
                 } else if (mImageType == ImageType.PHOTO_ROUNDED) {
-                    new ShapeBitmapTask(ShapeType.ROUNDED, imageLoadListener).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, bitmap);
+                    new ShapeBitmapTask(ShapeType.ROUNDED, imageLoadListener)
+                            .executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, bitmap);
                     return;
                 }
             } catch (RejectedExecutionException e) {
-                AppLog.w(AppLog.T.UTILS, "Too many tasks already available in the default AsyncTask.THREAD_POOL_EXECUTOR queue. " +
-                        "The current ShapeBitmapTask was rejected");
+                AppLog.w(AppLog.T.UTILS,
+                         "Too many tasks already available in the default AsyncTask.THREAD_POOL_EXECUTOR queue. "
+                         + "The current ShapeBitmapTask was rejected");
                 showDefaultImage();
                 return;
             }
@@ -367,7 +375,7 @@ public class WPNetworkImageView extends AppCompatImageView {
 
     public void removeCurrentUrlFromSkiplist() {
         if (!TextUtils.isEmpty(mUrl)) {
-            mUrlSkipList.remove(mUrl);
+            URL_SKIP_LIST.remove(mUrl);
         }
     }
 
@@ -430,7 +438,7 @@ public class WPNetworkImageView extends AppCompatImageView {
             case PLUGIN_ICON:
                 showDefaultPluginIcon();
                 break;
-            default :
+            default:
                 // light grey box for all others
                 setImageDrawable(new ColorDrawable(getColorRes(R.color.grey_light)));
                 break;
@@ -460,7 +468,7 @@ public class WPNetworkImageView extends AppCompatImageView {
             case PLUGIN_ICON:
                 showDefaultPluginIcon();
                 break;
-            default :
+            default:
                 // grey box for all others
                 setImageDrawable(new ColorDrawable(getColorRes(R.color.grey_lighten_30)));
                 break;
@@ -473,15 +481,19 @@ public class WPNetworkImageView extends AppCompatImageView {
     }
 
     private void showDefaultGravatarImage() {
-        if (getContext() == null) return;
+        if (getContext() == null) {
+            return;
+        }
         try {
-            new ShapeBitmapTask(ShapeType.CIRCLE, null).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, BitmapFactory.decodeResource(
-                    getContext().getResources(),
-                    R.drawable.ic_placeholder_gravatar_grey_lighten_20_100dp
-            ));
+            new ShapeBitmapTask(ShapeType.CIRCLE, null)
+                    .executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, BitmapFactory.decodeResource(
+                            getContext().getResources(),
+                            R.drawable.ic_placeholder_gravatar_grey_lighten_20_100dp
+                                                                                                   ));
         } catch (RejectedExecutionException e) {
-            AppLog.w(AppLog.T.UTILS, "Too many tasks already available in the default AsyncTask.THREAD_POOL_EXECUTOR queue. " +
-                    "The current DefaultGravatarImage was rejected");
+            AppLog.w(AppLog.T.UTILS,
+                     "Too many tasks already available in the default AsyncTask.THREAD_POOL_EXECUTOR queue. "
+                     + "The current DefaultGravatarImage was rejected");
         }
     }
 
@@ -510,14 +522,17 @@ public class WPNetworkImageView extends AppCompatImageView {
     }
 
     // Circularizes or rounds the corners of a bitmap in a background thread
-    private enum ShapeType { CIRCLE, ROUNDED }
+    private enum ShapeType {
+        CIRCLE, ROUNDED
+    }
+
     private class ShapeBitmapTask extends AsyncTask<Bitmap, Void, Bitmap> {
         private final ImageLoadListener mImageLoadListener;
         private final ShapeType mShapeType;
         private int mRoundedCornerRadiusPx;
         private static final int ROUNDED_CORNER_RADIUS_DP = 2;
 
-        public ShapeBitmapTask(ShapeType shapeType, ImageLoadListener imageLoadListener) {
+        ShapeBitmapTask(ShapeType shapeType, ImageLoadListener imageLoadListener) {
             mImageLoadListener = imageLoadListener;
             mShapeType = shapeType;
             if (mShapeType == ShapeType.ROUNDED) {
@@ -527,7 +542,9 @@ public class WPNetworkImageView extends AppCompatImageView {
 
         @Override
         protected Bitmap doInBackground(Bitmap... params) {
-            if (params == null || params.length == 0) return null;
+            if (params == null || params.length == 0) {
+                return null;
+            }
 
             Bitmap bitmap = params[0];
             switch (mShapeType) {
