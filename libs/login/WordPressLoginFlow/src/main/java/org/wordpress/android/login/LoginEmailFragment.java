@@ -37,8 +37,10 @@ import org.wordpress.android.fluxc.store.AccountStore.OnAvailabilityChecked;
 import org.wordpress.android.login.util.SiteUtils;
 import org.wordpress.android.login.widgets.WPLoginInputRow;
 import org.wordpress.android.login.widgets.WPLoginInputRow.OnEditorCommitListener;
+import org.wordpress.android.util.ActivityUtils;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
+import org.wordpress.android.util.DisplayUtils;
 import org.wordpress.android.util.EditTextUtils;
 import org.wordpress.android.util.NetworkUtils;
 
@@ -346,6 +348,8 @@ public class LoginEmailFragment extends LoginBaseFormFragment<LoginListener> imp
         if (event.isError()) {
             // report the error but don't bail yet.
             AppLog.e(T.API, "OnAvailabilityChecked has error: " + event.error.type + " - " + event.error.message);
+            // hide the keyboard to ensure the link to login using the site address is visible
+            ActivityUtils.hideKeyboardForced(mEmailInput);
             showEmailError(R.string.email_not_registered_wpcom);
             return;
         }
