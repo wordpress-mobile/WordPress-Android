@@ -124,11 +124,11 @@ public class ReaderTagTable {
                     + "VALUES (?1,?2,?3,?4,?5)");
 
             for (ReaderTag tag : tagList) {
-                stmt.bindString(1, tag.getmTagSlug());
-                stmt.bindString(2, tag.getmTagDisplayName());
-                stmt.bindString(3, tag.getmTagTitle());
+                stmt.bindString(1, tag.getTagSlug());
+                stmt.bindString(2, tag.getTagDisplayName());
+                stmt.bindString(3, tag.getTagTitle());
                 stmt.bindLong(4, tag.tagType.toInt());
-                stmt.bindString(5, tag.getmEndpoint());
+                stmt.bindString(5, tag.getEndpoint());
                 stmt.execute();
             }
         } finally {
@@ -143,7 +143,7 @@ public class ReaderTagTable {
         if (tag == null) {
             return false;
         }
-        String[] args = {tag.getmTagSlug(), Integer.toString(tag.tagType.toInt())};
+        String[] args = {tag.getTagSlug(), Integer.toString(tag.tagType.toInt())};
         return SqlUtils.boolForQuery(ReaderDatabase.getReadableDb(),
                                      "SELECT 1 FROM tbl_tags WHERE tag_slug=?1 AND tag_type=?2",
                                      args);
@@ -203,7 +203,7 @@ public class ReaderTagTable {
         if (tag == null) {
             return null;
         }
-        String[] args = {tag.getmTagSlug(), Integer.toString(tag.tagType.toInt())};
+        String[] args = {tag.getTagSlug(), Integer.toString(tag.tagType.toInt())};
         return SqlUtils.stringForQuery(ReaderDatabase.getReadableDb(),
                                        "SELECT endpoint FROM tbl_tags WHERE tag_slug=? AND tag_type=?",
                                        args);
@@ -257,7 +257,7 @@ public class ReaderTagTable {
         if (tag == null) {
             return;
         }
-        String[] args = {tag.getmTagSlug(), Integer.toString(tag.tagType.toInt())};
+        String[] args = {tag.getTagSlug(), Integer.toString(tag.tagType.toInt())};
         ReaderDatabase.getWritableDb().delete("tbl_tags", "tag_slug=? AND tag_type=?", args);
     }
 
@@ -266,7 +266,7 @@ public class ReaderTagTable {
         if (tag == null) {
             return "";
         }
-        String[] args = {tag.getmTagSlug(), Integer.toString(tag.tagType.toInt())};
+        String[] args = {tag.getTagSlug(), Integer.toString(tag.tagType.toInt())};
         return SqlUtils.stringForQuery(ReaderDatabase.getReadableDb(),
                                        "SELECT date_updated FROM tbl_tags WHERE tag_slug=? AND tag_type=?",
                                        args);
@@ -282,7 +282,7 @@ public class ReaderTagTable {
         SQLiteStatement stmt = ReaderDatabase.getWritableDb().compileStatement(sql);
         try {
             stmt.bindString(1, date);
-            stmt.bindString(2, tag.getmTagSlug());
+            stmt.bindString(2, tag.getTagSlug());
             stmt.bindLong(3, tag.tagType.toInt());
             stmt.execute();
         } finally {
@@ -363,11 +363,11 @@ public class ReaderTagTable {
 
                 // then insert the passed ones
                 for (ReaderTag tag : tagList) {
-                    stmt.bindString(1, tag.getmTagSlug());
-                    stmt.bindString(2, tag.getmTagDisplayName());
-                    stmt.bindString(3, tag.getmTagTitle());
+                    stmt.bindString(1, tag.getTagSlug());
+                    stmt.bindString(2, tag.getTagDisplayName());
+                    stmt.bindString(3, tag.getTagTitle());
                     stmt.bindLong(4, tag.tagType.toInt());
-                    stmt.bindString(5, tag.getmEndpoint());
+                    stmt.bindString(5, tag.getEndpoint());
                     stmt.execute();
                 }
 

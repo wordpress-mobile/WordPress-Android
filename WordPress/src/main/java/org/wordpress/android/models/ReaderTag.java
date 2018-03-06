@@ -29,33 +29,33 @@ public class ReaderTag implements Serializable, FilterCriteria {
         // primary key in the tag table)
         if (TextUtils.isEmpty(slug)) {
             if (!TextUtils.isEmpty(title)) {
-                setmTagSlug(ReaderUtils.sanitizeWithDashes(title));
+                setTagSlug(ReaderUtils.sanitizeWithDashes(title));
             } else {
-                setmTagSlug(getTagSlugFromEndpoint(endpoint));
+                setTagSlug(getTagSlugFromEndpoint(endpoint));
             }
         } else {
-            setmTagSlug(slug);
+            setTagSlug(slug);
         }
 
-        setmTagDisplayName(displayName);
-        setmTagTitle(title);
-        setmEndpoint(endpoint);
+        setTagDisplayName(displayName);
+        setTagTitle(title);
+        setEndpoint(endpoint);
         this.tagType = tagType;
     }
 
-    public String getmEndpoint() {
+    public String getEndpoint() {
         return StringUtils.notNullStr(mEndpoint);
     }
 
-    private void setmEndpoint(String mEndpoint) {
+    private void setEndpoint(String mEndpoint) {
         this.mEndpoint = StringUtils.notNullStr(mEndpoint);
     }
 
-    public String getmTagTitle() {
+    public String getTagTitle() {
         return StringUtils.notNullStr(mTagTitle);
     }
 
-    private void setmTagTitle(String title) {
+    private void setTagTitle(String title) {
         this.mTagTitle = StringUtils.notNullStr(title);
     }
 
@@ -63,19 +63,19 @@ public class ReaderTag implements Serializable, FilterCriteria {
         return !TextUtils.isEmpty(mTagTitle);
     }
 
-    public String getmTagDisplayName() {
+    public String getTagDisplayName() {
         return StringUtils.notNullStr(mTagDisplayName);
     }
 
-    private void setmTagDisplayName(String displayName) {
+    private void setTagDisplayName(String displayName) {
         this.mTagDisplayName = StringUtils.notNullStr(displayName);
     }
 
-    public String getmTagSlug() {
+    public String getTagSlug() {
         return StringUtils.notNullStr(mTagSlug);
     }
 
-    private void setmTagSlug(String slug) {
+    private void setTagSlug(String slug) {
         this.mTagSlug = StringUtils.notNullStr(slug);
     }
 
@@ -85,7 +85,7 @@ public class ReaderTag implements Serializable, FilterCriteria {
      * in the log could be considered a privacy issue
      */
     public String getTagNameForLog() {
-        String tagSlug = getmTagSlug();
+        String tagSlug = getTagSlug();
         if (tagType == ReaderTagType.DEFAULT) {
             return tagSlug;
         } else if (tagSlug.length() >= 6) {
@@ -141,28 +141,28 @@ public class ReaderTag implements Serializable, FilterCriteria {
             return false;
         }
         return tag1.tagType == tag2.tagType
-               && tag1.getmTagSlug().equalsIgnoreCase(tag2.getmTagSlug());
+               && tag1.getTagSlug().equalsIgnoreCase(tag2.getTagSlug());
     }
 
     public boolean isPostsILike() {
-        return tagType == ReaderTagType.DEFAULT && getmEndpoint().endsWith("/read/liked");
+        return tagType == ReaderTagType.DEFAULT && getEndpoint().endsWith("/read/liked");
     }
 
     public boolean isFollowedSites() {
-        return tagType == ReaderTagType.DEFAULT && getmEndpoint().endsWith("/read/following");
+        return tagType == ReaderTagType.DEFAULT && getEndpoint().endsWith("/read/following");
     }
 
     public boolean isDiscover() {
-        return tagType == ReaderTagType.DEFAULT && getmTagSlug().equals(TAG_TITLE_DISCOVER);
+        return tagType == ReaderTagType.DEFAULT && getTagSlug().equals(TAG_TITLE_DISCOVER);
     }
 
     public boolean isTagTopic() {
-        String endpoint = getmEndpoint();
+        String endpoint = getEndpoint();
         return endpoint.toLowerCase().contains("/read/tags/");
     }
 
     public boolean isListTopic() {
-        String endpoint = getmEndpoint();
+        String endpoint = getEndpoint();
         return endpoint.toLowerCase().contains("/read/list/");
     }
 
@@ -172,11 +172,11 @@ public class ReaderTag implements Serializable, FilterCriteria {
     @Override
     public String getLabel() {
         if (isTagDisplayNameAlphaNumeric()) {
-            return getmTagDisplayName().toLowerCase();
+            return getTagDisplayName().toLowerCase();
         } else if (hasTagTitle()) {
-            return getmTagTitle();
+            return getTagTitle();
         } else {
-            return getmTagDisplayName();
+            return getTagDisplayName();
         }
     }
 

@@ -217,7 +217,7 @@ public class ReaderPostTable {
             return 0;
         }
 
-        String[] args = {tag.getmTagSlug(), Integer.toString(tag.tagType.toInt()), Integer.toString(MAX_POSTS_PER_TAG)};
+        String[] args = {tag.getTagSlug(), Integer.toString(tag.tagType.toInt()), Integer.toString(MAX_POSTS_PER_TAG)};
         String where = "pseudo_id NOT IN (SELECT DISTINCT pseudo_id FROM tbl_posts WHERE tag_name=? AND "
                        + "tag_type=? ORDER BY " + getSortColumnForTag(tag) + " DESC LIMIT ?)";
         int numDeleted = db.delete("tbl_posts", where, args);
@@ -256,7 +256,7 @@ public class ReaderPostTable {
         if (tag == null) {
             return 0;
         }
-        String[] args = {tag.getmTagSlug(), Integer.toString(tag.tagType.toInt())};
+        String[] args = {tag.getTagSlug(), Integer.toString(tag.tagType.toInt())};
         return SqlUtils.intForQuery(ReaderDatabase.getReadableDb(),
                                     "SELECT count(*) FROM tbl_posts WHERE tag_name=? AND tag_type=?",
                                     args);
@@ -474,7 +474,7 @@ public class ReaderPostTable {
             return 0;
         }
 
-        String[] args = {tag.getmTagSlug(), Integer.toString(tag.tagType.toInt())};
+        String[] args = {tag.getTagSlug(), Integer.toString(tag.tagType.toInt())};
         return ReaderDatabase.getWritableDb().delete(
                 "tbl_posts",
                 "tag_name=? AND tag_type=?",
@@ -523,7 +523,7 @@ public class ReaderPostTable {
         String sql = "SELECT " + dateColumn + " FROM tbl_posts"
                      + " WHERE tag_name=? AND tag_type=?"
                      + " ORDER BY " + dateColumn + " LIMIT 1";
-        String[] args = {tag.getmTagSlug(), Integer.toString(tag.tagType.toInt())};
+        String[] args = {tag.getTagSlug(), Integer.toString(tag.tagType.toInt())};
         return SqlUtils.stringForQuery(ReaderDatabase.getReadableDb(), sql, args);
     }
 
@@ -549,7 +549,7 @@ public class ReaderPostTable {
             return;
         }
 
-        String[] args = {tag.getmTagSlug(), Integer.toString(tag.tagType.toInt())};
+        String[] args = {tag.getTagSlug(), Integer.toString(tag.tagType.toInt())};
         String sql = "UPDATE tbl_posts SET has_gap_marker=0 WHERE has_gap_marker!=0 AND tag_name=? AND tag_type=?";
         ReaderDatabase.getWritableDb().execSQL(sql, args);
     }
@@ -562,7 +562,7 @@ public class ReaderPostTable {
             return null;
         }
 
-        String[] args = {tag.getmTagSlug(), Integer.toString(tag.tagType.toInt())};
+        String[] args = {tag.getTagSlug(), Integer.toString(tag.tagType.toInt())};
         String sql = "SELECT blog_id, post_id FROM tbl_posts WHERE has_gap_marker!=0 AND tag_name=? AND tag_type=?";
         Cursor cursor = ReaderDatabase.getReadableDb().rawQuery(sql, args);
         try {
@@ -586,7 +586,7 @@ public class ReaderPostTable {
         String[] args = {
                 Long.toString(blogId),
                 Long.toString(postId),
-                tag.getmTagSlug(),
+                tag.getTagSlug(),
                 Integer.toString(tag.tagType.toInt())
         };
         String sql =
@@ -640,7 +640,7 @@ public class ReaderPostTable {
         }
 
         String dateColumn = getSortColumnForTag(tag);
-        String[] args = {gapMarkerDate, tag.getmTagSlug(), Integer.toString(tag.tagType.toInt())};
+        String[] args = {gapMarkerDate, tag.getTagSlug(), Integer.toString(tag.tagType.toInt())};
         String where = "tag_name=? AND tag_type=? AND " + dateColumn + " < ?";
         int numDeleted = ReaderDatabase.getWritableDb().delete("tbl_posts", where, args);
         if (numDeleted > 0) {
@@ -734,7 +734,7 @@ public class ReaderPostTable {
 
         db.beginTransaction();
         try {
-            String tagName = (tag != null ? tag.getmTagSlug() : "");
+            String tagName = (tag != null ? tag.getTagSlug() : "");
             int tagType = (tag != null ? tag.tagType.toInt() : 0);
 
             // we can safely assume there's no gap marker because any existing gap marker is
@@ -820,7 +820,7 @@ public class ReaderPostTable {
             sql += " LIMIT " + Integer.toString(maxPosts);
         }
 
-        String[] args = {tag.getmTagSlug(), Integer.toString(tag.tagType.toInt())};
+        String[] args = {tag.getTagSlug(), Integer.toString(tag.tagType.toInt())};
         Cursor cursor = ReaderDatabase.getReadableDb().rawQuery(sql, args);
         try {
             return getPostListFromCursor(cursor);
@@ -888,7 +888,7 @@ public class ReaderPostTable {
             sql += " LIMIT " + Integer.toString(maxPosts);
         }
 
-        String[] args = {tag.getmTagSlug(), Integer.toString(tag.tagType.toInt())};
+        String[] args = {tag.getTagSlug(), Integer.toString(tag.tagType.toInt())};
         Cursor cursor = ReaderDatabase.getReadableDb().rawQuery(sql, args);
         try {
             if (cursor != null && cursor.moveToFirst()) {

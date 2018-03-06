@@ -112,7 +112,7 @@ public class ReaderTagHeaderView extends RelativeLayout {
             return;
         }
 
-        String tagNameForApi = ReaderUtils.sanitizeWithDashes(mCurrentTag.getmTagSlug());
+        String tagNameForApi = ReaderUtils.sanitizeWithDashes(mCurrentTag.getTagSlug());
         String path = "read/tags/" + tagNameForApi + "/images?number=1";
 
         WordPress.getRestClientUtilsV1_2().get(path, new RestRequest.Listener() {
@@ -169,7 +169,7 @@ public class ReaderTagHeaderView extends RelativeLayout {
         }
 
         private String getKeyForTag(ReaderTag tag) {
-            return tag.getmTagSlug();
+            return tag.getTagSlug();
         }
     }
 }
