@@ -172,11 +172,20 @@ public class ReaderPost {
         // xpost info
         assignXpostIdsFromJson(post, json.optJSONArray("metadata"));
 
-        // if the post doesn't have a featured image but it contains an IMG tag, check whether
-        // we can find a suitable image from the content
-        if (!post.hasFeaturedImage() && post.hasImages()) {
-            post.mFeaturedImage = new ReaderImageScanner(post.mText, post.isPrivate)
-                    .getLargestImage(ReaderConstants.MIN_FEATURED_IMAGE_WIDTH);
+        if (!post.hasFeaturedImage()) {
+            // if there's no featured image, check if featured media has been set to an image
+            if (json.has("featured_media")) {
+                JSONObject jsonMedia = json.optJSONObject("featured_media");
+                String type = JSONUtils.getString(jsonMedia, "type");
+                if (type.equals("image")) {
+                    post.mFeaturedImage = JSONUtils.getString(jsonMedia, "uri");
+                }
+            } else if (post.hasImages()) {
+                // if the post doesn't have a featured media but it contains an IMG tag, check whether
+                // we can find a suitable image from the content
+                post.mFeaturedImage = new ReaderImageScanner(post.mText, post.isPrivate)
+                        .getLargestImage(ReaderConstants.MIN_FEATURED_IMAGE_WIDTH);
+            }
         }
 
         // if there's no featured image or featured video and the post contains an iframe, scan
