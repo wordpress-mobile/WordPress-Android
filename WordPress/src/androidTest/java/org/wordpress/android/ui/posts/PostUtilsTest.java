@@ -20,7 +20,7 @@ public class PostUtilsTest extends AndroidTestCase {
     }
 
     public void testShortcodeSpaces() {
-        String postContent = "[ gallery number=\"arst\" /]";
+        String postContent = "[   gallery number=\"arst\"     /]";
         String collapsedContent = PostUtils.collapseShortcodes(postContent);
         assertEquals("[gallery]", collapsedContent);
     }

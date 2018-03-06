@@ -74,7 +74,7 @@ public class AutolinkUtils {
         if (text == null) {
             return null;
         }
-        Pattern urlPattern = Pattern.compile("(\\s+|^) ((http|https|ftp|mailto):\\S+)");
+        Pattern urlPattern = Pattern.compile("(\\s+|^)((http|https|ftp|mailto):\\S+)");
         Matcher matcher = urlPattern.matcher(text);
         StringBuffer stringBuffer = new StringBuffer();
         while (matcher.find()) {

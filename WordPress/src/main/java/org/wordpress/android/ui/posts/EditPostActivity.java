@@ -1703,7 +1703,7 @@ public class EditPostActivity extends AppCompatActivity implements
         }
         if (content.contains("[caption")) {
             // Convert old legacy post caption formatting to new format, to avoid being stripped by the visual editor
-            Pattern pattern = Pattern.compile("(\\[caption[^]]*caption=\"([^\"]*)\"[^]]*].+?) (\\[\\/caption])");
+            Pattern pattern = Pattern.compile("(\\[caption[^]]*caption=\"([^\"]*)\"[^]]*].+?)(\\[\\/caption])");
             Matcher matcher = pattern.matcher(content);
             StringBuffer stringBuffer = new StringBuffer();
             while (matcher.find()) {
