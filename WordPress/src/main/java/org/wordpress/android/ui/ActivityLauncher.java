@@ -102,7 +102,8 @@ public class ActivityLauncher {
     public static void showPhotoPickerForResult(Activity activity,
                                                 @NonNull MediaBrowserType browserType,
                                                 @Nullable SiteModel site) {
-        Intent intent = new Intent(activity, StockPhotoPickerActivity.class); // TODO: change back to PhotoPickerActivity
+        // TODO: change back to PhotoPickerActivity
+        Intent intent = new Intent(activity, StockPhotoPickerActivity.class);
         intent.putExtra(PhotoPickerFragment.ARG_BROWSER_TYPE, browserType);
         if (site != null) {
             intent.putExtra(WordPress.SITE, site);

@@ -89,7 +89,7 @@ public class StockMediaViewModel extends ViewModel {
 
     @SuppressWarnings("unused")
     @Subscribe(threadMode = ThreadMode.MAIN)
-    public void OnStockMediaListFetched(StockMediaStore.OnStockMediaListFetched event) {
+    public void onStockMediaListFetched(StockMediaStore.OnStockMediaListFetched event) {
         mIsFetching = false;
 
         if (event.isError()) {
