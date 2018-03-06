@@ -516,8 +516,6 @@ public class MediaBrowserActivity extends AppCompatActivity implements MediaGrid
 
         enableTabs(true);
 
-        reloadMediaGrid();
-
         return true;
     }
 
