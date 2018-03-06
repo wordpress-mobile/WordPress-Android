@@ -8,6 +8,7 @@ import android.view.Menu;
 import android.webkit.WebViewClient;
 
 import org.wordpress.android.WordPress;
+import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.fluxc.model.SiteModel;
 
 import java.util.List;
@@ -109,9 +110,7 @@ public class JetpackConnectionWebViewActivity extends WPWebViewActivity {
 
     @Override
     protected void cancel() {
-        if (mWebViewClient != null) {
-            this.mWebViewClient.cancel();
-        }
+        AnalyticsTracker.track(AnalyticsTracker.Stat.STATS_CANCELED_INSTALL_JETPACK);
     }
 
     @Override

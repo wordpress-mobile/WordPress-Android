@@ -33,14 +33,12 @@ class JetpackConnectionWebViewClient extends WebViewClient {
     private static final String WORDPRESS_COM_PREFIX = "https://wordpress.com";
     private static final Uri JETPACK_DEEPLINK_URI = Uri.parse(JetpackConnectionWebViewActivity.JETPACK_CONNECTION_DEEPLINK);
     private static final String REDIRECT_PAGE_STATE_ITEM = "redirectPage";
-    private static final String FLOW_FINISHED = "FLOW_FINISHED";
 
     private final Activity mActivity;
     private final AccountStore mAccountStore;
     private final SiteModel mSiteModel;
 
     private String mRedirectPage;
-    private boolean mFlowFinished = false;
 
     JetpackConnectionWebViewClient(Activity activity, AccountStore accountStore, SiteModel siteModel) {
         mActivity = activity;
@@ -109,7 +107,6 @@ class JetpackConnectionWebViewClient extends WebViewClient {
                 intent.putExtra(SITE, mSiteModel);
                 mActivity.startActivity(intent);
                 mActivity.finish();
-                mFlowFinished = true;
                 AnalyticsTracker.track(AnalyticsTracker.Stat.STATS_COMPLETED_INSTALL_JETPACK);
                 return true;
             }
@@ -127,19 +124,11 @@ class JetpackConnectionWebViewClient extends WebViewClient {
         }
     }
 
-    public void cancel() {
-        if (!mFlowFinished) {
-            AnalyticsTracker.track(AnalyticsTracker.Stat.STATS_CANCELED_INSTALL_JETPACK);
-        }
-    }
-
     public void onSaveInstanceState(Bundle outState) {
         outState.putString(REDIRECT_PAGE_STATE_ITEM, mRedirectPage);
-        outState.putBoolean(FLOW_FINISHED, mFlowFinished);
     }
 
     public void onRestoreInstanceState(Bundle savedInstanceState) {
         mRedirectPage = savedInstanceState.getString(REDIRECT_PAGE_STATE_ITEM);
-        mFlowFinished = savedInstanceState.getBoolean(FLOW_FINISHED);
     }
 }
