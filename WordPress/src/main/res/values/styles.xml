@@ -186,6 +186,7 @@
 
     <style name="ThemeDetailsHeader">
         <item name="android:textStyle">bold</item>
+        <item name="android:fontFamily">sans-serif</item>
     </style>
 
     <style name="MediaGalleryText">
