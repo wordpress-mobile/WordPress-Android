@@ -10,6 +10,7 @@ import android.support.v7.app.ActionBar;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.view.ContextThemeWrapper;
 import android.view.MenuItem;
 
 import org.wordpress.android.R;
@@ -243,7 +244,7 @@ public class PublicizeListActivity extends AppCompatActivity
     }
 
     private void confirmDisconnect(final PublicizeConnection publicizeConnection) {
-        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        AlertDialog.Builder builder = new AlertDialog.Builder(new ContextThemeWrapper(this, R.style.Calypso_Dialog));
         builder.setMessage(
                 String.format(getString(R.string.dlg_confirm_publicize_disconnect), publicizeConnection.getLabel()));
         builder.setTitle(R.string.share_btn_disconnect);
