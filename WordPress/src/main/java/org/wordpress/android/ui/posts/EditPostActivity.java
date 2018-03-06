@@ -237,8 +237,6 @@ public class EditPostActivity extends AppCompatActivity implements
     private PhotoPickerFragment mPhotoPickerFragment;
     private int mPhotoPickerOrientation = Configuration.ORIENTATION_UNDEFINED;
 
-    private PromoDialogAdvanced mAsyncPromoDialog;
-
     // For opening the context menu after permissions have been granted
     private View mMenuView = null;
 
@@ -1003,7 +1001,7 @@ public class EditPostActivity extends AppCompatActivity implements
                         publishPost();
                     }
                 })
-                .setNegativeButton(R.string.dialog_confirm_publish_no, null)
+                .setNegativeButton(R.string.keep_editing, null)
                 .setCancelable(true);
         builder.create().show();
     }
@@ -3035,17 +3033,16 @@ public class EditPostActivity extends AppCompatActivity implements
     }
 
     private void showAsyncPromoDialog() {
-        if (mAsyncPromoDialog == null) {
-            mAsyncPromoDialog = new PromoDialogAdvanced.Builder(
-                    R.drawable.img_promo_async,
-                    R.string.async_promo_title,
-                    R.string.async_promo_description,
-                    android.R.string.ok)
-                    .setLinkText(R.string.async_promo_link)
-                    .build();
-        }
+        final PromoDialogAdvanced asyncPromoDialog = new PromoDialogAdvanced.Builder(
+                R.drawable.img_promo_async,
+                R.string.async_promo_title,
+                R.string.async_promo_description,
+                android.R.string.ok)
+                .setNegativeButtonText(R.string.keep_editing)
+                .setLinkText(R.string.async_promo_link)
+                .build();
 
-        mAsyncPromoDialog.setLinkOnClickListener(new View.OnClickListener() {
+        asyncPromoDialog.setLinkOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(EditPostActivity.this, ReleaseNotesActivity.class);
@@ -3055,15 +3052,21 @@ public class EditPostActivity extends AppCompatActivity implements
             }
         });
 
-        mAsyncPromoDialog.setPositiveButtonOnClickListener(new View.OnClickListener() {
+        asyncPromoDialog.setPositiveButtonOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                mAsyncPromoDialog.dismiss();
-                showPublishConfirmationOrUpdateIfNotLocalDraft();
+                publishPost();
             }
         });
 
-        mAsyncPromoDialog.show(getSupportFragmentManager(), ASYNC_PROMO_DIALOG_TAG);
+        asyncPromoDialog.setNegativeButtonOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                asyncPromoDialog.dismiss();
+            }
+        });
+
+        asyncPromoDialog.show(getSupportFragmentManager(), ASYNC_PROMO_DIALOG_TAG);
         AppPrefs.setAsyncPromoRequired(false);
     }
 

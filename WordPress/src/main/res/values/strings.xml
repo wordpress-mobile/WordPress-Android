@@ -331,7 +331,6 @@
     <string name="dialog_confirm_publish_title">Confirmation</string>
     <string name="dialog_confirm_publish_message">Are you sure you want to publish now?</string>
     <string name="dialog_confirm_publish_yes">Publish now</string>
-    <string name="dialog_confirm_publish_no">Keep editing</string>
 
     <!-- reload drop down -->
     <string name="loading">Loading…</string>
