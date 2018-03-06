@@ -26,7 +26,8 @@ public class SiteCreationSiteDetailsFragment extends SiteCreationBaseFormFragmen
     private WPLoginInputRow mSiteTaglineInput;
 
     @Override
-    protected @LayoutRes int getContentLayout() {
+    protected @LayoutRes
+    int getContentLayout() {
         return R.layout.site_creation_site_details_screen;
     }
 
@@ -129,7 +130,7 @@ public class SiteCreationSiteDetailsFragment extends SiteCreationBaseFormFragmen
         view.post(new Runnable() {
             @Override
             public void run() {
-                Rect rect = new Rect(); //coordinates to scroll to
+                Rect rect = new Rect(); // coordinates to scroll to
                 view.getHitRect(rect);
                 mScrollView.requestChildRectangleOnScreen(view, rect, false);
             }

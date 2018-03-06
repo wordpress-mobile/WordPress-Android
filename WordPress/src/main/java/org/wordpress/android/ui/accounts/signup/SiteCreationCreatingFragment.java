@@ -77,7 +77,7 @@ public class SiteCreationCreatingFragment extends SiteCreationBaseFormFragment<S
     }
 
     public static SiteCreationCreatingFragment newInstance(String siteTitle, String siteTagline, String siteSlug,
-            String themeId) {
+                                                           String themeId) {
         SiteCreationCreatingFragment fragment = new SiteCreationCreatingFragment();
         Bundle args = new Bundle();
         args.putString(ARG_SITE_TITLE, siteTitle);
@@ -89,7 +89,8 @@ public class SiteCreationCreatingFragment extends SiteCreationBaseFormFragment<S
     }
 
     @Override
-    protected @LayoutRes int getContentLayout() {
+    protected @LayoutRes
+    int getContentLayout() {
         return R.layout.site_creation_creating_screen;
     }
 
@@ -104,7 +105,7 @@ public class SiteCreationCreatingFragment extends SiteCreationBaseFormFragment<S
         mTadaContainer = rootView.findViewById(R.id.tada_container);
 
         // construct an array with the labels in reverse order
-        mLabels = new TextView[] {
+        mLabels = new TextView[]{
                 rootView.findViewById(R.id.site_creation_creating_preparing_frontend),
                 rootView.findViewById(R.id.site_creation_creating_configuring_theme),
                 rootView.findViewById(R.id.site_creation_creating_configuring_content),
@@ -243,8 +244,8 @@ public class SiteCreationCreatingFragment extends SiteCreationBaseFormFragment<S
         boolean enabled = false;
 
         // traverse the array (elements are in "reverse" order already) and disable them until the provided on is reach.
-        //  From that point on, enable the labels found
-        for(TextView tv : mLabels) {
+        // From that point on, enable the labels found
+        for (TextView tv : mLabels) {
             if (tv.getId() == textViewId) {
                 enabled = true;
             }
@@ -268,7 +269,7 @@ public class SiteCreationCreatingFragment extends SiteCreationBaseFormFragment<S
 
     private void configureImage(boolean hasFailure) {
         mImageView.setImageResource(hasFailure ? R.drawable.img_site_error_camera_pencils_226dp
-                : R.drawable.img_site_wordpress_camera_pencils_226dp);
+                                            : R.drawable.img_site_wordpress_camera_pencils_226dp);
     }
 
     private void handleFailure(final SiteCreationState failedState) {
@@ -284,9 +285,9 @@ public class SiteCreationCreatingFragment extends SiteCreationBaseFormFragment<S
                 AppLog.d(T.NUX, "User retries failed site creation on step: " + failedState.getStepName());
                 if (failedState.isTerminal()) {
                     throw new RuntimeException("Internal inconsistency: Cannot resume site creation from "
-                            + failedState.getStepName());
+                                               + failedState.getStepName());
                 } else if (failedState.getStep() == SiteCreationStep.IDLE
-                        || failedState.getStep() == SiteCreationStep.NEW_SITE) {
+                           || failedState.getStep() == SiteCreationStep.NEW_SITE) {
                     createSite();
                 } else {
                     retryFromState(failedState, (long) failedState.getPayload());

@@ -71,7 +71,7 @@ public class WPTextView extends AppCompatTextView {
     private CharSequence replaceCharacter(CharSequence source, int charIndex, CharSequence replacement) {
         if (charIndex != -1 && charIndex < source.length() - 1) {
             return TextUtils.concat(source.subSequence(0, charIndex), replacement, source.subSequence(charIndex + 1,
-                    source.length()));
+                                                                                                      source.length()));
         }
         return source;
     }

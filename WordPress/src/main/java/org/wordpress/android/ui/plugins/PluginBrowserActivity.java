@@ -53,7 +53,6 @@ import javax.inject.Inject;
 public class PluginBrowserActivity extends AppCompatActivity
         implements SearchView.OnQueryTextListener,
         MenuItem.OnActionExpandListener {
-
     @Inject ViewModelProvider.Factory mViewModelFactory;
     protected PluginBrowserViewModel mViewModel;
 
@@ -176,7 +175,7 @@ public class PluginBrowserActivity extends AppCompatActivity
             @Override
             public void onChanged(@Nullable PluginBrowserViewModel.PluginListStatus listStatus) {
                 showProgress(listStatus == PluginBrowserViewModel.PluginListStatus.FETCHING
-                        && mViewModel.isSitePluginsEmpty());
+                             && mViewModel.isSitePluginsEmpty());
 
                 if (listStatus == PluginBrowserViewModel.PluginListStatus.ERROR) {
                     ToastUtils.showToast(PluginBrowserActivity.this, R.string.plugin_fetch_error);
@@ -300,10 +299,10 @@ public class PluginBrowserActivity extends AppCompatActivity
     protected void showListFragment(@NonNull PluginListType listType) {
         PluginListFragment listFragment = PluginListFragment.newInstance(mViewModel.getSite(), listType);
         getSupportFragmentManager().beginTransaction()
-                .add(R.id.fragment_container, listFragment, PluginListFragment.TAG)
-                .addToBackStack(null)
-                .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE)
-                .commit();
+                                   .add(R.id.fragment_container, listFragment, PluginListFragment.TAG)
+                                   .addToBackStack(null)
+                                   .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE)
+                                   .commit();
         mViewModel.setTitle(getTitleForListType(listType));
     }
 
@@ -342,7 +341,9 @@ public class PluginBrowserActivity extends AppCompatActivity
         }
 
         void setPlugins(@NonNull List<?> items) {
-            if (mItems.isSameList(items)) return;
+            if (mItems.isSameList(items)) {
+                return;
+            }
 
             mItems.clear();
             mItems.addAll(items);
@@ -358,7 +359,8 @@ public class PluginBrowserActivity extends AppCompatActivity
             notifyDataSetChanged();
         }
 
-        protected @Nullable Object getItem(int position) {
+        protected @Nullable
+        Object getItem(int position) {
             if (position < mItems.size()) {
                 return mItems.get(position);
             }
@@ -385,7 +387,9 @@ public class PluginBrowserActivity extends AppCompatActivity
         public void onBindViewHolder(ViewHolder viewHolder, int position) {
             PluginBrowserViewHolder holder = (PluginBrowserViewHolder) viewHolder;
             Object item = getItem(position);
-            if (item == null) return;
+            if (item == null) {
+                return;
+            }
 
             SitePluginModel sitePlugin;
             WPOrgPluginModel wpOrgPlugin;
@@ -405,9 +409,9 @@ public class PluginBrowserActivity extends AppCompatActivity
 
             String iconUrl = wpOrgPlugin != null ? wpOrgPlugin.getIcon() : null;
 
-            holder.nameText.setText(name);
-            holder.authorText.setText(author);
-            holder.icon.setImageUrl(iconUrl, ImageType.PLUGIN_ICON);
+            holder.mNameText.setText(name);
+            holder.mAuthorText.setText(author);
+            holder.mIcon.setImageUrl(iconUrl, ImageType.PLUGIN_ICON);
 
             if (sitePlugin != null) {
                 @StringRes int textResId;
@@ -426,15 +430,15 @@ public class PluginBrowserActivity extends AppCompatActivity
                     colorResId = R.color.grey;
                     drawableResId = R.drawable.ic_cross_grey_600_24dp;
                 }
-                holder.statusText.setText(textResId);
-                holder.statusText.setTextColor(getResources().getColor(colorResId));
-                holder.statusIcon.setImageResource(drawableResId);
-                holder.statusContainer.setVisibility(View.VISIBLE);
-                holder.ratingBar.setVisibility(View.GONE);
+                holder.mStatusText.setText(textResId);
+                holder.mStatusText.setTextColor(getResources().getColor(colorResId));
+                holder.mStatusIcon.setImageResource(drawableResId);
+                holder.mStatusContainer.setVisibility(View.VISIBLE);
+                holder.mRatingBar.setVisibility(View.GONE);
             } else {
-                holder.statusContainer.setVisibility(View.GONE);
-                holder.ratingBar.setVisibility(View.VISIBLE);
-                holder.ratingBar.setRating(PluginUtils.getAverageStarRating(wpOrgPlugin));
+                holder.mStatusContainer.setVisibility(View.GONE);
+                holder.mRatingBar.setVisibility(View.VISIBLE);
+                holder.mRatingBar.setRating(PluginUtils.getAverageStarRating(wpOrgPlugin));
             }
         }
 
@@ -446,31 +450,33 @@ public class PluginBrowserActivity extends AppCompatActivity
         }
 
         private class PluginBrowserViewHolder extends ViewHolder {
-            final TextView nameText;
-            final TextView authorText;
-            final ViewGroup statusContainer;
-            final TextView statusText;
-            final ImageView statusIcon;
-            final WPNetworkImageView icon;
-            final RatingBar ratingBar;
+            private final TextView mNameText;
+            private final TextView mAuthorText;
+            private final ViewGroup mStatusContainer;
+            private final TextView mStatusText;
+            private final ImageView mStatusIcon;
+            private final WPNetworkImageView mIcon;
+            private final RatingBar mRatingBar;
 
             PluginBrowserViewHolder(View view) {
                 super(view);
-                nameText = view.findViewById(R.id.plugin_name);
-                authorText = view.findViewById(R.id.plugin_author);
-                icon = view.findViewById(R.id.plugin_icon);
-                ratingBar = view.findViewById(R.id.rating_bar);
+                mNameText = view.findViewById(R.id.plugin_name);
+                mAuthorText = view.findViewById(R.id.plugin_author);
+                mIcon = view.findViewById(R.id.plugin_icon);
+                mRatingBar = view.findViewById(R.id.rating_bar);
 
-                statusContainer = view.findViewById(R.id.plugin_status_container);
-                statusText = statusContainer.findViewById(R.id.plugin_status_text);
-                statusIcon = statusContainer.findViewById(R.id.plugin_status_icon);
+                mStatusContainer = view.findViewById(R.id.plugin_status_container);
+                mStatusText = mStatusContainer.findViewById(R.id.plugin_status_text);
+                mStatusIcon = mStatusContainer.findViewById(R.id.plugin_status_icon);
 
                 view.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
                         int position = getAdapterPosition();
                         Object item = getItem(position);
-                        if (item == null) return;
+                        if (item == null) {
+                            return;
+                        }
                         SitePluginModel sitePlugin;
                         WPOrgPluginModel wpOrgPlugin;
                         if (item instanceof SitePluginModel) {
@@ -482,10 +488,10 @@ public class PluginBrowserActivity extends AppCompatActivity
                         }
                         if (sitePlugin != null) {
                             ActivityLauncher.viewPluginDetailForResult(PluginBrowserActivity.this, mViewModel.getSite(),
-                                    sitePlugin);
+                                                                       sitePlugin);
                         } else {
                             ActivityLauncher.viewPluginDetailForResult(PluginBrowserActivity.this, mViewModel.getSite(),
-                                    wpOrgPlugin);
+                                                                       wpOrgPlugin);
                         }
                     }
                 });

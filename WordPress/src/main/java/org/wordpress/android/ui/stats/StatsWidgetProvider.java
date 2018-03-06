@@ -71,7 +71,7 @@ public class StatsWidgetProvider extends AppWidgetProvider {
 
             Intent intent = new Intent(context, WPMainActivity.class);
             intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK
-                    | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                            | Intent.FLAG_ACTIVITY_CLEAR_TASK);
             intent.setAction("android.intent.action.MAIN");
             intent.addCategory("android.intent.category.LAUNCHER");
             PendingIntent pendingIntent = PendingIntent.getActivity(context, 0, intent, 0);
@@ -89,7 +89,7 @@ public class StatsWidgetProvider extends AppWidgetProvider {
     }
 
     private static void showStatsData(Context context, int[] allWidgets, SiteModel site, JSONObject data) {
-        if (allWidgets.length == 0){
+        if (allWidgets.length == 0) {
             return;
         }
 
@@ -130,7 +130,7 @@ public class StatsWidgetProvider extends AppWidgetProvider {
         }
     }
 
-    private static void ShowCacheIfAvailableOrGenericError(Context context, SiteModel site, SiteStore siteStore) {
+    private static void showCacheIfAvailableOrGenericError(Context context, SiteModel site, SiteStore siteStore) {
         if (site == null) {
             AppLog.e(T.STATS, "Invalid site.");
             return;
@@ -166,7 +166,7 @@ public class StatsWidgetProvider extends AppWidgetProvider {
         // If it's an auth error, show it in the widget UI
         if (error instanceof com.android.volley.AuthFailureError) {
             int[] widgetIDs = getWidgetIDsFromRemoteBlogID(site.getSiteId());
-            if (widgetIDs.length == 0){
+            if (widgetIDs.length == 0) {
                 return;
             }
 
@@ -174,15 +174,15 @@ public class StatsWidgetProvider extends AppWidgetProvider {
             if (SiteUtils.isAccessedViaWPComRest(site)) {
                 // User cannot access stats for this .com blog
                 showMessage(context, widgetIDs, context.getString(R.string.stats_widget_error_no_permissions),
-                        siteStore);
+                            siteStore);
             } else {
                 // Not logged into wpcom, or the main .com account of the app is not linked with this blog
                 showMessage(context, widgetIDs, context.getString(R.string.stats_sign_in_jetpack_different_com_account),
-                        siteStore);
+                            siteStore);
             }
             return;
         }
-        ShowCacheIfAvailableOrGenericError(context, site, siteStore);
+        showCacheIfAvailableOrGenericError(context, site, siteStore);
     }
 
     // This is called by the Stats service in case of error
@@ -192,7 +192,7 @@ public class StatsWidgetProvider extends AppWidgetProvider {
             return;
         }
 
-        ShowCacheIfAvailableOrGenericError(context, site, siteStore);
+        showCacheIfAvailableOrGenericError(context, site, siteStore);
     }
 
     // This is called by the Stats service to keep widgets updated
@@ -246,8 +246,8 @@ public class StatsWidgetProvider extends AppWidgetProvider {
         }
     }
 
-    // This is called to update the App Widget at intervals defined by the updatePeriodMillis attribute in the AppWidgetProviderInfo.
-    // Also called at booting time!
+    // This is called to update the App Widget at intervals defined by the updatePeriodMillis attribute
+    // in the AppWidgetProviderInfo. Also called at booting time!
     // This method is NOT called when the user adds the App Widget.
     @Override
     public void onUpdate(Context context, AppWidgetManager appWidgetManager, int[] appWidgetIds) {
@@ -256,8 +256,8 @@ public class StatsWidgetProvider extends AppWidgetProvider {
     }
 
     /**
-     *  This is called when an instance the App Widget is created for the first time.
-     *  For example, if the user adds two instances of your App Widget, this is only called the first time.
+     * This is called when an instance the App Widget is created for the first time.
+     * For example, if the user adds two instances of your App Widget, this is only called the first time.
      */
     @Override
     public void onEnabled(Context context) {
@@ -268,6 +268,7 @@ public class StatsWidgetProvider extends AppWidgetProvider {
     /**
      * This is called when the last instance of your App Widget is deleted from the App Widget host.
      * This is where you should clean up any work done in onEnabled(Context), such as delete a temporary database.
+     *
      * @param context The Context in which this receiver is running.
      */
     @Override
@@ -281,6 +282,7 @@ public class StatsWidgetProvider extends AppWidgetProvider {
 
     /**
      * This is called every time an App Widget is deleted from the App Widget host.
+     *
      * @param context The Context in which this receiver is running.
      * @param widgetIDs Widget IDs to set blank. We cannot remove widget from home screen.
      */
@@ -319,7 +321,8 @@ public class StatsWidgetProvider extends AppWidgetProvider {
                 AppLog.i(AppLog.T.STATS, "Cache found for the blog ID " + remoteBlogID);
                 return cache;
             } else {
-                AppLog.i(AppLog.T.STATS, "Cache found for the blog ID " + remoteBlogID + " but the date value doesn't match!!");
+                AppLog.i(AppLog.T.STATS,
+                         "Cache found for the blog ID " + remoteBlogID + " but the date value doesn't match!!");
                 return null;
             }
         } catch (JSONException e) {
@@ -339,7 +342,7 @@ public class StatsWidgetProvider extends AppWidgetProvider {
             if (allKeys == null) {
                 return false;
             }
-            for (int i=0; i < allKeys.length(); i ++) {
+            for (int i = 0; i < allKeys.length(); i++) {
                 String currentKey = allKeys.getString(i);
                 int currentBlogID = prevKeys.getInt(currentKey);
                 if (currentBlogID == remoteBlogID) {
@@ -365,11 +368,12 @@ public class StatsWidgetProvider extends AppWidgetProvider {
             if (allKeys == null) {
                 return new int[0];
             }
-            for (int i=0; i < allKeys.length(); i ++) {
+            for (int i = 0; i < allKeys.length(); i++) {
                 String currentKey = allKeys.getString(i);
                 int currentBlogID = prevKeys.getInt(currentKey);
                 if (currentBlogID == remoteBlogID) {
-                    AppLog.d(AppLog.T.STATS, "The blog with remoteID " + remoteBlogID + " is displayed in the widget " + currentKey);
+                    AppLog.d(AppLog.T.STATS,
+                             "The blog with remoteID " + remoteBlogID + " is displayed in the widget " + currentKey);
                     widgetIDs.add(Integer.parseInt(currentKey));
                 }
             }
@@ -429,7 +433,7 @@ public class StatsWidgetProvider extends AppWidgetProvider {
             // it's unlikely that blog is null here.
             // This method is called from config activity which has loaded the blog fine.
             showMessage(context, new int[]{widgetID},
-                    context.getString(R.string.stats_widget_error_readd_widget), siteStore);
+                        context.getString(R.string.stats_widget_error_readd_widget), siteStore);
             AppLog.e(AppLog.T.STATS, "setupNewWidget: No blog found in the db!");
             return;
         }
@@ -439,7 +443,7 @@ public class StatsWidgetProvider extends AppWidgetProvider {
         // Add the following check just to be safe
         if (remoteBlogID == 0) {
             showMessage(context, new int[]{widgetID},
-                    context.getString(R.string.stats_widget_error_readd_widget), siteStore);
+                        context.getString(R.string.stats_widget_error_readd_widget), siteStore);
             return;
         }
 
@@ -447,21 +451,21 @@ public class StatsWidgetProvider extends AppWidgetProvider {
         AnalyticsTracker.flush();
 
         // Store the association between the widget ID and the remote blog id into prefs.
-        setRemoteBlogIDForWidgetIDs(new int[] {widgetID}, site.getSiteId());
+        setRemoteBlogIDForWidgetIDs(new int[]{widgetID}, site.getSiteId());
 
         String currentDate = StatsUtils.getCurrentDateTZ(site);
 
         // Load cached data if available and show it immediately
         JSONObject cache = getCacheDataForBlog(remoteBlogID, currentDate);
         if (cache != null) {
-            showStatsData(context, new int[] {widgetID}, site, cache);
+            showStatsData(context, new int[]{widgetID}, site, cache);
             return;
         }
 
         if (!NetworkUtils.isNetworkAvailable(context)) {
-            showMessage(context, new int[] {widgetID}, context.getString(R.string.no_network_title), siteStore);
+            showMessage(context, new int[]{widgetID}, context.getString(R.string.no_network_title), siteStore);
         } else {
-            showMessage(context, new int[] {widgetID}, context.getString(R.string.stats_widget_loading_data), siteStore);
+            showMessage(context, new int[]{widgetID}, context.getString(R.string.stats_widget_loading_data), siteStore);
             enqueueStatsRequestForBlog(context, remoteBlogID, currentDate);
         }
     }
@@ -470,8 +474,8 @@ public class StatsWidgetProvider extends AppWidgetProvider {
         // TODO: FluxC: This file must be refactored, we probably want a "WidgetManager" and keep the bare minimum
         // here in the AppWidgetProvider.
         // if (!mAccountStore.isSignedIn()) {
-        //     showMessage(context, appWidgetIds, context.getString(R.string.stats_widget_error_no_account));
-        //     return;
+        // showMessage(context, appWidgetIds, context.getString(R.string.stats_widget_error_no_account));
+        // return;
         // }
 
         SparseArray<ArrayList<Integer>> blogsToWidgetIDs = new SparseArray<>();
@@ -481,8 +485,9 @@ public class StatsWidgetProvider extends AppWidgetProvider {
                 // This could happen on logout when prefs are erased completely since we cannot remove
                 // widgets programmatically from the screen, or during the configuration of new widgets!!!
                 AppLog.e(AppLog.T.STATS, "No remote blog ID for widget ID " + widgetId);
-                showMessage(context, new int[] {widgetId}, context.getString(R.string
-                        .stats_widget_error_readd_widget), siteStore);
+                showMessage(context, new int[]{widgetId}, context.getString(R.string
+                                                                                    .stats_widget_error_readd_widget),
+                            siteStore);
                 continue;
             }
 
@@ -492,7 +497,7 @@ public class StatsWidgetProvider extends AppWidgetProvider {
         }
 
         // we now have an optimized data structure for our needs. BlogId -> widgetIDs list
-        for(int i = 0; i < blogsToWidgetIDs.size(); i++) {
+        for (int i = 0; i < blogsToWidgetIDs.size(); i++) {
             int remoteBlogID = blogsToWidgetIDs.keyAt(i);
             // get the object by the key.
             ArrayList<Integer> widgetsList = blogsToWidgetIDs.get(remoteBlogID);
@@ -500,7 +505,8 @@ public class StatsWidgetProvider extends AppWidgetProvider {
             SiteModel site = siteStore.getSiteBySiteId(remoteBlogID);
             if (site == null) {
                 // No site in the app
-                showMessage(context, currentWidgets, context.getString(R.string.stats_widget_error_readd_widget), siteStore);
+                showMessage(context, currentWidgets, context.getString(R.string.stats_widget_error_readd_widget),
+                            siteStore);
                 continue;
             }
             String currentDate = StatsUtils.getCurrentDateTZ(site);
@@ -515,11 +521,13 @@ public class StatsWidgetProvider extends AppWidgetProvider {
             // If network is available always start a refresh, and show prev data or the loading in progress message.
             if (!NetworkUtils.isNetworkAvailable(context)) {
                 if (cache == null) {
-                    showMessage(context, currentWidgets, context.getString(R.string.stats_widget_error_generic), siteStore);
+                    showMessage(context, currentWidgets, context.getString(R.string.stats_widget_error_generic),
+                                siteStore);
                 }
             } else {
                 if (cache == null) {
-                    showMessage(context, currentWidgets, context.getString(R.string.stats_widget_loading_data), siteStore);
+                    showMessage(context, currentWidgets, context.getString(R.string.stats_widget_loading_data),
+                                siteStore);
                 }
                 // Make sure to refresh widget data now.
                 enqueueStatsRequestForBlog(context, remoteBlogID, currentDate);

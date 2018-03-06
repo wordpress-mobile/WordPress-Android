@@ -24,12 +24,12 @@ import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.FluxCUtils;
 import org.wordpress.android.util.SiteUtils;
 import org.wordpress.android.util.ToastUtils;
+import org.wordpress.android.ui.main.SitePickerAdapter.SiteRecord;
 
 import javax.inject.Inject;
 
 public class StatsWidgetConfigureActivity extends AppCompatActivity
         implements StatsWidgetConfigureAdapter.OnSiteClickListener {
-
     private StatsWidgetConfigureAdapter mAdapter;
     private RecyclerView mRecycleView;
     private int mAppWidgetId = AppWidgetManager.INVALID_APPWIDGET_ID;
@@ -50,7 +50,7 @@ public class StatsWidgetConfigureActivity extends AppCompatActivity
                     AppWidgetManager.EXTRA_APPWIDGET_ID, AppWidgetManager.INVALID_APPWIDGET_ID);
         }
 
-        // Set the result to CANCELED.  This will cause the widget host to cancel out of the widget
+        // Set the result to CANCELED. This will cause the widget host to cancel out of the widget
         // placement if they press the back button.
         setResult(RESULT_CANCELED, new Intent().putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, mAppWidgetId));
 
@@ -71,7 +71,8 @@ public class StatsWidgetConfigureActivity extends AppCompatActivity
         // If no visible blogs
         int visibleSites = mSiteStore.getVisibleSitesCount();
         if (mSiteStore.getVisibleSitesCount() == 0) {
-            ToastUtils.showToast(getBaseContext(), R.string.stats_widget_error_no_visible_blog, ToastUtils.Duration.LONG);
+            ToastUtils
+                    .showToast(getBaseContext(), R.string.stats_widget_error_no_visible_blog, ToastUtils.Duration.LONG);
             finish();
             return;
         }
@@ -98,6 +99,7 @@ public class StatsWidgetConfigureActivity extends AppCompatActivity
         }
         return super.onOptionsItemSelected(item);
     }
+
     private void setupRecycleView() {
         mRecycleView = (RecyclerView) findViewById(R.id.recycler_view);
         mRecycleView.setLayoutManager(new LinearLayoutManager(this));
@@ -129,8 +131,8 @@ public class StatsWidgetConfigureActivity extends AppCompatActivity
     }
 
     @Override
-    public void onSiteClick(StatsWidgetConfigureAdapter.SiteRecord site) {
-        addWidgetToScreenAndFinish(site.localId);
+    public void onSiteClick(SiteRecord site) {
+        addWidgetToScreenAndFinish(site.getLocalId());
     }
 
     private void addWidgetToScreenAndFinish(int localID) {

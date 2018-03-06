@@ -80,13 +80,16 @@ public class MediaGridFragment extends Fragment implements MediaGridAdapterCallb
         FILTER_VIDEOS(3),
         FILTER_AUDIO(4);
 
-        private final int value;
-        private MediaFilter(int value) {
-            this.value = value;
+        private final int mValue;
+
+        MediaFilter(int value) {
+            this.mValue = value;
         }
+
         int getValue() {
-            return value;
+            return mValue;
         }
+
         private String toMimeType() {
             switch (this) {
                 case FILTER_AUDIO:
@@ -101,6 +104,7 @@ public class MediaGridFragment extends Fragment implements MediaGridAdapterCallb
                     return null;
             }
         }
+
         private static MediaFilter fromMimeType(@NonNull String mimeType) {
             switch (mimeType) {
                 case MediaUtils.MIME_TYPE_APPLICATION:
@@ -148,7 +152,9 @@ public class MediaGridFragment extends Fragment implements MediaGridAdapterCallb
 
     public interface MediaGridListener {
         void onMediaItemSelected(int localMediaId, boolean isLongClick);
+
         void onMediaRequestRetry(int localMediaId);
+
         void onMediaRequestDelete(int localMediaId);
     }
 
@@ -252,7 +258,7 @@ public class MediaGridFragment extends Fragment implements MediaGridAdapterCallb
                         fetchMediaList(false);
                     }
                 }
-        );
+                                                         );
 
         if (savedInstanceState != null) {
             restoreState(savedInstanceState);
@@ -312,11 +318,11 @@ public class MediaGridFragment extends Fragment implements MediaGridAdapterCallb
     private void ensureCorrectState(List<MediaModel> mediaModels) {
         if (isAdded() && getActivity() instanceof MediaBrowserActivity) {
             // we only need to check the deletion state if media are currently being deleted
-            MediaDeleteService service = ((MediaBrowserActivity)getActivity()).getMediaDeleteService();
+            MediaDeleteService service = ((MediaBrowserActivity) getActivity()).getMediaDeleteService();
             boolean checkDeleteState = service != null && service.isAnyMediaBeingDeleted();
 
             // note we count backwards so we can remove from the list
-            for (int i = mediaModels.size() - 1 ; i >= 0; i--) {
+            for (int i = mediaModels.size() - 1; i >= 0; i--) {
                 MediaModel media = mediaModels.get(i);
                 // ensure correct upload state for media being deleted
                 if (checkDeleteState && service.isMediaBeingDeleted(media)) {
@@ -325,7 +331,7 @@ public class MediaGridFragment extends Fragment implements MediaGridAdapterCallb
 
                 // remove local media that no longer exists
                 if (media.getFilePath() != null
-                        && org.wordpress.android.util.MediaUtils.isLocalFile(media.getUploadState())) {
+                    && org.wordpress.android.util.MediaUtils.isLocalFile(media.getUploadState())) {
                     File file = new File(media.getFilePath());
                     if (!file.exists()) {
                         AppLog.w(AppLog.T.MEDIA, "removing nonexistent local media " + media.getFilePath());
@@ -379,10 +385,12 @@ public class MediaGridFragment extends Fragment implements MediaGridAdapterCallb
     }
 
     void setFilter(@NonNull MediaFilter filter) {
-        mFilter  = filter;
+        mFilter = filter;
         getArguments().putSerializable(MediaBrowserActivity.ARG_FILTER, filter);
 
-        if (!isAdded()) return;
+        if (!isAdded()) {
+            return;
+        }
 
         // temporarily disable animation - otherwise the user will see items animate
         // when they change the filter
@@ -401,7 +409,7 @@ public class MediaGridFragment extends Fragment implements MediaGridAdapterCallb
             updateEmptyView(mEmptyViewMessageType);
         }
 
-        boolean hasFetchedThisFilter = mFetchedFilters[filter.value];
+        boolean hasFetchedThisFilter = mFetchedFilters[filter.getValue()];
         if (!hasFetchedThisFilter && NetworkUtils.isNetworkAvailable(getActivity())) {
             if (isEmpty()) {
                 mSwipeToRefreshHelper.setRefreshing(true);
@@ -412,7 +420,7 @@ public class MediaGridFragment extends Fragment implements MediaGridAdapterCallb
 
     @Override
     public void onAdapterFetchMoreData() {
-        boolean hasFetchedAll = mFetchedAllFilters[mFilter.value];
+        boolean hasFetchedAll = mFetchedAllFilters[mFilter.getValue()];
         if (!hasFetchedAll) {
             fetchMediaList(true);
         }
@@ -476,7 +484,9 @@ public class MediaGridFragment extends Fragment implements MediaGridAdapterCallb
      * it was just added, so reload the adapter
      */
     void updateMediaItem(@NonNull MediaModel media, boolean forceUpdate) {
-        if (!isAdded() || !hasAdapter()) return;
+        if (!isAdded() || !hasAdapter()) {
+            return;
+        }
 
         if (getAdapter().mediaExists(media)) {
             getAdapter().updateMediaItem(media, forceUpdate);
@@ -486,7 +496,9 @@ public class MediaGridFragment extends Fragment implements MediaGridAdapterCallb
     }
 
     void removeMediaItem(@NonNull MediaModel media) {
-        if (!isAdded() || !hasAdapter()) return;
+        if (!isAdded() || !hasAdapter()) {
+            return;
+        }
 
         getAdapter().removeMediaItem(media);
     }
@@ -503,8 +515,8 @@ public class MediaGridFragment extends Fragment implements MediaGridAdapterCallb
 
     public void removeFromMultiSelect(int localMediaId) {
         if (hasAdapter()
-                && getAdapter().isInMultiSelect()
-                && getAdapter().isItemSelected(localMediaId)) {
+            && getAdapter().isInMultiSelect()
+            && getAdapter().isItemSelected(localMediaId)) {
             getAdapter().removeSelectionByLocalId(localMediaId);
         }
     }
@@ -525,7 +537,9 @@ public class MediaGridFragment extends Fragment implements MediaGridAdapterCallb
     private void updateEmptyView(EmptyViewMessageType emptyViewMessageType) {
         mEmptyViewMessageType = emptyViewMessageType;
 
-        if (!isAdded() || mEmptyView == null) return;
+        if (!isAdded() || mEmptyView == null) {
+            return;
+        }
 
         if (isEmpty()) {
             int stringId;
@@ -596,7 +610,8 @@ public class MediaGridFragment extends Fragment implements MediaGridAdapterCallb
         if (isInMultiSelectMode) {
             getAdapter().setInMultiSelect(true);
             if (savedInstanceState.containsKey(BUNDLE_SELECTED_STATES)) {
-                ArrayList<Integer> selectedItems = ListUtils.fromIntArray(savedInstanceState.getIntArray(BUNDLE_SELECTED_STATES));
+                ArrayList<Integer> selectedItems =
+                        ListUtils.fromIntArray(savedInstanceState.getIntArray(BUNDLE_SELECTED_STATES));
                 getAdapter().setSelectedItems(selectedItems);
                 setSwipeToRefreshEnabled(false);
             }
@@ -605,8 +620,8 @@ public class MediaGridFragment extends Fragment implements MediaGridAdapterCallb
         mFetchedFilters = savedInstanceState.getBooleanArray(BUNDLE_FETCHED_FILTERS);
         mFetchedAllFilters = savedInstanceState.getBooleanArray(BUNDLE_RETRIEVED_ALL_FILTERS);
 
-        EmptyViewMessageType emptyType = EmptyViewMessageType.getEnumFromString(savedInstanceState.
-                getString(BUNDLE_EMPTY_VIEW_MESSAGE));
+        EmptyViewMessageType emptyType = EmptyViewMessageType.getEnumFromString(
+                savedInstanceState.getString(BUNDLE_EMPTY_VIEW_MESSAGE));
         updateEmptyView(emptyType);
     }
 
@@ -638,11 +653,13 @@ public class MediaGridFragment extends Fragment implements MediaGridAdapterCallb
     }
 
     private void handleFetchAllMediaSuccess(OnMediaListFetched event) {
-        if (!isAdded()) return;
+        if (!isAdded()) {
+            return;
+        }
 
         // make sure this request was for the current filter
         if (!TextUtils.isEmpty(event.mimeType)
-                && MediaFilter.fromMimeType(event.mimeType) != mFilter) {
+            && MediaFilter.fromMimeType(event.mimeType) != mFilter) {
             return;
         }
 
@@ -671,10 +688,12 @@ public class MediaGridFragment extends Fragment implements MediaGridAdapterCallb
     private void handleFetchAllMediaError(OnMediaListFetched event) {
         MediaErrorType errorType = event.error.type;
         AppLog.e(AppLog.T.MEDIA, "Media error occurred: " + errorType);
-        if (!isAdded()) return;
+        if (!isAdded()) {
+            return;
+        }
 
         if (!TextUtils.isEmpty(event.mimeType)
-                && MediaFilter.fromMimeType(event.mimeType) != mFilter) {
+            && MediaFilter.fromMimeType(event.mimeType) != mFilter) {
             return;
         }
 
@@ -682,7 +701,7 @@ public class MediaGridFragment extends Fragment implements MediaGridAdapterCallb
         if (errorType == MediaErrorType.AUTHORIZATION_REQUIRED) {
             updateEmptyView(EmptyViewMessageType.PERMISSION_ERROR);
             toastResId = R.string.media_error_no_permission;
-         } else {
+        } else {
             updateEmptyView(EmptyViewMessageType.GENERIC_ERROR);
             toastResId = R.string.error_refresh_media;
         }

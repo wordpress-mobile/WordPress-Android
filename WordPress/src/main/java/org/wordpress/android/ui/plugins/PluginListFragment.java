@@ -190,7 +190,7 @@ public class PluginListFragment extends Fragment {
                         mViewModel.pullToRefresh(mListType);
                     }
                 }
-        );
+                                                         );
 
         return view;
     }
@@ -259,7 +259,8 @@ public class PluginListFragment extends Fragment {
             }
         }
 
-        protected @Nullable Object getItem(int position) {
+        protected @Nullable
+        Object getItem(int position) {
             if (position < mItems.size()) {
                 return mItems.get(position);
             }
@@ -285,7 +286,9 @@ public class PluginListFragment extends Fragment {
         @Override
         public void onBindViewHolder(RecyclerView.ViewHolder viewHolder, int position) {
             Object item = getItem(position);
-            if (item == null) return;
+            if (item == null) {
+                return;
+            }
             SitePluginModel sitePlugin;
             WPOrgPluginModel wpOrgPlugin;
             if (item instanceof SitePluginModel) {
@@ -297,13 +300,14 @@ public class PluginListFragment extends Fragment {
             }
 
             String name = sitePlugin != null ? sitePlugin.getDisplayName() : wpOrgPlugin.getName();
-            String author = sitePlugin != null ? sitePlugin.getAuthorName() : HtmlUtils.fastStripHtml(wpOrgPlugin.getAuthorAsHtml());
+            String author = sitePlugin != null ? sitePlugin.getAuthorName()
+                    : HtmlUtils.fastStripHtml(wpOrgPlugin.getAuthorAsHtml());
             String iconUrl = wpOrgPlugin != null ? wpOrgPlugin.getIcon() : null;
 
             PluginViewHolder holder = (PluginViewHolder) viewHolder;
-            holder.name.setText(name);
-            holder.author.setText(author);
-            holder.icon.setImageUrl(iconUrl, WPNetworkImageView.ImageType.PLUGIN_ICON);
+            holder.mName.setText(name);
+            holder.mAuthor.setText(author);
+            holder.mIcon.setImageUrl(iconUrl, WPNetworkImageView.ImageType.PLUGIN_ICON);
 
             if (sitePlugin != null) {
                 @StringRes int textResId;
@@ -322,17 +326,17 @@ public class PluginListFragment extends Fragment {
                     colorResId = R.color.grey;
                     drawableResId = R.drawable.ic_cross_grey_600_24dp;
                 }
-                holder.statusText.setText(textResId);
-                holder.statusText.setTextColor(getResources().getColor(colorResId));
-                holder.statusIcon.setImageResource(drawableResId);
-                holder.statusText.setVisibility(View.VISIBLE);
-                holder.statusIcon.setVisibility(View.VISIBLE);
-                holder.ratingBar.setVisibility(View.GONE);
+                holder.mStatusText.setText(textResId);
+                holder.mStatusText.setTextColor(getResources().getColor(colorResId));
+                holder.mStatusIcon.setImageResource(drawableResId);
+                holder.mStatusText.setVisibility(View.VISIBLE);
+                holder.mStatusIcon.setVisibility(View.VISIBLE);
+                holder.mRatingBar.setVisibility(View.GONE);
             } else {
-                holder.statusText.setVisibility(View.GONE);
-                holder.statusIcon.setVisibility(View.GONE);
-                holder.ratingBar.setVisibility(View.VISIBLE);
-                holder.ratingBar.setRating(PluginUtils.getAverageStarRating(wpOrgPlugin));
+                holder.mStatusText.setVisibility(View.GONE);
+                holder.mStatusIcon.setVisibility(View.GONE);
+                holder.mRatingBar.setVisibility(View.VISIBLE);
+                holder.mRatingBar.setRating(PluginUtils.getAverageStarRating(wpOrgPlugin));
             }
 
             if (position == getItemCount() - 1) {
@@ -341,28 +345,30 @@ public class PluginListFragment extends Fragment {
         }
 
         private class PluginViewHolder extends RecyclerView.ViewHolder {
-            final TextView name;
-            final TextView author;
-            final TextView statusText;
-            final ImageView statusIcon;
-            final WPNetworkImageView icon;
-            final RatingBar ratingBar;
+            private final TextView mName;
+            private final TextView mAuthor;
+            private final TextView mStatusText;
+            private final ImageView mStatusIcon;
+            private final WPNetworkImageView mIcon;
+            private final RatingBar mRatingBar;
 
             PluginViewHolder(View view) {
                 super(view);
-                name = view.findViewById(R.id.plugin_name);
-                author = view.findViewById(R.id.plugin_author);
-                statusText = view.findViewById(R.id.plugin_status_text);
-                statusIcon = view.findViewById(R.id.plugin_status_icon);
-                icon = view.findViewById(R.id.plugin_icon);
-                ratingBar = view.findViewById(R.id.rating_bar);
+                mName = view.findViewById(R.id.plugin_name);
+                mAuthor = view.findViewById(R.id.plugin_author);
+                mStatusText = view.findViewById(R.id.plugin_status_text);
+                mStatusIcon = view.findViewById(R.id.plugin_status_icon);
+                mIcon = view.findViewById(R.id.plugin_icon);
+                mRatingBar = view.findViewById(R.id.rating_bar);
 
                 view.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
                         int position = getAdapterPosition();
                         Object item = getItem(position);
-                        if (item == null) return;
+                        if (item == null) {
+                            return;
+                        }
                         SitePluginModel sitePlugin;
                         WPOrgPluginModel wpOrgPlugin;
                         if (item instanceof SitePluginModel) {
@@ -375,7 +381,8 @@ public class PluginListFragment extends Fragment {
                         if (sitePlugin != null) {
                             ActivityLauncher.viewPluginDetailForResult(getActivity(), mViewModel.getSite(), sitePlugin);
                         } else {
-                            ActivityLauncher.viewPluginDetailForResult(getActivity(), mViewModel.getSite(), wpOrgPlugin);
+                            ActivityLauncher
+                                    .viewPluginDetailForResult(getActivity(), mViewModel.getSite(), wpOrgPlugin);
                         }
                     }
                 });

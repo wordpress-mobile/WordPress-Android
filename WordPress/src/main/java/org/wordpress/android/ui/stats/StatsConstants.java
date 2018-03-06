@@ -1,7 +1,6 @@
 package org.wordpress.android.ui.stats;
 
 public class StatsConstants {
-
     // Date formatting constants
     public static final String STATS_INPUT_DATE_FORMAT = "yyyy-MM-dd";
     public static final String STATS_OUTPUT_DATE_MONTH_SHORT_DAY_SHORT_FORMAT = "MMM d";

@@ -1,4 +1,3 @@
-
 package org.wordpress.android.push;
 
 import android.app.PendingIntent;
@@ -56,8 +55,8 @@ import javax.inject.Inject;
 import de.greenrobot.event.EventBus;
 
 public class GCMMessageService extends GcmListenerService {
-    private static final ArrayMap<Integer, Bundle> sActiveNotificationsMap = new ArrayMap<>();
-    private static final NotificationHelper sNotificationHelper = new NotificationHelper();
+    private static final ArrayMap<Integer, Bundle> ACTIVE_NOTIFICATIONS_MAP = new ArrayMap<>();
+    private static final NotificationHelper NOTIFICATION_HELPER = new NotificationHelper();
 
     private static final String NOTIFICATION_GROUP_KEY = "notification_group_key";
     private static final int PUSH_NOTIFICATION_ID = 10000;
@@ -103,13 +102,13 @@ public class GCMMessageService extends GcmListenerService {
     }
 
     // Add to the analytics properties map a subset of the push notification payload.
-    private static final String[] propertiesToCopyIntoAnalytics = {PUSH_ARG_NOTE_ID, PUSH_ARG_TYPE, "blog_id", "post_id",
-            "comment_id"};
+    private static final String[] PROPERTIES_TO_COPY_INTO_ANALYTICS =
+            {PUSH_ARG_NOTE_ID, PUSH_ARG_TYPE, "blog_id", "post_id", "comment_id"};
 
     private void synchronizedHandleDefaultPush(@NonNull Bundle data) {
-        // sActiveNotificationsMap being static, we can't just synchronize the method
+        // ACTIVE_NOTIFICATIONS_MAP being static, we can't just synchronize the method
         synchronized (GCMMessageService.class) {
-            sNotificationHelper.handleDefaultPush(this, data, mAccountStore.getAccount().getUserId());
+            NOTIFICATION_HELPER.handleDefaultPush(this, data, mAccountStore.getAccount().getUserId());
         }
     }
 
@@ -137,12 +136,12 @@ public class GCMMessageService extends GcmListenerService {
 
     public static synchronized void rebuildAndUpdateNotificationsOnSystemBarForThisNote(Context context,
                                                                                         String noteId) {
-        if (sActiveNotificationsMap.size() > 0) {
-            //get the corresponding bundle for this noteId
-            for (Map.Entry<Integer, Bundle> row : sActiveNotificationsMap.entrySet()) {
+        if (ACTIVE_NOTIFICATIONS_MAP.size() > 0) {
+            // get the corresponding bundle for this noteId
+            for (Map.Entry<Integer, Bundle> row : ACTIVE_NOTIFICATIONS_MAP.entrySet()) {
                 Bundle noteBundle = row.getValue();
                 if (noteBundle.getString(PUSH_ARG_NOTE_ID, "").equals(noteId)) {
-                    sNotificationHelper.rebuildAndUpdateNotificationsOnSystemBar(context, noteBundle);
+                    NOTIFICATION_HELPER.rebuildAndUpdateNotificationsOnSystemBar(context, noteBundle);
                     return;
                 }
             }
@@ -150,16 +149,17 @@ public class GCMMessageService extends GcmListenerService {
     }
 
     public static synchronized void rebuildAndUpdateNotifsOnSystemBarForRemainingNote(Context context) {
-        if (sActiveNotificationsMap.size() > 0) {
-            Bundle remainingNote = sActiveNotificationsMap.values().iterator().next();
-            sNotificationHelper.rebuildAndUpdateNotificationsOnSystemBar(context, remainingNote);
+        if (ACTIVE_NOTIFICATIONS_MAP.size() > 0) {
+            Bundle remainingNote = ACTIVE_NOTIFICATIONS_MAP.values().iterator().next();
+            NOTIFICATION_HELPER.rebuildAndUpdateNotificationsOnSystemBar(context, remainingNote);
         }
     }
 
-    public static synchronized Bundle getCurrentNoteBundleForNoteId(String noteId){
-        if (sActiveNotificationsMap.size() > 0) {
-            //get the corresponding bundle for this noteId
-            for(Iterator<Map.Entry<Integer, Bundle>> it = sActiveNotificationsMap.entrySet().iterator(); it.hasNext(); ) {
+    public static synchronized Bundle getCurrentNoteBundleForNoteId(String noteId) {
+        if (ACTIVE_NOTIFICATIONS_MAP.size() > 0) {
+            // get the corresponding bundle for this noteId
+            for (Iterator<Map.Entry<Integer, Bundle>> it = ACTIVE_NOTIFICATIONS_MAP.entrySet().iterator();
+                 it.hasNext();) {
                 Map.Entry<Integer, Bundle> row = it.next();
                 Bundle noteBundle = row.getValue();
                 if (noteBundle.getString(PUSH_ARG_NOTE_ID, "").equals(noteId)) {
@@ -171,28 +171,28 @@ public class GCMMessageService extends GcmListenerService {
     }
 
     public static synchronized void clearNotifications() {
-        Bundle authPNBundle = sActiveNotificationsMap.remove(AUTH_PUSH_NOTIFICATION_ID);
+        Bundle authPNBundle = ACTIVE_NOTIFICATIONS_MAP.remove(AUTH_PUSH_NOTIFICATION_ID);
 
-        sActiveNotificationsMap.clear();
+        ACTIVE_NOTIFICATIONS_MAP.clear();
 
-        //reinsert 2fa bundle if it was present
+        // reinsert 2fa bundle if it was present
         if (authPNBundle != null) {
-            sActiveNotificationsMap.put(AUTH_PUSH_NOTIFICATION_ID, authPNBundle);
+            ACTIVE_NOTIFICATIONS_MAP.put(AUTH_PUSH_NOTIFICATION_ID, authPNBundle);
         }
     }
 
     public static synchronized int getNotificationsCount() {
-        return sActiveNotificationsMap.size();
+        return ACTIVE_NOTIFICATIONS_MAP.size();
     }
 
     public static synchronized boolean hasNotifications() {
-        return !sActiveNotificationsMap.isEmpty();
+        return !ACTIVE_NOTIFICATIONS_MAP.isEmpty();
     }
 
     // Removes a specific notification from the internal map - only use this when we know
     // the user has dismissed the app by swiping it off the screen
     public static synchronized void removeNotification(int notificationId) {
-        sActiveNotificationsMap.remove(notificationId);
+        ACTIVE_NOTIFICATIONS_MAP.remove(notificationId);
     }
 
     // Removes a specific notification from the system bar
@@ -202,9 +202,10 @@ public class GCMMessageService extends GcmListenerService {
         }
 
         NotificationManagerCompat notificationManager = NotificationManagerCompat.from(context);
-        // here we loop with an Iterator as there might be several Notifications with the same Note ID (i.e. likes on the same Note)
-        // so we need to keep cancelling them and removing them from our activeNotificationsMap as we find it suitable
-        for(Iterator<Map.Entry<Integer, Bundle>> it = sActiveNotificationsMap.entrySet().iterator(); it.hasNext(); ) {
+        // here we loop with an Iterator as there might be several Notifications with the same Note ID
+        // (i.e. likes on the same Note) so we need to keep cancelling them and removing them from our
+        // ACTIVE_NOTIFICATIONS_MAP as we find it suitable
+        for (Iterator<Map.Entry<Integer, Bundle>> it = ACTIVE_NOTIFICATIONS_MAP.entrySet().iterator(); it.hasNext();) {
             Map.Entry<Integer, Bundle> row = it.next();
             Integer pushId = row.getKey();
             Bundle noteBundle = row.getValue();
@@ -214,7 +215,7 @@ public class GCMMessageService extends GcmListenerService {
             }
         }
 
-        if (sActiveNotificationsMap.size() == 0) {
+        if (ACTIVE_NOTIFICATIONS_MAP.size() == 0) {
             notificationManager.cancel(GCMMessageService.GROUP_NOTIFICATION_ID);
         }
     }
@@ -226,15 +227,15 @@ public class GCMMessageService extends GcmListenerService {
         }
 
         NotificationManagerCompat notificationManager = NotificationManagerCompat.from(context);
-        Bundle authPNBundle = sActiveNotificationsMap.remove(AUTH_PUSH_NOTIFICATION_ID);
-        for (Integer pushId : sActiveNotificationsMap.keySet()) {
+        Bundle authPNBundle = ACTIVE_NOTIFICATIONS_MAP.remove(AUTH_PUSH_NOTIFICATION_ID);
+        for (Integer pushId : ACTIVE_NOTIFICATIONS_MAP.keySet()) {
             notificationManager.cancel(pushId);
         }
         notificationManager.cancel(GCMMessageService.GROUP_NOTIFICATION_ID);
 
-        //reinsert 2fa bundle if it was present
+        // reinsert 2fa bundle if it was present
         if (authPNBundle != null) {
-            sActiveNotificationsMap.put(AUTH_PUSH_NOTIFICATION_ID, authPNBundle);
+            ACTIVE_NOTIFICATIONS_MAP.put(AUTH_PUSH_NOTIFICATION_ID, authPNBundle);
         }
 
         clearNotifications();
@@ -247,13 +248,13 @@ public class GCMMessageService extends GcmListenerService {
 
         NotificationManagerCompat notificationManager = NotificationManagerCompat.from(context);
         notificationManager.cancel(AUTH_PUSH_NOTIFICATION_ID);
-        sActiveNotificationsMap.remove(AUTH_PUSH_NOTIFICATION_ID);
+        ACTIVE_NOTIFICATIONS_MAP.remove(AUTH_PUSH_NOTIFICATION_ID);
     }
 
     // NoteID is the ID if the note in WordPress
     public static synchronized void bumpPushNotificationsTappedAnalytics(String noteID) {
-        for (int id : sActiveNotificationsMap.keySet()) {
-            Bundle noteBundle = sActiveNotificationsMap.get(id);
+        for (int id : ACTIVE_NOTIFICATIONS_MAP.keySet()) {
+            Bundle noteBundle = ACTIVE_NOTIFICATIONS_MAP.get(id);
             if (noteBundle.getString(PUSH_ARG_NOTE_ID, "").equals(noteID)) {
                 bumpPushNotificationsAnalytics(Stat.PUSH_NOTIFICATION_TAPPED, noteBundle, null);
                 AnalyticsTracker.flush();
@@ -264,8 +265,8 @@ public class GCMMessageService extends GcmListenerService {
 
     // Mark all notifications as tapped
     public static synchronized void bumpPushNotificationsTappedAllAnalytics() {
-        for (int id : sActiveNotificationsMap.keySet()) {
-            Bundle noteBundle = sActiveNotificationsMap.get(id);
+        for (int id : ACTIVE_NOTIFICATIONS_MAP.keySet()) {
+            Bundle noteBundle = ACTIVE_NOTIFICATIONS_MAP.get(id);
             bumpPushNotificationsAnalytics(Stat.PUSH_NOTIFICATION_TAPPED, noteBundle, null);
         }
         AnalyticsTracker.flush();
@@ -283,7 +284,7 @@ public class GCMMessageService extends GcmListenerService {
 
         String notificationID = noteBundle.getString(PUSH_ARG_NOTE_ID, "");
         if (!TextUtils.isEmpty(notificationID)) {
-            for (String currentPropertyToCopy : propertiesToCopyIntoAnalytics) {
+            for (String currentPropertyToCopy : PROPERTIES_TO_COPY_INTO_ANALYTICS) {
                 if (noteBundle.containsKey(currentPropertyToCopy)) {
                     properties.put("push_notification_" + currentPropertyToCopy, noteBundle.get(currentPropertyToCopy));
                 }
@@ -296,12 +297,11 @@ public class GCMMessageService extends GcmListenerService {
     }
 
     private static void addAuthPushNotificationToNotificationMap(Bundle data) {
-        sActiveNotificationsMap.put(AUTH_PUSH_NOTIFICATION_ID, data);
+        ACTIVE_NOTIFICATIONS_MAP.put(AUTH_PUSH_NOTIFICATION_ID, data);
     }
 
     private static class NotificationHelper {
         private void handleDefaultPush(Context context, @NonNull Bundle data, long wpcomUserId) {
-
             String pushUserId = data.getString(PUSH_ARG_USER);
             // pushUserId is always set server side, but better to double check it here.
             if (!String.valueOf(wpcomUserId).equals(pushUserId)) {
@@ -385,21 +385,21 @@ public class GCMMessageService extends GcmListenerService {
 
             // Update notification content for the same noteId if it is already showing
             int pushId = 0;
-            for (Integer id : sActiveNotificationsMap.keySet()) {
+            for (Integer id : ACTIVE_NOTIFICATIONS_MAP.keySet()) {
                 if (id == null) {
                     continue;
                 }
-                Bundle noteBundle = sActiveNotificationsMap.get(id);
+                Bundle noteBundle = ACTIVE_NOTIFICATIONS_MAP.get(id);
                 if (noteBundle != null && noteBundle.getString(PUSH_ARG_NOTE_ID, "").equals(wpcomNoteID)) {
                     pushId = id;
-                    sActiveNotificationsMap.put(pushId, data);
+                    ACTIVE_NOTIFICATIONS_MAP.put(pushId, data);
                     break;
                 }
             }
 
             if (pushId == 0) {
-                pushId = PUSH_NOTIFICATION_ID + sActiveNotificationsMap.size();
-                sActiveNotificationsMap.put(pushId, data);
+                pushId = PUSH_NOTIFICATION_ID + ACTIVE_NOTIFICATIONS_MAP.size();
+                ACTIVE_NOTIFICATIONS_MAP.put(pushId, data);
             }
 
             // Bump Analytics for PNs if "Show notifications" setting is checked (default). Skip otherwise.
@@ -420,7 +420,8 @@ public class GCMMessageService extends GcmListenerService {
 
             // Build the new notification, add group to support wearable stacking
             NotificationCompat.Builder builder = getNotificationBuilder(context, title, message);
-            Bitmap largeIconBitmap = getLargeIconBitmap(context, data.getString("icon"), shouldCircularizeNoteIcon(noteType));
+            Bitmap largeIconBitmap =
+                    getLargeIconBitmap(context, data.getString("icon"), shouldCircularizeNoteIcon(noteType));
             if (largeIconBitmap != null) {
                 builder.setLargeIcon(largeIconBitmap);
             }
@@ -432,12 +433,13 @@ public class GCMMessageService extends GcmListenerService {
             showGroupNotificationForBuilder(context, builder, wpcomNoteID, message);
         }
 
-        private void addActionsForCommentNotification(Context context, NotificationCompat.Builder builder, String noteId) {
+        private void addActionsForCommentNotification(Context context, NotificationCompat.Builder builder,
+                                                      String noteId) {
             // Add some actions if this is a comment notification
             boolean areActionsSet = false;
             Note note = NotificationsTable.getNoteById(noteId);
             if (note != null) {
-                //if note can be replied to, we'll always add this action first
+                // if note can be replied to, we'll always add this action first
                 if (note.canReply()) {
                     addCommentReplyActionForCommentNotification(context, builder, noteId);
                 }
@@ -464,15 +466,18 @@ public class GCMMessageService extends GcmListenerService {
             }
         }
 
-        private void addCommentReplyActionForCommentNotification(Context context, NotificationCompat.Builder builder, String noteId) {
+        private void addCommentReplyActionForCommentNotification(Context context, NotificationCompat.Builder builder,
+                                                                 String noteId) {
             // adding comment reply action
             Intent commentReplyIntent = getCommentActionReplyIntent(context, noteId);
             commentReplyIntent.addCategory(KEY_CATEGORY_COMMENT_REPLY);
-            commentReplyIntent.putExtra(NotificationsProcessingService.ARG_ACTION_TYPE, NotificationsProcessingService.ARG_ACTION_REPLY);
+            commentReplyIntent.putExtra(NotificationsProcessingService.ARG_ACTION_TYPE,
+                                        NotificationsProcessingService.ARG_ACTION_REPLY);
             if (noteId != null) {
                 commentReplyIntent.putExtra(NotificationsProcessingService.ARG_NOTE_ID, noteId);
             }
-            commentReplyIntent.putExtra(NotificationsProcessingService.ARG_NOTE_BUNDLE, getCurrentNoteBundleForNoteId(noteId));
+            commentReplyIntent
+                    .putExtra(NotificationsProcessingService.ARG_NOTE_BUNDLE, getCurrentNoteBundleForNoteId(noteId));
 
 
             PendingIntent commentReplyPendingIntent = getCommentActionPendingIntent(context, commentReplyIntent);
@@ -485,45 +490,51 @@ public class GCMMessageService extends GcmListenerService {
                     .build();
             NotificationCompat.Action action =
                     new NotificationCompat.Action.Builder(R.drawable.ic_reply_grey_32dp,
-                            context.getString(R.string.reply), commentReplyPendingIntent)
+                                                          context.getString(R.string.reply), commentReplyPendingIntent)
                             .addRemoteInput(remoteInput)
                             .build();
             // now add the action corresponding to direct-reply
             builder.addAction(action);
         }
 
-        private void addCommentLikeActionForCommentNotification(Context context, NotificationCompat.Builder builder, String noteId) {
+        private void addCommentLikeActionForCommentNotification(Context context, NotificationCompat.Builder builder,
+                                                                String noteId) {
             // adding comment like action
             Intent commentLikeIntent = getCommentActionIntent(context);
             commentLikeIntent.addCategory(KEY_CATEGORY_COMMENT_LIKE);
-            commentLikeIntent.putExtra(NotificationsProcessingService.ARG_ACTION_TYPE, NotificationsProcessingService.ARG_ACTION_LIKE);
+            commentLikeIntent.putExtra(NotificationsProcessingService.ARG_ACTION_TYPE,
+                                       NotificationsProcessingService.ARG_ACTION_LIKE);
             if (noteId != null) {
                 commentLikeIntent.putExtra(NotificationsProcessingService.ARG_NOTE_ID, noteId);
             }
-            commentLikeIntent.putExtra(NotificationsProcessingService.ARG_NOTE_BUNDLE, getCurrentNoteBundleForNoteId(noteId));
+            commentLikeIntent
+                    .putExtra(NotificationsProcessingService.ARG_NOTE_BUNDLE, getCurrentNoteBundleForNoteId(noteId));
 
-            PendingIntent commentLikePendingIntent =  getCommentActionPendingIntentForService(context,
-                    commentLikeIntent);
+            PendingIntent commentLikePendingIntent = getCommentActionPendingIntentForService(context,
+                                                                                             commentLikeIntent);
             builder.addAction(R.drawable.ic_star_grey_32dp, context.getText(R.string.like), commentLikePendingIntent);
         }
 
-        private void addCommentApproveActionForCommentNotification(Context context, NotificationCompat.Builder builder, String noteId) {
+        private void addCommentApproveActionForCommentNotification(Context context, NotificationCompat.Builder builder,
+                                                                   String noteId) {
             // adding comment approve action
             Intent commentApproveIntent = getCommentActionIntent(context);
             commentApproveIntent.addCategory(KEY_CATEGORY_COMMENT_MODERATE);
-            commentApproveIntent.putExtra(NotificationsProcessingService.ARG_ACTION_TYPE, NotificationsProcessingService.ARG_ACTION_APPROVE);
+            commentApproveIntent.putExtra(NotificationsProcessingService.ARG_ACTION_TYPE,
+                                          NotificationsProcessingService.ARG_ACTION_APPROVE);
             if (noteId != null) {
                 commentApproveIntent.putExtra(NotificationsProcessingService.ARG_NOTE_ID, noteId);
             }
-            commentApproveIntent.putExtra(NotificationsProcessingService.ARG_NOTE_BUNDLE, getCurrentNoteBundleForNoteId(noteId));
+            commentApproveIntent
+                    .putExtra(NotificationsProcessingService.ARG_NOTE_BUNDLE, getCurrentNoteBundleForNoteId(noteId));
 
-            PendingIntent commentApprovePendingIntent =  getCommentActionPendingIntentForService(context,
-                    commentApproveIntent);
+            PendingIntent commentApprovePendingIntent = getCommentActionPendingIntentForService(context,
+                                                                                                commentApproveIntent);
             builder.addAction(R.drawable.ic_checkmark_grey_32dp, context.getText(R.string.approve),
-                    commentApprovePendingIntent);
+                              commentApprovePendingIntent);
         }
 
-        private PendingIntent getCommentActionPendingIntent(Context context, Intent intent){
+        private PendingIntent getCommentActionPendingIntent(Context context, Intent intent) {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
                 return getCommentActionPendingIntentForService(context, intent);
             } else {
@@ -531,15 +542,15 @@ public class GCMMessageService extends GcmListenerService {
             }
         }
 
-        private PendingIntent getCommentActionPendingIntentForService(Context context, Intent intent){
+        private PendingIntent getCommentActionPendingIntentForService(Context context, Intent intent) {
             return PendingIntent.getService(context, 0, intent, PendingIntent.FLAG_CANCEL_CURRENT);
         }
 
-        private PendingIntent getCommentActionPendingIntentForActivity(Context context, Intent intent){
+        private PendingIntent getCommentActionPendingIntentForActivity(Context context, Intent intent) {
             return PendingIntent.getActivity(context, 0, intent, PendingIntent.FLAG_CANCEL_CURRENT);
         }
 
-        private Intent getCommentActionReplyIntent(Context context, String noteId){
+        private Intent getCommentActionReplyIntent(Context context, String noteId) {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
                 return getCommentActionIntentForService(context);
             } else {
@@ -547,19 +558,19 @@ public class GCMMessageService extends GcmListenerService {
             }
         }
 
-        private Intent getCommentActionIntent(Context context){
+        private Intent getCommentActionIntent(Context context) {
             return getCommentActionIntentForService(context);
         }
 
-        private Intent getCommentActionIntentForService(Context context){
+        private Intent getCommentActionIntentForService(Context context) {
             return new Intent(context, NotificationsProcessingService.class);
         }
 
-        private Intent getCommentActionIntentForActivity(Context context, String noteId){
+        private Intent getCommentActionIntentForActivity(Context context, String noteId) {
             Intent intent = new Intent(context, WPMainActivity.class);
             intent.putExtra(WPMainActivity.ARG_OPENED_FROM_PUSH, true);
             intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK
-                    | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                            | Intent.FLAG_ACTIVITY_CLEAR_TASK);
             intent.setAction("android.intent.action.MAIN");
             intent.addCategory("android.intent.category.LAUNCHER");
             intent.putExtra(NotificationsListFragment.NOTE_ID_EXTRA, noteId);
@@ -567,7 +578,7 @@ public class GCMMessageService extends GcmListenerService {
             return intent;
         }
 
-        private Bitmap getLargeIconBitmap(Context context, String iconUrl, boolean shouldCircularizeIcon){
+        private Bitmap getLargeIconBitmap(Context context, String iconUrl, boolean shouldCircularizeIcon) {
             Bitmap largeIconBitmap = null;
             if (iconUrl != null) {
                 try {
@@ -586,9 +597,9 @@ public class GCMMessageService extends GcmListenerService {
             return largeIconBitmap;
         }
 
-        private NotificationCompat.Builder getNotificationBuilder(Context context, String title, String message){
+        private NotificationCompat.Builder getNotificationBuilder(Context context, String title, String message) {
             // Build the new notification, add group to support wearable stacking
-           return new NotificationCompat.Builder(context)
+            return new NotificationCompat.Builder(context)
                     .setSmallIcon(R.drawable.ic_my_sites_24dp)
                     .setColor(context.getResources().getColor(R.color.blue_wordpress))
                     .setContentTitle(title)
@@ -601,18 +612,16 @@ public class GCMMessageService extends GcmListenerService {
 
         private void showGroupNotificationForBuilder(Context context, NotificationCompat.Builder builder,
                                                      String wpcomNoteID, String message) {
-
             if (builder == null || context == null) {
                 return;
             }
 
-            //first remove 2fa push from the map, then reinsert it, so it's not shown in the inbox style group notif
-            Bundle authPNBundle = sActiveNotificationsMap.remove(AUTH_PUSH_NOTIFICATION_ID);
-            if (sActiveNotificationsMap.size() > 1) {
-
+            // first remove 2fa push from the map, then reinsert it, so it's not shown in the inbox style group notif
+            Bundle authPNBundle = ACTIVE_NOTIFICATIONS_MAP.remove(AUTH_PUSH_NOTIFICATION_ID);
+            if (ACTIVE_NOTIFICATIONS_MAP.size() > 1) {
                 NotificationCompat.InboxStyle inboxStyle = new NotificationCompat.InboxStyle();
                 int noteCtr = 1;
-                for (Bundle pushBundle : sActiveNotificationsMap.values()) {
+                for (Bundle pushBundle : ACTIVE_NOTIFICATIONS_MAP.values()) {
                     // InboxStyle notification is limited to 5 lines
                     if (noteCtr > MAX_INBOX_ITEMS) {
                         break;
@@ -633,12 +642,13 @@ public class GCMMessageService extends GcmListenerService {
                     noteCtr++;
                 }
 
-                if (sActiveNotificationsMap.size() > MAX_INBOX_ITEMS) {
+                if (ACTIVE_NOTIFICATIONS_MAP.size() > MAX_INBOX_ITEMS) {
                     inboxStyle.setSummaryText(String.format(context.getString(R.string.more_notifications),
-                            sActiveNotificationsMap.size() - MAX_INBOX_ITEMS));
+                                                            ACTIVE_NOTIFICATIONS_MAP.size() - MAX_INBOX_ITEMS));
                 }
 
-                String subject = String.format(context.getString(R.string.new_notifications), sActiveNotificationsMap.size());
+                String subject =
+                        String.format(context.getString(R.string.new_notifications), ACTIVE_NOTIFICATIONS_MAP.size());
                 NotificationCompat.Builder groupBuilder = new NotificationCompat.Builder(context)
                         .setSmallIcon(R.drawable.ic_my_sites_24dp)
                         .setColor(context.getResources().getColor(R.color.blue_wordpress))
@@ -651,21 +661,20 @@ public class GCMMessageService extends GcmListenerService {
                         .setStyle(inboxStyle);
 
                 showNotificationForBuilder(groupBuilder, context, wpcomNoteID, GROUP_NOTIFICATION_ID, false);
-
             } else {
                 // Set the individual notification we've already built as the group summary
                 builder.setGroupSummary(true);
                 showNotificationForBuilder(builder, context, wpcomNoteID, GROUP_NOTIFICATION_ID, false);
             }
-            //reinsert 2fa bundle if it was present
+            // reinsert 2fa bundle if it was present
             if (authPNBundle != null) {
-                sActiveNotificationsMap.put(AUTH_PUSH_NOTIFICATION_ID, authPNBundle);
+                ACTIVE_NOTIFICATIONS_MAP.put(AUTH_PUSH_NOTIFICATION_ID, authPNBundle);
             }
-
         }
 
         private void showSingleNotificationForBuilder(Context context, NotificationCompat.Builder builder,
-                                                      String noteType, String wpcomNoteID, int pushId, boolean notifyUser) {
+                                                      String noteType, String wpcomNoteID, int pushId,
+                                                      boolean notifyUser) {
             if (builder == null || context == null) {
                 return;
             }
@@ -687,21 +696,27 @@ public class GCMMessageService extends GcmListenerService {
             Intent resultIntent = new Intent(context, WPMainActivity.class);
             resultIntent.putExtra(WPMainActivity.ARG_OPENED_FROM_PUSH, true);
             resultIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK
-                    | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                                  | Intent.FLAG_ACTIVITY_CLEAR_TASK);
             resultIntent.setAction("android.intent.action.MAIN");
             resultIntent.addCategory("android.intent.category.LAUNCHER");
             resultIntent.putExtra(NotificationsListFragment.NOTE_ID_EXTRA, wpcomNoteID);
 
             SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
-            boolean shouldReceiveNotifications = prefs.getBoolean(context.getString(R.string.wp_pref_notifications_master), true);
+            boolean shouldReceiveNotifications =
+                    prefs.getBoolean(context.getString(R.string.wp_pref_notifications_master), true);
 
             if (shouldReceiveNotifications) {
                 if (notifyUser) {
-                    boolean shouldVibrate = prefs.getBoolean(context.getString(R.string.wp_pref_notification_vibrate), false);
-                    boolean shouldBlinkLight = prefs.getBoolean(context.getString(R.string.wp_pref_notification_light), true);
-                    String notificationSound = prefs.getString(context.getString(R.string.wp_pref_custom_notification_sound), "content://settings/system/notification_sound"); //"" if None is selected
+                    boolean shouldVibrate = prefs.getBoolean(
+                            context.getString(R.string.wp_pref_notification_vibrate), false);
+                    boolean shouldBlinkLight = prefs.getBoolean(
+                            context.getString(R.string.wp_pref_notification_light), true);
+                    String notificationSound = prefs.getString(
+                       context.getString(R.string.wp_pref_custom_notification_sound),
+                       context.getString(R.string.notification_settings_item_sights_and_sounds_choose_sound_default));
 
-                    if (!TextUtils.isEmpty(notificationSound)) {
+                    if (!TextUtils.isEmpty(notificationSound)
+                            && !notificationSound.trim().toLowerCase().startsWith("file://")) {
                         builder.setSound(Uri.parse(notificationSound));
                     }
 
@@ -714,7 +729,8 @@ public class GCMMessageService extends GcmListenerService {
                 } else {
                     builder.setVibrate(null);
                     builder.setSound(null);
-                    // Do not turn the led off otherwise the previous (single) notification led is not shown. We're re-using the same builder for single and group.
+                    // Do not turn the led off otherwise the previous (single) notification led is not shown.
+                    // We're re-using the same builder for single and group.
                 }
 
                 // Call broadcast receiver when notification is dismissed
@@ -728,7 +744,8 @@ public class GCMMessageService extends GcmListenerService {
                 builder.setCategory(NotificationCompat.CATEGORY_SOCIAL);
 
                 PendingIntent pendingIntent = PendingIntent.getActivity(context, pushId, resultIntent,
-                        PendingIntent.FLAG_CANCEL_CURRENT | PendingIntent.FLAG_UPDATE_CURRENT);
+                                                                        PendingIntent.FLAG_CANCEL_CURRENT
+                                                                        | PendingIntent.FLAG_UPDATE_CURRENT);
                 builder.setContentIntent(pendingIntent);
                 NotificationManagerCompat notificationManager = NotificationManagerCompat.from(context);
                 notificationManager.notify(pushId, builder.build());
@@ -740,16 +757,16 @@ public class GCMMessageService extends GcmListenerService {
 
             // Check for wpcom auth push, if so we will process this push differently
             // and we'll remove the auth special notif out of the map while we re-build the remaining notifs
-            Bundle authPNBundle = sActiveNotificationsMap.remove(AUTH_PUSH_NOTIFICATION_ID);
+            Bundle authPNBundle = ACTIVE_NOTIFICATIONS_MAP.remove(AUTH_PUSH_NOTIFICATION_ID);
             if (authPNBundle != null) {
                 handlePushAuth(context, authPNBundle);
-                if (sActiveNotificationsMap.size() > 0 && noteType.equals(PUSH_TYPE_PUSH_AUTH)) {
-                    //get the data for the next notification in map for re-build
-                    //because otherwise we would be keeping the PUSH_AUTH type note in `data`
-                    data = sActiveNotificationsMap.values().iterator().next();
+                if (ACTIVE_NOTIFICATIONS_MAP.size() > 0 && noteType.equals(PUSH_TYPE_PUSH_AUTH)) {
+                    // get the data for the next notification in map for re-build
+                    // because otherwise we would be keeping the PUSH_AUTH type note in `data`
+                    data = ACTIVE_NOTIFICATIONS_MAP.values().iterator().next();
                 } else if (noteType.equals(PUSH_TYPE_PUSH_AUTH)) {
-                    //only note is the 2fa note, just reinsert it in the map and return
-                    sActiveNotificationsMap.put(AUTH_PUSH_NOTIFICATION_ID, authPNBundle);
+                    // only note is the 2fa note, just reinsert it in the map and return
+                    ACTIVE_NOTIFICATIONS_MAP.put(AUTH_PUSH_NOTIFICATION_ID, authPNBundle);
                     return;
                 }
             }
@@ -763,36 +780,41 @@ public class GCMMessageService extends GcmListenerService {
             NotificationCompat.Builder builder = null;
             String wpcomNoteID = null;
 
-            if (sActiveNotificationsMap.size() == 1) {
-                //only one notification remains, so get the proper message for it and re-instate in the system dashboard
-                Bundle remainingNote = sActiveNotificationsMap.values().iterator().next();
+            if (ACTIVE_NOTIFICATIONS_MAP.size() == 1) {
+                // only one notification remains, so get the proper message for it and re-instate
+                // in the system dashboard
+                Bundle remainingNote = ACTIVE_NOTIFICATIONS_MAP.values().iterator().next();
                 if (remainingNote != null) {
-                    String remainingNoteTitle = StringEscapeUtils.unescapeHtml4(remainingNote.getString(PUSH_ARG_TITLE));
+                    String remainingNoteTitle =
+                            StringEscapeUtils.unescapeHtml4(remainingNote.getString(PUSH_ARG_TITLE));
                     if (!TextUtils.isEmpty(remainingNoteTitle)) {
                         title = remainingNoteTitle;
                     }
-                    String remainingNoteMessage = StringEscapeUtils.unescapeHtml4(remainingNote.getString(PUSH_ARG_MSG));
+                    String remainingNoteMessage =
+                            StringEscapeUtils.unescapeHtml4(remainingNote.getString(PUSH_ARG_MSG));
                     if (!TextUtils.isEmpty(remainingNoteMessage)) {
                         message = remainingNoteMessage;
                     }
                     largeIconBitmap = getLargeIconBitmap(context, remainingNote.getString("icon"),
-                            shouldCircularizeNoteIcon(remainingNote.getString(PUSH_ARG_TYPE)));
+                                                         shouldCircularizeNoteIcon(
+                                                                 remainingNote.getString(PUSH_ARG_TYPE)));
 
                     builder = getNotificationBuilder(context, title, message);
 
                     // set timestamp for note: first try with the notification timestamp, then try google's sent time
-                    // if not available; finally just set the system's current time if everything else fails (not likely)
+                    // if not available; finally just set the system's current time if everything
+                    // else fails (not likely)
                     long timeStampToShow =
                             DateTimeUtils.timestampFromIso8601Millis(remainingNote.getString("note_timestamp"));
-                    timeStampToShow = timeStampToShow != 0 ? timeStampToShow :
-                            remainingNote.getLong("google.sent_time", System.currentTimeMillis());
+                    timeStampToShow = timeStampToShow != 0 ? timeStampToShow
+                            : remainingNote.getLong("google.sent_time", System.currentTimeMillis());
                     builder.setWhen(timeStampToShow);
 
                     noteType = StringUtils.notNullStr(remainingNote.getString(PUSH_ARG_TYPE));
                     wpcomNoteID = remainingNote.getString(PUSH_ARG_NOTE_ID, "");
-                    if (!sActiveNotificationsMap.isEmpty()) {
+                    if (!ACTIVE_NOTIFICATIONS_MAP.isEmpty()) {
                         showSingleNotificationForBuilder(context, builder, noteType, wpcomNoteID,
-                                sActiveNotificationsMap.keyAt(0), false);
+                                                         ACTIVE_NOTIFICATIONS_MAP.keyAt(0), false);
                     }
                 }
             }
@@ -802,7 +824,8 @@ public class GCMMessageService extends GcmListenerService {
             }
 
             if (largeIconBitmap == null) {
-                largeIconBitmap = getLargeIconBitmap(context, data.getString("icon"), shouldCircularizeNoteIcon(PUSH_TYPE_BADGE_RESET));
+                largeIconBitmap = getLargeIconBitmap(context, data.getString("icon"),
+                                                     shouldCircularizeNoteIcon(PUSH_TYPE_BADGE_RESET));
             }
 
             if (wpcomNoteID == null) {
@@ -813,15 +836,15 @@ public class GCMMessageService extends GcmListenerService {
                 builder.setLargeIcon(largeIconBitmap);
             }
 
-            showGroupNotificationForBuilder(context, builder,  wpcomNoteID, message);
+            showGroupNotificationForBuilder(context, builder, wpcomNoteID, message);
 
-            //reinsert 2fa bundle if it was present
+            // reinsert 2fa bundle if it was present
             if (authPNBundle != null) {
-                sActiveNotificationsMap.put(AUTH_PUSH_NOTIFICATION_ID, authPNBundle);
+                ACTIVE_NOTIFICATIONS_MAP.put(AUTH_PUSH_NOTIFICATION_ID, authPNBundle);
             }
         }
 
-        private String getNotificationTitleOrAppNameFromBundle(Context context, Bundle data){
+        private String getNotificationTitleOrAppNameFromBundle(Context context, Bundle data) {
             String title = StringEscapeUtils.unescapeHtml4(data.getString(PUSH_ARG_TITLE));
             if (title == null) {
                 title = context.getString(R.string.app_name);
@@ -831,7 +854,7 @@ public class GCMMessageService extends GcmListenerService {
 
         // Clear all notifications
         private void handleBadgeResetPN(Context context, Bundle data) {
-            if (data == null)  {
+            if (data == null) {
                 return;
             }
 
@@ -846,19 +869,20 @@ public class GCMMessageService extends GcmListenerService {
 
 
                 removeNotificationWithNoteIdFromSystemBar(context, noteID);
-                //now that we cleared the specific notif, we can check and make any visual updates
-                if (sActiveNotificationsMap.size() > 0) {
+                // now that we cleared the specific notif, we can check and make any visual updates
+                if (ACTIVE_NOTIFICATIONS_MAP.size() > 0) {
                     rebuildAndUpdateNotificationsOnSystemBar(context, data);
                 }
             } else {
                 removeAllNotifications(context);
             }
 
-            EventBus.getDefault().post(new NotificationEvents.NotificationsChanged(sActiveNotificationsMap.size() > 0));
+            EventBus.getDefault().post(new NotificationEvents.NotificationsChanged(
+                    ACTIVE_NOTIFICATIONS_MAP.size() > 0));
         }
 
         private void handleNoteDeletePN(Context context, Bundle data) {
-            if (data == null || !data.containsKey(PUSH_ARG_NOTE_ID))  {
+            if (data == null || !data.containsKey(PUSH_ARG_NOTE_ID)) {
                 return;
             }
 
@@ -868,12 +892,13 @@ public class GCMMessageService extends GcmListenerService {
             }
 
             removeNotificationWithNoteIdFromSystemBar(context, noteID);
-            //now that we cleared the specific notif, we can check and make any visual updates
-            if (sActiveNotificationsMap.size() > 0) {
+            // now that we cleared the specific notif, we can check and make any visual updates
+            if (ACTIVE_NOTIFICATIONS_MAP.size() > 0) {
                 rebuildAndUpdateNotificationsOnSystemBar(context, data);
             }
 
-            EventBus.getDefault().post(new NotificationEvents.NotificationsChanged(sActiveNotificationsMap.size() > 0));
+            EventBus.getDefault().post(new NotificationEvents.NotificationsChanged(
+                    ACTIVE_NOTIFICATIONS_MAP.size() > 0));
         }
 
         // Show a notification for two-step auth users who log in from a web browser
@@ -900,7 +925,7 @@ public class GCMMessageService extends GcmListenerService {
             pushAuthIntent.putExtra(NotificationsUtils.ARG_PUSH_AUTH_MESSAGE, message);
             pushAuthIntent.putExtra(NotificationsUtils.ARG_PUSH_AUTH_EXPIRES, expirationTimestamp);
             pushAuthIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK
-                    | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                                    | Intent.FLAG_ACTIVITY_CLEAR_TASK);
             pushAuthIntent.setAction("android.intent.action.MAIN");
             pushAuthIntent.addCategory("android.intent.category.LAUNCHER");
 
@@ -913,36 +938,44 @@ public class GCMMessageService extends GcmListenerService {
                     .setStyle(new NotificationCompat.BigTextStyle().bigText(message))
                     .setPriority(NotificationCompat.PRIORITY_MAX);
 
-            PendingIntent pendingIntent = PendingIntent.getActivity(context, AUTH_PUSH_REQUEST_CODE_OPEN_DIALOG, pushAuthIntent,
-                    PendingIntent.FLAG_CANCEL_CURRENT | PendingIntent.FLAG_UPDATE_CURRENT);
+            PendingIntent pendingIntent =
+                    PendingIntent.getActivity(context, AUTH_PUSH_REQUEST_CODE_OPEN_DIALOG, pushAuthIntent,
+                                              PendingIntent.FLAG_CANCEL_CURRENT | PendingIntent.FLAG_UPDATE_CURRENT);
             builder.setContentIntent(pendingIntent);
 
 
             // adding ignore / approve quick actions
             Intent authApproveIntent = new Intent(context, WPMainActivity.class);
             authApproveIntent.putExtra(WPMainActivity.ARG_OPENED_FROM_PUSH, true);
-            authApproveIntent.putExtra(NotificationsProcessingService.ARG_ACTION_TYPE, NotificationsProcessingService.ARG_ACTION_AUTH_APPROVE);
+            authApproveIntent.putExtra(NotificationsProcessingService.ARG_ACTION_TYPE,
+                                       NotificationsProcessingService.ARG_ACTION_AUTH_APPROVE);
             authApproveIntent.putExtra(NotificationsUtils.ARG_PUSH_AUTH_TOKEN, pushAuthToken);
             authApproveIntent.putExtra(NotificationsUtils.ARG_PUSH_AUTH_TITLE, title);
             authApproveIntent.putExtra(NotificationsUtils.ARG_PUSH_AUTH_MESSAGE, message);
             authApproveIntent.putExtra(NotificationsUtils.ARG_PUSH_AUTH_EXPIRES, expirationTimestamp);
 
             authApproveIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK
-                    | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                                       | Intent.FLAG_ACTIVITY_CLEAR_TASK);
             authApproveIntent.setAction("android.intent.action.MAIN");
             authApproveIntent.addCategory("android.intent.category.LAUNCHER");
 
-            PendingIntent authApprovePendingIntent = PendingIntent.getActivity(context, AUTH_PUSH_REQUEST_CODE_APPROVE, authApproveIntent,
-                    PendingIntent.FLAG_CANCEL_CURRENT | PendingIntent.FLAG_UPDATE_CURRENT);
+            PendingIntent authApprovePendingIntent =
+                    PendingIntent.getActivity(context, AUTH_PUSH_REQUEST_CODE_APPROVE, authApproveIntent,
+                                              PendingIntent.FLAG_CANCEL_CURRENT | PendingIntent.FLAG_UPDATE_CURRENT);
 
-            builder.addAction(R.drawable.ic_checkmark_grey_32dp, context.getText(R.string.approve), authApprovePendingIntent);
+            builder.addAction(R.drawable.ic_checkmark_grey_32dp, context.getText(R.string.approve),
+                              authApprovePendingIntent);
 
 
             Intent authIgnoreIntent = new Intent(context, NotificationsProcessingService.class);
-            authIgnoreIntent.putExtra(NotificationsProcessingService.ARG_ACTION_TYPE, NotificationsProcessingService.ARG_ACTION_AUTH_IGNORE);
-            PendingIntent authIgnorePendingIntent =  PendingIntent.getService(context,
-                    AUTH_PUSH_REQUEST_CODE_IGNORE, authIgnoreIntent, PendingIntent.FLAG_CANCEL_CURRENT);
-            builder.addAction(R.drawable.ic_close_white_24dp, context.getText(R.string.ignore), authIgnorePendingIntent);
+            authIgnoreIntent.putExtra(NotificationsProcessingService.ARG_ACTION_TYPE,
+                                      NotificationsProcessingService.ARG_ACTION_AUTH_IGNORE);
+            PendingIntent authIgnorePendingIntent = PendingIntent.getService(context,
+                                                                             AUTH_PUSH_REQUEST_CODE_IGNORE,
+                                                                             authIgnoreIntent,
+                                                                             PendingIntent.FLAG_CANCEL_CURRENT);
+            builder.addAction(R.drawable.ic_close_white_24dp, context.getText(R.string.ignore),
+                              authIgnorePendingIntent);
 
 
             // Call broadcast receiver when notification is dismissed

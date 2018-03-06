@@ -34,5 +34,4 @@ public class RequestCodes {
     public static final int REQUEST_JETPACK = 3000;
     public static final int JETPACK_LOGIN = 3100;
     public static final int PLUGIN_DETAIL = 3200;
-
 }

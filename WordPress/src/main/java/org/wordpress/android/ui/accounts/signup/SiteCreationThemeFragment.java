@@ -41,7 +41,8 @@ public class SiteCreationThemeFragment extends SiteCreationBaseFormFragment<Site
     }
 
     @Override
-    protected @LayoutRes int getContentLayout() {
+    protected @LayoutRes
+    int getContentLayout() {
         return R.layout.site_creation_theme_screen;
     }
 
@@ -70,8 +71,8 @@ public class SiteCreationThemeFragment extends SiteCreationBaseFormFragment<Site
 
         // Will trigger the update method since the onThemeLoadingUpdated event is sticky.
         // Need to do this early so the mSiteCreationThemeAdapter gets initialized before RecyclerView needs it. This
-        //  ensures that on rotation, the RecyclerView will have its data ready before layout and scroll position will
-        //  hold correctly automatically.
+        // ensures that on rotation, the RecyclerView will have its data ready before layout and scroll position will
+        // hold correctly automatically.
         EventBus.getDefault().register(this);
     }
 

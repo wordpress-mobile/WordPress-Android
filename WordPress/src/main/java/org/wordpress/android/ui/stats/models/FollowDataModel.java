@@ -6,7 +6,6 @@ import org.json.JSONObject;
 import java.io.Serializable;
 
 public class FollowDataModel implements Serializable {
-
        /*
      "following-text": "Following",
       "is_following": false,
@@ -20,68 +19,68 @@ public class FollowDataModel implements Serializable {
       "blog_domain": "ilpostodellefragole.wordpress.com"
      */
 
-    private String type;
-    private String followText;
-    private String followingText;
-    private String followingHoverText;
-    private boolean isFollowing;
-    private int blogID;
-    private int siteID;
-    private String statsSource;
-    private String blogDomain;
+    private String mType;
+    private String mFollowText;
+    private String mFollowingText;
+    private String mFollowingHoverText;
+    private boolean mIsFollowing;
+    private int mBlogID;
+    private int mSiteID;
+    private String mStatsSource;
+    private String mBlogDomain;
 
     public transient boolean isRestCallInProgress = false;
 
     public FollowDataModel(JSONObject followDataJSON) throws JSONException {
-        this.type = followDataJSON.getString("type");
+        mType = followDataJSON.getString("type");
         JSONObject paramsJSON = followDataJSON.getJSONObject("params");
-        this.followText = paramsJSON.getString("follow-text");
-        this.followingText = paramsJSON.getString("following-text");
-        this.followingHoverText = paramsJSON.getString("following-hover-text");
-        this.isFollowing = paramsJSON.getBoolean("is_following");
-        this.blogID = paramsJSON.getInt("blog_id");
-        this.siteID = paramsJSON.getInt("site_id");
-        this.statsSource = paramsJSON.getString("stat-source");
-        this.blogDomain = paramsJSON.getString("blog_domain");
+        mFollowText = paramsJSON.getString("follow-text");
+        mFollowingText = paramsJSON.getString("following-text");
+        mFollowingHoverText = paramsJSON.getString("following-hover-text");
+        mIsFollowing = paramsJSON.getBoolean("is_following");
+        mBlogID = paramsJSON.getInt("blog_id");
+        mSiteID = paramsJSON.getInt("site_id");
+        mStatsSource = paramsJSON.getString("stat-source");
+        mBlogDomain = paramsJSON.getString("blog_domain");
     }
 
     public boolean isFollowing() {
-        return isFollowing;
+        return mIsFollowing;
     }
 
     public void setIsFollowing(boolean following) {
-        isFollowing = following;
+        mIsFollowing = following;
     }
 
     public int getBlogID() {
-        return blogID;
+        return mBlogID;
     }
 
     public int getSiteID() {
-        return siteID;
+        return mSiteID;
     }
 
     public String getFollowText() {
-        return followText;
+        return mFollowText;
     }
 
     public String getFollowingHoverText() {
-        return followingHoverText;
+        return mFollowingHoverText;
     }
 
     public String getFollowingText() {
-        return followingText;
+        return mFollowingText;
     }
 
     public String getType() {
-        return type;
+        return mType;
     }
 
     public String getStatsSource() {
-        return statsSource;
+        return mStatsSource;
     }
 
     public String getBlogDomain() {
-        return blogDomain;
+        return mBlogDomain;
     }
 }

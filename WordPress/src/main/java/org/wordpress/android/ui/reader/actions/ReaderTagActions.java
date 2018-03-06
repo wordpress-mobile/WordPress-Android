@@ -29,7 +29,7 @@ public class ReaderTagActions {
             return false;
         }
 
-        final String tagNameForApi = ReaderUtils.sanitizeWithDashes(tag.getTagSlug());
+        final String tagNameForApi = ReaderUtils.sanitizeWithDashes(tag.getmTagSlug());
         final String path = "read/tags/" + tagNameForApi + "/mine/delete";
 
         com.wordpress.rest.RestRequest.Listener listener = new RestRequest.Listener() {
@@ -74,21 +74,21 @@ public class ReaderTagActions {
             return false;
         }
 
-        final String tagNameForApi = ReaderUtils.sanitizeWithDashes(tag.getTagSlug());
+        final String tagNameForApi = ReaderUtils.sanitizeWithDashes(tag.getmTagSlug());
         final String path = "read/tags/" + tagNameForApi + "/mine/new";
         String endpoint = "/read/tags/" + tagNameForApi + "/posts";
 
         ReaderTag newTag = new ReaderTag(
-                tag.getTagSlug(),
-                tag.getTagDisplayName(),
-                tag.getTagTitle(),
+                tag.getmTagSlug(),
+                tag.getmTagDisplayName(),
+                tag.getmTagTitle(),
                 endpoint,
                 ReaderTagType.FOLLOWED);
 
         com.wordpress.rest.RestRequest.Listener listener = new RestRequest.Listener() {
             @Override
             public void onResponse(JSONObject jsonObject) {
-                AppLog.i(T.READER, "add tag  succeeded");
+                AppLog.i(T.READER, "add tag succeeded");
                 // the response will contain the list of the user's followed tags
                 ReaderTagList tags = parseFollowedTags(jsonObject);
                 ReaderTagTable.replaceFollowedTags(tags);
@@ -153,7 +153,7 @@ public class ReaderTagActions {
         }
 
         ReaderTagList tags = new ReaderTagList();
-        for (int i=0; i < jsonTags.length(); i++) {
+        for (int i = 0; i < jsonTags.length(); i++) {
             JSONObject jsonThisTag = jsonTags.optJSONObject(i);
             String tagTitle = JSONUtils.getStringDecoded(jsonThisTag, ReaderConstants.JSON_TAG_TITLE);
             String tagDisplayName = JSONUtils.getStringDecoded(jsonThisTag, ReaderConstants.JSON_TAG_DISPLAY_NAME);
@@ -164,5 +164,4 @@ public class ReaderTagActions {
 
         return tags;
     }
-
 }

@@ -51,7 +51,7 @@ public class ReferrerGroupModel implements Serializable {
             for (int i = 0; i < resultsArray.length(); i++) {
                 JSONObject currentResultJSON = resultsArray.getJSONObject(i);
                 ReferrerResultModel currentResultModel = new ReferrerResultModel(blogId,
-                        date, currentResultJSON);
+                                                                                 date, currentResultJSON);
                 mResults.add(currentResultModel);
             }
             // Sort the results by views.
@@ -120,5 +120,7 @@ public class ReferrerGroupModel implements Serializable {
         this.mIcon = icon;
     }
 
-    public List<ReferrerResultModel> getResults() { return mResults; }
+    public List<ReferrerResultModel> getResults() {
+        return mResults;
+    }
 }

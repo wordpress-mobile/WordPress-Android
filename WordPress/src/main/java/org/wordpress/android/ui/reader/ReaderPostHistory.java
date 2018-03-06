@@ -40,9 +40,11 @@ class ReaderPostHistory extends Stack<ReaderBlogIdPostId> {
     }
 
     private void fromArrayList(ArrayList<String> list) {
-        if (list == null || list.isEmpty()) return;
+        if (list == null || list.isEmpty()) {
+            return;
+        }
 
-        for (String idPair: list) {
+        for (String idPair : list) {
             String[] split = idPair.split(":");
             long blogId = StringUtils.stringToLong(split[0]);
             long postId = StringUtils.stringToLong(split[1]);

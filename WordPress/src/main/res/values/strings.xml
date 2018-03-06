@@ -9,7 +9,7 @@
     <string name="xmlrpc_post_blocked_error">Couldn\'t connect. Your host is blocking POST requests, and the app needs
         that in order to communicate with your site. Contact your host to solve this problem.</string>
     <string name="xmlrpc_endpoint_forbidden_error">Couldn\'t connect. We received a 403 error when trying to access your
-        site XMLRPC endpoint. The app needs that in order to communicate with your site. Contact your host to solve
+        site XMLRPC mEndpoint. The app needs that in order to communicate with your site. Contact your host to solve
         this problem.</string>
     <string name="xmlrpc_malformed_response_error">Couldn\'t connect. The WordPress installation responded with an invalid XML-RPC document.</string>
     <string name="site_timeout_error">Couldn\'t connect to the WordPress site due to Timeout error.</string>
@@ -984,6 +984,7 @@
     <string name="notification_settings_item_other_account_emails_summary">We\'ll always send important emails regarding your account, but you can get some helpful extras, too.</string>
     <string name="notification_settings_category_sights_and_sounds">Sights and Sounds</string>
     <string name="notification_settings_item_sights_and_sounds_choose_sound">Choose sound</string>
+    <string name="notification_settings_item_sights_and_sounds_choose_sound_default" translatable="false">content://settings/system/notification_sound</string>
     <string name="notification_settings_item_sights_and_sounds_vibrate_device">Vibrate device</string>
     <string name="notification_settings_item_sights_and_sounds_blink_light">Blink light</string>
     <string name="notifications_wpcom_updates">WordPress.com Updates</string>
@@ -1001,6 +1002,7 @@
     <string name="notifications_push_summary">Settings for notifications that appear on your device.</string>
     <string name="search_sites">Search sites</string>
     <string name="notifications_no_search_results">No sites matched \'%s\'</string>
+    <string name="notification_sound_has_invalid_path">The chosen sound has invalid path. Please choose another.</string>
 
     <string name="comments_on_my_site">Comments on my site</string>
     <string name="likes_on_my_comments">Likes on my comments</string>
@@ -1589,7 +1591,7 @@
     <string name="site_picker_edit_visibility">Show/hide sites</string>
     <string name="site_picker_add_site">Add new site</string>
     <string name="site_picker_add_self_hosted">Add self-hosted site</string>
-    <string name="site_picker_create_dotcom">Create WordPress.com site</string>
+    <string name="site_picker_create_wpcom">Create WordPress.com site</string>
     <string name="site_picker_cant_hide_current_site">\"%s\" wasn\'t hidden because it\'s the current site</string>
     <string name="site_picker_remove_site_error">Error removing site, try again later</string>
 

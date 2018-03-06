@@ -20,7 +20,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class RemoteTests extends DefaultMocksInstrumentationTestCase {
-    private RestClientCustomizableMock mRestClientV1_2;
+    private RestClientCustomizableMock mRestClientV1p2;
 
     @Override
     protected void setUp() throws Exception {
@@ -28,13 +28,15 @@ public class RemoteTests extends DefaultMocksInstrumentationTestCase {
 
         // Set the version of the REST client to v1.2
         RestClientFactoryTest.sVersion = RestClient.REST_CLIENT_VERSIONS.V1_2;
-        mRestClientV1_2 = (RestClientCustomizableMock) RestClientFactory.instantiate(null,  RestClient.REST_CLIENT_VERSIONS.V1_2);
+        mRestClientV1p2 = (RestClientCustomizableMock) RestClientFactory
+                .instantiate(null, RestClient.REST_CLIENT_VERSIONS.V1_2);
     }
 
-    private RestRequest.ErrorListener errListener = new RestRequest.ErrorListener() {
+    private RestRequest.ErrorListener mErrListener = new RestRequest.ErrorListener() {
         @Override
         public void onErrorResponse(VolleyError response) {
-            AppLog.e(AppLog.T.PLANS, "The Rest Client returned an error from a mock call: " + response.getMessage());
+            AppLog.e(AppLog.T.PLANS, "The Rest Client returned an error from a mock call: "
+                                     + response.getMessage());
             assertFalse(response.getMessage(), true); // force the test to fails in this case
         }
     };
@@ -52,6 +54,7 @@ public class RemoteTests extends DefaultMocksInstrumentationTestCase {
             }
             assertFalse(parseError);
         }
+
         abstract void parseResponse(JSONObject response) throws JSONException;
     }
 
@@ -61,7 +64,7 @@ public class RemoteTests extends DefaultMocksInstrumentationTestCase {
             void parseResponse(JSONObject response) throws JSONException {
                 List<Plan> plans = new ArrayList<>();
                 JSONArray plansArray = response.getJSONArray("originalResponse");
-                for (int i=0; i < plansArray.length(); i ++) {
+                for (int i = 0; i < plansArray.length(); i++) {
                     JSONObject currentPlanJSON = plansArray.getJSONObject(i);
                     Plan currentPlan = new Plan(currentPlanJSON);
                     plans.add(currentPlan);
@@ -70,7 +73,8 @@ public class RemoteTests extends DefaultMocksInstrumentationTestCase {
                 assertEquals(3, plans.size());
 
                 Plan currentPlan = plans.get(0);
-                assertEquals(currentPlan.getDescription(), "Get a free blog and be on your way to publishing your first post in less than five minutes.");
+                assertEquals(currentPlan.getDescription(), "Get a free blog and be on your way to publishing "
+                                                           + "your first post in less than five minutes.");
                 assertEquals(currentPlan.getProductID(), 1L);
                 assertEquals(currentPlan.getProductName(), "WordPress.com Free");
                 assertEquals(currentPlan.getBillPeriod(), -1);
@@ -86,7 +90,8 @@ public class RemoteTests extends DefaultMocksInstrumentationTestCase {
                 assertEquals(currentPlan.getSubscribedDate(), "2016-03-07 08:56:13");
 
                 currentPlan = plans.get(2);
-                assertEquals(currentPlan.getDescription(), "Everything included with Premium, as well as live chat support, and unlimited access to our premium themes.");
+                assertEquals(currentPlan.getDescription(), "Everything included with Premium, as well as live "
+                                                       + "chat support, and unlimited access to our premium themes.");
                 assertEquals(currentPlan.getProductID(), 1008L);
                 assertEquals(currentPlan.getProductName(), "WordPress.com Business");
                 assertEquals(currentPlan.getBillPeriod(), 365);
@@ -97,11 +102,12 @@ public class RemoteTests extends DefaultMocksInstrumentationTestCase {
         };
 
 
-        mRestClientV1_2.makeRequest(Request.Method.POST, "https://public-api.wordpress.com/rest/v1.2/sites/123456/plans",
-                null,
-                listener,
-                errListener
-        );
+        mRestClientV1p2
+                .makeRequest(Request.Method.POST, "https://public-api.wordpress.com/rest/v1.2/sites/123456/plans",
+                             null,
+                             listener,
+                             mErrListener
+                            );
     }
 
     public void testFeatures() throws Exception {
@@ -123,13 +129,14 @@ public class RemoteTests extends DefaultMocksInstrumentationTestCase {
                 Feature currentFeatures = features.get(0);
                 assertEquals("WordPress.com Site", currentFeatures.getTitle());
                 assertEquals("free-blog", currentFeatures.getProductSlug());
-                assertEquals("Your own space to create posts and pages with basic customization.", currentFeatures.getDescription());
                 assertEquals("Your own space to create posts and pages with basic customization.",
-                        currentFeatures.getDescriptionForPlan(1L));
+                             currentFeatures.getDescription());
                 assertEquals("Your own space to create posts and pages with basic customization.",
-                        currentFeatures.getDescriptionForPlan(1003L));
+                             currentFeatures.getDescriptionForPlan(1L));
                 assertEquals("Your own space to create posts and pages with basic customization.",
-                        currentFeatures.getDescriptionForPlan(1008L));
+                             currentFeatures.getDescriptionForPlan(1003L));
+                assertEquals("Your own space to create posts and pages with basic customization.",
+                             currentFeatures.getDescriptionForPlan(1008L));
 
                 assertEquals(false, currentFeatures.isNotPartOfFreeTrial());
 
@@ -137,23 +144,24 @@ public class RemoteTests extends DefaultMocksInstrumentationTestCase {
                 currentFeatures = features.get(15);
                 assertEquals("Support", currentFeatures.getTitle());
                 assertEquals("support", currentFeatures.getProductSlug());
-                assertEquals("For those times when you can't find an answer on our Support site", currentFeatures.getDescription());
+                assertEquals("For those times when you can't find an answer on our Support site",
+                             currentFeatures.getDescription());
                 assertEquals("Find answers to your questions in our community forum.",
-                        currentFeatures.getDescriptionForPlan(1L));
+                             currentFeatures.getDescriptionForPlan(1L));
                 assertEquals("Community support",
-                        currentFeatures.getTitleForPlan(1L));
+                             currentFeatures.getTitleForPlan(1L));
                 assertEquals("The kind of support we offer for Jetpack Business.",
-                        currentFeatures.getDescriptionForPlan(2001L));
+                             currentFeatures.getDescriptionForPlan(2001L));
                 assertEquals("Priority security support",
-                        currentFeatures.getTitleForPlan(2001L));
+                             currentFeatures.getTitleForPlan(2001L));
                 assertEquals(false, currentFeatures.isNotPartOfFreeTrial());
             }
         };
 
-        mRestClientV1_2.makeRequest(Request.Method.POST, "https://public-api.wordpress.com/rest/v1.2/plans/features",
-                null,
-                listener,
-                errListener
-        );
+        mRestClientV1p2.makeRequest(Request.Method.POST, "https://public-api.wordpress.com/rest/v1.2/plans/features",
+                                    null,
+                                    listener,
+                                    mErrListener
+                                   );
     }
 }

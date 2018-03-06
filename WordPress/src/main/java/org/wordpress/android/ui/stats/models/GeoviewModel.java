@@ -14,7 +14,8 @@ public class GeoviewModel implements Serializable {
     private final String mFlagIconURL;
     private final String mFlatFlagIconURL;
 
-    public GeoviewModel(String countryShortName, String countryFullName, int views, String flagIcon, String flatFlagIcon) {
+    public GeoviewModel(String countryShortName, String countryFullName, int views, String flagIcon,
+                        String flatFlagIcon) {
         this.mCountryShortName = countryShortName;
         this.mCountryFullName = countryFullName;
         this.mViews = views;

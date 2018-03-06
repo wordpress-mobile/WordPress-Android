@@ -26,26 +26,26 @@ public class PromoDialog extends AppCompatDialogFragment {
     protected static final String KEY_BUTTON_POSITIVE_RES_ID = "buttonPositiveResId";
 
     public static class Builder {
-        @StringRes int buttonPositiveResId;
-        @StringRes int descriptionResId;
-        @DrawableRes int drawableResId;
-        @StringRes int titleResId;
+        @StringRes int mButtonPositiveResId;
+        @StringRes int mDescriptionResId;
+        @DrawableRes int mDrawableResId;
+        @StringRes int mTitleResId;
 
         public Builder(@DrawableRes int drawableResId, @StringRes int titleResId, @StringRes int descriptionResId,
                        @StringRes int buttonPositiveResId) {
-            this.drawableResId = drawableResId;
-            this.titleResId = titleResId;
-            this.descriptionResId = descriptionResId;
-            this.buttonPositiveResId = buttonPositiveResId;
+            mDrawableResId = drawableResId;
+            mTitleResId = titleResId;
+            mDescriptionResId = descriptionResId;
+            mButtonPositiveResId = buttonPositiveResId;
         }
 
         public PromoDialog build() {
             PromoDialog fragment = new PromoDialog();
             Bundle args = new Bundle();
-            args.putInt(KEY_DRAWABLE_RES_ID, drawableResId);
-            args.putInt(KEY_TITLE_RES_ID, titleResId);
-            args.putInt(KEY_DESCRIPTION_RES_ID, descriptionResId);
-            args.putInt(KEY_BUTTON_POSITIVE_RES_ID, buttonPositiveResId);
+            args.putInt(KEY_DRAWABLE_RES_ID, mDrawableResId);
+            args.putInt(KEY_TITLE_RES_ID, mTitleResId);
+            args.putInt(KEY_DESCRIPTION_RES_ID, mDescriptionResId);
+            args.putInt(KEY_BUTTON_POSITIVE_RES_ID, mButtonPositiveResId);
             fragment.setArguments(args);
             return fragment;
         }
@@ -59,7 +59,8 @@ public class PromoDialog extends AppCompatDialogFragment {
     protected View.OnClickListener mPositiveButtonOnClickListener;
 
     @Override
-    public @NonNull Dialog onCreateDialog(Bundle savedInstanceState) {
+    public @NonNull
+    Dialog onCreateDialog(Bundle savedInstanceState) {
         Dialog dialog = super.onCreateDialog(savedInstanceState);
         mDrawableResId = getArguments().getInt(KEY_DRAWABLE_RES_ID);
         mTitleResId = getArguments().getInt(KEY_TITLE_RES_ID);

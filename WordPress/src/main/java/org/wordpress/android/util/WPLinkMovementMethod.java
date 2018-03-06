@@ -23,15 +23,16 @@ public class WPLinkMovementMethod extends LinkMovementMethod {
     protected static WPLinkMovementMethod mMovementMethod;
 
     public static WPLinkMovementMethod getInstance() {
-        if (mMovementMethod == null)
+        if (mMovementMethod == null) {
             mMovementMethod = new WPLinkMovementMethod();
+        }
         return mMovementMethod;
     }
 
     @Override
     public boolean onTouchEvent(TextView textView, Spannable buffer, MotionEvent event) {
         try {
-            return super.onTouchEvent(textView, buffer, event) ;
+            return super.onTouchEvent(textView, buffer, event);
         } catch (ActivityNotFoundException e) {
             AppLog.e(AppLog.T.UTILS, e);
             // attempt to correct the tapped url then launch the intent to display it
@@ -41,24 +42,28 @@ public class WPLinkMovementMethod extends LinkMovementMethod {
     }
 
     private static String fixTappedUrl(Spannable buffer) {
-        if (buffer == null)
+        if (buffer == null) {
             return null;
+        }
 
-        URLSpan urlSpans[] = buffer.getSpans(0, buffer.length(), URLSpan.class);
-        if (urlSpans.length == 0)
+        URLSpan[] urlSpans = buffer.getSpans(0, buffer.length(), URLSpan.class);
+        if (urlSpans.length == 0) {
             return null;
+        }
 
         // note that there will be only one URLSpan (the one that was tapped)
         String url = StringUtils.notNullStr(urlSpans[0].getURL());
-        if (Uri.parse(url).getScheme() == null)
+        if (Uri.parse(url).getScheme() == null) {
             return "http://" + url.trim();
+        }
 
         return url.trim();
     }
 
     private static void showTappedUrl(Context context, String url) {
-        if (context == null || TextUtils.isEmpty(url))
+        if (context == null || TextUtils.isEmpty(url)) {
             return;
+        }
         try {
             Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
             context.startActivity(intent);

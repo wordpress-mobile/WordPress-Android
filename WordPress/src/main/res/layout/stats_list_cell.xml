@@ -79,7 +79,6 @@
             android:visibility="gone"
             android:layout_width="@dimen/avatar_sz_small"
             android:layout_height="@dimen/avatar_sz_small"
-            android:layout_centerVertical="true"
             android:layout_marginLeft="@dimen/margin_small"
             android:layout_marginStart="@dimen/margin_small"
             android:layout_marginRight="@dimen/margin_large"

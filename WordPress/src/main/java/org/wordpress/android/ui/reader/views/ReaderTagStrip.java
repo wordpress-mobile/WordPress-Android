@@ -22,7 +22,6 @@ import org.wordpress.android.util.AniUtils;
  * used by the detail view to display the primary and secondary tags from a reader post
  */
 public class ReaderTagStrip extends LinearLayout {
-
     private LinearLayout mView;
     private int mNumTags;
 
@@ -73,7 +72,8 @@ public class ReaderTagStrip extends LinearLayout {
     }
 
     private void addTag(@NonNull final String tagName) {
-        String tagDisplayName = mNumTags > 0 ? ", " + ReaderUtils.makeHashTag(tagName) : ReaderUtils.makeHashTag(tagName);
+        String tagDisplayName =
+                mNumTags > 0 ? ", " + ReaderUtils.makeHashTag(tagName) : ReaderUtils.makeHashTag(tagName);
 
         // inflate a new textView to show this tag
         LayoutInflater inflater = LayoutInflater.from(getContext());

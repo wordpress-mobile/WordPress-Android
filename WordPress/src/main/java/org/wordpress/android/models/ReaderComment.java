@@ -14,13 +14,13 @@ public class ReaderComment {
     public long postId;
     public long parentId;
 
-    private String authorName;
-    private String authorAvatar;
-    private String authorUrl;
-    private String status;
-    private String text;
+    private String mAuthorName;
+    private String mAuthorAvatar;
+    private String mAuthorUrl;
+    private String mStatus;
+    private String mText;
 
-    private String published;
+    private String mPublished;
     public long timestamp;
 
     public long authorId;
@@ -43,13 +43,13 @@ public class ReaderComment {
 
         comment.blogId = blogId;
         comment.commentId = json.optLong("ID");
-        comment.status = JSONUtils.getString(json, "status");
+        comment.mStatus = JSONUtils.getString(json, "status");
 
         // note that content may contain html, adapter needs to handle it
-        comment.text = HtmlUtils.stripScript(JSONUtils.getString(json, "content"));
+        comment.mText = HtmlUtils.stripScript(JSONUtils.getString(json, "content"));
 
-        comment.published = JSONUtils.getString(json, "date");
-        comment.timestamp = DateTimeUtils.timestampFromIso8601(comment.published);
+        comment.mPublished = JSONUtils.getString(json, "date");
+        comment.timestamp = DateTimeUtils.timestampFromIso8601(comment.mPublished);
 
         JSONObject jsonPost = json.optJSONObject("post");
         if (jsonPost != null) {
@@ -57,11 +57,11 @@ public class ReaderComment {
         }
 
         JSONObject jsonAuthor = json.optJSONObject("author");
-        if (jsonAuthor!=null) {
+        if (jsonAuthor != null) {
             // author names may contain html entities (esp. pingbacks)
-            comment.authorName = JSONUtils.getStringDecoded(jsonAuthor, "name");
-            comment.authorAvatar = JSONUtils.getString(jsonAuthor, "avatar_URL");
-            comment.authorUrl = JSONUtils.getString(jsonAuthor, "URL");
+            comment.mAuthorName = JSONUtils.getStringDecoded(jsonAuthor, "name");
+            comment.mAuthorAvatar = JSONUtils.getString(jsonAuthor, "avatar_URL");
+            comment.mAuthorUrl = JSONUtils.getString(jsonAuthor, "URL");
             comment.authorId = jsonAuthor.optLong("ID");
             comment.authorBlogId = jsonAuthor.optLong("site_ID");
         }
@@ -82,50 +82,55 @@ public class ReaderComment {
     }
 
     public String getAuthorName() {
-        return StringUtils.notNullStr(authorName);
+        return StringUtils.notNullStr(mAuthorName);
     }
 
     public void setAuthorName(String authorName) {
-        this.authorName = StringUtils.notNullStr(authorName);
+        this.mAuthorName = StringUtils.notNullStr(authorName);
     }
 
     public String getAuthorAvatar() {
-        return StringUtils.notNullStr(authorAvatar);
+        return StringUtils.notNullStr(mAuthorAvatar);
     }
+
     public void setAuthorAvatar(String authorAvatar) {
-        this.authorAvatar = StringUtils.notNullStr(authorAvatar);
+        this.mAuthorAvatar = StringUtils.notNullStr(authorAvatar);
     }
 
     public String getAuthorUrl() {
-        return StringUtils.notNullStr(authorUrl);
+        return StringUtils.notNullStr(mAuthorUrl);
     }
+
     public void setAuthorUrl(String authorUrl) {
-        this.authorUrl = StringUtils.notNullStr(authorUrl);
+        this.mAuthorUrl = StringUtils.notNullStr(authorUrl);
     }
 
     public String getText() {
-        return StringUtils.notNullStr(text);
+        return StringUtils.notNullStr(mText);
     }
+
     public void setText(String text) {
-        this.text = StringUtils.notNullStr(text);
+        this.mText = StringUtils.notNullStr(text);
     }
 
     public String getStatus() {
-        return StringUtils.notNullStr(status);
+        return StringUtils.notNullStr(mStatus);
     }
+
     public void setStatus(String status) {
-        this.status = StringUtils.notNullStr(status);
+        this.mStatus = StringUtils.notNullStr(status);
     }
 
     public String getPublished() {
-        return StringUtils.notNullStr(published);
+        return StringUtils.notNullStr(mPublished);
     }
+
     public void setPublished(String published) {
-        this.published = StringUtils.notNullStr(published);
+        this.mPublished = StringUtils.notNullStr(published);
     }
 
     public boolean hasAuthorUrl() {
-        return !TextUtils.isEmpty(authorUrl);
+        return !TextUtils.isEmpty(mAuthorUrl);
     }
 
     public boolean hasAuthorBlogId() {
@@ -133,7 +138,7 @@ public class ReaderComment {
     }
 
     public boolean hasAuthorAvatar() {
-        return !TextUtils.isEmpty(authorAvatar);
+        return !TextUtils.isEmpty(mAuthorAvatar);
     }
 
     @Override
@@ -144,20 +149,20 @@ public class ReaderComment {
 
         ReaderComment otherComment = (ReaderComment) other;
         return commentId == otherComment.commentId
-                && blogId == otherComment.blogId
-                && postId == otherComment.postId
-                && parentId == otherComment.parentId
-                && StringUtils.equals(authorName, otherComment.authorName)
-                && StringUtils.equals(authorAvatar, otherComment.authorAvatar)
-                && StringUtils.equals(authorUrl, otherComment.authorUrl)
-                && StringUtils.equals(status, otherComment.status)
-                && StringUtils.equals(text, otherComment.text)
-                && StringUtils.equals(published, otherComment.published)
-                && timestamp == otherComment.timestamp
-                && authorId == otherComment.authorId
-                && authorBlogId == otherComment.authorBlogId
-                && numLikes == otherComment.numLikes
-                && isLikedByCurrentUser == otherComment.isLikedByCurrentUser
-                && pageNumber == otherComment.pageNumber;
+               && blogId == otherComment.blogId
+               && postId == otherComment.postId
+               && parentId == otherComment.parentId
+               && StringUtils.equals(mAuthorName, otherComment.mAuthorName)
+               && StringUtils.equals(mAuthorAvatar, otherComment.mAuthorAvatar)
+               && StringUtils.equals(mAuthorUrl, otherComment.mAuthorUrl)
+               && StringUtils.equals(mStatus, otherComment.mStatus)
+               && StringUtils.equals(mText, otherComment.mText)
+               && StringUtils.equals(mPublished, otherComment.mPublished)
+               && timestamp == otherComment.timestamp
+               && authorId == otherComment.authorId
+               && authorBlogId == otherComment.authorBlogId
+               && numLikes == otherComment.numLikes
+               && isLikedByCurrentUser == otherComment.isLikedByCurrentUser
+               && pageNumber == otherComment.pageNumber;
     }
 }

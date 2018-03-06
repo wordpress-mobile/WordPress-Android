@@ -38,7 +38,7 @@ import javax.inject.Inject;
 /**
  * Interface for WordPress (.com and .org) Site Settings. The {@link SiteSettingsModel} class is
  * used to store the following settings:
- *
+ * <p>
  * - Title
  * - Tagline
  * - Address
@@ -62,7 +62,7 @@ import javax.inject.Inject;
  * - Comment Link Limit
  * - Comment Moderation Hold Filter
  * - Comment Blacklist Filter
- *
+ * <p>
  * This class is marked abstract. This is due to the fact that .org (self-hosted) and .com sites
  * expose different API's to query and edit their respective settings (even though the options
  * offered by each is roughly the same). To get an instance of this interface class use the
@@ -70,7 +70,6 @@ import javax.inject.Inject;
  */
 
 public abstract class SiteSettingsInterface {
-
     /**
      * Name of the {@link SharedPreferences} that is used to store local settings.
      */
@@ -126,13 +125,15 @@ public abstract class SiteSettingsInterface {
      */
     @Nullable
     public static SiteSettingsInterface getInterface(Context host, SiteModel site, SiteSettingsListener listener) {
-        if (host == null || site == null) return null;
-
-        if (SiteUtils.isAccessedViaWPComRest(site)) {
-            return new DotComSiteSettings(host, site, listener);
+        if (host == null || site == null) {
+            return null;
         }
 
-        return new DotOrgSiteSettings(host, site, listener);
+        if (SiteUtils.isAccessedViaWPComRest(site)) {
+            return new WPComSiteSettings(host, site, listener);
+        }
+
+        return new SelfHostedSiteSettings(host, site, listener);
     }
 
     /**
@@ -159,13 +160,15 @@ public abstract class SiteSettingsInterface {
     /**
      * Thrown when provided credentials are not valid.
      */
-    public class AuthenticationError extends Exception { }
+    public class AuthenticationError extends Exception {
+    }
 
     /**
      * Interface callbacks for settings events.
      */
     public interface SiteSettingsListener {
         void onSaveError(Exception error);
+
         void onFetchError(Exception error);
 
         /**
@@ -181,8 +184,7 @@ public abstract class SiteSettingsInterface {
         /**
          * Called when a request to validate current credentials has completed.
          *
-         * @param error
-         * null if successful
+         * @param error null if successful
          */
         void onCredentialsValidated(Exception error);
     }
@@ -227,21 +229,24 @@ public abstract class SiteSettingsInterface {
     public void saveSettings() {
         SiteSettingsTable.saveSettings(mSettings);
         siteSettingsPreferences(mContext).edit()
-                .putString(LANGUAGE_PREF_KEY, mSettings.language)
-                .putInt(DEF_CATEGORY_PREF_KEY, mSettings.defaultCategory)
-                .putString(DEF_FORMAT_PREF_KEY, mSettings.defaultPostFormat)
-                .apply();
+                                         .putString(LANGUAGE_PREF_KEY, mSettings.language)
+                                         .putInt(DEF_CATEGORY_PREF_KEY, mSettings.defaultCategory)
+                                         .putString(DEF_FORMAT_PREF_KEY, mSettings.defaultPostFormat)
+                                         .apply();
     }
 
-    public @NonNull String getTitle() {
+    public @NonNull
+    String getTitle() {
         return mSettings.title == null ? "" : mSettings.title;
     }
 
-    public @NonNull String getTagline() {
+    public @NonNull
+    String getTagline() {
         return mSettings.tagline == null ? "" : mSettings.tagline;
     }
 
-    public @NonNull String getAddress() {
+    public @NonNull
+    String getAddress() {
         return mSettings.address == null ? "" : mSettings.address;
     }
 
@@ -249,7 +254,8 @@ public abstract class SiteSettingsInterface {
         return mSettings.privacy;
     }
 
-    public @NonNull String getPrivacyDescription() {
+    public @NonNull
+    String getPrivacyDescription() {
         if (mContext != null) {
             switch (getPrivacy()) {
                 case -1:
@@ -263,19 +269,23 @@ public abstract class SiteSettingsInterface {
         return "";
     }
 
-    public @NonNull String getLanguageCode() {
+    public @NonNull
+    String getLanguageCode() {
         return mSettings.language == null ? "" : mSettings.language;
     }
 
-    public @NonNull String getUsername() {
+    public @NonNull
+    String getUsername() {
         return mSettings.username == null ? "" : mSettings.username;
     }
 
-    public @NonNull String getPassword() {
+    public @NonNull
+    String getPassword() {
         return mSettings.password == null ? "" : mSettings.password;
     }
 
-    public @NonNull Map<String, String> getFormats() {
+    public @NonNull
+    Map<String, String> getFormats() {
         mSettings.postFormats = new HashMap<>();
         String[] postFormatDisplayNames = mContext.getResources().getStringArray(R.array.post_format_display_names);
         String[] postFormatKeys = mContext.getResources().getStringArray(R.array.post_format_keys);
@@ -296,12 +306,16 @@ public abstract class SiteSettingsInterface {
         return mSettings.postFormats;
     }
 
-    public @NonNull CategoryModel[] getCategories() {
-        if (mSettings.categories == null) mSettings.categories = new CategoryModel[0];
+    public @NonNull
+    CategoryModel[] getCategories() {
+        if (mSettings.categories == null) {
+            mSettings.categories = new CategoryModel[0];
+        }
         return mSettings.categories;
     }
 
-    public @NonNull Map<Integer, String> getCategoryNames() {
+    public @NonNull
+    Map<Integer, String> getCategoryNames() {
         Map<Integer, String> categoryNames = new HashMap<>();
         if (mSettings.categories != null && mSettings.categories.length > 0) {
             for (CategoryModel model : mSettings.categories) {
@@ -316,7 +330,8 @@ public abstract class SiteSettingsInterface {
         return mSettings.defaultCategory;
     }
 
-    public @NonNull String getDefaultCategoryForDisplay() {
+    public @NonNull
+    String getDefaultCategoryForDisplay() {
         for (CategoryModel model : getCategories()) {
             if (model != null && model.id == getDefaultCategory()) {
                 return Html.fromHtml(model.name).toString();
@@ -326,16 +341,20 @@ public abstract class SiteSettingsInterface {
         return "";
     }
 
-    public @NonNull String getDefaultPostFormat() {
+    public @NonNull
+    String getDefaultPostFormat() {
         if (TextUtils.isEmpty(mSettings.defaultPostFormat) || !getFormats().containsKey(mSettings.defaultPostFormat)) {
             mSettings.defaultPostFormat = STANDARD_POST_FORMAT_KEY;
         }
         return mSettings.defaultPostFormat;
     }
 
-    public @NonNull String getDefaultPostFormatDisplay() {
+    public @NonNull
+    String getDefaultPostFormatDisplay() {
         String defaultFormat = getFormats().get(getDefaultPostFormat());
-        if (TextUtils.isEmpty(defaultFormat)) defaultFormat = STANDARD_POST_FORMAT;
+        if (TextUtils.isEmpty(defaultFormat)) {
+            defaultFormat = STANDARD_POST_FORMAT;
+        }
         return defaultFormat;
     }
 
@@ -351,8 +370,11 @@ public abstract class SiteSettingsInterface {
         return mSettings.showRelatedPostImages;
     }
 
-    public @NonNull String getRelatedPostsDescription() {
-        if (mContext == null) return "";
+    public @NonNull
+    String getRelatedPostsDescription() {
+        if (mContext == null) {
+            return "";
+        }
         String desc = mContext.getString(getShowRelatedPosts() ? R.string.on : R.string.off);
         return StringUtils.capitalize(desc);
     }
@@ -377,7 +399,8 @@ public abstract class SiteSettingsInterface {
         return mSettings.closeCommentAfter;
     }
 
-    public @NonNull String getCloseAfterDescriptionForPeriod() {
+    public @NonNull
+    String getCloseAfterDescriptionForPeriod() {
         return getCloseAfterDescriptionForPeriod(getCloseAfter());
     }
 
@@ -385,25 +408,34 @@ public abstract class SiteSettingsInterface {
         return !getShouldCloseAfter() ? 0 : getCloseAfter();
     }
 
-    public @NonNull String getCloseAfterDescription() {
+    public @NonNull
+    String getCloseAfterDescription() {
         return getCloseAfterDescriptionForPeriod(getCloseAfterPeriodForDescription());
     }
 
-    public @NonNull String getCloseAfterDescriptionForPeriod(int period) {
-        if (mContext == null) return "";
+    public @NonNull
+    String getCloseAfterDescriptionForPeriod(int period) {
+        if (mContext == null) {
+            return "";
+        }
 
-        if (!getShouldCloseAfter()) return mContext.getString(R.string.never);
+        if (!getShouldCloseAfter()) {
+            return mContext.getString(R.string.never);
+        }
 
         return StringUtils.getQuantityString(mContext, R.string.never, R.string.days_quantity_one,
-                R.string.days_quantity_other, period);
+                                             R.string.days_quantity_other, period);
     }
 
     public int getCommentSorting() {
         return mSettings.sortCommentsBy;
     }
 
-    public @NonNull String getSortingDescription() {
-        if (mContext == null) return "";
+    public @NonNull
+    String getSortingDescription() {
+        if (mContext == null) {
+            return "";
+        }
 
         int order = getCommentSorting();
         switch (order) {
@@ -428,14 +460,20 @@ public abstract class SiteSettingsInterface {
         return !getShouldThreadComments() ? 1 : getThreadingLevels();
     }
 
-    public @NonNull String getThreadingDescription() {
+    public @NonNull
+    String getThreadingDescription() {
         return getThreadingDescriptionForLevel(getThreadingLevelsForDescription());
     }
 
-    public @NonNull String getThreadingDescriptionForLevel(int level) {
-        if (mContext == null) return "";
+    public @NonNull
+    String getThreadingDescriptionForLevel(int level) {
+        if (mContext == null) {
+            return "";
+        }
 
-        if (level <= 1) return mContext.getString(R.string.none);
+        if (level <= 1) {
+            return mContext.getString(R.string.none);
+        }
         return String.format(mContext.getString(R.string.site_settings_threading_summary), level);
     }
 
@@ -451,8 +489,11 @@ public abstract class SiteSettingsInterface {
         return !getShouldPageComments() ? 0 : getPagingCount();
     }
 
-    public @NonNull String getPagingDescription() {
-        if (mContext == null) return "";
+    public @NonNull
+    String getPagingDescription() {
+        if (mContext == null) {
+            return "";
+        }
 
         if (!getShouldPageComments()) {
             return mContext.getString(R.string.disabled);
@@ -460,7 +501,7 @@ public abstract class SiteSettingsInterface {
 
         int count = getPagingCountForDescription();
         return StringUtils.getQuantityString(mContext, R.string.none, R.string.site_settings_paging_summary_one,
-                R.string.site_settings_paging_summary_other, count);
+                                             R.string.site_settings_paging_summary_other, count);
     }
 
     public boolean getManualApproval() {
@@ -483,25 +524,34 @@ public abstract class SiteSettingsInterface {
         return mSettings.maxLinks;
     }
 
-    public @NonNull List<String> getModerationKeys() {
-        if (mSettings.holdForModeration == null) mSettings.holdForModeration = new ArrayList<>();
+    public @NonNull
+    List<String> getModerationKeys() {
+        if (mSettings.holdForModeration == null) {
+            mSettings.holdForModeration = new ArrayList<>();
+        }
         return mSettings.holdForModeration;
     }
 
-    public @NonNull String getModerationHoldDescription() {
+    public @NonNull
+    String getModerationHoldDescription() {
         return getKeysDescription(getModerationKeys().size());
     }
 
-    public @NonNull List<String> getBlacklistKeys() {
-        if (mSettings.blacklist == null) mSettings.blacklist = new ArrayList<>();
+    public @NonNull
+    List<String> getBlacklistKeys() {
+        if (mSettings.blacklist == null) {
+            mSettings.blacklist = new ArrayList<>();
+        }
         return mSettings.blacklist;
     }
 
-    public @NonNull String getBlacklistDescription() {
+    public @NonNull
+    String getBlacklistDescription() {
         return getKeysDescription(getBlacklistKeys().size());
     }
 
-    public @NonNull String getJetpackProtectWhitelistSummary() {
+    public @NonNull
+    String getJetpackProtectWhitelistSummary() {
         return getKeysDescription(getJetpackWhitelistKeys().size());
     }
 
@@ -509,7 +559,8 @@ public abstract class SiteSettingsInterface {
         return mSettings.sharingLabel;
     }
 
-    public @NonNull String getSharingButtonStyle(Context context) {
+    public @NonNull
+    String getSharingButtonStyle(Context context) {
         if (TextUtils.isEmpty(mSettings.sharingButtonStyle)) {
             mSettings.sharingButtonStyle = context.getResources().getStringArray(R.array.sharing_button_style_array)[0];
         }
@@ -517,7 +568,8 @@ public abstract class SiteSettingsInterface {
         return mSettings.sharingButtonStyle;
     }
 
-    public @NonNull String getSharingButtonStyleDisplayText(Context context) {
+    public @NonNull
+    String getSharingButtonStyleDisplayText(Context context) {
         String sharingButtonStyle = getSharingButtonStyle(context);
         String[] styleArray = context.getResources().getStringArray(R.array.sharing_button_style_array);
         String[] styleDisplayArray = context.getResources().getStringArray(R.array.sharing_button_style_display_array);
@@ -539,23 +591,27 @@ public abstract class SiteSettingsInterface {
     }
 
     public boolean getAllowCommentLikes() {
-        //We have different settings for comment likes for dotcom and Jetpack sites
+        // We have different settings for comment likes for wpcom and Jetpack sites
         return mSite.isJetpackConnected() ? mJpSettings.commentLikes : mSettings.allowCommentLikes;
     }
 
-    public @NonNull String getTwitterUsername() {
+    public @NonNull
+    String getTwitterUsername() {
         if (mSettings.twitterUsername == null) {
             mSettings.twitterUsername = "";
         }
         return mSettings.twitterUsername;
     }
 
-    public @NonNull String getKeysDescription(int count) {
-        if (mContext == null) return "";
+    public @NonNull
+    String getKeysDescription(int count) {
+        if (mContext == null) {
+            return "";
+        }
 
         return StringUtils.getQuantityString(mContext, R.string.site_settings_list_editor_no_items_text,
-                R.string.site_settings_list_editor_summary_one,
-                R.string.site_settings_list_editor_summary_other, count);
+                                             R.string.site_settings_list_editor_summary_one,
+                                             R.string.site_settings_list_editor_summary_other, count);
     }
 
     public String getStartOfWeek() {
@@ -613,6 +669,7 @@ public abstract class SiteSettingsInterface {
     public void setAmpEnabled(boolean enabled) {
         mSettings.ampEnabled = enabled;
     }
+
     public boolean isJetpackMonitorEnabled() {
         return mJpSettings.monitorActive;
     }
@@ -645,7 +702,8 @@ public abstract class SiteSettingsInterface {
         mJpSettings.jetpackProtectEnabled = enabled;
     }
 
-    public @NonNull List<String> getJetpackWhitelistKeys() {
+    public @NonNull
+    List<String> getJetpackWhitelistKeys() {
         return mJpSettings.jetpackProtectWhitelist;
     }
 
@@ -715,8 +773,10 @@ public abstract class SiteSettingsInterface {
     }
 
     public boolean setLanguageCode(String languageCode) {
-        if (!mLanguageCodes.containsKey(languageCode) ||
-            TextUtils.isEmpty(mLanguageCodes.get(languageCode))) return false;
+        if (!mLanguageCodes.containsKey(languageCode)
+            || TextUtils.isEmpty(mLanguageCodes.get(languageCode))) {
+            return false;
+        }
         mSettings.language = languageCode;
         mSettings.languageId = Integer.valueOf(mLanguageCodes.get(languageCode));
         return true;
@@ -771,7 +831,7 @@ public abstract class SiteSettingsInterface {
     }
 
     public void setShouldPageComments(boolean shouldPage) {
-        mSettings.shouldPageComments= shouldPage;
+        mSettings.shouldPageComments = shouldPage;
     }
 
     public void setPagingCount(int count) {
@@ -827,7 +887,7 @@ public abstract class SiteSettingsInterface {
     }
 
     public void setAllowCommentLikes(boolean allowCommentLikes) {
-        //We have different settings for comment likes for dotcom and Jetpack sites
+        // We have different settings for comment likes for wpcom and Jetpack sites
         if (mSite.isJetpackConnected()) {
             mJpSettings.commentLikes = allowCommentLikes;
         } else {
@@ -846,8 +906,7 @@ public abstract class SiteSettingsInterface {
     /**
      * Sets the default post format.
      *
-     * @param format
-     * if null or empty default format is set to {@link SiteSettingsInterface#STANDARD_POST_FORMAT_KEY}
+     * @param format if null or empty default format is set to {@link SiteSettingsInterface#STANDARD_POST_FORMAT_KEY}
      */
     public void setDefaultFormat(String format) {
         if (TextUtils.isEmpty(format)) {
@@ -887,18 +946,22 @@ public abstract class SiteSettingsInterface {
      * Checks if the provided list of post format IDs is the same (order dependent) as the current
      * list of Post Formats in the local settings object.
      *
-     * @param ids
-     * an array of post format IDs
-     * @return
-     * true unless the provided IDs are different from the current IDs or in a different order
+     * @param ids an array of post format IDs
+     * @return true unless the provided IDs are different from the current IDs or in a different order
      */
     public boolean isSameFormatList(CharSequence[] ids) {
-        if (ids == null) return mSettings.postFormats == null;
-        if (mSettings.postFormats == null || ids.length != mSettings.postFormats.size()) return false;
+        if (ids == null) {
+            return mSettings.postFormats == null;
+        }
+        if (mSettings.postFormats == null || ids.length != mSettings.postFormats.size()) {
+            return false;
+        }
 
         String[] keys = mSettings.postFormats.keySet().toArray(new String[mSettings.postFormats.size()]);
         for (int i = 0; i < ids.length; ++i) {
-            if (!keys[i].equals(ids[i])) return false;
+            if (!keys[i].equals(ids[i])) {
+                return false;
+            }
         }
 
         return true;
@@ -908,17 +971,21 @@ public abstract class SiteSettingsInterface {
      * Checks if the provided list of category IDs is the same (order dependent) as the current
      * list of Categories in the local settings object.
      *
-     * @param ids
-     * an array of integers stored as Strings (for convenience)
-     * @return
-     * true unless the provided IDs are different from the current IDs or in a different order
+     * @param ids an array of integers stored as Strings (for convenience)
+     * @return true unless the provided IDs are different from the current IDs or in a different order
      */
     public boolean isSameCategoryList(CharSequence[] ids) {
-        if (ids == null) return mSettings.categories == null;
-        if (mSettings.categories == null || ids.length != mSettings.categories.length) return false;
+        if (ids == null) {
+            return mSettings.categories == null;
+        }
+        if (mSettings.categories == null || ids.length != mSettings.categories.length) {
+            return false;
+        }
 
         for (int i = 0; i < ids.length; ++i) {
-            if (Integer.valueOf(ids[i].toString()) != mSettings.categories[i].id) return false;
+            if (Integer.valueOf(ids[i].toString()) != mSettings.categories[i].id) {
+                return false;
+            }
         }
 
         return true;
@@ -946,14 +1013,16 @@ public abstract class SiteSettingsInterface {
      */
     protected void credentialsVerified(boolean valid) {
         Exception e = valid ? null : new AuthenticationError();
-        if (mSettings.hasVerifiedCredentials != valid) notifyCredentialsVerifiedOnUiThread(e);
+        if (mSettings.hasVerifiedCredentials != valid) {
+            notifyCredentialsVerifiedOnUiThread(e);
+        }
         mRemoteSettings.hasVerifiedCredentials = mSettings.hasVerifiedCredentials = valid;
     }
 
     /**
      * Language IDs, used only by WordPress, are integer values that map to a language code.
-     * https://github.com/Automattic/calypso-pre-oss/blob/72c2029b0805a73b749a2b64dd1d8655cae528d0/config/production.json#L86-L227
-     *
+     * http://bit.ly/2H7gksN
+     * <p>
      * Language codes are unique two-letter identifiers defined by ISO 639-1. Region dialects can
      * be defined by appending a -** where ** is the region code (en-GB -> English, Great Britain).
      * https://en.wikipedia.org/wiki/List_of_ISO_639-1_codes
@@ -1011,7 +1080,9 @@ public abstract class SiteSettingsInterface {
      * Notifies listener that credentials have been validated or are incorrect.
      */
     private void notifyCredentialsVerifiedOnUiThread(final Exception error) {
-        if (mContext == null || mListener == null) return;
+        if (mContext == null || mListener == null) {
+            return;
+        }
 
         new Handler().post(new Runnable() {
             @Override

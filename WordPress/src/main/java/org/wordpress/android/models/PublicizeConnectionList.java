@@ -8,9 +8,10 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 
 public class PublicizeConnectionList extends ArrayList<PublicizeConnection> {
-
     private int indexOfConnection(PublicizeConnection connection) {
-        if (connection == null) return -1;
+        if (connection == null) {
+            return -1;
+        }
 
         for (int i = 0; i < this.size(); i++) {
             if (connection.connectionId == this.get(i).connectionId) {
@@ -26,7 +27,7 @@ public class PublicizeConnectionList extends ArrayList<PublicizeConnection> {
             return false;
         }
 
-        for (PublicizeConnection otherConnection: otherList) {
+        for (PublicizeConnection otherConnection : otherList) {
             int i = this.indexOfConnection(otherConnection);
             if (i == -1) {
                 return false;
@@ -40,9 +41,11 @@ public class PublicizeConnectionList extends ArrayList<PublicizeConnection> {
 
     public PublicizeConnectionList getServiceConnectionsForUser(long userId, String serviceId) {
         PublicizeConnectionList connections = new PublicizeConnectionList();
-        if (TextUtils.isEmpty(serviceId)) return connections;
+        if (TextUtils.isEmpty(serviceId)) {
+            return connections;
+        }
 
-        for (PublicizeConnection connection: this) {
+        for (PublicizeConnection connection : this) {
             if (connection.getService().equalsIgnoreCase(serviceId)) {
                 // shared connections are available to all users, otherwise the service userId
                 // must match the current userId to be considered connected
@@ -55,9 +58,11 @@ public class PublicizeConnectionList extends ArrayList<PublicizeConnection> {
     }
 
     public boolean isServiceConnectedForUser(long userId, PublicizeService service) {
-        if (service == null) return false;
+        if (service == null) {
+            return false;
+        }
 
-        for (PublicizeConnection connection: this) {
+        for (PublicizeConnection connection : this) {
             if (connection.getService().equalsIgnoreCase(service.getId())) {
                 if (connection.isShared || connection.userId == userId) {
                     return true;
@@ -72,7 +77,7 @@ public class PublicizeConnectionList extends ArrayList<PublicizeConnection> {
      */
     public String getUserDisplayNames() {
         StringBuilder users = new StringBuilder();
-        for (PublicizeConnection connection: this) {
+        for (PublicizeConnection connection : this) {
             if (users.length() > 0) {
                 users.append(", ");
             }
@@ -83,18 +88,22 @@ public class PublicizeConnectionList extends ArrayList<PublicizeConnection> {
 
     /*
      * passed JSON is the response from sites/%d/publicize-connections
-     *   {"connections":[
-     *      {"ID":12783250,
-     *       "site_ID":52451176,
-     *       "user_ID":5399133,
-     *       ...
+     * {"connections":[
+     * {"ID":12783250,
+     * "site_ID":52451176,
+     * "user_ID":5399133,
+     * ...
      */
     public static PublicizeConnectionList fromJson(JSONObject json) {
         PublicizeConnectionList connectionList = new PublicizeConnectionList();
-        if (json == null) return connectionList;
+        if (json == null) {
+            return connectionList;
+        }
 
         JSONArray jsonConnectionList = json.optJSONArray("connections");
-        if (jsonConnectionList == null) return connectionList;
+        if (jsonConnectionList == null) {
+            return connectionList;
+        }
 
         for (int i = 0; i < jsonConnectionList.length(); i++) {
             PublicizeConnection connection = PublicizeConnection.fromJson(jsonConnectionList.optJSONObject(i));

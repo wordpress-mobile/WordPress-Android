@@ -545,7 +545,7 @@ Language: ko_KR
 	<string name="site_picker_cant_hide_current_site">\"%s\"은(는) 현재 사이트이기 때문에 숨길 수 없습니다.</string>
 	<string name="me_btn_support">도움 및 지원</string>
 	<string name="account_settings">계정 설정</string>
-	<string name="site_picker_create_dotcom">워드프레스닷컴 사이트 생성</string>
+	<string name="site_picker_create_wpcom">워드프레스닷컴 사이트 생성</string>
 	<string name="site_picker_edit_visibility">사이트 표시/숨기기</string>
 	<string name="site_picker_add_site">사이트 추가</string>
 	<string name="site_picker_add_self_hosted">독립 호스트 사이트 추가</string>

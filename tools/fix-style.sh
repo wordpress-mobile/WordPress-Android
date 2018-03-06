@@ -16,6 +16,11 @@ function move_binary_operators() {
     perl -i -0pe 's/ \|\r?\n([ ]+)/\n$1| /g' $1
 }
 
+function move_ternary_operators() {
+    perl -i -0pe 's/ :\r?\n([ ]+)/\n$1: /g' $1
+    perl -i -0pe 's/ \?\r?\n([ ]+)/\n$1? /g' $1
+}
+
 function remove_trailing_white_spaces {
     perl -i -ple 's/\s+$//' $1
 }
@@ -57,6 +62,7 @@ function add_space_after_switch() {
 for filename in $(find WordPress/src -type f -iname "*.java"); do
     fix_line_comments $filename
     move_binary_operators $filename
+    move_ternary_operators $filename
     remove_duplicate_white_spaces $filename
     remove_trailing_white_spaces $filename
     add_white_spaces_typecast $filename

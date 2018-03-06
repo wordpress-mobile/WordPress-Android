@@ -59,7 +59,8 @@ public class SiteCreationDomainFragment extends SiteCreationBaseFormFragment<Sit
     }
 
     @Override
-    protected @LayoutRes int getContentLayout() {
+    protected @LayoutRes
+    int getContentLayout() {
         return R.layout.site_creation_domain_screen;
     }
 
@@ -112,8 +113,8 @@ public class SiteCreationDomainFragment extends SiteCreationBaseFormFragment<Sit
         }
 
         // Need to do this early so the mSiteCreationDomainAdapter gets initialized before RecyclerView needs it. This
-        //  ensures that on rotation, the RecyclerView will have its data ready before layout and scroll position will
-        //  hold correctly automatically.
+        // ensures that on rotation, the RecyclerView will have its data ready before layout and scroll position will
+        // hold correctly automatically.
         EventBus.getDefault().register(this);
 
         if (savedInstanceState == null) {
@@ -169,7 +170,8 @@ public class SiteCreationDomainFragment extends SiteCreationBaseFormFragment<Sit
     public void onDomainSuggestionEvent(DomainSuggestionEvent event) {
         if (mSiteCreationDomainAdapter == null) {
             // Fragment is initializing or rotating so, just instantiate a new adapter.
-            mSiteCreationDomainAdapter = new SiteCreationDomainAdapter(getContext(), mKeywords,
+            mSiteCreationDomainAdapter = new SiteCreationDomainAdapter(
+                    getContext(), mKeywords,
                     new SiteCreationDomainAdapter.OnAdapterListener() {
                         @Override
                         public void onKeywordsChange(String keywords) {
@@ -178,7 +180,6 @@ public class SiteCreationDomainFragment extends SiteCreationBaseFormFragment<Sit
 
                             // fallback to using the provided username as query if text is empty
                             mQueryString = TextUtils.isEmpty(keywords.trim()) ? mUsername : keywords;
-
                             getLoaderFragment().load(mQueryString);
                         }
 
@@ -190,7 +191,7 @@ public class SiteCreationDomainFragment extends SiteCreationBaseFormFragment<Sit
                     });
         }
 
-        switch (event.step) {
+        switch (event.getStep()) {
             case UPDATING:
                 mSelectedDomain = mCarryOverDomain;
                 mSiteCreationDomainAdapter.setData(true, mCarryOverDomain, mSelectedDomain, null);
@@ -199,13 +200,13 @@ public class SiteCreationDomainFragment extends SiteCreationBaseFormFragment<Sit
                 mSiteCreationDomainAdapter.setData(false, mCarryOverDomain, mSelectedDomain, null);
                 break;
             case FINISHED:
-                if (!event.query.equals(mQueryString)) {
+                if (!event.getQuery().equals(mQueryString)) {
                     // this is not the result for the latest query the debouncer sent so, ignore it
                     break;
                 }
 
                 ArrayList<String> suggestions = new ArrayList<>();
-                for (DomainSuggestionResponse suggestionResponse : event.event.suggestions) {
+                for (DomainSuggestionResponse suggestionResponse : event.getEvent().suggestions) {
                     suggestions.add(suggestionResponse.domain_name);
                 }
 

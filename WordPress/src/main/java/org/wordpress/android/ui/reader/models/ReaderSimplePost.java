@@ -30,7 +30,8 @@ public class ReaderSimplePost {
        the endpoint - note that we want to avoid ever requesting the post content, since
        that makes the call much heavier
     */
-    public static final String SIMPLE_POST_FIELDS = "ID,site_ID,title,excerpt,site_name,is_following,author,featured_image,featured_media,railcar";
+    public static final String SIMPLE_POST_FIELDS =
+            "ID,site_ID,title,excerpt,site_name,is_following,author,featured_image,featured_media,railcar";
 
     public static ReaderSimplePost fromJson(JSONObject json) {
         if (json == null) {
