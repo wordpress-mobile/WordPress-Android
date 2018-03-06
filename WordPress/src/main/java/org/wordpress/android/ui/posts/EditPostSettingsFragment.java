@@ -563,7 +563,6 @@ public class EditPostSettingsFragment extends Fragment {
 
         final DatePickerDialog datePickerDialog = new DatePickerDialog(getActivity(),
                 Build.VERSION.SDK_INT >= 21 ? R.style.Calypso_AlertDialog : 0, null, year, month, day);
-        datePickerDialog.setTitle(R.string.select_date);
         datePickerDialog.setButton(DialogInterface.BUTTON_POSITIVE, resources.getString(android.R.string.ok),
                                    new DialogInterface.OnClickListener() {
                                        public void onClick(DialogInterface dialog, int id) {
@@ -613,7 +612,6 @@ public class EditPostSettingsFragment extends Fragment {
                         updatePublishDate(selectedCalendar);
                     }
                 }, hour, minute, DateFormat.is24HourFormat(getActivity()));
-        timePickerDialog.setTitle(R.string.select_time);
         timePickerDialog.show();
     }
 
