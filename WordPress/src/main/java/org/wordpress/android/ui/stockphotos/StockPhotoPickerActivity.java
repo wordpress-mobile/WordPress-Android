@@ -95,6 +95,9 @@ public class StockPhotoPickerActivity extends AppCompatActivity
         } else {
             mSite = (SiteModel) savedInstanceState.getSerializable(WordPress.SITE);
             mViewModel.readFromBundle(savedInstanceState);
+            if (savedInstanceState.containsKey(KEY_SELECTED_ITEMS)) {
+                mAdapter.setSelectedItems(savedInstanceState.getIntegerArrayList(KEY_SELECTED_ITEMS));
+            }
         }
     }
 
@@ -115,6 +118,9 @@ public class StockPhotoPickerActivity extends AppCompatActivity
         mViewModel.writeToBundle(outState);
         if (mSite != null) {
             outState.putSerializable(WordPress.SITE, mSite);
+        }
+        if (!mAdapter.mSelectedItems.isEmpty()) {
+            outState.putIntegerArrayList(KEY_SELECTED_ITEMS, mAdapter.mSelectedItems);
         }
     }
 
@@ -185,7 +191,6 @@ public class StockPhotoPickerActivity extends AppCompatActivity
     @Override
     public boolean onMenuItemActionCollapse(MenuItem menuItem) {
         mSearchView.setOnQueryTextListener(null);
-        mViewModel.clearSearchResults();
         return true;
     }
 
@@ -234,7 +239,7 @@ public class StockPhotoPickerActivity extends AppCompatActivity
         private static final float SCALE_SELECTED = .8f;
 
         private final List<StockMediaModel> mItems = new ArrayList<>();
-        private final List<Integer> mSelectedItems = new ArrayList<>();
+        private final ArrayList<Integer> mSelectedItems = new ArrayList<>();
 
         StockPhotoAdapter() {
             setHasStableIds(true);
@@ -348,6 +353,14 @@ public class StockPhotoPickerActivity extends AppCompatActivity
 
             boolean isSelected = isItemSelected(position);
             setItemSelected(holder, position, !isSelected);
+        }
+
+        private void setSelectedItems(@NonNull ArrayList<Integer> selectedItems) {
+            mSelectedItems.clear();
+            mSelectedItems.addAll(selectedItems);
+            if (!mItems.isEmpty()) {
+                notifyDataSetChanged();
+            }
         }
     }
 
