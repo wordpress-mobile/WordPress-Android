@@ -45,6 +45,7 @@ import java.util.List;
 import java.util.Map;
 
 public class PhotoPickerFragment extends Fragment {
+    private static final String KEY_LAST_TAPPED_ICON = "KEY_LAST_TAPPED_ICON";
 
     static final int NUM_COLUMNS = 3;
     public static final String ARG_BROWSER_TYPE = "browser_type";
@@ -99,6 +100,10 @@ public class PhotoPickerFragment extends Fragment {
 
         mBrowserType = (MediaBrowserType) getArguments().getSerializable(ARG_BROWSER_TYPE);
         mSite = (SiteModel) getArguments().getSerializable(WordPress.SITE);
+
+        if (savedInstanceState != null) {
+            mLastTappedIcon = PhotoPickerIcon.values()[savedInstanceState.getInt(KEY_LAST_TAPPED_ICON)];
+        }
     }
 
     @Override
@@ -183,6 +188,13 @@ public class PhotoPickerFragment extends Fragment {
         }
 
         return true;
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+
+        outState.putInt(KEY_LAST_TAPPED_ICON, mLastTappedIcon.ordinal());
     }
 
     @Override
