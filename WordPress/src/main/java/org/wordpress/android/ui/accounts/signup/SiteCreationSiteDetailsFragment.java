@@ -26,8 +26,7 @@ public class SiteCreationSiteDetailsFragment extends SiteCreationBaseFormFragmen
     private WPLoginInputRow mSiteTaglineInput;
 
     @Override
-    protected @LayoutRes
-    int getContentLayout() {
+    protected @LayoutRes int getContentLayout() {
         return R.layout.site_creation_site_details_screen;
     }
 

@@ -59,8 +59,7 @@ public class PromoDialog extends AppCompatDialogFragment {
     protected View.OnClickListener mPositiveButtonOnClickListener;
 
     @Override
-    public @NonNull
-    Dialog onCreateDialog(Bundle savedInstanceState) {
+    public @NonNull Dialog onCreateDialog(Bundle savedInstanceState) {
         Dialog dialog = super.onCreateDialog(savedInstanceState);
         mDrawableResId = getArguments().getInt(KEY_DRAWABLE_RES_ID);
         mTitleResId = getArguments().getInt(KEY_TITLE_RES_ID);

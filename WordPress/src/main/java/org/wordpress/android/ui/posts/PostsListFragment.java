@@ -265,8 +265,7 @@ public class PostsListFragment extends Fragment
                                                          );
     }
 
-    private @Nullable
-    PostsListAdapter getPostListAdapter() {
+    private @Nullable PostsListAdapter getPostListAdapter() {
         if (mPostsListAdapter == null) {
             mPostsListAdapter = new PostsListAdapter(getActivity(), mSite, mIsPage);
             mPostsListAdapter.setOnLoadMoreListener(this);

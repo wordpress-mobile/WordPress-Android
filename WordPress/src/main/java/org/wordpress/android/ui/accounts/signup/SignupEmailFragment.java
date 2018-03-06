@@ -72,14 +72,12 @@ public class SignupEmailFragment extends LoginBaseFormFragment<LoginListener> im
     protected boolean mIsDisplayingEmailHints;
 
     @Override
-    protected @LayoutRes
-    int getContentLayout() {
+    protected @LayoutRes int getContentLayout() {
         return R.layout.signup_email_fragment;
     }
 
     @Override
-    protected @LayoutRes
-    int getProgressBarText() {
+    protected @LayoutRes int getProgressBarText() {
         return R.string.checking_email;
     }
 

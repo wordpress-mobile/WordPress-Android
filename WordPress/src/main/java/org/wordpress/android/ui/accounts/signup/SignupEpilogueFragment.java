@@ -129,14 +129,12 @@ public class SignupEpilogueFragment extends LoginBaseFormFragment<SignupEpilogue
     }
 
     @Override
-    protected @LayoutRes
-    int getContentLayout() {
+    protected @LayoutRes int getContentLayout() {
         return 0; // no content layout; entire view is inflated in createMainView
     }
 
     @Override
-    protected @LayoutRes
-    int getProgressBarText() {
+    protected @LayoutRes int getProgressBarText() {
         return R.string.signup_updating_account;
     }
 

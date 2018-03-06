@@ -59,8 +59,7 @@ public class SiteCreationDomainFragment extends SiteCreationBaseFormFragment<Sit
     }
 
     @Override
-    protected @LayoutRes
-    int getContentLayout() {
+    protected @LayoutRes int getContentLayout() {
         return R.layout.site_creation_domain_screen;
     }
 

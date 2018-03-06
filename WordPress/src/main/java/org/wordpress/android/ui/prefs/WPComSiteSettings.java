@@ -788,8 +788,7 @@ class WPComSiteSettings extends SiteSettingsInterface {
         mRemoteJpSettings.wpNotifications = settingsObject.optBoolean(JP_MONITOR_WP_NOTES_KEY, false);
     }
 
-    private @NonNull
-    Map<String, String> serializeJetpackMonitorParams() {
+    private @NonNull Map<String, String> serializeJetpackMonitorParams() {
         Map<String, String> params = new HashMap<>();
         params.put(JP_MONITOR_EMAIL_NOTES_KEY, String.valueOf(mJpSettings.emailNotifications));
         params.put(JP_MONITOR_WP_NOTES_KEY, String.valueOf(mJpSettings.wpNotifications));

@@ -235,18 +235,15 @@ public abstract class SiteSettingsInterface {
                                          .apply();
     }
 
-    public @NonNull
-    String getTitle() {
+    public @NonNull String getTitle() {
         return mSettings.title == null ? "" : mSettings.title;
     }
 
-    public @NonNull
-    String getTagline() {
+    public @NonNull String getTagline() {
         return mSettings.tagline == null ? "" : mSettings.tagline;
     }
 
-    public @NonNull
-    String getAddress() {
+    public @NonNull String getAddress() {
         return mSettings.address == null ? "" : mSettings.address;
     }
 
@@ -254,8 +251,7 @@ public abstract class SiteSettingsInterface {
         return mSettings.privacy;
     }
 
-    public @NonNull
-    String getPrivacyDescription() {
+    public @NonNull String getPrivacyDescription() {
         if (mContext != null) {
             switch (getPrivacy()) {
                 case -1:
@@ -269,23 +265,19 @@ public abstract class SiteSettingsInterface {
         return "";
     }
 
-    public @NonNull
-    String getLanguageCode() {
+    public @NonNull String getLanguageCode() {
         return mSettings.language == null ? "" : mSettings.language;
     }
 
-    public @NonNull
-    String getUsername() {
+    public @NonNull String getUsername() {
         return mSettings.username == null ? "" : mSettings.username;
     }
 
-    public @NonNull
-    String getPassword() {
+    public @NonNull String getPassword() {
         return mSettings.password == null ? "" : mSettings.password;
     }
 
-    public @NonNull
-    Map<String, String> getFormats() {
+    public @NonNull Map<String, String> getFormats() {
         mSettings.postFormats = new HashMap<>();
         String[] postFormatDisplayNames = mContext.getResources().getStringArray(R.array.post_format_display_names);
         String[] postFormatKeys = mContext.getResources().getStringArray(R.array.post_format_keys);
@@ -306,16 +298,14 @@ public abstract class SiteSettingsInterface {
         return mSettings.postFormats;
     }
 
-    public @NonNull
-    CategoryModel[] getCategories() {
+    public @NonNull CategoryModel[] getCategories() {
         if (mSettings.categories == null) {
             mSettings.categories = new CategoryModel[0];
         }
         return mSettings.categories;
     }
 
-    public @NonNull
-    Map<Integer, String> getCategoryNames() {
+    public @NonNull Map<Integer, String> getCategoryNames() {
         Map<Integer, String> categoryNames = new HashMap<>();
         if (mSettings.categories != null && mSettings.categories.length > 0) {
             for (CategoryModel model : mSettings.categories) {
@@ -330,8 +320,7 @@ public abstract class SiteSettingsInterface {
         return mSettings.defaultCategory;
     }
 
-    public @NonNull
-    String getDefaultCategoryForDisplay() {
+    public @NonNull String getDefaultCategoryForDisplay() {
         for (CategoryModel model : getCategories()) {
             if (model != null && model.id == getDefaultCategory()) {
                 return Html.fromHtml(model.name).toString();
@@ -341,16 +330,14 @@ public abstract class SiteSettingsInterface {
         return "";
     }
 
-    public @NonNull
-    String getDefaultPostFormat() {
+    public @NonNull String getDefaultPostFormat() {
         if (TextUtils.isEmpty(mSettings.defaultPostFormat) || !getFormats().containsKey(mSettings.defaultPostFormat)) {
             mSettings.defaultPostFormat = STANDARD_POST_FORMAT_KEY;
         }
         return mSettings.defaultPostFormat;
     }
 
-    public @NonNull
-    String getDefaultPostFormatDisplay() {
+    public @NonNull String getDefaultPostFormatDisplay() {
         String defaultFormat = getFormats().get(getDefaultPostFormat());
         if (TextUtils.isEmpty(defaultFormat)) {
             defaultFormat = STANDARD_POST_FORMAT;
@@ -370,8 +357,7 @@ public abstract class SiteSettingsInterface {
         return mSettings.showRelatedPostImages;
     }
 
-    public @NonNull
-    String getRelatedPostsDescription() {
+    public @NonNull String getRelatedPostsDescription() {
         if (mContext == null) {
             return "";
         }
@@ -399,8 +385,7 @@ public abstract class SiteSettingsInterface {
         return mSettings.closeCommentAfter;
     }
 
-    public @NonNull
-    String getCloseAfterDescriptionForPeriod() {
+    public @NonNull String getCloseAfterDescriptionForPeriod() {
         return getCloseAfterDescriptionForPeriod(getCloseAfter());
     }
 
@@ -408,13 +393,11 @@ public abstract class SiteSettingsInterface {
         return !getShouldCloseAfter() ? 0 : getCloseAfter();
     }
 
-    public @NonNull
-    String getCloseAfterDescription() {
+    public @NonNull String getCloseAfterDescription() {
         return getCloseAfterDescriptionForPeriod(getCloseAfterPeriodForDescription());
     }
 
-    public @NonNull
-    String getCloseAfterDescriptionForPeriod(int period) {
+    public @NonNull String getCloseAfterDescriptionForPeriod(int period) {
         if (mContext == null) {
             return "";
         }
@@ -431,8 +414,7 @@ public abstract class SiteSettingsInterface {
         return mSettings.sortCommentsBy;
     }
 
-    public @NonNull
-    String getSortingDescription() {
+    public @NonNull String getSortingDescription() {
         if (mContext == null) {
             return "";
         }
@@ -460,13 +442,11 @@ public abstract class SiteSettingsInterface {
         return !getShouldThreadComments() ? 1 : getThreadingLevels();
     }
 
-    public @NonNull
-    String getThreadingDescription() {
+    public @NonNull String getThreadingDescription() {
         return getThreadingDescriptionForLevel(getThreadingLevelsForDescription());
     }
 
-    public @NonNull
-    String getThreadingDescriptionForLevel(int level) {
+    public @NonNull String getThreadingDescriptionForLevel(int level) {
         if (mContext == null) {
             return "";
         }
@@ -489,8 +469,7 @@ public abstract class SiteSettingsInterface {
         return !getShouldPageComments() ? 0 : getPagingCount();
     }
 
-    public @NonNull
-    String getPagingDescription() {
+    public @NonNull String getPagingDescription() {
         if (mContext == null) {
             return "";
         }
@@ -524,34 +503,29 @@ public abstract class SiteSettingsInterface {
         return mSettings.maxLinks;
     }
 
-    public @NonNull
-    List<String> getModerationKeys() {
+    public @NonNull List<String> getModerationKeys() {
         if (mSettings.holdForModeration == null) {
             mSettings.holdForModeration = new ArrayList<>();
         }
         return mSettings.holdForModeration;
     }
 
-    public @NonNull
-    String getModerationHoldDescription() {
+    public @NonNull String getModerationHoldDescription() {
         return getKeysDescription(getModerationKeys().size());
     }
 
-    public @NonNull
-    List<String> getBlacklistKeys() {
+    public @NonNull List<String> getBlacklistKeys() {
         if (mSettings.blacklist == null) {
             mSettings.blacklist = new ArrayList<>();
         }
         return mSettings.blacklist;
     }
 
-    public @NonNull
-    String getBlacklistDescription() {
+    public @NonNull String getBlacklistDescription() {
         return getKeysDescription(getBlacklistKeys().size());
     }
 
-    public @NonNull
-    String getJetpackProtectWhitelistSummary() {
+    public @NonNull String getJetpackProtectWhitelistSummary() {
         return getKeysDescription(getJetpackWhitelistKeys().size());
     }
 
@@ -559,8 +533,7 @@ public abstract class SiteSettingsInterface {
         return mSettings.sharingLabel;
     }
 
-    public @NonNull
-    String getSharingButtonStyle(Context context) {
+    public @NonNull String getSharingButtonStyle(Context context) {
         if (TextUtils.isEmpty(mSettings.sharingButtonStyle)) {
             mSettings.sharingButtonStyle = context.getResources().getStringArray(R.array.sharing_button_style_array)[0];
         }
@@ -568,8 +541,7 @@ public abstract class SiteSettingsInterface {
         return mSettings.sharingButtonStyle;
     }
 
-    public @NonNull
-    String getSharingButtonStyleDisplayText(Context context) {
+    public @NonNull String getSharingButtonStyleDisplayText(Context context) {
         String sharingButtonStyle = getSharingButtonStyle(context);
         String[] styleArray = context.getResources().getStringArray(R.array.sharing_button_style_array);
         String[] styleDisplayArray = context.getResources().getStringArray(R.array.sharing_button_style_display_array);
@@ -595,16 +567,14 @@ public abstract class SiteSettingsInterface {
         return mSite.isJetpackConnected() ? mJpSettings.commentLikes : mSettings.allowCommentLikes;
     }
 
-    public @NonNull
-    String getTwitterUsername() {
+    public @NonNull String getTwitterUsername() {
         if (mSettings.twitterUsername == null) {
             mSettings.twitterUsername = "";
         }
         return mSettings.twitterUsername;
     }
 
-    public @NonNull
-    String getKeysDescription(int count) {
+    public @NonNull String getKeysDescription(int count) {
         if (mContext == null) {
             return "";
         }
@@ -702,8 +672,7 @@ public abstract class SiteSettingsInterface {
         mJpSettings.jetpackProtectEnabled = enabled;
     }
 
-    public @NonNull
-    List<String> getJetpackWhitelistKeys() {
+    public @NonNull List<String> getJetpackWhitelistKeys() {
         return mJpSettings.jetpackProtectWhitelist;
     }
 

@@ -101,13 +101,11 @@ public class WPPrefView extends LinearLayout implements
         }
 
         @SuppressWarnings("unused")
-        public @NonNull
-        String getItemName() {
+        public @NonNull String getItemName() {
             return mItemName;
         }
 
-        public @NonNull
-        String getItemValue() {
+        public @NonNull String getItemValue() {
             return mItemValue;
         }
     }
@@ -133,8 +131,7 @@ public class WPPrefView extends LinearLayout implements
         }
 
         // use this for CHECKLIST prefs to get all selected items
-        private @NonNull
-        PrefListItems getSelectedItems() {
+        private @NonNull PrefListItems getSelectedItems() {
             PrefListItems selectedItems = new PrefListItems();
             for (PrefListItem item : this) {
                 if (item.mIsChecked) {
@@ -347,8 +344,7 @@ public class WPPrefView extends LinearLayout implements
     /*
      * the list of items when the PrefType is CHECKLIST or RADIOLIST
      */
-    public @NonNull
-    PrefListItems getListItems() {
+    public @NonNull PrefListItems getListItems() {
         return mListItems;
     }
 

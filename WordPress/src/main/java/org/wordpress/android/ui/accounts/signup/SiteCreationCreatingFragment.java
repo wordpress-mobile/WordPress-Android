@@ -89,8 +89,7 @@ public class SiteCreationCreatingFragment extends SiteCreationBaseFormFragment<S
     }
 
     @Override
-    protected @LayoutRes
-    int getContentLayout() {
+    protected @LayoutRes int getContentLayout() {
         return R.layout.site_creation_creating_screen;
     }
 

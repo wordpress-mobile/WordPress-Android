@@ -259,8 +259,7 @@ public class PluginListFragment extends Fragment {
             }
         }
 
-        protected @Nullable
-        Object getItem(int position) {
+        protected @Nullable Object getItem(int position) {
             if (position < mItems.size()) {
                 return mItems.get(position);
             }

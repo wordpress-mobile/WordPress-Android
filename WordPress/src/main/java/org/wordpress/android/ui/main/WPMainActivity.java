@@ -311,8 +311,7 @@ public class WPMainActivity extends AppCompatActivity {
         }
     }
 
-    private @Nullable
-    String getAuthToken() {
+    private @Nullable String getAuthToken() {
         Uri uri = getIntent().getData();
         return uri != null ? uri.getQueryParameter(LoginActivity.TOKEN_PARAMETER) : null;
     }
@@ -791,8 +790,7 @@ public class WPMainActivity extends AppCompatActivity {
     /**
      * @return null if there is no site or if there is no selected site
      */
-    public @Nullable
-    SiteModel getSelectedSite() {
+    public @Nullable SiteModel getSelectedSite() {
         return mSelectedSite;
     }
 

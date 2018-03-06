@@ -41,8 +41,7 @@ public class SiteCreationThemeFragment extends SiteCreationBaseFormFragment<Site
     }
 
     @Override
-    protected @LayoutRes
-    int getContentLayout() {
+    protected @LayoutRes int getContentLayout() {
         return R.layout.site_creation_theme_screen;
     }
 

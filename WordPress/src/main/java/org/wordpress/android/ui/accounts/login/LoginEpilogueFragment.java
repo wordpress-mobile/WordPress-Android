@@ -64,14 +64,12 @@ public class LoginEpilogueFragment extends LoginBaseFormFragment<LoginEpilogueLi
     }
 
     @Override
-    protected @LayoutRes
-    int getContentLayout() {
+    protected @LayoutRes int getContentLayout() {
         return 0; // nothing special here. The view is inflated in createMainView()
     }
 
     @Override
-    protected @LayoutRes
-    int getProgressBarText() {
+    protected @LayoutRes int getProgressBarText() {
         return R.string.logging_in;
     }
 
