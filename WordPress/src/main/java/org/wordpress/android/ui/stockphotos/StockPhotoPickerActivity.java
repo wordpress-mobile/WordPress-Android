@@ -140,13 +140,14 @@ public class StockPhotoPickerActivity extends AppCompatActivity
         getMenuInflater().inflate(R.menu.search, menu);
 
         mSearchMenuItem = menu.findItem(R.id.menu_search);
+        mSearchMenuItem.expandActionView();
+
         mSearchView = (SearchView) mSearchMenuItem.getActionView();
         mSearchView.setEnabled(false);
         mSearchView.setIconifiedByDefault(false);
         mSearchView.setQueryHint(getString(R.string.stock_photo_picker_search_hint));
 
         if (!TextUtils.isEmpty(mViewModel.getSearchQuery())) {
-            mSearchMenuItem.expandActionView();
             mSearchView.setQuery(mViewModel.getSearchQuery(), false);
             mSearchView.setOnQueryTextListener(this);
         }
