@@ -237,6 +237,8 @@ public class EditPostActivity extends AppCompatActivity implements
     private PhotoPickerFragment mPhotoPickerFragment;
     private int mPhotoPickerOrientation = Configuration.ORIENTATION_UNDEFINED;
 
+    private PromoDialogAdvanced mAsyncPromoDialog;
+
     // For opening the context menu after permissions have been granted
     private View mMenuView = null;
 
@@ -965,25 +967,7 @@ public class EditPostActivity extends AppCompatActivity implements
 
         if (itemId == R.id.menu_save_post) {
             if (!AppPrefs.isAsyncPromoRequired()) {
-                // if post is a draft, first make sure to confirm the PUBLISH action, in case
-                // the user tapped on it accidentally
-                if (mPost.isLocalDraft()) {
-                    AlertDialog.Builder builder = new AlertDialog.Builder(this);
-                    builder.setTitle(getResources().getText(R.string.dialog_confirm_publish_title))
-                            .setMessage(R.string.dialog_confirm_publish_message)
-                            .setPositiveButton(R.string.dialog_confirm_publish_yes, new DialogInterface.OnClickListener() {
-                                @Override
-                                public void onClick(DialogInterface dialogInterface, int i) {
-                                    publishPost();
-                                }
-                            })
-                            .setNegativeButton(R.string.dialog_confirm_publish_no, null)
-                            .setCancelable(true);
-                    builder.create().show();
-                } else {
-                    // otherwise, if they're updating a Post, just go ahead and save it to the server
-                    publishPost();
-                }
+                showPublishConfirmationOrUpdateIfNotLocalDraft();
             } else {
                 showAsyncPromoDialog();
             }
@@ -1007,6 +991,32 @@ public class EditPostActivity extends AppCompatActivity implements
             }
         }
         return false;
+    }
+
+    private void showPublishConfirmationDialog() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle(getResources().getText(R.string.dialog_confirm_publish_title))
+                .setMessage(R.string.dialog_confirm_publish_message)
+                .setPositiveButton(R.string.dialog_confirm_publish_yes, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        publishPost();
+                    }
+                })
+                .setNegativeButton(R.string.dialog_confirm_publish_no, null)
+                .setCancelable(true);
+        builder.create().show();
+    }
+
+    private void showPublishConfirmationOrUpdateIfNotLocalDraft() {
+        // if post is a draft, first make sure to confirm the PUBLISH action, in case
+        // the user tapped on it accidentally
+        if (mPost.isLocalDraft()) {
+            showPublishConfirmationDialog();
+        } else {
+            // otherwise, if they're updating a Post, just go ahead and save it to the server
+            publishPost();
+        }
     }
 
     private void savePostOnlineAndFinishAsync(boolean isFirstTimePublish) {
@@ -3025,15 +3035,17 @@ public class EditPostActivity extends AppCompatActivity implements
     }
 
     private void showAsyncPromoDialog() {
-        PromoDialogAdvanced asyncPromoDialog = new PromoDialogAdvanced.Builder(
-                R.drawable.img_promo_async,
-                R.string.async_promo_title,
-                R.string.async_promo_description,
-                android.R.string.ok)
-                .setLinkText(R.string.async_promo_link)
-                .build();
+        if (mAsyncPromoDialog == null) {
+            mAsyncPromoDialog = new PromoDialogAdvanced.Builder(
+                    R.drawable.img_promo_async,
+                    R.string.async_promo_title,
+                    R.string.async_promo_description,
+                    android.R.string.ok)
+                    .setLinkText(R.string.async_promo_link)
+                    .build();
+        }
 
-        asyncPromoDialog.setLinkOnClickListener(new View.OnClickListener() {
+        mAsyncPromoDialog.setLinkOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(EditPostActivity.this, ReleaseNotesActivity.class);
@@ -3043,14 +3055,15 @@ public class EditPostActivity extends AppCompatActivity implements
             }
         });
 
-        asyncPromoDialog.setPositiveButtonOnClickListener(new View.OnClickListener() {
+        mAsyncPromoDialog.setPositiveButtonOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                publishPost();
+                mAsyncPromoDialog.dismiss();
+                showPublishConfirmationOrUpdateIfNotLocalDraft();
             }
         });
 
-        asyncPromoDialog.show(getSupportFragmentManager(), ASYNC_PROMO_DIALOG_TAG);
+        mAsyncPromoDialog.show(getSupportFragmentManager(), ASYNC_PROMO_DIALOG_TAG);
         AppPrefs.setAsyncPromoRequired(false);
     }
 
