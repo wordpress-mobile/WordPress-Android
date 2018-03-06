@@ -102,7 +102,8 @@ public class PhotoPickerFragment extends Fragment {
         mSite = (SiteModel) getArguments().getSerializable(WordPress.SITE);
 
         if (savedInstanceState != null) {
-            mLastTappedIcon = PhotoPickerIcon.values()[savedInstanceState.getInt(KEY_LAST_TAPPED_ICON)];
+            String savedLastTappedIconName = savedInstanceState.getString(KEY_LAST_TAPPED_ICON);
+            mLastTappedIcon = savedLastTappedIconName == null ? null : PhotoPickerIcon.valueOf(savedLastTappedIconName);
         }
     }
 
@@ -194,7 +195,7 @@ public class PhotoPickerFragment extends Fragment {
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
 
-        outState.putInt(KEY_LAST_TAPPED_ICON, mLastTappedIcon.ordinal());
+        outState.putString(KEY_LAST_TAPPED_ICON, mLastTappedIcon == null ? null : mLastTappedIcon.name());
     }
 
     @Override
