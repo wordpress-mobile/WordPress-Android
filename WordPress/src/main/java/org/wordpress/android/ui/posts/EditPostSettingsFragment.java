@@ -560,7 +560,8 @@ public class EditPostSettingsFragment extends Fragment {
         Resources resources = getResources();
         boolean isPublishImmediatelyAvailable = PostUtils.shouldPublishImmediatelyOptionBeAvailable(getPost());
 
-        final DatePickerDialog datePickerDialog = new DatePickerDialog(getActivity(), null, year, month, day);
+        final DatePickerDialog datePickerDialog = new DatePickerDialog(getActivity(),
+                R.style.Calypso_AlertDialog, null, year, month, day);
         datePickerDialog.setTitle(R.string.select_date);
         datePickerDialog.setButton(DialogInterface.BUTTON_POSITIVE, resources.getString(android.R.string.ok),
                                    new DialogInterface.OnClickListener() {
@@ -601,7 +602,7 @@ public class EditPostSettingsFragment extends Fragment {
         final Calendar calendar = getCurrentPublishDateAsCalendar();
         int hour = calendar.get(Calendar.HOUR_OF_DAY);
         int minute = calendar.get(Calendar.MINUTE);
-        final TimePickerDialog timePickerDialog = new TimePickerDialog(getActivity(),
+        final TimePickerDialog timePickerDialog = new TimePickerDialog(getActivity(), R.style.Calypso_AlertDialog,
                                                                        new TimePickerDialog.OnTimeSetListener() {
                                                                            @Override
                                                                            public void onTimeSet(TimePicker timePicker,
