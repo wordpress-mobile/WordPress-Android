@@ -35,14 +35,10 @@
 
                     <TextView
                         android:id="@+id/text_installed"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginLeft="@dimen/margin_extra_large"
-                        android:layout_marginStart="@dimen/margin_extra_large"
-                        android:layout_marginTop="@dimen/margin_extra_large"
+                        style="@style/PluginDirectoryTitle"
                         android:text="@string/plugin_caption_installed"
-                        android:textColor="@color/grey_dark"
-                        android:textSize="@dimen/text_sz_large" />
+                        android:layout_toLeftOf="@+id/text_manage"
+                        android:layout_toStartOf="@+id/text_manage" />
 
                     <TextView
                         android:id="@+id/text_manage"
@@ -90,14 +86,10 @@
 
                     <TextView
                         android:id="@+id/text_featured"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginLeft="@dimen/margin_extra_large"
-                        android:layout_marginStart="@dimen/margin_extra_large"
-                        android:layout_marginTop="@dimen/margin_extra_large"
+                        style="@style/PluginDirectoryTitle"
                         android:text="@string/plugin_caption_featured"
-                        android:textColor="@color/grey_dark"
-                        android:textSize="@dimen/text_sz_large" />
+                        android:layout_toLeftOf="@+id/text_all_featured"
+                        android:layout_toStartOf="@+id/text_all_featured"/>
 
                     <TextView
                         android:id="@+id/text_all_featured"
@@ -145,14 +137,10 @@
 
                     <TextView
                         android:id="@+id/text_popular"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginLeft="@dimen/margin_extra_large"
-                        android:layout_marginStart="@dimen/margin_extra_large"
-                        android:layout_marginTop="@dimen/margin_extra_large"
+                        style="@style/PluginDirectoryTitle"
                         android:text="@string/plugin_caption_popular"
-                        android:textColor="@color/grey_dark"
-                        android:textSize="@dimen/text_sz_large" />
+                        android:layout_toLeftOf="@+id/text_all_popular"
+                        android:layout_toStartOf="@+id/text_all_popular"/>
 
                     <TextView
                         android:id="@+id/text_all_popular"
@@ -201,14 +189,10 @@
 
                     <TextView
                         android:id="@+id/text_new"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginLeft="@dimen/margin_extra_large"
-                        android:layout_marginStart="@dimen/margin_extra_large"
-                        android:layout_marginTop="@dimen/margin_extra_large"
+                        style="@style/PluginDirectoryTitle"
                         android:text="@string/plugin_caption_new"
-                        android:textColor="@color/grey_dark"
-                        android:textSize="@dimen/text_sz_large" />
+                        android:layout_toLeftOf="@+id/text_all_new"
+                        android:layout_toStartOf="@+id/text_all_new" />
 
                     <TextView
                         android:id="@+id/text_all_new"
