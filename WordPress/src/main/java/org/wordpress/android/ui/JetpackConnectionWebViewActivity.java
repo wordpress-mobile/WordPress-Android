@@ -5,7 +5,6 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.text.TextUtils;
 import android.view.Menu;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
@@ -30,7 +29,6 @@ import static org.wordpress.android.ui.RequestCodes.JETPACK_LOGIN;
  */
 public class JetpackConnectionWebViewActivity extends WPWebViewActivity {
     private static final String LOGIN_PATH = "/wp-login.php";
-    private static final String ADMIN_PATH = "/wp-admin/admin.php";
     private static final String REDIRECT_PARAMETER = "redirect_to=";
     private static final String WORDPRESS_COM_HOST = "wordpress.com";
     private static final String WPCOM_LOG_IN_PATH_1 = "/log-in";
@@ -71,28 +69,15 @@ public class JetpackConnectionWebViewActivity extends WPWebViewActivity {
     private SiteModel mSite;
     private String mRedirectPage;
 
-    public static void openJetpackConnectionFlow(Context context, Source source, SiteModel site) {
-        openJetpackConnectionFlow(context, urlFromSiteAndSource(site, source), site, true);
+    public static void startJetpackConnectionFlow(Context context, Source source, SiteModel site, boolean authorized) {
+        String url = "https://wordpress.com/jetpack/connect?"
+                     + "url=" + site.getUrl()
+                     + "&mobile_redirect=" + JETPACK_CONNECTION_DEEPLINK
+                     + "?source=" + source.toString();
+        startJetpackConnectionFlow(context, url, site, authorized);
     }
 
-    public static void openJetpackConnectionFlow(Context context, String url, SiteModel site) {
-        openJetpackConnectionFlow(context, url, site, true);
-    }
-
-    public static void openUnauthorizedJetpackConnectionFlow(Context context, Source source, SiteModel site) {
-        openJetpackConnectionFlow(context, urlFromSiteAndSource(site, source), site, false);
-    }
-
-    private static String urlFromSiteAndSource(SiteModel site, Source source) {
-        return "https://wordpress.com/jetpack/connect?"
-               + "url=" + site.getUrl()
-               + "&mobile_redirect="
-               + JETPACK_CONNECTION_DEEPLINK
-               + "?source="
-               + source.toString();
-    }
-
-    private static void openJetpackConnectionFlow(Context context, String url, SiteModel site, boolean authorized) {
+    private static void startJetpackConnectionFlow(Context context, String url, SiteModel site, boolean authorized) {
         if (!checkContextAndUrl(context, url)) {
             return;
         }
@@ -125,9 +110,10 @@ public class JetpackConnectionWebViewActivity extends WPWebViewActivity {
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == JETPACK_LOGIN && resultCode == RESULT_OK) {
-            JetpackConnectionWebViewActivity.openJetpackConnectionFlow(this, mRedirectPage, mSite);
-            finish();
+            JetpackConnectionWebViewActivity
+                    .startJetpackConnectionFlow(this, mRedirectPage, mSite, mAccountStore.hasAccessToken());
         }
+        finish();
     }
 
     @Override
@@ -174,12 +160,12 @@ public class JetpackConnectionWebViewActivity extends WPWebViewActivity {
     }
 
     private void jetpackSuccessfullyConnected(Uri uri) {
+        AnalyticsTracker.track(AnalyticsTracker.Stat.STATS_COMPLETED_INSTALL_JETPACK);
         Intent intent = new Intent(Intent.ACTION_VIEW);
         intent.setData(uri);
         intent.putExtra(SITE, mSite);
         startActivity(intent);
         finish();
-        AnalyticsTracker.track(AnalyticsTracker.Stat.STATS_COMPLETED_INSTALL_JETPACK);
     }
 
     class JetpackConnectionWebViewClient extends WebViewClient {
@@ -207,13 +193,6 @@ public class JetpackConnectionWebViewActivity extends WPWebViewActivity {
                     && stringUrl.contains(REDIRECT_PARAMETER)) {
                     extractRedirect(stringUrl);
                     loginToWPComInWebClient(view);
-                    return true;
-                } else if (loadedHost.equals(currentSiteHost)
-                           && loadedPath != null
-                           && loadedPath.contains(ADMIN_PATH)
-                           && !TextUtils.isEmpty(mRedirectPage)) {
-                    view.loadUrl(mRedirectPage);
-                    mRedirectPage = null;
                     return true;
                 } else if (loadedHost.equals(WORDPRESS_COM_HOST)
                            && loadedPath != null
