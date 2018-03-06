@@ -965,7 +965,18 @@ public class EditPostActivity extends AppCompatActivity implements
 
         if (itemId == R.id.menu_save_post) {
             if (!AppPrefs.isAsyncPromoRequired()) {
-                publishPost();
+                AlertDialog.Builder builder = new AlertDialog.Builder(this);
+                builder.setTitle(getResources().getText(R.string.dialog_confirm_publish_title))
+                        .setMessage(R.string.dialog_confirm_publish_message)
+                        .setPositiveButton(R.string.dialog_confirm_publish_yes, new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialogInterface, int i) {
+                                publishPost();
+                            }
+                        })
+                        .setNegativeButton(R.string.dialog_confirm_publish_no, null)
+                        .setCancelable(true);
+                builder.create().show();
             } else {
                 showAsyncPromoDialog();
             }
