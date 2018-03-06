@@ -52,7 +52,7 @@
     </module>
 
     <module name="RegexpSingleline">
-        <property name="format" value="@[\S]*(\([{]?\&quot;.*\&quot;[}]?\)++|\([^\&quot;]*\)++)[^ \t]"/>
+        <property name="format" value="[^\S\r\n]@[\S]*(\([{]?\&quot;.*\&quot;[}]?\)++|\([^\&quot;]*\)++)[^ \t]"/>
         <property name="message" value="In-line annotations must be followed by one whitespace"/>
         <property name="severity" value="error"/>
     </module>
