@@ -994,7 +994,8 @@ public class EditPostActivity extends AppCompatActivity implements
     private void showPublishConfirmationDialog() {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setTitle(getResources().getText(R.string.dialog_confirm_publish_title))
-                .setMessage(R.string.dialog_confirm_publish_message)
+                .setMessage(String.format(getString(R.string.dialog_confirm_publish_message),
+                                          mPost.isPage() ? getString(R.string.page) : getString(R.string.post)))
                 .setPositiveButton(R.string.dialog_confirm_publish_yes, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
