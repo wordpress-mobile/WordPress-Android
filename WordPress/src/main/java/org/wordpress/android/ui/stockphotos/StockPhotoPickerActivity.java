@@ -14,7 +14,6 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
-import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
@@ -31,6 +30,7 @@ import org.wordpress.android.util.DisplayUtils;
 import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.PhotonUtils;
 import org.wordpress.android.util.StringUtils;
+import org.wordpress.android.util.WPActivityUtils;
 import org.wordpress.android.viewmodel.StockMediaViewModel;
 import org.wordpress.android.widgets.WPNetworkImageView;
 
@@ -39,15 +39,13 @@ import java.util.List;
 
 import javax.inject.Inject;
 
-public class StockPhotoPickerActivity extends AppCompatActivity
-        implements SearchView.OnQueryTextListener, MenuItem.OnActionExpandListener {
+public class StockPhotoPickerActivity extends AppCompatActivity implements SearchView.OnQueryTextListener {
     private static final String KEY_SELECTED_ITEMS = "selected_items";
     private SiteModel mSite;
 
     private RecyclerView mRecycler;
     private StockPhotoAdapter mAdapter;
 
-    private MenuItem mSearchMenuItem;
     private SearchView mSearchView;
     private String mSearchQuery;
     private final Handler mHandler = new Handler();
@@ -80,6 +78,7 @@ public class StockPhotoPickerActivity extends AppCompatActivity
             actionBar.setDisplayHomeAsUpEnabled(true);
             actionBar.setDisplayShowTitleEnabled(true);
         }
+        addSearchView(toolbar);
 
         mRecycler = findViewById(R.id.recycler);
         mRecycler.setLayoutManager(new GridLayoutManager(this, getColumnCount()));
@@ -100,11 +99,21 @@ public class StockPhotoPickerActivity extends AppCompatActivity
         }
     }
 
+    private void addSearchView(@NonNull Toolbar toolbar) {
+        mSearchView = new SearchView(WPActivityUtils.getThemedContext(this));
+        mSearchView.setIconifiedByDefault(false);
+        mSearchView.setQueryHint(getString(R.string.stock_photo_picker_search_hint));
+        mSearchView.setOnQueryTextListener(this);
+        mSearchView.setOnCloseListener(new SearchView.OnCloseListener() {
+            @Override public boolean onClose() {
+                return true;
+            }
+        });
+        toolbar.addView(mSearchView);
+    }
+
     @Override
     protected void onDestroy() {
-        if (mSearchView != null) {
-            mSearchView.setOnQueryTextListener(null);
-        }
         if (mSearchView != null) {
             mSearchView.setOnQueryTextListener(null);
         }
@@ -136,28 +145,6 @@ public class StockPhotoPickerActivity extends AppCompatActivity
     }
 
     @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.search, menu);
-
-        mSearchMenuItem = menu.findItem(R.id.menu_search);
-        mSearchMenuItem.expandActionView();
-
-        mSearchView = (SearchView) mSearchMenuItem.getActionView();
-        mSearchView.setEnabled(false);
-        mSearchView.setIconifiedByDefault(false);
-        mSearchView.setQueryHint(getString(R.string.stock_photo_picker_search_hint));
-
-        if (!TextUtils.isEmpty(mViewModel.getSearchQuery())) {
-            mSearchView.setQuery(mViewModel.getSearchQuery(), false);
-            mSearchView.setOnQueryTextListener(this);
-        }
-
-        mSearchMenuItem.setOnActionExpandListener(this);
-
-        return super.onCreateOptionsMenu(menu);
-    }
-
-    @Override
     public boolean onOptionsItemSelected(final MenuItem item) {
         if (item.getItemId() == android.R.id.home) {
             setResult(RESULT_CANCELED);
@@ -179,18 +166,6 @@ public class StockPhotoPickerActivity extends AppCompatActivity
     @Override
     public boolean onQueryTextChange(String query) {
         submitSearch(query, true);
-        return true;
-    }
-
-    @Override
-    public boolean onMenuItemActionExpand(MenuItem menuItem) {
-        mSearchView.setOnQueryTextListener(this);
-        return true;
-    }
-
-    @Override
-    public boolean onMenuItemActionCollapse(MenuItem menuItem) {
-        mSearchView.setOnQueryTextListener(null);
         return true;
     }
 
