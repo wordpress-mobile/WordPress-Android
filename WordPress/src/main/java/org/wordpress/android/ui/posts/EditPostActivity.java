@@ -3037,7 +3037,7 @@ public class EditPostActivity extends AppCompatActivity implements
                 R.drawable.img_promo_async,
                 R.string.async_promo_title,
                 R.string.async_promo_description,
-                android.R.string.ok)
+                R.string.async_promo_publish_now)
                 .setNegativeButtonText(R.string.keep_editing)
                 .setLinkText(R.string.async_promo_link)
                 .build();
