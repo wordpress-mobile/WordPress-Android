@@ -3,15 +3,14 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:clickable="true"
-    android:focusable="true"
     android:orientation="vertical">
 
     <LinearLayout
+        android:focusable="true"
+        android:clickable="false"
         android:id="@+id/time_header"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:clickable="false"
         android:orientation="vertical"
         android:paddingLeft="@dimen/margin_extra_large"
         android:paddingRight="@dimen/margin_extra_large"
@@ -60,6 +59,7 @@
     </LinearLayout>
 
     <LinearLayout
+        android:focusable="true"
         android:id="@+id/note_content_container"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
