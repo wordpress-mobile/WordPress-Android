@@ -35,8 +35,8 @@ public class JetpackConnectionWebViewActivity extends WPWebViewActivity {
     private static final String WPCOM_LOG_IN_PATH_2 = "/log-in/jetpack";
     private static final String JETPACK_PATH = "/jetpack";
     private static final String WORDPRESS_COM_PREFIX = "https://wordpress.com";
-    private static final Uri JETPACK_DEEPLINK_URI =
-            Uri.parse(JetpackConnectionWebViewActivity.JETPACK_CONNECTION_DEEPLINK);
+    private static final String JETPACK_CONNECTION_DEEPLINK = "wordpress://jetpack-connection";
+    private static final Uri JETPACK_DEEPLINK_URI = Uri.parse(JETPACK_CONNECTION_DEEPLINK);
     private static final String REDIRECT_PAGE_STATE_ITEM = "redirectPage";
 
     public enum Source {
@@ -63,8 +63,6 @@ public class JetpackConnectionWebViewActivity extends WPWebViewActivity {
             return mValue;
         }
     }
-
-    public static final String JETPACK_CONNECTION_DEEPLINK = "wordpress://jetpack-connection";
 
     private SiteModel mSite;
     private String mRedirectPage;
