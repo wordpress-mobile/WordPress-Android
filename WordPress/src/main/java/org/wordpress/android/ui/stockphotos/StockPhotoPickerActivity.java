@@ -41,7 +41,6 @@ import javax.inject.Inject;
 
 public class StockPhotoPickerActivity extends AppCompatActivity
         implements SearchView.OnQueryTextListener, MenuItem.OnActionExpandListener {
-
     private static final String KEY_SELECTED_ITEMS = "selected_items";
     private SiteModel mSite;
 
@@ -249,7 +248,6 @@ public class StockPhotoPickerActivity extends AppCompatActivity
             mItems.clear();
             mItems.addAll(mediaList);
             notifyDataSetChanged();
-
         }
 
         void clear() {
@@ -278,21 +276,21 @@ public class StockPhotoPickerActivity extends AppCompatActivity
         public void onBindViewHolder(StockViewHolder holder, int position) {
             StockMediaModel media = mItems.get(position);
             String imageUrl = PhotonUtils.getPhotonImageUrl(media.getThumbnail(), mThumbWidth, mThumbHeight);
-            holder.imageView.setImageUrl(imageUrl, WPNetworkImageView.ImageType.PHOTO);
+            holder.mImageView.setImageUrl(imageUrl, WPNetworkImageView.ImageType.PHOTO);
 
             boolean isSelected = isItemSelected(position);
-            holder.selectionCountTextView.setSelected(isSelected);
+            holder.mSelectionCountTextView.setSelected(isSelected);
             if (isSelected) {
                 int count = mSelectedItems.indexOf(position) + 1;
-                holder.selectionCountTextView.setText(Integer.toString(count));
+                holder.mSelectionCountTextView.setText(Integer.toString(count));
             } else {
-                holder.selectionCountTextView.setText(null);
+                holder.mSelectionCountTextView.setText(null);
             }
 
             float scale = isSelected ? SCALE_SELECTED : SCALE_NORMAL;
-            if (holder.imageView.getScaleX() != scale) {
-                holder.imageView.setScaleX(scale);
-                holder.imageView.setScaleY(scale);
+            if (holder.mImageView.getScaleX() != scale) {
+                holder.mImageView.setScaleX(scale);
+                holder.mImageView.setScaleY(scale);
             }
 
             if (!mIsFetching && mViewModel.canLoadMore() && position == getItemCount() - 1) {
@@ -323,18 +321,18 @@ public class StockPhotoPickerActivity extends AppCompatActivity
 
             // show and animate the count
             if (selected) {
-                holder.selectionCountTextView.setText(Integer.toString(mSelectedItems.indexOf(position) + 1));
+                holder.mSelectionCountTextView.setText(Integer.toString(mSelectedItems.indexOf(position) + 1));
             } else {
-                holder.selectionCountTextView.setText(null);
+                holder.mSelectionCountTextView.setText(null);
             }
-            AniUtils.startAnimation(holder.selectionCountTextView, R.anim.pop);
-            holder.selectionCountTextView.setVisibility(selected ? View.VISIBLE : View.GONE);
+            AniUtils.startAnimation(holder.mSelectionCountTextView, R.anim.pop);
+            holder.mSelectionCountTextView.setVisibility(selected ? View.VISIBLE : View.GONE);
 
             // scale the thumbnail
             if (selected) {
-                AniUtils.scale(holder.imageView, SCALE_NORMAL, SCALE_SELECTED, AniUtils.Duration.SHORT);
+                AniUtils.scale(holder.mImageView, SCALE_NORMAL, SCALE_SELECTED, AniUtils.Duration.SHORT);
             } else {
-                AniUtils.scale(holder.imageView, SCALE_SELECTED, SCALE_NORMAL, AniUtils.Duration.SHORT);
+                AniUtils.scale(holder.mImageView, SCALE_SELECTED, SCALE_NORMAL, AniUtils.Duration.SHORT);
             }
 
             // redraw after the scale animation completes
@@ -345,7 +343,6 @@ public class StockPhotoPickerActivity extends AppCompatActivity
                     notifyDataSetChanged();
                 }
             }, delayMs);
-
         }
 
         private void toggleItemSelected(StockViewHolder holder, int position) {
@@ -365,18 +362,18 @@ public class StockPhotoPickerActivity extends AppCompatActivity
     }
 
     class StockViewHolder extends RecyclerView.ViewHolder {
-        private final WPNetworkImageView imageView;
-        private final TextView selectionCountTextView;
+        private final WPNetworkImageView mImageView;
+        private final TextView mSelectionCountTextView;
 
-        public StockViewHolder(View view) {
+        StockViewHolder(View view) {
             super(view);
 
-            imageView = view.findViewById(R.id.image_thumbnail);
-            imageView.getLayoutParams().width = mThumbWidth;
-            imageView.getLayoutParams().height = mThumbHeight;
+            mImageView = view.findViewById(R.id.image_thumbnail);
+            mImageView.getLayoutParams().width = mThumbWidth;
+            mImageView.getLayoutParams().height = mThumbHeight;
 
-            selectionCountTextView = view.findViewById(R.id.text_selection_count);
-            selectionCountTextView.setOnClickListener(new View.OnClickListener() {
+            mSelectionCountTextView = view.findViewById(R.id.text_selection_count);
+            mSelectionCountTextView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     int position = getAdapterPosition();
@@ -386,7 +383,7 @@ public class StockPhotoPickerActivity extends AppCompatActivity
                 }
             });
 
-            imageView.setOnLongClickListener(new View.OnLongClickListener() {
+            mImageView.setOnLongClickListener(new View.OnLongClickListener() {
                 @Override
                 public boolean onLongClick(View v) {
                     int position = getAdapterPosition();
@@ -402,5 +399,4 @@ public class StockPhotoPickerActivity extends AppCompatActivity
     private int getColumnCount() {
         return DisplayUtils.isLandscape(this) ? 4 : 3;
     }
-
 }
