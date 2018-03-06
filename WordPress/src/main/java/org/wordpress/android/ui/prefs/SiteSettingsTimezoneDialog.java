@@ -29,7 +29,6 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 
-import org.apache.commons.lang3.StringUtils;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -40,6 +39,7 @@ import org.wordpress.android.networking.RestClientUtils;
 import org.wordpress.android.ui.stats.models.PostViewsModel;
 import org.wordpress.android.util.ActivityUtils;
 import org.wordpress.android.util.AppLog;
+import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.ToastUtils;
 
 import java.util.ArrayList;
@@ -187,18 +187,7 @@ public class SiteSettingsTimezoneDialog extends DialogFragment implements Dialog
                 public int compare(Timezone t1, Timezone t2) {
                     // manually perform the StringUtils.compare() function. Some devices seem to be missing it.
                     //  See https://github.com/wordpress-mobile/WordPress-Android/issues/7376
-                    final String s1 = t1.label;
-                    final String s2 = t2.label;
-
-                    if (s1 == s2) {
-                        return 0;
-                    } else if (s1 == null) {
-                        return -1;
-                    } else if (s2 == null) {
-                        return 1;
-                    } else {
-                        return s1.compareTo(s2);
-                    }
+                    return StringUtils.compare(t1.label, t2.label);
                 }
             });
 
