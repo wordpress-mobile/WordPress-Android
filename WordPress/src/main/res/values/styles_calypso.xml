@@ -28,8 +28,8 @@
         <item name="colorPrimaryDark">@color/grey_darken_10</item>
 
         <item name="android:windowContentOverlay">@color/grey_lighten_30</item>
-        <item name="alertDialogTheme">@style/Calypso.AlertDialog</item>
-        <item name="dialogTheme">@style/Calypso.AlertDialog</item>
+        <item name="alertDialogTheme">@style/Calypso.Dialog</item>
+        <item name="dialogTheme">@style/Calypso.Dialog</item>
         <item name="colorControlActivated">@color/blue_medium</item>
         <item name="colorControlNormal">@color/grey_lighten_20</item>
         <item name="colorAccent">@color/orange_jazzy</item>
@@ -53,7 +53,7 @@
         <item name="android:background">@color/grey_darken_10</item>
     </style>
 
-    <style name="Calypso.AlertDialog" parent="@style/Theme.AppCompat.Light.Dialog.Alert">
+    <style name="Calypso.Dialog" parent="@style/Theme.AppCompat.Light.Dialog">
         <item name="colorPrimary">@color/color_primary</item>
         <item name="colorPrimaryDark">@color/color_primary_dark</item>
         <item name="colorAccent">@color/blue_medium</item>

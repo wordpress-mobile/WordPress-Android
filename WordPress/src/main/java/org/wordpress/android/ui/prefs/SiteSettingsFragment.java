@@ -1496,7 +1496,7 @@ public class SiteSettingsFragment extends PreferenceFragment
             @Override
             public void onClick(View v) {
                 AlertDialog.Builder builder =
-                        new AlertDialog.Builder(getActivity(), R.style.Calypso_AlertDialog);
+                        new AlertDialog.Builder(getActivity(), R.style.Calypso_Dialog);
                 final EditText input = new EditText(getActivity());
                 WPPrefUtils.layoutAsInput(input);
                 input.setWidth(getResources().getDimensionPixelSize(R.dimen.list_editor_input_max_width));

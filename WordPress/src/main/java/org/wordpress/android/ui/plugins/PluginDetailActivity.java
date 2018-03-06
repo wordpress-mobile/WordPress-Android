@@ -634,7 +634,7 @@ public class PluginDetailActivity extends AppCompatActivity {
     }
 
     private void confirmRemovePlugin() {
-        AlertDialog.Builder builder = new AlertDialog.Builder(this, R.style.Calypso_AlertDialog);
+        AlertDialog.Builder builder = new AlertDialog.Builder(this, R.style.Calypso_Dialog);
         builder.setTitle(getResources().getText(R.string.plugin_remove_dialog_title));
         String confirmationMessage = getString(R.string.plugin_remove_dialog_message,
                                                mSitePlugin.getDisplayName(),

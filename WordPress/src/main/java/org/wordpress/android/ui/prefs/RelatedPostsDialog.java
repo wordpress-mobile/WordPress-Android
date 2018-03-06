@@ -91,7 +91,7 @@ public class RelatedPostsDialog extends DialogFragment
 
         toggleViews(mShowRelatedPosts.isChecked());
 
-        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity(), R.style.Calypso_AlertDialog);
+        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity(), R.style.Calypso_Dialog);
         View titleView = inflater.inflate(R.layout.detail_list_preference_title, null);
         TextView titleText = ((TextView) titleView.findViewById(R.id.title));
         titleText.setText(R.string.site_settings_related_posts_title);

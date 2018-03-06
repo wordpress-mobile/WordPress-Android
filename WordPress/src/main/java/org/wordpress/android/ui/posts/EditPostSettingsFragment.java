@@ -488,7 +488,7 @@ public class EditPostSettingsFragment extends Fragment {
         if (!isAdded()) {
             return;
         }
-        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity(), R.style.Calypso_AlertDialog);
+        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity(), R.style.Calypso_Dialog);
         builder.setTitle(R.string.post_settings_status);
         builder.setSingleChoiceItems(R.array.post_settings_statuses, getCurrentPostStatusIndex(), null);
         builder.setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
@@ -517,7 +517,7 @@ public class EditPostSettingsFragment extends Fragment {
             }
         }
 
-        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity(), R.style.Calypso_AlertDialog);
+        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity(), R.style.Calypso_Dialog);
         builder.setTitle(R.string.post_settings_post_format);
         builder.setSingleChoiceItems(mPostFormatNames.toArray(new CharSequence[0]), checkedItem, null);
         builder.setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
@@ -562,7 +562,7 @@ public class EditPostSettingsFragment extends Fragment {
         boolean isPublishImmediatelyAvailable = PostUtils.shouldPublishImmediatelyOptionBeAvailable(getPost());
 
         final DatePickerDialog datePickerDialog = new DatePickerDialog(getActivity(),
-                Build.VERSION.SDK_INT >= 21 ? R.style.Calypso_AlertDialog : 0, null, year, month, day);
+                Build.VERSION.SDK_INT >= 21 ? R.style.Calypso_Dialog : 0, null, year, month, day);
         datePickerDialog.setButton(DialogInterface.BUTTON_POSITIVE, resources.getString(android.R.string.ok),
                                    new DialogInterface.OnClickListener() {
                                        public void onClick(DialogInterface dialog, int id) {
@@ -603,7 +603,7 @@ public class EditPostSettingsFragment extends Fragment {
         int hour = calendar.get(Calendar.HOUR_OF_DAY);
         int minute = calendar.get(Calendar.MINUTE);
         final TimePickerDialog timePickerDialog = new TimePickerDialog(getActivity(),
-                Build.VERSION.SDK_INT >= 21 ? R.style.Calypso_AlertDialog : 0,
+                Build.VERSION.SDK_INT >= 21 ? R.style.Calypso_Dialog : 0,
                 new TimePickerDialog.OnTimeSetListener() {
                     @Override
                     public void onTimeSet(TimePicker timePicker, int selectedHour, int selectedMinute) {
