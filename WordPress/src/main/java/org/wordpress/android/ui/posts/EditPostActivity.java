@@ -1437,7 +1437,7 @@ public class EditPostActivity extends AppCompatActivity implements
     }
 
     private void showRemoveFailedUploadsDialog() {
-        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        AlertDialog.Builder builder = new AlertDialog.Builder(new ContextThemeWrapper(this, R.style.Calypso_Dialog));
         builder.setMessage(R.string.editor_toast_failed_uploads)
                .setPositiveButton(R.string.editor_remove_failed_uploads, new DialogInterface.OnClickListener() {
                    public void onClick(DialogInterface dialog, int id) {
