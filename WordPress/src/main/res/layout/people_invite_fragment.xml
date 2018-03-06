@@ -94,8 +94,6 @@
             android:id="@+id/role_container"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_alignParentLeft="true"
-            android:layout_alignParentStart="true"
             android:layout_marginBottom="@dimen/margin_extra_large"
             android:layout_marginTop="@dimen/margin_medium"
             android:background="?android:selectableItemBackground"
