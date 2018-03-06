@@ -35,6 +35,27 @@ public class StringUtils {
         }
     }
 
+    /**
+     * Compare two Strings lexicographically, ignoring case differences.
+     * Mirrors {@link org.apache.commons.lang3.StringUtils#compareIgnoreCase(String, String)}. Use this version when
+     *  there is a hint that the Apache lib might not be provided by the system.
+     * @param s1 the String to compare from
+     * @param s2 the String to compare to
+     * @return &lt; 0, 0, &gt; 0, if {@code s1} is respectively less, equal ou greater than {@code s2}
+     */
+    public static int compareIgnoreCase(final String s1, final String s2) {
+        if (s1 == s2) {
+            return 0;
+        }
+        if (s1 == null) {
+            return -1;
+        }
+        if (s2 == null) {
+            return 1;
+        }
+        return s1.compareToIgnoreCase(s2);
+    }
+
     public static String[] mergeStringArrays(String array1[], String array2[]) {
         if (array1 == null || array1.length == 0) {
             return array2;
