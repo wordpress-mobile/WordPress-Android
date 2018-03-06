@@ -140,7 +140,7 @@ public class LoginEmailFragment extends LoginBaseFormFragment<LoginListener> imp
             @Override
             public void onClick(View view) {
                 mAnalyticsListener.trackSocialButtonClick();
-                EditTextUtils.hideSoftInput(mEmailInput.getEditText());
+                ActivityUtils.hideKeyboardForced(mEmailInput.getEditText());
 
                 if (NetworkUtils.checkConnection(getActivity())) {
                     if (isAdded()) {
@@ -357,9 +357,10 @@ public class LoginEmailFragment extends LoginBaseFormFragment<LoginListener> imp
             case EMAIL:
                 if (event.isAvailable) {
                     // email address is available on wpcom, so apparently the user can't login with that one.
+                    ActivityUtils.hideKeyboardForced(mEmailInput);
                     showEmailError(R.string.email_not_registered_wpcom);
                 } else if (mLoginListener != null) {
-                    EditTextUtils.hideSoftInput(mEmailInput.getEditText());
+                    ActivityUtils.hideKeyboardForced(mEmailInput);
                     mLoginListener.gotWpcomEmail(event.value);
                 }
                 break;
@@ -430,7 +431,7 @@ public class LoginEmailFragment extends LoginBaseFormFragment<LoginListener> imp
                     @Override
                     public void run() {
                         if (isAdded()) {
-                            EditTextUtils.showSoftInput(mEmailInput.getEditText());
+                            ActivityUtils.showKeyboard(mEmailInput.getEditText());
                         }
                     }
                 }, getResources().getInteger(android.R.integer.config_mediumAnimTime));
