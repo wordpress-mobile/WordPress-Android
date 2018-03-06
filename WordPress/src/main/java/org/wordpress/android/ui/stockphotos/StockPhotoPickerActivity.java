@@ -17,6 +17,7 @@ import android.text.TextUtils;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.EditorInfo;
 import android.widget.TextView;
 
 import org.wordpress.android.R;
@@ -104,6 +105,7 @@ public class StockPhotoPickerActivity extends AppCompatActivity implements Searc
         mSearchView.setIconifiedByDefault(false);
         mSearchView.setQueryHint(getString(R.string.stock_photo_picker_search_hint));
         mSearchView.setOnQueryTextListener(this);
+        mSearchView.setImeOptions(EditorInfo.IME_FLAG_NO_EXTRACT_UI);
         mSearchView.setOnCloseListener(new SearchView.OnCloseListener() {
             @Override public boolean onClose() {
                 return true;
