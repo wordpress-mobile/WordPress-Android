@@ -34,16 +34,16 @@ import de.greenrobot.event.EventBus;
  */
 
 public class ReaderPostService extends Service {
-
-    private static final String ARG_TAG     = "tag";
-    private static final String ARG_ACTION  = "action";
+    private static final String ARG_TAG = "tag";
+    private static final String ARG_ACTION = "action";
     private static final String ARG_BLOG_ID = "blog_id";
     private static final String ARG_FEED_ID = "feed_id";
 
     public enum UpdateAction {
-        REQUEST_NEWER,          // request the newest posts for this tag/blog/feed
-        REQUEST_OLDER,          // request posts older than the oldest existing one for this tag/blog/feed
-        REQUEST_OLDER_THAN_GAP  // request posts older than the one with the gap marker for this tag (not supported for blog/feed)
+        REQUEST_NEWER, // request the newest posts for this tag/blog/feed
+        REQUEST_OLDER, // request posts older than the oldest existing one for this tag/blog/feed
+        REQUEST_OLDER_THAN_GAP // request posts older than the one with the gap marker for this tag
+                               // (not supported for blog/feed)
     }
 
     /*
@@ -302,8 +302,8 @@ public class ReaderPostService extends Service {
                                 // provided that local posts exist
                                 int numServerPosts = serverPosts.size();
                                 if (numServerPosts >= 2
-                                        && ReaderPostTable.getNumPostsWithTag(tag) > 0
-                                        && !ReaderPostTable.hasOverlap(serverPosts)) {
+                                    && ReaderPostTable.getNumPostsWithTag(tag) > 0
+                                    && !ReaderPostTable.hasOverlap(serverPosts)) {
                                     // treat the second to last server post as having a gap
                                     postWithGap = serverPosts.get(numServerPosts - 2);
                                     // remove the last server post to deal with the edge case of
@@ -328,7 +328,8 @@ public class ReaderPostService extends Service {
                     if (postWithGap != null) {
                         ReaderPostTable.setGapMarkerForTag(postWithGap.blogId, postWithGap.postId, tag);
                     }
-                } else if (updateResult == UpdateResult.UNCHANGED && updateAction == UpdateAction.REQUEST_OLDER_THAN_GAP) {
+                } else if (updateResult == UpdateResult.UNCHANGED
+                           && updateAction == UpdateAction.REQUEST_OLDER_THAN_GAP) {
                     // edge case - request to fill gap returned nothing new, so remove the gap marker
                     ReaderPostTable.removeGapMarkerForTag(tag);
                     AppLog.w(AppLog.T.READER, "attempt to fill gap returned nothing new");
@@ -374,7 +375,7 @@ public class ReaderPostService extends Service {
      * between API versions (as it did when we moved from v1 to v1.1)
      *
      * ex: https://public-api.wordpress.com/rest/v1/read/tags/fitness/posts
-     *     becomes just                             read/tags/fitness/posts
+     * becomes just read/tags/fitness/posts
      */
     private static String getRelativeEndpoint(final String endpoint) {
         if (endpoint != null && endpoint.startsWith("http")) {
@@ -389,5 +390,4 @@ public class ReaderPostService extends Service {
         }
         return StringUtils.notNullStr(endpoint);
     }
-
 }

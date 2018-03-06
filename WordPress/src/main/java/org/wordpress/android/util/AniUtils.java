@@ -18,7 +18,6 @@ import android.view.animation.TranslateAnimation;
 import org.wordpress.android.R;
 
 public class AniUtils {
-
     public enum Duration {
         SHORT,
         MEDIUM,
@@ -49,7 +48,9 @@ public class AniUtils {
     }
 
     public static void startAnimation(View target, int aniResId, int duration) {
-        if (target == null) return;
+        if (target == null) {
+            return;
+        }
 
         Animation animation = AnimationUtils.loadAnimation(target.getContext(), aniResId);
         if (animation != null) {
@@ -59,7 +60,9 @@ public class AniUtils {
     }
 
     public static void startAnimation(View target, int aniResId, AnimationListener listener) {
-        if (target == null) return;
+        if (target == null) {
+            return;
+        }
 
         Animation animation = AnimationUtils.loadAnimation(target.getContext(), aniResId);
         if (animation != null) {
@@ -74,14 +77,17 @@ public class AniUtils {
      * in/out animation for floating action button
      */
     public static void showFab(final View view, final boolean show) {
-        if (view == null) return;
+        if (view == null) {
+            return;
+        }
 
         Context context = view.getContext();
-        int fabHeight = context.getResources().getDimensionPixelSize(android.support.design.R.dimen.design_fab_size_normal);
+        int fabHeight =
+                context.getResources().getDimensionPixelSize(android.support.design.R.dimen.design_fab_size_normal);
         int fabMargin = context.getResources().getDimensionPixelSize(R.dimen.fab_margin);
         int max = (fabHeight + fabMargin) * 2;
         float fromY = (show ? max : 0f);
-        float toY   = (show ? 0f : max);
+        float toY = (show ? 0f : max);
 
         ObjectAnimator anim = ObjectAnimator.ofFloat(view, View.TRANSLATION_Y, fromY, toY);
         if (show) {
@@ -99,6 +105,7 @@ public class AniUtils {
                     view.setVisibility(View.VISIBLE);
                 }
             }
+
             @Override
             public void onAnimationEnd(Animator animation) {
                 super.onAnimationEnd(animation);
@@ -139,10 +146,10 @@ public class AniUtils {
         float toY;
         if (isTopBar) {
             fromY = (show ? -1f : 0f);
-            toY   = (show ? 0f : -1f);
+            toY = (show ? 0f : -1f);
         } else {
             fromY = (show ? 1f : 0f);
-            toY   = (show ? 0f : 1f);
+            toY = (show ? 0f : 1f);
         }
         Animation animation = new TranslateAnimation(
                 Animation.RELATIVE_TO_SELF, 0.0f,
@@ -246,6 +253,7 @@ public class AniUtils {
     public static void scaleOut(final View target, Duration duration) {
         scaleOut(target, View.GONE, duration, null);
     }
+
     public static void scaleOut(final View target,
                                 final int endVisibility,
                                 Duration duration,

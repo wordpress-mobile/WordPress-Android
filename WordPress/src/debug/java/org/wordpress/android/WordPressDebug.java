@@ -26,20 +26,20 @@ public class WordPressDebug extends WordPress {
         }
 
         StrictMode.setThreadPolicy(new StrictMode.ThreadPolicy.Builder()
-                .detectDiskReads()
-                .detectDiskWrites()
-                .detectNetwork()
-                .penaltyLog()
-                .penaltyFlashScreen()
-                .build());
+                                           .detectDiskReads()
+                                           .detectDiskWrites()
+                                           .detectNetwork()
+                                           .penaltyLog()
+                                           .penaltyFlashScreen()
+                                           .build());
 
         StrictMode.setVmPolicy(new StrictMode.VmPolicy.Builder()
-                .detectActivityLeaks()
-                .detectLeakedSqlLiteObjects()
-                .detectLeakedClosableObjects()
-                .detectLeakedRegistrationObjects() // <-- requires Jelly Bean
-                .penaltyLog()
-                .build());
+                                       .detectActivityLeaks()
+                                       .detectLeakedSqlLiteObjects()
+                                       .detectLeakedClosableObjects()
+                                       .detectLeakedRegistrationObjects() // <-- requires Jelly Bean
+                                       .penaltyLog()
+                                       .build());
 
         AppLog.w(T.UTILS, "Strict mode enabled");
     }

@@ -77,23 +77,23 @@ public class SuggestionAutoCompleteText extends AppCompatMultiAutoCompleteTextVi
         SavedState savedState = new SavedState(super.onSaveInstanceState());
 
         // store the current Focused state
-        savedState.isFocused = isFocused();
+        savedState.mIsFocused = isFocused();
 
         return savedState;
     }
 
     @Override
     public void onRestoreInstanceState(Parcelable state) {
-        if(!(state instanceof SavedState)) {
+        if (!(state instanceof SavedState)) {
             super.onRestoreInstanceState(state);
             return;
         }
 
-        SavedState savedState = (SavedState)state;
+        SavedState savedState = (SavedState) state;
         super.onRestoreInstanceState(savedState.getSuperState());
 
         // if we were focused, setup a properly timed future request for focus
-        if (savedState.isFocused) {
+        if (savedState.mIsFocused) {
             // this OnLayoutChangeListener will self unregister upon running and it's there so we can properly time the
             // on-screen IME opening
             addOnLayoutChangeListener(mOneoffFocusRequest);
@@ -103,7 +103,7 @@ public class SuggestionAutoCompleteText extends AppCompatMultiAutoCompleteTextVi
     private final OnLayoutChangeListener mOneoffFocusRequest = new OnLayoutChangeListener() {
         @Override
         public void onLayoutChange(View v, int left, int top, int right, int bottom, int oldLeft, int oldTop,
-                int oldRight, int oldBottom) {
+                                   int oldRight, int oldBottom) {
             // we're now at a good point in time to launch a focus request
             post(new Runnable() {
                 @Override
@@ -144,7 +144,7 @@ public class SuggestionAutoCompleteText extends AppCompatMultiAutoCompleteTextVi
             }
         }
 
-        return super.onKeyPreIme(keyCode,event);
+        return super.onKeyPreIme(keyCode, event);
     }
 
     @Override
@@ -171,7 +171,7 @@ public class SuggestionAutoCompleteText extends AppCompatMultiAutoCompleteTextVi
      * Local class for holding the EditBox's focused or not state
      */
     static class SavedState extends BaseSavedState {
-        boolean isFocused;
+        private boolean mIsFocused;
 
         SavedState(Parcelable superState) {
             super(superState);
@@ -179,13 +179,13 @@ public class SuggestionAutoCompleteText extends AppCompatMultiAutoCompleteTextVi
 
         private SavedState(Parcel in) {
             super(in);
-            this.isFocused = (in.readInt() == 1);
+            this.mIsFocused = (in.readInt() == 1);
         }
 
         @Override
         public void writeToParcel(Parcel out, int flags) {
             super.writeToParcel(out, flags);
-            out.writeInt(this.isFocused ? 1 : 0);
+            out.writeInt(this.mIsFocused ? 1 : 0);
         }
 
         public static final Parcelable.Creator<SavedState> CREATOR = new Parcelable.Creator<SavedState>() {

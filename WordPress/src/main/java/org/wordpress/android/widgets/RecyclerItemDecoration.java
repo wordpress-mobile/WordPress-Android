@@ -33,8 +33,8 @@ public class RecyclerItemDecoration extends RecyclerView.ItemDecoration {
             return;
         }
         outRect.set(mSpacingHorizontal, // left
-                0,                      // top
-                mSpacingHorizontal,     // right
-                mSpacingVertical);      // bottom
+                    0, // top
+                    mSpacingHorizontal, // right
+                    mSpacingVertical); // bottom
     }
 }

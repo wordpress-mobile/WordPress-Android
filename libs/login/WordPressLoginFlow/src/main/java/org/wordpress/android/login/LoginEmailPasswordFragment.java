@@ -103,7 +103,7 @@ public class LoginEmailPasswordFragment extends LoginBaseFormFragment<LoginListe
 
         // connect to the Service. We'll receive updates via EventBus.
         mServiceEventConnection = new AutoForeground.ServiceEventConnection(getContext(),
-                LoginWpcomService.class, this);
+                                                                            LoginWpcomService.class, this);
 
         // install the change listener as late as possible so the UI can be setup (updated from the Service state)
         //  before triggering the state cleanup happening in the change listener.
@@ -124,8 +124,7 @@ public class LoginEmailPasswordFragment extends LoginBaseFormFragment<LoginListe
     }
 
     @Override
-    protected @LayoutRes
-    int getContentLayout() {
+    protected @LayoutRes int getContentLayout() {
         return R.layout.login_email_password_screen;
     }
 
@@ -214,7 +213,7 @@ public class LoginEmailPasswordFragment extends LoginBaseFormFragment<LoginListe
         mRequestedPassword = mPasswordInput.getEditText().getText().toString();
 
         LoginWpcomService.loginWithEmailAndPassword(getContext(), mEmailAddress, mRequestedPassword, mIdToken, mService,
-                mIsSocialLogin);
+                                                    mIsSocialLogin);
         mOldSitesIDs = SiteUtils.getCurrentSiteIds(mSiteStore, false);
     }
 

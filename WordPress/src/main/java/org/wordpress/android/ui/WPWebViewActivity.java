@@ -292,7 +292,7 @@ public class WPWebViewActivity extends WebViewActivity {
                 for (SiteModel siteModel : wpComSites) {
                     // Only replace the url if we know the unmapped url and if it's a custom domain
                     if (!TextUtils.isEmpty(siteModel.getUnmappedUrl())
-                            && !siteModel.getUrl().contains(".wordpress.com")) {
+                        && !siteModel.getUrl().contains(".wordpress.com")) {
                         addressToLoad = addressToLoad.replace(siteModel.getUrl(), siteModel.getUnmappedUrl());
                     }
                 }
@@ -332,25 +332,27 @@ public class WPWebViewActivity extends WebViewActivity {
      */
     protected void loadAuthenticatedUrl(String authenticationURL, String urlToLoad, String username, String password) {
         String postData = getAuthenticationPostData(authenticationURL, urlToLoad, username, password,
-                mAccountStore.getAccessToken());
+                                                    mAccountStore.getAccessToken());
 
         mWebView.postUrl(authenticationURL, postData.getBytes());
     }
 
     public static String getAuthenticationPostData(String authenticationUrl, String urlToLoad, String username,
                                                    String password, String token) {
-        if (TextUtils.isEmpty(authenticationUrl)) return "";
+        if (TextUtils.isEmpty(authenticationUrl)) {
+            return "";
+        }
 
         try {
             String postData = String.format("log=%s&pwd=%s&redirect_to=%s",
-                    URLEncoder.encode(StringUtils.notNullStr(username), ENCODING_UTF8),
-                    URLEncoder.encode(StringUtils.notNullStr(password), ENCODING_UTF8),
-                    URLEncoder.encode(StringUtils.notNullStr(urlToLoad), ENCODING_UTF8)
-            );
+                                            URLEncoder.encode(StringUtils.notNullStr(username), ENCODING_UTF8),
+                                            URLEncoder.encode(StringUtils.notNullStr(password), ENCODING_UTF8),
+                                            URLEncoder.encode(StringUtils.notNullStr(urlToLoad), ENCODING_UTF8)
+                                           );
 
             // Add token authorization when signing in to WP.com
             if (WPUrlUtils.safeToAddWordPressComAuthToken(authenticationUrl)
-                    && authenticationUrl.contains("wordpress.com/wp-login.php") && !TextUtils.isEmpty(token)) {
+                && authenticationUrl.contains("wordpress.com/wp-login.php") && !TextUtils.isEmpty(token)) {
                 postData += "&authorization=Bearer " + URLEncoder.encode(token, ENCODING_UTF8);
             }
 

@@ -23,17 +23,17 @@ public class NotificationsTable {
         return WordPress.wpDB.getDatabase();
     }
 
-    public static int NOTES_TO_RETRIEVE = 200;
+    public static final int NOTES_TO_RETRIEVE = 200;
 
     public static void createTables(SQLiteDatabase db) {
         db.execSQL("CREATE TABLE IF NOT EXISTS " + NOTIFICATIONS_TABLE + " ("
-                + "id                       INTEGER PRIMARY KEY DEFAULT 0,"
-                + "note_id                  TEXT,"
-                + "type                     TEXT,"
-                + "raw_note_data            TEXT,"
-                + "timestamp                INTEGER," +
-                " UNIQUE (note_id) ON CONFLICT REPLACE"
-                + ")");
+                   + "id INTEGER PRIMARY KEY DEFAULT 0,"
+                   + "note_id TEXT,"
+                   + "type TEXT,"
+                   + "raw_note_data TEXT,"
+                   + "timestamp INTEGER,"
+                   + " UNIQUE (note_id) ON CONFLICT REPLACE"
+                   + ")");
     }
 
     private static void dropTables(SQLiteDatabase db) {
@@ -45,17 +45,17 @@ public class NotificationsTable {
     }
 
     public static ArrayList<Note> getLatestNotes(int limit) {
-        Cursor cursor = getDb().query(NOTIFICATIONS_TABLE, new String[] {"note_id", "raw_note_data"},
-                null, null, null, null, "timestamp DESC", "" + limit);
+        Cursor cursor = getDb().query(NOTIFICATIONS_TABLE, new String[]{"note_id", "raw_note_data"},
+                                      null, null, null, null, "timestamp DESC", "" + limit);
         ArrayList<Note> notes = new ArrayList<Note>();
         while (cursor.moveToNext()) {
-            String note_id = cursor.getString(0);
-            String raw_note_data = cursor.getString(1);
+            String noteId = cursor.getString(0);
+            String rawNoteData = cursor.getString(1);
             try {
-                Note note = new Note(note_id, new JSONObject(raw_note_data));
+                Note note = new Note(noteId, new JSONObject(rawNoteData));
                 notes.add(note);
             } catch (JSONException e) {
-                AppLog.e(AppLog.T.DB, "Can't parse notification with note_id:" + note_id + ", exception:" + e);
+                AppLog.e(AppLog.T.DB, "Can't parse notification with noteId:" + noteId + ", exception:" + e);
             }
         }
         cursor.close();
@@ -69,7 +69,7 @@ public class NotificationsTable {
         values.put("raw_note_data", note.getJSON().toString());
 
         long result;
-        if(checkBeforeInsert && isNoteAvailable(note.getId())) {
+        if (checkBeforeInsert && isNoteAvailable(note.getId())) {
             // Update
             String[] args = {note.getId()};
             result = getDb().update(
@@ -78,12 +78,12 @@ public class NotificationsTable {
                     "note_id=?",
                     args);
             return result == 1;
-        }  else {
+        } else {
             // insert
             values.put("note_id", note.getId());
             result = getDb().insertWithOnConflict(NOTIFICATIONS_TABLE, null, values, SQLiteDatabase.CONFLICT_REPLACE);
             if (result == -1) {
-                AppLog.e(AppLog.T.DB, "An error occurred while saving the note into the DB -  note_id:" + note.getId());
+                AppLog.e(AppLog.T.DB, "An error occurred while saving the note into the DB - note_id:" + note.getId());
             }
             return result != -1;
         }
@@ -96,7 +96,7 @@ public class NotificationsTable {
                 clearNotes();
             }
 
-            for (Note note: notes) {
+            for (Note note : notes) {
                 // No need to check if the row already exists if we've just dropped the table.
                 putNote(note, !clearBeforeSaving);
             }
@@ -111,8 +111,8 @@ public class NotificationsTable {
         getDb().beginTransaction();
         boolean saved = false;
         try {
-             saved = putNote(note, true);
-             getDb().setTransactionSuccessful();
+            saved = putNote(note, true);
+            getDb().setTransactionSuccessful();
         } finally {
             getDb().endTransaction();
         }
@@ -127,8 +127,8 @@ public class NotificationsTable {
 
         String[] args = {noteID};
         return SqlUtils.boolForQuery(getDb(),
-                "SELECT 1 FROM " + NOTIFICATIONS_TABLE + " WHERE note_id=?1",
-                args);
+                                     "SELECT 1 FROM " + NOTIFICATIONS_TABLE + " WHERE note_id=?1",
+                                     args);
     }
 
     public static Note getNoteById(String noteID) {
@@ -136,7 +136,9 @@ public class NotificationsTable {
             AppLog.e(AppLog.T.DB, "Asking for a note with null Id. Really?" + noteID);
             return null;
         }
-        Cursor cursor = getDb().query(NOTIFICATIONS_TABLE, new String[] {"raw_note_data"},  "note_id=" + noteID, null, null, null, null);
+        Cursor cursor =
+                getDb().query(NOTIFICATIONS_TABLE, new String[]{"raw_note_data"}, "note_id=" + noteID, null, null, null,
+                              null);
         try {
             if (cursor.moveToFirst()) {
                 JSONObject jsonNote = new JSONObject(cursor.getString(0));

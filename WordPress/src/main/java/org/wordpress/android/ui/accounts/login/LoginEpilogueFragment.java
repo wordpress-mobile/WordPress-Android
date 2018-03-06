@@ -48,7 +48,7 @@ public class LoginEpilogueFragment extends LoginBaseFormFragment<LoginEpilogueLi
     private LoginEpilogueListener mLoginEpilogueListener;
 
     public static LoginEpilogueFragment newInstance(boolean doLoginUpdate, boolean showAndReturn,
-            ArrayList<Integer> oldSitesIds) {
+                                                    ArrayList<Integer> oldSitesIds) {
         LoginEpilogueFragment fragment = new LoginEpilogueFragment();
         Bundle args = new Bundle();
         args.putBoolean(ARG_DO_LOGIN_UPDATE, doLoginUpdate);
@@ -146,7 +146,8 @@ public class LoginEpilogueFragment extends LoginBaseFormFragment<LoginEpilogueLi
     }
 
     private void setNewAdapter() {
-        mAdapter = new SitePickerAdapter(getActivity(), R.layout.login_epilogue_sites_listitem, 0, "", false,
+        mAdapter = new SitePickerAdapter(
+                getActivity(), R.layout.login_epilogue_sites_listitem, 0, "", false,
                 new SitePickerAdapter.OnDataLoadedListener() {
                     @Override
                     public void onBeforeLoad(boolean isEmpty) {
@@ -165,13 +166,14 @@ public class LoginEpilogueFragment extends LoginBaseFormFragment<LoginEpilogueLi
                                     mBottomShadow.setVisibility(View.VISIBLE);
                                     mBottomButtonsContainer.setBackgroundResource(R.color.white);
                                     ViewUtils.setButtonBackgroundColor(getContext(), mConnectMore,
-                                            R.style.WordPress_Button_Grey, R.attr.colorButtonNormal);
+                                                                       R.style.WordPress_Button_Grey,
+                                                                       R.attr.colorButtonNormal);
                                 } else {
                                     mBottomShadow.setVisibility(View.GONE);
                                     mBottomButtonsContainer.setBackground(null);
                                     ViewUtils.setButtonBackgroundColor(getContext(), mConnectMore,
-                                            R.style.WordPress_Button,
-                                            R.attr.colorButtonNormal);
+                                                                       R.style.WordPress_Button,
+                                                                       R.attr.colorButtonNormal);
                                 }
                             }
                         });
@@ -179,7 +181,7 @@ public class LoginEpilogueFragment extends LoginBaseFormFragment<LoginEpilogueLi
                 }, new SitePickerAdapter.HeaderHandler() {
             @Override
             public RecyclerView.ViewHolder onCreateViewHolder(LayoutInflater layoutInflater, ViewGroup parent,
-                    boolean attachToRoot) {
+                                                              boolean attachToRoot) {
                 return new LoginHeaderViewHolder(layoutInflater.inflate(R.layout.login_epilogue_header, parent, false));
             }
 
@@ -244,17 +246,14 @@ public class LoginEpilogueFragment extends LoginBaseFormFragment<LoginEpilogueLi
 
     @Override
     public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
     }
 
     @Override
     public void onTextChanged(CharSequence s, int start, int before, int count) {
-
     }
 
     @Override
     public void afterTextChanged(Editable s) {
-
     }
 
     @Override

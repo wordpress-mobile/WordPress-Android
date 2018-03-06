@@ -300,8 +300,8 @@ public class SignupEmailFragment extends LoginBaseFormFragment<LoginListener> im
     public void getEmailHints() {
         HintRequest hintRequest = new HintRequest.Builder()
                 .setHintPickerConfig(new CredentialPickerConfig.Builder()
-                        .setShowCancelButton(true)
-                        .build())
+                                             .setShowCancelButton(true)
+                                             .build())
                 .setEmailAddressIdentifierSupported(true)
                 .build();
 

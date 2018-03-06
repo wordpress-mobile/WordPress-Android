@@ -628,7 +628,7 @@ Language: zh_TW
 	<string name="site_picker_cant_hide_current_site">由於「%s」是目前的網站，因此並未隱藏</string>
 	<string name="me_btn_support">說明與客戶服務</string>
 	<string name="account_settings">帳號設定</string>
-	<string name="site_picker_create_dotcom">建立 WordPress.com 網站</string>
+	<string name="site_picker_create_wpcom">建立 WordPress.com 網站</string>
 	<string name="site_picker_edit_visibility">顯示/隱藏網站</string>
 	<string name="site_picker_add_self_hosted">新增自助託管的網站</string>
 	<string name="site_picker_add_site">新增網站</string>

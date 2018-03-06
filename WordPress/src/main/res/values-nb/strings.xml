@@ -950,7 +950,7 @@ Language: nb_NO
 	<string name="account_settings">Kontoinnstillinger</string>
 	<string name="me_btn_support">Hjelp og støtte</string>
 	<string name="site_picker_cant_hide_current_site">«%s» ble ikke skjult, siden den er det nåværende nettstedet</string>
-	<string name="site_picker_create_dotcom">Opprett et WordPress.com-nettsted</string>
+	<string name="site_picker_create_wpcom">Opprett et WordPress.com-nettsted</string>
 	<string name="site_picker_edit_visibility">Vis/skjul sider</string>
 	<string name="site_picker_add_site">Legg til nettsted</string>
 	<string name="site_picker_add_self_hosted">Legg til selvtjent nettsted</string>

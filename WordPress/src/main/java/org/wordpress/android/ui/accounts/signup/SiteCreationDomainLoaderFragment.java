@@ -28,17 +28,30 @@ public class SiteCreationDomainLoaderFragment extends Fragment {
         ERROR
     }
 
-    static class DomainSuggestionEvent {
-        final DomainUpdateStep step;
-        final String query;
-        final OnSuggestedDomains event;
+    public static class DomainSuggestionEvent {
+        private final DomainUpdateStep mStep;
+        private final String mQuery;
+        private final OnSuggestedDomains mEvent;
 
         DomainSuggestionEvent(DomainUpdateStep step, String query, OnSuggestedDomains event) {
-            this.step = step;
-            this.query = query;
-            this.event = event;
+            mStep = step;
+            mQuery = query;
+            mEvent = event;
+        }
+
+        public OnSuggestedDomains getEvent() {
+            return mEvent;
+        }
+
+        public DomainUpdateStep getStep() {
+            return mStep;
+        }
+
+        public String getQuery() {
+            return mQuery;
         }
     }
+
     @Inject Dispatcher mDispatcher;
 
     // need to inject it even though we're not using it directly, otherwise we can't listen for its event responses

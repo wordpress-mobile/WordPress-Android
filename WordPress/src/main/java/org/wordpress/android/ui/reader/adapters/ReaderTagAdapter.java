@@ -26,7 +26,6 @@ import org.wordpress.android.util.ToastUtils;
 import java.lang.ref.WeakReference;
 
 public class ReaderTagAdapter extends RecyclerView.Adapter<ReaderTagAdapter.TagViewHolder> {
-
     public interface TagDeletedListener {
         void onTagDeleted(ReaderTag tag);
     }
@@ -89,12 +88,11 @@ public class ReaderTagAdapter extends RecyclerView.Adapter<ReaderTagAdapter.TagV
     @Override
     public void onBindViewHolder(TagViewHolder holder, int position) {
         final ReaderTag tag = mTags.get(position);
-        holder.txtTagName.setText(tag.getLabel());
-        holder.btnRemove.setOnClickListener(new View.OnClickListener() {
+        holder.mTxtTagName.setText(tag.getLabel());
+        holder.mBtnRemove.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 performDeleteTag(tag);
-
             }
         });
     }
@@ -129,14 +127,14 @@ public class ReaderTagAdapter extends RecyclerView.Adapter<ReaderTagAdapter.TagV
     }
 
     class TagViewHolder extends RecyclerView.ViewHolder {
-        private final TextView txtTagName;
-        private final ImageButton btnRemove;
+        private final TextView mTxtTagName;
+        private final ImageButton mBtnRemove;
 
-        public TagViewHolder(View view) {
+        TagViewHolder(View view) {
             super(view);
-            txtTagName = (TextView) view.findViewById(R.id.text_topic);
-            btnRemove = (ImageButton) view.findViewById(R.id.btn_remove);
-            ReaderUtils.setBackgroundToRoundRipple(btnRemove);
+            mTxtTagName = (TextView) view.findViewById(R.id.text_topic);
+            mBtnRemove = (ImageButton) view.findViewById(R.id.btn_remove);
+            ReaderUtils.setBackgroundToRoundRipple(mBtnRemove);
         }
     }
 
@@ -144,19 +142,23 @@ public class ReaderTagAdapter extends RecyclerView.Adapter<ReaderTagAdapter.TagV
      * AsyncTask to load tags
      */
     private boolean mIsTaskRunning = false;
+
     private class LoadTagsTask extends AsyncTask<Void, Void, ReaderTagList> {
         @Override
         protected void onPreExecute() {
             mIsTaskRunning = true;
         }
+
         @Override
         protected void onCancelled() {
             mIsTaskRunning = false;
         }
+
         @Override
         protected ReaderTagList doInBackground(Void... params) {
             return ReaderTagTable.getFollowedTags();
         }
+
         @Override
         protected void onPostExecute(ReaderTagList tagList) {
             if (tagList != null && !tagList.isSameList(mTags)) {
@@ -170,5 +172,4 @@ public class ReaderTagAdapter extends RecyclerView.Adapter<ReaderTagAdapter.TagV
             }
         }
     }
-
 }

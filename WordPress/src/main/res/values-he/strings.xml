@@ -1022,7 +1022,7 @@ Language: he_IL
 	<string name="site_picker_cant_hide_current_site">\"%s\" לא הוסתר מכיוון שזהו האתר הנוכחי</string>
 	<string name="account_settings">הגדרות חשבון</string>
 	<string name="me_btn_support">עזרה ותמיכה</string>
-	<string name="site_picker_create_dotcom">יצירת אתר וורדפרס.קום</string>
+	<string name="site_picker_create_wpcom">יצירת אתר וורדפרס.קום</string>
 	<string name="site_picker_edit_visibility">הצגת/הסתרת אתרים</string>
 	<string name="site_picker_add_self_hosted">הוספת אתר באחסון עצמי</string>
 	<string name="site_picker_add_site">הוספת אתר</string>

@@ -70,7 +70,7 @@ public class ReaderCommentLeveler {
     }
 
     private boolean hasChildren(long commentId) {
-        for (ReaderComment comment: mComments) {
+        for (ReaderComment comment : mComments) {
             if (comment.parentId == commentId) {
                 return true;
             }
@@ -80,7 +80,7 @@ public class ReaderCommentLeveler {
 
     private ReaderCommentList getChildren(long commentId) {
         ReaderCommentList children = new ReaderCommentList();
-        for (ReaderComment comment: mComments) {
+        for (ReaderComment comment : mComments) {
             if (comment.parentId == commentId) {
                 children.add(comment);
             }
@@ -89,7 +89,7 @@ public class ReaderCommentLeveler {
     }
 
     private void setLevel(@NonNull ReaderCommentList comments, int level) {
-        for (ReaderComment comment: comments) {
+        for (ReaderComment comment : comments) {
             comment.level = level;
         }
     }

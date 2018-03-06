@@ -11,7 +11,7 @@ import android.view.View;
 public class EmptyViewRecyclerView extends RecyclerView {
     private View mEmptyView;
 
-    final private AdapterDataObserver observer = new AdapterDataObserver() {
+    private final AdapterDataObserver mObserver = new AdapterDataObserver() {
         @Override
         public void onChanged() {
             toggleEmptyView();
@@ -45,13 +45,13 @@ public class EmptyViewRecyclerView extends RecyclerView {
         final RecyclerView.Adapter adapterOld = getAdapter();
 
         if (adapterOld != null) {
-            adapterOld.unregisterAdapterDataObserver(observer);
+            adapterOld.unregisterAdapterDataObserver(mObserver);
         }
 
         super.setAdapter(adapterNew);
 
         if (adapterNew != null) {
-            adapterNew.registerAdapterDataObserver(observer);
+            adapterNew.registerAdapterDataObserver(mObserver);
         }
 
         toggleEmptyView();

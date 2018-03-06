@@ -15,13 +15,12 @@ public class MediaUploadReadyProcessor implements MediaUploadReadyListener {
     @Override
     public PostModel replaceMediaFileWithUrlInPost(@Nullable PostModel post, String localMediaId, MediaFile mediaFile) {
         if (post != null) {
-
             boolean showAztecEditor = AppPrefs.isAztecEditorEnabled();
             boolean showNewEditor = AppPrefs.isVisualEditorEnabled();
 
             if (showAztecEditor) {
                 post.setContent(AztecEditorFragment.replaceMediaFileWithUrl(WordPress.getContext(), post.getContent(),
-                        localMediaId, mediaFile));
+                                                                            localMediaId, mediaFile));
             } else if (showNewEditor) {
                 post.setContent(EditorFragment.replaceMediaFileWithUrl(post.getContent(), mediaFile));
             }
@@ -35,13 +34,12 @@ public class MediaUploadReadyProcessor implements MediaUploadReadyListener {
     public PostModel markMediaUploadFailedInPost(@Nullable PostModel post, String localMediaId,
                                                  final MediaFile mediaFile) {
         if (post != null) {
-
             boolean showAztecEditor = AppPrefs.isAztecEditorEnabled();
             boolean showNewEditor = AppPrefs.isVisualEditorEnabled();
 
             if (showAztecEditor) {
                 post.setContent(AztecEditorFragment.markMediaFailed(WordPress.getContext(), post.getContent(),
-                        localMediaId, mediaFile));
+                                                                    localMediaId, mediaFile));
             } else if (showNewEditor) {
                 // No implementation necessary for the Visual Editor as it marks media failed at Post open
             }
@@ -50,5 +48,4 @@ public class MediaUploadReadyProcessor implements MediaUploadReadyListener {
 
         return post;
     }
-
 }

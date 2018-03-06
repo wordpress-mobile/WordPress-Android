@@ -33,6 +33,7 @@ public class StatsInsightsLatestPostSummaryFragment extends StatsAbstractInsight
     protected boolean hasDataAvailable() {
         return mInsightsLatestPostModel != null && mInsightsLatestPostDetailsModel != null;
     }
+
     @Override
     protected void saveStatsData(Bundle outState) {
         if (hasDataAvailable()) {
@@ -40,13 +41,15 @@ public class StatsInsightsLatestPostSummaryFragment extends StatsAbstractInsight
             outState.putSerializable(ARG_REST_RESPONSE_DETAILS, mInsightsLatestPostDetailsModel);
         }
     }
+
     @Override
     protected void restoreStatsData(Bundle savedInstanceState) {
         if (savedInstanceState.containsKey(ARG_REST_RESPONSE)) {
             mInsightsLatestPostModel = (InsightsLatestPostModel) savedInstanceState.getSerializable(ARG_REST_RESPONSE);
         }
         if (savedInstanceState.containsKey(ARG_REST_RESPONSE_DETAILS)) {
-            mInsightsLatestPostDetailsModel = (InsightsLatestPostDetailsModel) savedInstanceState.getSerializable(ARG_REST_RESPONSE_DETAILS);
+            mInsightsLatestPostDetailsModel =
+                    (InsightsLatestPostDetailsModel) savedInstanceState.getSerializable(ARG_REST_RESPONSE_DETAILS);
         }
     }
 
@@ -78,7 +81,8 @@ public class StatsInsightsLatestPostSummaryFragment extends StatsAbstractInsight
         if (mInsightsLatestPostModel.getPostViewsCount() == Integer.MIN_VALUE) {
             // we don't have the views count. Need to call the service again here
             refreshStats(mInsightsLatestPostModel.getPostID(),
-                    new StatsService.StatsEndpointsEnum[]{StatsService.StatsEndpointsEnum.INSIGHTS_LATEST_POST_VIEWS});
+                         new StatsService.StatsEndpointsEnum[]{
+                                 StatsService.StatsEndpointsEnum.INSIGHTS_LATEST_POST_VIEWS});
             showPlaceholderUI();
         } else {
             updateUI();
@@ -103,14 +107,13 @@ public class StatsInsightsLatestPostSummaryFragment extends StatsAbstractInsight
 
     @SuppressWarnings("unused")
     public void onEventMainThread(StatsEvents.SectionUpdateError event) {
-
         if (!shouldUpdateFragmentOnErrorEvent(event)
-                && event.mEndPointName != StatsService.StatsEndpointsEnum.INSIGHTS_LATEST_POST_VIEWS ) {
+            && event.mEndPointName != StatsService.StatsEndpointsEnum.INSIGHTS_LATEST_POST_VIEWS) {
             return;
         }
 
         mInsightsLatestPostDetailsModel = null;
-        mInsightsLatestPostModel =  null;
+        mInsightsLatestPostModel = null;
         showErrorUI(event.mError);
     }
 
@@ -129,18 +132,19 @@ public class StatsInsightsLatestPostSummaryFragment extends StatsAbstractInsight
         }
 
         TextView moduleTitle = (TextView) getView().findViewById(R.id.stats_module_title);
-        moduleTitle.setOnClickListener(ViewsTabOnClickListener);
+        moduleTitle.setOnClickListener(mViewsTabOnClickListener);
         moduleTitle.setTextColor(getResources().getColor(R.color.stats_link_text_color));
 
         // update the tabs and the text now
         LinearLayout ll = (LinearLayout) getActivity().getLayoutInflater()
-                .inflate(R.layout.stats_insights_latest_post_item, (ViewGroup) mResultContainer.getRootView(), false);
+                                                      .inflate(R.layout.stats_insights_latest_post_item,
+                                                               (ViewGroup) mResultContainer.getRootView(), false);
 
         String trendLabel = getString(R.string.stats_insights_latest_post_trend);
         String sinceLabel = StatsUtils.getSinceLabel(
                 getActivity(),
                 mInsightsLatestPostModel.getPostDate()
-        ).toLowerCase();
+                                                    ).toLowerCase();
 
         String postTitle = StringEscapeUtils.unescapeHtml4(mInsightsLatestPostModel.getPostTitle());
         if (TextUtils.isEmpty(postTitle)) {
@@ -152,21 +156,21 @@ public class StatsInsightsLatestPostSummaryFragment extends StatsAbstractInsight
 
         int startIndex, endIndex;
         startIndex = trendLabelFormatted.indexOf(postTitle);
-        endIndex = startIndex + postTitle.length() +1;
+        endIndex = startIndex + postTitle.length() + 1;
 
         Spannable descriptionTextToSpan = new SpannableString(trendLabelFormatted);
         descriptionTextToSpan.setSpan(new ForegroundColorSpan(getResources().getColor(R.color.stats_link_text_color)),
-                startIndex, endIndex, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+                                      startIndex, endIndex, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
         TextView trendLabelTextField = (TextView) ll.findViewById(R.id.stats_post_trend_label);
         trendLabelTextField.setText(descriptionTextToSpan);
         trendLabelTextField.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 StatsUtils.openPostInReaderOrInAppWebview(getActivity(),
-                        mInsightsLatestPostModel.getBlogID(),
-                        String.valueOf(mInsightsLatestPostModel.getPostID()),
-                        StatsConstants.ITEM_TYPE_POST,
-                        mInsightsLatestPostModel.getPostURL());
+                                                          mInsightsLatestPostModel.getBlogID(),
+                                                          String.valueOf(mInsightsLatestPostModel.getPostID()),
+                                                          StatsConstants.ITEM_TYPE_POST,
+                                                          mInsightsLatestPostModel.getPostURL());
             }
         });
 
@@ -176,13 +180,16 @@ public class StatsInsightsLatestPostSummaryFragment extends StatsAbstractInsight
             LinearLayout currentTab = (LinearLayout) tabs.getChildAt(i);
             switch (i) {
                 case 0:
-                    setupTab(currentTab, FormatUtils.formatDecimal(mInsightsLatestPostModel.getPostViewsCount()), StatsVisitorsAndViewsFragment.OverviewLabel.VIEWS);
+                    setupTab(currentTab, FormatUtils.formatDecimal(mInsightsLatestPostModel.getPostViewsCount()),
+                             StatsVisitorsAndViewsFragment.OverviewLabel.VIEWS);
                     break;
                 case 1:
-                    setupTab(currentTab, FormatUtils.formatDecimal(mInsightsLatestPostModel.getPostLikeCount()), StatsVisitorsAndViewsFragment.OverviewLabel.LIKES);
+                    setupTab(currentTab, FormatUtils.formatDecimal(mInsightsLatestPostModel.getPostLikeCount()),
+                             StatsVisitorsAndViewsFragment.OverviewLabel.LIKES);
                     break;
                 case 2:
-                    setupTab(currentTab, FormatUtils.formatDecimal(mInsightsLatestPostModel.getPostCommentCount()), StatsVisitorsAndViewsFragment.OverviewLabel.COMMENTS);
+                    setupTab(currentTab, FormatUtils.formatDecimal(mInsightsLatestPostModel.getPostCommentCount()),
+                             StatsVisitorsAndViewsFragment.OverviewLabel.COMMENTS);
                     break;
             }
         }
@@ -190,7 +197,8 @@ public class StatsInsightsLatestPostSummaryFragment extends StatsAbstractInsight
         mResultContainer.addView(ll);
     }
 
-    private void setupTab(LinearLayout currentTab, String total, final StatsVisitorsAndViewsFragment.OverviewLabel itemType) {
+    private void setupTab(LinearLayout currentTab, String total,
+                          final StatsVisitorsAndViewsFragment.OverviewLabel itemType) {
         final TextView label;
         final TextView value;
         final ImageView icon;
@@ -198,7 +206,7 @@ public class StatsInsightsLatestPostSummaryFragment extends StatsAbstractInsight
         currentTab.setTag(itemType);
         // Only Views is clickable here
         if (itemType == StatsVisitorsAndViewsFragment.OverviewLabel.VIEWS) {
-            currentTab.setOnClickListener(ViewsTabOnClickListener);
+            currentTab.setOnClickListener(mViewsTabOnClickListener);
         } else {
             currentTab.setClickable(false);
         }
@@ -229,7 +237,7 @@ public class StatsInsightsLatestPostSummaryFragment extends StatsAbstractInsight
         }
     }
 
-    private final View.OnClickListener ViewsTabOnClickListener = new View.OnClickListener() {
+    private final View.OnClickListener mViewsTabOnClickListener = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
             if (!isAdded()) {

@@ -12,7 +12,8 @@ import org.wordpress.android.R;
 
 import java.util.List;
 
-public class UsernameChangerRecyclerViewAdapter extends RecyclerView.Adapter<UsernameChangerRecyclerViewAdapter.ViewHolder> {
+public class UsernameChangerRecyclerViewAdapter
+        extends RecyclerView.Adapter<UsernameChangerRecyclerViewAdapter.ViewHolder> {
     private Context mContext;
 
     protected List<String> mItems;
@@ -32,7 +33,8 @@ public class UsernameChangerRecyclerViewAdapter extends RecyclerView.Adapter<Use
 
     @Override
     public UsernameChangerRecyclerViewAdapter.ViewHolder onCreateViewHolder(ViewGroup viewGroup, int viewType) {
-        final View view = LayoutInflater.from(mContext).inflate(R.layout.single_choice_recycler_view_item, viewGroup, false);
+        final View view =
+                LayoutInflater.from(mContext).inflate(R.layout.single_choice_recycler_view_item, viewGroup, false);
         return new UsernameChangerRecyclerViewAdapter.ViewHolder(view);
     }
 

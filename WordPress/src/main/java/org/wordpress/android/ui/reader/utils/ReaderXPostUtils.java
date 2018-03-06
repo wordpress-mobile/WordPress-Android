@@ -12,7 +12,6 @@ import org.wordpress.android.models.ReaderPost;
  */
 
 public class ReaderXPostUtils {
-
     // note that these strings don't need to be localized due to the intended audience
     private static final String UNKNOWN_SITE = "(unknown)";
     private static final String FMT_SITE_XPOST = "%1$s cross-posted from %2$s to %3$s";
@@ -69,6 +68,6 @@ public class ReaderXPostUtils {
             return "+" + UNKNOWN_SITE;
         }
 
-        return  "+" + domain.substring(0, domain.indexOf("."));
+        return "+" + domain.substring(0, domain.indexOf("."));
     }
 }

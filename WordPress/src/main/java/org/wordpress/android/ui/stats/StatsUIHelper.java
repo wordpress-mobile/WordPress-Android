@@ -48,7 +48,8 @@ class StatsUIHelper {
         return (StatsUtils.getSmallestWidthDP() >= TABLET_720DP);
     }
 
-    public static void reloadLinearLayout(Context ctx, ListAdapter adapter, LinearLayout linearLayout, int maxNumberOfItemsToshow) {
+    public static void reloadLinearLayout(Context ctx, ListAdapter adapter, LinearLayout linearLayout,
+                                          int maxNumberOfItemsToshow) {
         if (ctx == null || linearLayout == null || adapter == null) {
             return;
         }
@@ -95,7 +96,7 @@ class StatsUIHelper {
      * See http://stackoverflow.com/a/10469121 and
      * http://www.mail-archive.com/android-developers@googlegroups.com/msg09595.html
      *
-     * @param v               The view to apply the background resource
+     * @param v The view to apply the background resource
      * @param backgroundResId The resource ID
      */
     private static void setViewBackgroundWithoutResettingPadding(final View v, final int backgroundResId) {
@@ -237,10 +238,11 @@ class StatsUIHelper {
         StatsUIHelper.setGroupChevron(false, groupView, groupPosition, animate);
     }
 
-    /*
+    /**
      * shows the correct up/down chevron for the passed group
      */
-    private static void setGroupChevron(final boolean isGroupExpanded, View groupView, int groupPosition, boolean animate) {
+    private static void setGroupChevron(final boolean isGroupExpanded, View groupView, int groupPosition,
+                                        boolean animate) {
         final ImageView chevron = (ImageView) groupView.findViewById(R.id.stats_list_cell_chevron);
         if (chevron == null) {
             return;
@@ -249,13 +251,15 @@ class StatsUIHelper {
             // change the background of the parent
             setViewBackgroundWithoutResettingPadding(groupView, R.drawable.stats_list_item_expanded_background);
         } else {
-            setViewBackgroundWithoutResettingPadding(groupView, groupPosition == 0 ? 0 : R.drawable.stats_list_item_background);
+            setViewBackgroundWithoutResettingPadding(groupView, groupPosition == 0 ? 0
+                    : R.drawable.stats_list_item_background);
         }
 
         chevron.clearAnimation(); // Remove any other prev animations set on the chevron
         if (animate) {
             // make sure we start with the correct chevron for the prior state before animating it
-            chevron.setImageResource(isGroupExpanded ? R.drawable.ic_chevron_right_blue_wordpress_24dp : R.drawable.ic_chevron_down_blue_wordpress_24dp);
+            chevron.setImageResource(isGroupExpanded ? R.drawable.ic_chevron_right_blue_wordpress_24dp
+                                             : R.drawable.ic_chevron_down_blue_wordpress_24dp);
             float start = (isGroupExpanded ? 0.0f : 0.0f);
             float end = (isGroupExpanded ? 90.0f : -90.0f) * (RtlUtils.isRtl(groupView.getContext()) ? -1 : 1);
             Animation rotate = new RotateAnimation(start, end, Animation.RELATIVE_TO_SELF, 0.5f,
@@ -265,7 +269,8 @@ class StatsUIHelper {
             rotate.setFillAfter(true);
             chevron.startAnimation(rotate);
         } else {
-            chevron.setImageResource(isGroupExpanded ? R.drawable.ic_chevron_down_blue_wordpress_24dp : R.drawable.ic_chevron_right_blue_wordpress_24dp);
+            chevron.setImageResource(isGroupExpanded ? R.drawable.ic_chevron_down_blue_wordpress_24dp
+                                             : R.drawable.ic_chevron_right_blue_wordpress_24dp);
         }
     }
 
@@ -323,7 +328,7 @@ class StatsUIHelper {
      * URLSpanNoUnderline objects.
      *
      * @param pText A Spannable object. For example, a TextView casted as
-     *              Spannable.
+     * Spannable.
      */
     public static void removeUnderlines(Spannable pText) {
         URLSpan[] spans = pText.getSpans(0, pText.length(), URLSpan.class);

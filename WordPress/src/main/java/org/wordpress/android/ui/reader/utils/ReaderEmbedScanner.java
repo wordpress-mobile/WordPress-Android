@@ -11,9 +11,9 @@ public class ReaderEmbedScanner {
     public ReaderEmbedScanner(String contentOfPost) {
         mContent = contentOfPost;
         mKnownEmbeds.put(Pattern.compile("<blockquote[^<>]class=\"instagram-", Pattern.CASE_INSENSITIVE),
-                "https://platform.instagram.com/en_US/embeds.js");
+                         "https://platform.instagram.com/en_US/embeds.js");
         mKnownEmbeds.put(Pattern.compile("<fb:post", Pattern.CASE_INSENSITIVE),
-                "https://connect.facebook.net/en_US/sdk.js#xfbml=1&amp;version=v2.8");
+                         "https://connect.facebook.net/en_US/sdk.js#xfbml=1&amp;version=v2.8");
     }
 
     public void beginScan(ReaderHtmlUtils.HtmlScannerListener listener) {

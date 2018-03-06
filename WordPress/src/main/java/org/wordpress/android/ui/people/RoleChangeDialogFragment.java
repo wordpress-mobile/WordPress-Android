@@ -116,11 +116,11 @@ public class RoleChangeDialogFragment extends DialogFragment {
             TextView mainText = (TextView) convertView.findViewById(R.id.role_label);
             final RadioButton radioButton = (RadioButton) convertView.findViewById(R.id.radio);
             radioButton.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        changeSelection(position);
-                    }
-                });
+                @Override
+                public void onClick(View v) {
+                    changeSelection(position);
+                }
+            });
             convertView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -155,14 +155,26 @@ public class RoleChangeDialogFragment extends DialogFragment {
     }
 
     static class RoleChangeEvent {
-        final long personID;
-        final int localTableBlogId;
-        final String newRole;
+        private final long mPersonID;
+        private final int mLocalTableBlogId;
+        private final String mNewRole;
 
         RoleChangeEvent(long personID, int localTableBlogId, String newRole) {
-            this.personID = personID;
-            this.localTableBlogId = localTableBlogId;
-            this.newRole = newRole;
+            mPersonID = personID;
+            mLocalTableBlogId = localTableBlogId;
+            mNewRole = newRole;
+        }
+
+        public long getPersonID() {
+            return mPersonID;
+        }
+
+        public int getLocalTableBlogId() {
+            return mLocalTableBlogId;
+        }
+
+        public String getNewRole() {
+            return mNewRole;
         }
     }
 }

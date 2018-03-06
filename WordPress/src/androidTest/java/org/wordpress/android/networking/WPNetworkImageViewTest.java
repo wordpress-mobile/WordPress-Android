@@ -29,7 +29,7 @@ public class WPNetworkImageViewTest extends InstrumentationTestCase {
     public void testVolleyImageLoaderGetNullHost() throws InterruptedException {
         Handler mainLooperHandler = new Handler(WordPress.getContext().getMainLooper());
         final CountDownLatch countDownLatch = new CountDownLatch(1);
-        final boolean success[] = new boolean[1];
+        final boolean[] success = new boolean[1];
         Runnable getImage = new Runnable() {
             @Override
             public void run() {
@@ -37,10 +37,12 @@ public class WPNetworkImageViewTest extends InstrumentationTestCase {
                     // This call crash on old volley versions
                     WordPress.sImageLoader.get("http;///hello/null/host", new ImageListener() {
                         @Override
-                        public void onResponse(ImageContainer imageContainer, boolean b) {}
+                        public void onResponse(ImageContainer imageContainer, boolean b) {
+                        }
 
                         @Override
-                        public void onErrorResponse(VolleyError volleyError) {}
+                        public void onErrorResponse(VolleyError volleyError) {
+                        }
                     }, 1, 1);
                     success[0] = true;
                 } catch (Exception e) {

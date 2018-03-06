@@ -13,14 +13,17 @@ public class EditorAsyncMediaTest {
     public void testHybridEditorUploadingImageSwap() {
         MediaFile mediaFile = generateSampleUploadedPhoto1();
 
-        String expectedTag = String.format(Locale.US, "<a href=\"%s\"><img src=\"%s\" alt=\"\" class=\"wp-image-%s " +
-                "alignnone size-full\" width=\"%d\" height=\"%d\"></a>", mediaFile.getFileURL(), mediaFile.getFileURL(),
-                mediaFile.getMediaId(), mediaFile.getWidth(), mediaFile.getHeight());
+        String expectedTag = String.format(Locale.US, "<a href=\"%s\"><img src=\"%s\" alt=\"\""
+                                                      + " class=\"wp-image-%s alignnone size-full\" width=\"%d\""
+                                                      + " height=\"%d\"></a>",
+                                           mediaFile.getFileURL(), mediaFile.getFileURL(),
+                                           mediaFile.getMediaId(), mediaFile.getWidth(), mediaFile.getHeight());
 
-        String uploadingImageHtml = "<span id=\"img_container_54\" class=\"img_container\">" +
-                "<progress id=\"progress_54\" value=\"0.1\" class=\"wp_media_indicator\"></progress>" +
-                "<img data-wpid=\"54\" src=\"/storage/emulated/0/Android/data/image.jpg\" " +
-                "alt=\"\" class=\"uploading\"></span>";
+        String uploadingImageHtml = "<span id=\"img_container_54\" class=\"img_container\">"
+                                    + "<progress id=\"progress_54\" value=\"0.1\" class=\"wp_media_indicator\">"
+                                    + "</progress>"
+                                    + "<img data-wpid=\"54\" src=\"/storage/emulated/0/Android/data/image.jpg\" "
+                                    + "alt=\"\" class=\"uploading\"></span>";
 
         // --- Single image post with no other content ---
         String originalContent = "Some text\n" + uploadingImageHtml + "\nMore text";
@@ -51,19 +54,22 @@ public class EditorAsyncMediaTest {
     public void testHybridEditorUploadingImageSwapMultiple() {
         MediaFile mediaFile = generateSampleUploadedPhoto1();
 
-        String expectedTag = String.format(Locale.US, "<a href=\"%s\"><img src=\"%s\" alt=\"\" class=\"wp-image-%s " +
-                "alignnone size-full\" width=\"%d\" height=\"%d\"></a>", mediaFile.getFileURL(), mediaFile.getFileURL(),
-                mediaFile.getMediaId(), mediaFile.getWidth(), mediaFile.getHeight());
+        String expectedTag = String.format(Locale.US, "<a href=\"%s\"><img src=\"%s\" alt=\"\""
+                                                      + " class=\"wp-image-%s alignnone size-full\" width=\"%d\""
+                                                      + " height=\"%d\"></a>",
+                                           mediaFile.getFileURL(), mediaFile.getFileURL(),
+                                           mediaFile.getMediaId(), mediaFile.getWidth(), mediaFile.getHeight());
 
-        String uploadingImageHtml = "<span id=\"img_container_54\" class=\"img_container\">" +
-                "<progress id=\"progress_54\" value=\"0.1\" class=\"wp_media_indicator\"></progress>" +
-                "<img data-wpid=\"54\" src=\"/storage/emulated/0/Android/data/image.jpg\" " +
-                "alt=\"\" class=\"uploading\"></span>";
+        String uploadingImageHtml = "<span id=\"img_container_54\" class=\"img_container\">"
+                                    + "<progress id=\"progress_54\" value=\"0.1\" class=\"wp_media_indicator\">"
+                                    + "</progress>"
+                                    + "<img data-wpid=\"54\" src=\"/storage/emulated/0/Android/data/image.jpg\" "
+                                    + "alt=\"\" class=\"uploading\"></span>";
 
         // --- Post with two uploading images ---
         // -- Replace first image --
         String secondUploadingImageHtml = uploadingImageHtml.replaceAll("54", "65")
-                .replaceAll("image.jpg", "image2.jpg");
+                                                            .replaceAll("image.jpg", "image2.jpg");
         String originalContent = "Some text\n" + uploadingImageHtml + "\nMore text" + secondUploadingImageHtml;
         String modifiedContent = EditorFragment.replaceMediaFileWithUrl(originalContent, mediaFile);
 
@@ -73,9 +79,12 @@ public class EditorAsyncMediaTest {
         MediaFile mediaFile2 = generateSampleUploadedPhoto2();
         modifiedContent = EditorFragment.replaceMediaFileWithUrl(modifiedContent, mediaFile2);
 
-        String expectedSecondTag = String.format(Locale.US, "<a href=\"%s\"><img src=\"%s\" alt=\"\"" +
-                " class=\"wp-image-%s alignnone size-full\" width=\"%d\" height=\"%d\"></a>", mediaFile2.getFileURL(),
-                mediaFile2.getFileURL(), mediaFile2.getMediaId(), mediaFile2.getWidth(), mediaFile2.getHeight());
+        String expectedSecondTag = String.format(Locale.US, "<a href=\"%s\"><img src=\"%s\" alt=\"\""
+                                                            + " class=\"wp-image-%s alignnone size-full\" width=\"%d\""
+                                                            + " height=\"%d\"></a>",
+                                                 mediaFile2.getFileURL(),
+                                                 mediaFile2.getFileURL(), mediaFile2.getMediaId(),
+                                                 mediaFile2.getWidth(), mediaFile2.getHeight());
         assertEquals("Some text\n" + expectedTag + "\nMore text" + expectedSecondTag, modifiedContent);
 
         // --- Post with two uploading images, update in reverse order ---
@@ -95,15 +104,18 @@ public class EditorAsyncMediaTest {
     public void testHybridEditorUploadingImageSwapOldApis() {
         MediaFile mediaFile = generateSampleUploadedPhoto1();
 
-        String expectedTag = String.format(Locale.US, "<a href=\"%s\"><img src=\"%s\" alt=\"\" class=\"wp-image-%s " +
-                "alignnone size-full\" width=\"%d\" height=\"%d\"></a>", mediaFile.getFileURL(), mediaFile.getFileURL(),
-                mediaFile.getMediaId(), mediaFile.getWidth(), mediaFile.getHeight());
+        String expectedTag = String.format(Locale.US, "<a href=\"%s\"><img src=\"%s\" alt=\"\""
+                                                      + " class=\"wp-image-%s alignnone size-full\" width=\"%d\""
+                                                      + " height=\"%d\"></a>",
+                                           mediaFile.getFileURL(), mediaFile.getFileURL(),
+                                           mediaFile.getMediaId(), mediaFile.getWidth(), mediaFile.getHeight());
 
         // Pre-API19, we use nested spans for an 'Uploading...' overlay instead of a progress element
-        String uploadingImageHtmlOldApis = "<span id=\"img_container_54\" class=\"img_container compat\"><span " +
-                "class=\"upload-overlay\">Uploading…</span><span class=\"upload-overlay-bg\"></span><img " +
-                "data-wpid=\"54\" src=\"/storage/emulated/0/Android/data/image.jpg\" alt=\"\" class=\"uploading\">" +
-                "</span>";
+        String uploadingImageHtmlOldApis = "<span id=\"img_container_54\" class=\"img_container compat\"><span "
+                                           + "class=\"upload-overlay\">Uploading…</span>"
+                                           + "<span class=\"upload-overlay-bg\"></span><img "
+                                           + "data-wpid=\"54\" src=\"/storage/emulated/0/Android/data/image.jpg\""
+                                           + " alt=\"\" class=\"uploading\"></span>";
 
         // --- Single image post with no other content ---
         String originalContent = "Some text\n" + uploadingImageHtmlOldApis + "\nMore text";
@@ -122,20 +134,23 @@ public class EditorAsyncMediaTest {
     public void testHybridEditorUploadingImageSwapOldApisMultiple() {
         MediaFile mediaFile = generateSampleUploadedPhoto1();
 
-        String expectedTag = String.format(Locale.US, "<a href=\"%s\"><img src=\"%s\" alt=\"\" class=\"wp-image-%s " +
-                "alignnone size-full\" width=\"%d\" height=\"%d\"></a>", mediaFile.getFileURL(), mediaFile.getFileURL(),
-                mediaFile.getMediaId(), mediaFile.getWidth(), mediaFile.getHeight());
+        String expectedTag = String.format(Locale.US, "<a href=\"%s\"><img src=\"%s\" alt=\"\""
+                                                      + " class=\"wp-image-%s alignnone size-full\" width=\"%d\""
+                                                      + " height=\"%d\"></a>",
+                                           mediaFile.getFileURL(), mediaFile.getFileURL(),
+                                           mediaFile.getMediaId(), mediaFile.getWidth(), mediaFile.getHeight());
 
         // Pre-API19, we use nested spans for an 'Uploading...' overlay instead of a progress element
-        String uploadingImageHtmlOldApis = "<span id=\"img_container_54\" class=\"img_container compat\"><span " +
-                "class=\"upload-overlay\">Uploading…</span><span class=\"upload-overlay-bg\"></span><img " +
-                "data-wpid=\"54\" src=\"/storage/emulated/0/Android/data/image.jpg\" alt=\"\" class=\"uploading\">" +
-                "</span>";
+        String uploadingImageHtmlOldApis = "<span id=\"img_container_54\" class=\"img_container compat\"><span "
+                                           + "class=\"upload-overlay\">Uploading…</span>"
+                                           + "<span class=\"upload-overlay-bg\"></span><img "
+                                           + "data-wpid=\"54\" src=\"/storage/emulated/0/Android/data/image.jpg\""
+                                           + " alt=\"\" class=\"uploading\"></span>";
 
         // --- Post with two uploading images ---
         // -- Replace first image --
         String secondUploadingImageHtml = uploadingImageHtmlOldApis.replaceAll("54", "65")
-                .replaceAll("image.jpg", "image2.jpg");
+                                                                   .replaceAll("image.jpg", "image2.jpg");
         String originalContent = "Some text\n" + uploadingImageHtmlOldApis + "\nMore text" + secondUploadingImageHtml;
         String modifiedContent = EditorFragment.replaceMediaFileWithUrl(originalContent, mediaFile);
 
@@ -145,9 +160,12 @@ public class EditorAsyncMediaTest {
         MediaFile mediaFile2 = generateSampleUploadedPhoto2();
         modifiedContent = EditorFragment.replaceMediaFileWithUrl(modifiedContent, mediaFile2);
 
-        String expectedSecondTag = String.format(Locale.US, "<a href=\"%s\"><img src=\"%s\" alt=\"\"" +
-                " class=\"wp-image-%s alignnone size-full\" width=\"%d\" height=\"%d\"></a>", mediaFile2.getFileURL(),
-                mediaFile2.getFileURL(), mediaFile2.getMediaId(), mediaFile2.getWidth(), mediaFile2.getHeight());
+        String expectedSecondTag = String.format(Locale.US, "<a href=\"%s\"><img src=\"%s\" alt=\"\""
+                                                            + " class=\"wp-image-%s alignnone size-full\" width=\"%d\""
+                                                            + " height=\"%d\"></a>",
+                                                 mediaFile2.getFileURL(),
+                                                 mediaFile2.getFileURL(), mediaFile2.getMediaId(),
+                                                 mediaFile2.getWidth(), mediaFile2.getHeight());
         assertEquals("Some text\n" + expectedTag + "\nMore text" + expectedSecondTag, modifiedContent);
 
         // --- Post with two uploading images, update in reverse order ---
@@ -169,10 +187,11 @@ public class EditorAsyncMediaTest {
 
         String expectedTag = mediaFile.getVideoPressShortCode();
 
-        String uploadingVideoHtml = "<span id=\"video_container_87\" class=\"video_container\">" +
-                "<progress id=\"progress_87\" value=\"0.09\" class=\"wp_media_indicator\" contenteditable=\"false\">" +
-                "</progress><img data-video_wpid=\"87\" src=\"/data/user/0/org.wordpress" +
-                ".android.beta/cache/thumb-67374471.png\" alt=\"\" class=\"uploading\"></span>";
+        String uploadingVideoHtml = "<span id=\"video_container_87\" class=\"video_container\">"
+                                    + "<progress id=\"progress_87\" value=\"0.09\" class=\"wp_media_indicator\""
+                                    + " contenteditable=\"false\">"
+                                    + "</progress><img data-video_wpid=\"87\" src=\"/data/user/0/org.wordpress"
+                                    + ".android.beta/cache/thumb-67374471.png\" alt=\"\" class=\"uploading\"></span>";
 
         // --- Single video post with no other content ---
         String originalContent = "Some text\n" + uploadingVideoHtml + "\nMore text";
@@ -204,12 +223,13 @@ public class EditorAsyncMediaTest {
         MediaFile mediaFile = generateSampleUploadedVideo();
 
         String expectedTag = String.format(Locale.US, "[video src=\"%s\" poster=\"%s\"][/video]",
-                mediaFile.getFileURL(), mediaFile.getThumbnailURL());
+                                           mediaFile.getFileURL(), mediaFile.getThumbnailURL());
 
-        String uploadingVideoHtml = "<span id=\"video_container_76\" class=\"video_container\">" +
-                "<progress id=\"progress_76\" value=\"0.09\" class=\"wp_media_indicator\" contenteditable=\"false\">" +
-                "</progress><img data-video_wpid=\"76\" src=\"/data/user/0/org.wordpress" +
-                ".android.beta/cache/thumb-67374471.png\" alt=\"\" class=\"uploading\"></span>";
+        String uploadingVideoHtml = "<span id=\"video_container_76\" class=\"video_container\">"
+                                    + "<progress id=\"progress_76\" value=\"0.09\" class=\"wp_media_indicator\""
+                                    + " contenteditable=\"false\">"
+                                    + "</progress><img data-video_wpid=\"76\" src=\"/data/user/0/org.wordpress"
+                                    + ".android.beta/cache/thumb-67374471.png\" alt=\"\" class=\"uploading\"></span>";
 
         // --- Single video post with no other content ---
         String originalContent = "Some text\n" + uploadingVideoHtml + "\nMore text";
@@ -243,10 +263,12 @@ public class EditorAsyncMediaTest {
         String expectedTag = mediaFile.getVideoPressShortCode();
 
         // Pre-API19, we use nested spans for an 'Uploading...' overlay instead of a progress element
-        String uploadingImageHtmlOldApis = "<span id=\"video_container_87\" class=\"video_container compat\">" +
-                "<span class=\"upload-overlay\">Uploading…</span><span class=\"upload-overlay-bg\"></span>"+
-                "<img data-video_wpid=\"87\" src=\"/storage/emulated/0/Android/data/image.jpg\" alt=\"\"" +
-                " class=\"uploading\"></span>";
+        String uploadingImageHtmlOldApis = "<span id=\"video_container_87\" class=\"video_container compat\">"
+                                           + "<span class=\"upload-overlay\">Uploading…</span>"
+                                           + "<span class=\"upload-overlay-bg\"></span>"
+                                           + "<img data-video_wpid=\"87\" "
+                                           + "src=\"/storage/emulated/0/Android/data/image.jpg\" alt=\"\""
+                                           + " class=\"uploading\"></span>";
 
         // --- Single video post with no other content ---
         String originalContent = "Some text\n" + uploadingImageHtmlOldApis + "\nMore text";

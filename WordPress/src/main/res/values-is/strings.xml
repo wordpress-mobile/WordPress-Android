@@ -609,7 +609,7 @@ Language: is
 	<string name="account_settings">Stillingar notandareiknings</string>
 	<string name="site_picker_cant_hide_current_site">\"%s\" var ekki falið þar sem það er núverandi vefur</string>
 	<string name="me_btn_support">Hjálp og aðstoð</string>
-	<string name="site_picker_create_dotcom">Stofna WordPress.com vef</string>
+	<string name="site_picker_create_wpcom">Stofna WordPress.com vef</string>
 	<string name="site_picker_add_self_hosted">Bæta við sjálf-hýstum vef</string>
 	<string name="site_picker_add_site">Bæta við vef</string>
 	<string name="site_picker_edit_visibility">Birta/fela vefi</string>

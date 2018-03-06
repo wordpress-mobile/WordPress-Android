@@ -3,7 +3,6 @@ package org.wordpress.android.models;
 import java.util.ArrayList;
 
 public class ReaderTagList extends ArrayList<ReaderTag> {
-
     public int indexOfTagName(String tagName) {
         if (tagName == null || isEmpty()) {
             return -1;
@@ -37,7 +36,7 @@ public class ReaderTagList extends ArrayList<ReaderTag> {
             return false;
         }
 
-        for (ReaderTag otherTag: otherList) {
+        for (ReaderTag otherTag : otherList) {
             int i = this.indexOfTag(otherTag);
             if (i == -1) {
                 return false;
@@ -58,7 +57,7 @@ public class ReaderTagList extends ArrayList<ReaderTag> {
             return deletions;
         }
 
-        for (ReaderTag thisTag: this) {
+        for (ReaderTag thisTag : this) {
             if (otherList.indexOfTag(thisTag) == -1) {
                 deletions.add(thisTag);
             }

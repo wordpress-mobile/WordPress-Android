@@ -46,7 +46,7 @@ public class ReferrerResultModel implements Serializable {
                 mChildren.add(getChildren(blogId, date, currentChild));
             }
 
-            //Sort the children by views.
+            // Sort the children by views.
             Collections.sort(mChildren, new java.util.Comparator<SingleItemModel>() {
                 public int compare(SingleItemModel o1, SingleItemModel o2) {
                     // descending order
@@ -112,5 +112,7 @@ public class ReferrerResultModel implements Serializable {
         this.mUrl = url;
     }
 
-    public List<SingleItemModel> getChildren() { return mChildren; }
+    public List<SingleItemModel> getChildren() {
+        return mChildren;
+    }
 }
