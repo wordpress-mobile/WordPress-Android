@@ -9,6 +9,7 @@ import android.content.Intent;
 import android.content.res.Resources;
 import android.location.Address;
 import android.os.AsyncTask;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -561,7 +562,7 @@ public class EditPostSettingsFragment extends Fragment {
         boolean isPublishImmediatelyAvailable = PostUtils.shouldPublishImmediatelyOptionBeAvailable(getPost());
 
         final DatePickerDialog datePickerDialog = new DatePickerDialog(getActivity(),
-                R.style.Calypso_AlertDialog, null, year, month, day);
+                Build.VERSION.SDK_INT >= 21 ? R.style.Calypso_AlertDialog : 0, null, year, month, day);
         datePickerDialog.setTitle(R.string.select_date);
         datePickerDialog.setButton(DialogInterface.BUTTON_POSITIVE, resources.getString(android.R.string.ok),
                                    new DialogInterface.OnClickListener() {
@@ -602,22 +603,16 @@ public class EditPostSettingsFragment extends Fragment {
         final Calendar calendar = getCurrentPublishDateAsCalendar();
         int hour = calendar.get(Calendar.HOUR_OF_DAY);
         int minute = calendar.get(Calendar.MINUTE);
-        final TimePickerDialog timePickerDialog = new TimePickerDialog(getActivity(), R.style.Calypso_AlertDialog,
-                                                                       new TimePickerDialog.OnTimeSetListener() {
-                                                                           @Override
-                                                                           public void onTimeSet(TimePicker timePicker,
-                                                                                                 int selectedHour,
-                                                                                                 int selectedMinute) {
-                                                                               Calendar selectedCalendar =
-                                                                                       Calendar.getInstance();
-                                                                               selectedCalendar
-                                                                                       .set(selectedYear, selectedMonth,
-                                                                                            selectedDay, selectedHour,
-                                                                                            selectedMinute);
-                                                                               updatePublishDate(selectedCalendar);
-                                                                           }
-                                                                       }, hour, minute,
-                                                                       DateFormat.is24HourFormat(getActivity()));
+        final TimePickerDialog timePickerDialog = new TimePickerDialog(getActivity(),
+                Build.VERSION.SDK_INT >= 21 ? R.style.Calypso_AlertDialog : 0,
+                new TimePickerDialog.OnTimeSetListener() {
+                    @Override
+                    public void onTimeSet(TimePicker timePicker, int selectedHour, int selectedMinute) {
+                        Calendar selectedCalendar = Calendar.getInstance();
+                        selectedCalendar.set(selectedYear, selectedMonth, selectedDay, selectedHour, selectedMinute);
+                        updatePublishDate(selectedCalendar);
+                    }
+                }, hour, minute, DateFormat.is24HourFormat(getActivity()));
         timePickerDialog.setTitle(R.string.select_time);
         timePickerDialog.show();
     }
