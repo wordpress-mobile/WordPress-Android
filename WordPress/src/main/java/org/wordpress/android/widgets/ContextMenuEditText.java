@@ -10,7 +10,9 @@ import android.util.AttributeSet;
 public class ContextMenuEditText extends AppCompatEditText {
     public interface OnContextMenuListener {
         void onCut();
+
         void onCopy();
+
         void onPaste();
     }
 
@@ -18,6 +20,7 @@ public class ContextMenuEditText extends AppCompatEditText {
 
     /**
      * Set a listener to interface with activity or fragment.
+     *
      * @param listener object listening for cut, copy, and paste events
      */
     public void setOnContextMenuListener(OnContextMenuListener listener) {
@@ -61,7 +64,7 @@ public class ContextMenuEditText extends AppCompatEditText {
     /**
      * Text cut from WPEditText.
      */
-    public void onCut(){
+    public void onCut() {
         if (mOnContextMenuListener != null) {
             mOnContextMenuListener.onCut();
         }
@@ -70,7 +73,7 @@ public class ContextMenuEditText extends AppCompatEditText {
     /**
      * Text copied from WPEditText.
      */
-    public void onCopy(){
+    public void onCopy() {
         if (mOnContextMenuListener != null) {
             mOnContextMenuListener.onCopy();
         }
@@ -79,7 +82,7 @@ public class ContextMenuEditText extends AppCompatEditText {
     /**
      * Text pasted into WPEditText.
      */
-    public void onPaste(){
+    public void onPaste() {
         if (mOnContextMenuListener != null) {
             mOnContextMenuListener.onPaste();
         }

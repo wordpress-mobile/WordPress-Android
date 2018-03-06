@@ -11,7 +11,6 @@ import okhttp3.RequestBody;
 import okio.Buffer;
 
 public class GravatarApiTest extends InstrumentationTestCase {
-
     public void testGravatarUploadRequest() throws IOException {
         final String fileContent = "abcdefg";
 
@@ -37,7 +36,8 @@ public class GravatarApiTest extends InstrumentationTestCase {
         assertTrue(body.contains("Content-Length: " + email.length()));
         assertTrue(body.contains(email));
 
-        assertTrue(body.contains("Content-Disposition: form-data; name=\"filedata\"; filename=\"" + tempFile.getName() + "\""));
+        assertTrue(body.contains(
+                "Content-Disposition: form-data; name=\"filedata\"; filename=\"" + tempFile.getName() + "\""));
         assertTrue(body.contains("Content-Type: multipart/form-data"));
         assertTrue(body.contains(fileContent));
     }

@@ -21,37 +21,37 @@ import java.text.BreakIterator;
 import java.util.Iterator;
 
 public class ReaderPost {
-    private String pseudoId;
+    private String mPseudoId;
     public long postId;
     public long blogId;
     public long feedId;
     public long feedItemId;
     public long authorId;
 
-    private String title;
-    private String text;
-    private String excerpt;
-    private String authorName;
-    private String authorFirstName;
-    private String blogName;
-    private String blogUrl;
-    private String blogImageUrl;
-    private String postAvatar;
+    private String mTitle;
+    private String mText;
+    private String mExcerpt;
+    private String mAuthorName;
+    private String mAuthorFirstName;
+    private String mBlogName;
+    private String mBlogUrl;
+    private String mBlogImageUrl;
+    private String mPostAvatar;
 
-    private String primaryTag;    // most popular tag on this post based on usage in blog
-    private String secondaryTag;  // second most popular tag on this post based on usage in blog
+    private String mPrimaryTag; // most popular tag on this post based on usage in blog
+    private String mSecondaryTag; // second most popular tag on this post based on usage in blog
 
-    private String dateLiked;
-    private String dateTagged;
-    private String datePublished;
+    private String mDateLiked;
+    private String mDateTagged;
+    private String mDatePublished;
     public double score;
 
-    private String url;
-    private String shortUrl;
-    private String featuredImage;
-    private String featuredVideo;
+    private String mUrl;
+    private String mShortUrl;
+    private String mFeaturedImage;
+    private String mFeaturedVideo;
 
-    public int numReplies;        // includes comments, trackbacks & pingbacks
+    public int numReplies; // includes comments, trackbacks & pingbacks
     public int numLikes;
 
     public boolean isLikedByCurrentUser;
@@ -62,15 +62,15 @@ public class ReaderPost {
     public boolean isVideoPress;
     public boolean isJetpack;
 
-    private String attachmentsJson;
-    private String discoverJson;
-    private String format;
+    private String mAttachmentsJson;
+    private String mDiscoverJson;
+    private String mFormat;
 
     public long xpostPostId;
     public long xpostBlogId;
 
-    private String railcarJson;
-    private ReaderCardType cardType = ReaderCardType.DEFAULT;
+    private String mRailcarJson;
+    private ReaderCardType mCardType = ReaderCardType.DEFAULT;
 
     public static ReaderPost fromJson(JSONObject json) {
         if (json == null) {
@@ -85,19 +85,19 @@ public class ReaderPost {
         post.feedItemId = json.optLong("feed_item_ID");
 
         if (json.has("pseudo_ID")) {
-            post.pseudoId = JSONUtils.getString(json, "pseudo_ID");  // read/ endpoint
+            post.mPseudoId = JSONUtils.getString(json, "pseudo_ID"); // read/ endpoint
         } else {
-            post.pseudoId = JSONUtils.getString(json, "global_ID");  // sites/ endpoint
+            post.mPseudoId = JSONUtils.getString(json, "global_ID"); // sites/ endpoint
         }
 
         // remove HTML from the excerpt
-        post.excerpt = HtmlUtils.fastStripHtml(JSONUtils.getString(json, "excerpt")).trim();
+        post.mExcerpt = HtmlUtils.fastStripHtml(JSONUtils.getString(json, "excerpt")).trim();
 
-        post.text = JSONUtils.getString(json, "content");
-        post.title = JSONUtils.getStringDecoded(json, "title");
-        post.format = JSONUtils.getString(json, "format");
-        post.url = JSONUtils.getString(json, "URL");
-        post.shortUrl = JSONUtils.getString(json, "short_URL");
+        post.mText = JSONUtils.getString(json, "content");
+        post.mTitle = JSONUtils.getStringDecoded(json, "title");
+        post.mFormat = JSONUtils.getString(json, "format");
+        post.mUrl = JSONUtils.getString(json, "URL");
+        post.mShortUrl = JSONUtils.getString(json, "short_URL");
         post.setBlogUrl(JSONUtils.getString(json, "site_URL"));
 
         post.numLikes = json.optInt("like_count");
@@ -119,24 +119,24 @@ public class ReaderPost {
         // parse the author section
         assignAuthorFromJson(post, json.optJSONObject("author"));
 
-        post.featuredImage = JSONUtils.getString(json, "featured_image");
-        post.blogName = JSONUtils.getStringDecoded(json, "site_name");
+        post.mFeaturedImage = JSONUtils.getString(json, "featured_image");
+        post.mBlogName = JSONUtils.getStringDecoded(json, "site_name");
 
-        post.datePublished = JSONUtils.getString(json, "date");
-        post.dateLiked = JSONUtils.getString(json, "date_liked");
-        post.dateTagged = JSONUtils.getString(json, "tagged_on");
+        post.mDatePublished = JSONUtils.getString(json, "date");
+        post.mDateLiked = JSONUtils.getString(json, "date_liked");
+        post.mDateTagged = JSONUtils.getString(json, "tagged_on");
 
         // "score" only exists for search results
         post.score = json.optDouble("score");
 
         // if the post is untitled, make up a title from the excerpt
         if (!post.hasTitle() && post.hasExcerpt()) {
-            post.title = extractTitle(post.excerpt, 50);
+            post.mTitle = extractTitle(post.mExcerpt, 50);
         }
 
         // remove html from title (rare, but does happen)
-        if (post.hasTitle() && post.title.contains("<") && post.title.contains(">")) {
-            post.title = HtmlUtils.stripHtml(post.title);
+        if (post.hasTitle() && post.mTitle.contains("<") && post.mTitle.contains(">")) {
+            post.mTitle = HtmlUtils.stripHtml(post.mTitle);
         }
 
         // parse the tags section
@@ -145,19 +145,19 @@ public class ReaderPost {
         // parse the attachments
         JSONObject jsonAttachments = json.optJSONObject("attachments");
         if (jsonAttachments != null && jsonAttachments.length() > 0) {
-            post.attachmentsJson = jsonAttachments.toString();
+            post.mAttachmentsJson = jsonAttachments.toString();
         }
 
         // site metadata - returned when ?meta=site was added to the request
         JSONObject jsonSite = JSONUtils.getJSONChild(json, "meta/data/site");
         if (jsonSite != null) {
             post.blogId = jsonSite.optInt("ID");
-            post.blogName = JSONUtils.getString(jsonSite, "name");
+            post.mBlogName = JSONUtils.getString(jsonSite, "name");
             post.setBlogUrl(JSONUtils.getString(jsonSite, "URL"));
             post.isPrivate = JSONUtils.getBool(jsonSite, "is_private");
             JSONObject jsonSiteIcon = jsonSite.optJSONObject("icon");
             if (jsonSiteIcon != null) {
-                post.blogImageUrl = JSONUtils.getString(jsonSiteIcon, "img");
+                post.mBlogImageUrl = JSONUtils.getString(jsonSiteIcon, "img");
             }
             // TODO: as of 29-Sept-2014, this is broken - endpoint returns false when it should be true
             post.isJetpack = JSONUtils.getBool(jsonSite, "jetpack");
@@ -175,15 +175,15 @@ public class ReaderPost {
         // if the post doesn't have a featured image but it contains an IMG tag, check whether
         // we can find a suitable image from the content
         if (!post.hasFeaturedImage() && post.hasImages()) {
-            post.featuredImage = new ReaderImageScanner(post.text, post.isPrivate)
+            post.mFeaturedImage = new ReaderImageScanner(post.mText, post.isPrivate)
                     .getLargestImage(ReaderConstants.MIN_FEATURED_IMAGE_WIDTH);
         }
 
         // if there's no featured image or featured video and the post contains an iframe, scan
         // the content for a suitable featured video
         if (!post.hasFeaturedImage()
-                && !post.hasFeaturedVideo()
-                && post.getText().contains("<iframe")) {
+            && !post.hasFeaturedVideo()
+            && post.getText().contains("<iframe")) {
             post.setFeaturedVideo(new ReaderIframeScanner(post.getText()).getFirstUsableVideo());
         }
 
@@ -201,21 +201,23 @@ public class ReaderPost {
     }
 
     public boolean hasImages() {
-        return hasText() && text.contains("<img ");
+        return hasText() && mText.contains("<img ");
     }
 
     /*
      * assigns cross post blog & post IDs from post's metadata section
-     *  "metadata": [
-     *       {
-     *           "id": "21192",
-     *           "key": "xpost_origin",
-     *           "value": "11326809:18427"
-     *       }
-     *     ],
+     * "metadata": [
+     * {
+     * "id": "21192",
+     * "key": "xpost_origin",
+     * "value": "11326809:18427"
+     * }
+     * ],
      */
     private static void assignXpostIdsFromJson(ReaderPost post, JSONArray jsonMetadata) {
-        if (jsonMetadata ==  null) return;
+        if (jsonMetadata == null) {
+            return;
+        }
 
         for (int i = 0; i < jsonMetadata.length(); i++) {
             JSONObject jsonMetaItem = jsonMetadata.optJSONObject(i);
@@ -234,14 +236,16 @@ public class ReaderPost {
         }
     }
 
-     /*
-      * assigns author-related info to the passed post from the passed JSON "author" object
-      */
+    /*
+     * assigns author-related info to the passed post from the passed JSON "author" object
+     */
     private static void assignAuthorFromJson(ReaderPost post, JSONObject jsonAuthor) {
-        if (jsonAuthor == null) return;
+        if (jsonAuthor == null) {
+            return;
+        }
 
-        post.authorName = JSONUtils.getStringDecoded(jsonAuthor, "name");
-        post.authorFirstName = JSONUtils.getStringDecoded(jsonAuthor, "first_name");
+        post.mAuthorName = JSONUtils.getStringDecoded(jsonAuthor, "name");
+        post.mAuthorFirstName = JSONUtils.getStringDecoded(jsonAuthor, "first_name");
         post.authorId = jsonAuthor.optLong("ID");
 
         // v1.2 endpoint contains a "has_avatar" boolean which tells us whether the author
@@ -254,11 +258,11 @@ public class ReaderPost {
             hasAvatar = true;
         }
         if (hasAvatar) {
-            post.postAvatar = JSONUtils.getString(jsonAuthor, "avatar_URL");
+            post.mPostAvatar = JSONUtils.getString(jsonAuthor, "avatar_URL");
         }
 
         // site_URL doesn't exist for /sites/ endpoints, so get it from the author
-        if (TextUtils.isEmpty(post.blogUrl)) {
+        if (TextUtils.isEmpty(post.mBlogUrl)) {
             post.setBlogUrl(JSONUtils.getString(jsonAuthor, "URL"));
         }
     }
@@ -309,11 +313,13 @@ public class ReaderPost {
      * extracts a title from a post's excerpt - used when the post has no title
      */
     private static String extractTitle(final String excerpt, int maxLen) {
-        if (TextUtils.isEmpty(excerpt))
+        if (TextUtils.isEmpty(excerpt)) {
             return null;
+        }
 
-        if (excerpt.length() < maxLen)
+        if (excerpt.length() < maxLen) {
             return excerpt.trim();
+        }
 
         StringBuilder result = new StringBuilder();
         BreakIterator wordIterator = BreakIterator.getWordInstance();
@@ -325,172 +331,197 @@ public class ReaderPost {
             String word = excerpt.substring(start, end);
             result.append(word);
             totalLen += word.length();
-            if (totalLen >= maxLen)
+            if (totalLen >= maxLen) {
                 break;
+            }
             start = end;
             end = wordIterator.next();
         }
 
-        if (totalLen==0)
+        if (totalLen == 0) {
             return null;
+        }
         return result.toString().trim() + "...";
     }
 
     // --------------------------------------------------------------------------------------------
 
     public String getAuthorName() {
-        return StringUtils.notNullStr(authorName);
+        return StringUtils.notNullStr(mAuthorName);
     }
+
     public void setAuthorName(String name) {
-        this.authorName = StringUtils.notNullStr(name);
+        this.mAuthorName = StringUtils.notNullStr(name);
     }
 
     public String getAuthorFirstName() {
-        return StringUtils.notNullStr(authorFirstName);
+        return StringUtils.notNullStr(mAuthorFirstName);
     }
+
     public void setAuthorFirstName(String name) {
-        this.authorFirstName = StringUtils.notNullStr(name);
+        this.mAuthorFirstName = StringUtils.notNullStr(name);
     }
 
     public String getTitle() {
-        return StringUtils.notNullStr(title);
+        return StringUtils.notNullStr(mTitle);
     }
+
     public void setTitle(String title) {
-        this.title = StringUtils.notNullStr(title);
+        this.mTitle = StringUtils.notNullStr(title);
     }
 
     public String getText() {
-        return StringUtils.notNullStr(text);
+        return StringUtils.notNullStr(mText);
     }
+
     public void setText(String text) {
-        this.text = StringUtils.notNullStr(text);
+        this.mText = StringUtils.notNullStr(text);
     }
 
     public String getExcerpt() {
-        return StringUtils.notNullStr(excerpt);
+        return StringUtils.notNullStr(mExcerpt);
     }
+
     public void setExcerpt(String excerpt) {
-        this.excerpt = StringUtils.notNullStr(excerpt);
+        this.mExcerpt = StringUtils.notNullStr(excerpt);
     }
 
     // https://codex.wordpress.org/Post_Formats
     public String getFormat() {
-        return StringUtils.notNullStr(format);
+        return StringUtils.notNullStr(mFormat);
     }
+
     public void setFormat(String format) {
-        this.format = StringUtils.notNullStr(format);
+        this.mFormat = StringUtils.notNullStr(format);
     }
 
     public boolean isGallery() {
-        return format != null && format.equals("gallery");
+        return mFormat != null && mFormat.equals("gallery");
     }
 
 
     public String getUrl() {
-        return StringUtils.notNullStr(url);
+        return StringUtils.notNullStr(mUrl);
     }
+
     public void setUrl(String url) {
-        this.url = StringUtils.notNullStr(url);
+        this.mUrl = StringUtils.notNullStr(url);
     }
 
     public String getShortUrl() {
-        return StringUtils.notNullStr(shortUrl);
+        return StringUtils.notNullStr(mShortUrl);
     }
-    public void setShortUrl(String url) {
-        this.shortUrl = StringUtils.notNullStr(url);
+
+    public void setShortUrl(String shortUrl) {
+        this.mShortUrl = StringUtils.notNullStr(shortUrl);
     }
+
     public boolean hasShortUrl() {
-        return !TextUtils.isEmpty(shortUrl);
+        return !TextUtils.isEmpty(mShortUrl);
     }
 
     public String getFeaturedImage() {
-        return StringUtils.notNullStr(featuredImage);
+        return StringUtils.notNullStr(mFeaturedImage);
     }
+
     public void setFeaturedImage(String featuredImage) {
-        this.featuredImage = StringUtils.notNullStr(featuredImage);
+        this.mFeaturedImage = StringUtils.notNullStr(featuredImage);
     }
 
     public String getFeaturedVideo() {
-        return StringUtils.notNullStr(featuredVideo);
+        return StringUtils.notNullStr(mFeaturedVideo);
     }
+
     public void setFeaturedVideo(String featuredVideo) {
-        this.featuredVideo = StringUtils.notNullStr(featuredVideo);
+        this.mFeaturedVideo = StringUtils.notNullStr(featuredVideo);
     }
 
     public String getBlogName() {
-        return StringUtils.notNullStr(blogName);
+        return StringUtils.notNullStr(mBlogName);
     }
+
     public void setBlogName(String blogName) {
-        this.blogName = StringUtils.notNullStr(blogName);
+        this.mBlogName = StringUtils.notNullStr(blogName);
     }
 
     public String getBlogUrl() {
-        return StringUtils.notNullStr(blogUrl);
+        return StringUtils.notNullStr(mBlogUrl);
     }
+
     public void setBlogUrl(String blogUrl) {
-        this.blogUrl = StringUtils.notNullStr(blogUrl);
+        this.mBlogUrl = StringUtils.notNullStr(blogUrl);
     }
 
     public String getBlogImageUrl() {
-        return StringUtils.notNullStr(blogImageUrl);
+        return StringUtils.notNullStr(mBlogImageUrl);
     }
+
     public void setBlogImageUrl(String imageUrl) {
-        this.blogImageUrl = StringUtils.notNullStr(imageUrl);
+        this.mBlogImageUrl = StringUtils.notNullStr(imageUrl);
     }
 
     public String getPostAvatar() {
-        return StringUtils.notNullStr(postAvatar);
+        return StringUtils.notNullStr(mPostAvatar);
     }
+
     public void setPostAvatar(String postAvatar) {
-        this.postAvatar = StringUtils.notNullStr(postAvatar);
+        this.mPostAvatar = StringUtils.notNullStr(postAvatar);
     }
 
     public String getPseudoId() {
-        return StringUtils.notNullStr(pseudoId);
+        return StringUtils.notNullStr(mPseudoId);
     }
+
     public void setPseudoId(String pseudoId) {
-        this.pseudoId = StringUtils.notNullStr(pseudoId);
+        this.mPseudoId = StringUtils.notNullStr(pseudoId);
     }
 
     public String getDatePublished() {
-        return StringUtils.notNullStr(datePublished);
+        return StringUtils.notNullStr(mDatePublished);
     }
+
     public void setDatePublished(String dateStr) {
-        this.datePublished = StringUtils.notNullStr(dateStr);
+        this.mDatePublished = StringUtils.notNullStr(dateStr);
     }
 
     public String getDateLiked() {
-        return StringUtils.notNullStr(dateLiked);
+        return StringUtils.notNullStr(mDateLiked);
     }
+
     public void setDateLiked(String dateStr) {
-        this.dateLiked = StringUtils.notNullStr(dateStr);
+        this.mDateLiked = StringUtils.notNullStr(dateStr);
     }
 
     public String getDateTagged() {
-        return StringUtils.notNullStr(dateTagged);
+        return StringUtils.notNullStr(mDateTagged);
     }
+
     public void setDateTagged(String dateStr) {
-        this.dateTagged = StringUtils.notNullStr(dateStr);
+        this.mDateTagged = StringUtils.notNullStr(dateStr);
     }
 
     public String getPrimaryTag() {
-        return StringUtils.notNullStr(primaryTag);
+        return StringUtils.notNullStr(mPrimaryTag);
     }
+
     public void setPrimaryTag(String tagName) {
-        this.primaryTag = StringUtils.notNullStr(tagName);
+        this.mPrimaryTag = StringUtils.notNullStr(tagName);
     }
+
     public boolean hasPrimaryTag() {
-        return !TextUtils.isEmpty(primaryTag);
+        return !TextUtils.isEmpty(mPrimaryTag);
     }
 
     public String getSecondaryTag() {
-        return StringUtils.notNullStr(secondaryTag);
+        return StringUtils.notNullStr(mSecondaryTag);
     }
+
     public void setSecondaryTag(String tagName) {
-        this.secondaryTag = StringUtils.notNullStr(tagName);
+        this.mSecondaryTag = StringUtils.notNullStr(tagName);
     }
+
     public boolean hasSecondaryTag() {
-        return !TextUtils.isEmpty(secondaryTag);
+        return !TextUtils.isEmpty(mSecondaryTag);
     }
 
     /*
@@ -498,86 +529,91 @@ public class ReaderPost {
      * them, may need to revisit this if/when attachments become more important
      */
     public String getAttachmentsJson() {
-        return StringUtils.notNullStr(attachmentsJson);
+        return StringUtils.notNullStr(mAttachmentsJson);
     }
+
     public void setAttachmentsJson(String json) {
-        attachmentsJson = StringUtils.notNullStr(json);
+        mAttachmentsJson = StringUtils.notNullStr(json);
     }
+
     public boolean hasAttachments() {
-        return !TextUtils.isEmpty(attachmentsJson);
+        return !TextUtils.isEmpty(mAttachmentsJson);
     }
 
     /*
      * "discover" posts also store the actual JSON
      */
     public String getDiscoverJson() {
-        return StringUtils.notNullStr(discoverJson);
-    }
-    public void setDiscoverJson(String json) {
-        discoverJson = StringUtils.notNullStr(json);
-    }
-    public boolean isDiscoverPost() {
-        return !TextUtils.isEmpty(discoverJson);
+        return StringUtils.notNullStr(mDiscoverJson);
     }
 
-    private transient ReaderPostDiscoverData discoverData;
+    public void setDiscoverJson(String json) {
+        mDiscoverJson = StringUtils.notNullStr(json);
+    }
+
+    public boolean isDiscoverPost() {
+        return !TextUtils.isEmpty(mDiscoverJson);
+    }
+
+    private transient ReaderPostDiscoverData mDiscoverData;
+
     public ReaderPostDiscoverData getDiscoverData() {
-        if (discoverData == null && !TextUtils.isEmpty(discoverJson)) {
+        if (mDiscoverData == null && !TextUtils.isEmpty(mDiscoverJson)) {
             try {
-                discoverData = new ReaderPostDiscoverData(new JSONObject(discoverJson));
+                mDiscoverData = new ReaderPostDiscoverData(new JSONObject(mDiscoverJson));
             } catch (JSONException e) {
                 return null;
             }
         }
-        return discoverData;
+        return mDiscoverData;
     }
 
     public boolean hasText() {
-        return !TextUtils.isEmpty(text);
+        return !TextUtils.isEmpty(mText);
     }
 
     public boolean hasUrl() {
-        return !TextUtils.isEmpty(url);
+        return !TextUtils.isEmpty(mUrl);
     }
 
     public boolean hasExcerpt() {
-        return !TextUtils.isEmpty(excerpt);
+        return !TextUtils.isEmpty(mExcerpt);
     }
 
     public boolean hasFeaturedImage() {
-        return !TextUtils.isEmpty(featuredImage);
+        return !TextUtils.isEmpty(mFeaturedImage);
     }
 
     public boolean hasFeaturedVideo() {
-        return !TextUtils.isEmpty(featuredVideo);
+        return !TextUtils.isEmpty(mFeaturedVideo);
     }
 
     public boolean hasPostAvatar() {
-        return !TextUtils.isEmpty(postAvatar);
+        return !TextUtils.isEmpty(mPostAvatar);
     }
 
     public boolean hasBlogName() {
-        return !TextUtils.isEmpty(blogName);
+        return !TextUtils.isEmpty(mBlogName);
     }
 
     public boolean hasAuthorName() {
-        return !TextUtils.isEmpty(authorName);
+        return !TextUtils.isEmpty(mAuthorName);
     }
 
     public boolean hasAuthorFirstName() {
-        return !TextUtils.isEmpty(authorFirstName);
+        return !TextUtils.isEmpty(mAuthorFirstName);
     }
 
     public boolean hasTitle() {
-        return !TextUtils.isEmpty(title);
+        return !TextUtils.isEmpty(mTitle);
     }
 
     public boolean hasBlogUrl() {
-        return !TextUtils.isEmpty(blogUrl);
+        return !TextUtils.isEmpty(mBlogUrl);
     }
 
     public boolean hasBlogImageUrl() {
-        return !TextUtils.isEmpty(blogImageUrl);
+        return !TextUtils.isEmpty(mBlogImageUrl);
     }
 
     /*
@@ -607,24 +643,24 @@ public class ReaderPost {
      */
     public boolean isSamePost(ReaderPost post) {
         return post != null
-                && post.blogId == this.blogId
-                && post.postId == this.postId
-                && post.feedId == this.feedId
-                && post.feedItemId == this.feedItemId
-                && post.numLikes == this.numLikes
-                && post.numReplies == this.numReplies
-                && post.isFollowedByCurrentUser == this.isFollowedByCurrentUser
-                && post.isLikedByCurrentUser == this.isLikedByCurrentUser
-                && post.isCommentsOpen == this.isCommentsOpen
-                && post.getTitle().equals(this.getTitle())
-                && post.getExcerpt().equals(this.getExcerpt())
-                && post.getText().equals(this.getText());
+               && post.blogId == this.blogId
+               && post.postId == this.postId
+               && post.feedId == this.feedId
+               && post.feedItemId == this.feedItemId
+               && post.numLikes == this.numLikes
+               && post.numReplies == this.numReplies
+               && post.isFollowedByCurrentUser == this.isFollowedByCurrentUser
+               && post.isLikedByCurrentUser == this.isLikedByCurrentUser
+               && post.isCommentsOpen == this.isCommentsOpen
+               && post.getTitle().equals(this.getTitle())
+               && post.getExcerpt().equals(this.getExcerpt())
+               && post.getText().equals(this.getText());
     }
 
     public boolean hasIds(ReaderBlogIdPostId ids) {
         return ids != null
-                && ids.getBlogId() == this.blogId
-                && ids.getPostId() == this.postId;
+               && ids.getBlogId() == this.blogId
+               && ids.getPostId() == this.postId;
     }
 
     /*
@@ -636,20 +672,23 @@ public class ReaderPost {
 
 
     public String getRailcarJson() {
-        return StringUtils.notNullStr(railcarJson);
+        return StringUtils.notNullStr(mRailcarJson);
     }
+
     public void setRailcarJson(String jsonRailcar) {
-        this.railcarJson = StringUtils.notNullStr(jsonRailcar);
+        this.mRailcarJson = StringUtils.notNullStr(jsonRailcar);
     }
+
     public boolean hasRailcar() {
-        return !TextUtils.isEmpty(railcarJson);
+        return !TextUtils.isEmpty(mRailcarJson);
     }
 
     public ReaderCardType getCardType() {
-        return cardType != null ? cardType : ReaderCardType.DEFAULT;
+        return mCardType != null ? mCardType : ReaderCardType.DEFAULT;
     }
+
     public void setCardType(ReaderCardType cardType) {
-        this.cardType = cardType;
+        this.mCardType = cardType;
     }
 
     /****
@@ -661,66 +700,70 @@ public class ReaderPost {
     /*
      * returns the featured image url as a photon url set to the passed width/height
      */
-    private transient String featuredImageForDisplay;
+    private transient String mFeaturedImageForDisplay;
+
     public String getFeaturedImageForDisplay(int width, int height) {
-        if (featuredImageForDisplay == null) {
+        if (mFeaturedImageForDisplay == null) {
             if (!hasFeaturedImage()) {
-                featuredImageForDisplay = "";
+                mFeaturedImageForDisplay = "";
             } else {
-                featuredImageForDisplay = ReaderUtils.getResizedImageUrl(featuredImage, width, height, isPrivate);
+                mFeaturedImageForDisplay = ReaderUtils.getResizedImageUrl(mFeaturedImage, width, height, isPrivate);
             }
         }
-        return featuredImageForDisplay;
+        return mFeaturedImageForDisplay;
     }
 
     /*
      * returns the avatar url as a photon url set to the passed size
      */
-    private transient String avatarForDisplay;
+    private transient String mAvatarForDisplay;
+
     public String getPostAvatarForDisplay(int size) {
-        if (avatarForDisplay == null) {
+        if (mAvatarForDisplay == null) {
             if (!hasPostAvatar()) {
                 return "";
             }
-            avatarForDisplay = GravatarUtils.fixGravatarUrl(postAvatar, size);
+            mAvatarForDisplay = GravatarUtils.fixGravatarUrl(mPostAvatar, size);
         }
-        return avatarForDisplay;
+        return mAvatarForDisplay;
     }
 
     /*
      * returns the blog's blavatar url as a photon url set to the passed size
      */
-    private transient String blavatarForDisplay;
+    private transient String mBlavatarForDisplay;
+
     public String getPostBlavatarForDisplay(int size) {
-        if (blavatarForDisplay == null) {
+        if (mBlavatarForDisplay == null) {
             if (!hasBlogUrl()) {
                 return "";
             }
-            blavatarForDisplay = GravatarUtils.blavatarFromUrl(getBlogUrl(), size);
+            mBlavatarForDisplay = GravatarUtils.blavatarFromUrl(getBlogUrl(), size);
         }
-        return blavatarForDisplay;
+        return mBlavatarForDisplay;
     }
 
     /*
      * converts iso8601 pubDate to a java date for display - this is the date that appears on posts
      */
-    private transient java.util.Date dtDisplay;
+    private transient java.util.Date mDateDisplay;
+
     public java.util.Date getDisplayDate() {
-        if (dtDisplay == null) {
-            dtDisplay = DateTimeUtils.dateFromIso8601(this.datePublished);
+        if (mDateDisplay == null) {
+            mDateDisplay = DateTimeUtils.dateFromIso8601(this.mDatePublished);
         }
-        return dtDisplay;
+        return mDateDisplay;
     }
 
     /*
      * used when a unique numeric id is required by an adapter (when hasStableIds() = true)
      */
-    private transient long stableId;
-    public long getStableId() {
-        if (stableId == 0) {
-            stableId = (pseudoId != null ? pseudoId.hashCode() : 0);
-        }
-        return stableId;
-    }
+    private transient long mStableId;
 
+    public long getStableId() {
+        if (mStableId == 0) {
+            mStableId = (mPseudoId != null ? mPseudoId.hashCode() : 0);
+        }
+        return mStableId;
+    }
 }

@@ -21,7 +21,7 @@ public class ReaderSearchSuggestionAdapter extends CursorAdapter {
     private static final int MAX_SUGGESTIONS = 5;
     private static final int CLEAR_ALL_ROW_ID = -1;
 
-    private static final int NUM_VIEW_TYPES  = 2;
+    private static final int NUM_VIEW_TYPES = 2;
     private static final int VIEW_TYPE_QUERY = 0;
     private static final int VIEW_TYPE_CLEAR = 1;
 
@@ -110,12 +110,12 @@ public class ReaderSearchSuggestionAdapter extends CursorAdapter {
     }
 
     private class SuggestionViewHolder {
-        private final TextView txtSuggestion;
-        private final ImageView imgDelete;
+        private final TextView mTxtSuggestion;
+        private final ImageView mImgDelete;
 
         SuggestionViewHolder(View view) {
-            txtSuggestion = (TextView) view.findViewById(R.id.text_suggestion);
-            imgDelete = (ImageView) view.findViewById(R.id.image_delete);
+            mTxtSuggestion = (TextView) view.findViewById(R.id.text_suggestion);
+            mImgDelete = (ImageView) view.findViewById(R.id.image_delete);
         }
     }
 
@@ -135,7 +135,7 @@ public class ReaderSearchSuggestionAdapter extends CursorAdapter {
                     confirmClearSavedSearches(v.getContext());
                 }
             });
-            holder.imgDelete.setVisibility(View.GONE);
+            holder.mImgDelete.setVisibility(View.GONE);
         } else {
             view.setBackgroundColor(mSuggestionBgColor);
         }
@@ -148,11 +148,11 @@ public class ReaderSearchSuggestionAdapter extends CursorAdapter {
         SuggestionViewHolder holder = (SuggestionViewHolder) view.getTag();
 
         final String query = cursor.getString(cursor.getColumnIndex(ReaderSearchTable.COL_QUERY));
-        holder.txtSuggestion.setText(query);
+        holder.mTxtSuggestion.setText(query);
 
         long id = cursor.getLong(cursor.getColumnIndex(ReaderSearchTable.COL_ID));
         if (id != CLEAR_ALL_ROW_ID) {
-            holder.imgDelete.setOnClickListener(new View.OnClickListener() {
+            holder.mImgDelete.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     ReaderSearchTable.deleteQueryString(query);

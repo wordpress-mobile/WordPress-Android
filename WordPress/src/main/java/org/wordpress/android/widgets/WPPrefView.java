@@ -39,12 +39,11 @@ import java.util.ArrayList;
 
 public class WPPrefView extends LinearLayout implements
         View.OnClickListener, CompoundButton.OnCheckedChangeListener {
-
     public enum PrefType {
-        TEXT,       // text setting
-        TOGGLE,     // boolean setting
-        CHECKLIST,  // multi-select setting
-        RADIOLIST;  // single-select setting
+        TEXT, // text setting
+        TOGGLE, // boolean setting
+        CHECKLIST, // multi-select setting
+        RADIOLIST; // single-select setting
 
         public static PrefType fromInt(int value) {
             switch (value) {
@@ -62,10 +61,10 @@ public class WPPrefView extends LinearLayout implements
 
     /*
      * listener for when the user changes the preference
-     *      TEXT        use prefView.getTextEntry() to retrieve the updated setting
-     *      TOGGLE      use prefView.isChecked() to retrieve the updated setting
-     *      RADIOLIST   use prefView.getSelectedItem() to retrieve the updated setting
-     *      CHECKLIST   use prefView.getSelectedItems() to retrieve the updated setting
+     * TEXT use prefView.getTextEntry() to retrieve the updated setting
+     * TOGGLE use prefView.isChecked() to retrieve the updated setting
+     * RADIOLIST use prefView.getSelectedItem() to retrieve the updated setting
+     * CHECKLIST use prefView.getSelectedItems() to retrieve the updated setting
      */
     public interface OnPrefChangedListener {
         void onPrefChanged(@NonNull WPPrefView prefView);
@@ -91,19 +90,21 @@ public class WPPrefView extends LinearLayout implements
      * single item when this is a list preference
      */
     public static class PrefListItem implements Serializable {
-        private final String mItemName;   // name to display for this item
-        private final String mItemValue;  // value for this item (can be same as name)
-        private boolean mIsChecked;       // whether this item is checked
+        private final String mItemName; // name to display for this item
+        private final String mItemValue; // value for this item (can be same as name)
+        private boolean mIsChecked; // whether this item is checked
 
         public PrefListItem(@NonNull String itemName, @NonNull String itemValue, boolean isChecked) {
             mItemName = itemName;
             mItemValue = itemValue;
             mIsChecked = isChecked;
         }
+
         @SuppressWarnings("unused")
         public @NonNull String getItemName() {
             return mItemName;
         }
+
         public @NonNull String getItemValue() {
             return mItemValue;
         }
@@ -118,34 +119,38 @@ public class WPPrefView extends LinearLayout implements
                 this.get(i).mIsChecked = checkedItems.get(i);
             }
         }
+
         // use this for RADIOLIST prefs to get the single-select item
         private PrefListItem getFirstSelectedItem() {
-            for (PrefListItem item: this) {
+            for (PrefListItem item : this) {
                 if (item.mIsChecked) {
                     return item;
                 }
             }
             return null;
         }
+
         // use this for CHECKLIST prefs to get all selected items
         private @NonNull PrefListItems getSelectedItems() {
             PrefListItems selectedItems = new PrefListItems();
-            for (PrefListItem item: this) {
+            for (PrefListItem item : this) {
                 if (item.mIsChecked) {
                     selectedItems.add(item);
                 }
             }
             return selectedItems;
         }
+
         // use this with RADIOLIST prefs to select only the passed name
         public void setSelectedName(@NonNull String selectedName) {
-            for (PrefListItem item: this) {
+            for (PrefListItem item : this) {
                 item.mIsChecked = StringUtils.equals(selectedName, item.mItemName);
             }
         }
+
         public boolean removeItems(@NonNull PrefListItems items) {
             boolean isChanged = false;
-            for (PrefListItem item: items) {
+            for (PrefListItem item : items) {
                 int i = indexOfValue(item.getItemValue());
                 if (i > -1) {
                     this.remove(i);
@@ -154,6 +159,7 @@ public class WPPrefView extends LinearLayout implements
             }
             return isChanged;
         }
+
         private int indexOfValue(@NonNull String value) {
             for (int i = 0; i < this.size(); i++) {
                 if (this.get(i).getItemValue().equals(value)) {
@@ -162,14 +168,15 @@ public class WPPrefView extends LinearLayout implements
             }
             return -1;
         }
+
         public boolean containsValue(@NonNull String value) {
             return indexOfValue(value) > -1;
         }
     }
 
-   /*
-   * Wrapper that will allow us to preserve type of PrefListItems when serializing it
-   */
+    /*
+    * Wrapper that will allow us to preserve type of PrefListItems when serializing it
+    */
     public static class PrefListItemsWrapper implements Serializable {
         private PrefListItems mList;
 
@@ -254,7 +261,7 @@ public class WPPrefView extends LinearLayout implements
         if (state instanceof Bundle) {
             Bundle bundle = (Bundle) state;
             PrefListItemsWrapper listWrapper = (PrefListItemsWrapper) bundle.getSerializable(KEY_LIST_ITEMS);
-            if(listWrapper != null){
+            if (listWrapper != null) {
                 PrefListItems items = listWrapper.getList();
                 setListItems(items);
             }
@@ -317,6 +324,7 @@ public class WPPrefView extends LinearLayout implements
     public String getTextEntry() {
         return mTextEntry;
     }
+
     public void setTextEntry(String entry) {
         mTextEntry = entry;
         setSummary(entry);
@@ -328,6 +336,7 @@ public class WPPrefView extends LinearLayout implements
     public boolean isChecked() {
         return mPrefType == PrefType.TOGGLE && mToggleSwitch.isChecked();
     }
+
     public void setChecked(boolean checked) {
         mToggleSwitch.setChecked(checked);
     }
@@ -470,7 +479,6 @@ public class WPPrefView extends LinearLayout implements
     }
 
     public static class WPPrefDialogFragment extends DialogFragment {
-
         private int mPrefViewId;
         private static final String ARG_PREF_VIEW_ID = "pref_view_ID";
 
@@ -495,7 +503,8 @@ public class WPPrefView extends LinearLayout implements
         }
 
         private
-        @Nullable WPPrefView getPrefView() {
+        @Nullable
+        WPPrefView getPrefView() {
             if (getActivity() != null) {
                 return (WPPrefView) getActivity().findViewById(mPrefViewId);
             }

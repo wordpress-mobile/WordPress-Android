@@ -45,8 +45,8 @@ public class ClicksModel extends BaseStatsModel {
                     ClickGroupModel currentGroupModel = new ClickGroupModel(blogID, mDate, currentGroupJSON);
                     mClickGroups.add(currentGroupModel);
                 } catch (JSONException e) {
-                    AppLog.e(AppLog.T.STATS, "Unexpected ClickGroupModel object " +
-                            "at position " + i + " Response: " + response.toString(), e);
+                    AppLog.e(AppLog.T.STATS, "Unexpected ClickGroupModel object "
+                                             + "at position " + i + " Response: " + response.toString(), e);
                 }
             }
         }

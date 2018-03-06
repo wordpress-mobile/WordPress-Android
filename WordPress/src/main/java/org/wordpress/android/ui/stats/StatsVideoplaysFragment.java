@@ -2,6 +2,7 @@ package org.wordpress.android.ui.stats;
 
 import android.content.Context;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -26,12 +27,14 @@ public class StatsVideoplaysFragment extends StatsAbstractListFragment {
     protected boolean hasDataAvailable() {
         return mVideos != null;
     }
+
     @Override
     protected void saveStatsData(Bundle outState) {
         if (hasDataAvailable()) {
             outState.putSerializable(ARG_REST_RESPONSE, mVideos);
         }
     }
+
     @Override
     protected void restoreStatsData(Bundle savedInstanceState) {
         if (savedInstanceState.containsKey(ARG_REST_RESPONSE)) {
@@ -77,8 +80,8 @@ public class StatsVideoplaysFragment extends StatsAbstractListFragment {
 
     private boolean hasVideoplays() {
         return mVideos != null
-                && mVideos.getPlays() != null
-                && mVideos.getPlays().size() > 0;
+               && mVideos.getPlays() != null
+               && mVideos.getPlays().size() > 0;
     }
 
     private List<SingleItemModel> getVideoplays() {
@@ -99,28 +102,28 @@ public class StatsVideoplaysFragment extends StatsAbstractListFragment {
     }
 
     private class TopPostsAndPagesAdapter extends ArrayAdapter<SingleItemModel> {
+        private final List<SingleItemModel> mList;
+        private final LayoutInflater mInflater;
 
-        private final List<SingleItemModel> list;
-        private final LayoutInflater inflater;
-
-        public TopPostsAndPagesAdapter(Context context, List<SingleItemModel> list) {
+        TopPostsAndPagesAdapter(Context context, List<SingleItemModel> list) {
             super(context, R.layout.stats_list_cell, list);
-            this.list = list;
-            inflater = LayoutInflater.from(context);
+            mList = list;
+            mInflater = LayoutInflater.from(context);
         }
 
+        @NonNull
         @Override
-        public View getView(int position, View convertView, ViewGroup parent) {
+        public View getView(int position, View convertView, @NonNull ViewGroup parent) {
             View rowView = convertView;
             // reuse views
             if (rowView == null) {
-                rowView = inflater.inflate(R.layout.stats_list_cell, parent, false);
+                rowView = mInflater.inflate(R.layout.stats_list_cell, parent, false);
                 // configure view holder
                 StatsViewHolder viewHolder = new StatsViewHolder(rowView);
                 rowView.setTag(viewHolder);
             }
 
-            final SingleItemModel currentRowData = list.get(position);
+            final SingleItemModel currentRowData = mList.get(position);
             StatsViewHolder holder = (StatsViewHolder) rowView.getTag();
             // fill data
             // entries

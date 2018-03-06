@@ -31,7 +31,8 @@ public class SearchTermsModel extends BaseStatsModel {
         Iterator<String> keys = jDaysObject.keys();
         if (keys.hasNext()) {
             String key = keys.next();
-            JSONObject jDateObject = jDaysObject.optJSONObject(key); // This could be an empty array on site with low traffic
+            JSONObject jDateObject =
+                    jDaysObject.optJSONObject(key); // This could be an empty array on site with low traffic
             searchTermsArray = null;
             if (jDateObject != null) {
                 searchTermsArray = jDateObject.getJSONArray("search_terms");
@@ -46,7 +47,7 @@ public class SearchTermsModel extends BaseStatsModel {
         }
 
         ArrayList<SearchTermModel> list = new ArrayList<>(searchTermsArray.length());
-        for (int i=0; i < searchTermsArray.length(); i++) {
+        for (int i = 0; i < searchTermsArray.length(); i++) {
             try {
                 JSONObject postObject = searchTermsArray.getJSONObject(i);
                 String term = postObject.getString("term");
@@ -54,8 +55,8 @@ public class SearchTermsModel extends BaseStatsModel {
                 SearchTermModel currentModel = new SearchTermModel(blogID, mDate, term, total, false);
                 list.add(currentModel);
             } catch (JSONException e) {
-                AppLog.e(AppLog.T.STATS, "Unexpected SearchTerm object in searchterms array" +
-                        "at position " + i + " Response: " + response.toString(), e);
+                AppLog.e(AppLog.T.STATS, "Unexpected SearchTerm object in searchterms array"
+                                         + "at position " + i + " Response: " + response.toString(), e);
             }
         }
 

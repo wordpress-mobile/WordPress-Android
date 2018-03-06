@@ -1,4 +1,3 @@
-
 package org.wordpress.android.ui;
 
 import android.os.Bundle;
@@ -18,7 +17,9 @@ import java.util.Map;
  * Basic activity for displaying a WebView.
  */
 public abstract class WebViewActivity extends AppCompatActivity {
-    /** Primary webview used to display content. */
+    /**
+     * Primary webview used to display content.
+     */
 
     private static final String URL = "url";
 
@@ -162,6 +163,6 @@ public abstract class WebViewActivity extends AppCompatActivity {
     }
 
     protected void cancel() {
-        //nop
+        // nop
     }
 }

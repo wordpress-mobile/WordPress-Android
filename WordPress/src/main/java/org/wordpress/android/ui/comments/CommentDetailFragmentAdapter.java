@@ -11,7 +11,6 @@ import org.wordpress.android.models.CommentList;
 import org.wordpress.android.util.AppLog;
 
 public class CommentDetailFragmentAdapter extends FragmentStatePagerAdapter {
-
     private final SiteModel mSite;
     private final CommentAdapter.OnLoadMoreListener mOnLoadMoreListener;
     private final CommentList mCommentList;
@@ -40,7 +39,8 @@ public class CommentDetailFragmentAdapter extends FragmentStatePagerAdapter {
 
     boolean isAddingNewComments(CommentList newComments) {
         for (int index = 0; index < mCommentList.size(); index++) {
-            if (newComments.size() <= index || mCommentList.get(index).getRemoteCommentId() != newComments.get(index).getRemoteCommentId()) {
+            if (newComments.size() <= index
+                || mCommentList.get(index).getRemoteCommentId() != newComments.get(index).getRemoteCommentId()) {
                 return false;
             }
         }
@@ -52,10 +52,11 @@ public class CommentDetailFragmentAdapter extends FragmentStatePagerAdapter {
     }
 
     CommentModel getCommentAtPosition(int position) {
-        if (isValidPosition(position))
+        if (isValidPosition(position)) {
             return mCommentList.get(position);
-        else
+        } else {
             return null;
+        }
     }
 
     @Override

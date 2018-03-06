@@ -45,8 +45,8 @@ public class ReferrersModel extends BaseStatsModel {
                     ReferrerGroupModel currentGroupModel = new ReferrerGroupModel(blogID, mDate, currentGroupJSON);
                     mGroups.add(currentGroupModel);
                 } catch (JSONException e) {
-                    AppLog.e(AppLog.T.STATS, "Unexpected ReferrerGroupModel object " +
-                            "at position " + i + " Response: " + response.toString(), e);
+                    AppLog.e(AppLog.T.STATS, "Unexpected ReferrerGroupModel object "
+                                             + "at position " + i + " Response: " + response.toString(), e);
                 }
             }
         }

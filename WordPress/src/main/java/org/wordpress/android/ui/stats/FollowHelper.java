@@ -21,10 +21,9 @@ import java.lang.ref.WeakReference;
 import java.util.Locale;
 
 class FollowHelper {
-
     private final WeakReference<Activity> mActivityRef;
 
-    public FollowHelper(Activity activity) {
+    FollowHelper(Activity activity) {
         mActivityRef = new WeakReference<>(activity);
     }
 
@@ -36,7 +35,7 @@ class FollowHelper {
 
         final String workingText = followData.getFollowingText();
         final String followText = followData.getFollowText();
-        final String unfollowText =  followData.getFollowingHoverText();
+        final String unfollowText = followData.getFollowingHoverText();
 
         final PopupMenu popup = new PopupMenu(mActivityRef.get(), anchor);
         final MenuItem menuItem;
@@ -70,7 +69,6 @@ class FollowHelper {
         });
 
         popup.show();
-
     }
 
 
@@ -78,7 +76,7 @@ class FollowHelper {
         private final WeakReference<Activity> mActivityRef;
         private final FollowDataModel mFollowData;
 
-        public FollowRestListener(Activity activity, final FollowDataModel followData) {
+        FollowRestListener(Activity activity, final FollowDataModel followData) {
             this.mActivityRef = new WeakReference<>(activity);
             this.mFollowData = followData;
         }
@@ -90,7 +88,7 @@ class FollowHelper {
             }
 
             mFollowData.isRestCallInProgress = false;
-            if (response!= null) {
+            if (response != null) {
                 try {
                     boolean isFollowing = response.getBoolean("is_following");
                     mFollowData.setIsFollowing(isFollowing);
@@ -104,7 +102,7 @@ class FollowHelper {
         public void onErrorResponse(final VolleyError volleyError) {
             if (volleyError != null) {
                 AppLog.e(AppLog.T.STATS, "Error while following a blog "
-                        + volleyError.getMessage(), volleyError);
+                                         + volleyError.getMessage(), volleyError);
             }
             if (mActivityRef.get() == null || mActivityRef.get().isFinishing()) {
                 return;
@@ -112,8 +110,8 @@ class FollowHelper {
 
             mFollowData.isRestCallInProgress = false;
             ToastUtils.showToast(mActivityRef.get(),
-                    mActivityRef.get().getString(R.string.reader_toast_err_follow_blog),
-                    ToastUtils.Duration.LONG);
+                                 mActivityRef.get().getString(R.string.reader_toast_err_follow_blog),
+                                 ToastUtils.Duration.LONG);
         }
     }
 }

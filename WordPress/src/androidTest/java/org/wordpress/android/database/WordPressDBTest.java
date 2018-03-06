@@ -5,13 +5,13 @@ import android.test.InstrumentationTestCase;
 import android.test.RenamingDelegatingContext;
 
 public class WordPressDBTest extends InstrumentationTestCase {
-    protected Context testContext;
-    protected Context targetContext;
+    protected Context mTestContext;
+    protected Context mTargetContext;
 
     @Override
     protected void setUp() {
         // Run tests in an isolated context
-        targetContext = new RenamingDelegatingContext(getInstrumentation().getTargetContext(), "test_");
-        testContext = getInstrumentation().getContext();
+        mTargetContext = new RenamingDelegatingContext(getInstrumentation().getTargetContext(), "test_");
+        mTestContext = getInstrumentation().getContext();
     }
 }

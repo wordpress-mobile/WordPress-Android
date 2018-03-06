@@ -96,7 +96,7 @@ public class PostsListActivity extends AppCompatActivity {
             targetPost = mPostStore.getPostByLocalPostId(intent.getIntExtra(EXTRA_TARGET_POST_LOCAL_ID, 0));
             if (targetPost == null) {
                 String errorMessage = getString(mIsPage ? R.string.error_page_does_not_exist
-                        : R.string.error_post_does_not_exist);
+                                                        : R.string.error_post_does_not_exist);
                 ToastUtils.showToast(this, errorMessage);
             }
         }
@@ -107,12 +107,12 @@ public class PostsListActivity extends AppCompatActivity {
             mPostList = PostsListFragment.newInstance(mSite, mIsPage, targetPost);
             if (oldFragment == null) {
                 getFragmentManager().beginTransaction()
-                        .add(R.id.post_list_container, mPostList, PostsListFragment.TAG)
-                        .commit();
+                                    .add(R.id.post_list_container, mPostList, PostsListFragment.TAG)
+                                    .commit();
             } else {
                 getFragmentManager().beginTransaction()
-                        .replace(R.id.post_list_container, mPostList, PostsListFragment.TAG)
-                        .commit();
+                                    .replace(R.id.post_list_container, mPostList, PostsListFragment.TAG)
+                                    .commit();
             }
         }
     }

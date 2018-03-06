@@ -1050,7 +1050,7 @@ Language: sv_SE
 	<string name="site_picker_cant_hide_current_site">\"%s\" kunde inte döljas eftersom den är den nuvarande webbplatsen</string>
 	<string name="me_btn_support">Hjälp &amp; support</string>
 	<string name="account_settings">Kontoinställningar</string>
-	<string name="site_picker_create_dotcom">Skapa en webbplats på WordPress.com</string>
+	<string name="site_picker_create_wpcom">Skapa en webbplats på WordPress.com</string>
 	<string name="site_picker_edit_visibility">Visa/dölj webbplatser</string>
 	<string name="site_picker_add_self_hosted">Lägg till webbplats på egen server</string>
 	<string name="site_picker_add_site">Lägg till webbplats</string>

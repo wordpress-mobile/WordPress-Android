@@ -9,26 +9,28 @@ import org.wordpress.android.util.DateTimeUtils;
 import org.wordpress.android.util.StringUtils;
 
 public class Person {
-    public enum PersonType { USER, FOLLOWER, EMAIL_FOLLOWER, VIEWER }
+    public enum PersonType {
+        USER, FOLLOWER, EMAIL_FOLLOWER, VIEWER
+    }
 
-    private long personID;
-    private int localTableBlogId;
-    private String displayName;
-    private String avatarUrl;
-    private PersonType personType;
+    private long mPersonID;
+    private int mLocalTableBlogId;
+    private String mDisplayName;
+    private String mAvatarUrl;
+    private PersonType mPersonType;
 
     // Only users have a role
-    private String role;
+    private String mRole;
 
     // Users, followers & viewers has a username, email followers don't
-    private String username;
+    private String mUsername;
 
     // Only followers & email followers have a subscribed date
-    private String subscribed;
+    private String mSubscribed;
 
     public Person(long personID, int localTableBlogId) {
-        this.personID = personID;
-        this.localTableBlogId = localTableBlogId;
+        mPersonID = personID;
+        mLocalTableBlogId = localTableBlogId;
     }
 
     @Nullable
@@ -44,7 +46,7 @@ public class Person {
             person.setUsername(json.optString("login"));
             person.setDisplayName(json.optString("name"));
             person.setAvatarUrl(json.optString("avatar_URL"));
-            person.personType = PersonType.USER;
+            person.mPersonType = PersonType.USER;
             // We don't support multiple roles, so the first role is picked just as it's in Calypso
             String role = json.getJSONArray("roles").optString(0);
             person.setRole(role);
@@ -72,7 +74,7 @@ public class Person {
             person.setUsername(json.optString("login"));
             person.setAvatarUrl(json.optString("avatar"));
             person.setSubscribed(json.optString("date_subscribed"));
-            person.personType = isEmailFollower ? PersonType.EMAIL_FOLLOWER : PersonType.FOLLOWER;
+            person.mPersonType = isEmailFollower ? PersonType.EMAIL_FOLLOWER : PersonType.FOLLOWER;
 
             return person;
         } catch (NumberFormatException e) {
@@ -107,68 +109,70 @@ public class Person {
     }
 
     public long getPersonID() {
-        return personID;
+        return mPersonID;
     }
 
     public int getLocalTableBlogId() {
-        return localTableBlogId;
+        return mLocalTableBlogId;
     }
 
     public String getUsername() {
-        return StringUtils.notNullStr(username);
+        return StringUtils.notNullStr(mUsername);
     }
 
     public void setUsername(String username) {
-        this.username = username;
+        mUsername = username;
     }
 
     public String getDisplayName() {
-        return StringUtils.notNullStr(displayName);
+        return StringUtils.notNullStr(mDisplayName);
     }
 
     public void setDisplayName(String displayName) {
-        this.displayName = displayName;
+        mDisplayName = displayName;
     }
 
     public String getRole() {
-        return role;
+        return mRole;
     }
 
     public void setRole(String role) {
-        this.role = role;
+        mRole = role;
     }
 
     public String getAvatarUrl() {
-        return StringUtils.notNullStr(avatarUrl);
+        return StringUtils.notNullStr(mAvatarUrl);
     }
 
     public void setAvatarUrl(String avatarUrl) {
-        this.avatarUrl = avatarUrl;
+        mAvatarUrl = avatarUrl;
     }
 
     public String getSubscribed() {
-        return StringUtils.notNullStr(subscribed);
+        return StringUtils.notNullStr(mSubscribed);
     }
 
     public void setSubscribed(String subscribed) {
-        this.subscribed = StringUtils.notNullStr(subscribed);
+        mSubscribed = StringUtils.notNullStr(subscribed);
     }
 
     /*
      * converts iso8601 subscribed date to an actual java date
      */
-    private transient java.util.Date dtSubscribed;
+    private transient java.util.Date mDateSubscribed;
+
     public java.util.Date getDateSubscribed() {
-        if (dtSubscribed == null)
-            dtSubscribed = DateTimeUtils.dateFromIso8601(subscribed);
-        return dtSubscribed;
+        if (mDateSubscribed == null) {
+            mDateSubscribed = DateTimeUtils.dateFromIso8601(mSubscribed);
+        }
+        return mDateSubscribed;
     }
 
     public PersonType getPersonType() {
-        return personType;
+        return mPersonType;
     }
 
     public void setPersonType(PersonType personType) {
-        this.personType = personType;
+        mPersonType = personType;
     }
 }

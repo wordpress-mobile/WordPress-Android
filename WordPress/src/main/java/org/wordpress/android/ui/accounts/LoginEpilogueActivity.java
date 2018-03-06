@@ -40,7 +40,7 @@ public class LoginEpilogueActivity extends AppCompatActivity implements LoginEpi
 
     protected void addPostLoginFragment(boolean doLoginUpdate, boolean showAndReturn, ArrayList<Integer> oldSitesIds) {
         LoginEpilogueFragment loginEpilogueFragment = LoginEpilogueFragment.newInstance(doLoginUpdate, showAndReturn,
-                oldSitesIds);
+                                                                                        oldSitesIds);
         FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
         fragmentTransaction.replace(R.id.fragment_container, loginEpilogueFragment, LoginEpilogueFragment.TAG);
         fragmentTransaction.commit();

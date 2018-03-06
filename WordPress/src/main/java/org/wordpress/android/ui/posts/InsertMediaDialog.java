@@ -28,7 +28,6 @@ import org.wordpress.android.util.AniUtils;
  * a post - provides a choice between inserting them individually or as a gallery
  */
 public class InsertMediaDialog extends AppCompatDialogFragment {
-
     public enum InsertType {
         INDIVIDUALLY,
         GALLERY
@@ -169,10 +168,12 @@ public class InsertMediaDialog extends AppCompatDialogFragment {
                     setNumColumns(progress, true);
                 }
             }
+
             @Override
             public void onStartTrackingTouch(SeekBar seekBar) {
                 // noop
             }
+
             @Override
             public void onStopTrackingTouch(SeekBar seekBar) {
                 // noop

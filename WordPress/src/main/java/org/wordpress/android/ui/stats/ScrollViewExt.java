@@ -6,6 +6,7 @@ import android.widget.ScrollView;
 
 public class ScrollViewExt extends ScrollView {
     private ScrollViewListener mScrollViewListener = null;
+
     public ScrollViewExt(Context context) {
         super(context);
     }

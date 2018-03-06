@@ -25,10 +25,10 @@ import java.util.Collections;
 import java.util.Comparator;
 
 public class PublicizeServiceAdapter extends RecyclerView.Adapter<PublicizeServiceAdapter.SharingViewHolder> {
-
     public interface OnAdapterLoadedListener {
         void onAdapterLoaded(boolean isEmpty);
     }
+
     public interface OnServiceClickListener {
         void onServiceClicked(PublicizeService service);
     }
@@ -99,32 +99,34 @@ public class PublicizeServiceAdapter extends RecyclerView.Adapter<PublicizeServi
 
     @Override
     public SharingViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.publicize_listitem_service, parent, false);
+        View view =
+                LayoutInflater.from(parent.getContext()).inflate(R.layout.publicize_listitem_service, parent, false);
         return new SharingViewHolder(view);
     }
 
     @Override
     public void onBindViewHolder(final SharingViewHolder holder, int position) {
         final PublicizeService service = mServices.get(position);
-        final PublicizeConnectionList connections = mConnections.getServiceConnectionsForUser(mCurrentUserId, service.getId());
+        final PublicizeConnectionList connections =
+                mConnections.getServiceConnectionsForUser(mCurrentUserId, service.getId());
 
-        holder.txtService.setText(service.getLabel());
+        holder.mTxtService.setText(service.getLabel());
         String iconUrl = PhotonUtils.getPhotonImageUrl(service.getIconUrl(), mBlavatarSz, mBlavatarSz);
-        holder.imgIcon.setImageUrl(iconUrl, WPNetworkImageView.ImageType.BLAVATAR);
+        holder.mImgIcon.setImageUrl(iconUrl, WPNetworkImageView.ImageType.BLAVATAR);
 
         if (connections.size() > 0) {
-            holder.txtUser.setText(connections.getUserDisplayNames());
-            holder.txtUser.setVisibility(View.VISIBLE);
-            holder.imgIcon.clearColorFilter();
-            holder.imgIcon.setImageAlpha(255);
+            holder.mTxtUser.setText(connections.getUserDisplayNames());
+            holder.mTxtUser.setVisibility(View.VISIBLE);
+            holder.mImgIcon.clearColorFilter();
+            holder.mImgIcon.setImageAlpha(255);
         } else {
-            holder.txtUser.setVisibility(View.GONE);
-            holder.imgIcon.setColorFilter(mGrayScaleFilter);
-            holder.imgIcon.setImageAlpha(128);
+            holder.mTxtUser.setVisibility(View.GONE);
+            holder.mImgIcon.setColorFilter(mGrayScaleFilter);
+            holder.mImgIcon.setImageAlpha(128);
         }
 
         // show divider for all but the first item
-        holder.divider.setVisibility(position > 0 ? View.VISIBLE : View.GONE);
+        holder.mDivider.setVisibility(position > 0 ? View.VISIBLE : View.GONE);
 
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -137,17 +139,17 @@ public class PublicizeServiceAdapter extends RecyclerView.Adapter<PublicizeServi
     }
 
     class SharingViewHolder extends RecyclerView.ViewHolder {
-        private final TextView txtService;
-        private final TextView txtUser;
-        private final View divider;
-        private final WPNetworkImageView imgIcon;
+        private final TextView mTxtService;
+        private final TextView mTxtUser;
+        private final View mDivider;
+        private final WPNetworkImageView mImgIcon;
 
-        public SharingViewHolder(View view) {
+        SharingViewHolder(View view) {
             super(view);
-            txtService = (TextView) view.findViewById(R.id.text_service);
-            txtUser = (TextView) view.findViewById(R.id.text_user);
-            imgIcon = (WPNetworkImageView) view.findViewById(R.id.image_icon);
-            divider = view.findViewById(R.id.divider);
+            mTxtService = (TextView) view.findViewById(R.id.text_service);
+            mTxtUser = (TextView) view.findViewById(R.id.text_user);
+            mImgIcon = (WPNetworkImageView) view.findViewById(R.id.image_icon);
+            mDivider = view.findViewById(R.id.divider);
         }
     }
 
@@ -155,18 +157,21 @@ public class PublicizeServiceAdapter extends RecyclerView.Adapter<PublicizeServi
      * AsyncTask to load services
      */
     private boolean mIsTaskRunning = false;
+
     private class LoadServicesTask extends AsyncTask<Void, Void, Boolean> {
-        private final PublicizeServiceList tmpServices = new PublicizeServiceList();
-        private final PublicizeConnectionList tmpConnections = new PublicizeConnectionList();
+        private final PublicizeServiceList mTmpServices = new PublicizeServiceList();
+        private final PublicizeConnectionList mTmpConnections = new PublicizeConnectionList();
 
         @Override
         protected void onPreExecute() {
             mIsTaskRunning = true;
         }
+
         @Override
         protected void onCancelled() {
             mIsTaskRunning = false;
         }
+
         @Override
         protected Boolean doInBackground(Void... params) {
             // G+ no longers supports authentication via a WebView, so we hide it here unless the
@@ -174,30 +179,31 @@ public class PublicizeServiceAdapter extends RecyclerView.Adapter<PublicizeServi
             boolean hideGPlus = true;
 
             PublicizeConnectionList connections = PublicizeTable.getConnectionsForSite(mSiteId);
-            for (PublicizeConnection connection: connections) {
+            for (PublicizeConnection connection : connections) {
                 if (connection.getService().equals(PublicizeConstants.GOOGLE_PLUS_ID)) {
                     hideGPlus = false;
                 }
-                tmpConnections.add(connection);
+                mTmpConnections.add(connection);
             }
 
             PublicizeServiceList services = PublicizeTable.getServiceList();
-            for (PublicizeService service: services) {
+            for (PublicizeService service : services) {
                 if (!service.getId().equals(PublicizeConstants.GOOGLE_PLUS_ID) || !hideGPlus) {
-                    tmpServices.add(service);
+                    mTmpServices.add(service);
                 }
             }
 
-            return !(tmpServices.isSameAs(mServices) && tmpConnections.isSameAs(mConnections));
+            return !(mTmpServices.isSameAs(mServices) && mTmpConnections.isSameAs(mConnections));
         }
+
         @Override
         protected void onPostExecute(Boolean result) {
             if (result) {
                 mServices.clear();
-                mServices.addAll(tmpServices);
+                mServices.addAll(mTmpServices);
 
                 mConnections.clear();
-                mConnections.addAll(tmpConnections);
+                mConnections.addAll(mTmpConnections);
                 sortConnections();
 
                 notifyDataSetChanged();
@@ -230,5 +236,4 @@ public class PublicizeServiceAdapter extends RecyclerView.Adapter<PublicizeServi
             });
         }
     }
-
 }

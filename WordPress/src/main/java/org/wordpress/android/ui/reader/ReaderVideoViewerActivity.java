@@ -17,7 +17,6 @@ import org.wordpress.android.WordPress;
  */
 
 public class ReaderVideoViewerActivity extends AppCompatActivity {
-
     private String mVideoUrl;
     private WebView mWebView;
     private ProgressBar mProgress;
@@ -70,5 +69,4 @@ public class ReaderVideoViewerActivity extends AppCompatActivity {
         mWebView.saveState(outState);
         super.onSaveInstanceState(outState);
     }
-
 }
