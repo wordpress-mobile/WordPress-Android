@@ -29,4 +29,12 @@
     <issue id="IconLauncherFormat">
         <ignore path="src/main/res/mipmap-anydpi-v26/app_icon.xml" />
     </issue>
+
+    <issue id="UnusedResources" severity="error">
+        <ignore path="**/WordPressEditor/**" />
+        <ignore path="**/WordPressLoginFlow/**" />
+        <ignore path="**/.gradle/caches/**" />
+        <ignore path="**/generated/**" />
+        <ignore path="**/strings.xml" />
+    </issue>
 </lint>
