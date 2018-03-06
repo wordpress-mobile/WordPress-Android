@@ -28,15 +28,27 @@ public class SiteCreationDomainLoaderFragment extends Fragment {
         ERROR
     }
 
-    static class DomainSuggestionEvent {
-        final DomainUpdateStep step;
-        final String query;
-        final OnSuggestedDomains event;
+    public static class DomainSuggestionEvent {
+        private final DomainUpdateStep mStep;
+        private final String mQuery;
+        private final OnSuggestedDomains mEvent;
 
         DomainSuggestionEvent(DomainUpdateStep step, String query, OnSuggestedDomains event) {
-            this.step = step;
-            this.query = query;
-            this.event = event;
+            mStep = step;
+            mQuery = query;
+            mEvent = event;
+        }
+
+        public OnSuggestedDomains getEvent() {
+            return mEvent;
+        }
+
+        public DomainUpdateStep getStep() {
+            return mStep;
+        }
+
+        public String getQuery() {
+            return mQuery;
         }
     }
 

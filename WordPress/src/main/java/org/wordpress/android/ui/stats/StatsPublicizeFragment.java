@@ -139,7 +139,7 @@ public class StatsPublicizeFragment extends StatsAbstractListFragment {
 
             // image
             holder.networkImageView.setImageUrl(
-                    GravatarUtils.fixGravatarUrl(getServiceImage(serviceName), mResourceVars.headerAvatarSizePx),
+                    GravatarUtils.fixGravatarUrl(getServiceImage(serviceName), mResourceVars.mHeaderAvatarSizePx),
                     WPNetworkImageView.ImageType.BLAVATAR);
             holder.networkImageView.setVisibility(View.VISIBLE);
 
@@ -173,7 +173,7 @@ public class StatsPublicizeFragment extends StatsAbstractListFragment {
                 return null;
         }
 
-        return serviceIconURL + mResourceVars.headerAvatarSizePx;
+        return serviceIconURL + mResourceVars.mHeaderAvatarSizePx;
     }
 
     private String getServiceName(String service) {

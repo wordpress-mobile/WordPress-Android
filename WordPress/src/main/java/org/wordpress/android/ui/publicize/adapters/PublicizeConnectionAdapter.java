@@ -88,18 +88,18 @@ public class PublicizeConnectionAdapter extends RecyclerView.Adapter<PublicizeCo
     public void onBindViewHolder(ConnectionViewHolder holder, int position) {
         final PublicizeConnection connection = mConnections.get(position);
 
-        holder.txtUser.setText(connection.getExternalDisplayName());
-        holder.divider.setVisibility(position == 0 ? View.GONE : View.VISIBLE);
+        holder.mTxtUser.setText(connection.getExternalDisplayName());
+        holder.mDivider.setVisibility(position == 0 ? View.GONE : View.VISIBLE);
 
         if (connection.hasExternalProfilePictureUrl()) {
-            holder.imgAvatar.setImageUrl(connection.getExternalProfilePictureUrl(),
-                                         WPNetworkImageView.ImageType.AVATAR);
+            holder.mImgAvatar.setImageUrl(connection.getExternalProfilePictureUrl(),
+                                          WPNetworkImageView.ImageType.AVATAR);
         } else {
-            holder.imgAvatar.showDefaultGravatarImageAndNullifyUrl();
+            holder.mImgAvatar.showDefaultGravatarImageAndNullifyUrl();
         }
 
-        holder.btnConnect.setAction(PublicizeConstants.ConnectAction.DISCONNECT);
-        holder.btnConnect.setOnClickListener(new View.OnClickListener() {
+        holder.mBtnConnect.setAction(PublicizeConstants.ConnectAction.DISCONNECT);
+        holder.mBtnConnect.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if (mActionListener != null) {
@@ -110,17 +110,17 @@ public class PublicizeConnectionAdapter extends RecyclerView.Adapter<PublicizeCo
     }
 
     class ConnectionViewHolder extends RecyclerView.ViewHolder {
-        private final TextView txtUser;
-        private final ConnectButton btnConnect;
-        private final WPNetworkImageView imgAvatar;
-        private final View divider;
+        private final TextView mTxtUser;
+        private final ConnectButton mBtnConnect;
+        private final WPNetworkImageView mImgAvatar;
+        private final View mDivider;
 
         ConnectionViewHolder(View view) {
             super(view);
-            txtUser = (TextView) view.findViewById(R.id.text_user);
-            imgAvatar = (WPNetworkImageView) view.findViewById(R.id.image_avatar);
-            btnConnect = (ConnectButton) view.findViewById(R.id.button_connect);
-            divider = view.findViewById(R.id.divider);
+            mTxtUser = (TextView) view.findViewById(R.id.text_user);
+            mImgAvatar = (WPNetworkImageView) view.findViewById(R.id.image_avatar);
+            mBtnConnect = (ConnectButton) view.findViewById(R.id.button_connect);
+            mDivider = view.findViewById(R.id.divider);
         }
     }
 }

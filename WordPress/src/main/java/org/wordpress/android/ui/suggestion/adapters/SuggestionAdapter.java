@@ -70,9 +70,9 @@ public class SuggestionAdapter extends BaseAdapter implements Filterable {
 
         if (suggestion != null) {
             String avatarUrl = GravatarUtils.fixGravatarUrl(suggestion.getImageUrl(), mAvatarSz);
-            holder.imgAvatar.setImageUrl(avatarUrl, WPNetworkImageView.ImageType.AVATAR);
-            holder.txtUserLogin.setText("@" + suggestion.getUserLogin());
-            holder.txtDisplayName.setText(suggestion.getDisplayName());
+            holder.mImgAvatar.setImageUrl(avatarUrl, WPNetworkImageView.ImageType.AVATAR);
+            holder.mTxtUserLogin.setText("@" + suggestion.getUserLogin());
+            holder.mTxtDisplayName.setText(suggestion.getDisplayName());
         }
 
         return convertView;
@@ -88,14 +88,14 @@ public class SuggestionAdapter extends BaseAdapter implements Filterable {
     }
 
     private class SuggestionViewHolder {
-        private final WPNetworkImageView imgAvatar;
-        private final TextView txtUserLogin;
-        private final TextView txtDisplayName;
+        private final WPNetworkImageView mImgAvatar;
+        private final TextView mTxtUserLogin;
+        private final TextView mTxtDisplayName;
 
         SuggestionViewHolder(View row) {
-            imgAvatar = (WPNetworkImageView) row.findViewById(R.id.suggest_list_row_avatar);
-            txtUserLogin = (TextView) row.findViewById(R.id.suggestion_list_row_user_login_label);
-            txtDisplayName = (TextView) row.findViewById(R.id.suggestion_list_row_display_name_label);
+            mImgAvatar = (WPNetworkImageView) row.findViewById(R.id.suggest_list_row_avatar);
+            mTxtUserLogin = (TextView) row.findViewById(R.id.suggestion_list_row_user_login_label);
+            mTxtDisplayName = (TextView) row.findViewById(R.id.suggestion_list_row_display_name_label);
         }
     }
 

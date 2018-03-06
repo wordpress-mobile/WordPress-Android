@@ -155,14 +155,26 @@ public class RoleChangeDialogFragment extends DialogFragment {
     }
 
     static class RoleChangeEvent {
-        final long personID;
-        final int localTableBlogId;
-        final String newRole;
+        private final long mPersonID;
+        private final int mLocalTableBlogId;
+        private final String mNewRole;
 
         RoleChangeEvent(long personID, int localTableBlogId, String newRole) {
-            this.personID = personID;
-            this.localTableBlogId = localTableBlogId;
-            this.newRole = newRole;
+            mPersonID = personID;
+            mLocalTableBlogId = localTableBlogId;
+            mNewRole = newRole;
+        }
+
+        public long getPersonID() {
+            return mPersonID;
+        }
+
+        public int getLocalTableBlogId() {
+            return mLocalTableBlogId;
+        }
+
+        public String getNewRole() {
+            return mNewRole;
         }
     }
 }

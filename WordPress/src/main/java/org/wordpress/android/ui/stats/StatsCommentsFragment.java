@@ -227,7 +227,7 @@ public class StatsCommentsFragment extends StatsAbstractListFragment {
 
             // avatar
             holder.networkImageView.setImageUrl(
-                    GravatarUtils.fixGravatarUrl(currentRowData.getAvatar(), mResourceVars.headerAvatarSizePx),
+                    GravatarUtils.fixGravatarUrl(currentRowData.getAvatar(), mResourceVars.mHeaderAvatarSizePx),
                     WPNetworkImageView.ImageType.AVATAR);
             holder.networkImageView.setVisibility(View.VISIBLE);
 

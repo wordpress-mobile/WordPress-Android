@@ -730,15 +730,15 @@ public class StatsActivity extends AppCompatActivity
                 holder = (TagViewHolder) convertView.getTag();
             }
 
-            holder.textView.setText(selectedTimeframe.getLabel());
+            holder.mTextView.setText(selectedTimeframe.getLabel());
             return convertView;
         }
 
         private class TagViewHolder {
-            private final TextView textView;
+            private final TextView mTextView;
 
             TagViewHolder(View view) {
-                textView = (TextView) view.findViewById(R.id.text);
+                mTextView = (TextView) view.findViewById(R.id.text);
             }
         }
 

@@ -49,7 +49,6 @@ public class StatsVisitorsAndViewsFragment extends StatsAbstractFragment
     private static final String ARG_SELECTED_OVERVIEW_ITEM = "ARG_SELECTED_OVERVIEW_ITEM";
     private static final String ARG_CHECKBOX_SELECTED = "ARG_CHECKBOX_SELECTED";
 
-
     private LinearLayout mGraphContainer;
     private LinearLayout mNoActivtyThisPeriodContainer;
     private StatsBarGraph mGraphView;
@@ -152,30 +151,30 @@ public class StatsVisitorsAndViewsFragment extends StatsAbstractFragment
     }
 
     private class TabViewHolder {
-        final LinearLayout tab;
-        final LinearLayout innerContainer;
-        final TextView label;
-        final TextView value;
-        final ImageView icon;
-        final OverviewLabel labelItem;
-        boolean isChecked = false;
-        boolean isLastItem = false;
+        private final LinearLayout mTab;
+        private final LinearLayout mInnerContainer;
+        private final TextView mLabel;
+        private final TextView mValue;
+        private final ImageView mIcon;
+        private final OverviewLabel mLabelItem;
+        private boolean mIsChecked = false;
+        private boolean mIsLastItem = false;
 
         TabViewHolder(LinearLayout currentTab, OverviewLabel labelItem, boolean checked, boolean isLastItem) {
-            tab = currentTab;
-            innerContainer = (LinearLayout) currentTab.findViewById(R.id.stats_visitors_and_views_tab_inner_container);
-            label = (TextView) currentTab.findViewById(R.id.stats_visitors_and_views_tab_label);
-            label.setText(labelItem.getLabel());
-            value = (TextView) currentTab.findViewById(R.id.stats_visitors_and_views_tab_value);
-            icon = (ImageView) currentTab.findViewById(R.id.stats_visitors_and_views_tab_icon);
-            this.labelItem = labelItem;
-            this.isChecked = checked;
-            this.isLastItem = isLastItem;
+            mTab = currentTab;
+            mInnerContainer = (LinearLayout) currentTab.findViewById(R.id.stats_visitors_and_views_tab_inner_container);
+            mLabel = (TextView) currentTab.findViewById(R.id.stats_visitors_and_views_tab_label);
+            mLabel.setText(labelItem.getLabel());
+            mValue = (TextView) currentTab.findViewById(R.id.stats_visitors_and_views_tab_value);
+            mIcon = (ImageView) currentTab.findViewById(R.id.stats_visitors_and_views_tab_icon);
+            mLabelItem = labelItem;
+            mIsChecked = checked;
+            mIsLastItem = isLastItem;
             updateBackGroundAndIcon(0);
         }
 
         private Drawable getTabIcon() {
-            switch (labelItem) {
+            switch (mLabelItem) {
                 case VISITORS:
                     return getResources().getDrawable(R.drawable.ic_user_grey_dark_12dp);
                 case COMMENTS:
@@ -189,35 +188,35 @@ public class StatsVisitorsAndViewsFragment extends StatsAbstractFragment
         }
 
         public void updateBackGroundAndIcon(int currentValue) {
-            if (isChecked) {
-                value.setTextColor(getResources().getColor(R.color.orange_jazzy));
+            if (mIsChecked) {
+                mValue.setTextColor(getResources().getColor(R.color.orange_jazzy));
             } else {
                 if (currentValue == 0) {
-                    value.setTextColor(getResources().getColor(R.color.grey));
+                    mValue.setTextColor(getResources().getColor(R.color.grey));
                 } else {
-                    value.setTextColor(getResources().getColor(R.color.blue_wordpress));
+                    mValue.setTextColor(getResources().getColor(R.color.blue_wordpress));
                 }
             }
 
-            icon.setImageDrawable(getTabIcon());
+            mIcon.setImageDrawable(getTabIcon());
 
-            if (isLastItem) {
-                if (isChecked) {
-                    tab.setBackgroundResource(R.drawable.stats_visitors_and_views_button_latest_white);
+            if (mIsLastItem) {
+                if (mIsChecked) {
+                    mTab.setBackgroundResource(R.drawable.stats_visitors_and_views_button_latest_white);
                 } else {
-                    tab.setBackgroundResource(R.drawable.stats_visitors_and_views_button_latest_blue_light);
+                    mTab.setBackgroundResource(R.drawable.stats_visitors_and_views_button_latest_blue_light);
                 }
             } else {
-                if (isChecked) {
-                    tab.setBackgroundResource(R.drawable.stats_visitors_and_views_button_white);
+                if (mIsChecked) {
+                    mTab.setBackgroundResource(R.drawable.stats_visitors_and_views_button_white);
                 } else {
-                    tab.setBackgroundResource(R.drawable.stats_visitors_and_views_button_blue_light);
+                    mTab.setBackgroundResource(R.drawable.stats_visitors_and_views_button_blue_light);
                 }
             }
         }
 
         public void setChecked(boolean checked) {
-            this.isChecked = checked;
+            this.mIsChecked = checked;
         }
     }
 
@@ -231,7 +230,7 @@ public class StatsVisitorsAndViewsFragment extends StatsAbstractFragment
             // LinearLayout tab = (LinearLayout) v;
             TabViewHolder tabViewHolder = (TabViewHolder) v.getTag();
 
-            if (tabViewHolder.isChecked) {
+            if (tabViewHolder.mIsChecked) {
                 // already checked. Do nothing
                 return;
             }
@@ -585,7 +584,7 @@ public class StatsVisitorsAndViewsFragment extends StatsAbstractFragment
             if (o instanceof LinearLayout && o.getTag() instanceof TabViewHolder) {
                 TabViewHolder tabViewHolder = (TabViewHolder) o.getTag();
                 int currentValue = 0;
-                switch (tabViewHolder.labelItem) {
+                switch (tabViewHolder.mLabelItem) {
                     case VIEWS:
                         currentValue = modelTapped.getViews();
                         break;
@@ -599,7 +598,7 @@ public class StatsVisitorsAndViewsFragment extends StatsAbstractFragment
                         currentValue = modelTapped.getComments();
                         break;
                 }
-                tabViewHolder.value.setText(FormatUtils.formatDecimal(currentValue));
+                tabViewHolder.mValue.setText(FormatUtils.formatDecimal(currentValue));
                 tabViewHolder.updateBackGroundAndIcon(currentValue);
             }
         }

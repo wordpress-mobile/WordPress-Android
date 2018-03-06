@@ -182,10 +182,10 @@ public class StatsReferrersFragment extends StatsAbstractListFragment {
         }
 
         private final class MyChildModel {
-            String name;
-            int views;
-            String url;
-            String icon;
+            public String name;
+            public int views;
+            public String url;
+            public String icon;
         }
 
         @Override
@@ -227,7 +227,7 @@ public class StatsReferrersFragment extends StatsAbstractListFragment {
             holder.networkImageView.setVisibility(View.GONE);
             if (!TextUtils.isEmpty(currentChild.icon)) {
                 holder.networkImageView.setImageUrl(
-                        GravatarUtils.fixGravatarUrl(currentChild.icon, mResourceVars.headerAvatarSizePx),
+                        GravatarUtils.fixGravatarUrl(currentChild.icon, mResourceVars.mHeaderAvatarSizePx),
                         WPNetworkImageView.ImageType.GONE_UNTIL_AVAILABLE);
             }
 
@@ -296,7 +296,7 @@ public class StatsReferrersFragment extends StatsAbstractListFragment {
             holder.networkImageView.setVisibility(View.GONE);
             if (!TextUtils.isEmpty(icon)) {
                 holder.networkImageView.setImageUrl(
-                        GravatarUtils.fixGravatarUrl(icon, mResourceVars.headerAvatarSizePx),
+                        GravatarUtils.fixGravatarUrl(icon, mResourceVars.mHeaderAvatarSizePx),
                         WPNetworkImageView.ImageType.GONE_UNTIL_AVAILABLE);
             }
 

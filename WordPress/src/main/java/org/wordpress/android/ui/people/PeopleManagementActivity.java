@@ -471,18 +471,18 @@ public class PeopleManagementActivity extends AppCompatActivity
             return;
         }
 
-        final Person person = PeopleTable.getUser(event.personID, event.localTableBlogId);
-        if (person == null || event.newRole == null || event.newRole.equals(person.getRole())) {
+        final Person person = PeopleTable.getUser(event.getPersonID(), event.getLocalTableBlogId());
+        if (person == null || event.getNewRole() == null || event.getNewRole().equals(person.getRole())) {
             return;
         }
 
         final PersonDetailFragment personDetailFragment = getDetailFragment();
         if (personDetailFragment != null) {
             // optimistically update the role
-            personDetailFragment.changeRole(event.newRole);
+            personDetailFragment.changeRole(event.getNewRole());
         }
 
-        PeopleUtils.updateRole(mSite, person.getPersonID(), event.newRole, event.localTableBlogId,
+        PeopleUtils.updateRole(mSite, person.getPersonID(), event.getNewRole(), event.getLocalTableBlogId(),
                                new PeopleUtils.UpdateUserCallback() {
                                    @Override
                                    public void onSuccess(Person person) {

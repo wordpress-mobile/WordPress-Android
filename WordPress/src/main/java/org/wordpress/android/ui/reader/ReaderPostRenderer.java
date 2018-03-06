@@ -62,7 +62,7 @@ class ReaderPostRenderer {
         mWeakWebView = new WeakReference<>(webView);
         mResourceVars = new ReaderResourceVars(webView.getContext());
 
-        mMinFullSizeWidthDp = pxToDp(mResourceVars.fullSizeImageWidthPx / 3);
+        mMinFullSizeWidthDp = pxToDp(mResourceVars.mFullSizeImageWidthPx / 3);
         mMinMidSizeWidthDp = mMinFullSizeWidthDp / 2;
 
         // enable JavaScript in the webView, otherwise videos and other embedded content won't
@@ -80,7 +80,7 @@ class ReaderPostRenderer {
                 final boolean hasTiledGallery = hasTiledGallery(mRenderBuilder.toString());
                 String content = mRenderBuilder.toString();
 
-                if (!(hasTiledGallery && mResourceVars.isWideDisplay)) {
+                if (!(hasTiledGallery && mResourceVars.mIsWideDisplay)) {
                     resizeImages(content);
                 }
 
@@ -90,7 +90,7 @@ class ReaderPostRenderer {
                 Set<String> jsToInject = injectJSForSpecificEmbedSupport(content);
 
                 final String htmlContent =
-                        formatPostContentForWebView(content, jsToInject, hasTiledGallery, mResourceVars.isWideDisplay);
+                        formatPostContentForWebView(content, jsToInject, hasTiledGallery, mResourceVars.mIsWideDisplay);
                 mRenderBuilder = null;
                 handler.post(new Runnable() {
                     @Override
@@ -223,16 +223,16 @@ class ReaderPostRenderer {
         if (width > 0 && height > 0) {
             if (height > width) {
                 // noinspection SuspiciousNameCombination
-                newHeight = mResourceVars.fullSizeImageWidthPx;
+                newHeight = mResourceVars.mFullSizeImageWidthPx;
                 float ratio = ((float) width / (float) height);
                 newWidth = (int) (newHeight * ratio);
             } else {
                 float ratio = ((float) height / (float) width);
-                newWidth = mResourceVars.fullSizeImageWidthPx;
+                newWidth = mResourceVars.mFullSizeImageWidthPx;
                 newHeight = (int) (newWidth * ratio);
             }
         } else {
-            newWidth = mResourceVars.fullSizeImageWidthPx;
+            newWidth = mResourceVars.mFullSizeImageWidthPx;
             newHeight = 0;
         }
 
@@ -297,8 +297,8 @@ class ReaderPostRenderer {
     private String getFeaturedImageHtml() {
         String imageUrl = ReaderUtils.getResizedImageUrl(
                 mPost.getFeaturedImage(),
-                mResourceVars.fullSizeImageWidthPx,
-                mResourceVars.featuredImageHeightPx,
+                mResourceVars.mFullSizeImageWidthPx,
+                mResourceVars.mFeaturedImageHeightPx,
                 mPost.isPrivate);
 
         return "<img class='size-full' src='" + imageUrl + "'/>";
@@ -315,11 +315,11 @@ class ReaderPostRenderer {
         int newWidth;
         if (width > 0 && height > 0) {
             float ratio = ((float) height / (float) width);
-            newWidth = mResourceVars.videoWidthPx;
+            newWidth = mResourceVars.mVideoWidthPx;
             newHeight = (int) (newWidth * ratio);
         } else {
-            newWidth = mResourceVars.videoWidthPx;
-            newHeight = mResourceVars.videoHeightPx;
+            newWidth = mResourceVars.mVideoWidthPx;
+            newHeight = mResourceVars.mVideoHeightPx;
         }
 
         String newTag = "<iframe src='" + src + "'"
@@ -368,21 +368,21 @@ class ReaderPostRenderer {
               // make sure long strings don't force the user to scroll horizontally
               .append(" body, p, div, a { word-wrap: break-word; }")
               // use a consistent top/bottom margin for paragraphs, with no top margin for the first one
-              .append(" p { margin-top: ").append(mResourceVars.marginMediumPx).append("px;")
-              .append(" margin-bottom: ").append(mResourceVars.marginMediumPx).append("px; }")
+              .append(" p { margin-top: ").append(mResourceVars.mMarginMediumPx).append("px;")
+              .append(" margin-bottom: ").append(mResourceVars.mMarginMediumPx).append("px; }")
               .append(" p:first-child { margin-top: 0px; }")
               // add background color and padding to pre blocks, and add overflow scrolling
               // so user can scroll the block if it's wider than the display
               .append(" pre { overflow-x: scroll;")
-              .append(" background-color: ").append(mResourceVars.greyExtraLightStr).append("; ")
-              .append(" padding: ").append(mResourceVars.marginMediumPx).append("px; }")
+              .append(" background-color: ").append(mResourceVars.mGreyExtraLightStr).append("; ")
+              .append(" padding: ").append(mResourceVars.mMarginMediumPx).append("px; }")
               // add a left border to blockquotes
-              .append(" blockquote { color: ").append(mResourceVars.greyMediumDarkStr).append("; ")
+              .append(" blockquote { color: ").append(mResourceVars.mGreyMediumDarkStr).append("; ")
               .append(" padding-left: 32px; ")
               .append(" margin-left: 0px; ")
-              .append(" border-left: 3px solid ").append(mResourceVars.greyExtraLightStr).append("; }")
+              .append(" border-left: 3px solid ").append(mResourceVars.mGreyExtraLightStr).append("; }")
               // show links in the same color they are elsewhere in the app
-              .append(" a { text-decoration: none; color: ").append(mResourceVars.linkColorStr).append("; }")
+              .append(" a { text-decoration: none; color: ").append(mResourceVars.mLinkColorStr).append("; }")
               // make sure images aren't wider than the display, strictly enforced for images without size
               .append(" img { max-width: 100%; width: auto; height: auto; }")
               .append(" img.size-none { max-width: 100% !important; height: auto !important; }")
@@ -390,8 +390,8 @@ class ReaderPostRenderer {
               // so the user sees something while they're loading
               .append(" img.size-full, img.size-large, img.size-medium {")
               .append(" display: block; margin-left: auto; margin-right: auto;")
-              .append(" background-color: ").append(mResourceVars.greyExtraLightStr).append(";")
-              .append(" margin-bottom: ").append(mResourceVars.marginMediumPx).append("px; }");
+              .append(" background-color: ").append(mResourceVars.mGreyExtraLightStr).append(";")
+              .append(" margin-bottom: ").append(mResourceVars.mMarginMediumPx).append("px; }");
 
         if (isWideDisplay) {
             sbHtml
@@ -487,19 +487,19 @@ class ReaderPostRenderer {
                 .append(" .wp-caption .wp-caption-text {")
                 .append(" font-size: smaller; line-height: 1.2em; margin: 0px;")
                 .append(" text-align: center;")
-                .append(" padding: ").append(mResourceVars.marginMediumPx).append("px; ")
-                .append(" color: ").append(mResourceVars.greyMediumDarkStr).append("; }")
+                .append(" padding: ").append(mResourceVars.mMarginMediumPx).append("px; ")
+                .append(" color: ").append(mResourceVars.mGreyMediumDarkStr).append("; }")
                 // attribution for Discover posts
                 .append(" div#discover { ")
-                .append(" margin-top: ").append(mResourceVars.marginMediumPx).append("px;")
+                .append(" margin-top: ").append(mResourceVars.mMarginMediumPx).append("px;")
                 .append(" font-family: sans-serif;")
                 .append(" }")
                 // horizontally center iframes
                 .append(" iframe { display: block; margin: 0 auto; }")
                 // make sure html5 videos fit the browser width and use 16:9 ratio (YouTube standard)
                 .append(" video {")
-                .append(" width: ").append(pxToDp(mResourceVars.videoWidthPx)).append("px !important;")
-                .append(" height: ").append(pxToDp(mResourceVars.videoHeightPx)).append("px !important; }")
+                .append(" width: ").append(pxToDp(mResourceVars.mVideoWidthPx)).append("px !important;")
+                .append(" height: ").append(pxToDp(mResourceVars.mVideoHeightPx)).append("px !important; }")
                 // hide forms, form-related elements, legacy RSS sharing links and other ad-related content
                 // http://bit.ly/2FUTvsP
                 .append(" form, input, select, button textarea { display: none; }")

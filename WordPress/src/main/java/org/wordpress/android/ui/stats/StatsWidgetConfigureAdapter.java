@@ -6,7 +6,6 @@ import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
 import android.support.v7.widget.RecyclerView;
-import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,8 +15,8 @@ import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.store.SiteStore;
+import org.wordpress.android.ui.main.SitePickerAdapter.SiteRecord;
 import org.wordpress.android.util.AppLog;
-import org.wordpress.android.util.SiteUtils;
 import org.wordpress.android.widgets.WPNetworkImageView;
 
 import java.util.ArrayList;
@@ -51,21 +50,21 @@ public class StatsWidgetConfigureAdapter extends RecyclerView.Adapter<StatsWidge
     @Inject SiteStore mSiteStore;
 
     class SiteViewHolder extends RecyclerView.ViewHolder {
-        private final ViewGroup layoutContainer;
-        private final TextView txtTitle;
-        private final TextView txtDomain;
-        private final WPNetworkImageView imgBlavatar;
-        private final View divider;
-        private Boolean isSiteHidden;
+        private final ViewGroup mLayoutContainer;
+        private final TextView mTxtTitle;
+        private final TextView mTxtDomain;
+        private final WPNetworkImageView mImgBlavatar;
+        private final View mDivider;
+        private Boolean mIsSiteHidden;
 
         SiteViewHolder(View view) {
             super(view);
-            layoutContainer = (ViewGroup) view.findViewById(R.id.layout_container);
-            txtTitle = (TextView) view.findViewById(R.id.text_title);
-            txtDomain = (TextView) view.findViewById(R.id.text_domain);
-            imgBlavatar = (WPNetworkImageView) view.findViewById(R.id.image_blavatar);
-            divider = view.findViewById(R.id.divider);
-            isSiteHidden = null;
+            mLayoutContainer = (ViewGroup) view.findViewById(R.id.layout_container);
+            mTxtTitle = (TextView) view.findViewById(R.id.text_title);
+            mTxtDomain = (TextView) view.findViewById(R.id.text_domain);
+            mImgBlavatar = (WPNetworkImageView) view.findViewById(R.id.image_blavatar);
+            mDivider = view.findViewById(R.id.divider);
+            mIsSiteHidden = null;
 
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -105,7 +104,7 @@ public class StatsWidgetConfigureAdapter extends RecyclerView.Adapter<StatsWidge
 
     @Override
     public long getItemId(int position) {
-        return getItem(position).localId;
+        return getItem(position).getLocalId();
     }
 
     private SiteRecord getItem(int position) {
@@ -126,27 +125,28 @@ public class StatsWidgetConfigureAdapter extends RecyclerView.Adapter<StatsWidge
     public void onBindViewHolder(SiteViewHolder holder, int position) {
         SiteRecord site = getItem(position);
 
-        holder.txtTitle.setText(site.getBlogNameOrHomeURL());
-        holder.txtDomain.setText(site.homeURL);
-        holder.imgBlavatar.setImageUrl(site.blavatarUrl, WPNetworkImageView.ImageType.BLAVATAR);
+        holder.mTxtTitle.setText(site.getBlogNameOrHomeURL());
+        holder.mTxtDomain.setText(site.getHomeURL());
+        holder.mImgBlavatar.setImageUrl(site.getBlavatarUrl(), WPNetworkImageView.ImageType.BLAVATAR);
 
-        if (site.localId == mPrimarySiteId) {
-            holder.layoutContainer.setBackgroundDrawable(mSelectedItemBackground);
+        if (site.getLocalId() == mPrimarySiteId) {
+            holder.mLayoutContainer.setBackgroundDrawable(mSelectedItemBackground);
         } else {
-            holder.layoutContainer.setBackgroundDrawable(null);
+            holder.mLayoutContainer.setBackgroundDrawable(null);
         }
 
         // different styling for visible/hidden sites
-        if (holder.isSiteHidden == null || holder.isSiteHidden != site.isHidden) {
-            holder.isSiteHidden = site.isHidden;
-            holder.txtTitle.setTextColor(site.isHidden ? mTextColorHidden : mTextColorNormal);
-            holder.txtTitle.setTypeface(holder.txtTitle.getTypeface(), site.isHidden ? Typeface.NORMAL : Typeface.BOLD);
-            holder.imgBlavatar.setAlpha(site.isHidden ? 0.5f : 1f);
+        if (holder.mIsSiteHidden == null || holder.mIsSiteHidden != site.isHidden()) {
+            holder.mIsSiteHidden = site.isHidden();
+            holder.mTxtTitle.setTextColor(site.isHidden() ? mTextColorHidden : mTextColorNormal);
+            holder.mTxtTitle
+                    .setTypeface(holder.mTxtTitle.getTypeface(), site.isHidden() ? Typeface.NORMAL : Typeface.BOLD);
+            holder.mImgBlavatar.setAlpha(site.isHidden() ? 0.5f : 1f);
         }
 
         // hide the divider for the last item
         boolean isLastItem = (position == getItemCount() - 1);
-        holder.divider.setVisibility(isLastItem ? View.INVISIBLE : View.VISIBLE);
+        holder.mDivider.setVisibility(isLastItem ? View.INVISIBLE : View.VISIBLE);
     }
 
 
@@ -185,9 +185,9 @@ public class StatsWidgetConfigureAdapter extends RecyclerView.Adapter<StatsWidge
             Collections.sort(sites, new Comparator<SiteRecord>() {
                 public int compare(SiteRecord site1, SiteRecord site2) {
                     if (mPrimarySiteId > 0) {
-                        if (site1.blogId == mPrimarySiteId) {
+                        if (site1.getSiteId() == mPrimarySiteId) {
                             return -1;
-                        } else if (site2.blogId == mPrimarySiteId) {
+                        } else if (site2.getSiteId() == mPrimarySiteId) {
                             return 1;
                         }
                     }
@@ -227,38 +227,6 @@ public class StatsWidgetConfigureAdapter extends RecyclerView.Adapter<StatsWidge
         }
     }
 
-    /**
-     * SiteRecord is a simplified version of the full account (blog) record
-     */
-    static class SiteRecord {
-        final int localId;
-        final long blogId;
-        final String blogName;
-        final String homeURL;
-        final String url;
-        final String blavatarUrl;
-        final boolean isWPComOrJetpack;
-        final boolean isHidden;
-
-        SiteRecord(SiteModel site) {
-            localId = site.getId();
-            blogId = site.getSiteId();
-            blogName = SiteUtils.getSiteNameOrHomeURL(site);
-            homeURL = SiteUtils.getHomeURLOrHostName(site);
-            url = site.getUrl();
-            blavatarUrl = SiteUtils.getSiteIconUrl(site, mBlavatarSz);
-            isWPComOrJetpack = SiteUtils.isAccessedViaWPComRest(site);
-            isHidden = !site.isVisible();
-        }
-
-        String getBlogNameOrHomeURL() {
-            if (TextUtils.isEmpty(blogName)) {
-                return homeURL;
-            }
-            return blogName;
-        }
-    }
-
     static class SiteList extends ArrayList<SiteRecord> {
         SiteList() {
         }
@@ -278,7 +246,7 @@ public class StatsWidgetConfigureAdapter extends RecyclerView.Adapter<StatsWidge
             int i;
             for (SiteRecord site : sites) {
                 i = indexOfSite(site);
-                if (i == -1 || this.get(i).isHidden != site.isHidden) {
+                if (i == -1 || this.get(i).isHidden() != site.isHidden()) {
                     return false;
                 }
             }
@@ -286,9 +254,9 @@ public class StatsWidgetConfigureAdapter extends RecyclerView.Adapter<StatsWidge
         }
 
         int indexOfSite(SiteRecord site) {
-            if (site != null && site.blogId > 0) {
+            if (site != null && site.getSiteId() > 0) {
                 for (int i = 0; i < size(); i++) {
-                    if (site.blogId == this.get(i).blogId) {
+                    if (site.getSiteId() == this.get(i).getSiteId()) {
                         return i;
                     }
                 }
