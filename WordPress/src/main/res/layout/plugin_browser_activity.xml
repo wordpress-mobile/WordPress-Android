@@ -42,22 +42,8 @@
 
                     <TextView
                         android:id="@+id/text_manage"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:minHeight="@dimen/min_touch_target_sz"
-                        android:layout_alignParentRight="true"
-                        android:layout_alignParentEnd="true"
-                        android:paddingEnd="@dimen/margin_extra_large"
-                        android:paddingLeft="@dimen/margin_extra_large"
-                        android:paddingRight="@dimen/margin_extra_large"
-                        android:paddingStart="@dimen/margin_extra_large"
-                        android:paddingTop="@dimen/margin_extra_large"
-                        android:background="?android:attr/selectableItemBackground"
-                        android:text="@string/plugin_manage"
-                        android:textAllCaps="true"
-                        android:textColor="@color/blue_medium"
-                        android:textSize="@dimen/text_sz_medium"
-                        android:textStyle="bold" />
+                        style="@style/PluginDirectoryListButton"
+                        android:text="@string/plugin_manage" />
 
                     <android.support.v7.widget.RecyclerView
                         android:id="@+id/installed_plugins_recycler"
@@ -93,22 +79,8 @@
 
                     <TextView
                         android:id="@+id/text_all_featured"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:minHeight="@dimen/min_touch_target_sz"
-                        android:layout_alignParentRight="true"
-                        android:layout_alignParentEnd="true"
-                        android:paddingEnd="@dimen/margin_extra_large"
-                        android:paddingLeft="@dimen/margin_extra_large"
-                        android:paddingRight="@dimen/margin_extra_large"
-                        android:paddingStart="@dimen/margin_extra_large"
-                        android:paddingTop="@dimen/margin_extra_large"
-                        android:background="?android:attr/selectableItemBackground"
-                        android:text="@string/plugin_see_all"
-                        android:textAllCaps="true"
-                        android:textColor="@color/blue_medium"
-                        android:textSize="@dimen/text_sz_medium"
-                        android:textStyle="bold" />
+                        style="@style/PluginDirectoryListButton"
+                        android:text="@string/plugin_see_all" />
 
                     <android.support.v7.widget.RecyclerView
                         android:id="@+id/featured_plugins_recycler"
@@ -144,22 +116,8 @@
 
                     <TextView
                         android:id="@+id/text_all_popular"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:minHeight="@dimen/min_touch_target_sz"
-                        android:layout_alignParentRight="true"
-                        android:layout_alignParentEnd="true"
-                        android:paddingEnd="@dimen/margin_extra_large"
-                        android:paddingLeft="@dimen/margin_extra_large"
-                        android:paddingRight="@dimen/margin_extra_large"
-                        android:paddingStart="@dimen/margin_extra_large"
-                        android:paddingTop="@dimen/margin_extra_large"
-                        android:background="?android:attr/selectableItemBackground"
-                        android:text="@string/plugin_see_all"
-                        android:textAllCaps="true"
-                        android:textColor="@color/blue_medium"
-                        android:textSize="@dimen/text_sz_medium"
-                        android:textStyle="bold" />
+                        style="@style/PluginDirectoryListButton"
+                        android:text="@string/plugin_see_all" />
 
                     <android.support.v7.widget.RecyclerView
                         android:id="@+id/popular_plugins_recycler"
@@ -196,22 +154,8 @@
 
                     <TextView
                         android:id="@+id/text_all_new"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:minHeight="@dimen/min_touch_target_sz"
-                        android:layout_alignParentRight="true"
-                        android:layout_alignParentEnd="true"
-                        android:paddingEnd="@dimen/margin_extra_large"
-                        android:paddingLeft="@dimen/margin_extra_large"
-                        android:paddingRight="@dimen/margin_extra_large"
-                        android:paddingStart="@dimen/margin_extra_large"
-                        android:paddingTop="@dimen/margin_extra_large"
-                        android:background="?android:attr/selectableItemBackground"
-                        android:text="@string/plugin_see_all"
-                        android:textAllCaps="true"
-                        android:textColor="@color/blue_medium"
-                        android:textSize="@dimen/text_sz_medium"
-                        android:textStyle="bold" />
+                        style="@style/PluginDirectoryListButton"
+                        android:text="@string/plugin_see_all" />
 
                     <android.support.v7.widget.RecyclerView
                         android:id="@+id/new_plugins_recycler"
