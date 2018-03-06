@@ -25,15 +25,16 @@ import static org.wordpress.android.analytics.AnalyticsTracker.Stat.MEDIA_VIDEO_
 import static org.wordpress.android.analytics.AnalyticsTracker.Stat.MEDIA_VIDEO_OPTIMIZE_ERROR;
 
 public class VideoOptimizer implements org.m4m.IProgressListener {
-
     public interface VideoOptimizationListener {
         void onVideoOptimizationCompleted(@NonNull MediaModel media);
+
         void onVideoOptimizationProgress(@NonNull MediaModel media, float progress);
     }
 
     public static class ProgressEvent {
         public final MediaModel media;
         public final float progress;
+
         public ProgressEvent(@NonNull MediaModel media, float progress) {
             this.media = media;
             this.progress = progress;
@@ -94,8 +95,8 @@ public class VideoOptimizer implements org.m4m.IProgressListener {
         if (mediaComposer == null) {
             AppLog.w(AppLog.T.MEDIA, "VideoOptimizer > null composer");
             AnalyticsTracker.track(MEDIA_VIDEO_CANT_OPTIMIZE,
-                    AnalyticsUtils.getMediaProperties(getContext(), true, null, mInputPath)
-            );
+                                   AnalyticsUtils.getMediaProperties(getContext(), true, null, mInputPath)
+                                  );
             mListener.onVideoOptimizationCompleted(mMedia);
             return;
         }
@@ -104,7 +105,7 @@ public class VideoOptimizer implements org.m4m.IProgressListener {
         try {
             mediaComposer.start();
             AppLog.d(AppLog.T.MEDIA, "VideoOptimizer > composer started");
-        } catch(IllegalStateException e) {
+        } catch (IllegalStateException e) {
             AppLog.e(AppLog.T.MEDIA, "VideoOptimizer > failed to start composer", e);
             CrashlyticsUtils.logException(e, AppLog.T.MEDIA);
             mListener.onVideoOptimizationCompleted(mMedia);
@@ -113,14 +114,15 @@ public class VideoOptimizer implements org.m4m.IProgressListener {
 
     private void trackVideoProcessingEvents(boolean isError, Exception exception) {
         Map<String, Object> properties = new HashMap<>();
-        Map<String, Object> inputVideoProperties = AnalyticsUtils.getMediaProperties(getContext(), true, null, mInputPath);
+        Map<String, Object> inputVideoProperties =
+                AnalyticsUtils.getMediaProperties(getContext(), true, null, mInputPath);
         putAllWithPrefix("input_video_", inputVideoProperties, properties);
         if (mOutputPath != null) {
             Map<String, Object> outputVideoProperties = AnalyticsUtils.getMediaProperties(getContext(), true, null,
-                    mOutputPath);
+                                                                                          mOutputPath);
             putAllWithPrefix("output_video_", outputVideoProperties, properties);
-            String savedMegabytes = String.valueOf((FileUtils.length(mInputPath) - FileUtils.length(mOutputPath)) /  (1024 *
-                    1024));
+            String savedMegabytes =
+                    String.valueOf((FileUtils.length(mInputPath) - FileUtils.length(mOutputPath)) / (1024 * 1024));
             properties.put("saved_megabytes", savedMegabytes);
         }
 
@@ -128,7 +130,7 @@ public class VideoOptimizer implements org.m4m.IProgressListener {
         properties.put("elapsed_time_ms", endTime - mStartTimeMS);
         if (isError) {
             properties.put("exception_name", exception.getClass().getCanonicalName());
-            properties.put("exception_message",  exception.getMessage());
+            properties.put("exception_message", exception.getMessage());
             // Track to CrashlyticsUtils where it's easier to keep track of errors
             CrashlyticsUtils.logException(exception, AppLog.T.MEDIA);
         }

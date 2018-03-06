@@ -12,7 +12,6 @@ import org.wordpress.android.ui.notifications.blocks.NoteBlock;
 import java.util.List;
 
 public class NoteBlockAdapter extends ArrayAdapter<NoteBlock> {
-
     private final LayoutInflater mLayoutInflater;
     private final int mBackgroundColor;
 
@@ -55,7 +54,9 @@ public class NoteBlockAdapter extends ArrayAdapter<NoteBlock> {
     }
 
     public void setNoteList(List<NoteBlock> noteList) {
-        if (noteList == null) return;
+        if (noteList == null) {
+            return;
+        }
 
         mNoteBlockList = noteList;
         notifyDataSetChanged();

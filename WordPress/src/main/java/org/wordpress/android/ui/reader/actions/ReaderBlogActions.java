@@ -27,7 +27,6 @@ import org.wordpress.android.util.VolleyUtils;
 import java.net.HttpURLConnection;
 
 public class ReaderBlogActions {
-
     public static class BlockedBlogResult {
         public long blogId;
         public ReaderPostList deletedPosts;
@@ -181,8 +180,7 @@ public class ReaderBlogActions {
             final long feedId,
             final String feedUrl,
             final boolean isAskingToFollow,
-            final ActionListener actionListener)
-    {
+            final ActionListener actionListener) {
         // feedUrl is required
         if (TextUtils.isEmpty(feedUrl)) {
             ReaderActions.callActionListener(actionListener, false);
@@ -202,8 +200,8 @@ public class ReaderBlogActions {
 
         final String actionName = (isAskingToFollow ? "follow" : "unfollow");
         final String path = "read/following/mine/"
-                + (isAskingToFollow ? "new?source=android&url=" : "delete?url=")
-                + UrlUtils.urlEncode(feedUrl);
+                            + (isAskingToFollow ? "new?source=android&url=" : "delete?url=")
+                            + UrlUtils.urlEncode(feedUrl);
 
         com.wordpress.rest.RestRequest.Listener listener = new RestRequest.Listener() {
             @Override
@@ -257,6 +255,7 @@ public class ReaderBlogActions {
         ReaderBlogTable.setIsFollowedBlogId(blogId, !isAskingToFollow);
         ReaderPostTable.setFollowStatusForPostsInBlog(blogId, !isAskingToFollow);
     }
+
     private static void localRevertFollowFeedId(long feedId, boolean isAskingToFollow) {
         ReaderBlogTable.setIsFollowedFeedId(feedId, !isAskingToFollow);
         ReaderPostTable.setFollowStatusForPostsInFeed(feedId, !isAskingToFollow);
@@ -264,10 +263,10 @@ public class ReaderBlogActions {
 
     /*
      * returns whether a follow/unfollow was successful based on the response to:
-     *      read/follows/new
-     *      read/follows/delete
-     *      site/$site/follows/new
-     *      site/$site/follows/mine/delete
+     * read/follows/new
+     * read/follows/delete
+     * site/$site/follows/new
+     * site/$site/follows/mine/delete
      */
     private static boolean isFollowActionSuccessful(JSONObject json, boolean isAskingToFollow) {
         if (json == null) {
@@ -331,9 +330,11 @@ public class ReaderBlogActions {
         if (hasBlogId) {
             WordPress.getRestClientUtilsV1_1().get("read/sites/" + blogId, listener, errorListener);
         } else {
-            WordPress.getRestClientUtilsV1_1().get("read/sites/" + UrlUtils.urlEncode(UrlUtils.getHost(blogUrl)), listener, errorListener);
+            WordPress.getRestClientUtilsV1_1()
+                     .get("read/sites/" + UrlUtils.urlEncode(UrlUtils.getHost(blogUrl)), listener, errorListener);
         }
     }
+
     public static void updateFeedInfo(long feedId, String feedUrl, final UpdateBlogInfoListener infoListener) {
         RestRequest.Listener listener = new RestRequest.Listener() {
             @Override
@@ -358,6 +359,7 @@ public class ReaderBlogActions {
         }
         WordPress.getRestClientUtilsV1_1().get(path, listener, errorListener);
     }
+
     private static void handleUpdateBlogInfoResponse(JSONObject jsonObject, UpdateBlogInfoListener infoListener) {
         if (jsonObject == null) {
             if (infoListener != null) {
@@ -381,7 +383,9 @@ public class ReaderBlogActions {
     public static void checkUrlReachable(final String blogUrl,
                                          final ReaderActions.OnRequestListener requestListener) {
         // listener is required
-        if (requestListener == null) return;
+        if (requestListener == null) {
+            return;
+        }
 
         Response.Listener<String> listener = new Response.Listener<String>() {
             @Override
@@ -477,7 +481,6 @@ public class ReaderBlogActions {
                 } else if (!success) {
                     AppLog.w(T.READER, "failed to unblock blog " + blockResult.blogId);
                 }
-
             }
         };
         RestRequest.ErrorListener errorListener = new RestRequest.ErrorListener() {

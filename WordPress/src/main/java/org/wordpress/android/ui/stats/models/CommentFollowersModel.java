@@ -59,5 +59,4 @@ public class CommentFollowersModel extends BaseStatsModel {
     public int getPages() {
         return mPages;
     }
-
 }

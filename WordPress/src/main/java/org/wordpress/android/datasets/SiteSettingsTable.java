@@ -18,16 +18,16 @@ import java.util.Map;
 public final class SiteSettingsTable {
     private static final String CATEGORIES_TABLE_NAME = "site_categories";
     private static final String CREATE_CATEGORIES_TABLE_SQL =
-            "CREATE TABLE IF NOT EXISTS " +
-            CATEGORIES_TABLE_NAME +
-            " (" +
-            CategoryModel.ID_COLUMN_NAME + " INTEGER PRIMARY KEY, " +
-            CategoryModel.NAME_COLUMN_NAME + " TEXT, " +
-            CategoryModel.SLUG_COLUMN_NAME + " TEXT, " +
-            CategoryModel.DESC_COLUMN_NAME + " TEXT, " +
-            CategoryModel.PARENT_ID_COLUMN_NAME + " INTEGER, " +
-            CategoryModel.POST_COUNT_COLUMN_NAME + " INTEGER" +
-            ");";
+            "CREATE TABLE IF NOT EXISTS "
+            + CATEGORIES_TABLE_NAME
+            + " ("
+            + CategoryModel.ID_COLUMN_NAME + " INTEGER PRIMARY KEY, "
+            + CategoryModel.NAME_COLUMN_NAME + " TEXT, "
+            + CategoryModel.SLUG_COLUMN_NAME + " TEXT, "
+            + CategoryModel.DESC_COLUMN_NAME + " TEXT, "
+            + CategoryModel.PARENT_ID_COLUMN_NAME + " INTEGER, "
+            + CategoryModel.POST_COUNT_COLUMN_NAME + " INTEGER"
+            + ");";
 
     public static void createTable(SQLiteDatabase db) {
         if (db != null) {
@@ -51,7 +51,9 @@ public final class SiteSettingsTable {
         String sqlCommand = sqlSelectAllCategories() + ";";
         Cursor cursor = WordPress.wpDB.getDatabase().rawQuery(sqlCommand, null);
 
-        if (cursor == null || !cursor.moveToFirst() || cursor.getCount() == 0) return null;
+        if (cursor == null || !cursor.moveToFirst() || cursor.getCount() == 0) {
+            return null;
+        }
 
         Map<Integer, CategoryModel> models = new HashMap<>();
         for (int i = 0; i < cursor.getCount(); ++i) {
@@ -65,14 +67,18 @@ public final class SiteSettingsTable {
     }
 
     public static Cursor getCategory(long id) {
-        if (id < 0) return null;
+        if (id < 0) {
+            return null;
+        }
 
         String sqlCommand = sqlSelectAllCategories() + sqlWhere(CategoryModel.ID_COLUMN_NAME, Long.toString(id)) + ";";
         return WordPress.wpDB.getDatabase().rawQuery(sqlCommand, null);
     }
 
     public static Cursor getSettings(long id) {
-        if (id < 0) return null;
+        if (id < 0) {
+            return null;
+        }
 
         String whereClause = sqlWhere(SiteSettingsModel.ID_COLUMN_NAME, Long.toString(id));
         String sqlCommand = sqlSelectAllSettings() + whereClause + ";";
@@ -80,7 +86,9 @@ public final class SiteSettingsTable {
     }
 
     public static void saveCategory(CategoryModel category) {
-        if (category == null) return;
+        if (category == null) {
+            return;
+        }
 
         ContentValues values = category.serializeToDatabase();
         category.isInLocalTable = WordPress.wpDB.getDatabase().insertWithOnConflict(
@@ -88,7 +96,9 @@ public final class SiteSettingsTable {
     }
 
     public static void saveCategories(CategoryModel[] categories) {
-        if (categories == null) return;
+        if (categories == null) {
+            return;
+        }
 
         for (CategoryModel category : categories) {
             saveCategory(category);
@@ -96,7 +106,9 @@ public final class SiteSettingsTable {
     }
 
     public static void saveSettings(SiteSettingsModel settings) {
-        if (settings == null) return;
+        if (settings == null) {
+            return;
+        }
 
         ContentValues values = settings.serializeToDatabase();
         settings.isInLocalTable = WordPress.wpDB.getDatabase().insertWithOnConflict(
@@ -139,7 +151,7 @@ public final class SiteSettingsTable {
                     cursor.getInt(cursor.getColumnIndex("imageEncoderQuality")));
             AppPrefs.setVideoOptimize(
                     cursor.getInt(cursor.getColumnIndex("optimizedVideo")) == 1
-            );
+                                     );
             AppPrefs.setVideoOptimizeWidth(
                     cursor.getInt(cursor.getColumnIndex("maxVideoWidth")));
             AppPrefs.setVideoOptimizeQuality(

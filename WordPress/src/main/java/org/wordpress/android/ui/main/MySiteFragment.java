@@ -59,8 +59,7 @@ import de.greenrobot.event.EventBus;
 
 public class MySiteFragment extends Fragment
         implements WPMainActivity.OnScrollToTopListener {
-
-    private static final long ALERT_ANIM_OFFSET_MS   = 1000L;
+    private static final long ALERT_ANIM_OFFSET_MS = 1000L;
     private static final long ALERT_ANIM_DURATION_MS = 1000L;
     public static final int HIDE_WP_ADMIN_YEAR = 2015;
     public static final int HIDE_WP_ADMIN_MONTH = 9;
@@ -212,7 +211,8 @@ public class MySiteFragment extends Fragment
                     if (!mAccountStore.hasAccessToken() && selectedSite.isJetpackConnected()) {
                         // If the user is not connected to WordPress.com, ask him to connect first.
                         startWPComLoginForJetpackStats();
-                    } else if (selectedSite.isWPCom() || (selectedSite.isJetpackInstalled() && selectedSite.isJetpackConnected())) {
+                    } else if (selectedSite.isWPCom() || (selectedSite.isJetpackInstalled() && selectedSite
+                            .isJetpackConnected())) {
                         ActivityLauncher.viewBlogStats(getActivity(), selectedSite);
                     } else {
                         ActivityLauncher.viewConnectJetpackForStats(getActivity(), selectedSite);
@@ -302,7 +302,7 @@ public class MySiteFragment extends Fragment
             @Override
             public void onClick(View v) {
                 SitePickerActivity.addSite(getActivity(), mAccountStore.hasAccessToken(),
-                        mAccountStore.getAccount().getUserName());
+                                           mAccountStore.getAccount().getUserName());
             }
         });
 
@@ -333,7 +333,7 @@ public class MySiteFragment extends Fragment
                 break;
             case RequestCodes.SITE_PICKER:
                 if (resultCode == Activity.RESULT_OK) {
-                    //reset comments status filter
+                    // reset comments status filter
                     AppPrefs.setCommentsStatusFilter(CommentStatusCriteria.ALL);
                 }
                 break;
@@ -349,18 +349,22 @@ public class MySiteFragment extends Fragment
                 }
 
                 final PostModel post = mPostStore.
-                        getPostByLocalPostId(data.getIntExtra(EditPostActivity.EXTRA_POST_LOCAL_ID, 0));
+                                                         getPostByLocalPostId(
+                                                                 data.getIntExtra(EditPostActivity.EXTRA_POST_LOCAL_ID,
+                                                                                  0));
 
                 if (post != null) {
                     final SiteModel site = getSelectedSite();
                     UploadUtils.handleEditPostResultSnackbars(getActivity(),
-                            getActivity().findViewById(R.id.coordinator), resultCode, data, post, site,
-                            new View.OnClickListener() {
-                                @Override
-                                public void onClick(View v) {
-                                    UploadUtils.publishPost(getActivity(), post, site, mDispatcher);
-                                }
-                            });
+                                                              getActivity().findViewById(R.id.coordinator), resultCode,
+                                                              data, post, site,
+                                                              new View.OnClickListener() {
+                                                                  @Override
+                                                                  public void onClick(View v) {
+                                                                      UploadUtils.publishPost(getActivity(), post, site,
+                                                                                              mDispatcher);
+                                                                  }
+                                                              });
                 }
                 break;
         }
@@ -376,10 +380,15 @@ public class MySiteFragment extends Fragment
 
                 public float getInterpolation(float t) {
                     t *= 1.1226f;
-                    if (t < 0.184f) return bounce(t);
-                    else if (t < 0.545f) return bounce(t - 0.40719f);
-                    else if (t < 0.7275f) return -bounce(t - 0.6126f) + 1.0f;
-                    else return 0.0f;
+                    if (t < 0.184f) {
+                        return bounce(t);
+                    } else if (t < 0.545f) {
+                        return bounce(t - 0.40719f);
+                    } else if (t < 0.7275f) {
+                        return -bounce(t - 0.6126f) + 1.0f;
+                    } else {
+                        return 0.0f;
+                    }
                 }
             });
             highlightAnimation.setStartOffset(ALERT_ANIM_OFFSET_MS);
@@ -485,7 +494,7 @@ public class MySiteFragment extends Fragment
         } else {
             Date dateCreated = DateTimeUtils.dateFromIso8601(mAccountStore.getAccount().getDate());
             GregorianCalendar calendar = new GregorianCalendar(HIDE_WP_ADMIN_YEAR, HIDE_WP_ADMIN_MONTH,
-                    HIDE_WP_ADMIN_DAY);
+                                                               HIDE_WP_ADMIN_DAY);
             calendar.setTimeZone(TimeZone.getTimeZone(HIDE_WP_ADMIN_GMT_TIME_ZONE));
             return dateCreated != null && dateCreated.after(calendar.getTime());
         }
@@ -525,13 +534,13 @@ public class MySiteFragment extends Fragment
         if (site != null && event.post != null) {
             if (event.post.getLocalSiteId() == site.getId()) {
                 UploadUtils.onPostUploadedSnackbarHandler(getActivity(),
-                        getActivity().findViewById(R.id.coordinator), true,
-                        event.post, event.errorMessage, site, mDispatcher);
+                                                          getActivity().findViewById(R.id.coordinator), true,
+                                                          event.post, event.errorMessage, site, mDispatcher);
             }
         } else if (event.mediaModelList != null && !event.mediaModelList.isEmpty()) {
             UploadUtils.onMediaUploadedSnackbarHandler(getActivity(),
-                    getActivity().findViewById(R.id.coordinator), true,
-                    event.mediaModelList, site, event.errorMessage);
+                                                       getActivity().findViewById(R.id.coordinator), true,
+                                                       event.mediaModelList, site, event.errorMessage);
         }
     }
 
@@ -541,8 +550,8 @@ public class MySiteFragment extends Fragment
         SiteModel site = getSelectedSite();
         if (site != null && event.mediaModelList != null && !event.mediaModelList.isEmpty()) {
             UploadUtils.onMediaUploadedSnackbarHandler(getActivity(),
-                    getActivity().findViewById(R.id.coordinator), false,
-                    event.mediaModelList, site, event.successMessage);
+                                                       getActivity().findViewById(R.id.coordinator), false,
+                                                       event.mediaModelList, site, event.successMessage);
         }
     }
 
@@ -565,8 +574,8 @@ public class MySiteFragment extends Fragment
             if (site != null) {
                 if (event.post.getLocalSiteId() == site.getId()) {
                     UploadUtils.onPostUploadedSnackbarHandler(getActivity(),
-                            getActivity().findViewById(R.id.coordinator),
-                            event.isError(), event.post, null, site, mDispatcher);
+                                                              getActivity().findViewById(R.id.coordinator),
+                                                              event.isError(), event.post, null, site, mDispatcher);
                 }
             }
         }

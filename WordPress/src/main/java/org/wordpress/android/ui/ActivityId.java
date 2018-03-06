@@ -28,7 +28,7 @@ public enum ActivityId {
 
     private final String mStringValue;
 
-    private ActivityId(final String stringValue) {
+    ActivityId(final String stringValue) {
         mStringValue = stringValue;
     }
 

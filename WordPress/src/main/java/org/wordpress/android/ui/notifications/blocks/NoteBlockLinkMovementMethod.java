@@ -13,7 +13,6 @@ import android.widget.TextView;
  * See: http://stackoverflow.com/a/20905824/309558
  */
 class NoteBlockLinkMovementMethod extends LinkMovementMethod {
-
     private NoteBlockClickableSpan mPressedSpan;
 
     @Override
@@ -23,7 +22,7 @@ class NoteBlockLinkMovementMethod extends LinkMovementMethod {
             if (mPressedSpan != null) {
                 mPressedSpan.setPressed(true);
                 Selection.setSelection(spannable, spannable.getSpanStart(mPressedSpan),
-                        spannable.getSpanEnd(mPressedSpan));
+                                       spannable.getSpanEnd(mPressedSpan));
             }
         } else if (event.getAction() == MotionEvent.ACTION_MOVE) {
             NoteBlockClickableSpan touchedSpan = getPressedSpan(textView, spannable, event);
@@ -44,7 +43,6 @@ class NoteBlockLinkMovementMethod extends LinkMovementMethod {
     }
 
     private NoteBlockClickableSpan getPressedSpan(TextView textView, Spannable spannable, MotionEvent event) {
-
         int x = (int) event.getX();
         int y = (int) event.getY();
 
@@ -66,5 +64,4 @@ class NoteBlockLinkMovementMethod extends LinkMovementMethod {
 
         return touchedSpan;
     }
-
 }

@@ -77,8 +77,8 @@ public class WPMeShortlinks {
         String type;
 
         String postName = StringUtils.notNullStr(post.getSlug());
-        if (PostStatus.fromPost(post) == PostStatus.PUBLISHED && postName.length() > 0 && postName.length() <= 8 &&
-                !postName.contains("%") && !postName.contains("-")) {
+        if (PostStatus.fromPost(post) == PostStatus.PUBLISHED && postName.length() > 0 && postName.length() <= 8
+            && !postName.contains("%") && !postName.contains("-")) {
             id = postName;
             type = "s";
         } else {

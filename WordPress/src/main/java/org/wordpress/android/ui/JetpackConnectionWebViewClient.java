@@ -22,7 +22,6 @@ import static org.wordpress.android.WordPress.SITE;
 import static org.wordpress.android.ui.RequestCodes.JETPACK_LOGIN;
 
 class JetpackConnectionWebViewClient extends WebViewClient {
-
     private static final String LOGIN_PATH = "/wp-login.php";
     private static final String ADMIN_PATH = "/wp-admin/admin.php";
     private static final String REDIRECT_PARAMETER = "redirect_to=";
@@ -31,7 +30,8 @@ class JetpackConnectionWebViewClient extends WebViewClient {
     private static final String WPCOM_LOG_IN_PATH_2 = "/log-in/jetpack";
     private static final String JETPACK_PATH = "/jetpack";
     private static final String WORDPRESS_COM_PREFIX = "https://wordpress.com";
-    private static final Uri JETPACK_DEEPLINK_URI = Uri.parse(JetpackConnectionWebViewActivity.JETPACK_CONNECTION_DEEPLINK);
+    private static final Uri JETPACK_DEEPLINK_URI =
+            Uri.parse(JetpackConnectionWebViewActivity.JETPACK_CONNECTION_DEEPLINK);
     private static final String REDIRECT_PAGE_STATE_ITEM = "redirectPage";
 
     private final Activity mActivity;
@@ -48,7 +48,9 @@ class JetpackConnectionWebViewClient extends WebViewClient {
 
     private void loginToWPCom(WebView view, SiteModel site) {
         String authenticationURL = WPWebViewActivity.getSiteLoginUrl(site);
-        String postData = WPWebViewActivity.getAuthenticationPostData(authenticationURL, mRedirectPage, site.getUsername(), site.getPassword(), mAccountStore.getAccessToken());
+        String postData = WPWebViewActivity.getAuthenticationPostData(authenticationURL, mRedirectPage,
+                                                                      site.getUsername(), site.getPassword(),
+                                                                      mAccountStore.getAccessToken());
         view.postUrl(authenticationURL, postData.getBytes());
     }
 
@@ -85,9 +87,9 @@ class JetpackConnectionWebViewClient extends WebViewClient {
                 loginToWPCom(view, mSiteModel);
                 return true;
             } else if (loadedHost.equals(currentSiteHost)
-                    && loadedPath != null
-                    && loadedPath.contains(ADMIN_PATH)
-                    && mRedirectPage != null) {
+                       && loadedPath != null
+                       && loadedPath.contains(ADMIN_PATH)
+                       && mRedirectPage != null) {
                 view.loadUrl(mRedirectPage);
                 mRedirectPage = null;
                 return true;
@@ -118,7 +120,6 @@ class JetpackConnectionWebViewClient extends WebViewClient {
 
     void activityResult(Context context, int requestCode) {
         if (requestCode == JETPACK_LOGIN) {
-
             JetpackConnectionWebViewActivity.openJetpackConnectionFlow(context, mRedirectPage, mSiteModel);
             mActivity.finish();
         }

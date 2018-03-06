@@ -1,6 +1,5 @@
 package org.wordpress.android.util;
 
-import android.app.Activity;
 import android.content.Context;
 import android.preference.Preference;
 import android.preference.PreferenceCategory;
@@ -28,11 +27,10 @@ import java.util.Map;
  */
 
 public class WPPrefUtils {
-
     /**
      * Length of a {@link String} (representing a language code) when there is no region included.
      * For example: "en" contains no region, "en_US" contains a region (US)
-     *
+     * <p>
      * Used to parse a language code {@link String} when creating a {@link Locale}.
      */
     private static final int NO_REGION_LANG_CODE_LEN = 2;
@@ -48,10 +46,12 @@ public class WPPrefUtils {
      * Gets a preference and sets the {@link android.preference.Preference.OnPreferenceChangeListener}.
      */
     public static Preference getPrefAndSetClickListener(PreferenceFragment prefFrag,
-                                                         int id,
-                                                         Preference.OnPreferenceClickListener listener) {
+                                                        int id,
+                                                        Preference.OnPreferenceClickListener listener) {
         Preference pref = prefFrag.findPreference(prefFrag.getString(id));
-        if (pref != null) pref.setOnPreferenceClickListener(listener);
+        if (pref != null) {
+            pref.setOnPreferenceClickListener(listener);
+        }
         return pref;
     }
 
@@ -62,7 +62,9 @@ public class WPPrefUtils {
                                                          int id,
                                                          Preference.OnPreferenceChangeListener listener) {
         Preference pref = prefFrag.findPreference(prefFrag.getString(id));
-        if (pref != null) pref.setOnPreferenceChangeListener(listener);
+        if (pref != null) {
+            pref.setOnPreferenceChangeListener(listener);
+        }
         return pref;
     }
 
@@ -190,11 +192,13 @@ public class WPPrefUtils {
      * Gets a locale for the given language code.
      */
     public static Locale languageLocale(String languageCode) {
-        if (TextUtils.isEmpty(languageCode)) return LanguageUtils.getCurrentDeviceLanguage(WordPress.getContext());
+        if (TextUtils.isEmpty(languageCode)) {
+            return LanguageUtils.getCurrentDeviceLanguage(WordPress.getContext());
+        }
 
         if (languageCode.length() > NO_REGION_LANG_CODE_LEN) {
             return new Locale(languageCode.substring(0, NO_REGION_LANG_CODE_LEN),
-                    languageCode.substring(REGION_SUBSTRING_INDEX));
+                              languageCode.substring(REGION_SUBSTRING_INDEX));
         }
 
         return new Locale(languageCode);
@@ -221,7 +225,9 @@ public class WPPrefUtils {
     @Nullable
     public static Pair<String[], String[]> createSortedLanguageDisplayStrings(CharSequence[] languageCodes,
                                                                               Locale locale) {
-        if (languageCodes == null || languageCodes.length < 1) return null;
+        if (languageCodes == null || languageCodes.length < 1) {
+            return null;
+        }
 
         ArrayList<String> entryStrings = new ArrayList<>(languageCodes.length);
         for (int i = 0; i < languageCodes.length; ++i) {
@@ -251,7 +257,9 @@ public class WPPrefUtils {
      */
     @Nullable
     public static String[] createLanguageDetailDisplayStrings(CharSequence[] languageCodes) {
-        if (languageCodes == null || languageCodes.length < 1) return null;
+        if (languageCodes == null || languageCodes.length < 1) {
+            return null;
+        }
 
         String[] detailStrings = new String[languageCodes.length];
         for (int i = 0; i < languageCodes.length; ++i) {

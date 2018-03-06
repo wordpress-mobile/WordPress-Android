@@ -15,7 +15,6 @@ import org.wordpress.android.widgets.WPNetworkImageView;
  * ViewHolder for a RecyclerView header used on screens shown after a user logs in.
  */
 public class LoginHeaderViewHolder extends RecyclerView.ViewHolder {
-
     private final View mLoggedInAsHeading;
     private final View mUserDetailsCard;
     private final WPNetworkImageView mAvatarImageView;
@@ -35,11 +34,11 @@ public class LoginHeaderViewHolder extends RecyclerView.ViewHolder {
 
     public void updateLoggedInAsHeading(Context context, boolean isAfterLogin, AccountModel defaultAccount) {
         updateLoggedInAsHeading(context, isAfterLogin, constructGravatarUrl(context, defaultAccount),
-                defaultAccount.getUserName(), defaultAccount.getDisplayName());
+                                defaultAccount.getUserName(), defaultAccount.getDisplayName());
     }
 
     public void updateLoggedInAsHeading(Context context, boolean isAfterLogin, String avatarUrl, String username,
-            String displayName) {
+                                        String displayName) {
         if (isAfterLogin) {
             mLoggedInAsHeading.setVisibility(View.VISIBLE);
             mUserDetailsCard.setVisibility(View.VISIBLE);

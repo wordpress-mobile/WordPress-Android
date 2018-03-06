@@ -43,8 +43,8 @@ public class AuthorsModel extends BaseStatsModel {
                     AuthorModel currentAuthor = new AuthorModel(blogID, mDate, currentAuthorJSON);
                     mAuthors.add(currentAuthor);
                 } catch (JSONException e) {
-                    AppLog.e(AppLog.T.STATS, "Unexpected Author object " +
-                            "at position " + i + " Response: " + response.toString(), e);
+                    AppLog.e(AppLog.T.STATS, "Unexpected Author object "
+                                             + "at position " + i + " Response: " + response.toString(), e);
                 }
             }
         }

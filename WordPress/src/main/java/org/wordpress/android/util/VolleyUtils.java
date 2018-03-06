@@ -14,15 +14,16 @@ public class VolleyUtils {
     /*
      * Returns REST API 'error' string code from the response in the passed VolleyError
      * for example, returns "already_subscribed" from this response:
-     *  {
-	 *      "error": "already_subscribed",
-	 *      "message": "You are already subscribed to the specified topic."
-	 *  }
+     * {
+     * "error": "already_subscribed",
+     * "message": "You are already subscribed to the specified topic."
+     * }
      */
     public static String errStringFromVolleyError(VolleyError volleyError) {
         JSONObject json = volleyErrorToJSON(volleyError);
-        if (json==null)
+        if (json == null) {
             return "";
+        }
         return JSONUtils.getString(json, "error");
     }
 
@@ -36,15 +37,16 @@ public class VolleyUtils {
     /*
      * Returns REST API 'message' string field from the response in the passed VolleyError
      * for example, returns "You are already subscribed to the specified topic." from this response:
-     *  {
-     *      "error": "already_subscribed",
-     *      "message": "You are already subscribed to the specified topic."
-     *  }
+     * {
+     * "error": "already_subscribed",
+     * "message": "You are already subscribed to the specified topic."
+     * }
      */
     public static String messageStringFromVolleyError(VolleyError volleyError) {
         JSONObject json = volleyErrorToJSON(volleyError);
-        if (json==null)
+        if (json == null) {
             return "";
+        }
         return JSONUtils.getString(json, "message");
     }
 
@@ -54,7 +56,7 @@ public class VolleyUtils {
      */
     public static JSONObject volleyErrorToJSON(VolleyError volleyError) {
         if (volleyError == null || volleyError.networkResponse == null || volleyError.networkResponse.data == null
-                || volleyError.networkResponse.headers == null) {
+            || volleyError.networkResponse.headers == null) {
             return null;
         }
 
@@ -78,13 +80,15 @@ public class VolleyUtils {
      * Cancel all Volley requests that aren't for images
      */
     public static void cancelAllNonImageRequests(RequestQueue requestQueue) {
-        if (requestQueue==null)
+        if (requestQueue == null) {
             return;
+        }
         RequestQueue.RequestFilter filter = new RequestQueue.RequestFilter() {
             @Override
             public boolean apply(Request<?> request) {
-                if (request instanceof ImageRequest)
+                if (request instanceof ImageRequest) {
                     return false;
+                }
                 return true;
             }
         };
@@ -95,8 +99,9 @@ public class VolleyUtils {
      * Cancel all Volley requests
      */
     public static void cancelAllRequests(RequestQueue requestQueue) {
-        if (requestQueue==null)
+        if (requestQueue == null) {
             return;
+        }
         RequestQueue.RequestFilter filter = new RequestQueue.RequestFilter() {
             @Override
             public boolean apply(Request<?> request) {

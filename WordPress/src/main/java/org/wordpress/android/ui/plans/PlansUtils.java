@@ -15,7 +15,6 @@ import org.wordpress.android.util.PhotonUtils;
 import java.util.HashMap;
 
 public class PlansUtils {
-
     @Nullable
     public static HashMap<String, Feature> getFeatures() {
         String featuresString = AppPrefs.getGlobalPlansFeatures();
@@ -27,7 +26,7 @@ public class PlansUtils {
         try {
             JSONObject featuresJSONObject = new JSONObject(featuresString);
             JSONArray featuresArray = featuresJSONObject.getJSONArray("originalResponse");
-            for (int i=0; i < featuresArray.length(); i ++) {
+            for (int i = 0; i < featuresArray.length(); i++) {
                 JSONObject currentFeatureJSON = featuresArray.getJSONObject(i);
                 Feature currentFeature = new Feature(currentFeatureJSON);
                 features.put(currentFeature.getProductSlug(), currentFeature);

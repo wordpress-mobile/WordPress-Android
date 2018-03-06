@@ -97,7 +97,8 @@ public class RestClientCustomizableMock extends RestClient {
         // URL example: https://public-api.wordpress.com/rest/v1/me
         // Filename: default-public-api-wordpress-com-rest-v1-me.json
         String filename = mPrefix + "-" + url.replace("https://", "").replace("/", "-").replace(".", "-").replace("?",
-                "-") + ".json";
+                                                                                                                  "-")
+                          + ".json";
 
         if ("password-invalid".equals(mPrefix) && errorListener != null) {
             errorListener.onErrorResponse(forgeVolleyErrorFromFilename(filename));

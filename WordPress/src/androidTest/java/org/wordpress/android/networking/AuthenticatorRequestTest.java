@@ -35,7 +35,9 @@ public class AuthenticatorRequestTest extends InstrumentationTestCase {
     }
 
     public void testExtractSiteIdFromUrl3() {
-        String url = "https://public-api.wordpress.com/rest/v1/batch/?urls%5B%5D=%2Fsites%2F57991476%2Fstats%2Freferrers%3Fdate%3D2014-05-08&urls%5B%5D=%2Fsites%2F57991476%2Fstats%2Freferrers%3Fdate%3D2014-05-07";
+        String url = "https://public-api.wordpress.com/rest/v1/batch/?urls%5B%5D=%2Fsites%2F57991476%2Fstats%2F"
+                     + "referrers%3Fdate%3D2014-05-08&urls%5B%5D=%2Fsites%2F57991476%2Fstats%2F"
+                     + "referrers%3Fdate%3D2014-05-07";
         assertEquals("57991476", mAuthenticatorRequest.extractSiteIdFromUrl(mRestClient.getEndpointURL(), url));
     }
 

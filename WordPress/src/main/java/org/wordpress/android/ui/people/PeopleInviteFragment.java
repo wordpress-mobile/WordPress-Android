@@ -163,13 +163,13 @@ public class PeopleInviteFragment extends Fragment implements RoleSelectDialogFr
 
         mUsernameEditText = (MultiUsernameEditText) view.findViewById(R.id.invite_usernames);
 
-        //handle key preses from hardware keyboard
+        // handle key preses from hardware keyboard
         mUsernameEditText.setOnKeyListener(new View.OnKeyListener() {
             @Override
             public boolean onKey(View view, int i, KeyEvent keyEvent) {
                 return keyEvent.getKeyCode() == KeyEvent.KEYCODE_DEL
-                        && keyEvent.getAction() == KeyEvent.ACTION_DOWN
-                        && removeLastEnteredUsername();
+                       && keyEvent.getAction() == KeyEvent.ACTION_DOWN
+                       && removeLastEnteredUsername();
             }
         });
 
@@ -181,7 +181,7 @@ public class PeopleInviteFragment extends Fragment implements RoleSelectDialogFr
         });
 
         mUsernameEditText.addTextChangedListener(new TextWatcher() {
-            private boolean shouldIgnoreChanges = false;
+            private boolean mShouldIgnoreChanges = false;
 
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
@@ -189,17 +189,17 @@ public class PeopleInviteFragment extends Fragment implements RoleSelectDialogFr
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
-                if (shouldIgnoreChanges) { //used to avoid double call after calling setText from this method
+                if (mShouldIgnoreChanges) { // used to avoid double call after calling setText from this method
                     return;
                 }
 
-                shouldIgnoreChanges = true;
+                mShouldIgnoreChanges = true;
                 if (mUsernameButtons.size() >= MAX_NUMBER_OF_INVITEES && !TextUtils.isEmpty(s)) {
                     resetEditTextContent(mUsernameEditText);
                 } else if (endsWithDelimiter(mUsernameEditText.getText().toString())) {
                     addUsername(mUsernameEditText, null);
                 }
-                shouldIgnoreChanges = false;
+                mShouldIgnoreChanges = false;
             }
 
             @Override
@@ -262,7 +262,7 @@ public class PeopleInviteFragment extends Fragment implements RoleSelectDialogFr
             mRoleTextView.setCompoundDrawablesWithIntrinsicBounds(0, 0, 0, 0);
         }
 
-        final int MAX_CHARS = getResources().getInteger(R.integer.invite_message_char_limit);
+        final int maxChars = getResources().getInteger(R.integer.invite_message_char_limit);
         final TextView remainingCharsTextView = (TextView) view.findViewById(R.id.message_remaining);
 
         mCustomMessageEditText = (EditText) view.findViewById(R.id.message);
@@ -274,14 +274,14 @@ public class PeopleInviteFragment extends Fragment implements RoleSelectDialogFr
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
                 mCustomMessage = mCustomMessageEditText.getText().toString();
-                updateRemainingCharsView(remainingCharsTextView, mCustomMessage, MAX_CHARS);
+                updateRemainingCharsView(remainingCharsTextView, mCustomMessage, maxChars);
             }
 
             @Override
             public void afterTextChanged(Editable s) {
             }
         });
-        updateRemainingCharsView(remainingCharsTextView, mCustomMessage, MAX_CHARS);
+        updateRemainingCharsView(remainingCharsTextView, mCustomMessage, maxChars);
     }
 
     private boolean endsWithDelimiter(String string) {
@@ -329,14 +329,15 @@ public class PeopleInviteFragment extends Fragment implements RoleSelectDialogFr
 
     private void updateRemainingCharsView(TextView remainingCharsTextView, String currentString, int limit) {
         remainingCharsTextView.setText(StringUtils.getQuantityString(getActivity(),
-                R.string.invite_message_remaining_zero,
-                R.string.invite_message_remaining_one,
-                R.string.invite_message_remaining_other, limit - (currentString == null ? 0 : currentString.length())));
+                                                                     R.string.invite_message_remaining_zero,
+                                                                     R.string.invite_message_remaining_one,
+                                                                     R.string.invite_message_remaining_other,
+                                                                     limit - (currentString == null ? 0
+                                                                             : currentString.length())));
     }
 
     private void populateUsernameButtons(Collection<String> usernames) {
         if (usernames != null && usernames.size() > 0) {
-
             for (String username : usernames) {
                 mUsernameButtons.put(username, buttonizeUsername(username));
             }
@@ -350,8 +351,8 @@ public class PeopleInviteFragment extends Fragment implements RoleSelectDialogFr
             return null;
         }
 
-        final ViewGroup usernameButton = (ViewGroup) LayoutInflater.from(getActivity()).inflate(R.layout
-                .invite_username_button, null);
+        final ViewGroup usernameButton = (ViewGroup) LayoutInflater.from(
+                getActivity()).inflate(R.layout.invite_username_button, null);
         final TextView usernameTextView = (TextView) usernameButton.findViewById(R.id.username);
         usernameTextView.setText(username);
 
@@ -410,7 +411,7 @@ public class PeopleInviteFragment extends Fragment implements RoleSelectDialogFr
             return false;
         }
 
-        //try and remove the last entered username
+        // try and remove the last entered username
         List<String> list = new ArrayList<>(mUsernameButtons.keySet());
         if (!list.isEmpty()) {
             String username = list.get(list.size() - 1);
@@ -441,7 +442,8 @@ public class PeopleInviteFragment extends Fragment implements RoleSelectDialogFr
         mRoleTextView.setText(RoleUtils.getDisplayName(mCurrentRole, mInviteRoles));
     }
 
-    private void validateAndStyleUsername(Collection<String> usernames, final ValidationEndListener validationEndListener) {
+    private void validateAndStyleUsername(Collection<String> usernames,
+                                          final ValidationEndListener validationEndListener) {
         List<String> usernamesToCheck = new ArrayList<>();
 
         for (String username : usernames) {
@@ -458,39 +460,41 @@ public class PeopleInviteFragment extends Fragment implements RoleSelectDialogFr
         }
 
         if (usernamesToCheck.size() > 0) {
-            long dotComBlogId = mSite.getSiteId();
-            PeopleUtils.validateUsernames(usernamesToCheck, mCurrentRole, dotComBlogId,
-                    new PeopleUtils.ValidateUsernameCallback() {
-                @Override
-                public void onUsernameValidation(String username, ValidationResult validationResult) {
-                    if (!isAdded()) {
-                        return;
-                    }
+            long wpcomBlogId = mSite.getSiteId();
+            PeopleUtils.validateUsernames(usernamesToCheck, mCurrentRole, wpcomBlogId,
+                                          new PeopleUtils.ValidateUsernameCallback() {
+                                              @Override
+                                              public void onUsernameValidation(String username,
+                                                                               ValidationResult validationResult) {
+                                                  if (!isAdded()) {
+                                                      return;
+                                                  }
 
-                    if (!isUserInInvitees(username)) {
-                        //user is removed from invitees before validation
-                        return;
-                    }
+                                                  if (!isUserInInvitees(username)) {
+                                                      // user is removed from invitees before validation
+                                                      return;
+                                                  }
 
-                    final String usernameResultString = getValidationErrorString(username, validationResult);
-                    mUsernameResults.put(username, usernameResultString);
+                                                  final String usernameResultString =
+                                                          getValidationErrorString(username, validationResult);
+                                                  mUsernameResults.put(username, usernameResultString);
 
-                    styleButton(username, usernameResultString);
-                    updateUsernameError(username, usernameResultString);
-                }
+                                                  styleButton(username, usernameResultString);
+                                                  updateUsernameError(username, usernameResultString);
+                                              }
 
-                @Override
-                public void onValidationFinished() {
-                    if (validationEndListener != null) {
-                        validationEndListener.onValidationEnd();
-                    }
-                }
+                                              @Override
+                                              public void onValidationFinished() {
+                                                  if (validationEndListener != null) {
+                                                      validationEndListener.onValidationEnd();
+                                                  }
+                                              }
 
-                @Override
-                public void onError() {
-                    // properly style the button
-                }
-            });
+                                              @Override
+                                              public void onError() {
+                                                  // properly style the button
+                                              }
+                                          });
         } else {
             if (validationEndListener != null) {
                 validationEndListener.onValidationEnd();
@@ -505,8 +509,9 @@ public class PeopleInviteFragment extends Fragment implements RoleSelectDialogFr
 
         TextView textView = (TextView) mUsernameButtons.get(username).findViewById(R.id.username);
         textView.setTextColor(ContextCompat.getColor(getActivity(),
-                validationResultMessage == null ? R.color.grey_dark :
-                        (validationResultMessage.equals(FLAG_SUCCESS) ? R.color.blue_wordpress : R.color.alert_red)));
+                                                     validationResultMessage == null ? R.color.grey_dark
+                                                             : (validationResultMessage.equals(FLAG_SUCCESS)
+                                                                     ? R.color.blue_wordpress : R.color.alert_red)));
     }
 
     private
@@ -552,7 +557,7 @@ public class PeopleInviteFragment extends Fragment implements RoleSelectDialogFr
             }
 
             usernameErrorTextView = (TextView) LayoutInflater.from(getActivity())
-                    .inflate(R.layout.people_invite_error_view, null);
+                                                             .inflate(R.layout.people_invite_error_view, null);
 
             final ViewGroup usernameErrorsContainer = (ViewGroup) getView()
                     .findViewById(R.id.username_errors_container);
@@ -592,14 +597,14 @@ public class PeopleInviteFragment extends Fragment implements RoleSelectDialogFr
                 @Override
                 public void onValidationEnd() {
                     if (!checkAndSend()) {
-                        //re-enable SEND button if validation failed
+                        // re-enable SEND button if validation failed
                         enableSendButton(true);
                     }
                 }
             });
         } else {
             if (!checkAndSend()) {
-                //re-enable SEND button if validation failed
+                // re-enable SEND button if validation failed
                 enableSendButton(true);
             }
         }
@@ -630,17 +635,20 @@ public class PeopleInviteFragment extends Fragment implements RoleSelectDialogFr
         }
 
         if (invalidCount > 0) {
-            ToastUtils.showToast(getActivity(), StringUtils.getQuantityString(getActivity(), 0,
-                    R.string.invite_error_invalid_usernames_one,
-                    R.string.invite_error_invalid_usernames_multiple, invalidCount));
+            ToastUtils.showToast(getActivity(),
+                                 StringUtils.getQuantityString(getActivity(), 0,
+                                                               R.string.invite_error_invalid_usernames_one,
+                                                               R.string.invite_error_invalid_usernames_multiple,
+                                                               invalidCount));
             return false;
         }
 
-        //set the  "SEND" option disabled
+        // set the "SEND" option disabled
         enableSendButton(false);
 
-        long dotComBlogId = mSite.getSiteId();
-        PeopleUtils.sendInvitations(new ArrayList<>(mUsernameButtons.keySet()), mCurrentRole, mCustomMessage, dotComBlogId,
+        long wpcomBlogId = mSite.getSiteId();
+        PeopleUtils.sendInvitations(
+                new ArrayList<>(mUsernameButtons.keySet()), mCurrentRole, mCustomMessage, wpcomBlogId,
                 new PeopleUtils.InvitationsSendCallback() {
                     @Override
                     public void onSent(List<String> succeededUsernames, Map<String, String> failedUsernameErrors) {
@@ -657,18 +665,19 @@ public class PeopleInviteFragment extends Fragment implements RoleSelectDialogFr
                                 final String username = error.getKey();
                                 final String errorMessage = error.getValue();
                                 mUsernameResults.put(username, getString(R.string.invite_error_for_username,
-                                        username, errorMessage));
+                                                                         username, errorMessage));
                             }
 
                             populateUsernameButtons(failedUsernameErrors.keySet());
 
                             ToastUtils.showToast(getActivity(), succeededUsernames.isEmpty()
-                                    ? R.string.invite_error_sending : R.string.invite_error_some_failed);
+                                    ? R.string.invite_error_sending
+                                    : R.string.invite_error_some_failed);
                         } else {
                             ToastUtils.showToast(getActivity(), R.string.invite_sent, ToastUtils.Duration.LONG);
                         }
 
-                        //set the  "SEND" option enabled again
+                        // set the "SEND" option enabled again
                         enableSendButton(true);
                     }
 
@@ -677,12 +686,9 @@ public class PeopleInviteFragment extends Fragment implements RoleSelectDialogFr
                         if (!isAdded()) {
                             return;
                         }
-
                         ToastUtils.showToast(getActivity(), R.string.invite_error_sending);
-
-                        //set the  "SEND" option enabled again
+                        // set the "SEND" option enabled again
                         enableSendButton(true);
-
                     }
                 });
 
@@ -699,8 +705,8 @@ public class PeopleInviteFragment extends Fragment implements RoleSelectDialogFr
     @Override
     public void onDestroyView() {
         super.onDestroyView();
-        //we need to remove focus listener when view is destroyed (ex. orientation change) to prevent mUsernameEditText
-        //content from being converted to username
+        // we need to remove focus listener when view is destroyed (ex. orientation change) to prevent mUsernameEditText
+        // content from being converted to username
         if (mUsernameEditText != null) {
             mUsernameEditText.setOnFocusChangeListener(null);
         }

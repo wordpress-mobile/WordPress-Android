@@ -13,7 +13,6 @@ import android.view.inputmethod.InputConnection;
  * Used to handle backspace in People Management username field
  */
 public class MultiUsernameEditText extends AppCompatEditText {
-
     private OnBackspacePressedListener mOnBackspacePressedListener;
 
 
@@ -39,15 +38,14 @@ public class MultiUsernameEditText extends AppCompatEditText {
 
     @Override
     public InputConnection onCreateInputConnection(EditorInfo outAttrs) {
-        //in this case it makes sense to not change EditText to fullscreen mode at landscape
+        // in this case it makes sense to not change EditText to fullscreen mode at landscape
         outAttrs.imeOptions = EditorInfo.IME_FLAG_NO_EXTRACT_UI;
         return new MultiUsernameEditTextInputConnection(this, false);
     }
 
 
     private class MultiUsernameEditTextInputConnection extends BaseInputConnection {
-
-        public MultiUsernameEditTextInputConnection(View targetView, boolean fullEditor) {
+        MultiUsernameEditTextInputConnection(View targetView, boolean fullEditor) {
             super(targetView, fullEditor);
         }
 
@@ -55,7 +53,7 @@ public class MultiUsernameEditText extends AppCompatEditText {
         public boolean sendKeyEvent(KeyEvent event) {
             if (event.getAction() == KeyEvent.ACTION_DOWN && event.getKeyCode() == KeyEvent.KEYCODE_DEL) {
                 if (mOnBackspacePressedListener != null) {
-                    //if username was not deleted pass event to parent method and return the result
+                    // if username was not deleted pass event to parent method and return the result
                     return !mOnBackspacePressedListener.onBackspacePressed() && super.sendKeyEvent(event);
                 }
             }
@@ -66,12 +64,10 @@ public class MultiUsernameEditText extends AppCompatEditText {
         public boolean deleteSurroundingText(int beforeLength, int afterLength) {
             if (beforeLength == 1 && afterLength == 0) {
                 return sendKeyEvent(new KeyEvent(KeyEvent.ACTION_DOWN, KeyEvent.KEYCODE_DEL))
-                        && sendKeyEvent(new KeyEvent(KeyEvent.ACTION_UP, KeyEvent.KEYCODE_DEL));
+                       && sendKeyEvent(new KeyEvent(KeyEvent.ACTION_UP, KeyEvent.KEYCODE_DEL));
             }
 
             return super.deleteSurroundingText(beforeLength, afterLength);
         }
-
     }
-
 }

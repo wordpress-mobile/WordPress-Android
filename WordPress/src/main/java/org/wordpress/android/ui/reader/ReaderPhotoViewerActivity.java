@@ -28,7 +28,6 @@ import org.wordpress.android.widgets.WPViewPagerTransformer.TransformType;
  */
 public class ReaderPhotoViewerActivity extends AppCompatActivity
         implements PhotoViewListener {
-
     private String mInitialImageUrl;
     private boolean mIsPrivate;
     private boolean mIsGallery;
@@ -210,7 +209,7 @@ public class ReaderPhotoViewerActivity extends AppCompatActivity
 
         @Override
         public int getCount() {
-            return (mImageList != null ? mImageList.size(): 0);
+            return (mImageList != null ? mImageList.size() : 0);
         }
 
         private int indexOfImageUrl(String imageUrl) {

@@ -1,6 +1,5 @@
 package org.wordpress.android.editor;
 
-import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.Instrumentation;
 import android.os.Build;
@@ -36,7 +35,6 @@ public class ZssEditorTest extends ActivityInstrumentationTestCase2<MockActivity
         super(MockActivity.class);
     }
 
-    @SuppressLint("AddJavascriptInterface")
     @Override
     protected void setUp() throws Exception {
         super.setUp();
@@ -65,9 +63,10 @@ public class ZssEditorTest extends ActivityInstrumentationTestCase2<MockActivity
             @Override
             public void run() {
                 mWebView = new EditorWebView(mInstrumentation.getContext(), null);
-                if (Build.VERSION.SDK_INT < 17) {
+                if (Build.VERSION.SDK_INT < Build.VERSION_CODES.JELLY_BEAN_MR1) {
                     mWebView.setJsCallbackReceiver(new MockJsCallbackReceiver(new EditorFragmentForTests()));
                 } else {
+                    //noinspection AddJavascriptInterface
                     mWebView.addJavascriptInterface(new MockJsCallbackReceiver(new EditorFragmentForTests()),
                             JS_CALLBACK_HANDLER);
                 }

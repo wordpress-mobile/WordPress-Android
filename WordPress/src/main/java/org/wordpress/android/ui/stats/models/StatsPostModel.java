@@ -6,10 +6,10 @@ import org.wordpress.android.ui.stats.StatsUtils;
 import java.io.Serializable;
 
 public class StatsPostModel extends SingleItemModel implements Serializable {
-
     private final String mPostType;
 
-    public StatsPostModel(long blogId, String date, String itemID, String title, int totals, String url, String postType) {
+    public StatsPostModel(long blogId, String date, String itemID, String title, int totals, String url,
+                          String postType) {
         super(blogId, date, itemID, title, totals, url, null);
         this.mPostType = postType;
     }

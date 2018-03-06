@@ -3,11 +3,11 @@ package org.wordpress.android.models;
 import java.util.ArrayList;
 
 public class ReaderCommentList extends ArrayList<ReaderComment> {
-
     public int indexOfCommentId(long commentId) {
-        for (int i=0; i < this.size(); i++) {
-            if (commentId==this.get(i).commentId)
+        for (int i = 0; i < this.size(); i++) {
+            if (commentId == this.get(i).commentId) {
                 return i;
+            }
         }
         return -1;
     }
@@ -16,10 +16,11 @@ public class ReaderCommentList extends ArrayList<ReaderComment> {
      * does passed list contain the same comments as this list?
      */
     public boolean isSameList(ReaderCommentList comments) {
-        if (comments==null || comments.size()!=this.size())
+        if (comments == null || comments.size() != this.size()) {
             return false;
+        }
 
-        for (ReaderComment comment: comments) {
+        for (ReaderComment comment : comments) {
             if (indexOf(comment) == -1) {
                 return false;
             }

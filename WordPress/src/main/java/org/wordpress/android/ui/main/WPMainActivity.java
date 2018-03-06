@@ -158,12 +158,12 @@ public class WPMainActivity extends AppCompatActivity {
 
             @Override
             public void onTabUnselected(TabLayout.Tab tab) {
-                //  nop
+                // nop
             }
 
             @Override
             public void onTabReselected(TabLayout.Tab tab) {
-                //scroll the active fragment's contents to the top when user taps the current tab
+                // scroll the active fragment's contents to the top when user taps the current tab
                 Fragment fragment = mTabAdapter.getFragment(tab.getPosition());
                 if (fragment instanceof OnScrollToTopListener) {
                     ((OnScrollToTopListener) fragment).onScrollToTop();
@@ -185,10 +185,10 @@ public class WPMainActivity extends AppCompatActivity {
                         break;
                     case WPMainTabAdapter.TAB_READER:
                         setTabLayoutElevation(0);
-                    break;
+                        break;
                     case WPMainTabAdapter.TAB_ME:
                         setTabLayoutElevation(mAppBarElevation);
-                    break;
+                        break;
                     case WPMainTabAdapter.TAB_NOTIFS:
                         setTabLayoutElevation(mAppBarElevation);
                         Fragment fragment = mTabAdapter.getFragment(position);
@@ -224,12 +224,13 @@ public class WPMainActivity extends AppCompatActivity {
                 // open note detail if activity called from a push, otherwise return to the tab
                 // that was showing last time
                 boolean openedFromPush = (getIntent() != null && getIntent().getBooleanExtra(ARG_OPENED_FROM_PUSH,
-                        false));
+                                                                                             false));
                 if (openedFromPush) {
                     getIntent().putExtra(ARG_OPENED_FROM_PUSH, false);
                     if (getIntent().hasExtra(NotificationsPendingDraftsReceiver.POST_ID_EXTRA)) {
                         launchWithPostId(getIntent().getIntExtra(NotificationsPendingDraftsReceiver.POST_ID_EXTRA, 0),
-                                getIntent().getBooleanExtra(NotificationsPendingDraftsReceiver.IS_PAGE_EXTRA, false));
+                                         getIntent().getBooleanExtra(NotificationsPendingDraftsReceiver.IS_PAGE_EXTRA,
+                                                                     false));
                     } else {
                         launchWithNoteId();
                     }
@@ -273,14 +274,18 @@ public class WPMainActivity extends AppCompatActivity {
             mDispatcher.dispatch(AccountActionBuilder.newUpdateAccessTokenAction(payload));
         } else if (getIntent().getBooleanExtra(ARG_SHOW_LOGIN_EPILOGUE, false) && savedInstanceState == null) {
             ActivityLauncher.showLoginEpilogue(this, getIntent().getBooleanExtra(ARG_DO_LOGIN_UPDATE, false),
-                    getIntent().getIntegerArrayListExtra(ARG_OLD_SITES_IDS));
+                                               getIntent().getIntegerArrayListExtra(ARG_OLD_SITES_IDS));
         } else if (getIntent().getBooleanExtra(ARG_SHOW_SIGNUP_EPILOGUE, false) && savedInstanceState == null) {
             ActivityLauncher.showSignupEpilogue(this,
-                    getIntent().getStringExtra(SignupEpilogueActivity.EXTRA_SIGNUP_DISPLAY_NAME),
-                    getIntent().getStringExtra(SignupEpilogueActivity.EXTRA_SIGNUP_EMAIL_ADDRESS),
-                    getIntent().getStringExtra(SignupEpilogueActivity.EXTRA_SIGNUP_PHOTO_URL),
-                    getIntent().getStringExtra(SignupEpilogueActivity.EXTRA_SIGNUP_USERNAME),
-                    false);
+                                                getIntent().getStringExtra(
+                                                        SignupEpilogueActivity.EXTRA_SIGNUP_DISPLAY_NAME),
+                                                getIntent().getStringExtra(
+                                                        SignupEpilogueActivity.EXTRA_SIGNUP_EMAIL_ADDRESS),
+                                                getIntent()
+                                                        .getStringExtra(SignupEpilogueActivity.EXTRA_SIGNUP_PHOTO_URL),
+                                                getIntent()
+                                                        .getStringExtra(SignupEpilogueActivity.EXTRA_SIGNUP_USERNAME),
+                                                false);
         }
     }
 
@@ -300,7 +305,7 @@ public class WPMainActivity extends AppCompatActivity {
             String value = (uri.getQueryParameterNames() != null && uri.getQueryParameter(parameter) != null)
                     ? uri.getQueryParameter(parameter) : "";
             return Intent.ACTION_VIEW.equals(action) && uri.getQueryParameterNames().contains(parameter)
-                    && value.equalsIgnoreCase(SignupEpilogueActivity.MAGIC_SIGNUP_VALUE);
+                   && value.equalsIgnoreCase(SignupEpilogueActivity.MAGIC_SIGNUP_VALUE);
         } else {
             return false;
         }
@@ -311,15 +316,17 @@ public class WPMainActivity extends AppCompatActivity {
         return uri != null ? uri.getQueryParameter(LoginActivity.TOKEN_PARAMETER) : null;
     }
 
-    private void setTabLayoutElevation(float newElevation){
-        if (mTabLayout == null) return;
+    private void setTabLayoutElevation(float newElevation) {
+        if (mTabLayout == null) {
+            return;
+        }
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             float oldElevation = mTabLayout.getElevation();
             if (oldElevation != newElevation) {
                 ObjectAnimator.ofFloat(mTabLayout, "elevation", oldElevation, newElevation)
-                        .setDuration(1000L)
-                        .start();
+                              .setDuration(1000L)
+                              .start();
             }
         }
     }
@@ -339,34 +346,37 @@ public class WPMainActivity extends AppCompatActivity {
      * and opens the desired note detail
      */
     private void launchWithNoteId() {
-        if (isFinishing() || getIntent() == null) return;
+        if (isFinishing() || getIntent() == null) {
+            return;
+        }
 
         if (getIntent().hasExtra(NotificationsUtils.ARG_PUSH_AUTH_TOKEN)) {
             GCMMessageService.remove2FANotification(this);
 
-            NotificationsUtils.validate2FAuthorizationTokenFromIntentExtras(getIntent(),
-                    new NotificationsUtils.TwoFactorAuthCallback() {
-                @Override
-                public void onTokenValid(String token, String title, String message) {
-
-                    //we do this here instead of using the service in the background so we make sure
-                    //the user opens the app by using an activity (and thus unlocks the screen if locked, for security).
-                    String actionType = getIntent().getStringExtra(NotificationsProcessingService.ARG_ACTION_TYPE);
-                    if (NotificationsProcessingService.ARG_ACTION_AUTH_APPROVE.equals(actionType)) {
-                        // ping the push auth endpoint with the token, wp.com will take care of the rest!
-                        NotificationsUtils.sendTwoFactorAuthToken(token);
-                    } else {
-                        NotificationsUtils.showPushAuthAlert(WPMainActivity.this, token, title, message);
+            NotificationsUtils.validate2FAuthorizationTokenFromIntentExtras(
+                getIntent(),
+                new NotificationsUtils.TwoFactorAuthCallback() {
+                    @Override
+                    public void onTokenValid(String token, String title, String message) {
+                        // we do this here instead of using the service in the background so we make sure
+                        // the user opens the app by using an activity (and thus unlocks the screen if locked,
+                        // for security).
+                        String actionType = getIntent().getStringExtra(NotificationsProcessingService.ARG_ACTION_TYPE);
+                        if (NotificationsProcessingService.ARG_ACTION_AUTH_APPROVE.equals(actionType)) {
+                            // ping the push auth endpoint with the token, wp.com will take care of the rest!
+                            NotificationsUtils.sendTwoFactorAuthToken(token);
+                        } else {
+                            NotificationsUtils.showPushAuthAlert(WPMainActivity.this, token, title, message);
+                        }
                     }
-                }
 
-                @Override
-                public void onTokenInvalid() {
-                    // Show a toast if the user took too long to open the notification
-                    ToastUtils.showToast(WPMainActivity.this, R.string.push_auth_expired, ToastUtils.Duration.LONG);
-                    AnalyticsTracker.track(AnalyticsTracker.Stat.PUSH_AUTHENTICATION_EXPIRED);
-                }
-            });
+                    @Override
+                    public void onTokenInvalid() {
+                        // Show a toast if the user took too long to open the notification
+                        ToastUtils.showToast(WPMainActivity.this, R.string.push_auth_expired, ToastUtils.Duration.LONG);
+                        AnalyticsTracker.track(AnalyticsTracker.Stat.PUSH_AUTHENTICATION_EXPIRED);
+                    }
+                });
         }
 
         // Then hit the server
@@ -374,14 +384,14 @@ public class WPMainActivity extends AppCompatActivity {
 
         mViewPager.setCurrentItem(WPMainTabAdapter.TAB_NOTIFS);
 
-        //it could be that a notification has been tapped but has been removed by the time we reach
-        //here. It's ok to compare to <=1 as it could be zero then.
+        // it could be that a notification has been tapped but has been removed by the time we reach
+        // here. It's ok to compare to <=1 as it could be zero then.
         if (GCMMessageService.getNotificationsCount() <= 1) {
             String noteId = getIntent().getStringExtra(NotificationsListFragment.NOTE_ID_EXTRA);
             if (!TextUtils.isEmpty(noteId)) {
                 GCMMessageService.bumpPushNotificationsTappedAnalytics(noteId);
-                //if voice reply is enabled in a wearable, it will come through the remoteInput
-                //extra EXTRA_VOICE_OR_INLINE_REPLY
+                // if voice reply is enabled in a wearable, it will come through the remoteInput
+                // extra EXTRA_VOICE_OR_INLINE_REPLY
                 String voiceReply = null;
                 Bundle remoteInput = RemoteInput.getResultsFromIntent(getIntent());
                 if (remoteInput != null) {
@@ -398,16 +408,17 @@ public class WPMainActivity extends AppCompatActivity {
                     // we processed the voice reply, so we exit this function immediately
                     return;
                 } else {
-                    boolean shouldShowKeyboard = getIntent().getBooleanExtra(NotificationsListFragment.NOTE_INSTANT_REPLY_EXTRA, false);
-                    NotificationsListFragment.openNoteForReply(this, noteId, shouldShowKeyboard, null, NotesAdapter.FILTERS.FILTER_ALL);
+                    boolean shouldShowKeyboard =
+                            getIntent().getBooleanExtra(NotificationsListFragment.NOTE_INSTANT_REPLY_EXTRA, false);
+                    NotificationsListFragment
+                            .openNoteForReply(this, noteId, shouldShowKeyboard, null, NotesAdapter.FILTERS.FILTER_ALL);
                 }
-
             } else {
                 AppLog.e(T.NOTIFS, "app launched from a PN that doesn't have a note_id in it!!");
                 return;
             }
         } else {
-          // mark all tapped here
+            // mark all tapped here
             GCMMessageService.bumpPushNotificationsTappedAllAnalytics();
         }
 
@@ -419,13 +430,16 @@ public class WPMainActivity extends AppCompatActivity {
      * such as finish editing and publish, or delete the post, etc.
      */
     private void launchWithPostId(int postId, boolean isPage) {
-        if (isFinishing() || getIntent() == null) return;
+        if (isFinishing() || getIntent() == null) {
+            return;
+        }
 
         AnalyticsTracker.track(AnalyticsTracker.Stat.NOTIFICATION_PENDING_DRAFTS_TAPPED);
-        NativeNotificationsUtils.dismissNotification(PendingDraftsNotificationsUtils.makePendingDraftNotificationId(postId), this);
+        NativeNotificationsUtils
+                .dismissNotification(PendingDraftsNotificationsUtils.makePendingDraftNotificationId(postId), this);
 
         // if no specific post id passed, show the list
-        if (postId == 0 ) {
+        if (postId == 0) {
             // show list
             if (isPage) {
                 ActivityLauncher.viewCurrentBlogPages(this, getSelectedSite());
@@ -462,7 +476,7 @@ public class WPMainActivity extends AppCompatActivity {
         trackLastVisibleTab(currentItem, false);
 
         if (currentItem == WPMainTabAdapter.TAB_NOTIFS) {
-            //if we are presenting the notifications list, it's safe to clear any outstanding
+            // if we are presenting the notifications list, it's safe to clear any outstanding
             // notifications
             GCMMessageService.removeAllNotifications(this);
         }
@@ -497,7 +511,7 @@ public class WPMainActivity extends AppCompatActivity {
     }
 
     private void checkMagicLinkSignIn() {
-        if (getIntent() !=  null) {
+        if (getIntent() != null) {
             if (getIntent().getBooleanExtra(LoginActivity.MAGIC_LOGIN, false)) {
                 AnalyticsTracker.track(AnalyticsTracker.Stat.LOGIN_MAGIC_LINK_SUCCEEDED);
                 startWithNewAccount();
@@ -511,7 +525,7 @@ public class WPMainActivity extends AppCompatActivity {
                 ActivityId.trackLastActivity(ActivityId.MY_SITE);
                 if (trackAnalytics) {
                     AnalyticsUtils.trackWithSiteDetails(AnalyticsTracker.Stat.MY_SITE_ACCESSED,
-                            getSelectedSite());
+                                                        getSelectedSite());
                 }
                 break;
             case WPMainTabAdapter.TAB_READER:
@@ -543,12 +557,14 @@ public class WPMainActivity extends AppCompatActivity {
         if (resolveInfo != null && !getPackageName().equals(resolveInfo.activityInfo.name)) {
             // not set as default handler so, track this to evaluate. Note, a resolver/chooser might be the default.
             AnalyticsUtils.trackWithDefaultInterceptor(AnalyticsTracker.Stat.DEEP_LINK_NOT_DEFAULT_HANDLER,
-                    resolveInfo.activityInfo.name);
+                                                       resolveInfo.activityInfo.name);
         }
     }
 
     public void setReaderTabActive() {
-        if (isFinishing() || mTabLayout == null) return;
+        if (isFinishing() || mTabLayout == null) {
+            return;
+        }
 
         mTabLayout.setSelectedTabPosition(WPMainTabAdapter.TAB_READER);
     }
@@ -712,7 +728,8 @@ public class WPMainActivity extends AppCompatActivity {
                     ActivityLauncher.showSignupEpilogue(this, null, null, null, null, true);
                 } else {
                     AnalyticsTracker.track(AnalyticsTracker.Stat.LOGIN_MAGIC_LINK_SUCCEEDED);
-                    ActivityLauncher.showLoginEpilogue(this, true, getIntent().getIntegerArrayListExtra(ARG_OLD_SITES_IDS));
+                    ActivityLauncher
+                            .showLoginEpilogue(this, true, getIntent().getIntegerArrayListExtra(ARG_OLD_SITES_IDS));
                 }
             }
         }

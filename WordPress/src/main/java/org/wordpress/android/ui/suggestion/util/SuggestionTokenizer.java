@@ -6,7 +6,6 @@ import android.text.TextUtils;
 import android.widget.MultiAutoCompleteTextView;
 
 public class SuggestionTokenizer implements MultiAutoCompleteTextView.Tokenizer {
-
     @Override
     public CharSequence terminateToken(CharSequence text) {
         int i = text.length();
