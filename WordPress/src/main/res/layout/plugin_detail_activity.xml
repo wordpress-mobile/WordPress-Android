@@ -128,7 +128,11 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_centerVertical="true"
-                            android:orientation="vertical">
+                            android:orientation="vertical"
+                            android:layout_alignParentLeft="true"
+                            android:layout_alignParentStart="true"
+                            android:layout_toLeftOf="@+id/plugin_btn_container"
+                            android:layout_toStartOf="@+id/plugin_btn_container">
 
                             <TextView
                                 android:id="@+id/plugin_version_top"
@@ -147,11 +151,14 @@
                         </LinearLayout>
 
                         <FrameLayout
+                            android:id="@+id/plugin_btn_container"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_alignParentEnd="true"
                             android:layout_alignParentRight="true"
-                            android:layout_centerVertical="true">
+                            android:layout_centerVertical="true"
+                            android:layout_marginLeft="@dimen/margin_extra_large"
+                            android:layout_marginStart="@dimen/margin_extra_large">
 
                             <TextView
                                 android:id="@+id/plugin_btn_update"
