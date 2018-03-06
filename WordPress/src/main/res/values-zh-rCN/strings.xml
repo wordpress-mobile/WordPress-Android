@@ -955,7 +955,7 @@ Language: zh_CN
 	<string name="me_btn_support">帮助与支持</string>
 	<string name="account_settings">帐户设置</string>
 	<string name="site_picker_cant_hide_current_site">「%s」未隐藏，因为它是当前站点</string>
-	<string name="site_picker_create_dotcom">创建 WordPress.com 站点</string>
+	<string name="site_picker_create_wpcom">创建 WordPress.com 站点</string>
 	<string name="site_picker_add_self_hosted">添加自托管站点</string>
 	<string name="site_picker_edit_visibility">显示/隐藏站点</string>
 	<string name="site_picker_add_site">添加站点</string>

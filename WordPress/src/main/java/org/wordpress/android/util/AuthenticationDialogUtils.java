@@ -15,12 +15,12 @@ import org.wordpress.android.widgets.AuthErrorDialogFragment;
 public class AuthenticationDialogUtils {
     public static void showAuthErrorView(Activity activity, SiteStore siteStore, SiteModel site) {
         showAuthErrorView(activity, siteStore, AuthErrorDialogFragment.DEFAULT_RESOURCE_ID,
-                AuthErrorDialogFragment.DEFAULT_RESOURCE_ID, site);
+                          AuthErrorDialogFragment.DEFAULT_RESOURCE_ID, site);
     }
 
     public static void showAuthErrorView(Activity activity, SiteStore siteStore, int titleResId, int messageResId,
                                          SiteModel site) {
-        final String ALERT_TAG = "alert_ask_credentials";
+        final String alertTag = "alert_ask_credentials";
         if (activity.isFinishing()) {
             return;
         }
@@ -45,14 +45,14 @@ public class AuthenticationDialogUtils {
         }
 
         // abort if the dialog is already visible
-        if (activity.getFragmentManager().findFragmentByTag(ALERT_TAG) != null) {
+        if (activity.getFragmentManager().findFragmentByTag(alertTag) != null) {
             return;
         }
 
         FragmentTransaction ft = activity.getFragmentManager().beginTransaction();
         AuthErrorDialogFragment authAlert = new AuthErrorDialogFragment();
         authAlert.setArgs(titleResId, messageResId, site);
-        ft.add(authAlert, ALERT_TAG);
+        ft.add(authAlert, alertTag);
         ft.commitAllowingStateLoss();
     }
 }

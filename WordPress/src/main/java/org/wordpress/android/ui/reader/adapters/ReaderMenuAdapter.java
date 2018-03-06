@@ -18,7 +18,6 @@ import java.util.List;
  * adapter for the popup menu that appears when clicking "..." in the reader
  */
 public class ReaderMenuAdapter extends BaseAdapter {
-
     private final LayoutInflater mInflater;
     private final List<Integer> mMenuItems = new ArrayList<>();
 
@@ -81,23 +80,23 @@ public class ReaderMenuAdapter extends BaseAdapter {
                 return convertView;
         }
 
-        holder.text.setText(textRes);
-        holder.text.setTextColor(convertView.getContext().getResources().getColor(textColorRes));
+        holder.mText.setText(textRes);
+        holder.mText.setTextColor(convertView.getContext().getResources().getColor(textColorRes));
 
         if (iconRes != 0) {
-            holder.icon.setImageResource(iconRes);
+            holder.mIcon.setImageResource(iconRes);
         }
 
         return convertView;
     }
 
     class ReaderMenuHolder {
-        private final TextView text;
-        private final ImageView icon;
+        private final TextView mText;
+        private final ImageView mIcon;
 
         ReaderMenuHolder(View view) {
-            text = (TextView) view.findViewById(R.id.text);
-            icon = (ImageView) view.findViewById(R.id.image);
+            mText = (TextView) view.findViewById(R.id.text);
+            mIcon = (ImageView) view.findViewById(R.id.image);
         }
     }
 }

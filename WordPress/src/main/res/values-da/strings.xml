@@ -89,7 +89,7 @@ Language: da_DK
 	<string name="account_settings">Kontoindstillinger</string>
 	<string name="me_btn_support">Hjælp &amp; Support</string>
 	<string name="site_picker_cant_hide_current_site">\"%s\" blev ikke skjult, fordi det er det aktuelle websted</string>
-	<string name="site_picker_create_dotcom">Opret websted på WordPress.com</string>
+	<string name="site_picker_create_wpcom">Opret websted på WordPress.com</string>
 	<string name="site_picker_add_site">Tilføj websted</string>
 	<string name="site_picker_add_self_hosted">Tilføj websted fra egen udbyder</string>
 	<string name="site_picker_edit_visibility">Vis/skjul websteder</string>

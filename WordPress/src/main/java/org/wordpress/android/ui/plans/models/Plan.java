@@ -43,7 +43,7 @@ public class Plan implements Serializable {
     private String mSupportDocument;
     private String mCapability;
     private ArrayList<Integer> mBundleProductIds;
-    private final ArrayList<PlanFeaturesHighlightSection> mFeaturesHighlightSections =  new ArrayList<>();
+    private final ArrayList<PlanFeaturesHighlightSection> mFeaturesHighlightSections = new ArrayList<>();
 
     // used to link with an actual product on the Store (ie: Used to load the price from the Store).
     private String mAndroidSKU;
@@ -68,7 +68,7 @@ public class Plan implements Serializable {
         JSONObject priceJSONObject = planJSONObject.getJSONObject("prices");
         JSONArray priceKeys = priceJSONObject.names();
         if (priceKeys != null) {
-            for (int i=0; i < priceKeys.length(); i ++) {
+            for (int i = 0; i < priceKeys.length(); i++) {
                 String currentKey = priceKeys.getString(i);
                 int currentPrice = priceJSONObject.getInt(currentKey);
                 mPrices.put(currentKey, currentPrice);
@@ -104,7 +104,7 @@ public class Plan implements Serializable {
         if (planJSONObject.has("bundle_product_ids")) {
             JSONArray bundleIDS = planJSONObject.getJSONArray("bundle_product_ids");
             mBundleProductIds = new ArrayList<>(bundleIDS.length());
-            for (int i=0; i < bundleIDS.length(); i ++) {
+            for (int i = 0; i < bundleIDS.length(); i++) {
                 int currentBundleID = bundleIDS.getInt(i);
                 mBundleProductIds.add(currentBundleID);
             }
@@ -112,10 +112,10 @@ public class Plan implements Serializable {
 
         if (planJSONObject.has("features_highlight")) {
             JSONArray featuresHighlightSections = planJSONObject.getJSONArray("features_highlight");
-            for (int i=0; i < featuresHighlightSections.length(); i++) {
+            for (int i = 0; i < featuresHighlightSections.length(); i++) {
                 mFeaturesHighlightSections.add(
                         new PlanFeaturesHighlightSection(featuresHighlightSections.getJSONObject(i))
-                );
+                                              );
             }
         }
 
@@ -239,9 +239,11 @@ public class Plan implements Serializable {
     public String getIconUrl() {
         return StringUtils.notNullStr(mIconUrl);
     }
+
     public void setIconUrl(String iconUrl) {
         mIconUrl = StringUtils.notNullStr(iconUrl);
     }
+
     public boolean hasIconUrl() {
         return !TextUtils.isEmpty(mIconUrl);
     }

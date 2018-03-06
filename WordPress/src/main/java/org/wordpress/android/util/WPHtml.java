@@ -7,7 +7,7 @@ package org.wordpress.android.util;
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *      http://www.apache.org/licenses/LICENSE-2.0
+ * http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -55,7 +55,7 @@ public class WPHtml {
     /**
      * Retrieves images for HTML &lt;img&gt; tags.
      */
-    public static interface ImageGetter {
+    public interface ImageGetter {
         /**
          * This method is called when the HTML parser encounters an &lt;img&gt;
          * tag. The <code>source</code> argument is the string from the "src"
@@ -64,22 +64,22 @@ public class WPHtml {
          * sure you call setBounds() on your Drawable if it doesn't already have
          * its bounds set.
          */
-        public Drawable getDrawable(String source);
+        Drawable getDrawable(String source);
     }
 
     /**
      * Is notified when HTML tags are encountered that the parser does not know
      * how to interpret.
      */
-    public static interface TagHandler {
+    public interface TagHandler {
         /**
          * This method will be called whenn the HTML parser encounters a tag
          * that it does not know how to interpret.
          *
          * @param mysteryTagContent
          */
-        public void handleTag(boolean opening, String tag, Editable output,
-                XMLReader xmlReader, String mysteryTagContent);
+        void handleTag(boolean opening, String tag, Editable output,
+                       XMLReader xmlReader, String mysteryTagContent);
     }
 
     private WPHtml() {
@@ -89,7 +89,7 @@ public class WPHtml {
      * Returns displayable styled text from the provided HTML string. Any
      * &lt;img&gt; tags in the HTML will display as a generic replacement image
      * which your program can then go through and replace with real images.
-     *
+     * <p>
      * <p>
      * This uses TagSoup to handle real HTML, including all of the brokenness
      * found in the wild.
@@ -103,7 +103,7 @@ public class WPHtml {
      * preloaded by the zygote, or b) not loaded until absolutely necessary.
      */
     private static class HtmlParser {
-        private static final HTMLSchema schema = new HTMLSchema();
+        private static final HTMLSchema HTML_SCHEMA = new HTMLSchema();
     }
 
     /**
@@ -112,16 +112,16 @@ public class WPHtml {
      * request a representation of the image (use null if you don't want this)
      * and the specified TagHandler to handle unknown tags (specify null if you
      * don't want this).
-     *
+     * <p>
      * <p>
      * This uses TagSoup to handle real HTML, including all of the brokenness
      * found in the wild.
      */
     public static Spanned fromHtml(String source, ImageGetter imageGetter,
-            TagHandler tagHandler, Context ctx, PostModel post, int maxImageWidth) {
+                                   TagHandler tagHandler, Context ctx, PostModel post, int maxImageWidth) {
         Parser parser = new Parser();
         try {
-            parser.setProperty(Parser.schemaProperty, HtmlParser.schema);
+            parser.setProperty(Parser.schemaProperty, HtmlParser.HTML_SCHEMA);
         } catch (org.xml.sax.SAXNotRecognizedException e) {
             // Should not happen.
             throw new RuntimeException(e);
@@ -131,7 +131,8 @@ public class WPHtml {
         }
 
         HtmlToSpannedConverter converter = new HtmlToSpannedConverter(source,
-                imageGetter, tagHandler, parser, ctx, post, maxImageWidth);
+                                                                      imageGetter, tagHandler, parser, ctx, post,
+                                                                      maxImageWidth);
         return converter.convert();
     }
 
@@ -183,7 +184,7 @@ public class WPHtml {
 
     @SuppressWarnings("unused")
     private static void withinDiv(StringBuilder out, Spanned text, int start,
-            int end) {
+                                  int end) {
         int next;
         for (int i = start; i < end; i = next) {
             next = text.nextSpanTransition(i, end, QuoteSpan.class);
@@ -202,7 +203,7 @@ public class WPHtml {
     }
 
     private static void withinBlockquote(StringBuilder out, Spanned text,
-            int start, int end) {
+                                         int start, int end) {
         out.append("<p>");
 
         int next;
@@ -226,12 +227,12 @@ public class WPHtml {
     }
 
     private static void withinParagraph(StringBuilder out, Spanned text,
-            int start, int end, int nl, boolean last) {
+                                        int start, int end, int nl, boolean last) {
         int next;
         for (int i = start; i < end; i = next) {
             next = text.nextSpanTransition(i, end, CharacterStyle.class);
             CharacterStyle[] style = text.getSpans(i, next,
-                    CharacterStyle.class);
+                                                   CharacterStyle.class);
 
             for (int j = 0; j < style.length; j++) {
                 if (style[j] instanceof StyleSpan) {
@@ -270,14 +271,15 @@ public class WPHtml {
                 }
                 if (style[j] instanceof MediaGalleryImageSpan) {
                     out.append(getGalleryShortcode((MediaGalleryImageSpan) style[j]));
-                } else if (style[j] instanceof WPImageSpan && ((WPImageSpan) style[j]).getMediaFile().getMediaId() != null) {
+                } else if (style[j] instanceof WPImageSpan
+                           && ((WPImageSpan) style[j]).getMediaFile().getMediaId() != null) {
                     out.append(getContent((WPImageSpan) style[j]));
                 } else if (style[j] instanceof WPImageSpan) {
                     out.append("<img src=\"");
                     out.append(((WPImageSpan) style[j]).getSource());
                     out.append("\" android-uri=\""
-                            + ((WPImageSpan) style[j]).getImageSource()
-                                    .toString() + "\"");
+                               + ((WPImageSpan) style[j]).getImageSource()
+                                                         .toString() + "\"");
                     out.append(" />");
                     // Don't output the dummy character underlying the image.
                     i = next;
@@ -291,7 +293,7 @@ public class WPHtml {
                     out.append("<font color =\"#");
                     String color = Integer
                             .toHexString(((ForegroundColorSpan) style[j])
-                                    .getForegroundColor() + 0x01000000);
+                                                 .getForegroundColor() + 0x01000000);
                     while (color.length() < 6) {
                         color = "0" + color;
                     }
@@ -359,34 +361,42 @@ public class WPHtml {
         }
     }
 
-    /** Get gallery shortcode for a MediaGalleryImageSpan */
+    /**
+     * Get gallery shortcode for a MediaGalleryImageSpan
+     */
     public static String getGalleryShortcode(MediaGalleryImageSpan gallerySpan) {
         String shortcode = "";
         MediaGallery gallery = gallerySpan.getMediaGallery();
         shortcode += "[gallery ";
-        if (gallery.isRandom())
+        if (gallery.isRandom()) {
             shortcode += " orderby=\"rand\"";
-        if (gallery.getType().equals(""))
+        }
+        if (gallery.getType().equals("")) {
             shortcode += " columns=\"" + gallery.getNumColumns() + "\"";
-        else
+        } else {
             shortcode += " type=\"" + gallery.getType() + "\"";
+        }
         shortcode += " ids=\"" + gallery.getIdsStr() + "\"";
         shortcode += "]";
 
         return shortcode;
     }
 
-    /** Retrieve an image span content for a media file that exists on the server **/
+    /**
+     * Retrieve an image span content for a media file that exists on the server
+     **/
     public static String getContent(WPImageSpan imageSpan) {
         // based on PostUploadService
 
         String content = "";
         MediaFile mediaFile = imageSpan.getMediaFile();
-        if (mediaFile == null)
+        if (mediaFile == null) {
             return content;
+        }
         String mediaId = mediaFile.getMediaId();
-        if (mediaId == null || mediaId.length() == 0)
+        if (mediaId == null || mediaId.length() == 0) {
             return content;
+        }
 
         boolean isVideo = mediaFile.isVideo();
         String url = imageSpan.getImageSource().toString();
@@ -398,24 +408,26 @@ public class WPHtml {
                 int xRes = mediaFile.getWidth();
                 int yRes = mediaFile.getHeight();
                 String mimeType = mediaFile.getMimeType();
-                content = String.format(Locale.US, "<video width=\"%s\" height=\"%s\" controls=\"controls\"><source src=\"%s\" type=\"%s\" /><a href=\"%s\">Click to view video</a>.</video>",
+                content = String.format(Locale.US,
+                        "<video width=\"%s\" height=\"%s\" controls=\"controls\">"
+                        + "<source src=\"%s\" type=\"%s\" /><a href=\"%s\">Click to view video</a>.</video>",
                         xRes, yRes, url, mimeType, url);
             }
         } else {
             String alignment = "";
             switch (mediaFile.getHorizontalAlignment()) {
-            case 0:
-                alignment = "alignnone";
-                break;
-            case 1:
-                alignment = "alignleft";
-                break;
-            case 2:
-                alignment = "aligncenter";
-                break;
-            case 3:
-                alignment = "alignright";
-                break;
+                case 0:
+                    alignment = "alignnone";
+                    break;
+                case 1:
+                    alignment = "alignleft";
+                    break;
+                case 2:
+                    alignment = "aligncenter";
+                    break;
+                case 3:
+                    alignment = "alignright";
+                    break;
             }
             String alignmentCSS = "class=\"" + alignment + " size-full\" ";
             String title = mediaFile.getTitle();
@@ -424,12 +436,12 @@ public class WPHtml {
 
             String inlineCSS = " ";
             content = content + "<a href=\"" + url + "\"><img" + inlineCSS + "title=\"" + title + "\" "
-                    + alignmentCSS + "alt=\"image\" src=\"" + url + "?w=" + width +"\" /></a>";
+                      + alignmentCSS + "alt=\"image\" src=\"" + url + "?w=" + width + "\" /></a>";
 
             if (!caption.equals("")) {
                 content = String.format(Locale.US,
-                        "[caption id=\"\" align=\"%s\" width=\"%d\"]%s%s[/caption]",
-                        alignment, width, content, TextUtils.htmlEncode(caption));
+                                        "[caption id=\"\" align=\"%s\" width=\"%d\"]%s%s[/caption]",
+                                        alignment, width, content, TextUtils.htmlEncode(caption));
             }
         }
 
@@ -437,25 +449,24 @@ public class WPHtml {
     }
 
     private static void processWPImage(StringBuilder out, Spanned text,
-            int start, int end) {
+                                       int start, int end) {
         int next;
 
         for (int i = start; i < end; i = next) {
             next = text.nextSpanTransition(i, end, SpannableString.class);
             SpannableString[] images = text.getSpans(i, next,
-                    SpannableString.class);
+                                                     SpannableString.class);
 
             for (SpannableString image : images) {
                 out.append(image.toString());
             }
 
             withinStyle(out, text, i, next);
-
         }
     }
 
     private static void withinStyle(StringBuilder out, Spanned text, int start,
-            int end) {
+                                    int end) {
         for (int i = start; i < end; i++) {
             char c = text.charAt(i);
 

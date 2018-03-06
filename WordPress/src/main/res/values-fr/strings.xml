@@ -1045,7 +1045,7 @@ Language: fr
 	<string name="site_picker_cant_hide_current_site">\"%s\" n\'a pas été caché, c\'est le site selectionné</string>
 	<string name="me_btn_support">Aide &amp; Support</string>
 	<string name="account_settings">Paramètres du compte</string>
-	<string name="site_picker_create_dotcom">Créer un site WordPress.com</string>
+	<string name="site_picker_create_wpcom">Créer un site WordPress.com</string>
 	<string name="site_picker_edit_visibility">Montrer/cacher les sites</string>
 	<string name="site_picker_add_self_hosted">Ajouter un site auto-hébergé</string>
 	<string name="site_picker_add_site">Ajouter un site</string>

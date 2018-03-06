@@ -19,18 +19,18 @@ public class SuggestionTable {
 
     public static void createTables(SQLiteDatabase db) {
         db.execSQL("CREATE TABLE IF NOT EXISTS " + SUGGESTIONS_TABLE + " ("
-                + "    site_id              INTEGER DEFAULT 0,"
-                + "    user_login           TEXT,"
-                + "    display_name         TEXT,"
-                + "    image_url            TEXT,"
-                + "    taxonomy             TEXT,"
-                + "    PRIMARY KEY (user_login)"
-                + " );");
+                   + " site_id INTEGER DEFAULT 0,"
+                   + " user_login TEXT,"
+                   + " display_name TEXT,"
+                   + " image_url TEXT,"
+                   + " taxonomy TEXT,"
+                   + " PRIMARY KEY (user_login)"
+                   + " );");
         db.execSQL("CREATE TABLE IF NOT EXISTS " + TAXONOMY_TABLE + " ("
-                + "    site_id              INTEGER DEFAULT 0,"
-                + "    tag                  TEXT,"
-                + "    PRIMARY KEY (site_id, tag)"
-                + " );");
+                   + " site_id INTEGER DEFAULT 0,"
+                   + " tag TEXT,"
+                   + " PRIMARY KEY (site_id, tag)"
+                   + " );");
     }
 
     private static void dropTables(SQLiteDatabase db) {
@@ -47,6 +47,7 @@ public class SuggestionTable {
     private static SQLiteDatabase getReadableDb() {
         return WordPress.wpDB.getDatabase();
     }
+
     private static SQLiteDatabase getWritableDb() {
         return WordPress.wpDB.getDatabase();
     }
@@ -61,16 +62,18 @@ public class SuggestionTable {
             }
         }
     }
+
     public static void addSuggestion(final Suggestion suggestion) {
-        if (suggestion == null)
+        if (suggestion == null) {
             return;
+        }
 
         ContentValues values = new ContentValues();
-        values.put("site_id",           suggestion.siteID);
-        values.put("user_login",        suggestion.getUserLogin());
-        values.put("display_name",      suggestion.getDisplayName());
-        values.put("image_url",         suggestion.getImageUrl());
-        values.put("taxonomy",          suggestion.getTaxonomy());
+        values.put("site_id", suggestion.siteID);
+        values.put("user_login", suggestion.getUserLogin());
+        values.put("display_name", suggestion.getDisplayName());
+        values.put("image_url", suggestion.getImageUrl());
+        values.put("taxonomy", suggestion.getTaxonomy());
 
         getWritableDb().insertWithOnConflict(SUGGESTIONS_TABLE, null, values, SQLiteDatabase.CONFLICT_REPLACE);
     }
@@ -79,7 +82,8 @@ public class SuggestionTable {
         List<Suggestion> suggestions = new ArrayList<Suggestion>();
 
         String[] args = {Long.toString(siteId)};
-        Cursor c = getReadableDb().rawQuery("SELECT * FROM " + SUGGESTIONS_TABLE + " WHERE site_id=? ORDER BY user_login ASC", args);
+        Cursor c = getReadableDb()
+                .rawQuery("SELECT * FROM " + SUGGESTIONS_TABLE + " WHERE site_id=? ORDER BY user_login ASC", args);
 
         try {
             if (c.moveToFirst()) {
@@ -127,12 +131,13 @@ public class SuggestionTable {
     }
 
     public static void addTag(final Tag tag) {
-        if (tag == null)
+        if (tag == null) {
             return;
+        }
 
         ContentValues values = new ContentValues();
-        values.put("site_id",           tag.siteID);
-        values.put("tag",               tag.getTag());
+        values.put("site_id", tag.siteID);
+        values.put("tag", tag.getTag());
 
         getWritableDb().insertWithOnConflict(TAXONOMY_TABLE, null, values, SQLiteDatabase.CONFLICT_REPLACE);
     }
@@ -141,7 +146,8 @@ public class SuggestionTable {
         List<Tag> tags = new ArrayList<Tag>();
 
         String[] args = {Long.toString(siteId)};
-        Cursor c = getReadableDb().rawQuery("SELECT * FROM " + TAXONOMY_TABLE + " WHERE site_id=? ORDER BY tag ASC", args);
+        Cursor c =
+                getReadableDb().rawQuery("SELECT * FROM " + TAXONOMY_TABLE + " WHERE site_id=? ORDER BY tag ASC", args);
 
         try {
             if (c.moveToFirst()) {

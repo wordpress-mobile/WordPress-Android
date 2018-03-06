@@ -412,7 +412,8 @@ public class PluginDetailActivity extends AppCompatActivity {
             if (TextUtils.isEmpty(mSitePlugin.getAuthorUrl())) {
                 mByLineTextView.setText(String.format(getString(R.string.plugin_byline), mSitePlugin.getAuthorName()));
             } else {
-                String authorLink = "<a href='" + mSitePlugin.getAuthorUrl() + "'>" + mSitePlugin.getAuthorName() + "</a>";
+                String authorLink =
+                        "<a href='" + mSitePlugin.getAuthorUrl() + "'>" + mSitePlugin.getAuthorName() + "</a>";
                 String byline = String.format(getString(R.string.plugin_byline), authorLink);
                 mByLineTextView.setMovementMethod(WPLinkMovementMethod.getInstance());
                 mByLineTextView.setText(Html.fromHtml(byline));
@@ -449,7 +450,8 @@ public class PluginDetailActivity extends AppCompatActivity {
 
             if (PluginUtils.isUpdateAvailable(mSitePlugin, mWPOrgPlugin)) {
                 installedVersion = String.format(getString(R.string.plugin_installed_version), pluginVersion);
-                String availableVersion = String.format(getString(R.string.plugin_available_version), mWPOrgPlugin.getVersion());
+                String availableVersion =
+                        String.format(getString(R.string.plugin_available_version), mWPOrgPlugin.getVersion());
                 mVersionTopTextView.setText(availableVersion);
                 mVersionBottomTextView.setText(installedVersion);
                 mVersionBottomTextView.setVisibility(View.VISIBLE);
@@ -473,7 +475,8 @@ public class PluginDetailActivity extends AppCompatActivity {
             boolean isUpdateAvailable = PluginUtils.isUpdateAvailable(mSitePlugin, mWPOrgPlugin);
             boolean canUpdate = isUpdateAvailable && !mIsUpdatingPlugin;
             mUpdateButton.setVisibility(canUpdate ? View.VISIBLE : View.GONE);
-            findViewById(R.id.plugin_installed).setVisibility(isUpdateAvailable || mIsUpdatingPlugin ? View.GONE : View.VISIBLE);
+            findViewById(R.id.plugin_installed)
+                    .setVisibility(isUpdateAvailable || mIsUpdatingPlugin ? View.GONE : View.VISIBLE);
             if (canUpdate) {
                 mUpdateButton.setOnClickListener(new View.OnClickListener() {
                     @Override
@@ -497,7 +500,9 @@ public class PluginDetailActivity extends AppCompatActivity {
     }
 
     private void refreshRatingsViews() {
-        if (mWPOrgPlugin == null) return;
+        if (mWPOrgPlugin == null) {
+            return;
+        }
 
         int numRatingsTotal = mWPOrgPlugin.getNumberOfRatings();
 
@@ -544,11 +549,13 @@ public class PluginDetailActivity extends AppCompatActivity {
     }
 
     private void showPluginInfoPopup() {
-        if (mWPOrgPlugin == null) return;
+        if (mWPOrgPlugin == null) {
+            return;
+        }
 
         List<Map<String, String>> data = new ArrayList<>();
-        int[] to = { R.id.text1, R.id.text2 };
-        String[] from = { KEY_LABEL, KEY_TEXT };
+        int[] to = {R.id.text1, R.id.text2};
+        String[] from = {KEY_LABEL, KEY_TEXT};
         String[] labels = {
                 getString(R.string.plugin_info_version),
                 getString(R.string.plugin_info_lastupdated),
@@ -556,31 +563,31 @@ public class PluginDetailActivity extends AppCompatActivity {
                 getString(R.string.plugin_info_your_version)
         };
 
-        Map<String,String> mapVersion = new HashMap<>();
+        Map<String, String> mapVersion = new HashMap<>();
         mapVersion.put(KEY_LABEL, labels[0]);
         mapVersion.put(KEY_TEXT, StringUtils.notNullStr(mWPOrgPlugin.getVersion()));
         data.add(mapVersion);
 
-        Map<String,String> mapUpdated = new HashMap<>();
+        Map<String, String> mapUpdated = new HashMap<>();
         mapUpdated.put(KEY_LABEL, labels[1]);
         mapUpdated.put(KEY_TEXT, timespanFromUpdateDate(StringUtils.notNullStr(mWPOrgPlugin.getLastUpdated())));
         data.add(mapUpdated);
 
-        Map<String,String> mapRequiredVer = new HashMap<>();
+        Map<String, String> mapRequiredVer = new HashMap<>();
         mapRequiredVer.put(KEY_LABEL, labels[2]);
         mapRequiredVer.put(KEY_TEXT, StringUtils.notNullStr(mWPOrgPlugin.getRequiredWordPressVersion()));
         data.add(mapRequiredVer);
 
-        Map<String,String> mapThisVer = new HashMap<>();
+        Map<String, String> mapThisVer = new HashMap<>();
         mapThisVer.put(KEY_LABEL, labels[3]);
         mapThisVer.put(KEY_TEXT, !TextUtils.isEmpty(mSite.getSoftwareVersion()) ? mSite.getSoftwareVersion() : "?");
         data.add(mapThisVer);
 
         SimpleAdapter adapter = new SimpleAdapter(this,
-                data,
-                R.layout.plugin_info_row,
-                from,
-                to);
+                                                  data,
+                                                  R.layout.plugin_info_row,
+                                                  from,
+                                                  to);
 
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setCancelable(true);
@@ -591,7 +598,6 @@ public class PluginDetailActivity extends AppCompatActivity {
             }
         });
         builder.show();
-
     }
 
     private void toggleText(@NonNull final TextView textView, @NonNull ImageView chevron) {
@@ -631,8 +637,8 @@ public class PluginDetailActivity extends AppCompatActivity {
         AlertDialog.Builder builder = new AlertDialog.Builder(this, R.style.Calypso_AlertDialog);
         builder.setTitle(getResources().getText(R.string.plugin_remove_dialog_title));
         String confirmationMessage = getString(R.string.plugin_remove_dialog_message,
-                mSitePlugin.getDisplayName(),
-                SiteUtils.getSiteNameOrHomeURL(mSite));
+                                               mSitePlugin.getDisplayName(),
+                                               SiteUtils.getSiteNameOrHomeURL(mSite));
         builder.setMessage(confirmationMessage);
         builder.setPositiveButton(R.string.remove, new DialogInterface.OnClickListener() {
             @Override
@@ -655,22 +661,22 @@ public class PluginDetailActivity extends AppCompatActivity {
 
     private void showSuccessfulUpdateSnackbar() {
         Snackbar.make(mContainer,
-                getString(R.string.plugin_updated_successfully, mSitePlugin.getDisplayName()),
-                Snackbar.LENGTH_LONG)
+                      getString(R.string.plugin_updated_successfully, mSitePlugin.getDisplayName()),
+                      Snackbar.LENGTH_LONG)
                 .show();
     }
 
     private void showSuccessfulInstallSnackbar() {
         Snackbar.make(mContainer,
-                getString(R.string.plugin_installed_successfully, mWPOrgPlugin.getName()),
-                Snackbar.LENGTH_LONG)
+                      getString(R.string.plugin_installed_successfully, mWPOrgPlugin.getName()),
+                      Snackbar.LENGTH_LONG)
                 .show();
     }
 
     private void showUpdateFailedSnackbar() {
         Snackbar.make(mContainer,
-                getString(R.string.plugin_updated_failed, mSitePlugin.getDisplayName()),
-                Snackbar.LENGTH_LONG)
+                      getString(R.string.plugin_updated_failed, mSitePlugin.getDisplayName()),
+                      Snackbar.LENGTH_LONG)
                 .setAction(R.string.retry, new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
@@ -682,8 +688,8 @@ public class PluginDetailActivity extends AppCompatActivity {
 
     private void showInstallFailedSnackbar() {
         Snackbar.make(mContainer,
-                getString(R.string.plugin_installed_failed, mWPOrgPlugin.getName()),
-                Snackbar.LENGTH_LONG)
+                      getString(R.string.plugin_installed_failed, mWPOrgPlugin.getName()),
+                      Snackbar.LENGTH_LONG)
                 .setAction(R.string.retry, new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
@@ -695,8 +701,8 @@ public class PluginDetailActivity extends AppCompatActivity {
 
     private void showPluginRemoveFailedSnackbar() {
         Snackbar.make(mContainer,
-                getString(R.string.plugin_remove_failed, mSitePlugin.getDisplayName()),
-                Snackbar.LENGTH_LONG)
+                      getString(R.string.plugin_remove_failed, mSitePlugin.getDisplayName()),
+                      Snackbar.LENGTH_LONG)
                 .show();
     }
 
@@ -787,16 +793,18 @@ public class PluginDetailActivity extends AppCompatActivity {
     @SuppressWarnings("unused")
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onSitePluginConfigured(OnSitePluginConfigured event) {
-        if (isFinishing()) return;
+        if (isFinishing()) {
+            return;
+        }
 
         mIsConfiguringPlugin = false;
         if (event.isError()) {
             // The plugin was already removed in remote, there is no need to show an error to the user
-            if (mIsRemovingPlugin &&
-                    event.error.type == PluginStore.ConfigureSitePluginErrorType.UNKNOWN_PLUGIN) {
+            if (mIsRemovingPlugin
+                && event.error.type == PluginStore.ConfigureSitePluginErrorType.UNKNOWN_PLUGIN) {
                 // We still need to dispatch the remove plugin action to remove the local copy
-                // and complete the flow gracefully
-                // We can ignore `!mSitePlugin.isActive()` check here since the plugin is not installed anymore on remote
+                // and complete the flow gracefully. We can ignore `!mSitePlugin.isActive()` check here since the
+                // plugin is not installed anymore on remote
                 dispatchRemovePluginAction();
                 return;
             }
@@ -839,12 +847,14 @@ public class PluginDetailActivity extends AppCompatActivity {
     @SuppressWarnings("unused")
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onWPOrgPluginFetched(PluginStore.OnWPOrgPluginFetched event) {
-        if (isFinishing()) return;
+        if (isFinishing()) {
+            return;
+        }
 
         showFetchProgress(false);
         if (event.isError()) {
             AppLog.e(AppLog.T.PLUGINS, "An error occurred while fetching wporg plugin with type: "
-                    + event.error.type);
+                                       + event.error.type);
         } else {
             mWPOrgPlugin = mPluginStore.getWPOrgPluginBySlug(event.pluginSlug);
             refreshViews();
@@ -854,12 +864,14 @@ public class PluginDetailActivity extends AppCompatActivity {
     @SuppressWarnings("unused")
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onSitePluginUpdated(OnSitePluginUpdated event) {
-        if (isFinishing()) return;
+        if (isFinishing()) {
+            return;
+        }
 
         mIsUpdatingPlugin = false;
         if (event.isError()) {
             AppLog.e(AppLog.T.PLUGINS, "An error occurred while updating the plugin with type: "
-                    + event.error.type);
+                                       + event.error.type);
             refreshPluginVersionViews();
             showUpdateFailedSnackbar();
             return;
@@ -874,13 +886,15 @@ public class PluginDetailActivity extends AppCompatActivity {
 
     @SuppressWarnings("unused")
     @Subscribe(threadMode = ThreadMode.MAIN)
-    public void OnSitePluginInstalled(OnSitePluginInstalled event) {
-        if (isFinishing()) return;
+    public void onSitePluginInstalled(OnSitePluginInstalled event) {
+        if (isFinishing()) {
+            return;
+        }
 
         mIsUpdatingPlugin = false;
         if (event.isError()) {
             AppLog.e(AppLog.T.PLUGINS, "An error occurred while installing the plugin with type: "
-                    + event.error.type);
+                                       + event.error.type);
             refreshPluginVersionViews();
             showInstallFailedSnackbar();
             return;
@@ -897,15 +911,17 @@ public class PluginDetailActivity extends AppCompatActivity {
     @SuppressWarnings("unused")
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onSitePluginDeleted(OnSitePluginDeleted event) {
-        if (isFinishing()) return;
+        if (isFinishing()) {
+            return;
+        }
 
         mIsRemovingPlugin = false;
         cancelRemovePluginProgressDialog();
         if (event.isError()) {
             AppLog.e(AppLog.T.PLUGINS, "An error occurred while removing the plugin with type: "
-                    + event.error.type);
+                                       + event.error.type);
             String toastMessage = getString(R.string.plugin_updated_failed_detailed,
-                    mSitePlugin.getDisplayName(), event.error.message);
+                                            mSitePlugin.getDisplayName(), event.error.message);
             ToastUtils.showToast(this, toastMessage, Duration.LONG);
             return;
         }
@@ -951,15 +967,15 @@ public class PluginDetailActivity extends AppCompatActivity {
         }
         // Disable removing akismet and vaultpress for AT sites
         return !mSite.isAutomatedTransfer()
-                || (!pluginName.equals("akismet/akismet") && !pluginName.equals("vaultpress/vaultpress"));
+               || (!pluginName.equals("akismet/akismet") && !pluginName.equals("vaultpress/vaultpress"));
     }
 
     // only show settings for active plugins on .org sites
     private boolean canShowSettings() {
         return mSitePlugin != null
-                && mSitePlugin.isActive()
-                && !mSite.isJetpackConnected()
-                && !TextUtils.isEmpty(mSitePlugin.getSettingsUrl());
+               && mSitePlugin.isActive()
+               && !mSite.isJetpackConnected()
+               && !TextUtils.isEmpty(mSitePlugin.getSettingsUrl());
     }
 
     private boolean isPluginStateChangedSinceLastConfigurationDispatch() {
@@ -973,5 +989,4 @@ public class PluginDetailActivity extends AppCompatActivity {
         mSitePlugin = mPluginStore.getSitePluginByName(mSite, getPluginName());
         return mSitePlugin != null;
     }
-
 }

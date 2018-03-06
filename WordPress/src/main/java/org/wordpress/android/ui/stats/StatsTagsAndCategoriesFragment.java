@@ -27,12 +27,14 @@ public class StatsTagsAndCategoriesFragment extends StatsAbstractListFragment {
     protected boolean hasDataAvailable() {
         return mTagsContainer != null;
     }
+
     @Override
     protected void saveStatsData(Bundle outState) {
         if (mTagsContainer != null) {
             outState.putSerializable(ARG_REST_RESPONSE, mTagsContainer);
         }
     }
+
     @Override
     protected void restoreStatsData(Bundle savedInstanceState) {
         if (savedInstanceState.containsKey(ARG_REST_RESPONSE)) {
@@ -70,7 +72,8 @@ public class StatsTagsAndCategoriesFragment extends StatsAbstractListFragment {
 
         if (hasTags()) {
             BaseExpandableListAdapter adapter = new MyExpandableListAdapter(getActivity(), getTags());
-            StatsUIHelper.reloadGroupViews(getActivity(), adapter, mGroupIdToExpandedMap, mList, getMaxNumberOfItemsToShowInList());
+            StatsUIHelper.reloadGroupViews(getActivity(), adapter, mGroupIdToExpandedMap, mList,
+                                           getMaxNumberOfItemsToShowInList());
             showHideNoResultsUI(false);
         } else {
             showHideNoResultsUI(true);
@@ -79,8 +82,8 @@ public class StatsTagsAndCategoriesFragment extends StatsAbstractListFragment {
 
     private boolean hasTags() {
         return mTagsContainer != null
-                && mTagsContainer.getTags() != null
-                && mTagsContainer.getTags().size() > 0;
+               && mTagsContainer.getTags() != null
+               && mTagsContainer.getTags().size() > 0;
     }
 
     private List<TagsModel> getTags() {
@@ -111,14 +114,17 @@ public class StatsTagsAndCategoriesFragment extends StatsAbstractListFragment {
     protected int getEntryLabelResId() {
         return R.string.stats_entry_tags_and_categories;
     }
+
     @Override
     protected int getTotalsLabelResId() {
         return R.string.stats_totals_views;
     }
+
     @Override
     protected int getEmptyLabelTitleResId() {
         return R.string.stats_empty_tags_and_categories;
     }
+
     @Override
     protected int getEmptyLabelDescResId() {
         return R.string.stats_empty_tags_and_categories_desc;
@@ -126,16 +132,16 @@ public class StatsTagsAndCategoriesFragment extends StatsAbstractListFragment {
 
     private class MyExpandableListAdapter extends BaseExpandableListAdapter {
         public final LayoutInflater inflater;
-        private final List<TagsModel> groups;
+        private final List<TagsModel> mGroups;
 
-        public MyExpandableListAdapter(Context context, List<TagsModel> groups) {
-            this.groups = groups;
+        MyExpandableListAdapter(Context context, List<TagsModel> groups) {
+            mGroups = groups;
             this.inflater = LayoutInflater.from(context);
         }
 
         @Override
         public Object getChild(int groupPosition, int childPosition) {
-            TagsModel currentGroup = groups.get(groupPosition);
+            TagsModel currentGroup = mGroups.get(groupPosition);
             List<TagModel> results = currentGroup.getTags();
             return results.get(childPosition);
         }
@@ -148,7 +154,6 @@ public class StatsTagsAndCategoriesFragment extends StatsAbstractListFragment {
         @Override
         public View getChildView(int groupPosition, final int childPosition,
                                  boolean isLastChild, View convertView, ViewGroup parent) {
-
             final TagModel children = (TagModel) getChild(groupPosition, childPosition);
 
             if (convertView == null) {
@@ -156,7 +161,7 @@ public class StatsTagsAndCategoriesFragment extends StatsAbstractListFragment {
                 // configure view holder
                 StatsViewHolder viewHolder = new StatsViewHolder(convertView);
 
-                //Make the picture smaller (same size of the chevron) only for tag
+                // Make the picture smaller (same size of the chevron) only for tag
                 ViewGroup.LayoutParams params = viewHolder.networkImageView.getLayoutParams();
                 params.width = DisplayUtils.dpToPx(convertView.getContext(), 12);
                 params.height = params.width;
@@ -182,9 +187,9 @@ public class StatsTagsAndCategoriesFragment extends StatsAbstractListFragment {
 
         @Override
         public int getChildrenCount(int groupPosition) {
-            TagsModel currentGroup = groups.get(groupPosition);
+            TagsModel currentGroup = mGroups.get(groupPosition);
             List<TagModel> tags = currentGroup.getTags();
-            if (tags == null || tags.size() == 1 ) {
+            if (tags == null || tags.size() == 1) {
                 return 0;
             } else {
                 return tags.size();
@@ -193,12 +198,12 @@ public class StatsTagsAndCategoriesFragment extends StatsAbstractListFragment {
 
         @Override
         public Object getGroup(int groupPosition) {
-            return groups.get(groupPosition);
+            return mGroups.get(groupPosition);
         }
 
         @Override
         public int getGroupCount() {
-            return groups.size();
+            return mGroups.size();
         }
 
 
@@ -210,14 +215,13 @@ public class StatsTagsAndCategoriesFragment extends StatsAbstractListFragment {
         @Override
         public View getGroupView(int groupPosition, boolean isExpanded,
                                  View convertView, ViewGroup parent) {
-
             if (convertView == null) {
                 convertView = inflater.inflate(R.layout.stats_list_cell, parent, false);
                 // configure view holder
                 StatsViewHolder viewHolder = new StatsViewHolder(convertView);
                 convertView.setTag(viewHolder);
 
-                //Make the picture smaller (same size of the chevron) only for tag
+                // Make the picture smaller (same size of the chevron) only for tag
                 ViewGroup.LayoutParams params = viewHolder.networkImageView.getLayoutParams();
                 params.width = DisplayUtils.dpToPx(convertView.getContext(), 12);
                 params.height = params.width;
@@ -232,7 +236,7 @@ public class StatsTagsAndCategoriesFragment extends StatsAbstractListFragment {
             for (int i = 0; i < tags.size(); i++) {
                 TagModel currentTag = tags.get(i);
                 groupName.append(currentTag.getName());
-                if ( i < (tags.size() - 1)) {
+                if (i < (tags.size() - 1)) {
                     groupName.append(" | ");
                 }
             }
@@ -253,9 +257,10 @@ public class StatsTagsAndCategoriesFragment extends StatsAbstractListFragment {
 
 
             // icon
-            if ( children == 0 ) {
+            if (children == 0) {
                 holder.networkImageView.setVisibility(View.VISIBLE);
-                int drawableResource = groupName.toString().equalsIgnoreCase("uncategorized") ? R.drawable.ic_folder_blue_wordpress_12dp
+                int drawableResource = groupName.toString().equalsIgnoreCase("uncategorized")
+                        ? R.drawable.ic_folder_blue_wordpress_12dp
                         : R.drawable.ic_tag_blue_wordpress_12dp;
                 holder.networkImageView.setImageDrawable(getResources().getDrawable(drawableResource));
             }
@@ -272,7 +277,6 @@ public class StatsTagsAndCategoriesFragment extends StatsAbstractListFragment {
         public boolean isChildSelectable(int groupPosition, int childPosition) {
             return false;
         }
-
     }
 
     @Override

@@ -58,9 +58,8 @@ public class SignupGoogleFragment extends GoogleFragment {
                                 mDisplayName = account.getDisplayName() != null ? account.getDisplayName() : "";
                                 mGoogleEmail = account.getEmail() != null ? account.getEmail() : "";
                                 mIdToken = account.getIdToken() != null ? account.getIdToken() : "";
-                                mPhotoUrl = removeScaleFromGooglePhotoUrl(account.getPhotoUrl() != null ?
-                                        account.getPhotoUrl().toString() : ""
-                                );
+                                mPhotoUrl = removeScaleFromGooglePhotoUrl(
+                                        account.getPhotoUrl() != null ? account.getPhotoUrl().toString() : "");
                             }
 
                             PushSocialPayload payload = new PushSocialPayload(mIdToken, SERVICE_TYPE_GOOGLE);
@@ -83,7 +82,7 @@ public class SignupGoogleFragment extends GoogleFragment {
                             case GoogleSignInStatusCodes.INVALID_ACCOUNT:
                                 AppLog.e(T.NUX, "Google Signup Failed: invalid account name.");
                                 showErrorDialog(getString(R.string.login_error_generic)
-                                        + getString(R.string.login_error_suffix));
+                                                + getString(R.string.login_error_suffix));
                                 break;
                             // Network error.
                             case GoogleSignInStatusCodes.NETWORK_ERROR:
@@ -135,8 +134,8 @@ public class SignupGoogleFragment extends GoogleFragment {
         startActivityForResult(signInIntent, REQUEST_SIGNUP);
     }
 
-    // Remove scale from photo URL path string.  Current URL matches /s96-c, which returns a 96 x 96
-    // pixel image.  Removing /s96-c from the string returns a 512 x 512 pixel image.  Using regular
+    // Remove scale from photo URL path string. Current URL matches /s96-c, which returns a 96 x 96
+    // pixel image. Removing /s96-c from the string returns a 512 x 512 pixel image. Using regular
     // expressions may help if the photo URL scale value in the returned path changes.
     private String removeScaleFromGooglePhotoUrl(String photoUrl) {
         Pattern pattern = Pattern.compile("(/s[0-9]+-c)");
@@ -148,11 +147,12 @@ public class SignupGoogleFragment extends GoogleFragment {
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onAuthenticationChanged(AccountStore.OnAuthenticationChanged event) {
         if (event.isError()) {
-            AppLog.e(T.API, "SignupGoogleFragment.onAuthenticationChanged: " + event.error.type + " - " + event.error.message);
-        // Continue with signup since account was created.
+            AppLog.e(T.API,
+                     "SignupGoogleFragment.onAuthenticationChanged: " + event.error.type + " - " + event.error.message);
+            // Continue with signup since account was created.
         } else if (event.createdAccount) {
             mGoogleListener.onGoogleSignupFinished(mDisplayName, mGoogleEmail, mPhotoUrl, event.userName);
-        // Continue with login since existing account was selected.
+            // Continue with login since existing account was selected.
         } else {
             AnalyticsTracker.track(AnalyticsTracker.Stat.SIGNUP_SOCIAL_TO_LOGIN);
             mLoginListener.loggedInViaSocialAccount(mOldSitesIds, true);
@@ -189,11 +189,11 @@ public class SignupGoogleFragment extends GoogleFragment {
                     showErrorDialog(getString(R.string.login_error_generic));
                     break;
             }
-        // Response does not return error when two-factor authentication is required.
+            // Response does not return error when two-factor authentication is required.
         } else if (event.requiresTwoStepAuth) {
             AnalyticsTracker.track(AnalyticsTracker.Stat.SIGNUP_SOCIAL_TO_LOGIN);
             mLoginListener.needs2faSocial(mGoogleEmail, event.userId, event.nonceAuthenticator, event.nonceBackup,
-                    event.nonceSms);
+                                          event.nonceSms);
             // Kill connections with FluxC and this fragment since the flow is changing to login.
             mDispatcher.unregister(this);
             getActivity().getSupportFragmentManager().beginTransaction().remove(this).commit();

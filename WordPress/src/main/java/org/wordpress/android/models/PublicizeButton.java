@@ -117,6 +117,4 @@ public class PublicizeButton {
     public void setGenericon(String genericon) {
         this.mGenericon = genericon;
     }
-
-
 }

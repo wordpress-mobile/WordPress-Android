@@ -6,9 +6,10 @@ import java.util.ArrayList;
 import java.util.Iterator;
 
 public class PublicizeServiceList extends ArrayList<PublicizeService> {
-
     private int indexOfService(PublicizeService service) {
-        if (service == null) return -1;
+        if (service == null) {
+            return -1;
+        }
 
         for (int i = 0; i < this.size(); i++) {
             if (service.getId().equalsIgnoreCase(this.get(i).getId())) {
@@ -24,7 +25,7 @@ public class PublicizeServiceList extends ArrayList<PublicizeService> {
             return false;
         }
 
-        for (PublicizeService otherService: otherList) {
+        for (PublicizeService otherService : otherList) {
             int i = this.indexOfService(otherService);
             if (i == -1) {
                 return false;
@@ -49,7 +50,9 @@ public class PublicizeServiceList extends ArrayList<PublicizeService> {
                         "unicode": "\\f203"
                     },
                     "icon": "http://i.wordpress.com/wp-content/admin-plugins/publicize/assets/publicize-fb-2x.png",
-                    "connect_URL": "https://public-api.wordpress.com/connect/?action=request&kr_nonce=b2c86a0cdb&nonce=94557d1529&for=connect&service=facebook&kr_blog_nonce=5e399375f1&magic=keyring&blog=52451191",
+                    "connect_URL": "https://public-api.wordpress.com/connect/?action=request
+                    &kr_nonce=b2c86a0cdb&nonce=94557d1529&for=connect&service=facebook&kr_blog_nonce=5e399375f1
+                    &magic=keyring&blog=52451191",
                     "multiple_external_user_ID_support": true,
                     "jetpack_support": true,
                     "jetpack_module_required": "publicize"
@@ -58,10 +61,14 @@ public class PublicizeServiceList extends ArrayList<PublicizeService> {
      */
     public static PublicizeServiceList fromJson(JSONObject json) {
         PublicizeServiceList serviceList = new PublicizeServiceList();
-        if (json == null) return serviceList;
+        if (json == null) {
+            return serviceList;
+        }
 
         JSONObject jsonServiceList = json.optJSONObject("services");
-        if (jsonServiceList == null) return serviceList;
+        if (jsonServiceList == null) {
+            return serviceList;
+        }
 
         Iterator<String> it = jsonServiceList.keys();
         while (it.hasNext()) {
@@ -82,7 +89,7 @@ public class PublicizeServiceList extends ArrayList<PublicizeService> {
             if (jsonGenericon != null) {
                 service.setGenericon(jsonGenericon.optString("unicode"));
             }
-                    serviceList.add(service);
+            serviceList.add(service);
         }
 
         return serviceList;

@@ -60,8 +60,8 @@ public class Feature {
         mDescription = featureJSONObject.getString("description");
         mPlanIDToDescription = featureJSONObject.optJSONObject("plans");
 
-        if (featureJSONObject.has("not_part_of_free_trial") &&
-                JSONUtils.getBool(featureJSONObject, "not_part_of_free_trial")) {
+        if (featureJSONObject.has("not_part_of_free_trial")
+            && JSONUtils.getBool(featureJSONObject, "not_part_of_free_trial")) {
             // not part of free trial
             mIsNotPartOfFreeTrial = true;
         }
@@ -112,11 +112,10 @@ public class Feature {
         fallback = StringUtils.notNullStr(fallback);
         if (mPlanIDToDescription != null && mPlanIDToDescription.has(planIdAsString)) {
             JSONObject plan = mPlanIDToDescription.optJSONObject(planIdAsString);
-            if (plan != null) { // It's not a JSON object. Just `true` in the response. That means the plan has this feature with generic description/title/icon.
-                return plan.optString(
-                        propertyName,
-                        fallback
-                );
+            if (plan != null) {
+                // It's not a JSON object. Just `true` in the response. That means the plan has this feature
+                // with generic description/title/icon.
+                return plan.optString(propertyName, fallback);
             }
         }
         return fallback;

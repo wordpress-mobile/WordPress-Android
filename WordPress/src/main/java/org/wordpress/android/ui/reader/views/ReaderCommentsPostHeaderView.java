@@ -17,7 +17,6 @@ import org.wordpress.android.widgets.WPNetworkImageView;
  * topmost view in reader comment adapter - show info about the post
  */
 public class ReaderCommentsPostHeaderView extends LinearLayout {
-
     public ReaderCommentsPostHeaderView(Context context) {
         super(context);
         initView(context);
@@ -38,7 +37,9 @@ public class ReaderCommentsPostHeaderView extends LinearLayout {
     }
 
     public void setPost(final ReaderPost post) {
-        if (post == null) return;
+        if (post == null) {
+            return;
+        }
 
         TextView txtTitle = (TextView) findViewById(R.id.text_post_title);
         TextView txtBlogName = (TextView) findViewById(R.id.text_blog_name);
@@ -55,10 +56,10 @@ public class ReaderCommentsPostHeaderView extends LinearLayout {
         java.util.Date dtPost = DateTimeUtils.dateFromIso8601(post.getDatePublished());
         String dateLine = DateTimeUtils.javaDateToTimeSpan(dtPost, WordPress.getContext());
         if (post.isCommentsOpen || post.numReplies > 0) {
-            dateLine += "  \u2022  " + ReaderUtils.getShortCommentLabelText(getContext(), post.numReplies);
+            dateLine += " \u2022 " + ReaderUtils.getShortCommentLabelText(getContext(), post.numReplies);
         }
         if (post.canLikePost() || post.numLikes > 0) {
-            dateLine += "  \u2022  " + ReaderUtils.getShortLikeLabelText(getContext(), post.numLikes);
+            dateLine += " \u2022 " + ReaderUtils.getShortLikeLabelText(getContext(), post.numLikes);
         }
         txtDateline.setText(dateLine);
 

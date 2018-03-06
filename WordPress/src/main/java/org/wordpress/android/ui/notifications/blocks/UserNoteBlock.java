@@ -58,8 +58,8 @@ public class UserNoteBlock extends NoteBlock {
 
     @Override
     public View configureView(View view) {
-        final UserActionNoteBlockHolder noteBlockHolder = (UserActionNoteBlockHolder)view.getTag();
-        noteBlockHolder.nameTextView.setText(getNoteText().toString());
+        final UserActionNoteBlockHolder noteBlockHolder = (UserActionNoteBlockHolder) view.getTag();
+        noteBlockHolder.mNameTextView.setText(getNoteText().toString());
 
 
         String linkedText = null;
@@ -70,34 +70,34 @@ public class UserNoteBlock extends NoteBlock {
         }
 
         if (!TextUtils.isEmpty(linkedText)) {
-            noteBlockHolder.urlTextView.setText(linkedText);
-            noteBlockHolder.urlTextView.setVisibility(View.VISIBLE);
+            noteBlockHolder.mUrlTextView.setText(linkedText);
+            noteBlockHolder.mUrlTextView.setVisibility(View.VISIBLE);
         } else {
-            noteBlockHolder.urlTextView.setVisibility(View.GONE);
+            noteBlockHolder.mUrlTextView.setVisibility(View.GONE);
         }
 
         if (hasUserBlogTagline()) {
-            noteBlockHolder.taglineTextView.setText(getUserBlogTagline());
-            noteBlockHolder.taglineTextView.setVisibility(View.VISIBLE);
+            noteBlockHolder.mTaglineTextView.setText(getUserBlogTagline());
+            noteBlockHolder.mTaglineTextView.setVisibility(View.VISIBLE);
         } else {
-            noteBlockHolder.taglineTextView.setVisibility(View.GONE);
+            noteBlockHolder.mTaglineTextView.setVisibility(View.GONE);
         }
 
         if (hasImageMediaItem()) {
             String imageUrl = GravatarUtils.fixGravatarUrl(getNoteMediaItem().optString("url", ""), getAvatarSize());
-            noteBlockHolder.avatarImageView.setImageUrl(imageUrl, WPNetworkImageView.ImageType.AVATAR);
+            noteBlockHolder.mAvatarImageView.setImageUrl(imageUrl, WPNetworkImageView.ImageType.AVATAR);
             if (!TextUtils.isEmpty(getUserUrl())) {
-                noteBlockHolder.avatarImageView.setOnTouchListener(mOnGravatarTouchListener);
-                noteBlockHolder.rootView.setEnabled(true);
-                noteBlockHolder.rootView.setOnClickListener(mOnClickListener);
+                noteBlockHolder.mAvatarImageView.setOnTouchListener(mOnGravatarTouchListener);
+                noteBlockHolder.mRootView.setEnabled(true);
+                noteBlockHolder.mRootView.setOnClickListener(mOnClickListener);
             } else {
-                noteBlockHolder.avatarImageView.setOnTouchListener(null);
-                noteBlockHolder.rootView.setEnabled(false);
-                noteBlockHolder.rootView.setOnClickListener(null);
+                noteBlockHolder.mAvatarImageView.setOnTouchListener(null);
+                noteBlockHolder.mRootView.setEnabled(false);
+                noteBlockHolder.mRootView.setOnClickListener(null);
             }
         } else {
-            noteBlockHolder.avatarImageView.showDefaultGravatarImageAndNullifyUrl();
-            noteBlockHolder.avatarImageView.setOnTouchListener(null);
+            noteBlockHolder.mAvatarImageView.showDefaultGravatarImageAndNullifyUrl();
+            noteBlockHolder.mAvatarImageView.setOnTouchListener(null);
         }
 
         return view;
@@ -116,18 +116,18 @@ public class UserNoteBlock extends NoteBlock {
     }
 
     private class UserActionNoteBlockHolder {
-        private final View rootView;
-        private final TextView nameTextView;
-        private final TextView urlTextView;
-        private final TextView taglineTextView;
-        private final WPNetworkImageView avatarImageView;
+        private final View mRootView;
+        private final TextView mNameTextView;
+        private final TextView mUrlTextView;
+        private final TextView mTaglineTextView;
+        private final WPNetworkImageView mAvatarImageView;
 
-        public UserActionNoteBlockHolder(View view) {
-            rootView = view.findViewById(R.id.user_block_root_view);
-            nameTextView = (TextView)view.findViewById(R.id.user_name);
-            urlTextView = (TextView)view.findViewById(R.id.user_blog_url);
-            taglineTextView = (TextView)view.findViewById(R.id.user_blog_tagline);
-            avatarImageView = (WPNetworkImageView)view.findViewById(R.id.user_avatar);
+        UserActionNoteBlockHolder(View view) {
+            mRootView = view.findViewById(R.id.user_block_root_view);
+            mNameTextView = (TextView) view.findViewById(R.id.user_name);
+            mUrlTextView = (TextView) view.findViewById(R.id.user_blog_url);
+            mTaglineTextView = (TextView) view.findViewById(R.id.user_blog_tagline);
+            mAvatarImageView = (WPNetworkImageView) view.findViewById(R.id.user_avatar);
         }
     }
 
@@ -158,23 +158,23 @@ public class UserNoteBlock extends NoteBlock {
     final View.OnTouchListener mOnGravatarTouchListener = new View.OnTouchListener() {
         @Override
         public boolean onTouch(View v, MotionEvent event) {
-
             int animationDuration = 150;
 
             if (event.getAction() == MotionEvent.ACTION_DOWN) {
                 v.animate()
-                        .scaleX(0.9f)
-                        .scaleY(0.9f)
-                        .alpha(0.5f)
-                        .setDuration(animationDuration)
-                        .setInterpolator(new DecelerateInterpolator());
-            } else if (event.getActionMasked() == MotionEvent.ACTION_UP || event.getActionMasked() == MotionEvent.ACTION_CANCEL) {
+                 .scaleX(0.9f)
+                 .scaleY(0.9f)
+                 .alpha(0.5f)
+                 .setDuration(animationDuration)
+                 .setInterpolator(new DecelerateInterpolator());
+            } else if (event.getActionMasked() == MotionEvent.ACTION_UP
+                       || event.getActionMasked() == MotionEvent.ACTION_CANCEL) {
                 v.animate()
-                        .scaleX(1.0f)
-                        .scaleY(1.0f)
-                        .alpha(1.0f)
-                        .setDuration(animationDuration)
-                        .setInterpolator(new DecelerateInterpolator());
+                 .scaleX(1.0f)
+                 .scaleY(1.0f)
+                 .alpha(1.0f)
+                 .setDuration(animationDuration)
+                 .setInterpolator(new DecelerateInterpolator());
 
                 if (event.getActionMasked() == MotionEvent.ACTION_UP && mGravatarClickedListener != null) {
                     // Fire the listener, which will load the site preview for the user's site

@@ -28,12 +28,14 @@ public class StatsPublicizeFragment extends StatsAbstractListFragment {
     protected boolean hasDataAvailable() {
         return mPublicizeData != null;
     }
+
     @Override
     protected void saveStatsData(Bundle outState) {
         if (mPublicizeData != null) {
             outState.putSerializable(ARG_REST_RESPONSE, mPublicizeData);
         }
     }
+
     @Override
     protected void restoreStatsData(Bundle savedInstanceState) {
         if (savedInstanceState.containsKey(ARG_REST_RESPONSE)) {
@@ -78,8 +80,8 @@ public class StatsPublicizeFragment extends StatsAbstractListFragment {
 
     private boolean hasPublicize() {
         return mPublicizeData != null
-                && mPublicizeData.getServices() != null
-                && mPublicizeData.getServices().size() > 0;
+               && mPublicizeData.getServices() != null
+               && mPublicizeData.getServices().size() > 0;
     }
 
     private List<SingleItemModel> getPublicize() {
@@ -100,14 +102,13 @@ public class StatsPublicizeFragment extends StatsAbstractListFragment {
     }
 
     private class PublicizeAdapter extends ArrayAdapter<SingleItemModel> {
+        private final List<SingleItemModel> mList;
+        private final LayoutInflater mInflater;
 
-        private final List<SingleItemModel> list;
-        private final LayoutInflater inflater;
-
-        public PublicizeAdapter(Activity context, List<SingleItemModel> list) {
+        PublicizeAdapter(Activity context, List<SingleItemModel> list) {
             super(context, R.layout.stats_list_cell, list);
-            this.list = list;
-            inflater = LayoutInflater.from(context);
+            mList = list;
+            mInflater = LayoutInflater.from(context);
         }
 
         @Override
@@ -116,7 +117,7 @@ public class StatsPublicizeFragment extends StatsAbstractListFragment {
             // reuse views
             final StatsViewHolder holder;
             if (rowView == null) {
-                rowView = inflater.inflate(R.layout.stats_list_cell, parent, false);
+                rowView = mInflater.inflate(R.layout.stats_list_cell, parent, false);
                 // configure view holder
                 holder = new StatsViewHolder(rowView);
                 holder.networkImageView.setErrorImageResId(R.drawable.ic_placeholder_blavatar_grey_lighten_20_32dp);
@@ -126,7 +127,7 @@ public class StatsPublicizeFragment extends StatsAbstractListFragment {
                 holder = (StatsViewHolder) rowView.getTag();
             }
 
-            final SingleItemModel currentRowData = list.get(position);
+            final SingleItemModel currentRowData = mList.get(position);
 
             String serviceName = currentRowData.getTitle();
 
@@ -138,7 +139,7 @@ public class StatsPublicizeFragment extends StatsAbstractListFragment {
 
             // image
             holder.networkImageView.setImageUrl(
-                    GravatarUtils.fixGravatarUrl(getServiceImage(serviceName), mResourceVars.headerAvatarSizePx),
+                    GravatarUtils.fixGravatarUrl(getServiceImage(serviceName), mResourceVars.mHeaderAvatarSizePx),
                     WPNetworkImageView.ImageType.BLAVATAR);
             holder.networkImageView.setVisibility(View.VISIBLE);
 
@@ -172,7 +173,7 @@ public class StatsPublicizeFragment extends StatsAbstractListFragment {
                 return null;
         }
 
-        return serviceIconURL + mResourceVars.headerAvatarSizePx;
+        return serviceIconURL + mResourceVars.mHeaderAvatarSizePx;
     }
 
     private String getServiceName(String service) {

@@ -32,7 +32,6 @@ public class PublicizeListActivity extends AppCompatActivity
         PublicizeActions.OnPublicizeActionListener,
         PublicizeServiceAdapter.OnServiceClickListener,
         PublicizeListFragment.PublicizeButtonPrefsListener {
-
     private SiteModel mSite;
     private ProgressDialog mProgressDialog;
 
@@ -88,7 +87,9 @@ public class PublicizeListActivity extends AppCompatActivity
     }
 
     private void showListFragment() {
-        if (isFinishing()) return;
+        if (isFinishing()) {
+            return;
+        }
 
         String tag = getString(R.string.fragment_tag_publicize_list);
         Fragment fragment = PublicizeListFragment.newInstance(mSite);
@@ -119,14 +120,18 @@ public class PublicizeListActivity extends AppCompatActivity
      * close all but the first (list) fragment
      */
     private void returnToListFragment() {
-        if (getFragmentManager().getBackStackEntryCount() == 0) return;
+        if (getFragmentManager().getBackStackEntryCount() == 0) {
+            return;
+        }
 
         String tag = getString(R.string.fragment_tag_publicize_detail);
         getFragmentManager().popBackStack(tag, FragmentManager.POP_BACK_STACK_INCLUSIVE);
     }
 
     private void showDetailFragment(PublicizeService service) {
-        if (isFinishing()) return;
+        if (isFinishing()) {
+            return;
+        }
 
         String tag = getString(R.string.fragment_tag_publicize_detail);
         Fragment detailFragment = PublicizeDetailFragment.newInstance(mSite, service);
@@ -157,7 +162,9 @@ public class PublicizeListActivity extends AppCompatActivity
 
     private void showWebViewFragment(PublicizeService service,
                                      PublicizeConnection publicizeConnection) {
-        if (isFinishing()) return;
+        if (isFinishing()) {
+            return;
+        }
 
         String tag = getString(R.string.fragment_tag_publicize_webview);
         Fragment webViewFragment = PublicizeWebViewFragment.newInstance(mSite, service, publicizeConnection);
@@ -272,7 +279,9 @@ public class PublicizeListActivity extends AppCompatActivity
      */
     @SuppressWarnings("unused")
     public void onEventMainThread(PublicizeEvents.ActionCompleted event) {
-        if (isFinishing()) return;
+        if (isFinishing()) {
+            return;
+        }
 
         closeWebViewFragment();
         if (mProgressDialog != null && mProgressDialog.isShowing()) {
@@ -286,7 +295,9 @@ public class PublicizeListActivity extends AppCompatActivity
     }
 
     public void onEventMainThread(PublicizeEvents.ActionAccountChosen event) {
-        if (isFinishing()) return;
+        if (isFinishing()) {
+            return;
+        }
 
         PublicizeActions.connectStepTwo(event.getSiteId(), event.getKeychainId());
         mProgressDialog = new ProgressDialog(this);
@@ -295,7 +306,9 @@ public class PublicizeListActivity extends AppCompatActivity
     }
 
     public void onEventMainThread(PublicizeEvents.ActionRequestChooseAccount event) {
-        if (isFinishing()) return;
+        if (isFinishing()) {
+            return;
+        }
 
         closeWebViewFragment();
 
@@ -318,9 +331,9 @@ public class PublicizeListActivity extends AppCompatActivity
     public void onButtonPrefsClicked() {
         Fragment fragment = PublicizeButtonPrefsFragment.newInstance(mSite);
         getFragmentManager().beginTransaction()
-                .replace(R.id.fragment_container, fragment)
-                .addToBackStack(null)
-                .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE)
-                .commit();
+                            .replace(R.id.fragment_container, fragment)
+                            .addToBackStack(null)
+                            .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE)
+                            .commit();
     }
 }

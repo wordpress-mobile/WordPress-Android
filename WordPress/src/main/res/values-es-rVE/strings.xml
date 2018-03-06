@@ -533,7 +533,7 @@ Language: es_VE
 	<string name="account_settings">Configuración de la cuenta</string>
 	<string name="me_btn_support">Ayuda y soporte</string>
 	<string name="site_picker_cant_hide_current_site">\"%s\" no se ocultó porque es el sitio actual</string>
-	<string name="site_picker_create_dotcom">Crear sitio en WordPress.com</string>
+	<string name="site_picker_create_wpcom">Crear sitio en WordPress.com</string>
 	<string name="site_picker_edit_visibility">Mostrar/Ocultar sitios</string>
 	<string name="site_picker_add_self_hosted">Añadir sitio autoalojado</string>
 	<string name="site_picker_add_site">Añadir sitio</string>

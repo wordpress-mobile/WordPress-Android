@@ -27,7 +27,6 @@ import javax.inject.Inject;
  * count, and follow button
  */
 public class ReaderSiteHeaderView extends LinearLayout {
-
     public interface OnBlogInfoLoadedListener {
         void onBlogInfoLoaded(ReaderBlog blogInfo);
     }
@@ -132,11 +131,13 @@ public class ReaderSiteHeaderView extends LinearLayout {
         }
 
         try {
-            txtFollowCount.setText(String.format(getContext().getString(R.string.reader_label_follow_count), blogInfo.numSubscribers));
+            txtFollowCount.setText(
+                    String.format(getContext().getString(R.string.reader_label_follow_count), blogInfo.numSubscribers));
         } catch (ArithmeticException exception) {
             // See https://github.com/wordpress-mobile/WordPress-Android/issues/5568
             // In case of a "ArithmeticException: divide by zero", force the use of "US" locale to format the string.
-            txtFollowCount.setText(String.format(Locale.US, getContext().getString(R.string.reader_label_follow_count), blogInfo.numSubscribers));
+            txtFollowCount.setText(String.format(Locale.US, getContext().getString(R.string.reader_label_follow_count),
+                                                 blogInfo.numSubscribers));
         }
 
         if (!mAccountStore.hasAccessToken()) {
@@ -181,7 +182,8 @@ public class ReaderSiteHeaderView extends LinearLayout {
                 }
                 mFollowButton.setEnabled(true);
                 if (!succeeded) {
-                    int errResId = isAskingToFollow ? R.string.reader_toast_err_follow_blog : R.string.reader_toast_err_unfollow_blog;
+                    int errResId = isAskingToFollow ? R.string.reader_toast_err_follow_blog
+                            : R.string.reader_toast_err_unfollow_blog;
                     ToastUtils.showToast(getContext(), errResId);
                     mFollowButton.setIsFollowed(!isAskingToFollow);
                 }

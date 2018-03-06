@@ -1,11 +1,11 @@
 package org.wordpress.android.ui.media;
 
 public enum MediaBrowserType {
-    BROWSER,                 // browse & manage media
-    EDITOR_PICKER,           // select multiple images or videos to insert into a post
-    AZTEC_EDITOR_PICKER,     // select multiple images or videos to insert into a post, hide source bar in portrait
-    FEATURED_IMAGE_PICKER,   // select a single image as a featured image
-    GRAVATAR_IMAGE_PICKER;   // select a single image as a gravatar
+    BROWSER, // browse & manage media
+    EDITOR_PICKER, // select multiple images or videos to insert into a post
+    AZTEC_EDITOR_PICKER, // select multiple images or videos to insert into a post, hide source bar in portrait
+    FEATURED_IMAGE_PICKER, // select a single image as a featured image
+    GRAVATAR_IMAGE_PICKER; // select a single image as a gravatar
 
     public boolean isPicker() {
         return this != BROWSER;

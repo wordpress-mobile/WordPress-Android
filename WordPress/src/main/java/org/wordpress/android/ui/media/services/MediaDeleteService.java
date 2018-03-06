@@ -231,9 +231,9 @@ public class MediaDeleteService extends Service {
      * Compares site ID and media ID to determine if a given media item matches the current media item being deleted.
      */
     private boolean matchesInProgressMedia(final @NonNull MediaModel media) {
-        return mCurrentDelete != null &&
-               media.getLocalSiteId() == mCurrentDelete.getLocalSiteId() &&
-               media.getMediaId() == mCurrentDelete.getMediaId();
+        return mCurrentDelete != null
+               && media.getLocalSiteId() == mCurrentDelete.getLocalSiteId()
+               && media.getMediaId() == mCurrentDelete.getMediaId();
     }
 
     /**
