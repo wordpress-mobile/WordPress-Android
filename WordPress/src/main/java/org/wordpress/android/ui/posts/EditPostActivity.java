@@ -965,18 +965,25 @@ public class EditPostActivity extends AppCompatActivity implements
 
         if (itemId == R.id.menu_save_post) {
             if (!AppPrefs.isAsyncPromoRequired()) {
-                AlertDialog.Builder builder = new AlertDialog.Builder(this);
-                builder.setTitle(getResources().getText(R.string.dialog_confirm_publish_title))
-                        .setMessage(R.string.dialog_confirm_publish_message)
-                        .setPositiveButton(R.string.dialog_confirm_publish_yes, new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialogInterface, int i) {
-                                publishPost();
-                            }
-                        })
-                        .setNegativeButton(R.string.dialog_confirm_publish_no, null)
-                        .setCancelable(true);
-                builder.create().show();
+                // if post is a draft, first make sure to confirm the PUBLISH action, in case
+                // the user tapped on it accidentally
+                if (mPost.isLocalDraft()) {
+                    AlertDialog.Builder builder = new AlertDialog.Builder(this);
+                    builder.setTitle(getResources().getText(R.string.dialog_confirm_publish_title))
+                            .setMessage(R.string.dialog_confirm_publish_message)
+                            .setPositiveButton(R.string.dialog_confirm_publish_yes, new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialogInterface, int i) {
+                                    publishPost();
+                                }
+                            })
+                            .setNegativeButton(R.string.dialog_confirm_publish_no, null)
+                            .setCancelable(true);
+                    builder.create().show();
+                } else {
+                    // otherwise, if they're updating a Post, just go ahead and save it to the server
+                    publishPost();
+                }
             } else {
                 showAsyncPromoDialog();
             }
