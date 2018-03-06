@@ -237,7 +237,7 @@ public class StatsClicksFragment extends StatsAbstractListFragment {
             holder.networkImageView.setVisibility(View.GONE);
             if (!TextUtils.isEmpty(icon)) {
                 holder.networkImageView.setImageUrl(
-                        GravatarUtils.fixGravatarUrl(icon, mResourceVars.headerAvatarSizePx),
+                        GravatarUtils.fixGravatarUrl(icon, mResourceVars.mHeaderAvatarSizePx),
                         WPNetworkImageView.ImageType.GONE_UNTIL_AVAILABLE
                                                    );
             }

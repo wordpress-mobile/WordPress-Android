@@ -240,7 +240,7 @@ public class StatsAuthorsFragment extends StatsAbstractListFragment {
 
             // icon
             // holder.showNetworkImage(icon);
-            holder.networkImageView.setImageUrl(GravatarUtils.fixGravatarUrl(icon, mResourceVars.headerAvatarSizePx),
+            holder.networkImageView.setImageUrl(GravatarUtils.fixGravatarUrl(icon, mResourceVars.mHeaderAvatarSizePx),
                                                 WPNetworkImageView.ImageType.AVATAR);
             holder.networkImageView.setVisibility(View.VISIBLE);
 

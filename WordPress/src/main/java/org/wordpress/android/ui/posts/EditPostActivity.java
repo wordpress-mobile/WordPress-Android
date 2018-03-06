@@ -1270,7 +1270,7 @@ public class EditPostActivity extends AppCompatActivity implements
 
         @Override
         protected void onPostExecute(Void saved) {
-            saveResult(true, false,false);
+            saveResult(true, false, false);
             removePostOpenInEditorStickyEvent();
             finish();
         }
@@ -1303,7 +1303,7 @@ public class EditPostActivity extends AppCompatActivity implements
 
         @Override
         protected void onPostExecute(Boolean saved) {
-            saveResult(saved, false,true);
+            saveResult(saved, false, true);
             removePostOpenInEditorStickyEvent();
             finish();
         }
@@ -1376,7 +1376,7 @@ public class EditPostActivity extends AppCompatActivity implements
                 boolean isPublishable = PostUtils.isPublishable(mPost);
 
                 // if post was modified or has unsaved local changes and is publishable, save it
-                saveResult(isPublishable, false,false);
+                saveResult(isPublishable, false, false);
 
                 if (isPublishable) {
                     if (NetworkUtils.isNetworkAvailable(getBaseContext())) {

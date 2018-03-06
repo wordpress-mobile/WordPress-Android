@@ -24,6 +24,7 @@ import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.FluxCUtils;
 import org.wordpress.android.util.SiteUtils;
 import org.wordpress.android.util.ToastUtils;
+import org.wordpress.android.ui.main.SitePickerAdapter.SiteRecord;
 
 import javax.inject.Inject;
 
@@ -130,8 +131,8 @@ public class StatsWidgetConfigureActivity extends AppCompatActivity
     }
 
     @Override
-    public void onSiteClick(StatsWidgetConfigureAdapter.SiteRecord site) {
-        addWidgetToScreenAndFinish(site.localId);
+    public void onSiteClick(SiteRecord site) {
+        addWidgetToScreenAndFinish(site.getLocalId());
     }
 
     private void addWidgetToScreenAndFinish(int localID) {

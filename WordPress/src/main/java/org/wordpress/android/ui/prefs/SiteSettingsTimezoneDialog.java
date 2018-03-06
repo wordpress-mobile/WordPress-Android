@@ -50,12 +50,12 @@ public class SiteSettingsTimezoneDialog extends DialogFragment implements Dialog
     public static final String KEY_TIMEZONE = "timezone";
 
     private class Timezone {
-        private final String label;
-        private final String value;
+        private final String mLabel;
+        private final String mValue;
 
         private Timezone(String label, String value) {
-            this.label = label;
-            this.value = value;
+            mLabel = label;
+            mValue = value;
         }
     }
 
@@ -89,7 +89,7 @@ public class SiteSettingsTimezoneDialog extends DialogFragment implements Dialog
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Timezone tz = (Timezone) mAdapter.getItem(position);
-                mSelectedTimezone = tz.value;
+                mSelectedTimezone = tz.mValue;
                 mAdapter.notifyDataSetChanged();
                 hideSearchKeyboard();
             }
@@ -184,7 +184,7 @@ public class SiteSettingsTimezoneDialog extends DialogFragment implements Dialog
             // sort by label
             Collections.sort(timezones, new Comparator<Timezone>() {
                 public int compare(Timezone t1, Timezone t2) {
-                    return StringUtils.compare(t1.label, t2.label);
+                    return StringUtils.compare(t1.mLabel, t2.mLabel);
                 }
             });
 
@@ -251,10 +251,10 @@ public class SiteSettingsTimezoneDialog extends DialogFragment implements Dialog
     }
 
     private class TimezoneViewHolder {
-        private final TextView txtLabel;
+        private final TextView mTxtLabel;
 
         TimezoneViewHolder(View view) {
-            txtLabel = view.findViewById(android.R.id.text1);
+            mTxtLabel = view.findViewById(android.R.id.text1);
         }
     }
 
@@ -285,7 +285,7 @@ public class SiteSettingsTimezoneDialog extends DialogFragment implements Dialog
         public int indexOfValue(String timezoneValue) {
             if (!TextUtils.isEmpty(timezoneValue)) {
                 for (int i = 0; i < mFilteredTimezones.size(); i++) {
-                    if (timezoneValue.equals(mFilteredTimezones.get(i).value)) {
+                    if (timezoneValue.equals(mFilteredTimezones.get(i).mValue)) {
                         return i;
                     }
                 }
@@ -305,10 +305,10 @@ public class SiteSettingsTimezoneDialog extends DialogFragment implements Dialog
             }
 
             boolean isSelected = mSelectedTimezone != null
-                                 && mSelectedTimezone.equals(mFilteredTimezones.get(position).value);
+                                 && mSelectedTimezone.equals(mFilteredTimezones.get(position).mValue);
             int colorRes = isSelected ? R.color.list_row_selected : R.color.transparent;
-            holder.txtLabel.setBackgroundColor(getResources().getColor(colorRes));
-            holder.txtLabel.setText(mFilteredTimezones.get(position).label);
+            holder.mTxtLabel.setBackgroundColor(getResources().getColor(colorRes));
+            holder.mTxtLabel.setText(mFilteredTimezones.get(position).mLabel);
 
             return convertView;
         }
@@ -333,7 +333,7 @@ public class SiteSettingsTimezoneDialog extends DialogFragment implements Dialog
                     } else {
                         String lcConstraint = constraint.toString().toLowerCase();
                         for (Timezone tz : mAllTimezones) {
-                            if (tz.label.toLowerCase().contains(lcConstraint)) {
+                            if (tz.mLabel.toLowerCase().contains(lcConstraint)) {
                                 filtered.add(tz);
                             }
                         }

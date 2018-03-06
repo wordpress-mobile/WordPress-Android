@@ -275,7 +275,7 @@ public class StatsGeoviewsFragment extends StatsAbstractListFragment {
             } else {
                 // On other Android versions, use the Gravatar image
                 holder.networkImageView.setImageUrl(
-                        GravatarUtils.fixGravatarUrl(imageUrl, mResourceVars.headerAvatarSizePx),
+                        GravatarUtils.fixGravatarUrl(imageUrl, mResourceVars.mHeaderAvatarSizePx),
                         WPNetworkImageView.ImageType.BLAVATAR);
                 holder.networkImageView.setVisibility(View.VISIBLE);
             }

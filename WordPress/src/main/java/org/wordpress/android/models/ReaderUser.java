@@ -95,17 +95,17 @@ public class ReaderUser {
     /*
      * not stored - used by ReaderUserAdapter for performance
      */
-    private transient String urlDomain;
+    private transient String mUrlDomain;
 
     public String getUrlDomain() {
-        if (urlDomain == null) {
+        if (mUrlDomain == null) {
             if (hasUrl()) {
-                urlDomain = UrlUtils.getHost(getUrl());
+                mUrlDomain = UrlUtils.getHost(getUrl());
             } else {
-                urlDomain = "";
+                mUrlDomain = "";
             }
         }
-        return urlDomain;
+        return mUrlDomain;
     }
 
     public boolean isSameUser(ReaderUser user) {

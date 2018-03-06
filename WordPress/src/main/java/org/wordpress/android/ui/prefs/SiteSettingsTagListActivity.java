@@ -424,12 +424,12 @@ public class SiteSettingsTagListActivity extends AppCompatActivity
         @Override
         public void onBindViewHolder(final TagListAdapter.TagViewHolder holder, int position) {
             TermModel term = mFilteredTags.get(position);
-            holder.txtTag.setText(StringEscapeUtils.unescapeHtml4(term.getName()));
+            holder.mTxtTag.setText(StringEscapeUtils.unescapeHtml4(term.getName()));
             if (term.getPostCount() > 0) {
-                holder.txtCount.setVisibility(View.VISIBLE);
-                holder.txtCount.setText(String.valueOf(term.getPostCount()));
+                holder.mTxtCount.setVisibility(View.VISIBLE);
+                holder.mTxtCount.setText(String.valueOf(term.getPostCount()));
             } else {
-                holder.txtCount.setVisibility(View.GONE);
+                holder.mTxtCount.setVisibility(View.GONE);
             }
         }
 
@@ -454,13 +454,13 @@ public class SiteSettingsTagListActivity extends AppCompatActivity
         }
 
         class TagViewHolder extends RecyclerView.ViewHolder {
-            private final TextView txtTag;
-            private final TextView txtCount;
+            private final TextView mTxtTag;
+            private final TextView mTxtCount;
 
             TagViewHolder(View view) {
                 super(view);
-                txtTag = view.findViewById(R.id.text_tag);
-                txtCount = view.findViewById(R.id.text_count);
+                mTxtTag = view.findViewById(R.id.text_tag);
+                mTxtCount = view.findViewById(R.id.text_count);
                 view.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {

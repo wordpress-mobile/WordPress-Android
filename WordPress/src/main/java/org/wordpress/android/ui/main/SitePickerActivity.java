@@ -357,16 +357,16 @@ public class SitePickerActivity extends AppCompatActivity
         SiteList hiddenSites = getAdapter().getHiddenSites();
         List<SiteModel> siteList = new ArrayList<>();
         for (SiteRecord siteRecord : changeSet) {
-            SiteModel siteModel = mSiteStore.getSiteByLocalId(siteRecord.localId);
+            SiteModel siteModel = mSiteStore.getSiteByLocalId(siteRecord.getLocalId());
             if (hiddenSites.contains(siteRecord)) {
-                if (siteRecord.localId == mCurrentLocalId) {
+                if (siteRecord.getLocalId() == mCurrentLocalId) {
                     skippedCurrentSite = true;
                     currentSiteName = siteRecord.getBlogNameOrHomeURL();
                     continue;
                 }
                 siteModel.setIsVisible(false);
                 // Remove stats data for hidden sites
-                StatsTable.deleteStatsForBlog(this, siteRecord.localId);
+                StatsTable.deleteStatsForBlog(this, siteRecord.getLocalId());
             } else {
                 siteModel.setIsVisible(true);
             }
@@ -495,7 +495,7 @@ public class SitePickerActivity extends AppCompatActivity
 
     @Override
     public boolean onSiteLongClick(final SiteRecord siteRecord) {
-        final SiteModel site = mSiteStore.getSiteByLocalId(siteRecord.localId);
+        final SiteModel site = mSiteStore.getSiteByLocalId(siteRecord.getLocalId());
         if (site == null) {
             return false;
         }
@@ -514,12 +514,12 @@ public class SitePickerActivity extends AppCompatActivity
     public void onSiteClick(SiteRecord siteRecord) {
         if (mActionMode == null) {
             hideSoftKeyboard();
-            AppPrefs.addRecentlyPickedSiteId(siteRecord.localId);
-            setResult(RESULT_OK, new Intent().putExtra(KEY_LOCAL_ID, siteRecord.localId));
+            AppPrefs.addRecentlyPickedSiteId(siteRecord.getLocalId());
+            setResult(RESULT_OK, new Intent().putExtra(KEY_LOCAL_ID, siteRecord.getLocalId()));
             mDidUserSelectSite = true;
             // If the site is hidden, make sure to make it visible
-            if (siteRecord.isHidden) {
-                siteRecord.isHidden = false;
+            if (siteRecord.isHidden()) {
+                siteRecord.setHidden(false);
                 saveSiteVisibility(siteRecord);
             }
             finish();

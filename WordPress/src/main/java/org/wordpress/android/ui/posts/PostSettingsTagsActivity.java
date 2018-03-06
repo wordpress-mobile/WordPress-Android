@@ -234,7 +234,7 @@ public class PostSettingsTagsActivity extends AppCompatActivity implements TextW
                 return;
             }
             String tag = StringEscapeUtils.unescapeHtml4(mFilteredTags.get(position).getName());
-            holder.nameTextView.setText(tag);
+            holder.mNameTextView.setText(tag);
         }
 
         @Override
@@ -274,16 +274,16 @@ public class PostSettingsTagsActivity extends AppCompatActivity implements TextW
         }
 
         class TagViewHolder extends RecyclerView.ViewHolder {
-            private final TextView nameTextView;
+            private final TextView mNameTextView;
 
             TagViewHolder(View view) {
                 super(view);
-                nameTextView = (TextView) view.findViewById(R.id.tag_name);
+                mNameTextView = (TextView) view.findViewById(R.id.tag_name);
                 RelativeLayout layout = (RelativeLayout) view.findViewById(R.id.tags_list_row_container);
                 layout.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
-                        onTagSelected(nameTextView.getText().toString());
+                        onTagSelected(mNameTextView.getText().toString());
                     }
                 });
             }

@@ -191,7 +191,7 @@ public class SiteCreationDomainFragment extends SiteCreationBaseFormFragment<Sit
                     });
         }
 
-        switch (event.step) {
+        switch (event.getStep()) {
             case UPDATING:
                 mSelectedDomain = mCarryOverDomain;
                 mSiteCreationDomainAdapter.setData(true, mCarryOverDomain, mSelectedDomain, null);
@@ -200,13 +200,13 @@ public class SiteCreationDomainFragment extends SiteCreationBaseFormFragment<Sit
                 mSiteCreationDomainAdapter.setData(false, mCarryOverDomain, mSelectedDomain, null);
                 break;
             case FINISHED:
-                if (!event.query.equals(mQueryString)) {
+                if (!event.getQuery().equals(mQueryString)) {
                     // this is not the result for the latest query the debouncer sent so, ignore it
                     break;
                 }
 
                 ArrayList<String> suggestions = new ArrayList<>();
-                for (DomainSuggestionResponse suggestionResponse : event.event.suggestions) {
+                for (DomainSuggestionResponse suggestionResponse : event.getEvent().suggestions) {
                     suggestions.add(suggestionResponse.domain_name);
                 }
 

@@ -1,6 +1,5 @@
 package org.wordpress.android.ui.prefs.notifications;
 
-import android.app.Application;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
