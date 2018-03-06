@@ -13,6 +13,7 @@ import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
+import android.text.Html;
 import android.text.TextUtils;
 import android.view.MenuItem;
 import android.view.View;
@@ -72,7 +73,6 @@ public class StockPhotoPickerActivity extends AppCompatActivity implements Searc
         mThumbHeight = (int) (mThumbWidth * 0.75f);
 
         Toolbar toolbar = findViewById(R.id.toolbar);
-        toolbar.setNavigationIcon(R.drawable.ic_close_white_24dp);
         setSupportActionBar(toolbar);
         ActionBar actionBar = getSupportActionBar();
         if (actionBar != null) {
@@ -91,27 +91,17 @@ public class StockPhotoPickerActivity extends AppCompatActivity implements Searc
 
         if (savedInstanceState == null) {
             mSite = (SiteModel) getIntent().getSerializableExtra(WordPress.SITE);
+            showEmptyView(true);
         } else {
             mSite = (SiteModel) savedInstanceState.getSerializable(WordPress.SITE);
             mViewModel.readFromBundle(savedInstanceState);
             if (savedInstanceState.containsKey(KEY_SELECTED_ITEMS)) {
-                mAdapter.setSelectedItems(savedInstanceState.getIntegerArrayList(KEY_SELECTED_ITEMS));
+                ArrayList<Integer> selectedItems = savedInstanceState.getIntegerArrayList(KEY_SELECTED_ITEMS);
+                if (selectedItems != null) {
+                    mAdapter.setSelectedItems(selectedItems);
+                }
             }
         }
-    }
-
-    private void addSearchView(@NonNull Toolbar toolbar) {
-        mSearchView = new SearchView(WPActivityUtils.getThemedContext(this));
-        mSearchView.setIconifiedByDefault(false);
-        mSearchView.setQueryHint(getString(R.string.stock_photo_picker_search_hint));
-        mSearchView.setOnQueryTextListener(this);
-        mSearchView.setImeOptions(EditorInfo.IME_FLAG_NO_EXTRACT_UI);
-        mSearchView.setOnCloseListener(new SearchView.OnCloseListener() {
-            @Override public boolean onClose() {
-                return true;
-            }
-        });
-        toolbar.addView(mSearchView);
     }
 
     @Override
@@ -138,10 +128,11 @@ public class StockPhotoPickerActivity extends AppCompatActivity implements Searc
         mViewModel.getSearchResults().observe(this, new Observer<List<StockMediaModel>>() {
             @Override
             public void onChanged(@Nullable final List<StockMediaModel> mediaList) {
-                if (isFinishing()) return;
-                mIsFetching = false;
-                showProgress(false);
-                mAdapter.setMediaList(mediaList);
+                if (!isFinishing()) {
+                    mIsFetching = false;
+                    showProgress(false);
+                    mAdapter.setMediaList(mediaList);
+                }
             }
         });
     }
@@ -171,6 +162,42 @@ public class StockPhotoPickerActivity extends AppCompatActivity implements Searc
         return true;
     }
 
+    /*
+     * we add the SearchView programmatically rather than via onCreateOptionsMenu() because
+     * the latter doesn't allow us to have a SearchView that's always expanded
+     */
+    private void addSearchView(@NonNull Toolbar toolbar) {
+        mSearchView = new SearchView(WPActivityUtils.getThemedContext(this));
+        mSearchView.setIconifiedByDefault(false);
+        mSearchView.setQueryHint(getString(R.string.stock_photo_picker_search_hint));
+        mSearchView.setOnQueryTextListener(this);
+        mSearchView.setImeOptions(EditorInfo.IME_FLAG_NO_EXTRACT_UI);
+
+        // don't allow the SearchView to be closed
+        mSearchView.setOnCloseListener(new SearchView.OnCloseListener() {
+            @Override public boolean onClose() {
+                return true;
+            }
+        });
+        toolbar.addView(mSearchView);
+    }
+
+    private void showEmptyView(boolean show) {
+        if (!isFinishing()) {
+            TextView txtEmpty = findViewById(R.id.text_empty);
+            txtEmpty.setVisibility(show ? View.VISIBLE : View.GONE);
+            if (show) {
+                String message = getString(R.string.stock_photo_picker_initial_empty_text);
+                String subMessage = getString(R.string.stock_photo_picker_initial_empty_subtext);
+                String link = "<a href='https://pexels.com/'>Pexels</a>";
+                String html = message
+                              + "<br /><br />"
+                              + "<small>" + String.format(subMessage, link) + "</small>";
+                txtEmpty.setText(Html.fromHtml(html));
+            }
+        }
+    }
+
     private void showProgress(boolean show) {
         if (!isFinishing()) {
             findViewById(R.id.progress).setVisibility(show ? View.VISIBLE : View.GONE);
@@ -180,6 +207,7 @@ public class StockPhotoPickerActivity extends AppCompatActivity implements Searc
     private void submitSearch(@Nullable final String query, boolean delayed) {
         mSearchQuery = query;
 
+        // we need at least three characters to perform a search
         if (TextUtils.isEmpty(query) || query.length() <= 2) {
             mAdapter.clear();
             return;

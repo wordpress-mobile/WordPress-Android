@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent">
+                xmlns:app="http://schemas.android.com/apk/res-auto"
+                xmlns:tools="http://schemas.android.com/tools"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
 
-    <include layout="@layout/toolbar" />
+    <include layout="@layout/toolbar"/>
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/recycler"
@@ -14,21 +14,22 @@
         android:layout_below="@+id/toolbar"
         android:fadeScrollbars="true"
         android:scrollbars="vertical"
-        tools:listitem="@layout/stock_photo_picker_thumbnail" />
+        tools:listitem="@layout/stock_photo_picker_thumbnail"/>
 
     <org.wordpress.android.widgets.WPTextView
         android:id="@+id/text_empty"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerInParent="true"
-        android:drawablePadding="@dimen/margin_large"
-        android:drawableTop="@drawable/media_image_placeholder"
+        android:autoLink="web"
         android:gravity="center"
-        android:text="@string/media_empty_list"
+        android:linksClickable="true"
         android:textColor="@color/grey"
+        android:textColorLink="@color/link"
         android:textSize="@dimen/text_sz_extra_large"
         android:visibility="gone"
-        tools:visibility="visible" />
+        tools:text="@string/stock_photo_picker_initial_empty_text"
+        tools:visibility="visible"/>
 
     <ProgressBar
         android:id="@+id/progress"
@@ -37,6 +38,6 @@
         android:layout_height="wrap_content"
         android:layout_centerInParent="true"
         android:visibility="gone"
-        tools:visibility="visible" />
+        tools:visibility="visible"/>
 
 </RelativeLayout>
