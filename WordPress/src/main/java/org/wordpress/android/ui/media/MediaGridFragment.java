@@ -213,7 +213,6 @@ public class MediaGridFragment extends Fragment implements MediaGridAdapterCallb
         mGridManager = new GridLayoutManager(getActivity(), numColumns);
         mRecycler.setLayoutManager(mGridManager);
         mRecycler.setAdapter(getAdapter());
-        mRecycler.setEmptyView(view.findViewById(R.id.empty_view));
 
         // disable thumbnail loading during a fling to conserve memory
         final int minDistance = WPMediaUtils.getFlingDistanceToDisableThumbLoading(getActivity());
@@ -237,6 +236,7 @@ public class MediaGridFragment extends Fragment implements MediaGridAdapterCallb
         });
 
         mEmptyView = (TextView) view.findViewById(R.id.empty_view);
+        mRecycler.setEmptyView(mEmptyView);
 
         // swipe to refresh setup
         mSwipeToRefreshHelper = buildSwipeToRefreshHelper(
