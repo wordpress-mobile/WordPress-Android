@@ -470,7 +470,7 @@ public class ImageSettingsDialogFragment extends DialogFragment {
 
                 int progress = width / 10;
 
-                //OnSeekBarChangeListener will not be triggered if progress have not changed
+                // OnSeekBarChangeListener will not be triggered if progress have not changed
                 if (widthSeekBar.getProgress() == progress) {
                     widthText.setText(String.format(Locale.US, getString(R.string.pixel_suffix), progress * 10));
                 } else {
@@ -498,8 +498,9 @@ public class ImageSettingsDialogFragment extends DialogFragment {
         int width = 10;
 
         try {
-            if (editText.getText() != null)
+            if (editText.getText() != null) {
                 width = Integer.parseInt(editText.getText().toString().replace("px", ""));
+            }
         } catch (NumberFormatException e) {
             AppLog.e(AppLog.T.EDITOR, e);
         }
