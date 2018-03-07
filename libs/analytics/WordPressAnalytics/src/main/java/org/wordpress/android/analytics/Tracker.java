@@ -12,11 +12,17 @@ import java.util.UUID;
 
 public abstract class Tracker {
     abstract void track(Stat stat);
+
     abstract void track(Stat stat, Map<String, ?> properties);
+
     abstract void endSession();
+
     abstract void flush();
+
     abstract void refreshMetadata(AnalyticsMetadata metadata);
+
     abstract void registerPushNotificationToken(String regId);
+
     abstract String getAnonIdPrefKey();
 
     private String mAnonID = null; // do not access this variable directly. Use methods.
