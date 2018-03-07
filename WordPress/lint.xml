@@ -39,6 +39,6 @@
     </issue>
 
     <issue id="TypographyEllipsis" severity="warning">
-        <ignore regexp=".*values\-[a-z][a-z].*\/strings\.xml"/>
+        <ignore regexp=".*\/values\-([a-z]|[A-Z]|\-){2,6}\/strings\.xml$"/>
     </issue>
 </lint>
