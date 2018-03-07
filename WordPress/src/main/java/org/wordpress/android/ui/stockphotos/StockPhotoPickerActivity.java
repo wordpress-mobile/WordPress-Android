@@ -18,7 +18,6 @@ import android.text.TextUtils;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.inputmethod.EditorInfo;
 import android.widget.TextView;
 
 import org.wordpress.android.R;
@@ -32,7 +31,6 @@ import org.wordpress.android.util.DisplayUtils;
 import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.PhotonUtils;
 import org.wordpress.android.util.StringUtils;
-import org.wordpress.android.util.WPActivityUtils;
 import org.wordpress.android.util.WPLinkMovementMethod;
 import org.wordpress.android.viewmodel.StockMediaViewModel;
 import org.wordpress.android.widgets.WPNetworkImageView;
@@ -80,7 +78,7 @@ public class StockPhotoPickerActivity extends AppCompatActivity implements Searc
             actionBar.setDisplayHomeAsUpEnabled(true);
             actionBar.setDisplayShowTitleEnabled(true);
         }
-        addSearchView(toolbar);
+        configureSearchView();
 
         mRecycler = findViewById(R.id.recycler);
         mRecycler.setLayoutManager(new GridLayoutManager(this, getColumnCount()));
@@ -168,15 +166,8 @@ public class StockPhotoPickerActivity extends AppCompatActivity implements Searc
         return true;
     }
 
-    /*
-     * we add the SearchView programmatically rather than via onCreateOptionsMenu() because
-     * the latter doesn't allow us to have a SearchView that's always expanded
-     */
-    private void addSearchView(@NonNull Toolbar toolbar) {
-        mSearchView = new SearchView(WPActivityUtils.getThemedContext(this));
-        mSearchView.setIconifiedByDefault(false);
-        mSearchView.setQueryHint(getString(R.string.stock_photo_picker_search_hint));
-        mSearchView.setImeOptions(EditorInfo.IME_FLAG_NO_EXTRACT_UI);
+    private void configureSearchView() {
+        mSearchView = findViewById(R.id.search_view);
         mSearchView.setQuery(mViewModel.getSearchQuery(), false);
 
         // don't allow the SearchView to be closed
@@ -185,7 +176,6 @@ public class StockPhotoPickerActivity extends AppCompatActivity implements Searc
                 return true;
             }
         });
-        toolbar.addView(mSearchView);
 
         mSearchView.setOnQueryTextListener(this);
     }
