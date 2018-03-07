@@ -328,7 +328,8 @@
     <string name="pages_fetching">Fetching pages…</string>
     <string name="toast_err_post_uploading">Unable to open post while it\'s uploading</string>
     <string name="dialog_confirm_cancel_post_media_uploading">Are you sure? Deleting this post will also cancel the media upload.</string>
-    <string name="dialog_confirm_delete_post_page">This %s will be deleted and sent to Trash</string>
+    <string name="dialog_confirm_delete_post">This post will be deleted and sent to Trash</string>
+    <string name="dialog_confirm_delete_page">This page will be deleted and sent to Trash</string>
 
     <!-- reload drop down -->
     <string name="loading">Loading…</string>
