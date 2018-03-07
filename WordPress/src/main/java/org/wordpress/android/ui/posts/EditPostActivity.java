@@ -1671,9 +1671,9 @@ public class EditPostActivity extends AppCompatActivity implements
                     String.format(Locale.US,
                                   "<span id=\"img_container_%s\" class=\"img_container compat failed\" "
                                   + "contenteditable=\"false\" data-failed=\"%s\">"
-                                  + "<span class=\"upload-overlay failed\" contenteditable=\"false\">Uploading…</span>"
-                                  + "<span class=\"upload-overlay-bg\"></span><img data-wpid=\"%s\" src=\"%s\" alt=\"\""
-                                  + " class=\"failed\"></span>",
+                                  + "<span class=\"upload-overlay failed\" contenteditable=\"false\">"
+                                  + "Uploading…</span><span class=\"upload-overlay-bg\"></span>"
+                                  + "<img data-wpid=\"%s\" src=\"%s\" alt=\"\" class=\"failed\"></span>",
                                   mediaId, getString(R.string.tap_to_try_again), mediaId, path);
         }
         return replacement;
