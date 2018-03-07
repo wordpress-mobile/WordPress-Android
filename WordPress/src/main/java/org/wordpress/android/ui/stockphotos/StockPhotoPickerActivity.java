@@ -275,6 +275,7 @@ public class StockPhotoPickerActivity extends AppCompatActivity implements Searc
         if (numSelected > 0) {
             mTextInsert.setText(getString(R.string.insert) + " " + Integer.toString(numSelected));
             showSelectionBar();
+            ActivityUtils.hideKeyboardForced(mSearchView);
         } else {
             hideSelectionBar();
         }
