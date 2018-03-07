@@ -13,7 +13,7 @@ public class WPQuoteSpan extends QuoteSpan {
     private static final int STRIPE_WIDTH = 5;
     private static final int GAP_WIDTH = 20;
 
-    public WPQuoteSpan(){
+    public WPQuoteSpan() {
         super(STRIPE_COLOR);
     }
 
