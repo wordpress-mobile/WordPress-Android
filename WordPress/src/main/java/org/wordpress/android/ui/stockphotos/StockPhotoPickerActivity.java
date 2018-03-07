@@ -33,6 +33,7 @@ import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.PhotonUtils;
 import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.WPActivityUtils;
+import org.wordpress.android.util.WPLinkMovementMethod;
 import org.wordpress.android.viewmodel.StockMediaViewModel;
 import org.wordpress.android.widgets.WPNetworkImageView;
 
@@ -108,6 +109,7 @@ public class StockPhotoPickerActivity extends AppCompatActivity implements Searc
     protected void onDestroy() {
         if (mSearchView != null) {
             mSearchView.setOnQueryTextListener(null);
+            mSearchView.setOnCloseListener(null);
         }
         super.onDestroy();
     }
@@ -131,6 +133,7 @@ public class StockPhotoPickerActivity extends AppCompatActivity implements Searc
                 if (!isFinishing()) {
                     mIsFetching = false;
                     showProgress(false);
+                    showEmptyView(mediaList.isEmpty());
                     mAdapter.setMediaList(mediaList);
                 }
             }
@@ -170,8 +173,8 @@ public class StockPhotoPickerActivity extends AppCompatActivity implements Searc
         mSearchView = new SearchView(WPActivityUtils.getThemedContext(this));
         mSearchView.setIconifiedByDefault(false);
         mSearchView.setQueryHint(getString(R.string.stock_photo_picker_search_hint));
-        mSearchView.setOnQueryTextListener(this);
         mSearchView.setImeOptions(EditorInfo.IME_FLAG_NO_EXTRACT_UI);
+        mSearchView.setQuery(mViewModel.getSearchQuery(), false);
 
         // don't allow the SearchView to be closed
         mSearchView.setOnCloseListener(new SearchView.OnCloseListener() {
@@ -180,6 +183,8 @@ public class StockPhotoPickerActivity extends AppCompatActivity implements Searc
             }
         });
         toolbar.addView(mSearchView);
+
+        mSearchView.setOnQueryTextListener(this);
     }
 
     private void showEmptyView(boolean show) {
@@ -187,13 +192,18 @@ public class StockPhotoPickerActivity extends AppCompatActivity implements Searc
             TextView txtEmpty = findViewById(R.id.text_empty);
             txtEmpty.setVisibility(show ? View.VISIBLE : View.GONE);
             if (show) {
-                String message = getString(R.string.stock_photo_picker_initial_empty_text);
-                String subMessage = getString(R.string.stock_photo_picker_initial_empty_subtext);
-                String link = "<a href='https://pexels.com/'>Pexels</a>";
-                String html = message
-                              + "<br /><br />"
-                              + "<small>" + String.format(subMessage, link) + "</small>";
-                txtEmpty.setText(Html.fromHtml(html));
+                if (TextUtils.isEmpty(mSearchQuery)) {
+                    String message = getString(R.string.stock_photo_picker_initial_empty_text);
+                    String subMessage = getString(R.string.stock_photo_picker_initial_empty_subtext);
+                    String link = "<a href='https://pexels.com/'>Pexels</a>";
+                    String html = message
+                                  + "<br /><br />"
+                                  + "<small>" + String.format(subMessage, link) + "</small>";
+                    txtEmpty.setMovementMethod(WPLinkMovementMethod.getInstance());
+                    txtEmpty.setText(Html.fromHtml(html));
+                } else {
+                    txtEmpty.setText(R.string.stock_photo_picker_empty_results);
+                }
             }
         }
     }
@@ -210,6 +220,7 @@ public class StockPhotoPickerActivity extends AppCompatActivity implements Searc
         // we need at least three characters to perform a search
         if (TextUtils.isEmpty(query) || query.length() <= 2) {
             mAdapter.clear();
+            showEmptyView(true);
             return;
         }
 

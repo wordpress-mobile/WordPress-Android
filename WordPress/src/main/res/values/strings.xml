@@ -1984,6 +1984,7 @@
     <string name="stock_photo_picker_search_hint">Search free photo library</string>
     <string name="stock_photo_picker_initial_empty_text">Search to find free photos to add to your Media Library</string>
     <string name="stock_photo_picker_initial_empty_subtext">Powered by %s</string>
+    <string name="stock_photo_picker_empty_results">No matches</string>
 
     <!-- E-mail verification reminder dialog -->
     <string name="toast_saving_post_as_draft">Saving post as draft</string>
