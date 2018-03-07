@@ -110,7 +110,6 @@ public class AddQuickPressShortcutActivity extends BaseListActivity {
             if (sites.size() == 1) {
                 AddQuickPressShortcutActivity.this.buildDialog(0);
             }
-
         } else {
             // no account, load new account view
             ActivityLauncher.showSignInForResult(AddQuickPressShortcutActivity.this);
@@ -129,7 +128,7 @@ public class AddQuickPressShortcutActivity extends BaseListActivity {
             public void onClick(DialogInterface dialog, int which) {
                 if (TextUtils.isEmpty(quickPressShortcutName.getText())) {
                     ToastUtils.showToast(AddQuickPressShortcutActivity.this, R.string.quickpress_add_error,
-                            ToastUtils.Duration.LONG);
+                                         ToastUtils.Duration.LONG);
                 } else {
                     Intent shortcutIntent = new Intent(getApplicationContext(), EditPostActivity.class);
                     shortcutIntent.setAction(Intent.ACTION_MAIN);
@@ -157,7 +156,8 @@ public class AddQuickPressShortcutActivity extends BaseListActivity {
         });
         dialogBuilder.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
             // just let the dialog close
-            public void onClick(DialogInterface dialog, int which) {}
+            public void onClick(DialogInterface dialog, int which) {
+            }
         });
 
         dialogBuilder.setCancelable(false);
@@ -200,14 +200,14 @@ public class AddQuickPressShortcutActivity extends BaseListActivity {
             RelativeLayout view = (RelativeLayout) convertView;
             if (view == null) {
                 LayoutInflater inflater = getLayoutInflater();
-                view = (RelativeLayout)inflater.inflate(R.layout.home_row, parent, false);
+                view = (RelativeLayout) inflater.inflate(R.layout.home_row, parent, false);
             }
             String username = accountUsers[position];
             view.setId(Integer.valueOf(siteIds[position]));
 
-            TextView blogName = (TextView)view.findViewById(R.id.blogName);
-            TextView blogUsername = (TextView)view.findViewById(R.id.blogUser);
-            NetworkImageView blavatar = (NetworkImageView)view.findViewById(R.id.blavatar);
+            TextView blogName = (TextView) view.findViewById(R.id.blogName);
+            TextView blogUsername = (TextView) view.findViewById(R.id.blogUser);
+            NetworkImageView blavatar = (NetworkImageView) view.findViewById(R.id.blavatar);
 
             blogName.setText(
                     StringEscapeUtils.unescapeHtml4(blogNames[position]));
@@ -217,8 +217,6 @@ public class AddQuickPressShortcutActivity extends BaseListActivity {
             blavatar.setImageUrl(blavatars[position], mImageLoader);
 
             return view;
-
         }
-
     }
 }

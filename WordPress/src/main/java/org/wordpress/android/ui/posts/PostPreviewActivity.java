@@ -121,9 +121,9 @@ public class PostPreviewActivity extends BaseActivity {
         Fragment fragment = PostPreviewFragment.newInstance(mSite, mPost);
 
         fm.beginTransaction()
-                .replace(R.id.fragment_container, fragment, tagForFragment)
-                .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE)
-                .commitAllowingStateLoss();
+          .replace(R.id.fragment_container, fragment, tagForFragment)
+          .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE)
+          .commitAllowingStateLoss();
     }
 
     private boolean hasPreviewFragment() {
@@ -185,10 +185,10 @@ public class PostPreviewActivity extends BaseActivity {
         final ViewGroup messageView = (ViewGroup) findViewById(R.id.message_container);
 
         if (mPost == null
-                || mIsUpdatingPost
-                || UploadService.isPostUploadingOrQueued(mPost)
-                || (!mPost.isLocallyChanged() && !mPost.isLocalDraft())
-                && PostStatus.fromPost(mPost) != PostStatus.DRAFT) {
+            || mIsUpdatingPost
+            || UploadService.isPostUploadingOrQueued(mPost)
+            || (!mPost.isLocallyChanged() && !mPost.isLocalDraft())
+               && PostStatus.fromPost(mPost) != PostStatus.DRAFT) {
             messageView.setVisibility(View.GONE);
             return;
         }

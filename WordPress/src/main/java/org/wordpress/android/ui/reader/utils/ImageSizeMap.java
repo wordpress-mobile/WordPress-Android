@@ -19,6 +19,7 @@ import java.util.Iterator;
  */
 public class ImageSizeMap extends HashMap<String, ImageSizeMap.ImageSize> {
     private static final String EMPTY_JSON = "{}";
+
     public ImageSizeMap(@NonNull String postContent, String jsonString) {
         if (TextUtils.isEmpty(jsonString) || jsonString.equals(EMPTY_JSON)) {
             return;
@@ -34,7 +35,8 @@ public class ImageSizeMap extends HashMap<String, ImageSizeMap.ImageSize> {
             while (it.hasNext()) {
                 JSONObject jsonAttach = json.optJSONObject(it.next());
                 if (jsonAttach != null && JSONUtils.getString(jsonAttach, "mime_type").startsWith("image")) {
-                    String normUrl = UrlUtils.normalizeUrl(UrlUtils.removeQuery(JSONUtils.getString(jsonAttach, "URL")));
+                    String normUrl =
+                            UrlUtils.normalizeUrl(UrlUtils.removeQuery(JSONUtils.getString(jsonAttach, "URL")));
 
                     // make sure this image actually appears in the post content - it's possible for
                     // an image to be in the attachments but not in the post itself
@@ -73,7 +75,7 @@ public class ImageSizeMap extends HashMap<String, ImageSizeMap.ImageSize> {
     public String getLargestImageUrl(int minImageWidth) {
         String currentImageUrl = null;
         int currentMaxWidth = minImageWidth;
-        for (Entry<String, ImageSize> attach: this.entrySet()) {
+        for (Entry<String, ImageSize> attach : this.entrySet()) {
             if (attach.getValue().width > currentMaxWidth) {
                 currentImageUrl = attach.getKey();
                 currentMaxWidth = attach.getValue().width;
@@ -86,6 +88,7 @@ public class ImageSizeMap extends HashMap<String, ImageSizeMap.ImageSize> {
     public static class ImageSize {
         public final int width;
         public final int height;
+
         public ImageSize(int width, int height) {
             this.width = width;
             this.height = height;

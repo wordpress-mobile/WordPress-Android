@@ -87,7 +87,6 @@ import de.greenrobot.event.EventBus;
 public class MediaBrowserActivity extends BaseActivity implements MediaGridListener,
         OnQueryTextListener, OnActionExpandListener,
         WPMediaUtils.LaunchCameraCallback {
-
     public static final String ARG_BROWSER_TYPE = "media_browser_type";
     public static final String ARG_FILTER = "filter";
     public static final String RESULT_IDS = "result_ids";
@@ -219,11 +218,11 @@ public class MediaBrowserActivity extends BaseActivity implements MediaGridListe
             int selectedColor = ContextCompat.getColor(this, R.color.white);
             mTabLayout.setTabTextColors(normalColor, selectedColor);
 
-            mTabLayout.addTab(mTabLayout.newTab().setText(R.string.media_all));         // FILTER_ALL
-            mTabLayout.addTab(mTabLayout.newTab().setText(R.string.media_images));      // FILTER_IMAGES
-            mTabLayout.addTab(mTabLayout.newTab().setText(R.string.media_documents));   // FILTER_DOCUMENTS
-            mTabLayout.addTab(mTabLayout.newTab().setText(R.string.media_videos));      // FILTER_VIDEOS
-            mTabLayout.addTab(mTabLayout.newTab().setText(R.string.media_audio));       // FILTER_AUDIO
+            mTabLayout.addTab(mTabLayout.newTab().setText(R.string.media_all)); // FILTER_ALL
+            mTabLayout.addTab(mTabLayout.newTab().setText(R.string.media_images)); // FILTER_IMAGES
+            mTabLayout.addTab(mTabLayout.newTab().setText(R.string.media_documents)); // FILTER_DOCUMENTS
+            mTabLayout.addTab(mTabLayout.newTab().setText(R.string.media_videos)); // FILTER_VIDEOS
+            mTabLayout.addTab(mTabLayout.newTab().setText(R.string.media_audio)); // FILTER_AUDIO
 
             mTabLayout.setOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
                 @Override
@@ -251,7 +250,8 @@ public class MediaBrowserActivity extends BaseActivity implements MediaGridListe
                         LinearLayout tabFirstChild = (LinearLayout) mTabLayout.getChildAt(0);
                         for (int i = 0; i < mTabLayout.getTabCount(); i++) {
                             LinearLayout tabView = (LinearLayout) (tabFirstChild.getChildAt(i));
-                            tabLayoutWidth += (tabView.getMeasuredWidth() + ViewCompat.getPaddingStart(tabView) + ViewCompat.getPaddingEnd(tabView));
+                            tabLayoutWidth += (tabView.getMeasuredWidth() + ViewCompat.getPaddingStart(tabView)
+                                               + ViewCompat.getPaddingEnd(tabView));
                         }
 
                         int displayWidth = DisplayUtils.getDisplayPixelWidth(MediaBrowserActivity.this);
@@ -272,7 +272,7 @@ public class MediaBrowserActivity extends BaseActivity implements MediaGridListe
     }
 
     private MediaFilter getFilterForPosition(int position) {
-        for (MediaFilter filter: MediaFilter.values()) {
+        for (MediaFilter filter : MediaFilter.values()) {
             if (filter.getValue() == position) {
                 return filter;
             }
@@ -288,8 +288,8 @@ public class MediaBrowserActivity extends BaseActivity implements MediaGridListe
             mTabLayout.setScrollPosition(position, 0f, true);
         }
 
-        if (mMediaGridFragment != null &&
-                (mMediaGridFragment.getFilter() != filter || mMediaGridFragment.isEmpty())) {
+        if (mMediaGridFragment != null
+                && (mMediaGridFragment.getFilter() != filter || mMediaGridFragment.isEmpty())) {
             mMediaGridFragment.setFilter(filter);
         }
     }
@@ -431,7 +431,7 @@ public class MediaBrowserActivity extends BaseActivity implements MediaGridListe
     }
 
     @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String permissions[], @NonNull int[] results) {
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] results) {
         boolean allGranted = WPPermissionUtils.setPermissionListAsked(
                 this, requestCode, permissions, results, true);
 
@@ -453,8 +453,8 @@ public class MediaBrowserActivity extends BaseActivity implements MediaGridListe
 
         // open search bar if we were searching for something before
         if (!TextUtils.isEmpty(mQuery) && mMediaGridFragment != null && mMediaGridFragment.isVisible()) {
-            String tempQuery = mQuery; //temporary hold onto query
-            MenuItemCompat.expandActionView(mSearchMenuItem); //this will reset mQuery
+            String tempQuery = mQuery; // temporary hold onto query
+            MenuItemCompat.expandActionView(mSearchMenuItem); // this will reset mQuery
             onQueryTextSubmit(tempQuery);
             mSearchView.setQuery(mQuery, true);
         }
@@ -593,7 +593,7 @@ public class MediaBrowserActivity extends BaseActivity implements MediaGridListe
     private void showMediaSettings(@NonNull MediaModel media) {
         List<MediaModel> mediaList = mMediaGridFragment.getFilteredMedia();
         ArrayList<String> idList = new ArrayList<>();
-        for (MediaModel thisMedia: mediaList) {
+        for (MediaModel thisMedia : mediaList) {
             idList.add(Integer.toString(thisMedia.getId()));
         }
         MediaSettingsActivity.showForResult(this, mSite, media, idList);
@@ -685,8 +685,8 @@ public class MediaBrowserActivity extends BaseActivity implements MediaGridListe
                 mDispatcher.dispatch(MediaActionBuilder.newCancelMediaUploadAction(payload));
             }
 
-            if (mediaModel.getUploadState() != null &&
-                    MediaUtils.isLocalFile(mediaModel.getUploadState().toLowerCase())) {
+            if (mediaModel.getUploadState() != null
+                    && MediaUtils.isLocalFile(mediaModel.getUploadState().toLowerCase())) {
                 mDispatcher.dispatch(MediaActionBuilder.newRemoveMediaAction(mediaModel));
             } else {
                 mediaToDelete.add(mediaModel);
@@ -821,9 +821,9 @@ public class MediaBrowserActivity extends BaseActivity implements MediaGridListe
 
         String[] permissions;
         if (item == AddMenuItem.ITEM_CAPTURE_PHOTO || item == AddMenuItem.ITEM_CAPTURE_VIDEO) {
-            permissions = new String[]{ Manifest.permission.CAMERA, Manifest.permission.WRITE_EXTERNAL_STORAGE };
+            permissions = new String[] {Manifest.permission.CAMERA, Manifest.permission.WRITE_EXTERNAL_STORAGE};
         } else {
-            permissions = new String[] { Manifest.permission.WRITE_EXTERNAL_STORAGE };
+            permissions = new String[] {Manifest.permission.WRITE_EXTERNAL_STORAGE};
         }
         if (PermissionUtils.checkAndRequestPermissions(
                 this, WPPermissionUtils.MEDIA_BROWSER_PERMISSION_REQUEST_CODE, permissions)) {
@@ -896,18 +896,18 @@ public class MediaBrowserActivity extends BaseActivity implements MediaGridListe
     private void handleSharedMedia() {
         Intent intent = getIntent();
 
-        final List<Uri> multi_stream;
+        final List<Uri> multiStream;
         if (Intent.ACTION_SEND_MULTIPLE.equals(intent.getAction())) {
-            multi_stream = intent.getParcelableArrayListExtra((Intent.EXTRA_STREAM));
+            multiStream = intent.getParcelableArrayListExtra((Intent.EXTRA_STREAM));
         } else if (Intent.ACTION_SEND.equals(intent.getAction())) {
-            multi_stream = new ArrayList<>();
-            multi_stream.add((Uri) intent.getParcelableExtra(Intent.EXTRA_STREAM));
+            multiStream = new ArrayList<>();
+            multiStream.add((Uri) intent.getParcelableExtra(Intent.EXTRA_STREAM));
         } else {
-            multi_stream = null;
+            multiStream = null;
         }
 
-        if (multi_stream != null) {
-            uploadList(multi_stream);
+        if (multiStream != null) {
+            uploadList(multiStream);
         }
 
         // clear the intent's action, so that in case the user rotates, we don't re-upload the same files
@@ -947,7 +947,7 @@ public class MediaBrowserActivity extends BaseActivity implements MediaGridListe
         }
     }
 
-    private void updateMediaGridForTheseMedia(List<MediaModel> mediaModelList){
+    private void updateMediaGridForTheseMedia(List<MediaModel> mediaModelList) {
         if (mediaModelList != null) {
             for (MediaModel media : mediaModelList) {
                 updateMediaGridItem(media, true);
@@ -984,5 +984,4 @@ public class MediaBrowserActivity extends BaseActivity implements MediaGridListe
             updateMediaGridForTheseMedia(event.mediaModelList);
         }
     }
-
 }

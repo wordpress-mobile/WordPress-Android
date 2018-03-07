@@ -19,8 +19,8 @@ import org.wordpress.android.WordPress;
 import org.wordpress.android.fluxc.store.AccountStore;
 import org.wordpress.android.ui.accounts.login.LoginHeaderViewHolder;
 import org.wordpress.android.ui.main.SitePickerAdapter;
-import org.wordpress.android.ui.main.SitePickerAdapter.SiteList;
 import org.wordpress.android.ui.main.SitePickerAdapter.HeaderHandler;
+import org.wordpress.android.ui.main.SitePickerAdapter.SiteList;
 import org.wordpress.android.ui.media.MediaBrowserActivity;
 import org.wordpress.android.ui.posts.EditPostActivity;
 import org.wordpress.android.util.ViewUtils;
@@ -28,7 +28,6 @@ import org.wordpress.android.util.ViewUtils;
 import javax.inject.Inject;
 
 public class ShareIntentReceiverFragment extends Fragment {
-
     public static final String TAG = "share_intent_fragment_tag";
 
     private static final String ARG_SHARING_MEDIA = "ARG_SHARING_MEDIA";
@@ -50,7 +49,7 @@ public class ShareIntentReceiverFragment extends Fragment {
     private View mBottomButtonsShadow;
 
     public static ShareIntentReceiverFragment newInstance(boolean sharingMediaFile, int lastUsedBlogLocalId,
-            boolean afterLogin) {
+                                                          boolean afterLogin) {
         ShareIntentReceiverFragment fragment = new ShareIntentReceiverFragment();
         Bundle args = new Bundle();
         args.putBoolean(ARG_SHARING_MEDIA, sharingMediaFile);
@@ -73,7 +72,7 @@ public class ShareIntentReceiverFragment extends Fragment {
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container,
-            @Nullable Bundle savedInstanceState) {
+                             @Nullable Bundle savedInstanceState) {
         ViewGroup layout = (ViewGroup) inflater.inflate(R.layout.login_epilogue_screen, container, false);
         initButtonsContainer(layout);
         initShareActionPostButton(layout);
@@ -144,7 +143,8 @@ public class ShareIntentReceiverFragment extends Fragment {
     }
 
     private Adapter createSiteAdapter() {
-        mAdapter = new SitePickerAdapter(getActivity(), R.layout.share_intent_sites_listitem, 0, "", false,
+        mAdapter = new SitePickerAdapter(
+                getActivity(), R.layout.share_intent_sites_listitem, 0, "", false,
                 new SitePickerAdapter.OnDataLoadedListener() {
                     @Override
                     public void onBeforeLoad(boolean isEmpty) {
@@ -164,15 +164,15 @@ public class ShareIntentReceiverFragment extends Fragment {
                                     mBottomButtonsContainer.setBackgroundResource(R.color.white);
                                     mShareMediaBtn.setTextColor(getResources().getColor(R.color.blue_wordpress));
                                     ViewUtils.setButtonBackgroundColor(getContext(), mShareMediaBtn,
-                                            R.style.WordPress_Button_Grey, R.attr.colorButtonNormal);
+                                                                       R.style.WordPress_Button_Grey,
+                                                                       R.attr.colorButtonNormal);
                                 } else {
                                     mBottomButtonsShadow.setVisibility(View.GONE);
                                     mBottomButtonsContainer.setBackground(null);
                                     mShareMediaBtn.setTextColor(getResources().getColor(R.color.grey_dark));
-                                    ViewUtils
-                                            .setButtonBackgroundColor(getContext(), mShareMediaBtn,
-                                                    R.style.WordPress_Button,
-                                                    R.attr.colorButtonNormal);
+                                    ViewUtils.setButtonBackgroundColor(getContext(), mShareMediaBtn,
+                                                                       R.style.WordPress_Button,
+                                                                       R.attr.colorButtonNormal);
                                 }
                             }
                         });
@@ -190,7 +190,7 @@ public class ShareIntentReceiverFragment extends Fragment {
         return new HeaderHandler() {
             @Override
             public ViewHolder onCreateViewHolder(LayoutInflater layoutInflater, ViewGroup parent,
-                    boolean attachToRoot) {
+                                                 boolean attachToRoot) {
                 return new LoginHeaderViewHolder(layoutInflater.inflate(R.layout.login_epilogue_header, parent, false));
             }
 
@@ -222,12 +222,9 @@ public class ShareIntentReceiverFragment extends Fragment {
             this.targetClass = targetClass;
             this.analyticsName = analyticsName;
         }
-
     }
 
     interface ShareIntentFragmentListener {
-
         void share(ShareAction shareAction, int selectedSiteLocalId);
     }
-
 }

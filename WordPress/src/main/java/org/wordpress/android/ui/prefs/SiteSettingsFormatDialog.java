@@ -29,7 +29,6 @@ import org.wordpress.android.util.EditTextUtils;
  */
 
 public class SiteSettingsFormatDialog extends DialogFragment implements DialogInterface.OnClickListener {
-
     public enum FormatType {
         DATE_FORMAT,
         TIME_FORMAT;
@@ -98,8 +97,8 @@ public class SiteSettingsFormatDialog extends DialogFragment implements DialogIn
             mEditCustomFormat.setText(mFormatValue);
         }
 
-        @StringRes int titleRes = formatType == FormatType.DATE_FORMAT ?
-                R.string.site_settings_date_format_title : R.string.site_settings_time_format_title;
+        @StringRes int titleRes = formatType == FormatType.DATE_FORMAT
+                ? R.string.site_settings_date_format_title : R.string.site_settings_time_format_title;
         txtTitle.setText(titleRes);
 
         txtHelp.setOnClickListener(new View.OnClickListener() {
@@ -158,7 +157,7 @@ public class SiteSettingsFormatDialog extends DialogFragment implements DialogIn
     }
 
     private boolean isCustomFormatValue(@NonNull String value) {
-        for (String thisValue: mValues) {
+        for (String thisValue : mValues) {
             if (thisValue.equals(value)) {
                 return false;
             }
@@ -188,5 +187,4 @@ public class SiteSettingsFormatDialog extends DialogFragment implements DialogIn
 
         super.onDismiss(dialog);
     }
-
 }

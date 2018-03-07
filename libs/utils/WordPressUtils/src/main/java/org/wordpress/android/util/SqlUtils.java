@@ -23,6 +23,7 @@ public class SqlUtils {
     public static long boolToSql(boolean value) {
         return (value ? 1 : 0);
     }
+
     public static boolean sqlToBool(int value) {
         return (value != 0);
     }
@@ -52,7 +53,7 @@ public class SqlUtils {
 
     public static int intForQuery(SQLiteDatabase db, String query, String[] selectionArgs) {
         long value = longForQuery(db, query, selectionArgs);
-        return (int)value;
+        return (int) value;
     }
 
     public static boolean boolForQuery(SQLiteDatabase db, String query, String[] selectionArgs) {
@@ -111,7 +112,7 @@ public class SqlUtils {
 
         db.beginTransaction();
         try {
-            for (String tableName: tableNames) {
+            for (String tableName : tableNames) {
                 db.execSQL("DROP TABLE IF EXISTS " + tableName);
             }
             db.setTransactionSuccessful();
@@ -127,11 +128,14 @@ public class SqlUtils {
      * with a very large text column, causing an IllegalStateException when the
      * row is read - prevent this by limiting the amount of text that's stored in
      * the text column.
-     * https://github.com/android/platform_frameworks_base/blob/b77bc869241644a662f7e615b0b00ecb5aee373d/core/res/res/values/config.xml#L1268
-     * https://github.com/android/platform_frameworks_base/blob/3bdbf644d61f46b531838558fabbd5b990fc4913/core/java/android/database/CursorWindow.java#L103
+     * https://github.com/android/platform_frameworks_base/blob/b77bc869241644a662f7e615b0b00ecb5aee373d/core/res/res
+     * /values/config.xml#L1268
+     * https://github.com/android/platform_frameworks_base/blob/3bdbf644d61f46b531838558fabbd5b990fc4913/core/java
+     * /android/database/CursorWindow.java#L103
      */
     // Max 512K characters (a UTF-8 char is 4 bytes max, so a 512K characters string is always < 2Mb)
     private static final int MAX_TEXT_LEN = 1024 * 1024 / 2;
+
     public static String maxSQLiteText(final String text) {
         if (text.length() <= MAX_TEXT_LEN) {
             return text;

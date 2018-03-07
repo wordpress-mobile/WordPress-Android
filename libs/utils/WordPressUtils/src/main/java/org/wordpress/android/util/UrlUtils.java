@@ -71,7 +71,7 @@ public class UrlUtils {
         if (url != null && url.startsWith("//")) {
             url = url.substring(2);
             if (scheme != null) {
-                if (scheme.endsWith("://")){
+                if (scheme.endsWith("://")) {
                     url = scheme + url;
                 } else {
                     AppLog.e(T.UTILS, "Invalid scheme used: " + scheme);
@@ -94,7 +94,7 @@ public class UrlUtils {
             return null;
         }
 
-        // Remove leading double slash (eg. //example.com), needed for some wporg instances configured to
+        // Remove leading double slash (eg. // example.com), needed for some wporg instances configured to
         // switch between http or https
         url = removeLeadingDoubleSlash(url, (addHttps ? "https" : "http") + "://");
 
@@ -119,8 +119,8 @@ public class UrlUtils {
         // this routine is called from some performance-critical code and creating a URI from a string
         // is slow, so skip it when possible - if we know it's not a relative path (and 99.9% of the
         // time it won't be for our purposes) then we can normalize it without java.net.URI.normalize()
-        if (urlString.startsWith("http") &&
-                !urlString.contains("build/intermediates/exploded-aar/org.wordpress/graphview/3.1.1")) {
+        if (urlString.startsWith("http")
+            && !urlString.contains("build/intermediates/exploded-aar/org.wordpress/graphview/3.1.1")) {
             // return without a trailing slash
             if (urlString.endsWith("/")) {
                 return urlString.substring(0, urlString.length() - 1);
@@ -178,7 +178,9 @@ public class UrlUtils {
     }
 
     public static boolean isHttps(URI uri) {
-        if (uri == null) return false;
+        if (uri == null) {
+            return false;
+        }
 
         String protocol = uri.getScheme();
         return protocol != null && protocol.equals("https");
@@ -233,12 +235,14 @@ public class UrlUtils {
 
     // returns true if the passed url is for an image
     public static boolean isImageUrl(String url) {
-        if (TextUtils.isEmpty(url)) return false;
+        if (TextUtils.isEmpty(url)) {
+            return false;
+        }
 
         String cleanedUrl = removeQuery(url.toLowerCase());
 
-        return cleanedUrl.endsWith("jpg") || cleanedUrl.endsWith("jpeg") ||
-                cleanedUrl.endsWith("gif") || cleanedUrl.endsWith("png");
+        return cleanedUrl.endsWith("jpg") || cleanedUrl.endsWith("jpeg")
+               || cleanedUrl.endsWith("gif") || cleanedUrl.endsWith("png");
     }
 
     public static String appendUrlParameter(String url, String paramName, String paramValue) {

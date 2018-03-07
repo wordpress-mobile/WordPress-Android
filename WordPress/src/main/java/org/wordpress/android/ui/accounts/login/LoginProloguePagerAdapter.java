@@ -15,27 +15,27 @@ public class LoginProloguePagerAdapter extends FragmentPagerAdapter {
     static final String LOGIN_PROLOGUE_READER_TAG = "login_prologue_reader_tag";
 
     private final String[] mAnims = {
-        "login_anims/post.json",
-        "login_anims/stats.json",
-        "login_anims/reader.json",
-        "login_anims/notifications.json",
-        "login_anims/jetpack.json"
+            "login_anims/post.json",
+            "login_anims/stats.json",
+            "login_anims/reader.json",
+            "login_anims/notifications.json",
+            "login_anims/jetpack.json"
     };
 
     private final @StringRes int[] mPromoTexts = {
-        R.string.login_promo_text_onthego,
-        R.string.login_promo_text_realtime,
-        R.string.login_promo_text_anytime,
-        R.string.login_promo_text_notifications,
-        R.string.login_promo_text_jetpack
+            R.string.login_promo_text_onthego,
+            R.string.login_promo_text_realtime,
+            R.string.login_promo_text_anytime,
+            R.string.login_promo_text_notifications,
+            R.string.login_promo_text_jetpack
     };
 
-    private static final String[] sTags = {
-        LOGIN_PROLOGUE_POST_TAG,
-        LOGIN_PROLOGUE_STATS_TAG,
-        LOGIN_PROLOGUE_READER_TAG,
-        LOGIN_PROLOGUE_NOTIFICATIONS_TAG,
-        LOGIN_PROLOGUE_JETPACK_TAG
+    private static final String[] TAGS = {
+            LOGIN_PROLOGUE_POST_TAG,
+            LOGIN_PROLOGUE_STATS_TAG,
+            LOGIN_PROLOGUE_READER_TAG,
+            LOGIN_PROLOGUE_NOTIFICATIONS_TAG,
+            LOGIN_PROLOGUE_JETPACK_TAG
     };
 
     public LoginProloguePagerAdapter(FragmentManager supportFragmentManager) {
@@ -53,6 +53,6 @@ public class LoginProloguePagerAdapter extends FragmentPagerAdapter {
     }
 
     public static String getTag(int position) {
-        return sTags[position];
+        return TAGS[position];
     }
 }

@@ -64,8 +64,8 @@ public class NetworkUtils {
      */
     public static boolean isMobileConnected(Context context) {
         int networkType = getActiveNetworkType(context);
-        return (networkType == ConnectivityManager.TYPE_MOBILE ||
-                networkType == ConnectivityManager.TYPE_MOBILE_DUN);
+        return (networkType == ConnectivityManager.TYPE_MOBILE
+                || networkType == ConnectivityManager.TYPE_MOBILE_DUN);
     }
 
     /**

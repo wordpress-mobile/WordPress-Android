@@ -69,8 +69,8 @@ public class BlogPreferencesActivity extends BaseActivity {
             siteSettingsFragment = new SiteSettingsFragment();
             siteSettingsFragment.setArguments(getIntent().getExtras());
             fragmentManager.beginTransaction()
-                    .replace(android.R.id.content, siteSettingsFragment, KEY_SETTINGS_FRAGMENT)
-                    .commit();
+                           .replace(android.R.id.content, siteSettingsFragment, KEY_SETTINGS_FRAGMENT)
+                           .commit();
         }
     }
 
@@ -115,9 +115,9 @@ public class BlogPreferencesActivity extends BaseActivity {
             siteSettingsFragment.setEditingEnabled(event.isConnected());
 
             // TODO: add this back when delete blog is back
-            //https://github.com/wordpress-mobile/WordPress-Android/commit/6a90e3fe46e24ee40abdc4a7f8f0db06f157900c
+            // https://github.com/wordpress-mobile/WordPress-Android/commit/6a90e3fe46e24ee40abdc4a7f8f0db06f157900c
             // Checks for stats widgets that were synched with a blog that could be gone now.
-            //            StatsWidgetProvider.updateWidgetsOnLogout(this);
+            // StatsWidgetProvider.updateWidgetsOnLogout(this);
         }
     }
 

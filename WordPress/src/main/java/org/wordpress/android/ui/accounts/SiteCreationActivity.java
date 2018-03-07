@@ -81,7 +81,7 @@ public class SiteCreationActivity extends BaseActivity implements SiteCreationLi
     private void slideInFragment(Fragment fragment, String tag) {
         FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
         fragmentTransaction.setCustomAnimations(R.anim.activity_slide_in_from_right, R.anim.activity_slide_out_to_left,
-                R.anim.activity_slide_in_from_left, R.anim.activity_slide_out_to_right);
+                                                R.anim.activity_slide_in_from_left, R.anim.activity_slide_out_to_right);
         fragmentTransaction.replace(R.id.fragment_container, fragment, tag);
         fragmentTransaction.addToBackStack(null);
         fragmentTransaction.commitAllowingStateLoss();
@@ -197,8 +197,8 @@ public class SiteCreationActivity extends BaseActivity implements SiteCreationLi
         mSiteDomain = domain;
         String siteSlug = UrlUtils.extractSubDomain(domain);
 
-        SiteCreationCreatingFragment siteCreationCreatingFragment = SiteCreationCreatingFragment.newInstance(mSiteTitle,
-                mSiteTagline, siteSlug, mThemeId);
+        SiteCreationCreatingFragment siteCreationCreatingFragment =
+                SiteCreationCreatingFragment.newInstance(mSiteTitle, mSiteTagline, siteSlug, mThemeId);
         slideInFragment(siteCreationCreatingFragment, SiteCreationCreatingFragment.TAG);
     }
 

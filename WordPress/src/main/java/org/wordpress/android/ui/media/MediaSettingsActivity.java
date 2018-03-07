@@ -90,8 +90,8 @@ import javax.inject.Inject;
 
 import static org.wordpress.android.editor.EditorImageMetaData.ARG_EDITOR_IMAGE_METADATA;
 
-public class MediaSettingsActivity extends BaseActivity implements ActivityCompat.OnRequestPermissionsResultCallback {
-
+public class MediaSettingsActivity extends BaseActivity
+        implements ActivityCompat.OnRequestPermissionsResultCallback {
     private static final String ARG_MEDIA_LOCAL_ID = "media_local_id";
     private static final String ARG_ID_LIST = "id_list";
     private static final String ARG_DELETE_MEDIA_DIALOG_VISIBLE = "delete_media_dialog_visible";
@@ -143,9 +143,9 @@ public class MediaSettingsActivity extends BaseActivity implements ActivityCompa
     Dispatcher mDispatcher;
 
     /**
-     * @param activity    calling activity
-     * @param site        site this media is associated with
-     * @param media       media model to display
+     * @param activity calling activity
+     * @param site site this media is associated with
+     * @param media media model to display
      * @param mediaIdList optional list of media IDs to page through in preview screen
      */
     public static void showForResult(@NonNull Activity activity,
@@ -155,8 +155,8 @@ public class MediaSettingsActivity extends BaseActivity implements ActivityCompa
         // go directly to preview for local images, videos and audio (do nothing for local documents)
         if (MediaUtils.isLocalFile(media.getUploadState())) {
             if (MediaUtils.isValidImage(media.getFilePath())
-                    || MediaUtils.isAudio(media.getFilePath())
-                    || media.isVideo()) {
+                || MediaUtils.isAudio(media.getFilePath())
+                || media.isVideo()) {
                 MediaPreviewActivity.showPreview(activity, site, media.getFilePath());
             }
             return;
@@ -178,14 +178,13 @@ public class MediaSettingsActivity extends BaseActivity implements ActivityCompa
     }
 
     /**
-     * @param activity    calling activity
-     * @param site        site this media is associated with
+     * @param activity calling activity
+     * @param site site this media is associated with
      * @param editorMedia editor image metadata
      */
     public static void showForResult(@NonNull Activity activity,
                                      @NonNull SiteModel site,
                                      @NonNull EditorImageMetaData editorMedia) {
-
         Intent intent = new Intent(activity, MediaSettingsActivity.class);
         intent.putExtra(WordPress.SITE, site);
         intent.putExtra(ARG_EDITOR_IMAGE_METADATA, editorMedia);
@@ -238,7 +237,6 @@ public class MediaSettingsActivity extends BaseActivity implements ActivityCompa
             if (savedInstanceState.getBoolean(ARG_DELETE_MEDIA_DIALOG_VISIBLE, false)) {
                 deleteMediaWithConfirmation();
             }
-
         } else {
             mSite = (SiteModel) getIntent().getSerializableExtra(WordPress.SITE);
             mEditorImageMetaData = getIntent().getParcelableExtra(ARG_EDITOR_IMAGE_METADATA);
@@ -257,14 +255,14 @@ public class MediaSettingsActivity extends BaseActivity implements ActivityCompa
         final CollapsingToolbarLayout collapsingToolbar = findViewById(R.id.collapsing_toolbar);
         AppBarLayout appBarLayout = findViewById(R.id.app_bar_layout);
         appBarLayout.addOnOffsetChangedListener(new AppBarLayout.OnOffsetChangedListener() {
-            int scrollRange = -1;
+            int mScrollRange = -1;
 
             @Override
             public void onOffsetChanged(AppBarLayout appBarLayout, int verticalOffset) {
-                if (scrollRange == -1) {
-                    scrollRange = appBarLayout.getTotalScrollRange();
+                if (mScrollRange == -1) {
+                    mScrollRange = appBarLayout.getTotalScrollRange();
                 }
-                if (scrollRange + verticalOffset == 0) {
+                if (mScrollRange + verticalOffset == 0) {
                     collapsingToolbar.setTitle(mTitle);
                 } else {
                     collapsingToolbar.setTitle(" "); // space between double quotes is on purpose
@@ -329,7 +327,7 @@ public class MediaSettingsActivity extends BaseActivity implements ActivityCompa
 
         mMedia = media;
 
-        //try to get a file without parameters so we can more reliably determine media type
+        // try to get a file without parameters so we can more reliably determine media type
         String uriFilePath = !TextUtils.isEmpty(mMedia.getUrl()) ? Uri.parse(mMedia.getUrl()).getPath() : "";
 
         // determine media type up front, default to DOCUMENT if we can't detect it's an image, video, or audio file
@@ -348,7 +346,8 @@ public class MediaSettingsActivity extends BaseActivity implements ActivityCompa
         }
 
         mImagePlay.setVisibility(isVideo() || isAudio() ? View.VISIBLE : View.GONE);
-        findViewById(R.id.edit_alt_text_layout).setVisibility(isVideo() || isAudio() || isDocument() ? View.GONE : View.VISIBLE);
+        findViewById(R.id.edit_alt_text_layout)
+                .setVisibility(isVideo() || isAudio() || isDocument() ? View.GONE : View.VISIBLE);
 
         showMetaData();
 
@@ -376,9 +375,11 @@ public class MediaSettingsActivity extends BaseActivity implements ActivityCompa
         mediaModel.setCaption(mEditorImageMetaData.getCaption());
         mediaModel.setAlt(mEditorImageMetaData.getAlt());
         if (!TextUtils.isEmpty(mEditorImageMetaData.getSrc())) {
-            mediaModel.setFileName(mEditorImageMetaData.getSrc().substring(mEditorImageMetaData.getSrc().lastIndexOf("/") + 1));
+            mediaModel.setFileName(
+                    mEditorImageMetaData.getSrc().substring(mEditorImageMetaData.getSrc().lastIndexOf("/") + 1));
         }
-        mediaModel.setFileExtension(org.wordpress.android.fluxc.utils.MediaUtils.getExtension(mEditorImageMetaData.getSrc()));
+        mediaModel.setFileExtension(
+                org.wordpress.android.fluxc.utils.MediaUtils.getExtension(mEditorImageMetaData.getSrc()));
         mediaModel.setWidth(mEditorImageMetaData.getWidthInt());
         mediaModel.setHeight(mEditorImageMetaData.getHeightInt());
         return mediaModel;
@@ -651,12 +652,12 @@ public class MediaSettingsActivity extends BaseActivity implements ActivityCompa
 
         int imageSizeKey = Arrays.asList(mImageSizeKeyArray).indexOf(mEditorImageMetaData.getSize());
 
-        //image size is parsed from html, so we can get non standard values (anything that matches ^size-.*)
-        //in this case we should default to full size
+        // image size is parsed from html, so we can get non standard values (anything that matches ^size-.*)
+        // in this case we should default to full size
         if (imageSizeKey == -1) {
             imageSizeKey = mImageSizeLabelArray.length - 1;
             AppLog.w(AppLog.T.MEDIA, "Unrecognized image size class passed to MediaSettings from editor: "
-                    + mEditorImageMetaData.getSize());
+                                     + mEditorImageMetaData.getSize());
         }
 
         mImageSizeSeekBarView.setMax(mImageSizeLabelArray.length - 1);
@@ -705,8 +706,8 @@ public class MediaSettingsActivity extends BaseActivity implements ActivityCompa
         mAlignmentKeyArray = getResources().getStringArray(R.array.alignment_key_array);
         int alignmentIndex = Arrays.asList(mAlignmentKeyArray).indexOf(alignment);
 
-        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this, R.array.alignment_array,
-                R.layout.media_settings_alignment_spinner_item);
+        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(
+                this, R.array.alignment_array, R.layout.media_settings_alignment_spinner_item);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
 
         mAlignmentSpinnerView.setAdapter(adapter);
@@ -840,7 +841,6 @@ public class MediaSettingsActivity extends BaseActivity implements ActivityCompa
                 } else {
                     MediaPreviewActivity.showPreview(MediaSettingsActivity.this, mSite, mMedia, mMediaIdList);
                 }
-
             }
         }, 200);
     }
@@ -858,8 +858,7 @@ public class MediaSettingsActivity extends BaseActivity implements ActivityCompa
     }
 
     @Override
-    public void onRequestPermissionsResult(int requestCode,
-                                           @NonNull String permissions[],
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions,
                                            @NonNull int[] grantResults) {
         boolean allGranted = WPPermissionUtils.setPermissionListAsked(
                 this, requestCode, permissions, grantResults, true);
@@ -893,7 +892,9 @@ public class MediaSettingsActivity extends BaseActivity implements ActivityCompa
     };
 
     private void saveChanges() {
-        if (isFinishing()) return;
+        if (isFinishing()) {
+            return;
+        }
 
         String thisTitle = EditTextUtils.getText(mTitleView);
         String thisCaption = EditTextUtils.getText(mCaptionView);
@@ -909,9 +910,9 @@ public class MediaSettingsActivity extends BaseActivity implements ActivityCompa
             }
 
             boolean hasChanged = !StringUtils.equals(media.getTitle(), thisTitle)
-                    || !StringUtils.equals(media.getCaption(), thisCaption)
-                    || !StringUtils.equals(media.getAlt(), thisAltText)
-                    || !StringUtils.equals(media.getDescription(), thisDescription);
+                                 || !StringUtils.equals(media.getCaption(), thisCaption)
+                                 || !StringUtils.equals(media.getAlt(), thisAltText)
+                                 || !StringUtils.equals(media.getDescription(), thisDescription);
 
             if (hasChanged) {
                 AppLog.d(AppLog.T.MEDIA, "MediaSettingsActivity > Saving changes");
@@ -928,12 +929,12 @@ public class MediaSettingsActivity extends BaseActivity implements ActivityCompa
             boolean linkTargetBlank = mLinkTargetNewWindowView.isChecked();
 
             boolean hasChanged = !StringUtils.equals(mEditorImageMetaData.getTitle(), thisTitle)
-                    || !StringUtils.equals(mEditorImageMetaData.getAlt(), thisAltText)
-                    || !StringUtils.equals(mEditorImageMetaData.getSize(), size)
-                    || !StringUtils.equals(mEditorImageMetaData.getCaption(), thisCaption)
-                    || !StringUtils.equals(mEditorImageMetaData.getAlign(), alignment)
-                    || !StringUtils.equals(mEditorImageMetaData.getLinkUrl(), linkUrl)
-                    || linkTargetBlank != mEditorImageMetaData.isLinkTargetBlank();
+                                 || !StringUtils.equals(mEditorImageMetaData.getAlt(), thisAltText)
+                                 || !StringUtils.equals(mEditorImageMetaData.getSize(), size)
+                                 || !StringUtils.equals(mEditorImageMetaData.getCaption(), thisCaption)
+                                 || !StringUtils.equals(mEditorImageMetaData.getAlign(), alignment)
+                                 || !StringUtils.equals(mEditorImageMetaData.getLinkUrl(), linkUrl)
+                                 || linkTargetBlank != mEditorImageMetaData.isLinkTargetBlank();
 
             if (hasChanged) {
                 mEditorImageMetaData.setTitle(thisTitle);
@@ -963,7 +964,8 @@ public class MediaSettingsActivity extends BaseActivity implements ActivityCompa
                 Manifest.permission.READ_EXTERNAL_STORAGE,
                 Manifest.permission.WRITE_EXTERNAL_STORAGE
         };
-        if (!PermissionUtils.checkAndRequestPermissions(this, WPPermissionUtils.MEDIA_PREVIEW_PERMISSION_REQUEST_CODE, permissionList)) {
+        if (!PermissionUtils.checkAndRequestPermissions(this, WPPermissionUtils.MEDIA_PREVIEW_PERMISSION_REQUEST_CODE,
+                                                        permissionList)) {
             return;
         }
 
@@ -1042,7 +1044,9 @@ public class MediaSettingsActivity extends BaseActivity implements ActivityCompa
     }
 
     private void deleteMedia() {
-        if (!NetworkUtils.checkConnection(this)) return;
+        if (!NetworkUtils.checkConnection(this)) {
+            return;
+        }
 
         mProgressDialog = new ProgressDialog(this);
         mProgressDialog.setCancelable(false);

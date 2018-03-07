@@ -37,7 +37,7 @@ public class HelpActivity extends BaseActivity {
             actionBar.setHomeAsUpIndicator(R.drawable.ic_cross_white_24dp);
             actionBar.setHomeButtonEnabled(true);
             actionBar.setDisplayHomeAsUpEnabled(true);
-            actionBar.setElevation(0); //remove shadow
+            actionBar.setElevation(0); // remove shadow
         }
 
         // Init common elements
@@ -92,7 +92,7 @@ public class HelpActivity extends BaseActivity {
                 }
 
                 HelpshiftHelper.getInstance().showConversation(HelpActivity.this, mSiteStore, origin,
-                        mAccountStore.getAccount().getUserName(), extraTags);
+                                                               mAccountStore.getAccount().getUserName(), extraTags);
             }
         });
 
@@ -108,7 +108,7 @@ public class HelpActivity extends BaseActivity {
                     extraTags = (Tag[]) extras.get(HelpshiftHelper.EXTRA_TAGS_KEY);
                 }
                 HelpshiftHelper.getInstance().showFAQ(HelpActivity.this, mSiteStore, origin,
-                        mAccountStore.getAccount().getUserName(), extraTags);
+                                                      mAccountStore.getAccount().getUserName(), extraTags);
             }
         });
     }

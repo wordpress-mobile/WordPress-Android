@@ -143,8 +143,8 @@ public class PostSettingsTagsActivity extends BaseActivity implements TextWatche
 
     @Override
     public boolean onKey(View view, int keyCode, KeyEvent keyEvent) {
-        if ((keyEvent.getAction() == KeyEvent.ACTION_DOWN) &&
-                (keyCode == KeyEvent.KEYCODE_ENTER)) {
+        if ((keyEvent.getAction() == KeyEvent.ACTION_DOWN)
+            && (keyCode == KeyEvent.KEYCODE_ENTER)) {
             // Since we don't allow new lines, we should add comma on "enter" to separate the tags
             String currentText = mTagsEditText.getText().toString();
             if (!currentText.isEmpty() && !currentText.endsWith(",")) {
@@ -183,7 +183,7 @@ public class PostSettingsTagsActivity extends BaseActivity implements TextWatche
         }
     }
 
-    private void onTagSelected(@NonNull String selectedTag){
+    private void onTagSelected(@NonNull String selectedTag) {
         String text = mTagsEditText.getText().toString();
         String updatedText;
         int endIndex = text.lastIndexOf(",");
@@ -234,7 +234,7 @@ public class PostSettingsTagsActivity extends BaseActivity implements TextWatche
                 return;
             }
             String tag = StringEscapeUtils.unescapeHtml4(mFilteredTags.get(position).getName());
-            holder.nameTextView.setText(tag);
+            holder.mNameTextView.setText(tag);
         }
 
         @Override
@@ -271,20 +271,19 @@ public class PostSettingsTagsActivity extends BaseActivity implements TextWatche
                     });
                 }
             }).start();
-
         }
 
         class TagViewHolder extends RecyclerView.ViewHolder {
-            private final TextView nameTextView;
+            private final TextView mNameTextView;
 
             TagViewHolder(View view) {
                 super(view);
-                nameTextView = (TextView) view.findViewById(R.id.tag_name);
+                mNameTextView = (TextView) view.findViewById(R.id.tag_name);
                 RelativeLayout layout = (RelativeLayout) view.findViewById(R.id.tags_list_row_container);
                 layout.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
-                        onTagSelected(nameTextView.getText().toString());
+                        onTagSelected(mNameTextView.getText().toString());
                     }
                 });
             }

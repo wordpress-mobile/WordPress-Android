@@ -53,7 +53,8 @@ public class WPImageGetter implements Html.ImageGetter {
     @Override
     public Drawable getDrawable(String source) {
         if (mImageLoader == null || mLoadingDrawable == null || mFailedDrawable == null) {
-            throw new RuntimeException("Developer, you need to call setImageLoader, setLoadingDrawable and setFailedDrawable");
+            throw new RuntimeException(
+                    "Developer, you need to call setImageLoader, setLoadingDrawable and setFailedDrawable");
         }
 
         if (TextUtils.isEmpty(source)) {

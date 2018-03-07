@@ -25,14 +25,15 @@ public class GravatarApi {
 
     public interface GravatarUploadListener {
         void onSuccess();
+
         void onError();
     }
 
     private static OkHttpClient createClient(final String accessToken) {
         OkHttpClient.Builder httpClientBuilder = new OkHttpClient.Builder();
 
-        //// uncomment the following line to add logcat logging
-        //httpClientBuilder.addInterceptor(new HttpLoggingInterceptor().setLevel(HttpLoggingInterceptor.Level.BODY));
+        // // uncomment the following line to add logcat logging
+        // httpClientBuilder.addInterceptor(new HttpLoggingInterceptor().setLevel(HttpLoggingInterceptor.Level.BODY));
 
         // add oAuth token usage
         httpClientBuilder.addInterceptor(new Interceptor() {
@@ -40,8 +41,8 @@ public class GravatarApi {
             public Response intercept(Interceptor.Chain chain) throws IOException {
                 Request original = chain.request();
                 Request.Builder requestBuilder = original.newBuilder()
-                        .header("Authorization", "Bearer " + accessToken)
-                        .method(original.method(), original.body());
+                                                         .header("Authorization", "Bearer " + accessToken)
+                                                         .method(original.method(), original.body());
                 Request request = requestBuilder.build();
                 return chain.proceed(request);
             }
@@ -54,10 +55,10 @@ public class GravatarApi {
         return new Request.Builder()
                 .url(API_BASE_URL + "upload-image")
                 .post(new MultipartBody.Builder()
-                        .setType(MultipartBody.FORM)
-                        .addFormDataPart("account", email)
-                        .addFormDataPart("filedata", file.getName(), new StreamingRequest(file))
-                        .build())
+                              .setType(MultipartBody.FORM)
+                              .addFormDataPart("account", email)
+                              .addFormDataPart("filedata", file.getName(), new StreamingRequest(file))
+                              .build())
                 .build();
     }
 
@@ -84,9 +85,9 @@ public class GravatarApi {
                             properties.put("network_response_body", responseBody);
 
                             AnalyticsTracker.track(AnalyticsTracker.Stat.ME_GRAVATAR_UPLOAD_UNSUCCESSFUL,
-                                    properties);
-                            AppLog.w(AppLog.T.API, "Network call unsuccessful trying to upload Gravatar: " +
-                                    responseBody);
+                                                   properties);
+                            AppLog.w(AppLog.T.API, "Network call unsuccessful trying to upload Gravatar: "
+                                                   + responseBody);
                         }
 
                         new Handler(Looper.getMainLooper()).post(new Runnable() {
@@ -107,9 +108,10 @@ public class GravatarApi {
                         properties.put("network_exception_class", e != null ? e.getClass().getCanonicalName() : "null");
                         properties.put("network_exception_message", e != null ? e.getMessage() : "null");
                         AnalyticsTracker.track(AnalyticsTracker.Stat.ME_GRAVATAR_UPLOAD_EXCEPTION, properties);
-                        CrashlyticsUtils.logException(e, AppLog.T.API, "Network call failure trying to upload Gravatar!");
-                        AppLog.w(AppLog.T.API, "Network call failure trying to upload Gravatar!" + (e != null ?
-                                e.getMessage() : "null"));
+                        CrashlyticsUtils
+                                .logException(e, AppLog.T.API, "Network call failure trying to upload Gravatar!");
+                        AppLog.w(AppLog.T.API, "Network call failure trying to upload Gravatar!" + (e != null
+                                ? e.getMessage() : "null"));
 
                         new Handler(Looper.getMainLooper()).post(new Runnable() {
                             @Override

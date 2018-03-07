@@ -138,9 +138,11 @@ public class EditCommentActivity extends BaseActivity {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
             }
+
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
             }
+
             @Override
             public void afterTextChanged(Editable s) {
                 boolean hasError = (editContent.getError() != null);
@@ -254,7 +256,7 @@ public class EditCommentActivity extends BaseActivity {
     }
 
     private void setFetchProgressVisible(boolean progressVisible) {
-        final ProgressBar progress = (ProgressBar)findViewById(R.id.edit_comment_progress);
+        final ProgressBar progress = (ProgressBar) findViewById(R.id.edit_comment_progress);
         final View editContainer = findViewById(R.id.edit_comment_container);
 
         if (progress == null || editContainer == null) {
@@ -273,11 +275,11 @@ public class EditCommentActivity extends BaseActivity {
             dialogBuilder.setTitle(getResources().getText(R.string.cancel_edit));
             dialogBuilder.setMessage(getResources().getText(R.string.sure_to_cancel_edit_comment));
             dialogBuilder.setPositiveButton(getResources().getText(R.string.yes),
-                    new DialogInterface.OnClickListener() {
-                        public void onClick(DialogInterface dialog, int whichButton) {
-                            finish();
-                        }
-                    });
+                                            new DialogInterface.OnClickListener() {
+                                                public void onClick(DialogInterface dialog, int whichButton) {
+                                                    finish();
+                                                }
+                                            });
             dialogBuilder.setNegativeButton(
                     getResources().getText(R.string.no),
                     new DialogInterface.OnClickListener() {
@@ -293,7 +295,9 @@ public class EditCommentActivity extends BaseActivity {
     }
 
     private void onCommentPushed(OnCommentChanged event) {
-        if (isFinishing()) return;
+        if (isFinishing()) {
+            return;
+        }
 
         dismissSaveDialog();
 
@@ -308,7 +312,9 @@ public class EditCommentActivity extends BaseActivity {
     }
 
     private void onCommentFetched(OnCommentChanged event) {
-        if (isFinishing() || !mFetchingComment) return;
+        if (isFinishing() || !mFetchingComment) {
+            return;
+        }
         mFetchingComment = false;
         setFetchProgressVisible(false);
 

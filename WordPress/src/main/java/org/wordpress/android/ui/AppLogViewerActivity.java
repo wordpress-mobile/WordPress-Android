@@ -90,24 +90,24 @@ public class AppLogViewerActivity extends BaseActivity {
             // line numbers shown here won't match the line numbers when the log is shared
             int lineNum = position - AppLog.HEADER_LINE_COUNT + 1;
             if (lineNum > 0) {
-                holder.txtLineNumber.setText(format(Locale.US, "%02d", lineNum));
-                holder.txtLineNumber.setVisibility(View.VISIBLE);
+                holder.mTxtLineNumber.setText(format(Locale.US, "%02d", lineNum));
+                holder.mTxtLineNumber.setVisibility(View.VISIBLE);
             } else {
-                holder.txtLineNumber.setVisibility(View.GONE);
+                holder.mTxtLineNumber.setVisibility(View.GONE);
             }
 
-            holder.txtLogEntry.setText(Html.fromHtml(mEntries.get(position)));
+            holder.mTxtLogEntry.setText(Html.fromHtml(mEntries.get(position)));
 
             return convertView;
         }
 
         private class LogViewHolder {
-            private final TextView txtLineNumber;
-            private final TextView txtLogEntry;
+            private final TextView mTxtLineNumber;
+            private final TextView mTxtLogEntry;
 
             LogViewHolder(View view) {
-                txtLineNumber = (TextView) view.findViewById(R.id.text_line);
-                txtLogEntry = (TextView) view.findViewById(R.id.text_log);
+                mTxtLineNumber = (TextView) view.findViewById(R.id.text_line);
+                mTxtLogEntry = (TextView) view.findViewById(R.id.text_log);
             }
         }
     }

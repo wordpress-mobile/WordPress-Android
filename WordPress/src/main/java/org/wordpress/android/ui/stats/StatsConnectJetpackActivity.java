@@ -25,9 +25,7 @@ import static org.wordpress.android.ui.JetpackConnectionWebViewActivity.Source.S
  * An activity that shows when user tries to open Stats without Jetpack connected.
  * It offers a link to the Jetpack connection flow.
  */
-
 public class StatsConnectJetpackActivity extends BaseActivity {
-
     @Inject
     AccountStore mAccountStore;
 
@@ -55,7 +53,8 @@ public class StatsConnectJetpackActivity extends BaseActivity {
         setupButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startJetpackConnectionFlow((SiteModel) StatsConnectJetpackActivity.this.getIntent().getSerializableExtra(SITE));
+                startJetpackConnectionFlow(
+                        (SiteModel) StatsConnectJetpackActivity.this.getIntent().getSerializableExtra(SITE));
             }
         });
     }
@@ -73,9 +72,11 @@ public class StatsConnectJetpackActivity extends BaseActivity {
 
     private void startJetpackConnectionFlow(SiteModel siteModel) {
         if (mAccountStore.hasAccessToken()) {
-            JetpackConnectionWebViewActivity.openJetpackConnectionFlow(StatsConnectJetpackActivity.this, STATS, siteModel);
+            JetpackConnectionWebViewActivity
+                    .openJetpackConnectionFlow(StatsConnectJetpackActivity.this, STATS, siteModel);
         } else {
-            JetpackConnectionWebViewActivity.openUnauthorizedJetpackConnectionFlow(StatsConnectJetpackActivity.this, STATS, siteModel);
+            JetpackConnectionWebViewActivity
+                    .openUnauthorizedJetpackConnectionFlow(StatsConnectJetpackActivity.this, STATS, siteModel);
         }
         finish();
         if (!siteModel.isJetpackInstalled()) {

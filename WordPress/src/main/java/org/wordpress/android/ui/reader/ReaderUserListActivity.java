@@ -22,7 +22,6 @@ import org.wordpress.android.widgets.RecyclerItemDecoration;
  * displays a list of users who like a specific reader post
  */
 public class ReaderUserListActivity extends BaseActivity {
-
     private ReaderRecyclerView mRecyclerView;
     private ReaderUserAdapter mAdapter;
     private int mRestorePosition;
@@ -142,5 +141,4 @@ public class ReaderUserListActivity extends BaseActivity {
         }
         return ReaderUtils.getLongLikeLabelText(this, numLikes, isLikedByCurrentUser);
     }
-
 }

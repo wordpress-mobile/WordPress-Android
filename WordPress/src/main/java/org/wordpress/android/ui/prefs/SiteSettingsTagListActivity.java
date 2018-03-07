@@ -24,7 +24,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.text.StringEscapeUtils;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
@@ -41,6 +40,7 @@ import org.wordpress.android.util.ActivityUtils;
 import org.wordpress.android.util.AniUtils;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.NetworkUtils;
+import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.ToastUtils;
 
 import java.util.ArrayList;
@@ -53,7 +53,6 @@ import javax.inject.Inject;
 public class SiteSettingsTagListActivity extends AppCompatActivity
         implements SearchView.OnQueryTextListener, MenuItem.OnActionExpandListener,
         SiteSettingsTagDetailFragment.OnTagDetailListener {
-
     @Inject Dispatcher mDispatcher;
     @Inject SiteStore mSiteStore;
     @Inject TaxonomyStore mTaxonomyStore;
@@ -280,7 +279,8 @@ public class SiteSettingsTagListActivity extends AppCompatActivity
     }
 
     private SiteSettingsTagDetailFragment getDetailFragment() {
-        return (SiteSettingsTagDetailFragment) getFragmentManager().findFragmentByTag(SiteSettingsTagDetailFragment.TAG);
+        return (SiteSettingsTagDetailFragment) getFragmentManager()
+                .findFragmentByTag(SiteSettingsTagDetailFragment.TAG);
     }
 
     /*
@@ -291,10 +291,10 @@ public class SiteSettingsTagListActivity extends AppCompatActivity
         fragment.setOnTagDetailListener(this);
 
         getFragmentManager().beginTransaction()
-                .add(R.id.container, fragment, SiteSettingsTagDetailFragment.TAG)
-                .addToBackStack(null)
-                .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE)
-                .commitAllowingStateLoss();
+                            .add(R.id.container, fragment, SiteSettingsTagDetailFragment.TAG)
+                            .addToBackStack(null)
+                            .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE)
+                            .commitAllowingStateLoss();
 
         mSearchMenuItem.collapseActionView();
         mFabView.setVisibility(View.GONE);
@@ -371,13 +371,14 @@ public class SiteSettingsTagListActivity extends AppCompatActivity
         AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(this);
         dialogBuilder.setMessage(message);
         dialogBuilder.setPositiveButton(getResources().getText(R.string.delete_yes),
-                new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int whichButton) {
-                        showProgressDialog(R.string.dlg_deleting_tag);
-                        Action action = TaxonomyActionBuilder.newDeleteTermAction(new TaxonomyStore.RemoteTermPayload(term, mSite));
-                        mDispatcher.dispatch(action);
-                    }
-                });
+                                        new DialogInterface.OnClickListener() {
+                                            public void onClick(DialogInterface dialog, int whichButton) {
+                                                showProgressDialog(R.string.dlg_deleting_tag);
+                                                Action action = TaxonomyActionBuilder.newDeleteTermAction(
+                                                        new TaxonomyStore.RemoteTermPayload(term, mSite));
+                                                mDispatcher.dispatch(action);
+                                            }
+                                        });
         dialogBuilder.setNegativeButton(getResources().getText(R.string.delete_no), null);
         dialogBuilder.setCancelable(true);
         dialogBuilder.create().show();
@@ -396,7 +397,7 @@ public class SiteSettingsTagListActivity extends AppCompatActivity
 
     private boolean tagExists(@NonNull String termName) {
         List<TermModel> terms = mTaxonomyStore.getTagsForSite(mSite);
-        for (TermModel term: terms) {
+        for (TermModel term : terms) {
             if (termName.equalsIgnoreCase(term.getName())) {
                 return true;
             }
@@ -415,19 +416,20 @@ public class SiteSettingsTagListActivity extends AppCompatActivity
 
         @Override
         public TagViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-            View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.site_settings_tag_list_row, parent, false);
+            View view = LayoutInflater.from(parent.getContext())
+                                      .inflate(R.layout.site_settings_tag_list_row, parent, false);
             return new TagListAdapter.TagViewHolder(view);
         }
 
         @Override
         public void onBindViewHolder(final TagListAdapter.TagViewHolder holder, int position) {
             TermModel term = mFilteredTags.get(position);
-            holder.txtTag.setText(StringEscapeUtils.unescapeHtml4(term.getName()));
+            holder.mTxtTag.setText(StringEscapeUtils.unescapeHtml4(term.getName()));
             if (term.getPostCount() > 0) {
-                holder.txtCount.setVisibility(View.VISIBLE);
-                holder.txtCount.setText(String.valueOf(term.getPostCount()));
+                holder.mTxtCount.setVisibility(View.VISIBLE);
+                holder.mTxtCount.setText(String.valueOf(term.getPostCount()));
             } else {
-                holder.txtCount.setVisibility(View.GONE);
+                holder.mTxtCount.setVisibility(View.GONE);
             }
         }
 
@@ -452,13 +454,13 @@ public class SiteSettingsTagListActivity extends AppCompatActivity
         }
 
         class TagViewHolder extends RecyclerView.ViewHolder {
-            private final TextView txtTag;
-            private final TextView txtCount;
+            private final TextView mTxtTag;
+            private final TextView mTxtCount;
 
             TagViewHolder(View view) {
                 super(view);
-                txtTag = view.findViewById(R.id.text_tag);
-                txtCount = view.findViewById(R.id.text_count);
+                mTxtTag = view.findViewById(R.id.text_tag);
+                mTxtCount = view.findViewById(R.id.text_count);
                 view.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {

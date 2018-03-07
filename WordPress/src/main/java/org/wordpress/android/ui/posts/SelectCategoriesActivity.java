@@ -89,7 +89,7 @@ public class SelectCategoriesActivity extends BaseActivity {
             actionBar.setDisplayHomeAsUpEnabled(true);
         }
 
-        mListView = (ListView)findViewById(android.R.id.list);
+        mListView = (ListView) findViewById(android.R.id.list);
         mListScrollPositionManager = new ListScrollPositionManager(mListView, false);
         mListView.setChoiceMode(ListView.CHOICE_MODE_MULTIPLE);
         mListView.setItemsCanFocus(false);
@@ -125,7 +125,7 @@ public class SelectCategoriesActivity extends BaseActivity {
                         refreshCategories();
                     }
                 }
-        );
+                                                         );
 
         populateCategoryList();
 
@@ -273,7 +273,8 @@ public class SelectCategoriesActivity extends BaseActivity {
 
                 if (event.isError()) {
                     if (!isFinishing()) {
-                        ToastUtils.showToast(SelectCategoriesActivity.this, R.string.category_refresh_error, Duration.LONG);
+                        ToastUtils.showToast(SelectCategoriesActivity.this, R.string.category_refresh_error,
+                                             Duration.LONG);
                     }
                 } else {
                     populateCategoryList();

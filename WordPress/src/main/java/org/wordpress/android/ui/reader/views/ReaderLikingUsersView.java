@@ -57,7 +57,7 @@ public class ReaderLikingUsersView extends LinearLayout {
                 // TODO: Probably a bad idea to have mAccountStore.getAccount().getUserId() here,
                 // a view should not read the account state
                 final ArrayList<String> avatars = ReaderUserTable.getAvatarUrls(avatarIds, maxAvatars, mLikeAvatarSz,
-                        mAccountStore.getAccount().getUserId());
+                                                                                mAccountStore.getAccount().getUserId());
 
                 handler.post(new Runnable() {
                     @Override

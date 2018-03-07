@@ -177,7 +177,8 @@ public class PlansActivity extends BaseActivity {
                     LinearLayout tabFirstChild = (LinearLayout) mTabLayout.getChildAt(0);
                     for (int i = 0; i < mTabLayout.getTabCount(); i++) {
                         LinearLayout tabView = (LinearLayout) (tabFirstChild.getChildAt(i));
-                        tabLayoutWidth += (tabView.getMeasuredWidth() + ViewCompat.getPaddingStart(tabView) + ViewCompat.getPaddingEnd(tabView));
+                        tabLayoutWidth += (tabView.getMeasuredWidth() + ViewCompat.getPaddingStart(tabView)
+                                           + ViewCompat.getPaddingEnd(tabView));
                     }
 
                     int displayWidth = DisplayUtils.getDisplayPixelWidth(PlansActivity.this);
@@ -220,7 +221,8 @@ public class PlansActivity extends BaseActivity {
                 int centerX = pt.x / 2;
                 int centerY = pt.y / 2;
 
-                Animator anim = ViewAnimationUtils.createCircularReveal(mViewPager, centerX, centerY, startRadius, endRadius);
+                Animator anim = ViewAnimationUtils.createCircularReveal(mViewPager, centerX, centerY, startRadius,
+                                                                        endRadius);
                 anim.setDuration(getResources().getInteger(android.R.integer.config_longAnimTime));
                 anim.setInterpolator(new AccelerateInterpolator());
 

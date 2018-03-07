@@ -43,7 +43,6 @@ import javax.inject.Inject;
  * along with the content passed in the intent.
  */
 public class ShareIntentReceiverActivity extends BaseActivity implements ShareIntentFragmentListener {
-
     private static final String SHARE_LAST_USED_BLOG_ID_KEY = "wp-settings-share-last-used-text-blogid";
     private static final String KEY_SELECTED_SITE_LOCAL_ID = "KEY_SELECTED_SITE_LOCAL_ID";
     private static final String KEY_SHARE_ACTION_ID = "KEY_SHARE_ACTION_ID";
@@ -142,8 +141,8 @@ public class ShareIntentReceiverActivity extends BaseActivity implements ShareIn
 
     @Override
     public void onRequestPermissionsResult(int requestCode,
-            @NonNull String permissions[],
-            @NonNull int[] grantResults) {
+                                           @NonNull String[] permissions,
+                                           @NonNull int[] grantResults) {
         boolean allGranted = WPPermissionUtils.setPermissionListAsked(
                 this, requestCode, permissions, grantResults, true);
         if (allGranted && requestCode == WPPermissionUtils.SHARE_MEDIA_PERMISSION_REQUEST_CODE) {
@@ -202,9 +201,9 @@ public class ShareIntentReceiverActivity extends BaseActivity implements ShareIn
 
         // save preferences
         PreferenceManager.getDefaultSharedPreferences(this)
-                .edit()
-                .putInt(SHARE_LAST_USED_BLOG_ID_KEY, mSelectedSiteLocalId)
-                .apply();
+                         .edit()
+                         .putInt(SHARE_LAST_USED_BLOG_ID_KEY, mSelectedSiteLocalId)
+                         .apply();
 
         startActivityWithSyntheticBackstack(intent);
         finish();
@@ -227,8 +226,8 @@ public class ShareIntentReceiverActivity extends BaseActivity implements ShareIn
         analyticsProperties.put("share_to", shareAction.analyticsName);
 
         AnalyticsUtils.trackWithSiteDetails(AnalyticsTracker.Stat.SHARE_TO_WP_SUCCEEDED,
-                selectedSite,
-                analyticsProperties);
+                                            selectedSite,
+                                            analyticsProperties);
 
         if (doesContainMediaAndWasSharedToMediaLibrary(shareAction, numberOfMediaShared)) {
             trackMediaAddedToMediaLibrary(selectedSite);
@@ -250,13 +249,15 @@ public class ShareIntentReceiverActivity extends BaseActivity implements ShareIn
             boolean isVideo = mimeType != null && mimeType.startsWith("video");
             Map<String, Object> properties = AnalyticsUtils.getMediaProperties(this, isVideo, uri, null);
 
-            AnalyticsTracker.Stat mediaTypeTrack = isVideo ? AnalyticsTracker.Stat.MEDIA_LIBRARY_ADDED_VIDEO : AnalyticsTracker.Stat.MEDIA_LIBRARY_ADDED_PHOTO;
+            AnalyticsTracker.Stat mediaTypeTrack = isVideo ? AnalyticsTracker.Stat.MEDIA_LIBRARY_ADDED_VIDEO
+                    : AnalyticsTracker.Stat.MEDIA_LIBRARY_ADDED_PHOTO;
             AnalyticsUtils.trackWithSiteDetails(mediaTypeTrack, selectedSite, properties);
         }
     }
 
     private boolean doesContainMediaAndWasSharedToMediaLibrary(ShareAction shareAction, int numberOfMediaShared) {
-        return shareAction != null && shareAction.analyticsName.equals(ShareAction.SHARE_TO_MEDIA_LIBRARY.analyticsName) && numberOfMediaShared > 0;
+        return shareAction != null && shareAction.analyticsName.equals(ShareAction.SHARE_TO_MEDIA_LIBRARY.analyticsName)
+               && numberOfMediaShared > 0;
     }
 
     private int countMedia() {
@@ -275,6 +276,4 @@ public class ShareIntentReceiverActivity extends BaseActivity implements ShareIn
         }
         return mediaShared;
     }
-
-
 }

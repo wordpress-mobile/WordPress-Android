@@ -54,6 +54,7 @@ public class ImageUtilsTest extends InstrumentationTestCase {
 
         assertEquals(2, scale);
     }
+
     public void testGetScaleForResizingThreeTimesSizeReturnsTwo() {
         BitmapFactory.Options options = new BitmapFactory.Options();
         options.outHeight = 100;

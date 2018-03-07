@@ -14,8 +14,8 @@ public class ReaderImageScanner {
     private final boolean mContentContainsImages;
 
     private static final Pattern IMG_TAG_PATTERN = Pattern.compile(
-            "<img(\\s+.*?)(?:src\\s*=\\s*(?:'|\")(.*?)(?:'|\"))(.*?)>",
-            Pattern.DOTALL| Pattern.CASE_INSENSITIVE);
+            "<img(\\s+.*?) (?:src\\s*=\\s*(?:'|\") (.*?) (?:'|\")) (.*?)>",
+            Pattern.DOTALL | Pattern.CASE_INSENSITIVE);
 
     public ReaderImageScanner(String contentOfPost, boolean isPrivate) {
         mContent = contentOfPost;
@@ -64,7 +64,8 @@ public class ReaderImageScanner {
             if (minImageWidth == 0) {
                 imageList.addImageUrl(imageUrl);
             } else {
-                int width = Math.max(ReaderHtmlUtils.getWidthAttrValue(imgTag), ReaderHtmlUtils.getIntQueryParam(imageUrl, "w"));
+                int width = Math.max(ReaderHtmlUtils.getWidthAttrValue(imgTag),
+                                     ReaderHtmlUtils.getIntQueryParam(imageUrl, "w"));
                 if (width >= minImageWidth) {
                     imageList.addImageUrl(imageUrl);
                     if (maxImageCount > 0 && imageList.size() >= maxImageCount) {
@@ -102,7 +103,8 @@ public class ReaderImageScanner {
             String imgTag = mContent.substring(imgMatcher.start(), imgMatcher.end());
             String imageUrl = ReaderHtmlUtils.getSrcAttrValue(imgTag);
 
-            int width = Math.max(ReaderHtmlUtils.getWidthAttrValue(imgTag), ReaderHtmlUtils.getIntQueryParam(imageUrl, "w"));
+            int width = Math.max(ReaderHtmlUtils.getWidthAttrValue(imgTag),
+                                 ReaderHtmlUtils.getIntQueryParam(imageUrl, "w"));
             if (width > currentMaxWidth) {
                 currentImageUrl = imageUrl;
                 currentMaxWidth = width;
@@ -122,8 +124,8 @@ public class ReaderImageScanner {
         String tagClass = ReaderHtmlUtils.getClassAttrValue(imageTag);
         return (tagClass != null
                 && (tagClass.contains("size-full")
-                 || tagClass.contains("size-large")
-                 || tagClass.contains("size-medium")));
+                    || tagClass.contains("size-large")
+                    || tagClass.contains("size-medium")));
     }
 
     /*

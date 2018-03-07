@@ -13,8 +13,8 @@ public class ShareAndDismissNotificationReceiver extends BroadcastReceiver {
     public void onReceive(Context context, Intent receivedIntent) {
         // Cancel (dismiss) the notification
         int notificationId = receivedIntent.getIntExtra(NOTIFICATION_ID_KEY, 0);
-        NotificationManager notificationManager = (NotificationManager) SystemServiceFactory.get(context,
-                Context.NOTIFICATION_SERVICE);
+        NotificationManager notificationManager =
+                (NotificationManager) SystemServiceFactory.get(context, Context.NOTIFICATION_SERVICE);
         notificationManager.cancel(notificationId);
 
         // Close system notification tray

@@ -31,10 +31,9 @@ import de.greenrobot.event.EventBus;
 import static org.wordpress.android.util.WPSwipeToRefreshHelper.buildSwipeToRefreshHelper;
 
 /**
- *  Single item details activity.
+ * Single item details activity.
  */
 public class StatsViewAllActivity extends BaseActivity {
-
     public static final String ARG_STATS_VIEW_ALL_TITLE = "arg_stats_view_all_title";
     private static final String SAVED_STATS_SCROLL_POSITION = "SAVED_STATS_SCROLL_POSITION";
 
@@ -87,7 +86,7 @@ public class StatsViewAllActivity extends BaseActivity {
                         refreshStats();
                     }
                 }
-        );
+                                                         );
 
         if (savedInstanceState != null) {
             mLocalBlogID = savedInstanceState.getInt(StatsActivity.ARG_LOCAL_TABLE_SITE_ID, -1);
@@ -98,9 +97,10 @@ public class StatsViewAllActivity extends BaseActivity {
             mTimeframe = (StatsTimeframe) savedInstanceState.getSerializable(StatsAbstractFragment.ARGS_TIMEFRAME);
             mDate = savedInstanceState.getString(StatsAbstractFragment.ARGS_SELECTED_DATE);
             mStatsViewType = (StatsViewType) savedInstanceState.getSerializable(StatsAbstractFragment.ARGS_VIEW_TYPE);
-            mOuterPagerSelectedButtonIndex = savedInstanceState.getInt(StatsAbstractListFragment.ARGS_TOP_PAGER_SELECTED_BUTTON_INDEX, 0);
+            mOuterPagerSelectedButtonIndex =
+                    savedInstanceState.getInt(StatsAbstractListFragment.ARGS_TOP_PAGER_SELECTED_BUTTON_INDEX, 0);
             final int yScrollPosition = savedInstanceState.getInt(SAVED_STATS_SCROLL_POSITION);
-            if(yScrollPosition != 0) {
+            if (yScrollPosition != 0) {
                 mOuterScrollView.postDelayed(new Runnable() {
                     public void run() {
                         if (!isFinishing()) {
@@ -115,7 +115,8 @@ public class StatsViewAllActivity extends BaseActivity {
             mTimeframe = (StatsTimeframe) extras.getSerializable(StatsAbstractFragment.ARGS_TIMEFRAME);
             mDate = extras.getString(StatsAbstractFragment.ARGS_SELECTED_DATE);
             mStatsViewType = (StatsViewType) extras.getSerializable(StatsAbstractFragment.ARGS_VIEW_TYPE);
-            mOuterPagerSelectedButtonIndex = extras.getInt(StatsAbstractListFragment.ARGS_TOP_PAGER_SELECTED_BUTTON_INDEX, 0);
+            mOuterPagerSelectedButtonIndex =
+                    extras.getInt(StatsAbstractListFragment.ARGS_TOP_PAGER_SELECTED_BUTTON_INDEX, 0);
 
             // Set a custom activity title if one was passed
             if (!TextUtils.isEmpty(extras.getString(ARG_STATS_VIEW_ALL_TITLE))) {
@@ -186,26 +187,30 @@ public class StatsViewAllActivity extends BaseActivity {
         switch (timeframe) {
             case DAY:
                 return String.format(prefix, StatsUtils.parseDate(date, StatsConstants.STATS_INPUT_DATE_FORMAT,
-                        StatsConstants.STATS_OUTPUT_DATE_MONTH_LONG_DAY_SHORT_FORMAT));
+                                              StatsConstants.STATS_OUTPUT_DATE_MONTH_LONG_DAY_SHORT_FORMAT));
             case WEEK:
                 try {
                     SimpleDateFormat sdf = new SimpleDateFormat(StatsConstants.STATS_INPUT_DATE_FORMAT);
                     final Date parsedDate = sdf.parse(date);
                     Calendar c = Calendar.getInstance();
                     c.setTime(parsedDate);
-                    String  endDateLabel = StatsUtils.msToString(c.getTimeInMillis(), StatsConstants.STATS_OUTPUT_DATE_MONTH_LONG_DAY_LONG_FORMAT);
+                    String endDateLabel = StatsUtils.msToString(c.getTimeInMillis(),
+                                                        StatsConstants.STATS_OUTPUT_DATE_MONTH_LONG_DAY_LONG_FORMAT);
                     // last day of this week
-                    c.add(Calendar.DAY_OF_WEEK, - 6);
-                    String startDateLabel = StatsUtils.msToString(c.getTimeInMillis(), StatsConstants.STATS_OUTPUT_DATE_MONTH_LONG_DAY_LONG_FORMAT);
-                    return String.format(prefix,  startDateLabel + " - " + endDateLabel);
+                    c.add(Calendar.DAY_OF_WEEK, -6);
+                    String startDateLabel = StatsUtils.msToString(c.getTimeInMillis(),
+                                                      StatsConstants.STATS_OUTPUT_DATE_MONTH_LONG_DAY_LONG_FORMAT);
+                    return String.format(prefix, startDateLabel + " - " + endDateLabel);
                 } catch (ParseException e) {
                     AppLog.e(AppLog.T.UTILS, e);
                     return "";
                 }
             case MONTH:
-                return String.format(prefix, StatsUtils.parseDate(date, StatsConstants.STATS_INPUT_DATE_FORMAT, StatsConstants.STATS_OUTPUT_DATE_MONTH_LONG_FORMAT));
+                return String.format(prefix, StatsUtils.parseDate(date, StatsConstants.STATS_INPUT_DATE_FORMAT,
+                                                                  StatsConstants.STATS_OUTPUT_DATE_MONTH_LONG_FORMAT));
             case YEAR:
-                return String.format(prefix, StatsUtils.parseDate(date, StatsConstants.STATS_INPUT_DATE_FORMAT, StatsConstants.STATS_OUTPUT_DATE_YEAR_FORMAT));
+                return String.format(prefix, StatsUtils.parseDate(date, StatsConstants.STATS_INPUT_DATE_FORMAT,
+                                                                  StatsConstants.STATS_OUTPUT_DATE_YEAR_FORMAT));
         }
         return "";
     }
@@ -308,7 +313,7 @@ public class StatsViewAllActivity extends BaseActivity {
         }
         if (!NetworkUtils.isNetworkAvailable(this)) {
             mSwipeToRefreshHelper.setRefreshing(false);
-            AppLog.w(AppLog.T.STATS, "ViewAll on "+ mFragment.getTag() + " > no connection, update canceled");
+            AppLog.w(AppLog.T.STATS, "ViewAll on " + mFragment.getTag() + " > no connection, update canceled");
             return;
         }
 

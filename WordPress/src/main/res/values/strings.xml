@@ -9,7 +9,7 @@
     <string name="xmlrpc_post_blocked_error">Couldn\'t connect. Your host is blocking POST requests, and the app needs
         that in order to communicate with your site. Contact your host to solve this problem.</string>
     <string name="xmlrpc_endpoint_forbidden_error">Couldn\'t connect. We received a 403 error when trying to access your
-        site XMLRPC endpoint. The app needs that in order to communicate with your site. Contact your host to solve
+        site XMLRPC mEndpoint. The app needs that in order to communicate with your site. Contact your host to solve
         this problem.</string>
     <string name="xmlrpc_malformed_response_error">Couldn\'t connect. The WordPress installation responded with an invalid XML-RPC document.</string>
     <string name="site_timeout_error">Couldn\'t connect to the WordPress site due to Timeout error.</string>
@@ -1591,7 +1591,7 @@
     <string name="site_picker_edit_visibility">Show/hide sites</string>
     <string name="site_picker_add_site">Add new site</string>
     <string name="site_picker_add_self_hosted">Add self-hosted site</string>
-    <string name="site_picker_create_dotcom">Create WordPress.com site</string>
+    <string name="site_picker_create_wpcom">Create WordPress.com site</string>
     <string name="site_picker_cant_hide_current_site">\"%s\" wasn\'t hidden because it\'s the current site</string>
     <string name="site_picker_remove_site_error">Error removing site, try again later</string>
 
@@ -2030,7 +2030,7 @@
     <string name="login_text_otp">Text me a code instead.</string>
     <string name="login_text_otp_another">Text me another code instead.</string>
     <string name="requesting_otp">Requesting a verification code via SMS.</string>
-    <string name="email_not_registered_wpcom">Hmm, this email address isn\'t registered with WordPress.com.\nAre you trying to access a self-hosted site? Log in using the link at the bottom of this screen.</string>
+    <string name="email_not_registered_wpcom">Hmm, we can\'t find a WordPress.com account connected to this email address. Try the link below to log in using your site address.</string>
     <string name="password_incorrect">It looks like this password is incorrect. Please double check your information and try again.</string>
     <string name="login_magic_links_label">We\'ll email you a magic link that\'ll log you in instantly, no password needed. Hunt and peck no more!</string>
     <string name="login_magic_links_sent_label">Your magic link is on its way! Check your email on this device and tap the link in the email you received from WordPress.com.</string>

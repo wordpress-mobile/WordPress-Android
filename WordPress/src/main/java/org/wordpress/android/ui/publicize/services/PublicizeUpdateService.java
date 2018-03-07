@@ -24,7 +24,6 @@ import de.greenrobot.event.EventBus;
  */
 
 public class PublicizeUpdateService extends IntentService {
-
     private static boolean mHasUpdatedServices;
 
     /*
@@ -54,7 +53,9 @@ public class PublicizeUpdateService extends IntentService {
 
     @Override
     protected void onHandleIntent(Intent intent) {
-        if (intent == null) return;
+        if (intent == null) {
+            return;
+        }
 
         // update list of services if we haven't done so yet - only done once per session
         // since it rarely changes

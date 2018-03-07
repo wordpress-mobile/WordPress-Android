@@ -8,7 +8,6 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 
 public class ReaderBlogList extends ArrayList<ReaderBlog> {
-
     @Override
     public Object clone() {
         return super.clone();
@@ -51,7 +50,7 @@ public class ReaderBlogList extends ArrayList<ReaderBlog> {
             return false;
         }
 
-        for (ReaderBlog blogInfo: blogs) {
+        for (ReaderBlog blogInfo : blogs) {
             int index = indexOfBlogId(blogInfo.blogId);
             if (index == -1) {
                 return false;
@@ -76,7 +75,7 @@ public class ReaderBlogList extends ArrayList<ReaderBlog> {
             return false;
         }
 
-        for (ReaderBlog blogInfo: blogs) {
+        for (ReaderBlog blogInfo : blogs) {
             if (indexOfBlogId(blogInfo.blogId) == -1) {
                 return false;
             }

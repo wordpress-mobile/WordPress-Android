@@ -29,7 +29,9 @@ import de.greenrobot.event.EventBus;
 public class PublicizeActions {
     public interface OnPublicizeActionListener {
         void onRequestConnect(PublicizeService service);
+
         void onRequestDisconnect(PublicizeConnection connection);
+
         void onRequestReconnect(PublicizeService service, PublicizeConnection connection);
     }
 
@@ -64,7 +66,7 @@ public class PublicizeActions {
     /*
      * create a new publicize service connection for a specific site
      */
-    public static void connect(long siteId, String serviceId, long currentUserId){
+    public static void connect(long siteId, String serviceId, long currentUserId) {
         if (TextUtils.isEmpty(serviceId)) {
             AppLog.w(AppLog.T.SHARING, "cannot connect without service");
             EventBus.getDefault().post(new ActionCompleted(false, ConnectAction.CONNECT));
@@ -84,7 +86,8 @@ public class PublicizeActions {
             public void onResponse(JSONObject jsonObject) {
                 if (shouldShowChooserDialog(siteId, serviceId, jsonObject)) {
                     // show dialog showing multiple options
-                    EventBus.getDefault().post(new PublicizeEvents.ActionRequestChooseAccount(siteId, serviceId, jsonObject));
+                    EventBus.getDefault()
+                            .post(new PublicizeEvents.ActionRequestChooseAccount(siteId, serviceId, jsonObject));
                 } else {
                     long keyringConnectionId = parseServiceKeyringId(serviceId, currentUserId, jsonObject);
                     connectStepTwo(siteId, keyringConnectionId);

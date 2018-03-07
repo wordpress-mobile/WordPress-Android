@@ -8,39 +8,38 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class ReaderHtmlUtils {
-
     public interface HtmlScannerListener {
         void onTagFound(String tag, String src);
     }
 
     // regex for matching oriwidth attributes in tags
     private static final Pattern ORIGINAL_WIDTH_ATTR_PATTERN = Pattern.compile(
-            "data-orig-size\\s*=\\s*(?:'|\")(.*?),.*?(?:'|\")",
-            Pattern.DOTALL|Pattern.CASE_INSENSITIVE);
+            "data-orig-size\\s*=\\s*(?:'|\") (.*?),.*?(?:'|\")",
+            Pattern.DOTALL | Pattern.CASE_INSENSITIVE);
 
     private static final Pattern ORIGINAL_HEIGHT_ATTR_PATTERN = Pattern.compile(
-            "data-orig-size\\s*=\\s*(?:'|\").*?,(.*?)(?:'|\")",
-            Pattern.DOTALL|Pattern.CASE_INSENSITIVE);
+            "data-orig-size\\s*=\\s*(?:'|\").*?,(.*?) (?:'|\")",
+            Pattern.DOTALL | Pattern.CASE_INSENSITIVE);
 
     // regex for matching width attributes in tags
     private static final Pattern WIDTH_ATTR_PATTERN = Pattern.compile(
-            "width\\s*=\\s*(?:'|\")(.*?)(?:'|\")",
-            Pattern.DOTALL|Pattern.CASE_INSENSITIVE);
+            "width\\s*=\\s*(?:'|\") (.*?) (?:'|\")",
+            Pattern.DOTALL | Pattern.CASE_INSENSITIVE);
 
     // regex for matching height attributes in tags
     private static final Pattern HEIGHT_ATTR_PATTERN = Pattern.compile(
-            "height\\s*=\\s*(?:'|\")(.*?)(?:'|\")",
-            Pattern.DOTALL|Pattern.CASE_INSENSITIVE);
+            "height\\s*=\\s*(?:'|\") (.*?) (?:'|\")",
+            Pattern.DOTALL | Pattern.CASE_INSENSITIVE);
 
     // regex for matching src attributes in tags
     private static final Pattern SRC_ATTR_PATTERN = Pattern.compile(
-            "src\\s*=\\s*(?:'|\")(.*?)(?:'|\")",
-            Pattern.DOTALL|Pattern.CASE_INSENSITIVE);
+            "src\\s*=\\s*(?:'|\") (.*?) (?:'|\")",
+            Pattern.DOTALL | Pattern.CASE_INSENSITIVE);
 
     // regex for matching class attributes in tags
     private static final Pattern CLASS_ATTR_PATTERN = Pattern.compile(
-            "class\\s*=\\s*(?:'|\")(.*?)(?:'|\")",
-            Pattern.DOTALL|Pattern.CASE_INSENSITIVE);
+            "class\\s*=\\s*(?:'|\") (.*?) (?:'|\")",
+            Pattern.DOTALL | Pattern.CASE_INSENSITIVE);
 
 
     /*
@@ -143,9 +142,9 @@ public class ReaderHtmlUtils {
     public static int getIntQueryParam(final String url,
                                        @SuppressWarnings("SameParameterValue") final String param) {
         if (url == null
-                || param == null
-                || !url.startsWith("http")
-                || !url.contains(param + "=")) {
+            || param == null
+            || !url.startsWith("http")
+            || !url.contains(param + "=")) {
             return 0;
         }
         return StringUtils.stringToInt(Uri.parse(url).getQueryParameter(param));

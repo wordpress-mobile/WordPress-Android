@@ -33,7 +33,8 @@ public class FlowLayout extends ViewGroup {
 
     @Override
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
-        int widthSize = MeasureSpec.getSize(widthMeasureSpec) - ViewCompat.getPaddingEnd(this) - ViewCompat.getPaddingStart(this);
+        int widthSize = MeasureSpec.getSize(widthMeasureSpec) - ViewCompat.getPaddingEnd(this) - ViewCompat
+                .getPaddingStart(this);
         int widthMode = MeasureSpec.getMode(widthMeasureSpec);
 
         boolean growHeight = widthMode != MeasureSpec.UNSPECIFIED;
@@ -92,7 +93,8 @@ public class FlowLayout extends ViewGroup {
             LayoutParams lp = (LayoutParams) child.getLayoutParams();
 
             if (ViewCompat.getLayoutDirection(this) == ViewCompat.LAYOUT_DIRECTION_RTL) {
-                child.layout(child.getMeasuredWidth() - lp.x - child.getMeasuredWidth(), lp.y, r - lp.x, lp.y + child.getMeasuredHeight());
+                child.layout(child.getMeasuredWidth() - lp.x - child.getMeasuredWidth(), lp.y, r - lp.x,
+                             lp.y + child.getMeasuredHeight());
             } else {
                 child.layout(lp.x, lp.y, lp.x + child.getMeasuredWidth(), lp.y + child.getMeasuredHeight());
             }
@@ -120,16 +122,15 @@ public class FlowLayout extends ViewGroup {
     }
 
     public static class LayoutParams extends ViewGroup.MarginLayoutParams {
-        int x;
-        int y;
-
+        public int x;
+        public int y;
         public int horizontalSpacing;
 
         public LayoutParams(Context context, AttributeSet attrs) {
             super(context, attrs);
-            TypedArray a = context.obtainStyledAttributes(attrs, R.styleable.FlowLayout_LayoutParams);
+            TypedArray a = context.obtainStyledAttributes(attrs, R.styleable.FlowLayout_Layout);
             try {
-                horizontalSpacing = a.getDimensionPixelSize(R.styleable.FlowLayout_LayoutParams_layout_horizontalSpacing, -1);
+                horizontalSpacing = a.getDimensionPixelSize(R.styleable.FlowLayout_Layout_layout_horizontalSpacing, -1);
             } finally {
                 a.recycle();
             }

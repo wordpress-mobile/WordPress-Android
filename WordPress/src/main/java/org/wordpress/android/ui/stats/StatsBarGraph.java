@@ -27,7 +27,6 @@ import java.util.List;
  * Based on BarGraph from the GraphView library.
  */
 class StatsBarGraph extends GraphView {
-
     private static final int DEFAULT_MAX_Y = 10;
 
     // Keep tracks of every bar drawn on the graph.
@@ -38,7 +37,7 @@ class StatsBarGraph extends GraphView {
     private final GestureDetectorCompat mDetector;
     private OnGestureListener mGestureListener;
 
-    public StatsBarGraph(Context context) {
+    StatsBarGraph(Context context) {
         super(context, "");
 
         int width = LayoutParams.MATCH_PARENT;
@@ -84,7 +83,7 @@ class StatsBarGraph extends GraphView {
 
         private void highlightBarAndBroadcastDate() {
             int tappedBar = getTappedBar();
-            //AppLog.d(AppLog.T.STATS, this.getClass().getName() + " Tapped bar " + tappedBar);
+            // AppLog.d(AppLog.T.STATS, this.getClass().getName() + " Tapped bar " + tappedBar);
             if (tappedBar >= 0) {
                 highlightBar(tappedBar);
                 if (mGestureListener != null) {
@@ -95,12 +94,12 @@ class StatsBarGraph extends GraphView {
     }
 
     @Override
-    public boolean onTouchEvent (MotionEvent event) {
+    public boolean onTouchEvent(MotionEvent event) {
         boolean handled = super.onTouchEvent(event);
         if (mDetector != null && handled) {
             this.mDetector.onTouchEvent(event);
         }
-       return handled;
+        return handled;
     }
 
     private class HorizontalLabelsColor implements IndexDependentColor {
@@ -114,7 +113,7 @@ class StatsBarGraph extends GraphView {
     }
 
     private void setProperties() {
-        GraphViewStyle gStyle =  getGraphViewStyle();
+        GraphViewStyle gStyle = getGraphViewStyle();
         gStyle.setHorizontalLabelsIndexDependentColor(new HorizontalLabelsColor());
         gStyle.setHorizontalLabelsColor(getResources().getColor(R.color.grey_darken_30));
         gStyle.setVerticalLabelsColor(getResources().getColor(R.color.grey_darken_10));
@@ -124,18 +123,18 @@ class StatsBarGraph extends GraphView {
         gStyle.setNumVerticalLabels(3);
 
         setCustomLabelFormatter(new CustomLabelFormatter() {
-            private NumberFormat numberFormatter;
+            private NumberFormat mNumberFormatter;
 
             @Override
             public String formatLabel(double value, boolean isValueX) {
                 if (isValueX) {
                     return null;
                 }
-                if (numberFormatter == null) {
-                    numberFormatter = NumberFormat.getNumberInstance();
-                    numberFormatter.setMaximumFractionDigits(0);
+                if (mNumberFormatter == null) {
+                    mNumberFormatter = NumberFormat.getNumberInstance();
+                    mNumberFormatter.setMaximumFractionDigits(0);
                 }
-                return numberFormatter.format(value);
+                return mNumberFormatter.format(value);
             }
         });
     }
@@ -153,7 +152,7 @@ class StatsBarGraph extends GraphView {
         float colwidth = graphwidth / values.length;
         int maxColumnSize = getGraphViewStyle().getMaxColumnWidth();
         if (maxColumnSize > 0 && colwidth > maxColumnSize) {
-          colwidth = maxColumnSize;
+            colwidth = maxColumnSize;
         }
 
         paint.setStrokeWidth(style.thickness);
@@ -188,8 +187,8 @@ class StatsBarGraph extends GraphView {
 
             // Draw the grey background color on weekend days
             if (style.outerColor != 0x00ffffff
-                    && mBarPositionToHighlight != i
-                    && mWeekendDays != null && mWeekendDays[i]) {
+                && mBarPositionToHighlight != i
+                && mWeekendDays != null && mWeekendDays[i]) {
                 paint.setColor(style.outerColor);
                 canvas.drawRect(left, 10f, right, bottom, paint);
             }
@@ -199,7 +198,9 @@ class StatsBarGraph extends GraphView {
                 if (mBarPositionToHighlight != i) {
                     paint.setColor(style.color);
                     paint.setAlpha(25);
-                    Shader shader = new LinearGradient(left + pad, bottom - 50, left + pad, bottom, Color.WHITE, Color.BLACK, Shader.TileMode.CLAMP);
+                    Shader shader =
+                            new LinearGradient(left + pad, bottom - 50, left + pad, bottom, Color.WHITE, Color.BLACK,
+                                               Shader.TileMode.CLAMP);
                     paint.setShader(shader);
                     canvas.drawRect(left + pad, bottom - 50, right - pad, bottom, paint);
                     paint.setShader(null);
@@ -322,7 +323,7 @@ class StatsBarGraph extends GraphView {
          */
         public boolean isPointInside(float x, float y) {
             return x >= this.mLeft
-                    && x <= this.mRight;
+                   && x <= this.mRight;
         }
     }
 

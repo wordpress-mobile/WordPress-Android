@@ -33,6 +33,7 @@ public class AppPrefs {
 
     public interface PrefKey {
         String name();
+
         String toString();
     }
 
@@ -284,8 +285,8 @@ public class AppPrefs {
             setInt(DeletablePrefKey.STATS_ITEM_INDEX, timeframe.ordinal());
         } else {
             prefs().edit()
-                    .remove(DeletablePrefKey.STATS_ITEM_INDEX.name())
-                    .apply();
+                   .remove(DeletablePrefKey.STATS_ITEM_INDEX.name())
+                   .apply();
         }
     }
 
@@ -304,8 +305,8 @@ public class AppPrefs {
             setInt(DeletablePrefKey.COMMENTS_STATUS_TYPE_INDEX, commentStatus.ordinal());
         } else {
             prefs().edit()
-                    .remove(DeletablePrefKey.COMMENTS_STATUS_TYPE_INDEX.name())
-                    .apply();
+                   .remove(DeletablePrefKey.COMMENTS_STATUS_TYPE_INDEX.name())
+                   .apply();
         }
     }
 
@@ -318,13 +319,14 @@ public class AppPrefs {
             return values[idx];
         }
     }
+
     public static void setPeopleListFilter(PeopleListFilter peopleListFilter) {
         if (peopleListFilter != null) {
             setInt(DeletablePrefKey.PEOPLE_LIST_FILTER_INDEX, peopleListFilter.ordinal());
         } else {
             prefs().edit()
-                    .remove(DeletablePrefKey.PEOPLE_LIST_FILTER_INDEX.name())
-                    .apply();
+                   .remove(DeletablePrefKey.PEOPLE_LIST_FILTER_INDEX.name())
+                   .apply();
         }
     }
 
@@ -436,7 +438,8 @@ public class AppPrefs {
     }
 
     public static boolean isVisualEditorEnabled() {
-        return isVisualEditorAvailable() && getBoolean(UndeletablePrefKey.VISUAL_EDITOR_ENABLED, !isAztecEditorEnabled());
+        return isVisualEditorAvailable() && getBoolean(UndeletablePrefKey.VISUAL_EDITOR_ENABLED,
+                                                       !isAztecEditorEnabled());
     }
 
     public static boolean isAsyncPromoRequired() {
@@ -576,7 +579,7 @@ public class AppPrefs {
     }
 
     public static int getVideoOptimizeWidth() {
-        int resizeWidth =getInt(DeletablePrefKey.VIDEO_OPTIMIZE_WIDTH, 0);
+        int resizeWidth = getInt(DeletablePrefKey.VIDEO_OPTIMIZE_WIDTH, 0);
         return resizeWidth == 0 ? WPMediaUtils.OPTIMIZE_VIDEO_MAX_WIDTH : resizeWidth;
     }
 
@@ -585,7 +588,7 @@ public class AppPrefs {
     }
 
     public static int getVideoOptimizeQuality() {
-        int quality =  getInt(DeletablePrefKey.VIDEO_OPTIMIZE_QUALITY, 0);
+        int quality = getInt(DeletablePrefKey.VIDEO_OPTIMIZE_QUALITY, 0);
         return quality > 1 ? quality : WPMediaUtils.OPTIMIZE_VIDEO_ENCODER_BITRATE_KB;
     }
 
@@ -595,6 +598,7 @@ public class AppPrefs {
     public static ArrayList<Integer> getRecentlyPickedSiteIds() {
         return getRecentlyPickedSiteIds(MAX_RECENTLY_PICKED_SITES_TO_SHOW);
     }
+
     private static ArrayList<Integer> getRecentlyPickedSiteIds(int limit) {
         String idsAsString = getString(DeletablePrefKey.RECENTLY_PICKED_SITE_IDS, "");
         List<String> items = Arrays.asList(idsAsString.split(","));
@@ -614,7 +618,9 @@ public class AppPrefs {
      * adds a local site ID to the top of list of recently chosen sites
      */
     public static void addRecentlyPickedSiteId(Integer localId) {
-        if (localId == 0) return;
+        if (localId == 0) {
+            return;
+        }
 
         ArrayList<Integer> currentIds = getRecentlyPickedSiteIds(MAX_RECENTLY_PICKED_SITES_TO_SAVE);
 

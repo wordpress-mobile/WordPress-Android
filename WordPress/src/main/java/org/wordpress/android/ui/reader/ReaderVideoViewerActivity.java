@@ -15,9 +15,7 @@ import org.wordpress.android.WordPress;
 /**
  * Full screen landscape video player for the reader
  */
-
 public class ReaderVideoViewerActivity extends BaseActivity {
-
     private String mVideoUrl;
     private WebView mWebView;
     private ProgressBar mProgress;
@@ -70,5 +68,4 @@ public class ReaderVideoViewerActivity extends BaseActivity {
         mWebView.saveState(outState);
         super.onSaveInstanceState(outState);
     }
-
 }

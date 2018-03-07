@@ -38,8 +38,11 @@ public abstract class StatsAbstractFragment extends Fragment {
     private StatsTimeframe mStatsTimeframe = StatsTimeframe.DAY;
 
     protected abstract StatsService.StatsEndpointsEnum[] sectionsToUpdate();
+
     protected abstract void showPlaceholderUI();
+
     protected abstract void updateUI();
+
     protected abstract void showErrorUI(String label);
 
     @Inject AccountStore mAccountStore;
@@ -47,18 +50,21 @@ public abstract class StatsAbstractFragment extends Fragment {
 
     /**
      * Wheter or not previous data is available.
+     *
      * @return True if previous data is already available in the fragment
      */
     protected abstract boolean hasDataAvailable();
 
     /**
      * Called in onSaveIstance. Fragments should persist data here.
+     *
      * @param outState Bundle in which to place fragment saved state.
      */
     protected abstract void saveStatsData(Bundle outState);
 
     /**
      * Called in OnCreate. Fragment should restore here previous saved data.
+     *
      * @param savedInstanceState If the fragment is being re-created from a previous saved state, this is the state.
      */
     protected abstract void restoreStatsData(Bundle savedInstanceState); // called in onCreate
@@ -68,6 +74,7 @@ public abstract class StatsAbstractFragment extends Fragment {
     public void refreshStats() {
         refreshStats(-1, null);
     }
+
     // call an update for the stats shown in the fragment
     void refreshStats(int pageNumberRequested, StatsService.StatsEndpointsEnum[] sections) {
         if (!isAdded()) {
@@ -100,12 +107,13 @@ public abstract class StatsAbstractFragment extends Fragment {
 
         // Do not pass the array of StatsEndpointsEnum to the Service. Otherwise we get
         // java.lang.RuntimeException: Unable to start service org.wordpress.android.ui.stats.service.StatsService
-        // with Intent { cmp=org.wordpress.android/.ui.stats.service.StatsService (has extras) }: java.lang.ClassCastException:
-        // java.lang.Object[] cannot be cast to org.wordpress.android.ui.stats.service.StatsService$StatsEndpointsEnum[]
-        // on older devices.
-        // We should use Enumset, or array of int. Going for the latter, since we have an array and cannot create an Enumset easily.
+        // with Intent { cmp=org.wordpress.android/.ui.stats.service.StatsService (has extras) }:
+        // java.lang.ClassCastException: java.lang.Object[] cannot be cast to
+        // org.wordpress.android.ui.stats.service.StatsService$StatsEndpointsEnum[] on older devices.
+        // We should use Enumset, or array of int. Going for the latter, since we have an array and cannot create
+        // an Enumset easily.
         int[] sectionsForTheService = new int[sections.length];
-        for (int i=0; i < sections.length; i++){
+        for (int i = 0; i < sections.length; i++) {
             sectionsForTheService[i] = sections[i].ordinal();
         }
 
@@ -115,8 +123,10 @@ public abstract class StatsAbstractFragment extends Fragment {
         intent.putExtra(StatsService.ARG_PERIOD, mStatsTimeframe);
         intent.putExtra(StatsService.ARG_DATE, mDate);
         if (isSingleView()) {
-            // Single Item screen: request 20 items per page on paged requests. Default to the first 100 items otherwise.
-            int maxElementsToRetrieve = pageNumberRequested > 0 ? StatsService.MAX_RESULTS_REQUESTED_PER_PAGE : MAX_RESULTS_REQUESTED;
+            // Single Item screen: request 20 items per page on paged requests.
+            // Default to the first 100 items otherwise.
+            int maxElementsToRetrieve =
+                    pageNumberRequested > 0 ? StatsService.MAX_RESULTS_REQUESTED_PER_PAGE : MAX_RESULTS_REQUESTED;
             intent.putExtra(StatsService.ARG_MAX_RESULTS, maxElementsToRetrieve);
         }
         if (pageNumberRequested > 0) {
@@ -254,20 +264,21 @@ public abstract class StatsAbstractFragment extends Fragment {
     }
 
     public static StatsAbstractFragment newVisitorsAndViewsInstance(StatsViewType viewType, int localTableBlogID,
-                                                    StatsTimeframe timeframe, String date,  StatsVisitorsAndViewsFragment.OverviewLabel itemToSelect) {
-        StatsVisitorsAndViewsFragment fragment = (StatsVisitorsAndViewsFragment) newInstance(viewType, localTableBlogID, timeframe, date);
+                  StatsTimeframe timeframe, String date, StatsVisitorsAndViewsFragment.OverviewLabel itemToSelect) {
+        StatsVisitorsAndViewsFragment fragment =
+                (StatsVisitorsAndViewsFragment) newInstance(viewType, localTableBlogID, timeframe, date);
         fragment.setSelectedOverviewItem(itemToSelect);
         return fragment;
     }
 
     public static StatsAbstractFragment newInstance(StatsViewType viewType, int localTableBlogID,
-                                                    StatsTimeframe timeframe, String date ) {
+                                                    StatsTimeframe timeframe, String date) {
         StatsAbstractFragment fragment = null;
 
         switch (viewType) {
-            //case TIMEFRAME_SELECTOR:
-               // fragment = new StatsDateSelectorFragment();
-              //  break;
+            // case TIMEFRAME_SELECTOR:
+            // fragment = new StatsDateSelectorFragment();
+            // break;
             case GRAPH_AND_SUMMARY:
                 fragment = new StatsVisitorsAndViewsFragment();
                 break;

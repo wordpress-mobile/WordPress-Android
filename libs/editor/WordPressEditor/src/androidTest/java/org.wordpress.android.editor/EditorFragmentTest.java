@@ -114,8 +114,8 @@ public class EditorFragmentTest extends ActivityInstrumentationTestCase2<MockEdi
 
         String content = mFragment.getContent().toString();
 
-        final EditTextWithKeyBackListener titleText = (EditTextWithKeyBackListener) view.findViewById(R.id.sourceview_title);
-        final EditTextWithKeyBackListener contentText = (EditTextWithKeyBackListener) view.findViewById(R.id.sourceview_content);
+        final EditTextWithKeyBackListener titleText = view.findViewById(R.id.sourceview_title);
+        final EditTextWithKeyBackListener contentText = view.findViewById(R.id.sourceview_content);
 
         // -- Check that title and content text is properly loaded into the EditTexts when switching to HTML mode
 
@@ -173,7 +173,7 @@ public class EditorFragmentTest extends ActivityInstrumentationTestCase2<MockEdi
 
     private void waitForOnDomLoaded() {
         long start = System.currentTimeMillis();
-        while(!mFragment.mDomLoaded) {
+        while (!mFragment.mDomLoaded) {
             waitFor(10);
             if (System.currentTimeMillis() - start > 5000) {
                 throw(new RuntimeException("Callback wait timed out"));

@@ -246,7 +246,7 @@ public class AutoResizeTextView extends AppCompatTextView {
             TextPaint paint = new TextPaint(textPaint);
             // Draw using a static layout
             StaticLayout layout = new StaticLayout(text, paint, width, Layout.Alignment.ALIGN_NORMAL,
-                    mSpacingMult, mSpacingAdd, false);
+                                                   mSpacingMult, mSpacingAdd, false);
             // Check that we have a least one line of rendered text
             if (layout.getLineCount() > 0) {
                 // Since the line at the specific vertical position would be cut off,
@@ -295,7 +295,7 @@ public class AutoResizeTextView extends AppCompatTextView {
         paintCopy.setTextSize(textSize);
         // Measure using a static layout
         StaticLayout layout = new StaticLayout(source, paintCopy, width, Layout.Alignment.ALIGN_NORMAL,
-                mSpacingMult, mSpacingAdd, true);
+                                               mSpacingMult, mSpacingAdd, true);
         return layout.getHeight();
     }
 }

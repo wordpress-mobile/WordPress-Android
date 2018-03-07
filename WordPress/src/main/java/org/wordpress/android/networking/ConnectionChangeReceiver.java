@@ -21,9 +21,11 @@ public class ConnectionChangeReceiver extends BroadcastReceiver {
 
     public static class ConnectionChangeEvent {
         private final boolean mIsConnected;
+
         public ConnectionChangeEvent(boolean isConnected) {
             mIsConnected = isConnected;
         }
+
         public boolean isConnected() {
             return mIsConnected;
         }
@@ -50,7 +52,7 @@ public class ConnectionChangeReceiver extends BroadcastReceiver {
         EventBus.getDefault().post(new ConnectionChangeEvent(isConnected));
     }
 
-    public static ConnectionChangeReceiver getInstance(){
+    public static ConnectionChangeReceiver getInstance() {
         if (sInstance == null) {
             sInstance = new ConnectionChangeReceiver();
         }

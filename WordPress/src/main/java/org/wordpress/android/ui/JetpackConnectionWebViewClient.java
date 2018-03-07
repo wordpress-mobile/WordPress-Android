@@ -22,7 +22,6 @@ import static org.wordpress.android.WordPress.SITE;
 import static org.wordpress.android.ui.RequestCodes.JETPACK_LOGIN;
 
 class JetpackConnectionWebViewClient extends WebViewClient {
-
     private static final String LOGIN_PATH = "/wp-login.php";
     private static final String ADMIN_PATH = "/wp-admin/admin.php";
     private static final String REDIRECT_PARAMETER = "redirect_to=";
@@ -31,26 +30,29 @@ class JetpackConnectionWebViewClient extends WebViewClient {
     private static final String WPCOM_LOG_IN_PATH_2 = "/log-in/jetpack";
     private static final String JETPACK_PATH = "/jetpack";
     private static final String WORDPRESS_COM_PREFIX = "https://wordpress.com";
-    private static final Uri JETPACK_DEEPLINK_URI = Uri.parse(JetpackConnectionWebViewActivity.JETPACK_CONNECTION_DEEPLINK);
+    private static final Uri JETPACK_DEEPLINK_URI =
+            Uri.parse(JetpackConnectionWebViewActivity.JETPACK_CONNECTION_DEEPLINK);
     private static final String REDIRECT_PAGE_STATE_ITEM = "redirectPage";
     private static final String FLOW_FINISHED = "FLOW_FINISHED";
 
-    private Activity activity;
-    private final AccountStore accountStore;
+    private Activity mActivity;
+    private final AccountStore mAccountStore;
     private final SiteModel mSiteModel;
 
-    private String redirectPage;
-    private boolean flowFinished = false;
+    private String mRedirectPage;
+    private boolean mFlowFinished = false;
 
-    JetpackConnectionWebViewClient(Activity activity, AccountStore accountStore, SiteModel mSiteModel) {
-        this.activity = activity;
-        this.accountStore = accountStore;
-        this.mSiteModel = mSiteModel;
+    JetpackConnectionWebViewClient(Activity activity, AccountStore accountStore, SiteModel siteModel) {
+        mActivity = activity;
+        mAccountStore = accountStore;
+        mSiteModel = siteModel;
     }
 
     private void loginToWPCom(WebView view, SiteModel site) {
         String authenticationURL = WPWebViewActivity.getSiteLoginUrl(site);
-        String postData = WPWebViewActivity.getAuthenticationPostData(authenticationURL, redirectPage, site.getUsername(), site.getPassword(), accountStore.getAccessToken());
+        String postData = WPWebViewActivity.getAuthenticationPostData(authenticationURL, mRedirectPage,
+                                                                      site.getUsername(), site.getPassword(),
+                                                                      mAccountStore.getAccessToken());
         view.postUrl(authenticationURL, postData.getBytes());
     }
 
@@ -83,33 +85,33 @@ class JetpackConnectionWebViewClient extends WebViewClient {
                     && loadedPath != null
                     && loadedPath.contains(LOGIN_PATH)
                     && stringUrl.contains(REDIRECT_PARAMETER)) {
-                redirectPage = extractRedirect(stringUrl);
+                mRedirectPage = extractRedirect(stringUrl);
                 loginToWPCom(view, mSiteModel);
                 return true;
             } else if (loadedHost.equals(currentSiteHost)
-                    && loadedPath != null
-                    && loadedPath.contains(ADMIN_PATH)
-                    && redirectPage != null) {
-                view.loadUrl(redirectPage);
-                redirectPage = null;
+                       && loadedPath != null
+                       && loadedPath.contains(ADMIN_PATH)
+                       && mRedirectPage != null) {
+                view.loadUrl(mRedirectPage);
+                mRedirectPage = null;
                 return true;
             } else if (loadedHost.equals(WORDPRESS_COM_HOST)
                     && loadedPath != null
                     && (loadedPath.equals(WPCOM_LOG_IN_PATH_1) || loadedPath.equals(WPCOM_LOG_IN_PATH_2))
                     && stringUrl.contains(REDIRECT_PARAMETER)) {
-                redirectPage = extractRedirect(stringUrl);
-                Intent loginIntent = new Intent(activity, LoginActivity.class);
+                mRedirectPage = extractRedirect(stringUrl);
+                Intent loginIntent = new Intent(mActivity, LoginActivity.class);
                 LoginMode.JETPACK_STATS.putInto(loginIntent);
-                activity.startActivityForResult(loginIntent, JETPACK_LOGIN);
+                mActivity.startActivityForResult(loginIntent, JETPACK_LOGIN);
                 return true;
             } else if (loadedHost.equals(JETPACK_DEEPLINK_URI.getHost())
                     && url.getScheme().equals(JETPACK_DEEPLINK_URI.getScheme())) {
                 Intent intent = new Intent(Intent.ACTION_VIEW);
                 intent.setData(url);
                 intent.putExtra(SITE, mSiteModel);
-                activity.startActivity(intent);
-                activity.finish();
-                flowFinished = true;
+                mActivity.startActivity(intent);
+                mActivity.finish();
+                mFlowFinished = true;
                 AnalyticsTracker.track(AnalyticsTracker.Stat.STATS_COMPLETED_INSTALL_JETPACK);
                 return true;
             }
@@ -121,24 +123,24 @@ class JetpackConnectionWebViewClient extends WebViewClient {
 
     void activityResult(Context context, int requestCode) {
         if (requestCode == JETPACK_LOGIN) {
-            JetpackConnectionWebViewActivity.openJetpackConnectionFlow(context, redirectPage, mSiteModel);
-            activity.finish();
+            JetpackConnectionWebViewActivity.openJetpackConnectionFlow(context, mRedirectPage, mSiteModel);
+            mActivity.finish();
         }
     }
 
     public void cancel() {
-        if (!flowFinished) {
+        if (!mFlowFinished) {
             AnalyticsTracker.track(AnalyticsTracker.Stat.STATS_CANCELED_INSTALL_JETPACK);
         }
     }
 
     public void onSaveInstanceState(Bundle outState) {
-        outState.putString(REDIRECT_PAGE_STATE_ITEM, redirectPage);
-        outState.putBoolean(FLOW_FINISHED, flowFinished);
+        outState.putString(REDIRECT_PAGE_STATE_ITEM, mRedirectPage);
+        outState.putBoolean(FLOW_FINISHED, mFlowFinished);
     }
 
     public void onRestoreInstanceState(Bundle savedInstanceState) {
-        redirectPage = savedInstanceState.getString(REDIRECT_PAGE_STATE_ITEM);
-        flowFinished = savedInstanceState.getBoolean(FLOW_FINISHED);
+        mRedirectPage = savedInstanceState.getString(REDIRECT_PAGE_STATE_ITEM);
+        mFlowFinished = savedInstanceState.getBoolean(FLOW_FINISHED);
     }
 }

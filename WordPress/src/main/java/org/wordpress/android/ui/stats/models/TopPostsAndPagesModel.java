@@ -29,7 +29,8 @@ public class TopPostsAndPagesModel extends BaseStatsModel {
         Iterator<String> keys = jDaysObject.keys();
         if (keys.hasNext()) {
             String key = keys.next();
-            JSONObject jDateObject = jDaysObject.optJSONObject(key); // This could be an empty array on site with low traffic
+            JSONObject jDateObject =
+                    jDaysObject.optJSONObject(key); // This could be an empty array on site with low traffic
             postViewsArray = (jDateObject != null) ? jDateObject.getJSONArray("postviews") : null;
         }
 
@@ -39,7 +40,7 @@ public class TopPostsAndPagesModel extends BaseStatsModel {
 
         ArrayList<StatsPostModel> list = new ArrayList<>(postViewsArray.length());
 
-        for (int i=0; i < postViewsArray.length(); i++) {
+        for (int i = 0; i < postViewsArray.length(); i++) {
             try {
                 JSONObject postObject = postViewsArray.getJSONObject(i);
                 String itemID = postObject.getString("id");
@@ -49,11 +50,11 @@ public class TopPostsAndPagesModel extends BaseStatsModel {
                 String itemType = postObject.getString("type");
                 String itemDate = postObject.getString("date");
                 StatsPostModel currentModel = new StatsPostModel(blogID, itemDate, itemID, itemTitle,
-                        itemTotal, itemURL, itemType);
+                                                                 itemTotal, itemURL, itemType);
                 list.add(currentModel);
             } catch (JSONException e) {
-                AppLog.e(AppLog.T.STATS, "Unexpected PostModel object in top posts and pages array " +
-                        "at position " + i + " Response: " + response.toString(), e);
+                AppLog.e(AppLog.T.STATS, "Unexpected PostModel object in top posts and pages array "
+                                         + "at position " + i + " Response: " + response.toString(), e);
             }
         }
         this.mTopPostsAndPages = list;

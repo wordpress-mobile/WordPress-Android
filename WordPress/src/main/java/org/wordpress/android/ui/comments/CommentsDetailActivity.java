@@ -36,7 +36,7 @@ import static org.wordpress.android.ui.comments.CommentsListFragment.COMMENTS_PE
 
 public class CommentsDetailActivity extends BaseActivity
         implements CommentAdapter.OnLoadMoreListener,
-                   CommentActions.OnCommentActionListener {
+        CommentActions.OnCommentActionListener {
     public static final String COMMENT_ID_EXTRA = "commentId";
     public static final String COMMENT_STATUS_FILTER_EXTRA = "commentStatusFilter";
 
@@ -77,21 +77,20 @@ public class CommentsDetailActivity extends BaseActivity
             mCommentId = getIntent().getLongExtra(COMMENT_ID_EXTRA, -1);
             mSite = (SiteModel) getIntent().getSerializableExtra(WordPress.SITE);
             mStatusFilter = (CommentStatus) getIntent().getSerializableExtra(COMMENT_STATUS_FILTER_EXTRA);
-
         } else {
             mCommentId = savedInstanceState.getLong(COMMENT_ID_EXTRA);
             mSite = (SiteModel) savedInstanceState.getSerializable(WordPress.SITE);
             mStatusFilter = (CommentStatus) savedInstanceState.getSerializable(COMMENT_STATUS_FILTER_EXTRA);
         }
 
-        //set up the viewpager and adapter for lateral navigation
+        // set up the viewpager and adapter for lateral navigation
         mViewPager = (WPViewPager) findViewById(R.id.viewpager);
         mViewPager.setPageTransformer(false,
-                new WPViewPagerTransformer(WPViewPagerTransformer.TransformType.SLIDE_OVER));
+                                      new WPViewPagerTransformer(WPViewPagerTransformer.TransformType.SLIDE_OVER));
 
         mProgressBar = (ProgressBar) findViewById(R.id.progress_loading);
 
-        //Asynchronously loads comments and build the adapter
+        // Asynchronously loads comments and build the adapter
         loadDataInViewPager();
     }
 
@@ -152,7 +151,7 @@ public class CommentsDetailActivity extends BaseActivity
             if (event.changedCommentsLocalIds.size() > 0) {
                 loadDataInViewPager();
             } else if (!event.isError()) {
-                //There are no more comments to load
+                // There are no more comments to load
                 mCanLoadMoreComments = false;
             }
         }
@@ -187,13 +186,13 @@ public class CommentsDetailActivity extends BaseActivity
     private void showCommentList(CommentList commentList) {
         final int previousItem = mViewPager.getCurrentItem();
 
-        //Only notify adapter when loading new page
+        // Only notify adapter when loading new page
         if (mAdapter != null && mAdapter.isAddingNewComments(commentList)) {
             mAdapter.onNewItems(commentList);
         } else {
-            //If current items change, rebuild the adapter
+            // If current items change, rebuild the adapter
             mAdapter = new CommentDetailFragmentAdapter(getFragmentManager(), commentList, mSite,
-                    CommentsDetailActivity.this);
+                                                        CommentsDetailActivity.this);
             mViewPager.setAdapter(mAdapter);
         }
 
@@ -236,7 +235,7 @@ public class CommentsDetailActivity extends BaseActivity
 
 
     @Override
-    public void onModerateComment(final SiteModel mSite,
+    public void onModerateComment(final SiteModel site,
                                   final CommentModel comment,
                                   final CommentStatus newStatus) {
         Intent resultIntent = new Intent();
