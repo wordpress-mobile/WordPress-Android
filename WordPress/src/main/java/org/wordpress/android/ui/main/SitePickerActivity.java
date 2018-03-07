@@ -266,7 +266,7 @@ public class SitePickerActivity extends AppCompatActivity
                         if (isFinishing()) {
                             return;
                         }
-                        if (!NetworkUtils.checkConnection(SitePickerActivity.this)) {
+                        if (!NetworkUtils.checkConnection(SitePickerActivity.this) || !mAccountStore.hasAccessToken()) {
                             mSwipeToRefreshHelper.setRefreshing(false);
                             return;
                         }
