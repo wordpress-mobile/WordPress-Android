@@ -33,10 +33,5 @@ install:
   - cp libs/login/gradle.properties-example libs/login/gradle.properties
 
 script:
-  - ./gradlew :WordPress:checkstyle
-  - ./gradlew :libs:analytics:WordPressAnalytics:checkstyle
-  - ./gradlew :libs:editor:WordPressEditor:checkstyle
-  - ./gradlew :libs:utils:WordPressUtils:checkstyle
-  - ./gradlew :libs:networking:WordPressNetworking:checkstyle
-  - ./gradlew :libs:login:WordPressLoginFlow:checkstyle
+  - ./gradlew checkstyle
   - ./gradlew -PdisablePreDex assembleVanillaRelease lintVanillaRelease testVanillaRelease || (grep -A20 -B2 'severity="Error"' -r --include="*.xml" WordPress libs; exit 1)
