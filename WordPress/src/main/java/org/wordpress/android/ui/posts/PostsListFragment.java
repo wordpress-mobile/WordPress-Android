@@ -565,8 +565,8 @@ public class PostsListFragment extends Fragment
     private void showPublishConfirmationDialog(final PostModel post) {
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         builder.setTitle(getResources().getText(R.string.dialog_confirm_publish_title))
-               .setMessage(post.isPage() ? getString(R.string.dialog_confirm_publish_message_page) :
-                       getString(R.string.dialog_confirm_publish_message_post))
+               .setMessage(post.isPage() ? getString(R.string.dialog_confirm_publish_message_page)
+                                   : getString(R.string.dialog_confirm_publish_message_post))
                .setPositiveButton(R.string.dialog_confirm_publish_yes, new DialogInterface.OnClickListener() {
                    @Override
                    public void onClick(DialogInterface dialogInterface, int i) {
