@@ -6,7 +6,6 @@ import android.location.Geocoder;
 
 import java.io.IOException;
 import java.util.List;
-import java.util.Locale;
 
 public final class GeocoderUtils {
     private GeocoderUtils() {
@@ -47,9 +46,9 @@ public final class GeocoderUtils {
             // may get "Unable to parse response from server" IOException here if Geocoder
             // service is hit too frequently
             AppLog.e(AppLog.T.UTILS,
-                    "Unable to parse response from server. Is Geocoder service hitting the server too frequently?",
-                    e
-            );
+                     "Unable to parse response from server. Is Geocoder service hitting the server too frequently?",
+                     e
+                    );
         }
 
         // addresses may be null or empty if network isn't connected
@@ -100,7 +99,7 @@ public final class GeocoderUtils {
         }
 
         return ((locality.equals("")) ? locality : locality + ", ")
-                + ((adminArea.equals("")) ? adminArea : adminArea + " ") + country;
+               + ((adminArea.equals("")) ? adminArea : adminArea + " ") + country;
     }
 
     public static double[] getCoordsFromAddress(Address address) {

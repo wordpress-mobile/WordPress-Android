@@ -9,7 +9,7 @@ import java.io.File;
 
 public class VideoUtils {
     public static long getVideoDurationMS(Context context, File file) {
-        if(context == null || file == null) {
+        if (context == null || file == null) {
             AppLog.e(AppLog.T.MEDIA, "context and file can't be null.");
             return 0L;
         }
@@ -17,7 +17,7 @@ public class VideoUtils {
     }
 
     public static long getVideoDurationMS(Context context, Uri videoUri) {
-        if(context == null || videoUri == null) {
+        if (context == null || videoUri == null) {
             AppLog.e(AppLog.T.MEDIA, "context and videoUri can't be null.");
             return 0L;
         }
@@ -29,7 +29,8 @@ public class VideoUtils {
             return 0L;
         } catch (RuntimeException e) {
             // Ref: https://github.com/wordpress-mobile/WordPress-Android/issues/5431
-            AppLog.e(AppLog.T.MEDIA, "Can't read duration of the video due to a Runtime Exception happened setting the datasource", e);
+            AppLog.e(AppLog.T.MEDIA,
+                     "Can't read duration of the video due to a Runtime Exception happened setting the datasource", e);
             return 0L;
         }
 

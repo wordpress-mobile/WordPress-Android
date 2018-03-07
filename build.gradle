@@ -25,6 +25,7 @@ allprojects {
         source 'src'
         include '**/*.java'
         include '**/*.kt'
+        include '**/*.xml'
         exclude '**/gen/**'
 
         classpath = files()

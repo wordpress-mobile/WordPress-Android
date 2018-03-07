@@ -82,8 +82,8 @@ public class MediaPreviewFragment extends Fragment implements MediaController.Me
      * @param contentUri URI of media - can be local or remote
      */
     public static MediaPreviewFragment newInstance(
-            SiteModel site,
-            String contentUri) {
+            @Nullable SiteModel site,
+            @NonNull String contentUri) {
         Bundle args = new Bundle();
         args.putString(ARG_MEDIA_CONTENT_URI, contentUri);
         if (site != null) {
@@ -101,8 +101,8 @@ public class MediaPreviewFragment extends Fragment implements MediaController.Me
      * @param autoPlay true = play video/audio after fragment is created
      */
     public static MediaPreviewFragment newInstance(
-            SiteModel site,
-            MediaModel media,
+            @Nullable SiteModel site,
+            @NonNull MediaModel media,
             boolean autoPlay) {
         Bundle args = new Bundle();
         args.putString(ARG_MEDIA_CONTENT_URI, media.getUrl());
@@ -286,7 +286,7 @@ public class MediaPreviewFragment extends Fragment implements MediaController.Me
         if (mediaUri.startsWith("http")) {
             showProgress(true);
             String imageUrl = mediaUri;
-            if (mSite != null && SiteUtils.isPhotonCapable(mSite)) {
+            if (mSite == null || SiteUtils.isPhotonCapable(mSite)) {
                 imageUrl = PhotonUtils.getPhotonImageUrl(mediaUri, size, 0);
             }
             mImageLoader.get(imageUrl, new ImageLoader.ImageListener() {
