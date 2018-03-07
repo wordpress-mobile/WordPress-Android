@@ -91,6 +91,11 @@ public class StockPhotoPickerActivity extends AppCompatActivity implements Searc
 
         mSelectionBar = findViewById(R.id.container_selection_bar);
         mTextInsert = findViewById(R.id.text_insert);
+        mTextInsert.setOnClickListener(new View.OnClickListener() {
+            @Override public void onClick(View v) {
+                insertSelection();
+            }
+        });
         findViewById(R.id.text_clear).setOnClickListener(new View.OnClickListener() {
             @Override public void onClick(View v) {
                 mAdapter.clearSelection();
@@ -111,28 +116,6 @@ public class StockPhotoPickerActivity extends AppCompatActivity implements Searc
                     mAdapter.setSelectedItems(selectedItems);
                 }
             }
-        }
-    }
-
-    private void showSelectionBar() {
-        if (mSelectionBar.getVisibility() != View.VISIBLE) {
-            AniUtils.animateBottomBar(mSelectionBar, true);
-        }
-    }
-
-    private void hideSelectionBar() {
-        if (mSelectionBar.getVisibility() == View.VISIBLE) {
-            AniUtils.animateBottomBar(mSelectionBar, false);
-        }
-    }
-
-    private void notifySelectionCountChanged() {
-        int numSelected = mAdapter.getSelectionCount();
-        if (numSelected > 0) {
-            mTextInsert.setText(getString(R.string.insert) + " " + Integer.toString(numSelected));
-            showSelectionBar();
-        } else {
-            hideSelectionBar();
         }
     }
 
@@ -275,6 +258,37 @@ public class StockPhotoPickerActivity extends AppCompatActivity implements Searc
         mViewModel.fetchStockPhotos(searchTerm, page);
     }
 
+    private void showSelectionBar() {
+        if (mSelectionBar.getVisibility() != View.VISIBLE) {
+            AniUtils.animateBottomBar(mSelectionBar, true);
+        }
+    }
+
+    private void hideSelectionBar() {
+        if (mSelectionBar.getVisibility() == View.VISIBLE) {
+            AniUtils.animateBottomBar(mSelectionBar, false);
+        }
+    }
+
+    private void notifySelectionCountChanged() {
+        int numSelected = mAdapter.getSelectionCount();
+        if (numSelected > 0) {
+            mTextInsert.setText(getString(R.string.insert) + " " + Integer.toString(numSelected));
+            showSelectionBar();
+        } else {
+            hideSelectionBar();
+        }
+    }
+
+    private void insertSelection() {
+        List<StockMediaModel> items = mAdapter.getSelectedItems();
+        if (items.size() == 0) {
+            return;
+        }
+        // TODO
+    }
+
+
     class StockPhotoAdapter extends RecyclerView.Adapter<StockViewHolder> {
         private static final float SCALE_NORMAL = 1.0f;
         private static final float SCALE_SELECTED = .8f;
@@ -393,6 +407,14 @@ public class StockPhotoPickerActivity extends AppCompatActivity implements Searc
             boolean isSelected = isItemSelected(position);
             setItemSelected(holder, position, !isSelected);
             notifySelectionCountChanged();
+        }
+
+        private List<StockMediaModel> getSelectedItems() {
+            List<StockMediaModel> items = new ArrayList<>();
+            for (int i : mSelectedItems) {
+                items.add(mItems.get(i));
+            }
+            return items;
         }
 
         private void setSelectedItems(@NonNull ArrayList<Integer> selectedItems) {
