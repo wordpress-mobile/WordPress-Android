@@ -15,7 +15,6 @@ import java.util.List;
  * Tweaked from source at http://stackoverflow.com/questions/4044509/android-how-to-use-the-html-taghandler
  */
 public class WPHtmlTagHandler implements Html.TagHandler {
-
     private static final int SPAN_INDENT_WIDTH = 15;
 
     private int mListItemCount = 0;
@@ -27,26 +26,30 @@ public class WPHtmlTagHandler implements Html.TagHandler {
         if (tag != null) {
             switch (tag) {
                 case "WPUL":
-                    if (opening)
+                    if (opening) {
                         mListParents.add("ul");
-                    else
+                    } else {
                         mListParents.remove("ul");
+                    }
                     break;
                 case "WPOL":
-                    if (opening)
+                    if (opening) {
                         mListParents.add("ol");
-                    else
+                    } else {
                         mListParents.remove("ol");
+                    }
                     break;
                 case "WPLI":
-                    if (!opening)
+                    if (!opening) {
                         handleListTag(output);
+                    }
                     break;
                 case "dd":
-                    if (opening)
+                    if (opening) {
                         mListParents.add("dd");
-                    else
+                    } else {
                         mListParents.remove("dd");
+                    }
                     break;
             }
         }
@@ -75,7 +78,7 @@ public class WPHtmlTagHandler implements Html.TagHandler {
                 }
                 output.insert(start, mListItemCount + ". ");
                 output.setSpan(new LeadingMarginSpan.Standard(SPAN_INDENT_WIDTH * mListParents.size()), start,
-                        output.length(), 0);
+                               output.length(), 0);
             }
         }
     }
