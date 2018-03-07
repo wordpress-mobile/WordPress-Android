@@ -54,6 +54,7 @@ public class PluginBrowserActivity extends AppCompatActivity
     protected PluginBrowserViewModel mViewModel;
 
     private RecyclerView mSitePluginsRecycler;
+    private RecyclerView mFeaturedPluginsRecycler;
     private RecyclerView mPopularPluginsRecycler;
     private RecyclerView mNewPluginsRecycler;
 
@@ -69,6 +70,7 @@ public class PluginBrowserActivity extends AppCompatActivity
         mViewModel = ViewModelProviders.of(this, mViewModelFactory).get(PluginBrowserViewModel.class);
 
         mSitePluginsRecycler = findViewById(R.id.installed_plugins_recycler);
+        mFeaturedPluginsRecycler = findViewById(R.id.featured_plugins_recycler);
         mPopularPluginsRecycler = findViewById(R.id.popular_plugins_recycler);
         mNewPluginsRecycler = findViewById(R.id.new_plugins_recycler);
 
@@ -101,6 +103,14 @@ public class PluginBrowserActivity extends AppCompatActivity
             }
         });
 
+        // featured plugin list
+        findViewById(R.id.text_all_featured).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                showListFragment(PluginListType.FEATURED);
+            }
+        });
+
         // popular plugin list
         findViewById(R.id.text_all_popular).setOnClickListener(new View.OnClickListener() {
             @Override
@@ -127,6 +137,7 @@ public class PluginBrowserActivity extends AppCompatActivity
         });
 
         configureRecycler(mSitePluginsRecycler);
+        configureRecycler(mFeaturedPluginsRecycler);
         configureRecycler(mPopularPluginsRecycler);
         configureRecycler(mNewPluginsRecycler);
 
@@ -151,6 +162,13 @@ public class PluginBrowserActivity extends AppCompatActivity
             @Override
             public void onChanged(@Nullable final List<ImmutablePluginModel> sitePlugins) {
                 reloadPluginAdapterAndVisibility(PluginListType.SITE, sitePlugins);
+            }
+        });
+
+        mViewModel.getFeaturedPlugins().observe(this, new Observer<List<ImmutablePluginModel>>() {
+            @Override
+            public void onChanged(@Nullable final List<ImmutablePluginModel> featuredPlugins) {
+                reloadPluginAdapterAndVisibility(PluginListType.FEATURED, featuredPlugins);
             }
         });
 
@@ -230,6 +248,10 @@ public class PluginBrowserActivity extends AppCompatActivity
         PluginBrowserAdapter adapter;
         View cardView;
         switch (pluginType) {
+            case FEATURED:
+                adapter = (PluginBrowserAdapter) mFeaturedPluginsRecycler.getAdapter();
+                cardView = findViewById(R.id.featured_plugins_cardview);
+                break;
             case POPULAR:
                 adapter = (PluginBrowserAdapter) mPopularPluginsRecycler.getAdapter();
                 cardView = findViewById(R.id.popular_plugins_cardview);
@@ -417,6 +439,8 @@ public class PluginBrowserActivity extends AppCompatActivity
 
     private String getTitleForListType(@NonNull PluginListType pluginListType) {
         switch (pluginListType) {
+            case FEATURED:
+                return getString(R.string.plugin_caption_featured);
             case POPULAR:
                 return getString(R.string.plugin_caption_popular);
             case NEW:

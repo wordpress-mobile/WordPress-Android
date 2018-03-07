@@ -34,6 +34,7 @@ import javax.inject.Inject;
 public class PluginBrowserViewModel extends ViewModel {
     public enum PluginListType {
         SITE,
+        FEATURED,
         POPULAR,
         NEW,
         SEARCH
@@ -62,11 +63,13 @@ public class PluginBrowserViewModel extends ViewModel {
     @SuppressWarnings("WeakerAccess")
     protected final Set<String> mUpdatedPluginSlugSet;
 
+    private final MutableLiveData<PluginListStatus> mFeaturedPluginsListStatus;
     private final MutableLiveData<PluginListStatus> mNewPluginsListStatus;
     private final MutableLiveData<PluginListStatus> mPopularPluginsListStatus;
     private final MutableLiveData<PluginListStatus> mSitePluginsListStatus;
     private final MutableLiveData<PluginListStatus> mSearchPluginsListStatus;
 
+    private final MutableLiveData<List<ImmutablePluginModel>> mFeaturedPlugins;
     private final MutableLiveData<List<ImmutablePluginModel>> mNewPlugins;
     private final MutableLiveData<List<ImmutablePluginModel>> mPopularPlugins;
     private final MutableLiveData<List<ImmutablePluginModel>> mSitePlugins;
@@ -86,11 +89,13 @@ public class PluginBrowserViewModel extends ViewModel {
         mHandler = new Handler();
         mUpdatedPluginSlugSet = new HashSet<>();
 
+        mFeaturedPlugins = new MutableLiveData<>();
         mSitePlugins = new MutableLiveData<>();
         mNewPlugins = new MutableLiveData<>();
         mPopularPlugins = new MutableLiveData<>();
         mSearchResults = new MutableLiveData<>();
 
+        mFeaturedPluginsListStatus = new MutableLiveData<>();
         mNewPluginsListStatus = new MutableLiveData<>();
         mPopularPluginsListStatus = new MutableLiveData<>();
         mSitePluginsListStatus = new MutableLiveData<>();
@@ -126,11 +131,13 @@ public class PluginBrowserViewModel extends ViewModel {
         if (mIsStarted) {
             return;
         }
+        reloadPluginDirectory(PluginDirectoryType.FEATURED);
         reloadPluginDirectory(PluginDirectoryType.NEW);
         reloadPluginDirectory(PluginDirectoryType.POPULAR);
         reloadPluginDirectory(PluginDirectoryType.SITE);
 
         fetchPlugins(PluginListType.SITE, false);
+        fetchPlugins(PluginListType.FEATURED, false);
         fetchPlugins(PluginListType.POPULAR, false);
         fetchPlugins(PluginListType.NEW, false);
         // If activity is recreated we need to re-search
@@ -145,15 +152,19 @@ public class PluginBrowserViewModel extends ViewModel {
 
     @WorkerThread
     private void reloadPluginDirectory(PluginDirectoryType directoryType) {
+        List<ImmutablePluginModel> pluginList = mPluginStore.getPluginDirectory(getSite(), directoryType);
         switch (directoryType) {
+            case FEATURED:
+                mFeaturedPlugins.postValue(pluginList);
+                break;
             case NEW:
-                mNewPlugins.postValue(mPluginStore.getPluginDirectory(getSite(), PluginDirectoryType.NEW));
+                mNewPlugins.postValue(pluginList);
                 break;
             case POPULAR:
-                mPopularPlugins.postValue(mPluginStore.getPluginDirectory(getSite(), PluginDirectoryType.POPULAR));
+                mPopularPlugins.postValue(pluginList);
                 break;
             case SITE:
-                mSitePlugins.postValue(mPluginStore.getPluginDirectory(getSite(), PluginDirectoryType.SITE));
+                mSitePlugins.postValue(pluginList);
                 break;
         }
     }
@@ -171,27 +182,34 @@ public class PluginBrowserViewModel extends ViewModel {
         if (!shouldFetchPlugins(listType, loadMore)) {
             return;
         }
+        PluginListStatus newStatus = loadMore ? PluginListStatus.LOADING_MORE : PluginListStatus.FETCHING;
         switch (listType) {
             case SITE:
-                mSitePluginsListStatus.postValue(PluginListStatus.FETCHING);
+                mSitePluginsListStatus.postValue(newStatus);
                 PluginStore.FetchPluginDirectoryPayload payload =
-                        new PluginStore.FetchPluginDirectoryPayload(PluginDirectoryType.SITE, getSite(), false);
+                        new PluginStore.FetchPluginDirectoryPayload(PluginDirectoryType.SITE, getSite(), loadMore);
                 mDispatcher.dispatch(PluginActionBuilder.newFetchPluginDirectoryAction(payload));
                 break;
+            case FEATURED:
+                mFeaturedPluginsListStatus.postValue(newStatus);
+                PluginStore.FetchPluginDirectoryPayload featuredPayload =
+                        new PluginStore.FetchPluginDirectoryPayload(PluginDirectoryType.FEATURED, getSite(), loadMore);
+                mDispatcher.dispatch(PluginActionBuilder.newFetchPluginDirectoryAction(featuredPayload));
+                break;
             case POPULAR:
-                mPopularPluginsListStatus.postValue(loadMore ? PluginListStatus.LOADING_MORE : PluginListStatus.FETCHING);
+                mPopularPluginsListStatus.postValue(newStatus);
                 PluginStore.FetchPluginDirectoryPayload popularPayload =
                         new PluginStore.FetchPluginDirectoryPayload(PluginDirectoryType.POPULAR, getSite(), loadMore);
                 mDispatcher.dispatch(PluginActionBuilder.newFetchPluginDirectoryAction(popularPayload));
                 break;
             case NEW:
-                mNewPluginsListStatus.postValue(loadMore ? PluginListStatus.LOADING_MORE : PluginListStatus.FETCHING);
+                mNewPluginsListStatus.postValue(newStatus);
                 PluginStore.FetchPluginDirectoryPayload newPayload =
                         new PluginStore.FetchPluginDirectoryPayload(PluginDirectoryType.NEW, getSite(), loadMore);
                 mDispatcher.dispatch(PluginActionBuilder.newFetchPluginDirectoryAction(newPayload));
                 break;
             case SEARCH:
-                mSearchPluginsListStatus.postValue(PluginListStatus.FETCHING);
+                mSearchPluginsListStatus.postValue(newStatus);
                 PluginStore.SearchPluginDirectoryPayload searchPayload =
                         new PluginStore.SearchPluginDirectoryPayload(getSite(), getSearchQuery(), 1);
                 mDispatcher.dispatch(PluginActionBuilder.newSearchPluginDirectoryAction(searchPayload));
@@ -201,53 +219,38 @@ public class PluginBrowserViewModel extends ViewModel {
 
     @WorkerThread
     private boolean shouldFetchPlugins(PluginListType listType, boolean loadMore) {
-        if (loadMore && !isLoadMoreEnabled(listType)) {
-            // If we are trying to load more and it's not allowed
-            return false;
-        }
+        PluginListStatus currentStatus = null;
         switch (listType) {
             case SITE:
-                if (getSitePluginsListStatus().getValue() == PluginListStatus.FETCHING) {
-                    // already fetching
-                    return false;
-                }
+                currentStatus = getSitePluginsListStatus().getValue();
+                break;
+            case FEATURED:
+                currentStatus = getFeaturedPluginsListStatus().getValue();
                 break;
             case POPULAR:
-                if (!loadMore && getPopularPluginsListStatus().getValue() == PluginListStatus.FETCHING) {
-                    // already fetching first page
-                    return false;
-                }
-                if (loadMore && getPopularPluginsListStatus().getValue() != PluginListStatus.CAN_LOAD_MORE) {
-                    // We might be fetching the first page, loading more or done fetching
-                    return false;
-                }
+                currentStatus = getPopularPluginsListStatus().getValue();
                 break;
             case NEW:
-                if (!loadMore && getNewPluginsListStatus().getValue() == PluginListStatus.FETCHING) {
-                    // already fetching first page
-                    return false;
-                }
-                if (loadMore && getNewPluginsListStatus().getValue() != PluginListStatus.CAN_LOAD_MORE) {
-                    // We might be fetching the first page, loading more or done fetching
-                    return false;
-                }
+                currentStatus = getNewPluginsListStatus().getValue();
                 break;
             case SEARCH:
-                // Since search query might have been changed, we should always fetch
-                return true;
+                currentStatus = getSearchPluginsListStatus().getValue();
+                break;
+        }
+        if (currentStatus == PluginListStatus.FETCHING || currentStatus == PluginListStatus.LOADING_MORE) {
+            // if we are already fetching something we shouldn't start a new one. Even if we are loading more plugins
+            // and the user pulled to refresh, we don't want (or need) the 2 requests colliding
+            return false;
+        }
+        if (loadMore && currentStatus != PluginListStatus.CAN_LOAD_MORE) {
+            // There is nothing to load more
+            return false;
         }
         return true;
     }
 
     public void loadMore(PluginListType listType) {
-        if (isLoadMoreEnabled(listType)) {
-            fetchPlugins(listType, true);
-        }
-    }
-
-    private boolean isLoadMoreEnabled(PluginListType listType) {
-        // We don't use pagination for Site plugins or Search results
-        return listType != PluginListType.SITE && listType != PluginListType.SEARCH;
+        fetchPlugins(listType, true);
     }
 
     // Network Callbacks
@@ -277,6 +280,9 @@ public class PluginBrowserViewModel extends ViewModel {
             listStatus = event.canLoadMore ? PluginListStatus.CAN_LOAD_MORE : PluginListStatus.DONE;
         }
         switch (event.type) {
+            case FEATURED:
+                mFeaturedPluginsListStatus.postValue(listStatus);
+                break;
             case NEW:
                 mNewPluginsListStatus.postValue(listStatus);
                 break;
@@ -390,6 +396,7 @@ public class PluginBrowserViewModel extends ViewModel {
             }
         }
         // By combining all the updated plugins into one map, we can post a single update to the UI after changes are reflected
+        updatePluginListWithNewPlugin(mFeaturedPlugins, newPluginMap);
         updatePluginListWithNewPlugin(mNewPlugins, newPluginMap);
         updatePluginListWithNewPlugin(mPopularPlugins, newPluginMap);
         updatePluginListWithNewPlugin(mSearchResults, newPluginMap);
@@ -514,6 +521,10 @@ public class PluginBrowserViewModel extends ViewModel {
         return getSitePlugins().getValue() == null || getSitePlugins().getValue().size() == 0;
     }
 
+    public LiveData<List<ImmutablePluginModel>> getFeaturedPlugins() {
+        return mFeaturedPlugins;
+    }
+
     public LiveData<List<ImmutablePluginModel>> getNewPlugins() {
         return mNewPlugins;
     }
@@ -524,6 +535,10 @@ public class PluginBrowserViewModel extends ViewModel {
 
     public LiveData<List<ImmutablePluginModel>> getSearchResults() {
         return mSearchResults;
+    }
+
+    public LiveData<PluginListStatus> getFeaturedPluginsListStatus() {
+        return mFeaturedPluginsListStatus;
     }
 
     public LiveData<PluginListStatus> getNewPluginsListStatus() {
@@ -554,6 +569,8 @@ public class PluginBrowserViewModel extends ViewModel {
         switch (listType) {
             case SITE:
                 return getSitePlugins().getValue();
+            case FEATURED:
+                return getFeaturedPlugins().getValue();
             case POPULAR:
                 return getPopularPlugins().getValue();
             case NEW:
