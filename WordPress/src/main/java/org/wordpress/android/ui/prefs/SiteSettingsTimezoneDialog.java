@@ -29,7 +29,6 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 
-import org.apache.commons.lang3.StringUtils;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -38,6 +37,7 @@ import org.wordpress.android.R;
 import org.wordpress.android.networking.RestClientUtils;
 import org.wordpress.android.util.ActivityUtils;
 import org.wordpress.android.util.AppLog;
+import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.ToastUtils;
 
 import java.util.ArrayList;
@@ -82,6 +82,7 @@ public class SiteSettingsTimezoneDialog extends DialogFragment implements Dialog
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         mInflater = LayoutInflater.from(getActivity());
+        //noinspection InflateParams
         View view = mInflater.inflate(R.layout.site_settings_timezone_dialog, null);
 
         mListView = view.findViewById(R.id.list);
