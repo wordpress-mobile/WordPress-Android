@@ -12,13 +12,13 @@ import java.net.URLDecoder;
 
 class JetpackConnectionWebViewClient extends WebViewClient {
     interface JetpackConnectionWebViewClientListener {
-        void onRedirectPageChanged(String redirectPage);
-        void onRequiresWPComLogin(WebView webView);
+        void onRequiresWPComLogin(WebView webView, String redirectPage);
         void onRequiresJetpackLogin();
         void onJetpackSuccessfullyConnected(Uri uri);
     }
 
     private static final String LOGIN_PATH = "/wp-login.php";
+    private static final String ADMIN_PATH = "/wp-admin/admin.php";
     private static final String REDIRECT_PARAMETER = "redirect_to=";
     private static final String WORDPRESS_COM_HOST = "wordpress.com";
     private static final String WPCOM_LOG_IN_PATH_1 = "/log-in";
@@ -30,6 +30,7 @@ class JetpackConnectionWebViewClient extends WebViewClient {
 
     private final @NonNull JetpackConnectionWebViewClientListener mListener;
     private final String mSiteUrl;
+    private String mRedirectPage;
 
     JetpackConnectionWebViewClient(@NonNull JetpackConnectionWebViewClientListener listener, String siteUrl) {
         mListener = listener;
@@ -51,7 +52,14 @@ class JetpackConnectionWebViewClient extends WebViewClient {
                 && loadedPath.contains(LOGIN_PATH)
                 && stringUrl.contains(REDIRECT_PARAMETER)) {
                 extractRedirect(stringUrl);
-                mListener.onRequiresWPComLogin(view);
+                mListener.onRequiresWPComLogin(view, mRedirectPage);
+                return true;
+            } else if (loadedHost.equals(currentSiteHost)
+                       && loadedPath != null
+                       && loadedPath.contains(ADMIN_PATH)
+                       && mRedirectPage != null) {
+                view.loadUrl(mRedirectPage);
+                mRedirectPage = null;
                 return true;
             } else if (loadedHost.equals(WORDPRESS_COM_HOST)
                        && loadedPath != null
@@ -83,6 +91,14 @@ class JetpackConnectionWebViewClient extends WebViewClient {
         if (redirectUrl.startsWith(JETPACK_PATH)) {
             redirectUrl = WORDPRESS_COM_PREFIX + redirectUrl;
         }
-        mListener.onRedirectPageChanged(URLDecoder.decode(redirectUrl, WPWebViewActivity.ENCODING_UTF8));
+        mRedirectPage = URLDecoder.decode(redirectUrl, WPWebViewActivity.ENCODING_UTF8);
+    }
+
+    String getRedirectPage() {
+        return mRedirectPage;
+    }
+
+    void setRedirectPage(String redirectPage) {
+        mRedirectPage = redirectPage;
     }
 }

@@ -55,7 +55,7 @@ public class JetpackConnectionWebViewActivity extends WPWebViewActivity
     }
 
     private SiteModel mSite;
-    private String mRedirectPage;
+    private JetpackConnectionWebViewClient mWebViewClient;
 
     public static void startJetpackConnectionFlow(Context context, Source source, SiteModel site, boolean authorized) {
         String url = "https://wordpress.com/jetpack/connect?"
@@ -91,7 +91,8 @@ public class JetpackConnectionWebViewActivity extends WPWebViewActivity
 
     @Override
     protected WebViewClient createWebViewClient(List<String> allowedURL) {
-        return new JetpackConnectionWebViewClient(this, mSite.getUrl());
+        mWebViewClient = new JetpackConnectionWebViewClient(this, mSite.getUrl());
+        return mWebViewClient;
     }
 
     @Override
@@ -99,7 +100,8 @@ public class JetpackConnectionWebViewActivity extends WPWebViewActivity
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == JETPACK_LOGIN && resultCode == RESULT_OK) {
             JetpackConnectionWebViewActivity
-                    .startJetpackConnectionFlow(this, mRedirectPage, mSite, mAccountStore.hasAccessToken());
+                    .startJetpackConnectionFlow(this, mWebViewClient.getRedirectPage(), mSite,
+                                                mAccountStore.hasAccessToken());
         }
         finish();
     }
@@ -112,13 +114,13 @@ public class JetpackConnectionWebViewActivity extends WPWebViewActivity
     @Override
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
-        outState.putString(REDIRECT_PAGE_STATE_ITEM, mRedirectPage);
+        outState.putString(REDIRECT_PAGE_STATE_ITEM, mWebViewClient.getRedirectPage());
     }
 
     @Override
     protected void onRestoreInstanceState(Bundle savedInstanceState) {
         super.onRestoreInstanceState(savedInstanceState);
-        mRedirectPage = savedInstanceState.getString(REDIRECT_PAGE_STATE_ITEM);
+        mWebViewClient.setRedirectPage(savedInstanceState.getString(REDIRECT_PAGE_STATE_ITEM));
     }
 
     @Override
@@ -129,14 +131,9 @@ public class JetpackConnectionWebViewActivity extends WPWebViewActivity
     // JetpackConnectionWebViewClientListener
 
     @Override
-    public void onRedirectPageChanged(String redirectPage) {
-        mRedirectPage = redirectPage;
-    }
-
-    @Override
-    public void onRequiresWPComLogin(WebView webView) {
+    public void onRequiresWPComLogin(WebView webView, String redirectPage) {
         String authenticationUrl = WPWebViewActivity.getSiteLoginUrl(mSite);
-        String postData = WPWebViewActivity.getAuthenticationPostData(authenticationUrl, mRedirectPage,
+        String postData = WPWebViewActivity.getAuthenticationPostData(authenticationUrl, redirectPage,
                                                                       mSite.getUsername(), mSite.getPassword(),
                                                                       mAccountStore.getAccessToken());
         webView.postUrl(authenticationUrl, postData.getBytes());
