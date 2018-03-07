@@ -13,6 +13,7 @@ import android.text.Spannable;
 import android.text.SpannableString;
 import android.text.TextWatcher;
 import android.text.style.StyleSpan;
+import android.view.ContextThemeWrapper;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -31,7 +32,8 @@ public class DeleteSiteDialogFragment extends DialogFragment implements TextWatc
 
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
-        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+        AlertDialog.Builder builder = new AlertDialog.Builder(new ContextThemeWrapper(getActivity(),
+                                                                                      R.style.Calypso_Dialog));
         retrieveSiteDomain();
         configureAlertViewBuilder(builder);
 
