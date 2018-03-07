@@ -25,7 +25,6 @@ import android.support.v4.view.MenuItemCompat;
 import android.support.v4.view.MenuItemCompat.OnActionExpandListener;
 import android.support.v4.view.ViewCompat;
 import android.support.v7.app.ActionBar;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.view.ActionMode;
 import android.support.v7.widget.SearchView;
 import android.support.v7.widget.SearchView.OnQueryTextListener;
@@ -40,6 +39,7 @@ import android.widget.PopupMenu;
 
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
+import org.wordpress.android.BaseActivity;
 import org.wordpress.android.BuildConfig;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
@@ -84,7 +84,7 @@ import de.greenrobot.event.EventBus;
 /**
  * The main activity in which the user can browse their media.
  */
-public class MediaBrowserActivity extends AppCompatActivity implements MediaGridListener,
+public class MediaBrowserActivity extends BaseActivity implements MediaGridListener,
         OnQueryTextListener, OnActionExpandListener,
         WPMediaUtils.LaunchCameraCallback {
 
@@ -157,6 +157,7 @@ public class MediaBrowserActivity extends AppCompatActivity implements MediaGrid
             actionBar.setDisplayShowTitleEnabled(true);
             actionBar.setDisplayHomeAsUpEnabled(true);
         }
+        actionBar.setTitle(R.string.wp_media_title);
 
         FragmentManager fm = getFragmentManager();
         fm.addOnBackStackChangedListener(mOnBackStackChangedListener);

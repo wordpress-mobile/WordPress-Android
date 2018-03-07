@@ -9,12 +9,12 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.ActionBar;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
 import android.view.MenuItem;
 import android.view.View;
 
+import org.wordpress.android.BaseActivity;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.fluxc.Dispatcher;
@@ -36,7 +36,7 @@ import org.wordpress.android.util.ToastUtils;
 
 import javax.inject.Inject;
 
-public class CommentsActivity extends AppCompatActivity
+public class CommentsActivity extends BaseActivity
         implements OnCommentSelectedListener,
         NotificationFragment.OnPostClickListener {
     static final String KEY_AUTO_REFRESHED = "has_auto_refreshed";

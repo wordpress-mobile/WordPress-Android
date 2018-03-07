@@ -14,7 +14,6 @@ import android.support.annotation.StringRes;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.ActionBar;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.RecyclerView.ViewHolder;
@@ -30,6 +29,7 @@ import android.widget.ImageView;
 import android.widget.RatingBar;
 import android.widget.TextView;
 
+import org.wordpress.android.BaseActivity;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.fluxc.model.SiteModel;
@@ -50,7 +50,7 @@ import java.util.List;
 
 import javax.inject.Inject;
 
-public class PluginBrowserActivity extends AppCompatActivity
+public class PluginBrowserActivity extends BaseActivity
         implements SearchView.OnQueryTextListener,
         MenuItem.OnActionExpandListener {
 

@@ -26,6 +26,7 @@ import android.widget.TextView;
 import com.android.volley.toolbox.NetworkImageView;
 
 import org.apache.commons.text.StringEscapeUtils;
+import org.wordpress.android.BaseListActivity;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.fluxc.model.SiteModel;
@@ -40,7 +41,7 @@ import java.util.List;
 
 import javax.inject.Inject;
 
-public class AddQuickPressShortcutActivity extends ListActivity {
+public class AddQuickPressShortcutActivity extends BaseListActivity {
     public String[] blogNames;
     public int[] siteIds;
     public String[] accountUsers;

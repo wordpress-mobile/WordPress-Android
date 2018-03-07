@@ -3,12 +3,12 @@ package org.wordpress.android.ui.prefs;
 import android.app.FragmentManager;
 import android.os.Bundle;
 import android.support.v7.app.ActionBar;
-import android.support.v7.app.AppCompatActivity;
 import android.view.MenuItem;
 
+import org.wordpress.android.BaseActivity;
 import org.wordpress.android.R;
 
-public class AccountSettingsActivity extends AppCompatActivity {
+public class AccountSettingsActivity extends BaseActivity {
     private static final String KEY_ACCOUNT_SETTINGS_FRAGMENT = "account-settings-fragment";
 
     @Override

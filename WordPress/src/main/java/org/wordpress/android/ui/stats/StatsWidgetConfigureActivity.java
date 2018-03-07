@@ -9,12 +9,12 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.ActionBar;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.MenuItem;
 import android.view.View;
 
+import org.wordpress.android.BaseActivity;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.fluxc.model.SiteModel;
@@ -27,7 +27,7 @@ import org.wordpress.android.util.ToastUtils;
 
 import javax.inject.Inject;
 
-public class StatsWidgetConfigureActivity extends AppCompatActivity
+public class StatsWidgetConfigureActivity extends BaseActivity
         implements StatsWidgetConfigureAdapter.OnSiteClickListener {
 
     private StatsWidgetConfigureAdapter mAdapter;

@@ -3,15 +3,15 @@ package org.wordpress.android.ui;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
 
+import org.wordpress.android.BaseActivity;
 import org.wordpress.android.R;
 import org.wordpress.android.ui.prefs.AppPrefs;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.ToastUtils;
 
-public class VisualEditorOptionsReceiver extends AppCompatActivity {
+public class VisualEditorOptionsReceiver extends BaseActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

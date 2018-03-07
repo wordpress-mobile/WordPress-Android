@@ -6,11 +6,11 @@ import android.support.annotation.NonNull;
 import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.v7.app.ActionBar;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.view.View;
 
+import org.wordpress.android.BaseActivity;
 import org.wordpress.android.R;
 import org.wordpress.android.datasets.ReaderBlogTable;
 import org.wordpress.android.models.ReaderTag;
@@ -20,7 +20,7 @@ import org.wordpress.android.ui.reader.ReaderTypes.ReaderPostListType;
  * serves as the host for ReaderPostListFragment when showing blog preview & tag preview
  */
 
-public class ReaderPostListActivity extends AppCompatActivity {
+public class ReaderPostListActivity extends BaseActivity {
 
     private ReaderPostListType mPostListType;
 

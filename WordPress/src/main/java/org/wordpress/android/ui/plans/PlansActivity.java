@@ -10,7 +10,6 @@ import android.support.design.widget.TabLayout;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewCompat;
 import android.support.v7.app.ActionBar;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.view.View;
@@ -21,6 +20,7 @@ import android.view.animation.AccelerateInterpolator;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 
+import org.wordpress.android.BaseActivity;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.fluxc.model.SiteModel;
@@ -45,7 +45,7 @@ import javax.inject.Inject;
 
 import de.greenrobot.event.EventBus;
 
-public class PlansActivity extends AppCompatActivity {
+public class PlansActivity extends BaseActivity {
     private static final String ARG_LOCAL_AVAILABLE_PLANS = "ARG_LOCAL_AVAILABLE_PLANS";
 
     private SiteModel mSelectedSite;

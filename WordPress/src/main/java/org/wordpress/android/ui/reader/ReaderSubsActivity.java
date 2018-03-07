@@ -10,7 +10,6 @@ import android.support.v4.content.ContextCompat;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.ActionBar;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
 import android.view.Gravity;
@@ -24,6 +23,7 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import org.wordpress.android.BaseActivity;
 import org.wordpress.android.R;
 import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.datasets.ReaderBlogTable;
@@ -57,7 +57,7 @@ import de.greenrobot.event.EventBus;
  * activity which shows the user's subscriptions and recommended subscriptions - includes
  * followed tags, followed blogs, and recommended blogs
  */
-public class ReaderSubsActivity extends AppCompatActivity
+public class ReaderSubsActivity extends BaseActivity
         implements ReaderTagAdapter.TagDeletedListener {
 
     private EditText mEditAdd;

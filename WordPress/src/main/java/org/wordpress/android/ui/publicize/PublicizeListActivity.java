@@ -8,10 +8,10 @@ import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AlertDialog;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 
+import org.wordpress.android.BaseActivity;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.datasets.PublicizeTable;
@@ -27,7 +27,7 @@ import javax.inject.Inject;
 
 import de.greenrobot.event.EventBus;
 
-public class PublicizeListActivity extends AppCompatActivity
+public class PublicizeListActivity extends BaseActivity
         implements
         PublicizeActions.OnPublicizeActionListener,
         PublicizeServiceAdapter.OnServiceClickListener,

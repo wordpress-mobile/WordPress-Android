@@ -13,13 +13,13 @@ import android.support.annotation.Nullable;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.RemoteInput;
 import android.support.v4.view.ViewPager;
-import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
 import android.view.View;
 import android.widget.TextView;
 
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
+import org.wordpress.android.BaseActivity;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.analytics.AnalyticsTracker;
@@ -81,7 +81,7 @@ import de.greenrobot.event.EventBus;
 /**
  * Main activity which hosts sites, reader, me and notifications tabs
  */
-public class WPMainActivity extends AppCompatActivity {
+public class WPMainActivity extends BaseActivity {
     public static final String ARG_DO_LOGIN_UPDATE = "ARG_DO_LOGIN_UPDATE";
     public static final String ARG_OLD_SITES_IDS = "ARG_OLD_SITES_IDS";
     public static final String ARG_OPENED_FROM_PUSH = "opened_from_push";

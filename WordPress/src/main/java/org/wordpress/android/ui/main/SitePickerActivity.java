@@ -14,7 +14,6 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.view.MenuItemCompat;
 import android.support.v7.app.ActionBar;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.content.res.AppCompatResources;
 import android.support.v7.view.ActionMode;
 import android.support.v7.widget.DefaultItemAnimator;
@@ -36,6 +35,7 @@ import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.wordpress.android.BaseActivity;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.fluxc.Dispatcher;
@@ -70,7 +70,7 @@ import javax.inject.Inject;
 
 import static org.wordpress.android.util.WPSwipeToRefreshHelper.buildSwipeToRefreshHelper;
 
-public class SitePickerActivity extends AppCompatActivity
+public class SitePickerActivity extends BaseActivity
         implements SitePickerAdapter.OnSiteClickListener,
         SitePickerAdapter.OnSelectedCountChangedListener,
         SearchView.OnQueryTextListener {

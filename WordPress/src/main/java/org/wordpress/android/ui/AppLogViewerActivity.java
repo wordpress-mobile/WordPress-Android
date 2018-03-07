@@ -6,7 +6,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.ActionBar;
-import android.support.v7.app.AppCompatActivity;
 import android.text.Html;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -17,6 +16,7 @@ import android.widget.BaseAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import org.wordpress.android.BaseActivity;
 import org.wordpress.android.R;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
@@ -30,7 +30,7 @@ import static java.lang.String.format;
 /**
  * views the activity log (see utils/AppLog.java)
  */
-public class AppLogViewerActivity extends AppCompatActivity {
+public class AppLogViewerActivity extends BaseActivity {
     private static final int ID_SHARE = 1;
     private static final int ID_COPY_TO_CLIPBOARD = 2;
 

@@ -2,13 +2,13 @@ package org.wordpress.android.ui.accounts;
 
 import android.os.Bundle;
 import android.support.v4.app.FragmentTransaction;
-import android.support.v7.app.AppCompatActivity;
 
+import org.wordpress.android.BaseActivity;
 import org.wordpress.android.R;
 import org.wordpress.android.ui.accounts.signup.SignupEpilogueFragment;
 import org.wordpress.android.ui.accounts.signup.SignupEpilogueListener;
 
-public class SignupEpilogueActivity extends AppCompatActivity implements SignupEpilogueListener {
+public class SignupEpilogueActivity extends BaseActivity implements SignupEpilogueListener {
     public static final String EXTRA_SIGNUP_DISPLAY_NAME = "EXTRA_SIGNUP_DISPLAY_NAME";
     public static final String EXTRA_SIGNUP_EMAIL_ADDRESS = "EXTRA_SIGNUP_EMAIL_ADDRESS";
     public static final String EXTRA_SIGNUP_IS_EMAIL = "EXTRA_SIGNUP_IS_EMAIL";

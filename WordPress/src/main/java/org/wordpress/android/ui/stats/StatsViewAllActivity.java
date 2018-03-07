@@ -4,12 +4,12 @@ import android.app.FragmentManager;
 import android.app.FragmentTransaction;
 import android.os.Bundle;
 import android.support.v7.app.ActionBar;
-import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
 
+import org.wordpress.android.BaseActivity;
 import org.wordpress.android.R;
 import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.analytics.AnalyticsTracker.Stat;
@@ -33,7 +33,7 @@ import static org.wordpress.android.util.WPSwipeToRefreshHelper.buildSwipeToRefr
 /**
  *  Single item details activity.
  */
-public class StatsViewAllActivity extends AppCompatActivity {
+public class StatsViewAllActivity extends BaseActivity {
 
     public static final String ARG_STATS_VIEW_ALL_TITLE = "arg_stats_view_all_title";
     private static final String SAVED_STATS_SCROLL_POSITION = "SAVED_STATS_SCROLL_POSITION";

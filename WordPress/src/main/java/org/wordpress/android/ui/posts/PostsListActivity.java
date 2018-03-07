@@ -3,10 +3,10 @@ package org.wordpress.android.ui.posts;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.ActionBar;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 
+import org.wordpress.android.BaseActivity;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.fluxc.model.PostModel;
@@ -19,7 +19,7 @@ import org.wordpress.android.util.ToastUtils;
 
 import javax.inject.Inject;
 
-public class PostsListActivity extends AppCompatActivity {
+public class PostsListActivity extends BaseActivity {
     public static final String EXTRA_VIEW_PAGES = "viewPages";
     public static final String EXTRA_TARGET_POST_LOCAL_ID = "targetPostLocalId";
 

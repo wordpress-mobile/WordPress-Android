@@ -509,6 +509,10 @@
             </intent-filter>
         </activity>
 
+        <!-- Base activities-->
+        <activity android:name=".BaseListActivity"/>
+        <activity android:name=".BaseActivity"/>
+
         <!-- Lib activities-->
         <activity
             android:name="com.yalantis.ucrop.UCropActivity"

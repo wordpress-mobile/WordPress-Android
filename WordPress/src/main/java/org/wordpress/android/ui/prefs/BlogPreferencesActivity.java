@@ -4,12 +4,12 @@ import android.app.Fragment;
 import android.app.FragmentManager;
 import android.os.Bundle;
 import android.support.v7.app.ActionBar;
-import android.support.v7.app.AppCompatActivity;
 import android.view.MenuItem;
 
 import org.apache.commons.text.StringEscapeUtils;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
+import org.wordpress.android.BaseActivity;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.fluxc.Dispatcher;
@@ -29,7 +29,7 @@ import de.greenrobot.event.EventBus;
 /**
  * Activity for configuring blog specific settings.
  */
-public class BlogPreferencesActivity extends AppCompatActivity {
+public class BlogPreferencesActivity extends BaseActivity {
     private static final String KEY_SETTINGS_FRAGMENT = "settings-fragment";
 
     private SiteModel mSite;

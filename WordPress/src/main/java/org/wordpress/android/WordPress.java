@@ -78,12 +78,12 @@ import org.wordpress.android.util.CrashlyticsUtils;
 import org.wordpress.android.util.DateTimeUtils;
 import org.wordpress.android.util.FluxCUtils;
 import org.wordpress.android.util.HelpshiftHelper;
+import org.wordpress.android.util.LocaleManager;
 import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.PackageUtils;
 import org.wordpress.android.util.ProfilingUtils;
 import org.wordpress.android.util.RateLimitedTask;
 import org.wordpress.android.util.VolleyUtils;
-import org.wordpress.android.util.WPActivityUtils;
 import org.wordpress.passcodelock.AbstractAppLock;
 import org.wordpress.passcodelock.AppLockManager;
 
@@ -200,6 +200,11 @@ public class WordPress extends MultiDexApplication implements HasServiceInjector
     }
 
     @Override
+    protected void attachBaseContext(Context base) {
+        super.attachBaseContext(LocaleManager.setLocale(base));
+    }
+
+    @Override
     public void onCreate() {
         super.onCreate();
         mContext = this;
@@ -271,9 +276,6 @@ public class WordPress extends MultiDexApplication implements HasServiceInjector
         registerActivityLifecycleCallbacks(applicationLifecycleMonitor);
 
         initAnalytics(SystemClock.elapsedRealtime() - startDate);
-
-        // If users uses a custom locale set it on start of application
-        WPActivityUtils.applyLocale(getContext());
 
         disableRtlLayoutDirectionOnSdk17();
 
@@ -667,7 +669,7 @@ public class WordPress extends MultiDexApplication implements HasServiceInjector
         @Override
         public void onConfigurationChanged(final Configuration newConfig) {
             // Reapply locale on configuration change
-            WPActivityUtils.applyLocale(getContext());
+            LocaleManager.setLocale(getContext());
         }
 
         @Override

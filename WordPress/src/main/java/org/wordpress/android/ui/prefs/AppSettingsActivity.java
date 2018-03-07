@@ -5,15 +5,15 @@ import android.os.Bundle;
 import android.preference.Preference;
 import android.preference.SwitchPreference;
 import android.support.v7.app.ActionBar;
-import android.support.v7.app.AppCompatActivity;
 import android.view.MenuItem;
 
+import org.wordpress.android.BaseActivity;
 import org.wordpress.android.R;
 import org.wordpress.android.push.GCMMessageService;
 import org.wordpress.passcodelock.AppLockManager;
 import org.wordpress.passcodelock.PasscodePreferenceFragment;
 
-public class AppSettingsActivity extends AppCompatActivity {
+public class AppSettingsActivity extends BaseActivity {
     private static final String KEY_APP_SETTINGS_FRAGMENT = "app-settings-fragment";
     private static final String KEY_PASSCODE_FRAGMENT = "passcode-fragment";
 

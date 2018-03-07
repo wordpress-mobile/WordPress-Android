@@ -4,7 +4,6 @@ import android.app.FragmentManager;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v7.app.ActionBar;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.preference.PreferenceManager;
 import android.support.v7.widget.SwitchCompat;
 import android.support.v7.widget.Toolbar;
@@ -16,6 +15,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import org.wordpress.android.BaseActivity;
 import org.wordpress.android.R;
 import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.ui.notifications.NotificationEvents;
@@ -23,7 +23,7 @@ import org.wordpress.android.ui.notifications.NotificationEvents;
 import de.greenrobot.event.EventBus;
 
 // Simple wrapper activity for NotificationsSettingsFragment
-public class NotificationsSettingsActivity extends AppCompatActivity {
+public class NotificationsSettingsActivity extends BaseActivity {
     private TextView mMessageTextView;
     private View mMessageContainer;
 

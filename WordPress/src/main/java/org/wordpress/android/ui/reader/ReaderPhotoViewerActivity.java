@@ -7,11 +7,11 @@ import android.os.Parcelable;
 import android.support.annotation.NonNull;
 import android.support.v13.app.FragmentStatePagerAdapter;
 import android.support.v4.view.ViewPager;
-import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
 import android.view.View;
 import android.widget.TextView;
 
+import org.wordpress.android.BaseActivity;
 import org.wordpress.android.R;
 import org.wordpress.android.ui.reader.models.ReaderImageList;
 import org.wordpress.android.ui.reader.utils.ReaderImageScanner;
@@ -26,7 +26,7 @@ import org.wordpress.android.widgets.WPViewPagerTransformer.TransformType;
  * Full-screen photo viewer - uses a ViewPager to enable scrolling between images in a blog
  * post, but also supports viewing a single image
  */
-public class ReaderPhotoViewerActivity extends AppCompatActivity
+public class ReaderPhotoViewerActivity extends BaseActivity
         implements PhotoViewListener {
 
     private String mInitialImageUrl;

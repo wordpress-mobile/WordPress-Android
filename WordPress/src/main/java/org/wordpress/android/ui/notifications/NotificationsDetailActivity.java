@@ -9,13 +9,13 @@ import android.support.annotation.NonNull;
 import android.support.v13.app.FragmentStatePagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.ActionBar;
-import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.ProgressBar;
 
+import org.wordpress.android.BaseActivity;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.analytics.AnalyticsTracker;
@@ -63,7 +63,7 @@ import static org.wordpress.android.models.Note.NOTE_COMMENT_TYPE;
 import static org.wordpress.android.models.Note.NOTE_FOLLOW_TYPE;
 import static org.wordpress.android.models.Note.NOTE_LIKE_TYPE;
 
-public class NotificationsDetailActivity extends AppCompatActivity implements
+public class NotificationsDetailActivity extends BaseActivity implements
         CommentActions.OnNoteCommentActionListener {
     private static final String ARG_TITLE = "activityTitle";
     private static final String DOMAIN_WPCOM = "wordpress.com";

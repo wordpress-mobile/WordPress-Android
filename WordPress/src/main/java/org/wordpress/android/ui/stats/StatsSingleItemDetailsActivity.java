@@ -6,7 +6,6 @@ import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v7.app.ActionBar;
-import android.support.v7.app.AppCompatActivity;
 import android.util.SparseBooleanArray;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
@@ -25,6 +24,7 @@ import com.wordpress.rest.RestRequest;
 
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.wordpress.android.BaseActivity;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.analytics.AnalyticsTracker;
@@ -52,7 +52,7 @@ import static org.wordpress.android.util.WPSwipeToRefreshHelper.buildSwipeToRefr
 /**
  *  Single item details activity.
  */
-public class StatsSingleItemDetailsActivity extends AppCompatActivity
+public class StatsSingleItemDetailsActivity extends BaseActivity
         implements StatsBarGraph.OnGestureListener{
 
     public static final String ARG_REMOTE_BLOG_ID = "ARG_REMOTE_BLOG_ID";

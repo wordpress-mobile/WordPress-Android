@@ -7,12 +7,12 @@ import android.app.FragmentTransaction;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.v7.app.ActionBar;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
+import org.wordpress.android.BaseActivity;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.analytics.AnalyticsTracker;
@@ -37,7 +37,7 @@ import javax.inject.Inject;
 import de.greenrobot.event.EventBus;
 
 
-public class PeopleManagementActivity extends AppCompatActivity
+public class PeopleManagementActivity extends BaseActivity
         implements PeopleListFragment.OnPersonSelectedListener, PeopleListFragment.OnFetchPeopleListener {
     private static final String KEY_PEOPLE_LIST_FRAGMENT = "people-list-fragment";
     private static final String KEY_PERSON_DETAIL_FRAGMENT = "person-detail-fragment";

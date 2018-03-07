@@ -6,7 +6,6 @@ import android.app.FragmentTransaction;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v7.app.ActionBar;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -17,6 +16,7 @@ import android.widget.TextView;
 
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
+import org.wordpress.android.BaseActivity;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.analytics.AnalyticsTracker;
@@ -45,7 +45,7 @@ import de.greenrobot.event.EventBus;
 
 import static org.wordpress.android.ui.posts.EditPostActivity.EXTRA_POST_LOCAL_ID;
 
-public class PostPreviewActivity extends AppCompatActivity {
+public class PostPreviewActivity extends BaseActivity {
     private boolean mIsUpdatingPost;
 
     private PostModel mPost;

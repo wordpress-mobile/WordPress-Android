@@ -10,7 +10,6 @@ import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
-import android.support.v7.app.AppCompatActivity;
 import android.view.MenuItem;
 
 import com.google.android.gms.auth.api.credentials.Credential;
@@ -18,6 +17,7 @@ import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient.ConnectionCallbacks;
 import com.google.android.gms.common.api.GoogleApiClient.OnConnectionFailedListener;
 
+import org.wordpress.android.BaseActivity;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.analytics.AnalyticsTracker;
@@ -65,7 +65,7 @@ import dagger.android.AndroidInjector;
 import dagger.android.DispatchingAndroidInjector;
 import dagger.android.support.HasSupportFragmentInjector;
 
-public class LoginActivity extends AppCompatActivity implements ConnectionCallbacks, OnConnectionFailedListener,
+public class LoginActivity extends BaseActivity implements ConnectionCallbacks, OnConnectionFailedListener,
         Callback, LoginListener, GoogleListener, LoginPrologueListener, SignupSheetListener,
         HasSupportFragmentInjector {
     public static final String MAGIC_LOGIN = "magic-login";

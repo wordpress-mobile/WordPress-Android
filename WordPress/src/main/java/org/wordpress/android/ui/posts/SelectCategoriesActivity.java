@@ -5,7 +5,6 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.ActionBar;
-import android.support.v7.app.AppCompatActivity;
 import android.util.LongSparseArray;
 import android.util.SparseBooleanArray;
 import android.view.Menu;
@@ -16,6 +15,7 @@ import android.widget.TextView;
 
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
+import org.wordpress.android.BaseActivity;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.fluxc.Dispatcher;
@@ -46,7 +46,7 @@ import javax.inject.Inject;
 import static org.wordpress.android.ui.posts.EditPostActivity.EXTRA_POST_LOCAL_ID;
 import static org.wordpress.android.util.WPSwipeToRefreshHelper.buildSwipeToRefreshHelper;
 
-public class SelectCategoriesActivity extends AppCompatActivity {
+public class SelectCategoriesActivity extends BaseActivity {
     public static final String KEY_SELECTED_CATEGORY_IDS = "KEY_SELECTED_CATEGORY_IDS";
 
     private ListView mListView;

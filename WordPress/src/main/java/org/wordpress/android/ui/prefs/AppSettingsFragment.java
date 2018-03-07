@@ -1,12 +1,10 @@
 package org.wordpress.android.ui.prefs;
 
 import android.content.ActivityNotFoundException;
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.content.res.Configuration;
-import android.content.res.Resources;
 import android.net.Uri;
-import android.os.Build;
 import android.os.Bundle;
 import android.preference.ListPreference;
 import android.preference.Preference;
@@ -27,7 +25,7 @@ import org.wordpress.android.fluxc.store.AccountStore;
 import org.wordpress.android.fluxc.store.SiteStore;
 import org.wordpress.android.util.AnalyticsUtils;
 import org.wordpress.android.util.AppLog;
-import org.wordpress.android.util.LanguageUtils;
+import org.wordpress.android.util.LocaleManager;
 import org.wordpress.android.util.WPMediaUtils;
 import org.wordpress.android.util.WPPrefUtils;
 
@@ -38,7 +36,6 @@ import java.util.Map;
 import javax.inject.Inject;
 
 public class AppSettingsFragment extends PreferenceFragment implements OnPreferenceClickListener, Preference.OnPreferenceChangeListener {
-    public static final String LANGUAGE_PREF_KEY = "language-pref";
     public static final int LANGUAGE_CHANGED = 1000;
 
     private static final int IDX_LEGACY_EDITOR = 0;
@@ -264,45 +261,24 @@ public class AppSettingsFragment extends PreferenceFragment implements OnPrefere
     private void changeLanguage(String languageCode) {
         if (mLanguagePreference == null || TextUtils.isEmpty(languageCode)) return;
 
-        Resources res = getResources();
-        Configuration conf = res.getConfiguration();
-        // will return conf.locale if conf is non-null, or Locale.getDefault()
-        Locale currentLocale = LanguageUtils.getCurrentDeviceLanguage(WordPress.getContext());
-        Locale newLocale = WPPrefUtils.languageLocale(languageCode);
-
-        if (currentLocale.toString().equals(newLocale.getDisplayLanguage())) {
+        if (!LocaleManager.isDifferentLanguage(WordPress.getContext(), languageCode)) {
             return;
         }
 
-        if (Locale.getDefault().toString().equals(newLocale.toString())) {
-            // remove custom locale key when original device locale is selected
-            mSettings.edit().remove(LANGUAGE_PREF_KEY).apply();
-        } else {
-            mSettings.edit().putString(LANGUAGE_PREF_KEY, newLocale.toString()).apply();
-        }
+        Context newContext = LocaleManager.setNewLocale(WordPress.getContext(), languageCode);
         updateLanguagePreference(languageCode);
-
-        // update configuration
-        conf.locale = newLocale;
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
-            conf.setLayoutDirection(newLocale);
-        }
-        res.updateConfiguration(conf, res.getDisplayMetrics());
 
         // Track language change on Analytics because we have both the device language and app selected language
         // data in Tracks metadata.
         Map<String, Object> properties = new HashMap<>();
-        properties.put("app_locale", conf.locale.toString());
+        properties.put("app_locale", newContext.getResources().getConfiguration().locale.toString());
         AnalyticsTracker.track(Stat.ACCOUNT_SETTINGS_LANGUAGE_CHANGED, properties);
 
         // Language is now part of metadata, so we need to refresh them
         AnalyticsUtils.refreshMetadata(mAccountStore, mSiteStore);
 
-        // Refresh the app
-        Intent refresh = new Intent(getActivity(), getActivity().getClass());
-        startActivity(refresh);
-        getActivity().setResult(LANGUAGE_CHANGED);
-        getActivity().finish();
+        // Restart the app to apply the new language.
+        System.exit(0);
     }
 
     private void updateLanguagePreference(String languageCode) {

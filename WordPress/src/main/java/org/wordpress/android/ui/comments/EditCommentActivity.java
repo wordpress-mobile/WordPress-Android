@@ -7,7 +7,6 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.ActionBar;
-import android.support.v7.app.AppCompatActivity;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.Menu;
@@ -19,6 +18,7 @@ import android.widget.ProgressBar;
 
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
+import org.wordpress.android.BaseActivity;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.datasets.NotificationsTable;
@@ -41,7 +41,7 @@ import org.wordpress.android.util.ToastUtils;
 
 import javax.inject.Inject;
 
-public class EditCommentActivity extends AppCompatActivity {
+public class EditCommentActivity extends BaseActivity {
     static final String KEY_COMMENT = "KEY_COMMENT";
     static final String KEY_NOTE_ID = "KEY_NOTE_ID";
 

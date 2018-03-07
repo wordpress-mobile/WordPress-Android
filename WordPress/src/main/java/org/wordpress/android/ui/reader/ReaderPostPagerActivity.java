@@ -11,7 +11,6 @@ import android.support.annotation.NonNull;
 import android.support.v13.app.FragmentStatePagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.ActionBar;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
 import android.util.SparseArray;
@@ -20,6 +19,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ProgressBar;
 
+import org.wordpress.android.BaseActivity;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.analytics.AnalyticsTracker;
@@ -71,7 +71,7 @@ import de.greenrobot.event.EventBus;
  *
  * Will also handle jumping to the comments section, liking a commend and liking a post directly
  */
-public class ReaderPostPagerActivity extends AppCompatActivity
+public class ReaderPostPagerActivity extends BaseActivity
         implements ReaderInterfaces.AutoHideToolbarListener {
 
     /**

@@ -3,12 +3,12 @@ package org.wordpress.android.ui.stats;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.ActionBar;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 
+import org.wordpress.android.BaseActivity;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.analytics.AnalyticsTracker;
@@ -26,7 +26,7 @@ import static org.wordpress.android.ui.JetpackConnectionWebViewActivity.Source.S
  * It offers a link to the Jetpack connection flow.
  */
 
-public class StatsConnectJetpackActivity extends AppCompatActivity {
+public class StatsConnectJetpackActivity extends BaseActivity {
 
     @Inject
     AccountStore mAccountStore;

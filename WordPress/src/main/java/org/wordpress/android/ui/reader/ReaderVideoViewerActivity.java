@@ -3,12 +3,12 @@ package org.wordpress.android.ui.reader;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.webkit.WebChromeClient;
 import android.webkit.WebView;
 import android.widget.ProgressBar;
 
+import org.wordpress.android.BaseActivity;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 
@@ -16,7 +16,7 @@ import org.wordpress.android.WordPress;
  * Full screen landscape video player for the reader
  */
 
-public class ReaderVideoViewerActivity extends AppCompatActivity {
+public class ReaderVideoViewerActivity extends BaseActivity {
 
     private String mVideoUrl;
     private WebView mWebView;

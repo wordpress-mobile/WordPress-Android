@@ -4,9 +4,9 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
-import android.support.v7.app.AppCompatActivity;
 import android.view.MenuItem;
 
+import org.wordpress.android.BaseActivity;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.analytics.AnalyticsTracker;
@@ -22,7 +22,7 @@ import org.wordpress.android.util.HelpshiftHelper;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.UrlUtils;
 
-public class SiteCreationActivity extends AppCompatActivity implements SiteCreationListener {
+public class SiteCreationActivity extends BaseActivity implements SiteCreationListener {
     public static final String ARG_USERNAME = "ARG_USERNAME";
 
     public static final String KEY_DO_NEW_POST = "KEY_DO_NEW_POST";

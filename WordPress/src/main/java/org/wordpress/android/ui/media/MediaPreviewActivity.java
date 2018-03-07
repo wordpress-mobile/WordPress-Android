@@ -17,7 +17,6 @@ import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.ActionBar;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
 import android.util.SparseArray;
@@ -27,6 +26,7 @@ import android.view.ViewGroup;
 import android.view.animation.Animation;
 
 import org.greenrobot.eventbus.EventBus;
+import org.wordpress.android.BaseActivity;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.fluxc.model.MediaModel;
@@ -43,7 +43,7 @@ import java.util.ArrayList;
 
 import javax.inject.Inject;
 
-public class MediaPreviewActivity extends AppCompatActivity implements MediaPreviewFragment.OnMediaTappedListener {
+public class MediaPreviewActivity extends BaseActivity implements MediaPreviewFragment.OnMediaTappedListener {
 
     private static final String ARG_ID_LIST = "id_list";
 

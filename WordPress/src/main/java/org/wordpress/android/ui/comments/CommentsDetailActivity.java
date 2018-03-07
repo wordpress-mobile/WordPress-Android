@@ -5,7 +5,6 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.ActionBar;
-import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
 import android.view.MenuItem;
 import android.view.View;
@@ -13,6 +12,7 @@ import android.widget.ProgressBar;
 
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
+import org.wordpress.android.BaseActivity;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.fluxc.Dispatcher;
@@ -34,7 +34,7 @@ import javax.inject.Inject;
 
 import static org.wordpress.android.ui.comments.CommentsListFragment.COMMENTS_PER_PAGE;
 
-public class CommentsDetailActivity extends AppCompatActivity
+public class CommentsDetailActivity extends BaseActivity
         implements CommentAdapter.OnLoadMoreListener,
                    CommentActions.OnCommentActionListener {
     public static final String COMMENT_ID_EXTRA = "commentId";

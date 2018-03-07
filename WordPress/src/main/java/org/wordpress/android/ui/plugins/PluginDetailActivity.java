@@ -11,7 +11,6 @@ import android.support.annotation.Nullable;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AlertDialog;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.content.res.AppCompatResources;
 import android.support.v7.widget.Toolbar;
 import android.text.Html;
@@ -31,6 +30,7 @@ import android.widget.TextView;
 
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
+import org.wordpress.android.BaseActivity;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.analytics.AnalyticsTracker;
@@ -79,7 +79,7 @@ import javax.inject.Inject;
 import static org.wordpress.android.widgets.WPNetworkImageView.ImageType.PHOTO;
 import static org.wordpress.android.widgets.WPNetworkImageView.ImageType.PLUGIN_ICON;
 
-public class PluginDetailActivity extends AppCompatActivity {
+public class PluginDetailActivity extends BaseActivity {
     public static final String KEY_PLUGIN_SLUG = "KEY_PLUGIN_SLUG";
     private static final String KEY_IS_CONFIGURING_PLUGIN = "KEY_IS_CONFIGURING_PLUGIN";
     private static final String KEY_IS_UPDATING_PLUGIN = "KEY_IS_UPDATING_PLUGIN";

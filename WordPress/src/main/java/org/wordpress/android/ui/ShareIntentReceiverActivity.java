@@ -8,9 +8,9 @@ import android.os.PersistableBundle;
 import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 import android.support.v4.app.TaskStackBuilder;
-import android.support.v7.app.AppCompatActivity;
 import android.widget.Toast;
 
+import org.wordpress.android.BaseActivity;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.analytics.AnalyticsTracker;
@@ -42,7 +42,7 @@ import javax.inject.Inject;
  * Moreover it lists what actions the user can perform and redirects the user to the activity,
  * along with the content passed in the intent.
  */
-public class ShareIntentReceiverActivity extends AppCompatActivity implements ShareIntentFragmentListener {
+public class ShareIntentReceiverActivity extends BaseActivity implements ShareIntentFragmentListener {
 
     private static final String SHARE_LAST_USED_BLOG_ID_KEY = "wp-settings-share-last-used-text-blogid";
     private static final String KEY_SELECTED_SITE_LOCAL_ID = "KEY_SELECTED_SITE_LOCAL_ID";
