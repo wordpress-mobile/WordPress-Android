@@ -25,7 +25,6 @@ import org.wordpress.android.login.R;
  * Compound view composed of an icon and an EditText
  */
 public class WPLoginInputRow extends RelativeLayout {
-
     private static final String KEY_SUPER_STATE = "wplogin_input_row_super_state";
 
     public interface OnEditorCommitListener {
@@ -108,7 +107,6 @@ public class WPLoginInputRow extends RelativeLayout {
                 a.recycle();
             }
         }
-
     }
 
 
@@ -190,7 +188,6 @@ public class WPLoginInputRow extends RelativeLayout {
     }
 
     private static class SavedState extends BaseSavedState {
-
         private Parcelable mEditTextState;
 
         SavedState(Parcelable superState, Parcelable editTextState) {
