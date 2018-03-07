@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:card_view="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent">
+                                                 xmlns:app="http://schemas.android.com/apk/res-auto"
+                                                 xmlns:card_view="http://schemas.android.com/apk/res-auto"
+                                                 xmlns:tools="http://schemas.android.com/tools"
+                                                 android:layout_width="match_parent"
+                                                 android:layout_height="match_parent">
 
     <org.wordpress.android.util.widgets.CustomSwipeRefreshLayout
         android:id="@+id/swipe_refresh_notifications"
@@ -16,13 +16,13 @@
             android:id="@+id/recycler_view_notes"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:paddingEnd="@dimen/notifications_content_margin"
             android:paddingLeft="@dimen/notifications_content_margin"
             android:paddingRight="@dimen/notifications_content_margin"
+            android:paddingStart="@dimen/notifications_content_margin"
             android:scrollbarStyle="outsideOverlay"
             android:scrollbars="vertical"
-            app:layout_behavior="@string/appbar_scrolling_view_behavior"
-            android:paddingStart="@dimen/notifications_content_margin"
-            android:paddingEnd="@dimen/notifications_content_margin"/>
+            app:layout_behavior="@string/appbar_scrolling_view_behavior"/>
 
     </org.wordpress.android.util.widgets.CustomSwipeRefreshLayout>
 
@@ -31,45 +31,45 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center|bottom"
-        android:gravity="center_horizontal"
         android:layout_marginBottom="24dp"
         android:background="@drawable/notifications_new_notification_bar_background"
         android:elevation="@dimen/message_bar_elevation"
+        android:gravity="center_horizontal"
         android:orientation="vertical"
         android:paddingBottom="@dimen/margin_large"
+        android:paddingEnd="24dp"
         android:paddingLeft="24dp"
         android:paddingRight="24dp"
+        android:paddingStart="24dp"
         android:paddingTop="@dimen/margin_large"
         android:visibility="gone"
         tools:targetApi="LOLLIPOP"
-        tools:visibility="visible"
-        android:paddingStart="24dp"
-        android:paddingEnd="24dp">
+        tools:visibility="visible">
 
         <org.wordpress.android.widgets.WPTextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/notifications_label_new_notifications"
             android:textColor="@color/grey_lighten_30"
-            android:textSize="@dimen/text_sz_large" />
+            android:textSize="@dimen/text_sz_large"/>
 
         <org.wordpress.android.widgets.WPTextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/notifications_label_new_notifications_subtitle"
             android:textColor="@color/grey_lighten_30"
-            android:textSize="@dimen/text_sz_small" />
+            android:textSize="@dimen/text_sz_small"/>
     </LinearLayout>
 
     <android.support.design.widget.AppBarLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginEnd="@dimen/notifications_content_margin"
         android:layout_marginLeft="@dimen/notifications_content_margin"
         android:layout_marginRight="@dimen/notifications_content_margin"
-        android:background="@color/white"
-        app:elevation="0dp"
         android:layout_marginStart="@dimen/notifications_content_margin"
-        android:layout_marginEnd="@dimen/notifications_content_margin">
+        android:background="@color/white"
+        app:elevation="0dp">
 
         <LinearLayout
             android:id="@+id/notifications_filter"
@@ -83,12 +83,12 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"
                 android:layout_marginBottom="@dimen/margin_medium"
+                android:layout_marginEnd="@dimen/margin_extra_large"
                 android:layout_marginLeft="@dimen/margin_extra_large"
                 android:layout_marginRight="@dimen/margin_extra_large"
-                android:layout_marginTop="@dimen/margin_medium"
-                android:fillViewport="true"
                 android:layout_marginStart="@dimen/margin_extra_large"
-                android:layout_marginEnd="@dimen/margin_extra_large">
+                android:layout_marginTop="@dimen/margin_medium"
+                android:fillViewport="true">
 
                 <RadioGroup
                     android:id="@+id/notifications_radio_group"
@@ -102,7 +102,7 @@
                         android:id="@+id/notifications_filter_all"
                         style="@style/Calypso.SegmentedControl"
                         android:background="@drawable/calypso_segmented_control_button_start"
-                        android:text="@string/notifications_tab_title_all" />
+                        android:text="@string/notifications_tab_title_all"/>
 
                     <RadioButton
                         android:id="@+id/notifications_filter_unread"
@@ -110,7 +110,7 @@
                         android:layout_marginLeft="-1dp"
                         android:layout_marginStart="-1dp"
                         android:background="@drawable/calypso_segmented_control_button"
-                        android:text="@string/notifications_tab_title_unread" />
+                        android:text="@string/notifications_tab_title_unread"/>
 
                     <RadioButton
                         android:id="@+id/notifications_filter_comments"
@@ -118,7 +118,7 @@
                         android:layout_marginLeft="-1dp"
                         android:layout_marginStart="-1dp"
                         android:background="@drawable/calypso_segmented_control_button"
-                        android:text="@string/notifications_tab_title_comments" />
+                        android:text="@string/notifications_tab_title_comments"/>
 
                     <RadioButton
                         android:id="@+id/notifications_filter_follows"
@@ -126,7 +126,7 @@
                         android:layout_marginLeft="-1dp"
                         android:layout_marginStart="-1dp"
                         android:background="@drawable/calypso_segmented_control_button"
-                        android:text="@string/notifications_tab_title_follows" />
+                        android:text="@string/notifications_tab_title_follows"/>
 
                     <RadioButton
                         android:id="@+id/notifications_filter_likes"
@@ -134,7 +134,7 @@
                         android:layout_marginLeft="-1dp"
                         android:layout_marginStart="-1dp"
                         android:background="@drawable/calypso_segmented_control_button_end"
-                        android:text="@string/notifications_tab_title_likes" />
+                        android:text="@string/notifications_tab_title_likes"/>
                 </RadioGroup>
             </HorizontalScrollView>
 
@@ -142,7 +142,7 @@
                 android:id="@+id/notifications_filter_divider"
                 android:layout_width="match_parent"
                 android:layout_height="1dp"
-                android:background="@drawable/notifications_list_divider" />
+                android:background="@drawable/notifications_list_divider"/>
 
         </LinearLayout>
     </android.support.design.widget.AppBarLayout>
@@ -151,14 +151,14 @@
         android:id="@+id/empty_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:layout_marginEnd="@dimen/empty_list_title_side_margin"
         android:layout_marginLeft="@dimen/empty_list_title_side_margin"
         android:layout_marginRight="@dimen/empty_list_title_side_margin"
+        android:layout_marginStart="@dimen/empty_list_title_side_margin"
         android:gravity="center"
         android:orientation="vertical"
         android:visibility="gone"
-        tools:visibility="visible"
-        android:layout_marginStart="@dimen/empty_list_title_side_margin"
-        android:layout_marginEnd="@dimen/empty_list_title_side_margin">
+        tools:visibility="visible">
 
         <org.wordpress.android.widgets.WPTextView
             android:id="@+id/text_empty"
@@ -168,7 +168,7 @@
             android:gravity="center"
             android:text="@string/notifications_empty_list"
             android:textColor="@color/grey_dark"
-            android:textSize="@dimen/text_sz_double_extra_large" />
+            android:textSize="@dimen/text_sz_double_extra_large"/>
 
         <org.wordpress.android.widgets.WPTextView
             android:id="@+id/text_empty_description"
@@ -177,7 +177,7 @@
             android:layout_marginTop="@dimen/margin_medium"
             android:gravity="center"
             android:textColor="@color/grey"
-            android:textSize="@dimen/text_sz_medium" />
+            android:textSize="@dimen/text_sz_medium"/>
 
         <android.support.v7.widget.CardView
             android:layout_width="wrap_content"
@@ -193,59 +193,51 @@
                 android:layout_height="wrap_content"
                 android:background="?android:attr/selectableItemBackground"
                 android:paddingBottom="@dimen/margin_medium"
+                android:paddingEnd="@dimen/margin_large"
                 android:paddingLeft="@dimen/margin_large"
                 android:paddingRight="@dimen/margin_large"
+                android:paddingStart="@dimen/margin_large"
                 android:paddingTop="@dimen/margin_medium"
                 android:textAllCaps="true"
-                android:textColor="@color/white"
-                android:paddingEnd="@dimen/margin_large"
-                android:paddingStart="@dimen/margin_large"/>
+                android:textColor="@color/white"/>
 
         </android.support.v7.widget.CardView>
 
     </LinearLayout>
 
-
-    <LinearLayout
+    <android.support.v4.widget.NestedScrollView
         android:id="@+id/connect_jetpack"
-        android:visibility="gone"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:gravity="center"
-        android:orientation="vertical">
+        android:visibility="gone">
 
-        <ScrollView
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:orientation="vertical">
 
-            <LinearLayout
-                android:layout_width="match_parent"
+            <ImageView
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:gravity="center"
-                android:orientation="vertical">
+                android:layout_marginTop="@dimen/margin_extra_large"
+                app:srcCompat="@drawable/jetpack_connection_notifications"/>
 
-                <ImageView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/margin_extra_large"
-                    app:srcCompat="@drawable/jetpack_connection_notifications" />
+            <TextView
+                style="@style/JetpackConnectionText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:maxWidth="290dp"
+                android:text="@string/notifications_jetpack_connection_setup_info"
+                android:textAlignment="center"/>
 
-                <TextView
-                    style="@style/JetpackConnectionText"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:maxWidth="290dp"
-                    android:text="@string/notifications_jetpack_connection_setup_info"
-                    android:textAlignment="center" />
-
-                <android.support.v7.widget.AppCompatButton
-                    android:id="@+id/jetpack_setup"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/stats_jetpack_connection_setup"
-                    android:layout_marginBottom="@dimen/margin_extra_large"
-                    android:theme="@style/JetpackConnectionButton" />
-            </LinearLayout>
-        </ScrollView>
-    </LinearLayout>
+            <android.support.v7.widget.AppCompatButton
+                android:id="@+id/jetpack_setup"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="@dimen/margin_extra_large"
+                android:text="@string/stats_jetpack_connection_setup"
+                android:theme="@style/JetpackConnectionButton"/>
+        </LinearLayout>
+    </android.support.v4.widget.NestedScrollView>
 </android.support.design.widget.CoordinatorLayout>
