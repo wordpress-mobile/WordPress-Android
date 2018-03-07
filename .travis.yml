@@ -34,5 +34,6 @@ install:
 
 script:
   - ./gradlew :WordPress:checkstyle
+  - ./gradlew :libs:analytics:WordPressAnalytics:checkstyle
   - ./gradlew :libs:utils:WordPressUtils:checkstyle
   - ./gradlew -PdisablePreDex assembleVanillaRelease lintVanillaRelease testVanillaRelease || (grep -A20 -B2 'severity="Error"' -r --include="*.xml" WordPress libs; exit 1)
