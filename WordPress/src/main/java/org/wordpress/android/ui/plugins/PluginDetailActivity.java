@@ -589,7 +589,7 @@ public class PluginDetailActivity extends AppCompatActivity {
                                                   from,
                                                   to);
 
-        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        AlertDialog.Builder builder = new AlertDialog.Builder(this, R.style.Calypso_Dialog);
         builder.setCancelable(true);
         builder.setAdapter(adapter, new DialogInterface.OnClickListener() {
             @Override
