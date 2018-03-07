@@ -798,11 +798,7 @@ public class PluginDetailActivity extends AppCompatActivity {
     public void onSitePluginConfigured(OnSitePluginConfigured event) {
         if (isFinishing()) return;
 
-        if (mSite.getId() != event.site.getId() // Wrong site
-                || !mPlugin.isInstalled() // Plugin is not installed, this event can't be about this plugin
-                || mPlugin.getName() == null // Sanity check for NPE, but if the plugin is installed name will be there
-                || !mPlugin.getName().equals(event.pluginName)) { // Checking if the configured plugin is the one we are showing
-            // Not the event we are interested in
+        if (!shouldHandleFluxCSitePluginEvent(event.site, event.pluginName)) {
             return;
         }
 
@@ -834,7 +830,26 @@ public class PluginDetailActivity extends AppCompatActivity {
             return;
         }
 
-        refreshPluginFromStore();
+        // Sanity check
+        ImmutablePluginModel configuredPlugin = mPluginStore.getImmutablePluginBySlug(mSite, mSlug);
+        if (configuredPlugin == null) {
+            ToastUtils.showToast(this, R.string.plugin_not_found);
+            finish();
+            return;
+        }
+        // Before refreshing the plugin from store, check the changes and track them
+        if (mPlugin.isActive() != configuredPlugin.isActive()) {
+            AnalyticsTracker.Stat stat = configuredPlugin.isActive()
+                    ? AnalyticsTracker.Stat.PLUGIN_ACTIVATED : AnalyticsTracker.Stat.PLUGIN_DEACTIVATED;
+            AnalyticsUtils.trackWithSiteDetails(stat, mSite);
+        }
+        if (mPlugin.isAutoUpdateEnabled() != configuredPlugin.isAutoUpdateEnabled()) {
+            AnalyticsTracker.Stat stat = configuredPlugin.isAutoUpdateEnabled()
+                    ? AnalyticsTracker.Stat.PLUGIN_AUTOUPDATE_ENABLED : AnalyticsTracker.Stat.PLUGIN_AUTOUPDATE_DISABLED;
+            AnalyticsUtils.trackWithSiteDetails(stat, mSite);
+        }
+        // Now we can update the plugin with the new one from store
+        mPlugin = configuredPlugin;
 
         // The plugin state has been changed while a configuration network call is going on, we need to dispatch another
         // configure plugin action since we don't allow multiple configure actions to happen at the same time
@@ -858,9 +873,14 @@ public class PluginDetailActivity extends AppCompatActivity {
     public void onWPOrgPluginFetched(PluginStore.OnWPOrgPluginFetched event) {
         if (isFinishing()) return;
 
+        if (!mSlug.equals(event.pluginSlug)) {
+            // another plugin fetched, no need to handle it
+            return;
+        }
+
         if (event.isError()) {
-            AppLog.e(AppLog.T.PLUGINS, "An error occurred while fetching wporg plugin with type: "
-                    + event.error.type);
+            AppLog.e(AppLog.T.PLUGINS, "An error occurred while fetching wporg plugin" + event.pluginSlug
+                    + " with type: " + event.error.type);
         } else {
             refreshPluginFromStore();
             refreshViews();
@@ -872,11 +892,7 @@ public class PluginDetailActivity extends AppCompatActivity {
     public void onSitePluginUpdated(OnSitePluginUpdated event) {
         if (isFinishing()) return;
 
-        if (mSite.getId() != event.site.getId() // Wrong site
-                || !mPlugin.isInstalled() // Plugin is not installed, this event can't be about this plugin
-                || mPlugin.getName() == null // Sanity check for NPE, but if the plugin is installed name will be there
-                || !mPlugin.getName().equals(event.pluginName)) { // Checking if the configured plugin is the one we are showing
-            // Not the event we are interested in
+        if (!shouldHandleFluxCSitePluginEvent(event.site, event.pluginName)) {
             return;
         }
 
@@ -934,11 +950,7 @@ public class PluginDetailActivity extends AppCompatActivity {
     public void onSitePluginDeleted(OnSitePluginDeleted event) {
         if (isFinishing()) return;
 
-        if (mSite.getId() != event.site.getId() // Wrong site
-                || !mPlugin.isInstalled() // Plugin is not installed, this event can't be about this plugin
-                || mPlugin.getName() == null // Sanity check for NPE, but if the plugin is installed name will be there
-                || !mPlugin.getName().equals(event.pluginName)) { // Checking if the configured plugin is the one we are showing
-            // Not the event we are interested in
+        if (!shouldHandleFluxCSitePluginEvent(event.site, event.pluginName)) {
             return;
         }
 
@@ -963,6 +975,14 @@ public class PluginDetailActivity extends AppCompatActivity {
             refreshViews();
         }
         showSuccessfulPluginRemovedSnackbar();
+    }
+
+    // This check should only handle events for already installed plugins - onSitePluginConfigured, onSitePluginUpdated, onSitePluginDeleted
+    private boolean shouldHandleFluxCSitePluginEvent(SiteModel eventSite, String eventPluginName) {
+        return mSite.getId() == eventSite.getId() // correct site
+                && mPlugin.isInstalled() // needs plugin to be already installed
+                && mPlugin.getName() != null // sanity check for NPE since if plugin is installed it'll have the name
+                && mPlugin.getName().equals(eventPluginName); // event is for the plugin we are showing
     }
 
     // Utils
