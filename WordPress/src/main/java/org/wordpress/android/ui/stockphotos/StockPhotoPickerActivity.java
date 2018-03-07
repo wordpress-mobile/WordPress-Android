@@ -44,6 +44,8 @@ import javax.inject.Inject;
 
 public class StockPhotoPickerActivity extends AppCompatActivity implements SearchView.OnQueryTextListener {
     private static final String KEY_SELECTED_ITEMS = "selected_items";
+    private static final int MIN_SEARCH_QUERY_SIZE = 3;
+
     private SiteModel mSite;
 
     private RecyclerView mRecycler;
@@ -55,8 +57,6 @@ public class StockPhotoPickerActivity extends AppCompatActivity implements Searc
 
     private int mThumbWidth;
     private int mThumbHeight;
-
-    private boolean mIsFetching;
 
     @Inject ViewModelProvider.Factory mViewModelFactory;
     private StockMediaViewModel mViewModel;
@@ -126,14 +126,17 @@ public class StockPhotoPickerActivity extends AppCompatActivity implements Searc
         }
     }
 
+    /*
+     * observe when the ViewModel's search results have changed and update the adapter with them
+     */
     private void setupObserver() {
         mViewModel.getSearchResults().observe(this, new Observer<List<StockMediaModel>>() {
             @Override
             public void onChanged(@Nullable final List<StockMediaModel> mediaList) {
                 if (!isFinishing()) {
-                    mIsFetching = false;
                     showProgress(false);
-                    showEmptyView(mediaList.isEmpty());
+                    showEmptyView(mediaList.isEmpty()
+                                  && !TextUtils.isEmpty(mViewModel.getSearchQuery()));
                     mAdapter.setMediaList(mediaList);
                 }
             }
@@ -192,7 +195,8 @@ public class StockPhotoPickerActivity extends AppCompatActivity implements Searc
             TextView txtEmpty = findViewById(R.id.text_empty);
             txtEmpty.setVisibility(show ? View.VISIBLE : View.GONE);
             if (show) {
-                if (TextUtils.isEmpty(mSearchQuery)) {
+                boolean isEmpty = mSearchQuery == null || mSearchQuery.length() < MIN_SEARCH_QUERY_SIZE;
+                if (isEmpty) {
                     String message = getString(R.string.stock_photo_picker_initial_empty_text);
                     String subMessage = getString(R.string.stock_photo_picker_initial_empty_subtext);
                     String link = "<a href='https://pexels.com/'>Pexels</a>";
@@ -217,8 +221,7 @@ public class StockPhotoPickerActivity extends AppCompatActivity implements Searc
     private void submitSearch(@Nullable final String query, boolean delayed) {
         mSearchQuery = query;
 
-        // we need at least three characters to perform a search
-        if (TextUtils.isEmpty(query) || query.length() <= 2) {
+        if (query == null || query.length() < MIN_SEARCH_QUERY_SIZE) {
             mAdapter.clear();
             showEmptyView(true);
             return;
@@ -245,7 +248,6 @@ public class StockPhotoPickerActivity extends AppCompatActivity implements Searc
             mAdapter.clear();
         }
 
-        mIsFetching = true;
         showProgress(true);
         mViewModel.fetchStockPhotos(searchTerm, page);
     }
@@ -310,7 +312,7 @@ public class StockPhotoPickerActivity extends AppCompatActivity implements Searc
                 holder.mImageView.setScaleY(scale);
             }
 
-            if (!mIsFetching && mViewModel.canLoadMore() && position == getItemCount() - 1) {
+            if (!mViewModel.isFetching() && mViewModel.canLoadMore() && position == getItemCount() - 1) {
                 requestStockPhotos(mSearchQuery, mViewModel.getNextPage());
             }
         }

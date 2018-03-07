@@ -97,6 +97,8 @@ public class StockMediaViewModel extends ViewModel {
             mCanLoadMore = false;
             return;
         }
+
+        // make sure these results are for the same query
         if (mSearchQuery == null || !mSearchQuery.equals(event.searchTerm)) {
             return;
         }
@@ -104,6 +106,7 @@ public class StockMediaViewModel extends ViewModel {
         mNextPage = event.nextPage;
         mCanLoadMore = event.canLoadMore;
 
+        // set the results to the event's mediaList if this is the first page, otherwise add to the existing results
         if (event.nextPage == 2 || mSearchResults.getValue() == null) {
             mSearchResults.setValue(event.mediaList);
         } else {
@@ -123,6 +126,10 @@ public class StockMediaViewModel extends ViewModel {
 
     public String getSearchQuery() {
         return mSearchQuery;
+    }
+
+    public boolean isFetching() {
+        return mIsFetching;
     }
 
     public LiveData<List<StockMediaModel>> getSearchResults() {
