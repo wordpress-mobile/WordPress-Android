@@ -551,7 +551,8 @@ public class PostsListFragment extends Fragment
                 if (!UploadService.isPostUploadingOrQueued(post)) {
                     AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
                     builder.setTitle(post.isPage() ? getString(R.string.delete_page) : getString(R.string.delete_post))
-                            .setMessage(post.isPage() ? getString(R.string.dialog_confirm_delete_page) : getString(R.string.dialog_confirm_delete_post))
+                            .setMessage(post.isPage() ? getString(R.string.dialog_confirm_delete_page) :
+                                    getString(R.string.dialog_confirm_delete_post))
                             .setPositiveButton(R.string.delete, new DialogInterface.OnClickListener() {
                                 @Override
                                 public void onClick(DialogInterface dialogInterface, int i) {
