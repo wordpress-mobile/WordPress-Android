@@ -242,7 +242,7 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
         mTxtStatus = (TextView) view.findViewById(R.id.text_status);
         mTxtContent = (TextView) view.findViewById(R.id.text_content);
 
-        //noinspection InflateParams
+        // noinspection InflateParams
         mLayoutButtons = (ViewGroup) inflater.inflate(R.layout.comment_action_footer, null, false);
         mBtnLikeComment = mLayoutButtons.findViewById(R.id.btn_like);
         mBtnLikeIcon = (ImageView) mLayoutButtons.findViewById(R.id.btn_like_icon);

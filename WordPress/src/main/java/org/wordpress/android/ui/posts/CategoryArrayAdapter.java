@@ -40,7 +40,8 @@ public class CategoryArrayAdapter extends ArrayAdapter<CategoryNode> {
         CategoryNode node = getItem(position);
         if (node != null) {
             viewHolder.mCategoryRowText.setText(StringEscapeUtils.unescapeHtml4(node.getName()));
-            ViewCompat.setPaddingRelative(viewHolder.mCategoryRowText, DisplayUtils.dpToPx(getContext(), 16) * node.getLevel(), 0,
+            ViewCompat.setPaddingRelative(viewHolder.mCategoryRowText,
+                                          DisplayUtils.dpToPx(getContext(), 16) * node.getLevel(), 0,
                                           DisplayUtils.dpToPx(getContext(), 16), 0);
         }
         return rowView;

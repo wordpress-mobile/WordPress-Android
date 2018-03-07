@@ -394,7 +394,7 @@ public class WPPrefView extends LinearLayout implements
      */
     private Dialog getTextDialog() {
         LayoutInflater inflater = LayoutInflater.from(getContext());
-        //noinspection InflateParams
+        // noinspection InflateParams
         ViewGroup customView = (ViewGroup) inflater.inflate(R.layout.wppref_text_dialog, null);
         final EditText editText = (EditText) customView.findViewById(R.id.edit);
         editText.setText(mSummaryTextView.getText());
