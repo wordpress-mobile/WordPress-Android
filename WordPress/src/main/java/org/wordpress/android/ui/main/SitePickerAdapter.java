@@ -31,6 +31,7 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Locale;
 import java.util.Set;
 
 import javax.inject.Inject;
@@ -538,11 +539,11 @@ public class SitePickerAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
 
         for (int i = 0; i < sites.size(); i++) {
             SiteRecord record = sites.get(i);
-            String siteNameLowerCase = record.mBlogName.toLowerCase();
-            String hostNameLowerCase = record.mHomeURL.toLowerCase();
+            String siteNameLowerCase = record.mBlogName.toLowerCase(Locale.getDefault());
+            String hostNameLowerCase = record.mHomeURL.toLowerCase(Locale.ROOT);
 
-            if (siteNameLowerCase.contains(mLastSearch.toLowerCase()) || hostNameLowerCase
-                    .contains(mLastSearch.toLowerCase())) {
+            if (siteNameLowerCase.contains(mLastSearch.toLowerCase(Locale.getDefault())) || hostNameLowerCase
+                    .contains(mLastSearch.toLowerCase(Locale.ROOT))) {
                 filteredSiteList.add(record);
             }
         }

@@ -41,6 +41,7 @@ import org.wordpress.android.util.AppLog.T;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 import javax.inject.Inject;
 
@@ -250,7 +251,7 @@ public class UsernameChangerFullScreenDialogFragment extends Fragment implements
     }
 
     private String getUsernameQueryFromDisplayName() {
-        return mDisplayName.replace(" ", "").toLowerCase();
+        return mDisplayName.replace(" ", "").toLowerCase(Locale.ROOT);
     }
 
     protected boolean hasUsernameChanged() {

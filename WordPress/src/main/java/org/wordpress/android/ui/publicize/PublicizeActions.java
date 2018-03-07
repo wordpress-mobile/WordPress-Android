@@ -19,6 +19,7 @@ import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.JSONUtils;
 
 import java.util.HashMap;
+import java.util.Locale;
 import java.util.Map;
 
 import de.greenrobot.event.EventBus;
@@ -39,8 +40,9 @@ public class PublicizeActions {
      * disconnect a currently connected publicize service
      */
     public static void disconnect(@NonNull final PublicizeConnection connection) {
-        String path = String.format(
-                "sites/%d/publicize-connections/%d/delete", connection.siteId, connection.connectionId);
+        String path = String.format(Locale.ROOT,
+                                    "sites/%d/publicize-connections/%d/delete", connection.siteId,
+                                    connection.connectionId);
 
         RestRequest.Listener listener = new RestRequest.Listener() {
             @Override
@@ -130,7 +132,7 @@ public class PublicizeActions {
 
         Map<String, String> params = new HashMap<>();
         params.put("keyring_connection_ID", Long.toString(keyringConnectionId));
-        String path = String.format("/sites/%d/publicize-connections/new", siteId);
+        String path = String.format(Locale.ROOT, "/sites/%d/publicize-connections/new", siteId);
         WordPress.getRestClientUtilsV1_1().post(path, params, null, listener, errorListener);
     }
 

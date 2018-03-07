@@ -23,6 +23,7 @@ import org.wordpress.android.widgets.WPNetworkImageView;
 
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.Locale;
 
 /*
  * adapter which shows either recommended or followed blogs - used by ReaderBlogFragment
@@ -218,11 +219,11 @@ public class ReaderBlogAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                     mTmpFollowedBlogs = new ReaderBlogList();
                     ReaderBlogList allFollowedBlogs = ReaderBlogTable.getFollowedBlogs();
                     if (hasSearchFilter()) {
-                        String query = mSearchFilter.toLowerCase();
+                        String query = mSearchFilter.toLowerCase(Locale.getDefault());
                         for (ReaderBlog blog : allFollowedBlogs) {
-                            if (blog.getName().toLowerCase().contains(query)) {
+                            if (blog.getName().toLowerCase(Locale.getDefault()).contains(query)) {
                                 mTmpFollowedBlogs.add(blog);
-                            } else if (UrlUtils.getHost(blog.getUrl()).toLowerCase().contains(query)) {
+                            } else if (UrlUtils.getHost(blog.getUrl()).toLowerCase(Locale.getDefault()).contains(query)) {
                                 mTmpFollowedBlogs.add(blog);
                             }
                         }

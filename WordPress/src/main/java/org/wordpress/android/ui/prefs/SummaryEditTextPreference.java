@@ -25,6 +25,8 @@ import android.widget.TextView;
 import org.wordpress.android.R;
 import org.wordpress.android.util.WPPrefUtils;
 
+import java.util.Locale;
+
 /**
  * Standard EditTextPreference that has attributes to limit summary length.
  * <p>
@@ -111,7 +113,7 @@ public class SummaryEditTextPreference extends EditTextPreference implements Pre
         mWhichButtonClicked = DialogInterface.BUTTON_NEGATIVE;
 
         builder.setPositiveButton(android.R.string.ok, this);
-        builder.setNegativeButton(res.getString(R.string.cancel).toUpperCase(), this);
+        builder.setNegativeButton(res.getString(R.string.cancel).toUpperCase(Locale.getDefault()), this);
         if (titleView != null) {
             TextView titleText = (TextView) titleView.findViewById(R.id.title);
             if (titleText != null) {

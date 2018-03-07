@@ -40,6 +40,7 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.lang.ref.WeakReference;
 import java.util.HashMap;
+import java.util.Locale;
 
 public class ImageUtils {
     public static int[] getImageSize(Uri uri, Context context){
@@ -515,7 +516,7 @@ public class ImageUtils {
         }
 
         String fileName = MediaUtils.getMediaFileName(file, mimeType);
-        String fileExtension = MimeTypeMap.getFileExtensionFromUrl(fileName).toLowerCase();
+        String fileExtension = MimeTypeMap.getFileExtensionFromUrl(fileName).toLowerCase(Locale.ROOT);
 
         int[] imageDimensions = getImageSize(srcImageUri, context);
         int selectedMaxSize = Math.max(imageDimensions[0], imageDimensions[1]);
@@ -767,7 +768,7 @@ public class ImageUtils {
         }
 
         String fileName = MediaUtils.getMediaFileName(file, mimeType);
-        String fileExtension = MimeTypeMap.getFileExtensionFromUrl(fileName).toLowerCase();
+        String fileExtension = MimeTypeMap.getFileExtensionFromUrl(fileName).toLowerCase(Locale.ROOT);
 
         int selectedWidth = getImageSize(srcImageUri, context)[0];
         if (selectedWidth == 0) {

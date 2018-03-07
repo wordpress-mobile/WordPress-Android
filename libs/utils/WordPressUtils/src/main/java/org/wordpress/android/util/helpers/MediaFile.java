@@ -48,7 +48,7 @@ public class MediaFile {
         String link = MapUtils.getMapStr(resultMap, "link");
         setFileName(new String(link).replaceAll("^.*/([A-Za-z0-9_-]+)\\.\\w+$", "$1"));
 
-        String fileType = new String(link).replaceAll(".*\\.(\\w+)$", "$1").toLowerCase();
+        String fileType = new String(link).replaceAll(".*\\.(\\w+)$", "$1").toLowerCase(Locale.ROOT);
         String fileMimeType = MimeTypeMap.getSingleton().getMimeTypeFromExtension(fileType);
         setMimeType(fileMimeType);
 

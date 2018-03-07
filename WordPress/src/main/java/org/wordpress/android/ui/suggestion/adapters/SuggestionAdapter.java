@@ -16,6 +16,7 @@ import org.wordpress.android.widgets.WPNetworkImageView;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 public class SuggestionAdapter extends BaseAdapter implements Filterable {
     private final LayoutInflater mInflater;
@@ -114,10 +115,10 @@ public class SuggestionAdapter extends BaseAdapter implements Filterable {
                 List<Suggestion> nSuggestionList = new ArrayList<Suggestion>();
 
                 for (Suggestion suggestion : mOrigSuggestionList) {
-                    String lowerCaseConstraint = constraint.toString().toLowerCase();
-                    if (suggestion.getUserLogin().toLowerCase().startsWith(lowerCaseConstraint)
-                        || suggestion.getDisplayName().toLowerCase().startsWith(lowerCaseConstraint)
-                        || suggestion.getDisplayName().toLowerCase().contains(" " + lowerCaseConstraint)) {
+                    String lowerCaseConstraint = constraint.toString().toLowerCase(Locale.getDefault());
+                    if (suggestion.getUserLogin().toLowerCase(Locale.ROOT).startsWith(lowerCaseConstraint)
+                        || suggestion.getDisplayName().toLowerCase(Locale.getDefault()).startsWith(lowerCaseConstraint)
+                        || suggestion.getDisplayName().toLowerCase(Locale.getDefault()).contains(" " + lowerCaseConstraint)) {
                         nSuggestionList.add(suggestion);
                     }
                 }

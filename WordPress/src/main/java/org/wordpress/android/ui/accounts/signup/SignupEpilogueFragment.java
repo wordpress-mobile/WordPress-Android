@@ -485,12 +485,14 @@ public class SignupEpilogueFragment extends LoginBaseFormFragment<SignupEpilogue
      * @return {@link String} to be the display name
      */
     private String createDisplayNameFromEmail() {
+
+
         String username = mEmailAddress.split("@")[0].replaceAll("[^A-Za-z/.]", "");
         String[] array = username.split("\\.");
         StringBuilder builder = new StringBuilder();
 
         for (String s : array) {
-            String capitalized = s.substring(0, 1).toUpperCase() + s.substring(1);
+            String capitalized = s.substring(0, 1).toUpperCase(Locale.getDefault()) + s.substring(1);
             builder.append(capitalized.concat(" "));
         }
 
@@ -504,7 +506,7 @@ public class SignupEpilogueFragment extends LoginBaseFormFragment<SignupEpilogue
      * @return {@link String} to be the username
      */
     private String createUsernameFromEmail() {
-        return mEmailAddress.split("@")[0].replaceAll("[^A-Za-z0-9]", "").toLowerCase();
+        return mEmailAddress.split("@")[0].replaceAll("[^A-Za-z0-9]", "").toLowerCase(Locale.ROOT);
     }
 
     private void injectCache(File file, String avatarUrl) throws IOException {

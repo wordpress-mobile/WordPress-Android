@@ -15,6 +15,7 @@ import java.net.URLDecoder;
 import java.net.URLEncoder;
 import java.nio.charset.Charset;
 import java.util.HashMap;
+import java.util.Locale;
 import java.util.Map;
 
 public class UrlUtils {
@@ -53,9 +54,9 @@ public class UrlUtils {
      */
     public static String convertUrlToPunycodeIfNeeded(String url) {
         if (!Charset.forName("US-ASCII").newEncoder().canEncode(url)) {
-            if (url.toLowerCase().startsWith("http://")) {
+            if (url.toLowerCase(Locale.ROOT).startsWith("http://")) {
                 url = "http://" + IDN.toASCII(url.substring(7), IDN.ALLOW_UNASSIGNED);
-            } else if (url.toLowerCase().startsWith("https://")) {
+            } else if (url.toLowerCase(Locale.ROOT).startsWith("https://")) {
                 url = "https://" + IDN.toASCII(url.substring(8), IDN.ALLOW_UNASSIGNED);
             } else {
                 url = IDN.toASCII(url, IDN.ALLOW_UNASSIGNED);
@@ -71,7 +72,7 @@ public class UrlUtils {
         if (url != null && url.startsWith("//")) {
             url = url.substring(2);
             if (scheme != null) {
-                if (scheme.endsWith("://")){
+                if (scheme.endsWith("://")) {
                     url = scheme + url;
                 } else {
                     AppLog.e(T.UTILS, "Invalid scheme used: " + scheme);
@@ -119,8 +120,8 @@ public class UrlUtils {
         // this routine is called from some performance-critical code and creating a URI from a string
         // is slow, so skip it when possible - if we know it's not a relative path (and 99.9% of the
         // time it won't be for our purposes) then we can normalize it without java.net.URI.normalize()
-        if (urlString.startsWith("http") &&
-                !urlString.contains("build/intermediates/exploded-aar/org.wordpress/graphview/3.1.1")) {
+        if (urlString.startsWith("http")
+            && !urlString.contains("build/intermediates/exploded-aar/org.wordpress/graphview/3.1.1")) {
             // return without a trailing slash
             if (urlString.endsWith("/")) {
                 return urlString.substring(0, urlString.length() - 1);
@@ -178,7 +179,9 @@ public class UrlUtils {
     }
 
     public static boolean isHttps(URI uri) {
-        if (uri == null) return false;
+        if (uri == null) {
+            return false;
+        }
 
         String protocol = uri.getScheme();
         return protocol != null && protocol.equals("https");
@@ -233,12 +236,14 @@ public class UrlUtils {
 
     // returns true if the passed url is for an image
     public static boolean isImageUrl(String url) {
-        if (TextUtils.isEmpty(url)) return false;
+        if (TextUtils.isEmpty(url)) {
+            return false;
+        }
 
-        String cleanedUrl = removeQuery(url.toLowerCase());
+        String cleanedUrl = removeQuery(url.toLowerCase(Locale.ROOT));
 
-        return cleanedUrl.endsWith("jpg") || cleanedUrl.endsWith("jpeg") ||
-                cleanedUrl.endsWith("gif") || cleanedUrl.endsWith("png");
+        return cleanedUrl.endsWith("jpg") || cleanedUrl.endsWith("jpeg")
+               || cleanedUrl.endsWith("gif") || cleanedUrl.endsWith("png");
     }
 
     public static String appendUrlParameter(String url, String paramName, String paramValue) {
@@ -273,7 +278,7 @@ public class UrlUtils {
     }
 
     public static String removeXmlrpcSuffix(String siteAddress) {
-        if (siteAddress.toLowerCase().endsWith("/xmlrpc.php")) {
+        if (siteAddress.toLowerCase(Locale.ROOT).endsWith("/xmlrpc.php")) {
             return siteAddress.substring(0, siteAddress.lastIndexOf("xmlrpc.php"));
         } else {
             return siteAddress;
