@@ -52,7 +52,7 @@ import static org.wordpress.android.util.WPSwipeToRefreshHelper.buildSwipeToRefr
  * Single item details activity.
  */
 public class StatsSingleItemDetailsActivity extends BaseActivity
-        implements StatsBarGraph.OnGestureListener{
+        implements StatsBarGraph.OnGestureListener {
     public static final String ARG_REMOTE_BLOG_ID = "ARG_REMOTE_BLOG_ID";
     public static final String ARG_REMOTE_ITEM_ID = "ARG_REMOTE_ITEM_ID";
     public static final String ARG_REMOTE_ITEM_TYPE = "ARG_REMOTE_ITEM_TYPE";

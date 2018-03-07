@@ -19,8 +19,6 @@ import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.UrlUtils;
 
-import java.util.Locale;
-
 import javax.inject.Inject;
 
 /**

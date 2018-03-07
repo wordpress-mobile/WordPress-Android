@@ -20,7 +20,6 @@ import javax.annotation.Nullable;
  * android version.
  */
 public abstract class LocaleManager {
-
     private static final String LANGUAGE_KEY = "language-pref";
 
     /**

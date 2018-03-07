@@ -35,7 +35,7 @@ import java.util.Map;
 
 import javax.inject.Inject;
 
-public class AppSettingsFragment extends PreferenceFragment 
+public class AppSettingsFragment extends PreferenceFragment
         implements OnPreferenceClickListener, Preference.OnPreferenceChangeListener {
     public static final int LANGUAGE_CHANGED = 1000;
 
