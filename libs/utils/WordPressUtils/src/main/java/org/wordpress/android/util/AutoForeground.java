@@ -13,7 +13,6 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.NotificationManagerCompat;
 
 import org.greenrobot.eventbus.EventBus;
-
 import org.wordpress.android.util.AutoForeground.ServiceState;
 
 import java.util.HashMap;
@@ -21,16 +20,19 @@ import java.util.Map;
 
 public abstract class AutoForeground<StateClass extends ServiceState>
         extends Service {
-
     public static final int NOTIFICATION_ID_PROGRESS = 1;
     public static final int NOTIFICATION_ID_SUCCESS = 2;
     public static final int NOTIFICATION_ID_FAILURE = 3;
 
     public interface ServiceState {
         boolean isIdle();
+
         boolean isInProgress();
+
         boolean isError();
+
         boolean isTerminal();
+
         String getStepName();
     }
 
@@ -61,7 +63,8 @@ public abstract class AutoForeground<StateClass extends ServiceState>
         }
     }
 
-    private class LocalBinder extends Binder {}
+    private class LocalBinder extends Binder {
+    }
 
     private final IBinder mBinder = new LocalBinder();
 
@@ -70,9 +73,11 @@ public abstract class AutoForeground<StateClass extends ServiceState>
     private boolean mIsForeground;
 
     protected abstract void onProgressStart();
+
     protected abstract void onProgressEnd();
 
     protected abstract Notification getNotification(StateClass state);
+
     protected abstract void trackStateUpdate(Map<String, ?> props);
 
     @SuppressWarnings("unchecked")

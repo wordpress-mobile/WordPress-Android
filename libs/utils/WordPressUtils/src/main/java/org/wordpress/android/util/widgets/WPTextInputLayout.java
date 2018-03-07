@@ -27,8 +27,9 @@ public class WPTextInputLayout extends TextInputLayout {
     @Override
     public int getBaseline() {
         EditText editText = getEditText();
-        return editText != null ? editText.getBaseline() - editText.getPaddingBottom() +
-                getResources().getDimensionPixelSize(R.dimen.textinputlayout_baseline_correction) : 0;
+        return editText != null ? editText.getBaseline() - editText.getPaddingBottom()
+                                  + getResources().getDimensionPixelSize(R.dimen.textinputlayout_baseline_correction)
+                : 0;
     }
 
     @Override
@@ -39,7 +40,8 @@ public class WPTextInputLayout extends TextInputLayout {
         if (enabled) {
             View errorView = findViewById(android.support.design.R.id.textinput_error);
             if (errorView != null && errorView.getParent() != null) {
-                ((View) errorView.getParent()).setPadding(0, errorView.getPaddingTop(), 0, errorView.getPaddingBottom());
+                ((View) errorView.getParent())
+                        .setPadding(0, errorView.getPaddingTop(), 0, errorView.getPaddingBottom());
             }
         }
     }

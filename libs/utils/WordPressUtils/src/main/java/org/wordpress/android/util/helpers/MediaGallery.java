@@ -1,4 +1,3 @@
-
 package org.wordpress.android.util.helpers;
 
 import java.io.Serializable;
@@ -13,75 +12,75 @@ import java.util.ArrayList;
 public class MediaGallery implements Serializable {
     private static final long serialVersionUID = 2359176987182027508L;
 
-    private long uniqueId;
-    private boolean isRandom;
-    private String type;
-    private int numColumns;
-    private ArrayList<Long> ids;
+    private long mUniqueId;
+    private boolean mIsRandom;
+    private String mType;
+    private int mNumColumns;
+    private ArrayList<Long> mIds;
 
     public MediaGallery(boolean isRandom, String type, int numColumns, ArrayList<Long> ids) {
-        this.isRandom = isRandom;
-        this.type = type;
-        this.numColumns = numColumns;
-        this.ids = ids;
-        this.uniqueId = System.currentTimeMillis();
+        mIsRandom = isRandom;
+        mType = type;
+        mNumColumns = numColumns;
+        mIds = ids;
+        mUniqueId = System.currentTimeMillis();
     }
 
     public MediaGallery() {
-        isRandom = false;
-        type = "";
-        numColumns = 3;
-        ids = new ArrayList<>();
-        this.uniqueId = System.currentTimeMillis();
+        mIsRandom = false;
+        mType = "";
+        mNumColumns = 3;
+        mIds = new ArrayList<>();
+        mUniqueId = System.currentTimeMillis();
     }
 
     public boolean isRandom() {
-        return isRandom;
+        return mIsRandom;
     }
 
     public void setRandom(boolean isRandom) {
-        this.isRandom = isRandom;
+        this.mIsRandom = isRandom;
     }
 
     public String getType() {
-        return type;
+        return mType;
     }
 
     public void setType(String type) {
-        this.type = type;
+        this.mType = type;
     }
 
     public int getNumColumns() {
-        return numColumns;
+        return mNumColumns;
     }
 
     public void setNumColumns(int numColumns) {
-        this.numColumns = numColumns;
+        this.mNumColumns = numColumns;
     }
 
     public ArrayList<Long> getIds() {
-        return ids;
+        return mIds;
     }
 
     public String getIdsStr() {
-        String ids_str = "";
-        if (ids.size() > 0) {
-            for (Long id : ids) {
-                ids_str += id + ",";
+        String idsStr = "";
+        if (mIds.size() > 0) {
+            for (Long id : mIds) {
+                idsStr += id + ",";
             }
-            ids_str = ids_str.substring(0, ids_str.length() - 1);
+            idsStr = idsStr.substring(0, idsStr.length() - 1);
         }
-        return ids_str;
+        return idsStr;
     }
 
     public void setIds(ArrayList<Long> ids) {
-        this.ids = ids;
+        this.mIds = ids;
     }
 
     /**
      * An id to uniquely identify a media gallery object, so that the same object can be edited in the post editor
      */
     public long getUniqueId() {
-        return uniqueId;
+        return mUniqueId;
     }
 }

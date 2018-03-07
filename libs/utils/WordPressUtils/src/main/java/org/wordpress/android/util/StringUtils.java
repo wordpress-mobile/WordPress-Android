@@ -18,7 +18,7 @@ public class StringUtils {
     /**
      * Compare two Strings lexicographically
      * Mirrors {@link org.apache.commons.lang3.StringUtils#compare(String, String)}. Use this version when there is a
-     *  hint that the Apache lib might not be provided by the system.
+     * hint that the Apache lib might not be provided by the system.
      * @param s1 the String to compare from
      * @param s2 the String to compare to
      * @return &lt; 0, 0, &gt; 0, if {@code s1} is respectively less, equal ou greater than {@code s2}
@@ -38,7 +38,7 @@ public class StringUtils {
     /**
      * Compare two Strings lexicographically, ignoring case differences.
      * Mirrors {@link org.apache.commons.lang3.StringUtils#compareIgnoreCase(String, String)}. Use this version when
-     *  there is a hint that the Apache lib might not be provided by the system.
+     * there is a hint that the Apache lib might not be provided by the system.
      * @param s1 the String to compare from
      * @param s2 the String to compare to
      * @return &lt; 0, 0, &gt; 0, if {@code s1} is respectively less, equal ou greater than {@code s2}
@@ -56,7 +56,7 @@ public class StringUtils {
         return s1.compareToIgnoreCase(s2);
     }
 
-    public static String[] mergeStringArrays(String array1[], String array2[]) {
+    public static String[] mergeStringArrays(String[] array1, String[] array2) {
         if (array1 == null || array1.length == 0) {
             return array2;
         }
@@ -105,7 +105,7 @@ public class StringUtils {
                 String trimmed = asploded[i].trim();
                 if (trimmed.length() > 0) {
                     trimmed = trimmed.replace("<br />", "<br>").replace("<br/>", "<br>").replace("<br>\n", "<br>")
-                            .replace("\n", "<br>");
+                                     .replace("\n", "<br>");
                     wrappedHTML.append("<p>");
                     wrappedHTML.append(trimmed);
                     wrappedHTML.append("</p>");
@@ -199,7 +199,8 @@ public class StringUtils {
 
     /*
      * capitalizes the first letter in the passed string - based on Apache commons/lang3/StringUtils
-     * http://svn.apache.org/viewvc/commons/proper/lang/trunk/src/main/java/org/apache/commons/lang3/StringUtils.java?revision=1497829&view=markup
+     * http://svn.apache.org/viewvc/commons/proper/lang/trunk/src/main/java/org/apache/commons/lang3/StringUtils
+     * .java?revision=1497829&view=markup
      */
     public static String capitalize(final String str) {
         int strLen;
@@ -235,12 +236,12 @@ public class StringUtils {
     public static String replaceUnicodeSurrogateBlocksWithHTMLEntities(final String inputString) {
         final int length = inputString.length();
         StringBuilder out = new StringBuilder(); // Used to hold the output.
-        for (int offset = 0; offset < length; ) {
+        for (int offset = 0; offset < length;) {
             final int codepoint = inputString.codePointAt(offset);
             final char current = inputString.charAt(offset);
             if (Character.isHighSurrogate(current) || Character.isLowSurrogate(current)) {
-                if (EmoticonsUtils.wpSmiliesCodePointToText.get(codepoint) != null) {
-                    out.append(EmoticonsUtils.wpSmiliesCodePointToText.get(codepoint));
+                if (EmoticonsUtils.WP_SMILIES_CODE_POINT_TO_TEXT.get(codepoint) != null) {
+                    out.append(EmoticonsUtils.WP_SMILIES_CODE_POINT_TO_TEXT.get(codepoint));
                 } else {
                     final String htmlEscapedChar = "&#x" + Integer.toHexString(codepoint) + ";";
                     out.append(htmlEscapedChar);
@@ -294,12 +295,12 @@ public class StringUtils {
         }
         for (int i = 0; i < in.length(); i++) {
             current = in.charAt(i); // NOTE: No IndexOutOfBoundsException caught here; it should not happen.
-            if ((current == 0x9) ||
-                    (current == 0xA) ||
-                    (current == 0xD) ||
-                    ((current >= 0x20) && (current <= 0xD7FF)) ||
-                    ((current >= 0xE000) && (current <= 0xFFFD)) ||
-                    ((current >= 0x10000) && (current <= 0x10FFFF))) {
+            if ((current == 0x9)
+                || (current == 0xA)
+                || (current == 0xD)
+                || ((current >= 0x20) && (current <= 0xD7FF))
+                || ((current >= 0xE000) && (current <= 0xFFFD))
+                || ((current >= 0x10000) && (current <= 0x10FFFF))) {
                 out.append(current);
             }
         }
@@ -314,8 +315,9 @@ public class StringUtils {
     }
 
     public static int stringToInt(String s, int defaultValue) {
-        if (s == null)
+        if (s == null) {
             return defaultValue;
+        }
         try {
             return Integer.valueOf(s);
         } catch (NumberFormatException e) {
@@ -328,8 +330,9 @@ public class StringUtils {
     }
 
     public static long stringToLong(String s, long defaultValue) {
-        if (s == null)
+        if (s == null) {
             return defaultValue;
+        }
         try {
             return Long.valueOf(s);
         } catch (NumberFormatException e) {
