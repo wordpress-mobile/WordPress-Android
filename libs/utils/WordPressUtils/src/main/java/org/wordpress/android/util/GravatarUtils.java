@@ -8,7 +8,7 @@ import android.text.TextUtils;
 public class GravatarUtils {
     // by default tell gravatar to respond to non-existent images with a 404 - this means
     // it's up to the caller to catch the 404 and provide a suitable default image
-    private static final DefaultImage DEFAULT_GRAVATAR = DefaultImage.STATUS_404;
+    private static final DefaultImage DEFAULT_GRAVATAR = DefaultImage.MYSTERY_MAN;
 
     private enum DefaultImage {
         MYSTERY_MAN,
