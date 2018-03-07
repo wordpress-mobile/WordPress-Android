@@ -144,11 +144,11 @@ public class EditPostPreviewFragment extends Fragment {
                         getActivity(),
                         mPost,
                         Math.min(mTextView.getWidth(), mTextView.getHeight())
-                );
+                                                  );
             } else {
-                String htmlText = "<?xml version=\"1.0\" encoding=\"UTF-8\" ?><html><head><link rel=\"stylesheet\" " +
-                        "type=\"text/css\" href=\"webview.css\" /></head><body><div " +
-                        "id=\"container\">%s</div></body></html>";
+                String htmlText = "<?xml version=\"1.0\" encoding=\"UTF-8\" ?><html><head><link rel=\"stylesheet\" "
+                                  + "type=\"text/css\" href=\"webview.css\" /></head><body><div "
+                                  + "id=\"container\">%s</div></body></html>";
                 htmlText = String.format(htmlText, StringUtils.addPTags(postContent));
                 contentSpannable = new SpannableString(htmlText);
             }
@@ -168,7 +168,7 @@ public class EditPostPreviewFragment extends Fragment {
                     mWebView.setVisibility(View.VISIBLE);
 
                     mWebView.loadDataWithBaseURL("file:///android_asset/", spanned.toString(),
-                            "text/html", "utf-8", null);
+                                                 "text/html", "utf-8", null);
                 }
             }
 

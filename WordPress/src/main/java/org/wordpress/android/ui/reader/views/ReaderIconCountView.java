@@ -23,7 +23,7 @@ public class ReaderIconCountView extends LinearLayout {
     private static final int ICON_LIKE = 0;
     private static final int ICON_COMMENT = 1;
 
-    public ReaderIconCountView(Context context){
+    public ReaderIconCountView(Context context) {
         super(context);
         initView(context, null);
     }
@@ -52,14 +52,14 @@ public class ReaderIconCountView extends LinearLayout {
             try {
                 mIconType = a.getInteger(R.styleable.ReaderIconCountView_readerIcon, ICON_LIKE);
                 switch (mIconType) {
-                    case ICON_LIKE :
+                    case ICON_LIKE:
                         mImageView.setImageDrawable(ContextCompat.getDrawable(context, R.drawable.reader_button_like));
                         break;
-                    case ICON_COMMENT :
-                        mImageView.setImageDrawable(ContextCompat.getDrawable(context, R.drawable.reader_button_comment));
+                    case ICON_COMMENT:
+                        mImageView
+                                .setImageDrawable(ContextCompat.getDrawable(context, R.drawable.reader_button_comment));
                         break;
                 }
-
             } finally {
                 a.recycle();
             }

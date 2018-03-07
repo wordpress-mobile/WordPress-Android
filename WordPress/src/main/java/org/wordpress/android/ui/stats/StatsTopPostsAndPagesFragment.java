@@ -22,12 +22,14 @@ public class StatsTopPostsAndPagesFragment extends StatsAbstractListFragment {
     protected boolean hasDataAvailable() {
         return mTopPostsAndPagesModel != null;
     }
+
     @Override
     protected void saveStatsData(Bundle outState) {
         if (hasDataAvailable()) {
             outState.putSerializable(ARG_REST_RESPONSE, mTopPostsAndPagesModel);
         }
     }
+
     @Override
     protected void restoreStatsData(Bundle savedInstanceState) {
         if (savedInstanceState.containsKey(ARG_REST_RESPONSE)) {

@@ -15,15 +15,14 @@ import java.util.Date;
  * search suggestion table - populated by user's reader search history
  */
 public class ReaderSearchTable {
-
-    public static final String COL_ID    = "_id";
+    public static final String COL_ID = "_id";
     public static final String COL_QUERY = "query_string";
 
     protected static void createTables(SQLiteDatabase db) {
         db.execSQL("CREATE TABLE tbl_search_suggestions ("
-                 + "    _id            INTEGER PRIMARY KEY AUTOINCREMENT,"
-                 + "	query_string   TEXT NOT NULL COLLATE NOCASE,"
-                 + "    date_used      TEXT)");
+                   + " _id INTEGER PRIMARY KEY AUTOINCREMENT,"
+                   + " query_string TEXT NOT NULL COLLATE NOCASE,"
+                   + " date_used TEXT)");
         db.execSQL("CREATE UNIQUE INDEX idx_search_suggestions_query ON tbl_search_suggestions(query_string)");
     }
 
@@ -49,7 +48,7 @@ public class ReaderSearchTable {
     }
 
     public static void deleteQueryString(@NonNull String query) {
-        String[]args = new String[]{query};
+        String[] args = new String[]{query};
         ReaderDatabase.getWritableDb().delete("tbl_search_suggestions", "query_string=?", args);
     }
 
@@ -59,6 +58,7 @@ public class ReaderSearchTable {
 
     /**
      * Returns a cursor containing query strings previously typed by the user
+     *
      * @param filter - filters the list using LIKE syntax (pass null for no filter)
      * @param max - limit the list to this many items (pass zero for no limit)
      */

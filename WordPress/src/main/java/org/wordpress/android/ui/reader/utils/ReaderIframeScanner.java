@@ -6,12 +6,11 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class ReaderIframeScanner {
-
     private final String mContent;
 
     private static final Pattern IFRAME_TAG_PATTERN = Pattern.compile(
-            "<iframe(\\s+.*?)(?:src\\s*=\\s*(?:'|\")(.*?)(?:'|\"))(.*?)>",
-            Pattern.DOTALL| Pattern.CASE_INSENSITIVE);
+            "<iframe(\\s+.*?) (?:src\\s*=\\s*(?:'|\") (.*?) (?:'|\")) (.*?)>",
+            Pattern.DOTALL | Pattern.CASE_INSENSITIVE);
 
     public ReaderIframeScanner(String contentOfPost) {
         mContent = contentOfPost;

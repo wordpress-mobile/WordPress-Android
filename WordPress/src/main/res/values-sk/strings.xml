@@ -403,7 +403,7 @@ Language: sk
 	<string name="me_btn_login_logout">Prihlásiť/Odhlásiť</string>
 	<string name="me_btn_support">Pomoc a podpora</string>
 	<string name="site_picker_cant_hide_current_site">\"%s\" nebola skrytá, pretože to je aktuálna webová stránka</string>
-	<string name="site_picker_create_dotcom">Vytvoriť webovú stránku WordPress.com</string>
+	<string name="site_picker_create_wpcom">Vytvoriť webovú stránku WordPress.com</string>
 	<string name="site_picker_add_site">Pridať webovú stránku</string>
 	<string name="site_picker_edit_visibility">Zobraziť/skryť webové stránky</string>
 	<string name="site_picker_add_self_hosted">Pridať webovú stránku s vlastným hostingom</string>

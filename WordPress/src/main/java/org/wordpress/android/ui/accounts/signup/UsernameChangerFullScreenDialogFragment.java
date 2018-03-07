@@ -60,7 +60,7 @@ public class UsernameChangerFullScreenDialogFragment extends Fragment implements
     protected TextView mHeaderView;
     protected UsernameChangerRecyclerViewAdapter mUsernamesAdapter;
     protected boolean mIsShowingDismissDialog;
-    protected boolean mShouldWatchText;  // Flag handling text watcher to avoid network call on device rotation.
+    protected boolean mShouldWatchText; // Flag handling text watcher to avoid network call on device rotation.
     protected int mUsernameSelectedIndex;
 
     public static final String EXTRA_DISPLAY_NAME = "EXTRA_DISPLAY_NAME";
@@ -91,7 +91,8 @@ public class UsernameChangerFullScreenDialogFragment extends Fragment implements
 
     @Nullable
     @Override
-    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container,
+                             @Nullable Bundle savedInstanceState) {
         ViewGroup rootView = (ViewGroup) inflater.inflate(R.layout.username_changer_dialog_fragment, container, false);
 
         mDisplayName = getArguments().getString(EXTRA_DISPLAY_NAME);
@@ -233,8 +234,8 @@ public class UsernameChangerFullScreenDialogFragment extends Fragment implements
                         "<b>",
                         display,
                         "</b>"
-                )
-        );
+                             )
+                            );
     }
 
     protected String getUsernameOrSelected() {
@@ -285,19 +286,19 @@ public class UsernameChangerFullScreenDialogFragment extends Fragment implements
         new AlertDialog.Builder(getContext())
                 .setMessage(R.string.username_changer_dismiss_message)
                 .setPositiveButton(R.string.username_changer_dismiss_button_positive,
-                        new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
-                                mDialogController.dismiss();
-                            }
-                        })
+                                   new DialogInterface.OnClickListener() {
+                                       @Override
+                                       public void onClick(DialogInterface dialog, int which) {
+                                           mDialogController.dismiss();
+                                       }
+                                   })
                 .setNegativeButton(android.R.string.cancel,
-                        new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
-                                mIsShowingDismissDialog = false;
-                            }
-                        })
+                                   new DialogInterface.OnClickListener() {
+                                       @Override
+                                       public void onClick(DialogInterface dialog, int which) {
+                                           mIsShowingDismissDialog = false;
+                                       }
+                                   })
                 .show();
     }
 
@@ -325,15 +326,15 @@ public class UsernameChangerFullScreenDialogFragment extends Fragment implements
             showErrorDialog(new SpannedString(getString(R.string.username_changer_error_generic)));
         } else if (event.suggestions.size() == 0) {
             showErrorDialog(
-                Html.fromHtml(
-                    String.format(
-                        getString(R.string.username_changer_error_none),
-                        "<b>",
-                        mUsernameSuggestionInput,
-                        "</b>"
-                    )
-                )
-            );
+                    Html.fromHtml(
+                            String.format(
+                                    getString(R.string.username_changer_error_none),
+                                    "<b>",
+                                    mUsernameSuggestionInput,
+                                    "</b>"
+                                         )
+                                 )
+                           );
         } else {
             populateUsernameSuggestions(event.suggestions);
         }

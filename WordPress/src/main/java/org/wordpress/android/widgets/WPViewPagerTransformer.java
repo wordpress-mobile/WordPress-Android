@@ -18,6 +18,7 @@ public class WPViewPagerTransformer implements ViewPager.PageTransformer {
         ZOOM,
         SLIDE_OVER
     }
+
     private final TransformType mTransformType;
 
     public WPViewPagerTransformer(TransformType transformType) {
@@ -76,8 +77,8 @@ public class WPViewPagerTransformer implements ViewPager.PageTransformer {
             case ZOOM:
                 if (position >= -1 && position <= 1) {
                     scale = Math.max(MIN_SCALE_ZOOM, 1 - Math.abs(position));
-                    alpha = MIN_ALPHA_ZOOM +
-                            (scale - MIN_SCALE_ZOOM) / (1 - MIN_SCALE_ZOOM) * (1 - MIN_ALPHA_ZOOM);
+                    alpha = MIN_ALPHA_ZOOM
+                            + (scale - MIN_SCALE_ZOOM) / (1 - MIN_SCALE_ZOOM) * (1 - MIN_ALPHA_ZOOM);
                     float vMargin = page.getHeight() * (1 - scale) / 2;
                     float hMargin = page.getWidth() * (1 - scale) / 2;
                     if (position < 0) {

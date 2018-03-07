@@ -45,13 +45,13 @@ public class ReleaseNotesActivity extends WebViewActivity {
         super.onCreate(savedInstanceState);
         ((WordPress) getApplication()).component().inject(this);
         mWebView.setWebViewClient(
-            new WebViewClient() {
-                @Override
-                public void onPageFinished(WebView view, String url) {
-                    ReleaseNotesActivity.this.setTitle(view.getTitle());
+                new WebViewClient() {
+                    @Override
+                    public void onPageFinished(WebView view, String url) {
+                        ReleaseNotesActivity.this.setTitle(view.getTitle());
+                    }
                 }
-            }
-        );
+                                 );
     }
 
     @Override
@@ -79,7 +79,7 @@ public class ReleaseNotesActivity extends WebViewActivity {
             case R.id.menu_bug:
                 HelpshiftHelper.Tag origin = (HelpshiftHelper.Tag) getIntent().getSerializableExtra(KEY_HELPSHIFT_TAG);
                 HelpshiftHelper.getInstance().showConversation(ReleaseNotesActivity.this, mSiteStore, origin,
-                        mAccountStore.getAccount().getUserName());
+                                                               mAccountStore.getAccount().getUserName());
                 return true;
         }
 

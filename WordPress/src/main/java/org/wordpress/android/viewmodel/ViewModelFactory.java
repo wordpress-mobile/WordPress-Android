@@ -34,7 +34,7 @@ public class ViewModelFactory implements ViewModelProvider.Factory {
         }
         if (creator == null) {
             throw new IllegalArgumentException("View model not found [" + viewModelClass
-                    + "]. Have you added corresponding method into the ViewModelModule.");
+                                               + "]. Have you added corresponding method into the ViewModelModule.");
         }
         return (T) creator.get();
     }

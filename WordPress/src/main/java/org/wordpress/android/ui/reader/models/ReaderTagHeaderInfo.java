@@ -9,61 +9,61 @@ import org.wordpress.android.util.StringUtils;
  */
 
 public class ReaderTagHeaderInfo {
-    private String imageUrl;
-    private long sourceBlogId;
-    private long sourcePostId;
-    private String authorName;
-    private String blogName;
+    private String mImageUrl;
+    private long mSourceBlogId;
+    private long mSourcePostId;
+    private String mAuthorName;
+    private String mBlogName;
 
     public String getImageUrl() {
-        return StringUtils.notNullStr(imageUrl);
+        return StringUtils.notNullStr(mImageUrl);
     }
 
     public void setImageUrl(String imageUrl) {
-        this.imageUrl = StringUtils.notNullStr(imageUrl);
+        mImageUrl = StringUtils.notNullStr(imageUrl);
     }
 
     public String getAuthorName() {
-        return StringUtils.notNullStr(authorName);
+        return StringUtils.notNullStr(mAuthorName);
     }
 
     public void setAuthorName(String authorName) {
-        this.authorName = StringUtils.notNullStr(authorName);
+        mAuthorName = StringUtils.notNullStr(authorName);
     }
 
     public String getBlogName() {
-        return StringUtils.notNullStr(blogName);
+        return StringUtils.notNullStr(mBlogName);
     }
 
     public void setBlogName(String blogName) {
-        this.blogName = StringUtils.notNullStr(blogName);
+        mBlogName = StringUtils.notNullStr(blogName);
     }
 
     public long getSourceBlogId() {
-        return sourceBlogId;
+        return mSourceBlogId;
     }
 
     public void setSourceBlogId(long blogId) {
-        this.sourceBlogId = blogId;
+        mSourceBlogId = blogId;
     }
 
     public long getSourcePostId() {
-        return sourcePostId;
+        return mSourcePostId;
     }
 
     public void setSourcePostId(long postId) {
-        this.sourcePostId = postId;
+        mSourcePostId = postId;
     }
 
     public boolean hasAuthorName() {
-        return !TextUtils.isEmpty(authorName);
+        return !TextUtils.isEmpty(mAuthorName);
     }
 
     public boolean hasBlogName() {
-        return !TextUtils.isEmpty(blogName);
+        return !TextUtils.isEmpty(mBlogName);
     }
 
     public boolean hasSourcePost() {
-        return sourceBlogId != 0 && sourcePostId != 0;
+        return mSourceBlogId != 0 && mSourcePostId != 0;
     }
 }

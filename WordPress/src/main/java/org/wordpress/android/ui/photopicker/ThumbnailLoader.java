@@ -16,7 +16,6 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.ThreadPoolExecutor;
 
 class ThumbnailLoader {
-
     private final Context mContext;
     private final ThreadPoolExecutor mExecutor;
     private final Handler mHandler;
@@ -112,12 +111,10 @@ class ThumbnailLoader {
                                     mWeakImageView.get(), View.ALPHA, 0.25f, 1f);
                             alpha.setDuration(FADE_TRANSITION);
                             alpha.start();
-
                         }
                     }
                 }
             });
         }
     }
-
 }

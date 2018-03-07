@@ -6,6 +6,7 @@ import android.util.AttributeSet;
 
 public class NestedScrollViewExt extends NestedScrollView {
     private ScrollViewListener mScrollViewListener = null;
+
     public NestedScrollViewExt(Context context) {
         super(context);
     }

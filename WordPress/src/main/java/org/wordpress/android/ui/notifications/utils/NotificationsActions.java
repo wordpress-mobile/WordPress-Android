@@ -18,12 +18,13 @@ import java.util.List;
 import de.greenrobot.event.EventBus;
 
 public class NotificationsActions {
-
     // Get the latest note from the local DB and send its timestamp to the server.
     // The server will discard the value if we've already seen a most recent note elsewhere or on this device.
     public static void updateNotesSeenTimestamp() {
         ArrayList<Note> latestNotes = NotificationsTable.getLatestNotes(1);
-        if (latestNotes.size() == 0) return;
+        if (latestNotes.size() == 0) {
+            return;
+        }
         updateSeenTimestamp(latestNotes.get(0));
     }
 
@@ -44,7 +45,7 @@ public class NotificationsActions {
                         AppLog.e(AppLog.T.NOTIFS, "Could not mark notifications/seen' value via API.", error);
                     }
                 }
-        );
+                                                                );
     }
 
     public static List<Note> parseNotes(JSONObject response) throws JSONException {
@@ -80,26 +81,29 @@ public class NotificationsActions {
         }
     }
 
-    public static void downloadNoteAndUpdateDB(final String noteID, final RestRequest.Listener respoListener, final RestRequest.ErrorListener errorListener) {
+    public static void downloadNoteAndUpdateDB(final String noteID, final RestRequest.Listener respoListener,
+                                               final RestRequest.ErrorListener errorListener) {
         WordPress.getRestClientUtilsV1_1().getNotification(
                 noteID,
                 new RestRequest.Listener() {
                     @Override
                     public void onResponse(JSONObject response) {
                         if (response == null) {
-                            //Not sure this could ever happen, but make sure we're catching all response types
+                            // Not sure this could ever happen, but make sure we're catching all response types
                             AppLog.w(AppLog.T.NOTIFS, "Success, but did not receive any notes");
                         }
                         try {
                             List<Note> notes = NotificationsActions.parseNotes(response);
                             if (notes.size() > 0) {
                                 NotificationsTable.saveNote(notes.get(0));
-                                EventBus.getDefault().post(new NotificationEvents.NotificationsChanged(notes.get(0).isUnread()));
+                                EventBus.getDefault()
+                                        .post(new NotificationEvents.NotificationsChanged(notes.get(0).isUnread()));
                             } else {
                                 AppLog.e(AppLog.T.NOTIFS, "Success, but no note!!!???");
                             }
                         } catch (JSONException e) {
-                            AppLog.e(AppLog.T.NOTIFS, "Success, but can't parse the response for the note_id " + noteID, e);
+                            AppLog.e(AppLog.T.NOTIFS, "Success, but can't parse the response for the note_id " + noteID,
+                                     e);
                         }
                         if (respoListener != null) {
                             respoListener.onResponse(response);
@@ -115,5 +119,4 @@ public class NotificationsActions {
                     }
                 });
     }
-
 }

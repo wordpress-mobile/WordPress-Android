@@ -72,6 +72,7 @@ public class NotificationsUtils {
 
     public interface TwoFactorAuthCallback {
         void onTokenValid(String token, String title, String message);
+
         void onTokenInvalid();
     }
 
@@ -89,8 +90,9 @@ public class NotificationsUtils {
     public static void registerDeviceForPushNotifications(final Context ctx, String token) {
         SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(ctx);
         String uuid = settings.getString(WPCOM_PUSH_DEVICE_UUID, null);
-        if (uuid == null)
+        if (uuid == null) {
             return;
+        }
 
         String deviceName = DeviceUtils.getInstance().getDeviceName(ctx);
         Map<String, String> contentStruct = new HashMap<>();
@@ -108,7 +110,7 @@ public class NotificationsUtils {
                 AppLog.d(T.NOTIFS, "Register token action succeeded");
                 try {
                     String deviceID = jsonObject.getString("ID");
-                    if (deviceID==null) {
+                    if (deviceID == null) {
                         AppLog.e(T.NOTIFS, "Server response is missing of the device_id. Registration skipped!!");
                         return;
                     }
@@ -152,7 +154,7 @@ public class NotificationsUtils {
         };
 
         SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(ctx);
-        String deviceID = settings.getString(WPCOM_PUSH_DEVICE_SERVER_ID, null );
+        String deviceID = settings.getString(WPCOM_PUSH_DEVICE_SERVER_ID, null);
         if (TextUtils.isEmpty(deviceID)) {
             return;
         }
@@ -165,6 +167,7 @@ public class NotificationsUtils {
 
     /**
      * Returns a spannable with formatted content based on WP.com note content 'range' data
+     *
      * @param blockObject the JSON data
      * @param textView the TextView that will display the spannnable
      * @param onNoteBlockTextClickListener - click listener for ClickableSpans in the spannable
@@ -172,8 +175,8 @@ public class NotificationsUtils {
      * @return Spannable string with formatted content
      */
     public static Spannable getSpannableContentForRanges(JSONObject blockObject, TextView textView,
-                                                         final NoteBlock.OnNoteBlockTextClickListener onNoteBlockTextClickListener,
-                                                         boolean isFooter) {
+                                 final NoteBlock.OnNoteBlockTextClickListener onNoteBlockTextClickListener,
+                                 boolean isFooter) {
         if (blockObject == null) {
             return new SpannableStringBuilder();
         }
@@ -196,7 +199,7 @@ public class NotificationsUtils {
                 }
 
                 NoteBlockClickableSpan clickableSpan = new NoteBlockClickableSpan(WordPress.getContext(), rangeObject,
-                        shouldLink, isFooter) {
+                                                                                  shouldLink, isFooter) {
                     @Override
                     public void onClick(View widget) {
                         if (onNoteBlockTextClickListener != null) {
@@ -206,14 +209,16 @@ public class NotificationsUtils {
                 };
 
                 int[] indices = clickableSpan.getIndices();
-                if (indices.length == 2 && indices[0] <= spannableStringBuilder.length() &&
-                        indices[1] <= spannableStringBuilder.length()) {
-                    spannableStringBuilder.setSpan(clickableSpan, indices[0], indices[1], Spanned.SPAN_INCLUSIVE_INCLUSIVE);
+                if (indices.length == 2 && indices[0] <= spannableStringBuilder.length()
+                    && indices[1] <= spannableStringBuilder.length()) {
+                    spannableStringBuilder
+                            .setSpan(clickableSpan, indices[0], indices[1], Spanned.SPAN_INCLUSIVE_INCLUSIVE);
 
                     // Add additional styling if the range wants it
                     if (clickableSpan.getSpanStyle() != Typeface.NORMAL) {
                         StyleSpan styleSpan = new StyleSpan(clickableSpan.getSpanStyle());
-                        spannableStringBuilder.setSpan(styleSpan, indices[0], indices[1], Spanned.SPAN_INCLUSIVE_INCLUSIVE);
+                        spannableStringBuilder
+                                .setSpan(styleSpan, indices[0], indices[1], Spanned.SPAN_INCLUSIVE_INCLUSIVE);
                     }
                 }
             }
@@ -223,7 +228,7 @@ public class NotificationsUtils {
     }
 
     public static int[] getIndicesForRange(JSONObject rangeObject) {
-        int[] indices = new int[]{0,0};
+        int[] indices = new int[]{0, 0};
         if (rangeObject == null) {
             return indices;
         }
@@ -240,8 +245,11 @@ public class NotificationsUtils {
     /**
      * Adds ImageSpans to the passed SpannableStringBuilder
      */
-    private static void addImageSpansForBlockMedia(TextView textView, JSONObject subject, SpannableStringBuilder spannableStringBuilder) {
-        if (textView == null || subject == null || spannableStringBuilder == null) return;
+    private static void addImageSpansForBlockMedia(TextView textView, JSONObject subject,
+                                                   SpannableStringBuilder spannableStringBuilder) {
+        if (textView == null || subject == null || spannableStringBuilder == null) {
+            return;
+        }
 
         Context context = textView.getContext();
         JSONArray mediaArray = subject.optJSONArray("media");
@@ -250,7 +258,7 @@ public class NotificationsUtils {
         }
 
         Drawable loading = context.getResources().getDrawable(
-            org.wordpress.android.editor.R.drawable.legacy_dashicon_format_image_big_grey);
+                org.wordpress.android.editor.R.drawable.legacy_dashicon_format_image_big_grey);
         Drawable failed = context.getResources().getDrawable(R.drawable.ic_notice_grey_500_48dp);
         // Note: notifications_max_image_size seems to be the max size an ImageSpan can handle,
         // otherwise it would load blank white
@@ -293,7 +301,7 @@ public class NotificationsUtils {
                 // Move the image to a new line if needed
                 int previousCharIndex = (startIndex > 0) ? startIndex - 1 : 0;
                 if (!spannableHasCharacterAtIndex(spannableStringBuilder, '\n', previousCharIndex)
-                        || spannableStringBuilder.getSpans(startIndex, startIndex, ImageSpan.class).length > 0) {
+                    || spannableStringBuilder.getSpans(startIndex, startIndex, ImageSpan.class).length > 0) {
                     imagePlaceholder = "\n ";
                 }
 
@@ -301,7 +309,7 @@ public class NotificationsUtils {
 
                 // Add a newline after the image if needed
                 if (!spannableHasCharacterAtIndex(spannableStringBuilder, '\n', startIndex)
-                        && !spannableHasCharacterAtIndex(spannableStringBuilder, '\r', startIndex)) {
+                    && !spannableHasCharacterAtIndex(spannableStringBuilder, '\r', startIndex)) {
                     imagePlaceholder += "\n";
                 }
 
@@ -313,7 +321,7 @@ public class NotificationsUtils {
                         spanIndex,
                         spanIndex + 1,
                         Spannable.SPAN_EXCLUSIVE_EXCLUSIVE
-                );
+                                              );
 
                 // Add an AlignmentSpan to center the image
                 spannableStringBuilder.setSpan(
@@ -321,7 +329,7 @@ public class NotificationsUtils {
                         spanIndex,
                         spanIndex + 1,
                         Spannable.SPAN_EXCLUSIVE_EXCLUSIVE
-                );
+                                              );
 
                 indexAdjustment += imagePlaceholder.length();
             }
@@ -355,10 +363,10 @@ public class NotificationsUtils {
 
 
     public static void showPushAuthAlert(Context context, final String token, String title, String message) {
-        if (context == null ||
-                TextUtils.isEmpty(token) ||
-                TextUtils.isEmpty(title) ||
-                TextUtils.isEmpty(message)) {
+        if (context == null
+            || TextUtils.isEmpty(token)
+            || TextUtils.isEmpty(title)
+            || TextUtils.isEmpty(message)) {
             return;
         }
 
@@ -383,12 +391,13 @@ public class NotificationsUtils {
         dialog.show();
     }
 
-    public static void sendTwoFactorAuthToken(String token){
+    public static void sendTwoFactorAuthToken(String token) {
         // ping the push auth endpoint with the token, wp.com will take care of the rest!
         Map<String, String> tokenMap = new HashMap<>();
         tokenMap.put("action", "authorize_login");
         tokenMap.put("push_token", token);
-        WordPress.getRestClientUtilsV1_1().post(PUSH_AUTH_ENDPOINT, tokenMap, null, null,
+        WordPress.getRestClientUtilsV1_1().post(
+                PUSH_AUTH_ENDPOINT, tokenMap, null, null,
                 new RestRequest.ErrorListener() {
                     @Override
                     public void onErrorResponse(VolleyError error) {
@@ -414,14 +423,15 @@ public class NotificationsUtils {
             try {
                 appOpsClass = Class.forName(AppOpsManager.class.getName());
 
-                Method checkOpNoThrowMethod = appOpsClass.getMethod(CHECK_OP_NO_THROW, Integer.TYPE, Integer.TYPE, String.class);
+                Method checkOpNoThrowMethod =
+                        appOpsClass.getMethod(CHECK_OP_NO_THROW, Integer.TYPE, Integer.TYPE, String.class);
 
                 Field opPostNotificationValue = appOpsClass.getDeclaredField(OP_POST_NOTIFICATION);
                 int value = (int) opPostNotificationValue.get(Integer.class);
 
                 return ((int) checkOpNoThrowMethod.invoke(mAppOps, value, uid, pkg) == AppOpsManager.MODE_ALLOWED);
-            } catch (ClassNotFoundException | NoSuchFieldException | NoSuchMethodException |
-                    IllegalAccessException | InvocationTargetException e) {
+            } catch (ClassNotFoundException | NoSuchFieldException | NoSuchMethodException
+                    | IllegalAccessException | InvocationTargetException e) {
                 AppLog.e(T.NOTIFS, e.getMessage());
             }
         }
@@ -440,7 +450,6 @@ public class NotificationsUtils {
     }
 
     public static Note buildNoteObjectFromBundle(Bundle data) {
-
         if (data == null) {
             AppLog.e(T.NOTIFS, "Bundle is null! Cannot read '" + GCMMessageService.PUSH_ARG_NOTE_ID + "'.");
             return null;
@@ -452,22 +461,24 @@ public class NotificationsUtils {
         note = Note.buildFromBase64EncodedData(noteId, base64FullData);
         if (note == null) {
             // At this point we don't have the note :(
-            AppLog.w(T.NOTIFS, "Cannot build the Note object by using info available in the PN payload. Please see " +
-                    "previous log messages for detailed information about the error.");
+            AppLog.w(T.NOTIFS, "Cannot build the Note object by using info available in the PN payload. Please see "
+                               + "previous log messages for detailed information about the error.");
         }
 
         return note;
     }
 
     public static int findNoteInNoteArray(List<Note> notes, String noteIdToSearchFor) {
-        if (notes == null || TextUtils.isEmpty(noteIdToSearchFor)) return -1;
+        if (notes == null || TextUtils.isEmpty(noteIdToSearchFor)) {
+            return -1;
+        }
 
         for (int i = 0; i < notes.size(); i++) {
             Note note = notes.get(i);
-            if (noteIdToSearchFor.equals(note.getId()))
+            if (noteIdToSearchFor.equals(note.getId())) {
                 return i;
+            }
         }
         return -1;
     }
-
 }

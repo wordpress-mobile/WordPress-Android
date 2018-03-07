@@ -20,7 +20,8 @@ public class PublicizeModel extends BaseStatsModel {
                 JSONObject current = services.getJSONObject(i);
                 String serviceName = current.getString("service");
                 int followers = current.getInt("followers");
-                SingleItemModel currentItem = new SingleItemModel(blogID, null, null, serviceName, followers, null, null);
+                SingleItemModel currentItem =
+                        new SingleItemModel(blogID, null, null, serviceName, followers, null, null);
                 mServices.add(currentItem);
             }
         }

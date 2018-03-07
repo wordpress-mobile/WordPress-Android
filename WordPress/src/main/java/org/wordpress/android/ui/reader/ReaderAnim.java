@@ -10,14 +10,17 @@ import android.view.animation.AccelerateDecelerateInterpolator;
 import org.wordpress.android.util.AniUtils;
 
 public class ReaderAnim {
-
     /*
      * animation when user taps a like button
      */
-    private enum ReaderButton { LIKE_ON, LIKE_OFF}
+    private enum ReaderButton {
+        LIKE_ON, LIKE_OFF
+    }
+
     public static void animateLikeButton(final View target, boolean isAskingToLike) {
         animateButton(target, isAskingToLike ? ReaderButton.LIKE_ON : ReaderButton.LIKE_OFF);
     }
+
     private static void animateButton(final View target, ReaderButton button) {
         if (target == null || button == null) {
             return;
@@ -34,7 +37,8 @@ public class ReaderAnim {
         AnimatorSet set = new AnimatorSet();
 
         switch (button) {
-            case LIKE_ON: case LIKE_OFF:
+            case LIKE_ON:
+            case LIKE_OFF:
                 // rotate like button +/- 72 degrees (72 = 360/5, 5 is the number of points in the star)
                 float endRotate = (button == ReaderButton.LIKE_ON ? 72f : -72f);
                 ObjectAnimator animRotate = ObjectAnimator.ofFloat(target, View.ROTATION, 0f, endRotate);
@@ -58,5 +62,4 @@ public class ReaderAnim {
 
         set.start();
     }
-
 }

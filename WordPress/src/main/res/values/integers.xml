@@ -1,10 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <integer name="themes_grid_num_columns">2</integer>
-    <integer name="visible">0</integer>
-    <integer name="gone">2</integer>
-    <integer name="media_editor_save_button_visibility">@integer/gone</integer>
-    <integer name="isSW600DP">0</integer>
     <integer name="smallest_width_dp">320</integer>
 
     <!-- max #chars user can type when adding a new topic to the reader -->
@@ -15,8 +10,6 @@
     <integer name="max_length_password">254</integer>
 
     <!-- MediaPicker -->
-    <integer name="num_media_columns">2</integer>
-
     <integer name="fab_animation_delay">300</integer>
 
     <!-- Site Settings -->

@@ -22,7 +22,6 @@ import java.util.List;
  * in the menu item array is an integer that matches a specific PostListButton button type
  */
 public class PageMenuAdapter extends BaseAdapter {
-
     private final LayoutInflater mInflater;
     private final List<Integer> mMenuItems = new ArrayList<>();
 
@@ -79,19 +78,19 @@ public class PageMenuAdapter extends BaseAdapter {
         }
 
         int buttonType = mMenuItems.get(position);
-        holder.text.setText(PostListButton.getButtonTextResId(buttonType));
-        holder.icon.setImageResource(PostListButton.getButtonIconResId(buttonType));
+        holder.mText.setText(PostListButton.getButtonTextResId(buttonType));
+        holder.mIcon.setImageResource(PostListButton.getButtonIconResId(buttonType));
 
         return convertView;
     }
 
     class PageMenuHolder {
-        private final TextView text;
-        private final ImageView icon;
+        private final TextView mText;
+        private final ImageView mIcon;
 
         PageMenuHolder(View view) {
-            text = (TextView) view.findViewById(R.id.text);
-            icon = (ImageView) view.findViewById(R.id.image);
+            mText = (TextView) view.findViewById(R.id.text);
+            mIcon = (ImageView) view.findViewById(R.id.image);
         }
     }
 }

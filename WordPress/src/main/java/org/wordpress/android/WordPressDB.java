@@ -30,24 +30,27 @@ public class WordPressDB {
     private static final String THEMES_TABLE = "themes";
 
     // add new table for QuickPress homescreen shortcuts
-    private static final String CREATE_TABLE_QUICKPRESS_SHORTCUTS = "create table if not exists quickpress_shortcuts (id integer primary key autoincrement, accountId text, name text);";
+    private static final String CREATE_TABLE_QUICKPRESS_SHORTCUTS =
+            "create table if not exists quickpress_shortcuts (id integer primary key autoincrement, "
+            + "accountId text, name text);";
     private static final String QUICKPRESS_SHORTCUTS_TABLE = "quickpress_shortcuts";
 
     private static final String DROP_TABLE_PREFIX = "DROP TABLE IF EXISTS ";
 
-    private SQLiteDatabase db;
+    private SQLiteDatabase mDb;
 
+    @SuppressWarnings({"FallThrough"})
     public WordPressDB(Context ctx) {
-        db = ctx.openOrCreateDatabase(DATABASE_NAME, 0, null);
+        mDb = ctx.openOrCreateDatabase(DATABASE_NAME, 0, null);
 
         // Create tables if they don't exist
-        db.execSQL(CREATE_TABLE_QUICKPRESS_SHORTCUTS);
-        SiteSettingsTable.createTable(db);
-        SuggestionTable.createTables(db);
-        NotificationsTable.createTables(db);
+        mDb.execSQL(CREATE_TABLE_QUICKPRESS_SHORTCUTS);
+        SiteSettingsTable.createTable(mDb);
+        SuggestionTable.createTables(mDb);
+        NotificationsTable.createTables(mDb);
 
         // Update tables for new installs and app updates
-        int currentVersion = db.getVersion();
+        int currentVersion = mDb.getVersion();
         boolean isNewInstall = (currentVersion == 0);
 
         if (!isNewInstall && currentVersion != DATABASE_VERSION) {
@@ -97,20 +100,21 @@ public class WordPressDB {
             case 24:
                 currentVersion++;
             case 25:
-                //ver 26 "virtually" remove columns 'lastCommentId' and 'runService' from the DB
-                //SQLite supports a limited subset of ALTER TABLE.
-                //The ALTER TABLE command in SQLite allows the user to rename a table or to add a new column to an existing table.
-                //It is not possible to rename a column, remove a column, or add or remove constraints from a table.
+                // ver 26 "virtually" remove columns 'lastCommentId' and 'runService' from the DB
+                // SQLite supports a limited subset of ALTER TABLE.
+                // The ALTER TABLE command in SQLite allows the user to rename a table or to add a new column to
+                // an existing table. It is not possible to rename a column, remove a column, or add or remove
+                // constraints from a table.
                 currentVersion++;
             case 26:
                 // Drop the notes table, no longer needed with Simperium.
-                db.execSQL(DROP_TABLE_PREFIX + NOTES_TABLE);
+                mDb.execSQL(DROP_TABLE_PREFIX + NOTES_TABLE);
                 currentVersion++;
             case 27:
                 currentVersion++;
             case 28:
                 // Remove WordPress.com credentials
-                // NOPE: removeDotComCredentials();
+                // NOPE: removeWPComCredentials();
                 currentVersion++;
             case 29:
                 currentVersion++;
@@ -149,7 +153,7 @@ public class WordPressDB {
             case 43:
                 currentVersion++;
             case 44:
-                PeopleTable.createTables(db);
+                PeopleTable.createTables(mDb);
                 currentVersion++;
             case 45:
                 currentVersion++;
@@ -158,10 +162,10 @@ public class WordPressDB {
                 AppPrefs.setVisualEditorEnabled(true);
                 currentVersion++;
             case 47:
-                PeopleTable.reset(db);
+                PeopleTable.reset(mDb);
                 currentVersion++;
             case 48:
-                PeopleTable.createViewersTable(db);
+                PeopleTable.createViewersTable(mDb);
                 currentVersion++;
             case 49:
                 // Delete simperium DB since we're removing Simperium from the app.
@@ -184,18 +188,18 @@ public class WordPressDB {
                 // no op - was used for old image optimization settings
                 currentVersion++;
             case 55:
-                SiteSettingsTable.addSharingColumnsToSiteSettingsTable(db);
+                SiteSettingsTable.addSharingColumnsToSiteSettingsTable(mDb);
                 currentVersion++;
             case 56:
                 // no op - was used for old video optimization settings
                 currentVersion++;
             case 57:
                 // Migrate media optimization settings
-                SiteSettingsTable.migrateMediaOptimizeSettings(db);
+                SiteSettingsTable.migrateMediaOptimizeSettings(mDb);
                 currentVersion++;
             case 58:
                 // ThemeStore merged, remove deprecated themes tables
-                db.execSQL(DROP_TABLE_PREFIX + THEMES_TABLE);
+                mDb.execSQL(DROP_TABLE_PREFIX + THEMES_TABLE);
                 currentVersion++;
             case 59:
                 // Enable Aztec for all users
@@ -204,29 +208,29 @@ public class WordPressDB {
                 currentVersion++;
             case 60:
                 // add Start of Week site setting as part of #betterjetpackxp
-                db.execSQL(SiteSettingsModel.ADD_START_OF_WEEK);
+                mDb.execSQL(SiteSettingsModel.ADD_START_OF_WEEK);
                 currentVersion++;
             case 61:
                 // add date & time format site setting as part of #betterjetpackxp
-                db.execSQL(SiteSettingsModel.ADD_TIME_FORMAT);
-                db.execSQL(SiteSettingsModel.ADD_DATE_FORMAT);
+                mDb.execSQL(SiteSettingsModel.ADD_TIME_FORMAT);
+                mDb.execSQL(SiteSettingsModel.ADD_DATE_FORMAT);
                 currentVersion++;
             case 62:
                 // add timezone and posts per page site setting as part of #betterjetpackxp
-                db.execSQL(SiteSettingsModel.ADD_TIMEZONE);
-                db.execSQL(SiteSettingsModel.ADD_POSTS_PER_PAGE);
+                mDb.execSQL(SiteSettingsModel.ADD_TIMEZONE);
+                mDb.execSQL(SiteSettingsModel.ADD_POSTS_PER_PAGE);
                 currentVersion++;
             case 63:
                 // add AMP site setting as part of #betterjetpackxp
-                db.execSQL(SiteSettingsModel.ADD_AMP_SUPPORTED);
-                db.execSQL(SiteSettingsModel.ADD_AMP_ENABLED);
+                mDb.execSQL(SiteSettingsModel.ADD_AMP_SUPPORTED);
+                mDb.execSQL(SiteSettingsModel.ADD_AMP_ENABLED);
                 currentVersion++;
         }
-        db.setVersion(DATABASE_VERSION);
+        mDb.setVersion(DATABASE_VERSION);
     }
 
     public SQLiteDatabase getDatabase() {
-        return db;
+        return mDb;
     }
 
     public static void deleteDatabase(Context ctx) {
@@ -239,7 +243,7 @@ public class WordPressDB {
         values.put("name", name);
         boolean returnValue = false;
         synchronized (this) {
-            returnValue = db.insert(QUICKPRESS_SHORTCUTS_TABLE, null, values) > 0;
+            returnValue = mDb.insert(QUICKPRESS_SHORTCUTS_TABLE, null, values) > 0;
         }
 
         return (returnValue);
@@ -249,8 +253,9 @@ public class WordPressDB {
      * used during development to copy database to SD card so we can access it via DDMS
      */
     protected void copyDatabase() {
-        String copyFrom = db.getPath();
-        String copyTo = WordPress.getContext().getExternalFilesDir(null).getAbsolutePath() + "/" + DATABASE_NAME + ".db";
+        String copyFrom = mDb.getPath();
+        String copyTo =
+                WordPress.getContext().getExternalFilesDir(null).getAbsolutePath() + "/" + DATABASE_NAME + ".db";
 
         try {
             InputStream input = new FileInputStream(copyFrom);
@@ -258,8 +263,9 @@ public class WordPressDB {
 
             byte[] buffer = new byte[1024];
             int length;
-            while ((length = input.read(buffer)) > 0)
+            while ((length = input.read(buffer)) > 0) {
                 output.write(buffer, 0, length);
+            }
 
             output.flush();
             output.close();

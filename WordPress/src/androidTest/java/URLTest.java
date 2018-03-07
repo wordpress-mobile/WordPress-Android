@@ -8,7 +8,8 @@ public class URLTest extends InstrumentationTestCase {
         URL url = null;
         try {
             url = new URL("https://wordpress.com");
-        } catch (MalformedURLException e) {}
+        } catch (MalformedURLException e) {
+        }
         assertNotNull(url);
 
         assertEquals("wordpress.com", url.getHost());
@@ -18,7 +19,8 @@ public class URLTest extends InstrumentationTestCase {
         URL url = null;
         try {
             url = new URL("http://a.com#.b.com/test");
-        } catch (MalformedURLException e) {}
+        } catch (MalformedURLException e) {
+        }
         assertNotNull(url);
 
         assertEquals("a.com", url.getHost());
@@ -28,7 +30,8 @@ public class URLTest extends InstrumentationTestCase {
         URL url = null;
         try {
             url = new URL("https://a.com");
-        } catch (MalformedURLException e) {}
+        } catch (MalformedURLException e) {
+        }
         assertNotNull(url);
 
         assertEquals("a.com", url.getHost());
@@ -38,7 +41,8 @@ public class URLTest extends InstrumentationTestCase {
         URL url = null;
         try {
             url = new URL("https://a.com/test#test");
-        } catch (MalformedURLException e) {}
+        } catch (MalformedURLException e) {
+        }
         assertNotNull(url);
 
         assertEquals("a.com", url.getHost());
@@ -48,7 +52,8 @@ public class URLTest extends InstrumentationTestCase {
         URL url = null;
         try {
             url = new URL("a.com");
-        } catch (MalformedURLException e) {}
+        } catch (MalformedURLException e) {
+        }
 
         assertNull(url);
     }

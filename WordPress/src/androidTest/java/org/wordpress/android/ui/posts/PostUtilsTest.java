@@ -5,10 +5,10 @@ import android.test.AndroidTestCase;
 public class PostUtilsTest extends AndroidTestCase {
     public void testCollapseShortcodes() {
         String postContent = "Text before first gallery [gallery number=\"one\"]"
-                + " text between galleries"
-                + " [gallery number=\"two\"]"
-                + " text after second gallery"
-                + " [unknown shortcode].";
+                             + " text between galleries"
+                             + " [gallery number=\"two\"]"
+                             + " text after second gallery"
+                             + " [unknown shortcode].";
         String collapsedContent = PostUtils.collapseShortcodes(postContent);
 
         // make sure [gallery] now exists and [gallery number] does not
