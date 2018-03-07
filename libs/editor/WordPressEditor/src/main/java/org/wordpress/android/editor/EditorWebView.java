@@ -8,7 +8,6 @@ import android.util.AttributeSet;
 import org.wordpress.android.util.AppLog;
 
 public class EditorWebView extends EditorWebViewAbstract {
-
     public EditorWebView(Context context, AttributeSet attrs) {
         super(context, attrs);
     }

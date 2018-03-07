@@ -51,10 +51,10 @@ public class ZssEditorTest extends ActivityInstrumentationTestCase2<MockActivity
             htmlEditor = htmlEditor.replace("%%TITLE%%", getActivity().getString(R.string.visual_editor));
             htmlEditor = htmlEditor.replace("%%ANDROID_API_LEVEL%%", String.valueOf(Build.VERSION.SDK_INT));
             htmlEditor = htmlEditor.replace("%%LOCALIZED_STRING_INIT%%",
-                    "nativeState.localizedStringEdit = '" + getActivity().getString(R.string.edit) + "';\n" +
-                    "nativeState.localizedStringUploading = '" + getActivity().getString(R.string.uploading) + "';\n" +
-                    "nativeState.localizedStringUploadingGallery = '" +
-                            getActivity().getString(R.string.uploading_gallery_placeholder) + "';\n");
+                    "nativeState.localizedStringEdit = '" + getActivity().getString(R.string.edit) + "';\n"
+                    + "nativeState.localizedStringUploading = '" + getActivity().getString(R.string.uploading) + "';\n"
+                    + "nativeState.localizedStringUploadingGallery = '"
+                            + getActivity().getString(R.string.uploading_gallery_placeholder) + "';\n");
         }
 
         final String finalHtmlEditor = htmlEditor;
@@ -66,7 +66,7 @@ public class ZssEditorTest extends ActivityInstrumentationTestCase2<MockActivity
                 if (Build.VERSION.SDK_INT < Build.VERSION_CODES.JELLY_BEAN_MR1) {
                     mWebView.setJsCallbackReceiver(new MockJsCallbackReceiver(new EditorFragmentForTests()));
                 } else {
-                    //noinspection AddJavascriptInterface
+                    // noinspection AddJavascriptInterface
                     mWebView.addJavascriptInterface(new MockJsCallbackReceiver(new EditorFragmentForTests()),
                             JS_CALLBACK_HANDLER);
                 }
@@ -98,7 +98,7 @@ public class ZssEditorTest extends ActivityInstrumentationTestCase2<MockActivity
     }
 
     private class MockJsCallbackReceiver extends JsCallbackReceiver {
-        public MockJsCallbackReceiver(EditorFragmentAbstract editorFragmentAbstract) {
+        MockJsCallbackReceiver(EditorFragmentAbstract editorFragmentAbstract) {
             super(editorFragmentAbstract);
         }
 
@@ -110,7 +110,7 @@ public class ZssEditorTest extends ActivityInstrumentationTestCase2<MockActivity
             }
 
             // Handle callbacks and count down latches according to the currently running test
-            switch(mTestMethod) {
+            switch (mTestMethod) {
                 case INIT:
                     if (callbackId.equals("callback-dom-loaded")) {
                         mCallbackSet.add(callbackId + ":");

@@ -12,7 +12,6 @@ import org.wordpress.android.util.StringUtils;
 import static org.wordpress.android.editor.EditorFragmentAbstract.ATTR_ALIGN;
 
 public class EditorImageMetaData implements Parcelable {
-
     public static final String ARG_EDITOR_IMAGE_METADATA = "editor_image_metadata";
 
     @SerializedName("align")
@@ -294,7 +293,8 @@ public class EditorImageMetaData implements Parcelable {
     }
 
     @SuppressWarnings("unused")
-    public static final Parcelable.Creator<EditorImageMetaData> CREATOR = new Parcelable.Creator<EditorImageMetaData>() {
+    public static final Parcelable.Creator<EditorImageMetaData> CREATOR =
+            new Parcelable.Creator<EditorImageMetaData>() {
         @Override
         public EditorImageMetaData createFromParcel(Parcel in) {
             return new EditorImageMetaData(in);
