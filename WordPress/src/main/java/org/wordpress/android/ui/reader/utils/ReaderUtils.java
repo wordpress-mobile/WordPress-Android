@@ -91,7 +91,8 @@ public class ReaderUtils {
                     return context.getString(R.string.reader_likes_you_and_one);
                 default:
                     String youAndMultiLikes = context.getString(R.string.reader_likes_you_and_multi);
-                    return String.format(youAndMultiLikes, numLikes - 1);
+                    return String.format(
+                            LocaleManager.getSafeLocale(context), youAndMultiLikes, numLikes - 1);
             }
         } else {
             if (numLikes == 1) {
