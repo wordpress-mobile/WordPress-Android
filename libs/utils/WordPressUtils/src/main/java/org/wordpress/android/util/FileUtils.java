@@ -9,11 +9,11 @@ public class FileUtils {
      * Returns the length of the file denoted by this abstract pathname.
      * The return value is unspecified if this pathname denotes a directory.
      *
-     * @return  The length, in bytes, of the file denoted by this abstract
-     *          pathname, or <code>-1L</code> if the file does not exist, or an
-     *          exception is thrown accessing the file.
-     *          Some operating systems may return <code>0L</code> for pathnames
-     *          denoting system-dependent entities such as devices or pipes.
+     * @return The length, in bytes, of the file denoted by this abstract
+     * pathname, or <code>-1L</code> if the file does not exist, or an
+     * exception is thrown accessing the file.
+     * Some operating systems may return <code>0L</code> for pathnames
+     * denoting system-dependent entities such as devices or pipes.
      */
     public static long length(String path) {
         // File not found
@@ -32,7 +32,8 @@ public class FileUtils {
     }
 
     /**
-     * Given the full file path, or the filename with extension (i.e. my-picture.jpg), returns the filename part only (my-picture).
+     * Given the full file path, or the filename with extension (i.e. my-picture.jpg), returns the filename part only
+     * (my-picture).
      *
      * @param filePath The path to the file or the full filename
      * @return filename part only or null

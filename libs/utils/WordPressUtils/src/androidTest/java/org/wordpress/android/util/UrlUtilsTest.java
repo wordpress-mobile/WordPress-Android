@@ -102,7 +102,8 @@ public class UrlUtilsTest extends InstrumentationTestCase {
         URL url = null;
         try {
             url = new URL(address);
-        } catch (MalformedURLException e) {}
+        } catch (MalformedURLException e) {
+        }
         return url;
     }
 }
