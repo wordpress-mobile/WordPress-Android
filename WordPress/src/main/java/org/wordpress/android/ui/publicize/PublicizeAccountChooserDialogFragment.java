@@ -44,6 +44,7 @@ public class PublicizeAccountChooserDialogFragment extends DialogFragment
         configureConnectionName();
 
         LayoutInflater inflater = getActivity().getLayoutInflater();
+        //noinspection InflateParams
         View view = inflater.inflate(R.layout.publicize_account_chooser_dialog, null);
 
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
