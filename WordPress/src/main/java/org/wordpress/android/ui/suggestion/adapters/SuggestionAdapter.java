@@ -118,7 +118,8 @@ public class SuggestionAdapter extends BaseAdapter implements Filterable {
                     String lowerCaseConstraint = constraint.toString().toLowerCase(Locale.getDefault());
                     if (suggestion.getUserLogin().toLowerCase(Locale.ROOT).startsWith(lowerCaseConstraint)
                         || suggestion.getDisplayName().toLowerCase(Locale.getDefault()).startsWith(lowerCaseConstraint)
-                        || suggestion.getDisplayName().toLowerCase(Locale.getDefault()).contains(" " + lowerCaseConstraint)) {
+                        || suggestion.getDisplayName().toLowerCase(Locale.getDefault())
+                                     .contains(" " + lowerCaseConstraint)) {
                         nSuggestionList.add(suggestion);
                     }
                 }

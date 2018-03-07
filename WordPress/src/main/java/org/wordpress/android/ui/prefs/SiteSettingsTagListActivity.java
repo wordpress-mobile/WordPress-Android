@@ -445,7 +445,8 @@ public class SiteSettingsTagListActivity extends AppCompatActivity
                 mFilteredTags.addAll(mAllTags);
             } else {
                 for (TermModel tag : mAllTags) {
-                    if (tag.getName().toLowerCase(Locale.getDefault()).contains(text.toLowerCase(Locale.getDefault()))) {
+                    if (tag.getName().toLowerCase(Locale.getDefault())
+                           .contains(text.toLowerCase(Locale.getDefault()))) {
                         mFilteredTags.add(tag);
                     }
                 }

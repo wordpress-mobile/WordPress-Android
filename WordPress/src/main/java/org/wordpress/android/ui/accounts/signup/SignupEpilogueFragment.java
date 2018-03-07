@@ -485,8 +485,6 @@ public class SignupEpilogueFragment extends LoginBaseFormFragment<SignupEpilogue
      * @return {@link String} to be the display name
      */
     private String createDisplayNameFromEmail() {
-
-
         String username = mEmailAddress.split("@")[0].replaceAll("[^A-Za-z/.]", "");
         String[] array = username.split("\\.");
         StringBuilder builder = new StringBuilder();

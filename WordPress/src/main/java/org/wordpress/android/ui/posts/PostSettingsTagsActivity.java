@@ -257,7 +257,8 @@ public class PostSettingsTagsActivity extends AppCompatActivity implements TextW
                         filteredTags.addAll(allTags);
                     } else {
                         for (TermModel tag : allTags) {
-                            if (tag.getName().toLowerCase(Locale.getDefault()).contains(text.toLowerCase(Locale.getDefault()))) {
+                            if (tag.getName().toLowerCase(Locale.getDefault())
+                                   .contains(text.toLowerCase(Locale.getDefault()))) {
                                 filteredTags.add(tag);
                             }
                         }

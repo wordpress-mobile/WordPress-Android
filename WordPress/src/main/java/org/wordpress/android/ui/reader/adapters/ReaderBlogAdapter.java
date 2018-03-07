@@ -223,7 +223,8 @@ public class ReaderBlogAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                         for (ReaderBlog blog : allFollowedBlogs) {
                             if (blog.getName().toLowerCase(Locale.getDefault()).contains(query)) {
                                 mTmpFollowedBlogs.add(blog);
-                            } else if (UrlUtils.getHost(blog.getUrl()).toLowerCase(Locale.getDefault()).contains(query)) {
+                            } else if (UrlUtils.getHost(blog.getUrl()).toLowerCase(Locale.getDefault())
+                                               .contains(query)) {
                                 mTmpFollowedBlogs.add(blog);
                             }
                         }
