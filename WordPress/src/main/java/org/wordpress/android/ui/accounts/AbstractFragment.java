@@ -62,7 +62,7 @@ public abstract class AbstractFragment extends Fragment {
 
     protected void lowerCaseEditable(Editable editable) {
         // Convert editable content to lowercase
-        String lowerCase = editable.toString().toLowerCase(Locale.getDefault());
+        String lowerCase = editable.toString().toLowerCase(Locale.ROOT);
         if (!lowerCase.equals(editable.toString())) {
             editable.replace(0, editable.length(), lowerCase);
         }
