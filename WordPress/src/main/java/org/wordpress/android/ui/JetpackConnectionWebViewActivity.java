@@ -144,7 +144,6 @@ public class JetpackConnectionWebViewActivity extends WPWebViewActivity
         Intent loginIntent = new Intent(this, LoginActivity.class);
         LoginMode.JETPACK_STATS.putInto(loginIntent);
         startActivityForResult(loginIntent, JETPACK_LOGIN);
-
     }
 
     @Override
@@ -155,6 +154,5 @@ public class JetpackConnectionWebViewActivity extends WPWebViewActivity
         intent.putExtra(SITE, mSite);
         startActivity(intent);
         finish();
-
     }
 }
