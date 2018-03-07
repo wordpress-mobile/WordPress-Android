@@ -12,6 +12,8 @@ import java.net.URLDecoder;
 
 class JetpackConnectionWebViewClient extends WebViewClient {
     interface JetpackConnectionWebViewClientListener {
+        void onRedirectPageChanged(String redirectPage);
+        void onRequiresWPComLogin(WebView webView);
         void onRequiresJetpackLogin();
         void onJetpackSuccessfullyConnected(Uri uri);
     }
@@ -28,16 +30,10 @@ class JetpackConnectionWebViewClient extends WebViewClient {
 
     private final @NonNull JetpackConnectionWebViewClientListener mListener;
     private final String mSiteUrl;
-    private final String mAuthenticationUrl;
-    private final String mAuthenticationPostData;
-    private String mRedirectPage;
 
-    JetpackConnectionWebViewClient(@NonNull JetpackConnectionWebViewClientListener listener, String siteUrl,
-                                   String authenticationUrl, String authenticationPostData) {
+    JetpackConnectionWebViewClient(@NonNull JetpackConnectionWebViewClientListener listener, String siteUrl) {
         mListener = listener;
         mSiteUrl = siteUrl;
-        mAuthenticationUrl = authenticationUrl;
-        mAuthenticationPostData = authenticationPostData;
     }
 
     @Override
@@ -55,8 +51,7 @@ class JetpackConnectionWebViewClient extends WebViewClient {
                 && loadedPath.contains(LOGIN_PATH)
                 && stringUrl.contains(REDIRECT_PARAMETER)) {
                 extractRedirect(stringUrl);
-                // Login to wp.com from web client
-                view.postUrl(mAuthenticationUrl, mAuthenticationPostData.getBytes());
+                mListener.onRequiresWPComLogin(view);
                 return true;
             } else if (loadedHost.equals(WORDPRESS_COM_HOST)
                        && loadedPath != null
@@ -88,14 +83,6 @@ class JetpackConnectionWebViewClient extends WebViewClient {
         if (redirectUrl.startsWith(JETPACK_PATH)) {
             redirectUrl = WORDPRESS_COM_PREFIX + redirectUrl;
         }
-        mRedirectPage = URLDecoder.decode(redirectUrl, WPWebViewActivity.ENCODING_UTF8);
-    }
-
-    void setRedirectPage(String redirectPage) {
-        mRedirectPage = redirectPage;
-    }
-
-    String getRedirectPage() {
-        return mRedirectPage;
+        mListener.onRedirectPageChanged(URLDecoder.decode(redirectUrl, WPWebViewActivity.ENCODING_UTF8));
     }
 }
