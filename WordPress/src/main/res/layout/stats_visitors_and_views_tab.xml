@@ -2,26 +2,26 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
               xmlns:app="http://schemas.android.com/apk/res-auto"
               xmlns:tools="http://schemas.android.com/tools"
-              android:layout_width="0dp"
               android:layout_height="match_parent"
+              android:layout_width="0dp"
               android:layout_weight="1"
-              android:clickable="true"
+              android:orientation="horizontal"
               android:gravity="center"
-              android:orientation="horizontal">
+              android:clickable="true">
 
     <LinearLayout
         android:id="@+id/stats_visitors_and_views_tab_inner_container"
-        android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="?android:selectableItemBackground"
-        android:gravity="center"
+        android:layout_width="match_parent"
         android:orientation="vertical"
         android:padding="@dimen/margin_medium"
+        android:background="?android:selectableItemBackground"
+        android:gravity="center"
         tools:ignore="UselessParent">
 
         <LinearLayout
-            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_width="wrap_content"
             android:gravity="center"
             android:orientation="horizontal">
 
@@ -29,29 +29,29 @@
                 android:id="@+id/stats_visitors_and_views_tab_icon"
                 android:layout_width="12dp"
                 android:layout_height="12dp"
-                android:layout_marginEnd="3dp"
                 android:layout_marginRight="3dp"
-                app:srcCompat="@drawable/ic_star_white_48dp"/>
+                android:layout_marginEnd="3dp"
+                app:srcCompat="@drawable/ic_star_white_48dp" />
 
             <org.wordpress.android.util.widgets.AutoResizeTextView
                 android:id="@+id/stats_visitors_and_views_tab_label"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:ellipsize="end"
-                android:maxLines="1"
                 android:textColor="@color/grey_dark"
-                android:textSize="@dimen/text_sz_extra_small"/>
+                android:textSize="@dimen/text_sz_extra_small"
+                android:maxLines="1"
+                android:ellipsize="end"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
         </LinearLayout>
 
         <org.wordpress.android.widgets.WPTextView
             android:id="@+id/stats_visitors_and_views_tab_value"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:ellipsize="end"
-            android:maxLines="1"
-            android:paddingBottom="@dimen/margin_extra_small"
-            android:paddingTop="@dimen/margin_small"
             android:textColor="@color/blue_wordpress"
-            android:textSize="@dimen/text_sz_small"/>
+            android:textSize="@dimen/text_sz_small"
+            android:paddingTop="@dimen/margin_small"
+            android:paddingBottom="@dimen/margin_extra_small"
+            android:maxLines="1"
+            android:ellipsize="end"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
     </LinearLayout>
 </LinearLayout>
