@@ -49,6 +49,9 @@ public class StockPhotoPickerActivity extends AppCompatActivity implements Searc
     private RecyclerView mRecycler;
     private StockPhotoAdapter mAdapter;
 
+    private ViewGroup mSelectionBar;
+    private TextView mTextInsert;
+
     private SearchView mSearchView;
     private String mSearchQuery;
     private final Handler mHandler = new Handler();
@@ -86,6 +89,14 @@ public class StockPhotoPickerActivity extends AppCompatActivity implements Searc
         mAdapter = new StockPhotoAdapter();
         mRecycler.setAdapter(mAdapter);
 
+        mSelectionBar = findViewById(R.id.container_selection_bar);
+        mTextInsert = findViewById(R.id.text_insert);
+        findViewById(R.id.text_clear).setOnClickListener(new View.OnClickListener() {
+            @Override public void onClick(View v) {
+                mAdapter.clearSelection();
+            }
+        });
+
         setupObserver();
 
         if (savedInstanceState == null) {
@@ -100,6 +111,28 @@ public class StockPhotoPickerActivity extends AppCompatActivity implements Searc
                     mAdapter.setSelectedItems(selectedItems);
                 }
             }
+        }
+    }
+
+    private void showSelectionBar() {
+        if (mSelectionBar.getVisibility() != View.VISIBLE) {
+            AniUtils.animateBottomBar(mSelectionBar, true);
+        }
+    }
+
+    private void hideSelectionBar() {
+        if (mSelectionBar.getVisibility() == View.VISIBLE) {
+            AniUtils.animateBottomBar(mSelectionBar, false);
+        }
+    }
+
+    private void notifySelectionCountChanged() {
+        int numSelected = mAdapter.getSelectionCount();
+        if (numSelected > 0) {
+            mTextInsert.setText(getString(R.string.insert) + " " + Integer.toString(numSelected));
+            showSelectionBar();
+        } else {
+            hideSelectionBar();
         }
     }
 
@@ -359,6 +392,7 @@ public class StockPhotoPickerActivity extends AppCompatActivity implements Searc
 
             boolean isSelected = isItemSelected(position);
             setItemSelected(holder, position, !isSelected);
+            notifySelectionCountChanged();
         }
 
         private void setSelectedItems(@NonNull ArrayList<Integer> selectedItems) {
@@ -367,6 +401,19 @@ public class StockPhotoPickerActivity extends AppCompatActivity implements Searc
             if (!mItems.isEmpty()) {
                 notifyDataSetChanged();
             }
+            notifySelectionCountChanged();
+        }
+
+        private void clearSelection() {
+            if (mSelectedItems.size() > 0) {
+                mSelectedItems.clear();
+                notifyDataSetChanged();
+                notifySelectionCountChanged();
+            }
+        }
+
+        int getSelectionCount() {
+            return mSelectedItems.size();
         }
     }
 
@@ -378,11 +425,12 @@ public class StockPhotoPickerActivity extends AppCompatActivity implements Searc
             super(view);
 
             mImageView = view.findViewById(R.id.image_thumbnail);
+            mSelectionCountTextView = view.findViewById(R.id.text_selection_count);
+
             mImageView.getLayoutParams().width = mThumbWidth;
             mImageView.getLayoutParams().height = mThumbHeight;
 
-            mSelectionCountTextView = view.findViewById(R.id.text_selection_count);
-            mSelectionCountTextView.setOnClickListener(new View.OnClickListener() {
+            mImageView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     int position = getAdapterPosition();
