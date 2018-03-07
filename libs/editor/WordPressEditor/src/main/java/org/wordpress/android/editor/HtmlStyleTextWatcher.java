@@ -208,7 +208,7 @@ public class HtmlStyleTextWatcher implements TextWatcher {
      * Returns the closing/opening symbol corresponding to the given opening/closing symbol.
      */
     private String getMatchingSymbol(String symbol) {
-        switch(symbol) {
+        switch (symbol) {
             case "<":
                 return ">";
             case ">":

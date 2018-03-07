@@ -19,27 +19,30 @@ import java.util.Set;
 import java.util.regex.Pattern;
 
 public class MetadataUtils {
-
     public static JSONObject getMetadata(AttributesWithClass attrs, int naturalWidth, int naturalHeight) {
         JSONObject metadata = new JSONObject();
-        addMetadataProperty(metadata, "align", "none");          // Accepted values: center, left, right or empty string.
-        addMetadataProperty(metadata, "alt", "");                // Image alt attribute
-        addMetadataProperty(metadata, "attachment_id", "");      // Numeric attachment id of the image in the site's media library
-        addMetadataProperty(metadata, "caption", "");            // The text of the caption for the image (if any)
-        addMetadataProperty(metadata, "captionClassName", "");   // The classes for the caption shortcode (if any).
-        addMetadataProperty(metadata, "captionId", "");          // The caption shortcode's ID attribute. The numeric value should match the value of attachment_id
-        addMetadataProperty(metadata, "classes", "");            // The class attribute for the image. Does not include editor generated classes
-        addMetadataProperty(metadata, "height", "");             // The image height attribute
-        addMetadataProperty(metadata, "linkClassName", "");      // The class attribute for the link
-        addMetadataProperty(metadata, "linkRel", "");            // The rel attribute for the link (if any)
+        addMetadataProperty(metadata, "align", "none"); // Accepted values: center, left, right or empty string.
+        addMetadataProperty(metadata, "alt", ""); // Image alt attribute
+        // Numeric attachment id of the image in the site's media library
+        addMetadataProperty(metadata, "attachment_id", "");
+        addMetadataProperty(metadata, "caption", ""); // The text of the caption for the image (if any)
+        addMetadataProperty(metadata, "captionClassName", ""); // The classes for the caption shortcode (if any).
+        // The caption shortcode's ID attribute. The numeric value should match the value of attachment_id
+        addMetadataProperty(metadata, "captionId", "");
+        // The class attribute for the image. Does not include editor generated classes
+        addMetadataProperty(metadata, "classes", "");
+        addMetadataProperty(metadata, "height", ""); // The image height attribute
+        addMetadataProperty(metadata, "linkClassName", ""); // The class attribute for the link
+        addMetadataProperty(metadata, "linkRel", ""); // The rel attribute for the link (if any)
         addMetadataProperty(metadata, "linkTargetBlank", false); // true if the link should open in a new window.
-        addMetadataProperty(metadata, "linkUrl", "");            // The href attribute of the link
-        addMetadataProperty(metadata, "size", "size-full");         // Accepted values: size-thumbnail, size-medium, size-large, size-full
-        addMetadataProperty(metadata, "src", "");                // The src attribute of the image
-        addMetadataProperty(metadata, "title", "");              // The title attribute of the image (if any)
-        addMetadataProperty(metadata, "width", "");              // The image width attribute
-        addMetadataProperty(metadata, "naturalWidth", "");       // The natural width of the image.
-        addMetadataProperty(metadata, "naturalHeight", "");       // The natural height of the image.
+        addMetadataProperty(metadata, "linkUrl", ""); // The href attribute of the link
+        // Accepted values: size-thumbnail, size-medium, size-large, size-full
+        addMetadataProperty(metadata, "size", "size-full");
+        addMetadataProperty(metadata, "src", ""); // The src attribute of the image
+        addMetadataProperty(metadata, "title", ""); // The title attribute of the image (if any)
+        addMetadataProperty(metadata, "width", ""); // The image width attribute
+        addMetadataProperty(metadata, "naturalWidth", ""); // The natural width of the image.
+        addMetadataProperty(metadata, "naturalHeight", ""); // The natural height of the image.
 
         String src = attrs.getAttribute("src", "");
         if (TextUtils.isEmpty(src)) {
@@ -179,7 +182,6 @@ public class MetadataUtils {
         }
 
         String getAttribute(String key, String defaultValue) {
-
             updateClassAttribute();
 
             if (mAztecAttributes.hasAttribute(key)) {

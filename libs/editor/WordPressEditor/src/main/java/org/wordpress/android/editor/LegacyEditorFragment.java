@@ -236,7 +236,7 @@ public class LegacyEditorFragment extends EditorFragmentAbstract implements Text
 
             if (spans != null && spans.length > 0) {
                 for (Parcelable s : spans) {
-                    WPImageSpan editSpan = (WPImageSpan)s;
+                    WPImageSpan editSpan = (WPImageSpan) s;
                     addMediaFile(editSpan.getMediaFile(), editSpan.getMediaFile().getFilePath(),
                             mImageLoader, editSpan.getStartPosition(), editSpan.getEndPosition());
                 }
@@ -253,7 +253,8 @@ public class LegacyEditorFragment extends EditorFragmentAbstract implements Text
         mRootView.getViewTreeObserver().addOnGlobalLayoutListener(mGlobalLayoutListener);
     }
 
-    private ViewTreeObserver.OnGlobalLayoutListener mGlobalLayoutListener = new ViewTreeObserver.OnGlobalLayoutListener() {
+    private ViewTreeObserver.OnGlobalLayoutListener mGlobalLayoutListener
+            = new ViewTreeObserver.OnGlobalLayoutListener() {
         public void onGlobalLayout() {
             mRootView.getViewTreeObserver().removeGlobalOnLayoutListener(this);
             mFullViewBottom = mRootView.getBottom();
@@ -428,8 +429,9 @@ public class LegacyEditorFragment extends EditorFragmentAbstract implements Text
                 mSelectionEnd = mContentEditText.getSelectionEnd();
                 Editable str = mContentEditText.getText();
                 if (str != null) {
-                    if (mSelectionEnd > str.length())
+                    if (mSelectionEnd > str.length()) {
                         mSelectionEnd = str.length();
+                    }
                     str.insert(mSelectionEnd, "\n<!--more-->\n");
                 }
             } else if (id == R.id.link) {
@@ -445,7 +447,8 @@ public class LegacyEditorFragment extends EditorFragmentAbstract implements Text
                 Intent i = new Intent(getActivity(), EditLinkActivity.class);
                 if (mSelectionEnd > mSelectionStart) {
                     if (mContentEditText.getText() != null) {
-                        String selectedText = mContentEditText.getText().subSequence(mSelectionStart, mSelectionEnd).toString();
+                        String selectedText = mContentEditText.getText()
+                                                              .subSequence(mSelectionStart, mSelectionEnd).toString();
                         i.putExtra("selectedText", selectedText);
                     }
                 }
@@ -484,7 +487,8 @@ public class LegacyEditorFragment extends EditorFragmentAbstract implements Text
         if (context == null || mediaFile == null || mediaFile.getFileURL() == null) {
             return null;
         }
-        int drawable = mediaFile.isVideo() ? R.drawable.media_movieclip : R.drawable.legacy_dashicon_format_image_big_grey;
+        int drawable = mediaFile.isVideo() ? R.drawable.media_movieclip
+                : R.drawable.legacy_dashicon_format_image_big_grey;
         Uri uri = Uri.parse(mediaFile.getFileURL());
         WPEditImageSpan imageSpan = new WPEditImageSpan(context, drawable, uri);
         imageSpan.setMediaFile(mediaFile);
@@ -507,8 +511,7 @@ public class LegacyEditorFragment extends EditorFragmentAbstract implements Text
      */
     private void onFormatButtonClick(ToggleButton toggleButton, String tag) {
         Spannable s = mContentEditText.getText();
-        if (s == null)
-            return;
+        if (s == null) return;
         int selectionStart = mContentEditText.getSelectionStart();
         mStyleStart = selectionStart;
         int selectionEnd = mContentEditText.getSelectionEnd();
@@ -520,17 +523,17 @@ public class LegacyEditorFragment extends EditorFragmentAbstract implements Text
         }
 
         Class styleClass = null;
-        if (tag.equals(TAG_FORMAT_BAR_BUTTON_STRONG) || tag.equals(TAG_FORMAT_BAR_BUTTON_EM))
+        if (tag.equals(TAG_FORMAT_BAR_BUTTON_STRONG) || tag.equals(TAG_FORMAT_BAR_BUTTON_EM)) {
             styleClass = StyleSpan.class;
-        else if (tag.equals(TAG_FORMAT_BAR_BUTTON_UNDERLINE))
+        } else if (tag.equals(TAG_FORMAT_BAR_BUTTON_UNDERLINE)) {
             styleClass = WPUnderlineSpan.class;
-        else if (tag.equals(TAG_FORMAT_BAR_BUTTON_STRIKE))
-            styleClass = StrikethroughSpan.class;
-        else if (tag.equals(TAG_FORMAT_BAR_BUTTON_QUOTE))
+        } else if (tag.equals(TAG_FORMAT_BAR_BUTTON_STRIKE)) {
+                styleClass = StrikethroughSpan.class;
+        } else if (tag.equals(TAG_FORMAT_BAR_BUTTON_QUOTE)) {
             styleClass = QuoteSpan.class;
+        }
 
-        if (styleClass == null)
-            return;
+        if (styleClass == null) return;
 
         Object[] allSpans = s.getSpans(selectionStart, selectionEnd, styleClass);
         boolean textIsSelected = selectionEnd > selectionStart;
@@ -539,7 +542,7 @@ public class LegacyEditorFragment extends EditorFragmentAbstract implements Text
             boolean shouldAddSpan = true;
             for (Object span : allSpans) {
                 if (span instanceof StyleSpan) {
-                    StyleSpan styleSpan = (StyleSpan)span;
+                    StyleSpan styleSpan = (StyleSpan) span;
                     if ((styleSpan.getStyle() == Typeface.BOLD && !tag.equals(TAG_FORMAT_BAR_BUTTON_STRONG))
                             || (styleSpan.getStyle() == Typeface.ITALIC && !tag.equals(TAG_FORMAT_BAR_BUTTON_EM))) {
                         continue;
@@ -563,12 +566,15 @@ public class LegacyEditorFragment extends EditorFragmentAbstract implements Text
 
             if (shouldAddSpan) {
                 if (tag.equals(TAG_FORMAT_BAR_BUTTON_STRONG)) {
-                    s.setSpan(new StyleSpan(android.graphics.Typeface.BOLD), selectionStart, selectionEnd, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+                    s.setSpan(new StyleSpan(android.graphics.Typeface.BOLD), selectionStart, selectionEnd,
+                              Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
                 } else if (tag.equals(TAG_FORMAT_BAR_BUTTON_EM)) {
-                    s.setSpan(new StyleSpan(android.graphics.Typeface.ITALIC), selectionStart, selectionEnd, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+                    s.setSpan(new StyleSpan(android.graphics.Typeface.ITALIC), selectionStart, selectionEnd,
+                              Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
                 } else {
                     try {
-                        s.setSpan(styleClass.newInstance(), selectionStart, selectionEnd, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+                        s.setSpan(styleClass.newInstance(), selectionStart, selectionEnd,
+                                  Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
                     } catch (java.lang.InstantiationException e) {
                         AppLog.e(T.POSTS, e);
                     } catch (IllegalAccessException e) {
@@ -655,13 +661,15 @@ public class LegacyEditorFragment extends EditorFragmentAbstract implements Text
     public boolean onTouch(View v, MotionEvent event) {
         float pos = event.getY();
 
-        if (event.getAction() == 0)
+        if (event.getAction() == 0) {
             mLastYPos = pos;
+        }
 
         if (event.getAction() > 1) {
             int scrollThreshold = DisplayUtils.dpToPx(getActivity(), 2);
-            if (((mLastYPos - pos) > scrollThreshold) || ((pos - mLastYPos) > scrollThreshold))
+            if (((mLastYPos - pos) > scrollThreshold) || ((pos - mLastYPos) > scrollThreshold)) {
                 mScrollDetected = true;
+            }
         }
 
         mLastYPos = pos;
@@ -695,14 +703,13 @@ public class LegacyEditorFragment extends EditorFragmentAbstract implements Text
                 if (imageSpans.length != 0) {
                     final WPImageSpan imageSpan = imageSpans[0];
                     MediaFile mediaFile = imageSpan.getMediaFile();
-                    if (mediaFile == null)
-                        return false;
+                    if (mediaFile == null) return false;
                     if (!mediaFile.isVideo()) {
                         LayoutInflater factory = LayoutInflater.from(getActivity());
                         //noinspection InflateParams
                         final View alertView = factory.inflate(R.layout.alert_image_options, null);
-                        if (alertView == null)
-                            return false;
+                        if (alertView == null) return false;
+
                         final EditText imageWidthText = (EditText) alertView.findViewById(R.id.imageWidthText);
                         final EditText titleText = (EditText) alertView.findViewById(R.id.title);
                         final EditText caption = (EditText) alertView.findViewById(R.id.caption);
@@ -723,7 +730,6 @@ public class LegacyEditorFragment extends EditorFragmentAbstract implements Text
                                 } else {
                                     featuredInPostCheckBox.setVisibility(View.GONE);
                                 }
-
                             }
                         });
 
@@ -805,16 +811,17 @@ public class LegacyEditorFragment extends EditorFragmentAbstract implements Text
                         mScrollDetected = false;
                         return true;
                     }
-
                 } else {
                     mContentEditText.setMovementMethod(ArrowKeyMovementMethod.getInstance());
                     int selectionStart = mContentEditText.getSelectionStart();
-                    if (selectionStart >= 0 && mContentEditText.getSelectionEnd() >= selectionStart)
+                    if (selectionStart >= 0 && mContentEditText.getSelectionEnd() >= selectionStart) {
                         mContentEditText.setSelection(selectionStart, mContentEditText.getSelectionEnd());
+                    }
                 }
 
                 // get media gallery spans
-                MediaGalleryImageSpan[] gallerySpans = spannable.getSpans(charPosition, charPosition, MediaGalleryImageSpan.class);
+                MediaGalleryImageSpan[] gallerySpans = spannable.getSpans(charPosition, charPosition,
+                                                                          MediaGalleryImageSpan.class);
                 if (gallerySpans.length > 0) {
                     final MediaGalleryImageSpan gallerySpan = gallerySpans[0];
                     Intent intent = new Intent(ACTION_MEDIA_GALLERY_TOUCHED);
@@ -831,8 +838,9 @@ public class LegacyEditorFragment extends EditorFragmentAbstract implements Text
     @Override
     public void afterTextChanged(Editable s) {
         int position = Selection.getSelectionStart(mContentEditText.getText());
-        if ((mIsBackspace && position != 1) || mLastPosition == position || !mIsLocalDraft)
+        if ((mIsBackspace && position != 1) || mLastPosition == position || !mIsLocalDraft) {
             return;
+        }
 
         if (position < 0) {
             position = 0;
@@ -853,10 +861,11 @@ public class LegacyEditorFragment extends EditorFragmentAbstract implements Text
             for (Object span : allSpans) {
                 if (span instanceof StyleSpan) {
                     StyleSpan styleSpan = (StyleSpan) span;
-                    if (styleSpan.getStyle() == Typeface.BOLD)
+                    if (styleSpan.getStyle() == Typeface.BOLD) {
                         shouldBold = false;
-                    else if (styleSpan.getStyle() == Typeface.ITALIC)
+                    } else if (styleSpan.getStyle() == Typeface.ITALIC) {
                         shouldEm = false;
+                    }
                 } else if (span instanceof WPUnderlineSpan) {
                     shouldUnderline = false;
                 } else if (span instanceof StrikethroughSpan) {
@@ -866,16 +875,23 @@ public class LegacyEditorFragment extends EditorFragmentAbstract implements Text
                 }
             }
 
-            if (shouldBold)
-                s.setSpan(new StyleSpan(android.graphics.Typeface.BOLD), mStyleStart, position, Spannable.SPAN_INCLUSIVE_INCLUSIVE);
-            if (shouldEm)
-                s.setSpan(new StyleSpan(android.graphics.Typeface.ITALIC), mStyleStart, position, Spannable.SPAN_INCLUSIVE_INCLUSIVE);
-            if (shouldUnderline)
+            if (shouldBold) {
+                s.setSpan(new StyleSpan(android.graphics.Typeface.BOLD), mStyleStart, position,
+                          Spannable.SPAN_INCLUSIVE_INCLUSIVE);
+            }
+            if (shouldEm) {
+                s.setSpan(new StyleSpan(android.graphics.Typeface.ITALIC), mStyleStart, position,
+                          Spannable.SPAN_INCLUSIVE_INCLUSIVE);
+            }
+            if (shouldUnderline) {
                 s.setSpan(new WPUnderlineSpan(), mStyleStart, position, Spannable.SPAN_INCLUSIVE_INCLUSIVE);
-            if (shouldStrike)
+            }
+            if (shouldStrike) {
                 s.setSpan(new StrikethroughSpan(), mStyleStart, position, Spannable.SPAN_INCLUSIVE_INCLUSIVE);
-            if (shouldQuote)
+            }
+            if (shouldQuote) {
                 s.setSpan(new QuoteSpan(), mStyleStart, position, Spannable.SPAN_INCLUSIVE_INCLUSIVE);
+            }
         }
     }
 
@@ -895,11 +911,12 @@ public class LegacyEditorFragment extends EditorFragmentAbstract implements Text
         }
 
         final Spannable s = mContentEditText.getText();
-        if (s == null)
-            return;
+        if (s == null) return;
+
         // set toggle buttons if cursor is inside of a matching span
         mStyleStart = mContentEditText.getSelectionStart();
-        Object[] spans = s.getSpans(mContentEditText.getSelectionStart(), mContentEditText.getSelectionStart(), Object.class);
+        Object[] spans = s.getSpans(mContentEditText.getSelectionStart(), mContentEditText.getSelectionStart(),
+                                    Object.class);
 
         mBoldToggleButton.setChecked(false);
         mEmToggleButton.setChecked(false);
@@ -931,8 +948,9 @@ public class LegacyEditorFragment extends EditorFragmentAbstract implements Text
     private int getEditTextIntegerClamped(EditText editText, int min, int max) {
         int width = 10;
         try {
-            if (editText.getText() != null)
+            if (editText.getText() != null) {
                 width = Integer.parseInt(editText.getText().toString().replace("px", ""));
+            }
         } catch (NumberFormatException e) {
             AppLog.e(T.POSTS, e);
         }
@@ -1013,7 +1031,8 @@ public class LegacyEditorFragment extends EditorFragmentAbstract implements Text
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
 
-        WPImageSpan[] spans = mContentEditText.getText().getSpans(0, mContentEditText.getText().length(), WPEditImageSpan.class);
+        WPImageSpan[] spans = mContentEditText.getText().getSpans(0, mContentEditText.getText().length(),
+                                                                  WPEditImageSpan.class);
 
         if (spans != null && spans.length > 0) {
             outState.putParcelableArray(KEY_IMAGE_SPANS, spans);
@@ -1031,7 +1050,7 @@ public class LegacyEditorFragment extends EditorFragmentAbstract implements Text
         private int mStart;
         private int mEnd;
 
-        public AddMediaFileTask(MediaFile mediaFile, String imageUrl, ImageLoader imageLoader, int start, int end) {
+        AddMediaFileTask(MediaFile mediaFile, String imageUrl, ImageLoader imageLoader, int start, int end) {
             mMediaFile = mediaFile;
             mImageUrl = imageUrl;
             mImageLoader = imageLoader;
@@ -1052,7 +1071,7 @@ public class LegacyEditorFragment extends EditorFragmentAbstract implements Text
                 if (isAdded()) {
                     ToastUtils.showToast(getActivity(), R.string.alert_error_adding_media, Duration.LONG);
                 }
-                return ;
+                return;
             }
             // Insert the WPImageSpan in the content field
             int selectionStart = mStart;
@@ -1110,7 +1129,8 @@ public class LegacyEditorFragment extends EditorFragmentAbstract implements Text
 
     @Override
     public void appendMediaFile(final MediaFile mediaFile, final String imageUrl, final ImageLoader imageLoader) {
-        addMediaFile(mediaFile, imageUrl, imageLoader, mContentEditText.getSelectionStart(), mContentEditText.getSelectionEnd());
+        addMediaFile(mediaFile, imageUrl, imageLoader,
+                     mContentEditText.getSelectionStart(), mContentEditText.getSelectionEnd());
     }
 
     @Override
@@ -1153,7 +1173,6 @@ public class LegacyEditorFragment extends EditorFragmentAbstract implements Text
 
     @Override
     public void setUrlForVideoPressId(String videoPressId, String url, String posterUrl) {
-
     }
 
     @Override
@@ -1167,18 +1186,16 @@ public class LegacyEditorFragment extends EditorFragmentAbstract implements Text
     }
 
     @Override
-    public void removeAllFailedMediaUploads() {}
+    public void removeAllFailedMediaUploads() { }
 
     @Override
-    public void removeMedia(String mediaId) {}
+    public void removeMedia(String mediaId) { }
 
     @Override
-    public void setTitlePlaceholder(CharSequence text) {
-    }
+    public void setTitlePlaceholder(CharSequence text) { }
 
     @Override
-    public void setContentPlaceholder(CharSequence text) {
-    }
+    public void setContentPlaceholder(CharSequence text) { }
 
     @Override
     public boolean isActionInProgress() {

@@ -37,7 +37,6 @@ public class EditLinkActivity extends AppCompatActivity {
                     urlEditText.setSelection(7);
                 }
             }
-
         });
 
         okButton.setOnClickListener(new Button.OnClickListener() {
