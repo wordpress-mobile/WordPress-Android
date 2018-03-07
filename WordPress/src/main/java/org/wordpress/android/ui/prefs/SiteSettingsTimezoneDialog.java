@@ -185,8 +185,6 @@ public class SiteSettingsTimezoneDialog extends DialogFragment implements Dialog
             // sort by label
             Collections.sort(timezones, new Comparator<Timezone>() {
                 public int compare(Timezone t1, Timezone t2) {
-                    // manually perform the StringUtils.compare() function. Some devices seem to be missing it.
-                    //  See https://github.com/wordpress-mobile/WordPress-Android/issues/7376
                     return StringUtils.compare(t1.label, t2.label);
                 }
             });
