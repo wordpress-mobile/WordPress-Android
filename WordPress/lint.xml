@@ -38,7 +38,5 @@
         <ignore path="**/strings.xml" />
     </issue>
 
-    <issue id="TypographyEllipsis" severity="warning">
-        <ignore regexp=".*\/values\-([a-z]|[A-Z]|\-){2,6}\/strings\.xml$"/>
-    </issue>
+    <issue id="TypographyEllipsis" severity="error"/>
 </lint>
