@@ -535,7 +535,7 @@ public class PostsListFragment extends Fragment
             case PostListButton.BUTTON_SUBMIT:
             case PostListButton.BUTTON_SYNC:
             case PostListButton.BUTTON_PUBLISH:
-                UploadUtils.publishPost(getActivity(), post, mSite, mDispatcher);
+                showPublishConfirmationDialog(post);
                 break;
             case PostListButton.BUTTON_VIEW:
                 ActivityLauncher.browsePostOrPage(getActivity(), mSite, post);
@@ -566,6 +566,22 @@ public class PostsListFragment extends Fragment
                 }
                 break;
         }
+    }
+
+    private void showPublishConfirmationDialog(final PostModel post) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+        builder.setTitle(getResources().getText(R.string.dialog_confirm_publish_title))
+               .setMessage(post.isPage() ? getString(R.string.dialog_confirm_publish_message_page)
+                                   : getString(R.string.dialog_confirm_publish_message_post))
+               .setPositiveButton(R.string.dialog_confirm_publish_yes, new DialogInterface.OnClickListener() {
+                   @Override
+                   public void onClick(DialogInterface dialogInterface, int i) {
+                       UploadUtils.publishPost(getActivity(), post, mSite, mDispatcher);
+                   }
+               })
+               .setNegativeButton(R.string.cancel, null)
+               .setCancelable(true);
+        builder.create().show();
     }
 
     /*

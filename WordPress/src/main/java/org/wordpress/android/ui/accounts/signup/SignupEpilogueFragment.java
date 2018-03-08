@@ -567,8 +567,8 @@ public class SignupEpilogueFragment extends LoginBaseFormFragment<SignupEpilogue
                 // trusted to update the image quick enough.
                 injectCache(new File(injectFilePath), avatarUrl);
             } catch (IOException exception) {
-                AppLog.e(T.NUX, "Gravatar image could not be injected into request cache - " +
-                        exception.toString() + " - " + exception.getMessage());
+                AppLog.e(T.NUX, "Gravatar image could not be injected into request cache - "
+                                + exception.toString() + " - " + exception.getMessage());
                 showErrorDialogAvatar(getString(R.string.signup_epilogue_error_avatar));
             }
 
@@ -760,8 +760,8 @@ public class SignupEpilogueFragment extends LoginBaseFormFragment<SignupEpilogue
                         }
                     });
             } catch (NullPointerException | URISyntaxException exception) {
-                AppLog.e(T.NUX, "Google avatar download and Gravatar upload failed - " +
-                        exception.toString() + " - " + exception.getMessage());
+                AppLog.e(T.NUX, "Google avatar download and Gravatar upload failed - "
+                                + exception.toString() + " - " + exception.getMessage());
             }
         }
     }
