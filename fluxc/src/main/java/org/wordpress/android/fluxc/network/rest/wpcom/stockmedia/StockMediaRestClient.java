@@ -48,13 +48,12 @@ public class StockMediaRestClient extends BaseWPComRestClient {
                 new Response.Listener<SearchStockMediaResponse>() {
                     @Override
                     public void onResponse(SearchStockMediaResponse response) {
-                        boolean canLoadMore = response.nextPage > page;
                         StockMediaStore.FetchedStockMediaListPayload payload =
                                 new StockMediaStore.FetchedStockMediaListPayload(
                                 response.media,
                                 searchTerm,
                                 response.nextPage,
-                                canLoadMore);
+                                response.canLoadMore);
                         mDispatcher.dispatch(StockMediaActionBuilder.newFetchedStockMediaAction(payload));
                     }
                 }, new BaseRequest.BaseErrorListener() {
@@ -64,7 +63,7 @@ public class StockMediaRestClient extends BaseWPComRestClient {
                         StockMediaStore.StockMediaError mediaError = new StockMediaStore.StockMediaError(
                                 StockMediaStore.StockMediaErrorType.fromBaseNetworkError(error));
                         StockMediaStore.FetchedStockMediaListPayload payload =
-                                new StockMediaStore.FetchedStockMediaListPayload(mediaError);
+                                new StockMediaStore.FetchedStockMediaListPayload(mediaError, searchTerm);
                         mDispatcher.dispatch(StockMediaActionBuilder.newFetchedStockMediaAction(payload));
                     }
                 }

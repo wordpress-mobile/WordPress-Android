@@ -1,5 +1,6 @@
 package org.wordpress.android.fluxc.network.rest.wpcom.stockmedia;
 
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
 import com.google.gson.JsonArray;
@@ -25,7 +26,8 @@ import java.util.List;
 public class SearchStockMediaResponse {
     public int found;
     public int nextPage;
-    public List<StockMediaModel> media;
+    public boolean canLoadMore;
+    public @NonNull List<StockMediaModel> media;
 }
 
 class SearchStockMediaDeserializer implements JsonDeserializer<SearchStockMediaResponse> {
@@ -43,8 +45,10 @@ class SearchStockMediaDeserializer implements JsonDeserializer<SearchStockMediaR
             // note that "next_page" will be "false" rather than an int if this is the last page
             try {
                 response.nextPage = getJsonInt(jsonMeta, "next_page");
+                response.canLoadMore = true;
             } catch (NumberFormatException e) {
                 response.nextPage = 0;
+                response.canLoadMore = false;
             }
         }
 
