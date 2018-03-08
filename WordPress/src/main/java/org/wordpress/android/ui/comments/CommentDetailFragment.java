@@ -942,7 +942,7 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
         // comment status is only shown if this comment is from one of this user's blogs and the
         // comment hasn't been CommentStatus.APPROVED
         if (mIsUsersBlog && commentStatus != CommentStatus.APPROVED) {
-            mTxtStatus.setText(getString(statusTextResId).toUpperCase());
+            mTxtStatus.setText(getString(statusTextResId).toUpperCase(Locale.getDefault()));
             mTxtStatus.setTextColor(statusColor);
             if (mTxtStatus.getVisibility() != View.VISIBLE) {
                 mTxtStatus.clearAnimation();

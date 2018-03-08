@@ -2751,7 +2751,7 @@ public class EditPostActivity extends AppCompatActivity implements
                 // also make sure it's not being uploaded anywhere else (maybe on some other Post,
                 // simultaneously)
                 if (mediaModel.getUploadState() != null
-                    && MediaUtils.isLocalFile(mediaModel.getUploadState().toLowerCase())
+                    && MediaUtils.isLocalFile(mediaModel.getUploadState().toLowerCase(Locale.ROOT))
                     && !UploadService.isPendingOrInProgressMediaUpload(mediaModel)) {
                     mDispatcher.dispatch(MediaActionBuilder.newRemoveMediaAction(mediaModel));
                 }

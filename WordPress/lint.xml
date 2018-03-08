@@ -10,6 +10,7 @@
 
     <!-- ERROR -->
     <issue id="RtlCompat" severity="error" />
+    <issue id="DefaultLocale" severity="error" />
     <issue id="RtlHardcoded" severity="error" />
     <issue id="InconsistentArrays" severity="error" />
     <issue id="HardcodedText" severity="error" />

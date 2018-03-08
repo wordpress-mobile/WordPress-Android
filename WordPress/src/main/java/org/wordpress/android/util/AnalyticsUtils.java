@@ -22,6 +22,7 @@ import org.wordpress.android.models.ReaderPost;
 import java.io.File;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.Locale;
 import java.util.Map;
 
 import static org.wordpress.android.analytics.AnalyticsTracker.Stat.READER_ARTICLE_COMMENTED_ON;
@@ -375,7 +376,7 @@ public class AnalyticsUtils {
         properties.put("mime", mimeType);
 
         String fileName = MediaUtils.getMediaFileName(file, mimeType);
-        String fileExtension = MimeTypeMap.getFileExtensionFromUrl(fileName).toLowerCase();
+        String fileExtension = MimeTypeMap.getFileExtensionFromUrl(fileName).toLowerCase(Locale.ROOT);
         properties.put("ext", fileExtension);
 
         if (!isVideo) {

@@ -34,7 +34,7 @@ public class WPWebViewClient extends URLFilteredWebViewClient {
 
     private final SiteModel mSite;
     private String mToken;
-    protected @Inject MemorizingTrustManager mMemorizingTrustManager;
+    @Inject protected MemorizingTrustManager mMemorizingTrustManager;
 
     public WPWebViewClient(SiteModel site, String token) {
         this(site, token, null);

@@ -28,6 +28,7 @@ import org.wordpress.android.widgets.WPNetworkImageView;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 class ThemeBrowserAdapter extends BaseAdapter implements Filterable {
     private static final String THEME_IMAGE_PARAMETER = "?w=";
@@ -276,9 +277,10 @@ class ThemeBrowserAdapter extends BaseAdapter implements Filterable {
                     filtered.addAll(mAllThemes);
                 } else {
                     mQuery = constraint.toString();
-                    String lcConstraint = constraint.toString().toLowerCase();
+                    // Locale.ROOT is used on user input for convenience as all the theme names are in english
+                    String lcConstraint = constraint.toString().toLowerCase(Locale.ROOT);
                     for (ThemeModel theme : mAllThemes) {
-                        if (theme.getName().toLowerCase().contains(lcConstraint)) {
+                        if (theme.getName().toLowerCase(Locale.ROOT).contains(lcConstraint)) {
                             filtered.add(theme);
                         }
                     }

@@ -45,6 +45,7 @@ import org.xml.sax.XMLReader;
 import java.io.IOException;
 import java.io.StringReader;
 import java.util.HashMap;
+import java.util.Locale;
 
 import javax.inject.Inject;
 
@@ -717,7 +718,7 @@ public class HtmlToSpannedConverter implements ContentHandler {
      * interpreted.
      */
     private static int getHtmlColor(String color) {
-        Integer i = COLORS.get(color.toLowerCase());
+        Integer i = COLORS.get(color.toLowerCase(Locale.ROOT));
         if (i != null) {
             return i;
         } else {
