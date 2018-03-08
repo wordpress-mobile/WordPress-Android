@@ -89,7 +89,7 @@ public class DetailListPreference extends ListPreference
 
         mWhichButtonClicked = DialogInterface.BUTTON_NEGATIVE;
         builder.setPositiveButton(android.R.string.ok, this);
-        builder.setNegativeButton(res.getString(R.string.cancel).toUpperCase(Locale.getDefault()), this);
+        builder.setNegativeButton(res.getString(android.R.string.cancel).toUpperCase(Locale.getDefault()), this);
 
         if (mDetails == null) {
             mDetails = new String[getEntries() == null ? 1 : getEntries().length];
