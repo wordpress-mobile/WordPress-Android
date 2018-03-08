@@ -284,7 +284,7 @@ public class StatsActivity extends AppCompatActivity
     private boolean checkIfSiteHasAccessibleStats(SiteModel site) {
         if (!SiteUtils.isAccessedViaWPComRest(mSite)) {
             if (!site.isJetpackInstalled() || !site.isJetpackConnected()) {
-                ActivityLauncher.startJetpackConnectionFlow(this, site);
+                ActivityLauncher.viewConnectJetpackForStats(this, site);
                 return false;
             }
         }

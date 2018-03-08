@@ -86,6 +86,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
+import java.util.Locale;
 
 import javax.inject.Inject;
 
@@ -136,12 +137,9 @@ public class MediaSettingsActivity extends AppCompatActivity
 
     private MediaType mMediaType;
 
-    @Inject
-    MediaStore mMediaStore;
-    @Inject
-    FluxCImageLoader mImageLoader;
-    @Inject
-    Dispatcher mDispatcher;
+    @Inject MediaStore mMediaStore;
+    @Inject FluxCImageLoader mImageLoader;
+    @Inject Dispatcher mDispatcher;
 
     /**
      * @param activity calling activity
@@ -597,7 +595,7 @@ public class MediaSettingsActivity extends AppCompatActivity
         txtFilename.setText(mMedia.getFileName());
 
         TextView txtFileType = findViewById(R.id.text_filetype);
-        txtFileType.setText(StringUtils.notNullStr(mMedia.getFileExtension()).toUpperCase());
+        txtFileType.setText(StringUtils.notNullStr(mMedia.getFileExtension()).toUpperCase(Locale.ROOT));
 
         showImageDimensions(mMedia.getWidth(), mMedia.getHeight());
 

@@ -4,6 +4,16 @@
     "http://www.puppycrawl.com/dtds/configuration_1_2.dtd">
 
 <module name="Checker">
+    <!-- Restricts scan to specific extensions.           -->
+    <!-- See http://checkstyle.sf.net/config.html#Checker -->
+    <property name="fileExtensions" value="java, kt, xml"/>
+
+    <!-- Excludes given file patterns from scan.              -->
+    <!-- See http://checkstyle.sf.net/config_filefilters.html -->
+    <module name="BeforeExecutionExclusionFileFilter">
+        <property name="fileNamePattern" value="[/\\]gen[/\\]"/>
+    </module>
+
     <!-- Checks whether files end with a new line.                        -->
     <!-- See http://checkstyle.sf.net/config_misc.html#NewlineAtEndOfFile -->
     <module name="NewlineAtEndOfFile"/>
@@ -35,32 +45,55 @@
 
     <module name="RegexpMultiline">
       <property name="format"
-                value="\n[\t ]*\n[\t ]*\}"/>
+                value="(\n|\r\n)[\t ]*(\n|\r\n)[\t ]*\}"/>
       <property name="message" value="Empty line not allowed before brace"/>
     </module>
 
     <module name="RegexpMultiline">
       <property name="format"
-                value="\{[\t ]*\n[\t ]*\n"/>
+                value="\{[\t ]*(\n|\r\n)[\t ]*(\n|\r\n)"/>
       <property name="message" value="Empty line not allowed after brace"/>
     </module>
 
     <module name="RegexpSingleline">
-      <property name="format" value=" \/\/[^ \t]"/>
+      <property name="format" value=" \/\/(?!noinspection)[^ \t]"/>
       <property name="message" value="Line comments '//' must be followed by one whitespace"/>
       <property name="severity" value="error"/>
     </module>
 
     <module name="RegexpSingleline">
-        <property name="format" value="@[\S]*(\([{]?\&quot;.*\&quot;[}]?\)++|\([^\&quot;]*\)++)[^ \t]"/>
+        <property name="format" value="[^\S\r\n]@[\S]*(\([{]?\&quot;.*\&quot;[}]?\)++|\([^\&quot;]*\)++)[^ \t]"/>
         <property name="message" value="In-line annotations must be followed by one whitespace"/>
         <property name="severity" value="error"/>
     </module>
 
+    <module name="RegexpMultiline">
+        <property name="format" value="@Inject(\n|\r\n).*[^{,(]$"/>
+        <property name="message" value="Inject annotation should be in-line with the annotated field or property"/>
+    </module>
+
+    <module name="RegexpSingleline">
+        <property name="format" value="^(?!.*\bclass\b).*\S.*@Inject"/>
+        <property name="message" value="In-line inject annotation should precede the rest of the declaration"/>
+    </module>
+
+    <!-- Specific to FluxC -->
     <module name="RegexpSingleline">
         <property name="format" value="extends Payload[^&lt;]"/>
         <property name="message" value="Payload should not be used as a raw type"/>
         <property name="severity" value="error"/>
+    </module>
+
+    <!-- Specific to FluxC -->
+    <module name="RegexpMultiline">
+        <property name="format" value="(?&lt;!^@Singleton)\n.*extends Store[\s{]"/>
+        <property name="message" value="Stores must be annotated with @Singleton"/>
+    </module>
+
+    <!-- Specific to FluxC -->
+    <module name="RegexpMultiline">
+        <property name="format" value="(?&lt;!^@Singleton)\n.*extends Base[\w]*Client[\s{]"/>
+        <property name="message" value="Network clients must be annotated with @Singleton"/>
     </module>
 
     <!-- Specific to WordPress -->

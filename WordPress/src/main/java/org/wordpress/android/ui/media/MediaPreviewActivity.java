@@ -155,7 +155,7 @@ public class MediaPreviewActivity extends AppCompatActivity implements MediaPrev
 
         mToolbar = (Toolbar) findViewById(R.id.toolbar);
         int toolbarColor = ContextCompat.getColor(this, R.color.transparent);
-        // noinspection deprecation
+        //noinspection deprecation
         mToolbar.setBackgroundDrawable(new ColorDrawable(toolbarColor));
         setSupportActionBar(mToolbar);
         ActionBar actionBar = getSupportActionBar();

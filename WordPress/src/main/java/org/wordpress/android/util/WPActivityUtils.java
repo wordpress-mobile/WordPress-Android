@@ -89,7 +89,7 @@ public class WPActivityUtils {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
             window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
-            // noinspection deprecation
+            //noinspection deprecation
             window.setStatusBarColor(window.getContext().getResources().getColor(color));
         }
     }

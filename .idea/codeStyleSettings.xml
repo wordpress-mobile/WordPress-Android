@@ -3,6 +3,8 @@
   <component name="ProjectCodeStyleSettingsManager">
     <option name="PER_PROJECT_SETTINGS">
       <value>
+        <option name="FIELD_NAME_PREFIX" value="m" />
+        <option name="STATIC_FIELD_NAME_PREFIX" value="s" />
         <option name="CLASS_COUNT_TO_USE_IMPORT_ON_DEMAND" value="99" />
         <option name="NAMES_COUNT_TO_USE_IMPORT_ON_DEMAND" value="99" />
         <option name="PACKAGES_TO_USE_IMPORT_ON_DEMAND">
@@ -30,7 +32,7 @@
             <emptyLine />
           </value>
         </option>
-        <option name="ENABLE_JAVADOC_FORMATTING" value="false" />
+        <option name="RIGHT_MARGIN" value="120" />
         <AndroidXmlCodeStyleSettings>
           <option name="USE_CUSTOM_SETTINGS" value="true" />
         </AndroidXmlCodeStyleSettings>
@@ -76,7 +78,6 @@
         </XML>
         <codeStyleSettings language="JAVA">
           <option name="ALIGN_MULTILINE_CHAINED_METHODS" value="true" />
-          <option name="ALIGN_MULTILINE_PARAMETERS_IN_CALLS" value="true" />
           <option name="ALIGN_MULTILINE_BINARY_OPERATION" value="true" />
           <option name="ALIGN_MULTILINE_METHOD_BRACKETS" value="true" />
           <option name="CALL_PARAMETERS_WRAP" value="1" />

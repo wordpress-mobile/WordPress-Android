@@ -321,13 +321,19 @@
     <string name="out_of_memory">Device out of memory</string>
     <string name="file_not_found">Couldn\'t find the file for upload. Was it deleted or moved?</string>
     <string name="download">Downloading media</string>
-    <string name="delete_post">Delete post</string>
-    <string name="delete_page">Delete page</string>
+    <string name="delete_post">Delete post?</string>
+    <string name="delete_page">Delete page?</string>
     <string name="share_url">Share URL</string>
     <string name="posts_fetching">Fetching posts…</string>
     <string name="pages_fetching">Fetching pages…</string>
     <string name="toast_err_post_uploading">Unable to open post while it\'s uploading</string>
     <string name="dialog_confirm_cancel_post_media_uploading">Are you sure? Deleting this post will also cancel the media upload.</string>
+    <string name="dialog_confirm_delete_post">This post will be deleted and sent to Trash</string>
+    <string name="dialog_confirm_delete_page">This page will be deleted and sent to Trash</string>
+    <string name="dialog_confirm_publish_title">Ready to Publish?</string>
+    <string name="dialog_confirm_publish_message_post">This post will be published immediately.</string>
+    <string name="dialog_confirm_publish_message_page">This page will be published immediately.</string>
+    <string name="dialog_confirm_publish_yes">Publish now</string>
 
     <!-- reload drop down -->
     <string name="loading">Loading…</string>
@@ -1067,6 +1073,7 @@
     <string name="async_promo_title">Publish with Confidence</string>
     <string name="async_promo_description">You can now leave the editor and your post will save and publish behind the scenes! Give it a try!</string>
     <string name="async_promo_link">How does it work?</string>
+    <string name="async_promo_publish_now">Publish now</string>
 
     <!-- Post Settings -->
     <string name="post_settings">Post settings</string>

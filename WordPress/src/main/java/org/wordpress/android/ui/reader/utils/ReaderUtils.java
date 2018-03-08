@@ -20,6 +20,8 @@ import org.wordpress.android.util.PhotonUtils;
 import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.UrlUtils;
 
+import java.util.Locale;
+
 public class ReaderUtils {
     public static String getResizedImageUrl(final String imageUrl, int width, int height, boolean isPrivate) {
         return getResizedImageUrl(imageUrl, width, height, isPrivate, PhotonUtils.Quality.MEDIUM);
@@ -197,7 +199,7 @@ public class ReaderUtils {
     }
 
     public static ReaderTag createTagFromTagName(String tagName, ReaderTagType tagType) {
-        String tagSlug = sanitizeWithDashes(tagName).toLowerCase();
+        String tagSlug = sanitizeWithDashes(tagName).toLowerCase(Locale.ROOT);
         String tagDisplayName = tagType == ReaderTagType.DEFAULT ? tagName : tagSlug;
         return new ReaderTag(tagSlug, tagDisplayName, tagName, null, tagType);
     }

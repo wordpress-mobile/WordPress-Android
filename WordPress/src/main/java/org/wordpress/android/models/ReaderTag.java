@@ -6,6 +6,7 @@ import org.wordpress.android.ui.reader.utils.ReaderUtils;
 import org.wordpress.android.util.StringUtils;
 
 import java.io.Serializable;
+import java.util.Locale;
 import java.util.regex.Pattern;
 
 public class ReaderTag implements Serializable, FilterCriteria {
@@ -158,12 +159,12 @@ public class ReaderTag implements Serializable, FilterCriteria {
 
     public boolean isTagTopic() {
         String endpoint = getEndpoint();
-        return endpoint.toLowerCase().contains("/read/tags/");
+        return endpoint.toLowerCase(Locale.ROOT).contains("/read/tags/");
     }
 
     public boolean isListTopic() {
         String endpoint = getEndpoint();
-        return endpoint.toLowerCase().contains("/read/list/");
+        return endpoint.toLowerCase(Locale.ROOT).contains("/read/list/");
     }
 
     /*
@@ -172,7 +173,7 @@ public class ReaderTag implements Serializable, FilterCriteria {
     @Override
     public String getLabel() {
         if (isTagDisplayNameAlphaNumeric()) {
-            return getTagDisplayName().toLowerCase();
+            return getTagDisplayName().toLowerCase(Locale.ROOT);
         } else if (hasTagTitle()) {
             return getTagTitle();
         } else {

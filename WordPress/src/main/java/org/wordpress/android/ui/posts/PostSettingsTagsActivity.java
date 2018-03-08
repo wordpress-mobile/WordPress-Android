@@ -36,6 +36,7 @@ import org.wordpress.android.util.ToastUtils;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 import javax.inject.Inject;
 
@@ -262,7 +263,8 @@ public class PostSettingsTagsActivity extends AppCompatActivity implements TextW
                         filteredTags.addAll(allTags);
                     } else {
                         for (TermModel tag : allTags) {
-                            if (tag.getName().toLowerCase().contains(text.toLowerCase())) {
+                            if (tag.getName().toLowerCase(Locale.getDefault())
+                                   .contains(text.toLowerCase(Locale.getDefault()))) {
                                 filteredTags.add(tag);
                             }
                         }

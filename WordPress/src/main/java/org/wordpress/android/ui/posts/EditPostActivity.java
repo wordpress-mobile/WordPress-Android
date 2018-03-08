@@ -977,7 +977,7 @@ public class EditPostActivity extends AppCompatActivity implements
 
         if (itemId == R.id.menu_save_post) {
             if (!AppPrefs.isAsyncPromoRequired()) {
-                publishPost();
+                showPublishConfirmationOrUpdateIfNotLocalDraft();
             } else {
                 showAsyncPromoDialog();
             }
@@ -1001,6 +1001,33 @@ public class EditPostActivity extends AppCompatActivity implements
             }
         }
         return false;
+    }
+
+    private void showPublishConfirmationDialog() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle(getResources().getText(R.string.dialog_confirm_publish_title))
+                .setMessage(mPost.isPage() ? getString(R.string.dialog_confirm_publish_message_page)
+                                    : getString(R.string.dialog_confirm_publish_message_post))
+                .setPositiveButton(R.string.dialog_confirm_publish_yes, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        publishPost();
+                    }
+                })
+                .setNegativeButton(R.string.keep_editing, null)
+                .setCancelable(true);
+        builder.create().show();
+    }
+
+    private void showPublishConfirmationOrUpdateIfNotLocalDraft() {
+        // if post is a draft, first make sure to confirm the PUBLISH action, in case
+        // the user tapped on it accidentally
+        if (mPost.isLocalDraft()) {
+            showPublishConfirmationDialog();
+        } else {
+            // otherwise, if they're updating a Post, just go ahead and save it to the server
+            publishPost();
+        }
     }
 
     private void savePostOnlineAndFinishAsync(boolean isFirstTimePublish) {
@@ -2730,7 +2757,7 @@ public class EditPostActivity extends AppCompatActivity implements
                 // also make sure it's not being uploaded anywhere else (maybe on some other Post,
                 // simultaneously)
                 if (mediaModel.getUploadState() != null
-                    && MediaUtils.isLocalFile(mediaModel.getUploadState().toLowerCase())
+                    && MediaUtils.isLocalFile(mediaModel.getUploadState().toLowerCase(Locale.ROOT))
                     && !UploadService.isPendingOrInProgressMediaUpload(mediaModel)) {
                     mDispatcher.dispatch(MediaActionBuilder.newRemoveMediaAction(mediaModel));
                 }
@@ -3031,11 +3058,12 @@ public class EditPostActivity extends AppCompatActivity implements
     }
 
     private void showAsyncPromoDialog() {
-        PromoDialogAdvanced asyncPromoDialog = new PromoDialogAdvanced.Builder(
+        final PromoDialogAdvanced asyncPromoDialog = new PromoDialogAdvanced.Builder(
                 R.drawable.img_promo_async,
                 R.string.async_promo_title,
                 R.string.async_promo_description,
-                android.R.string.ok)
+                R.string.async_promo_publish_now)
+                .setNegativeButtonText(R.string.keep_editing)
                 .setLinkText(R.string.async_promo_link)
                 .build();
 
@@ -3053,6 +3081,13 @@ public class EditPostActivity extends AppCompatActivity implements
             @Override
             public void onClick(View v) {
                 publishPost();
+            }
+        });
+
+        asyncPromoDialog.setNegativeButtonOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                asyncPromoDialog.dismiss();
             }
         });
 
