@@ -1127,7 +1127,6 @@ Language: ru
     <string name="site_picker_cant_hide_current_site">\"%s\" не был скрыт, так как это текущий сайт.</string>
     <string name="me_btn_support">Помощь и техническая поддержка</string>
     <string name="account_settings">Настройки учётной записи</string>
-    <string name="site_picker_create_dotcom">Создать сайт на WordPress.com</string>
     <string name="site_picker_edit_visibility">Показать/скрыть веб-сайты</string>
     <string name="site_picker_add_self_hosted">Добавить автономный веб-сайт</string>
     <string name="site_picker_add_site">Добавить веб-сайт</string>

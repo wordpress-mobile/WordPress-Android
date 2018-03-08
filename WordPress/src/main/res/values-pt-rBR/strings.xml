@@ -1127,7 +1127,6 @@ Language: pt_BR
     <string name="site_picker_cant_hide_current_site">\"%s\" não está escondido porque é o site atual</string>
     <string name="me_btn_support">Ajuda e Suporte</string>
     <string name="account_settings">Configurações da conta</string>
-    <string name="site_picker_create_dotcom">Criar um site no WordPress.com</string>
     <string name="site_picker_edit_visibility">Mostrar/esconder sites</string>
     <string name="site_picker_add_self_hosted">Adicionar site auto-hospedado</string>
     <string name="site_picker_add_site">Adicionar site</string>

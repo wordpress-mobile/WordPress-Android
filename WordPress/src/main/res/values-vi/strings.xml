@@ -458,7 +458,6 @@ Language: vi_VN
     <string name="me_btn_support">Giúp đỡ &amp; Hỗ trợ</string>
     <string name="account_settings">Cài đặt tài khoản</string>
     <string name="site_picker_cant_hide_current_site">\"%s\" không được ẩn vì đó là trang web hiện tại</string>
-    <string name="site_picker_create_dotcom">Tạo WordPress.com site</string>
     <string name="site_picker_add_self_hosted">Thêm site tự làm</string>
     <string name="site_picker_edit_visibility">Hiện/Ẩn các site</string>
     <string name="my_site_btn_view_admin">Xem Admin</string>

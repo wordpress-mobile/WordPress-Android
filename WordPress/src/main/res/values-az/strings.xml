@@ -53,7 +53,6 @@ Language: az
     <string name="me_btn_login_logout">Giriş/Çıxış</string>
     <string name="me_btn_support">Yardım və Dəstək</string>
     <string name="site_picker_cant_hide_current_site">\"%s\" hazırkı sayt olduğundan gizlədilə bilmədi</string>
-    <string name="site_picker_create_dotcom">WordPress.com saytı yarat</string>
     <string name="site_picker_add_self_hosted">İstifadəçinin öz hostundakı saytı əlavə et</string>
     <string name="site_picker_edit_visibility">Saytları göstər/gizlət</string>
     <string name="my_site_btn_view_admin">Nəzarətçiyə Bax</string>

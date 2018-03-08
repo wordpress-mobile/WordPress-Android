@@ -727,7 +727,6 @@ Language: bg
     <string name="account_settings">Настройки на профила</string>
     <string name="me_btn_support">Помощ и поддръжка</string>
     <string name="site_picker_cant_hide_current_site">\"%s\" не беше скрит защото е текущият уебсайт</string>
-    <string name="site_picker_create_dotcom">Създаване на WordPress.com уебсайт</string>
     <string name="site_picker_edit_visibility">Показване/скриване на сайтовете</string>
     <string name="site_picker_add_self_hosted">Добавяне на самостоятелно хостван уебсайт</string>
     <string name="my_site_btn_view_admin">Преглед на администрацията</string>
