@@ -38,6 +38,7 @@ import org.wordpress.android.fluxc.store.AccountStore.NewUserError;
 import org.wordpress.android.fluxc.store.AccountStore.NewUserErrorType;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
+import org.wordpress.android.util.LanguageUtils;
 
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
@@ -595,6 +596,7 @@ public class AccountRestClient extends BaseWPComRestClient {
         body.put("validate", dryRun ? "1" : "0");
         body.put("client_id", mAppSecrets.getAppId());
         body.put("client_secret", mAppSecrets.getAppSecret());
+        body.put("locale", LanguageUtils.getPatchedCurrentDeviceLanguage(mAppContext));
 
         WPComGsonRequest<AccountBoolResponse> request = WPComGsonRequest.buildPostRequest(url, body,
                 AccountBoolResponse.class,
