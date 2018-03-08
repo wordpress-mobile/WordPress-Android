@@ -1,5 +1,6 @@
 package org.wordpress.android.fluxc.network.rest.wpcom.auth;
 
+import android.content.Context;
 import android.support.annotation.NonNull;
 import android.text.TextUtils;
 
@@ -27,6 +28,7 @@ import org.wordpress.android.fluxc.store.AccountStore.AuthEmailPayload;
 import org.wordpress.android.fluxc.store.AccountStore.AuthenticationErrorType;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
+import org.wordpress.android.util.LanguageUtils;
 
 import java.io.UnsupportedEncodingException;
 import java.util.HashMap;
@@ -57,6 +59,7 @@ public class Authenticator {
     private static final String INVALID_OTP_ERROR = "invalid_otp";
     private static final String INVALID_CREDS_ERROR = "Incorrect username or password.";
 
+    private final Context mAppContext;
     private final Dispatcher mDispatcher;
     private final RequestQueue mRequestQueue;
     private AppSecrets mAppSecrets;
@@ -76,7 +79,8 @@ public class Authenticator {
     }
 
     @Inject
-    public Authenticator(Dispatcher dispatcher, RequestQueue requestQueue, AppSecrets secrets) {
+    public Authenticator(Context appContext, Dispatcher dispatcher, RequestQueue requestQueue, AppSecrets secrets) {
+        mAppContext = appContext;
         mDispatcher = dispatcher;
         mRequestQueue = requestQueue;
         mAppSecrets = secrets;
@@ -210,6 +214,7 @@ public class Authenticator {
         params.put("email", payload.emailOrUsername);
         params.put("client_id", mAppSecrets.getAppId());
         params.put("client_secret", mAppSecrets.getAppSecret());
+        params.put("locale", LanguageUtils.getPatchedCurrentDeviceLanguage(mAppContext));
 
         WPComGsonRequest request = WPComGsonRequest.buildPostRequest(url, params, AuthEmailWPComRestResponse.class,
                 new Response.Listener<AuthEmailWPComRestResponse>() {
