@@ -35,6 +35,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
 import android.text.format.DateUtils;
+import android.view.ContextThemeWrapper;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -1023,7 +1024,7 @@ public class MediaSettingsActivity extends AppCompatActivity
             resId = R.string.confirm_delete_media_image;
         }
 
-        AlertDialog.Builder builder = new AlertDialog.Builder(this)
+        AlertDialog.Builder builder = new AlertDialog.Builder(new ContextThemeWrapper(this, R.style.Calypso_Dialog))
                 .setMessage(resId)
                 .setCancelable(true).setPositiveButton(
                         isMediaFromEditor() ? R.string.remove : R.string.delete, new DialogInterface.OnClickListener() {
