@@ -277,7 +277,8 @@ public class PluginBrowserViewModel extends ViewModel {
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onSitePluginsFetched(PluginStore.OnSitePluginsFetched event) {
         if (event.isError()) {
-            AppLog.e(AppLog.T.PLUGINS, "An error occurred while fetching site plugins with type: " + event.error.type);
+            AppLog.e(AppLog.T.PLUGINS, "An error occurred while fetching site plugins with type: " + event.error.type
+                    + " and message: " + event.error.message);
             mSitePluginsListStatus.setValue(PluginListStatus.ERROR);
             return;
         }
@@ -303,7 +304,8 @@ public class PluginBrowserViewModel extends ViewModel {
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onPluginDirectoryFetched(PluginStore.OnPluginDirectoryFetched event) {
         if (event.isError()) {
-            AppLog.e(AppLog.T.PLUGINS, "An error occurred while fetching the plugin directory: " + event.type);
+            AppLog.e(AppLog.T.PLUGINS, "An error occurred while fetching the plugin directory: " + event.type
+                    + " and message: " + event.error.message);
             if (event.type == PluginDirectoryType.NEW) {
                 mNewPluginsListStatus.setValue(PluginListStatus.ERROR);
             } else if (event.type == PluginDirectoryType.POPULAR) {
@@ -331,7 +333,8 @@ public class PluginBrowserViewModel extends ViewModel {
             return;
         }
         if (event.isError()) {
-            AppLog.e(AppLog.T.PLUGINS, "An error occurred while searching the plugin directory");
+            AppLog.e(AppLog.T.PLUGINS, "An error occurred while searching the plugin directory: " + event.error.type
+                    + " and message: " + event.error.message);
             mSearchPluginsListStatus.setValue(PluginListStatus.ERROR);
             return;
         }

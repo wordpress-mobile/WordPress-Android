@@ -344,7 +344,10 @@ public class LoginActivity extends AppCompatActivity implements ConnectionCallba
     @Override
     public void onSignupSheetTermsOfServiceClicked() {
         AnalyticsTracker.track(AnalyticsTracker.Stat.SIGNUP_TERMS_OF_SERVICE_TAPPED);
-        ActivityLauncher.openUrlExternal(this, getResources().getString(R.string.wordpresscom_tos_url));
+        // Get device locale and remove region to pass only language.
+        String locale = LanguageUtils.getPatchedCurrentDeviceLanguage(this);
+        locale = locale.substring(0, locale.indexOf("_"));
+        ActivityLauncher.openUrlExternal(this, getResources().getString(R.string.wordpresscom_tos_url, locale));
     }
 
     @Override
