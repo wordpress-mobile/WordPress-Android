@@ -71,6 +71,7 @@ Language: sr_RS
     <string name="me_btn_login_logout">Пријава/одјава</string>
     <string name="me_btn_support">Помоћ и подршка</string>
     <string name="site_picker_cant_hide_current_site">\"%s\" није сакривен зато што је тренутно веб место</string>
+    <string name="site_picker_create_dotcom">Направи WordPress.com веб место</string>
     <string name="site_picker_add_self_hosted">Додај самостално угошћено веб место</string>
     <string name="site_picker_edit_visibility">Прикажи/сакриј веб места</string>
     <string name="my_site_btn_switch_site">Промени веб место</string>
@@ -95,13 +96,13 @@ Language: sr_RS
     <string name="language">Језик</string>
     <string name="device">Уређај</string>
     <string name="reader_empty_posts_request_failed">Није могуће добавити чланке</string>
-    <string name="pages_fetching">Добављам стране...</string>
+    <string name="pages_fetching">Добављам стране…</string>
     <string name="stats_empty_search_terms_desc">Сазнајте више о посетама са веб претраживача прегледом термина које су посетиоци користили да пронађу ваше веб место.</string>
-    <string name="media_fetching">Добављам медије...</string>
-    <string name="posts_fetching">Добављам чланке...</string>
+    <string name="media_fetching">Добављам медије…</string>
+    <string name="posts_fetching">Добављам чланке…</string>
     <string name="toast_err_post_uploading">Није могуће отворити чланак док се отпремљује</string>
     <string name="stats_view_search_terms">Термини за претрагу</string>
-    <string name="comments_fetching">Добављам коментаре...</string>
+    <string name="comments_fetching">Добављам коментаре…</string>
     <string name="stats_view_authors">Аутори</string>
     <string name="stats_entry_search_terms">Термин за претрагу</string>
     <string name="stats_empty_search_terms">Нема забележених термина за претрагу</string>
@@ -177,7 +178,7 @@ Language: sr_RS
     <string name="stats_followers_months">%1$d месеци</string>
     <string name="stats_for">Статистике за %s</string>
     <string name="stats_other_recent_stats_label">Друге недавне статистике</string>
-    <string name="themes_fetching">Добављам теме...</string>
+    <string name="themes_fetching">Добављам теме…</string>
     <string name="stats_comments_total_comments_followers">Укупан број чланака са пратиоцима коментара: %1$s</string>
     <string name="ssl_certificate_details">Детаљи</string>
     <string name="delete_sure_page">Обриши ову страну</string>
@@ -244,7 +245,7 @@ Language: sr_RS
     <string name="reader_title_blog_preview">Блог читача</string>
     <string name="reader_page_followed_blogs">Веб места која пратите</string>
     <string name="ptr_tip_message">Савет: Повуците надоле да бисте освежили</string>
-    <string name="saving">Чувам...</string>
+    <string name="saving">Чувам…</string>
     <string name="media_empty_list">Нема медија</string>
     <string name="ssl_certificate_error">Неисправна SSL потврда</string>
     <string name="help_center">Центар за помоћ</string>
@@ -397,7 +398,7 @@ Language: sr_RS
     <string name="deleting_page">Брисање стране</string>
     <string name="share_url_page">Поделите страну</string>
     <string name="creating_your_site">Прављење веб места</string>
-    <string name="reader_empty_posts_in_tag_updating">Добављам чланке...</string>
+    <string name="reader_empty_posts_in_tag_updating">Добављам чланке…</string>
     <string name="reader_likes_you_and_multi">Вама и %,d других се ово свиђа</string>
     <string name="reader_likes_multi">%,d људи се ово свиђа</string>
     <string name="cant_share_no_visible_blog">Не можете делити на Вордпрес без видљивог блога</string>
@@ -493,7 +494,7 @@ Language: sr_RS
     <string name="more_notifications">и %d још.</string>
     <string name="new_notifications">%d нових обавештења</string>
     <string name="note_reply_successful">Успешно одговорено</string>
-    <string name="loading">Учитавање...</string>
+    <string name="loading">Учитавање…</string>
     <string name="httppassword">HTTP лозинка</string>
     <string name="httpuser">HTTP корисничко име</string>
     <string name="error_media_upload">Дошло је до грешке током отпремања медија</string>

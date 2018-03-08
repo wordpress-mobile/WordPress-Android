@@ -74,7 +74,7 @@ Language: it
     <string name="editor_dropped_title_images_not_allowed">Non è consentito rilasciare immagini nel Titolo</string>
     <string name="editor_dropped_text_error">Si è verificato un errore durante il rilascio del testo</string>
     <string name="editor_dropped_html_images_not_allowed">Non è consentito rilasciare immagini quando si è in modalità HTML</string>
-    <string name="editor_content_hint">Condividi la tua storia qui...</string>
+    <string name="editor_content_hint">Condividi la tua storia qui…</string>
     <string name="post_status_trashed">Eliminati nel cestino</string>
     <string name="post_status_scheduled">Programmati</string>
     <string name="post_status_post_private">Privati</string>
@@ -305,10 +305,10 @@ Language: it
     <string name="error_notif_q_action_like">Impossibile mettere un like al commento. Riprova più tardi.</string>
     <string name="notifications_label_new_notifications_subtitle">Clicca per mostrarli</string>
     <string name="notifications_label_new_notifications">Nuove notifiche</string>
-    <string name="comment_q_action_replying">Rispondendo...</string>
-    <string name="comment_q_action_approving">Approvando...</string>
-    <string name="comment_q_action_liking">Effettuando il link...</string>
-    <string name="comment_q_action_processing">Processo in corso...</string>
+    <string name="comment_q_action_replying">Rispondendo…</string>
+    <string name="comment_q_action_approving">Approvando…</string>
+    <string name="comment_q_action_liking">Effettuando il link…</string>
+    <string name="comment_q_action_processing">Processo in corso…</string>
     <string name="comment_q_action_done_generic">Azione compiuta!</string>
     <string name="comment_liked">Like assegnato al commento</string>
     <string name="signout">Uscire</string>
@@ -401,7 +401,7 @@ Language: it
     <string name="dlg_confirm_clear_search_history">Pulire lo storico della ricerca?</string>
     <string name="reader_empty_posts_in_search_description">Nessun articolo trovato riguardo %s per la tua lingua</string>
     <string name="reader_empty_posts_in_search_title">Nessun articolo trovato</string>
-    <string name="reader_label_post_search_running">Ricerca in corso...</string>
+    <string name="reader_label_post_search_running">Ricerca in corso…</string>
     <string name="reader_label_post_search_explainer">Cerca in tutti i blog pubblici di WordPress.com</string>
     <string name="reader_hint_post_search">Cerca in WordPress.com</string>
     <string name="reader_title_search_results">Cerca %s</string>
@@ -455,13 +455,13 @@ Language: it
     <string name="export_your_content_message">I tuoi articoli, pagine e impostazioni ti saranno inviate via e-mail all\'indirizzo %s.</string>
     <string name="export_your_content">Esporta i contenuti</string>
     <string name="export_email_sent">Email di esportazione inviata!</string>
-    <string name="exporting_content_progress">Esportazione dei contenuti in corso ...</string>
+    <string name="exporting_content_progress">Esportazione dei contenuti in corso …</string>
     <string name="checking_purchases">Controllo degli acquisti</string>
     <string name="show_purchases">Mostra gli acquisti</string>
     <string name="premium_upgrades_message">Sul tuo sito sono attivi alcuni aggiornamenti premium. Cancella gli aggiornamenti prima di cancellare il sito.</string>
     <string name="premium_upgrades_title">Aggiornamenti alla versione Premium</string>
     <string name="purchases_request_error">Qualcosa è andato storto. Non è stato possibile richiedere gli acquisti.</string>
-    <string name="delete_site_progress">Cancellazione del sito in corso ...</string>
+    <string name="delete_site_progress">Cancellazione del sito in corso …</string>
     <string name="delete_site_hint">Elimina il sito</string>
     <string name="delete_site_summary">Questa azione è irreversibile. Cancellando il tuo sito rimuoverai tutti i contenuti, collaboratori, e domini.</string>
     <string name="export_site_hint">Esporta il sito in un file XML</string>
@@ -542,7 +542,7 @@ Language: it
     <string name="post_settings_set_featured_image">Imposta Immagine in Evidenza</string>
     <string name="post_settings_featured_image">Immagine in evidenza</string>
     <string name="visual_editor_enabled">Editor visuale abilitato</string>
-    <string name="editor_content_placeholder">Condividi la tua storia qui...</string>
+    <string name="editor_content_placeholder">Condividi la tua storia qui…</string>
     <string name="editor_page_title_placeholder">Titolo della pagina</string>
     <string name="editor_post_title_placeholder">Titolo dell\'articolo</string>
     <string name="email_address">Indirizzo e-mail</string>
@@ -729,9 +729,9 @@ Language: it
     <string name="notifications_empty_action_comments">Unisciti ad una conversazione: commenti su articoli di blog che segui.</string>
     <string name="notifications_empty_action_unread">Ravviva la conversazione: scrivi un nuovo articolo.</string>
     <string name="notifications_empty_action_all">Sii attivo! Commenta articoli dei blog che segui.</string>
-    <string name="notifications_empty_likes">Nessun nuovo mi piace da mostrare... per ora.</string>
-    <string name="notifications_empty_followers">Nessun nuovo utente ti segue... per ora.</string>
-    <string name="notifications_empty_comments">Nessun nuovo commento... per ora.</string>
+    <string name="notifications_empty_likes">Nessun nuovo mi piace da mostrare… per ora.</string>
+    <string name="notifications_empty_followers">Nessun nuovo utente ti segue… per ora.</string>
+    <string name="notifications_empty_comments">Nessun nuovo commento… per ora.</string>
     <string name="notifications_empty_unread">Nessun articolo non letto!</string>
     <string name="stats_widget_error_jetpack_no_blogid">Accedi alla Statistiche nella app e quindi successivamente prova ad aggiungere il widget</string>
     <string name="stats_widget_error_readd_widget">Rimuovi il widget e aggiungilo nuovamente</string>
@@ -739,7 +739,7 @@ Language: it
     <string name="stats_widget_error_no_permissions">Il tuo account WordPress.com non può accedere alle Statistiche di questo blog</string>
     <string name="stats_widget_error_no_account">Effettua il login su WordPress</string>
     <string name="stats_widget_error_generic">Le Statistiche non possno essere caricate</string>
-    <string name="stats_widget_loading_data">Caricamento dati...</string>
+    <string name="stats_widget_loading_data">Caricamento dati…</string>
     <string name="stats_widget_name_for_blog">Statistiche di oggi per %1$s</string>
     <string name="stats_widget_name">Statistiche di oggi di WordPress</string>
     <string name="post_settings_add_location_permission_required">Per aggiungere una località occorre disporre dei permessi appositi</string>
@@ -775,7 +775,7 @@ Language: it
     <string name="notifications_tab">Scheda Notifiche</string>
     <string name="app_notifications">Notifiche della app</string>
     <string name="notifications_wpcom_updates">Aggiornamenti di WordPress.com</string>
-    <string name="stats_insights_latest_post_trend">Sono passati %1$s dalla pubblicazione di %2$s. Ecco com\'è andato finora l\'articolo...</string>
+    <string name="stats_insights_latest_post_trend">Sono passati %1$s dalla pubblicazione di %2$s. Ecco com\'è andato finora l\'articolo…</string>
     <string name="stats_insights_latest_post_summary">Riassunto ultimo articolo</string>
     <string name="button_revert">Riconverti</string>
     <string name="yesterday">Ieri</string>
@@ -816,6 +816,7 @@ Language: it
     <string name="site_picker_cant_hide_current_site">\"%s\" non è stato nascosto perchè è il sito corrente</string>
     <string name="me_btn_support">Aiuto e supporto</string>
     <string name="account_settings">Impostazioni account</string>
+    <string name="site_picker_create_dotcom">Crea un sito su WordPress.com</string>
     <string name="site_picker_edit_visibility">Mostra/nascondi siti</string>
     <string name="site_picker_add_self_hosted">Aggiungi un sito self-hosted</string>
     <string name="my_site_btn_switch_site">Cambia sito</string>
@@ -846,10 +847,10 @@ Language: it
     <string name="language">Lingua</string>
     <string name="device">Dispositivo</string>
     <string name="media_fetching">Recupero file multimediali in corso…</string>
-    <string name="posts_fetching">Recupero degli articoli in corso...</string>
+    <string name="posts_fetching">Recupero degli articoli in corso…</string>
     <string name="toast_err_post_uploading">Impossibile aprire l\'articolo durante il suo caricamento</string>
     <string name="pages_fetching">Recupero pagine in corso…</string>
-    <string name="comments_fetching">Recupero commenti in corso...</string>
+    <string name="comments_fetching">Recupero commenti in corso…</string>
     <string name="stats_view_search_terms">Termini di ricerca</string>
     <string name="stats_view_authors">Autori</string>
     <string name="stats_entry_search_terms">Termine di ricerca</string>
@@ -936,7 +937,7 @@ Language: it
     <string name="delete_sure_page">Cancella questa pagina</string>
     <string name="delete_sure">Cancella questa bozza</string>
     <string name="delete_sure_post">Cancella questo articolo</string>
-    <string name="signing_out">Disconnessione in corso...</string>
+    <string name="signing_out">Disconnessione in corso…</string>
     <string name="pages_empty_list">Ancora nessuna pagina. Perché non crearne una?</string>
     <string name="comment_reply_to_user">Replica a %s</string>
     <string name="posts_empty_list">Ancora nessun articolo. Perché non crearne uno?</string>
@@ -944,7 +945,7 @@ Language: it
     <string name="comment">Commento</string>
     <string name="mnu_comment_liked">Like</string>
     <string name="uploading_total">Caricamento %1$d di %2$d</string>
-    <string name="sending_content">Caricamento del contenuto di %s...</string>
+    <string name="sending_content">Caricamento del contenuto di %s…</string>
     <string name="select_a_blog">Seleziona un sito WordPress</string>
     <string name="stats_no_blog">Non è possibile caricare le statistiche per il blog indicato</string>
     <string name="older_last_week">Più vecchio di una settimana</string>
@@ -1002,7 +1003,7 @@ Language: it
     <string name="reader_title_blog_preview">Reader blog</string>
     <string name="ptr_tip_message">Suggerimento: scorri il dito verso il basso per aggiornare</string>
     <string name="media_empty_list">Nessun media</string>
-    <string name="saving">Salvataggio in corso...</string>
+    <string name="saving">Salvataggio in corso…</string>
     <string name="ssl_certificate_ask_trust">Se in genere ti connetti al sito senza problemi, questo errore potrebbe significare che qualcuno sta tentando di impersonare il sito, pertanto non dovresti continuare. Desideri comunque confermare l\'affidabilità del certificato?</string>
     <string name="ssl_certificate_error">Certificato SSL non valido</string>
     <string name="help_center">Centro assistenza</string>
@@ -1085,7 +1086,7 @@ Language: it
     <string name="view_site">Visualizza sito</string>
     <string name="new_media">Nuovo supporto</string>
     <string name="new_post">Nuovo articolo</string>
-    <string name="notifications_empty_all">Nessuna notifica... per ora.</string>
+    <string name="notifications_empty_all">Nessuna notifica… per ora.</string>
     <string name="http_authorization_required">Autorizzazione richiesta</string>
     <string name="http_credentials">Credenziali HTTP (opzionale)</string>
     <string name="invalid_site_url_message">Controlla che l\'URL del sito sia valido</string>
@@ -1158,7 +1159,7 @@ Language: it
     <string name="deleting_post">Eliminando l\'articolo</string>
     <string name="deleting_page">Eliminando la pagina</string>
     <string name="creating_your_site">Creazione del sito in corso</string>
-    <string name="reader_empty_posts_in_tag_updating">Recupero post in corso...</string>
+    <string name="reader_empty_posts_in_tag_updating">Recupero post in corso…</string>
     <string name="cant_share_no_visible_blog">Non è possibile condividere su WordPress senza un blog visibile</string>
     <string name="comment_spammed">Commento contrassegnato come spam</string>
     <string name="download">Download file multimediale in corso</string>
@@ -1228,7 +1229,7 @@ Language: it
     <string name="stats_view_visitors_and_views">Visitatori e visite</string>
     <string name="stats">Statistiche</string>
     <string name="share_action">Condividi</string>
-    <string name="share_action_title">Aggiungi a...</string>
+    <string name="share_action_title">Aggiungi a…</string>
     <string name="theme_auth_error_title">Impossibile recuperare i temi</string>
     <string name="theme_set_success">Tema impostato con successo!</string>
     <string name="theme_activating_button">Attivazione</string>
@@ -1284,7 +1285,7 @@ Language: it
     <string name="scaled_image">Larghezza immagine ridimensionata</string>
     <string name="upload_scaled_image">Carica e inserisci link all\'immagine ridimensionata</string>
     <string name="link_enter_url">URL</string>
-    <string name="uploading">Caricamento...</string>
+    <string name="uploading">Caricamento…</string>
     <string name="app_title">WordPress per Android</string>
     <string name="tos">Condizioni del servizio</string>
     <string name="version">Versione</string>

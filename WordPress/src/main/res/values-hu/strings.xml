@@ -16,10 +16,10 @@ Language: hu
     <string name="device">Eszköz</string>
     <string name="stats_view_authors">Szerzők</string>
     <string name="publisher">Közzétevő:</string>
-    <string name="pages_fetching">Oldalak betöltése...</string>
-    <string name="media_fetching">Média betöltése...</string>
-    <string name="comments_fetching">Hozzászólások betöltése...</string>
-    <string name="posts_fetching">Bejegyzések betöltése...</string>
+    <string name="pages_fetching">Oldalak betöltése…</string>
+    <string name="media_fetching">Média betöltése…</string>
+    <string name="comments_fetching">Hozzászólások betöltése…</string>
+    <string name="posts_fetching">Bejegyzések betöltése…</string>
     <string name="reader_empty_posts_in_blog">Ez a blog üres</string>
     <string name="stats_followers_email_selector">E-mail</string>
     <string name="stats_followers_wpcom_selector">WordPress.com</string>
@@ -75,7 +75,7 @@ Language: hu
     <string name="reader_empty_recommended_blogs">Nincsenek ajánlott blogok</string>
     <string name="reader_toast_err_already_follow_blog">Ezt a blogot már követjük</string>
     <string name="reader_toast_err_unfollow_blog">Nem sikerült ezt a blogot követni</string>
-    <string name="saving">Mentés...</string>
+    <string name="saving">Mentés…</string>
     <string name="media_empty_list">Nincs média</string>
     <string name="ptr_tip_message">Tipp: A frissítéshez húzzuk le</string>
     <string name="help">Segítség</string>

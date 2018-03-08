@@ -181,7 +181,7 @@ Language: zh_TW
     <string name="alert_error_adding_media">插入媒體時發生錯誤</string>
     <string name="alert_action_while_uploading">你目前正在上傳媒體。請等待此項作業完成。</string>
     <string name="alert_insert_image_html_mode">無法直接在 HTML 模式中插入媒體。請切換回視覺化模式。</string>
-    <string name="uploading_gallery_placeholder">正在上傳圖庫...</string>
+    <string name="uploading_gallery_placeholder">正在上傳圖庫…</string>
     <string name="invite_error_some_failed">已送出邀請但發生錯誤！</string>
     <string name="invite_sent">已成功送出邀請</string>
     <string name="tap_to_try_again">點選以重試！</string>
@@ -257,14 +257,14 @@ Language: zh_TW
     <string name="plans">方案</string>
     <string name="plans_loading_error">無法載入方案</string>
     <string name="export_your_content">匯出你的內容</string>
-    <string name="exporting_content_progress">匯出內容...</string>
+    <string name="exporting_content_progress">匯出內容…</string>
     <string name="export_email_sent">匯出電子郵件已傳送！</string>
     <string name="premium_upgrades_message">你的網站已啟用進階版升級服務。刪除網站前，請先取消升級。</string>
     <string name="show_purchases">顯示購買項目</string>
     <string name="checking_purchases">檢查購買項目</string>
     <string name="premium_upgrades_title">進階版升級</string>
     <string name="purchases_request_error">發生了點錯誤。無法要求購買項目。</string>
-    <string name="delete_site_progress">正在刪除網站...</string>
+    <string name="delete_site_progress">正在刪除網站…</string>
     <string name="delete_site_summary">此動作無法復原。刪除網站將一併移除網站上的所有內容、參與者及網域。</string>
     <string name="delete_site_hint">刪除網站</string>
     <string name="export_site_hint">將網站匯出為 XML 檔案</string>
@@ -343,7 +343,7 @@ Language: zh_TW
     <string name="editor_toast_uploading_please_wait">你目前正在上傳媒體。請等待此作業完成。</string>
     <string name="error_refresh_comments_showing_older">目前無法重新整理留言 – 顯示較舊的留言</string>
     <string name="visual_editor_enabled">視覺化編輯器已啟用</string>
-    <string name="editor_content_placeholder">在此分享你的故事...</string>
+    <string name="editor_content_placeholder">在此分享你的故事…</string>
     <string name="editor_page_title_placeholder">頁面標題</string>
     <string name="editor_post_title_placeholder">文章標題</string>
     <string name="email_address">電子郵件地址</string>
@@ -550,7 +550,7 @@ Language: zh_TW
     <string name="reader_short_comment_count_multi">%s評論</string>
     <string name="reader_short_comment_count_one">1評論</string>
     <string name="reader_label_submit_comment">發送</string>
-    <string name="reader_hint_comment_on_post">回复文章...</string>
+    <string name="reader_hint_comment_on_post">回复文章…</string>
     <string name="reader_discover_visit_blog">造訪 %s</string>
     <string name="reader_discover_attribution_blog">原始發表位置：%s</string>
     <string name="reader_discover_attribution_author">原始作者：%s</string>
@@ -616,6 +616,7 @@ Language: zh_TW
     <string name="site_picker_cant_hide_current_site">由於「%s」是目前的網站，因此並未隱藏</string>
     <string name="me_btn_support">說明與客戶服務</string>
     <string name="account_settings">帳號設定</string>
+    <string name="site_picker_create_dotcom">建立 WordPress.com 網站</string>
     <string name="site_picker_edit_visibility">顯示/隱藏網站</string>
     <string name="site_picker_add_self_hosted">新增自助託管的網站</string>
     <string name="my_site_btn_switch_site">切換網站</string>
@@ -729,7 +730,7 @@ Language: zh_TW
     <string name="stats_view_all">檢視全部</string>
     <string name="stats_for">%s 的統計資料</string>
     <string name="stats_other_recent_stats_label">其他近期統計資料</string>
-    <string name="themes_fetching">正在擷取佈景主題...</string>
+    <string name="themes_fetching">正在擷取佈景主題…</string>
     <string name="ssl_certificate_details">詳細資料</string>
     <string name="delete_sure_post">刪除此文章</string>
     <string name="delete_sure">刪除此草稿</string>
@@ -1055,7 +1056,7 @@ Language: zh_TW
     <string name="new_notifications">%d 個新通知</string>
     <string name="more_notifications">還有 %d 個。</string>
     <string name="follows">關注者</string>
-    <string name="loading">載入中...</string>
+    <string name="loading">載入中…</string>
     <string name="httppassword">HTTP 密碼</string>
     <string name="httpuser">HTTP 使用者帳號</string>
     <string name="error_media_upload">上傳媒體時發生錯誤</string>

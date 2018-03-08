@@ -80,7 +80,7 @@ Language: id
     <string name="comment_q_action_replying">Membalas…</string>
     <string name="comment_q_action_approving">Menyetujui…</string>
     <string name="comment_q_action_liking">Menyukai…</string>
-    <string name="comment_q_action_processing">Memproses...</string>
+    <string name="comment_q_action_processing">Memproses…</string>
     <string name="comment_q_action_done_generic">Tindakan selesai!</string>
     <string name="comment_liked">Komentar tersukai</string>
     <string name="signout">Keluar</string>
@@ -110,7 +110,7 @@ Language: id
     <string name="people_empty_list_filtered_viewers">Anda belum memiliki satupun pengunjung.</string>
     <string name="title_follower">Pengikut</string>
     <string name="title_email_follower">Pengikut Email</string>
-    <string name="people_fetching">Mengambil pengguna...</string>
+    <string name="people_fetching">Mengambil pengguna…</string>
     <string name="people_empty_list_filtered_email_followers">Anda belum memiliki satupun pengikut email.</string>
     <string name="people_empty_list_filtered_followers">Anda belum memiliki satupun pengikut.</string>
     <string name="people_empty_list_filtered_users">Anda belum memiliki satupun pengguna.</string>
@@ -145,7 +145,7 @@ Language: id
     <string name="alert_error_adding_media">Terjadi galat saat menyisipkan media</string>
     <string name="alert_action_while_uploading">Anda sedang mengunggah media. Mohon tunggu hingga selesai.</string>
     <string name="alert_insert_image_html_mode">Gagal menyisipkan media dalam mode HTML. Silakan pindah ke mode visual.</string>
-    <string name="uploading_gallery_placeholder">Mengunggah galeri...</string>
+    <string name="uploading_gallery_placeholder">Mengunggah galeri…</string>
     <string name="invite_sent">Undangan berhasil terkirim</string>
     <string name="tap_to_try_again">Ketuk untuk mencoba lagi!</string>
     <string name="invite_error_some_failed">Undangan terkirim namun terjadi galat!</string>
@@ -167,7 +167,7 @@ Language: id
     <string name="label_clear_search_history">Bersihkan riwayat pencarian</string>
     <string name="dlg_confirm_clear_search_history">Bersihkan riwayat pencarian?</string>
     <string name="reader_empty_posts_in_search_description">Tak ditemukan pos untuk %s dalam bahasa Anda</string>
-    <string name="reader_label_post_search_running">Mencari...</string>
+    <string name="reader_label_post_search_running">Mencari…</string>
     <string name="reader_empty_posts_in_search_title">Tak ditemukan pos</string>
     <string name="reader_label_post_search_explainer">Cari seluruh blog publik WordPress.com</string>
     <string name="reader_hint_post_search">Cari WordPress.com</string>
@@ -341,7 +341,7 @@ Language: id
     <string name="privacy_private">Situs Anda hanya dapat dilihat oleh Anda dan pengguna yang Anda setujui</string>
     <string name="privacy_public_not_indexed">Situs Anda dapat dilihat oleh semua orang, tetapi meminta mesin pencari untuk tidak mengindeks.</string>
     <string name="privacy_public">Situs Anda dapat dilihat oleh semua orang dan mungkin diindeks berdasarkan mesin pencarian.</string>
-    <string name="about_me_hint">Beberapa kata tentang Anda...</string>
+    <string name="about_me_hint">Beberapa kata tentang Anda…</string>
     <string name="about_me">Tentang saya</string>
     <string name="public_display_name_hint">Nama tampilan secara default akan menjadi nama pengguna Anda bila tidak diatur</string>
     <string name="public_display_name">Nama tampilan publik</string>
@@ -514,7 +514,7 @@ Language: id
     <string name="reader_short_comment_count_multi">%s Komentar</string>
     <string name="reader_short_comment_count_one">1 Komentar</string>
     <string name="reader_label_submit_comment">KIRIM</string>
-    <string name="reader_hint_comment_on_post">Tanggapan untuk pos...</string>
+    <string name="reader_hint_comment_on_post">Tanggapan untuk pos…</string>
     <string name="reader_discover_visit_blog">Kunjungi %s</string>
     <string name="reader_discover_attribution_blog">Semula diposkan pada %s</string>
     <string name="reader_discover_attribution_author">Semula diposkan oleh %s</string>
@@ -579,6 +579,7 @@ Language: id
     <string name="site_picker_cant_hide_current_site">\"%s\" tidak tersembunyi karena itu adalah situs saat ini</string>
     <string name="me_btn_support">Bantuan &amp; Dukungan</string>
     <string name="account_settings">Pengaturan Akun</string>
+    <string name="site_picker_create_dotcom">Buat situs WordPress.com</string>
     <string name="site_picker_add_self_hosted">Tambahkan situs mandiri (self-hosted)</string>
     <string name="site_picker_edit_visibility">Tampilkan/sembunyikan situs</string>
     <string name="site_picker_title">Pilih situs</string>
@@ -608,11 +609,11 @@ Language: id
     <string name="media_details_label_file_type">Tipe file</string>
     <string name="auth_required">Log in lagi untuk melanjutkan.</string>
     <string name="sign_in_jetpack">Log in ke akun WordPress.com Anda untuk menyambungkan dengan Jetpack.</string>
-    <string name="posts_fetching">Memuat pos...</string>
-    <string name="media_fetching">Memuat media...</string>
+    <string name="posts_fetching">Memuat pos…</string>
+    <string name="media_fetching">Memuat media…</string>
     <string name="toast_err_post_uploading">Gagal membuka pos saat diunggah</string>
-    <string name="comments_fetching">Memuat komentar...</string>
-    <string name="pages_fetching">Memuat laman...</string>
+    <string name="comments_fetching">Memuat komentar…</string>
+    <string name="pages_fetching">Memuat laman…</string>
     <string name="stats_view_search_terms">Terma-terma Pencarian</string>
     <string name="stats_view_authors">Para Penulis</string>
     <string name="stats_entry_search_terms">Terma Pencarian</string>
@@ -760,7 +761,7 @@ Language: id
     <string name="reader_title_tag_preview">Tag Pembaca</string>
     <string name="reader_page_followed_blogs">Situs yang diikuti</string>
     <string name="reader_hint_add_tag_or_url">Masukkan sebuah URL atau tag untuk mengikuti</string>
-    <string name="saving">Menyimpan...</string>
+    <string name="saving">Menyimpan…</string>
     <string name="media_empty_list">Tak ada media</string>
     <string name="ptr_tip_message">Tip: Tarik ke bawah untuk menyegarkan</string>
     <string name="help">Bantuan</string>
@@ -909,7 +910,7 @@ Language: id
     <string name="media_gallery_type_thumbnail_grid">Thumbnail grid</string>
     <string name="blog_removed_successfully">Situs berhasil dihapus</string>
     <string name="remove_account">Hapus situs</string>
-    <string name="notifications_empty_all">Belum ada pemberitahuan...sampai sekarang.</string>
+    <string name="notifications_empty_all">Belum ada pemberitahuan…sampai sekarang.</string>
     <string name="invalid_site_url_message">Pastikan URL situs yang dimasukkan sudah valid</string>
     <string name="deleting_page">Menghapus laman</string>
     <string name="deleting_post">Menghapus pos</string>
@@ -917,7 +918,7 @@ Language: id
     <string name="share_url_page">Bagikan laman</string>
     <string name="share_link">Bagikan tautan</string>
     <string name="creating_your_site">Membuat situs Anda</string>
-    <string name="reader_empty_posts_in_tag_updating">Mengambil pos...</string>
+    <string name="reader_empty_posts_in_tag_updating">Mengambil pos…</string>
     <string name="reader_likes_you_and_multi">Anda dan %,d lainnya menyukai ini</string>
     <string name="reader_likes_multi">%,d orang menyukai ini</string>
     <string name="reader_toast_err_get_comment">Tak bisa menampilkan komentar ini</string>
@@ -1016,7 +1017,7 @@ Language: id
     <string name="more_notifications">dan %d lagi.</string>
     <string name="follows">Mengikuti</string>
     <string name="sign_in">Log in</string>
-    <string name="loading">Memuat...</string>
+    <string name="loading">Memuat…</string>
     <string name="httpuser">Nama pengguna HTTP</string>
     <string name="httppassword">Kata sandi HTTP</string>
     <string name="error_media_upload">Ada masalah ketika mengunggah media</string>
@@ -1041,7 +1042,7 @@ Language: id
     <string name="upload_scaled_image">Unggah dan tautkan ke gambar terskala</string>
     <string name="scaled_image">Lebar gambar terskala</string>
     <string name="link_enter_url">URL</string>
-    <string name="uploading">Mengunggah...</string>
+    <string name="uploading">Mengunggah…</string>
     <string name="version">Versi</string>
     <string name="app_title">WordPress untuk Android</string>
     <string name="tos">Syarat Layanan</string>

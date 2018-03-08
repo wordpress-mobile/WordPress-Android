@@ -68,9 +68,9 @@ Language: ar
     <string name="reader_title_post_detail_wpcom">مقالة وردبرس. كوم</string>
     <string name="reader_title_deeplink">قارئ وردبرس</string>
     <string name="error_notif_q_action_reply">تعذر الرد على التعليق. يُرجى المحاولة مرة أخرى لاحقًا.</string>
-    <string name="comment_q_action_replying">جارٍ الرد...</string>
-    <string name="comment_q_action_approving">جارٍ الموافقة...</string>
-    <string name="comment_q_action_liking">جارٍ تسجيل الإعجاب...</string>
+    <string name="comment_q_action_replying">جارٍ الرد…</string>
+    <string name="comment_q_action_approving">جارٍ الموافقة…</string>
+    <string name="comment_q_action_liking">جارٍ تسجيل الإعجاب…</string>
     <string name="comment_q_action_processing">جارٍ المعالجة…</string>
     <string name="comment_q_action_done_generic">تم اتخاذ الإجراء!</string>
     <string name="comment_liked">تم تسجيل إعجاب بالتعليق</string>
@@ -96,7 +96,7 @@ Language: ar
     <string name="error_fetch_users_list">تعذر استرداد مستخدمي الموقع</string>
     <string name="plans_manage">إدارة باقتك على\nWordPress.com/plans</string>
     <string name="people_empty_list_filtered_viewers">ليس لديك أي مشاهدين بعد.</string>
-    <string name="people_fetching">جارٍ إحضار المستخدمين...</string>
+    <string name="people_fetching">جارٍ إحضار المستخدمين…</string>
     <string name="title_follower">المتابع</string>
     <string name="title_email_follower">المتابع عبر البريد الإلكتروني</string>
     <string name="people_empty_list_filtered_email_followers">ليس لديك أي متابعين عبر البريد الإلكتروني بعد.</string>
@@ -133,7 +133,7 @@ Language: ar
     <string name="alert_error_adding_media">خطأ ما قد حدث أثناء إدراج الوسائط</string>
     <string name="alert_action_while_uploading">أنت تقوم برفع وسائط حاليًا. يرجى الانتظار حتى يكتمل هذا.</string>
     <string name="alert_insert_image_html_mode">لا يمكن إدراج الوسائط مباشرة في وضع HTML. يرجى التبديل إلى الوضع المرئي.</string>
-    <string name="uploading_gallery_placeholder">جاري رفع المعرض...</string>
+    <string name="uploading_gallery_placeholder">جاري رفع المعرض…</string>
     <string name="invite_error_some_failed">تم إرسال الدعوة ولكن بعض الأخطاء قد وقعت!</string>
     <string name="invite_sent">تم إرسال الدعوة بنجاح</string>
     <string name="tap_to_try_again">اضغط للمحاولة مرة أخرى!</string>
@@ -155,7 +155,7 @@ Language: ar
     <string name="label_clear_search_history">مسح محفوظات البحث</string>
     <string name="dlg_confirm_clear_search_history">مسح محفوظات البحث؟</string>
     <string name="reader_empty_posts_in_search_description">لم يتم العثور على مقالات عن %s للغة الخاصة بك</string>
-    <string name="reader_label_post_search_running">البحث...</string>
+    <string name="reader_label_post_search_running">البحث…</string>
     <string name="reader_empty_posts_in_search_title">لم يتم العثور على مقالات</string>
     <string name="reader_label_post_search_explainer">البحث في جميع مدونات WordPress.com العامة</string>
     <string name="reader_hint_post_search">البحث في WordPress.com</string>
@@ -328,7 +328,7 @@ Language: ar
     <string name="privacy_private">سيكون موقعك مرئيًّا لك وللمستخدمين الذين توافق عليهم فقط</string>
     <string name="privacy_public_not_indexed">سيكون موقعك مرئيًّا للجميع مع مطالبة محركات البحث بعدم فهرسته في الوقت نفسه</string>
     <string name="privacy_public">سيكون موقعك مرئيًّا للجميع ويمكن فهرسته بواسطة محركات البحث</string>
-    <string name="about_me_hint">كلمات قليلة عنك...</string>
+    <string name="about_me_hint">كلمات قليلة عنك…</string>
     <string name="public_display_name_hint">سيكون اسم العرض افتراضيًا لاسم المستخدم الخاص بك إذا لم يتم تعيينه</string>
     <string name="about_me">نبذة عني</string>
     <string name="public_display_name">اسم العرض العام</string>
@@ -500,7 +500,7 @@ Language: ar
     <string name="reader_short_comment_count_multi">%s تعليقات</string>
     <string name="reader_short_comment_count_one">تعليق واحد</string>
     <string name="reader_label_submit_comment">إرسال</string>
-    <string name="reader_hint_comment_on_post">رد على المقالة...</string>
+    <string name="reader_hint_comment_on_post">رد على المقالة…</string>
     <string name="reader_discover_visit_blog">زيارة %s</string>
     <string name="reader_discover_attribution_blog">تم النشر في الأصل على %s</string>
     <string name="reader_discover_attribution_author">تم النشر في الأصل بواسطة %s</string>
@@ -562,6 +562,7 @@ Language: ar
     <string name="me_btn_support">المساعدة والدعم</string>
     <string name="site_picker_cant_hide_current_site">\"%s\" لم يكن مخفيًا لأنه الموقع الحالي</string>
     <string name="account_settings">إعدادات الحساب</string>
+    <string name="site_picker_create_dotcom">إنشاء موقع وردبرس.كوم</string>
     <string name="site_picker_edit_visibility">إظهار/إخفاء المواقع</string>
     <string name="site_picker_add_self_hosted">إضافة موقع مستضاف ذاتيًا</string>
     <string name="my_site_btn_view_site">عرض الموقع</string>
@@ -737,7 +738,7 @@ Language: ar
     <string name="reader_title_tag_preview">وسم القارئ</string>
     <string name="reader_page_followed_blogs">المواقع المتابَعة</string>
     <string name="reader_hint_add_tag_or_url">أدخل عنوان URL أو اضغط للمتابعة</string>
-    <string name="saving">حفظ...</string>
+    <string name="saving">حفظ…</string>
     <string name="media_empty_list">لا وسائط</string>
     <string name="ptr_tip_message">نصيحة: اسحب للأسفل من أجل التحديث</string>
     <string name="forgot_password">نسيت كلمة المرور؟</string>
@@ -894,7 +895,7 @@ Language: ar
     <string name="share_url_page">مشاركة الصفحة</string>
     <string name="share_link">مشاركة الرابط</string>
     <string name="creating_your_site">يتم الآن إنشاء موقعك</string>
-    <string name="reader_empty_posts_in_tag_updating">يتم الآن جلب المقالات ...</string>
+    <string name="reader_empty_posts_in_tag_updating">يتم الآن جلب المقالات …</string>
     <string name="reader_label_reply">رد</string>
     <string name="cant_share_no_visible_blog">لا تستطيع مشاركتها إلى ووردبريس بدون أن تجعل المدونة مرئية</string>
     <string name="comment_spammed">تم وضع علامة إزعاج على التعليق</string>
@@ -935,7 +936,7 @@ Language: ar
     <string name="reader_toast_err_tag_invalid">هذا الوسم غير صالح</string>
     <string name="limit_reached">وصلت للحد المسموح , يمكنك المحاولة مرة أخرى خلال 1 دقيقة. المحاولة مرة أخرى قبل ذلك ستؤدي لزيادة الوقت الواجب انتظاره قبل أن يتم رفع الحظر. إذا كنت تعتقد أن هذا هو الخطأ، اتصل بالدعم.</string>
     <string name="nux_tutorial_get_started_title">ابدأ!</string>
-    <string name="reader_hint_comment_on_comment">رد على التعليق...</string>
+    <string name="reader_hint_comment_on_comment">رد على التعليق…</string>
     <string name="themes">القوالب</string>
     <string name="media_gallery_type">النوع</string>
     <string name="media_edit_title_text">العنوان</string>
@@ -992,7 +993,7 @@ Language: ar
     <string name="new_notifications">%d تنبيهات جديدة</string>
     <string name="more_notifications">و %d اكثر</string>
     <string name="follows">متابعات</string>
-    <string name="loading">جاري التحميل...</string>
+    <string name="loading">جاري التحميل…</string>
     <string name="httppassword">كلمة مرور HTTP</string>
     <string name="httpuser">اسم مستخدم HTTP</string>
     <string name="error_media_upload">حدث خطأ أثناء رفع ملفات الوسائط</string>
@@ -1017,7 +1018,7 @@ Language: ar
     <string name="scaled_image">تحجيم عرض الصورة</string>
     <string name="upload_scaled_image">الرفع والربط بالصورة المحجمة</string>
     <string name="link_enter_url">URL</string>
-    <string name="uploading">جاري الرفع...</string>
+    <string name="uploading">جاري الرفع…</string>
     <string name="version">النسخة</string>
     <string name="tos">بنود الخدمة</string>
     <string name="app_title">ووردبريس للآندرويد</string>

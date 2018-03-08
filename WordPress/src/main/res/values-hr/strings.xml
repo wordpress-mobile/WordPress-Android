@@ -28,7 +28,7 @@ Language: hr
     <string name="privacy_private">Vaša web-stranica je vidljiva samo vama i korisnicima koje odobrite</string>
     <string name="privacy_public_not_indexed">Vaša web-stranica je vidljiva svima, ali traži od pretraživača da ju ne indeksiraju</string>
     <string name="privacy_public">Vaša web-stranica je vidljiva svima, i pretraživači će ju indeksirati</string>
-    <string name="about_me_hint">Nekoliko riječi o vama...</string>
+    <string name="about_me_hint">Nekoliko riječi o vama…</string>
     <string name="about_me">O meni</string>
     <string name="public_display_name_hint">Prikazano ime biti će vaše korisničko ime, ako drugo nije postavljeno</string>
     <string name="public_display_name">Javno prikazano ime</string>
@@ -182,9 +182,9 @@ Language: hr
     <string name="notifications_empty_action_comments">Pridružite se raspravi: komentirajte objave blogova koje pratite.</string>
     <string name="notifications_empty_action_unread">Ponovno pokrenite raspravu: napišite novu objavu.</string>
     <string name="notifications_empty_action_all">Postanite aktivni! Komentirajte objave blogova koje pratite.</string>
-    <string name="notifications_empty_likes">Nema novih lajkova... još.</string>
-    <string name="notifications_empty_followers">Nemate novih pratitelja... još.</string>
-    <string name="notifications_empty_comments">Nema novih komentara... još.</string>
+    <string name="notifications_empty_likes">Nema novih lajkova… još.</string>
+    <string name="notifications_empty_followers">Nemate novih pratitelja… još.</string>
+    <string name="notifications_empty_comments">Nema novih komentara… još.</string>
     <string name="notifications_empty_unread">Sve ste pročitali!</string>
     <string name="stats_widget_error_jetpack_no_blogid">Pregledajte Statistiku u aplikaciji, i kasnije pokušajte dodati novi widget</string>
     <string name="stats_widget_error_readd_widget">Uklonite widget i zatim ga ponovno dodajte</string>
@@ -192,7 +192,7 @@ Language: hr
     <string name="stats_widget_error_no_permissions">Vaš WordPress.com račun ne može pristupiti Statistici na ovom blogu</string>
     <string name="stats_widget_error_no_account">Prijavite se u WordPress</string>
     <string name="stats_widget_error_generic">Statistiku nije moguće učitati</string>
-    <string name="stats_widget_loading_data">Učitavanje podataka...</string>
+    <string name="stats_widget_loading_data">Učitavanje podataka…</string>
     <string name="stats_widget_name_for_blog">Današnja statistika za %1$s</string>
     <string name="stats_widget_name">Današnja WordPress statistika</string>
     <string name="post_settings_add_location_permission_required">Potrebno je dopuštenje kako bi se dodala lokacija</string>
@@ -203,7 +203,7 @@ Language: hr
     <string name="reader_short_comment_count_multi">%s komentara</string>
     <string name="reader_short_comment_count_one">1 komentar</string>
     <string name="reader_label_submit_comment">POŠALJI</string>
-    <string name="reader_hint_comment_on_post">Odgovori na objavu...</string>
+    <string name="reader_hint_comment_on_post">Odgovori na objavu…</string>
     <string name="reader_discover_visit_blog">Pošalji %s</string>
     <string name="reader_discover_attribution_blog">Izvorno objavljeno na %s</string>
     <string name="reader_discover_attribution_author">Originalni autor %s</string>
@@ -229,7 +229,7 @@ Language: hr
     <string name="email">E-pošta</string>
     <string name="notifications_wpcom_updates">WordPress.com ažuriranja</string>
     <string name="notification_settings_item_other_account_emails_summary">Uvijek ćemo slati važne poruke e-pošte o vašem računu, ali također možete dobiti i dodatnu pomoć.</string>
-    <string name="stats_insights_latest_post_trend">Prošlo je %1$s od kad je %2$s objavljen. Ovo su informacije kako je primljen kod čitatelja...</string>
+    <string name="stats_insights_latest_post_trend">Prošlo je %1$s od kad je %2$s objavljen. Ovo su informacije kako je primljen kod čitatelja…</string>
     <string name="stats_insights_latest_post_summary">Najnoviji sažetak objava</string>
     <string name="button_revert">Vrati</string>
     <string name="yesterday">Jučer</string>
@@ -270,6 +270,7 @@ Language: hr
     <string name="me_btn_support">Pomoć i podrška</string>
     <string name="account_settings">Postavke računa</string>
     <string name="site_picker_cant_hide_current_site">\"%s\" nije skriven jer je to trenutna web-stranica.</string>
+    <string name="site_picker_create_dotcom">Kreiraj WordPress.com web-stranicu</string>
     <string name="site_picker_edit_visibility">Prikaži/sakrij web-stranice</string>
     <string name="site_picker_add_self_hosted">Dodaj samostalno hostanu web-stranicu</string>
     <string name="site_picker_add_site">Dodaj novu web-stranicu</string>
@@ -303,9 +304,9 @@ Language: hr
     <string name="publisher">Izdavač:</string>
     <string name="error_notification_open">Ne mogu otvoriti obavjesti</string>
     <string name="comments_fetching">Dohvaćanje komentara</string>
-    <string name="pages_fetching">Dohvaćanje stranica...</string>
+    <string name="pages_fetching">Dohvaćanje stranica…</string>
     <string name="toast_err_post_uploading">Ne mogu otvoriti objavu dok se prenosi na stranicu</string>
-    <string name="posts_fetching">Dohvaćanje objava...</string>
+    <string name="posts_fetching">Dohvaćanje objava…</string>
     <string name="media_fetching">Dohvaćanje medija</string>
     <string name="stats_view_authors">Autori</string>
     <string name="stats_entry_search_terms">Pojam pretrage</string>
@@ -358,7 +359,7 @@ Language: hr
     <string name="stats_visitors">Posjetitelji</string>
     <string name="stats_timeframe_years">Godine</string>
     <string name="stats_views">Pregledi</string>
-    <string name="themes_fetching">Dohvaćanje tema...</string>
+    <string name="themes_fetching">Dohvaćanje tema…</string>
     <string name="stats_for">Statistika za %s</string>
     <string name="stats_followers_months">%1$d mjeseci</string>
     <string name="stats_followers_a_year">Godina</string>
@@ -400,7 +401,7 @@ Language: hr
     <string name="reader_label_view_original">Pogledaj izvorni članak</string>
     <string name="mnu_comment_liked">Lajkao</string>
     <string name="comment">Komentar</string>
-    <string name="signing_out">Odjava ...</string>
+    <string name="signing_out">Odjava …</string>
     <string name="create_new_blog_wpcom">Kreiraj WordPress.com blog</string>
     <string name="new_blog_wpcom_created">WordPress.com blog je kreiran!</string>
     <string name="reader_label_comments_closed">Komentari su zatvoreni</string>
@@ -426,7 +427,7 @@ Language: hr
     <string name="reader_empty_posts_in_tag">Nema objava s ovom oznakom</string>
     <string name="select_a_blog">Odaberite WordPress web-stranicu</string>
     <string name="reader_empty_followed_blogs_title">Još ne pratite ni jednu web-stranicu</string>
-    <string name="sending_content">Prijenos %s sadržaja...</string>
+    <string name="sending_content">Prijenos %s sadržaja…</string>
     <string name="reader_toast_err_generic">Nije moguće izvesti tu akciju</string>
     <string name="reader_toast_err_block_blog">Nije moguće blokirati ovaj blog</string>
     <string name="reader_toast_blog_blocked">Objave sa ovog bloga više neće biti prikazane</string>
@@ -454,7 +455,7 @@ Language: hr
     <string name="reader_title_blog_preview">Blog u Čitaču</string>
     <string name="reader_title_tag_preview">Oznaka u Čitaču</string>
     <string name="reader_page_followed_blogs">Praćene web-stranice</string>
-    <string name="saving">Spremam...</string>
+    <string name="saving">Spremam…</string>
     <string name="media_empty_list">Nema medijskih zapisa</string>
     <string name="ptr_tip_message">Savjet: Povucite dolje za osvježavanje</string>
     <string name="help">Pomoć</string>
@@ -533,7 +534,7 @@ Language: hr
     <string name="create_a_link">Kreiraj poveznicu</string>
     <string name="reader_title_applog">Aplikacijski zapisnik</string>
     <string name="add_account_blog_url">Blog adresa</string>
-    <string name="notifications_empty_all">Nema obavijesti... još.</string>
+    <string name="notifications_empty_all">Nema obavijesti… još.</string>
     <string name="privacy_policy">Pravila privatnosti</string>
     <string name="open_source_licenses">Licence otvorenog softvera</string>
     <string name="post_settings">Postavke objave</string>
@@ -612,7 +613,7 @@ Language: hr
     <string name="deleting_post">Brišem objavu</string>
     <string name="share_link">Podjeli poveznicu</string>
     <string name="creating_your_site">Napravi svoju stranicu</string>
-    <string name="reader_empty_posts_in_tag_updating">Dohvaćanje objava...</string>
+    <string name="reader_empty_posts_in_tag_updating">Dohvaćanje objava…</string>
     <string name="reader_likes_you_and_multi">Vi i %,d drugih se ovo sviđa</string>
     <string name="reader_likes_multi">%,d ljudi se ovo sviđa</string>
     <string name="reader_toast_err_get_comment">Nije moguće dohvatiti komentare</string>
@@ -640,7 +641,7 @@ Language: hr
     <string name="reader_untitled_post">(Bez naslova)</string>
     <string name="reader_btn_share">Podjeli</string>
     <string name="reader_btn_unfollow">Prati se</string>
-    <string name="reader_hint_comment_on_comment">Odgovor na komentar...</string>
+    <string name="reader_hint_comment_on_comment">Odgovor na komentar…</string>
     <string name="reader_label_added_tag">Dodano %s</string>
     <string name="reader_label_removed_tag">Uklonjeno %s</string>
     <string name="reader_likes_one">Jednoj osobi se ovo sviđa</string>
@@ -710,7 +711,7 @@ Language: hr
     <string name="more_notifications">i %d više.</string>
     <string name="note_reply_successful">Odgovor objavljen</string>
     <string name="follows">Praćenje</string>
-    <string name="loading">Učitavanje...</string>
+    <string name="loading">Učitavanje…</string>
     <string name="httppassword">HTTP lozinka</string>
     <string name="httpuser">HTTP korisničko ime</string>
     <string name="error_media_upload">Dogodila se greška tijekom prijenosa medijskog zapisa</string>
@@ -735,7 +736,7 @@ Language: hr
     <string name="upload_scaled_image">Prenesi i poveži do dimenzionirane slike</string>
     <string name="scaled_image">Širina dimenzionirane slike</string>
     <string name="link_enter_url">URL</string>
-    <string name="uploading">Prijenos...</string>
+    <string name="uploading">Prijenos…</string>
     <string name="version">Inačica</string>
     <string name="tos">Uvjeti Korištenja</string>
     <string name="app_title">WordPress za Android</string>

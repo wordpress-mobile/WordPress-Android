@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2018-03-06 14:05:33+0000
+Translation-Revision-Date: 2018-03-07 13:38:41+0000
 Plural-Forms: nplurals=2; plural=(n > 1);
 Generator: GlotPress/2.4.0-alpha
 Language: pt_BR
@@ -12,11 +12,13 @@ Language: pt_BR
     <string name="site_creation_epilogue_congrats">Parabéns!\nSeu site está pronto.</string>
     <string name="site_creation_creating_modal">Aguarde até que a criação do site esteja concluída.</string>
     <string name="site_creation_creating_retry">Tentar novamente</string>
-    <string name="site_creation_creating_failed">Algo deu errado...</string>
-    <string name="site_creation_creating_configuring_theme">Configurando estilo do site...</string>
-    <string name="site_creation_creating_configuring_content">Configurando conteúdo do site...</string>
-    <string name="site_creation_creating_fetching_info">Recuperando informação do site...</string>
-    <string name="site_creation_creating_laying_foundation">Criando a estrutura do site...</string>
+    <string name="site_creation_creating_failed_extended">Um bando de papagaios derrubou os nossos servidores enquanto nos distraíam com as suas ótimas piadas</string>
+    <string name="site_creation_creating_failed">Algo deu errado…</string>
+    <string name="site_creation_creating_preparing_frontend">Preparando a interface…</string>
+    <string name="site_creation_creating_configuring_theme">Configurando estilo do site…</string>
+    <string name="site_creation_creating_configuring_content">Configurando conteúdo do site…</string>
+    <string name="site_creation_creating_fetching_info">Recuperando informação do site…</string>
+    <string name="site_creation_creating_laying_foundation">Criando a estrutura do site…</string>
     <string name="site_creation_empty_site_title">Digite um título para o site</string>
     <string name="site_creation_tagline_helper">A descrição é uma linha curta de texto exibida bem abaixo do título na maioria dos temas e age como um metadado do site nos mecanismos de busca.</string>
     <string name="site_creation_tagline_hint">Descrição do site (opcional)</string>
@@ -30,6 +32,13 @@ Language: pt_BR
     <string name="site_creation_label_theme_loading">Aguarde o carregamento dos temas</string>
     <string name="site_creation_label_theme_selection">Comece rapidamente com um dos nossos temas populares. Uma vez que seu site seja criado, você pode procurar e escolher entre centenas de outros.</string>
     <string name="site_creation_label_theme_selection_title">Passo 2 de 4</string>
+    <string name="site_creation_subtitle_portfolio">Para apresentar seus projetos criativos como em uma vitrine.</string>
+    <string name="site_creation_title_portfolio">Iniciar com um portfólio</string>
+    <string name="site_creation_subtitle_website">Para promover seu negócio ou marca e se conectar com o seu público.</string>
+    <string name="site_creation_title_website">Iniciar com um site</string>
+    <string name="site_creation_subtitle_blog">Para compartilhar suas ideias, histórias e fotografias com os seus seguidores.</string>
+    <string name="site_creation_title_blog">Iniciar com um blog</string>
+    <string name="site_creation_label_category">Que tipo de site você precisa?\nEscolha uma das opções abaixo:</string>
     <string name="site_creation_label_category_title">Passo 1 de 4</string>
     <string name="site_creation_title">Criar site</string>
     <string name="notification_site_creation_failed">Ocorreu um erro.</string>
@@ -38,13 +47,49 @@ Language: pt_BR
     <string name="notification_site_creation_step_tagline">Passo 3 de 4</string>
     <string name="notification_site_creation_step_fetching">Passo 2 de 4</string>
     <string name="notification_site_creation_step_creating">Passo 1 de 4</string>
-    <string name="notification_site_creation_title_in_progress">Criando site...</string>
+    <string name="notification_site_creation_title_in_progress">Criando site…</string>
     <string name="notification_site_creation_created">Toque para continuar.</string>
     <string name="notification_site_creation_title_success">Site criado!</string>
     <string name="google_error_timeout">O Google demorou muito tempo para responder. Pode ser preciso esperar até que você tenha uma conexão melhor com a internet.</string>
     <string name="username_changer_title">Mudar nome de usuário</string>
     <string name="username_changer_hint">Digite para mais sugestões</string>
     <string name="username_changer_header">Atualmente, seu nome de usuário é %1$s%2$s%3$s. Com poucas exceções, outras pessoas verão apenas o seu nome de exibição, %4$s%5$s%6$s.</string>
+    <string name="username_changer_error_none">Nenhuma sugestão de nome de usuário a partir de %1$s%2$s%3$s. Digite mais letras ou números para receber sugestões.</string>
+    <string name="username_changer_error_generic">Ocorreu um erro ao tentar obter sugestões de nomes de usuários.</string>
+    <string name="username_changer_dismiss_message">Descartar as mudanças de nome de usuário?</string>
+    <string name="username_changer_dismiss_button_positive">Descartar</string>
+    <string name="username_changer_action">Salvar</string>
+    <string name="content_description_add_avatar">Adicionar avatar</string>
+    <string name="signup_with_google_button">Inscrever-se com o Google</string>
+    <string name="signup_with_email_button">Inscrever-se com e-mail</string>
+    <string name="signup_user_exists">Este e-mail já existe no WordPress.com.\nContinuando com o acesso.</string>
+    <string name="signup_updating_account">Atualizando conta…</string>
+    <string name="signup_terms_of_service_text">Ao cadastrar-se, você concorda com os nossos %1$sTermos de serviço%2$s.</string>
+    <string name="signup_magic_link_progress">Enviando e-mail</string>
+    <string name="signup_magic_link_message">Enviamos para você um endereço mágico para cadastro! Confira seu e-mail neste dispositivo e toque no endereço no e-mail para finalizar seu cadastro.</string>
+    <string name="signup_magic_link_error_button_positive">Tentar novamente</string>
+    <string name="signup_magic_link_error_button_negative">Fechar</string>
+    <string name="signup_magic_link_error">Houve um problema ao enviar o e-mail. Você pode tentar novamente agora ou fechar e tentar de novo mais tarde.</string>
+    <string name="signup_epilogue_hint_username">Nome de usuário</string>
+    <string name="signup_epilogue_hint_password_detail">Você sempre pode acessar com um endereço mágico como o que acabou de usar, mas também é possível definir uma senha se preferir.</string>
+    <string name="signup_epilogue_hint_password">Senha (opcional)</string>
+    <string name="signup_epilogue_hint_display">Nome de exibição</string>
+    <string name="signup_epilogue_heading">Nova conta</string>
+    <string name="signup_epilogue_error_button_positive">Tentar novamente</string>
+    <string name="signup_epilogue_error_button_negative">Reverter</string>
+    <string name="signup_epilogue_error_generic">Houve um problema ao atualizar sua conta. Você pode tentar novamente ou reverter suas alterações para continuar.</string>
+    <string name="signup_epilogue_error_avatar">Houve um problema ao enviar seu avatar.</string>
+    <string name="signup_email_header">Para criar sua nova conta no WordPress.com, digite seu endereço de e-mail.</string>
+    <string name="signup_email_error_generic">Houve um problema ao verificar o endereço de e-mail.</string>
+    <string name="signup_creating_account">Criando conta…</string>
+    <string name="sign_up">Inscrever-se no WordPress.com</string>
+    <string name="enter_username_instead">Acesse com seu nome de usuário.</string>
+    <string name="enter_site_address_instead">Acesse digitando o endereço do seu site.</string>
+    <string name="plugin_needs_update">Precisa de atualização</string>
+    <string name="plugin_caption_search">Pesquisar plugins</string>
+    <string name="plugin_caption_new">Novo</string>
+    <string name="plugin_caption_popular">Popular</string>
+    <string name="plugins_empty_search_list">Nada encontrado</string>
     <string name="plugin_see_all">Ver todos</string>
     <string name="plugin_manage">Gerenciar</string>
     <string name="plugin_search_error">Não foi possível pesquisar por plugins</string>
@@ -54,6 +99,12 @@ Language: pt_BR
     <string name="site_settings_like_header">Curtir</string>
     <string name="my_site_add_new_site">Adicionar site</string>
     <string name="my_site_create_new_site">Crie um novo site para seu negócio, revista, blog pessoal ou conecte-se a uma instalação WordPress já existente.</string>
+    <string name="notifications_jetpack_connection_setup_info">Para receber úteis notificações do seu site WordPress no seu dispositivo, é necessário instalar o plugin Jetpack. Você gostaria de configurar o Jetpack?</string>
+    <string name="site_settings_lazy_load_images_summary">Aumente a velocidade do seu site carregando somente as imagens visíveis na tela. Novas imagens serão carregadas apenas momentos antes que o usuário role a tela e elas precisem ser exibidas. Isso previne que os usuários tenham que baixar todas as imagens da página de uma só vez, mesmo aquelas que eles não verão.</string>
+    <string name="site_settings_lazy_load_images">Carregamento assíncrono de imagens</string>
+    <string name="site_settings_serve_images_from_our_servers_summary">O Jetpack otimizará as suas imagens e as entregará a partir de um servidor localizado mais perto dos seus visitantes. Usando redes globais de entrega de conteúdo (CDNs) você aumentará a velocidade de carregamento do seu site.</string>
+    <string name="site_settings_serve_images_from_our_servers">Servir imagens pelos nossos servidores</string>
+    <string name="site_settings_speed_up_your_site">Acelere seu site</string>
     <string name="stats_jetpack_more_info">Mais informações</string>
     <string name="stats_jetpack_connection_setup_info">Para usar as estatísticas no seu site WordPress, você precisa instalar o plugin Jetpack. Gostaria de configurar o Jetpack?</string>
     <string name="stats_jetpack_connection_setup">Configurar Jetpack</string>
@@ -114,8 +165,8 @@ Language: pt_BR
     <string name="wordpress_dot_org_plugin_page">Página do plugin no WordPress.org</string>
     <string name="plugin_remove_dialog_message">Tem certeza de que deseja remover %1$s de %2$s?\n\nIsto irá desativar o plugin e excluir todos os arquivos e dados associados a ele.</string>
     <string name="plugin_remove_dialog_title">Remover plugin</string>
-    <string name="plugin_remove_progress_dialog_message">Removendo %s...</string>
-    <string name="plugin_disable_progress_dialog_message">Desabilitando %s...</string>
+    <string name="plugin_remove_progress_dialog_message">Removendo %s…</string>
+    <string name="plugin_disable_progress_dialog_message">Desabilitando %s…</string>
     <string name="plugin_btn_remove">Remover plugin</string>
     <string name="plugin_configuration_failed">Ocorreu um erro durante a configuração do plugin %s</string>
     <string name="plugin_remove_failed">Erro ao remover %s</string>
@@ -139,7 +190,7 @@ Language: pt_BR
     <string name="notification_error_wrong_password">Confira novamente sua senha para continuar.</string>
     <string name="notification_login_title_stopped">Acesso interrompido</string>
     <string name="notification_logging_in">Aguarde o acesso.</string>
-    <string name="notification_login_title_in_progress">Acesso em andamento...</string>
+    <string name="notification_login_title_in_progress">Acesso em andamento…</string>
     <string name="notification_logged_in">Toque para continuar.</string>
     <string name="notification_login_title_success">Acesso realizado!</string>
     <string name="login_error_generic_start">Não foi possível iniciar o acesso pelo Google.</string>
@@ -268,7 +319,7 @@ Language: pt_BR
     <string name="async_promo_description">Agora você pode sair do editor e o seu post será salvo e publicado por trás dos panos! Faça uma tentativa!</string>
     <string name="async_promo_title">Publique com confiança</string>
     <string name="editor_uploading_post">Seu post está sendo enviado</string>
-    <string name="uploading_media">Fazendo upload da mídia...</string>
+    <string name="uploading_media">Fazendo upload da mídia…</string>
     <string name="dialog_confirm_cancel_post_media_uploading">Tem certeza? Excluir este post também cancelará o upload da mídia.</string>
     <string name="page_scheduled">Página agendada</string>
     <string name="post_scheduled">Post agendado</string>
@@ -331,7 +382,7 @@ Language: pt_BR
     <string name="editor_dropped_title_images_not_allowed">Soltar imagens no título não é permitido</string>
     <string name="editor_dropped_text_error">Ocorreu um erro ao soltar texto</string>
     <string name="editor_dropped_html_images_not_allowed">Soltar imagens no modo HTML não é permitido</string>
-    <string name="editor_content_hint">Compartihe sua história aqui...</string>
+    <string name="editor_content_hint">Compartihe sua história aqui…</string>
     <string name="post_status_trashed">Enviado para a lixeira</string>
     <string name="post_status_scheduled">Agendado</string>
     <string name="post_status_post_private">Privado</string>
@@ -373,7 +424,7 @@ Language: pt_BR
     <string name="media_images">Imagens</string>
     <string name="media_all">Todos</string>
     <string name="video_optimization_generic_error_message">Ocorreu um erro na compressão do seu vídeo. Usando o arquivo original.</string>
-    <string name="video_optimization_in_progress">Otimizando seu vídeo...</string>
+    <string name="video_optimization_in_progress">Otimizando seu vídeo…</string>
     <string name="photo_picker_soft_ask_permissions_denied">%1$s teve o acesso às suas fotos negado. Edite suas permissões e habilite %2$s para corrigir.</string>
     <string name="format_bar_description_ellipsis_expand">Expandir barra de ferramentas</string>
     <string name="format_bar_description_ellipsis_collapse">Contrair barra de ferramentas</string>
@@ -563,10 +614,10 @@ Language: pt_BR
     <string name="error_notif_q_action_like">Não foi possível curtir o comentário. Tente novamente mais tarde.</string>
     <string name="notifications_label_new_notifications_subtitle">Toque para mostrá-las</string>
     <string name="notifications_label_new_notifications">Novas notificações</string>
-    <string name="comment_q_action_replying">Respondendo...</string>
-    <string name="comment_q_action_approving">Aprovando...</string>
-    <string name="comment_q_action_liking">Curtindo...</string>
-    <string name="comment_q_action_processing">Processando...</string>
+    <string name="comment_q_action_replying">Respondendo…</string>
+    <string name="comment_q_action_approving">Aprovando…</string>
+    <string name="comment_q_action_liking">Curtindo…</string>
+    <string name="comment_q_action_processing">Processando…</string>
     <string name="comment_q_action_done_generic">Ação concluída!</string>
     <string name="comment_liked">Comentário curtido</string>
     <string name="signout">Fazer logout</string>
@@ -595,7 +646,7 @@ Language: pt_BR
     <string name="plans_manage">Gerenciar o seu plano em\nWordPress.com/plans</string>
     <string name="title_email_follower">Seguidor por e-mail</string>
     <string name="title_follower">Seguidor</string>
-    <string name="people_fetching">Buscando usuários...</string>
+    <string name="people_fetching">Buscando usuários…</string>
     <string name="people_empty_list_filtered_viewers">Você não tem nenhum espectador ainda.</string>
     <string name="people_empty_list_filtered_email_followers">Você não tem nenhum seguidores por e-mail ainda.</string>
     <string name="people_empty_list_filtered_followers">Você não tem seguidores ainda.</string>
@@ -636,7 +687,7 @@ Language: pt_BR
     <string name="alert_error_adding_media">Um erro ocorreu algo inserir o arquivo de mídia</string>
     <string name="alert_action_while_uploading">Você esta no momento enviando um arquivo de mídia. Aguarde até o processo ser completo.</string>
     <string name="alert_insert_image_html_mode">Não é possível inserir arquivo de mídia diretamente no modo HTML. Mude de volta para o modo visual.</string>
-    <string name="uploading_gallery_placeholder">Enviando galeria...</string>
+    <string name="uploading_gallery_placeholder">Enviando galeria…</string>
     <string name="tap_to_try_again">Toque para tentar novamente!</string>
     <string name="invite_sent">Convite enviado com sucesso.</string>
     <string name="invite_error_for_username">%1$s: %2$s</string>
@@ -659,7 +710,7 @@ Language: pt_BR
     <string name="dlg_confirm_clear_search_history">Limpar histórico de pesquisa?</string>
     <string name="reader_empty_posts_in_search_description">Nenhum post na sua língua foi encontrado para %s</string>
     <string name="reader_empty_posts_in_search_title">Nenhum post foi encontrado</string>
-    <string name="reader_label_post_search_running">Pesquisando...</string>
+    <string name="reader_label_post_search_running">Pesquisando…</string>
     <string name="reader_label_post_search_explainer">Pesquisar em todos os blogs públicos do WordPress.com</string>
     <string name="reader_hint_post_search">Pesquisar no WordPress.com</string>
     <string name="reader_title_search_results">Pesquisar por %s</string>
@@ -713,13 +764,13 @@ Language: pt_BR
     <string name="export_your_content_message">Seus posts, páginas e configurações serão enviados para você em %s</string>
     <string name="export_your_content">Exporte seu conteúdo</string>
     <string name="export_email_sent">E-mail sobre a exportação enviado!</string>
-    <string name="exporting_content_progress">Exportando conteúdo...</string>
+    <string name="exporting_content_progress">Exportando conteúdo…</string>
     <string name="checking_purchases">Verificando compras</string>
     <string name="show_purchases">Mostrar compras</string>
     <string name="premium_upgrades_message">Você ativou upgrades Premium em seu site. Por favor, cancele seus upgrades antes de excluir seu site.</string>
     <string name="premium_upgrades_title">Upgrades premium</string>
     <string name="purchases_request_error">Algo deu errado. Não foi possível carregar as compras.</string>
-    <string name="delete_site_progress">Excluindo site...</string>
+    <string name="delete_site_progress">Excluindo site…</string>
     <string name="delete_site_hint">Excluir site</string>
     <string name="delete_site_summary">Essa ação não pode ser desfeita. Excluir seu site irá remover todo o conteúdo, contribuidores e domínios desse site.</string>
     <string name="export_site_hint">Exporte seu conteúdo para um arquivo XML</string>
@@ -800,7 +851,7 @@ Language: pt_BR
     <string name="post_settings_set_featured_image">Configurar imagem destacada</string>
     <string name="post_settings_featured_image">Imagem destacada</string>
     <string name="visual_editor_enabled">Editor visual ativado</string>
-    <string name="editor_content_placeholder">Compartilhe sua história aqui...</string>
+    <string name="editor_content_placeholder">Compartilhe sua história aqui…</string>
     <string name="editor_page_title_placeholder">Título da página</string>
     <string name="editor_post_title_placeholder">Título do post</string>
     <string name="email_address">Endereço de e-mail</string>
@@ -834,7 +885,7 @@ Language: pt_BR
     <string name="privacy_private">Seu site é visível apenas para você e usuários aprovados</string>
     <string name="privacy_public_not_indexed">Seu site está visível para todos mas solicita aos mecanismos de busca para não indexá-lo</string>
     <string name="privacy_public">Seu site está visível para todos e pode ser indexado por mecanismos de busca</string>
-    <string name="about_me_hint">Algumas palavras sobre você...</string>
+    <string name="about_me_hint">Algumas palavras sobre você…</string>
     <string name="about_me">Sobre mim</string>
     <string name="public_display_name_hint">O nome de exibição será o seu nome de usuário se não for configurado</string>
     <string name="public_display_name">Nome para exibição pública</string>
@@ -988,9 +1039,9 @@ Language: pt_BR
     <string name="notifications_empty_action_comments">Participe de uma conversa: comente em posts de blogs que você segue.</string>
     <string name="notifications_empty_action_unread">Reinicie a conversa: escrever um novo post.</string>
     <string name="notifications_empty_action_all">Seja ativo! Comente em posts de blogs que você segue.</string>
-    <string name="notifications_empty_likes">Nenhuma nova curtida para exibir... ainda.</string>
-    <string name="notifications_empty_followers">Nenhum novo seguidore para relatar... ainda.</string>
-    <string name="notifications_empty_comments">Nenhum novo comentário... ainda.</string>
+    <string name="notifications_empty_likes">Nenhuma nova curtida para exibir… ainda.</string>
+    <string name="notifications_empty_followers">Nenhum novo seguidore para relatar… ainda.</string>
+    <string name="notifications_empty_comments">Nenhum novo comentário… ainda.</string>
     <string name="notifications_empty_unread">Você está atualizado!</string>
     <string name="stats_widget_error_jetpack_no_blogid">Por favor, acesse as Estatísticas no aplicativo e tente adicionar o widget mais tarde</string>
     <string name="stats_widget_error_readd_widget">Por favor, remova o widget e adicione-o novamente</string>
@@ -998,7 +1049,7 @@ Language: pt_BR
     <string name="stats_widget_error_no_permissions">Sua conta no WordPress.com não pode acessar as estatísticas deste blog</string>
     <string name="stats_widget_error_no_account">Por favor, faça login no WordPress</string>
     <string name="stats_widget_error_generic">As Estatísticas não puderam ser carregadas</string>
-    <string name="stats_widget_loading_data">Carregando dados...</string>
+    <string name="stats_widget_loading_data">Carregando dados…</string>
     <string name="stats_widget_name_for_blog">Estatísticas de hoje para %1$s</string>
     <string name="stats_widget_name">Estatísticas de hoje do WordPress</string>
     <string name="post_settings_add_location_permission_required">Permissões necessárias para adicionar localização</string>
@@ -1009,7 +1060,7 @@ Language: pt_BR
     <string name="reader_short_comment_count_multi">%s comentários</string>
     <string name="reader_short_comment_count_one">1 comentário</string>
     <string name="reader_label_submit_comment">ENVIAR</string>
-    <string name="reader_hint_comment_on_post">Responder ao post...</string>
+    <string name="reader_hint_comment_on_post">Responder ao post…</string>
     <string name="reader_discover_visit_blog">Acessar %s</string>
     <string name="reader_discover_attribution_blog">Originalmente publicado no %s</string>
     <string name="reader_discover_attribution_author">Originalmente publicado por %s</string>
@@ -1035,7 +1086,7 @@ Language: pt_BR
     <string name="app_notifications">Notificações de aplicativo</string>
     <string name="notifications_wpcom_updates">Novidades do WordPress.com</string>
     <string name="notification_settings_item_other_account_emails_summary">Sempre enviaremos e-mails importantes sobre a sua conta, mas você também pode receber outros conteúdos úteis.</string>
-    <string name="stats_insights_latest_post_trend">Faz %1$s desde que %2$s foi publicado. Este foi o desempenho do post até agora...</string>
+    <string name="stats_insights_latest_post_trend">Faz %1$s desde que %2$s foi publicado. Este foi o desempenho do post até agora…</string>
     <string name="stats_insights_latest_post_summary">Resumo dos posts mais recentes</string>
     <string name="button_revert">Reverter</string>
     <string name="yesterday">Ontem</string>
@@ -1076,6 +1127,7 @@ Language: pt_BR
     <string name="site_picker_cant_hide_current_site">\"%s\" não está escondido porque é o site atual</string>
     <string name="me_btn_support">Ajuda e Suporte</string>
     <string name="account_settings">Configurações da conta</string>
+    <string name="site_picker_create_dotcom">Criar um site no WordPress.com</string>
     <string name="site_picker_edit_visibility">Mostrar/esconder sites</string>
     <string name="site_picker_add_self_hosted">Adicionar site auto-hospedado</string>
     <string name="site_picker_add_site">Adicionar site</string>
@@ -1107,10 +1159,10 @@ Language: pt_BR
     <string name="language">Idioma</string>
     <string name="device">Dispositivo</string>
     <string name="media_fetching">Obtendo mídia…</string>
-    <string name="posts_fetching">Obtendo posts...</string>
+    <string name="posts_fetching">Obtendo posts…</string>
     <string name="toast_err_post_uploading">Não é possível abrir o post enquanto o upload está em andamento</string>
-    <string name="pages_fetching">Obtendo páginas...</string>
-    <string name="comments_fetching">Obtendo comentários...</string>
+    <string name="pages_fetching">Obtendo páginas…</string>
+    <string name="comments_fetching">Obtendo comentários…</string>
     <string name="stats_view_search_terms">Termos de busca</string>
     <string name="stats_view_authors">Autores</string>
     <string name="stats_entry_search_terms">Termo de busca</string>
@@ -1205,7 +1257,7 @@ Language: pt_BR
     <string name="comment">Comentário</string>
     <string name="mnu_comment_liked">Curtiu</string>
     <string name="uploading_total">Fazendo upload de %1$d de %2$d</string>
-    <string name="sending_content">Fazendo upload do conteúdo de %s...</string>
+    <string name="sending_content">Fazendo upload do conteúdo de %s…</string>
     <string name="select_a_blog">Escolha um site WordPress</string>
     <string name="stats_no_blog">Não foi possível carregar as estatísticas do blog</string>
     <string name="older_last_week">Há mais de uma semana</string>
@@ -1263,7 +1315,7 @@ Language: pt_BR
     <string name="reader_title_blog_preview">Blog do Leitor</string>
     <string name="ptr_tip_message">Dica: Arraste para baixo para atualizar</string>
     <string name="media_empty_list">Nenhuma mídia</string>
-    <string name="saving">Salvando...</string>
+    <string name="saving">Salvando…</string>
     <string name="ssl_certificate_ask_trust">Se você geralmente se conecta a este site sem problemas, talvez este erro signifique que alguém está tentando imitar o site, e você não deve continuar. Deseja confiar no certificado mesmo assim?</string>
     <string name="ssl_certificate_error">Certificado SSL inválido</string>
     <string name="help_center">Central de ajuda</string>
@@ -1348,7 +1400,7 @@ Language: pt_BR
     <string name="view_site">Exibir site</string>
     <string name="new_media">Nova mídia</string>
     <string name="new_post">Novo post</string>
-    <string name="notifications_empty_all">Nenhuma notificação... ainda.</string>
+    <string name="notifications_empty_all">Nenhuma notificação… ainda.</string>
     <string name="http_authorization_required">Autorização obrigatória</string>
     <string name="http_credentials">Credenciais HTTP (opcional)</string>
     <string name="invalid_site_url_message">Verifique se a URL do site inserida é válida</string>
@@ -1423,7 +1475,7 @@ Language: pt_BR
     <string name="deleting_post">Excluindo post</string>
     <string name="deleting_page">Excluindo página</string>
     <string name="creating_your_site">Criando seu site</string>
-    <string name="reader_empty_posts_in_tag_updating">Coletando posts...</string>
+    <string name="reader_empty_posts_in_tag_updating">Coletando posts…</string>
     <string name="cant_share_no_visible_blog">Você não pode compartilhar no WordPress sem um blog visível</string>
     <string name="comment_spammed">Comentário marcado como spam</string>
     <string name="download">Fazendo download de mídia</string>
@@ -1523,7 +1575,7 @@ Language: pt_BR
     <string name="note_reply_successful">Resposta publicada</string>
     <string name="notifications">Notificações</string>
     <string name="sign_in">Fazer login</string>
-    <string name="loading">Carregando...</string>
+    <string name="loading">Carregando…</string>
     <string name="httppassword">Senha HTTP</string>
     <string name="httpuser">Usuário HTTP</string>
     <string name="error_media_upload">Ocorreu um erro durante o envio de mídia</string>
@@ -1549,7 +1601,7 @@ Language: pt_BR
     <string name="scaled_image">Largura da imagem</string>
     <string name="upload_scaled_image">Enviar e link para a imagem redimensionada</string>
     <string name="link_enter_url">URL</string>
-    <string name="uploading">Enviando...</string>
+    <string name="uploading">Enviando…</string>
     <string name="app_title">WordPress para Android</string>
     <string name="tos">Termos de Serviço</string>
     <string name="version">Versão</string>

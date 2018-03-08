@@ -277,7 +277,7 @@ Language: ja_JP
     <string name="editor_dropped_title_images_not_allowed">タイトルに画像をドロップすることはできません</string>
     <string name="editor_dropped_text_error">テキストをドロップする際にエラーが発生しました</string>
     <string name="editor_dropped_html_images_not_allowed">HTML モードで画像をドロップすることはできません</string>
-    <string name="editor_content_hint">あなたのストーリーをお聞かせください...</string>
+    <string name="editor_content_hint">あなたのストーリーをお聞かせください…</string>
     <string name="post_status_trashed">ゴミ箱に移動済み</string>
     <string name="post_status_scheduled">予約済み</string>
     <string name="post_status_post_private">非公開</string>
@@ -510,7 +510,7 @@ Language: ja_JP
     <string name="notifications_label_new_notifications_subtitle">タップして表示</string>
     <string name="notifications_label_new_notifications">新しい通知</string>
     <string name="comment_q_action_replying">返信中…</string>
-    <string name="comment_q_action_approving">承認中...</string>
+    <string name="comment_q_action_approving">承認中…</string>
     <string name="comment_q_action_liking">「いいね」を付けています…</string>
     <string name="comment_q_action_processing">処理中…</string>
     <string name="comment_q_action_done_generic">操作が完了しました。</string>
@@ -746,7 +746,7 @@ Language: ja_JP
     <string name="post_settings_set_featured_image">アイキャッチ画像を設定</string>
     <string name="post_settings_featured_image">アイキャッチ画像</string>
     <string name="visual_editor_enabled">ビジュアルエディターを有効化しました</string>
-    <string name="editor_content_placeholder">こちらでストーリーを共有してください...</string>
+    <string name="editor_content_placeholder">こちらでストーリーを共有してください…</string>
     <string name="editor_page_title_placeholder">ページタイトル</string>
     <string name="editor_post_title_placeholder">投稿タイトル</string>
     <string name="email_address">メールアドレス</string>
@@ -1022,6 +1022,7 @@ Language: ja_JP
     <string name="site_picker_cant_hide_current_site">現在のサイトのため “%s” は非表示になりませんでした</string>
     <string name="me_btn_support">ヘルプ &amp; サポート</string>
     <string name="account_settings">アカウント設定</string>
+    <string name="site_picker_create_dotcom">WordPress.com サイトを作成</string>
     <string name="site_picker_edit_visibility">サイトを表示/非表示</string>
     <string name="site_picker_add_self_hosted">インストール型サイトを追加</string>
     <string name="my_site_btn_switch_site">サイト切り替え</string>

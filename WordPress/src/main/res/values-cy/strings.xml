@@ -57,10 +57,10 @@ Language: cy_GB
     <string name="error_notif_q_action_like">Methu hoffi sylw. Ceisiwch eto.</string>
     <string name="notifications_label_new_notifications_subtitle">Tapio i\'w dangos</string>
     <string name="notifications_label_new_notifications">Hysbysiadau newydd</string>
-    <string name="comment_q_action_replying">Ateb...</string>
-    <string name="comment_q_action_approving">Cymeradwyo...</string>
-    <string name="comment_q_action_liking">Hoffi...</string>
-    <string name="comment_q_action_processing">Prosesu...</string>
+    <string name="comment_q_action_replying">Ateb…</string>
+    <string name="comment_q_action_approving">Cymeradwyo…</string>
+    <string name="comment_q_action_liking">Hoffi…</string>
+    <string name="comment_q_action_processing">Prosesu…</string>
     <string name="comment_q_action_done_generic">Gweithred wedi ei gyflawni!</string>
     <string name="comment_liked">Sylw wedi ei hoffi</string>
     <string name="signout">Allgofnodi</string>
@@ -88,7 +88,7 @@ Language: cy_GB
     <string name="error_fetch_users_list">Methu adfer defnyddiwr y wefan</string>
     <string name="plans_manage">Rheoli eich cynllun yn\nWordPress.com/plans</string>
     <string name="people_empty_list_filtered_viewers">Nid oes gennych unrhyw ddarllenwyr eto.</string>
-    <string name="people_fetching">Estyn defnyddwyr...</string>
+    <string name="people_fetching">Estyn defnyddwyr…</string>
     <string name="title_follower">Dilynwr</string>
     <string name="title_email_follower">Dilynwr e-bost</string>
     <string name="people_empty_list_filtered_email_followers">Nid oes gennych unrhyw dilynwyr e-bost eto.</string>
@@ -125,7 +125,7 @@ Language: cy_GB
     <string name="alert_error_adding_media">Digwyddodd gwall wrth fewnosod y cyfrwng</string>
     <string name="alert_action_while_uploading">Rydych wrthi\'n llwytho cyfrwng. Arhoswch nes i hyn orffen.</string>
     <string name="alert_insert_image_html_mode">Nid oes modd mewnosod y cyfrwng yn uniongyrchol yn y modd HTML.Ewch i\'r modd gweledol</string>
-    <string name="uploading_gallery_placeholder">Llwytho\'r oriel...</string>
+    <string name="uploading_gallery_placeholder">Llwytho\'r oriel…</string>
     <string name="invite_sent">wedi anfon gwahoddiad yn llwyddiannus</string>
     <string name="tap_to_try_again">Tapiwch i geisio eto!</string>
     <string name="invite_error_some_failed">Wedi anfon y gwahoddiad ond digwyddodd gwall(au)!</string>
@@ -474,9 +474,9 @@ Language: cy_GB
     <string name="notifications_empty_action_comments">Ymunwch â sgwrs: rhowch sylw ar flogiau rydych yn eu dilyn.</string>
     <string name="notifications_empty_action_unread">Ail-gynnwch sgwrs: ysgrifennwch gofnod newydd.</string>
     <string name="notifications_empty_action_all">Byddwch egniol! Rhowch sylwadau ar flogiau rydych yn eu dilyn.</string>
-    <string name="notifications_empty_likes">Dim hoffi newydd i\'w dangos...eto.</string>
-    <string name="notifications_empty_followers">Dim dilynwyr newydd...eto.</string>
-    <string name="notifications_empty_comments">Dim sylwadau newydd...eto.</string>
+    <string name="notifications_empty_likes">Dim hoffi newydd i\'w dangos…eto.</string>
+    <string name="notifications_empty_followers">Dim dilynwyr newydd…eto.</string>
+    <string name="notifications_empty_comments">Dim sylwadau newydd…eto.</string>
     <string name="notifications_empty_unread">Wedi dal i fyny!</string>
     <string name="stats_widget_error_jetpack_no_blogid">Ewch i\'r Ystadegau yn yr ap a cheisio ychwanegu\'r teclyn yn hwyrach</string>
     <string name="stats_widget_error_readd_widget">Tynnwch y teclyn a\'i ychwanegu eto</string>
@@ -559,6 +559,7 @@ Language: cy_GB
     <string name="me_btn_support">Cymorth a Chefnogaeth</string>
     <string name="site_picker_cant_hide_current_site">Nid oedd \"%s\" wedi ei guddio gan taw hi yw\'r wefan gyfredol</string>
     <string name="account_settings">Gosodiadau\'r Cyfrif</string>
+    <string name="site_picker_create_dotcom">Creu gwefan WordPress.com</string>
     <string name="site_picker_edit_visibility">Dangos/cuddio gwefannau</string>
     <string name="site_picker_add_self_hosted">Ychwanegu gwefan hunanwesteio</string>
     <string name="site_picker_title">Dewis gwefan</string>
@@ -889,7 +890,7 @@ Language: cy_GB
     <string name="select_categories">Dewis categorïau</string>
     <string name="account_details">Manylion cyfrif</string>
     <string name="xmlrpc_error">Methwyd cysylltu. Rhowch y llwybr llawn i xmlrpc.php ar eich gwefan a cheisiwch eto.</string>
-    <string name="notifications_empty_all">Dim hysbysiadau...eto.</string>
+    <string name="notifications_empty_all">Dim hysbysiadau…eto.</string>
     <string name="invalid_site_url_message">Gwiriwch fod URL y blog yn ddilys</string>
     <string name="share_url_post">Rhannu cofnod</string>
     <string name="share_url_page">Rhannu tudalen</string>
@@ -1021,7 +1022,7 @@ Language: cy_GB
     <string name="scaled_image">Lled y ddelwedd graddedig</string>
     <string name="upload_scaled_image">Llwytho a chysylltu â delwedd graddedig</string>
     <string name="link_enter_url">URL</string>
-    <string name="uploading">Llwytho...</string>
+    <string name="uploading">Llwytho…</string>
     <string name="version">Fersiwn</string>
     <string name="tos">Amodau Gwasanaeth</string>
     <string name="app_title">WordPress ar gyfer Android</string>

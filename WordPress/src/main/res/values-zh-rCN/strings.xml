@@ -872,7 +872,7 @@ Language: zh_CN
     <string name="reader_short_comment_count_multi">%s 条评论</string>
     <string name="reader_short_comment_count_one">一条评论</string>
     <string name="reader_label_submit_comment">发送</string>
-    <string name="reader_hint_comment_on_post">回复文章...</string>
+    <string name="reader_hint_comment_on_post">回复文章…</string>
     <string name="reader_discover_visit_blog">访问 %s</string>
     <string name="reader_discover_attribution_blog">最初发布在 %s 上</string>
     <string name="reader_discover_attribution_author">最初由%s发布</string>
@@ -939,6 +939,7 @@ Language: zh_CN
     <string name="me_btn_support">帮助与支持</string>
     <string name="account_settings">帐户设置</string>
     <string name="site_picker_cant_hide_current_site">「%s」未隐藏，因为它是当前站点</string>
+    <string name="site_picker_create_dotcom">创建 WordPress.com 站点</string>
     <string name="site_picker_add_self_hosted">添加自托管站点</string>
     <string name="site_picker_edit_visibility">显示/隐藏站点</string>
     <string name="my_site_btn_switch_site">转换站点</string>
@@ -1123,7 +1124,7 @@ Language: zh_CN
     <string name="reader_page_followed_blogs">已关注的博客</string>
     <string name="reader_label_tag_preview">带标签「%s」的文章</string>
     <string name="reader_title_subs">标签 &amp; 博客</string>
-    <string name="saving">正在保存...</string>
+    <string name="saving">正在保存…</string>
     <string name="media_empty_list">没有媒体</string>
     <string name="ptr_tip_message">注意:下拉以刷新</string>
     <string name="help">帮助</string>

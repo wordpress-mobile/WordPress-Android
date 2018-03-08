@@ -68,8 +68,8 @@ Language: pl
     <string name="wordpress_dot_org_plugin_page">Strona wtyczki na WordPress.org</string>
     <string name="plugin_remove_dialog_message">Czy na pewno chcesz usunąć %1$s z %2$s?\n\nSpowoduje to wyłączenie wtyczki i usunie wszystkie powiązane pliki i dane.</string>
     <string name="plugin_remove_dialog_title">Usuń wtyczkę</string>
-    <string name="plugin_remove_progress_dialog_message">Usuwanie %s...</string>
-    <string name="plugin_disable_progress_dialog_message">Wyłączanie %s...</string>
+    <string name="plugin_remove_progress_dialog_message">Usuwanie %s…</string>
+    <string name="plugin_disable_progress_dialog_message">Wyłączanie %s…</string>
     <string name="plugin_btn_remove">Usuń wtyczkę</string>
     <string name="plugin_configuration_failed">Wystąpił błąd podczas konfiguracji wtyczki: %s</string>
     <string name="plugin_detail_label_state_autoupdates">Autoaktualizacja</string>
@@ -87,7 +87,7 @@ Language: pl
     <string name="notification_error_wrong_password">Proszę sprawdzić swoje hasło aby kontynuować. </string>
     <string name="notification_login_title_stopped">Logowanie zatrzymane. </string>
     <string name="notification_logging_in">Proszę czekać, trwa logowanie. </string>
-    <string name="notification_login_title_in_progress">Logowanie w toku... </string>
+    <string name="notification_login_title_in_progress">Logowanie w toku… </string>
     <string name="notification_logged_in">Stuknij aby kontynuować. </string>
     <string name="notification_login_title_success">Zalogowano! </string>
     <string name="login_error_generic_start">Nie można było rozpocząć logowania Google. </string>
@@ -108,7 +108,7 @@ Language: pl
     <string name="uploading_subtitle_posts_only">Pozostało %1$d %2$s</string>
     <string name="uploading_subtitle_mixed_one">Pozostało %1$d %2$s, oraz 1 plik</string>
     <string name="uploading_subtitle_mixed">Pozostało %1$d %2$s, oraz %3$d z %4$d plików</string>
-    <string name="uploading_title">Przesyłanie... </string>
+    <string name="uploading_title">Przesyłanie… </string>
     <string name="media_files_uploaded_write_post">Zredaguj wpis</string>
     <string name="media_file_missing_for_retry">Ponowna próba niemożliwa - brakuje niektórych plików z tego urządzenia w tym wpisie</string>
     <string name="media_all_files_uploaded_successfully">Przesłano z sukcesem %d plików</string>
@@ -216,7 +216,7 @@ Language: pl
     <string name="async_promo_description">Możesz teraz opuścić edytora a twój wpis zostanie zapisany i opublikowany poza kulisami! Wypróbuj to!</string>
     <string name="async_promo_title">Publikuj z pełnym zaufaniem</string>
     <string name="editor_uploading_post">Twój wpis jest przesyłany</string>
-    <string name="uploading_media">Przesyłanie mediów...</string>
+    <string name="uploading_media">Przesyłanie mediów…</string>
     <string name="dialog_confirm_cancel_post_media_uploading">Jesteś pewien? Usunięcie tego wpisu anuluje również przesyłanie mediów.</string>
     <string name="page_scheduled">Strona zaplanowana</string>
     <string name="post_scheduled">Wpis zaplanowany</string>
@@ -279,7 +279,7 @@ Language: pl
     <string name="editor_dropped_title_images_not_allowed">Upuszczanie obrazków w tytule nie jest dozwolone</string>
     <string name="editor_dropped_text_error">Błąd podczas upuszczania tekstu</string>
     <string name="editor_dropped_html_images_not_allowed">Upuszczanie obrazków w trybie HTML nie jest dozwolone</string>
-    <string name="editor_content_hint">Podziel się swoją historią...</string>
+    <string name="editor_content_hint">Podziel się swoją historią…</string>
     <string name="post_status_trashed">W koszu</string>
     <string name="post_status_scheduled">Zaplanowany</string>
     <string name="post_status_post_private">Prywatny</string>
@@ -321,7 +321,7 @@ Language: pl
     <string name="media_images">Obrazki</string>
     <string name="media_all">Wszystkie</string>
     <string name="video_optimization_generic_error_message">Błąd podczas kompresji twojego filmu. Pozostawiono film w oryginale.</string>
-    <string name="video_optimization_in_progress">Optymalizacja twojego filmu...</string>
+    <string name="video_optimization_in_progress">Optymalizacja twojego filmu…</string>
     <string name="photo_picker_soft_ask_permissions_denied">%1$s nie ma dostępu do twoich zdjęć. Aby to naprawić, edytuj uprawnienia i włącz %2$s.</string>
     <string name="format_bar_description_ellipsis_expand">Rozwiń pasek narzędzi</string>
     <string name="format_bar_description_ellipsis_collapse">Zwiń pasek narzędzi</string>
@@ -511,10 +511,10 @@ Language: pl
     <string name="error_notif_q_action_like">Nie można dodać polubienia komentarza. Proszę spróbować później.</string>
     <string name="notifications_label_new_notifications_subtitle">Stuknij aby je wyświetlić</string>
     <string name="notifications_label_new_notifications">Nowe powiadomienia</string>
-    <string name="comment_q_action_replying">Dodawanie odpowiedzi...</string>
-    <string name="comment_q_action_approving">Zatwierdzanie...</string>
-    <string name="comment_q_action_liking">Dodawanie polubienia...</string>
-    <string name="comment_q_action_processing">Przetwarzanie...</string>
+    <string name="comment_q_action_replying">Dodawanie odpowiedzi…</string>
+    <string name="comment_q_action_approving">Zatwierdzanie…</string>
+    <string name="comment_q_action_liking">Dodawanie polubienia…</string>
+    <string name="comment_q_action_processing">Przetwarzanie…</string>
     <string name="comment_q_action_done_generic">Akcja wykonana!</string>
     <string name="comment_liked">Komentarz polubiony</string>
     <string name="signout">Wyloguj się</string>
@@ -543,7 +543,7 @@ Language: pl
     <string name="plans_manage">Zarządzaj swoim planem na\nWorPress.com/plans</string>
     <string name="title_email_follower">Obserwujący przez e-mail</string>
     <string name="title_follower">Obserwujący</string>
-    <string name="people_fetching">Pobieranie użytkowników...</string>
+    <string name="people_fetching">Pobieranie użytkowników…</string>
     <string name="people_empty_list_filtered_viewers">Witryna nie ma jeszcze oglądających</string>
     <string name="people_empty_list_filtered_email_followers">Nie masz jeszcze żadnych obserwujących przez e-mail</string>
     <string name="people_empty_list_filtered_followers">Nie masz jeszcze żadnych obserwujących.</string>
@@ -584,7 +584,7 @@ Language: pl
     <string name="alert_error_adding_media">Błąd podczas wstawiania mediów</string>
     <string name="alert_action_while_uploading">Przesyłasz właśnie media. Poczekaj aż to zadanie się zakończy.</string>
     <string name="alert_insert_image_html_mode">Nie można wstawić mediów bezpośrednio w trybie HTML. Przełącz się na tryb wizualny.</string>
-    <string name="uploading_gallery_placeholder">Przesyłanie galerii...</string>
+    <string name="uploading_gallery_placeholder">Przesyłanie galerii…</string>
     <string name="tap_to_try_again">Stuknij aby spróbować ponownie!</string>
     <string name="invite_sent">Zaproszenie zostało poprawnie wysłane</string>
     <string name="invite_error_for_username">%1$s: %2$s</string>
@@ -607,7 +607,7 @@ Language: pl
     <string name="dlg_confirm_clear_search_history">Usunąć historię wyszukiwania?</string>
     <string name="reader_empty_posts_in_search_description">Nie odnaleziono żadnych wpisów zawierających %s w twoim języku</string>
     <string name="reader_empty_posts_in_search_title">Nie odnaleziono wpisów</string>
-    <string name="reader_label_post_search_running">Szukanie...</string>
+    <string name="reader_label_post_search_running">Szukanie…</string>
     <string name="reader_label_post_search_explainer">Przeszukaj wszystkie publiczne blogi WordPress.com</string>
     <string name="reader_hint_post_search">Przeszukaj WordPress.com</string>
     <string name="reader_title_search_results">Szukaj %s</string>
@@ -667,7 +667,7 @@ Language: pl
     <string name="premium_upgrades_message">Masz aktywowane plany premium na swojej witrynie. Anuluj plany przed usunięciem swojej witryny.</string>
     <string name="premium_upgrades_title">Płatne podwyższenie planu</string>
     <string name="purchases_request_error">Coś poszło nie tak. Nie można uruchomić zakupów.</string>
-    <string name="delete_site_progress">Usuwanie witryny...</string>
+    <string name="delete_site_progress">Usuwanie witryny…</string>
     <string name="delete_site_hint">Usuń witrynę</string>
     <string name="delete_site_summary">Nie można cofnąć tego działania. Usunięcie tej witryny usunie całą zawartość, wszystkich współpracowników i domeny tej witryny.</string>
     <string name="export_site_hint">Wyeksportuj swoją witrynę do pliku XML</string>
@@ -748,7 +748,7 @@ Language: pl
     <string name="post_settings_set_featured_image">Ustaw obrazek wyróżniający</string>
     <string name="post_settings_featured_image">Obrazek wyróżniający</string>
     <string name="visual_editor_enabled">Edytor wizualny włączony</string>
-    <string name="editor_content_placeholder">Podziel się swoją historią...</string>
+    <string name="editor_content_placeholder">Podziel się swoją historią…</string>
     <string name="editor_page_title_placeholder">Tytuł strony</string>
     <string name="editor_post_title_placeholder">Tytuł wpisu</string>
     <string name="email_address">Adres e-mail</string>
@@ -782,7 +782,7 @@ Language: pl
     <string name="privacy_private">Twoja witryna jest widoczna jedynie przez ciebie i użytkowników przez ciebie zatwierdzonych</string>
     <string name="privacy_public_not_indexed">Twoja witryna jest widoczna dla wszystkich, ale prosi wyszukiwarki o nie indeksowanie</string>
     <string name="privacy_public">Twoja witryna jest widoczna dla wszystkich i może być indeksowana przez wyszukiwarki</string>
-    <string name="about_me_hint">Kilka słów o sobie...</string>
+    <string name="about_me_hint">Kilka słów o sobie…</string>
     <string name="about_me">O mnie</string>
     <string name="public_display_name_hint">Jeśli jej nie określisz, to twoją nazwą wyświetlaną publicznie będzie nazwa użytkownika</string>
     <string name="public_display_name">Nazwa wyświetlana publicznie</string>
@@ -936,9 +936,9 @@ Language: pl
     <string name="notifications_empty_action_comments">Dołącz do konwersacji: komentuj wpisy z blogów, które obserwujesz</string>
     <string name="notifications_empty_action_unread">Ożyw dyskusję: dodaj nowy wpis.</string>
     <string name="notifications_empty_action_all">Bądź aktywny! Skomentuj wpisy z blogów, które obserwujesz. </string>
-    <string name="notifications_empty_likes">Brak nowych polubień... na razie.</string>
-    <string name="notifications_empty_followers">Brak nowych obserwujących... póki co.</string>
-    <string name="notifications_empty_comments">Brak nowych komentarzy... jeszcze.</string>
+    <string name="notifications_empty_likes">Brak nowych polubień… na razie.</string>
+    <string name="notifications_empty_followers">Brak nowych obserwujących… póki co.</string>
+    <string name="notifications_empty_comments">Brak nowych komentarzy… jeszcze.</string>
     <string name="notifications_empty_unread">Jesteś na bieżąco!</string>
     <string name="stats_widget_error_jetpack_no_blogid">Proszę wejdź w statystki w aplikacji i spróbuj dodać widget później</string>
     <string name="stats_widget_error_readd_widget">Proszę usuń widget i dodaj go ponownie</string>
@@ -946,7 +946,7 @@ Language: pl
     <string name="stats_widget_error_no_permissions">Twoje konto WordPress.com nie ma dostępu do statystyk na tym blogu</string>
     <string name="stats_widget_error_no_account">Proszę zalogować się do WordPressa</string>
     <string name="stats_widget_error_generic">Statystyki nie mogły być wczytane</string>
-    <string name="stats_widget_loading_data">Wczytywanie danych...</string>
+    <string name="stats_widget_loading_data">Wczytywanie danych…</string>
     <string name="stats_widget_name_for_blog">Dzisiejsze statystyki dla %1$s</string>
     <string name="stats_widget_name">Dzisiejsze statystyki WordPressa</string>
     <string name="post_settings_add_location_permission_required">Wymagane uprawnienie do dodania lokalizacji</string>
@@ -957,7 +957,7 @@ Language: pl
     <string name="reader_short_comment_count_multi">%s Komentarzy</string>
     <string name="reader_short_comment_count_one">1 Komentarz</string>
     <string name="reader_label_submit_comment">WYŚLIJ</string>
-    <string name="reader_hint_comment_on_post">Dodaj komentarz do wpisu...</string>
+    <string name="reader_hint_comment_on_post">Dodaj komentarz do wpisu…</string>
     <string name="reader_discover_visit_blog">Przejdź do %s</string>
     <string name="reader_discover_attribution_blog">Oryginalnie opublikowano %s</string>
     <string name="reader_discover_attribution_author">Pierwotnie opublikowano przez %s</string>
@@ -983,7 +983,7 @@ Language: pl
     <string name="app_notifications">Powiadomienia aplikacji</string>
     <string name="notifications_wpcom_updates">Aktualizacje WordPress.com</string>
     <string name="notification_settings_item_other_account_emails_summary">Wysyłamy zawsze istotne wiadomości dotyczące twojego konta, ale czasem wysyłamy również przydatne informacje.</string>
-    <string name="stats_insights_latest_post_trend">Minęło %1$s od czasu kiedy wpis %2$s został opublikowany. Oto informacje o jego  popularności od tego czasu...</string>
+    <string name="stats_insights_latest_post_trend">Minęło %1$s od czasu kiedy wpis %2$s został opublikowany. Oto informacje o jego  popularności od tego czasu…</string>
     <string name="stats_insights_latest_post_summary">Podsumowanie ostatniego wpisu</string>
     <string name="button_revert">Cofnij</string>
     <string name="yesterday">Wczoraj</string>
@@ -1024,6 +1024,7 @@ Language: pl
     <string name="site_picker_cant_hide_current_site">\"%s\" została ukryta ponieważ jest to aktualna witryna</string>
     <string name="me_btn_support">Pomoc i wsparcie</string>
     <string name="account_settings">Ustawienia konta</string>
+    <string name="site_picker_create_dotcom">Utwórz witrynę na WordPress.com</string>
     <string name="site_picker_edit_visibility">Pokaż/ukryj witryny</string>
     <string name="site_picker_add_self_hosted">Dodaj witrynę z własnym hostingiem</string>
     <string name="my_site_btn_switch_site">Przełącz witrynę</string>
@@ -1053,11 +1054,11 @@ Language: pl
     <string name="media_details_label_file_name">Nazwa pliku</string>
     <string name="language">Język</string>
     <string name="device">Urządzenie</string>
-    <string name="media_fetching">Ładowanie mediów...</string>
-    <string name="posts_fetching">Ładowanie wpisów...</string>
+    <string name="media_fetching">Ładowanie mediów…</string>
+    <string name="posts_fetching">Ładowanie wpisów…</string>
     <string name="toast_err_post_uploading">Nie można otworzyć wpisu, gdy jest on przesyłany</string>
-    <string name="pages_fetching">Ładowanie stron...</string>
-    <string name="comments_fetching">Ładowanie komentarzy...</string>
+    <string name="pages_fetching">Ładowanie stron…</string>
+    <string name="comments_fetching">Ładowanie komentarzy…</string>
     <string name="stats_view_search_terms">Wyrażenia</string>
     <string name="stats_view_authors">Autorzy</string>
     <string name="stats_entry_search_terms">Wyrażenie</string>
@@ -1138,13 +1139,13 @@ Language: pl
     <string name="stats_view_all">Zobacz wszystkie</string>
     <string name="stats_other_recent_stats_label">Inne najnowsze statystyki</string>
     <string name="stats_for">Statystyki dla %s</string>
-    <string name="themes_fetching">Pobieranie motywów...</string>
+    <string name="themes_fetching">Pobieranie motywów…</string>
     <string name="ssl_certificate_details">Szczegóły</string>
     <string name="cab_selected">Liczba zaznaczonych: %d</string>
     <string name="delete_sure_page">Usuń tę stronę</string>
     <string name="delete_sure">Usuń ten szkic</string>
     <string name="delete_sure_post">Usuń ten wpis</string>
-    <string name="signing_out">Wylogowywanie...</string>
+    <string name="signing_out">Wylogowywanie…</string>
     <string name="pages_empty_list">Brak stron. Może jakąś opublikujesz?</string>
     <string name="comment_reply_to_user">Odpowiedz na komentarz %s</string>
     <string name="posts_empty_list">Brak wpisów. Może jakiś opublikujesz?</string>
@@ -1152,7 +1153,7 @@ Language: pl
     <string name="comment">Komentarz</string>
     <string name="mnu_comment_liked">Polubiony</string>
     <string name="uploading_total">Wysyłanie %1$d z %2$d</string>
-    <string name="sending_content">Wysyłanie treści %s ...</string>
+    <string name="sending_content">Wysyłanie treści %s …</string>
     <string name="select_a_blog">Wybierz witrynę WordPress</string>
     <string name="stats_no_blog">Nie udało się załadować statystyk dla wskazanego blogu</string>
     <string name="older_last_week">Starsze niż tydzień</string>
@@ -1210,7 +1211,7 @@ Language: pl
     <string name="reader_title_blog_preview">Blog Czytnika</string>
     <string name="ptr_tip_message">Porada: przeciągnij w dół aby odświeżyć</string>
     <string name="media_empty_list">Brak mediów</string>
-    <string name="saving">Zapisywanie...</string>
+    <string name="saving">Zapisywanie…</string>
     <string name="ssl_certificate_ask_trust">Jeśli zazwyczaj łączysz się z tą stroną bez problemów, ten błąd może oznaczać, że ktoś próbuje się pod nią podszyć i nie powinieneś kontynuować. Czy mimo to chcesz zaufać temu certyfikatowi?</string>
     <string name="ssl_certificate_error">Niepoprawny certyfikat SSL</string>
     <string name="help_center">Centrum pomocy</string>
@@ -1295,7 +1296,7 @@ Language: pl
     <string name="view_site">Zobacz stronę</string>
     <string name="new_media">Nowe media</string>
     <string name="new_post">Nowy wpis</string>
-    <string name="notifications_empty_all">Brak powiadomień... na razie. </string>
+    <string name="notifications_empty_all">Brak powiadomień… na razie. </string>
     <string name="http_authorization_required">Wymagana autoryzacja</string>
     <string name="http_credentials">Dane uwierzytelniające HTTP (opcjonalne)</string>
     <string name="invalid_site_url_message">Sprawdź, czy wpisany adres URL jest prawidłowy</string>
@@ -1370,7 +1371,7 @@ Language: pl
     <string name="deleting_post">Usuwanie wpisu</string>
     <string name="deleting_page">Usuwanie strony</string>
     <string name="creating_your_site">Tworzenie twojej strony</string>
-    <string name="reader_empty_posts_in_tag_updating">Ładowanie wpisów...</string>
+    <string name="reader_empty_posts_in_tag_updating">Ładowanie wpisów…</string>
     <string name="cant_share_no_visible_blog">Nie możesz udostępnić do WordPressa bez widocznego blogu</string>
     <string name="comment_spammed">Komentarz został oznaczony jako spam</string>
     <string name="download">Pobieranie mediów</string>
@@ -1405,7 +1406,7 @@ Language: pl
     <string name="reader_likes_one">Jedna osoba lubi to</string>
     <string name="reader_label_removed_tag">Usunięto %s</string>
     <string name="reader_label_added_tag">Dodano %s</string>
-    <string name="reader_hint_comment_on_comment">Odpowiedz na komentarz...</string>
+    <string name="reader_hint_comment_on_comment">Odpowiedz na komentarz…</string>
     <string name="reader_btn_unfollow">Obserwujesz</string>
     <string name="reader_btn_follow">Obserwuj</string>
     <string name="reader_btn_share">Udostępnij</string>
@@ -1470,7 +1471,7 @@ Language: pl
     <string name="note_reply_successful">Odpowiedź opublikowana</string>
     <string name="notifications">Powiadomienia</string>
     <string name="sign_in">Zaloguj się</string>
-    <string name="loading">Ładowanie...</string>
+    <string name="loading">Ładowanie…</string>
     <string name="httppassword">Hasło protokołu HTTP</string>
     <string name="httpuser">Nazwa użytkownika protokołu HTTP</string>
     <string name="error_media_upload">Napotkano błąd podczas wysyłania multimediów.</string>
@@ -1496,7 +1497,7 @@ Language: pl
     <string name="scaled_image">Szerokosć obrazka przeskalowanego</string>
     <string name="upload_scaled_image">Załaduj i wprowadź odnośnik do przeskalowanego obrazka</string>
     <string name="link_enter_url">Adres URL</string>
-    <string name="uploading">Przesyłanie...</string>
+    <string name="uploading">Przesyłanie…</string>
     <string name="app_title">WordPress dla Androida</string>
     <string name="tos">Warunki korzystania</string>
     <string name="version">Wersja</string>

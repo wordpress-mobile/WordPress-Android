@@ -55,7 +55,7 @@ Language: bg
     <string name="menu_redo">Стъпка напред</string>
     <string name="menu_undo">Стъпка назад</string>
     <string name="media_insert_unimplemented">За съжаление тази функционалност не е налична все още :(</string>
-    <string name="editor_content_hint">Споделете вашата история тук...</string>
+    <string name="editor_content_hint">Споделете вашата история тук…</string>
     <string name="post_status_pending_review">Очаква коментар</string>
     <string name="post_status_post_private">Лична</string>
     <string name="change_location">Промяна на местоположението</string>
@@ -78,7 +78,7 @@ Language: bg
     <string name="media_audio">Аудио</string>
     <string name="media_videos">Видео файлове</string>
     <string name="video_optimization_generic_error_message">Настъпи грешка докато вашето видео се компресираше. Ще използваме оригиналния файл.</string>
-    <string name="video_optimization_in_progress">Оптимизираме вашето видео...</string>
+    <string name="video_optimization_in_progress">Оптимизираме вашето видео…</string>
     <string name="photo_picker_soft_ask_permissions_denied">Достъпът на %1$s до вашите снимки беше ограничен. За да поправите това редактирайте вашите правомощия и включете %2$s.</string>
     <string name="format_bar_description_ellipsis_expand">Разширяване на помощната кутия</string>
     <string name="format_bar_description_ellipsis_collapse">Минимизиране на помощната кутия</string>
@@ -214,10 +214,10 @@ Language: bg
     <string name="error_notif_q_action_like">Неуспешно харесване на коментара. Моля, опитайте по-късно.</string>
     <string name="notifications_label_new_notifications_subtitle">Натиснете, за да ги покажете</string>
     <string name="notifications_label_new_notifications">Нови уведомления</string>
-    <string name="comment_q_action_replying">Отговаряне...</string>
-    <string name="comment_q_action_approving">Одобряване...</string>
-    <string name="comment_q_action_liking">Харесване...</string>
-    <string name="comment_q_action_processing">Обработва се...</string>
+    <string name="comment_q_action_replying">Отговаряне…</string>
+    <string name="comment_q_action_approving">Одобряване…</string>
+    <string name="comment_q_action_liking">Харесване…</string>
+    <string name="comment_q_action_processing">Обработва се…</string>
     <string name="comment_q_action_done_generic">Готово!</string>
     <string name="comment_liked">Коментарът е харесан</string>
     <string name="sign_in_wpcom">Влизане в WordPress.com</string>
@@ -246,7 +246,7 @@ Language: bg
     <string name="plans_manage">Управление на плана ви\nWordPress.com/plans</string>
     <string name="title_follower">Последовател</string>
     <string name="title_email_follower">Абонат</string>
-    <string name="people_fetching">Търсене на потребителите...</string>
+    <string name="people_fetching">Търсене на потребителите…</string>
     <string name="people_empty_list_filtered_viewers">Все още нямате потребители.</string>
     <string name="people_empty_list_filtered_email_followers">Все още нямате последователи по имейл.</string>
     <string name="people_empty_list_filtered_followers">Все още нямате последователи.</string>
@@ -287,7 +287,7 @@ Language: bg
     <string name="alert_error_adding_media">Грешка при добавянето на файла</string>
     <string name="alert_action_while_uploading">В момента качвате файл. Изчакайте докато процесът приключи.</string>
     <string name="alert_insert_image_html_mode">Файлове не могат да се добавят в режим HTML. Превключете обратно към визуален режим.</string>
-    <string name="uploading_gallery_placeholder">Качване на галерията...</string>
+    <string name="uploading_gallery_placeholder">Качване на галерията…</string>
     <string name="invite_sent">Успешно изпращане на поканата</string>
     <string name="invite_error_for_username">%1$s: %2$s</string>
     <string name="tap_to_try_again">Тап за повторен опит</string>
@@ -309,7 +309,7 @@ Language: bg
     <string name="label_clear_search_history">Изчистване на историята на търсенето</string>
     <string name="dlg_confirm_clear_search_history">Изчистване на историята на търсенето?</string>
     <string name="reader_empty_posts_in_search_description">Няма намерени публикации за %s на вашия език</string>
-    <string name="reader_label_post_search_running">Търсене...</string>
+    <string name="reader_label_post_search_running">Търсене…</string>
     <string name="reader_empty_posts_in_search_title">Няма намерени публикации</string>
     <string name="reader_label_post_search_explainer">Търсене в публичните блогове на WordPress.com</string>
     <string name="reader_hint_post_search">Търсене в WordPress.com</string>
@@ -363,14 +363,14 @@ Language: bg
     <string name="plans">Планове</string>
     <string name="export_your_content_message">Публикациите, страниците и настройките ви ще ви бъдат изпратени по имейл на %s.</string>
     <string name="export_your_content">Експортиране на вашето съдържание</string>
-    <string name="exporting_content_progress">Експортиране...</string>
+    <string name="exporting_content_progress">Експортиране…</string>
     <string name="export_email_sent">Писмото за прехвърлянето е изпратено!</string>
     <string name="show_purchases">Покупки</string>
     <string name="checking_purchases">Проверка на покупките</string>
     <string name="premium_upgrades_message">Имате активни премиум ъпгрейди на сайта си. Отменете ги преди да изтриете сайта си.</string>
     <string name="premium_upgrades_title">Премиум ъпгрейди</string>
     <string name="purchases_request_error">Нещо се счупи. Покупките не бяха заявени.</string>
-    <string name="delete_site_progress">Сайтът се изтрива...</string>
+    <string name="delete_site_progress">Сайтът се изтрива…</string>
     <string name="delete_site_hint">Изтриване на сайт</string>
     <string name="delete_site_summary">Това действие е необратимо. При изтриване на вашия сайт, всички домейни, сътрудници и съдържание ще бъдат премахнати.</string>
     <string name="export_site_hint">Експортиране на вашия сайт в XML файл</string>
@@ -451,7 +451,7 @@ Language: bg
     <string name="post_settings_set_featured_image">Задаване на основно изображение</string>
     <string name="post_settings_featured_image">Основно изображение</string>
     <string name="visual_editor_enabled">Визуалният редактор е активиран</string>
-    <string name="editor_content_placeholder">Споделете вашата история тук...</string>
+    <string name="editor_content_placeholder">Споделете вашата история тук…</string>
     <string name="editor_page_title_placeholder">Заглавие на страницата</string>
     <string name="editor_post_title_placeholder">Заглавие на публикация</string>
     <string name="email_address">Имейл адрес</string>
@@ -485,7 +485,7 @@ Language: bg
     <string name="privacy_private">Вашият сайт е видим за вас и одобрените от вас потребители</string>
     <string name="privacy_public_not_indexed">Сайтът ви се вижда от всички, но не позволява на търсачките да го индексират</string>
     <string name="privacy_public">Вашият сайт е видим от всички и може да бъде индексиран от търсачките</string>
-    <string name="about_me_hint">Няколко думи за вас...</string>
+    <string name="about_me_hint">Няколко думи за вас…</string>
     <string name="about_me">За мен</string>
     <string name="public_display_name_hint">Потребителското ви име ще стане официално име ако такова не е специално зададено</string>
     <string name="public_display_name">Публично име</string>
@@ -649,7 +649,7 @@ Language: bg
     <string name="stats_widget_error_no_permissions">Профилът ви в WordPress.com не дава достъп до данните в този блог </string>
     <string name="stats_widget_error_no_account">Влезте във WordPress</string>
     <string name="stats_widget_error_generic">Данните не могат да бъдат заредени</string>
-    <string name="stats_widget_loading_data">Зареждане на данните...</string>
+    <string name="stats_widget_loading_data">Зареждане на данните…</string>
     <string name="stats_widget_name_for_blog">Днешните данни за %1$s</string>
     <string name="stats_widget_name">Днешните данни за WordPress</string>
     <string name="post_settings_add_location_permission_required">Изисква се разрешение, за да добавите местоположение</string>
@@ -660,7 +660,7 @@ Language: bg
     <string name="reader_short_comment_count_multi">%s коментара</string>
     <string name="reader_short_comment_count_one">1 коментар</string>
     <string name="reader_label_submit_comment">ИЗПРАЩАНЕ</string>
-    <string name="reader_hint_comment_on_post">Отговор на публикацията...</string>
+    <string name="reader_hint_comment_on_post">Отговор на публикацията…</string>
     <string name="reader_discover_visit_blog">Посещаване на %s</string>
     <string name="reader_discover_attribution_blog">Оригинална публикация на %s</string>
     <string name="reader_discover_attribution_author">Оригинално публикувано от %s</string>
@@ -686,7 +686,7 @@ Language: bg
     <string name="email">Ел. поща</string>
     <string name="notifications_wpcom_updates">Актуализации за WordPress.com</string>
     <string name="notification_settings_item_other_account_emails_summary">Винаги изпращаме имейли, съдържащи важна информация относно вашия профил. Но също така известяваме и за полезни екстри.</string>
-    <string name="stats_insights_latest_post_trend">Мина %1$s от публикуването на %2$s. Ето как се представи публикацията досега...</string>
+    <string name="stats_insights_latest_post_trend">Мина %1$s от публикуването на %2$s. Ето как се представи публикацията досега…</string>
     <string name="stats_insights_latest_post_summary">Обзор на последната публикация</string>
     <string name="button_revert">Връщане</string>
     <string name="days_ago">преди %d дни</string>
@@ -727,6 +727,7 @@ Language: bg
     <string name="account_settings">Настройки на профила</string>
     <string name="me_btn_support">Помощ и поддръжка</string>
     <string name="site_picker_cant_hide_current_site">\"%s\" не беше скрит защото е текущият уебсайт</string>
+    <string name="site_picker_create_dotcom">Създаване на WordPress.com уебсайт</string>
     <string name="site_picker_edit_visibility">Показване/скриване на сайтовете</string>
     <string name="site_picker_add_self_hosted">Добавяне на самостоятелно хостван уебсайт</string>
     <string name="my_site_btn_view_admin">Преглед на администрацията</string>
@@ -756,11 +757,11 @@ Language: bg
     <string name="media_details_label_file_type">Тип на файла</string>
     <string name="auth_required">За да продължите, влезте отново.</string>
     <string name="sign_in_jetpack">За да се свържете с Jetpack влезте в WordPress.com.</string>
-    <string name="posts_fetching">Извличане на публикации...</string>
+    <string name="posts_fetching">Извличане на публикации…</string>
     <string name="reader_empty_posts_request_failed">Възникна грешка при извличане на публикациите</string>
-    <string name="comments_fetching">Извличане на коментари...</string>
-    <string name="pages_fetching">Извличане на страници...</string>
-    <string name="media_fetching">Извличане на файлове...</string>
+    <string name="comments_fetching">Извличане на коментари…</string>
+    <string name="pages_fetching">Извличане на страници…</string>
+    <string name="media_fetching">Извличане на файлове…</string>
     <string name="stats_followers_total_email_paged">Показване на %1$d - %2$d от %3$s email последователи</string>
     <string name="stats_followers_total_wpcom_paged">Показване на %1$d - %2$d от %3$s WordPress.com последователи</string>
     <string name="stats_view_authors">Автори</string>
@@ -815,7 +816,7 @@ Language: bg
     <string name="stats_views">Преглеждания</string>
     <string name="stats_followers_minutes">%1$d минути</string>
     <string name="stats_followers_a_year">Година</string>
-    <string name="themes_fetching">Извличане на теми...</string>
+    <string name="themes_fetching">Извличане на теми…</string>
     <string name="stats_followers_hours">%1$d часа</string>
     <string name="stats_entry_followers">Последовател</string>
     <string name="stats_followers_wpcom_selector">WordPress.com</string>
@@ -860,7 +861,7 @@ Language: bg
     <string name="pages_empty_list">Все ощя няма страници. Защо не създадете една?</string>
     <string name="reader_empty_posts_in_tag">Няма публикации с този таг</string>
     <string name="older_last_week">По-стари от седмица</string>
-    <string name="signing_out">Излизане...</string>
+    <string name="signing_out">Излизане…</string>
     <string name="older_month">По-стари от месец</string>
     <string name="comment_trashed">Коментарът беше изтрит</string>
     <string name="reader_label_comments_closed">Коментарите са изключени</string>
@@ -912,7 +913,7 @@ Language: bg
     <string name="reader_toast_err_follow_blog">Последването на този блог е неуспешно</string>
     <string name="reader_toast_err_unfollow_blog">Спирането на следенето на този блог е неуспешно</string>
     <string name="media_empty_list">Няма медиа</string>
-    <string name="saving">Записване...</string>
+    <string name="saving">Записване…</string>
     <string name="ptr_tip_message">Съвет: прекарайте пръст надолу за да обновите списъка</string>
     <string name="forgot_password">Изгубена парола?</string>
     <string name="help_center">Помощен център</string>
@@ -1099,7 +1100,7 @@ Language: bg
     <string name="reader_empty_followed_tags">Вие не следвате етикети</string>
     <string name="reader_toast_err_tag_invalid">Това не е валиден етикет</string>
     <string name="nux_tutorial_get_started_title">Начало!</string>
-    <string name="reader_hint_comment_on_comment">Отговор на коментар...</string>
+    <string name="reader_hint_comment_on_comment">Отговор на коментар…</string>
     <string name="limit_reached">Достигнахте ограничение. Пробвайте отново след 1 минута. Ако пробвате по-скоро от една минута ще увеличите продължителността на ограничението. В случай, че това е грешка, трябва да се свържете с поддръжката.</string>
     <string name="media_add_popup_title">Добавяне в библиотеката с файлове</string>
     <string name="empty_list_default">Списъкът е празен</string>
@@ -1170,7 +1171,7 @@ Language: bg
     <string name="note_reply_successful">Отговорът е публикуван</string>
     <string name="sign_in">Влизане</string>
     <string name="follows">Следва</string>
-    <string name="loading">Зареждане...</string>
+    <string name="loading">Зареждане…</string>
     <string name="httppassword">HTTP Парола</string>
     <string name="httpuser">Потребител за HTTP</string>
     <string name="error_media_upload">Грешка при качването на медийния файл</string>
@@ -1196,7 +1197,7 @@ Language: bg
     <string name="upload_scaled_image">Качване и свързване с оразмерено изображение</string>
     <string name="scaled_image">Оразмеряване ширината на изображението</string>
     <string name="link_enter_url">URL</string>
-    <string name="uploading">Качва се...</string>
+    <string name="uploading">Качва се…</string>
     <string name="version">Версия</string>
     <string name="tos">Условия за ползване</string>
     <string name="app_title">WordPress за Android</string>

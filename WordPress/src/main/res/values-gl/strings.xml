@@ -20,10 +20,10 @@ Language: gl_ES
     <string name="error_notif_q_action_like">Non se pode marcar como me gusta o comentario. Por favor téntao de novo máis tarde.</string>
     <string name="notifications_label_new_notifications_subtitle">Pulsa para mostralos</string>
     <string name="notifications_label_new_notifications">Novas notificacións</string>
-    <string name="comment_q_action_replying">Respondendo...</string>
-    <string name="comment_q_action_approving">Aprobando...</string>
-    <string name="comment_q_action_liking">Enlazando...</string>
-    <string name="comment_q_action_processing">Procesando...</string>
+    <string name="comment_q_action_replying">Respondendo…</string>
+    <string name="comment_q_action_approving">Aprobando…</string>
+    <string name="comment_q_action_liking">Enlazando…</string>
+    <string name="comment_q_action_processing">Procesando…</string>
     <string name="comment_q_action_done_generic">Acción realizada!</string>
     <string name="comment_liked">Comentario marcado como me gusta</string>
     <string name="signout">Pechar sesión</string>
@@ -52,7 +52,7 @@ Language: gl_ES
     <string name="plans_manage">Xestiona o teu plan en\nWordPress.com/plans</string>
     <string name="people_empty_list_filtered_viewers">Aínda non tes lectores.</string>
     <string name="title_follower">Seguidor</string>
-    <string name="people_fetching">Á procura dos usuarios...</string>
+    <string name="people_fetching">Á procura dos usuarios…</string>
     <string name="title_email_follower">Seguidor por correo-e</string>
     <string name="people_empty_list_filtered_email_followers">Aínda non tes seguidor por correo electrónico ningún</string>
     <string name="people_empty_list_filtered_followers">Aínda non tes seguidor ningún</string>
@@ -93,7 +93,7 @@ Language: gl_ES
     <string name="alert_error_adding_media">Houbo un erro na inserción do ficheiro</string>
     <string name="alert_action_while_uploading">Estanse a cargar os ficheiros. Por favor, espera a que o proceso termine.</string>
     <string name="alert_insert_image_html_mode">Non se poden inserir ficheiros directamente no modo HTML. Hai que volver ao modo visual.</string>
-    <string name="uploading_gallery_placeholder">Cargando a galería...</string>
+    <string name="uploading_gallery_placeholder">Cargando a galería…</string>
     <string name="invite_error_some_failed">Enviouse a invitación, pero houbo algún erro.</string>
     <string name="invite_sent">Invitación enviada con éxito</string>
     <string name="invite_error_for_username">%1$s: %2$s</string>
@@ -115,7 +115,7 @@ Language: gl_ES
     <string name="label_clear_search_history">Limpar o historial de busca</string>
     <string name="dlg_confirm_clear_search_history">Limpar o historial de busca?</string>
     <string name="reader_empty_posts_in_search_description">Non se atoparon artigos para %s na túa lingua</string>
-    <string name="reader_label_post_search_running">Buscando...</string>
+    <string name="reader_label_post_search_running">Buscando…</string>
     <string name="reader_empty_posts_in_search_title">Non se atoparon artigos</string>
     <string name="reader_label_post_search_explainer">Buscar en todos os blogues públicos de WordPress.com</string>
     <string name="reader_hint_post_search">Buscar en WordPress.com</string>
@@ -169,14 +169,14 @@ Language: gl_ES
     <string name="plans">Plans</string>
     <string name="plans_loading_error">Non foi posible cargar os plans</string>
     <string name="export_your_content">Exportar os contidos</string>
-    <string name="exporting_content_progress">Exportando os contidos...</string>
+    <string name="exporting_content_progress">Exportando os contidos…</string>
     <string name="export_email_sent">Mensaxe de exportación enviada</string>
     <string name="premium_upgrades_message">Tes melloras Premium no teu sitio. Cancela as melloras antes de eliminalo.</string>
     <string name="show_purchases">Mostrar compras</string>
     <string name="checking_purchases">Comprobando as compras</string>
     <string name="premium_upgrades_title">Melloras Premium</string>
     <string name="purchases_request_error">Algo foi mal. Non foi posible solicitar as compras.</string>
-    <string name="delete_site_progress">Eliminando o sitio...</string>
+    <string name="delete_site_progress">Eliminando o sitio…</string>
     <string name="delete_site_summary">Esta acción non se pode desfacer. Eliminar o sitio implica borrar todos os contidos, colaboradores y dominios do sitio.</string>
     <string name="delete_site_hint">Eliminar o sitio</string>
     <string name="export_site_hint">Exportar o sitio a un ficheiro XML</string>
@@ -257,7 +257,7 @@ Language: gl_ES
     <string name="post_settings_set_featured_image">Poñer como imaxe destacada</string>
     <string name="post_settings_featured_image">Imaxe destacada</string>
     <string name="visual_editor_enabled">Editor visual habilitado</string>
-    <string name="editor_content_placeholder">Comparte aquí as túas anécdotas...</string>
+    <string name="editor_content_placeholder">Comparte aquí as túas anécdotas…</string>
     <string name="editor_page_title_placeholder">Título da páxina</string>
     <string name="editor_post_title_placeholder">Título do artigo</string>
     <string name="email_address">Correo electrónico</string>
@@ -291,7 +291,7 @@ Language: gl_ES
     <string name="privacy_private">O sitio só é visible para ti e para os usuarios autorizados</string>
     <string name="privacy_public_not_indexed">O sitio é visible para calquera, pero pídese aos motores de busca que non o indexen.</string>
     <string name="privacy_public">O sitio é visible para calquera e os motores de busca poden indexalo</string>
-    <string name="about_me_hint">Unhas palabras acerca de ti...</string>
+    <string name="about_me_hint">Unhas palabras acerca de ti…</string>
     <string name="about_me">Acerca de mi</string>
     <string name="public_display_name_hint">Se non se define, o nome mostrado por defecto será o nome de usuario,</string>
     <string name="public_display_name">Nome público</string>
@@ -445,9 +445,9 @@ Language: gl_ES
     <string name="notifications_empty_action_comments">Únete a unha conversa: comenta nos artigos dos blogues que segues.</string>
     <string name="notifications_empty_action_unread">Reaviva a conversa: escribe un artigo novo.</string>
     <string name="notifications_empty_action_all">Sé activo! comenta nos artigos dos blogues que segues.</string>
-    <string name="notifications_empty_likes">Non hai novos \"gústame\" que mostrar ... de momento.</string>
-    <string name="notifications_empty_followers">Non hai novos seguidores dos que informar ... de momento</string>
-    <string name="notifications_empty_comments">Non hai comentarios novos ... de momento</string>
+    <string name="notifications_empty_likes">Non hai novos \"gústame\" que mostrar … de momento.</string>
+    <string name="notifications_empty_followers">Non hai novos seguidores dos que informar … de momento</string>
+    <string name="notifications_empty_comments">Non hai comentarios novos … de momento</string>
     <string name="notifications_empty_unread">Xa estás ao día!</string>
     <string name="stats_widget_error_jetpack_no_blogid">Por favor, accede ás estatísticas na aplicación e tenta engadir o widget máis tarde.</string>
     <string name="stats_widget_error_readd_widget">Elimina o widget e engádeo de novo</string>
@@ -455,7 +455,7 @@ Language: gl_ES
     <string name="stats_widget_error_no_permissions">A túa conta de WordPress.com non pode acceder ás estatísticas deste blogue</string>
     <string name="stats_widget_error_no_account">Por favor, inicia sesión en WordPress.</string>
     <string name="stats_widget_error_generic">Non foi posible cargar as estatísticas</string>
-    <string name="stats_widget_loading_data">Cargando datos...</string>
+    <string name="stats_widget_loading_data">Cargando datos…</string>
     <string name="stats_widget_name_for_blog">Estatísticas de hoxe para  %1$s</string>
     <string name="stats_widget_name">Estatísticas de WordPress hoxe</string>
     <string name="post_settings_add_location_permission_required">Necesítase permiso para engadir a localización</string>
@@ -466,7 +466,7 @@ Language: gl_ES
     <string name="reader_short_comment_count_multi">%s comentarios</string>
     <string name="reader_short_comment_count_one">1 comentario</string>
     <string name="reader_label_submit_comment">ENVIADO</string>
-    <string name="reader_hint_comment_on_post">Responder ao artigo...</string>
+    <string name="reader_hint_comment_on_post">Responder ao artigo…</string>
     <string name="reader_discover_visit_blog">Ver %s</string>
     <string name="reader_discover_attribution_blog">Publicado orixinalmente en %s</string>
     <string name="reader_discover_attribution_author">Publicado orixinalmente por %s</string>
@@ -492,7 +492,7 @@ Language: gl_ES
     <string name="email">Correo electrónico</string>
     <string name="notifications_wpcom_updates">Actualizacións de WordPress.com</string>
     <string name="notification_settings_item_other_account_emails_summary">Enviaremos sempre mensaxes importantes relativos á túa conta, e terás tamén algúns extras de utilidade.</string>
-    <string name="stats_insights_latest_post_trend">Hai %1$s que %2$s foi publicado. Aquí tes como lle foi ao artigo até este momento...</string>
+    <string name="stats_insights_latest_post_trend">Hai %1$s que %2$s foi publicado. Aquí tes como lle foi ao artigo até este momento…</string>
     <string name="stats_insights_latest_post_summary">Resumo do último artigo</string>
     <string name="button_revert">Reverter</string>
     <string name="days_ago">Hai %d días</string>
@@ -533,6 +533,7 @@ Language: gl_ES
     <string name="account_settings">Configuración da conta</string>
     <string name="site_picker_cant_hide_current_site">\"%s\" non foi ocultado porque é o sitio actual</string>
     <string name="me_btn_support">Axuda e soporte</string>
+    <string name="site_picker_create_dotcom">Crear un sitio en WordPress.com</string>
     <string name="site_picker_edit_visibility">Mostrar/ocultar sitios</string>
     <string name="site_picker_add_self_hosted">Engadir un sitio autoaloxado</string>
     <string name="my_site_btn_view_site">Ver o sitio</string>
@@ -568,10 +569,10 @@ Language: gl_ES
     <string name="stats_entry_search_terms">Termo de busca</string>
     <string name="stats_view_authors">Autores</string>
     <string name="stats_view_search_terms">Termos de busca</string>
-    <string name="comments_fetching">Á procura dos comentarios...</string>
-    <string name="pages_fetching">Á procura das páxinas...</string>
-    <string name="posts_fetching">Á procura dos artigos...</string>
-    <string name="media_fetching">Á procura dos ficheiros...</string>
+    <string name="comments_fetching">Á procura dos comentarios…</string>
+    <string name="pages_fetching">Á procura das páxinas…</string>
+    <string name="posts_fetching">Á procura dos artigos…</string>
+    <string name="media_fetching">Á procura dos ficheiros…</string>
     <string name="publisher">Editor:</string>
     <string name="error_notification_open">Non foi posible abrir a notificación</string>
     <string name="stats_followers_total_email_paged">Mostrando %1$d - %2$d de %3$s seguidores por correo-e</string>
@@ -617,7 +618,7 @@ Language: gl_ES
     <string name="stats_timeframe_years">Anos</string>
     <string name="stats_views">Visitas</string>
     <string name="stats_visitors">Lectores</string>
-    <string name="themes_fetching">Á procura dos temas...</string>
+    <string name="themes_fetching">Á procura dos temas…</string>
     <string name="stats_likes">\"Gústame\"</string>
     <string name="stats_followers_months">%1$d meses</string>
     <string name="stats_followers_a_year">Un ano</string>
@@ -689,7 +690,7 @@ Language: gl_ES
     <string name="sending_content">Cargando o contido de %s</string>
     <string name="uploading_total">Cargando %1$d de %2$d</string>
     <string name="browse_our_faq_button">Ves as FAQ</string>
-    <string name="signing_out">Saíndo...</string>
+    <string name="signing_out">Saíndo…</string>
     <string name="reader_menu_block_blog">Bloquear este blogue</string>
     <string name="reader_toast_err_block_blog">Non foi posible bloquear este blogue</string>
     <string name="reader_toast_blog_blocked">Os artigos deste blogue non se mostrarán máis</string>
@@ -717,7 +718,7 @@ Language: gl_ES
     <string name="reader_title_tag_preview">Etiqueta da Guía de Lectura</string>
     <string name="reader_title_subs">Etiquetas e blogues</string>
     <string name="reader_label_followed_blog">Blogue en seguimento</string>
-    <string name="saving">Gardando...</string>
+    <string name="saving">Gardando…</string>
     <string name="media_empty_list">Sen ficheiros</string>
     <string name="ptr_tip_message">Truco: Arrastra cara abaixo para actualizar</string>
     <string name="forgot_password">Perdiches o contrasinal?</string>
@@ -786,7 +787,7 @@ Language: gl_ES
     <string name="blog_name_must_include_letters">O enderezo do sitio debe ter como mínimo unha letra (a-z)</string>
     <string name="blog_name_invalid">Enderezo do sitio non válido</string>
     <string name="blog_title_invalid">Título do sitio non válido</string>
-    <string name="notifications_empty_all">Sen notificacións ... de momento.</string>
+    <string name="notifications_empty_all">Sen notificacións … de momento.</string>
     <string name="new_post">Artigo novo</string>
     <string name="new_media">Ficheiro novo</string>
     <string name="view_site">Ver o sitio</string>
@@ -876,7 +877,7 @@ Language: gl_ES
     <string name="share_url_page">Compartir a páxina</string>
     <string name="share_link">Enlace para compartir</string>
     <string name="creating_your_site">Creando o teu sitio</string>
-    <string name="reader_empty_posts_in_tag_updating">Á procura de artigos...</string>
+    <string name="reader_empty_posts_in_tag_updating">Á procura de artigos…</string>
     <string name="reader_label_reply">Responder</string>
     <string name="video">Vídeo</string>
     <string name="download">Descargando o ficheiro</string>
@@ -965,7 +966,7 @@ Language: gl_ES
     <string name="media_edit_failure">Fallou a actualización</string>
     <string name="theme_activating_button">Activando</string>
     <string name="theme_auth_error_title">Fallou a procura de temas</string>
-    <string name="share_action_title">Engadir a ...</string>
+    <string name="share_action_title">Engadir a …</string>
     <string name="theme_set_success">Tema activado con éxito!</string>
     <string name="upload">Cargar</string>
     <string name="discard">Descartar</string>
@@ -975,7 +976,7 @@ Language: gl_ES
     <string name="note_reply_successful">Resposta publicada</string>
     <string name="follows">Segue</string>
     <string name="sign_in">Entrar</string>
-    <string name="loading">Cargando...</string>
+    <string name="loading">Cargando…</string>
     <string name="httpuser">usuario HTTP</string>
     <string name="httppassword">contrasinal HTTP</string>
     <string name="error_media_upload">Houbo un erro mentres se cargaba o ficheiro</string>
@@ -1000,7 +1001,7 @@ Language: gl_ES
     <string name="scaled_image">Largo da imaxe escalada</string>
     <string name="upload_scaled_image">Cargar e ligar á imaxe escalada</string>
     <string name="link_enter_url">URL</string>
-    <string name="uploading">Cargando...</string>
+    <string name="uploading">Cargando…</string>
     <string name="version">Versión</string>
     <string name="tos">Termos de servizo</string>
     <string name="app_title">WordPress para Android</string>

@@ -94,7 +94,7 @@ Language: is
     <string name="error_notif_q_action_like">Gat ekki líkað við athugasemd. Vinsamlegast reyndu aftur síðar.</string>
     <string name="notifications_label_new_notifications_subtitle">Ýttu til þess að birta þær</string>
     <string name="notifications_label_new_notifications">Nýjar tilkynningar</string>
-    <string name="comment_q_action_replying">Svara...</string>
+    <string name="comment_q_action_replying">Svara…</string>
     <string name="comment_q_action_approving">Samþykki…</string>
     <string name="comment_q_action_liking">Líka við…</string>
     <string name="comment_q_action_processing">Í vinnslu…</string>
@@ -162,7 +162,7 @@ Language: is
     <string name="alert_error_adding_media">Villa kom upp við að fella inn skrá</string>
     <string name="alert_action_while_uploading">Þú ert að hala upp skrá eins og er. Vinsamlegast bíðið þangað til því er lokið.</string>
     <string name="alert_insert_image_html_mode">Þú getur ekki fellt inn skrá í HTML ham. Vinsamlegast skiptu aftur yfir í sjónrænan ham.</string>
-    <string name="uploading_gallery_placeholder">Hleð upp myndasafni...</string>
+    <string name="uploading_gallery_placeholder">Hleð upp myndasafni…</string>
     <string name="invite_error_for_username">%1$s: %2$s</string>
     <string name="invite_sent">Boð sent</string>
     <string name="invite_error_some_failed">Boð sent en með villu(m)!</string>
@@ -239,13 +239,13 @@ Language: is
     <string name="export_your_content_message">Færslurnar þínar, síður og stillingar verða sendar til þín á netfangið %s.</string>
     <string name="export_your_content">Flyttu út efnið þitt</string>
     <string name="export_email_sent">Tölvupóstur með útflutningi sendur!</string>
-    <string name="exporting_content_progress">Flyt út efni...</string>
+    <string name="exporting_content_progress">Flyt út efni…</string>
     <string name="checking_purchases">Athuga kaup</string>
     <string name="show_purchases">Birta kaup</string>
     <string name="premium_upgrades_message">Þú hefur virkar keyptar uppfærslur á vefnum þínum. Vinsamlegast segðu upp uppfærslunum áður en þú eyðir vefnum þínum.</string>
     <string name="premium_upgrades_title">Uppfærslur fyrir sérfræðinga</string>
     <string name="purchases_request_error">Eitthvað fór úrskeiðis. Gat ekki beðið um yfirlit yfir kaup.</string>
-    <string name="delete_site_progress">Eyði vef...</string>
+    <string name="delete_site_progress">Eyði vef…</string>
     <string name="delete_site_hint">Eyða vef</string>
     <string name="delete_site_summary">Það verður ekki mögulegt að afturkalla þessa aðgerð. Þegar vefnum þínum er eytt verður allt efni, þátttakendur og lén fjarlægð úr vefnum.</string>
     <string name="export_site_hint">Flytja vefinn þinn út sem XML skrá</string>
@@ -324,7 +324,7 @@ Language: is
     <string name="editor_toast_uploading_please_wait">Þú ert að hala upp skrá eins og er. Vinsamlegast bíðið þangað til því er lokið.</string>
     <string name="error_refresh_comments_showing_older">Ekki var hægt að endurfríska athugasemdir í þetta sinn - birti eldri athugasemdir</string>
     <string name="visual_editor_enabled">Sjónrænn ritill virkjaður</string>
-    <string name="editor_content_placeholder">Deildu sögunni þinni hér...</string>
+    <string name="editor_content_placeholder">Deildu sögunni þinni hér…</string>
     <string name="editor_page_title_placeholder">Titill síðu</string>
     <string name="editor_post_title_placeholder">Titill</string>
     <string name="email_address">Netfang</string>
@@ -511,9 +511,9 @@ Language: is
     <string name="notifications_empty_action_comments">Taktu þátt í samræðum: ritaðu athugasemd eða færslur af bloggunum sem þú fylgist með.</string>
     <string name="notifications_empty_action_unread">Komdu samræðum aftur í gang: ritaðu nýja færslu.</string>
     <string name="notifications_empty_action_all">Vertu virk(ur)! Skrifaðu athugasemdir við færslur á bloggum sem þú fylgist með.</string>
-    <string name="notifications_empty_likes">Engum líkar við...enn.</string>
-    <string name="notifications_empty_followers">Engir nýir fylgjendur...enn.</string>
-    <string name="notifications_empty_comments">Engar nýjar athugasemdir...enn.</string>
+    <string name="notifications_empty_likes">Engum líkar við…enn.</string>
+    <string name="notifications_empty_followers">Engir nýir fylgjendur…enn.</string>
+    <string name="notifications_empty_comments">Engar nýjar athugasemdir…enn.</string>
     <string name="notifications_empty_unread">Þú hefur unnið allt upp!</string>
     <string name="stats_widget_error_jetpack_no_blogid">Þú getur nálgast tölfræði í forritinu með því að bæta síðuhlutnum við síðar</string>
     <string name="stats_widget_error_readd_widget">Vinsamlegast fjarlægðu síðuhlutinn og bættu honum aftur við</string>
@@ -521,7 +521,7 @@ Language: is
     <string name="stats_widget_error_no_permissions">WordPress reikningurinn þinn getur ekki skoðað tölfræði fyrir þetta blogg</string>
     <string name="stats_widget_error_no_account">Vinsamlegast skráðu þig inn í WordPress</string>
     <string name="stats_widget_error_generic">Tókst ekki að hlaða tölfræði</string>
-    <string name="stats_widget_loading_data">Hleð gögn...</string>
+    <string name="stats_widget_loading_data">Hleð gögn…</string>
     <string name="stats_widget_name_for_blog">Tölfræði dagsins fyrir %1$s</string>
     <string name="stats_widget_name">WordPress tölfræði dagsins</string>
     <string name="add_media_permission_required">Heimild þarfnast til þess að bæta við skrá</string>
@@ -531,7 +531,7 @@ Language: is
     <string name="reader_short_comment_count_multi">%s athugasemdir</string>
     <string name="reader_short_comment_count_one">Ein athugasemd</string>
     <string name="reader_label_submit_comment">SENDA</string>
-    <string name="reader_hint_comment_on_post">Svara færslu...</string>
+    <string name="reader_hint_comment_on_post">Svara færslu…</string>
     <string name="reader_discover_visit_blog">Sækja #%s</string>
     <string name="reader_discover_attribution_blog">Upprunalega birt á %s</string>
     <string name="reader_discover_attribution_author">Upprunalega birt af %s</string>
@@ -556,7 +556,7 @@ Language: is
     <string name="app_notifications">App tilkynningar</string>
     <string name="notifications_tab">Tilkynningar</string>
     <string name="notifications_wpcom_updates">WordPress.com uppfærslur</string>
-    <string name="stats_insights_latest_post_trend">Það er %1$s síðan %2$s var birt. Hér eru upplýsingar um hvernig færslunni hefur vegnað hingað til...</string>
+    <string name="stats_insights_latest_post_trend">Það er %1$s síðan %2$s var birt. Hér eru upplýsingar um hvernig færslunni hefur vegnað hingað til…</string>
     <string name="stats_insights_latest_post_summary">Samantekt um síðustu færslu</string>
     <string name="button_revert">Afturkalla</string>
     <string name="yesterday">Í gær</string>
@@ -597,6 +597,7 @@ Language: is
     <string name="account_settings">Stillingar notandareiknings</string>
     <string name="site_picker_cant_hide_current_site">\"%s\" var ekki falið þar sem það er núverandi vefur</string>
     <string name="me_btn_support">Hjálp og aðstoð</string>
+    <string name="site_picker_create_dotcom">Stofna WordPress.com vef</string>
     <string name="site_picker_add_self_hosted">Bæta við sjálf-hýstum vef</string>
     <string name="site_picker_edit_visibility">Birta/fela vefi</string>
     <string name="my_site_btn_view_site">Skoða vef</string>
@@ -691,7 +692,7 @@ Language: is
     <string name="stats_pagination_label">Síða %1$s af %2$s</string>
     <string name="stats_empty_followers">Engir fylgjendur</string>
     <string name="stats_followers_seconds_ago">sekúndum síðan</string>
-    <string name="themes_fetching">Sæki þemu...</string>
+    <string name="themes_fetching">Sæki þemu…</string>
     <string name="stats_followers_total_email">Heildarfjöldi fylgjenda í tölvupósti: %1$s</string>
     <string name="stats_followers_total_wpcom">Heildarfjöldi WordPress.com fylgjenda: %1$s</string>
     <string name="stats_other_recent_stats_label">Önnur nýleg tölfræði</string>
@@ -779,7 +780,7 @@ Language: is
     <string name="reader_toast_err_follow_blog">Tókst ekki að fylgja þessu bloggi</string>
     <string name="reader_title_subs">Merki og blogg</string>
     <string name="media_empty_list">Engar skrár</string>
-    <string name="saving">Vista...</string>
+    <string name="saving">Vista…</string>
     <string name="ptr_tip_message">Ábending: Dragðu niður til að endurfríska</string>
     <string name="forums">Spjallborð</string>
     <string name="help">Hjálp</string>
@@ -908,7 +909,7 @@ Language: is
     <string name="required_field">Nauðsynlegir reitir</string>
     <string name="saving_changes">Vista breytingar</string>
     <string name="select_categories">Veldu flokk</string>
-    <string name="notifications_empty_all">Engar tilkynningar...enn.</string>
+    <string name="notifications_empty_all">Engar tilkynningar…enn.</string>
     <string name="open_source_licenses">Opin hugbúnaðarleyfi</string>
     <string name="link_enter_url_text">Texti tengils (valkvæmt)</string>
     <string name="local_changes">Staðværar breytingar</string>
@@ -1034,7 +1035,7 @@ Language: is
     <string name="follows">Fylgist með</string>
     <string name="note_reply_successful">Svar birt</string>
     <string name="more_notifications">og %d til viðbótar.</string>
-    <string name="loading">Hleð...</string>
+    <string name="loading">Hleð…</string>
     <string name="httppassword">HTTP lykilorð</string>
     <string name="httpuser">HTTP notandanafn</string>
     <string name="error_media_upload">Villa kom upp við upphleðslu á skrá</string>
@@ -1059,7 +1060,7 @@ Language: is
     <string name="scaled_image">Breidd minnkaðrar myndar</string>
     <string name="upload_scaled_image">Hlaða upp og tengja við minnkaða mynd</string>
     <string name="link_enter_url">Slóð</string>
-    <string name="uploading">Hleð upp...</string>
+    <string name="uploading">Hleð upp…</string>
     <string name="version">Útgáfa</string>
     <string name="tos">Notendaskilmálar</string>
     <string name="app_title">WordPress fyrir Android</string>

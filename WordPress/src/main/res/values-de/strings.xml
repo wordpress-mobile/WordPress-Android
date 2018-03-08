@@ -33,8 +33,8 @@ Language: de
     <string name="plugin_fetch_error">Plugins konnten nicht geladen werden</string>
     <string name="my_site_btn_site_pages">Website-Seiten</string>
     <string name="site_settings_tags_hint">Verwalte deine Website-Schlagwörter</string>
-    <string name="dlg_saving_tag">Wird gespeichert ...</string>
-    <string name="dlg_deleting_tag">Wird gelöscht ...</string>
+    <string name="dlg_saving_tag">Wird gespeichert …</string>
+    <string name="dlg_deleting_tag">Wird gelöscht …</string>
     <string name="dlg_confirm_delete_tag">Soll „%s“ dauerhaft gelöscht werden?</string>
     <string name="error_tag_exists">Ein Schlagwort mit diesem Namen ist bereits vorhanden.</string>
     <string name="add_new_tag">Neues Schlagwort hinzufügen</string>
@@ -103,7 +103,7 @@ Language: de
     <string name="uploading_subtitle_posts_only">%1$d %2$s verbleibend</string>
     <string name="uploading_subtitle_mixed_one">%1$d %2$s, und 1 Datei verbleibend</string>
     <string name="uploading_subtitle_mixed">%1$d %2$s, und %3$d von %4$d Dateien verbleibend</string>
-    <string name="uploading_title">Lade hoch ...</string>
+    <string name="uploading_title">Lade hoch …</string>
     <string name="media_files_uploaded_write_post">Beitrag verfassen</string>
     <string name="media_file_missing_for_retry">Kein neuer Versuch möglich – einige Dateien in diesem Beitrag sind auf deinem Gerät nicht vorhanden.</string>
     <string name="media_all_files_uploaded_successfully">%d Dateien erfolgreich hochgeladen</string>
@@ -507,9 +507,9 @@ Language: de
     <string name="notifications_label_new_notifications_subtitle">Zum Anzeigen tippen</string>
     <string name="notifications_label_new_notifications">Neue Benachrichtigungen</string>
     <string name="comment_q_action_replying">Antworten …</string>
-    <string name="comment_q_action_approving">Genehmigen ...</string>
+    <string name="comment_q_action_approving">Genehmigen …</string>
     <string name="comment_q_action_liking">Gefällt mir …</string>
-    <string name="comment_q_action_processing">Wird verarbeitet ...</string>
+    <string name="comment_q_action_processing">Wird verarbeitet …</string>
     <string name="comment_q_action_done_generic">Aktion erledigt!</string>
     <string name="comment_liked">Kommentar gefällt mir</string>
     <string name="signout">Abmelden</string>
@@ -538,7 +538,7 @@ Language: de
     <string name="plans_manage">Verwalte deinen Tarif auf\nWordPress.com/plans</string>
     <string name="title_email_follower">E-Mail-Follower</string>
     <string name="title_follower">Follower</string>
-    <string name="people_fetching">Benutzer werden abgerufen ...</string>
+    <string name="people_fetching">Benutzer werden abgerufen …</string>
     <string name="people_empty_list_filtered_viewers">Du hast noch keine Besucher.</string>
     <string name="people_empty_list_filtered_email_followers">Du hast noch keine E-Mail-Follower.</string>
     <string name="people_empty_list_filtered_followers">Du hast noch keine Follower.</string>
@@ -579,7 +579,7 @@ Language: de
     <string name="alert_error_adding_media">Beim Einfügen von Medien ist ein Fehler aufgetreten</string>
     <string name="alert_action_while_uploading">Derzeit lädst du noch Medien hoch. Bitte warte bis der Vorgang abgeschlossen ist.</string>
     <string name="alert_insert_image_html_mode">Du kannst keine Medien im HTML-Modus einfügen. Bitte wechsle zurück in den Visuellen Editor und versuche es erneut.</string>
-    <string name="uploading_gallery_placeholder">Galerie wird hochgeladen...</string>
+    <string name="uploading_gallery_placeholder">Galerie wird hochgeladen…</string>
     <string name="tap_to_try_again">Tippe, um es erneut zu probieren!</string>
     <string name="invite_sent">Einladung erfolgreich gesendet</string>
     <string name="invite_error_for_username">%1$s: %2$s</string>
@@ -602,7 +602,7 @@ Language: de
     <string name="dlg_confirm_clear_search_history">Suchverlauf löschen?</string>
     <string name="reader_empty_posts_in_search_description">Keine Beiträge zu %s in deiner Sprache gefunden.</string>
     <string name="reader_empty_posts_in_search_title">Keine Beiträge gefunden</string>
-    <string name="reader_label_post_search_running">Suche...</string>
+    <string name="reader_label_post_search_running">Suche…</string>
     <string name="reader_label_post_search_explainer">Durchsuche alle öffentlichen WordPress.com-Blogs</string>
     <string name="reader_hint_post_search">Durchsuche WordPress.com</string>
     <string name="reader_title_search_results">Suche nach %s</string>
@@ -777,7 +777,7 @@ Language: de
     <string name="privacy_private">Deine Website ist nur für dich und freigegebene Nutzer sichtbar.</string>
     <string name="privacy_public_not_indexed">Deine Website ist für alle sichtbar. Suchmaschinen werden aufgefordert, sie nicht zu indexieren.</string>
     <string name="privacy_public">Deine Website ist für alle sichtbar. Suchmaschinen dürfen sie indexieren.</string>
-    <string name="about_me_hint">Ein paar Infos über dich ...</string>
+    <string name="about_me_hint">Ein paar Infos über dich …</string>
     <string name="about_me">Über mich</string>
     <string name="public_display_name_hint">Wenn du keinen Anzeigenamen festlegst, wird standardmäßig dein Benutzername verwendet.</string>
     <string name="public_display_name">Öffentlich angezeigter Name</string>
@@ -941,7 +941,7 @@ Language: de
     <string name="stats_widget_error_no_permissions">Dein WordPress.com-Konto kann auf diesem Blog nicht auf Statistiken zugreifen</string>
     <string name="stats_widget_error_no_account">Bitte bei WordPress anmelden</string>
     <string name="stats_widget_error_generic">Statistiken konnten nicht geladen werden</string>
-    <string name="stats_widget_loading_data">Lade Daten ...</string>
+    <string name="stats_widget_loading_data">Lade Daten …</string>
     <string name="stats_widget_name_for_blog">Heutige Statistik für %1$s</string>
     <string name="stats_widget_name">Heutige WordPress-Statistiken</string>
     <string name="post_settings_add_location_permission_required">Rechte zum Hinzufügen eines Ortes erforderlich</string>
@@ -978,7 +978,7 @@ Language: de
     <string name="app_notifications">App-Benachrichtigungen</string>
     <string name="notifications_wpcom_updates">WordPress.com-Aktualisierungen</string>
     <string name="notification_settings_item_other_account_emails_summary">Wichtige E-Mails bezüglich deines Kontos werden immer versandt, aber du kannst auch zusätzliche Benachrichtigungen erhalten.</string>
-    <string name="stats_insights_latest_post_trend">Die Veröffentlichung von %2$s ist %1$s her. Hier siehst du, wie es dem Beitrag bisher ergangen ist ...</string>
+    <string name="stats_insights_latest_post_trend">Die Veröffentlichung von %2$s ist %1$s her. Hier siehst du, wie es dem Beitrag bisher ergangen ist …</string>
     <string name="stats_insights_latest_post_summary">Übersicht des letzten Beitrags</string>
     <string name="button_revert">Rückgängig</string>
     <string name="yesterday">Gestern</string>
@@ -1019,6 +1019,7 @@ Language: de
     <string name="site_picker_cant_hide_current_site">\"%s\" wurde nicht ausgeblendet, denn es ist die aktuelle Webseite</string>
     <string name="me_btn_support">Hilfe &amp; Support</string>
     <string name="account_settings">Konto-Einstellungen</string>
+    <string name="site_picker_create_dotcom">WordPress.com Website erstellen</string>
     <string name="site_picker_edit_visibility">Websites anzeigen/ausblenden</string>
     <string name="site_picker_add_self_hosted">Selbstgehostete Website hinzufügen</string>
     <string name="my_site_btn_switch_site">Website wechseln</string>
@@ -1139,7 +1140,7 @@ Language: de
     <string name="delete_sure_page">Lösche diese Seite</string>
     <string name="delete_sure">Lösche diesen Entwurf</string>
     <string name="delete_sure_post">Lösche diesen Beitrag</string>
-    <string name="signing_out">Abmelden ...</string>
+    <string name="signing_out">Abmelden …</string>
     <string name="pages_empty_list">Keine Seiten bisher. Warum nicht jetzt Eine erstellen?</string>
     <string name="comment_reply_to_user">Antwort zu %s</string>
     <string name="posts_empty_list">Keine Beiträge bisher. Warum nicht jetzt einen erstellen?</string>
@@ -1465,7 +1466,7 @@ Language: de
     <string name="note_reply_successful">Antwort veröffentlicht</string>
     <string name="notifications">Benachrichtigungen</string>
     <string name="sign_in">Anmelden</string>
-    <string name="loading">Lädt...</string>
+    <string name="loading">Lädt…</string>
     <string name="httppassword">HTTP-Passwort</string>
     <string name="httpuser">HTTP-Benutzername</string>
     <string name="error_media_upload">Beim Hochladen von Medien ist ein Fehler aufgetreten</string>

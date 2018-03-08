@@ -202,7 +202,7 @@ Language: ms
     <string name="editor_dropped_title_images_not_allowed">Menjatuhkan imej dalam Tajuk tidak dibenarkan</string>
     <string name="editor_dropped_html_images_not_allowed">Menjatuhkan imej sambil dalam mod HTML tidak dibenarkan</string>
     <string name="editor_dropped_text_error">Ralat berlaku semasa menjatuhkan teks</string>
-    <string name="editor_content_hint">Kongsi cerita anda di sini...</string>
+    <string name="editor_content_hint">Kongsi cerita anda di sini…</string>
     <string name="post_status_draft">Draf</string>
     <string name="post_status_pending_review">Menunggu tinjauan</string>
     <string name="post_status_post_private">Persendirian</string>
@@ -244,7 +244,7 @@ Language: ms
     <string name="media_images">Imej</string>
     <string name="media_videos">Video</string>
     <string name="video_optimization_generic_error_message">Ralat berlaku semasa memampatkan video anda. Menggunakan fail asal.</string>
-    <string name="video_optimization_in_progress">Mengoptimumkan video anda...</string>
+    <string name="video_optimization_in_progress">Mengoptimumkan video anda…</string>
     <string name="photo_picker_soft_ask_permissions_denied">%1$s telah menolak capaian ke gambar-gambar anda. Untuk membaikinya, sunting keizinan anda dan hidupkan %2$s.</string>
     <string name="format_bar_description_ellipsis_expand">Kembangkan Palang Alatan</string>
     <string name="format_bar_description_ellipsis_collapse">Runtuhkan Palang Alatan</string>
@@ -434,10 +434,10 @@ Language: ms
     <string name="error_notif_q_action_like">Tidak boleh menyukai ulasan. Sila cuba sebentar lagi.</string>
     <string name="notifications_label_new_notifications_subtitle">Tap untuk menunjukkannya</string>
     <string name="notifications_label_new_notifications">Pemberitahuan baharu</string>
-    <string name="comment_q_action_replying">Membalas...</string>
-    <string name="comment_q_action_approving">Melulus...</string>
-    <string name="comment_q_action_liking">Menyukai...</string>
-    <string name="comment_q_action_processing">Memproses...</string>
+    <string name="comment_q_action_replying">Membalas…</string>
+    <string name="comment_q_action_approving">Melulus…</string>
+    <string name="comment_q_action_liking">Menyukai…</string>
+    <string name="comment_q_action_processing">Memproses…</string>
     <string name="comment_q_action_done_generic">Tindakan selesai!</string>
     <string name="comment_liked">Ulasan disukai</string>
     <string name="signout">Log keluar</string>
@@ -507,7 +507,7 @@ Language: ms
     <string name="alert_error_adding_media">Ralat berlaku semasa menyisip media</string>
     <string name="alert_action_while_uploading">Anda sedang memuat naik media. Sila tunggu sehingga ianya selesai.</string>
     <string name="alert_insert_image_html_mode">Tidak dapat menyisip media terus dalam mod HTML. Sila tukar kembali ke mod visual.</string>
-    <string name="uploading_gallery_placeholder">Memuat naik galeri...</string>
+    <string name="uploading_gallery_placeholder">Memuat naik galeri…</string>
     <string name="invite_error_for_username">%1$s: %2$s</string>
     <string name="invite_error_some_failed">Jemputan dihantar tetapi ralat berlaku!</string>
     <string name="invite_sent">Jemputan berjaya dihantar</string>
@@ -529,7 +529,7 @@ Language: ms
     <string name="label_clear_search_history">Kosongkan sejarah carian</string>
     <string name="dlg_confirm_clear_search_history">Kosongkan sejarah carian?</string>
     <string name="reader_empty_posts_in_search_description">Tiada kiriman dijumpai untuk %s bagi bahasa anda</string>
-    <string name="reader_label_post_search_running">Mencari...</string>
+    <string name="reader_label_post_search_running">Mencari…</string>
     <string name="reader_empty_posts_in_search_title">Tiada kiriman ditemui</string>
     <string name="reader_label_post_search_explainer">Cari semua blog umum WordPress.com</string>
     <string name="reader_hint_post_search">Cari WordPress.com</string>
@@ -584,13 +584,13 @@ Language: ms
     <string name="plans_loading_error">Tidak boleh memuatkan pelan</string>
     <string name="export_your_content">Eksport kandungan anda</string>
     <string name="export_email_sent">Emel eksport dihantar!</string>
-    <string name="exporting_content_progress">Mengeksport kandungan...</string>
+    <string name="exporting_content_progress">Mengeksport kandungan…</string>
     <string name="premium_upgrades_message">Anda mempunyai naik taraf premium aktif di laman anda. Sila batalkan naik taraf anda sebelum menghapuskan laman anda.</string>
     <string name="show_purchases">Tunjukkan pembelian</string>
     <string name="checking_purchases">Menyemak pembelian</string>
     <string name="premium_upgrades_title">Naiktaraf Premium</string>
     <string name="purchases_request_error">Sesuatu tidak kena. Tidak boleh memohon pembelian</string>
-    <string name="delete_site_progress">Menghapus laman...</string>
+    <string name="delete_site_progress">Menghapus laman…</string>
     <string name="delete_site_summary">Tindakan ini tidak boleh diulang semula. Menghapuskan laman anda akan membuang semua kandungan, penyumbang, dan domain dari laman.</string>
     <string name="delete_site_hint">Hapuskan laman</string>
     <string name="export_site_hint">Eksport laman anda ke fail XML</string>
@@ -671,7 +671,7 @@ Language: ms
     <string name="post_settings_set_featured_image">Tetapkan Imej Terencana</string>
     <string name="post_settings_featured_image">Imej Terencana</string>
     <string name="visual_editor_enabled">Penyunting Visual dibolehkan</string>
-    <string name="editor_content_placeholder">Kongsikan cerita anda di sini...</string>
+    <string name="editor_content_placeholder">Kongsikan cerita anda di sini…</string>
     <string name="editor_page_title_placeholder">Tajuk Halaman</string>
     <string name="editor_post_title_placeholder">Tajuk Kiriman</string>
     <string name="email_address">Alamat emel</string>
@@ -705,7 +705,7 @@ Language: ms
     <string name="privacy_private">Laman anda adalah kelihatan hanya kepada anda dan pengguna yang anda luluskan</string>
     <string name="privacy_public_not_indexed">Laman anda adalah kelihatan kepada semua tetapi meminta enjin carian untuk tidak mengindeksnya</string>
     <string name="privacy_public">Laman anda adalah kelihata kepada semua dan mungkin diindeks oleh enjin carian</string>
-    <string name="about_me_hint">Beberapa perkataan mengenai anda...</string>
+    <string name="about_me_hint">Beberapa perkataan mengenai anda…</string>
     <string name="about_me">Mengenai saya</string>
     <string name="public_display_name_hint">Nama paparan akan kembali kepada nama pengguna anda jika ia tidak ditetapkan</string>
     <string name="public_display_name">Nama paparan umum</string>
@@ -859,9 +859,9 @@ Language: ms
     <string name="notifications_empty_action_comments">Ikuti perbincangan: ulas pada kiriman dari blog yang anda ikuti.</string>
     <string name="notifications_empty_action_unread">Nyalakan semula perbualan: tulis kiriman baharu.</string>
     <string name="notifications_empty_action_all">Jadilah aktif! Ulasan pada kiriman dari blog yang anda ikuti.</string>
-    <string name="notifications_empty_likes">Belum ada disukai untuk ditunjuk... lagi.</string>
-    <string name="notifications_empty_followers">Belum ada pengikut untuk dilaporkan... lagi.</string>
-    <string name="notifications_empty_comments">Belum ada ulasan baharu... lagi.</string>
+    <string name="notifications_empty_likes">Belum ada disukai untuk ditunjuk… lagi.</string>
+    <string name="notifications_empty_followers">Belum ada pengikut untuk dilaporkan… lagi.</string>
+    <string name="notifications_empty_comments">Belum ada ulasan baharu… lagi.</string>
     <string name="notifications_empty_unread">Anda telah lengkapkan semuanya!</string>
     <string name="stats_widget_error_jetpack_no_blogid">Sila capai Statistik dalam aplikasi, dan cuba tambah widget kemudian</string>
     <string name="stats_widget_error_readd_widget">Sila buang widget dan menambahnya semula</string>
@@ -869,7 +869,7 @@ Language: ms
     <string name="stats_widget_error_no_permissions">Akaun WordPress.com anda tidak dapat mencapai Statistik di blog ini</string>
     <string name="stats_widget_error_no_account">Sila log masuk ke dalam WordPress</string>
     <string name="stats_widget_error_generic">Statistik tidak dapat dimuatkan</string>
-    <string name="stats_widget_loading_data">Memuat data...</string>
+    <string name="stats_widget_loading_data">Memuat data…</string>
     <string name="stats_widget_name_for_blog">Statistik %1$s untuk hari ini</string>
     <string name="stats_widget_name">Statistik WordPress Hari Ini</string>
     <string name="post_settings_add_location_permission_required">Kebenaran diperlukan untuk menambah lokasi</string>
@@ -880,7 +880,7 @@ Language: ms
     <string name="reader_short_comment_count_multi">%s Ulasan</string>
     <string name="reader_short_comment_count_one">1 Ulasan</string>
     <string name="reader_label_submit_comment">HANTAR</string>
-    <string name="reader_hint_comment_on_post">Balas kiriman...</string>
+    <string name="reader_hint_comment_on_post">Balas kiriman…</string>
     <string name="reader_discover_visit_blog">Lawat %s</string>
     <string name="reader_discover_attribution_blog">Asalnya dikirim pada %s</string>
     <string name="reader_discover_attribution_author">Asalnya dikirim oleh %s</string>
@@ -947,6 +947,7 @@ Language: ms
     <string name="site_picker_cant_hide_current_site">\"%s\" tidak disembunyikan kerana ianya laman semasa</string>
     <string name="account_settings">Tetapan Akaun</string>
     <string name="me_btn_support">Bantuan &amp; Sokongan</string>
+    <string name="site_picker_create_dotcom">Cipta laman WordPress.com</string>
     <string name="site_picker_add_self_hosted">Tambah laman yang dihos sendiri</string>
     <string name="site_picker_edit_visibility">Tunjuk/sembunyi laman</string>
     <string name="site_picker_title">Pilih laman</string>
@@ -978,10 +979,10 @@ Language: ms
     <string name="sign_in_jetpack">Log masuk ke akaun WordPress.com anda dan untuk menyambung ke Jetpack.</string>
     <string name="stats_view_authors">Pengarang</string>
     <string name="error_notification_open">Tidak dapat membuka pemberitahuan</string>
-    <string name="comments_fetching">Mengambil ulasan...</string>
-    <string name="media_fetching">Mengambil media...</string>
-    <string name="pages_fetching">Mengambil halaman...</string>
-    <string name="posts_fetching">Mengambil kiriman...</string>
+    <string name="comments_fetching">Mengambil ulasan…</string>
+    <string name="media_fetching">Mengambil media…</string>
+    <string name="pages_fetching">Mengambil halaman…</string>
+    <string name="posts_fetching">Mengambil kiriman…</string>
     <string name="stats_empty_search_terms_desc">Pelajari dengan lanjut mengenai trafik carian anda dengan melihat pada istilah yang dicari oleh para pelawat anda untuk mencari laman anda.</string>
     <string name="reader_empty_posts_request_failed">Tidak dapat mendapatkan kiriman</string>
     <string name="publisher">Penerbit:</string>
@@ -1021,7 +1022,7 @@ Language: ms
     <string name="stats_empty_top_posts_desc">Temui kandungan anda yang paling dilihat, dan periksa prestasi kiriman dan halaman dari semasa ke semasa.</string>
     <string name="stats_followers_email_selector">Emel</string>
     <string name="stats_empty_geoviews_desc">Jelajahi senarai untuk melihat negara dan kawasan mana menjana trafik terbanyak ke laman anda.</string>
-    <string name="themes_fetching">Mengambil tema...</string>
+    <string name="themes_fetching">Mengambil tema…</string>
     <string name="stats_entry_followers">Pengikut</string>
     <string name="stats_totals_publicize">Pengikut</string>
     <string name="stats_view_followers">Pengikut</string>
@@ -1103,7 +1104,7 @@ Language: ms
     <string name="older_month">Lebih dari sebulan</string>
     <string name="error_refresh_unauthorized_posts">Anda tidak mempunyai kebenaran melihat atau menyunting kiriman</string>
     <string name="reader_label_liked_by">Disukai oleh</string>
-    <string name="sending_content">Memuat naik kandungan %s...</string>
+    <string name="sending_content">Memuat naik kandungan %s…</string>
     <string name="reader_toast_err_generic">Tidak dapat melaksanakan tindakan ini</string>
     <string name="reader_toast_err_block_blog">Tidak dapat menyekat blog ini</string>
     <string name="reader_toast_blog_blocked">Kiriman daripada blog ini tidak akan ditunjukkan</string>
@@ -1133,7 +1134,7 @@ Language: ms
     <string name="reader_title_tag_preview">Tag Pembaca</string>
     <string name="media_empty_list">Tiada media</string>
     <string name="ptr_tip_message">Tip: Tarik ke bawah untuk segar semula</string>
-    <string name="saving">Menyimpan...</string>
+    <string name="saving">Menyimpan…</string>
     <string name="help">Bantuan</string>
     <string name="forums">Forum</string>
     <string name="help_center">Pusat bantuan</string>
@@ -1292,7 +1293,7 @@ Language: ms
     <string name="share_link">Kongsi pautan</string>
     <string name="deleting_page">Menghapuskan halaman</string>
     <string name="creating_your_site">Cipta laman anda</string>
-    <string name="reader_empty_posts_in_tag_updating">Mengambil kiriman...</string>
+    <string name="reader_empty_posts_in_tag_updating">Mengambil kiriman…</string>
     <string name="reader_likes_you_and_multi">Anda dan %,d yang lain sukakannya</string>
     <string name="reader_likes_multi">%,d orang sukakanya</string>
     <string name="reader_toast_err_get_comment">Komen ini tidak boleh didapatkan</string>
@@ -1330,7 +1331,7 @@ Language: ms
     <string name="reader_toast_err_tag_invalid">Ianya bukan tag yang sah</string>
     <string name="reader_toast_err_share_intent">Tidak dapat dikongsi</string>
     <string name="reader_toast_err_view_image">Tidak dapat melihat imej</string>
-    <string name="reader_hint_comment_on_comment">Balas ulasan...</string>
+    <string name="reader_hint_comment_on_comment">Balas ulasan…</string>
     <string name="media_add_popup_title">Tambah ke pustaka media</string>
     <string name="create_account_wpcom">Cipta akaun di WordPress.com</string>
     <string name="reader_empty_followed_tags">Anda tidak mengikut apa-apa tag</string>
@@ -1392,7 +1393,7 @@ Language: ms
     <string name="notifications">Pemberitahuan</string>
     <string name="follows">Ikutan</string>
     <string name="sign_in">Log masuk</string>
-    <string name="loading">Sedang memuat...</string>
+    <string name="loading">Sedang memuat…</string>
     <string name="httpuser">Nama pengguna HTTP</string>
     <string name="httppassword">Kata laluan HTTP</string>
     <string name="error_media_upload">Ralat berlaku semasa memuat naik media</string>
@@ -1418,7 +1419,7 @@ Language: ms
     <string name="scaled_image">Lebar imej berskala</string>
     <string name="upload_scaled_image">Muat naik dan pautkan ke imej berskala</string>
     <string name="link_enter_url">URL</string>
-    <string name="uploading">Memuat naik...</string>
+    <string name="uploading">Memuat naik…</string>
     <string name="version">Versi</string>
     <string name="tos">Terma Perkhidmatan</string>
     <string name="app_title">WordPress untuk Android</string>

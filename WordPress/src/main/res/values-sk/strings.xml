@@ -13,8 +13,8 @@ Language: sk
     <string name="wordpress_dot_org_plugin_page">WordPress.org stránka pluginov</string>
     <string name="plugin_remove_dialog_message">Ste si istý, že chcete odstrániť %1$s z%2$s?\n\nTýmto deaktivujete pluginy a zmažete všetky príslišné súbory a dáta.</string>
     <string name="plugin_remove_dialog_title">Odstrániť plugin</string>
-    <string name="plugin_remove_progress_dialog_message">Odstraňujem %s...</string>
-    <string name="plugin_disable_progress_dialog_message">Vypínam %s...</string>
+    <string name="plugin_remove_progress_dialog_message">Odstraňujem %s…</string>
+    <string name="plugin_disable_progress_dialog_message">Vypínam %s…</string>
     <string name="plugin_btn_remove">Odstrániť plugin</string>
     <string name="plugin_configuration_failed">Vyskytla sa chyba počas konfigurácie pluginu: %s</string>
     <string name="plugin_detail_label_state_autoupdates">Automatické aktualizácie</string>
@@ -52,7 +52,7 @@ Language: sk
     <string name="uploading_subtitle_posts_only">%1$d %2$s zostáva</string>
     <string name="uploading_subtitle_mixed_one">%1$d %2$s, a 1 súbor zostáva</string>
     <string name="uploading_subtitle_mixed">%1$d %2$s, a %3$d zo%4$d súborov zostáva</string>
-    <string name="uploading_title">Nahrávam...</string>
+    <string name="uploading_title">Nahrávam…</string>
     <string name="media_files_uploaded_write_post">Napíš článok</string>
     <string name="media_file_missing_for_retry">Návrat nie je možný - v tomto Článku chýbajú niektoré súbory  z vášho zariadenia</string>
     <string name="media_all_files_uploaded_successfully">%d úspešne nahraté súbory</string>
@@ -117,7 +117,7 @@ Language: sk
     <string name="alert_error_adding_media">Nastala chyba pri vkladaní súboru</string>
     <string name="alert_action_while_uploading">Práve nahrávate súbory. Počkajte na dokončenie.</string>
     <string name="alert_insert_image_html_mode">V HTML móde nemôžete vkladať súbory. Prepnite sa späť do vizuálneho módu.</string>
-    <string name="uploading_gallery_placeholder">Nahrávanie galérie...</string>
+    <string name="uploading_gallery_placeholder">Nahrávanie galérie…</string>
     <string name="invite_error_for_username">%1$s: %2$s</string>
     <string name="invite_sent">Pozvánka úspešne odoslaná</string>
     <string name="invite_error_no_usernames">Pridajte aspoň jedno používateľské meno</string>
@@ -133,7 +133,7 @@ Language: sk
     <string name="label_clear_search_history">Vyčistiť históriu vyhľadávania</string>
     <string name="dlg_confirm_clear_search_history">Vyčistiť históriu vyhľadávania?</string>
     <string name="reader_empty_posts_in_search_description">Nenašli sa žiadne príspevky pre %s vo vašom jazyku</string>
-    <string name="reader_label_post_search_running">Hľadanie...</string>
+    <string name="reader_label_post_search_running">Hľadanie…</string>
     <string name="reader_empty_posts_in_search_title">Nenájdené žiadne články</string>
     <string name="reader_label_post_search_explainer">Hľadať všetky verejné WordPress.com blogy</string>
     <string name="reader_hint_post_search">Hľadaj na WordPress.com</string>
@@ -171,10 +171,10 @@ Language: sk
     <string name="plans">Paušály</string>
     <string name="plan">Paušál</string>
     <string name="export_your_content_message">Tvoj článok, webová stránka a nastavenia budú zaslané emailom na %s.</string>
-    <string name="export_your_content">Exportujem Váš obsah...</string>
-    <string name="exporting_content_progress">Exportujem obsah...</string>
+    <string name="export_your_content">Exportujem Váš obsah…</string>
+    <string name="exporting_content_progress">Exportujem obsah…</string>
     <string name="export_email_sent">Exportovaný email odoslaný!</string>
-    <string name="delete_site_progress">Mazanie stránky...</string>
+    <string name="delete_site_progress">Mazanie stránky…</string>
     <string name="export_site_hint">Exportovať Vašu stránku ako XML súbor</string>
     <string name="keep_your_content">Ponechať Váš obsah</string>
     <string name="site_settings_export_content_title">Exportovať obsah</string>
@@ -253,7 +253,7 @@ Language: sk
     <string name="privacy_private">Vaša stránka je viditeľná iba pre vás a vami schválených používateľov</string>
     <string name="privacy_public_not_indexed">Vaša stránka je viditeľná každému, ale indexovanie vyhľadávačmi nie je povolené</string>
     <string name="privacy_public">Vaša strána je viditeľná každému a môže byť indexovaná vyhľadávačmi</string>
-    <string name="about_me_hint">Pár slov o vás...</string>
+    <string name="about_me_hint">Pár slov o vás…</string>
     <string name="public_display_name_hint">V prípade, že nemáte nastavené zobrazovacie meno, bude použité vaše užívateľské meno</string>
     <string name="about_me">O mne</string>
     <string name="public_display_name">Pre návštevníkov zobrazovať meno</string>
@@ -320,9 +320,9 @@ Language: sk
     <string name="notifications_empty_action_comments">Pridajte sa ku konverzácii: komentujte príspevky z blogov, ktoré sledujete.</string>
     <string name="notifications_empty_action_unread">Začnite konverzáciu: napíšte nový príspevok.</string>
     <string name="notifications_empty_action_all">Tvorte! Komentujte príspevky z blogov, ktoré sledujete.</string>
-    <string name="notifications_empty_likes">Nemáte žiadne nové lajky... zatiaľ.</string>
-    <string name="notifications_empty_followers">Žiadny nový sledujúci... zatiaľ.</string>
-    <string name="notifications_empty_comments">Žiadne nové komentáre... zatiaľ.</string>
+    <string name="notifications_empty_likes">Nemáte žiadne nové lajky… zatiaľ.</string>
+    <string name="notifications_empty_followers">Žiadny nový sledujúci… zatiaľ.</string>
+    <string name="notifications_empty_comments">Žiadne nové komentáre… zatiaľ.</string>
     <string name="notifications_empty_unread">Všetky sú prečítané!</string>
     <string name="stats_widget_error_jetpack_no_blogid">Prosím získajte štatistiku v aplikácii a pokúste sa pridať widgety neskôr</string>
     <string name="stats_widget_error_readd_widget">Prosím odstráňte widget a neskôr ho znovu pridajte</string>
@@ -330,7 +330,7 @@ Language: sk
     <string name="stats_widget_error_no_permissions">Váš účet na WordPress.com nemá prístup k štatistikám na tomto blogu</string>
     <string name="stats_widget_error_no_account">Prosím prihláste sa do WordPress</string>
     <string name="stats_widget_error_generic">Nemožno načítať štatistku</string>
-    <string name="stats_widget_loading_data">Načítavanie údajov...</string>
+    <string name="stats_widget_loading_data">Načítavanie údajov…</string>
     <string name="stats_widget_name_for_blog">Dnešná štatistika pre %1$s</string>
     <string name="stats_widget_name">Dnešná štatistika WordPress</string>
     <string name="add_media_permission_required">Vyžadujú sa súhlasy k pridaniu súborov</string>
@@ -340,7 +340,7 @@ Language: sk
     <string name="reader_short_comment_count_multi">%s komentárov</string>
     <string name="reader_short_comment_count_one">1 komentár</string>
     <string name="reader_label_submit_comment">ODOSLAŤ</string>
-    <string name="reader_hint_comment_on_post">Pridať komentár k článku...</string>
+    <string name="reader_hint_comment_on_post">Pridať komentár k článku…</string>
     <string name="reader_discover_visit_blog">Návštevnosť %s</string>
     <string name="reader_discover_attribution_blog">Pôvodne publikované v %s</string>
     <string name="reader_discover_attribution_author">Pôvodne publikované autorom %s</string>
@@ -365,7 +365,7 @@ Language: sk
     <string name="app_notifications">Upozornenia aplikácie</string>
     <string name="notifications_tab">Záložka Upozornenia</string>
     <string name="notifications_wpcom_updates">Aktualizácie WordPress.com</string>
-    <string name="stats_insights_latest_post_trend">Prešlo %1$s od zverejnenia %2$s. Môžete vidieť ako doteraz príspevok obstál...</string>
+    <string name="stats_insights_latest_post_trend">Prešlo %1$s od zverejnenia %2$s. Môžete vidieť ako doteraz príspevok obstál…</string>
     <string name="stats_insights_latest_post_summary">Súhrn najnovších príspevkov</string>
     <string name="button_revert">Vrátiť</string>
     <string name="yesterday">Včera</string>
@@ -401,6 +401,7 @@ Language: sk
     <string name="me_btn_login_logout">Prihlásiť/Odhlásiť</string>
     <string name="me_btn_support">Pomoc a podpora</string>
     <string name="site_picker_cant_hide_current_site">\"%s\" nebola skrytá, pretože to je aktuálna webová stránka</string>
+    <string name="site_picker_create_dotcom">Vytvoriť webovú stránku WordPress.com</string>
     <string name="site_picker_edit_visibility">Zobraziť/skryť webové stránky</string>
     <string name="site_picker_add_self_hosted">Pridať webovú stránku s vlastným hostingom</string>
     <string name="my_site_btn_view_site">Zobraziť webovú stránku</string>
@@ -428,10 +429,10 @@ Language: sk
     <string name="media_details_label_file_name">Názov súboru</string>
     <string name="stats_followers_total_wpcom_paged">WordPress.com odberatelia %1$d - %2$d z %3$s</string>
     <string name="stats_followers_total_email_paged">Zobrazuje sa %1$d - %2$d z %3$s odberateľov</string>
-    <string name="media_fetching">Načítavajú sa súbory...</string>
-    <string name="comments_fetching">Načítavajú sa komentáre...</string>
-    <string name="posts_fetching">Načítavajú sa príspevky...</string>
-    <string name="pages_fetching">Načítavajú sa stránky...</string>
+    <string name="media_fetching">Načítavajú sa súbory…</string>
+    <string name="comments_fetching">Načítavajú sa komentáre…</string>
+    <string name="posts_fetching">Načítavajú sa príspevky…</string>
+    <string name="pages_fetching">Načítavajú sa stránky…</string>
     <string name="publisher">Vydavateľ:</string>
     <string name="stats_empty_search_terms_desc">Zistite, aké kľúčové slová zvyšujú návštevnosť stránky.</string>
     <string name="stats_empty_search_terms">Slovo nenájdené</string>
@@ -578,7 +579,7 @@ Language: sk
     <string name="reader_hint_add_tag_or_url">Zadajte adresu URL alebo značku, ktorú chcete sledovať</string>
     <string name="media_empty_list">Žiadne súbory</string>
     <string name="ptr_tip_message">Potiahnite smerom nadol pre obnovu</string>
-    <string name="saving">Ukladá sa ...</string>
+    <string name="saving">Ukladá sa …</string>
     <string name="ssl_certificate_ask_trust">Ak sa bežne pripájate bez problémov, táto chyba môže znamenať, že sa niekto pokúša prevziať vašu identitu. Neodporúčame vám pokračovať. Chcete aj napriek tomu dôverovať tomuto certifikátu?</string>
     <string name="ssl_certificate_error">Neplatný SSL certifikát</string>
     <string name="forgot_password">Stratili ste heslo?</string>
@@ -774,7 +775,7 @@ Language: sk
     <string name="empty_list_default">Tento zoznam je prázdny</string>
     <string name="media_add_popup_title">Pridať do knižnice súborov</string>
     <string name="create_account_wpcom">Vytvoriť účet na WordPress.com</string>
-    <string name="reader_hint_comment_on_comment">Odpovedajte na komentár...</string>
+    <string name="reader_hint_comment_on_comment">Odpovedajte na komentár…</string>
     <string name="stats_view_referrers">Odkazujúci</string>
     <string name="stats_entry_referrers">Odkazujúci</string>
     <string name="media_gallery_type_squares">Štvorce</string>
@@ -830,7 +831,7 @@ Language: sk
     <string name="new_notifications">Počet nových upozornení: %d</string>
     <string name="note_reply_successful">Odpoveď zverejnená</string>
     <string name="follows">Sledovania</string>
-    <string name="loading">Načítava sa...</string>
+    <string name="loading">Načítava sa…</string>
     <string name="httpuser">HTTP používateľské meno</string>
     <string name="httppassword">HTTP heslo</string>
     <string name="error_media_upload">Pri nahrávaní multimédií sa vyskytla chyba</string>

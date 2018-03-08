@@ -53,6 +53,7 @@ Language: az
     <string name="me_btn_login_logout">Giriş/Çıxış</string>
     <string name="me_btn_support">Yardım və Dəstək</string>
     <string name="site_picker_cant_hide_current_site">\"%s\" hazırkı sayt olduğundan gizlədilə bilmədi</string>
+    <string name="site_picker_create_dotcom">WordPress.com saytı yarat</string>
     <string name="site_picker_add_self_hosted">İstifadəçinin öz hostundakı saytı əlavə et</string>
     <string name="site_picker_edit_visibility">Saytları göstər/gizlət</string>
     <string name="my_site_btn_view_admin">Nəzarətçiyə Bax</string>
@@ -87,11 +88,11 @@ Language: az
     <string name="stats_entry_search_terms">Axtarış Kriteriyası</string>
     <string name="stats_view_authors">Müəlliflər</string>
     <string name="stats_view_search_terms">Axtarış Kriteriyaları</string>
-    <string name="comments_fetching">Şərhlər alınır...</string>
-    <string name="pages_fetching">Səhifələr alınır...</string>
+    <string name="comments_fetching">Şərhlər alınır…</string>
+    <string name="pages_fetching">Səhifələr alınır…</string>
     <string name="toast_err_post_uploading">Yazı yüklənərkən açılmır</string>
-    <string name="posts_fetching">Yazılar alınır...</string>
-    <string name="media_fetching">Media faylı alınır...</string>
+    <string name="posts_fetching">Yazılar alınır…</string>
+    <string name="media_fetching">Media faylı alınır…</string>
     <string name="stats_total">Cəmi</string>
     <string name="stats_overall">Əsas</string>
     <string name="stats_period">Dövr</string>
@@ -102,7 +103,7 @@ Language: az
     <string name="stats_recent_weeks">Son Həftələr</string>
     <string name="error_copy_to_clipboard">Mətn lövhəyə köçürülərkən xəta baş verdi</string>
     <string name="stats_months_and_years">Aylar və İllər</string>
-    <string name="themes_fetching">Mövzular alınır...</string>
+    <string name="themes_fetching">Mövzular alınır…</string>
     <string name="stats_for">%s üçün statistikalar</string>
     <string name="stats_other_recent_stats_label">Digər Son Statistikalar</string>
     <string name="stats_view_all">Tamamına bax</string>
@@ -371,14 +372,14 @@ Language: az
     <string name="create_a_link">Bağlantı yarat</string>
     <string name="remove_account">Saytı sil</string>
     <string name="blog_removed_successfully">Sayt uğurla silindi</string>
-    <string name="notifications_empty_all">Bildiriş yoxdur...</string>
+    <string name="notifications_empty_all">Bildiriş yoxdur…</string>
     <string name="deleting_page">Səhifə silinir</string>
     <string name="deleting_post">Yazı silinir</string>
     <string name="share_url_post">Yazını paylaş</string>
     <string name="share_url_page">Səhifəni paylaş</string>
     <string name="share_link">Bağlantını paylaş</string>
     <string name="creating_your_site">Yeni saytınız yaradılır</string>
-    <string name="reader_empty_posts_in_tag_updating">Yazılar gətirilir...</string>
+    <string name="reader_empty_posts_in_tag_updating">Yazılar gətirilir…</string>
     <string name="reader_label_reply">Cavab</string>
     <string name="comment_spammed">Şərh spam olaraq işarələnmişdir</string>
     <string name="video">Video</string>
@@ -418,7 +419,7 @@ Language: az
     <string name="reader_toast_err_share_intent">Paylaşma baş tutmadı</string>
     <string name="reader_toast_err_view_image">Təsviri görüntüləmək baş tutmadı</string>
     <string name="reader_toast_err_url_intent">%s açmaq baş tutmadı</string>
-    <string name="reader_hint_comment_on_comment">Şərhə cavab yaz...</string>
+    <string name="reader_hint_comment_on_comment">Şərhə cavab yaz…</string>
     <string name="themes">Mövzular</string>
     <string name="media_gallery_type_slideshow">Slaydşou</string>
     <string name="media_edit_description_text">Açıqlama</string>
@@ -475,7 +476,7 @@ Language: az
     <string name="more_notifications">və %d daha çox.</string>
     <string name="new_notifications">%d yeni bildirişlər</string>
     <string name="follows">İzləmələr</string>
-    <string name="loading">Yüklənir...</string>
+    <string name="loading">Yüklənir…</string>
     <string name="httpuser">HTTP istifadəçi adı</string>
     <string name="httppassword">HTTP parolu</string>
     <string name="error_media_upload">Media faylının yüklənməsi zamanı xəta baş verdi.</string>

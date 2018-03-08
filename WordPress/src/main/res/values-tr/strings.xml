@@ -62,9 +62,9 @@ Language: tr
     <string name="wordpress_dot_org_plugin_page">WordPress.org eklenti sayfası</string>
     <string name="plugin_home_page">Eklenti ana sayfası</string>
     <string name="plugin_remove_dialog_message">%1$s içinden %2$s eklentisini kaldırmak istediğinizden emin misiniz?\n\nBu eklentiyi devre dışı bırakır ve tüm ilişkili dosyaları ve verileri siler.</string>
-    <string name="plugin_remove_progress_dialog_message">Kaldırılıyor %s...</string>
+    <string name="plugin_remove_progress_dialog_message">Kaldırılıyor %s…</string>
     <string name="plugin_remove_dialog_title">Eklentiyi kaldır</string>
-    <string name="plugin_disable_progress_dialog_message">Etkisizleştiriliyor %s...</string>
+    <string name="plugin_disable_progress_dialog_message">Etkisizleştiriliyor %s…</string>
     <string name="plugin_btn_remove">Eklentiyi kaldır</string>
     <string name="plugin_configuration_failed">Eklentiyi yapılandırılırken bir hata oluştu: %s</string>
     <string name="plugin_detail_label_state_autoupdates">Otomatik güncellemeler</string>
@@ -82,7 +82,7 @@ Language: tr
     <string name="notification_error_wrong_password">Lütfen devam etmek için parolanızı iki kere kontrol edin.</string>
     <string name="notification_login_title_stopped">Giriş durdu</string>
     <string name="notification_logging_in">Giriş yaparken lütfen bekleyin.</string>
-    <string name="notification_login_title_in_progress">Giriş işlemi devam ediyor...</string>
+    <string name="notification_login_title_in_progress">Giriş işlemi devam ediyor…</string>
     <string name="notification_logged_in">Devam etmek için dokunun.</string>
     <string name="notification_login_title_success">Oturum açıldı!</string>
     <string name="login_error_generic_start">Google giriş başlatılamadı.</string>
@@ -103,7 +103,7 @@ Language: tr
     <string name="uploading_subtitle_mixed_one">%1$d %2$s ve 1 dosya kaldı</string>
     <string name="uploading_subtitle_posts_only">%1$d %2$s kaldı</string>
     <string name="uploading_subtitle_mixed">%1$d %2$s ve %4$d dosyadan %3$d kaldı</string>
-    <string name="uploading_title">Yükleniyor...</string>
+    <string name="uploading_title">Yükleniyor…</string>
     <string name="media_files_uploaded_write_post">Yazı yaz</string>
     <string name="media_file_missing_for_retry">Tekrar deneme mümkün değil - Bu yazıdaki bazı dosyalar cihazınızdan kayıp</string>
     <string name="media_all_files_uploaded_successfully">%d dosya başarıyla yüklendi</string>
@@ -274,7 +274,7 @@ Language: tr
     <string name="editor_dropped_title_images_not_allowed">Başlık alanına görsel bırakmaya izin verilmiyor</string>
     <string name="editor_dropped_text_error">Metin bırakılırken hata oluştu</string>
     <string name="editor_dropped_html_images_not_allowed">HTML modunda görsel bırakmaya izin verilmiyor</string>
-    <string name="editor_content_hint">Hikayenizi burada paylaşın...</string>
+    <string name="editor_content_hint">Hikayenizi burada paylaşın…</string>
     <string name="post_status_trashed">Çöp</string>
     <string name="post_status_scheduled">Zamanlanmış</string>
     <string name="post_status_post_private">Özel</string>
@@ -506,10 +506,10 @@ Language: tr
     <string name="error_notif_q_action_like">Yorum beğenilemiyor. Lütfen daha sonra tekrar deneyin.</string>
     <string name="notifications_label_new_notifications_subtitle">Görüntülemek için dokunun</string>
     <string name="notifications_label_new_notifications">Yeni bildirimler</string>
-    <string name="comment_q_action_replying">Cevaplanıyor...</string>
-    <string name="comment_q_action_approving">Onaylanıyor...</string>
-    <string name="comment_q_action_liking">Beğeniliyor...</string>
-    <string name="comment_q_action_processing">İşleniyor...</string>
+    <string name="comment_q_action_replying">Cevaplanıyor…</string>
+    <string name="comment_q_action_approving">Onaylanıyor…</string>
+    <string name="comment_q_action_liking">Beğeniliyor…</string>
+    <string name="comment_q_action_processing">İşleniyor…</string>
     <string name="comment_q_action_done_generic">Eylem tamamlandı!</string>
     <string name="comment_liked">Yorum beğenildi</string>
     <string name="signout">Çıkış yap</string>
@@ -539,7 +539,7 @@ Language: tr
     <string name="people_empty_list_filtered_viewers">Henüz hiç izleyiciniz yok.</string>
     <string name="title_follower">Takipçi</string>
     <string name="title_email_follower">E-posta takipçisi</string>
-    <string name="people_fetching">Kullanıcılar getiriliyor...</string>
+    <string name="people_fetching">Kullanıcılar getiriliyor…</string>
     <string name="people_empty_list_filtered_email_followers">Henüz hiç e-posta takipçiniz yok.</string>
     <string name="people_empty_list_filtered_followers">Henüz hiç takipçiniz yok.</string>
     <string name="people_empty_list_filtered_users">Henüz hiç kullanıcınız yok.</string>
@@ -579,7 +579,7 @@ Language: tr
     <string name="alert_error_adding_media">Ortam eklenirken bir hata oluştu</string>
     <string name="alert_action_while_uploading">Şu anda medya yüklüyorsunuz. Lütfen bu işlem tamamlanıncaya kadar bekleyin.</string>
     <string name="alert_insert_image_html_mode">Ortam HTML modunda doğrudan ekleyemiyor. Lütfen tekrar görsel moduna geçin.</string>
-    <string name="uploading_gallery_placeholder">Galeri yükleniyor...</string>
+    <string name="uploading_gallery_placeholder">Galeri yükleniyor…</string>
     <string name="invite_error_some_failed">Davet gönderildi fakat hata(lar) oluştu!</string>
     <string name="invite_sent">Davet başarıyla gönderildi</string>
     <string name="tap_to_try_again">Tekrar denemek için dokunun!</string>
@@ -601,7 +601,7 @@ Language: tr
     <string name="label_clear_search_history">Arama geçmişini temizle</string>
     <string name="dlg_confirm_clear_search_history">Arama geçmişini temizle?</string>
     <string name="reader_empty_posts_in_search_description">Dilinizde %s için hiç yazı bulunamadı</string>
-    <string name="reader_label_post_search_running">Aranıyor...</string>
+    <string name="reader_label_post_search_running">Aranıyor…</string>
     <string name="reader_empty_posts_in_search_title">Yazı bulunamadı</string>
     <string name="reader_label_post_search_explainer">Tüm halka açık WordPress.com bloglarında ara</string>
     <string name="reader_hint_post_search">WordPress.com üzerinde ara</string>
@@ -655,14 +655,14 @@ Language: tr
     <string name="plans">Planlar</string>
     <string name="plans_loading_error">Planlar yüklenemiyor</string>
     <string name="export_your_content">İçeriğinizi dışarı aktarın</string>
-    <string name="exporting_content_progress">İçerik dışarı aktarılıyor...</string>
+    <string name="exporting_content_progress">İçerik dışarı aktarılıyor…</string>
     <string name="export_email_sent">Dışarı aktarma e-postası gönderildi!</string>
     <string name="premium_upgrades_message">Sitenizde etkin premium güncellemeleri var. Lütfen sitenizi silmeden önce güncellemeleri iptal edin.</string>
     <string name="show_purchases">Satın almaları göster</string>
     <string name="checking_purchases">Satın almalar kontrol ediliyor</string>
     <string name="premium_upgrades_title">Premium güncellemeleri</string>
     <string name="purchases_request_error">Bir şeyler ters gitti. Satın almalar için istek yapılamadı.</string>
-    <string name="delete_site_progress">Site siliniyor...</string>
+    <string name="delete_site_progress">Site siliniyor…</string>
     <string name="delete_site_summary">Bu eylem geri alınamaz. Siteniz silindiğinde tüm içerik, katılımcılar ve alan adları silinecektir.</string>
     <string name="delete_site_hint">Siteyi sil</string>
     <string name="export_site_hint">İçeriğinizi XML dosyası ile dışarı aktarın</string>
@@ -743,7 +743,7 @@ Language: tr
     <string name="post_settings_set_featured_image">Öne çıkan görsel belirle</string>
     <string name="post_settings_featured_image">Öne çıkan görsel</string>
     <string name="visual_editor_enabled">Görsel Düzenleyici etkinleştirildi</string>
-    <string name="editor_content_placeholder">Hikayenizi burada paylaşın...</string>
+    <string name="editor_content_placeholder">Hikayenizi burada paylaşın…</string>
     <string name="editor_page_title_placeholder">Sayfa Başlığı</string>
     <string name="editor_post_title_placeholder">Yazı Başlığı</string>
     <string name="email_address">E-posta adresi</string>
@@ -931,9 +931,9 @@ Language: tr
     <string name="notifications_empty_action_comments">Konuşmalara katılın: takip ettiğiniz bloglarda yorum yapın.</string>
     <string name="notifications_empty_action_unread">Tartışmaları alevlendirin: yeni bir yazı yazın.</string>
     <string name="notifications_empty_action_all">Etkin olun! Takip ettiğiniz bloglarda yazılara yorum yapın.</string>
-    <string name="notifications_empty_likes">Gösterilecek beğeni yok...henüz.</string>
-    <string name="notifications_empty_followers">Raporlanacak takipçi yok...henüz.</string>
-    <string name="notifications_empty_comments">Yeni yorum yok...henüz.</string>
+    <string name="notifications_empty_likes">Gösterilecek beğeni yok…henüz.</string>
+    <string name="notifications_empty_followers">Raporlanacak takipçi yok…henüz.</string>
+    <string name="notifications_empty_comments">Yeni yorum yok…henüz.</string>
     <string name="notifications_empty_unread">Her şey tamam!</string>
     <string name="stats_widget_error_jetpack_no_blogid">Lütfen önce uygulamada istatistiklere ulaşın, sonra bileşeni tekrar eklemeyi deneyin</string>
     <string name="stats_widget_error_readd_widget">Lütfen bileşeni kaldırıp tekrar ekleyin</string>
@@ -941,7 +941,7 @@ Language: tr
     <string name="stats_widget_error_no_permissions">WordPress.com hesabınız bu blogun istatistiklerine erişemiyor</string>
     <string name="stats_widget_error_no_account">Lütfen WordPress oturumu açın</string>
     <string name="stats_widget_error_generic">İstatistikler yüklenemedi</string>
-    <string name="stats_widget_loading_data">Veri yükleniyor...</string>
+    <string name="stats_widget_loading_data">Veri yükleniyor…</string>
     <string name="stats_widget_name_for_blog">%1$s için bugünün istatistikleri</string>
     <string name="stats_widget_name">Bugünkü WordPress istatistikleri</string>
     <string name="post_settings_add_location_permission_required">Konum eklemek için izin gerektiriyor</string>
@@ -952,7 +952,7 @@ Language: tr
     <string name="reader_short_comment_count_multi">%s Yorum</string>
     <string name="reader_short_comment_count_one">1 Yorum</string>
     <string name="reader_label_submit_comment">GÖNDER</string>
-    <string name="reader_hint_comment_on_post">Yazıyı cevapla...</string>
+    <string name="reader_hint_comment_on_post">Yazıyı cevapla…</string>
     <string name="reader_discover_visit_blog">Ziyaret et %s</string>
     <string name="reader_discover_attribution_blog">Orijinal olarak %s adresinde yayınlandı</string>
     <string name="reader_discover_attribution_author">Orijinal olarak %s tarafından yayınlandı</string>
@@ -978,7 +978,7 @@ Language: tr
     <string name="app_notifications">Uygulama bildirimleri</string>
     <string name="notifications_wpcom_updates">WordPress.com güncellemeleri</string>
     <string name="notification_settings_item_other_account_emails_summary">Hesabınızla ilgili önemli e-postaları her zaman göndereceğiz, ayrıca bazı yardımcı içerikler de alabilirsiniz.</string>
-    <string name="stats_insights_latest_post_trend">%2$s yayımlandığından beri %1$s geçti. İşte yazının bugüne kadarki performansı...</string>
+    <string name="stats_insights_latest_post_trend">%2$s yayımlandığından beri %1$s geçti. İşte yazının bugüne kadarki performansı…</string>
     <string name="stats_insights_latest_post_summary">Son yazılar özeti</string>
     <string name="button_revert">Geri Çevir</string>
     <string name="yesterday">Dün</string>
@@ -1019,6 +1019,7 @@ Language: tr
     <string name="site_picker_cant_hide_current_site">\"%s\" şu anki site olduğundan gizlenmedi</string>
     <string name="me_btn_support">Yardım &amp; Destek</string>
     <string name="account_settings">Hesap ayarları</string>
+    <string name="site_picker_create_dotcom">WordPress.com site oluştur</string>
     <string name="site_picker_add_self_hosted">Kullanıcı tarafından barındırılan site ekle</string>
     <string name="site_picker_edit_visibility">Siteleri göster/gizle</string>
     <string name="my_site_btn_view_admin">Yöneticiyi Görüntüle</string>
@@ -1052,10 +1053,10 @@ Language: tr
     <string name="stats_entry_search_terms">Arama Terimi</string>
     <string name="stats_view_authors">Yazarlar</string>
     <string name="stats_view_search_terms">Arama Terimleri</string>
-    <string name="comments_fetching">Yorumlar alınıyor...</string>
+    <string name="comments_fetching">Yorumlar alınıyor…</string>
     <string name="pages_fetching">Sayfalar alınıyor…</string>
     <string name="toast_err_post_uploading">Gönderi yüklenirken açılamıyor</string>
-    <string name="posts_fetching">Gönderiler alınıyor...</string>
+    <string name="posts_fetching">Gönderiler alınıyor…</string>
     <string name="media_fetching">Medya alınıyor…</string>
     <string name="reader_empty_posts_request_failed">Gönderiler geri alınamıyor</string>
     <string name="publisher">Yayımlayan:</string>
@@ -1175,7 +1176,7 @@ Language: tr
     <string name="error_publish_empty_post">Boş bir yazı yayımlanamaz</string>
     <string name="reader_empty_followed_blogs_title">Henüz herhangi bir site takip etmiyorsunuz.</string>
     <string name="reader_label_liked_by">Beğenenler</string>
-    <string name="sending_content">%s içeriği yükleniyor...</string>
+    <string name="sending_content">%s içeriği yükleniyor…</string>
     <string name="reader_toast_err_block_blog">Bu blog engellenemiyor</string>
     <string name="reader_toast_blog_blocked">Bu blogdan yazılar artık gösterilmeyecek</string>
     <string name="reader_toast_err_generic">Bu eylemi gerçekleştirilemiyor</string>
@@ -1353,7 +1354,7 @@ Language: tr
     <string name="blog_name_invalid">Geçersiz ste adresi</string>
     <string name="post_not_published">Yazı durumu yayımlanmadı</string>
     <string name="page_not_published">Sayfa durumu yayımlanmadı</string>
-    <string name="notifications_empty_all">Bildirim yok...henüz.</string>
+    <string name="notifications_empty_all">Bildirim yok…henüz.</string>
     <string name="invalid_site_url_message">Girdiğiniz site URL\'sinin geçerli olduğunu kontrol edin</string>
     <string name="error_refresh_media">Ortam dosyaları şu an yenilenemiyor</string>
     <string name="error_deleting_page">Sayfayı silinirken bir hata oluştu</string>
@@ -1365,7 +1366,7 @@ Language: tr
     <string name="deleting_post">Yazı siliniyor</string>
     <string name="share_url_post">Yazıyı paylaş</string>
     <string name="creating_your_site">Siteniz oluşturuluyor</string>
-    <string name="reader_empty_posts_in_tag_updating">Yazılar getiriliyor...</string>
+    <string name="reader_empty_posts_in_tag_updating">Yazılar getiriliyor…</string>
     <string name="reader_toast_err_get_comment">Bu yoruma erişilemiyor</string>
     <string name="reader_label_reply">Yanıtla</string>
     <string name="video">Video</string>
@@ -1406,7 +1407,7 @@ Language: tr
     <string name="reader_toast_err_view_image">Imaj görüntülenemedi</string>
     <string name="reader_empty_followed_tags">Herhangi bir etiketi takip etmiyorsunuz</string>
     <string name="create_account_wpcom">WordPress.com\'da bir hesap oluştur</string>
-    <string name="reader_hint_comment_on_comment">Yorumu yanıtla...</string>
+    <string name="reader_hint_comment_on_comment">Yorumu yanıtla…</string>
     <string name="themes">Temalar</string>
     <string name="media_edit_title_text">Başlık</string>
     <string name="media_edit_caption_text">Manşet</string>
@@ -1465,7 +1466,7 @@ Language: tr
     <string name="sign_in">Oturum aç</string>
     <string name="note_reply_successful">Yanıt yayımlandı</string>
     <string name="follows">Takipçiler</string>
-    <string name="loading">Yükleniyor...</string>
+    <string name="loading">Yükleniyor…</string>
     <string name="httpuser">HTTP Kullanici Adi</string>
     <string name="httppassword">HTTP Sifre</string>
     <string name="error_media_upload">Ortam yüklenirken bir hata oluştu</string>
@@ -1491,7 +1492,7 @@ Language: tr
     <string name="scaled_image">Oranlanmış görsel genişliği</string>
     <string name="upload_scaled_image">Boyutlandırılmış görseli yükle ve bağlantı ver</string>
     <string name="link_enter_url">Adres</string>
-    <string name="uploading">Yükleniyor...</string>
+    <string name="uploading">Yükleniyor…</string>
     <string name="version">Sürüm</string>
     <string name="app_title">Android için WordPress</string>
     <string name="tos">Hizmet Şartları</string>
