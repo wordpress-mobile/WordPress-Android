@@ -135,12 +135,9 @@ public class MediaSettingsActivity extends AppCompatActivity
 
     private MediaType mMediaType;
 
-    @Inject
-    MediaStore mMediaStore;
-    @Inject
-    FluxCImageLoader mImageLoader;
-    @Inject
-    Dispatcher mDispatcher;
+    @Inject MediaStore mMediaStore;
+    @Inject FluxCImageLoader mImageLoader;
+    @Inject Dispatcher mDispatcher;
 
     /**
      * @param activity calling activity

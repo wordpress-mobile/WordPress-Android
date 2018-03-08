@@ -27,8 +27,7 @@ import static org.wordpress.android.ui.JetpackConnectionWebViewActivity.Source.S
  */
 
 public class StatsConnectJetpackActivity extends AppCompatActivity {
-    @Inject
-    AccountStore mAccountStore;
+    @Inject AccountStore mAccountStore;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
