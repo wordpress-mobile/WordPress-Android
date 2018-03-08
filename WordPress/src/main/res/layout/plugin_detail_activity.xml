@@ -123,18 +123,23 @@
                     </RelativeLayout>
 
                     <RelativeLayout
-                        android:minHeight="80dp"
-                        style="@style/PluginCardViewHorizontalContainer" >
+                        android:layout_height="wrap_content"
+                        android:layout_width="match_parent" >
 
                         <LinearLayout
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_centerVertical="true"
-                            android:orientation="vertical"
                             android:layout_alignParentLeft="true"
                             android:layout_alignParentStart="true"
+                            android:layout_centerVertical="true"
+                            android:layout_height="match_parent"
                             android:layout_toLeftOf="@+id/plugin_btn_container"
-                            android:layout_toStartOf="@+id/plugin_btn_container">
+                            android:layout_toStartOf="@+id/plugin_btn_container"
+                            android:layout_width="wrap_content"
+                            android:orientation="vertical"
+                            android:paddingBottom="@dimen/margin_extra_large"
+                            android:paddingLeft="@dimen/margin_extra_large"
+                            android:paddingStart="@dimen/margin_extra_large"
+                            android:paddingTop="@dimen/margin_extra_large"
+                            tools:ignore="RtlSymmetry" >
 
                             <TextView
                                 android:id="@+id/plugin_version_top"
@@ -158,13 +163,17 @@
 
                         <FrameLayout
                             android:id="@+id/plugin_btn_container"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
                             android:layout_alignParentEnd="true"
                             android:layout_alignParentRight="true"
                             android:layout_centerVertical="true"
+                            android:layout_height="match_parent"
                             android:layout_marginLeft="@dimen/margin_large"
-                            android:layout_marginStart="@dimen/margin_large" >
+                            android:layout_marginStart="@dimen/margin_large"
+                            android:layout_width="wrap_content"
+                            android:paddingEnd="@dimen/margin_extra_large"
+                            android:paddingLeft="@dimen/margin_extra_large"
+                            android:paddingRight="@dimen/margin_extra_large"
+                            android:paddingStart="@dimen/margin_extra_large" >
 
                             <android.support.v7.widget.AppCompatButton
                                 android:id="@+id/plugin_btn_update"
