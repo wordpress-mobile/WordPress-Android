@@ -140,12 +140,12 @@ public class DetailListPreference extends ListPreference
         }
 
         if (positive != null) {
-            // noinspection deprecation
+            //noinspection deprecation
             positive.setTextColor(res.getColor(R.color.blue_medium));
         }
 
         if (negative != null) {
-            // noinspection deprecation
+            //noinspection deprecation
             negative.setTextColor(res.getColor(R.color.blue_medium));
         }
     }
@@ -213,7 +213,7 @@ public class DetailListPreference extends ListPreference
         if (view != null) {
             Resources res = getContext().getResources();
             view.setTextSize(TypedValue.COMPLEX_UNIT_PX, res.getDimensionPixelSize(sizeRes));
-            // noinspection deprecation
+            //noinspection deprecation
             view.setTextColor(res.getColor(isEnabled() ? enabledColorRes : disabledColorRes));
         }
     }

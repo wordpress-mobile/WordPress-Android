@@ -282,7 +282,8 @@ public class SiteCreationService extends AutoForeground<SiteCreationState> {
         mIsRetry = intent.hasExtra(ARG_RESUME_PHASE);
 
         final SiteCreationStep continueFromPhase = mIsRetry
-                ? SiteCreationStep.valueOf(intent.getStringExtra(ARG_RESUME_PHASE)) : SiteCreationStep.IDLE;
+                ? SiteCreationStep.valueOf(intent.getStringExtra(ARG_RESUME_PHASE))
+                : SiteCreationStep.IDLE;
 
         if (continueFromPhase == SiteCreationStep.IDLE && mNewSite != null) {
             // site already exists but we're not in a retry attempt _after_ having issued the new-site creation call.
