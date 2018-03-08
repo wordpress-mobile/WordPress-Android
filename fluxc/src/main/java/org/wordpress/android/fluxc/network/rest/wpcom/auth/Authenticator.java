@@ -214,7 +214,8 @@ public class Authenticator {
         params.put("email", payload.emailOrUsername);
         params.put("client_id", mAppSecrets.getAppId());
         params.put("client_secret", mAppSecrets.getAppSecret());
-        params.put("locale", LanguageUtils.getPatchedCurrentDeviceLanguage(mAppContext));
+        params.put("locale", LanguageUtils.patchDeviceLanguageCode(
+                LanguageUtils.getCurrentDeviceLanguage(mAppContext).getLanguage()));
 
         WPComGsonRequest request = WPComGsonRequest.buildPostRequest(url, params, AuthEmailWPComRestResponse.class,
                 new Response.Listener<AuthEmailWPComRestResponse>() {
