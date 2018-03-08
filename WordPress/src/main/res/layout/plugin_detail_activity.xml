@@ -138,18 +138,22 @@
 
                             <TextView
                                 android:id="@+id/plugin_version_top"
-                                style="@style/PluginCardViewPrimaryText"
                                 android:background="?android:attr/selectableItemBackground"
                                 android:drawablePadding="@dimen/margin_small"
-                                tools:drawableRight="@drawable/ic_info_outline_grey_dark_18dp"
+                                android:ellipsize="end"
+                                android:maxLines="1"
                                 tools:drawableEnd="@drawable/ic_info_outline_grey_dark_18dp"
-                                tools:text="plugin_version_top" />
+                                tools:drawableRight="@drawable/ic_info_outline_grey_dark_18dp"
+                                tools:text="plugin_version_top"
+                                style="@style/PluginCardViewPrimaryText" />
 
                             <TextView
                                 android:id="@+id/plugin_version_bottom"
-                                style="@style/PluginCardViewSecondaryText"
+                                android:ellipsize="end"
+                                android:maxLines="1"
                                 android:textColor="@color/grey_darken_10"
-                                tools:text="plugin_version_bottom" />
+                                tools:text="plugin_version_bottom"
+                                style="@style/PluginCardViewSecondaryText" />
                         </LinearLayout>
 
                         <FrameLayout
