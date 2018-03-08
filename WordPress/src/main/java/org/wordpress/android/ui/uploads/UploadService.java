@@ -591,27 +591,7 @@ public class UploadService extends Service {
     }
 
     private synchronized void stopServiceIfUploadsComplete() {
-        if (mPostUploadHandler != null && mPostUploadHandler.hasInProgressUploads()) {
-            return;
-        }
-
-        if (mMediaUploadHandler != null && mMediaUploadHandler.hasInProgressUploads()) {
-            return;
-        } else {
-            verifyMediaOnlyUploadsAndNotify();
-        }
-
-        if (doFinalProcessingOfPosts(null)) {
-            // when more Posts have been re-enqueued, don't stop the service just yet.
-            return;
-        }
-
-        if (!mUploadStore.getPendingPosts().isEmpty()) {
-            return;
-        }
-
-        AppLog.i(T.MAIN, "UploadService > Completed");
-        stopSelf();
+        stopServiceIfUploadsComplete(null);
     }
 
 
