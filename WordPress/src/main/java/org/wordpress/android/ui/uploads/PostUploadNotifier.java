@@ -8,6 +8,7 @@ import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.NotificationCompat;
+import android.support.v4.util.SparseArrayCompat;
 import android.text.TextUtils;
 
 import org.wordpress.android.R;
@@ -29,9 +30,7 @@ import org.wordpress.android.util.SystemServiceFactory;
 import org.wordpress.android.util.WPMeShortlinks;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.Random;
 
 import de.greenrobot.event.EventBus;
@@ -56,7 +55,7 @@ class PostUploadNotifier {
         int mTotalPostItems;
         int mTotalPageItemsIncludedInPostCount;
         int mCurrentPostItem;
-        final Map<Integer, Float> mediaItemToProgressMap = new HashMap<>();
+        final SparseArrayCompat<Float> mediaItemToProgressMap = new SparseArrayCompat<>();
         final List<PostModel> mUploadedPostsCounted = new ArrayList<>();
     }
 
@@ -658,8 +657,9 @@ class PostUploadNotifier {
 
     private float getCurrentMediaProgress() {
         float currentMediaProgress = 0.0f;
-        int size = sNotificationData.mediaItemToProgressMap.values().size();
-        for (Float itemProgress : sNotificationData.mediaItemToProgressMap.values()) {
+        int size = sNotificationData.mediaItemToProgressMap.size();
+        for (int i = 0; i < size; i++) {
+            float itemProgress = sNotificationData.mediaItemToProgressMap.get(i);
             currentMediaProgress += (itemProgress / size);
         }
         return currentMediaProgress;
