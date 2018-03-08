@@ -997,6 +997,7 @@ public class PluginDetailActivity extends AppCompatActivity {
         } else {
             // Refresh the views to show wporg plugin details
             refreshViews();
+            invalidateOptionsMenu();
         }
         showSuccessfulPluginRemovedSnackbar();
     }

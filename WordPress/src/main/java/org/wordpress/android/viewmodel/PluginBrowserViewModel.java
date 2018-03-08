@@ -235,8 +235,10 @@ public class PluginBrowserViewModel extends ViewModel {
                 currentStatus = getNewPluginsListStatus().getValue();
                 break;
             case SEARCH:
-                currentStatus = getSearchPluginsListStatus().getValue();
-                break;
+                // We should always do the initial search because the string might have changed and it is
+                // already optimized in submitSearch with a delay. Even though FluxC allows it, we don't do multiple
+                // pages of search, so if we are trying to load more, we can ignore it
+                return !loadMore;
         }
         if (currentStatus == PluginListStatus.FETCHING || currentStatus == PluginListStatus.LOADING_MORE) {
             // if we are already fetching something we shouldn't start a new one. Even if we are loading more plugins
