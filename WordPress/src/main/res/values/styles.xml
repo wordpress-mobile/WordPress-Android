@@ -10,7 +10,6 @@
         <item name="colorControlHighlight">@color/color_control_highlight</item>
 
         <item name="android:windowBackground">@color/grey_lighten_30</item>
-        <item name="android:actionBarItemBackground">@drawable/selectable_background_wordpress</item>
         <item name="android:popupMenuStyle">@style/PopupMenu.WordPress</item>
         <item name="android:dropDownListViewStyle">@style/DropDownListView.Light.WordPress</item>
         <item name="android:actionDropDownStyle">@style/DropDownNav.WordPress</item>
