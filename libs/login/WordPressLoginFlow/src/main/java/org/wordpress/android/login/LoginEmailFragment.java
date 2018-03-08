@@ -349,7 +349,7 @@ public class LoginEmailFragment extends LoginBaseFormFragment<LoginListener> imp
             AppLog.e(T.API, "OnAvailabilityChecked has error: " + event.error.type + " - " + event.error.message);
             // hide the keyboard to ensure the link to login using the site address is visible
             ActivityUtils.hideKeyboardForced(mEmailInput);
-            showEmailError(R.string.email_not_registered_wpcom);
+            showEmailError(R.string.error_generic_network);
             return;
         }
 
