@@ -87,6 +87,8 @@ public class HelpActivity extends AppCompatActivity {
                             HelpshiftHelper.ENTERED_URL_KEY));
                     HelpshiftHelper.getInstance().addMetaData(MetadataKey.USER_ENTERED_USERNAME, extras.getString(
                             HelpshiftHelper.ENTERED_USERNAME_KEY));
+                    HelpshiftHelper.getInstance().addMetaData(MetadataKey.USER_ENTERED_EMAIL, extras.getString(
+                            HelpshiftHelper.ENTERED_EMAIL_KEY));
                     origin = (Tag) extras.get(HelpshiftHelper.ORIGIN_KEY);
                     extraTags = (Tag[]) extras.get(HelpshiftHelper.EXTRA_TAGS_KEY);
                 }
