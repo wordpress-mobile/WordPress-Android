@@ -43,8 +43,8 @@ public class SignupMagicLinkFragment extends Fragment {
     private Button mOpenMailButton;
     private ProgressDialog mProgressDialog;
 
-    protected @Inject Dispatcher mDispatcher;
-    protected @Inject LoginAnalyticsListener mAnalyticsListener;
+    @Inject protected Dispatcher mDispatcher;
+    @Inject protected LoginAnalyticsListener mAnalyticsListener;
     protected LoginListener mLoginListener;
     protected String mEmail;
     protected boolean mInProgress;
