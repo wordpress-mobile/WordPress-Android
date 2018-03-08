@@ -577,9 +577,7 @@ class PostUploadNotifier {
                             mediaItemsNotUploaded);
                     break;
             }
-
         } else if (postItemsNotUploaded > 0) {
-
             switch (getPagesAndOrPostsType(postItemsNotUploaded)) {
                 case POST:
                     newErrorMessage = mContext.getString(R.string.media_file_post_singular_only_not_uploaded);
@@ -604,7 +602,6 @@ class PostUploadNotifier {
                             postItemsNotUploaded);
                     break;
             }
-
         } else if (mediaItemsNotUploaded > 0) {
             if (mediaItemsNotUploaded == 1) {
                 newErrorMessage = mContext.getString(R.string.media_file_not_uploaded);
