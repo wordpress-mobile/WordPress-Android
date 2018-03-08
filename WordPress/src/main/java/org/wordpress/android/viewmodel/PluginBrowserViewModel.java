@@ -235,8 +235,9 @@ public class PluginBrowserViewModel extends ViewModel {
                 currentStatus = getNewPluginsListStatus().getValue();
                 break;
             case SEARCH:
-                currentStatus = getSearchPluginsListStatus().getValue();
-                break;
+                // We should always do the search because the string might have changed and it is
+                // already optimized in submitSearch with a delay
+                return true;
         }
         if (currentStatus == PluginListStatus.FETCHING || currentStatus == PluginListStatus.LOADING_MORE) {
             // if we are already fetching something we shouldn't start a new one. Even if we are loading more plugins
