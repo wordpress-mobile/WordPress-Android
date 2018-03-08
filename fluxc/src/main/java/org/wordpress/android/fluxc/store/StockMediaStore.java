@@ -14,6 +14,7 @@ import org.wordpress.android.fluxc.network.BaseRequest.BaseNetworkError;
 import org.wordpress.android.fluxc.network.rest.wpcom.stockmedia.StockMediaRestClient;
 import org.wordpress.android.util.AppLog;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.inject.Inject;
@@ -61,8 +62,11 @@ public class StockMediaStore extends Store {
             this.nextPage = nextPage;
         }
 
-        public FetchedStockMediaListPayload(@NonNull StockMediaError error) {
+        public FetchedStockMediaListPayload(@NonNull StockMediaError error, @NonNull String searchTerm) {
             this.error = error;
+            this.mediaList = new ArrayList<>();
+            this.searchTerm = searchTerm;
+            this.canLoadMore = false;
         }
     }
 
