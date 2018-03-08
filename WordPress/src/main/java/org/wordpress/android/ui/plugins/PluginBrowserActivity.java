@@ -379,9 +379,9 @@ public class PluginBrowserActivity extends AppCompatActivity
                 return;
             }
 
-            holder.nameText.setText(plugin.getDisplayName());
-            holder.authorText.setText(plugin.getAuthorName());
-            holder.icon.setImageUrl(plugin.getIcon(), ImageType.PLUGIN_ICON);
+            holder.mNameText.setText(plugin.getDisplayName());
+            holder.mAuthorText.setText(plugin.getAuthorName());
+            holder.mIcon.setImageUrl(plugin.getIcon(), ImageType.PLUGIN_ICON);
 
             if (plugin.isInstalled()) {
                 @StringRes int textResId;
@@ -406,9 +406,9 @@ public class PluginBrowserActivity extends AppCompatActivity
                 holder.mStatusContainer.setVisibility(View.VISIBLE);
                 holder.mRatingBar.setVisibility(View.GONE);
             } else {
-                holder.statusContainer.setVisibility(View.GONE);
-                holder.ratingBar.setVisibility(View.VISIBLE);
-                holder.ratingBar.setRating(plugin.getAverageStarRating());
+                holder.mStatusContainer.setVisibility(View.GONE);
+                holder.mRatingBar.setVisibility(View.VISIBLE);
+                holder.mRatingBar.setRating(plugin.getAverageStarRating());
             }
         }
 

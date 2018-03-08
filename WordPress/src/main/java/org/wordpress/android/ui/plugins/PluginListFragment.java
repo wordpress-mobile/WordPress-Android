@@ -286,9 +286,9 @@ public class PluginListFragment extends Fragment {
             }
 
             PluginViewHolder holder = (PluginViewHolder) viewHolder;
-            holder.name.setText(plugin.getDisplayName());
-            holder.author.setText(plugin.getAuthorName());
-            holder.icon.setImageUrl(plugin.getIcon(), WPNetworkImageView.ImageType.PLUGIN_ICON);
+            holder.mName.setText(plugin.getDisplayName());
+            holder.mAuthor.setText(plugin.getAuthorName());
+            holder.mIcon.setImageUrl(plugin.getIcon(), WPNetworkImageView.ImageType.PLUGIN_ICON);
 
             if (plugin.isInstalled()) {
                 @StringRes int textResId;
@@ -314,10 +314,10 @@ public class PluginListFragment extends Fragment {
                 holder.mStatusIcon.setVisibility(View.VISIBLE);
                 holder.mRatingBar.setVisibility(View.GONE);
             } else {
-                holder.statusText.setVisibility(View.GONE);
-                holder.statusIcon.setVisibility(View.GONE);
-                holder.ratingBar.setVisibility(View.VISIBLE);
-                holder.ratingBar.setRating(plugin.getAverageStarRating());
+                holder.mStatusText.setVisibility(View.GONE);
+                holder.mStatusIcon.setVisibility(View.GONE);
+                holder.mRatingBar.setVisibility(View.VISIBLE);
+                holder.mRatingBar.setRating(plugin.getAverageStarRating());
             }
 
             if (position == getItemCount() - 1) {
