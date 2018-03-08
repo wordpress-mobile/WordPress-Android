@@ -60,7 +60,7 @@ public class WellSqlConfig extends DefaultWellConfig {
 
     @Override
     public int getDbVersion() {
-        return 24;
+        return 25;
     }
 
     @Override
@@ -208,6 +208,13 @@ public class WellSqlConfig extends DefaultWellConfig {
                 AppLog.d(T.DB, "Migrating to version " + (oldVersion + 1));
                 db.execSQL("CREATE TABLE PluginDirectoryModel (_id INTEGER PRIMARY KEY AUTOINCREMENT,"
                         + "SLUG TEXT,DIRECTORY_TYPE TEXT,PAGE INTEGER)");
+                oldVersion++;
+            case 24:
+                AppLog.d(T.DB, "Migrating to version " + (oldVersion + 1));
+                db.execSQL("alter table SiteModel add SPACE_AVAILABLE INTEGER");
+                db.execSQL("alter table SiteModel add SPACE_ALLOWED INTEGER");
+                db.execSQL("alter table SiteModel add SPACE_USED INTEGER");
+                db.execSQL("alter table SiteModel add SPACE_PERCENT_USED REAL");
                 oldVersion++;
         }
         db.setTransactionSuccessful();
