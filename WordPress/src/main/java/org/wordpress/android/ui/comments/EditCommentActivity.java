@@ -10,6 +10,7 @@ import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.view.ContextThemeWrapper;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -243,7 +244,8 @@ public class EditCommentActivity extends AppCompatActivity {
     }
 
     private void showEditErrorAlert() {
-        AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(EditCommentActivity.this);
+        AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(
+                new ContextThemeWrapper(this, R.style.Calypso_Dialog));
         dialogBuilder.setTitle(getResources().getText(R.string.error));
         dialogBuilder.setMessage(R.string.error_edit_comment);
         dialogBuilder.setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
@@ -271,7 +273,7 @@ public class EditCommentActivity extends AppCompatActivity {
     public void onBackPressed() {
         if (isCommentEdited()) {
             AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(
-                    EditCommentActivity.this);
+                    new ContextThemeWrapper(this, R.style.Calypso_Dialog));
             dialogBuilder.setTitle(getResources().getText(R.string.cancel_edit));
             dialogBuilder.setMessage(getResources().getText(R.string.sure_to_cancel_edit_comment));
             dialogBuilder.setPositiveButton(getResources().getText(R.string.yes),
