@@ -52,6 +52,13 @@ public class SiteWPComRestResponse implements Response {
         public boolean view_stats;
     }
 
+    public class Quota {
+        public long space_allowed;
+        public long space_used;
+        public double percent_used;
+        public long space_available;
+    }
+
     public class Icon {
         public String img;
     }
@@ -77,4 +84,5 @@ public class SiteWPComRestResponse implements Response {
     public Plan plan;
     public Icon icon;
     public Meta meta;
+    public Quota quota;
 }
