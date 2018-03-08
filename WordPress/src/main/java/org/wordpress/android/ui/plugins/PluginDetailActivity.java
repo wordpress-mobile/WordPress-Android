@@ -335,10 +335,10 @@ public class PluginDetailActivity extends AppCompatActivity {
 
         mSwitchActive.setOnCheckedChangeListener(new OnCheckedChangeListener() {
             @Override
-            public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
+            public void onCheckedChanged(CompoundButton compoundButton, boolean isChecked) {
                 if (compoundButton.isPressed()) {
                     if (NetworkUtils.checkConnection(PluginDetailActivity.this)) {
-                        mIsActive = b;
+                        mIsActive = isChecked;
                         dispatchConfigurePluginAction(false);
                     } else {
                         compoundButton.setChecked(mIsActive);
@@ -349,10 +349,10 @@ public class PluginDetailActivity extends AppCompatActivity {
 
         mSwitchAutoupdates.setOnCheckedChangeListener(new OnCheckedChangeListener() {
             @Override
-            public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
+            public void onCheckedChanged(CompoundButton compoundButton, boolean isChecked) {
                 if (compoundButton.isPressed()) {
                     if (NetworkUtils.checkConnection(PluginDetailActivity.this)) {
-                        mIsAutoUpdateEnabled = b;
+                        mIsAutoUpdateEnabled = isChecked;
                         dispatchConfigurePluginAction(false);
                     } else {
                         compoundButton.setChecked(mIsAutoUpdateEnabled);
