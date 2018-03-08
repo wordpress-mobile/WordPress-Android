@@ -74,7 +74,7 @@ public abstract class EditorFragmentAbstract extends Fragment {
     protected static final String EXTRA_MAX_WIDTH = "maxWidth";
 
     private static final String FEATURED_IMAGE_SUPPORT_KEY = "featured-image-supported";
-    private static final String FEATURED_IMAGE_WIDTH_KEY   = "featured-image-width";
+    private static final String FEATURED_IMAGE_WIDTH_KEY = "featured-image-width";
 
     protected EditorFragmentListener mEditorFragmentListener;
     protected EditorDragAndDropListener mEditorDragAndDropListener;
@@ -163,8 +163,8 @@ public abstract class EditorFragmentAbstract extends Fragment {
             // default to image
             return MediaType.IMAGE;
         }
-        return mediaFile.isVideo() ? MediaType.VIDEO :
-                MediaType.IMAGE;
+        return mediaFile.isVideo() ? MediaType.VIDEO
+                : MediaType.IMAGE;
     }
 
     /**

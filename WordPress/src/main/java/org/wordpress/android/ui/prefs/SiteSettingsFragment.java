@@ -812,7 +812,7 @@ public class SiteSettingsFragment extends PreferenceFragment
         }
 
         // customize list dividers
-        // noinspection deprecation
+        //noinspection deprecation
         prefList.setDivider(res.getDrawable(R.drawable.preferences_divider));
         prefList.setDividerHeight(res.getDimensionPixelSize(R.dimen.site_settings_divider_height));
         // handle long clicks on preferences to display hints
@@ -821,7 +821,7 @@ public class SiteSettingsFragment extends PreferenceFragment
         prefList.setOnHierarchyChangeListener(this);
         // remove footer divider bar
         prefList.setFooterDividersEnabled(false);
-        // noinspection deprecation
+        //noinspection deprecation
         prefList.setOverscrollFooter(res.getDrawable(R.color.transparent));
     }
 

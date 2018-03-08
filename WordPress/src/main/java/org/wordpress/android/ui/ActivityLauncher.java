@@ -117,7 +117,7 @@ public class ActivityLauncher {
         context.startActivity(intent);
     }
 
-    public static void startJetpackConnectionFlow(Context context, SiteModel site) {
+    public static void viewConnectJetpackForStats(Context context, SiteModel site) {
         Intent intent = new Intent(context, StatsConnectJetpackActivity.class);
         intent.putExtra(WordPress.SITE, site);
         context.startActivity(intent);
@@ -340,9 +340,8 @@ public class ActivityLauncher {
         context.startActivity(intent);
     }
 
-    public static void newBlogForResult(Activity activity, String username) {
+    public static void newBlogForResult(Activity activity) {
         Intent intent = new Intent(activity, SiteCreationActivity.class);
-        intent.putExtra(SiteCreationActivity.ARG_USERNAME, username);
         activity.startActivityForResult(intent, RequestCodes.CREATE_SITE);
     }
 

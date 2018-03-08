@@ -535,7 +535,7 @@ public class PostsListFragment extends Fragment
             case PostListButton.BUTTON_SUBMIT:
             case PostListButton.BUTTON_SYNC:
             case PostListButton.BUTTON_PUBLISH:
-                UploadUtils.publishPost(getActivity(), post, mSite, mDispatcher);
+                showPublishConfirmationDialog(post);
                 break;
             case PostListButton.BUTTON_VIEW:
                 ActivityLauncher.browsePostOrPage(getActivity(), mSite, post);
@@ -549,23 +549,51 @@ public class PostsListFragment extends Fragment
             case PostListButton.BUTTON_TRASH:
             case PostListButton.BUTTON_DELETE:
                 if (!UploadService.isPostUploadingOrQueued(post)) {
-                    trashPost(post);
+                    AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+                    builder.setTitle(post.isPage() ? getString(R.string.delete_page) : getString(R.string.delete_post))
+                            .setMessage(post.isPage() ? getString(R.string.dialog_confirm_delete_page)
+                                                : getString(R.string.dialog_confirm_delete_post))
+                            .setPositiveButton(R.string.delete, new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialogInterface, int i) {
+                                    trashPost(post);
+                                }
+                            })
+                            .setNegativeButton(R.string.cancel, null)
+                            .setCancelable(true);
+                    builder.create().show();
                 } else {
                     AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-                    builder.setTitle(getResources().getText(R.string.delete_post))
-                           .setMessage(R.string.dialog_confirm_cancel_post_media_uploading)
-                           .setPositiveButton(R.string.delete, new DialogInterface.OnClickListener() {
-                               @Override
-                               public void onClick(DialogInterface dialogInterface, int i) {
-                                   trashPost(post);
-                               }
-                           })
-                           .setNegativeButton(R.string.cancel, null)
-                           .setCancelable(true);
+                    builder.setTitle(post.isPage() ? getText(R.string.delete_page) : getText(R.string.delete_post))
+                            .setMessage(R.string.dialog_confirm_cancel_post_media_uploading)
+                            .setPositiveButton(R.string.delete, new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialogInterface, int i) {
+                                    trashPost(post);
+                                }
+                            })
+                            .setNegativeButton(R.string.cancel, null)
+                            .setCancelable(true);
                     builder.create().show();
                 }
                 break;
         }
+    }
+
+    private void showPublishConfirmationDialog(final PostModel post) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+        builder.setTitle(getResources().getText(R.string.dialog_confirm_publish_title))
+               .setMessage(post.isPage() ? getString(R.string.dialog_confirm_publish_message_page)
+                                   : getString(R.string.dialog_confirm_publish_message_post))
+               .setPositiveButton(R.string.dialog_confirm_publish_yes, new DialogInterface.OnClickListener() {
+                   @Override
+                   public void onClick(DialogInterface dialogInterface, int i) {
+                       UploadUtils.publishPost(getActivity(), post, mSite, mDispatcher);
+                   }
+               })
+               .setNegativeButton(R.string.cancel, null)
+               .setCancelable(true);
+        builder.create().show();
     }
 
     /*

@@ -45,7 +45,7 @@ public class MediaUtils {
         if (url == null) {
             return false;
         }
-        url = url.toLowerCase();
+        url = url.toLowerCase(Locale.ROOT);
         return url.endsWith(".png") || url.endsWith(".jpg") || url.endsWith(".jpeg") || url.endsWith(".gif");
     }
 
@@ -53,7 +53,7 @@ public class MediaUtils {
         if (url == null) {
             return false;
         }
-        url = url.toLowerCase();
+        url = url.toLowerCase(Locale.ROOT);
         return url.endsWith(".doc") || url.endsWith(".docx") || url.endsWith(".odt") || url.endsWith(".pdf");
     }
 
@@ -61,7 +61,7 @@ public class MediaUtils {
         if (url == null) {
             return false;
         }
-        url = url.toLowerCase();
+        url = url.toLowerCase(Locale.ROOT);
         return url.endsWith(".ppt") || url.endsWith(".pptx") || url.endsWith(".pps") || url.endsWith(".ppsx")
                || url.endsWith(".key");
     }
@@ -70,7 +70,7 @@ public class MediaUtils {
         if (url == null) {
             return false;
         }
-        url = url.toLowerCase();
+        url = url.toLowerCase(Locale.ROOT);
         return url.endsWith(".xls") || url.endsWith(".xlsx");
     }
 
@@ -78,7 +78,7 @@ public class MediaUtils {
         if (url == null) {
             return false;
         }
-        url = url.toLowerCase();
+        url = url.toLowerCase(Locale.ROOT);
         return url.endsWith(".ogv") || url.endsWith(".mp4") || url.endsWith(".m4v") || url.endsWith(".mov")
                || url.endsWith(".wmv") || url.endsWith(".avi") || url.endsWith(".mpg") || url.endsWith(".3gp")
                || url.endsWith(".3g2") || url.contains("video");
@@ -88,7 +88,7 @@ public class MediaUtils {
         if (url == null) {
             return false;
         }
-        url = url.toLowerCase();
+        url = url.toLowerCase(Locale.ROOT);
         return url.endsWith(".mp3") || url.endsWith(".ogg") || url.endsWith(".wav") || url.endsWith(".wma")
                || url.endsWith(".aiff") || url.endsWith(".aif") || url.endsWith(".aac") || url.endsWith(".m4a");
     }
@@ -287,7 +287,7 @@ public class MediaUtils {
     }
 
     public static String getMediaFileMimeType(File mediaFile) {
-        String originalFileName = mediaFile.getName().toLowerCase();
+        String originalFileName = mediaFile.getName().toLowerCase(Locale.ROOT);
         String mimeType = UrlUtils.getUrlMimeType(originalFileName);
 
         if (TextUtils.isEmpty(mimeType)) {
@@ -356,7 +356,7 @@ public class MediaUtils {
     }
 
     public static String getMediaFileName(File mediaFile, String mimeType) {
-        String originalFileName = mediaFile.getName().toLowerCase();
+        String originalFileName = mediaFile.getName().toLowerCase(Locale.ROOT);
         String extension = MimeTypeMap.getFileExtensionFromUrl(originalFileName);
         if (!TextUtils.isEmpty(extension)) { // File name already has the extension in it
             return originalFileName;
@@ -388,7 +388,7 @@ public class MediaUtils {
             fileExtensionFromMimeType = split.length > 1 ? split[1] : split[0];
         }
 
-        return fileExtensionFromMimeType.toLowerCase();
+        return fileExtensionFromMimeType.toLowerCase(Locale.ROOT);
     }
 
     public static String getRealPathFromURI(final Context context, Uri uri) {

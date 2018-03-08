@@ -141,8 +141,8 @@ public class Utils {
      * @param oldSet the older of the two <code>Sets</code>
      * @param newSet the newer of the two <code>Sets</code>
      * @param <E> type of element stored in the <code>Sets</code>
-     * @return a <code>Map</code> containing the difference between <code>oldSet</code> and <code>newSet</code>, and whether the
-     * element was added (<code>true</code>) or removed (<code>false</code>) in <code>newSet</code>
+     * @return a <code>Map</code> containing the difference between <code>oldSet</code> and <code>newSet</code>,
+     * and whether the element was added (<code>true</code>) or removed (<code>false</code>) in <code>newSet</code>
      */
     public static <E> Map<E, Boolean> getChangeMapFromSets(Set<E> oldSet, Set<E> newSet) {
         Map<E, Boolean> changeMap = new HashMap<>();

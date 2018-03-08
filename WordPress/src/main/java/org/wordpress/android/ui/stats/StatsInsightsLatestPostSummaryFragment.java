@@ -21,6 +21,8 @@ import org.wordpress.android.ui.stats.models.StatsPostModel;
 import org.wordpress.android.ui.stats.service.StatsService;
 import org.wordpress.android.util.FormatUtils;
 
+import java.util.Locale;
+
 public class StatsInsightsLatestPostSummaryFragment extends StatsAbstractInsightsFragment {
     public static final String TAG = StatsInsightsLatestPostSummaryFragment.class.getSimpleName();
 
@@ -143,8 +145,7 @@ public class StatsInsightsLatestPostSummaryFragment extends StatsAbstractInsight
         String trendLabel = getString(R.string.stats_insights_latest_post_trend);
         String sinceLabel = StatsUtils.getSinceLabel(
                 getActivity(),
-                mInsightsLatestPostModel.getPostDate()
-                                                    ).toLowerCase();
+                mInsightsLatestPostModel.getPostDate()).toLowerCase(Locale.getDefault());
 
         String postTitle = StringEscapeUtils.unescapeHtml4(mInsightsLatestPostModel.getPostTitle());
         if (TextUtils.isEmpty(postTitle)) {

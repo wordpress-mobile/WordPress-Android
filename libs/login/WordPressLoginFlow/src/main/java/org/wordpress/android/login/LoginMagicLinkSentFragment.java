@@ -27,7 +27,7 @@ public class LoginMagicLinkSentFragment extends Fragment {
 
     private String mEmail;
 
-    protected @Inject LoginAnalyticsListener mAnalyticsListener;
+    @Inject protected LoginAnalyticsListener mAnalyticsListener;
 
     public static LoginMagicLinkSentFragment newInstance(String email) {
         LoginMagicLinkSentFragment fragment = new LoginMagicLinkSentFragment();

@@ -1001,6 +1001,8 @@ public class ReaderPostDetailFragment extends Fragment
                     showError(mErrorMessage);
                 }
                 return;
+            } else {
+                showError(null);
             }
 
             if (mDirectOperation != null) {

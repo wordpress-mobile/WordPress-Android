@@ -88,7 +88,7 @@ public class WPNumberPicker extends NumberPicker {
         float y = getScrollOffset();
         Paint paint = mInputView.getPaint();
         paint.setTextAlign(Paint.Align.CENTER);
-        // noinspection deprecation
+        //noinspection deprecation
         paint.setColor(getResources().getColor(R.color.blue_medium));
         int alpha = isEnabled() ? 255 : 96;
         paint.setAlpha(alpha);

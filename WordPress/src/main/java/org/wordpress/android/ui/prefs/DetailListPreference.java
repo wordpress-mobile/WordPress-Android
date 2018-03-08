@@ -22,6 +22,8 @@ import android.widget.TextView;
 import org.apache.commons.lang3.ArrayUtils;
 import org.wordpress.android.R;
 
+import java.util.Locale;
+
 /**
  * Custom {@link ListPreference} used to display detail text per item.
  */
@@ -87,7 +89,7 @@ public class DetailListPreference extends ListPreference
 
         mWhichButtonClicked = DialogInterface.BUTTON_NEGATIVE;
         builder.setPositiveButton(android.R.string.ok, this);
-        builder.setNegativeButton(res.getString(R.string.cancel).toUpperCase(), this);
+        builder.setNegativeButton(res.getString(android.R.string.cancel).toUpperCase(Locale.getDefault()), this);
 
         if (mDetails == null) {
             mDetails = new String[getEntries() == null ? 1 : getEntries().length];
@@ -138,12 +140,12 @@ public class DetailListPreference extends ListPreference
         }
 
         if (positive != null) {
-            // noinspection deprecation
+            //noinspection deprecation
             positive.setTextColor(res.getColor(R.color.blue_medium));
         }
 
         if (negative != null) {
-            // noinspection deprecation
+            //noinspection deprecation
             negative.setTextColor(res.getColor(R.color.blue_medium));
         }
     }
@@ -211,7 +213,7 @@ public class DetailListPreference extends ListPreference
         if (view != null) {
             Resources res = getContext().getResources();
             view.setTextSize(TypedValue.COMPLEX_UNIT_PX, res.getDimensionPixelSize(sizeRes));
-            // noinspection deprecation
+            //noinspection deprecation
             view.setTextColor(res.getColor(isEnabled() ? enabledColorRes : disabledColorRes));
         }
     }
