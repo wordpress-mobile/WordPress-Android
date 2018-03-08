@@ -506,6 +506,8 @@ public class MediaBrowserActivity extends AppCompatActivity implements MediaGrid
             onQueryTextChange(mQuery);
         }
 
+        reloadMediaGrid();
+
         return true;
     }
 
@@ -515,6 +517,8 @@ public class MediaBrowserActivity extends AppCompatActivity implements MediaGrid
         invalidateOptionsMenu();
 
         enableTabs(true);
+
+        reloadMediaGrid();
 
         return true;
     }
