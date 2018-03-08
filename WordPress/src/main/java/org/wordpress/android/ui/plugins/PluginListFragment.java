@@ -28,6 +28,7 @@ import org.wordpress.android.WordPress;
 import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.model.plugin.ImmutablePluginModel;
 import org.wordpress.android.ui.ActivityLauncher;
+import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.helpers.SwipeToRefreshHelper;
 import org.wordpress.android.util.widgets.CustomSwipeRefreshLayout;
@@ -193,7 +194,11 @@ public class PluginListFragment extends Fragment {
                 new SwipeToRefreshHelper.RefreshListener() {
                     @Override
                     public void onRefreshStarted() {
-                        mViewModel.pullToRefresh(mListType);
+                        if (NetworkUtils.checkConnection(getActivity())) {
+                            mViewModel.pullToRefresh(mListType);
+                        } else {
+                            mSwipeToRefreshHelper.setRefreshing(false);
+                        }
                     }
                 }
         );
