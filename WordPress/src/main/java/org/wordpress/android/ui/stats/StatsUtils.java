@@ -44,11 +44,12 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.Locale;
 import java.util.TimeZone;
 import java.util.concurrent.TimeUnit;
 
 public class StatsUtils {
-    @SuppressLint("SimpleDateFormat")
+
     private static long toMs(String date, String pattern) {
         if (date == null || date.equals("null")) {
             AppLog.w(T.UTILS, "Trying to parse a 'null' Stats Date.");
@@ -60,7 +61,7 @@ public class StatsUtils {
             return -1;
         }
 
-        SimpleDateFormat sdf = new SimpleDateFormat(pattern);
+        SimpleDateFormat sdf = new SimpleDateFormat(pattern, Locale.ROOT);
         try {
             return sdf.parse(date).getTime();
         } catch (ParseException e) {
@@ -229,32 +230,37 @@ public class StatsUtils {
                 case DAY:
                     after = StatsUtils.msToLocalizedString(c.getTimeInMillis(), StatsConstants.STATS_INPUT_DATE_FORMAT);
                     c.add(Calendar.DAY_OF_YEAR, +1);
-                    before = StatsUtils.msToLocalizedString(c.getTimeInMillis(), StatsConstants.STATS_INPUT_DATE_FORMAT);
+                    before = StatsUtils.msToLocalizedString(c.getTimeInMillis(),
+                                                            StatsConstants.STATS_INPUT_DATE_FORMAT);
                     break;
                 case WEEK:
                     c.set(Calendar.DAY_OF_WEEK, Calendar.MONDAY);
                     after = StatsUtils.msToLocalizedString(c.getTimeInMillis(), StatsConstants.STATS_INPUT_DATE_FORMAT);
                     c.set(Calendar.DAY_OF_WEEK, Calendar.SUNDAY);
                     c.add(Calendar.DAY_OF_YEAR, +1);
-                    before = StatsUtils.msToLocalizedString(c.getTimeInMillis(), StatsConstants.STATS_INPUT_DATE_FORMAT);
+                    before = StatsUtils.msToLocalizedString(c.getTimeInMillis(),
+                                                            StatsConstants.STATS_INPUT_DATE_FORMAT);
                     break;
                 case MONTH:
                     // first day of the next month
                     c.set(Calendar.DAY_OF_MONTH, c.getActualMaximum(Calendar.DAY_OF_MONTH));
                     c.add(Calendar.DAY_OF_YEAR, +1);
-                    before = StatsUtils.msToLocalizedString(c.getTimeInMillis(), StatsConstants.STATS_INPUT_DATE_FORMAT);
+                    before = StatsUtils.msToLocalizedString(c.getTimeInMillis(),
+                                                            StatsConstants.STATS_INPUT_DATE_FORMAT);
 
                     // last day of the prev month
                     c.setTime(parsedDate);
                     c.set(Calendar.DAY_OF_MONTH, c.getActualMinimum(Calendar.DAY_OF_MONTH));
-                    after = StatsUtils.msToLocalizedString(c.getTimeInMillis(), StatsConstants.STATS_INPUT_DATE_FORMAT);
+                    after = StatsUtils.msToLocalizedString(c.getTimeInMillis(),
+                                                           StatsConstants.STATS_INPUT_DATE_FORMAT);
                     break;
                 case YEAR:
                     // first day of the next year
                     c.set(Calendar.MONTH, Calendar.DECEMBER);
                     c.set(Calendar.DAY_OF_MONTH, 31);
                     c.add(Calendar.DAY_OF_YEAR, +1);
-                    before = StatsUtils.msToLocalizedString(c.getTimeInMillis(), StatsConstants.STATS_INPUT_DATE_FORMAT);
+                    before = StatsUtils.msToLocalizedString(c.getTimeInMillis(),
+                                                            StatsConstants.STATS_INPUT_DATE_FORMAT);
 
                     c.setTime(parsedDate);
                     c.set(Calendar.MONTH, Calendar.JANUARY);
