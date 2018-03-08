@@ -249,10 +249,13 @@
     <string name="featured">Use as featured image</string>
     <string name="featured_in_post">Include image in post content</string>
     <string name="file_not_found">Couldn\'t find the file for upload. Was it deleted or moved?</string>
-    <string name="delete_post">Delete post</string>
+    <string name="delete_post">Delete post?</string>
+    <string name="delete_page">Delete page?</string>
     <string name="posts_fetching">Fetching posts…</string>
     <string name="pages_fetching">Fetching pages…</string>
     <string name="dialog_confirm_cancel_post_media_uploading">Are you sure? Deleting this post will also cancel the media upload.</string>
+    <string name="dialog_confirm_delete_post">This post will be deleted and sent to Trash</string>
+    <string name="dialog_confirm_delete_page">This page will be deleted and sent to Trash</string>
     <string name="dialog_confirm_publish_title">Ready to Publish?</string>
     <string name="dialog_confirm_publish_message_post">This post will be published immediately.</string>
     <string name="dialog_confirm_publish_message_page">This page will be published immediately.</string>
