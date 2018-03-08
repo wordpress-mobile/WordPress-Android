@@ -45,6 +45,14 @@ class PostUploadNotifier {
 
     private static final int BASE_MEDIA_ERROR_NOTIFICATION_ID = 72000;
 
+    private enum PagesOrPostsType {
+        POST,
+        PAGE,
+        POSTS,
+        PAGES,
+        PAGES_OR_POSTS
+    }
+
     // used to hold notification data for everything (only one outstanding foreground notification
     // for the live UploadService instance
     private static NotificationData sNotificationData;
@@ -538,11 +546,65 @@ class PostUploadNotifier {
                 ? overrideMediaNotUploadedCount : sNotificationData.mTotalMediaItems - getCurrentMediaItem();
 
         if (postItemsNotUploaded > 0 && mediaItemsNotUploaded > 0) {
-            newErrorMessage = String.format(mContext.getString(R.string.media_file_post_mixed_not_uploaded),
-                                            postItemsNotUploaded, getPagesAndOrPostsString(postItemsNotUploaded),
-                                            mediaItemsNotUploaded);
+            switch (getPagesAndOrPostsType(postItemsNotUploaded)) {
+                case POST:
+                    newErrorMessage = String.format(
+                            mContext.getString(R.string.media_file_post_singular_mixed_not_uploaded),
+                            mediaItemsNotUploaded);
+                    break;
+                case PAGE:
+                    newErrorMessage = String.format(
+                            mContext.getString(R.string.media_file_page_singular_mixed_not_uploaded),
+                            mediaItemsNotUploaded);
+                    break;
+                case PAGES:
+                    newErrorMessage = String.format(
+                            mContext.getString(R.string.media_file_pages_plural_mixed_not_uploaded),
+                            postItemsNotUploaded,
+                            mediaItemsNotUploaded);
+                    break;
+                case PAGES_OR_POSTS:
+                    newErrorMessage = String.format(
+                            mContext.getString(R.string.media_file_pages_and_posts_mixed_not_uploaded),
+                            postItemsNotUploaded,
+                            mediaItemsNotUploaded);
+                    break;
+                case POSTS:
+                default:
+                    newErrorMessage = String.format(
+                            mContext.getString(R.string.media_file_posts_plural_mixed_not_uploaded),
+                            postItemsNotUploaded,
+                            mediaItemsNotUploaded);
+                    break;
+            }
+
         } else if (postItemsNotUploaded > 0) {
-            newErrorMessage = postItemsNotUploaded + " " + getPagesAndOrPostsString(postItemsNotUploaded);
+
+            switch (getPagesAndOrPostsType(postItemsNotUploaded)) {
+                case POST:
+                    newErrorMessage = mContext.getString(R.string.media_file_post_singular_only_not_uploaded);
+                    break;
+                case PAGE:
+                    newErrorMessage = mContext.getString(R.string.media_file_page_singular_only_not_uploaded);
+                    break;
+                case PAGES:
+                    newErrorMessage = String.format(
+                            mContext.getString(R.string.media_file_pages_plural_only_not_uploaded),
+                            postItemsNotUploaded);
+                    break;
+                case PAGES_OR_POSTS:
+                    newErrorMessage = String.format(
+                            mContext.getString(R.string.media_file_pages_and_posts_only_not_uploaded),
+                            postItemsNotUploaded);
+                    break;
+                case POSTS:
+                default:
+                    newErrorMessage = String.format(
+                            mContext.getString(R.string.media_file_posts_plural_only_not_uploaded),
+                            postItemsNotUploaded);
+                    break;
+            }
+
         } else if (mediaItemsNotUploaded > 0) {
             if (mediaItemsNotUploaded == 1) {
                 newErrorMessage = mContext.getString(R.string.media_file_not_uploaded);
@@ -700,48 +762,53 @@ class PostUploadNotifier {
     }
 
     private String buildNotificationSubtitleForPost(PostModel post) {
-        String uploadingMessage = String.format(
-                mContext.getString(R.string.uploading_subtitle_posts_only),
-                sNotificationData.mTotalPostItems - getCurrentPostItem(),
-                (post != null && post.isPage()) ? mContext.getString(R.string.page).toLowerCase()
-                        : mContext.getString(R.string.post).toLowerCase()
-                                               );
+        String uploadingMessage =
+                (post != null && post.isPage()) ? mContext.getString(R.string.uploading_subtitle_pages_only_one)
+                : mContext.getString(R.string.uploading_subtitle_posts_only_one);
         return uploadingMessage;
     }
 
     private String buildNotificationSubtitleForPosts() {
         int remaining = sNotificationData.mTotalPostItems - getCurrentPostItem();
-        String pagesAndOrPosts = getPagesAndOrPostsString(remaining);
-        String uploadingMessage = String.format(
-                mContext.getString(R.string.uploading_subtitle_posts_only),
-                remaining,
-                pagesAndOrPosts
-                                               );
-        return uploadingMessage;
+        PagesOrPostsType pagesAndOrPosts = getPagesAndOrPostsType(remaining);
+        String strToUse;
+        switch (pagesAndOrPosts) {
+            case PAGES:
+                strToUse = mContext.getString(R.string.uploading_subtitle_pages_only_plural);
+                break;
+            case PAGES_OR_POSTS:
+                strToUse = mContext.getString(R.string.uploading_subtitle_pages_posts);
+                break;
+            case POSTS:
+            default:
+                strToUse = mContext.getString(R.string.uploading_subtitle_posts_only_plural);
+                break;
+        }
+
+        return String.format(strToUse, remaining);
     }
 
-    private String getPagesAndOrPostsString(int remaining) {
-        String pagesAndOrPosts;
+    private PagesOrPostsType getPagesAndOrPostsType(int remaining) {
+        PagesOrPostsType pagesAndOrPosts;
         if (sNotificationData.mTotalPageItemsIncludedInPostCount > 0 && sNotificationData.mTotalPostItems > 0
             && sNotificationData.mTotalPostItems > sNotificationData.mTotalPageItemsIncludedInPostCount) {
             // we have both pages and posts
-            pagesAndOrPosts = mContext.getString(R.string.posts).toLowerCase() + "/"
-                              + mContext.getString(R.string.pages).toLowerCase();
+            pagesAndOrPosts = PagesOrPostsType.PAGES_OR_POSTS;
         } else if (sNotificationData.mTotalPageItemsIncludedInPostCount > 0) {
             // we have only pages
             if (remaining == 1) {
                 // only one page
-                pagesAndOrPosts = mContext.getString(R.string.page).toLowerCase();
+                pagesAndOrPosts = PagesOrPostsType.PAGE;
             } else {
-                pagesAndOrPosts = mContext.getString(R.string.pages).toLowerCase();
+                pagesAndOrPosts = PagesOrPostsType.PAGES;
             }
         } else {
             // we have only posts
             if (remaining == 1) {
                 // only one post
-                pagesAndOrPosts = mContext.getString(R.string.post).toLowerCase();
+                pagesAndOrPosts = PagesOrPostsType.POST;
             } else {
-                pagesAndOrPosts = mContext.getString(R.string.posts).toLowerCase();
+                pagesAndOrPosts = PagesOrPostsType.POSTS;
             }
         }
         return pagesAndOrPosts;
@@ -764,20 +831,69 @@ class PostUploadNotifier {
     private String buildNotificationSubtitleForMixedContent() {
         int remaining = sNotificationData.mTotalPostItems - getCurrentPostItem();
         String uploadingMessage;
+
         if (sNotificationData.mTotalMediaItems == 1) {
-            uploadingMessage = String.format(
-                    mContext.getString(R.string.uploading_subtitle_mixed_one),
-                    remaining,
-                    getPagesAndOrPostsString(remaining)
-                                            );
+            switch (getPagesAndOrPostsType(remaining)) {
+                case PAGES:
+                    uploadingMessage = String.format(
+                            mContext.getString(R.string.uploading_subtitle_mixed_pages_plural_media_one),
+                            remaining);
+                    break;
+                case PAGE:
+                    uploadingMessage = mContext.getString(R.string.uploading_subtitle_mixed_page_singular_media_one);
+                    break;
+                case POST:
+                    uploadingMessage = mContext.getString(R.string.uploading_subtitle_mixed_post_singular_media_one);
+                    break;
+                case PAGES_OR_POSTS:
+                    uploadingMessage = String.format(
+                            mContext.getString(R.string.uploading_subtitle_mixed_pages_and_posts_plural_media_one),
+                            remaining);
+                    break;
+                case POSTS:
+                default:
+                    uploadingMessage = String.format(
+                            mContext.getString(R.string.uploading_subtitle_mixed_posts_plural_media_one),
+                            remaining);
+                    break;
+            }
         } else {
-            uploadingMessage = String.format(
-                    mContext.getString(R.string.uploading_subtitle_mixed),
-                    sNotificationData.mTotalPostItems - getCurrentPostItem(),
-                    getPagesAndOrPostsString(remaining),
-                    sNotificationData.mTotalMediaItems - getCurrentMediaItem(),
-                    sNotificationData.mTotalMediaItems
-                                            );
+            switch (getPagesAndOrPostsType(remaining)) {
+                case PAGES:
+                    uploadingMessage = String.format(
+                            mContext.getString(R.string.uploading_subtitle_mixed_pages_plural_media_plural),
+                            remaining,
+                            sNotificationData.mTotalMediaItems - getCurrentMediaItem(),
+                            sNotificationData.mTotalMediaItems);
+                    break;
+                case PAGE:
+                    uploadingMessage = String.format(
+                            mContext.getString(R.string.uploading_subtitle_mixed_page_singular_media_plural),
+                            sNotificationData.mTotalMediaItems - getCurrentMediaItem(),
+                            sNotificationData.mTotalMediaItems);
+                    break;
+                case POST:
+                    uploadingMessage = String.format(
+                            mContext.getString(R.string.uploading_subtitle_mixed_post_singular_media_plural),
+                            sNotificationData.mTotalMediaItems - getCurrentMediaItem(),
+                            sNotificationData.mTotalMediaItems);
+                    break;
+                case PAGES_OR_POSTS:
+                    uploadingMessage = String.format(
+                            mContext.getString(R.string.uploading_subtitle_mixed_pages_and_posts_plural_media_plural),
+                            remaining,
+                            sNotificationData.mTotalMediaItems - getCurrentMediaItem(),
+                            sNotificationData.mTotalMediaItems);
+                    break;
+                case POSTS:
+                default:
+                    uploadingMessage = String.format(
+                            mContext.getString(R.string.uploading_subtitle_mixed_posts_plural_media_plural),
+                            remaining,
+                            sNotificationData.mTotalMediaItems - getCurrentMediaItem(),
+                            sNotificationData.mTotalMediaItems);
+                    break;
+            }
         }
         return uploadingMessage;
     }

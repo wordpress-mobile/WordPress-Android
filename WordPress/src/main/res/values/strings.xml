@@ -292,7 +292,20 @@
 
     <!-- post uploads -->
     <string name="upload_failed_param">Upload failed for \"%s\"</string>
-    <string name="media_file_post_mixed_not_uploaded">%1$d %2$s with %3$d files not uploaded</string>
+
+    <string name="media_file_post_singular_mixed_not_uploaded">1 post with %1$d file(s) not uploaded</string>
+    <string name="media_file_posts_plural_mixed_not_uploaded">%1$d posts with %2$d file(s) not uploaded</string>
+    <string name="media_file_page_singular_mixed_not_uploaded">1 page with %1$d file(s) not uploaded</string>
+    <string name="media_file_pages_plural_mixed_not_uploaded">%1$d pages with %2$d file(s) not uploaded</string>
+    <string name="media_file_pages_and_posts_mixed_not_uploaded">%1$d post / pages with %2$d file(s) not uploaded</string>
+
+    <string name="media_file_post_singular_only_not_uploaded">1 post not uploaded</string>
+    <string name="media_file_posts_plural_only_not_uploaded">%1$d posts not uploaded</string>
+    <string name="media_file_page_singular_only_not_uploaded">1 page not uploaded</string>
+    <string name="media_file_pages_plural_only_not_uploaded">%1$d pages not uploaded</string>
+    <string name="media_file_pages_and_posts_only_not_uploaded">%1$d post / pages not uploaded</string>
+
+
     <string name="media_files_not_uploaded">%d files not uploaded</string>
     <string name="media_files_uploaded">%d files uploaded</string>
     <string name="media_file_not_uploaded">1 file not uploaded</string>
@@ -446,9 +459,24 @@
     <string name="update_verb">Update</string>
     <string name="sending_content">Uploading %s content…</string>
     <string name="uploading_title">Uploading…</string>
-    <string name="uploading_subtitle_mixed">%1$d %2$s, and %3$d of %4$d files remaining</string>
-    <string name="uploading_subtitle_mixed_one">%1$d %2$s, and 1 file remaining</string>
-    <string name="uploading_subtitle_posts_only">%1$d %2$s remaining</string>
+
+    <string name="uploading_subtitle_mixed_page_singular_media_plural">1 page, and %1$d of %2$d files remaining</string>
+    <string name="uploading_subtitle_mixed_post_singular_media_plural">1 post, and %1$d of %2$d files remaining</string>
+    <string name="uploading_subtitle_mixed_pages_plural_media_plural">%1$d pages, and %2$d of %3$d files remaining</string>
+    <string name="uploading_subtitle_mixed_posts_plural_media_plural">%1$d posts, and %2$d of %3$d files remaining</string>
+    <string name="uploading_subtitle_mixed_pages_and_posts_plural_media_plural">%1$d pages / posts, and %2$d of %3$d files remaining</string>
+
+    <string name="uploading_subtitle_mixed_page_singular_media_one">1 page, and 1 file remaining</string>
+    <string name="uploading_subtitle_mixed_post_singular_media_one">1 post, and 1 file remaining</string>
+    <string name="uploading_subtitle_mixed_pages_plural_media_one">%1$d pages, and 1 file remaining</string>
+    <string name="uploading_subtitle_mixed_posts_plural_media_one">%1$d posts, and 1 file remaining</string>
+    <string name="uploading_subtitle_mixed_pages_and_posts_plural_media_one">%1$d pages / posts, and 1 file remaining</string>
+
+    <string name="uploading_subtitle_posts_only_plural">%1$d posts remaining</string>
+    <string name="uploading_subtitle_pages_only_plural">%1$d pages remaining</string>
+    <string name="uploading_subtitle_posts_only_one">1 post remaining</string>
+    <string name="uploading_subtitle_pages_only_one">1 page remaining</string>
+    <string name="uploading_subtitle_pages_posts">%1$d pages / posts remaining</string>
     <string name="uploading_subtitle_media_only">%1$d of %2$d files remaining</string>
     <string name="uploading_subtitle_media_only_one">1 file remaining</string>
     <string name="uploading_total">Uploading %1$d of %2$d</string>
