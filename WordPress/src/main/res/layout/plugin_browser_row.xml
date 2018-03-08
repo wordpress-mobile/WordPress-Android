@@ -4,10 +4,11 @@
     android:layout_width="@dimen/plugin_row_width"
     android:layout_height="match_parent"
     android:background="?android:attr/selectableItemBackground"
-    android:paddingLeft="@dimen/margin_extra_large"
-    android:paddingStart="@dimen/margin_extra_large"
-    android:paddingRight="0dp"
-    android:paddingEnd="0dp">
+    android:paddingBottom="@dimen/margin_small"
+    android:paddingEnd="@dimen/margin_medium"
+    android:paddingLeft="@dimen/margin_medium"
+    android:paddingRight="@dimen/margin_medium"
+    android:paddingStart="@dimen/margin_medium" >
 
     <org.wordpress.android.widgets.WPNetworkImageView
         android:id="@+id/plugin_icon"

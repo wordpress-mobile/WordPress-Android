@@ -47,11 +47,15 @@
 
                     <android.support.v7.widget.RecyclerView
                         android:id="@+id/installed_plugins_recycler"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
+                        android:clipToPadding="false"
                         android:layout_below="@+id/text_manage"
-                        android:layout_marginBottom="@dimen/margin_small"
-                        android:layout_marginTop="@dimen/margin_small"
+                        android:layout_height="wrap_content"
+                        android:layout_width="match_parent"
+                        android:paddingEnd="@dimen/margin_medium"
+                        android:paddingLeft="@dimen/margin_medium"
+                        android:paddingStart="@dimen/margin_medium"
+                        android:paddingRight="@dimen/margin_medium"
+                        android:paddingTop="@dimen/margin_small"
                         android:scrollbars="none" />
                 </RelativeLayout>
             </android.support.v7.widget.CardView>
@@ -84,11 +88,15 @@
 
                     <android.support.v7.widget.RecyclerView
                         android:id="@+id/featured_plugins_recycler"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
+                        android:clipToPadding="false"
                         android:layout_below="@+id/text_all_featured"
-                        android:layout_marginBottom="@dimen/margin_small"
-                        android:layout_marginTop="@dimen/margin_small"
+                        android:layout_height="wrap_content"
+                        android:layout_width="match_parent"
+                        android:paddingEnd="@dimen/margin_medium"
+                        android:paddingLeft="@dimen/margin_medium"
+                        android:paddingStart="@dimen/margin_medium"
+                        android:paddingRight="@dimen/margin_medium"
+                        android:paddingTop="@dimen/margin_small"
                         android:scrollbars="none" />
                 </RelativeLayout>
             </android.support.v7.widget.CardView>
@@ -121,11 +129,15 @@
 
                     <android.support.v7.widget.RecyclerView
                         android:id="@+id/popular_plugins_recycler"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
+                        android:clipToPadding="false"
                         android:layout_below="@+id/text_all_popular"
-                        android:layout_marginBottom="@dimen/margin_small"
-                        android:layout_marginTop="@dimen/margin_small"
+                        android:layout_height="wrap_content"
+                        android:layout_width="match_parent"
+                        android:paddingEnd="@dimen/margin_medium"
+                        android:paddingLeft="@dimen/margin_medium"
+                        android:paddingStart="@dimen/margin_medium"
+                        android:paddingRight="@dimen/margin_medium"
+                        android:paddingTop="@dimen/margin_small"
                         android:scrollbars="none" />
                 </RelativeLayout>
             </android.support.v7.widget.CardView>
@@ -159,11 +171,15 @@
 
                     <android.support.v7.widget.RecyclerView
                         android:id="@+id/new_plugins_recycler"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
+                        android:clipToPadding="false"
                         android:layout_below="@+id/text_all_new"
-                        android:layout_marginBottom="@dimen/margin_small"
-                        android:layout_marginTop="@dimen/margin_small"
+                        android:layout_height="wrap_content"
+                        android:layout_width="match_parent"
+                        android:paddingEnd="@dimen/margin_medium"
+                        android:paddingLeft="@dimen/margin_medium"
+                        android:paddingStart="@dimen/margin_medium"
+                        android:paddingRight="@dimen/margin_medium"
+                        android:paddingTop="@dimen/margin_small"
                         android:scrollbars="none" />
                 </RelativeLayout>
             </android.support.v7.widget.CardView>
