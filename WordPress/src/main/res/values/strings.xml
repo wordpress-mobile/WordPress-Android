@@ -1813,6 +1813,7 @@
     <string name="plugins_empty_search_list">No matches</string>
 
     <string name="plugin_caption_installed" translatable="false">@string/plugin_installed</string>
+    <string name="plugin_caption_featured">Featured</string>
     <string name="plugin_caption_popular">Popular</string>
     <string name="plugin_caption_new">New</string>
     <string name="plugin_caption_search">Search Plugins</string>

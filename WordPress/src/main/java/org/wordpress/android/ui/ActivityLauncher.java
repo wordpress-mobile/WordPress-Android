@@ -17,8 +17,6 @@ import org.wordpress.android.WordPress;
 import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.fluxc.model.PostModel;
 import org.wordpress.android.fluxc.model.SiteModel;
-import org.wordpress.android.fluxc.model.plugin.SitePluginModel;
-import org.wordpress.android.fluxc.model.plugin.WPOrgPluginModel;
 import org.wordpress.android.login.LoginMode;
 import org.wordpress.android.networking.SSLCertsViewActivity;
 import org.wordpress.android.ui.accounts.HelpActivity;
@@ -176,30 +174,20 @@ public class ActivityLauncher {
 
     public static void viewPluginBrowser(Context context, SiteModel site) {
         if (PluginUtils.isPluginFeatureAvailable(site)) {
-            AnalyticsUtils.trackWithSiteDetails(AnalyticsTracker.Stat.OPENED_PLUGINS, site);
+            AnalyticsUtils.trackWithSiteDetails(AnalyticsTracker.Stat.OPENED_PLUGIN_DIRECTORY, site);
             Intent intent = new Intent(context, PluginBrowserActivity.class);
             intent.putExtra(WordPress.SITE, site);
             context.startActivity(intent);
         }
     }
 
-    public static void viewPluginDetailForResult(Activity context, SiteModel site, SitePluginModel plugin) {
+    public static void viewPluginDetail(Activity context, SiteModel site, String slug) {
         if (PluginUtils.isPluginFeatureAvailable(site)) {
             AnalyticsUtils.trackWithSiteDetails(AnalyticsTracker.Stat.OPENED_PLUGIN_DETAIL, site);
             Intent intent = new Intent(context, PluginDetailActivity.class);
             intent.putExtra(WordPress.SITE, site);
-            intent.putExtra(PluginDetailActivity.KEY_PLUGIN_SLUG, plugin.getSlug());
-            context.startActivityForResult(intent, RequestCodes.PLUGIN_DETAIL);
-        }
-    }
-
-    public static void viewPluginDetailForResult(Activity context, SiteModel site, WPOrgPluginModel plugin) {
-        if (PluginUtils.isPluginFeatureAvailable(site)) {
-            AnalyticsUtils.trackWithSiteDetails(AnalyticsTracker.Stat.OPENED_PLUGIN_DETAIL, site);
-            Intent intent = new Intent(context, PluginDetailActivity.class);
-            intent.putExtra(WordPress.SITE, site);
-            intent.putExtra(PluginDetailActivity.KEY_PLUGIN_SLUG, plugin.getSlug());
-            context.startActivityForResult(intent, RequestCodes.PLUGIN_DETAIL);
+            intent.putExtra(PluginDetailActivity.KEY_PLUGIN_SLUG, slug);
+            context.startActivity(intent);
         }
     }
 
