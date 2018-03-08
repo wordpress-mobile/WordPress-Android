@@ -20,7 +20,7 @@ public class ReaderBlogIdPostIdList extends ArrayList<ReaderBlogIdPostId>
     public ReaderBlogIdPostIdList(Serializable serializedList) {
         super();
         if (serializedList != null && serializedList instanceof ArrayList) {
-            // noinspection unchecked
+            //noinspection unchecked
             ArrayList<ReaderBlogIdPostId> list = (ArrayList<ReaderBlogIdPostId>) serializedList;
             for (ReaderBlogIdPostId idPair : list) {
                 this.add(idPair);

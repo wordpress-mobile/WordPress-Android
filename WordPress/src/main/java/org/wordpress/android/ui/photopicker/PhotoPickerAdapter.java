@@ -273,7 +273,7 @@ class PhotoPickerAdapter extends RecyclerView.Adapter<PhotoPickerAdapter.Thumbna
 
     @NonNull
     ArrayList<Uri> getSelectedURIs() {
-        // noinspection unchecked
+        //noinspection unchecked
         return (ArrayList<Uri>) mSelectedUris.clone();
     }
 
