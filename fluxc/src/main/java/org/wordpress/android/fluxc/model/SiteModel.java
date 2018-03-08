@@ -556,19 +556,35 @@ public class SiteModel extends Payload<BaseNetworkError> implements Identifiable
         return isWPCom() || (isJetpackConnected() && getOrigin() == ORIGIN_WPCOM_REST);
     }
 
-    public void setSpaceAvailable(long spaceAvailable) { mSpaceAvailable = spaceAvailable; }
+    public void setSpaceAvailable(long spaceAvailable) {
+        mSpaceAvailable = spaceAvailable;
+    }
 
-    public long getSpaceAvailable() { return mSpaceAvailable; }
+    public long getSpaceAvailable() {
+        return mSpaceAvailable;
+    }
 
-    public void setSpaceAllowed(long spaceAllowed) { mSpaceAllowed = spaceAllowed; }
+    public void setSpaceAllowed(long spaceAllowed) {
+        mSpaceAllowed = spaceAllowed;
+    }
 
-    public long getSpaceAllowed() { return mSpaceAllowed; }
+    public long getSpaceAllowed() {
+        return mSpaceAllowed;
+    }
 
-    public void setSpaceUsed(long spaceUsed) { mSpaceUsed = spaceUsed; }
+    public void setSpaceUsed(long spaceUsed) {
+        mSpaceUsed = spaceUsed;
+    }
 
-    public long getSpaceUsed() { return mSpaceUsed; }
+    public long getSpaceUsed() {
+        return mSpaceUsed;
+    }
 
-    public void setSpacePercentUsed( double spacePercentUsed) { mSpacePercentUsed = spacePercentUsed; }
+    public void setSpacePercentUsed(double spacePercentUsed) {
+        mSpacePercentUsed = spacePercentUsed;
+    }
 
-    public double getSpacePercentUsed() { return mSpacePercentUsed; }
+    public double getSpacePercentUsed() {
+        return mSpacePercentUsed;
+    }
 }
