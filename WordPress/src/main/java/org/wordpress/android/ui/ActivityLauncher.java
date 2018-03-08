@@ -32,8 +32,8 @@ import org.wordpress.android.ui.main.WPMainActivity;
 import org.wordpress.android.ui.media.MediaBrowserActivity;
 import org.wordpress.android.ui.media.MediaBrowserType;
 import org.wordpress.android.ui.people.PeopleManagementActivity;
+import org.wordpress.android.ui.photopicker.PhotoPickerActivity;
 import org.wordpress.android.ui.photopicker.PhotoPickerFragment;
-import org.wordpress.android.ui.stockphotos.StockPhotoPickerActivity;
 import org.wordpress.android.ui.plans.PlansActivity;
 import org.wordpress.android.ui.plugins.PluginBrowserActivity;
 import org.wordpress.android.ui.plugins.PluginDetailActivity;
@@ -53,6 +53,7 @@ import org.wordpress.android.ui.stats.StatsConnectJetpackActivity;
 import org.wordpress.android.ui.stats.StatsConstants;
 import org.wordpress.android.ui.stats.StatsSingleItemDetailsActivity;
 import org.wordpress.android.ui.stats.models.StatsPostModel;
+import org.wordpress.android.ui.stockphotos.StockPhotoPickerActivity;
 import org.wordpress.android.ui.themes.ThemeBrowserActivity;
 import org.wordpress.android.util.AnalyticsUtils;
 import org.wordpress.android.util.AppLog;
@@ -102,13 +103,19 @@ public class ActivityLauncher {
     public static void showPhotoPickerForResult(Activity activity,
                                                 @NonNull MediaBrowserType browserType,
                                                 @Nullable SiteModel site) {
-        // TODO: change back to PhotoPickerActivity
-        Intent intent = new Intent(activity, StockPhotoPickerActivity.class);
+        Intent intent = new Intent(activity, PhotoPickerActivity.class);
         intent.putExtra(PhotoPickerFragment.ARG_BROWSER_TYPE, browserType);
         if (site != null) {
             intent.putExtra(WordPress.SITE, site);
         }
         activity.startActivityForResult(intent, RequestCodes.PHOTO_PICKER);
+    }
+
+    public static void showStockPhotoPickerForResult(Activity activity,
+                                                    @NonNull SiteModel site) {
+        Intent intent = new Intent(activity, StockPhotoPickerActivity.class);
+        intent.putExtra(WordPress.SITE, site);
+        activity.startActivityForResult(intent, RequestCodes.STOCK_PHOTO_PICKER);
     }
 
     public static void viewBlogStats(Context context, SiteModel site) {

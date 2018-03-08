@@ -53,6 +53,7 @@ import org.wordpress.android.fluxc.store.MediaStore;
 import org.wordpress.android.fluxc.store.MediaStore.OnMediaChanged;
 import org.wordpress.android.fluxc.store.MediaStore.OnMediaUploaded;
 import org.wordpress.android.ui.ActivityId;
+import org.wordpress.android.ui.ActivityLauncher;
 import org.wordpress.android.ui.RequestCodes;
 import org.wordpress.android.ui.media.MediaGridFragment.MediaFilter;
 import org.wordpress.android.ui.media.MediaGridFragment.MediaGridListener;
@@ -118,7 +119,8 @@ public class MediaBrowserActivity extends AppCompatActivity implements MediaGrid
         ITEM_CAPTURE_PHOTO,
         ITEM_CAPTURE_VIDEO,
         ITEM_CHOOSE_PHOTO,
-        ITEM_CHOOSE_VIDEO
+        ITEM_CHOOSE_VIDEO,
+        ITEM_CHOOSE_STOCK_MEDIA
     }
 
     @Override
@@ -813,6 +815,17 @@ public class MediaBrowserActivity extends AppCompatActivity implements MediaGrid
                     });
         }
 
+        if (mBrowserType.isBrowser() && mSite.isUsingWpComRestApi()) {
+            popup.getMenu().add(R.string.photo_picker_choose_stock_media).setOnMenuItemClickListener(
+                    new MenuItem.OnMenuItemClickListener() {
+                        @Override
+                        public boolean onMenuItemClick(MenuItem item) {
+                            doAddMediaItemClicked(AddMenuItem.ITEM_CHOOSE_STOCK_MEDIA);
+                            return true;
+                        }
+                    });
+        }
+
         popup.show();
     }
 
@@ -839,6 +852,9 @@ public class MediaBrowserActivity extends AppCompatActivity implements MediaGrid
                     break;
                 case ITEM_CHOOSE_VIDEO:
                     WPMediaUtils.launchVideoLibrary(this, true);
+                    break;
+                case ITEM_CHOOSE_STOCK_MEDIA:
+                    ActivityLauncher.showStockPhotoPickerForResult(this, mSite);
                     break;
             }
         }

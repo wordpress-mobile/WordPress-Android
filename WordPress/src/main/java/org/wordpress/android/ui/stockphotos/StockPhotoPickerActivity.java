@@ -31,6 +31,7 @@ import org.wordpress.android.util.DisplayUtils;
 import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.PhotonUtils;
 import org.wordpress.android.util.StringUtils;
+import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.WPLinkMovementMethod;
 import org.wordpress.android.viewmodel.StockMediaViewModel;
 import org.wordpress.android.widgets.WPNetworkImageView;
@@ -288,9 +289,8 @@ public class StockPhotoPickerActivity extends AppCompatActivity implements Searc
         if (items.size() == 0) {
             return;
         }
-        // TODO
+        ToastUtils.showToast(this, "Insertion will be handled in a separate PR");
     }
-
 
     class StockPhotoAdapter extends RecyclerView.Adapter<StockViewHolder> {
         private static final float SCALE_NORMAL = 1.0f;
