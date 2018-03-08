@@ -80,9 +80,9 @@ public class StatsInsightsAllTimeFragment extends StatsAbstractInsightsFragment 
 
         besteverTextView.setText(FormatUtils.formatDecimal(mInsightsAllTimeModel.getViewsBestDayTotal()));
         besteverDateTextView.setText(
-                StatsUtils.parseDate(mInsightsAllTimeModel.getViewsBestDay(), StatsConstants.STATS_INPUT_DATE_FORMAT,
-                                     "MMMM dd, yyyy")
-                                    );
+                StatsUtils.parseDateToLocalizedFormat(mInsightsAllTimeModel.getViewsBestDay(),
+                                                      StatsConstants.STATS_INPUT_DATE_FORMAT,
+                                                      "MMMM dd, yyyy"));
 
         mResultContainer.addView(ll);
     }

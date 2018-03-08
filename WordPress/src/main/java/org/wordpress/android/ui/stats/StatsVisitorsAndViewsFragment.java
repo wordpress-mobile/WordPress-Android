@@ -609,7 +609,7 @@ public class StatsVisitorsAndViewsFragment extends StatsAbstractFragment
         String prefix = getString(R.string.stats_for);
         switch (timeframe) {
             case DAY:
-                return String.format(prefix, StatsUtils.parseDate(
+                return String.format(prefix, StatsUtils.parseDateToLocalizedFormat(
                         date,
                         StatsConstants.STATS_INPUT_DATE_FORMAT,
                         StatsConstants.STATS_OUTPUT_DATE_MONTH_LONG_DAY_SHORT_FORMAT));
@@ -645,11 +645,15 @@ public class StatsVisitorsAndViewsFragment extends StatsAbstractFragment
                     return "";
                 }
             case MONTH:
-                return String.format(prefix, StatsUtils.parseDate(date, StatsConstants.STATS_INPUT_DATE_FORMAT,
-                                                                  StatsConstants.STATS_OUTPUT_DATE_MONTH_LONG_FORMAT));
+                return String.format(prefix, StatsUtils.parseDateToLocalizedFormat(
+                        date,
+                        StatsConstants.STATS_INPUT_DATE_FORMAT,
+                        StatsConstants.STATS_OUTPUT_DATE_MONTH_LONG_FORMAT));
             case YEAR:
-                return String.format(prefix, StatsUtils.parseDate(date, StatsConstants.STATS_INPUT_DATE_FORMAT,
-                                                                  StatsConstants.STATS_OUTPUT_DATE_YEAR_FORMAT));
+                return String.format(prefix, StatsUtils.parseDateToLocalizedFormat(
+                        date,
+                        StatsConstants.STATS_INPUT_DATE_FORMAT,
+                        StatsConstants.STATS_OUTPUT_DATE_YEAR_FORMAT));
         }
         return "";
     }
@@ -660,23 +664,26 @@ public class StatsVisitorsAndViewsFragment extends StatsAbstractFragment
     private String getDateLabelForBarInGraph(String dateToFormat) {
         switch (getTimeframe()) {
             case DAY:
-                return StatsUtils.parseDate(
+                return StatsUtils.parseDateToLocalizedFormat(
                         dateToFormat,
                         StatsConstants.STATS_INPUT_DATE_FORMAT,
-                        StatsConstants.STATS_OUTPUT_DATE_MONTH_SHORT_DAY_SHORT_FORMAT
-                                           );
+                        StatsConstants.STATS_OUTPUT_DATE_MONTH_SHORT_DAY_SHORT_FORMAT);
             case WEEK:
                 // first four digits are the year
                 // followed by Wxx where xx is the month
                 // followed by Wxx where xx is the day of the month
                 // ex: 2013W07W22 = July 22, 2013
-                return StatsUtils.parseDate(dateToFormat, "yyyy'W'MM'W'dd",
-                                            StatsConstants.STATS_OUTPUT_DATE_MONTH_SHORT_DAY_SHORT_FORMAT);
+                return StatsUtils.parseDateToLocalizedFormat(
+                        dateToFormat,
+                        "yyyy'W'MM'W'dd",
+                        StatsConstants.STATS_OUTPUT_DATE_MONTH_SHORT_DAY_SHORT_FORMAT);
             case MONTH:
-                return StatsUtils.parseDate(dateToFormat, "yyyy-MM", "MMM");
+                return StatsUtils.parseDateToLocalizedFormat(dateToFormat, "yyyy-MM", "MMM");
             case YEAR:
-                return StatsUtils.parseDate(dateToFormat, StatsConstants.STATS_INPUT_DATE_FORMAT,
-                                            StatsConstants.STATS_OUTPUT_DATE_YEAR_FORMAT);
+                return StatsUtils.parseDateToLocalizedFormat(
+                        dateToFormat,
+                        StatsConstants.STATS_INPUT_DATE_FORMAT,
+                        StatsConstants.STATS_OUTPUT_DATE_YEAR_FORMAT);
             default:
                 return dateToFormat;
         }

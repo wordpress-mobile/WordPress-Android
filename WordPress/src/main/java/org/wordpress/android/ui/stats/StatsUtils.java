@@ -49,7 +49,6 @@ import java.util.TimeZone;
 import java.util.concurrent.TimeUnit;
 
 public class StatsUtils {
-
     private static long toMs(String date, String pattern) {
         if (date == null || date.equals("null")) {
             AppLog.w(T.UTILS, "Trying to parse a 'null' Stats Date.");
@@ -182,8 +181,8 @@ public class StatsUtils {
         return gmtDf.format(date);
     }
 
-    public static String parseDate(String timestamp, String fromFormat, String toFormat) {
-        SimpleDateFormat from = new SimpleDateFormat(fromFormat, Locale.getDefault());
+    public static String parseDateToLocalizedFormat(String timestamp, String fromFormat, String toFormat) {
+        SimpleDateFormat from = new SimpleDateFormat(fromFormat, Locale.ROOT);
         SimpleDateFormat to = new SimpleDateFormat(toFormat, Locale.getDefault());
         try {
             Date date = from.parse(timestamp);
@@ -209,7 +208,7 @@ public class StatsUtils {
 
 
     // Calculate the correct start/end date for the selected period
-    @SuppressLint("SimpleDateFormat") //not sure what this method might be used for, so stressing for now
+    @SuppressLint("SimpleDateFormat") // not sure what this method might be used for, so supressing for now
     public static String getPublishedEndpointPeriodDateParameters(StatsTimeframe timeframe, String date) {
         if (date == null) {
             AppLog.w(AppLog.T.STATS, "Can't calculate start and end period without a reference date");
