@@ -9,6 +9,7 @@
     </issue>
 
     <!-- ERROR -->
+    <issue id="SimpleDateFormat" severity="error" />
     <issue id="RtlCompat" severity="error" />
     <issue id="RtlHardcoded" severity="error" />
     <issue id="InconsistentArrays" severity="error" />
