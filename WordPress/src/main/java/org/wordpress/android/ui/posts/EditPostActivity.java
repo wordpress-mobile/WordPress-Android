@@ -999,7 +999,7 @@ public class EditPostActivity extends AppCompatActivity implements
     }
 
     private void showPublishConfirmationDialog() {
-        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        AlertDialog.Builder builder = new AlertDialog.Builder(new ContextThemeWrapper(this, R.style.Calypso_Dialog));
         builder.setTitle(getResources().getText(R.string.dialog_confirm_publish_title))
                 .setMessage(mPost.isPage() ? getString(R.string.dialog_confirm_publish_message_page)
                                     : getString(R.string.dialog_confirm_publish_message_post))
