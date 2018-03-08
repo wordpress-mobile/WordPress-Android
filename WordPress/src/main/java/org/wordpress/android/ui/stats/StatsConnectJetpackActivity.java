@@ -1,20 +1,22 @@
 package org.wordpress.android.ui.stats;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.ActionBar;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 
-import org.wordpress.android.BaseActivity;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.store.AccountStore;
 import org.wordpress.android.ui.JetpackConnectionWebViewActivity;
+import org.wordpress.android.util.LocaleManager;
 
 import javax.inject.Inject;
 
@@ -25,9 +27,14 @@ import static org.wordpress.android.ui.JetpackConnectionWebViewActivity.Source.S
  * An activity that shows when user tries to open Stats without Jetpack connected.
  * It offers a link to the Jetpack connection flow.
  */
-public class StatsConnectJetpackActivity extends BaseActivity {
+public class StatsConnectJetpackActivity extends AppCompatActivity {
     @Inject
     AccountStore mAccountStore;
+
+    @Override
+    protected void attachBaseContext(Context newBase) {
+        super.attachBaseContext(LocaleManager.setLocale(newBase));
+    }
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {

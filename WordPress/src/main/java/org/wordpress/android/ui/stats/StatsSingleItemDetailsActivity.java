@@ -6,6 +6,7 @@ import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v7.app.ActionBar;
+import android.support.v7.app.AppCompatActivity;
 import android.util.SparseBooleanArray;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
@@ -24,7 +25,6 @@ import com.wordpress.rest.RestRequest;
 
 import org.json.JSONException;
 import org.json.JSONObject;
-import org.wordpress.android.BaseActivity;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.analytics.AnalyticsTracker;
@@ -36,6 +36,7 @@ import org.wordpress.android.util.AnalyticsUtils;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.DisplayUtils;
 import org.wordpress.android.util.FormatUtils;
+import org.wordpress.android.util.LocaleManager;
 import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.helpers.SwipeToRefreshHelper;
@@ -51,7 +52,7 @@ import static org.wordpress.android.util.WPSwipeToRefreshHelper.buildSwipeToRefr
 /**
  * Single item details activity.
  */
-public class StatsSingleItemDetailsActivity extends BaseActivity
+public class StatsSingleItemDetailsActivity extends AppCompatActivity
         implements StatsBarGraph.OnGestureListener {
     public static final String ARG_REMOTE_BLOG_ID = "ARG_REMOTE_BLOG_ID";
     public static final String ARG_REMOTE_ITEM_ID = "ARG_REMOTE_ITEM_ID";
@@ -101,6 +102,10 @@ public class StatsSingleItemDetailsActivity extends BaseActivity
     private static final String ARG_AVERAGES_EXPANDED_ROWS = "ARG_AVERAGES_EXPANDED_ROWS";
     private static final String ARG_RECENT_EXPANDED_ROWS = "ARG_RECENT_EXPANDED_ROWS";
 
+    @Override
+    protected void attachBaseContext(Context newBase) {
+        super.attachBaseContext(LocaleManager.setLocale(newBase));
+    }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {

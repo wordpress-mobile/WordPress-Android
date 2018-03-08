@@ -1,23 +1,30 @@
 package org.wordpress.android.ui.prefs;
 
 import android.app.FragmentManager;
+import android.content.Context;
 import android.os.Bundle;
 import android.support.v7.app.ActionBar;
+import android.support.v7.app.AppCompatActivity;
 import android.view.MenuItem;
 
-import org.wordpress.android.BaseActivity;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.fluxc.Dispatcher;
 import org.wordpress.android.fluxc.store.AccountStore;
+import org.wordpress.android.util.LocaleManager;
 
 import javax.inject.Inject;
 
-public class MyProfileActivity extends BaseActivity {
+public class MyProfileActivity extends AppCompatActivity {
     private static final String KEY_MY_PROFILE_FRAGMENT = "my-profile-fragment";
 
     @Inject Dispatcher mDispatcher;
     @Inject AccountStore mAccountStore;
+
+    @Override
+    protected void attachBaseContext(Context newBase) {
+        super.attachBaseContext(LocaleManager.setLocale(newBase));
+    }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {

@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.app.ActionBar;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.Editable;
@@ -23,7 +24,6 @@ import android.widget.TextView;
 import org.apache.commons.text.StringEscapeUtils;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
-import org.wordpress.android.BaseActivity;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.fluxc.Dispatcher;
@@ -31,6 +31,7 @@ import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.model.TermModel;
 import org.wordpress.android.fluxc.store.TaxonomyStore;
 import org.wordpress.android.util.ActivityUtils;
+import org.wordpress.android.util.LocaleManager;
 import org.wordpress.android.util.ToastUtils;
 
 import java.util.ArrayList;
@@ -38,7 +39,7 @@ import java.util.List;
 
 import javax.inject.Inject;
 
-public class PostSettingsTagsActivity extends BaseActivity implements TextWatcher, View.OnKeyListener {
+public class PostSettingsTagsActivity extends AppCompatActivity implements TextWatcher, View.OnKeyListener {
     public static final String KEY_TAGS = "KEY_TAGS";
     public static final String KEY_SELECTED_TAGS = "KEY_SELECTED_TAGS";
     private SiteModel mSite;
@@ -48,6 +49,11 @@ public class PostSettingsTagsActivity extends BaseActivity implements TextWatche
 
     @Inject Dispatcher mDispatcher;
     @Inject TaxonomyStore mTaxonomyStore;
+
+    @Override
+    protected void attachBaseContext(Context newBase) {
+        super.attachBaseContext(LocaleManager.setLocale(newBase));
+    }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {

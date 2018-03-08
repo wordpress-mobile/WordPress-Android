@@ -1,6 +1,8 @@
 package org.wordpress.android.ui;
 
 import android.app.AlertDialog;
+import android.app.ListActivity;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
@@ -25,13 +27,13 @@ import android.widget.TextView;
 import com.android.volley.toolbox.NetworkImageView;
 
 import org.apache.commons.text.StringEscapeUtils;
-import org.wordpress.android.BaseListActivity;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.store.SiteStore;
 import org.wordpress.android.fluxc.tools.FluxCImageLoader;
 import org.wordpress.android.ui.posts.EditPostActivity;
+import org.wordpress.android.util.LocaleManager;
 import org.wordpress.android.util.SiteUtils;
 import org.wordpress.android.util.ToastUtils;
 
@@ -40,7 +42,7 @@ import java.util.List;
 
 import javax.inject.Inject;
 
-public class AddQuickPressShortcutActivity extends BaseListActivity {
+public class AddQuickPressShortcutActivity extends ListActivity {
     public String[] blogNames;
     public int[] siteIds;
     public String[] accountUsers;
@@ -49,6 +51,11 @@ public class AddQuickPressShortcutActivity extends BaseListActivity {
 
     @Inject SiteStore mSiteStore;
     @Inject FluxCImageLoader mImageLoader;
+
+    @Override
+    protected void attachBaseContext(Context newBase) {
+        super.attachBaseContext(LocaleManager.setLocale(newBase));
+    }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {

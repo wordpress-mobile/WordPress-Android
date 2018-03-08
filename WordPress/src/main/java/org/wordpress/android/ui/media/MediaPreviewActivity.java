@@ -17,6 +17,7 @@ import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.ActionBar;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
 import android.util.SparseArray;
@@ -26,7 +27,6 @@ import android.view.ViewGroup;
 import android.view.animation.Animation;
 
 import org.greenrobot.eventbus.EventBus;
-import org.wordpress.android.BaseActivity;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.fluxc.model.MediaModel;
@@ -35,6 +35,7 @@ import org.wordpress.android.fluxc.store.MediaStore;
 import org.wordpress.android.fluxc.tools.FluxCImageLoader;
 import org.wordpress.android.util.AniUtils;
 import org.wordpress.android.util.AppLog;
+import org.wordpress.android.util.LocaleManager;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.widgets.WPViewPagerTransformer;
 import org.wordpress.android.widgets.WPViewPagerTransformer.TransformType;
@@ -43,7 +44,7 @@ import java.util.ArrayList;
 
 import javax.inject.Inject;
 
-public class MediaPreviewActivity extends BaseActivity implements MediaPreviewFragment.OnMediaTappedListener {
+public class MediaPreviewActivity extends AppCompatActivity implements MediaPreviewFragment.OnMediaTappedListener {
     private static final String ARG_ID_LIST = "id_list";
 
     private int mMediaId;
@@ -117,6 +118,11 @@ public class MediaPreviewActivity extends BaseActivity implements MediaPreviewFr
                 R.anim.fade_in,
                 R.anim.fade_out);
         ActivityCompat.startActivity(context, intent, options.toBundle());
+    }
+
+    @Override
+    protected void attachBaseContext(Context newBase) {
+        super.attachBaseContext(LocaleManager.setLocale(newBase));
     }
 
     @Override
