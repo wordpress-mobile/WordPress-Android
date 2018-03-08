@@ -263,8 +263,8 @@ public class SignupEpilogueFragment extends LoginBaseFormFragment<SignupEpilogue
                 // email does not exist in account store.
                 if (TextUtils.isEmpty(mAccountStore.getAccount().getEmail())) {
                     startProgress(false);
-                    // Skip progress and populate views when email does exist in account store.
                 } else {
+                    // Skip progress and populate views when email does exist in account store.
                     populateViews();
                 }
             } else {
