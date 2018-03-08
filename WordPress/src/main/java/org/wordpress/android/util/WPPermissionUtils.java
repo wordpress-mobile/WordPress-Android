@@ -12,6 +12,7 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
 import android.text.Html;
+import android.view.ContextThemeWrapper;
 
 import org.wordpress.android.R;
 import org.wordpress.android.analytics.AnalyticsTracker;
@@ -181,7 +182,7 @@ public class WPPermissionUtils {
                 activity.getString(R.string.permissions_denied_message),
                 "<strong>" + getPermissionName(activity, permission) + "</strong>");
 
-        AlertDialog.Builder builder = new AlertDialog.Builder(activity)
+        AlertDialog.Builder builder = new AlertDialog.Builder(new ContextThemeWrapper(activity, R.style.Calypso_Dialog))
                 .setMessage(Html.fromHtml(message))
                 .setPositiveButton(R.string.button_edit_permissions, new DialogInterface.OnClickListener() {
                     @Override
