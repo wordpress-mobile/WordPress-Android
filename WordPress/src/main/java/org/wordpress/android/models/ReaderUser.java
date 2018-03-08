@@ -10,76 +10,82 @@ import org.wordpress.android.util.UrlUtils;
 public class ReaderUser {
     public long userId;
     public long blogId;
-    private String userName;
-    private String displayName;
-    private String url;
-    private String profileUrl;
-    private String avatarUrl;
+    private String mUserName;
+    private String mDisplayName;
+    private String mUrl;
+    private String mProfileUrl;
+    private String mAvatarUrl;
 
     public static ReaderUser fromJson(JSONObject json) {
         ReaderUser user = new ReaderUser();
-        if (json==null)
+        if (json == null) {
             return user;
+        }
 
         user.userId = json.optLong("ID");
         user.blogId = json.optLong("site_ID");
 
-        user.userName = JSONUtils.getString(json, "username");
-        user.url = JSONUtils.getString(json, "URL"); // <-- this isn't necessarily a wp blog
-        user.profileUrl = JSONUtils.getString(json, "profile_URL");
-        user.avatarUrl = JSONUtils.getString(json, "avatar_URL");
+        user.mUserName = JSONUtils.getString(json, "username");
+        user.mUrl = JSONUtils.getString(json, "URL"); // <-- this isn't necessarily a wp blog
+        user.mProfileUrl = JSONUtils.getString(json, "profile_URL");
+        user.mAvatarUrl = JSONUtils.getString(json, "avatar_URL");
 
         // "me" api call (current user) has "display_name", others have "name"
         if (json.has("display_name")) {
-            user.displayName = JSONUtils.getStringDecoded(json, "display_name");
+            user.mDisplayName = JSONUtils.getStringDecoded(json, "display_name");
         } else {
-            user.displayName = JSONUtils.getStringDecoded(json, "name");
+            user.mDisplayName = JSONUtils.getStringDecoded(json, "name");
         }
 
         return user;
     }
 
     public String getUserName() {
-        return StringUtils.notNullStr(userName);
+        return StringUtils.notNullStr(mUserName);
     }
+
     public void setUserName(String userName) {
-        this.userName = StringUtils.notNullStr(userName);
+        this.mUserName = StringUtils.notNullStr(userName);
     }
 
     public String getDisplayName() {
-        return StringUtils.notNullStr(displayName);
+        return StringUtils.notNullStr(mDisplayName);
     }
+
     public void setDisplayName(String displayName) {
-        this.displayName = StringUtils.notNullStr(displayName);
+        this.mDisplayName = StringUtils.notNullStr(displayName);
     }
 
     public String getUrl() {
-        return StringUtils.notNullStr(url);
+        return StringUtils.notNullStr(mUrl);
     }
+
     public void setUrl(String url) {
-        this.url = StringUtils.notNullStr(url);
+        this.mUrl = StringUtils.notNullStr(url);
     }
 
     public String getProfileUrl() {
-        return StringUtils.notNullStr(profileUrl);
+        return StringUtils.notNullStr(mProfileUrl);
     }
+
     public void setProfileUrl(String profileUrl) {
-        this.profileUrl = StringUtils.notNullStr(profileUrl);
+        this.mProfileUrl = StringUtils.notNullStr(profileUrl);
     }
 
     public String getAvatarUrl() {
-        return StringUtils.notNullStr(avatarUrl);
+        return StringUtils.notNullStr(mAvatarUrl);
     }
+
     public void setAvatarUrl(String avatarUrl) {
-        this.avatarUrl = StringUtils.notNullStr(avatarUrl);
+        this.mAvatarUrl = StringUtils.notNullStr(avatarUrl);
     }
 
     public boolean hasUrl() {
-        return !TextUtils.isEmpty(url);
+        return !TextUtils.isEmpty(mUrl);
     }
 
     public boolean hasAvatarUrl() {
-        return !TextUtils.isEmpty(avatarUrl);
+        return !TextUtils.isEmpty(mAvatarUrl);
     }
 
     public boolean hasBlogId() {
@@ -89,33 +95,41 @@ public class ReaderUser {
     /*
      * not stored - used by ReaderUserAdapter for performance
      */
-    private transient String urlDomain;
+    private transient String mUrlDomain;
+
     public String getUrlDomain() {
-        if (urlDomain == null) {
+        if (mUrlDomain == null) {
             if (hasUrl()) {
-                urlDomain = UrlUtils.getHost(getUrl());
+                mUrlDomain = UrlUtils.getHost(getUrl());
             } else {
-                urlDomain = "";
+                mUrlDomain = "";
             }
         }
-        return urlDomain;
+        return mUrlDomain;
     }
 
     public boolean isSameUser(ReaderUser user) {
-        if (user == null)
+        if (user == null) {
             return false;
-        if (this.userId != user.userId)
+        }
+        if (this.userId != user.userId) {
             return false;
-        if (!this.getAvatarUrl().equals(user.getAvatarUrl()))
+        }
+        if (!this.getAvatarUrl().equals(user.getAvatarUrl())) {
             return false;
-        if (!this.getDisplayName().equals(user.getDisplayName()))
+        }
+        if (!this.getDisplayName().equals(user.getDisplayName())) {
             return false;
-        if (!this.getUserName().equals(user.getUserName()))
+        }
+        if (!this.getUserName().equals(user.getUserName())) {
             return false;
-        if (!this.getUrl().equals(user.getUrl()))
+        }
+        if (!this.getUrl().equals(user.getUrl())) {
             return false;
-        if (!this.getProfileUrl().equals(user.getProfileUrl()))
+        }
+        if (!this.getProfileUrl().equals(user.getProfileUrl())) {
             return false;
+        }
         return true;
     }
 }

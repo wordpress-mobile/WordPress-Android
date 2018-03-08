@@ -11,7 +11,6 @@ import android.widget.Button;
 
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
-import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.store.AccountStore;
 import org.wordpress.android.ui.JetpackConnectionWebViewActivity;
@@ -27,9 +26,7 @@ import static org.wordpress.android.ui.JetpackConnectionWebViewActivity.Source.S
  */
 
 public class StatsConnectJetpackActivity extends AppCompatActivity {
-
-    @Inject
-    AccountStore mAccountStore;
+    @Inject AccountStore mAccountStore;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -55,7 +52,8 @@ public class StatsConnectJetpackActivity extends AppCompatActivity {
         setupButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startJetpackConnectionFlow((SiteModel) StatsConnectJetpackActivity.this.getIntent().getSerializableExtra(SITE));
+                startJetpackConnectionFlow(
+                        (SiteModel) StatsConnectJetpackActivity.this.getIntent().getSerializableExtra(SITE));
             }
         });
     }
@@ -72,11 +70,8 @@ public class StatsConnectJetpackActivity extends AppCompatActivity {
     }
 
     private void startJetpackConnectionFlow(SiteModel siteModel) {
-        if (mAccountStore.hasAccessToken()) {
-            JetpackConnectionWebViewActivity.openJetpackConnectionFlow(StatsConnectJetpackActivity.this, STATS, siteModel);
-        } else {
-            JetpackConnectionWebViewActivity.openUnauthorizedJetpackConnectionFlow(StatsConnectJetpackActivity.this, STATS, siteModel);
-        }
+        JetpackConnectionWebViewActivity
+                .startJetpackConnectionFlow(this, STATS, siteModel, mAccountStore.hasAccessToken());
         finish();
     }
 }

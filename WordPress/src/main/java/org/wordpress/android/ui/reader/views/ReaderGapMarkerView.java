@@ -57,7 +57,7 @@ public class ReaderGapMarkerView extends RelativeLayout {
 
     private void fillTheGap() {
         if (mCurrentTag == null
-                || !NetworkUtils.checkConnection(getContext())) {
+            || !NetworkUtils.checkConnection(getContext())) {
             return;
         }
 

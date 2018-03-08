@@ -13,7 +13,11 @@
         android:layout_marginRight="@dimen/margin_large"
         android:orientation="vertical"
         android:paddingLeft="@dimen/content_margin"
-        android:paddingRight="@dimen/content_margin">
+        android:paddingRight="@dimen/content_margin"
+        android:layout_marginEnd="@dimen/margin_large"
+        android:paddingStart="@dimen/content_margin"
+        android:paddingEnd="@dimen/content_margin"
+        android:layout_marginStart="@dimen/margin_large">
 
         <com.android.volley.toolbox.NetworkImageView
             android:id="@+id/image_plan_icon"

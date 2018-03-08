@@ -9,7 +9,8 @@ public class AnalyticsMetadata {
     private String mUsername = "";
     private String mEmail = "";
 
-    public AnalyticsMetadata() {}
+    public AnalyticsMetadata() {
+    }
 
     public boolean isUserConnected() {
         return mIsUserConnected;

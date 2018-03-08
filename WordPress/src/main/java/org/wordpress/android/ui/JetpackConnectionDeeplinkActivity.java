@@ -36,13 +36,11 @@ import static org.wordpress.android.ui.RequestCodes.JETPACK_LOGIN;
  * Redirects users to the stats activity if the jetpack connection was succesful
  */
 public class JetpackConnectionDeeplinkActivity extends AppCompatActivity {
-    private String reason;
-    private Source source;
+    private String mReason;
+    private Source mSource;
 
-    @Inject
-    AccountStore mAccountStore;
-    @Inject
-    Dispatcher mDispatcher;
+    @Inject AccountStore mAccountStore;
+    @Inject Dispatcher mDispatcher;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -73,8 +71,8 @@ public class JetpackConnectionDeeplinkActivity extends AppCompatActivity {
 
             //Non-empty reason does not mean we're not connected to Jetpack
             //- one of the errors is "already-connected"
-            reason = uri.getQueryParameter("reason");
-            source = Source.fromString(uri.getQueryParameter("source"));
+            mReason = uri.getQueryParameter("reason");
+            mSource = Source.fromString(uri.getQueryParameter("source"));
             if (mAccountStore.hasAccessToken()) {
                 // if user is signed in wpcom show the stats or notifications right away
                 trackResult();
@@ -106,16 +104,16 @@ public class JetpackConnectionDeeplinkActivity extends AppCompatActivity {
     }
 
     private void trackResult() {
-        if (!TextUtils.isEmpty(reason)) {
-            AppLog.e(AppLog.T.API, "Could not connect to Jetpack, reason: "+reason);
-            ToastUtils.showToast(this, reason);
+        if (!TextUtils.isEmpty(mReason)) {
+            AppLog.e(AppLog.T.API, "Could not connect to Jetpack, reason: "+mReason);
+            ToastUtils.showToast(this, mReason);
         } else {
-            trackWithSource(Stat.SIGNED_INTO_JETPACK, source);
+            trackWithSource(Stat.SIGNED_INTO_JETPACK, mSource);
         }
     }
 
     private void finishAndGoBackToSource() {
-        if (source == Source.STATS) {
+        if (mSource == Source.STATS) {
             SiteModel site = (SiteModel) getIntent().getSerializableExtra(SITE);
             mDispatcher.dispatch(SiteActionBuilder.newFetchSiteAction(site));
             ActivityLauncher.viewBlogStatsAfterJetpackSetup(this, site);

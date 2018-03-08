@@ -10,7 +10,6 @@ import android.view.KeyEvent;
  * using a custom XML attribute.
  */
 public class EditTextWithKeyBackListener extends AppCompatEditText {
-
     private OnImeBackListener mOnImeBackListener;
 
     public EditTextWithKeyBackListener(Context context) {
@@ -26,7 +25,7 @@ public class EditTextWithKeyBackListener extends AppCompatEditText {
     }
 
     public boolean onKeyPreIme(int keyCode, KeyEvent event) {
-        if(event.getKeyCode() == KeyEvent.KEYCODE_BACK && event.getAction() == KeyEvent.ACTION_UP) {
+        if (event.getKeyCode() == KeyEvent.KEYCODE_BACK && event.getAction() == KeyEvent.ACTION_UP) {
             if (this.mOnImeBackListener != null) {
                 this.mOnImeBackListener.onImeBack();
             }

@@ -13,10 +13,10 @@ public class Suggestion {
 
     public long siteID;
 
-    private String userLogin;
-    private String displayName;
-    private String imageUrl;
-    private String taxonomy;
+    private String mUserLogin;
+    private String mDisplayName;
+    private String mImageUrl;
+    private String mTaxonomy;
 
     public Suggestion(long siteID,
                       String userLogin,
@@ -24,10 +24,10 @@ public class Suggestion {
                       String imageUrl,
                       String taxonomy) {
         this.siteID = siteID;
-        this.userLogin = userLogin;
-        this.displayName = displayName;
-        this.imageUrl = imageUrl;
-        this.taxonomy = taxonomy;
+        mUserLogin = userLogin;
+        mDisplayName = displayName;
+        mImageUrl = imageUrl;
+        mTaxonomy = taxonomy;
     }
 
     public static Suggestion fromJSON(JSONObject json, long siteID) {
@@ -59,13 +59,18 @@ public class Suggestion {
     }
 
     public String getUserLogin() {
-        return StringUtils.notNullStr(userLogin);
+        return StringUtils.notNullStr(mUserLogin);
     }
+
     public String getDisplayName() {
-        return StringUtils.notNullStr(displayName);
+        return StringUtils.notNullStr(mDisplayName);
     }
+
     public String getImageUrl() {
-        return StringUtils.notNullStr(imageUrl);
+        return StringUtils.notNullStr(mImageUrl);
     }
-    public String getTaxonomy() { return StringUtils.notNullStr(taxonomy); }
+
+    public String getTaxonomy() {
+        return StringUtils.notNullStr(mTaxonomy);
+    }
 }

@@ -8,11 +8,10 @@ import java.util.Locale;
  * Methods for dealing with i18n messages
  */
 public class LanguageUtils {
-
     public static Locale getCurrentDeviceLanguage(Context context) {
-        //better use getConfiguration as it has the latest locale configuration change.
-        //Otherwise Locale.getDefault().getLanguage() gets
-        //the config upon application launch.
+        // better use getConfiguration as it has the latest locale configuration change.
+        // Otherwise Locale.getDefault().getLanguage() gets
+        // the config upon application launch.
         Locale deviceLocale = context != null ? context.getResources().getConfiguration().locale : Locale.getDefault();
         return deviceLocale;
     }
@@ -29,7 +28,7 @@ public class LanguageUtils {
     /**
      * Patches a deviceLanguageCode if any of deprecated values iw, id, or yi
      */
-    public static String patchDeviceLanguageCode(String deviceLanguageCode){
+    public static String patchDeviceLanguageCode(String deviceLanguageCode) {
         String patchedCode = deviceLanguageCode;
         /*
          <p>Note that Java uses several deprecated two-letter codes. The Hebrew ("he") language
@@ -38,15 +37,15 @@ public class LanguageUtils {
          * instances returned by the various lookup methods.
          */
         if (deviceLanguageCode != null) {
-            if (deviceLanguageCode.startsWith("iw"))
+            if (deviceLanguageCode.startsWith("iw")) {
                 patchedCode = deviceLanguageCode.replace("iw", "he");
-            else if (deviceLanguageCode.startsWith("in"))
+            } else if (deviceLanguageCode.startsWith("in")) {
                 patchedCode = deviceLanguageCode.replace("in", "id");
-            else if (deviceLanguageCode.startsWith("ji"))
+            } else if (deviceLanguageCode.startsWith("ji")) {
                 patchedCode = deviceLanguageCode.replace("ji", "yi");
+            }
         }
 
         return patchedCode;
     }
-
 }

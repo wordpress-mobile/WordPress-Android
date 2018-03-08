@@ -30,10 +30,10 @@ import java.util.List;
 import javax.inject.Inject;
 
 public class PersonDetailFragment extends Fragment {
-    private static String ARG_CURRENT_USER_ID = "current_user_id";
-    private static String ARG_PERSON_ID = "person_id";
-    private static String ARG_LOCAL_TABLE_BLOG_ID = "local_table_blog_id";
-    private static String ARG_PERSON_TYPE = "person_type";
+    private static final String ARG_CURRENT_USER_ID = "current_user_id";
+    private static final String ARG_PERSON_ID = "person_id";
+    private static final String ARG_LOCAL_TABLE_BLOG_ID = "local_table_blog_id";
+    private static final String ARG_PERSON_TYPE = "person_type";
 
     private long mCurrentUserId;
     private long mPersonId;
@@ -131,7 +131,9 @@ public class PersonDetailFragment extends Fragment {
     }
 
     public void refreshPersonDetails() {
-        if (!isAdded()) return;
+        if (!isAdded()) {
+            return;
+        }
 
         Person person = loadPerson();
         if (person != null) {
@@ -175,7 +177,7 @@ public class PersonDetailFragment extends Fragment {
             changeDisplayNameTopPadding(padding);
         } else {
             AppLog.w(AppLog.T.PEOPLE, "Person returned null from DB for personID: " + mPersonId
-                    + " & localTableBlogID: " + mLocalTableBlogId);
+                                      + " & localTableBlogID: " + mLocalTableBlogId);
         }
     }
 
@@ -212,7 +214,9 @@ public class PersonDetailFragment extends Fragment {
         }
 
         RoleChangeDialogFragment dialog = RoleChangeDialogFragment.newInstance(person.getPersonID(),
-                mSiteStore.getSiteByLocalId(mLocalTableBlogId), person.getRole());
+                                                                               mSiteStore.getSiteByLocalId(
+                                                                                       mLocalTableBlogId),
+                                                                               person.getRole());
         dialog.show(getFragmentManager(), null);
     }
 
@@ -225,7 +229,7 @@ public class PersonDetailFragment extends Fragment {
         if (mDisplayNameTextView == null) {
             return;
         }
-        mDisplayNameTextView.setPadding(0, newPadding, 0 , 0);
+        mDisplayNameTextView.setPadding(0, newPadding, 0, 0);
     }
 
     public Person loadPerson() {

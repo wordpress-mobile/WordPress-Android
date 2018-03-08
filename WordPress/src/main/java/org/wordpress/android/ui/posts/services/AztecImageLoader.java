@@ -18,13 +18,12 @@ import org.wordpress.aztec.Html;
 import java.io.File;
 
 public class AztecImageLoader implements Html.ImageGetter {
-
-    private final Drawable loadingInProgress;
-    private Context context;
+    private final Drawable mLoadingInProgress;
+    private Context mContext;
 
     public AztecImageLoader(Context context, Drawable loadingInProgressDrawable) {
-        this.context = context;
-        this.loadingInProgress = loadingInProgressDrawable;
+        this.mContext = context;
+        this.mLoadingInProgress = loadingInProgressDrawable;
     }
 
     @Override
@@ -40,21 +39,21 @@ public class AztecImageLoader implements Html.ImageGetter {
             // By default, BitmapFactory.decodeFile sets the bitmap's density to the device default so, we need
             // to correctly set the input density to 160 ourselves.
             cachedBitmap.setDensity(DisplayMetrics.DENSITY_DEFAULT);
-            callbacks.onImageLoaded(new BitmapDrawable(context.getResources(), cachedBitmap));
+            callbacks.onImageLoaded(new BitmapDrawable(mContext.getResources(), cachedBitmap));
             return;
         }
 
         if (new File(url).exists()) {
-            int orientation = ImageUtils.getImageOrientation(this.context, url);
+            int orientation = ImageUtils.getImageOrientation(this.mContext, url);
             byte[] bytes = ImageUtils.createThumbnailFromUri(
-                   context, Uri.parse(url), maxWidth, null, orientation);
+                    mContext, Uri.parse(url), maxWidth, null, orientation);
             if (bytes != null) {
                 Bitmap bitmap = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
                 if (bitmap != null) {
                     WordPress.getBitmapCache().putBitmap(cacheKey, bitmap);
                     bitmap.setDensity(DisplayMetrics.DENSITY_DEFAULT);
                 }
-                BitmapDrawable bitmapDrawable = new BitmapDrawable(context.getResources(), bitmap);
+                BitmapDrawable bitmapDrawable = new BitmapDrawable(mContext.getResources(), bitmap);
                 callbacks.onImageLoaded(bitmapDrawable);
             } else {
                 callbacks.onImageFailed();
@@ -62,7 +61,7 @@ public class AztecImageLoader implements Html.ImageGetter {
             return;
         }
 
-        callbacks.onImageLoading(loadingInProgress);
+        callbacks.onImageLoading(mLoadingInProgress);
 
         WordPress.sImageLoader.get(url, new ImageLoader.ImageListener() {
             @Override
@@ -80,7 +79,7 @@ public class AztecImageLoader implements Html.ImageGetter {
                     // By default, BitmapFactory.decodeFile sets the bitmap's density to the device default so, we need
                     // to correctly set the input density to 160 ourselves.
                     bitmap.setDensity(DisplayMetrics.DENSITY_DEFAULT);
-                    BitmapDrawable bitmapDrawable = new BitmapDrawable(context.getResources(), bitmap);
+                    BitmapDrawable bitmapDrawable = new BitmapDrawable(mContext.getResources(), bitmap);
                     callbacks.onImageLoaded(bitmapDrawable);
                 }
             }

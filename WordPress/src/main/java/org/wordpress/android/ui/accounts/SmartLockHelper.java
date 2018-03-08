@@ -33,6 +33,7 @@ public class SmartLockHelper {
 
     public interface Callback {
         void onCredentialRetrieved(Credential credential);
+
         void onCredentialsUnavailable();
     }
 
@@ -40,8 +41,8 @@ public class SmartLockHelper {
         if (activity instanceof OnConnectionFailedListener && activity instanceof ConnectionCallbacks) {
             mActivity = new WeakReference<>(activity);
         } else {
-            throw new RuntimeException("SmartLockHelper constructor needs an activity that " +
-                    "implements OnConnectionFailedListener and ConnectionCallbacks");
+            throw new RuntimeException("SmartLockHelper constructor needs an activity that "
+                                       + "implements OnConnectionFailedListener and ConnectionCallbacks");
         }
     }
 
@@ -127,7 +128,8 @@ public class SmartLockHelper {
             return;
         }
         Credential credential = new Credential.Builder(username).setPassword(password)
-                .setName(displayName).setProfilePictureUri(profilePicture).build();
+                                                                .setName(displayName)
+                                                                .setProfilePictureUri(profilePicture).build();
         Auth.CredentialsApi.save(mCredentialsClient, credential).setResultCallback(
                 new ResultCallback<Status>() {
                     @Override
@@ -160,7 +162,7 @@ public class SmartLockHelper {
                     @Override
                     public void onResult(@NonNull Status status) {
                         AppLog.i(T.NUX, status.isSuccess() ? "SmartLock: credentials deleted for username: " + username
-                                : "SmartLock: Credentials not deleted for username: " + username );
+                                : "SmartLock: Credentials not deleted for username: " + username);
                     }
                 });
     }

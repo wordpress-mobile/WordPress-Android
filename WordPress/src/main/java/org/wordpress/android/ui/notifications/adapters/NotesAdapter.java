@@ -2,11 +2,14 @@ package org.wordpress.android.ui.notifications.adapters;
 
 import android.content.Context;
 import android.os.AsyncTask;
+import android.support.v4.text.BidiFormatter;
+import android.support.v4.view.ViewCompat;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewParent;
 import android.widget.TextView;
 
 import org.wordpress.android.R;
@@ -16,6 +19,7 @@ import org.wordpress.android.models.Note;
 import org.wordpress.android.ui.comments.CommentUtils;
 import org.wordpress.android.ui.notifications.NotificationsListFragment;
 import org.wordpress.android.util.GravatarUtils;
+import org.wordpress.android.util.RtlUtils;
 import org.wordpress.android.widgets.NoticonTextView;
 import org.wordpress.android.widgets.WPNetworkImageView;
 
@@ -24,7 +28,6 @@ import java.util.Collections;
 import java.util.List;
 
 public class NotesAdapter extends RecyclerView.Adapter<NotesAdapter.NoteViewHolder> {
-
     private final int mAvatarSz;
     private final int mColorRead;
     private final int mColorUnread;
@@ -110,7 +113,7 @@ public class NotesAdapter extends RecyclerView.Adapter<NotesAdapter.NoteViewHold
             filteredNotes.addAll(notes);
             return;
         }
-        for( Note currentNote : notes) {
+        for (Note currentNote : notes) {
             switch (filter) {
                 case FILTER_COMMENT:
                     if (currentNote.isCommentType()) {
@@ -190,21 +193,21 @@ public class NotesAdapter extends RecyclerView.Adapter<NotesAdapter.NoteViewHold
         }
 
         if (previousTimeGroup != null && previousTimeGroup == timeGroup) {
-            noteViewHolder.headerView.setVisibility(View.GONE);
+            noteViewHolder.mHeaderView.setVisibility(View.GONE);
         } else {
             if (timeGroup == Note.NoteTimeGroup.GROUP_TODAY) {
-                noteViewHolder.headerText.setText(R.string.stats_timeframe_today);
+                noteViewHolder.mHeaderText.setText(R.string.stats_timeframe_today);
             } else if (timeGroup == Note.NoteTimeGroup.GROUP_YESTERDAY) {
-                noteViewHolder.headerText.setText(R.string.stats_timeframe_yesterday);
+                noteViewHolder.mHeaderText.setText(R.string.stats_timeframe_yesterday);
             } else if (timeGroup == Note.NoteTimeGroup.GROUP_OLDER_TWO_DAYS) {
-                noteViewHolder.headerText.setText(R.string.older_two_days);
+                noteViewHolder.mHeaderText.setText(R.string.older_two_days);
             } else if (timeGroup == Note.NoteTimeGroup.GROUP_OLDER_WEEK) {
-                noteViewHolder.headerText.setText(R.string.older_last_week);
+                noteViewHolder.mHeaderText.setText(R.string.older_last_week);
             } else {
-                noteViewHolder.headerText.setText(R.string.older_month);
+                noteViewHolder.mHeaderText.setText(R.string.older_month);
             }
 
-            noteViewHolder.headerView.setVisibility(View.VISIBLE);
+            noteViewHolder.mHeaderView.setVisibility(View.VISIBLE);
         }
 
         CommentStatus commentStatus = CommentStatus.ALL;
@@ -220,40 +223,51 @@ public class NotesAdapter extends RecyclerView.Adapter<NotesAdapter.NoteViewHold
         CharSequence noteSubjectSpanned = note.getFormattedSubject();
         // Trim the '\n\n' added by Html.fromHtml()
         noteSubjectSpanned = noteSubjectSpanned.subSequence(0, TextUtils.getTrimmedLength(noteSubjectSpanned));
-        noteViewHolder.txtSubject.setText(noteSubjectSpanned);
+        noteViewHolder.mTxtSubject.setText(noteSubjectSpanned);
 
         String noteSubjectNoticon = note.getCommentSubjectNoticon();
         if (!TextUtils.isEmpty(noteSubjectNoticon)) {
-            CommentUtils.indentTextViewFirstLine(noteViewHolder.txtSubject, mTextIndentSize);
-            noteViewHolder.txtSubjectNoticon.setText(noteSubjectNoticon);
-            noteViewHolder.txtSubjectNoticon.setVisibility(View.VISIBLE);
+            ViewParent parent = noteViewHolder.mTxtSubject.getParent();
+            // Fix position of the subject noticon in the RtL mode
+            if (parent instanceof ViewGroup) {
+                int textDirection = BidiFormatter.getInstance().isRtl(noteViewHolder.mTxtSubject.getText())
+                        ? ViewCompat.LAYOUT_DIRECTION_RTL : ViewCompat.LAYOUT_DIRECTION_LTR;
+                ViewCompat.setLayoutDirection((ViewGroup) parent, textDirection);
+            }
+            // mirror noticon in the rtl mode
+            if (RtlUtils.isRtl(noteViewHolder.itemView.getContext())) {
+                noteViewHolder.mTxtSubjectNoticon.setScaleX(-1);
+            }
+            CommentUtils.indentTextViewFirstLine(noteViewHolder.mTxtSubject, mTextIndentSize);
+            noteViewHolder.mTxtSubjectNoticon.setText(noteSubjectNoticon);
+            noteViewHolder.mTxtSubjectNoticon.setVisibility(View.VISIBLE);
         } else {
-            noteViewHolder.txtSubjectNoticon.setVisibility(View.GONE);
+            noteViewHolder.mTxtSubjectNoticon.setVisibility(View.GONE);
         }
 
         String noteSnippet = note.getCommentSubject();
         if (!TextUtils.isEmpty(noteSnippet)) {
-            noteViewHolder.txtSubject.setMaxLines(2);
-            noteViewHolder.txtDetail.setText(noteSnippet);
-            noteViewHolder.txtDetail.setVisibility(View.VISIBLE);
+            noteViewHolder.mTxtSubject.setMaxLines(2);
+            noteViewHolder.mTxtDetail.setText(noteSnippet);
+            noteViewHolder.mTxtDetail.setVisibility(View.VISIBLE);
         } else {
-            noteViewHolder.txtSubject.setMaxLines(3);
-            noteViewHolder.txtDetail.setVisibility(View.GONE);
+            noteViewHolder.mTxtSubject.setMaxLines(3);
+            noteViewHolder.mTxtDetail.setVisibility(View.GONE);
         }
 
         String avatarUrl = GravatarUtils.fixGravatarUrl(note.getIconURL(), mAvatarSz);
-        noteViewHolder.imgAvatar.setImageUrl(avatarUrl, WPNetworkImageView.ImageType.AVATAR);
+        noteViewHolder.mImgAvatar.setImageUrl(avatarUrl, WPNetworkImageView.ImageType.AVATAR);
 
         boolean isUnread = note.isUnread();
 
         String noticonCharacter = note.getNoticonCharacter();
-        noteViewHolder.noteIcon.setText(noticonCharacter);
+        noteViewHolder.mNoteIcon.setText(noticonCharacter);
         if (commentStatus == CommentStatus.UNAPPROVED) {
-            noteViewHolder.noteIcon.setBackgroundResource(R.drawable.shape_oval_orange);
+            noteViewHolder.mNoteIcon.setBackgroundResource(R.drawable.shape_oval_orange);
         } else if (isUnread) {
-            noteViewHolder.noteIcon.setBackgroundResource(R.drawable.shape_oval_blue_white_stroke);
+            noteViewHolder.mNoteIcon.setBackgroundResource(R.drawable.shape_oval_blue_white_stroke);
         } else {
-            noteViewHolder.noteIcon.setBackgroundResource(R.drawable.shape_oval_grey);
+            noteViewHolder.mNoteIcon.setBackgroundResource(R.drawable.shape_oval_grey);
         }
 
         if (isUnread) {
@@ -297,7 +311,6 @@ public class NotesAdapter extends RecyclerView.Adapter<NotesAdapter.NoteViewHold
     }
 
     private class ReloadNotesFromDBTask extends AsyncTask<Void, Void, ArrayList<Note>> {
-
         @Override
         protected ArrayList<Note> doInBackground(Void... voids) {
             return NotificationsTable.getLatestNotes();
@@ -312,26 +325,26 @@ public class NotesAdapter extends RecyclerView.Adapter<NotesAdapter.NoteViewHold
     }
 
     class NoteViewHolder extends RecyclerView.ViewHolder {
-        private final View headerView;
-        private final View contentView;
-        private final TextView headerText;
+        private final View mHeaderView;
+        private final View mContentView;
+        private final TextView mHeaderText;
 
-        private final TextView txtSubject;
-        private final TextView txtSubjectNoticon;
-        private final TextView txtDetail;
-        private final WPNetworkImageView imgAvatar;
-        private final NoticonTextView noteIcon;
+        private final TextView mTxtSubject;
+        private final TextView mTxtSubjectNoticon;
+        private final TextView mTxtDetail;
+        private final WPNetworkImageView mImgAvatar;
+        private final NoticonTextView mNoteIcon;
 
         NoteViewHolder(View view) {
             super(view);
-            headerView = view.findViewById(R.id.time_header);
-            contentView = view.findViewById(R.id.note_content_container);
-            headerText = (TextView)view.findViewById(R.id.header_date_text);
-            txtSubject = (TextView) view.findViewById(R.id.note_subject);
-            txtSubjectNoticon = (TextView) view.findViewById(R.id.note_subject_noticon);
-            txtDetail = (TextView) view.findViewById(R.id.note_detail);
-            imgAvatar = (WPNetworkImageView) view.findViewById(R.id.note_avatar);
-            noteIcon = (NoticonTextView) view.findViewById(R.id.note_icon);
+            mHeaderView = view.findViewById(R.id.time_header);
+            mContentView = view.findViewById(R.id.note_content_container);
+            mHeaderText = (TextView) view.findViewById(R.id.header_date_text);
+            mTxtSubject = (TextView) view.findViewById(R.id.note_subject);
+            mTxtSubjectNoticon = (TextView) view.findViewById(R.id.note_subject_noticon);
+            mTxtDetail = (TextView) view.findViewById(R.id.note_detail);
+            mImgAvatar = (WPNetworkImageView) view.findViewById(R.id.note_avatar);
+            mNoteIcon = (NoticonTextView) view.findViewById(R.id.note_icon);
 
             itemView.setOnClickListener(mOnClickListener);
         }
@@ -341,7 +354,7 @@ public class NotesAdapter extends RecyclerView.Adapter<NotesAdapter.NoteViewHold
         @Override
         public void onClick(View v) {
             if (mOnNoteClickListener != null && v.getTag() instanceof String) {
-                mOnNoteClickListener.onClickNote((String)v.getTag());
+                mOnNoteClickListener.onClickNote((String) v.getTag());
             }
         }
     };

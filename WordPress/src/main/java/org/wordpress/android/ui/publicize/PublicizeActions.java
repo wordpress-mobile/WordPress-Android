@@ -19,6 +19,7 @@ import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.JSONUtils;
 
 import java.util.HashMap;
+import java.util.Locale;
 import java.util.Map;
 
 import de.greenrobot.event.EventBus;
@@ -29,7 +30,9 @@ import de.greenrobot.event.EventBus;
 public class PublicizeActions {
     public interface OnPublicizeActionListener {
         void onRequestConnect(PublicizeService service);
+
         void onRequestDisconnect(PublicizeConnection connection);
+
         void onRequestReconnect(PublicizeService service, PublicizeConnection connection);
     }
 
@@ -37,7 +40,7 @@ public class PublicizeActions {
      * disconnect a currently connected publicize service
      */
     public static void disconnect(@NonNull final PublicizeConnection connection) {
-        String path = String.format(
+        String path = String.format(Locale.ROOT,
                 "sites/%d/publicize-connections/%d/delete", connection.siteId, connection.connectionId);
 
         RestRequest.Listener listener = new RestRequest.Listener() {
@@ -64,7 +67,7 @@ public class PublicizeActions {
     /*
      * create a new publicize service connection for a specific site
      */
-    public static void connect(long siteId, String serviceId, long currentUserId){
+    public static void connect(long siteId, String serviceId, long currentUserId) {
         if (TextUtils.isEmpty(serviceId)) {
             AppLog.w(AppLog.T.SHARING, "cannot connect without service");
             EventBus.getDefault().post(new ActionCompleted(false, ConnectAction.CONNECT));
@@ -84,7 +87,8 @@ public class PublicizeActions {
             public void onResponse(JSONObject jsonObject) {
                 if (shouldShowChooserDialog(siteId, serviceId, jsonObject)) {
                     // show dialog showing multiple options
-                    EventBus.getDefault().post(new PublicizeEvents.ActionRequestChooseAccount(siteId, serviceId, jsonObject));
+                    EventBus.getDefault()
+                            .post(new PublicizeEvents.ActionRequestChooseAccount(siteId, serviceId, jsonObject));
                 } else {
                     long keyringConnectionId = parseServiceKeyringId(serviceId, currentUserId, jsonObject);
                     connectStepTwo(siteId, keyringConnectionId);
@@ -127,7 +131,7 @@ public class PublicizeActions {
 
         Map<String, String> params = new HashMap<>();
         params.put("keyring_connection_ID", Long.toString(keyringConnectionId));
-        String path = String.format("/sites/%d/publicize-connections/new", siteId);
+        String path = String.format(Locale.ROOT, "/sites/%d/publicize-connections/new", siteId);
         WordPress.getRestClientUtilsV1_1().post(path, params, null, listener, errorListener);
     }
 

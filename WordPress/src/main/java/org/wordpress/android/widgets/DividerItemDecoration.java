@@ -5,6 +5,7 @@ import android.content.res.TypedArray;
 import android.graphics.Canvas;
 import android.graphics.Rect;
 import android.graphics.drawable.Drawable;
+import android.support.v4.view.ViewCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
@@ -16,7 +17,7 @@ import android.view.View;
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *      http://www.apache.org/licenses/LICENSE-2.0
+ * http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -25,7 +26,6 @@ import android.view.View;
  * limitations under the License.
  */
 public class DividerItemDecoration extends RecyclerView.ItemDecoration {
-
     private static final int[] ATTRS = new int[]{
             android.R.attr.listDivider
     };
@@ -62,8 +62,8 @@ public class DividerItemDecoration extends RecyclerView.ItemDecoration {
     }
 
     public void drawVertical(Canvas c, RecyclerView parent) {
-        final int left = parent.getPaddingLeft();
-        final int right = parent.getWidth() - parent.getPaddingRight();
+        final int left = ViewCompat.getPaddingStart(parent);
+        final int right = parent.getWidth() - ViewCompat.getPaddingEnd(parent);
 
         final int childCount = parent.getChildCount();
         for (int i = 0; i < childCount; i++) {

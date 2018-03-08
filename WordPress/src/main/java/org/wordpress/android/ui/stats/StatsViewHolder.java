@@ -64,7 +64,7 @@ public class StatsViewHolder {
                         String url = linkURL;
                         AppLog.d(AppLog.T.UTILS, "Tapped on the Link: " + url);
                         if (url.startsWith("https://wordpress.com/my-stats")
-                                || url.startsWith("http://wordpress.com/my-stats")) {
+                            || url.startsWith("http://wordpress.com/my-stats")) {
                             // make sure to load the no-chrome version of Stats over https
                             url = UrlUtils.makeHttps(url);
                             if (url.contains("?")) {
@@ -84,7 +84,7 @@ public class StatsViewHolder {
                         }
                     }
                 }
-        );
+                                     );
 
         entryTextView.setTextColor(entryTextView.getContext().getResources().getColor(R.color.stats_link_text_color));
     }
@@ -108,7 +108,7 @@ public class StatsViewHolder {
             return;
         }
 
-        String name =  StringEscapeUtils.unescapeHtml4(currentItem.getTitle());
+        String name = StringEscapeUtils.unescapeHtml4(currentItem.getTitle());
         entryTextView.setText(name);
         rowContent.setOnClickListener(
                 new View.OnClickListener() {

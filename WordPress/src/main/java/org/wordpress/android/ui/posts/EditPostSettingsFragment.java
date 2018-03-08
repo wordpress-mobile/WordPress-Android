@@ -132,6 +132,7 @@ public class EditPostSettingsFragment extends Fragment {
 
     interface EditPostActivityHook {
         PostModel getPost();
+
         SiteModel getSite();
     }
 
@@ -169,8 +170,8 @@ public class EditPostSettingsFragment extends Fragment {
             return;
         }
         // we need to fetch site settings in order to get the latest default post format
-        mSiteSettings = SiteSettingsInterface.getInterface(getActivity(), getSite(),
-                new SiteSettingsListener() {
+        mSiteSettings = SiteSettingsInterface.getInterface(
+                getActivity(), getSite(), new SiteSettingsListener() {
                     @Override
                     public void onSaveError(Exception error) {
                         // no-op
@@ -185,7 +186,8 @@ public class EditPostSettingsFragment extends Fragment {
                     public void onSettingsUpdated() {
                         // mEditPostActivityHook will be null if the fragment is detached
                         if (getEditPostActivityHook() != null) {
-                            updatePostFormat(mSiteSettings.getDefaultPostFormat());
+                            updatePostFormat(
+                                    mSiteSettings.getDefaultPostFormat());
                         }
                     }
 
@@ -386,8 +388,8 @@ public class EditPostSettingsFragment extends Fragment {
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
-        if (data != null || ((requestCode == RequestCodes.TAKE_PHOTO ||
-                requestCode == RequestCodes.TAKE_VIDEO))) {
+        if (data != null || ((requestCode == RequestCodes.TAKE_PHOTO
+                              || requestCode == RequestCodes.TAKE_VIDEO))) {
             Bundle extras;
 
             switch (requestCode) {
@@ -490,7 +492,7 @@ public class EditPostSettingsFragment extends Fragment {
         builder.setSingleChoiceItems(R.array.post_settings_statuses, getCurrentPostStatusIndex(), null);
         builder.setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int which) {
-                ListView listView = ((AlertDialog)dialog).getListView();
+                ListView listView = ((AlertDialog) dialog).getListView();
                 int index = listView.getCheckedItemPosition();
                 updatePostStatus(getPostStatusAtIndex(index).toString());
             }
@@ -519,7 +521,7 @@ public class EditPostSettingsFragment extends Fragment {
         builder.setSingleChoiceItems(mPostFormatNames.toArray(new CharSequence[0]), checkedItem, null);
         builder.setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int which) {
-                ListView listView = ((AlertDialog)dialog).getListView();
+                ListView listView = ((AlertDialog) dialog).getListView();
                 String formatName = (String) listView.getAdapter().getItem(listView.getCheckedItemPosition());
                 updatePostFormat(getPostFormatKeyFromName(formatName));
             }
@@ -561,29 +563,29 @@ public class EditPostSettingsFragment extends Fragment {
         final DatePickerDialog datePickerDialog = new DatePickerDialog(getActivity(), null, year, month, day);
         datePickerDialog.setTitle(R.string.select_date);
         datePickerDialog.setButton(DialogInterface.BUTTON_POSITIVE, resources.getString(android.R.string.ok),
-                new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int id) {
-                        DatePicker datePicker = datePickerDialog.getDatePicker();
-                        int selectedYear = datePicker.getYear();
-                        int selectedMonth = datePicker.getMonth();
-                        int selectedDay = datePicker.getDayOfMonth();
-                        showPostTimeSelectionDialog(selectedYear, selectedMonth, selectedDay);
-                    }
-                });
+                                   new DialogInterface.OnClickListener() {
+                                       public void onClick(DialogInterface dialog, int id) {
+                                           DatePicker datePicker = datePickerDialog.getDatePicker();
+                                           int selectedYear = datePicker.getYear();
+                                           int selectedMonth = datePicker.getMonth();
+                                           int selectedDay = datePicker.getDayOfMonth();
+                                           showPostTimeSelectionDialog(selectedYear, selectedMonth, selectedDay);
+                                       }
+                                   });
         String neutralButtonTitle = isPublishImmediatelyAvailable ? resources.getString(R.string.immediately)
                 : resources.getString(R.string.now);
         datePickerDialog.setButton(DialogInterface.BUTTON_NEUTRAL, neutralButtonTitle,
-                new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int id) {
-                        Calendar now = Calendar.getInstance();
-                        updatePublishDate(now);
-                    }
-                });
+                                   new DialogInterface.OnClickListener() {
+                                       public void onClick(DialogInterface dialog, int id) {
+                                           Calendar now = Calendar.getInstance();
+                                           updatePublishDate(now);
+                                       }
+                                   });
         datePickerDialog.setButton(DialogInterface.BUTTON_NEGATIVE, resources.getString(android.R.string.cancel),
-                new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int id) {
-                    }
-                });
+                                   new DialogInterface.OnClickListener() {
+                                       public void onClick(DialogInterface dialog, int id) {
+                                       }
+                                   });
         if (isPublishImmediatelyAvailable) {
             // We shouldn't let the user pick a past date since we'll just override it to Immediately if they do
             // We can't set the min date to now, so we need to subtract some amount of time
@@ -600,14 +602,21 @@ public class EditPostSettingsFragment extends Fragment {
         int hour = calendar.get(Calendar.HOUR_OF_DAY);
         int minute = calendar.get(Calendar.MINUTE);
         final TimePickerDialog timePickerDialog = new TimePickerDialog(getActivity(),
-                new TimePickerDialog.OnTimeSetListener() {
-                    @Override
-                    public void onTimeSet(TimePicker timePicker, int selectedHour, int selectedMinute) {
-                        Calendar selectedCalendar = Calendar.getInstance();
-                        selectedCalendar.set(selectedYear, selectedMonth, selectedDay, selectedHour, selectedMinute);
-                        updatePublishDate(selectedCalendar);
-                    }
-                }, hour, minute, DateFormat.is24HourFormat(getActivity()));
+                                                                       new TimePickerDialog.OnTimeSetListener() {
+                                                                           @Override
+                                                                           public void onTimeSet(TimePicker timePicker,
+                                                                                                 int selectedHour,
+                                                                                                 int selectedMinute) {
+                                                                               Calendar selectedCalendar =
+                                                                                       Calendar.getInstance();
+                                                                               selectedCalendar
+                                                                                       .set(selectedYear, selectedMonth,
+                                                                                            selectedDay, selectedHour,
+                                                                                            selectedMinute);
+                                                                               updatePublishDate(selectedCalendar);
+                                                                           }
+                                                                       }, hour, minute,
+                                                                       DateFormat.is24HourFormat(getActivity()));
         timePickerDialog.setTitle(R.string.select_time);
         timePickerDialog.show();
     }
@@ -741,9 +750,10 @@ public class EditPostSettingsFragment extends Fragment {
             mPublishDateTextView.setText(R.string.immediately);
         } else {
             String dateCreated = postModel.getDateCreated();
-            if (!TextUtils.isEmpty(dateCreated)){
+            if (!TextUtils.isEmpty(dateCreated)) {
                 String formattedDate = DateUtils.formatDateTime(getActivity(),
-                        DateTimeUtils.timestampFromIso8601Millis(dateCreated), getDateTimeFlags());
+                                                                DateTimeUtils.timestampFromIso8601Millis(dateCreated),
+                                                                getDateTimeFlags());
                 mPublishDateTextView.setText(formattedDate);
             }
         }
@@ -809,7 +819,7 @@ public class EditPostSettingsFragment extends Fragment {
         // Default values
         mPostFormatKeys = new ArrayList<>(Arrays.asList(getResources().getStringArray(R.array.post_format_keys)));
         mPostFormatNames = new ArrayList<>(Arrays.asList(getResources()
-                .getStringArray(R.array.post_format_display_names)));
+                                                                 .getStringArray(R.array.post_format_display_names)));
 
         // If we have specific values for this site, use them
         List<PostFormatModel> postFormatModels = mSiteStore.getPostFormats(getSite());
@@ -981,7 +991,7 @@ public class EditPostSettingsFragment extends Fragment {
                 return;
             }
             StringBuilder sb = new StringBuilder();
-            for (int i = 0; ; ++i) {
+            for (int i = 0;; ++i) {
                 sb.append(address.getAddressLine(i));
                 if (i == address.getMaxAddressLineIndex()) {
                     sb.append(".");
@@ -1018,7 +1028,7 @@ public class EditPostSettingsFragment extends Fragment {
             ToastUtils.showToast(getActivity(), R.string.post_settings_error_placepicker_missing_play_services);
         } catch (GooglePlayServicesRepairableException re) {
             GoogleApiAvailability.getInstance().getErrorDialog(getActivity(), re.getConnectionStatusCode(),
-                    ACTIVITY_REQUEST_PLAY_SERVICES_RESOLUTION);
+                                                               ACTIVITY_REQUEST_PLAY_SERVICES_RESOLUTION);
         }
     }
 

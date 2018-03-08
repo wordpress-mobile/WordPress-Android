@@ -13,10 +13,9 @@ import org.wordpress.android.ui.publicize.PublicizeConstants.ConnectAction;
  * Publicize connect/disconnect/reconnect button
  */
 public class ConnectButton extends FrameLayout {
-
     private ConnectAction mConnectAction = ConnectAction.CONNECT;
 
-    public ConnectButton(Context context){
+    public ConnectButton(Context context) {
         super(context);
         initView(context);
     }

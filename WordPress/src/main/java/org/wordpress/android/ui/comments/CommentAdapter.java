@@ -53,6 +53,7 @@ public class CommentAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
 
     interface OnCommentPressedListener {
         void onCommentPressed(int position, View view);
+
         void onCommentLongPressed(int position, View view);
     }
 
@@ -83,23 +84,23 @@ public class CommentAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
     @Inject CommentStore mCommentStore;
 
     class CommentHolder extends RecyclerView.ViewHolder implements View.OnClickListener, View.OnLongClickListener {
-        private final TextView txtTitle;
-        private final TextView txtComment;
-        private final TextView txtStatus;
-        private final TextView txtDate;
-        private final WPNetworkImageView imgAvatar;
-        private final ImageView imgCheckmark;
-        private final ViewGroup containerView;
+        private final TextView mTxtTitle;
+        private final TextView mTxtComment;
+        private final TextView mTxtStatus;
+        private final TextView mTxtDate;
+        private final WPNetworkImageView mImgAvatar;
+        private final ImageView mImgCheckmark;
+        private final ViewGroup mContainerView;
 
-        public CommentHolder(View view) {
+        CommentHolder(View view) {
             super(view);
-            txtTitle = (TextView) view.findViewById(R.id.title);
-            txtComment = (TextView) view.findViewById(R.id.comment);
-            txtStatus = (TextView) view.findViewById(R.id.status);
-            txtDate = (TextView) view.findViewById(R.id.text_date);
-            imgCheckmark = (ImageView) view.findViewById(R.id.image_checkmark);
-            imgAvatar = (WPNetworkImageView) view.findViewById(R.id.avatar);
-            containerView = (ViewGroup) view.findViewById(R.id.layout_container);
+            mTxtTitle = (TextView) view.findViewById(R.id.title);
+            mTxtComment = (TextView) view.findViewById(R.id.comment);
+            mTxtStatus = (TextView) view.findViewById(R.id.status);
+            mTxtDate = (TextView) view.findViewById(R.id.text_date);
+            mImgCheckmark = (ImageView) view.findViewById(R.id.image_checkmark);
+            mImgAvatar = (WPNetworkImageView) view.findViewById(R.id.avatar);
+            mContainerView = (ViewGroup) view.findViewById(R.id.layout_container);
 
             itemView.setOnClickListener(this);
             itemView.setOnLongClickListener(this);
@@ -217,9 +218,9 @@ public class CommentAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
 
         // Note: following operation can take some time, we could maybe cache the calculated objects (title, spanned
         // content) to make the list scroll smoother.
-        holder.txtTitle.setText(Html.fromHtml(getFormattedTitle(comment)));
-        holder.txtComment.setText(getSpannedContent(comment));
-        holder.txtDate.setText(getFormattedDate(comment, mContext));
+        holder.mTxtTitle.setText(Html.fromHtml(getFormattedTitle(comment)));
+        holder.mTxtComment.setText(getSpannedContent(comment));
+        holder.mTxtDate.setText(getFormattedDate(comment, mContext));
 
         // status is only shown for comments that haven't been approved
         final boolean showStatus;
@@ -227,40 +228,40 @@ public class CommentAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
         switch (commentStatus) {
             case SPAM:
                 showStatus = true;
-                holder.txtStatus.setText(mStatusTextSpam);
-                holder.txtStatus.setTextColor(mStatusColorSpam);
+                holder.mTxtStatus.setText(mStatusTextSpam);
+                holder.mTxtStatus.setTextColor(mStatusColorSpam);
                 break;
             case UNAPPROVED:
                 showStatus = true;
-                holder.txtStatus.setText(mStatusTextUnapproved);
-                holder.txtStatus.setTextColor(mStatusColorUnapproved);
+                holder.mTxtStatus.setText(mStatusTextUnapproved);
+                holder.mTxtStatus.setTextColor(mStatusColorUnapproved);
                 break;
             default:
                 showStatus = false;
                 break;
         }
-        holder.txtStatus.setVisibility(showStatus ? View.VISIBLE : View.GONE);
+        holder.mTxtStatus.setVisibility(showStatus ? View.VISIBLE : View.GONE);
 
         int checkmarkVisibility;
         if (mEnableSelection && isItemSelected(position)) {
             checkmarkVisibility = View.VISIBLE;
-            holder.containerView.setBackgroundColor(mSelectedColor);
+            holder.mContainerView.setBackgroundColor(mSelectedColor);
         } else {
             checkmarkVisibility = View.GONE;
-            holder.imgAvatar.setImageUrl(getAvatarForDisplay(comment, mAvatarSz), WPNetworkImageView.ImageType.AVATAR);
-            holder.containerView.setBackgroundColor(mUnselectedColor);
+            holder.mImgAvatar.setImageUrl(getAvatarForDisplay(comment, mAvatarSz), WPNetworkImageView.ImageType.AVATAR);
+            holder.mContainerView.setBackgroundColor(mUnselectedColor);
         }
 
-        if (holder.imgCheckmark.getVisibility() != checkmarkVisibility) {
-            holder.imgCheckmark.setVisibility(checkmarkVisibility);
+        if (holder.mImgCheckmark.getVisibility() != checkmarkVisibility) {
+            holder.mImgCheckmark.setVisibility(checkmarkVisibility);
         }
 
         // comment text needs to be to the left of date/status when the title is a single line and
         // the status is displayed or else the status may overlap the comment text - note that
         // getLineCount() will return 0 if the view hasn't been rendered yet, which is why we
         // check getLineCount() <= 1
-        boolean adjustComment = (showStatus && holder.txtTitle.getLineCount() <= 1);
-        RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) holder.txtComment.getLayoutParams();
+        boolean adjustComment = (showStatus && holder.mTxtTitle.getLineCount() <= 1);
+        RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) holder.mTxtComment.getLayoutParams();
         if (adjustComment) {
             params.addRule(RelativeLayout.LEFT_OF, R.id.layout_date_status);
         } else {
@@ -268,8 +269,8 @@ public class CommentAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
         }
 
         // request to load more comments when we near the end
-        if (mOnLoadMoreListener != null && position >= getItemCount()-1
-                && position >= CommentsListFragment.COMMENTS_PER_PAGE - 1) {
+        if (mOnLoadMoreListener != null && position >= getItemCount() - 1
+            && position >= CommentsListFragment.COMMENTS_PER_PAGE - 1) {
             mOnLoadMoreListener.onLoadMore();
         }
     }
@@ -297,7 +298,9 @@ public class CommentAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
     }
 
     void setEnableSelection(boolean enable) {
-        if (enable == mEnableSelection) return;
+        if (enable == mEnableSelection) {
+            return;
+        }
 
         mEnableSelection = enable;
         if (mEnableSelection) {
@@ -327,9 +330,10 @@ public class CommentAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
             return comments;
         }
 
-        for (Integer position: mSelectedPositions) {
-            if (isPositionValid(position))
+        for (Integer position : mSelectedPositions) {
+            if (isPositionValid(position)) {
                 comments.add(mComments.get(position));
+            }
         }
 
         return comments;
@@ -340,7 +344,9 @@ public class CommentAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
     }
 
     void setItemSelected(int position, boolean isSelected, View view) {
-        if (isItemSelected(position) == isSelected) return;
+        if (isItemSelected(position) == isSelected) {
+            return;
+        }
 
         if (isSelected) {
             mSelectedPositions.add(position);
@@ -353,8 +359,8 @@ public class CommentAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
         if (view != null && view.getTag() instanceof CommentHolder) {
             CommentHolder holder = (CommentHolder) view.getTag();
             // animate the selection change
-            AniUtils.startAnimation(holder.imgCheckmark, isSelected ? R.anim.cab_select : R.anim.cab_deselect);
-            holder.imgCheckmark.setVisibility(isSelected ? View.VISIBLE : View.GONE);
+            AniUtils.startAnimation(holder.mImgCheckmark, isSelected ? R.anim.cab_select : R.anim.cab_deselect);
+            holder.mImgCheckmark.setVisibility(isSelected ? View.VISIBLE : View.GONE);
         }
 
         if (mOnSelectedChangeListener != null) {
@@ -397,11 +403,12 @@ public class CommentAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
      * AsyncTask to load comments from SQLite
      */
     private boolean mIsLoadTaskRunning = false;
+
     private class LoadCommentsTask extends AsyncTask<Void, Void, Boolean> {
-        CommentList tmpComments;
+        private CommentList mTmpComments;
         final CommentStatus mStatusFilter;
 
-        public LoadCommentsTask(CommentStatus statusFilter) {
+        LoadCommentsTask(CommentStatus statusFilter) {
             mStatusFilter = statusFilter;
         }
 
@@ -409,31 +416,34 @@ public class CommentAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
         protected void onPreExecute() {
             mIsLoadTaskRunning = true;
         }
+
         @Override
         protected void onCancelled() {
             mIsLoadTaskRunning = false;
         }
+
         @Override
         protected Boolean doInBackground(Void... params) {
             List<CommentModel> comments;
             if (mStatusFilter == null || mStatusFilter == CommentStatus.ALL) {
                 // The "all" filter actually means "approved" + "unapproved" (but not "spam", "trash" or "deleted")
                 comments = mCommentStore.getCommentsForSite(mSite, false,
-                        CommentStatus.APPROVED, CommentStatus.UNAPPROVED);
+                                                            CommentStatus.APPROVED, CommentStatus.UNAPPROVED);
             } else {
                 comments = mCommentStore.getCommentsForSite(mSite, false, mStatusFilter);
             }
 
-            tmpComments = new CommentList();
-            tmpComments.addAll(comments);
+            mTmpComments = new CommentList();
+            mTmpComments.addAll(comments);
 
-            return !mComments.isSameList(tmpComments);
+            return !mComments.isSameList(mTmpComments);
         }
+
         @Override
         protected void onPostExecute(Boolean result) {
             if (result) {
                 mComments.clear();
-                mComments.addAll(tmpComments);
+                mComments.addAll(mTmpComments);
                 // Sort by date
                 Collections.sort(mComments, new Comparator<CommentModel>() {
                     @Override
@@ -456,5 +466,4 @@ public class CommentAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
             mIsLoadTaskRunning = false;
         }
     }
-
 }

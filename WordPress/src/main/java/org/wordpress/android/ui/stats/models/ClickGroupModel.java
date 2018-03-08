@@ -109,5 +109,7 @@ public class ClickGroupModel implements Serializable {
         this.mIcon = icon;
     }
 
-    public List<SingleItemModel> getClicks() { return mClicks; }
+    public List<SingleItemModel> getClicks() {
+        return mClicks;
+    }
 }

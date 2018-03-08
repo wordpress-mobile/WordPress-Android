@@ -6,6 +6,7 @@ import android.graphics.Canvas;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
+import android.support.v4.view.ViewCompat;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -92,10 +93,11 @@ public class PeopleListFragment extends Fragment {
         final ViewGroup rootView = (ViewGroup) inflater.inflate(R.layout.people_list_fragment, container, false);
 
         mSite = (SiteModel) getArguments().getSerializable(WordPress.SITE);
-        final boolean isPrivate =  mSite != null && mSite.isPrivate();
+        final boolean isPrivate = mSite != null && mSite.isPrivate();
 
         mFilteredRecyclerView = (FilteredRecyclerView) rootView.findViewById(R.id.filtered_recycler_view);
-        mFilteredRecyclerView.addItemDecoration(new PeopleItemDecoration(getActivity(), R.drawable.people_list_divider));
+        mFilteredRecyclerView
+                .addItemDecoration(new PeopleItemDecoration(getActivity(), R.drawable.people_list_divider));
         mFilteredRecyclerView.setLogT(AppLog.T.PEOPLE);
         mFilteredRecyclerView.setSwipeToRefreshEnabled(false);
 
@@ -120,7 +122,8 @@ public class PeopleListFragment extends Fragment {
             }
 
             @Override
-            public void onLoadFilterCriteriaOptionsAsync(FilteredRecyclerView.FilterCriteriaAsyncLoaderListener listener, boolean refresh) {
+            public void onLoadFilterCriteriaOptionsAsync(
+                    FilteredRecyclerView.FilterCriteriaAsyncLoaderListener listener, boolean refresh) {
                 // no-op
             }
 
@@ -195,7 +198,6 @@ public class PeopleListFragment extends Fragment {
 
             @Override
             public void onShowCustomEmptyView(EmptyViewMessageType emptyViewMsgType) {
-
             }
         });
 
@@ -236,7 +238,9 @@ public class PeopleListFragment extends Fragment {
     }
 
     public void refreshPeopleList(boolean isFetching) {
-        if (!isAdded()) return;
+        if (!isAdded()) {
+            return;
+        }
 
         List<Person> peopleList;
         switch (mPeopleListFilter) {
@@ -374,28 +378,28 @@ public class PeopleListFragment extends Fragment {
 
             if (person != null) {
                 String avatarUrl = GravatarUtils.fixGravatarUrl(person.getAvatarUrl(), mAvatarSz);
-                peopleViewHolder.imgAvatar.setImageUrl(avatarUrl, WPNetworkImageView.ImageType.AVATAR);
-                peopleViewHolder.txtDisplayName.setText(StringEscapeUtils.unescapeHtml4(person.getDisplayName()));
+                peopleViewHolder.mImgAvatar.setImageUrl(avatarUrl, WPNetworkImageView.ImageType.AVATAR);
+                peopleViewHolder.mTxtDisplayName.setText(StringEscapeUtils.unescapeHtml4(person.getDisplayName()));
                 if (person.getRole() != null) {
-                    peopleViewHolder.txtRole.setVisibility(View.VISIBLE);
-                    peopleViewHolder.txtRole.setText(RoleUtils.getDisplayName(person.getRole(), mUserRoles));
+                    peopleViewHolder.mTxtRole.setVisibility(View.VISIBLE);
+                    peopleViewHolder.mTxtRole.setText(RoleUtils.getDisplayName(person.getRole(), mUserRoles));
                 } else {
-                    peopleViewHolder.txtRole.setVisibility(View.GONE);
+                    peopleViewHolder.mTxtRole.setVisibility(View.GONE);
                 }
                 if (!person.getUsername().isEmpty()) {
-                    peopleViewHolder.txtUsername.setVisibility(View.VISIBLE);
-                    peopleViewHolder.txtUsername.setText(String.format("@%s", person.getUsername()));
+                    peopleViewHolder.mTxtUsername.setVisibility(View.VISIBLE);
+                    peopleViewHolder.mTxtUsername.setText(String.format("@%s", person.getUsername()));
                 } else {
-                    peopleViewHolder.txtUsername.setVisibility(View.GONE);
+                    peopleViewHolder.mTxtUsername.setVisibility(View.GONE);
                 }
                 if (person.getPersonType() == Person.PersonType.USER
-                        || person.getPersonType() == Person.PersonType.VIEWER) {
-                    peopleViewHolder.txtSubscribed.setVisibility(View.GONE);
+                    || person.getPersonType() == Person.PersonType.VIEWER) {
+                    peopleViewHolder.mTxtSubscribed.setVisibility(View.GONE);
                 } else {
-                    peopleViewHolder.txtSubscribed.setVisibility(View.VISIBLE);
+                    peopleViewHolder.mTxtSubscribed.setVisibility(View.VISIBLE);
                     String dateSubscribed = SimpleDateFormat.getDateInstance().format(person.getDateSubscribed());
                     String dateText = getString(R.string.follower_subscribed_since, dateSubscribed);
-                    peopleViewHolder.txtSubscribed.setText(dateText);
+                    peopleViewHolder.mTxtSubscribed.setText(dateText);
                 }
             }
 
@@ -406,19 +410,19 @@ public class PeopleListFragment extends Fragment {
         }
 
         public class PeopleViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
-            private final WPNetworkImageView imgAvatar;
-            private final TextView txtDisplayName;
-            private final TextView txtUsername;
-            private final TextView txtRole;
-            private final TextView txtSubscribed;
+            private final WPNetworkImageView mImgAvatar;
+            private final TextView mTxtDisplayName;
+            private final TextView mTxtUsername;
+            private final TextView mTxtRole;
+            private final TextView mTxtSubscribed;
 
             public PeopleViewHolder(View view) {
                 super(view);
-                imgAvatar = (WPNetworkImageView) view.findViewById(R.id.person_avatar);
-                txtDisplayName = (TextView) view.findViewById(R.id.person_display_name);
-                txtUsername = (TextView) view.findViewById(R.id.person_username);
-                txtRole = (TextView) view.findViewById(R.id.person_role);
-                txtSubscribed = (TextView) view.findViewById(R.id.follower_subscribed_date);
+                mImgAvatar = (WPNetworkImageView) view.findViewById(R.id.person_avatar);
+                mTxtDisplayName = (TextView) view.findViewById(R.id.person_display_name);
+                mTxtUsername = (TextView) view.findViewById(R.id.person_username);
+                mTxtRole = (TextView) view.findViewById(R.id.person_role);
+                mTxtSubscribed = (TextView) view.findViewById(R.id.follower_subscribed_date);
 
                 itemView.setOnClickListener(this);
             }
@@ -438,14 +442,14 @@ public class PeopleListFragment extends Fragment {
         private Drawable mDivider;
 
         // use a custom drawable
-        public PeopleItemDecoration(Context context, int resId) {
+        PeopleItemDecoration(Context context, int resId) {
             mDivider = ContextCompat.getDrawable(context, resId);
         }
 
         @Override
         public void onDraw(Canvas c, RecyclerView parent, RecyclerView.State state) {
-            int left = parent.getPaddingLeft();
-            int right = parent.getWidth() - parent.getPaddingRight();
+            int left = ViewCompat.getPaddingStart(parent);
+            int right = parent.getWidth() - ViewCompat.getPaddingEnd(parent);
 
             int childCount = parent.getChildCount();
             for (int i = 0; i < childCount; i++) {

@@ -11,6 +11,32 @@ buildscript {
 
 project.ext.preDexLibs = !project.hasProperty('disablePreDex')
 
+allprojects {
+    apply plugin: 'checkstyle'
+
+    repositories {
+        jcenter()
+        maven {
+            url "https://maven.google.com"
+        }
+    }
+
+    task checkstyle(type: Checkstyle) {
+        source 'src'
+        include '**/*.java'
+        include '**/*.kt'
+        include '**/*.xml'
+        exclude '**/gen/**'
+
+        classpath = files()
+    }
+
+    checkstyle {
+        toolVersion = '8.3'
+        configFile file("${project.rootDir}/config/checkstyle.xml")
+    }
+}
+
 subprojects {
     project.plugins.whenPluginAdded { plugin ->
         if ("com.android.build.gradle.AppPlugin".equals(plugin.class.name)) {
@@ -22,5 +48,5 @@ subprojects {
 }
 
 ext {
-    fluxCVersion = '9d90f262c86c284eae06776e68ab604ef5a3907c'
+    fluxCVersion = 'cac602a6c31a9c63eb42d25305e8d0e40780d2e2'
 }

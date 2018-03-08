@@ -343,7 +343,7 @@ public final class AnalyticsTracker {
         }
     }
 
-    public static void setHasUserOptedOut(boolean hasUserOptedOut){
+    public static void setHasUserOptedOut(boolean hasUserOptedOut) {
         if (hasUserOptedOut != mHasUserOptedOut) {
             mHasUserOptedOut = hasUserOptedOut;
         }

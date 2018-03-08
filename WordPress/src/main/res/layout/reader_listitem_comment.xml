@@ -9,7 +9,11 @@
     android:layout_marginRight="@dimen/reader_card_margin"
     android:background="@color/white"
     android:paddingLeft="@dimen/margin_medium"
-    android:paddingRight="@dimen/margin_medium">
+    android:paddingRight="@dimen/margin_medium"
+    android:layout_marginStart="@dimen/reader_card_margin"
+    android:paddingEnd="@dimen/margin_medium"
+    android:paddingStart="@dimen/margin_medium"
+    android:layout_marginEnd="@dimen/reader_card_margin">
 
     <!-- spacer_comment_indent width and visibility set at run-time based on comment indent level -->
     <View
@@ -26,7 +30,10 @@
         android:layout_marginRight="@dimen/reader_card_content_padding"
         android:layout_marginTop="@dimen/margin_large"
         android:layout_toRightOf="@+id/spacer_comment_indent"
-        android:orientation="vertical">
+        android:orientation="vertical"
+        android:layout_toEndOf="@+id/spacer_comment_indent"
+        android:layout_marginEnd="@dimen/reader_card_content_padding"
+        android:layout_marginStart="@dimen/reader_card_content_padding">
 
         <LinearLayout
             android:id="@+id/layout_author"
@@ -39,7 +46,8 @@
                 android:layout_width="@dimen/avatar_sz_extra_small"
                 android:layout_height="@dimen/avatar_sz_extra_small"
                 android:layout_marginRight="@dimen/margin_small"
-                tools:src="@drawable/ic_placeholder_gravatar_grey_lighten_20_100dp" />
+                tools:src="@drawable/ic_placeholder_gravatar_grey_lighten_20_100dp"
+                android:layout_marginEnd="@dimen/margin_small"/>
 
             <org.wordpress.android.widgets.WPTextView
                 android:id="@+id/text_comment_author"
@@ -51,7 +59,8 @@
                 android:textColor="@color/grey_dark"
                 android:textSize="@dimen/text_sz_medium"
                 android:textStyle="bold"
-                tools:text="text_comment_author" />
+                tools:text="text_comment_author"
+                android:layout_marginStart="@dimen/margin_medium"/>
         </LinearLayout>
 
         <org.wordpress.android.widgets.WPTextView
@@ -70,8 +79,7 @@
 
         <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal">
+            android:layout_height="wrap_content">
 
             <org.wordpress.android.widgets.WPTextView
                 android:id="@+id/text_comment_date"
@@ -94,7 +102,10 @@
                 android:paddingBottom="@dimen/margin_small"
                 android:paddingLeft="@dimen/margin_small"
                 android:paddingRight="@dimen/margin_small"
-                android:paddingTop="@dimen/margin_small">
+                android:paddingTop="@dimen/margin_small"
+                android:layout_toStartOf="@+id/count_likes"
+                android:paddingEnd="@dimen/margin_small"
+                android:paddingStart="@dimen/margin_small">
 
                 <ImageView
                     android:layout_width="@dimen/reader_button_icon"
@@ -120,7 +131,11 @@
                 android:layout_centerVertical="true"
                 android:paddingBottom="@dimen/margin_small"
                 android:paddingLeft="@dimen/margin_large"
-                android:paddingTop="@dimen/margin_small" />
+                android:paddingRight="0dp"
+                android:paddingEnd="0dp"
+                android:paddingTop="@dimen/margin_small"
+                android:layout_alignParentEnd="true"
+                android:paddingStart="@dimen/margin_large"/>
 
         </RelativeLayout>
 
@@ -135,6 +150,7 @@
         android:layout_alignParentRight="true"
         android:layout_centerVertical="true"
         android:visibility="gone"
-        tools:visibility="visible" />
+        tools:visibility="visible"
+        android:layout_alignParentEnd="true"/>
 
 </RelativeLayout>

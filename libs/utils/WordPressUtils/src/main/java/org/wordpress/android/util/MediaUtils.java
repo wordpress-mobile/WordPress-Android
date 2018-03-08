@@ -45,7 +45,7 @@ public class MediaUtils {
         if (url == null) {
             return false;
         }
-        url = url.toLowerCase();
+        url = url.toLowerCase(Locale.ROOT);
         return url.endsWith(".png") || url.endsWith(".jpg") || url.endsWith(".jpeg") || url.endsWith(".gif");
     }
 
@@ -53,7 +53,7 @@ public class MediaUtils {
         if (url == null) {
             return false;
         }
-        url = url.toLowerCase();
+        url = url.toLowerCase(Locale.ROOT);
         return url.endsWith(".doc") || url.endsWith(".docx") || url.endsWith(".odt") || url.endsWith(".pdf");
     }
 
@@ -61,16 +61,16 @@ public class MediaUtils {
         if (url == null) {
             return false;
         }
-        url = url.toLowerCase();
-        return url.endsWith(".ppt") || url.endsWith(".pptx") || url.endsWith(".pps") || url.endsWith(".ppsx") ||
-                url.endsWith(".key");
+        url = url.toLowerCase(Locale.ROOT);
+        return url.endsWith(".ppt") || url.endsWith(".pptx") || url.endsWith(".pps") || url.endsWith(".ppsx")
+               || url.endsWith(".key");
     }
 
     public static boolean isSpreadsheet(String url) {
         if (url == null) {
             return false;
         }
-        url = url.toLowerCase();
+        url = url.toLowerCase(Locale.ROOT);
         return url.endsWith(".xls") || url.endsWith(".xlsx");
     }
 
@@ -78,19 +78,19 @@ public class MediaUtils {
         if (url == null) {
             return false;
         }
-        url = url.toLowerCase();
-        return url.endsWith(".ogv") || url.endsWith(".mp4") || url.endsWith(".m4v") || url.endsWith(".mov") ||
-                url.endsWith(".wmv") || url.endsWith(".avi") || url.endsWith(".mpg") || url.endsWith(".3gp") ||
-                url.endsWith(".3g2") || url.contains("video");
+        url = url.toLowerCase(Locale.ROOT);
+        return url.endsWith(".ogv") || url.endsWith(".mp4") || url.endsWith(".m4v") || url.endsWith(".mov")
+               || url.endsWith(".wmv") || url.endsWith(".avi") || url.endsWith(".mpg") || url.endsWith(".3gp")
+               || url.endsWith(".3g2") || url.contains("video");
     }
 
     public static boolean isAudio(String url) {
         if (url == null) {
             return false;
         }
-        url = url.toLowerCase();
-        return url.endsWith(".mp3") || url.endsWith(".ogg") || url.endsWith(".wav") || url.endsWith(".wma") ||
-                url.endsWith(".aiff") || url.endsWith(".aif") || url.endsWith(".aac") || url.endsWith(".m4a");
+        url = url.toLowerCase(Locale.ROOT);
+        return url.endsWith(".mp3") || url.endsWith(".ogg") || url.endsWith(".wav") || url.endsWith(".wma")
+               || url.endsWith(".aiff") || url.endsWith(".aif") || url.endsWith(".aac") || url.endsWith(".m4a");
     }
 
     /**
@@ -112,13 +112,13 @@ public class MediaUtils {
         }
 
         return state.equalsIgnoreCase("queued")
-                || state.equalsIgnoreCase("uploading")
-                || state.equalsIgnoreCase("retry")
-                || state.equalsIgnoreCase("failed");
+               || state.equalsIgnoreCase("uploading")
+               || state.equalsIgnoreCase("retry")
+               || state.equalsIgnoreCase("failed");
     }
 
     public static Uri getLastRecordedVideoUri(Activity activity) {
-        String[] proj = { MediaStore.Video.Media._ID };
+        String[] proj = {MediaStore.Video.Media._ID};
         Uri contentUri = MediaStore.Video.Media.EXTERNAL_CONTENT_URI;
         String sortOrder = MediaStore.Video.VideoColumns.DATE_TAKEN + " DESC";
         CursorLoader loader = new CursorLoader(activity, contentUri, proj, null, null, sortOrder);
@@ -134,10 +134,10 @@ public class MediaUtils {
      * Get image max size setting from the image max size setting string. This string can be an int, in this case it's
      * the maximum image width defined by the site.
      * Examples:
-     *   "1000" will return 1000
-     *   "Original Size" will return Integer.MAX_VALUE
-     *   "Largeur originale" will return Integer.MAX_VALUE
-     *   null will return Integer.MAX_VALUE
+     * "1000" will return 1000
+     * "Original Size" will return Integer.MAX_VALUE
+     * "Largeur originale" will return Integer.MAX_VALUE
+     * null will return Integer.MAX_VALUE
      * @param imageMaxSizeSiteSettingString Image max size site setting string
      * @return Integer.MAX_VALUE if image width is not defined or invalid, maximum image width in other cases.
      */
@@ -178,11 +178,7 @@ public class MediaUtils {
 
     public static boolean isInMediaStore(Uri mediaUri) {
         // Check if the image is externally hosted (Picasa/Google Photos for example)
-        if (mediaUri != null && mediaUri.toString().startsWith("content://media/")) {
-            return true;
-        } else {
-            return false;
-        }
+        return mediaUri != null && mediaUri.toString().startsWith("content://media/");
     }
 
     public static @Nullable String getFilenameFromURI(Context context, Uri uri) {
@@ -236,7 +232,7 @@ public class MediaUtils {
 
             OutputStream output = new FileOutputStream(f);
 
-            byte data[] = new byte[1024];
+            byte[] data = new byte[1024];
             int count;
             while ((count = input.read(data)) != -1) {
                 output.write(data, 0, count);
@@ -291,7 +287,7 @@ public class MediaUtils {
     }
 
     public static String getMediaFileMimeType(File mediaFile) {
-        String originalFileName = mediaFile.getName().toLowerCase();
+        String originalFileName = mediaFile.getName().toLowerCase(Locale.ROOT);
         String mimeType = UrlUtils.getUrlMimeType(originalFileName);
 
         if (TextUtils.isEmpty(mimeType)) {
@@ -300,26 +296,32 @@ public class MediaUtils {
                 if (mediaFile.getPath().contains("://")) {
                     filePathForGuessingMime = Uri.encode(mediaFile.getPath(), ":/");
                 } else {
-                    filePathForGuessingMime = "file://"+ Uri.encode(mediaFile.getPath(), "/");
+                    filePathForGuessingMime = "file://" + Uri.encode(mediaFile.getPath(), "/");
                 }
                 URL urlForGuessingMime = new URL(filePathForGuessingMime);
                 URLConnection uc = urlForGuessingMime.openConnection();
                 String guessedContentType = null;
                 try {
-                    guessedContentType = uc.getContentType(); //internally calls guessContentTypeFromName(url.getFile()); and guessContentTypeFromStream(is);
+                    guessedContentType =
+                            uc.getContentType(); // internally calls guessContentTypeFromName(url.getFile()); and
+                    // guessContentTypeFromStream(is);
                 } catch (StringIndexOutOfBoundsException e) {
                     // Ref: https://github.com/wordpress-mobile/WordPress-Android/issues/5699
-                    AppLog.e(AppLog.T.MEDIA, "Error getting the content type for " + mediaFile.getPath() +" by using URLConnection.getContentType", e);
+                    AppLog.e(AppLog.T.MEDIA, "Error getting the content type for " + mediaFile.getPath()
+                                             + " by using URLConnection.getContentType", e);
                 }
                 // check if returned "content/unknown"
                 if (!TextUtils.isEmpty(guessedContentType) && !guessedContentType.equals("content/unknown")) {
                     mimeType = guessedContentType;
                 }
             } catch (MalformedURLException e) {
-                AppLog.e(AppLog.T.MEDIA, "MalformedURLException while trying to guess the content type for the file here " + mediaFile.getPath() + " with URLConnection", e);
-            }
-            catch (IOException e) {
-                AppLog.e(AppLog.T.MEDIA, "Error while trying to guess the content type for the file here " + mediaFile.getPath() +" with URLConnection", e);
+                AppLog.e(AppLog.T.MEDIA,
+                         "MalformedURLException while trying to guess the content type for the file here " + mediaFile
+                                 .getPath() + " with URLConnection", e);
+            } catch (IOException e) {
+                AppLog.e(AppLog.T.MEDIA,
+                         "Error while trying to guess the content type for the file here " + mediaFile.getPath()
+                         + " with URLConnection", e);
             }
         }
 
@@ -333,16 +335,19 @@ public class MediaUtils {
                 }
                 inputStream.close();
             } catch (FileNotFoundException e) {
-                AppLog.e(AppLog.T.MEDIA, "FileNotFoundException while trying to guess the content type for the file " + mediaFile.getPath(), e);
+                AppLog.e(AppLog.T.MEDIA,
+                         "FileNotFoundException while trying to guess the content type for the file " + mediaFile
+                                 .getPath(), e);
             } catch (IOException e) {
-                AppLog.e(AppLog.T.MEDIA, "IOException while trying to guess the content type for the file " + mediaFile.getPath(), e);
+                AppLog.e(AppLog.T.MEDIA,
+                         "IOException while trying to guess the content type for the file " + mediaFile.getPath(), e);
             }
         }
 
         if (TextUtils.isEmpty(mimeType)) {
             mimeType = "";
         } else {
-            if (mimeType.equalsIgnoreCase("video/mp4v-es")) { //Fixes #533. See: http://tools.ietf.org/html/rfc3016
+            if (mimeType.equalsIgnoreCase("video/mp4v-es")) { // Fixes #533. See: http://tools.ietf.org/html/rfc3016
                 mimeType = "video/mp4";
             }
         }
@@ -351,18 +356,19 @@ public class MediaUtils {
     }
 
     public static String getMediaFileName(File mediaFile, String mimeType) {
-        String originalFileName = mediaFile.getName().toLowerCase();
+        String originalFileName = mediaFile.getName().toLowerCase(Locale.ROOT);
         String extension = MimeTypeMap.getFileExtensionFromUrl(originalFileName);
-        if (!TextUtils.isEmpty(extension))  //File name already has the extension in it
+        if (!TextUtils.isEmpty(extension)) { // File name already has the extension in it
             return originalFileName;
+        }
 
-        if (!TextUtils.isEmpty(mimeType)) { //try to get the extension from mimeType
+        if (!TextUtils.isEmpty(mimeType)) { // try to get the extension from mimeType
             String fileExtension = getExtensionForMimeType(mimeType);
             if (!TextUtils.isEmpty(fileExtension)) {
                 originalFileName += "." + fileExtension;
             }
         } else {
-            //No mimetype and no extension!!
+            // No mimetype and no extension!!
             AppLog.e(AppLog.T.API, "No mimetype and no extension for " + mediaFile.getPath());
         }
 
@@ -370,8 +376,9 @@ public class MediaUtils {
     }
 
     public static String getExtensionForMimeType(String mimeType) {
-        if (TextUtils.isEmpty(mimeType))
+        if (TextUtils.isEmpty(mimeType)) {
             return "";
+        }
 
         MimeTypeMap mimeTypeMap = MimeTypeMap.getSingleton();
         String fileExtensionFromMimeType = mimeTypeMap.getExtensionFromMimeType(mimeType);
@@ -381,7 +388,7 @@ public class MediaUtils {
             fileExtensionFromMimeType = split.length > 1 ? split[1] : split[0];
         }
 
-        return fileExtensionFromMimeType.toLowerCase();
+        return fileExtensionFromMimeType.toLowerCase(Locale.ROOT);
     }
 
     public static String getRealPathFromURI(final Context context, Uri uri) {
@@ -416,9 +423,7 @@ public class MediaUtils {
         // MediaStore (and general)
         if ("content".equalsIgnoreCase(uri.getScheme())) {
             return getDataColumn(context, uri, null, null);
-        }
-        // File
-        else if ("file".equalsIgnoreCase(uri.getScheme())) {
+        } else if ("file".equalsIgnoreCase(uri.getScheme())) { // File
             return uri.getPath();
         }
 
@@ -442,18 +447,13 @@ public class MediaUtils {
                 }
 
                 // TODO handle non-primary volumes
-            }
-            // DownloadsProvider
-            else if (isDownloadsDocument(uri)) {
-
+            } else if (isDownloadsDocument(uri)) { // DownloadsProvider
                 final String id = DocumentsContract.getDocumentId(uri);
                 final Uri contentUri = ContentUris.withAppendedId(
                         Uri.parse("content://downloads/public_downloads"), Long.valueOf(id));
 
                 return getDataColumn(context, contentUri, null, null);
-            }
-            // MediaProvider
-            else if (isMediaDocument(uri)) {
+            } else if (isMediaDocument(uri)) { // MediaProvider
                 final String docId = DocumentsContract.getDocumentId(uri);
                 final String[] split = docId.split(":");
                 final String type = split[0];
@@ -470,7 +470,7 @@ public class MediaUtils {
 
                 final String selection = MediaStore.MediaColumns._ID + "=?";
 
-                final String[] selectionArgs = new String[] {
+                final String[] selectionArgs = new String[]{
                         split[1]
                 };
 
@@ -503,9 +503,9 @@ public class MediaUtils {
         try {
             cursor = context.getContentResolver().query(uri, projection, selection, selectionArgs, null);
             if (cursor != null && cursor.moveToFirst()) {
-                final int column_index = cursor.getColumnIndex(column);
-                if (column_index != -1) {
-                    return cursor.getString(column_index);
+                final int columnIndex = cursor.getColumnIndex(column);
+                if (columnIndex != -1) {
+                    return cursor.getString(columnIndex);
                 }
             }
         } finally {

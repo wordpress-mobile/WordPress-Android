@@ -26,8 +26,9 @@ import java.util.ArrayList;
 
 import de.greenrobot.event.EventBus;
 
-public class PublicizeAccountChooserDialogFragment extends DialogFragment implements PublicizeAccountChooserListAdapter.OnPublicizeAccountChooserListener {
-    public static String TAG = "publicize-account-chooser-dialog-fragment";
+public class PublicizeAccountChooserDialogFragment extends DialogFragment
+        implements PublicizeAccountChooserListAdapter.OnPublicizeAccountChooserListener {
+    public static final String TAG = "publicize-account-chooser-dialog-fragment";
     private RecyclerView mNotConnectedRecyclerView;
     private ArrayList<PublicizeConnection> mNotConnectedAccounts;
     private ArrayList<PublicizeConnection> mConnectedAccounts;
@@ -62,7 +63,8 @@ public class PublicizeAccountChooserDialogFragment extends DialogFragment implem
     }
 
     private void configureRecyclerViews(View view) {
-        PublicizeAccountChooserListAdapter notConnectedAdapter = new PublicizeAccountChooserListAdapter(mNotConnectedAccounts, this, false);
+        PublicizeAccountChooserListAdapter notConnectedAdapter =
+                new PublicizeAccountChooserListAdapter(mNotConnectedAccounts, this, false);
         notConnectedAdapter.setHasStableIds(true);
         mNotConnectedRecyclerView = (RecyclerView) view.findViewById(R.id.not_connected_recyclerview);
         mNotConnectedRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
@@ -82,7 +84,8 @@ public class PublicizeAccountChooserDialogFragment extends DialogFragment implem
 
     private void populateConnectedListView(View view) {
         RecyclerView listViewConnected = (RecyclerView) view.findViewById(R.id.connected_recyclerview);
-        PublicizeAccountChooserListAdapter connectedAdapter = new PublicizeAccountChooserListAdapter(mConnectedAccounts, null, true);
+        PublicizeAccountChooserListAdapter connectedAdapter =
+                new PublicizeAccountChooserListAdapter(mConnectedAccounts, null, true);
 
         listViewConnected.setLayoutManager(new LinearLayoutManager(getActivity()));
         listViewConnected.setAdapter(connectedAdapter);
@@ -104,11 +107,12 @@ public class PublicizeAccountChooserDialogFragment extends DialogFragment implem
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
                 dialogInterface.cancel();
-                ToastUtils.showToast(getActivity(), getActivity().getString(R.string.cannot_connect_account_error, mConnectionName));
+                ToastUtils.showToast(getActivity(),
+                                     getActivity().getString(R.string.cannot_connect_account_error, mConnectionName));
             }
         });
     }
-    
+
     private boolean containsSiteId(long[] array) {
         for (long a : array) {
             if (a == mSite.getSiteId()) {

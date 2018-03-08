@@ -13,7 +13,9 @@
         android:orientation="vertical"
         android:background="?android:selectableItemBackground"
         android:paddingLeft="@dimen/margin_extra_large"
-        android:paddingRight="@dimen/margin_extra_large">
+        android:paddingRight="@dimen/margin_extra_large"
+        android:paddingStart="@dimen/margin_extra_large"
+        android:paddingEnd="@dimen/margin_extra_large">
 
         <LinearLayout
             android:layout_width="match_parent"

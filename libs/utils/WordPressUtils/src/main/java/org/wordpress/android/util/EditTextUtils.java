@@ -43,9 +43,11 @@ public class EditTextUtils {
     /**
      * hide the soft keyboard for the passed EditText
      *
-     * @deprecated Use {@link ActivityUtils#hideKeyboard(Activity)} or {@link ActivityUtils#hideKeyboardForced(View)} instead.
+     * @deprecated Use {@link ActivityUtils#hideKeyboard(Activity)} or {@link ActivityUtils#hideKeyboardForced(View)}
+     * instead.
      */
-    // TODO: Replace instances with ActivityUtils#showKeyboard(Activity) or ActivityUtils#showKeyboardForced(View) to consolidate similar methods and favor library version.
+    // TODO: Replace instances with ActivityUtils#showKeyboard(Activity) or ActivityUtils#showKeyboardForced(View) to
+    // consolidate similar methods and favor library version.
     @Deprecated
     public static void hideSoftInput(EditText edit) {
         if (edit == null) {
@@ -63,7 +65,8 @@ public class EditTextUtils {
      *
      * @deprecated Use {@link ActivityUtils#showKeyboard(View)} instead.
      */
-    // TODO: Replace instances with ActivityUtils#showKeyboard(View) to consolidate similar methods and favor library version.
+    // TODO: Replace instances with ActivityUtils#showKeyboard(View) to consolidate similar methods and favor library
+    // version.
     @Deprecated
     public static void showSoftInput(EditText edit) {
         if (edit == null) {

@@ -16,7 +16,7 @@ public class RecyclerViewScrollPositionManager {
         // make sure the layout manager is assigned to the RecyclerView
         // also take into account this needs to be a LinearLayoutManager, otherwise ClassCastException occurs
         outState.putInt(RV_POSITION,
-                ((LinearLayoutManager)recyclerView.getLayoutManager()).findFirstVisibleItemPosition());
+                        ((LinearLayoutManager) recyclerView.getLayoutManager()).findFirstVisibleItemPosition());
         View firstItemView = recyclerView.getChildAt(0);
         int offset = (firstItemView == null) ? 0 : (firstItemView.getTop() - recyclerView.getPaddingTop());
         outState.putInt(RV_OFFSET, offset);
@@ -29,7 +29,7 @@ public class RecyclerViewScrollPositionManager {
 
     public void restoreScrollOffset(RecyclerView recyclerView) {
         if (mRVPosition > 0 || mRVOffset > 0) {
-            ((LinearLayoutManager)recyclerView.getLayoutManager())
+            ((LinearLayoutManager) recyclerView.getLayoutManager())
                     .scrollToPositionWithOffset(mRVPosition, mRVOffset);
         }
         mRVPosition = 0;

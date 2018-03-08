@@ -39,6 +39,7 @@ import org.wordpress.android.widgets.WPNetworkImageView;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 import java.util.concurrent.RejectedExecutionException;
 
 /**
@@ -69,9 +70,13 @@ public class MediaGridAdapter extends RecyclerView.Adapter<MediaGridAdapter.Grid
 
     public interface MediaGridAdapterCallback {
         void onAdapterFetchMoreData();
+
         void onAdapterItemClicked(int position, boolean isLongClick);
+
         void onAdapterSelectionCountChanged(int count);
+
         void onAdapterRequestRetry(int position);
+
         void onAdapterRequestDelete(int position);
     }
 
@@ -148,7 +153,7 @@ public class MediaGridAdapter extends RecyclerView.Adapter<MediaGridAdapter.Grid
         }
 
         MediaModel media = mMediaList.get(position);
-        holder.imageView.setTag(null);
+        holder.mImageView.setTag(null);
 
         String strState = media.getUploadState();
         MediaUploadState state = MediaUploadState.fromString(strState);
@@ -159,80 +164,82 @@ public class MediaGridAdapter extends RecyclerView.Adapter<MediaGridAdapter.Grid
         boolean isImage = media.getMimeType() != null && media.getMimeType().startsWith("image/");
 
         if (!mLoadThumbnails) {
-            holder.fileContainer.setVisibility(View.GONE);
-            holder.imageView.setImageUrl(null, WPNetworkImageView.ImageType.PHOTO);
+            holder.mFileContainer.setVisibility(View.GONE);
+            holder.mImageView.setImageUrl(null, WPNetworkImageView.ImageType.PHOTO);
         } else if (isImage) {
-            holder.fileContainer.setVisibility(View.GONE);
+            holder.mFileContainer.setVisibility(View.GONE);
             if (isLocalFile) {
-                loadLocalImage(media.getFilePath(), holder.imageView);
+                loadLocalImage(media.getFilePath(), holder.mImageView);
             } else {
-                holder.imageView.setImageUrl(getBestImageUrl(media), WPNetworkImageView.ImageType.PHOTO);
+                holder.mImageView.setImageUrl(getBestImageUrl(media), WPNetworkImageView.ImageType.PHOTO);
             }
         } else if (media.isVideo()) {
-            holder.fileContainer.setVisibility(View.GONE);
-            loadVideoThumbnail(media, holder.imageView);
+            holder.mFileContainer.setVisibility(View.GONE);
+            loadVideoThumbnail(media, holder.mImageView);
         } else {
             // not an image or video, so show file name and file type
-            holder.imageView.setImageDrawable(null);
+            holder.mImageView.setImageDrawable(null);
             String fileName = media.getFileName();
             String title = media.getTitle();
             String fileExtension = MediaUtils.getExtensionForMimeType(media.getMimeType());
-            holder.fileContainer.setVisibility(View.VISIBLE);
-            holder.titleView.setText(TextUtils.isEmpty(title) ? fileName : title);
-            holder.fileTypeView.setText(fileExtension.toUpperCase());
+            holder.mFileContainer.setVisibility(View.VISIBLE);
+            holder.mTitleView.setText(TextUtils.isEmpty(title) ? fileName : title);
+            holder.mFileTypeView.setText(fileExtension.toUpperCase(Locale.ROOT));
             int placeholderResId = WPMediaUtils.getPlaceholder(fileName);
-            holder.fileTypeImageView.setImageResource(placeholderResId);
+            holder.mFileTypeImageView.setImageResource(placeholderResId);
         }
 
         if (mBrowserType.canMultiselect() && canSelect) {
-            holder.selectionCountTextView.setVisibility(View.VISIBLE);
-            holder.selectionCountTextView.setSelected(isSelected);
+            holder.mSelectionCountContainer.setVisibility(View.VISIBLE);
+            holder.mSelectionCountTextView.setVisibility(View.VISIBLE);
+            holder.mSelectionCountTextView.setSelected(isSelected);
             if (isSelected) {
                 int count = mSelectedItems.indexOf(media.getId()) + 1;
-                holder.selectionCountTextView.setText(Integer.toString(count));
+                holder.mSelectionCountTextView.setText(Integer.toString(count));
             } else {
-                holder.selectionCountTextView.setText(null);
+                holder.mSelectionCountTextView.setText(null);
             }
         } else {
-            holder.selectionCountTextView.setVisibility(View.GONE);
+            holder.mSelectionCountContainer.setVisibility(View.GONE);
+            holder.mSelectionCountTextView.setVisibility(View.GONE);
         }
 
         // make sure the thumbnail scale reflects its selection state
         float scale = isSelected ? SCALE_SELECTED : SCALE_NORMAL;
-        if (holder.imageView.getScaleX() != scale) {
-            holder.imageView.setScaleX(scale);
-            holder.imageView.setScaleY(scale);
+        if (holder.mImageView.getScaleX() != scale) {
+            holder.mImageView.setScaleX(scale);
+            holder.mImageView.setScaleY(scale);
         }
 
         // show upload state unless it's already uploaded
         if (state != MediaUploadState.UPLOADED) {
-            holder.stateContainer.setVisibility(View.VISIBLE);
+            holder.mStateContainer.setVisibility(View.VISIBLE);
 
             // only show progress for items currently being uploaded or deleted
             boolean showProgress = state == MediaUploadState.UPLOADING || state == MediaUploadState.DELETING;
-            holder.progressUpload.setVisibility(showProgress ? View.VISIBLE : View.GONE);
+            holder.mProgressUpload.setVisibility(showProgress ? View.VISIBLE : View.GONE);
 
             // failed uploads can be retried or deleted, queued items can be deleted
             if (state == MediaUploadState.FAILED || state == MediaUploadState.QUEUED) {
-                holder.retryDeleteContainer.setVisibility(View.VISIBLE);
-                holder.imgRetry.setVisibility(state == MediaUploadState.FAILED ? View.VISIBLE : View.GONE);
+                holder.mRetryDeleteContainer.setVisibility(View.VISIBLE);
+                holder.mImgRetry.setVisibility(state == MediaUploadState.FAILED ? View.VISIBLE : View.GONE);
             } else {
-                holder.retryDeleteContainer.setVisibility(View.GONE);
+                holder.mRetryDeleteContainer.setVisibility(View.GONE);
             }
-            holder.stateTextView.setText(getLabelForMediaUploadState(state));
+            holder.mStateTextView.setText(getLabelForMediaUploadState(state));
 
             // hide the video player icon so it doesn't overlap state label
-            holder.videoOverlayContainer.setVisibility(View.GONE);
+            holder.mVideoOverlayContainer.setVisibility(View.GONE);
         } else {
-            holder.stateContainer.setVisibility(View.GONE);
-            holder.stateContainer.setOnClickListener(null);
-            holder.videoOverlayContainer.setVisibility(media.isVideo() ? View.VISIBLE : View.GONE);
+            holder.mStateContainer.setVisibility(View.GONE);
+            holder.mStateContainer.setOnClickListener(null);
+            holder.mVideoOverlayContainer.setVisibility(media.isVideo() ? View.VISIBLE : View.GONE);
         }
 
         // if we are near the end, make a call to fetch more
         if (position == getItemCount() - 1
-                && !mHasRetrievedAll
-                && mCallback != null) {
+            && !mHasRetrievedAll
+            && mCallback != null) {
             mCallback.onAdapterFetchMoreData();
         }
     }
@@ -240,8 +247,8 @@ public class MediaGridAdapter extends RecyclerView.Adapter<MediaGridAdapter.Grid
     @Override
     public void onViewRecycled(GridViewHolder holder) {
         super.onViewRecycled(holder);
-        holder.imageView.setImageDrawable(null);
-        holder.imageView.setTag(null);
+        holder.mImageView.setImageDrawable(null);
+        holder.mImageView.setTag(null);
     }
 
     public ArrayList<Integer> getSelectedItems() {
@@ -253,56 +260,56 @@ public class MediaGridAdapter extends RecyclerView.Adapter<MediaGridAdapter.Grid
     }
 
     class GridViewHolder extends RecyclerView.ViewHolder {
-        private final TextView titleView;
-        private final WPNetworkImageView imageView;
-        private final TextView fileTypeView;
-        private final ImageView fileTypeImageView;
-        private final TextView selectionCountTextView;
-        private final TextView stateTextView;
-        private final ProgressBar progressUpload;
-        private final ViewGroup stateContainer;
-        private final ViewGroup fileContainer;
-        private final ViewGroup videoOverlayContainer;
-        private final ViewGroup selectionCountContainer;
-        private final ViewGroup retryDeleteContainer;
-        private final ImageView imgRetry;
-        private final ImageView imgTrash;
+        private final TextView mTitleView;
+        private final WPNetworkImageView mImageView;
+        private final TextView mFileTypeView;
+        private final ImageView mFileTypeImageView;
+        private final TextView mSelectionCountTextView;
+        private final TextView mStateTextView;
+        private final ProgressBar mProgressUpload;
+        private final ViewGroup mStateContainer;
+        private final ViewGroup mFileContainer;
+        private final ViewGroup mVideoOverlayContainer;
+        private final ViewGroup mSelectionCountContainer;
+        private final ViewGroup mRetryDeleteContainer;
+        private final ImageView mImgRetry;
+        private final ImageView mImgTrash;
 
-        public GridViewHolder(View view) {
+        GridViewHolder(View view) {
             super(view);
 
-            imageView = (WPNetworkImageView) view.findViewById(R.id.media_grid_item_image);
-            selectionCountTextView = (TextView) view.findViewById(R.id.text_selection_count);
+            mImageView = (WPNetworkImageView) view.findViewById(R.id.media_grid_item_image);
+            mSelectionCountTextView = (TextView) view.findViewById(R.id.text_selection_count);
 
-            stateContainer = (ViewGroup) view.findViewById(R.id.media_grid_item_upload_state_container);
-            stateTextView = (TextView) stateContainer.findViewById(R.id.media_grid_item_upload_state);
-            progressUpload = (ProgressBar) stateContainer.findViewById(R.id.media_grid_item_upload_progress);
+            mStateContainer = (ViewGroup) view.findViewById(R.id.media_grid_item_upload_state_container);
+            mStateTextView = (TextView) mStateContainer.findViewById(R.id.media_grid_item_upload_state);
+            mProgressUpload = (ProgressBar) mStateContainer.findViewById(R.id.media_grid_item_upload_progress);
 
-            fileContainer = (ViewGroup) view.findViewById(R.id.media_grid_item_file_container);
-            titleView = (TextView) fileContainer.findViewById(R.id.media_grid_item_name);
-            fileTypeView = (TextView) fileContainer.findViewById(R.id.media_grid_item_filetype);
-            fileTypeImageView = (ImageView) fileContainer.findViewById(R.id.media_grid_item_filetype_image);
+            mFileContainer = (ViewGroup) view.findViewById(R.id.media_grid_item_file_container);
+            mTitleView = (TextView) mFileContainer.findViewById(R.id.media_grid_item_name);
+            mFileTypeView = (TextView) mFileContainer.findViewById(R.id.media_grid_item_filetype);
+            mFileTypeImageView = (ImageView) mFileContainer.findViewById(R.id.media_grid_item_filetype_image);
 
-            videoOverlayContainer = (ViewGroup) view.findViewById(R.id.frame_video_overlay);
-            selectionCountContainer = (ViewGroup) view.findViewById(R.id.frame_selection_count);
+            mVideoOverlayContainer = (ViewGroup) view.findViewById(R.id.frame_video_overlay);
+            mSelectionCountContainer = (ViewGroup) view.findViewById(R.id.frame_selection_count);
 
-            imageView.setErrorImageResId(R.drawable.media_item_background);
-            imageView.setDefaultImageResId(R.drawable.media_item_background);
+            mImageView.setErrorImageResId(R.drawable.media_item_background);
+            mImageView.setDefaultImageResId(R.drawable.media_item_background);
 
             // make the progress bar white
-            progressUpload.getIndeterminateDrawable().setColorFilter(Color.WHITE, PorterDuff.Mode.MULTIPLY);
+            mProgressUpload.getIndeterminateDrawable().setColorFilter(Color.WHITE, PorterDuff.Mode.MULTIPLY);
 
             // set size of image and container views
-            imageView.getLayoutParams().width = mThumbWidth;
-            imageView.getLayoutParams().height = mThumbHeight;
-            stateContainer.getLayoutParams().width = mThumbWidth;
-            stateContainer.getLayoutParams().height = mThumbHeight;
-            fileContainer.getLayoutParams().width = mThumbWidth;
-            fileContainer.getLayoutParams().height = mThumbHeight;
+            mImageView.getLayoutParams().width = mThumbWidth;
+            mImageView.getLayoutParams().height = mThumbHeight;
+            mStateContainer.getLayoutParams().width = mThumbWidth;
+            mStateContainer.getLayoutParams().height = mThumbHeight;
+            mFileContainer.getLayoutParams().width = mThumbWidth;
+            mFileContainer.getLayoutParams().height = mThumbHeight;
 
-            retryDeleteContainer = (ViewGroup) view.findViewById(R.id.container_retry_delete);
-            imgRetry = (ImageView) view.findViewById(R.id.image_retry);
-            imgTrash = (ImageView) view.findViewById(R.id.image_trash);
+            mRetryDeleteContainer = (ViewGroup) view.findViewById(R.id.container_retry_delete);
+            mImgRetry = (ImageView) view.findViewById(R.id.image_retry);
+            mImgTrash = (ImageView) view.findViewById(R.id.image_trash);
 
             itemView.setOnClickListener(new OnClickListener() {
                 @Override
@@ -321,7 +328,7 @@ public class MediaGridAdapter extends RecyclerView.Adapter<MediaGridAdapter.Grid
                 }
             });
 
-            selectionCountContainer.setOnClickListener(new OnClickListener() {
+            mSelectionCountContainer.setOnClickListener(new OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     int position = getAdapterPosition();
@@ -332,18 +339,17 @@ public class MediaGridAdapter extends RecyclerView.Adapter<MediaGridAdapter.Grid
                 }
             });
 
-            imgRetry.setOnClickListener(new OnClickListener() {
+            mImgRetry.setOnClickListener(new OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     int position = getAdapterPosition();
                     if (isValidPosition(position) && mCallback != null) {
                         mCallback.onAdapterRequestRetry(position);
                     }
-
                 }
             });
 
-            imgTrash.setOnClickListener(new OnClickListener() {
+            mImgTrash.setOnClickListener(new OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     int position = getAdapterPosition();
@@ -353,7 +359,7 @@ public class MediaGridAdapter extends RecyclerView.Adapter<MediaGridAdapter.Grid
                 }
             });
 
-            ViewUtils.addCircularShadowOutline(selectionCountTextView);
+            ViewUtils.addCircularShadowOutline(mSelectionCountTextView);
         }
 
         private void doAdapterItemClicked(int position, boolean isLongClick) {
@@ -436,8 +442,8 @@ public class MediaGridAdapter extends RecyclerView.Adapter<MediaGridAdapter.Grid
                             public void run() {
                                 WordPress.getBitmapCache().put(path, bitmap);
                                 if (imageView != null
-                                        && imageView.getTag() instanceof String
-                                        && ((String) imageView.getTag()).equalsIgnoreCase(path)) {
+                                    && imageView.getTag() instanceof String
+                                    && ((String) imageView.getTag()).equalsIgnoreCase(path)) {
                                     imageView.setImageBitmap(bitmap);
                                 }
                             }
@@ -495,7 +501,7 @@ public class MediaGridAdapter extends RecyclerView.Adapter<MediaGridAdapter.Grid
                         public void run() {
                             WordPress.getBitmapCache().put(filePath, thumb);
                             if (imageView.getTag() instanceof String
-                                    && (imageView.getTag()).equals(filePath)) {
+                                && (imageView.getTag()).equals(filePath)) {
                                 imageView.setImageBitmap(thumb);
                             }
                         }
@@ -571,18 +577,18 @@ public class MediaGridAdapter extends RecyclerView.Adapter<MediaGridAdapter.Grid
 
         // show and animate the count
         if (selected) {
-            holder.selectionCountTextView.setText(Integer.toString(mSelectedItems.indexOf(localMediaId) + 1));
+            holder.mSelectionCountTextView.setText(Integer.toString(mSelectedItems.indexOf(localMediaId) + 1));
         } else {
-            holder.selectionCountTextView.setText(null);
+            holder.mSelectionCountTextView.setText(null);
         }
-        AniUtils.startAnimation(holder.selectionCountContainer, R.anim.pop);
-        holder.selectionCountTextView.setVisibility(selected ? View.VISIBLE : View.GONE);
+        AniUtils.startAnimation(holder.mSelectionCountContainer, R.anim.pop);
+        holder.mSelectionCountTextView.setVisibility(selected ? View.VISIBLE : View.GONE);
 
         // scale the thumbnail
         if (selected) {
-            AniUtils.scale(holder.imageView, SCALE_NORMAL, SCALE_SELECTED, AniUtils.Duration.SHORT);
+            AniUtils.scale(holder.mImageView, SCALE_NORMAL, SCALE_SELECTED, AniUtils.Duration.SHORT);
         } else {
-            AniUtils.scale(holder.imageView, SCALE_SELECTED, SCALE_NORMAL, AniUtils.Duration.SHORT);
+            AniUtils.scale(holder.mImageView, SCALE_SELECTED, SCALE_NORMAL, AniUtils.Duration.SHORT);
         }
 
         // redraw after the scale animation completes
@@ -656,7 +662,7 @@ public class MediaGridAdapter extends RecyclerView.Adapter<MediaGridAdapter.Grid
     }
 
     private int indexOfMedia(@NonNull MediaModel media) {
-        for (int i = 0 ; i < mMediaList.size(); i++) {
+        for (int i = 0; i < mMediaList.size(); i++) {
             if (media.getId() == mMediaList.get(i).getId()) {
                 return i;
             }

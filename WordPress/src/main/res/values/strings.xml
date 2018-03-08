@@ -9,7 +9,7 @@
     <string name="xmlrpc_post_blocked_error">Couldn\'t connect. Your host is blocking POST requests, and the app needs
         that in order to communicate with your site. Contact your host to solve this problem.</string>
     <string name="xmlrpc_endpoint_forbidden_error">Couldn\'t connect. We received a 403 error when trying to access your
-        site XMLRPC endpoint. The app needs that in order to communicate with your site. Contact your host to solve
+        site XMLRPC mEndpoint. The app needs that in order to communicate with your site. Contact your host to solve
         this problem.</string>
     <string name="xmlrpc_malformed_response_error">Couldn\'t connect. The WordPress installation responded with an invalid XML-RPC document.</string>
     <string name="site_timeout_error">Couldn\'t connect to the WordPress site due to Timeout error.</string>
@@ -321,13 +321,19 @@
     <string name="out_of_memory">Device out of memory</string>
     <string name="file_not_found">Couldn\'t find the file for upload. Was it deleted or moved?</string>
     <string name="download">Downloading media</string>
-    <string name="delete_post">Delete post</string>
-    <string name="delete_page">Delete page</string>
+    <string name="delete_post">Delete post?</string>
+    <string name="delete_page">Delete page?</string>
     <string name="share_url">Share URL</string>
     <string name="posts_fetching">Fetching posts…</string>
     <string name="pages_fetching">Fetching pages…</string>
     <string name="toast_err_post_uploading">Unable to open post while it\'s uploading</string>
     <string name="dialog_confirm_cancel_post_media_uploading">Are you sure? Deleting this post will also cancel the media upload.</string>
+    <string name="dialog_confirm_delete_post">This post will be deleted and sent to Trash</string>
+    <string name="dialog_confirm_delete_page">This page will be deleted and sent to Trash</string>
+    <string name="dialog_confirm_publish_title">Ready to Publish?</string>
+    <string name="dialog_confirm_publish_message_post">This post will be published immediately.</string>
+    <string name="dialog_confirm_publish_message_page">This page will be published immediately.</string>
+    <string name="dialog_confirm_publish_yes">Publish now</string>
 
     <!-- reload drop down -->
     <string name="loading">Loading…</string>
@@ -984,6 +990,7 @@
     <string name="notification_settings_item_other_account_emails_summary">We\'ll always send important emails regarding your account, but you can get some helpful extras, too.</string>
     <string name="notification_settings_category_sights_and_sounds">Sights and Sounds</string>
     <string name="notification_settings_item_sights_and_sounds_choose_sound">Choose sound</string>
+    <string name="notification_settings_item_sights_and_sounds_choose_sound_default" translatable="false">content://settings/system/notification_sound</string>
     <string name="notification_settings_item_sights_and_sounds_vibrate_device">Vibrate device</string>
     <string name="notification_settings_item_sights_and_sounds_blink_light">Blink light</string>
     <string name="notifications_wpcom_updates">WordPress.com Updates</string>
@@ -1001,6 +1008,7 @@
     <string name="notifications_push_summary">Settings for notifications that appear on your device.</string>
     <string name="search_sites">Search sites</string>
     <string name="notifications_no_search_results">No sites matched \'%s\'</string>
+    <string name="notification_sound_has_invalid_path">The chosen sound has invalid path. Please choose another.</string>
 
     <string name="comments_on_my_site">Comments on my site</string>
     <string name="likes_on_my_comments">Likes on my comments</string>
@@ -1065,6 +1073,7 @@
     <string name="async_promo_title">Publish with Confidence</string>
     <string name="async_promo_description">You can now leave the editor and your post will save and publish behind the scenes! Give it a try!</string>
     <string name="async_promo_link">How does it work?</string>
+    <string name="async_promo_publish_now">Publish now</string>
 
     <!-- Post Settings -->
     <string name="post_settings">Post settings</string>
@@ -1589,7 +1598,7 @@
     <string name="site_picker_edit_visibility">Show/hide sites</string>
     <string name="site_picker_add_site">Add new site</string>
     <string name="site_picker_add_self_hosted">Add self-hosted site</string>
-    <string name="site_picker_create_dotcom">Create WordPress.com site</string>
+    <string name="site_picker_create_wpcom">Create WordPress.com site</string>
     <string name="site_picker_cant_hide_current_site">\"%s\" wasn\'t hidden because it\'s the current site</string>
     <string name="site_picker_remove_site_error">Error removing site, try again later</string>
 
@@ -1635,6 +1644,8 @@
 
     <!-- Publicize and sharing -->
     <string name="sharing">Sharing</string>
+    <string name="sharing_disabled">Sharing module disabled</string>
+    <string name="sharing_disabled_description">You cannot access your sharing settings because your Sharing Jetpack module is disabled.</string>
     <string name="connections_label">Connections</string>
     <string name="connections_description">Connect your favorite social media services to automatically share new posts with friends.</string>
     <string name="connected_accounts_label">Connected accounts</string>
@@ -2026,7 +2037,7 @@
     <string name="login_text_otp">Text me a code instead.</string>
     <string name="login_text_otp_another">Text me another code instead.</string>
     <string name="requesting_otp">Requesting a verification code via SMS.</string>
-    <string name="email_not_registered_wpcom">Hmm, this email address isn\'t registered with WordPress.com.\nAre you trying to access a self-hosted site? Log in using the link at the bottom of this screen.</string>
+    <string name="email_not_registered_wpcom">Hmm, we can\'t find a WordPress.com account connected to this email address. Try the link below to log in using your site address.</string>
     <string name="password_incorrect">It looks like this password is incorrect. Please double check your information and try again.</string>
     <string name="login_magic_links_label">We\'ll email you a magic link that\'ll log you in instantly, no password needed. Hunt and peck no more!</string>
     <string name="login_magic_links_sent_label">Your magic link is on its way! Check your email on this device and tap the link in the email you received from WordPress.com.</string>
@@ -2066,23 +2077,24 @@
     <string name="login_error_suffix">\nMaybe try a different account?</string>
 
     <!-- Signup -->
-    <string name="sign_up">Sign Up</string>
+    <string name="sign_up">Sign Up for WordPress.com</string>
     <string name="signup_creating_account">Creating account&#8230;</string>
     <string name="signup_email_error_generic">There was some trouble checking the email address.</string>
     <string name="signup_email_header">To create your new WordPress.com account, please enter your email address.</string>
     <string name="signup_epilogue_error_avatar">There was some trouble uploading your avatar.</string>
+    <string name="signup_epilogue_error_avatar_view">Your avatar has been uploaded and will be available shortly.</string>
     <string name="signup_epilogue_error_generic">There was some trouble updating your account. You can retry or revert your changes to continue.</string>
     <string name="signup_epilogue_error_button_negative">Revert</string>
     <string name="signup_epilogue_error_button_positive">Retry</string>
     <string name="signup_epilogue_heading">New account</string>
     <string name="signup_epilogue_hint_display">Display Name</string>
     <string name="signup_epilogue_hint_password">Password (optional)</string>
-    <string name="signup_epilogue_hint_password_detail">Log in will be possible by getting a new email link like the one you just used, but you can set up a password if you prefer.</string>
+    <string name="signup_epilogue_hint_password_detail">You can always log in with a magic link like the one you just used, but you can also set up a password if you prefer.</string>
     <string name="signup_epilogue_hint_username">Username</string>
     <string name="signup_magic_link_error">There was some trouble sending the email.  You can retry now or close and try again later.</string>
     <string name="signup_magic_link_error_button_negative">Close</string>
     <string name="signup_magic_link_error_button_positive">Retry</string>
-    <string name="signup_magic_link_message">We sent an email with a link, open it to proceed with your new WordPress.com account.</string>
+    <string name="signup_magic_link_message">We sent you a magic signup link! Check your email on this device, and tap the link in the email to finish signing up.</string>
     <string name="signup_magic_link_progress">Sending email</string>
     <string name="signup_terms_of_service_text">By signing up, you agree to our %1$sTerms of Service%2$s.</string>
     <string name="signup_updating_account">Updating account&#8230;</string>
@@ -2090,14 +2102,13 @@
     <string name="signup_with_email_button">Sign Up with Email</string>
     <string name="signup_with_google_button">Sign Up with Google</string>
     <string name="content_description_add_avatar">Add avatar</string>
-    <string name="try_again">Try again</string>
 
     <string name="username_changer_action">Save</string>
     <string name="username_changer_dismiss_button_positive">Discard</string>
     <string name="username_changer_dismiss_message">Discard changing username?</string>
     <string name="username_changer_error_generic">An error occurred while retrieving username suggestions.</string>
     <string name="username_changer_error_none">No usernames are suggested from %1$s%2$s%3$s. Please enter more letters or numbers to get suggestions.</string>
-    <string name="username_changer_header">Your username will be %1$s%2$s%3$s. It will be used for mentions and links, but otherwise people will just see your display name, %4$s%5$s%6$s.</string>
+    <string name="username_changer_header">Your current username is %1$s%2$s%3$s. With few exceptions, others will only ever see your display name, %4$s%5$s%6$s.</string>
     <string name="username_changer_hint">Type to get more suggestions</string>
     <string name="username_changer_title">Change username</string>
 

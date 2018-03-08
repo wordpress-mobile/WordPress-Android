@@ -5,7 +5,7 @@
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *      http://www.apache.org/licenses/LICENSE-2.0
+ * http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -19,6 +19,7 @@ package org.wordpress.android.widgets;
 import android.content.Context;
 import android.database.DataSetObservable;
 import android.database.DataSetObserver;
+import android.support.v4.view.ViewCompat;
 import android.util.AttributeSet;
 import android.view.View;
 import android.view.ViewGroup;
@@ -105,7 +106,7 @@ public class HeaderGridView extends GridView {
     public void addHeaderView(View v, Object data, boolean isSelectable) {
         ListAdapter adapter = getAdapter();
 
-        if (adapter != null && ! (adapter instanceof HeaderViewGridAdapter)) {
+        if (adapter != null && !(adapter instanceof HeaderViewGridAdapter)) {
             throw new IllegalStateException(
                     "Cannot add header view to grid -- setAdapter has already been called.");
         }
@@ -149,7 +150,7 @@ public class HeaderGridView extends GridView {
      *
      * @param v The view to remove
      * @return true if the view was removed, false if the view was not a header
-     *         view
+     * view
      */
     public boolean removeHeaderView(View v) {
         if (mHeaderViewInfos.size() > 0) {
@@ -190,15 +191,15 @@ public class HeaderGridView extends GridView {
     }
 
     private class FullWidthFixedViewLayout extends FrameLayout {
-        public FullWidthFixedViewLayout(Context context) {
+        FullWidthFixedViewLayout(Context context) {
             super(context);
         }
 
         @Override
         protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
             int targetWidth = HeaderGridView.this.getMeasuredWidth()
-                    - HeaderGridView.this.getPaddingLeft()
-                    - HeaderGridView.this.getPaddingRight();
+                    - ViewCompat.getPaddingStart(HeaderGridView.this)
+                    - ViewCompat.getPaddingEnd(HeaderGridView.this);
             widthMeasureSpec = MeasureSpec.makeMeasureSpec(targetWidth,
                     MeasureSpec.getMode(widthMeasureSpec));
             super.onMeasure(widthMeasureSpec, heightMeasureSpec);
@@ -213,7 +214,6 @@ public class HeaderGridView extends GridView {
      * use this class directly in your own code.
      */
     private static class HeaderViewGridAdapter implements WrapperListAdapter, Filterable {
-
         // This is used to notify the container of updates relating to number of columns
         // or headers changing, which changes the number of placeholders needed
         private final DataSetObservable mDataSetObservable = new DataSetObservable();
@@ -228,7 +228,7 @@ public class HeaderGridView extends GridView {
 
         private final boolean mIsFilterable;
 
-        public HeaderViewGridAdapter(ArrayList<FixedViewInfo> headerViewInfos, ListAdapter adapter) {
+        HeaderViewGridAdapter(ArrayList<FixedViewInfo> headerViewInfos, ListAdapter adapter) {
             mAdapter = adapter;
             mIsFilterable = adapter instanceof Filterable;
 
@@ -374,7 +374,7 @@ public class HeaderGridView extends GridView {
         @Override
         public View getView(int position, View convertView, ViewGroup parent) {
             // Header (negative positions will throw an ArrayIndexOutOfBoundsException)
-            int numHeadersAndPlaceholders = getHeadersCount() * mNumColumns ;
+            int numHeadersAndPlaceholders = getHeadersCount() * mNumColumns;
             if (position < numHeadersAndPlaceholders) {
                 View headerViewContainer = mHeaderViewInfos
                         .get(position / mNumColumns).viewContainer;

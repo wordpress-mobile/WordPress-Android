@@ -22,42 +22,41 @@ import java.util.Date;
 /**
  * tbl_blog_info contains information about blogs viewed in the reader, and blogs the
  * user is following. Note that this table is populated from two endpoints:
- *
- *      1. sites/{$siteId}
- *      2. read/following/mine?meta=site,feed
- *
- *  The first endpoint is called when the user views blog preview, the second is called
- *  to get the full list of blogs the user is following
+ * <p>
+ * 1. sites/{$siteId}
+ * 2. read/following/mine?meta=site,feed
+ * <p>
+ * The first endpoint is called when the user views blog preview, the second is called
+ * to get the full list of blogs the user is following
  */
 public class ReaderBlogTable {
-
     protected static void createTables(SQLiteDatabase db) {
         db.execSQL("CREATE TABLE tbl_blog_info ("
-                 + "    blog_id       INTEGER DEFAULT 0,"   // will be same as feedId for feeds
-                 + "    feed_id       INTEGER DEFAULT 0,"   // will be 0 for blogs
-                 + "	blog_url      TEXT NOT NULL COLLATE NOCASE,"
-                 + "    image_url     TEXT,"
-                 + "    feed_url      TEXT,"
-                 + "    name          TEXT,"
-                 + "    description   TEXT,"
-                 + "    is_private    INTEGER DEFAULT 0,"
-                 + "    is_jetpack    INTEGER DEFAULT 0,"
-                 + "    is_following  INTEGER DEFAULT 0,"
-                 + "    num_followers INTEGER DEFAULT 0,"
-                 + " 	date_updated  TEXT,"
-                 + "    PRIMARY KEY (blog_id)"
-                 + ")");
+                   + " blog_id INTEGER DEFAULT 0," // will be same as feedId for feeds
+                   + " feed_id INTEGER DEFAULT 0," // will be 0 for blogs
+                   + " blog_url TEXT NOT NULL COLLATE NOCASE,"
+                   + " image_url TEXT,"
+                   + " feed_url TEXT,"
+                   + " name TEXT,"
+                   + " description TEXT,"
+                   + " is_private INTEGER DEFAULT 0,"
+                   + " is_jetpack INTEGER DEFAULT 0,"
+                   + " is_following INTEGER DEFAULT 0,"
+                   + " num_followers INTEGER DEFAULT 0,"
+                   + " date_updated TEXT,"
+                   + " PRIMARY KEY (blog_id)"
+                   + ")");
 
         db.execSQL("CREATE TABLE tbl_recommended_blogs ("
-                + "     blog_id         INTEGER DEFAULT 0,"
-                + "     follow_reco_id  INTEGER DEFAULT 0,"
-                + "     score           INTEGER DEFAULT 0,"
-                + "	    title           TEXT COLLATE NOCASE,"
-                + "	    blog_url        TEXT COLLATE NOCASE,"
-                + "	    image_url       TEXT,"
-                + "	    reason          TEXT,"
-                + "     PRIMARY KEY (blog_id)"
-                + ")");
+                   + " blog_id INTEGER DEFAULT 0,"
+                   + " follow_reco_id INTEGER DEFAULT 0,"
+                   + " score INTEGER DEFAULT 0,"
+                   + " title TEXT COLLATE NOCASE,"
+                   + " blog_url TEXT COLLATE NOCASE,"
+                   + " image_url TEXT,"
+                   + " reason TEXT,"
+                   + " PRIMARY KEY (blog_id)"
+                   + ")");
     }
 
     protected static void dropTables(SQLiteDatabase db) {
@@ -103,8 +102,8 @@ public class ReaderBlogTable {
         }
         String[] args = {UrlUtils.normalizeUrl(url)};
         return SqlUtils.longForQuery(ReaderDatabase.getReadableDb(),
-                "SELECT feed_id FROM tbl_blog_info WHERE feed_url=?",
-                args);
+                                     "SELECT feed_id FROM tbl_blog_info WHERE feed_url=?",
+                                     args);
     }
 
     private static ReaderBlog getBlogInfoFromCursor(Cursor c) {
@@ -133,21 +132,22 @@ public class ReaderBlogTable {
             return;
         }
         String sql = "INSERT OR REPLACE INTO tbl_blog_info"
-                + "   (blog_id, feed_id, blog_url, image_url, feed_url, name, description, is_private, is_jetpack, is_following, num_followers, date_updated)"
-                + "   VALUES (?1, ?2, ?3, ?4, ?5, ?6, ?7, ?8, ?9, ?10, ?11, ?12)";
+                     + " (blog_id, feed_id, blog_url, image_url, feed_url, name, description, is_private, is_jetpack, "
+                     + "  is_following, num_followers, date_updated)"
+                     + " VALUES (?1, ?2, ?3, ?4, ?5, ?6, ?7, ?8, ?9, ?10, ?11, ?12)";
         SQLiteStatement stmt = ReaderDatabase.getWritableDb().compileStatement(sql);
         try {
-            stmt.bindLong  (1, blogInfo.blogId);
-            stmt.bindLong  (2, blogInfo.feedId);
+            stmt.bindLong(1, blogInfo.blogId);
+            stmt.bindLong(2, blogInfo.feedId);
             stmt.bindString(3, blogInfo.getUrl());
             stmt.bindString(4, blogInfo.getImageUrl());
             stmt.bindString(5, blogInfo.getFeedUrl());
             stmt.bindString(6, blogInfo.getName());
             stmt.bindString(7, blogInfo.getDescription());
-            stmt.bindLong  (8, SqlUtils.boolToSql(blogInfo.isPrivate));
-            stmt.bindLong  (9, SqlUtils.boolToSql(blogInfo.isJetpack));
-            stmt.bindLong  (10, SqlUtils.boolToSql(blogInfo.isFollowing));
-            stmt.bindLong  (11, blogInfo.numSubscribers);
+            stmt.bindLong(8, SqlUtils.boolToSql(blogInfo.isPrivate));
+            stmt.bindLong(9, SqlUtils.boolToSql(blogInfo.isJetpack));
+            stmt.bindLong(10, SqlUtils.boolToSql(blogInfo.isFollowing));
+            stmt.bindLong(11, blogInfo.numSubscribers);
             stmt.bindString(12, DateTimeUtils.iso8601FromDate(new Date()));
             stmt.execute();
         } finally {
@@ -188,13 +188,12 @@ public class ReaderBlogTable {
 
             // then insert passed ones
             if (followedBlogs != null) {
-                for (ReaderBlog blog: followedBlogs) {
+                for (ReaderBlog blog : followedBlogs) {
                     addOrUpdateBlog(blog);
                 }
             }
 
             db.setTransactionSuccessful();
-
         } finally {
             db.endTransaction();
         }
@@ -204,7 +203,8 @@ public class ReaderBlogTable {
      * return list of URLs of followed blogs
      */
     public static ReaderUrlList getFollowedBlogUrls() {
-        Cursor c = ReaderDatabase.getReadableDb().rawQuery("SELECT DISTINCT blog_url FROM tbl_blog_info WHERE is_following!=0", null);
+        Cursor c = ReaderDatabase.getReadableDb()
+                                 .rawQuery("SELECT DISTINCT blog_url FROM tbl_blog_info WHERE is_following!=0", null);
         try {
             ReaderUrlList urls = new ReaderUrlList();
             if (c.moveToFirst()) {
@@ -224,16 +224,16 @@ public class ReaderBlogTable {
     public static void setIsFollowedBlogId(long blogId, boolean isFollowed) {
         ReaderDatabase.getWritableDb().execSQL(
                 "UPDATE tbl_blog_info SET is_following="
-                        + SqlUtils.boolToSql(isFollowed)
-                        + " WHERE blog_id=?",
+                + SqlUtils.boolToSql(isFollowed)
+                + " WHERE blog_id=?",
                 new String[]{Long.toString(blogId)});
     }
 
     public static void setIsFollowedFeedId(long feedId, boolean isFollowed) {
         ReaderDatabase.getWritableDb().execSQL(
                 "UPDATE tbl_blog_info SET is_following="
-                        + SqlUtils.boolToSql(isFollowed)
-                        + " WHERE feed_id=?",
+                + SqlUtils.boolToSql(isFollowed)
+                + " WHERE feed_id=?",
                 new String[]{Long.toString(feedId)});
     }
 
@@ -275,22 +275,22 @@ public class ReaderBlogTable {
     public static String getBlogName(long blogId) {
         String[] args = {Long.toString(blogId)};
         return SqlUtils.stringForQuery(ReaderDatabase.getReadableDb(),
-                "SELECT name FROM tbl_blog_info WHERE blog_id=?",
-                args);
+                                       "SELECT name FROM tbl_blog_info WHERE blog_id=?",
+                                       args);
     }
 
     public static String getBlogUrl(long blogId) {
         String[] args = {Long.toString(blogId)};
         return SqlUtils.stringForQuery(ReaderDatabase.getReadableDb(),
-                "SELECT blog_url FROM tbl_blog_info WHERE blog_id=?",
-                args);
+                                       "SELECT blog_url FROM tbl_blog_info WHERE blog_id=?",
+                                       args);
     }
 
     public static String getFeedName(long feedId) {
         String[] args = {Long.toString(feedId)};
         return SqlUtils.stringForQuery(ReaderDatabase.getReadableDb(),
-                "SELECT name FROM tbl_blog_info WHERE feed_id=?",
-                args);
+                                       "SELECT name FROM tbl_blog_info WHERE feed_id=?",
+                                       args);
     }
 
     public static ReaderRecommendBlogList getRecommendedBlogs() {
@@ -321,8 +321,8 @@ public class ReaderBlogTable {
         SQLiteDatabase db = ReaderDatabase.getWritableDb();
         SQLiteStatement stmt = db.compileStatement(
                 "INSERT INTO tbl_recommended_blogs"
-                        + " (blog_id, follow_reco_id, score, title, blog_url, image_url, reason)"
-                        + " VALUES (?1, ?2, ?3, ?4, ?5, ?6, ?7)");
+                + " (blog_id, follow_reco_id, score, title, blog_url, image_url, reason)"
+                + " VALUES (?1, ?2, ?3, ?4, ?5, ?6, ?7)");
         db.beginTransaction();
         try {
             try {
@@ -332,9 +332,9 @@ public class ReaderBlogTable {
                 // then insert the passed ones
                 if (blogs != null && blogs.size() > 0) {
                     for (ReaderRecommendedBlog blog : blogs) {
-                        stmt.bindLong  (1, blog.blogId);
-                        stmt.bindLong  (2, blog.followRecoId);
-                        stmt.bindLong  (3, blog.score);
+                        stmt.bindLong(1, blog.blogId);
+                        stmt.bindLong(2, blog.followRecoId);
+                        stmt.bindLong(3, blog.score);
                         stmt.bindString(4, blog.getTitle());
                         stmt.bindString(5, blog.getBlogUrl());
                         stmt.bindString(6, blog.getImageUrl());
@@ -343,7 +343,6 @@ public class ReaderBlogTable {
                     }
                 }
                 db.setTransactionSuccessful();
-
             } catch (SQLException e) {
                 AppLog.e(AppLog.T.READER, e);
             }
@@ -371,17 +370,18 @@ public class ReaderBlogTable {
         if (blogInfo.blogId != 0) {
             String[] args = {Long.toString(blogInfo.blogId)};
             return SqlUtils.stringForQuery(ReaderDatabase.getReadableDb(),
-                    "SELECT date_updated FROM tbl_blog_info WHERE blog_id=?",
-                    args);
+                                           "SELECT date_updated FROM tbl_blog_info WHERE blog_id=?",
+                                           args);
         } else {
             String[] args = {Long.toString(blogInfo.feedId)};
             return SqlUtils.stringForQuery(ReaderDatabase.getReadableDb(),
-                    "SELECT date_updated FROM tbl_blog_info WHERE feed_id=?",
-                    args);
+                                           "SELECT date_updated FROM tbl_blog_info WHERE feed_id=?",
+                                           args);
         }
     }
 
     private static final int NEVER_UPDATED = -1;
+
     private static int minutesSinceLastUpdate(ReaderBlog blogInfo) {
         if (blogInfo == null) {
             return 0;

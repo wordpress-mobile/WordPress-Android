@@ -34,6 +34,8 @@
                     android:layout_height="wrap_content"
                     android:hint="@string/tag_name_hint"
                     android:inputType="textCapSentences|textAutoCorrect"
+                    android:textAlignment="viewStart"
+                    android:gravity="start"
                     tools:text="edit_name" />
 
             </android.support.design.widget.TextInputLayout>
@@ -51,6 +53,7 @@
                     android:hint="@string/tag_description_hint"
                     android:inputType="textCapSentences|textAutoCorrect"
                     android:lines="3"
+                    android:textAlignment="viewStart"
                     tools:text="edit_description" />
 
             </android.support.design.widget.TextInputLayout>

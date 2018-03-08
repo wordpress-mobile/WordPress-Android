@@ -1,6 +1,5 @@
 package org.wordpress.android.editor;
 
-import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.Instrumentation;
 import android.os.Build;
@@ -36,7 +35,6 @@ public class ZssEditorTest extends ActivityInstrumentationTestCase2<MockActivity
         super(MockActivity.class);
     }
 
-    @SuppressLint("AddJavascriptInterface")
     @Override
     protected void setUp() throws Exception {
         super.setUp();
@@ -53,10 +51,10 @@ public class ZssEditorTest extends ActivityInstrumentationTestCase2<MockActivity
             htmlEditor = htmlEditor.replace("%%TITLE%%", getActivity().getString(R.string.visual_editor));
             htmlEditor = htmlEditor.replace("%%ANDROID_API_LEVEL%%", String.valueOf(Build.VERSION.SDK_INT));
             htmlEditor = htmlEditor.replace("%%LOCALIZED_STRING_INIT%%",
-                    "nativeState.localizedStringEdit = '" + getActivity().getString(R.string.edit) + "';\n" +
-                    "nativeState.localizedStringUploading = '" + getActivity().getString(R.string.uploading) + "';\n" +
-                    "nativeState.localizedStringUploadingGallery = '" +
-                            getActivity().getString(R.string.uploading_gallery_placeholder) + "';\n");
+                    "nativeState.localizedStringEdit = '" + getActivity().getString(R.string.edit) + "';\n"
+                    + "nativeState.localizedStringUploading = '" + getActivity().getString(R.string.uploading) + "';\n"
+                    + "nativeState.localizedStringUploadingGallery = '"
+                            + getActivity().getString(R.string.uploading_gallery_placeholder) + "';\n");
         }
 
         final String finalHtmlEditor = htmlEditor;
@@ -65,9 +63,10 @@ public class ZssEditorTest extends ActivityInstrumentationTestCase2<MockActivity
             @Override
             public void run() {
                 mWebView = new EditorWebView(mInstrumentation.getContext(), null);
-                if (Build.VERSION.SDK_INT < 17) {
+                if (Build.VERSION.SDK_INT < Build.VERSION_CODES.JELLY_BEAN_MR1) {
                     mWebView.setJsCallbackReceiver(new MockJsCallbackReceiver(new EditorFragmentForTests()));
                 } else {
+                    //noinspection AddJavascriptInterface
                     mWebView.addJavascriptInterface(new MockJsCallbackReceiver(new EditorFragmentForTests()),
                             JS_CALLBACK_HANDLER);
                 }
@@ -99,7 +98,7 @@ public class ZssEditorTest extends ActivityInstrumentationTestCase2<MockActivity
     }
 
     private class MockJsCallbackReceiver extends JsCallbackReceiver {
-        public MockJsCallbackReceiver(EditorFragmentAbstract editorFragmentAbstract) {
+        MockJsCallbackReceiver(EditorFragmentAbstract editorFragmentAbstract) {
             super(editorFragmentAbstract);
         }
 
@@ -111,7 +110,7 @@ public class ZssEditorTest extends ActivityInstrumentationTestCase2<MockActivity
             }
 
             // Handle callbacks and count down latches according to the currently running test
-            switch(mTestMethod) {
+            switch (mTestMethod) {
                 case INIT:
                     if (callbackId.equals("callback-dom-loaded")) {
                         mCallbackSet.add(callbackId + ":");

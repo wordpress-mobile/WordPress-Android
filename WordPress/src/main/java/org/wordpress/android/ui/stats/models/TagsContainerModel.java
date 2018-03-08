@@ -17,7 +17,7 @@ public class TagsContainerModel extends BaseStatsModel {
         this.mDate = response.getString("date");
         JSONArray outerTags = response.getJSONArray("tags");
         if (outerTags != null) {
-             mTags = new ArrayList<>(outerTags.length());
+            mTags = new ArrayList<>(outerTags.length());
             for (int i = 0; i < outerTags.length(); i++) {
                 JSONObject current = outerTags.getJSONObject(i);
                 mTags.add(new TagsModel(current));

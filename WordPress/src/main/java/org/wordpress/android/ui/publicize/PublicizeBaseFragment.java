@@ -8,7 +8,6 @@ import android.support.v7.widget.Toolbar;
 import org.wordpress.android.R;
 
 public class PublicizeBaseFragment extends Fragment {
-
     private Toolbar getToolbar() {
         if (getActivity() != null) {
             return (Toolbar) getActivity().findViewById(R.id.toolbar);
@@ -34,5 +33,4 @@ public class PublicizeBaseFragment extends Fragment {
             toolbar.setNavigationIcon(resId);
         }
     }
-
 }

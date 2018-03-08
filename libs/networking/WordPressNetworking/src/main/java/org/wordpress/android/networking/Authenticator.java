@@ -9,5 +9,5 @@ package org.wordpress.android.networking;
  * easily update the access token.
  */
 public interface Authenticator {
-    void authenticate(final AuthenticatorRequest authenticatorRequest);
+    void authenticate(AuthenticatorRequest authenticatorRequest);
 }

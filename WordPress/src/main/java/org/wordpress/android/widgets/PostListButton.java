@@ -16,27 +16,26 @@ import org.wordpress.android.R;
  * buttons in footer of post cards
  */
 public class PostListButton extends LinearLayout {
-
     private ImageView mImageView;
     private TextView mTextView;
     private int mButtonType = BUTTON_NONE;
 
     // from attrs.xml
-    public static final int BUTTON_NONE     = 0;
-    public static final int BUTTON_EDIT     = 1;
-    public static final int BUTTON_VIEW     = 2;
-    public static final int BUTTON_PREVIEW  = 3;
-    public static final int BUTTON_STATS    = 4;
-    public static final int BUTTON_TRASH    = 5;
-    public static final int BUTTON_DELETE   = 6;
-    public static final int BUTTON_PUBLISH  = 7;
-    public static final int BUTTON_SYNC     = 8;
-    public static final int BUTTON_MORE     = 9;
-    public static final int BUTTON_BACK     = 10;
-    public static final int BUTTON_SUBMIT   = 11;
-    public static final int BUTTON_RETRY    = 12;
+    public static final int BUTTON_NONE = 0;
+    public static final int BUTTON_EDIT = 1;
+    public static final int BUTTON_VIEW = 2;
+    public static final int BUTTON_PREVIEW = 3;
+    public static final int BUTTON_STATS = 4;
+    public static final int BUTTON_TRASH = 5;
+    public static final int BUTTON_DELETE = 6;
+    public static final int BUTTON_PUBLISH = 7;
+    public static final int BUTTON_SYNC = 8;
+    public static final int BUTTON_MORE = 9;
+    public static final int BUTTON_BACK = 10;
+    public static final int BUTTON_SUBMIT = 11;
+    public static final int BUTTON_RETRY = 12;
 
-    public PostListButton(Context context){
+    public PostListButton(Context context) {
         super(context);
         initView(context, null);
     }
@@ -89,7 +88,8 @@ public class PostListButton extends LinearLayout {
         mTextView.setTextColor(getContext().getResources().getColor(getTextColorResId(buttonType)));
     }
 
-    public static @StringRes int getButtonTextResId(int buttonType) {
+    public static @StringRes
+    int getButtonTextResId(int buttonType) {
         switch (buttonType) {
             case BUTTON_EDIT:
                 return R.string.button_edit;
@@ -120,7 +120,8 @@ public class PostListButton extends LinearLayout {
         }
     }
 
-    public static @DrawableRes int getButtonIconResId(int buttonType) {
+    public static @DrawableRes
+    int getButtonIconResId(int buttonType) {
         switch (buttonType) {
             case BUTTON_EDIT:
                 return R.drawable.ic_pencil_blue_wordpress_18dp;
@@ -149,7 +150,8 @@ public class PostListButton extends LinearLayout {
         }
     }
 
-    public static @ColorRes int getTextColorResId(int buttonType) {
+    public static @ColorRes
+    int getTextColorResId(int buttonType) {
         switch (buttonType) {
             case BUTTON_RETRY:
                 return R.color.alert_red;

@@ -13,7 +13,9 @@
         android:layout_marginRight="@dimen/theme_browser_cardview_margin_large"
         android:layout_marginTop="@dimen/theme_browser_cardview_margin_large"
         card_view:cardCornerRadius="@dimen/cardview_default_radius"
-        card_view:cardElevation="@dimen/card_elevation">
+        card_view:cardElevation="@dimen/card_elevation"
+        android:layout_marginStart="@dimen/theme_browser_cardview_margin_large"
+        android:layout_marginEnd="@dimen/theme_browser_cardview_margin_large">
 
         <RelativeLayout
             android:layout_width="match_parent"
@@ -30,7 +32,6 @@
                     android:id="@+id/theme_grid_item_image"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_alignParentTop="true"
                     android:adjustViewBounds="true"
                     android:scaleType="fitCenter" />
 
@@ -47,7 +48,8 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_alignParentLeft="true"
-                    android:layout_centerVertical="true">
+                    android:layout_centerVertical="true"
+                    android:layout_alignParentStart="true">
 
                     <org.wordpress.android.widgets.WPTextView
                         android:id="@+id/theme_grid_item_name"
@@ -55,7 +57,8 @@
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="@dimen/theme_browser_cardview_header_margin"
                         android:textColor="@color/black"
-                        android:textStyle="bold" />
+                        android:textStyle="bold"
+                        android:layout_marginStart="@dimen/theme_browser_cardview_header_margin"/>
 
                     <org.wordpress.android.widgets.WPTextView
                         android:id="@+id/theme_grid_item_price"
@@ -63,7 +66,8 @@
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="@dimen/theme_browser_cardview_margin_large"
                         android:textColor="@color/theme_price"
-                        android:textStyle="bold" />
+                        android:textStyle="bold"
+                        android:layout_marginStart="@dimen/theme_browser_cardview_margin_large"/>
 
                     <org.wordpress.android.widgets.WPTextView
                         android:id="@+id/theme_grid_item_active"
@@ -75,14 +79,16 @@
                         android:textColor="@color/theme_active"
                         android:textSize="@dimen/text_sz_extra_small"
                         android:textStyle="bold"
-                        android:visibility="gone" />
+                        android:visibility="gone"
+                        android:layout_marginStart="@dimen/theme_browser_cardview_margin_large"/>
 
                 </LinearLayout>
 
                 <LinearLayout
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_alignParentRight="true">
+                    android:layout_alignParentRight="true"
+                    android:layout_alignParentEnd="true">
 
                     <View
                         android:id="@+id/divider"

@@ -21,7 +21,7 @@ public class RestClientEmptyMock extends RestClient {
     }
 
     public java.lang.String getAbsoluteURL(java.lang.String path,
-                                                  java.util.Map<java.lang.String, java.lang.String> params) {
+                                           java.util.Map<java.lang.String, java.lang.String> params) {
         return null;
     }
 

@@ -13,10 +13,10 @@ import java.util.Properties;
 
 public class DeviceUtils {
     private static DeviceUtils instance;
-    private boolean isKindleFire = false;
+    private boolean mIsKindleFire = false;
 
     public boolean isKindleFire() {
-        return isKindleFire;
+        return mIsKindleFire;
     }
 
     public static DeviceUtils getInstance() {
@@ -27,15 +27,15 @@ public class DeviceUtils {
     }
 
     private DeviceUtils() {
-        isKindleFire = android.os.Build.MODEL.equalsIgnoreCase("kindle fire") ? true: false;
+        mIsKindleFire = android.os.Build.MODEL.equalsIgnoreCase("kindle fire") ? true : false;
     }
 
     /**
      * Checks camera availability recursively based on API level.
      *
      * TODO: change "android.hardware.camera.front" and "android.hardware.camera.any" to
-     *     {@link PackageManager#FEATURE_CAMERA_FRONT} and {@link PackageManager#FEATURE_CAMERA_ANY},
-     *     respectively, once they become accessible or minSdk version is incremented.
+     * {@link PackageManager#FEATURE_CAMERA_FRONT} and {@link PackageManager#FEATURE_CAMERA_ANY},
+     * respectively, once they become accessible or minSdk version is incremented.
      *
      * @param context The context.
      * @return Whether camera is available.
@@ -44,7 +44,7 @@ public class DeviceUtils {
         final PackageManager pm = context.getPackageManager();
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.JELLY_BEAN_MR1) {
             return pm.hasSystemFeature(PackageManager.FEATURE_CAMERA)
-                    || pm.hasSystemFeature("android.hardware.camera.front");
+                   || pm.hasSystemFeature("android.hardware.camera.front");
         }
 
         return pm.hasSystemFeature("android.hardware.camera.any");
@@ -69,11 +69,13 @@ public class DeviceUtils {
             }
         } catch (IOException e) {
             AppLog.e(T.UTILS, "Can't read `android_models.properties` file from assets, or it's in the wrong form.", e);
-            AppLog.d(T.UTILS, "If you need more info about the file, please check the reference implementation available " +
-                    "here: https://github.com/wordpress-mobile/WordPress-Android/blob/dd989429bd701a66bcba911de08f2e8d336798ef/WordPress/src/main/assets/android_models.properties");
+            AppLog.d(T.UTILS,
+                 "If you need more info about the file, please check the reference implementation available here: "
+                 + "https://github.com/wordpress-mobile/WordPress-Android/blob/dd989429bd701a66bcba911de08f2e8d336798ef"
+                 + "/WordPress/src/main/assets/android_models.properties");
         }
 
-        if (model == null) {  //Device model not found in the list
+        if (model == null) { // Device model not found in the list
             if (undecodedModel.startsWith(manufacturer)) {
                 model = capitalize(undecodedModel);
             } else {

@@ -41,8 +41,8 @@ public class DateTimeUtils {
 
         // less than a year old, let `DateUtils.getRelativeTimeSpanString` do the job
         if (daysSince < 365) {
-            return DateUtils.getRelativeTimeSpanString(passedTime, currentTime,
-                    DateUtils.MINUTE_IN_MILLIS, DateUtils.FORMAT_ABBREV_ALL).toString();
+            return DateUtils.getRelativeTimeSpanString(passedTime, currentTime, DateUtils.MINUTE_IN_MILLIS,
+                                                       DateUtils.FORMAT_ABBREV_ALL).toString();
         }
 
         // date is older, so include year (ex: Jan 30, 2013)

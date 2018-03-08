@@ -31,14 +31,11 @@
 
         <item name="windowActionModeOverlay">true</item>
         <item name="searchViewStyle">@style/WordPress.SearchViewStyle</item>
+        <item name="homeAsUpIndicator">@drawable/ic_arrow_left_white_24dp</item>
     </style>
 
     <!-- http://android-developers.blogspot.com/2014/10/appcompat-v21-material-design-for-pre.html -->
     <style name="WordPress.SearchViewStyle" parent="Widget.AppCompat.SearchView.ActionBar" />
-
-    <style name="WordPress.DropDownListView.Light" parent="WordPress">
-        <item name="android:dropDownListViewStyle">@style/DropDownListView.Light.WordPress</item>
-    </style>
 
     <!-- this style is only referenced in a Light.DarkActionBar based theme -->
     <style name="Theme.WordPress.Widget" parent="Theme.AppCompat">
@@ -76,12 +73,6 @@
         <item name="android:popupBackground">@drawable/menu_dropdown_panel_wordpress</item>
     </style>
 
-    <style name="DropDownListView.Dark.WordPress" parent="android:Widget.Holo.ListView.DropDown">
-        <item name="android:listSelector">@drawable/selectable_background_wordpress</item>
-        <item name="android:fadeScrollbars">false</item>
-        <item name="android:scrollbarThumbVertical">@drawable/scrollbar_transparent_white</item>
-    </style>
-
     <style name="DropDownListView.Light.WordPress" parent="android:Widget.Holo.ListView.DropDown">
         <item name="android:listSelector">@drawable/selectable_background_wordpress</item>
         <item name="android:fadeScrollbars">false</item>
@@ -104,7 +95,9 @@
     <style name="FilteredRecyclerViewFilterTextView.WordPress" parent="android:TextAppearance.Widget.TextView">
         <item name="android:padding">@dimen/margin_medium</item>
         <item name="android:layout_marginLeft">@dimen/margin_extra_large</item>
+        <item name="android:layout_marginStart" tools:targetApi="jelly_bean_mr1">@dimen/margin_extra_large</item>
         <item name="android:paddingRight">@dimen/margin_large</item>
+        <item name="android:paddingEnd" tools:targetApi="jelly_bean_mr1">@dimen/margin_large</item>
         <item name="android:textSize">@dimen/text_sz_large</item>
     </style>
 
@@ -122,7 +115,6 @@
     </style>
 
     <style name="FilteredRecyclerViewToolbar" parent="Widget.AppCompat.Toolbar">
-        <item name="android:paddingLeft">@dimen/margin_filter_spinner</item>
         <item name="android:elevation">@dimen/filter_subbar_elevation</item>
         <item name="android:theme">@style/FilteredRecyclerViewToolbar.Theme</item>
     </style>
@@ -145,64 +137,8 @@
         <item name="android:listDivider">@null</item>
     </style>
 
-    <style name="ProgressBar.WordPress" parent="android:Widget.Holo.ProgressBar.Horizontal">
-        <item name="android:progressDrawable">@drawable/progress_horizontal_wordpress</item>
-    </style>
-
     <style name="ActionButton.CloseMode.WordPress" parent="android:Widget.Holo.ActionButton.CloseMode">
         <item name="android:background">@drawable/btn_cab_done_wordpress</item>
-    </style>
-
-    <style name="WordPressSettingsSectionHeader">
-        <item name="android:layout_marginTop">@dimen/margin_large</item>
-        <item name="android:layout_marginBottom">@dimen/margin_small</item>
-        <item name="android:textColor">@color/grey</item>
-        <item name="android:textSize">@dimen/text_sz_medium</item>
-        <item name="android:textStyle">bold</item>
-        <item name="android:textAllCaps">true</item>
-    </style>
-
-    <style name="WordPressSubHeader">
-        <item name="android:textSize">@dimen/text_sz_medium</item>
-        <item name="android:textAllCaps">true</item>
-        <item name="android:layout_marginTop">@dimen/margin_large</item>
-        <item name="android:textColor">@color/grey</item>
-    </style>
-
-    <style name="WordPressTitleAppearance" parent="@android:style/TextAppearance">
-        <item name="android:singleLine">true</item>
-        <item name="android:shadowColor">#BB000000</item>
-        <item name="android:shadowRadius">2.75</item>
-        <item name="android:textColor">#FFF6F6F6</item>
-        <item name="android:textSize">14sp</item>
-        <item name="android:textStyle">bold</item>
-    </style>
-
-    <style name="WordPressWelcomeStyle">
-        <item name="android:layout_gravity">center</item>
-    </style>
-
-    <style name="ThemeDetailsHeader">
-        <item name="android:textStyle">bold</item>
-    </style>
-
-    <style name="MediaGalleryText">
-        <item name="android:textColor">@color/white</item>
-        <item name="android:textSize">16sp</item>
-    </style>
-
-    <style name="MediaGalleryNumOfColumns" parent="@style/MediaGalleryText">
-        <item name="android:textColor">@color/media_grid_item_checkstate_text_selector</item>
-        <item name="android:background">@drawable/media_gallery_option_selector</item>
-        <item name="android:button">@null</item>
-    </style>
-
-    <style name="MediaGalleryTypeCheckbox">
-        <item name="android:textColor">@color/white</item>
-        <item name="android:drawablePadding">8dp</item>
-        <item name="android:textSize">14sp</item>
-        <item name="android:button">@null</item>
-        <item name="android:gravity">center</item>
     </style>
 
     <style name="MediaSettings" />
@@ -220,6 +156,8 @@
         <!-- Label color in TRUE state and bar color FALSE and TRUE State -->
         <item name="colorControlNormal">@color/grey_500</item>
         <item name="colorControlActivated">@color/blue_wordpress</item>
+        <item name="android:textAlignment">viewStart</item>
+        <item name="android:gravity">start</item>
 
         <!-- Fix for crash on ASUS devices - https://github.com/wordpress-mobile/WordPress-Android/issues/7038 -->
         <item name="android:textColorHighlight">@color/transparent</item>
@@ -232,13 +170,17 @@
     </style>
     <style name="MediaSettings.Label">
         <item name="android:layout_marginLeft">@dimen/media_settings_margin</item>
+        <item name="android:layout_marginStart" tools:targetApi="jelly_bean_mr1">@dimen/media_settings_margin</item>
         <item name="android:layout_marginRight">@dimen/media_settings_margin</item>
+        <item name="android:layout_marginEnd" tools:targetApi="jelly_bean_mr1">@dimen/media_settings_margin</item>
         <item name="android:textColor">@color/grey_dark</item>
         <item name="android:textSize">@dimen/text_sz_large</item>
     </style>
     <style name="MediaSettings.Value">
         <item name="android:layout_marginLeft">@dimen/media_settings_margin</item>
+        <item name="android:layout_marginStart" tools:targetApi="jelly_bean_mr1">@dimen/media_settings_margin</item>
         <item name="android:layout_marginRight">@dimen/media_settings_margin</item>
+        <item name="android:layout_marginEnd" tools:targetApi="jelly_bean_mr1">@dimen/media_settings_margin</item>
         <item name="android:textColor">@color/grey</item>
         <item name="android:textSize">@dimen/text_sz_medium</item>
     </style>
@@ -279,7 +221,9 @@
         <item name="android:textColor">@color/nux_primary_button</item>
         <item name="android:layout_height">@dimen/nux_main_button_height</item>
         <item name="android:layout_marginLeft">4dp</item>
+        <item name="android:layout_marginStart" tools:targetApi="jelly_bean_mr1">4dp</item>
         <item name="android:layout_marginRight">4dp</item>
+        <item name="android:layout_marginEnd" tools:targetApi="jelly_bean_mr1">4dp</item>
         <item name="android:layout_marginBottom">8dp</item>
         <item name="android:clickable">true</item>
         <item name="android:background">@drawable/nux_primary_button_selector</item>
@@ -290,13 +234,6 @@
         <item name="android:textColor">@drawable/nux_flat_button_text_selector</item>
         <item name="android:background">@drawable/nux_flat_button_selector</item>
         <item name="android:padding">8dp</item>
-        <item name="android:clickable">true</item>
-    </style>
-
-    <style name="WordPress.NUXFlatButtonNoBg">
-        <item name="android:textColor">@color/grey_lighten_10</item>
-        <item name="android:background">?android:attr/selectableItemBackground</item>
-        <item name="android:padding">@dimen/margin_large</item>
         <item name="android:clickable">true</item>
     </style>
 
@@ -313,6 +250,7 @@
         <item name="android:textColorHint">#AAAAAA</item>
         <item name="android:padding">12dp</item>
         <item name="android:layout_marginLeft">40dp</item>
+        <item name="android:layout_marginStart" tools:targetApi="jelly_bean_mr1">40dp</item>
     </style>
 
     <style name="WordPress.NUXTitle">
@@ -329,7 +267,9 @@
         <item name="android:textColor">@color/grey_darken_30</item>
         <item name="android:gravity">center</item>
         <item name="android:layout_marginLeft">16dp</item>
+        <item name="android:layout_marginStart" tools:targetApi="jelly_bean_mr1">16dp</item>
         <item name="android:layout_marginRight">16dp</item>
+        <item name="android:layout_marginEnd" tools:targetApi="jelly_bean_mr1">16dp</item>
     </style>
 
     <style name="WordPress.EmptyList.Title" parent="WordPress.EmptyList">
@@ -341,35 +281,12 @@
         <item name="android:textSize">@dimen/empty_list_description_text_size</item>
     </style>
 
-    <!--
-        moderation views on comment detail
-    -->
-    <style name="WordPress.ModerateButton">
-        <item name="android:textColor">@color/grey</item>
-        <item name="android:textSize">@dimen/text_sz_small</item>
-        <item name="android:singleLine">true</item>
-        <item name="android:ellipsize">end</item>
-        <item name="android:background">@drawable/moderate_button_selector</item>
-        <item name="android:paddingTop">@dimen/margin_small</item>
-        <item name="android:paddingRight">@dimen/margin_small</item>
-        <item name="android:paddingLeft">@dimen/margin_small</item>
-        <item name="android:paddingBottom">@dimen/margin_medium</item>
-        <item name="android:drawablePadding">-4dp</item>
-        <item name="android:focusable">true</item>
-        <item name="android:clickable">true</item>
-        <item name="android:gravity">center</item>
-    </style>
-
-    <style name="WordPress.BorderedBackground">
-        <item name="android:background">@color/white</item>
-    </style>
-
     <!--My Site Styles-->
     <style name="MySiteListRowLayout">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:paddingLeft">@dimen/my_site_list_row_padding_left</item>
-        <item name="android:paddingStart">@dimen/my_site_list_row_padding_left</item>
+        <item name="android:paddingStart" tools:targetApi="jelly_bean_mr1">@dimen/my_site_list_row_padding_left</item>
         <item name="android:background">?android:attr/selectableItemBackground</item>
     </style>
 
@@ -377,12 +294,12 @@
         <item name="android:layout_width">@dimen/my_site_list_row_icon_size</item>
         <item name="android:layout_height">@dimen/my_site_list_row_icon_size</item>
         <item name="android:layout_alignParentLeft">true</item>
-        <item name="android:layout_alignParentStart">true</item>
+        <item name="android:layout_alignParentStart" tools:targetApi="jelly_bean_mr1">true</item>
         <item name="android:layout_centerVertical">true</item>
         <item name="android:layout_marginTop">@dimen/margin_large</item>
         <item name="android:layout_marginBottom">@dimen/margin_large</item>
         <item name="android:layout_marginRight">@dimen/margin_extra_large</item>
-        <item name="android:layout_marginEnd">@dimen/margin_extra_large</item>
+        <item name="android:layout_marginEnd" tools:targetApi="jelly_bean_mr1">@dimen/margin_extra_large</item>
         <item name="android:gravity">center_vertical</item>
     </style>
 
@@ -391,7 +308,7 @@
         <item name="android:layout_height">wrap_content</item>
         <item name="android:layout_centerVertical">true</item>
         <item name="android:layout_marginRight">@dimen/margin_medium</item>
-        <item name="android:layout_marginEnd">@dimen/margin_medium</item>
+        <item name="android:layout_marginEnd" tools:targetApi="jelly_bean_mr1">@dimen/margin_medium</item>
         <item name="android:ellipsize">end</item>
         <item name="android:gravity">center_vertical</item>
         <item name="android:maxLines">1</item>
@@ -400,20 +317,23 @@
         <item name="android:paddingTop">@dimen/margin_large</item>
         <item name="android:paddingBottom">@dimen/margin_large</item>
         <item name="android:paddingLeft">@dimen/margin_extra_large</item>
-        <item name="android:paddingStart">@dimen/margin_extra_large</item>
+        <item name="android:paddingRight">0dp</item>
+        <item name="android:paddingStart" tools:targetApi="jelly_bean_mr1">@dimen/margin_extra_large</item>
+        <item name="android:paddingEnd" tools:targetApi="jelly_bean_mr1">0dp</item>
+
     </style>
 
     <style name="MySiteListRowSecondaryElement">
         <item name="android:layout_centerVertical">true</item>
         <item name="android:layout_marginRight">@dimen/margin_extra_large</item>
-        <item name="android:layout_marginEnd">@dimen/margin_extra_large</item>
-        <item name="android:gravity">right|center_vertical</item>
+        <item name="android:layout_marginEnd" tools:targetApi="jelly_bean_mr1">@dimen/margin_extra_large</item>
+        <item name="android:gravity">end|center_vertical</item>
     </style>
 
     <style name="MySiteListRowSecondaryTextView" parent="MySiteListRowSecondaryElement">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">wrap_content</item>
-        <item name="android:layout_alignParentEnd">true</item>
+        <item name="android:layout_alignParentEnd" tools:targetApi="jelly_bean_mr1">true</item>
         <item name="android:layout_alignParentRight">true</item>
         <item name="android:ellipsize">end</item>
         <item name="android:maxLines">1</item>
@@ -422,7 +342,7 @@
         <item name="android:paddingTop">@dimen/margin_large</item>
         <item name="android:paddingBottom">@dimen/margin_large</item>
         <item name="android:paddingLeft">@dimen/margin_extra_large</item>
-        <item name="android:paddingStart">@dimen/margin_extra_large</item>
+        <item name="android:paddingStart" tools:targetApi="jelly_bean_mr1">@dimen/margin_extra_large</item>
     </style>
 
     <style name="MySiteListRowSecondaryIcon" parent="MySiteListRowSecondaryElement">
@@ -435,6 +355,7 @@
         <item name="android:layout_height">wrap_content</item>
         <item name="android:paddingBottom">@dimen/my_site_margin_general</item>
         <item name="android:paddingLeft">@dimen/my_site_list_row_padding_left</item>
+        <item name="android:paddingStart" tools:targetApi="jelly_bean_mr1">@dimen/my_site_list_row_padding_left</item>
         <item name="android:paddingTop">@dimen/my_site_margin_general</item>
     </style>
 
@@ -452,8 +373,10 @@
         <item name="android:layout_height">1dp</item>
         <item name="android:layout_gravity">center_vertical</item>
         <item name="android:layout_marginLeft">@dimen/margin_large</item>
+        <item name="android:layout_marginStart" tools:targetApi="jelly_bean_mr1">@dimen/margin_large</item>
         <item name="android:background">@color/grey_lighten_20</item>
         <item name="android:layout_marginRight">@dimen/margin_extra_large</item>
+        <item name="android:layout_marginEnd" tools:targetApi="jelly_bean_mr1">@dimen/margin_extra_large</item>
     </style>
 
     <style name="MeListRowLayout">
@@ -470,17 +393,21 @@
         <item name="android:layout_marginTop">@dimen/margin_large</item>
         <item name="android:layout_marginBottom">@dimen/margin_large</item>
         <item name="android:layout_marginLeft">@dimen/margin_medium</item>
+        <item name="android:layout_marginStart" tools:targetApi="jelly_bean_mr1">@dimen/margin_medium</item>
         <item name="android:layout_marginRight">@dimen/margin_extra_large</item>
+        <item name="android:layout_marginEnd" tools:targetApi="jelly_bean_mr1">@dimen/margin_extra_large</item>
     </style>
 
     <style name="MeListRowTextView">
-        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:layout_gravity">center_vertical</item>
         <item name="android:minHeight">0dp</item>
         <item name="android:padding">@dimen/margin_extra_large</item>
         <item name="android:textColor">@color/grey_dark</item>
         <item name="android:textSize">@dimen/text_sz_large</item>
+        <item name="android:textAlignment" tools:targetApi="jelly_bean_mr1">viewStart</item>
+        <item name="android:gravity">start</item>
     </style>
 
     <style name="MeListSectionDividerView">
@@ -566,10 +493,10 @@
         <item name="android:textStyle">bold</item>
         <item name="android:layout_marginBottom">@dimen/margin_small</item>
         <item name="android:layout_marginTop">@dimen/margin_extra_large</item>
-        <item name="android:layout_marginEnd">@dimen/margin_extra_large</item>
+        <item name="android:layout_marginEnd" tools:targetApi="jelly_bean_mr1">@dimen/margin_extra_large</item>
         <item name="android:layout_marginLeft">@dimen/margin_extra_large</item>
         <item name="android:layout_marginRight">@dimen/margin_extra_large</item>
-        <item name="android:layout_marginStart">@dimen/margin_extra_large</item>
+        <item name="android:layout_marginStart" tools:targetApi="jelly_bean_mr1">@dimen/margin_extra_large</item>
     </style>
 
     <style name="PostSettingsContainer">
@@ -653,12 +580,6 @@
         <item name="android:padding">@dimen/margin_extra_large</item>
     </style>
 
-    <style name="PluginCardViewDivider">
-        <item name="android:layout_width">match_parent</item>
-        <item name="android:layout_height">@dimen/list_divider_height</item>
-        <item name="android:background">@color/grey_lighten_20</item>
-    </style>
-
     <style name="PluginCardViewPrimaryText">
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
@@ -679,7 +600,7 @@
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:layout_centerVertical">true</item>
-        <item name="android:layout_alignParentEnd">true</item>
+        <item name="android:layout_alignParentEnd" tools:targetApi="jelly_bean_mr1">true</item>
         <item name="android:layout_alignParentRight">true</item>
     </style>
 
@@ -688,7 +609,7 @@
         <item name="android:layout_height">@dimen/plugin_external_link_image_size</item>
         <item name="android:tint">@color/grey_darken_10</item>
         <item name="android:layout_marginRight">@dimen/margin_medium</item>
-        <item name="android:layout_marginEnd">@dimen/margin_medium</item>
+        <item name="android:layout_marginEnd" tools:targetApi="jelly_bean_mr1">@dimen/margin_medium</item>
     </style>
 
     <style name="PluginCardViewSecondaryElement.ChevronImage" parent="PluginCardViewSecondaryElement.ExternalLinkImage">
