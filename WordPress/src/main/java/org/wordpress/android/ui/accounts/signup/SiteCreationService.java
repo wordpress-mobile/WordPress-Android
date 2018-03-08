@@ -281,8 +281,9 @@ public class SiteCreationService extends AutoForeground<SiteCreationState> {
 
         mIsRetry = intent.hasExtra(ARG_RESUME_PHASE);
 
-        final SiteCreationStep continueFromPhase = mIsRetry ?
-                SiteCreationStep.valueOf(intent.getStringExtra(ARG_RESUME_PHASE)) : SiteCreationStep.IDLE;
+        final SiteCreationStep continueFromPhase = mIsRetry
+                ? SiteCreationStep.valueOf(intent.getStringExtra(ARG_RESUME_PHASE))
+                : SiteCreationStep.IDLE;
 
         if (continueFromPhase == SiteCreationStep.IDLE && mNewSite != null) {
             // site already exists but we're not in a retry attempt _after_ having issued the new-site creation call.
@@ -307,7 +308,7 @@ public class SiteCreationService extends AutoForeground<SiteCreationState> {
 
     private SiteModel getWpcomSiteBySlug(String siteSlug) {
         final String url = siteSlug + ".wordpress.com";
-        for(SiteModel site : mSiteStore.getSites()) {
+        for (SiteModel site : mSiteStore.getSites()) {
             if (Uri.parse(site.getUrl()).getHost().equals(url)) {
                 return site;
             }

@@ -66,7 +66,7 @@ public class ZssEditorTest extends ActivityInstrumentationTestCase2<MockActivity
                 if (Build.VERSION.SDK_INT < Build.VERSION_CODES.JELLY_BEAN_MR1) {
                     mWebView.setJsCallbackReceiver(new MockJsCallbackReceiver(new EditorFragmentForTests()));
                 } else {
-                    // noinspection AddJavascriptInterface
+                    //noinspection AddJavascriptInterface
                     mWebView.addJavascriptInterface(new MockJsCallbackReceiver(new EditorFragmentForTests()),
                             JS_CALLBACK_HANDLER);
                 }
