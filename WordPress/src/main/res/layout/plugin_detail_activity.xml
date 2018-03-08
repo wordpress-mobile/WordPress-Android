@@ -122,7 +122,9 @@
                         </LinearLayout>
                     </RelativeLayout>
 
-                    <RelativeLayout style="@style/PluginCardViewHorizontalContainer">
+                    <RelativeLayout
+                        android:minHeight="80dp"
+                        style="@style/PluginCardViewHorizontalContainer" >
 
                         <LinearLayout
                             android:layout_width="wrap_content"
