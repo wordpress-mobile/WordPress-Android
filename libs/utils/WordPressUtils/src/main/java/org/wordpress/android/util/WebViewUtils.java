@@ -15,7 +15,7 @@ public class WebViewUtils {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             cookieManager.removeAllCookies(callback);
         } else {
-            // noinspection deprecation
+            //noinspection deprecation
             cookieManager.removeAllCookie();
         }
     }
