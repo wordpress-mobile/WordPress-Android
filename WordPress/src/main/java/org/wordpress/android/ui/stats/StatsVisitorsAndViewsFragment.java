@@ -425,7 +425,7 @@ public class StatsVisitorsAndViewsFragment extends StatsAbstractFragment
             mStatsDate[i] = currentItemStatsDate;
 
             if (weekendDays != null) {
-                SimpleDateFormat from = new SimpleDateFormat(StatsConstants.STATS_INPUT_DATE_FORMAT);
+                SimpleDateFormat from = new SimpleDateFormat(StatsConstants.STATS_INPUT_DATE_FORMAT, Locale.ROOT);
                 try {
                     Date date = from.parse(currentItemStatsDate);
                     Calendar c = Calendar.getInstance();
@@ -620,7 +620,7 @@ public class StatsVisitorsAndViewsFragment extends StatsAbstractFragment
                     // followed by Wxx where xx is the month
                     // followed by Wxx where xx is the day of the month
                     // ex: 2013W07W22 = July 22, 2013
-                    sdf = new SimpleDateFormat("yyyy'W'MM'W'dd");
+                    sdf = new SimpleDateFormat("yyyy'W'MM'W'dd", Locale.ROOT);
                     // Calculate the end of the week
                     parsedDate = sdf.parse(date);
                     c = Calendar.getInstance();
@@ -628,12 +628,12 @@ public class StatsVisitorsAndViewsFragment extends StatsAbstractFragment
                     c.setTime(parsedDate);
                     // first day of this week
                     c.set(Calendar.DAY_OF_WEEK, Calendar.MONDAY);
-                    String startDateLabel = StatsUtils.msToString(c.getTimeInMillis(),
-                                                 StatsConstants.STATS_OUTPUT_DATE_MONTH_LONG_DAY_LONG_FORMAT);
+                    String startDateLabel = StatsUtils.msToLocalizedString(c.getTimeInMillis(),
+                                                                           StatsConstants.STATS_OUTPUT_DATE_MONTH_LONG_DAY_LONG_FORMAT);
                     // last day of this week
                     c.add(Calendar.DAY_OF_WEEK, +6);
-                    String endDateLabel = StatsUtils.msToString(c.getTimeInMillis(),
-                                                  StatsConstants.STATS_OUTPUT_DATE_MONTH_LONG_DAY_LONG_FORMAT);
+                    String endDateLabel = StatsUtils.msToLocalizedString(c.getTimeInMillis(),
+                                                                         StatsConstants.STATS_OUTPUT_DATE_MONTH_LONG_DAY_LONG_FORMAT);
                     return String.format(prefix, startDateLabel + " - " + endDateLabel);
                 } catch (ParseException e) {
                     AppLog.e(AppLog.T.UTILS, e);
@@ -792,7 +792,7 @@ public class StatsVisitorsAndViewsFragment extends StatsAbstractFragment
                     // followed by Wxx where xx is the month
                     // followed by Wxx where xx is the day of the month
                     // ex: 2013W07W22 = July 22, 2013
-                    sdf = new SimpleDateFormat("yyyy'W'MM'W'dd");
+                    sdf = new SimpleDateFormat("yyyy'W'MM'W'dd", Locale.ROOT);
                     // Calculate the end of the week
                     parsedDate = sdf.parse(date);
                     c.setTime(parsedDate);
@@ -800,25 +800,25 @@ public class StatsVisitorsAndViewsFragment extends StatsAbstractFragment
                     c.set(Calendar.DAY_OF_WEEK, Calendar.MONDAY);
                     // last day of this week
                     c.add(Calendar.DAY_OF_WEEK, +6);
-                    calculatedDate = StatsUtils.msToString(c.getTimeInMillis(), StatsConstants.STATS_INPUT_DATE_FORMAT);
+                    calculatedDate = StatsUtils.msToLocalizedString(c.getTimeInMillis(), StatsConstants.STATS_INPUT_DATE_FORMAT);
                     break;
                 case MONTH:
-                    sdf = new SimpleDateFormat("yyyy-MM");
+                    sdf = new SimpleDateFormat("yyyy-MM", Locale.ROOT);
                     // Calculate the end of the month
                     parsedDate = sdf.parse(date);
                     c.setTime(parsedDate);
                     // last day of this month
                     c.set(Calendar.DAY_OF_MONTH, c.getActualMaximum(Calendar.DAY_OF_MONTH));
-                    calculatedDate = StatsUtils.msToString(c.getTimeInMillis(), StatsConstants.STATS_INPUT_DATE_FORMAT);
+                    calculatedDate = StatsUtils.msToLocalizedString(c.getTimeInMillis(), StatsConstants.STATS_INPUT_DATE_FORMAT);
                     break;
                 case YEAR:
-                    sdf = new SimpleDateFormat(StatsConstants.STATS_INPUT_DATE_FORMAT);
+                    sdf = new SimpleDateFormat(StatsConstants.STATS_INPUT_DATE_FORMAT, Locale.ROOT);
                     // Calculate the end of the week
                     parsedDate = sdf.parse(date);
                     c.setTime(parsedDate);
                     c.set(Calendar.MONTH, Calendar.DECEMBER);
                     c.set(Calendar.DAY_OF_MONTH, 31);
-                    calculatedDate = StatsUtils.msToString(c.getTimeInMillis(), StatsConstants.STATS_INPUT_DATE_FORMAT);
+                    calculatedDate = StatsUtils.msToLocalizedString(c.getTimeInMillis(), StatsConstants.STATS_INPUT_DATE_FORMAT);
                     break;
             }
         } catch (ParseException e) {

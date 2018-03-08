@@ -56,6 +56,7 @@ import java.io.IOException;
 import java.lang.ref.WeakReference;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.Locale;
 import java.util.TreeMap;
 
 import javax.inject.Inject;
@@ -495,7 +496,7 @@ public class MeFragment extends Fragment {
 
     // injects a fabricated cache entry to the request cache
     private void injectCache(File file, String avatarUrl) throws IOException {
-        final SimpleDateFormat sdf = new SimpleDateFormat("E, dd MMM yyyy HH:mm:ss z");
+        final SimpleDateFormat sdf = new SimpleDateFormat("E, dd MMM yyyy HH:mm:ss z", Locale.ROOT);
         final long currentTimeMs = System.currentTimeMillis();
         final Date currentTime = new Date(currentTimeMs);
         final long fiveMinutesLaterMs = currentTimeMs + 5 * 60 * 1000;
