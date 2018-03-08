@@ -18,8 +18,9 @@ import org.wordpress.android.util.LanguageUtils;
 
 public abstract class BaseWPComRestClient {
     private AccessToken mAccessToken;
-    private final Context mAppContext;
     private final RequestQueue mRequestQueue;
+
+    protected final Context mAppContext;
     protected final Dispatcher mDispatcher;
     protected UserAgent mUserAgent;
 
