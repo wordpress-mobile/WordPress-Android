@@ -547,7 +547,6 @@ public class PluginStore extends Store {
     private final PluginWPOrgClient mPluginWPOrgClient;
 
     @Inject
-    @SuppressWarnings("WeakerAccess")
     public PluginStore(Dispatcher dispatcher, PluginRestClient pluginRestClient, PluginWPOrgClient pluginWPOrgClient) {
         super(dispatcher);
         mPluginRestClient = pluginRestClient;
