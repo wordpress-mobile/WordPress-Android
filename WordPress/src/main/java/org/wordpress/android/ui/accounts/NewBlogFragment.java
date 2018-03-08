@@ -190,10 +190,6 @@ public class NewBlogFragment extends AbstractFragment implements TextWatcher {
         return retValue;
     }
 
-    private String titleToUrl(String siteUrl) {
-        return siteUrl.replaceAll("[^a-zA-Z0-9]", "").toLowerCase();
-    }
-
     private void validateAndCreateUserAndBlog() {
         if (mSystemService.getActiveNetworkInfo() == null) {
             AlertUtils.showAlert(getActivity(), R.string.no_network_title, R.string.no_network_message);

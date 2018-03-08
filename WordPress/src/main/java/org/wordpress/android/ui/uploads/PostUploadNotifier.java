@@ -31,6 +31,7 @@ import org.wordpress.android.util.WPMeShortlinks;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.Random;
 
@@ -703,9 +704,8 @@ class PostUploadNotifier {
         String uploadingMessage = String.format(
                 mContext.getString(R.string.uploading_subtitle_posts_only),
                 sNotificationData.mTotalPostItems - getCurrentPostItem(),
-                (post != null && post.isPage()) ? mContext.getString(R.string.page).toLowerCase()
-                        : mContext.getString(R.string.post).toLowerCase()
-                                               );
+                (post != null && post.isPage()) ? mContext.getString(R.string.page).toLowerCase(Locale.getDefault())
+                        : mContext.getString(R.string.post).toLowerCase(Locale.getDefault()));
         return uploadingMessage;
     }
 
@@ -715,8 +715,7 @@ class PostUploadNotifier {
         String uploadingMessage = String.format(
                 mContext.getString(R.string.uploading_subtitle_posts_only),
                 remaining,
-                pagesAndOrPosts
-                                               );
+                pagesAndOrPosts);
         return uploadingMessage;
     }
 
@@ -725,23 +724,23 @@ class PostUploadNotifier {
         if (sNotificationData.mTotalPageItemsIncludedInPostCount > 0 && sNotificationData.mTotalPostItems > 0
             && sNotificationData.mTotalPostItems > sNotificationData.mTotalPageItemsIncludedInPostCount) {
             // we have both pages and posts
-            pagesAndOrPosts = mContext.getString(R.string.posts).toLowerCase() + "/"
-                              + mContext.getString(R.string.pages).toLowerCase();
+            pagesAndOrPosts = mContext.getString(R.string.posts).toLowerCase(Locale.getDefault()) + "/"
+                              + mContext.getString(R.string.pages).toLowerCase(Locale.getDefault());
         } else if (sNotificationData.mTotalPageItemsIncludedInPostCount > 0) {
             // we have only pages
             if (remaining == 1) {
                 // only one page
-                pagesAndOrPosts = mContext.getString(R.string.page).toLowerCase();
+                pagesAndOrPosts = mContext.getString(R.string.page).toLowerCase(Locale.getDefault());
             } else {
-                pagesAndOrPosts = mContext.getString(R.string.pages).toLowerCase();
+                pagesAndOrPosts = mContext.getString(R.string.pages).toLowerCase(Locale.getDefault());
             }
         } else {
             // we have only posts
             if (remaining == 1) {
                 // only one post
-                pagesAndOrPosts = mContext.getString(R.string.post).toLowerCase();
+                pagesAndOrPosts = mContext.getString(R.string.post).toLowerCase(Locale.getDefault());
             } else {
-                pagesAndOrPosts = mContext.getString(R.string.posts).toLowerCase();
+                pagesAndOrPosts = mContext.getString(R.string.posts).toLowerCase(Locale.getDefault());
             }
         }
         return pagesAndOrPosts;

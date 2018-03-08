@@ -75,6 +75,7 @@ import org.wordpress.android.util.WPPermissionUtils;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 
 import javax.inject.Inject;
@@ -685,7 +686,7 @@ public class MediaBrowserActivity extends AppCompatActivity implements MediaGrid
             }
 
             if (mediaModel.getUploadState() != null
-                    && MediaUtils.isLocalFile(mediaModel.getUploadState().toLowerCase())) {
+                    && MediaUtils.isLocalFile(mediaModel.getUploadState().toLowerCase(Locale.ROOT))) {
                 mDispatcher.dispatch(MediaActionBuilder.newRemoveMediaAction(mediaModel));
             } else {
                 mediaToDelete.add(mediaModel);

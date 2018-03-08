@@ -39,6 +39,7 @@ import org.wordpress.android.widgets.WPNetworkImageView;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 import java.util.concurrent.RejectedExecutionException;
 
 /**
@@ -183,7 +184,7 @@ public class MediaGridAdapter extends RecyclerView.Adapter<MediaGridAdapter.Grid
             String fileExtension = MediaUtils.getExtensionForMimeType(media.getMimeType());
             holder.mFileContainer.setVisibility(View.VISIBLE);
             holder.mTitleView.setText(TextUtils.isEmpty(title) ? fileName : title);
-            holder.mFileTypeView.setText(fileExtension.toUpperCase());
+            holder.mFileTypeView.setText(fileExtension.toUpperCase(Locale.ROOT));
             int placeholderResId = WPMediaUtils.getPlaceholder(fileName);
             holder.mFileTypeImageView.setImageResource(placeholderResId);
         }

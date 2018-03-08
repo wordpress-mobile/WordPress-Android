@@ -47,6 +47,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Locale;
 
 import javax.inject.Inject;
 
@@ -444,7 +445,8 @@ public class SiteSettingsTagListActivity extends AppCompatActivity
                 mFilteredTags.addAll(mAllTags);
             } else {
                 for (TermModel tag : mAllTags) {
-                    if (tag.getName().toLowerCase().contains(text.toLowerCase())) {
+                    if (tag.getName().toLowerCase(Locale.getDefault())
+                           .contains(text.toLowerCase(Locale.getDefault()))) {
                         mFilteredTags.add(tag);
                     }
                 }

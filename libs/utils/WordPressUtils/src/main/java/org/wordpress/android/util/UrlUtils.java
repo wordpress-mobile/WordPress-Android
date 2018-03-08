@@ -15,6 +15,7 @@ import java.net.URLDecoder;
 import java.net.URLEncoder;
 import java.nio.charset.Charset;
 import java.util.HashMap;
+import java.util.Locale;
 import java.util.Map;
 
 public class UrlUtils {
@@ -53,9 +54,9 @@ public class UrlUtils {
      */
     public static String convertUrlToPunycodeIfNeeded(String url) {
         if (!Charset.forName("US-ASCII").newEncoder().canEncode(url)) {
-            if (url.toLowerCase().startsWith("http://")) {
+            if (url.toLowerCase(Locale.ROOT).startsWith("http://")) {
                 url = "http://" + IDN.toASCII(url.substring(7), IDN.ALLOW_UNASSIGNED);
-            } else if (url.toLowerCase().startsWith("https://")) {
+            } else if (url.toLowerCase(Locale.ROOT).startsWith("https://")) {
                 url = "https://" + IDN.toASCII(url.substring(8), IDN.ALLOW_UNASSIGNED);
             } else {
                 url = IDN.toASCII(url, IDN.ALLOW_UNASSIGNED);
@@ -239,7 +240,7 @@ public class UrlUtils {
             return false;
         }
 
-        String cleanedUrl = removeQuery(url.toLowerCase());
+        String cleanedUrl = removeQuery(url.toLowerCase(Locale.ROOT));
 
         return cleanedUrl.endsWith("jpg") || cleanedUrl.endsWith("jpeg")
                || cleanedUrl.endsWith("gif") || cleanedUrl.endsWith("png");
@@ -277,7 +278,7 @@ public class UrlUtils {
     }
 
     public static String removeXmlrpcSuffix(String siteAddress) {
-        if (siteAddress.toLowerCase().endsWith("/xmlrpc.php")) {
+        if (siteAddress.toLowerCase(Locale.ROOT).endsWith("/xmlrpc.php")) {
             return siteAddress.substring(0, siteAddress.lastIndexOf("xmlrpc.php"));
         } else {
             return siteAddress;

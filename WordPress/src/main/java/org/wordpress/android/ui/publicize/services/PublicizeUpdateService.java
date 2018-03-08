@@ -17,6 +17,8 @@ import org.wordpress.android.models.PublicizeServiceList;
 import org.wordpress.android.ui.publicize.PublicizeEvents;
 import org.wordpress.android.util.AppLog;
 
+import java.util.Locale;
+
 import de.greenrobot.event.EventBus;
 
 /**
@@ -117,7 +119,7 @@ public class PublicizeUpdateService extends IntentService {
             }
         };
 
-        String path = String.format("sites/%d/publicize-connections", siteId);
+        String path = String.format(Locale.ROOT, "sites/%d/publicize-connections", siteId);
         WordPress.getRestClientUtilsV1_1().get(path, null, null, listener, errorListener);
     }
 }
