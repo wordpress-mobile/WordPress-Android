@@ -277,6 +277,7 @@ class ThemeBrowserAdapter extends BaseAdapter implements Filterable {
                     filtered.addAll(mAllThemes);
                 } else {
                     mQuery = constraint.toString();
+                    // Locale.ROOT is used on user input for convenience as all the theme names are in english
                     String lcConstraint = constraint.toString().toLowerCase(Locale.ROOT);
                     for (ThemeModel theme : mAllThemes) {
                         if (theme.getName().toLowerCase(Locale.ROOT).contains(lcConstraint)) {
