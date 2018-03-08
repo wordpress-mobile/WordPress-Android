@@ -490,7 +490,7 @@ public class SignupEpilogueFragment extends LoginBaseFormFragment<SignupEpilogue
         StringBuilder builder = new StringBuilder();
 
         for (String s : array) {
-            String capitalized = s.substring(0, 1).toUpperCase(Locale.getDefault()) + s.substring(1);
+            String capitalized = s.substring(0, 1).toUpperCase(Locale.ROOT) + s.substring(1);
             builder.append(capitalized.concat(" "));
         }
 
