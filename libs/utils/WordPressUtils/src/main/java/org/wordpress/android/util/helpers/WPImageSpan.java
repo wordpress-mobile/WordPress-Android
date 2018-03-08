@@ -48,12 +48,12 @@ public class WPImageSpan extends ImageSpan implements Parcelable {
         return mMediaFile;
     }
 
-    public void setMediaFile(MediaFile mMediaFile) {
-        this.mMediaFile = mMediaFile;
+    public void setMediaFile(MediaFile mediaFile) {
+        this.mMediaFile = mediaFile;
     }
 
-    public void setImageSource(Uri mImageSource) {
-        this.mImageSource = mImageSource;
+    public void setImageSource(Uri imageSource) {
+        this.mImageSource = imageSource;
     }
 
     public Uri getImageSource() {
@@ -117,7 +117,7 @@ public class WPImageSpan extends ImageSpan implements Parcelable {
 
     @Override
     public void writeToParcel(Parcel parcel, int i) {
-        parcel.writeBooleanArray(new boolean[] {mNetworkImageLoaded, mMediaFile.isVideo()});
+        parcel.writeBooleanArray(new boolean[]{mNetworkImageLoaded, mMediaFile.isVideo()});
         parcel.writeString(mImageSource.toString());
         parcel.writeString(mMediaFile.getMediaId());
         parcel.writeString(mMediaFile.getBlogId());

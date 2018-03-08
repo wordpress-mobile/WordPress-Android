@@ -258,7 +258,15 @@ public class SignupEpilogueFragment extends LoginBaseFormFragment<SignupEpilogue
         if (savedInstanceState == null) {
             if (mIsEmailSignup) {
                 AnalyticsTracker.track(AnalyticsTracker.Stat.SIGNUP_EMAIL_EPILOGUE_VIEWED);
-                startProgress();
+
+                // Start progress and wait for account to be fetched before populating views when
+                // email does not exist in account store.
+                if (TextUtils.isEmpty(mAccountStore.getAccount().getEmail())) {
+                    startProgress(false);
+                // Skip progress and populate views when email does exist in account store.
+                } else {
+                    populateViews();
+                }
             } else {
                 AnalyticsTracker.track(AnalyticsTracker.Stat.SIGNUP_SOCIAL_EPILOGUE_VIEWED);
                 new DownloadAvatarAndUploadGravatarThread(mPhotoUrl, mEmailAddress, mAccount.getAccessToken()).start();
@@ -423,24 +431,9 @@ public class SignupEpilogueFragment extends LoginBaseFormFragment<SignupEpilogue
         } else if (event.causeOfChange == AccountAction.FETCH_ACCOUNT
                    && !TextUtils.isEmpty(mAccountStore.getAccount().getEmail())) {
             endProgress();
-            mEmailAddress = mAccountStore.getAccount().getEmail();
-            mDisplayName = createDisplayNameFromEmail();
-            mUsername = !TextUtils.isEmpty(mAccountStore.getAccount().getUserName())
-                    ? mAccountStore.getAccount().getUserName() : createUsernameFromEmail();
-            mHeaderDisplayName.setText(mDisplayName);
-            mHeaderEmailAddress.setText(mEmailAddress);
-            mEditTextDisplayName.setText(mDisplayName);
-            mEditTextUsername.setText(mUsername);
-            // Set fragment arguments to know if account should be updated when values change.
-            Bundle args = new Bundle();
-            args.putString(ARG_DISPLAY_NAME, mDisplayName);
-            args.putString(ARG_EMAIL_ADDRESS, mEmailAddress);
-            args.putString(ARG_PHOTO_URL, mPhotoUrl);
-            args.putString(ARG_USERNAME, mUsername);
-            args.putBoolean(ARG_IS_EMAIL_SIGNUP, mIsEmailSignup);
-            setArguments(args);
+            populateViews();
         } else if (changedUsername()) {
-            startProgress();
+            startProgress(false);
             PushUsernamePayload payload = new PushUsernamePayload(mUsername,
                                                                   AccountUsernameActionType.KEEP_OLD_SITE_AND_ADDRESS);
             mDispatcher.dispatch(AccountActionBuilder.newPushUsernameAction(payload));
@@ -576,7 +569,7 @@ public class SignupEpilogueFragment extends LoginBaseFormFragment<SignupEpilogue
             } catch (IOException exception) {
                 AppLog.e(T.NUX, "Gravatar image could not be injected into request cache - "
                                 + exception.toString() + " - " + exception.getMessage());
-                showErrorDialogAvatar();
+                showErrorDialogAvatar(getString(R.string.signup_epilogue_error_avatar));
             }
 
             mHeaderAvatar.resetImage();
@@ -586,13 +579,33 @@ public class SignupEpilogueFragment extends LoginBaseFormFragment<SignupEpilogue
         mHeaderAvatar.setImageUrl(avatarUrl, ImageType.AVATAR, new WPNetworkImageView.ImageLoadListener() {
             @Override
             public void onError() {
-                showErrorDialogAvatar();
+                AppLog.e(T.NUX, "Uploading image to Gravatar succeeded, but setting image view failed");
+                showErrorDialogAvatar(getString(R.string.signup_epilogue_error_avatar_view));
             }
 
             @Override
             public void onLoaded() {
             }
         });
+    }
+
+    private void populateViews() {
+        mEmailAddress = mAccountStore.getAccount().getEmail();
+        mDisplayName = createDisplayNameFromEmail();
+        mUsername = !TextUtils.isEmpty(mAccountStore.getAccount().getUserName())
+                ? mAccountStore.getAccount().getUserName() : createUsernameFromEmail();
+        mHeaderDisplayName.setText(mDisplayName);
+        mHeaderEmailAddress.setText(mEmailAddress);
+        mEditTextDisplayName.setText(mDisplayName);
+        mEditTextUsername.setText(mUsername);
+        // Set fragment arguments to know if account should be updated when values change.
+        Bundle args = new Bundle();
+        args.putString(ARG_DISPLAY_NAME, mDisplayName);
+        args.putString(ARG_EMAIL_ADDRESS, mEmailAddress);
+        args.putString(ARG_PHOTO_URL, mPhotoUrl);
+        args.putString(ARG_USERNAME, mUsername);
+        args.putBoolean(ARG_IS_EMAIL_SIGNUP, mIsEmailSignup);
+        setArguments(args);
     }
 
     protected void showErrorDialog(String message) {
@@ -620,9 +633,9 @@ public class SignupEpilogueFragment extends LoginBaseFormFragment<SignupEpilogue
         dialog.show();
     }
 
-    protected void showErrorDialogAvatar() {
+    protected void showErrorDialogAvatar(String message) {
         AlertDialog dialog = new AlertDialog.Builder(new ContextThemeWrapper(getActivity(), R.style.LoginTheme))
-                .setMessage(R.string.signup_epilogue_error_avatar)
+                .setMessage(message)
                 .setPositiveButton(R.string.login_error_button, null)
                 .create();
         dialog.show();
@@ -651,29 +664,27 @@ public class SignupEpilogueFragment extends LoginBaseFormFragment<SignupEpilogue
             final File file = new File(filePath);
 
             if (file.exists()) {
-                startProgress();
+                startProgress(false);
 
                 GravatarApi.uploadGravatar(file, mAccountStore.getAccount().getEmail(), mAccountStore.getAccessToken(),
-                                           new GravatarApi.GravatarUploadListener() {
-                                               @Override
-                                               public void onSuccess() {
-                                                   endProgress();
-                                                   mPhotoUrl = GravatarUtils
-                                                           .fixGravatarUrl(mAccount.getAccount().getAvatarUrl(),
-                                                                           getResources().getDimensionPixelSize(
-                                                                                   R.dimen.avatar_sz_large));
-                                                   loadAvatar(mPhotoUrl, filePath);
-                                                   mHeaderAvatarAdd.setVisibility(View.GONE);
-                                                   mIsAvatarAdded = true;
-                                               }
+                        new GravatarApi.GravatarUploadListener() {
+                            @Override
+                            public void onSuccess() {
+                                endProgress();
+                                mPhotoUrl = GravatarUtils.fixGravatarUrl(mAccount.getAccount().getAvatarUrl(),
+                                        getResources().getDimensionPixelSize(R.dimen.avatar_sz_large));
+                                loadAvatar(mPhotoUrl, filePath);
+                                mHeaderAvatarAdd.setVisibility(View.GONE);
+                                mIsAvatarAdded = true;
+                            }
 
-                                               @Override
-                                               public void onError() {
-                                                   endProgress();
-                                                   showErrorDialogAvatar();
-                                                   AppLog.e(T.NUX, "Uploading image to Gravatar failed");
-                                               }
-                                           });
+                            @Override
+                            public void onError() {
+                                endProgress();
+                                showErrorDialogAvatar(getString(R.string.signup_epilogue_error_avatar));
+                                AppLog.e(T.NUX, "Uploading image to Gravatar failed");
+                            }
+                        });
             } else {
                 ToastUtils.showToast(getActivity(), R.string.error_locating_image, ToastUtils.Duration.SHORT);
             }
@@ -693,7 +704,7 @@ public class SignupEpilogueFragment extends LoginBaseFormFragment<SignupEpilogue
 
     protected void updateAccountOrContinue() {
         if (changedDisplayName()) {
-            startProgress();
+            startProgress(false);
             PushAccountSettingsPayload payload = new PushAccountSettingsPayload();
             payload.params = new HashMap<>();
             payload.params.put("display_name", mDisplayName);
@@ -704,13 +715,13 @@ public class SignupEpilogueFragment extends LoginBaseFormFragment<SignupEpilogue
 
             mDispatcher.dispatch(AccountActionBuilder.newPushSettingsAction(payload));
         } else if (changedPassword()) {
-            startProgress();
+            startProgress(false);
             PushAccountSettingsPayload payload = new PushAccountSettingsPayload();
             payload.params = new HashMap<>();
             payload.params.put("password", mInputPassword.getEditText().getText().toString());
             mDispatcher.dispatch(AccountActionBuilder.newPushSettingsAction(payload));
         } else if (changedUsername()) {
-            startProgress();
+            startProgress(false);
             PushUsernamePayload payload = new PushUsernamePayload(mUsername,
                                                                   AccountUsernameActionType.KEEP_OLD_SITE_AND_ADDRESS);
             mDispatcher.dispatch(AccountActionBuilder.newPushUsernameAction(payload));
@@ -737,20 +748,18 @@ public class SignupEpilogueFragment extends LoginBaseFormFragment<SignupEpilogue
                 Uri uri = MediaUtils.downloadExternalMedia(getContext(), Uri.parse(mUrl));
                 File file = new File(new URI(uri.toString()));
                 GravatarApi.uploadGravatar(file, mEmail, mToken,
-                                           new GravatarApi.GravatarUploadListener() {
-                                               @Override
-                                               public void onSuccess() {
-                                                   AppLog.i(T.NUX,
-                                                            "Google avatar download and Gravatar upload succeeded.");
-                                               }
+                    new GravatarApi.GravatarUploadListener() {
+                        @Override
+                        public void onSuccess() {
+                            AppLog.i(T.NUX, "Google avatar download and Gravatar upload succeeded.");
+                        }
 
-                                               @Override
-                                               public void onError() {
-                                                   AppLog.i(T.NUX,
-                                                            "Google avatar download and Gravatar upload failed.");
-                                               }
-                                           });
-            } catch (URISyntaxException exception) {
+                        @Override
+                        public void onError() {
+                            AppLog.i(T.NUX, "Google avatar download and Gravatar upload failed.");
+                        }
+                    });
+            } catch (NullPointerException | URISyntaxException exception) {
                 AppLog.e(T.NUX, "Google avatar download and Gravatar upload failed - "
                                 + exception.toString() + " - " + exception.getMessage());
             }

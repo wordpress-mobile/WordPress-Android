@@ -8,14 +8,14 @@ public class FormatUtils {
      * NumberFormat isn't synchronized, so a separate instance must be created for each thread
      * http://developer.android.com/reference/java/text/NumberFormat.html
      */
-    private static final ThreadLocal<NumberFormat> IntegerInstance = new ThreadLocal<NumberFormat>() {
+    private static final ThreadLocal<NumberFormat> INTEGER_INSTANCE = new ThreadLocal<NumberFormat>() {
         @Override
         protected NumberFormat initialValue() {
             return NumberFormat.getIntegerInstance();
         }
     };
 
-    private static final ThreadLocal<DecimalFormat> DecimalInstance = new ThreadLocal<DecimalFormat>() {
+    private static final ThreadLocal<DecimalFormat> DECIMAL_INSTANCE = new ThreadLocal<DecimalFormat>() {
         @Override
         protected DecimalFormat initialValue() {
             return (DecimalFormat) DecimalFormat.getInstance();
@@ -26,10 +26,10 @@ public class FormatUtils {
      * returns the passed integer formatted with thousands-separators based on the current locale
      */
     public static final String formatInt(int value) {
-        return IntegerInstance.get().format(value).toString();
+        return INTEGER_INSTANCE.get().format(value).toString();
     }
 
     public static final String formatDecimal(int value) {
-        return DecimalInstance.get().format(value).toString();
+        return DECIMAL_INSTANCE.get().format(value).toString();
     }
 }

@@ -172,6 +172,15 @@ public class ReaderPost {
         // xpost info
         assignXpostIdsFromJson(post, json.optJSONArray("metadata"));
 
+        // if there's no featured image, check if featured media has been set to an image
+        if (!post.hasFeaturedImage() && json.has("featured_media")) {
+            JSONObject jsonMedia = json.optJSONObject("featured_media");
+            String type = JSONUtils.getString(jsonMedia, "type");
+            if (type.equals("image")) {
+                post.mFeaturedImage = JSONUtils.getString(jsonMedia, "uri");
+            }
+        }
+
         // if the post doesn't have a featured image but it contains an IMG tag, check whether
         // we can find a suitable image from the content
         if (!post.hasFeaturedImage() && post.hasImages()) {

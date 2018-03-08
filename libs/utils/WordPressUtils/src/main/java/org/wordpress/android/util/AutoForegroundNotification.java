@@ -9,9 +9,9 @@ import android.support.annotation.DrawableRes;
 import android.support.annotation.StringRes;
 import android.support.v4.app.NotificationCompat;
 
+import static org.wordpress.android.util.AutoForeground.NOTIFICATION_ID_FAILURE;
 import static org.wordpress.android.util.AutoForeground.NOTIFICATION_ID_PROGRESS;
 import static org.wordpress.android.util.AutoForeground.NOTIFICATION_ID_SUCCESS;
-import static org.wordpress.android.util.AutoForeground.NOTIFICATION_ID_FAILURE;
 
 public class AutoForegroundNotification {
     private static Intent getResumeIntent(Context context) {
@@ -19,7 +19,7 @@ public class AutoForegroundNotification {
         Intent resumeIntent = context.getPackageManager().getLaunchIntentForPackage(context.getPackageName());
 
         // getLaunchIntentForPackage() seems to set the Package Name but if we construct a launcher Intent manually
-        //  the package name is not set so, let's null it out here to match the manual Intent.
+        // the package name is not set so, let's null it out here to match the manual Intent.
         resumeIntent.setSelector(null);
         resumeIntent.setPackage(null);
 
