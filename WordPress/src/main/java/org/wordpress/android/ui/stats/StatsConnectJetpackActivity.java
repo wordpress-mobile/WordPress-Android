@@ -71,18 +71,13 @@ public class StatsConnectJetpackActivity extends AppCompatActivity {
     }
 
     private void startJetpackConnectionFlow(SiteModel siteModel) {
-        if (mAccountStore.hasAccessToken()) {
-            JetpackConnectionWebViewActivity
-                    .openJetpackConnectionFlow(StatsConnectJetpackActivity.this, STATS, siteModel);
-        } else {
-            JetpackConnectionWebViewActivity
-                    .openUnauthorizedJetpackConnectionFlow(StatsConnectJetpackActivity.this, STATS, siteModel);
-        }
-        finish();
         if (!siteModel.isJetpackInstalled()) {
             AnalyticsTracker.track(AnalyticsTracker.Stat.STATS_SELECTED_INSTALL_JETPACK);
         } else {
             AnalyticsTracker.track(AnalyticsTracker.Stat.STATS_SELECTED_CONNECT_JETPACK);
         }
+        JetpackConnectionWebViewActivity
+                .startJetpackConnectionFlow(this, STATS, siteModel, mAccountStore.hasAccessToken());
+        finish();
     }
 }
