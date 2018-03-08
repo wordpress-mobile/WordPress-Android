@@ -117,10 +117,10 @@ public class RestClientUtils {
      * <p/>
      * https://developer.wordpress.com/docs/api/1/get/notifications/%s
      */
-    public void getNotification(String note_id, Listener listener, ErrorListener errorListener) {
+    public void getNotification(String noteId, Listener listener, ErrorListener errorListener) {
         HashMap<String, String> params = new HashMap<>();
         params.put("fields", NOTIFICATION_FIELDS);
-        String path = String.format("notifications/%s", note_id);
+        String path = String.format("notifications/%s", noteId);
         get(path, params, null, listener, errorListener);
     }
 
@@ -288,7 +288,7 @@ public class RestClientUtils {
                         .getAbsoluteURL(path, getRestLocaleParams(mContext)), params, listener, errorListener);
         if (retryPolicy == null) {
             retryPolicy = new DefaultRetryPolicy(REST_TIMEOUT_MS, REST_MAX_RETRIES_POST,
-                    REST_BACKOFF_MULT); //Do not retry on failure
+                    REST_BACKOFF_MULT); // Do not retry on failure
         }
         request.setRetryPolicy(retryPolicy);
         AuthenticatorRequest authCheck = new AuthenticatorRequest(request, errorListener, mRestClient, mAuthenticator);
@@ -305,7 +305,7 @@ public class RestClientUtils {
                         .getAbsoluteURL(path, getRestLocaleParams(mContext)), params, listener, errorListener);
         if (retryPolicy == null) {
             retryPolicy = new DefaultRetryPolicy(REST_TIMEOUT_MS, REST_MAX_RETRIES_POST,
-                    REST_BACKOFF_MULT); //Do not retry on failure
+                    REST_BACKOFF_MULT); // Do not retry on failure
         }
         request.setRetryPolicy(retryPolicy);
         AuthenticatorRequest authCheck = new AuthenticatorRequest(request, errorListener, mRestClient, mAuthenticator);
@@ -315,11 +315,11 @@ public class RestClientUtils {
     /**
      * Takes a URL and returns the path within, or an empty string (not null)
      */
-    private static String getSanitizedPath(String unsanitizedPath){
+    private static String getSanitizedPath(String unsanitizedPath) {
         if (unsanitizedPath != null) {
             int qmarkPos = unsanitizedPath.indexOf('?');
-            if (qmarkPos > -1) { //strip any query string params off this to obtain the path
-                return unsanitizedPath.substring(0, qmarkPos+1);
+            if (qmarkPos > -1) { // strip any query string params off this to obtain the path
+                return unsanitizedPath.substring(0, qmarkPos + 1);
             } else {
                 // return the string as is, consider the whole string as the path
                 return unsanitizedPath;
@@ -331,7 +331,7 @@ public class RestClientUtils {
     /**
      * Takes a URL with query strings and returns a Map of query string values.
      */
-    private static HashMap<String, String> getSanitizedParameters(String unsanitizedPath){
+    private static HashMap<String, String> getSanitizedParameters(String unsanitizedPath) {
         HashMap<String, String> queryParams = new HashMap<>();
 
         Uri uri = Uri.parse(unsanitizedPath);
@@ -341,7 +341,7 @@ public class RestClientUtils {
                     // it as opaque so, try it with a empty scheme in front
         }
 
-        if (uri.getQueryParameterNames() != null ) {
+        if (uri.getQueryParameterNames() != null) {
             for (String paramName : uri.getQueryParameterNames()) {
                 String value = uri.getQueryParameter(paramName);
                 queryParams.put(paramName, value);
@@ -358,11 +358,10 @@ public class RestClientUtils {
         HashMap<String, String> params = new HashMap<>();
         String deviceLanguageCode = LanguageUtils.getCurrentDeviceLanguageCode(context);
         if (!TextUtils.isEmpty(deviceLanguageCode)) {
-            //patch locale if it's any of the deprecated codes as can be read in Locale.java source code:
+            // patch locale if it's any of the deprecated codes as can be read in Locale.java source code:
             deviceLanguageCode = LanguageUtils.patchDeviceLanguageCode(deviceLanguageCode);
             params.put("locale", deviceLanguageCode);
         }
         return params;
     }
-
 }

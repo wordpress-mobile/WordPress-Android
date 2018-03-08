@@ -43,6 +43,8 @@ import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.widgets.WPNetworkImageView;
 
+import java.util.Date;
+
 import javax.inject.Inject;
 
 public class ReaderCommentAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
@@ -225,7 +227,12 @@ public class ReaderCommentAdapter extends RecyclerView.Adapter<RecyclerView.View
         final CommentHolder commentHolder = (CommentHolder) holder;
         commentHolder.mTxtAuthor.setText(comment.getAuthorName());
 
-        java.util.Date dtPublished = DateTimeUtils.dateFromIso8601(comment.getPublished());
+        java.util.Date dtPublished;
+        if (mShowProgressForHighlightedComment && mHighlightCommentId == comment.commentId) {
+            dtPublished = new Date();
+        } else {
+            dtPublished = DateTimeUtils.dateFromIso8601(comment.getPublished());
+        }
         commentHolder.mTxtDate.setText(DateTimeUtils.javaDateToTimeSpan(dtPublished, WordPress.getContext()));
 
         if (comment.hasAuthorAvatar()) {

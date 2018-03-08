@@ -17,7 +17,7 @@ public class ActivityUtils {
             InputMethodManager inputManager = (InputMethodManager) activity.getSystemService(
                     Context.INPUT_METHOD_SERVICE);
             inputManager.hideSoftInputFromWindow(activity.getCurrentFocus().getWindowToken(),
-                    InputMethodManager.HIDE_NOT_ALWAYS);
+                                                 InputMethodManager.HIDE_NOT_ALWAYS);
         }
     }
 
@@ -26,9 +26,11 @@ public class ActivityUtils {
      * keyboard is forcibly hidden regardless of the circumstances.
      */
     public static void hideKeyboardForced(@Nullable final View view) {
-        if (view == null) return;
-        InputMethodManager inputMethodManager = (InputMethodManager) view.getContext()
-                .getSystemService(Context.INPUT_METHOD_SERVICE);
+        if (view == null) {
+            return;
+        }
+        InputMethodManager inputMethodManager =
+                (InputMethodManager) view.getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
         inputMethodManager.hideSoftInputFromWindow(view.getWindowToken(), 0);
     }
 
@@ -37,9 +39,11 @@ public class ActivityUtils {
      * which is an implicit request (i.e. not requested by the user) to show the keyboard.
      */
     public static void showKeyboard(@Nullable final View view) {
-        if (view == null) return;
-        InputMethodManager inputMethodManager = (InputMethodManager) view.getContext()
-                .getSystemService(Context.INPUT_METHOD_SERVICE);
+        if (view == null) {
+            return;
+        }
+        InputMethodManager inputMethodManager =
+                (InputMethodManager) view.getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
         inputMethodManager.showSoftInput(view, InputMethodManager.SHOW_IMPLICIT);
     }
 }

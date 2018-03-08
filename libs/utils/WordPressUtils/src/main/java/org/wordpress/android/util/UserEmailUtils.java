@@ -18,8 +18,9 @@ public class UserEmailUtils {
     public static String getPrimaryEmail(Context context) {
         try {
             AccountManager accountManager = AccountManager.get(context);
-            if (accountManager == null)
+            if (accountManager == null) {
                 return "";
+            }
             Account[] accounts = accountManager.getAccounts();
             Pattern emailPattern = Patterns.EMAIL_ADDRESS;
             for (Account account : accounts) {

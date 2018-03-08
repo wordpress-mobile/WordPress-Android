@@ -95,7 +95,7 @@ public class UrlUtils {
             return null;
         }
 
-        // Remove leading double slash (eg. //example.com), needed for some wporg instances configured to
+        // Remove leading double slash (eg. // example.com), needed for some wporg instances configured to
         // switch between http or https
         url = removeLeadingDoubleSlash(url, (addHttps ? "https" : "http") + "://");
 
