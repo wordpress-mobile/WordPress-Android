@@ -8,6 +8,7 @@ import android.os.Bundle;
 import android.support.v4.content.pm.ShortcutInfoCompat;
 import android.support.v4.content.pm.ShortcutManagerCompat;
 import android.text.TextUtils;
+import android.view.ContextThemeWrapper;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -116,7 +117,8 @@ public class AddQuickPressShortcutActivity extends ListActivity {
     }
 
     private void buildDialog(final int position) {
-        AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(AddQuickPressShortcutActivity.this);
+        AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(
+                new ContextThemeWrapper(this, R.style.Calypso_Dialog));
         dialogBuilder.setTitle(R.string.quickpress_add_alert_title);
 
         final EditText quickPressShortcutName = new EditText(AddQuickPressShortcutActivity.this);
