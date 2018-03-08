@@ -8,8 +8,6 @@ import android.content.res.Resources;
 import android.os.Build;
 import android.preference.PreferenceManager;
 
-import org.wordpress.android.WordPress;
-
 import java.util.Locale;
 
 import javax.annotation.Nullable;
@@ -34,7 +32,7 @@ public abstract class LocaleManager {
      * Change the active locale to the language provided. Save the updated language
      * settings to sharedPreferences.
      * @param context The current context
-     * @param language The language to change to
+     * @param language The 2-letter language code (example "en") to switch to
      */
     public static Context setNewLocale(Context context, String language) {
         Locale newLocale = WPPrefUtils.languageLocale(language);
@@ -49,21 +47,18 @@ public abstract class LocaleManager {
 
     /**
      * Compare the language for the current context with another language.
-     * @param context The current context
      * @param language The language to compare
      * @return True if the languages are the same, else false
      */
-    public static boolean isDifferentLanguage(Context context, String language) {
-        Locale currentLocale = LanguageUtils.getCurrentDeviceLanguage(WordPress.getContext());
+    public static boolean isDifferentLanguage(String language) {
         Locale newLocale = WPPrefUtils.languageLocale(language);
-
-        return !currentLocale.getLanguage().equals(newLocale.getLanguage());
+        return !Locale.getDefault().getLanguage().equals(newLocale.getLanguage());
     }
 
     /**
      * If the user has selected a language other than the device default, return that
      * language code, else just return the device default language code.
-     * @return The 2-letter language code
+     * @return The 2-letter language code (example "en")
      */
     private static String getLanguage(Context context) {
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
@@ -98,16 +93,27 @@ public abstract class LocaleManager {
         prefs.edit().remove(LANGUAGE_KEY).commit();
     }
 
+    /**
+     * Update resources for the current session.
+     *
+     * @param context The current active context
+     * @param language The 2-letter language code (example "en")
+     * @return The modified context containing the updated localized resources
+     */
     private static Context updateResources(Context context, String language) {
         Locale locale = new Locale(language);
         Locale.setDefault(locale);
 
         Resources res = context.getResources();
         Configuration config = new Configuration(res.getConfiguration());
-        if (Build.VERSION.SDK_INT >= 17) {
+
+        // NOTE: Earlier versions of Android require both of these to be set, otherwise
+        // RTL may not be implemented properly.
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
             config.setLocale(locale);
             context = context.createConfigurationContext(config);
-        } else {
+        }
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.N_MR1) {
             config.locale = locale;
             res.updateConfiguration(config, res.getDisplayMetrics());
         }

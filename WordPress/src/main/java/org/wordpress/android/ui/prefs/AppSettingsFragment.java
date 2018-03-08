@@ -277,7 +277,7 @@ public class AppSettingsFragment extends PreferenceFragment
             return;
         }
 
-        if (!LocaleManager.isDifferentLanguage(WordPress.getContext(), languageCode)) {
+        if (!LocaleManager.isDifferentLanguage(languageCode)) {
             return;
         }
 
@@ -293,8 +293,11 @@ public class AppSettingsFragment extends PreferenceFragment
         // Language is now part of metadata, so we need to refresh them
         AnalyticsUtils.refreshMetadata(mAccountStore, mSiteStore);
 
-        // Restart the app to apply the new language.
-        System.exit(0);
+        // Refresh the app
+        Intent refresh = new Intent(getActivity(), getActivity().getClass());
+        startActivity(refresh);
+        getActivity().setResult(LANGUAGE_CHANGED);
+        getActivity().finish();
     }
 
     private void updateLanguagePreference(String languageCode) {

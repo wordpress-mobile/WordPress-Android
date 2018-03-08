@@ -13,7 +13,6 @@ import android.widget.EditText;
 import android.widget.TextView;
 
 import org.wordpress.android.R;
-import org.wordpress.android.WordPress;
 
 import java.text.Collator;
 import java.util.ArrayList;
@@ -193,7 +192,7 @@ public class WPPrefUtils {
      */
     public static Locale languageLocale(String languageCode) {
         if (TextUtils.isEmpty(languageCode)) {
-            return LanguageUtils.getCurrentDeviceLanguage(WordPress.getContext());
+            return Locale.getDefault();
         }
 
         if (languageCode.length() > NO_REGION_LANG_CODE_LEN) {

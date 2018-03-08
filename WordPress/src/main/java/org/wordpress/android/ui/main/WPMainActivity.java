@@ -653,7 +653,7 @@ public class WPMainActivity extends BaseActivity {
                 break;
             case RequestCodes.APP_SETTINGS:
                 if (resultCode == AppSettingsFragment.LANGUAGE_CHANGED) {
-                    resetFragments();
+                    appLanguageChanged();
                 }
                 break;
             case RequestCodes.NOTE_DETAIL:
@@ -667,6 +667,13 @@ public class WPMainActivity extends BaseActivity {
                 }
                 break;
         }
+    }
+
+    private void appLanguageChanged() {
+        // Recreate this activity (much like a configuration change)
+        recreate();
+
+        resetFragments();
     }
 
     private void startWithNewAccount() {
