@@ -550,7 +550,8 @@ public class PostsListFragment extends Fragment
             case PostListButton.BUTTON_TRASH:
             case PostListButton.BUTTON_DELETE:
                 if (!UploadService.isPostUploadingOrQueued(post)) {
-                    AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+                    AlertDialog.Builder builder = new AlertDialog.Builder(
+                            new ContextThemeWrapper(getActivity(), R.style.Calypso_Dialog));
                     builder.setTitle(post.isPage() ? getString(R.string.delete_page) : getString(R.string.delete_post))
                             .setMessage(post.isPage() ? getString(R.string.dialog_confirm_delete_page)
                                                 : getString(R.string.dialog_confirm_delete_post))
@@ -583,7 +584,8 @@ public class PostsListFragment extends Fragment
     }
 
     private void showPublishConfirmationDialog(final PostModel post) {
-        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+        AlertDialog.Builder builder = new AlertDialog.Builder(
+                new ContextThemeWrapper(getActivity(), R.style.Calypso_Dialog));
         builder.setTitle(getResources().getText(R.string.dialog_confirm_publish_title))
                .setMessage(post.isPage() ? getString(R.string.dialog_confirm_publish_message_page)
                                    : getString(R.string.dialog_confirm_publish_message_post))
