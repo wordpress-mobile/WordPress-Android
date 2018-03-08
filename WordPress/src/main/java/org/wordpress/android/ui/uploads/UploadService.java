@@ -102,7 +102,7 @@ public class UploadService extends Service {
         }
 
         // Update posts with any completed AND failed uploads in our post->media map
-        doFinalProcessingOfPosts();
+        doFinalProcessingOfPosts(null);
 
         for (PostModel pendingPost : mUploadStore.getPendingPosts()) {
             cancelQueuedPostUpload(pendingPost);
@@ -591,6 +591,11 @@ public class UploadService extends Service {
     }
 
     private synchronized void stopServiceIfUploadsComplete() {
+        stopServiceIfUploadsComplete(null);
+    }
+
+
+    private synchronized void stopServiceIfUploadsComplete(OnPostUploaded event) {
         if (mPostUploadHandler != null && mPostUploadHandler.hasInProgressUploads()) {
             return;
         }
@@ -601,7 +606,7 @@ public class UploadService extends Service {
             verifyMediaOnlyUploadsAndNotify();
         }
 
-        if (doFinalProcessingOfPosts()) {
+        if (doFinalProcessingOfPosts(event)) {
             // when more Posts have been re-enqueued, don't stop the service just yet.
             return;
         }
@@ -613,6 +618,8 @@ public class UploadService extends Service {
         AppLog.i(T.MAIN, "UploadService > Completed");
         stopSelf();
     }
+
+
 
     private void verifyMediaOnlyUploadsAndNotify() {
         // check if all are successful uploads, then notify the user about it
@@ -860,7 +867,7 @@ public class UploadService extends Service {
      * (*)`Registered` posts are posts that had media in them and are waiting to be uploaded once
      * their corresponding associated media is uploaded first.
     */
-    private boolean doFinalProcessingOfPosts() {
+    private boolean doFinalProcessingOfPosts(OnPostUploaded event) {
         // If this was the last media upload a post was waiting for, update the post content
         // This done for pending as well as cancelled and failed posts
         for (PostModel postModel : mUploadStore.getAllRegisteredPosts()) {
@@ -892,6 +899,10 @@ public class UploadService extends Service {
                         EventBus.getDefault().post(
                                 new PostEvents.PostUploadCanceled(postModel.getLocalSiteId()));
                     } else {
+                        // Do not re-enqueue a post that has already failed
+                        if (event != null && event.isError() && mUploadStore.isFailedPost(event.post)) {
+                            continue;
+                        }
                         // TODO Should do some extra validation here
                         // e.g. what if the post has local media URLs but no pending media uploads?
                         mPostUploadHandler.upload(updatedPost);
@@ -961,7 +972,7 @@ public class UploadService extends Service {
     @SuppressWarnings("unused")
     @Subscribe(threadMode = ThreadMode.MAIN, priority = 7)
     public void onPostUploaded(OnPostUploaded event) {
-        stopServiceIfUploadsComplete();
+        stopServiceIfUploadsComplete(event);
     }
 
     public static class UploadErrorEvent {
