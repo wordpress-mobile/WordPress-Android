@@ -6,8 +6,11 @@ buildscript {
 
     dependencies {
         classpath 'com.android.tools.build:gradle:3.0.1'
+        classpath 'com.automattic.android:fetchstyle:1.0'
     }
 }
+
+apply plugin: 'com.automattic.android.fetchstyle'
 
 project.ext.preDexLibs = !project.hasProperty('disablePreDex')
 

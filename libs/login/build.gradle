@@ -1,3 +1,15 @@
+buildscript {
+    repositories {
+        jcenter()
+    }
+
+    dependencies {
+        classpath 'com.automattic.android:fetchstyle:1.0'
+    }
+}
+
+apply plugin: 'com.automattic.android.fetchstyle'
+
 allprojects {
     apply plugin: 'checkstyle'
 
