@@ -224,8 +224,8 @@ public class ReaderPostTable {
                        + "tag_type=? ORDER BY " + getSortColumnForTag(tag) + " DESC LIMIT ?)";
         int numDeleted = db.delete("tbl_posts", where, args);
         AppLog.d(AppLog.T.READER,
-                 String.format(Locale.ENGLISH,
-                               "reader post table > purged %d posts in tag %s", numDeleted, tag.getTagNameForLog()));
+                String.format(Locale.ENGLISH, "reader post table > purged %d posts in tag %s", numDeleted,
+                        tag.getTagNameForLog()));
         return numDeleted;
     }
 
@@ -507,7 +507,7 @@ public class ReaderPostTable {
             int count = statement.executeUpdateDelete();
             if (count > 0) {
                 AppLog.d(AppLog.T.READER, String.format(Locale.ENGLISH,
-                                                        "reader post table > marked %d posts unfollowed", count));
+                        "reader post table > marked %d posts unfollowed", count));
             }
         } finally {
             statement.close();

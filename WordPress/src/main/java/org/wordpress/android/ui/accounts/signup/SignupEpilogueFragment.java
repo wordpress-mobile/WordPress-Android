@@ -668,27 +668,24 @@ public class SignupEpilogueFragment extends LoginBaseFormFragment<SignupEpilogue
                 startProgress(false);
 
                 GravatarApi.uploadGravatar(file, mAccountStore.getAccount().getEmail(), mAccountStore.getAccessToken(),
-                                           new GravatarApi.GravatarUploadListener() {
-                                               @Override
-                                               public void onSuccess() {
-                                                   endProgress();
-                                                   mPhotoUrl = GravatarUtils
-                                                           .fixGravatarUrl(mAccount.getAccount().getAvatarUrl(),
-                                                                           getResources().getDimensionPixelSize(
-                                                                                   R.dimen.avatar_sz_large));
-                                                   loadAvatar(mPhotoUrl, filePath);
-                                                   mHeaderAvatarAdd.setVisibility(View.GONE);
-                                                   mIsAvatarAdded = true;
-                                               }
+                        new GravatarApi.GravatarUploadListener() {
+                            @Override
+                            public void onSuccess() {
+                                endProgress();
+                                mPhotoUrl = GravatarUtils.fixGravatarUrl(mAccount.getAccount().getAvatarUrl(),
+                                        getResources().getDimensionPixelSize(R.dimen.avatar_sz_large));
+                                loadAvatar(mPhotoUrl, filePath);
+                                mHeaderAvatarAdd.setVisibility(View.GONE);
+                                mIsAvatarAdded = true;
+                            }
 
-                                               @Override
-                                               public void onError() {
-                                                   endProgress();
-                                                   showErrorDialogAvatar(
-                                                           getString(R.string.signup_epilogue_error_avatar));
-                                                   AppLog.e(T.NUX, "Uploading image to Gravatar failed");
-                                               }
-                                           });
+                            @Override
+                            public void onError() {
+                                endProgress();
+                                showErrorDialogAvatar(getString(R.string.signup_epilogue_error_avatar));
+                                AppLog.e(T.NUX, "Uploading image to Gravatar failed");
+                            }
+                        });
             } else {
                 ToastUtils.showToast(getActivity(), R.string.error_locating_image, ToastUtils.Duration.SHORT);
             }
@@ -752,19 +749,17 @@ public class SignupEpilogueFragment extends LoginBaseFormFragment<SignupEpilogue
                 Uri uri = MediaUtils.downloadExternalMedia(getContext(), Uri.parse(mUrl));
                 File file = new File(new URI(uri.toString()));
                 GravatarApi.uploadGravatar(file, mEmail, mToken,
-                                           new GravatarApi.GravatarUploadListener() {
-                                               @Override
-                                               public void onSuccess() {
-                                                   AppLog.i(T.NUX,
-                                                            "Google avatar download and Gravatar upload succeeded.");
-                                               }
+                        new GravatarApi.GravatarUploadListener() {
+                            @Override
+                            public void onSuccess() {
+                                AppLog.i(T.NUX, "Google avatar download and Gravatar upload succeeded.");
+                            }
 
-                                               @Override
-                                               public void onError() {
-                                                   AppLog.i(T.NUX,
-                                                            "Google avatar download and Gravatar upload failed.");
-                                               }
-                                           });
+                            @Override
+                            public void onError() {
+                                AppLog.i(T.NUX, "Google avatar download and Gravatar upload failed.");
+                            }
+                        });
             } catch (NullPointerException | URISyntaxException exception) {
                 AppLog.e(T.NUX, "Google avatar download and Gravatar upload failed - "
                                 + exception.toString() + " - " + exception.getMessage());

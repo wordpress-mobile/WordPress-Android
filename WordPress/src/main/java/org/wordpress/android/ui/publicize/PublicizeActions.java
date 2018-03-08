@@ -41,8 +41,7 @@ public class PublicizeActions {
      */
     public static void disconnect(@NonNull final PublicizeConnection connection) {
         String path = String.format(Locale.ROOT,
-                                    "sites/%d/publicize-connections/%d/delete", connection.siteId,
-                                    connection.connectionId);
+                "sites/%d/publicize-connections/%d/delete", connection.siteId, connection.connectionId);
 
         RestRequest.Listener listener = new RestRequest.Listener() {
             @Override
