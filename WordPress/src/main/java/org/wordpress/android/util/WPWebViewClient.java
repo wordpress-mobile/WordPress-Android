@@ -27,12 +27,14 @@ import static org.wordpress.android.util.SelfSignedSSLUtils.sslCertificateToX509
  * username and password of the blog configured for this activity.
  */
 public class WPWebViewClient extends URLFilteredWebViewClient {
-    /** Timeout in milliseconds for read / connect timeouts */
+    /**
+     * Timeout in milliseconds for read / connect timeouts
+     */
     private static final int TIMEOUT_MS = 30000;
 
     private final SiteModel mSite;
     private String mToken;
-    protected @Inject MemorizingTrustManager mMemorizingTrustManager;
+    @Inject protected MemorizingTrustManager mMemorizingTrustManager;
 
     public WPWebViewClient(SiteModel site, String token) {
         this(site, token, null);
@@ -55,7 +57,6 @@ public class WPWebViewClient extends URLFilteredWebViewClient {
     }
 
 
-
     @Override
     public void onReceivedSslError(WebView view, SslErrorHandler handler, SslError error) {
         X509Certificate certificate = sslCertificateToX509(error.getCertificate());
@@ -69,7 +70,7 @@ public class WPWebViewClient extends URLFilteredWebViewClient {
 
     @Override
     public WebResourceResponse shouldInterceptRequest(WebView view, String stringUrl) {
-        URL imageUrl  = null;
+        URL imageUrl = null;
         if (mSite != null && mSite.isPrivate() && UrlUtils.isImageUrl(stringUrl)) {
             try {
                 imageUrl = new URL(UrlUtils.makeHttps(stringUrl));
@@ -79,9 +80,9 @@ public class WPWebViewClient extends URLFilteredWebViewClient {
         }
 
         // Intercept requests for private images and add the WP.com authorization header
-        if (imageUrl != null &&
-                WPUrlUtils.safeToAddWordPressComAuthToken(imageUrl) &&
-                !TextUtils.isEmpty(mToken)) {
+        if (imageUrl != null
+            && WPUrlUtils.safeToAddWordPressComAuthToken(imageUrl)
+            && !TextUtils.isEmpty(mToken)) {
             try {
                 // Force use of HTTPS for the resource, otherwise the request will fail for private sites
                 HttpURLConnection urlConnection = (HttpURLConnection) imageUrl.openConnection();
@@ -89,8 +90,8 @@ public class WPWebViewClient extends URLFilteredWebViewClient {
                 urlConnection.setReadTimeout(TIMEOUT_MS);
                 urlConnection.setConnectTimeout(TIMEOUT_MS);
                 WebResourceResponse response = new WebResourceResponse(urlConnection.getContentType(),
-                        urlConnection.getContentEncoding(),
-                        urlConnection.getInputStream());
+                                                                       urlConnection.getContentEncoding(),
+                                                                       urlConnection.getInputStream());
                 return response;
             } catch (ClassCastException e) {
                 AppLog.e(AppLog.T.POSTS, "Invalid connection type - URL: " + stringUrl);

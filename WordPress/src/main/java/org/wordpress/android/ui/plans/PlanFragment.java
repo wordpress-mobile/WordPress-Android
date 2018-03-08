@@ -72,7 +72,9 @@ public class PlanFragment extends Fragment {
     }
 
     private void showPlans() {
-        if (!isAdded()) return;
+        if (!isAdded()) {
+            return;
+        }
 
         if (mPlanDetails == null) {
             // TODO This should never happen - Fix this. Close the activity?
@@ -94,7 +96,7 @@ public class PlanFragment extends Fragment {
         TextView txtProductName = (TextView) getView().findViewById(R.id.text_product_name);
         String productShortName = mPlanDetails.getProductNameShort();
         String productName = mPlanDetails.getProductName().replace(productShortName,
-                "<b>" + productShortName + "</b>");
+                                                                   "<b>" + productShortName + "</b>");
         txtProductName.setText(Html.fromHtml(productName));
 
         TextView txtTagLine = (TextView) getView().findViewById(R.id.text_tagline);
@@ -128,7 +130,9 @@ public class PlanFragment extends Fragment {
     }
 
     private void addSectionTitle(String title) {
-        if (TextUtils.isEmpty(title)) return;
+        if (TextUtils.isEmpty(title)) {
+            return;
+        }
 
         LayoutInflater inflater = LayoutInflater.from(getActivity());
         ViewGroup view = (ViewGroup) inflater.inflate(R.layout.plan_section_title, mPlanContainerView, false);
@@ -140,7 +144,9 @@ public class PlanFragment extends Fragment {
     }
 
     private void addFeature(Feature feature) {
-        if (feature == null) return;
+        if (feature == null) {
+            return;
+        }
 
         LayoutInflater inflater = LayoutInflater.from(getActivity());
         ViewGroup view = (ViewGroup) inflater.inflate(R.layout.plan_feature_item, mPlanContainerView, false);
@@ -148,7 +154,8 @@ public class PlanFragment extends Fragment {
         TextView txtTitle = (TextView) view.findViewById(R.id.text_feature_title);
         TextView txtDescription = (TextView) view.findViewById(R.id.text_feature_description);
         String title = StringEscapeUtils.unescapeHtml4(feature.getTitleForPlan(mPlanDetails.getProductID()));
-        String description = StringEscapeUtils.unescapeHtml4(feature.getDescriptionForPlan(mPlanDetails.getProductID()));
+        String description =
+                StringEscapeUtils.unescapeHtml4(feature.getDescriptionForPlan(mPlanDetails.getProductID()));
         txtTitle.setText(title);
         txtDescription.setText(description);
 
@@ -167,5 +174,4 @@ public class PlanFragment extends Fragment {
     private void setSitePlan(@NonNull Plan sitePlan) {
         mPlanDetails = sitePlan;
     }
-
 }

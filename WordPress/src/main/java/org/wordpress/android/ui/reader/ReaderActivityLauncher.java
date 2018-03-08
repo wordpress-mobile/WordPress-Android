@@ -23,7 +23,6 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class ReaderActivityLauncher {
-
     /*
      * show a single reader post in the detail view - simply calls showReaderPostPager
      * with a single post
@@ -90,7 +89,9 @@ public class ReaderActivityLauncher {
      * show a list of posts in a specific blog
      */
     public static void showReaderBlogPreview(Context context, long siteId) {
-        if (siteId == 0) return;
+        if (siteId == 0) {
+            return;
+        }
         AnalyticsTracker.track(AnalyticsTracker.Stat.READER_BLOG_PREVIEWED);
         Intent intent = new Intent(context, ReaderPostListActivity.class);
         intent.putExtra(ReaderConstants.ARG_BLOG_ID, siteId);
@@ -212,6 +213,7 @@ public class ReaderActivityLauncher {
         IS_PRIVATE_IMAGE,
         IS_GALLERY_IMAGE
     }
+
     public static void showReaderPhotoViewer(Context context,
                                              String imageUrl,
                                              String content,
@@ -243,20 +245,25 @@ public class ReaderActivityLauncher {
             context.startActivity(intent);
         }
     }
+
     public static void showReaderPhotoViewer(Context context,
                                              String imageUrl,
                                              EnumSet<PhotoViewerOption> imageOptions) {
         showReaderPhotoViewer(context, imageUrl, null, null, imageOptions, 0, 0);
     }
 
-    public enum OpenUrlType { INTERNAL, EXTERNAL }
+    public enum OpenUrlType {
+        INTERNAL, EXTERNAL
+    }
 
     public static void openUrl(Context context, String url) {
         openUrl(context, url, OpenUrlType.INTERNAL);
     }
 
     public static void openUrl(Context context, String url, OpenUrlType openUrlType) {
-        if (context == null || TextUtils.isEmpty(url)) return;
+        if (context == null || TextUtils.isEmpty(url)) {
+            return;
+        }
 
         if (openUrlType == OpenUrlType.INTERNAL) {
             openUrlInternal(context, url);

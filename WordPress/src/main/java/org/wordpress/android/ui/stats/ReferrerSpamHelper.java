@@ -24,10 +24,9 @@ import java.lang.ref.WeakReference;
 import java.util.Locale;
 
 class ReferrerSpamHelper {
-
     private final WeakReference<Activity> mActivityRef;
 
-    public ReferrerSpamHelper(Activity activity) {
+    ReferrerSpamHelper(Activity activity) {
         mActivityRef = new WeakReference<>(activity);
     }
 
@@ -53,41 +52,44 @@ class ReferrerSpamHelper {
 
         if (referrerGroup.isRestCallInProgress) {
             menuItem = popup.getMenu().add(
-                    referrerGroup.isMarkedAsSpam ?
-                            mActivityRef.get().getString(R.string.stats_referrers_marking_not_spam) :
-                            mActivityRef.get().getString(R.string.stats_referrers_marking_spam)
-            );
+                    referrerGroup.isMarkedAsSpam
+                            ? mActivityRef.get().getString(R.string.stats_referrers_marking_not_spam)
+                            : mActivityRef.get().getString(R.string.stats_referrers_marking_spam)
+                                          );
         } else {
             menuItem = popup.getMenu().add(
-                    referrerGroup.isMarkedAsSpam ?
-                            mActivityRef.get().getString(R.string.stats_referrers_unspam) :
-                            mActivityRef.get().getString(R.string.stats_referrers_spam)
-            );
+                    referrerGroup.isMarkedAsSpam
+                            ? mActivityRef.get().getString(R.string.stats_referrers_unspam)
+                            : mActivityRef.get().getString(R.string.stats_referrers_spam)
+                                          );
         }
 
         menuItem.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
             @Override
             public boolean onMenuItemClick(MenuItem item) {
                 item.setTitle(
-                        referrerGroup.isMarkedAsSpam ?
-                                mActivityRef.get().getString(R.string.stats_referrers_marking_not_spam) :
-                                mActivityRef.get().getString(R.string.stats_referrers_marking_spam)
-                );
+                        referrerGroup.isMarkedAsSpam
+                                ? mActivityRef.get().getString(R.string.stats_referrers_marking_not_spam)
+                                : mActivityRef.get().getString(R.string.stats_referrers_marking_spam)
+                             );
                 item.setOnMenuItemClickListener(null);
 
                 final RestClientUtils restClientUtils = WordPress.getRestClientUtilsV1_1();
                 final String restPath;
                 final boolean isMarkingAsSpamInProgress;
                 if (referrerGroup.isMarkedAsSpam) {
-                    restPath = String.format(Locale.US, "/sites/%s/stats/referrers/spam/delete/?domain=%s", referrerGroup.getBlogId(), getDomain(referrerGroup));
+                    restPath = String.format(Locale.US, "/sites/%s/stats/referrers/spam/delete/?domain=%s",
+                                             referrerGroup.getBlogId(), getDomain(referrerGroup));
                     isMarkingAsSpamInProgress = false;
                 } else {
-                    restPath = String.format(Locale.US, "/sites/%s/stats/referrers/spam/new/?domain=%s", referrerGroup.getBlogId(), getDomain(referrerGroup));
+                    restPath = String.format(Locale.US, "/sites/%s/stats/referrers/spam/new/?domain=%s",
+                                             referrerGroup.getBlogId(), getDomain(referrerGroup));
                     isMarkingAsSpamInProgress = true;
                 }
 
                 referrerGroup.isRestCallInProgress = true;
-                ReferrerSpamRestListener vListener = new ReferrerSpamRestListener(mActivityRef.get(), referrerGroup, isMarkingAsSpamInProgress);
+                ReferrerSpamRestListener vListener =
+                        new ReferrerSpamRestListener(mActivityRef.get(), referrerGroup, isMarkingAsSpamInProgress);
                 restClientUtils.post(restPath, vListener, vListener);
                 AppLog.d(AppLog.T.STATS, "Enqueuing the following REST request " + restPath);
                 return true;
@@ -101,12 +103,13 @@ class ReferrerSpamHelper {
     private class ReferrerSpamRestListener implements RestRequest.Listener, RestRequest.ErrorListener {
         private final WeakReference<Activity> mActivityRef;
         private final ReferrerGroupModel mReferrerGroup;
-        private final boolean isMarkingAsSpamInProgress;
+        private final boolean mIsMarkingAsSpamInProgress;
 
-        public ReferrerSpamRestListener(Activity activity, final ReferrerGroupModel referrerGroup, final boolean isMarkingAsSpamInProgress) {
-            this.mActivityRef = new WeakReference<>(activity);
-            this.mReferrerGroup = referrerGroup;
-            this.isMarkingAsSpamInProgress = isMarkingAsSpamInProgress;
+        ReferrerSpamRestListener(Activity activity, final ReferrerGroupModel referrerGroup,
+                                        final boolean isMarkingAsSpamInProgress) {
+            mActivityRef = new WeakReference<>(activity);
+            mReferrerGroup = referrerGroup;
+            mIsMarkingAsSpamInProgress = isMarkingAsSpamInProgress;
         }
 
         @Override
@@ -116,12 +119,12 @@ class ReferrerSpamHelper {
             }
 
             mReferrerGroup.isRestCallInProgress = false;
-            if (response!= null) {
+            if (response != null) {
                 boolean success = response.optBoolean("success");
                 if (success) {
-                    mReferrerGroup.isMarkedAsSpam = isMarkingAsSpamInProgress;
+                    mReferrerGroup.isMarkedAsSpam = mIsMarkingAsSpamInProgress;
                     StatsTable.deleteStatsForBlog(mActivityRef.get(), mReferrerGroup.getBlogId(),
-                            StatsService.StatsEndpointsEnum.REFERRERS);
+                                                  StatsService.StatsEndpointsEnum.REFERRERS);
                 } else {
                     // It's not a success. Something went wrong on the server
                     String errorMessage = null;
@@ -142,8 +145,8 @@ class ReferrerSpamHelper {
         public void onErrorResponse(final VolleyError volleyError) {
             if (volleyError != null) {
                 AppLog.e(AppLog.T.STATS, "Error while marking the referrer " + getDomain(mReferrerGroup) + " as "
-                        + (isMarkingAsSpamInProgress ? " spam " : " unspam ") +
-                        volleyError.getMessage(), volleyError);
+                                         + (mIsMarkingAsSpamInProgress ? " spam " : " unspam ")
+                                         + volleyError.getMessage(), volleyError);
             }
             if (mActivityRef.get() == null || mActivityRef.get().isFinishing()) {
                 return;
@@ -151,8 +154,8 @@ class ReferrerSpamHelper {
 
             mReferrerGroup.isRestCallInProgress = false;
             ToastUtils.showToast(mActivityRef.get(),
-                    mActivityRef.get().getString(R.string.stats_referrers_spam_generic_error),
-                    ToastUtils.Duration.LONG);
+                                 mActivityRef.get().getString(R.string.stats_referrers_spam_generic_error),
+                                 ToastUtils.Duration.LONG);
         }
     }
 }

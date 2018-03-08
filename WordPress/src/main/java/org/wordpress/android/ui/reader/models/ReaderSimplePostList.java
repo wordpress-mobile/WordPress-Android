@@ -8,7 +8,6 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 
 public class ReaderSimplePostList extends ArrayList<ReaderSimplePost> {
-
     public static ReaderSimplePostList fromJsonPosts(@NonNull JSONArray jsonPosts) {
         ReaderSimplePostList posts = new ReaderSimplePostList();
         for (int i = 0; i < jsonPosts.length(); i++) {
@@ -22,5 +21,4 @@ public class ReaderSimplePostList extends ArrayList<ReaderSimplePost> {
         }
         return posts;
     }
-
 }

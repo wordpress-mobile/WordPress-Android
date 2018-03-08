@@ -3,6 +3,7 @@ package org.wordpress.android.ui.stats;
 import android.app.Activity;
 import android.content.res.Resources;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -35,6 +36,7 @@ public class StatsCommentsFragment extends StatsAbstractListFragment {
     protected boolean hasDataAvailable() {
         return mCommentsModel != null && mCommentFollowersModel != null;
     }
+
     @Override
     protected void saveStatsData(Bundle outState) {
         if (mCommentsModel != null) {
@@ -44,13 +46,15 @@ public class StatsCommentsFragment extends StatsAbstractListFragment {
             outState.putSerializable(ARG_REST_RESPONSE_FOLLOWERS, mCommentFollowersModel);
         }
     }
+
     @Override
     protected void restoreStatsData(Bundle savedInstanceState) {
         if (savedInstanceState.containsKey(ARG_REST_RESPONSE)) {
             mCommentsModel = (CommentsModel) savedInstanceState.getSerializable(ARG_REST_RESPONSE);
         }
         if (savedInstanceState.containsKey(ARG_REST_RESPONSE_FOLLOWERS)) {
-            mCommentFollowersModel = (CommentFollowersModel) savedInstanceState.getSerializable(ARG_REST_RESPONSE_FOLLOWERS);
+            mCommentFollowersModel =
+                    (CommentFollowersModel) savedInstanceState.getSerializable(ARG_REST_RESPONSE_FOLLOWERS);
         }
     }
 
@@ -126,7 +130,7 @@ public class StatsCommentsFragment extends StatsAbstractListFragment {
             String totalCommentsFollowers = getString(R.string.stats_comments_total_comments_followers);
             mTotalsLabel.setText(
                     String.format(totalCommentsFollowers, FormatUtils.formatDecimal(totalNumberOfFollowers))
-            );
+                                );
         }
 
         ArrayAdapter adapter = null;
@@ -147,8 +151,8 @@ public class StatsCommentsFragment extends StatsAbstractListFragment {
 
     private boolean hasAuthors() {
         return mCommentsModel != null
-                && mCommentsModel.getAuthors() != null
-                && mCommentsModel.getAuthors().size() > 0;
+               && mCommentsModel.getAuthors() != null
+               && mCommentsModel.getAuthors().size() > 0;
     }
 
     private List<AuthorModel> getAuthors() {
@@ -159,9 +163,9 @@ public class StatsCommentsFragment extends StatsAbstractListFragment {
     }
 
     private boolean hasPosts() {
-        return  mCommentsModel != null
-                && mCommentsModel.getPosts() != null
-                && mCommentsModel.getPosts().size() > 0;
+        return mCommentsModel != null
+               && mCommentsModel.getPosts() != null
+               && mCommentsModel.getPosts().size() > 0;
     }
 
     private List<StatsPostModel> getPosts() {
@@ -173,9 +177,11 @@ public class StatsCommentsFragment extends StatsAbstractListFragment {
 
     @Override
     protected boolean isViewAllOptionAvailable() {
-        if (mTopPagerSelectedButtonIndex == 0 && hasAuthors() && getAuthors().size() > MAX_NUM_OF_ITEMS_DISPLAYED_IN_LIST) {
+        if (mTopPagerSelectedButtonIndex == 0 && hasAuthors()
+            && getAuthors().size() > MAX_NUM_OF_ITEMS_DISPLAYED_IN_LIST) {
             return true;
-        } else if (mTopPagerSelectedButtonIndex == 1 && hasPosts() && getPosts().size() > MAX_NUM_OF_ITEMS_DISPLAYED_IN_LIST) {
+        } else if (mTopPagerSelectedButtonIndex == 1 && hasPosts()
+                   && getPosts().size() > MAX_NUM_OF_ITEMS_DISPLAYED_IN_LIST) {
             return true;
         }
         return false;
@@ -187,30 +193,30 @@ public class StatsCommentsFragment extends StatsAbstractListFragment {
     }
 
     private class AuthorsAdapter extends ArrayAdapter<AuthorModel> {
+        private final List<AuthorModel> mList;
+        private final Activity mContext;
+        private final LayoutInflater mInflater;
 
-        private final List<AuthorModel> list;
-        private final Activity context;
-        private final LayoutInflater inflater;
-
-        public AuthorsAdapter(Activity context, List<AuthorModel> list) {
+        AuthorsAdapter(Activity context, List<AuthorModel> list) {
             super(context, R.layout.stats_list_cell, list);
-            this.context = context;
-            this.list = list;
-            inflater = LayoutInflater.from(context);
+            mContext = context;
+            mList = list;
+            mInflater = LayoutInflater.from(context);
         }
 
+        @NonNull
         @Override
-        public View getView(int position, View convertView, ViewGroup parent) {
+        public View getView(int position, View convertView, @NonNull ViewGroup parent) {
             View rowView = convertView;
             // reuse views
             if (rowView == null) {
-                rowView = inflater.inflate(R.layout.stats_list_cell, parent, false);
+                rowView = mInflater.inflate(R.layout.stats_list_cell, parent, false);
                 // configure view holder
                 StatsViewHolder viewHolder = new StatsViewHolder(rowView);
                 rowView.setTag(viewHolder);
             }
 
-            final AuthorModel currentRowData = list.get(position);
+            final AuthorModel currentRowData = mList.get(position);
             final StatsViewHolder holder = (StatsViewHolder) rowView.getTag();
 
             // entries
@@ -220,7 +226,9 @@ public class StatsCommentsFragment extends StatsAbstractListFragment {
             holder.totalsTextView.setText(FormatUtils.formatDecimal(currentRowData.getViews()));
 
             // avatar
-            holder.networkImageView.setImageUrl(GravatarUtils.fixGravatarUrl(currentRowData.getAvatar(), mResourceVars.headerAvatarSizePx), WPNetworkImageView.ImageType.AVATAR);
+            holder.networkImageView.setImageUrl(
+                    GravatarUtils.fixGravatarUrl(currentRowData.getAvatar(), mResourceVars.mHeaderAvatarSizePx),
+                    WPNetworkImageView.ImageType.AVATAR);
             holder.networkImageView.setVisibility(View.VISIBLE);
 
             final FollowDataModel followData = currentRowData.getFollowData();
@@ -232,7 +240,7 @@ public class StatsCommentsFragment extends StatsAbstractListFragment {
                 holder.imgMore.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
-                        FollowHelper fh = new FollowHelper(context);
+                        FollowHelper fh = new FollowHelper(mContext);
                         fh.showPopup(holder.imgMore, followData);
                     }
                 });

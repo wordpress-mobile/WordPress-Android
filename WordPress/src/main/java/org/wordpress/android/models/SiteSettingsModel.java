@@ -11,7 +11,7 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * Holds blog settings and provides methods to (de)serialize .com and self-hosted network calls.
+ * Holds blog settings and provides methods to (de) serialize .com and self-hosted network calls.
  */
 
 public class SiteSettingsModel {
@@ -67,69 +67,69 @@ public class SiteSettingsModel {
 
     public static final String SETTINGS_TABLE_NAME = "site_settings";
 
-    public static final String ADD_SHARING_LABEL = "alter table " + SETTINGS_TABLE_NAME +
-            " add " + SHARING_LABEL_COLUMN_NAME + " TEXT;";
-    public static final String ADD_SHARING_BUTTON_STYLE = "alter table " + SETTINGS_TABLE_NAME +
-            " add " + SHARING_BUTTON_STYLE_COLUMN_NAME + " TEXT;";
-    public static final String ADD_ALLOW_REBLOG_BUTTON = "alter table " + SETTINGS_TABLE_NAME +
-            " add " + ALLOW_REBLOG_BUTTON_COLUMN_NAME + " BOOLEAN;";
-    public static final String ADD_ALLOW_LIKE_BUTTON = "alter table " + SETTINGS_TABLE_NAME +
-            " add " + ALLOW_LIKE_BUTTON_COLUMN_NAME + " BOOLEAN;";
-    public static final String ADD_ALLOW_COMMENT_LIKES = "alter table " + SETTINGS_TABLE_NAME +
-            " add " + ALLOW_COMMENT_LIKES_COLUMN_NAME + " BOOLEAN;";
-    public static final String ADD_TWITTER_USERNAME = "alter table " + SETTINGS_TABLE_NAME +
-            " add " + TWITTER_USERNAME_COLUMN_NAME + " TEXT;";
-    public static final String ADD_START_OF_WEEK = "alter table " + SETTINGS_TABLE_NAME +
-            " add " + START_OF_WEEK_COLUMN_NAME + " TEXT;";
-    public static final String ADD_TIME_FORMAT = "alter table " + SETTINGS_TABLE_NAME +
-            " add " + TIME_FORMAT_COLUMN_NAME + " TEXT;";
-    public static final String ADD_DATE_FORMAT = "alter table " + SETTINGS_TABLE_NAME +
-            " add " + DATE_FORMAT_COLUMN_NAME + " TEXT;";
-    public static final String ADD_TIMEZONE = "alter table " + SETTINGS_TABLE_NAME +
-            " add " + TIMEZONE_COLUMN_NAME + " TEXT;";
-    public static final String ADD_POSTS_PER_PAGE = "alter table " + SETTINGS_TABLE_NAME +
-            " add " + POSTS_PER_PAGE_COLUMN_NAME + " INTEGER;";
-    public static final String ADD_AMP_ENABLED = "alter table " + SETTINGS_TABLE_NAME +
-            " add " + AMP_ENABLED_COLUMN_NAME + " BOOLEAN;";
-    public static final String ADD_AMP_SUPPORTED = "alter table " + SETTINGS_TABLE_NAME +
-            " add " + AMP_SUPPORTED_COLUMN_NAME + " BOOLEAN;";
+    public static final String ADD_SHARING_LABEL = "alter table " + SETTINGS_TABLE_NAME
+                                                   + " add " + SHARING_LABEL_COLUMN_NAME + " TEXT;";
+    public static final String ADD_SHARING_BUTTON_STYLE = "alter table " + SETTINGS_TABLE_NAME
+                                                          + " add " + SHARING_BUTTON_STYLE_COLUMN_NAME + " TEXT;";
+    public static final String ADD_ALLOW_REBLOG_BUTTON = "alter table " + SETTINGS_TABLE_NAME
+                                                         + " add " + ALLOW_REBLOG_BUTTON_COLUMN_NAME + " BOOLEAN;";
+    public static final String ADD_ALLOW_LIKE_BUTTON = "alter table " + SETTINGS_TABLE_NAME
+                                                       + " add " + ALLOW_LIKE_BUTTON_COLUMN_NAME + " BOOLEAN;";
+    public static final String ADD_ALLOW_COMMENT_LIKES = "alter table " + SETTINGS_TABLE_NAME
+                                                         + " add " + ALLOW_COMMENT_LIKES_COLUMN_NAME + " BOOLEAN;";
+    public static final String ADD_TWITTER_USERNAME = "alter table " + SETTINGS_TABLE_NAME
+                                                      + " add " + TWITTER_USERNAME_COLUMN_NAME + " TEXT;";
+    public static final String ADD_START_OF_WEEK = "alter table " + SETTINGS_TABLE_NAME
+                                                   + " add " + START_OF_WEEK_COLUMN_NAME + " TEXT;";
+    public static final String ADD_TIME_FORMAT = "alter table " + SETTINGS_TABLE_NAME
+                                                 + " add " + TIME_FORMAT_COLUMN_NAME + " TEXT;";
+    public static final String ADD_DATE_FORMAT = "alter table " + SETTINGS_TABLE_NAME
+                                                 + " add " + DATE_FORMAT_COLUMN_NAME + " TEXT;";
+    public static final String ADD_TIMEZONE = "alter table " + SETTINGS_TABLE_NAME
+                                              + " add " + TIMEZONE_COLUMN_NAME + " TEXT;";
+    public static final String ADD_POSTS_PER_PAGE = "alter table " + SETTINGS_TABLE_NAME
+                                                    + " add " + POSTS_PER_PAGE_COLUMN_NAME + " INTEGER;";
+    public static final String ADD_AMP_ENABLED = "alter table " + SETTINGS_TABLE_NAME
+                                                 + " add " + AMP_ENABLED_COLUMN_NAME + " BOOLEAN;";
+    public static final String ADD_AMP_SUPPORTED = "alter table " + SETTINGS_TABLE_NAME
+                                                   + " add " + AMP_SUPPORTED_COLUMN_NAME + " BOOLEAN;";
 
     public static final String CREATE_SETTINGS_TABLE_SQL =
-            "CREATE TABLE IF NOT EXISTS " +
-                    SETTINGS_TABLE_NAME +
-                    " (" +
-                    ID_COLUMN_NAME + " INTEGER PRIMARY KEY, " +
-                    ADDRESS_COLUMN_NAME + " TEXT, " +
-                    USERNAME_COLUMN_NAME + " TEXT, " +
-                    PASSWORD_COLUMN_NAME + " TEXT, " +
-                    TITLE_COLUMN_NAME + " TEXT, " +
-                    TAGLINE_COLUMN_NAME + " TEXT, " +
-                    LANGUAGE_COLUMN_NAME + " INTEGER, " +
-                    PRIVACY_COLUMN_NAME + " INTEGER, " +
-                    LOCATION_COLUMN_NAME + " BOOLEAN, " +
-                    DEF_CATEGORY_COLUMN_NAME + " TEXT, " +
-                    DEF_POST_FORMAT_COLUMN_NAME + " TEXT, " +
-                    CATEGORIES_COLUMN_NAME + " TEXT, " +
-                    POST_FORMATS_COLUMN_NAME + " TEXT, " +
-                    CREDS_VERIFIED_COLUMN_NAME + " BOOLEAN, " +
-                    RELATED_POSTS_COLUMN_NAME + " INTEGER, " +
-                    ALLOW_COMMENTS_COLUMN_NAME + " BOOLEAN, " +
-                    SEND_PINGBACKS_COLUMN_NAME + " BOOLEAN, " +
-                    RECEIVE_PINGBACKS_COLUMN_NAME + " BOOLEAN, " +
-                    SHOULD_CLOSE_AFTER_COLUMN_NAME + " BOOLEAN, " +
-                    CLOSE_AFTER_COLUMN_NAME + " INTEGER, " +
-                    SORT_BY_COLUMN_NAME + " INTEGER, " +
-                    SHOULD_THREAD_COLUMN_NAME + " BOOLEAN, " +
-                    THREADING_COLUMN_NAME + " INTEGER, " +
-                    SHOULD_PAGE_COLUMN_NAME + " BOOLEAN, " +
-                    PAGING_COLUMN_NAME + " INTEGER, " +
-                    MANUAL_APPROVAL_COLUMN_NAME + " BOOLEAN, " +
-                    IDENTITY_REQUIRED_COLUMN_NAME + " BOOLEAN, " +
-                    USER_ACCOUNT_REQUIRED_COLUMN_NAME + " BOOLEAN, " +
-                    WHITELIST_COLUMN_NAME + " BOOLEAN, " +
-                    MODERATION_KEYS_COLUMN_NAME + " TEXT, " +
-                    BLACKLIST_KEYS_COLUMN_NAME + " TEXT" +
-                    ");";
+            "CREATE TABLE IF NOT EXISTS "
+            + SETTINGS_TABLE_NAME
+            + " ("
+            + ID_COLUMN_NAME + " INTEGER PRIMARY KEY, "
+            + ADDRESS_COLUMN_NAME + " TEXT, "
+            + USERNAME_COLUMN_NAME + " TEXT, "
+            + PASSWORD_COLUMN_NAME + " TEXT, "
+            + TITLE_COLUMN_NAME + " TEXT, "
+            + TAGLINE_COLUMN_NAME + " TEXT, "
+            + LANGUAGE_COLUMN_NAME + " INTEGER, "
+            + PRIVACY_COLUMN_NAME + " INTEGER, "
+            + LOCATION_COLUMN_NAME + " BOOLEAN, "
+            + DEF_CATEGORY_COLUMN_NAME + " TEXT, "
+            + DEF_POST_FORMAT_COLUMN_NAME + " TEXT, "
+            + CATEGORIES_COLUMN_NAME + " TEXT, "
+            + POST_FORMATS_COLUMN_NAME + " TEXT, "
+            + CREDS_VERIFIED_COLUMN_NAME + " BOOLEAN, "
+            + RELATED_POSTS_COLUMN_NAME + " INTEGER, "
+            + ALLOW_COMMENTS_COLUMN_NAME + " BOOLEAN, "
+            + SEND_PINGBACKS_COLUMN_NAME + " BOOLEAN, "
+            + RECEIVE_PINGBACKS_COLUMN_NAME + " BOOLEAN, "
+            + SHOULD_CLOSE_AFTER_COLUMN_NAME + " BOOLEAN, "
+            + CLOSE_AFTER_COLUMN_NAME + " INTEGER, "
+            + SORT_BY_COLUMN_NAME + " INTEGER, "
+            + SHOULD_THREAD_COLUMN_NAME + " BOOLEAN, "
+            + THREADING_COLUMN_NAME + " INTEGER, "
+            + SHOULD_PAGE_COLUMN_NAME + " BOOLEAN, "
+            + PAGING_COLUMN_NAME + " INTEGER, "
+            + MANUAL_APPROVAL_COLUMN_NAME + " BOOLEAN, "
+            + IDENTITY_REQUIRED_COLUMN_NAME + " BOOLEAN, "
+            + USER_ACCOUNT_REQUIRED_COLUMN_NAME + " BOOLEAN, "
+            + WHITELIST_COLUMN_NAME + " BOOLEAN, "
+            + MODERATION_KEYS_COLUMN_NAME + " TEXT, "
+            + BLACKLIST_KEYS_COLUMN_NAME + " TEXT"
+            + ");";
 
     public boolean isInLocalTable;
     public boolean hasVerifiedCredentials;
@@ -183,59 +183,63 @@ public class SiteSettingsModel {
 
     @Override
     public boolean equals(Object other) {
-        if (!(other instanceof SiteSettingsModel)) return false;
+        if (!(other instanceof SiteSettingsModel)) {
+            return false;
+        }
         SiteSettingsModel otherModel = (SiteSettingsModel) other;
 
-        return localTableId == otherModel.localTableId &&
-                equals(address, otherModel.address) &&
-                equals(username, otherModel.username) &&
-                equals(password, otherModel.password) &&
-                equals(title, otherModel.title) &&
-                equals(tagline, otherModel.tagline) &&
-                equals(defaultPostFormat, otherModel.defaultPostFormat) &&
-                equals(startOfWeek, otherModel.startOfWeek) &&
-                equals(dateFormat, otherModel.dateFormat) &&
-                equals(timeFormat, otherModel.timeFormat) &&
-                equals(timezone, otherModel.timezone) &&
-                languageId == otherModel.languageId &&
-                privacy == otherModel.privacy &&
-                location == otherModel.location &&
-                defaultCategory == otherModel.defaultCategory &&
-                showRelatedPosts == otherModel.showRelatedPosts &&
-                showRelatedPostHeader == otherModel.showRelatedPostHeader &&
-                showRelatedPostImages == otherModel.showRelatedPostImages &&
-                allowComments == otherModel.allowComments &&
-                sendPingbacks == otherModel.sendPingbacks &&
-                receivePingbacks == otherModel.receivePingbacks &&
-                closeCommentAfter == otherModel.closeCommentAfter &&
-                sortCommentsBy == otherModel.sortCommentsBy &&
-                threadingLevels == otherModel.threadingLevels &&
-                commentsPerPage == otherModel.commentsPerPage &&
-                commentApprovalRequired == otherModel.commentApprovalRequired &&
-                commentsRequireIdentity == otherModel.commentsRequireIdentity &&
-                commentsRequireUserAccount == otherModel.commentsRequireUserAccount &&
-                commentAutoApprovalKnownUsers == otherModel.commentAutoApprovalKnownUsers &&
-                postsPerPage == otherModel.postsPerPage &&
-                ampEnabled == otherModel.ampEnabled &&
-                ampSupported == otherModel.ampSupported &&
-                maxLinks == otherModel.maxLinks &&
-                equals(defaultPostFormat, otherModel.defaultPostFormat) &&
-                holdForModeration != null
-                    && holdForModeration.equals(otherModel.holdForModeration) &&
-                blacklist != null && blacklist.equals(otherModel.blacklist) &&
-                sharingLabel != null && sharingLabel.equals(otherModel.sharingLabel) &&
-                sharingButtonStyle != null && sharingButtonStyle.equals(otherModel.sharingButtonStyle) &&
-                allowReblogButton == otherModel.allowReblogButton &&
-                allowLikeButton == otherModel.allowLikeButton &&
-                allowCommentLikes == otherModel.allowCommentLikes &&
-                twitterUsername != null && twitterUsername.equals(otherModel.twitterUsername);
+        return localTableId == otherModel.localTableId
+               && equals(address, otherModel.address)
+               && equals(username, otherModel.username)
+               && equals(password, otherModel.password)
+               && equals(title, otherModel.title)
+               && equals(tagline, otherModel.tagline)
+               && equals(defaultPostFormat, otherModel.defaultPostFormat)
+               && equals(startOfWeek, otherModel.startOfWeek)
+               && equals(dateFormat, otherModel.dateFormat)
+               && equals(timeFormat, otherModel.timeFormat)
+               && equals(timezone, otherModel.timezone)
+               && languageId == otherModel.languageId
+               && privacy == otherModel.privacy
+               && location == otherModel.location
+               && defaultCategory == otherModel.defaultCategory
+               && showRelatedPosts == otherModel.showRelatedPosts
+               && showRelatedPostHeader == otherModel.showRelatedPostHeader
+               && showRelatedPostImages == otherModel.showRelatedPostImages
+               && allowComments == otherModel.allowComments
+               && sendPingbacks == otherModel.sendPingbacks
+               && receivePingbacks == otherModel.receivePingbacks
+               && closeCommentAfter == otherModel.closeCommentAfter
+               && sortCommentsBy == otherModel.sortCommentsBy
+               && threadingLevels == otherModel.threadingLevels
+               && commentsPerPage == otherModel.commentsPerPage
+               && commentApprovalRequired == otherModel.commentApprovalRequired
+               && commentsRequireIdentity == otherModel.commentsRequireIdentity
+               && commentsRequireUserAccount == otherModel.commentsRequireUserAccount
+               && commentAutoApprovalKnownUsers == otherModel.commentAutoApprovalKnownUsers
+               && postsPerPage == otherModel.postsPerPage
+               && ampEnabled == otherModel.ampEnabled
+               && ampSupported == otherModel.ampSupported
+               && maxLinks == otherModel.maxLinks
+               && equals(defaultPostFormat, otherModel.defaultPostFormat)
+               && holdForModeration != null
+               && holdForModeration.equals(otherModel.holdForModeration)
+               && blacklist != null && blacklist.equals(otherModel.blacklist)
+               && sharingLabel != null && sharingLabel.equals(otherModel.sharingLabel)
+               && sharingButtonStyle != null && sharingButtonStyle.equals(otherModel.sharingButtonStyle)
+               && allowReblogButton == otherModel.allowReblogButton
+               && allowLikeButton == otherModel.allowLikeButton
+               && allowCommentLikes == otherModel.allowCommentLikes
+               && twitterUsername != null && twitterUsername.equals(otherModel.twitterUsername);
     }
 
     /**
      * Copies data from another {@link SiteSettingsModel}.
      */
     public void copyFrom(SiteSettingsModel other) {
-        if (other == null) return;
+        if (other == null) {
+            return;
+        }
 
         isInLocalTable = other.isInLocalTable;
         hasVerifiedCredentials = other.hasVerifiedCredentials;
@@ -302,7 +306,9 @@ public class SiteSettingsModel {
      * Sets values from a local database {@link Cursor}.
      */
     public void deserializeOptionsDatabaseCursor(Cursor cursor, Map<Integer, CategoryModel> models) {
-        if (cursor == null || !cursor.moveToFirst() || cursor.getCount() == 0) return;
+        if (cursor == null || !cursor.moveToFirst() || cursor.getCount() == 0) {
+            return;
+        }
 
         localTableId = getIntFromCursor(cursor, ID_COLUMN_NAME);
         address = getStringFromCursor(cursor, ADDRESS_COLUMN_NAME);
@@ -426,7 +432,7 @@ public class SiteSettingsModel {
         values.put(POSTS_PER_PAGE_COLUMN_NAME, postsPerPage);
         values.put(AMP_SUPPORTED_COLUMN_NAME, ampSupported);
         values.put(AMP_ENABLED_COLUMN_NAME, ampEnabled);
-        
+
         String moderationKeys = "";
         if (holdForModeration != null) {
             for (String key : holdForModeration) {
@@ -454,9 +460,15 @@ public class SiteSettingsModel {
     private int getRelatedPostsFlags() {
         int flags = 0;
 
-        if (showRelatedPosts) flags |= RELATED_POSTS_ENABLED_FLAG;
-        if (showRelatedPostHeader) flags |= RELATED_POST_HEADER_FLAG;
-        if (showRelatedPostImages) flags |= RELATED_POST_IMAGE_FLAG;
+        if (showRelatedPosts) {
+            flags |= RELATED_POSTS_ENABLED_FLAG;
+        }
+        if (showRelatedPostHeader) {
+            flags |= RELATED_POST_HEADER_FLAG;
+        }
+        if (showRelatedPostImages) {
+            flags |= RELATED_POST_IMAGE_FLAG;
+        }
 
         return flags;
     }
@@ -470,13 +482,13 @@ public class SiteSettingsModel {
     /**
      * Used to serialize post formats to store in a local database.
      *
-     * @param formats
-     * map of post formats where the key is the format ID and the value is the format name
-     * @return
-     * a String of semi-colon separated KVP's of Post Formats; Post Format ID -> Post Format Name
+     * @param formats map of post formats where the key is the format ID and the value is the format name
+     * @return a String of semi-colon separated KVP's of Post Formats; Post Format ID -> Post Format Name
      */
     private static String postFormatList(Map<String, String> formats) {
-        if (formats == null || formats.size() == 0) return "";
+        if (formats == null || formats.size() == 0) {
+            return "";
+        }
 
         StringBuilder builder = new StringBuilder();
         for (String key : formats.keySet()) {
@@ -490,13 +502,13 @@ public class SiteSettingsModel {
     /**
      * Used to serialize categories to store in a local database.
      *
-     * @param elements
-     * {@link CategoryModel} array to create String ID list from
-     * @return
-     * a String of comma-separated integer Category ID's
+     * @param elements {@link CategoryModel} array to create String ID list from
+     * @return a String of comma-separated integer Category ID's
      */
     private static String categoryIdList(CategoryModel[] elements) {
-        if (elements == null || elements.length == 0) return "";
+        if (elements == null || elements.length == 0) {
+            return "";
+        }
 
         StringBuilder builder = new StringBuilder();
         for (CategoryModel element : elements) {
@@ -535,7 +547,7 @@ public class SiteSettingsModel {
      * Helper method to check if two String are equals or not
      */
     private boolean equals(String first, String second) {
-        return (first == null && second == null) ||
-                (first != null  && first.equals(second));
+        return (first == null && second == null)
+               || (first != null && first.equals(second));
     }
 }

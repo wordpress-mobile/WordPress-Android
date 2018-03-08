@@ -20,16 +20,19 @@ import android.widget.Button;
 import org.wordpress.android.R;
 
 public abstract class SiteCreationBaseFormFragment<SiteCreationListenerType> extends Fragment {
-
     private Button mPrimaryButton;
     private Button mSecondaryButton;
 
     protected SiteCreationListenerType mSiteCreationListener;
 
-    protected abstract @LayoutRes int getContentLayout();
+    protected abstract @LayoutRes
+    int getContentLayout();
+
     protected abstract void setupContent(ViewGroup rootView);
 
-    protected void setupBottomButtons(Button secondaryButton, Button primaryButton) {}
+    protected void setupBottomButtons(Button secondaryButton, Button primaryButton) {
+    }
+
     protected Button getPrimaryButton() {
         return mPrimaryButton;
     }

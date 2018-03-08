@@ -46,12 +46,10 @@ public class MockEditorActivity extends AppCompatActivity implements EditorFragm
 
     @Override
     public void onSettingsClicked() {
-
     }
 
     @Override
     public void onAddMediaClicked() {
-
     }
 
     @Override
@@ -61,27 +59,22 @@ public class MockEditorActivity extends AppCompatActivity implements EditorFragm
 
     @Override
     public void onMediaUploadCancelClicked(String mediaId) {
-
     }
 
     @Override
     public void onMediaDeleted(String mediaId) {
-
     }
 
     @Override
     public void onUndoMediaCheck(String undoedContent) {
-
     }
 
     @Override
     public void onFeaturedImageChanged(long mediaId) {
-
     }
 
     @Override
     public void onVideoPressInfoRequested(String videoId) {
-
     }
 
     @Override
@@ -91,22 +84,18 @@ public class MockEditorActivity extends AppCompatActivity implements EditorFragm
 
     @Override
     public void saveMediaFile(MediaFile mediaFile) {
-
     }
 
     @Override
     public void onTrackableEvent(TrackableEvent event) {
-
     }
 
     @Override
     public void onMediaDropped(ArrayList<Uri> mediaUri) {
-
     }
 
     @Override
     public void onRequestDragAndDropPermissions(DragEvent dragEvent) {
-
     }
 }
 

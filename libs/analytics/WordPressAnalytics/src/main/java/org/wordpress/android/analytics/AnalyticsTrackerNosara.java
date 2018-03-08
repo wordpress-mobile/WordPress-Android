@@ -13,7 +13,6 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class AnalyticsTrackerNosara extends Tracker {
-
     private static final String JETPACK_USER = "jetpack_user";
     private static final String NUMBER_OF_BLOGS = "number_of_blogs";
     private static final String TRACKS_ANON_ID = "nosara_tracks_anon_id";
@@ -37,6 +36,7 @@ public class AnalyticsTrackerNosara extends Tracker {
     }
 
     @Override
+    @SuppressWarnings("checkstyle:methodlength")
     public void track(AnalyticsTracker.Stat stat, Map<String, ?> properties) {
         if (mNosaraClient == null) {
             return;
@@ -229,15 +229,20 @@ public class AnalyticsTrackerNosara extends Tracker {
                 for (String key : predefinedEventProperties.keySet()) {
                     try {
                         if (propertiesToJSON.has(key)) {
-                            AppLog.w(AppLog.T.STATS, "The user has defined a property named: '" + key + "' that will override" +
-                                    "the same property pre-defined at event level. This may generate unexpected behavior!!");
-                            AppLog.w(AppLog.T.STATS, "User value: " + propertiesToJSON.get(key).toString() + " - pre-defined value: " +
-                                    predefinedEventProperties.get(key).toString());
+                            AppLog.w(AppLog.T.STATS,
+                                     "The user has defined a property named: '" + key + "' that will override"
+                                     + "the same property pre-defined at event level. This may generate unexpected "
+                                     + "behavior!!");
+                            AppLog.w(AppLog.T.STATS,
+                                     "User value: " + propertiesToJSON.get(key).toString()
+                                     + " - pre-defined value: "
+                                     + predefinedEventProperties.get(key).toString());
                         } else {
                             propertiesToJSON.put(key, predefinedEventProperties.get(key));
                         }
                     } catch (JSONException e) {
-                        AppLog.e(AppLog.T.STATS, "Error while merging user-defined properties with pre-defined properties", e);
+                        AppLog.e(AppLog.T.STATS,
+                                 "Error while merging user-defined properties with pre-defined properties", e);
                     }
                 }
             } catch (NullPointerException e) {
@@ -255,6 +260,7 @@ public class AnalyticsTrackerNosara extends Tracker {
             mNosaraClient.track(EVENTS_PREFIX + eventName, user, userType);
         }
     }
+
 
     @Override
     public void endSession() {
@@ -287,7 +293,7 @@ public class AnalyticsTrackerNosara extends Tracker {
         // De-anonymize user only when it's WPCOM and we have the username available (might still be waiting for it to
         //  be fetched).
         if (metadata.isUserConnected() && metadata.isWordPressComUser()
-                && !TextUtils.isEmpty(metadata.getUsername())) {
+            && !TextUtils.isEmpty(metadata.getUsername())) {
             setWordPressComUserName(metadata.getUsername());
             // Re-unify the user
             if (getAnonID() != null) {
@@ -301,8 +307,6 @@ public class AnalyticsTrackerNosara extends Tracker {
                 generateNewAnonID();
             }
         }
-
-
     }
 
 
@@ -320,6 +324,7 @@ public class AnalyticsTrackerNosara extends Tracker {
         return;
     }
 
+    @SuppressWarnings("checkstyle:methodlength")
     public static String getEventNameForStat(AnalyticsTracker.Stat stat) {
         if (!isValidEvent(stat)) {
             return null;
@@ -350,7 +355,7 @@ public class AnalyticsTrackerNosara extends Tracker {
                 return "reader_article_opened";
             case READER_ARTICLE_UNLIKED:
                 return "reader_article_unliked";
-            case READER_ARTICLE_RENDERED :
+            case READER_ARTICLE_RENDERED:
                 return "reader_article_rendered";
             case READER_BLOG_BLOCKED:
                 return "reader_blog_blocked";
@@ -958,3 +963,4 @@ public class AnalyticsTrackerNosara extends Tracker {
         }
     }
 }
+// CHECKSTYLE END IGNORE

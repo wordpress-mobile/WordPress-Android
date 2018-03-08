@@ -19,7 +19,7 @@ import org.wordpress.android.widgets.WPNetworkImageView;
  * owner must call setUsers() with the list of
  * users to display
  */
-public class ReaderUserAdapter  extends RecyclerView.Adapter<ReaderUserAdapter.UserViewHolder> {
+public class ReaderUserAdapter extends RecyclerView.Adapter<ReaderUserAdapter.UserViewHolder> {
     private final ReaderUserList mUsers = new ReaderUserList();
     private DataLoadedListener mDataLoadedListener;
     private final int mAvatarSz;
@@ -53,10 +53,10 @@ public class ReaderUserAdapter  extends RecyclerView.Adapter<ReaderUserAdapter.U
     public void onBindViewHolder(UserViewHolder holder, int position) {
         final ReaderUser user = mUsers.get(position);
 
-        holder.txtName.setText(user.getDisplayName());
+        holder.mTxtName.setText(user.getDisplayName());
         if (user.hasUrl()) {
-            holder.txtUrl.setVisibility(View.VISIBLE);
-            holder.txtUrl.setText(user.getUrlDomain());
+            holder.mTxtUrl.setVisibility(View.VISIBLE);
+            holder.mTxtUrl.setText(user.getUrlDomain());
             holder.itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -68,16 +68,16 @@ public class ReaderUserAdapter  extends RecyclerView.Adapter<ReaderUserAdapter.U
                 }
             });
         } else {
-            holder.txtUrl.setVisibility(View.GONE);
+            holder.mTxtUrl.setVisibility(View.GONE);
             holder.itemView.setOnClickListener(null);
         }
 
         if (user.hasAvatarUrl()) {
-            holder.imgAvatar.setImageUrl(
+            holder.mImgAvatar.setImageUrl(
                     GravatarUtils.fixGravatarUrl(user.getAvatarUrl(), mAvatarSz),
                     WPNetworkImageView.ImageType.AVATAR);
         } else {
-            holder.imgAvatar.showDefaultGravatarImageAndNullifyUrl();
+            holder.mImgAvatar.showDefaultGravatarImageAndNullifyUrl();
         }
     }
 
@@ -87,15 +87,15 @@ public class ReaderUserAdapter  extends RecyclerView.Adapter<ReaderUserAdapter.U
     }
 
     class UserViewHolder extends RecyclerView.ViewHolder {
-        private final TextView txtName;
-        private final TextView txtUrl;
-        private final WPNetworkImageView imgAvatar;
+        private final TextView mTxtName;
+        private final TextView mTxtUrl;
+        private final WPNetworkImageView mImgAvatar;
 
-        public UserViewHolder(View view) {
+        UserViewHolder(View view) {
             super(view);
-            txtName = (TextView) view.findViewById(R.id.text_name);
-            txtUrl = (TextView) view.findViewById(R.id.text_url);
-            imgAvatar = (WPNetworkImageView) view.findViewById(R.id.image_avatar);
+            mTxtName = (TextView) view.findViewById(R.id.text_name);
+            mTxtUrl = (TextView) view.findViewById(R.id.text_url);
+            mImgAvatar = (WPNetworkImageView) view.findViewById(R.id.image_avatar);
         }
     }
 

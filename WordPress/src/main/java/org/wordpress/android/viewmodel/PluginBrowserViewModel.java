@@ -59,7 +59,8 @@ public class PluginBrowserViewModel extends ViewModel {
     private SiteModel mSite;
 
     private final Handler mHandler;
-    // We don't want synthetic accessor methods to be introduced, so `protected` is used over `private` and the warning suppressed
+    // We don't want synthetic accessor methods to be introduced, so `protected` is used over `private`
+    // and the warning suppressed
     @SuppressWarnings("WeakerAccess")
     protected final Set<String> mUpdatedPluginSlugSet;
 
@@ -259,10 +260,12 @@ public class PluginBrowserViewModel extends ViewModel {
     @Subscribe(threadMode = ThreadMode.BACKGROUND)
     public void onWPOrgPluginFetched(PluginStore.OnWPOrgPluginFetched event) {
         if (event.isError()) {
-            AppLog.e(AppLog.T.PLUGINS, "An error occurred while fetching the wporg plugin with type: " + event.error.type);
+            AppLog.e(AppLog.T.PLUGINS,
+                    "An error occurred while fetching the wporg plugin with type: " + event.error.type);
             return;
         }
-        // Check if the slug is empty, if not add it to the set and only trigger the update if the slug is not in the set
+        // Check if the slug is empty, if not add it to the set and only trigger the update
+        // if the slug is not in the set
         if (!TextUtils.isEmpty(event.pluginSlug) && mUpdatedPluginSlugSet.add(event.pluginSlug)) {
             updateAllPluginListsIfNecessary();
         }
@@ -274,7 +277,7 @@ public class PluginBrowserViewModel extends ViewModel {
         PluginListStatus listStatus;
         if (event.isError()) {
             AppLog.e(AppLog.T.PLUGINS, "An error occurred while fetching the plugin directory " + event.type + ": "
-                    + event.error.type);
+                                       + event.error.type);
             listStatus = PluginListStatus.ERROR;
         } else {
             listStatus = event.canLoadMore ? PluginListStatus.CAN_LOAD_MORE : PluginListStatus.DONE;
@@ -316,10 +319,11 @@ public class PluginBrowserViewModel extends ViewModel {
     @Subscribe(threadMode = ThreadMode.BACKGROUND)
     public void onSitePluginConfigured(PluginStore.OnSitePluginConfigured event) {
         if (event.isError()) {
-            // The error should be handled wherever the action has been triggered from which should be PluginDetailActivity
+            // The error should be handled wherever the action has been triggered from (probably PluginDetailActivity)
             return;
         }
-        // Check if the slug is empty, if not add it to the set and only trigger the update if the slug is not in the set
+        // Check if the slug is empty, if not add it to the set and only trigger the update
+        // if the slug is not in the set
         if (!TextUtils.isEmpty(event.slug) && mUpdatedPluginSlugSet.add(event.slug)) {
             updateAllPluginListsIfNecessary();
         }
@@ -329,10 +333,11 @@ public class PluginBrowserViewModel extends ViewModel {
     @Subscribe(threadMode = ThreadMode.BACKGROUND)
     public void onSitePluginDeleted(PluginStore.OnSitePluginDeleted event) {
         if (event.isError()) {
-            // The error should be handled wherever the action has been triggered from which should be PluginDetailActivity
+            // The error should be handled wherever the action has been triggered from (probably PluginDetailActivity)
             return;
         }
-        // Check if the slug is empty, if not add it to the set and only trigger the update if the slug is not in the set
+        // Check if the slug is empty, if not add it to the set and only trigger the update
+        // if the slug is not in the set
         if (!TextUtils.isEmpty(event.slug) && mUpdatedPluginSlugSet.add(event.slug)) {
             updateAllPluginListsIfNecessary();
         }
@@ -342,10 +347,11 @@ public class PluginBrowserViewModel extends ViewModel {
     @Subscribe(threadMode = ThreadMode.BACKGROUND)
     public void onSitePluginInstalled(PluginStore.OnSitePluginInstalled event) {
         if (event.isError()) {
-            // The error should be handled wherever the action has been triggered from which should be PluginDetailActivity
+            // The error should be handled wherever the action has been triggered from (probably PluginDetailActivity)
             return;
         }
-        // Check if the slug is empty, if not add it to the set and only trigger the update if the slug is not in the set
+        // Check if the slug is empty, if not add it to the set and only trigger the update
+        // if the slug is not in the set
         if (!TextUtils.isEmpty(event.slug) && mUpdatedPluginSlugSet.add(event.slug)) {
             updateAllPluginListsIfNecessary();
         }
@@ -355,10 +361,11 @@ public class PluginBrowserViewModel extends ViewModel {
     @Subscribe(threadMode = ThreadMode.BACKGROUND)
     public void onSitePluginUpdated(PluginStore.OnSitePluginUpdated event) {
         if (event.isError()) {
-            // The error should be handled wherever the action has been triggered from which should be PluginDetailActivity
+            // The error should be handled wherever the action has been triggered from (probably PluginDetailActivity)
             return;
         }
-        // Check if the slug is empty, if not add it to the set and only trigger the update if the slug is not in the set
+        // Check if the slug is empty, if not add it to the set and only trigger the update
+        // if the slug is not in the set
         if (!TextUtils.isEmpty(event.slug) && mUpdatedPluginSlugSet.add(event.slug)) {
             updateAllPluginListsIfNecessary();
         }
@@ -381,7 +388,8 @@ public class PluginBrowserViewModel extends ViewModel {
         }, 250);
     }
 
-    // We don't want synthetic accessor methods to be introduced, so `protected` is used over `private` and the warning suppressed
+    // We don't want synthetic accessor methods to be introduced, so `protected` is used over `private` and the
+    // warning suppressed
     @WorkerThread
     @SuppressWarnings("WeakerAccess")
     protected void updateAllPluginListsWithNewPlugins(@NonNull Set<String> updatedPluginSlugSet) {
@@ -395,21 +403,24 @@ public class PluginBrowserViewModel extends ViewModel {
                 newPluginMap.put(slug, immutablePlugin);
             }
         }
-        // By combining all the updated plugins into one map, we can post a single update to the UI after changes are reflected
+        // By combining all the updated plugins into one map, we can post a single update to the UI after changes are
+        // reflected
         updatePluginListWithNewPlugin(mFeaturedPlugins, newPluginMap);
         updatePluginListWithNewPlugin(mNewPlugins, newPluginMap);
         updatePluginListWithNewPlugin(mPopularPlugins, newPluginMap);
         updatePluginListWithNewPlugin(mSearchResults, newPluginMap);
 
         // Unfortunately we can't use the same method to update the site plugins because removing/installing plugins can
-        // mess up the list. Also we care most about the Site Plugins and using the store to get the correct plugin information
+        // mess up the list. Also we care most about the Site Plugins and using the store to get the correct plugin
+        // information
         // is much more reliable than any manual update we can make
         reloadPluginDirectory(PluginDirectoryType.SITE);
     }
 
     @WorkerThread
-    private void updatePluginListWithNewPlugin(@NonNull final MutableLiveData<List<ImmutablePluginModel>> mutableLiveData,
-                                               @NonNull final Map<String, ImmutablePluginModel> newPluginMap) {
+    private void updatePluginListWithNewPlugin(
+            @NonNull final MutableLiveData<List<ImmutablePluginModel>> mutableLiveData,
+            @NonNull final Map<String, ImmutablePluginModel> newPluginMap) {
         List<ImmutablePluginModel> pluginList = mutableLiveData.getValue();
         if (pluginList == null || pluginList.size() == 0 || newPluginMap.size() == 0) {
             // Nothing to update
@@ -450,7 +461,8 @@ public class PluginBrowserViewModel extends ViewModel {
         return getSearchQuery() != null && getSearchQuery().length() > 1;
     }
 
-    // We don't want synthetic accessor methods to be introduced, so `protected` is used over `private` and the warning suppressed
+    // We don't want synthetic accessor methods to be introduced, so `protected` is used over `private` and the
+    // warning suppressed
     @SuppressWarnings("WeakerAccess")
     @WorkerThread
     protected void submitSearch(@Nullable final String query, boolean delayed) {
@@ -493,7 +505,7 @@ public class PluginBrowserViewModel extends ViewModel {
             return false;
         }
         if (mSearchPluginsListStatus.getValue() != PluginListStatus.DONE
-                && mSearchPluginsListStatus.getValue() != PluginListStatus.ERROR) {
+            && mSearchPluginsListStatus.getValue() != PluginListStatus.ERROR) {
             return false;
         }
         return getSearchResults().getValue() == null || getSearchResults().getValue().size() == 0;

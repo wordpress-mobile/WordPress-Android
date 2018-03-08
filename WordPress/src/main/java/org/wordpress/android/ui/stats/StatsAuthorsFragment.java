@@ -29,12 +29,14 @@ public class StatsAuthorsFragment extends StatsAbstractListFragment {
     protected boolean hasDataAvailable() {
         return mAuthors != null;
     }
+
     @Override
     protected void saveStatsData(Bundle outState) {
         if (hasDataAvailable()) {
             outState.putSerializable(ARG_REST_RESPONSE, mAuthors);
         }
     }
+
     @Override
     protected void restoreStatsData(Bundle savedInstanceState) {
         if (savedInstanceState.containsKey(ARG_REST_RESPONSE)) {
@@ -77,14 +79,15 @@ public class StatsAuthorsFragment extends StatsAbstractListFragment {
         }
 
         BaseExpandableListAdapter adapter = new MyExpandableListAdapter(getActivity(), mAuthors.getAuthors());
-        StatsUIHelper.reloadGroupViews(getActivity(), adapter, mGroupIdToExpandedMap, mList, getMaxNumberOfItemsToShowInList());
+        StatsUIHelper.reloadGroupViews(getActivity(), adapter, mGroupIdToExpandedMap, mList,
+                                       getMaxNumberOfItemsToShowInList());
         showHideNoResultsUI(false);
     }
 
     private boolean hasAuthors() {
         return mAuthors != null
-                && mAuthors.getAuthors() != null
-                && mAuthors.getAuthors().size() > 0;
+               && mAuthors.getAuthors() != null
+               && mAuthors.getAuthors().size() > 0;
     }
 
 
@@ -110,14 +113,17 @@ public class StatsAuthorsFragment extends StatsAbstractListFragment {
     protected int getEntryLabelResId() {
         return R.string.stats_entry_authors;
     }
+
     @Override
     protected int getTotalsLabelResId() {
         return R.string.stats_totals_views;
     }
+
     @Override
     protected int getEmptyLabelTitleResId() {
         return R.string.stats_empty_top_posts_title;
     }
+
     @Override
     protected int getEmptyLabelDescResId() {
         return R.string.stats_empty_top_authors_desc;
@@ -126,17 +132,17 @@ public class StatsAuthorsFragment extends StatsAbstractListFragment {
     private class MyExpandableListAdapter extends BaseExpandableListAdapter {
         public final LayoutInflater inflater;
         public final Activity activity;
-        private final List<AuthorModel> authors;
+        private final List<AuthorModel> mAuthors;
 
-        public MyExpandableListAdapter(Activity act, List<AuthorModel> authors) {
+        MyExpandableListAdapter(Activity act, List<AuthorModel> authors) {
             this.activity = act;
-            this.authors = authors;
+            mAuthors = authors;
             this.inflater = act.getLayoutInflater();
         }
 
         @Override
         public Object getChild(int groupPosition, int childPosition) {
-            AuthorModel currentGroup = authors.get(groupPosition);
+            AuthorModel currentGroup = mAuthors.get(groupPosition);
             List<StatsPostModel> posts = currentGroup.getPosts();
             return posts.get(childPosition);
         }
@@ -149,7 +155,6 @@ public class StatsAuthorsFragment extends StatsAbstractListFragment {
         @Override
         public View getChildView(int groupPosition, final int childPosition,
                                  boolean isLastChild, View convertView, ViewGroup parent) {
-
             final StatsPostModel children = (StatsPostModel) getChild(groupPosition, childPosition);
 
             if (convertView == null) {
@@ -182,7 +187,7 @@ public class StatsAuthorsFragment extends StatsAbstractListFragment {
 
         @Override
         public int getChildrenCount(int groupPosition) {
-            AuthorModel currentGroup = authors.get(groupPosition);
+            AuthorModel currentGroup = mAuthors.get(groupPosition);
             List<StatsPostModel> posts = currentGroup.getPosts();
             if (posts == null) {
                 return 0;
@@ -193,12 +198,12 @@ public class StatsAuthorsFragment extends StatsAbstractListFragment {
 
         @Override
         public Object getGroup(int groupPosition) {
-            return authors.get(groupPosition);
+            return mAuthors.get(groupPosition);
         }
 
         @Override
         public int getGroupCount() {
-            return authors.size();
+            return mAuthors.size();
         }
 
 
@@ -210,7 +215,6 @@ public class StatsAuthorsFragment extends StatsAbstractListFragment {
         @Override
         public View getGroupView(int groupPosition, boolean isExpanded,
                                  View convertView, ViewGroup parent) {
-
             if (convertView == null) {
                 convertView = inflater.inflate(R.layout.stats_list_cell, parent, false);
                 convertView.setTag(new StatsViewHolder(convertView));
@@ -235,8 +239,9 @@ public class StatsAuthorsFragment extends StatsAbstractListFragment {
             holder.totalsTextView.setText(FormatUtils.formatDecimal(total));
 
             // icon
-            //holder.showNetworkImage(icon);
-            holder.networkImageView.setImageUrl(GravatarUtils.fixGravatarUrl(icon, mResourceVars.headerAvatarSizePx), WPNetworkImageView.ImageType.AVATAR);
+            // holder.showNetworkImage(icon);
+            holder.networkImageView.setImageUrl(GravatarUtils.fixGravatarUrl(icon, mResourceVars.mHeaderAvatarSizePx),
+                                                WPNetworkImageView.ImageType.AVATAR);
             holder.networkImageView.setVisibility(View.VISIBLE);
 
             final FollowDataModel followData = group.getFollowData();
@@ -272,7 +277,6 @@ public class StatsAuthorsFragment extends StatsAbstractListFragment {
         public boolean isChildSelectable(int groupPosition, int childPosition) {
             return false;
         }
-
     }
 
     @Override

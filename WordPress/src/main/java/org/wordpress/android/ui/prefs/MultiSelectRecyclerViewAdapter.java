@@ -31,13 +31,13 @@ public class MultiSelectRecyclerViewAdapter extends RecyclerView.Adapter<MultiSe
     }
 
     public class ItemHolder extends RecyclerView.ViewHolder {
-        private final LinearLayout container;
-        private final TextView text;
+        private final LinearLayout mContainer;
+        private final TextView mText;
 
         public ItemHolder(View view) {
             super(view);
-            this.container = (LinearLayout) view.findViewById(R.id.container);
-            this.text = (TextView) view.findViewById(R.id.text);
+            mContainer = (LinearLayout) view.findViewById(R.id.container);
+            mText = (TextView) view.findViewById(R.id.text);
         }
     }
 
@@ -49,17 +49,17 @@ public class MultiSelectRecyclerViewAdapter extends RecyclerView.Adapter<MultiSe
     @Override
     public void onBindViewHolder(final ItemHolder holder, int position) {
         String item = getItem(holder.getAdapterPosition());
-        holder.text.setText(item);
-        holder.container.setBackgroundColor(
-                isItemSelected(position) ?
-                mSelectedColor :
-                mUnselectedColor
-        );
+        holder.mText.setText(item);
+        holder.mContainer.setBackgroundColor(
+                isItemSelected(position)
+                        ? mSelectedColor
+                        : mUnselectedColor);
     }
 
     @Override
     public ItemHolder onCreateViewHolder(ViewGroup parent, int type) {
-        return new ItemHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.wp_simple_list_item_1, parent, false));
+        return new ItemHolder(
+                LayoutInflater.from(parent.getContext()).inflate(R.layout.wp_simple_list_item_1, parent, false));
     }
 
     public String getItem(int position) {

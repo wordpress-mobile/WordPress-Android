@@ -10,6 +10,7 @@
 
     <!-- ERROR -->
     <issue id="RtlCompat" severity="error" />
+    <issue id="DefaultLocale" severity="error" />
     <issue id="RtlHardcoded" severity="error" />
     <issue id="InconsistentArrays" severity="error" />
     <issue id="HardcodedText" severity="error" />
@@ -28,5 +29,13 @@
 
     <issue id="IconLauncherFormat">
         <ignore path="src/main/res/mipmap-anydpi-v26/app_icon.xml" />
+    </issue>
+
+    <issue id="UnusedResources" severity="error">
+        <ignore path="**/WordPressEditor/**" />
+        <ignore path="**/WordPressLoginFlow/**" />
+        <ignore path="**/.gradle/caches/**" />
+        <ignore path="**/generated/**" />
+        <ignore path="**/strings.xml" />
     </issue>
 </lint>

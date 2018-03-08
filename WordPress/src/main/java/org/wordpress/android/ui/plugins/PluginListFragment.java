@@ -139,14 +139,15 @@ public class PluginListFragment extends Fragment {
             }
         });
 
-        mViewModel.getFeaturedPluginsListStatus().observe(this, new Observer<PluginBrowserViewModel.PluginListStatus>() {
-            @Override
-            public void onChanged(@Nullable PluginBrowserViewModel.PluginListStatus listStatus) {
-                if (mListType == PluginListType.FEATURED) {
-                    refreshProgressBars(listStatus);
-                }
-            }
-        });
+        mViewModel.getFeaturedPluginsListStatus()
+                  .observe(this, new Observer<PluginBrowserViewModel.PluginListStatus>() {
+                      @Override
+                      public void onChanged(@Nullable PluginBrowserViewModel.PluginListStatus listStatus) {
+                          if (mListType == PluginListType.FEATURED) {
+                              refreshProgressBars(listStatus);
+                          }
+                      }
+                  });
 
         mViewModel.getNewPluginsListStatus().observe(this, new Observer<PluginBrowserViewModel.PluginListStatus>() {
             @Override
@@ -200,9 +201,7 @@ public class PluginListFragment extends Fragment {
                             mSwipeToRefreshHelper.setRefreshing(false);
                         }
                     }
-                }
-        );
-
+                });
         return view;
     }
 
@@ -282,7 +281,9 @@ public class PluginListFragment extends Fragment {
         @Override
         public void onBindViewHolder(RecyclerView.ViewHolder viewHolder, int position) {
             ImmutablePluginModel plugin = (ImmutablePluginModel) getItem(position);
-            if (plugin == null) return;
+            if (plugin == null) {
+                return;
+            }
 
             PluginViewHolder holder = (PluginViewHolder) viewHolder;
             holder.name.setText(plugin.getDisplayName());
@@ -306,12 +307,12 @@ public class PluginListFragment extends Fragment {
                     colorResId = R.color.grey;
                     drawableResId = R.drawable.ic_cross_grey_600_24dp;
                 }
-                holder.statusText.setText(textResId);
-                holder.statusText.setTextColor(getResources().getColor(colorResId));
-                holder.statusIcon.setImageResource(drawableResId);
-                holder.statusText.setVisibility(View.VISIBLE);
-                holder.statusIcon.setVisibility(View.VISIBLE);
-                holder.ratingBar.setVisibility(View.GONE);
+                holder.mStatusText.setText(textResId);
+                holder.mStatusText.setTextColor(getResources().getColor(colorResId));
+                holder.mStatusIcon.setImageResource(drawableResId);
+                holder.mStatusText.setVisibility(View.VISIBLE);
+                holder.mStatusIcon.setVisibility(View.VISIBLE);
+                holder.mRatingBar.setVisibility(View.GONE);
             } else {
                 holder.statusText.setVisibility(View.GONE);
                 holder.statusIcon.setVisibility(View.GONE);
@@ -325,28 +326,30 @@ public class PluginListFragment extends Fragment {
         }
 
         private class PluginViewHolder extends RecyclerView.ViewHolder {
-            final TextView name;
-            final TextView author;
-            final TextView statusText;
-            final ImageView statusIcon;
-            final WPNetworkImageView icon;
-            final RatingBar ratingBar;
+            private final TextView mName;
+            private final TextView mAuthor;
+            private final TextView mStatusText;
+            private final ImageView mStatusIcon;
+            private final WPNetworkImageView mIcon;
+            private final RatingBar mRatingBar;
 
             PluginViewHolder(View view) {
                 super(view);
-                name = view.findViewById(R.id.plugin_name);
-                author = view.findViewById(R.id.plugin_author);
-                statusText = view.findViewById(R.id.plugin_status_text);
-                statusIcon = view.findViewById(R.id.plugin_status_icon);
-                icon = view.findViewById(R.id.plugin_icon);
-                ratingBar = view.findViewById(R.id.rating_bar);
+                mName = view.findViewById(R.id.plugin_name);
+                mAuthor = view.findViewById(R.id.plugin_author);
+                mStatusText = view.findViewById(R.id.plugin_status_text);
+                mStatusIcon = view.findViewById(R.id.plugin_status_icon);
+                mIcon = view.findViewById(R.id.plugin_icon);
+                mRatingBar = view.findViewById(R.id.rating_bar);
 
                 view.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
                         int position = getAdapterPosition();
                         ImmutablePluginModel plugin = (ImmutablePluginModel) getItem(position);
-                        if (plugin == null) return;
+                        if (plugin == null) {
+                            return;
+                        }
 
                         ActivityLauncher.viewPluginDetail(getActivity(), mViewModel.getSite(),
                                 plugin.getSlug());

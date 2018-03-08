@@ -69,7 +69,7 @@ public class SiteSettingsTagDetailFragment extends Fragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View view  = inflater.inflate(R.layout.site_settings_tag_detail_fragment, container, false);
+        View view = inflater.inflate(R.layout.site_settings_tag_detail_fragment, container, false);
 
         mNameView = view.findViewById(R.id.edit_name);
         mDescriptionView = view.findViewById(R.id.edit_description);
@@ -118,7 +118,9 @@ public class SiteSettingsTagDetailFragment extends Fragment {
     }
 
     private void loadTagDetail() {
-        if (!isAdded()) return;
+        if (!isAdded()) {
+            return;
+        }
 
         if (mIsNewTerm) {
             getActivity().setTitle(R.string.add_new_tag);
@@ -140,11 +142,12 @@ public class SiteSettingsTagDetailFragment extends Fragment {
             return !TextUtils.isEmpty(thisName);
         }
         return !TextUtils.isEmpty(thisName)
-                && (!StringUtils.equals(mTerm.getName(), thisName)
-                || !StringUtils.equals(mTerm.getDescription(), thisDescription));
+               && (!StringUtils.equals(mTerm.getName(), thisName)
+                   || !StringUtils.equals(mTerm.getDescription(), thisDescription));
     }
 
-    @NonNull TermModel getTerm() {
+    @NonNull
+    TermModel getTerm() {
         String thisName = EditTextUtils.getText(mNameView);
         String thisDescription = EditTextUtils.getText(mDescriptionView);
         mTerm.setName(thisName);

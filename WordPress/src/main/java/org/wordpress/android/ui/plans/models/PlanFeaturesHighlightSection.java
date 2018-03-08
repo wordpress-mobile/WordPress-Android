@@ -34,11 +34,11 @@ public class PlanFeaturesHighlightSection implements Serializable {
     private final String mTitle; // title (if available) of this section
     private ArrayList<String> mItems; // slug of the features to highlight in this section
 
-    PlanFeaturesHighlightSection(JSONObject featureSection) throws JSONException{
+    PlanFeaturesHighlightSection(JSONObject featureSection) throws JSONException {
         mTitle = featureSection.optString("title");
         JSONArray items = featureSection.getJSONArray("items");
         mItems = new ArrayList<>(items.length());
-        for (int i=0; i < items.length(); i++) {
+        for (int i = 0; i < items.length(); i++) {
             mItems.add(items.getString(i));
         }
     }

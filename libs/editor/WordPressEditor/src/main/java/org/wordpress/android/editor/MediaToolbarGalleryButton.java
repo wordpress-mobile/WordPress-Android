@@ -12,7 +12,6 @@ import org.wordpress.aztec.toolbar.AztecToolbar;
 import org.wordpress.aztec.toolbar.IToolbarAction;
 
 public class MediaToolbarGalleryButton implements IMediaToolbarButton {
-
     private IMediaToolbarClickListener mClickListener;
     private Context mContext;
     private IToolbarAction mAction = MediaToolbarAction.GALLERY;

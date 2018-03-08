@@ -16,20 +16,18 @@ import org.wordpress.android.ui.prefs.AppPrefs.UndeletablePrefKey;
  */
 
 public class SmartToast {
-
     public enum SmartToastType {
-        COMMENTS_LONG_PRESS
-                (UndeletablePrefKey.SMART_TOAST_COMMENTS_LONG_PRESS_USAGE_COUNTER,
-                        UndeletablePrefKey.SMART_TOAST_COMMENTS_LONG_PRESS_TOAST_COUNTER);
+        COMMENTS_LONG_PRESS(UndeletablePrefKey.SMART_TOAST_COMMENTS_LONG_PRESS_USAGE_COUNTER,
+                 UndeletablePrefKey.SMART_TOAST_COMMENTS_LONG_PRESS_TOAST_COUNTER);
 
         // key which stores the number of times the feature associated with the smart toast has been used
-        private final UndeletablePrefKey usageKey;
+        private final UndeletablePrefKey mUsageKey;
         // key which stores the number of times the toast associated with the smart toast type has been shown
-        private final UndeletablePrefKey shownKey;
+        private final UndeletablePrefKey mShownKey;
 
         SmartToastType(@NonNull UndeletablePrefKey usageKey, @NonNull UndeletablePrefKey shownKey) {
-            this.usageKey = usageKey;
-            this.shownKey = shownKey;
+            this.mUsageKey = usageKey;
+            this.mShownKey = shownKey;
         }
     }
 
@@ -37,23 +35,23 @@ public class SmartToast {
     private static final int MAX_TIMES_TO_SHOW_TOAST = 2;
 
     public static void reset() {
-        for (SmartToastType type: SmartToastType.values()) {
-            AppPrefs.setInt(type.shownKey, 0);
-            AppPrefs.setInt(type.usageKey, 0);
+        for (SmartToastType type : SmartToastType.values()) {
+            AppPrefs.setInt(type.mShownKey, 0);
+            AppPrefs.setInt(type.mUsageKey, 0);
         }
     }
 
     public static boolean show(@NonNull Context context, @NonNull SmartToastType type) {
         // limit the number of times to show the toast
-        int numTimesShown = AppPrefs.getInt(type.shownKey);
+        int numTimesShown = AppPrefs.getInt(type.mShownKey);
         if (numTimesShown >= MAX_TIMES_TO_SHOW_TOAST) {
             return false;
         }
 
         // don't show the toast until the user has used this feature a few times
-        int numTypesFeatureUsed = AppPrefs.getInt(type.usageKey);
+        int numTypesFeatureUsed = AppPrefs.getInt(type.mUsageKey);
         numTypesFeatureUsed++;
-        AppPrefs.setInt(type.usageKey, numTypesFeatureUsed);
+        AppPrefs.setInt(type.mUsageKey, numTypesFeatureUsed);
         if (numTypesFeatureUsed < MIN_TIMES_TO_USE_FEATURE) {
             return false;
         }
@@ -73,7 +71,7 @@ public class SmartToast {
         toast.show();
 
         numTimesShown++;
-        AppPrefs.setInt(type.shownKey, numTimesShown);
+        AppPrefs.setInt(type.mShownKey, numTimesShown);
         return true;
     }
 
@@ -83,6 +81,6 @@ public class SmartToast {
      * they can do it
      */
     public static void disableSmartToast(@NonNull SmartToastType type) {
-        AppPrefs.setInt(type.shownKey, MAX_TIMES_TO_SHOW_TOAST);
+        AppPrefs.setInt(type.mShownKey, MAX_TIMES_TO_SHOW_TOAST);
     }
 }

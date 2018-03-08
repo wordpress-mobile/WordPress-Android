@@ -59,7 +59,6 @@ import de.greenrobot.event.EventBus;
  */
 public class ReaderSubsActivity extends AppCompatActivity
         implements ReaderTagAdapter.TagDeletedListener {
-
     private EditText mEditAdd;
     private ImageButton mBtnAdd;
     private WPViewPager mViewPager;
@@ -253,7 +252,7 @@ public class ReaderSubsActivity extends AppCompatActivity
 
         // is it a url or a tag?
         boolean isUrl = !entry.contains(" ")
-                && (entry.contains(".") || entry.contains("://"));
+                        && (entry.contains(".") || entry.contains("://"));
         if (isUrl) {
             addAsUrl(entry);
         } else {
@@ -354,8 +353,8 @@ public class ReaderSubsActivity extends AppCompatActivity
 
     /*
      * start a two-step process to follow a blog by url:
-     *    1. test whether the url is reachable (API will follow any url, even if it doesn't exist)
-     *    2. perform the actual follow
+     * 1. test whether the url is reachable (API will follow any url, even if it doesn't exist)
+     * 2. perform the actual follow
      * note that the passed URL is assumed to be normalized and validated
      */
     private void performAddUrl(final String blogUrl) {
@@ -387,7 +386,8 @@ public class ReaderSubsActivity extends AppCompatActivity
                             errMsg = getString(R.string.reader_toast_err_follow_blog_not_found);
                             break;
                         default:
-                            errMsg = getString(R.string.reader_toast_err_follow_blog) + " (" + Integer.toString(statusCode) + ")";
+                            errMsg = getString(R.string.reader_toast_err_follow_blog) + " (" + Integer
+                                    .toString(statusCode) + ")";
                             break;
                     }
                     ToastUtils.showToast(ReaderSubsActivity.this, errMsg);

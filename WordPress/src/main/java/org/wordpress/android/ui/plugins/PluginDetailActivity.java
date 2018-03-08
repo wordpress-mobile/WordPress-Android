@@ -452,7 +452,8 @@ public class PluginDetailActivity extends AppCompatActivity {
         }
 
         findViewById(R.id.plugin_card_site).setVisibility(mPlugin.isInstalled() ? View.VISIBLE : View.GONE);
-        findViewById(R.id.plugin_state_active_container).setVisibility(canPluginBeDisabledOrRemoved() ? View.VISIBLE : View.GONE);
+        findViewById(R.id.plugin_state_active_container)
+                .setVisibility(canPluginBeDisabledOrRemoved() ? View.VISIBLE : View.GONE);
         mSwitchActive.setChecked(mIsActive);
         mSwitchAutoupdates.setChecked(mIsAutoUpdateEnabled);
 
@@ -483,7 +484,7 @@ public class PluginDetailActivity extends AppCompatActivity {
             } else {
                 versionTopText = String.format(getString(R.string.plugin_version), pluginVersion);
             }
-        } else if (!TextUtils.isEmpty(availableVersion)){
+        } else if (!TextUtils.isEmpty(availableVersion)) {
             versionTopText = String.format(getString(R.string.plugin_version), availableVersion);
         }
         mVersionTopTextView.setText(versionTopText);
@@ -565,11 +566,13 @@ public class PluginDetailActivity extends AppCompatActivity {
     }
 
     protected void showPluginInfoPopup() {
-        if (!mPlugin.doesHaveWPOrgPluginDetails()) return;
+        if (!mPlugin.doesHaveWPOrgPluginDetails()) {
+            return;
+        }
 
         List<Map<String, String>> data = new ArrayList<>();
-        int[] to = { R.id.text1, R.id.text2 };
-        String[] from = { KEY_LABEL, KEY_TEXT };
+        int[] to = {R.id.text1, R.id.text2};
+        String[] from = {KEY_LABEL, KEY_TEXT};
         String[] labels = {
                 getString(R.string.plugin_info_version),
                 getString(R.string.plugin_info_lastupdated),
@@ -577,22 +580,23 @@ public class PluginDetailActivity extends AppCompatActivity {
                 getString(R.string.plugin_info_your_version)
         };
 
-        Map<String,String> mapVersion = new HashMap<>();
+        Map<String, String> mapVersion = new HashMap<>();
         mapVersion.put(KEY_LABEL, labels[0]);
         mapVersion.put(KEY_TEXT, StringUtils.notNullStr(mPlugin.getWPOrgPluginVersion()));
         data.add(mapVersion);
 
-        Map<String,String> mapUpdated = new HashMap<>();
+        Map<String, String> mapUpdated = new HashMap<>();
         mapUpdated.put(KEY_LABEL, labels[1]);
-        mapUpdated.put(KEY_TEXT, timespanFromUpdateDate(StringUtils.notNullStr(mPlugin.getLastUpdatedForWPOrgPlugin())));
+        mapUpdated
+                .put(KEY_TEXT, timespanFromUpdateDate(StringUtils.notNullStr(mPlugin.getLastUpdatedForWPOrgPlugin())));
         data.add(mapUpdated);
 
-        Map<String,String> mapRequiredVer = new HashMap<>();
+        Map<String, String> mapRequiredVer = new HashMap<>();
         mapRequiredVer.put(KEY_LABEL, labels[2]);
         mapRequiredVer.put(KEY_TEXT, StringUtils.notNullStr(mPlugin.getRequiredWordPressVersion()));
         data.add(mapRequiredVer);
 
-        Map<String,String> mapThisVer = new HashMap<>();
+        Map<String, String> mapThisVer = new HashMap<>();
         mapThisVer.put(KEY_LABEL, labels[3]);
         mapThisVer.put(KEY_TEXT, !TextUtils.isEmpty(mSite.getSoftwareVersion()) ? mSite.getSoftwareVersion() : "?");
         data.add(mapThisVer);
@@ -612,7 +616,6 @@ public class PluginDetailActivity extends AppCompatActivity {
             }
         });
         builder.show();
-
     }
 
     protected void toggleText(@NonNull final TextView textView, @NonNull ImageView chevron) {
@@ -806,7 +809,9 @@ public class PluginDetailActivity extends AppCompatActivity {
     @SuppressWarnings("unused")
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onSitePluginConfigured(OnSitePluginConfigured event) {
-        if (isFinishing()) return;
+        if (isFinishing()) {
+            return;
+        }
 
         if (!shouldHandleFluxCSitePluginEvent(event.site, event.pluginName)) {
             return;
@@ -815,11 +820,11 @@ public class PluginDetailActivity extends AppCompatActivity {
         mIsConfiguringPlugin = false;
         if (event.isError()) {
             // The plugin was already removed in remote, there is no need to show an error to the user
-            if (mIsRemovingPlugin &&
-                    event.error.type == PluginStore.ConfigureSitePluginErrorType.UNKNOWN_PLUGIN) {
+            if (mIsRemovingPlugin
+                && event.error.type == PluginStore.ConfigureSitePluginErrorType.UNKNOWN_PLUGIN) {
                 // We still need to dispatch the remove plugin action to remove the local copy
-                // and complete the flow gracefully
-                // We can ignore `!mSitePlugin.isActive()` check here since the plugin is not installed anymore on remote
+                // and complete the flow gracefully. We can ignore `!mSitePlugin.isActive()` check here since the
+                // plugin is not installed anymore on remote
                 dispatchRemovePluginAction();
                 return;
             }
@@ -855,7 +860,8 @@ public class PluginDetailActivity extends AppCompatActivity {
         }
         if (mPlugin.isAutoUpdateEnabled() != configuredPlugin.isAutoUpdateEnabled()) {
             AnalyticsTracker.Stat stat = configuredPlugin.isAutoUpdateEnabled()
-                    ? AnalyticsTracker.Stat.PLUGIN_AUTOUPDATE_ENABLED : AnalyticsTracker.Stat.PLUGIN_AUTOUPDATE_DISABLED;
+                    ? AnalyticsTracker.Stat.PLUGIN_AUTOUPDATE_ENABLED
+                    : AnalyticsTracker.Stat.PLUGIN_AUTOUPDATE_DISABLED;
             AnalyticsUtils.trackWithSiteDetails(stat, mSite);
         }
         // Now we can update the plugin with the new one from store
@@ -881,7 +887,9 @@ public class PluginDetailActivity extends AppCompatActivity {
     @SuppressWarnings("unused")
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onWPOrgPluginFetched(PluginStore.OnWPOrgPluginFetched event) {
-        if (isFinishing()) return;
+        if (isFinishing()) {
+            return;
+        }
 
         if (!mSlug.equals(event.pluginSlug)) {
             // another plugin fetched, no need to handle it
@@ -890,7 +898,7 @@ public class PluginDetailActivity extends AppCompatActivity {
 
         if (event.isError()) {
             AppLog.e(AppLog.T.PLUGINS, "An error occurred while fetching wporg plugin" + event.pluginSlug
-                    + " with type: " + event.error.type);
+                                       + " with type: " + event.error.type);
         } else {
             refreshPluginFromStore();
             refreshViews();
@@ -900,7 +908,9 @@ public class PluginDetailActivity extends AppCompatActivity {
     @SuppressWarnings("unused")
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onSitePluginUpdated(OnSitePluginUpdated event) {
-        if (isFinishing()) return;
+        if (isFinishing()) {
+            return;
+        }
 
         if (!shouldHandleFluxCSitePluginEvent(event.site, event.pluginName)) {
             return;
@@ -909,7 +919,7 @@ public class PluginDetailActivity extends AppCompatActivity {
         mIsUpdatingPlugin = false;
         if (event.isError()) {
             AppLog.e(AppLog.T.PLUGINS, "An error occurred while updating the plugin with type: "
-                    + event.error.type);
+                                       + event.error.type + " and message: " + event.error.message);
             refreshPluginVersionViews();
             showUpdateFailedSnackbar();
             return;
@@ -925,7 +935,9 @@ public class PluginDetailActivity extends AppCompatActivity {
     @SuppressWarnings("unused")
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onSitePluginInstalled(OnSitePluginInstalled event) {
-        if (isFinishing()) return;
+        if (isFinishing()) {
+            return;
+        }
 
         if (mSite.getId() != event.site.getId() || !mSlug.equals(event.slug)) {
             // Not the event we are interested in
@@ -935,7 +947,7 @@ public class PluginDetailActivity extends AppCompatActivity {
         mIsInstallingPlugin = false;
         if (event.isError()) {
             AppLog.e(AppLog.T.PLUGINS, "An error occurred while installing the plugin with type: "
-                    + event.error.type);
+                                       + event.error.type + " and message: " + event.error.message);
             refreshPluginVersionViews();
             showInstallFailedSnackbar();
             return;
@@ -958,7 +970,9 @@ public class PluginDetailActivity extends AppCompatActivity {
     @SuppressWarnings("unused")
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onSitePluginDeleted(OnSitePluginDeleted event) {
-        if (isFinishing()) return;
+        if (isFinishing()) {
+            return;
+        }
 
         if (!shouldHandleFluxCSitePluginEvent(event.site, event.pluginName)) {
             return;
@@ -968,7 +982,7 @@ public class PluginDetailActivity extends AppCompatActivity {
         cancelRemovePluginProgressDialog();
         if (event.isError()) {
             AppLog.e(AppLog.T.PLUGINS, "An error occurred while removing the plugin with type: "
-                    + event.error.type);
+                                       + event.error.type + " and message: " + event.error.message);
             String toastMessage = getString(R.string.plugin_updated_failed_detailed,
                     mPlugin.getDisplayName(), event.error.message);
             ToastUtils.showToast(this, toastMessage, Duration.LONG);
@@ -987,12 +1001,13 @@ public class PluginDetailActivity extends AppCompatActivity {
         showSuccessfulPluginRemovedSnackbar();
     }
 
-    // This check should only handle events for already installed plugins - onSitePluginConfigured, onSitePluginUpdated, onSitePluginDeleted
+    // This check should only handle events for already installed plugins - onSitePluginConfigured,
+    // onSitePluginUpdated, onSitePluginDeleted
     private boolean shouldHandleFluxCSitePluginEvent(SiteModel eventSite, String eventPluginName) {
         return mSite.getId() == eventSite.getId() // correct site
-                && mPlugin.isInstalled() // needs plugin to be already installed
-                && mPlugin.getName() != null // sanity check for NPE since if plugin is installed it'll have the name
-                && mPlugin.getName().equals(eventPluginName); // event is for the plugin we are showing
+               && mPlugin.isInstalled() // needs plugin to be already installed
+               && mPlugin.getName() != null // sanity check for NPE since if plugin is installed it'll have the name
+               && mPlugin.getName().equals(eventPluginName); // event is for the plugin we are showing
     }
 
     // Utils
@@ -1025,14 +1040,14 @@ public class PluginDetailActivity extends AppCompatActivity {
         }
         // Disable removing akismet and vaultpress for AT sites
         return !mSite.isAutomatedTransfer()
-                || (!pluginName.equals("akismet/akismet") && !pluginName.equals("vaultpress/vaultpress"));
+               || (!pluginName.equals("akismet/akismet") && !pluginName.equals("vaultpress/vaultpress"));
     }
 
     // only show settings for active plugins on .org sites
     private boolean canShowSettings() {
         return mPlugin.isInstalled()
-                && mPlugin.isActive()
-                && !TextUtils.isEmpty(mPlugin.getSettingsUrl());
+               && mPlugin.isActive()
+               && !TextUtils.isEmpty(mPlugin.getSettingsUrl());
     }
 
     private boolean isPluginStateChangedSinceLastConfigurationDispatch() {

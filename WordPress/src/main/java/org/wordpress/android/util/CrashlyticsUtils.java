@@ -5,8 +5,8 @@ import com.crashlytics.android.Crashlytics;
 import io.fabric.sdk.android.Fabric;
 
 public class CrashlyticsUtils {
-    final private static String TAG_KEY = "tag";
-    final private static String MESSAGE_KEY = "message";
+    private static final String TAG_KEY = "tag";
+    private static final String MESSAGE_KEY = "message";
 
     public static void logException(Throwable tr, AppLog.T tag, String message) {
         if (!Fabric.isInitialized()) {

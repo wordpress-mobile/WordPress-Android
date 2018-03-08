@@ -13,7 +13,6 @@ import android.content.res.Configuration;
 import android.content.res.Resources;
 import android.os.Build;
 import android.preference.PreferenceManager;
-import android.support.v4.text.TextUtilsCompat;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -40,20 +39,22 @@ public class WPActivityUtils {
         }
 
         Toolbar toolbar;
-        if (dialog.findViewById(android.R.id.list) == null &&
-                dialog.findViewById(android.R.id.list_container) == null) {
+        if (dialog.findViewById(android.R.id.list) == null
+            && dialog.findViewById(android.R.id.list_container) == null) {
             return;
         }
 
         @SuppressLint("InlinedApi") View child = dialog.findViewById(android.R.id.list_container);
         if (child == null) {
             child = dialog.findViewById(android.R.id.list);
-            if (child == null) return;
+            if (child == null) {
+                return;
+            }
         }
 
         ViewGroup root = (ViewGroup) child.getParent();
         toolbar = (Toolbar) LayoutInflater.from(context.getActivity())
-                .inflate(org.wordpress.android.R.layout.toolbar, root, false);
+                                          .inflate(org.wordpress.android.R.layout.toolbar, root, false);
         root.addView(toolbar, 0);
 
         dialog.getWindow().setWindowAnimations(R.style.DialogAnimations);
@@ -75,13 +76,15 @@ public class WPActivityUtils {
     /**
      * Checks for a {@link Toolbar} at the first child element of a given {@link Dialog} and
      * removes it if it exists.
-     *
+     * <p>
      * Originally added to prevent a crash that occurs with nested PreferenceScreens that added
      * a toolbar via {@link WPActivityUtils#addToolbarToDialog(Fragment, Dialog, String)}. The
      * crash can be reproduced by turning 'Don't keep activities' on from Developer options.
      */
     public static void removeToolbarFromDialog(final Fragment context, final Dialog dialog) {
-        if (dialog == null || !context.isAdded()) return;
+        if (dialog == null || !context.isAdded()) {
+            return;
+        }
 
         ViewGroup root = (ViewGroup) dialog.findViewById(android.R.id.list).getParent();
         if (root.getChildAt(0) instanceof Toolbar) {
@@ -127,7 +130,7 @@ public class WPActivityUtils {
 
     public static Context getThemedContext(Context context) {
         if (context instanceof AppCompatActivity) {
-            ActionBar actionBar = ((AppCompatActivity)context).getSupportActionBar();
+            ActionBar actionBar = ((AppCompatActivity) context).getSupportActionBar();
             if (actionBar != null) {
                 return actionBar.getThemedContext();
             }
@@ -158,12 +161,12 @@ public class WPActivityUtils {
     public static void disableComponent(Context context, Class<?> klass) {
         PackageManager pm = context.getPackageManager();
         pm.setComponentEnabledSetting(new ComponentName(context, klass),
-                PackageManager.COMPONENT_ENABLED_STATE_DISABLED, PackageManager.DONT_KILL_APP);
+                                      PackageManager.COMPONENT_ENABLED_STATE_DISABLED, PackageManager.DONT_KILL_APP);
     }
 
     public static void enableComponent(Context context, Class<?> klass) {
         PackageManager pm = context.getPackageManager();
         pm.setComponentEnabledSetting(new ComponentName(context, klass),
-                PackageManager.COMPONENT_ENABLED_STATE_ENABLED, PackageManager.DONT_KILL_APP);
+                                      PackageManager.COMPONENT_ENABLED_STATE_ENABLED, PackageManager.DONT_KILL_APP);
     }
 }

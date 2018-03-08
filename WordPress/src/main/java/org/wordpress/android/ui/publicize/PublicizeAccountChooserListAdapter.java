@@ -13,13 +13,15 @@ import org.wordpress.android.widgets.WPNetworkImageView;
 
 import java.util.List;
 
-public class PublicizeAccountChooserListAdapter extends RecyclerView.Adapter<PublicizeAccountChooserListAdapter.ViewHolder> {
+public class PublicizeAccountChooserListAdapter
+        extends RecyclerView.Adapter<PublicizeAccountChooserListAdapter.ViewHolder> {
     private List<PublicizeConnection> mConnectionItems;
     private OnPublicizeAccountChooserListener mListener;
     private boolean mAreAccountsConnected;
     private int mSelectedPosition;
 
-    public PublicizeAccountChooserListAdapter(List<PublicizeConnection> connectionItems, OnPublicizeAccountChooserListener listener, boolean isConnected) {
+    public PublicizeAccountChooserListAdapter(List<PublicizeConnection> connectionItems,
+                                              OnPublicizeAccountChooserListener listener, boolean isConnected) {
         mConnectionItems = connectionItems;
         mListener = listener;
         mAreAccountsConnected = isConnected;
@@ -28,7 +30,8 @@ public class PublicizeAccountChooserListAdapter extends RecyclerView.Adapter<Pub
 
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.publicize_connection_list_item, parent, false);
+        View view = LayoutInflater.from(parent.getContext())
+                                  .inflate(R.layout.publicize_connection_list_item, parent, false);
 
         return new ViewHolder(view);
     }
@@ -36,7 +39,8 @@ public class PublicizeAccountChooserListAdapter extends RecyclerView.Adapter<Pub
     @Override
     public void onBindViewHolder(final ViewHolder holder, int position) {
         final PublicizeConnection connection = mConnectionItems.get(position);
-        holder.mProfileImageView.setImageUrl(connection.getExternalProfilePictureUrl(), WPNetworkImageView.ImageType.PHOTO);
+        holder.mProfileImageView
+                .setImageUrl(connection.getExternalProfilePictureUrl(), WPNetworkImageView.ImageType.PHOTO);
         holder.mNameTextView.setText(connection.getExternalDisplayName());
         holder.mRadioButton.setChecked(position == mSelectedPosition);
 

@@ -4,7 +4,7 @@ import android.content.ContentValues;
 import android.database.Cursor;
 
 /**
- * Represents WordPress post Category data and handles local database (de)serialization.
+ * Represents WordPress post Category data and handles local database (de) serialization.
  */
 public class CategoryModel {
     // Categories table column names
@@ -37,7 +37,9 @@ public class CategoryModel {
      * Sets data from a local database {@link Cursor}.
      */
     public void deserializeFromDatabase(Cursor cursor) {
-        if (cursor == null) return;
+        if (cursor == null) {
+            return;
+        }
 
         id = cursor.getInt(cursor.getColumnIndex(ID_COLUMN_NAME));
         name = cursor.getString(cursor.getColumnIndex(NAME_COLUMN_NAME));

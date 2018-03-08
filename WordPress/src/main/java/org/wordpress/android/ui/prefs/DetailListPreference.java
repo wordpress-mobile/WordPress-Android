@@ -22,6 +22,8 @@ import android.widget.TextView;
 import org.apache.commons.lang3.ArrayUtils;
 import org.wordpress.android.R;
 
+import java.util.Locale;
+
 /**
  * Custom {@link ListPreference} used to display detail text per item.
  */
@@ -63,9 +65,9 @@ public class DetailListPreference extends ListPreference
         super.onBindView(view);
 
         setupView((TextView) view.findViewById(android.R.id.title),
-                R.dimen.text_sz_large, R.color.grey_dark, R.color.grey_lighten_10);
+                  R.dimen.text_sz_large, R.color.grey_dark, R.color.grey_lighten_10);
         setupView((TextView) view.findViewById(android.R.id.summary),
-                R.dimen.text_sz_medium, R.color.grey_darken_10, R.color.grey_lighten_10);
+                  R.dimen.text_sz_medium, R.color.grey_darken_10, R.color.grey_lighten_10);
     }
 
     @Override
@@ -87,7 +89,7 @@ public class DetailListPreference extends ListPreference
 
         mWhichButtonClicked = DialogInterface.BUTTON_NEGATIVE;
         builder.setPositiveButton(android.R.string.ok, this);
-        builder.setNegativeButton(res.getString(R.string.cancel).toUpperCase(), this);
+        builder.setNegativeButton(res.getString(android.R.string.cancel).toUpperCase(Locale.getDefault()), this);
 
         if (mDetails == null) {
             mDetails = new String[getEntries() == null ? 1 : getEntries().length];
@@ -98,11 +100,11 @@ public class DetailListPreference extends ListPreference
         mSelectedIndex = findIndexOfValue(mStartingValue);
 
         builder.setSingleChoiceItems(mListAdapter, mSelectedIndex,
-                new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int which) {
-                        mSelectedIndex = which;
-                    }
-                });
+                                     new DialogInterface.OnClickListener() {
+                                         public void onClick(DialogInterface dialog, int which) {
+                                             mSelectedIndex = which;
+                                         }
+                                     });
 
         View titleView = View.inflate(getContext(), R.layout.detail_list_preference_title, null);
 
@@ -117,7 +119,9 @@ public class DetailListPreference extends ListPreference
             builder.setTitle(getTitle());
         }
 
-        if ((mDialog = builder.create()) == null) return;
+        if ((mDialog = builder.create()) == null) {
+            return;
+        }
 
         if (state != null) {
             mDialog.onRestoreInstanceState(state);
@@ -215,7 +219,7 @@ public class DetailListPreference extends ListPreference
     }
 
     private class DetailListAdapter extends ArrayAdapter<String> {
-        public DetailListAdapter(Context context, int resource, String[] objects) {
+        DetailListAdapter(Context context, int resource, String[] objects) {
             super(context, resource, objects);
         }
 

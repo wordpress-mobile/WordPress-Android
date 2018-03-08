@@ -44,7 +44,6 @@ import java.util.ArrayList;
 import javax.inject.Inject;
 
 public class MediaPreviewActivity extends AppCompatActivity implements MediaPreviewFragment.OnMediaTappedListener {
-
     private static final String ARG_ID_LIST = "id_list";
 
     private int mMediaId;
@@ -66,15 +65,16 @@ public class MediaPreviewActivity extends AppCompatActivity implements MediaPrev
 
     public static class MediaPreviewSwiped {
         final int mediaId;
+
         public MediaPreviewSwiped(int mediaId) {
             this.mediaId = mediaId;
         }
     }
 
     /**
-     * @param context     self explanatory
-     * @param site        optional site this media is associated with
-     * @param contentUri  URI of media - can be local or remote
+     * @param context self explanatory
+     * @param site optional site this media is associated with
+     * @param contentUri URI of media - can be local or remote
      */
     public static void showPreview(@NonNull Context context,
                                    @Nullable SiteModel site,
@@ -89,9 +89,9 @@ public class MediaPreviewActivity extends AppCompatActivity implements MediaPrev
     }
 
     /**
-     * @param context     self explanatory
-     * @param site        optional site this media is associated with
-     * @param media       media model
+     * @param context self explanatory
+     * @param site optional site this media is associated with
+     * @param media media model
      * @param mediaIdList optional list of media IDs to page through
      */
     public static void showPreview(@NonNull Context context,
@@ -172,7 +172,7 @@ public class MediaPreviewActivity extends AppCompatActivity implements MediaPrev
             showPreviewFragment();
         }
 
-        mFadeHandler.postDelayed(fadeOutRunnable, FADE_DELAY_MS);
+        mFadeHandler.postDelayed(mFadeOutRunnable, FADE_DELAY_MS);
     }
 
     @Override
@@ -224,26 +224,30 @@ public class MediaPreviewActivity extends AppCompatActivity implements MediaPrev
             fragment = MediaPreviewFragment.newInstance(mSite, mContentUri);
         }
         getFragmentManager().beginTransaction()
-                .replace(R.id.fragment_container, fragment, MediaPreviewFragment.TAG)
-                .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE)
-                .commit();
+                            .replace(R.id.fragment_container, fragment, MediaPreviewFragment.TAG)
+                            .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE)
+                            .commit();
 
         fragment.setOnMediaTappedListener(this);
     }
 
-    private final Runnable fadeOutRunnable = new Runnable() {
+    private final Runnable mFadeOutRunnable = new Runnable() {
         @Override
         public void run() {
             if (!isFinishing() && mToolbar.getVisibility() == View.VISIBLE) {
                 AniUtils.startAnimation(mToolbar, R.anim.toolbar_fade_out_and_up, new Animation.AnimationListener() {
                     @Override
-                    public void onAnimationStart(Animation animation) { }
+                    public void onAnimationStart(Animation animation) {
+                    }
+
                     @Override
                     public void onAnimationEnd(Animation animation) {
                         mToolbar.setVisibility(View.GONE);
                     }
+
                     @Override
-                    public void onAnimationRepeat(Animation animation) { }
+                    public void onAnimationRepeat(Animation animation) {
+                    }
                 });
             }
         }
@@ -251,18 +255,22 @@ public class MediaPreviewActivity extends AppCompatActivity implements MediaPrev
 
     private void showToolbar() {
         if (!isFinishing()) {
-            mFadeHandler.removeCallbacks(fadeOutRunnable);
-            mFadeHandler.postDelayed(fadeOutRunnable, FADE_DELAY_MS);
+            mFadeHandler.removeCallbacks(mFadeOutRunnable);
+            mFadeHandler.postDelayed(mFadeOutRunnable, FADE_DELAY_MS);
             if (mToolbar.getVisibility() != View.VISIBLE) {
                 AniUtils.startAnimation(mToolbar, R.anim.toolbar_fade_in_and_down, new Animation.AnimationListener() {
                     @Override
                     public void onAnimationStart(Animation animation) {
                         mToolbar.setVisibility(View.VISIBLE);
                     }
+
                     @Override
-                    public void onAnimationEnd(Animation animation) { }
+                    public void onAnimationEnd(Animation animation) {
+                    }
+
                     @Override
-                    public void onAnimationRepeat(Animation animation) { }
+                    public void onAnimationRepeat(Animation animation) {
+                    }
                 });
             }
         }
@@ -300,10 +308,12 @@ public class MediaPreviewActivity extends AppCompatActivity implements MediaPrev
                 // fire event so settings activity shows the same media as this activity (user may have swiped)
                 EventBus.getDefault().post(new MediaPreviewSwiped(mMediaId));
             }
+
             @Override
             public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
                 // noop
             }
+
             @Override
             public void onPageScrollStateChanged(int state) {
                 // noop
@@ -323,7 +333,7 @@ public class MediaPreviewActivity extends AppCompatActivity implements MediaPrev
         private final SparseArray<Fragment> mFragmentMap = new SparseArray<>();
         private boolean mDidAutoPlay;
 
-        public MediaPagerAdapter(FragmentManager fm) {
+        MediaPagerAdapter(FragmentManager fm) {
             super(fm);
         }
 

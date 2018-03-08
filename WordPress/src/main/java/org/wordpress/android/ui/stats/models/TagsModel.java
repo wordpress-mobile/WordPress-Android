@@ -24,7 +24,6 @@ public class TagsModel implements Serializable {
     }
 
 
-
     public List<TagModel> getTags() {
         return mTags;
     }

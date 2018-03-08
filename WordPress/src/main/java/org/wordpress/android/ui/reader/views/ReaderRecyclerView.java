@@ -6,7 +6,6 @@ import android.support.v7.widget.RecyclerView;
 import android.util.AttributeSet;
 
 public class ReaderRecyclerView extends RecyclerView {
-
     public ReaderRecyclerView(Context context) {
         super(context);
         initialize(context);

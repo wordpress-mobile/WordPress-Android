@@ -86,7 +86,9 @@ public class PostPreviewFragment extends Fragment {
     }
 
     void refreshPreview() {
-        if (!isAdded()) return;
+        if (!isAdded()) {
+            return;
+        }
 
         new Thread() {
             @Override
@@ -96,7 +98,9 @@ public class PostPreviewFragment extends Fragment {
                 getActivity().runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
-                        if (!isAdded()) return;
+                        if (!isAdded()) {
+                            return;
+                        }
 
                         if (htmlContent != null) {
                             mWebView.loadDataWithBaseURL(
@@ -132,12 +136,12 @@ public class PostPreviewFragment extends Fragment {
         }
 
         return "<!DOCTYPE html><html><head><meta charset='UTF-8' />"
-                + "<meta name='viewport' content='width=device-width, initial-scale=1'>"
-                + "<link rel='stylesheet' href='editor.css'>"
-                + "<link rel='stylesheet' href='editor-android.css'>"
-                + "</head><body>"
-                + "<h1>" + title + "</h1>"
-                + StringUtils.addPTags(postContent)
-                + "</body></html>";
+               + "<meta name='viewport' content='width=device-width, initial-scale=1'>"
+               + "<link rel='stylesheet' href='editor.css'>"
+               + "<link rel='stylesheet' href='editor-android.css'>"
+               + "</head><body>"
+               + "<h1>" + title + "</h1>"
+               + StringUtils.addPTags(postContent)
+               + "</body></html>";
     }
 }

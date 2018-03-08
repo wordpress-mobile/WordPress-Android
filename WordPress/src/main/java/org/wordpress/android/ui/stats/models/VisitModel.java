@@ -3,7 +3,6 @@ package org.wordpress.android.ui.stats.models;
 import java.io.Serializable;
 
 public class VisitModel implements Serializable {
-
     private int mViews;
     private int mLikes;
     private int mVisitors;
@@ -58,5 +57,4 @@ public class VisitModel implements Serializable {
     public void setPeriod(String period) {
         this.mPeriod = period;
     }
-
 }

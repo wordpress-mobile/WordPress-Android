@@ -85,11 +85,11 @@ public class JsCallbackReceiver {
                 // TODO: Possibly needed for handling WebView scrolling when caret moves (from iOS)
                 break;
             case CALLBACK_FOCUS_IN:
-                // TODO: Needed to handle displaying/graying the format bar when focus changes between the title and content
+                // TODO: Handles displaying/graying the format bar when focus changes between title and content
                 AppLog.d(AppLog.T.EDITOR, "Focus in callback received");
                 break;
             case CALLBACK_FOCUS_OUT:
-                // TODO: Needed to handle displaying/graying the format bar when focus changes between the title and content
+                // TODO: Handles displaying/graying the format bar when focus changes between title and content
                 AppLog.d(AppLog.T.EDITOR, "Focus out callback received");
                 break;
             case CALLBACK_NEW_FIELD:
@@ -204,7 +204,8 @@ public class JsCallbackReceiver {
             case CALLBACK_RESPONSE_STRING:
                 // log the entire params unless they contain the post content
                 if (params.startsWith("function=getHTMLForCallback~id=zss_field_content~contents=")) {
-                    AppLog.d(AppLog.T.EDITOR, callbackId + ": function=getHTMLForCallback~id=zss_field_content~contents=(content not logged)");
+                    AppLog.d(AppLog.T.EDITOR, callbackId + ": function=getHTMLForCallback"
+                                              + "~id=zss_field_content~contents=(content not logged)");
                 } else {
                     AppLog.d(AppLog.T.EDITOR, callbackId + ": " + params);
                 }
