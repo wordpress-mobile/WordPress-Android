@@ -102,7 +102,8 @@ public class PostUploadHandler implements UploadHandler<PostModel> {
             // first check whether there was an old version of this Post still enqueued waiting
             // for being uploaded
             for (PostModel queuedPost : sQueuedPostsList) {
-                if (queuedPost.getId() == post.getId()) {
+                if (queuedPost.getId() == post.getId()
+                    && queuedPost.getLocalSiteId() == post.getLocalSiteId()) {
                     // we found an older version, so let's remove it and replace it with the newest copy
                     sQueuedPostsList.remove(queuedPost);
                     break;
@@ -142,7 +143,8 @@ public class PostUploadHandler implements UploadHandler<PostModel> {
         if (sQueuedPostsList.size() > 0) {
             synchronized (sQueuedPostsList) {
                 for (PostModel queuedPost : sQueuedPostsList) {
-                    if (queuedPost.getId() == post.getId()) {
+                    if (queuedPost.getId() == post.getId()
+                        && queuedPost.getLocalSiteId() == post.getLocalSiteId()) {
                         return true;
                     }
                 }
@@ -152,7 +154,8 @@ public class PostUploadHandler implements UploadHandler<PostModel> {
     }
 
     static boolean isPostUploading(PostModel post) {
-        return post != null && sCurrentUploadingPost != null && sCurrentUploadingPost.getId() == post.getId();
+        return post != null && sCurrentUploadingPost != null && sCurrentUploadingPost.getId() == post.getId()
+                && sCurrentUploadingPost.getLocalSiteId() == post.getLocalSiteId();
     }
 
     static boolean hasPendingOrInProgressPostUploads() {

@@ -78,7 +78,8 @@ public class MediaUploadHandler implements UploadHandler<MediaModel>, VideoOptim
 
         synchronized (sInProgressUploads) {
             for (MediaModel queuedMedia : sInProgressUploads) {
-                if (queuedMedia.getLocalPostId() == postModel.getId()) {
+                if (queuedMedia.getLocalPostId() == postModel.getId()
+                        && queuedMedia.getLocalSiteId() == postModel.getLocalSiteId()) {
                     return true;
                 }
             }
@@ -94,7 +95,8 @@ public class MediaUploadHandler implements UploadHandler<MediaModel>, VideoOptim
 
         synchronized (sPendingUploads) {
             for (MediaModel queuedMedia : sPendingUploads) {
-                if (queuedMedia.getLocalPostId() == postModel.getId()) {
+                if (queuedMedia.getLocalPostId() == postModel.getId()
+                        && queuedMedia.getLocalSiteId() == postModel.getLocalSiteId()) {
                     return true;
                 }
             }
@@ -119,7 +121,8 @@ public class MediaUploadHandler implements UploadHandler<MediaModel>, VideoOptim
         List<MediaModel> mediaList = new ArrayList<>();
         synchronized (sInProgressUploads) {
             for (MediaModel queuedMedia : sInProgressUploads) {
-                if (queuedMedia.getLocalPostId() == postModel.getId()) {
+                if (queuedMedia.getLocalPostId() == postModel.getId()
+                    && queuedMedia.getLocalSiteId() == postModel.getLocalSiteId()) {
                     mediaList.add(queuedMedia);
                 }
             }
@@ -127,7 +130,8 @@ public class MediaUploadHandler implements UploadHandler<MediaModel>, VideoOptim
 
         synchronized (sPendingUploads) {
             for (MediaModel queuedMedia : sPendingUploads) {
-                if (queuedMedia.getLocalPostId() == postModel.getId()) {
+                if (queuedMedia.getLocalPostId() == postModel.getId()
+                    && queuedMedia.getLocalSiteId() == postModel.getLocalSiteId()) {
                     mediaList.add(queuedMedia);
                 }
             }
@@ -322,14 +326,16 @@ public class MediaUploadHandler implements UploadHandler<MediaModel>, VideoOptim
         }
         synchronized (sInProgressUploads) {
             for (MediaModel inProgressUpload : sInProgressUploads) {
-                if (inProgressUpload.getLocalPostId() == event.post.getId()) {
+                if (inProgressUpload.getLocalPostId() == event.post.getId()
+                    && inProgressUpload.getLocalSiteId() == event.post.getLocalSiteId()) {
                     cancelUpload(inProgressUpload, true);
                 }
             }
         }
         synchronized (sPendingUploads) {
             for (MediaModel pendingUpload : sPendingUploads) {
-                if (pendingUpload.getLocalPostId() == event.post.getId()) {
+                if (pendingUpload.getLocalPostId() == event.post.getId()
+                    && pendingUpload.getLocalSiteId() == event.post.getLocalSiteId()) {
                     cancelUpload(pendingUpload, true);
                 }
             }
