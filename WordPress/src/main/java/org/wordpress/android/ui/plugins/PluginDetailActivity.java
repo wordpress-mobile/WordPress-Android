@@ -13,8 +13,8 @@ import android.support.v7.app.ActionBar;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.content.res.AppCompatResources;
-import android.support.v7.widget.CardView;
 import android.support.v7.widget.AppCompatButton;
+import android.support.v7.widget.CardView;
 import android.support.v7.widget.Toolbar;
 import android.text.Html;
 import android.text.TextUtils;
@@ -25,6 +25,7 @@ import android.view.ViewGroup;
 import android.widget.CompoundButton;
 import android.widget.CompoundButton.OnCheckedChangeListener;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.RatingBar;
 import android.widget.RelativeLayout;
@@ -99,6 +100,7 @@ public class PluginDetailActivity extends AppCompatActivity {
     private ViewGroup mContainer;
     private TextView mTitleTextView;
     private TextView mByLineTextView;
+    private LinearLayout mVersionLayout;
     private TextView mVersionTopTextView;
     private TextView mVersionBottomTextView;
     private TextView mInstalledText;
@@ -266,6 +268,7 @@ public class PluginDetailActivity extends AppCompatActivity {
         mContainer = findViewById(R.id.plugin_detail_container);
         mTitleTextView = findViewById(R.id.text_title);
         mByLineTextView = findViewById(R.id.text_byline);
+        mVersionLayout = findViewById(R.id.plugin_version_layout);
         mVersionTopTextView = findViewById(R.id.plugin_version_top);
         mVersionBottomTextView = findViewById(R.id.plugin_version_bottom);
         mInstalledText = findViewById(R.id.plugin_installed);
@@ -327,7 +330,7 @@ public class PluginDetailActivity extends AppCompatActivity {
             }
         });
 
-        mVersionTopTextView.setOnClickListener(new View.OnClickListener() {
+        mVersionLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 showPluginInfoPopup();

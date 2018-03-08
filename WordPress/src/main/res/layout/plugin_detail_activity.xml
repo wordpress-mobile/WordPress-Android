@@ -127,6 +127,10 @@
                         android:layout_width="match_parent" >
 
                         <LinearLayout
+                            android:id="@+id/plugin_version_layout"
+                            android:background="?android:attr/selectableItemBackground"
+                            android:clickable="true"
+                            android:focusable="true"
                             android:layout_alignParentLeft="true"
                             android:layout_alignParentStart="true"
                             android:layout_centerVertical="true"
@@ -143,7 +147,6 @@
 
                             <TextView
                                 android:id="@+id/plugin_version_top"
-                                android:background="?android:attr/selectableItemBackground"
                                 android:drawablePadding="@dimen/margin_small"
                                 android:ellipsize="end"
                                 android:maxLines="1"
