@@ -50,7 +50,7 @@ public class LoginHttpAuthDialogFragment extends DialogFragment {
         AlertDialog.Builder alert = new AlertDialog.Builder(getActivity());
         alert.setTitle(R.string.http_authorization_required);
 
-        // noinspection InflateParams
+        //noinspection InflateParams
         View httpAuth = getActivity().getLayoutInflater().inflate(R.layout.login_alert_http_auth, null);
         alert.setView(httpAuth);
 
