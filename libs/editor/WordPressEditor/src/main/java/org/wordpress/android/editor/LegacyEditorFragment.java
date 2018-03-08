@@ -26,6 +26,7 @@ import android.text.style.QuoteSpan;
 import android.text.style.StrikethroughSpan;
 import android.text.style.StyleSpan;
 import android.text.style.URLSpan;
+import android.view.ContextThemeWrapper;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -609,7 +610,8 @@ public class LegacyEditorFragment extends EditorFragmentAbstract implements Text
                                   final EditText caption, final EditText imageWidthText,
                                   final CheckBox featuredCheckBox, final CheckBox featuredInPostCheckBox,
                                   final int maxWidth, final Spinner alignmentSpinner, final WPImageSpan imageSpan) {
-        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+        AlertDialog.Builder builder = new AlertDialog.Builder(
+                new ContextThemeWrapper(getActivity(), R.style.Calypso_Dialog));
         builder.setTitle(getString(R.string.image_settings));
         builder.setView(alertView);
         builder.setPositiveButton(getString(android.R.string.ok), new DialogInterface.OnClickListener() {
