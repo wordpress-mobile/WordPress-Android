@@ -101,7 +101,7 @@ public class DeleteSiteDialogFragment extends DialogFragment implements TextWatc
     }
 
     private void configureUrlConfirmation(AlertDialog.Builder builder) {
-        // noinspection InflateParams
+        //noinspection InflateParams
         View view = getActivity().getLayoutInflater().inflate(R.layout.delete_site_dialog, null);
         mUrlConfirmation = (EditText) view.findViewById(R.id.url_confirmation);
         mUrlConfirmation.addTextChangedListener(this);

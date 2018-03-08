@@ -706,7 +706,7 @@ public class LegacyEditorFragment extends EditorFragmentAbstract implements Text
                     if (mediaFile == null) return false;
                     if (!mediaFile.isVideo()) {
                         LayoutInflater factory = LayoutInflater.from(getActivity());
-                        // noinspection InflateParams
+                        //noinspection InflateParams
                         final View alertView = factory.inflate(R.layout.alert_image_options, null);
                         if (alertView == null) return false;
 

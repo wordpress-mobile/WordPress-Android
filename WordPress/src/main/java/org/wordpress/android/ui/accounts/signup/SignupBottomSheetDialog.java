@@ -16,7 +16,7 @@ public class SignupBottomSheetDialog extends WPBottomSheetDialog {
     public SignupBottomSheetDialog(@NonNull final Context context,
                                    @NonNull final SignupSheetListener signupSheetListener) {
         super(context);
-        // noinspection InflateParams
+        //noinspection InflateParams
         final View layout = LayoutInflater.from(context).inflate(R.layout.signup_bottom_sheet_dialog, null);
 
         Button termsOfServiceText = (Button) layout.findViewById(R.id.signup_tos);
