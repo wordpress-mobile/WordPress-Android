@@ -920,16 +920,7 @@ public class UploadService extends Service {
                                 new PostEvents.PostUploadCanceled(postModel.getLocalSiteId()));
                     } else {
                         // Do not re-enqueue a post that has already failed
-                        boolean isPostAlreadyFailed = false;
-                        if (event != null && event.isError()) {
-                            for (PostModel postModel2 : mUploadStore.getAllRegisteredPosts()) {
-                                if (event.post.getLocalSiteId() == postModel2.getLocalSiteId()
-                                    && event.post.getId() == postModel2.getId()) {
-                                    isPostAlreadyFailed = true;
-                                }
-                            }
-                        }
-                        if (isPostAlreadyFailed) {
+                        if (event != null && event.isError() && mUploadStore.isFailedPost(event.post)) {
                             continue;
                         }
                         // TODO Should do some extra validation here
