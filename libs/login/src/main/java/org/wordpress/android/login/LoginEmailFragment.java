@@ -33,6 +33,7 @@ import com.google.android.gms.common.api.GoogleApiClient.OnConnectionFailedListe
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 import org.wordpress.android.fluxc.generated.AccountActionBuilder;
+import org.wordpress.android.fluxc.store.AccountStore;
 import org.wordpress.android.fluxc.store.AccountStore.OnAvailabilityChecked;
 import org.wordpress.android.login.util.SiteUtils;
 import org.wordpress.android.login.widgets.WPLoginInputRow;
@@ -349,7 +350,12 @@ public class LoginEmailFragment extends LoginBaseFormFragment<LoginListener> imp
             AppLog.e(T.API, "OnAvailabilityChecked has error: " + event.error.type + " - " + event.error.message);
             // hide the keyboard to ensure the link to login using the site address is visible
             ActivityUtils.hideKeyboardForced(mEmailInput);
-            showEmailError(R.string.error_generic_network);
+            // we validate the email prior to making the request, but just to be safe...
+            if (event.error.type == AccountStore.IsAvailableErrorType.INVALID) {
+                showEmailError(R.string.email_invalid);
+            } else {
+                showErrorDialog(getString(R.string.error_generic_network));
+            }
             return;
         }
 
