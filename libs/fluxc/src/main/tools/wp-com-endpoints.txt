@@ -19,6 +19,8 @@
 
 /domains/suggestions
 
+/meta/external-media/pexels
+
 /sites/
 /sites/$site/delete
 /sites/$site/exports/start

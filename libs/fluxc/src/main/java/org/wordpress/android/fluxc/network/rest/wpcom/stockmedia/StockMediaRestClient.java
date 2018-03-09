@@ -1,0 +1,74 @@
+package org.wordpress.android.fluxc.network.rest.wpcom.stockmedia;
+
+import android.content.Context;
+import android.support.annotation.NonNull;
+
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+
+import org.wordpress.android.fluxc.Dispatcher;
+import org.wordpress.android.fluxc.generated.StockMediaActionBuilder;
+import org.wordpress.android.fluxc.generated.endpoint.WPCOMREST;
+import org.wordpress.android.fluxc.network.BaseRequest;
+import org.wordpress.android.fluxc.network.UserAgent;
+import org.wordpress.android.fluxc.network.rest.wpcom.BaseWPComRestClient;
+import org.wordpress.android.fluxc.network.rest.wpcom.WPComGsonRequest;
+import org.wordpress.android.fluxc.network.rest.wpcom.auth.AccessToken;
+import org.wordpress.android.fluxc.store.StockMediaStore;
+import org.wordpress.android.util.AppLog;
+import org.wordpress.android.util.UrlUtils;
+
+import java.util.HashMap;
+import java.util.Map;
+
+import javax.inject.Singleton;
+
+@Singleton
+public class StockMediaRestClient extends BaseWPComRestClient {
+    public static final int DEFAULT_NUM_STOCK_MEDIA_PER_FETCH = 20;
+
+    public StockMediaRestClient(Context appContext, Dispatcher dispatcher, RequestQueue requestQueue,
+                                AccessToken accessToken, UserAgent userAgent) {
+        super(appContext, dispatcher, requestQueue, accessToken, userAgent);
+    }
+
+    /**
+     * Gets a list of stock media items matching a query string
+     */
+    public void searchStockMedia(final String searchTerm, final int page) {
+        String url = WPCOMREST.meta.external_media.pexels.getUrlV1_1();
+
+        Map<String, String> params = new HashMap<>();
+        params.put("number", Integer.toString(DEFAULT_NUM_STOCK_MEDIA_PER_FETCH));
+        params.put("page_handle", Integer.toString(page));
+        params.put("source", "pexels");
+        params.put("search", UrlUtils.urlEncode(searchTerm));
+
+        WPComGsonRequest request = WPComGsonRequest.buildGetRequest(url, params, SearchStockMediaResponse.class,
+                new Response.Listener<SearchStockMediaResponse>() {
+                    @Override
+                    public void onResponse(SearchStockMediaResponse response) {
+                        StockMediaStore.FetchedStockMediaListPayload payload =
+                                new StockMediaStore.FetchedStockMediaListPayload(
+                                response.media,
+                                searchTerm,
+                                response.nextPage,
+                                response.canLoadMore);
+                        mDispatcher.dispatch(StockMediaActionBuilder.newFetchedStockMediaAction(payload));
+                    }
+                }, new BaseRequest.BaseErrorListener() {
+                    @Override
+                    public void onErrorResponse(@NonNull BaseRequest.BaseNetworkError error) {
+                        AppLog.e(AppLog.T.MEDIA, "VolleyError Fetching stock media: " + error);
+                        StockMediaStore.StockMediaError mediaError = new StockMediaStore.StockMediaError(
+                                StockMediaStore.StockMediaErrorType.fromBaseNetworkError(error), error.message);
+                        StockMediaStore.FetchedStockMediaListPayload payload =
+                                new StockMediaStore.FetchedStockMediaListPayload(mediaError, searchTerm);
+                        mDispatcher.dispatch(StockMediaActionBuilder.newFetchedStockMediaAction(payload));
+                    }
+                }
+        );
+
+        add(request);
+    }
+}
