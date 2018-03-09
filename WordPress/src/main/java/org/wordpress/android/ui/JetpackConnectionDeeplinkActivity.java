@@ -68,9 +68,8 @@ public class JetpackConnectionDeeplinkActivity extends AppCompatActivity {
 
         // check if this intent is started via custom scheme link
         if (Intent.ACTION_VIEW.equals(action) && uri != null) {
-
-            //Non-empty reason does not mean we're not connected to Jetpack
-            //- one of the errors is "already-connected"
+            // Non-empty reason does not mean we're not connected to Jetpack
+            // - one of the errors is "already-connected"
             mReason = uri.getQueryParameter("reason");
             mSource = Source.fromString(uri.getQueryParameter("source"));
             if (mAccountStore.hasAccessToken()) {

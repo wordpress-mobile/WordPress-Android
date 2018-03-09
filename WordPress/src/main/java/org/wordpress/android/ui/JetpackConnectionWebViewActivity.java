@@ -66,7 +66,11 @@ public class JetpackConnectionWebViewActivity extends WPWebViewActivity
         startJetpackConnectionFlow(context, url, site, authorized, source);
     }
 
-    private static void startJetpackConnectionFlow(Context context, String url, SiteModel site, boolean authorized, Source source) {
+    private static void startJetpackConnectionFlow(Context context,
+                                                   String url,
+                                                   SiteModel site,
+                                                   boolean authorized,
+                                                   Source source) {
         if (!checkContextAndUrl(context, url)) {
             return;
         }
