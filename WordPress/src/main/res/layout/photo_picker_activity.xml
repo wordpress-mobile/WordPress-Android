@@ -10,7 +10,7 @@
         android:id="@+id/fragment_container"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_above="@+id/message_container"
-        android:layout_below="@+id/toolbar" />
+        android:layout_below="@+id/toolbar"
+        tools:ignore="UnknownIdInLayout"/>
 
 </RelativeLayout>

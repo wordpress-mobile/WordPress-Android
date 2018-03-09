@@ -400,7 +400,7 @@ Language: gd_GB
     <string name="share_url_post">Co-roinn am post</string>
     <string name="share_url_page">Co-roinn an duilleag</string>
     <string name="creating_your_site">A\' cruthachadh na làraich agad</string>
-    <string name="reader_empty_posts_in_tag_updating">A\' faighinn nam post...</string>
+    <string name="reader_empty_posts_in_tag_updating">A\' faighinn nam post…</string>
     <string name="reader_likes_you_and_multi">Thuirt thusa agus %,d eile gur toigh leibh seo</string>
     <string name="reader_likes_multi">\'S toigh le %,d daoine seo</string>
     <string name="reader_toast_err_get_comment">Chan urrainn dhuinn am beachd seo fhaighinn dhut</string>

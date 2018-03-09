@@ -81,7 +81,8 @@
                     android:layout_gravity="center_vertical"
                     android:layout_weight="1"
                     android:progress="75"
-                    android:progressTint="@color/blue_medium" />
+                    android:progressTint="@color/blue_medium"
+                    tools:ignore="UnusedAttribute"/>
 
             </LinearLayout>
 

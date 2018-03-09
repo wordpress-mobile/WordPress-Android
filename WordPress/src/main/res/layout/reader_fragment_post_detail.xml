@@ -38,7 +38,8 @@
                         android:layout_marginBottom="@dimen/margin_large"
                         android:layout_marginTop="@dimen/margin_large"
                         android:layout_alignEnd="@+id/layout_post_detail_content"
-                        android:layout_alignStart="@+id/layout_post_detail_content"/>
+                        android:layout_alignStart="@+id/layout_post_detail_content"
+                        tools:ignore="UnknownIdInLayout"/>
 
                     <include
                         layout="@layout/reader_include_post_detail_content"
@@ -58,7 +59,8 @@
                         android:layout_below="@+id/layout_post_detail_content"
                         android:orientation="vertical"
                         android:layout_alignEnd="@+id/layout_post_detail_content"
-                        android:layout_alignStart="@+id/layout_post_detail_content">
+                        android:layout_alignStart="@+id/layout_post_detail_content"
+                        tools:ignore="UnknownIdInLayout">
 
                         <org.wordpress.android.ui.reader.views.ReaderSimplePostContainerView
                             android:id="@+id/related_posts_view_local"

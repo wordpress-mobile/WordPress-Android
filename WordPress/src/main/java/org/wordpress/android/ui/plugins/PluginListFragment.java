@@ -12,6 +12,7 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.annotation.StringRes;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -34,7 +35,6 @@ import org.wordpress.android.util.helpers.SwipeToRefreshHelper;
 import org.wordpress.android.util.widgets.CustomSwipeRefreshLayout;
 import org.wordpress.android.viewmodel.PluginBrowserViewModel;
 import org.wordpress.android.viewmodel.PluginBrowserViewModel.PluginListType;
-import org.wordpress.android.widgets.DividerItemDecoration;
 import org.wordpress.android.widgets.WPNetworkImageView;
 
 import java.util.List;
@@ -188,7 +188,7 @@ public class PluginListFragment extends Fragment {
 
         mRecycler = view.findViewById(R.id.recycler);
         mRecycler.setLayoutManager(new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false));
-        mRecycler.addItemDecoration(new DividerItemDecoration(getActivity(), DividerItemDecoration.VERTICAL_LIST));
+        mRecycler.addItemDecoration(new DividerItemDecoration(getActivity(), DividerItemDecoration.VERTICAL));
 
         mSwipeToRefreshHelper = buildSwipeToRefreshHelper(
                 (CustomSwipeRefreshLayout) view.findViewById(R.id.ptr_layout),

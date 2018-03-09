@@ -13,12 +13,12 @@ Language: ru
     <string name="site_creation_creating_modal">Пожалуйста подождите завершения создания сайта.</string>
     <string name="site_creation_creating_retry">Попробуйте снова</string>
     <string name="site_creation_creating_failed_extended">На ель Ворона взгромоздясь, позавтракать было совсем уж собралась, да призадумалась, а сервера лежали.</string>
-    <string name="site_creation_creating_failed">Что-то пошло не так...</string>
-    <string name="site_creation_creating_preparing_frontend">Подготовка сайта для посетителей...</string>
-    <string name="site_creation_creating_configuring_theme">Настройка стиля...</string>
-    <string name="site_creation_creating_configuring_content">Настройка содержимого...</string>
-    <string name="site_creation_creating_fetching_info">Получение информации о сайте...</string>
-    <string name="site_creation_creating_laying_foundation">Закладка фундамента...</string>
+    <string name="site_creation_creating_failed">Что-то пошло не так…</string>
+    <string name="site_creation_creating_preparing_frontend">Подготовка сайта для посетителей…</string>
+    <string name="site_creation_creating_configuring_theme">Настройка стиля…</string>
+    <string name="site_creation_creating_configuring_content">Настройка содержимого…</string>
+    <string name="site_creation_creating_fetching_info">Получение информации о сайте…</string>
+    <string name="site_creation_creating_laying_foundation">Закладка фундамента…</string>
     <string name="site_creation_empty_site_title">Введите название сайта</string>
     <string name="site_creation_tagline_helper">Слоган - короткая строка текста, показываемая сразу после названия в большинстве тем. Также служит метаданными сайта для поисковых систем.</string>
     <string name="site_creation_tagline_hint">Слоган сайта (необязательно)</string>
@@ -47,7 +47,7 @@ Language: ru
     <string name="notification_site_creation_step_tagline">Шаг 3 из 4</string>
     <string name="notification_site_creation_step_fetching">Шаг 2 из 4</string>
     <string name="notification_site_creation_step_creating">Шаг 1 из 4</string>
-    <string name="notification_site_creation_title_in_progress">Создание сайта...</string>
+    <string name="notification_site_creation_title_in_progress">Создание сайта…</string>
     <string name="notification_site_creation_created">Нажмите для продолжения.</string>
     <string name="notification_site_creation_title_success">Сайт создан!</string>
     <string name="google_error_timeout">Google отвечает слишком долго. Возможно вам стоит подождать пока ваше подключение к Интернет станет лучше.</string>
@@ -63,7 +63,7 @@ Language: ru
     <string name="signup_with_google_button">Зарегистрироваться через Google</string>
     <string name="signup_with_email_button">Зарегистрироваться с адресом Email</string>
     <string name="signup_user_exists">Email уже зарегистрирован на WordPress.com\nПереходим ко входу.</string>
-    <string name="signup_updating_account">Обновление учетной записи...</string>
+    <string name="signup_updating_account">Обновление учетной записи…</string>
     <string name="signup_terms_of_service_text">Регистрируясь, вы соглашаетесь с нашими %1$sПравилами пользования%2$s.</string>
     <string name="signup_magic_link_progress">Отправка email</string>
     <string name="signup_magic_link_message">Мы послали вам магическую ссылку для регистрации. Проверьте вашу почту и нажмите присланную ссылку для завершения регистрации.</string>
@@ -81,7 +81,7 @@ Language: ru
     <string name="signup_epilogue_error_avatar">Возникла ошибка обновления аватара.</string>
     <string name="signup_email_header">Для создания новой учетной записи WordPress.com, пожалуйста введите ваш адрес email.</string>
     <string name="signup_email_error_generic">Возникла ошибка проверки адреса email.</string>
-    <string name="signup_creating_account">Создание учетной записи...</string>
+    <string name="signup_creating_account">Создание учетной записи…</string>
     <string name="sign_up">Зарегистрироваться на WordPress.com</string>
     <string name="enter_username_instead">Войти с именем пользователя.</string>
     <string name="enter_site_address_instead">Войти с адресом вашего сайта.</string>
@@ -165,8 +165,8 @@ Language: ru
     <string name="wordpress_dot_org_plugin_page">Страница плагина на WordPress.org</string>
     <string name="plugin_remove_dialog_message">Вы точно хотите удалить %1$s с %2$s?\n\nЭто деактивирует плагин и удалит все ассоциированные файлы и данные.</string>
     <string name="plugin_remove_dialog_title">Удаление плагина</string>
-    <string name="plugin_remove_progress_dialog_message">Удаление %s...</string>
-    <string name="plugin_disable_progress_dialog_message">Отключение %s...</string>
+    <string name="plugin_remove_progress_dialog_message">Удаление %s…</string>
+    <string name="plugin_disable_progress_dialog_message">Отключение %s…</string>
     <string name="plugin_btn_remove">Удалить плагин</string>
     <string name="plugin_configuration_failed">Возникла ошибка конфигурации плагина: %s</string>
     <string name="plugin_remove_failed">Ошибка удаления %s.</string>
@@ -190,7 +190,7 @@ Language: ru
     <string name="notification_error_wrong_password">Пожалуйста, перепроверьте свой пароль для продолжения.</string>
     <string name="notification_login_title_stopped">Вход остановлен</string>
     <string name="notification_logging_in">Пожалуйста подождите пока авторизуемся.</string>
-    <string name="notification_login_title_in_progress">Вход ...</string>
+    <string name="notification_login_title_in_progress">Вход …</string>
     <string name="notification_logged_in">Нажмите чтобы продолжить.</string>
     <string name="notification_login_title_success">Вход успешен!</string>
     <string name="login_error_generic_start">Процесс входа в Google не может быть запущен.</string>
@@ -211,7 +211,7 @@ Language: ru
     <string name="uploading_subtitle_posts_only">остались %1$d %2$s</string>
     <string name="uploading_subtitle_mixed_one">остались %1$d %2$s и один файл</string>
     <string name="uploading_subtitle_mixed">остались %1$d %2$s, и %3$d из %4$d файлов</string>
-    <string name="uploading_title">Загрузка...</string>
+    <string name="uploading_title">Загрузка…</string>
     <string name="media_files_uploaded_write_post">Написать запись</string>
     <string name="media_file_missing_for_retry">Повтор не возможен, некоторые файлы этой записи отсутствуют на устройстве</string>
     <string name="media_all_files_uploaded_successfully">успешно загружено %d файлов</string>
@@ -687,7 +687,7 @@ Language: ru
     <string name="alert_error_adding_media">При добавлении файла произошла ошибка</string>
     <string name="alert_action_while_uploading">Сейчас идёт загрузка файла. Подождите, пока процесс завершится.</string>
     <string name="alert_insert_image_html_mode">В режиме HTML нельзя вставлять файлы. Переключитесь обратно в визуальный режим.</string>
-    <string name="uploading_gallery_placeholder">Загрузка галереи...</string>
+    <string name="uploading_gallery_placeholder">Загрузка галереи…</string>
     <string name="tap_to_try_again">Тапните, чтобы попробовать ещё раз!</string>
     <string name="invite_sent">Приглашение успешно отправлено</string>
     <string name="invite_error_for_username">%1$s: %2$s</string>
@@ -710,7 +710,7 @@ Language: ru
     <string name="dlg_confirm_clear_search_history">Очистить историю поиска?</string>
     <string name="reader_empty_posts_in_search_description">По запросу «%s» на вашем языке записей не найдено</string>
     <string name="reader_empty_posts_in_search_title">Записей не найдено</string>
-    <string name="reader_label_post_search_running">Поиск...</string>
+    <string name="reader_label_post_search_running">Поиск…</string>
     <string name="reader_label_post_search_explainer">Поиск по всем открытым блогам на WordPress.com</string>
     <string name="reader_hint_post_search">Поиск по WordPress.com</string>
     <string name="reader_title_search_results">Поиск по запросу «%s»</string>
@@ -1060,7 +1060,7 @@ Language: ru
     <string name="reader_short_comment_count_multi">Комментариев: %s</string>
     <string name="reader_short_comment_count_one">Один комментарий</string>
     <string name="reader_label_submit_comment">ОТПРАВИТЬ</string>
-    <string name="reader_hint_comment_on_post">Ответить на запись...</string>
+    <string name="reader_hint_comment_on_post">Ответить на запись…</string>
     <string name="reader_discover_visit_blog">Перейти на %s</string>
     <string name="reader_discover_attribution_blog">Изначально опубликовано на сайте %s</string>
     <string name="reader_discover_attribution_author">Изначально опубликовано автором %s</string>
@@ -1086,7 +1086,7 @@ Language: ru
     <string name="app_notifications">Уведомления в приложении</string>
     <string name="notifications_wpcom_updates">Обновления WordPress.com</string>
     <string name="notification_settings_item_other_account_emails_summary">Важные письма, касающиеся вашей учётной записи, мы отправляем всегда, но можно также включить и другие полезные уведомления.</string>
-    <string name="stats_insights_latest_post_trend">С момента публикации %2$s прошло %1$s. Вот данные о популярности записи...</string>
+    <string name="stats_insights_latest_post_trend">С момента публикации %2$s прошло %1$s. Вот данные о популярности записи…</string>
     <string name="stats_insights_latest_post_summary">Данные о последней записи</string>
     <string name="button_revert">Отменить</string>
     <string name="yesterday">Вчера</string>
@@ -1248,7 +1248,7 @@ Language: ru
     <string name="delete_sure_page">Удалить страницу</string>
     <string name="delete_sure">Удалить черновик</string>
     <string name="delete_sure_post">Удалить запись</string>
-    <string name="signing_out">Выход из системы...</string>
+    <string name="signing_out">Выход из системы…</string>
     <string name="pages_empty_list">Пока нет страниц. Создайте первую!</string>
     <string name="comment_reply_to_user">Ответить автору %s</string>
     <string name="posts_empty_list">Пока нет записей. Создайте первую!</string>
@@ -1314,7 +1314,7 @@ Language: ru
     <string name="reader_title_blog_preview">Блог из Чтива</string>
     <string name="ptr_tip_message">Потяните вниз, чтобы обновить</string>
     <string name="media_empty_list">Нет медиа</string>
-    <string name="saving">Сохранение...</string>
+    <string name="saving">Сохранение…</string>
     <string name="ssl_certificate_ask_trust">Если вы обычно заходите на этот сайт без проблем, эта ошибка может означать, что кто-то пытается подделать сайт и вам не стоит сюда заходить. Хотите ли вы доверять ssl сертификату?</string>
     <string name="ssl_certificate_error">Недействительный сертификат SSL</string>
     <string name="help_center">Центр помощи</string>
@@ -1474,7 +1474,7 @@ Language: ru
     <string name="deleting_post">Удаление записи</string>
     <string name="deleting_page">Удаление страницы</string>
     <string name="creating_your_site">Создайте свой сайт</string>
-    <string name="reader_empty_posts_in_tag_updating">Ищем записи...</string>
+    <string name="reader_empty_posts_in_tag_updating">Ищем записи…</string>
     <string name="cant_share_no_visible_blog">Вы не можете поделиться через WordPress без видимого блога</string>
     <string name="comment_spammed">Комментарий помечен как спам.</string>
     <string name="download">Загрузить медиа</string>
@@ -1544,7 +1544,7 @@ Language: ru
     <string name="stats_view_visitors_and_views">Посетители и Просмотры</string>
     <string name="stats">Статистика</string>
     <string name="share_action">Поделиться</string>
-    <string name="share_action_title">Добавить в ...</string>
+    <string name="share_action_title">Добавить в …</string>
     <string name="theme_auth_error_title">Ошибка получения тем</string>
     <string name="theme_set_success">Тема успешно установлена!</string>
     <string name="theme_activating_button">Активировать</string>

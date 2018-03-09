@@ -26,6 +26,7 @@ public class WPLinearLayoutSizeBound extends LinearLayout {
                                             Integer.MAX_VALUE);
         mMaxHeight = a.getDimensionPixelSize(R.styleable.WPLinearLayoutSizeBound_maxHeight,
                                              Integer.MAX_VALUE);
+        a.recycle();
     }
 
     @Override
