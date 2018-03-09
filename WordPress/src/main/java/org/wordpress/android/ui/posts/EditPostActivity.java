@@ -69,6 +69,7 @@ import org.wordpress.android.editor.LegacyEditorFragment;
 import org.wordpress.android.editor.MediaToolbarAction;
 import org.wordpress.android.fluxc.Dispatcher;
 import org.wordpress.android.fluxc.action.AccountAction;
+import org.wordpress.android.fluxc.action.PostAction;
 import org.wordpress.android.fluxc.generated.AccountActionBuilder;
 import org.wordpress.android.fluxc.generated.MediaActionBuilder;
 import org.wordpress.android.fluxc.generated.PostActionBuilder;
@@ -108,6 +109,7 @@ import org.wordpress.android.ui.prefs.ReleaseNotesActivity;
 import org.wordpress.android.ui.prefs.SiteSettingsInterface;
 import org.wordpress.android.ui.uploads.PostEvents;
 import org.wordpress.android.ui.uploads.UploadService;
+import org.wordpress.android.ui.uploads.UploadUtils;
 import org.wordpress.android.ui.uploads.VideoOptimizer;
 import org.wordpress.android.util.AnalyticsUtils;
 import org.wordpress.android.util.AniUtils;
@@ -894,6 +896,7 @@ public class EditPostActivity extends AppCompatActivity implements
 
         MenuItem previewMenuItem = menu.findItem(R.id.menu_preview_post);
         MenuItem settingsMenuItem = menu.findItem(R.id.menu_post_settings);
+        MenuItem saveAsDraftMenuItem = menu.findItem(R.id.menu_save_as_draft);
 
         if (previewMenuItem != null) {
             previewMenuItem.setVisible(showMenuItems);
@@ -901,6 +904,10 @@ public class EditPostActivity extends AppCompatActivity implements
 
         if (settingsMenuItem != null) {
             settingsMenuItem.setVisible(showMenuItems);
+        }
+
+        if (saveAsDraftMenuItem != null) {
+            saveAsDraftMenuItem.setVisible(isNewPost());
         }
 
         // Set text of the save button in the ActionBar
@@ -994,22 +1001,26 @@ public class EditPostActivity extends AppCompatActivity implements
                 mViewPager.setCurrentItem(PAGE_SETTINGS);
             } else if (itemId == R.id.menu_save_as_draft) {
                 // save as draft
-                savePostAsync(new AfterSavePostListener() {
-                    @Override
-                    public void onPostSave() {
-                        // TODO here show the snackbar
-//                        if (mEditPostPreviewFragment != null) {
-//                            runOnUiThread(new Runnable() {
-//                                @Override
-//                                public void run() {
-//                                    if (mEditPostPreviewFragment != null) {
-//                                        mEditPostPreviewFragment.loadPost(mPost);
-//                                    }
-//                                }
-//                            });
-//                        }
-                    }
-                });
+                if (isNewPost()) {
+                    mPost.setStatus(PostStatus.DRAFT.toString());
+                    savePostAsync(new AfterSavePostListener() {
+                        @Override
+                        public void onPostSave() {
+                            // show the snackbar
+                            invalidateOptionsMenu();
+                            UploadUtils.showSnackbarSuccessAction(findViewById(R.id.editor_activity),
+                                    R.string.editor_draft_saved_locally,
+                                    R.string.button_publish,
+                                    new View.OnClickListener() {
+                                        @Override
+                                        public void onClick(View v) {
+                                            UploadUtils
+                                                    .publishPost(EditPostActivity.this, mPost, mSite, mDispatcher);
+                                        }
+                                    });
+                            }
+                        });
+                }
 
             } else if (itemId == R.id.menu_html_mode) {
                 // TODO: toggle HTML mode
@@ -1468,7 +1479,7 @@ public class EditPostActivity extends AppCompatActivity implements
         builder.create().show();
     }
 
-    private void savePostAndFinish(boolean doFinish) {
+    private void savePostAndFinish() {
         // Update post, save to db and post online in its own Thread, because 1. update can be pretty slow with a lot of
         // text 2. better not to call `updatePostObject()` from the UI thread due to weird thread blocking behavior
         // on API 16 (and 21) with the visual editor.
@@ -1486,14 +1497,11 @@ public class EditPostActivity extends AppCompatActivity implements
                     return;
                 }
 
-                boolean hasChanges = PostUtils.postHasEdits(mOriginalPost, mPost);
                 boolean isPublishable = PostUtils.isPublishable(mPost);
-                boolean hasUnpublishedLocalDraftChanges = PostStatus.fromPost(mPost) == PostStatus.DRAFT
-                                                          && isPublishable && hasLocalChanges;
 
                 // if post was modified or has unpublished local changes, save it
-                boolean shouldSave = (mOriginalPost != null && hasChanges)
-                                     || hasUnpublishedLocalDraftChanges || (isPublishable && isNewPost());
+                boolean shouldSave = shouldSavePost();
+
                 // if post is publishable or not new, sync it
                 boolean shouldSync = isPublishable || !isNewPost();
 
@@ -1533,6 +1541,19 @@ public class EditPostActivity extends AppCompatActivity implements
             }
         }).start();
     }
+
+    private boolean shouldSavePost(){
+        boolean hasLocalChanges = mPost.isLocallyChanged() || mPost.isLocalDraft();
+        boolean hasChanges = PostUtils.postHasEdits(mOriginalPost, mPost);
+        boolean isPublishable = PostUtils.isPublishable(mPost);
+        boolean hasUnpublishedLocalDraftChanges = PostStatus.fromPost(mPost) == PostStatus.DRAFT
+                                                  && isPublishable && hasLocalChanges;
+
+        // if post was modified or has unpublished local changes, save it
+        return (mOriginalPost != null && hasChanges)
+                             || hasUnpublishedLocalDraftChanges || (isPublishable && isNewPost());
+    }
+
 
     private boolean isDiscardable() {
         return !PostUtils.isPublishable(mPost) && isNewPost();
@@ -3048,6 +3069,38 @@ public class EditPostActivity extends AppCompatActivity implements
             onUploadProgress(event.media, event.progress);
         }
     }
+
+    // FluxC events
+
+    @SuppressWarnings("unused")
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onPostChanged(PostStore.OnPostChanged event) {
+        if (event.causeOfChange == PostAction.UPDATE_POST) {
+            if (!event.isError()) {
+                // here update the menu if it's not a draft anymore
+                invalidateOptionsMenu();
+            }
+        }
+    }
+
+    @SuppressWarnings("unused")
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onPostUploaded(PostStore.OnPostUploaded event) {
+        final PostModel post = event.post;
+        if (post != null && post.getLocalSiteId() == mSite.getId()) {
+            // here show snackbar saying it was uploaded
+            int messageRes = post.isPage() ? R.string.page_published : R.string.post_published;
+            UploadUtils.showSnackbarSuccessAction(findViewById(R.id.editor_activity), messageRes,
+                    R.string.button_view, new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+                            // jump to Editor Preview mode to show this Post
+                            ActivityLauncher.browsePostOrPage(EditPostActivity.this, mSite, post);
+                        }
+                    });
+        }
+    }
+
 
     @SuppressWarnings("unused")
     public void onEventMainThread(VideoOptimizer.ProgressEvent event) {

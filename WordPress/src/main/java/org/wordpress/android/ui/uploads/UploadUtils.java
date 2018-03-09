@@ -202,7 +202,7 @@ public class UploadUtils {
                 .setAction(buttonTitleRes, onClickListener).show();
     }
 
-    private static void showSnackbarSuccessAction(View view, int messageRes, int buttonTitleRes,
+    public static void showSnackbarSuccessAction(View view, int messageRes, int buttonTitleRes,
                                                   View.OnClickListener onClickListener) {
         Snackbar.make(view, messageRes, K_SNACKBAR_WAIT_TIME_MS)
                 .setAction(buttonTitleRes, onClickListener).
