@@ -96,33 +96,12 @@ public class StockMediaStore extends Store {
     }
 
     public enum StockMediaErrorType {
-        AUTHORIZATION_REQUIRED,
-        CONNECTION_ERROR,
-        NOT_AUTHENTICATED,
-        NOT_FOUND,
-        PARSE_ERROR,
-        REQUEST_TOO_LARGE,
-        SERVER_ERROR,
-        TIMEOUT,
+        // the endpoint for stock media search simply returns an empty list if there's any type of
+        // error (timeout, authentication, etc.), so we use only a simple GENERIC_ERROR here
         GENERIC_ERROR;
 
         public static StockMediaErrorType fromBaseNetworkError(BaseNetworkError baseError) {
-            switch (baseError.type) {
-                case NOT_FOUND:
-                    return StockMediaErrorType.NOT_FOUND;
-                case NOT_AUTHENTICATED:
-                    return StockMediaErrorType.NOT_AUTHENTICATED;
-                case AUTHORIZATION_REQUIRED:
-                    return StockMediaErrorType.AUTHORIZATION_REQUIRED;
-                case PARSE_ERROR:
-                    return StockMediaErrorType.PARSE_ERROR;
-                case SERVER_ERROR:
-                    return StockMediaErrorType.SERVER_ERROR;
-                case TIMEOUT:
-                    return StockMediaErrorType.TIMEOUT;
-                default:
-                    return StockMediaErrorType.GENERIC_ERROR;
-            }
+            return StockMediaErrorType.GENERIC_ERROR;
         }
     }
 
