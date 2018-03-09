@@ -25,7 +25,6 @@ import android.view.ViewGroup;
 import android.widget.CompoundButton;
 import android.widget.CompoundButton.OnCheckedChangeListener;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.RatingBar;
 import android.widget.RelativeLayout;
@@ -100,7 +99,6 @@ public class PluginDetailActivity extends AppCompatActivity {
     private ViewGroup mContainer;
     private TextView mTitleTextView;
     private TextView mByLineTextView;
-    private LinearLayout mVersionLayout;
     private TextView mVersionTopTextView;
     private TextView mVersionBottomTextView;
     private TextView mInstalledText;
@@ -268,7 +266,6 @@ public class PluginDetailActivity extends AppCompatActivity {
         mContainer = findViewById(R.id.plugin_detail_container);
         mTitleTextView = findViewById(R.id.text_title);
         mByLineTextView = findViewById(R.id.text_byline);
-        mVersionLayout = findViewById(R.id.plugin_version_layout);
         mVersionTopTextView = findViewById(R.id.plugin_version_top);
         mVersionBottomTextView = findViewById(R.id.plugin_version_bottom);
         mInstalledText = findViewById(R.id.plugin_installed);
@@ -330,7 +327,7 @@ public class PluginDetailActivity extends AppCompatActivity {
             }
         });
 
-        mVersionLayout.setOnClickListener(new View.OnClickListener() {
+        findViewById(R.id.plugin_version_layout).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 showPluginInfoPopup();
