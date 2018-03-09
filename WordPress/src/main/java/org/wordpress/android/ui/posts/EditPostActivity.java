@@ -241,6 +241,8 @@ public class EditPostActivity extends AppCompatActivity implements
     // For opening the context menu after permissions have been granted
     private View mMenuView = null;
 
+    private boolean mHtmlModeMenuStateOn = false;
+
     @Inject Dispatcher mDispatcher;
     @Inject AccountStore mAccountStore;
     @Inject SiteStore mSiteStore;
@@ -897,6 +899,7 @@ public class EditPostActivity extends AppCompatActivity implements
         MenuItem previewMenuItem = menu.findItem(R.id.menu_preview_post);
         MenuItem settingsMenuItem = menu.findItem(R.id.menu_post_settings);
         MenuItem saveAsDraftMenuItem = menu.findItem(R.id.menu_save_as_draft);
+        MenuItem viewHtmlModeMenuItem = menu.findItem(R.id.menu_html_mode);
 
         if (previewMenuItem != null) {
             previewMenuItem.setVisible(showMenuItems);
@@ -908,6 +911,11 @@ public class EditPostActivity extends AppCompatActivity implements
 
         if (saveAsDraftMenuItem != null) {
             saveAsDraftMenuItem.setVisible(isNewPost());
+        }
+
+        if (viewHtmlModeMenuItem != null) {
+            viewHtmlModeMenuItem.setVisible(mEditorFragment instanceof AztecEditorFragment);
+            viewHtmlModeMenuItem.setTitle(mHtmlModeMenuStateOn ? R.string.menu_visual_mode : R.string.menu_html_mode);
         }
 
         // Set text of the save button in the ActionBar
@@ -1023,7 +1031,12 @@ public class EditPostActivity extends AppCompatActivity implements
                 }
 
             } else if (itemId == R.id.menu_html_mode) {
-                // TODO: toggle HTML mode
+                // toggle HTML mode
+                if (mEditorFragment instanceof AztecEditorFragment) {
+                    ((AztecEditorFragment) mEditorFragment).onToolbarHtmlButtonClicked();
+                    mHtmlModeMenuStateOn = !mHtmlModeMenuStateOn;
+                    invalidateOptionsMenu();
+                }
             }
         }
         return false;
