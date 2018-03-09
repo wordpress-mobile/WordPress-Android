@@ -566,6 +566,12 @@ public class SiteRestClient extends BaseWPComRestClient {
             site.setHasCapabilityRemoveUsers(from.capabilities.remove_users);
             site.setHasCapabilityViewStats(from.capabilities.view_stats);
         }
+        if (from.quota != null) {
+            site.setSpaceAvailable(from.quota.space_available);
+            site.setSpaceAllowed(from.quota.space_allowed);
+            site.setSpaceUsed(from.quota.space_used);
+            site.setSpacePercentUsed(from.quota.percent_used);
+        }
         if (from.icon != null) {
             site.setIconUrl(from.icon.img);
         }
