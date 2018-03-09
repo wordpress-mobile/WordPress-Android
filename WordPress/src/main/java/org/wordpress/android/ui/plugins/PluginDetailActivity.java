@@ -13,6 +13,7 @@ import android.support.v7.app.ActionBar;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.content.res.AppCompatResources;
+import android.support.v7.widget.AppCompatButton;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.Toolbar;
 import android.text.Html;
@@ -101,8 +102,8 @@ public class PluginDetailActivity extends AppCompatActivity {
     private TextView mVersionTopTextView;
     private TextView mVersionBottomTextView;
     private TextView mInstalledText;
-    private TextView mUpdateButton;
-    private TextView mInstallButton;
+    private AppCompatButton mUpdateButton;
+    private AppCompatButton mInstallButton;
     private Switch mSwitchActive;
     private Switch mSwitchAutoupdates;
     private ProgressDialog mRemovePluginProgressDialog;
@@ -326,7 +327,7 @@ public class PluginDetailActivity extends AppCompatActivity {
             }
         });
 
-        mVersionTopTextView.setOnClickListener(new View.OnClickListener() {
+        findViewById(R.id.plugin_version_layout).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 showPluginInfoPopup();
