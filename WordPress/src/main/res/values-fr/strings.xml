@@ -61,8 +61,8 @@ Language: fr
     <string name="wordpress_dot_org_plugin_page">Page WordPress.org de l’extension</string>
     <string name="plugin_remove_dialog_message">Voulez vous vraiment supprimer %1$s depuis %2$s ?\n\nCette action désactivera l’extension et supprimera tous les fichiers et données associés.</string>
     <string name="plugin_remove_dialog_title">Supprimer l’extension</string>
-    <string name="plugin_remove_progress_dialog_message">Suppression de %s ...</string>
-    <string name="plugin_disable_progress_dialog_message">Désactivation de %s ...</string>
+    <string name="plugin_remove_progress_dialog_message">Suppression de %s …</string>
+    <string name="plugin_disable_progress_dialog_message">Désactivation de %s …</string>
     <string name="plugin_btn_remove">Supprimer l’extension</string>
     <string name="plugin_configuration_failed">Une erreur est survenue pendant la configuration de l\'extension : %s</string>
     <string name="plugin_detail_label_state_autoupdates">Mises à jour automatiques</string>
@@ -80,7 +80,7 @@ Language: fr
     <string name="notification_error_wrong_password">Veuillez confirmer deux fois votre mot de passe pour continuer.</string>
     <string name="notification_login_title_stopped">Connexion stoppée</string>
     <string name="notification_logging_in">Veuillez patienter durant la connexion.</string>
-    <string name="notification_login_title_in_progress">Connexion en cours...</string>
+    <string name="notification_login_title_in_progress">Connexion en cours…</string>
     <string name="notification_logged_in">Touchez pour continuer.</string>
     <string name="notification_login_title_success">Connecté⋅e !</string>
     <string name="login_error_generic_start">La connexion Google n’a pas pu démarrer.</string>
@@ -101,7 +101,7 @@ Language: fr
     <string name="uploading_subtitle_posts_only">%1$d %2$s restant</string>
     <string name="uploading_subtitle_mixed_one">%1$d %2$s, et 1 fichier restant</string>
     <string name="uploading_subtitle_mixed">%1$d %2$s, et %3$d fichiers sur %4$d restants</string>
-    <string name="uploading_title">Téléversement...</string>
+    <string name="uploading_title">Téléversement…</string>
     <string name="media_files_uploaded_write_post">Écrire un article</string>
     <string name="media_file_missing_for_retry">Nouvelle tentative impossible - Certains fichiers sont manquants sur votre appareil.</string>
     <string name="media_all_files_uploaded_successfully">%d fichiers ont bien été téléversés</string>
@@ -209,7 +209,7 @@ Language: fr
     <string name="async_promo_description">Vous pouvez désormais quitter l\'éditeur. Votre article sera enregistré et publié en arrière-plan ! Faites un essai !</string>
     <string name="async_promo_title">Publier en toute confiance</string>
     <string name="editor_uploading_post">Votre article est en cours de téléversement</string>
-    <string name="uploading_media">Téléversement du média...</string>
+    <string name="uploading_media">Téléversement du média…</string>
     <string name="dialog_confirm_cancel_post_media_uploading">Êtes-vous certain-e ? Supprimer ce article supprimera aussi les médias téléversés.</string>
     <string name="page_scheduled">Page planifiée</string>
     <string name="post_scheduled">Article planifié</string>
@@ -272,7 +272,7 @@ Language: fr
     <string name="editor_dropped_title_images_not_allowed">Il n\'est pas permis de glisser des images dans le champ Titre</string>
     <string name="editor_dropped_text_error">Erreur survenue pendant le glisser-déposer du texte</string>
     <string name="editor_dropped_html_images_not_allowed">Il n\'est pas permis de glisser des images en mode HTML</string>
-    <string name="editor_content_hint">Partagez votre histoire ici...</string>
+    <string name="editor_content_hint">Partagez votre histoire ici…</string>
     <string name="post_status_trashed">Supprimé</string>
     <string name="post_status_scheduled">Planifié</string>
     <string name="post_status_post_private">Privé</string>
@@ -504,10 +504,10 @@ Language: fr
     <string name="error_notif_q_action_like">Impossible d\'aimer ce commentaire. Veuillez réessayer plus tard.</string>
     <string name="notifications_label_new_notifications_subtitle">Tapez pour les montrer</string>
     <string name="notifications_label_new_notifications">Nouvelles notifications</string>
-    <string name="comment_q_action_replying">Réponse en cours...</string>
-    <string name="comment_q_action_approving">Approbation en cours...</string>
-    <string name="comment_q_action_liking">Aimer...</string>
-    <string name="comment_q_action_processing">Traitement en cours...</string>
+    <string name="comment_q_action_replying">Réponse en cours…</string>
+    <string name="comment_q_action_approving">Approbation en cours…</string>
+    <string name="comment_q_action_liking">Aimer…</string>
+    <string name="comment_q_action_processing">Traitement en cours…</string>
     <string name="comment_q_action_done_generic">Terminé !</string>
     <string name="comment_liked">Commentaire aimé</string>
     <string name="signout">Se déconnecter</string>
@@ -536,7 +536,7 @@ Language: fr
     <string name="plans_manage">Gérez votre plan sur\nWordPress.com/plans</string>
     <string name="title_email_follower">E-mail de l’abonné</string>
     <string name="title_follower">Abonné</string>
-    <string name="people_fetching">Récupération des utilisateurs...</string>
+    <string name="people_fetching">Récupération des utilisateurs…</string>
     <string name="people_empty_list_filtered_viewers">Vous n\'avez pas encore de lecteur.</string>
     <string name="people_empty_list_filtered_email_followers">Vous n’avez encore aucun abonné par e-mail.</string>
     <string name="people_empty_list_filtered_followers">Vous n’avez encore aucun abonné.</string>
@@ -577,7 +577,7 @@ Language: fr
     <string name="alert_error_adding_media">Erreur pendant l\'insertion d\'un média</string>
     <string name="alert_action_while_uploading">Nous sommes en train de téléverser des médias, attendez que ceci soit terminé.</string>
     <string name="alert_insert_image_html_mode">Impossible d\'insérer directement un média en mode HTML. Veuillez passer en mode visuel.</string>
-    <string name="uploading_gallery_placeholder">Téléversement de la galerie...</string>
+    <string name="uploading_gallery_placeholder">Téléversement de la galerie…</string>
     <string name="tap_to_try_again">Tapez pour réessayer !</string>
     <string name="invite_sent">Les invitations ont bien été envoyées</string>
     <string name="invite_error_for_username">%1$s: %2$s</string>
@@ -600,7 +600,7 @@ Language: fr
     <string name="dlg_confirm_clear_search_history">Supprimer l\'historique de recherche ?</string>
     <string name="reader_empty_posts_in_search_description">Aucune article trouvé pour %s dans votre langue</string>
     <string name="reader_empty_posts_in_search_title">Aucun article trouvé</string>
-    <string name="reader_label_post_search_running">Recherche en cours...</string>
+    <string name="reader_label_post_search_running">Recherche en cours…</string>
     <string name="reader_label_post_search_explainer">Recherche dans tous les blogs publics de WordPress.com</string>
     <string name="reader_hint_post_search">Recherche dans WordPress.com</string>
     <string name="reader_title_search_results">Résultats pour %s</string>
@@ -654,13 +654,13 @@ Language: fr
     <string name="export_your_content_message">Vos articles, pages, et réglages vont vous être envoyés par e-mail à l\'adresse %s.</string>
     <string name="export_your_content">Exporter votre contenu</string>
     <string name="export_email_sent">Message d’export envoyé !</string>
-    <string name="exporting_content_progress">Export en cours...</string>
+    <string name="exporting_content_progress">Export en cours…</string>
     <string name="checking_purchases">Vérification des achats</string>
     <string name="show_purchases">Voir les achats</string>
     <string name="premium_upgrades_message">Vous avez des mises à jour premium actives sur votre site. Veuillez annuler vos mises à jour avant de supprimer votre site</string>
     <string name="premium_upgrades_title">Mises à jour premium</string>
     <string name="purchases_request_error">Quelque chose s’est mal passé. Impossible de lancer l’achat.</string>
-    <string name="delete_site_progress">Suppression du site...</string>
+    <string name="delete_site_progress">Suppression du site…</string>
     <string name="delete_site_hint">Supprimer le site</string>
     <string name="delete_site_summary">Cette action est irréversible. La suppression de votre site supprimera tout le contenu, les contributeurs et les domaines du site.</string>
     <string name="export_site_hint">Exportez votre site vers un fichier XML</string>
@@ -741,7 +741,7 @@ Language: fr
     <string name="post_settings_set_featured_image">Définir une image mise à la une</string>
     <string name="post_settings_featured_image">Image à la une</string>
     <string name="visual_editor_enabled">Éditeur visuel activé</string>
-    <string name="editor_content_placeholder">Partagez ici votre histoire...</string>
+    <string name="editor_content_placeholder">Partagez ici votre histoire…</string>
     <string name="editor_page_title_placeholder">Titre de la page</string>
     <string name="editor_post_title_placeholder">Titre de l\'article</string>
     <string name="email_address">Adresse de messagerie</string>
@@ -775,7 +775,7 @@ Language: fr
     <string name="privacy_private">Votre site est visible uniquement pour vous et les utilisateurs que vous approuvez</string>
     <string name="privacy_public_not_indexed">Votre site est visible par tous, mais demande aux moteurs de recherche de ne pas l\'indexer</string>
     <string name="privacy_public">Votre site est visible par tous et peut être indexé par les moteurs de recherche</string>
-    <string name="about_me_hint">Quelques mots à propos de vous...</string>
+    <string name="about_me_hint">Quelques mots à propos de vous…</string>
     <string name="about_me">À propos de moi</string>
     <string name="public_display_name_hint">Le nom d\'affichage par défaut est votre nom d\'utilisateur s\'il n\'est pas défini.</string>
     <string name="public_display_name">Public</string>
@@ -950,7 +950,7 @@ Language: fr
     <string name="reader_short_comment_count_multi">%s Commentaires</string>
     <string name="reader_short_comment_count_one">1 Commentaire</string>
     <string name="reader_label_submit_comment">ENVOYER</string>
-    <string name="reader_hint_comment_on_post">Répondre à l\'article...</string>
+    <string name="reader_hint_comment_on_post">Répondre à l\'article…</string>
     <string name="reader_discover_visit_blog">Visiter %s</string>
     <string name="reader_discover_attribution_blog">Publié à l\'origine sur %s</string>
     <string name="reader_discover_attribution_author">Publié à l\'origine par %s</string>
@@ -1145,7 +1145,7 @@ Language: fr
     <string name="comment">Commentaire</string>
     <string name="mnu_comment_liked">Aimé</string>
     <string name="uploading_total">Téléversement %1$d sur %2$d</string>
-    <string name="sending_content">Téléversement du contenu : %s...</string>
+    <string name="sending_content">Téléversement du contenu : %s…</string>
     <string name="select_a_blog">Sélectionnez un site WordPress</string>
     <string name="stats_no_blog">Les statistiques ne peuvent pas être chargée pour ce blog</string>
     <string name="older_last_week">Plus d\'une semaine</string>
@@ -1203,7 +1203,7 @@ Language: fr
     <string name="reader_title_blog_preview">Blog du Reader</string>
     <string name="ptr_tip_message">Tip: Tirer vers le bas pour rafraichir</string>
     <string name="media_empty_list">Pas de media</string>
-    <string name="saving">Sauvegarde...</string>
+    <string name="saving">Sauvegarde…</string>
     <string name="ssl_certificate_ask_trust">Si vous vous connectez habituellement à ce site sans problème, cette erreur peut signifier que quelqu\'un essai de se faire passer pour vous et vous ne devriez pas continuer. Souhaitez-vous faire confiance à ce certificat ?</string>
     <string name="ssl_certificate_error">Certificat SSL invalide</string>
     <string name="help_center">Centre d\'aide</string>
@@ -1433,7 +1433,7 @@ Language: fr
     <string name="stats_view_visitors_and_views">Visiteurs et Vues</string>
     <string name="stats">Stats</string>
     <string name="share_action">Partager</string>
-    <string name="share_action_title">Ajouter à...</string>
+    <string name="share_action_title">Ajouter à…</string>
     <string name="theme_auth_error_title">Impossible de récupérer les thèmes</string>
     <string name="theme_set_success">Le thème a bien été sélectionné !</string>
     <string name="theme_activating_button">Activation</string>
@@ -1489,7 +1489,7 @@ Language: fr
     <string name="scaled_image">Largeur de l\'image à l\'échelle</string>
     <string name="upload_scaled_image">Téléverser et lier l\'image à l\'échelle</string>
     <string name="link_enter_url">URL</string>
-    <string name="uploading">Téléversement...</string>
+    <string name="uploading">Téléversement…</string>
     <string name="app_title">WordPress pour Android</string>
     <string name="tos">Conditions d\'utilisation</string>
     <string name="version">Version</string>

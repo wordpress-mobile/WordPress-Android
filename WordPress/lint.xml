@@ -10,6 +10,7 @@
 
     <!-- ERROR -->
     <issue id="RtlCompat" severity="error" />
+    <issue id="DefaultLocale" severity="error" />
     <issue id="RtlHardcoded" severity="error" />
     <issue id="InconsistentArrays" severity="error" />
     <issue id="HardcodedText" severity="error" />
@@ -35,6 +36,8 @@
         <ignore path="**/WordPressLoginFlow/**" />
         <ignore path="**/.gradle/caches/**" />
         <ignore path="**/generated/**" />
-        <ignore path="**/strings.xml" />
+        <ignore regexp=".*\/values\-([a-z]|[A-Z]|\-){2,6}\/strings\.xml$"/>
     </issue>
+
+    <issue id="TypographyEllipsis" severity="error"/>
 </lint>

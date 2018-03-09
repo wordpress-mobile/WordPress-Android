@@ -2,6 +2,7 @@
 
 <RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:clickable="true"
     android:descendantFocusability="afterDescendants"
     android:focusable="true"
@@ -13,7 +14,8 @@
         android:elevation="@dimen/appbar_elevation"
         android:layout_height="?attr/actionBarSize"
         android:layout_width="match_parent"
-        style="@style/Toolbar.Primary" >
+        style="@style/Toolbar.Primary"
+        tools:ignore="UnusedAttribute">
     </android.support.v7.widget.Toolbar>
 
     <FrameLayout

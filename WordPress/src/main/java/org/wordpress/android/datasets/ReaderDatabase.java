@@ -13,6 +13,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.util.Locale;
 
 /**
  * database for all reader information
@@ -203,24 +204,24 @@ public class ReaderDatabase extends SQLiteOpenHelper {
 
             // don't bother purging other data unless posts were purged
             if (numPostsDeleted > 0) {
-                AppLog.i(T.READER, String.format("%d total posts purged", numPostsDeleted));
+                AppLog.i(T.READER, String.format(Locale.ENGLISH, "%d total posts purged", numPostsDeleted));
 
                 // purge unattached comments
                 int numCommentsDeleted = ReaderCommentTable.purge(db);
                 if (numCommentsDeleted > 0) {
-                    AppLog.i(T.READER, String.format("%d comments purged", numCommentsDeleted));
+                    AppLog.i(T.READER, String.format(Locale.ENGLISH, "%d comments purged", numCommentsDeleted));
                 }
 
                 // purge unattached likes
                 int numLikesDeleted = ReaderLikeTable.purge(db);
                 if (numLikesDeleted > 0) {
-                    AppLog.i(T.READER, String.format("%d likes purged", numLikesDeleted));
+                    AppLog.i(T.READER, String.format(Locale.ENGLISH, "%d likes purged", numLikesDeleted));
                 }
 
                 // purge unattached thumbnails
                 int numThumbsPurged = ReaderThumbnailTable.purge(db);
                 if (numThumbsPurged > 0) {
-                    AppLog.i(T.READER, String.format("%d thumbnails purged", numThumbsPurged));
+                    AppLog.i(T.READER, String.format(Locale.ENGLISH, "%d thumbnails purged", numThumbsPurged));
                 }
             }
             db.setTransactionSuccessful();

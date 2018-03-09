@@ -97,7 +97,7 @@ Language: nl
     <string name="uploading_subtitle_posts_only">%1$d %2$s resterend</string>
     <string name="uploading_subtitle_mixed_one">%1$d %2$s en 1 bestand resterend</string>
     <string name="uploading_subtitle_mixed">%1$d %2$s en %3$d van %4$d resterende bestanden</string>
-    <string name="uploading_title">Uploaden...</string>
+    <string name="uploading_title">Uploaden…</string>
     <string name="media_files_uploaded_write_post">Bericht schrijven</string>
     <string name="media_file_missing_for_retry">Opnieuw proberen niet mogelijk; sommige bestanden in dit bericht ontbreken op jouw apparaat</string>
     <string name="media_all_files_uploaded_successfully">%d bestanden geüpload</string>
@@ -149,7 +149,7 @@ Language: nl
     <string name="share_media_permission_required">Machtigingen vereist om afbeeldingen of video\'s te delen</string>
     <string name="invalid_ip_or_range">Onjuist IP of IP-reeks</string>
     <string name="confirm_delete_media_video">Deze video verwijderen?</string>
-    <string name="deleting_media_dlg">Verwijderen...</string>
+    <string name="deleting_media_dlg">Verwijderen…</string>
     <string name="confirm_delete_media_image">Deze afbeelding verwijderen?</string>
     <string name="media_title_document_details">Documentgegevens</string>
     <string name="media_title_audio_details">Audiogegevens</string>
@@ -205,7 +205,7 @@ Language: nl
     <string name="async_promo_description">Je kunt de editor nu afsluiten; je bericht wordt automatisch opgeslagen en gepubliceerd! Probeer het ook eens!</string>
     <string name="async_promo_title">Vol vertrouwen publiceren</string>
     <string name="editor_uploading_post">Je bericht wordt geüpload</string>
-    <string name="uploading_media">Media uploaden...</string>
+    <string name="uploading_media">Media uploaden…</string>
     <string name="dialog_confirm_cancel_post_media_uploading">Weet je het zeker? Door dit bericht te verwijderen, wordt de media-upload ook geannuleerd.</string>
     <string name="page_scheduled">Pagina ingepland</string>
     <string name="post_scheduled">Bericht ingepland</string>
@@ -268,7 +268,7 @@ Language: nl
     <string name="editor_dropped_title_images_not_allowed">Afbeeldingen naar de titel slepen is niet toegestaan</string>
     <string name="editor_dropped_text_error">Fout opgetreden bij het verslepen van tekst</string>
     <string name="editor_dropped_html_images_not_allowed">Afbeeldingen in HTML-modus slepen, is niet toegestaan</string>
-    <string name="editor_content_hint">Deel hier je verhaal...</string>
+    <string name="editor_content_hint">Deel hier je verhaal…</string>
     <string name="post_status_trashed">Verwijderd</string>
     <string name="post_status_scheduled">Gepland</string>
     <string name="post_status_post_private">Privé</string>
@@ -310,7 +310,7 @@ Language: nl
     <string name="media_images">Afbeeldingen</string>
     <string name="media_all">Alles</string>
     <string name="video_optimization_generic_error_message">Fout opgetreden bij het comprimeren van je video. Het oorspronkelijke bestand gebruiken.</string>
-    <string name="video_optimization_in_progress">Optimaliseren van je video...</string>
+    <string name="video_optimization_in_progress">Optimaliseren van je video…</string>
     <string name="format_bar_description_ellipsis_expand">Toolbar uitvouwen</string>
     <string name="photo_picker_soft_ask_permissions_denied">%1$s kreeg geen toegang tot je foto\'s. Om dit te verhelpen, pas de rechten aan en schakel %2$s in.</string>
     <string name="format_bar_description_ellipsis_collapse">Toolbar invouwen</string>
@@ -437,7 +437,7 @@ Language: nl
     <string name="media_encoder_quality_80">Laag</string>
     <string name="media_upload_state_uploaded">Geüpload</string>
     <string name="media_upload_state_deleted">Verwijderd</string>
-    <string name="media_upload_state_deleting">Verwijderen ...</string>
+    <string name="media_upload_state_deleting">Verwijderen …</string>
     <string name="media_upload_state_uploading">Uploaden</string>
     <string name="media_upload_state_queued">In wachtrij geplaatst</string>
     <string name="media_upload_state_failed">Upload mislukt</string>
@@ -500,9 +500,9 @@ Language: nl
     <string name="error_notif_q_action_like">Kan reactie niet liken. Probeer het later opnieuw.</string>
     <string name="notifications_label_new_notifications_subtitle">Tik om ze te tonen</string>
     <string name="notifications_label_new_notifications">Nieuwe meldingen</string>
-    <string name="comment_q_action_replying">Bezig met reageren...</string>
-    <string name="comment_q_action_approving">Bezig met goedkeuren...</string>
-    <string name="comment_q_action_liking">Bezig met liken...</string>
+    <string name="comment_q_action_replying">Bezig met reageren…</string>
+    <string name="comment_q_action_approving">Bezig met goedkeuren…</string>
+    <string name="comment_q_action_liking">Bezig met liken…</string>
     <string name="comment_q_action_processing">Bezig met verwerken…</string>
     <string name="comment_q_action_done_generic">Actie voltooid.</string>
     <string name="comment_liked">Reactie geliket</string>
@@ -531,7 +531,7 @@ Language: nl
     <string name="error_fetch_users_list">Site-gebruikers ophalen mislukt</string>
     <string name="plans_manage">Beheer je abonnement op\nWordPress.com/plans</string>
     <string name="title_follower">Volger</string>
-    <string name="people_fetching">Gebruikers ophalen...</string>
+    <string name="people_fetching">Gebruikers ophalen…</string>
     <string name="people_empty_list_filtered_viewers">Je hebt nog geen volgers.</string>
     <string name="title_email_follower">E-mailvolger</string>
     <string name="people_empty_list_filtered_email_followers">Je hebt nog geen e-mailvolgers.</string>
@@ -595,7 +595,7 @@ Language: nl
     <string name="label_clear_search_history">Zoekgeschiedenis wissen</string>
     <string name="dlg_confirm_clear_search_history">Zoekgeschiedenis wissen?</string>
     <string name="reader_empty_posts_in_search_description">Geen berichten gevonden voor %s in je taal.</string>
-    <string name="reader_label_post_search_running">Zoeken ...</string>
+    <string name="reader_label_post_search_running">Zoeken …</string>
     <string name="reader_empty_posts_in_search_title">Geen berichten gevonden.</string>
     <string name="reader_label_post_search_explainer">Zoek alle openbare WordPress.com-blogs</string>
     <string name="reader_hint_post_search">Zoek op WordPress.com</string>
@@ -650,13 +650,13 @@ Language: nl
     <string name="export_your_content_message">Je berichten, pagina\'s en instellingen worden naar je e-mailadres, %s, verzonden.</string>
     <string name="export_your_content">Exporteer je content</string>
     <string name="export_email_sent">Exporteer verzonden e-mail!</string>
-    <string name="exporting_content_progress">Content exporteren...</string>
+    <string name="exporting_content_progress">Content exporteren…</string>
     <string name="premium_upgrades_message">Je hebt actieve Premium-upgrades op je site. Annuleer je upgrades voordat je je site verwijdert.</string>
     <string name="checking_purchases">Aankopen worden gecontroleerd</string>
     <string name="show_purchases">Geef aankopen weer</string>
     <string name="premium_upgrades_title">Premium-upgrades</string>
     <string name="purchases_request_error">Er is iets fout gegaan. Kon aankopen niet aanvragen.</string>
-    <string name="delete_site_progress">Site verwijderen...</string>
+    <string name="delete_site_progress">Site verwijderen…</string>
     <string name="delete_site_summary">Deze actie kan niet ongedaan worden gemaakt. Door de site te verwijderen worden alle content, bijdragers en domeinen van de site verwijderd.</string>
     <string name="delete_site_hint">Site verwijderen</string>
     <string name="export_site_hint">Exporteer je site naar een XML-bestand</string>
@@ -737,7 +737,7 @@ Language: nl
     <string name="post_settings_set_featured_image">Stel uitgelichte afbeelding in</string>
     <string name="post_settings_featured_image">Uitgelichte afbeelding</string>
     <string name="visual_editor_enabled">Visual Editor ingeschakeld</string>
-    <string name="editor_content_placeholder">Deel hier je verhaal...</string>
+    <string name="editor_content_placeholder">Deel hier je verhaal…</string>
     <string name="editor_page_title_placeholder">Paginatitel</string>
     <string name="editor_post_title_placeholder">Berichttitel</string>
     <string name="email_address">E-mailadres</string>
@@ -972,7 +972,7 @@ Language: nl
     <string name="email">E-mailadres</string>
     <string name="notifications_wpcom_updates">Nieuws WordPress.com</string>
     <string name="notification_settings_item_other_account_emails_summary">We sturen altijd belangrijke e-mails met betrekking tot je account, maar je kunt ook aanvullende nuttige berichten ontvangen.</string>
-    <string name="stats_insights_latest_post_trend">Het is %1$s geleden sinds %2$s is gepubliceerd. Hier zie je hoe het bericht het tot nu toe heeft gedaan ...</string>
+    <string name="stats_insights_latest_post_trend">Het is %1$s geleden sinds %2$s is gepubliceerd. Hier zie je hoe het bericht het tot nu toe heeft gedaan …</string>
     <string name="stats_insights_latest_post_summary">Samenvatting laatste bericht</string>
     <string name="button_revert">Terugzetten</string>
     <string name="days_ago">%d dagen geleden</string>
@@ -1169,7 +1169,7 @@ Language: nl
     <string name="error_refresh_unauthorized_comments">Je hebt geen rechten om reacties te bekijken of te bewerken</string>
     <string name="signing_out">Uitloggen…</string>
     <string name="reader_empty_followed_blogs_title">Je volgt nog geen sites</string>
-    <string name="sending_content">Uploaden %s inhoud...</string>
+    <string name="sending_content">Uploaden %s inhoud…</string>
     <string name="reader_menu_block_blog">Blokkeer deze blog</string>
     <string name="reader_toast_err_generic">Deze actie kan niet uitgevoerd worden</string>
     <string name="reader_toast_err_block_blog">Blokkeren van deze blog is mislukt</string>
@@ -1197,7 +1197,7 @@ Language: nl
     <string name="reader_title_blog_preview">Reader-blog</string>
     <string name="reader_title_tag_preview">Reader-tag</string>
     <string name="reader_page_followed_blogs">Gevolgde sites</string>
-    <string name="saving">Aan het opslaan...</string>
+    <string name="saving">Aan het opslaan…</string>
     <string name="media_empty_list">Geen media</string>
     <string name="ptr_tip_message">Tip: schuif omlaag om te vernieuwen</string>
     <string name="help">Help</string>
@@ -1359,7 +1359,7 @@ Language: nl
     <string name="deleting_post">Verwijderen van bericht</string>
     <string name="share_link">Deel link</string>
     <string name="creating_your_site">Je site aanmaken</string>
-    <string name="reader_empty_posts_in_tag_updating">Berichten ophalen...</string>
+    <string name="reader_empty_posts_in_tag_updating">Berichten ophalen…</string>
     <string name="reader_likes_you_and_multi">Jij en %,d anderen vinden dit leuk</string>
     <string name="reader_likes_multi">%,d mensen vinden dit leuk</string>
     <string name="reader_toast_err_get_comment">Deze reactie kon niet opgehaald worden</string>
@@ -1400,7 +1400,7 @@ Language: nl
     <string name="username_invalid">Ongeldige gebruikersnaam</string>
     <string name="reader_btn_unfollow">Volgend</string>
     <string name="limit_reached">Limiet bereikt. Je kan het na 1 minuut nogmaals proberen. Als je het eerder probeert dan zul je langer moeten wachten totdat de ban wordt opgeheven. Neem contact op met de helpdesk wanneer je denk dat dit niet klopt.</string>
-    <string name="reader_hint_comment_on_comment">Beantwoord reactie...</string>
+    <string name="reader_hint_comment_on_comment">Beantwoord reactie…</string>
     <string name="media_gallery_type_slideshow">Diavoorstelling</string>
     <string name="media_edit_title_text">Titel</string>
     <string name="media_edit_caption_text">Onderschrift</string>
@@ -1449,7 +1449,7 @@ Language: nl
     <string name="stats_timeframe_today">Vandaag</string>
     <string name="media_gallery_type_tiled">Tegels</string>
     <string name="passcode_turn_on">Zet PIN slot aan</string>
-    <string name="share_action_title">Voeg toe aan...</string>
+    <string name="share_action_title">Voeg toe aan…</string>
     <string name="discard">Verwijder</string>
     <string name="upload">Upload</string>
     <string name="manage">Beheer</string>
@@ -1459,7 +1459,7 @@ Language: nl
     <string name="new_notifications">%d nieuwe notificaties</string>
     <string name="more_notifications">en %d extra.</string>
     <string name="follows">Volgt</string>
-    <string name="loading">Laden...</string>
+    <string name="loading">Laden…</string>
     <string name="httpuser">HTTP gebruikersnaam</string>
     <string name="httppassword">HTTP wachtwoord</string>
     <string name="error_media_upload">Er is een fout opgetreden tijdens het uploaden van media</string>

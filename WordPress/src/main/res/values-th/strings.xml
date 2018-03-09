@@ -26,7 +26,7 @@ Language: th
     <string name="add_category">เพิ่มหมวดหมู่</string>
     <string name="disabled">ปิดการใช้งาน</string>
     <string name="site_settings_image_original_size">ขนาดต้นฉบับ</string>
-    <string name="about_me_hint">คำอธิบายสั้น ๆ เกี่ยวกับคุณ....</string>
+    <string name="about_me_hint">คำอธิบายสั้น ๆ เกี่ยวกับคุณ….</string>
     <string name="about_me">เกี่ยวกับฉัน</string>
     <string name="public_display_name">ชื่อที่ใช้แสดงในสาธารณะ</string>
     <string name="my_profile">ประวัติของฉัน</string>
@@ -153,7 +153,7 @@ Language: th
     <string name="stats_widget_error_no_permissions">บัญชี WordPress.com ของคุณไม่สามารถเข้าถึงสถิติของบล็อกนี้</string>
     <string name="stats_widget_error_no_account">โปรดเข้าสู่ระบบเวิร์ดเพรส</string>
     <string name="stats_widget_error_generic">ไม่สามารถโหลดสถิติ</string>
-    <string name="stats_widget_loading_data">กำลังโหลดข้อมูล...</string>
+    <string name="stats_widget_loading_data">กำลังโหลดข้อมูล…</string>
     <string name="stats_widget_name_for_blog">สถิติวันนี้สำหรับ %1$s</string>
     <string name="stats_widget_name">สถิติเวิร์ดเพรสวันนี้</string>
     <string name="add_media_permission_required">ต้องได้การอนุญาตก่อนจะเพิ่มไฟล์สื่อ</string>
@@ -163,7 +163,7 @@ Language: th
     <string name="reader_short_comment_count_multi">%s ความคิดเห็น</string>
     <string name="reader_short_comment_count_one">1 ความคิดเห็น</string>
     <string name="reader_label_submit_comment">ส่ง</string>
-    <string name="reader_hint_comment_on_post">ตอบกลับไปที่เรื่อง....</string>
+    <string name="reader_hint_comment_on_post">ตอบกลับไปที่เรื่อง….</string>
     <string name="reader_discover_visit_blog">เยี่ยมชม %s</string>
     <string name="reader_discover_attribution_blog">เริ่มต้นเขียนบน %s</string>
     <string name="reader_discover_attribution_author">เริ่มต้นเขียนโดย %s</string>
@@ -259,11 +259,11 @@ Language: th
     <string name="sign_in_jetpack">เข้าสู่ระบบบัญชี WordPress.com ของคุณเพื่อเชื่อมต่อกับ Jetpack</string>
     <string name="stats_empty_search_terms_desc">เรียนรู้เพิ่มเติมเกี่ยวกับการหาคนเข้าเว็บของคุณโดยดูที่เงื่อนไขที่ผู้เยี่ยมชมค้นหาสำหรับเว็บไซต์ของคุณ</string>
     <string name="stats_followers_total_wpcom_paged">กำลังแสดง %1$d - %2$d จาก %3$s ผู้ติดตาม WordPress.com</string>
-    <string name="media_fetching">กำลังรับข้อมูลไฟล์สื่อ...</string>
+    <string name="media_fetching">กำลังรับข้อมูลไฟล์สื่อ…</string>
     <string name="toast_err_post_uploading">ไม่สามารถเปิดเรื่องขณะที่มันกำลังอัปโหลดได้</string>
-    <string name="posts_fetching">กำลังรับข้อมูลเรื่อง...</string>
-    <string name="pages_fetching">กำลังรับข้อมูลหน้า...</string>
-    <string name="comments_fetching">กำลังรับข้อมูลความเห็น...</string>
+    <string name="posts_fetching">กำลังรับข้อมูลเรื่อง…</string>
+    <string name="pages_fetching">กำลังรับข้อมูลหน้า…</string>
+    <string name="comments_fetching">กำลังรับข้อมูลความเห็น…</string>
     <string name="stats_view_search_terms">เงื่อนไขการค้นหา</string>
     <string name="stats_view_authors">ผู้เขียน</string>
     <string name="stats_entry_search_terms">เงื่อนไขการค้นหา</string>
@@ -380,7 +380,7 @@ Language: th
     <string name="reader_label_view_original">ดูบทความเริ่มต้น</string>
     <string name="reader_label_like">ชื่นชอบ</string>
     <string name="reader_empty_followed_blogs_title">คุณยังไม่ได้ติดตามเว็บใด ๆ</string>
-    <string name="signing_out">กำลังออกจากระบบ...</string>
+    <string name="signing_out">กำลังออกจากระบบ…</string>
     <string name="reader_label_liked_by">ชื่นชอบโดย</string>
     <string name="reader_toast_err_generic">ไม่สามารถทำการกระทำนี้ได้</string>
     <string name="reader_toast_err_block_blog">ไม่สามารถปิดกั้นบล็อกนี้</string>
@@ -565,7 +565,7 @@ Language: th
     <string name="share_url_page">แบ่งปันหน้า</string>
     <string name="share_link">แบ่งปันลิงก์</string>
     <string name="creating_your_site">กำลังสร้างเว็บของคุณ</string>
-    <string name="reader_empty_posts_in_tag_updating">กำลังดึงข้อมูลเรื่อง...</string>
+    <string name="reader_empty_posts_in_tag_updating">กำลังดึงข้อมูลเรื่อง…</string>
     <string name="comment_spammed">ความเห็นนี้ถูกบันทึกเป็นสแปม</string>
     <string name="cant_share_no_visible_blog">คุณสามารถแบ่งปันไปยังเวิร์ดเพรสได้ถ้าไม่มีบล็อกที่มองเห็นได้</string>
     <string name="reader_likes_multi">%,d คนชอบสิ่งนี้</string>
@@ -606,7 +606,7 @@ Language: th
     <string name="media_add_popup_title">เพิ่มไปยังคลังสื่อ</string>
     <string name="empty_list_default">รายชื่อนี้ว่างเปล่า</string>
     <string name="limit_reached">มาถึงขีดจำกัดแล้ว คุณสามารถลองใหม่อีกหนึ่งนาทีภายหลัง  การลองใหม่ก่อนหน้าหนึ่งนาทีจะเพิ่มเวลาที่คุณต้องรอก่อนพ้นการแบนให้ยาวไปอีก  ถ้าคุณคิดว่าสิ่งนี้เป็นความผิดพลาด  โปรดติดต่อฝ่ายช่วยเหลือ</string>
-    <string name="reader_hint_comment_on_comment">ตอบกลับไปที่ความเห็น...</string>
+    <string name="reader_hint_comment_on_comment">ตอบกลับไปที่ความเห็น…</string>
     <string name="themes">Themes</string>
     <string name="stats_entry_country">ประเทศ</string>
     <string name="stats_entry_posts_and_pages">หัวข้อ</string>
@@ -664,7 +664,7 @@ Language: th
     <string name="more_notifications">และ %d เพิ่มเติม</string>
     <string name="follows">ติดตาม</string>
     <string name="sign_in">เข้าสู่ระบบ</string>
-    <string name="loading">กำลังโหลดข้อมูล...</string>
+    <string name="loading">กำลังโหลดข้อมูล…</string>
     <string name="httpuser">ชื่อผู้ใช้ HTTP</string>
     <string name="httppassword">รหัสผ่าน HTTP</string>
     <string name="error_media_upload">มีความผิดพลาดเกิดขึ้นขณะทำการอัปโหลดไฟล์สื่อ</string>
@@ -690,7 +690,7 @@ Language: th
     <string name="upload_scaled_image">อัปโหลดและลิงก์ไปยังภาพที่ปรับขนาด</string>
     <string name="scaled_image">ปรับขนาดความกว้างรูปภาพแล้ว</string>
     <string name="link_enter_url">URL</string>
-    <string name="uploading">กำลังอัปโหลด...</string>
+    <string name="uploading">กำลังอัปโหลด…</string>
     <string name="version">รุ่น</string>
     <string name="tos">เงื่อนไขบริการ</string>
     <string name="app_title">เวิร์ดเพรสสำหรับแอนดรอยด์</string>

@@ -72,7 +72,7 @@ Language: mk
     <string name="stats_view">Прегледи</string>
     <string name="stats_other_recent_stats_label">Други последни статистики</string>
     <string name="stats_for">Статистики за %s</string>
-    <string name="themes_fetching">Примање теми...</string>
+    <string name="themes_fetching">Примање теми…</string>
     <string name="ssl_certificate_details">Детали</string>
     <string name="delete_sure_post">Избриши напис</string>
     <string name="delete_sure">Избриши овој драфт</string>
@@ -133,7 +133,7 @@ Language: mk
     <string name="reader_toast_err_follow_blog">Неможе да се следи овој блог</string>
     <string name="reader_toast_err_unfollow_blog">Неможе да се прекине следењето на овој блог</string>
     <string name="reader_empty_recommended_blogs">Нема препорачани блогови</string>
-    <string name="saving">Зачувување...</string>
+    <string name="saving">Зачувување…</string>
     <string name="media_empty_list">Нема медиа</string>
     <string name="ptr_tip_message">Совет: Повлечи надолу за освежување</string>
     <string name="help">Помош</string>
@@ -284,7 +284,7 @@ Language: mk
     <string name="share_url_post">Сподели напис</string>
     <string name="share_url_page">Сподели страница</string>
     <string name="creating_your_site">Креирање на вашата страница</string>
-    <string name="reader_empty_posts_in_tag_updating">Преземање написи...</string>
+    <string name="reader_empty_posts_in_tag_updating">Преземање написи…</string>
     <string name="cant_share_no_visible_blog">Неможе да споделите WordPress блог без да е видлив</string>
     <string name="reader_likes_you_and_multi">На тебе и на уште %,d други им се допаѓа ова</string>
     <string name="reader_likes_multi">На %,d луѓе им се допаѓа ова</string>
@@ -377,7 +377,7 @@ Language: mk
     <string name="new_notifications">%d нови известувања</string>
     <string name="more_notifications">и уште %d .</string>
     <string name="note_reply_successful">Одговори на објавено</string>
-    <string name="loading">Вчитување...</string>
+    <string name="loading">Вчитување…</string>
     <string name="httpuser">HTTP корисничко име</string>
     <string name="httppassword">HTTP лозинка</string>
     <string name="error_media_upload">Настана грешка при качување на медиа</string>

@@ -6,8 +6,11 @@ buildscript {
 
     dependencies {
         classpath 'com.android.tools.build:gradle:3.0.1'
+        classpath 'com.automattic.android:fetchstyle:1.0'
     }
 }
+
+apply plugin: 'com.automattic.android.fetchstyle'
 
 project.ext.preDexLibs = !project.hasProperty('disablePreDex')
 
@@ -48,5 +51,5 @@ subprojects {
 }
 
 ext {
-    fluxCVersion = 'cac602a6c31a9c63eb42d25305e8d0e40780d2e2'
+    fluxCVersion = '83072117124811e2bd02f728d2498205ea245090'
 }

@@ -9,7 +9,7 @@ Language: uz
     <string name="site_creation_creating_retry">Qayta urinib ko\'ring</string>
     <string name="device">Qurilma</string>
     <string name="creating_your_site">Saytingiz yaratilmoqda</string>
-    <string name="reader_empty_posts_in_tag_updating">Postlar yuklanmoqda...</string>
+    <string name="reader_empty_posts_in_tag_updating">Postlar yuklanmoqda…</string>
     <string name="reader_likes_you_and_multi">Siz hamda %,d kishi buni yoqtiradi</string>
     <string name="reader_likes_multi">%,d kishi buni yoqtiradi</string>
     <string name="reader_toast_err_get_comment">Bu mulohazani yuklab bo‘lmadi</string>
@@ -104,7 +104,7 @@ Language: uz
     <string name="more_notifications">va yana %d ta.</string>
     <string name="sign_in">Kirish</string>
     <string name="follows">Kuzatadi</string>
-    <string name="loading">Yuklanmoqda...</string>
+    <string name="loading">Yuklanmoqda…</string>
     <string name="httppassword">HTTP parol</string>
     <string name="httpuser">HTTP foydalanuvchi nomi</string>
     <string name="error_media_upload">Media yuklash jarayonida xatolik yuz berdi.</string>

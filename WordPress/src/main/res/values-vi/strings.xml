@@ -25,7 +25,7 @@ Language: vi_VN
     <string name="alert_error_adding_media">Một lỗi đã xảy ra trong khi chèn media</string>
     <string name="alert_action_while_uploading">Hiện tại bạn đang tải lên media. Vui lòng chờ đến khi việc này hoàn thành.</string>
     <string name="alert_insert_image_html_mode">Không thể chèn media trực tiếp trong chế độ HTML. Vui lòng chuyển sang chế độ trực quan.</string>
-    <string name="uploading_gallery_placeholder">Đang tải lên bộ sưu tập ...</string>
+    <string name="uploading_gallery_placeholder">Đang tải lên bộ sưu tập …</string>
     <string name="invite_error_some_failed">Lời mời đã được gửi nhưng lỗi đã xảy ra!</string>
     <string name="invite_sent">Lời mời đã được gửi thành công</string>
     <string name="tap_to_try_again">Chạm để thử lại!</string>
@@ -46,7 +46,7 @@ Language: vi_VN
     <string name="label_clear_search_history">Xóa lịch sử tìm kiếm</string>
     <string name="dlg_confirm_clear_search_history">Xóa lịch sử tìm kiếm?</string>
     <string name="reader_empty_posts_in_search_description">Không tìm thấy bài viết %s cho ngôn ngữ của bạn</string>
-    <string name="reader_label_post_search_running">Đang tìm kiếm...</string>
+    <string name="reader_label_post_search_running">Đang tìm kiếm…</string>
     <string name="reader_empty_posts_in_search_title">Không tìm thấy bài viết nào</string>
     <string name="reader_label_post_search_explainer">Tìm kiếm tất cả blog WordPress.com công khai</string>
     <string name="reader_hint_post_search">Tìm kiếm WordPress.com</string>
@@ -100,14 +100,14 @@ Language: vi_VN
     <string name="plan">Sơ đồ</string>
     <string name="plans">Sơ đồ</string>
     <string name="export_your_content">Xuất nội dung của bạn</string>
-    <string name="exporting_content_progress">Đang xuất nội dung...</string>
+    <string name="exporting_content_progress">Đang xuất nội dung…</string>
     <string name="export_email_sent">Xuất email đã được gửi!</string>
     <string name="checking_purchases">Đang kiểm tra mua</string>
     <string name="show_purchases">Hiện mua</string>
     <string name="premium_upgrades_message">Bạn đã kích hoạt nâng cấp Premium trên trang web của bạn. Hãy hủy bỏ nâng cấp của bạn trước khi xóa trang web của bạn.</string>
     <string name="premium_upgrades_title">Nâng cấp Premium</string>
     <string name="purchases_request_error">Có gì đó sai. Không thể yêu cầu mua.</string>
-    <string name="delete_site_progress">Đang xóa site...</string>
+    <string name="delete_site_progress">Đang xóa site…</string>
     <string name="delete_site_summary">Hành động này không thể hoàn nguyên. Xóa site của bạn sẽ loại bỏ tất cả nội dung, người đóng góp, và tên miền từ site.</string>
     <string name="delete_site_hint">Xóa site</string>
     <string name="export_site_hint">Xuất site của bạn sang tập tin XML</string>
@@ -220,7 +220,7 @@ Language: vi_VN
     <string name="privacy_private">Site của bạn chỉ hiện cho bạn và những người dùng bạn phê duyệt</string>
     <string name="privacy_public_not_indexed">Site của bạn hiện lên cho tất cả mọi người nhưng yêu cầu các bộ máy không lập chỉ mục nó</string>
     <string name="privacy_public">Site của bạn sẽ hiện cho mọi người và có thể được lập chỉ mục bởi các bộ máy tìm kiếm</string>
-    <string name="about_me_hint">Một vài từ về bạn...</string>
+    <string name="about_me_hint">Một vài từ về bạn…</string>
     <string name="about_me">Giới thiệu tôi</string>
     <string name="public_display_name_hint">Tên hiển thị sẽ mặc định là tên người dùng của bạn nếu nó không được thiết lập</string>
     <string name="public_display_name">Tên hiển thị công khai</string>
@@ -373,9 +373,9 @@ Language: vi_VN
     <string name="notifications_empty_action_comments">Tham gia cuộc trò chuyện: bình luận trên bài viết từ các blog bạn theo dõi.</string>
     <string name="notifications_empty_action_unread">Khuấy động cuộc trò chuyện: viết một bài mới.</string>
     <string name="notifications_empty_action_all">Lấy kích hoạt! Bình luận về bài viết từ các blog bạn theo dõi.</string>
-    <string name="notifications_empty_likes">Chưa có thích mới để hiện thị...</string>
-    <string name="notifications_empty_followers">Chưa có người theo dõi mới... để báo cáo.</string>
-    <string name="notifications_empty_comments">Chưa có bình luận mới...</string>
+    <string name="notifications_empty_likes">Chưa có thích mới để hiện thị…</string>
+    <string name="notifications_empty_followers">Chưa có người theo dõi mới… để báo cáo.</string>
+    <string name="notifications_empty_comments">Chưa có bình luận mới…</string>
     <string name="notifications_empty_unread">Bạn đã bắt kịp tất cả!</string>
     <string name="stats_widget_error_jetpack_no_blogid">Hãy truy cập vào Thống kê trong ứng dụng, và thử thêm các widget sau</string>
     <string name="stats_widget_error_readd_widget">Vui lòng loại bỏ widget và thêm lại nó lần nữa</string>
@@ -383,7 +383,7 @@ Language: vi_VN
     <string name="stats_widget_error_no_permissions">Tài khoản WordPress.com của bạn không thể truy cập vào Thống kê trên blog này</string>
     <string name="stats_widget_error_no_account">Vui lòng đăng nhập vào WordPress</string>
     <string name="stats_widget_error_generic">Thống kê không thể nạp được</string>
-    <string name="stats_widget_loading_data">Đang nạp dữ liệu...</string>
+    <string name="stats_widget_loading_data">Đang nạp dữ liệu…</string>
     <string name="stats_widget_name_for_blog">Thống kê hôm nay cho %1$s</string>
     <string name="stats_widget_name">WordPress Thống kê hôm nay</string>
     <string name="add_media_permission_required">Cần có quyền để thêm media</string>
@@ -418,7 +418,7 @@ Language: vi_VN
     <string name="notifications_tab">Thẻ thông báo</string>
     <string name="email">Email</string>
     <string name="notifications_wpcom_updates">Các cập nhật WordPress.com</string>
-    <string name="stats_insights_latest_post_trend">Đó là %1$s kể từ %2$s đã được xuất bản. Đây là cách các bài đã thực hiện cho đến nay ...</string>
+    <string name="stats_insights_latest_post_trend">Đó là %1$s kể từ %2$s đã được xuất bản. Đây là cách các bài đã thực hiện cho đến nay …</string>
     <string name="stats_insights_latest_post_summary">Tóm tắt bài viết mới nhất</string>
     <string name="button_revert">Hoàn nguyên</string>
     <string name="days_ago">%d ngày trước</string>
@@ -491,10 +491,10 @@ Language: vi_VN
     <string name="toast_err_post_uploading">Không thể mở bài viết trong khi nó đang tải lên</string>
     <string name="error_notification_open">Không thể mở thông báo</string>
     <string name="stats_view_search_terms">Điều kiện tìm kiếm</string>
-    <string name="comments_fetching">Đang tìm nạp bình luận...</string>
-    <string name="pages_fetching">Đang tìm nạp trang...</string>
-    <string name="posts_fetching">Đang tìm nạp bài viết...</string>
-    <string name="media_fetching">Đang tìm nạp media...</string>
+    <string name="comments_fetching">Đang tìm nạp bình luận…</string>
+    <string name="pages_fetching">Đang tìm nạp trang…</string>
+    <string name="posts_fetching">Đang tìm nạp bài viết…</string>
+    <string name="media_fetching">Đang tìm nạp media…</string>
     <string name="reader_empty_posts_request_failed">Không thể lấy các bài viết</string>
     <string name="publisher">Người xuất bản:</string>
     <string name="stats_followers_total_email_paged">Đang hiển thị %1$d - %2$d của %3$s Email Người theo dõi</string>
@@ -564,7 +564,7 @@ Language: vi_VN
     <string name="stats_empty_geoviews_desc">Khám phá danh sách để thấy các quốc gia và khu vực tạo ra lượng truy cập nhiều nhất vào trang web của bạn.</string>
     <string name="stats_view_publicize">Công bố</string>
     <string name="stats_visitors">Khách ghé thăm</string>
-    <string name="themes_fetching">Đang tìm nạp chủ đề...</string>
+    <string name="themes_fetching">Đang tìm nạp chủ đề…</string>
     <string name="stats_for">Thống kê cho %s</string>
     <string name="stats_other_recent_stats_label">Thống kê khác gần đây</string>
     <string name="stats_comments_total_comments_followers">Tổng số các bài viết với người theo dõi bình luận: %1$s</string>
@@ -591,7 +591,7 @@ Language: vi_VN
     <string name="error_publish_empty_post">Không thể xuất bản một bài viết trống</string>
     <string name="error_refresh_unauthorized_posts">Bạn không có quyền xem hoặc sửa các bài viết</string>
     <string name="error_refresh_unauthorized_pages">Bạn không có quyền xem hoặc sửa các trang</string>
-    <string name="signing_out">Đang đăng xuất...</string>
+    <string name="signing_out">Đang đăng xuất…</string>
     <string name="error_refresh_unauthorized_comments">Bạn không có quyền xem hoặc sửa bình luận</string>
     <string name="older_month">Cũ hơn 1 tháng</string>
     <string name="more">Nhiều hơn</string>
@@ -638,7 +638,7 @@ Language: vi_VN
     <string name="reader_toast_err_follow_blog">Không thể theo dõi blog này</string>
     <string name="reader_toast_err_unfollow_blog">Không thể bỏ theo dõi blog này</string>
     <string name="reader_empty_recommended_blogs">Không có blog được đề nghị</string>
-    <string name="saving">Đang lưu...</string>
+    <string name="saving">Đang lưu…</string>
     <string name="media_empty_list">Không có media</string>
     <string name="ptr_tip_message">Mẹo: Kéo xuống để làm mới</string>
     <string name="forums">Diễn đàn</string>
@@ -734,7 +734,7 @@ Language: vi_VN
     <string name="post_not_published">Trạng thái bài viết không được xuất bản</string>
     <string name="page_not_published">Trạng thái trang không được xuất bản</string>
     <string name="view_in_browser">Xem trong trình duyệt</string>
-    <string name="notifications_empty_all">Chưa có thông báo...</string>
+    <string name="notifications_empty_all">Chưa có thông báo…</string>
     <string name="new_post">Bài viết mới</string>
     <string name="new_media">Media mới</string>
     <string name="view_site">Xem site</string>
@@ -795,7 +795,7 @@ Language: vi_VN
     <string name="share_url_page">Chia sẻ trang</string>
     <string name="share_link">Chia sẻ liên kết</string>
     <string name="creating_your_site">Tạo site của bạn</string>
-    <string name="reader_empty_posts_in_tag_updating">Đang tìm nạp bài viết...</string>
+    <string name="reader_empty_posts_in_tag_updating">Đang tìm nạp bài viết…</string>
     <string name="download">Đang tải về media</string>
     <string name="reader_likes_you_and_multi">Bạn và %d người khác thích điều này</string>
     <string name="reader_likes_multi">%d người thích điều này</string>
@@ -824,7 +824,7 @@ Language: vi_VN
     <string name="reader_btn_share">Chia sẻ</string>
     <string name="reader_btn_follow">Theo dõi</string>
     <string name="reader_btn_unfollow">Đang theo dõi</string>
-    <string name="reader_hint_comment_on_comment">Trả lời tới bình luận...</string>
+    <string name="reader_hint_comment_on_comment">Trả lời tới bình luận…</string>
     <string name="reader_label_added_tag">Đã thêm %s</string>
     <string name="reader_likes_one">Một người thích điều này</string>
     <string name="reader_likes_only_you">Bạn thích điều này</string>
@@ -918,7 +918,7 @@ Language: vi_VN
     <string name="upload_scaled_image">Tải lên và liên kết đến hình ảnh được thu nhỏ</string>
     <string name="scaled_image">Chiều rộng hình ảnh thu nhỏ</string>
     <string name="link_enter_url">URL</string>
-    <string name="uploading">Đang tải lên...</string>
+    <string name="uploading">Đang tải lên…</string>
     <string name="version">Phiên bản</string>
     <string name="app_title">WordPress cho Android</string>
     <string name="tos">Điều khoản dịch vụ</string>

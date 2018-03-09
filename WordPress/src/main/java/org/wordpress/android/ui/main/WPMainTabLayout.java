@@ -43,6 +43,7 @@ public class WPMainTabLayout extends TabLayout {
     }
 
     private void addTab(@DrawableRes int iconId, @StringRes int contentDescriptionId, boolean isNoteTab) {
+        //noinspection InflateParams
         View customView = LayoutInflater.from(getContext()).inflate(R.layout.tab_icon, null);
 
         ImageView icon = (ImageView) customView.findViewById(R.id.tab_icon);

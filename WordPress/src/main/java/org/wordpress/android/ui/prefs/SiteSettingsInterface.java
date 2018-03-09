@@ -32,6 +32,7 @@ import org.wordpress.android.util.WPPrefUtils;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 
 import javax.inject.Inject;
@@ -844,7 +845,7 @@ public abstract class SiteSettingsInterface {
         if (TextUtils.isEmpty(sharingButtonStyle)) {
             mSettings.sharingButtonStyle = STANDARD_SHARING_BUTTON_STYLE;
         } else {
-            mSettings.sharingButtonStyle = sharingButtonStyle.toLowerCase();
+            mSettings.sharingButtonStyle = sharingButtonStyle.toLowerCase(Locale.ROOT);
         }
     }
 
@@ -882,7 +883,7 @@ public abstract class SiteSettingsInterface {
         if (TextUtils.isEmpty(format)) {
             mSettings.defaultPostFormat = STANDARD_POST_FORMAT_KEY;
         } else {
-            mSettings.defaultPostFormat = format.toLowerCase();
+            mSettings.defaultPostFormat = format.toLowerCase(Locale.ROOT);
         }
     }
 
