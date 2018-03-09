@@ -1933,7 +1933,7 @@
     <string name="site_creation_creating_configuring_theme">Configuring site style…</string>
     <string name="site_creation_creating_preparing_frontend">Preparing frontend…</string>
     <string name="site_creation_creating_failed">Something went wrong&#8230;</string>
-    <string name="site_creation_creating_failed_extended">A parliament of owls distracted our servers with their superior oratory skills</string>
+    <string name="site_creation_creating_failed_extended">We ran into an unexpected problem. How about giving it another shot?</string>
     <string name="site_creation_creating_retry">Try again</string>
     <string name="site_creation_creating_modal">Please wait until site creation is completed.</string>
     <string name="site_creation_epilogue_congrats">Congratulations!\nYour site is ready.</string>
