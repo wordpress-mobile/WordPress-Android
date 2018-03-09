@@ -229,8 +229,7 @@ class PostUploadNotifier {
 
     private boolean isPostAlreadyInPostCount(@NonNull PostModel post) {
         for (PostModel onePost : sNotificationData.mUploadedPostsCounted) {
-            if (onePost.getId() == post.getId()
-                && onePost.getLocalSiteId() == post.getLocalSiteId()) {
+            if (onePost.getId() == post.getId()) {
                 return true;
             }
         }
