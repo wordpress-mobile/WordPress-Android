@@ -1013,7 +1013,6 @@ Language: nl
     <string name="site_picker_cant_hide_current_site">\"%s\" was niet verborgen omdat het de huidige site is</string>
     <string name="me_btn_support">Help &amp; Support</string>
     <string name="account_settings">Accountinstellingen</string>
-    <string name="site_picker_create_dotcom">WordPress.com site maken</string>
     <string name="site_picker_edit_visibility">Sites tonen/verbergen</string>
     <string name="site_picker_add_self_hosted">Een zelf–gehoste site toevoegen</string>
     <string name="my_site_btn_switch_site">Site wisselen</string>

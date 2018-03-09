@@ -1022,7 +1022,6 @@ Language: en_GB
     <string name="account_settings">Account Settings</string>
     <string name="me_btn_support">Help &amp; Support</string>
     <string name="site_picker_cant_hide_current_site">\"%s\" wasn\'t hidden because it\'s the current site</string>
-    <string name="site_picker_create_dotcom">Create WordPress.com site</string>
     <string name="site_picker_add_self_hosted">Add self–hosted site</string>
     <string name="site_picker_edit_visibility">Show/hide sites</string>
     <string name="my_site_btn_view_admin">View Admin</string>

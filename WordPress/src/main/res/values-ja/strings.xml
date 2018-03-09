@@ -1023,7 +1023,6 @@ Language: ja_JP
     <string name="site_picker_cant_hide_current_site">現在のサイトのため “%s” は非表示になりませんでした</string>
     <string name="me_btn_support">ヘルプ &amp; サポート</string>
     <string name="account_settings">アカウント設定</string>
-    <string name="site_picker_create_dotcom">WordPress.com サイトを作成</string>
     <string name="site_picker_edit_visibility">サイトを表示/非表示</string>
     <string name="site_picker_add_self_hosted">インストール型サイトを追加</string>
     <string name="my_site_btn_switch_site">サイト切り替え</string>

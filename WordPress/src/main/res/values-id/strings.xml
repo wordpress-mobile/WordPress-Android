@@ -579,7 +579,6 @@ Language: id
     <string name="site_picker_cant_hide_current_site">\"%s\" tidak tersembunyi karena itu adalah situs saat ini</string>
     <string name="me_btn_support">Bantuan &amp; Dukungan</string>
     <string name="account_settings">Pengaturan Akun</string>
-    <string name="site_picker_create_dotcom">Buat situs WordPress.com</string>
     <string name="site_picker_add_self_hosted">Tambahkan situs mandiri (self–hosted)</string>
     <string name="site_picker_edit_visibility">Tampilkan/sembunyikan situs</string>
     <string name="site_picker_title">Pilih situs</string>

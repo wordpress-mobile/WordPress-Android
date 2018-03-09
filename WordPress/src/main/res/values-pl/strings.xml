@@ -1024,7 +1024,6 @@ Language: pl
     <string name="site_picker_cant_hide_current_site">\"%s\" została ukryta ponieważ jest to aktualna witryna</string>
     <string name="me_btn_support">Pomoc i wsparcie</string>
     <string name="account_settings">Ustawienia konta</string>
-    <string name="site_picker_create_dotcom">Utwórz witrynę na WordPress.com</string>
     <string name="site_picker_edit_visibility">Pokaż/ukryj witryny</string>
     <string name="site_picker_add_self_hosted">Dodaj witrynę z własnym hostingiem</string>
     <string name="my_site_btn_switch_site">Przełącz witrynę</string>

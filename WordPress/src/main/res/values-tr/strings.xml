@@ -1019,7 +1019,6 @@ Language: tr
     <string name="site_picker_cant_hide_current_site">\"%s\" şu anki site olduğundan gizlenmedi</string>
     <string name="me_btn_support">Yardım &amp; Destek</string>
     <string name="account_settings">Hesap ayarları</string>
-    <string name="site_picker_create_dotcom">WordPress.com site oluştur</string>
     <string name="site_picker_add_self_hosted">Kullanıcı tarafından barındırılan site ekle</string>
     <string name="site_picker_edit_visibility">Siteleri göster/gizle</string>
     <string name="my_site_btn_view_admin">Yöneticiyi Görüntüle</string>

@@ -1019,7 +1019,6 @@ Language: de
     <string name="site_picker_cant_hide_current_site">\"%s\" wurde nicht ausgeblendet, denn es ist die aktuelle Webseite</string>
     <string name="me_btn_support">Hilfe &amp; Support</string>
     <string name="account_settings">Konto–Einstellungen</string>
-    <string name="site_picker_create_dotcom">WordPress.com Website erstellen</string>
     <string name="site_picker_edit_visibility">Websites anzeigen/ausblenden</string>
     <string name="site_picker_add_self_hosted">Selbstgehostete Website hinzufügen</string>
     <string name="my_site_btn_switch_site">Website wechseln</string>

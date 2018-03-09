@@ -1127,7 +1127,6 @@ Language: ro
     <string name="site_picker_cant_hide_current_site">\"%s\" n–a fost ascuns pentru că este situl curent</string>
     <string name="me_btn_support">Ajutor și suport</string>
     <string name="account_settings">Setări cont</string>
-    <string name="site_picker_create_dotcom">Creează un sit WordPress.com</string>
     <string name="site_picker_edit_visibility">Arată/ascunde situri</string>
     <string name="site_picker_add_self_hosted">Adaugă sit auto–găzduit</string>
     <string name="site_picker_add_site">Adaugă sit nou</string>

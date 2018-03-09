@@ -533,7 +533,6 @@ Language: gl_ES
     <string name="account_settings">Configuración da conta</string>
     <string name="site_picker_cant_hide_current_site">\"%s\" non foi ocultado porque é o sitio actual</string>
     <string name="me_btn_support">Axuda e soporte</string>
-    <string name="site_picker_create_dotcom">Crear un sitio en WordPress.com</string>
     <string name="site_picker_edit_visibility">Mostrar/ocultar sitios</string>
     <string name="site_picker_add_self_hosted">Engadir un sitio autoaloxado</string>
     <string name="my_site_btn_view_site">Ver o sitio</string>

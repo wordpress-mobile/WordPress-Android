@@ -816,7 +816,6 @@ Language: it
     <string name="site_picker_cant_hide_current_site">\"%s\" non è stato nascosto perchè è il sito corrente</string>
     <string name="me_btn_support">Aiuto e supporto</string>
     <string name="account_settings">Impostazioni account</string>
-    <string name="site_picker_create_dotcom">Crea un sito su WordPress.com</string>
     <string name="site_picker_edit_visibility">Mostra/nascondi siti</string>
     <string name="site_picker_add_self_hosted">Aggiungi un sito self–hosted</string>
     <string name="my_site_btn_switch_site">Cambia sito</string>
