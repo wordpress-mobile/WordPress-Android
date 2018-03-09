@@ -86,6 +86,7 @@ android {
     lintOptions{
         checkDependencies = true
         lintConfig file('lint.xml')
+        baseline file("lint-baseline.xml")
     }
 }
 

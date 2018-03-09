@@ -352,7 +352,7 @@ public class PeopleInviteFragment extends Fragment implements RoleSelectDialogFr
         }
 
         final ViewGroup usernameButton = (ViewGroup) LayoutInflater.from(
-                getActivity()).inflate(R.layout.invite_username_button, null);
+                getActivity()).inflate(R.layout.invite_username_button, mUsernamesContainer, false);
         final TextView usernameTextView = (TextView) usernameButton.findViewById(R.id.username);
         usernameTextView.setText(username);
 
@@ -556,11 +556,13 @@ public class PeopleInviteFragment extends Fragment implements RoleSelectDialogFr
                 return;
             }
 
-            usernameErrorTextView = (TextView) LayoutInflater.from(getActivity())
-                                                             .inflate(R.layout.people_invite_error_view, null);
-
             final ViewGroup usernameErrorsContainer = (ViewGroup) getView()
                     .findViewById(R.id.username_errors_container);
+
+            usernameErrorTextView = (TextView) LayoutInflater.from(getActivity())
+                                                             .inflate(R.layout.people_invite_error_view,
+                                                                      usernameErrorsContainer, false);
+
             usernameErrorsContainer.addView(usernameErrorTextView);
 
             mUsernameErrorViews.put(username, usernameErrorTextView);

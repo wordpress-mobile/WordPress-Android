@@ -25,7 +25,7 @@ public class LinkDialogFragment extends DialogFragment {
         AlertDialog.Builder builder = new AlertDialog.Builder(
                 new ContextThemeWrapper(getActivity(), R.style.Calypso_Dialog));
         LayoutInflater inflater = getActivity().getLayoutInflater();
-
+        //noinspection InflateParams
         View view = inflater.inflate(R.layout.dialog_link, null);
 
         final EditText urlEditText = (EditText) view.findViewById(R.id.linkURL);

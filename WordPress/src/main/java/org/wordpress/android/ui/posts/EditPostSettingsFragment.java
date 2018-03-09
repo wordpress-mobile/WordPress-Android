@@ -1049,7 +1049,8 @@ public class EditPostSettingsFragment extends Fragment {
             mPostLocation = null;
         } else {
             mPostLocation = postModel.getLocation();
-            mLocationTextView.setText(mPostLocation.getLatitude() + ", " + mPostLocation.getLongitude());
+            mLocationTextView.setText(getString(
+                    R.string.latitude_longitude, mPostLocation.getLatitude(), mPostLocation.getLongitude()));
             // Asynchronously get the address from the location coordinates
             new FetchAndSetAddressAsyncTask().execute(mPostLocation.getLatitude(), mPostLocation.getLongitude());
         }

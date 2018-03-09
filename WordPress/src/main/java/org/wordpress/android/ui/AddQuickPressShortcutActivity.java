@@ -122,7 +122,8 @@ public class AddQuickPressShortcutActivity extends ListActivity {
         dialogBuilder.setTitle(R.string.quickpress_add_alert_title);
 
         final EditText quickPressShortcutName = new EditText(AddQuickPressShortcutActivity.this);
-        quickPressShortcutName.setText("QP " + StringEscapeUtils.unescapeHtml4(accountNames.get(position)));
+        quickPressShortcutName.setText(getString(R.string.quickpress_shortcut_with_account_param,
+                StringEscapeUtils.unescapeHtml4(accountNames.get(position))));
         dialogBuilder.setView(quickPressShortcutName);
 
         dialogBuilder.setPositiveButton(R.string.add, new DialogInterface.OnClickListener() {

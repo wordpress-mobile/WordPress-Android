@@ -23,7 +23,7 @@ Language: es_CL
     <string name="alert_error_adding_media">Se produjo un error al cargar los archivos</string>
     <string name="alert_action_while_uploading">Actualmente estás subiendo archivos. Por favor, espera hasta que termine.</string>
     <string name="alert_insert_image_html_mode">No se puede insertar medios directamente en modo HTML. Por favor, cambia al modo visual.</string>
-    <string name="uploading_gallery_placeholder">Cargando Galería...</string>
+    <string name="uploading_gallery_placeholder">Cargando Galería…</string>
     <string name="invite_sent">Invitación enviada exitosamente</string>
     <string name="tap_to_try_again">¡Toca para volver a intentarlo!</string>
     <string name="invite_message_info">(Opcional) Puedes escribir un mensaje personalizado de hasta 500 caracteres que serán incluidos en la invitación a lo(s) usuario(s).</string>
@@ -45,7 +45,7 @@ Language: es_CL
     <string name="reader_short_comment_count_multi">%s Comentarios</string>
     <string name="reader_short_comment_count_one">1 Comentario</string>
     <string name="reader_label_submit_comment">ENVIAR</string>
-    <string name="reader_hint_comment_on_post">Responder a la entrada...</string>
+    <string name="reader_hint_comment_on_post">Responder a la entrada…</string>
     <string name="reader_discover_visit_blog">Visita %s</string>
     <string name="reader_discover_attribution_blog">Originalmente publicado en %s</string>
     <string name="reader_discover_attribution_author">Originalmente publicado por %s</string>
@@ -318,12 +318,12 @@ Language: es_CL
     <string name="error_downloading_image">Error al descargar la imagen</string>
     <string name="passcode_wrong_passcode">PIN erróneo</string>
     <string name="invalid_email_message">Tu dirección de correo electrónico no es válida</string>
-    <string name="username_only_lowercase_letters_and_numbers">Nombre de usuario solo puede contener letras minúsculas (a-z) y números</string>
+    <string name="username_only_lowercase_letters_and_numbers">Nombre de usuario solo puede contener letras minúsculas (a–z) y números</string>
     <string name="username_required">Ingresa un nombre de usuario</string>
     <string name="username_not_allowed">Nombre de usuario no permitido</string>
     <string name="username_must_be_at_least_four_characters">El nombre de usuario debe tener, al menos, 4 caracteres</string>
     <string name="username_contains_invalid_characters">El nombre de usuario no puede incluir el caracter “_”</string>
-    <string name="username_must_include_letters">El nombre de usuario debe tener, al menos, 1 letra (a-z)</string>
+    <string name="username_must_include_letters">El nombre de usuario debe tener, al menos, 1 letra (a–z)</string>
     <string name="email_invalid">Ingresa una dirección de correo electrónico válida</string>
     <string name="email_not_allowed">Esa dirección de correo electrónico no está permitida</string>
     <string name="username_exists">Ese nombre de usuario ya existe</string>
@@ -335,7 +335,7 @@ Language: es_CL
     <string name="blog_name_must_be_less_than_sixty_four_characters">La dirección del sitio debe ser más corta que 64 caracteres</string>
     <string name="blog_name_contains_invalid_characters">La dirección del sitio no puede tener el caracter “_”</string>
     <string name="blog_name_cant_be_used">No puedes usar esa dirección de sitio</string>
-    <string name="blog_name_only_lowercase_letters_and_numbers">La dirección solo puede contener letras minúsculas (a-z) y números.</string>
+    <string name="blog_name_only_lowercase_letters_and_numbers">La dirección solo puede contener letras minúsculas (a–z) y números.</string>
     <string name="blog_name_exists">Ese sitio ya existe</string>
     <string name="blog_name_reserved">Ese sitio está reservado</string>
     <string name="blog_name_reserved_but_may_be_available">Este sitio está reservado actualmente pero es posible que quede libre en un par de días.</string>
@@ -427,7 +427,7 @@ Language: es_CL
     <string name="site_address">La dirección (URL) de tu sitio autoalojado</string>
     <string name="email_cant_be_used_to_signup">No puedes usar esta dirección de correo electrónico para registrarte, ya que bloquea algunos de nuestros correos. Utiliza otro proveedor de correo.</string>
     <string name="email_reserved">Esta dirección de correo electrónico ya se ha utilizado. Comprueba si tienes en tu bandeja de entrada un correo de activación. Si no activas ahora el correo, puedes intentarlo dentro de unos días.</string>
-    <string name="blog_name_must_include_letters">La dirección de los sitios debe tener, al menos, 1 letra (a-z)</string>
+    <string name="blog_name_must_include_letters">La dirección de los sitios debe tener, al menos, 1 letra (a–z)</string>
     <string name="blog_title_invalid">Título de sitio no válido</string>
     <string name="blog_name_invalid">Dirección de sitio no válida</string>
     <string name="deleting_page">Borrando página</string>
@@ -436,7 +436,7 @@ Language: es_CL
     <string name="share_url_page">Compartir página</string>
     <string name="share_link">Compartir enlace</string>
     <string name="creating_your_site">Creando tu sitio</string>
-    <string name="reader_empty_posts_in_tag_updating">Recuperando entradas...</string>
+    <string name="reader_empty_posts_in_tag_updating">Recuperando entradas…</string>
     <string name="reader_likes_you_and_multi">A ti, y a %,d personas más les gusta esto</string>
     <string name="reader_likes_multi">A %,d personas les gusta esto</string>
     <string name="reader_toast_err_get_comment">No ha sido posible cargar este comentario</string>
@@ -471,7 +471,7 @@ Language: es_CL
     <string name="create_account_wpcom">Crear una cuenta de WordPress.com</string>
     <string name="username_invalid">Nombre de usuario no válido</string>
     <string name="limit_reached">Límite alcanzado. Puedes probar en 1 minuto. Probar de nuevo antes solamente incrementará el tiempo de espera hasta que la prohibición sea suprimida. Si crees que es un error, contacta con soporte. </string>
-    <string name="reader_hint_comment_on_comment">Contestar al comentario...</string>
+    <string name="reader_hint_comment_on_comment">Contestar al comentario…</string>
     <string name="reader_label_added_tag">Agregado %s</string>
     <string name="reader_toast_err_tag_invalid">Esa no es una etiqueta válida</string>
     <string name="reader_toast_err_share_intent">No se pudo compartir</string>
@@ -531,7 +531,7 @@ Language: es_CL
     <string name="note_reply_successful">Respuesta publicada</string>
     <string name="new_notifications">%d nuevas notificaciones</string>
     <string name="more_notifications">y %d más.</string>
-    <string name="loading">Cargando...</string>
+    <string name="loading">Cargando…</string>
     <string name="httpuser">Usuario HTTP</string>
     <string name="httppassword">Contraseña HTTP</string>
     <string name="error_media_upload">Se ha producido un error al cargar los archivos</string>

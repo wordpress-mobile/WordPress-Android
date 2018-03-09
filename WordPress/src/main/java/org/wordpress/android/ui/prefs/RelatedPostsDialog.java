@@ -61,7 +61,8 @@ public class RelatedPostsDialog extends DialogFragment
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         LayoutInflater inflater = getActivity().getLayoutInflater();
-        View v = inflater.inflate(R.layout.related_posts_dialog, null, false);
+        //noinspection InflateParams
+        View v = inflater.inflate(R.layout.related_posts_dialog, null);
 
         mShowRelatedPosts = (Switch) v.findViewById(R.id.toggle_related_posts_switch);
         mShowHeader = (CheckBox) v.findViewById(R.id.show_header_checkbox);
@@ -92,6 +93,7 @@ public class RelatedPostsDialog extends DialogFragment
         toggleViews(mShowRelatedPosts.isChecked());
 
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity(), R.style.Calypso_Dialog);
+        //noinspection InflateParams
         View titleView = inflater.inflate(R.layout.detail_list_preference_title, null);
         TextView titleText = ((TextView) titleView.findViewById(R.id.title));
         titleText.setText(R.string.site_settings_related_posts_title);

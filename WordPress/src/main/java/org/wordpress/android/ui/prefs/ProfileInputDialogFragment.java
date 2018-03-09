@@ -45,6 +45,7 @@ public class ProfileInputDialogFragment extends DialogFragment {
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         LayoutInflater layoutInflater = LayoutInflater.from(getActivity());
+        //noinspection InflateParams
         View promptView = layoutInflater.inflate(R.layout.my_profile_dialog, null);
         AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(
                 new ContextThemeWrapper(getActivity(), R.style.Calypso_Dialog));

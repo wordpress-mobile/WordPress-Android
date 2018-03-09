@@ -254,7 +254,7 @@ public class MeFragment extends Fragment {
             final String avatarUrl = constructGravatarUrl(mAccountStore.getAccount());
             loadAvatar(avatarUrl, null);
 
-            mUsernameTextView.setText("@" + defaultAccount.getUserName());
+            mUsernameTextView.setText(getString(R.string.at_username, defaultAccount.getUserName()));
             mLoginLogoutTextView.setText(R.string.me_disconnect_from_wordpress_com);
 
             String displayName = defaultAccount.getDisplayName();
