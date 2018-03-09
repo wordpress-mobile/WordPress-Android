@@ -38,7 +38,7 @@ public class PluginDirectorySqlUtilsTest {
     }
 
     @Test
-    public void insertPluginDirectoryList() throws NoSuchMethodException,
+    public void testInsertPluginDirectoryList() throws NoSuchMethodException,
             InvocationTargetException, IllegalAccessException {
         int numberOfDirectories = 10;
         List<PluginDirectoryModel> pluginDirectoryList = new ArrayList<>();
@@ -50,15 +50,8 @@ public class PluginDirectorySqlUtilsTest {
             directoryModel.setPage(1);
             pluginDirectoryList.add(directoryModel);
         }
-        Assert.assertEquals(numberOfDirectories, PluginSqlUtils.insertOrUpdatePluginDirectoryList(pluginDirectoryList));
-
-        // Use reflection to assert PluginSqlUtils.getPluginDirectoriesForType
-        Method getPluginDirectoriesForType = PluginSqlUtils.class.getDeclaredMethod("getPluginDirectoriesForType",
-                PluginDirectoryType.class);
-        getPluginDirectoriesForType.setAccessible(true);
-        Object directoryList = getPluginDirectoriesForType.invoke(PluginSqlUtils.class, directoryType);
-        Assert.assertTrue(directoryList instanceof List);
-        Assert.assertEquals(numberOfDirectories, ((List) directoryList).size());
+        PluginSqlUtils.insertPluginDirectoryList(pluginDirectoryList);
+        Assert.assertEquals(numberOfDirectories, getPluginDirectoriesForType(directoryType).size());
     }
 
     @Test
@@ -67,62 +60,17 @@ public class PluginDirectorySqlUtilsTest {
         String slug = randomString("slug");
         int page = 5;
         List<PluginDirectoryModel> pluginDirectoryList = new ArrayList<>();
-        String directoryType = PluginDirectoryType.NEW.toString();
+        PluginDirectoryType directoryType = PluginDirectoryType.NEW;
         PluginDirectoryModel directoryModel = new PluginDirectoryModel();
         directoryModel.setSlug(slug);
-        directoryModel.setDirectoryType(directoryType);
+        directoryModel.setDirectoryType(directoryType.toString());
         directoryModel.setPage(page);
         pluginDirectoryList.add(directoryModel);
-        Assert.assertEquals(1, PluginSqlUtils.insertOrUpdatePluginDirectoryList(pluginDirectoryList));
+        PluginSqlUtils.insertPluginDirectoryList(pluginDirectoryList);
 
-        // Use reflection to assert PluginSqlUtils.getPluginDirectoriesForType
-        Method getPluginDirectoryModel = PluginSqlUtils.class.getDeclaredMethod("getPluginDirectoryModel",
-                String.class, String.class);
-        getPluginDirectoryModel.setAccessible(true);
-        Object object = getPluginDirectoryModel.invoke(PluginSqlUtils.class, directoryType, slug);
-        Assert.assertNotNull(object);
-        Assert.assertTrue(object instanceof PluginDirectoryModel);
-        PluginDirectoryModel insertedDirectoryModel = (PluginDirectoryModel) object;
-        Assert.assertEquals(insertedDirectoryModel.getPage(), page);
-    }
-
-    @Test
-    public void testUpdatePluginDirectoryModel() throws NoSuchMethodException,
-            InvocationTargetException, IllegalAccessException {
-        String slug = randomString("slug");
-        int oldPage = 1;
-        String directoryType = PluginDirectoryType.NEW.toString();
-        PluginDirectoryModel directoryModel = new PluginDirectoryModel();
-        directoryModel.setSlug(slug);
-        directoryModel.setDirectoryType(directoryType);
-        directoryModel.setPage(oldPage);
-
-        Method insertOrUpdatePluginDirectoryModel =
-                PluginSqlUtils.class.getDeclaredMethod("insertOrUpdatePluginDirectoryModel",
-                        PluginDirectoryModel.class);
-        insertOrUpdatePluginDirectoryModel.setAccessible(true);
-        Assert.assertEquals(1, insertOrUpdatePluginDirectoryModel.invoke(PluginSqlUtils.class, directoryModel));
-
-        // Use reflection to assert PluginSqlUtils.getPluginDirectoriesForType
-        Method getPluginDirectoryModel = PluginSqlUtils.class.getDeclaredMethod("getPluginDirectoryModel",
-                String.class, String.class);
-        getPluginDirectoryModel.setAccessible(true);
-        Object firstObject = getPluginDirectoryModel.invoke(PluginSqlUtils.class, directoryType, slug);
-        Assert.assertNotNull(firstObject);
-        Assert.assertTrue(firstObject instanceof PluginDirectoryModel);
-        PluginDirectoryModel insertedDirectoryModel = (PluginDirectoryModel) firstObject;
-        Assert.assertEquals(insertedDirectoryModel.getPage(), oldPage);
-
-        int newPage = 2;
-        directoryModel.setPage(newPage);
-        Assert.assertEquals(1, insertOrUpdatePluginDirectoryModel.invoke(PluginSqlUtils.class, directoryModel));
-
-        Object secondObject = getPluginDirectoryModel.invoke(PluginSqlUtils.class, directoryType, slug);
-        Assert.assertNotNull(secondObject);
-        Assert.assertTrue(secondObject instanceof PluginDirectoryModel);
-        PluginDirectoryModel updatedDirectoryModel = (PluginDirectoryModel) secondObject;
-        Assert.assertEquals(updatedDirectoryModel.getPage(), newPage);
-        Assert.assertEquals(insertedDirectoryModel.getSlug(), updatedDirectoryModel.getSlug());
+        List<PluginDirectoryModel> directoryList = getPluginDirectoriesForType(directoryType);
+        Assert.assertEquals(1, directoryList.size());
+        Assert.assertEquals(directoryList.get(0).getPage(), page);
     }
 
     @Test
@@ -142,7 +90,7 @@ public class PluginDirectorySqlUtilsTest {
             // Add PluginDirectoryModels one by one
             List<PluginDirectoryModel> pluginDirectoryList = new ArrayList<>();
             pluginDirectoryList.add(directoryModel);
-            Assert.assertEquals(1, PluginSqlUtils.insertOrUpdatePluginDirectoryList(pluginDirectoryList));
+            PluginSqlUtils.insertPluginDirectoryList(pluginDirectoryList);
             // Last requested page is the max value of the `page` column for that directory type
             lastRequestedPage = Math.max(lastRequestedPage, page);
             Assert.assertEquals(lastRequestedPage, PluginSqlUtils.getLastRequestedPageForDirectoryType(directoryType));
@@ -164,6 +112,10 @@ public class PluginDirectorySqlUtilsTest {
         int numberOfNewPlugins = 30;
         int numberOfPopularPlugins = 40;
 
+        // Assert empty state - SQLite's WHERE IN query could crash if the empty list is not handled properly
+        Assert.assertEquals(0, PluginSqlUtils.getWPOrgPluginsForDirectory(PluginDirectoryType.NEW).size());
+        Assert.assertEquals(0, PluginSqlUtils.getWPOrgPluginsForDirectory(PluginDirectoryType.POPULAR).size());
+
         // Add plugin directory models for NEW type
         final List<String> slugListForNewPlugins = randomSlugsFromList(slugList, numberOfNewPlugins);
         List<PluginDirectoryModel> directoryListForNewPlugins = new ArrayList<>();
@@ -173,8 +125,7 @@ public class PluginDirectorySqlUtilsTest {
             directoryModel.setDirectoryType(PluginDirectoryType.NEW.toString());
             directoryListForNewPlugins.add(directoryModel);
         }
-        Assert.assertEquals(numberOfNewPlugins,
-                PluginSqlUtils.insertOrUpdatePluginDirectoryList(directoryListForNewPlugins));
+        PluginSqlUtils.insertPluginDirectoryList(directoryListForNewPlugins);
 
         // Add plugin directory models for POPULAR type
         final List<String> slugListForPopularPlugins = randomSlugsFromList(slugList, numberOfPopularPlugins);
@@ -185,8 +136,7 @@ public class PluginDirectorySqlUtilsTest {
             directoryModel.setDirectoryType(PluginDirectoryType.POPULAR.toString());
             directoryListForPopularPlugins.add(directoryModel);
         }
-        Assert.assertEquals(numberOfPopularPlugins,
-                PluginSqlUtils.insertOrUpdatePluginDirectoryList(directoryListForPopularPlugins));
+        PluginSqlUtils.insertPluginDirectoryList(directoryListForPopularPlugins);
 
         // Assert that getWPOrgPluginsForDirectory return the correct items
 
@@ -208,6 +158,18 @@ public class PluginDirectorySqlUtilsTest {
             WPOrgPluginModel wpOrgPluginModel = insertedPopularPlugins.get(i);
             Assert.assertEquals(wpOrgPluginModel.getSlug(), slug);
         }
+    }
+
+    @SuppressWarnings("unchecked")
+    private List<PluginDirectoryModel> getPluginDirectoriesForType(PluginDirectoryType directoryType)
+            throws NoSuchMethodException, InvocationTargetException, IllegalAccessException {
+        // Use reflection to assert PluginSqlUtils.getPluginDirectoriesForType
+        Method getPluginDirectoriesForType = PluginSqlUtils.class.getDeclaredMethod("getPluginDirectoriesForType",
+                PluginDirectoryType.class);
+        getPluginDirectoriesForType.setAccessible(true);
+        Object directoryList = getPluginDirectoriesForType.invoke(PluginSqlUtils.class, directoryType);
+        Assert.assertTrue(directoryList instanceof List);
+        return (List<PluginDirectoryModel>) directoryList;
     }
 
     private String randomString(String prefix) {
