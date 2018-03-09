@@ -1,6 +1,7 @@
 package org.wordpress.android.util.widgets;
 
 import android.content.Context;
+import android.support.v4.view.ViewCompat;
 import android.support.v7.widget.AppCompatTextView;
 import android.text.Layout;
 import android.text.StaticLayout;
@@ -205,7 +206,7 @@ public class AutoResizeTextView extends AppCompatTextView {
      */
     public void resizeText() {
         int heightLimit = getHeight() - getPaddingBottom() - getPaddingTop();
-        int widthLimit = getWidth() - getPaddingLeft() - getPaddingRight();
+        int widthLimit = getWidth() - ViewCompat.getPaddingStart(this) - ViewCompat.getPaddingStart(this);
         resizeText(widthLimit, heightLimit);
     }
 
@@ -245,7 +246,7 @@ public class AutoResizeTextView extends AppCompatTextView {
             TextPaint paint = new TextPaint(textPaint);
             // Draw using a static layout
             StaticLayout layout = new StaticLayout(text, paint, width, Layout.Alignment.ALIGN_NORMAL,
-                    mSpacingMult, mSpacingAdd, false);
+                                                   mSpacingMult, mSpacingAdd, false);
             // Check that we have a least one line of rendered text
             if (layout.getLineCount() > 0) {
                 // Since the line at the specific vertical position would be cut off,
@@ -294,7 +295,7 @@ public class AutoResizeTextView extends AppCompatTextView {
         paintCopy.setTextSize(textSize);
         // Measure using a static layout
         StaticLayout layout = new StaticLayout(source, paintCopy, width, Layout.Alignment.ALIGN_NORMAL,
-                mSpacingMult, mSpacingAdd, true);
+                                               mSpacingMult, mSpacingAdd, true);
         return layout.getHeight();
     }
 }

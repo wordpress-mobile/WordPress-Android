@@ -1,0 +1,33 @@
+buildscript {
+    repositories {
+        jcenter()
+    }
+
+    dependencies {
+        classpath 'com.automattic.android:fetchstyle:1.0'
+    }
+}
+
+apply plugin: 'com.automattic.android.fetchstyle'
+
+allprojects {
+    apply plugin: 'checkstyle'
+
+    repositories {
+        jcenter()
+        maven {
+            url "https://maven.google.com"
+        }
+    }
+
+    task checkstyle(type: Checkstyle) {
+        source 'src'
+
+        classpath = files()
+    }
+
+    checkstyle {
+        toolVersion = '8.3'
+        configFile file("${project.rootDir}/config/checkstyle.xml")
+    }
+}

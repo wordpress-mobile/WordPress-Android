@@ -1,6 +1,5 @@
 package org.wordpress.android.util;
 
-import android.Manifest;
 import android.Manifest.permission;
 import android.app.Activity;
 import android.app.Fragment;
@@ -72,9 +71,9 @@ public class PermissionUtils {
 
     public static boolean checkCameraAndStoragePermissions(Activity activity) {
         return checkPermissions(activity,
-                new String[]{
-                        permission.WRITE_EXTERNAL_STORAGE,
-                        permission.CAMERA});
+                                new String[]{
+                                        permission.WRITE_EXTERNAL_STORAGE,
+                                        permission.CAMERA});
     }
 
     public static boolean checkAndRequestCameraAndStoragePermissions(Fragment fragment, int requestCode) {

@@ -24,8 +24,30 @@ import static java.lang.String.format;
  */
 public class AppLog {
     // T for Tag
-    public enum T {READER, EDITOR, MEDIA, NUX, API, STATS, UTILS, NOTIFS, DB, POSTS, COMMENTS, THEMES, TESTS, PROFILING,
-        SIMPERIUM, SUGGESTION, MAIN, SETTINGS, PLANS, PEOPLE, SHARING}
+    public enum T {
+        READER,
+        EDITOR,
+        MEDIA,
+        NUX,
+        API,
+        STATS,
+        UTILS,
+        NOTIFS,
+        DB,
+        POSTS,
+        COMMENTS,
+        THEMES,
+        TESTS,
+        PROFILING,
+        SIMPERIUM,
+        SUGGESTION,
+        MAIN,
+        SETTINGS,
+        PLANS,
+        PEOPLE,
+        SHARING,
+        PLUGINS
+    }
 
     public static final String TAG = "WordPress";
     public static final int HEADER_LINE_COUNT = 2;
@@ -59,7 +81,7 @@ public class AppLog {
     /**
      * Sends a VERBOSE log message
      * @param tag Used to identify the source of a log message.
-     *            It usually identifies the class or activity where the log call occurs.
+     * It usually identifies the class or activity where the log call occurs.
      * @param message The message you would like logged.
      */
     public static void v(T tag, String message) {
@@ -71,7 +93,7 @@ public class AppLog {
     /**
      * Sends a DEBUG log message
      * @param tag Used to identify the source of a log message.
-     *            It usually identifies the class or activity where the log call occurs.
+     * It usually identifies the class or activity where the log call occurs.
      * @param message The message you would like logged.
      */
     public static void d(T tag, String message) {
@@ -83,7 +105,7 @@ public class AppLog {
     /**
      * Sends a INFO log message
      * @param tag Used to identify the source of a log message.
-     *            It usually identifies the class or activity where the log call occurs.
+     * It usually identifies the class or activity where the log call occurs.
      * @param message The message you would like logged.
      */
     public static void i(T tag, String message) {
@@ -95,7 +117,7 @@ public class AppLog {
     /**
      * Sends a WARN log message
      * @param tag Used to identify the source of a log message.
-     *            It usually identifies the class or activity where the log call occurs.
+     * It usually identifies the class or activity where the log call occurs.
      * @param message The message you would like logged.
      */
     public static void w(T tag, String message) {
@@ -107,7 +129,7 @@ public class AppLog {
     /**
      * Sends a ERROR log message
      * @param tag Used to identify the source of a log message.
-     *            It usually identifies the class or activity where the log call occurs.
+     * It usually identifies the class or activity where the log call occurs.
      * @param message The message you would like logged.
      */
     public static void e(T tag, String message) {
@@ -119,7 +141,7 @@ public class AppLog {
     /**
      * Send a ERROR log message and log the exception.
      * @param tag Used to identify the source of a log message.
-     *            It usually identifies the class or activity where the log call occurs.
+     * It usually identifies the class or activity where the log call occurs.
      * @param message The message you would like logged.
      * @param tr An exception to log
      */
@@ -132,7 +154,8 @@ public class AppLog {
 
     /**
      * Sends a ERROR log message and the exception with StackTrace
-     * @param tag Used to identify the source of a log message. It usually identifies the class or activity where the log call occurs.
+     * @param tag Used to identify the source of a log message. It usually identifies the class or activity where the
+     *           log call occurs.
      * @param tr An exception to log to get StackTrace
      */
     public static void e(T tag, Throwable tr) {
@@ -143,7 +166,8 @@ public class AppLog {
 
     /**
      * Sends a ERROR log message
-     * @param tag Used to identify the source of a log message. It usually identifies the class or activity where the log call occurs.
+     * @param tag Used to identify the source of a log message. It usually identifies the class or activity where the
+     *           log call occurs.
      * @param volleyErrorMsg
      * @param statusCode
      */
@@ -167,8 +191,9 @@ public class AppLog {
 
     public enum LogLevel {
         v, d, i, w, e;
+
         private String toHtmlColor() {
-            switch(this) {
+            switch (this) {
                 case v:
                     return "grey";
                 case i:
@@ -190,7 +215,7 @@ public class AppLog {
         final java.util.Date mDate;
         final T mLogTag;
 
-        public LogEntry(LogLevel logLevel, String logText, T logTag) {
+        LogEntry(LogLevel logLevel, String logText, T logTag) {
             mLogLevel = logLevel;
             mDate = DateTimeUtils.nowUTC();
             if (logText == null) {
@@ -223,14 +248,17 @@ public class AppLog {
 
     private static class LogEntryList extends ArrayList<LogEntry> {
         private synchronized boolean addEntry(LogEntry entry) {
-            if (size() >= MAX_ENTRIES)
+            if (size() >= MAX_ENTRIES) {
                 removeFirstEntry();
+            }
             return add(entry);
         }
+
         private void removeFirstEntry() {
             Iterator<LogEntry> it = iterator();
-            if (!it.hasNext())
+            if (!it.hasNext()) {
                 return;
+            }
             try {
                 remove(it.next());
             } catch (NoSuchElementException e) {
@@ -268,12 +296,12 @@ public class AppLog {
         ApplicationInfo applicationInfo = pkInfo != null ? pkInfo.applicationInfo : null;
         String appName;
         if (applicationInfo != null && packageManager.getApplicationLabel(applicationInfo) != null) {
-            appName =  packageManager.getApplicationLabel(applicationInfo).toString();
+            appName = packageManager.getApplicationLabel(applicationInfo).toString();
         } else {
             appName = "Unknown";
         }
         sb.append(appName).append(" - ").append(PackageUtils.getVersionName(context))
-                .append(" - Version code: ").append(PackageUtils.getVersionCode(context));
+          .append(" - Version code: ").append(PackageUtils.getVersionCode(context));
         return sb.toString();
     }
 
@@ -283,7 +311,7 @@ public class AppLog {
 
     /**
      * Returns entire log as html for display (see AppLogViewerActivity)
-     * @param  context
+     * @param context
      * @return Arraylist of Strings containing log messages
      */
     public static ArrayList<String> toHtmlList(Context context) {
@@ -305,24 +333,24 @@ public class AppLog {
      * @param context
      * @return The log as plain text
      */
-    public synchronized static String toPlainText(Context context) {
+    public static synchronized String toPlainText(Context context) {
         StringBuilder sb = new StringBuilder();
 
         // add version & device info
         sb.append(getAppInfoHeaderText(context)).append("\n")
-                .append(getDeviceInfoHeaderText(context)).append("\n\n");
+          .append(getDeviceInfoHeaderText(context)).append("\n\n");
 
         Iterator<LogEntry> it = mLogEntries.iterator();
         int lineNum = 1;
         while (it.hasNext()) {
             LogEntry entry = it.next();
             sb.append(format(Locale.US, "%02d - ", lineNum))
-                .append("[")
-                .append(entry.formatLogDate()).append(" ")
-                .append(entry.mLogTag.name())
-                .append("] ")
-                .append(entry.mLogText)
-                .append("\n");
+              .append("[")
+              .append(entry.formatLogDate()).append(" ")
+              .append(entry.mLogTag.name())
+              .append("] ")
+              .append(entry.mLogText)
+              .append("\n");
             lineNum++;
         }
         return sb.toString();

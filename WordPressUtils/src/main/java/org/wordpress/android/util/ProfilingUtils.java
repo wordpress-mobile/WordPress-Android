@@ -79,7 +79,7 @@ public class ProfilingUtils {
             now = mSplits.get(i);
             final String splitLabel = mSplitLabels.get(i);
             final long prev = mSplits.get(i - 1);
-            AppLog.d(T.PROFILING, mLabel + ":      " + (now - prev) + " ms, " + splitLabel);
+            AppLog.d(T.PROFILING, mLabel + ": " + (now - prev) + " ms, " + splitLabel);
         }
         AppLog.d(T.PROFILING, mLabel + ": end, " + (now - first) + " ms");
     }

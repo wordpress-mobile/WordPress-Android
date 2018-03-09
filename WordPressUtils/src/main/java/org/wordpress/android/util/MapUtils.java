@@ -25,6 +25,7 @@ public class MapUtils {
     public static int getMapInt(final Map<?, ?> map, final String key) {
         return getMapInt(map, key, 0);
     }
+
     public static int getMapInt(final Map<?, ?> map, final String key, int defaultValue) {
         try {
             return Integer.parseInt(getMapStr(map, key));
@@ -39,6 +40,7 @@ public class MapUtils {
     public static long getMapLong(final Map<?, ?> map, final String key) {
         return getMapLong(map, key, 0);
     }
+
     public static long getMapLong(final Map<?, ?> map, final String key, long defaultValue) {
         try {
             return Long.parseLong(getMapStr(map, key));
@@ -53,6 +55,7 @@ public class MapUtils {
     public static float getMapFloat(final Map<?, ?> map, final String key) {
         return getMapFloat(map, key, 0);
     }
+
     public static float getMapFloat(final Map<?, ?> map, final String key, float defaultValue) {
         try {
             return Float.parseFloat(getMapStr(map, key));
@@ -67,6 +70,7 @@ public class MapUtils {
     public static double getMapDouble(final Map<?, ?> map, final String key) {
         return getMapDouble(map, key, 0);
     }
+
     public static double getMapDouble(final Map<?, ?> map, final String key, double defaultValue) {
         try {
             return Double.parseDouble(getMapStr(map, key));
@@ -80,8 +84,9 @@ public class MapUtils {
      * returns null if key doesn't exist or isn't a date
      */
     public static Date getMapDate(final Map<?, ?> map, final String key) {
-        if (map == null || key == null || !map.containsKey(key))
+        if (map == null || key == null || !map.containsKey(key)) {
             return null;
+        }
         try {
             return (Date) map.get(key);
         } catch (ClassCastException e) {
@@ -95,12 +100,15 @@ public class MapUtils {
      */
     public static boolean getMapBool(final Map<?, ?> map, final String key) {
         String value = getMapStr(map, key);
-        if (value.isEmpty())
+        if (value.isEmpty()) {
             return false;
-        if (value.startsWith("0")) // handles "0" and "0.0"
+        }
+        if (value.startsWith("0")) { // handles "0" and "0.0"
             return false;
-        if (value.equalsIgnoreCase("false"))
+        }
+        if (value.equalsIgnoreCase("false")) {
             return false;
+        }
         // all other values are assume to be true
         return true;
     }

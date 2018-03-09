@@ -7,7 +7,6 @@ import android.text.TextUtils;
  * http://developer.wordpress.com/docs/photon/
  */
 public class PhotonUtils {
-
     private PhotonUtils() {
         throw new AssertionError();
     }
@@ -28,9 +27,11 @@ public class PhotonUtils {
         MEDIUM,
         LOW
     }
+
     public static String getPhotonImageUrl(String imageUrl, int width, int height) {
         return getPhotonImageUrl(imageUrl, width, height, Quality.MEDIUM);
     }
+
     public static String getPhotonImageUrl(String imageUrl, int width, int height, Quality quality) {
         if (TextUtils.isEmpty(imageUrl)) {
             return "";
@@ -57,8 +58,8 @@ public class PhotonUtils {
             return imageUrl + "?w=" + width + "&h=" + height;
         }
 
-        // strip=all removes EXIF and other non-visual data from JPEGs
-        String query = "?strip=all";
+        // strip=info removes Exif, IPTC and comment data from the output image.
+        String query = "?strip=info";
 
         switch (quality) {
             case HIGH:
@@ -84,8 +85,9 @@ public class PhotonUtils {
 
         // return passed url+query if it's already a photon url
         if (imageUrl.contains(".wp.com")) {
-            if (imageUrl.contains("i0.wp.com") || imageUrl.contains("i1.wp.com") || imageUrl.contains("i2.wp.com"))
+            if (imageUrl.contains("i0.wp.com") || imageUrl.contains("i1.wp.com") || imageUrl.contains("i2.wp.com")) {
                 return imageUrl + query;
+            }
         }
 
         // use wordpress.com as the host if image is on wordpress.com since it supports the same
@@ -96,9 +98,9 @@ public class PhotonUtils {
 
         // must use https for https image urls
         if (UrlUtils.isHttps(imageUrl)) {
-            return "https://i0.wp.com/" + imageUrl.substring(schemePos+3, imageUrl.length()) + query;
+            return "https://i0.wp.com/" + imageUrl.substring(schemePos + 3, imageUrl.length()) + query;
         } else {
-            return "http://i0.wp.com/" + imageUrl.substring(schemePos+3, imageUrl.length()) + query;
+            return "http://i0.wp.com/" + imageUrl.substring(schemePos + 3, imageUrl.length()) + query;
         }
     }
 }

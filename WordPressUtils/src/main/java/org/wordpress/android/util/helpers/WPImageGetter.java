@@ -3,6 +3,7 @@ package org.wordpress.android.util.helpers;
 import android.graphics.Canvas;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
+import android.support.v4.view.ViewCompat;
 import android.text.Html;
 import android.text.TextUtils;
 import android.widget.TextView;
@@ -52,7 +53,8 @@ public class WPImageGetter implements Html.ImageGetter {
     @Override
     public Drawable getDrawable(String source) {
         if (mImageLoader == null || mLoadingDrawable == null || mFailedDrawable == null) {
-            throw new RuntimeException("Developer, you need to call setImageLoader, setLoadingDrawable and setFailedDrawable");
+            throw new RuntimeException(
+                    "Developer, you need to call setImageLoader, setLoadingDrawable and setFailedDrawable");
         }
 
         if (TextUtils.isEmpty(source)) {
@@ -94,7 +96,7 @@ public class WPImageGetter implements Html.ImageGetter {
                     return;
                 }
 
-                int maxWidth = view.getWidth() - view.getPaddingLeft() - view.getPaddingRight();
+                int maxWidth = view.getWidth() - ViewCompat.getPaddingStart(view) - ViewCompat.getPaddingEnd(view);
                 if (mMaxSize > 0 && (maxWidth > mMaxSize || maxWidth == 0)) {
                     maxWidth = mMaxSize;
                 }
