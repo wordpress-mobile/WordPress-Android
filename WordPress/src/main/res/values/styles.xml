@@ -630,6 +630,18 @@
         <item name="android:layout_alignParentStart">true</item>
     </style>
 
+    <style name="PluginDirectoryList">
+        <item name="android:clipToPadding">false</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:scrollbars">none</item>
+        <item name="android:paddingEnd">@dimen/margin_medium</item>
+        <item name="android:paddingLeft">@dimen/margin_medium</item>
+        <item name="android:paddingRight">@dimen/margin_medium</item>
+        <item name="android:paddingStart">@dimen/margin_medium</item>
+        <item name="android:paddingTop">@dimen/margin_small</item>
+    </style>
+
     <style name="PluginDirectoryListButton">
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
