@@ -8,6 +8,7 @@ import android.content.res.Resources;
 import android.os.Build;
 import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.text.TextUtils;
 import android.util.Pair;
 
@@ -17,8 +18,6 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
-
-import javax.annotation.Nullable;
 
 /**
  * Helper class for working with localized strings. Ensures updates to the users
@@ -102,18 +101,6 @@ public class LocaleManager {
     private static void saveLanguageToPref(Context context, String language) {
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
         prefs.edit().putString(LANGUAGE_KEY, language).commit();
-    }
-
-    /**
-     * Remove any saved custom language selection from SharedPreferences.
-     * Use commit() instead of apply() to ensure the language preference is saved instantly
-     * as the app may be restarted immediately.
-     * @param context The current context
-     */
-    @SuppressLint("ApplySharedPref")
-    private static void removePersistedLanguage(Context context) {
-        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
-        prefs.edit().remove(LANGUAGE_KEY).commit();
     }
 
     /**
@@ -208,7 +195,7 @@ public class LocaleManager {
     /**
      * Generates display strings for given language codes. Used as entries in language preference.
      */
-    @android.support.annotation.Nullable
+    @Nullable
     public static Pair<String[], String[]> createSortedLanguageDisplayStrings(CharSequence[] languageCodes,
                                                                               Locale locale) {
         if (languageCodes == null || languageCodes.length < 1) {
@@ -241,7 +228,7 @@ public class LocaleManager {
      * Generates detail display strings in the currently selected locale. Used as detail text
      * in language preference dialog.
      */
-    @android.support.annotation.Nullable
+    @Nullable
     public static String[] createLanguageDetailDisplayStrings(CharSequence[] languageCodes) {
         if (languageCodes == null || languageCodes.length < 1) {
             return null;
