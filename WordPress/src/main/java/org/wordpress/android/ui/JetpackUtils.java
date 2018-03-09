@@ -18,7 +18,7 @@ public class JetpackUtils {
      */
     static void trackWithSource(AnalyticsTracker.Stat stat, JetpackConnectionWebViewActivity.Source source) {
         HashMap<String, String> sourceMap = new HashMap<>();
-        sourceMap.put("source", source.getValue());
+        sourceMap.put("source", source.toString());
         AnalyticsTracker.track(stat, sourceMap);
     }
 }

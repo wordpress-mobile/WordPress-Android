@@ -38,10 +38,6 @@ public class JetpackConnectionWebViewActivity extends WPWebViewActivity
             mValue = value;
         }
 
-        public String getValue() {
-            return mValue;
-        }
-
         @Nullable
         public static Source fromString(String value) {
             if (STATS.mValue.equals(value)) {

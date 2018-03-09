@@ -105,7 +105,7 @@ public class JetpackConnectionDeeplinkActivity extends AppCompatActivity {
 
     private void trackResult() {
         if (!TextUtils.isEmpty(mReason)) {
-            AppLog.e(AppLog.T.API, "Could not connect to Jetpack, reason: "+mReason);
+            AppLog.e(AppLog.T.API, "Could not connect to Jetpack, reason: " + mReason);
             ToastUtils.showToast(this, mReason);
         } else {
             trackWithSource(Stat.SIGNED_INTO_JETPACK, mSource);
