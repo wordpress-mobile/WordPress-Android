@@ -163,6 +163,15 @@ public class MediaRestClient extends BaseWPComRestClient implements ProgressList
             return;
         }
 
+        // Abort upload if it exceeds the space quota limit for the site
+        if (site.hasDiskSpaceQuotaInformation() && body.contentLength() > site.getSpaceAvailable()) {
+            AppLog.d(T.MEDIA, "Media size of " + body.contentLength() + " exceeds disk space quota remaining  "
+                              + site.getSpaceAvailable() + " for this site");
+            MediaError error = new MediaError(MediaErrorType.EXCEEDS_SITE_SPACE_QUOTA_LIMIT);
+            notifyMediaUploaded(media, error);
+            return;
+        }
+
         String authHeader = String.format(WPComGsonRequest.REST_AUTHORIZATION_FORMAT, getAccessToken().get());
 
         Request request = new Request.Builder()
