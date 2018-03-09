@@ -88,8 +88,9 @@ public class StockMediaStore extends Store {
             this.canLoadMore = canLoadMore;
             this.nextPage = nextPage;
         }
-        public OnStockMediaListFetched(StockMediaError error) {
+        public OnStockMediaListFetched(@NonNull StockMediaError error, @NonNull String searchTerm) {
             this.error = error;
+            this.searchTerm = searchTerm;
             this.mediaList = new ArrayList<>();
         }
     }
@@ -165,7 +166,7 @@ public class StockMediaStore extends Store {
         OnStockMediaListFetched onStockMediaListFetched;
 
         if (payload.isError()) {
-            onStockMediaListFetched = new OnStockMediaListFetched(payload.error);
+            onStockMediaListFetched = new OnStockMediaListFetched(payload.error, payload.searchTerm);
         } else {
             onStockMediaListFetched = new OnStockMediaListFetched(
                     payload.mediaList,
