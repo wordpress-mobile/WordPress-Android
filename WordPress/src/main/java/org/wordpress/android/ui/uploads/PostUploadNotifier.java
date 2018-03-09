@@ -549,15 +549,17 @@ class PostUploadNotifier {
             switch (getPagesAndOrPostsType(postItemsNotUploaded)) {
                 case POST:
                     newErrorMessage = (mediaItemsNotUploaded == 1
-                            ? mContext.getString(R.string.media_file_post_singular_mixed_not_uploaded_one_file)
-                            : String.format(mContext.getString(R.string.media_file_post_singular_mixed_not_uploaded_files_plural),
-                            mediaItemsNotUploaded));
+                        ? mContext.getString(R.string.media_file_post_singular_mixed_not_uploaded_one_file)
+                        : String.format(
+                                mContext.getString(R.string.media_file_post_singular_mixed_not_uploaded_files_plural),
+                        mediaItemsNotUploaded));
                     break;
                 case PAGE:
                     newErrorMessage = (mediaItemsNotUploaded == 1
-                            ? mContext.getString(R.string.media_file_page_singular_mixed_not_uploaded_one_file)
-                            : String.format(mContext.getString(R.string.media_file_page_singular_mixed_not_uploaded_files_plural),
-                            mediaItemsNotUploaded));
+                        ? mContext.getString(R.string.media_file_page_singular_mixed_not_uploaded_one_file)
+                        : String.format(
+                                mContext.getString(R.string.media_file_page_singular_mixed_not_uploaded_files_plural),
+                        mediaItemsNotUploaded));
                     break;
                 case PAGES:
                     newErrorMessage = (mediaItemsNotUploaded == 1
