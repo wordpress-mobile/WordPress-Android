@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:layout_width="match_parent"
+              xmlns:tools="http://schemas.android.com/tools"
+              android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical">
 
@@ -16,7 +17,8 @@
         android:background="@color/tab_background"
         android:elevation="@dimen/tabs_elevation"
         app:tabIndicatorColor="@color/tab_indicator"
-        app:tabMode="scrollable" />
+        app:tabMode="scrollable"
+        tools:ignore="UnusedAttribute"/>
 
     <FrameLayout
         android:id="@+id/media_browser_container"

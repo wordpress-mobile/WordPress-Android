@@ -16,12 +16,12 @@ Language: hu
     <string name="device">Eszköz</string>
     <string name="stats_view_authors">Szerzők</string>
     <string name="publisher">Közzétevő:</string>
-    <string name="pages_fetching">Oldalak betöltése...</string>
-    <string name="media_fetching">Média betöltése...</string>
-    <string name="comments_fetching">Hozzászólások betöltése...</string>
-    <string name="posts_fetching">Bejegyzések betöltése...</string>
+    <string name="pages_fetching">Oldalak betöltése…</string>
+    <string name="media_fetching">Média betöltése…</string>
+    <string name="comments_fetching">Hozzászólások betöltése…</string>
+    <string name="posts_fetching">Bejegyzések betöltése…</string>
     <string name="reader_empty_posts_in_blog">Ez a blog üres</string>
-    <string name="stats_followers_email_selector">E-mail</string>
+    <string name="stats_followers_email_selector">E–mail</string>
     <string name="stats_followers_wpcom_selector">WordPress.com</string>
     <string name="stats_followers_seconds_ago">másodpercekkel ezelőtt</string>
     <string name="stats_followers_a_minute_ago">egy perccel ezelőtt</string>
@@ -60,7 +60,7 @@ Language: hu
     <string name="reader_toast_err_block_blog">Nem sikerült a blog letiltása</string>
     <string name="reader_toast_blog_blocked">Ennek a blognak a bejegyzései a továbbiakban nem jelennek meg</string>
     <string name="contact_us">Kapcsolat</string>
-    <string name="hs__invalid_email_error">Adjunk meg valós e-mail címet</string>
+    <string name="hs__invalid_email_error">Adjunk meg valós e–mail címet</string>
     <string name="hs__username_blank_error">Adjunk meg valós nevet</string>
     <string name="hs__conversation_detail_error">Írjuk le a problémát, amivel találkoztunk</string>
     <string name="hs__new_conversation_header">Támogató chat</string>
@@ -75,7 +75,7 @@ Language: hu
     <string name="reader_empty_recommended_blogs">Nincsenek ajánlott blogok</string>
     <string name="reader_toast_err_already_follow_blog">Ezt a blogot már követjük</string>
     <string name="reader_toast_err_unfollow_blog">Nem sikerült ezt a blogot követni</string>
-    <string name="saving">Mentés...</string>
+    <string name="saving">Mentés…</string>
     <string name="media_empty_list">Nincs média</string>
     <string name="ptr_tip_message">Tipp: A frissítéshez húzzuk le</string>
     <string name="help">Segítség</string>
@@ -99,7 +99,7 @@ Language: hu
     <string name="notifications_empty_list">Nincsenek értesítések</string>
     <string name="stats_bar_graph_empty">Nincsenek elérhető statisztikák</string>
     <string name="blog_name_not_allowed">Ez a weboldal cím nem engedélyezett</string>
-    <string name="email_invalid">Adjunk meg egy valós e-mail címet</string>
+    <string name="email_invalid">Adjunk meg egy valós e–mail címet</string>
     <string name="mnu_comment_spam">Spam</string>
     <string name="author_name">Szerző neve</string>
     <string name="delete_draft">Vázlat törlése</string>
@@ -108,11 +108,11 @@ Language: hu
     <string name="comment_status_spam">Spam</string>
     <string name="account_details">Felhasználói fiók részletei</string>
     <string name="preview_page">Oldal előnézet</string>
-    <string name="email_hint">E-mail cím</string>
+    <string name="email_hint">E–mail cím</string>
     <string name="theme_premium_theme">Prémium sablon</string>
     <string name="hint_comment_content">Hozzászólás</string>
     <string name="comment_added">Sikeres hozzászólás</string>
-    <string name="author_email">Szerző e-mail</string>
+    <string name="author_email">Szerző e–mail</string>
     <string name="mnu_comment_trash">Lomtár</string>
     <string name="media_error_no_permission">Nincs elég jogosultság a médiatár megtekitéséhez</string>
     <string name="post_settings">Bejegyzés beálitások</string>
@@ -199,7 +199,7 @@ Language: hu
     <string name="page">Oldal</string>
     <string name="featured_in_post">Kép beillesztése a bejegyzés tartalmába</string>
     <string name="posts">Bejegyzés</string>
-    <string name="blogusername">honlap-felhasználó</string>
+    <string name="blogusername">honlap–felhasználó</string>
     <string name="upload_scaled_image">Feltöltés és hivatkozás az átméretezett képre</string>
     <string name="scaled_image">Átméretezett kép szélessége</string>
     <string name="link_enter_url">URL</string>
@@ -233,7 +233,7 @@ Language: hu
     <string name="save">Mentés</string>
     <string name="add">Hozzáad</string>
     <string name="category_refresh_error">Kategóriák frissítése sikertelen</string>
-    <string name="on"> -</string>
+    <string name="on"> –</string>
     <string name="reply">Válasz</string>
     <string name="yes">Igen</string>
     <string name="no">Nem</string>

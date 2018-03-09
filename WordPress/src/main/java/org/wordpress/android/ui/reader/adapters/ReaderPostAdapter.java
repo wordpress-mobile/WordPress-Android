@@ -382,7 +382,10 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
 
         // show author and blog name if both are available, otherwise show whichever is available
         if (post.hasBlogName() && post.hasAuthorName() && !post.getBlogName().equals(post.getAuthorName())) {
-            holder.mTxtAuthorAndBlogName.setText(post.getAuthorName() + ", " + post.getBlogName());
+            holder.mTxtAuthorAndBlogName.setText(holder.mTxtAuthorAndBlogName.getResources()
+                                                                             .getString(R.string.author_name_blog_name,
+                                                                                     post.getAuthorName(),
+                                                                                     post.getBlogName()));
         } else if (post.hasBlogName()) {
             holder.mTxtAuthorAndBlogName.setText(post.getBlogName());
         } else if (post.hasAuthorName()) {
