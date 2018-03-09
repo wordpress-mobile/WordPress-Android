@@ -20,14 +20,16 @@ allprojects {
         }
     }
 
-    task checkstyle(type: Checkstyle) {
-        source 'src'
+    if (tasks.findByPath('checkstyle') == null) {
+        tasks.create(name: 'checkstyle', type: Checkstyle) {
+            source 'src'
 
-        classpath = files()
-    }
+            classpath = files()
+        }
 
-    checkstyle {
-        toolVersion = '8.3'
-        configFile file("${project.rootDir}/config/checkstyle.xml")
+        checkstyle {
+            toolVersion = '8.3'
+            configFile file("${project.rootDir}/config/checkstyle.xml")
+        }
     }
 }
