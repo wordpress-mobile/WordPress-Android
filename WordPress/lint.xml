@@ -19,6 +19,8 @@
     <issue id="InconsistentArrays" severity="error" />
     <issue id="StringFormatCount" severity="error" />
 
+    <issue id="TypographyEllipsis" severity="error"/>
+
     <!-- IGNORE -->
     <issue id="MissingTranslation" severity="ignore" />
     <issue id="ExtraTranslation" severity="ignore" />
@@ -39,5 +41,7 @@
         <ignore regexp=".*\/values\-([a-z]|[A-Z]|\-){2,6}\/strings\.xml$"/>
     </issue>
 
-    <issue id="TypographyEllipsis" severity="error"/>
+    <issue id="Typos" severity="error">
+        <ignore regexp=".*\/values\-([a-z]|[A-Z]|\-){2,6}\/strings\.xml$"/>
+    </issue>
 </lint>
