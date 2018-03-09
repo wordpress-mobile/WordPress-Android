@@ -1,6 +1,7 @@
 package org.wordpress.android.ui.prefs;
 
 import android.app.FragmentManager;
+import android.content.Context;
 import android.os.Bundle;
 import android.preference.Preference;
 import android.preference.SwitchPreference;
@@ -10,6 +11,7 @@ import android.view.MenuItem;
 
 import org.wordpress.android.R;
 import org.wordpress.android.push.GCMMessageService;
+import org.wordpress.android.util.LocaleManager;
 import org.wordpress.passcodelock.AppLockManager;
 import org.wordpress.passcodelock.PasscodePreferenceFragment;
 
@@ -19,6 +21,11 @@ public class AppSettingsActivity extends AppCompatActivity {
 
     private AppSettingsFragment mAppSettingsFragment;
     private PasscodePreferenceFragment mPasscodePreferenceFragment;
+
+    @Override
+    protected void attachBaseContext(Context newBase) {
+        super.attachBaseContext(LocaleManager.setLocale(newBase));
+    }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {

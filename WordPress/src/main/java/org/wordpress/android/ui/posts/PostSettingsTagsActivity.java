@@ -31,6 +31,7 @@ import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.model.TermModel;
 import org.wordpress.android.fluxc.store.TaxonomyStore;
 import org.wordpress.android.util.ActivityUtils;
+import org.wordpress.android.util.LocaleManager;
 import org.wordpress.android.util.ToastUtils;
 
 import java.util.ArrayList;
@@ -49,6 +50,11 @@ public class PostSettingsTagsActivity extends AppCompatActivity implements TextW
 
     @Inject Dispatcher mDispatcher;
     @Inject TaxonomyStore mTaxonomyStore;
+
+    @Override
+    protected void attachBaseContext(Context newBase) {
+        super.attachBaseContext(LocaleManager.setLocale(newBase));
+    }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {

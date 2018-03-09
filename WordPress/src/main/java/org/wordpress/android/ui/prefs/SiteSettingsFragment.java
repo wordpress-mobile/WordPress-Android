@@ -67,6 +67,7 @@ import org.wordpress.android.util.AnalyticsUtils;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.HelpshiftHelper;
 import org.wordpress.android.util.HtmlUtils;
+import org.wordpress.android.util.LocaleManager;
 import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.SiteUtils;
 import org.wordpress.android.util.StringUtils;
@@ -1374,7 +1375,7 @@ public class SiteSettingsFragment extends PreferenceFragment
         if (TextUtils.isEmpty(mLanguagePref.getSummary())
             || !newValue.equals(mLanguagePref.getValue())) {
             mLanguagePref.setValue(newValue);
-            String summary = WPPrefUtils.getLanguageString(newValue, WPPrefUtils.languageLocale(newValue));
+            String summary = LocaleManager.getLanguageString(newValue, LocaleManager.languageLocale(newValue));
             mLanguagePref.setSummary(summary);
             mLanguagePref.refreshAdapter();
         }
@@ -1385,15 +1386,15 @@ public class SiteSettingsFragment extends PreferenceFragment
             return;
         }
 
-        Pair<String[], String[]> pair = WPPrefUtils
-                .createSortedLanguageDisplayStrings(mLanguagePref.getEntryValues(), WPPrefUtils.languageLocale(null));
+        Pair<String[], String[]> pair = LocaleManager
+                .createSortedLanguageDisplayStrings(mLanguagePref.getEntryValues(), LocaleManager.languageLocale(null));
         if (pair != null) {
             String[] sortedEntries = pair.first;
             String[] sortedValues = pair.second;
 
             mLanguagePref.setEntries(sortedEntries);
             mLanguagePref.setEntryValues(sortedValues);
-            mLanguagePref.setDetails(WPPrefUtils.createLanguageDetailDisplayStrings(sortedValues));
+            mLanguagePref.setDetails(LocaleManager.createLanguageDetailDisplayStrings(sortedValues));
         }
     }
 

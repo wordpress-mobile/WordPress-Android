@@ -1,6 +1,7 @@
 package org.wordpress.android.ui.accounts;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
@@ -51,6 +52,7 @@ import org.wordpress.android.util.CrashlyticsUtils;
 import org.wordpress.android.util.HelpshiftHelper;
 import org.wordpress.android.util.HelpshiftHelper.Tag;
 import org.wordpress.android.util.LanguageUtils;
+import org.wordpress.android.util.LocaleManager;
 import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.SelfSignedSSLUtils;
 import org.wordpress.android.util.StringUtils;
@@ -91,6 +93,11 @@ public class LoginActivity extends AppCompatActivity implements ConnectionCallba
     private LoginMode mLoginMode;
 
     @Inject DispatchingAndroidInjector<Fragment> mFragmentInjector;
+
+    @Override
+    protected void attachBaseContext(Context newBase) {
+        super.attachBaseContext(LocaleManager.setLocale(newBase));
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

@@ -2,18 +2,13 @@ package org.wordpress.android.ui.prefs;
 
 import android.content.ActivityNotFoundException;
 import android.content.Intent;
-import android.content.SharedPreferences;
-import android.content.res.Configuration;
-import android.content.res.Resources;
 import android.net.Uri;
-import android.os.Build;
 import android.os.Bundle;
 import android.preference.ListPreference;
 import android.preference.Preference;
 import android.preference.Preference.OnPreferenceClickListener;
 import android.preference.PreferenceCategory;
 import android.preference.PreferenceFragment;
-import android.preference.PreferenceManager;
 import android.preference.PreferenceScreen;
 import android.text.TextUtils;
 import android.util.Pair;
@@ -27,7 +22,7 @@ import org.wordpress.android.fluxc.store.AccountStore;
 import org.wordpress.android.fluxc.store.SiteStore;
 import org.wordpress.android.util.AnalyticsUtils;
 import org.wordpress.android.util.AppLog;
-import org.wordpress.android.util.LanguageUtils;
+import org.wordpress.android.util.LocaleManager;
 import org.wordpress.android.util.WPMediaUtils;
 import org.wordpress.android.util.WPPrefUtils;
 
@@ -39,7 +34,6 @@ import javax.inject.Inject;
 
 public class AppSettingsFragment extends PreferenceFragment
         implements OnPreferenceClickListener, Preference.OnPreferenceChangeListener {
-    public static final String LANGUAGE_PREF_KEY = "language-pref";
     public static final int LANGUAGE_CHANGED = 1000;
 
     private static final int IDX_LEGACY_EDITOR = 0;
@@ -47,7 +41,6 @@ public class AppSettingsFragment extends PreferenceFragment
     private static final int IDX_AZTEC_EDITOR = 2;
 
     private DetailListPreference mLanguagePreference;
-    private SharedPreferences mSettings;
 
     // This Device settings
     private WPSwitchPreference mOptimizedImage;
@@ -135,8 +128,6 @@ public class AppSettingsFragment extends PreferenceFragment
             WPPrefUtils.removePreference(this, R.string.pref_key_optimize_media,
                                          R.string.pref_key_site_video_encoder_bitrate);
         }
-
-        mSettings = PreferenceManager.getDefaultSharedPreferences(getActivity());
 
         updateEditorSettings();
     }
@@ -280,35 +271,17 @@ public class AppSettingsFragment extends PreferenceFragment
             return;
         }
 
-        Resources res = getResources();
-        Configuration conf = res.getConfiguration();
-        // will return conf.locale if conf is non-null, or Locale.getDefault()
-        Locale currentLocale = LanguageUtils.getCurrentDeviceLanguage(WordPress.getContext());
-        Locale newLocale = WPPrefUtils.languageLocale(languageCode);
-
-        if (currentLocale.toString().equals(newLocale.getDisplayLanguage())) {
+        if (LocaleManager.isSameLanguage(languageCode)) {
             return;
         }
 
-        if (Locale.getDefault().toString().equals(newLocale.toString())) {
-            // remove custom locale key when original device locale is selected
-            mSettings.edit().remove(LANGUAGE_PREF_KEY).apply();
-        } else {
-            mSettings.edit().putString(LANGUAGE_PREF_KEY, newLocale.toString()).apply();
-        }
+        LocaleManager.setNewLocale(WordPress.getContext(), languageCode);
         updateLanguagePreference(languageCode);
-
-        // update configuration
-        conf.locale = newLocale;
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
-            conf.setLayoutDirection(newLocale);
-        }
-        res.updateConfiguration(conf, res.getDisplayMetrics());
 
         // Track language change on Analytics because we have both the device language and app selected language
         // data in Tracks metadata.
         Map<String, Object> properties = new HashMap<>();
-        properties.put("app_locale", conf.locale.toString());
+        properties.put("app_locale", Locale.getDefault());
         AnalyticsTracker.track(Stat.ACCOUNT_SETTINGS_LANGUAGE_CHANGED, properties);
 
         // Language is now part of metadata, so we need to refresh them
@@ -326,11 +299,11 @@ public class AppSettingsFragment extends PreferenceFragment
             return;
         }
 
-        Locale languageLocale = WPPrefUtils.languageLocale(languageCode);
+        Locale languageLocale = LocaleManager.languageLocale(languageCode);
         String[] availableLocales = getResources().getStringArray(R.array.available_languages);
 
         Pair<String[], String[]> pair =
-                WPPrefUtils.createSortedLanguageDisplayStrings(availableLocales, languageLocale);
+                LocaleManager.createSortedLanguageDisplayStrings(availableLocales, languageLocale);
         // check for a possible NPE
         if (pair == null) {
             return;
@@ -341,10 +314,10 @@ public class AppSettingsFragment extends PreferenceFragment
 
         mLanguagePreference.setEntries(sortedEntries);
         mLanguagePreference.setEntryValues(sortedValues);
-        mLanguagePreference.setDetails(WPPrefUtils.createLanguageDetailDisplayStrings(sortedValues));
+        mLanguagePreference.setDetails(LocaleManager.createLanguageDetailDisplayStrings(sortedValues));
 
         mLanguagePreference.setValue(languageCode);
-        mLanguagePreference.setSummary(WPPrefUtils.getLanguageString(languageCode, languageLocale));
+        mLanguagePreference.setSummary(LocaleManager.getLanguageString(languageCode, languageLocale));
         mLanguagePreference.refreshAdapter();
     }
 

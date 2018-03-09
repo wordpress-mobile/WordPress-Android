@@ -25,9 +25,9 @@ import org.wordpress.android.models.CategoryModel;
 import org.wordpress.android.models.JetpackSettingsModel;
 import org.wordpress.android.models.SiteSettingsModel;
 import org.wordpress.android.util.LanguageUtils;
+import org.wordpress.android.util.LocaleManager;
 import org.wordpress.android.util.SiteUtils;
 import org.wordpress.android.util.StringUtils;
-import org.wordpress.android.util.WPPrefUtils;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -219,7 +219,7 @@ public abstract class SiteSettingsInterface {
         mRemoteSettings = new SiteSettingsModel();
         mJpSettings = new JetpackSettingsModel();
         mRemoteJpSettings = new JetpackSettingsModel();
-        mLanguageCodes = WPPrefUtils.generateLanguageMap(host);
+        mLanguageCodes = LocaleManager.generateLanguageMap(host);
     }
 
     @Override
