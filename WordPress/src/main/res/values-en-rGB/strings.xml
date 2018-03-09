@@ -43,7 +43,7 @@ Language: en_GB
     <string name="add_new_tag">Add New Tag</string>
     <string name="tag_description_hint">Description</string>
     <string name="tag_name_hint">Tag</string>
-    <string name="site_settings_amp_summary">Your WordPress.com site supports the use of Accelerated Mobile Pages, a Google-led initiative that dramatically speeds up loading times on mobile devices</string>
+    <string name="site_settings_amp_summary">Your WordPress.com site supports the use of Accelerated Mobile Pages, a Google–led initiative that dramatically speeds up loading times on mobile devices</string>
     <string name="site_settings_amp_title">Accelerated Mobile Pages (AMP)</string>
     <string name="site_settings_format_help">Learn more about date &amp; time formatting</string>
     <string name="site_settings_timezones_error">Unable to load timezones</string>
@@ -90,7 +90,7 @@ Language: en_GB
     <string name="notification_login_title_success">Logged in!</string>
     <string name="login_error_generic_start">Google login could not be started.</string>
     <string name="login_empty_password">Please enter a password</string>
-    <string name="email_not_registered_wpcom">Hmm, this email address isn\'t registered with WordPress.com.\nAre you trying to access a self-hosted site? Log in using the link at the bottom of this screen.</string>
+    <string name="email_not_registered_wpcom">Hmm, this email address isn\'t registered with WordPress.com.\nAre you trying to access a self–hosted site? Log in using the link at the bottom of this screen.</string>
     <string name="login_text_otp_another">Text me another code instead.</string>
     <string name="enter_verification_code_sms">We sent a text message to the phone number ending in %s. Please enter the verification code in the SMS.</string>
     <string name="error_generic_error">Couldn\'t perform operation</string>
@@ -108,7 +108,7 @@ Language: en_GB
     <string name="uploading_subtitle_mixed">%1$d %2$s, and %3$d of %4$d files remaining</string>
     <string name="uploading_title">Uploading…</string>
     <string name="media_files_uploaded_write_post">Write Post</string>
-    <string name="media_file_missing_for_retry">Retry not possible - some files in this Post are missing from your device</string>
+    <string name="media_file_missing_for_retry">Retry not possible – some files in this Post are missing from your device</string>
     <string name="media_all_files_uploaded_successfully">%d files uploaded successfully</string>
     <string name="media_files_uploaded_successfully">, %d successfully uploaded</string>
     <string name="media_file_uploaded">1 file uploaded</string>
@@ -139,7 +139,7 @@ Language: en_GB
     <string name="jetpack_disconnect_confirmation_message">Are you sure you want to disconnect Jetpack from the site?</string>
     <string name="jetpack_disconnect_pref_title">\"Disconnect from WordPress.com\"</string>
     <string name="site_settings_jetpack_whitelist_description">You may whitelist an IP address or series of addresses preventing them from ever being blocked by Jetpack. IPv4 and IPv6 are acceptable. To specify a range, enter the low value and high value separated by a dash. Example: 12.12.12.1–12.12.12.100</string>
-    <string name="jetpack_require_two_factor_title">Require two-step authentication</string>
+    <string name="jetpack_require_two_factor_title">Require two–step authentication</string>
     <string name="jetpack_match_wpcom_via_email_title">Match accounts using email</string>
     <string name="jetpack_allow_wpcom_sign_in_title">Allow WordPress.com login</string>
     <string name="jetpack_wpcom_sign_in_category_title">WordPress.com login</string>
@@ -185,7 +185,7 @@ Language: en_GB
     <string name="notification_settings_category_other">Other</string>
     <string name="notification_settings_item_your_sites_all_your_sites">All My Sites</string>
     <string name="notification_settings_category_your_sites">Your Sites</string>
-    <string name="notification_settings_master_off_message">Turning Notification Settings off will disable all notifications from this app, regardless of type. You can fine-tune which kind of notification you receive after turning Notification Settings on.</string>
+    <string name="notification_settings_master_off_message">Turning Notification Settings off will disable all notifications from this app, regardless of type. You can fine–tune which kind of notification you receive after turning Notification Settings on.</string>
     <string name="notification_settings_master_off_title">To receive notifications on this device, turn Notification Settings on.</string>
     <string name="notification_settings_master_hint_off">Enable notifications</string>
     <string name="notification_settings_master_hint_on">Disable notifications</string>
@@ -243,7 +243,7 @@ Language: en_GB
     <string name="login_continue">Continue</string>
     <string name="connect_more">Connect Another Site</string>
     <string name="enter_wpcom_password">Enter your WordPress.com password.</string>
-    <string name="login_magic_link_email_requesting">Requesting log-in email</string>
+    <string name="login_magic_link_email_requesting">Requesting log–in email</string>
     <string name="login_magic_links_sent_description">Magic link sent illustration</string>
     <string name="login_magic_links_sent_label">Your magic link is on its way! Check your email on this device and tap the link in the email you received from WordPress.com.</string>
     <string name="login_magic_links_label">We\'ll email you a magic link that\'ll log you in instantly, no password needed. Hunt and peck no more!</string>
@@ -255,7 +255,7 @@ Language: en_GB
     <string name="open_mail">Open mail</string>
     <string name="next">Next</string>
     <string name="enter_email_wordpress_com">Log in to WordPress.com using an email address to manage all your WordPress sites.</string>
-    <string name="login_promo_text_jetpack">Manage your Jetpack-powered site on the go — you\'ve got WordPress in your pocket.</string>
+    <string name="login_promo_text_jetpack">Manage your Jetpack–powered site on the go — you\'ve got WordPress in your pocket.</string>
     <string name="login_promo_text_notifications">Your notifications travel with you — see comments and likes as they happen.</string>
     <string name="login_promo_text_anytime">Catch up with your favourite sites and join the conversation anywhere, any time.</string>
     <string name="login_promo_text_realtime">Watch readers from around the world read and interact with your site — in realtime.</string>
@@ -290,8 +290,8 @@ Language: en_GB
     <string name="post_settings_location">Location</string>
     <string name="now">Now</string>
     <string name="post_settings_password_dialog_hint">Only those with this password can view this post</string>
-    <string name="post_settings_excerpt_dialog_hint">Excerpts are optional hand-crafted summaries of your content.</string>
-    <string name="post_settings_slug_dialog_hint">The slug is the URL-friendly version of the post title.</string>
+    <string name="post_settings_excerpt_dialog_hint">Excerpts are optional hand–crafted summaries of your content.</string>
+    <string name="post_settings_slug_dialog_hint">The slug is the URL–friendly version of the post title.</string>
     <string name="post_settings_post_format">Post Format</string>
     <string name="post_settings_tags">Tags</string>
     <string name="post_settings_slug">Slug</string>
@@ -484,7 +484,7 @@ Language: en_GB
     <string name="pending_draft_one_generic">Don\'t leave it hanging! \'%1$s\' is waiting to be published.</string>
     <string name="pending_draft_one_month">Don\'t leave it hanging! \'%1$s\' is waiting to be published.</string>
     <string name="pending_draft_one_week_2">\'%1$s\' remains a draft. Remember to publish it!</string>
-    <string name="pending_draft_one_week_1">Your draft \'%1$s\' awaits you - be sure to publish it!</string>
+    <string name="pending_draft_one_week_1">Your draft \'%1$s\' awaits you – be sure to publish it!</string>
     <string name="pending_draft_one_day_2">Did you know that \'%1$s\' is still a draft? Publish away!</string>
     <string name="pending_draft_one_day_1">You drafted \'%1$s\' yesterday. Don\'t forget to publish it!</string>
     <string name="jetpack_stats_module_disabled_message_not_admin">The Jetpack plugin is connected, but the Stats module is not active. Contact the site administrator.</string>
@@ -552,7 +552,7 @@ Language: en_GB
     <string name="people_dropdown_item_team">Team</string>
     <string name="invite_message_usernames_limit">Invite up to 10 email addresses and/or WordPress.com usernames. Those needing a username will be sent instructions on how to create one.</string>
     <string name="viewer_remove_confirmation_message">If you remove this viewer, he or she will not be able to visit this site.\n\nWould you still like to remove this viewer?</string>
-    <string name="follower_remove_confirmation_message">If removed, this follower will stop receiving notifications about this site, unless they re-follow.\n\nWould you still like to remove this follower?</string>
+    <string name="follower_remove_confirmation_message">If removed, this follower will stop receiving notifications about this site, unless they re–follow.\n\nWould you still like to remove this follower?</string>
     <string name="follower_subscribed_since">Since %1$s</string>
     <string name="reader_label_view_gallery">View Gallery</string>
     <string name="reader_label_image_count_multi">%d images</string>
@@ -693,8 +693,8 @@ Language: en_GB
     <string name="comments_empty_list_filtered_pending">No Pending comments</string>
     <string name="comments_empty_list_filtered_approved">No Approved comments</string>
     <string name="site_timeout_error">Couldn\'t connect to the WordPress site due to Timeout error.</string>
-    <string name="xmlrpc_malformed_response_error">Couldn\'t connect. The WordPress installation responded with an invalid XML-RPC document.</string>
-    <string name="xmlrpc_missing_method_error">Couldn\'t connect. Required XML-RPC methods are missing on the server.</string>
+    <string name="xmlrpc_malformed_response_error">Couldn\'t connect. The WordPress installation responded with an invalid XML–RPC document.</string>
+    <string name="xmlrpc_missing_method_error">Couldn\'t connect. Required XML–RPC methods are missing on the server.</string>
     <string name="post_format_status">Status</string>
     <string name="post_format_video">Video</string>
     <string name="alignment_center">Centre</string>
@@ -704,7 +704,7 @@ Language: en_GB
     <string name="post_format_link">Link</string>
     <string name="post_format_quote">Quote</string>
     <string name="post_format_standard">Standard</string>
-    <string name="notif_events">Information on WordPress.com courses and events (online &amp; in-person).</string>
+    <string name="notif_events">Information on WordPress.com courses and events (online &amp; in–person).</string>
     <string name="post_format_aside">Aside</string>
     <string name="post_format_audio">Audio</string>
     <string name="notif_surveys">Opportunities to participate in WordPress.com research &amp; surveys.</string>
@@ -742,7 +742,7 @@ Language: en_GB
     <string name="primary_site">Primary site</string>
     <string name="web_address">Web Address</string>
     <string name="editor_toast_uploading_please_wait">You are currently uploading media. Please wait until this completes.</string>
-    <string name="error_refresh_comments_showing_older">Comments couldn\'t be refreshed at this time - showing older comments</string>
+    <string name="error_refresh_comments_showing_older">Comments couldn\'t be refreshed at this time – showing older comments</string>
     <string name="post_settings_set_featured_image">Set Featured Image</string>
     <string name="post_settings_featured_image">Featured Image</string>
     <string name="visual_editor_enabled">Visual Editor enabled</string>
@@ -822,7 +822,7 @@ Language: en_GB
     <string name="site_settings_multiple_links_hint">Ignores link limit from known users</string>
     <string name="site_settings_whitelist_hint">Comment author must have a previously approved comment</string>
     <string name="site_settings_user_account_required_hint">Users must be registered and logged in to comment</string>
-    <string name="site_settings_identity_required_hint">Comment author must fill out name and e-mail</string>
+    <string name="site_settings_identity_required_hint">Comment author must fill out name and e–mail</string>
     <string name="site_settings_manual_approval_hint">Comments must be manually approved</string>
     <string name="site_settings_paging_hint">Display comments in chunks of a specified size</string>
     <string name="site_settings_threading_hint">Allow nested comments to a certain depth</string>
@@ -939,7 +939,7 @@ Language: en_GB
     <string name="notifications_empty_comments">No new comments…yet.</string>
     <string name="notifications_empty_unread">You\'re all caught up!</string>
     <string name="stats_widget_error_jetpack_no_blogid">Please access the Stats in the app, and try adding the widget later</string>
-    <string name="stats_widget_error_readd_widget">Please remove the widget and re-add it again</string>
+    <string name="stats_widget_error_readd_widget">Please remove the widget and re–add it again</string>
     <string name="stats_widget_error_no_visible_blog">Stats couldn\'t be accessed without a visible blog</string>
     <string name="stats_widget_error_no_permissions">Your WordPress.com account can\'t access Stats on this blog</string>
     <string name="stats_widget_error_no_account">Please login into WordPress</string>
@@ -1012,7 +1012,7 @@ Language: en_GB
     <string name="stats_insights_most_popular_day">Most popular day</string>
     <string name="stats_insights_popular">Most popular day and hour</string>
     <string name="stats_insights_today">Today\'s Stats</string>
-    <string name="stats_insights_all_time">All-time posts, views, and visitors</string>
+    <string name="stats_insights_all_time">All–time posts, views, and visitors</string>
     <string name="stats_insights">Insights</string>
     <string name="stats_sign_in_jetpack_different_com_account">To view your stats, log in to the WordPress.com account you used to connect Jetpack.</string>
     <string name="stats_other_recent_stats_moved_label">Looking for your Other Recent Stats? We\'ve moved them to the Insights page.</string>
@@ -1022,7 +1022,7 @@ Language: en_GB
     <string name="account_settings">Account Settings</string>
     <string name="me_btn_support">Help &amp; Support</string>
     <string name="site_picker_cant_hide_current_site">\"%s\" wasn\'t hidden because it\'s the current site</string>
-    <string name="site_picker_add_self_hosted">Add self-hosted site</string>
+    <string name="site_picker_add_self_hosted">Add self–hosted site</string>
     <string name="site_picker_edit_visibility">Show/hide sites</string>
     <string name="my_site_btn_view_admin">View Admin</string>
     <string name="my_site_btn_view_site">View Site</string>
@@ -1054,9 +1054,9 @@ Language: en_GB
     <string name="reader_empty_posts_request_failed">Unable to retrieve posts</string>
     <string name="publisher">Publisher:</string>
     <string name="error_notification_open">Could not open notification</string>
-    <string name="stats_followers_total_email_paged">Showing %1$d - %2$d of %3$s Email Followers</string>
+    <string name="stats_followers_total_email_paged">Showing %1$d – %2$d of %3$s Email Followers</string>
     <string name="stats_search_terms_unknown_search_terms">Unknown Search Terms</string>
-    <string name="stats_followers_total_wpcom_paged">Showing %1$d - %2$d of %3$s WordPress.com Followers</string>
+    <string name="stats_followers_total_wpcom_paged">Showing %1$d – %2$d of %3$s WordPress.com Followers</string>
     <string name="stats_empty_search_terms_desc">Learn more about your search traffic by looking at the terms your visitors searched for to find your site.</string>
     <string name="stats_empty_search_terms">No search terms recorded</string>
     <string name="stats_entry_search_terms">Search Term</string>
@@ -1115,7 +1115,7 @@ Language: en_GB
     <string name="stats_empty_clicks_title">No clicks recorded</string>
     <string name="stats_empty_referrers_title">No referrers recorded</string>
     <string name="stats_empty_top_posts_title">No posts or pages viewed</string>
-    <string name="stats_empty_top_posts_desc">Discover what your most-viewed content is, and check how individual posts and pages perform over time.</string>
+    <string name="stats_empty_top_posts_desc">Discover what your most–viewed content is, and check how individual posts and pages perform over time.</string>
     <string name="stats_totals_followers">Since</string>
     <string name="stats_empty_geoviews">No countries recorded</string>
     <string name="stats_empty_geoviews_desc">Explore the list to see which countries and regions generate the most traffic to your site.</string>
@@ -1244,12 +1244,12 @@ Language: en_GB
     <string name="error_downloading_image">Error downloading image</string>
     <string name="passcode_wrong_passcode">Wrong PIN</string>
     <string name="invalid_email_message">Your email address isn\'t valid</string>
-    <string name="username_only_lowercase_letters_and_numbers">Username can only contain lowercase letters (a-z) and numbers</string>
+    <string name="username_only_lowercase_letters_and_numbers">Username can only contain lowercase letters (a–z) and numbers</string>
     <string name="username_required">Enter a username</string>
     <string name="username_not_allowed">Username not allowed</string>
     <string name="username_must_be_at_least_four_characters">Username must be at least 4 characters</string>
     <string name="username_contains_invalid_characters">Username may not contain the character “_”</string>
-    <string name="username_must_include_letters">Username must have a least 1 letter (a-z)</string>
+    <string name="username_must_include_letters">Username must have a least 1 letter (a–z)</string>
     <string name="email_invalid">Enter a valid email address</string>
     <string name="email_not_allowed">That email address isn\'t allowed</string>
     <string name="username_exists">That username already exists</string>
@@ -1261,7 +1261,7 @@ Language: en_GB
     <string name="blog_name_must_be_less_than_sixty_four_characters">The site address must be shorter than 64 characters</string>
     <string name="blog_name_contains_invalid_characters">Site address may not contain the character “_”</string>
     <string name="blog_name_cant_be_used">You may not use that site address</string>
-    <string name="blog_name_only_lowercase_letters_and_numbers">Site address can only contain lowercase letters (a-z) and numbers</string>
+    <string name="blog_name_only_lowercase_letters_and_numbers">Site address can only contain lowercase letters (a–z) and numbers</string>
     <string name="blog_name_exists">That site already exists</string>
     <string name="blog_name_reserved">That site is reserved</string>
     <string name="blog_name_reserved_but_may_be_available">That site is currently reserved but may be available in a couple days</string>
@@ -1345,10 +1345,10 @@ Language: en_GB
     <string name="reader_toast_err_remove_tag">Unable to remove this tag</string>
     <string name="required_field">Required field</string>
     <string name="email_hint">Email address</string>
-    <string name="site_address">Your self-hosted address (URL)</string>
+    <string name="site_address">Your self–hosted address (URL)</string>
     <string name="email_cant_be_used_to_signup">You can\'t use that email address to signup. We are having problems with them blocking some of our email. Use another email provider.</string>
     <string name="email_reserved">That email address has already been used. Check your inbox for an activation email. If you don\'t activate you can try again in a few days.</string>
-    <string name="blog_name_must_include_letters">Site address must have at least 1 letter (a-z)</string>
+    <string name="blog_name_must_include_letters">Site address must have at least 1 letter (a–z)</string>
     <string name="blog_name_invalid">Invalid site address</string>
     <string name="blog_title_invalid">Invalid site title</string>
     <string name="blog_removed_successfully">Site removed successfully</string>
@@ -1381,7 +1381,7 @@ Language: en_GB
     <string name="reader_likes_you_and_one">You and one other like this</string>
     <string name="select_date">Select date</string>
     <string name="pick_photo">Select photo</string>
-    <string name="account_two_step_auth_enabled">This account has two step authentication enabled. Visit your security settings on WordPress.com and generate an application-specific password.</string>
+    <string name="account_two_step_auth_enabled">This account has two step authentication enabled. Visit your security settings on WordPress.com and generate an application–specific password.</string>
     <string name="pick_video">Select video</string>
     <string name="reader_toast_err_get_post">Unable to retrieve this post</string>
     <string name="reader_empty_followed_blogs_description">But don\'t worry, just tap the icon at the top right to start exploring!</string>
@@ -1451,7 +1451,7 @@ Language: en_GB
     <string name="passcode_manage">Manage PIN lock</string>
     <string name="passcode_enter_passcode">Enter your PIN</string>
     <string name="passcode_enter_old_passcode">Enter your old PIN</string>
-    <string name="passcode_re_enter_passcode">Re-enter your PIN</string>
+    <string name="passcode_re_enter_passcode">Re–enter your PIN</string>
     <string name="passcode_change_passcode">Change PIN</string>
     <string name="passcode_set">PIN set</string>
     <string name="passcode_preference_title">PIN lock</string>

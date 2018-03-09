@@ -318,12 +318,12 @@ Language: es_CL
     <string name="error_downloading_image">Error al descargar la imagen</string>
     <string name="passcode_wrong_passcode">PIN erróneo</string>
     <string name="invalid_email_message">Tu dirección de correo electrónico no es válida</string>
-    <string name="username_only_lowercase_letters_and_numbers">Nombre de usuario solo puede contener letras minúsculas (a-z) y números</string>
+    <string name="username_only_lowercase_letters_and_numbers">Nombre de usuario solo puede contener letras minúsculas (a–z) y números</string>
     <string name="username_required">Ingresa un nombre de usuario</string>
     <string name="username_not_allowed">Nombre de usuario no permitido</string>
     <string name="username_must_be_at_least_four_characters">El nombre de usuario debe tener, al menos, 4 caracteres</string>
     <string name="username_contains_invalid_characters">El nombre de usuario no puede incluir el caracter “_”</string>
-    <string name="username_must_include_letters">El nombre de usuario debe tener, al menos, 1 letra (a-z)</string>
+    <string name="username_must_include_letters">El nombre de usuario debe tener, al menos, 1 letra (a–z)</string>
     <string name="email_invalid">Ingresa una dirección de correo electrónico válida</string>
     <string name="email_not_allowed">Esa dirección de correo electrónico no está permitida</string>
     <string name="username_exists">Ese nombre de usuario ya existe</string>
@@ -335,7 +335,7 @@ Language: es_CL
     <string name="blog_name_must_be_less_than_sixty_four_characters">La dirección del sitio debe ser más corta que 64 caracteres</string>
     <string name="blog_name_contains_invalid_characters">La dirección del sitio no puede tener el caracter “_”</string>
     <string name="blog_name_cant_be_used">No puedes usar esa dirección de sitio</string>
-    <string name="blog_name_only_lowercase_letters_and_numbers">La dirección solo puede contener letras minúsculas (a-z) y números.</string>
+    <string name="blog_name_only_lowercase_letters_and_numbers">La dirección solo puede contener letras minúsculas (a–z) y números.</string>
     <string name="blog_name_exists">Ese sitio ya existe</string>
     <string name="blog_name_reserved">Ese sitio está reservado</string>
     <string name="blog_name_reserved_but_may_be_available">Este sitio está reservado actualmente pero es posible que quede libre en un par de días.</string>
@@ -427,7 +427,7 @@ Language: es_CL
     <string name="site_address">La dirección (URL) de tu sitio autoalojado</string>
     <string name="email_cant_be_used_to_signup">No puedes usar esta dirección de correo electrónico para registrarte, ya que bloquea algunos de nuestros correos. Utiliza otro proveedor de correo.</string>
     <string name="email_reserved">Esta dirección de correo electrónico ya se ha utilizado. Comprueba si tienes en tu bandeja de entrada un correo de activación. Si no activas ahora el correo, puedes intentarlo dentro de unos días.</string>
-    <string name="blog_name_must_include_letters">La dirección de los sitios debe tener, al menos, 1 letra (a-z)</string>
+    <string name="blog_name_must_include_letters">La dirección de los sitios debe tener, al menos, 1 letra (a–z)</string>
     <string name="blog_title_invalid">Título de sitio no válido</string>
     <string name="blog_name_invalid">Dirección de sitio no válida</string>
     <string name="deleting_page">Borrando página</string>

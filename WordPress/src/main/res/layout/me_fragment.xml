@@ -76,7 +76,8 @@
                     android:clickable="true"
                     android:focusable="true"
                     android:text="@string/change_photo"
-                    tools:text="Change photo" />
+                    tools:text="Change photo"
+                    tools:ignore="SmallSp"/>
 
                 <org.wordpress.android.widgets.WPTextView
                     android:id="@+id/me_display_name"

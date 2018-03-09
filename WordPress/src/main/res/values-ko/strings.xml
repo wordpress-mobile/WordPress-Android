@@ -213,8 +213,8 @@ Language: ko_KR
     <string name="comments_empty_list_filtered_pending">대기중인 댓글 없음</string>
     <string name="comments_empty_list_filtered_approved">승인한 댓글 없음</string>
     <string name="site_timeout_error">시간이 초과되어 워드프레스 사이트에 접속할 수 없습니다.</string>
-    <string name="xmlrpc_malformed_response_error">연결할 수 없습니다. 워드프레스 설치 프로그램이 잘못된 XML-RPC 문서를 보냈습니다.</string>
-    <string name="xmlrpc_missing_method_error">연결할 수 없습니다. 필수 XML-RPC 함수가 서버에 없습니다.</string>
+    <string name="xmlrpc_malformed_response_error">연결할 수 없습니다. 워드프레스 설치 프로그램이 잘못된 XML–RPC 문서를 보냈습니다.</string>
+    <string name="xmlrpc_missing_method_error">연결할 수 없습니다. 필수 XML–RPC 함수가 서버에 없습니다.</string>
     <string name="post_format_status">상태</string>
     <string name="post_format_video">비디오</string>
     <string name="alignment_center">가운데</string>
@@ -568,8 +568,8 @@ Language: ko_KR
     <string name="stats_empty_search_terms_desc">방문자들이 내 사이트를 찾기 위해 검색한 용어를 확인하여 검색 트래픽에 대해 자세히 알아보세요.</string>
     <string name="stats_empty_search_terms">기록된 검색어 없음</string>
     <string name="error_notification_open">알림을 열 수 없음</string>
-    <string name="stats_followers_total_email_paged">%1$d 표시 - %2$d/%3$s 이메일 팔로워</string>
-    <string name="stats_followers_total_wpcom_paged">%1$d 표시 - %2$d/%3$s WordPress.com 팔로워</string>
+    <string name="stats_followers_total_email_paged">%1$d 표시 – %2$d/%3$s 이메일 팔로워</string>
+    <string name="stats_followers_total_wpcom_paged">%1$d 표시 – %2$d/%3$s WordPress.com 팔로워</string>
     <string name="stats_view_search_terms">검색어</string>
     <string name="stats_entry_search_terms">검색어</string>
     <string name="stats_view_authors">글쓴이</string>

@@ -15,7 +15,7 @@ Language: id
     <string name="toast_saving_post_as_draft">Menyimpan pos sebagai konsep</string>
     <string name="photo_picker_capture_video">Rekam video</string>
     <string name="photo_picker_capture_photo">Ambil foto</string>
-    <string name="delete_site_warning_subtitle">Hati-hati! Setelah situs dihapus, situs tersebut tidak akan dapat dipulihkan. Pastikan sebelum Anda melanjutkan.</string>
+    <string name="delete_site_warning_subtitle">Hati–hati! Setelah situs dihapus, situs tersebut tidak akan dapat dipulihkan. Pastikan sebelum Anda melanjutkan.</string>
     <string name="delete_site_warning">Semua pos, gambar, dan data Anda akan dihapus. Dan alamat situs ini (%s) akan hilang.</string>
     <string name="delete_site_warning_title">Hapus situs?</string>
     <string name="start_over_email_intent_error">Tidak dapat mengirim email</string>
@@ -52,7 +52,7 @@ Language: id
     <string name="pending_draft_one_generic">Jangan biarkan menggantung! \'%1$s\' menunggu untuk diterbitkan.</string>
     <string name="pending_draft_one_month">Jangan biarkan menggantung! \'%1$s\' menunggu untuk diterbitkan.</string>
     <string name="pending_draft_one_week_2">\'%1$s\' masih berupa konsep. Ingatlah untuk menerbitkannya!</string>
-    <string name="pending_draft_one_week_1">Konsep \'%1$s\' menanti Anda - pastikan untuk menerbitkannya!</string>
+    <string name="pending_draft_one_week_1">Konsep \'%1$s\' menanti Anda – pastikan untuk menerbitkannya!</string>
     <string name="pending_draft_one_day_2">Tahukah Anda bahwa \'%1$s\' masih berupa konsep? Terbitkan saja!</string>
     <string name="pending_draft_one_day_1">Anda membuat konsep \'%1$s\' kemarin. Jangan lupa menerbitkannya!</string>
     <string name="jetpack_stats_module_disabled_message_not_admin">Plugin Jetpack terhubung, tetapi modul Statistik tidak aktif. Hubungi administrator situs.</string>
@@ -163,7 +163,7 @@ Language: id
     <string name="invite_names_title">Nama pengguna atau Email</string>
     <string name="send_link">Kirim tautan</string>
     <string name="my_site_header_external">Eksternal</string>
-    <string name="invite_people">Undang Orang-orang</string>
+    <string name="invite_people">Undang Orang–orang</string>
     <string name="label_clear_search_history">Bersihkan riwayat pencarian</string>
     <string name="dlg_confirm_clear_search_history">Bersihkan riwayat pencarian?</string>
     <string name="reader_empty_posts_in_search_description">Tak ditemukan pos untuk %s dalam bahasa Anda</string>
@@ -179,7 +179,7 @@ Language: id
     <string name="user_remove_confirmation_message">Jika Anda menghapus %1$s, pengguna tsb tak bisa mengakses situs ini lagi, tetapi semua konten yang telah dibuat oleh %1$s akan tetap ada di situs ini.\n\nApakah Anda masih ingin menghapus pengguna ini?</string>
     <string name="person_removed">Berhasil menghapus %1$s</string>
     <string name="person_remove_confirmation_title">Hapus %1$s</string>
-    <string name="reader_empty_posts_in_custom_list">Situs dalam daftar ini belum memposting apa pun baru-baru ini</string>
+    <string name="reader_empty_posts_in_custom_list">Situs dalam daftar ini belum memposting apa pun baru–baru ini</string>
     <string name="people">Orang</string>
     <string name="edit_user">Edit Pengguna</string>
     <string name="role">Peran</string>
@@ -209,7 +209,7 @@ Language: id
     <string name="plans_post_purchase_button_themes">Telusuri Tema</string>
     <string name="plans_post_purchase_title_themes">Temukan tema Premium yang sempurna</string>
     <string name="plans_post_purchase_button_video">Mulai pos baru</string>
-    <string name="plans_post_purchase_text_video">Anda dapat mengunggah dan meng-hosting video di situs Anda dengan VideoPress dan penyimpanan media yang diperluas.</string>
+    <string name="plans_post_purchase_text_video">Anda dapat mengunggah dan meng–hosting video di situs Anda dengan VideoPress dan penyimpanan media yang diperluas.</string>
     <string name="plans_post_purchase_title_video">Hidupkan pos dengan video</string>
     <string name="plans_post_purchase_button_customize">Sesuaikan Situs saya</string>
     <string name="plans_post_purchase_text_customize">Anda sekarang memiliki akses ke fon khusus, warna khusus, dan kemampuan pengeditan CSS khusus.</string>
@@ -235,7 +235,7 @@ Language: id
     <string name="export_site_summary">Jika Anda yakin, segera luangkan waktu dan ekspor konten Anda sekarang. Itu tidak dapat dikembalikan di masa mendatang.</string>
     <string name="keep_your_content">Jaga Konten Anda</string>
     <string name="domain_removal_hint">Domain yang tidak berfungsi setelah Anda menghapus situs Anda</string>
-    <string name="domain_removal_summary">Hati-hati! Menghapus situs Anda juga akan menghapus domain Anda di bawah ini.</string>
+    <string name="domain_removal_summary">Hati–hati! Menghapus situs Anda juga akan menghapus domain Anda di bawah ini.</string>
     <string name="primary_domain">Domain Primer</string>
     <string name="domain_removal">Penghapusan Domain</string>
     <string name="error_deleting_site_summary">Ada kesalahan saat menghapus situs Anda. Hubungi dukungan untuk bantuan selengkapnya</string>
@@ -256,8 +256,8 @@ Language: id
     <string name="comments_empty_list_filtered_pending">Tidak ada komentar Tertunda</string>
     <string name="comments_empty_list_filtered_approved">Tidak ada komentar Disetujui</string>
     <string name="site_timeout_error">Tidak dapat terhubung ke situs WordPress karena kesalahan Waktu Habis.</string>
-    <string name="xmlrpc_malformed_response_error">Tidak dapat terhubung. Pemasangan WordPress merespons dengan dokumen XML-RPC yang tidak valid.</string>
-    <string name="xmlrpc_missing_method_error">Tidak dapat terhubung. Metode XML-RPC yang diperlukan tidak ditemukan di server.</string>
+    <string name="xmlrpc_malformed_response_error">Tidak dapat terhubung. Pemasangan WordPress merespons dengan dokumen XML–RPC yang tidak valid.</string>
+    <string name="xmlrpc_missing_method_error">Tidak dapat terhubung. Metode XML–RPC yang diperlukan tidak ditemukan di server.</string>
     <string name="post_format_status">Status</string>
     <string name="post_format_video">Video</string>
     <string name="alignment_center">Tengah</string>
@@ -305,7 +305,7 @@ Language: id
     <string name="primary_site">Situs Utama</string>
     <string name="web_address">Alamat Web</string>
     <string name="editor_toast_uploading_please_wait">Saat ini Anda sedang mengunggah media. Harap tunggu hingga selesai.</string>
-    <string name="error_refresh_comments_showing_older">Komentar tidak dapat disegarkan pada saat ini - menunjukkan komentar lama</string>
+    <string name="error_refresh_comments_showing_older">Komentar tidak dapat disegarkan pada saat ini – menunjukkan komentar lama</string>
     <string name="visual_editor_enabled">Editor Visual diaktifkan</string>
     <string name="editor_content_placeholder">Editor Visual diaktifkan</string>
     <string name="editor_page_title_placeholder">Judul Halaman</string>
@@ -362,8 +362,8 @@ Language: id
     <string name="site_settings_paging_dialog_description">Bagi utas komentar ke dalam beberapa halaman.</string>
     <string name="site_settings_paging_dialog_header">Komentar per halaman</string>
     <string name="site_settings_close_after_dialog_title">Tutup komentar</string>
-    <string name="site_settings_blacklist_description">Saat komentar memuat kata-kata berikut dalam isi, nama, tautan, email, atau IP, maka akan ditandai sebagai spam. Anda bisa menuliskan bagian kata, jadi \"press\" akan cocok dengan \"WordPress.\"</string>
-    <string name="site_settings_hold_for_moderation_description">Saat komentar memuat kata-kata berikut dalam isi, nama, tautan, email, atau IP, maka akan tertunda dalam antrean moderasi. Anda bisa menuliskan bagian kata, jadi \"press\" akan cocok dengan \"WordPress.\"</string>
+    <string name="site_settings_blacklist_description">Saat komentar memuat kata–kata berikut dalam isi, nama, tautan, email, atau IP, maka akan ditandai sebagai spam. Anda bisa menuliskan bagian kata, jadi \"press\" akan cocok dengan \"WordPress.\"</string>
+    <string name="site_settings_hold_for_moderation_description">Saat komentar memuat kata–kata berikut dalam isi, nama, tautan, email, atau IP, maka akan tertunda dalam antrean moderasi. Anda bisa menuliskan bagian kata, jadi \"press\" akan cocok dengan \"WordPress.\"</string>
     <string name="site_settings_list_editor_input_hint">Masukkan kata atau kalimat</string>
     <string name="site_settings_list_editor_no_items_text">Tidak ada item</string>
     <string name="site_settings_learn_more_caption">Anda dapat mengubah pengaturan ini untuk pos individual.</string>
@@ -446,7 +446,7 @@ Language: id
     <string name="reader_err_get_post_not_found">Pos ini tidak ada lagi</string>
     <string name="reader_err_get_post_not_authorized">Anda tidak diizinkan melihat pos ini</string>
     <string name="reader_err_get_post_generic">Gagal mengambil pos ini</string>
-    <string name="reader_empty_followed_blogs_no_recent_posts_description">Situs-situs yang Anda ikuti belum menerbitkan pos apapun belakangan ini</string>
+    <string name="reader_empty_followed_blogs_no_recent_posts_description">Situs–situs yang Anda ikuti belum menerbitkan pos apapun belakangan ini</string>
     <string name="reader_empty_followed_blogs_no_recent_posts_title">Tak ada pos terbaru</string>
     <string name="edit_media">Edit media</string>
     <string name="media_details_label_date_uploaded">Terunggah</string>
@@ -579,7 +579,7 @@ Language: id
     <string name="site_picker_cant_hide_current_site">\"%s\" tidak tersembunyi karena itu adalah situs saat ini</string>
     <string name="me_btn_support">Bantuan &amp; Dukungan</string>
     <string name="account_settings">Pengaturan Akun</string>
-    <string name="site_picker_add_self_hosted">Tambahkan situs mandiri (self-hosted)</string>
+    <string name="site_picker_add_self_hosted">Tambahkan situs mandiri (self–hosted)</string>
     <string name="site_picker_edit_visibility">Tampilkan/sembunyikan situs</string>
     <string name="site_picker_title">Pilih situs</string>
     <string name="my_site_btn_switch_site">Ganti Situs</string>
@@ -613,15 +613,15 @@ Language: id
     <string name="toast_err_post_uploading">Gagal membuka pos saat diunggah</string>
     <string name="comments_fetching">Memuat komentar…</string>
     <string name="pages_fetching">Memuat laman…</string>
-    <string name="stats_view_search_terms">Terma-terma Pencarian</string>
+    <string name="stats_view_search_terms">Terma–terma Pencarian</string>
     <string name="stats_view_authors">Para Penulis</string>
     <string name="stats_entry_search_terms">Terma Pencarian</string>
-    <string name="stats_empty_search_terms_desc">Pelajari lebih lanjut mengenai trafik pencarian Anda dengan melihat terma-terma pencarian yang dipergunakan oleh pengunjung saat menemukan situs Anda.</string>
+    <string name="stats_empty_search_terms_desc">Pelajari lebih lanjut mengenai trafik pencarian Anda dengan melihat terma–terma pencarian yang dipergunakan oleh pengunjung saat menemukan situs Anda.</string>
     <string name="stats_empty_search_terms">Tak ada terma pencarian yang tercatat</string>
     <string name="stats_search_terms_unknown_search_terms">Terma Pencarian Tak Dikenal</string>
-    <string name="stats_followers_total_wpcom_paged">Menampilkan %1$d - %2$d dari %3$s Pengikut WordPress.com</string>
-    <string name="stats_followers_total_email_paged">Menampilkan %1$d - %2$d dari %3$s Pengikut via Email</string>
-    <string name="reader_empty_posts_request_failed">Gagal memuat pos-pos</string>
+    <string name="stats_followers_total_wpcom_paged">Menampilkan %1$d – %2$d dari %3$s Pengikut WordPress.com</string>
+    <string name="stats_followers_total_email_paged">Menampilkan %1$d – %2$d dari %3$s Pengikut via Email</string>
+    <string name="reader_empty_posts_request_failed">Gagal memuat pos–pos</string>
     <string name="publisher">Penerbit:</string>
     <string name="error_notification_open">Gagal membuka notifikasi</string>
     <string name="stats_overall">Keseluruhan</string>
@@ -632,7 +632,7 @@ Language: id
     <string name="error_copy_to_clipboard">Terjadi kesalahan saat menyalin teks ke clipboard</string>
     <string name="stats_period">Periode</string>
     <string name="logs_copied_to_clipboard">Log aplikasi sudah disalin ke clipboard</string>
-    <string name="stats_average_per_day">Rata-Rata per Hari</string>
+    <string name="stats_average_per_day">Rata–Rata per Hari</string>
     <string name="stats_months_and_years">Bulan dan Tahun</string>
     <string name="reader_page_recommended_blogs">Situs yang mungkin Anda sukai</string>
     <string name="stats_comments_total_comments_followers">Total pos dengan pengikut komentar: %1$s</string>
@@ -644,7 +644,7 @@ Language: id
     <string name="stats_view_videos">Video</string>
     <string name="stats_entry_followers">Pengikut</string>
     <string name="stats_totals_publicize">Pengikut</string>
-    <string name="stats_empty_geoviews_desc">Telusuri daftar untuk melihat negara dan wilayah mana yang menghasilkan lalu-lintas terbanyak ke situs Anda.</string>
+    <string name="stats_empty_geoviews_desc">Telusuri daftar untuk melihat negara dan wilayah mana yang menghasilkan lalu–lintas terbanyak ke situs Anda.</string>
     <string name="stats_empty_geoviews">Tak ada negara yang direkam</string>
     <string name="stats_empty_top_posts_desc">Temukan konten Anda yang paling sering dilihat, dan periksa kinerja pos dan halaman individual.</string>
     <string name="stats_empty_referrers_title">Tidak ada perujuk yang direkam</string>
@@ -662,7 +662,7 @@ Language: id
     <string name="stats_empty_publicize_desc">Tetap pantau pengikut Anda dari berbagai layanan jejaring sosial menggunakan publikasikan.</string>
     <string name="stats_empty_publicize">Tidak ada pengikut publikasikan yang terekam</string>
     <string name="stats_comments_by_posts_and_pages">Berdasarkan Pos &amp; Halaman</string>
-    <string name="stats_empty_followers_desc">Tetap lacak seluruh pengikut Anda, dan berapa lama masing-masing pengikut Anda telah mengikuti situs Anda.</string>
+    <string name="stats_empty_followers_desc">Tetap lacak seluruh pengikut Anda, dan berapa lama masing–masing pengikut Anda telah mengikuti situs Anda.</string>
     <string name="stats_view">Lihat</string>
     <string name="stats_followers_seconds_ago">detik yang lalu</string>
     <string name="stats_followers_total_email">Total Pengikut Email: %1$s</string>
@@ -735,7 +735,7 @@ Language: id
     <string name="signing_out">Log out…</string>
     <string name="reader_toast_err_generic">Tidak bisa menjalankan proses ini</string>
     <string name="reader_toast_err_block_blog">Tidak bisa memblokir blog ini</string>
-    <string name="reader_toast_blog_blocked">Pos-pos dari blog ini tak akan ditampilkan lagi</string>
+    <string name="reader_toast_blog_blocked">Pos–pos dari blog ini tak akan ditampilkan lagi</string>
     <string name="reader_menu_block_blog">Blokir blog ini</string>
     <string name="contact_us">Hubungi kami</string>
     <string name="hs__conversation_detail_error">Uraikan permasalahan yang Anda hadapi</string>
@@ -799,12 +799,12 @@ Language: id
     <string name="error_downloading_image">Galat saat mengunduh gambar</string>
     <string name="passcode_wrong_passcode">PIN keliru</string>
     <string name="invalid_email_message">Alamat emailmu tidak sah</string>
-    <string name="username_only_lowercase_letters_and_numbers">Nama pengguna hanya boleh mengandung huruf kecil (a-z) dan angka</string>
+    <string name="username_only_lowercase_letters_and_numbers">Nama pengguna hanya boleh mengandung huruf kecil (a–z) dan angka</string>
     <string name="username_required">Masukkan nama pengguna</string>
     <string name="username_not_allowed">Nama pengguna tidak diizinkan</string>
     <string name="username_must_be_at_least_four_characters">Nama pengguna harus lebih dari 4 karakter</string>
     <string name="username_contains_invalid_characters">Nama pengguna tidak boleh mengandung karakter “_”</string>
-    <string name="username_must_include_letters">Nama pengguna harus mengandung minimal 1 huruf kecil (a-z)</string>
+    <string name="username_must_include_letters">Nama pengguna harus mengandung minimal 1 huruf kecil (a–z)</string>
     <string name="email_invalid">Masukkan alamat email yang sah</string>
     <string name="email_not_allowed">Alamat email itu tidak diizinkan</string>
     <string name="username_exists">Nama pengguna itu sudah terpakai</string>
@@ -816,7 +816,7 @@ Language: id
     <string name="blog_name_must_be_less_than_sixty_four_characters">Alamat situs harus kurang dari 64 karakter</string>
     <string name="blog_name_contains_invalid_characters">Alamat situs tidak boleh mengandung karakter “_”</string>
     <string name="blog_name_cant_be_used">Anda tidak diperbolehkan menggunakan alamat situs tersebut</string>
-    <string name="blog_name_only_lowercase_letters_and_numbers">Alamat situs hanya boleh mengandung huruf kecil (a-z) dan angka</string>
+    <string name="blog_name_only_lowercase_letters_and_numbers">Alamat situs hanya boleh mengandung huruf kecil (a–z) dan angka</string>
     <string name="blog_name_exists">Situs itu sudah ada</string>
     <string name="blog_name_reserved">Situs itu dicadangkan</string>
     <string name="blog_name_reserved_but_may_be_available">Situs itu sedang dicadangkan, namun bisa menjadi tersedia dalam beberapa hari</string>
@@ -903,7 +903,7 @@ Language: id
     <string name="site_address">Alamat (URL) host mandiri Anda</string>
     <string name="email_cant_be_used_to_signup">Anda tak bisa menggunakan alamat email tersebut untuk mendaftar. Kami bermasalah dengan blokir mereka atas sejumlah email kami. Silakan gunakan layanan email lainnya.</string>
     <string name="email_reserved">Alamat email tersebut telah digunakan. Periksa kotak masuk Anda untuk email aktivasi. Jika Anda tidak mengaktifkannya, Anda masih bisa mencoba lagi dalam beberapa hari.</string>
-    <string name="blog_name_must_include_letters">Alamat situs harus memiliki setidaknya 1 huruf (a-z)</string>
+    <string name="blog_name_must_include_letters">Alamat situs harus memiliki setidaknya 1 huruf (a–z)</string>
     <string name="blog_name_invalid">Alamat situs tidak sah</string>
     <string name="blog_title_invalid">Judul situs tidak sah</string>
     <string name="media_gallery_type_thumbnail_grid">Thumbnail grid</string>
@@ -956,7 +956,7 @@ Language: id
     <string name="reader_empty_followed_tags">Anda belum mengikuti satupun tag</string>
     <string name="create_account_wpcom">Buat akun dengan Wordpress.com</string>
     <string name="username_invalid">Username tidak valid</string>
-    <string name="limit_reached">Mencapai batasan. Anda dapat mencoba kembali setelah 1 menit. Cobalah kembali, ini akan menambahkan kesempatan kepada anda sebelum benar-benar masuk list banned. Jika menurut anda ini adalah suatu kesalahan, hubungi Support.</string>
+    <string name="limit_reached">Mencapai batasan. Anda dapat mencoba kembali setelah 1 menit. Cobalah kembali, ini akan menambahkan kesempatan kepada anda sebelum benar–benar masuk list banned. Jika menurut anda ini adalah suatu kesalahan, hubungi Support.</string>
     <string name="nux_tutorial_get_started_title">Memulai!</string>
     <string name="reader_hint_comment_on_comment">Balas komentar…</string>
     <string name="themes">Tema</string>
@@ -968,7 +968,7 @@ Language: id
     <string name="media_edit_description_hint">Masukkan deskripsi di sini</string>
     <string name="media_edit_success">Telah diperbarui</string>
     <string name="media_gallery_type">Tipe</string>
-    <string name="media_gallery_type_squares">Kotak-kotak</string>
+    <string name="media_gallery_type_squares">Kotak–kotak</string>
     <string name="media_gallery_type_tiled">Tersusun</string>
     <string name="media_gallery_type_circles">Lingkaran</string>
     <string name="media_gallery_type_slideshow">Slide</string>
