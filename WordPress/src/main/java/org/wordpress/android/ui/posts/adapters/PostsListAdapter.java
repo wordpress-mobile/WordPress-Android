@@ -11,6 +11,7 @@ import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
 import android.support.annotation.NonNull;
 import android.support.v4.graphics.drawable.DrawableCompat;
+import android.support.v4.util.SparseArrayCompat;
 import android.support.v7.widget.ListPopupWindow;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
@@ -58,9 +59,7 @@ import org.wordpress.android.widgets.WPNetworkImageView;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import javax.inject.Inject;
 
@@ -101,7 +100,7 @@ public class PostsListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
 
     private final List<PostModel> mPosts = new ArrayList<>();
     private final List<PostModel> mHiddenPosts = new ArrayList<>();
-    private final Map<Integer, String> mFeaturedImageUrls = new HashMap<>();
+    private final SparseArrayCompat<String> mFeaturedImageUrls = new SparseArrayCompat<>();
 
     private RecyclerView mRecyclerView;
     private final LayoutInflater mLayoutInflater;
@@ -227,7 +226,7 @@ public class PostsListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
                 String cleanPostTitle = StringEscapeUtils.unescapeHtml4(post.getTitle());
                 postHolder.mTxtTitle.setText(cleanPostTitle);
             } else {
-                postHolder.mTxtTitle.setText("(" + context.getResources().getText(R.string.untitled) + ")");
+                postHolder.mTxtTitle.setText(context.getResources().getText(R.string.untitled_in_parentheses));
             }
 
             String cleanPostExcerpt = PostUtils.getPostListExcerptFromPost(post);
@@ -274,7 +273,7 @@ public class PostsListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
             if (StringUtils.isNotEmpty(post.getTitle())) {
                 pageHolder.mTxtTitle.setText(post.getTitle());
             } else {
-                pageHolder.mTxtTitle.setText("(" + context.getResources().getText(R.string.untitled) + ")");
+                pageHolder.mTxtTitle.setText(context.getResources().getText(R.string.untitled_in_parentheses));
             }
 
             String dateStr = getPageDateHeaderText(context, post);

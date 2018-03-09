@@ -13,14 +13,16 @@
         android:layout_marginBottom="@dimen/margin_large"
         android:textColor="@color/grey_darken_10"
         android:textSize="@dimen/text_sz_large"
+        android:labelFor="@+id/edit"
         tools:text="text_subtitle" />
 
     <EditText
         android:id="@+id/edit"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:textAlignment="viewStart"
         android:gravity="start"
-        android:textSize="@dimen/text_sz_large" />
+        android:inputType="text"
+        android:textAlignment="viewStart"
+        android:textSize="@dimen/text_sz_large"/>
 
 </LinearLayout>

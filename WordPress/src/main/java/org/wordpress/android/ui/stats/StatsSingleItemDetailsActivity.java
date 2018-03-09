@@ -507,8 +507,7 @@ public class StatsSingleItemDetailsActivity extends AppCompatActivity
 
 
     private void setMainViewsLabel(String dateFormatted, int totals) {
-        mStatsViewsLabel.setText(getString(R.string.stats_views) + ": "
-                                 + dateFormatted);
+        mStatsViewsLabel.setText(getString(R.string.stats_views_with_date_param, dateFormatted));
         mStatsViewsTotals.setText(FormatUtils.formatDecimal(totals));
     }
 

@@ -25,7 +25,7 @@ Language: zh_CN
     <string name="uploading_subtitle_mixed">还剩 %1$d %2$s 和 %3$d / %4$d 个文件</string>
     <string name="uploading_title">正在上传…</string>
     <string name="media_files_uploaded_write_post">撰写文章</string>
-    <string name="media_file_missing_for_retry">无法重试 - 文章引用的部分文件已经不在您的设备上</string>
+    <string name="media_file_missing_for_retry">无法重试 – 文章引用的部分文件已经不在您的设备上</string>
     <string name="media_all_files_uploaded_successfully">%d 个文件已成功上传</string>
     <string name="media_files_uploaded_successfully">, %d 成功上传</string>
     <string name="media_file_uploaded">一个文件已上传</string>
@@ -55,7 +55,7 @@ Language: zh_CN
     <string name="jetpack_disconnect_confirm">断开连接</string>
     <string name="jetpack_disconnect_confirmation_message">是否确定要断开 Jetpack 与该站点的连接？</string>
     <string name="jetpack_disconnect_pref_title">「断开与 WordPress.com 的连接」</string>
-    <string name="site_settings_jetpack_whitelist_description">您可以将一个或多个 IP 地址加入白名单，以避免 Jetpack 将其屏蔽。IPv4 和 IPv6 都支持。如要按范围指定地址，请输入最小值和最大值，并用破折号隔开。示例：12.12.12.1-12.12.12.100</string>
+    <string name="site_settings_jetpack_whitelist_description">您可以将一个或多个 IP 地址加入白名单，以避免 Jetpack 将其屏蔽。IPv4 和 IPv6 都支持。如要按范围指定地址，请输入最小值和最大值，并用破折号隔开。示例：12.12.12.1–12.12.12.100</string>
     <string name="jetpack_require_two_factor_title">需要两步验证</string>
     <string name="jetpack_match_wpcom_via_email_title">使用邮箱地址匹配帐户</string>
     <string name="jetpack_allow_wpcom_sign_in_title">允许通过 WordPress.com 登录</string>
@@ -610,8 +610,8 @@ Language: zh_CN
     <string name="comments_empty_list_filtered_pending">无待审评论</string>
     <string name="comments_empty_list_filtered_approved">无已批准的评论</string>
     <string name="site_timeout_error">出现超时错误，无法连接到 WordPress 站点。</string>
-    <string name="xmlrpc_malformed_response_error">无法连接。WordPress 安装响应并返回了无效的 XML-RPC 文档。</string>
-    <string name="xmlrpc_missing_method_error">无法连接。服务器上没有所需的 XML-RPC 方法。</string>
+    <string name="xmlrpc_malformed_response_error">无法连接。WordPress 安装响应并返回了无效的 XML–RPC 文档。</string>
+    <string name="xmlrpc_missing_method_error">无法连接。服务器上没有所需的 XML–RPC 方法。</string>
     <string name="post_format_status">状态</string>
     <string name="post_format_video">视频</string>
     <string name="alignment_center">居中</string>
@@ -872,7 +872,7 @@ Language: zh_CN
     <string name="reader_short_comment_count_multi">%s 条评论</string>
     <string name="reader_short_comment_count_one">一条评论</string>
     <string name="reader_label_submit_comment">发送</string>
-    <string name="reader_hint_comment_on_post">回复文章...</string>
+    <string name="reader_hint_comment_on_post">回复文章…</string>
     <string name="reader_discover_visit_blog">访问 %s</string>
     <string name="reader_discover_attribution_blog">最初发布在 %s 上</string>
     <string name="reader_discover_attribution_author">最初由%s发布</string>
@@ -968,8 +968,8 @@ Language: zh_CN
     <string name="media_details_label_file_type">文件类型</string>
     <string name="auth_required">再次登录以继续操作。</string>
     <string name="sign_in_jetpack">登录 WordPress.com 账号以便连接到 Jetpack。</string>
-    <string name="stats_followers_total_email_paged">正在显示 %1$d - %2$d 位（共 %3$s 位）电子邮件关注者</string>
-    <string name="stats_followers_total_wpcom_paged">正在显示 %1$d - %2$d 位（共 %3$s 位）WordPress.com 关注者</string>
+    <string name="stats_followers_total_email_paged">正在显示 %1$d – %2$d 位（共 %3$s 位）电子邮件关注者</string>
+    <string name="stats_followers_total_wpcom_paged">正在显示 %1$d – %2$d 位（共 %3$s 位）WordPress.com 关注者</string>
     <string name="reader_empty_posts_request_failed">无法检索文章</string>
     <string name="publisher">发布者：</string>
     <string name="stats_search_terms_unknown_search_terms">未知搜索字词</string>
@@ -1123,7 +1123,7 @@ Language: zh_CN
     <string name="reader_page_followed_blogs">已关注的博客</string>
     <string name="reader_label_tag_preview">带标签「%s」的文章</string>
     <string name="reader_title_subs">标签 &amp; 博客</string>
-    <string name="saving">正在保存...</string>
+    <string name="saving">正在保存…</string>
     <string name="media_empty_list">没有媒体</string>
     <string name="ptr_tip_message">注意:下拉以刷新</string>
     <string name="help">帮助</string>
@@ -1158,11 +1158,11 @@ Language: zh_CN
     <string name="error_load_comment">无法加载评论</string>
     <string name="passcode_wrong_passcode">PIN错误</string>
     <string name="invalid_email_message">你的邮件地址不可用</string>
-    <string name="username_only_lowercase_letters_and_numbers">用户名只能包含小写字母(a-z) 和数字</string>
+    <string name="username_only_lowercase_letters_and_numbers">用户名只能包含小写字母(a–z) 和数字</string>
     <string name="username_required">输入用户名</string>
     <string name="username_not_allowed">用户名不允许</string>
     <string name="username_must_be_at_least_four_characters">用户名至少包括4个字符</string>
-    <string name="username_must_include_letters">用户名需要至少包含一个字母（a-z）</string>
+    <string name="username_must_include_letters">用户名需要至少包含一个字母（a–z）</string>
     <string name="email_invalid">请输入一个可用的电子邮件地址</string>
     <string name="email_not_allowed">该电子邮件地址是不允许的</string>
     <string name="username_exists">该用户名已存在</string>
@@ -1172,7 +1172,7 @@ Language: zh_CN
     <string name="blog_name_must_be_at_least_four_characters">网址最少4个字符</string>
     <string name="blog_name_must_be_less_than_sixty_four_characters">网址最多64子字符</string>
     <string name="blog_name_cant_be_used">你不能使用这个网址</string>
-    <string name="blog_name_only_lowercase_letters_and_numbers">网址只能包含小写字母（a-z）和数字</string>
+    <string name="blog_name_only_lowercase_letters_and_numbers">网址只能包含小写字母（a–z）和数字</string>
     <string name="blog_name_exists">这个网站已经存在</string>
     <string name="blog_name_reserved">这个网址是保留的</string>
     <string name="blog_name_reserved_but_may_be_available">这个网址目前是保留的但可能在几天后可用</string>
@@ -1265,7 +1265,7 @@ Language: zh_CN
     <string name="site_address">你的博客地址</string>
     <string name="email_cant_be_used_to_signup">你不能使用该电子邮件地址来注册。它们会阻止我们的电子邮件。请使用其他电子邮件提供商。</string>
     <string name="email_reserved">该电子邮件地址已经被使用。检查你的收件箱里的激活邮件。如果你没有激活可以在几天后再次尝试。</string>
-    <string name="blog_name_must_include_letters">网址必须至少有1个字母（a-z）</string>
+    <string name="blog_name_must_include_letters">网址必须至少有1个字母（a–z）</string>
     <string name="blog_name_invalid">无效的网址</string>
     <string name="blog_title_invalid">无效的网站标题</string>
     <string name="blog_removed_successfully">已成功删除站点</string>

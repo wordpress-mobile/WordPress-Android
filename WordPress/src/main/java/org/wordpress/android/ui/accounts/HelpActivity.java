@@ -42,7 +42,7 @@ public class HelpActivity extends AppCompatActivity {
 
         // Init common elements
         WPTextView version = (WPTextView) findViewById(R.id.nux_help_version);
-        version.setText(getString(R.string.version) + " " + WordPress.versionName);
+        version.setText(getString(R.string.version_with_name_param, WordPress.versionName));
 
         WPTextView applogButton = (WPTextView) findViewById(R.id.applog_button);
         applogButton.setOnClickListener(new OnClickListener() {
@@ -72,7 +72,7 @@ public class HelpActivity extends AppCompatActivity {
         setContentView(R.layout.help_activity_with_helpshift);
 
         WPTextView version = (WPTextView) findViewById(R.id.nux_help_version);
-        version.setText(getString(R.string.version) + " " + WordPress.versionName);
+        version.setText(getString(R.string.version_with_name_param, WordPress.versionName));
         WPTextView contactUsButton = (WPTextView) findViewById(R.id.contact_us_button);
         contactUsButton.setOnClickListener(new OnClickListener() {
             @Override

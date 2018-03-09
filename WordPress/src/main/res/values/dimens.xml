@@ -246,6 +246,7 @@
     <dimen name="theme_browser_header_button_height">50dp</dimen>
     <dimen name="theme_browser_header_button_width">100dp</dimen>
     <dimen name="theme_browser_more_button_padding">8dp</dimen>
+    <dimen name="theme_browser_preview_image_height">280dp</dimen>
     <dimen name="drake_themes_width">400dp</dimen>
     <dimen name="start_over_url_margin">22dp</dimen>
     <dimen name="start_over_preference_margin_large">15dp</dimen>

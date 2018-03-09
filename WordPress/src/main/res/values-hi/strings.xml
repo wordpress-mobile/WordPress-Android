@@ -55,7 +55,7 @@ Language: hi_IN
     <string name="error_post_does_not_exist">पोस्ट अब मौजूद नहीं है </string>
     <string name="async_promo_link">यह कैसे काम करता है?</string>
     <string name="editor_uploading_post">आपकी पोस्ट अपलोड हो रहे है</string>
-    <string name="uploading_media">मीडिया अपलोड हो रही है...</string>
+    <string name="uploading_media">मीडिया अपलोड हो रही है…</string>
     <string name="button_retry">पुन: प्रयास करें</string>
     <string name="login_epilogue_mysites_one">मेरी साइट</string>
     <string name="login_site_address">साइट का पता</string>
@@ -168,7 +168,7 @@ Language: hi_IN
     <string name="search_sites">साइट्स खोजें</string>
     <string name="notifications_empty_view_reader">पाठक देखें</string>
     <string name="notifications_empty_action_all">सक्रिय हों! जिन ब्लॉग का अनुगमन करते है उनके लेखों पर टिप्पणी करें </string>
-    <string name="notifications_empty_comments">कोई नई टिप्पणी नहीं है... अबतक।</string>
+    <string name="notifications_empty_comments">कोई नई टिप्पणी नहीं है… अबतक।</string>
     <string name="stats_widget_error_readd_widget">कृपया विजेट को निकाल कर दोबारा जोड़ें</string>
     <string name="stats_widget_error_no_visible_blog">आंकड़े देखने के लिए एक ब्लॉग प्रत्यक्ष होना चाहिए</string>
     <string name="add_media_permission_required">मीडिया डालने के लिए अनुमति जरुरी है|</string>
@@ -178,7 +178,7 @@ Language: hi_IN
     <string name="reader_short_comment_count_multi">%s टिप्पणियाँ</string>
     <string name="reader_short_comment_count_one">1 टिप्पणी</string>
     <string name="reader_label_submit_comment">भेजें</string>
-    <string name="reader_hint_comment_on_post">लेख का उत्तर दें...</string>
+    <string name="reader_hint_comment_on_post">लेख का उत्तर दें…</string>
     <string name="reader_discover_visit_blog">यात्रा %s</string>
     <string name="reader_short_like_count_multi">%s पसंद</string>
     <string name="reader_short_like_count_one">1 पसंद</string>
@@ -215,7 +215,7 @@ Language: hi_IN
     <string name="stats_insights_today">आज के आँकड़े</string>
     <string name="account_settings">अकाउंट सेटिंग्स</string>
     <string name="me_btn_support">मदद और सहायता</string>
-    <string name="site_picker_add_self_hosted">सेल्फ-होस्टेड साइट डाले </string>
+    <string name="site_picker_add_self_hosted">सेल्फ–होस्टेड साइट डाले </string>
     <string name="site_picker_edit_visibility">साइट्स दिखाए या छिपाये</string>
     <string name="my_site_btn_view_site">साईट पर जाये</string>
     <string name="my_site_btn_switch_site">साइट स्विच करे</string>
@@ -230,7 +230,7 @@ Language: hi_IN
     <string name="device">यंत्र</string>
     <string name="language">भाषा</string>
     <string name="verification_code">सत्यापन कोड</string>
-    <string name="pages_fetching">पृष्ठ ला रहे है...</string>
+    <string name="pages_fetching">पृष्ठ ला रहे है…</string>
     <string name="publisher">प्रकाशक:</string>
     <string name="stats_view_authors">लेखक</string>
     <string name="stats_search_terms_unknown_search_terms">अज्ञात खोज शब्द</string>
@@ -247,7 +247,7 @@ Language: hi_IN
     <string name="stats_followers_a_minute_ago">एक दिन पहले</string>
     <string name="stats_followers_a_month">एक महीना</string>
     <string name="stats_followers_a_year">एक साल</string>
-    <string name="stats_followers_email_selector">ई-मेल</string>
+    <string name="stats_followers_email_selector">ई–मेल</string>
     <string name="stats_followers_an_hour_ago">एक घंटा पहले</string>
     <string name="stats_entry_top_commenter">लेखक</string>
     <string name="stats_entry_followers">प्रसंशक</string>
@@ -343,14 +343,14 @@ Language: hi_IN
     <string name="email_not_allowed">उस ईमेल पते की अनुमति नहीं है</string>
     <string name="email_exists">वह ईमेल पता पहले ही से प्रयोग में है</string>
     <string name="error_refresh_stats">आँकड़े को इस समय रिफ्रेश नहीं किया जा सकता</string>
-    <string name="blog_name_only_lowercase_letters_and_numbers">साइट का पता केवल छोटे अक्षरों (a-z) और अंक हो सकते हैं</string>
+    <string name="blog_name_only_lowercase_letters_and_numbers">साइट का पता केवल छोटे अक्षरों (a–z) और अंक हो सकते हैं</string>
     <string name="blog_name_contains_invalid_characters">साइट के पते में \"_\" अक्षर नहीं हो सकता है</string>
     <string name="blog_name_must_be_at_least_four_characters">साइट का पता कम से कम 4 अक्षरों का होना चाहिए</string>
     <string name="blog_name_must_be_less_than_sixty_four_characters">साइट का पता 64 अक्षर से कम होना चाहिए</string>
-    <string name="username_only_lowercase_letters_and_numbers">उपयोगकर्ता नाम केवल छोटे अक्षरों (a-z) और अंक हो सकते हैं</string>
+    <string name="username_only_lowercase_letters_and_numbers">उपयोगकर्ता नाम केवल छोटे अक्षरों (a–z) और अंक हो सकते हैं</string>
     <string name="username_contains_invalid_characters">उपयोगकर्ता नाम में \"_\" अक्षर नहीं हो सकता है</string>
     <string name="username_must_be_at_least_four_characters">उपयोगकर्ता नाम कम से कम 4 अक्षरों का होना चाहिए</string>
-    <string name="username_must_include_letters">उपयोगकर्ता नाम एक से कम 1 अक्षर (a-z) का होना आवश्यक है</string>
+    <string name="username_must_include_letters">उपयोगकर्ता नाम एक से कम 1 अक्षर (a–z) का होना आवश्यक है</string>
     <string name="blog_name_reserved_but_may_be_available">वह साइट वर्तमान में आरक्षित है, लेकिन एक दो दिन में उपलब्ध हो सकता है</string>
     <string name="username_reserved_but_may_be_available">वह  उपयोगकर्ता नाम वर्तमान में आरक्षित है, लेकिन एक दो दिन में उपलब्ध हो सकता है</string>
     <string name="blog_not_found">इस ब्लॉग से पहुँच स्थापित करते समय ​​एक त्रुटि हुई</string>
@@ -427,7 +427,7 @@ Language: hi_IN
     <string name="dlg_confirm_trash_comments">कचरा पेटी में भेजें?</string>
     <string name="dlg_trashing_comments">कचरा पेटी में भेजा जा रहा</string>
     <string name="sure_to_cancel_edit_comment">इस टिप्पणी का संपादन रद्द करें?</string>
-    <string name="blog_name_must_include_letters">साइट के पते में कम से कम 1 अक्षर (a-z) होना आवश्यक है</string>
+    <string name="blog_name_must_include_letters">साइट के पते में कम से कम 1 अक्षर (a–z) होना आवश्यक है</string>
     <string name="cannot_delete_multi_media_items">कुछ मीडिया को इस समय हटाया नहीं जा सकता है. बाद में पुन: प्रयास करें.</string>
     <string name="media_gallery_type_thumbnail_grid">लघुछवि ग्रिड</string>
     <string name="post_not_found">पोस्ट लोड करते समय एक त्रुटि हुई.पोस्ट को रिफ्रेश करे और फिर से प्रयास करें</string>
@@ -453,7 +453,7 @@ Language: hi_IN
     <string name="share_url_page">पृष्ठ साझा करे</string>
     <string name="share_url_post">पोस्ट साझा करे</string>
     <string name="creating_your_site">आपकी साइट बनाया जा रहा</string>
-    <string name="reader_empty_posts_in_tag_updating">पोस्ट्स को प्राप्त किया जा रहा...</string>
+    <string name="reader_empty_posts_in_tag_updating">पोस्ट्स को प्राप्त किया जा रहा…</string>
     <string name="video">वीडियो</string>
     <string name="download">मीडिया डाउनलोड हो रहा</string>
     <string name="reader_label_reply">जवाब दें</string>
@@ -491,7 +491,7 @@ Language: hi_IN
     <string name="nux_tutorial_get_started_title">शुरू हो जाये!</string>
     <string name="reader_toast_err_tag_invalid">वह एक मान्य टैग नहीं है</string>
     <string name="limit_reached">सीमा पहुँच गयी. आप 1 मिनट में फिर से कोशिश कर सकते हैं. उसके पहले कोशिश करने पर आपके प्रतिबंध हटाने के इन्तजार समय में वृद्धि होगी. आपको लगता है यह त्रुटी है तो, सहायता से संपर्क करे.</string>
-    <string name="reader_hint_comment_on_comment">टिप्पणी का जवाब दे...</string>
+    <string name="reader_hint_comment_on_comment">टिप्पणी का जवाब दे…</string>
     <string name="create_account_wpcom">Wordpress.com पे अकाउंट बनाये|</string>
     <string name="stats_entry_country">देश</string>
     <string name="stats_entry_authors">लेखक</string>
@@ -550,7 +550,7 @@ Language: hi_IN
     <string name="new_notifications">%d नयी सूचनाएं</string>
     <string name="more_notifications">और %d और भी.</string>
     <string name="sign_in">साइन इन</string>
-    <string name="loading">लोड किया जा रहा...</string>
+    <string name="loading">लोड किया जा रहा…</string>
     <string name="httppassword">एचटीटीपी कूटशब्द</string>
     <string name="httpuser">एचटीटीपी उपयोगकर्ता नाम</string>
     <string name="error_media_upload">मीडिया अपलोड करने के दौरान एक त्रुटि हुई</string>

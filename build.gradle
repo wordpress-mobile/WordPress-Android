@@ -26,10 +26,6 @@ allprojects {
 
     task checkstyle(type: Checkstyle) {
         source 'src'
-        include '**/*.java'
-        include '**/*.kt'
-        include '**/*.xml'
-        exclude '**/gen/**'
 
         classpath = files()
     }
@@ -51,5 +47,5 @@ subprojects {
 }
 
 ext {
-    fluxCVersion = '8ba19369d7086097aa7622b0d606f79ac68eeef7'
+    fluxCVersion = '83072117124811e2bd02f728d2498205ea245090'
 }

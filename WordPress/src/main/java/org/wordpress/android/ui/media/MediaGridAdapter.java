@@ -195,7 +195,7 @@ public class MediaGridAdapter extends RecyclerView.Adapter<MediaGridAdapter.Grid
             holder.mSelectionCountTextView.setSelected(isSelected);
             if (isSelected) {
                 int count = mSelectedItems.indexOf(media.getId()) + 1;
-                holder.mSelectionCountTextView.setText(Integer.toString(count));
+                holder.mSelectionCountTextView.setText(String.format(Locale.getDefault(), "%d", count));
             } else {
                 holder.mSelectionCountTextView.setText(null);
             }
@@ -577,7 +577,8 @@ public class MediaGridAdapter extends RecyclerView.Adapter<MediaGridAdapter.Grid
 
         // show and animate the count
         if (selected) {
-            holder.mSelectionCountTextView.setText(Integer.toString(mSelectedItems.indexOf(localMediaId) + 1));
+            holder.mSelectionCountTextView
+                    .setText(String.format(Locale.getDefault(), "%d", mSelectedItems.indexOf(localMediaId) + 1));
         } else {
             holder.mSelectionCountTextView.setText(null);
         }

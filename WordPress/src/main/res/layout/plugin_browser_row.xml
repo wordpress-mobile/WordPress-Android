@@ -27,7 +27,8 @@
         android:textColor="@color/grey_dark"
         android:textSize="@dimen/text_sz_medium"
         android:textStyle="bold"
-        tools:text="plugin_name" />
+        tools:text="plugin_name"
+        tools:ignore="UnusedAttribute"/>
 
     <TextView
         android:id="@+id/plugin_author"
