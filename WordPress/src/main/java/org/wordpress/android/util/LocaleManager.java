@@ -25,7 +25,7 @@ import javax.annotation.Nullable;
  * selected language is properly saved and resources appropriately updated for the
  * android version.
  */
-public abstract class LocaleManager {
+public class LocaleManager {
     /**
      * Length of a {@link String} (representing a language code) when there is no region included.
      * For example: "en" contains no region, "en_US" contains a region (US)
