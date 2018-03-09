@@ -162,6 +162,7 @@ public class CommentAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
 
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+        //noinspection InflateParams
         View view = mInflater.inflate(R.layout.comment_listitem, null);
         CommentHolder holder = new CommentHolder(view);
         view.setTag(holder);

@@ -36,6 +36,8 @@
         <ignore path="**/WordPressLoginFlow/**" />
         <ignore path="**/.gradle/caches/**" />
         <ignore path="**/generated/**" />
-        <ignore path="**/strings.xml" />
+        <ignore regexp=".*\/values\-([a-z]|[A-Z]|\-){2,6}\/strings\.xml$"/>
     </issue>
+
+    <issue id="TypographyEllipsis" severity="error"/>
 </lint>

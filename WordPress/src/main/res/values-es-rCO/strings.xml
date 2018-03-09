@@ -151,7 +151,7 @@ Language: es_CO
     <string name="editor_dropped_title_images_not_allowed">No está permitido arrastrar imágenes en el título</string>
     <string name="editor_dropped_text_error">Ocurrió un error al arrastrar texto</string>
     <string name="editor_dropped_html_images_not_allowed">No está permitido arrastrar imágenes en el modo HTML</string>
-    <string name="editor_content_hint">Comparte tu historia aquí...</string>
+    <string name="editor_content_hint">Comparte tu historia aquí…</string>
     <string name="post_status_trashed">En la papelera</string>
     <string name="post_status_scheduled">Programada</string>
     <string name="post_status_post_private">Privada</string>
@@ -382,10 +382,10 @@ Language: es_CO
     <string name="error_notif_q_action_like">No se puede marcar como me gusta el comentario. Por favor inténtalo de nuevo más tarde.</string>
     <string name="notifications_label_new_notifications_subtitle">Pulsa para mostrarlos</string>
     <string name="notifications_label_new_notifications">Nuevas notificaciones</string>
-    <string name="comment_q_action_replying">Respondiendo...</string>
-    <string name="comment_q_action_approving">Aprobando...</string>
-    <string name="comment_q_action_liking">Enlazando...</string>
-    <string name="comment_q_action_processing">Procesando...</string>
+    <string name="comment_q_action_replying">Respondiendo…</string>
+    <string name="comment_q_action_approving">Aprobando…</string>
+    <string name="comment_q_action_liking">Enlazando…</string>
+    <string name="comment_q_action_processing">Procesando…</string>
     <string name="comment_q_action_done_generic">¡Acción realizada!</string>
     <string name="comment_liked">Comentario marcado como me gusta</string>
     <string name="signout">Cerrar sesión</string>
@@ -455,7 +455,7 @@ Language: es_CO
     <string name="alert_error_adding_media">Hubo un error al insertar el archivo multimedia</string>
     <string name="alert_action_while_uploading">Ahora mismo estás subiendo medios. Por favor, espera hasta que termine.</string>
     <string name="alert_insert_image_html_mode">No se pueden insertar medios directamente en el modo HTML. Por favor, cambia al modo visual.</string>
-    <string name="uploading_gallery_placeholder">Subiendo galería...</string>
+    <string name="uploading_gallery_placeholder">Subiendo galería…</string>
     <string name="tap_to_try_again">¡Toca para probar de nuevo!</string>
     <string name="invite_sent">Invitación enviada con éxito</string>
     <string name="invite_error_for_username">%1$s: %2$s</string>
@@ -478,7 +478,7 @@ Language: es_CO
     <string name="dlg_confirm_clear_search_history">¿Borrar historial de búsqueda?</string>
     <string name="reader_empty_posts_in_search_description">No se han encontrado entradas con %s para tu idioma</string>
     <string name="reader_empty_posts_in_search_title">No se han encontrado entradas</string>
-    <string name="reader_label_post_search_running">Buscando...</string>
+    <string name="reader_label_post_search_running">Buscando…</string>
     <string name="reader_label_post_search_explainer">Buscar en todos los blogs públicos de WordPress.com</string>
     <string name="reader_hint_post_search">Buscar en WordPress.com</string>
     <string name="reader_title_search_results">Buscar %s</string>
@@ -532,13 +532,13 @@ Language: es_CO
     <string name="export_your_content_message">Tus entradas, páginas y ajustes te serán enviadas por correo electrónico a %s.</string>
     <string name="export_your_content">Exportar tu contenido</string>
     <string name="export_email_sent">¡Correo electrónico de exportación enviado!</string>
-    <string name="exporting_content_progress">Exportando contenido...</string>
+    <string name="exporting_content_progress">Exportando contenido…</string>
     <string name="checking_purchases">Comprobando compras</string>
     <string name="show_purchases">Mostrar compras</string>
     <string name="premium_upgrades_message">Tienes mejoras premium en tu sitio. Por favor, cancela tus mejoras antes de eliminar tu sitio. </string>
     <string name="premium_upgrades_title">Mejoras premium</string>
     <string name="purchases_request_error">Algo fue mal. No se pudo realizar la compra.</string>
-    <string name="delete_site_progress">Borrando sitio...</string>
+    <string name="delete_site_progress">Borrando sitio…</string>
     <string name="delete_site_hint">Eliminar el sitio</string>
     <string name="delete_site_summary">Esta acción no se puede deshacer. Eliminar tu sitio eliminará todo el contenido, contribuidores y dominios de tu sitio.</string>
     <string name="export_site_hint">Exportar tu sitio a un archivo XML</string>
@@ -619,7 +619,7 @@ Language: es_CO
     <string name="post_settings_set_featured_image">Establece la imagen destacada</string>
     <string name="post_settings_featured_image">Imagen destacada</string>
     <string name="visual_editor_enabled">Editor visual activado</string>
-    <string name="editor_content_placeholder">Comparte tu historia aquí...</string>
+    <string name="editor_content_placeholder">Comparte tu historia aquí…</string>
     <string name="editor_page_title_placeholder">Título página</string>
     <string name="editor_post_title_placeholder">Título entrada</string>
     <string name="email_address">Correo electrónico</string>
@@ -653,7 +653,7 @@ Language: es_CO
     <string name="privacy_private">Tu sitio es visible únicamente por ti y por lo usuarios que apruebes</string>
     <string name="privacy_public_not_indexed">Tu sitio es visible para todos pero pide a los motores de búsqueda no ser indexado</string>
     <string name="privacy_public">Tu sitio es visible para todos y puede ser indexado por motores de búsqueda</string>
-    <string name="about_me_hint">Algunas palabras sobre ti...</string>
+    <string name="about_me_hint">Algunas palabras sobre ti…</string>
     <string name="about_me">Sobre mí</string>
     <string name="public_display_name_hint">El nombre público mostrará por defecto el nombre de usuario si no está establecido</string>
     <string name="public_display_name">Nombre que se mostrará públicamente</string>
@@ -807,9 +807,9 @@ Language: es_CO
     <string name="notifications_empty_action_comments">Unirse a una conversación: comentar en entradas de blogs que sigues.</string>
     <string name="notifications_empty_action_unread">Reiniciar la conversación: escribir una entrada nueva.</string>
     <string name="notifications_empty_action_all">¡Actívate! Comentario en entradas de blogs que sigues.</string>
-    <string name="notifications_empty_likes">No hay nuevos Me gusta que mostrar... todavía.</string>
-    <string name="notifications_empty_followers">No hay nuevos seguidores de los que informar... todavía.</string>
-    <string name="notifications_empty_comments">No hay comentarios nuevos... todavía.</string>
+    <string name="notifications_empty_likes">No hay nuevos Me gusta que mostrar… todavía.</string>
+    <string name="notifications_empty_followers">No hay nuevos seguidores de los que informar… todavía.</string>
+    <string name="notifications_empty_comments">No hay comentarios nuevos… todavía.</string>
     <string name="notifications_empty_unread">¡Te has puesto al día!</string>
     <string name="stats_widget_error_jetpack_no_blogid">Accede a las estadísticas de la aplicación e intenta agregar un widget más tarde</string>
     <string name="stats_widget_error_readd_widget">Elimina el widget y vuelve a agregarlo</string>
@@ -817,7 +817,7 @@ Language: es_CO
     <string name="stats_widget_error_no_permissions">Tu cuenta de WordPress.com no puede acceder a las estadísticas de este blog</string>
     <string name="stats_widget_error_no_account">Accede a WordPress</string>
     <string name="stats_widget_error_generic">No se han podido cargar las estadísticas</string>
-    <string name="stats_widget_loading_data">Cargando datos...</string>
+    <string name="stats_widget_loading_data">Cargando datos…</string>
     <string name="stats_widget_name_for_blog">Las estadísticas de hoy de %1$s</string>
     <string name="stats_widget_name">Las estadísticas de hoy de WordPress</string>
     <string name="post_settings_add_location_permission_required">Se requieren permisos para añadir la ubicación</string>
@@ -828,7 +828,7 @@ Language: es_CO
     <string name="reader_short_comment_count_multi">%s Comentarios</string>
     <string name="reader_short_comment_count_one">1 Comentario</string>
     <string name="reader_label_submit_comment">ENVIAR</string>
-    <string name="reader_hint_comment_on_post">Responder a la entrada...</string>
+    <string name="reader_hint_comment_on_post">Responder a la entrada…</string>
     <string name="reader_discover_visit_blog">Visita %s</string>
     <string name="reader_discover_attribution_blog">Originalmente publicado en %s</string>
     <string name="reader_discover_attribution_author">Originalmente publicado por %s</string>
@@ -1166,7 +1166,7 @@ Language: es_CO
     <string name="view_site">Ver sitio</string>
     <string name="new_media">Nuevo elemento multimedia</string>
     <string name="new_post">Nueva entrada</string>
-    <string name="notifications_empty_all">No hay notificaciones... todavía.</string>
+    <string name="notifications_empty_all">No hay notificaciones… todavía.</string>
     <string name="http_authorization_required">Se necesita autorización</string>
     <string name="http_credentials">Credenciales HTTP (opcional)</string>
     <string name="invalid_site_url_message">Comprueba que la URL del sitio introducida es válida</string>
@@ -1239,7 +1239,7 @@ Language: es_CO
     <string name="deleting_post">Borrando entrada</string>
     <string name="deleting_page">Borrando página</string>
     <string name="creating_your_site">Creando tu sitio</string>
-    <string name="reader_empty_posts_in_tag_updating">Recuperando entradas...</string>
+    <string name="reader_empty_posts_in_tag_updating">Recuperando entradas…</string>
     <string name="cant_share_no_visible_blog">No se puede compartir en WordPress si no tienes un blog visible</string>
     <string name="comment_spammed">Comentado marcado como spam</string>
     <string name="download">Descargando elemento multimedia</string>
@@ -1339,7 +1339,7 @@ Language: es_CO
     <string name="note_reply_successful">Respuesta publicada</string>
     <string name="notifications">Notificaciones</string>
     <string name="sign_in">Acceder</string>
-    <string name="loading">Cargando...</string>
+    <string name="loading">Cargando…</string>
     <string name="httppassword">Contraseña HTTP</string>
     <string name="httpuser">Usuario HTTP</string>
     <string name="error_media_upload">Se ha producido un error al cargar los archivos</string>

@@ -102,7 +102,7 @@ Language: ko_KR
     <string name="alert_error_adding_media">미디어를 삽입하는 동안 오류가 발생했습니다.</string>
     <string name="alert_action_while_uploading">미디어를 업로드 중입니다. 완료될 때까지 기다려 주세요.</string>
     <string name="alert_insert_image_html_mode">HTML 모드에서 직접 미디어를 삽입할 수 없습니다. 비주얼 모드로 전환하세요.</string>
-    <string name="uploading_gallery_placeholder">갤러리 업데이트 중...</string>
+    <string name="uploading_gallery_placeholder">갤러리 업데이트 중…</string>
     <string name="invite_error_some_failed">초대를 전송했으나 오류가 발생했습니다!</string>
     <string name="invite_sent">초대를 전송했습니다.</string>
     <string name="tap_to_try_again">눌러서 다시 시도하세요!</string>
@@ -124,7 +124,7 @@ Language: ko_KR
     <string name="label_clear_search_history">검색 내역 지우기</string>
     <string name="dlg_confirm_clear_search_history">검색 내역을 지울까요?</string>
     <string name="reader_empty_posts_in_search_description">사용자 언어로 된 %s에 대한 글을 찾을 수 없습니다.</string>
-    <string name="reader_label_post_search_running">검색 중...</string>
+    <string name="reader_label_post_search_running">검색 중…</string>
     <string name="reader_empty_posts_in_search_title">글을 찾을 수 없습니다.</string>
     <string name="reader_label_post_search_explainer">모든 공개 워드프레스닷컴 블로그 검색</string>
     <string name="reader_hint_post_search">워드프레스닷컴 검색</string>
@@ -298,7 +298,7 @@ Language: ko_KR
     <string name="privacy_private">사이트가 본인과 본인이 승인한 사용자에게만 공개됩니다.</string>
     <string name="privacy_public_not_indexed">사이트가 모든 사람에게 공개되지만 검색 엔진에 사이트가 검색되지 않도록 요청합니다.</string>
     <string name="privacy_public">사이트가 모든 사람에게 공개되며 검색 엔진이 검색할 수 있습니다.</string>
-    <string name="about_me_hint">사용자에 대한 몇 가지 정보...</string>
+    <string name="about_me_hint">사용자에 대한 몇 가지 정보…</string>
     <string name="public_display_name_hint">대화명을 설정하지 않을 경우 기본적으로 사용자명으로 설정됩니다.</string>
     <string name="about_me">내 소개</string>
     <string name="public_display_name">공개 이름</string>
@@ -461,7 +461,7 @@ Language: ko_KR
     <string name="stats_widget_error_no_permissions">회원님의 워드프레스닷컴 계정에서 이 블로그의 통계에 액세스할 수 없습니다.</string>
     <string name="stats_widget_error_no_account">워드프레스에 로그인하세요.</string>
     <string name="stats_widget_error_generic">통계를 로드할 수 없음</string>
-    <string name="stats_widget_loading_data">데이터 로드 중...</string>
+    <string name="stats_widget_loading_data">데이터 로드 중…</string>
     <string name="stats_widget_name_for_blog">%1$s 오늘의 통계</string>
     <string name="stats_widget_name">워드프레스 오늘의 통계</string>
     <string name="add_media_permission_required">미디어를 추가하려면 권한이 필요합니다.</string>
@@ -471,7 +471,7 @@ Language: ko_KR
     <string name="reader_short_comment_count_multi">%s 댓글</string>
     <string name="reader_short_comment_count_one">1 댓글</string>
     <string name="reader_label_submit_comment">보내기</string>
-    <string name="reader_hint_comment_on_post">글에 답장하기...</string>
+    <string name="reader_hint_comment_on_post">글에 답장하기…</string>
     <string name="reader_discover_visit_blog">%s 방문</string>
     <string name="reader_discover_attribution_blog">원래 %s에 게시됨</string>
     <string name="reader_discover_attribution_author">원래 %s님이 게시함</string>
@@ -574,13 +574,13 @@ Language: ko_KR
     <string name="stats_entry_search_terms">검색어</string>
     <string name="stats_view_authors">글쓴이</string>
     <string name="stats_search_terms_unknown_search_terms">알 수 없는 검색어</string>
-    <string name="pages_fetching">페이지를 가져오는 중...</string>
+    <string name="pages_fetching">페이지를 가져오는 중…</string>
     <string name="toast_err_post_uploading">업로드하는 동안 글을 여는데 실패함.</string>
-    <string name="posts_fetching">글을 가져오는 중...</string>
+    <string name="posts_fetching">글을 가져오는 중…</string>
     <string name="reader_empty_posts_request_failed">글을 가져올 수 없음</string>
     <string name="publisher">게시자:</string>
-    <string name="comments_fetching">답글을 가져오는 중...</string>
-    <string name="media_fetching">미디어를 가져오는 중...</string>
+    <string name="comments_fetching">답글을 가져오는 중…</string>
+    <string name="media_fetching">미디어를 가져오는 중…</string>
     <string name="reader_page_recommended_blogs">회원님이 좋아할 만한 블로그</string>
     <string name="stats_months_and_years">월 및 연도</string>
     <string name="stats_recent_weeks">최근 몇 주</string>
@@ -717,7 +717,7 @@ Language: ko_KR
     <string name="reader_empty_recommended_blogs">추천 블로그가 없습니다.</string>
     <string name="reader_title_blog_preview">리더 블로그</string>
     <string name="reader_title_tag_preview">리더 태그</string>
-    <string name="saving">저장중...</string>
+    <string name="saving">저장중…</string>
     <string name="media_empty_list">미디어가 없습니다.</string>
     <string name="ptr_tip_message">팁: 당겨서 새로 고침</string>
     <string name="help">도우미</string>
@@ -874,7 +874,7 @@ Language: ko_KR
     <string name="share_url_page">페이지 공유</string>
     <string name="share_link">링크 공유</string>
     <string name="creating_your_site">사이트를 만들 수 있습니다</string>
-    <string name="reader_empty_posts_in_tag_updating">리뷰 가져 오는 중 ...</string>
+    <string name="reader_empty_posts_in_tag_updating">리뷰 가져 오는 중 …</string>
     <string name="comment_spammed">댓글이 스팸으로 처리됨</string>
     <string name="download">미디어를 다운로드 중</string>
     <string name="reader_label_reply">회신</string>
@@ -973,7 +973,7 @@ Language: ko_KR
     <string name="note_reply_successful">답장을 공개했습니다</string>
     <string name="more_notifications">%d개.</string>
     <string name="new_notifications">%d개의 새로운 알림</string>
-    <string name="loading">로드 중입니다...</string>
+    <string name="loading">로드 중입니다…</string>
     <string name="httpuser">HTTP 사용자 이름</string>
     <string name="httppassword">HTTP 암호</string>
     <string name="error_media_upload">미디어를 업로드할때 오류가 발생했습니다</string>
@@ -999,7 +999,7 @@ Language: ko_KR
     <string name="scaled_image">변경 후의 이미지 폭</string>
     <string name="upload_scaled_image">업로드 하여 크기를 조정 한 이미지 링크</string>
     <string name="link_enter_url">URL</string>
-    <string name="uploading">업로드 중...</string>
+    <string name="uploading">업로드 중…</string>
     <string name="version">버전</string>
     <string name="tos">이용 약관</string>
     <string name="app_title">WordPress for Android</string>

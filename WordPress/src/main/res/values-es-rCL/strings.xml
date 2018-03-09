@@ -23,7 +23,7 @@ Language: es_CL
     <string name="alert_error_adding_media">Se produjo un error al cargar los archivos</string>
     <string name="alert_action_while_uploading">Actualmente estás subiendo archivos. Por favor, espera hasta que termine.</string>
     <string name="alert_insert_image_html_mode">No se puede insertar medios directamente en modo HTML. Por favor, cambia al modo visual.</string>
-    <string name="uploading_gallery_placeholder">Cargando Galería...</string>
+    <string name="uploading_gallery_placeholder">Cargando Galería…</string>
     <string name="invite_sent">Invitación enviada exitosamente</string>
     <string name="tap_to_try_again">¡Toca para volver a intentarlo!</string>
     <string name="invite_message_info">(Opcional) Puedes escribir un mensaje personalizado de hasta 500 caracteres que serán incluidos en la invitación a lo(s) usuario(s).</string>
@@ -45,7 +45,7 @@ Language: es_CL
     <string name="reader_short_comment_count_multi">%s Comentarios</string>
     <string name="reader_short_comment_count_one">1 Comentario</string>
     <string name="reader_label_submit_comment">ENVIAR</string>
-    <string name="reader_hint_comment_on_post">Responder a la entrada...</string>
+    <string name="reader_hint_comment_on_post">Responder a la entrada…</string>
     <string name="reader_discover_visit_blog">Visita %s</string>
     <string name="reader_discover_attribution_blog">Originalmente publicado en %s</string>
     <string name="reader_discover_attribution_author">Originalmente publicado por %s</string>
@@ -436,7 +436,7 @@ Language: es_CL
     <string name="share_url_page">Compartir página</string>
     <string name="share_link">Compartir enlace</string>
     <string name="creating_your_site">Creando tu sitio</string>
-    <string name="reader_empty_posts_in_tag_updating">Recuperando entradas...</string>
+    <string name="reader_empty_posts_in_tag_updating">Recuperando entradas…</string>
     <string name="reader_likes_you_and_multi">A ti, y a %,d personas más les gusta esto</string>
     <string name="reader_likes_multi">A %,d personas les gusta esto</string>
     <string name="reader_toast_err_get_comment">No ha sido posible cargar este comentario</string>
@@ -471,7 +471,7 @@ Language: es_CL
     <string name="create_account_wpcom">Crear una cuenta de WordPress.com</string>
     <string name="username_invalid">Nombre de usuario no válido</string>
     <string name="limit_reached">Límite alcanzado. Puedes probar en 1 minuto. Probar de nuevo antes solamente incrementará el tiempo de espera hasta que la prohibición sea suprimida. Si crees que es un error, contacta con soporte. </string>
-    <string name="reader_hint_comment_on_comment">Contestar al comentario...</string>
+    <string name="reader_hint_comment_on_comment">Contestar al comentario…</string>
     <string name="reader_label_added_tag">Agregado %s</string>
     <string name="reader_toast_err_tag_invalid">Esa no es una etiqueta válida</string>
     <string name="reader_toast_err_share_intent">No se pudo compartir</string>
@@ -531,7 +531,7 @@ Language: es_CL
     <string name="note_reply_successful">Respuesta publicada</string>
     <string name="new_notifications">%d nuevas notificaciones</string>
     <string name="more_notifications">y %d más.</string>
-    <string name="loading">Cargando...</string>
+    <string name="loading">Cargando…</string>
     <string name="httpuser">Usuario HTTP</string>
     <string name="httppassword">Contraseña HTTP</string>
     <string name="error_media_upload">Se ha producido un error al cargar los archivos</string>

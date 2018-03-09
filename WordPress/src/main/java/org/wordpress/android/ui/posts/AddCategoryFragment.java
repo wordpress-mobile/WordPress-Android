@@ -50,6 +50,7 @@ public class AddCategoryFragment extends AppCompatDialogFragment {
         LayoutInflater inflater = getActivity().getLayoutInflater();
 
         // Inflate view
+        //noinspection InflateParams
         View view = inflater.inflate(R.layout.add_category, null);
         mCategoryEditText = (EditText) view.findViewById(R.id.category_name);
         mParentSpinner = (Spinner) view.findViewById(R.id.parent_category);

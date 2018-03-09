@@ -54,7 +54,8 @@
         android:background="@color/color_primary"
         android:elevation="@dimen/appbar_elevation"
         android:visibility="gone"
-        tools:visibility="visible">
+        tools:visibility="visible"
+        tools:ignore="UnusedAttribute">
 
         <org.wordpress.android.widgets.WPTextView
             android:id="@+id/text_manage"
