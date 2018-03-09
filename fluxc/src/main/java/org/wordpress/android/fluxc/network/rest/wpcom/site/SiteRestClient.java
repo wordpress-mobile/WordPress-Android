@@ -59,7 +59,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import javax.inject.Inject;
 import javax.inject.Singleton;
 
 @Singleton
@@ -95,7 +94,6 @@ public class SiteRestClient extends BaseWPComRestClient {
         public SiteModel site;
     }
 
-    @Inject
     public SiteRestClient(Context appContext, Dispatcher dispatcher, RequestQueue requestQueue, AppSecrets appSecrets,
                           AccessToken accessToken, UserAgent userAgent) {
         super(appContext, dispatcher, requestQueue, accessToken, userAgent);
