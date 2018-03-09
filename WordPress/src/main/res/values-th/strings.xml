@@ -228,6 +228,7 @@ Language: th
     <string name="site_picker_cant_hide_current_site">ไม่ได้ซ่อน \"%s\" เพราะว่ามันเป็นเว็บปัจจุบัน</string>
     <string name="me_btn_support">ช่วยเหลือและสนับสนุน</string>
     <string name="account_settings">ตั้งค่าบัญชี</string>
+    <string name="site_picker_create_dotcom">สร้างเว็บ WordPress.com</string>
     <string name="site_picker_edit_visibility">แสดง/ซ่อน เว็บไซต์</string>
     <string name="site_picker_add_self_hosted">เพิ่มเว็บไซต์บนโฮสท์ติดตั้งเอง</string>
     <string name="my_site_btn_switch_site">สลับเว็บไซต์</string>
@@ -258,7 +259,7 @@ Language: th
     <string name="auth_required">เข้าสู่ระบบอีกครั้งเพื่อทำต่อ</string>
     <string name="sign_in_jetpack">เข้าสู่ระบบบัญชี WordPress.com ของคุณเพื่อเชื่อมต่อกับ Jetpack</string>
     <string name="stats_empty_search_terms_desc">เรียนรู้เพิ่มเติมเกี่ยวกับการหาคนเข้าเว็บของคุณโดยดูที่เงื่อนไขที่ผู้เยี่ยมชมค้นหาสำหรับเว็บไซต์ของคุณ</string>
-    <string name="stats_followers_total_wpcom_paged">กำลังแสดง %1$d - %2$d จาก %3$s ผู้ติดตาม WordPress.com</string>
+    <string name="stats_followers_total_wpcom_paged">กำลังแสดง %1$d – %2$d จาก %3$s ผู้ติดตาม WordPress.com</string>
     <string name="media_fetching">กำลังรับข้อมูลไฟล์สื่อ…</string>
     <string name="toast_err_post_uploading">ไม่สามารถเปิดเรื่องขณะที่มันกำลังอัปโหลดได้</string>
     <string name="posts_fetching">กำลังรับข้อมูลเรื่อง…</string>
@@ -268,7 +269,7 @@ Language: th
     <string name="stats_view_authors">ผู้เขียน</string>
     <string name="stats_entry_search_terms">เงื่อนไขการค้นหา</string>
     <string name="stats_empty_search_terms">ไม่มีบันทึกเงื่อนไขการค้นหา</string>
-    <string name="stats_followers_total_email_paged">กำลังแสดง %1$d - %2$d จาก %3$s ผู้ติดตามอีเมล์</string>
+    <string name="stats_followers_total_email_paged">กำลังแสดง %1$d – %2$d จาก %3$s ผู้ติดตามอีเมล์</string>
     <string name="stats_search_terms_unknown_search_terms">เงื่อนไขการค้นหาที่ไม่รู้จัก</string>
     <string name="reader_empty_posts_request_failed">ไม่สามารถดึงเรื่องได้</string>
     <string name="publisher">ผู้เผยแพร่:</string>
@@ -429,15 +430,15 @@ Language: th
     <string name="blog_name_must_be_less_than_sixty_four_characters">ที่อยู่เว็บต้องสั้นกว่า 64 ตัวอักษร</string>
     <string name="blog_name_contains_invalid_characters">ที่อยู่เว็บต้องไม่มีสัญลักษณ์ “_”</string>
     <string name="blog_name_cant_be_used">คุณอาจจะไม่ใช้ที่อยู่เว็บนั้น</string>
-    <string name="blog_name_only_lowercase_letters_and_numbers">ที่อยู่เว็บต้องประกอบด้วยตัวอักษรเล็ก (a-z) และตัวเลข</string>
+    <string name="blog_name_only_lowercase_letters_and_numbers">ที่อยู่เว็บต้องประกอบด้วยตัวอักษรเล็ก (a–z) และตัวเลข</string>
     <string name="blog_name_exists">เว็บนั้นมีอยู่แล้ว</string>
     <string name="blog_name_reserved">เว็บนั้นถูกสงวนไว้</string>
-    <string name="username_only_lowercase_letters_and_numbers">ชื่อผู้ใช้สามารถประกอบไปด้วยตัวอักษรเล็ก (a-z) และตัวเลข</string>
+    <string name="username_only_lowercase_letters_and_numbers">ชื่อผู้ใช้สามารถประกอบไปด้วยตัวอักษรเล็ก (a–z) และตัวเลข</string>
     <string name="username_required">ใส่ชื่อผู้ใช้</string>
     <string name="username_not_allowed">ชื่อผู้ใช้ไม่อนุญาต</string>
     <string name="username_must_be_at_least_four_characters">ชื่อผู้ใช้ต้องมีอย่างน้อย 4 ตัวอักษร</string>
     <string name="username_contains_invalid_characters">ชื่อผู้ใช้ต้องไม่มีตัวอักษร “_”</string>
-    <string name="username_must_include_letters">ชื่อผู้ใช้ต้องมีอย่างน้อย 1 ตัวอักษร (a-z)</string>
+    <string name="username_must_include_letters">ชื่อผู้ใช้ต้องมีอย่างน้อย 1 ตัวอักษร (a–z)</string>
     <string name="username_reserved_but_may_be_available">ชื่อผู้ใช้นั้นถูกสงวนไว้ในเวลานี้  แต่อาจจะว่างภายในสองสามวันข้างหน้า</string>
     <string name="blog_name_required">ใส่ที่อยู่เว็บ</string>
     <string name="blog_name_not_allowed">ไม่อนุญาตที่อยู่เว็บนั้น</string>
@@ -472,7 +473,7 @@ Language: th
     <string name="email_not_allowed">ที่อยู่อีเมลนั้นไม่อนุญาต</string>
     <string name="email_exists">ที่อยู่อีเมลนั้นถูกใช้งานแล้ว</string>
     <string name="invalid_url_message">ตรวจสอบ URL ที่ใส่มาว่าใช้งานได้หรือไม่</string>
-    <string name="blog_name_must_include_letters">ที่อยู่เว็บต้องมีตัวอักษรอย่างน้อย 1 ตัว (a-z)</string>
+    <string name="blog_name_must_include_letters">ที่อยู่เว็บต้องมีตัวอักษรอย่างน้อย 1 ตัว (a–z)</string>
     <string name="blog_name_invalid">ที่อยู่เว็บไม่ถูกต้อง</string>
     <string name="blog_title_invalid">หัวข้อเว็บไม่ถูกต้อง</string>
     <string name="reader_toast_err_add_tag">ไม่สามารถเพิ่มป้ายกำกับนี้</string>

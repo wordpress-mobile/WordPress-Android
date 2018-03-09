@@ -1,11 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2018-02-19 02:15:44+0000
+Translation-Revision-Date: 2018-03-09 01:54:10+0000
 Plural-Forms: nplurals=1; plural=0;
 Generator: GlotPress/2.4.0-alpha
 Language: ja_JP
 -->
 <resources>
+    <string name="site_creation_creating_failed_extended">何らかの理由によりサーバーとの通信が確立できませんでした</string>
     <string name="stats_jetpack_more_info">詳細情報</string>
     <string name="stats_jetpack_connection_setup_info">WordPress サイトで統計情報機能を使用するには、Jetpack プラグインをインストールする必要があります。 Jetpack を設定しますか ?</string>
     <string name="stats_jetpack_connection_setup">Jetpack を設定</string>
@@ -693,8 +694,8 @@ Language: ja_JP
     <string name="comments_empty_list_filtered_pending">保留中のコメントはありません</string>
     <string name="comments_empty_list_filtered_approved">承認済みのコメントはありません</string>
     <string name="site_timeout_error">タイムアウトエラーのため WordPress サイトに接続できませんでした。</string>
-    <string name="xmlrpc_malformed_response_error">接続できませんでした。WordPress インストールが、無効な XML-RPC ドキュメントで応答しました。</string>
-    <string name="xmlrpc_missing_method_error">接続できませんでした。必要な XML-RPC メソッドがサーバーにありません。</string>
+    <string name="xmlrpc_malformed_response_error">接続できませんでした。WordPress インストールが、無効な XML–RPC ドキュメントで応答しました。</string>
+    <string name="xmlrpc_missing_method_error">接続できませんでした。必要な XML–RPC メソッドがサーバーにありません。</string>
     <string name="alignment_center">中央</string>
     <string name="post_format_video">動画</string>
     <string name="post_format_status">ステータス</string>
@@ -1022,6 +1023,7 @@ Language: ja_JP
     <string name="site_picker_cant_hide_current_site">現在のサイトのため “%s” は非表示になりませんでした</string>
     <string name="me_btn_support">ヘルプ &amp; サポート</string>
     <string name="account_settings">アカウント設定</string>
+    <string name="site_picker_create_dotcom">WordPress.com サイトを作成</string>
     <string name="site_picker_edit_visibility">サイトを表示/非表示</string>
     <string name="site_picker_add_self_hosted">インストール型サイトを追加</string>
     <string name="my_site_btn_switch_site">サイト切り替え</string>
@@ -1061,9 +1063,9 @@ Language: ja_JP
     <string name="stats_entry_search_terms">検索キーワード</string>
     <string name="stats_empty_search_terms">検索キーワードが記録されていません</string>
     <string name="stats_empty_search_terms_desc">訪問者があなたのサイトを見つけるために検索したキーワードを見て、検索トラフィックについてより詳しく知りましょう。</string>
-    <string name="stats_followers_total_wpcom_paged">%1$d - %2$d人目を表示中 (%3$s人の WordPress.com フォロワー中)</string>
+    <string name="stats_followers_total_wpcom_paged">%1$d – %2$d人目を表示中 (%3$s人の WordPress.com フォロワー中)</string>
     <string name="stats_search_terms_unknown_search_terms">不明な検索語</string>
-    <string name="stats_followers_total_email_paged">%1$d - %2$d人目を表示中 (%3$s人のメールフォロワー中)</string>
+    <string name="stats_followers_total_email_paged">%1$d – %2$d人目を表示中 (%3$s人のメールフォロワー中)</string>
     <string name="error_notification_open">通知を開けませんでした</string>
     <string name="publisher">投稿者:</string>
     <string name="reader_empty_posts_request_failed">投稿を取得できません</string>
@@ -1219,7 +1221,7 @@ Language: ja_JP
     <string name="blog_name_reserved_but_may_be_available">このサイト名は予約済みですが、数日中に利用可能になるかもしれません</string>
     <string name="blog_name_reserved">そのサイトは予約済みです</string>
     <string name="blog_name_exists">そのサイトはすでに存在しています</string>
-    <string name="blog_name_only_lowercase_letters_and_numbers">サイトアドレスには英小文字 (a-z) と数字以外は含められません</string>
+    <string name="blog_name_only_lowercase_letters_and_numbers">サイトアドレスには英小文字 (a–z) と数字以外は含められません</string>
     <string name="blog_name_cant_be_used">そのサイトアドレスは使えません</string>
     <string name="blog_name_contains_invalid_characters">サイトアドレスに \'_\' (アンダースコア記号) を含めることはできません</string>
     <string name="blog_name_must_be_less_than_sixty_four_characters">サイトアドレスは半角で64文字以下にしてください</string>
@@ -1231,12 +1233,12 @@ Language: ja_JP
     <string name="username_exists">このユーザー名はすでに使われています</string>
     <string name="email_not_allowed">そのメールアドレスでは登録できません</string>
     <string name="email_invalid">有効なメールアドレスを入力してください</string>
-    <string name="username_must_include_letters">ユーザー名には必ず英小文字 (a-z) を1つ以上含めてください</string>
+    <string name="username_must_include_letters">ユーザー名には必ず英小文字 (a–z) を1つ以上含めてください</string>
     <string name="username_contains_invalid_characters">ユーザー名に \'_\' (アンダースコア記号) を含めることはできません</string>
     <string name="username_must_be_at_least_four_characters">ユーザー名は4文字以上にしてください</string>
     <string name="username_not_allowed">使用できないユーザー名です</string>
     <string name="username_required">ユーザー名を入力してください</string>
-    <string name="username_only_lowercase_letters_and_numbers">ユーザー名には英小文字 (a-z) と数字以外は含められません</string>
+    <string name="username_only_lowercase_letters_and_numbers">ユーザー名には英小文字 (a–z) と数字以外は含められません</string>
     <string name="invalid_email_message">無効なメールアドレスです</string>
     <string name="passcode_wrong_passcode">不正な PIN 番号</string>
     <string name="error_downloading_image">画像ダウンロードエラー</string>
@@ -1272,7 +1274,7 @@ Language: ja_JP
     <string name="out_of_memory">端末のメモリが足りません</string>
     <string name="blog_title_invalid">無効なサイトタイトル</string>
     <string name="blog_name_invalid">無効なサイトアドレス</string>
-    <string name="blog_name_must_include_letters">サイトアドレスには必ず英小文字 (a-z) を1つ以上含めてください</string>
+    <string name="blog_name_must_include_letters">サイトアドレスには必ず英小文字 (a–z) を1つ以上含めてください</string>
     <string name="email_reserved">そのメールアドレスはすでに使われています。有効化メールが届いていないかチェックしてみてください。有効化しなかった場合、数日後に同じアドレスでもう一度登録できるようになります。</string>
     <string name="email_cant_be_used_to_signup">こちらから送信するメールがブロックされる問題が発生しているため、そのメールアドレスは登録の際にお使いいただけません。他のメールプロバイダをご利用ください。</string>
     <string name="site_address">インストール型 WordPress のアドレス (URL)</string>

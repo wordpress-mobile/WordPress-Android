@@ -213,7 +213,7 @@ Language: es
     <string name="uploading_subtitle_mixed">Quedan %1$d %2$s y %3$d de %4$d archivos</string>
     <string name="uploading_title">Subiendo…</string>
     <string name="media_files_uploaded_write_post">Escribir entrada</string>
-    <string name="media_file_missing_for_retry">El reintento no es posible - algunos archivos de esta entrada no están en tu dispositivo</string>
+    <string name="media_file_missing_for_retry">El reintento no es posible – algunos archivos de esta entrada no están en tu dispositivo</string>
     <string name="media_all_files_uploaded_successfully">%d archivos subidos con éxito</string>
     <string name="media_files_uploaded_successfully">, %d subido con éxito</string>
     <string name="media_file_uploaded">1 archivo subido</string>
@@ -360,10 +360,10 @@ Language: es
     <string name="open_mail">Abrir correo electrónico</string>
     <string name="next">Siguiente</string>
     <string name="enter_email_wordpress_com">Accede a WordPress.com usando una dirección de correo electrónico para gestionar todos tus sitios WordPress.</string>
-    <string name="login_promo_text_jetpack">Gestiona tu sitio con Jetpack instalado sobre la marcha - tienes WordPress en tu bolsillo.</string>
-    <string name="login_promo_text_notifications">Tus avisos viajan contigo - ve los comentarios y \"me gusta\" a medida que ocurran.</string>
+    <string name="login_promo_text_jetpack">Gestiona tu sitio con Jetpack instalado sobre la marcha – tienes WordPress en tu bolsillo.</string>
+    <string name="login_promo_text_notifications">Tus avisos viajan contigo – ve los comentarios y \"me gusta\" a medida que ocurran.</string>
     <string name="login_promo_text_anytime">Revisa tus sitios favoritos y únete a la conversación en cualquier sitio, en cualquier momento.</string>
-    <string name="login_promo_text_realtime">Observa a lectores de todo el mundo leyendo e interactuando con tu sitio - en tiempo real. </string>
+    <string name="login_promo_text_realtime">Observa a lectores de todo el mundo leyendo e interactuando con tu sitio – en tiempo real. </string>
     <string name="login_promo_text_onthego">Publica desde el parque. Bloguea desde el autobús. Comenta desde el café. WordPress está donde tú vas.</string>
     <string name="email_not_found">No hemos encontrado un usuario de WordPress.com con esa dirección de correo electrónico</string>
     <string name="image_optimization_promo_desc">La optimización de imagen reduce las imágenes para que suban más rápido.\n\nPuedes cambiar esto en cualquier momento en los ajustes del sitio.</string>
@@ -798,8 +798,8 @@ Language: es
     <string name="comments_empty_list_filtered_pending">No hay comentarios pendientes</string>
     <string name="comments_empty_list_filtered_approved">No hay comentarios aprobados</string>
     <string name="site_timeout_error">No se pudo conectar con WordPress debido a un error de Timeout.</string>
-    <string name="xmlrpc_malformed_response_error">No se pudo conectar. La instalación de WordPress está respondiendo con un documento XML-RPC no válido.</string>
-    <string name="xmlrpc_missing_method_error">No se pudo conectar. Los métodos requeridos en el XML-RPC faltan en el servidor.</string>
+    <string name="xmlrpc_malformed_response_error">No se pudo conectar. La instalación de WordPress está respondiendo con un documento XML–RPC no válido.</string>
+    <string name="xmlrpc_missing_method_error">No se pudo conectar. Los métodos requeridos en el XML–RPC faltan en el servidor.</string>
     <string name="alignment_center">Centrado</string>
     <string name="post_format_video">Video</string>
     <string name="post_format_status">Estado</string>
@@ -847,7 +847,7 @@ Language: es
     <string name="primary_site">Sitio principal</string>
     <string name="pending_email_change_snackbar">Haz click en el enlace de verificación del correo electrónica enviado a %1$s para confirmar tu nueva dirección</string>
     <string name="editor_toast_uploading_please_wait">Actualmente estás subiendo archivos multimedia. Por favor, espera hasta que se complete.</string>
-    <string name="error_refresh_comments_showing_older">No se pudieron actualizar los comentarios ahora mismo - se muestran comentarios antiguos</string>
+    <string name="error_refresh_comments_showing_older">No se pudieron actualizar los comentarios ahora mismo – se muestran comentarios antiguos</string>
     <string name="post_settings_set_featured_image">Establece la imagen destacada</string>
     <string name="post_settings_featured_image">Imagen destacada</string>
     <string name="visual_editor_enabled">Editor visual activado</string>
@@ -1127,6 +1127,7 @@ Language: es
     <string name="site_picker_cant_hide_current_site">\"%s\" no se ocultó porque es el sitio actual</string>
     <string name="me_btn_support">Ayuda y soporte</string>
     <string name="account_settings">Configuración de la cuenta</string>
+    <string name="site_picker_create_dotcom">Crear sitio en WordPress.com</string>
     <string name="site_picker_edit_visibility">Mostrar/Ocultar sitios</string>
     <string name="site_picker_add_self_hosted">Añadir sitio autoalojado</string>
     <string name="site_picker_add_site">Añadir sitio nuevo</string>
@@ -1325,7 +1326,7 @@ Language: es
     <string name="blog_name_reserved_but_may_be_available">Este sitio está reservado actualmente pero es posible que quede libre en un par de días.</string>
     <string name="blog_name_reserved">Ese sitio está reservado</string>
     <string name="blog_name_exists">Ese sitio ya existe</string>
-    <string name="blog_name_only_lowercase_letters_and_numbers">La dirección solo puede contener letras minúsculas (a-z) y números.</string>
+    <string name="blog_name_only_lowercase_letters_and_numbers">La dirección solo puede contener letras minúsculas (a–z) y números.</string>
     <string name="blog_name_cant_be_used">No puedes usar esa dirección de sitio</string>
     <string name="blog_name_contains_invalid_characters">La dirección del sitio no puede tener el caracter “_”</string>
     <string name="blog_name_must_be_less_than_sixty_four_characters">La dirección del sitio debe ser más corta que 64 caracteres</string>
@@ -1337,12 +1338,12 @@ Language: es
     <string name="username_exists">Ese nombre de usuario ya existe</string>
     <string name="email_not_allowed">Esa dirección de correo electrónico no está permitida</string>
     <string name="email_invalid">Ingresa una dirección de correo electrónico válida</string>
-    <string name="username_must_include_letters">El nombre de usuario debe tener, al menos, 1 letra (a-z)</string>
+    <string name="username_must_include_letters">El nombre de usuario debe tener, al menos, 1 letra (a–z)</string>
     <string name="username_contains_invalid_characters">El nombre de usuario no puede incluir el caracter “_”</string>
     <string name="username_must_be_at_least_four_characters">El nombre de usuario debe tener, al menos, 4 caracteres</string>
     <string name="username_not_allowed">Nombre de usuario no permitido</string>
     <string name="username_required">Ingresa un nombre de usuario</string>
-    <string name="username_only_lowercase_letters_and_numbers">Nombre de usuario solo puede contener letras minúsculas (a-z) y números</string>
+    <string name="username_only_lowercase_letters_and_numbers">Nombre de usuario solo puede contener letras minúsculas (a–z) y números</string>
     <string name="invalid_email_message">Tu dirección de correo electrónico no es válida</string>
     <string name="passcode_wrong_passcode">PIN erróneo</string>
     <string name="error_downloading_image">Error al descargar la imagen</string>
@@ -1378,7 +1379,7 @@ Language: es
     <string name="out_of_memory">Memoria del dispositivo agotada</string>
     <string name="blog_title_invalid">Título de sitio no válido</string>
     <string name="blog_name_invalid">Dirección de sitio inválida</string>
-    <string name="blog_name_must_include_letters">La dirección de los sitios debe tener, al menos, 1 letra (a-z)</string>
+    <string name="blog_name_must_include_letters">La dirección de los sitios debe tener, al menos, 1 letra (a–z)</string>
     <string name="email_reserved">Esta dirección de correo electrónico ya se ha utilizado. Comprueba si tienes en tu bandeja de entrada un correo de activación. Si no activas ahora el correo, puedes intentarlo dentro de unos días.</string>
     <string name="email_cant_be_used_to_signup">No puedes usar esta dirección de correo electrónico para registrarte, ya que bloquea algunos de nuestros correos. Utiliza otro proveedor de correo.</string>
     <string name="site_address">La dirección (URL) de tu sitio autoalojado</string>

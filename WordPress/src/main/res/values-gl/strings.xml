@@ -53,12 +53,12 @@ Language: gl_ES
     <string name="people_empty_list_filtered_viewers">Aínda non tes lectores.</string>
     <string name="title_follower">Seguidor</string>
     <string name="people_fetching">Á procura dos usuarios…</string>
-    <string name="title_email_follower">Seguidor por correo-e</string>
+    <string name="title_email_follower">Seguidor por correo–e</string>
     <string name="people_empty_list_filtered_email_followers">Aínda non tes seguidor por correo electrónico ningún</string>
     <string name="people_empty_list_filtered_followers">Aínda non tes seguidor ningún</string>
     <string name="people_empty_list_filtered_users">Aínda non tes usuario ningún</string>
     <string name="people_dropdown_item_viewers">Lectores</string>
-    <string name="people_dropdown_item_email_followers">Seguidores por correo-e</string>
+    <string name="people_dropdown_item_email_followers">Seguidores por correo–e</string>
     <string name="people_dropdown_item_followers">Seguidores</string>
     <string name="people_dropdown_item_team">Equipo</string>
     <string name="invite_message_usernames_limit">Invita ate 10 enderezos de correo electrónico e/ou nomes de usuario de WordPress.com. A\naqueles que necesiten un nome de usuario se lles enviarán instrucións de como crear un.</string>
@@ -204,8 +204,8 @@ Language: gl_ES
     <string name="comments_empty_list_filtered_pending">Non hai comentarios pendentes</string>
     <string name="comments_empty_list_filtered_approved">Non hai comentarios aprobados</string>
     <string name="site_timeout_error">Fallou a conexión a WordPress. Tempo de espera esgotado.</string>
-    <string name="xmlrpc_malformed_response_error">Non foi posible conectar. A instalación de WordPress respondeu cun documento XML-RPC non válido.</string>
-    <string name="xmlrpc_missing_method_error">Non foi posible conectar. Os métodos XML-RPC requiridos non están no servidor.</string>
+    <string name="xmlrpc_malformed_response_error">Non foi posible conectar. A instalación de WordPress respondeu cun documento XML–RPC non válido.</string>
+    <string name="xmlrpc_missing_method_error">Non foi posible conectar. Os métodos XML–RPC requiridos non están no servidor.</string>
     <string name="post_format_status">Estado</string>
     <string name="post_format_video">Vídeo</string>
     <string name="alignment_center">Centro</string>
@@ -253,7 +253,7 @@ Language: gl_ES
     <string name="pending_email_change_snackbar">Preme no enlace de verificación na mensaxe enviada a %1$s para confirmar o teu novo enderezo</string>
     <string name="web_address">Enderezo web</string>
     <string name="editor_toast_uploading_please_wait">Estanse a cargar os ficheiros. Por favor, espera a que o proceso termine.</string>
-    <string name="error_refresh_comments_showing_older">Non foi posible actualizar os comentarios neste momento - mostrando comentarios antigos</string>
+    <string name="error_refresh_comments_showing_older">Non foi posible actualizar os comentarios neste momento – mostrando comentarios antigos</string>
     <string name="post_settings_set_featured_image">Poñer como imaxe destacada</string>
     <string name="post_settings_featured_image">Imaxe destacada</string>
     <string name="visual_editor_enabled">Editor visual habilitado</string>
@@ -533,6 +533,7 @@ Language: gl_ES
     <string name="account_settings">Configuración da conta</string>
     <string name="site_picker_cant_hide_current_site">\"%s\" non foi ocultado porque é o sitio actual</string>
     <string name="me_btn_support">Axuda e soporte</string>
+    <string name="site_picker_create_dotcom">Crear un sitio en WordPress.com</string>
     <string name="site_picker_edit_visibility">Mostrar/ocultar sitios</string>
     <string name="site_picker_add_self_hosted">Engadir un sitio autoaloxado</string>
     <string name="my_site_btn_view_site">Ver o sitio</string>
@@ -563,7 +564,7 @@ Language: gl_ES
     <string name="sign_in_jetpack">Para conectar a Jetpack entra na túa conta de WordPress.com</string>
     <string name="auth_required">Inicia sesión de novo para continuar</string>
     <string name="stats_search_terms_unknown_search_terms">Termos de busca descoñecidos</string>
-    <string name="stats_followers_total_wpcom_paged">Mostrando %1$d - %2$d de %3$s seguidores de WordPress.com</string>
+    <string name="stats_followers_total_wpcom_paged">Mostrando %1$d – %2$d de %3$s seguidores de WordPress.com</string>
     <string name="stats_empty_search_terms">Non se rexistraron termos de busca</string>
     <string name="stats_entry_search_terms">Termo de busca</string>
     <string name="stats_view_authors">Autores</string>
@@ -574,7 +575,7 @@ Language: gl_ES
     <string name="media_fetching">Á procura dos ficheiros…</string>
     <string name="publisher">Editor:</string>
     <string name="error_notification_open">Non foi posible abrir a notificación</string>
-    <string name="stats_followers_total_email_paged">Mostrando %1$d - %2$d de %3$s seguidores por correo-e</string>
+    <string name="stats_followers_total_email_paged">Mostrando %1$d - %2$d de %3$s seguidores por correo–e</string>
     <string name="toast_err_post_uploading">Non se pode abrir o artigo mentres está en proceso de carga</string>
     <string name="stats_empty_search_terms_desc">Aprende máis sobre o tráfico de buscas mirando os termos que levaron aos lectores ao teu sitio.</string>
     <string name="reader_empty_posts_request_failed">Fallou a procura de artigos</string>
@@ -627,8 +628,8 @@ Language: gl_ES
     <string name="stats_followers_hours">%1$d horas</string>
     <string name="stats_followers_a_day">Un día</string>
     <string name="stats_followers_days">%1$d días</string>
-    <string name="stats_followers_total_email">Total de seguidores por correo-e: %1$s</string>
-    <string name="stats_followers_email_selector">Correo-e</string>
+    <string name="stats_followers_total_email">Total de seguidores por correo–e: %1$s</string>
+    <string name="stats_followers_email_selector">Correo–e</string>
     <string name="stats_followers_total_wpcom">Total de seguidores en WordPress.com: %1$s</string>
     <string name="stats_comments_total_comments_followers">Total de artigos con seguidores dos comentarios: %1$s</string>
     <string name="stats_comments_by_authors">Por autores</string>
@@ -739,12 +740,12 @@ Language: gl_ES
     <string name="notifications_empty_list">Sen notificacións</string>
     <string name="error_generic">Houbo un erro</string>
     <string name="passcode_wrong_passcode">PIN incorrecto</string>
-    <string name="username_only_lowercase_letters_and_numbers">O nome de usuario só pode conter letras minúsculas (a-z) e números</string>
+    <string name="username_only_lowercase_letters_and_numbers">O nome de usuario só pode conter letras minúsculas (a–z) e números</string>
     <string name="username_required">Introduce un nome de usuario</string>
     <string name="username_not_allowed">Nome de usuario non permitido</string>
     <string name="username_must_be_at_least_four_characters">O nome de usuario debe ter como mínimo 4 caracteres</string>
     <string name="username_contains_invalid_characters">O nome de usuario non pode conter o carácter “_”</string>
-    <string name="username_must_include_letters">O nome de usuario debe conter como mínimo unha letra (a-z)</string>
+    <string name="username_must_include_letters">O nome de usuario debe conter como mínimo unha letra (a–z)</string>
     <string name="email_not_allowed">Ese enderezo de correo electrónico non está permitido</string>
     <string name="email_invalid">Introduce un enderezo de correo electrónico válido</string>
     <string name="username_exists">Ese nome de usuario xa existe</string>
@@ -756,7 +757,7 @@ Language: gl_ES
     <string name="blog_name_must_be_less_than_sixty_four_characters">O enderezo do sitio debe ter menos de 64 caracteres</string>
     <string name="blog_name_contains_invalid_characters">O enderezo do sitio non pode conter o carácter “_”</string>
     <string name="blog_name_cant_be_used">Non podes usar ese enderezo de sitio</string>
-    <string name="blog_name_only_lowercase_letters_and_numbers">O enderezo do sitio só pode conter letras minúsculas (a-z) e números</string>
+    <string name="blog_name_only_lowercase_letters_and_numbers">O enderezo do sitio só pode conter letras minúsculas (a–z) e números</string>
     <string name="blog_name_exists">Ese sitio xa existe</string>
     <string name="blog_name_reserved">Ese sitio está reservado</string>
     <string name="blog_name_reserved_but_may_be_available">Ese sitio está reservado neste momento, pero pode que estea dispoñible nun par de días.</string>
@@ -783,7 +784,7 @@ Language: gl_ES
     <string name="error_deleting_post">Houbo un erro mentres se eliminaba a entrada</string>
     <string name="required_field">Campo obrigatorio</string>
     <string name="email_hint">Correo electrónico</string>
-    <string name="blog_name_must_include_letters">O enderezo do sitio debe ter como mínimo unha letra (a-z)</string>
+    <string name="blog_name_must_include_letters">O enderezo do sitio debe ter como mínimo unha letra (a–z)</string>
     <string name="blog_name_invalid">Enderezo do sitio non válido</string>
     <string name="blog_title_invalid">Título do sitio non válido</string>
     <string name="notifications_empty_all">Sen notificacións … de momento.</string>
@@ -850,7 +851,7 @@ Language: gl_ES
     <string name="trash_no">Non botalo ao lixo</string>
     <string name="trash">Lixo</string>
     <string name="author_name">Nome do autor</string>
-    <string name="author_email">Correo-e do autor</string>
+    <string name="author_email">Correo–e do autor</string>
     <string name="author_url">URL do autor</string>
     <string name="sure_to_cancel_edit_comment">Cancelar a edición deste comentario?</string>
     <string name="reader_toast_err_remove_tag">Non foi posible borrar esta etiqueta</string>

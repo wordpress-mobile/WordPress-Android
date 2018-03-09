@@ -135,8 +135,8 @@ Language: vi_VN
     <string name="comments_empty_list_filtered_pending">Không có bình luận Đang chờ</string>
     <string name="comments_empty_list_filtered_approved">Không có bình luận Được duyệt</string>
     <string name="site_timeout_error">Không thể kết nối tới site Wordpress vì lỗi Hết giờ.</string>
-    <string name="xmlrpc_malformed_response_error">Không thể kết nối. Việc cài đặt WordPress đáp lại bằng một tài liệu XML-RPC không hợp lệ.</string>
-    <string name="xmlrpc_missing_method_error">Không thể kết nối. Các phương thức XML-RPC cần thiết bị thiếu trên máy chủ</string>
+    <string name="xmlrpc_malformed_response_error">Không thể kết nối. Việc cài đặt WordPress đáp lại bằng một tài liệu XML–RPC không hợp lệ.</string>
+    <string name="xmlrpc_missing_method_error">Không thể kết nối. Các phương thức XML–RPC cần thiết bị thiếu trên máy chủ</string>
     <string name="alignment_center">Ở giữa</string>
     <string name="post_format_status">Trạng thái</string>
     <string name="post_format_video">Video</string>
@@ -184,7 +184,7 @@ Language: vi_VN
     <string name="web_address">Địa chỉ Web</string>
     <string name="pending_email_change_snackbar">Kích liên kết xác thực trong email đã gửi tới %1$s để xác nhận địa chỉ mới của bạn</string>
     <string name="editor_toast_uploading_please_wait">Hiện tại bạn đang tải lên media. Vui lòng chờ đến khi việc này hoàn thành.</string>
-    <string name="error_refresh_comments_showing_older">Các bình luận không thể làm mới tại thời điểm này - hiện các bình luận cũ hơn</string>
+    <string name="error_refresh_comments_showing_older">Các bình luận không thể làm mới tại thời điểm này – hiện các bình luận cũ hơn</string>
     <string name="visual_editor_enabled">Trình biên tập trực quan đã bật</string>
     <string name="editor_content_placeholder">Chia sẻ câu chuyện của bạn ở đây</string>
     <string name="editor_page_title_placeholder">Tiêu đề Trang</string>
@@ -241,8 +241,8 @@ Language: vi_VN
     <string name="site_settings_paging_dialog_description">Ngắt chuỗi bình luận thành nhiều trang.</string>
     <string name="site_settings_paging_dialog_header">Bình luận trên mỗi trang</string>
     <string name="site_settings_close_after_dialog_title">Đóng bình luận</string>
-    <string name="site_settings_blacklist_description">Khi bình luận chứa bất kỳ của các từ trong nội dung, tên, URL, e-mail, hoặc IP của nó, nó sẽ được đánh dấu là Spam. Bạn có thể nhập một phần từ, do đó \"press\" sẽ khớp \"WordPress.\"</string>
-    <string name="site_settings_hold_for_moderation_description">Khi bình luận chứa bất kỳ của các từ trong nội dung, tên, URL, e-mail, hoặc IP của nó, nó sẽ được giữ trong hàng đợi kiểm duyệt. Bạn có thể nhập một phần từ, do đó, \"press\" sẽ khớp \"WordPress.\"</string>
+    <string name="site_settings_blacklist_description">Khi bình luận chứa bất kỳ của các từ trong nội dung, tên, URL, e–mail, hoặc IP của nó, nó sẽ được đánh dấu là Spam. Bạn có thể nhập một phần từ, do đó \"press\" sẽ khớp \"WordPress.\"</string>
+    <string name="site_settings_hold_for_moderation_description">Khi bình luận chứa bất kỳ của các từ trong nội dung, tên, URL, e–mail, hoặc IP của nó, nó sẽ được giữ trong hàng đợi kiểm duyệt. Bạn có thể nhập một phần từ, do đó, \"press\" sẽ khớp \"WordPress.\"</string>
     <string name="site_settings_list_editor_input_hint">Nhập một từ hoặc cụm từ</string>
     <string name="site_settings_list_editor_no_items_text">Không có mục</string>
     <string name="site_settings_learn_more_caption">Bạn có thể ghi đè lên các thiết lập này cho các bài viết cá nhân.</string>
@@ -458,6 +458,7 @@ Language: vi_VN
     <string name="me_btn_support">Giúp đỡ &amp; Hỗ trợ</string>
     <string name="account_settings">Cài đặt tài khoản</string>
     <string name="site_picker_cant_hide_current_site">\"%s\" không được ẩn vì đó là trang web hiện tại</string>
+    <string name="site_picker_create_dotcom">Tạo WordPress.com site</string>
     <string name="site_picker_add_self_hosted">Thêm site tự làm</string>
     <string name="site_picker_edit_visibility">Hiện/Ẩn các site</string>
     <string name="my_site_btn_view_admin">Xem Admin</string>
@@ -497,9 +498,9 @@ Language: vi_VN
     <string name="media_fetching">Đang tìm nạp media…</string>
     <string name="reader_empty_posts_request_failed">Không thể lấy các bài viết</string>
     <string name="publisher">Người xuất bản:</string>
-    <string name="stats_followers_total_email_paged">Đang hiển thị %1$d - %2$d của %3$s Email Người theo dõi</string>
+    <string name="stats_followers_total_email_paged">Đang hiển thị %1$d – %2$d của %3$s Email Người theo dõi</string>
     <string name="stats_search_terms_unknown_search_terms">Không biết Điều kiện tìm kiếm</string>
-    <string name="stats_followers_total_wpcom_paged">Đang hiển thị %1$d - %2$d của %3$s Người theo dõi WordPress.com</string>
+    <string name="stats_followers_total_wpcom_paged">Đang hiển thị %1$d – %2$d của %3$s Người theo dõi WordPress.com</string>
     <string name="stats_empty_search_terms_desc">Tìm hiểu thêm về lưu lượng tìm kiếm của bạn bằng cách nhìn vào các điều khoản khách truy cập của bạn tìm kiếm để tìm trang web của bạn.</string>
     <string name="stats_empty_search_terms">Không có điều kiện tìm kiếm được ghi nhận</string>
     <string name="stats_entry_search_terms">Điều kiện tìm kiếm</string>
@@ -665,14 +666,14 @@ Language: vi_VN
     <string name="error_downloading_image">Lỗi tải ảnh về</string>
     <string name="passcode_wrong_passcode">Sai mã PIN</string>
     <string name="invalid_email_message">Địa chỉ email của bạn không hợp lệ</string>
-    <string name="username_only_lowercase_letters_and_numbers">Tên người dùng chỉ có thể chứa chữ thường (a-z) và số</string>
+    <string name="username_only_lowercase_letters_and_numbers">Tên người dùng chỉ có thể chứa chữ thường (a–z) và số</string>
     <string name="username_required">Nhập một tên người dùng</string>
     <string name="username_not_allowed">Tên người dùng không được phép</string>
     <string name="username_must_be_at_least_four_characters">Tên người dùng phải chứa ít nhất 4 kí tự</string>
     <string name="blog_name_exists">Site đó đã tồn tại</string>
     <string name="username_or_password_incorrect">Tên người dùng và mật khẩu bạn đã nhập không đúng</string>
     <string name="username_contains_invalid_characters">Tên người dùng không thể chứa kí tự \"_\"</string>
-    <string name="username_must_include_letters">Tên người dùng phải có ít nhất 1 chữ (a-z)</string>
+    <string name="username_must_include_letters">Tên người dùng phải có ít nhất 1 chữ (a–z)</string>
     <string name="email_invalid">Nhập một địa chỉ email hợp lệ</string>
     <string name="email_not_allowed">Địa chỉ email đó không được phép</string>
     <string name="username_exists">Tên người dùng đó đã tồn tại</string>
@@ -682,7 +683,7 @@ Language: vi_VN
     <string name="blog_name_must_be_less_than_sixty_four_characters">Địa chỉ site phải ngắn hơn 64 kí tự</string>
     <string name="blog_name_contains_invalid_characters">Địa chỉ site không thể chứa kí tự \"_\"</string>
     <string name="blog_name_cant_be_used">Bạn không thể sử dụng địa chỉ site đó</string>
-    <string name="blog_name_only_lowercase_letters_and_numbers">Địa chỉ site chỉ có thể chứa chữ thường (a-z) và số</string>
+    <string name="blog_name_only_lowercase_letters_and_numbers">Địa chỉ site chỉ có thể chứa chữ thường (a–z) và số</string>
     <string name="invalid_url_message">Kiểm tra URL đã nhập là hợp lệ</string>
     <string name="reply_failed">Trả lời bị lỗi</string>
     <string name="notifications_empty_list">Không có thông báo</string>
@@ -749,7 +750,7 @@ Language: vi_VN
     <string name="email_hint">Địa chỉ email</string>
     <string name="email_cant_be_used_to_signup">Bạn không thể dùng địa chỉ email đó để đăng kí. Chúng tôi đang có vấn đề với việc chăn 1 số email của chúng tôi. Sử dụng một nhà cung cấp email khác.</string>
     <string name="email_reserved">Địa chỉ email đã được sử dụng. Kiểm tra email kích hoạt trong hộp thư đến của bạn. Nếu bạn không kích hoạt, bạn có thể thử lại trong vài ngày.</string>
-    <string name="blog_name_must_include_letters">Địa chỉ site phải có ít nhất 1 chữ (a-z)</string>
+    <string name="blog_name_must_include_letters">Địa chỉ site phải có ít nhất 1 chữ (a–z)</string>
     <string name="blog_name_invalid">Địa chỉ site không hợp lệ</string>
     <string name="blog_title_invalid">Tiêu đề site không hợp lệ</string>
     <string name="add_new_category">Thêm danh mục mới</string>
