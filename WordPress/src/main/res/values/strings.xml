@@ -1778,8 +1778,8 @@
 
     <!-- permissions -->
     <string name="button_edit_permissions">Edit permissions</string>
-    <string name="permissions_denied_title">It looks like you turned off permissions required for this feature</string>
-    <string name="permissions_denied_message">To change this, edit your permissions and make sure %s is enabled</string>
+    <string name="permissions_denied_title">Permissions</string>
+    <string name="permissions_denied_message">It looks like you turned off permissions required for this feature.&lt;br/&gt;&lt;br/&gt;To change this, edit your permissions and make sure &lt;strong&gt;%s&lt;/strong&gt; is enabled.</string>
     <string name="permission_storage">Storage</string>
     <string name="permission_camera">Camera</string>
     <string name="permission_location">Location</string>
