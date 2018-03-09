@@ -3,6 +3,7 @@ package org.wordpress.android.ui.stockphotos;
 import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModelProvider;
 import android.arch.lifecycle.ViewModelProviders;
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.NonNull;
@@ -28,6 +29,7 @@ import org.wordpress.android.ui.media.MediaPreviewActivity;
 import org.wordpress.android.util.ActivityUtils;
 import org.wordpress.android.util.AniUtils;
 import org.wordpress.android.util.DisplayUtils;
+import org.wordpress.android.util.ListUtils;
 import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.PhotonUtils;
 import org.wordpress.android.util.StringUtils;
@@ -42,6 +44,7 @@ import java.util.List;
 import javax.inject.Inject;
 
 public class StockPhotoPickerActivity extends AppCompatActivity implements SearchView.OnQueryTextListener {
+    public static final String RESULT_GUIDS = "result_guids";
     private static final String KEY_SELECTED_ITEMS = "selected_items";
     private static final int MIN_SEARCH_QUERY_SIZE = 3;
 
@@ -285,11 +288,18 @@ public class StockPhotoPickerActivity extends AppCompatActivity implements Searc
     }
 
     private void insertSelection() {
+        ToastUtils.showToast(this, "Uploading will be added in a later PR");
+
         List<StockMediaModel> items = mAdapter.getSelectedItems();
-        if (items.size() == 0) {
-            return;
+        ArrayList<String> guids = new ArrayList<>();
+        for (StockMediaModel item : items) {
+            guids.add(item.getGuid());
         }
-        ToastUtils.showToast(this, "Insertion will be handled in a separate PR");
+
+        Intent intent = new Intent();
+        intent.putStringArrayListExtra(RESULT_GUIDS, guids);
+        setResult(RESULT_OK, intent);
+        finish();
     }
 
     class StockPhotoAdapter extends RecyclerView.Adapter<StockViewHolder> {

@@ -406,6 +406,9 @@ public class MediaBrowserActivity extends AppCompatActivity implements MediaGrid
                     reloadMediaGrid();
                 }
                 break;
+            case RequestCodes.STOCK_PHOTO_PICKER:
+                // TODO
+                break;
         }
     }
 
