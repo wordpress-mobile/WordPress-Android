@@ -577,7 +577,8 @@ public class MediaGridAdapter extends RecyclerView.Adapter<MediaGridAdapter.Grid
 
         // show and animate the count
         if (selected) {
-            holder.mSelectionCountTextView.setText(String.format(Locale.getDefault(), "%d", mSelectedItems.indexOf(localMediaId) + 1));
+            holder.mSelectionCountTextView
+                    .setText(String.format(Locale.getDefault(), "%d", mSelectedItems.indexOf(localMediaId) + 1));
         } else {
             holder.mSelectionCountTextView.setText(null);
         }
