@@ -992,6 +992,27 @@ public class EditPostActivity extends AppCompatActivity implements
                     mEditPostSettingsFragment.refreshViews();
                 }
                 mViewPager.setCurrentItem(PAGE_SETTINGS);
+            } else if (itemId == R.id.menu_save_as_draft) {
+                // save as draft
+                savePostAsync(new AfterSavePostListener() {
+                    @Override
+                    public void onPostSave() {
+                        // TODO here show the snackbar
+//                        if (mEditPostPreviewFragment != null) {
+//                            runOnUiThread(new Runnable() {
+//                                @Override
+//                                public void run() {
+//                                    if (mEditPostPreviewFragment != null) {
+//                                        mEditPostPreviewFragment.loadPost(mPost);
+//                                    }
+//                                }
+//                            });
+//                        }
+                    }
+                });
+
+            } else if (itemId == R.id.menu_html_mode) {
+                // TODO: toggle HTML mode
             }
         }
         return false;
@@ -1447,7 +1468,7 @@ public class EditPostActivity extends AppCompatActivity implements
         builder.create().show();
     }
 
-    private void savePostAndFinish() {
+    private void savePostAndFinish(boolean doFinish) {
         // Update post, save to db and post online in its own Thread, because 1. update can be pretty slow with a lot of
         // text 2. better not to call `updatePostObject()` from the UI thread due to weird thread blocking behavior
         // on API 16 (and 21) with the visual editor.
