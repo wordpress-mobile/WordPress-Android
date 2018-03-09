@@ -7,8 +7,16 @@ import android.content.res.Configuration;
 import android.content.res.Resources;
 import android.os.Build;
 import android.preference.PreferenceManager;
+import android.support.annotation.NonNull;
+import android.text.TextUtils;
+import android.util.Pair;
 
+import java.text.Collator;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
 import java.util.Locale;
+import java.util.Map;
 
 import javax.annotation.Nullable;
 
@@ -18,6 +26,24 @@ import javax.annotation.Nullable;
  * android version.
  */
 public abstract class LocaleManager {
+    /**
+     * Length of a {@link String} (representing a language code) when there is no region included.
+     * For example: "en" contains no region, "en_US" contains a region (US)
+     * <p>
+     * Used to parse a language code {@link String} when creating a {@link Locale}.
+     */
+    private static final int NO_REGION_LANG_CODE_LEN = 2;
+
+    /**
+     * Index of a language code {@link String} where the region code begins. The language code
+     * format is cc_rr, where cc is the country code (e.g. en, es, az) and rr is the region code
+     * (e.g. us, au, gb).
+     */
+    private static final int REGION_SUBSTRING_INDEX = 3;
+
+    /**
+     * Key used for saving the language selection to shared preferences.
+     */
     private static final String LANGUAGE_KEY = "language-pref";
 
     /**
@@ -35,7 +61,7 @@ public abstract class LocaleManager {
      * @param language The 2-letter language code (example "en") to switch to
      */
     public static Context setNewLocale(Context context, String language) {
-        Locale newLocale = WPPrefUtils.languageLocale(language);
+        Locale newLocale = languageLocale(language);
 
         if (Locale.getDefault().toString().equals(newLocale.toString())) {
             removePersistedLanguage(context);
@@ -50,9 +76,9 @@ public abstract class LocaleManager {
      * @param language The language to compare
      * @return True if the languages are the same, else false
      */
-    public static boolean isDifferentLanguage(String language) {
-        Locale newLocale = WPPrefUtils.languageLocale(language);
-        return !Locale.getDefault().getLanguage().equals(newLocale.getLanguage());
+    public static boolean isSameLanguage(@NonNull String language) {
+        Locale newLocale = languageLocale(language);
+        return Locale.getDefault().getLanguage().equals(newLocale.getLanguage());
     }
 
     /**
@@ -143,9 +169,111 @@ public abstract class LocaleManager {
         }
 
         if (Build.VERSION.SDK_INT >= 24) {
-            return WPPrefUtils.languageLocale(baseLocale.getLanguage());
+            return languageLocale(baseLocale.getLanguage());
         } else {
             return baseLocale;
         }
+    }
+
+    /**
+     * Gets a locale for the given language code.
+     * @param languageCode The 2-letter language code (example "en"). If null or empty will return
+     *                     the current default locale.
+     */
+    public static Locale languageLocale(@Nullable String languageCode) {
+        if (TextUtils.isEmpty(languageCode)) {
+            return Locale.getDefault();
+        }
+
+        if (languageCode.length() > NO_REGION_LANG_CODE_LEN) {
+            return new Locale(languageCode.substring(0, NO_REGION_LANG_CODE_LEN),
+                    languageCode.substring(REGION_SUBSTRING_INDEX));
+        }
+
+        return new Locale(languageCode);
+    }
+
+    /**
+     * Creates a map from language codes to WordPress language IDs.
+     */
+    public static Map<String, String> generateLanguageMap(Context context) {
+        String[] languageIds = context.getResources().getStringArray(org.wordpress.android.R.array.lang_ids);
+        String[] languageCodes = context.getResources().getStringArray(org.wordpress.android.R.array.language_codes);
+
+        Map<String, String> languageMap = new HashMap<>();
+        for (int i = 0; i < languageIds.length && i < languageCodes.length; ++i) {
+            languageMap.put(languageCodes[i], languageIds[i]);
+        }
+
+        return languageMap;
+    }
+
+    /**
+     * Generates display strings for given language codes. Used as entries in language preference.
+     */
+    @android.support.annotation.Nullable
+    public static Pair<String[], String[]> createSortedLanguageDisplayStrings(CharSequence[] languageCodes,
+                                                                              Locale locale) {
+        if (languageCodes == null || languageCodes.length < 1) {
+            return null;
+        }
+
+        ArrayList<String> entryStrings = new ArrayList<>(languageCodes.length);
+        for (int i = 0; i < languageCodes.length; ++i) {
+            // "__" is used to sort the language code with the display string so both arrays are sorted at the same time
+            entryStrings.add(i, StringUtils.capitalize(
+                    getLanguageString(languageCodes[i].toString(), locale)) + "__" + languageCodes[i]);
+        }
+
+        Collections.sort(entryStrings, Collator.getInstance(locale));
+
+        String[] sortedEntries = new String[languageCodes.length];
+        String[] sortedValues = new String[languageCodes.length];
+
+        for (int i = 0; i < entryStrings.size(); ++i) {
+            // now, we can split the sorted array to extract the display string and the language code
+            String[] split = entryStrings.get(i).split("__");
+            sortedEntries[i] = split[0];
+            sortedValues[i] = split[1];
+        }
+
+        return new Pair<>(sortedEntries, sortedValues);
+    }
+
+    /**
+     * Generates detail display strings in the currently selected locale. Used as detail text
+     * in language preference dialog.
+     */
+    @android.support.annotation.Nullable
+    public static String[] createLanguageDetailDisplayStrings(CharSequence[] languageCodes) {
+        if (languageCodes == null || languageCodes.length < 1) {
+            return null;
+        }
+
+        String[] detailStrings = new String[languageCodes.length];
+        for (int i = 0; i < languageCodes.length; ++i) {
+            detailStrings[i] = StringUtils.capitalize(getLanguageString(
+                    languageCodes[i].toString(), languageLocale(languageCodes[i].toString())));
+        }
+
+        return detailStrings;
+    }
+
+    /**
+     * Return a non-null display string for a given language code.
+     */
+    public static String getLanguageString(String languageCode, Locale displayLocale) {
+        if (languageCode == null || languageCode.length() < 2 || languageCode.length() > 6) {
+            return "";
+        }
+
+        Locale languageLocale = languageLocale(languageCode);
+        String displayLanguage = StringUtils.capitalize(languageLocale.getDisplayLanguage(displayLocale));
+        String displayCountry = languageLocale.getDisplayCountry(displayLocale);
+
+        if (!TextUtils.isEmpty(displayCountry)) {
+            return displayLanguage + " (" + displayCountry + ")";
+        }
+        return displayLanguage;
     }
 }

@@ -3,7 +3,6 @@ package org.wordpress.android.ui.prefs;
 import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
 import android.preference.ListPreference;
@@ -11,7 +10,6 @@ import android.preference.Preference;
 import android.preference.Preference.OnPreferenceClickListener;
 import android.preference.PreferenceCategory;
 import android.preference.PreferenceFragment;
-import android.preference.PreferenceManager;
 import android.preference.PreferenceScreen;
 import android.text.TextUtils;
 import android.util.Pair;
@@ -44,7 +42,6 @@ public class AppSettingsFragment extends PreferenceFragment
     private static final int IDX_AZTEC_EDITOR = 2;
 
     private DetailListPreference mLanguagePreference;
-    private SharedPreferences mSettings;
 
     // This Device settings
     private WPSwitchPreference mOptimizedImage;
@@ -132,8 +129,6 @@ public class AppSettingsFragment extends PreferenceFragment
             WPPrefUtils.removePreference(this, R.string.pref_key_optimize_media,
                                          R.string.pref_key_site_video_encoder_bitrate);
         }
-
-        mSettings = PreferenceManager.getDefaultSharedPreferences(getActivity());
 
         updateEditorSettings();
     }
@@ -277,7 +272,7 @@ public class AppSettingsFragment extends PreferenceFragment
             return;
         }
 
-        if (!LocaleManager.isDifferentLanguage(languageCode)) {
+        if (LocaleManager.isSameLanguage(languageCode)) {
             return;
         }
 
@@ -305,11 +300,11 @@ public class AppSettingsFragment extends PreferenceFragment
             return;
         }
 
-        Locale languageLocale = WPPrefUtils.languageLocale(languageCode);
+        Locale languageLocale = LocaleManager.languageLocale(languageCode);
         String[] availableLocales = getResources().getStringArray(R.array.available_languages);
 
         Pair<String[], String[]> pair =
-                WPPrefUtils.createSortedLanguageDisplayStrings(availableLocales, languageLocale);
+                LocaleManager.createSortedLanguageDisplayStrings(availableLocales, languageLocale);
         // check for a possible NPE
         if (pair == null) {
             return;
@@ -320,10 +315,10 @@ public class AppSettingsFragment extends PreferenceFragment
 
         mLanguagePreference.setEntries(sortedEntries);
         mLanguagePreference.setEntryValues(sortedValues);
-        mLanguagePreference.setDetails(WPPrefUtils.createLanguageDetailDisplayStrings(sortedValues));
+        mLanguagePreference.setDetails(LocaleManager.createLanguageDetailDisplayStrings(sortedValues));
 
         mLanguagePreference.setValue(languageCode);
-        mLanguagePreference.setSummary(WPPrefUtils.getLanguageString(languageCode, languageLocale));
+        mLanguagePreference.setSummary(LocaleManager.getLanguageString(languageCode, languageLocale));
         mLanguagePreference.refreshAdapter();
     }
 

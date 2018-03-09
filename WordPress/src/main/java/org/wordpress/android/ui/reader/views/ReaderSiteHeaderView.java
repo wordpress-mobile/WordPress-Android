@@ -129,17 +129,10 @@ public class ReaderSiteHeaderView extends LinearLayout {
             txtDescription.setVisibility(View.GONE);
         }
 
-        try {
-            txtFollowCount.setText(String.format(
-                            LocaleManager.getSafeLocale(getContext()),
-                            getContext().getString(R.string.reader_label_follow_count),
-                            blogInfo.numSubscribers));
-        } catch (ArithmeticException exception) {
-            txtFollowCount.setText(String.format(
-                    LocaleManager.getSafeLocale(getContext()),
-                    getContext().getString(R.string.reader_label_follow_count),
-                    blogInfo.numSubscribers));
-        }
+        txtFollowCount.setText(String.format(
+                        LocaleManager.getSafeLocale(getContext()),
+                        getContext().getString(R.string.reader_label_follow_count),
+                        blogInfo.numSubscribers));
 
         if (!mAccountStore.hasAccessToken()) {
             mFollowButton.setVisibility(View.GONE);
