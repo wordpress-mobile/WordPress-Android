@@ -35,13 +35,10 @@
 
     <!-- general strings -->
     <string name="device">Device</string>
-    <string name="post">Post</string>
-    <string name="page">Page</string>
     <string name="posts">Posts</string>
     <string name="media">Media</string>
     <string name="video">Video</string>
     <string name="themes">Themes</string>
-    <string name="pages">Pages</string>
     <string name="about_the_app">About the app</string>
     <string name="username">Username</string>
     <string name="cancel">Cancel</string>
