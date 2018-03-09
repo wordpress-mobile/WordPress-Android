@@ -90,6 +90,7 @@ public class StockMediaStore extends Store {
         }
         public OnStockMediaListFetched(StockMediaError error) {
             this.error = error;
+            this.mediaList = new ArrayList<>();
         }
     }
 
