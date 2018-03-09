@@ -226,7 +226,7 @@ public class PostsListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
                 String cleanPostTitle = StringEscapeUtils.unescapeHtml4(post.getTitle());
                 postHolder.mTxtTitle.setText(cleanPostTitle);
             } else {
-                postHolder.mTxtTitle.setText("(" + context.getResources().getText(R.string.untitled) + ")");
+                postHolder.mTxtTitle.setText(context.getResources().getText(R.string.untitled_in_parentheses));
             }
 
             String cleanPostExcerpt = PostUtils.getPostListExcerptFromPost(post);
@@ -273,7 +273,7 @@ public class PostsListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
             if (StringUtils.isNotEmpty(post.getTitle())) {
                 pageHolder.mTxtTitle.setText(post.getTitle());
             } else {
-                pageHolder.mTxtTitle.setText("(" + context.getResources().getText(R.string.untitled) + ")");
+                pageHolder.mTxtTitle.setText(context.getResources().getText(R.string.untitled_in_parentheses));
             }
 
             String dateStr = getPageDateHeaderText(context, post);
