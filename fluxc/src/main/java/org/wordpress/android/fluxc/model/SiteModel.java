@@ -587,4 +587,8 @@ public class SiteModel extends Payload<BaseNetworkError> implements Identifiable
     public double getSpacePercentUsed() {
         return mSpacePercentUsed;
     }
+
+    public boolean hasDiskSpaceQuotaInformation() {
+        return mSpaceAllowed > 0;
+    }
 }
