@@ -10,6 +10,7 @@ public class WPComV2EndpointTest {
     public void testAllEndpoints() {
         // Users
         assertEquals("/users/username/suggestions/", WPCOMV2.users.username.suggestions.getEndpoint());
+        assertEquals("/plugins/featured/", WPCOMV2.plugins.featured.getEndpoint());
     }
 
     @Test
