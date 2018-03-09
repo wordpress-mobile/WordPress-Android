@@ -44,8 +44,7 @@ public class HelpshiftHelper {
     public enum MetadataKey {
         USER_ENTERED_URL("user-entered-url"),
         USER_ENTERED_USERNAME("user-entered-username"),
-        USER_ENTERED_EMAIL("user-entered-email")
-        ;
+        USER_ENTERED_EMAIL("user-entered-email");
 
         private final String mStringValue;
 
