@@ -1,7 +1,6 @@
 package org.wordpress.android.ui.prefs;
 
 import android.content.ActivityNotFoundException;
-import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
@@ -276,13 +275,13 @@ public class AppSettingsFragment extends PreferenceFragment
             return;
         }
 
-        Context newContext = LocaleManager.setNewLocale(WordPress.getContext(), languageCode);
+        LocaleManager.setNewLocale(WordPress.getContext(), languageCode);
         updateLanguagePreference(languageCode);
 
         // Track language change on Analytics because we have both the device language and app selected language
         // data in Tracks metadata.
         Map<String, Object> properties = new HashMap<>();
-        properties.put("app_locale", newContext.getResources().getConfiguration().locale.toString());
+        properties.put("app_locale", Locale.getDefault());
         AnalyticsTracker.track(Stat.ACCOUNT_SETTINGS_LANGUAGE_CHANGED, properties);
 
         // Language is now part of metadata, so we need to refresh them

@@ -60,15 +60,12 @@ public class LocaleManager {
      * @param context The current context
      * @param language The 2-letter language code (example "en") to switch to
      */
-    public static Context setNewLocale(Context context, String language) {
-        Locale newLocale = languageLocale(language);
-
-        if (Locale.getDefault().toString().equals(newLocale.toString())) {
-            removePersistedLanguage(context);
-        } else {
-            saveLanguageToPref(context, language);
+    public static void setNewLocale(Context context, String language) {
+        if (isSameLanguage(language)) {
+            return;
         }
-        return updateResources(context, language);
+        saveLanguageToPref(context, language);
+        updateResources(context, language);
     }
 
     /**
