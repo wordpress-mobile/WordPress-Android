@@ -1,0 +1,276 @@
+<?xml version="1.0"?>
+<!DOCTYPE module PUBLIC
+    "-//Puppy Crawl//DTD Check Configuration 1.2//EN"
+    "http://www.puppycrawl.com/dtds/configuration_1_2.dtd">
+
+<module name="Checker">
+    <!-- Restricts scan to specific extensions.           -->
+    <!-- See http://checkstyle.sf.net/config.html#Checker -->
+    <property name="fileExtensions" value="java, kt, xml"/>
+
+    <!-- Excludes given file patterns from scan.              -->
+    <!-- See http://checkstyle.sf.net/config_filefilters.html -->
+    <module name="BeforeExecutionExclusionFileFilter">
+        <property name="fileNamePattern" value="[/\\]gen[/\\]"/>
+    </module>
+
+    <!-- Checks whether files end with a new line.                        -->
+    <!-- See http://checkstyle.sf.net/config_misc.html#NewlineAtEndOfFile -->
+    <module name="NewlineAtEndOfFile"/>
+
+    <!-- Checks that property files contain the same keys.         -->
+    <!-- See http://checkstyle.sf.net/config_misc.html#Translation -->
+    <module name="Translation"/>
+
+    <!-- Checks for Size Violations.                    -->
+    <!-- See http://checkstyle.sf.net/config_sizes.html -->
+    <!--
+    <module name="FileLength"/>
+    -->
+
+    <!-- Checks for whitespace                               -->
+    <!-- See http://checkstyle.sf.net/config_whitespace.html -->
+    <module name="FileTabCharacter"/>
+
+    <!-- Miscellaneous other checks.                   -->
+    <!-- See http://checkstyle.sf.net/config_misc.html -->
+    <module name="RegexpSingleline">
+       <property name="format" value="\s+$"/>
+       <property name="minimum" value="0"/>
+       <property name="maximum" value="0"/>
+       <property name="message" value="Line has trailing spaces."/>
+       <property name="severity" value="error"/>
+    </module>
+
+
+    <module name="RegexpMultiline">
+      <property name="format"
+                value="(\n|\r\n)[\t ]*(\n|\r\n)[\t ]*\}"/>
+      <property name="message" value="Empty line not allowed before brace"/>
+    </module>
+
+    <module name="RegexpMultiline">
+      <property name="format"
+                value="\{[\t ]*(\n|\r\n)[\t ]*(\n|\r\n)"/>
+      <property name="message" value="Empty line not allowed after brace"/>
+    </module>
+
+    <module name="RegexpSingleline">
+      <property name="format" value=" \/\/(?!noinspection)[^ \t]"/>
+      <property name="message" value="Line comments '//' must be followed by one whitespace"/>
+      <property name="severity" value="error"/>
+    </module>
+
+    <module name="RegexpSingleline">
+        <property name="format" value="[^\S\r\n]@[\S]*(\([{]?\&quot;.*\&quot;[}]?\)++|\([^\&quot;]*\)++)[^ \t]"/>
+        <property name="message" value="In-line annotations must be followed by one whitespace"/>
+        <property name="severity" value="error"/>
+    </module>
+
+    <module name="RegexpMultiline">
+        <property name="format" value="@Inject(\n|\r\n).*[^{,(]$"/>
+        <property name="message" value="Inject annotation should be in-line with the annotated field or property"/>
+    </module>
+
+    <module name="RegexpSingleline">
+        <property name="format" value="^(?!.*\bclass\b).*\S.*@Inject"/>
+        <property name="message" value="In-line inject annotation should precede the rest of the declaration"/>
+    </module>
+
+    <!-- Specific to FluxC -->
+    <module name="RegexpSingleline">
+        <property name="format" value="extends Payload[^&lt;]"/>
+        <property name="message" value="Payload should not be used as a raw type"/>
+        <property name="severity" value="error"/>
+    </module>
+
+    <!-- Specific to FluxC -->
+    <module name="RegexpMultiline">
+        <property name="format" value="(?&lt;!^@Singleton)\n.*extends Store[\s{]"/>
+        <property name="message" value="Stores must be annotated with @Singleton"/>
+    </module>
+
+    <!-- Specific to FluxC -->
+    <module name="RegexpMultiline">
+        <property name="format" value="(?&lt;!^@Singleton)\n.*extends Base[\w]*Client[\s{]"/>
+        <property name="message" value="Network clients must be annotated with @Singleton"/>
+    </module>
+
+    <!-- Specific to WordPress -->
+    <module name="RegexpSingleline">
+      <property name="format" value=".*dotcom(?!.*checkstyle ignore)"/>
+      <property name="ignoreCase" value="true"/>
+      <property name="message" value="You should not use _dotcom_, use _wpcom_ instead"/>
+      <property name="severity" value="error"/>
+    </module>
+
+    <!-- Specific to WordPress -->
+    <module name="RegexpSingleline">
+      <property name="format" value=".*dotorg(?!.*checkstyle ignore)"/>
+      <property name="ignoreCase" value="true"/>
+      <property name="message" value="You should not use _dotorg_, use _selfHosted_ instead"/>
+      <property name="severity" value="error"/>
+    </module>
+
+    <module name="TreeWalker">
+
+        <!-- Checks for Naming Conventions.                  -->
+        <!-- See http://checkstyle.sf.net/config_naming.html -->
+        <module name="ConstantName"/>
+        <module name="LocalFinalVariableName"/>
+        <module name="LocalVariableName"/>
+        <!-- <module name="MemberName"/> -->
+        <module name="MemberName">
+          <property name="applyToPublic" value="false"/>
+          <property name="applyToProtected" value="false"/>
+          <property name="applyToPackage" value="false"/>
+          <property name="applyToPrivate" value="false"/>
+          <property name="format" value="^[a-zA-Z0-9]*$"/>
+        </module>
+        <module name="MemberName">
+          <property name="applyToPublic" value="false"/>
+          <property name="applyToProtected" value="true"/>
+          <property name="applyToPackage" value="true"/>
+          <property name="applyToPrivate" value="true"/>
+          <property name="format" value="^m[a-zA-Z0-9]*$"/>
+        </module>
+
+        <module name="MethodName">
+           <property name="format" value="^[a-z](_?[a-zA-Z0-9]+)*$"/>
+        </module>
+        <module name="PackageName"/>
+        <module name="ParameterName"/>
+        <module name="StaticVariableName"/>
+        <module name="TypeName">
+          <property name="format" value="^[A-Z][a-zA-Z0-9_]*$"/>
+        </module>
+
+        <!-- Checks for imports                              -->
+        <!-- See http://checkstyle.sf.net/config_import.html -->
+        <module name="AvoidStarImport"/>
+        <module name="IllegalImport"/> <!-- defaults to sun.* packages -->
+        <module name="RedundantImport"/>
+        <module name="UnusedImports">
+            <property name="processJavadoc" value="true"/>
+        </module>
+
+        <module name="ImportOrder">
+            <property name="groups" value="android,com,junit,net,org,java,javax"/>
+            <property name="ordered" value="false"/>
+            <property name="separated" value="true"/>
+            <property name="option" value="bottom"/>
+            <property name="sortStaticImportsAlphabetically" value="true"/>
+        </module>
+
+        <!-- Checks for Size Violations.                    -->
+        <!-- See http://checkstyle.sf.net/config_sizes.html -->
+        <module name="LineLength">
+          <!-- what is a good max value? -->
+          <property name="max" value="120"/>
+          <!-- ignore lines like "$File: //depot/... $" -->
+          <property name="ignorePattern" value="\$File.*\$"/>
+          <property name="severity" value="error"/>
+        </module>
+        <module name="MethodLength">
+          <property name="tokens" value="METHOD_DEF"/>
+          <!-- TODO: We should set this value around 40 or 50 -->
+          <property name="max" value="200"/>
+        </module>
+
+        <!-- Checks for whitespace                               -->
+        <!-- See http://checkstyle.sf.net/config_whitespace.html -->
+        <module name="EmptyForIteratorPad"/>
+        <module name="GenericWhitespace"/>
+        <module name="MethodParamPad"/>
+        <module name="NoWhitespaceAfter"/>
+        <module name="NoWhitespaceBefore"/>
+        <module name="SingleSpaceSeparator"/>
+        <module name="OperatorWrap"/>
+        <module name="ParenPad"/>
+        <module name="TypecastParenPad"/>
+        <module name="WhitespaceAfter"/>
+        <module name="WhitespaceAround">
+          <property name="allowEmptyTypes" value="true"/>
+          <property name="allowEmptyConstructors" value="true"/>
+          <property name="ignoreEnhancedForColon" value="false"/>
+        </module>
+        <module name="NoWhitespaceAfter">
+          <property name="tokens"
+                    value="BNOT, DEC, DOT, INC, LNOT, UNARY_MINUS, UNARY_PLUS" />
+        </module>
+
+        <!-- Modifier Checks                                    -->
+        <!-- See http://checkstyle.sf.net/config_modifiers.html -->
+        <module name="ModifierOrder"/>
+        <module name="RedundantModifier"/>
+
+
+        <!-- Checks for blocks. You know, those {}'s         -->
+        <!-- See http://checkstyle.sf.net/config_blocks.html -->
+        <module name="AvoidNestedBlocks"/>
+        <module name="EmptyBlock">
+          <property name="option" value="text"/>
+        </module>
+        <module name="LeftCurly"/>
+        <module name="NeedBraces">
+            <property name="allowSingleLineStatement" value="true"/>
+        </module>
+        <module name="RightCurly"/>
+
+
+        <!-- Checks for common coding problems               -->
+        <!-- See http://checkstyle.sf.net/config_coding.html -->
+        <module name="EmptyStatement"/>
+        <module name="FallThrough"/>
+        <module name="HiddenField">
+          <property name="ignoreConstructorParameter" value="true"/>
+          <property name="ignoreSetter" value="true"/>
+          <property name="severity" value="warning"/>
+        </module>
+        <module name="IllegalInstantiation"/>
+
+        <module name="SimplifyBooleanExpression"/>
+        <module name="SimplifyBooleanReturn"/>
+
+        <!-- Checks for class design                         -->
+        <!-- See http://checkstyle.sf.net/config_design.html -->
+        <module name="InterfaceIsType"/>
+        <module name="VisibilityModifier">
+          <property name="packageAllowed" value="true"/>
+          <property name="protectedAllowed" value="true"/>
+          <property name="publicMemberPattern" value="^[a-zA-Z0-9_]*$"/>
+        </module>
+
+        <!-- Miscellaneous other checks.                   -->
+        <!-- See http://checkstyle.sf.net/config_misc.html -->
+        <module name="ArrayTypeStyle"/>
+        <module name="TodoComment">
+          <property name="format" value="FIXME"/>
+          <property name="severity" value="warning"/>
+        </module>
+
+        <module name="UpperEll"/>
+
+        <module name="SuppressWarningsHolder"/> <!-- Required by suppression via annotation filter -->
+
+        <module name="OneStatementPerLine"/>
+
+        <!-- Enable suppression comments -->
+        <module name="SuppressionCommentFilter">
+            <property name="offCommentFormat" value="CHECKSTYLE IGNORE\s+(\S+)"/>
+            <property name="onCommentFormat" value="CHECKSTYLE END IGNORE\s+(\S+)"/>
+            <property name="checkFormat" value="$1"/>
+        </module>
+
+        <module name="SuppressWithNearbyCommentFilter">
+            <!-- Syntax is "SUPPRESS CHECKSTYLE name" -->
+            <property name="commentFormat" value="SUPPRESS CHECKSTYLE (\w+)"/>
+            <property name="checkFormat" value="$1"/>
+            <property name="influenceFormat" value="1"/>
+        </module>
+
+    </module>
+
+    <module name="SuppressWarningsFilter"/>
+
+</module>
