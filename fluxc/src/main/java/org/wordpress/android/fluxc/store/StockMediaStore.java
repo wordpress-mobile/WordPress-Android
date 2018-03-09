@@ -24,6 +24,7 @@ import javax.inject.Singleton;
 public class StockMediaStore extends Store {
     private final StockMediaRestClient mStockMediaRestClient;
 
+    @SuppressWarnings("WeakerAccess")
     @Inject
     public StockMediaStore(Dispatcher dispatcher, StockMediaRestClient restClient) {
         super(dispatcher);
@@ -46,6 +47,7 @@ public class StockMediaStore extends Store {
     /**
      * Actions: FETCHED_MEDIA_LIST
      */
+    @SuppressWarnings("WeakerAccess")
     public static class FetchedStockMediaListPayload extends Payload<StockMediaError> {
         @NonNull public String searchTerm;
         @NonNull public List<StockMediaModel> mediaList;
@@ -70,6 +72,7 @@ public class StockMediaStore extends Store {
         }
     }
 
+    @SuppressWarnings("WeakerAccess")
     public static class OnStockMediaListFetched extends OnChanged<StockMediaError> {
         @NonNull public String searchTerm;
         @NonNull public List<StockMediaModel> mediaList;
@@ -124,9 +127,6 @@ public class StockMediaStore extends Store {
     public static class StockMediaError implements OnChangedError {
         public StockMediaErrorType type;
         public String message;
-        public StockMediaError(StockMediaErrorType type) {
-            this.type = type;
-        }
         public StockMediaError(StockMediaErrorType type, String message) {
             this.type = type;
             this.message = message;
