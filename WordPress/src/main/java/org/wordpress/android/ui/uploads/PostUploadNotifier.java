@@ -548,33 +548,47 @@ class PostUploadNotifier {
         if (postItemsNotUploaded > 0 && mediaItemsNotUploaded > 0) {
             switch (getPagesAndOrPostsType(postItemsNotUploaded)) {
                 case POST:
-                    newErrorMessage = String.format(
-                            mContext.getString(R.string.media_file_post_singular_mixed_not_uploaded),
-                            mediaItemsNotUploaded);
+                    newErrorMessage = (mediaItemsNotUploaded == 1
+                            ? mContext.getString(R.string.media_file_post_singular_mixed_not_uploaded_one_file)
+                            : String.format(mContext.getString(R.string.media_file_post_singular_mixed_not_uploaded_files_plural),
+                            mediaItemsNotUploaded));
                     break;
                 case PAGE:
-                    newErrorMessage = String.format(
-                            mContext.getString(R.string.media_file_page_singular_mixed_not_uploaded),
-                            mediaItemsNotUploaded);
+                    newErrorMessage = (mediaItemsNotUploaded == 1
+                            ? mContext.getString(R.string.media_file_page_singular_mixed_not_uploaded_one_file)
+                            : String.format(mContext.getString(R.string.media_file_page_singular_mixed_not_uploaded_files_plural),
+                            mediaItemsNotUploaded));
                     break;
                 case PAGES:
-                    newErrorMessage = String.format(
-                            mContext.getString(R.string.media_file_pages_plural_mixed_not_uploaded),
-                            postItemsNotUploaded,
-                            mediaItemsNotUploaded);
+                    newErrorMessage = (mediaItemsNotUploaded == 1
+                            ? String.format(
+                                mContext.getString(R.string.media_file_pages_plural_mixed_not_uploaded_one_file),
+                                postItemsNotUploaded)
+                            : String.format(
+                                mContext.getString(R.string.media_file_pages_plural_mixed_not_uploaded_files_plural),
+                                postItemsNotUploaded,
+                                mediaItemsNotUploaded));
                     break;
                 case PAGES_OR_POSTS:
-                    newErrorMessage = String.format(
-                            mContext.getString(R.string.media_file_pages_and_posts_mixed_not_uploaded),
+                    newErrorMessage = (mediaItemsNotUploaded == 1
+                    ? String.format(
+                            mContext.getString(R.string.media_file_pages_and_posts_mixed_not_uploaded_one_file),
+                            postItemsNotUploaded)
+                    : String.format(
+                            mContext.getString(R.string.media_file_pages_and_posts_mixed_not_uploaded_files_plural),
                             postItemsNotUploaded,
-                            mediaItemsNotUploaded);
+                            mediaItemsNotUploaded));
                     break;
                 case POSTS:
                 default:
-                    newErrorMessage = String.format(
-                            mContext.getString(R.string.media_file_posts_plural_mixed_not_uploaded),
+                    newErrorMessage = (mediaItemsNotUploaded == 1
+                    ? String.format(
+                            mContext.getString(R.string.media_file_posts_plural_mixed_not_uploaded_one_file),
+                            postItemsNotUploaded)
+                    : String.format(
+                            mContext.getString(R.string.media_file_posts_plural_mixed_not_uploaded_files_plural),
                             postItemsNotUploaded,
-                            mediaItemsNotUploaded);
+                            mediaItemsNotUploaded));
                     break;
             }
         } else if (postItemsNotUploaded > 0) {

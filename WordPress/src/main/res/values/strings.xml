@@ -293,11 +293,18 @@
     <!-- post uploads -->
     <string name="upload_failed_param">Upload failed for \"%s\"</string>
 
-    <string name="media_file_post_singular_mixed_not_uploaded">1 post with %1$d file(s) not uploaded</string>
-    <string name="media_file_posts_plural_mixed_not_uploaded">%1$d posts with %2$d file(s) not uploaded</string>
-    <string name="media_file_page_singular_mixed_not_uploaded">1 page with %1$d file(s) not uploaded</string>
-    <string name="media_file_pages_plural_mixed_not_uploaded">%1$d pages with %2$d file(s) not uploaded</string>
-    <string name="media_file_pages_and_posts_mixed_not_uploaded">%1$d post / pages with %2$d file(s) not uploaded</string>
+    <string name="media_file_post_singular_mixed_not_uploaded_one_file">1 post with 1 file not uploaded</string>
+    <string name="media_file_posts_plural_mixed_not_uploaded_one_file">%1$d posts with 1 file not uploaded</string>
+    <string name="media_file_page_singular_mixed_not_uploaded_one_file">1 page with 1 file not uploaded</string>
+    <string name="media_file_pages_plural_mixed_not_uploaded_one_file">%1$d pages with 1 file not uploaded</string>
+    <string name="media_file_pages_and_posts_mixed_not_uploaded_one_file">%1$d post / pages with 1 file not uploaded</string>
+
+    <string name="media_file_post_singular_mixed_not_uploaded_files_plural">1 post with %1$d files not uploaded</string>
+    <string name="media_file_posts_plural_mixed_not_uploaded_files_plural">%1$d posts with %2$d files not uploaded</string>
+    <string name="media_file_page_singular_mixed_not_uploaded_files_plural">1 page with %1$d files not uploaded</string>
+    <string name="media_file_pages_plural_mixed_not_uploaded_files_plural">%1$d pages with %2$d files not uploaded</string>
+    <string name="media_file_pages_and_posts_mixed_not_uploaded_files_plural">%1$d post / pages with %2$d files not uploaded</string>
+
 
     <string name="media_file_post_singular_only_not_uploaded">1 post not uploaded</string>
     <string name="media_file_posts_plural_only_not_uploaded">%1$d posts not uploaded</string>
