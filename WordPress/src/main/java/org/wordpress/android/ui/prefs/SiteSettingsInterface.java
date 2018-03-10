@@ -250,6 +250,10 @@ public abstract class SiteSettingsInterface {
         return mSettings.address == null ? "" : mSettings.address;
     }
 
+    public @NonNull String getQuotaDiskSpace() {
+        return mSettings.quotaDiskSpace == null ? "" : mSettings.quotaDiskSpace;
+    }
+
     public int getPrivacy() {
         return mSettings.privacy;
     }
@@ -1031,6 +1035,7 @@ public abstract class SiteSettingsInterface {
             }
             mRemoteSettings.language = mSettings.language;
             mRemoteSettings.languageId = mSettings.languageId;
+            setQuotaDiskSpace(FormatUtils.formatFileSize(mSite.getSpaceAvailable()));
             notifyUpdatedOnUiThread();
         } else {
             mSettings.isInLocalTable = false;
