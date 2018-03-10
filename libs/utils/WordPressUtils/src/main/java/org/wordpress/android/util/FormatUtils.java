@@ -32,4 +32,17 @@ public class FormatUtils {
     public static final String formatDecimal(int value) {
         return DECIMAL_INSTANCE.get().format(value).toString();
     }
+
+    /*
+     * returns the passed long formatted has an human readable filesize. Ex: 10 GB
+     */
+    public static final String formatFileSize(long size) {
+        if (size <= 0) {
+            return "0";
+        }
+        final String[] units = new String[] { "B", "kB", "MB", "GB", "TB" };
+        int digitGroups = (int) (Math.log10(size)/Math.log10(1024));
+
+        return new DecimalFormat("#,##0.#").format(size/Math.pow(1024, digitGroups)) + " " + units[digitGroups];
+    }
 }

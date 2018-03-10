@@ -183,6 +183,9 @@ public class SiteSettingsFragment extends PreferenceFragment
     private Preference mPostsPerPagePref;
     private WPSwitchPreference mAmpPref;
 
+    // Media settings
+    private EditTextPreference mSiteQuotaSpacePref;
+
     // Discussion settings preview
     private WPSwitchPreference mAllowCommentsPref;
     private WPSwitchPreference mSendPingbacksPref;
@@ -880,7 +883,10 @@ public class SiteSettingsFragment extends PreferenceFragment
         mServeImagesFromOurServers =
                 (WPSwitchPreference) getChangePref(R.string.pref_key_serve_images_from_our_servers);
         mLazyLoadImages = (WPSwitchPreference) getChangePref(R.string.pref_key_lazy_load_images);
-
+        mSiteQuotaSpacePref = (EditTextPreference) getChangePref(R.string.pref_key_site_quota_space);
+        mSiteQuotaSpacePref.setPersistent(false);
+        mSiteQuotaSpacePref.setDefaultValue("Hello world");
+        mSiteQuotaSpacePref.setText("Bingo");
         sortLanguages();
 
         boolean isAccessedViaWPComRest = SiteUtils.isAccessedViaWPComRest(mSite);
@@ -1659,6 +1665,7 @@ public class SiteSettingsFragment extends PreferenceFragment
         WPPrefUtils.removePreference(this, R.string.pref_key_site_screen, R.string.pref_key_site_writing);
         WPPrefUtils.removePreference(this, R.string.pref_key_site_screen, R.string.pref_key_site_discussion);
         WPPrefUtils.removePreference(this, R.string.pref_key_site_screen, R.string.pref_key_site_advanced);
+        WPPrefUtils.removePreference(this, R.string.pref_key_site_screen, R.string.pref_key_site_quota);
     }
 
     private void removeNonJetpackPreferences() {

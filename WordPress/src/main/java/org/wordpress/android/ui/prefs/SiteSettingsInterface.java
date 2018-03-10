@@ -23,6 +23,7 @@ import org.wordpress.android.fluxc.store.SiteStore.OnPostFormatsChanged;
 import org.wordpress.android.models.CategoryModel;
 import org.wordpress.android.models.JetpackSettingsModel;
 import org.wordpress.android.models.SiteSettingsModel;
+import org.wordpress.android.util.FormatUtils;
 import org.wordpress.android.util.LanguageUtils;
 import org.wordpress.android.util.SiteUtils;
 import org.wordpress.android.util.StringUtils;
@@ -737,6 +738,10 @@ public abstract class SiteSettingsInterface {
         mSettings.address = address;
     }
 
+    public void setQuotaDiskSpace(String quotaDiskSpace) {
+        mSettings.quotaDiskSpace = quotaDiskSpace;
+    }
+
     public void setPrivacy(int privacy) {
         mSettings.privacy = privacy;
     }
@@ -1032,6 +1037,7 @@ public abstract class SiteSettingsInterface {
             setUsername(mSite.getUsername());
             setPassword(mSite.getPassword());
             setTitle(mSite.getName());
+            setQuotaDiskSpace(FormatUtils.formatFileSize(mSite.getSpaceAvailable()));
         }
 
         // Self hosted always read account data from the main table

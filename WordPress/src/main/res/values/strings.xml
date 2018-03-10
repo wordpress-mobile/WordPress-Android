@@ -564,6 +564,12 @@
     <string name="site_settings_timezones_error">Unable to load timezones</string>
     <string name="site_settings_amp_title">Accelerated Mobile Pages (AMP)</string>
     <string name="site_settings_amp_summary">Your WordPress.com site supports the use of Accelerated Mobile Pages, a Google-led initiative that dramatically speeds up loading times on mobile devices</string>
+
+    <!-- Media -->
+    <string name="site_settings_quota_header">Media</string>
+    <string name="site_settings_quota_space_title">Space Used</string>
+    <string name="site_settings_quota_space_hint">If you need more space consider upgrade you WordPress plan.</string>
+
     <!-- Speed up your site -->
     <string name="site_settings_speed_up_your_site">Speed up your site</string>
     <string name="site_settings_serve_images_from_our_servers">Serve images from our servers</string>
