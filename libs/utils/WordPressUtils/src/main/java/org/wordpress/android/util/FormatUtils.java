@@ -45,4 +45,14 @@ public class FormatUtils {
 
         return new DecimalFormat("#,##0.#").format(size/Math.pow(1024, digitGroups)) + " " + units[digitGroups];
     }
+
+    /*
+     * returns the passed double percentage (0 to 1) formatted has an human readable percentage. Ex: 0.25 returns 25%
+     */
+    public static final String formatPercentage(double value) {
+        NumberFormat percentFormat = NumberFormat.getPercentInstance();
+        percentFormat.setMaximumFractionDigits(1);
+        String result = percentFormat.format(value);
+        return result;
+    }
 }
