@@ -1035,8 +1035,6 @@ public abstract class SiteSettingsInterface {
             }
             mRemoteSettings.language = mSettings.language;
             mRemoteSettings.languageId = mSettings.languageId;
-            setQuotaDiskSpace(FormatUtils.formatFileSize(mSite.getSpaceAvailable()));
-            notifyUpdatedOnUiThread();
         } else {
             mSettings.isInLocalTable = false;
             mSettings.localTableId = mSite.getId();
@@ -1044,9 +1042,15 @@ public abstract class SiteSettingsInterface {
             setUsername(mSite.getUsername());
             setPassword(mSite.getPassword());
             setTitle(mSite.getName());
-            setQuotaDiskSpace(FormatUtils.formatFileSize(mSite.getSpaceAvailable()));
         }
-
+        // Quota information always comes from the main site table
+        if (mSite.hasDiskSpaceQuotaInformation()) {
+            String percentage = FormatUtils.formatPercentage(mSite.getSpacePercentUsed() / 100);
+            String spaceAllowed = FormatUtils.formatFileSize(mSite.getSpaceAvailable());
+            String quotaAvailableSentence = String.format(mContext.getString(R.string.site_settings_quota_space_value),
+                    percentage, spaceAllowed);
+            setQuotaDiskSpace(quotaAvailableSentence);
+        }
         // Self hosted always read account data from the main table
         if (!SiteUtils.isAccessedViaWPComRest(mSite)) {
             setUsername(mSite.getUsername());
@@ -1056,6 +1060,7 @@ public abstract class SiteSettingsInterface {
         if (localSettings != null) {
             localSettings.close();
         }
+        notifyUpdatedOnUiThread();
     }
 
     /**

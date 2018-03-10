@@ -471,7 +471,8 @@
     <!-- Media -->
     <string name="site_settings_quota_header">Media</string>
     <string name="site_settings_quota_space_title">Space Used</string>
-    <string name="site_settings_quota_space_hint">If you need more space consider upgrade you WordPress plan.</string>
+    <string name="site_settings_quota_space_hint">If you need more space consider upgrading your WordPress plan.</string>
+    <string name="site_settings_quota_space_value">%s of %s</string>
 
     <!-- Speed up your site -->
     <string name="site_settings_speed_up_your_site">Speed up your site</string>
