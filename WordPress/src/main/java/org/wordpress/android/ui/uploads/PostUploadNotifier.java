@@ -8,6 +8,7 @@ import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.NotificationCompat;
+import android.support.v4.util.SparseArrayCompat;
 import android.text.TextUtils;
 
 import org.wordpress.android.R;
@@ -29,9 +30,8 @@ import org.wordpress.android.util.SystemServiceFactory;
 import org.wordpress.android.util.WPMeShortlinks;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
+import java.util.Locale;
 import java.util.Random;
 
 import de.greenrobot.event.EventBus;
@@ -56,7 +56,7 @@ class PostUploadNotifier {
         int mTotalPostItems;
         int mTotalPageItemsIncludedInPostCount;
         int mCurrentPostItem;
-        final Map<Integer, Float> mediaItemToProgressMap = new HashMap<>();
+        final SparseArrayCompat<Float> mediaItemToProgressMap = new SparseArrayCompat<>();
         final List<PostModel> mUploadedPostsCounted = new ArrayList<>();
     }
 
@@ -229,7 +229,8 @@ class PostUploadNotifier {
 
     private boolean isPostAlreadyInPostCount(@NonNull PostModel post) {
         for (PostModel onePost : sNotificationData.mUploadedPostsCounted) {
-            if (onePost.getId() == post.getId()) {
+            if (onePost.getId() == post.getId()
+                && onePost.getLocalSiteId() == post.getLocalSiteId()) {
                 return true;
             }
         }
@@ -658,8 +659,9 @@ class PostUploadNotifier {
 
     private float getCurrentMediaProgress() {
         float currentMediaProgress = 0.0f;
-        int size = sNotificationData.mediaItemToProgressMap.values().size();
-        for (Float itemProgress : sNotificationData.mediaItemToProgressMap.values()) {
+        int size = sNotificationData.mediaItemToProgressMap.size();
+        for (int i = 0; i < size; i++) {
+            float itemProgress = sNotificationData.mediaItemToProgressMap.get(i);
             currentMediaProgress += (itemProgress / size);
         }
         return currentMediaProgress;
@@ -703,9 +705,8 @@ class PostUploadNotifier {
         String uploadingMessage = String.format(
                 mContext.getString(R.string.uploading_subtitle_posts_only),
                 sNotificationData.mTotalPostItems - getCurrentPostItem(),
-                (post != null && post.isPage()) ? mContext.getString(R.string.page).toLowerCase()
-                        : mContext.getString(R.string.post).toLowerCase()
-                                               );
+                (post != null && post.isPage()) ? mContext.getString(R.string.page).toLowerCase(Locale.getDefault())
+                        : mContext.getString(R.string.post).toLowerCase(Locale.getDefault()));
         return uploadingMessage;
     }
 
@@ -715,8 +716,7 @@ class PostUploadNotifier {
         String uploadingMessage = String.format(
                 mContext.getString(R.string.uploading_subtitle_posts_only),
                 remaining,
-                pagesAndOrPosts
-                                               );
+                pagesAndOrPosts);
         return uploadingMessage;
     }
 
@@ -725,23 +725,23 @@ class PostUploadNotifier {
         if (sNotificationData.mTotalPageItemsIncludedInPostCount > 0 && sNotificationData.mTotalPostItems > 0
             && sNotificationData.mTotalPostItems > sNotificationData.mTotalPageItemsIncludedInPostCount) {
             // we have both pages and posts
-            pagesAndOrPosts = mContext.getString(R.string.posts).toLowerCase() + "/"
-                              + mContext.getString(R.string.pages).toLowerCase();
+            pagesAndOrPosts = mContext.getString(R.string.posts).toLowerCase(Locale.getDefault()) + "/"
+                              + mContext.getString(R.string.pages).toLowerCase(Locale.getDefault());
         } else if (sNotificationData.mTotalPageItemsIncludedInPostCount > 0) {
             // we have only pages
             if (remaining == 1) {
                 // only one page
-                pagesAndOrPosts = mContext.getString(R.string.page).toLowerCase();
+                pagesAndOrPosts = mContext.getString(R.string.page).toLowerCase(Locale.getDefault());
             } else {
-                pagesAndOrPosts = mContext.getString(R.string.pages).toLowerCase();
+                pagesAndOrPosts = mContext.getString(R.string.pages).toLowerCase(Locale.getDefault());
             }
         } else {
             // we have only posts
             if (remaining == 1) {
                 // only one post
-                pagesAndOrPosts = mContext.getString(R.string.post).toLowerCase();
+                pagesAndOrPosts = mContext.getString(R.string.post).toLowerCase(Locale.getDefault());
             } else {
-                pagesAndOrPosts = mContext.getString(R.string.posts).toLowerCase();
+                pagesAndOrPosts = mContext.getString(R.string.posts).toLowerCase(Locale.getDefault());
             }
         }
         return pagesAndOrPosts;

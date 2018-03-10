@@ -28,6 +28,7 @@ import org.wordpress.android.util.ViewUtils;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.Locale;
 import java.util.Map;
 
 import static android.support.v7.widget.RecyclerView.NO_POSITION;
@@ -167,7 +168,7 @@ class PhotoPickerAdapter extends RecyclerView.Adapter<PhotoPickerAdapter.Thumbna
         if (mBrowserType.canMultiselect()) {
             if (selectedIndex > -1) {
                 holder.mTxtSelectionCount.setSelected(true);
-                holder.mTxtSelectionCount.setText(Integer.toString(selectedIndex + 1));
+                holder.mTxtSelectionCount.setText(String.format(Locale.getDefault(), "%d", selectedIndex + 1));
             } else {
                 holder.mTxtSelectionCount.setSelected(false);
                 holder.mTxtSelectionCount.setText(null);
@@ -243,7 +244,7 @@ class PhotoPickerAdapter extends RecyclerView.Adapter<PhotoPickerAdapter.Thumbna
         } else {
             mSelectedUris.add(item.mUri);
             isSelected = true;
-            holder.mTxtSelectionCount.setText(Integer.toString(mSelectedUris.size()));
+            holder.mTxtSelectionCount.setText(String.format(Locale.getDefault(), "%d", mSelectedUris.size()));
         }
         holder.mTxtSelectionCount.setSelected(isSelected);
 

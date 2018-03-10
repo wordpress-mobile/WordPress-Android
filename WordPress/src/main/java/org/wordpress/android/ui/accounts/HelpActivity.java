@@ -1,5 +1,6 @@
 package org.wordpress.android.ui.accounts;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.ActionBar;
@@ -17,6 +18,7 @@ import org.wordpress.android.ui.AppLogViewerActivity;
 import org.wordpress.android.util.HelpshiftHelper;
 import org.wordpress.android.util.HelpshiftHelper.MetadataKey;
 import org.wordpress.android.util.HelpshiftHelper.Tag;
+import org.wordpress.android.util.LocaleManager;
 import org.wordpress.android.widgets.WPTextView;
 
 import javax.inject.Inject;
@@ -24,6 +26,11 @@ import javax.inject.Inject;
 public class HelpActivity extends AppCompatActivity {
     @Inject AccountStore mAccountStore;
     @Inject SiteStore mSiteStore;
+
+    @Override
+    protected void attachBaseContext(Context newBase) {
+        super.attachBaseContext(LocaleManager.setLocale(newBase));
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,7 +49,7 @@ public class HelpActivity extends AppCompatActivity {
 
         // Init common elements
         WPTextView version = (WPTextView) findViewById(R.id.nux_help_version);
-        version.setText(getString(R.string.version) + " " + WordPress.versionName);
+        version.setText(getString(R.string.version_with_name_param, WordPress.versionName));
 
         WPTextView applogButton = (WPTextView) findViewById(R.id.applog_button);
         applogButton.setOnClickListener(new OnClickListener() {
@@ -72,7 +79,7 @@ public class HelpActivity extends AppCompatActivity {
         setContentView(R.layout.help_activity_with_helpshift);
 
         WPTextView version = (WPTextView) findViewById(R.id.nux_help_version);
-        version.setText(getString(R.string.version) + " " + WordPress.versionName);
+        version.setText(getString(R.string.version_with_name_param, WordPress.versionName));
         WPTextView contactUsButton = (WPTextView) findViewById(R.id.contact_us_button);
         contactUsButton.setOnClickListener(new OnClickListener() {
             @Override

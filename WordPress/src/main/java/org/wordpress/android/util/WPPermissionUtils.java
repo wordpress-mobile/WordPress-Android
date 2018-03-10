@@ -175,13 +175,11 @@ public class WPPermissionUtils {
      */
     private static void showPermissionAlwaysDeniedDialog(@NonNull final Activity activity,
                                                          @NonNull String permission) {
-        String message = "<strong>" + activity.getString(R.string.permissions_denied_title) + "</strong>"
-                         + "<br /><br />"
-                         + String.format(
-                activity.getString(R.string.permissions_denied_message),
-                "<strong>" + getPermissionName(activity, permission) + "</strong>");
+        String message = String.format(activity.getString(R.string.permissions_denied_message),
+                getPermissionName(activity, permission));
 
         AlertDialog.Builder builder = new AlertDialog.Builder(activity)
+                .setTitle(activity.getString(R.string.permissions_denied_title))
                 .setMessage(Html.fromHtml(message))
                 .setPositiveButton(R.string.button_edit_permissions, new DialogInterface.OnClickListener() {
                     @Override

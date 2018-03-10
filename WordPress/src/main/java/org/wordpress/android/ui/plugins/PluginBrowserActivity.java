@@ -4,7 +4,6 @@ import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModelProvider;
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.Context;
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.ColorRes;
 import android.support.annotation.DrawableRes;
@@ -32,21 +31,24 @@ import android.widget.TextView;
 
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
+import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.fluxc.model.SiteModel;
-import org.wordpress.android.fluxc.model.plugin.SitePluginModel;
-import org.wordpress.android.fluxc.model.plugin.WPOrgPluginModel;
+import org.wordpress.android.fluxc.model.plugin.ImmutablePluginModel;
 import org.wordpress.android.ui.ActivityLauncher;
-import org.wordpress.android.ui.RequestCodes;
 import org.wordpress.android.util.ActivityUtils;
+import org.wordpress.android.util.AnalyticsUtils;
 import org.wordpress.android.util.AniUtils;
-import org.wordpress.android.util.HtmlUtils;
+import org.wordpress.android.util.LocaleManager;
+import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.viewmodel.PluginBrowserViewModel;
 import org.wordpress.android.viewmodel.PluginBrowserViewModel.PluginListType;
 import org.wordpress.android.widgets.WPNetworkImageView;
 import org.wordpress.android.widgets.WPNetworkImageView.ImageType;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.inject.Inject;
 
@@ -57,11 +59,17 @@ public class PluginBrowserActivity extends AppCompatActivity
     protected PluginBrowserViewModel mViewModel;
 
     private RecyclerView mSitePluginsRecycler;
+    private RecyclerView mFeaturedPluginsRecycler;
     private RecyclerView mPopularPluginsRecycler;
     private RecyclerView mNewPluginsRecycler;
 
     private MenuItem mSearchMenuItem;
     private SearchView mSearchView;
+
+    @Override
+    protected void attachBaseContext(Context newBase) {
+        super.attachBaseContext(LocaleManager.setLocale(newBase));
+    }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -72,6 +80,7 @@ public class PluginBrowserActivity extends AppCompatActivity
         mViewModel = ViewModelProviders.of(this, mViewModelFactory).get(PluginBrowserViewModel.class);
 
         mSitePluginsRecycler = findViewById(R.id.installed_plugins_recycler);
+        mFeaturedPluginsRecycler = findViewById(R.id.featured_plugins_recycler);
         mPopularPluginsRecycler = findViewById(R.id.popular_plugins_recycler);
         mNewPluginsRecycler = findViewById(R.id.new_plugins_recycler);
 
@@ -104,6 +113,14 @@ public class PluginBrowserActivity extends AppCompatActivity
             }
         });
 
+        // featured plugin list
+        findViewById(R.id.text_all_featured).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                showListFragment(PluginListType.FEATURED);
+            }
+        });
+
         // popular plugin list
         findViewById(R.id.text_all_popular).setOnClickListener(new View.OnClickListener() {
             @Override
@@ -130,6 +147,7 @@ public class PluginBrowserActivity extends AppCompatActivity
         });
 
         configureRecycler(mSitePluginsRecycler);
+        configureRecycler(mFeaturedPluginsRecycler);
         configureRecycler(mPopularPluginsRecycler);
         configureRecycler(mNewPluginsRecycler);
 
@@ -150,23 +168,30 @@ public class PluginBrowserActivity extends AppCompatActivity
             }
         });
 
-        mViewModel.getSitePlugins().observe(this, new Observer<List<SitePluginModel>>() {
+        mViewModel.getSitePlugins().observe(this, new Observer<List<ImmutablePluginModel>>() {
             @Override
-            public void onChanged(@Nullable final List<SitePluginModel> sitePlugins) {
+            public void onChanged(@Nullable final List<ImmutablePluginModel> sitePlugins) {
                 reloadPluginAdapterAndVisibility(PluginListType.SITE, sitePlugins);
             }
         });
 
-        mViewModel.getNewPlugins().observe(this, new Observer<List<WPOrgPluginModel>>() {
+        mViewModel.getFeaturedPlugins().observe(this, new Observer<List<ImmutablePluginModel>>() {
             @Override
-            public void onChanged(@Nullable final List<WPOrgPluginModel> newPlugins) {
+            public void onChanged(@Nullable final List<ImmutablePluginModel> featuredPlugins) {
+                reloadPluginAdapterAndVisibility(PluginListType.FEATURED, featuredPlugins);
+            }
+        });
+
+        mViewModel.getNewPlugins().observe(this, new Observer<List<ImmutablePluginModel>>() {
+            @Override
+            public void onChanged(@Nullable final List<ImmutablePluginModel> newPlugins) {
                 reloadPluginAdapterAndVisibility(PluginListType.NEW, newPlugins);
             }
         });
 
-        mViewModel.getPopularPlugins().observe(this, new Observer<List<WPOrgPluginModel>>() {
+        mViewModel.getPopularPlugins().observe(this, new Observer<List<ImmutablePluginModel>>() {
             @Override
-            public void onChanged(@Nullable final List<WPOrgPluginModel> popularPlugins) {
+            public void onChanged(@Nullable final List<ImmutablePluginModel> popularPlugins) {
                 reloadPluginAdapterAndVisibility(PluginListType.POPULAR, popularPlugins);
             }
         });
@@ -177,17 +202,11 @@ public class PluginBrowserActivity extends AppCompatActivity
                 showProgress(listStatus == PluginBrowserViewModel.PluginListStatus.FETCHING
                              && mViewModel.isSitePluginsEmpty());
 
-                if (listStatus == PluginBrowserViewModel.PluginListStatus.ERROR) {
+                // We should ignore the errors due to network condition, unless this is the first fetch, the user can
+                // use the cached version of them and showing the error while the data is loaded might cause confusion
+                if (listStatus == PluginBrowserViewModel.PluginListStatus.ERROR
+                    && NetworkUtils.isNetworkAvailable(PluginBrowserActivity.this)) {
                     ToastUtils.showToast(PluginBrowserActivity.this, R.string.plugin_fetch_error);
-                }
-            }
-        });
-
-        mViewModel.getLastUpdatedWpOrgPluginSlug().observe(this, new Observer<String>() {
-            @Override
-            public void onChanged(@Nullable String slug) {
-                if (!TextUtils.isEmpty(slug)) {
-                    reloadPluginWithSlug(slug);
                 }
             }
         });
@@ -237,18 +256,15 @@ public class PluginBrowserActivity extends AppCompatActivity
         return super.onOptionsItemSelected(item);
     }
 
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == RequestCodes.PLUGIN_DETAIL) {
-            mViewModel.reloadAllPluginsFromStore();
-        }
-    }
-
-    protected void reloadPluginAdapterAndVisibility(@NonNull PluginListType pluginType, List<?> plugins) {
+    protected void reloadPluginAdapterAndVisibility(@NonNull PluginListType pluginType,
+                                                    @Nullable List<ImmutablePluginModel> plugins) {
         PluginBrowserAdapter adapter;
         View cardView;
         switch (pluginType) {
+            case FEATURED:
+                adapter = (PluginBrowserAdapter) mFeaturedPluginsRecycler.getAdapter();
+                cardView = findViewById(R.id.featured_plugins_cardview);
+                break;
             case POPULAR:
                 adapter = (PluginBrowserAdapter) mPopularPluginsRecycler.getAdapter();
                 cardView = findViewById(R.id.popular_plugins_cardview);
@@ -266,19 +282,13 @@ public class PluginBrowserActivity extends AppCompatActivity
         }
         adapter.setPlugins(plugins);
 
-        int newVisibility = plugins.size() > 0 ? View.VISIBLE : View.GONE;
+        int newVisibility = plugins != null && plugins.size() > 0 ? View.VISIBLE : View.GONE;
         int oldVisibility = cardView.getVisibility();
         if (newVisibility == View.VISIBLE && oldVisibility != View.VISIBLE) {
             AniUtils.fadeIn(cardView, AniUtils.Duration.MEDIUM);
         } else if (newVisibility != View.VISIBLE && oldVisibility == View.VISIBLE) {
             AniUtils.fadeOut(cardView, AniUtils.Duration.MEDIUM);
         }
-    }
-
-    protected void reloadPluginWithSlug(@NonNull String slug) {
-        ((PluginBrowserAdapter) mSitePluginsRecycler.getAdapter()).reloadPluginWithSlug(slug);
-        ((PluginBrowserAdapter) mPopularPluginsRecycler.getAdapter()).reloadPluginWithSlug(slug);
-        ((PluginBrowserAdapter) mNewPluginsRecycler.getAdapter()).reloadPluginWithSlug(slug);
     }
 
     @Override
@@ -304,6 +314,7 @@ public class PluginBrowserActivity extends AppCompatActivity
                                    .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE)
                                    .commit();
         mViewModel.setTitle(getTitleForListType(listType));
+        trackPluginListOpened(listType);
     }
 
     private void hideListFragment() {
@@ -340,30 +351,14 @@ public class PluginBrowserActivity extends AppCompatActivity
             setHasStableIds(true);
         }
 
-        void setPlugins(@NonNull List<?> items) {
-            if (mItems.isSameList(items)) {
-                return;
-            }
-
+        void setPlugins(@Nullable List<ImmutablePluginModel> items) {
             mItems.clear();
             mItems.addAll(items);
-
-            // strip HTML here so we don't have to do it in every call to onBindViewHolder
-            for (Object item : mItems) {
-                if (item instanceof WPOrgPluginModel) {
-                    WPOrgPluginModel plugin = (WPOrgPluginModel) item;
-                    plugin.setAuthorAsHtml(HtmlUtils.fastStripHtml(plugin.getAuthorAsHtml()));
-                }
-            }
-
             notifyDataSetChanged();
         }
 
         protected @Nullable Object getItem(int position) {
-            if (position < mItems.size()) {
-                return mItems.get(position);
-            }
-            return null;
+            return mItems.getItem(position);
         }
 
         @Override
@@ -385,42 +380,24 @@ public class PluginBrowserActivity extends AppCompatActivity
         @Override
         public void onBindViewHolder(ViewHolder viewHolder, int position) {
             PluginBrowserViewHolder holder = (PluginBrowserViewHolder) viewHolder;
-            Object item = getItem(position);
-            if (item == null) {
+            ImmutablePluginModel plugin = (ImmutablePluginModel) getItem(position);
+            if (plugin == null) {
                 return;
             }
 
-            SitePluginModel sitePlugin;
-            WPOrgPluginModel wpOrgPlugin;
-            String name;
-            String author;
-            if (item instanceof SitePluginModel) {
-                sitePlugin = (SitePluginModel) item;
-                wpOrgPlugin = mViewModel.getWPOrgPluginForSitePluginAndFetchIfNecessary(sitePlugin);
-                name = sitePlugin.getDisplayName();
-                author = sitePlugin.getAuthorName();
-            } else {
-                wpOrgPlugin = (WPOrgPluginModel) item;
-                sitePlugin = mViewModel.getSitePluginFromSlug(wpOrgPlugin.getSlug());
-                name = wpOrgPlugin.getName();
-                author = wpOrgPlugin.getAuthorAsHtml();
-            }
+            holder.mNameText.setText(plugin.getDisplayName());
+            holder.mAuthorText.setText(plugin.getAuthorName());
+            holder.mIcon.setImageUrl(plugin.getIcon(), ImageType.PLUGIN_ICON);
 
-            String iconUrl = wpOrgPlugin != null ? wpOrgPlugin.getIcon() : null;
-
-            holder.mNameText.setText(name);
-            holder.mAuthorText.setText(author);
-            holder.mIcon.setImageUrl(iconUrl, ImageType.PLUGIN_ICON);
-
-            if (sitePlugin != null) {
+            if (plugin.isInstalled()) {
                 @StringRes int textResId;
                 @ColorRes int colorResId;
                 @DrawableRes int drawableResId;
-                if (PluginUtils.isUpdateAvailable(sitePlugin, wpOrgPlugin)) {
+                if (PluginUtils.isUpdateAvailable(plugin)) {
                     textResId = R.string.plugin_needs_update;
                     colorResId = R.color.alert_yellow;
                     drawableResId = R.drawable.plugin_update_available_icon;
-                } else if (sitePlugin.isActive()) {
+                } else if (plugin.isActive()) {
                     textResId = R.string.plugin_active;
                     colorResId = R.color.alert_green;
                     drawableResId = R.drawable.ic_checkmark_green_24dp;
@@ -437,14 +414,7 @@ public class PluginBrowserActivity extends AppCompatActivity
             } else {
                 holder.mStatusContainer.setVisibility(View.GONE);
                 holder.mRatingBar.setVisibility(View.VISIBLE);
-                holder.mRatingBar.setRating(PluginUtils.getAverageStarRating(wpOrgPlugin));
-            }
-        }
-
-        void reloadPluginWithSlug(@NonNull String slug) {
-            int index = mItems.indexOfPluginWithSlug(slug);
-            if (index != -1) {
-                notifyItemChanged(index);
+                holder.mRatingBar.setRating(plugin.getAverageStarRating());
             }
         }
 
@@ -472,26 +442,13 @@ public class PluginBrowserActivity extends AppCompatActivity
                     @Override
                     public void onClick(View v) {
                         int position = getAdapterPosition();
-                        Object item = getItem(position);
-                        if (item == null) {
+                        ImmutablePluginModel plugin = (ImmutablePluginModel) getItem(position);
+                        if (plugin == null) {
                             return;
                         }
-                        SitePluginModel sitePlugin;
-                        WPOrgPluginModel wpOrgPlugin;
-                        if (item instanceof SitePluginModel) {
-                            sitePlugin = (SitePluginModel) item;
-                            wpOrgPlugin = mViewModel.getWPOrgPluginForSitePluginAndFetchIfNecessary(sitePlugin);
-                        } else {
-                            wpOrgPlugin = (WPOrgPluginModel) item;
-                            sitePlugin = mViewModel.getSitePluginFromSlug(wpOrgPlugin.getSlug());
-                        }
-                        if (sitePlugin != null) {
-                            ActivityLauncher.viewPluginDetailForResult(PluginBrowserActivity.this, mViewModel.getSite(),
-                                                                       sitePlugin);
-                        } else {
-                            ActivityLauncher.viewPluginDetailForResult(PluginBrowserActivity.this, mViewModel.getSite(),
-                                                                       wpOrgPlugin);
-                        }
+
+                        ActivityLauncher.viewPluginDetail(PluginBrowserActivity.this, mViewModel.getSite(),
+                                plugin.getSlug());
                     }
                 });
             }
@@ -500,6 +457,8 @@ public class PluginBrowserActivity extends AppCompatActivity
 
     private String getTitleForListType(@NonNull PluginListType pluginListType) {
         switch (pluginListType) {
+            case FEATURED:
+                return getString(R.string.plugin_caption_featured);
             case POPULAR:
                 return getString(R.string.plugin_caption_popular);
             case NEW:
@@ -510,5 +469,31 @@ public class PluginBrowserActivity extends AppCompatActivity
                 return getString(R.string.plugin_caption_installed);
         }
         return getString(R.string.plugins);
+    }
+
+    void trackPluginListOpened(PluginListType listType) {
+        if (listType == PluginListType.SEARCH) {
+            // Although it's named as "search performed" we are actually only tracking the first search
+            AnalyticsUtils.trackWithSiteDetails(AnalyticsTracker.Stat.PLUGIN_SEARCH_PERFORMED, mViewModel.getSite());
+            return;
+        }
+        Map<String, Object> properties = new HashMap<>();
+        String type = null;
+        switch (listType) {
+            case SITE:
+                type = "installed";
+                break;
+            case FEATURED:
+                type = "featured";
+                break;
+            case POPULAR:
+                type = "popular";
+                break;
+            case NEW:
+                type = "newest";
+                break;
+        }
+        properties.put("type", type);
+        AnalyticsUtils.trackWithSiteDetails(AnalyticsTracker.Stat.OPENED_PLUGIN_LIST, mViewModel.getSite(), properties);
     }
 }

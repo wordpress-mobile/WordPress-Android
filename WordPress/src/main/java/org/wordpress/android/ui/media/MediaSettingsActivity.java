@@ -71,6 +71,7 @@ import org.wordpress.android.util.DateTimeUtils;
 import org.wordpress.android.util.DisplayUtils;
 import org.wordpress.android.util.EditTextUtils;
 import org.wordpress.android.util.ImageUtils;
+import org.wordpress.android.util.LocaleManager;
 import org.wordpress.android.util.MediaUtils;
 import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.PermissionUtils;
@@ -85,6 +86,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
+import java.util.Locale;
 
 import javax.inject.Inject;
 
@@ -135,12 +137,9 @@ public class MediaSettingsActivity extends AppCompatActivity
 
     private MediaType mMediaType;
 
-    @Inject
-    MediaStore mMediaStore;
-    @Inject
-    FluxCImageLoader mImageLoader;
-    @Inject
-    Dispatcher mDispatcher;
+    @Inject MediaStore mMediaStore;
+    @Inject FluxCImageLoader mImageLoader;
+    @Inject Dispatcher mDispatcher;
 
     /**
      * @param activity calling activity
@@ -195,6 +194,11 @@ public class MediaSettingsActivity extends AppCompatActivity
                 R.anim.do_nothing);
 
         ActivityCompat.startActivityForResult(activity, intent, RequestCodes.MEDIA_SETTINGS, options.toBundle());
+    }
+
+    @Override
+    protected void attachBaseContext(Context newBase) {
+        super.attachBaseContext(LocaleManager.setLocale(newBase));
     }
 
     @Override
@@ -591,7 +595,7 @@ public class MediaSettingsActivity extends AppCompatActivity
         txtFilename.setText(mMedia.getFileName());
 
         TextView txtFileType = findViewById(R.id.text_filetype);
-        txtFileType.setText(StringUtils.notNullStr(mMedia.getFileExtension()).toUpperCase());
+        txtFileType.setText(StringUtils.notNullStr(mMedia.getFileExtension()).toUpperCase(Locale.ROOT));
 
         showImageDimensions(mMedia.getWidth(), mMedia.getHeight());
 

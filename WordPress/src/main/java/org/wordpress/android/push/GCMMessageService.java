@@ -47,6 +47,7 @@ import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.Locale;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
@@ -716,7 +717,7 @@ public class GCMMessageService extends GcmListenerService {
                        context.getString(R.string.notification_settings_item_sights_and_sounds_choose_sound_default));
 
                     if (!TextUtils.isEmpty(notificationSound)
-                            && !notificationSound.trim().toLowerCase().startsWith("file://")) {
+                            && !notificationSound.trim().toLowerCase(Locale.ROOT).startsWith("file://")) {
                         builder.setSound(Uri.parse(notificationSound));
                     }
 

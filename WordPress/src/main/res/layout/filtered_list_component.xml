@@ -25,7 +25,8 @@
                 style="@style/FilteredRecyclerViewSpinner.WordPress"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:overlapAnchor="false" />
+                android:overlapAnchor="false"
+                tools:ignore="UnusedAttribute"/>
 
         </android.support.v7.widget.Toolbar>
 

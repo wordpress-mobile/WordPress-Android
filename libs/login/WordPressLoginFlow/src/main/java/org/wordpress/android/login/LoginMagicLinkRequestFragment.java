@@ -62,9 +62,9 @@ public class LoginMagicLinkRequestFragment extends Fragment {
 
     private boolean mInProgress;
 
-    protected @Inject Dispatcher mDispatcher;
+    @Inject protected Dispatcher mDispatcher;
 
-    protected @Inject LoginAnalyticsListener mAnalyticsListener;
+    @Inject protected LoginAnalyticsListener mAnalyticsListener;
 
     public static LoginMagicLinkRequestFragment newInstance(String email) {
         LoginMagicLinkRequestFragment fragment = new LoginMagicLinkRequestFragment();

@@ -4,6 +4,7 @@ import android.content.ContentValues;
 import android.database.Cursor;
 import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
+import android.support.v4.util.SparseArrayCompat;
 
 import org.wordpress.android.WordPress;
 import org.wordpress.android.models.CategoryModel;
@@ -11,9 +12,6 @@ import org.wordpress.android.models.SiteSettingsModel;
 import org.wordpress.android.ui.prefs.AppPrefs;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.SqlUtils;
-
-import java.util.HashMap;
-import java.util.Map;
 
 public final class SiteSettingsTable {
     private static final String CATEGORIES_TABLE_NAME = "site_categories";
@@ -47,7 +45,7 @@ public final class SiteSettingsTable {
         }
     }
 
-    public static Map<Integer, CategoryModel> getAllCategories() {
+    public static SparseArrayCompat<CategoryModel> getAllCategories() {
         String sqlCommand = sqlSelectAllCategories() + ";";
         Cursor cursor = WordPress.wpDB.getDatabase().rawQuery(sqlCommand, null);
 
@@ -55,7 +53,7 @@ public final class SiteSettingsTable {
             return null;
         }
 
-        Map<Integer, CategoryModel> models = new HashMap<>();
+        SparseArrayCompat<CategoryModel> models = new SparseArrayCompat<>();
         for (int i = 0; i < cursor.getCount(); ++i) {
             CategoryModel model = new CategoryModel();
             model.deserializeFromDatabase(cursor);

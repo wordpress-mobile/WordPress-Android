@@ -215,7 +215,7 @@ public class MySiteFragment extends Fragment
                             .isJetpackConnected())) {
                         ActivityLauncher.viewBlogStats(getActivity(), selectedSite);
                     } else {
-                        ActivityLauncher.startJetpackConnectionFlow(getActivity(), selectedSite);
+                        ActivityLauncher.viewConnectJetpackForStats(getActivity(), selectedSite);
                     }
                 }
             }

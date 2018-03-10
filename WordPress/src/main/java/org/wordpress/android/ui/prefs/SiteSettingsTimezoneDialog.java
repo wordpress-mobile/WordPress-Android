@@ -44,6 +44,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 
 public class SiteSettingsTimezoneDialog extends DialogFragment implements DialogInterface.OnClickListener {
@@ -82,6 +83,7 @@ public class SiteSettingsTimezoneDialog extends DialogFragment implements Dialog
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         mInflater = LayoutInflater.from(getActivity());
+        //noinspection InflateParams
         View view = mInflater.inflate(R.layout.site_settings_timezone_dialog, null);
 
         mListView = view.findViewById(R.id.list);
@@ -331,9 +333,9 @@ public class SiteSettingsTimezoneDialog extends DialogFragment implements Dialog
                     if (TextUtils.isEmpty(constraint)) {
                         filtered.addAll(mAllTimezones);
                     } else {
-                        String lcConstraint = constraint.toString().toLowerCase();
+                        String lcConstraint = constraint.toString().toLowerCase(Locale.ROOT);
                         for (Timezone tz : mAllTimezones) {
-                            if (tz.mLabel.toLowerCase().contains(lcConstraint)) {
+                            if (tz.mLabel.toLowerCase(Locale.ROOT).contains(lcConstraint)) {
                                 filtered.add(tz);
                             }
                         }

@@ -15,9 +15,12 @@ import org.wordpress.android.datasets.ReaderTagTable;
 import org.wordpress.android.models.ReaderTag;
 import org.wordpress.android.models.ReaderTagType;
 import org.wordpress.android.util.FormatUtils;
+import org.wordpress.android.util.LocaleManager;
 import org.wordpress.android.util.PhotonUtils;
 import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.UrlUtils;
+
+import java.util.Locale;
 
 public class ReaderUtils {
     public static String getResizedImageUrl(final String imageUrl, int width, int height, boolean isPrivate) {
@@ -90,14 +93,15 @@ public class ReaderUtils {
                     return context.getString(R.string.reader_likes_you_and_one);
                 default:
                     String youAndMultiLikes = context.getString(R.string.reader_likes_you_and_multi);
-                    return String.format(youAndMultiLikes, numLikes - 1);
+                    return String.format(
+                            LocaleManager.getSafeLocale(context), youAndMultiLikes, numLikes - 1);
             }
         } else {
             if (numLikes == 1) {
                 return context.getString(R.string.reader_likes_one);
             } else {
                 String likes = context.getString(R.string.reader_likes_multi);
-                return String.format(likes, numLikes);
+                return String.format(LocaleManager.getSafeLocale(context), likes, numLikes);
             }
         }
     }
@@ -195,7 +199,7 @@ public class ReaderUtils {
     }
 
     public static ReaderTag createTagFromTagName(String tagName, ReaderTagType tagType) {
-        String tagSlug = sanitizeWithDashes(tagName).toLowerCase();
+        String tagSlug = sanitizeWithDashes(tagName).toLowerCase(Locale.ROOT);
         String tagDisplayName = tagType == ReaderTagType.DEFAULT ? tagName : tagSlug;
         return new ReaderTag(tagSlug, tagDisplayName, tagName, null, tagType);
     }
