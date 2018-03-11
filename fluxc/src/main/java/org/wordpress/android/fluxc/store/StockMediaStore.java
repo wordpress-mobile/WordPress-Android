@@ -1,6 +1,7 @@
 package org.wordpress.android.fluxc.store;
 
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
@@ -81,7 +82,7 @@ public class StockMediaStore extends Store {
         @NonNull List<StockMediaModel> mediaList;
         public SiteModel site;
 
-        public UploadStockMediaPayload(@NonNull List<StockMediaModel> mediaList, @NonNull SiteModel site) {
+        public UploadStockMediaPayload(@NonNull SiteModel site, @NonNull List<StockMediaModel> mediaList) {
             this.mediaList = mediaList;
             this.site = site;
         }
@@ -93,12 +94,15 @@ public class StockMediaStore extends Store {
     @SuppressWarnings("WeakerAccess")
     public static class UploadedStockMediaPayload extends Payload<StockMediaError> {
         @NonNull public List<StockMediaUploadModel> mediaList;
+        @NonNull public SiteModel site;
 
-        public UploadedStockMediaPayload(@NonNull List<StockMediaUploadModel> mediaList) {
+        public UploadedStockMediaPayload(@NonNull SiteModel site, @NonNull List<StockMediaUploadModel> mediaList) {
+            this.site = site;
             this.mediaList = mediaList;
         }
 
-        public UploadedStockMediaPayload(@NonNull StockMediaError error) {
+        public UploadedStockMediaPayload(@NonNull SiteModel site, @NonNull StockMediaError error) {
+            this.site = site;
             this.error = error;
             this.mediaList = new ArrayList<>();
         }
@@ -124,6 +128,22 @@ public class StockMediaStore extends Store {
             this.error = error;
             this.searchTerm = searchTerm;
             this.mediaList = new ArrayList<>();
+        }
+    }
+
+    @SuppressWarnings("WeakerAccess")
+    public static class OnStockMediaUploaded extends OnChanged<StockMediaError> {
+        @NonNull public List<StockMediaUploadModel> uploadedMedia;
+        @Nullable public SiteModel site;
+
+        public OnStockMediaUploaded(@NonNull SiteModel site, @NonNull List<StockMediaUploadModel> uploadedMedia) {
+            this.site = site;
+            this.uploadedMedia = uploadedMedia;
+        }
+        public OnStockMediaUploaded(@NonNull SiteModel site, @NonNull StockMediaError error) {
+            this.site = site;
+            this.error = error;
+            this.uploadedMedia = new ArrayList<>();
         }
     }
 
@@ -156,10 +176,16 @@ public class StockMediaStore extends Store {
 
         switch ((StockMediaAction) actionType) {
             case FETCH_STOCK_MEDIA:
-                performFetchStockMediaList((StockMediaStore.FetchStockMediaListPayload) action.getPayload());
+                performFetchStockMediaList((FetchStockMediaListPayload) action.getPayload());
                 break;
             case FETCHED_STOCK_MEDIA:
-                handleStockMediaListFetched((StockMediaStore.FetchedStockMediaListPayload) action.getPayload());
+                handleStockMediaListFetched((FetchedStockMediaListPayload) action.getPayload());
+                break;
+            case UPLOAD_STOCK_MEDIA:
+                performUploadStockMedia((UploadStockMediaPayload) action.getPayload());
+                break;
+            case UPLOADED_STOCK_MEDIA:
+                handleStockMediaUploaded(((UploadedStockMediaPayload) action.getPayload()));
                 break;
         }
     }
@@ -187,5 +213,21 @@ public class StockMediaStore extends Store {
         }
 
         emitChange(onStockMediaListFetched);
+    }
+
+    private void performUploadStockMedia(StockMediaStore.UploadStockMediaPayload payload) {
+        mStockMediaRestClient.uploadStockMedia(payload.site, payload.mediaList);
+    }
+
+    private void handleStockMediaUploaded(StockMediaStore.UploadedStockMediaPayload payload) {
+        OnStockMediaUploaded onStockMediaUploaded;
+
+        if (payload.isError()) {
+            onStockMediaUploaded = new OnStockMediaUploaded(payload.site, payload.error);
+        } else {
+            onStockMediaUploaded = new OnStockMediaUploaded(payload.site, payload.mediaList);
+        }
+
+        emitChange(onStockMediaUploaded);
     }
 }
