@@ -694,6 +694,25 @@ public class EditPostActivity extends AppCompatActivity implements
         }
     }
 
+    private String getSaveAsADraftButtonText() {
+        if (!userCanPublishPosts()) {
+            return getString(R.string.submit_for_review);
+        }
+
+        switch (PostStatus.fromPost(mPost)) {
+            case DRAFT:
+                return getString(R.string.menu_publish_now);
+            case PUBLISHED:
+            case UNKNOWN:
+            default:
+                if (!isNewPost()) {
+                    return getString(R.string.menu_publish_now);
+                } else {
+                    return getString(R.string.menu_save_as_draft);
+                }
+        }
+    }
+
     private boolean isPhotoPickerShowing() {
         return mPhotoPickerContainer != null
                && mPhotoPickerContainer.getVisibility() == View.VISIBLE;
@@ -916,7 +935,10 @@ public class EditPostActivity extends AppCompatActivity implements
         }
 
         if (saveAsDraftMenuItem != null) {
-            saveAsDraftMenuItem.setVisible(isNewPost() && showMenuItems);
+            saveAsDraftMenuItem.setVisible(showMenuItems);
+            if (mPost != null) {
+                saveAsDraftMenuItem.setTitle(getSaveAsADraftButtonText());
+            }
         }
 
         if (viewHtmlModeMenuItem != null) {
@@ -1014,11 +1036,15 @@ public class EditPostActivity extends AppCompatActivity implements
                 }
                 mViewPager.setCurrentItem(PAGE_SETTINGS);
             } else if (itemId == R.id.menu_save_as_draft) {
-                // save as draft
-                if (isNewPost()) {
+                // save as draft if it's a local post with UNKNOWN status, or PUBLISH if it's a DRAFT (as this
+                //  R.id.menu_save_as_draft button will be "Publish Now" in that case)
+                if (PostStatus.fromPost(mPost) == PostStatus.DRAFT) {
+                    showPublishConfirmationDialog();
+                } else {
                     UploadUtils.showSnackbar(findViewById(R.id.editor_activity), R.string.editor_uploading_post);
-
-                    mPost.setStatus(PostStatus.DRAFT.toString());
+                    if (isNewPost()) {
+                        mPost.setStatus(PostStatus.DRAFT.toString());
+                    }
                     savePostAndOptionallyFinish(false);
                 }
             } else if (itemId == R.id.menu_html_mode) {
@@ -1056,6 +1082,7 @@ public class EditPostActivity extends AppCompatActivity implements
                 .setPositiveButton(R.string.dialog_confirm_publish_yes, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
+                        mPost.setStatus(PostStatus.PUBLISHED.toString());
                         publishPost();
                     }
                 })
@@ -1067,7 +1094,8 @@ public class EditPostActivity extends AppCompatActivity implements
     private void showPublishConfirmationOrUpdateIfNotLocalDraft() {
         // if post is a draft, first make sure to confirm the PUBLISH action, in case
         // the user tapped on it accidentally
-        if (mPost.isLocalDraft()) {
+        PostStatus status = PostStatus.fromPost(mPost);
+        if ((status == PostStatus.PUBLISHED || status == PostStatus.UNKNOWN) && mPost.isLocalDraft()) {
             showPublishConfirmationDialog();
         } else {
             // otherwise, if they're updating a Post, just go ahead and save it to the server
