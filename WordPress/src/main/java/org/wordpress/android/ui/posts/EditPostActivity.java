@@ -1015,7 +1015,6 @@ public class EditPostActivity extends AppCompatActivity implements
                     mPost.setStatus(PostStatus.DRAFT.toString());
                     savePostAndOptionallyFinish(false);
                 }
-
             } else if (itemId == R.id.menu_html_mode) {
                 // toggle HTML mode
                 if (mEditorFragment instanceof AztecEditorFragment) {
@@ -1071,7 +1070,8 @@ public class EditPostActivity extends AppCompatActivity implements
     }
 
     private void savePostOnlineAndFinishAsync(boolean isFirstTimePublish, boolean doFinishActivity) {
-        new SavePostOnlineAndFinishTask(isFirstTimePublish, doFinishActivity).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+        new SavePostOnlineAndFinishTask(isFirstTimePublish, doFinishActivity)
+                .executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 
     private void onUploadSuccess(MediaModel media) {
@@ -1354,7 +1354,6 @@ public class EditPostActivity extends AppCompatActivity implements
     }
 
     private class SavePostLocallyAndFinishTask extends AsyncTask<Void, Void, Boolean> {
-
         boolean mDoFinishActivity;
 
         SavePostLocallyAndFinishTask(boolean doFinishActivity) {
@@ -1573,7 +1572,7 @@ public class EditPostActivity extends AppCompatActivity implements
         }).start();
     }
 
-    private boolean shouldSavePost(){
+    private boolean shouldSavePost() {
         boolean hasLocalChanges = mPost.isLocallyChanged() || mPost.isLocalDraft();
         boolean hasChanges = PostUtils.postHasEdits(mOriginalPost, mPost);
         boolean isPublishable = PostUtils.isPublishable(mPost);
