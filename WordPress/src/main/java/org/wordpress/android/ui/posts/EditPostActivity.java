@@ -910,11 +910,11 @@ public class EditPostActivity extends AppCompatActivity implements
         }
 
         if (saveAsDraftMenuItem != null) {
-            saveAsDraftMenuItem.setVisible(isNewPost());
+            saveAsDraftMenuItem.setVisible(isNewPost() && showMenuItems);
         }
 
         if (viewHtmlModeMenuItem != null) {
-            viewHtmlModeMenuItem.setVisible(mEditorFragment instanceof AztecEditorFragment);
+            viewHtmlModeMenuItem.setVisible(mEditorFragment instanceof AztecEditorFragment && showMenuItems);
             viewHtmlModeMenuItem.setTitle(mHtmlModeMenuStateOn ? R.string.menu_visual_mode : R.string.menu_html_mode);
         }
 
