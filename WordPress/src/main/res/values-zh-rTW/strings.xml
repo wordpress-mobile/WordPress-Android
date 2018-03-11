@@ -181,7 +181,7 @@ Language: zh_TW
     <string name="alert_error_adding_media">插入媒體時發生錯誤</string>
     <string name="alert_action_while_uploading">你目前正在上傳媒體。請等待此項作業完成。</string>
     <string name="alert_insert_image_html_mode">無法直接在 HTML 模式中插入媒體。請切換回視覺化模式。</string>
-    <string name="uploading_gallery_placeholder">正在上傳圖庫...</string>
+    <string name="uploading_gallery_placeholder">正在上傳圖庫…</string>
     <string name="invite_error_some_failed">已送出邀請但發生錯誤！</string>
     <string name="invite_sent">已成功送出邀請</string>
     <string name="tap_to_try_again">點選以重試！</string>
@@ -257,14 +257,14 @@ Language: zh_TW
     <string name="plans">方案</string>
     <string name="plans_loading_error">無法載入方案</string>
     <string name="export_your_content">匯出你的內容</string>
-    <string name="exporting_content_progress">匯出內容...</string>
+    <string name="exporting_content_progress">匯出內容…</string>
     <string name="export_email_sent">匯出電子郵件已傳送！</string>
     <string name="premium_upgrades_message">你的網站已啟用進階版升級服務。刪除網站前，請先取消升級。</string>
     <string name="show_purchases">顯示購買項目</string>
     <string name="checking_purchases">檢查購買項目</string>
     <string name="premium_upgrades_title">進階版升級</string>
     <string name="purchases_request_error">發生了點錯誤。無法要求購買項目。</string>
-    <string name="delete_site_progress">正在刪除網站...</string>
+    <string name="delete_site_progress">正在刪除網站…</string>
     <string name="delete_site_summary">此動作無法復原。刪除網站將一併移除網站上的所有內容、參與者及網域。</string>
     <string name="delete_site_hint">刪除網站</string>
     <string name="export_site_hint">將網站匯出為 XML 檔案</string>
@@ -292,8 +292,8 @@ Language: zh_TW
     <string name="comments_empty_list_filtered_pending">沒有待審核的留言</string>
     <string name="comments_empty_list_filtered_approved">沒有已核准的留言</string>
     <string name="site_timeout_error">由於發生逾時錯誤，導致無法連結到 WordPress 網站。</string>
-    <string name="xmlrpc_malformed_response_error">無法連結。WordPress 安裝以無效的 XML-RPC 文件回應。</string>
-    <string name="xmlrpc_missing_method_error">無法連結。伺服器缺少必要的 XML-RPC 方式。</string>
+    <string name="xmlrpc_malformed_response_error">無法連結。WordPress 安裝以無效的 XML–RPC 文件回應。</string>
+    <string name="xmlrpc_missing_method_error">無法連結。伺服器缺少必要的 XML–RPC 方式。</string>
     <string name="post_format_status">狀態</string>
     <string name="post_format_video">影片</string>
     <string name="alignment_center">置中</string>
@@ -343,7 +343,7 @@ Language: zh_TW
     <string name="editor_toast_uploading_please_wait">你目前正在上傳媒體。請等待此作業完成。</string>
     <string name="error_refresh_comments_showing_older">目前無法重新整理留言 – 顯示較舊的留言</string>
     <string name="visual_editor_enabled">視覺化編輯器已啟用</string>
-    <string name="editor_content_placeholder">在此分享你的故事...</string>
+    <string name="editor_content_placeholder">在此分享你的故事…</string>
     <string name="editor_page_title_placeholder">頁面標題</string>
     <string name="editor_post_title_placeholder">文章標題</string>
     <string name="email_address">電子郵件地址</string>
@@ -550,7 +550,7 @@ Language: zh_TW
     <string name="reader_short_comment_count_multi">%s評論</string>
     <string name="reader_short_comment_count_one">1評論</string>
     <string name="reader_label_submit_comment">發送</string>
-    <string name="reader_hint_comment_on_post">回复文章...</string>
+    <string name="reader_hint_comment_on_post">回复文章…</string>
     <string name="reader_discover_visit_blog">造訪 %s</string>
     <string name="reader_discover_attribution_blog">原始發表位置：%s</string>
     <string name="reader_discover_attribution_author">原始作者：%s</string>
@@ -655,9 +655,9 @@ Language: zh_TW
     <string name="stats_entry_search_terms">搜尋字詞</string>
     <string name="stats_empty_search_terms">沒有任何搜尋字詞的記錄</string>
     <string name="stats_empty_search_terms_desc">查看訪客以哪些搜尋字詞找到你的網站，進一步瞭解搜尋流量的相關資訊。</string>
-    <string name="stats_followers_total_wpcom_paged">顯示 %1$d - %2$d 個 WordPress.com 關注者 (共 %3$s 個)</string>
+    <string name="stats_followers_total_wpcom_paged">顯示 %1$d – %2$d 個 WordPress.com 關注者 (共 %3$s 個)</string>
     <string name="stats_search_terms_unknown_search_terms">不明搜尋字詞</string>
-    <string name="stats_followers_total_email_paged">顯示 %1$d - %2$d 個電子郵件關注者 (共 %3$s 個)</string>
+    <string name="stats_followers_total_email_paged">顯示 %1$d – %2$d 個電子郵件關注者 (共 %3$s 個)</string>
     <string name="publisher">發佈者：</string>
     <string name="error_notification_open">無法開啟通知</string>
     <string name="reader_empty_posts_request_failed">無法擷取文章</string>
@@ -729,7 +729,7 @@ Language: zh_TW
     <string name="stats_view_all">檢視全部</string>
     <string name="stats_for">%s 的統計資料</string>
     <string name="stats_other_recent_stats_label">其他近期統計資料</string>
-    <string name="themes_fetching">正在擷取佈景主題...</string>
+    <string name="themes_fetching">正在擷取佈景主題…</string>
     <string name="ssl_certificate_details">詳細資料</string>
     <string name="delete_sure_post">刪除此文章</string>
     <string name="delete_sure">刪除此草稿</string>
@@ -838,12 +838,12 @@ Language: zh_TW
     <string name="error_downloading_image">下載圖片時發生錯誤</string>
     <string name="passcode_wrong_passcode">錯誤的 PIN</string>
     <string name="invalid_email_message">你的電子郵件地址無效</string>
-    <string name="username_only_lowercase_letters_and_numbers">使用者名稱只能包含小寫字母 (a-z) 和數字</string>
+    <string name="username_only_lowercase_letters_and_numbers">使用者名稱只能包含小寫字母 (a–z) 和數字</string>
     <string name="username_required">輸入使用者名稱</string>
     <string name="username_not_allowed">不允許使用該使用者名稱</string>
     <string name="username_must_be_at_least_four_characters">使用者名稱必須至少為 4 個字元</string>
     <string name="username_contains_invalid_characters">使用者名稱不能包含字元「_」</string>
-    <string name="username_must_include_letters">使用者名稱必須至少有 1 個字母 (a-z)</string>
+    <string name="username_must_include_letters">使用者名稱必須至少有 1 個字母 (a–z)</string>
     <string name="email_invalid">輸入有效的電子郵件地址</string>
     <string name="email_not_allowed">不允許使用該電子郵件地址</string>
     <string name="username_exists">該使用者名稱已存在</string>
@@ -855,7 +855,7 @@ Language: zh_TW
     <string name="blog_name_must_be_less_than_sixty_four_characters">網站位址長度必須小於 64 個字元</string>
     <string name="blog_name_contains_invalid_characters">網站位址不能包含字元「_」</string>
     <string name="blog_name_cant_be_used">你不可使用該網站位址</string>
-    <string name="blog_name_only_lowercase_letters_and_numbers">網站位址只能包含小寫字母 (a-z) 和數字</string>
+    <string name="blog_name_only_lowercase_letters_and_numbers">網站位址只能包含小寫字母 (a–z) 和數字</string>
     <string name="blog_name_exists">該網站已存在</string>
     <string name="blog_name_reserved">該網站已被預定</string>
     <string name="blog_name_reserved_but_may_be_available">該網站目前已被預定，但可能幾天後便可供使用</string>
@@ -944,7 +944,7 @@ Language: zh_TW
     <string name="site_address">你自助託管的位址 (網址)</string>
     <string name="email_cant_be_used_to_signup">你無法使用該電子郵件地址來註冊。我們無法使用這些電子郵件地址，因為它們會阻擋我們的某些郵件。請使用其他電子郵件供應商。</string>
     <string name="email_reserved">已有人使用該電子郵件地址。請查看你的收件匣是否有啟用郵件。如果你現在不啟用，可以幾天後再試一次。</string>
-    <string name="blog_name_must_include_letters">網站位址必須至少有 1 個字母 (a-z)</string>
+    <string name="blog_name_must_include_letters">網站位址必須至少有 1 個字母 (a–z)</string>
     <string name="blog_name_invalid">無效的網站位址</string>
     <string name="blog_title_invalid">無效的網站標題</string>
     <string name="notifications_empty_all">尚未有任何通知。</string>
@@ -1055,7 +1055,7 @@ Language: zh_TW
     <string name="new_notifications">%d 個新通知</string>
     <string name="more_notifications">還有 %d 個。</string>
     <string name="follows">關注者</string>
-    <string name="loading">載入中...</string>
+    <string name="loading">載入中…</string>
     <string name="httppassword">HTTP 密碼</string>
     <string name="httpuser">HTTP 使用者帳號</string>
     <string name="error_media_upload">上傳媒體時發生錯誤</string>

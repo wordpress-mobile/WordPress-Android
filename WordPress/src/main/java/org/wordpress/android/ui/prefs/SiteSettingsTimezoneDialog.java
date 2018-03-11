@@ -83,6 +83,7 @@ public class SiteSettingsTimezoneDialog extends DialogFragment implements Dialog
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         mInflater = LayoutInflater.from(getActivity());
+        //noinspection InflateParams
         View view = mInflater.inflate(R.layout.site_settings_timezone_dialog, null);
 
         mListView = view.findViewById(R.id.list);

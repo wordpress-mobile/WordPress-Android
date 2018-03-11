@@ -1,25 +1,56 @@
+# OS X generated file
+.DS_Store
+
+# built application files
+*.apk
+*.ap_
+
+# files for the dex VM
+*.dex
+
+# Java class files
+*.class
+
 # generated files
+bin/
+gen/
 build/
+build.log
 
 # Local configuration file (sdk path, etc)
 local.properties
-tools/deploy-mvn-artifact.conf
+
+# Eclipse project files
+.settings/
+.classpath
+.project
 
 # Intellij project files
 *.iml
 *.ipr
 *.iws
-.idea/
+/.idea/*
+
+# IntelliJ/Android Studio exceptions
+!/.idea/vcs.xml
+!/.idea/fileTemplates/
+!/.idea/inspectionProfiles/
+!/.idea/scopes/
+!/.idea/codeStyleSettings.xml
+!/.idea/encodings.xml
+!/.idea/copyright/
+!/.idea/compiler.xml
+# Enforce plugins
+!/.idea/externalDependencies.xml
+# Checkstyle configuration
+!/.idea/checkstyle-idea.xml
 
 # Gradle
 .gradle/
 gradle.properties
 
-# Idea
-.idea/workspace.xml
-*.iml
+# Silver Searcher ignore file
+.agignore
 
-# OS X
-.DS_Store
-
-# dependencies
+# Windows Backup
+*.bak

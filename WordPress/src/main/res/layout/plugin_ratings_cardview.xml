@@ -76,12 +76,13 @@
                 <ProgressBar
                     android:id="@+id/progress5"
                     style="?android:attr/progressBarStyleHorizontal"
-                    android:layout_width="match_parent"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_vertical"
                     android:layout_weight="1"
                     android:progress="75"
-                    android:progressTint="@color/blue_medium" />
+                    android:progressTint="@color/blue_medium"
+                    tools:ignore="UnusedAttribute"/>
 
             </LinearLayout>
 
@@ -104,7 +105,7 @@
                 <ProgressBar
                     android:id="@+id/progress4"
                     style="?android:attr/progressBarStyleHorizontal"
-                    android:layout_width="match_parent"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_vertical"
                     android:layout_weight="1"
@@ -132,7 +133,7 @@
                 <ProgressBar
                     android:id="@+id/progress3"
                     style="?android:attr/progressBarStyleHorizontal"
-                    android:layout_width="match_parent"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_vertical"
                     android:layout_weight="1"
@@ -160,7 +161,7 @@
                 <ProgressBar
                     android:id="@+id/progress2"
                     style="?android:attr/progressBarStyleHorizontal"
-                    android:layout_width="match_parent"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_vertical"
                     android:layout_weight="1"
@@ -188,7 +189,7 @@
                 <ProgressBar
                     android:id="@+id/progress1"
                     style="?android:attr/progressBarStyleHorizontal"
-                    android:layout_width="match_parent"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_vertical"
                     android:layout_weight="1"

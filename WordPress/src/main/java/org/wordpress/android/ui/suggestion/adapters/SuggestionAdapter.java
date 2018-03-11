@@ -72,7 +72,8 @@ public class SuggestionAdapter extends BaseAdapter implements Filterable {
         if (suggestion != null) {
             String avatarUrl = GravatarUtils.fixGravatarUrl(suggestion.getImageUrl(), mAvatarSz);
             holder.mImgAvatar.setImageUrl(avatarUrl, WPNetworkImageView.ImageType.AVATAR);
-            holder.mTxtUserLogin.setText("@" + suggestion.getUserLogin());
+            holder.mTxtUserLogin
+                    .setText(convertView.getResources().getString(R.string.at_username, suggestion.getUserLogin()));
             holder.mTxtDisplayName.setText(suggestion.getDisplayName());
         }
 

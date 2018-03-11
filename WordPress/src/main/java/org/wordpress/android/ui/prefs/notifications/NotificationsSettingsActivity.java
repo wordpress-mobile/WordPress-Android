@@ -1,6 +1,7 @@
 package org.wordpress.android.ui.prefs.notifications;
 
 import android.app.FragmentManager;
+import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v7.app.ActionBar;
@@ -19,6 +20,7 @@ import android.widget.Toast;
 import org.wordpress.android.R;
 import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.ui.notifications.NotificationEvents;
+import org.wordpress.android.util.LocaleManager;
 
 import de.greenrobot.event.EventBus;
 
@@ -30,6 +32,11 @@ public class NotificationsSettingsActivity extends AppCompatActivity {
     protected SharedPreferences mSharedPreferences;
     protected SwitchCompat mMasterSwitch;
     protected Toolbar mToolbarSwitch;
+
+    @Override
+    protected void attachBaseContext(Context newBase) {
+        super.attachBaseContext(LocaleManager.setLocale(newBase));
+    }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {

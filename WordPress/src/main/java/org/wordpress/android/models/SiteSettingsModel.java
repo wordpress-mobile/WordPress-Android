@@ -2,6 +2,7 @@ package org.wordpress.android.models;
 
 import android.content.ContentValues;
 import android.database.Cursor;
+import android.support.v4.util.SparseArrayCompat;
 import android.text.TextUtils;
 
 import java.util.ArrayList;
@@ -305,7 +306,7 @@ public class SiteSettingsModel {
     /**
      * Sets values from a local database {@link Cursor}.
      */
-    public void deserializeOptionsDatabaseCursor(Cursor cursor, Map<Integer, CategoryModel> models) {
+    public void deserializeOptionsDatabaseCursor(Cursor cursor, SparseArrayCompat<CategoryModel> models) {
         if (cursor == null || !cursor.moveToFirst() || cursor.getCount() == 0) {
             return;
         }

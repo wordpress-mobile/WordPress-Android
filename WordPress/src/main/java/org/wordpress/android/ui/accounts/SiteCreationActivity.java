@@ -1,5 +1,6 @@
 package org.wordpress.android.ui.accounts;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -19,6 +20,7 @@ import org.wordpress.android.ui.accounts.signup.SiteCreationThemeFragment;
 import org.wordpress.android.ui.accounts.signup.SiteCreationThemeLoaderFragment;
 import org.wordpress.android.ui.main.SitePickerActivity;
 import org.wordpress.android.util.HelpshiftHelper;
+import org.wordpress.android.util.LocaleManager;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.UrlUtils;
 
@@ -34,6 +36,11 @@ public class SiteCreationActivity extends AppCompatActivity implements SiteCreat
     private String mThemeId;
     private String mSiteTitle;
     private String mSiteTagline;
+
+    @Override
+    protected void attachBaseContext(Context newBase) {
+        super.attachBaseContext(LocaleManager.setLocale(newBase));
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

@@ -6,6 +6,7 @@ import android.database.Cursor;
 import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v4.util.SparseArrayCompat;
 import android.text.Html;
 import android.text.TextUtils;
 
@@ -24,9 +25,9 @@ import org.wordpress.android.models.CategoryModel;
 import org.wordpress.android.models.JetpackSettingsModel;
 import org.wordpress.android.models.SiteSettingsModel;
 import org.wordpress.android.util.LanguageUtils;
+import org.wordpress.android.util.LocaleManager;
 import org.wordpress.android.util.SiteUtils;
 import org.wordpress.android.util.StringUtils;
-import org.wordpress.android.util.WPPrefUtils;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -218,7 +219,7 @@ public abstract class SiteSettingsInterface {
         mRemoteSettings = new SiteSettingsModel();
         mJpSettings = new JetpackSettingsModel();
         mRemoteJpSettings = new JetpackSettingsModel();
-        mLanguageCodes = WPPrefUtils.generateLanguageMap(host);
+        mLanguageCodes = LocaleManager.generateLanguageMap(host);
     }
 
     @Override
@@ -306,8 +307,8 @@ public abstract class SiteSettingsInterface {
         return mSettings.categories;
     }
 
-    public @NonNull Map<Integer, String> getCategoryNames() {
-        Map<Integer, String> categoryNames = new HashMap<>();
+    public @NonNull SparseArrayCompat<String> getCategoryNames() {
+        SparseArrayCompat<String> categoryNames = new SparseArrayCompat<>();
         if (mSettings.categories != null && mSettings.categories.length > 0) {
             for (CategoryModel model : mSettings.categories) {
                 categoryNames.put(model.id, Html.fromHtml(model.name).toString());
@@ -1017,7 +1018,7 @@ public abstract class SiteSettingsInterface {
 
         if (localSettings != null && localSettings.getCount() > 0) {
             mSettings.isInLocalTable = true;
-            Map<Integer, CategoryModel> cachedModels = SiteSettingsTable.getAllCategories();
+            SparseArrayCompat<CategoryModel> cachedModels = SiteSettingsTable.getAllCategories();
             mSettings.deserializeOptionsDatabaseCursor(localSettings, cachedModels);
             mSettings.language = languageIdToLanguageCode(Integer.toString(mSettings.languageId));
             if (mSettings.language == null) {

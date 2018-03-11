@@ -6,17 +6,12 @@ import android.app.Fragment;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
-import android.content.res.Configuration;
-import android.content.res.Resources;
 import android.os.Build;
-import android.preference.PreferenceManager;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -25,10 +20,8 @@ import android.view.WindowManager;
 import android.widget.TextView;
 
 import org.wordpress.android.R;
-import org.wordpress.android.ui.prefs.AppSettingsFragment;
 
 import java.util.List;
-import java.util.Locale;
 
 public class WPActivityUtils {
     // Hack! PreferenceScreens don't show the toolbar, so we'll manually add one
@@ -98,33 +91,6 @@ public class WPActivityUtils {
             window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
             //noinspection deprecation
             window.setStatusBarColor(window.getContext().getResources().getColor(color));
-        }
-    }
-
-    public static void applyLocale(Context context) {
-        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context);
-
-        if (sharedPreferences.contains(AppSettingsFragment.LANGUAGE_PREF_KEY)) {
-            Locale contextLocale = context.getResources().getConfiguration().locale;
-            String contextLanguage = contextLocale.getLanguage();
-            contextLanguage = LanguageUtils.patchDeviceLanguageCode(contextLanguage);
-            String contextCountry = contextLocale.getCountry();
-            String locale = sharedPreferences.getString(AppSettingsFragment.LANGUAGE_PREF_KEY, "");
-
-            if (!TextUtils.isEmpty(contextCountry)) {
-                contextLanguage += "_" + contextCountry;
-            }
-
-            if (!locale.equals(contextLanguage)) {
-                Resources resources = context.getResources();
-                Configuration conf = resources.getConfiguration();
-                Locale newLocale = WPPrefUtils.languageLocale(locale);
-                conf.locale = newLocale;
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
-                    conf.setLayoutDirection(newLocale);
-                }
-                resources.updateConfiguration(conf, resources.getDisplayMetrics());
-            }
         }
     }
 

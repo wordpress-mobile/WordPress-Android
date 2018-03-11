@@ -1,6 +1,7 @@
 package org.wordpress.android.util;
 
 import android.content.Context;
+import android.support.annotation.Nullable;
 
 import java.util.Locale;
 
@@ -8,17 +9,35 @@ import java.util.Locale;
  * Methods for dealing with i18n messages
  */
 public class LanguageUtils {
-    public static Locale getCurrentDeviceLanguage(Context context) {
-        // better use getConfiguration as it has the latest locale configuration change.
-        // Otherwise Locale.getDefault().getLanguage() gets
-        // the config upon application launch.
-        Locale deviceLocale = context != null ? context.getResources().getConfiguration().locale : Locale.getDefault();
-        return deviceLocale;
+    /**
+     * @deprecated Use {@link #getCurrentDeviceLanguage()}. As of API 25, setting the locale by updating the
+     * configuration on the resources object was deprecated, so this method stopped working for newer versions
+     * of Android. The current active locale should always be set in {@link Locale#getDefault()}. When manually
+     * setting the active locale, the developer should set it in {@link Locale#setDefault(Locale)}.
+     */
+    @SuppressWarnings("DeprecatedIsStillUsed")
+    @Deprecated
+    public static Locale getCurrentDeviceLanguage(@Nullable Context context) {
+        return getCurrentDeviceLanguage();
     }
 
-    public static String getCurrentDeviceLanguageCode(Context context) {
-        String deviceLanguageCode = getCurrentDeviceLanguage(context).toString();
-        return deviceLanguageCode;
+    @SuppressWarnings("WeakerAccess")
+    public static Locale getCurrentDeviceLanguage() {
+        return Locale.getDefault();
+    }
+
+    /**
+     * @deprecated Use {@link #getCurrentDeviceLanguageCode()}.
+     */
+    @SuppressWarnings("WeakerAccess,DeprecatedIsStillUsed")
+    @Deprecated
+    public static String getCurrentDeviceLanguageCode(@Nullable Context context) {
+        return getCurrentDeviceLanguageCode();
+    }
+
+    @SuppressWarnings("WeakerAccess")
+    public static String getCurrentDeviceLanguageCode() {
+        return getCurrentDeviceLanguage().toString();
     }
 
     public static String getPatchedCurrentDeviceLanguage(Context context) {
@@ -28,6 +47,7 @@ public class LanguageUtils {
     /**
      * Patches a deviceLanguageCode if any of deprecated values iw, id, or yi
      */
+    @SuppressWarnings("WeakerAccess")
     public static String patchDeviceLanguageCode(String deviceLanguageCode) {
         String patchedCode = deviceLanguageCode;
         /*
