@@ -44,7 +44,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.BaseInputConnection;
 import android.webkit.URLUtil;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.android.volley.VolleyError;
