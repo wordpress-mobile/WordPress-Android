@@ -5,10 +5,13 @@ import android.support.annotation.NonNull;
 
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
+import com.google.gson.JsonArray;
 
 import org.wordpress.android.fluxc.Dispatcher;
 import org.wordpress.android.fluxc.generated.StockMediaActionBuilder;
 import org.wordpress.android.fluxc.generated.endpoint.WPCOMREST;
+import org.wordpress.android.fluxc.model.SiteModel;
+import org.wordpress.android.fluxc.model.StockMediaModel;
 import org.wordpress.android.fluxc.network.BaseRequest;
 import org.wordpress.android.fluxc.network.UserAgent;
 import org.wordpress.android.fluxc.network.rest.wpcom.BaseWPComRestClient;
@@ -19,6 +22,7 @@ import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.UrlUtils;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import javax.inject.Singleton;
@@ -35,7 +39,7 @@ public class StockMediaRestClient extends BaseWPComRestClient {
     /**
      * Gets a list of stock media items matching a query string
      */
-    public void searchStockMedia(final String searchTerm, final int page) {
+    public void searchStockMedia(@NonNull final String searchTerm, final int page) {
         String url = WPCOMREST.meta.external_media.pexels.getUrlV1_1();
 
         Map<String, String> params = new HashMap<>();
@@ -65,6 +69,42 @@ public class StockMediaRestClient extends BaseWPComRestClient {
                         StockMediaStore.FetchedStockMediaListPayload payload =
                                 new StockMediaStore.FetchedStockMediaListPayload(mediaError, searchTerm);
                         mDispatcher.dispatch(StockMediaActionBuilder.newFetchedStockMediaAction(payload));
+                    }
+                }
+        );
+
+        add(request);
+    }
+
+    public void uploadStockMedia(@NonNull List<StockMediaModel> stockMediaList, @NonNull SiteModel site) {
+        String url = WPCOMREST.sites.site(site.getSiteId()).external_media_upload.getUrlV1_1();
+
+        JsonArray jsonIds = new JsonArray();
+        for (StockMediaModel stockMedia : stockMediaList) {
+            jsonIds.add(stockMedia.getId());
+        }
+
+        Map<String, Object> body = new HashMap<>();
+        body.put("service", "pexels");
+        body.put("external_ids", jsonIds.getAsString());
+
+        WPComGsonRequest request = WPComGsonRequest.buildPostRequest(url, body, UploadStockMediaResponse.class,
+                new Response.Listener<UploadStockMediaResponse>() {
+                    @Override
+                    public void onResponse(UploadStockMediaResponse response) {
+                        StockMediaStore.UploadedStockMediaPayload payload =
+                                new StockMediaStore.UploadedStockMediaPayload(response.uploadedMedia);
+                        mDispatcher.dispatch(StockMediaActionBuilder.newUploadedStockMediaAction(payload));
+                    }
+                }, new BaseRequest.BaseErrorListener() {
+                    @Override
+                    public void onErrorResponse(@NonNull BaseRequest.BaseNetworkError error) {
+                        AppLog.e(AppLog.T.MEDIA, "VolleyError Fetching stock media: " + error);
+                        StockMediaStore.StockMediaError mediaError = new StockMediaStore.StockMediaError(
+                                StockMediaStore.StockMediaErrorType.fromBaseNetworkError(error), error.message);
+                        StockMediaStore.UploadedStockMediaPayload payload =
+                                new StockMediaStore.UploadedStockMediaPayload(mediaError);
+                        mDispatcher.dispatch(StockMediaActionBuilder.newUploadedStockMediaAction(payload));
                     }
                 }
         );
