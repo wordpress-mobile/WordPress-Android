@@ -6,7 +6,7 @@
         app:showAsAction="always"
         android:title="@string/post_status_publish_post"/>
 
-    <group android:id="@+id/group_save_preview">
+    <group android:id="@+id/group_save_preview" android:orderInCategory="1">
         <item
             android:id="@+id/menu_save_as_draft"
             android:title="@string/menu_save_as_draft"/>
@@ -15,13 +15,13 @@
             android:title="@string/menu_preview"/>
     </group>
 
-    <group android:id="@+id/group_html_mode">
+    <group android:id="@+id/group_html_mode" android:orderInCategory="1">
         <item
             android:id="@+id/menu_html_mode"
             android:title="@string/menu_html_mode"/>
     </group>
 
-    <group android:id="@+id/group_post_settings">
+    <group android:id="@+id/group_post_settings" android:orderInCategory="1">
         <item
             android:id="@+id/menu_post_settings"
             android:title="@string/post_settings"/>
