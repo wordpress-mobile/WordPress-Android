@@ -218,6 +218,14 @@ public class UploadUtils {
                 .show();
     }
 
+    public static void showSnackbarSuccessActionOrange(View view, int messageRes, int buttonTitleRes,
+                                                  View.OnClickListener onClickListener) {
+        Snackbar.make(view, messageRes, Snackbar.LENGTH_LONG)
+                .setAction(buttonTitleRes, onClickListener).
+                        setActionTextColor(view.getResources().getColor(R.color.alert_yellow))
+                .show();
+    }
+
     public static void showSnackbar(View view, int messageRes) {
         Snackbar.make(view,
                       messageRes, Snackbar.LENGTH_LONG).show();

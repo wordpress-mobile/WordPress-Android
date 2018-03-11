@@ -1019,13 +1019,28 @@ public class EditPostActivity extends AppCompatActivity implements
             } else if (itemId == R.id.menu_html_mode) {
                 // toggle HTML mode
                 if (mEditorFragment instanceof AztecEditorFragment) {
-                    ((AztecEditorFragment) mEditorFragment).onToolbarHtmlButtonClicked();
-                    mHtmlModeMenuStateOn = !mHtmlModeMenuStateOn;
-                    invalidateOptionsMenu();
+                    toggleHtmlVisualMode();
+                    UploadUtils.showSnackbarSuccessActionOrange(findViewById(R.id.editor_activity),
+                            mHtmlModeMenuStateOn ? R.string.menu_html_mode_done_snackbar
+                                    : R.string.menu_visual_mode_done_snackbar,
+                            R.string.menu_undo_snackbar_action,
+                            new View.OnClickListener() {
+                                @Override
+                                public void onClick(View view) {
+                                    // switch back
+                                    toggleHtmlVisualMode();
+                                }
+                            });
                 }
             }
         }
         return false;
+    }
+
+    private void toggleHtmlVisualMode() {
+        ((AztecEditorFragment) mEditorFragment).onToolbarHtmlButtonClicked();
+        mHtmlModeMenuStateOn = !mHtmlModeMenuStateOn;
+        invalidateOptionsMenu();
     }
 
     private void showPublishConfirmationDialog() {
