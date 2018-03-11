@@ -10,7 +10,7 @@ import android.view.View;
 import android.widget.Button;
 
 import org.wordpress.android.R;
-import org.wordpress.android.ui.WPBottomSheetDialog;
+import org.wordpress.android.login.widgets.WPBottomSheetDialog;
 
 public class SignupBottomSheetDialog extends WPBottomSheetDialog {
     public SignupBottomSheetDialog(@NonNull final Context context,
