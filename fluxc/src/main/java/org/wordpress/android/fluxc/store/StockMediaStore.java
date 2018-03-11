@@ -9,7 +9,9 @@ import org.wordpress.android.fluxc.Payload;
 import org.wordpress.android.fluxc.action.StockMediaAction;
 import org.wordpress.android.fluxc.annotations.action.Action;
 import org.wordpress.android.fluxc.annotations.action.IAction;
+import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.model.StockMediaModel;
+import org.wordpress.android.fluxc.model.StockMediaUploadModel;
 import org.wordpress.android.fluxc.network.BaseRequest.BaseNetworkError;
 import org.wordpress.android.fluxc.network.rest.wpcom.stockmedia.StockMediaRestClient;
 import org.wordpress.android.util.AppLog;
@@ -69,6 +71,36 @@ public class StockMediaStore extends Store {
             this.mediaList = new ArrayList<>();
             this.searchTerm = searchTerm;
             this.canLoadMore = false;
+        }
+    }
+
+    /**
+     * Actions: UPLOAD_STOCK_MEDIA
+     */
+    public static class UploadStockMediaPayload extends Payload<BaseNetworkError> {
+        @NonNull List<StockMediaModel> mediaList;
+        public SiteModel site;
+
+        public UploadStockMediaPayload(@NonNull List<StockMediaModel> mediaList, @NonNull SiteModel site) {
+            this.mediaList = mediaList;
+            this.site = site;
+        }
+    }
+
+    /**
+     * Actions: UPLOADED_STOCK_MEDIA
+     */
+    @SuppressWarnings("WeakerAccess")
+    public static class UploadedStockMediaPayload extends Payload<StockMediaError> {
+        @NonNull public List<StockMediaUploadModel> mediaList;
+
+        public UploadedStockMediaPayload(@NonNull List<StockMediaUploadModel> mediaList) {
+            this.mediaList = mediaList;
+        }
+
+        public UploadedStockMediaPayload(@NonNull StockMediaError error) {
+            this.error = error;
+            this.mediaList = new ArrayList<>();
         }
     }
 

@@ -20,6 +20,7 @@
 /domains/suggestions
 
 /meta/external-media/pexels
+/sites/$site/external-media-upload
 
 /sites/
 /sites/$site/delete
