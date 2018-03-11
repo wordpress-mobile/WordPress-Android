@@ -3,9 +3,11 @@ package org.wordpress.android.fluxc.network.rest.wpcom.stockmedia;
 import android.content.Context;
 import android.support.annotation.NonNull;
 
+import com.android.volley.AuthFailureError;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.google.gson.JsonArray;
+import com.google.gson.JsonObject;
 
 import org.wordpress.android.fluxc.Dispatcher;
 import org.wordpress.android.fluxc.generated.StockMediaActionBuilder;
@@ -19,6 +21,7 @@ import org.wordpress.android.fluxc.network.rest.wpcom.WPComGsonRequest;
 import org.wordpress.android.fluxc.network.rest.wpcom.auth.AccessToken;
 import org.wordpress.android.fluxc.store.StockMediaStore;
 import org.wordpress.android.util.AppLog;
+import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.UrlUtils;
 
 import java.util.HashMap;
@@ -76,24 +79,35 @@ public class StockMediaRestClient extends BaseWPComRestClient {
         add(request);
     }
 
-    public void uploadStockMedia(@NonNull final SiteModel site, @NonNull List<StockMediaModel> stockMediaList) {
+    public void uploadStockMedia(@NonNull final SiteModel site,
+                                 @NonNull List<StockMediaModel> stockMediaList) {
         String url = WPCOMREST.sites.site(site.getSiteId()).external_media_upload.getUrlV1_1();
 
-        JsonArray jsonIds = new JsonArray();
+        /*
+        [
+        { "url": "https://...", "name": "pexels-photo-902152.jpeg", "title": "pexels-photo-902152.jpeg"},
+        { "url": "https://...", "name": "pexels-photo-748920.jpeg", "title": "pexels-photo-748920.jpeg"},
+         ]
+         */
+        JsonArray jsonBody = new JsonArray();
         for (StockMediaModel stockMedia : stockMediaList) {
-            jsonIds.add(stockMedia.getId());
+            JsonObject json = new JsonObject();
+            json.addProperty("url", StringUtils.notNullStr(stockMedia.getUrl()));
+            json.addProperty("name", StringUtils.notNullStr(stockMedia.getName()));
+            json.addProperty("title", StringUtils.notNullStr(stockMedia.getTitle()));
+            jsonBody.add(json);
         }
 
         Map<String, Object> body = new HashMap<>();
         body.put("service", "pexels");
-        body.put("external_ids", jsonIds.getAsString());
+        body.put("external_ids", jsonBody.toString());
 
         WPComGsonRequest request = WPComGsonRequest.buildPostRequest(url, body, UploadStockMediaResponse.class,
                 new Response.Listener<UploadStockMediaResponse>() {
                     @Override
                     public void onResponse(UploadStockMediaResponse response) {
                         StockMediaStore.UploadedStockMediaPayload payload =
-                                new StockMediaStore.UploadedStockMediaPayload(site, response.uploadedMedia);
+                                new StockMediaStore.UploadedStockMediaPayload(site, response.mediaList);
                         mDispatcher.dispatch(StockMediaActionBuilder.newUploadedStockMediaAction(payload));
                     }
                 }, new BaseRequest.BaseErrorListener() {
@@ -108,6 +122,13 @@ public class StockMediaRestClient extends BaseWPComRestClient {
                     }
                 }
         );
+
+        try {
+            String strBody = new String(request.getBody());
+            AppLog.w(AppLog.T.MEDIA, strBody);
+        } catch (AuthFailureError authFailureError) {
+            authFailureError.printStackTrace();
+        }
 
         add(request);
     }

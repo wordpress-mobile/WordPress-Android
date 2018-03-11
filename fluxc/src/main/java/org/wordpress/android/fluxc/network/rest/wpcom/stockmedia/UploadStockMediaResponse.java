@@ -2,7 +2,7 @@ package org.wordpress.android.fluxc.network.rest.wpcom.stockmedia;
 
 import android.support.annotation.NonNull;
 
-import org.wordpress.android.fluxc.model.StockMediaUploadModel;
+import org.wordpress.android.fluxc.model.MediaModel;
 import org.wordpress.android.fluxc.network.Response;
 
 import java.util.List;
@@ -12,5 +12,5 @@ import java.util.List;
  */
 @SuppressWarnings("WeakerAccess")
 public class UploadStockMediaResponse implements Response {
-    public @NonNull List<StockMediaUploadModel> uploadedMedia;
+    public @NonNull List<MediaModel> mediaList;
 }
