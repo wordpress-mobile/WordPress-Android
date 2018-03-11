@@ -968,7 +968,7 @@ public class EditPostActivity extends AppCompatActivity implements
             mViewPager.setCurrentItem(PAGE_CONTENT);
             invalidateOptionsMenu();
         } else {
-            savePostAndFinish();
+            savePostAndOptionallyFinish(true);
         }
         return true;
     }
@@ -1010,24 +1010,10 @@ public class EditPostActivity extends AppCompatActivity implements
             } else if (itemId == R.id.menu_save_as_draft) {
                 // save as draft
                 if (isNewPost()) {
+                    UploadUtils.showSnackbar(findViewById(R.id.editor_activity), R.string.editor_uploading_post);
+
                     mPost.setStatus(PostStatus.DRAFT.toString());
-                    savePostAsync(new AfterSavePostListener() {
-                        @Override
-                        public void onPostSave() {
-                            // show the snackbar
-                            invalidateOptionsMenu();
-                            UploadUtils.showSnackbarSuccessAction(findViewById(R.id.editor_activity),
-                                    R.string.editor_draft_saved_locally,
-                                    R.string.button_publish,
-                                    new View.OnClickListener() {
-                                        @Override
-                                        public void onClick(View v) {
-                                            UploadUtils
-                                                    .publishPost(EditPostActivity.this, mPost, mSite, mDispatcher);
-                                        }
-                                    });
-                            }
-                        });
+                    savePostAndOptionallyFinish(false);
                 }
 
             } else if (itemId == R.id.menu_html_mode) {
@@ -1069,8 +1055,8 @@ public class EditPostActivity extends AppCompatActivity implements
         }
     }
 
-    private void savePostOnlineAndFinishAsync(boolean isFirstTimePublish) {
-        new SavePostOnlineAndFinishTask(isFirstTimePublish).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+    private void savePostOnlineAndFinishAsync(boolean isFirstTimePublish, boolean doFinishActivity) {
+        new SavePostOnlineAndFinishTask(isFirstTimePublish, doFinishActivity).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 
     private void onUploadSuccess(MediaModel media) {
@@ -1310,9 +1296,11 @@ public class EditPostActivity extends AppCompatActivity implements
 
     private class SavePostOnlineAndFinishTask extends AsyncTask<Void, Void, Void> {
         boolean mIsFirstTimePublish;
+        boolean mDoFinishActivity;
 
-        SavePostOnlineAndFinishTask(boolean isFirstTimePublish) {
+        SavePostOnlineAndFinishTask(boolean isFirstTimePublish, boolean doFinishActivity) {
             this.mIsFirstTimePublish = isFirstTimePublish;
+            this.mDoFinishActivity = doFinishActivity;
         }
 
         @Override
@@ -1342,13 +1330,22 @@ public class EditPostActivity extends AppCompatActivity implements
 
         @Override
         protected void onPostExecute(Void saved) {
-            saveResult(true, false, false);
-            removePostOpenInEditorStickyEvent();
-            finish();
+            if (mDoFinishActivity) {
+                saveResult(true, false, false);
+                removePostOpenInEditorStickyEvent();
+                finish();
+            }
         }
     }
 
     private class SavePostLocallyAndFinishTask extends AsyncTask<Void, Void, Boolean> {
+
+        boolean mDoFinishActivity;
+
+        SavePostLocallyAndFinishTask(boolean doFinishActivity) {
+            this.mDoFinishActivity = doFinishActivity;
+        }
+
         @Override
         protected Boolean doInBackground(Void... params) {
             if (mOriginalPost != null && !PostUtils.postHasEdits(mOriginalPost, mPost)) {
@@ -1375,9 +1372,11 @@ public class EditPostActivity extends AppCompatActivity implements
 
         @Override
         protected void onPostExecute(Boolean saved) {
-            saveResult(saved, false, true);
-            removePostOpenInEditorStickyEvent();
-            finish();
+            if (mDoFinishActivity) {
+                saveResult(saved, false, true);
+                removePostOpenInEditorStickyEvent();
+                finish();
+            }
         }
     }
 
@@ -1409,7 +1408,7 @@ public class EditPostActivity extends AppCompatActivity implements
                                           public void onClick(DialogInterface dialog, int id) {
                                               ToastUtils.showToast(EditPostActivity.this,
                                                                    getString(R.string.toast_saving_post_as_draft));
-                                              savePostAndFinish();
+                                              savePostAndOptionallyFinish(true);
                                           }
                                       })
                    .setNegativeButton(R.string.editor_confirm_email_prompt_negative,
@@ -1461,10 +1460,10 @@ public class EditPostActivity extends AppCompatActivity implements
                                 }
                             });
                         } else {
-                            savePostOnlineAndFinishAsync(isFirstTimePublish);
+                            savePostOnlineAndFinishAsync(isFirstTimePublish, true);
                         }
                     } else {
-                        savePostLocallyAndFinishAsync();
+                        savePostLocallyAndFinishAsync(true);
                     }
                 } else {
                     EditPostActivity.this.runOnUiThread(new Runnable() {
@@ -1492,7 +1491,7 @@ public class EditPostActivity extends AppCompatActivity implements
         builder.create().show();
     }
 
-    private void savePostAndFinish() {
+    private void savePostAndOptionallyFinish(final boolean doFinish) {
         // Update post, save to db and post online in its own Thread, because 1. update can be pretty slow with a lot of
         // text 2. better not to call `updatePostObject()` from the UI thread due to weird thread blocking behavior
         // on API 16 (and 21) with the visual editor.
@@ -1518,7 +1517,9 @@ public class EditPostActivity extends AppCompatActivity implements
                 // if post is publishable or not new, sync it
                 boolean shouldSync = isPublishable || !isNewPost();
 
-                saveResult(shouldSave && shouldSync, isDiscardable(), false);
+                if (doFinish) {
+                    saveResult(shouldSave && shouldSync, isDiscardable(), false);
+                }
 
                 definitelyDeleteBackspaceDeletedMediaItems();
 
@@ -1539,9 +1540,9 @@ public class EditPostActivity extends AppCompatActivity implements
 
                     if (PostStatus.fromPost(mPost) == PostStatus.DRAFT && isPublishable && !hasFailedMedia()
                         && NetworkUtils.isNetworkAvailable(getBaseContext())) {
-                        savePostOnlineAndFinishAsync(isFirstTimePublish);
+                        savePostOnlineAndFinishAsync(isFirstTimePublish, doFinish);
                     } else {
-                        savePostLocallyAndFinishAsync();
+                        savePostLocallyAndFinishAsync(doFinish);
                     }
                 } else {
                     // discard post if new & empty
@@ -1549,7 +1550,9 @@ public class EditPostActivity extends AppCompatActivity implements
                         mDispatcher.dispatch(PostActionBuilder.newRemovePostAction(mPost));
                     }
                     removePostOpenInEditorStickyEvent();
-                    finish();
+                    if (doFinish) {
+                        finish();
+                    }
                 }
             }
         }).start();
@@ -1599,8 +1602,8 @@ public class EditPostActivity extends AppCompatActivity implements
         return true;
     }
 
-    private void savePostLocallyAndFinishAsync() {
-        new SavePostLocallyAndFinishTask().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+    private void savePostLocallyAndFinishAsync(boolean doFinishActivity) {
+        new SavePostLocallyAndFinishTask(doFinishActivity).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 
     /**
@@ -3100,17 +3103,41 @@ public class EditPostActivity extends AppCompatActivity implements
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onPostUploaded(PostStore.OnPostUploaded event) {
         final PostModel post = event.post;
-        if (post != null && post.getLocalSiteId() == mSite.getId()) {
-            // here show snackbar saying it was uploaded
-            int messageRes = post.isPage() ? R.string.page_published : R.string.post_published;
-            UploadUtils.showSnackbarSuccessAction(findViewById(R.id.editor_activity), messageRes,
-                    R.string.button_view, new View.OnClickListener() {
-                        @Override
-                        public void onClick(View view) {
-                            // jump to Editor Preview mode to show this Post
-                            ActivityLauncher.browsePostOrPage(EditPostActivity.this, mSite, post);
-                        }
-                    });
+        if (post != null && post.getId() == mPost.getId()) {
+            if (event.isError()) {
+                UploadUtils.showSnackbarError(findViewById(R.id.editor_activity), event.error.message);
+                return;
+            }
+
+            mPost = post;
+            invalidateOptionsMenu();
+            switch (PostStatus.fromPost(post)) {
+                case PUBLISHED:
+                    // here show snackbar saying it was uploaded
+                    int messageRes = post.isPage() ? R.string.page_published : R.string.post_published;
+                    UploadUtils.showSnackbarSuccessAction(findViewById(R.id.editor_activity), messageRes,
+                            R.string.button_view, new View.OnClickListener() {
+                                @Override
+                                public void onClick(View view) {
+                                    // jump to Editor Preview mode to show this Post
+                                    ActivityLauncher.browsePostOrPage(EditPostActivity.this, mSite, post);
+                                }
+                            });
+                    break;
+                case DRAFT:
+                default:
+                    UploadUtils.showSnackbarSuccessAction(findViewById(R.id.editor_activity),
+                            R.string.editor_draft_saved_online,
+                            R.string.button_publish,
+                            new View.OnClickListener() {
+                                @Override
+                                public void onClick(View v) {
+                                    UploadUtils
+                                            .publishPost(EditPostActivity.this, post, mSite, mDispatcher);
+                                }
+                            });
+                    break;
+            }
         }
     }
 

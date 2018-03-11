@@ -192,7 +192,7 @@ public class UploadUtils {
                 .setAction(buttonTitleRes, onClickListener).show();
     }
 
-    private static void showSnackbarError(View view, String message) {
+    public static void showSnackbarError(View view, String message) {
         Snackbar.make(view, message, K_SNACKBAR_WAIT_TIME_MS).show();
     }
 
@@ -218,7 +218,7 @@ public class UploadUtils {
                 .show();
     }
 
-    private static void showSnackbar(View view, int messageRes) {
+    public static void showSnackbar(View view, int messageRes) {
         Snackbar.make(view,
                       messageRes, Snackbar.LENGTH_LONG).show();
     }
