@@ -10,9 +10,9 @@ import org.wordpress.android.fluxc.Payload;
 import org.wordpress.android.fluxc.action.StockMediaAction;
 import org.wordpress.android.fluxc.annotations.action.Action;
 import org.wordpress.android.fluxc.annotations.action.IAction;
+import org.wordpress.android.fluxc.model.MediaModel;
 import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.model.StockMediaModel;
-import org.wordpress.android.fluxc.model.StockMediaUploadModel;
 import org.wordpress.android.fluxc.network.BaseRequest.BaseNetworkError;
 import org.wordpress.android.fluxc.network.rest.wpcom.stockmedia.StockMediaRestClient;
 import org.wordpress.android.util.AppLog;
@@ -78,12 +78,13 @@ public class StockMediaStore extends Store {
     /**
      * Actions: UPLOAD_STOCK_MEDIA
      */
+    @SuppressWarnings("WeakerAccess")
     public static class UploadStockMediaPayload extends Payload<BaseNetworkError> {
-        @NonNull List<StockMediaModel> mediaList;
-        public SiteModel site;
+        public @NonNull List<StockMediaModel> stockMediaList;
+        public @NonNull SiteModel site;
 
-        public UploadStockMediaPayload(@NonNull SiteModel site, @NonNull List<StockMediaModel> mediaList) {
-            this.mediaList = mediaList;
+        public UploadStockMediaPayload(@NonNull SiteModel site, @NonNull List<StockMediaModel> stockMediaList) {
+            this.stockMediaList = stockMediaList;
             this.site = site;
         }
     }
@@ -93,10 +94,10 @@ public class StockMediaStore extends Store {
      */
     @SuppressWarnings("WeakerAccess")
     public static class UploadedStockMediaPayload extends Payload<StockMediaError> {
-        @NonNull public List<StockMediaUploadModel> mediaList;
+        @NonNull public List<MediaModel> mediaList;
         @NonNull public SiteModel site;
 
-        public UploadedStockMediaPayload(@NonNull SiteModel site, @NonNull List<StockMediaUploadModel> mediaList) {
+        public UploadedStockMediaPayload(@NonNull SiteModel site, @NonNull List<MediaModel> mediaList) {
             this.site = site;
             this.mediaList = mediaList;
         }
@@ -133,17 +134,17 @@ public class StockMediaStore extends Store {
 
     @SuppressWarnings("WeakerAccess")
     public static class OnStockMediaUploaded extends OnChanged<StockMediaError> {
-        @NonNull public List<StockMediaUploadModel> uploadedMedia;
+        @NonNull public List<MediaModel> mediaList;
         @Nullable public SiteModel site;
 
-        public OnStockMediaUploaded(@NonNull SiteModel site, @NonNull List<StockMediaUploadModel> uploadedMedia) {
+        public OnStockMediaUploaded(@NonNull SiteModel site, @NonNull List<MediaModel> mediaList) {
             this.site = site;
-            this.uploadedMedia = uploadedMedia;
+            this.mediaList = mediaList;
         }
         public OnStockMediaUploaded(@NonNull SiteModel site, @NonNull StockMediaError error) {
             this.site = site;
             this.error = error;
-            this.uploadedMedia = new ArrayList<>();
+            this.mediaList = new ArrayList<>();
         }
     }
 
@@ -216,7 +217,7 @@ public class StockMediaStore extends Store {
     }
 
     private void performUploadStockMedia(StockMediaStore.UploadStockMediaPayload payload) {
-        mStockMediaRestClient.uploadStockMedia(payload.site, payload.mediaList);
+        mStockMediaRestClient.uploadStockMedia(payload.site, payload.stockMediaList);
     }
 
     private void handleStockMediaUploaded(StockMediaStore.UploadedStockMediaPayload payload) {
