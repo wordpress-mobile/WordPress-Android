@@ -76,7 +76,7 @@ public class StockMediaRestClient extends BaseWPComRestClient {
         add(request);
     }
 
-    public void uploadStockMedia(@NonNull List<StockMediaModel> stockMediaList, @NonNull SiteModel site) {
+    public void uploadStockMedia(@NonNull final SiteModel site, @NonNull List<StockMediaModel> stockMediaList) {
         String url = WPCOMREST.sites.site(site.getSiteId()).external_media_upload.getUrlV1_1();
 
         JsonArray jsonIds = new JsonArray();
@@ -93,17 +93,17 @@ public class StockMediaRestClient extends BaseWPComRestClient {
                     @Override
                     public void onResponse(UploadStockMediaResponse response) {
                         StockMediaStore.UploadedStockMediaPayload payload =
-                                new StockMediaStore.UploadedStockMediaPayload(response.uploadedMedia);
+                                new StockMediaStore.UploadedStockMediaPayload(site, response.uploadedMedia);
                         mDispatcher.dispatch(StockMediaActionBuilder.newUploadedStockMediaAction(payload));
                     }
                 }, new BaseRequest.BaseErrorListener() {
                     @Override
                     public void onErrorResponse(@NonNull BaseRequest.BaseNetworkError error) {
-                        AppLog.e(AppLog.T.MEDIA, "VolleyError Fetching stock media: " + error);
+                        AppLog.e(AppLog.T.MEDIA, "VolleyError uploading stock media: " + error);
                         StockMediaStore.StockMediaError mediaError = new StockMediaStore.StockMediaError(
                                 StockMediaStore.StockMediaErrorType.fromBaseNetworkError(error), error.message);
                         StockMediaStore.UploadedStockMediaPayload payload =
-                                new StockMediaStore.UploadedStockMediaPayload(mediaError);
+                                new StockMediaStore.UploadedStockMediaPayload(site, mediaError);
                         mDispatcher.dispatch(StockMediaActionBuilder.newUploadedStockMediaAction(payload));
                     }
                 }
