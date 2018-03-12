@@ -65,7 +65,7 @@ public class StatsInsightsAllTimeFragment extends StatsAbstractInsightsFragment 
 
         LinearLayout ll = (LinearLayout) getActivity().getLayoutInflater()
                                                       .inflate(R.layout.stats_insights_all_time_item,
-                                                               (ViewGroup) mResultContainer.getRootView(), false);
+                                                              (ViewGroup) mResultContainer.getRootView(), false);
 
         TextView postsTextView = (TextView) ll.findViewById(R.id.stats_all_time_posts);
         TextView viewsTextView = (TextView) ll.findViewById(R.id.stats_all_time_views);
@@ -79,10 +79,8 @@ public class StatsInsightsAllTimeFragment extends StatsAbstractInsightsFragment 
         visitorsTextView.setText(FormatUtils.formatDecimal(mInsightsAllTimeModel.getVisitors()));
 
         besteverTextView.setText(FormatUtils.formatDecimal(mInsightsAllTimeModel.getViewsBestDayTotal()));
-        besteverDateTextView.setText(
-                StatsUtils.parseDateToLocalizedFormat(mInsightsAllTimeModel.getViewsBestDay(),
-                                                      StatsConstants.STATS_INPUT_DATE_FORMAT,
-                                                      "MMMM dd, yyyy"));
+        besteverDateTextView.setText(StatsUtils.parseDateToLocalizedFormat(mInsightsAllTimeModel.getViewsBestDay(),
+                StatsConstants.STATS_INPUT_DATE_FORMAT, "MMMM dd, yyyy"));
 
         mResultContainer.addView(ll);
     }
