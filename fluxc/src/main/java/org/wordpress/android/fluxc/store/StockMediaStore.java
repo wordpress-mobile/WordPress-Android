@@ -151,6 +151,7 @@ public class StockMediaStore extends Store {
 
     public enum StockMediaErrorType {
         INVALID_INPUT,
+        PARSE_ERROR,
         GENERIC_ERROR;
 
         public static StockMediaErrorType fromBaseNetworkError(BaseNetworkError baseError) {
