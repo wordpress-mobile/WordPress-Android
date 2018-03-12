@@ -3,7 +3,6 @@ package org.wordpress.android.ui.stockphotos;
 import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModelProvider;
 import android.arch.lifecycle.ViewModelProviders;
-import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.NonNull;
@@ -29,7 +28,6 @@ import org.wordpress.android.ui.media.MediaPreviewActivity;
 import org.wordpress.android.util.ActivityUtils;
 import org.wordpress.android.util.AniUtils;
 import org.wordpress.android.util.DisplayUtils;
-import org.wordpress.android.util.ListUtils;
 import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.PhotonUtils;
 import org.wordpress.android.util.StringUtils;
@@ -44,7 +42,6 @@ import java.util.List;
 import javax.inject.Inject;
 
 public class StockPhotoPickerActivity extends AppCompatActivity implements SearchView.OnQueryTextListener {
-    public static final String RESULT_GUIDS = "result_guids";
     private static final String KEY_SELECTED_ITEMS = "selected_items";
     private static final int MIN_SEARCH_QUERY_SIZE = 3;
 
@@ -97,7 +94,7 @@ public class StockPhotoPickerActivity extends AppCompatActivity implements Searc
         mTextInsert = findViewById(R.id.text_insert);
         mTextInsert.setOnClickListener(new View.OnClickListener() {
             @Override public void onClick(View v) {
-                insertSelection();
+                uploadSelection();
             }
         });
         findViewById(R.id.text_clear).setOnClickListener(new View.OnClickListener() {
@@ -277,7 +274,8 @@ public class StockPhotoPickerActivity extends AppCompatActivity implements Searc
     private void notifySelectionCountChanged() {
         int numSelected = mAdapter.getSelectionCount();
         if (numSelected > 0) {
-            mTextInsert.setText(getString(R.string.insert) + " " + Integer.toString(numSelected));
+            String label = getString(R.string.insert) + " " + Integer.toString(numSelected);
+            mTextInsert.setText(label);
             showSelectionBar();
             if (numSelected == 1) {
                 ActivityUtils.hideKeyboardForced(mSearchView);
@@ -287,19 +285,9 @@ public class StockPhotoPickerActivity extends AppCompatActivity implements Searc
         }
     }
 
-    private void insertSelection() {
+    private void uploadSelection() {
         ToastUtils.showToast(this, "Uploading will be added in a later PR");
-
-        List<StockMediaModel> items = mAdapter.getSelectedItems();
-        ArrayList<String> guids = new ArrayList<>();
-        for (StockMediaModel item : items) {
-            guids.add(item.getGuid());
-        }
-
-        Intent intent = new Intent();
-        intent.putStringArrayListExtra(RESULT_GUIDS, guids);
-        setResult(RESULT_OK, intent);
-        finish();
+        // List<StockMediaModel> items = mAdapter.getSelectedItems();
     }
 
     class StockPhotoAdapter extends RecyclerView.Adapter<StockViewHolder> {
@@ -351,7 +339,8 @@ public class StockPhotoPickerActivity extends AppCompatActivity implements Searc
             holder.mSelectionCountTextView.setSelected(isSelected);
             if (isSelected) {
                 int count = mSelectedItems.indexOf(position) + 1;
-                holder.mSelectionCountTextView.setText(Integer.toString(count));
+                String label = Integer.toString(count);
+                holder.mSelectionCountTextView.setText(label);
             } else {
                 holder.mSelectionCountTextView.setText(null);
             }
@@ -390,7 +379,8 @@ public class StockPhotoPickerActivity extends AppCompatActivity implements Searc
 
             // show and animate the count
             if (selected) {
-                holder.mSelectionCountTextView.setText(Integer.toString(mSelectedItems.indexOf(position) + 1));
+                String label = Integer.toString(mSelectedItems.indexOf(position) + 1);
+                holder.mSelectionCountTextView.setText(label);
             } else {
                 holder.mSelectionCountTextView.setText(null);
             }
