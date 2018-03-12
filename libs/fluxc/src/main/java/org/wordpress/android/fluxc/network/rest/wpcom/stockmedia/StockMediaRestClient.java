@@ -12,6 +12,7 @@ import com.google.gson.JsonObject;
 import org.wordpress.android.fluxc.Dispatcher;
 import org.wordpress.android.fluxc.generated.StockMediaActionBuilder;
 import org.wordpress.android.fluxc.generated.endpoint.WPCOMREST;
+import org.wordpress.android.fluxc.model.MediaModel;
 import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.model.StockMediaModel;
 import org.wordpress.android.fluxc.network.BaseRequest;
@@ -19,7 +20,10 @@ import org.wordpress.android.fluxc.network.UserAgent;
 import org.wordpress.android.fluxc.network.rest.wpcom.BaseWPComRestClient;
 import org.wordpress.android.fluxc.network.rest.wpcom.WPComGsonRequest;
 import org.wordpress.android.fluxc.network.rest.wpcom.auth.AccessToken;
+import org.wordpress.android.fluxc.network.rest.wpcom.media.MediaWPComRestResponse.MultipleMediaResponse;
 import org.wordpress.android.fluxc.store.StockMediaStore;
+import org.wordpress.android.fluxc.store.StockMediaStore.StockMediaError;
+import org.wordpress.android.fluxc.store.StockMediaStore.StockMediaErrorType;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.UrlUtils;
@@ -29,6 +33,8 @@ import java.util.List;
 import java.util.Map;
 
 import javax.inject.Singleton;
+
+import static org.wordpress.android.fluxc.network.rest.wpcom.media.MediaRestClient.getMediaListFromRestResponse;
 
 @Singleton
 public class StockMediaRestClient extends BaseWPComRestClient {
@@ -57,24 +63,24 @@ public class StockMediaRestClient extends BaseWPComRestClient {
                     public void onResponse(SearchStockMediaResponse response) {
                         StockMediaStore.FetchedStockMediaListPayload payload =
                                 new StockMediaStore.FetchedStockMediaListPayload(
-                                response.media,
-                                searchTerm,
-                                response.nextPage,
-                                response.canLoadMore);
+                                        response.media,
+                                        searchTerm,
+                                        response.nextPage,
+                                        response.canLoadMore);
                         mDispatcher.dispatch(StockMediaActionBuilder.newFetchedStockMediaAction(payload));
                     }
                 }, new BaseRequest.BaseErrorListener() {
                     @Override
                     public void onErrorResponse(@NonNull BaseRequest.BaseNetworkError error) {
                         AppLog.e(AppLog.T.MEDIA, "VolleyError Fetching stock media: " + error);
-                        StockMediaStore.StockMediaError mediaError = new StockMediaStore.StockMediaError(
-                                StockMediaStore.StockMediaErrorType.fromBaseNetworkError(error), error.message);
+                        StockMediaError mediaError = new StockMediaError(
+                                StockMediaErrorType.fromBaseNetworkError(error), error.message);
                         StockMediaStore.FetchedStockMediaListPayload payload =
                                 new StockMediaStore.FetchedStockMediaListPayload(mediaError, searchTerm);
                         mDispatcher.dispatch(StockMediaActionBuilder.newFetchedStockMediaAction(payload));
                     }
                 }
-        );
+                                                                   );
 
         add(request);
     }
@@ -96,26 +102,27 @@ public class StockMediaRestClient extends BaseWPComRestClient {
         body.put("service", "pexels");
         body.put("external_ids", jsonBody);
 
-        WPComGsonRequest request = WPComGsonRequest.buildPostRequest(url, body, UploadStockMediaResponse.class,
-                new Response.Listener<UploadStockMediaResponse>() {
+        WPComGsonRequest request = WPComGsonRequest.buildPostRequest(url, body, MultipleMediaResponse.class,
+                new Response.Listener<MultipleMediaResponse>() {
                     @Override
-                    public void onResponse(UploadStockMediaResponse response) {
+                    public void onResponse(MultipleMediaResponse response) {
+                        List<MediaModel> mediaList = getMediaListFromRestResponse(response, site.getId());
                         StockMediaStore.UploadedStockMediaPayload payload =
-                                new StockMediaStore.UploadedStockMediaPayload(site, response.mediaList);
+                                new StockMediaStore.UploadedStockMediaPayload(site, mediaList);
                         mDispatcher.dispatch(StockMediaActionBuilder.newUploadedStockMediaAction(payload));
                     }
                 }, new BaseRequest.BaseErrorListener() {
                     @Override
                     public void onErrorResponse(@NonNull BaseRequest.BaseNetworkError error) {
                         AppLog.e(AppLog.T.MEDIA, "VolleyError uploading stock media: " + error);
-                        StockMediaStore.StockMediaError mediaError = new StockMediaStore.StockMediaError(
-                                StockMediaStore.StockMediaErrorType.fromBaseNetworkError(error), error.message);
+                        StockMediaError mediaError = new StockMediaError(
+                                StockMediaErrorType.fromBaseNetworkError(error), error.message);
                         StockMediaStore.UploadedStockMediaPayload payload =
                                 new StockMediaStore.UploadedStockMediaPayload(site, mediaError);
                         mDispatcher.dispatch(StockMediaActionBuilder.newUploadedStockMediaAction(payload));
                     }
                 }
-        );
+                                                                    );
 
         try {
             String strBody = new String(request.getBody());
