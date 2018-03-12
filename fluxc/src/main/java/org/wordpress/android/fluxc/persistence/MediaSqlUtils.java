@@ -126,6 +126,22 @@ public class MediaSqlUtils {
         return searchSiteMediaQuery(siteModel, searchTerm).getAsModel();
     }
 
+    public static List<MediaModel> searchSiteImages(SiteModel siteModel, String searchTerm) {
+        return searchSiteMediaByMimeTypeQuery(siteModel, searchTerm, MediaUtils.MIME_TYPE_IMAGE).getAsModel();
+    }
+
+    public static List<MediaModel> searchSiteAudio(SiteModel siteModel, String searchTerm) {
+        return searchSiteMediaByMimeTypeQuery(siteModel, searchTerm, MediaUtils.MIME_TYPE_AUDIO).getAsModel();
+    }
+
+    public static List<MediaModel> searchSiteVideos(SiteModel siteModel, String searchTerm) {
+        return searchSiteMediaByMimeTypeQuery(siteModel, searchTerm, MediaUtils.MIME_TYPE_VIDEO).getAsModel();
+    }
+
+    public static List<MediaModel> searchSiteDocuments(SiteModel siteModel, String searchTerm) {
+        return searchSiteMediaByMimeTypeQuery(siteModel, searchTerm, MediaUtils.MIME_TYPE_APPLICATION).getAsModel();
+    }
+
     public static WellCursor<MediaModel> searchSiteMediaAsCursor(SiteModel siteModel,
                                                                  String searchTerm) {
         return searchSiteMediaQuery(siteModel, searchTerm).getAsCursor();
@@ -144,6 +160,22 @@ public class MediaSqlUtils {
                 .endGroup()
                 .endGroup().endWhere()
                 .orderBy(MediaModelTable.UPLOAD_DATE, SelectQuery.ORDER_DESCENDING);
+    }
+
+    private static SelectQuery<MediaModel> searchSiteMediaByMimeTypeQuery(SiteModel siteModel,
+                                                                          String searchTerm,
+                                                                          String mimeTypePrefix) {
+        return WellSql.select(MediaModel.class)
+                      .where().beginGroup()
+                      .equals(MediaModelTable.LOCAL_SITE_ID, siteModel.getId())
+                      .beginGroup()
+                      .contains(MediaModelTable.TITLE, searchTerm)
+                      .or().contains(MediaModelTable.CAPTION, searchTerm)
+                      .or().contains(MediaModelTable.DESCRIPTION, searchTerm)
+                      .or().contains(MediaModelTable.MIME_TYPE, mimeTypePrefix)
+                      .endGroup()
+                      .endGroup().endWhere()
+                      .orderBy(MediaModelTable.UPLOAD_DATE, SelectQuery.ORDER_DESCENDING);
     }
 
     public static List<MediaModel> getSiteImages(SiteModel siteModel) {
