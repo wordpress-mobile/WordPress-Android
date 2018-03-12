@@ -44,8 +44,11 @@ public class FormatUtils {
         }
         int digitGroups = (int) (Math.log10(size) / log1024);
 
-        return String.format(unitStrings[digitGroups],
-                new DecimalFormat("#,##0.#").format(size / Math.pow(1024, digitGroups)));
+        NumberFormat f = NumberFormat.getInstance();
+        if (f instanceof DecimalFormat) {
+            ((DecimalFormat) f).applyPattern("#,##0.#");
+        }
+        return String.format(unitStrings[digitGroups], f.format(size / Math.pow(1024, digitGroups)));
     }
 
     /*
