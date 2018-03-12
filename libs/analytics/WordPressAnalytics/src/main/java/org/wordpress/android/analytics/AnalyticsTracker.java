@@ -173,7 +173,8 @@ public final class AnalyticsTracker {
         OPENED_MY_PROFILE,
         OPENED_PEOPLE_MANAGEMENT,
         OPENED_PERSON,
-        OPENED_PLUGINS,
+        OPENED_PLUGIN_DIRECTORY,
+        OPENED_PLUGIN_LIST,
         OPENED_PLUGIN_DETAIL,
         CREATE_ACCOUNT_INITIATED,
         CREATE_ACCOUNT_EMAIL_EXISTS,
@@ -327,9 +328,14 @@ public final class AnalyticsTracker {
         APP_PERMISSION_GRANTED,
         APP_PERMISSION_DENIED,
         SHARE_TO_WP_SUCCEEDED,
+        PLUGIN_ACTIVATED,
+        PLUGIN_AUTOUPDATE_ENABLED,
+        PLUGIN_AUTOUPDATE_DISABLED,
+        PLUGIN_DEACTIVATED,
+        PLUGIN_INSTALLED,
         PLUGIN_REMOVED,
-        PLUGIN_UPDATED,
-        PLUGIN_INSTALLED
+        PLUGIN_SEARCH_PERFORMED,
+        PLUGIN_UPDATED
     }
 
     private static final List<Tracker> TRACKERS = new ArrayList<>();

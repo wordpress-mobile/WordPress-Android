@@ -23,6 +23,8 @@ import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.CrashlyticsUtils;
 import org.wordpress.android.util.SqlUtils;
 
+import java.util.Locale;
+
 /**
  * tbl_posts contains all reader posts - the primary key is pseudo_id + tag_name + tag_type,
  * which allows the same post to appear in multiple streams (ex: it can exist in followed
@@ -222,7 +224,8 @@ public class ReaderPostTable {
                        + "tag_type=? ORDER BY " + getSortColumnForTag(tag) + " DESC LIMIT ?)";
         int numDeleted = db.delete("tbl_posts", where, args);
         AppLog.d(AppLog.T.READER,
-                 String.format("reader post table > purged %d posts in tag %s", numDeleted, tag.getTagNameForLog()));
+                String.format(Locale.ENGLISH, "reader post table > purged %d posts in tag %s", numDeleted,
+                        tag.getTagNameForLog()));
         return numDeleted;
     }
 
@@ -503,7 +506,8 @@ public class ReaderPostTable {
         try {
             int count = statement.executeUpdateDelete();
             if (count > 0) {
-                AppLog.d(AppLog.T.READER, String.format("reader post table > marked %d posts unfollowed", count));
+                AppLog.d(AppLog.T.READER, String.format(Locale.ENGLISH,
+                        "reader post table > marked %d posts unfollowed", count));
             }
         } finally {
             statement.close();

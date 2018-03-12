@@ -302,7 +302,7 @@ public class StatsUtils {
         }
         com.android.volley.AuthFailureError volleyError = (com.android.volley.AuthFailureError) error;
         if (volleyError.networkResponse != null && volleyError.networkResponse.data != null) {
-            String errorMessage = new String(volleyError.networkResponse.data).toLowerCase();
+            String errorMessage = new String(volleyError.networkResponse.data).toLowerCase(Locale.ROOT);
             return errorMessage.contains("api calls") && errorMessage.contains("disabled");
         } else {
             AppLog.e(T.STATS, "Network response is null in Volley. Can't check if it is a Rest Disabled error.");

@@ -25,6 +25,7 @@ import org.wordpress.android.widgets.WPNetworkImageView;
 
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ThreadPoolExecutor;
@@ -410,7 +411,7 @@ public class StatsFollowersFragment extends StatsAbstractListFragment {
         if (TextUtils.isEmpty(url)) {
             return "";
         }
-        String normURL = UrlUtils.normalizeUrl(url.toLowerCase());
+        String normURL = UrlUtils.normalizeUrl(url.toLowerCase(Locale.ROOT));
         int pos = normURL.indexOf("://");
         if (pos > -1) {
             return normURL.substring(pos + 3);

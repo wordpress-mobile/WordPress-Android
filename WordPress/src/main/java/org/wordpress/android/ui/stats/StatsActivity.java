@@ -39,6 +39,7 @@ import org.wordpress.android.ui.prefs.AppPrefs;
 import org.wordpress.android.util.AnalyticsUtils;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
+import org.wordpress.android.util.LocaleManager;
 import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.RateLimitedTask;
 import org.wordpress.android.util.SiteUtils;
@@ -100,6 +101,10 @@ public class StatsActivity extends AppCompatActivity
             StatsVisitorsAndViewsFragment.OverviewLabel.VIEWS;
     private boolean mThereWasAnErrorLoadingStats = false;
 
+    @Override
+    protected void attachBaseContext(Context newBase) {
+        super.attachBaseContext(LocaleManager.setLocale(newBase));
+    }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -279,7 +284,7 @@ public class StatsActivity extends AppCompatActivity
     private boolean checkIfSiteHasAccessibleStats(SiteModel site) {
         if (!SiteUtils.isAccessedViaWPComRest(mSite)) {
             if (!site.isJetpackInstalled() || !site.isJetpackConnected()) {
-                ActivityLauncher.startJetpackConnectionFlow(this, site);
+                ActivityLauncher.viewConnectJetpackForStats(this, site);
                 return false;
             }
         }

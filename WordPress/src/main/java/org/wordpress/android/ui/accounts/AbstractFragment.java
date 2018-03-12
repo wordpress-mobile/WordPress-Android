@@ -10,6 +10,8 @@ import android.view.inputmethod.EditorInfo;
 
 import org.wordpress.android.util.ActivityUtils;
 
+import java.util.Locale;
+
 /**
  * A fragment representing a single step in a wizard. The fragment shows a dummy title indicating
  * the page number, along with some dummy text.
@@ -60,7 +62,7 @@ public abstract class AbstractFragment extends Fragment {
 
     protected void lowerCaseEditable(Editable editable) {
         // Convert editable content to lowercase
-        String lowerCase = editable.toString().toLowerCase();
+        String lowerCase = editable.toString().toLowerCase(Locale.ROOT);
         if (!lowerCase.equals(editable.toString())) {
             editable.replace(0, editable.length(), lowerCase);
         }

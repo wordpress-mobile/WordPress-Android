@@ -1,13 +1,12 @@
 package org.wordpress.android.models;
 
+import android.support.v4.util.LongSparseArray;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.JSONUtils;
-
-import java.util.HashMap;
-import java.util.Map;
 
 // Maps to notification settings returned from the /me/notifications/settings endpoint on wp.com
 public class NotificationsSettings {
@@ -21,7 +20,7 @@ public class NotificationsSettings {
 
     private JSONObject mOtherSettings;
     private JSONObject mWPComSettings;
-    private Map<Long, JSONObject> mBlogSettings;
+    private LongSparseArray<JSONObject> mBlogSettings;
 
     // The main notification settings channels (displayed at root of NoticationsSettingsFragment)
     public enum Channel {
@@ -56,7 +55,7 @@ public class NotificationsSettings {
 
     // Parses the json response from /me/notifications/settings endpoint and updates the instance variables
     public void updateJson(JSONObject json) {
-        mBlogSettings = new HashMap<>();
+        mBlogSettings = new LongSparseArray<>();
 
         mOtherSettings = JSONUtils.queryJSON(json, KEY_OTHER, new JSONObject());
         mWPComSettings = JSONUtils.queryJSON(json, KEY_WPCOM, new JSONObject());
@@ -105,7 +104,7 @@ public class NotificationsSettings {
         return mOtherSettings;
     }
 
-    public Map<Long, JSONObject> getBlogSettings() {
+    public LongSparseArray<JSONObject> getBlogSettings() {
         return mBlogSettings;
     }
 

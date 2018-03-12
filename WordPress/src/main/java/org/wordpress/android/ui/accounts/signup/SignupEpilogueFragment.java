@@ -263,8 +263,8 @@ public class SignupEpilogueFragment extends LoginBaseFormFragment<SignupEpilogue
                 // email does not exist in account store.
                 if (TextUtils.isEmpty(mAccountStore.getAccount().getEmail())) {
                     startProgress(false);
-                // Skip progress and populate views when email does exist in account store.
                 } else {
+                    // Skip progress and populate views when email does exist in account store.
                     populateViews();
                 }
             } else {
@@ -312,8 +312,9 @@ public class SignupEpilogueFragment extends LoginBaseFormFragment<SignupEpilogue
                                             data.getStringExtra(PhotoPickerActivity.EXTRA_MEDIA_SOURCE));
                                     AnalyticsTracker.Stat stat =
                                             source == PhotoPickerActivity.PhotoPickerMediaSource.ANDROID_CAMERA
-                                                ? AnalyticsTracker.Stat.SIGNUP_EMAIL_EPILOGUE_GRAVATAR_SHOT_NEW
-                                                : AnalyticsTracker.Stat.SIGNUP_EMAIL_EPILOGUE_GRAVATAR_GALLERY_PICKED;
+                                                    ? AnalyticsTracker.Stat.SIGNUP_EMAIL_EPILOGUE_GRAVATAR_SHOT_NEW
+                                                    : AnalyticsTracker.Stat
+                                                            .SIGNUP_EMAIL_EPILOGUE_GRAVATAR_GALLERY_PICKED;
                                     AnalyticsTracker.track(stat);
                                     Uri imageUri = Uri.parse(mediaUriString);
 
@@ -483,7 +484,7 @@ public class SignupEpilogueFragment extends LoginBaseFormFragment<SignupEpilogue
         StringBuilder builder = new StringBuilder();
 
         for (String s : array) {
-            String capitalized = s.substring(0, 1).toUpperCase() + s.substring(1);
+            String capitalized = s.substring(0, 1).toUpperCase(Locale.ROOT) + s.substring(1);
             builder.append(capitalized.concat(" "));
         }
 
@@ -497,7 +498,7 @@ public class SignupEpilogueFragment extends LoginBaseFormFragment<SignupEpilogue
      * @return {@link String} to be the username
      */
     private String createUsernameFromEmail() {
-        return mEmailAddress.split("@")[0].replaceAll("[^A-Za-z0-9]", "").toLowerCase();
+        return mEmailAddress.split("@")[0].replaceAll("[^A-Za-z0-9]", "").toLowerCase(Locale.ROOT);
     }
 
     private void injectCache(File file, String avatarUrl) throws IOException {
@@ -748,17 +749,17 @@ public class SignupEpilogueFragment extends LoginBaseFormFragment<SignupEpilogue
                 Uri uri = MediaUtils.downloadExternalMedia(getContext(), Uri.parse(mUrl));
                 File file = new File(new URI(uri.toString()));
                 GravatarApi.uploadGravatar(file, mEmail, mToken,
-                    new GravatarApi.GravatarUploadListener() {
-                        @Override
-                        public void onSuccess() {
-                            AppLog.i(T.NUX, "Google avatar download and Gravatar upload succeeded.");
-                        }
+                        new GravatarApi.GravatarUploadListener() {
+                            @Override
+                            public void onSuccess() {
+                                AppLog.i(T.NUX, "Google avatar download and Gravatar upload succeeded.");
+                            }
 
-                        @Override
-                        public void onError() {
-                            AppLog.i(T.NUX, "Google avatar download and Gravatar upload failed.");
-                        }
-                    });
+                            @Override
+                            public void onError() {
+                                AppLog.i(T.NUX, "Google avatar download and Gravatar upload failed.");
+                            }
+                        });
             } catch (NullPointerException | URISyntaxException exception) {
                 AppLog.e(T.NUX, "Google avatar download and Gravatar upload failed - "
                                 + exception.toString() + " - " + exception.getMessage());

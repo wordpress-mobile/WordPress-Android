@@ -41,6 +41,7 @@ import org.wordpress.android.util.AppLog.T;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 import javax.inject.Inject;
 
@@ -73,8 +74,7 @@ public class UsernameChangerFullScreenDialogFragment extends Fragment implements
     public static final String RESULT_USERNAME = "RESULT_USERNAME";
     public static final int GET_SUGGESTIONS_INTERVAL_MS = 1000;
 
-    @Inject
-    protected Dispatcher mDispatcher;
+    @Inject protected Dispatcher mDispatcher;
 
     protected static Bundle newBundle(String displayName, String username) {
         Bundle bundle = new Bundle();
@@ -250,7 +250,7 @@ public class UsernameChangerFullScreenDialogFragment extends Fragment implements
     }
 
     private String getUsernameQueryFromDisplayName() {
-        return mDisplayName.replace(" ", "").toLowerCase();
+        return mDisplayName.replace(" ", "").toLowerCase(Locale.ROOT);
     }
 
     protected boolean hasUsernameChanged() {

@@ -361,7 +361,7 @@ public class StatsVisitorsAndViewsFragment extends StatsAbstractFragment
 
         // Update the Legend and enable/disable the visitors checkboxes
         mLegendContainer.setVisibility(View.VISIBLE);
-        mLegendLabel.setText(StringUtils.capitalize(selectedStatsType.getLabel().toLowerCase()));
+        mLegendLabel.setText(StringUtils.capitalize(selectedStatsType.getLabel().toLowerCase(Locale.getDefault())));
         switch (selectedStatsType) {
             case VIEWS:
                 mVisitorsCheckboxContainer.setVisibility(View.VISIBLE);
@@ -872,7 +872,7 @@ public class StatsVisitorsAndViewsFragment extends StatsAbstractFragment
         }
 
         public String getLabel() {
-            return WordPress.getContext().getString(mLabelResId).toUpperCase();
+            return WordPress.getContext().getString(mLabelResId).toUpperCase(Locale.getDefault());
         }
     }
 

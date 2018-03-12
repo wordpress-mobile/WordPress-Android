@@ -19,6 +19,7 @@ import android.preference.PreferenceScreen;
 import android.provider.ContactsContract;
 import android.support.annotation.NonNull;
 import android.support.design.widget.Snackbar;
+import android.support.v4.util.SparseArrayCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.text.TextUtils;
 import android.util.Pair;
@@ -66,6 +67,7 @@ import org.wordpress.android.util.AnalyticsUtils;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.HelpshiftHelper;
 import org.wordpress.android.util.HtmlUtils;
+import org.wordpress.android.util.LocaleManager;
 import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.SiteUtils;
 import org.wordpress.android.util.StringUtils;
@@ -1275,11 +1277,13 @@ public class SiteSettingsFragment extends PreferenceFragment
             return;
         }
 
-        Map<Integer, String> categories = mSiteSettings.getCategoryNames();
+        SparseArrayCompat<String> categories = mSiteSettings.getCategoryNames();
         CharSequence[] entries = new CharSequence[categories.size()];
         CharSequence[] values = new CharSequence[categories.size()];
         int i = 0;
-        for (Integer key : categories.keySet()) {
+        int numOfCategories = categories.size();
+        for (int j = 0; j < numOfCategories; j++) {
+            int key = categories.keyAt(j);
             entries[i] = categories.get(key);
             values[i] = String.valueOf(key);
             if (key == UNCATEGORIZED_CATEGORY_ID) {
@@ -1371,7 +1375,7 @@ public class SiteSettingsFragment extends PreferenceFragment
         if (TextUtils.isEmpty(mLanguagePref.getSummary())
             || !newValue.equals(mLanguagePref.getValue())) {
             mLanguagePref.setValue(newValue);
-            String summary = WPPrefUtils.getLanguageString(newValue, WPPrefUtils.languageLocale(newValue));
+            String summary = LocaleManager.getLanguageString(newValue, LocaleManager.languageLocale(newValue));
             mLanguagePref.setSummary(summary);
             mLanguagePref.refreshAdapter();
         }
@@ -1382,15 +1386,15 @@ public class SiteSettingsFragment extends PreferenceFragment
             return;
         }
 
-        Pair<String[], String[]> pair = WPPrefUtils
-                .createSortedLanguageDisplayStrings(mLanguagePref.getEntryValues(), WPPrefUtils.languageLocale(null));
+        Pair<String[], String[]> pair = LocaleManager
+                .createSortedLanguageDisplayStrings(mLanguagePref.getEntryValues(), LocaleManager.languageLocale(null));
         if (pair != null) {
             String[] sortedEntries = pair.first;
             String[] sortedValues = pair.second;
 
             mLanguagePref.setEntries(sortedEntries);
             mLanguagePref.setEntryValues(sortedValues);
-            mLanguagePref.setDetails(WPPrefUtils.createLanguageDetailDisplayStrings(sortedValues));
+            mLanguagePref.setDetails(LocaleManager.createLanguageDetailDisplayStrings(sortedValues));
         }
     }
 

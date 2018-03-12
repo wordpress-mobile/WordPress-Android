@@ -1,27 +1,22 @@
 package org.wordpress.android.ui;
 
-import android.app.Activity;
-import android.content.Context;
-import android.content.Intent;
 import android.net.Uri;
-import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 
-import org.wordpress.android.analytics.AnalyticsTracker;
-import org.wordpress.android.fluxc.model.SiteModel;
-import org.wordpress.android.fluxc.store.AccountStore;
-import org.wordpress.android.login.LoginMode;
-import org.wordpress.android.ui.accounts.LoginActivity;
 import org.wordpress.android.util.AppLog;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
 
-import static org.wordpress.android.WordPress.SITE;
-import static org.wordpress.android.ui.RequestCodes.JETPACK_LOGIN;
-
 class JetpackConnectionWebViewClient extends WebViewClient {
+    interface JetpackConnectionWebViewClientListener {
+        void onRequiresWPComLogin(WebView webView, String redirectPage);
+        void onRequiresJetpackLogin();
+        void onJetpackSuccessfullyConnected(Uri uri);
+    }
+
     private static final String LOGIN_PATH = "/wp-login.php";
     private static final String ADMIN_PATH = "/wp-admin/admin.php";
     private static final String REDIRECT_PARAMETER = "redirect_to=";
@@ -30,33 +25,61 @@ class JetpackConnectionWebViewClient extends WebViewClient {
     private static final String WPCOM_LOG_IN_PATH_2 = "/log-in/jetpack";
     private static final String JETPACK_PATH = "/jetpack";
     private static final String WORDPRESS_COM_PREFIX = "https://wordpress.com";
-    private static final Uri JETPACK_DEEPLINK_URI =
-            Uri.parse(JetpackConnectionWebViewActivity.JETPACK_CONNECTION_DEEPLINK);
-    private static final String REDIRECT_PAGE_STATE_ITEM = "redirectPage";
-    private static final String FLOW_FINISHED = "FLOW_FINISHED";
+    static final String JETPACK_CONNECTION_DEEPLINK = "wordpress://jetpack-connection";
+    private static final Uri JETPACK_DEEPLINK_URI = Uri.parse(JETPACK_CONNECTION_DEEPLINK);
 
-    private Activity mActivity;
-    private final AccountStore mAccountStore;
-    private final SiteModel mSiteModel;
-
+    private final @NonNull JetpackConnectionWebViewClientListener mListener;
+    private final String mSiteUrl;
     private String mRedirectPage;
-    private boolean mFlowFinished = false;
 
-    JetpackConnectionWebViewClient(Activity activity, AccountStore accountStore, SiteModel siteModel) {
-        mActivity = activity;
-        mAccountStore = accountStore;
-        mSiteModel = siteModel;
+    JetpackConnectionWebViewClient(@NonNull JetpackConnectionWebViewClientListener listener, String siteUrl) {
+        mListener = listener;
+        mSiteUrl = siteUrl;
     }
 
-    private void loginToWPCom(WebView view, SiteModel site) {
-        String authenticationURL = WPWebViewActivity.getSiteLoginUrl(site);
-        String postData = WPWebViewActivity.getAuthenticationPostData(authenticationURL, mRedirectPage,
-                                                                      site.getUsername(), site.getPassword(),
-                                                                      mAccountStore.getAccessToken());
-        view.postUrl(authenticationURL, postData.getBytes());
+    @Override
+    public boolean shouldOverrideUrlLoading(WebView view, String stringUrl) {
+        try {
+            final Uri uri = Uri.parse(stringUrl);
+            final String loadedHost = uri.getHost();
+            if (loadedHost == null) {
+                return false;
+            }
+            final String loadedPath = uri.getPath();
+            final String currentSiteHost = Uri.parse(mSiteUrl).getHost();
+            if (loadedHost.equals(currentSiteHost)
+                && loadedPath != null
+                && loadedPath.contains(LOGIN_PATH)
+                && stringUrl.contains(REDIRECT_PARAMETER)) {
+                extractRedirect(stringUrl);
+                mListener.onRequiresWPComLogin(view, mRedirectPage);
+                return true;
+            } else if (loadedHost.equals(currentSiteHost)
+                       && loadedPath != null
+                       && loadedPath.contains(ADMIN_PATH)
+                       && mRedirectPage != null) {
+                view.loadUrl(mRedirectPage);
+                mRedirectPage = null;
+                return true;
+            } else if (loadedHost.equals(WORDPRESS_COM_HOST)
+                       && loadedPath != null
+                       && (loadedPath.equals(WPCOM_LOG_IN_PATH_1) || loadedPath.equals(WPCOM_LOG_IN_PATH_2))
+                       && stringUrl.contains(REDIRECT_PARAMETER)) {
+                extractRedirect(stringUrl);
+                mListener.onRequiresJetpackLogin();
+                return true;
+            } else if (loadedHost.equals(JETPACK_DEEPLINK_URI.getHost())
+                       && uri.getScheme().equals(JETPACK_DEEPLINK_URI.getScheme())) {
+                mListener.onJetpackSuccessfullyConnected(uri);
+                return true;
+            }
+        } catch (UnsupportedEncodingException e) {
+            AppLog.e(AppLog.T.API, "Unexpected URL encoding in Jetpack connection flow.", e);
+        }
+        return false;
     }
 
-    private String extractRedirect(String stringUrl) throws UnsupportedEncodingException {
+    private void extractRedirect(String stringUrl) throws UnsupportedEncodingException {
         int from = stringUrl.indexOf(REDIRECT_PARAMETER) + REDIRECT_PARAMETER.length();
         int to = stringUrl.indexOf("&", from);
         String redirectUrl;
@@ -68,79 +91,14 @@ class JetpackConnectionWebViewClient extends WebViewClient {
         if (redirectUrl.startsWith(JETPACK_PATH)) {
             redirectUrl = WORDPRESS_COM_PREFIX + redirectUrl;
         }
-        return URLDecoder.decode(redirectUrl, WPWebViewActivity.ENCODING_UTF8);
+        mRedirectPage = URLDecoder.decode(redirectUrl, WPWebViewActivity.ENCODING_UTF8);
     }
 
-    @Override
-    public boolean shouldOverrideUrlLoading(WebView view, String stringUrl) {
-        try {
-            final Uri url = Uri.parse(stringUrl);
-            final String loadedHost = url.getHost();
-            if (loadedHost == null) {
-                return false;
-            }
-            final String loadedPath = url.getPath();
-            final String currentSiteHost = Uri.parse(mSiteModel.getUrl()).getHost();
-            if (loadedHost.equals(currentSiteHost)
-                    && loadedPath != null
-                    && loadedPath.contains(LOGIN_PATH)
-                    && stringUrl.contains(REDIRECT_PARAMETER)) {
-                mRedirectPage = extractRedirect(stringUrl);
-                loginToWPCom(view, mSiteModel);
-                return true;
-            } else if (loadedHost.equals(currentSiteHost)
-                       && loadedPath != null
-                       && loadedPath.contains(ADMIN_PATH)
-                       && mRedirectPage != null) {
-                view.loadUrl(mRedirectPage);
-                mRedirectPage = null;
-                return true;
-            } else if (loadedHost.equals(WORDPRESS_COM_HOST)
-                    && loadedPath != null
-                    && (loadedPath.equals(WPCOM_LOG_IN_PATH_1) || loadedPath.equals(WPCOM_LOG_IN_PATH_2))
-                    && stringUrl.contains(REDIRECT_PARAMETER)) {
-                mRedirectPage = extractRedirect(stringUrl);
-                Intent loginIntent = new Intent(mActivity, LoginActivity.class);
-                LoginMode.JETPACK_STATS.putInto(loginIntent);
-                mActivity.startActivityForResult(loginIntent, JETPACK_LOGIN);
-                return true;
-            } else if (loadedHost.equals(JETPACK_DEEPLINK_URI.getHost())
-                    && url.getScheme().equals(JETPACK_DEEPLINK_URI.getScheme())) {
-                Intent intent = new Intent(Intent.ACTION_VIEW);
-                intent.setData(url);
-                intent.putExtra(SITE, mSiteModel);
-                mActivity.startActivity(intent);
-                mActivity.finish();
-                mFlowFinished = true;
-                AnalyticsTracker.track(AnalyticsTracker.Stat.STATS_COMPLETED_INSTALL_JETPACK);
-                return true;
-            }
-        } catch (UnsupportedEncodingException e) {
-            AppLog.e(AppLog.T.API, "Unexpected URL encoding in Jetpack connection flow.", e);
-        }
-        return false;
+    String getRedirectPage() {
+        return mRedirectPage;
     }
 
-    void activityResult(Context context, int requestCode) {
-        if (requestCode == JETPACK_LOGIN) {
-            JetpackConnectionWebViewActivity.openJetpackConnectionFlow(context, mRedirectPage, mSiteModel);
-            mActivity.finish();
-        }
-    }
-
-    public void cancel() {
-        if (!mFlowFinished) {
-            AnalyticsTracker.track(AnalyticsTracker.Stat.STATS_CANCELED_INSTALL_JETPACK);
-        }
-    }
-
-    public void onSaveInstanceState(Bundle outState) {
-        outState.putString(REDIRECT_PAGE_STATE_ITEM, mRedirectPage);
-        outState.putBoolean(FLOW_FINISHED, mFlowFinished);
-    }
-
-    public void onRestoreInstanceState(Bundle savedInstanceState) {
-        mRedirectPage = savedInstanceState.getString(REDIRECT_PAGE_STATE_ITEM);
-        mFlowFinished = savedInstanceState.getBoolean(FLOW_FINISHED);
+    void setRedirectPage(String redirectPage) {
+        mRedirectPage = redirectPage;
     }
 }
