@@ -1,5 +1,6 @@
 package org.wordpress.android.fluxc.network.rest.wpcom.auth;
 
+import android.content.Context;
 import android.support.annotation.NonNull;
 import android.text.TextUtils;
 
@@ -27,12 +28,11 @@ import org.wordpress.android.fluxc.store.AccountStore.AuthEmailPayload;
 import org.wordpress.android.fluxc.store.AccountStore.AuthenticationErrorType;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
+import org.wordpress.android.util.LanguageUtils;
 
 import java.io.UnsupportedEncodingException;
 import java.util.HashMap;
 import java.util.Map;
-
-import javax.inject.Inject;
 
 public class Authenticator {
     private static final String WPCOM_OAUTH_PREFIX = "https://public-api.wordpress.com/oauth2";
@@ -57,6 +57,7 @@ public class Authenticator {
     private static final String INVALID_OTP_ERROR = "invalid_otp";
     private static final String INVALID_CREDS_ERROR = "Incorrect username or password.";
 
+    private final Context mAppContext;
     private final Dispatcher mDispatcher;
     private final RequestQueue mRequestQueue;
     private AppSecrets mAppSecrets;
@@ -75,8 +76,8 @@ public class Authenticator {
         }
     }
 
-    @Inject
-    public Authenticator(Dispatcher dispatcher, RequestQueue requestQueue, AppSecrets secrets) {
+    public Authenticator(Context appContext, Dispatcher dispatcher, RequestQueue requestQueue, AppSecrets secrets) {
+        mAppContext = appContext;
         mDispatcher = dispatcher;
         mRequestQueue = requestQueue;
         mAppSecrets = secrets;
@@ -232,6 +233,7 @@ public class Authenticator {
                     }
                 }
         );
+        request.addQueryParameter("locale", LanguageUtils.getPatchedCurrentDeviceLanguage(mAppContext));
 
         mRequestQueue.add(request);
     }
