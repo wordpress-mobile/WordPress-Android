@@ -20,6 +20,7 @@ public abstract class BaseWPComRestClient {
     private AccessToken mAccessToken;
     private final Context mAppContext;
     private final RequestQueue mRequestQueue;
+
     protected final Dispatcher mDispatcher;
     protected UserAgent mUserAgent;
 
