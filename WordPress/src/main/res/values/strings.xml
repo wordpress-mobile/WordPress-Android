@@ -1019,8 +1019,6 @@
 
     <string name="error_media_small">Media too small to show</string>
 
-    <string name="media_insert_unimplemented">Apologies! Feature not implemented yet :(</string>
-
     <string name="menu_save_as_draft">Save as Draft</string>
     <string name="menu_publish_now">Publish Now</string>
     <string name="menu_preview">Preview</string>
