@@ -606,10 +606,18 @@ public class AnalyticsTrackerNosara extends Tracker {
                 return "signed_in";
             case SIGNED_INTO_JETPACK:
                 return "signed_into_jetpack";
+            case INSTALL_JETPACK_SELECTED:
+                return "install_jetpack_selected";
+            case INSTALL_JETPACK_CANCELLED:
+                return "install_jetpack_canceled";
+            case INSTALL_JETPACK_COMPLETED:
+                return "install_jetpack_completed";
+            case CONNECT_JETPACK_SELECTED:
+                return "connect_jetpack_selected";
+            case CONNECT_JETPACK_FAILED:
+                return "connect_jetpack_failed";
             case ACCOUNT_LOGOUT:
                 return "account_logout";
-            case PERFORMED_JETPACK_SIGN_IN_FROM_STATS_SCREEN:
-                return "stats_screen_signed_into_jetpack";
             case STATS_ACCESSED:
                 return "stats_accessed";
             case STATS_INSIGHTS_ACCESSED:
@@ -630,14 +638,6 @@ public class AnalyticsTrackerNosara extends Tracker {
                 return "stats_bar_chart_tapped";
             case STATS_SCROLLED_TO_BOTTOM:
                 return "stats_scrolled_to_bottom";
-            case STATS_SELECTED_INSTALL_JETPACK:
-                return "stats_install_jetpack_selected";
-            case STATS_CANCELED_INSTALL_JETPACK:
-                return "stats_install_jetpack_canceled";
-            case STATS_COMPLETED_INSTALL_JETPACK:
-                return "stats_install_jetpack_completed";
-            case STATS_SELECTED_CONNECT_JETPACK:
-                return "stats_connect_jetpack_selected";
             case STATS_WIDGET_ADDED:
                 return "stats_widget_added";
             case STATS_WIDGET_REMOVED:

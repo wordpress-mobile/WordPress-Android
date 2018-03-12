@@ -167,6 +167,21 @@
 
     </PreferenceCategory>
 
+    <!-- Site Quota Settings -->
+    <PreferenceCategory
+        android:id="@+id/pref_site_quota"
+        android:key="@string/pref_key_site_quota"
+        android:title="@string/site_settings_quota_header">
+
+        <org.wordpress.android.ui.prefs.SummaryEditTextPreference
+            android:id="@+id/pref_site_quota_space"
+            android:enabled="false"
+            android:key="@string/pref_key_site_quota_space"
+            android:title="@string/site_settings_quota_space_title"
+            app:longClickHint="@string/site_settings_quota_space_hint"
+            app:maxSummaryLines="1"
+            app:summaryLines="1" />
+    </PreferenceCategory>
     <!-- Traffic settings -->
     <PreferenceCategory
         android:id="@+id/pref_traffic"

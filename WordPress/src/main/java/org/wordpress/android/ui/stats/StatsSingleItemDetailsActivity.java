@@ -36,6 +36,7 @@ import org.wordpress.android.util.AnalyticsUtils;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.DisplayUtils;
 import org.wordpress.android.util.FormatUtils;
+import org.wordpress.android.util.LocaleManager;
 import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.helpers.SwipeToRefreshHelper;
@@ -47,7 +48,6 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.ThreadPoolExecutor;
 
 import static org.wordpress.android.util.WPSwipeToRefreshHelper.buildSwipeToRefreshHelper;
-
 
 /**
  * Single item details activity.
@@ -102,6 +102,10 @@ public class StatsSingleItemDetailsActivity extends AppCompatActivity
     private static final String ARG_AVERAGES_EXPANDED_ROWS = "ARG_AVERAGES_EXPANDED_ROWS";
     private static final String ARG_RECENT_EXPANDED_ROWS = "ARG_RECENT_EXPANDED_ROWS";
 
+    @Override
+    protected void attachBaseContext(Context newBase) {
+        super.attachBaseContext(LocaleManager.setLocale(newBase));
+    }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {

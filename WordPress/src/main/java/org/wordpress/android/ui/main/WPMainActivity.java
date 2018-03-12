@@ -2,6 +2,7 @@ package org.wordpress.android.ui.main;
 
 import android.animation.ObjectAnimator;
 import android.app.Fragment;
+import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
@@ -66,6 +67,7 @@ import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.AuthenticationDialogUtils;
 import org.wordpress.android.util.CoreEvents.MainViewPagerScrolled;
 import org.wordpress.android.util.FluxCUtils;
+import org.wordpress.android.util.LocaleManager;
 import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.ProfilingUtils;
 import org.wordpress.android.util.ToastUtils;
@@ -115,6 +117,11 @@ public class WPMainActivity extends AppCompatActivity {
      */
     public interface OnActivityBackPressedListener {
         boolean onActivityBackPressed();
+    }
+
+    @Override
+    protected void attachBaseContext(Context newBase) {
+        super.attachBaseContext(LocaleManager.setLocale(newBase));
     }
 
     @Override
@@ -653,7 +660,7 @@ public class WPMainActivity extends AppCompatActivity {
                 break;
             case RequestCodes.APP_SETTINGS:
                 if (resultCode == AppSettingsFragment.LANGUAGE_CHANGED) {
-                    resetFragments();
+                    appLanguageChanged();
                 }
                 break;
             case RequestCodes.NOTE_DETAIL:
@@ -667,6 +674,13 @@ public class WPMainActivity extends AppCompatActivity {
                 }
                 break;
         }
+    }
+
+    private void appLanguageChanged() {
+        // Recreate this activity (much like a configuration change)
+        recreate();
+
+        resetFragments();
     }
 
     private void startWithNewAccount() {

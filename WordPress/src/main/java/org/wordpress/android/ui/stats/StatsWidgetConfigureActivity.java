@@ -20,11 +20,12 @@ import org.wordpress.android.WordPress;
 import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.store.AccountStore;
 import org.wordpress.android.fluxc.store.SiteStore;
+import org.wordpress.android.ui.main.SitePickerAdapter.SiteRecord;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.FluxCUtils;
+import org.wordpress.android.util.LocaleManager;
 import org.wordpress.android.util.SiteUtils;
 import org.wordpress.android.util.ToastUtils;
-import org.wordpress.android.ui.main.SitePickerAdapter.SiteRecord;
 
 import javax.inject.Inject;
 
@@ -36,6 +37,11 @@ public class StatsWidgetConfigureActivity extends AppCompatActivity
 
     @Inject AccountStore mAccountStore;
     @Inject SiteStore mSiteStore;
+
+    @Override
+    protected void attachBaseContext(Context newBase) {
+        super.attachBaseContext(LocaleManager.setLocale(newBase));
+    }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
