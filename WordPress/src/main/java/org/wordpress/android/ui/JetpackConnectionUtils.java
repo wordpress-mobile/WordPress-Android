@@ -7,10 +7,7 @@ import java.util.HashMap;
 /**
  * Wraps utility methods for Jetpack
  */
-public class JetpackUtils {
-    private JetpackUtils() {
-    }
-
+class JetpackConnectionUtils {
     /**
      * Adds source as a parameter to the tracked Stat
      * @param stat to be tracked

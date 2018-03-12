@@ -112,11 +112,11 @@ public class JetpackConnectionDeeplinkActivity extends AppCompatActivity {
                 ToastUtils.showToast(this, getString(R.string.jetpack_already_connected_toast));
             } else {
                 AppLog.e(AppLog.T.API, "Could not connect to Jetpack, reason: " + mReason);
-                JetpackUtils.trackFailureWithSource(Stat.CONNECT_JETPACK_FAILED, mSource, mReason);
+                JetpackConnectionUtils.trackFailureWithSource(Stat.CONNECT_JETPACK_FAILED, mSource, mReason);
                 ToastUtils.showToast(this, getString(R.string.jetpack_connection_failed_with_reason, mReason));
             }
         } else {
-            JetpackUtils.trackWithSource(Stat.SIGNED_INTO_JETPACK, mSource);
+            JetpackConnectionUtils.trackWithSource(Stat.SIGNED_INTO_JETPACK, mSource);
         }
     }
 

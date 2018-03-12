@@ -91,9 +91,9 @@ public class JetpackConnectionWebViewActivity extends WPWebViewActivity
 
     private static void trackJetpackConnectionFlowStart(SiteModel site, Source source) {
         if (!site.isJetpackInstalled()) {
-            JetpackUtils.trackWithSource(AnalyticsTracker.Stat.INSTALL_JETPACK_SELECTED, source);
+            JetpackConnectionUtils.trackWithSource(AnalyticsTracker.Stat.INSTALL_JETPACK_SELECTED, source);
         } else {
-            JetpackUtils.trackWithSource(AnalyticsTracker.Stat.CONNECT_JETPACK_SELECTED, source);
+            JetpackConnectionUtils.trackWithSource(AnalyticsTracker.Stat.CONNECT_JETPACK_SELECTED, source);
         }
     }
 
@@ -124,8 +124,8 @@ public class JetpackConnectionWebViewActivity extends WPWebViewActivity
 
     @Override
     protected void cancel() {
-        JetpackUtils.trackWithSource(AnalyticsTracker.Stat.INSTALL_JETPACK_CANCELLED,
-                                     (Source) getIntent().getSerializableExtra(TRACKING_SOURCE_KEY));
+        JetpackConnectionUtils.trackWithSource(AnalyticsTracker.Stat.INSTALL_JETPACK_CANCELLED,
+                                               (Source) getIntent().getSerializableExtra(TRACKING_SOURCE_KEY));
     }
 
     @Override
@@ -165,8 +165,8 @@ public class JetpackConnectionWebViewActivity extends WPWebViewActivity
 
     @Override
     public void onJetpackSuccessfullyConnected(Uri uri) {
-        JetpackUtils.trackWithSource(AnalyticsTracker.Stat.INSTALL_JETPACK_COMPLETED,
-                                     (Source) getIntent().getSerializableExtra(TRACKING_SOURCE_KEY));
+        JetpackConnectionUtils.trackWithSource(AnalyticsTracker.Stat.INSTALL_JETPACK_COMPLETED,
+                                               (Source) getIntent().getSerializableExtra(TRACKING_SOURCE_KEY));
         Intent intent = new Intent(Intent.ACTION_VIEW);
         intent.setData(uri);
         intent.putExtra(SITE, mSite);
