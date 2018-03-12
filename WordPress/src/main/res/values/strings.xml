@@ -351,6 +351,15 @@
     <string name="comment_deleted_permanently">Comment deleted</string>
     <string name="comment">Comment</string>
     <string name="comments_fetching">Fetching comments…</string>
+    <string name="comment_approved_talkback">Comment approved</string>
+    <string name="comment_unapproved_talkback">Comment unapproved</string>
+    <string name="comment_liked_talkback">Comment liked</string>
+    <string name="comment_unliked_talkback">Comment unliked</string>
+    <string name="comment_trash_talkback">Comment sent to trash</string>
+    <string name="comment_untrash_talkback">Comment restored</string>
+    <string name="comment_delete_talkback">Comment deleted</string>
+    <string name="comment_spam_talkback">Comment marked as spam</string>
+    <string name="comment_unspam_talkback">Comment marked as not spam</string>
 
     <!-- comment menu and buttons on comment detail - keep these short! -->
     <string name="mnu_comment_approve">Approve</string>
@@ -2127,10 +2136,10 @@
     <string name="notification_login_failed">An error has occurred.</string>
     <string name="change_photo">Change photo</string>
 
-    <!-- ImageView content description  -->
+    <!-- Content description for accessibility  -->
     <string name="comment_checkmark_desc">check mark</string>
-    <string name="invite_user_delete_desc">remove user</string>
-    <string name="media_grid_item_image_desc">media preview</string>
+    <string name="invite_user_delete_desc">remove %s</string>
+    <string name="media_grid_item_image_desc">media preview, filename %s</string>
     <string name="media_grid_item_retry_desc">retry</string>
     <string name="media_grid_item_trash_desc">trash</string>
     <string name="media_grid_item_play_video_desc">play video</string>
@@ -2150,12 +2159,16 @@
     <string name="photo_picker_thumbnail_desc">Play video</string>
     <string name="reader_list_item_suggestion_remove_desc">delete</string>
     <string name="reader_photo_view_desc">photo</string>
-    <string name="sign_in_dialog_logo_desc">WordPress logo</string>
-    <string name="sign_in_logo_desc">WordPress logo</string>
     <string name="sign_in_password_visibility_desc">change password visibility</string>
-    <string name="stats_list_cell_chevron_desc">expand</string>
+    <string name="stats_list_cell_chevron_expand_desc">expand</string>
     <string name="show_more_desc">show more</string>
     <string name="open_external_link_desc">open external link</string>
+    <string name="notification_settings_switch_desc">Notifications</string>
+    <string name="navigate_up_desc">navigate up</string>
+    <string name="stats_list_cell_chevron_collapse_desc">collapse</string>
+    <string name="fab_add_tag_desc">create tag</string>
+    <string name="fab_create_post_desc">create post</string>
+    <string name="fab_create_desc">create</string>
 
     <!-- Site Creation -->
     <string name="site_creation_title">Create New Site</string>
@@ -2193,5 +2206,4 @@
     <string name="site_creation_epilogue_configure">Configure</string>
     <string name="site_creation_epilogue_write">Write first post</string>
     <string name="site_creation_content_description_confetti">Site creation completed successfully!</string>
-
 </resources>

@@ -153,6 +153,7 @@ public class StatsGeoviewsFragment extends StatsAbstractListFragment {
                         "</html>";
 
                 WebView webView = new WebView(getActivity());
+                webView.setImportantForAccessibility(View.IMPORTANT_FOR_ACCESSIBILITY_NO);
                 mTopPagerContainer.addView(webView);
 
                 int width = mTopPagerContainer.getWidth();

@@ -58,7 +58,7 @@ public class WPActivityUtils {
 
         dialog.getWindow().setWindowAnimations(R.style.DialogAnimations);
 
-        TextView titleView = (TextView) toolbar.findViewById(R.id.toolbar_title);
+        TextView titleView = toolbar.findViewById(R.id.toolbar_title);
         titleView.setVisibility(View.VISIBLE);
         titleView.setText(title);
 
@@ -70,6 +70,7 @@ public class WPActivityUtils {
                 dialog.dismiss();
             }
         });
+        toolbar.setNavigationContentDescription(R.string.navigate_up_desc);
     }
 
     /**

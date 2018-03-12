@@ -16,6 +16,8 @@
         android:paddingRight="@dimen/margin_large"
         android:paddingLeft="@dimen/margin_large"
         android:gravity="center_vertical"
+        android:focusable="true"
+        android:clickable="true"
         android:layout_gravity="center_vertical"
         android:paddingStart="@dimen/margin_large"
         android:paddingEnd="@dimen/margin_large">
@@ -37,7 +39,8 @@
             android:layout_marginRight="@dimen/margin_large"
             android:layout_marginEnd="@dimen/margin_large"
             android:visibility="gone"
-            android:contentDescription="@string/stats_list_cell_chevron_desc"
+            android:importantForAccessibility="yes"
+            android:contentDescription="@string/stats_list_cell_chevron_expand_desc"
             app:srcCompat="@drawable/ic_chevron_right_blue_wordpress_24dp" />
 
         <org.wordpress.android.widgets.WPNetworkImageView
@@ -58,6 +61,7 @@
             android:layout_marginEnd="@dimen/margin_large"
             android:textSize="@dimen/avatar_sz_extra_small"
             android:textColor="@color/black"
+            android:importantForAccessibility="no"
             android:visibility="gone" />
 
         <org.wordpress.android.widgets.WPTextView

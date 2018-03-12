@@ -30,7 +30,8 @@
             <org.wordpress.android.widgets.WPNetworkImageView
                 android:id="@+id/avatar"
                 android:layout_width="@dimen/notifications_avatar_sz"
-                android:layout_height="@dimen/notifications_avatar_sz"/>
+                android:layout_height="@dimen/notifications_avatar_sz"
+                android:contentDescription="@null"/>
 
             <ImageView
                 android:id="@+id/image_checkmark"
@@ -105,6 +106,7 @@
             android:ellipsize="end"
             android:maxLines="2"
             android:textColor="@color/grey_darken_10"
+            android:importantForAccessibility="no"
             android:textSize="@dimen/text_sz_medium"
             tools:text="comment"
             android:paddingEnd="@dimen/margin_large"
