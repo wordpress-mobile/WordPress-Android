@@ -83,24 +83,18 @@ public class StockMediaRestClient extends BaseWPComRestClient {
                                  @NonNull List<StockMediaModel> stockMediaList) {
         String url = WPCOMREST.sites.site(site.getSiteId()).external_media_upload.getUrlV1_1();
 
-        /*
-        [
-        { "url": "https://...", "name": "pexels-photo-902152.jpeg", "title": "pexels-photo-902152.jpeg"},
-        { "url": "https://...", "name": "pexels-photo-748920.jpeg", "title": "pexels-photo-748920.jpeg"},
-         ]
-         */
         JsonArray jsonBody = new JsonArray();
         for (StockMediaModel stockMedia : stockMediaList) {
             JsonObject json = new JsonObject();
             json.addProperty("url", StringUtils.notNullStr(stockMedia.getUrl()));
             json.addProperty("name", StringUtils.notNullStr(stockMedia.getName()));
             json.addProperty("title", StringUtils.notNullStr(stockMedia.getTitle()));
-            jsonBody.add(json);
+            jsonBody.add(json.toString());
         }
 
         Map<String, Object> body = new HashMap<>();
         body.put("service", "pexels");
-        body.put("external_ids", jsonBody.toString());
+        body.put("external_ids", jsonBody);
 
         WPComGsonRequest request = WPComGsonRequest.buildPostRequest(url, body, UploadStockMediaResponse.class,
                 new Response.Listener<UploadStockMediaResponse>() {

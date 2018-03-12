@@ -149,7 +149,6 @@ public class StockMediaStore extends Store {
         }
     }
 
-    // note that the search endpoint returns an empty list if there's any type of error
     public enum StockMediaErrorType {
         INVALID_INPUT,
         GENERIC_ERROR;
