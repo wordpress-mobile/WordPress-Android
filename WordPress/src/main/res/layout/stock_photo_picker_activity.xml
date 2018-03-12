@@ -36,6 +36,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerInParent="true"
+        android:layout_margin="@dimen/margin_large"
         android:gravity="center"
         android:textColor="@color/grey"
         android:textColorLink="@color/link"
