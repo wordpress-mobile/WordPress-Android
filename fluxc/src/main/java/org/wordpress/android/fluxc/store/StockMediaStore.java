@@ -13,6 +13,7 @@ import org.wordpress.android.fluxc.annotations.action.IAction;
 import org.wordpress.android.fluxc.model.MediaModel;
 import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.model.StockMediaModel;
+import org.wordpress.android.fluxc.network.BaseRequest;
 import org.wordpress.android.fluxc.network.BaseRequest.BaseNetworkError;
 import org.wordpress.android.fluxc.network.rest.wpcom.WPComGsonRequest.WPComGsonNetworkError;
 import org.wordpress.android.fluxc.network.rest.wpcom.stockmedia.StockMediaRestClient;
@@ -151,16 +152,20 @@ public class StockMediaStore extends Store {
 
     public enum StockMediaErrorType {
         INVALID_INPUT,
-        PARSE_ERROR,
+        UNKNOWN,
         GENERIC_ERROR;
 
         public static StockMediaErrorType fromBaseNetworkError(BaseNetworkError baseError) {
-            // invalid upload request
             if (baseError instanceof WPComGsonNetworkError) {
                 WPComGsonNetworkError wpError = (WPComGsonNetworkError) baseError;
-                if (wpError.apiError.equals("invalid_input")) {
+                // invalid upload request
+                if (wpError.apiError.equalsIgnoreCase("invalid_input")) {
                     return INVALID_INPUT;
                 }
+            }
+            // can happen if invalid pexels image url is passed
+            if (baseError.type == BaseRequest.GenericErrorType.UNKNOWN) {
+                return UNKNOWN;
             }
             return StockMediaErrorType.GENERIC_ERROR;
         }
