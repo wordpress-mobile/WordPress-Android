@@ -34,7 +34,7 @@ public class FormatUtils {
     }
 
     /*
-     * returns the passed long formatted has an human readable filesize. Ex: 10 GB
+     * returns the passed long formatted as an human readable filesize. Ex: 10 GB
      * unitStrings is expected to be an array of all possible sizes from byte to TeraByte, in the current locale
      */
     public static final String formatFileSize(long size, final String[] unitStrings) {
