@@ -661,7 +661,8 @@ class PostUploadNotifier {
         float currentMediaProgress = 0.0f;
         int size = sNotificationData.mediaItemToProgressMap.size();
         for (int i = 0; i < size; i++) {
-            float itemProgress = sNotificationData.mediaItemToProgressMap.get(i);
+            int key = sNotificationData.mediaItemToProgressMap.keyAt(i);
+            float itemProgress = sNotificationData.mediaItemToProgressMap.get(key);
             currentMediaProgress += (itemProgress / size);
         }
         return currentMediaProgress;
