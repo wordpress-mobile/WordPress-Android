@@ -222,10 +222,10 @@ public class StatsSingleItemDetailsActivity extends AppCompatActivity
                     public void onClick(View v) {
                         final Context ctx = v.getContext();
                         StatsUtils.openPostInReaderOrInAppWebview(ctx,
-                                                                  mRemoteBlogID,
-                                                                  mRemoteItemID,
-                                                                  mRemoteItemType,
-                                                                  mItemURL);
+                                mRemoteBlogID,
+                                mRemoteItemID,
+                                mRemoteItemType,
+                                mItemURL);
                     }
                 });
             } else {
@@ -253,11 +253,11 @@ public class StatsSingleItemDetailsActivity extends AppCompatActivity
 
         if (mAveragesIdToExpandedMap.size() > 0) {
             outState.putParcelable(ARG_AVERAGES_EXPANDED_ROWS,
-                                   new SparseBooleanArrayParcelable(mAveragesIdToExpandedMap));
+                    new SparseBooleanArrayParcelable(mAveragesIdToExpandedMap));
         }
         if (mRecentWeeksIdToExpandedMap.size() > 0) {
             outState.putParcelable(ARG_RECENT_EXPANDED_ROWS,
-                                   new SparseBooleanArrayParcelable(mRecentWeeksIdToExpandedMap));
+                    new SparseBooleanArrayParcelable(mRecentWeeksIdToExpandedMap));
         }
         if (mYearsIdToExpandedMap.size() > 0) {
             outState.putParcelable(ARG_YEARS_EXPANDED_ROWS, new SparseBooleanArrayParcelable(mYearsIdToExpandedMap));
@@ -477,11 +477,10 @@ public class StatsSingleItemDetailsActivity extends AppCompatActivity
         mGraphView.highlightBar(mSelectedBarGraphIndex);
         mPrevNumberOfBarsGraph = dataToShowOnGraph.length;
 
-        setMainViewsLabel(StatsUtils.parseDateToLocalizedFormat(
-                mStatsDate[mSelectedBarGraphIndex],
+        setMainViewsLabel(StatsUtils.parseDateToLocalizedFormat(mStatsDate[mSelectedBarGraphIndex],
                 StatsConstants.STATS_INPUT_DATE_FORMAT,
                 StatsConstants.STATS_OUTPUT_DATE_MONTH_LONG_DAY_SHORT_FORMAT),
-                          dataToShowOnGraph[mSelectedBarGraphIndex].getViews());
+                dataToShowOnGraph[mSelectedBarGraphIndex].getViews());
 
         showHideEmptyModulesIndicator(false);
 
@@ -548,9 +547,10 @@ public class StatsSingleItemDetailsActivity extends AppCompatActivity
                 holder = (StatsViewHolder) convertView.getTag();
             }
 
-            holder.setEntryText(
-                    StatsUtils.parseDateToLocalizedFormat(currentDay.getDay(), StatsConstants.STATS_INPUT_DATE_FORMAT,
-                                                          "EEE, MMM dd"));
+            holder.setEntryText(StatsUtils.parseDateToLocalizedFormat(
+                    currentDay.getDay(),
+                    StatsConstants.STATS_INPUT_DATE_FORMAT,
+                    "EEE, MMM dd"));
 
             // Intercept clicks at row level and eat the event. We don't want to show the ripple here.
             holder.rowContent.setOnClickListener(
@@ -634,15 +634,12 @@ public class StatsSingleItemDetailsActivity extends AppCompatActivity
                 PostViewsModel.Day lastChild =
                         (PostViewsModel.Day) getChild(groupPosition, getChildrenCount(groupPosition) - 1);
                 name = StatsUtils.parseDateToLocalizedFormat(firstChild.getDay(),
-                                                             StatsConstants.STATS_INPUT_DATE_FORMAT,
-                                                             GROUP_DATE_FORMAT)
+                        StatsConstants.STATS_INPUT_DATE_FORMAT, GROUP_DATE_FORMAT)
                        + " - " + StatsUtils.parseDateToLocalizedFormat(lastChild.getDay(),
-                                                                       StatsConstants.STATS_INPUT_DATE_FORMAT,
-                                                                       GROUP_DATE_FORMAT);
+                        StatsConstants.STATS_INPUT_DATE_FORMAT, GROUP_DATE_FORMAT);
             } else {
                 name = StatsUtils.parseDateToLocalizedFormat(firstChild.getDay(),
-                                                             StatsConstants.STATS_INPUT_DATE_FORMAT,
-                                                             GROUP_DATE_FORMAT);
+                        StatsConstants.STATS_INPUT_DATE_FORMAT, GROUP_DATE_FORMAT);
             }
 
             holder.setEntryText(name, getResources().getColor(R.color.stats_link_text_color));
@@ -712,9 +709,7 @@ public class StatsSingleItemDetailsActivity extends AppCompatActivity
                 holder = (StatsViewHolder) convertView.getTag();
             }
 
-            holder.setEntryText(StatsUtils.parseDateToLocalizedFormat(
-                    currentMonth.getMonth(),
-                    "MM",
+            holder.setEntryText(StatsUtils.parseDateToLocalizedFormat(currentMonth.getMonth(), "MM",
                     StatsConstants.STATS_OUTPUT_DATE_MONTH_LONG_FORMAT));
 
             // Intercept clicks at row level and eat the event. We don't want to show the ripple here.

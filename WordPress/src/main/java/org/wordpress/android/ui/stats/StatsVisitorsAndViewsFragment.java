@@ -131,7 +131,7 @@ public class StatsVisitorsAndViewsFragment extends StatsAbstractFragment
         // https://github.com/wordpress-mobile/WordPress-Android/pull/2377#issuecomment-77067993
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
             ViewCompat.setPaddingRelative(mVisitorsCheckbox,
-                                          getResources().getDimensionPixelSize(R.dimen.margin_medium), 0, 0, 0);
+                    getResources().getDimensionPixelSize(R.dimen.margin_medium), 0, 0, 0);
         }
 
         // Make sure we've all the info to build the tab correctly. This is ALWAYS true
@@ -631,13 +631,11 @@ public class StatsVisitorsAndViewsFragment extends StatsAbstractFragment
                     c.setTime(parsedDate);
                     // first day of this week
                     c.set(Calendar.DAY_OF_WEEK, Calendar.MONDAY);
-                    String startDateLabel = StatsUtils.msToLocalizedString(
-                            c.getTimeInMillis(),
+                    String startDateLabel = StatsUtils.msToLocalizedString(c.getTimeInMillis(),
                             StatsConstants.STATS_OUTPUT_DATE_MONTH_LONG_DAY_LONG_FORMAT);
                     // last day of this week
                     c.add(Calendar.DAY_OF_WEEK, +6);
-                    String endDateLabel = StatsUtils.msToLocalizedString(
-                            c.getTimeInMillis(),
+                    String endDateLabel = StatsUtils.msToLocalizedString(c.getTimeInMillis(),
                             StatsConstants.STATS_OUTPUT_DATE_MONTH_LONG_DAY_LONG_FORMAT);
                     return String.format(prefix, startDateLabel + " - " + endDateLabel);
                 } catch (ParseException e) {
@@ -645,13 +643,11 @@ public class StatsVisitorsAndViewsFragment extends StatsAbstractFragment
                     return "";
                 }
             case MONTH:
-                return String.format(prefix, StatsUtils.parseDateToLocalizedFormat(
-                        date,
+                return String.format(prefix, StatsUtils.parseDateToLocalizedFormat(date,
                         StatsConstants.STATS_INPUT_DATE_FORMAT,
                         StatsConstants.STATS_OUTPUT_DATE_MONTH_LONG_FORMAT));
             case YEAR:
-                return String.format(prefix, StatsUtils.parseDateToLocalizedFormat(
-                        date,
+                return String.format(prefix, StatsUtils.parseDateToLocalizedFormat(date,
                         StatsConstants.STATS_INPUT_DATE_FORMAT,
                         StatsConstants.STATS_OUTPUT_DATE_YEAR_FORMAT));
         }
@@ -664,25 +660,19 @@ public class StatsVisitorsAndViewsFragment extends StatsAbstractFragment
     private String getDateLabelForBarInGraph(String dateToFormat) {
         switch (getTimeframe()) {
             case DAY:
-                return StatsUtils.parseDateToLocalizedFormat(
-                        dateToFormat,
-                        StatsConstants.STATS_INPUT_DATE_FORMAT,
+                return StatsUtils.parseDateToLocalizedFormat(dateToFormat, StatsConstants.STATS_INPUT_DATE_FORMAT,
                         StatsConstants.STATS_OUTPUT_DATE_MONTH_SHORT_DAY_SHORT_FORMAT);
             case WEEK:
                 // first four digits are the year
                 // followed by Wxx where xx is the month
                 // followed by Wxx where xx is the day of the month
                 // ex: 2013W07W22 = July 22, 2013
-                return StatsUtils.parseDateToLocalizedFormat(
-                        dateToFormat,
-                        "yyyy'W'MM'W'dd",
+                return StatsUtils.parseDateToLocalizedFormat(dateToFormat, "yyyy'W'MM'W'dd",
                         StatsConstants.STATS_OUTPUT_DATE_MONTH_SHORT_DAY_SHORT_FORMAT);
             case MONTH:
                 return StatsUtils.parseDateToLocalizedFormat(dateToFormat, "yyyy-MM", "MMM");
             case YEAR:
-                return StatsUtils.parseDateToLocalizedFormat(
-                        dateToFormat,
-                        StatsConstants.STATS_INPUT_DATE_FORMAT,
+                return StatsUtils.parseDateToLocalizedFormat(dateToFormat, StatsConstants.STATS_INPUT_DATE_FORMAT,
                         StatsConstants.STATS_OUTPUT_DATE_YEAR_FORMAT);
             default:
                 return dateToFormat;
@@ -813,7 +803,7 @@ public class StatsVisitorsAndViewsFragment extends StatsAbstractFragment
                     // last day of this week
                     c.add(Calendar.DAY_OF_WEEK, +6);
                     calculatedDate = StatsUtils.msToLocalizedString(c.getTimeInMillis(),
-                                                                    StatsConstants.STATS_INPUT_DATE_FORMAT);
+                            StatsConstants.STATS_INPUT_DATE_FORMAT);
                     break;
                 case MONTH:
                     sdf = new SimpleDateFormat("yyyy-MM", Locale.ROOT);
@@ -822,8 +812,8 @@ public class StatsVisitorsAndViewsFragment extends StatsAbstractFragment
                     c.setTime(parsedDate);
                     // last day of this month
                     c.set(Calendar.DAY_OF_MONTH, c.getActualMaximum(Calendar.DAY_OF_MONTH));
-                    calculatedDate =
-                            StatsUtils.msToLocalizedString(c.getTimeInMillis(), StatsConstants.STATS_INPUT_DATE_FORMAT);
+                    calculatedDate = StatsUtils.msToLocalizedString(c.getTimeInMillis(),
+                            StatsConstants.STATS_INPUT_DATE_FORMAT);
                     break;
                 case YEAR:
                     sdf = new SimpleDateFormat(StatsConstants.STATS_INPUT_DATE_FORMAT, Locale.ROOT);
@@ -833,7 +823,7 @@ public class StatsVisitorsAndViewsFragment extends StatsAbstractFragment
                     c.set(Calendar.MONTH, Calendar.DECEMBER);
                     c.set(Calendar.DAY_OF_MONTH, 31);
                     calculatedDate = StatsUtils.msToLocalizedString(c.getTimeInMillis(),
-                                                                    StatsConstants.STATS_INPUT_DATE_FORMAT);
+                            StatsConstants.STATS_INPUT_DATE_FORMAT);
                     break;
             }
         } catch (ParseException e) {
@@ -842,7 +832,7 @@ public class StatsVisitorsAndViewsFragment extends StatsAbstractFragment
 
         if (calculatedDate == null) {
             AppLog.w(AppLog.T.STATS,
-                     "A call to request new stats stats is made but date received cannot be parsed!! " + date);
+                    "A call to request new stats stats is made but date received cannot be parsed!! " + date);
             return;
         }
 
@@ -856,7 +846,7 @@ public class StatsVisitorsAndViewsFragment extends StatsAbstractFragment
         }
 
         AnalyticsUtils.trackWithSiteDetails(AnalyticsTracker.Stat.STATS_TAPPED_BAR_CHART,
-                                            mSiteStore.getSiteByLocalId(getLocalTableBlogID()));
+                mSiteStore.getSiteByLocalId(getLocalTableBlogID()));
     }
 
     public enum OverviewLabel {

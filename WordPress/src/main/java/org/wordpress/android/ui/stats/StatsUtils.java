@@ -196,8 +196,8 @@ public class StatsUtils {
     /**
      * Get a diff between two dates
      *
-     * @param date1 the oldest date in Ms
-     * @param date2 the newest date in Ms
+     * @param date1    the oldest date in Ms
+     * @param date2    the newest date in Ms
      * @param timeUnit the unit in which you want the diff
      * @return the diff value, in the provided unit
      */
@@ -230,7 +230,7 @@ public class StatsUtils {
                     after = StatsUtils.msToLocalizedString(c.getTimeInMillis(), StatsConstants.STATS_INPUT_DATE_FORMAT);
                     c.add(Calendar.DAY_OF_YEAR, +1);
                     before = StatsUtils.msToLocalizedString(c.getTimeInMillis(),
-                                                            StatsConstants.STATS_INPUT_DATE_FORMAT);
+                            StatsConstants.STATS_INPUT_DATE_FORMAT);
                     break;
                 case WEEK:
                     c.set(Calendar.DAY_OF_WEEK, Calendar.MONDAY);
@@ -238,20 +238,20 @@ public class StatsUtils {
                     c.set(Calendar.DAY_OF_WEEK, Calendar.SUNDAY);
                     c.add(Calendar.DAY_OF_YEAR, +1);
                     before = StatsUtils.msToLocalizedString(c.getTimeInMillis(),
-                                                            StatsConstants.STATS_INPUT_DATE_FORMAT);
+                            StatsConstants.STATS_INPUT_DATE_FORMAT);
                     break;
                 case MONTH:
                     // first day of the next month
                     c.set(Calendar.DAY_OF_MONTH, c.getActualMaximum(Calendar.DAY_OF_MONTH));
                     c.add(Calendar.DAY_OF_YEAR, +1);
                     before = StatsUtils.msToLocalizedString(c.getTimeInMillis(),
-                                                            StatsConstants.STATS_INPUT_DATE_FORMAT);
+                            StatsConstants.STATS_INPUT_DATE_FORMAT);
 
                     // last day of the prev month
                     c.setTime(parsedDate);
                     c.set(Calendar.DAY_OF_MONTH, c.getActualMinimum(Calendar.DAY_OF_MONTH));
                     after = StatsUtils.msToLocalizedString(c.getTimeInMillis(),
-                                                           StatsConstants.STATS_INPUT_DATE_FORMAT);
+                            StatsConstants.STATS_INPUT_DATE_FORMAT);
                     break;
                 case YEAR:
                     // first day of the next year
@@ -259,7 +259,7 @@ public class StatsUtils {
                     c.set(Calendar.DAY_OF_MONTH, 31);
                     c.add(Calendar.DAY_OF_YEAR, +1);
                     before = StatsUtils.msToLocalizedString(c.getTimeInMillis(),
-                                                            StatsConstants.STATS_INPUT_DATE_FORMAT);
+                            StatsConstants.STATS_INPUT_DATE_FORMAT);
 
                     c.setTime(parsedDate);
                     c.set(Calendar.MONTH, Calendar.JANUARY);
