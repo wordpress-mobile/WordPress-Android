@@ -93,10 +93,13 @@ public class JetpackConnectionDeeplinkActivity extends AppCompatActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == RequestCodes.JETPACK_LOGIN && resultCode == RESULT_OK) {
-            trackResult();
+        if (requestCode == RequestCodes.JETPACK_LOGIN) {
+            if (resultCode == RESULT_OK) {
+                trackResult();
+            } else {
+                finishAndGoBackToSource();
+            }
         }
-        finishAndGoBackToSource();
     }
 
     @Override
@@ -112,7 +115,7 @@ public class JetpackConnectionDeeplinkActivity extends AppCompatActivity {
                 ToastUtils.showToast(this, getString(R.string.jetpack_already_connected_toast));
             } else {
                 AppLog.e(AppLog.T.API, "Could not connect to Jetpack, reason: " + mReason);
-                JetpackConnectionUtils.trackFailureWithSource(Stat.CONNECT_JETPACK_FAILED, mSource, mReason);
+                JetpackConnectionUtils.trackFailureWithSource(mSource, mReason);
                 ToastUtils.showToast(this, getString(R.string.jetpack_connection_failed_with_reason, mReason));
             }
         } else {
