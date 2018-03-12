@@ -57,6 +57,10 @@ public class LoginAnalyticsTracker implements LoginAnalyticsListener {
         AnalyticsTracker.track(AnalyticsTracker.Stat.LOGIN_PASSWORD_FORM_VIEWED);
     }
 
+    @Override public void trackSignupEmailToLogin() {
+        AnalyticsTracker.track(AnalyticsTracker.Stat.SIGNUP_EMAIL_TO_LOGIN);
+    }
+
     @Override
     public void trackSocialAccountsNeedConnecting() {
         AnalyticsTracker.track(AnalyticsTracker.Stat.LOGIN_SOCIAL_ACCOUNTS_NEED_CONNECTING);
