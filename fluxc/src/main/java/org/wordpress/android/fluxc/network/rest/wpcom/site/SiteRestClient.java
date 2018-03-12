@@ -59,7 +59,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import javax.inject.Inject;
 import javax.inject.Singleton;
 
 @Singleton
@@ -95,7 +94,6 @@ public class SiteRestClient extends BaseWPComRestClient {
         public SiteModel site;
     }
 
-    @Inject
     public SiteRestClient(Context appContext, Dispatcher dispatcher, RequestQueue requestQueue, AppSecrets appSecrets,
                           AccessToken accessToken, UserAgent userAgent) {
         super(appContext, dispatcher, requestQueue, accessToken, userAgent);
@@ -565,6 +563,12 @@ public class SiteRestClient extends BaseWPComRestClient {
             site.setHasCapabilityDeleteUser(from.capabilities.delete_user);
             site.setHasCapabilityRemoveUsers(from.capabilities.remove_users);
             site.setHasCapabilityViewStats(from.capabilities.view_stats);
+        }
+        if (from.quota != null) {
+            site.setSpaceAvailable(from.quota.space_available);
+            site.setSpaceAllowed(from.quota.space_allowed);
+            site.setSpaceUsed(from.quota.space_used);
+            site.setSpacePercentUsed(from.quota.percent_used);
         }
         if (from.icon != null) {
             site.setIconUrl(from.icon.img);

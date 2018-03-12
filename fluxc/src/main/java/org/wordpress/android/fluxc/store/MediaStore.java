@@ -256,6 +256,7 @@ public class MediaStore extends Store {
         DB_QUERY_FAILURE,
         EXCEEDS_FILESIZE_LIMIT,
         EXCEEDS_MEMORY_LIMIT,
+        EXCEEDS_SITE_SPACE_QUOTA_LIMIT,
 
         // network errors, occur in response to network requests
         AUTHORIZATION_REQUIRED,

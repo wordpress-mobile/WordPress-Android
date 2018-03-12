@@ -19,8 +19,6 @@ import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import javax.inject.Inject;
-
 public class SelfHostedEndpointFinder {
     public static final int TIMEOUT_MS = 60000;
 
@@ -66,7 +64,6 @@ public class SelfHostedEndpointFinder {
         }
     }
 
-    @Inject
     public SelfHostedEndpointFinder(Dispatcher dispatcher, DiscoveryXMLRPCClient discoveryXMLRPCClient,
                                     DiscoveryWPAPIRestClient discoveryWPAPIRestClient) {
         mDispatcher = dispatcher;
