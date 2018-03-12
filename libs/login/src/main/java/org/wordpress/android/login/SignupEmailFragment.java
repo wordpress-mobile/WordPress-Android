@@ -325,7 +325,7 @@ public class SignupEmailFragment extends LoginBaseFormFragment<LoginListener> im
                     @Override
                     public void run() {
                         if (isAdded()) {
-                            EditTextUtils.showSoftInput(mEmailInput.getEditText());
+                            ActivityUtils.showKeyboard(mEmailInput.getEditText());
                         }
                     }
                 }, getResources().getInteger(android.R.integer.config_mediumAnimTime));
