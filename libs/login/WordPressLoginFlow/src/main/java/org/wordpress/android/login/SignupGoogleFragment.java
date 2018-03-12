@@ -1,7 +1,7 @@
 package org.wordpress.android.login;
 
+import android.content.Context;
 import android.content.Intent;
-import android.os.Bundle;
 
 import com.google.android.gms.auth.api.Auth;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
@@ -33,9 +33,8 @@ public class SignupGoogleFragment extends GoogleFragment {
 
     public static final String TAG = "signup_google_fragment_tag";
 
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
+    @Override public void onAttach(Context context) {
+        super.onAttach(context);
         AndroidSupportInjection.inject(this);
     }
 
