@@ -12,7 +12,6 @@ import android.widget.Button;
 
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
-import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.store.AccountStore;
 import org.wordpress.android.ui.JetpackConnectionWebViewActivity;
@@ -77,11 +76,6 @@ public class StatsConnectJetpackActivity extends AppCompatActivity {
     }
 
     private void startJetpackConnectionFlow(SiteModel siteModel) {
-        if (!siteModel.isJetpackInstalled()) {
-            AnalyticsTracker.track(AnalyticsTracker.Stat.STATS_SELECTED_INSTALL_JETPACK);
-        } else {
-            AnalyticsTracker.track(AnalyticsTracker.Stat.STATS_SELECTED_CONNECT_JETPACK);
-        }
         JetpackConnectionWebViewActivity
                 .startJetpackConnectionFlow(this, STATS, siteModel, mAccountStore.hasAccessToken());
         finish();
