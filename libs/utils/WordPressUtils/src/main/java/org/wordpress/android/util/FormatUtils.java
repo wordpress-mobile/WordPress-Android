@@ -54,7 +54,6 @@ public class FormatUtils {
     public static final String formatPercentage(double value) {
         NumberFormat percentFormat = NumberFormat.getPercentInstance();
         percentFormat.setMaximumFractionDigits(1);
-        String result = percentFormat.format(value);
-        return result;
+        return percentFormat.format(value);
     }
 }
