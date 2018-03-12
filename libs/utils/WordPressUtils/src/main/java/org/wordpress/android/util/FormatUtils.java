@@ -47,7 +47,7 @@ public class FormatUtils {
     }
 
     /*
-     * returns the passed double percentage (0 to 1) formatted has an human readable percentage. Ex: 0.25 returns 25%
+     * returns the passed double percentage (0 to 1) formatted as an human readable percentage. Ex: 0.25 returns 25%
      */
     public static final String formatPercentage(double value) {
         NumberFormat percentFormat = NumberFormat.getPercentInstance();
