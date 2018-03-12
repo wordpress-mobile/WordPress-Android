@@ -67,12 +67,6 @@ Language: de
 	<string name="plugin_disable_progress_dialog_message">%s deaktivieren …</string>
 	<string name="plugin_btn_remove">Plugin entfernen</string>
 	<string name="plugin_configuration_failed">Bei der Konfiguration des Plugins ist ein Fehler aufgetreten: %s</string>
-	<string name="plugin_remove_failed">Fehler beim Entfernen von %s.</string>
-	<string name="plugin_removed_successfully">%s wurde erfolgreich entfernt.</string>
-	<string name="plugin_updated_failed_detailed">Fehler beim Entfernen von %1$s: %2$s</string>
-	<string name="plugin_updated_failed">Fehler beim Entfernen von %s.</string>
-	<string name="plugin_updated_successfully">%s wurde erfolgreich aktualisiert.</string>
-	<string name="plugin_available_version">Version %s ist verfügbar.</string>
 	<string name="plugin_detail_label_state_autoupdates">Automatische Updates</string>
 	<string name="plugin_detail_label_state_active">Aktiv</string>
 	<string name="plugin_autoupdates_off">Automatische Updates aus</string>
@@ -92,12 +86,6 @@ Language: de
 	<string name="notification_logged_in">Zum Fortfahren tippen.</string>
 	<string name="notification_login_title_success">Angemeldet!</string>
 	<string name="login_error_generic_start">Google-Anmeldung konnte nicht gestartet werden.</string>
-	<string name="site_creating_success">Erfolg!</string>
-	<string name="site_creating_failed">Entschuldigung, es ist nicht gelungen, deine Website ordnungsgemäß zu erstellen :(</string>
-	<string name="site_creating_set_theme">Theme wird eingerichtet …</string>
-	<string name="site_creating_set_tagline">Untertitel wird eingerichtet …</string>
-	<string name="site_creating_fetching_info">Website-Information wird geholt …</string>
-	<string name="site_creating_label">Deine Site wird vorbereitet …</string>
 	<string name="login_empty_password">Bitte gib ein Passwort ein</string>
 	<string name="email_not_registered_wpcom">Hmm, diese E-Mail-Adresse ist bei WordPress.com nicht registriert.\nMöchtest du eine selbst gehostete Website aufrufen? Melde dich über den Link unten auf dem Bildschirm an.</string>
 	<string name="login_text_otp_another">Sende mir stattdessen einen anderen Code per SMS.</string>
@@ -136,7 +124,6 @@ Language: de
 	<string name="login_error_email_not_found">Das Google-Konto „%s“ stimmt mit keinem vorhandenen WordPress.com-Konto überein.</string>
 	<string name="login_error_button">Schließen</string>
 	<string name="login_google_button_suffix">Mit Google anmelden.</string>
-	<string name="login_google_button_prefix">Oder du kannst</string>
 	<string name="enter_wpcom_password_google">Bitte melde dich mit dem WordPress.com-Passwort an, um mit diesem Google-Konto fortzufahren. Es wird nur einmal benötigt.</string>
 	<string name="error_generic_network">Es ist ein Netzwerkfehler aufgetreten. Bitte überprüfe deine Verbindung und versuche es erneut.</string>
 	<string name="post_settings_remove_featured_image">Beitragsbild entfernen</string>
@@ -262,8 +249,6 @@ Language: de
 	<string name="login_text_otp">Stattdessen Code per SMS senden.</string>
 	<string name="enter_verification_code">Fast geschafft! Gib bitte den Verifizierungscode aus deiner Authenticator-App ein.</string>
 	<string name="enter_the_address_of_your_wordpress_site">Gib die Adresse deiner WordPress-Website ein.</string>
-	<string name="enter_username_instead">Melde dich stattdessen mit dem Benutzernamen an.</string>
-	<string name="enter_site_address_instead">Melde dich auf deiner Website an, indem du stattdessen die Adresse deiner Website eingibst.</string>
 	<string name="open_mail">E-Mail öffnen</string>
 	<string name="next">Weiter</string>
 	<string name="enter_email_wordpress_com">Melde dich auf WordPress.com mit einer E-Mail-Adresse an, um alle deine WordPress-Websites zu verwalten.</string>
@@ -272,7 +257,6 @@ Language: de
 	<string name="login_promo_text_anytime">Du kannst überall und jederzeit deine bevorzugten Websites verfolgen und an der Unterhaltung teilnehmen.</string>
 	<string name="login_promo_text_realtime">Schau zu, wie Leser aus der ganzen Welt deine Website lesen und damit interagieren – in Echtzeit.</string>
 	<string name="login_promo_text_onthego">Veröffentliche deine Beiträge im Park. Blogge im Bus. Kommentiere im Café. WordPress ist immer und überall für dich verfügbar.</string>
-	<string name="create_wordpress_site">Erstelle eine WordPress-Website</string>
 	<string name="email_not_found">Wir können keinen WordPress.com-Benutzer mit dieser E-Mail-Adresse finden.</string>
 	<string name="image_optimization_promo_desc">Bildoptimierung schrumpft Bilder für schnelleres Hochladen.\n\nDies kannst du in den Website-Einstellungen jederzeit ändern.</string>
 	<string name="image_optimization_promo_title">Bildoptimierung einschalten?</string>
@@ -470,12 +454,9 @@ Language: de
 	<string name="error_unknown_post_type">Unbekanntes Beitragsformat</string>
 	<string name="error_fetch_site_after_creation">Die Website wurde erstellt. Gegebenenfalls musst du deine Websites in der Website-Auswahl aktualisieren.</string>
 	<string name="submit_for_review">Abschicken</string>
-	<string name="tell_me_more">Weitere Informationen</string>
 	<string name="duplicate_site_detected">Es wurde eine doppelte Website entdeckt.</string>
 	<string name="cannot_add_duplicate_site">Diese Website existiert bereits in der App, du kannst sie nicht hinzufügen.</string>
-	<string name="already_logged_in_wpcom_same_username">Du bist bereits mit deinem WordPress.com-Konto angemeldet. Deine Website sollte in der Website-Auswahl angezeigt werden; stelle sicher, dass sie nicht versteckt ist.</string>
 	<string name="already_logged_in_wpcom">Du bist bereits in einem WordPress.com-Konto angemeldet, du kannst keine WordPress.com-Website hinzufügen, die an ein anderes Konto gebunden ist.</string>
-	<string name="checking_username">Überprüfen des Benutzernamens</string>
 	<string name="jetpack_different_com_account">Jetpack-Websites, die zu anderen WordPress.com-Konten gehören, werden nicht unterstützt</string>
 	<string name="jetpack_use_com_account">Um deine Jetpack-Website hinzuzufügen, melde dich bei dem WordPress.com-Konto an, das du zum Verbinden von Jetpack verwendet hast.</string>
 	<string name="error_media_load">Medien können nicht geladen werden</string>
@@ -509,7 +490,6 @@ Language: de
 	<string name="reader_photo_by">Foto von %s</string>
 	<string name="reader_label_visit">Besuche</string>
 	<string name="pending_draft_more">Du hast %d Beiträge geschrieben, aber nie veröffentlicht. Tippe, um sie zu prüfen.</string>
-	<string name="invalid_verification_code_format">Muss eine 6-stellige Zahl sein</string>
 	<string name="confirm_discard_changes">Nicht gespeicherte Änderungen verwerfen?</string>
 	<string name="swipe_for_more">Wischen für mehr</string>
 	<string name="reader_err_get_post_not_authorized_signin_fallback">Du bist nicht berechtigt, diesen Beitrag anzuzeigen. Versuche, dich zuerst auf WordPress.com anzumelden, oder öffne stattdessen über den oberen Aktions-Button einen Browser.</string>
@@ -618,7 +598,6 @@ Language: de
 	<string name="invite_people">Personen einladen</string>
 	<string name="my_site_header_external">Extern</string>
 	<string name="send_link">Link senden</string>
-	<string name="signup_succeed_signin_failed">Dein Konto wurde erstellt, aber bei deiner\n Anmeldung ist ein Fehler aufgetreten. Versuche, dich mit deinem neu erstellten Benutzernamen und Passwort anzumelden.</string>
 	<string name="label_clear_search_history">Lösche Suchverlauf</string>
 	<string name="dlg_confirm_clear_search_history">Suchverlauf löschen?</string>
 	<string name="reader_empty_posts_in_search_description">Keine Beiträge zu %s in deiner Sprache gefunden.</string>
@@ -710,8 +689,6 @@ Language: de
 	<string name="comments_empty_list_filtered_trashed">Keine gelöschten Kommentare</string>
 	<string name="comments_empty_list_filtered_pending">Keine ausstehenden Kommentare</string>
 	<string name="comments_empty_list_filtered_approved">Keine genehmigten Kommentare</string>
-	<string name="button_done">Erledigt</string>
-	<string name="button_skip">Überspringen</string>
 	<string name="site_timeout_error">Konnte nicht zur WordPress-Website verbinden, infolge einer Zeitüberschreitung.</string>
 	<string name="xmlrpc_malformed_response_error">Konnte nicht verbinden. Die WordPress Installation antwortete mit einem ungültigen XML-RPC Dokument.</string>
 	<string name="xmlrpc_missing_method_error">Konnte nicht verbinden. Die benötigte XML-RPC Methoden sind nicht auf dem Server vorhanden.</string>
@@ -905,8 +882,6 @@ Language: de
 	<string name="reader_err_get_post_not_found">Dieser Beitrag ist nicht mehr vorhanden</string>
 	<string name="reader_err_get_post_not_authorized">Du hast nicht die erforderlichen Rechte diesen Beitrag anzusehen</string>
 	<string name="reader_err_get_post_generic">Konnte den Beitrag nicht empfangen</string>
-	<string name="blog_name_no_spaced_allowed">Website-Adresse darf keine Leerzeichen enthalten</string>
-	<string name="invalid_username_no_spaces">Benutzername darf keine Leerzeichen enthalten</string>
 	<string name="reader_empty_followed_blogs_no_recent_posts_description">Die Websites, denen du folgst, haben keine aktuellen Beiträge veröffentlicht</string>
 	<string name="reader_empty_followed_blogs_no_recent_posts_title">Keine aktuellen Beiträge</string>
 	<string name="edit_media">Medien bearbeiten</string>
@@ -1021,9 +996,6 @@ Language: de
 	<string name="post_trashed">Beitrag in den Papierkorb verschoben</string>
 	<string name="post_deleted">Beitrag gelöscht</string>
 	<string name="page_trashed">Seite in den Papierkorb verschoben</string>
-	<string name="my_site_no_sites_view_subtitle">Möchtest du welche hinzufügen?</string>
-	<string name="my_site_no_sites_view_title">Du hast noch keine WordPress-Websites.</string>
-	<string name="my_site_no_sites_view_drake">Illustration</string>
 	<string name="reader_toast_err_follow_blog_not_authorized">Du bist nicht berechtigt auf diesen Blog zuzugreifen</string>
 	<string name="reader_toast_err_follow_blog_not_found">Dieser Blog konnte nicht gefunden werden</string>
 	<string name="undo">Rückgängig</string>
@@ -1050,7 +1022,6 @@ Language: de
 	<string name="site_picker_create_dotcom">WordPress.com Website erstellen</string>
 	<string name="site_picker_edit_visibility">Websites anzeigen/ausblenden</string>
 	<string name="site_picker_add_self_hosted">Selbstgehostete Website hinzufügen</string>
-	<string name="site_picker_add_site">Website hinzufügen</string>
 	<string name="my_site_btn_switch_site">Website wechseln</string>
 	<string name="site_picker_title">Website auswählen</string>
 	<string name="my_site_btn_view_site">Website ansehen</string>
@@ -1072,11 +1043,6 @@ Language: de
 	<string name="stats_generic_error">Erforderliche Statistiken konnten nicht geladen werden</string>
 	<string name="auth_required">Melde dich erneut an, um fortzufahren.</string>
 	<string name="sign_in_jetpack">Melde dich bei deinem WordPress.com-Konto an, um dich mit Jetpack zu verbinden.</string>
-	<string name="two_step_sms_sent">Der Überprüfungscode kommt per Textnachricht.</string>
-	<string name="two_step_footer_button">Sende Code via Textnachricht</string>
-	<string name="two_step_footer_label">Gib den Code aus der Authenticator-App ein.</string>
-	<string name="verify">Überprüfen</string>
-	<string name="invalid_verification_code">Ungültiger Überprüfungscode</string>
 	<string name="verification_code">Überprüfungscode</string>
 	<string name="editor_toast_invalid_path">Ungültiger Dateipfad</string>
 	<string name="media_details_label_file_type">Dateityp</string>
@@ -1247,7 +1213,6 @@ Language: de
 	<string name="forums">Forums</string>
 	<string name="forgot_password">Passwort vergessen?</string>
 	<string name="help">Hilfe</string>
-	<string name="nux_cannot_log_in">Wir können dich nicht anmelden</string>
 	<string name="username_or_password_incorrect">Der Benutzername oder das Passwort ist falsch</string>
 	<string name="blog_name_reserved_but_may_be_available">Diese Website ist momentan reserviert, aber eventuell in ein paar Tagen verfügbar</string>
 	<string name="blog_name_reserved">Diese Website ist reserviert</string>
@@ -1270,9 +1235,6 @@ Language: de
 	<string name="username_not_allowed">Benutzername nicht erlaubt</string>
 	<string name="username_required">Gib einen Benutzernamen ein</string>
 	<string name="username_only_lowercase_letters_and_numbers">Benutzername darf nur Kleinbuchstaben (a-z) und Nummern enthalten</string>
-	<string name="invalid_username_too_long">Benutzername muss kürzer als 61 Zeichen sein</string>
-	<string name="invalid_username_too_short">Benutzername muss länger als 4 Zeichen sein</string>
-	<string name="invalid_password_message">Passwort muss aus mindestens 4 Zeichen bestehen</string>
 	<string name="invalid_email_message">Deine E-Mail-Adresse ist ungültig</string>
 	<string name="passcode_wrong_passcode">Falsche PIN</string>
 	<string name="error_downloading_image">Fehler beim Herunterladen des Bildes</string>
@@ -1292,7 +1254,6 @@ Language: de
 	<string name="stats_bar_graph_empty">Keine Statistiken verfügbar</string>
 	<string name="stats_empty_comments">Bisher keine Kommentare</string>
 	<string name="sdcard_message">Eine angeschlossene SD-Karte wird für den Medienupload benötigt</string>
-	<string name="no_account">Kein WordPress-Konto gefunden, füge ein Konto hinzu und versuche es erneut</string>
 	<string name="category_automatically_renamed">Kategorie-Name %1$s ist ungültig. Er wurde umbenannt zu %2$s.</string>
 	<string name="cat_name_required">Das Feld Kategorie-Name ist erforderlich</string>
 	<string name="adding_cat_success">Kategorie erfolgreich hinzugefügt</string>
@@ -1405,7 +1366,6 @@ Language: de
 	<string name="deleting_post">Lösche Beitrag</string>
 	<string name="deleting_page">Lösche Seite</string>
 	<string name="creating_your_site">Erstelle deine Website</string>
-	<string name="creating_your_account">Erstelle dein Konto</string>
 	<string name="reader_empty_posts_in_tag_updating">Beiträge werden abgerufen…</string>
 	<string name="cant_share_no_visible_blog">Du kannst nicht auf WordPress teilen ohne einen sichtbaren Blog</string>
 	<string name="comment_spammed">Kommentar als Spam markiert</string>
@@ -1415,8 +1375,6 @@ Language: de
 	<string name="reader_toast_err_get_comment">Kommentar konnte nicht geladen werden</string>
 	<string name="reader_likes_multi">%d Leuten gefällt dies</string>
 	<string name="reader_likes_you_and_multi">Dir und %,d anderen gefällt dies</string>
-	<string name="validating_site_data">Validiere Website-Daten</string>
-	<string name="validating_user_data">Validiere Benutzer-Daten</string>
 	<string name="reader_toast_err_get_post">Beitrag konnte nicht geladen werden</string>
 	<string name="pick_video">Video auswählen</string>
 	<string name="account_two_step_auth_enabled">Dieses Konto hat Zwei-Schritt-Authentifizierung aktiviert. Besuche deine Sicherheitseinstellungen auf WordPress.com und generiere ein App-spezifisches Passwort.</string>
@@ -1425,17 +1383,12 @@ Language: de
 	<string name="reader_empty_followed_blogs_description">Keine Bange, tippe einfach das Icon rechts oben an um zu stöbern!</string>
 	<string name="reader_likes_you_and_one">Dir und einem anderen gefällt dies</string>
 	<string name="select_time">Zeit auswählen</string>
-	<string name="nux_oops_not_selfhosted_blog">Bei WordPress.com anmelden</string>
-	<string name="nux_add_selfhosted_blog">Selbst-gehostete Website hinzufügen</string>
-	<string name="signing_in">Anmelden ...</string>
 	<string name="nux_welcome_create_account">Konto erstellen</string>
 	<string name="nux_tap_continue">Weiter</string>
 	<string name="password_invalid">Du benötigst ein sichereres Passwort. Stelle sicher, dass Du 7 oder mehr Zeichen benutzt und Groß- und Kleinbuchstaben enthalten sind, genau so wie Zahlen und Sonderzeichen.</string>
 	<string name="nux_tutorial_get_started_title">Los geht\'s!</string>
 	<string name="limit_reached">Limit erreicht. Du kannst es in 1 Minute nochmal versuchen. Ein weiterer Versuch vor Ablauf wird nur die Wartezeit verlängern, bis die Sperre aufgehoben wird. Falls du dies für einen Fehler hältst, kontaktiere bitte den Support.</string>
 	<string name="username_invalid">Ungültiger Benutzername</string>
-	<string name="connecting_wpcom">Bei WordPress.com anmelden</string>
-	<string name="button_next">Nächster</string>
 	<string name="create_account_wpcom">Erstelle ein Konto auf WordPress.com</string>
 	<string name="reader_empty_followed_tags">Du folgst keinen Schlagwörtern</string>
 	<string name="reader_toast_err_url_intent">Konnte %s nicht öffnen</string>

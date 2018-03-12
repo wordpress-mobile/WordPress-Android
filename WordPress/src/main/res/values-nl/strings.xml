@@ -61,12 +61,6 @@ Language: nl
 	<string name="plugin_disable_progress_dialog_message">%s wordt uitgeschakeld …</string>
 	<string name="plugin_btn_remove">Plugin verwijderen</string>
 	<string name="plugin_configuration_failed">Er is een fout opgetreden bij het configureren van de plugin: %s</string>
-	<string name="plugin_remove_failed">Fout bij het verwijderen van %s.</string>
-	<string name="plugin_removed_successfully">%s is verwijderd.</string>
-	<string name="plugin_updated_failed_detailed">Fout bij het verwijderen van %1$s: %2$s</string>
-	<string name="plugin_updated_failed">Fout bij het verwijderen van %s.</string>
-	<string name="plugin_updated_successfully">%s bijgewerkt.</string>
-	<string name="plugin_available_version">Versie %s is beschikbaar.</string>
 	<string name="plugin_detail_label_state_autoupdates">Automatische updates</string>
 	<string name="plugin_detail_label_state_active">Actief</string>
 	<string name="plugin_autoupdates_off">Automatische updates uit</string>
@@ -86,12 +80,6 @@ Language: nl
 	<string name="notification_logged_in">Tik om door te gaan.</string>
 	<string name="notification_login_title_success">Ingelogd!</string>
 	<string name="login_error_generic_start">Inloggen via Google kon niet worden gestart.</string>
-	<string name="site_creating_success">Gelukt!</string>
-	<string name="site_creating_failed">Sorry, je site kon niet goed worden aangemaakt :(</string>
-	<string name="site_creating_set_theme">Het thema wordt ingesteld …</string>
-	<string name="site_creating_set_tagline">De beschrijving wordt ingesteld …</string>
-	<string name="site_creating_fetching_info">Sitegegevens worden opgehaald …</string>
-	<string name="site_creating_label">Je site wordt voorbereid ...</string>
 	<string name="login_empty_password">Voer een wachtwoord in</string>
 	<string name="email_not_registered_wpcom">Het lijkt erop dat dit e-mailadres niet geregistreerd staat bij WordPress.com.\nProbeer je een zelf-gehoste site te openen? Log in met de koppeling onderaan dit scherm.</string>
 	<string name="login_text_otp_another">Stuur me via SMS een andere code.</string>
@@ -130,7 +118,6 @@ Language: nl
 	<string name="login_error_email_not_found">Het Google-account \'%s\' komt niet overeen met een bestaand account op WordPress.com.</string>
 	<string name="login_error_button">Sluit</string>
 	<string name="login_google_button_suffix">Log in met Google.</string>
-	<string name="login_google_button_prefix">Je kunt ook</string>
 	<string name="enter_wpcom_password_google">Om door te gaan met dit Google-account moet je eerst het wachtwoord van WordPress.com opgeven. Je hoeft dit slechts één keer in te vullen.</string>
 	<string name="error_generic_network">Er is een netwerkfout opgetreden. Controleer je verbinding en probeer het nogmaals.</string>
 	<string name="post_settings_remove_featured_image">Uitgelichte afbeelding verwijderen</string>
@@ -256,8 +243,6 @@ Language: nl
 	<string name="login_text_otp">Sms de code in plaats daarvan naar me.</string>
 	<string name="enter_verification_code">Bijna klaar! Voer de verificatiecode uit je Authenticator-app in.</string>
 	<string name="enter_the_address_of_your_wordpress_site">Voer het adres van je WordPress-site in</string>
-	<string name="enter_username_instead">Log in plaats daarvan in met een gebruikersnaam.</string>
-	<string name="enter_site_address_instead">Log in plaats daarvan in op je site door je site-adres in te voeren.</string>
 	<string name="open_mail">Open e-mail</string>
 	<string name="next">Volgende</string>
 	<string name="enter_email_wordpress_com">Log in op WordPress.com met behulp van een e-mailadres om al je WordPress-sites te beheren.</string>
@@ -266,7 +251,6 @@ Language: nl
 	<string name="login_promo_text_anytime">Volg je favoriete sites en neem altijd en overal deel aan het gesprek.</string>
 	<string name="login_promo_text_realtime">Kijk in realtime hoe mensen overal ter wereld je site lezen en bekijken.</string>
 	<string name="login_promo_text_onthego">Publiceren in het park. Bloggen in de bus. Reageren in het restaurant. WordPress gaat altijd met je mee.</string>
-	<string name="create_wordpress_site">Een WordPress-site maken</string>
 	<string name="email_not_found">We konden geen WordPress.com-gebruiker met dat e-mailadres vinden</string>
 	<string name="image_optimization_promo_desc">Afbeeldingoptimalisatie maakt afbeeldingen kleiner, zodat ze sneller geüpload kunnen worden.\n\nJe kunt deze optie op elk moment wijzigen in de site-instellingen.</string>
 	<string name="image_optimization_promo_title">Afbeeldingoptimalisatie aanzetten?</string>
@@ -464,12 +448,9 @@ Language: nl
 	<string name="error_unknown_post_type">Onbekende berichtindeling</string>
 	<string name="error_fetch_site_after_creation">Site is aangemaakt. Je moet mogelijk je sites vernieuwen in de sitekiezer.</string>
 	<string name="submit_for_review">Verzenden</string>
-	<string name="tell_me_more">Meer informatie</string>
 	<string name="duplicate_site_detected">Er is een dubbele site gevonden.</string>
 	<string name="cannot_add_duplicate_site">De site komt al voor in de app. Je kunt deze dus niet toevoegen.</string>
-	<string name="already_logged_in_wpcom_same_username">Je bent al aangemeld bij je WordPress.com-account. Je site moet voorkomen in de sitekiezer. Controleer of de site niet verborgen is.</string>
 	<string name="already_logged_in_wpcom">Je bent al aangemeld bij een WordPress.com-account. Je kunt geen WordPress.com-site toevoegen die is gekoppeld aan een ander account.</string>
-	<string name="checking_username">Gebruikersnaam controleren</string>
 	<string name="jetpack_different_com_account">Jetpack-sites die behoren tot verschillende WordPress.com-accounts, worden niet ondersteund</string>
 	<string name="jetpack_use_com_account">Log in op de WordPress.com-account die je gebruikte om verbinding te maken met Jetpack om je Jetpack-site toe te voegen.</string>
 	<string name="error_media_load">Kan media niet laden.</string>
@@ -503,7 +484,6 @@ Language: nl
 	<string name="reader_photo_by">Foto van %s</string>
 	<string name="reader_label_visit">Bezoek</string>
 	<string name="pending_draft_more">Je hebt %d berichten als concept opgeslagen, maar ze nooit gepubliceerd. Tik om ze te controleren.</string>
-	<string name="invalid_verification_code_format">Moet een zescijferig nummer zijn</string>
 	<string name="confirm_discard_changes">Niet-opgeslagen wijzigingen verwijderen?</string>
 	<string name="swipe_for_more">Veeg voor meer</string>
 	<string name="reader_err_get_post_not_authorized_signin_fallback">Je hebt geen toestemming om dit bericht te lezen. Probeer je eerst aan te melden op WordPress.com of gebruik in plaats daarvan de actieknop hierboven om een browser te openen.</string>
@@ -612,7 +592,6 @@ Language: nl
 	<string name="send_link">Stuur link</string>
 	<string name="my_site_header_external">Extern</string>
 	<string name="invite_people">Mensen uitnodigen</string>
-	<string name="signup_succeed_signin_failed">Je account is aangemaakt maar er is een fout opgetreden bij het\n inloggen. Probeer je in te loggen met je nieuwe gebruikersnaam en wachtwoord.</string>
 	<string name="label_clear_search_history">Zoekgeschiedenis wissen</string>
 	<string name="dlg_confirm_clear_search_history">Zoekgeschiedenis wissen?</string>
 	<string name="reader_empty_posts_in_search_description">Geen berichten gevonden voor %s in je taal.</string>
@@ -704,8 +683,6 @@ Language: nl
 	<string name="comments_empty_list_filtered_trashed">Geen verwijderde reacties</string>
 	<string name="comments_empty_list_filtered_pending">Geen reacties in behandeling</string>
 	<string name="comments_empty_list_filtered_approved">Geen goedgekeurde reacties</string>
-	<string name="button_done">Klaar</string>
-	<string name="button_skip">Overslaan</string>
 	<string name="site_timeout_error">Kon geen verbinding maken met de WordPress-site wegens een time-out.</string>
 	<string name="xmlrpc_malformed_response_error">Kon geen verbinding maken. De WordPress-installatie heeft gereageerd met een ongeldig XML-RPC-document.</string>
 	<string name="xmlrpc_missing_method_error">Kon geen verbinding maken. Vereiste XML-RPC-methoden ontbreken op de server.</string>
@@ -899,8 +876,6 @@ Language: nl
 	<string name="reader_err_get_post_not_found">Dit bericht bestaat niet meer</string>
 	<string name="reader_err_get_post_not_authorized">Je hebt geen rechten om dit bericht te lezen</string>
 	<string name="reader_err_get_post_generic">Kan dit bericht niet ophalen</string>
-	<string name="blog_name_no_spaced_allowed">Het adres van de site mag geen spaties bevatten</string>
-	<string name="invalid_username_no_spaces">De gebruikersnaam mag geen spaties bevatten</string>
 	<string name="reader_empty_followed_blogs_no_recent_posts_description">De sites die je volgt hebben recent niets geplaatst</string>
 	<string name="reader_empty_followed_blogs_no_recent_posts_title">Geen recente berichten</string>
 	<string name="media_edit_copy_url_toast">URL gekopieerd naar klembord</string>
@@ -1015,9 +990,6 @@ Language: nl
 	<string name="stats_no_activity_this_period">Geen activiteit deze periode</string>
 	<string name="button_preview">Voorbeeld</string>
 	<string name="button_view">Bekijk</string>
-	<string name="my_site_no_sites_view_subtitle">Wil je er één toevoegen?</string>
-	<string name="my_site_no_sites_view_title">Je hebt nog geen WordPress-sites.</string>
-	<string name="my_site_no_sites_view_drake">Illustratie</string>
 	<string name="reader_toast_err_follow_blog_not_authorized">Je hebt geen rechten om dit blog te openen</string>
 	<string name="reader_toast_err_follow_blog_not_found">Dit blog kon niet worden gevonden</string>
 	<string name="undo">Ongedaan maken</string>
@@ -1044,7 +1016,6 @@ Language: nl
 	<string name="site_picker_create_dotcom">WordPress.com site maken</string>
 	<string name="site_picker_edit_visibility">Sites tonen/verbergen</string>
 	<string name="site_picker_add_self_hosted">Een zelf-gehoste site toevoegen</string>
-	<string name="site_picker_add_site">Site toevoegen</string>
 	<string name="my_site_btn_switch_site">Site wisselen</string>
 	<string name="site_picker_title">Site kiezen</string>
 	<string name="my_site_btn_view_admin">Beheer bekijken</string>
@@ -1068,11 +1039,6 @@ Language: nl
 	<string name="language">Taal</string>
 	<string name="editor_toast_invalid_path">Ongeldig bestandspad</string>
 	<string name="verification_code">Verificatiecode</string>
-	<string name="invalid_verification_code">Ongeldige verificatiecode</string>
-	<string name="verify">Verifiëren</string>
-	<string name="two_step_footer_label">Voer de code in vanuit je Authenticator-app.</string>
-	<string name="two_step_footer_button">Verzend code via sms</string>
-	<string name="two_step_sms_sent">Kijk in je sms\'jes voor de verificatiecode.</string>
 	<string name="sign_in_jetpack">Log in met je WordPress.com account om verbinding te maken met Jetpack.</string>
 	<string name="auth_required">Log opnieuw in om door te gaan.</string>
 	<string name="media_details_label_file_name">Bestandsnaam</string>
@@ -1248,16 +1214,12 @@ Language: nl
 	<string name="adding_cat_success">Categorie toegevoegd</string>
 	<string name="cat_name_required">Het veld Categorienaam is verplicht</string>
 	<string name="category_automatically_renamed">Categorienaam %1$s is ongeldig. De categorie is hernoemd naar %2$s.</string>
-	<string name="no_account">Geen WordPress-account gevonden. Voeg een account toe en probeer het opnieuw</string>
 	<string name="sdcard_message">Er moet een SD-kaart zijn gekoppeld om media te uploaden</string>
 	<string name="stats_empty_comments">Er zijn nog geen reacties</string>
 	<string name="error_load_comment">Kan de reactie niet laden</string>
 	<string name="error_downloading_image">Fout bij downloaden van afbeelding</string>
 	<string name="passcode_wrong_passcode">Verkeerde PIN</string>
 	<string name="invalid_email_message">Je e-mailadres is niet geldig</string>
-	<string name="invalid_password_message">Wachtwoord moet minstens 4 tekens bevatten</string>
-	<string name="invalid_username_too_short">Gebruikersnaam moet langer dan 4 tekens zijn</string>
-	<string name="invalid_username_too_long">Gebruikersnaam moet korter dan 61 tekens zijn</string>
 	<string name="username_only_lowercase_letters_and_numbers">Gebruikersnaam kan alleen kleine letters (a-z) en cijfers bevatten</string>
 	<string name="username_required">Voer een gebruikersnaam in</string>
 	<string name="username_not_allowed">Gebruikersnaam niet toegestaan</string>
@@ -1298,7 +1260,6 @@ Language: nl
 	<string name="blog_name_contains_invalid_characters">Site-adres kan niet het teken \'_\' bevatten</string>
 	<string name="blog_name_reserved_but_may_be_available">Die site is momenteel gereserveerd, maar is mogelijk binnen een paar dagen beschikbaar</string>
 	<string name="username_or_password_incorrect">De gebruikersnaam of het wachtwoord is niet correct</string>
-	<string name="nux_cannot_log_in">We kunnen je niet aanmelden</string>
 	<string name="invalid_url_message">Controleer of de ingevoerde URL geldig is</string>
 	<string name="error_deleting_post">Er heeft zich een fout voorgedaan bij het verwijderen van het bericht</string>
 	<string name="blog_removed_successfully">Site is verwijderd</string>
@@ -1398,7 +1359,6 @@ Language: nl
 	<string name="deleting_page">Verwijderen van pagina</string>
 	<string name="deleting_post">Verwijderen van bericht</string>
 	<string name="share_link">Deel link</string>
-	<string name="creating_your_account">Je account aanmaken</string>
 	<string name="creating_your_site">Je site aanmaken</string>
 	<string name="reader_empty_posts_in_tag_updating">Berichten ophalen...</string>
 	<string name="reader_likes_you_and_multi">Jij en %,d anderen vinden dit leuk</string>
@@ -1413,8 +1373,6 @@ Language: nl
 	<string name="account_two_step_auth_enabled">Voor deze account is authenticatie in twee stappen actief. Bekijk je beveiligingsinstellingen op WordPress.com en genereer een applicatie-specifiek wachtwoord.</string>
 	<string name="pick_video">Selecteer video</string>
 	<string name="reader_toast_err_get_post">Niet in staat om dit bericht op te halen</string>
-	<string name="validating_user_data">Gebruikersgegevens valideren</string>
-	<string name="validating_site_data">Sitegegevens valideren</string>
 	<string name="select_time">Selecteer tijd</string>
 	<string name="reader_likes_you_and_one">Jij en één andere vinden dit leuk</string>
 	<string name="select_date">Selecteer datum</string>
@@ -1422,9 +1380,6 @@ Language: nl
 	<string name="password_invalid">Je hebt een veiliger wachtwoord nodig. Let erop dat je 7 of meer karakters gebruikt, gebruik hoofd- en kleine letters, nummers of speciale karakters.</string>
 	<string name="nux_tap_continue">Ga door</string>
 	<string name="nux_welcome_create_account">Maak account aan</string>
-	<string name="nux_add_selfhosted_blog">Voeg zelf gehoste site toe</string>
-	<string name="signing_in">Inloggen…</string>
-	<string name="nux_oops_not_selfhosted_blog">Log in op WordPress.com</string>
 	<string name="media_add_popup_title">Toevoegen aan mediabibliotheek</string>
 	<string name="reader_untitled_post">(geen titel)</string>
 	<string name="reader_btn_share">Delen</string>
@@ -1446,9 +1401,7 @@ Language: nl
 	<string name="username_invalid">Ongeldige gebruikersnaam</string>
 	<string name="reader_btn_unfollow">Volgend</string>
 	<string name="limit_reached">Limiet bereikt. Je kan het na 1 minuut nogmaals proberen. Als je het eerder probeert dan zul je langer moeten wachten totdat de ban wordt opgeheven. Neem contact op met de helpdesk wanneer je denk dat dit niet klopt.</string>
-	<string name="connecting_wpcom">Inloggen bij Wordpress.com</string>
 	<string name="reader_hint_comment_on_comment">Beantwoord reactie...</string>
-	<string name="button_next">Volgende</string>
 	<string name="media_gallery_type_slideshow">Diavoorstelling</string>
 	<string name="media_edit_title_text">Titel</string>
 	<string name="media_edit_caption_text">Onderschrift</string>

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2017-11-23 09:38:19+0000
+Translation-Revision-Date: 2018-02-28 21:46:40+0000
 Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);
 Generator: GlotPress/2.4.0-alpha
 Language: hr
@@ -133,8 +133,6 @@ Language: hr
 	<string name="reader_err_get_post_not_found">Objava više ne postoji</string>
 	<string name="reader_err_get_post_not_authorized">Nemate pravo pristupa pregledavanja ove objave</string>
 	<string name="reader_err_get_post_generic">Nije moguće učitati objavu</string>
-	<string name="blog_name_no_spaced_allowed">Adresa web-stranice ne može sadržavati razmake</string>
-	<string name="invalid_username_no_spaces">Korisničko ime ne može sadržavati razmake</string>
 	<string name="reader_empty_followed_blogs_no_recent_posts_description">Web-stranice koje pratite nisu ništa objavile u posljednje vrijeme</string>
 	<string name="reader_empty_followed_blogs_no_recent_posts_title">Nema novijih objava</string>
 	<string name="media_edit_copy_url_toast">URL kopiran u međuspremnik</string>
@@ -249,9 +247,6 @@ Language: hr
 	<string name="button_preview">Predpregled</string>
 	<string name="post_deleted">Objava obrisana</string>
 	<string name="stats_no_activity_this_period">U ovom periodu nema aktivnosti</string>
-	<string name="my_site_no_sites_view_subtitle">Želite li dodati web-stranicu?</string>
-	<string name="my_site_no_sites_view_title">Nemate WordPress web-stranica.</string>
-	<string name="my_site_no_sites_view_drake">Ilustracija</string>
 	<string name="reader_toast_err_follow_blog_not_authorized">Nemate pravo pristupa ovom blogu</string>
 	<string name="reader_toast_err_follow_blog_not_found">Blog nije moguće pronaći</string>
 	<string name="undo">Poništi</string>
@@ -276,9 +271,9 @@ Language: hr
 	<string name="account_settings">Postavke računa</string>
 	<string name="site_picker_cant_hide_current_site">\"%s\" nije skriven jer je to trenutna web-stranica.</string>
 	<string name="site_picker_create_dotcom">Kreiraj WordPress.com web-stranicu</string>
-	<string name="site_picker_add_site">Dodaj stranicu</string>
 	<string name="site_picker_edit_visibility">Prikaži/sakrij web-stranice</string>
 	<string name="site_picker_add_self_hosted">Dodaj samostalno hostanu web-stranicu</string>
+	<string name="site_picker_add_site">Dodaj novu web-stranicu</string>
 	<string name="my_site_btn_view_site">Pogledaj stranicu</string>
 	<string name="site_picker_title">Odaberi stranicu</string>
 	<string name="my_site_btn_view_admin">Prikaži Admin</string>
@@ -301,12 +296,7 @@ Language: hr
 	<string name="device">Uređaj</string>
 	<string name="language">Jezik</string>
 	<string name="verification_code">Kod za provjeru</string>
-	<string name="verify">Provjeri</string>
 	<string name="editor_toast_invalid_path">Neispravna putanja datoteke</string>
-	<string name="invalid_verification_code">Neispravan verifikacijski kod</string>
-	<string name="two_step_footer_label">Unesite kod iz autentifikacijske aplikacije.</string>
-	<string name="two_step_footer_button">Slanje koda putem poruke</string>
-	<string name="two_step_sms_sent">Provjerite poruke za verifikacijski kod.</string>
 	<string name="sign_in_jetpack">Prijavite se u WordPress.com račun kako bi spojili Jetpack.</string>
 	<string name="auth_required">Ponovno se prijavite za nastavak.</string>
 	<string name="media_details_label_file_name">Ime datoteke</string>
@@ -478,9 +468,6 @@ Language: hr
 	<string name="blog_name_exists">Ova internet stranica već postoji</string>
 	<string name="username_required">Unesite korisničko ime</string>
 	<string name="passcode_wrong_passcode">Pogrešan PIN</string>
-	<string name="invalid_password_message">Lozinka mora sadržavati barem 4 znaka</string>
-	<string name="invalid_username_too_short">Korisničko ime mora biti duže od 4 znaka</string>
-	<string name="invalid_username_too_long">Korisničko ime mora biti kraće od 61 znak</string>
 	<string name="username_only_lowercase_letters_and_numbers">Korisničko ime može sadžavati samo mala slova (a-z) i brojke</string>
 	<string name="username_not_allowed">Korisničko ime nije dopušteno</string>
 	<string name="username_must_be_at_least_four_characters">Korisničko ime mora biti duže od 4 znaka</string>
@@ -500,7 +487,6 @@ Language: hr
 	<string name="adding_cat_success">Kategorija uspješno dodana</string>
 	<string name="cat_name_required">Polje imena kategorije je obavezno</string>
 	<string name="category_automatically_renamed">Ime kategorije %1$s nije valjano. Preimenovana je u %2$s.</string>
-	<string name="no_account">Nije pronađen WordPress.com račun. Dodajte račun i pokušajte ponovno</string>
 	<string name="sdcard_message">Za prijenos medijskih zapisa potrebna je montirana SD kartica</string>
 	<string name="stats_empty_comments">Još nema komentara</string>
 	<string name="stats_bar_graph_empty">Nema dostupne statistike</string>
@@ -517,7 +503,6 @@ Language: hr
 	<string name="reply_failed">Neuspjeli odgovor</string>
 	<string name="username_reserved_but_may_be_available">Navedeno korisničko ime je trenutno rezervirano, ali možda se oslobodi kroz par dana</string>
 	<string name="username_or_password_incorrect">Korisničko ime ili lozinka koje ste unijeli nisu točni</string>
-	<string name="nux_cannot_log_in">Prijava nije moguća</string>
 	<string name="invalid_email_message">Vaša adresa e-pošte nije valjana</string>
 	<string name="email_invalid">Unesite ispravnu adresu e-pošte</string>
 	<string name="email_not_allowed">Ta adresa e-pošte nije dopuštena</string>
@@ -627,7 +612,6 @@ Language: hr
 	<string name="deleting_page">Brišem stranicu</string>
 	<string name="deleting_post">Brišem objavu</string>
 	<string name="share_link">Podjeli poveznicu</string>
-	<string name="creating_your_account">Napravi svoj račun</string>
 	<string name="creating_your_site">Napravi svoju stranicu</string>
 	<string name="reader_empty_posts_in_tag_updating">Dohvaćanje objava...</string>
 	<string name="reader_likes_you_and_multi">Vi i %,d drugih se ovo sviđa</string>
@@ -643,17 +627,12 @@ Language: hr
 	<string name="select_time">Odaberi vrijeme</string>
 	<string name="pick_video">Odaberi video</string>
 	<string name="reader_toast_err_get_post">Nije moguće dohvatiti ovu objavu</string>
-	<string name="validating_user_data">Provjeravanje korisničkih podataka</string>
 	<string name="reader_likes_you_and_one">Vama i još jednoj osobi ovo se sviđa</string>
 	<string name="reader_empty_followed_blogs_description">Ne brinite, samo pritisnite ikonu u gore desno za početak istraživanja!</string>
 	<string name="account_two_step_auth_enabled">Ovaj račun ima omogućenu provjeru u dva koraka. Posjetite vaše sigurnosne postavke na WordPress.com i generirajte lozinku za ovu aplikaciju.</string>
-	<string name="validating_site_data">Provjeravanje podataka web-stranice</string>
-	<string name="nux_oops_not_selfhosted_blog">Prijavite se u WordPress.com</string>
 	<string name="nux_welcome_create_account">Kreiraj račun</string>
 	<string name="nux_tap_continue">Nastavi</string>
-	<string name="signing_in">Prijavljivanje...</string>
 	<string name="password_invalid">Trebate sigurniju lozinku. Koristite 7 ili više znakova, miješana mala i velika slova, brojeve i specijalne znakove.</string>
-	<string name="nux_add_selfhosted_blog">Dodaj samostalno hostanu web-stranicu</string>
 	<string name="create_account_wpcom">Kreiraj račun na WordPress.com</string>
 	<string name="reader_btn_follow">Prati</string>
 	<string name="reader_empty_followed_tags">Ne pratite ni jednu oznaku</string>
@@ -673,7 +652,6 @@ Language: hr
 	<string name="reader_toast_err_share_intent">Nije moguće podijeliti</string>
 	<string name="reader_toast_err_view_image">Nije moguće prikazati sliku</string>
 	<string name="reader_toast_err_url_intent">Nije moguće otvoriti %s</string>
-	<string name="connecting_wpcom">Spajanje sa WordPress.com</string>
 	<string name="username_invalid">Neispravno korisničko ime</string>
 	<string name="nux_tutorial_get_started_title">Započnimo!</string>
 	<string name="limit_reached">Dosegnuti je limit. Možete ponovno pokušati za 1 minutu. Ako pokušate prije toga produžiti ćete vrijeme koje morate čekati prije nego što se digne ban. Ako mislite da je ovo greška, kontaktirajte podršku.</string>

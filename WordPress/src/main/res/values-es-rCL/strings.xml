@@ -88,9 +88,6 @@ Language: es_CL
 	<string name="button_view">Ver</string>
 	<string name="button_edit">Editar</string>
 	<string name="button_publish">Publicar</string>
-	<string name="my_site_no_sites_view_subtitle">¿Quieres añadir uno?</string>
-	<string name="my_site_no_sites_view_title">Aún no tienes ningún sitio WordPress.</string>
-	<string name="my_site_no_sites_view_drake">Ilustración</string>
 	<string name="reader_toast_err_follow_blog_not_authorized">No tienes autorización para acceder a este blog</string>
 	<string name="reader_toast_err_follow_blog_not_found">No se pudo encontrar dicho blog</string>
 	<string name="undo">Deshacer</string>
@@ -111,7 +108,6 @@ Language: es_CL
 	<string name="me_btn_support">Ayuda y Soporte</string>
 	<string name="account_settings">Preferencias de la Cuenta</string>
 	<string name="site_picker_create_dotcom">Crear sitio en WordPress.com</string>
-	<string name="site_picker_add_site">Añadir sitio</string>
 	<string name="site_picker_add_self_hosted">Añadir sitio autoalojado</string>
 	<string name="site_picker_edit_visibility">Mostrar/Ocultar sitios</string>
 	<string name="my_site_btn_view_site">Ver sitio</string>
@@ -137,11 +133,6 @@ Language: es_CL
 	<string name="media_details_label_file_type">Tipo de archivo:</string>
 	<string name="editor_toast_invalid_path">Ruta de archivo no válida</string>
 	<string name="verification_code">Código de verificación</string>
-	<string name="invalid_verification_code">Código de verificación no válido</string>
-	<string name="verify">Verificar</string>
-	<string name="two_step_footer_label">Introduce el código de tu app de autentificación.</string>
-	<string name="two_step_footer_button">Enviar código vía mensaje de texto</string>
-	<string name="two_step_sms_sent">Revisa tus mensajes de texto para el código de verificación.</string>
 	<string name="reader_empty_posts_request_failed">No fue posible cargar las entradas</string>
 	<string name="publisher">Autor:</string>
 	<string name="error_notification_open">No se pudo abrir la notificación</string>
@@ -328,9 +319,6 @@ Language: es_CL
 	<string name="error_downloading_image">Error al descargar la imagen</string>
 	<string name="passcode_wrong_passcode">PIN erróneo</string>
 	<string name="invalid_email_message">Tu dirección de correo electrónico no es válida</string>
-	<string name="invalid_password_message">La contraseña debe contener al menos 4 caracteres</string>
-	<string name="invalid_username_too_short">Nombre de usuario debe ser superior a 4 caracteres</string>
-	<string name="invalid_username_too_long">Nombre de usuario debe ser inferior a 61 caracteres</string>
 	<string name="username_only_lowercase_letters_and_numbers">Nombre de usuario solo puede contener letras minúsculas (a-z) y números</string>
 	<string name="username_required">Ingresa un nombre de usuario</string>
 	<string name="username_not_allowed">Nombre de usuario no permitido</string>
@@ -353,10 +341,8 @@ Language: es_CL
 	<string name="blog_name_reserved">Ese sitio está reservado</string>
 	<string name="blog_name_reserved_but_may_be_available">Este sitio está reservado actualmente pero es posible que quede libre en un par de días.</string>
 	<string name="username_or_password_incorrect">El usuario o contraseña que ingresaste no son correctos.</string>
-	<string name="nux_cannot_log_in">No se pudo acceder</string>
 	<string name="no_network_message">No hay conexiones de red disponible</string>
 	<string name="could_not_remove_account">No pudimos eliminar el sitio</string>
-	<string name="no_account">No entramos cuentas WordPress, añade una cuenta e intenta nuevamente</string>
 	<string name="error_refresh_notifications">No se pudieron actualizar las notificaciones</string>
 	<string name="invalid_url_message">Comprueba que la URL de blog ingresada es válida</string>
 	<string name="xmlrpc_error">No se pudo conectar. Ingresa la ruta completa a xmlrpc.php en tu sitio e intenta de nuevo.</string>
@@ -450,7 +436,6 @@ Language: es_CL
 	<string name="share_url_post">Compartir entrada</string>
 	<string name="share_url_page">Compartir página</string>
 	<string name="share_link">Compartir enlace</string>
-	<string name="creating_your_account">Creando tu cuenta</string>
 	<string name="creating_your_site">Creando tu sitio</string>
 	<string name="reader_empty_posts_in_tag_updating">Recuperando entradas...</string>
 	<string name="reader_likes_you_and_multi">A ti, y a %,d personas más les gusta esto</string>
@@ -467,14 +452,11 @@ Language: es_CL
 	<string name="account_two_step_auth_enabled">Esta cuenta tiene activado el proceso de autentificación en dos pasos. Visita los ajustes de seguridad de WordPress.com y genera una contraseña específica para la aplicación.</string>
 	<string name="pick_video">Elige un vídeo</string>
 	<string name="reader_toast_err_get_post">No fue posible cargar esta entrada</string>
-	<string name="validating_user_data">Datos de validación del usuario</string>
-	<string name="validating_site_data">Validando datos del sitio</string>
 	<string name="select_time">Elige hora</string>
 	<string name="reader_likes_you_and_one">A ti y a otra persona les gusta esto.</string>
 	<string name="nux_tap_continue">Continuar</string>
 	<string name="nux_welcome_create_account">Crear cuenta</string>
 	<string name="password_invalid">Necesitas una contraseña más segura. Asegúrate de utilizar 7 ó más caracteres, mezclar letras mayúsculas y minúsculas, número y caracteres especiales.</string>
-	<string name="nux_add_selfhosted_blog">Añade un sitio auto hospedado</string>
 	<string name="media_add_popup_title">Añadir a biblioteca multimedia</string>
 	<string name="empty_list_default">Esta lista esta vacía</string>
 	<string name="reader_untitled_post">Sin título</string>

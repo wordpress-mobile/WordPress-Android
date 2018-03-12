@@ -1,11 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2018-02-26 12:27:04+0000
+Translation-Revision-Date: 2018-03-01 08:17:21+0000
 Plural-Forms: nplurals=3; plural=(n==1) ? 0 : (n>=2 && n<=4) ? 1 : 2;
 Generator: GlotPress/2.4.0-alpha
 Language: cs_CZ
 -->
 <resources>
+	<string name="site_creation_epilogue_write">Napsat první příspěvek</string>
+	<string name="site_creation_content_description_confetti">Vytvoření webu bylo úspěšně dokončeno!</string>
+	<string name="site_creation_epilogue_configure">Nastavit</string>
+	<string name="site_creation_epilogue_congrats">Blahopřejeme!\nWeb je hotový.</string>
+	<string name="site_creation_creating_modal">Vyčkejte, dokud neskončí vytváření webu.</string>
+	<string name="site_creation_creating_retry">Zkusit znovu</string>
+	<string name="site_creation_creating_failed">Nastala neočekávaná chyba...</string>
+	<string name="stats_jetpack_more_info">Více informací</string>
+	<string name="stats_jetpack_connection_setup_info">Pro použití Stats na tomto WordPress webu bude potřeba nainstalovat plugin Jetpack. Chcete nastavit Jetpack?</string>
+	<string name="stats_jetpack_connection_setup">Nastavit Jetpack</string>
+	<string name="plugin_chevron_icon_content_description">Přepnout text</string>
 	<string name="plugin_info_your_version">Verze WordPressu</string>
 	<string name="plugin_info_requires_version">Požadovaná verze WordPressu</string>
 	<string name="plugin_info_lastupdated">Poslední aktualizace</string>
@@ -17,9 +28,15 @@ Language: cs_CZ
 	<string name="plugin_one_stars">1 hvězdička</string>
 	<string name="plugin_num_downloads">%s stažení</string>
 	<string name="plugin_num_ratings">%s hodnocení</string>
+	<string name="plugin_empty_text">Nebyl zadán</string>
+	<string name="plugin_read_reviews">Přečíst recenze</string>
+	<string name="plugin_faq">Časté otázky</string>
 	<string name="plugin_installation">Instalace</string>
 	<string name="plugin_description">Popis</string>
+	<string name="plugin_whatsnew">Co je nového</string>
 	<string name="plugin_settings">Nastavení</string>
+	<string name="plugin_installed">Nainstalováno</string>
+	<string name="plugin_installed_version">Verze %s nainstalována</string>
 	<string name="plugin_version">Verze %s</string>
 	<string name="plugin_byline">Od %s</string>
 	<string name="change_photo">Změnit fotku</string>
@@ -62,8 +79,8 @@ Language: cs_CZ
 	<string name="plugin_configuration_failed">Při konfigurování pluginu se vyskytla chyba: %s</string>
 	<string name="plugin_remove_failed">Chyba při odstraňování %s.</string>
 	<string name="plugin_removed_successfully">%s byl úspěšně odstraněn.</string>
-	<string name="plugin_updated_failed_detailed">Chyba při odebírání %1$s: %2$s</string>
-	<string name="plugin_updated_failed">Chyba při odebírání %s.</string>
+	<string name="plugin_updated_failed_detailed">Chyba při aktualizování %1$s: %2$s</string>
+	<string name="plugin_updated_failed">Chyba při aktualizování %s.</string>
 	<string name="plugin_updated_successfully">%s byl úspěšně aktualizován.</string>
 	<string name="plugin_available_version">K dispozici je novější verze %s.</string>
 	<string name="plugin_detail_label_state_autoupdates">Automatické aktualizace</string>
@@ -85,11 +102,6 @@ Language: cs_CZ
 	<string name="notification_logged_in">Pokračujte klepnutím.</string>
 	<string name="notification_login_title_success">Přihlášeno!</string>
 	<string name="login_error_generic_start">Přihlášení pomocí Google nemůže být spuštěno.</string>
-	<string name="site_creating_success">Úspěch!</string>
-	<string name="site_creating_failed">Nepodařilo se správně vytvořit web :(</string>
-	<string name="site_creating_set_theme">Nastavuje se šablona...</string>
-	<string name="site_creating_fetching_info">Načítají se informace o webu...</string>
-	<string name="site_creating_label">Web se připravuje...</string>
 	<string name="login_empty_password">Zadejte heslo</string>
 	<string name="email_not_registered_wpcom">Hmm, tato emailová adresa není registrovaná na WordPress.com.\nSnažíte se dostat na web na vlastním hostingu? Přihlašte se přes odkaz dole na obrazovce.</string>
 	<string name="login_text_otp_another">Pošlete mi nový kód.</string>
@@ -128,7 +140,6 @@ Language: cs_CZ
 	<string name="login_error_email_not_found">Účet Google \'%s\' neodpovídá žádnému existujícímu účtu na WordPress.com.</string>
 	<string name="login_error_button">Zavřít</string>
 	<string name="login_google_button_suffix">Přihlásit se pomocí Google.</string>
-	<string name="login_google_button_prefix">Nebo</string>
 	<string name="enter_wpcom_password_google">Abyste mohli pokračovat s tímto Google účtem, zadejte odpovídající heslo k WordPress.com. Tato žádost bude pouze jednou.</string>
 	<string name="error_generic_network">Vyskytla se chyba sítě. Zkontrolujte připojení a zkuste znovu.</string>
 	<string name="post_settings_remove_featured_image">Odstranit náhledový obrázek</string>
@@ -257,12 +268,15 @@ Language: cs_CZ
 	<string name="post_settings_tags">Štítky</string>
 	<string name="post_settings_post_format">Formát příspěvku</string>
 	<string name="post_settings_excerpt">Úryvek</string>
+	<string name="post_settings_slug">Název v URL</string>
 	<string name="post_settings_more_options">Více nastavení</string>
 	<string name="post_settings_categories_and_tags">Rubriky a štítky</string>
 	<string name="post_settings_not_set">Nenastaveno</string>
 	<string name="notifications_tab_title_all">Vše</string>
 	<string name="post_settings_status">Stav</string>
 	<string name="notifications_tab_title_unread">Nepřečtený</string>
+	<string name="top_level_category_name">Nejvyšší úroveň</string>
+	<string name="category_parent">Nadřazená rubrika (volitelné):</string>
 	<string name="media_all">Vše</string>
 	<string name="media_audio">Zvuk</string>
 	<string name="media_documents">Dokumenty</string>
@@ -281,6 +295,7 @@ Language: cs_CZ
 	<string name="buttons">Tlačítka</string>
 	<string name="twitter_username">Twitter uživatelské jméno</string>
 	<string name="more_buttons">Více tlačítek</string>
+	<string name="label">Popisek</string>
 	<string name="text_only_display">Pouze text</string>
 	<string name="icon_only_display">Pouze ikona</string>
 	<string name="icon_and_text_display">Ikona a text</string>
@@ -328,8 +343,6 @@ Language: cs_CZ
 	<string name="keep_editing">Pokračovat v úpravách</string>
 	<string name="error_unknown_post_type">Neznámý formát příspěvku</string>
 	<string name="submit_for_review">Odeslat</string>
-	<string name="tell_me_more">Řekněte mi</string>
-	<string name="checking_username">Ověřování uživatelského jména</string>
 	<string name="retry">Znovu</string>
 	<string name="confirm">Potvrdit</string>
 	<string name="xmlrpc_post_blocked_error">Nepodařilo se připojit. Váš hostitel blokuje požadavky POST, které jsou potřeba ke komunikaci s webovou stránkou. Pro vyřešení toho problému kontaktujte svého hostitele.</string>
@@ -351,7 +364,6 @@ Language: cs_CZ
 	<string name="reader_photo_by">Fotka od %s</string>
 	<string name="reader_label_visit">Návštěva</string>
 	<string name="pending_draft_more">Váš koncept příspěvku %d nebude nikdy publikován. Klepnutím to zkontrolujete.</string>
-	<string name="invalid_verification_code_format">Musí být šestimístné číslo</string>
 	<string name="confirm_discard_changes">Zahodit neuložené změny?</string>
 	<string name="swipe_for_more">Přejetím více</string>
 	<string name="reader_err_get_post_not_authorized_signin_fallback">Nemáte oprávnění pro zobrazení tohoto příspěvku. Zkuste se nejdřív přihlásit na WordPress.com nebo použijte akční tlačítko nahoře v prohlížeči.</string>
@@ -460,7 +472,6 @@ Language: cs_CZ
 	<string name="send_link">Poslat URL</string>
 	<string name="my_site_header_external">Externí</string>
 	<string name="invite_people">Přidat uživatele</string>
-	<string name="signup_succeed_signin_failed">Váš účet byl vytvořen, ale došlo k chybě, když jsme vás zaregistrovali.\n        Zkuste se přihlásit pomocí svého nově vytvořeného uživatelského jména a hesla.</string>
 	<string name="label_clear_search_history">Smazat historii prohlížení</string>
 	<string name="dlg_confirm_clear_search_history">Smazat historii prohlížení?</string>
 	<string name="reader_empty_posts_in_search_description">Žádný příspěvek nebyl nalezen %s pro váš jazyk.</string>
@@ -552,8 +563,6 @@ Language: cs_CZ
 	<string name="comments_empty_list_filtered_trashed">Žádné komentáře v koši</string>
 	<string name="comments_empty_list_filtered_pending">Žádné komentáře nečekají na schválení</string>
 	<string name="comments_empty_list_filtered_approved">Žádné schválené komentáře</string>
-	<string name="button_done">Hotovo</string>
-	<string name="button_skip">Přeskočit</string>
 	<string name="site_timeout_error">Nelze se připojit k serveru WordPress, kvůli chybě v časového limitu.</string>
 	<string name="xmlrpc_malformed_response_error">Nelze se připojit. Instalace WordPress reagoval na neplatný XML-RPC.</string>
 	<string name="xmlrpc_missing_method_error">Nelze se připojit. Požadované metody XML-RPC chybí na serveru.</string>
@@ -747,8 +756,6 @@ Language: cs_CZ
 	<string name="reader_err_get_post_not_found">Tento příspěvek již neexistuje</string>
 	<string name="reader_err_get_post_not_authorized">Nemáte oprávnění prozobrazení tohoto příspěvku</string>
 	<string name="reader_err_get_post_generic">Nelze načíst tento příspěvek</string>
-	<string name="blog_name_no_spaced_allowed">Adresa webu nesmí obsahovat mezery</string>
-	<string name="invalid_username_no_spaces">Uživatelské jméno nemůže obsahovat mezery</string>
 	<string name="reader_empty_followed_blogs_no_recent_posts_description">Stránky, které sledujete v poslední době neměly žádné příspěvky</string>
 	<string name="reader_empty_followed_blogs_no_recent_posts_title">Žádné nedávné příspěvky</string>
 	<string name="edit_media">Upravit média</string>
@@ -863,9 +870,6 @@ Language: cs_CZ
 	<string name="button_trash">Koš</string>
 	<string name="button_preview">Náhled</string>
 	<string name="stats_no_activity_this_period">Žádná aktivita v tomto období</string>
-	<string name="my_site_no_sites_view_subtitle">Chtěli byste přidat jednu?</string>
-	<string name="my_site_no_sites_view_title">Zatím nemáte žádný web WordPress.</string>
-	<string name="my_site_no_sites_view_drake">Ilustrace</string>
 	<string name="reader_toast_err_follow_blog_not_authorized">Nemáte oprávnění pro přístup k tomuto webu</string>
 	<string name="reader_toast_err_follow_blog_not_found">Web nebyl nalezen</string>
 	<string name="undo">Zpět</string>
@@ -891,8 +895,8 @@ Language: cs_CZ
 	<string name="site_picker_cant_hide_current_site">\"%s\" nebyl skrytý, protože je to aktuální stránka</string>
 	<string name="site_picker_create_dotcom">Vytvořit web na WordPress.com</string>
 	<string name="site_picker_add_self_hosted">Přidat vlastní WordPress web</string>
-	<string name="site_picker_add_site">Přidat web</string>
 	<string name="site_picker_edit_visibility">Zobrazitt/skrýt stránky</string>
+	<string name="site_picker_add_site">Přidat web</string>
 	<string name="site_picker_title">Vybrat web</string>
 	<string name="my_site_btn_switch_site">Přepnout web</string>
 	<string name="my_site_btn_view_admin">Zobrazit administraci</string>
@@ -912,15 +916,10 @@ Language: cs_CZ
 	<string name="sign_out_wpcom_confirm">Po odpojení se vám z účtu vymažou všechny @%s  WordPress.com údaje z tohoto zařízení, včetně lokálních konceptů a změn.</string>
 	<string name="show">Zobrazit</string>
 	<string name="stats_generic_error">Požadované statistiky se nepodařilo načíst</string>
-	<string name="verify">Ověřit</string>
 	<string name="language">Jazyk</string>
 	<string name="device">Zařízení</string>
 	<string name="editor_toast_invalid_path">Neplatná cesta k souboru</string>
 	<string name="verification_code">Ověřovací kód</string>
-	<string name="invalid_verification_code">Neplatný ověřovací kód</string>
-	<string name="two_step_footer_button">Odeslat kód pomocí SMS</string>
-	<string name="two_step_sms_sent">Zkontrolujte si své SMSky pro ověřovací kód.</string>
-	<string name="two_step_footer_label">Zadejte kód z ověřovací aplikace</string>
 	<string name="media_details_label_file_type">Typ souboru</string>
 	<string name="media_details_label_file_name">Název souboru</string>
 	<string name="sign_in_jetpack">Přihlaste se k účtu WordPress.com pro připojení k Jetpacku.</string>
@@ -1097,7 +1096,6 @@ Language: cs_CZ
 	<string name="theme_auth_error_message">Ujisti se, že máš práva k nastavení motivu</string>
 	<string name="comments_empty_list">Žádný komentář</string>
 	<string name="mnu_comment_unspam">Není spam</string>
-	<string name="no_account">Nebyl nalezen žádný WordPress účet. Přidej účet a zkus znovu</string>
 	<string name="sdcard_message">Pro nahrání media musí být připojená SD karta</string>
 	<string name="stats_empty_comments">Žádné komentáře</string>
 	<string name="stats_bar_graph_empty">Statistika není dostupná</string>
@@ -1114,9 +1112,6 @@ Language: cs_CZ
 	<string name="error_downloading_image">Chyba při stahování obrázku</string>
 	<string name="passcode_wrong_passcode">Špatný PIN</string>
 	<string name="invalid_email_message">Tvoje emailová adresa není platná</string>
-	<string name="invalid_password_message">Heslo musí obsahovat alespoň 4 znaky</string>
-	<string name="invalid_username_too_short">Uživatelské jméno musí být delší než 4 znaky</string>
-	<string name="invalid_username_too_long">Uživatelské jméno musí být kratší než 61 znaků</string>
 	<string name="username_only_lowercase_letters_and_numbers">Uživatelské jméno může obsahovat pouze malá písmena (a-z) a číslice</string>
 	<string name="username_required">Vlož uživatelské jméno</string>
 	<string name="username_not_allowed">Uživatelské jméno není povoleno</string>
@@ -1128,7 +1123,6 @@ Language: cs_CZ
 	<string name="username_exists">Toto uživatelské jméno již existuje</string>
 	<string name="email_exists">Tato emailová adresa je již používána</string>
 	<string name="username_reserved_but_may_be_available">Toto uživatelské jméno je momentálně rezervované, ale může být dostupné během pár dnů</string>
-	<string name="nux_cannot_log_in">Nemohli jsme tě přihlásit</string>
 	<string name="could_not_remove_account">Nelze odstranit web</string>
 	<string name="error_moderate_comment">Nastala chyba při moderování</string>
 	<string name="username_or_password_incorrect">Vložené uživatelské jméno nebo heslo je neplatné</string>
@@ -1246,7 +1240,6 @@ Language: cs_CZ
 	<string name="deleting_post">Smazat příspěvek</string>
 	<string name="share_url_post">Sdílet příspěvek</string>
 	<string name="share_link">Sdílet odkaz</string>
-	<string name="creating_your_account">Vytvářím váš účet</string>
 	<string name="creating_your_site">Vytvářím vaši stránku</string>
 	<string name="reader_empty_posts_in_tag_updating">Načítám příspěvky...</string>
 	<string name="video">Video</string>
@@ -1260,19 +1253,14 @@ Language: cs_CZ
 	<string name="select_date">Vyberte datum</string>
 	<string name="pick_photo">Vyberte fotku</string>
 	<string name="pick_video">Vyberte video</string>
-	<string name="validating_user_data">Ověřuji data uživatele</string>
-	<string name="validating_site_data">Ověřuji data stránky</string>
 	<string name="reader_toast_err_get_post">Tento příspěvek se nedá načíst</string>
 	<string name="select_time">Zadejte čas</string>
 	<string name="reader_likes_you_and_one">To se líbí vám a jedné další osobě</string>
 	<string name="reader_empty_followed_blogs_description">Ale nebojte se, klepněte jen na ikonu v pravém horním rohu, a začněte poznávat!</string>
 	<string name="account_two_step_auth_enabled">Tento účet má zapnutou dvoufázovou autorizaci. Navštivte nastavení zabezpečení na WordPress.com a nechte si vygenerovat heslo pro konkrétní aplikaci.</string>
 	<string name="nux_tap_continue">Pokračovat</string>
-	<string name="signing_in">Přihlašuji...</string>
 	<string name="password_invalid">Potřebujete bezpečnější heslo. Ujistěte se, že používáte více než 7 znaků, kombinujete velká a malá písmena, čísla, nebo speciální znaky.</string>
 	<string name="nux_welcome_create_account">Vytvořit účet</string>
-	<string name="nux_oops_not_selfhosted_blog">Přihlásit se k WordPress.com</string>
-	<string name="nux_add_selfhosted_blog">Přidejte vlastní web</string>
 	<string name="nux_tutorial_get_started_title">Můžeme začít!</string>
 	<string name="reader_btn_share">Sdílet</string>
 	<string name="username_invalid">Špatné uživatelské jméno</string>
@@ -1288,7 +1276,6 @@ Language: cs_CZ
 	<string name="reader_toast_err_url_intent">Nelze otevřít %s</string>
 	<string name="reader_empty_followed_tags">Nesledujete žádné štítky</string>
 	<string name="create_account_wpcom">Vytvořte si účet na WordPress.com</string>
-	<string name="connecting_wpcom">Připojuji se k WordPress.com</string>
 	<string name="reader_toast_err_comment_failed">Nepodařilo se publikovat váš komentář</string>
 	<string name="reader_toast_err_tag_exists">Tento štítek už sledujete</string>
 	<string name="reader_toast_err_tag_invalid">Toto není platný štítek</string>
@@ -1296,7 +1283,6 @@ Language: cs_CZ
 	<string name="reader_label_added_tag">%s byl přidán</string>
 	<string name="limit_reached">Dosažen limit. Můžete to zkusit za 1 minutu. Další pokusy před vypršením limitu, tento limit pouze prodlouží. Pokud se domníváte, že je to chyba, kontaktujte prosím podporu.</string>
 	<string name="reader_likes_only_you">To se vám líbí</string>
-	<string name="button_next">Další</string>
 	<string name="stats_entry_posts_and_pages">Nadpis</string>
 	<string name="stats_entry_tags_and_categories">Téma</string>
 	<string name="stats_totals_views">Zobrazení</string>

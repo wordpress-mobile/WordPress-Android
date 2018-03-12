@@ -49,8 +49,6 @@ Language: it
 	<string name="login_text_otp">Inviami un codice.</string>
 	<string name="enter_verification_code">Ci sei quasi! Inserisci il codice di verifica dalla tua app di autenticazione.</string>
 	<string name="enter_the_address_of_your_wordpress_site">Inserisci l\'indirizzo del tuo sito WordPress</string>
-	<string name="enter_username_instead">Accedi con il nome utente.</string>
-	<string name="enter_site_address_instead">Accedi al tuo sito inserendo invece l\'indirizzo del tuo sito.</string>
 	<string name="open_mail">Apri mail</string>
 	<string name="next">Successivo</string>
 	<string name="enter_email_wordpress_com">Accedi a WordPress.com utilizzando un indirizzo e-mail per gestire tutti i tuoi siti WordPress.com.</string>
@@ -59,7 +57,6 @@ Language: it
 	<string name="login_promo_text_anytime">Tieni il passo con i tuoi siti preferiti e partecipa a una conversazione ovunque e in qualsiasi momento.</string>
 	<string name="login_promo_text_realtime">Guarda i lettori da tutto il mondo leggere e interagire con il tuo sito, in tempo reale.</string>
 	<string name="login_promo_text_onthego">Pubblica dal parco. Lavora al blog sull\'autobus. Commenta dal bar. WordPress si sposta con te.</string>
-	<string name="create_wordpress_site">Crea un sito WordPress</string>
 	<string name="email_not_found">Non è stato trovato nessun utente WordPress.com con questo indirizzo e-mail</string>
 	<string name="image_optimization_promo_desc">L\'ottimizzazione dell\'immagine restringe l\'immagine per un caricamento più veloce.\n\nPuoi modificare questa opzione in qualsiasi momento nelle impostazioni del sito.</string>
 	<string name="image_optimization_promo_title">Attivare l\'ottimizzazione dell\'immagine?</string>
@@ -256,12 +253,9 @@ Language: it
 	<string name="error_unknown_post_type">Formato dell\'articolo sconosciuto</string>
 	<string name="error_fetch_site_after_creation">Il sito è stato creato. Potresti aver bisogno di aggiornare i tuoi siti nel relativo selezionatore.</string>
 	<string name="submit_for_review">Invia</string>
-	<string name="tell_me_more">Dimmi di più</string>
 	<string name="duplicate_site_detected">È stato rilevato un sito duplicato.</string>
 	<string name="cannot_add_duplicate_site">Il sito esiste già nell\'app, non lo puoi aggiungere.</string>
-	<string name="already_logged_in_wpcom_same_username">Sei già connesso al tuo account WordPress.com. Il tuo sito dovrebbe apparire nel menu dei siti, assicurati che non sia nascosto.</string>
 	<string name="already_logged_in_wpcom">Sei già connesso a un account WordPress.com, non puoi aggiungere un sito WordPress.com legato a un altro account.</string>
-	<string name="checking_username">Controllo del nome utente in corso</string>
 	<string name="jetpack_different_com_account">I siti Jetpack che appartengono a diversi account WordPress.com non sono supportati</string>
 	<string name="jetpack_use_com_account">Per aggiungere il tuo sito Jetpack, accedi all\'account WordPress.com che hai usato per connettere Jetpack.</string>
 	<string name="error_media_load">Non è possibile caricare il media</string>
@@ -295,7 +289,6 @@ Language: it
 	<string name="reader_photo_by">Foto di %s</string>
 	<string name="reader_label_visit">Visita</string>
 	<string name="pending_draft_more">Hai abbozzato %d articoli ma non li hai mai pubblicati. Clicca per verificare.</string>
-	<string name="invalid_verification_code_format">Deve essere un numero a sei cifre</string>
 	<string name="confirm_discard_changes">Scartare le modifiche non salvate?</string>
 	<string name="swipe_for_more">Scorri per altre info</string>
 	<string name="reader_err_get_post_not_authorized_signin_fallback">Non sei autorizzato a vedere questo articolo. Prova a registrarti prima su WordPress.com o a fare clic sul pulsante di azione qua sopra per aprire un browser.</string>
@@ -404,7 +397,6 @@ Language: it
 	<string name="invite_people">Invita delle persone</string>
 	<string name="my_site_header_external">Esterno</string>
 	<string name="send_link">Invia link</string>
-	<string name="signup_succeed_signin_failed">Il tuo account è stato creato ma si è verificato un errore quando abbiamo provato ad autenticarti. Prova ad entrare con il nome utente e la password appena creati.</string>
 	<string name="label_clear_search_history">Pulisci lo storico della ricerca</string>
 	<string name="dlg_confirm_clear_search_history">Pulire lo storico della ricerca?</string>
 	<string name="reader_empty_posts_in_search_description">Nessun articolo trovato riguardo %s per la tua lingua</string>
@@ -496,8 +488,6 @@ Language: it
 	<string name="comments_empty_list_filtered_trashed">Nessun commento nel cestino</string>
 	<string name="comments_empty_list_filtered_pending">Nessun commento in sospeso</string>
 	<string name="comments_empty_list_filtered_approved">Nessun commento approvato</string>
-	<string name="button_done">Fatto</string>
-	<string name="button_skip">Salta</string>
 	<string name="site_timeout_error">Non è stato possibile connettersi al sito WordPress a causa di un errore di timeout.</string>
 	<string name="xmlrpc_malformed_response_error">Non è possibile connettersi. L\'installazione WordPress risponde con un documento XML-RPC non valido.</string>
 	<string name="xmlrpc_missing_method_error">Non è possibile connettersi. Sul server mancano i necessari metodi XML-RPC</string>
@@ -691,8 +681,6 @@ Language: it
 	<string name="reader_err_get_post_not_found">Questo articolo non esiste più</string>
 	<string name="reader_err_get_post_not_authorized">Non disponi del permesso per visualizzare questo articolo</string>
 	<string name="reader_err_get_post_generic">Impossibile recuperare questo articolo</string>
-	<string name="blog_name_no_spaced_allowed">L\'indirizzo del sito non può contenere spazi</string>
-	<string name="invalid_username_no_spaces">Il nome utente non può contenere spazi</string>
 	<string name="reader_empty_followed_blogs_no_recent_posts_description">I siti che segui non hanno pubblicato nulla recentemente</string>
 	<string name="reader_empty_followed_blogs_no_recent_posts_title">Nessun articolo recente</string>
 	<string name="edit_media">Modifica media</string>
@@ -805,9 +793,6 @@ Language: it
 	<string name="post_trashed">Articolo inviato al cestino</string>
 	<string name="post_deleted">Articolo cancellato</string>
 	<string name="page_trashed">Pagina inviata al cestino</string>
-	<string name="my_site_no_sites_view_subtitle">Vuoi aggiungerne uno?</string>
-	<string name="my_site_no_sites_view_title">No hai ancora nessun sito WordPress</string>
-	<string name="my_site_no_sites_view_drake">Illustrazione</string>
 	<string name="reader_toast_err_follow_blog_not_authorized">Non sei autorizzato ad accedere a questo blog</string>
 	<string name="reader_toast_err_follow_blog_not_found">impossibile trovare questo blog</string>
 	<string name="undo">Annulla</string>
@@ -834,7 +819,6 @@ Language: it
 	<string name="site_picker_create_dotcom">Crea un sito su WordPress.com</string>
 	<string name="site_picker_edit_visibility">Mostra/nascondi siti</string>
 	<string name="site_picker_add_self_hosted">Aggiungi un sito self-hosted</string>
-	<string name="site_picker_add_site">Aggiungi sito</string>
 	<string name="my_site_btn_switch_site">Cambia sito</string>
 	<string name="site_picker_title">Seleziona un sito</string>
 	<string name="my_site_btn_view_site">Visualizza il sito</string>
@@ -856,11 +840,6 @@ Language: it
 	<string name="stats_generic_error">Le statistiche richieste non possono venir caricate</string>
 	<string name="auth_required">Accedi di nuovo per continuare.</string>
 	<string name="sign_in_jetpack">Accedi al tuo account WordPress.com  per connetterti a Jetpack.</string>
-	<string name="two_step_sms_sent">Verifica i messaggi di testo per il codice di verifica.</string>
-	<string name="two_step_footer_button">Invia codice come messaggio di testo</string>
-	<string name="two_step_footer_label">Inserisci il codice dalla tua app di autenticazione.</string>
-	<string name="verify">Verifica</string>
-	<string name="invalid_verification_code">Codice di verifica non valido</string>
 	<string name="verification_code">Codice di verifica</string>
 	<string name="editor_toast_invalid_path">Percorso file non valido</string>
 	<string name="media_details_label_file_type">Tipo file</string>
@@ -1031,7 +1010,6 @@ Language: it
 	<string name="forums">Forum</string>
 	<string name="forgot_password">Password dimenticata?</string>
 	<string name="help">Aiuto</string>
-	<string name="nux_cannot_log_in">Impossibile effettuare l\'accesso</string>
 	<string name="username_or_password_incorrect">Il nome utente o la password immessi non sono corretti</string>
 	<string name="blog_name_reserved_but_may_be_available">Il sito è attualmente riservato, ma potrebbe essere disponibile tra un paio di giorni</string>
 	<string name="blog_name_reserved">Il sito è riservato</string>
@@ -1054,9 +1032,6 @@ Language: it
 	<string name="username_not_allowed">Nome utente non consentito</string>
 	<string name="username_required">Inserisci un nome utente</string>
 	<string name="username_only_lowercase_letters_and_numbers">Il nome utente può contenere solo lettere minuscole (a-z) e numeri</string>
-	<string name="invalid_username_too_long">Il nome utente può contenere fino a 61 caratteri</string>
-	<string name="invalid_username_too_short">Il nome utente deve contenere più di 4 caratteri</string>
-	<string name="invalid_password_message">La password deve contenere almeno 4 caratteri</string>
 	<string name="invalid_email_message">Il tuo indirizzo e-mail non è valido</string>
 	<string name="passcode_wrong_passcode">PIN errato</string>
 	<string name="error_downloading_image">Errore durante il download dell\'immagine</string>
@@ -1075,7 +1050,6 @@ Language: it
 	<string name="stats_bar_graph_empty">Nessuna statistica disponibile</string>
 	<string name="stats_empty_comments">Ancora nessun commento</string>
 	<string name="sdcard_message">Occorre una scheda SD per caricare i file</string>
-	<string name="no_account">Impossibile trovare un account WordPress. Aggiungi un account e riprova</string>
 	<string name="category_automatically_renamed">Il valore del campo Nome categoria %1$s non è valido. È stato rinominato in %2$s.</string>
 	<string name="cat_name_required">Il campo Nome categoria è obbligatorio</string>
 	<string name="adding_cat_success">Categoria aggiunta correttamente</string>
@@ -1185,7 +1159,6 @@ Language: it
 	<string name="deleting_post">Eliminando l\'articolo</string>
 	<string name="deleting_page">Eliminando la pagina</string>
 	<string name="creating_your_site">Creazione del sito in corso</string>
-	<string name="creating_your_account">Creazione dell\'account in corso</string>
 	<string name="reader_empty_posts_in_tag_updating">Recupero post in corso...</string>
 	<string name="cant_share_no_visible_blog">Non è possibile condividere su WordPress senza un blog visibile</string>
 	<string name="comment_spammed">Commento contrassegnato come spam</string>
@@ -1195,8 +1168,6 @@ Language: it
 	<string name="reader_toast_err_get_comment">Impossibile recuperare questo commento</string>
 	<string name="reader_likes_multi">Piace a %,d persone</string>
 	<string name="reader_likes_you_and_multi">Piace a te e ad altri %,d</string>
-	<string name="validating_site_data">Convalida dati sito in corso</string>
-	<string name="validating_user_data">Convalida dati utente in corso</string>
 	<string name="reader_toast_err_get_post">Impossibile recuperare questo post</string>
 	<string name="pick_video">Seleziona video</string>
 	<string name="account_two_step_auth_enabled">Per questo account è attiva l\'autenticazione in due fasi. Visita le tue impostazioni di sicurezza in WordPress.com e genera una password specifica per l\'applicazione.</string>
@@ -1205,17 +1176,12 @@ Language: it
 	<string name="reader_empty_followed_blogs_description">Ma non preoccuparti, fai un tap sull\'icona in alto a destra per iniziare ad esplorare!</string>
 	<string name="reader_likes_you_and_one">Piace a te e a un\'altra persona</string>
 	<string name="select_time">Seleziona orario</string>
-	<string name="nux_oops_not_selfhosted_blog">Accedi a WordPress.com</string>
-	<string name="nux_add_selfhosted_blog">Aggiungi sito self-hosted</string>
-	<string name="signing_in">Connessione in corso...</string>
 	<string name="nux_welcome_create_account">Crea account</string>
 	<string name="nux_tap_continue">Continua</string>
 	<string name="password_invalid">Devi impostare una password più sicura. Usa 7 o più caratteri sia minuscoli che maiuscoli, numeri o caratteri speciali.</string>
 	<string name="nux_tutorial_get_started_title">Inizia!</string>
 	<string name="limit_reached">Limite raggiunto. Si consiglia di attendere almeno un minuto prima di riprovare. Se l\'errore persiste, o se pensi che sia un errore del sistema, si prega di contattare il supporto.</string>
 	<string name="username_invalid">Nome utente non valido</string>
-	<string name="connecting_wpcom">Collegamento con WordPress.com in corso</string>
-	<string name="button_next">Successivo</string>
 	<string name="create_account_wpcom">Apri un account su WordPress.com</string>
 	<string name="reader_empty_followed_tags">Non stai seguendo alcun tag</string>
 	<string name="reader_toast_err_url_intent">Impossibile aprire %s</string>

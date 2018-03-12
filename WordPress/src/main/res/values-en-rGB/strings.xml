@@ -70,12 +70,6 @@ Language: en_GB
 	<string name="plugin_disable_progress_dialog_message">Disabling %s…</string>
 	<string name="plugin_btn_remove">Remove Plugin</string>
 	<string name="plugin_configuration_failed">An error occurred while configuring the plugin: %s</string>
-	<string name="plugin_remove_failed">Error removing %s.</string>
-	<string name="plugin_removed_successfully">Successfully removed %s.</string>
-	<string name="plugin_updated_failed_detailed">Error removing %1$s: %2$s</string>
-	<string name="plugin_updated_failed">Error removing %s.</string>
-	<string name="plugin_updated_successfully">Successfully updated %s.</string>
-	<string name="plugin_available_version">Version %s is available.</string>
 	<string name="plugin_detail_label_state_autoupdates">Autoupdates</string>
 	<string name="plugin_detail_label_state_active">Active</string>
 	<string name="plugin_autoupdates_off">Autoupdates off</string>
@@ -95,12 +89,6 @@ Language: en_GB
 	<string name="notification_logged_in">Tap to continue.</string>
 	<string name="notification_login_title_success">Logged in!</string>
 	<string name="login_error_generic_start">Google login could not be started.</string>
-	<string name="site_creating_failed">Sorry, failed to properly create your site :(</string>
-	<string name="site_creating_success">Success!</string>
-	<string name="site_creating_set_theme">Setting the theme…</string>
-	<string name="site_creating_set_tagline">Setting the tagline…</string>
-	<string name="site_creating_fetching_info">Fetching site info…</string>
-	<string name="site_creating_label">Preparing your site…</string>
 	<string name="login_empty_password">Please enter a password</string>
 	<string name="email_not_registered_wpcom">Hmm, this email address isn\'t registered with WordPress.com.\nAre you trying to access a self-hosted site? Log in using the link at the bottom of this screen.</string>
 	<string name="login_text_otp_another">Text me another code instead.</string>
@@ -139,7 +127,6 @@ Language: en_GB
 	<string name="login_error_email_not_found">The Google account \'%s\' doesn\'t match any existing account on WordPress.com.</string>
 	<string name="login_error_button">Close</string>
 	<string name="login_google_button_suffix">Log in with Google.</string>
-	<string name="login_google_button_prefix">Or you can</string>
 	<string name="enter_wpcom_password_google">To proceed with this Google account, please provide the matching WordPress.com password. This will be asked only once.</string>
 	<string name="error_generic_network">A network error occurred. Please check your connection and try again.</string>
 	<string name="post_settings_remove_featured_image">Remove featured image</string>
@@ -265,8 +252,6 @@ Language: en_GB
 	<string name="login_text_otp">Text me a code instead.</string>
 	<string name="enter_verification_code">Almost there! Please enter the verification code from your Authenticator app.</string>
 	<string name="enter_the_address_of_your_wordpress_site">Enter the address of your WordPress site</string>
-	<string name="enter_username_instead">Log in with username instead.</string>
-	<string name="enter_site_address_instead">Log in to your site by entering your site address instead.</string>
 	<string name="open_mail">Open mail</string>
 	<string name="next">Next</string>
 	<string name="enter_email_wordpress_com">Log in to WordPress.com using an email address to manage all your WordPress sites.</string>
@@ -275,7 +260,6 @@ Language: en_GB
 	<string name="login_promo_text_anytime">Catch up with your favourite sites and join the conversation anywhere, any time.</string>
 	<string name="login_promo_text_realtime">Watch readers from around the world read and interact with your site — in realtime.</string>
 	<string name="login_promo_text_onthego">Publish from the park. Blog from the bus. Comment from the café. WordPress goes where you go.</string>
-	<string name="create_wordpress_site">Create a WordPress site</string>
 	<string name="email_not_found">We didn\'t find a WordPress.com user with that email address</string>
 	<string name="image_optimization_promo_desc">Image optimisation shrinks images for quicker uploading.\n\nYou can change this any time in site settings.</string>
 	<string name="image_optimization_promo_title">Turn on image optimisation?</string>
@@ -473,12 +457,9 @@ Language: en_GB
 	<string name="error_unknown_post_type">Unknown post format</string>
 	<string name="error_fetch_site_after_creation">Site has been created, you might need to refresh your sites in the site picker.</string>
 	<string name="submit_for_review">Submit</string>
-	<string name="tell_me_more">Tell me more</string>
 	<string name="duplicate_site_detected">A duplicate site has been detected.</string>
 	<string name="cannot_add_duplicate_site">This site already exists in the app, you can\'t add it.</string>
-	<string name="already_logged_in_wpcom_same_username">You\'re already logged in your WordPress.com account. Your site should appear in the site picker, make sure it\'s not hidden.</string>
 	<string name="already_logged_in_wpcom">You\'re already logged in a WordPress.com account, you can\'t add a WordPress.com site bound to another account.</string>
-	<string name="checking_username">Checking username</string>
 	<string name="jetpack_different_com_account">Jetpack sites belonging to different WordPress.com accounts are not supported</string>
 	<string name="jetpack_use_com_account">To add your Jetpack site, log in to the WordPress.com account you used to connect Jetpack.</string>
 	<string name="error_media_load">Unable to load media</string>
@@ -512,7 +493,6 @@ Language: en_GB
 	<string name="reader_photo_by">Photo by %s</string>
 	<string name="reader_label_visit">Visit</string>
 	<string name="pending_draft_more">You drafted %d posts but never published them. Tap to check.</string>
-	<string name="invalid_verification_code_format">Must be a six-digit number</string>
 	<string name="confirm_discard_changes">Discard unsaved changes?</string>
 	<string name="swipe_for_more">Swipe for more</string>
 	<string name="reader_err_get_post_not_authorized_signin_fallback">You\'re not authorised to view this post. Try signing in to WordPress.com first or use the top action button to open a browser instead.</string>
@@ -621,7 +601,6 @@ Language: en_GB
 	<string name="send_link">Send link</string>
 	<string name="my_site_header_external">External</string>
 	<string name="invite_people">Invite People</string>
-	<string name="signup_succeed_signin_failed">Your account has been created but an error occured while we loggged you\n        in. Try to log in with your newly created username and password.</string>
 	<string name="label_clear_search_history">Clear search history</string>
 	<string name="dlg_confirm_clear_search_history">Clear search history?</string>
 	<string name="reader_empty_posts_in_search_description">No posts found for %s for your language</string>
@@ -713,8 +692,6 @@ Language: en_GB
 	<string name="site_settings_advanced_header">Advanced</string>
 	<string name="comments_empty_list_filtered_pending">No Pending comments</string>
 	<string name="comments_empty_list_filtered_approved">No Approved comments</string>
-	<string name="button_done">Done</string>
-	<string name="button_skip">Skip</string>
 	<string name="site_timeout_error">Couldn\'t connect to the WordPress site due to Timeout error.</string>
 	<string name="xmlrpc_malformed_response_error">Couldn\'t connect. The WordPress installation responded with an invalid XML-RPC document.</string>
 	<string name="xmlrpc_missing_method_error">Couldn\'t connect. Required XML-RPC methods are missing on the server.</string>
@@ -908,8 +885,6 @@ Language: en_GB
 	<string name="reader_err_get_post_not_found">This post no longer exists</string>
 	<string name="reader_err_get_post_not_authorized">You\'re not authorised to view this post</string>
 	<string name="reader_err_get_post_generic">Unable to retrieve this post</string>
-	<string name="blog_name_no_spaced_allowed">Site address can\'t contain spaces</string>
-	<string name="invalid_username_no_spaces">Username can\'t contain spaces</string>
 	<string name="reader_empty_followed_blogs_no_recent_posts_description">The sites you follow haven\'t posted anything recently</string>
 	<string name="reader_empty_followed_blogs_no_recent_posts_title">No recent posts</string>
 	<string name="edit_media">Edit media</string>
@@ -1024,9 +999,6 @@ Language: en_GB
 	<string name="button_view">View</string>
 	<string name="button_edit">Edit</string>
 	<string name="button_publish">Publish</string>
-	<string name="my_site_no_sites_view_subtitle">Would you like to add one?</string>
-	<string name="my_site_no_sites_view_title">You don\'t have any WordPress sites yet.</string>
-	<string name="my_site_no_sites_view_drake">Illustration</string>
 	<string name="reader_toast_err_follow_blog_not_authorized">You are not authorised to access this blog</string>
 	<string name="reader_toast_err_follow_blog_not_found">This blog could not be found</string>
 	<string name="undo">Undo</string>
@@ -1051,7 +1023,6 @@ Language: en_GB
 	<string name="me_btn_support">Help &amp; Support</string>
 	<string name="site_picker_cant_hide_current_site">\"%s\" wasn\'t hidden because it\'s the current site</string>
 	<string name="site_picker_create_dotcom">Create WordPress.com site</string>
-	<string name="site_picker_add_site">Add site</string>
 	<string name="site_picker_add_self_hosted">Add self-hosted site</string>
 	<string name="site_picker_edit_visibility">Show/hide sites</string>
 	<string name="my_site_btn_view_admin">View Admin</string>
@@ -1077,11 +1048,6 @@ Language: en_GB
 	<string name="language">Language</string>
 	<string name="editor_toast_invalid_path">Invalid file path</string>
 	<string name="verification_code">Verification code</string>
-	<string name="invalid_verification_code">Invalid verification code</string>
-	<string name="verify">Verify</string>
-	<string name="two_step_footer_label">Enter the code from your authenticator app.</string>
-	<string name="two_step_footer_button">Send code via text message</string>
-	<string name="two_step_sms_sent">Check your text messages for the verification code.</string>
 	<string name="media_details_label_file_type">File type</string>
 	<string name="media_details_label_file_name">File name</string>
 	<string name="sign_in_jetpack">Log in to your WordPress.com account to connect to Jetpack.</string>
@@ -1262,7 +1228,6 @@ Language: en_GB
 	<string name="adding_cat_success">Category added successfully</string>
 	<string name="cat_name_required">The category name field is required</string>
 	<string name="category_automatically_renamed">Category name %1$s isn\'t valid. It has been renamed to %2$s.</string>
-	<string name="no_account">No WordPress account found, add an account and try again</string>
 	<string name="sdcard_message">A mounted SD card is required to upload media</string>
 	<string name="stats_empty_comments">No comments yet</string>
 	<string name="stats_bar_graph_empty">No stats available</string>
@@ -1280,9 +1245,6 @@ Language: en_GB
 	<string name="error_downloading_image">Error downloading image</string>
 	<string name="passcode_wrong_passcode">Wrong PIN</string>
 	<string name="invalid_email_message">Your email address isn\'t valid</string>
-	<string name="invalid_password_message">Password must contain at least 4 characters</string>
-	<string name="invalid_username_too_short">Username must be longer than 4 characters</string>
-	<string name="invalid_username_too_long">Username must be shorter than 61 characters</string>
 	<string name="username_only_lowercase_letters_and_numbers">Username can only contain lowercase letters (a-z) and numbers</string>
 	<string name="username_required">Enter a username</string>
 	<string name="username_not_allowed">Username not allowed</string>
@@ -1305,7 +1267,6 @@ Language: en_GB
 	<string name="blog_name_reserved">That site is reserved</string>
 	<string name="blog_name_reserved_but_may_be_available">That site is currently reserved but may be available in a couple days</string>
 	<string name="username_or_password_incorrect">The username or password you entered is incorrect</string>
-	<string name="nux_cannot_log_in">We can\'t log you in</string>
 	<string name="out_of_memory">Device out of memory</string>
 	<string name="could_not_remove_account">Couldn\'t remove site</string>
 	<string name="invalid_url_message">Check that the URL entered is valid</string>
@@ -1407,7 +1368,6 @@ Language: en_GB
 	<string name="share_url_post">Share post</string>
 	<string name="share_url_page">Share page</string>
 	<string name="share_link">Share link</string>
-	<string name="creating_your_account">Creating your account</string>
 	<string name="creating_your_site">Creating your site</string>
 	<string name="reader_empty_posts_in_tag_updating">Fetching posts…</string>
 	<string name="reader_likes_you_and_multi">You and %,d others like this</string>
@@ -1425,15 +1385,10 @@ Language: en_GB
 	<string name="account_two_step_auth_enabled">This account has two step authentication enabled. Visit your security settings on WordPress.com and generate an application-specific password.</string>
 	<string name="pick_video">Select video</string>
 	<string name="reader_toast_err_get_post">Unable to retrieve this post</string>
-	<string name="validating_user_data">Validating user data</string>
-	<string name="validating_site_data">Validating site data</string>
 	<string name="reader_empty_followed_blogs_description">But don\'t worry, just tap the icon at the top right to start exploring!</string>
 	<string name="nux_tap_continue">Continue</string>
 	<string name="nux_welcome_create_account">Create account</string>
-	<string name="nux_add_selfhosted_blog">Add self-hosted site</string>
 	<string name="password_invalid">You need a more secure password. Make sure to use 7 or more characters, mix uppercase and lowercase letters, numbers or special characters.</string>
-	<string name="nux_oops_not_selfhosted_blog">Log in to WordPress.com</string>
-	<string name="signing_in">Logging in…</string>
 	<string name="media_add_popup_title">Add to media library</string>
 	<string name="empty_list_default">This list is empty</string>
 	<string name="reader_untitled_post">(Untitled)</string>
@@ -1456,8 +1411,6 @@ Language: en_GB
 	<string name="reader_empty_followed_tags">You don\'t follow any tags</string>
 	<string name="create_account_wpcom">Create an account on WordPress.com</string>
 	<string name="reader_hint_comment_on_comment">Reply to comment…</string>
-	<string name="button_next">Next</string>
-	<string name="connecting_wpcom">Logging in to WordPress.com</string>
 	<string name="themes">Themes</string>
 	<string name="media_edit_title_text">Title</string>
 	<string name="media_edit_caption_text">Caption</string>

@@ -35,9 +35,6 @@ Language: az
 	<string name="button_edit">Redaktə et</string>
 	<string name="button_publish">Dərc et</string>
 	<string name="stats_no_activity_this_period">Bu dövrə aid aktivlik yoxdur</string>
-	<string name="my_site_no_sites_view_subtitle">Bir ədədini əlavə etmək istərdinizmi?</string>
-	<string name="my_site_no_sites_view_title">Hələlik heç bir WordPress saytınız yoxdur.</string>
-	<string name="my_site_no_sites_view_drake">İllüstrasiya</string>
 	<string name="reader_toast_err_follow_blog_not_authorized">Bu bloqa giriş izniniz yoxdur</string>
 	<string name="reader_toast_err_follow_blog_not_found">Bloq tapılmadı</string>
 	<string name="undo">Geri al</string>
@@ -57,7 +54,6 @@ Language: az
 	<string name="me_btn_support">Yardım və Dəstək</string>
 	<string name="site_picker_cant_hide_current_site">\"%s\" hazırkı sayt olduğundan gizlədilə bilmədi</string>
 	<string name="site_picker_create_dotcom">WordPress.com saytı yarat</string>
-	<string name="site_picker_add_site">Sayt əlavə et</string>
 	<string name="site_picker_add_self_hosted">İstifadəçinin öz hostundakı saytı əlavə et</string>
 	<string name="site_picker_edit_visibility">Saytları göstər/gizlət</string>
 	<string name="my_site_btn_view_admin">Nəzarətçiyə Bax</string>
@@ -81,11 +77,6 @@ Language: az
 	<string name="language">Dil</string>
 	<string name="editor_toast_invalid_path">Keçərsiz fayl yolu.</string>
 	<string name="verification_code">Təsdiqləmə kodu</string>
-	<string name="invalid_verification_code">Keçərsiz təsdiqləmə kodu</string>
-	<string name="verify">Təsdiqlə</string>
-	<string name="two_step_footer_label">Təsdiqləmə proqramınızdakı kodu daxil edin.</string>
-	<string name="two_step_footer_button">Kodu mətn mesajı olaraq göndər</string>
-	<string name="two_step_sms_sent">Mətn mesajlarınızı təsdiqləmə kodu üçün yoxlayın.</string>
 	<string name="reader_empty_posts_request_failed">Yazılar geri alına bilmir</string>
 	<string name="publisher">Naşir:</string>
 	<string name="error_notification_open">Bildiriş açılmadı</string>
@@ -255,7 +246,6 @@ Language: az
 	<string name="adding_cat_success">Kateqoriya müvəffəqiyyətlə əlavə edildi</string>
 	<string name="cat_name_required">Kateqoriya adı vacibdir</string>
 	<string name="category_automatically_renamed">Kateqoriya adı %1$s yararsızdır. Ad %2$s olaraq dəyişdirildi</string>
-	<string name="no_account">WordPress hesabı tapılmadı, bir hesab əlavə edib təkrar yoxlayın</string>
 	<string name="sdcard_message">Media yükləmək üçün taxılmış SD kart gərəklidir</string>
 	<string name="stats_empty_comments">Hələlik şərh yoxdur</string>
 	<string name="stats_bar_graph_empty">Baxılacaq statistika yoxdur</string>
@@ -273,9 +263,6 @@ Language: az
 	<string name="passcode_wrong_passcode">Yanlış PIN</string>
 	<string name="error_edit_comment">Şərh redaktəsi sırasında xəta baş verdi</string>
 	<string name="invalid_email_message">Keçərsiz e-poçt ünvanı</string>
-	<string name="invalid_password_message">Parollar ən az 4 simvol olmalıdır</string>
-	<string name="invalid_username_too_short">İstifadəçi adı 4 simvoldan artıq olmalıdır</string>
-	<string name="invalid_username_too_long">İstifadəçi adı 61 simvoldan qısa olmalıdır</string>
 	<string name="username_only_lowercase_letters_and_numbers">İstifadəçi adı sadəcə kiçik hərflərdən (a-z) və rəqəmlərdən ibarət olmalıdır</string>
 	<string name="username_required">İstifadəçi adınızı daxil edin</string>
 	<string name="username_not_allowed">İstifadəçi adına izin verilmir</string>
@@ -298,7 +285,6 @@ Language: az
 	<string name="blog_name_reserved">Bu sayt ehtiyatdadır</string>
 	<string name="blog_name_reserved_but_may_be_available">Bu sayt adı ehtiyatdadır, ancaq bir neçə gün ərzində müsaid ola bilər</string>
 	<string name="username_or_password_incorrect">Yanlış istifadəçi adı və ya parol daxil etdiniz</string>
-	<string name="nux_cannot_log_in">Daxil ola bilmirsiniz</string>
 	<string name="could_not_remove_account">Sayt silinmədi</string>
 	<string name="select_categories">Kateqoriyaları seç</string>
 	<string name="account_details">Hesab məlumatları</string>
@@ -392,7 +378,6 @@ Language: az
 	<string name="share_url_post">Yazını paylaş</string>
 	<string name="share_url_page">Səhifəni paylaş</string>
 	<string name="share_link">Bağlantını paylaş</string>
-	<string name="creating_your_account">Yeni hesabınız yaradılır</string>
 	<string name="creating_your_site">Yeni saytınız yaradılır</string>
 	<string name="reader_empty_posts_in_tag_updating">Yazılar gətirilir...</string>
 	<string name="reader_label_reply">Cavab</string>
@@ -408,14 +393,11 @@ Language: az
 	<string name="pick_photo">Foto seç</string>
 	<string name="pick_video">Video seç</string>
 	<string name="reader_toast_err_get_post">Bu yazını almaq mümkün deyil</string>
-	<string name="validating_user_data">İstifadəçi məlumatları təsdiqlənir</string>
-	<string name="validating_site_data">Sayt məlumatları təsdiqlənir</string>
 	<string name="reader_likes_you_and_one">Siz və bir diğəri bunu bəyənir</string>
 	<string name="account_two_step_auth_enabled">Bu hesab iki məhələli təsdiqləməyə sahibdir. Посетите настройки безопасности на WordPress.com-da təhlükəsizlik parametrlərini ziyarət edin və konkret proqram üçün parol hazırlayın.</string>
 	<string name="nux_tap_continue">Davam et</string>
 	<string name="nux_welcome_create_account">Hesab yarat</string>
 	<string name="password_invalid">Sizə daha etibarlı parol lazımdır. 7 simvoldan artıq böyük və kiçik hərflərin, rəqəm və ya özəl simvolların qarışığından istifadə edin.</string>
-	<string name="nux_add_selfhosted_blog">Öz-xostinq saytını əlavə et</string>
 	<string name="media_add_popup_title">Media kitabxanasına əlavə et</string>
 	<string name="empty_list_default">Bu siyahı boşdur</string>
 	<string name="reader_btn_share">Paylaş</string>

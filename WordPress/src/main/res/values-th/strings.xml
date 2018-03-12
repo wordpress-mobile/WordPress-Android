@@ -95,8 +95,6 @@ Language: th
 	<string name="reader_err_get_post_not_found">ไม่มีเรื่องนี้อยู่อีกแล้ว</string>
 	<string name="reader_err_get_post_not_authorized">คุณไม่มีสิทธิที่จะดูเรื่องนี้</string>
 	<string name="reader_err_get_post_generic">ไม่สามารถดึงข้อมูลเรื่องนี้</string>
-	<string name="blog_name_no_spaced_allowed">ที่อยู่เว็บไม่สามารถมีที่ว่างได้</string>
-	<string name="invalid_username_no_spaces">ชื่อผู้ใช้ไม่สามารถมีที่ว่างได้</string>
 	<string name="reader_empty_followed_blogs_no_recent_posts_description">เว็บที่คุณติดตามยังไม่มีเรื่องใหม่เมื่อเร็ว ๆ มานี้</string>
 	<string name="reader_empty_followed_blogs_no_recent_posts_title">ไม่มีเรื่องใหม่</string>
 	<string name="edit_media">แก้ไขไฟล์สื่อ</string>
@@ -208,9 +206,6 @@ Language: th
 	<string name="post_deleted">ลบหน้าแล้ว</string>
 	<string name="post_trashed">เรื่องที่ส่งไปถังขยะ</string>
 	<string name="page_trashed">หน้าที่ส่งไปถังขยะ</string>
-	<string name="my_site_no_sites_view_subtitle">คุณต้องการจะเพิ่มซักหนึ่งอย่าง</string>
-	<string name="my_site_no_sites_view_title">คุณยังไม่มีเว็บเวิร์ดเพรส</string>
-	<string name="my_site_no_sites_view_drake">ภาพประกอบ</string>
 	<string name="reader_toast_err_follow_blog_not_authorized">คุณไม่มีสิทธิเข้าถึงบล็อกนี้</string>
 	<string name="reader_toast_err_follow_blog_not_found">ไม่สามารถค้นหาบล็อกนี้</string>
 	<string name="undo">ย้อนกลับ</string>
@@ -236,7 +231,6 @@ Language: th
 	<string name="site_picker_create_dotcom">สร้างเว็บ WordPress.com</string>
 	<string name="site_picker_edit_visibility">แสดง/ซ่อน เว็บไซต์</string>
 	<string name="site_picker_add_self_hosted">เพิ่มเว็บไซต์บนโฮสท์ติดตั้งเอง</string>
-	<string name="site_picker_add_site">เพิ่มเว็บไซต์</string>
 	<string name="my_site_btn_switch_site">สลับเว็บไซต์</string>
 	<string name="site_picker_title">เลือกเว็บไซต์</string>
 	<string name="my_site_btn_view_site">ดูเว็บไซต์</string>
@@ -256,13 +250,8 @@ Language: th
 	<string name="deselect_all">ไม่เลือกทั้งหมด</string>
 	<string name="sign_out_wpcom_confirm">ตัดการเชื่อมต่อบัญชีของคุณจะลบข้อมูลทั้งหมดของ @%s’s WordPress.com ออกจากอุปกรณ์นี้  รวมถึงฉบับร่างและการเปลี่ยนแปลงในเครื่องด้วย</string>
 	<string name="stats_generic_error">สถิติที่ต้องการไม่สามารถแสดงผลได้</string>
-	<string name="invalid_verification_code">โค้ดยืนยันไม่ถูกต้อง</string>
 	<string name="verification_code">โค้ดยืนยัน</string>
 	<string name="editor_toast_invalid_path">ที่อยู่ไฟล์ไม่ถูกต้อง</string>
-	<string name="two_step_footer_label">ใส่โค้ดจากแอพยืนยันตัวตนของคุณ</string>
-	<string name="verify">ยืนยัน</string>
-	<string name="two_step_sms_sent">ตรวจสอบข้อความของคุณสำหรับโค้ดยืนยัน</string>
-	<string name="two_step_footer_button">ส่งโค้ดผ่านทางข้อความ</string>
 	<string name="device">อุปกรณ์</string>
 	<string name="language">ภาษา</string>
 	<string name="media_details_label_file_type">ประเภทไฟล์</string>
@@ -431,7 +420,6 @@ Language: th
 	<string name="ssl_certificate_error">SSL certificate ใช้งานไม่ได้</string>
 	<string name="ssl_certificate_ask_trust">ถ้าคุณสามารถเชื่อมต่อกับเว็บนี้บ่อย ๆ โดยไม่มีปัญหา  ความผิดพลาดนี้อาจหมายถึงมีบางคนพยายามเปลี่ยนแปลงเว็บทำให้คุณไม่สามารถดำเนินการต่อได้  คุณต้องการที่จะเชื่อใจการรับรองนี้หรือไม่?</string>
 	<string name="could_not_remove_account">ไม่สามารถลบเว็บ</string>
-	<string name="nux_cannot_log_in">เราไม่สามารถนำคุณเข้าสู่ระบบ</string>
 	<string name="username_exists">ผู้ใช้ชื่อนั้นมีอยู่แล้ว</string>
 	<string name="out_of_memory">อุปกรณ์ใช้ความจำหมดแล้ว</string>
 	<string name="mnu_comment_unspam">ไม่ใช่สแปม</string>
@@ -439,7 +427,6 @@ Language: th
 	<string name="adding_cat_success">เพิ่มหมวดหมู่สำเร็จแล้ว</string>
 	<string name="cat_name_required">ต้องใส่ชื่อหมวดหมู่</string>
 	<string name="category_automatically_renamed">ชื่อหมวดหมู่ %1$s ใช้งานไม่ได้  มันถูกเปลี่ยนชื่อเป็น %2$s</string>
-	<string name="no_account">ไม่พบบัญชีเวิร์ดเพรส  ลองใส่ซักหนึ่งบัญชีแล้วลองใหม่อีกครั้ง</string>
 	<string name="blog_name_must_be_less_than_sixty_four_characters">ที่อยู่เว็บต้องสั้นกว่า 64 ตัวอักษร</string>
 	<string name="blog_name_contains_invalid_characters">ที่อยู่เว็บต้องไม่มีสัญลักษณ์ “_”</string>
 	<string name="blog_name_cant_be_used">คุณอาจจะไม่ใช้ที่อยู่เว็บนั้น</string>
@@ -459,9 +446,6 @@ Language: th
 	<string name="blog_name_reserved_but_may_be_available">เว็บนั้นถูกสงวนไว้ในเวลานี้ แต่อาจจะว่างภายในสองสามวันข้างหน้า </string>
 	<string name="username_or_password_incorrect">คุณกรอกชื่อผู้ใช้หรือรหัสผ่านไม่ถูกต้อง</string>
 	<string name="passcode_wrong_passcode">PIN ไม่ถูกต้อง</string>
-	<string name="invalid_password_message">รหัสผ่านต้องมีอย่างน้อย 4 ตัวอักษร</string>
-	<string name="invalid_username_too_short">ชื่อผู้ใช้ต้องยาวกว่า 4 ตัวอักษร</string>
-	<string name="invalid_username_too_long">ชื่อผู้ใช้ต้องสั้นกว่า 61 ตัวอักษร</string>
 	<string name="theme_auth_error_message">โปรดแน่ใจว่าคุณมีสิทธิการตั้งค่า themes</string>
 	<string name="comments_empty_list">ไม่มีความเห็น</string>
 	<string name="stats_empty_comments">ยังไม่มีความเห็น</string>
@@ -581,7 +565,6 @@ Language: th
 	<string name="share_url_post">แบ่งปันเรื่อง</string>
 	<string name="share_url_page">แบ่งปันหน้า</string>
 	<string name="share_link">แบ่งปันลิงก์</string>
-	<string name="creating_your_account">กำลังสร้างบัญชีของคุณ</string>
 	<string name="creating_your_site">กำลังสร้างเว็บของคุณ</string>
 	<string name="reader_empty_posts_in_tag_updating">กำลังดึงข้อมูลเรื่อง...</string>
 	<string name="comment_spammed">ความเห็นนี้ถูกบันทึกเป็นสแปม</string>
@@ -599,15 +582,10 @@ Language: th
 	<string name="reader_likes_you_and_one">คุณและอีกหนึ่งคนชอบสิ่งนี้</string>
 	<string name="select_date">เลือกวันที่</string>
 	<string name="account_two_step_auth_enabled">บัญชีนี้มีสองขั้นตอนในการเปิดใช้การยืนยัน  เยี่ยมชมการตั้งค่าความปลอดภัยของคุณบน WordPress.com และสร้างรหัสผ่านเฉพาะแอพพลิเคชั่น</string>
-	<string name="validating_user_data">ยืนยันข้อมูลผู้ใช้</string>
-	<string name="validating_site_data">ยืนยันข้อมูลเว็บไซต์</string>
 	<string name="reader_empty_followed_blogs_description">ไม่ต้องเป็นห่วง เพียงแตะที่ไอคอนที่ด้านบนขวาเพื่อเริ่มการค้นหา</string>
 	<string name="password_invalid">คุณต้องการรหัสผ่านที่ปลอดภัยมากขึ้น โปรดแน่ใจว่าได้ใช้ตัวอักษร 7 ตัวหรือมากกว่า  และผสมตัวอักษรตัวใหญ่ ตัวเล็ก ตัวเลข และสัญลักษณ์พิเศษในรหัสผ่าน</string>
 	<string name="nux_tap_continue">ดำเนินการต่อ</string>
 	<string name="nux_welcome_create_account">สร้างบัญชี</string>
-	<string name="nux_add_selfhosted_blog">เพิ่มเว็บที่ติดตั้งบนโฮสท์ของคุณ</string>
-	<string name="nux_oops_not_selfhosted_blog">เข้าสู่ระบบของ WordPress.com</string>
-	<string name="signing_in">กำลังเข้าสู่ระบบ...</string>
 	<string name="nux_tutorial_get_started_title">เริ่มใช้งาน</string>
 	<string name="username_invalid">ชื่อผู้ใช้ไม่ถูกต้อง</string>
 	<string name="reader_toast_err_view_image">ไม่สามารถดูรูปได้</string>
@@ -630,8 +608,6 @@ Language: th
 	<string name="empty_list_default">รายชื่อนี้ว่างเปล่า</string>
 	<string name="limit_reached">มาถึงขีดจำกัดแล้ว คุณสามารถลองใหม่อีกหนึ่งนาทีภายหลัง  การลองใหม่ก่อนหน้าหนึ่งนาทีจะเพิ่มเวลาที่คุณต้องรอก่อนพ้นการแบนให้ยาวไปอีก  ถ้าคุณคิดว่าสิ่งนี้เป็นความผิดพลาด  โปรดติดต่อฝ่ายช่วยเหลือ</string>
 	<string name="reader_hint_comment_on_comment">ตอบกลับไปที่ความเห็น...</string>
-	<string name="connecting_wpcom">เชื่อมต่อไปยัง WordPress.com</string>
-	<string name="button_next">ถัดไป</string>
 	<string name="themes">Themes</string>
 	<string name="stats_entry_country">ประเทศ</string>
 	<string name="stats_entry_posts_and_pages">หัวข้อ</string>

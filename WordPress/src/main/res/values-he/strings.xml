@@ -44,12 +44,6 @@ Language: he_IL
 	<string name="plugin_disable_progress_dialog_message">משבית את %s...</string>
 	<string name="plugin_btn_remove">הסרת התוסף</string>
 	<string name="plugin_configuration_failed">אירעה שגיאה בעת ההגדרה של התוסף: %s</string>
-	<string name="plugin_remove_failed">שגיאה בעת ההסרה של %s.</string>
-	<string name="plugin_removed_successfully">הסרת בהצלחה את %s.</string>
-	<string name="plugin_updated_failed_detailed">שגיאה בעת ההסרה של %1$s: %2$s</string>
-	<string name="plugin_updated_failed">שגיאה בעת ההסרה של %s.</string>
-	<string name="plugin_updated_successfully">העדכון של %s בוצע בהצלחה.</string>
-	<string name="plugin_available_version">גרסה %s זמינה כעת.</string>
 	<string name="plugin_detail_label_state_autoupdates">עדכונים אוטומטיים</string>
 	<string name="plugin_detail_label_state_active">פעיל</string>
 	<string name="plugin_autoupdates_off">עדכונים אוטומטיים מושבתים</string>
@@ -69,12 +63,6 @@ Language: he_IL
 	<string name="notification_logged_in">יש להקיש להמשך.</string>
 	<string name="notification_login_title_success">התחברת!</string>
 	<string name="login_error_generic_start">לא ניתן להתחיל בתהליך ההתחברות ל-Google.</string>
-	<string name="site_creating_success">הצלחה!</string>
-	<string name="site_creating_failed">מצטערים, לא הצלחנו ליצור את האתר שלך כראוי :(</string>
-	<string name="site_creating_set_theme">מגדיר את ערכת העיצוב...</string>
-	<string name="site_creating_set_tagline">מגדיר את התיאור הקצר...</string>
-	<string name="site_creating_fetching_info">אוסף את פרטי האתר...</string>
-	<string name="site_creating_label">מכין את האתר שלך...</string>
 	<string name="login_empty_password">יש להזין סיסמה</string>
 	<string name="email_not_registered_wpcom">אופס, כתובת האימייל הזו לא רשומה ב-WordPress.com.\nהאם ניסית להתחבר לאתר באחסון עצמי? יש להתחבר באמצעות הקישור בתחתית המסך.</string>
 	<string name="login_text_otp_another">שליחת קוד נוסף בהודעת טקסט במקום.</string>
@@ -113,7 +101,6 @@ Language: he_IL
 	<string name="login_error_email_not_found">חשבון ה-Google‏ \'%s\' לא תואם לחשבון קיים ב-WordPress.com.‏</string>
 	<string name="login_error_button">סגור</string>
 	<string name="login_google_button_suffix">התחברות עם Google.</string>
-	<string name="login_google_button_prefix">לחלופין, אפשר</string>
 	<string name="enter_wpcom_password_google">כדי להמשיך עם חשבון Google, יש לספק סיסמת WordPress.com תואמת. נבקש את הנתונים האלו פעם אחת בלבד.</string>
 	<string name="error_generic_network">אירעה שגיאת רשת. יש לבדוק את החיבור ולנסות שוב.</string>
 	<string name="post_settings_remove_featured_image">הסרת התמונה המרכזית</string>
@@ -237,8 +224,6 @@ Language: he_IL
 	<string name="login_text_otp">שלחו לי הודעת טקסט עם קוד במקום.</string>
 	<string name="enter_verification_code">כמעט סיימת! יש להזין את קוד האימות מאפליקציית האימות.</string>
 	<string name="enter_the_address_of_your_wordpress_site">יש להזין את הכתובת של האתר שלך ב-WordPress</string>
-	<string name="enter_username_instead">התחברות באמצעות שם המשתמש במקום.</string>
-	<string name="enter_site_address_instead">התחברות לאתר שלך באמצעות הזנת כתובת האתר במקום.</string>
 	<string name="open_mail">פתיחת דואר</string>
 	<string name="enter_email_wordpress_com">התחברות ל-WordPress.com באמצעות כתובת אימייל כדי לנהל את האתרים שלך ב-WordPress.</string>
 	<string name="next">הבא</string>
@@ -247,7 +232,6 @@ Language: he_IL
 	<string name="login_promo_text_anytime">אפשר לבדוק את העדכונים באתרים המועדפים עליך ולהצטרף לשיחה בכל מקום ובכל זמן.</string>
 	<string name="login_promo_text_realtime">ניתן לראות את הפעולות של קוראים מכל העולם באתר שלך - בזמן אמת.</string>
 	<string name="login_promo_text_onthego">שליחה לפרסום כשנמצאים בפארק. כתיבת בלוג כשנוסעים באוטובוס. כתיבת תגובה כשיושבים בבית קפה. השירות של WordPress אתך בכל מקום.</string>
-	<string name="create_wordpress_site">יצירת אתר ב-WordPress</string>
 	<string name="email_not_found">לא מצאנו משתמש של WordPress.com עם כתובת האימייל הזו</string>
 	<string name="image_optimization_promo_desc">מיטוב התמונות מכווץ כעת תמונות להעלאה מהירה יותר.\n\nאפשר לשנות את האפשרות הזו בכל עת דרך הגדרות האתר.</string>
 	<string name="image_optimization_promo_title">להפעיל את מיטוב התמונות?</string>
@@ -445,12 +429,9 @@ Language: he_IL
 	<string name="error_unknown_post_type">סוג פוסט לא מזוהה</string>
 	<string name="error_fetch_site_after_creation">האתר כבר נוצר, ייתכן שיידרש ריענון של האתרים שלך בתפריט בחירת האתרים.</string>
 	<string name="submit_for_review">שלח</string>
-	<string name="tell_me_more">אני רוצה לראות מידע נוסף</string>
 	<string name="duplicate_site_detected">נמצא אתר כפול.</string>
 	<string name="cannot_add_duplicate_site">אתר זה כבר קיים באפליקציה, אין אפשרות להוסיף אותו.</string>
-	<string name="already_logged_in_wpcom_same_username">כבר התחברת לחשבון שלך ב-WordPress.com. האתר שלך אמור להופיע בתפריט בחירת האתרים. יש לוודא שהוא אינו מוגדר כ\'מוסתר\'.</string>
 	<string name="already_logged_in_wpcom">כבר התחברת לחשבון שלך ב-WordPress.com. אין באפשרותך להוסיף אתר WordPress.com שקשור לחשבון אחר.</string>
-	<string name="checking_username">בדיקת שמות משתמש</string>
 	<string name="jetpack_different_com_account">אין תמיכה באתרי Jetpack ששייכים לחשבונות WordPress.com שונים</string>
 	<string name="jetpack_use_com_account">כדי להוסיף אתר Jetpack שברשותך, יש להתחבר לחשבון WordPress.com שבאמצעותו בוצע החיבור ל-Jetpack.</string>
 	<string name="error_media_load">לא ניתן לטעון את פריטי המדיה</string>
@@ -484,7 +465,6 @@ Language: he_IL
 	<string name="reader_photo_by">צולם על ידי %s</string>
 	<string name="reader_label_visit">ניתן לבקר בכתובת</string>
 	<string name="pending_draft_more">יצרת טיוטה ל-%d פוסטים, אבל מעולם לא פרסמת אותם. יש להקיש כדי לבדוק.</string>
-	<string name="invalid_verification_code_format">חייב להיות מספר בן שש ספרות</string>
 	<string name="confirm_discard_changes">האם לבטל שינויים שלא נשמרו?</string>
 	<string name="swipe_for_more">יש להחליק לקבלת מידע נוסף</string>
 	<string name="reader_err_get_post_not_authorized_signin_fallback">אין לך הרשאה להציג פוסט זה. יש לנסות להתחבר ל-WordPress.com תחילה או להשתמש בכפתור הפעולה העליון כדי לפתוח דפדפן במקום.</string>
@@ -593,7 +573,6 @@ Language: he_IL
 	<string name="my_site_header_external">חיצוני</string>
 	<string name="send_link">שלח קישור</string>
 	<string name="invite_people">הזמנת אנשים</string>
-	<string name="signup_succeed_signin_failed">החשבון שלך נוצר, אך אירעה שגיאה כשהכנסנו אותך. יש לנסות להיכנס עם שם המשתמש והסיסמה החדשים שיצרת.</string>
 	<string name="label_clear_search_history">ניקוי היסטוריית חיפוש</string>
 	<string name="dlg_confirm_clear_search_history">לנקות היסטוריית חיפוש?</string>
 	<string name="reader_empty_posts_in_search_description">לא נמצאו פוסטים עבור %s בשפה שבחרת</string>
@@ -685,8 +664,6 @@ Language: he_IL
 	<string name="site_settings_advanced_header">אפשרויות מתקדמות</string>
 	<string name="comments_empty_list_filtered_pending">אין תגובות שממתינות לאישור</string>
 	<string name="comments_empty_list_filtered_approved">אין תגובות מאושרות</string>
-	<string name="button_done">בוצע</string>
-	<string name="button_skip">דילוג</string>
 	<string name="site_timeout_error">לא ניתן להתחבר ל-WordPress עקב שגיאה - תם הזמן הקצוב.</string>
 	<string name="xmlrpc_malformed_response_error">לא ניתן להתחבר. התקנת WordPress הגיבה עם מסמך XML-RPC לא תקף.</string>
 	<string name="xmlrpc_missing_method_error">לא ניתן להתחבר. שיטות XML-RPC נדרשות חסרות בשרת.</string>
@@ -880,8 +857,6 @@ Language: he_IL
 	<string name="reader_err_get_post_not_found">הפוסט כבר לא קיים</string>
 	<string name="reader_err_get_post_not_authorized">אינך רשאי לראות פוסט זה</string>
 	<string name="reader_err_get_post_generic">לא ניתן לאחזר פוסט זה</string>
-	<string name="blog_name_no_spaced_allowed">כתובת האתר לא יכולה להכיל רווחים</string>
-	<string name="invalid_username_no_spaces">שם המשתמש לא יכול להכיל רווחים</string>
 	<string name="reader_empty_followed_blogs_no_recent_posts_description">האתרים אחריהם אתה עוקב לא פרסמו דבר לאחרונה</string>
 	<string name="reader_empty_followed_blogs_no_recent_posts_title">אין פוסטים אחרונים</string>
 	<string name="edit_media">עריכת מדיה</string>
@@ -996,9 +971,6 @@ Language: he_IL
 	<string name="button_view">הצגה</string>
 	<string name="button_edit">עריכה</string>
 	<string name="button_publish">פרסום</string>
-	<string name="my_site_no_sites_view_subtitle">האם תרצה להוסיף אחד?</string>
-	<string name="my_site_no_sites_view_title">עדיין אין לך אתרי וורדפרס.</string>
-	<string name="my_site_no_sites_view_drake">אילוסטרציה</string>
 	<string name="reader_toast_err_follow_blog_not_authorized">אינך מורשה להיכנס לבלוג</string>
 	<string name="reader_toast_err_follow_blog_not_found">הבלוג לא נמצא</string>
 	<string name="undo">ביטול פעולה אחרונה</string>
@@ -1025,7 +997,6 @@ Language: he_IL
 	<string name="site_picker_create_dotcom">יצירת אתר וורדפרס.קום</string>
 	<string name="site_picker_edit_visibility">הצגת/הסתרת אתרים</string>
 	<string name="site_picker_add_self_hosted">הוספת אתר באחסון עצמי</string>
-	<string name="site_picker_add_site">הוספת אתר</string>
 	<string name="site_picker_title">בחירת אתר</string>
 	<string name="my_site_btn_switch_site">החלפת אתר</string>
 	<string name="my_site_btn_view_admin">הצגת מנהל מערכת</string>
@@ -1047,11 +1018,6 @@ Language: he_IL
 	<string name="stats_generic_error">לא ניתן לטעון סטטוס נדרש</string>
 	<string name="editor_toast_invalid_path">נתיב קובץ שגוי</string>
 	<string name="verification_code">קוד אימות</string>
-	<string name="invalid_verification_code">קוד אימות שגוי</string>
-	<string name="verify">אימות</string>
-	<string name="two_step_footer_label">יש להזין את הקוד מאפליקציית האימות.</string>
-	<string name="two_step_footer_button">שליחת קוד באמצעות הודעת טקסט</string>
-	<string name="two_step_sms_sent">יש לבדוק הודעות טקסט לקבלת קוד אימות.</string>
 	<string name="auth_required">יש להתחבר שוב כדי המשיך.</string>
 	<string name="language">שפה</string>
 	<string name="device">מכשיר</string>
@@ -1236,7 +1202,6 @@ Language: he_IL
 	<string name="adding_cat_success">הקטגוריה הוספה בהצלחה</string>
 	<string name="cat_name_required">שם הקטגוריה הוא שדה חובה</string>
 	<string name="category_automatically_renamed">שם הקטגוריה %1$s אינו תקף. הוא שונה ל-%2$s.</string>
-	<string name="no_account">לא נמצא חשבון ב-WordPress, הוסף חשבון ונסה שנית</string>
 	<string name="sdcard_message">יש לטעון כרטיס SD כדי להעלות קבצים</string>
 	<string name="stats_empty_comments">עדיין אין תגובות</string>
 	<string name="stats_bar_graph_empty">הנתונים הסטטיסטיים לא זמינים</string>
@@ -1254,9 +1219,6 @@ Language: he_IL
 	<string name="error_downloading_image">שגיאה בזמן הורדת תמונה</string>
 	<string name="passcode_wrong_passcode">PIN שגוי</string>
 	<string name="invalid_email_message">כתובת האימייל שלך לא תקפה</string>
-	<string name="invalid_password_message">הסיסמה חייבת להכיל לפחות 4 תווים</string>
-	<string name="invalid_username_too_short">שם המשתמש חייב להכיל מעל 4 תווים</string>
-	<string name="invalid_username_too_long">שם המשתמש חייב להכיל פחות מ-61 תווים</string>
 	<string name="username_only_lowercase_letters_and_numbers">שם משתמש יכול להכיל רק אותיות לא רישיות (a-z) וספרות</string>
 	<string name="username_required">הקלד שם משתמש</string>
 	<string name="username_not_allowed">שם המשתמש לא מותר</string>
@@ -1279,7 +1241,6 @@ Language: he_IL
 	<string name="blog_name_reserved">אתר זה שמור</string>
 	<string name="blog_name_reserved_but_may_be_available">אתר זה שמור כעת אך עשוי להיות זמין בעוד כמה ימים</string>
 	<string name="username_or_password_incorrect">שם המשתמש או הסיסמה שהקלדת שגויים</string>
-	<string name="nux_cannot_log_in">איננו יכולים לחבר אותך</string>
 	<string name="invalid_url_message">ודא שכתובת האתר שהוזנה תקפה</string>
 	<string name="error_deleting_post">אירעה שגיאה בזמן מחיקת הפוסט</string>
 	<string name="wordpress_blog">אתר ב-WordPress</string>
@@ -1379,7 +1340,6 @@ Language: he_IL
 	<string name="share_link">קישור לשיתוף</string>
 	<string name="deleting_page">מוחק דף</string>
 	<string name="deleting_post">מוחק רשומה</string>
-	<string name="creating_your_account">יוצר את החשבון שלך</string>
 	<string name="creating_your_site">יוצר את האתר שלך</string>
 	<string name="reader_empty_posts_in_tag_updating">מביא רשומות...</string>
 	<string name="cant_share_no_visible_blog">אינך יכול לשתף ב-WordPress ללא אתר גלוי</string>
@@ -1396,16 +1356,11 @@ Language: he_IL
 	<string name="pick_photo">בחר תמונה</string>
 	<string name="pick_video">בחר וידאו</string>
 	<string name="reader_toast_err_get_post">לא ניתן לאחזר רשומה זו</string>
-	<string name="validating_user_data">מאמת נתוני משתמש</string>
-	<string name="validating_site_data">מאמת נתוני אתר</string>
 	<string name="account_two_step_auth_enabled">בחשבון זה מופעל אימות דו-שלבי. עיין בהגדרות האבטחה בוורדפרס.קום וצור סיסמה ספציפית ליישום.</string>
 	<string name="reader_empty_followed_blogs_description">אך אין צורך לדאוג, יש להקיש מימין כדי להתחיל לשוטט!</string>
 	<string name="password_invalid">נחוצה לך סיסמה בטוחה יותר. הקפד להשתמש ב-7 תווים או יותר, שלב אותיות רישיות ורגילות, מספרים או תווים מיוחדים.</string>
 	<string name="nux_tap_continue">המשך</string>
 	<string name="nux_welcome_create_account">צור חשבון</string>
-	<string name="nux_add_selfhosted_blog">הוסף אתר באחסון עצמי</string>
-	<string name="signing_in">מתחבר...</string>
-	<string name="nux_oops_not_selfhosted_blog">התחבר לוורדפרס.קום</string>
 	<string name="media_add_popup_title">הוסף לספריית המדיה</string>
 	<string name="empty_list_default">רשימה זו ריקה</string>
 	<string name="reader_untitled_post">(ללא כותרת)</string>
@@ -1428,8 +1383,6 @@ Language: he_IL
 	<string name="nux_tutorial_get_started_title">צא לדרך!</string>
 	<string name="reader_empty_followed_tags">אין מעקב אחר שום תגית</string>
 	<string name="create_account_wpcom">יצירת חשבון וורדפרס.קום</string>
-	<string name="connecting_wpcom">מתחבר לוורדפרס.קום</string>
-	<string name="button_next">לשלב הבא</string>
 	<string name="themes">ערכות עיצוב</string>
 	<string name="stats_view_tags_and_categories">תגים וקטגוריות</string>
 	<string name="media_gallery_type">סוג</string>

@@ -71,7 +71,6 @@ Language: gd_GB
 	<string name="site_picker_create_dotcom">Cruthaich làrach WordPress.com</string>
 	<string name="site_picker_edit_visibility">Seall/falaich làraichean</string>
 	<string name="site_picker_add_self_hosted">Cuir làrach air fèin-òstaireachd ris</string>
-	<string name="site_picker_add_site">Cuir làrach ris</string>
 	<string name="my_site_btn_view_admin">Seall an rianachd</string>
 	<string name="my_site_btn_switch_site">Leum gu làrach eile</string>
 	<string name="my_site_btn_view_site">Seall an làrach agam</string>
@@ -89,11 +88,6 @@ Language: gd_GB
 	<string name="show">Seall</string>
 	<string name="deselect_all">Dì-thagh na h-uile</string>
 	<string name="stats_generic_error">Cha b’ urrainn dhuinn na stats a dh’iarr thu a luchdadh</string>
-	<string name="two_step_sms_sent">Thoir sùil air na teachdaireachdan teacsa agad airson a’ chòd dearbhaidh.</string>
-	<string name="two_step_footer_button">Cuir an còd slighe teachdaireachd teacsa</string>
-	<string name="two_step_footer_label">Cuir a-steach on aplacaid dearbhaidh agad.</string>
-	<string name="verify">Dearbh</string>
-	<string name="invalid_verification_code">Còd dearbhadh mì-dhligheach</string>
 	<string name="verification_code">Còd dearbhaidh</string>
 	<string name="editor_toast_invalid_path">Tha slighe an fhaidhle mì-dhligheach</string>
 	<string name="language">Cànan</string>
@@ -259,7 +253,6 @@ Language: gd_GB
 	<string name="ssl_certificate_error">Teisteanas SSL mì-dhligheach</string>
 	<string name="forgot_password">Na chaill thu am facal-faire agad?</string>
 	<string name="help">Cobhair</string>
-	<string name="nux_cannot_log_in">Chan urrainn dhuinn do chlàradh a-steach</string>
 	<string name="username_or_password_incorrect">Tha an t-ainm-cleachdaiche no am facal-faire a chuir thu a-steach cearr</string>
 	<string name="blog_name_reserved_but_may_be_available">Tha an làrach sin air a ghlèidheadh ach faodaidh gum bi e ri fhaighinn ann am beagan làithean</string>
 	<string name="blog_name_reserved">Tha an làrach seo glèidhte aig cuideigin eile</string>
@@ -280,11 +273,8 @@ Language: gd_GB
 	<string name="username_must_be_at_least_four_characters">Feumaidh ainm cleachdaiche a bhith 4 caractaran a dh\'fhaid air a’ char as lugha</string>
 	<string name="username_contains_invalid_characters">Chan fhaod “_” a bhith ann an ainm-cleachdaiche</string>
 	<string name="username_not_allowed">Chan eil an t-ainm-cleachdaiche seo ceadaichte</string>
-	<string name="invalid_username_too_long">Feumaidh ainm-cleachdaiche a bhith nas giorra na 61 caractar</string>
 	<string name="username_only_lowercase_letters_and_numbers">Chan fhaod ach litrichean beaga (a-z) agus àireamhan a bhith ann an ainm-cleachdaiche</string>
 	<string name="username_required">Cuir a-steach ainm-cleachdaiche</string>
-	<string name="invalid_username_too_short">Feumaidh ainm-cleachdaiche a bhith nas fhaide na 4 caractaran</string>
-	<string name="invalid_password_message">Feumaidh facal-faire a bhith 4 caractaran a dh’fhaid air a’ char as lugha</string>
 	<string name="invalid_email_message">Chan eil am post-d agad dligheach</string>
 	<string name="passcode_wrong_passcode">PIN cearr</string>
 	<string name="error_downloading_image">Mearachd le luchdadh a-nuas an deilbh</string>
@@ -303,7 +293,6 @@ Language: gd_GB
 	<string name="stats_bar_graph_empty">Chan eil stats ri fhaighinn</string>
 	<string name="sdcard_message">Feumaidh tu cairt SD a chaidh a mhunntachadh mus urrainn dhut meadhanan a luchdadh suas</string>
 	<string name="category_automatically_renamed">Chan e ainm dligheach airson roinn-seòrsa a tha ann an %1$s. Chaidh %2$s a chur air an àite sin.</string>
-	<string name="no_account">Cha deach cunntas WordPress a lorg, cuir cunntas ris is feuch ris a-rithist</string>
 	<string name="cat_name_required">Tha feum air raon ainm na roinn-seòrsa</string>
 	<string name="adding_cat_success">Chaidh an roinn-seòrsa a chur ris</string>
 	<string name="adding_cat_failed">Dh’fhàillig cur ris na roinn-seòrsa</string>
@@ -411,7 +400,6 @@ Language: gd_GB
 	<string name="deleting_post">A’ sguabadh às a’ phuist</string>
 	<string name="share_url_post">Co-roinn am post</string>
 	<string name="share_url_page">Co-roinn an duilleag</string>
-	<string name="creating_your_account">A\' cruthachadh a\' chunntais agad</string>
 	<string name="creating_your_site">A\' cruthachadh na làraich agad</string>
 	<string name="reader_empty_posts_in_tag_updating">A\' faighinn nam post...</string>
 	<string name="reader_likes_you_and_multi">Thuirt thusa agus %,d eile gur toigh leibh seo</string>
@@ -429,13 +417,10 @@ Language: gd_GB
 	<string name="account_two_step_auth_enabled">Tha dearbhadh dà-cheumnach an sàs sa chunntas seo. Tadhail air na roghainnean tèarainteachd agad air WordPress.com agus gin facal-faire gu sònraichte dhan aplacaid.</string>
 	<string name="pick_video">Tagh video</string>
 	<string name="reader_toast_err_get_post">Chan urrainn dhuinn am post seo fhaighinn dhut</string>
-	<string name="validating_user_data">A\' dearbhadh dàta a\' chleachdaiche</string>
-	<string name="validating_site_data">A\' dearbhadh dàta na làraich</string>
 	<string name="reader_empty_followed_blogs_description">Ach na gabh dragh, cha leig thu leas ach gnogag a thoirt air a ìomhaigheag gu h-àrd air an taobh deas gus an rùrachadh!</string>
 	<string name="password_invalid">Feumaidh tu facal-faire nas tèarainte. Dèan cinnteach gun cleachd thu co-dhiù 7 caractaran, measgachadh de litrichean mòra \'s beaga, àireamhan is caractaran sònraichte.</string>
 	<string name="nux_tap_continue">Air adhart</string>
 	<string name="nux_welcome_create_account">Cruthaich cunntas</string>
-	<string name="nux_add_selfhosted_blog">Cuir làrach air fèin-òstaireachd ris</string>
 	<string name="media_add_popup_title">Cuir ri leabharlann nam meadhanan</string>
 	<string name="reader_untitled_post">(Gun tiotal)</string>
 	<string name="reader_btn_share">Co-roinn</string>
@@ -458,7 +443,6 @@ Language: gd_GB
 	<string name="reader_empty_followed_tags">Chan eil thu a’ leantainn taga sam bith</string>
 	<string name="empty_list_default">Tha an liosta seo falamh</string>
 	<string name="reader_hint_comment_on_comment">Freagair am beachd…</string>
-	<string name="button_next">Air adhart</string>
 	<string name="themes">Ùrlaran</string>
 	<string name="media_gallery_type">Seòrsa</string>
 	<string name="media_gallery_type_squares">Ceàrnagan</string>

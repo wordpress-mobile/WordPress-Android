@@ -44,7 +44,6 @@ Language: zh_CN
 	<string name="login_error_email_not_found">Google 帐户「%s」未与 WordPress.com 上的账户绑定。</string>
 	<string name="login_error_button">关闭</string>
 	<string name="login_google_button_suffix">使用 Google 登录。</string>
-	<string name="login_google_button_prefix">或者您可以</string>
 	<string name="enter_wpcom_password_google">要继续使用此 Google 帐户，请提供匹配的 WordPress.com 密码。此要求仅会出现一次。</string>
 	<string name="error_generic_network">发生网络错误。请检查您的连接，然后再试一次。</string>
 	<string name="post_settings_remove_featured_image">删除推荐图片</string>
@@ -170,8 +169,6 @@ Language: zh_CN
 	<string name="login_text_otp">通过短信向我发送验证码。</string>
 	<string name="enter_verification_code">马上就好！请输入验证器应用中的验证码。</string>
 	<string name="enter_the_address_of_your_wordpress_site">输入您 WordPress 站点的地址</string>
-	<string name="enter_username_instead">通过用户名登录。</string>
-	<string name="enter_site_address_instead">通过输入您的站点地址来登录站点。</string>
 	<string name="open_mail">打开邮箱</string>
 	<string name="next">下一步</string>
 	<string name="enter_email_wordpress_com">使用电子邮件地址登录 WordPress.com 以便管理您的所有 WordPress 站点。</string>
@@ -180,7 +177,6 @@ Language: zh_CN
 	<string name="login_promo_text_anytime">密切关注您喜爱的站点，并随时随地加入讨论。</string>
 	<string name="login_promo_text_realtime">实时看到世界各地的读者来阅读您的站点以及互动情况。</string>
 	<string name="login_promo_text_onthego">在公园里发布文章，在公共汽车上写博客，在咖啡馆中发表评论，WordPress 随时随地陪着您。</string>
-	<string name="create_wordpress_site">创建 WordPress 站点</string>
 	<string name="email_not_found">找不到使用此电子邮件地址的 WordPress.com 用户</string>
 	<string name="image_optimization_promo_desc">图片优化可缩小图片以便更快地上传。\n\n您可以随时在站点设置中更改此选项。</string>
 	<string name="image_optimization_promo_title">打开图片优化？</string>
@@ -378,12 +374,9 @@ Language: zh_CN
 	<string name="error_unknown_post_type">未知文章格式</string>
 	<string name="error_fetch_site_after_creation">站点已创建，您可能需要在站点选择器中刷新您的站点。</string>
 	<string name="submit_for_review">提交</string>
-	<string name="tell_me_more">介绍更多</string>
 	<string name="duplicate_site_detected">检测到重复的站点。</string>
 	<string name="cannot_add_duplicate_site">应用中已存在此站点，无法重复添加。</string>
-	<string name="already_logged_in_wpcom_same_username">您已登录 WordPress.com 帐户。您的站点会出现在站点选择器中（确保未将其隐藏）。</string>
 	<string name="already_logged_in_wpcom">您已登录 WordPress.com 帐户，不能添加被其他帐户绑定的 WordPress.com 站点。</string>
-	<string name="checking_username">正在检查用户名</string>
 	<string name="jetpack_different_com_account">不支持属于不同 WordPress.com 帐户的 Jetpack 站点</string>
 	<string name="jetpack_use_com_account">要添加 Jetpack 站点，请登录您用于连接 Jetpack 的 WordPress.com 帐户。</string>
 	<string name="error_media_load">无法加载媒体</string>
@@ -417,7 +410,6 @@ Language: zh_CN
 	<string name="reader_photo_by">照片拍摄者：%s</string>
 	<string name="reader_label_visit">访问</string>
 	<string name="pending_draft_more">您有 %d 篇草稿尚未发布。点击查看。</string>
-	<string name="invalid_verification_code_format">必须由 6 位数字组成</string>
 	<string name="confirm_discard_changes">放弃未保存的更改？</string>
 	<string name="swipe_for_more">滑动以查看更多内容</string>
 	<string name="reader_err_get_post_not_authorized_signin_fallback">您未被授权查看这篇文章。请尝试先登录 WordPress.com，或可以使用顶部的操作按钮打开浏览器。</string>
@@ -526,7 +518,6 @@ Language: zh_CN
 	<string name="send_link">发送链接</string>
 	<string name="my_site_header_external">外部</string>
 	<string name="invite_people">邀请用户</string>
-	<string name="signup_succeed_signin_failed">您的账号已创建，但尝试登录时发生错误。\n        请尝试用刚创建的用户名与密码手动登录。</string>
 	<string name="label_clear_search_history">清除搜索历史记录</string>
 	<string name="dlg_confirm_clear_search_history">清除搜索历史记录？</string>
 	<string name="reader_empty_posts_in_search_description">未找到与您的语言对应的符合「%s」搜索条件的文章</string>
@@ -618,8 +609,6 @@ Language: zh_CN
 	<string name="site_settings_advanced_header">高级</string>
 	<string name="comments_empty_list_filtered_pending">无待审评论</string>
 	<string name="comments_empty_list_filtered_approved">无已批准的评论</string>
-	<string name="button_done">完成</string>
-	<string name="button_skip">跳过</string>
 	<string name="site_timeout_error">出现超时错误，无法连接到 WordPress 站点。</string>
 	<string name="xmlrpc_malformed_response_error">无法连接。WordPress 安装响应并返回了无效的 XML-RPC 文档。</string>
 	<string name="xmlrpc_missing_method_error">无法连接。服务器上没有所需的 XML-RPC 方法。</string>
@@ -813,8 +802,6 @@ Language: zh_CN
 	<string name="reader_err_get_post_not_found">此文章不再存在</string>
 	<string name="reader_err_get_post_not_authorized">您不具备查看此文章的权限</string>
 	<string name="reader_err_get_post_generic">无法检索这篇文章</string>
-	<string name="blog_name_no_spaced_allowed">站点地址中不能包含空格</string>
-	<string name="invalid_username_no_spaces">用户名中不能包含空格</string>
 	<string name="reader_empty_followed_blogs_no_recent_posts_description">您关注的站点近期未发布任何内容</string>
 	<string name="reader_empty_followed_blogs_no_recent_posts_title">无近期文章</string>
 	<string name="edit_media">编辑媒体</string>
@@ -929,9 +916,6 @@ Language: zh_CN
 	<string name="button_view">查看</string>
 	<string name="button_edit">编辑</string>
 	<string name="button_publish">发布</string>
-	<string name="my_site_no_sites_view_subtitle">想要添加一个吗？</string>
-	<string name="my_site_no_sites_view_title">您目前没有任何 WordPress 站点。</string>
-	<string name="my_site_no_sites_view_drake">插图</string>
 	<string name="reader_toast_err_follow_blog_not_authorized">您无权访问此博客。</string>
 	<string name="reader_toast_err_follow_blog_not_found">找不到此博客</string>
 	<string name="undo">撤消</string>
@@ -958,7 +942,6 @@ Language: zh_CN
 	<string name="site_picker_create_dotcom">创建 WordPress.com 站点</string>
 	<string name="site_picker_add_self_hosted">添加自托管站点</string>
 	<string name="site_picker_edit_visibility">显示/隐藏站点</string>
-	<string name="site_picker_add_site">添加站点</string>
 	<string name="my_site_btn_switch_site">转换站点</string>
 	<string name="site_picker_title">选择站点</string>
 	<string name="my_site_btn_view_admin">查看管理员</string>
@@ -982,11 +965,6 @@ Language: zh_CN
 	<string name="language">语言</string>
 	<string name="editor_toast_invalid_path">文件路径无效</string>
 	<string name="verification_code">验证码</string>
-	<string name="invalid_verification_code">验证码无效</string>
-	<string name="verify">验证</string>
-	<string name="two_step_footer_label">输入您验证器应用程中的代码。</string>
-	<string name="two_step_footer_button">通过短信发送代码</string>
-	<string name="two_step_sms_sent">查收短信查看验证码。</string>
 	<string name="media_details_label_file_name">文件名</string>
 	<string name="media_details_label_file_type">文件类型</string>
 	<string name="auth_required">再次登录以继续操作。</string>
@@ -1167,7 +1145,6 @@ Language: zh_CN
 	<string name="adding_cat_failed">添加分类失败</string>
 	<string name="adding_cat_success">分类添加成功</string>
 	<string name="category_automatically_renamed">\"分类名称 %1$s 不可用. 它已经被重命名为 %2$s.\"</string>
-	<string name="no_account">未找到 WordPress 账号，请添加一个账号后再试</string>
 	<string name="sdcard_message">上传媒体需要已装载的 SD 卡</string>
 	<string name="reply_failed">回复失败</string>
 	<string name="notifications_empty_list">没有通知</string>
@@ -1182,9 +1159,6 @@ Language: zh_CN
 	<string name="error_load_comment">无法加载评论</string>
 	<string name="passcode_wrong_passcode">PIN错误</string>
 	<string name="invalid_email_message">你的邮件地址不可用</string>
-	<string name="invalid_password_message">密码至少4个字符</string>
-	<string name="invalid_username_too_short">用户名必须大于4个字符</string>
-	<string name="invalid_username_too_long">用户名必须小于61个字符</string>
 	<string name="username_only_lowercase_letters_and_numbers">用户名只能包含小写字母(a-z) 和数字</string>
 	<string name="username_required">输入用户名</string>
 	<string name="username_not_allowed">用户名不允许</string>
@@ -1204,7 +1178,6 @@ Language: zh_CN
 	<string name="blog_name_reserved">这个网址是保留的</string>
 	<string name="blog_name_reserved_but_may_be_available">这个网址目前是保留的但可能在几天后可用</string>
 	<string name="username_or_password_incorrect">你输入的用户名或密码错误</string>
-	<string name="nux_cannot_log_in">无法登陆</string>
 	<string name="stats_empty_comments">现在没有评论</string>
 	<string name="stats_bar_graph_empty">还没有评论</string>
 	<string name="username_reserved_but_may_be_available">这个用户名现在不可用</string>
@@ -1311,7 +1284,6 @@ Language: zh_CN
 	<string name="share_url_page">分享页面</string>
 	<string name="share_link">分享链接</string>
 	<string name="creating_your_site">正在创建您的网站</string>
-	<string name="creating_your_account">正在创建您的账户</string>
 	<string name="reader_empty_posts_in_tag_updating">正在获取文章…</string>
 	<string name="reader_likes_you_and_multi">你和 %,d 人喜欢</string>
 	<string name="reader_likes_multi">%,d 人喜欢</string>
@@ -1328,15 +1300,10 @@ Language: zh_CN
 	<string name="account_two_step_auth_enabled">此帐户已启用两步认证。访问您WordPress.com上的安全设置生成一个特定的密码。</string>
 	<string name="pick_video">选择视频</string>
 	<string name="reader_toast_err_get_post">无法检索这篇文章</string>
-	<string name="validating_user_data">验证用户数据</string>
-	<string name="validating_site_data">验证站点数据</string>
 	<string name="reader_empty_followed_blogs_description">别担心，点击右上角的图标即可开始浏览！</string>
 	<string name="password_invalid">你需要一个更安全的密码。确定使用7个或更多字符，混合大、小写字母、数字或特殊字符.</string>
 	<string name="nux_tap_continue">继续</string>
 	<string name="nux_welcome_create_account">创建账户</string>
-	<string name="nux_add_selfhosted_blog">添加一个自己的站点</string>
-	<string name="nux_oops_not_selfhosted_blog">登录 WordPress.com</string>
-	<string name="signing_in">正在登录…</string>
 	<string name="reader_untitled_post">(未命名)</string>
 	<string name="reader_label_removed_tag">已移除 %s</string>
 	<string name="reader_label_added_tag">已添加 %s</string>
@@ -1355,9 +1322,7 @@ Language: zh_CN
 	<string name="reader_empty_followed_tags">您没有关注任何标签</string>
 	<string name="reader_btn_unfollow">关注中</string>
 	<string name="reader_hint_comment_on_comment">回复评论</string>
-	<string name="button_next">下一步</string>
 	<string name="create_account_wpcom">创建 WordPress.com 帐号</string>
-	<string name="connecting_wpcom">正在登录 WordPress.com</string>
 	<string name="reader_toast_err_view_image">无法查看图片</string>
 	<string name="reader_toast_err_share_intent">无法分享</string>
 	<string name="reader_btn_share">分享</string>

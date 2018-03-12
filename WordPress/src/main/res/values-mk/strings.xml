@@ -155,11 +155,8 @@ Language: mk
 	<string name="theme_set_failed">Неможе да промени тема</string>
 	<string name="theme_auth_error_message">Осигурете се дека имате привилегија за поставување на теми</string>
 	<string name="invalid_email_message">Вашата е-пошта е невалидна</string>
-	<string name="invalid_password_message">Лозинка мора да содржи барем 4 знаци</string>
-	<string name="invalid_username_too_short">Корисничкото име мора да содржи барем 4 знаци</string>
 	<string name="adding_cat_failed">Додавањето категорија е неуспешно</string>
 	<string name="cat_name_required">Полето со името на категоријата е задолжително</string>
-	<string name="invalid_username_too_long">Корисничкотое е мора да содржи помалку од 61 знак</string>
 	<string name="email_invalid">Воведи валидна е-поштта</string>
 	<string name="email_not_allowed">Оваа е-пошта не е дозволена</string>
 	<string name="username_exists">Корсиничкото име веќе постои</string>
@@ -168,7 +165,6 @@ Language: mk
 	<string name="category_automatically_renamed">Името на категоријата %1$s не е валидно. Преименувано е во %2$s.</string>
 	<string name="blog_name_not_allowed">Веб-адресата не е дозволена</string>
 	<string name="blog_name_must_be_at_least_four_characters">Веб адресата мора да содржи барем 4 знака</string>
-	<string name="no_account">Не е пронајдена WordPress корисничка сметка, додади корисничка сметка и обиди се повторно</string>
 	<string name="blog_name_must_be_less_than_sixty_four_characters">Веб адреста треба да има помалку од 64 знака</string>
 	<string name="blog_name_contains_invalid_characters">Веб адресата не треба да содржи знак  “_”</string>
 	<string name="blog_name_cant_be_used">Вие не може да ја користите оваа веб адреса</string>
@@ -185,7 +181,6 @@ Language: mk
 	<string name="stats_bar_graph_empty">Нема статистика</string>
 	<string name="sdcard_message">Сврзана SD карта е потребна за качување на медиа</string>
 	<string name="error_load_comment">Неможе да се покаже коментар</string>
-	<string name="nux_cannot_log_in">Неможе да ве најавиме</string>
 	<string name="username_must_include_letters">Корисничкото има треба да има барем 1 буква (a-z)</string>
 	<string name="error_moderate_comment">Настана грешка при модерирање</string>
 	<string name="error_refresh_stats">Статистика неможе да биде освежена во ова време</string>
@@ -288,7 +283,6 @@ Language: mk
 	<string name="deleting_post">Бришење на напис</string>
 	<string name="share_url_post">Сподели напис</string>
 	<string name="share_url_page">Сподели страница</string>
-	<string name="creating_your_account">Креирање на вашата корисничка сметка</string>
 	<string name="creating_your_site">Креирање на вашата страница</string>
 	<string name="reader_empty_posts_in_tag_updating">Преземање написи...</string>
 	<string name="cant_share_no_visible_blog">Неможе да споделите WordPress блог без да е видлив</string>
@@ -300,10 +294,8 @@ Language: mk
 	<string name="download">Преземање на медиа</string>
 	<string name="comment_spammed">Коментарот е означен како спам</string>
 	<string name="pick_photo">Избери фотографија</string>
-	<string name="validating_site_data">Валидирање на податоци за сајт</string>
 	<string name="reader_toast_err_get_post">Неможе да се вчита овој напис</string>
 	<string name="pick_video">Избери видео</string>
-	<string name="validating_user_data">Валидација на кориснички податоци</string>
 	<string name="reader_likes_you_and_one">На вас и на уште еден му се допаѓа ова</string>
 	<string name="select_time">Избери време</string>
 	<string name="select_date">Избери дата</string>
@@ -311,7 +303,6 @@ Language: mk
 	<string name="nux_tap_continue">Продолжи</string>
 	<string name="nux_welcome_create_account">Креирај корисничка сметка</string>
 	<string name="password_invalid">Потребна ви е посигурна лозинка. Употребете 7 или повеќе карактери помешани со големи и мали букви, бројки и специјални карактери.</string>
-	<string name="nux_add_selfhosted_blog">Додади автономна страница</string>
 	<string name="reader_label_removed_tag">Одстранети %s</string>
 	<string name="media_add_popup_title">Додади во медиа библиотеката</string>
 	<string name="empty_list_default">Оваа листа е празна</string>

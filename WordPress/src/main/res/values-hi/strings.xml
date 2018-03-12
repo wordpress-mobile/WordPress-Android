@@ -206,7 +206,6 @@ Language: hi_IN
 	<string name="button_trash">ट्रैश</string>
 	<string name="button_stats">आकड़े</string>
 	<string name="post_deleted">पोस्ट नष्ट कर दिया गया</string>
-	<string name="my_site_no_sites_view_subtitle">क्या आप एक जोड़ना चाहेंगे?</string>
 	<string name="reader_toast_err_follow_blog_not_found">इस ब्लॉग को पाया नहीं जा सका</string>
 	<string name="editor_toast_changes_saved">परिवर्तन सहेजा गया</string>
 	<string name="ignore">ध्यान न दें</string>
@@ -218,7 +217,6 @@ Language: hi_IN
 	<string name="me_btn_support">मदद और सहायता</string>
 	<string name="site_picker_add_self_hosted">सेल्फ-होस्टेड साइट डाले </string>
 	<string name="site_picker_edit_visibility">साइट्स दिखाए या छिपाये</string>
-	<string name="site_picker_add_site">साईट जोड़े</string>
 	<string name="my_site_btn_view_site">साईट पर जाये</string>
 	<string name="my_site_btn_switch_site">साइट स्विच करे</string>
 	<string name="my_site_header_publish">प्रकाशित</string>
@@ -231,7 +229,6 @@ Language: hi_IN
 	<string name="stats_generic_error">आवश्यक सांख्यिकी लोड करने में असफल</string>
 	<string name="device">यंत्र</string>
 	<string name="language">भाषा</string>
-	<string name="verify">सत्यापित करें</string>
 	<string name="verification_code">सत्यापन कोड</string>
 	<string name="pages_fetching">पृष्ठ ला रहे है...</string>
 	<string name="publisher">प्रकाशक:</string>
@@ -321,13 +318,11 @@ Language: hi_IN
 	<string name="stats_empty_comments">अभी तक कोई टिप्पणी नहीं</string>
 	<string name="notifications_empty_list">कोई सूचनाएं नहीं</string>
 	<string name="mnu_comment_unspam">स्पैम नहीं</string>
-	<string name="invalid_password_message">कूटशब्द कम से कम 4 अक्षर का चाहिए</string>
 	<string name="no_network_message">नेटवर्क उपलब्ध नहीं है </string>
 	<string name="stats_bar_graph_empty">कोई आंकड़े उपलब्ध नहीं</string>
 	<string name="invalid_email_message">आपका ईमेल पता मान्य नहीं है</string>
 	<string name="adding_cat_failed">श्रेणी जोड़ना असफल हुआ</string>
 	<string name="reply_failed">जवाब असफल हुआ</string>
-	<string name="nux_cannot_log_in">हम लॉग इन नहीं कर सकते</string>
 	<string name="error_load_comment">टिप्पणी लोड नहीं हो सका</string>
 	<string name="theme_set_failed">थीम को सेट करने में असफल</string>
 	<string name="passcode_wrong_passcode">गलत पिन</string>
@@ -355,8 +350,6 @@ Language: hi_IN
 	<string name="username_only_lowercase_letters_and_numbers">उपयोगकर्ता नाम केवल छोटे अक्षरों (a-z) और अंक हो सकते हैं</string>
 	<string name="username_contains_invalid_characters">उपयोगकर्ता नाम में \"_\" अक्षर नहीं हो सकता है</string>
 	<string name="username_must_be_at_least_four_characters">उपयोगकर्ता नाम कम से कम 4 अक्षरों का होना चाहिए</string>
-	<string name="invalid_username_too_short">उपयोगकर्ता नाम 4 अक्षरों से अधिक समय होना चाहिए</string>
-	<string name="invalid_username_too_long">उपयोगकर्ता नाम 61 अक्षरो से कम होना चाहिए</string>
 	<string name="username_must_include_letters">उपयोगकर्ता नाम एक से कम 1 अक्षर (a-z) का होना आवश्यक है</string>
 	<string name="blog_name_reserved_but_may_be_available">वह साइट वर्तमान में आरक्षित है, लेकिन एक दो दिन में उपलब्ध हो सकता है</string>
 	<string name="username_reserved_but_may_be_available">वह  उपयोगकर्ता नाम वर्तमान में आरक्षित है, लेकिन एक दो दिन में उपलब्ध हो सकता है</string>
@@ -366,7 +359,6 @@ Language: hi_IN
 	<string name="theme_auth_error_message">यह सुनिश्चित करे की आपको थीमस निर्धारित करने का विशेषाधिकार है</string>
 	<string name="category_automatically_renamed">श्रेणी नाम %1$s मान्य नहीं है.यह %2$s में बदल दिया गया है.</string>
 	<string name="error_moderate_comment">मध्यस्थता करते हुए त्रुटि हुई</string>
-	<string name="no_account">कोई वर्डप्रेस खाता नहीं है,एक खाता जोड़े और फिर से प्रयास करे</string>
 	<string name="sdcard_message">मीडिया अपलोड करने के लिए एक माउंटेड एसडी कार्ड की आवश्यकता है</string>
 	<string name="add_comment">टिप्पणी जोड़ें</string>
 	<string name="add_new_category">नई श्रेणी जोड़ें</string>
@@ -460,7 +452,6 @@ Language: hi_IN
 	<string name="share_link">कड़ी साझा करे</string>
 	<string name="share_url_page">पृष्ठ साझा करे</string>
 	<string name="share_url_post">पोस्ट साझा करे</string>
-	<string name="creating_your_account">आपका खाता बनाया जा रहा</string>
 	<string name="creating_your_site">आपकी साइट बनाया जा रहा</string>
 	<string name="reader_empty_posts_in_tag_updating">पोस्ट्स को प्राप्त किया जा रहा...</string>
 	<string name="video">वीडियो</string>
@@ -473,8 +464,6 @@ Language: hi_IN
 	<string name="comment_spammed">टिप्पणी स्पैम के रूप में चिह्नित </string>
 	<string name="reader_toast_err_get_post">इस संदेश को पुनः प्राप्त में असमर्थ</string>
 	<string name="reader_likes_you_and_one">आपने और एक और ने इसे पसंद किया है</string>
-	<string name="validating_user_data">उपयोगकर्ता डेटा को सत्यापित किया जा रहा</string>
-	<string name="validating_site_data">साईट डेटा को सत्यापित किया जा रहा</string>
 	<string name="select_date">तिथि को चुने</string>
 	<string name="pick_photo">तस्वीर को चुने</string>
 	<string name="select_time">समय चुने</string>
@@ -482,8 +471,6 @@ Language: hi_IN
 	<string name="account_two_step_auth_enabled">इस खाते में दो स्टेप प्रमाणीकरण सक्षम किया गया है.  WordPress.com पर अपनी सुरक्षा सेटिंग में जाएं और एक ऐप्लिकेशन विशिष्ट पासवर्ड उत्पन्न करे.</string>
 	<string name="nux_tap_continue">जारी रखे</string>
 	<string name="nux_welcome_create_account">खाता बनाएं</string>
-	<string name="nux_oops_not_selfhosted_blog">वर्डप्रेस डॉट कॉम पर साइन इन करे</string>
-	<string name="nux_add_selfhosted_blog">अपने से होस्ट किया हुआ साईट जोड़े</string>
 	<string name="password_invalid">आपको एक अधिक सुरक्षित पासवर्ड की जरूरत है. सुनिश्चित करें की आप 7 या अधिक वर्णों ,बड़े और छोटे अक्षरों, संख्या या विशेष वर्ण मिश्रण का उपयोग कर रहे है.</string>
 	<string name="reader_untitled_post">(शीर्षक रहित)</string>
 	<string name="reader_label_added_tag">जोड़ा गया %s</string>
@@ -503,7 +490,6 @@ Language: hi_IN
 	<string name="empty_list_default">इस सूची खाली है</string>
 	<string name="nux_tutorial_get_started_title">शुरू हो जाये!</string>
 	<string name="reader_toast_err_tag_invalid">वह एक मान्य टैग नहीं है</string>
-	<string name="connecting_wpcom">WordPress.com से कनेक्ट हो रहा</string>
 	<string name="limit_reached">सीमा पहुँच गयी. आप 1 मिनट में फिर से कोशिश कर सकते हैं. उसके पहले कोशिश करने पर आपके प्रतिबंध हटाने के इन्तजार समय में वृद्धि होगी. आपको लगता है यह त्रुटी है तो, सहायता से संपर्क करे.</string>
 	<string name="reader_hint_comment_on_comment">टिप्पणी का जवाब दे...</string>
 	<string name="create_account_wpcom">Wordpress.com पे अकाउंट बनाये|</string>

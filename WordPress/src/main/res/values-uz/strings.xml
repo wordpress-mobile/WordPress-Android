@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2015-08-19 20:02:12+0000
+Translation-Revision-Date: 2018-03-05 11:25:08+0000
 Plural-Forms: nplurals=1; plural=0;
 Generator: GlotPress/2.4.0-alpha
 Language: uz
 -->
 <resources>
+	<string name="site_creation_creating_retry">Qayta urinib ko\'ring</string>
 	<string name="device">Qurilma</string>
-	<string name="creating_your_account">Akkauntingiz yaratilmoqda</string>
 	<string name="creating_your_site">Saytingiz yaratilmoqda</string>
 	<string name="reader_empty_posts_in_tag_updating">Postlar yuklanmoqda...</string>
 	<string name="reader_likes_you_and_multi">Siz hamda %,d kishi buni yoqtiradi</string>
@@ -45,6 +45,7 @@ Language: uz
 	<string name="create_account_wpcom">Wordpress.com da akkaunt oching</string>
 	<string name="username_invalid">Yaroqsiz foydalanuvchi nomi</string>
 	<string name="limit_reached">Chegaraga yetib keldik. Bir minutdan keyin harakat qilib ko‘rishingiz mumkin. Bu vaqtdan avval harakatga o‘tishingiz kutish vaqtining yanada uzayishiga olib keladi. Agar bu biror tushunmovchilik natijasi deb o‘ylasangiz, yordam xizmatiga murojaat qiling.</string>
+	<string name="reader_hint_comment_on_comment">Fikrga javob yozish</string>
 	<string name="media_gallery_type_circles">Doiralar</string>
 	<string name="themes">Shablonlar</string>
 	<string name="media_gallery_type">Tur</string>
@@ -93,6 +94,7 @@ Language: uz
 	<string name="media_edit_title_hint">Sarlavha kiriting</string>
 	<string name="media_edit_caption_hint">Titr kiriting</string>
 	<string name="media_edit_description_hint">Izoh kiriting</string>
+	<string name="share_action_title">Qo\'shish</string>
 	<string name="upload">Yuklash</string>
 	<string name="manage">Boshqarish</string>
 	<string name="discard">Bekor qilish</string>
@@ -100,6 +102,8 @@ Language: uz
 	<string name="note_reply_successful">Javob chop qilindi</string>
 	<string name="new_notifications">%d ta yangi xabarlar</string>
 	<string name="more_notifications">va yana %d ta.</string>
+	<string name="sign_in">Kirish</string>
+	<string name="follows">Kuzatadi</string>
 	<string name="loading">Yuklanmoqda...</string>
 	<string name="httppassword">HTTP parol</string>
 	<string name="httpuser">HTTP foydalanuvchi nomi</string>
@@ -108,6 +112,7 @@ Language: uz
 	<string name="content_description_add_media">Media qo‘shish</string>
 	<string name="post_content">Kontent (matn va media qo‘shish uchun bosing)</string>
 	<string name="incorrect_credentials">Foydalanuvchi nomi yoki parol xato.</string>
+	<string name="log_in">Kirish</string>
 	<string name="password">Parol</string>
 	<string name="username">Foydalanuvchi nomi</string>
 	<string name="reader">Rider</string>
@@ -125,6 +130,7 @@ Language: uz
 	<string name="upload_scaled_image">Rasm yuklab, hajmi moslashtirilgan (kichiklashtirilgan) nusxasiga havola berish</string>
 	<string name="scaled_image">Yangi hajm uchun en qiymati</string>
 	<string name="link_enter_url">URL</string>
+	<string name="uploading">Yuklanmoqda</string>
 	<string name="version">Versiya</string>
 	<string name="tos">Xizmat shartlari</string>
 	<string name="app_title">WordPress for Android</string>
@@ -142,6 +148,8 @@ Language: uz
 	<string name="upload_full_size_image">To‘liq hajmda rasm yuklash</string>
 	<string name="title">Sarlavha</string>
 	<string name="categories">Bo‘limlar</string>
+	<string name="tags_separate_with_commas">Kalit so\'zlarni vergul bilan ajrating</string>
+	<string name="dlg_deleting_comments">Fikrlarni o\'chirish</string>
 	<string name="sdcard_title">SD karta kerak</string>
 	<string name="media">Media</string>
 	<string name="delete">O‘chir</string>

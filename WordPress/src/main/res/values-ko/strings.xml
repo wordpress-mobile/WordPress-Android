@@ -43,7 +43,6 @@ Language: ko_KR
 	<string name="error_unknown_post_type">알 수 없는 글 형식입니다.</string>
 	<string name="error_fetch_site_after_creation">사이트가 생성되면 사이트 선택 도구에서 사이트를 새로 고쳐야 할 수 있습니다.</string>
 	<string name="submit_for_review">제출하기</string>
-	<string name="invalid_verification_code_format">반드시 6자리 숫자이어야 함</string>
 	<string name="confirm_discard_changes">저장하지 않은 변경사항을 버리시겠습니까?</string>
 	<string name="signout">로그아웃</string>
 	<string name="sign_in_wpcom">WordPress.com에 로그인</string>
@@ -122,7 +121,6 @@ Language: ko_KR
 	<string name="send_link">링크 전송</string>
 	<string name="my_site_header_external">외부</string>
 	<string name="invite_people">사용자 초대</string>
-	<string name="signup_succeed_signin_failed">계정이 새로 생성되었으나 로그인하는 중에 오류가 발생했습니다.\n 새로 만들어진 계정과 비밀번호로 다시 로그인을 시도해주세요.</string>
 	<string name="label_clear_search_history">검색 내역 지우기</string>
 	<string name="dlg_confirm_clear_search_history">검색 내역을 지울까요?</string>
 	<string name="reader_empty_posts_in_search_description">사용자 언어로 된 %s에 대한 글을 찾을 수 없습니다.</string>
@@ -214,8 +212,6 @@ Language: ko_KR
 	<string name="site_settings_advanced_header">고급</string>
 	<string name="comments_empty_list_filtered_pending">대기중인 댓글 없음</string>
 	<string name="comments_empty_list_filtered_approved">승인한 댓글 없음</string>
-	<string name="button_done">완료</string>
-	<string name="button_skip">넘어가기</string>
 	<string name="site_timeout_error">시간이 초과되어 워드프레스 사이트에 접속할 수 없습니다.</string>
 	<string name="xmlrpc_malformed_response_error">연결할 수 없습니다. 워드프레스 설치 프로그램이 잘못된 XML-RPC 문서를 보냈습니다.</string>
 	<string name="xmlrpc_missing_method_error">연결할 수 없습니다. 필수 XML-RPC 함수가 서버에 없습니다.</string>
@@ -407,8 +403,6 @@ Language: ko_KR
 	<string name="reader_err_get_post_not_found">이 글은 더 이상 존재하지 않습니다.</string>
 	<string name="reader_err_get_post_not_authorized">이 글을 볼 권한이 없습니다.</string>
 	<string name="reader_err_get_post_generic">이 글을 가져올 수 없습니다.</string>
-	<string name="blog_name_no_spaced_allowed">사이트 주소에 공백을 포함할 수 없습니다.</string>
-	<string name="invalid_username_no_spaces">사용자명에 공백을 포함할 수 없습니다.</string>
 	<string name="reader_empty_followed_blogs_no_recent_posts_description">팔로우하는 사이트에 최근 게시된 글이 없습니다.</string>
 	<string name="reader_empty_followed_blogs_no_recent_posts_title">최근 글 없음</string>
 	<string name="edit_media">미디어 편집</string>
@@ -520,9 +514,6 @@ Language: ko_KR
 	<string name="button_view">보기</string>
 	<string name="button_edit">편집</string>
 	<string name="button_publish">발행</string>
-	<string name="my_site_no_sites_view_subtitle">더 추가하시겠습니까?</string>
-	<string name="my_site_no_sites_view_title">아직 WordPress사이트를 등록하지 않았습니다.</string>
-	<string name="my_site_no_sites_view_drake">Illustration</string>
 	<string name="reader_toast_err_follow_blog_not_authorized">이 블로그에 접근할 권한이 없습니다.</string>
 	<string name="reader_toast_err_follow_blog_not_found">블로그를 찾을 수 없습니다.</string>
 	<string name="undo">실행 취소</string>
@@ -547,7 +538,6 @@ Language: ko_KR
 	<string name="account_settings">계정 설정</string>
 	<string name="site_picker_create_dotcom">워드프레스닷컴 사이트 생성</string>
 	<string name="site_picker_edit_visibility">사이트 표시/숨기기</string>
-	<string name="site_picker_add_site">사이트 추가</string>
 	<string name="site_picker_add_self_hosted">독립 호스트 사이트 추가</string>
 	<string name="site_picker_title">사이트 선택</string>
 	<string name="my_site_btn_switch_site">사이트 전환</string>
@@ -572,11 +562,6 @@ Language: ko_KR
 	<string name="language">언어</string>
 	<string name="editor_toast_invalid_path">잘못된 파일 경로</string>
 	<string name="verification_code">확인 코드</string>
-	<string name="invalid_verification_code">잘못된 확인 코드</string>
-	<string name="verify">확인</string>
-	<string name="two_step_footer_label">인증 앱의 코드를 입력하세요.</string>
-	<string name="two_step_footer_button">문자 메시지를 통한 코드 보내기</string>
-	<string name="two_step_sms_sent">확인 코드 문자 메시지가 왔는지 확인하세요.</string>
 	<string name="media_details_label_file_name">파일명</string>
 	<string name="media_details_label_file_type">파일형식</string>
 	<string name="sign_in_jetpack">JetPack에 연결하려면 WordPress.com 계정으로 로그인하십시요.</string>
@@ -749,13 +734,10 @@ Language: ko_KR
 	<string name="error_refresh_pages">고정 페이지를 다시로드 할 수 없습니다.</string>
 	<string name="error_refresh_notifications">알림을 다시로드 할 수 없습니다.</string>
 	<string name="username_or_password_incorrect">입력된 사용자 이름이나 암호가 잘못되었습니다.</string>
-	<string name="invalid_username_too_long">사용자 이름에는 최대 64 자 이하로 되어야 함.</string>
-	<string name="invalid_username_too_short">사용자 이름은 4자 이상입니다.</string>
 	<string name="blog_name_reserved_but_may_be_available">이 사이트 이름은 예약 중입니다만, 며칠 동안 사용 가능하게 될지도 모릅니다.</string>
 	<string name="comments_empty_list">댓글이 없습니다.</string>
 	<string name="notifications_empty_list">알림이 없습니다.</string>
 	<string name="email_invalid">유효한 이메일 주소를 입력 하십시오.</string>
-	<string name="nux_cannot_log_in">로그인 할 수 없습니다.</string>
 	<string name="email_not_allowed">허용되지 않는 메일 주소 입니다.</string>
 	<string name="invalid_email_message">잘못된 이메일 주소입니다.</string>
 	<string name="username_not_allowed">허용되지 않은 사용자 이름입니다.</string>
@@ -767,7 +749,6 @@ Language: ko_KR
 	<string name="blog_name_only_lowercase_letters_and_numbers">사이트 주소는 소문자(az)와 숫자 이외는 포함되지 않습니다.</string>
 	<string name="blog_name_cant_be_used">사이트 주소는 사용하실 수 없습니다.</string>
 	<string name="blog_name_must_be_less_than_sixty_four_characters">사이트 주소는 64자를 초과합니다.</string>
-	<string name="invalid_password_message">암호는 4자 이상이어야 합니다.</string>
 	<string name="username_must_be_at_least_four_characters">사용자 이름은 4자 이상입니다.</string>
 	<string name="blog_name_must_be_at_least_four_characters">사이트 주소는 4자 이상이어야 합니다.</string>
 	<string name="blog_name_contains_invalid_characters">사이트 주소에 밑줄 기호(_)은 포함되지 않습니다.</string>
@@ -793,7 +774,6 @@ Language: ko_KR
 	<string name="out_of_memory">장치 메모리가 부족합니다.</string>
 	<string name="no_network_message">사용 가능한 네트워크가 없습니다. 네트워크에 연결하고 다시 시도하십시오 .</string>
 	<string name="sdcard_message">미디어를 업로드하려면 SD카드가 필요합니다.</string>
-	<string name="no_account">WordPress 계정을 찾을 수 없습니다. 계정을 추가하고 다시 시도하십시오.</string>
 	<string name="cat_name_required">카테고리 이름은 필수 항목입니다.</string>
 	<string name="adding_cat_success">카테고리를 추가했습니다.</string>
 	<string name="adding_cat_failed">카테고리 추가에 실패했습니다.</string>
@@ -895,7 +875,6 @@ Language: ko_KR
 	<string name="share_url_page">페이지 공유</string>
 	<string name="share_link">링크 공유</string>
 	<string name="creating_your_site">사이트를 만들 수 있습니다</string>
-	<string name="creating_your_account">계정을 생성 합니다</string>
 	<string name="reader_empty_posts_in_tag_updating">리뷰 가져 오는 중 ...</string>
 	<string name="comment_spammed">댓글이 스팸으로 처리됨</string>
 	<string name="download">미디어를 다운로드 중</string>
@@ -909,18 +888,13 @@ Language: ko_KR
 	<string name="pick_video">동영상을 선택</string>
 	<string name="select_date">날짜를 선택</string>
 	<string name="select_time">시간을 선택</string>
-	<string name="validating_site_data">사이트의 데이터를 체크 합니다</string>
-	<string name="validating_user_data">사용자의 데이터를 체크 합니다</string>
 	<string name="reader_toast_err_get_post">이 게시물 을 로드 할 수 없습니다</string>
 	<string name="reader_likes_you_and_one">당신과 다른 1명이 \"좋아요\"를 눌렀습니다.</string>
 	<string name="account_two_step_auth_enabled">이 계정에서 2단계 인증이 활성화되어 있습니다. WordPress.com의 보안 설정 페이지에서 응용 프로그램 암호를 생성하십시오.</string>
 	<string name="reader_empty_followed_blogs_description">걱정하지 마세요. 둘러보려면 태그 아이콘을 누르세요!</string>
 	<string name="nux_welcome_create_account">계정 만들기</string>
-	<string name="nux_add_selfhosted_blog">인스톨형 WordPress 블로그를 추가</string>
 	<string name="nux_tap_continue">다음</string>
 	<string name="password_invalid">보안 강도 높은 암호가 필요합니다. 7자 이상의 대문자/소문자와 숫자와 기호를 포함하는 것을 추천합니다.</string>
-	<string name="nux_oops_not_selfhosted_blog">WordPress.com에 로그인</string>
-	<string name="signing_in">로그인 중...</string>
 	<string name="reader_btn_share">공유</string>
 	<string name="reader_btn_follow">팔로우</string>
 	<string name="reader_toast_err_url_intent">%s를 열 수 없습니다</string>
@@ -939,12 +913,10 @@ Language: ko_KR
 	<string name="reader_toast_err_share_intent">공유에 실패</string>
 	<string name="reader_likes_one">1명이 \"좋아요\"를 달았습니다</string>
 	<string name="reader_toast_err_comment_failed">의견을 게시 할 수 없습니다</string>
-	<string name="connecting_wpcom">WordPress.com에 연결 중</string>
 	<string name="limit_reached">한도에 도달했습니다. 1분 후에 다시 시도해 수 있습니다. 이전에 로그인을 시도하면 제한 해제까지의 시간이 더 길어집니다. 오류라고 생각되면 지원에 문의하십시오.</string>
 	<string name="reader_empty_followed_tags">태그를 팔로우하지 않습니다.</string>
 	<string name="create_account_wpcom">WordPress.com에서 계정 만들기</string>
 	<string name="reader_hint_comment_on_comment">답변 달기</string>
-	<string name="button_next">다음</string>
 	<string name="themes">테마</string>
 	<string name="media_gallery_type_circles">원형</string>
 	<string name="media_edit_title_text">제목</string>

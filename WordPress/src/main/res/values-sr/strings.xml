@@ -53,9 +53,6 @@ Language: sr_RS
 	<string name="button_view">Поглед</string>
 	<string name="button_edit">Уређивање</string>
 	<string name="button_publish">Објављивање</string>
-	<string name="my_site_no_sites_view_subtitle">Да ли бисте желели да додате једно?</string>
-	<string name="my_site_no_sites_view_title">Још увек немате ниједно Вордпресово веб место.</string>
-	<string name="my_site_no_sites_view_drake">Илустрација</string>
 	<string name="reader_toast_err_follow_blog_not_authorized">Нисте овлашћени да приступите овом блогу</string>
 	<string name="reader_toast_err_follow_blog_not_found">Овај блог не може бити пронађен</string>
 	<string name="undo">Врати</string>
@@ -76,7 +73,6 @@ Language: sr_RS
 	<string name="site_picker_cant_hide_current_site">\"%s\" није сакривен зато што је тренутно веб место</string>
 	<string name="site_picker_create_dotcom">Направи WordPress.com веб место</string>
 	<string name="site_picker_add_self_hosted">Додај самостално угошћено веб место</string>
-	<string name="site_picker_add_site">Додај веб место</string>
 	<string name="site_picker_edit_visibility">Прикажи/сакриј веб места</string>
 	<string name="my_site_btn_switch_site">Промени веб место</string>
 	<string name="my_site_btn_view_site">Види веб место</string>
@@ -95,11 +91,6 @@ Language: sr_RS
 	<string name="select_all">Изабери све</string>
 	<string name="show">Прикажи</string>
 	<string name="stats_generic_error">Тражене статистике се не могу учитати</string>
-	<string name="two_step_sms_sent">Потражите верификациони код међу вашим текстуалним порукама.</string>
-	<string name="two_step_footer_button">Пошаљите код путем текстуалне поруке</string>
-	<string name="two_step_footer_label">Унесите код са своје апликације за аутентикацију.</string>
-	<string name="verify">Провери</string>
-	<string name="invalid_verification_code">Погрешан верификациони код</string>
 	<string name="verification_code">Код за потврђивање</string>
 	<string name="editor_toast_invalid_path">Неисправна путања до датотеке</string>
 	<string name="language">Језик</string>
@@ -268,7 +259,6 @@ Language: sr_RS
 	<string name="sdcard_message">Уграђена SD картица је неопходна за отпремање медија</string>
 	<string name="username_must_include_letters">Корисничко име мора имати најмање једно слово енглеске латинице (a-z)</string>
 	<string name="blog_name_only_lowercase_letters_and_numbers">Адреса веб места може да се састоји само од малих слова енглеске латинице (a-z) и бројева</string>
-	<string name="nux_cannot_log_in">Не можемо вас пријавити</string>
 	<string name="username_or_password_incorrect">Неисправно корисничко име или лозинка</string>
 	<string name="blog_name_reserved_but_may_be_available">То веб место је тренутно резервисано али ће можда бити доступно за пар дана</string>
 	<string name="blog_name_reserved">То веб место је резервисано</string>
@@ -288,10 +278,7 @@ Language: sr_RS
 	<string name="username_not_allowed">Недозвољено корисничко име</string>
 	<string name="username_must_be_at_least_four_characters">Корисничко име мора садржати бар 4 знака</string>
 	<string name="username_required">Унесите корисничко име</string>
-	<string name="invalid_username_too_long">Корисничко име мора бити краће од 61 знакова</string>
-	<string name="invalid_username_too_short">Корисничко име мора бити дуже од 4 знака</string>
 	<string name="invalid_email_message">Ваша адреса е-поште није исправна</string>
-	<string name="invalid_password_message">Лозинка мора да садржи најмање 4 знака</string>
 	<string name="passcode_wrong_passcode">Погрешан ПИН</string>
 	<string name="error_downloading_image">Грешка приликом преузимања слике</string>
 	<string name="error_load_comment">Није могуће учитати коментар</string>
@@ -314,7 +301,6 @@ Language: sr_RS
 	<string name="reply_failed">Одговарање неуспешно</string>
 	<string name="stats_bar_graph_empty">Нема статистика</string>
 	<string name="stats_empty_comments">Нема коментара</string>
-	<string name="no_account">Није пронађен Вордпрес налог. Додајте налог и покушајте поново</string>
 	<string name="category_automatically_renamed">Име категорије %1$s није исправно. Преименована је у %2$s.</string>
 	<string name="cat_name_required">Име категорије је неопходно</string>
 	<string name="adding_cat_success">Категорија успешно додата</string>
@@ -412,7 +398,6 @@ Language: sr_RS
 	<string name="deleting_page">Брисање стране</string>
 	<string name="share_url_page">Поделите страну</string>
 	<string name="creating_your_site">Прављење веб места</string>
-	<string name="creating_your_account">Прави се ваш налог</string>
 	<string name="reader_empty_posts_in_tag_updating">Добављам чланке...</string>
 	<string name="reader_likes_you_and_multi">Вама и %,d других се ово свиђа</string>
 	<string name="reader_likes_multi">%,d људи се ово свиђа</string>
@@ -422,8 +407,6 @@ Language: sr_RS
 	<string name="reader_label_reply">Одговор</string>
 	<string name="reader_toast_err_get_comment">Није могуће добавити овај коментар</string>
 	<string name="comment_spammed">Коментар означен као непожељан</string>
-	<string name="validating_site_data">Проверавам исправност података веб места</string>
-	<string name="validating_user_data">Проверавам исправност корисничких података</string>
 	<string name="account_two_step_auth_enabled">Овај налог има омогућену потврду идентитета у два корака. Посетите своја подешавања сигурности на WordPress.com и направите посебну лозинку за ову апликацију.</string>
 	<string name="reader_likes_you_and_one">Вама и још некоме се ово свиђа</string>
 	<string name="reader_toast_err_get_post">Није могуће добавити овај чланак</string>
@@ -433,7 +416,6 @@ Language: sr_RS
 	<string name="pick_video">Одаберите видео снимак</string>
 	<string name="reader_empty_followed_blogs_description">Не брините, потребно је само да додирнете иконицу горе десно да бисте започели истраживање!</string>
 	<string name="nux_welcome_create_account">Направи налог</string>
-	<string name="nux_add_selfhosted_blog">Додај самостално угошћено веб место</string>
 	<string name="password_invalid">Потребна вам је сигурнија лозинка. Користите 7 или више знакова, употребите и велика и мала слова, бројеве и посебне знакове.</string>
 	<string name="nux_tap_continue">Настави</string>
 	<string name="reader_empty_followed_tags">Не пратите ниједну ознаку</string>

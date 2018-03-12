@@ -112,7 +112,6 @@ Language: gl_ES
 	<string name="send_link">Enviar o enlace</string>
 	<string name="my_site_header_external">Externo</string>
 	<string name="invite_people">Invitar xente</string>
-	<string name="signup_succeed_signin_failed">A túa conta está creada, pero houbo u erro mentres cha dabamos acceso. Proba a entrar cos teus nome de usuario e contrasinal novos.</string>
 	<string name="label_clear_search_history">Limpar o historial de busca</string>
 	<string name="dlg_confirm_clear_search_history">Limpar o historial de busca?</string>
 	<string name="reader_empty_posts_in_search_description">Non se atoparon artigos para %s na túa lingua</string>
@@ -204,8 +203,6 @@ Language: gl_ES
 	<string name="site_settings_advanced_header">Avanzado</string>
 	<string name="comments_empty_list_filtered_pending">Non hai comentarios pendentes</string>
 	<string name="comments_empty_list_filtered_approved">Non hai comentarios aprobados</string>
-	<string name="button_done">Feito</string>
-	<string name="button_skip">Omitir</string>
 	<string name="site_timeout_error">Fallou a conexión a WordPress. Tempo de espera esgotado.</string>
 	<string name="xmlrpc_malformed_response_error">Non foi posible conectar. A instalación de WordPress respondeu cun documento XML-RPC non válido.</string>
 	<string name="xmlrpc_missing_method_error">Non foi posible conectar. Os métodos XML-RPC requiridos non están no servidor.</string>
@@ -399,8 +396,6 @@ Language: gl_ES
 	<string name="reader_err_get_post_not_found">O artigo xa non existe</string>
 	<string name="reader_err_get_post_not_authorized">Non tes permiso para ver este artigo</string>
 	<string name="reader_err_get_post_generic">Non foi posible acceder a este artigo</string>
-	<string name="blog_name_no_spaced_allowed">O enderezo do sitio non pode conter espazos</string>
-	<string name="invalid_username_no_spaces">O nome de usuario non pode conter espazos</string>
 	<string name="reader_empty_followed_blogs_no_recent_posts_description">Os sitios que segues non publicaron nada ultimamente</string>
 	<string name="reader_empty_followed_blogs_no_recent_posts_title">Sen artigos recentes</string>
 	<string name="edit_media">Editar o ficheiro</string>
@@ -515,9 +510,6 @@ Language: gl_ES
 	<string name="button_publish">Publicar</string>
 	<string name="button_back">Atrás</string>
 	<string name="button_trash">Lixo</string>
-	<string name="my_site_no_sites_view_subtitle">Gustaríache engadir un?</string>
-	<string name="my_site_no_sites_view_title">Aínda non tes sitio ningún en WordPress</string>
-	<string name="my_site_no_sites_view_drake">Ilustración</string>
 	<string name="reader_toast_err_follow_blog_not_authorized">Non tes autorización para acceder a este blogue</string>
 	<string name="reader_toast_err_follow_blog_not_found">Non foi posible atopar este blogue</string>
 	<string name="undo">Desfacer</string>
@@ -542,7 +534,6 @@ Language: gl_ES
 	<string name="site_picker_cant_hide_current_site">\"%s\" non foi ocultado porque é o sitio actual</string>
 	<string name="me_btn_support">Axuda e soporte</string>
 	<string name="site_picker_create_dotcom">Crear un sitio en WordPress.com</string>
-	<string name="site_picker_add_site">Engadir sitio</string>
 	<string name="site_picker_edit_visibility">Mostrar/ocultar sitios</string>
 	<string name="site_picker_add_self_hosted">Engadir un sitio autoaloxado</string>
 	<string name="my_site_btn_view_site">Ver o sitio</string>
@@ -570,11 +561,6 @@ Language: gl_ES
 	<string name="media_details_label_file_type">Tipo de ficheiro</string>
 	<string name="editor_toast_invalid_path">Ruta do ficheiro non válida</string>
 	<string name="verification_code">Código de verificación</string>
-	<string name="invalid_verification_code">Código de verificación non válido</string>
-	<string name="verify">Verificar</string>
-	<string name="two_step_footer_label">Introduce o código da túa aplicación de autenticación</string>
-	<string name="two_step_sms_sent">Busca o código de verificación nos teus SMS</string>
-	<string name="two_step_footer_button">Enviar o código por SMS</string>
 	<string name="sign_in_jetpack">Para conectar a Jetpack entra na túa conta de WordPress.com</string>
 	<string name="auth_required">Inicia sesión de novo para continuar</string>
 	<string name="stats_search_terms_unknown_search_terms">Termos de busca descoñecidos</string>
@@ -748,16 +734,12 @@ Language: gl_ES
 	<string name="adding_cat_success">Categoría engadida con éxito</string>
 	<string name="cat_name_required">O campo de nome de categoría é obrigatorio</string>
 	<string name="category_automatically_renamed">O nome de categoría %1$s non é válido. Foi cambiado por %2$s.</string>
-	<string name="no_account">Non se atopou conta de WordPress, engade unha conta e proba outra vez.</string>
 	<string name="stats_empty_comments">Non hai comentarios aínda</string>
 	<string name="stats_bar_graph_empty">Non hai estatísticas dispoñibles</string>
 	<string name="invalid_url_message">Comproba se a URL introducida é válida</string>
 	<string name="notifications_empty_list">Sen notificacións</string>
 	<string name="error_generic">Houbo un erro</string>
 	<string name="passcode_wrong_passcode">PIN incorrecto</string>
-	<string name="invalid_password_message">O contrasinal debe conter como mínimo 4 caracteres</string>
-	<string name="invalid_username_too_short">O nome de usuario debe ter máis de 4 caracteres</string>
-	<string name="invalid_username_too_long">O nome de usuario debe ter menos de 61 caracteres</string>
 	<string name="username_only_lowercase_letters_and_numbers">O nome de usuario só pode conter letras minúsculas (a-z) e números</string>
 	<string name="username_required">Introduce un nome de usuario</string>
 	<string name="username_not_allowed">Nome de usuario non permitido</string>
@@ -780,7 +762,6 @@ Language: gl_ES
 	<string name="blog_name_reserved">Ese sitio está reservado</string>
 	<string name="blog_name_reserved_but_may_be_available">Ese sitio está reservado neste momento, pero pode que estea dispoñible nun par de días.</string>
 	<string name="username_or_password_incorrect">O nome de usuario ou o contrasinal introducido é incorrecto</string>
-	<string name="nux_cannot_log_in">Non foi posible conectar</string>
 	<string name="gallery_error">Non foi posible obter o elemento multimedia</string>
 	<string name="could_not_remove_account">Non foi posible borrar o sitio</string>
 	<string name="error_refresh_posts">Non foi posible actualizar os artigos neste momento</string>
@@ -896,7 +877,6 @@ Language: gl_ES
 	<string name="share_url_page">Compartir a páxina</string>
 	<string name="share_link">Enlace para compartir</string>
 	<string name="creating_your_site">Creando o teu sitio</string>
-	<string name="creating_your_account">Creando a conta</string>
 	<string name="reader_empty_posts_in_tag_updating">Á procura de artigos...</string>
 	<string name="reader_label_reply">Responder</string>
 	<string name="video">Vídeo</string>
@@ -914,19 +894,13 @@ Language: gl_ES
 	<string name="reader_likes_you_and_one">A ti e a un máis gustoulles isto</string>
 	<string name="reader_toast_err_get_post">Non foi posible acceder a este artigo</string>
 	<string name="account_two_step_auth_enabled">Esta conta ten activada a autenticación de dou pasos. Vai á configuración de seguridade de WordPress.com e crea un contrasinal específico para a aplicación.</string>
-	<string name="validating_user_data">Validando os datos de usuario</string>
-	<string name="validating_site_data">Validando os datos do sitio</string>
 	<string name="nux_tap_continue">Continuar</string>
 	<string name="nux_welcome_create_account">Crear unha conta</string>
 	<string name="password_invalid">Necesitas un contrasinal máis seguro. Asegúrate de usar sete ou máis caracteres e mestura letras maiúsculas e minúsculas, números e caracteres especiais.</string>
-	<string name="nux_add_selfhosted_blog">Engadir un sitio autoaloxado</string>
-	<string name="signing_in">Conectando...</string>
-	<string name="nux_oops_not_selfhosted_blog">Iniciar sesión en WordPress.com</string>
 	<string name="reader_toast_err_tag_exists">Xa segues esta etiqueta</string>
 	<string name="reader_toast_err_tag_invalid">Non é unha etiqueta válida</string>
 	<string name="reader_empty_followed_tags">Non segues etiqueta ningunha</string>
 	<string name="create_account_wpcom">Crear unha conta en WordPress.com</string>
-	<string name="button_next">Seguinte</string>
 	<string name="username_invalid">Nome de usuario non válido</string>
 	<string name="nux_tutorial_get_started_title">Comezar!</string>
 	<string name="reader_untitled_post">(Sen título)</string>
@@ -945,7 +919,6 @@ Language: gl_ES
 	<string name="reader_toast_err_view_image">Non foi posible mostrar a imaxe</string>
 	<string name="reader_toast_err_url_intent">No foi posible abrir %s</string>
 	<string name="limit_reached">Límite acadado. Podes intentalo de novo dentro dun minuto. Tentalo antes só servirá para incrementar a espera até que a prohibición caduque. Se consideras que se trata dun erro, contacta co soporte.</string>
-	<string name="connecting_wpcom">Conectando con WordPress.com</string>
 	<string name="stats_totals_plays">Reproducións</string>
 	<string name="passcode_manage">Administrar o bloqueo con PIN</string>
 	<string name="passcode_enter_passcode">Introduce o PIN</string>

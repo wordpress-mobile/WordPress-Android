@@ -61,7 +61,6 @@ Language: id
 	<string name="reader_photo_by">Foto oleh %s</string>
 	<string name="reader_label_visit">Kunjungi</string>
 	<string name="pending_draft_more">Anda mengonsep %d pos namun belum menerbitkannya. Sentuh untuk melihatnya.</string>
-	<string name="invalid_verification_code_format">Harus angka enam digit</string>
 	<string name="confirm_discard_changes">Buang perubahan yang belum tersimpan?</string>
 	<string name="swipe_for_more">Geser untuk selengkapnya</string>
 	<string name="reader_err_get_post_not_authorized_signin_fallback">Anda tidak diizinkan menampilkan pos ini. Cobalah untuk masuk ke WordPress.com lebih dahulu atau gunakan tombol tindakan di atas untuk membuka browser.</string>
@@ -162,7 +161,6 @@ Language: id
 	<string name="invite_message_title">Pesan Kustom</string>
 	<string name="invite">Undang</string>
 	<string name="invite_names_title">Nama pengguna atau Email</string>
-	<string name="signup_succeed_signin_failed">Akun Anda telah dibuat namun terjadi galat saat mencoba masuk.\n        Coba untuk masuk dengan nama pengguna dan password baru Anda.</string>
 	<string name="send_link">Kirim tautan</string>
 	<string name="my_site_header_external">Eksternal</string>
 	<string name="invite_people">Undang Orang-orang</string>
@@ -257,8 +255,6 @@ Language: id
 	<string name="site_settings_advanced_header">Lanjutan</string>
 	<string name="comments_empty_list_filtered_pending">Tidak ada komentar Tertunda</string>
 	<string name="comments_empty_list_filtered_approved">Tidak ada komentar Disetujui</string>
-	<string name="button_done">Selesai</string>
-	<string name="button_skip">Lewati</string>
 	<string name="site_timeout_error">Tidak dapat terhubung ke situs WordPress karena kesalahan Waktu Habis.</string>
 	<string name="xmlrpc_malformed_response_error">Tidak dapat terhubung. Pemasangan WordPress merespons dengan dokumen XML-RPC yang tidak valid.</string>
 	<string name="xmlrpc_missing_method_error">Tidak dapat terhubung. Metode XML-RPC yang diperlukan tidak ditemukan di server.</string>
@@ -450,8 +446,6 @@ Language: id
 	<string name="reader_err_get_post_not_found">Pos ini tidak ada lagi</string>
 	<string name="reader_err_get_post_not_authorized">Anda tidak diizinkan melihat pos ini</string>
 	<string name="reader_err_get_post_generic">Gagal mengambil pos ini</string>
-	<string name="blog_name_no_spaced_allowed">Alamat situs tak boleh memuat spasi</string>
-	<string name="invalid_username_no_spaces">Nama pengguna tak boleh memuat spasi</string>
 	<string name="reader_empty_followed_blogs_no_recent_posts_description">Situs-situs yang Anda ikuti belum menerbitkan pos apapun belakangan ini</string>
 	<string name="reader_empty_followed_blogs_no_recent_posts_title">Tak ada pos terbaru</string>
 	<string name="edit_media">Edit media</string>
@@ -563,9 +557,6 @@ Language: id
 	<string name="button_publish">Terbitkan</string>
 	<string name="post_deleted">Pos dihapus</string>
 	<string name="post_trashed">Pos dibuang ke tong sampah</string>
-	<string name="my_site_no_sites_view_subtitle">Mau menambahkan satu?</string>
-	<string name="my_site_no_sites_view_title">Anda belum punya situs WordPress sama sekali.</string>
-	<string name="my_site_no_sites_view_drake">Ilustrasi</string>
 	<string name="reader_toast_err_follow_blog_not_authorized">Anda tidak punya otoritas untuk mengakses blog ini.</string>
 	<string name="reader_toast_err_follow_blog_not_found">Blog ini tak bisa ditemukan</string>
 	<string name="undo">Urungkan</string>
@@ -591,7 +582,6 @@ Language: id
 	<string name="site_picker_create_dotcom">Buat situs WordPress.com</string>
 	<string name="site_picker_add_self_hosted">Tambahkan situs mandiri (self-hosted)</string>
 	<string name="site_picker_edit_visibility">Tampilkan/sembunyikan situs</string>
-	<string name="site_picker_add_site">Tambahkan situs</string>
 	<string name="site_picker_title">Pilih situs</string>
 	<string name="my_site_btn_switch_site">Ganti Situs</string>
 	<string name="my_site_btn_view_admin">Tampilkan Admin</string>
@@ -611,11 +601,6 @@ Language: id
 	<string name="hide">Sembunyikan</string>
 	<string name="sign_out_wpcom_confirm">Log out dari akun Anda akan menghapus seluruh data WordPress.com dari @%s dalam perangkat ini, termasuk draf dan perubahan lokal.</string>
 	<string name="stats_generic_error">Statistik yang diminta gagal dimuat</string>
-	<string name="two_step_sms_sent">Periksa pesan teks Anda untuk melihat kode verifikasi.</string>
-	<string name="two_step_footer_button">Kirimkan kode via pesan teks</string>
-	<string name="verify">Verifikasikan</string>
-	<string name="two_step_footer_label">Masukkan kode dari authenticator app.</string>
-	<string name="invalid_verification_code">Kode verifikasi tidak valid</string>
 	<string name="verification_code">Kode verifikasi</string>
 	<string name="editor_toast_invalid_path">Lokasi file tidak valid</string>
 	<string name="language">Bahasa</string>
@@ -798,7 +783,6 @@ Language: id
 	<string name="adding_cat_success">Berhasil menambahkan kategori</string>
 	<string name="cat_name_required">Nama kategori wajib diisi</string>
 	<string name="category_automatically_renamed">Nama kategori %1$s tidak sah. Sudah diubah menjadi %2$s.</string>
-	<string name="no_account">Akun WordPress tidak ditemukan, masukkan akun dan coba lagi</string>
 	<string name="sdcard_message">Kartu SD tambahan diperlukan untuk mengunggah media</string>
 	<string name="stats_empty_comments">Belum ada tanggapan</string>
 	<string name="stats_bar_graph_empty">Belum ada statistik</string>
@@ -816,9 +800,6 @@ Language: id
 	<string name="error_downloading_image">Galat saat mengunduh gambar</string>
 	<string name="passcode_wrong_passcode">PIN keliru</string>
 	<string name="invalid_email_message">Alamat emailmu tidak sah</string>
-	<string name="invalid_password_message">Password harus berisi minimal 4 karakter</string>
-	<string name="invalid_username_too_short">Nama pengguna harus lebih dari 4 karakter</string>
-	<string name="invalid_username_too_long">Nama pengguna harus kurang dari 61 karakter</string>
 	<string name="username_only_lowercase_letters_and_numbers">Nama pengguna hanya boleh mengandung huruf kecil (a-z) dan angka</string>
 	<string name="username_required">Masukkan nama pengguna</string>
 	<string name="username_not_allowed">Nama pengguna tidak diizinkan</string>
@@ -841,7 +822,6 @@ Language: id
 	<string name="blog_name_reserved">Situs itu dicadangkan</string>
 	<string name="blog_name_reserved_but_may_be_available">Situs itu sedang dicadangkan, namun bisa menjadi tersedia dalam beberapa hari</string>
 	<string name="username_or_password_incorrect">Nama pengguna atau password yang Anda masukkan tidak tepat</string>
-	<string name="nux_cannot_log_in">Kami tak bisa me-log masukkan Anda</string>
 	<string name="could_not_remove_account">Gagal menghapus situs</string>
 	<string name="invalid_url_message">Pastikan URL yang dimasukkan sudah valid</string>
 	<string name="edit_post">Edit tulisan</string>
@@ -937,7 +917,6 @@ Language: id
 	<string name="share_url_post">Bagikan pos</string>
 	<string name="share_url_page">Bagikan laman</string>
 	<string name="share_link">Bagikan tautan</string>
-	<string name="creating_your_account">Membuat akun Anda</string>
 	<string name="creating_your_site">Membuat situs Anda</string>
 	<string name="reader_empty_posts_in_tag_updating">Mengambil pos...</string>
 	<string name="reader_likes_you_and_multi">Anda dan %,d lainnya menyukai ini</string>
@@ -955,15 +934,10 @@ Language: id
 	<string name="account_two_step_auth_enabled">Akun ini memiliki sistem autentifikasi dua langkah yang aktif. Kunjungi pengaturan keamanan Anda di WordPress.com dan buat password khusus untuk aplikasi.</string>
 	<string name="pick_video">Pilih video</string>
 	<string name="reader_toast_err_get_post">Gagal membuka pos ini</string>
-	<string name="validating_user_data">Memeriksa keabsahan data pengguna</string>
-	<string name="validating_site_data">Memeriksa keabsahan data situs</string>
 	<string name="reader_empty_followed_blogs_description">Tapi jangan khawatir, cukup ketuk ikon di kanan atas untuk mulai menjelajah!</string>
 	<string name="password_invalid">Anda butuh password yang lebih aman. Pastikan menggunakan 7 atau lebih karakter, kombinasikan huruf kapital dan kecil, angka atau tanda baca.</string>
 	<string name="nux_tap_continue">Lanjutkan</string>
 	<string name="nux_welcome_create_account">Buat akun</string>
-	<string name="nux_add_selfhosted_blog">Tambahkan situs dengan hostiing mandiri</string>
-	<string name="nux_oops_not_selfhosted_blog">Log in ke WordPress.com</string>
-	<string name="signing_in">Log in…</string>
 	<string name="media_add_popup_title">Tambah ke pustaka media</string>
 	<string name="empty_list_default">List ini masih kosong</string>
 	<string name="reader_untitled_post">(Tanpa Judul)</string>
@@ -986,8 +960,6 @@ Language: id
 	<string name="limit_reached">Mencapai batasan. Anda dapat mencoba kembali setelah 1 menit. Cobalah kembali, ini akan menambahkan kesempatan kepada anda sebelum benar-benar masuk list banned. Jika menurut anda ini adalah suatu kesalahan, hubungi Support.</string>
 	<string name="nux_tutorial_get_started_title">Memulai!</string>
 	<string name="reader_hint_comment_on_comment">Balas komentar…</string>
-	<string name="button_next">Selanjutnya</string>
-	<string name="connecting_wpcom">Memproses login ke Wordpress.com</string>
 	<string name="themes">Tema</string>
 	<string name="media_edit_title_text">Judul</string>
 	<string name="media_edit_caption_text">Subjudul</string>

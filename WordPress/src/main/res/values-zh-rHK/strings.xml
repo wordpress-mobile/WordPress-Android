@@ -62,12 +62,9 @@ Language: zh_TW
 	<string name="error_unknown_post_type">未知的文章格式</string>
 	<string name="error_fetch_site_after_creation">網站已建立，你可能需要重新整理網站挑選器中的網站清單。</string>
 	<string name="submit_for_review">送出</string>
-	<string name="tell_me_more">我想瞭解更多</string>
 	<string name="duplicate_site_detected">已偵測到重複的網站。</string>
 	<string name="cannot_add_duplicate_site">應用程式中已有此網站，你無法再度新增該網站。</string>
-	<string name="already_logged_in_wpcom_same_username">你已登入 WordPress.com 帳號。你的網站應已顯示在網站選擇器中，請確保該網站並未設為隱藏。</string>
 	<string name="already_logged_in_wpcom">你已登入 WordPress.com 帳號，無法新增連結至其他帳號的 WordPress.com 網站。</string>
-	<string name="checking_username">正在檢查使用者名稱</string>
 	<string name="jetpack_different_com_account">並不支援屬於不同 WordPress.com 帳號的 Jetpack 網站</string>
 	<string name="jetpack_use_com_account">若要新增 Jetpack 網站，請登入連結 Jetpack 的 WordPress.com 帳號。</string>
 	<string name="error_media_load">無法載入媒體</string>
@@ -100,7 +97,6 @@ Language: zh_TW
 	<string name="reader_photo_by">拍攝者：%s</string>
 	<string name="reader_label_visit">造訪</string>
 	<string name="pending_draft_more">你有 %d 份草稿，卻從未發表。點選以查看。</string>
-	<string name="invalid_verification_code_format">必須是六位數字</string>
 	<string name="confirm_discard_changes">要捨棄未儲存的變更嗎？</string>
 	<string name="swipe_for_more">撥動以瞭解更多</string>
 	<string name="reader_err_get_post_not_authorized_signin_fallback">你未獲授權，無法檢視此文章。請先嘗試登入 WordPress.com，或者使用頂端的動作按鈕開啟瀏覽器。</string>
@@ -201,7 +197,6 @@ Language: zh_TW
 	<string name="invite_message_title">自訂訊息</string>
 	<string name="invite">邀請</string>
 	<string name="invite_names_title">使用者名稱或電子郵件</string>
-	<string name="signup_succeed_signin_failed">系統已為你建立帳號，但在將你登入時發生錯誤\n。請嘗試使用新建立的使用者名稱與密碼登入。</string>
 	<string name="send_link">傳送連結</string>
 	<string name="my_site_header_external">外部</string>
 	<string name="invite_people">邀請他人</string>
@@ -296,8 +291,6 @@ Language: zh_TW
 	<string name="site_settings_advanced_header">進階</string>
 	<string name="comments_empty_list_filtered_pending">沒有待審核的留言</string>
 	<string name="comments_empty_list_filtered_approved">沒有已核准的留言</string>
-	<string name="button_done">完成</string>
-	<string name="button_skip">略過</string>
 	<string name="site_timeout_error">由於發生逾時錯誤，導致無法連結到 WordPress 網站。</string>
 	<string name="xmlrpc_malformed_response_error">無法連結。WordPress 安裝以無效的 XML-RPC 文件回應。</string>
 	<string name="xmlrpc_missing_method_error">無法連結。伺服器缺少必要的 XML-RPC 方式。</string>
@@ -489,8 +482,6 @@ Language: zh_TW
 	<string name="reader_err_get_post_not_found">此文章已不存在</string>
 	<string name="reader_err_get_post_not_authorized">你未獲授權無法檢視此文章</string>
 	<string name="reader_err_get_post_generic">無法擷取此文章</string>
-	<string name="blog_name_no_spaced_allowed">網站位址不可包含空格</string>
-	<string name="invalid_username_no_spaces">使用者名稱不可包含空格</string>
 	<string name="reader_empty_followed_blogs_no_recent_posts_description">您所關注的網站最近未發表任何文章</string>
 	<string name="reader_empty_followed_blogs_no_recent_posts_title">沒有近期文章</string>
 	<string name="edit_media">編輯媒體</string>
@@ -602,9 +593,6 @@ Language: zh_TW
 	<string name="button_view">檢視</string>
 	<string name="button_edit">編輯</string>
 	<string name="button_publish">發表</string>
-	<string name="my_site_no_sites_view_subtitle">你希望加入一個嗎?</string>
-	<string name="my_site_no_sites_view_title">你還沒有任何 WordPress 網站。</string>
-	<string name="my_site_no_sites_view_drake">圖示</string>
 	<string name="reader_toast_err_follow_blog_not_authorized">你沒有存取此網誌的權限</string>
 	<string name="reader_toast_err_follow_blog_not_found">無法找到這個部落格</string>
 	<string name="undo">復原</string>
@@ -631,7 +619,6 @@ Language: zh_TW
 	<string name="site_picker_create_dotcom">建立 WordPress.com 網站</string>
 	<string name="site_picker_edit_visibility">顯示/隱藏網站</string>
 	<string name="site_picker_add_self_hosted">新增自助託管的網站</string>
-	<string name="site_picker_add_site">新增網站</string>
 	<string name="my_site_btn_switch_site">切換網站</string>
 	<string name="site_picker_title">選擇網站</string>
 	<string name="my_site_btn_view_site">檢視網站</string>
@@ -655,11 +642,6 @@ Language: zh_TW
 	<string name="language">語言</string>
 	<string name="editor_toast_invalid_path">檔案路徑無效</string>
 	<string name="verification_code">驗證碼</string>
-	<string name="invalid_verification_code">驗證碼無效</string>
-	<string name="verify">驗證</string>
-	<string name="two_step_footer_label">輸入驗證器應用程式上的驗證碼。</string>
-	<string name="two_step_footer_button">透過簡訊傳送驗證碼</string>
-	<string name="two_step_sms_sent">請查看簡訊是否收到驗證碼。</string>
 	<string name="sign_in_jetpack">登入 WordPress.com 帳號以連結至 Jetpack。</string>
 	<string name="auth_required">再次登入以繼續操作。</string>
 	<string name="media_details_label_file_name">檔案名稱</string>
@@ -840,7 +822,6 @@ Language: zh_TW
 	<string name="adding_cat_success">類別已成功新增</string>
 	<string name="cat_name_required">類別名稱欄位為必填</string>
 	<string name="category_automatically_renamed">類別名稱 %1$s 無效。已將它重新命名為 %2$s。</string>
-	<string name="no_account">未找到 WordPress 帳號，請新增帳號然後重試一次</string>
 	<string name="sdcard_message">需要掛接 SD 卡以上傳媒體</string>
 	<string name="stats_empty_comments">尚無回應</string>
 	<string name="stats_bar_graph_empty">沒有可用的統計</string>
@@ -858,9 +839,6 @@ Language: zh_TW
 	<string name="error_downloading_image">下載圖片時發生錯誤</string>
 	<string name="passcode_wrong_passcode">錯誤的 PIN</string>
 	<string name="invalid_email_message">你的電子郵件地址無效</string>
-	<string name="invalid_password_message">密碼必須包含至少 4 個字元</string>
-	<string name="invalid_username_too_short">使用者名稱長度必須超過 4 個字元</string>
-	<string name="invalid_username_too_long">使用者名稱長度必須小於 61 個字元</string>
 	<string name="username_only_lowercase_letters_and_numbers">使用者名稱只能包含小寫字母 (a-z) 和數字</string>
 	<string name="username_required">輸入使用者名稱</string>
 	<string name="username_not_allowed">不允許使用該使用者名稱</string>
@@ -883,7 +861,6 @@ Language: zh_TW
 	<string name="blog_name_reserved">該網站已被預定</string>
 	<string name="blog_name_reserved_but_may_be_available">該網站目前已被預定，但可能幾天後便可供使用</string>
 	<string name="username_or_password_incorrect">你輸入的使用者名稱或密碼不正確</string>
-	<string name="nux_cannot_log_in">我們無法將你登入</string>
 	<string name="invalid_url_message">檢查輸入的 URL 是否有效</string>
 	<string name="blog_removed_successfully">已成功移除網站</string>
 	<string name="remove_account">移除網站</string>
@@ -978,7 +955,6 @@ Language: zh_TW
 	<string name="share_url_post">分享文章</string>
 	<string name="share_url_page">分享頁面</string>
 	<string name="share_link">分享連結</string>
-	<string name="creating_your_account">建立你的帳號</string>
 	<string name="creating_your_site">建立你的網站</string>
 	<string name="reader_empty_posts_in_tag_updating">正在擷取文章…</string>
 	<string name="reader_likes_you_and_multi">你和其他 %,d 個人都說這個讚</string>
@@ -996,15 +972,10 @@ Language: zh_TW
 	<string name="account_two_step_auth_enabled">此帳號已啟用兩步驟驗證。瀏覽你的 WordPress.com 安全性設定，並產生一組應用程式專用密碼。</string>
 	<string name="pick_video">選取影片</string>
 	<string name="reader_toast_err_get_post">無法擷取此文章</string>
-	<string name="validating_user_data">正在驗證使用者資料</string>
-	<string name="validating_site_data">正在驗證網站資料</string>
 	<string name="reader_empty_followed_blogs_description">不過別擔心，只要點選右上方的圖示即可開始探索！</string>
 	<string name="password_invalid">你需要一組更安全的密碼。請務必使用 7 個或更多字元，並混合使用大小寫字母、數字或特殊字元。</string>
 	<string name="nux_tap_continue">繼續</string>
 	<string name="nux_welcome_create_account">建立帳號</string>
-	<string name="nux_add_selfhosted_blog">新增自助託管的網站</string>
-	<string name="nux_oops_not_selfhosted_blog">登入 WordPress.com</string>
-	<string name="signing_in">正在登入…</string>
 	<string name="media_add_popup_title">增加媒體庫</string>
 	<string name="empty_list_default">清單是空的</string>
 	<string name="reader_untitled_post">（未命名）</string>
@@ -1014,7 +985,6 @@ Language: zh_TW
 	<string name="reader_btn_share">分享</string>
 	<string name="reader_btn_follow">追蹤</string>
 	<string name="reader_toast_err_url_intent">無法開啟 %s</string>
-	<string name="connecting_wpcom">連結至 WordPress.com</string>
 	<string name="username_invalid">無效的使用者名稱</string>
 	<string name="reader_likes_one">1 人說這個讚</string>
 	<string name="reader_likes_only_you">你說這個讚</string>
@@ -1028,7 +998,6 @@ Language: zh_TW
 	<string name="reader_empty_followed_tags">你未關注任何標籤</string>
 	<string name="create_account_wpcom">在 WordPress.com 上建立帳號</string>
 	<string name="reader_hint_comment_on_comment">回應評論</string>
-	<string name="button_next">下一步</string>
 	<string name="themes">佈景主題</string>
 	<string name="media_gallery_type_slideshow">幻燈片</string>
 	<string name="media_edit_description_text">說明</string>

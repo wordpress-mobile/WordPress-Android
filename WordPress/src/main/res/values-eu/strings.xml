@@ -91,7 +91,6 @@ Language: eu_ES
 	<string name="invite_message_title">Mezu pertsonalizatua</string>
 	<string name="invite">Gonbidatu</string>
 	<string name="invite_names_title">Erabiltzaile-izenak edo e-postak</string>
-	<string name="signup_succeed_signin_failed">Zure kontua sortu da baina errore bat gertatu da zu sartzean. Saia zaitez saioa hasten sortu berri dituzun erabiltzaile-izen eta pasahitzarekin.</string>
 	<string name="my_site_header_external">Kanpokoak</string>
 	<string name="send_link">Bidali esteka</string>
 	<string name="invite_people">Gonbidatu jendea</string>
@@ -150,8 +149,6 @@ Language: eu_ES
 	<string name="site_settings_advanced_header">Aurreratua</string>
 	<string name="comments_empty_list_filtered_pending">Ez dago iruzkinik itxaroten</string>
 	<string name="comments_empty_list_filtered_approved">Ez dago iruzkinik onartuta</string>
-	<string name="button_done">Eginda</string>
-	<string name="button_skip">Saltatu</string>
 	<string name="post_format_status">Egoera</string>
 	<string name="post_format_video">Bideoa</string>
 	<string name="alignment_center">Erdira</string>
@@ -314,8 +311,6 @@ Language: eu_ES
 	<string name="button_view">Ikusi</string>
 	<string name="button_edit">Editatu</string>
 	<string name="button_publish">Argitaratu</string>
-	<string name="my_site_no_sites_view_subtitle">Gehitu nahi diozu bat?</string>
-	<string name="my_site_no_sites_view_title">Oraindik ez duzu WordPress gunerik.</string>
 	<string name="reader_toast_err_follow_blog_not_found">Ezin izan da blog hori aurkitu</string>
 	<string name="undo">Desegin</string>
 	<string name="passcodelock_prompt_message">Sartu zure PINa</string>
@@ -336,7 +331,6 @@ Language: eu_ES
 	<string name="account_settings">Kontuaren ezarpenak</string>
 	<string name="me_btn_support">Laguntza eta euskarria</string>
 	<string name="site_picker_create_dotcom">Sortu WordPress.com gunea</string>
-	<string name="site_picker_add_site">Gehitu gunea</string>
 	<string name="site_picker_add_self_hosted">Gehitu zuk ostatatutako gunea</string>
 	<string name="site_picker_edit_visibility">Erakutsi/ezkutatu guneak</string>
 	<string name="my_site_btn_view_site">Ikusi gunea</string>
@@ -361,8 +355,6 @@ Language: eu_ES
 	<string name="media_details_label_file_name">Fitxategi izena</string>
 	<string name="media_details_label_file_type">Fitxategi mota</string>
 	<string name="verification_code">Egiaztaketa kodea</string>
-	<string name="invalid_verification_code">Egiaztaketa kode okerra</string>
-	<string name="verify">Egiaztatu</string>
 	<string name="auth_required">Hasi saioa berriro jarraitzeko.</string>
 	<string name="editor_toast_invalid_path">Fitxategiaren bide okerra</string>
 	<string name="reader_empty_posts_request_failed">Huts egin du bidalketak eskuratzeak</string>
@@ -463,7 +455,6 @@ Language: eu_ES
 	<string name="forgot_password">Pasahitza galdu duzu?</string>
 	<string name="ssl_certificate_ask_trust">Normalean gune honetara arazo gabe konektatzen bazara, errore honek norbait zu ordezkatu nahian dabilela adieraz lezake eta ez zenuke aurrera jarraitu beharko. Hala ere ziurtagiriaz fidatu nahi duzu?</string>
 	<string name="passcode_wrong_passcode">PIN okerra</string>
-	<string name="invalid_password_message">Pasahitzak gutxienez 4 karaktere eduki behar ditu</string>
 	<string name="comments_empty_list">Ez dago iruzkinik.</string>
 	<string name="adding_cat_success">Kategoria zuzen gehitu da.</string>
 	<string name="stats_bar_graph_empty">Ez dago estatistikarik eskuragarri.</string>
@@ -481,7 +472,6 @@ Language: eu_ES
 	<string name="email_exists">Posta elektroniko helbide hori dagoeneko erabilia da</string>
 	<string name="cat_name_required">Kategoria izena beharrezkoa da</string>
 	<string name="category_automatically_renamed">%1$s kategoria izena ez da zuzena. %2$s bezala berrizendatua izan da.</string>
-	<string name="no_account">Ez da Wordpress konturik aurkitu, gehitu kontu bat eta saiatu berriz</string>
 	<string name="error_refresh_notifications">Jakinarazpenak ezin izan dira eguneratu</string>
 	<string name="error_load_comment">Ezin izan da iruzkina kargatu</string>
 	<string name="error_downloading_image">Irudia deskargatzean errorea</string>
@@ -491,7 +481,6 @@ Language: eu_ES
 	<string name="reply_failed">Erantzunak huts egin du</string>
 	<string name="error_refresh_comments">Iruzkinak ezin izan dira une honetan freskatu</string>
 	<string name="error_refresh_stats">Estatistikak ezin izan dira une honetan freskatu </string>
-	<string name="nux_cannot_log_in">Ezin zara sartu</string>
 	<string name="gallery_error">Ezin izan da media itema eskuratu</string>
 	<string name="sdcard_message">Mediak igotzeko muntatutako SD txartel bat beharrezkoa da</string>
 	<string name="blog_name_required">Sartu gune helbide bat</string>
@@ -509,8 +498,6 @@ Language: eu_ES
 	<string name="theme_fetch_failed">Huts egin du itxurak eskuratzeak</string>
 	<string name="error_refresh_posts">Bidalketak ezin dira momentu honetan eguneratu</string>
 	<string name="could_not_remove_account">Ezin izan da gunea ezabatu</string>
-	<string name="invalid_username_too_short">Erabiltzaile-izenak gutxienez 4 karaktere eduki behar ditu</string>
-	<string name="invalid_username_too_long">Erabiltzaile-izenak 64 karaktere baino gutxiago eduki behar ditu</string>
 	<string name="username_only_lowercase_letters_and_numbers">Erabiltzaile-izenak letra minuskulak (a-z) eta zenbakiak bakarrik eduki ditzake</string>
 	<string name="username_required">Sartu erabiltzaile-izen bat</string>
 	<string name="username_not_allowed">Erabiltzaile-izena ez dago baimenduta</string>
@@ -616,7 +603,6 @@ Language: eu_ES
 	<string name="deleting_page">Orrialdea ezabatzen</string>
 	<string name="deleting_post">Bidalketa ezabatzen</string>
 	<string name="share_url_post">Partekatu bidalketa</string>
-	<string name="creating_your_account">Zure kontua sortzen</string>
 	<string name="creating_your_site">Zure gunea sortzen</string>
 	<string name="reader_empty_posts_in_tag_updating">Bidalketak eskuratzen...</string>
 	<string name="reader_label_reply">Erantzun</string>
@@ -634,14 +620,9 @@ Language: eu_ES
 	<string name="account_two_step_auth_enabled">Kontu honek bi pausotako autentikazioa gaiturik dauka. Joan WordPress.com-eko hobespenetara eta aplikazioarentzat pasahitz bat sortu.</string>
 	<string name="pick_video">Aukeratu bideoa</string>
 	<string name="reader_toast_err_get_post">Ezin izan da bidalketa hau eskuratu</string>
-	<string name="validating_user_data">Erabiltzaile-datuak egiaztatzen</string>
-	<string name="validating_site_data">Gunearen datuak egiaztatzen</string>
 	<string name="nux_welcome_create_account">Sortu kontua</string>
 	<string name="password_invalid">Pasahitz seguruago bat behar duzu. Ziurtatu gutxienez 7 karaktere erabiltzeaz, letra larri eta xeheak, zenbakiak eta karaktere bereziak nahasteaz.</string>
 	<string name="nux_tap_continue">Jarraitu</string>
-	<string name="signing_in">Saioa hasten...</string>
-	<string name="nux_add_selfhosted_blog">Gehitu zuk ostatatutako gunea</string>
-	<string name="nux_oops_not_selfhosted_blog">Hasi saioa WordPress.com-en</string>
 	<string name="reader_label_added_tag">%s gehitua</string>
 	<string name="reader_toast_err_tag_invalid">Hau ez da etiketa zuzen bat</string>
 	<string name="reader_toast_err_share_intent">Ezin izan da partekatu</string>
@@ -652,7 +633,6 @@ Language: eu_ES
 	<string name="empty_list_default">Zerrenda hau hutsik dago</string>
 	<string name="reader_btn_share">Partekatu</string>
 	<string name="reader_btn_follow">Jarraitu</string>
-	<string name="connecting_wpcom">WordPress.com-en saioa hasten</string>
 	<string name="media_add_popup_title">Gehitu media bildumara</string>
 	<string name="reader_untitled_post">(Izenbururik gabe)</string>
 	<string name="reader_btn_unfollow">Jarraitzen</string>
@@ -664,7 +644,6 @@ Language: eu_ES
 	<string name="create_account_wpcom">Sortu kontu bat WordPress.com-en</string>
 	<string name="username_invalid">Erabiltzaile-izen okerra</string>
 	<string name="reader_hint_comment_on_comment">Erantzun iruzkinari...</string>
-	<string name="button_next">Hurrengoa</string>
 	<string name="limit_reached">Mugara iritsi zara. Minutu bat barru berriz proba dezakezu. Lehenago saiatuz gero debekua luzatzea besterik ez duzu lortuko. Hau errore bat dela baderitzozu, kontaktatu laguntza zerbitzua. </string>
 	<string name="media_gallery_type">Mota</string>
 	<string name="media_gallery_type_squares">Karratuak</string>

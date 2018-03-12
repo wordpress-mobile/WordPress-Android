@@ -16,9 +16,6 @@ Language: nb_NO
 	<string name="plugin_disable_progress_dialog_message">Skrur av %s …</string>
 	<string name="plugin_btn_remove">Fjern utvidelsen</string>
 	<string name="plugin_configuration_failed">En feil oppstod under oppsett av utvidelsen: %s</string>
-	<string name="plugin_remove_failed">Feil under fjerning av %s.</string>
-	<string name="plugin_removed_successfully">Lyktes i å fjerne %s.</string>
-	<string name="plugin_available_version">Versjon %s er tilgjengelig.</string>
 	<string name="plugin_detail_label_state_autoupdates">Auto-oppdateringer</string>
 	<string name="plugin_detail_label_state_active">Aktiv</string>
 	<string name="my_site_btn_plugins">Utvidelser</string>
@@ -28,9 +25,6 @@ Language: nb_NO
 	<string name="notification_login_failed">En feil har oppstått.</string>
 	<string name="notification_2fa_needed">Vennligst skriv inn en autentiseringskode for å fortsette.</string>
 	<string name="notification_error_wrong_password">Vennligst dobbeltsjekk passordet ditt for å fortsette.</string>
-	<string name="site_creating_success">Suksess!</string>
-	<string name="site_creating_set_theme">Velger temaet …</string>
-	<string name="site_creating_label">Forbereder nettstedet ditt …</string>
 	<string name="login_empty_password">Vennligst skriv inn et passord</string>
 	<string name="login_text_otp_another">Send meg en annen kode i stedet.</string>
 	<string name="size_large">Stor</string>
@@ -165,8 +159,6 @@ Language: nb_NO
 	<string name="login_text_otp">Send meg en SMS-kode istedet.</string>
 	<string name="enter_verification_code">Nesten framme! Vennligst skriv inn verifiseringskoden fra autentiseringsappen din.</string>
 	<string name="enter_the_address_of_your_wordpress_site">Skriv inn adressen til WordPress-nettstedet ditt</string>
-	<string name="enter_username_instead">Logg inn med brukernavnet ditt istedet.</string>
-	<string name="enter_site_address_instead">Logg inn til nettsiden din ved å skrive inn nettstedsadressen din istedet.</string>
 	<string name="open_mail">Åpne E-post</string>
 	<string name="next">Neste</string>
 	<string name="enter_email_wordpress_com">Logg inn på WordPress.com ved å bruke en E-postadresse, for å behandle alle dine WordPress-nettsteder.</string>
@@ -176,7 +168,6 @@ Language: nb_NO
 	<string name="login_promo_text_realtime">Se at lesere fra rundt om i verden leser og samhandler med nettstedet ditt — i sanntid.</string>
 	<string name="login_promo_text_onthego">Publiser fra parken. Blogg fra bussen. Kommenter fra kaféen. WordPress blir med deg hvor du går.</string>
 	<string name="email_not_found">Vi kunne ikke finne en WordPress.com-bruker med denne E-postadressen</string>
-	<string name="create_wordpress_site">Lag en WordPress-side</string>
 	<string name="image_optimization_promo_desc">Bildeoptimalisering krymper bilder for raskere opplastning.\n\nDu kan endre dette til enhver tid i nettstedets innstillinger.</string>
 	<string name="image_optimization_promo_title">Vil du skru på bildeoptimalisering?</string>
 	<string name="turn_on">Skru på</string>
@@ -373,12 +364,9 @@ Language: nb_NO
 	<string name="error_unknown_post_type">Ukjent innleggsformat</string>
 	<string name="error_fetch_site_after_creation">Nettstedet har blitt laget, og du kan måtte oppfriske nettstedene dine i nettstedsvelgeren.</string>
 	<string name="submit_for_review">Send inn</string>
-	<string name="tell_me_more">Fortell meg mer</string>
 	<string name="duplicate_site_detected">En duplikatside har blitt oppdaget.</string>
 	<string name="cannot_add_duplicate_site">Dette nettstedet finnes allerede i appen, så du kan ikke legge den til.</string>
-	<string name="already_logged_in_wpcom_same_username">Du er allerede logget inn på WordPress.com-kontoen din. Nettstedet ditt burde dukke opp i nettsidevelgeren, så sørg for at den ikke er skjult.</string>
 	<string name="already_logged_in_wpcom">Du er allerede logget inn med en WordPress.com-konto, og du kan ikke legge til en WordPress.com-nettsted som er knyttet til en annen konto.</string>
-	<string name="checking_username">Sjekker brukernavnet</string>
 	<string name="jetpack_different_com_account">Jetpack-nettsteder som hører til andre WordPress.com-kontoer, er ikke støttet</string>
 	<string name="jetpack_use_com_account">For å legge til Jetpack-nettstedet ditt, logg inn på WordPress.com-kontoen du brukte til å tilkoble Jetpack.</string>
 	<string name="error_media_load">Klarte ikke å laste inn mediet</string>
@@ -412,7 +400,6 @@ Language: nb_NO
 	<string name="reader_photo_by">Bilde av %s</string>
 	<string name="reader_label_visit">Besøk</string>
 	<string name="pending_draft_more">Du lagde utkast for %d innlegg, men de ble aldri publisert. Trykk for å sjekke.</string>
-	<string name="invalid_verification_code_format">Må være et seks-sifret nummer</string>
 	<string name="confirm_discard_changes">Vil du forkaste ulagrede endringer?</string>
 	<string name="swipe_for_more">Sveip for mer</string>
 	<string name="reader_err_get_post_not_authorized_signin_fallback">Du er ikke autorisert til å se dette innlegget. Prøv å logge inn på WordPress.com først, eller bruk den øverste handlingsknappen for å åpne opp en nettleser istedet.</string>
@@ -521,7 +508,6 @@ Language: nb_NO
 	<string name="my_site_header_external">Eksternt</string>
 	<string name="send_link">Send lenke</string>
 	<string name="invite_people">Inviter folk</string>
-	<string name="signup_succeed_signin_failed">Kontoen din har blitt laget, men en feil oppstod mens vil logget deg på.\n     Prøv å logge inn med ditt nyopprettede brukernavn og passord.</string>
 	<string name="label_clear_search_history">Slett søkehistorien</string>
 	<string name="dlg_confirm_clear_search_history">Vil du slette søkehistorien?</string>
 	<string name="reader_empty_posts_in_search_description">Ingen innlegg ble funnet for %s på språket ditt</string>
@@ -613,8 +599,6 @@ Language: nb_NO
 	<string name="comments_empty_list_filtered_trashed">Ingen forkastede kommentarer</string>
 	<string name="comments_empty_list_filtered_pending">Ingen ventende kommentarer</string>
 	<string name="comments_empty_list_filtered_approved">Ingen godkjente kommentarer</string>
-	<string name="button_done">Ferdig</string>
-	<string name="button_skip">Hopp over</string>
 	<string name="site_timeout_error">Klarte ikke å koble til WordPress-nettstedet på grunn av en tidsutløpsfeil.</string>
 	<string name="xmlrpc_malformed_response_error">Klarte ikke å koble til. WordPress-installasjonen svarte med et ugylidg XML-RPC-dokument.</string>
 	<string name="xmlrpc_missing_method_error">Klarte ikke å koble til. De påkrevde XML-RPC-metodene mangler på denne tjeneren.</string>
@@ -808,8 +792,6 @@ Language: nb_NO
 	<string name="reader_err_get_post_not_found">Dette innlegget finnes ikke lenger</string>
 	<string name="reader_err_get_post_not_authorized">Du er ikke autorisert til å vise dette innlegget</string>
 	<string name="reader_err_get_post_generic">Klarte ikke å hente inn dette innlegget</string>
-	<string name="blog_name_no_spaced_allowed">Sideadresser kan ikke inneholde mellomrom</string>
-	<string name="invalid_username_no_spaces">Brukernavnet kan ikke inneholde mellomrom</string>
 	<string name="reader_empty_followed_blogs_no_recent_posts_description">Nettstedene du følger har ikke lagt ut noe i det siste</string>
 	<string name="reader_empty_followed_blogs_no_recent_posts_title">Ingen nylige innlegg</string>
 	<string name="edit_media">Rediger medie</string>
@@ -924,9 +906,6 @@ Language: nb_NO
 	<string name="page_trashed">Siden er lagt i papirkurven</string>
 	<string name="stats_no_activity_this_period">Ingen aktivitet i denne perioden</string>
 	<string name="post_trashed">Innlegg lagt i papirkurven</string>
-	<string name="my_site_no_sites_view_subtitle">Vil du legge til en?</string>
-	<string name="my_site_no_sites_view_title">Du har ikke noen WordPress-nettsteder ennå.</string>
-	<string name="my_site_no_sites_view_drake">Illustrering</string>
 	<string name="reader_toast_err_follow_blog_not_authorized">Du er ikke autorisert til å få tilgang til denne bloggen</string>
 	<string name="reader_toast_err_follow_blog_not_found">Denne bloggen kunne ikke bli funnet</string>
 	<string name="undo">Angre</string>
@@ -952,7 +931,6 @@ Language: nb_NO
 	<string name="site_picker_cant_hide_current_site">«%s» ble ikke skjult, siden den er det nåværende nettstedet</string>
 	<string name="site_picker_create_dotcom">Opprett et WordPress.com-nettsted</string>
 	<string name="site_picker_edit_visibility">Vis/skjul sider</string>
-	<string name="site_picker_add_site">Legg til nettsted</string>
 	<string name="site_picker_add_self_hosted">Legg til selvtjent nettsted</string>
 	<string name="my_site_btn_view_site">Vis nettsted</string>
 	<string name="my_site_btn_view_admin">Vis admin-området</string>
@@ -973,14 +951,9 @@ Language: nb_NO
 	<string name="deselect_all">Avvelg alle</string>
 	<string name="sign_out_wpcom_confirm">Å logge ut av kontoen din vil fjerne alle WordPress.com-dataene til @%s fra denne enheten, inkludert lokale utkast og lokale endringer.</string>
 	<string name="stats_generic_error">«Påkrevde statistikker» kunne ikke bli lastet inn</string>
-	<string name="two_step_footer_label">Skriv inn koden fra din autentiseringsapp.</string>
-	<string name="two_step_footer_button">Send kode via tekstmelding.</string>
-	<string name="two_step_sms_sent">Sjekk dine tekstmeldinger for verifikasjonskoden.</string>
 	<string name="auth_required">Logg på igjen for å fortsette.</string>
 	<string name="editor_toast_invalid_path">Ugyldig filsti</string>
 	<string name="verification_code">Verifikasjonskode</string>
-	<string name="invalid_verification_code">Ugyldig verifikasjonskode</string>
-	<string name="verify">Verifiser</string>
 	<string name="language">Språk</string>
 	<string name="device">Enhet</string>
 	<string name="media_details_label_file_name">Filnavn</string>
@@ -1164,13 +1137,10 @@ Language: nb_NO
 	<string name="notifications_empty_list">Ingen notifikasjoner</string>
 	<string name="error_refresh_stats">Statistikkene kunne ikke bli oppfrisket for øyeblikket</string>
 	<string name="cat_name_required">Kategorinavn-feltet er påkrevd</string>
-	<string name="no_account">Ingen Wordpress-konto ble funnet. Legg til en konto og prøv igjen.</string>
 	<string name="error_downloading_image">Feil ved nedlastning av bilde</string>
 	<string name="username_required">Skriv inn et brukernavn</string>
 	<string name="username_only_lowercase_letters_and_numbers">Brukernavnet kan bare inneholde engelske småbokstaver (a-z) og sifre.</string>
 	<string name="invalid_email_message">E-postadressen din er ikke gyldig</string>
-	<string name="invalid_password_message">Passordet må ha ≥4 tegn</string>
-	<string name="invalid_username_too_short">Brukernavnet må ha >4 tegn</string>
 	<string name="error_load_comment">Klarte ikke å laste inn kommentaren</string>
 	<string name="error_generic">En feil oppstod</string>
 	<string name="blog_name_reserved">Den siden er reservert</string>
@@ -1178,7 +1148,6 @@ Language: nb_NO
 	<string name="blog_name_cant_be_used">Du kan ikke bruke den sideadressen</string>
 	<string name="username_reserved_but_may_be_available">Det brukernavnet er for øyeblikket reservert, men kan bli tilgjengelig om et par dager</string>
 	<string name="username_must_include_letters">Brukernavnet må ha minst én engelsk bokstav (a-z)</string>
-	<string name="nux_cannot_log_in">Vi kunne ikke logge deg på</string>
 	<string name="username_or_password_incorrect">Brukernavnet og/eller passordet du skrev inn er feil</string>
 	<string name="blog_name_contains_invalid_characters">Sideadressen kan ikke inneholde tegnet «_»</string>
 	<string name="email_exists">Den E-postadressen er allerede i bruk</string>
@@ -1186,7 +1155,6 @@ Language: nb_NO
 	<string name="email_invalid">Skriv inn en gyldig E-postadresse</string>
 	<string name="username_must_be_at_least_four_characters">Brukernavnet må ha ≥4 tegn</string>
 	<string name="username_contains_invalid_characters">Brukernavnet kan ikke inneholdet tegnet «_»</string>
-	<string name="invalid_username_too_long">Brukernavnet må være &lt;61 tegn</string>
 	<string name="blog_name_must_be_less_than_sixty_four_characters">Nettstedsadressen må være &lt;64 tegn</string>
 	<string name="blog_name_must_be_at_least_four_characters">Nettstedsadressen må ha >4 tegn</string>
 	<string name="blog_name_not_allowed">Den nettstedsadressen er ikke tillatt</string>
@@ -1306,7 +1274,6 @@ Language: nb_NO
 	<string name="share_link">Del lenke</string>
 	<string name="deleting_post">Sletter innlegg</string>
 	<string name="deleting_page">Sletter side</string>
-	<string name="creating_your_account">Oppretter kontoen din</string>
 	<string name="creating_your_site">Oppretter ditt nettsted</string>
 	<string name="reader_empty_posts_in_tag_updating">Henter innlegg …</string>
 	<string name="comment_spammed">Kommentar merket som useriøs</string>
@@ -1324,15 +1291,10 @@ Language: nb_NO
 	<string name="select_time">Velg tidspunkt</string>
 	<string name="account_two_step_auth_enabled">Denne kontoen har 2-trinnsautentisering aktivert. Besøk dine sikkerhetsinnstillinger på WordPress.com og generer et app-spesifikt passord.</string>
 	<string name="reader_toast_err_get_post">Klarte ikke å hente inn dette innlegget</string>
-	<string name="validating_site_data">Validerer nettstedets dataer</string>
-	<string name="validating_user_data">Validerer brukerdataer</string>
 	<string name="reader_empty_followed_blogs_description">Men ikke vær redd, bare trykk på ikonet øverst til høyre for å begynne å utforske!</string>
 	<string name="nux_tap_continue">Fortsett</string>
 	<string name="nux_welcome_create_account">Opprett konto</string>
-	<string name="nux_oops_not_selfhosted_blog">Logg inn på WordPress.com</string>
 	<string name="password_invalid">Du trenger et mer sikkert passord. Sørg for å bruke 7 eller flere tegn, og bland store og små bokstaver, numre, spesialtegn, eller Unicode-tegn.</string>
-	<string name="signing_in">Logger inn …</string>
-	<string name="nux_add_selfhosted_blog">Legg til selvtjent nettsted</string>
 	<string name="reader_btn_share">Del</string>
 	<string name="reader_btn_follow">Følg</string>
 	<string name="reader_untitled_post">(Uten tittel)</string>
@@ -1347,12 +1309,10 @@ Language: nb_NO
 	<string name="reader_likes_one">En person liker dette</string>
 	<string name="limit_reached">Midlertidig begrenset. Du kan prøve igjen om 1 minutt. Dersom du prøver igjen før dette, vil begrensningsperioden bli utvidet. Dersom du mener dette er en feil, vennligst ta kontakt med brukerstøtte.</string>
 	<string name="empty_list_default">Denne listen er tom</string>
-	<string name="button_next">Neste</string>
 	<string name="reader_toast_err_share_intent">Klarte ikke å dele</string>
 	<string name="reader_toast_err_tag_invalid">Det var ikke et gyldig merke</string>
 	<string name="reader_toast_err_tag_exists">Du følger allerede dette merket</string>
 	<string name="reader_toast_err_comment_failed">Klarte ikke å poste kommentaren din</string>
-	<string name="connecting_wpcom">Logger inn til WordPress.com</string>
 	<string name="reader_hint_comment_on_comment">Svar på kommentar …</string>
 	<string name="reader_label_added_tag">La til %s</string>
 	<string name="media_add_popup_title">Legg til i mediebiblioteket</string>

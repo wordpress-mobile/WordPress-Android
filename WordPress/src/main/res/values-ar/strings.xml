@@ -52,12 +52,9 @@ Language: ar
 	<string name="error_unknown_post_type">تنسيق المقالة غير معروف</string>
 	<string name="error_fetch_site_after_creation">تم إنشاء الموقع، ربما تحتاج إلى تحديث مواقعك في منتقي المواقع.</string>
 	<string name="submit_for_review">إرسال</string>
-	<string name="tell_me_more">أرغب في معرفة المزيد</string>
 	<string name="duplicate_site_detected">تم اكتشاف موقع متكرر.</string>
 	<string name="cannot_add_duplicate_site">الموقع موجود بالفعل في التطبيق، لا يمكنك إضافته.</string>
-	<string name="already_logged_in_wpcom_same_username">أنت قيد تسجيل الدخول بالفعل إلى حساب وردبرس.كوم الخاص بك. ينبغي أن يظهر موقعك في منتقي المواقع، تأكد من أنَّه ليس مخفيًا.</string>
 	<string name="already_logged_in_wpcom">أنت قيد تسجيل الدخول بالفعل إلى حساب وردبرس.كوم، ولا يمكنك إضافة موقع وردبرس.كوم مرتبط بحساب آخر.</string>
-	<string name="checking_username">التحقق من اسم المستخدم</string>
 	<string name="jetpack_different_com_account">مواقع Jetpack التي تنتمي إلى حسابات ووردبريس.كوم المختلفة غير مدعومة</string>
 	<string name="jetpack_use_com_account">لإضافة موقع Jetpack الخاص بك، سجل الدخول إلى حساب وردبرس.كوم الذي استخدمته للاتصال بـ Jetpack.</string>
 	<string name="error_media_load">تعذر تحميل الوسائط</string>
@@ -245,8 +242,6 @@ Language: ar
 	<string name="site_settings_advanced_header">متقدم</string>
 	<string name="comments_empty_list_filtered_pending">لا توجد تعليقات في قائمة الانتظار</string>
 	<string name="comments_empty_list_filtered_approved">لا توجد تعليقات تمَّت الموافقة عليها</string>
-	<string name="button_done">تم</string>
-	<string name="button_skip">تخطي</string>
 	<string name="site_timeout_error">تعذر الاتصال بموقع وردبرس لوجود خطأ في المهلة.</string>
 	<string name="xmlrpc_malformed_response_error">تعذر الاتصال. أنتجت عملية تثبيت وردبرس مستند XML-RPC غير صالح.</string>
 	<string name="xmlrpc_missing_method_error">تعذر الاتصال. طرق XML-RPC غير موجودة على الخادم.</string>
@@ -437,8 +432,6 @@ Language: ar
 	<string name="reader_err_get_post_not_found">لم تعد هذه المقالة موجودة</string>
 	<string name="reader_err_get_post_not_authorized">لست مخولاً لعرض هذه المقالة</string>
 	<string name="reader_err_get_post_generic">يتعذر استرجاع هذه المقالة</string>
-	<string name="blog_name_no_spaced_allowed">لا يمكن أن يحتوي عنوان الموقع على مسافات</string>
-	<string name="invalid_username_no_spaces">لا يمكن أن يحتوي اسم المستخدم على مسافات</string>
 	<string name="reader_empty_followed_blogs_no_recent_posts_description">لم تنشر المواقع التي تتابعها أي شيء مؤخرًا</string>
 	<string name="reader_empty_followed_blogs_no_recent_posts_title">لا توجد مقالات حديثة</string>
 	<string name="edit_media">تحرير الوسائط</string>
@@ -550,9 +543,6 @@ Language: ar
 	<string name="button_view">عرض</string>
 	<string name="button_edit">تحرير</string>
 	<string name="button_publish">نشر</string>
-	<string name="my_site_no_sites_view_subtitle">هل ترغب في إضافة واحد؟</string>
-	<string name="my_site_no_sites_view_title">ليس لديك أي مواقع وردبرس حتى الآن.</string>
-	<string name="my_site_no_sites_view_drake">رسم توضيحي</string>
 	<string name="reader_toast_err_follow_blog_not_authorized">أنت غير معتمد للوصول إلى هذه المدونة</string>
 	<string name="reader_toast_err_follow_blog_not_found">تعذر العثور على هذه المدونة</string>
 	<string name="undo">تراجع</string>
@@ -573,7 +563,6 @@ Language: ar
 	<string name="site_picker_cant_hide_current_site">\"%s\" لم يكن مخفيًا لأنه الموقع الحالي</string>
 	<string name="account_settings">إعدادات الحساب</string>
 	<string name="site_picker_create_dotcom">إنشاء موقع وردبرس.كوم</string>
-	<string name="site_picker_add_site">إضافة موقع</string>
 	<string name="site_picker_edit_visibility">إظهار/إخفاء المواقع</string>
 	<string name="site_picker_add_self_hosted">إضافة موقع مستضاف ذاتيًا</string>
 	<string name="my_site_btn_view_site">عرض الموقع</string>
@@ -595,12 +584,7 @@ Language: ar
 	<string name="stats_generic_error">تعذر تحميل الإحصاءات المطلوبة</string>
 	<string name="editor_toast_invalid_path">مسار الملف غير صالح</string>
 	<string name="verification_code">رمز التحقق</string>
-	<string name="invalid_verification_code">رمز التحقق غير صالح</string>
-	<string name="two_step_footer_label">أدخل الرمز من تطبيق الموثق.</string>
-	<string name="two_step_sms_sent">تحقق من رسائلك النصية للاطلاع على رمز التحقق.</string>
 	<string name="language">اللغة</string>
-	<string name="verify">تحقق</string>
-	<string name="two_step_footer_button">إرسال الكود عن طريق رسالة نصية</string>
 	<string name="device">جهاز</string>
 	<string name="media_details_label_file_name">اسم الملف</string>
 	<string name="media_details_label_file_type">نوع الملف</string>
@@ -764,7 +748,6 @@ Language: ar
 	<string name="ssl_certificate_error">شهادة SSL غير صالحة</string>
 	<string name="ssl_certificate_ask_trust">إذا كنت عادة تتصل بهذا الموقع بدون أي مشاكل، فربما يعني هذا الخطأ أن شخصًا ما يحاول سرقة هذا الموقع, وينبغي ألا تقوم بالاستمرار. هل ترغب في الوثوق بالشهادة على أي حال؟</string>
 	<string name="could_not_remove_account">تعذر إزالة الموقع</string>
-	<string name="no_account">لم يتم العثور على حساب ووردبريس، أضف حسابًا وحاول من جديد</string>
 	<string name="error_generic">حدث خطأ</string>
 	<string name="blog_name_reserved">هذا الموقع محجوز</string>
 	<string name="blog_name_exists">هذا الموقع موجود مسبقًا</string>
@@ -779,16 +762,12 @@ Language: ar
 	<string name="username_required">أدخل اسم المستخدم</string>
 	<string name="email_not_allowed">عنوان البريد الإلكتروني هذا غير مسموح به</string>
 	<string name="username_not_allowed">اسم المستخدم غير مسموح به</string>
-	<string name="invalid_username_too_short">اسم المستخدم يجب أن يكون أطول من 4 أحرف</string>
 	<string name="invalid_email_message">عنوان بريدك الإلكتروني غير صالح</string>
-	<string name="invalid_username_too_long">اسم المستخدم يجب أن يكون أقل من 61 حرفًا</string>
-	<string name="invalid_password_message">كلمة المرور يجب أن تحتوي على 4 أحرف على الأقل</string>
 	<string name="username_exists">اسم المستخدم هذا موجود بالفعل</string>
 	<string name="email_invalid">أدخل عنوان بريد إلكتروني صالح</string>
 	<string name="adding_cat_success">تم إضافة التصنيف بنجاح</string>
 	<string name="adding_cat_failed">إضافة التصنيف فشلت</string>
 	<string name="stats_empty_comments">لا تعليقات حتى الآن</string>
-	<string name="nux_cannot_log_in">نحن لا نستطيع تسجيل دخولك</string>
 	<string name="username_or_password_incorrect">اسم المستخدم أو كلمة المرور غير صحيحة</string>
 	<string name="passcode_wrong_passcode">مفتاح الـ PIN خاطئ</string>
 	<string name="error_downloading_image">خطأ في تحميل الصورة</string>
@@ -916,7 +895,6 @@ Language: ar
 	<string name="share_url_page">مشاركة الصفحة</string>
 	<string name="share_link">مشاركة الرابط</string>
 	<string name="creating_your_site">يتم الآن إنشاء موقعك</string>
-	<string name="creating_your_account">يتم الآن إنشاء حسابك</string>
 	<string name="reader_empty_posts_in_tag_updating">يتم الآن جلب المقالات ...</string>
 	<string name="reader_label_reply">رد</string>
 	<string name="cant_share_no_visible_blog">لا تستطيع مشاركتها إلى ووردبريس بدون أن تجعل المدونة مرئية</string>
@@ -933,12 +911,9 @@ Language: ar
 	<string name="pick_photo">تحديد صورة</string>
 	<string name="pick_video">تحديد فيديو</string>
 	<string name="reader_toast_err_get_post">غير قادر على استرجاع هذه المقالة</string>
-	<string name="validating_user_data">التحقق من صحة بيانات المستخدم</string>
-	<string name="validating_site_data">التحقق من صحة بيانات الموقع</string>
 	<string name="reader_empty_followed_blogs_description">ومع ذلك لا داعي للقلق، فما عليك سوى النقر على الأيقونة في أعلى اليمين لبدء الاستكشاف!</string>
 	<string name="nux_welcome_create_account">انشئ حساب</string>
 	<string name="nux_tap_continue">متابعة</string>
-	<string name="nux_add_selfhosted_blog">أضف موقعك المستضاف ذاتيًا</string>
 	<string name="password_invalid">تحتاج لكلمة مرور أكثر أمنًا. تأكدمن استخدام 7 رموز أو أكثر، اخلط الأحرف الكبيرة أو الأحرف الصغيرة أو الأرقام أو الرموز الخاصة</string>
 	<string name="media_add_popup_title">اضف إلى مكتبة الوسائط</string>
 	<string name="empty_list_default">هذه القائمة فارغة.</string>
@@ -962,7 +937,6 @@ Language: ar
 	<string name="limit_reached">وصلت للحد المسموح , يمكنك المحاولة مرة أخرى خلال 1 دقيقة. المحاولة مرة أخرى قبل ذلك ستؤدي لزيادة الوقت الواجب انتظاره قبل أن يتم رفع الحظر. إذا كنت تعتقد أن هذا هو الخطأ، اتصل بالدعم.</string>
 	<string name="nux_tutorial_get_started_title">ابدأ!</string>
 	<string name="reader_hint_comment_on_comment">رد على التعليق...</string>
-	<string name="button_next">التالي</string>
 	<string name="themes">القوالب</string>
 	<string name="media_gallery_type">النوع</string>
 	<string name="media_edit_title_text">العنوان</string>

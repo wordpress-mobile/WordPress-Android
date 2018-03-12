@@ -6,12 +6,9 @@ Generator: GlotPress/2.4.0-alpha
 Language: cy_GB
 -->
 <resources>
-	<string name="tell_me_more">Gwybod mwy...</string>
 	<string name="duplicate_site_detected">Mae gwefan dyblyg wedi\'i chanfod.</string>
 	<string name="cannot_add_duplicate_site">Mae\'r wefan hon yn bodoli eisoes yn yr ap, chewch chi ddim ychwanegu iddi.</string>
-	<string name="already_logged_in_wpcom_same_username">Rydych eisoes wedi mewngofnodi i\'ch cyfrif WordPress.com. Dylai eich gwefan ymddangos yn y dewisydd gwefan, gwnewch yn siŵr nad yw wedi cael ei guddio.</string>
 	<string name="already_logged_in_wpcom">Rydych eisoes wedi mewngofnodi i gyfrif WordPress.com, chewch chi ddim ychwanegu gwefan WordPress.com sy\'n rhwym i gyfrif arall.</string>
-	<string name="checking_username">Gwirio enw defnyddiwr</string>
 	<string name="jetpack_different_com_account">Nid yw gwefannau Jetpack sy\'n perthyn i gyfrifon WordPress gwahanol yn cael eu cynnal</string>
 	<string name="jetpack_use_com_account">I ychwanegu eich gwefan Jetpack, mewngofnodwch i gyfrif WordPress.com a ddefnyddiwyd gennych i gysylltu Jetpack.</string>
 	<string name="error_media_load">Methu llwytho cyfrwng</string>
@@ -44,7 +41,6 @@ Language: cy_GB
 	<string name="reader_photo_by">Llun gan %s</string>
 	<string name="reader_label_visit">Ymweld</string>
 	<string name="pending_draft_more">Rydych wedi drafftio %d cofnod ond heb eu chyhoeddi. Tapiwch i wirio.</string>
-	<string name="invalid_verification_code_format">Rhaid iddo fod yn rif chwe digid</string>
 	<string name="confirm_discard_changes">Hepgor newidiadau heb eu cadw?</string>
 	<string name="swipe_for_more">Llusgo am rhagor</string>
 	<string name="reader_err_get_post_not_authorized_signin_fallback">Nid oes gennych hawl i weld y cofnod hwn. Mewngofnodwch i WordPress.com yn gyntaf neu ddefnyddiwch y botwm gweithred uchaf i agor porwr yn lle hynny.</string>
@@ -145,7 +141,6 @@ Language: cy_GB
 	<string name="invite_message_title">Neges Bersonol</string>
 	<string name="invite">Gwahodd</string>
 	<string name="invite_names_title">Enwau defnyddwyr neu E-byst</string>
-	<string name="signup_succeed_signin_failed">Mae eich cyfrif wedi ei greu ond bu gwall wrth i ni eich mewngofnodi\n      Ceisiwch fewngofnodi gyda\'ch enw defnyddiwr a chyfrinair newydd.</string>
 	<string name="send_link">Anfon dolen</string>
 	<string name="my_site_header_external">Allanol</string>
 	<string name="invite_people">Gwahodd Pobl</string>
@@ -240,8 +235,6 @@ Language: cy_GB
 	<string name="site_settings_advanced_header">Uwch</string>
 	<string name="comments_empty_list_filtered_pending">Dim sylwadau o Dan Ystyriaeth</string>
 	<string name="comments_empty_list_filtered_approved">Dim sylwadau Cymeradwy</string>
-	<string name="button_done">Gorffen</string>
-	<string name="button_skip">Hepgor</string>
 	<string name="site_timeout_error">Methwyd cysylltu â gwefan WordPress oherwydd gwall Terfyn Amser.</string>
 	<string name="xmlrpc_malformed_response_error">Doedd dim modd cysylltu. Ymatebodd y gosodiad WordPress gyda dogfen XML-RPC annilys.</string>
 	<string name="xmlrpc_missing_method_error">Doedd dim modd cysylltu. Mae\'r dulliau XML-RPC angenrheidiol ar goll o\'r gweinydd.</string>
@@ -433,8 +426,6 @@ Language: cy_GB
 	<string name="reader_err_get_post_not_found">Nid yw\'r cofnod yma\'n bodoli bellach</string>
 	<string name="reader_err_get_post_not_authorized">Nid ydych wedi eich awdurdodi i weld y cofnod hwn</string>
 	<string name="reader_err_get_post_generic">Methu estyn y cofnod hwn</string>
-	<string name="blog_name_no_spaced_allowed">Nid oes modd i gyfeiriad gwefan gynnwys bylchau</string>
-	<string name="invalid_username_no_spaces">Nid oes modd i enw defnyddiwr gynnwys bylchau</string>
 	<string name="reader_empty_followed_blogs_no_recent_posts_description">Nid yw\'r gwefannau rydych yn eu dilyn gofnodi dim yn ddiweddar</string>
 	<string name="reader_empty_followed_blogs_no_recent_posts_title">Dim cofnodion diweddar</string>
 	<string name="edit_media">Golygu cyfrwng</string>
@@ -546,9 +537,6 @@ Language: cy_GB
 	<string name="button_preview">Rhagolwg</string>
 	<string name="button_view">Gweld</string>
 	<string name="button_publish">Cyhoeddi</string>
-	<string name="my_site_no_sites_view_subtitle">Hoffech chi ychwanegu un?</string>
-	<string name="my_site_no_sites_view_title">Nid oes gennych wefannau WordPress eto.</string>
-	<string name="my_site_no_sites_view_drake">Darlun</string>
 	<string name="reader_toast_err_follow_blog_not_authorized">Nid oes gennych hawl i gael mynediad at y blog hwn</string>
 	<string name="reader_toast_err_follow_blog_not_found">Nid oedd modd canfod y blog hwn</string>
 	<string name="undo">Dadwneud</string>
@@ -573,7 +561,6 @@ Language: cy_GB
 	<string name="account_settings">Gosodiadau\'r Cyfrif</string>
 	<string name="site_picker_create_dotcom">Creu gwefan WordPress.com</string>
 	<string name="site_picker_edit_visibility">Dangos/cuddio gwefannau</string>
-	<string name="site_picker_add_site">Ychwanegu gwefan</string>
 	<string name="site_picker_add_self_hosted">Ychwanegu gwefan hunanwesteio</string>
 	<string name="site_picker_title">Dewis gwefan</string>
 	<string name="my_site_btn_switch_site">Newid Gwefan</string>
@@ -595,12 +582,7 @@ Language: cy_GB
 	<string name="sign_out_wpcom_confirm">Bydd allgofnodi o\'ch cyfrif yn tynnu holl fanylion WordPress.com @%s o\'r ddyfais hon, gan gynnwys drafftiau a newidiadau lleol.</string>
 	<string name="stats_generic_error">Methu llwytho\'r ystadegau angenrheidiol</string>
 	<string name="sign_in_jetpack">Mewngofnodwch i\'ch cyfrif WordPress.com i gysylltu â Jetpack.</string>
-	<string name="two_step_sms_sent">Gwiriwch eich neges testun am god dilysu.</string>
 	<string name="auth_required">Mewngofnodwch eto i barhau.</string>
-	<string name="two_step_footer_button">Anfonwch god drwy neges testun</string>
-	<string name="two_step_footer_label">Rhowch y cod o\'ch ap dilysu.</string>
-	<string name="verify">Dilysu</string>
-	<string name="invalid_verification_code">Cod dilysu annilys</string>
 	<string name="verification_code">Cod dilysu</string>
 	<string name="editor_toast_invalid_path">Llwybr ffeil annilys</string>
 	<string name="device">Dyfais</string>
@@ -768,7 +750,6 @@ Language: cy_GB
 	<string name="forgot_password">Wedi colli eich cyfrinair?</string>
 	<string name="forums">Fforymau</string>
 	<string name="help">Cymorth</string>
-	<string name="nux_cannot_log_in">Nid oes modd i ni eich mewngofnodi</string>
 	<string name="username_or_password_incorrect">Mae\'r enw defnyddiwr neu gyfrinair yn anghywir</string>
 	<string name="blog_name_reserved_but_may_be_available">Mae\'r wefan yna wedi\'i neilltuo ar hyn o bryd ond efallai y bydd ar gael ymhen ychydig o ddyddiau</string>
 	<string name="blog_name_reserved">Mae\'r wefan wedi ei neilltuo</string>
@@ -791,9 +772,6 @@ Language: cy_GB
 	<string name="username_required">Rhowch enw defnyddiwr</string>
 	<string name="username_not_allowed">Nid yw\'r enw defnyddiwr yna yn cael ei ganiatáu</string>
 	<string name="username_only_lowercase_letters_and_numbers">Gall enwau defnyddiwr gynnwys dim ond llythrennau bach (a-z) a rhifau</string>
-	<string name="invalid_username_too_long">Rhaid i enw defnyddiwr fod yn llai na 61 nod</string>
-	<string name="invalid_username_too_short">Rhaid i enw defnyddiwr fod o leiaf yn 4 nod o hyd</string>
-	<string name="invalid_password_message">Rhaid i enw defnyddiwr gynnwys o leiaf yn 4 nod</string>
 	<string name="invalid_email_message">Nid yw eich cyfeiriad e-bost yn ddilys</string>
 	<string name="passcode_wrong_passcode">PIN anghywir</string>
 	<string name="error_downloading_image">Gwall wrth lwytho delwedd i lawr</string>
@@ -813,7 +791,6 @@ Language: cy_GB
 	<string name="reply_failed">Methodd yr ateb</string>
 	<string name="cat_name_required">Mae angen maes enw categori</string>
 	<string name="category_automatically_renamed">Nid yw enw categori %1$s yn ddilys. Mae wedi ei ail-enwi i%2$s.</string>
-	<string name="no_account">Heb ganfod cyfrif WordPress, ychwanegwch cyfrif a cheisiwch eto</string>
 	<string name="adding_cat_success">Ychwanegwyd categori yn llwyddiannus</string>
 	<string name="adding_cat_failed">Methodd ychwanegu categori</string>
 	<string name="theme_auth_error_message">Sicrhewch bod gennych breintiau gosod themâu</string>
@@ -921,7 +898,6 @@ Language: cy_GB
 	<string name="deleting_post">Wrthi\'n dileu cofnod</string>
 	<string name="deleting_page">Wrthi\'n dileu tudalen</string>
 	<string name="creating_your_site">Creu eich gwefan</string>
-	<string name="creating_your_account">Creu eich cyfrif</string>
 	<string name="reader_empty_posts_in_tag_updating">Estyn cofnodion…</string>
 	<string name="cant_share_no_visible_blog">Nid oes modd rhannu i WordPress heb flog gweladwy</string>
 	<string name="reader_toast_err_get_comment">Methu adfer y sylw hwn</string>
@@ -931,8 +907,6 @@ Language: cy_GB
 	<string name="comment_spammed">Mae\'r sylw hwn wedi ei farcio fel sbam</string>
 	<string name="reader_likes_you_and_multi">Rydych chi a %,d o bobl eraill yn hoffi hwn</string>
 	<string name="reader_likes_multi">%,d o pobl yn hoffi hwn</string>
-	<string name="validating_site_data">Dilysu data gwefan</string>
-	<string name="validating_user_data">Dilysu data defnyddiwr</string>
 	<string name="pick_video">Dewiswch fideo</string>
 	<string name="reader_toast_err_get_post">Does dim modd adfer y cofnod hwn</string>
 	<string name="pick_photo">Dewis ffoto</string>
@@ -941,12 +915,9 @@ Language: cy_GB
 	<string name="select_time">Dewis amser</string>
 	<string name="reader_likes_you_and_one">Rydych chi ac eraill yn hoffi hwn</string>
 	<string name="reader_empty_followed_blogs_description">Ond peidiwch â phoeni, tapiwch yr eicon tag ar y brig de i ddechrau darganfod!</string>
-	<string name="nux_oops_not_selfhosted_blog">Mewngofnodi i WordPress.com</string>
-	<string name="nux_add_selfhosted_blog">Ychwanegu gwefan hunan-letya</string>
 	<string name="nux_welcome_create_account">Creu cyfrif</string>
 	<string name="nux_tap_continue">Parhau</string>
 	<string name="password_invalid">Mae angen cyfrinair mwy diogel arnoch chi. Gwnewch yn siŵr eich bod yn defnyddio 7 nod neu fwy, cymysgedd o briflythyren a llythrennau bach, rhifau neu nodau arbennig.</string>
-	<string name="signing_in">Mewngofnodi...</string>
 	<string name="nux_tutorial_get_started_title">Cychwyn arni!</string>
 	<string name="limit_reached">Wedi cyrraedd y terfyn. Gallwch geisio eto mewn 1 munud. Bydd ceisio eto cyn yn cynyddu amser fydd gennych cyn codi\'r gwaharddiad. Os ydych chi\'n credu bod hwn yn gamgymeriad, cysylltwch â Cymorth.</string>
 	<string name="username_invalid">Enw defnyddiwr annilys</string>
@@ -969,8 +940,6 @@ Language: cy_GB
 	<string name="empty_list_default">Mae\'r rhestr hon yn wag</string>
 	<string name="media_add_popup_title">Ychwanegu at y llyfrgell cyfryngau</string>
 	<string name="reader_hint_comment_on_comment">Ateb sylw…</string>
-	<string name="button_next">Nesaf</string>
-	<string name="connecting_wpcom">Mewngofnodi i WordPress.com</string>
 	<string name="stats_view_tags_and_categories">Tagiau a Chategorïau</string>
 	<string name="passcode_turn_on">Troi clo PIN ymlaen</string>
 	<string name="passcode_turn_off">Diffodd clo PIN</string>
