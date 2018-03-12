@@ -474,6 +474,13 @@
     <string name="site_settings_quota_space_hint">If you need more space consider upgrading your WordPress plan.</string>
     <string name="site_settings_quota_space_value">%s of %s</string>
 
+    <!-- these represent an amount along with a measuring unit, i.e. 10 bytes, or 132 kb, or 10.2 MB, etc. -->
+    <string name="file_size_in_bytes">%d B</string>
+    <string name="file_size_in_kilobytes">%d kB</string>
+    <string name="file_size_in_megabytes">%d MB</string>
+    <string name="file_size_in_gigabytes">%d GB</string>
+    <string name="file_size_in_terabytes">%d TB</string>
+
     <!-- Speed up your site -->
     <string name="site_settings_speed_up_your_site">Speed up your site</string>
     <string name="site_settings_serve_images_from_our_servers">Serve images from our servers</string>

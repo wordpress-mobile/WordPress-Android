@@ -35,15 +35,15 @@ public class FormatUtils {
 
     /*
      * returns the passed long formatted has an human readable filesize. Ex: 10 GB
+     * unitStrings is expected to be an array of all possible sizes from byte to TeraByte, in the current locale
      */
-    public static final String formatFileSize(long size) {
+    public static final String formatFileSize(long size, final String[] unitStrings) {
         if (size <= 0) {
             return "0";
         }
-        final String[] units = new String[] {"B", "kB", "MB", "GB", "TB" };
         int digitGroups = (int) (Math.log10(size) / Math.log10(1024));
 
-        return DECIMAL_INSTANCE.get().format(size / Math.pow(1024, digitGroups)) + " " + units[digitGroups];
+        return String.format(unitStrings[digitGroups], DECIMAL_INSTANCE.get().format(size / Math.pow(1024, digitGroups)));
     }
 
     /*
