@@ -14,6 +14,7 @@ import org.wordpress.android.fluxc.model.MediaModel;
 import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.model.StockMediaModel;
 import org.wordpress.android.fluxc.network.BaseRequest.BaseNetworkError;
+import org.wordpress.android.fluxc.network.rest.wpcom.WPComGsonRequest.WPComGsonNetworkError;
 import org.wordpress.android.fluxc.network.rest.wpcom.stockmedia.StockMediaRestClient;
 import org.wordpress.android.util.AppLog;
 
@@ -148,12 +149,19 @@ public class StockMediaStore extends Store {
         }
     }
 
+    // note that the search endpoint returns an empty list if there's any type of error
     public enum StockMediaErrorType {
-        // the endpoint for stock media search simply returns an empty list if there's any type of
-        // error (timeout, authentication, etc.), so we use only a simple GENERIC_ERROR here
+        INVALID_INPUT,
         GENERIC_ERROR;
 
         public static StockMediaErrorType fromBaseNetworkError(BaseNetworkError baseError) {
+            // invalid upload request
+            if (baseError instanceof WPComGsonNetworkError) {
+                WPComGsonNetworkError wpError = (WPComGsonNetworkError) baseError;
+                if (wpError.apiError.equals("invalid_input")) {
+                    return INVALID_INPUT;
+                }
+            }
             return StockMediaErrorType.GENERIC_ERROR;
         }
     }
