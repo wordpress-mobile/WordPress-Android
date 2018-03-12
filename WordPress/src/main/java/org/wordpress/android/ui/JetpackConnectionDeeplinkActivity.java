@@ -25,7 +25,6 @@ import org.wordpress.android.util.ToastUtils;
 import javax.inject.Inject;
 
 import static org.wordpress.android.WordPress.SITE;
-import static org.wordpress.android.ui.JetpackUtils.trackWithSource;
 import static org.wordpress.android.ui.RequestCodes.JETPACK_LOGIN;
 
 /**
@@ -36,6 +35,10 @@ import static org.wordpress.android.ui.RequestCodes.JETPACK_LOGIN;
  * Redirects users to the stats activity if the jetpack connection was succesful
  */
 public class JetpackConnectionDeeplinkActivity extends AppCompatActivity {
+    private static final String ALREADY_CONNECTED = "already-connected";
+    private static final String REASON_PARAM = "reason";
+    private static final String SOURCE_PARAM = "source";
+
     private String mReason;
     private Source mSource;
 
@@ -70,8 +73,8 @@ public class JetpackConnectionDeeplinkActivity extends AppCompatActivity {
         if (Intent.ACTION_VIEW.equals(action) && uri != null) {
             // Non-empty reason does not mean we're not connected to Jetpack
             // - one of the errors is "already-connected"
-            mReason = uri.getQueryParameter("reason");
-            mSource = Source.fromString(uri.getQueryParameter("source"));
+            mReason = uri.getQueryParameter(REASON_PARAM);
+            mSource = Source.fromString(uri.getQueryParameter(SOURCE_PARAM));
             if (mAccountStore.hasAccessToken()) {
                 // if user is signed in wpcom show the stats or notifications right away
                 trackResult();
@@ -104,10 +107,16 @@ public class JetpackConnectionDeeplinkActivity extends AppCompatActivity {
 
     private void trackResult() {
         if (!TextUtils.isEmpty(mReason)) {
-            AppLog.e(AppLog.T.API, "Could not connect to Jetpack, reason: " + mReason);
-            ToastUtils.showToast(this, mReason);
+            if (mReason.equals(ALREADY_CONNECTED)) {
+                AppLog.d(AppLog.T.API, "Already connected to Jetpack.");
+                ToastUtils.showToast(this, getString(R.string.jetpack_already_connected_toast));
+            } else {
+                AppLog.e(AppLog.T.API, "Could not connect to Jetpack, reason: " + mReason);
+                JetpackUtils.trackFailureWithSource(Stat.CONNECT_JETPACK_FAILED, mSource, mReason);
+                ToastUtils.showToast(this, getString(R.string.jetpack_connection_failed_with_reason, mReason));
+            }
         } else {
-            trackWithSource(Stat.SIGNED_INTO_JETPACK, mSource);
+            JetpackUtils.trackWithSource(Stat.SIGNED_INTO_JETPACK, mSource);
         }
     }
 

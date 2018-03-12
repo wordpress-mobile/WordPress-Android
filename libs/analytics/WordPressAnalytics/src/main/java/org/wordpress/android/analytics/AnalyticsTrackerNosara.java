@@ -612,6 +612,8 @@ public class AnalyticsTrackerNosara extends Tracker {
                 return "install_jetpack_completed";
             case CONNECT_JETPACK_SELECTED:
                 return "connect_jetpack_selected";
+            case CONNECT_JETPACK_FAILED:
+                return "connect_jetpack_failed";
             case ACCOUNT_LOGOUT:
                 return "account_logout";
             case STATS_ACCESSED:
