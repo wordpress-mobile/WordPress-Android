@@ -11,6 +11,7 @@ import org.wordpress.android.login.LoginSiteAddressHelpDialogFragment;
 import org.wordpress.android.login.LoginUsernamePasswordFragment;
 import org.wordpress.android.login.SignupEmailFragment;
 import org.wordpress.android.login.SignupGoogleFragment;
+import org.wordpress.android.login.SignupMagicLinkFragment;
 
 import dagger.Module;
 import dagger.android.ContributesAndroidInjector;
@@ -49,4 +50,7 @@ public abstract class LoginFragmentModule {
 
     @ContributesAndroidInjector
     abstract SignupGoogleFragment signupGoogleFragment();
+
+    @ContributesAndroidInjector
+    abstract SignupMagicLinkFragment signupMagicLinkFragment();
 }
