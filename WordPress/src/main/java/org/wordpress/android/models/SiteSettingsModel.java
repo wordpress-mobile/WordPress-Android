@@ -181,6 +181,7 @@ public class SiteSettingsModel {
     public int postsPerPage;
     public boolean ampSupported;
     public boolean ampEnabled;
+    public String quotaDiskSpace;
 
     @Override
     public boolean equals(Object other) {
