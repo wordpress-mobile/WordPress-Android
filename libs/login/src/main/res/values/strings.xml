@@ -67,6 +67,11 @@
     <string name="login_error_suffix">\nMaybe try a different account?</string>
     <string name="signup_email_error_generic">There was some trouble checking the email address.</string>
     <string name="signup_email_header">To create your new WordPress.com account, please enter your email address.</string>
+    <string name="signup_magic_link_error">There was some trouble sending the email.  You can retry now or close and try again later.</string>
+    <string name="signup_magic_link_error_button_negative">Close</string>
+    <string name="signup_magic_link_error_button_positive">Retry</string>
+    <string name="signup_magic_link_message">We sent you a magic signup link! Check your email on this device, and tap the link in the email to finish signing up.</string>
+    <string name="signup_magic_link_progress">Sending email</string>
     <string name="signup_terms_of_service_text">By signing up, you agree to our %1$sTerms of Service%2$s.</string>
     <string name="signup_with_email_button">Sign Up with Email</string>
     <string name="signup_with_google_button">Sign Up with Google</string>

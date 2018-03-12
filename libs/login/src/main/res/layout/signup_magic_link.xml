@@ -1,0 +1,59 @@
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_height="match_parent"
+    android:layout_width="match_parent" >
+
+    <include
+        android:id="@+id/toolbar"
+        layout="@layout/toolbar_login" >
+    </include>
+
+    <RelativeLayout
+        android:gravity="center"
+        android:layout_below="@+id/toolbar"
+        android:layout_height="match_parent"
+        android:layout_width="match_parent" >
+
+        <ImageView
+            android:id="@+id/signup_magic_link_image"
+            android:contentDescription="@string/login_magic_links_sent_description"
+            android:layout_centerHorizontal="true"
+            android:layout_height="@dimen/magic_link_sent_illustration_sz"
+            android:layout_width="@dimen/magic_link_sent_illustration_sz"
+            android:scaleType="centerInside"
+            app:srcCompat="@drawable/img_email_alert_120dp" >
+        </ImageView>
+
+        <org.wordpress.android.widgets.WPTextView
+            android:id="@+id/signup_magic_link_label"
+            android:gravity="center"
+            android:layout_below="@+id/signup_magic_link_image"
+            android:layout_height="wrap_content"
+            android:layout_width="match_parent"
+            android:paddingBottom="@dimen/margin_extra_large"
+            android:paddingEnd="@dimen/margin_extra_extra_large"
+            android:paddingLeft="@dimen/margin_extra_extra_large"
+            android:paddingRight="@dimen/margin_extra_extra_large"
+            android:paddingStart="@dimen/margin_extra_extra_large"
+            android:paddingTop="@dimen/margin_extra_large"
+            android:text="@string/signup_magic_link_message"
+            app:fixWidowWords="true"
+            style="@style/Base.TextAppearance.AppCompat.Body1" >
+        </org.wordpress.android.widgets.WPTextView>
+
+        <Button
+            android:id="@+id/signup_magic_link_button"
+            android:layout_below="@+id/signup_magic_link_label"
+            android:layout_centerHorizontal="true"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/margin_extra_large"
+            android:layout_width="wrap_content"
+            android:text="@string/open_mail"
+            android:theme="@style/LoginTheme.Button"
+            style="@style/Widget.AppCompat.Button.Colored" >
+        </Button>
+
+    </RelativeLayout>
+
+</RelativeLayout>

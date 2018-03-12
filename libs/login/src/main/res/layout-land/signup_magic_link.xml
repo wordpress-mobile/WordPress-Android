@@ -1,0 +1,75 @@
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <include
+        android:id="@+id/toolbar"
+        layout="@layout/toolbar_login" >
+    </include>
+
+    <LinearLayout
+        android:gravity="center_horizontal"
+        android:layout_centerInParent="true"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/margin_extra_large"
+        android:layout_width="match_parent"
+        android:orientation="vertical" >
+
+        <ImageView
+            android:id="@+id/signup_magic_link_image"
+            android:contentDescription="@string/login_magic_links_sent_description"
+            android:layout_height="@dimen/magic_link_sent_illustration_sz"
+            android:layout_width="@dimen/magic_link_sent_illustration_sz"
+            android:scaleType="centerInside"
+            app:srcCompat="@drawable/img_email_alert_120dp" >
+        </ImageView>
+
+        <org.wordpress.android.widgets.WPTextView
+            android:id="@+id/signup_magic_link_label"
+            android:gravity="center"
+            android:layout_height="wrap_content"
+            android:layout_width="match_parent"
+            android:paddingBottom="@dimen/margin_extra_large"
+            android:paddingEnd="@dimen/margin_extra_extra_large"
+            android:paddingLeft="@dimen/margin_extra_extra_large"
+            android:paddingRight="@dimen/margin_extra_extra_large"
+            android:paddingStart="@dimen/margin_extra_extra_large"
+            android:paddingTop="@dimen/margin_extra_large"
+            android:text="@string/signup_magic_link_message"
+            app:fixWidowWords="true"
+            style="@style/Base.TextAppearance.AppCompat.Body1" >
+        </org.wordpress.android.widgets.WPTextView>
+
+    </LinearLayout>
+
+    <RelativeLayout
+        android:id="@+id/bottom_buttons"
+        android:clipToPadding="false"
+        android:background="@color/login_background_color"
+        android:layout_alignParentBottom="true"
+        android:layout_height="wrap_content"
+        android:layout_width="match_parent"
+        android:paddingBottom="@dimen/margin_medium_large"
+        android:paddingEnd="@dimen/margin_medium_large"
+        android:paddingLeft="@dimen/margin_small_medium"
+        android:paddingRight="@dimen/margin_medium_large"
+        android:paddingStart="@dimen/margin_small_medium"
+        android:paddingTop="@dimen/margin_medium_large"
+        tools:ignore="InconsistentLayout">
+
+        <android.support.v7.widget.AppCompatButton
+            android:id="@+id/signup_magic_link_button"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentRight="true"
+            android:layout_height="wrap_content"
+            android:layout_width="wrap_content"
+            android:text="@string/open_mail"
+            style="@style/WordPress.Button.Primary" >
+        </android.support.v7.widget.AppCompatButton>
+
+    </RelativeLayout>
+
+</RelativeLayout>
