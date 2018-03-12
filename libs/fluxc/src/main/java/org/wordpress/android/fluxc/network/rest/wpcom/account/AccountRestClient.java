@@ -45,7 +45,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import javax.inject.Inject;
 import javax.inject.Singleton;
 
 @Singleton
@@ -172,7 +171,6 @@ public class AccountRestClient extends BaseWPComRestClient {
         DOMAIN
     }
 
-    @Inject
     public AccountRestClient(Context appContext, Dispatcher dispatcher, RequestQueue requestQueue,
                              AppSecrets appSecrets, AccessToken accessToken, UserAgent userAgent) {
         super(appContext, dispatcher, requestQueue, accessToken, userAgent);

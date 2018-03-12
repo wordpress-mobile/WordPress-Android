@@ -4,7 +4,6 @@ import android.content.Context;
 import android.preference.PreferenceManager;
 import android.text.TextUtils;
 
-import javax.inject.Inject;
 import javax.inject.Singleton;
 
 @Singleton
@@ -13,7 +12,6 @@ public class AccessToken {
     private String mToken;
     private Context mContext;
 
-    @Inject
     public AccessToken(Context appContext) {
         mContext = appContext;
         mToken = PreferenceManager.getDefaultSharedPreferences(mContext).getString(ACCOUNT_TOKEN_PREF_KEY, "");
