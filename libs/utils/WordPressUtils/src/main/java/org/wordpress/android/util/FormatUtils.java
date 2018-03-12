@@ -34,20 +34,22 @@ public class FormatUtils {
     }
 
     /*
-     * returns the passed long formatted has an human readable filesize. Ex: 10 GB
+     * returns the passed long formatted as an human readable filesize. Ex: 10 GB
+     * unitStrings is expected to be an array of all possible sizes from byte to TeraByte, in the current locale
      */
-    public static final String formatFileSize(long size) {
+    public static final String formatFileSize(long size, final String[] unitStrings) {
+        final double log1024 = Math.log10(1024);
         if (size <= 0) {
             return "0";
         }
-        final String[] units = new String[] {"B", "kB", "MB", "GB", "TB" };
-        int digitGroups = (int) (Math.log10(size) / Math.log10(1024));
+        int digitGroups = (int) (Math.log10(size) / log1024);
 
-        return new DecimalFormat("#,##0.#").format(size / Math.pow(1024, digitGroups)) + " " + units[digitGroups];
+        return String.format(unitStrings[digitGroups],
+                new DecimalFormat("#,##0.#").format(size / Math.pow(1024, digitGroups)));
     }
 
     /*
-     * returns the passed double percentage (0 to 1) formatted has an human readable percentage. Ex: 0.25 returns 25%
+     * returns the passed double percentage (0 to 1) formatted as an human readable percentage. Ex: 0.25 returns 25%
      */
     public static final String formatPercentage(double value) {
         NumberFormat percentFormat = NumberFormat.getPercentInstance();

@@ -1046,7 +1046,12 @@ public abstract class SiteSettingsInterface {
         // Quota information always comes from the main site table
         if (mSite.hasDiskSpaceQuotaInformation()) {
             String percentage = FormatUtils.formatPercentage(mSite.getSpacePercentUsed() / 100);
-            String spaceAllowed = FormatUtils.formatFileSize(mSite.getSpaceAvailable());
+            final String[] units = new String[] {mContext.getString(R.string.file_size_in_bytes),
+                    mContext.getString(R.string.file_size_in_kilobytes),
+                    mContext.getString(R.string.file_size_in_megabytes),
+                    mContext.getString(R.string.file_size_in_gigabytes),
+                    mContext.getString(R.string.file_size_in_terabytes) };
+            String spaceAllowed = FormatUtils.formatFileSize(mSite.getSpaceAvailable(), units);
             String quotaAvailableSentence = String.format(mContext.getString(R.string.site_settings_quota_space_value),
                     percentage, spaceAllowed);
             setQuotaDiskSpace(quotaAvailableSentence);
