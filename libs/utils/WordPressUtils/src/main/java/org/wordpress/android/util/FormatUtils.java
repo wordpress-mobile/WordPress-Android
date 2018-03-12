@@ -38,10 +38,11 @@ public class FormatUtils {
      * unitStrings is expected to be an array of all possible sizes from byte to TeraByte, in the current locale
      */
     public static final String formatFileSize(long size, final String[] unitStrings) {
+        final double log1024 = Math.log10(1024);
         if (size <= 0) {
             return "0";
         }
-        int digitGroups = (int) (Math.log10(size) / Math.log10(1024));
+        int digitGroups = (int) (Math.log10(size) / log1024);
 
         return String.format(unitStrings[digitGroups], DECIMAL_INSTANCE.get().format(size / Math.pow(1024, digitGroups)));
     }
