@@ -1,4 +1,4 @@
-package org.wordpress.android.ui.accounts.signup;
+package org.wordpress.android.login;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -10,20 +10,18 @@ import com.google.android.gms.auth.api.signin.GoogleSignInStatusCodes;
 
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
-import org.wordpress.android.R;
-import org.wordpress.android.WordPress;
-import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.fluxc.generated.AccountActionBuilder;
 import org.wordpress.android.fluxc.store.AccountStore;
 import org.wordpress.android.fluxc.store.AccountStore.PushSocialPayload;
-import org.wordpress.android.login.GoogleFragment;
+import org.wordpress.android.login.util.SiteUtils;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
-import org.wordpress.android.util.SiteUtils;
 
 import java.util.ArrayList;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
+import dagger.android.support.AndroidSupportInjection;
 
 import static android.app.Activity.RESULT_CANCELED;
 import static android.app.Activity.RESULT_OK;
@@ -38,7 +36,7 @@ public class SignupGoogleFragment extends GoogleFragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        ((WordPress) getActivity().getApplication()).component().inject(this);
+        AndroidSupportInjection.inject(this);
     }
 
     @Override
@@ -71,7 +69,7 @@ public class SignupGoogleFragment extends GoogleFragment {
                             showErrorDialog(getString(R.string.login_error_generic));
                         }
                     } else {
-                        AnalyticsTracker.track(AnalyticsTracker.Stat.SIGNUP_SOCIAL_BUTTON_FAILURE);
+                        mAnalyticsListener.trackSignupSocialButtonFailure();
                         switch (signInResult.getStatus().getStatusCode()) {
                             // Internal error.
                             case GoogleSignInStatusCodes.INTERNAL_ERROR:
@@ -116,10 +114,10 @@ public class SignupGoogleFragment extends GoogleFragment {
                         }
                     }
                 } else if (result == RESULT_CANCELED) {
-                    AnalyticsTracker.track(AnalyticsTracker.Stat.SIGNUP_SOCIAL_BUTTON_FAILURE);
+                    mAnalyticsListener.trackSignupSocialButtonFailure();
                     AppLog.e(T.NUX, "Google Signup Failed: result was CANCELED.");
                 } else {
-                    AnalyticsTracker.track(AnalyticsTracker.Stat.SIGNUP_SOCIAL_BUTTON_FAILURE);
+                    mAnalyticsListener.trackSignupSocialButtonFailure();
                     AppLog.e(T.NUX, "Google Signup Failed: result was not OK or CANCELED.");
                     showErrorDialog(getString(R.string.login_error_generic));
                 }
@@ -148,13 +146,13 @@ public class SignupGoogleFragment extends GoogleFragment {
     public void onAuthenticationChanged(AccountStore.OnAuthenticationChanged event) {
         if (event.isError()) {
             AppLog.e(T.API,
-                     "SignupGoogleFragment.onAuthenticationChanged: " + event.error.type + " - " + event.error.message);
+                    "SignupGoogleFragment.onAuthenticationChanged: " + event.error.type + " - " + event.error.message);
             // Continue with signup since account was created.
         } else if (event.createdAccount) {
             mGoogleListener.onGoogleSignupFinished(mDisplayName, mGoogleEmail, mPhotoUrl, event.userName);
             // Continue with login since existing account was selected.
         } else {
-            AnalyticsTracker.track(AnalyticsTracker.Stat.SIGNUP_SOCIAL_TO_LOGIN);
+            mAnalyticsListener.trackSignupSocialToLogin();
             mLoginListener.loggedInViaSocialAccount(mOldSitesIds, true);
         }
     }
@@ -168,8 +166,8 @@ public class SignupGoogleFragment extends GoogleFragment {
             switch (event.error.type) {
                 // WordPress account exists with input email address, and two-factor authentication is required.
                 case TWO_STEP_ENABLED:
-                    AnalyticsTracker.track(AnalyticsTracker.Stat.SIGNUP_SOCIAL_2FA_NEEDED);
-                    AnalyticsTracker.track(AnalyticsTracker.Stat.SIGNUP_SOCIAL_TO_LOGIN);
+                    mAnalyticsListener.trackSignupSocial2faNeeded();
+                    mAnalyticsListener.trackSignupSocialToLogin();
                     mLoginListener.showSignupToLoginMessage();
                     // Dispatch social login action to retrieve data required for two-factor authentication.
                     PushSocialPayload payload = new PushSocialPayload(mIdToken, SERVICE_TYPE_GOOGLE);
@@ -177,8 +175,8 @@ public class SignupGoogleFragment extends GoogleFragment {
                     break;
                 // WordPress account exists with input email address, but not connected.
                 case USER_EXISTS:
-                    AnalyticsTracker.track(AnalyticsTracker.Stat.SIGNUP_SOCIAL_ACCOUNTS_NEED_CONNECTING);
-                    AnalyticsTracker.track(AnalyticsTracker.Stat.SIGNUP_SOCIAL_TO_LOGIN);
+                    mAnalyticsListener.trackSignupSocialAccountsNeedConnecting();
+                    mAnalyticsListener.trackSignupSocialToLogin();
                     mLoginListener.showSignupToLoginMessage();
                     mLoginListener.loginViaSocialAccount(mGoogleEmail, mIdToken, SERVICE_TYPE_GOOGLE, true);
                     // Kill connections with FluxC and this fragment since the flow is changing to login.
@@ -191,9 +189,9 @@ public class SignupGoogleFragment extends GoogleFragment {
             }
             // Response does not return error when two-factor authentication is required.
         } else if (event.requiresTwoStepAuth) {
-            AnalyticsTracker.track(AnalyticsTracker.Stat.SIGNUP_SOCIAL_TO_LOGIN);
+            mAnalyticsListener.trackSignupSocialToLogin();
             mLoginListener.needs2faSocial(mGoogleEmail, event.userId, event.nonceAuthenticator, event.nonceBackup,
-                                          event.nonceSms);
+                    event.nonceSms);
             // Kill connections with FluxC and this fragment since the flow is changing to login.
             mDispatcher.unregister(this);
             getActivity().getSupportFragmentManager().beginTransaction().remove(this).commit();
