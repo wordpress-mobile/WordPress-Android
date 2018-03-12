@@ -3,7 +3,6 @@ package org.wordpress.android.fluxc.network.rest.wpcom.stockmedia;
 import android.content.Context;
 import android.support.annotation.NonNull;
 
-import com.android.volley.AuthFailureError;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.google.gson.JsonArray;
@@ -106,6 +105,7 @@ public class StockMediaRestClient extends BaseWPComRestClient {
                 new Response.Listener<MultipleMediaResponse>() {
                     @Override
                     public void onResponse(MultipleMediaResponse response) {
+                        // response is a list of media, exactly like that of MediaRestClient.fetchMediaList()
                         List<MediaModel> mediaList = getMediaListFromRestResponse(response, site.getId());
                         StockMediaStore.UploadedStockMediaPayload payload =
                                 new StockMediaStore.UploadedStockMediaPayload(site, mediaList);
@@ -122,14 +122,7 @@ public class StockMediaRestClient extends BaseWPComRestClient {
                         mDispatcher.dispatch(StockMediaActionBuilder.newUploadedStockMediaAction(payload));
                     }
                 }
-                                                                    );
-
-        try {
-            String strBody = new String(request.getBody());
-            AppLog.w(AppLog.T.MEDIA, strBody);
-        } catch (AuthFailureError authFailureError) {
-            authFailureError.printStackTrace();
-        }
+        );
 
         add(request);
     }
