@@ -260,7 +260,7 @@ public class SignupEmailFragment extends LoginBaseFormFragment<LoginListener> im
                             if (event.isAvailable) {
                                 mLoginListener.showSignupMagicLink(event.value);
                             } else {
-                                mAnalyticsListener.trackAnalyticsSignIn(mAccountStore, mSiteStore, true);
+                                mAnalyticsListener.trackSignupEmailToLogin();
                                 mLoginListener.showSignupToLoginMessage();
                                 mLoginListener.gotWpcomEmail(event.value);
                                 // Kill connections with FluxC and this fragment since the flow is changing to login.
