@@ -27,7 +27,7 @@
             app:srcCompat="@drawable/img_email_alert_120dp" >
         </ImageView>
 
-        <org.wordpress.android.widgets.WPTextView
+        <TextView
             android:id="@+id/signup_magic_link_label"
             android:gravity="center"
             android:layout_height="wrap_content"
@@ -39,9 +39,8 @@
             android:paddingStart="@dimen/margin_extra_extra_large"
             android:paddingTop="@dimen/margin_extra_large"
             android:text="@string/signup_magic_link_message"
-            app:fixWidowWords="true"
             style="@style/Base.TextAppearance.AppCompat.Body1" >
-        </org.wordpress.android.widgets.WPTextView>
+        </TextView>
 
     </LinearLayout>
 
