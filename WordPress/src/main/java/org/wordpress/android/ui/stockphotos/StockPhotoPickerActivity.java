@@ -148,7 +148,9 @@ public class StockPhotoPickerActivity extends AppCompatActivity implements Searc
             @Override
             public void onChanged(@Nullable final List<StockMediaModel> mediaList) {
                 if (!isFinishing()) {
-                    showProgress(false);
+                    if (!mViewModel.isFetching()) {
+                        showProgress(false);
+                    }
                     showEmptyView(mediaList.isEmpty()
                                   && !TextUtils.isEmpty(mViewModel.getSearchQuery()));
                     mAdapter.setMediaList(mediaList);
@@ -229,7 +231,6 @@ public class StockPhotoPickerActivity extends AppCompatActivity implements Searc
 
         if (query == null || query.length() < MIN_SEARCH_QUERY_SIZE) {
             mAdapter.clear();
-            hideSelectionBar();
             showEmptyView(true);
             return;
         }
@@ -309,7 +310,10 @@ public class StockPhotoPickerActivity extends AppCompatActivity implements Searc
 
         void clear() {
             mItems.clear();
-            mSelectedItems.clear();
+            if (mSelectedItems.size() > 0) {
+                mSelectedItems.clear();
+                notifySelectionCountChanged();
+            }
             notifyDataSetChanged();
         }
 

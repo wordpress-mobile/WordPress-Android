@@ -66,11 +66,12 @@ public class StockMediaViewModel extends ViewModel {
             return;
         }
 
+        mIsFetching = true;
+
         if (page == 1) {
             clearSearchResults();
         }
 
-        mIsFetching = true;
         mSearchQuery = searchQuery;
         AppLog.d(AppLog.T.MEDIA, "Fetching stock media page " + page);
 
