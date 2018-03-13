@@ -12,7 +12,8 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_above="@+id/message_container"
-        android:layout_below="@+id/toolbar" />
+        android:layout_below="@+id/toolbar"
+        tools:ignore="UnknownIdInLayout"/>
 
     <RelativeLayout
         android:id="@+id/message_container"
@@ -23,7 +24,9 @@
         android:paddingRight="@dimen/content_margin"
         android:visibility="gone"
         android:background="@color/snackbar_background_color"
-        tools:visibility="visible">
+        tools:visibility="visible"
+        android:paddingStart="@dimen/content_margin"
+        android:paddingEnd="@dimen/content_margin">
 
         <org.wordpress.android.widgets.WPTextView
             android:id="@+id/message_text"
@@ -36,7 +39,9 @@
             android:layout_toLeftOf="@+id/layout_buttons"
             android:textColor="@color/white"
             android:textSize="@dimen/text_sz_medium"
-            tools:text="Explanation of what a local draft is or what local changes are" />
+            tools:text="Explanation of what a local draft is or what local changes are"
+            android:layout_marginStart="@dimen/margin_large"
+            android:layout_toStartOf="@+id/layout_buttons"/>
 
         <LinearLayout
             android:id="@+id/layout_buttons"
@@ -44,13 +49,14 @@
             android:layout_height="wrap_content"
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
-            android:orientation="horizontal">
+            android:orientation="horizontal"
+            android:layout_alignParentEnd="true">
 
             <org.wordpress.android.widgets.WPTextView
                 android:id="@+id/btn_publish"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_gravity="right"
+                android:layout_gravity="end"
                 android:background="?android:selectableItemBackground"
                 android:paddingBottom="@dimen/margin_medium"
                 android:paddingLeft="@dimen/margin_extra_large"
@@ -59,13 +65,15 @@
                 android:text="@string/button_publish"
                 android:textAllCaps="true"
                 android:textColor="@color/color_accent"
-                android:textSize="@dimen/text_sz_small" />
+                android:textSize="@dimen/text_sz_small"
+                android:paddingStart="@dimen/margin_extra_large"
+                android:paddingEnd="@dimen/margin_extra_large"/>
 
             <org.wordpress.android.widgets.WPTextView
                 android:id="@+id/btn_revert"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_gravity="right"
+                android:layout_gravity="end"
                 android:background="?android:selectableItemBackground"
                 android:paddingBottom="@dimen/margin_medium"
                 android:paddingLeft="@dimen/margin_large"
@@ -74,7 +82,9 @@
                 android:text="@string/button_revert"
                 android:textAllCaps="true"
                 android:textColor="@color/color_accent"
-                android:textSize="@dimen/text_sz_small" />
+                android:textSize="@dimen/text_sz_small"
+                android:paddingEnd="@dimen/margin_large"
+                android:paddingStart="@dimen/margin_large"/>
         </LinearLayout>
     </RelativeLayout>
 

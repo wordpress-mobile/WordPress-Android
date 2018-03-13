@@ -16,6 +16,7 @@ import org.wordpress.android.widgets.WPNetworkImageView;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 public class SuggestionAdapter extends BaseAdapter implements Filterable {
     private final LayoutInflater mInflater;
@@ -70,9 +71,10 @@ public class SuggestionAdapter extends BaseAdapter implements Filterable {
 
         if (suggestion != null) {
             String avatarUrl = GravatarUtils.fixGravatarUrl(suggestion.getImageUrl(), mAvatarSz);
-            holder.imgAvatar.setImageUrl(avatarUrl, WPNetworkImageView.ImageType.AVATAR);
-            holder.txtUserLogin.setText("@" + suggestion.getUserLogin());
-            holder.txtDisplayName.setText(suggestion.getDisplayName());
+            holder.mImgAvatar.setImageUrl(avatarUrl, WPNetworkImageView.ImageType.AVATAR);
+            holder.mTxtUserLogin
+                    .setText(convertView.getResources().getString(R.string.at_username, suggestion.getUserLogin()));
+            holder.mTxtDisplayName.setText(suggestion.getDisplayName());
         }
 
         return convertView;
@@ -88,14 +90,14 @@ public class SuggestionAdapter extends BaseAdapter implements Filterable {
     }
 
     private class SuggestionViewHolder {
-        private final WPNetworkImageView imgAvatar;
-        private final TextView txtUserLogin;
-        private final TextView txtDisplayName;
+        private final WPNetworkImageView mImgAvatar;
+        private final TextView mTxtUserLogin;
+        private final TextView mTxtDisplayName;
 
         SuggestionViewHolder(View row) {
-            imgAvatar = (WPNetworkImageView) row.findViewById(R.id.suggest_list_row_avatar);
-            txtUserLogin = (TextView) row.findViewById(R.id.suggestion_list_row_user_login_label);
-            txtDisplayName = (TextView) row.findViewById(R.id.suggestion_list_row_display_name_label);
+            mImgAvatar = (WPNetworkImageView) row.findViewById(R.id.suggest_list_row_avatar);
+            mTxtUserLogin = (TextView) row.findViewById(R.id.suggestion_list_row_user_login_label);
+            mTxtDisplayName = (TextView) row.findViewById(R.id.suggestion_list_row_display_name_label);
         }
     }
 
@@ -107,20 +109,20 @@ public class SuggestionAdapter extends BaseAdapter implements Filterable {
             if (mOrigSuggestionList == null) {
                 results.values = null;
                 results.count = 0;
-            }
-            else if (constraint == null || constraint.length() == 0) {
+            } else if (constraint == null || constraint.length() == 0) {
                 results.values = mOrigSuggestionList;
                 results.count = mOrigSuggestionList.size();
-            }
-            else {
+            } else {
                 List<Suggestion> nSuggestionList = new ArrayList<Suggestion>();
 
                 for (Suggestion suggestion : mOrigSuggestionList) {
-                    String lowerCaseConstraint = constraint.toString().toLowerCase();
-                    if (suggestion.getUserLogin().toLowerCase().startsWith(lowerCaseConstraint)
-                            || suggestion.getDisplayName().toLowerCase().startsWith(lowerCaseConstraint)
-                            || suggestion.getDisplayName().toLowerCase().contains(" " + lowerCaseConstraint))
+                    String lowerCaseConstraint = constraint.toString().toLowerCase(Locale.getDefault());
+                    if (suggestion.getUserLogin().toLowerCase(Locale.ROOT).startsWith(lowerCaseConstraint)
+                        || suggestion.getDisplayName().toLowerCase(Locale.getDefault()).startsWith(lowerCaseConstraint)
+                        || suggestion.getDisplayName().toLowerCase(Locale.getDefault())
+                                     .contains(" " + lowerCaseConstraint)) {
                         nSuggestionList.add(suggestion);
+                    }
                 }
 
                 results.values = nSuggestionList;
@@ -133,16 +135,16 @@ public class SuggestionAdapter extends BaseAdapter implements Filterable {
         @Override
         protected void publishResults(CharSequence constraint,
                                       FilterResults results) {
-            if (results.count == 0)
+            if (results.count == 0) {
                 notifyDataSetInvalidated();
-            else {
+            } else {
                 mSuggestionList = (List<Suggestion>) results.values;
                 notifyDataSetChanged();
             }
         }
 
         @Override
-        public CharSequence convertResultToString (Object resultValue) {
+        public CharSequence convertResultToString(Object resultValue) {
             Suggestion suggestion = (Suggestion) resultValue;
             return suggestion.getUserLogin();
         }

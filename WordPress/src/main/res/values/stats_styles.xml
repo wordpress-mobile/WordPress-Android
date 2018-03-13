@@ -1,9 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources>
-
-    <style name="StatsWhiteBackground">
-        <item name="android:background">@drawable/stats_white_background</item>
-    </style>
+<resources xmlns:tools="http://schemas.android.com/tools">
 
     <style name="StatsHeader">
         <item name="android:textColor">@color/stats_module_content_list_header</item>
@@ -46,30 +42,11 @@
         <item name="android:textColor">@color/grey_dark</item>
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">wrap_content</item>
+        <item name="android:textAlignment" tools:targetApi="jelly_bean_mr1">viewStart</item>
+        <item name="android:gravity">start</item>
     </style>
 
     <!-- TextViews -->
-    <!-- style name="StatsTextView" parent="android:Widget.TextView">
-        <item name="android:textColorLink">@color/reader_hyperlink</item>
-    </style>
-
-    <style name="StatsTextView.SecondaryAction" parent="StatsTextView">
-        <item name="android:layout_width">wrap_content</item>
-        <item name="android:layout_height">wrap_content</item>
-        <item name="android:textSize">@dimen/text_sz_small</item>
-        <item name="android:minWidth">60dp</item>
-        <item name="android:gravity">center</item>
-        <item name="android:drawableLeft">@drawable/dashicon_external_black</item>
-        <item name="android:background">@drawable/reader_button_follow</item>
-        <item name="android:textColor">@color/reader_follow_text</item>
-        <item name="android:paddingLeft">@dimen/margin_small</item>
-        <item name="android:paddingTop">@dimen/margin_small</item>
-        <item name="android:paddingBottom">@dimen/margin_small</item>
-        <item name="android:paddingRight">@dimen/margin_small</item>
-        <item name="android:layout_marginRight">@dimen/margin_medium</item>
-        <item name="android:drawablePadding">0dp</item>
-        <item name="android:text">View</item>
-    </style -->
 
     <style name="JetpackConnectionText" parent="TextAppearance.AppCompat.Body1">
         <item name="android:textColor">@color/grey_dark</item>
@@ -80,9 +57,5 @@
     <style name="JetpackConnectionButton" parent="WordPress.Button.Primary">
         <item name="android:paddingLeft">@dimen/margin_extra_medium_large</item>
         <item name="android:paddingRight">@dimen/margin_extra_medium_large</item>
-    </style>
-    <style name="JetpackMoreInfoButton" parent="TextAppearance.AppCompat.Caption">
-        <item name="android:layout_marginTop">@dimen/margin_extra_large</item>
-        <item name="android:textColor">@color/blue_medium</item>
     </style>
 </resources>

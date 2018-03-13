@@ -21,32 +21,31 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class WPPermissionUtils {
-
     // permission request codes - note these are reported to analytics so they shouldn't be changed
-    public static final int SHARE_MEDIA_PERMISSION_REQUEST_CODE          = 10;
-    public static final int MEDIA_BROWSER_PERMISSION_REQUEST_CODE        = 20;
-    public static final int MEDIA_PREVIEW_PERMISSION_REQUEST_CODE        = 30;
+    public static final int SHARE_MEDIA_PERMISSION_REQUEST_CODE = 10;
+    public static final int MEDIA_BROWSER_PERMISSION_REQUEST_CODE = 20;
+    public static final int MEDIA_PREVIEW_PERMISSION_REQUEST_CODE = 30;
     public static final int PHOTO_PICKER_STORAGE_PERMISSION_REQUEST_CODE = 40;
-    public static final int PHOTO_PICKER_CAMERA_PERMISSION_REQUEST_CODE  = 41;
-    public static final int EDITOR_LOCATION_PERMISSION_REQUEST_CODE      = 50;
-    public static final int EDITOR_MEDIA_PERMISSION_REQUEST_CODE         = 60;
-    public static final int EDITOR_DRAG_DROP_PERMISSION_REQUEST_CODE     = 70;
+    public static final int PHOTO_PICKER_CAMERA_PERMISSION_REQUEST_CODE = 41;
+    public static final int EDITOR_LOCATION_PERMISSION_REQUEST_CODE = 50;
+    public static final int EDITOR_MEDIA_PERMISSION_REQUEST_CODE = 60;
+    public static final int EDITOR_DRAG_DROP_PERMISSION_REQUEST_CODE = 70;
 
     /**
      * called by the onRequestPermissionsResult() of various activities and fragments - tracks
      * the permission results, remembers that the permissions have been asked for, and optionally
      * shows a dialog enabling the user to edit permissions if any are always denied
      *
-     * @param activity      host activity
-     * @param requestCode   request code passed to ContextCompat.checkSelfPermission
-     * @param permissions   list of permissions
-     * @param grantResults  list of results for above permissions
+     * @param activity host activity
+     * @param requestCode request code passed to ContextCompat.checkSelfPermission
+     * @param permissions list of permissions
+     * @param grantResults list of results for above permissions
      * @param checkForAlwaysDenied show dialog if any permissions always denied
      * @return true if all permissions granted
      */
     public static boolean setPermissionListAsked(@NonNull Activity activity,
                                                  int requestCode,
-                                                 @NonNull String permissions[],
+                                                 @NonNull String[] permissions,
                                                  @NonNull int[] grantResults,
                                                  boolean checkForAlwaysDenied) {
         for (int i = 0; i < permissions.length; i++) {
@@ -63,7 +62,7 @@ public class WPPermissionUtils {
             if (grantResults[i] == PackageManager.PERMISSION_DENIED) {
                 allGranted = false;
                 if (checkForAlwaysDenied
-                        && !ActivityCompat.shouldShowRequestPermissionRationale(activity, permissions[i])) {
+                    && !ActivityCompat.shouldShowRequestPermissionRationale(activity, permissions[i])) {
                     showPermissionAlwaysDeniedDialog(activity, permissions[i]);
                     break;
                 }
@@ -105,7 +104,7 @@ public class WPPermissionUtils {
         // denied, but it also returns false if the app has never requested that permission - so we
         // check it only if we know we've asked for this permission
         if (isPermissionAsked(activity, permission)
-                && ContextCompat.checkSelfPermission(activity, permission) == PackageManager.PERMISSION_DENIED) {
+            && ContextCompat.checkSelfPermission(activity, permission) == PackageManager.PERMISSION_DENIED) {
             boolean shouldShow = ActivityCompat.shouldShowRequestPermissionRationale(activity, permission);
             return !shouldShow;
         }
@@ -176,13 +175,11 @@ public class WPPermissionUtils {
      */
     private static void showPermissionAlwaysDeniedDialog(@NonNull final Activity activity,
                                                          @NonNull String permission) {
-        String message = "<strong>" + activity.getString(R.string.permissions_denied_title) + "</strong>"
-                + "<br /><br />"
-                + String.format(
-                activity.getString(R.string.permissions_denied_message),
-                "<strong>" + getPermissionName(activity, permission) + "</strong>");
+        String message = String.format(activity.getString(R.string.permissions_denied_message),
+                getPermissionName(activity, permission));
 
         AlertDialog.Builder builder = new AlertDialog.Builder(activity)
+                .setTitle(activity.getString(R.string.permissions_denied_title))
                 .setMessage(Html.fromHtml(message))
                 .setPositiveButton(R.string.button_edit_permissions, new DialogInterface.OnClickListener() {
                     @Override

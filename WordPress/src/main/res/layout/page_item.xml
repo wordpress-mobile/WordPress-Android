@@ -28,7 +28,10 @@
             android:padding="@dimen/margin_medium"
             android:textColor="@color/grey_darken_10"
             android:textSize="@dimen/text_sz_medium"
-            tools:text="text_date" />
+            tools:text="text_date"
+            android:textAlignment="viewStart"
+            android:gravity="start"
+            android:drawableStart="@drawable/ic_time_grey_darken_10_16dp"/>
 
         <View
             android:layout_width="match_parent"
@@ -48,25 +51,29 @@
             android:paddingBottom="@dimen/margin_large"
             android:paddingLeft="@dimen/margin_extra_large"
             android:paddingRight="@dimen/margin_extra_large"
-            android:paddingTop="@dimen/margin_large">
+            android:paddingTop="@dimen/margin_large"
+            android:paddingStart="@dimen/margin_extra_large"
+            android:paddingEnd="@dimen/margin_extra_large">
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_centerVertical="true"
                 android:layout_toLeftOf="@+id/btn_more"
-                android:orientation="vertical">
+                android:orientation="vertical"
+                android:layout_toStartOf="@+id/btn_more">
 
                 <org.wordpress.android.widgets.WPTextView
                     android:id="@+id/text_title"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_below="@+id/text_date"
                     android:ellipsize="end"
                     android:maxLines="3"
                     android:textColor="@color/grey_dark"
                     android:textSize="@dimen/text_sz_large"
                     android:fontFamily="serif"
+                    android:textAlignment="viewStart"
+                    android:gravity="start"
                     tools:text="text_title" />
 
                 <LinearLayout
@@ -75,7 +82,11 @@
                     android:layout_marginLeft="@dimen/margin_extra_large"
                     android:layout_marginRight="@dimen/margin_extra_large"
                     android:layout_marginTop="@dimen/margin_medium"
-                    android:orientation="horizontal">
+                    android:orientation="horizontal"
+                    android:textAlignment="viewStart"
+                    android:gravity="start"
+                    android:layout_marginEnd="@dimen/margin_extra_large"
+                    android:layout_marginStart="@dimen/margin_extra_large">
 
                     <ImageView
                         android:id="@+id/image_status"
@@ -84,7 +95,7 @@
                         android:layout_gravity="center"
                         android:layout_marginRight="@dimen/margin_small"
                         tools:src="@drawable/ic_gridicons_page"
-                        />
+                        android:layout_marginEnd="@dimen/margin_small"/>
 
                     <org.wordpress.android.widgets.WPTextView
                         android:id="@+id/text_status"
@@ -111,7 +122,9 @@
                 android:background="?android:selectableItemBackground"
                 android:padding="@dimen/margin_medium"
                 android:contentDescription="@string/more"
-                app:srcCompat="@drawable/ic_ellipsis_blue_wordpress_32dp" />
+                app:srcCompat="@drawable/ic_ellipsis_blue_wordpress_32dp"
+                android:layout_alignParentEnd="true"
+                android:layout_marginStart="@dimen/margin_medium"/>
         </RelativeLayout>
 
         <RelativeLayout

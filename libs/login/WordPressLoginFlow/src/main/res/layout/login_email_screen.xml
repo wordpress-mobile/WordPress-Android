@@ -32,6 +32,8 @@
         android:layout_height="wrap_content"
         android:layout_width="match_parent"
         app:wpIconDrawable="@drawable/ic_user_grey_24dp"
+        android:textAlignment="viewStart"
+        android:gravity="start"
         tools:ignore="UnusedAttribute" >
     </org.wordpress.android.login.widgets.WPLoginInputRow>
 
@@ -41,7 +43,7 @@
         android:layout_marginBottom="@dimen/margin_medium"
         android:layout_marginTop="@dimen/margin_extra_large"
         android:layout_width="wrap_content"
-        android:text="Alternatively:"
+        android:text="@string/alternatively"
         style="@style/LoginTheme.TextLabel" >
     </TextView>
 
@@ -57,6 +59,7 @@
         android:paddingEnd="@dimen/margin_medium"
         android:paddingRight="@dimen/margin_medium"
         android:paddingTop="@dimen/margin_medium"
+        android:gravity="center_vertical"
         tools:ignore="RtlSymmetry" >
 
         <ImageView
@@ -70,7 +73,7 @@
 
         <TextView
             android:gravity="center_vertical"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
             android:layout_width="wrap_content"
             android:text="@string/login_google_button_suffix"
             style="@style/LoginTheme.Button.Google" >
@@ -91,6 +94,7 @@
         android:paddingEnd="@dimen/margin_medium"
         android:paddingRight="@dimen/margin_medium"
         android:paddingTop="@dimen/margin_medium"
+        android:gravity="center_vertical"
         tools:ignore="RtlSymmetry" >
 
         <ImageView
@@ -106,7 +110,7 @@
         <TextView
             android:id="@+id/login_site_button_text"
             android:gravity="center_vertical"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
             android:layout_width="wrap_content"
             android:text="@string/enter_site_address_instead"
             style="@style/LoginTheme.Button.Google" >

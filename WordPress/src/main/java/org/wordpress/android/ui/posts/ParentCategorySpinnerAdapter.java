@@ -1,6 +1,7 @@
 package org.wordpress.android.ui.posts;
 
 import android.content.Context;
+import android.support.v4.view.ViewCompat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,9 +19,9 @@ import java.util.List;
 import static org.wordpress.android.WordPress.getContext;
 
 public class ParentCategorySpinnerAdapter extends BaseAdapter implements SpinnerAdapter {
-    int mResourceId;
-    List<CategoryNode> mObjects;
-    Context mContext;
+    private int mResourceId;
+    private List<CategoryNode> mObjects;
+    private Context mContext;
 
     public int getCount() {
         return mObjects.size();
@@ -34,7 +35,7 @@ public class ParentCategorySpinnerAdapter extends BaseAdapter implements Spinner
         return position;
     }
 
-    public ParentCategorySpinnerAdapter(Context context, int resource, List<CategoryNode> objects) {
+    ParentCategorySpinnerAdapter(Context context, int resource, List<CategoryNode> objects) {
         super();
         mContext = context;
         mObjects = objects;
@@ -45,12 +46,12 @@ public class ParentCategorySpinnerAdapter extends BaseAdapter implements Spinner
     public View getDropDownView(int position, View convertView, ViewGroup parent) {
         LayoutInflater inflater = (LayoutInflater) mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         View rowView = inflater.inflate(mResourceId, parent, false);
-        TextView textView = (TextView) rowView.findViewById(R.id.categoryRowText);
+        TextView textView = rowView.findViewById(R.id.categoryRowText);
         textView.setText(StringEscapeUtils.unescapeHtml4(getItem(position).getName()));
         CategoryNode node = getItem(position);
         if (node != null) {
             textView.setText(StringEscapeUtils.unescapeHtml4(node.getName()));
-            textView.setPadding(DisplayUtils.dpToPx(getContext(), 16) * (node.getLevel() + 1), 0,
+            ViewCompat.setPaddingRelative(textView, DisplayUtils.dpToPx(getContext(), 16) * (node.getLevel() + 1), 0,
                     DisplayUtils.dpToPx(getContext(), 16), 0);
         }
         return rowView;
@@ -59,9 +60,22 @@ public class ParentCategorySpinnerAdapter extends BaseAdapter implements Spinner
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
         LayoutInflater inflater = (LayoutInflater) mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        View rowView = inflater.inflate(mResourceId, parent, false);
-        TextView textView = (TextView) rowView.findViewById(R.id.categoryRowText);
-        textView.setText(StringEscapeUtils.unescapeHtml4(getItem(position).getName()));
+        View rowView = convertView;
+        if (rowView == null) {
+            rowView = inflater.inflate(mResourceId, parent, false);
+            ViewHolder viewHolder = new ViewHolder(rowView);
+            rowView.setTag(viewHolder);
+        }
+        ViewHolder viewHolder = (ViewHolder) rowView.getTag();
+        viewHolder.mCategoryRowText.setText(StringEscapeUtils.unescapeHtml4(getItem(position).getName()));
         return rowView;
+    }
+
+    private static class ViewHolder {
+        private final TextView mCategoryRowText;
+
+        private ViewHolder(View view) {
+            this.mCategoryRowText = view.findViewById(R.id.categoryRowText);
+        }
     }
 }

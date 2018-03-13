@@ -85,7 +85,7 @@ public class NotificationsDetailListFragment extends ListFragment implements Not
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.notifications_fragment_detail_list, container, false);
-        mRootLayout = (LinearLayout)view.findViewById(R.id.notifications_list_root);
+        mRootLayout = (LinearLayout) view.findViewById(R.id.notifications_list_root);
 
         return view;
     }
@@ -102,7 +102,7 @@ public class NotificationsDetailListFragment extends ListFragment implements Not
         listView.setHeaderDividersEnabled(false);
 
         if (mFooterView != null) {
-           listView.addFooterView(mFooterView);
+            listView.addFooterView(mFooterView);
         }
 
         reloadNoteBlocks();
@@ -178,115 +178,127 @@ public class NotificationsDetailListFragment extends ListFragment implements Not
         mFooterView = footerView;
     }
 
-    private final NoteBlock.OnNoteBlockTextClickListener mOnNoteBlockTextClickListener = new NoteBlock.OnNoteBlockTextClickListener() {
-        @Override
-        public void onNoteBlockTextClicked(NoteBlockClickableSpan clickedSpan) {
-            if (!isAdded() || !(getActivity() instanceof NotificationsDetailActivity)) return;
+    private final NoteBlock.OnNoteBlockTextClickListener mOnNoteBlockTextClickListener =
+            new NoteBlock.OnNoteBlockTextClickListener() {
+                @Override
+                public void onNoteBlockTextClicked(NoteBlockClickableSpan clickedSpan) {
+                    if (!isAdded() || !(getActivity() instanceof NotificationsDetailActivity)) {
+                        return;
+                    }
 
-            handleNoteBlockSpanClick((NotificationsDetailActivity) getActivity(), clickedSpan);
-        }
-
-        @Override
-        public void showDetailForNoteIds() {
-            if (!isAdded() || mNote == null || !(getActivity() instanceof NotificationsDetailActivity)) {
-                return;
-            }
-
-            NotificationsDetailActivity detailActivity = (NotificationsDetailActivity)getActivity();
-            if (mNote.isCommentReplyType() || (!mNote.isCommentType() && mNote.getCommentId() > 0)) {
-                long commentId = mNote.isCommentReplyType() ? mNote.getParentCommentId() : mNote.getCommentId();
-
-                // show comments list if it exists in the reader
-                if (ReaderUtils.postAndCommentExists(mNote.getSiteId(), mNote.getPostId(), commentId)) {
-                    detailActivity.showReaderCommentsList(mNote.getSiteId(), mNote.getPostId(), commentId);
-                } else {
-                    detailActivity.showWebViewActivityForUrl(mNote.getUrl());
+                    handleNoteBlockSpanClick((NotificationsDetailActivity) getActivity(), clickedSpan);
                 }
-            } else if (mNote.isFollowType()) {
-                detailActivity.showBlogPreviewActivity(mNote.getSiteId());
-            } else {
-                // otherwise, load the post in the Reader
-                detailActivity.showPostActivity(mNote.getSiteId(), mNote.getPostId());
-            }
-        }
 
-        @Override
-        public void showReaderPostComments() {
-            if (!isAdded() || mNote == null || mNote.getCommentId() == 0) return;
+                @Override
+                public void showDetailForNoteIds() {
+                    if (!isAdded() || mNote == null || !(getActivity() instanceof NotificationsDetailActivity)) {
+                        return;
+                    }
 
-            ReaderActivityLauncher.showReaderComments(getActivity(), mNote.getSiteId(), mNote.getPostId(), mNote.getCommentId());
-        }
+                    NotificationsDetailActivity detailActivity = (NotificationsDetailActivity) getActivity();
+                    if (mNote.isCommentReplyType() || (!mNote.isCommentType() && mNote.getCommentId() > 0)) {
+                        long commentId = mNote.isCommentReplyType() ? mNote.getParentCommentId() : mNote.getCommentId();
 
-        @Override
-        public void showSitePreview(long siteId, String siteUrl) {
-            if (!isAdded() || mNote == null || !(getActivity() instanceof NotificationsDetailActivity)) {
-                return;
-            }
-
-            NotificationsDetailActivity detailActivity = (NotificationsDetailActivity)getActivity();
-            if (siteId != 0) {
-                detailActivity.showBlogPreviewActivity(siteId);
-            } else if (!TextUtils.isEmpty(siteUrl)) {
-                detailActivity.showWebViewActivityForUrl(siteUrl);
-            }
-        }
-
-        public void handleNoteBlockSpanClick(NotificationsDetailActivity activity, NoteBlockClickableSpan clickedSpan) {
-            switch (clickedSpan.getRangeType()) {
-                case SITE:
-                    // Show blog preview
-                    activity.showBlogPreviewActivity(clickedSpan.getId());
-                    break;
-                case USER:
-                    // Show blog preview
-                    activity.showBlogPreviewActivity(clickedSpan.getSiteId());
-                    break;
-                case POST:
-                    // Show post detail
-                    activity.showPostActivity(clickedSpan.getSiteId(), clickedSpan.getId());
-                    break;
-                case COMMENT:
-                    // Load the comment in the reader list if it exists, otherwise show a webview
-                    if (ReaderUtils.postAndCommentExists(clickedSpan.getSiteId(), clickedSpan.getPostId(), clickedSpan.getId())) {
-                        activity.showReaderCommentsList(clickedSpan.getSiteId(), clickedSpan.getPostId(), clickedSpan.getId());
+                        // show comments list if it exists in the reader
+                        if (ReaderUtils.postAndCommentExists(mNote.getSiteId(), mNote.getPostId(), commentId)) {
+                            detailActivity.showReaderCommentsList(mNote.getSiteId(), mNote.getPostId(), commentId);
+                        } else {
+                            detailActivity.showWebViewActivityForUrl(mNote.getUrl());
+                        }
+                    } else if (mNote.isFollowType()) {
+                        detailActivity.showBlogPreviewActivity(mNote.getSiteId());
                     } else {
-                        activity.showWebViewActivityForUrl(clickedSpan.getUrl());
+                        // otherwise, load the post in the Reader
+                        detailActivity.showPostActivity(mNote.getSiteId(), mNote.getPostId());
                     }
-                    break;
-                case STAT:
-                case FOLLOW:
-                    // We can open native stats if the site is a wpcom or Jetpack sites
-                    activity.showStatsActivityForSite(clickedSpan.getSiteId(), clickedSpan.getRangeType());
-                    break;
-                case LIKE:
-                    if (ReaderPostTable.postExists(clickedSpan.getSiteId(), clickedSpan.getId())) {
-                        activity.showReaderPostLikeUsers(clickedSpan.getSiteId(), clickedSpan.getId());
-                    } else {
-                        activity.showPostActivity(clickedSpan.getSiteId(), clickedSpan.getId());
-                    }
-                    break;
-                default:
-                    // We don't know what type of id this is, let's see if it has a URL and push a webview
-                    if (!TextUtils.isEmpty(clickedSpan.getUrl())) {
-                        activity.showWebViewActivityForUrl(clickedSpan.getUrl());
-                    }
-            }
-        }
-    };
+                }
 
-    private final UserNoteBlock.OnGravatarClickedListener mOnGravatarClickedListener = new UserNoteBlock.OnGravatarClickedListener() {
-        @Override
-        public void onGravatarClicked(long siteId, long userId, String siteUrl) {
-            if (!isAdded() || !(getActivity() instanceof NotificationsDetailActivity)) return;
+                @Override
+                public void showReaderPostComments() {
+                    if (!isAdded() || mNote == null || mNote.getCommentId() == 0) {
+                        return;
+                    }
 
-            NotificationsDetailActivity detailActivity = (NotificationsDetailActivity)getActivity();
-            if (siteId == 0 && !TextUtils.isEmpty(siteUrl)) {
-                detailActivity.showWebViewActivityForUrl(siteUrl);
-            } else if (siteId != 0) {
-                detailActivity.showBlogPreviewActivity(siteId);
-            }
-        }
-    };
+                    ReaderActivityLauncher.showReaderComments(getActivity(), mNote.getSiteId(), mNote.getPostId(),
+                                                              mNote.getCommentId());
+                }
+
+                @Override
+                public void showSitePreview(long siteId, String siteUrl) {
+                    if (!isAdded() || mNote == null || !(getActivity() instanceof NotificationsDetailActivity)) {
+                        return;
+                    }
+
+                    NotificationsDetailActivity detailActivity = (NotificationsDetailActivity) getActivity();
+                    if (siteId != 0) {
+                        detailActivity.showBlogPreviewActivity(siteId);
+                    } else if (!TextUtils.isEmpty(siteUrl)) {
+                        detailActivity.showWebViewActivityForUrl(siteUrl);
+                    }
+                }
+
+                public void handleNoteBlockSpanClick(NotificationsDetailActivity activity,
+                                                     NoteBlockClickableSpan clickedSpan) {
+                    switch (clickedSpan.getRangeType()) {
+                        case SITE:
+                            // Show blog preview
+                            activity.showBlogPreviewActivity(clickedSpan.getId());
+                            break;
+                        case USER:
+                            // Show blog preview
+                            activity.showBlogPreviewActivity(clickedSpan.getSiteId());
+                            break;
+                        case POST:
+                            // Show post detail
+                            activity.showPostActivity(clickedSpan.getSiteId(), clickedSpan.getId());
+                            break;
+                        case COMMENT:
+                            // Load the comment in the reader list if it exists, otherwise show a webview
+                            if (ReaderUtils.postAndCommentExists(clickedSpan.getSiteId(), clickedSpan.getPostId(),
+                                                                 clickedSpan.getId())) {
+                                activity.showReaderCommentsList(clickedSpan.getSiteId(), clickedSpan.getPostId(),
+                                                                clickedSpan.getId());
+                            } else {
+                                activity.showWebViewActivityForUrl(clickedSpan.getUrl());
+                            }
+                            break;
+                        case STAT:
+                        case FOLLOW:
+                            // We can open native stats if the site is a wpcom or Jetpack sites
+                            activity.showStatsActivityForSite(clickedSpan.getSiteId(), clickedSpan.getRangeType());
+                            break;
+                        case LIKE:
+                            if (ReaderPostTable.postExists(clickedSpan.getSiteId(), clickedSpan.getId())) {
+                                activity.showReaderPostLikeUsers(clickedSpan.getSiteId(), clickedSpan.getId());
+                            } else {
+                                activity.showPostActivity(clickedSpan.getSiteId(), clickedSpan.getId());
+                            }
+                            break;
+                        default:
+                            // We don't know what type of id this is, let's see if it has a URL and push a webview
+                            if (!TextUtils.isEmpty(clickedSpan.getUrl())) {
+                                activity.showWebViewActivityForUrl(clickedSpan.getUrl());
+                            }
+                    }
+                }
+            };
+
+    private final UserNoteBlock.OnGravatarClickedListener mOnGravatarClickedListener =
+            new UserNoteBlock.OnGravatarClickedListener() {
+                @Override
+                public void onGravatarClicked(long siteId, long userId, String siteUrl) {
+                    if (!isAdded() || !(getActivity() instanceof NotificationsDetailActivity)) {
+                        return;
+                    }
+
+                    NotificationsDetailActivity detailActivity = (NotificationsDetailActivity) getActivity();
+                    if (siteId == 0 && !TextUtils.isEmpty(siteUrl)) {
+                        detailActivity.showWebViewActivityForUrl(siteUrl);
+                    } else if (siteId != 0) {
+                        detailActivity.showBlogPreviewActivity(siteId);
+                    }
+                }
+            };
 
     private boolean hasNoteBlockAdapter() {
         return mNoteBlockAdapter != null;
@@ -295,12 +307,13 @@ public class NotificationsDetailListFragment extends ListFragment implements Not
 
     // Loop through the 'body' items in this note, and create blocks for each.
     private class LoadNoteBlocksTask extends AsyncTask<Void, Boolean, List<NoteBlock>> {
-
         private boolean mIsBadgeView;
 
         @Override
         protected List<NoteBlock> doInBackground(Void... params) {
-            if (mNote == null) return null;
+            if (mNote == null) {
+                return null;
+            }
 
             requestReaderContentForNote();
 
@@ -323,7 +336,7 @@ public class NotificationsDetailListFragment extends ListFragment implements Not
             }
 
             if (bodyArray != null && bodyArray.length() > 0) {
-                for (int i=0; i < bodyArray.length(); i++) {
+                for (int i = 0; i < bodyArray.length(); i++) {
                     try {
                         JSONObject noteObject = bodyArray.getJSONObject(i);
                         // Determine NoteBlock type and add it to the array
@@ -354,7 +367,7 @@ public class NotificationsDetailListFragment extends ListFragment implements Not
                                 );
 
                                 // Set listener for comment status changes, so we can update bg and text colors
-                                CommentUserNoteBlock commentUserNoteBlock = (CommentUserNoteBlock)noteBlock;
+                                CommentUserNoteBlock commentUserNoteBlock = (CommentUserNoteBlock) noteBlock;
                                 mOnCommentStatusChangeListener = commentUserNoteBlock.getOnCommentChangeListener();
                                 commentUserNoteBlock.setCommentStatus(mNote.getCommentStatus());
                                 commentUserNoteBlock.configureResources(getActivity());
@@ -368,10 +381,10 @@ public class NotificationsDetailListFragment extends ListFragment implements Not
                             }
                         } else if (isFooterBlock(noteObject)) {
                             noteBlock = new FooterNoteBlock(noteObject, mOnNoteBlockTextClickListener);
-                            ((FooterNoteBlock)noteBlock).setClickableSpan(
+                            ((FooterNoteBlock) noteBlock).setClickableSpan(
                                     JSONUtils.queryJSON(noteObject, "ranges[last]", new JSONObject()),
                                     mNote.getType()
-                            );
+                                                                          );
                         } else {
                             noteBlock = new NoteBlock(noteObject, mOnNoteBlockTextClickListener);
                         }
@@ -398,7 +411,9 @@ public class NotificationsDetailListFragment extends ListFragment implements Not
 
         @Override
         protected void onPostExecute(List<NoteBlock> noteList) {
-            if (!isAdded() || noteList == null) return;
+            if (!isAdded() || noteList == null) {
+                return;
+            }
 
             if (mIsBadgeView) {
                 mRootLayout.setGravity(Gravity.CENTER_VERTICAL);
@@ -419,15 +434,17 @@ public class NotificationsDetailListFragment extends ListFragment implements Not
     }
 
     private boolean isFooterBlock(JSONObject blockObject) {
-        if (mNote == null || blockObject == null) return false;
+        if (mNote == null || blockObject == null) {
+            return false;
+        }
 
         if (mNote.isCommentType()) {
             // Check if this is a comment notification that has been replied to
             // The block will not have a type, and its id will match the comment reply id in the Note.
-            return (JSONUtils.queryJSON(blockObject, "type", null) == null &&
-                    mNote.getCommentReplyId() == JSONUtils.queryJSON(blockObject, "ranges[1].id", 0));
-        } else if (mNote.isFollowType() || mNote.isLikeType() ||
-                mNote.isCommentLikeType() || mNote.isReblogType()) {
+            return (JSONUtils.queryJSON(blockObject, "type", null) == null
+                    && mNote.getCommentReplyId() == JSONUtils.queryJSON(blockObject, "ranges[1].id", 0));
+        } else if (mNote.isFollowType() || mNote.isLikeType()
+                   || mNote.isCommentLikeType() || mNote.isReblogType()) {
             // User list notifications have a footer if they have 10 or more users in the body
             // The last block will not have a type, so we can use that to determine if it is the footer
             return JSONUtils.queryJSON(blockObject, "type", null) == null;
@@ -460,7 +477,9 @@ public class NotificationsDetailListFragment extends ListFragment implements Not
 
     // Requests Reader content for certain notification types
     private void requestReaderContentForNote() {
-        if (mNote == null || !isAdded()) return;
+        if (mNote == null || !isAdded()) {
+            return;
+        }
 
         // Request the reader post so that loading reader activities will work.
         if (mNote.isUserList() && !ReaderPostTable.postExists(mNote.getSiteId(), mNote.getPostId())) {
@@ -468,9 +487,10 @@ public class NotificationsDetailListFragment extends ListFragment implements Not
         }
 
         // Request reader comments until we retrieve the comment for this note
-        if ((mNote.isCommentLikeType() || mNote.isCommentReplyType() || mNote.isCommentWithUserReply()) &&
-                !ReaderCommentTable.commentExists(mNote.getSiteId(), mNote.getPostId(), mNote.getCommentId())) {
-            ReaderCommentService.startServiceForComment(getActivity(), mNote.getSiteId(), mNote.getPostId(), mNote.getCommentId());
+        if ((mNote.isCommentLikeType() || mNote.isCommentReplyType() || mNote.isCommentWithUserReply())
+            && !ReaderCommentTable.commentExists(mNote.getSiteId(), mNote.getPostId(), mNote.getCommentId())) {
+            ReaderCommentService
+                    .startServiceForComment(getActivity(), mNote.getSiteId(), mNote.getPostId(), mNote.getCommentId());
         }
     }
 }

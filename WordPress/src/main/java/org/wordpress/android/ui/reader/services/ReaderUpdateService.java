@@ -34,7 +34,6 @@ import javax.inject.Inject;
 import de.greenrobot.event.EventBus;
 
 public class ReaderUpdateService extends Service {
-
     /***
      * service which updates followed/recommended tags and blogs for the Reader, relies
      * on EventBus to notify of changes
@@ -233,7 +232,7 @@ public class ReaderUpdateService extends Service {
         SQLiteDatabase db = ReaderDatabase.getWritableDb();
         db.beginTransaction();
         try {
-            for (ReaderTag tag: tagList) {
+            for (ReaderTag tag : tagList) {
                 ReaderTagTable.deleteTag(tag);
                 ReaderPostTable.deletePostsWithTag(tag);
             }
@@ -313,10 +312,11 @@ public class ReaderUpdateService extends Service {
 
         AppLog.d(AppLog.T.READER, "reader service > updating recommended blogs");
         String path = "read/recommendations/mine/"
-                    + "?source=mobile"
-                    + "&number=" + Integer.toString(ReaderConstants.READER_MAX_RECOMMENDED_TO_REQUEST);
+                      + "?source=mobile"
+                      + "&number=" + Integer.toString(ReaderConstants.READER_MAX_RECOMMENDED_TO_REQUEST);
         WordPress.getRestClientUtilsV1_1().get(path, listener, errorListener);
     }
+
     private void handleRecommendedBlogsResponse(final JSONObject jsonObject) {
         new Thread() {
             @Override

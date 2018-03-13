@@ -1,5 +1,6 @@
 package org.wordpress.android.ui;
 
+import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
@@ -14,15 +15,16 @@ import org.wordpress.android.ui.reader.ReaderActivityLauncher;
 import org.wordpress.android.util.AnalyticsUtils;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
+import org.wordpress.android.util.LocaleManager;
 import org.wordpress.android.util.ToastUtils;
 
 import javax.inject.Inject;
 
 /**
  * An activity to handle deep linking and intercepting
- *
+ * <p>
  * wordpress://viewpost?blogId={blogId}&postId={postId}
- *
+ * <p>
  * Redirects users to the reader activity along with IDs passed in the intent
  */
 public class DeepLinkingIntentReceiverActivity extends AppCompatActivity {
@@ -31,6 +33,11 @@ public class DeepLinkingIntentReceiverActivity extends AppCompatActivity {
     private String mPostId;
 
     @Inject AccountStore mAccountStore;
+
+    @Override
+    protected void attachBaseContext(Context newBase) {
+        super.attachBaseContext(LocaleManager.setLocale(newBase));
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -80,10 +87,10 @@ public class DeepLinkingIntentReceiverActivity extends AppCompatActivity {
                 final long postId = Long.parseLong(mPostId);
 
                 AnalyticsUtils.trackWithBlogPostDetails(AnalyticsTracker.Stat.READER_VIEWPOST_INTERCEPTED,
-                        blogId, postId);
+                                                        blogId, postId);
 
                 ReaderActivityLauncher.showReaderPostDetail(this, false, blogId, postId, null, 0, false,
-                        mInterceptedUri);
+                                                            mInterceptedUri);
             } catch (NumberFormatException e) {
                 AppLog.e(T.READER, e);
             }

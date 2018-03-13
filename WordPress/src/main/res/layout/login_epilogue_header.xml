@@ -41,7 +41,9 @@
             android:orientation="vertical"
             android:gravity="center_horizontal"
             android:paddingLeft="@dimen/margin_extra_large"
-            android:paddingRight="@dimen/margin_extra_large">
+            android:paddingRight="@dimen/margin_extra_large"
+            android:paddingStart="@dimen/margin_extra_large"
+            android:paddingEnd="@dimen/margin_extra_large">
 
             <org.wordpress.android.widgets.WPNetworkImageView
                 android:id="@+id/avatar"

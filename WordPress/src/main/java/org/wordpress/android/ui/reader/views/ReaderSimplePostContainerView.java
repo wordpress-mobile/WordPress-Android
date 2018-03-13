@@ -18,7 +18,6 @@ import org.wordpress.android.util.AnalyticsUtils;
  * from the same site as the source post) or global (related posts from across wp.com)
  */
 public class ReaderSimplePostContainerView extends LinearLayout {
-
     private final ReaderSimplePostList mSimplePostList = new ReaderSimplePostList();
 
     public ReaderSimplePostContainerView(Context context) {
@@ -57,7 +56,9 @@ public class ReaderSimplePostContainerView extends LinearLayout {
         container.removeAllViews();
 
         // nothing more to do if passed list is empty
-        if (mSimplePostList.size() == 0) return;
+        if (mSimplePostList.size() == 0) {
+            return;
+        }
 
         // add a view for each post
         for (int index = 0; index < mSimplePostList.size(); index++) {
@@ -79,9 +80,8 @@ public class ReaderSimplePostContainerView extends LinearLayout {
      * called by reader detail when scrolled into view, tracks railcar events for each post
      */
     public void trackRailcarRender() {
-        for (ReaderSimplePost post: mSimplePostList) {
+        for (ReaderSimplePost post : mSimplePostList) {
             AnalyticsUtils.trackRailcarRender(post.getRailcarJson());
         }
     }
-
 }

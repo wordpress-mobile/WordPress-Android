@@ -10,6 +10,7 @@ import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.ui.notifications.utils.NotificationsUtils;
 import org.wordpress.android.util.JSONUtils;
+import org.wordpress.android.util.RtlUtils;
 
 public class FooterNoteBlock extends NoteBlock {
     private NoteBlockClickableSpan mClickableSpan;
@@ -19,7 +20,9 @@ public class FooterNoteBlock extends NoteBlock {
     }
 
     public void setClickableSpan(JSONObject rangeObject, String noteType) {
-        if (rangeObject == null) return;
+        if (rangeObject == null) {
+            return;
+        }
 
         mClickableSpan = new NoteBlockClickableSpan(
                 WordPress.getContext(),
@@ -43,7 +46,7 @@ public class FooterNoteBlock extends NoteBlock {
 
     @Override
     public View configureView(final View view) {
-        final FooterNoteBlockHolder noteBlockHolder = (FooterNoteBlockHolder)view.getTag();
+        final FooterNoteBlockHolder noteBlockHolder = (FooterNoteBlockHolder) view.getTag();
 
         // Note text
         if (!TextUtils.isEmpty(getNoteText())) {
@@ -57,6 +60,10 @@ public class FooterNoteBlock extends NoteBlock {
         if (!TextUtils.isEmpty(noticonGlyph)) {
             noteBlockHolder.getNoticonView().setVisibility(View.VISIBLE);
             noteBlockHolder.getNoticonView().setText(noticonGlyph);
+            // mirror noticon in the rtl mode
+            if (RtlUtils.isRtl(noteBlockHolder.getNoticonView().getContext())) {
+                noteBlockHolder.getNoticonView().setScaleX(-1);
+            }
         } else {
             noteBlockHolder.getNoticonView().setVisibility(View.GONE);
         }
@@ -65,7 +72,9 @@ public class FooterNoteBlock extends NoteBlock {
     }
 
     private String getNoticonGlyph() {
-        if (getNoteData() == null) return "";
+        if (getNoteData() == null) {
+            return "";
+        }
 
         return JSONUtils.queryJSON(getNoteData(), "ranges[first].value", "");
     }
@@ -73,7 +82,7 @@ public class FooterNoteBlock extends NoteBlock {
     @Override
     Spannable getNoteText() {
         return NotificationsUtils.getSpannableContentForRanges(getNoteData(), null,
-                getOnNoteBlockTextClickListener(), true);
+                                                               getOnNoteBlockTextClickListener(), true);
     }
 
     public Object getViewHolder(View view) {
@@ -100,6 +109,7 @@ public class FooterNoteBlock extends NoteBlock {
         public TextView getTextView() {
             return mTextView;
         }
+
         public TextView getNoticonView() {
             return mNoticonView;
         }
@@ -112,5 +122,4 @@ public class FooterNoteBlock extends NoteBlock {
 
         getOnNoteBlockTextClickListener().onNoteBlockTextClicked(mClickableSpan);
     }
-
 }

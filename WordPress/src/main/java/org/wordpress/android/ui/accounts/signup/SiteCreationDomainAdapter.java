@@ -1,8 +1,10 @@
 package org.wordpress.android.ui.accounts.signup;
 
 import android.content.Context;
+import android.os.Build;
 import android.os.Handler;
 import android.os.Looper;
+import android.support.v7.content.res.AppCompatResources;
 import android.support.v7.widget.RecyclerView;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -31,6 +33,7 @@ public class SiteCreationDomainAdapter extends RecyclerView.Adapter<RecyclerView
 
     public interface OnAdapterListener {
         void onKeywordsChange(String keywords);
+
         void onSelectionChange(String domain);
     }
 
@@ -60,6 +63,16 @@ public class SiteCreationDomainAdapter extends RecyclerView.Adapter<RecyclerView
         private InputViewHolder(View itemView) {
             super(itemView);
             this.mInput = itemView.findViewById(R.id.input);
+            if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
+                this.mInput.setCompoundDrawablesRelativeWithIntrinsicBounds(
+                        AppCompatResources.getDrawable(itemView.getContext(), R.drawable.ic_search_grey_24dp),
+                        null, null, null);
+            } else {
+                this.mInput.setCompoundDrawablesWithIntrinsicBounds(
+                        AppCompatResources.getDrawable(itemView.getContext(), R.drawable.ic_search_grey_24dp),
+                        null, null, null);
+
+            }
             this.mProgressBar = itemView.findViewById(R.id.progress_bar);
 
             this.mTextWatcher = new TextWatcher() {
@@ -128,7 +141,7 @@ public class SiteCreationDomainAdapter extends RecyclerView.Adapter<RecyclerView
         mOnAdapterListener.onSelectionChange(mSelectedDomain);
 
         mNeedExtraLineForSelectedDomain = carryOverDomain != null
-                && (suggestions == null || !suggestions.contains(carryOverDomain));
+                                          && (suggestions == null || !suggestions.contains(carryOverDomain));
 
         notifyDataSetChanged();
     }
@@ -138,13 +151,14 @@ public class SiteCreationDomainAdapter extends RecyclerView.Adapter<RecyclerView
         switch (viewType) {
             case VIEW_TYPE_HEADER:
                 return new HeaderViewHolder(LayoutInflater.from(parent.getContext())
-                        .inflate(R.layout.site_creation_domain_header, parent, false));
+                                                          .inflate(R.layout.site_creation_domain_header, parent,
+                                                                   false));
             case VIEW_TYPE_INPUT:
                 return new InputViewHolder(LayoutInflater.from(parent.getContext())
-                        .inflate(R.layout.site_creation_domain_input, parent, false));
+                                                         .inflate(R.layout.site_creation_domain_input, parent, false));
             case VIEW_TYPE_ITEM:
                 return new DomainViewHolder(LayoutInflater.from(parent.getContext())
-                        .inflate(R.layout.site_creation_domain_item, parent, false));
+                                                          .inflate(R.layout.site_creation_domain_item, parent, false));
             default:
                 throw new RuntimeException("Unknown view type " + viewType);
         }
@@ -174,7 +188,7 @@ public class SiteCreationDomainAdapter extends RecyclerView.Adapter<RecyclerView
 
         switch (viewType) {
             // case VIEW_TYPE_HEADER:
-            //  nothing to be bound for VIEW_TYPE_HEADER so, just have this as a comment
+            // nothing to be bound for VIEW_TYPE_HEADER so, just have this as a comment
 
             case VIEW_TYPE_INPUT:
                 bindInput((InputViewHolder) holder);
@@ -200,7 +214,7 @@ public class SiteCreationDomainAdapter extends RecyclerView.Adapter<RecyclerView
             @Override
             public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
                 if (actionId == EditorInfo.IME_ACTION_SEARCH
-                        || (event != null
+                    || (event != null
                         && event.getAction() == KeyEvent.ACTION_UP
                         && event.getKeyCode() == KeyEvent.KEYCODE_ENTER)) {
                     mOnAdapterListener.onKeywordsChange(inputViewHolder.mInput.getText().toString());
@@ -215,7 +229,7 @@ public class SiteCreationDomainAdapter extends RecyclerView.Adapter<RecyclerView
             @Override
             public void onFocusChange(View view, boolean focused) {
                 // when the focus is lost when out-of-view then it means we lost it because of the shadowing.
-                //  Let's keep a note to restore focus when back-in-view.
+                // Let's keep a note to restore focus when back-in-view.
                 inputViewHolder.mKeepFocus = !focused && inputViewHolder.mIsDetached;
             }
         });

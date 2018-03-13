@@ -1,6 +1,7 @@
 package org.wordpress.android.ui.reader;
 
 import android.app.Fragment;
+import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.AppBarLayout;
@@ -15,14 +16,18 @@ import org.wordpress.android.R;
 import org.wordpress.android.datasets.ReaderBlogTable;
 import org.wordpress.android.models.ReaderTag;
 import org.wordpress.android.ui.reader.ReaderTypes.ReaderPostListType;
+import org.wordpress.android.util.LocaleManager;
 
 /*
  * serves as the host for ReaderPostListFragment when showing blog preview & tag preview
  */
-
 public class ReaderPostListActivity extends AppCompatActivity {
-
     private ReaderPostListType mPostListType;
+
+    @Override
+    protected void attachBaseContext(Context newBase) {
+        super.attachBaseContext(LocaleManager.setLocale(newBase));
+    }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -43,7 +48,8 @@ public class ReaderPostListActivity extends AppCompatActivity {
             mPostListType = ReaderTypes.DEFAULT_POST_LIST_TYPE;
         }
 
-        if (getPostListType() == ReaderPostListType.TAG_PREVIEW || getPostListType() == ReaderPostListType.BLOG_PREVIEW) {
+        if (getPostListType() == ReaderPostListType.TAG_PREVIEW
+            || getPostListType() == ReaderPostListType.BLOG_PREVIEW) {
             // show an X in the toolbar which closes the activity - if this is tag preview, then
             // using the back button will navigate through tags if the user explores beyond a single tag
             toolbar.setNavigationIcon(R.drawable.ic_cross_white_24dp);
@@ -83,26 +89,26 @@ public class ReaderPostListActivity extends AppCompatActivity {
     @Override
     protected void onResumeFragments() {
         super.onResumeFragments();
-        //this particular Activity doesn't show filtering, so we'll disable the FilteredRecyclerView toolbar here
+        // this particular Activity doesn't show filtering, so we'll disable the FilteredRecyclerView toolbar here
         disableFilteredRecyclerViewToolbar();
     }
 
     /*
     * This method hides the FilteredRecyclerView toolbar with spinner so to disable content filtering, for reusability
     * */
-    private void disableFilteredRecyclerViewToolbar(){
+    private void disableFilteredRecyclerViewToolbar() {
         // make it invisible - setting height to zero here because setting visibility to View.GONE wouldn't take the
         // occupied space, as otherwise expected
         AppBarLayout appBarLayout = (AppBarLayout) findViewById(R.id.app_bar_layout);
         if (appBarLayout != null) {
-            CoordinatorLayout.LayoutParams lp = (CoordinatorLayout.LayoutParams)appBarLayout.getLayoutParams();
+            CoordinatorLayout.LayoutParams lp = (CoordinatorLayout.LayoutParams) appBarLayout.getLayoutParams();
             lp.height = 0;
             appBarLayout.setLayoutParams(lp);
         }
 
         // disabling any CoordinatorLayout behavior for scrolling
         Toolbar toolbarWithSpinner = (Toolbar) findViewById(R.id.toolbar_with_spinner);
-        if (toolbarWithSpinner != null){
+        if (toolbarWithSpinner != null) {
             AppBarLayout.LayoutParams p = (AppBarLayout.LayoutParams) toolbarWithSpinner.getLayoutParams();
             p.setScrollFlags(0);
             toolbarWithSpinner.setLayoutParams(p);
@@ -120,7 +126,8 @@ public class ReaderPostListActivity extends AppCompatActivity {
         }
 
         // store the title for blog/tag preview so we can restore it upon recreation
-        if (getPostListType() == ReaderPostListType.BLOG_PREVIEW || getPostListType() == ReaderPostListType.TAG_PREVIEW) {
+        if (getPostListType() == ReaderPostListType.BLOG_PREVIEW
+            || getPostListType() == ReaderPostListType.TAG_PREVIEW) {
             outState.putString(ReaderConstants.KEY_ACTIVITY_TITLE, getTitle().toString());
         }
 

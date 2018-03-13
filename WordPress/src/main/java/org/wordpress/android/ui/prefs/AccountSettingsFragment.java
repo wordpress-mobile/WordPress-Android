@@ -1,6 +1,7 @@
 package org.wordpress.android.ui.prefs;
 
 import android.os.AsyncTask;
+import android.os.Build;
 import android.os.Bundle;
 import android.preference.Preference;
 import android.preference.PreferenceFragment;
@@ -8,10 +9,12 @@ import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.Snackbar;
 import android.support.v4.content.ContextCompat;
 import android.text.InputType;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.EditText;
 import android.widget.TextView;
 
 import org.greenrobot.eventbus.Subscribe;
@@ -59,9 +62,11 @@ public class AccountSettingsFragment extends PreferenceFragment implements Prefe
         mUsernamePreference = findPreference(getString(R.string.pref_key_username));
         mEmailPreference = (EditTextPreferenceWithValidation) findPreference(getString(R.string.pref_key_email));
         mPrimarySitePreference = (DetailListPreference) findPreference(getString(R.string.pref_key_primary_site));
-        mWebAddressPreference = (EditTextPreferenceWithValidation) findPreference(getString(R.string.pref_key_web_address));
+        mWebAddressPreference =
+                (EditTextPreferenceWithValidation) findPreference(getString(R.string.pref_key_web_address));
 
-        mEmailPreference.getEditText().setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_EMAIL_ADDRESS);
+        mEmailPreference.getEditText()
+                        .setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_EMAIL_ADDRESS);
         mEmailPreference.setValidationType(EditTextPreferenceWithValidation.ValidationType.EMAIL);
         mWebAddressPreference.getEditText().setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_URI);
         mWebAddressPreference.setValidationType(EditTextPreferenceWithValidation.ValidationType.URL);
@@ -70,6 +75,9 @@ public class AccountSettingsFragment extends PreferenceFragment implements Prefe
         mEmailPreference.setOnPreferenceChangeListener(this);
         mPrimarySitePreference.setOnPreferenceChangeListener(this);
         mWebAddressPreference.setOnPreferenceChangeListener(this);
+
+        setTextAlignement(mEmailPreference.getEditText());
+        setTextAlignement(mWebAddressPreference.getEditText());
 
         // load site list asynchronously
         new LoadSitesTask().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
@@ -113,7 +121,9 @@ public class AccountSettingsFragment extends PreferenceFragment implements Prefe
 
     @Override
     public boolean onPreferenceChange(Preference preference, Object newValue) {
-        if (newValue == null) return false;
+        if (newValue == null) {
+            return false;
+        }
 
         if (preference == mEmailPreference) {
             updateEmail(newValue.toString());
@@ -141,6 +151,14 @@ public class AccountSettingsFragment extends PreferenceFragment implements Prefe
         return super.onOptionsItemSelected(item);
     }
 
+    private void setTextAlignement(EditText editText) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
+            editText.setTextAlignment(View.TEXT_ALIGNMENT_VIEW_START);
+        } else {
+            editText.setGravity(Gravity.START);
+        }
+    }
+
     private void refreshAccountDetails() {
         AccountModel account = mAccountStore.getAccount();
         mUsernamePreference.setSummary(account.getUserName());
@@ -154,7 +172,7 @@ public class AccountSettingsFragment extends PreferenceFragment implements Prefe
         AccountModel account = mAccountStore.getAccount();
         if (account.getPendingEmailChange()) {
             showPendingEmailChangeSnackbar(account.getNewEmail());
-        } else if (mEmailSnackbar != null && mEmailSnackbar.isShown()){
+        } else if (mEmailSnackbar != null && mEmailSnackbar.isShown()) {
             mEmailSnackbar.dismiss();
         }
         mEmailPreference.setEnabled(!account.getPendingEmailChange());
@@ -171,10 +189,12 @@ public class AccountSettingsFragment extends PreferenceFragment implements Prefe
                 };
 
                 mEmailSnackbar = Snackbar
-                        .make(getView(), "", Snackbar.LENGTH_INDEFINITE).setAction(getString(R.string.button_revert), clickListener);
+                        .make(getView(), "", Snackbar.LENGTH_INDEFINITE)
+                        .setAction(getString(R.string.button_revert), clickListener);
                 mEmailSnackbar.getView().setBackgroundColor(ContextCompat.getColor(getActivity(), R.color.grey_dark));
                 mEmailSnackbar.setActionTextColor(ContextCompat.getColor(getActivity(), R.color.blue_medium));
-                TextView textView = (TextView) mEmailSnackbar.getView().findViewById(android.support.design.R.id.snackbar_text);
+                TextView textView =
+                        (TextView) mEmailSnackbar.getView().findViewById(android.support.design.R.id.snackbar_text);
                 textView.setMaxLines(4);
             }
             // instead of creating a new snackbar, update the current one to avoid the jumping animation
@@ -228,16 +248,20 @@ public class AccountSettingsFragment extends PreferenceFragment implements Prefe
     @SuppressWarnings("unused")
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onAccountChanged(OnAccountChanged event) {
-        if (!isAdded()) return;
+        if (!isAdded()) {
+            return;
+        }
 
         if (event.isError()) {
             switch (event.error.type) {
                 case SETTINGS_FETCH_ERROR:
-                    ToastUtils.showToast(getActivity(), R.string.error_fetch_account_settings, ToastUtils.Duration.LONG);
+                    ToastUtils
+                            .showToast(getActivity(), R.string.error_fetch_account_settings, ToastUtils.Duration.LONG);
                     break;
                 case SETTINGS_POST_ERROR:
                     ToastUtils.showToast(getActivity(), R.string.error_post_account_settings, ToastUtils.Duration.LONG);
-                    // we optimistically show the email change snackbar, if that request fails, we should remove the snackbar
+                    // we optimistically show the email change snackbar, if that request fails, we should
+                    // remove the snackbar
                     checkIfEmailChangeIsPending();
                     break;
             }

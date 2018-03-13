@@ -25,16 +25,15 @@ import org.wordpress.android.util.WPPrefUtils;
 public class NumberPickerDialog extends DialogFragment
         implements DialogInterface.OnClickListener,
         CompoundButton.OnCheckedChangeListener {
-
-    public static final String SHOW_SWITCH_KEY    = "show-switch";
+    public static final String SHOW_SWITCH_KEY = "show-switch";
     public static final String SWITCH_ENABLED_KEY = "switch-enabled";
-    public static final String SWITCH_TITLE_KEY   = "switch-title";
-    public static final String SWITCH_DESC_KEY    = "switch-description";
-    public static final String TITLE_KEY          = "dialog-title";
-    public static final String HEADER_TEXT_KEY    = "header-text";
-    public static final String MIN_VALUE_KEY      = "min-value";
-    public static final String MAX_VALUE_KEY      = "max-value";
-    public static final String CUR_VALUE_KEY      = "cur-value";
+    public static final String SWITCH_TITLE_KEY = "switch-title";
+    public static final String SWITCH_DESC_KEY = "switch-description";
+    public static final String TITLE_KEY = "dialog-title";
+    public static final String HEADER_TEXT_KEY = "header-text";
+    public static final String MIN_VALUE_KEY = "min-value";
+    public static final String MAX_VALUE_KEY = "max-value";
+    public static final String CUR_VALUE_KEY = "cur-value";
 
     private static final int DEFAULT_MIN_VALUE = 0;
     private static final int DEFAULT_MAX_VALUE = 99;
@@ -112,8 +111,12 @@ public class NumberPickerDialog extends DialogFragment
         AlertDialog dialog = (AlertDialog) getDialog();
         Button positive = dialog.getButton(DialogInterface.BUTTON_POSITIVE);
         Button negative = dialog.getButton(DialogInterface.BUTTON_NEGATIVE);
-        if (positive != null) WPPrefUtils.layoutAsFlatButton(positive);
-        if (negative != null) WPPrefUtils.layoutAsFlatButton(negative);
+        if (positive != null) {
+            WPPrefUtils.layoutAsFlatButton(positive);
+        }
+        if (negative != null) {
+            WPPrefUtils.layoutAsFlatButton(negative);
+        }
     }
 
     @Override

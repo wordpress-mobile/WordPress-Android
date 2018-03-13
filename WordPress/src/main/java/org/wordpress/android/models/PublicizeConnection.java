@@ -10,14 +10,13 @@ import org.wordpress.android.util.JSONUtils;
 import org.wordpress.android.util.StringUtils;
 
 public class PublicizeConnection {
-
     public enum ConnectStatus {
         OK {
             public String toString() {
                 return "ok";
             }
         },
-        BROKEN{
+        BROKEN {
             public String toString() {
                 return "broken";
             }
@@ -43,13 +42,15 @@ public class PublicizeConnection {
     private String mExternalProfilePictureUrl;
     private long[] mSites;
 
-    // `status` can be `ok` or `broken` -- `broken` means the connection needs to be re-established via the `refresh_URL`
+    // `status` can be `ok` or `broken` -- `broken` means the connection needs
+    // to be re-established via the `refresh_URL`
     private String mStatus;
     private String mRefreshUrl;
 
     public String getService() {
         return StringUtils.notNullStr(mService);
     }
+
     public void setService(String service) {
         this.mService = StringUtils.notNullStr(service);
     }
@@ -57,6 +58,7 @@ public class PublicizeConnection {
     public String getLabel() {
         return StringUtils.notNullStr(mLabel);
     }
+
     public void setLabel(String label) {
         this.mLabel = StringUtils.notNullStr(label);
     }
@@ -64,6 +66,7 @@ public class PublicizeConnection {
     public String getExternalName() {
         return StringUtils.notNullStr(mExternalName);
     }
+
     public void setExternalName(String name) {
         this.mExternalName = StringUtils.notNullStr(name);
     }
@@ -71,9 +74,11 @@ public class PublicizeConnection {
     public String getExternalDisplayName() {
         return StringUtils.notNullStr(mExternalDisplayName);
     }
+
     public void setExternalDisplayName(String name) {
         this.mExternalDisplayName = StringUtils.notNullStr(name);
     }
+
     public boolean hasExternalDisplayName() {
         return !TextUtils.isEmpty(mExternalDisplayName);
     }
@@ -81,6 +86,7 @@ public class PublicizeConnection {
     public String getExternalId() {
         return StringUtils.notNullStr(mExternalId);
     }
+
     public void setExternalId(String id) {
         this.mExternalId = StringUtils.notNullStr(id);
     }
@@ -88,9 +94,11 @@ public class PublicizeConnection {
     public String getRefreshUrl() {
         return StringUtils.notNullStr(mRefreshUrl);
     }
+
     public void setRefreshUrl(String url) {
         this.mRefreshUrl = StringUtils.notNullStr(url);
     }
+
     public boolean hasRefreshUrl() {
         return !TextUtils.isEmpty(mRefreshUrl);
     }
@@ -98,9 +106,11 @@ public class PublicizeConnection {
     public String getExternalProfilePictureUrl() {
         return StringUtils.notNullStr(mExternalProfilePictureUrl);
     }
+
     public void setExternalProfilePictureUrl(String url) {
         this.mExternalProfilePictureUrl = StringUtils.notNullStr(url);
     }
+
     public boolean hasExternalProfilePictureUrl() {
         return !TextUtils.isEmpty(mExternalProfilePictureUrl);
     }
@@ -108,6 +118,7 @@ public class PublicizeConnection {
     public String getStatus() {
         return StringUtils.notNullStr(mStatus);
     }
+
     public void setStatus(String status) {
         this.mStatus = StringUtils.notNullStr(status);
     }
@@ -119,24 +130,25 @@ public class PublicizeConnection {
             return ConnectStatus.OK;
         }
     }
+
     public void setStatusEnum(@NonNull ConnectStatus status) {
         this.mStatus = status.toString();
     }
 
     public boolean isSameAs(PublicizeConnection other) {
         return other != null
-                && other.connectionId == this.connectionId
-                && other.userId == this.userId
-                && other.keyringConnectionId == this.keyringConnectionId
-                && other.keyringConnectionUserId == this.keyringConnectionUserId
-                && other.isShared == this.isShared
-                && other.getStatus().equals(this.getStatus())
-                && other.getExternalDisplayName().equals(this.getExternalDisplayName())
-                && other.getExternalName().equals(this.getExternalName())
-                && other.getLabel().equals(this.getLabel())
-                && other.getExternalProfilePictureUrl().equals(this.getExternalProfilePictureUrl())
-                && other.getRefreshUrl().equals(this.getRefreshUrl())
-                && other.getService().equals(this.getService());
+               && other.connectionId == this.connectionId
+               && other.userId == this.userId
+               && other.keyringConnectionId == this.keyringConnectionId
+               && other.keyringConnectionUserId == this.keyringConnectionUserId
+               && other.isShared == this.isShared
+               && other.getStatus().equals(this.getStatus())
+               && other.getExternalDisplayName().equals(this.getExternalDisplayName())
+               && other.getExternalName().equals(this.getExternalName())
+               && other.getLabel().equals(this.getLabel())
+               && other.getExternalProfilePictureUrl().equals(this.getExternalProfilePictureUrl())
+               && other.getRefreshUrl().equals(this.getRefreshUrl())
+               && other.getService().equals(this.getService());
     }
 
     public void setSites(long[] sites) {
@@ -147,9 +159,9 @@ public class PublicizeConnection {
         return mSites;
     }
 
-    public boolean isInSite(long siteId) {
+    public boolean isInSite(long remoteSiteId) {
         for (int i = 0; i < mSites.length; i++) {
-            if (siteId == mSites[i]) {
+            if (remoteSiteId == mSites[i]) {
                 return true;
             }
         }
@@ -172,18 +184,20 @@ public class PublicizeConnection {
         "external_ID":"4098796763",
         "external_name":"AutomatticNickB",
         "external_display":"@AutomatticNickB",
-        "external_profile_picture":"https:\/\/pbs.twimg.com\/profile_images\/661237406360727552\/RycwaFzg.png",
-        "external_profile_URL":"http:\/\/twitter.com\/AutomatticNickB",
+        "external_profile_picture":"https://pbs.twimg.com/profile_images/661237406360727552/RycwaFzg.png",
+        "external_profile_URL":"http://twitter.com/AutomatticNickB",
         "external_follower_count":null,
         "status":"ok",
-        "refresh_URL":"https:\/\/public-api.wordpress.com\/connect\/?action=request&kr_nonce=10c147b6fb&nonce=44fce811bb&refresh=1&for=connect&service=twitter&kr_blog_nonce=e3686ea86a&magic=keyring&blog=52451176",
+        "refresh_URL":"https://public-api.wordpress.com/connect/?action=request&kr_nonce=
+        10c147b6fb&nonce=44fce811bb&refresh=1&for=connect&service=twitter&kr_blog_nonce=
+        e3686ea86a&magic=keyring&blog=52451176",
         "meta":{
             "links":{
-                "self":"https:\/\/public-api.wordpress.com\/rest\/v1.1\/sites\/52451176\/publicize-connections\/12783250",
-                "help":"https:\/\/public-api.wordpress.com\/rest\/v1.1\/sites\/52451176\/publicize-connections\/12783250\/help",
-                "site":"https:\/\/public-api.wordpress.com\/rest\/v1.1\/sites\/52451176",
-                "service":"https:\/\/public-api.wordpress.com\/rest\/v1.1\/meta\/external-services\/twitter",
-                "keyring-connection":"https:\/\/public-api.wordpress.com\/rest\/v1.1\/me\/keyring-connections\/12781808"}
+                "self":"https://public-api.wordpress.com/rest/v1.1/sites/52451176/publicize-connections/12783250",
+                "help":"https://public-api.wordpress.com/rest/v1.1/sites/52451176/publicize-connections/12783250/help",
+                "site":"https://public-api.wordpress.com/rest/v1.1/sites/52451176",
+                "service":"https://public-api.wordpress.com/rest/v1.1/meta/external-services/twitter",
+                "keyring-connection":"https://public-api.wordpress.com/rest/v1.1/me/keyring-connections/12781808"}
              }}]}
      */
     public static PublicizeConnection fromJson(JSONObject json) {

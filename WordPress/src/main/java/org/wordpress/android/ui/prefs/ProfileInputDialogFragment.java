@@ -28,7 +28,6 @@ public class ProfileInputDialogFragment extends DialogFragment {
                                                          String hint,
                                                          boolean isMultiline,
                                                          int callbackId) {
-
         ProfileInputDialogFragment profileInputDialogFragment = new ProfileInputDialogFragment();
         Bundle args = new Bundle();
 
@@ -45,6 +44,7 @@ public class ProfileInputDialogFragment extends DialogFragment {
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         LayoutInflater layoutInflater = LayoutInflater.from(getActivity());
+        //noinspection InflateParams
         View promptView = layoutInflater.inflate(R.layout.my_profile_dialog, null);
         AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(getActivity());
         alertDialogBuilder.setView(promptView);
@@ -55,7 +55,7 @@ public class ProfileInputDialogFragment extends DialogFragment {
 
         Bundle args = getArguments();
         String title = args.getString(TITLE_TAG);
-        String hint  = args.getString(HINT_TAG);
+        String hint = args.getString(HINT_TAG);
         Boolean isMultiline = args.getBoolean(IS_MULTILINE_TAG);
         String initialText = args.getString(INITIAL_TEXT_TAG);
         final int callbackId = args.getInt(CALLBACK_ID_TAG);
@@ -76,21 +76,23 @@ public class ProfileInputDialogFragment extends DialogFragment {
         }
 
         alertDialogBuilder.setCancelable(true)
-                .setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int id) {
-                        if (getTargetFragment() instanceof Callback) {
-                            ((Callback) getTargetFragment()).onSuccessfulInput(editText.getText().toString(), callbackId);
-                        } else {
-                            AppLog.e(AppLog.T.UTILS, "Target fragment doesn't implement ProfileInputDialogFragment.Callback");
-                        }
-                    }
-                })
-                .setNegativeButton(R.string.cancel,
-                        new DialogInterface.OnClickListener() {
-                            public void onClick(DialogInterface dialog, int id) {
-                                dialog.cancel();
-                            }
-                        });
+                          .setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
+                              public void onClick(DialogInterface dialog, int id) {
+                                  if (getTargetFragment() instanceof Callback) {
+                                      ((Callback) getTargetFragment())
+                                              .onSuccessfulInput(editText.getText().toString(), callbackId);
+                                  } else {
+                                      AppLog.e(AppLog.T.UTILS,
+                                               "Target fragment doesn't implement ProfileInputDialogFragment.Callback");
+                                  }
+                              }
+                          })
+                          .setNegativeButton(R.string.cancel,
+                                             new DialogInterface.OnClickListener() {
+                                                 public void onClick(DialogInterface dialog, int id) {
+                                                     dialog.cancel();
+                                                 }
+                                             });
 
         return alertDialogBuilder.create();
     }
@@ -101,8 +103,12 @@ public class ProfileInputDialogFragment extends DialogFragment {
         AlertDialog dialog = (AlertDialog) getDialog();
         Button positive = dialog.getButton(DialogInterface.BUTTON_POSITIVE);
         Button negative = dialog.getButton(DialogInterface.BUTTON_NEGATIVE);
-        if (positive != null) WPPrefUtils.layoutAsFlatButton(positive);
-        if (negative != null) WPPrefUtils.layoutAsFlatButton(negative);
+        if (positive != null) {
+            WPPrefUtils.layoutAsFlatButton(positive);
+        }
+        if (negative != null) {
+            WPPrefUtils.layoutAsFlatButton(negative);
+        }
     }
 
     public interface Callback {

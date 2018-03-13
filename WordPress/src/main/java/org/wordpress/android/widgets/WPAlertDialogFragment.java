@@ -13,16 +13,18 @@ import org.wordpress.android.ui.ActivityLauncher;
 import org.wordpress.android.util.StringUtils;
 
 public class WPAlertDialogFragment extends DialogFragment implements DialogInterface.OnClickListener {
-    private enum WPAlertDialogType {ALERT,    // simple ok dialog with error message
-                                    CONFIRM,  // dialog with yes/no and callback when positive button clicked
-                                    CUSTOM,   // dialog with custom buttons and callback when positive or negative button clicked
-                                    URL_INFO} // info dialog that shows url when positive button clicked
+    private enum WPAlertDialogType {
+        ALERT, // simple ok dialog with error message
+        CONFIRM, // dialog with yes/no and callback when positive button clicked
+        CUSTOM, // dialog with custom buttons and callback when positive or negative button clicked
+        URL_INFO
+    } // info dialog that shows url when positive button clicked
 
-    private static final String ARG_TITLE           = "title";
-    private static final String ARG_MESSAGE         = "message";
-    private static final String ARG_TYPE            = "type";
-    private static final String ARG_INFO_TITLE      = "info-title";
-    private static final String ARG_INFO_URL        = "info-url";
+    private static final String ARG_TITLE = "title";
+    private static final String ARG_MESSAGE = "message";
+    private static final String ARG_TYPE = "type";
+    private static final String ARG_INFO_TITLE = "info-title";
+    private static final String ARG_INFO_URL = "info-url";
     private static final String ARG_POSITIVE_BUTTON = "positive-button";
     private static final String ARG_NEGATIVE_BUTTON = "negative-button";
 
@@ -38,6 +40,7 @@ public class WPAlertDialogFragment extends DialogFragment implements DialogInter
         String title = WordPress.getContext().getString(R.string.error_generic);
         return newAlertDialog(title, message);
     }
+
     public static WPAlertDialogFragment newAlertDialog(String title, String message) {
         return newInstance(title, message, WPAlertDialogType.ALERT, null, null, null, null);
     }
@@ -165,12 +168,12 @@ public class WPAlertDialogFragment extends DialogFragment implements DialogInter
                 final String infoTitle = StringUtils.notNullStr(bundle.getString(ARG_INFO_TITLE));
                 final String infoURL = StringUtils.notNullStr(bundle.getString(ARG_INFO_URL));
                 builder.setPositiveButton(infoTitle, new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                            if (!TextUtils.isEmpty(infoURL)) {
-                                ActivityLauncher.openUrlExternal(getActivity(), infoURL);
-                            }
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        if (!TextUtils.isEmpty(infoURL)) {
+                            ActivityLauncher.openUrlExternal(getActivity(), infoURL);
                         }
+                    }
                 });
                 break;
         }

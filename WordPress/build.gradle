@@ -34,8 +34,8 @@ android {
 
     defaultConfig {
         applicationId "org.wordpress.android"
-        versionName "9.5-rc-1"
-        versionCode 532
+        versionName "9.6-rc-1"
+        versionCode 537
         minSdkVersion 16
         targetSdkVersion 25
 
@@ -59,7 +59,6 @@ android {
         wasabi { // "hot" version, can be installed along release, alpha or beta versions
             applicationId "org.wordpress.android.beta"
             dimension "buildType"
-            minSdkVersion 21 // to take advantage of "fast" multi dex (pre-dex each module)
         }
     }
 
@@ -82,6 +81,12 @@ android {
         unitTests {
             includeAndroidResources = true
         }
+    }
+
+    lintOptions{
+        checkDependencies = true
+        lintConfig file('lint.xml')
+        baseline file("lint-baseline.xml")
     }
 }
 
@@ -165,6 +170,8 @@ dependencies {
         exclude group: "com.github.wordpress-mobile.WordPress-FluxC-Android", module: "fluxc"
         exclude group: 'com.github.bumptech.glide'
     }
+
+    lintChecks 'org.wordpress:lint:1.0.0'
 
     // Debug
     debugImplementation 'com.facebook.stetho:stetho:1.4.2'

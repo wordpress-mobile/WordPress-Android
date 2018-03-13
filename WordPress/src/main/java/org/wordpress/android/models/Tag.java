@@ -11,12 +11,12 @@ import java.util.List;
 public class Tag {
     public long siteID;
 
-    private String tag;
+    private String mTag;
 
     public Tag(long siteID,
                String tag) {
         this.siteID = siteID;
-        this.tag = tag;
+        mTag = tag;
     }
 
     public static Tag fromJSON(JSONObject json, long siteID) {
@@ -46,6 +46,6 @@ public class Tag {
     }
 
     public String getTag() {
-        return StringUtils.notNullStr(tag);
+        return StringUtils.notNullStr(mTag);
     }
 }

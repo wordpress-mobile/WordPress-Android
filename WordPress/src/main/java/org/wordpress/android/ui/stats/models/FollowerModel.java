@@ -17,7 +17,7 @@ public class FollowerModel implements Serializable {
     private FollowDataModel mFollowData;
     private String mDateSubscribed;
 
-    public FollowerModel(long mBlogId, JSONObject followerJSONData) throws JSONException{
+    public FollowerModel(long mBlogId, JSONObject followerJSONData) throws JSONException {
         this.mBlogId = mBlogId;
         this.mLabel = followerJSONData.getString("label");
 
@@ -48,9 +48,9 @@ public class FollowerModel implements Serializable {
         return mUrl;
     }
 
-    private boolean setURL(String URL) {
-        if (!TextUtils.isEmpty(URL) && UrlUtils.isValidUrlAndHostNotNull(URL)) {
-            this.mUrl = URL;
+    private boolean setURL(String url) {
+        if (!TextUtils.isEmpty(url) && UrlUtils.isValidUrlAndHostNotNull(url)) {
+            this.mUrl = url;
             return true;
         }
         return false;

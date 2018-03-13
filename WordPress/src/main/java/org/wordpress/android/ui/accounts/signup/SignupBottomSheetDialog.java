@@ -13,9 +13,11 @@ import org.wordpress.android.R;
 import org.wordpress.android.ui.WPBottomSheetDialog;
 
 public class SignupBottomSheetDialog extends WPBottomSheetDialog {
-    public SignupBottomSheetDialog(@NonNull final Context context, @NonNull final SignupSheetListener signupSheetListener) {
+    public SignupBottomSheetDialog(@NonNull final Context context,
+                                   @NonNull final SignupSheetListener signupSheetListener) {
         super(context);
-        final View layout = LayoutInflater.from(context).inflate(R.layout.signup_bottom_sheet_dialog, null, false);
+        //noinspection InflateParams
+        final View layout = LayoutInflater.from(context).inflate(R.layout.signup_bottom_sheet_dialog, null);
 
         Button termsOfServiceText = (Button) layout.findViewById(R.id.signup_tos);
         termsOfServiceText.setOnClickListener(new View.OnClickListener() {
@@ -65,8 +67,11 @@ public class SignupBottomSheetDialog extends WPBottomSheetDialog {
 
     public interface SignupSheetListener {
         void onSignupSheetCanceled();
+
         void onSignupSheetEmailClicked();
+
         void onSignupSheetGoogleClicked();
+
         void onSignupSheetTermsOfServiceClicked();
     }
 }

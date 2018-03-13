@@ -16,7 +16,9 @@
         android:paddingRight="@dimen/margin_large"
         android:paddingLeft="@dimen/margin_large"
         android:gravity="center_vertical"
-        android:layout_gravity="center_vertical">
+        android:layout_gravity="center_vertical"
+        android:paddingStart="@dimen/margin_large"
+        android:paddingEnd="@dimen/margin_large">
 
         <ImageView
             android:id="@+id/stats_list_cell_link"
@@ -51,7 +53,7 @@
             android:layout_height="@dimen/avatar_sz_small"
             android:layout_marginRight="@dimen/margin_large"
             android:layout_marginEnd="@dimen/margin_large"
-            android:textSize="@dimen/avatar_sz_extra_small"
+            android:textSize="@dimen/text_sz_double_extra_large"
             android:textColor="@color/black"
             android:visibility="gone" />
 
@@ -64,11 +66,12 @@
             android:layout_marginRight="@dimen/margin_large"
             android:layout_marginEnd="@dimen/margin_large"
             android:maxLines="3"
-            android:gravity="center_vertical"
+            android:gravity="center_vertical|start"
             android:autoLink="none"
             android:textColor="@color/stats_text_color"
             android:textColorLink="@color/stats_link_text_color"
             android:textColorHighlight="@color/transparent"
+            android:textAlignment="viewStart"
             android:textSize="@dimen/text_sz_medium" />
 
         <ImageView
@@ -76,7 +79,6 @@
             android:visibility="gone"
             android:layout_width="@dimen/avatar_sz_small"
             android:layout_height="@dimen/avatar_sz_small"
-            android:layout_centerVertical="true"
             android:layout_marginLeft="@dimen/margin_small"
             android:layout_marginStart="@dimen/margin_small"
             android:layout_marginRight="@dimen/margin_large"
@@ -85,7 +87,9 @@
             android:paddingLeft="@dimen/margin_small"
             android:paddingRight="@dimen/margin_small"
             android:contentDescription="@string/more"
-            app:srcCompat="@drawable/ic_ellipsis_blue_wordpress_32dp" />
+            app:srcCompat="@drawable/ic_ellipsis_blue_wordpress_32dp"
+            android:paddingEnd="@dimen/margin_small"
+            android:paddingStart="@dimen/margin_small"/>
 
         <LinearLayout
             android:id="@+id/stats_list_cell_total_container"

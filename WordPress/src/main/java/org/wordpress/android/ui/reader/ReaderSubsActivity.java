@@ -2,6 +2,7 @@ package org.wordpress.android.ui.reader;
 
 import android.app.Fragment;
 import android.app.FragmentManager;
+import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.TabLayout;
@@ -42,6 +43,7 @@ import org.wordpress.android.ui.reader.utils.ReaderUtils;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.DisplayUtils;
 import org.wordpress.android.util.EditTextUtils;
+import org.wordpress.android.util.LocaleManager;
 import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.UrlUtils;
@@ -59,7 +61,6 @@ import de.greenrobot.event.EventBus;
  */
 public class ReaderSubsActivity extends AppCompatActivity
         implements ReaderTagAdapter.TagDeletedListener {
-
     private EditText mEditAdd;
     private ImageButton mBtnAdd;
     private WPViewPager mViewPager;
@@ -75,6 +76,11 @@ public class ReaderSubsActivity extends AppCompatActivity
     private static final int TAB_IDX_FOLLOWED_TAGS = 0;
     private static final int TAB_IDX_FOLLOWED_BLOGS = 1;
     private static final int TAB_IDX_RECOMMENDED_BLOGS = 2;
+
+    @Override
+    protected void attachBaseContext(Context newBase) {
+        super.attachBaseContext(LocaleManager.setLocale(newBase));
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -253,7 +259,7 @@ public class ReaderSubsActivity extends AppCompatActivity
 
         // is it a url or a tag?
         boolean isUrl = !entry.contains(" ")
-                && (entry.contains(".") || entry.contains("://"));
+                        && (entry.contains(".") || entry.contains("://"));
         if (isUrl) {
             addAsUrl(entry);
         } else {
@@ -354,8 +360,8 @@ public class ReaderSubsActivity extends AppCompatActivity
 
     /*
      * start a two-step process to follow a blog by url:
-     *    1. test whether the url is reachable (API will follow any url, even if it doesn't exist)
-     *    2. perform the actual follow
+     * 1. test whether the url is reachable (API will follow any url, even if it doesn't exist)
+     * 2. perform the actual follow
      * note that the passed URL is assumed to be normalized and validated
      */
     private void performAddUrl(final String blogUrl) {
@@ -387,7 +393,8 @@ public class ReaderSubsActivity extends AppCompatActivity
                             errMsg = getString(R.string.reader_toast_err_follow_blog_not_found);
                             break;
                         default:
-                            errMsg = getString(R.string.reader_toast_err_follow_blog) + " (" + Integer.toString(statusCode) + ")";
+                            errMsg = getString(R.string.reader_toast_err_follow_blog) + " (" + Integer
+                                    .toString(statusCode) + ")";
                             break;
                     }
                     ToastUtils.showToast(ReaderSubsActivity.this, errMsg);

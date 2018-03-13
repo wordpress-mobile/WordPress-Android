@@ -21,7 +21,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal|bottom"
             android:baselineAligned="true"
-            android:gravity="right"
+            android:gravity="end"
             android:orientation="horizontal">
 
             <ImageView
@@ -37,7 +37,7 @@
 
         <org.wordpress.android.widgets.WPLinearLayoutSizeBound
             android:layout_width="fill_parent"
-            android:layout_height="fill_parent"
+            android:layout_height="0dp"
             android:layout_weight="1"
             android:animateLayoutChanges="true"
             android:gravity="center"
@@ -58,7 +58,9 @@
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="16dp"
                 android:layout_marginRight="16dp"
-                android:layout_marginTop="16dp">
+                android:layout_marginTop="16dp"
+                android:layout_marginEnd="16dp"
+                android:layout_marginStart="16dp">
 
                 <org.wordpress.android.widgets.WPTextView
                     android:id="@+id/magic_button"
@@ -104,7 +106,9 @@
                 android:layout_marginLeft="16dp"
                 android:layout_marginRight="16dp"
                 android:gravity="center"
-                android:text="@string/enter_your_password_instead" />
+                android:text="@string/enter_your_password_instead"
+                android:layout_marginStart="16dp"
+                android:layout_marginEnd="16dp"/>
 
         </org.wordpress.android.widgets.WPLinearLayoutSizeBound>
 

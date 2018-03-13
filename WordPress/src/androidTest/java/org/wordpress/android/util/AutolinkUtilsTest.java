@@ -28,14 +28,16 @@ public class AutolinkUtilsTest extends InstrumentationTestCase {
     public void testNonBlacklistedUrl2() {
         String sourceTest = "http://test.com http://test.com";
         String output = AutolinkUtils.autoCreateLinks(sourceTest);
-        String expected = "<a href=\"http://test.com\">http://test.com</a> <a href=\"http://test.com\">http://test.com</a>";
+        String expected =
+                "<a href=\"http://test.com\">http://test.com</a> <a href=\"http://test.com\">http://test.com</a>";
         assertEquals(expected, output);
     }
 
     public void testNonBlacklistedUrl3() {
         String sourceTest = "http://test.com\nhttp://test.com";
         String output = AutolinkUtils.autoCreateLinks(sourceTest);
-        String expected = "<a href=\"http://test.com\">http://test.com</a>\n<a href=\"http://test.com\">http://test.com</a>";
+        String expected =
+                "<a href=\"http://test.com\">http://test.com</a>\n<a href=\"http://test.com\">http://test.com</a>";
         assertEquals(expected, output);
     }
 
@@ -52,7 +54,8 @@ public class AutolinkUtilsTest extends InstrumentationTestCase {
     }
 
     public void testBlacklistedUrlKickStarter1() {
-        String sourceTest = "testing https://www.kickstarter.com/projects/583173617/raspi-boy-retro-handheld-emulation-console-electro ponies";
+        String sourceTest = "testing https://www.kickstarter.com/projects/583173617/raspi-boy-retro-"
+                            + "handheld-emulation-console-electro ponies";
         String output = AutolinkUtils.autoCreateLinks(sourceTest);
         assertEquals(sourceTest, output);
     }
@@ -66,7 +69,8 @@ public class AutolinkUtilsTest extends InstrumentationTestCase {
     public void testMixedUrls1() {
         String sourceTest = "hey http://youtube.com/watch?test salut http://test.com hello";
         String output = AutolinkUtils.autoCreateLinks(sourceTest);
-        String expected = "hey http://youtube.com/watch?test salut <a href=\"http://test.com\">http://test.com</a> hello";
+        String expected =
+                "hey http://youtube.com/watch?test salut <a href=\"http://test.com\">http://test.com</a> hello";
         assertEquals(expected, output);
     }
 
@@ -91,7 +95,8 @@ public class AutolinkUtilsTest extends InstrumentationTestCase {
     public void testMixedUrls2() {
         String sourceTest = "http://test.com http://www.youtube.com/watch?test http://test.com http://youtu.be/wat";
         String output = AutolinkUtils.autoCreateLinks(sourceTest);
-        String expected = "<a href=\"http://test.com\">http://test.com</a> http://www.youtube.com/watch?test <a href=\"http://test.com\">http://test.com</a> http://youtu.be/wat";
+        String expected = "<a href=\"http://test.com\">http://test.com</a> http://www.youtube.com/watch?test "
+                          + "<a href=\"http://test.com\">http://test.com</a> http://youtu.be/wat";
         assertEquals(expected, output);
     }
 }

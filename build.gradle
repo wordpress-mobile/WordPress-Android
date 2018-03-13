@@ -6,10 +6,35 @@ buildscript {
 
     dependencies {
         classpath 'com.android.tools.build:gradle:3.0.1'
+        classpath 'com.automattic.android:fetchstyle:1.0'
     }
 }
 
+apply plugin: 'com.automattic.android.fetchstyle'
+
 project.ext.preDexLibs = !project.hasProperty('disablePreDex')
+
+allprojects {
+    apply plugin: 'checkstyle'
+
+    repositories {
+        jcenter()
+        maven {
+            url "https://maven.google.com"
+        }
+    }
+
+    task checkstyle(type: Checkstyle) {
+        source 'src'
+
+        classpath = files()
+    }
+
+    checkstyle {
+        toolVersion = '8.3'
+        configFile file("${project.rootDir}/config/checkstyle.xml")
+    }
+}
 
 subprojects {
     project.plugins.whenPluginAdded { plugin ->
@@ -22,5 +47,5 @@ subprojects {
 }
 
 ext {
-    fluxCVersion = '9d90f262c86c284eae06776e68ab604ef5a3907c'
+    fluxCVersion = '83072117124811e2bd02f728d2498205ea245090'
 }

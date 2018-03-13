@@ -25,6 +25,9 @@
         android:paddingTop="@dimen/margin_medium"
         android:textColor="@color/grey_light"
         android:textSize="@dimen/text_sz_large"
-        tools:text="title" />
+        tools:text="title"
+        android:paddingEnd="@dimen/margin_large"
+        android:paddingStart="@dimen/margin_large"
+        android:layout_marginStart="@dimen/margin_small"/>
 
 </RelativeLayout>

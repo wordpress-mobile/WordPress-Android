@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.annotation.WorkerThread;
 import android.text.TextUtils;
 
 import org.greenrobot.eventbus.Subscribe;
@@ -15,22 +16,25 @@ import org.wordpress.android.WordPress;
 import org.wordpress.android.fluxc.Dispatcher;
 import org.wordpress.android.fluxc.generated.PluginActionBuilder;
 import org.wordpress.android.fluxc.model.SiteModel;
+import org.wordpress.android.fluxc.model.plugin.ImmutablePluginModel;
 import org.wordpress.android.fluxc.model.plugin.PluginDirectoryType;
-import org.wordpress.android.fluxc.model.plugin.SitePluginModel;
-import org.wordpress.android.fluxc.model.plugin.WPOrgPluginModel;
 import org.wordpress.android.fluxc.store.PluginStore;
-import org.wordpress.android.ui.plugins.PluginUtils;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.StringUtils;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 import javax.inject.Inject;
 
 public class PluginBrowserViewModel extends ViewModel {
     public enum PluginListType {
         SITE,
+        FEATURED,
         POPULAR,
         NEW,
         SEARCH
@@ -55,18 +59,23 @@ public class PluginBrowserViewModel extends ViewModel {
     private SiteModel mSite;
 
     private final Handler mHandler;
+    // We don't want synthetic accessor methods to be introduced, so `protected` is used over `private`
+    // and the warning suppressed
+    @SuppressWarnings("WeakerAccess")
+    protected final Set<String> mUpdatedPluginSlugSet;
 
+    private final MutableLiveData<PluginListStatus> mFeaturedPluginsListStatus;
     private final MutableLiveData<PluginListStatus> mNewPluginsListStatus;
     private final MutableLiveData<PluginListStatus> mPopularPluginsListStatus;
     private final MutableLiveData<PluginListStatus> mSitePluginsListStatus;
     private final MutableLiveData<PluginListStatus> mSearchPluginsListStatus;
 
-    private final MutableLiveData<List<WPOrgPluginModel>> mNewPlugins;
-    private final MutableLiveData<List<WPOrgPluginModel>> mPopularPlugins;
-    private final MutableLiveData<List<SitePluginModel>> mSitePlugins;
-    private final MutableLiveData<List<WPOrgPluginModel>> mSearchResults;
+    private final MutableLiveData<List<ImmutablePluginModel>> mFeaturedPlugins;
+    private final MutableLiveData<List<ImmutablePluginModel>> mNewPlugins;
+    private final MutableLiveData<List<ImmutablePluginModel>> mPopularPlugins;
+    private final MutableLiveData<List<ImmutablePluginModel>> mSitePlugins;
+    private final MutableLiveData<List<ImmutablePluginModel>> mSearchResults;
 
-    private final MutableLiveData<String> mLastUpdatedWpOrgPluginSlug;
     private final MutableLiveData<String> mTitle;
 
     @SuppressWarnings("WeakerAccess")
@@ -79,17 +88,19 @@ public class PluginBrowserViewModel extends ViewModel {
         mDispatcher.register(this);
 
         mHandler = new Handler();
+        mUpdatedPluginSlugSet = new HashSet<>();
 
+        mFeaturedPlugins = new MutableLiveData<>();
         mSitePlugins = new MutableLiveData<>();
         mNewPlugins = new MutableLiveData<>();
         mPopularPlugins = new MutableLiveData<>();
         mSearchResults = new MutableLiveData<>();
 
+        mFeaturedPluginsListStatus = new MutableLiveData<>();
         mNewPluginsListStatus = new MutableLiveData<>();
         mPopularPluginsListStatus = new MutableLiveData<>();
         mSitePluginsListStatus = new MutableLiveData<>();
         mSearchPluginsListStatus = new MutableLiveData<>();
-        mLastUpdatedWpOrgPluginSlug = new MutableLiveData<>();
         mTitle = new MutableLiveData<>();
     }
 
@@ -116,13 +127,18 @@ public class PluginBrowserViewModel extends ViewModel {
         setTitle(savedInstanceState.getString(KEY_TITLE));
     }
 
+    @WorkerThread
     public void start() {
         if (mIsStarted) {
             return;
         }
-        reloadAllPluginsFromStore();
+        reloadPluginDirectory(PluginDirectoryType.FEATURED);
+        reloadPluginDirectory(PluginDirectoryType.NEW);
+        reloadPluginDirectory(PluginDirectoryType.POPULAR);
+        reloadPluginDirectory(PluginDirectoryType.SITE);
 
         fetchPlugins(PluginListType.SITE, false);
+        fetchPlugins(PluginListType.FEATURED, false);
         fetchPlugins(PluginListType.POPULAR, false);
         fetchPlugins(PluginListType.NEW, false);
         // If activity is recreated we need to re-search
@@ -135,47 +151,23 @@ public class PluginBrowserViewModel extends ViewModel {
 
     // Site & WPOrg plugin management
 
-    public WPOrgPluginModel getWPOrgPluginForSitePluginAndFetchIfNecessary(SitePluginModel sitePlugin) {
-        if (sitePlugin == null) {
-            return null;
+    @WorkerThread
+    private void reloadPluginDirectory(PluginDirectoryType directoryType) {
+        List<ImmutablePluginModel> pluginList = mPluginStore.getPluginDirectory(getSite(), directoryType);
+        switch (directoryType) {
+            case FEATURED:
+                mFeaturedPlugins.postValue(pluginList);
+                break;
+            case NEW:
+                mNewPlugins.postValue(pluginList);
+                break;
+            case POPULAR:
+                mPopularPlugins.postValue(pluginList);
+                break;
+            case SITE:
+                mSitePlugins.postValue(pluginList);
+                break;
         }
-        WPOrgPluginModel wpOrgPlugin = PluginUtils.getWPOrgPlugin(mPluginStore, sitePlugin);
-        if (wpOrgPlugin == null) {
-            fetchWPOrgPlugin(sitePlugin.getSlug());
-        }
-        return wpOrgPlugin;
-    }
-
-    public SitePluginModel getSitePluginFromSlug(String slug) {
-        List<SitePluginModel> sitePlugins = getSitePlugins().getValue();
-        if (sitePlugins != null) {
-            // TODO: if we ever add caching to PluginStore, remove this
-            for (SitePluginModel plugin : sitePlugins) {
-                if (plugin.getSlug().equals(slug)) {
-                    return plugin;
-                }
-            }
-        }
-        return mPluginStore.getSitePluginBySlug(getSite(), slug);
-    }
-
-    public void reloadAllPluginsFromStore() {
-        reloadSitePlugins();
-        reloadPopularPlugins();
-        reloadNewPlugins();
-    }
-
-    private void reloadSitePlugins() {
-        List<SitePluginModel> sitePlugins = mPluginStore.getSitePlugins(getSite());
-        mSitePlugins.setValue(sitePlugins);
-    }
-
-    private void reloadNewPlugins() {
-        mNewPlugins.setValue(mPluginStore.getPluginDirectory(PluginDirectoryType.NEW));
-    }
-
-    private void reloadPopularPlugins() {
-        mPopularPlugins.setValue(mPluginStore.getPluginDirectory(PluginDirectoryType.POPULAR));
     }
 
     // Pull to refresh
@@ -186,155 +178,275 @@ public class PluginBrowserViewModel extends ViewModel {
 
     // Network Requests
 
+    @WorkerThread
     private void fetchPlugins(@NonNull PluginListType listType, boolean loadMore) {
         if (!shouldFetchPlugins(listType, loadMore)) {
             return;
         }
+        PluginListStatus newStatus = loadMore ? PluginListStatus.LOADING_MORE : PluginListStatus.FETCHING;
         switch (listType) {
             case SITE:
-                mSitePluginsListStatus.setValue(PluginListStatus.FETCHING);
-                mDispatcher.dispatch(PluginActionBuilder.newFetchSitePluginsAction(getSite()));
+                mSitePluginsListStatus.postValue(newStatus);
+                PluginStore.FetchPluginDirectoryPayload payload =
+                        new PluginStore.FetchPluginDirectoryPayload(PluginDirectoryType.SITE, getSite(), loadMore);
+                mDispatcher.dispatch(PluginActionBuilder.newFetchPluginDirectoryAction(payload));
+                break;
+            case FEATURED:
+                mFeaturedPluginsListStatus.postValue(newStatus);
+                PluginStore.FetchPluginDirectoryPayload featuredPayload =
+                        new PluginStore.FetchPluginDirectoryPayload(PluginDirectoryType.FEATURED, getSite(), loadMore);
+                mDispatcher.dispatch(PluginActionBuilder.newFetchPluginDirectoryAction(featuredPayload));
                 break;
             case POPULAR:
-                mPopularPluginsListStatus.setValue(loadMore ? PluginListStatus.LOADING_MORE : PluginListStatus.FETCHING);
+                mPopularPluginsListStatus.postValue(newStatus);
                 PluginStore.FetchPluginDirectoryPayload popularPayload =
-                        new PluginStore.FetchPluginDirectoryPayload(PluginDirectoryType.POPULAR, loadMore);
+                        new PluginStore.FetchPluginDirectoryPayload(PluginDirectoryType.POPULAR, getSite(), loadMore);
                 mDispatcher.dispatch(PluginActionBuilder.newFetchPluginDirectoryAction(popularPayload));
                 break;
             case NEW:
-                mNewPluginsListStatus.setValue(loadMore ? PluginListStatus.LOADING_MORE : PluginListStatus.FETCHING);
+                mNewPluginsListStatus.postValue(newStatus);
                 PluginStore.FetchPluginDirectoryPayload newPayload =
-                        new PluginStore.FetchPluginDirectoryPayload(PluginDirectoryType.NEW, loadMore);
+                        new PluginStore.FetchPluginDirectoryPayload(PluginDirectoryType.NEW, getSite(), loadMore);
                 mDispatcher.dispatch(PluginActionBuilder.newFetchPluginDirectoryAction(newPayload));
                 break;
             case SEARCH:
-                mSearchPluginsListStatus.setValue(PluginListStatus.FETCHING);
+                mSearchPluginsListStatus.postValue(newStatus);
                 PluginStore.SearchPluginDirectoryPayload searchPayload =
-                        new PluginStore.SearchPluginDirectoryPayload(getSearchQuery(), 1);
+                        new PluginStore.SearchPluginDirectoryPayload(getSite(), getSearchQuery(), 1);
                 mDispatcher.dispatch(PluginActionBuilder.newSearchPluginDirectoryAction(searchPayload));
                 break;
         }
     }
 
+    @WorkerThread
     private boolean shouldFetchPlugins(PluginListType listType, boolean loadMore) {
-        if (loadMore && !isLoadMoreEnabled(listType)) {
-            // If we are trying to load more and it's not allowed
-            return false;
-        }
+        PluginListStatus currentStatus = null;
         switch (listType) {
             case SITE:
-                if (getSitePluginsListStatus().getValue() == PluginListStatus.FETCHING) {
-                    // already fetching
-                    return false;
-                }
+                currentStatus = getSitePluginsListStatus().getValue();
+                break;
+            case FEATURED:
+                currentStatus = getFeaturedPluginsListStatus().getValue();
                 break;
             case POPULAR:
-                if (!loadMore && getPopularPluginsListStatus().getValue() == PluginListStatus.FETCHING) {
-                    // already fetching first page
-                    return false;
-                }
-                if (loadMore && getPopularPluginsListStatus().getValue() != PluginListStatus.CAN_LOAD_MORE) {
-                    // We might be fetching the first page, loading more or done fetching
-                    return false;
-                }
+                currentStatus = getPopularPluginsListStatus().getValue();
                 break;
             case NEW:
-                if (!loadMore && getNewPluginsListStatus().getValue() == PluginListStatus.FETCHING) {
-                    // already fetching first page
-                    return false;
-                }
-                if (loadMore && getNewPluginsListStatus().getValue() != PluginListStatus.CAN_LOAD_MORE) {
-                    // We might be fetching the first page, loading more or done fetching
-                    return false;
-                }
+                currentStatus = getNewPluginsListStatus().getValue();
                 break;
             case SEARCH:
-                // Since search query might have been changed, we should always fetch
-                return true;
+                // We should always do the initial search because the string might have changed and it is
+                // already optimized in submitSearch with a delay. Even though FluxC allows it, we don't do multiple
+                // pages of search, so if we are trying to load more, we can ignore it
+                return !loadMore;
+        }
+        if (currentStatus == PluginListStatus.FETCHING || currentStatus == PluginListStatus.LOADING_MORE) {
+            // if we are already fetching something we shouldn't start a new one. Even if we are loading more plugins
+            // and the user pulled to refresh, we don't want (or need) the 2 requests colliding
+            return false;
+        }
+        if (loadMore && currentStatus != PluginListStatus.CAN_LOAD_MORE) {
+            // There is nothing to load more
+            return false;
         }
         return true;
     }
 
-    private void fetchWPOrgPlugin(String slug) {
-        mDispatcher.dispatch(PluginActionBuilder.newFetchWporgPluginAction(slug));
-    }
-
     public void loadMore(PluginListType listType) {
-        if (isLoadMoreEnabled(listType)) {
-            fetchPlugins(listType, true);
-        }
-    }
-
-    private boolean isLoadMoreEnabled(PluginListType listType) {
-        // We don't use pagination for Site plugins or Search results
-        return listType != PluginListType.SITE && listType != PluginListType.SEARCH;
+        fetchPlugins(listType, true);
     }
 
     // Network Callbacks
 
     @SuppressWarnings("unused")
-    @Subscribe(threadMode = ThreadMode.MAIN)
-    public void onSitePluginsFetched(PluginStore.OnSitePluginsFetched event) {
-        if (event.isError()) {
-            AppLog.e(AppLog.T.PLUGINS, "An error occurred while fetching site plugins with type: " + event.error.type);
-            mSitePluginsListStatus.setValue(PluginListStatus.ERROR);
-            return;
-        }
-        mSitePluginsListStatus.setValue(PluginListStatus.DONE);
-        reloadSitePlugins();
-    }
-
-    @SuppressWarnings("unused")
-    @Subscribe(threadMode = ThreadMode.MAIN)
+    @Subscribe(threadMode = ThreadMode.BACKGROUND)
     public void onWPOrgPluginFetched(PluginStore.OnWPOrgPluginFetched event) {
         if (event.isError()) {
-            AppLog.e(AppLog.T.PLUGINS, "An error occurred while fetching the wporg plugin with type: " + event.error.type);
+            AppLog.e(AppLog.T.PLUGINS,
+                    "An error occurred while fetching the wporg plugin with type: " + event.error.type);
             return;
         }
-
-        if (!TextUtils.isEmpty(event.pluginSlug)) {
-            mLastUpdatedWpOrgPluginSlug.setValue(event.pluginSlug);
+        // Check if the slug is empty, if not add it to the set and only trigger the update
+        // if the slug is not in the set
+        if (!TextUtils.isEmpty(event.pluginSlug) && mUpdatedPluginSlugSet.add(event.pluginSlug)) {
+            updateAllPluginListsIfNecessary();
         }
     }
 
     @SuppressWarnings("unused")
-    @Subscribe(threadMode = ThreadMode.MAIN)
+    @Subscribe(threadMode = ThreadMode.BACKGROUND)
     public void onPluginDirectoryFetched(PluginStore.OnPluginDirectoryFetched event) {
+        PluginListStatus listStatus;
         if (event.isError()) {
-            AppLog.e(AppLog.T.PLUGINS, "An error occurred while fetching the plugin directory: " + event.type);
-            if (event.type == PluginDirectoryType.NEW) {
-                mNewPluginsListStatus.setValue(PluginListStatus.ERROR);
-            } else if (event.type == PluginDirectoryType.POPULAR) {
-                mPopularPluginsListStatus.setValue(PluginListStatus.ERROR);
-            }
-            return;
+            AppLog.e(AppLog.T.PLUGINS, "An error occurred while fetching the plugin directory " + event.type + ": "
+                                       + event.error.type);
+            listStatus = PluginListStatus.ERROR;
+        } else {
+            listStatus = event.canLoadMore ? PluginListStatus.CAN_LOAD_MORE : PluginListStatus.DONE;
         }
-        PluginListStatus listStatus = event.canLoadMore ? PluginListStatus.CAN_LOAD_MORE : PluginListStatus.DONE;
         switch (event.type) {
+            case FEATURED:
+                mFeaturedPluginsListStatus.postValue(listStatus);
+                break;
             case NEW:
-                reloadNewPlugins();
-                mNewPluginsListStatus.setValue(listStatus);
+                mNewPluginsListStatus.postValue(listStatus);
                 break;
             case POPULAR:
-                reloadPopularPlugins();
-                mPopularPluginsListStatus.setValue(listStatus);
+                mPopularPluginsListStatus.postValue(listStatus);
                 break;
+            case SITE:
+                mSitePluginsListStatus.postValue(listStatus);
+        }
+        if (!event.isError()) {
+            reloadPluginDirectory(event.type);
         }
     }
 
     @SuppressWarnings("unused")
-    @Subscribe(threadMode = ThreadMode.MAIN)
+    @Subscribe(threadMode = ThreadMode.BACKGROUND)
     public void onPluginDirectorySearched(PluginStore.OnPluginDirectorySearched event) {
         if (mSearchQuery == null || !mSearchQuery.equals(event.searchTerm)) {
             return;
         }
         if (event.isError()) {
             AppLog.e(AppLog.T.PLUGINS, "An error occurred while searching the plugin directory");
-            mSearchPluginsListStatus.setValue(PluginListStatus.ERROR);
+            mSearchPluginsListStatus.postValue(PluginListStatus.ERROR);
             return;
         }
-        mSearchResults.setValue(event.plugins);
-        mSearchPluginsListStatus.setValue(PluginListStatus.DONE);
+        mSearchResults.postValue(event.plugins);
+        mSearchPluginsListStatus.postValue(PluginListStatus.DONE);
+    }
+
+    @SuppressWarnings("unused")
+    @Subscribe(threadMode = ThreadMode.BACKGROUND)
+    public void onSitePluginConfigured(PluginStore.OnSitePluginConfigured event) {
+        if (event.isError()) {
+            // The error should be handled wherever the action has been triggered from (probably PluginDetailActivity)
+            return;
+        }
+        // Check if the slug is empty, if not add it to the set and only trigger the update
+        // if the slug is not in the set
+        if (!TextUtils.isEmpty(event.slug) && mUpdatedPluginSlugSet.add(event.slug)) {
+            updateAllPluginListsIfNecessary();
+        }
+    }
+
+    @SuppressWarnings("unused")
+    @Subscribe(threadMode = ThreadMode.BACKGROUND)
+    public void onSitePluginDeleted(PluginStore.OnSitePluginDeleted event) {
+        if (event.isError()) {
+            // The error should be handled wherever the action has been triggered from (probably PluginDetailActivity)
+            return;
+        }
+        // Check if the slug is empty, if not add it to the set and only trigger the update
+        // if the slug is not in the set
+        if (!TextUtils.isEmpty(event.slug) && mUpdatedPluginSlugSet.add(event.slug)) {
+            updateAllPluginListsIfNecessary();
+        }
+    }
+
+    @SuppressWarnings("unused")
+    @Subscribe(threadMode = ThreadMode.BACKGROUND)
+    public void onSitePluginInstalled(PluginStore.OnSitePluginInstalled event) {
+        if (event.isError()) {
+            // The error should be handled wherever the action has been triggered from (probably PluginDetailActivity)
+            return;
+        }
+        // Check if the slug is empty, if not add it to the set and only trigger the update
+        // if the slug is not in the set
+        if (!TextUtils.isEmpty(event.slug) && mUpdatedPluginSlugSet.add(event.slug)) {
+            updateAllPluginListsIfNecessary();
+        }
+    }
+
+    @SuppressWarnings("unused")
+    @Subscribe(threadMode = ThreadMode.BACKGROUND)
+    public void onSitePluginUpdated(PluginStore.OnSitePluginUpdated event) {
+        if (event.isError()) {
+            // The error should be handled wherever the action has been triggered from (probably PluginDetailActivity)
+            return;
+        }
+        // Check if the slug is empty, if not add it to the set and only trigger the update
+        // if the slug is not in the set
+        if (!TextUtils.isEmpty(event.slug) && mUpdatedPluginSlugSet.add(event.slug)) {
+            updateAllPluginListsIfNecessary();
+        }
+    }
+
+    // Keeping the data up to date
+
+    @WorkerThread
+    private void updateAllPluginListsIfNecessary() {
+        final Set<String> copiedSet = new HashSet<>(mUpdatedPluginSlugSet);
+        mHandler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                // Using the size of the set for comparison might fail since we clear the mUpdatedPluginSlugSet
+                if (copiedSet.equals(mUpdatedPluginSlugSet)) {
+                    updateAllPluginListsWithNewPlugins(copiedSet);
+                    mUpdatedPluginSlugSet.clear();
+                }
+            }
+        }, 250);
+    }
+
+    // We don't want synthetic accessor methods to be introduced, so `protected` is used over `private` and the
+    // warning suppressed
+    @WorkerThread
+    @SuppressWarnings("WeakerAccess")
+    protected void updateAllPluginListsWithNewPlugins(@NonNull Set<String> updatedPluginSlugSet) {
+        if (updatedPluginSlugSet.size() == 0) {
+            return;
+        }
+        Map<String, ImmutablePluginModel> newPluginMap = new HashMap<>(updatedPluginSlugSet.size());
+        for (String slug : updatedPluginSlugSet) {
+            ImmutablePluginModel immutablePlugin = mPluginStore.getImmutablePluginBySlug(getSite(), slug);
+            if (immutablePlugin != null) {
+                newPluginMap.put(slug, immutablePlugin);
+            }
+        }
+        // By combining all the updated plugins into one map, we can post a single update to the UI after changes are
+        // reflected
+        updatePluginListWithNewPlugin(mFeaturedPlugins, newPluginMap);
+        updatePluginListWithNewPlugin(mNewPlugins, newPluginMap);
+        updatePluginListWithNewPlugin(mPopularPlugins, newPluginMap);
+        updatePluginListWithNewPlugin(mSearchResults, newPluginMap);
+
+        // Unfortunately we can't use the same method to update the site plugins because removing/installing plugins can
+        // mess up the list. Also we care most about the Site Plugins and using the store to get the correct plugin
+        // information
+        // is much more reliable than any manual update we can make
+        reloadPluginDirectory(PluginDirectoryType.SITE);
+    }
+
+    @WorkerThread
+    private void updatePluginListWithNewPlugin(
+            @NonNull final MutableLiveData<List<ImmutablePluginModel>> mutableLiveData,
+            @NonNull final Map<String, ImmutablePluginModel> newPluginMap) {
+        List<ImmutablePluginModel> pluginList = mutableLiveData.getValue();
+        if (pluginList == null || pluginList.size() == 0 || newPluginMap.size() == 0) {
+            // Nothing to update
+            return;
+        }
+        // When a site or wporg plugin is updated we need to update every occurrence of that item
+        List<ImmutablePluginModel> newList = new ArrayList<>(pluginList.size());
+        boolean isChanged = false;
+        for (ImmutablePluginModel immutablePlugin : pluginList) {
+            String slug = immutablePlugin.getSlug();
+            ImmutablePluginModel newPlugin = newPluginMap.get(slug);
+            if (newPlugin != null) {
+                // add new item
+                newList.add(newPlugin);
+                isChanged = true;
+            } else {
+                // add old item
+                newList.add(immutablePlugin);
+            }
+        }
+        // Only update if the list is actually changed
+        if (isChanged) {
+            mutableLiveData.postValue(newList);
+        }
     }
 
     // Search
@@ -351,8 +463,10 @@ public class PluginBrowserViewModel extends ViewModel {
         return getSearchQuery() != null && getSearchQuery().length() > 1;
     }
 
-    // Make the method protected to avoid synthetic accessor methods
+    // We don't want synthetic accessor methods to be introduced, so `protected` is used over `private` and the
+    // warning suppressed
     @SuppressWarnings("WeakerAccess")
+    @WorkerThread
     protected void submitSearch(@Nullable final String query, boolean delayed) {
         if (delayed) {
             mHandler.postDelayed(new Runnable() {
@@ -377,13 +491,14 @@ public class PluginBrowserViewModel extends ViewModel {
                 // be triggered again, because another fetch didn't happen (due to query being empty)
                 // 4. The status will be stuck in FETCHING until another search occurs. This following reset fixes the
                 // problem.
-                mSearchPluginsListStatus.setValue(PluginListStatus.DONE);
+                mSearchPluginsListStatus.postValue(PluginListStatus.DONE);
             }
         }
     }
 
+    @WorkerThread
     private void clearSearchResults() {
-        mSearchResults.setValue(new ArrayList<WPOrgPluginModel>());
+        mSearchResults.postValue(new ArrayList<ImmutablePluginModel>());
     }
 
     public boolean shouldShowEmptySearchResultsView() {
@@ -392,7 +507,7 @@ public class PluginBrowserViewModel extends ViewModel {
             return false;
         }
         if (mSearchPluginsListStatus.getValue() != PluginListStatus.DONE
-                && mSearchPluginsListStatus.getValue() != PluginListStatus.ERROR) {
+            && mSearchPluginsListStatus.getValue() != PluginListStatus.ERROR) {
             return false;
         }
         return getSearchResults().getValue() == null || getSearchResults().getValue().size() == 0;
@@ -412,7 +527,7 @@ public class PluginBrowserViewModel extends ViewModel {
         return mSearchQuery;
     }
 
-    public LiveData<List<SitePluginModel>> getSitePlugins() {
+    public LiveData<List<ImmutablePluginModel>> getSitePlugins() {
         return mSitePlugins;
     }
 
@@ -420,16 +535,24 @@ public class PluginBrowserViewModel extends ViewModel {
         return getSitePlugins().getValue() == null || getSitePlugins().getValue().size() == 0;
     }
 
-    public LiveData<List<WPOrgPluginModel>> getNewPlugins() {
+    public LiveData<List<ImmutablePluginModel>> getFeaturedPlugins() {
+        return mFeaturedPlugins;
+    }
+
+    public LiveData<List<ImmutablePluginModel>> getNewPlugins() {
         return mNewPlugins;
     }
 
-    public LiveData<List<WPOrgPluginModel>> getPopularPlugins() {
+    public LiveData<List<ImmutablePluginModel>> getPopularPlugins() {
         return mPopularPlugins;
     }
 
-    public LiveData<List<WPOrgPluginModel>> getSearchResults() {
+    public LiveData<List<ImmutablePluginModel>> getSearchResults() {
         return mSearchResults;
+    }
+
+    public LiveData<PluginListStatus> getFeaturedPluginsListStatus() {
+        return mFeaturedPluginsListStatus;
     }
 
     public LiveData<PluginListStatus> getNewPluginsListStatus() {
@@ -448,22 +571,20 @@ public class PluginBrowserViewModel extends ViewModel {
         return mSearchPluginsListStatus;
     }
 
-    public LiveData<String> getLastUpdatedWpOrgPluginSlug() {
-        return mLastUpdatedWpOrgPluginSlug;
-    }
-
     public void setTitle(String title) {
-        mTitle.setValue(title);
+        mTitle.postValue(title);
     }
 
     public LiveData<String> getTitle() {
         return mTitle;
     }
 
-    public List<?> getPluginsForListType(PluginListType listType) {
+    public List<ImmutablePluginModel> getPluginsForListType(PluginListType listType) {
         switch (listType) {
             case SITE:
                 return getSitePlugins().getValue();
+            case FEATURED:
+                return getFeaturedPlugins().getValue();
             case POPULAR:
                 return getPopularPlugins().getValue();
             case NEW:

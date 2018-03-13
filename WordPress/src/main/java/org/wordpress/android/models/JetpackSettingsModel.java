@@ -16,8 +16,11 @@ public class JetpackSettingsModel {
     public boolean ssoActive;
     public boolean ssoMatchEmail;
     public boolean ssoRequireTwoFactor;
+    // Modules
     public boolean serveImagesFromOurServers;
     public boolean lazyLoadImages;
+    public boolean commentLikes;
+    public boolean sharingEnabled = true;
 
     public JetpackSettingsModel() {
         super();
@@ -37,25 +40,29 @@ public class JetpackSettingsModel {
         ssoActive = other.ssoActive;
         ssoMatchEmail = other.ssoMatchEmail;
         ssoRequireTwoFactor = other.ssoRequireTwoFactor;
+        commentLikes = other.commentLikes;
         jetpackProtectWhitelist.addAll(other.jetpackProtectWhitelist);
         serveImagesFromOurServers = other.serveImagesFromOurServers;
         lazyLoadImages = other.lazyLoadImages;
+        sharingEnabled = other.sharingEnabled;
     }
 
     @Override
     public boolean equals(Object other) {
         if (!(other instanceof JetpackSettingsModel)) return false;
         JetpackSettingsModel otherModel = (JetpackSettingsModel) other;
-        return monitorActive == otherModel.monitorActive &&
-                emailNotifications == otherModel.emailNotifications &&
-                wpNotifications == otherModel.wpNotifications &&
-                jetpackProtectEnabled == otherModel.jetpackProtectEnabled &&
-                ssoActive == otherModel.ssoActive &&
-                ssoMatchEmail == otherModel.ssoMatchEmail &&
-                ssoRequireTwoFactor == otherModel.ssoRequireTwoFactor &&
-                serveImagesFromOurServers == otherModel.serveImagesFromOurServers &&
-                lazyLoadImages == otherModel.lazyLoadImages &&
-                whitelistMatches(otherModel.jetpackProtectWhitelist);
+        return monitorActive == otherModel.monitorActive
+                && emailNotifications == otherModel.emailNotifications
+                && wpNotifications == otherModel.wpNotifications
+                && jetpackProtectEnabled == otherModel.jetpackProtectEnabled
+                && ssoActive == otherModel.ssoActive
+                && ssoMatchEmail == otherModel.ssoMatchEmail
+                && ssoRequireTwoFactor == otherModel.ssoRequireTwoFactor
+                && serveImagesFromOurServers == otherModel.serveImagesFromOurServers
+                && lazyLoadImages == otherModel.lazyLoadImages
+                && commentLikes == otherModel.commentLikes
+                && sharingEnabled == otherModel.sharingEnabled
+                && whitelistMatches(otherModel.jetpackProtectWhitelist);
     }
 
     public boolean whitelistMatches(List<String> otherWhitelist) {

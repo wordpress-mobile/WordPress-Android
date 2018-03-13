@@ -1,5 +1,6 @@
 package org.wordpress.android.ui.accounts;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -19,12 +20,11 @@ import org.wordpress.android.ui.accounts.signup.SiteCreationThemeFragment;
 import org.wordpress.android.ui.accounts.signup.SiteCreationThemeLoaderFragment;
 import org.wordpress.android.ui.main.SitePickerActivity;
 import org.wordpress.android.util.HelpshiftHelper;
+import org.wordpress.android.util.LocaleManager;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.UrlUtils;
 
 public class SiteCreationActivity extends AppCompatActivity implements SiteCreationListener {
-    public static final String ARG_USERNAME = "ARG_USERNAME";
-
     public static final String KEY_DO_NEW_POST = "KEY_DO_NEW_POST";
 
     private static final String KEY_CATERGORY = "KEY_CATERGORY";
@@ -32,13 +32,15 @@ public class SiteCreationActivity extends AppCompatActivity implements SiteCreat
     private static final String KEY_SITE_TITLE = "KEY_SITE_TITLE";
     private static final String KEY_SITE_TAGLINE = "KEY_SITE_TAGLINE";
 
-    private String mUsername;
-
     private String mCategory;
     private String mThemeId;
     private String mSiteTitle;
     private String mSiteTagline;
-    private String mSiteDomain;
+
+    @Override
+    protected void attachBaseContext(Context newBase) {
+        super.attachBaseContext(LocaleManager.setLocale(newBase));
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -46,8 +48,6 @@ public class SiteCreationActivity extends AppCompatActivity implements SiteCreat
         ((WordPress) getApplication()).component().inject(this);
 
         setContentView(R.layout.site_creation_activity);
-
-        mUsername = getIntent().getStringExtra(ARG_USERNAME);
 
         if (savedInstanceState == null) {
             AnalyticsTracker.track(AnalyticsTracker.Stat.SITE_CREATION_ACCESSED);
@@ -81,7 +81,7 @@ public class SiteCreationActivity extends AppCompatActivity implements SiteCreat
     private void slideInFragment(Fragment fragment, String tag) {
         FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
         fragmentTransaction.setCustomAnimations(R.anim.activity_slide_in_from_right, R.anim.activity_slide_out_to_left,
-                R.anim.activity_slide_in_from_left, R.anim.activity_slide_out_to_right);
+                                                R.anim.activity_slide_in_from_left, R.anim.activity_slide_out_to_right);
         fragmentTransaction.replace(R.id.fragment_container, fragment, tag);
         fragmentTransaction.addToBackStack(null);
         fragmentTransaction.commitAllowingStateLoss();
@@ -183,7 +183,7 @@ public class SiteCreationActivity extends AppCompatActivity implements SiteCreat
         mSiteTitle = siteTitle;
         mSiteTagline = siteTagline;
 
-        SiteCreationDomainFragment fragment = SiteCreationDomainFragment.newInstance(mUsername);
+        SiteCreationDomainFragment fragment = SiteCreationDomainFragment.newInstance(mSiteTitle);
         slideInFragment(fragment, SiteCreationDomainFragment.TAG);
     }
 
@@ -194,11 +194,10 @@ public class SiteCreationActivity extends AppCompatActivity implements SiteCreat
 
     @Override
     public void withDomain(String domain) {
-        mSiteDomain = domain;
         String siteSlug = UrlUtils.extractSubDomain(domain);
 
-        SiteCreationCreatingFragment siteCreationCreatingFragment = SiteCreationCreatingFragment.newInstance(mSiteTitle,
-                mSiteTagline, siteSlug, mThemeId);
+        SiteCreationCreatingFragment siteCreationCreatingFragment =
+                SiteCreationCreatingFragment.newInstance(mSiteTitle, mSiteTagline, siteSlug, mThemeId);
         slideInFragment(siteCreationCreatingFragment, SiteCreationCreatingFragment.TAG);
     }
 

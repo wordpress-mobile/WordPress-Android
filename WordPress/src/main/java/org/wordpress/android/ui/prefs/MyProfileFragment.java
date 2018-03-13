@@ -27,7 +27,7 @@ import java.util.HashMap;
 import javax.inject.Inject;
 
 public class MyProfileFragment extends Fragment implements ProfileInputDialogFragment.Callback {
-    private final String DIALOG_TAG = "DIALOG";
+    private static final String DIALOG_TAG = "DIALOG";
 
     private WPTextView mFirstName;
     private WPTextView mLastName;
@@ -107,7 +107,9 @@ public class MyProfileFragment extends Fragment implements ProfileInputDialogFra
     }
 
     private void refreshDetails() {
-        if (!isAdded()) return;
+        if (!isAdded()) {
+            return;
+        }
 
         AccountModel account = mAccountStore.getAccount();
         updateLabel(mFirstName, account != null ? account.getFirstName() : null);
@@ -124,8 +126,7 @@ public class MyProfileFragment extends Fragment implements ProfileInputDialogFra
             } else {
                 textView.setVisibility(View.GONE);
             }
-        }
-        else {
+        } else {
             textView.setVisibility(View.VISIBLE);
         }
     }
@@ -139,7 +140,10 @@ public class MyProfileFragment extends Fragment implements ProfileInputDialogFra
             @Override
             public void onClick(View v) {
                 ProfileInputDialogFragment inputDialog = ProfileInputDialogFragment.newInstance(dialogTitle,
-                        textView.getText().toString(), hint, isMultiline, textView.getId());
+                                                                                                textView.getText()
+                                                                                                        .toString(),
+                                                                                                hint, isMultiline,
+                                                                                                textView.getId());
                 inputDialog.setTargetFragment(MyProfileFragment.this, 0);
                 inputDialog.show(getFragmentManager(), DIALOG_TAG);
             }
@@ -170,7 +174,9 @@ public class MyProfileFragment extends Fragment implements ProfileInputDialogFra
     @Override
     public void onSuccessfulInput(String input, int callbackId) {
         View rootView = getView();
-        if (rootView == null) return;
+        if (rootView == null) {
+            return;
+        }
 
         if (!NetworkUtils.isNetworkAvailable(getActivity())) {
             ToastUtils.showToast(getActivity(), R.string.error_post_my_profile_no_connection);

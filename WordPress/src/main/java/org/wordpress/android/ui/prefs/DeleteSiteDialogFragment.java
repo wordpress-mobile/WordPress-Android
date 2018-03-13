@@ -19,6 +19,8 @@ import android.widget.EditText;
 
 import org.wordpress.android.R;
 
+import java.util.Locale;
+
 public class DeleteSiteDialogFragment extends DialogFragment implements TextWatcher, DialogInterface.OnShowListener {
     public static final String SITE_DOMAIN_KEY = "site-domain";
 
@@ -101,6 +103,7 @@ public class DeleteSiteDialogFragment extends DialogFragment implements TextWatc
     }
 
     private void configureUrlConfirmation(AlertDialog.Builder builder) {
+        //noinspection InflateParams
         View view = getActivity().getLayoutInflater().inflate(R.layout.delete_site_dialog, null);
         mUrlConfirmation = (EditText) view.findViewById(R.id.url_confirmation);
         mUrlConfirmation.addTextChangedListener(this);
@@ -109,15 +112,15 @@ public class DeleteSiteDialogFragment extends DialogFragment implements TextWatc
 
     private void retrieveSiteDomain() {
         Bundle args = getArguments();
-        mSiteDomain = getString(R.string.wordpress_dot_com).toLowerCase();
+        mSiteDomain = getString(R.string.wordpress_dot_com).toLowerCase(Locale.ROOT);
         if (args != null) {
             mSiteDomain = args.getString(SITE_DOMAIN_KEY);
         }
     }
 
     private boolean isUrlConfirmationTextValid() {
-        String confirmationText = mUrlConfirmation.getText().toString().trim().toLowerCase();
-        String hintText = mSiteDomain.toLowerCase();
+        String confirmationText = mUrlConfirmation.getText().toString().trim().toLowerCase(Locale.ROOT);
+        String hintText = mSiteDomain.toLowerCase(Locale.ROOT);
 
         return confirmationText.equals(hintText);
     }

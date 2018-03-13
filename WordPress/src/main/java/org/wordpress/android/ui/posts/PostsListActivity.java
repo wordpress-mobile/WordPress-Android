@@ -1,5 +1,6 @@
 package org.wordpress.android.ui.posts;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.ActionBar;
@@ -15,6 +16,7 @@ import org.wordpress.android.fluxc.store.PostStore;
 import org.wordpress.android.fluxc.store.SiteStore;
 import org.wordpress.android.ui.ActivityId;
 import org.wordpress.android.ui.RequestCodes;
+import org.wordpress.android.util.LocaleManager;
 import org.wordpress.android.util.ToastUtils;
 
 import javax.inject.Inject;
@@ -29,6 +31,11 @@ public class PostsListActivity extends AppCompatActivity {
 
     @Inject SiteStore mSiteStore;
     @Inject PostStore mPostStore;
+
+    @Override
+    protected void attachBaseContext(Context newBase) {
+        super.attachBaseContext(LocaleManager.setLocale(newBase));
+    }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -96,7 +103,7 @@ public class PostsListActivity extends AppCompatActivity {
             targetPost = mPostStore.getPostByLocalPostId(intent.getIntExtra(EXTRA_TARGET_POST_LOCAL_ID, 0));
             if (targetPost == null) {
                 String errorMessage = getString(mIsPage ? R.string.error_page_does_not_exist
-                        : R.string.error_post_does_not_exist);
+                                                        : R.string.error_post_does_not_exist);
                 ToastUtils.showToast(this, errorMessage);
             }
         }
@@ -107,12 +114,12 @@ public class PostsListActivity extends AppCompatActivity {
             mPostList = PostsListFragment.newInstance(mSite, mIsPage, targetPost);
             if (oldFragment == null) {
                 getFragmentManager().beginTransaction()
-                        .add(R.id.post_list_container, mPostList, PostsListFragment.TAG)
-                        .commit();
+                                    .add(R.id.post_list_container, mPostList, PostsListFragment.TAG)
+                                    .commit();
             } else {
                 getFragmentManager().beginTransaction()
-                        .replace(R.id.post_list_container, mPostList, PostsListFragment.TAG)
-                        .commit();
+                                    .replace(R.id.post_list_container, mPostList, PostsListFragment.TAG)
+                                    .commit();
             }
         }
     }

@@ -13,55 +13,52 @@
         android:layout_marginTop="12dip"
         android:gravity="center|center"
         android:scaleType="centerCrop"
-        app:srcCompat="@mipmap/app_icon" />
+        app:srcCompat="@mipmap/app_icon"
+        android:layout_marginStart="8dip"
+        android:layout_marginRight="8dp"
+        android:layout_marginEnd="8dp"/>
 
     <LinearLayout
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
         android:paddingBottom="10dip"
+        android:layout_toRightOf="@id/blavatar"
+        android:layout_toEndOf="@id/blavatar"
         android:paddingTop="10dip">
 
-        <LinearLayout
+        <TextView
+            android:id="@+id/blogName"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="58dip"
+            android:layout_marginBottom="-2dip"
             android:layout_weight="1"
-            android:gravity="center_vertical"
-            android:orientation="vertical">
+            android:ellipsize="end"
+            android:gravity="start"
+            android:paddingRight="8dip"
+            android:shadowColor="#FFFFFF"
+            android:shadowDx="0"
+            android:shadowDy="1"
+            android:shadowRadius="1"
+            android:singleLine="true"
+            android:text="@string/wordpress_blog"
+            android:textColor="#444444"
+            android:textSize="20sp"
+            android:textStyle="bold"
+            android:paddingEnd="8dip"/>
 
-            <TextView
-                android:id="@+id/blogName"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="-2dip"
-                android:layout_weight="1"
-                android:ellipsize="end"
-                android:gravity="left"
-                android:paddingRight="8dip"
-                android:shadowColor="#FFFFFF"
-                android:shadowDx="0"
-                android:shadowDy="1"
-                android:shadowRadius="1"
-                android:singleLine="true"
-                android:text="@string/wordpress_blog"
-                android:textColor="#444444"
-                android:textSize="20dip"
-                android:textStyle="bold" />
-
-            <TextView
-                android:id="@+id/blogUser"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:ellipsize="end"
-                android:gravity="left"
-                android:padding="0px"
-                android:singleLine="true"
-                android:text="@string/blogusername"
-                android:textColor="#666666"
-                android:textColorLink="@color/blue_wordpress"
-                android:textSize="12dip" />
-        </LinearLayout>
+        <TextView
+            android:id="@+id/blogUser"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:ellipsize="end"
+            android:gravity="start"
+            android:padding="0px"
+            android:singleLine="true"
+            android:text="@string/blogusername"
+            android:textColor="#666666"
+            android:textColorLink="@color/blue_wordpress"
+            android:textSize="12sp" />
     </LinearLayout>
 </RelativeLayout>

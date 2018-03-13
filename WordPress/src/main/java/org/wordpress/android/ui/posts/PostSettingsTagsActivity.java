@@ -31,10 +31,12 @@ import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.model.TermModel;
 import org.wordpress.android.fluxc.store.TaxonomyStore;
 import org.wordpress.android.util.ActivityUtils;
+import org.wordpress.android.util.LocaleManager;
 import org.wordpress.android.util.ToastUtils;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 import javax.inject.Inject;
 
@@ -48,6 +50,11 @@ public class PostSettingsTagsActivity extends AppCompatActivity implements TextW
 
     @Inject Dispatcher mDispatcher;
     @Inject TaxonomyStore mTaxonomyStore;
+
+    @Override
+    protected void attachBaseContext(Context newBase) {
+        super.attachBaseContext(LocaleManager.setLocale(newBase));
+    }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -143,8 +150,8 @@ public class PostSettingsTagsActivity extends AppCompatActivity implements TextW
 
     @Override
     public boolean onKey(View view, int keyCode, KeyEvent keyEvent) {
-        if ((keyEvent.getAction() == KeyEvent.ACTION_DOWN) &&
-                (keyCode == KeyEvent.KEYCODE_ENTER)) {
+        if ((keyEvent.getAction() == KeyEvent.ACTION_DOWN)
+            && (keyCode == KeyEvent.KEYCODE_ENTER)) {
             // Since we don't allow new lines, we should add comma on "enter" to separate the tags
             String currentText = mTagsEditText.getText().toString();
             if (!currentText.isEmpty() && !currentText.endsWith(",")) {
@@ -183,7 +190,7 @@ public class PostSettingsTagsActivity extends AppCompatActivity implements TextW
         }
     }
 
-    private void onTagSelected(@NonNull String selectedTag){
+    private void onTagSelected(@NonNull String selectedTag) {
         String text = mTagsEditText.getText().toString();
         String updatedText;
         int endIndex = text.lastIndexOf(",");
@@ -234,7 +241,7 @@ public class PostSettingsTagsActivity extends AppCompatActivity implements TextW
                 return;
             }
             String tag = StringEscapeUtils.unescapeHtml4(mFilteredTags.get(position).getName());
-            holder.nameTextView.setText(tag);
+            holder.mNameTextView.setText(tag);
         }
 
         @Override
@@ -256,7 +263,8 @@ public class PostSettingsTagsActivity extends AppCompatActivity implements TextW
                         filteredTags.addAll(allTags);
                     } else {
                         for (TermModel tag : allTags) {
-                            if (tag.getName().toLowerCase().contains(text.toLowerCase())) {
+                            if (tag.getName().toLowerCase(Locale.getDefault())
+                                   .contains(text.toLowerCase(Locale.getDefault()))) {
                                 filteredTags.add(tag);
                             }
                         }
@@ -271,20 +279,19 @@ public class PostSettingsTagsActivity extends AppCompatActivity implements TextW
                     });
                 }
             }).start();
-
         }
 
         class TagViewHolder extends RecyclerView.ViewHolder {
-            private final TextView nameTextView;
+            private final TextView mNameTextView;
 
             TagViewHolder(View view) {
                 super(view);
-                nameTextView = (TextView) view.findViewById(R.id.tag_name);
+                mNameTextView = (TextView) view.findViewById(R.id.tag_name);
                 RelativeLayout layout = (RelativeLayout) view.findViewById(R.id.tags_list_row_container);
                 layout.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
-                        onTagSelected(nameTextView.getText().toString());
+                        onTagSelected(mNameTextView.getText().toString());
                     }
                 });
             }

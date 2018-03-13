@@ -12,19 +12,18 @@ import android.view.WindowManager;
 import android.widget.EditText;
 
 public class LinkDialogFragment extends DialogFragment {
-
     public static final int LINK_DIALOG_REQUEST_CODE_ADD = 1;
     public static final int LINK_DIALOG_REQUEST_CODE_UPDATE = 2;
     public static final int LINK_DIALOG_REQUEST_CODE_DELETE = 3;
 
-    public static final String LINK_DIALOG_ARG_URL  = "linkURL";
+    public static final String LINK_DIALOG_ARG_URL = "linkURL";
     public static final String LINK_DIALOG_ARG_TEXT = "linkText";
 
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         LayoutInflater inflater = getActivity().getLayoutInflater();
-
+        //noinspection InflateParams
         View view = inflater.inflate(R.layout.dialog_link, null);
 
         final EditText urlEditText = (EditText) view.findViewById(R.id.linkURL);
@@ -68,7 +67,7 @@ public class LinkDialogFragment extends DialogFragment {
             urlEditText.selectAll();
         }
 
-        AlertDialog dialog =  builder.create();
+        AlertDialog dialog = builder.create();
         dialog.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE);
 
         return dialog;

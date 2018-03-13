@@ -25,7 +25,8 @@
                 style="@style/FilteredRecyclerViewSpinner.WordPress"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:overlapAnchor="false" />
+                android:overlapAnchor="false"
+                tools:ignore="UnusedAttribute"/>
 
         </android.support.v7.widget.Toolbar>
 
@@ -62,7 +63,9 @@
             android:gravity="center"
             android:text="@string/empty_list_default"
             android:visibility="gone"
-            tools:visibility="visible" />
+            tools:visibility="visible"
+            android:layout_marginEnd="@dimen/empty_list_title_side_margin"
+            android:layout_marginStart="@dimen/empty_list_title_side_margin"/>
 
         <ProgressBar
             android:id="@+id/progress_loading"
@@ -70,7 +73,8 @@
             android:layout_height="32dp"
             android:layout_alignParentBottom="true"
             android:layout_marginBottom="@dimen/margin_medium"
-            android:layout_marginLeft="@dimen/margin_extra_large" />
+            android:layout_marginLeft="@dimen/margin_extra_large"
+            android:layout_marginStart="@dimen/margin_extra_large"/>
     </RelativeLayout>
 
 </android.support.design.widget.CoordinatorLayout>

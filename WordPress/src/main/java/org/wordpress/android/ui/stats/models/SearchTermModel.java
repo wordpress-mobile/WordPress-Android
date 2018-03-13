@@ -3,7 +3,6 @@ package org.wordpress.android.ui.stats.models;
 import java.io.Serializable;
 
 public class SearchTermModel extends SingleItemModel implements Serializable {
-
     private final boolean mIsEncriptedTerms;
 
     public SearchTermModel(long blogId, String date, String title, int totals, boolean isEncriptedTerms) {
@@ -14,5 +13,4 @@ public class SearchTermModel extends SingleItemModel implements Serializable {
     public boolean isEncriptedTerms() {
         return mIsEncriptedTerms;
     }
-
 }

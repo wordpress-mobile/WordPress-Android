@@ -128,7 +128,9 @@ public class PublicizeWebViewFragment extends PublicizeBaseFragment {
      * authorize the connection via the external service
      */
     private void loadConnectUrl() {
-        if (!isAdded()) return;
+        if (!isAdded()) {
+            return;
+        }
 
         // connect url depends on whether we're connecting or reconnecting
         String connectUrl;
@@ -152,7 +154,6 @@ public class PublicizeWebViewFragment extends PublicizeBaseFragment {
     // ********************************************************************************************
 
     private class PublicizeWebViewClient extends WebViewClient {
-
         PublicizeWebViewClient() {
             super();
         }
@@ -165,8 +166,8 @@ public class PublicizeWebViewFragment extends PublicizeBaseFragment {
             if (isAdded() && url != null) {
                 Uri uri = Uri.parse(url);
                 if (uri.getHost().equals("public-api.wordpress.com")
-                        && uri.getPath().equals("/connect/")
-                        && uri.getQueryParameter("action").equals("verify")) {
+                    && uri.getPath().equals("/connect/")
+                    && uri.getQueryParameter("action").equals("verify")) {
                     // "denied" param will appear on failure or cancellation
                     String denied = uri.getQueryParameter("denied");
                     if (!TextUtils.isEmpty(denied)) {
@@ -184,7 +185,6 @@ public class PublicizeWebViewFragment extends PublicizeBaseFragment {
     }
 
     private class PublicizeWebChromeClient extends WebChromeClient {
-
         PublicizeWebChromeClient() {
             super();
         }

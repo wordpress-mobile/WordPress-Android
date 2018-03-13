@@ -26,7 +26,8 @@ public class WordPressGlideModule extends AppGlideModule {
     @Inject @Named("custom-ssl") RequestQueue mRequestQueue;
 
     @Override
-    public void applyOptions(Context context, GlideBuilder builder) {}
+    public void applyOptions(Context context, GlideBuilder builder) {
+    }
 
     @Override
     public boolean isManifestParsingEnabled() {

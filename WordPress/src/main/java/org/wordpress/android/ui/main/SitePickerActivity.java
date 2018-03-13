@@ -54,6 +54,7 @@ import org.wordpress.android.ui.prefs.AppPrefs;
 import org.wordpress.android.ui.stats.datasets.StatsTable;
 import org.wordpress.android.util.ActivityUtils;
 import org.wordpress.android.util.AppLog;
+import org.wordpress.android.util.LocaleManager;
 import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.helpers.Debouncer;
@@ -74,7 +75,6 @@ public class SitePickerActivity extends AppCompatActivity
         implements SitePickerAdapter.OnSiteClickListener,
         SitePickerAdapter.OnSelectedCountChangedListener,
         SearchView.OnQueryTextListener {
-
     public static final String KEY_LOCAL_ID = "local_id";
     private static final String KEY_IS_IN_SEARCH_MODE = "is_in_search_mode";
     private static final String KEY_LAST_SEARCH = "last_search";
@@ -95,6 +95,11 @@ public class SitePickerActivity extends AppCompatActivity
     @Inject AccountStore mAccountStore;
     @Inject SiteStore mSiteStore;
     @Inject Dispatcher mDispatcher;
+
+    @Override
+    protected void attachBaseContext(Context newBase) {
+        super.attachBaseContext(LocaleManager.setLocale(newBase));
+    }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -157,7 +162,9 @@ public class SitePickerActivity extends AppCompatActivity
     }
 
     private void updateMenuItemVisibility() {
-        if (mMenuAdd == null || mMenuEdit == null || mMenuSearch == null) return;
+        if (mMenuAdd == null || mMenuEdit == null || mMenuSearch == null) {
+            return;
+        }
 
         if (getAdapter().getIsInSearchMode()) {
             mMenuEdit.setVisible(false);
@@ -265,14 +272,14 @@ public class SitePickerActivity extends AppCompatActivity
                         if (isFinishing()) {
                             return;
                         }
-                        if (!NetworkUtils.checkConnection(SitePickerActivity.this)) {
+                        if (!NetworkUtils.checkConnection(SitePickerActivity.this) || !mAccountStore.hasAccessToken()) {
                             mSwipeToRefreshHelper.setRefreshing(false);
                             return;
                         }
                         mDispatcher.dispatch(SiteActionBuilder.newFetchSitesAction());
                     }
                 }
-        );
+                                                         );
     }
 
     private void setupRecycleView() {
@@ -328,17 +335,18 @@ public class SitePickerActivity extends AppCompatActivity
                 lastSearch,
                 isInSearchMode,
                 new SitePickerAdapter.OnDataLoadedListener() {
-            @Override
-            public void onBeforeLoad(boolean isEmpty) {
-                if (isEmpty) {
-                    showProgress(true);
-                }
-            }
-            @Override
-            public void onAfterLoad() {
-                showProgress(false);
-            }
-        });
+                    @Override
+                    public void onBeforeLoad(boolean isEmpty) {
+                        if (isEmpty) {
+                            showProgress(true);
+                        }
+                    }
+
+                    @Override
+                    public void onAfterLoad() {
+                        showProgress(false);
+                    }
+                });
         mAdapter.setOnSiteClickListener(this);
         mAdapter.setOnSelectedCountChangedListener(this);
     }
@@ -355,16 +363,16 @@ public class SitePickerActivity extends AppCompatActivity
         SiteList hiddenSites = getAdapter().getHiddenSites();
         List<SiteModel> siteList = new ArrayList<>();
         for (SiteRecord siteRecord : changeSet) {
-            SiteModel siteModel = mSiteStore.getSiteByLocalId(siteRecord.localId);
+            SiteModel siteModel = mSiteStore.getSiteByLocalId(siteRecord.getLocalId());
             if (hiddenSites.contains(siteRecord)) {
-                if (siteRecord.localId == mCurrentLocalId) {
+                if (siteRecord.getLocalId() == mCurrentLocalId) {
                     skippedCurrentSite = true;
                     currentSiteName = siteRecord.getBlogNameOrHomeURL();
                     continue;
                 }
                 siteModel.setIsVisible(false);
                 // Remove stats data for hidden sites
-                StatsTable.deleteStatsForBlog(this, siteRecord.localId);
+                StatsTable.deleteStatsForBlog(this, siteRecord.getLocalId());
             } else {
                 siteModel.setIsVisible(true);
             }
@@ -379,8 +387,8 @@ public class SitePickerActivity extends AppCompatActivity
         if (skippedCurrentSite) {
             String cantHideCurrentSite = getString(R.string.site_picker_cant_hide_current_site);
             ToastUtils.showToast(this,
-                    String.format(cantHideCurrentSite, currentSiteName),
-                    ToastUtils.Duration.LONG);
+                                 String.format(cantHideCurrentSite, currentSiteName),
+                                 ToastUtils.Duration.LONG);
         }
     }
 
@@ -493,7 +501,7 @@ public class SitePickerActivity extends AppCompatActivity
 
     @Override
     public boolean onSiteLongClick(final SiteRecord siteRecord) {
-        final SiteModel site = mSiteStore.getSiteByLocalId(siteRecord.localId);
+        final SiteModel site = mSiteStore.getSiteByLocalId(siteRecord.getLocalId());
         if (site == null) {
             return false;
         }
@@ -512,12 +520,12 @@ public class SitePickerActivity extends AppCompatActivity
     public void onSiteClick(SiteRecord siteRecord) {
         if (mActionMode == null) {
             hideSoftKeyboard();
-            AppPrefs.addRecentlyPickedSiteId(siteRecord.localId);
-            setResult(RESULT_OK, new Intent().putExtra(KEY_LOCAL_ID, siteRecord.localId));
+            AppPrefs.addRecentlyPickedSiteId(siteRecord.getLocalId());
+            setResult(RESULT_OK, new Intent().putExtra(KEY_LOCAL_ID, siteRecord.getLocalId()));
             mDidUserSelectSite = true;
             // If the site is hidden, make sure to make it visible
-            if (siteRecord.isHidden) {
-                siteRecord.isHidden = false;
+            if (siteRecord.isHidden()) {
+                siteRecord.setHidden(false);
                 saveSiteVisibility(siteRecord);
             }
             finish();
@@ -607,7 +615,7 @@ public class SitePickerActivity extends AppCompatActivity
         // if user is signed into wp.com use the dialog to enable choosing whether to
         // create a new wp.com blog or add a self-hosted one
         if (isSignedInWpCom) {
-            DialogFragment dialog = AddSiteDialog.newInstance(username);
+            DialogFragment dialog = new AddSiteDialog();
             dialog.show(activity.getFragmentManager(), AddSiteDialog.ADD_SITE_DIALOG_TAG);
         } else {
             // user isn't signed into wp.com, so simply enable adding self-hosted
@@ -622,21 +630,11 @@ public class SitePickerActivity extends AppCompatActivity
     public static class AddSiteDialog extends DialogFragment {
         static final String ADD_SITE_DIALOG_TAG = "add_site_dialog";
 
-        private static final String ARG_USERNAME = "ARG_USERNAME";
-
-        public static AddSiteDialog newInstance(String username) {
-            AddSiteDialog fragment = new AddSiteDialog();
-            Bundle args = new Bundle();
-            args.putString(ARG_USERNAME, username);
-            fragment.setArguments(args);
-            return fragment;
-        }
-
         @NonNull
         @Override
         public Dialog onCreateDialog(Bundle savedInstanceState) {
             CharSequence[] items =
-                    {getString(R.string.site_picker_create_dotcom),
+                    {getString(R.string.site_picker_create_wpcom),
                             getString(R.string.site_picker_add_self_hosted)};
             AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
             builder.setTitle(R.string.site_picker_add_site);
@@ -646,8 +644,8 @@ public class SitePickerActivity extends AppCompatActivity
                         @Override
                         public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
                             TextView tv = (TextView) super.getView(position, convertView, parent);
-                            Drawable leftDrawable = AppCompatResources.getDrawable(tv.getContext(),
-                                    R.drawable.ic_add_outline_grey_dark_24dp);
+                            Drawable leftDrawable = AppCompatResources
+                                    .getDrawable(tv.getContext(), R.drawable.ic_add_outline_grey_dark_24dp);
                             tv.setCompoundDrawablesWithIntrinsicBounds(leftDrawable, null, null, null);
                             tv.setCompoundDrawablePadding(
                                     getResources().getDimensionPixelSize(R.dimen.margin_extra_large));
@@ -658,13 +656,12 @@ public class SitePickerActivity extends AppCompatActivity
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
                             if (which == 0) {
-                                ActivityLauncher.newBlogForResult(getActivity(),
-                                        getArguments().getString(ARG_USERNAME));
+                                ActivityLauncher.newBlogForResult(getActivity());
                             } else {
                                 ActivityLauncher.addSelfHostedSiteForResult(getActivity());
                             }
                         }
-            });
+                    });
             return builder.create();
         }
     }

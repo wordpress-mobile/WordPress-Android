@@ -17,7 +17,9 @@
         android:textSize="@dimen/text_sz_medium"
         android:textStyle="bold"
         android:visibility="gone"
-        tools:text="text_heading" />
+        tools:text="text_heading"
+        android:layout_marginEnd="@dimen/margin_extra_large"
+        android:layout_marginStart="@dimen/margin_extra_large"/>
 
     <RelativeLayout
         android:id="@+id/container"
@@ -35,7 +37,10 @@
             android:layout_toLeftOf="@+id/switch_view"
             android:textColor="@color/grey_dark"
             android:textSize="@dimen/text_sz_large"
-            tools:text="text_title" />
+            tools:text="text_title"
+            android:textAlignment="viewStart"
+            android:gravity="start"
+            android:layout_toStartOf="@+id/switch_view"/>
 
         <android.support.v7.widget.SwitchCompat
             android:id="@+id/switch_view"
@@ -44,7 +49,9 @@
             android:layout_alignParentRight="true"
             android:layout_marginLeft="@dimen/margin_medium"
             app:theme="@style/WPPrefSwitch"
-            tools:checked="true" />
+            tools:checked="true"
+            android:layout_marginStart="@dimen/margin_medium"
+            android:layout_alignParentEnd="true"/>
 
         <TextView
             android:id="@+id/text_summary"
@@ -54,7 +61,10 @@
             android:layout_toLeftOf="@+id/switch_view"
             android:textColor="@color/grey"
             android:textSize="@dimen/text_sz_medium"
-            tools:text="text_summary" />
+            tools:text="text_summary"
+            android:textAlignment="viewStart"
+            android:gravity="start"
+            android:layout_toStartOf="@+id/switch_view"/>
 
     </RelativeLayout>
 

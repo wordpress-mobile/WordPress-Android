@@ -20,6 +20,7 @@ import android.widget.TextView;
 import org.wordpress.android.R;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
+import org.wordpress.android.util.LocaleManager;
 import org.wordpress.android.util.ToastUtils;
 
 import java.util.ArrayList;
@@ -33,6 +34,11 @@ import static java.lang.String.format;
 public class AppLogViewerActivity extends AppCompatActivity {
     private static final int ID_SHARE = 1;
     private static final int ID_COPY_TO_CLIPBOARD = 2;
+
+    @Override
+    protected void attachBaseContext(Context newBase) {
+        super.attachBaseContext(LocaleManager.setLocale(newBase));
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -90,24 +96,24 @@ public class AppLogViewerActivity extends AppCompatActivity {
             // line numbers shown here won't match the line numbers when the log is shared
             int lineNum = position - AppLog.HEADER_LINE_COUNT + 1;
             if (lineNum > 0) {
-                holder.txtLineNumber.setText(format(Locale.US, "%02d", lineNum));
-                holder.txtLineNumber.setVisibility(View.VISIBLE);
+                holder.mTxtLineNumber.setText(format(Locale.US, "%02d", lineNum));
+                holder.mTxtLineNumber.setVisibility(View.VISIBLE);
             } else {
-                holder.txtLineNumber.setVisibility(View.GONE);
+                holder.mTxtLineNumber.setVisibility(View.GONE);
             }
 
-            holder.txtLogEntry.setText(Html.fromHtml(mEntries.get(position)));
+            holder.mTxtLogEntry.setText(Html.fromHtml(mEntries.get(position)));
 
             return convertView;
         }
 
         private class LogViewHolder {
-            private final TextView txtLineNumber;
-            private final TextView txtLogEntry;
+            private final TextView mTxtLineNumber;
+            private final TextView mTxtLogEntry;
 
             LogViewHolder(View view) {
-                txtLineNumber = (TextView) view.findViewById(R.id.text_line);
-                txtLogEntry = (TextView) view.findViewById(R.id.text_log);
+                mTxtLineNumber = (TextView) view.findViewById(R.id.text_line);
+                mTxtLogEntry = (TextView) view.findViewById(R.id.text_log);
             }
         }
     }

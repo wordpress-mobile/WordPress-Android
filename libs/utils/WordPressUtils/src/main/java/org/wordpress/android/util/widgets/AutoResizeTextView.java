@@ -1,6 +1,8 @@
 package org.wordpress.android.util.widgets;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
+import android.support.v4.view.ViewCompat;
 import android.support.v7.widget.AppCompatTextView;
 import android.text.Layout;
 import android.text.StaticLayout;
@@ -205,7 +207,7 @@ public class AutoResizeTextView extends AppCompatTextView {
      */
     public void resizeText() {
         int heightLimit = getHeight() - getPaddingBottom() - getPaddingTop();
-        int widthLimit = getWidth() - getPaddingLeft() - getPaddingRight();
+        int widthLimit = getWidth() - ViewCompat.getPaddingStart(this) - ViewCompat.getPaddingStart(this);
         resizeText(widthLimit, heightLimit);
     }
 
@@ -214,7 +216,7 @@ public class AutoResizeTextView extends AppCompatTextView {
      * @param width
      * @param height
      */
-    public void resizeText(int width, int height) {
+    @SuppressLint("SetTextI18n") public void resizeText(int width, int height) {
         CharSequence text = getText();
         // Do not resize if the view does not have dimensions or there is no text
         if (text == null || text.length() == 0 || height <= 0 || width <= 0 || mTextSize == 0) {
@@ -245,7 +247,7 @@ public class AutoResizeTextView extends AppCompatTextView {
             TextPaint paint = new TextPaint(textPaint);
             // Draw using a static layout
             StaticLayout layout = new StaticLayout(text, paint, width, Layout.Alignment.ALIGN_NORMAL,
-                    mSpacingMult, mSpacingAdd, false);
+                                                   mSpacingMult, mSpacingAdd, false);
             // Check that we have a least one line of rendered text
             if (layout.getLineCount() > 0) {
                 // Since the line at the specific vertical position would be cut off,
@@ -265,7 +267,11 @@ public class AutoResizeTextView extends AppCompatTextView {
                     while (width < lineWidth + ellipseWidth) {
                         lineWidth = paint.measureText(text.subSequence(start, --end + 1).toString());
                     }
-                    setText(text.subSequence(0, end) + M_ELLIPSIS);
+                    if (ViewCompat.getLayoutDirection(this) == ViewCompat.LAYOUT_DIRECTION_RTL) {
+                        setText(M_ELLIPSIS + text.subSequence(0, end));
+                    } else {
+                        setText(text.subSequence(0, end) + M_ELLIPSIS);
+                    }
                 }
             }
         }
@@ -294,7 +300,7 @@ public class AutoResizeTextView extends AppCompatTextView {
         paintCopy.setTextSize(textSize);
         // Measure using a static layout
         StaticLayout layout = new StaticLayout(source, paintCopy, width, Layout.Alignment.ALIGN_NORMAL,
-                mSpacingMult, mSpacingAdd, true);
+                                               mSpacingMult, mSpacingAdd, true);
         return layout.getHeight();
     }
 }

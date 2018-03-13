@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:layout_width="match_parent"
+              xmlns:tools="http://schemas.android.com/tools"
+              android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical">
 
@@ -31,7 +32,8 @@
                     android:id="@+id/filter_spinner"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:overlapAnchor="false"/>
+                    android:overlapAnchor="false"
+                    tools:ignore="UnusedAttribute"/>
 
             </android.support.v7.widget.Toolbar>
 
@@ -54,7 +56,9 @@
                     android:layout_height="match_parent"
                     android:layout_marginLeft="@dimen/content_margin"
                     android:layout_marginRight="@dimen/content_margin"
-                    android:orientation="vertical">
+                    android:orientation="vertical"
+                    android:layout_marginStart="@dimen/content_margin"
+                    android:layout_marginEnd="@dimen/content_margin">
 
                     <LinearLayout
                         android:id="@+id/stats_insights_fragments_container"
@@ -102,6 +106,7 @@
                             android:layout_marginBottom="@dimen/margin_extra_small"
                             android:textColor="@color/stats_blue_labels"
                             android:gravity="start"
+                            android:textAlignment="viewStart"
                             android:text="@string/stats_other_recent_stats_label" />
 
                         <FrameLayout
@@ -194,6 +199,7 @@
                             android:layout_marginTop="@dimen/margin_large"
                             android:textColor="@color/stats_blue_labels"
                             android:gravity="start"
+                            android:textAlignment="viewStart"
                             android:textSize="@dimen/text_sz_large"
                             android:text="@string/stats_other_recent_stats_label" />
 
@@ -206,6 +212,7 @@
                             android:layout_marginTop="@dimen/margin_small"
                             android:textColor="@color/stats_link_text_color"
                             android:gravity="start"
+                            android:textAlignment="viewStart"
                             android:textSize="@dimen/text_sz_small"
                             android:text="@string/stats_other_recent_stats_moved_label" />
 

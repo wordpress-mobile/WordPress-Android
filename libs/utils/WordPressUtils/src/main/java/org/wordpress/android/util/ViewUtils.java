@@ -19,7 +19,7 @@ public class ViewUtils {
     /**
      * Generate a value suitable for use in {@link View#setId(int)}.
      * This value will not collide with ID values generated at build time by aapt for R.id.
-     *  Uses the native implementation if API 17 or above, otherwise uses a copied implementation.
+     * Uses the native implementation if API 17 or above, otherwise uses a copied implementation.
      *
      * @return a generated ID value
      */
@@ -31,7 +31,7 @@ public class ViewUtils {
         }
     }
 
-    private static final AtomicInteger sNextGeneratedId = new AtomicInteger(1);
+    private static final AtomicInteger NEXT_GENERATED_ID = new AtomicInteger(1);
 
     /**
      * Copied from {@link View#generateViewId()}
@@ -42,19 +42,21 @@ public class ViewUtils {
      */
     private static int copiedGenerateViewId() {
         for (;;) {
-            final int result = sNextGeneratedId.get();
+            final int result = NEXT_GENERATED_ID.get();
             // aapt-generated IDs have the high byte nonzero; clamp to the range under that.
             int newValue = result + 1;
-            if (newValue > 0x00FFFFFF) newValue = 1; // Roll over to 1, not 0.
-            if (sNextGeneratedId.compareAndSet(result, newValue)) {
+            if (newValue > 0x00FFFFFF) {
+                newValue = 1; // Roll over to 1, not 0.
+            }
+            if (NEXT_GENERATED_ID.compareAndSet(result, newValue)) {
                 return result;
             }
         }
     }
 
     public static void setButtonBackgroundColor(Context context, View button, @StyleRes int styleId,
-            @AttrRes int colorAttribute) {
-        TypedArray a = context.obtainStyledAttributes(styleId, new int[] { colorAttribute } );
+                                                @AttrRes int colorAttribute) {
+        TypedArray a = context.obtainStyledAttributes(styleId, new int[]{colorAttribute});
         ColorStateList color = a.getColorStateList(0);
         a.recycle();
         ViewCompat.setBackgroundTintList(button, color);

@@ -1,6 +1,7 @@
 package org.wordpress.android.ui.prefs;
 
 import android.app.FragmentManager;
+import android.content.Context;
 import android.os.Bundle;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
@@ -10,6 +11,7 @@ import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.fluxc.Dispatcher;
 import org.wordpress.android.fluxc.store.AccountStore;
+import org.wordpress.android.util.LocaleManager;
 
 import javax.inject.Inject;
 
@@ -18,6 +20,11 @@ public class MyProfileActivity extends AppCompatActivity {
 
     @Inject Dispatcher mDispatcher;
     @Inject AccountStore mAccountStore;
+
+    @Override
+    protected void attachBaseContext(Context newBase) {
+        super.attachBaseContext(LocaleManager.setLocale(newBase));
+    }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -43,8 +50,8 @@ public class MyProfileActivity extends AppCompatActivity {
             myProfileFragment = MyProfileFragment.newInstance();
 
             fragmentManager.beginTransaction()
-                    .add(android.R.id.content, myProfileFragment, KEY_MY_PROFILE_FRAGMENT)
-                    .commit();
+                           .add(android.R.id.content, myProfileFragment, KEY_MY_PROFILE_FRAGMENT)
+                           .commit();
         }
     }
 

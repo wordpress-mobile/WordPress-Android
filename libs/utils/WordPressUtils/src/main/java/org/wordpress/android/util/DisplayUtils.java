@@ -15,8 +15,9 @@ public class DisplayUtils {
     }
 
     public static boolean isLandscape(Context context) {
-        if (context == null)
+        if (context == null) {
             return false;
+        }
         return context.getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE;
     }
 
@@ -38,7 +39,7 @@ public class DisplayUtils {
         return (size.y);
     }
 
-    public static float spToPx(Context context, float sp){
+    public static float spToPx(Context context, float sp) {
         DisplayMetrics displayMetrics = context.getResources().getDisplayMetrics();
         final float scale = displayMetrics.scaledDensity;
         return sp * scale;
@@ -46,18 +47,18 @@ public class DisplayUtils {
 
     public static int dpToPx(Context context, int dp) {
         float px = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, dp,
-                context.getResources().getDisplayMetrics());
+                                             context.getResources().getDisplayMetrics());
         return (int) px;
     }
 
     public static int pxToDp(Context context, int px) {
         DisplayMetrics displayMetrics = context.getResources().getDisplayMetrics();
-        return (int) ((px/displayMetrics.density)+0.5);
+        return (int) ((px / displayMetrics.density) + 0.5);
     }
 
     public static boolean isXLarge(Context context) {
         if ((context.getResources().getConfiguration().screenLayout & Configuration.SCREENLAYOUT_SIZE_MASK)
-                == Configuration.SCREENLAYOUT_SIZE_XLARGE) {
+            == Configuration.SCREENLAYOUT_SIZE_XLARGE) {
             return true;
         }
         return false;
@@ -73,7 +74,7 @@ public class DisplayUtils {
         }
         TypedValue tv = new TypedValue();
         if (context.getTheme() != null
-                && context.getTheme().resolveAttribute(android.R.attr.actionBarSize, tv, true)) {
+            && context.getTheme().resolveAttribute(android.R.attr.actionBarSize, tv, true)) {
             return TypedValue.complexToDimensionPixelSize(tv.data, context.getResources().getDisplayMetrics());
         }
 

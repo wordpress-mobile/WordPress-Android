@@ -4,6 +4,7 @@ import android.app.Fragment;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.v7.app.ActionBar;
@@ -21,6 +22,7 @@ import org.wordpress.android.models.PublicizeConnection;
 import org.wordpress.android.models.PublicizeService;
 import org.wordpress.android.ui.publicize.adapters.PublicizeServiceAdapter;
 import org.wordpress.android.ui.publicize.services.PublicizeUpdateService;
+import org.wordpress.android.util.LocaleManager;
 import org.wordpress.android.util.ToastUtils;
 
 import javax.inject.Inject;
@@ -32,11 +34,15 @@ public class PublicizeListActivity extends AppCompatActivity
         PublicizeActions.OnPublicizeActionListener,
         PublicizeServiceAdapter.OnServiceClickListener,
         PublicizeListFragment.PublicizeButtonPrefsListener {
-
     private SiteModel mSite;
     private ProgressDialog mProgressDialog;
 
     @Inject SiteStore mSiteStore;
+
+    @Override
+    protected void attachBaseContext(Context newBase) {
+        super.attachBaseContext(LocaleManager.setLocale(newBase));
+    }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -88,7 +94,9 @@ public class PublicizeListActivity extends AppCompatActivity
     }
 
     private void showListFragment() {
-        if (isFinishing()) return;
+        if (isFinishing()) {
+            return;
+        }
 
         String tag = getString(R.string.fragment_tag_publicize_list);
         Fragment fragment = PublicizeListFragment.newInstance(mSite);
@@ -119,14 +127,18 @@ public class PublicizeListActivity extends AppCompatActivity
      * close all but the first (list) fragment
      */
     private void returnToListFragment() {
-        if (getFragmentManager().getBackStackEntryCount() == 0) return;
+        if (getFragmentManager().getBackStackEntryCount() == 0) {
+            return;
+        }
 
         String tag = getString(R.string.fragment_tag_publicize_detail);
         getFragmentManager().popBackStack(tag, FragmentManager.POP_BACK_STACK_INCLUSIVE);
     }
 
     private void showDetailFragment(PublicizeService service) {
-        if (isFinishing()) return;
+        if (isFinishing()) {
+            return;
+        }
 
         String tag = getString(R.string.fragment_tag_publicize_detail);
         Fragment detailFragment = PublicizeDetailFragment.newInstance(mSite, service);
@@ -157,7 +169,9 @@ public class PublicizeListActivity extends AppCompatActivity
 
     private void showWebViewFragment(PublicizeService service,
                                      PublicizeConnection publicizeConnection) {
-        if (isFinishing()) return;
+        if (isFinishing()) {
+            return;
+        }
 
         String tag = getString(R.string.fragment_tag_publicize_webview);
         Fragment webViewFragment = PublicizeWebViewFragment.newInstance(mSite, service, publicizeConnection);
@@ -272,7 +286,9 @@ public class PublicizeListActivity extends AppCompatActivity
      */
     @SuppressWarnings("unused")
     public void onEventMainThread(PublicizeEvents.ActionCompleted event) {
-        if (isFinishing()) return;
+        if (isFinishing()) {
+            return;
+        }
 
         closeWebViewFragment();
         if (mProgressDialog != null && mProgressDialog.isShowing()) {
@@ -286,7 +302,9 @@ public class PublicizeListActivity extends AppCompatActivity
     }
 
     public void onEventMainThread(PublicizeEvents.ActionAccountChosen event) {
-        if (isFinishing()) return;
+        if (isFinishing()) {
+            return;
+        }
 
         PublicizeActions.connectStepTwo(event.getSiteId(), event.getKeychainId());
         mProgressDialog = new ProgressDialog(this);
@@ -295,7 +313,9 @@ public class PublicizeListActivity extends AppCompatActivity
     }
 
     public void onEventMainThread(PublicizeEvents.ActionRequestChooseAccount event) {
-        if (isFinishing()) return;
+        if (isFinishing()) {
+            return;
+        }
 
         closeWebViewFragment();
 
@@ -318,9 +338,9 @@ public class PublicizeListActivity extends AppCompatActivity
     public void onButtonPrefsClicked() {
         Fragment fragment = PublicizeButtonPrefsFragment.newInstance(mSite);
         getFragmentManager().beginTransaction()
-                .replace(R.id.fragment_container, fragment)
-                .addToBackStack(null)
-                .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE)
-                .commit();
+                            .replace(R.id.fragment_container, fragment)
+                            .addToBackStack(null)
+                            .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE)
+                            .commit();
     }
 }

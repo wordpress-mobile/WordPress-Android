@@ -43,8 +43,8 @@ public class SignupMagicLinkFragment extends Fragment {
     private Button mOpenMailButton;
     private ProgressDialog mProgressDialog;
 
-    protected @Inject Dispatcher mDispatcher;
-    protected @Inject LoginAnalyticsListener mAnalyticsListener;
+    @Inject protected Dispatcher mDispatcher;
+    @Inject protected LoginAnalyticsListener mAnalyticsListener;
     protected LoginListener mLoginListener;
     protected String mEmail;
     protected boolean mInProgress;
@@ -151,14 +151,14 @@ public class SignupMagicLinkFragment extends Fragment {
         mOpenMailButton.setEnabled(false);
 
         mProgressDialog = ProgressDialog.show(getActivity(), "", message, true, true,
-                new DialogInterface.OnCancelListener() {
-                    @Override
-                    public void onCancel(DialogInterface dialog) {
-                        if (mInProgress) {
-                            endProgress();
-                        }
-                    }
-                });
+                                              new DialogInterface.OnCancelListener() {
+                                                  @Override
+                                                  public void onCancel(DialogInterface dialog) {
+                                                      if (mInProgress) {
+                                                          endProgress();
+                                                      }
+                                                  }
+                                              });
 
         mInProgress = true;
     }
@@ -190,7 +190,7 @@ public class SignupMagicLinkFragment extends Fragment {
                     case DialogInterface.BUTTON_POSITIVE:
                         sendMagicLinkEmail();
                         break;
-                    // DialogInterface.BUTTON_NEGATIVE is intentionally ignored.  Just dismiss dialog.
+                    // DialogInterface.BUTTON_NEGATIVE is intentionally ignored. Just dismiss dialog.
                 }
             }
         };

@@ -72,10 +72,14 @@ public class ReaderBlogFragment extends Fragment
     }
 
     private void checkEmptyView() {
-        if (!isAdded()) return;
+        if (!isAdded()) {
+            return;
+        }
 
         TextView emptyView = (TextView) getView().findViewById(R.id.text_empty);
-        if (emptyView == null) return;
+        if (emptyView == null) {
+            return;
+        }
 
         boolean isEmpty = hasBlogAdapter() && getBlogAdapter().isEmpty();
         if (isEmpty) {
@@ -144,6 +148,7 @@ public class ReaderBlogFragment extends Fragment
             public boolean onMenuItemActionExpand(MenuItem item) {
                 return true;
             }
+
             @Override
             public boolean onMenuItemActionCollapse(MenuItem item) {
                 return true;
@@ -156,6 +161,7 @@ public class ReaderBlogFragment extends Fragment
                 setSearchFilter(query);
                 return false;
             }
+
             @Override
             public boolean onQueryTextChange(String newText) {
                 // when the fragment is recreated this will be called with an empty query
@@ -205,7 +211,6 @@ public class ReaderBlogFragment extends Fragment
                     checkEmptyView();
                 }
             });
-
         }
         return mAdapter;
     }

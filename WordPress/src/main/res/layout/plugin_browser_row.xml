@@ -4,8 +4,11 @@
     android:layout_width="@dimen/plugin_row_width"
     android:layout_height="match_parent"
     android:background="?android:attr/selectableItemBackground"
-    android:paddingLeft="@dimen/margin_extra_large"
-    android:paddingStart="@dimen/margin_extra_large">
+    android:paddingBottom="@dimen/margin_small"
+    android:paddingEnd="@dimen/margin_medium"
+    android:paddingLeft="@dimen/margin_medium"
+    android:paddingRight="@dimen/margin_medium"
+    android:paddingStart="@dimen/margin_medium" >
 
     <org.wordpress.android.widgets.WPNetworkImageView
         android:id="@+id/plugin_icon"
@@ -25,7 +28,8 @@
         android:textColor="@color/grey_dark"
         android:textSize="@dimen/text_sz_medium"
         android:textStyle="bold"
-        tools:text="plugin_name" />
+        tools:text="plugin_name"
+        tools:ignore="UnusedAttribute"/>
 
     <TextView
         android:id="@+id/plugin_author"
@@ -40,7 +44,7 @@
         tools:text="plugin_author" />
 
     <FrameLayout
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="match_parent"
         android:layout_alignParentBottom="true"
         android:layout_below="@+id/plugin_author"
@@ -65,6 +69,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="@dimen/margin_small"
+                android:layout_marginStart="@dimen/margin_small"
                 android:gravity="center_vertical"
                 android:maxLines="2"
                 android:textColor="@color/alert_yellow"

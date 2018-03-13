@@ -10,7 +10,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@drawable/stats_white_background"
-        android:orientation="vertical">
+        android:orientation="vertical"
+        tools:ignore="UselessParent">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -23,7 +24,9 @@
                 android:layout_marginLeft="@dimen/margin_large"
                 android:layout_marginRight="@dimen/margin_large"
                 android:layout_marginBottom="@dimen/margin_small"
-                style="@style/StatsModuleTitle" />
+                style="@style/StatsModuleTitle"
+                android:layout_marginEnd="@dimen/margin_large"
+                android:layout_marginStart="@dimen/margin_large"/>
 
             <include
                 android:id="@+id/stats_empty_module_placeholder"
@@ -45,7 +48,9 @@
                 android:paddingTop="@dimen/margin_small"
                 android:layout_marginLeft="@dimen/margin_large"
                 android:layout_marginRight="@dimen/margin_large"
-                android:visibility="gone"/>
+                android:visibility="gone"
+                android:layout_marginEnd="@dimen/margin_large"
+                android:layout_marginStart="@dimen/margin_large"/>
 
             <org.wordpress.android.widgets.WPTextView
                 android:id="@+id/stats_module_totals_label"
@@ -58,7 +63,9 @@
                 android:paddingBottom="@dimen/margin_medium"
                 android:layout_marginLeft="@dimen/margin_large"
                 android:layout_marginRight="@dimen/margin_large"
-                android:visibility="gone" />
+                android:visibility="gone"
+                android:layout_marginEnd="@dimen/margin_large"
+                android:layout_marginStart="@dimen/margin_large"/>
 
             <include
                 android:id="@+id/stats_top_pagination_container"
@@ -80,7 +87,9 @@
                     android:layout_marginLeft="@dimen/margin_large"
                     android:layout_marginRight="@dimen/margin_large"
                     android:paddingTop="@dimen/margin_small"
-                    android:paddingBottom="@dimen/margin_small">
+                    android:paddingBottom="@dimen/margin_small"
+                    android:layout_marginEnd="@dimen/margin_large"
+                    android:layout_marginStart="@dimen/margin_large">
 
                     <org.wordpress.android.widgets.WPTextView
                         android:id="@+id/stats_list_entry_label"
@@ -88,7 +97,8 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_alignParentLeft="true"
-                        tools:text="TITLE" />
+                        tools:text="TITLE"
+                        android:layout_alignParentStart="true"/>
 
                     <org.wordpress.android.widgets.WPTextView
                         android:id="@+id/stats_list_totals_label"
@@ -96,7 +106,8 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_alignParentRight="true"
-                        tools:text="VIEWS" />
+                        tools:text="VIEWS"
+                        android:layout_alignParentEnd="true"/>
                 </RelativeLayout>
 
 
@@ -123,7 +134,9 @@
             android:textColor="@color/grey"
             android:textSize="@dimen/text_sz_small"
             android:padding="@dimen/margin_large"
-            android:visibility="gone" />
+            android:visibility="gone"
+            android:textAlignment="viewStart"
+            android:gravity="start"/>
 
         <LinearLayout
             android:layout_width="match_parent"

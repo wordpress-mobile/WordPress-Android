@@ -54,7 +54,8 @@
         android:background="@color/color_primary"
         android:elevation="@dimen/appbar_elevation"
         android:visibility="gone"
-        tools:visibility="visible">
+        tools:visibility="visible"
+        tools:ignore="UnusedAttribute">
 
         <org.wordpress.android.widgets.WPTextView
             android:id="@+id/text_manage"
@@ -69,7 +70,9 @@
             android:text="@string/plans_manage"
             android:textColor="@color/white"
             android:textColorLink="@color/blue_light"
-            android:textSize="@dimen/text_sz_large" />
+            android:textSize="@dimen/text_sz_large"
+            android:paddingEnd="@dimen/content_margin"
+            android:paddingStart="@dimen/content_margin"/>
     </FrameLayout>
 
 </RelativeLayout>

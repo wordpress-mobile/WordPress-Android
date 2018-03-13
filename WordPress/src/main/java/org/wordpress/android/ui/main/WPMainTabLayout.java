@@ -21,7 +21,6 @@ import org.wordpress.android.R;
  * tab layout for main activity
  */
 public class WPMainTabLayout extends TabLayout {
-
     private View mNoteBadge;
 
     public WPMainTabLayout(Context context, AttributeSet attrs, int defStyleAttr) {
@@ -44,6 +43,7 @@ public class WPMainTabLayout extends TabLayout {
     }
 
     private void addTab(@DrawableRes int iconId, @StringRes int contentDescriptionId, boolean isNoteTab) {
+        //noinspection InflateParams
         View customView = LayoutInflater.from(getContext()).inflate(R.layout.tab_icon, null);
 
         ImageView icon = (ImageView) customView.findViewById(R.id.tab_icon);
@@ -62,7 +62,9 @@ public class WPMainTabLayout extends TabLayout {
      * unread notifications
     */
     void showNoteBadge(boolean showBadge) {
-        if (mNoteBadge == null) return;
+        if (mNoteBadge == null) {
+            return;
+        }
 
         boolean isBadged = (mNoteBadge.getVisibility() == View.VISIBLE);
         if (showBadge == isBadged) {
@@ -100,7 +102,7 @@ public class WPMainTabLayout extends TabLayout {
     }
 
     private boolean isValidPosition(int position) {
-        return (position >=0 && position < getTabCount());
+        return (position >= 0 && position < getTabCount());
     }
 
     public void setSelectedTabPosition(int position) {

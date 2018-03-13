@@ -10,7 +10,9 @@
     android:paddingTop="@dimen/start_over_preference_margin_large"
     android:paddingBottom="@dimen/start_over_preference_margin_large"
     android:background="?android:attr/selectableItemBackground"
-    android:baselineAligned="false">
+    android:baselineAligned="false"
+    android:paddingStart="@dimen/start_over_preference_margin_large"
+    android:paddingEnd="@dimen/start_over_preference_margin_large">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -24,7 +26,8 @@
             android:layout_marginRight="@dimen/start_over_icon_margin_right"
             android:padding="@dimen/start_over_icon_padding"
             android:layout_gravity="center_vertical"
-            android:tint="@color/grey_darken_30"/>
+            android:tint="@color/grey_darken_30"
+            android:layout_marginEnd="@dimen/start_over_icon_margin_right"/>
 
         <TextView
             android:id="@android:id/title"
@@ -35,7 +38,8 @@
             android:layout_gravity="center_vertical"
             android:textAppearance="?android:attr/textAppearanceLarge"
             android:ellipsize="marquee"
-            android:fadingEdge="horizontal" />
+            android:fadingEdge="horizontal"
+            android:paddingStart="@dimen/start_over_title_margin"/>
 
     </LinearLayout>
 
@@ -48,7 +52,9 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textAppearance="?android:attr/textAppearanceSmall"
-        android:textColor="?android:attr/textColorSecondary" />
+        android:textColor="?android:attr/textColorSecondary"
+        android:paddingStart="@dimen/start_over_preference_margin_small"
+        android:layout_marginStart="@dimen/start_over_summary_margin"/>
 
     <LinearLayout
         android:id="@android:id/widget_frame"
@@ -56,6 +62,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:gravity="center_vertical"
-        android:orientation="vertical" />
+        android:orientation="vertical"
+        android:layout_marginStart="@dimen/start_over_summary_margin"/>
 
 </LinearLayout>

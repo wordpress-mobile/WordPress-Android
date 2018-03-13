@@ -2,6 +2,7 @@ package org.wordpress.android.ui.notifications;
 
 import android.app.Fragment;
 import android.app.FragmentManager;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Parcelable;
@@ -44,6 +45,7 @@ import org.wordpress.android.ui.stats.StatsTimeframe;
 import org.wordpress.android.ui.stats.StatsViewAllActivity;
 import org.wordpress.android.ui.stats.StatsViewType;
 import org.wordpress.android.util.AppLog;
+import org.wordpress.android.util.LocaleManager;
 import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.widgets.WPSwipeSnackbar;
@@ -79,6 +81,11 @@ public class NotificationsDetailActivity extends AppCompatActivity implements
     private boolean mIsReaderSwipeToNavigateShown;
 
     @Override
+    protected void attachBaseContext(Context newBase) {
+        super.attachBaseContext(LocaleManager.setLocale(newBase));
+    }
+
+    @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         ((WordPress) getApplication()).component().inject(this);
@@ -100,10 +107,10 @@ public class NotificationsDetailActivity extends AppCompatActivity implements
             mNoteId = savedInstanceState.getString(NotificationsListFragment.NOTE_ID_EXTRA);
         }
 
-        //set up the viewpager and adapter for lateral navigation
+        // set up the viewpager and adapter for lateral navigation
         mViewPager = (WPViewPager) findViewById(R.id.viewpager);
         mViewPager.setPageTransformer(false,
-                new WPViewPagerTransformer(WPViewPagerTransformer.TransformType.SLIDE_OVER));
+                                      new WPViewPagerTransformer(WPViewPagerTransformer.TransformType.SLIDE_OVER));
 
         mIsReaderSwipeToNavigateShown = AppPrefs.isReaderSwipeToNavigateShown();
 
@@ -149,14 +156,15 @@ public class NotificationsDetailActivity extends AppCompatActivity implements
 
         NotesAdapter.FILTERS filter = NotesAdapter.FILTERS.FILTER_ALL;
         if (getIntent().hasExtra(NotificationsListFragment.NOTE_CURRENT_LIST_FILTER_EXTRA)) {
-            filter = (NotesAdapter.FILTERS) getIntent().getSerializableExtra(NotificationsListFragment.NOTE_CURRENT_LIST_FILTER_EXTRA);
+            filter = (NotesAdapter.FILTERS) getIntent()
+                    .getSerializableExtra(NotificationsListFragment.NOTE_CURRENT_LIST_FILTER_EXTRA);
         }
 
         mAdapter = buildNoteListAdapterAndSetPosition(note, filter);
 
         resetOnPageChangeListener();
 
-        //set title
+        // set title
         setActionBarTitleForNote(note);
         markNoteAsRead(note);
 
@@ -178,7 +186,6 @@ public class NotificationsDetailActivity extends AppCompatActivity implements
             mOnPageChangeListener = new ViewPager.OnPageChangeListener() {
                 @Override
                 public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
-
                 }
 
                 @Override
@@ -187,7 +194,7 @@ public class NotificationsDetailActivity extends AppCompatActivity implements
                     if (!mIsReaderSwipeToNavigateShown) {
                         AppPrefs.setNotificationsSwipeToNavigateShown(true);
                     }
-                    //change the action bar title for the current note
+                    // change the action bar title for the current note
                     Note currentNote = mAdapter.getNoteAtPosition(position);
                     if (currentNote != null) {
                         setActionBarTitleForNote(currentNote);
@@ -197,7 +204,6 @@ public class NotificationsDetailActivity extends AppCompatActivity implements
 
                 @Override
                 public void onPageScrollStateChanged(int state) {
-
                 }
             };
         }
@@ -261,7 +267,7 @@ public class NotificationsDetailActivity extends AppCompatActivity implements
         if (getSupportActionBar() != null) {
             String title = note.getTitle();
             if (TextUtils.isEmpty(title)) {
-                //set a default title if title is not set within the note
+                // set a default title if title is not set within the note
                 switch (note.getType()) {
                     case NOTE_FOLLOW_TYPE:
                         title = getString(R.string.follows);
@@ -293,7 +299,7 @@ public class NotificationsDetailActivity extends AppCompatActivity implements
         ArrayList<Note> notes = NotificationsTable.getLatestNotes();
         ArrayList<Note> filteredNotes = new ArrayList<>();
 
-        //apply filter to the list so we show the same items that the list show vertically, but horizontally
+        // apply filter to the list so we show the same items that the list show vertically, but horizontally
         NotesAdapter.buildFilteredNotesList(filteredNotes, notes, filter);
         adapter = new NotificationDetailFragmentAdapter(getFragmentManager(), filteredNotes);
 
@@ -308,17 +314,19 @@ public class NotificationsDetailActivity extends AppCompatActivity implements
      * Defaults to NotificationDetailListFragment
      */
     private Fragment getDetailFragmentForNote(Note note, int idForFragmentContainer) {
-        if (note == null)
+        if (note == null) {
             return null;
+        }
 
         Fragment fragment;
         if (note.isCommentType()) {
             // show comment detail for comment notifications
             boolean isInstantReply = getIntent().getBooleanExtra(NotificationsListFragment.NOTE_INSTANT_REPLY_EXTRA,
-                    false);
+                                                                 false);
             fragment = CommentDetailFragment.newInstance(note.getId(),
-                    getIntent().getStringExtra(NotificationsListFragment.NOTE_PREFILLED_REPLY_EXTRA),
-                    idForFragmentContainer);
+                                                         getIntent().getStringExtra(
+                                                                 NotificationsListFragment.NOTE_PREFILLED_REPLY_EXTRA),
+                                                         idForFragmentContainer);
 
             if (isInstantReply) {
                 ((CommentDetailFragment) fragment).enableShouldFocusReplyField();
@@ -342,13 +350,17 @@ public class NotificationsDetailActivity extends AppCompatActivity implements
     }
 
     public void showBlogPreviewActivity(long siteId) {
-        if (isFinishing()) return;
+        if (isFinishing()) {
+            return;
+        }
 
         ReaderActivityLauncher.showReaderBlogPreview(this, siteId);
     }
 
     public void showPostActivity(long siteId, long postId) {
-        if (isFinishing()) return;
+        if (isFinishing()) {
+            return;
+        }
 
         ReaderActivityLauncher.showReaderPostDetail(this, siteId, postId);
     }
@@ -365,7 +377,9 @@ public class NotificationsDetailActivity extends AppCompatActivity implements
     }
 
     private void showStatsActivityForSite(@NonNull SiteModel site, NoteBlockRangeType rangeType) {
-        if (isFinishing()) return;
+        if (isFinishing()) {
+            return;
+        }
 
         if (rangeType == NoteBlockRangeType.FOLLOW) {
             Intent intent = new Intent(this, StatsViewAllActivity.class);
@@ -383,7 +397,9 @@ public class NotificationsDetailActivity extends AppCompatActivity implements
     }
 
     public void showWebViewActivityForUrl(String url) {
-        if (isFinishing() || url == null) return;
+        if (isFinishing() || url == null) {
+            return;
+        }
 
         if (url.contains(DOMAIN_WPCOM)) {
             WPWebViewActivity.openUrlByUsingGlobalWPCOMCredentials(this, url);
@@ -393,13 +409,17 @@ public class NotificationsDetailActivity extends AppCompatActivity implements
     }
 
     public void showReaderPostLikeUsers(long blogId, long postId) {
-        if (isFinishing()) return;
+        if (isFinishing()) {
+            return;
+        }
 
         ReaderActivityLauncher.showReaderLikingUsers(this, blogId, postId);
     }
 
     public void showReaderCommentsList(long siteId, long postId, long commentId) {
-        if (isFinishing()) return;
+        if (isFinishing()) {
+            return;
+        }
 
         ReaderActivityLauncher.showReaderComments(this, siteId, postId, commentId);
     }
@@ -445,12 +465,11 @@ public class NotificationsDetailActivity extends AppCompatActivity implements
     }
 
     private class NotificationDetailFragmentAdapter extends FragmentStatePagerAdapter {
-
-        final private ArrayList<Note> mNoteList;
+        private final ArrayList<Note> mNoteList;
 
         NotificationDetailFragmentAdapter(FragmentManager fm, ArrayList<Note> notes) {
             super(fm);
-            mNoteList = (ArrayList<Note>)notes.clone();
+            mNoteList = (ArrayList<Note>) notes.clone();
         }
 
         @Override
@@ -493,14 +512,15 @@ public class NotificationsDetailActivity extends AppCompatActivity implements
             return (position >= 0 && position < getCount());
         }
 
-        public Note getNoteAtPosition(int position){
-            if (isValidPosition(position))
+        public Note getNoteAtPosition(int position) {
+            if (isValidPosition(position)) {
                 return mNoteList.get(position);
-            else
+            } else {
                 return null;
+            }
         }
 
-        public Note getNoteWithId(String id){
+        public Note getNoteWithId(String id) {
             for (Note note : mNoteList) {
                 if (note.getId().equalsIgnoreCase(id)) {
                     return note;
@@ -508,6 +528,5 @@ public class NotificationsDetailActivity extends AppCompatActivity implements
             }
             return null;
         }
-
     }
 }
