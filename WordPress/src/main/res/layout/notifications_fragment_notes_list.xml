@@ -62,14 +62,15 @@
     </LinearLayout>
 
     <android.support.design.widget.AppBarLayout
-        android:layout_width="match_parent"
+        android:id="@+id/notifications_filter_container"
+        android:background="@color/white"
         android:layout_height="wrap_content"
+        android:layout_marginEnd="@dimen/notifications_content_margin"
         android:layout_marginLeft="@dimen/notifications_content_margin"
         android:layout_marginRight="@dimen/notifications_content_margin"
-        android:background="@color/white"
-        app:elevation="0dp"
         android:layout_marginStart="@dimen/notifications_content_margin"
-        android:layout_marginEnd="@dimen/notifications_content_margin">
+        android:layout_width="match_parent"
+        app:elevation="0dp">
 
         <LinearLayout
             android:id="@+id/notifications_filter"
@@ -139,10 +140,9 @@
             </HorizontalScrollView>
 
             <View
-                android:id="@+id/notifications_filter_divider"
-                android:layout_width="match_parent"
+                android:background="@drawable/notifications_list_divider"
                 android:layout_height="1dp"
-                android:background="@drawable/notifications_list_divider" />
+                android:layout_width="match_parent"/>
 
         </LinearLayout>
     </android.support.design.widget.AppBarLayout>
