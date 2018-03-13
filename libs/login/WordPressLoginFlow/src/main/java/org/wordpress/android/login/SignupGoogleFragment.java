@@ -34,8 +34,8 @@ public class SignupGoogleFragment extends GoogleFragment {
     public static final String TAG = "signup_google_fragment_tag";
 
     @Override public void onAttach(Context context) {
-        super.onAttach(context);
         AndroidSupportInjection.inject(this);
+        super.onAttach(context);
     }
 
     @Override
