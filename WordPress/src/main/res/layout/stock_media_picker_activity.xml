@@ -79,7 +79,7 @@
             android:background="?android:selectableItemBackground"
             android:minHeight="@dimen/min_touch_target_sz"
             android:padding="@dimen/margin_large"
-            android:text="@string/insert"
+            android:text="@string/insert_count"
             android:textAllCaps="true"
             android:textColor="@color/blue_wordpress"
             android:textSize="@dimen/text_sz_large"

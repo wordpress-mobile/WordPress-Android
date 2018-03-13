@@ -276,7 +276,7 @@ public class StockMediaPickerActivity extends AppCompatActivity implements Searc
     private void notifySelectionCountChanged() {
         int numSelected = mAdapter.getSelectionCount();
         if (numSelected > 0) {
-            String label = getString(R.string.insert) + " " + Integer.toString(numSelected);
+            String label = String.format(getString(R.string.insert_count), numSelected);
             mTextInsert.setText(label);
             showSelectionBar();
             if (numSelected == 1) {
