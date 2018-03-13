@@ -690,6 +690,10 @@ public class EditPostActivity extends AppCompatActivity implements
                 } else {
                     return getString(R.string.update_verb);
                 }
+            case PRIVATE:
+            case PENDING:
+            case TRASHED:
+            case DRAFT:
             default:
                 if (mPost.isLocalDraft()) {
                     return getString(R.string.save);
@@ -709,6 +713,10 @@ public class EditPostActivity extends AppCompatActivity implements
                 return getString(R.string.menu_publish_now);
             case PUBLISHED:
             case UNKNOWN:
+            case PRIVATE:
+            case PENDING:
+            case TRASHED:
+            case SCHEDULED:
             default:
                 if (!isNewPost()) {
                     return getString(R.string.menu_publish_now);
