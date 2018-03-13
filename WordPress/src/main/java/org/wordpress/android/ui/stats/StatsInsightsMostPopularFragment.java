@@ -12,6 +12,7 @@ import org.wordpress.android.ui.stats.service.StatsService;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.Locale;
 
 
 public class StatsInsightsMostPopularFragment extends StatsAbstractInsightsFragment {
@@ -98,7 +99,7 @@ public class StatsInsightsMostPopularFragment extends StatsAbstractInsightsFragm
                 break;
         }
 
-        DateFormat formatter = new SimpleDateFormat("EEEE");
+        DateFormat formatter = new SimpleDateFormat("EEEE", Locale.getDefault());
         final TextView mostPopularDayTextView = (TextView) ll.findViewById(R.id.stats_most_popular_day);
         mostPopularDayTextView.setText(formatter.format(c.getTime()));
         final TextView mostPopularDayPercentTextView = (TextView) ll.findViewById(R.id.stats_most_popular_day_percent);

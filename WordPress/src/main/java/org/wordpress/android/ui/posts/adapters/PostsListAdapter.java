@@ -60,6 +60,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 
 import javax.inject.Inject;
 
@@ -293,8 +294,7 @@ public class PostsListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
             pageHolder.mDateHeader.setVisibility(showDate ? View.VISIBLE : View.GONE);
 
             // no "..." more button when uploading
-            pageHolder.mBtnMore.setVisibility(UploadService.isPostUploadingOrQueued(post) ? View.GONE
-                                                     : View.VISIBLE);
+            pageHolder.mBtnMore.setVisibility(UploadService.isPostUploadingOrQueued(post) ? View.GONE : View.VISIBLE);
             pageHolder.mBtnMore.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -382,9 +382,9 @@ public class PostsListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
             } else if (DateTimeUtils.isSameMonthAndYear(dtCreated, dtNow)) {
                 return String.format(context.getString(R.string.days_ago), daysBetween);
             } else if (DateTimeUtils.isSameYear(dtCreated, dtNow)) {
-                return new SimpleDateFormat("MMMM").format(dtCreated);
+                return new SimpleDateFormat("MMMM", Locale.getDefault()).format(dtCreated);
             } else {
-                return new SimpleDateFormat("MMMM yyyy").format(dtCreated);
+                return new SimpleDateFormat("MMMM yyyy", Locale.getDefault()).format(dtCreated);
             }
         }
     }
