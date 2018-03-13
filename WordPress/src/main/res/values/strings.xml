@@ -737,6 +737,7 @@
     <string name="stats_default_number_zero" translatable="false">0</string>
     <string name="stats_jetpack_connection_setup_info">To use Stats on your WordPress site, you\'ll need to install the Jetpack plugin. Would you like to setup Jetpack?</string>
     <string name="stats_jetpack_connection_setup">Set up Jetpack</string>
+    <string name="content_description_people_looking_charts">People looking at graphs and charts</string>
 
     <!-- stats: errors -->
     <string name="stats_no_blog">Stats couldn\'t be loaded for the required blog</string>
