@@ -151,6 +151,7 @@ public class StockMediaPickerActivity extends AppCompatActivity implements Searc
                     if (!mViewModel.isFetching()) {
                         showProgress(false);
                     }
+                    //noinspection ConstantConditions
                     showEmptyView(mediaList.isEmpty()
                                   && !TextUtils.isEmpty(mViewModel.getSearchQuery()));
                     mAdapter.setMediaList(mediaList);
@@ -416,6 +417,7 @@ public class StockMediaPickerActivity extends AppCompatActivity implements Searc
             notifySelectionCountChanged();
         }
 
+        @SuppressWarnings("unused")
         private List<StockMediaModel> getSelectedItems() {
             List<StockMediaModel> items = new ArrayList<>();
             for (int i : mSelectedItems) {
