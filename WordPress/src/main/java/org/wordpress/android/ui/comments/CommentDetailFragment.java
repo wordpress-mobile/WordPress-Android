@@ -309,8 +309,10 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
 
                 if (CommentStatus.fromString(mComment.getStatus()) == CommentStatus.SPAM) {
                     moderateComment(CommentStatus.APPROVED);
+                    announceCommentStatusChangeForAccessibility(CommentStatus.UNSPAM);
                 } else {
                     moderateComment(CommentStatus.SPAM);
+                    announceCommentStatusChangeForAccessibility(CommentStatus.SPAM);
                 }
             }
         });
@@ -330,6 +332,7 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
                             new DialogInterface.OnClickListener() {
                                 public void onClick(DialogInterface dialog, int whichButton) {
                                     moderateComment(CommentStatus.DELETED);
+                                    announceCommentStatusChangeForAccessibility(CommentStatus.DELETED);
                                 }
                             });
                     dialogBuilder.setNegativeButton(
@@ -340,6 +343,7 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
 
                 } else {
                     moderateComment(CommentStatus.TRASH);
+                    announceCommentStatusChangeForAccessibility(CommentStatus.TRASH);
                 }
 
             }
@@ -988,9 +992,11 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
         }
 
         CommentStatus newStatus = CommentStatus.APPROVED;
-        if (CommentStatus.fromString(mComment.getStatus()) == CommentStatus.APPROVED) {
+        CommentStatus currentStatus = CommentStatus.fromString(mComment.getStatus());
+        if (currentStatus == CommentStatus.APPROVED) {
             newStatus = CommentStatus.UNAPPROVED;
         }
+        announceCommentStatusChangeForAccessibility(currentStatus == CommentStatus.TRASH ? CommentStatus.UNTRASH : newStatus);
 
         mComment.setStatus(newStatus.toString());
         setModerateButtonForStatus(newStatus);
@@ -1124,6 +1130,7 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
         }
         mDispatcher.dispatch(CommentActionBuilder.newLikeCommentAction(
                 new RemoteLikeCommentPayload(mSite, mComment, mBtnLikeComment.isActivated())));
+        mBtnLikeComment.announceForAccessibility(getText(mBtnLikeComment.isActivated() ? R.string.comment_liked_talkback : R.string.comment_unliked_talkback));
     }
 
     private void toggleLikeButton(boolean isLiked) {
@@ -1240,6 +1247,41 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
                 ToastUtils.showToast(getActivity(), event.error.message);
             }
             return;
+        }
+    }
+
+    private void announceCommentStatusChangeForAccessibility(CommentStatus newStatus) {
+        int resId = -1;
+        switch (newStatus) {
+            case APPROVED:
+                resId = R.string.comment_approved_talkback;
+                break;
+            case UNAPPROVED:
+                resId = R.string.comment_unapproved_talkback;
+                break;
+            case SPAM:
+                resId = R.string.comment_spam_talkback;
+                break;
+            case TRASH:
+                resId = R.string.comment_trash_talkback;
+                break;
+            case DELETED:
+                resId = R.string.comment_delete_talkback;
+                break;
+            case UNSPAM:
+                resId = R.string.comment_unspam_talkback;
+                break;
+            case UNTRASH:
+                resId = R.string.comment_untrash_talkback;
+                break;
+            case ALL:
+                // ignore
+                break;
+            default:
+                AppLog.w(T.COMMENTS, "AnnounceCommentStatusChangeForAccessibility - Missing switch branch for comment status: " + newStatus);
+        }
+        if (resId != -1) {
+            getView().announceForAccessibility(getText(resId));
         }
     }
 }

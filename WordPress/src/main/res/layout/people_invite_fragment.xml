@@ -27,7 +27,7 @@
             android:layout_marginTop="@dimen/margin_large"
             android:text="@string/invite_names_title"
             android:textColor="@color/grey_dark"
-            android:labelFor="@+id/usernames_container"
+            android:labelFor="@+id/invite_usernames"
             android:textSize="@dimen/text_sz_large" />
 
         <LinearLayout
@@ -157,7 +157,7 @@
             android:layout_marginTop="@dimen/margin_medium"
             android:text="@string/invite_message_title"
             android:textColor="@color/grey_dark"
-            android:labelFor="@+id/message_container"
+            android:labelFor="@+id/message"
             android:textSize="@dimen/text_sz_large" />
 
         <RelativeLayout

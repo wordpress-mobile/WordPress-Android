@@ -54,6 +54,7 @@
                     android:layout_width="fill_parent"
                     android:layout_height="wrap_content"
                     android:minHeight="@dimen/stats_barchart_height"
+                    android:importantForAccessibility="noHideDescendants"
                     android:orientation="vertical" />
 
                 <RelativeLayout
@@ -62,6 +63,7 @@
                     android:layout_marginLeft="@dimen/margin_medium"
                     android:layout_marginRight="@dimen/margin_medium"
                     android:layout_marginTop="@dimen/margin_medium"
+                    android:importantForAccessibility="noHideDescendants"
                     android:layout_marginBottom="@dimen/margin_small"
                     android:layout_marginStart="@dimen/margin_medium"
                     android:layout_marginEnd="@dimen/margin_medium">

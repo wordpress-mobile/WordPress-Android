@@ -174,7 +174,7 @@ class ThemeBrowserAdapter extends BaseAdapter implements Filterable {
         }
 
         themeViewHolder.imageView.setImageUrl(requestURL + THEME_IMAGE_PARAMETER + mViewWidth, WPNetworkImageView.ImageType.PHOTO);
-        themeViewHolder.frameLayout.setOnClickListener(new View.OnClickListener() {
+        themeViewHolder.cardView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if (isCurrent) {

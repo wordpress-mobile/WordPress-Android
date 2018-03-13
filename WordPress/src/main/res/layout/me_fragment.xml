@@ -116,7 +116,7 @@
                 android:id="@+id/me_my_profile_icon"
                 style="@style/MeListRowIcon"
                 app:srcCompat="@drawable/ic_user_grey_24dp"
-                android:contentDescription="@string/my_profile"/>
+                android:contentDescription="@null"/>
 
             <org.wordpress.android.widgets.WPTextView
                 android:id="@+id/me_my_profile_text_view"
@@ -135,7 +135,7 @@
                 android:id="@+id/me_account_settings_icon"
                 style="@style/MeListRowIcon"
                 app:srcCompat="@drawable/ic_cog_grey_24dp"
-                android:contentDescription="@string/account_settings"/>
+                android:contentDescription="@null"/>
 
             <org.wordpress.android.widgets.WPTextView
                 android:id="@+id/me_account_settings_text_view"
@@ -154,7 +154,7 @@
                 android:id="@+id/me_app_settings_icon"
                 style="@style/MeListRowIcon"
                 app:srcCompat="@drawable/ic_phone_grey_24dp"
-                android:contentDescription="@string/me_btn_app_settings"/>
+                android:contentDescription="@null"/>
 
             <org.wordpress.android.widgets.WPTextView
                 android:id="@+id/me_app_settings_text_view"
@@ -173,7 +173,7 @@
                 android:id="@+id/me_notifications_icon"
                 style="@style/MeListRowIcon"
                 app:srcCompat="@drawable/ic_bell_grey_24dp"
-                android:contentDescription="@string/notification_settings"/>
+                android:contentDescription="@null"/>
 
             <org.wordpress.android.widgets.WPTextView
                 android:id="@+id/me_notifications_text_view"
@@ -193,7 +193,7 @@
                 android:id="@+id/me_support_icon"
                 style="@style/MeListRowIcon"
                 app:srcCompat="@drawable/ic_help_grey_24dp"
-                android:contentDescription="@string/me_btn_support"/>
+                android:contentDescription="@null"/>
 
             <org.wordpress.android.util.widgets.AutoResizeTextView
                 android:id="@+id/me_support_text_view"
@@ -212,7 +212,7 @@
                 android:id="@+id/me_login_logout_icon"
                 style="@style/MeListRowIcon"
                 app:srcCompat="@drawable/ic_sign_out_grey_24dp"
-                android:contentDescription="@string/me_btn_login_logout"/>
+                android:contentDescription="@null"/>
 
             <org.wordpress.android.util.widgets.AutoResizeTextView
                 android:id="@+id/me_login_logout_text_view"

@@ -26,13 +26,16 @@
 
             <android.support.design.widget.TextInputLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content">
+                android:layout_height="wrap_content"
+                android:hint="@string/tag_name_hint"
+                android:importantForAccessibility="no">
 
                 <android.support.design.widget.TextInputEditText
                     android:id="@+id/edit_name"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:hint="@string/tag_name_hint"
+                    android:textColorHint="@color/transparent"
                     android:inputType="textCapSentences|textAutoCorrect"
                     android:textAlignment="viewStart"
                     android:gravity="start"
@@ -43,6 +46,8 @@
             <android.support.design.widget.TextInputLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:importantForAccessibility="no"
+                android:hint="@string/tag_description_hint"
                 android:layout_marginTop="@dimen/margin_medium">
 
                 <android.support.design.widget.TextInputEditText
@@ -51,6 +56,7 @@
                     android:layout_height="wrap_content"
                     android:gravity="top|start"
                     android:hint="@string/tag_description_hint"
+                    android:textColorHint="@color/transparent"
                     android:inputType="textCapSentences|textAutoCorrect"
                     android:lines="3"
                     android:textAlignment="viewStart"

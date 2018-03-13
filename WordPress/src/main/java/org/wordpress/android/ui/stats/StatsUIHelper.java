@@ -246,9 +246,11 @@ class StatsUIHelper {
             return;
         }
         if (isGroupExpanded) {
+            chevron.setContentDescription(groupView.getContext().getString(R.string.stats_list_cell_chevron_collapse_desc));
             // change the background of the parent
             setViewBackgroundWithoutResettingPadding(groupView, R.drawable.stats_list_item_expanded_background);
         } else {
+            chevron.setContentDescription(groupView.getContext().getString(R.string.stats_list_cell_chevron_expand_desc));
             setViewBackgroundWithoutResettingPadding(groupView, groupPosition == 0 ? 0 : R.drawable.stats_list_item_background);
         }
 
