@@ -4,7 +4,6 @@ import android.arch.lifecycle.LiveData;
 import android.arch.lifecycle.MutableLiveData;
 import android.arch.lifecycle.ViewModel;
 import android.os.Bundle;
-import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.text.TextUtils;
@@ -33,7 +32,6 @@ public class StockMediaViewModel extends ViewModel {
     private boolean mCanLoadMore;
     private int mNextPage;
 
-    private final Handler mHandler;
     private final MutableLiveData<List<StockMediaModel>> mSearchResults;
 
     @SuppressWarnings("WeakerAccess")
@@ -45,7 +43,6 @@ public class StockMediaViewModel extends ViewModel {
         mStockMediaStore = stockMediaStore;
         mDispatcher.register(this);
 
-        mHandler = new Handler();
         mSearchResults = new MutableLiveData<>();
     }
 
@@ -82,7 +79,7 @@ public class StockMediaViewModel extends ViewModel {
         mDispatcher.dispatch(StockMediaActionBuilder.newFetchStockMediaAction(payload));
     }
 
-    public void clearSearchResults() {
+    private void clearSearchResults() {
         mSearchQuery = null;
         mSearchResults.setValue(new ArrayList<StockMediaModel>());
     }

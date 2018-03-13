@@ -47,7 +47,6 @@ public class StockPhotoPickerActivity extends AppCompatActivity implements Searc
 
     private SiteModel mSite;
 
-    private RecyclerView mRecycler;
     private StockPhotoAdapter mAdapter;
 
     private ViewGroup mSelectionBar;
@@ -84,11 +83,11 @@ public class StockPhotoPickerActivity extends AppCompatActivity implements Searc
         }
         configureSearchView();
 
-        mRecycler = findViewById(R.id.recycler);
-        mRecycler.setLayoutManager(new GridLayoutManager(this, getColumnCount()));
+        RecyclerView recycler = findViewById(R.id.recycler);
+        recycler.setLayoutManager(new GridLayoutManager(this, getColumnCount()));
 
         mAdapter = new StockPhotoAdapter();
-        mRecycler.setAdapter(mAdapter);
+        recycler.setAdapter(mAdapter);
 
         mSelectionBar = findViewById(R.id.container_selection_bar);
         mTextInsert = findViewById(R.id.text_insert);
