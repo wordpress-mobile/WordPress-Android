@@ -57,6 +57,34 @@ public class LoginAnalyticsTracker implements LoginAnalyticsListener {
         AnalyticsTracker.track(AnalyticsTracker.Stat.LOGIN_PASSWORD_FORM_VIEWED);
     }
 
+    @Override public void trackSignupEmailToLogin() {
+        AnalyticsTracker.track(AnalyticsTracker.Stat.SIGNUP_EMAIL_TO_LOGIN);
+    }
+
+    @Override public void trackSignupMagicLinkFailed() {
+        AnalyticsTracker.track(AnalyticsTracker.Stat.SIGNUP_MAGIC_LINK_FAILED);
+    }
+
+    @Override public void trackSignupMagicLinkSucceeded() {
+        AnalyticsTracker.track(AnalyticsTracker.Stat.SIGNUP_MAGIC_LINK_SUCCEEDED);
+    }
+
+    @Override public void trackSignupSocial2faNeeded() {
+        AnalyticsTracker.track(AnalyticsTracker.Stat.SIGNUP_SOCIAL_2FA_NEEDED);
+    }
+
+    @Override public void trackSignupSocialAccountsNeedConnecting() {
+        AnalyticsTracker.track(AnalyticsTracker.Stat.SIGNUP_SOCIAL_ACCOUNTS_NEED_CONNECTING);
+    }
+
+    @Override public void trackSignupSocialButtonFailure() {
+        AnalyticsTracker.track(AnalyticsTracker.Stat.SIGNUP_SOCIAL_BUTTON_FAILURE);
+    }
+
+    @Override public void trackSignupSocialToLogin() {
+        AnalyticsTracker.track(AnalyticsTracker.Stat.SIGNUP_SOCIAL_TO_LOGIN);
+    }
+
     @Override
     public void trackSocialAccountsNeedConnecting() {
         AnalyticsTracker.track(AnalyticsTracker.Stat.LOGIN_SOCIAL_ACCOUNTS_NEED_CONNECTING);

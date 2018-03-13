@@ -1,4 +1,4 @@
-package org.wordpress.android.ui.accounts.signup;
+package org.wordpress.android.login;
 
 import android.app.PendingIntent;
 import android.content.Context;
@@ -30,14 +30,8 @@ import com.google.android.gms.common.api.GoogleApiClient.OnConnectionFailedListe
 
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
-import org.wordpress.android.R;
-import org.wordpress.android.WordPress;
-import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.fluxc.generated.AccountActionBuilder;
 import org.wordpress.android.fluxc.store.AccountStore.OnAvailabilityChecked;
-import org.wordpress.android.login.BuildConfig;
-import org.wordpress.android.login.LoginBaseFormFragment;
-import org.wordpress.android.login.LoginListener;
 import org.wordpress.android.login.widgets.WPLoginInputRow;
 import org.wordpress.android.login.widgets.WPLoginInputRow.OnEditorCommitListener;
 import org.wordpress.android.util.ActivityUtils;
@@ -48,6 +42,8 @@ import org.wordpress.android.util.NetworkUtils;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
+import dagger.android.support.AndroidSupportInjection;
 
 import static android.app.Activity.RESULT_OK;
 
@@ -139,7 +135,7 @@ public class SignupEmailFragment extends LoginBaseFormFragment<LoginListener> im
 
     @Override
     public void onAttach(Context context) {
-        ((WordPress) getActivity().getApplication()).component().inject(this);
+        AndroidSupportInjection.inject(this);
         super.onAttach(context);
     }
 
@@ -264,7 +260,7 @@ public class SignupEmailFragment extends LoginBaseFormFragment<LoginListener> im
                             if (event.isAvailable) {
                                 mLoginListener.showSignupMagicLink(event.value);
                             } else {
-                                AnalyticsTracker.track(AnalyticsTracker.Stat.SIGNUP_EMAIL_TO_LOGIN);
+                                mAnalyticsListener.trackSignupEmailToLogin();
                                 mLoginListener.showSignupToLoginMessage();
                                 mLoginListener.gotWpcomEmail(event.value);
                                 // Kill connections with FluxC and this fragment since the flow is changing to login.
@@ -300,8 +296,8 @@ public class SignupEmailFragment extends LoginBaseFormFragment<LoginListener> im
     public void getEmailHints() {
         HintRequest hintRequest = new HintRequest.Builder()
                 .setHintPickerConfig(new CredentialPickerConfig.Builder()
-                                             .setShowCancelButton(true)
-                                             .build())
+                        .setShowCancelButton(true)
+                        .build())
                 .setEmailAddressIdentifierSupported(true)
                 .build();
 
@@ -329,7 +325,7 @@ public class SignupEmailFragment extends LoginBaseFormFragment<LoginListener> im
                     @Override
                     public void run() {
                         if (isAdded()) {
-                            EditTextUtils.showSoftInput(mEmailInput.getEditText());
+                            ActivityUtils.showKeyboard(mEmailInput.getEditText());
                         }
                     }
                 }, getResources().getInteger(android.R.integer.config_mediumAnimTime));

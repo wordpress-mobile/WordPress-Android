@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
+
 <resources>
+
     <dimen name="toolbar_content_offset">72dp</dimen>
     <dimen name="toolbar_content_offset_end">0dp</dimen>
 
@@ -37,4 +39,8 @@
     <dimen name="magic_link_sent_illustration_sz">120dp</dimen>
     <dimen name="google_button_icon_sz">24dp</dimen>
     <dimen name="textinputlayout_correction_padding_right">9dp</dimen>
+
+    <!-- signup -->
+    <dimen name="bottom_sheet_dialog_width">0dp</dimen>
+
 </resources>
