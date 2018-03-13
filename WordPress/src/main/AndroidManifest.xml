@@ -95,7 +95,8 @@
         <!-- Main tab activity -->
         <activity
             android:name=".ui.main.WPMainActivity"
-            android:theme="@style/Calypso.NoActionBar" />
+            android:theme="@style/Calypso.NoActionBar"
+            android:label=""/>
 
         <!-- Account activities -->
         <activity
@@ -138,13 +139,14 @@
 
         <activity
             android:name=".ui.accounts.HelpActivity"
-            android:label=""
+            android:label="@string/help_screen_title"
             android:theme="@style/CalypsoTheme.NoActionBarShadow" />
         <!-- empty title -->
 
         <!-- Preferences activities -->
         <activity
             android:name=".ui.prefs.AboutActivity"
+            android:label="@string/about_the_app"
             android:theme="@style/Theme.AppCompat.NoActionBar" />
         <activity
             android:name=".ui.prefs.BlogPreferencesActivity"
@@ -153,9 +155,11 @@
             android:theme="@style/CalypsoTheme" />
         <activity
             android:name=".ui.prefs.ReleaseNotesActivity"
-            android:theme="@style/Calypso.NoActionBar" />
+            android:theme="@style/Calypso.NoActionBar"
+            android:label="@string/release_notes_screen_title"/>
         <activity
             android:name=".ui.prefs.LicensesActivity"
+            android:label="@string/license_screen_title"
             android:theme="@style/Calypso.NoActionBar" />
         <activity android:name=".ui.prefs.SiteSettingsTagListActivity"
             android:theme="@style/CalypsoTheme"
@@ -173,7 +177,8 @@
         <activity
             android:name=".ui.prefs.notifications.NotificationsSettingsActivity"
             android:configChanges="orientation|screenSize"
-            android:theme="@style/Calypso.NoActionBar" >
+            android:theme="@style/Calypso.NoActionBar"
+            android:label="@string/notif_settings_screen_title">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.NOTIFICATION_PREFERENCES" />
@@ -469,10 +474,12 @@
             android:name="org.wordpress.passcodelock.PasscodeUnlockActivity"
             android:theme="@style/CalypsoTheme"
             android:launchMode="singleInstance"
+            android:label="@string/passcode_screen_title"
             android:windowSoftInputMode="stateHidden" />
         <activity
             android:name="org.wordpress.passcodelock.PasscodeManagePasswordActivity"
             android:theme="@style/CalypsoTheme"
+            android:label="@string/passcode_screen_title"
             android:windowSoftInputMode="stateHidden" />
 
         <!--People Management-->
