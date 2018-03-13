@@ -925,7 +925,7 @@ public class EditPostActivity extends AppCompatActivity implements
 
         MenuItem previewMenuItem = menu.findItem(R.id.menu_preview_post);
         MenuItem settingsMenuItem = menu.findItem(R.id.menu_post_settings);
-        MenuItem saveAsDraftMenuItem = menu.findItem(R.id.menu_save_as_draft);
+        MenuItem saveAsDraftMenuItem = menu.findItem(R.id.menu_save_as_draft_or_publish);
         MenuItem viewHtmlModeMenuItem = menu.findItem(R.id.menu_html_mode);
 
         if (previewMenuItem != null) {
@@ -1037,7 +1037,7 @@ public class EditPostActivity extends AppCompatActivity implements
                     mEditPostSettingsFragment.refreshViews();
                 }
                 mViewPager.setCurrentItem(PAGE_SETTINGS);
-            } else if (itemId == R.id.menu_save_as_draft) {
+            } else if (itemId == R.id.menu_save_as_draft_or_publish) {
                 // save as draft if it's a local post with UNKNOWN status, or PUBLISH if it's a DRAFT (as this
                 //  R.id.menu_save_as_draft button will be "Publish Now" in that case)
                 if (PostStatus.fromPost(mPost) == PostStatus.DRAFT) {
