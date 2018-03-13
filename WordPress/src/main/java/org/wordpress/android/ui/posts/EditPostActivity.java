@@ -170,7 +170,8 @@ public class EditPostActivity extends AppCompatActivity implements
         EditorWebViewCompatibility.ReflectionFailureListener,
         OnRequestPermissionsResultCallback,
         PhotoPickerFragment.PhotoPickerListener,
-        EditPostSettingsFragment.EditPostActivityHook {
+        EditPostSettingsFragment.EditPostActivityHook,
+        BaseYesNoFragmentDialog.BasicYesNoDialogClickInterface {
     public static final String EXTRA_POST_LOCAL_ID = "postModelLocalId";
     public static final String EXTRA_IS_PAGE = "isPage";
     public static final String EXTRA_IS_PROMO = "isPromo";
@@ -187,6 +188,7 @@ public class EditPostActivity extends AppCompatActivity implements
     private static final String STATE_KEY_POST_REMOTE_ID = "stateKeyPostModelRemoteId";
     private static final String STATE_KEY_IS_NEW_POST = "stateKeyIsNewPost";
     private static final String STATE_KEY_IS_PHOTO_PICKER_VISIBLE = "stateKeyPhotoPickerVisible";
+    private static final String TAG_PUBLISH_CONFIRMATION_DIALOG = "tag_publish_confirmation_dialog";
 
     private static final int PAGE_CONTENT = 0;
     private static final int PAGE_SETTINGS = 1;
@@ -1075,20 +1077,16 @@ public class EditPostActivity extends AppCompatActivity implements
     }
 
     private void showPublishConfirmationDialog() {
-        AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setTitle(getResources().getText(R.string.dialog_confirm_publish_title))
-                .setMessage(mPost.isPage() ? getString(R.string.dialog_confirm_publish_message_page)
-                                    : getString(R.string.dialog_confirm_publish_message_post))
-                .setPositiveButton(R.string.dialog_confirm_publish_yes, new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialogInterface, int i) {
-                        mPost.setStatus(PostStatus.PUBLISHED.toString());
-                        publishPost();
-                    }
-                })
-                .setNegativeButton(R.string.keep_editing, null)
-                .setCancelable(true);
-        builder.create().show();
+        BaseYesNoFragmentDialog publishConfirmationDialog = new BaseYesNoFragmentDialog();
+        publishConfirmationDialog.setArgs(
+                TAG_PUBLISH_CONFIRMATION_DIALOG,
+                getString(R.string.dialog_confirm_publish_title),
+                mPost.isPage() ? getString(R.string.dialog_confirm_publish_message_page)
+                        : getString(R.string.dialog_confirm_publish_message_post),
+                getString(R.string.dialog_confirm_publish_yes),
+                getString(R.string.keep_editing)
+            );
+        publishConfirmationDialog.show(getSupportFragmentManager(), TAG_PUBLISH_CONFIRMATION_DIALOG);
     }
 
     private void showPublishConfirmationOrUpdateIfNotLocalDraft() {
@@ -1300,6 +1298,19 @@ public class EditPostActivity extends AppCompatActivity implements
     @Override
     public void onImageSettingsRequested(EditorImageMetaData editorImageMetaData) {
         MediaSettingsActivity.showForResult(this, mSite, editorImageMetaData);
+    }
+
+    @Override public void onPositiveClicked(String instanceTag) {
+        if (instanceTag != null && instanceTag == TAG_PUBLISH_CONFIRMATION_DIALOG) {
+            mPost.setStatus(PostStatus.PUBLISHED.toString());
+            publishPost();
+        }
+    }
+
+    @Override public void onNegativeClicked(String instanceTag) {
+        if (instanceTag != null && instanceTag == TAG_PUBLISH_CONFIRMATION_DIALOG) {
+            // no op
+        }
     }
 
     private interface AfterSavePostListener {
