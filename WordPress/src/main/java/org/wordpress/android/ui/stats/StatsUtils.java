@@ -49,7 +49,6 @@ import java.util.TimeZone;
 import java.util.concurrent.TimeUnit;
 
 public class StatsUtils {
-    @SuppressLint("SimpleDateFormat")
     private static long toMs(String date, String pattern) {
         if (date == null || date.equals("null")) {
             AppLog.w(T.UTILS, "Trying to parse a 'null' Stats Date.");
@@ -61,7 +60,7 @@ public class StatsUtils {
             return -1;
         }
 
-        SimpleDateFormat sdf = new SimpleDateFormat(pattern);
+        SimpleDateFormat sdf = new SimpleDateFormat(pattern, Locale.ROOT);
         try {
             return sdf.parse(date).getTime();
         } catch (ParseException e) {
@@ -77,8 +76,8 @@ public class StatsUtils {
         return toMs(date, StatsConstants.STATS_INPUT_DATE_FORMAT);
     }
 
-    public static String msToString(long ms, String format) {
-        SimpleDateFormat sdf = new SimpleDateFormat(format);
+    public static String msToLocalizedString(long ms, String format) {
+        SimpleDateFormat sdf = new SimpleDateFormat(format, Locale.getDefault());
         return sdf.format(new Date(ms));
     }
 
@@ -125,7 +124,7 @@ public class StatsUtils {
      * Get the current date in the form of yyyy-MM-dd (EX: 2013-07-18) *
      */
     public static String getCurrentDate() {
-        SimpleDateFormat sdf = new SimpleDateFormat(StatsConstants.STATS_INPUT_DATE_FORMAT);
+        SimpleDateFormat sdf = new SimpleDateFormat(StatsConstants.STATS_INPUT_DATE_FORMAT, Locale.ROOT);
         return sdf.format(new Date());
     }
 
@@ -134,13 +133,13 @@ public class StatsUtils {
      */
     private static String getCurrentDatetime() {
         String pattern = "yyyy-MM-dd HH:mm:ss"; // precision to seconds
-        SimpleDateFormat sdf = new SimpleDateFormat(pattern);
+        SimpleDateFormat sdf = new SimpleDateFormat(pattern, Locale.ROOT);
         return sdf.format(new Date());
     }
 
     private static String getCurrentDateTimeTZ(String blogTimeZoneOption, String pattern) {
         Date date = new Date();
-        SimpleDateFormat gmtDf = new SimpleDateFormat(pattern);
+        SimpleDateFormat gmtDf = new SimpleDateFormat(pattern, Locale.ROOT);
 
         if (blogTimeZoneOption == null) {
             AppLog.w(T.UTILS, "blogTimeZoneOption is null. getCurrentDateTZ() will return the device time!");
@@ -182,9 +181,9 @@ public class StatsUtils {
         return gmtDf.format(date);
     }
 
-    public static String parseDate(String timestamp, String fromFormat, String toFormat) {
-        SimpleDateFormat from = new SimpleDateFormat(fromFormat);
-        SimpleDateFormat to = new SimpleDateFormat(toFormat);
+    public static String parseDateToLocalizedFormat(String timestamp, String fromFormat, String toFormat) {
+        SimpleDateFormat from = new SimpleDateFormat(fromFormat, Locale.ROOT);
+        SimpleDateFormat to = new SimpleDateFormat(toFormat, Locale.getDefault());
         try {
             Date date = from.parse(timestamp);
             return to.format(date);
@@ -197,8 +196,8 @@ public class StatsUtils {
     /**
      * Get a diff between two dates
      *
-     * @param date1 the oldest date in Ms
-     * @param date2 the newest date in Ms
+     * @param date1    the oldest date in Ms
+     * @param date2    the newest date in Ms
      * @param timeUnit the unit in which you want the diff
      * @return the diff value, in the provided unit
      */
@@ -209,6 +208,7 @@ public class StatsUtils {
 
 
     // Calculate the correct start/end date for the selected period
+    @SuppressLint("SimpleDateFormat") // not sure what this method might be used for, so supressing for now
     public static String getPublishedEndpointPeriodDateParameters(StatsTimeframe timeframe, String date) {
         if (date == null) {
             AppLog.w(AppLog.T.STATS, "Can't calculate start and end period without a reference date");
@@ -227,39 +227,44 @@ public class StatsUtils {
             final String before;
             switch (timeframe) {
                 case DAY:
-                    after = StatsUtils.msToString(c.getTimeInMillis(), StatsConstants.STATS_INPUT_DATE_FORMAT);
+                    after = StatsUtils.msToLocalizedString(c.getTimeInMillis(), StatsConstants.STATS_INPUT_DATE_FORMAT);
                     c.add(Calendar.DAY_OF_YEAR, +1);
-                    before = StatsUtils.msToString(c.getTimeInMillis(), StatsConstants.STATS_INPUT_DATE_FORMAT);
+                    before = StatsUtils.msToLocalizedString(c.getTimeInMillis(),
+                            StatsConstants.STATS_INPUT_DATE_FORMAT);
                     break;
                 case WEEK:
                     c.set(Calendar.DAY_OF_WEEK, Calendar.MONDAY);
-                    after = StatsUtils.msToString(c.getTimeInMillis(), StatsConstants.STATS_INPUT_DATE_FORMAT);
+                    after = StatsUtils.msToLocalizedString(c.getTimeInMillis(), StatsConstants.STATS_INPUT_DATE_FORMAT);
                     c.set(Calendar.DAY_OF_WEEK, Calendar.SUNDAY);
                     c.add(Calendar.DAY_OF_YEAR, +1);
-                    before = StatsUtils.msToString(c.getTimeInMillis(), StatsConstants.STATS_INPUT_DATE_FORMAT);
+                    before = StatsUtils.msToLocalizedString(c.getTimeInMillis(),
+                            StatsConstants.STATS_INPUT_DATE_FORMAT);
                     break;
                 case MONTH:
                     // first day of the next month
                     c.set(Calendar.DAY_OF_MONTH, c.getActualMaximum(Calendar.DAY_OF_MONTH));
                     c.add(Calendar.DAY_OF_YEAR, +1);
-                    before = StatsUtils.msToString(c.getTimeInMillis(), StatsConstants.STATS_INPUT_DATE_FORMAT);
+                    before = StatsUtils.msToLocalizedString(c.getTimeInMillis(),
+                            StatsConstants.STATS_INPUT_DATE_FORMAT);
 
                     // last day of the prev month
                     c.setTime(parsedDate);
                     c.set(Calendar.DAY_OF_MONTH, c.getActualMinimum(Calendar.DAY_OF_MONTH));
-                    after = StatsUtils.msToString(c.getTimeInMillis(), StatsConstants.STATS_INPUT_DATE_FORMAT);
+                    after = StatsUtils.msToLocalizedString(c.getTimeInMillis(),
+                            StatsConstants.STATS_INPUT_DATE_FORMAT);
                     break;
                 case YEAR:
                     // first day of the next year
                     c.set(Calendar.MONTH, Calendar.DECEMBER);
                     c.set(Calendar.DAY_OF_MONTH, 31);
                     c.add(Calendar.DAY_OF_YEAR, +1);
-                    before = StatsUtils.msToString(c.getTimeInMillis(), StatsConstants.STATS_INPUT_DATE_FORMAT);
+                    before = StatsUtils.msToLocalizedString(c.getTimeInMillis(),
+                            StatsConstants.STATS_INPUT_DATE_FORMAT);
 
                     c.setTime(parsedDate);
                     c.set(Calendar.MONTH, Calendar.JANUARY);
                     c.set(Calendar.DAY_OF_MONTH, 1);
-                    after = StatsUtils.msToString(c.getTimeInMillis(), StatsConstants.STATS_INPUT_DATE_FORMAT);
+                    after = StatsUtils.msToLocalizedString(c.getTimeInMillis(), StatsConstants.STATS_INPUT_DATE_FORMAT);
                     break;
                 default:
                     AppLog.w(AppLog.T.STATS, "Can't calculate start and end period without a reference timeframe");
@@ -444,7 +449,7 @@ public class StatsUtils {
         Date currentDateTime = new Date();
 
         try {
-            SimpleDateFormat from = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssZ");
+            SimpleDateFormat from = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssZ", Locale.ROOT);
             Date date = from.parse(dataSubscribed);
 
             // See http://momentjs.com/docs/#/displaying/fromnow/
