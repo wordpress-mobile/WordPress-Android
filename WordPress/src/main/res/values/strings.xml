@@ -84,8 +84,8 @@
 
     <string name="button_not_now">Not now</string>
 
-    <string name="latitude_longitude">%f, %f</string>
-    <string name="author_name_blog_name">%s, %s</string>
+    <string name="latitude_longitude">%1$f, %2$f</string>
+    <string name="author_name_blog_name">%1$s, %2$s</string>
     <string name="at_username">\@%s</string>
 
     <!-- timestamps for posts / pages -->
@@ -502,7 +502,7 @@
     <string name="site_settings_quota_header">Media</string>
     <string name="site_settings_quota_space_title">Space Used</string>
     <string name="site_settings_quota_space_hint">If you need more space consider upgrading your WordPress plan.</string>
-    <string name="site_settings_quota_space_value">%s of %s</string>
+    <string name="site_settings_quota_space_value">%1$s of %2$s</string>
 
     <!-- these represent a formatted amount along with a measuring unit, i.e. 10 B, or 132 kB, or 10.2 MB, 1,037.76 kB etc. -->
     <string name="file_size_in_bytes">%s B</string>
@@ -1147,7 +1147,7 @@
     <string name="app_title">WordPress for Android</string>
     <string name="publisher">Publisher:</string>
     <string name="publisher_with_company_param">Publisher: %s</string>
-    <string name="copyright_with_year_and_company_params">© %d %s</string>
+    <string name="copyright_with_year_and_company_params">© %1$d %2$s</string>
     <string name="automattic_inc" translatable="false">Automattic, Inc</string>
     <string name="automattic_url" translatable="false">automattic.com</string>
     <string name="wordpresscom_tos_url" translatable="false">https://%s.wordpress.com/tos</string>
