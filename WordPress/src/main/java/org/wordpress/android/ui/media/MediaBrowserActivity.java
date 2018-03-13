@@ -413,7 +413,7 @@ public class MediaBrowserActivity extends AppCompatActivity implements MediaGrid
                     reloadMediaGrid();
                 }
                 break;
-            case RequestCodes.STOCK_PHOTO_PICKER:
+            case RequestCodes.STOCK_MEDIA_PICKER:
                 // TODO
                 break;
         }
@@ -864,7 +864,7 @@ public class MediaBrowserActivity extends AppCompatActivity implements MediaGrid
                     WPMediaUtils.launchVideoLibrary(this, true);
                     break;
                 case ITEM_CHOOSE_STOCK_MEDIA:
-                    ActivityLauncher.showStockPhotoPickerForResult(this, mSite);
+                    ActivityLauncher.showStockMediaPickerForResult(this, mSite);
                     break;
             }
         }

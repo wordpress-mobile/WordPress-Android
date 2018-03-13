@@ -51,7 +51,7 @@ import org.wordpress.android.ui.stats.StatsConnectJetpackActivity;
 import org.wordpress.android.ui.stats.StatsConstants;
 import org.wordpress.android.ui.stats.StatsSingleItemDetailsActivity;
 import org.wordpress.android.ui.stats.models.StatsPostModel;
-import org.wordpress.android.ui.stockphotos.StockPhotoPickerActivity;
+import org.wordpress.android.ui.stockmedia.StockMediaPickerActivity;
 import org.wordpress.android.ui.themes.ThemeBrowserActivity;
 import org.wordpress.android.util.AnalyticsUtils;
 import org.wordpress.android.util.AppLog;
@@ -111,11 +111,11 @@ public class ActivityLauncher {
         activity.startActivityForResult(intent, RequestCodes.PHOTO_PICKER);
     }
 
-    public static void showStockPhotoPickerForResult(Activity activity,
-                                                    @NonNull SiteModel site) {
-        Intent intent = new Intent(activity, StockPhotoPickerActivity.class);
+    public static void showStockMediaPickerForResult(Activity activity,
+                                                     @NonNull SiteModel site) {
+        Intent intent = new Intent(activity, StockMediaPickerActivity.class);
         intent.putExtra(WordPress.SITE, site);
-        activity.startActivityForResult(intent, RequestCodes.STOCK_PHOTO_PICKER);
+        activity.startActivityForResult(intent, RequestCodes.STOCK_MEDIA_PICKER);
     }
 
     public static void viewBlogStats(Context context, SiteModel site) {

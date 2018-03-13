@@ -19,7 +19,7 @@
             android:layout_height="wrap_content"
             android:imeOptions="flagNoExtractUi"
             app:iconifiedByDefault="false"
-            app:queryHint="@string/stock_photo_picker_search_hint"/>
+            app:queryHint="@string/stock_media_picker_search_hint"/>
     </android.support.v7.widget.Toolbar>
 
     <android.support.v7.widget.RecyclerView
@@ -29,7 +29,7 @@
         android:layout_below="@+id/toolbar"
         android:fadeScrollbars="true"
         android:scrollbars="vertical"
-        tools:listitem="@layout/stock_photo_picker_thumbnail"/>
+        tools:listitem="@layout/stock_media_picker_thumbnail"/>
 
     <org.wordpress.android.widgets.WPTextView
         android:id="@+id/text_empty"
@@ -42,7 +42,7 @@
         android:textColorLink="@color/link"
         android:textSize="@dimen/text_sz_extra_large"
         android:visibility="gone"
-        tools:text="@string/stock_photo_picker_initial_empty_text"
+        tools:text="@string/stock_media_picker_initial_empty_text"
         tools:visibility="visible"/>
 
     <FrameLayout

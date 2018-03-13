@@ -1,4 +1,4 @@
-package org.wordpress.android.ui.stockphotos;
+package org.wordpress.android.ui.stockmedia;
 
 import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModelProvider;
@@ -41,13 +41,13 @@ import java.util.List;
 
 import javax.inject.Inject;
 
-public class StockPhotoPickerActivity extends AppCompatActivity implements SearchView.OnQueryTextListener {
+public class StockMediaPickerActivity extends AppCompatActivity implements SearchView.OnQueryTextListener {
     private static final String KEY_SELECTED_ITEMS = "selected_items";
     private static final int MIN_SEARCH_QUERY_SIZE = 3;
 
     private SiteModel mSite;
 
-    private StockPhotoAdapter mAdapter;
+    private StockMediaAdapter mAdapter;
 
     private ViewGroup mSelectionBar;
     private TextView mTextInsert;
@@ -66,7 +66,7 @@ public class StockPhotoPickerActivity extends AppCompatActivity implements Searc
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         ((WordPress) getApplication()).component().inject(this);
-        setContentView(R.layout.stock_photo_picker_activity);
+        setContentView(R.layout.stock_media_picker_activity);
 
         mViewModel = ViewModelProviders.of(this, mViewModelFactory).get(StockMediaViewModel.class);
 
@@ -86,7 +86,7 @@ public class StockPhotoPickerActivity extends AppCompatActivity implements Searc
         RecyclerView recycler = findViewById(R.id.recycler);
         recycler.setLayoutManager(new GridLayoutManager(this, getColumnCount()));
 
-        mAdapter = new StockPhotoAdapter();
+        mAdapter = new StockMediaAdapter();
         recycler.setAdapter(mAdapter);
 
         mSelectionBar = findViewById(R.id.container_selection_bar);
@@ -205,8 +205,8 @@ public class StockPhotoPickerActivity extends AppCompatActivity implements Searc
             if (show) {
                 boolean isEmpty = mSearchQuery == null || mSearchQuery.length() < MIN_SEARCH_QUERY_SIZE;
                 if (isEmpty) {
-                    String message = getString(R.string.stock_photo_picker_initial_empty_text);
-                    String subMessage = getString(R.string.stock_photo_picker_initial_empty_subtext);
+                    String message = getString(R.string.stock_media_picker_initial_empty_text);
+                    String subMessage = getString(R.string.stock_media_picker_initial_empty_subtext);
                     String link = "<a href='https://pexels.com/'>Pexels</a>";
                     String html = message
                                   + "<br /><br />"
@@ -214,7 +214,7 @@ public class StockPhotoPickerActivity extends AppCompatActivity implements Searc
                     txtEmpty.setMovementMethod(WPLinkMovementMethod.getInstance());
                     txtEmpty.setText(Html.fromHtml(html));
                 } else {
-                    txtEmpty.setText(R.string.stock_photo_picker_empty_results);
+                    txtEmpty.setText(R.string.stock_media_picker_empty_results);
                 }
             }
         }
@@ -245,11 +245,11 @@ public class StockPhotoPickerActivity extends AppCompatActivity implements Searc
                 }
             }, 500);
         } else {
-            requestStockPhotos(query, 1);
+            requestStockMedia(query, 1);
         }
     }
 
-    private void requestStockPhotos(@Nullable String searchTerm, int page) {
+    private void requestStockMedia(@Nullable String searchTerm, int page) {
         if (!NetworkUtils.checkConnection(this)) return;
 
         if (page == 1) {
@@ -257,7 +257,7 @@ public class StockPhotoPickerActivity extends AppCompatActivity implements Searc
         }
 
         showProgress(true);
-        mViewModel.fetchStockPhotos(searchTerm, page);
+        mViewModel.fetchStockMedia(searchTerm, page);
     }
 
     private void showSelectionBar() {
@@ -291,14 +291,14 @@ public class StockPhotoPickerActivity extends AppCompatActivity implements Searc
         // List<StockMediaModel> items = mAdapter.getSelectedItems();
     }
 
-    class StockPhotoAdapter extends RecyclerView.Adapter<StockViewHolder> {
+    class StockMediaAdapter extends RecyclerView.Adapter<StockViewHolder> {
         private static final float SCALE_NORMAL = 1.0f;
         private static final float SCALE_SELECTED = .8f;
 
         private final List<StockMediaModel> mItems = new ArrayList<>();
         private final ArrayList<Integer> mSelectedItems = new ArrayList<>();
 
-        StockPhotoAdapter() {
+        StockMediaAdapter() {
             setHasStableIds(true);
         }
 
@@ -329,7 +329,7 @@ public class StockPhotoPickerActivity extends AppCompatActivity implements Searc
 
         @Override
         public StockViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-            View view = getLayoutInflater().inflate(R.layout.stock_photo_picker_thumbnail, parent, false);
+            View view = getLayoutInflater().inflate(R.layout.stock_media_picker_thumbnail, parent, false);
             return new StockViewHolder(view);
         }
 
@@ -356,7 +356,7 @@ public class StockPhotoPickerActivity extends AppCompatActivity implements Searc
             }
 
             if (!mViewModel.isFetching() && mViewModel.canLoadMore() && position == getItemCount() - 1) {
-                requestStockPhotos(mSearchQuery, mViewModel.getNextPage());
+                requestStockMedia(mSearchQuery, mViewModel.getNextPage());
             }
         }
 
@@ -399,7 +399,7 @@ public class StockPhotoPickerActivity extends AppCompatActivity implements Searc
             }
 
             // redraw after the scale animation completes
-            long delayMs = AniUtils.Duration.SHORT.toMillis(StockPhotoPickerActivity.this);
+            long delayMs = AniUtils.Duration.SHORT.toMillis(StockMediaPickerActivity.this);
             new Handler().postDelayed(new Runnable() {
                 @Override
                 public void run() {

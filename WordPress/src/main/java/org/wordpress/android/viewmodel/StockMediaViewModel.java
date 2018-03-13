@@ -60,7 +60,7 @@ public class StockMediaViewModel extends ViewModel {
         mSearchQuery = savedInstanceState.getString(KEY_SEARCH_QUERY);
     }
 
-    public void fetchStockPhotos(@Nullable String searchQuery, int page) {
+    public void fetchStockMedia(@Nullable String searchQuery, int page) {
         if (TextUtils.isEmpty(searchQuery)) {
             clearSearchResults();
             return;
