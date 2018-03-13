@@ -927,6 +927,7 @@
     <string name="notifications_empty_action_followers_likes">Get noticed: comment on posts you\'ve read.</string>
     <string name="notifications_jetpack_connection_setup_info">To get helpful notifications on your device from your WordPress site, you\'ll need to install the Jetpack plugin. Would you like to set up Jetpack?</string>
     <string name="notifications_empty_view_reader">View Reader</string>
+    <string name="content_description_person_reading_device_notification">Person reading device with notifications</string>
     <string name="older_two_days">Older than 2 days</string>
     <string name="older_last_week">Older than a week</string>
     <string name="older_month">Older than a month</string>
