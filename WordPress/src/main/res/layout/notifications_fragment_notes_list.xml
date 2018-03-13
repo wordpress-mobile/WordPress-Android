@@ -237,13 +237,14 @@
                     android:layout_marginTop="@dimen/margin_extra_large"
                     app:srcCompat="@drawable/jetpack_connection_notifications"/>
 
-                <TextView
+                <org.wordpress.android.widgets.WPTextView
                     style="@style/JetpackConnectionText"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:maxWidth="290dp"
                     android:text="@string/notifications_jetpack_connection_setup_info"
-                    android:textAlignment="center"/>
+                    android:textAlignment="center"
+                    app:fixWidowWords="true"/>
 
                 <android.support.v7.widget.AppCompatButton
                     android:id="@+id/jetpack_setup"
