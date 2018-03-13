@@ -229,6 +229,7 @@ public class StockPhotoPickerActivity extends AppCompatActivity implements Searc
 
         if (query == null || query.length() < MIN_SEARCH_QUERY_SIZE) {
             mAdapter.clear();
+            hideSelectionBar();
             showEmptyView(true);
             return;
         }
