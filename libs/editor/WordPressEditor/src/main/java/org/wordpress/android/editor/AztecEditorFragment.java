@@ -657,6 +657,7 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
 
     private void toggleHtmlMode() {
         mEditorFragmentListener.onTrackableEvent(TrackableEvent.HTML_BUTTON_TAPPED);
+        mEditorFragmentListener.onHtmlModeToggledInToolbar();
 
         // Don't switch to HTML mode if currently uploading media
         if (!mUploadingMediaProgressMax.isEmpty() || isActionInProgress()) {

@@ -1075,6 +1075,10 @@ public class EditPostActivity extends AppCompatActivity implements
 
     private void toggleHtmlVisualMode() {
         ((AztecEditorFragment) mEditorFragment).onToolbarHtmlButtonClicked();
+        //toggleHtmlModeOnMenu();
+    }
+
+    private void toggleHtmlModeOnMenu() {
         mHtmlModeMenuStateOn = !mHtmlModeMenuStateOn;
         invalidateOptionsMenu();
     }
@@ -3023,6 +3027,11 @@ public class EditPostActivity extends AppCompatActivity implements
 
     @Override
     public void saveMediaFile(MediaFile mediaFile) {
+    }
+
+    @Override
+    public void onHtmlModeToggledInToolbar() {
+        toggleHtmlModeOnMenu();
     }
 
     @Override
