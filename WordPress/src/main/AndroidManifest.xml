@@ -248,7 +248,8 @@
 
         <!-- plans -->
         <activity android:name=".ui.plans.PlansActivity"
-                  android:theme="@style/Calypso.NoActionBar"/>
+                  android:theme="@style/Calypso.NoActionBar"
+                  android:label="@string/plans"/>
 
         <!-- Stats Activities -->
         <activity
