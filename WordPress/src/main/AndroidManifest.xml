@@ -305,7 +305,8 @@
         <!-- Theme Activities -->
         <activity
             android:name=".ui.themes.ThemeBrowserActivity"
-            android:theme="@style/Calypso.NoActionBar" />
+            android:theme="@style/Calypso.NoActionBar"
+            android:label="@string/themes"/>
         <activity
             android:name=".ui.themes.ThemeWebActivity"
             android:label="@string/selected_theme"
