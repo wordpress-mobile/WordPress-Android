@@ -195,10 +195,12 @@ public class ReaderCommentAdapter extends RecyclerView.Adapter<RecyclerView.View
         switch (viewType) {
             case VIEW_TYPE_HEADER:
                 View headerView = new ReaderCommentsPostHeaderView(parent.getContext());
-                headerView.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
+                headerView.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
+                        ViewGroup.LayoutParams.WRAP_CONTENT));
                 return new PostHeaderHolder(headerView);
             default:
-                View commentView = LayoutInflater.from(parent.getContext()).inflate(R.layout.reader_listitem_comment, parent, false);
+                View commentView = LayoutInflater.from(parent.getContext())
+                                                 .inflate(R.layout.reader_listitem_comment, parent, false);
                 return new CommentHolder(commentView);
         }
     }
@@ -246,8 +248,10 @@ public class ReaderCommentAdapter extends RecyclerView.Adapter<RecyclerView.View
                 }
             };
             commentHolder.authorContainer.setOnClickListener(authorListener);
+            commentHolder.authorContainer.setClickable(true);
         } else {
             commentHolder.authorContainer.setOnClickListener(null);
+            commentHolder.authorContainer.setClickable(false);
         }
 
         // author name uses different color for comments from the post's author
@@ -261,7 +265,8 @@ public class ReaderCommentAdapter extends RecyclerView.Adapter<RecyclerView.View
         int indentWidth;
         if (comment.parentId != 0 && comment.level > 0) {
             indentWidth = Math.min(MAX_INDENT_LEVEL, comment.level) * mIndentPerLevel;
-            RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) commentHolder.spacerIndent.getLayoutParams();
+            RelativeLayout.LayoutParams params =
+                    (RelativeLayout.LayoutParams) commentHolder.spacerIndent.getLayoutParams();
             params.width = indentWidth;
             commentHolder.spacerIndent.setVisibility(View.VISIBLE);
         } else {
