@@ -26,6 +26,10 @@ public class PublicizeBaseFragment extends Fragment {
         if (toolbar != null) {
             toolbar.setTitle(title);
         }
+        if (getActivity() != null) {
+            // important for accessibiility - talkBack
+            getActivity().setTitle(title);
+        }
     }
 
     void setNavigationIcon(@DrawableRes int resId) {

@@ -33,7 +33,7 @@ import java.util.ArrayList;
 
 import javax.inject.Inject;
 
-public class PublicizeButtonPrefsFragment extends Fragment implements
+public class PublicizeButtonPrefsFragment extends PublicizeBaseFragment implements
         SiteSettingsInterface.SiteSettingsListener,
         WPPrefView.OnPrefChangedListener {
 
@@ -151,6 +151,11 @@ public class PublicizeButtonPrefsFragment extends Fragment implements
         getSiteSettings(shouldFetchSettings);
 
         configureSharingButtons();
+    }
+
+    @Override public void onResume() {
+        super.onResume();
+        setTitle(R.string.publicize_buttons_screen_title);
     }
 
     /**
