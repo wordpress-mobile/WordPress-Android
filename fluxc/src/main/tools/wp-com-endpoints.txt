@@ -44,7 +44,7 @@
 /sites/$site/plugins
 /sites/$site/plugins/$name#String
 /sites/$site/plugins/$name#String/delete
-/sites/$site/plugins/$name#String/install
+/sites/$site/plugins/$slug#String/install
 /sites/$site/plugins/$name#String/update
 
 /sites/$site/posts/

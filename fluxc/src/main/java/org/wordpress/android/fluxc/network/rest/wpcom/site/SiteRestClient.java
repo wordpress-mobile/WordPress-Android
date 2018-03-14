@@ -59,7 +59,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import javax.inject.Inject;
 import javax.inject.Singleton;
 
 @Singleton
@@ -95,7 +94,6 @@ public class SiteRestClient extends BaseWPComRestClient {
         public SiteModel site;
     }
 
-    @Inject
     public SiteRestClient(Context appContext, Dispatcher dispatcher, RequestQueue requestQueue, AppSecrets appSecrets,
                           AccessToken accessToken, UserAgent userAgent) {
         super(appContext, dispatcher, requestQueue, accessToken, userAgent);
@@ -327,6 +325,38 @@ public class SiteRestClient extends BaseWPComRestClient {
         add(request);
     }
 
+    public void suggestDomains(@NonNull final String query, final boolean onlyWordpressCom,
+                               final boolean includeWordpressCom, final boolean includeDotBlogSubdomain,
+                               final int quantity) {
+        String url = WPCOMREST.domains.suggestions.getUrlV1_1();
+        Map<String, String> params = new HashMap<>(4);
+        params.put("query", query);
+        params.put("only_wordpressdotcom", String.valueOf(onlyWordpressCom)); // CHECKSTYLE IGNORE
+        params.put("include_wordpressdotcom", String.valueOf(includeWordpressCom)); // CHECKSTYLE IGNORE
+        params.put("include_dotblogsubdomain", String.valueOf(includeDotBlogSubdomain));
+        params.put("quantity", String.valueOf(quantity));
+        final WPComGsonRequest<ArrayList<DomainSuggestionResponse>> request =
+                WPComGsonRequest.buildGetRequest(url, params,
+                        new TypeToken<ArrayList<DomainSuggestionResponse>>(){}.getType(),
+                        new Listener<ArrayList<DomainSuggestionResponse>>() {
+                            @Override
+                            public void onResponse(ArrayList<DomainSuggestionResponse> response) {
+                                SuggestDomainsResponsePayload payload = new SuggestDomainsResponsePayload(query,
+                                        response);
+                                mDispatcher.dispatch(SiteActionBuilder.newSuggestedDomainsAction(payload));
+                            }
+                        },
+                        new BaseErrorListener() {
+                            @Override
+                            public void onErrorResponse(@NonNull BaseNetworkError error) {
+                                SuggestDomainsResponsePayload payload = new SuggestDomainsResponsePayload(query, error);
+                                mDispatcher.dispatch(SiteActionBuilder.newSuggestedDomainsAction(payload));
+                            }
+                        }
+                );
+        add(request);
+    }
+
     //
     // Unauthenticated network calls
     //
@@ -460,37 +490,6 @@ public class SiteRestClient extends BaseWPComRestClient {
         addUnauthedRequest(request);
     }
 
-    public void suggestDomains(@NonNull final String query, final boolean onlyWordpressCom,
-                               final boolean includeWordpressCom, final boolean includeDotBlogSubdomain,
-                               final int quantity) {
-        String url = WPCOMREST.domains.suggestions.getUrlV1_1();
-        Map<String, String> params = new HashMap<>(4);
-        params.put("query", query);
-        params.put("only_wordpressdotcom", String.valueOf(onlyWordpressCom)); // CHECKSTYLE IGNORE
-        params.put("include_wordpressdotcom", String.valueOf(includeWordpressCom)); // CHECKSTYLE IGNORE
-        params.put("include_dotblogsubdomain", String.valueOf(includeDotBlogSubdomain));
-        params.put("quantity", String.valueOf(quantity));
-        final WPComGsonRequest<ArrayList<DomainSuggestionResponse>> request =
-                WPComGsonRequest.buildGetRequest(url, params,
-                        new TypeToken<ArrayList<DomainSuggestionResponse>>(){}.getType(),
-                new Listener<ArrayList<DomainSuggestionResponse>>() {
-                    @Override
-                    public void onResponse(ArrayList<DomainSuggestionResponse> response) {
-                        SuggestDomainsResponsePayload payload = new SuggestDomainsResponsePayload(query, response);
-                        mDispatcher.dispatch(SiteActionBuilder.newSuggestedDomainsAction(payload));
-                    }
-                },
-                new BaseErrorListener() {
-                    @Override
-                    public void onErrorResponse(@NonNull BaseNetworkError error) {
-                        SuggestDomainsResponsePayload payload = new SuggestDomainsResponsePayload(query, error);
-                        mDispatcher.dispatch(SiteActionBuilder.newSuggestedDomainsAction(payload));
-                    }
-                }
-        );
-        addUnauthedRequest(request);
-    }
-
     private SiteModel siteResponseToSiteModel(SiteWPComRestResponse from) {
         SiteModel site = new SiteModel();
         site.setSiteId(from.ID);
@@ -566,6 +565,12 @@ public class SiteRestClient extends BaseWPComRestClient {
             site.setHasCapabilityDeleteUser(from.capabilities.delete_user);
             site.setHasCapabilityRemoveUsers(from.capabilities.remove_users);
             site.setHasCapabilityViewStats(from.capabilities.view_stats);
+        }
+        if (from.quota != null) {
+            site.setSpaceAvailable(from.quota.space_available);
+            site.setSpaceAllowed(from.quota.space_allowed);
+            site.setSpaceUsed(from.quota.space_used);
+            site.setSpacePercentUsed(from.quota.percent_used);
         }
         if (from.icon != null) {
             site.setIconUrl(from.icon.img);

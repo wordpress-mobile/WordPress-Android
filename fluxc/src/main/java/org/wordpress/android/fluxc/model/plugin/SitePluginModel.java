@@ -3,11 +3,13 @@ package org.wordpress.android.fluxc.model.plugin;
 import com.yarolegovich.wellsql.core.Identifiable;
 import com.yarolegovich.wellsql.core.annotation.Column;
 import com.yarolegovich.wellsql.core.annotation.PrimaryKey;
+import com.yarolegovich.wellsql.core.annotation.RawConstraints;
 import com.yarolegovich.wellsql.core.annotation.Table;
 
 import java.io.Serializable;
 
 @Table
+@RawConstraints({"UNIQUE (SLUG, LOCAL_SITE_ID)"})
 public class SitePluginModel implements Identifiable, Serializable {
     @PrimaryKey @Column private int mId;
     @Column private int mLocalSiteId;
