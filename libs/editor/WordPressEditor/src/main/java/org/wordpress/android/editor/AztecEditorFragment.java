@@ -382,8 +382,6 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
 
     @Override
     public void onSaveInstanceState(Bundle outState) {
-        outState.putCharSequence(ATTR_TITLE, getTitle());
-        outState.putCharSequence(ATTR_CONTENT, getContent());
         outState.putParcelable(ATTR_TAPPED_MEDIA_PREDICATE, mTappedMediaPredicate);
     }
 
