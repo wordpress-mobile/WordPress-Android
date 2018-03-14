@@ -46,8 +46,11 @@ public class NoteBlock {
 
     public interface OnNoteBlockTextClickListener {
         void onNoteBlockTextClicked(NoteBlockClickableSpan clickedSpan);
+
         void showDetailForNoteIds();
+
         void showReaderPostComments();
+
         void showSitePreview(long siteId, String siteUrl);
     }
 
@@ -112,20 +115,20 @@ public class NoteBlock {
     boolean hasImageMediaItem() {
         String mediaType = getNoteMediaItem().optString(PROPERTY_MEDIA_TYPE, "");
         return hasMediaArray() &&
-                (mediaType.startsWith("image") || mediaType.equals("badge")) &&
-                getNoteMediaItem().has(PROPERTY_MEDIA_URL);
+               (mediaType.startsWith("image") || mediaType.equals("badge")) &&
+               getNoteMediaItem().has(PROPERTY_MEDIA_URL);
     }
 
     private boolean hasVideoMediaItem() {
         return hasMediaArray() &&
-                getNoteMediaItem().optString(PROPERTY_MEDIA_TYPE, "").startsWith("video") &&
-                getNoteMediaItem().has(PROPERTY_MEDIA_URL);
+               getNoteMediaItem().optString(PROPERTY_MEDIA_TYPE, "").startsWith("video") &&
+               getNoteMediaItem().has(PROPERTY_MEDIA_URL);
     }
 
     public boolean containsBadgeMediaType() {
         try {
             JSONArray mediaArray = mNoteData.getJSONArray("media");
-            for (int i=0; i < mediaArray.length(); i++) {
+            for (int i = 0; i < mediaArray.length(); i++) {
                 JSONObject mediaObject = mediaArray.getJSONObject(i);
                 if (mediaObject.optString(PROPERTY_MEDIA_TYPE, "").equals("badge")) {
                     return true;
@@ -139,7 +142,7 @@ public class NoteBlock {
     }
 
     public View configureView(final View view) {
-        final BasicNoteBlockHolder noteBlockHolder = (BasicNoteBlockHolder)view.getTag();
+        final BasicNoteBlockHolder noteBlockHolder = (BasicNoteBlockHolder) view.getTag();
 
         // Note image
         if (hasImageMediaItem()) {
@@ -162,6 +165,9 @@ public class NoteBlock {
                     noteBlockHolder.hideImageView();
                 }
             });
+            if(mIsBadge){
+                noteBlockHolder.getImageView().setImportantForAccessibility(View.IMPORTANT_FOR_ACCESSIBILITY_NO);
+            }
         } else {
             noteBlockHolder.hideImageView();
         }
@@ -177,11 +183,13 @@ public class NoteBlock {
         // Note text
         if (!TextUtils.isEmpty(getNoteText())) {
             if (mIsBadge) {
-                LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.MATCH_PARENT);
+                LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT,
+                        LinearLayout.LayoutParams.MATCH_PARENT);
                 params.gravity = Gravity.CENTER_HORIZONTAL;
                 noteBlockHolder.getTextView().setLayoutParams(params);
                 noteBlockHolder.getTextView().setGravity(Gravity.CENTER_HORIZONTAL);
                 noteBlockHolder.getTextView().setPadding(0, DisplayUtils.dpToPx(view.getContext(), 8), 0, 0);
+
             } else {
                 noteBlockHolder.getTextView().setGravity(Gravity.NO_GRAVITY);
                 noteBlockHolder.getTextView().setPadding(0, 0, 0, 0);
@@ -191,6 +199,7 @@ public class NoteBlock {
         } else {
             noteBlockHolder.getTextView().setVisibility(View.GONE);
         }
+
 
         view.setBackgroundColor(mBackgroundColor);
 
@@ -209,7 +218,7 @@ public class NoteBlock {
         private VideoView mVideoView;
 
         BasicNoteBlockHolder(View view) {
-            mRootLayout = (LinearLayout)view;
+            mRootLayout = (LinearLayout) view;
             mTextView = (WPTextView) view.findViewById(R.id.note_text);
             mTextView.setMovementMethod(new NoteBlockLinkMovementMethod());
         }
@@ -236,8 +245,9 @@ public class NoteBlock {
         public VideoView getVideoView() {
             if (mVideoView == null) {
                 mVideoView = new VideoView(mRootLayout.getContext());
-                FrameLayout.LayoutParams layoutParams = new FrameLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
-                        DisplayUtils.dpToPx(mRootLayout.getContext(), 220));
+                FrameLayout.LayoutParams layoutParams =
+                        new FrameLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
+                                DisplayUtils.dpToPx(mRootLayout.getContext(), 220));
                 mVideoView.setLayoutParams(layoutParams);
                 mRootLayout.addView(mVideoView, 0);
 
