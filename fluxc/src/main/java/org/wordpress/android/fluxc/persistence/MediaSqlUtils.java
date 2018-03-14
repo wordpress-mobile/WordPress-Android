@@ -166,16 +166,16 @@ public class MediaSqlUtils {
                                                                           String searchTerm,
                                                                           String mimeTypePrefix) {
         return WellSql.select(MediaModel.class)
-                      .where().beginGroup()
-                      .equals(MediaModelTable.LOCAL_SITE_ID, siteModel.getId())
-                      .beginGroup()
-                      .contains(MediaModelTable.TITLE, searchTerm)
-                      .or().contains(MediaModelTable.CAPTION, searchTerm)
-                      .or().contains(MediaModelTable.DESCRIPTION, searchTerm)
-                      .or().contains(MediaModelTable.MIME_TYPE, mimeTypePrefix)
-                      .endGroup()
-                      .endGroup().endWhere()
-                      .orderBy(MediaModelTable.UPLOAD_DATE, SelectQuery.ORDER_DESCENDING);
+                .where().beginGroup()
+                .equals(MediaModelTable.LOCAL_SITE_ID, siteModel.getId())
+                .beginGroup()
+                .contains(MediaModelTable.TITLE, searchTerm)
+                .or().contains(MediaModelTable.CAPTION, searchTerm)
+                .or().contains(MediaModelTable.DESCRIPTION, searchTerm)
+                .or().contains(MediaModelTable.MIME_TYPE, mimeTypePrefix)
+                .endGroup()
+                .endGroup().endWhere()
+                .orderBy(MediaModelTable.UPLOAD_DATE, SelectQuery.ORDER_DESCENDING);
     }
 
     public static List<MediaModel> getSiteImages(SiteModel siteModel) {
