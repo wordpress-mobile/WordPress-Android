@@ -8,7 +8,10 @@ import org.wordpress.android.fluxc.annotations.action.Action
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.network.BaseRequest
 import org.wordpress.android.fluxc.network.rest.wpcom.activity.Activity
+import org.wordpress.android.fluxc.network.rest.wpcom.activity.Activity.ActivityError
 import org.wordpress.android.fluxc.network.rest.wpcom.activity.ActivityRestClient
+import org.wordpress.android.fluxc.network.rest.wpcom.activity.RewindStatus
+import org.wordpress.android.fluxc.network.rest.wpcom.activity.RewindStatus.RewindStatusError
 import org.wordpress.android.util.AppLog
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -58,28 +61,15 @@ class ActivityStore
         }
     }
 
-    data class FetchRewindStateResponsePayload(val rewindResponse: ActivityRestClient.RewindResponse? = null,
+    data class FetchRewindStateResponsePayload(val rewindStatusResponse: RewindStatus? = null,
                                                val site: SiteModel,
                                                val number: Int,
-                                               val offset: Int) : Payload<ActivityError>() {
-        constructor(error: ActivityError,
+                                               val offset: Int) : Payload<RewindStatusError>() {
+        constructor(error: RewindStatusError,
                     site: SiteModel,
                     number: Int,
                     offset: Int) : this(site = site, number = number, offset = offset) {
             this.error = error
         }
     }
-
-    // Errors
-    enum class ActivityErrorType {
-        GENERIC_ERROR,
-        AUTHORIZATION_REQUIRED,
-        INVALID_RESPONSE,
-        MISSING_ACTIVITY_ID,
-        MISSING_SUMMARY,
-        MISSING_CONTENT_TEXT,
-        MISSING_PUBLISHED_DATE
-    }
-
-    class ActivityError(var type: ActivityErrorType, var message: String? = null) : Store.OnChangedError
 }
