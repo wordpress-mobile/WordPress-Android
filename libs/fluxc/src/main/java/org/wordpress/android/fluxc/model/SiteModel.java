@@ -104,6 +104,12 @@ public class SiteModel extends Payload<BaseNetworkError> implements Identifiable
     @Column private boolean mHasCapabilityRemoveUsers;
     @Column private boolean mHasCapabilityViewStats;
 
+    // WPCOM and Jetpack Disk Quota information
+    @Column private long mSpaceAvailable;
+    @Column private long mSpaceAllowed;
+    @Column private long mSpaceUsed;
+    @Column private double mSpacePercentUsed;
+
     @Override
     public int getId() {
         return mId;
@@ -566,5 +572,41 @@ public class SiteModel extends Payload<BaseNetworkError> implements Identifiable
 
     public boolean isUsingWpComRestApi() {
         return isWPCom() || (isJetpackConnected() && getOrigin() == ORIGIN_WPCOM_REST);
+    }
+
+    public void setSpaceAvailable(long spaceAvailable) {
+        mSpaceAvailable = spaceAvailable;
+    }
+
+    public long getSpaceAvailable() {
+        return mSpaceAvailable;
+    }
+
+    public void setSpaceAllowed(long spaceAllowed) {
+        mSpaceAllowed = spaceAllowed;
+    }
+
+    public long getSpaceAllowed() {
+        return mSpaceAllowed;
+    }
+
+    public void setSpaceUsed(long spaceUsed) {
+        mSpaceUsed = spaceUsed;
+    }
+
+    public long getSpaceUsed() {
+        return mSpaceUsed;
+    }
+
+    public void setSpacePercentUsed(double spacePercentUsed) {
+        mSpacePercentUsed = spacePercentUsed;
+    }
+
+    public double getSpacePercentUsed() {
+        return mSpacePercentUsed;
+    }
+
+    public boolean hasDiskSpaceQuotaInformation() {
+        return mSpaceAllowed > 0;
     }
 }
