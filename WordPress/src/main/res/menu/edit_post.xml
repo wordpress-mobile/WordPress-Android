@@ -2,12 +2,29 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
     <item
-        android:id="@+id/menu_post_settings"
-        android:icon="@drawable/ic_cog_white_24dp"
-        app:showAsAction="always"
-        android:title="@string/settings"/>
-    <item
         android:id="@+id/menu_save_post"
         app:showAsAction="always"
         android:title="@string/post_status_publish_post"/>
+
+    <group android:id="@+id/group_save_preview" android:orderInCategory="1">
+        <item
+            android:id="@+id/menu_save_as_draft_or_publish"
+            android:title="@string/menu_save_as_draft"/>
+        <item
+            android:id="@+id/menu_preview_post"
+            android:title="@string/menu_preview"/>
+    </group>
+
+    <group android:id="@+id/group_html_mode" android:orderInCategory="1">
+        <item
+            android:id="@+id/menu_html_mode"
+            android:title="@string/menu_html_mode"/>
+    </group>
+
+    <group android:id="@+id/group_post_settings" android:orderInCategory="1">
+        <item
+            android:id="@+id/menu_post_settings"
+            android:title="@string/post_settings"/>
+    </group>
+
 </menu>
