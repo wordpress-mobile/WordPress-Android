@@ -191,13 +191,16 @@
         <!-- Comments activities -->
         <activity
             android:name=".ui.comments.CommentsActivity"
-            android:theme="@style/Calypso.NoActionBar" />
+            android:theme="@style/Calypso.NoActionBar"
+            android:label="@string/comments"/>
         <activity
             android:name=".ui.comments.EditCommentActivity"
-            android:theme="@style/CalypsoTheme" />
+            android:theme="@style/CalypsoTheme"
+            android:label="@string/edit_comment"/>
         <activity
             android:name=".ui.comments.CommentsDetailActivity"
-            android:theme="@style/CalypsoTheme" />
+            android:theme="@style/CalypsoTheme"
+            android:label="@string/comments"/>
 
         <!-- Posts activities -->
         <activity
