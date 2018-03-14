@@ -11,6 +11,11 @@ import org.wordpress.android.fluxc.network.BaseRequest
 import org.wordpress.android.fluxc.network.UserAgent
 import org.wordpress.android.fluxc.network.rest.wpcom.BaseWPComRestClient
 import org.wordpress.android.fluxc.network.rest.wpcom.WPComGsonRequest
+import org.wordpress.android.fluxc.network.rest.wpcom.WPComGsonRequest.buildGetRequest
+import org.wordpress.android.fluxc.network.rest.wpcom.activity.Activity.ActivityError
+import org.wordpress.android.fluxc.network.rest.wpcom.activity.Activity.ActivityErrorType
+import org.wordpress.android.fluxc.network.rest.wpcom.activity.RewindStatus.RestoreStatus.*
+import org.wordpress.android.fluxc.network.rest.wpcom.activity.RewindStatus.RewindStatusErrorType
 import org.wordpress.android.fluxc.network.rest.wpcom.auth.AccessToken
 import org.wordpress.android.fluxc.store.ActivityStore
 import java.util.Date
@@ -27,7 +32,7 @@ constructor(appContext: Context, dispatcher: Dispatcher, requestQueue: RequestQu
         val url = WPCOMREST.sites.site(site.siteId).activity.urlV2
         val pageNumber = offset / number + 1
         val params = mapOf("page" to pageNumber.toString(), "number" to number.toString())
-        val request = WPComGsonRequest.buildGetRequest(
+        val request = buildGetRequest(
                 url, params, ActivitiesResponse::class.java,
                 {
                     val activities = it.current.orderedItems
@@ -35,7 +40,7 @@ constructor(appContext: Context, dispatcher: Dispatcher, requestQueue: RequestQu
                     mDispatcher.dispatch(ActivityActionBuilder.newFetchedActivitiesAction(payload))
                 },
                 {
-                    val error = ActivityStore.ActivityError(genericToError(it), it.message)
+                    val error = ActivityError(genericToError(it), it.message)
                     val payload = ActivityStore.FetchedActivitiesPayload(error, site, number, offset)
                     mDispatcher.dispatch(ActivityActionBuilder.newFetchedActivitiesAction(payload))
                 })
@@ -46,15 +51,15 @@ constructor(appContext: Context, dispatcher: Dispatcher, requestQueue: RequestQu
         val url = WPCOMREST.sites.site(site.siteId).rewind.urlV2
         val pageNumber = offset / number + 1
         val params = mapOf("page" to pageNumber.toString(), "number" to number.toString())
-        val request = WPComGsonRequest.buildGetRequest(
-                url, params, RewindResponse::class.java,
+        val request = buildGetRequest(
+                url, params, RewindStatusResponse::class.java,
                 {
                     Log.d("activity_log", "Rewind: $it")
-                    val payload = ActivityStore.FetchRewindStateResponsePayload(it, site, number, offset)
+                    val payload = buildRewindStatusPayload(it, site, number, offset)
                     mDispatcher.dispatch(ActivityActionBuilder.newFetchedRewindStateAction(payload))
                 },
                 {
-                    val error = ActivityStore.ActivityError(genericToError(it), it.message)
+                    val error = RewindStatus.RewindStatusError(genericToRewindErrorType(it), it.message)
                     val payload = ActivityStore.FetchRewindStateResponsePayload(error, site, number, offset)
                     mDispatcher.dispatch(ActivityActionBuilder.newFetchedRewindStateAction(payload))
                 })
@@ -62,24 +67,24 @@ constructor(appContext: Context, dispatcher: Dispatcher, requestQueue: RequestQu
     }
 
     private fun buildActivityPayload(activityResponses: List<ActivitiesResponse.ActivityResponse>, site: SiteModel, number: Int, offset: Int): ActivityStore.FetchedActivitiesPayload {
-        var error: ActivityStore.ActivityErrorType? = null
+        var error: ActivityErrorType? = null
 
         val activities = activityResponses.mapNotNull {
             when {
                 it.activity_id == null -> {
-                    error = ActivityStore.ActivityErrorType.MISSING_ACTIVITY_ID
+                    error = ActivityErrorType.MISSING_ACTIVITY_ID
                     null
                 }
                 it.summary == null -> {
-                    error = ActivityStore.ActivityErrorType.MISSING_SUMMARY
+                    error = ActivityErrorType.MISSING_SUMMARY
                     null
                 }
                 it.content?.text == null -> {
-                    error = ActivityStore.ActivityErrorType.MISSING_CONTENT_TEXT
+                    error = ActivityErrorType.MISSING_CONTENT_TEXT
                     null
                 }
                 it.published == null -> {
-                    error = ActivityStore.ActivityErrorType.MISSING_PUBLISHED_DATE
+                    error = ActivityErrorType.MISSING_PUBLISHED_DATE
                     null
                 }
                 else -> Activity(it.activity_id,
@@ -101,27 +106,74 @@ constructor(appContext: Context, dispatcher: Dispatcher, requestQueue: RequestQu
             }
         }
         error?.let {
-            return ActivityStore.FetchedActivitiesPayload(ActivityStore.ActivityError(it), site, number, offset)
+            return ActivityStore.FetchedActivitiesPayload(ActivityError(it), site, number, offset)
         }
         return ActivityStore.FetchedActivitiesPayload(activities, site, number, offset)
     }
 
-    private fun genericToError(error: BaseRequest.BaseNetworkError): ActivityStore.ActivityErrorType {
-        var errorType = ActivityStore.ActivityErrorType.GENERIC_ERROR
+    private fun buildRewindStatusPayload(response: RewindStatusResponse, site: SiteModel, number: Int, offset: Int): ActivityStore.FetchRewindStateResponsePayload {
+        if (response.state == null) {
+            return error(site, number, offset, RewindStatusErrorType.MISSING_STATE)
+        }
+        var restoreStatus: RewindStatus.RestoreStatus? =
+                if (response.restoreResponse != null) {
+                    with(response.restoreResponse) {
+                        if (this.rewind_id == null) {
+                            return error(site, number, offset, RewindStatusErrorType.MISSING_RESTORE_ID)
+                        }
+                        if (this.status == null) {
+                            return error(site, number, offset, RewindStatusErrorType.MISSING_RESTORE_STATUS)
+                        }
+                        val restoreStatus = Status.values().firstOrNull { it.value == this.status }
+                                ?: return error(site, number, offset, RewindStatusErrorType.INVALID_RESTORE_STATUS)
+                        RewindStatus.RestoreStatus(this.rewind_id,
+                                restoreStatus,
+                                this.progress,
+                                this.message,
+                                this.error_code,
+                                this.reason)
+                    }
+                } else {
+                    null
+                }
+        val rewindStatusState = RewindStatus.State.values().firstOrNull { it.value == response.state }
+                ?: return error(site, number, offset, RewindStatusErrorType.INVALID_REWIND_STATE)
+        val rewindStatus = RewindStatus(rewindStatusState, response.reason, restoreStatus)
+        return ActivityStore.FetchRewindStateResponsePayload(rewindStatus, site, number, offset)
+    }
+
+    private fun error(site: SiteModel, number: Int, offset: Int, errorType: RewindStatusErrorType) =
+            ActivityStore.FetchRewindStateResponsePayload(RewindStatus.RewindStatusError(errorType), site, number, offset)
+
+    private fun genericToError(error: BaseRequest.BaseNetworkError): ActivityErrorType {
+        var errorType = ActivityErrorType.GENERIC_ERROR
         if (error.isGeneric && error.type == BaseRequest.GenericErrorType.INVALID_RESPONSE) {
-            errorType = ActivityStore.ActivityErrorType.INVALID_RESPONSE
+            errorType = ActivityErrorType.INVALID_RESPONSE
         }
         if (error is WPComGsonRequest.WPComGsonNetworkError) {
             if ("unauthorized" == error.apiError) {
-                errorType = ActivityStore.ActivityErrorType.AUTHORIZATION_REQUIRED
+                errorType = ActivityErrorType.AUTHORIZATION_REQUIRED
+            }
+        }
+        return errorType
+    }
+
+    private fun genericToRewindErrorType(error: BaseRequest.BaseNetworkError): RewindStatusErrorType {
+        var errorType = RewindStatusErrorType.GENERIC_ERROR
+        if (error.isGeneric && error.type == BaseRequest.GenericErrorType.INVALID_RESPONSE) {
+            errorType = RewindStatusErrorType.INVALID_RESPONSE
+        }
+        if (error is WPComGsonRequest.WPComGsonNetworkError) {
+            if ("unauthorized" == error.apiError) {
+                errorType = RewindStatusErrorType.AUTHORIZATION_REQUIRED
             }
         }
         return errorType
     }
 
     private data class ActivitiesResponse(val totalItems: Int?,
-                                  val summary: String?,
-                                  val current: Page) {
+                                          val summary: String?,
+                                          val current: Page) {
         data class Page(val orderedItems: List<ActivityResponse>)
         data class ActivityResponse(val summary: String?,
                                     val content: Content?,
@@ -156,6 +208,16 @@ constructor(appContext: Context, dispatcher: Dispatcher, requestQueue: RequestQu
                                   val wpcom_user_id: Long?)
     }
 
-    data class RewindResponse(val reason: String, val state: String, val last_updated: Date)
+    data class RewindStatusResponse(val reason: String,
+                                    val state: String?,
+                                    val last_updated: Date,
+                                    val restoreResponse: RestoreStatusResponse?) {
+        data class RestoreStatusResponse(val rewind_id: String?,
+                                         val status: String?,
+                                         val progress: Int = 0,
+                                         val message: String?,
+                                         val error_code: String?,
+                                         val reason: String?)
+    }
 }
 
