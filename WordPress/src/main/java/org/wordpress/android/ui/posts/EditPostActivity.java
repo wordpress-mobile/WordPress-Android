@@ -1068,7 +1068,7 @@ public class EditPostActivity extends AppCompatActivity implements
             } else if (itemId == R.id.menu_html_mode) {
                 // toggle HTML mode
                 if (mEditorFragment instanceof AztecEditorFragment) {
-                    toggleHtmlVisualMode();
+                    ((AztecEditorFragment) mEditorFragment).onToolbarHtmlButtonClicked();
                     UploadUtils.showSnackbarSuccessActionOrange(findViewById(R.id.editor_activity),
                             mHtmlModeMenuStateOn ? R.string.menu_html_mode_done_snackbar
                                     : R.string.menu_visual_mode_done_snackbar,
@@ -1077,18 +1077,13 @@ public class EditPostActivity extends AppCompatActivity implements
                                 @Override
                                 public void onClick(View view) {
                                     // switch back
-                                    toggleHtmlVisualMode();
+                                    ((AztecEditorFragment) mEditorFragment).onToolbarHtmlButtonClicked();
                                 }
                             });
                 }
             }
         }
         return false;
-    }
-
-    private void toggleHtmlVisualMode() {
-        ((AztecEditorFragment) mEditorFragment).onToolbarHtmlButtonClicked();
-        //toggleHtmlModeOnMenu();
     }
 
     private void toggleHtmlModeOnMenu() {
