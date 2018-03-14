@@ -232,7 +232,8 @@
 
         <activity
             android:name=".ui.posts.PostsListActivity"
-            android:theme="@style/Calypso.NoActionBar" />
+            android:theme="@style/Calypso.NoActionBar"
+            android:label="" />
         <activity
             android:name=".ui.posts.PostPreviewActivity"
             android:label="@string/preview_post"
