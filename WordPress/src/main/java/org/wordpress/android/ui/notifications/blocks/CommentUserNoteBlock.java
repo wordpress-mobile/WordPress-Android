@@ -75,9 +75,12 @@ public class CommentUserNoteBlock extends UserNoteBlock {
             noteBlockHolder.siteTextView.setVisibility(View.GONE);
         }
 
+        noteBlockHolder.siteTextView.setImportantForAccessibility(View.IMPORTANT_FOR_ACCESSIBILITY_NO);
+
         if (hasImageMediaItem()) {
             String imageUrl = GravatarUtils.fixGravatarUrl(getNoteMediaItem().optString("url", ""), getAvatarSize());
             noteBlockHolder.avatarImageView.setImageUrl(imageUrl, WPNetworkImageView.ImageType.AVATAR);
+            noteBlockHolder.avatarImageView.setContentDescription(view.getContext().getString(R.string.profile_picture,getNoteText().toString()));
             if (!TextUtils.isEmpty(getUserUrl())) {
                 noteBlockHolder.avatarImageView.setOnClickListener(new View.OnClickListener() {
                     @Override
@@ -91,12 +94,14 @@ public class CommentUserNoteBlock extends UserNoteBlock {
                 noteBlockHolder.avatarImageView.setOnClickListener(null);
                 //noinspection AndroidLintClickableViewAccessibility
                 noteBlockHolder.avatarImageView.setOnTouchListener(null);
+                noteBlockHolder.avatarImageView.setContentDescription(null);
             }
         } else {
             noteBlockHolder.avatarImageView.showDefaultGravatarImageAndNullifyUrl();
             noteBlockHolder.avatarImageView.setOnClickListener(null);
             //noinspection AndroidLintClickableViewAccessibility
             noteBlockHolder.avatarImageView.setOnTouchListener(null);
+            noteBlockHolder.avatarImageView.setContentDescription(null);
         }
 
         noteBlockHolder.commentTextView.setText(

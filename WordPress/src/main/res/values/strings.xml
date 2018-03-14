@@ -2138,7 +2138,7 @@
 
     <!-- Content description for accessibility  -->
     <string name="comment_checkmark_desc">check mark</string>
-    <string name="profile_picture">profile picture</string>
+    <string name="profile_picture">%s\'s profile picture</string>
     <string name="invite_user_delete_desc">remove %s</string>
     <string name="media_grid_item_image_desc">media preview, filename %s</string>
     <string name="media_grid_item_retry_desc">retry</string>
