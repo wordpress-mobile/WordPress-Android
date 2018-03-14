@@ -145,7 +145,6 @@ public class ThemeWebActivity extends WPWebViewActivity {
     private void setActionBarTitleToThemeName() {
         String themeName = getIntent().getStringExtra(THEME_NAME);
         if (getSupportActionBar() != null && themeName != null) {
-            setTitle("test");
             getSupportActionBar().setTitle(themeName);
         }
     }

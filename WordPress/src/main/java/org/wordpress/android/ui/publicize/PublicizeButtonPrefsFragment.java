@@ -1,6 +1,5 @@
 package org.wordpress.android.ui.publicize;
 
-import android.app.Fragment;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.NonNull;
