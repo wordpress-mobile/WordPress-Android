@@ -713,6 +713,11 @@ public class EditPostActivity extends AppCompatActivity implements
                 return getString(R.string.menu_publish_now);
             case PUBLISHED:
             case UNKNOWN:
+                if (mPost.isLocalDraft()) {
+                    return getString(R.string.menu_publish_now);
+                } else {
+                    return getString(R.string.update_verb);
+                }
             case PRIVATE:
             case PENDING:
             case TRASHED:
