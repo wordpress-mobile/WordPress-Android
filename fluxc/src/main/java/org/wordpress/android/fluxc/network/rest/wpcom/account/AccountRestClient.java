@@ -38,14 +38,15 @@ import org.wordpress.android.fluxc.store.AccountStore.NewUserError;
 import org.wordpress.android.fluxc.store.AccountStore.NewUserErrorType;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
+import org.wordpress.android.util.LanguageUtils;
 
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 
-import javax.inject.Inject;
 import javax.inject.Singleton;
 
 @Singleton
@@ -172,7 +173,6 @@ public class AccountRestClient extends BaseWPComRestClient {
         DOMAIN
     }
 
-    @Inject
     public AccountRestClient(Context appContext, Dispatcher dispatcher, RequestQueue requestQueue,
                              AppSecrets appSecrets, AccessToken accessToken, UserAgent userAgent) {
         super(appContext, dispatcher, requestQueue, accessToken, userAgent);
@@ -596,6 +596,10 @@ public class AccountRestClient extends BaseWPComRestClient {
         body.put("client_id", mAppSecrets.getAppId());
         body.put("client_secret", mAppSecrets.getAppSecret());
 
+        // backend needs locale set both the POST body _and_ the query param to fully set up the user's locale settings
+        //  (messages language, followed blogs initialization)
+        body.put("locale", getLocaleForUsersNewEndpoint());
+
         WPComGsonRequest<AccountBoolResponse> request = WPComGsonRequest.buildPostRequest(url, body,
                 AccountBoolResponse.class,
                 new Listener<AccountBoolResponse>() {
@@ -618,6 +622,31 @@ public class AccountRestClient extends BaseWPComRestClient {
 
         request.disableRetries();
         add(request);
+    }
+
+    private String getLocaleForUsersNewEndpoint() {
+        final Locale loc = LanguageUtils.getCurrentDeviceLanguage(mAppContext);
+        final String lang = LanguageUtils.patchDeviceLanguageCode(loc.getLanguage());
+        final String country = loc.getCountry().toLowerCase(Locale.ROOT); // backend needs it lowercase
+        final String langMinusCountry = lang + '-' + country; // backend needs it separated by a minus
+
+        // the `/users/new` endpoint expects only some locales to have a territory/Country, the rest being language only
+        switch (langMinusCountry) {
+            case "el-po":
+            case "en-gb":
+            case "es-mx":
+            case "fr-be":
+            case "fr-ca":
+            case "fr-ch":
+            case "pt-br":
+            case "zh-cn":
+            case "zh-tw":
+                // return a lowercase, separated by a "minus" sign locale
+                return langMinusCountry;
+            default:
+                // return the language part of the locale only
+                return lang;
+        }
     }
 
     public void isAvailable(@NonNull final String value, final IsAvailable type) {
