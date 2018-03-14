@@ -10,8 +10,12 @@ public enum ActivityAction implements IAction {
     // Remote actions
     @Action(payloadType = ActivityStore.FetchActivitiesPayload.class)
     FETCH_ACTIVITIES,
+    @Action(payloadType = ActivityStore.FetchRewindStatePayload.class)
+    FETCH_REWIND_STATE,
 
     // Remote responses
-    @Action(payloadType = ActivityStore.FetchActivitiesResponsePayload.class)
-    FETCHED_ACTIVITIES
+    @Action(payloadType = ActivityStore.FetchedActivitiesPayload.class)
+    FETCHED_ACTIVITIES,
+    @Action(payloadType = ActivityStore.FetchRewindStateResponsePayload.class)
+    FETCHED_REWIND_STATE
 }
