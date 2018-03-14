@@ -44,6 +44,7 @@ import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 
 import javax.inject.Singleton;
@@ -597,7 +598,7 @@ public class AccountRestClient extends BaseWPComRestClient {
 
         // backend needs locale set both the POST body _and_ the query param to fully set up the user's locale settings
         //  (messages language, followed blogs initialization)
-        body.put("locale", LanguageUtils.getPatchedCurrentDeviceLanguage(mAppContext));
+        body.put("locale", getLocaleForUsersNewEndpoint());
 
         WPComGsonRequest<AccountBoolResponse> request = WPComGsonRequest.buildPostRequest(url, body,
                 AccountBoolResponse.class,
@@ -621,6 +622,31 @@ public class AccountRestClient extends BaseWPComRestClient {
 
         request.disableRetries();
         add(request);
+    }
+
+    private String getLocaleForUsersNewEndpoint() {
+        final Locale loc = LanguageUtils.getCurrentDeviceLanguage(mAppContext);
+        final String lang = LanguageUtils.patchDeviceLanguageCode(loc.getLanguage());
+        final String country = loc.getCountry().toLowerCase(Locale.ROOT); // backend needs it lowercase
+        final String langMinusCountry = lang + '-' + country; // backend needs it separated by a minus
+
+        // the `/users/new` endpoint expects only some locales to have a territory/Country, the rest being language only
+        switch (langMinusCountry) {
+            case "el-po":
+            case "en-gb":
+            case "es-mx":
+            case "fr-be":
+            case "fr-ca":
+            case "fr-ch":
+            case "pt-br":
+            case "zh-cn":
+            case "zh-tw":
+                // return a lowercase, separated by a "minus" sign locale
+                return langMinusCountry;
+            default:
+                // return the language part of the locale only
+                return lang;
+        }
     }
 
     public void isAvailable(@NonNull final String value, final IsAvailable type) {
