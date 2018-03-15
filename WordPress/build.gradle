@@ -4,6 +4,7 @@ buildscript {
         maven { url 'https://maven.fabric.io/public' }
     }
     dependencies {
+        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
         classpath 'io.fabric.tools:gradle:1.+'
         classpath 'com.google.gms:google-services:3.1.0'
     }
@@ -18,6 +19,9 @@ repositories {
 }
 
 apply plugin: 'com.android.application'
+apply plugin: 'kotlin-android'
+apply plugin: 'kotlin-android-extensions'
+apply plugin: 'kotlin-kapt'
 apply plugin: 'io.fabric'
 
 android {
@@ -34,8 +38,8 @@ android {
 
     defaultConfig {
         applicationId "org.wordpress.android"
-        versionName "alpha-102"
-        versionCode 538
+        versionName "alpha-103"
+        versionCode 541
         minSdkVersion 16
         targetSdkVersion 25
 
@@ -95,6 +99,8 @@ dependencies {
         transitive = true;
     }
 
+    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
+
     // Provided by maven central
     implementation 'com.google.code.gson:gson:2.6.+'
     implementation 'org.ccil.cowan.tagsoup:tagsoup:1.2.1'
@@ -133,7 +139,7 @@ dependencies {
     }
 
     implementation 'com.github.bumptech.glide:glide:4.1.1'
-    annotationProcessor 'com.github.bumptech.glide:compiler:4.1.1'
+    kapt 'com.github.bumptech.glide:compiler:4.1.1'
     implementation 'com.github.bumptech.glide:volley-integration:4.1.1@aar'
 
     testImplementation 'junit:junit:4.12'
@@ -151,10 +157,10 @@ dependencies {
 
     // Dagger
     implementation 'com.google.dagger:dagger:2.11'
-    annotationProcessor 'com.google.dagger:dagger-compiler:2.11'
+    kapt 'com.google.dagger:dagger-compiler:2.11'
     compileOnly 'org.glassfish:javax.annotation:10.0-b28'
     implementation 'com.google.dagger:dagger-android-support:2.11'
-    annotationProcessor 'com.google.dagger:dagger-android-processor:2.11'
+    kapt 'com.google.dagger:dagger-android-processor:2.11'
 
     implementation ("com.github.wordpress-mobile.WordPress-FluxC-Android:fluxc:$fluxCVersion") {
         exclude group: "com.android.volley"

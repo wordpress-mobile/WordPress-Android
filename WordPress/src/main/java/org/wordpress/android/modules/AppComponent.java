@@ -25,10 +25,7 @@ import org.wordpress.android.ui.accounts.NewBlogFragment;
 import org.wordpress.android.ui.accounts.SignInDialogFragment;
 import org.wordpress.android.ui.accounts.SiteCreationActivity;
 import org.wordpress.android.ui.accounts.login.LoginEpilogueFragment;
-import org.wordpress.android.ui.accounts.signup.SignupEmailFragment;
 import org.wordpress.android.ui.accounts.signup.SignupEpilogueFragment;
-import org.wordpress.android.ui.accounts.signup.SignupGoogleFragment;
-import org.wordpress.android.ui.accounts.signup.SignupMagicLinkFragment;
 import org.wordpress.android.ui.accounts.signup.SiteCreationCategoryFragment;
 import org.wordpress.android.ui.accounts.signup.SiteCreationDomainAdapter;
 import org.wordpress.android.ui.accounts.signup.SiteCreationDomainFragment;
@@ -157,10 +154,6 @@ public interface AppComponent extends AndroidInjector<WordPress> {
 
     void inject(SignInDialogFragment object);
 
-    void inject(SignupEmailFragment object);
-
-    void inject(SignupMagicLinkFragment object);
-
     void inject(SiteCreationService object);
 
     void inject(UploadService object);
@@ -178,8 +171,6 @@ public interface AppComponent extends AndroidInjector<WordPress> {
     void inject(SignupEpilogueFragment object);
 
     void inject(UsernameChangerFullScreenDialogFragment object);
-
-    void inject(SignupGoogleFragment object);
 
     void inject(SiteCreationActivity object);
 
