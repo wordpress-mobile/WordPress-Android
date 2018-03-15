@@ -72,14 +72,14 @@
             android:textStyle="bold"/>
 
         <TextView
-            android:id="@+id/text_insert"
+            android:id="@+id/text_add"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="end|center_vertical"
             android:background="?android:selectableItemBackground"
             android:minHeight="@dimen/min_touch_target_sz"
             android:padding="@dimen/margin_large"
-            android:text="@string/insert_count"
+            android:text="@string/add_count"
             android:textAllCaps="true"
             android:textColor="@color/blue_wordpress"
             android:textSize="@dimen/text_sz_large"

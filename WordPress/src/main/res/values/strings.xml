@@ -82,7 +82,7 @@
     <string name="delete_yes">Delete</string>
     <string name="delete_no">Don\'t Delete</string>
     <string name="clear">Clear</string>
-    <string name="insert_count">Insert %d</string>
+    <string name="add_count">Add %d</string>
 
     <string name="button_not_now">Not now</string>
 
