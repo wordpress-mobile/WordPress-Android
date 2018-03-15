@@ -539,7 +539,7 @@ public class MediaRestClient extends BaseWPComRestClient implements ProgressList
     /**
      * Creates a {@link MediaModel} list from a WP.com REST response to a request for all media.
      */
-    public static List<MediaModel> getMediaListFromRestResponse(final MultipleMediaResponse from, int localSiteId) {
+    private static List<MediaModel> getMediaListFromRestResponse(final MultipleMediaResponse from, int localSiteId) {
         if (from == null || from.media == null) return null;
 
         final List<MediaModel> mediaList = new ArrayList<>();
