@@ -281,6 +281,7 @@ public interface AppComponent extends AndroidInjector<WordPress> {
     void inject(MediaSettingsActivity object);
 
     void inject(PhotoPickerActivity object);
+
     void inject(StockMediaPickerActivity object);
 
     void inject(SiteSettingsTagListActivity object);

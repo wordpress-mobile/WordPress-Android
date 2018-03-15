@@ -1,8 +1,5 @@
 package org.wordpress.android.ui.stockmedia;
 
-import android.arch.lifecycle.Observer;
-import android.arch.lifecycle.ViewModelProvider;
-import android.arch.lifecycle.ViewModelProviders;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.NonNull;
@@ -20,20 +17,25 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
+import org.wordpress.android.fluxc.Dispatcher;
+import org.wordpress.android.fluxc.generated.StockMediaActionBuilder;
 import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.model.StockMediaModel;
+import org.wordpress.android.fluxc.store.StockMediaStore;
 import org.wordpress.android.ui.media.MediaPreviewActivity;
 import org.wordpress.android.util.ActivityUtils;
 import org.wordpress.android.util.AniUtils;
+import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.DisplayUtils;
 import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.PhotonUtils;
 import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.WPLinkMovementMethod;
-import org.wordpress.android.viewmodel.StockMediaViewModel;
 import org.wordpress.android.widgets.WPNetworkImageView;
 
 import java.util.ArrayList;
@@ -59,8 +61,12 @@ public class StockMediaPickerActivity extends AppCompatActivity implements Searc
     private int mThumbWidth;
     private int mThumbHeight;
 
-    @Inject ViewModelProvider.Factory mViewModelFactory;
-    private StockMediaViewModel mViewModel;
+    private boolean mIsFetching;
+    private boolean mCanLoadMore;
+    private int mNextPage;
+
+    @Inject Dispatcher mDispatcher;
+    @Inject StockMediaStore mStockMediaStore;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -78,8 +84,6 @@ public class StockMediaPickerActivity extends AppCompatActivity implements Searc
             finish();
             return;
         }
-
-        mViewModel = ViewModelProviders.of(this, mViewModelFactory).get(StockMediaViewModel.class);
 
         int displayWidth = DisplayUtils.getDisplayPixelWidth(this);
         mThumbWidth = displayWidth / getColumnCount();
@@ -113,12 +117,9 @@ public class StockMediaPickerActivity extends AppCompatActivity implements Searc
             }
         });
 
-        setupObserver();
-
         if (savedInstanceState == null) {
             showEmptyView(true);
         } else {
-            mViewModel.readFromBundle(savedInstanceState);
             if (savedInstanceState.containsKey(KEY_SELECTED_ITEMS)) {
                 ArrayList<Integer> selectedItems = savedInstanceState.getIntegerArrayList(KEY_SELECTED_ITEMS);
                 if (selectedItems != null) {
@@ -140,7 +141,6 @@ public class StockMediaPickerActivity extends AppCompatActivity implements Searc
     @Override
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
-        mViewModel.writeToBundle(outState);
         if (mSite != null) {
             outState.putSerializable(WordPress.SITE, mSite);
         }
@@ -149,24 +149,16 @@ public class StockMediaPickerActivity extends AppCompatActivity implements Searc
         }
     }
 
-    /*
-     * observe when the ViewModel's search results have changed and update the adapter with them
-     */
-    private void setupObserver() {
-        mViewModel.getSearchResults().observe(this, new Observer<List<StockMediaModel>>() {
-            @Override
-            public void onChanged(@Nullable final List<StockMediaModel> mediaList) {
-                if (!isFinishing()) {
-                    if (!mViewModel.isFetching()) {
-                        showProgress(false);
-                    }
-                    //noinspection ConstantConditions
-                    showEmptyView(mediaList.isEmpty()
-                                  && !TextUtils.isEmpty(mViewModel.getSearchQuery()));
-                    mAdapter.setMediaList(mediaList);
-                }
-            }
-        });
+    @Override
+    public void onStart() {
+        super.onStart();
+        mDispatcher.register(this);
+    }
+
+    @Override
+    public void onStop() {
+        mDispatcher.unregister(this);
+        super.onStop();
     }
 
     @Override
@@ -196,7 +188,7 @@ public class StockMediaPickerActivity extends AppCompatActivity implements Searc
 
     private void configureSearchView() {
         mSearchView = findViewById(R.id.search_view);
-        mSearchView.setQuery(mViewModel.getSearchQuery(), false);
+        mSearchView.setQuery(mSearchQuery, false);
 
         // don't allow the SearchView to be closed
         mSearchView.setOnCloseListener(new SearchView.OnCloseListener() {
@@ -255,19 +247,62 @@ public class StockMediaPickerActivity extends AppCompatActivity implements Searc
                 }
             }, 500);
         } else {
-            requestStockMedia(query, 1);
+            fetchStockMedia(query, 1);
         }
     }
 
-    private void requestStockMedia(@Nullable String searchTerm, int page) {
+    public void fetchStockMedia(@Nullable String searchQuery, int page) {
         if (!NetworkUtils.checkConnection(this)) return;
+
+        if (TextUtils.isEmpty(searchQuery)) {
+            mAdapter.clear();
+            return;
+        }
 
         if (page == 1) {
             mAdapter.clear();
         }
 
         showProgress(true);
-        mViewModel.fetchStockMedia(searchTerm, page);
+
+        mIsFetching = true;
+
+        mSearchQuery = searchQuery;
+        AppLog.d(AppLog.T.MEDIA, "Fetching stock media page " + page);
+
+        StockMediaStore.FetchStockMediaListPayload payload =
+                new StockMediaStore.FetchStockMediaListPayload(searchQuery, page);
+        mDispatcher.dispatch(StockMediaActionBuilder.newFetchStockMediaAction(payload));
+    }
+
+    @SuppressWarnings("unused")
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onStockMediaListFetched(StockMediaStore.OnStockMediaListFetched event) {
+        mIsFetching = false;
+        showProgress(false);
+
+        if (event.isError()) {
+            AppLog.e(AppLog.T.MEDIA, "An error occurred while searching stock media");
+            mCanLoadMore = false;
+            return;
+        }
+
+        // make sure these results are for the same query
+        if (mSearchQuery == null || !mSearchQuery.equals(event.searchTerm)) {
+            return;
+        }
+
+        mNextPage = event.nextPage;
+        mCanLoadMore = event.canLoadMore;
+
+        // set the results to the event's mediaList if this is the first page, otherwise add to the existing results
+        if (event.nextPage == 2) {
+            mAdapter.setMediaList(event.mediaList);
+        } else {
+            mAdapter.addMediaList(event.mediaList);
+        }
+
+        showEmptyView(mAdapter.isEmpty() && !TextUtils.isEmpty(mSearchQuery));
     }
 
     private void showSelectionBar() {
@@ -318,6 +353,11 @@ public class StockMediaPickerActivity extends AppCompatActivity implements Searc
             notifyDataSetChanged();
         }
 
+        void addMediaList(@NonNull List<StockMediaModel> mediaList) {
+            mItems.addAll(mediaList);
+            notifyDataSetChanged();
+        }
+
         void clear() {
             mItems.clear();
             if (mSelectedItems.size() > 0) {
@@ -335,6 +375,10 @@ public class StockMediaPickerActivity extends AppCompatActivity implements Searc
         @Override
         public int getItemCount() {
             return mItems.size();
+        }
+
+        boolean isEmpty() {
+            return getItemCount() == 0;
         }
 
         @Override
@@ -365,8 +409,8 @@ public class StockMediaPickerActivity extends AppCompatActivity implements Searc
                 holder.mImageView.setScaleY(scale);
             }
 
-            if (!mViewModel.isFetching() && mViewModel.canLoadMore() && position == getItemCount() - 1) {
-                requestStockMedia(mSearchQuery, mViewModel.getNextPage());
+            if (!mIsFetching && mCanLoadMore && position == getItemCount() - 1) {
+                fetchStockMedia(mSearchQuery, mNextPage);
             }
         }
 
