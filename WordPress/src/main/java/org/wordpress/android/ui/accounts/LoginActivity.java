@@ -226,13 +226,15 @@ public class LoginActivity extends AppCompatActivity implements ConnectionCallba
                 finish();
                 break;
             case JETPACK_STATS:
+                ActivityLauncher.showLoginEpilogueForResult(this, true, oldSitesIds, true);
+                break;
             case WPCOM_LOGIN_DEEPLINK:
             case WPCOM_REAUTHENTICATE:
-                ActivityLauncher.showLoginEpilogueForResult(this, true, oldSitesIds);
+                ActivityLauncher.showLoginEpilogueForResult(this, true, oldSitesIds, false);
                 break;
             case SHARE_INTENT:
             case SELFHOSTED_ONLY:
-                // skip the epilogue when only added a selfhosted site or sharing to WordPress
+                // skip the epilogue when only added a self-hosted site or sharing to WordPress
                 setResult(Activity.RESULT_OK);
                 finish();
                 break;
