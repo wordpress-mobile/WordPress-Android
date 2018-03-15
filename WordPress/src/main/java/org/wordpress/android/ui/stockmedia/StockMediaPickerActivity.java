@@ -1,5 +1,6 @@
 package org.wordpress.android.ui.stockmedia;
 
+import android.app.FragmentManager;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.NonNull;
@@ -44,12 +45,13 @@ import java.util.List;
 import javax.inject.Inject;
 
 public class StockMediaPickerActivity extends AppCompatActivity implements SearchView.OnQueryTextListener {
-    private static final String KEY_SELECTED_ITEMS = "selected_items";
     private static final int MIN_SEARCH_QUERY_SIZE = 3;
+    private static final String TAG_RETAINED_FRAGMENT = "retained_fragment";
 
     private SiteModel mSite;
 
     private StockMediaAdapter mAdapter;
+    private StockMediaRetainedFragment mRetainedFragment;
 
     private ViewGroup mSelectionBar;
     private TextView mTextAdd;
@@ -85,6 +87,13 @@ public class StockMediaPickerActivity extends AppCompatActivity implements Searc
             return;
         }
 
+        FragmentManager fm = getFragmentManager();
+        mRetainedFragment = (StockMediaRetainedFragment) fm.findFragmentByTag(TAG_RETAINED_FRAGMENT);
+        if (mRetainedFragment == null) {
+            mRetainedFragment = StockMediaRetainedFragment.newInstance();
+            fm.beginTransaction().add(mRetainedFragment, TAG_RETAINED_FRAGMENT).commit();
+        }
+
         int displayWidth = DisplayUtils.getDisplayPixelWidth(this);
         mThumbWidth = displayWidth / getColumnCount();
         mThumbHeight = (int) (mThumbWidth * 0.75f);
@@ -96,7 +105,6 @@ public class StockMediaPickerActivity extends AppCompatActivity implements Searc
             actionBar.setDisplayHomeAsUpEnabled(true);
             actionBar.setDisplayShowTitleEnabled(true);
         }
-        configureSearchView();
 
         RecyclerView recycler = findViewById(R.id.recycler);
         recycler.setLayoutManager(new GridLayoutManager(this, getColumnCount()));
@@ -120,12 +128,8 @@ public class StockMediaPickerActivity extends AppCompatActivity implements Searc
         if (savedInstanceState == null) {
             showEmptyView(true);
         } else {
-            if (savedInstanceState.containsKey(KEY_SELECTED_ITEMS)) {
-                ArrayList<Integer> selectedItems = savedInstanceState.getIntegerArrayList(KEY_SELECTED_ITEMS);
-                if (selectedItems != null) {
-                    mAdapter.setSelectedItems(selectedItems);
-                }
-            }
+            mAdapter.setMediaList(mRetainedFragment.getStockMediaList());
+            mAdapter.setSelectedItems(mRetainedFragment.getSelectedItems());
         }
     }
 
@@ -144,21 +148,29 @@ public class StockMediaPickerActivity extends AppCompatActivity implements Searc
         if (mSite != null) {
             outState.putSerializable(WordPress.SITE, mSite);
         }
-        if (!mAdapter.mSelectedItems.isEmpty()) {
-            outState.putIntegerArrayList(KEY_SELECTED_ITEMS, mAdapter.mSelectedItems);
-        }
+        mRetainedFragment.setStockMediaList(mAdapter.mItems);
+        mRetainedFragment.setSelectedItems(mAdapter.mSelectedItems);
     }
 
     @Override
     public void onStart() {
         super.onStart();
         mDispatcher.register(this);
+        configureSearchView();
     }
 
     @Override
     public void onStop() {
         mDispatcher.unregister(this);
         super.onStop();
+    }
+
+    @Override
+    public void onPause() {
+        if (isFinishing() && mRetainedFragment != null) {
+            getFragmentManager().beginTransaction().remove(mRetainedFragment).commit();
+        }
+        super.onPause();
     }
 
     @Override
@@ -188,7 +200,6 @@ public class StockMediaPickerActivity extends AppCompatActivity implements Searc
 
     private void configureSearchView() {
         mSearchView = findViewById(R.id.search_view);
-        mSearchView.setQuery(mSearchQuery, false);
 
         // don't allow the SearchView to be closed
         mSearchView.setOnCloseListener(new SearchView.OnCloseListener() {
@@ -196,6 +207,7 @@ public class StockMediaPickerActivity extends AppCompatActivity implements Searc
                 return true;
             }
         });
+
 
         mSearchView.setOnQueryTextListener(this);
     }
@@ -251,7 +263,7 @@ public class StockMediaPickerActivity extends AppCompatActivity implements Searc
         }
     }
 
-    public void fetchStockMedia(@Nullable String searchQuery, int page) {
+    private void fetchStockMedia(@Nullable String searchQuery, int page) {
         if (!NetworkUtils.checkConnection(this)) return;
 
         if (TextUtils.isEmpty(searchQuery)) {
@@ -333,7 +345,7 @@ public class StockMediaPickerActivity extends AppCompatActivity implements Searc
 
     private void uploadSelection() {
         ToastUtils.showToast(this, "Uploading will be added in a later PR");
-        // List<StockMediaModel> items = mAdapter.getSelectedItems();
+        // List<StockMediaModel> items = mAdapter.getSelectedStockMedia();
     }
 
     class StockMediaAdapter extends RecyclerView.Adapter<StockViewHolder> {
@@ -471,7 +483,7 @@ public class StockMediaPickerActivity extends AppCompatActivity implements Searc
         }
 
         @SuppressWarnings("unused")
-        private List<StockMediaModel> getSelectedItems() {
+        private List<StockMediaModel> getSelectedStockMedia() {
             List<StockMediaModel> items = new ArrayList<>();
             for (int i : mSelectedItems) {
                 items.add(mItems.get(i));
@@ -479,12 +491,14 @@ public class StockMediaPickerActivity extends AppCompatActivity implements Searc
             return items;
         }
 
-        private void setSelectedItems(@NonNull ArrayList<Integer> selectedItems) {
+        private void setSelectedItems(@NonNull List<Integer> selectedItems) {
+            if (mSelectedItems.isEmpty() && selectedItems.isEmpty()) {
+                return;
+            }
+
             mSelectedItems.clear();
             mSelectedItems.addAll(selectedItems);
-            if (!mItems.isEmpty()) {
-                notifyDataSetChanged();
-            }
+            notifyDataSetChanged();
             notifySelectionCountChanged();
         }
 
