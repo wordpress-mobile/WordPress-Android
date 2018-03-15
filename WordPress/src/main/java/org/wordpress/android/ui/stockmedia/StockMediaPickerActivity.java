@@ -68,6 +68,17 @@ public class StockMediaPickerActivity extends AppCompatActivity implements Searc
         ((WordPress) getApplication()).component().inject(this);
         setContentView(R.layout.stock_media_picker_activity);
 
+        if (savedInstanceState == null) {
+            mSite = (SiteModel) getIntent().getSerializableExtra(WordPress.SITE);
+        } else {
+            mSite = (SiteModel) savedInstanceState.getSerializable(WordPress.SITE);
+        }
+        if (mSite == null) {
+            ToastUtils.showToast(this, R.string.blog_not_found, ToastUtils.Duration.SHORT);
+            finish();
+            return;
+        }
+
         mViewModel = ViewModelProviders.of(this, mViewModelFactory).get(StockMediaViewModel.class);
 
         int displayWidth = DisplayUtils.getDisplayPixelWidth(this);
@@ -105,10 +116,8 @@ public class StockMediaPickerActivity extends AppCompatActivity implements Searc
         setupObserver();
 
         if (savedInstanceState == null) {
-            mSite = (SiteModel) getIntent().getSerializableExtra(WordPress.SITE);
             showEmptyView(true);
         } else {
-            mSite = (SiteModel) savedInstanceState.getSerializable(WordPress.SITE);
             mViewModel.readFromBundle(savedInstanceState);
             if (savedInstanceState.containsKey(KEY_SELECTED_ITEMS)) {
                 ArrayList<Integer> selectedItems = savedInstanceState.getIntegerArrayList(KEY_SELECTED_ITEMS);
