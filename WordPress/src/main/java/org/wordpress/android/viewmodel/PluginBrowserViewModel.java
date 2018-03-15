@@ -106,8 +106,8 @@ public class PluginBrowserViewModel extends ViewModel implements ViewModelInterf
 
     @Override
     protected void onCleared() {
-        super.onCleared();
         mDispatcher.unregister(this);
+        super.onCleared();
     }
 
     @Override
