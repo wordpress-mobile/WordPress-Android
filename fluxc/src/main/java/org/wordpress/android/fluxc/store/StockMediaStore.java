@@ -1,7 +1,6 @@
 package org.wordpress.android.fluxc.store;
 
 import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
@@ -10,12 +9,8 @@ import org.wordpress.android.fluxc.Payload;
 import org.wordpress.android.fluxc.action.StockMediaAction;
 import org.wordpress.android.fluxc.annotations.action.Action;
 import org.wordpress.android.fluxc.annotations.action.IAction;
-import org.wordpress.android.fluxc.model.MediaModel;
-import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.model.StockMediaModel;
-import org.wordpress.android.fluxc.network.BaseRequest;
 import org.wordpress.android.fluxc.network.BaseRequest.BaseNetworkError;
-import org.wordpress.android.fluxc.network.rest.wpcom.WPComGsonRequest.WPComGsonNetworkError;
 import org.wordpress.android.fluxc.network.rest.wpcom.stockmedia.StockMediaRestClient;
 import org.wordpress.android.util.AppLog;
 
@@ -77,40 +72,6 @@ public class StockMediaStore extends Store {
         }
     }
 
-    /**
-     * Actions: UPLOAD_STOCK_MEDIA
-     */
-    @SuppressWarnings("WeakerAccess")
-    public static class UploadStockMediaPayload extends Payload<BaseNetworkError> {
-        public @NonNull List<StockMediaModel> stockMediaList;
-        public @NonNull SiteModel site;
-
-        public UploadStockMediaPayload(@NonNull SiteModel site, @NonNull List<StockMediaModel> stockMediaList) {
-            this.stockMediaList = stockMediaList;
-            this.site = site;
-        }
-    }
-
-    /**
-     * Actions: UPLOADED_STOCK_MEDIA
-     */
-    @SuppressWarnings("WeakerAccess")
-    public static class UploadedStockMediaPayload extends Payload<StockMediaError> {
-        @NonNull public List<MediaModel> mediaList;
-        @NonNull public SiteModel site;
-
-        public UploadedStockMediaPayload(@NonNull SiteModel site, @NonNull List<MediaModel> mediaList) {
-            this.site = site;
-            this.mediaList = mediaList;
-        }
-
-        public UploadedStockMediaPayload(@NonNull SiteModel site, @NonNull StockMediaError error) {
-            this.site = site;
-            this.error = error;
-            this.mediaList = new ArrayList<>();
-        }
-    }
-
     @SuppressWarnings("WeakerAccess")
     public static class OnStockMediaListFetched extends OnChanged<StockMediaError> {
         @NonNull public String searchTerm;
@@ -134,39 +95,11 @@ public class StockMediaStore extends Store {
         }
     }
 
-    @SuppressWarnings("WeakerAccess")
-    public static class OnStockMediaUploaded extends OnChanged<StockMediaError> {
-        @NonNull public List<MediaModel> mediaList;
-        @Nullable public SiteModel site;
-
-        public OnStockMediaUploaded(@NonNull SiteModel site, @NonNull List<MediaModel> mediaList) {
-            this.site = site;
-            this.mediaList = mediaList;
-        }
-        public OnStockMediaUploaded(@NonNull SiteModel site, @NonNull StockMediaError error) {
-            this.site = site;
-            this.error = error;
-            this.mediaList = new ArrayList<>();
-        }
-    }
-
     public enum StockMediaErrorType {
-        INVALID_INPUT,
-        UNKNOWN,
         GENERIC_ERROR;
 
         public static StockMediaErrorType fromBaseNetworkError(BaseNetworkError baseError) {
-            if (baseError instanceof WPComGsonNetworkError) {
-                WPComGsonNetworkError wpError = (WPComGsonNetworkError) baseError;
-                // invalid upload request
-                if (wpError.apiError.equalsIgnoreCase("invalid_input")) {
-                    return INVALID_INPUT;
-                }
-            }
-            // can happen if invalid pexels image url is passed
-            if (baseError.type == BaseRequest.GenericErrorType.UNKNOWN) {
-                return UNKNOWN;
-            }
+            // endpoint returns an empty media list for any type of error, including timeouts, server error, etc.
             return StockMediaErrorType.GENERIC_ERROR;
         }
     }
@@ -195,12 +128,6 @@ public class StockMediaStore extends Store {
             case FETCHED_STOCK_MEDIA:
                 handleStockMediaListFetched((FetchedStockMediaListPayload) action.getPayload());
                 break;
-            case UPLOAD_STOCK_MEDIA:
-                performUploadStockMedia((UploadStockMediaPayload) action.getPayload());
-                break;
-            case UPLOADED_STOCK_MEDIA:
-                handleStockMediaUploaded(((UploadedStockMediaPayload) action.getPayload()));
-                break;
         }
     }
 
@@ -227,21 +154,5 @@ public class StockMediaStore extends Store {
         }
 
         emitChange(onStockMediaListFetched);
-    }
-
-    private void performUploadStockMedia(StockMediaStore.UploadStockMediaPayload payload) {
-        mStockMediaRestClient.uploadStockMedia(payload.site, payload.stockMediaList);
-    }
-
-    private void handleStockMediaUploaded(StockMediaStore.UploadedStockMediaPayload payload) {
-        OnStockMediaUploaded onStockMediaUploaded;
-
-        if (payload.isError()) {
-            onStockMediaUploaded = new OnStockMediaUploaded(payload.site, payload.error);
-        } else {
-            onStockMediaUploaded = new OnStockMediaUploaded(payload.site, payload.mediaList);
-        }
-
-        emitChange(onStockMediaUploaded);
     }
 }
