@@ -262,6 +262,7 @@ public class SignupEmailFragment extends LoginBaseFormFragment<LoginListener> im
 
                         if (mLoginListener != null) {
                             if (event.isAvailable) {
+                                AnalyticsTracker.track(AnalyticsTracker.Stat.CREATED_ACCOUNT);
                                 mLoginListener.showSignupMagicLink(event.value);
                             } else {
                                 AnalyticsTracker.track(AnalyticsTracker.Stat.SIGNUP_EMAIL_TO_LOGIN);
