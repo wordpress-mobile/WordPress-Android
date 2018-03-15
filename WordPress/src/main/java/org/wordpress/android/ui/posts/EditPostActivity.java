@@ -190,6 +190,7 @@ public class EditPostActivity extends AppCompatActivity implements
     private static final String STATE_KEY_IS_PHOTO_PICKER_VISIBLE = "stateKeyPhotoPickerVisible";
     private static final String STATE_KEY_HTML_MODE_ON = "stateKeyHtmlModeOn";
     private static final String TAG_PUBLISH_CONFIRMATION_DIALOG = "tag_publish_confirmation_dialog";
+    private static final String TAG_REMOVE_FAILED_UPLOADS_DIALOG = "tag_remove_failed_uploads_dialog";
 
     private static final int PAGE_CONTENT = 0;
     private static final int PAGE_SETTINGS = 1;
@@ -1316,9 +1317,18 @@ public class EditPostActivity extends AppCompatActivity implements
     }
 
     @Override public void onPositiveClicked(String instanceTag) {
-        if (instanceTag != null && instanceTag == TAG_PUBLISH_CONFIRMATION_DIALOG) {
-            mPost.setStatus(PostStatus.PUBLISHED.toString());
-            publishPost();
+        if (instanceTag != null) {
+            if (instanceTag == TAG_PUBLISH_CONFIRMATION_DIALOG) {
+                mPost.setStatus(PostStatus.PUBLISHED.toString());
+                publishPost();
+            } else if (instanceTag == TAG_REMOVE_FAILED_UPLOADS_DIALOG) {
+                // Clear failed uploads
+                mEditorFragment.removeAllFailedMediaUploads();
+            }
+        } else {
+            ToastUtils.showToast(EditPostActivity.this,
+                    getString(R.string.editor_toast_no_action_taken));
+            AppLog.e(T.EDITOR, "Dialog instanceTag is null - positive button clicked, but no action taken");
         }
     }
 
@@ -1554,15 +1564,14 @@ public class EditPostActivity extends AppCompatActivity implements
     }
 
     private void showRemoveFailedUploadsDialog() {
-        AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setMessage(R.string.editor_toast_failed_uploads)
-               .setPositiveButton(R.string.editor_remove_failed_uploads, new DialogInterface.OnClickListener() {
-                   public void onClick(DialogInterface dialog, int id) {
-                       // Clear failed uploads
-                       mEditorFragment.removeAllFailedMediaUploads();
-                   }
-               }).setNegativeButton(android.R.string.cancel, null);
-        builder.create().show();
+        BaseYesNoFragmentDialog removeFailedUploadsDialog = new BaseYesNoFragmentDialog();
+        removeFailedUploadsDialog.setArgs(
+                TAG_REMOVE_FAILED_UPLOADS_DIALOG,
+                null,
+                getString(R.string.editor_toast_failed_uploads),
+                getString(R.string.editor_remove_failed_uploads),
+                getString(android.R.string.cancel));
+        removeFailedUploadsDialog.show(getSupportFragmentManager(), TAG_REMOVE_FAILED_UPLOADS_DIALOG);
     }
 
     private void savePostAndOptionallyFinish(final boolean doFinish) {
