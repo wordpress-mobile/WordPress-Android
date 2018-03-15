@@ -46,8 +46,11 @@ import javax.inject.Inject;
 
 public class StockMediaPickerActivity extends AppCompatActivity implements SearchView.OnQueryTextListener {
     private static final int MIN_SEARCH_QUERY_SIZE = 3;
-    private static final String KEY_SEARCH_QUERY = "search_query";
     private static final String TAG_RETAINED_FRAGMENT = "retained_fragment";
+
+    private static final String KEY_SEARCH_QUERY = "search_query";
+    private static final String KEY_CAN_LOAD_MORE = "can_load_more";
+    private static final String KEY_NEXT_PAGE = "next_page";
 
     private SiteModel mSite;
 
@@ -130,6 +133,8 @@ public class StockMediaPickerActivity extends AppCompatActivity implements Searc
             showEmptyView(true);
         } else {
             mSearchQuery = savedInstanceState.getString(KEY_SEARCH_QUERY);
+            mCanLoadMore = savedInstanceState.getBoolean(KEY_CAN_LOAD_MORE);
+            mNextPage = savedInstanceState.getInt(KEY_NEXT_PAGE);
             mAdapter.setMediaList(mRetainedFragment.getStockMediaList());
             mAdapter.setSelectedItems(mRetainedFragment.getSelectedItems());
         }
@@ -149,12 +154,17 @@ public class StockMediaPickerActivity extends AppCompatActivity implements Searc
     @Override
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
+
+        outState.putBoolean(KEY_CAN_LOAD_MORE, mCanLoadMore);
+        outState.putInt(KEY_NEXT_PAGE, mNextPage);
+
         if (mSite != null) {
             outState.putSerializable(WordPress.SITE, mSite);
         }
         if (mSearchView != null && !TextUtils.isEmpty(mSearchView.getQuery())) {
             outState.putString(KEY_SEARCH_QUERY, mSearchView.getQuery().toString());
         }
+
         mRetainedFragment.setStockMediaList(mAdapter.mItems);
         mRetainedFragment.setSelectedItems(mAdapter.mSelectedItems);
     }
