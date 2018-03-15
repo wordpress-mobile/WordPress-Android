@@ -24,6 +24,7 @@ import org.json.JSONObject;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.ui.notifications.utils.NotificationsUtils;
+import org.wordpress.android.util.AccessibilityUtils;
 import org.wordpress.android.util.DisplayUtils;
 import org.wordpress.android.util.JSONUtils;
 import org.wordpress.android.widgets.WPTextView;
@@ -165,7 +166,7 @@ public class NoteBlock {
                     noteBlockHolder.hideImageView();
                 }
             });
-            if(mIsBadge){
+            if (mIsBadge) {
                 noteBlockHolder.getImageView().setImportantForAccessibility(View.IMPORTANT_FOR_ACCESSIBILITY_NO);
             }
         } else {
@@ -189,6 +190,11 @@ public class NoteBlock {
                 noteBlockHolder.getTextView().setLayoutParams(params);
                 noteBlockHolder.getTextView().setGravity(Gravity.CENTER_HORIZONTAL);
                 noteBlockHolder.getTextView().setPadding(0, DisplayUtils.dpToPx(view.getContext(), 8), 0, 0);
+
+                if (AccessibilityUtils.isAccessibilityEnabled(noteBlockHolder.getTextView().getContext())) {
+                    noteBlockHolder.getTextView().setClickable(false);
+                    noteBlockHolder.getTextView().setLongClickable(false);
+                }
 
             } else {
                 noteBlockHolder.getTextView().setGravity(Gravity.NO_GRAVITY);
