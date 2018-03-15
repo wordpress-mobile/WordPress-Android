@@ -192,7 +192,7 @@ public class UploadUtils {
                 .setAction(buttonTitleRes, onClickListener).show();
     }
 
-    private static void showSnackbarError(View view, String message) {
+    public static void showSnackbarError(View view, String message) {
         Snackbar.make(view, message, K_SNACKBAR_WAIT_TIME_MS).show();
     }
 
@@ -202,7 +202,7 @@ public class UploadUtils {
                 .setAction(buttonTitleRes, onClickListener).show();
     }
 
-    private static void showSnackbarSuccessAction(View view, int messageRes, int buttonTitleRes,
+    public static void showSnackbarSuccessAction(View view, int messageRes, int buttonTitleRes,
                                                   View.OnClickListener onClickListener) {
         Snackbar.make(view, messageRes, K_SNACKBAR_WAIT_TIME_MS)
                 .setAction(buttonTitleRes, onClickListener).
@@ -218,7 +218,15 @@ public class UploadUtils {
                 .show();
     }
 
-    private static void showSnackbar(View view, int messageRes) {
+    public static void showSnackbarSuccessActionOrange(View view, int messageRes, int buttonTitleRes,
+                                                  View.OnClickListener onClickListener) {
+        Snackbar.make(view, messageRes, Snackbar.LENGTH_LONG)
+                .setAction(buttonTitleRes, onClickListener).
+                        setActionTextColor(view.getResources().getColor(R.color.alert_yellow))
+                .show();
+    }
+
+    public static void showSnackbar(View view, int messageRes) {
         Snackbar.make(view,
                       messageRes, Snackbar.LENGTH_LONG).show();
     }

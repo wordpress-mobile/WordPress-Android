@@ -499,11 +499,11 @@ public class LoginActivity extends AppCompatActivity implements ConnectionCallba
         });
     }
 
-    private void launchHelpshift(String url, String username, boolean isWpcom, Tag origin) {
+    private void launchHelpshift(String url, String email, boolean isWpcom, Tag origin) {
         Intent intent = new Intent(this, HelpActivity.class);
         // Used to pass data to an eventual support service
         intent.putExtra(HelpshiftHelper.ENTERED_URL_KEY, url);
-        intent.putExtra(HelpshiftHelper.ENTERED_USERNAME_KEY, username);
+        intent.putExtra(HelpshiftHelper.ENTERED_EMAIL_KEY, email);
         intent.putExtra(HelpshiftHelper.ORIGIN_KEY, origin);
         if (getLoginMode() == LoginMode.JETPACK_STATS) {
             Tag[] tags = new Tag[]{Tag.CONNECTING_JETPACK};

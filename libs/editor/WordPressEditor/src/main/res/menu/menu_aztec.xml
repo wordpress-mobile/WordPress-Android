@@ -7,15 +7,15 @@
     <item
         android:id="@+id/undo"
         android:title="@string/menu_undo"
-        android:icon="@drawable/ic_action_undo_selector"
-        app:showAsAction="always" >
+        android:orderInCategory="0"
+        android:icon="@drawable/ic_action_undo_selector">
     </item>
 
     <item
         android:id="@+id/redo"
         android:title="@string/menu_redo"
-        android:icon="@drawable/ic_action_redo_selector"
-        app:showAsAction="always" >
+        android:orderInCategory="0"
+        android:icon="@drawable/ic_action_redo_selector">
     </item>
 
 </menu>
