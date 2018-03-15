@@ -60,21 +60,32 @@ public class HeaderNoteBlock extends NoteBlock {
         noteBlockHolder.nameTextView.setText(spannable);
 
         noteBlockHolder.avatarImageView.setImageUrl(getAvatarUrl(), mImageType);
-        if (!TextUtils.isEmpty(getUserUrl())) {
+        final long siteId = Long.valueOf(JSONUtils.queryJSON(mHeaderArray, "[0].ranges[0].site_id", 0));
+        final long userId = Long.valueOf(JSONUtils.queryJSON(mHeaderArray, "[0].ranges[0].id", 0));
+
+        if (!TextUtils.isEmpty(getUserUrl()) && siteId > 0 && userId > 0) {
             noteBlockHolder.avatarImageView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    long siteId = Long.valueOf(JSONUtils.queryJSON(mHeaderArray, "[0].ranges[0].site_id", 0));
-                    long userId = Long.valueOf(JSONUtils.queryJSON(mHeaderArray, "[0].ranges[0].id", 0));
                     String siteUrl = getUserUrl();
-                    if (siteId > 0 && userId > 0) {
-                        mGravatarClickedListener.onGravatarClicked(siteId, userId, siteUrl);
-                    }
+                    mGravatarClickedListener.onGravatarClicked(siteId, userId, siteUrl);
                 }
             });
+
+
+            noteBlockHolder.avatarImageView.setContentDescription(
+                    view.getContext().getString(R.string.profile_picture, spannable));
             //noinspection AndroidLintClickableViewAccessibility
             noteBlockHolder.avatarImageView.setOnTouchListener(mOnGravatarTouchListener);
+
+            if (siteId == userId) {
+                noteBlockHolder.avatarImageView.setImportantForAccessibility(View.IMPORTANT_FOR_ACCESSIBILITY_NO);
+            } else {
+                noteBlockHolder.avatarImageView.setImportantForAccessibility(View.IMPORTANT_FOR_ACCESSIBILITY_YES);
+            }
         } else {
+            noteBlockHolder.avatarImageView.setImportantForAccessibility(View.IMPORTANT_FOR_ACCESSIBILITY_NO);
+            noteBlockHolder.avatarImageView.setContentDescription(null);
             noteBlockHolder.avatarImageView.setOnClickListener(null);
             //noinspection AndroidLintClickableViewAccessibility
             noteBlockHolder.avatarImageView.setOnTouchListener(null);
@@ -148,19 +159,19 @@ public class HeaderNoteBlock extends NoteBlock {
 
             if (event.getAction() == MotionEvent.ACTION_DOWN) {
                 v.animate()
-                        .scaleX(0.9f)
-                        .scaleY(0.9f)
-                        .alpha(0.5f)
-                        .setDuration(animationDuration)
-                        .setInterpolator(new DecelerateInterpolator());
+                 .scaleX(0.9f)
+                 .scaleY(0.9f)
+                 .alpha(0.5f)
+                 .setDuration(animationDuration)
+                 .setInterpolator(new DecelerateInterpolator());
             } else if (event.getActionMasked() == MotionEvent.ACTION_UP
-                    || event.getActionMasked() == MotionEvent.ACTION_CANCEL) {
+                       || event.getActionMasked() == MotionEvent.ACTION_CANCEL) {
                 v.animate()
-                        .scaleX(1.0f)
-                        .scaleY(1.0f)
-                        .alpha(1.0f)
-                        .setDuration(animationDuration)
-                        .setInterpolator(new DecelerateInterpolator());
+                 .scaleX(1.0f)
+                 .scaleY(1.0f)
+                 .alpha(1.0f)
+                 .setDuration(animationDuration)
+                 .setInterpolator(new DecelerateInterpolator());
 
                 if (event.getActionMasked() == MotionEvent.ACTION_UP && mGravatarClickedListener != null) {
                     // Fire the listener, which will load the site preview for the user's site

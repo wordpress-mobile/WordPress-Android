@@ -100,6 +100,7 @@ public class UserNoteBlock extends NoteBlock {
                 noteBlockHolder.rootView.setOnClickListener(null);
             }
         } else {
+            noteBlockHolder.rootView.setEnabled(false);
             noteBlockHolder.avatarImageView.showDefaultGravatarImageAndNullifyUrl();
             noteBlockHolder.rootView.setOnClickListener(null);
             //noinspection AndroidLintClickableViewAccessibility
