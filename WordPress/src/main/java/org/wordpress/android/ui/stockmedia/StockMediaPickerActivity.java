@@ -46,6 +46,7 @@ import javax.inject.Inject;
 
 public class StockMediaPickerActivity extends AppCompatActivity implements SearchView.OnQueryTextListener {
     private static final int MIN_SEARCH_QUERY_SIZE = 3;
+    private static final String KEY_SEARCH_QUERY = "search_query";
     private static final String TAG_RETAINED_FRAGMENT = "retained_fragment";
 
     private SiteModel mSite;
@@ -128,9 +129,12 @@ public class StockMediaPickerActivity extends AppCompatActivity implements Searc
         if (savedInstanceState == null) {
             showEmptyView(true);
         } else {
+            mSearchQuery = savedInstanceState.getString(KEY_SEARCH_QUERY);
             mAdapter.setMediaList(mRetainedFragment.getStockMediaList());
             mAdapter.setSelectedItems(mRetainedFragment.getSelectedItems());
         }
+
+        configureSearchView();
     }
 
     @Override
@@ -148,6 +152,9 @@ public class StockMediaPickerActivity extends AppCompatActivity implements Searc
         if (mSite != null) {
             outState.putSerializable(WordPress.SITE, mSite);
         }
+        if (mSearchView != null && !TextUtils.isEmpty(mSearchView.getQuery())) {
+            outState.putString(KEY_SEARCH_QUERY, mSearchView.getQuery().toString());
+        }
         mRetainedFragment.setStockMediaList(mAdapter.mItems);
         mRetainedFragment.setSelectedItems(mAdapter.mSelectedItems);
     }
@@ -156,7 +163,6 @@ public class StockMediaPickerActivity extends AppCompatActivity implements Searc
     public void onStart() {
         super.onStart();
         mDispatcher.register(this);
-        configureSearchView();
     }
 
     @Override
@@ -194,7 +200,9 @@ public class StockMediaPickerActivity extends AppCompatActivity implements Searc
 
     @Override
     public boolean onQueryTextChange(String query) {
-        submitSearch(query, true);
+        if (!StringUtils.equals(query, mSearchQuery)) {
+            submitSearch(query, true);
+        }
         return true;
     }
 
@@ -207,7 +215,6 @@ public class StockMediaPickerActivity extends AppCompatActivity implements Searc
                 return true;
             }
         });
-
 
         mSearchView.setOnQueryTextListener(this);
     }

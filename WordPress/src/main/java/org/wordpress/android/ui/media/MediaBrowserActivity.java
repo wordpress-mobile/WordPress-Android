@@ -842,31 +842,36 @@ public class MediaBrowserActivity extends AppCompatActivity implements MediaGrid
     private void doAddMediaItemClicked(@NonNull AddMenuItem item) {
         mLastAddMediaItemClicked = item;
 
-        String[] permissions;
-        if (item == AddMenuItem.ITEM_CAPTURE_PHOTO || item == AddMenuItem.ITEM_CAPTURE_VIDEO) {
-            permissions = new String[] {Manifest.permission.CAMERA, Manifest.permission.WRITE_EXTERNAL_STORAGE};
-        } else {
-            permissions = new String[] {Manifest.permission.WRITE_EXTERNAL_STORAGE};
-        }
-        if (PermissionUtils.checkAndRequestPermissions(
-                this, WPPermissionUtils.MEDIA_BROWSER_PERMISSION_REQUEST_CODE, permissions)) {
-            switch (item) {
-                case ITEM_CAPTURE_PHOTO:
-                    WPMediaUtils.launchCamera(this, BuildConfig.APPLICATION_ID, this);
-                    break;
-                case ITEM_CAPTURE_VIDEO:
-                    WPMediaUtils.launchVideoCamera(this);
-                    break;
-                case ITEM_CHOOSE_PHOTO:
-                    WPMediaUtils.launchPictureLibrary(this, true);
-                    break;
-                case ITEM_CHOOSE_VIDEO:
-                    WPMediaUtils.launchVideoLibrary(this, true);
-                    break;
-                case ITEM_CHOOSE_STOCK_MEDIA:
-                    ActivityLauncher.showStockMediaPickerForResult(this, mSite);
-                    break;
+        // stock photos item requires no permission, all other items do
+        if (item != AddMenuItem.ITEM_CHOOSE_STOCK_MEDIA) {
+            String[] permissions;
+            if (item == AddMenuItem.ITEM_CAPTURE_PHOTO || item == AddMenuItem.ITEM_CAPTURE_VIDEO) {
+                permissions = new String[]{Manifest.permission.CAMERA, Manifest.permission.WRITE_EXTERNAL_STORAGE};
+            } else {
+                permissions = new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE};
             }
+            if (!PermissionUtils.checkAndRequestPermissions(
+                    this, WPPermissionUtils.MEDIA_BROWSER_PERMISSION_REQUEST_CODE, permissions)) {
+                return;
+            }
+        }
+
+        switch (item) {
+            case ITEM_CAPTURE_PHOTO:
+                WPMediaUtils.launchCamera(this, BuildConfig.APPLICATION_ID, this);
+                break;
+            case ITEM_CAPTURE_VIDEO:
+                WPMediaUtils.launchVideoCamera(this);
+                break;
+            case ITEM_CHOOSE_PHOTO:
+                WPMediaUtils.launchPictureLibrary(this, true);
+                break;
+            case ITEM_CHOOSE_VIDEO:
+                WPMediaUtils.launchVideoLibrary(this, true);
+                break;
+            case ITEM_CHOOSE_STOCK_MEDIA:
+                ActivityLauncher.showStockMediaPickerForResult(this, mSite);
+                break;
         }
     }
 
