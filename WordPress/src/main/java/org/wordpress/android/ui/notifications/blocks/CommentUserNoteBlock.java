@@ -80,7 +80,8 @@ public class CommentUserNoteBlock extends UserNoteBlock {
         if (hasImageMediaItem()) {
             String imageUrl = GravatarUtils.fixGravatarUrl(getNoteMediaItem().optString("url", ""), getAvatarSize());
             noteBlockHolder.avatarImageView.setImageUrl(imageUrl, WPNetworkImageView.ImageType.AVATAR);
-            noteBlockHolder.avatarImageView.setContentDescription(view.getContext().getString(R.string.profile_picture,getNoteText().toString()));
+            noteBlockHolder.avatarImageView.setContentDescription(
+                    view.getContext().getString(R.string.profile_picture, getNoteText().toString()));
             if (!TextUtils.isEmpty(getUserUrl())) {
                 noteBlockHolder.avatarImageView.setOnClickListener(new View.OnClickListener() {
                     @Override
