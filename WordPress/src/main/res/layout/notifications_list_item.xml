@@ -141,6 +141,7 @@
                 </FrameLayout>
 
                 <org.wordpress.android.widgets.WPTextView
+                    android:importantForAccessibility="no"
                     android:id="@+id/note_detail"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
