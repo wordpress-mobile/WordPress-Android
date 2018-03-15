@@ -1325,6 +1325,10 @@ public class EditPostActivity extends AppCompatActivity implements
                 // Clear failed uploads
                 mEditorFragment.removeAllFailedMediaUploads();
             }
+        } else {
+            ToastUtils.showToast(EditPostActivity.this,
+                    getString(R.string.editor_toast_no_action_taken));
+            AppLog.e(T.EDITOR, "Dialog instanceTag is null - positive button clicked, but no action taken");
         }
     }
 
