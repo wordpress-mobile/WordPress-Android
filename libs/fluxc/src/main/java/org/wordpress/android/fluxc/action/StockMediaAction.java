@@ -12,11 +12,5 @@ public enum StockMediaAction implements IAction {
     FETCH_STOCK_MEDIA,
 
     @Action(payloadType = StockMediaStore.FetchedStockMediaListPayload.class)
-    FETCHED_STOCK_MEDIA,
-
-    @Action(payloadType = StockMediaStore.UploadStockMediaPayload.class)
-    UPLOAD_STOCK_MEDIA,
-
-    @Action(payloadType = StockMediaStore.UploadedStockMediaPayload.class)
-    UPLOADED_STOCK_MEDIA
+    FETCHED_STOCK_MEDIA
 }
