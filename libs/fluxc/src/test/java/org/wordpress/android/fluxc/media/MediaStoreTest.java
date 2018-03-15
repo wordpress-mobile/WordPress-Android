@@ -376,6 +376,71 @@ public class MediaStoreTest {
     }
 
     @Test
+    public void testSearchSiteByMimeType() {
+        final String testVideoPath = "/test/test_video.mp4";
+        final String testImagePath = "/test/test_image.jpg";
+        final String testAudioPath = "/test/test_audio.mp3";
+        final String testDocumentPath = "/test/test_document.pdf";
+
+        final int testSiteId = 55;
+        final long testVideoId = 987;
+        final long testImageId = 654;
+        final long testAudioId = 540;
+        final long testDocumentId = 876;
+
+        // generate media of different types
+        MediaModel videoMedia = generateMediaFromPath(testSiteId, testVideoId, testVideoPath);
+        assertTrue(MediaUtils.isVideoMimeType(videoMedia.getMimeType()));
+
+        MediaModel imageMedia = generateMediaFromPath(testSiteId, testImageId, testImagePath);
+        assertTrue(MediaUtils.isImageMimeType(imageMedia.getMimeType()));
+
+        MediaModel audioMedia = generateMediaFromPath(testSiteId, testAudioId, testAudioPath);
+        assertTrue(MediaUtils.isAudioMimeType(audioMedia.getMimeType()));
+
+        MediaModel documentMedia = generateMediaFromPath(testSiteId, testDocumentId, testDocumentPath);
+        assertTrue(MediaUtils.isApplicationMimeType(documentMedia.getMimeType()));
+
+        // insert media of different types
+        insertMediaIntoDatabase(videoMedia);
+        insertMediaIntoDatabase(imageMedia);
+        insertMediaIntoDatabase(audioMedia);
+        insertMediaIntoDatabase(documentMedia);
+
+        // verify the correct media is returned (just images)
+        final List<MediaModel> storeImages = mMediaStore
+                .searchSiteImages(getTestSiteWithLocalId(testSiteId), "test");
+        assertNotNull(storeImages);
+        assertTrue(storeImages.size() == 1);
+        assertEquals(testImageId, storeImages.get(0).getMediaId());
+        assertTrue(MediaUtils.isImageMimeType(storeImages.get(0).getMimeType()));
+
+        // verify the correct media is returned (just videos)
+        final List<MediaModel> storeVideos = mMediaStore
+                .searchSiteVideos(getTestSiteWithLocalId(testSiteId), "test");
+        assertNotNull(storeVideos);
+        assertTrue(storeVideos.size() == 1);
+        assertEquals(testVideoId, storeVideos.get(0).getMediaId());
+        assertTrue(MediaUtils.isVideoMimeType(storeVideos.get(0).getMimeType()));
+
+        // verify the correct media is returned (just audio)
+        final List<MediaModel> storeAudio = mMediaStore
+                .searchSiteAudio(getTestSiteWithLocalId(testSiteId), "test");
+        assertNotNull(storeAudio);
+        assertTrue(storeAudio.size() == 1);
+        assertEquals(testAudioId, storeAudio.get(0).getMediaId());
+        assertTrue(MediaUtils.isAudioMimeType(storeAudio.get(0).getMimeType()));
+
+        // verify the correct media is returned (just documents)
+        final List<MediaModel> storeDocuments = mMediaStore
+                .searchSiteDocuments(getTestSiteWithLocalId(testSiteId), "test");
+        assertNotNull(storeDocuments);
+        assertTrue(storeDocuments.size() == 1);
+        assertEquals(testDocumentId, storeDocuments.get(0).getMediaId());
+        assertTrue(MediaUtils.isApplicationMimeType(storeDocuments.get(0).getMimeType()));
+    }
+
+    @Test
     public void testGetPostMedia() {
         final int testSiteId = 11235813;
         final int testLocalPostId = 213253;
