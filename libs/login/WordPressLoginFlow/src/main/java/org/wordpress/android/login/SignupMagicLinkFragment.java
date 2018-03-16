@@ -1,4 +1,4 @@
-package org.wordpress.android.ui.accounts.signup;
+package org.wordpress.android.login;
 
 import android.app.ProgressDialog;
 import android.content.Context;
@@ -21,19 +21,16 @@ import android.widget.Button;
 
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
-import org.wordpress.android.R;
-import org.wordpress.android.WordPress;
-import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.fluxc.Dispatcher;
 import org.wordpress.android.fluxc.generated.AuthenticationActionBuilder;
 import org.wordpress.android.fluxc.store.AccountStore;
-import org.wordpress.android.login.LoginAnalyticsListener;
-import org.wordpress.android.login.LoginListener;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.NetworkUtils;
 
 import javax.inject.Inject;
+
+import dagger.android.support.AndroidSupportInjection;
 
 public class SignupMagicLinkFragment extends Fragment {
     private static final String ARG_EMAIL_ADDRESS = "ARG_EMAIL_ADDRESS";
@@ -109,7 +106,7 @@ public class SignupMagicLinkFragment extends Fragment {
 
     @Override
     public void onAttach(Context context) {
-        ((WordPress) getActivity().getApplication()).component().inject(this);
+        AndroidSupportInjection.inject(this);
         super.onAttach(context);
 
         if (context instanceof LoginListener) {
@@ -135,30 +132,29 @@ public class SignupMagicLinkFragment extends Fragment {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case R.id.help:
-                if (mLoginListener != null) {
-                    mLoginListener.helpSignupMagicLinkScreen(mEmail);
-                }
+        if (item.getItemId() == R.id.help) {
+            if (mLoginListener != null) {
+                mLoginListener.helpSignupMagicLinkScreen(mEmail);
+            }
 
-                return true;
-            default:
-                return false;
+            return true;
         }
+
+        return false;
     }
 
     protected void startProgress(String message) {
         mOpenMailButton.setEnabled(false);
 
         mProgressDialog = ProgressDialog.show(getActivity(), "", message, true, true,
-                                              new DialogInterface.OnCancelListener() {
-                                                  @Override
-                                                  public void onCancel(DialogInterface dialog) {
-                                                      if (mInProgress) {
-                                                          endProgress();
-                                                      }
-                                                  }
-                                              });
+                new DialogInterface.OnCancelListener() {
+                    @Override
+                    public void onCancel(DialogInterface dialog) {
+                        if (mInProgress) {
+                            endProgress();
+                        }
+                    }
+                });
 
         mInProgress = true;
     }
@@ -210,11 +206,11 @@ public class SignupMagicLinkFragment extends Fragment {
             endProgress();
 
             if (event.isError()) {
-                AnalyticsTracker.track(AnalyticsTracker.Stat.SIGNUP_MAGIC_LINK_FAILED);
+                mAnalyticsListener.trackSignupMagicLinkFailed();
                 AppLog.e(T.API, "OnAuthEmailSent error: " + event.error.type + " - " + event.error.message);
                 showErrorDialog(getString(R.string.signup_magic_link_error));
             } else {
-                AnalyticsTracker.track(AnalyticsTracker.Stat.SIGNUP_MAGIC_LINK_SUCCEEDED);
+                mAnalyticsListener.trackSignupMagicLinkSucceeded();
             }
         }
     }

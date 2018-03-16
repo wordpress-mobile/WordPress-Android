@@ -28,13 +28,10 @@
     <string name="anonymous">Anonymous</string>
 
     <!-- general strings -->
-    <string name="post">Post</string>
-    <string name="page">Page</string>
     <string name="posts">Posts</string>
     <string name="media">Media</string>
     <string name="video">Video</string>
     <string name="themes">Themes</string>
-    <string name="pages">Pages</string>
     <string name="about_the_app">About the app</string>
     <string name="username">Username</string>
     <string name="cancel">Cancel</string>
@@ -87,8 +84,8 @@
 
     <string name="button_not_now">Not now</string>
 
-    <string name="latitude_longitude">%f, %f</string>
-    <string name="author_name_blog_name">%s, %s</string>
+    <string name="latitude_longitude">%1$f, %2$f</string>
+    <string name="author_name_blog_name">%1$s, %2$s</string>
     <string name="at_username">\@%s</string>
 
     <!-- timestamps for posts / pages -->
@@ -230,7 +227,25 @@
 
     <!-- post uploads -->
     <string name="upload_failed_param">Upload failed for \"%s\"</string>
-    <string name="media_file_post_mixed_not_uploaded">%1$d %2$s with %3$d files not uploaded</string>
+
+    <string name="media_file_post_singular_mixed_not_uploaded_one_file">1 post with 1 file not uploaded</string>
+    <string name="media_file_posts_plural_mixed_not_uploaded_one_file">%1$d posts with 1 file not uploaded</string>
+    <string name="media_file_page_singular_mixed_not_uploaded_one_file">1 page with 1 file not uploaded</string>
+    <string name="media_file_pages_plural_mixed_not_uploaded_one_file">%1$d pages with 1 file not uploaded</string>
+    <string name="media_file_pages_and_posts_mixed_not_uploaded_one_file">%1$d posts / pages with 1 file not uploaded</string>
+
+    <string name="media_file_post_singular_mixed_not_uploaded_files_plural">1 post with %1$d files not uploaded</string>
+    <string name="media_file_posts_plural_mixed_not_uploaded_files_plural">%1$d posts with %2$d files not uploaded</string>
+    <string name="media_file_page_singular_mixed_not_uploaded_files_plural">1 page with %1$d files not uploaded</string>
+    <string name="media_file_pages_plural_mixed_not_uploaded_files_plural">%1$d pages with %2$d files not uploaded</string>
+    <string name="media_file_pages_and_posts_mixed_not_uploaded_files_plural">%1$d posts / pages with %2$d files not uploaded</string>
+
+    <string name="media_file_post_singular_only_not_uploaded">1 post not uploaded</string>
+    <string name="media_file_posts_plural_only_not_uploaded">%1$d posts not uploaded</string>
+    <string name="media_file_page_singular_only_not_uploaded">1 page not uploaded</string>
+    <string name="media_file_pages_plural_only_not_uploaded">%1$d pages not uploaded</string>
+    <string name="media_file_pages_and_posts_only_not_uploaded">%1$d posts / pages not uploaded</string>
+
     <string name="media_files_not_uploaded">%d files not uploaded</string>
     <string name="media_files_uploaded">%d files uploaded</string>
     <string name="media_file_not_uploaded">1 file not uploaded</string>
@@ -356,9 +371,24 @@
     <string name="preview">Preview</string>
     <string name="update_verb">Update</string>
     <string name="uploading_title">Uploading…</string>
-    <string name="uploading_subtitle_mixed">%1$d %2$s, and %3$d of %4$d files remaining</string>
-    <string name="uploading_subtitle_mixed_one">%1$d %2$s, and 1 file remaining</string>
-    <string name="uploading_subtitle_posts_only">%1$d %2$s remaining</string>
+
+    <string name="uploading_subtitle_mixed_page_singular_media_plural">1 page, and %1$d of %2$d files remaining</string>
+    <string name="uploading_subtitle_mixed_post_singular_media_plural">1 post, and %1$d of %2$d files remaining</string>
+    <string name="uploading_subtitle_mixed_pages_plural_media_plural">%1$d pages, and %2$d of %3$d files remaining</string>
+    <string name="uploading_subtitle_mixed_posts_plural_media_plural">%1$d posts, and %2$d of %3$d files remaining</string>
+    <string name="uploading_subtitle_mixed_pages_and_posts_plural_media_plural">%1$d pages / posts, and %2$d of %3$d files remaining</string>
+
+    <string name="uploading_subtitle_mixed_page_singular_media_one">1 page, and 1 file remaining</string>
+    <string name="uploading_subtitle_mixed_post_singular_media_one">1 post, and 1 file remaining</string>
+    <string name="uploading_subtitle_mixed_pages_plural_media_one">%1$d pages, and 1 file remaining</string>
+    <string name="uploading_subtitle_mixed_posts_plural_media_one">%1$d posts, and 1 file remaining</string>
+    <string name="uploading_subtitle_mixed_pages_and_posts_plural_media_one">%1$d pages / posts, and 1 file remaining</string>
+
+    <string name="uploading_subtitle_posts_only_plural">%1$d posts remaining</string>
+    <string name="uploading_subtitle_pages_only_plural">%1$d pages remaining</string>
+    <string name="uploading_subtitle_posts_only_one">1 post remaining</string>
+    <string name="uploading_subtitle_pages_only_one">1 page remaining</string>
+    <string name="uploading_subtitle_pages_posts">%1$d pages / posts remaining</string>
     <string name="uploading_subtitle_media_only">%1$d of %2$d files remaining</string>
     <string name="uploading_subtitle_media_only_one">1 file remaining</string>
     <string name="uploading_media">Uploading media…</string>
@@ -467,6 +497,20 @@
     <string name="site_settings_timezones_error">Unable to load timezones</string>
     <string name="site_settings_amp_title">Accelerated Mobile Pages (AMP)</string>
     <string name="site_settings_amp_summary">Your WordPress.com site supports the use of Accelerated Mobile Pages, a Google-led initiative that dramatically speeds up loading times on mobile devices</string>
+
+    <!-- Media -->
+    <string name="site_settings_quota_header">Media</string>
+    <string name="site_settings_quota_space_title">Space Used</string>
+    <string name="site_settings_quota_space_hint">If you need more space consider upgrading your WordPress plan.</string>
+    <string name="site_settings_quota_space_value">%1$s of %2$s</string>
+
+    <!-- these represent a formatted amount along with a measuring unit, i.e. 10 B, or 132 kB, or 10.2 MB, 1,037.76 kB etc. -->
+    <string name="file_size_in_bytes">%s B</string>
+    <string name="file_size_in_kilobytes">%s kB</string>
+    <string name="file_size_in_megabytes">%s MB</string>
+    <string name="file_size_in_gigabytes">%s GB</string>
+    <string name="file_size_in_terabytes">%s TB</string>
+
     <!-- Speed up your site -->
     <string name="site_settings_speed_up_your_site">Speed up your site</string>
     <string name="site_settings_serve_images_from_our_servers">Serve images from our servers</string>
@@ -1017,6 +1061,15 @@
 
     <string name="error_media_small">Media too small to show</string>
 
+    <string name="menu_save_as_draft">Save as Draft</string>
+    <string name="menu_publish_now">Publish Now</string>
+    <string name="menu_preview">Preview</string>
+    <string name="menu_html_mode">HTML Mode</string>
+    <string name="menu_html_mode_done_snackbar">Switched to HTML mode.</string>
+    <string name="menu_visual_mode">Visual Mode</string>
+    <string name="menu_visual_mode_done_snackbar">Switched to Visual mode.</string>
+    <string name="menu_undo_snackbar_action">UNDO</string>
+
     <string name="menu_undo">Undo</string>
     <string name="menu_redo">Redo</string>
 
@@ -1101,7 +1154,7 @@
     <string name="app_title">WordPress for Android</string>
     <string name="publisher">Publisher:</string>
     <string name="publisher_with_company_param">Publisher: %s</string>
-    <string name="copyright_with_year_and_company_params">© %d %s</string>
+    <string name="copyright_with_year_and_company_params">© %1$d %2$s</string>
     <string name="automattic_inc" translatable="false">Automattic, Inc</string>
     <string name="automattic_url" translatable="false">automattic.com</string>
     <string name="wordpresscom_tos_url" translatable="false">https://%s.wordpress.com/tos</string>
@@ -1221,6 +1274,8 @@
     <string name="jetpack_disconnect_confirm">Disconnect</string>
     <string name="jetpack_disconnect_success_toast">Site disconnected</string>
     <string name="jetpack_disconnect_error_toast">Error disconnecting site</string>
+    <string name="jetpack_already_connected_toast">You are already connected to Jetpack</string>
+    <string name="jetpack_connection_failed_with_reason">Connection to Jetpack failed: %s</string>
 
     <!--
       reader strings
@@ -1750,6 +1805,7 @@
     <string name="editor_toast_uploading_please_wait">You are currently uploading media. Please wait until this completes.</string>
     <string name="editor_toast_failed_uploads">Some media uploads have failed. You can\'t save or publish
         your post in this state. Would you like to remove all failed media?</string>
+    <string name="editor_toast_no_action_taken">An error occurred. No action taken.</string>
     <string name="editor_remove_failed_uploads">Remove failed uploads</string>
     <string name="error_all_media_upload_canceled">All media uploads have been cancelled due to an unknown error. Please retry uploading</string>
 

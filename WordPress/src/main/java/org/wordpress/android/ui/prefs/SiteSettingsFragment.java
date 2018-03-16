@@ -67,6 +67,7 @@ import org.wordpress.android.util.AnalyticsUtils;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.HelpshiftHelper;
 import org.wordpress.android.util.HtmlUtils;
+import org.wordpress.android.util.LocaleManager;
 import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.SiteUtils;
 import org.wordpress.android.util.StringUtils;
@@ -183,6 +184,9 @@ public class SiteSettingsFragment extends PreferenceFragment
     private Preference mTimezonePref;
     private Preference mPostsPerPagePref;
     private WPSwitchPreference mAmpPref;
+
+    // Media settings
+    private EditTextPreference mSiteQuotaSpacePref;
 
     // Discussion settings preview
     private WPSwitchPreference mAllowCommentsPref;
@@ -882,7 +886,7 @@ public class SiteSettingsFragment extends PreferenceFragment
         mServeImagesFromOurServers =
                 (WPSwitchPreference) getChangePref(R.string.pref_key_serve_images_from_our_servers);
         mLazyLoadImages = (WPSwitchPreference) getChangePref(R.string.pref_key_lazy_load_images);
-
+        mSiteQuotaSpacePref = (EditTextPreference) getChangePref(R.string.pref_key_site_quota_space);
         sortLanguages();
 
         boolean isAccessedViaWPComRest = SiteUtils.isAccessedViaWPComRest(mSite);
@@ -1240,6 +1244,7 @@ public class SiteSettingsFragment extends PreferenceFragment
 
         mPostsPerPagePref.setSummary(String.valueOf(mSiteSettings.getPostsPerPage()));
         setTimezonePref(mSiteSettings.getTimezone());
+        changeEditTextPreferenceValue(mSiteQuotaSpacePref, mSiteSettings.getQuotaDiskSpace());
     }
 
     private void setDateTimeFormatPref(FormatType formatType, WPPreference formatPref, String formatValue) {
@@ -1378,7 +1383,7 @@ public class SiteSettingsFragment extends PreferenceFragment
         if (TextUtils.isEmpty(mLanguagePref.getSummary())
             || !newValue.equals(mLanguagePref.getValue())) {
             mLanguagePref.setValue(newValue);
-            String summary = WPPrefUtils.getLanguageString(newValue, WPPrefUtils.languageLocale(newValue));
+            String summary = LocaleManager.getLanguageString(newValue, LocaleManager.languageLocale(newValue));
             mLanguagePref.setSummary(summary);
             mLanguagePref.refreshAdapter();
         }
@@ -1389,15 +1394,15 @@ public class SiteSettingsFragment extends PreferenceFragment
             return;
         }
 
-        Pair<String[], String[]> pair = WPPrefUtils
-                .createSortedLanguageDisplayStrings(mLanguagePref.getEntryValues(), WPPrefUtils.languageLocale(null));
+        Pair<String[], String[]> pair = LocaleManager
+                .createSortedLanguageDisplayStrings(mLanguagePref.getEntryValues(), LocaleManager.languageLocale(null));
         if (pair != null) {
             String[] sortedEntries = pair.first;
             String[] sortedValues = pair.second;
 
             mLanguagePref.setEntries(sortedEntries);
             mLanguagePref.setEntryValues(sortedValues);
-            mLanguagePref.setDetails(WPPrefUtils.createLanguageDetailDisplayStrings(sortedValues));
+            mLanguagePref.setDetails(LocaleManager.createLanguageDetailDisplayStrings(sortedValues));
         }
     }
 
@@ -1666,6 +1671,7 @@ public class SiteSettingsFragment extends PreferenceFragment
         WPPrefUtils.removePreference(this, R.string.pref_key_site_screen, R.string.pref_key_site_writing);
         WPPrefUtils.removePreference(this, R.string.pref_key_site_screen, R.string.pref_key_site_discussion);
         WPPrefUtils.removePreference(this, R.string.pref_key_site_screen, R.string.pref_key_site_advanced);
+        WPPrefUtils.removePreference(this, R.string.pref_key_site_screen, R.string.pref_key_site_quota);
     }
 
     private void removeNonJetpackPreferences() {
@@ -1673,6 +1679,9 @@ public class SiteSettingsFragment extends PreferenceFragment
         WPPrefUtils.removePreference(this, R.string.pref_key_site_screen, R.string.pref_key_site_advanced);
         WPPrefUtils.removePreference(this, R.string.pref_key_site_screen, R.string.pref_key_site_account);
         WPPrefUtils.removePreference(this, R.string.pref_key_site_general, R.string.pref_key_site_language);
+        if (!mSite.hasDiskSpaceQuotaInformation()) {
+            WPPrefUtils.removePreference(this, R.string.pref_key_site_screen, R.string.pref_key_site_quota);
+        }
     }
 
     private void removeSpeedUpJetpackPreferences() {

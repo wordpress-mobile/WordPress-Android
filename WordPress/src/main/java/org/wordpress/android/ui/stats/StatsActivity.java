@@ -39,6 +39,7 @@ import org.wordpress.android.ui.prefs.AppPrefs;
 import org.wordpress.android.util.AnalyticsUtils;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
+import org.wordpress.android.util.LocaleManager;
 import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.RateLimitedTask;
 import org.wordpress.android.util.SiteUtils;
@@ -76,6 +77,7 @@ public class StatsActivity extends AppCompatActivity
     public static final String ARG_LOCAL_TABLE_SITE_ID = "ARG_LOCAL_TABLE_SITE_ID";
     public static final String ARG_LAUNCHED_FROM = "ARG_LAUNCHED_FROM";
     public static final String ARG_DESIRED_TIMEFRAME = "ARG_DESIRED_TIMEFRAME";
+    public static final String LOGGED_INTO_JETPACK = "LOGGED_INTO_JETPACK";
 
     public enum StatsLaunchedFrom {
         STATS_WIDGET,
@@ -100,6 +102,10 @@ public class StatsActivity extends AppCompatActivity
             StatsVisitorsAndViewsFragment.OverviewLabel.VIEWS;
     private boolean mThereWasAnErrorLoadingStats = false;
 
+    @Override
+    protected void attachBaseContext(Context newBase) {
+        super.attachBaseContext(LocaleManager.setLocale(newBase));
+    }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -277,7 +283,7 @@ public class StatsActivity extends AppCompatActivity
     }
 
     private boolean checkIfSiteHasAccessibleStats(SiteModel site) {
-        if (!SiteUtils.isAccessedViaWPComRest(mSite)) {
+        if (!SiteUtils.isAccessedViaWPComRest(mSite) && !getIntent().getBooleanExtra(LOGGED_INTO_JETPACK, false)) {
             if (!site.isJetpackInstalled() || !site.isJetpackConnected()) {
                 ActivityLauncher.viewConnectJetpackForStats(this, site);
                 return false;

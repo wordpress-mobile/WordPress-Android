@@ -24,10 +24,11 @@ import org.wordpress.android.fluxc.store.SiteStore.OnPostFormatsChanged;
 import org.wordpress.android.models.CategoryModel;
 import org.wordpress.android.models.JetpackSettingsModel;
 import org.wordpress.android.models.SiteSettingsModel;
+import org.wordpress.android.util.FormatUtils;
 import org.wordpress.android.util.LanguageUtils;
+import org.wordpress.android.util.LocaleManager;
 import org.wordpress.android.util.SiteUtils;
 import org.wordpress.android.util.StringUtils;
-import org.wordpress.android.util.WPPrefUtils;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -219,7 +220,7 @@ public abstract class SiteSettingsInterface {
         mRemoteSettings = new SiteSettingsModel();
         mJpSettings = new JetpackSettingsModel();
         mRemoteJpSettings = new JetpackSettingsModel();
-        mLanguageCodes = WPPrefUtils.generateLanguageMap(host);
+        mLanguageCodes = LocaleManager.generateLanguageMap(host);
     }
 
     @Override
@@ -247,6 +248,10 @@ public abstract class SiteSettingsInterface {
 
     public @NonNull String getAddress() {
         return mSettings.address == null ? "" : mSettings.address;
+    }
+
+    public @NonNull String getQuotaDiskSpace() {
+        return mSettings.quotaDiskSpace == null ? "" : mSettings.quotaDiskSpace;
     }
 
     public int getPrivacy() {
@@ -739,6 +744,10 @@ public abstract class SiteSettingsInterface {
         mSettings.address = address;
     }
 
+    public void setQuotaDiskSpace(String quotaDiskSpace) {
+        mSettings.quotaDiskSpace = quotaDiskSpace;
+    }
+
     public void setPrivacy(int privacy) {
         mSettings.privacy = privacy;
     }
@@ -1026,7 +1035,6 @@ public abstract class SiteSettingsInterface {
             }
             mRemoteSettings.language = mSettings.language;
             mRemoteSettings.languageId = mSettings.languageId;
-            notifyUpdatedOnUiThread();
         } else {
             mSettings.isInLocalTable = false;
             mSettings.localTableId = mSite.getId();
@@ -1035,7 +1043,19 @@ public abstract class SiteSettingsInterface {
             setPassword(mSite.getPassword());
             setTitle(mSite.getName());
         }
-
+        // Quota information always comes from the main site table
+        if (mSite.hasDiskSpaceQuotaInformation()) {
+            String percentage = FormatUtils.formatPercentage(mSite.getSpacePercentUsed() / 100);
+            final String[] units = new String[] {mContext.getString(R.string.file_size_in_bytes),
+                    mContext.getString(R.string.file_size_in_kilobytes),
+                    mContext.getString(R.string.file_size_in_megabytes),
+                    mContext.getString(R.string.file_size_in_gigabytes),
+                    mContext.getString(R.string.file_size_in_terabytes) };
+            String spaceAllowed = FormatUtils.formatFileSize(mSite.getSpaceAvailable(), units);
+            String quotaAvailableSentence = String.format(mContext.getString(R.string.site_settings_quota_space_value),
+                    percentage, spaceAllowed);
+            setQuotaDiskSpace(quotaAvailableSentence);
+        }
         // Self hosted always read account data from the main table
         if (!SiteUtils.isAccessedViaWPComRest(mSite)) {
             setUsername(mSite.getUsername());
@@ -1045,6 +1065,7 @@ public abstract class SiteSettingsInterface {
         if (localSettings != null) {
             localSettings.close();
         }
+        notifyUpdatedOnUiThread();
     }
 
     /**

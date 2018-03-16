@@ -1,4 +1,4 @@
-package org.wordpress.android.ui.accounts.signup;
+package org.wordpress.android.login;
 
 import android.content.Context;
 import android.content.DialogInterface;
@@ -9,8 +9,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
 
-import org.wordpress.android.R;
-import org.wordpress.android.ui.WPBottomSheetDialog;
+import org.wordpress.android.login.widgets.WPBottomSheetDialog;
 
 public class SignupBottomSheetDialog extends WPBottomSheetDialog {
     public SignupBottomSheetDialog(@NonNull final Context context,
@@ -19,7 +18,7 @@ public class SignupBottomSheetDialog extends WPBottomSheetDialog {
         //noinspection InflateParams
         final View layout = LayoutInflater.from(context).inflate(R.layout.signup_bottom_sheet_dialog, null);
 
-        Button termsOfServiceText = (Button) layout.findViewById(R.id.signup_tos);
+        Button termsOfServiceText = layout.findViewById(R.id.signup_tos);
         termsOfServiceText.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -29,7 +28,7 @@ public class SignupBottomSheetDialog extends WPBottomSheetDialog {
         termsOfServiceText.setText(Html.fromHtml(String.format(
                 context.getResources().getString(R.string.signup_terms_of_service_text), "<u>", "</u>")));
 
-        Button signupWithEmailButton = (Button) layout.findViewById(R.id.signup_email);
+        Button signupWithEmailButton = layout.findViewById(R.id.signup_email);
         signupWithEmailButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -37,7 +36,7 @@ public class SignupBottomSheetDialog extends WPBottomSheetDialog {
             }
         });
 
-        Button signupWithGoogleButton = (Button) layout.findViewById(R.id.signup_google);
+        Button signupWithGoogleButton = layout.findViewById(R.id.signup_google);
         signupWithGoogleButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -67,11 +66,8 @@ public class SignupBottomSheetDialog extends WPBottomSheetDialog {
 
     public interface SignupSheetListener {
         void onSignupSheetCanceled();
-
         void onSignupSheetEmailClicked();
-
         void onSignupSheetGoogleClicked();
-
         void onSignupSheetTermsOfServiceClicked();
     }
 }

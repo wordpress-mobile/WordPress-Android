@@ -12,6 +12,7 @@
     </issue>
 
     <!-- ERROR -->
+    <issue id="SimpleDateFormat" severity="error" />
     <issue id="RtlCompat" severity="error" />
     <issue id="DefaultLocale" severity="error" />
     <issue id="RtlHardcoded" severity="error" />
@@ -64,6 +65,7 @@
     <!-- IGNORE -->
     <issue id="MissingTranslation" severity="ignore" />
     <issue id="ExtraTranslation" severity="ignore" />
+    <issue id="PluralsCandidate" severity="ignore" /> <!-- GlotPress doesn't support plurals -->
 
     <issue id="InvalidPackage">
         <ignore regexp="okio-1.9.0.jar" />

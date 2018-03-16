@@ -1,6 +1,7 @@
 package org.wordpress.android.ui.accounts;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
@@ -34,16 +35,16 @@ import org.wordpress.android.login.LoginMagicLinkSentFragment;
 import org.wordpress.android.login.LoginMode;
 import org.wordpress.android.login.LoginSiteAddressFragment;
 import org.wordpress.android.login.LoginUsernamePasswordFragment;
+import org.wordpress.android.login.SignupBottomSheetDialog;
+import org.wordpress.android.login.SignupBottomSheetDialog.SignupSheetListener;
+import org.wordpress.android.login.SignupEmailFragment;
+import org.wordpress.android.login.SignupGoogleFragment;
+import org.wordpress.android.login.SignupMagicLinkFragment;
 import org.wordpress.android.ui.ActivityLauncher;
 import org.wordpress.android.ui.RequestCodes;
 import org.wordpress.android.ui.accounts.SmartLockHelper.Callback;
 import org.wordpress.android.ui.accounts.login.LoginPrologueFragment;
 import org.wordpress.android.ui.accounts.login.LoginPrologueListener;
-import org.wordpress.android.ui.accounts.signup.SignupBottomSheetDialog;
-import org.wordpress.android.ui.accounts.signup.SignupBottomSheetDialog.SignupSheetListener;
-import org.wordpress.android.ui.accounts.signup.SignupEmailFragment;
-import org.wordpress.android.ui.accounts.signup.SignupGoogleFragment;
-import org.wordpress.android.ui.accounts.signup.SignupMagicLinkFragment;
 import org.wordpress.android.ui.notifications.services.NotificationsUpdateService;
 import org.wordpress.android.ui.reader.services.ReaderUpdateService;
 import org.wordpress.android.util.AppLog;
@@ -51,6 +52,7 @@ import org.wordpress.android.util.CrashlyticsUtils;
 import org.wordpress.android.util.HelpshiftHelper;
 import org.wordpress.android.util.HelpshiftHelper.Tag;
 import org.wordpress.android.util.LanguageUtils;
+import org.wordpress.android.util.LocaleManager;
 import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.SelfSignedSSLUtils;
 import org.wordpress.android.util.StringUtils;
@@ -91,6 +93,11 @@ public class LoginActivity extends AppCompatActivity implements ConnectionCallba
     private LoginMode mLoginMode;
 
     @Inject DispatchingAndroidInjector<Fragment> mFragmentInjector;
+
+    @Override
+    protected void attachBaseContext(Context newBase) {
+        super.attachBaseContext(LocaleManager.setLocale(newBase));
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -492,11 +499,11 @@ public class LoginActivity extends AppCompatActivity implements ConnectionCallba
         });
     }
 
-    private void launchHelpshift(String url, String username, boolean isWpcom, Tag origin) {
+    private void launchHelpshift(String url, String email, boolean isWpcom, Tag origin) {
         Intent intent = new Intent(this, HelpActivity.class);
         // Used to pass data to an eventual support service
         intent.putExtra(HelpshiftHelper.ENTERED_URL_KEY, url);
-        intent.putExtra(HelpshiftHelper.ENTERED_USERNAME_KEY, username);
+        intent.putExtra(HelpshiftHelper.ENTERED_EMAIL_KEY, email);
         intent.putExtra(HelpshiftHelper.ORIGIN_KEY, origin);
         if (getLoginMode() == LoginMode.JETPACK_STATS) {
             Tag[] tags = new Tag[]{Tag.CONNECTING_JETPACK};

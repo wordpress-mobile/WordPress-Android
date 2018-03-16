@@ -2,6 +2,7 @@ package org.wordpress.android.ui.plugins;
 
 import android.animation.ObjectAnimator;
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
@@ -13,6 +14,7 @@ import android.support.v7.app.ActionBar;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.content.res.AppCompatResources;
+import android.support.v7.widget.AppCompatButton;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.Toolbar;
 import android.text.Html;
@@ -56,6 +58,7 @@ import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.DateTimeUtils;
 import org.wordpress.android.util.DisplayUtils;
 import org.wordpress.android.util.FormatUtils;
+import org.wordpress.android.util.LocaleManager;
 import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.SiteUtils;
 import org.wordpress.android.util.StringUtils;
@@ -101,8 +104,8 @@ public class PluginDetailActivity extends AppCompatActivity {
     private TextView mVersionTopTextView;
     private TextView mVersionBottomTextView;
     private TextView mInstalledText;
-    private TextView mUpdateButton;
-    private TextView mInstallButton;
+    private AppCompatButton mUpdateButton;
+    private AppCompatButton mInstallButton;
     private Switch mSwitchActive;
     private Switch mSwitchAutoupdates;
     private ProgressDialog mRemovePluginProgressDialog;
@@ -134,6 +137,11 @@ public class PluginDetailActivity extends AppCompatActivity {
 
     @Inject PluginStore mPluginStore;
     @Inject Dispatcher mDispatcher;
+
+    @Override
+    protected void attachBaseContext(Context newBase) {
+        super.attachBaseContext(LocaleManager.setLocale(newBase));
+    }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -326,7 +334,7 @@ public class PluginDetailActivity extends AppCompatActivity {
             }
         });
 
-        mVersionTopTextView.setOnClickListener(new View.OnClickListener() {
+        findViewById(R.id.plugin_version_layout).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 showPluginInfoPopup();
