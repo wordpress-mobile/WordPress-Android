@@ -376,68 +376,202 @@ public class MediaStoreTest {
     }
 
     @Test
-    public void testSearchSiteByMimeType() {
-        final String testVideoPath = "/test/test_video.mp4";
+    public void testSearchSiteImages() {
         final String testImagePath = "/test/test_image.jpg";
+        final String testVideoPath = "/test/test_video.mp4";
         final String testAudioPath = "/test/test_audio.mp3";
-        final String testDocumentPath = "/test/test_document.pdf";
 
         final int testSiteId = 55;
-        final long testVideoId = 987;
         final long testImageId = 654;
+        final long testVideoId = 987;
         final long testAudioId = 540;
-        final long testDocumentId = 876;
 
         // generate media of different types
-        MediaModel videoMedia = generateMediaFromPath(testSiteId, testVideoId, testVideoPath);
-        assertTrue(MediaUtils.isVideoMimeType(videoMedia.getMimeType()));
-
         MediaModel imageMedia = generateMediaFromPath(testSiteId, testImageId, testImagePath);
+        imageMedia.setTitle("Awesome Image");
+        imageMedia.setDescription("This is an image test");
         assertTrue(MediaUtils.isImageMimeType(imageMedia.getMimeType()));
 
-        MediaModel audioMedia = generateMediaFromPath(testSiteId, testAudioId, testAudioPath);
-        assertTrue(MediaUtils.isAudioMimeType(audioMedia.getMimeType()));
+        MediaModel videoMedia = generateMediaFromPath(testSiteId, testVideoId, testVideoPath);
+        videoMedia.setTitle("Video Title");
+        videoMedia.setCaption("Test Caption");
+        assertTrue(MediaUtils.isVideoMimeType(videoMedia.getMimeType()));
 
-        MediaModel documentMedia = generateMediaFromPath(testSiteId, testDocumentId, testDocumentPath);
-        assertTrue(MediaUtils.isApplicationMimeType(documentMedia.getMimeType()));
+        MediaModel audioMedia = generateMediaFromPath(testSiteId, testAudioId, testAudioPath);
+        audioMedia.setDescription("This is an audio test");
+        assertTrue(MediaUtils.isAudioMimeType(audioMedia.getMimeType()));
 
         // insert media of different types
         insertMediaIntoDatabase(videoMedia);
         insertMediaIntoDatabase(imageMedia);
         insertMediaIntoDatabase(audioMedia);
-        insertMediaIntoDatabase(documentMedia);
 
-        // verify the correct media is returned (just images)
+        // verify the correct media is returned
         final List<MediaModel> storeImages = mMediaStore
                 .searchSiteImages(getTestSiteWithLocalId(testSiteId), "test");
+
         assertNotNull(storeImages);
         assertTrue(storeImages.size() == 1);
         assertEquals(testImageId, storeImages.get(0).getMediaId());
         assertTrue(MediaUtils.isImageMimeType(storeImages.get(0).getMimeType()));
+        assertEquals(testSiteId, storeImages.get(0).getLocalSiteId());
+    }
 
-        // verify the correct media is returned (just videos)
+    @Test
+    public void testSearchSiteVideos() {
+        final String testVideoPath1 = "/test/video_1.mp4";
+        final String testVideoPath2 = "/test/video_2.mp4";
+        final String testDocumentPath = "/test/test_document.pdf";
+
+        final int testSiteId = 423;
+        final long testVideoId1 = 675;
+        final long testVideoId2 = 1432;
+        final long testDocumentId = 125;
+
+        // generate media of different types
+        MediaModel videoMedia1 = generateMediaFromPath(testSiteId, testVideoId1, testVideoPath1);
+        videoMedia1.setTitle("My trip title");
+        assertTrue(MediaUtils.isVideoMimeType(videoMedia1.getMimeType()));
+
+        MediaModel videoMedia2 = generateMediaFromPath(testSiteId, testVideoId2, testVideoPath2);
+        videoMedia2.setTitle("Test video title");
+        assertTrue(MediaUtils.isVideoMimeType(videoMedia2.getMimeType()));
+
+        MediaModel documentMedia = generateMediaFromPath(testSiteId, testDocumentId, testDocumentPath);
+        documentMedia.setTitle("My first test");
+        assertTrue(MediaUtils.isApplicationMimeType(documentMedia.getMimeType()));
+
+        // insert media of different types
+        insertMediaIntoDatabase(videoMedia1);
+        insertMediaIntoDatabase(videoMedia2);
+        insertMediaIntoDatabase(documentMedia);
+
+        // verify the correct media is returned
         final List<MediaModel> storeVideos = mMediaStore
                 .searchSiteVideos(getTestSiteWithLocalId(testSiteId), "test");
         assertNotNull(storeVideos);
         assertTrue(storeVideos.size() == 1);
-        assertEquals(testVideoId, storeVideos.get(0).getMediaId());
+        assertEquals(testVideoId2, storeVideos.get(0).getMediaId());
         assertTrue(MediaUtils.isVideoMimeType(storeVideos.get(0).getMimeType()));
+        assertEquals(testSiteId, storeVideos.get(0).getLocalSiteId());
+    }
+
+    @Test
+    public void testSearchSiteAudio() {
+        final String testImagePath = "/test/test_image.jpg";
+        final String testAudioPath1 = "/test/my_audio.mp3";
+        final String testAudioPath2 = "/test/awesome_2018.mp3";
+        final String testDocumentPath = "/test/test_document.pdf";
+
+        final int testSiteId = 8765;
+        final long testImageId = 34;
+        final long testAudioId1 = 100;
+        final long testAudioId2 = 99;
+        final long testDocumentId = 43;
+
+        // generate media of different types
+        MediaModel imageMedia = generateMediaFromPath(testSiteId, testImageId, testImagePath);
+        imageMedia.setTitle("Title test");
+        assertTrue(MediaUtils.isImageMimeType(imageMedia.getMimeType()));
+
+        MediaModel audioMedia1 = generateMediaFromPath(testSiteId, testAudioId1, testAudioPath1);
+        audioMedia1.setTitle("The big one");
+        audioMedia1.setDescription("Test for the World");
+        assertTrue(MediaUtils.isAudioMimeType(audioMedia1.getMimeType()));
+
+        MediaModel audioMedia2 = generateMediaFromPath(testSiteId, testAudioId2, testAudioPath2);
+        audioMedia2.setTitle("The test!");
+        audioMedia2.setDescription("Without description");
+        assertTrue(MediaUtils.isAudioMimeType(audioMedia2.getMimeType()));
+
+        MediaModel documentMedia = generateMediaFromPath(testSiteId, testDocumentId, testDocumentPath);
+        documentMedia.setTitle("Document with every test of the app");
+        assertTrue(MediaUtils.isApplicationMimeType(documentMedia.getMimeType()));
+
+        // insert media of different types
+        insertMediaIntoDatabase(imageMedia);
+        insertMediaIntoDatabase(audioMedia1);
+        insertMediaIntoDatabase(audioMedia2);
+        insertMediaIntoDatabase(documentMedia);
 
         // verify the correct media is returned (just audio)
         final List<MediaModel> storeAudio = mMediaStore
                 .searchSiteAudio(getTestSiteWithLocalId(testSiteId), "test");
         assertNotNull(storeAudio);
-        assertTrue(storeAudio.size() == 1);
-        assertEquals(testAudioId, storeAudio.get(0).getMediaId());
+        assertTrue(storeAudio.size() == 2);
+        assertEquals(testAudioId1, storeAudio.get(0).getMediaId());
+        assertEquals(testAudioId2, storeAudio.get(1).getMediaId());
+
         assertTrue(MediaUtils.isAudioMimeType(storeAudio.get(0).getMimeType()));
+        assertTrue(MediaUtils.isAudioMimeType(storeAudio.get(1).getMimeType()));
+
+        assertEquals(testSiteId, storeAudio.get(0).getLocalSiteId());
+        assertEquals(testSiteId, storeAudio.get(1).getLocalSiteId());
+
+    }
+
+    @Test
+    public void testSearchSiteDocuments() {
+        final String testAudioPath = "/test/test_audio.mp3";
+        final String testDocumentPath1 = "/test/document.pdf";
+        final String testDocumentPath2 = "/test/document.doc";
+        final String testDocumentPath3 = "/test/document.xls";
+        final String testDocumentPath4 = "/test/document.pps";
+
+        final int testSiteId = 865234;
+        final long testAudioId = 78;
+        final long testDocumentId1 = 234;
+        final long testDocumentId2 = 657;
+        final long testDocumentId3 = 98;
+        final long testDocumentId4 = 543;
+
+        // generate media of different types
+        MediaModel audioMedia = generateMediaFromPath(testSiteId, testAudioId, testAudioPath);
+        audioMedia.setTitle("My first test");
+        audioMedia.setDescription("This is a description test");
+        audioMedia.setCaption("Caption test");
+        assertTrue(MediaUtils.isAudioMimeType(audioMedia.getMimeType()));
+
+        MediaModel documentMedia1 = generateMediaFromPath(testSiteId, testDocumentId1, testDocumentPath1);
+        documentMedia1.setTitle("The Document");
+        documentMedia1.setDescription("short description");
+        assertTrue(MediaUtils.isApplicationMimeType(documentMedia1.getMimeType()));
+
+        MediaModel documentMedia2 = generateMediaFromPath(testSiteId, testDocumentId2, testDocumentPath2);
+        documentMedia2.setTitle("Document to Test");
+        documentMedia2.setDescription("medium description");
+        assertTrue(MediaUtils.isApplicationMimeType(documentMedia2.getMimeType()));
+
+        MediaModel documentMedia3 = generateMediaFromPath(testSiteId, testDocumentId3, testDocumentPath3);
+        documentMedia3.setTitle("Document");
+        documentMedia3.setDescription("Large description with a test");
+        assertTrue(MediaUtils.isApplicationMimeType(documentMedia3.getMimeType()));
+
+        MediaModel documentMedia4 = generateMediaFromPath(testSiteId, testDocumentId4, testDocumentPath4);
+        documentMedia4.setTitle("Document Title");
+        documentMedia4.setDescription("description");
+        assertTrue(MediaUtils.isApplicationMimeType(documentMedia4.getMimeType()));
+
+        // insert media of different types
+        insertMediaIntoDatabase(audioMedia);
+        insertMediaIntoDatabase(documentMedia1);
+        insertMediaIntoDatabase(documentMedia2);
+        insertMediaIntoDatabase(documentMedia3);
+        insertMediaIntoDatabase(documentMedia4);
 
         // verify the correct media is returned (just documents)
         final List<MediaModel> storeDocuments = mMediaStore
                 .searchSiteDocuments(getTestSiteWithLocalId(testSiteId), "test");
         assertNotNull(storeDocuments);
-        assertTrue(storeDocuments.size() == 1);
-        assertEquals(testDocumentId, storeDocuments.get(0).getMediaId());
+        assertTrue(storeDocuments.size() == 2);
+        assertEquals(testDocumentId2, storeDocuments.get(0).getMediaId());
+        assertEquals(testDocumentId3, storeDocuments.get(1).getMediaId());
+
         assertTrue(MediaUtils.isApplicationMimeType(storeDocuments.get(0).getMimeType()));
+        assertTrue(MediaUtils.isApplicationMimeType(storeDocuments.get(1).getMimeType()));
+
+        assertEquals(testSiteId, storeDocuments.get(0).getLocalSiteId());
+        assertEquals(testSiteId, storeDocuments.get(1).getLocalSiteId());
     }
 
     @Test
