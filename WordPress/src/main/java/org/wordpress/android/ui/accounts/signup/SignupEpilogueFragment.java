@@ -591,7 +591,6 @@ public class SignupEpilogueFragment extends LoginBaseFormFragment<SignupEpilogue
     }
 
     private void populateViews() {
-        AnalyticsTracker.track(AnalyticsTracker.Stat.CREATED_ACCOUNT);
         mEmailAddress = mAccountStore.getAccount().getEmail();
         mDisplayName = createDisplayNameFromEmail();
         mUsername = !TextUtils.isEmpty(mAccountStore.getAccount().getUserName())
