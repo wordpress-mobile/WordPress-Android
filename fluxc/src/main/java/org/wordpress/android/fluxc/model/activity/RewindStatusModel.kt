@@ -1,8 +1,6 @@
-package org.wordpress.android.fluxc.network.rest.wpcom.activity
+package org.wordpress.android.fluxc.model.activity
 
-import org.wordpress.android.fluxc.store.Store
-
-data class RewindStatus(val state: State, val reason: String?, val restore: RestoreStatus?) {
+data class RewindStatusModel(val state: State, val reason: String?, val restore: RestoreStatus?) {
     enum class State(val value: String) {
         ACTIVE("active"),
         INACTIVE("inactive"),
@@ -21,20 +19,12 @@ data class RewindStatus(val state: State, val reason: String?, val restore: Rest
             QUEUED("queued"),
             FINISHED("finished"),
             RUNNING("running"),
-            FAIL("fail")
+            FAIL("fail");
+            companion object {
+                fun safeValueOf(value: String): Status? {
+                    return Status.values().firstOrNull { it.value == value }
+                }
+            }
         }
     }
-
-    enum class RewindStatusErrorType {
-        GENERIC_ERROR,
-        AUTHORIZATION_REQUIRED,
-        INVALID_RESPONSE,
-        MISSING_STATE,
-        INVALID_REWIND_STATE,
-        MISSING_RESTORE_ID,
-        MISSING_RESTORE_STATUS,
-        INVALID_RESTORE_STATUS
-    }
-
-    data class RewindStatusError(var type: RewindStatusErrorType, var message: String? = null) : Store.OnChangedError
 }
