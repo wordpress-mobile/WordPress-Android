@@ -28,7 +28,8 @@ class ActivityStoreTest {
         val number = 10
         val offset = 0
 
-        activityStore.onAction(ActivityActionBuilder.newFetchActivitiesAction(FetchActivitiesPayload(siteModel, number, offset)))
+        val action = ActivityActionBuilder.newFetchActivitiesAction(FetchActivitiesPayload(siteModel, number, offset))
+        activityStore.onAction(action)
 
         verify(activityRestClient).fetchActivity(siteModel, number, offset)
     }
@@ -38,7 +39,8 @@ class ActivityStoreTest {
         val number = 10
         val offset = 0
 
-        activityStore.onAction(ActivityActionBuilder.newFetchRewindStateAction(FetchRewindStatePayload(siteModel, number, offset)))
+        val action = ActivityActionBuilder.newFetchRewindStateAction(FetchRewindStatePayload(siteModel, number, offset))
+        activityStore.onAction(action)
 
         verify(activityRestClient).fetchActivityRewind(siteModel, number, offset)
     }
