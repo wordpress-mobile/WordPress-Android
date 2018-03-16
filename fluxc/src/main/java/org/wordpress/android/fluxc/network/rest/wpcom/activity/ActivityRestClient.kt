@@ -42,7 +42,10 @@ open class ActivityRestClient
                     mDispatcher.dispatch(ActivityActionBuilder.newFetchedActivitiesAction(payload))
                 },
                 {
-                    val error = ActivityError(genericToError(it), it.message)
+                    val error = ActivityError(genericToError(it,
+                            ActivityErrorType.GENERIC_ERROR,
+                            ActivityErrorType.INVALID_RESPONSE,
+                            ActivityErrorType.AUTHORIZATION_REQUIRED), it.message)
                     val payload = FetchedActivitiesPayload(error, site, number, offset)
                     mDispatcher.dispatch(ActivityActionBuilder.newFetchedActivitiesAction(payload))
                 })
@@ -61,7 +64,10 @@ open class ActivityRestClient
                     mDispatcher.dispatch(ActivityActionBuilder.newFetchedRewindStateAction(payload))
                 },
                 {
-                    val error = RewindStatusError(genericToRewindErrorType(it), it.message)
+                    val error = RewindStatusError(genericToError(it,
+                            RewindStatusErrorType.GENERIC_ERROR,
+                            RewindStatusErrorType.INVALID_RESPONSE,
+                            RewindStatusErrorType.AUTHORIZATION_REQUIRED), it.message)
                     val payload = FetchedRewindStatePayload(error, site, number, offset)
                     mDispatcher.dispatch(ActivityActionBuilder.newFetchedRewindStateAction(payload))
                 })
@@ -103,14 +109,12 @@ open class ActivityRestClient
                             rewindable = it.is_rewindable,
                             rewindID = it.rewind_id,
                             published = it.published,
-                            discarded = it.is_discarded)
-                    it.actor?.let {
-                        activityModelBuilder.displayName = it.name
-                        activityModelBuilder.type = it.type
-                        activityModelBuilder.wpcomUserID = it.wpcom_user_id
-                        activityModelBuilder.avatarURL = it.icon?.url
-                        activityModelBuilder.role = it.role
-                    }
+                            discarded = it.is_discarded,
+                            displayName = it.actor?.name,
+                            actorType = it.actor?.type,
+                            wpcomUserID = it.actor?.wpcom_user_id,
+                            avatarURL = it.actor?.icon?.url,
+                            role = it.actor?.role)
                     activityModelBuilder.build()
                 }
             }
@@ -151,27 +155,17 @@ open class ActivityRestClient
     private fun error(site: SiteModel, number: Int, offset: Int, errorType: RewindStatusErrorType) =
             FetchedRewindStatePayload(RewindStatusError(errorType), site, number, offset)
 
-    private fun genericToError(error: BaseRequest.BaseNetworkError): ActivityErrorType {
-        var errorType = ActivityErrorType.GENERIC_ERROR
+    private fun <T> genericToError(error: BaseRequest.BaseNetworkError,
+                               genericError: T,
+                               invalidResponse: T,
+                               authorizationRequired: T): T {
+        var errorType = genericError
         if (error.isGeneric && error.type == BaseRequest.GenericErrorType.INVALID_RESPONSE) {
-            errorType = ActivityErrorType.INVALID_RESPONSE
+            errorType = invalidResponse
         }
         if (error is WPComGsonRequest.WPComGsonNetworkError) {
             if ("unauthorized" == error.apiError) {
-                errorType = ActivityErrorType.AUTHORIZATION_REQUIRED
-            }
-        }
-        return errorType
-    }
-
-    private fun genericToRewindErrorType(error: BaseRequest.BaseNetworkError): RewindStatusErrorType {
-        var errorType = RewindStatusErrorType.GENERIC_ERROR
-        if (error.isGeneric && error.type == BaseRequest.GenericErrorType.INVALID_RESPONSE) {
-            errorType = RewindStatusErrorType.INVALID_RESPONSE
-        }
-        if (error is WPComGsonRequest.WPComGsonNetworkError) {
-            if ("unauthorized" == error.apiError) {
-                errorType = RewindStatusErrorType.AUTHORIZATION_REQUIRED
+                errorType = authorizationRequired
             }
         }
         return errorType
