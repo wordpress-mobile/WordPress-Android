@@ -51,15 +51,13 @@ data class ActivityModel(val activityID: String,
                        @Column var wpcomUserID: Long? = null,
                        @Column var avatarURL: String? = null,
                        @Column var role: String? = null) : Identifiable {
+        constructor() : this(-1, 0, 0, "", "", "")
+
         override fun setId(id: Int) {
             mId = id
         }
 
-        override fun getId(): Int {
-            return mId
-        }
-
-        constructor() : this(-1, 0, 0, "", "", "")
+        override fun getId() = mId
 
         fun build(): ActivityModel {
             var actor: ActivityActor? = null

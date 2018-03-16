@@ -1,6 +1,5 @@
 package org.wordpress.android.fluxc.store
 
-import com.yarolegovich.wellsql.SelectQuery
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
 import org.wordpress.android.fluxc.Dispatcher
@@ -11,7 +10,6 @@ import org.wordpress.android.fluxc.model.activity.ActivityModel
 import org.wordpress.android.fluxc.model.activity.RewindStatusModel
 import org.wordpress.android.fluxc.network.BaseRequest
 import org.wordpress.android.fluxc.network.rest.wpcom.activity.ActivityRestClient
-import org.wordpress.android.fluxc.persistence.ActivitySqlUtils
 import org.wordpress.android.util.AppLog
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -19,20 +17,7 @@ import javax.inject.Singleton
 @Singleton
 class ActivityStore
 @Inject constructor(private val mActivityRestClient: ActivityRestClient,
-                    private val mActivitySqlUtils: ActivitySqlUtils,
                     dispatcher: Dispatcher) : Store(dispatcher) {
-    /**
-     * Get a list of activities for a specific site.
-     *
-     * @param site Site model to get comment for.
-     * @param orderByDateAscending If true order the results by ascending published date.
-     * If false, order the results by descending published date.
-     */
-    fun getActivitiesForSite(site: SiteModel, orderByDateAscending: Boolean): List<ActivityModel> {
-        @SelectQuery.Order val order = if (orderByDateAscending) SelectQuery.ORDER_ASCENDING else SelectQuery.ORDER_DESCENDING
-        return mActivitySqlUtils.getActivitiesForSite(site, order)
-    }
-
     @Subscribe(threadMode = ThreadMode.ASYNC)
     override fun onAction(action: Action<*>) {
         val payload = action.payload ?: return
@@ -76,10 +61,10 @@ data class FetchedActivitiesPayload(val activityModelRespons: List<ActivityModel
     }
 }
 
-data class FetchRewindStateResponsePayload(val rewindStatusModelResponse: RewindStatusModel? = null,
-                                           val site: SiteModel,
-                                           val number: Int,
-                                           val offset: Int) : Payload<RewindStatusError>() {
+data class FetchedRewindStatePayload(val rewindStatusModelResponse: RewindStatusModel? = null,
+                                     val site: SiteModel,
+                                     val number: Int,
+                                     val offset: Int) : Payload<RewindStatusError>() {
     constructor(error: RewindStatusError,
                 site: SiteModel,
                 number: Int,
