@@ -18,6 +18,7 @@ import com.jjoe64.graphview.GraphViewStyle;
 import com.jjoe64.graphview.IndexDependentColor;
 
 import org.wordpress.android.R;
+import org.wordpress.android.util.AccessibilityUtils;
 
 import java.text.NumberFormat;
 import java.util.LinkedList;
@@ -83,14 +84,26 @@ class StatsBarGraph extends GraphView {
             return false;
         }
 
-        private void highlightBarAndBroadcastDate() {
-            int tappedBar = getTappedBar();
-            //AppLog.d(AppLog.T.STATS, this.getClass().getName() + " Tapped bar " + tappedBar);
-            if (tappedBar >= 0) {
-                highlightBar(tappedBar);
-                if (mGestureListener != null) {
-                    mGestureListener.onBarTapped(tappedBar);
-                }
+    }
+
+    private void highlightBarAndBroadcastDate() {
+        int tappedBar = getTappedBar();
+        //AppLog.d(AppLog.T.STATS, this.getClass().getName() + " Tapped bar " + tappedBar);
+        if (tappedBar >= 0) {
+            highlightBar(tappedBar);
+            if (mGestureListener != null) {
+                mGestureListener.onBarTapped(tappedBar);
+            }
+        }
+    }
+
+    private void highlightBarAndBroadcastDateSpecific(MotionEvent e) {
+        int tappedBar = getTappedBarSpecific(e.getX(), e.getY());
+        //AppLog.d(AppLog.T.STATS, this.getClass().getName() + " Tapped bar " + tappedBar);
+        if (tappedBar >= 0) {
+            highlightBar(tappedBar);
+            if (mGestureListener != null) {
+                mGestureListener.onBarTapped(tappedBar);
             }
         }
     }
@@ -99,12 +112,12 @@ class StatsBarGraph extends GraphView {
     //https://developer.android.com/guide/topics/ui/accessibility/custom-views.html
     @SuppressLint("ClickableViewAccessibility")
     @Override
-    public boolean onTouchEvent (MotionEvent event) {
+    public boolean onTouchEvent(MotionEvent event) {
         boolean handled = super.onTouchEvent(event);
         if (mDetector != null && handled) {
             this.mDetector.onTouchEvent(event);
         }
-       return handled;
+        return handled;
     }
 
     private class HorizontalLabelsColor implements IndexDependentColor {
@@ -118,7 +131,7 @@ class StatsBarGraph extends GraphView {
     }
 
     private void setProperties() {
-        GraphViewStyle gStyle =  getGraphViewStyle();
+        GraphViewStyle gStyle = getGraphViewStyle();
         gStyle.setHorizontalLabelsIndexDependentColor(new HorizontalLabelsColor());
         gStyle.setHorizontalLabelsColor(getResources().getColor(R.color.grey_darken_30));
         gStyle.setVerticalLabelsColor(getResources().getColor(R.color.grey_darken_10));
@@ -157,7 +170,7 @@ class StatsBarGraph extends GraphView {
         float colwidth = graphwidth / values.length;
         int maxColumnSize = getGraphViewStyle().getMaxColumnWidth();
         if (maxColumnSize > 0 && colwidth > maxColumnSize) {
-          colwidth = maxColumnSize;
+            colwidth = maxColumnSize;
         }
 
         paint.setStrokeWidth(style.thickness);
@@ -192,8 +205,8 @@ class StatsBarGraph extends GraphView {
 
             // Draw the grey background color on weekend days
             if (style.outerColor != 0x00ffffff
-                    && mBarPositionToHighlight != i
-                    && mWeekendDays != null && mWeekendDays[i]) {
+                && mBarPositionToHighlight != i
+                && mWeekendDays != null && mWeekendDays[i]) {
                 paint.setColor(style.outerColor);
                 canvas.drawRect(left, 10f, right, bottom, paint);
             }
@@ -203,7 +216,9 @@ class StatsBarGraph extends GraphView {
                 if (mBarPositionToHighlight != i) {
                     paint.setColor(style.color);
                     paint.setAlpha(25);
-                    Shader shader = new LinearGradient(left + pad, bottom - 50, left + pad, bottom, Color.WHITE, Color.BLACK, Shader.TileMode.CLAMP);
+                    Shader shader =
+                            new LinearGradient(left + pad, bottom - 50, left + pad, bottom, Color.WHITE, Color.BLACK,
+                                    Shader.TileMode.CLAMP);
                     paint.setShader(shader);
                     canvas.drawRect(left + pad, bottom - 50, right - pad, bottom, paint);
                     paint.setShader(null);
@@ -233,6 +248,22 @@ class StatsBarGraph extends GraphView {
             int i = 0;
             for (BarChartRect barChartRect : currentSerieChartRects) {
                 if (barChartRect.isPointInside(lastBarChartTouchedPoint[0], lastBarChartTouchedPoint[1])) {
+                    return i;
+                }
+                i++;
+            }
+        }
+        return -1;
+    }
+
+    private int getTappedBarSpecific(float x, float y) {
+        if (x == 0f && y == 0f) {
+            return -1;
+        }
+        for (List<BarChartRect> currentSerieChartRects : mSeriesRectsDrawedOnScreen) {
+            int i = 0;
+            for (BarChartRect barChartRect : currentSerieChartRects) {
+                if (barChartRect.isPointInside(x, y)) {
                     return i;
                 }
                 i++;
@@ -326,11 +357,25 @@ class StatsBarGraph extends GraphView {
          */
         public boolean isPointInside(float x, float y) {
             return x >= this.mLeft
-                    && x <= this.mRight;
+                   && x <= this.mRight;
         }
     }
 
     interface OnGestureListener {
         void onBarTapped(int tappedBar);
+    }
+
+
+    @Override
+    public boolean onHoverEvent(MotionEvent event) {
+        if (AccessibilityUtils.isAccessibilityEnabled(getContext()) && event.getPointerCount() == 1) {
+            final int action = event.getAction();
+            if(action == MotionEvent.ACTION_HOVER_MOVE){
+                if (getHighlightBar() != getTappedBarSpecific(event.getX(),event.getY()) && getTappedBarSpecific(event.getX(),event.getY()) != -1) {
+                    highlightBarAndBroadcastDateSpecific(event);
+                }
+            }
+        }
+        return true;
     }
 }
