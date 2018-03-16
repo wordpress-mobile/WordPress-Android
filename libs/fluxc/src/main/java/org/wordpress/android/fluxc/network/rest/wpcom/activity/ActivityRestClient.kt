@@ -7,17 +7,20 @@ import org.wordpress.android.fluxc.Dispatcher
 import org.wordpress.android.fluxc.generated.ActivityActionBuilder
 import org.wordpress.android.fluxc.generated.endpoint.WPCOMREST
 import org.wordpress.android.fluxc.model.SiteModel
+import org.wordpress.android.fluxc.model.activity.ActivityModel
+import org.wordpress.android.fluxc.model.activity.RewindStatusModel
 import org.wordpress.android.fluxc.network.BaseRequest
 import org.wordpress.android.fluxc.network.UserAgent
 import org.wordpress.android.fluxc.network.rest.wpcom.BaseWPComRestClient
 import org.wordpress.android.fluxc.network.rest.wpcom.WPComGsonRequest
 import org.wordpress.android.fluxc.network.rest.wpcom.WPComGsonRequest.buildGetRequest
-import org.wordpress.android.fluxc.network.rest.wpcom.activity.Activity.ActivityError
-import org.wordpress.android.fluxc.network.rest.wpcom.activity.Activity.ActivityErrorType
-import org.wordpress.android.fluxc.network.rest.wpcom.activity.RewindStatus.RestoreStatus.*
-import org.wordpress.android.fluxc.network.rest.wpcom.activity.RewindStatus.RewindStatusErrorType
 import org.wordpress.android.fluxc.network.rest.wpcom.auth.AccessToken
-import org.wordpress.android.fluxc.store.ActivityStore
+import org.wordpress.android.fluxc.store.ActivityError
+import org.wordpress.android.fluxc.store.ActivityErrorType
+import org.wordpress.android.fluxc.store.FetchRewindStateResponsePayload
+import org.wordpress.android.fluxc.store.FetchedActivitiesPayload
+import org.wordpress.android.fluxc.store.RewindStatusError
+import org.wordpress.android.fluxc.store.RewindStatusErrorType
 import java.util.Date
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -41,7 +44,7 @@ constructor(appContext: Context, dispatcher: Dispatcher, requestQueue: RequestQu
                 },
                 {
                     val error = ActivityError(genericToError(it), it.message)
-                    val payload = ActivityStore.FetchedActivitiesPayload(error, site, number, offset)
+                    val payload = FetchedActivitiesPayload(error, site, number, offset)
                     mDispatcher.dispatch(ActivityActionBuilder.newFetchedActivitiesAction(payload))
                 })
         add(request)
@@ -59,14 +62,14 @@ constructor(appContext: Context, dispatcher: Dispatcher, requestQueue: RequestQu
                     mDispatcher.dispatch(ActivityActionBuilder.newFetchedRewindStateAction(payload))
                 },
                 {
-                    val error = RewindStatus.RewindStatusError(genericToRewindErrorType(it), it.message)
-                    val payload = ActivityStore.FetchRewindStateResponsePayload(error, site, number, offset)
+                    val error = RewindStatusError(genericToRewindErrorType(it), it.message)
+                    val payload = FetchRewindStateResponsePayload(error, site, number, offset)
                     mDispatcher.dispatch(ActivityActionBuilder.newFetchedRewindStateAction(payload))
                 })
         add(request)
     }
 
-    private fun buildActivityPayload(activityResponses: List<ActivitiesResponse.ActivityResponse>, site: SiteModel, number: Int, offset: Int): ActivityStore.FetchedActivitiesPayload {
+    private fun buildActivityPayload(activityResponses: List<ActivitiesResponse.ActivityResponse>, site: SiteModel, number: Int, offset: Int): FetchedActivitiesPayload {
         var error: ActivityErrorType? = null
 
         val activities = activityResponses.mapNotNull {
@@ -87,35 +90,44 @@ constructor(appContext: Context, dispatcher: Dispatcher, requestQueue: RequestQu
                     error = ActivityErrorType.MISSING_PUBLISHED_DATE
                     null
                 }
-                else -> Activity(it.activity_id,
-                        it.summary,
-                        it.content.text,
-                        it.name,
-                        it.type,
-                        it.gridicon,
-                        it.status,
-                        it.is_rewindable,
-                        it.rewind_id,
-                        it.published,
-                        it.is_discarded,
-                        Activity.ActivityActor(it.actor.name,
-                                it.actor.type,
-                                it.actor.wpcom_user_id,
-                                it.actor.icon?.url,
-                                it.actor.role))
+                else -> {
+                    val activityModelBuilder = ActivityModel.Builder(
+                            localSiteId = site.id,
+                            remoteSiteId = site.siteId,
+                            activityID = it.activity_id,
+                            summary = it.summary,
+                            text = it.content.text,
+                            name = it.name,
+                            type = it.type,
+                            gridicon = it.gridicon,
+                            status = it.status,
+                            rewindable = it.is_rewindable,
+                            rewindID = it.rewind_id,
+                            published = it.published,
+                            discarded = it.is_discarded)
+                    it.actor?.let {
+                        activityModelBuilder.displayName = it.name
+                        activityModelBuilder.type = it.type
+                        activityModelBuilder.wpcomUserID = it.wpcom_user_id
+                        activityModelBuilder.avatarURL = it.icon?.url
+                        activityModelBuilder.role = it.role
+                    }
+                    activityModelBuilder.build()
+                }
             }
         }
         error?.let {
-            return ActivityStore.FetchedActivitiesPayload(ActivityError(it), site, number, offset)
+            return FetchedActivitiesPayload(ActivityError(it), site, number, offset)
         }
-        return ActivityStore.FetchedActivitiesPayload(activities, site, number, offset)
+        return FetchedActivitiesPayload(activities, site, number, offset)
     }
 
-    private fun buildRewindStatusPayload(response: RewindStatusResponse, site: SiteModel, number: Int, offset: Int): ActivityStore.FetchRewindStateResponsePayload {
+    private fun buildRewindStatusPayload(response: RewindStatusResponse, site: SiteModel, number: Int, offset: Int):
+            FetchRewindStateResponsePayload {
         if (response.state == null) {
             return error(site, number, offset, RewindStatusErrorType.MISSING_STATE)
         }
-        var restoreStatus: RewindStatus.RestoreStatus? =
+        var restoreStatusModel: RewindStatusModel.RestoreStatus? =
                 if (response.restoreResponse != null) {
                     with(response.restoreResponse) {
                         if (this.rewind_id == null) {
@@ -124,9 +136,9 @@ constructor(appContext: Context, dispatcher: Dispatcher, requestQueue: RequestQu
                         if (this.status == null) {
                             return error(site, number, offset, RewindStatusErrorType.MISSING_RESTORE_STATUS)
                         }
-                        val restoreStatus = Status.values().firstOrNull { it.value == this.status }
+                        val restoreStatus = RewindStatusModel.RestoreStatus.Status.safeValueOf(this.status)
                                 ?: return error(site, number, offset, RewindStatusErrorType.INVALID_RESTORE_STATUS)
-                        RewindStatus.RestoreStatus(this.rewind_id,
+                        RewindStatusModel.RestoreStatus(this.rewind_id,
                                 restoreStatus,
                                 this.progress,
                                 this.message,
@@ -136,14 +148,14 @@ constructor(appContext: Context, dispatcher: Dispatcher, requestQueue: RequestQu
                 } else {
                     null
                 }
-        val rewindStatusState = RewindStatus.State.values().firstOrNull { it.value == response.state }
+        val rewindStatusState = RewindStatusModel.State.values().firstOrNull { it.value == response.state }
                 ?: return error(site, number, offset, RewindStatusErrorType.INVALID_REWIND_STATE)
-        val rewindStatus = RewindStatus(rewindStatusState, response.reason, restoreStatus)
-        return ActivityStore.FetchRewindStateResponsePayload(rewindStatus, site, number, offset)
+        val rewindStatus = RewindStatusModel(rewindStatusState, response.reason, restoreStatusModel)
+        return FetchRewindStateResponsePayload(rewindStatus, site, number, offset)
     }
 
     private fun error(site: SiteModel, number: Int, offset: Int, errorType: RewindStatusErrorType) =
-            ActivityStore.FetchRewindStateResponsePayload(RewindStatus.RewindStatusError(errorType), site, number, offset)
+            FetchRewindStateResponsePayload(RewindStatusError(errorType), site, number, offset)
 
     private fun genericToError(error: BaseRequest.BaseNetworkError): ActivityErrorType {
         var errorType = ActivityErrorType.GENERIC_ERROR
@@ -178,7 +190,7 @@ constructor(appContext: Context, dispatcher: Dispatcher, requestQueue: RequestQu
         data class ActivityResponse(val summary: String?,
                                     val content: Content?,
                                     val name: String?,
-                                    val actor: Actor,
+                                    val actor: Actor?,
                                     val type: String?,
                                     val published: Date?,
                                     val generator: Generator?,
