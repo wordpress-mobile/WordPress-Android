@@ -297,11 +297,12 @@
         <activity
             android:name=".ui.media.MediaPreviewActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
+            android:label="@string/media_settings_image_preview_desc"
             android:theme="@style/Theme.AppCompat.NoActionBar" />
         <activity
             android:name=".ui.media.MediaSettingsActivity"
             android:windowSoftInputMode="stateHidden|adjustPan"
-            android:label="@string/media"
+            android:label="@string/media_settings_screen_title"
             android:theme="@style/MediaSettings.Activity" />
 
         <!-- Theme Activities -->
