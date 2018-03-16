@@ -507,7 +507,6 @@ public class MediaStoreTest {
 
         assertEquals(testSiteId, storeAudio.get(0).getLocalSiteId());
         assertEquals(testSiteId, storeAudio.get(1).getLocalSiteId());
-
     }
 
     @Test
