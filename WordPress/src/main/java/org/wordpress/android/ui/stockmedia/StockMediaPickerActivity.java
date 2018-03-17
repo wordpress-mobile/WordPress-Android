@@ -2,6 +2,7 @@ package org.wordpress.android.ui.stockmedia;
 
 import android.app.FragmentManager;
 import android.app.ProgressDialog;
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.NonNull;
@@ -26,6 +27,7 @@ import org.wordpress.android.WordPress;
 import org.wordpress.android.fluxc.Dispatcher;
 import org.wordpress.android.fluxc.generated.MediaActionBuilder;
 import org.wordpress.android.fluxc.generated.StockMediaActionBuilder;
+import org.wordpress.android.fluxc.model.MediaModel;
 import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.model.StockMediaModel;
 import org.wordpress.android.fluxc.store.MediaStore;
@@ -55,6 +57,7 @@ public class StockMediaPickerActivity extends AppCompatActivity implements Searc
     private static final String KEY_CAN_LOAD_MORE = "can_load_more";
     private static final String KEY_NEXT_PAGE = "next_page";
     private static final String KEY_IS_UPLOADING = "is_uploading";
+    public static final String KEY_UPLOADED_MEDIA_IDS = "uploaded_media_ids";
 
     private SiteModel mSite;
 
@@ -367,7 +370,13 @@ public class StockMediaPickerActivity extends AppCompatActivity implements Searc
             ToastUtils.showToast(this, R.string.media_upload_error);
             AppLog.e(AppLog.T.MEDIA, "An error occurred while uploading stock media");
         } else {
-            setResult(RESULT_OK);
+            ArrayList<Integer> idList = new ArrayList<>();
+            for (MediaModel media : event.mediaList) {
+                idList.add(media.getId());
+            }
+            Intent intent = new Intent();
+            intent.putIntegerArrayListExtra(KEY_UPLOADED_MEDIA_IDS, idList);
+            setResult(RESULT_OK, intent);
             finish();
         }
     }
