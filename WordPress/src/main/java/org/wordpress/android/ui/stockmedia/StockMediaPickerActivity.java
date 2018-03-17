@@ -54,6 +54,7 @@ public class StockMediaPickerActivity extends AppCompatActivity implements Searc
     private static final String KEY_SEARCH_QUERY = "search_query";
     private static final String KEY_CAN_LOAD_MORE = "can_load_more";
     private static final String KEY_NEXT_PAGE = "next_page";
+    private static final String KEY_IS_UPLOADING = "is_uploading";
 
     private SiteModel mSite;
 
@@ -142,6 +143,10 @@ public class StockMediaPickerActivity extends AppCompatActivity implements Searc
             mNextPage = savedInstanceState.getInt(KEY_NEXT_PAGE);
             mAdapter.setMediaList(mRetainedFragment.getStockMediaList());
             mAdapter.setSelectedItems(mRetainedFragment.getSelectedItems());
+            mIsUploading = savedInstanceState.getBoolean(KEY_IS_UPLOADING);
+            if (mIsUploading) {
+                showUploacProgressDialog(true);
+            }
         }
 
         configureSearchView();
@@ -160,6 +165,7 @@ public class StockMediaPickerActivity extends AppCompatActivity implements Searc
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
 
+        outState.putBoolean(KEY_IS_UPLOADING, mIsUploading);
         outState.putBoolean(KEY_CAN_LOAD_MORE, mCanLoadMore);
         outState.putInt(KEY_NEXT_PAGE, mNextPage);
 
