@@ -358,10 +358,9 @@ public class StockMediaPickerActivity extends AppCompatActivity implements Searc
         showUploacProgressDialog(false);
 
         if (event.isError()) {
-            // TODO: show error message
+            ToastUtils.showToast(this, R.string.media_upload_error);
             AppLog.e(AppLog.T.MEDIA, "An error occurred while uploading stock media");
         } else {
-            ToastUtils.showToast(this, "Upload completed");
             setResult(RESULT_OK);
             finish();
         }
