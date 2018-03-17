@@ -1,6 +1,7 @@
 package org.wordpress.android.ui.stockmedia;
 
 import android.app.FragmentManager;
+import android.app.ProgressDialog;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.NonNull;
@@ -23,9 +24,11 @@ import org.greenrobot.eventbus.ThreadMode;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.fluxc.Dispatcher;
+import org.wordpress.android.fluxc.generated.MediaActionBuilder;
 import org.wordpress.android.fluxc.generated.StockMediaActionBuilder;
 import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.model.StockMediaModel;
+import org.wordpress.android.fluxc.store.MediaStore;
 import org.wordpress.android.fluxc.store.StockMediaStore;
 import org.wordpress.android.ui.media.MediaPreviewActivity;
 import org.wordpress.android.util.ActivityUtils;
@@ -56,6 +59,7 @@ public class StockMediaPickerActivity extends AppCompatActivity implements Searc
 
     private StockMediaAdapter mAdapter;
     private StockMediaRetainedFragment mRetainedFragment;
+    private ProgressDialog mProgressDialog;
 
     private ViewGroup mSelectionBar;
     private TextView mTextAdd;
@@ -68,6 +72,7 @@ public class StockMediaPickerActivity extends AppCompatActivity implements Searc
     private int mThumbHeight;
 
     private boolean mIsFetching;
+    private boolean mIsUploading;
     private boolean mCanLoadMore;
     private int mNextPage;
 
@@ -257,6 +262,18 @@ public class StockMediaPickerActivity extends AppCompatActivity implements Searc
         }
     }
 
+    private void showUploacProgressDialog(boolean show) {
+        if (show) {
+            mProgressDialog = new ProgressDialog(this);
+            mProgressDialog.setCancelable(false);
+            mProgressDialog.setIndeterminate(true);
+            mProgressDialog.setMessage(getString(R.string.uploading_media));
+            mProgressDialog.show();
+        } else if (mProgressDialog != null && mProgressDialog.isShowing()) {
+            mProgressDialog.dismiss();
+        }
+    }
+
     private void submitSearch(@Nullable final String query, boolean delayed) {
         mSearchQuery = query;
 
@@ -334,6 +351,22 @@ public class StockMediaPickerActivity extends AppCompatActivity implements Searc
         showEmptyView(mAdapter.isEmpty() && !TextUtils.isEmpty(mSearchQuery));
     }
 
+    @SuppressWarnings("unused")
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onStockMediaUploaded(MediaStore.OnStockMediaUploaded event) {
+        mIsUploading = false;
+        showUploacProgressDialog(false);
+
+        if (event.isError()) {
+            // TODO: show error message
+            AppLog.e(AppLog.T.MEDIA, "An error occurred while uploading stock media");
+        } else {
+            ToastUtils.showToast(this, "Upload completed");
+            setResult(RESULT_OK);
+            finish();
+        }
+    }
+
     private void showSelectionBar() {
         if (mSelectionBar.getVisibility() != View.VISIBLE) {
             AniUtils.animateBottomBar(mSelectionBar, true);
@@ -361,8 +394,14 @@ public class StockMediaPickerActivity extends AppCompatActivity implements Searc
     }
 
     private void uploadSelection() {
-        ToastUtils.showToast(this, "Uploading will be added in a later PR");
-        // List<StockMediaModel> items = mAdapter.getSelectedStockMedia();
+        if (!NetworkUtils.checkConnection(this)) return;
+
+        mIsUploading = true;
+        showUploacProgressDialog(true);
+        List<StockMediaModel> items = mAdapter.getSelectedStockMedia();
+        MediaStore.UploadStockMediaPayload payload =
+                new MediaStore.UploadStockMediaPayload(mSite, items);
+        mDispatcher.dispatch(MediaActionBuilder.newUploadStockMediaAction(payload));
     }
 
     class StockMediaAdapter extends RecyclerView.Adapter<StockViewHolder> {

@@ -414,7 +414,9 @@ public class MediaBrowserActivity extends AppCompatActivity implements MediaGrid
                 }
                 break;
             case RequestCodes.STOCK_MEDIA_PICKER:
-                // TODO
+                if (resultCode == RESULT_OK) {
+                    reloadMediaGrid();
+                }
                 break;
         }
     }
