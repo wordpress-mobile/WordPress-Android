@@ -370,6 +370,8 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
             mHideActionBarOnSoftKeyboardUp = true;
             hideActionBarIfNeeded();
         }
+
+        updateFailedAndUploadingMedia();
     }
 
     @Override
@@ -385,8 +387,6 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
 
     @Override
     public void onSaveInstanceState(Bundle outState) {
-        outState.putCharSequence(ATTR_TITLE, getTitle());
-        outState.putCharSequence(ATTR_CONTENT, getContent());
         outState.putParcelable(ATTR_TAPPED_MEDIA_PREDICATE, mTappedMediaPredicate);
     }
 
@@ -521,11 +521,7 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
 
         mContent.fromHtml(removeVisualEditorProgressTag(text.toString()));
 
-        updateFailedMediaList();
-        overlayFailedMedia();
-
-        updateUploadingMediaList();
-        overlayProgressingMedia();
+        updateFailedAndUploadingMedia();
 
         mAztecReady = true;
     }
@@ -670,6 +666,14 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
         if (mSource.getVisibility() == View.VISIBLE) {
             updateFailedMediaList();
         }
+    }
+
+    private void updateFailedAndUploadingMedia() {
+        updateFailedMediaList();
+        overlayFailedMedia();
+
+        updateUploadingMediaList();
+        overlayProgressingMedia();
     }
 
     public void enableMediaMode(boolean enable) {
