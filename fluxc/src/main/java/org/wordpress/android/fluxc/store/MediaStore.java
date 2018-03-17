@@ -916,6 +916,10 @@ public class MediaStore extends Store {
         if (payload.isError()) {
             onStockMediaUploaded = new OnStockMediaUploaded(payload.site, payload.error);
         } else {
+            // add uploaded media to the store
+            for (MediaModel media : payload.mediaList) {
+                updateMedia(media, false);
+            }
             onStockMediaUploaded = new OnStockMediaUploaded(payload.site, payload.mediaList);
         }
 
