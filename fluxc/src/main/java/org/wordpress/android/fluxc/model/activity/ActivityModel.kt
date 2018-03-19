@@ -79,4 +79,3 @@ data class ActivityModel(val activityID: String,
         }
     }
 }
-

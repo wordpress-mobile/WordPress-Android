@@ -32,11 +32,15 @@ class ActivityStore
     }
 
     private fun fetchActivities(fetchActivitiesPayload: FetchActivitiesPayload) {
-        mActivityRestClient.fetchActivity(fetchActivitiesPayload.site, fetchActivitiesPayload.number, fetchActivitiesPayload.offset)
+        mActivityRestClient.fetchActivity(fetchActivitiesPayload.site,
+                fetchActivitiesPayload.number,
+                fetchActivitiesPayload.offset)
     }
 
     private fun fetchActivitiesRewind(fetchActivitiesRewindPayload: FetchRewindStatePayload) {
-        mActivityRestClient.fetchActivityRewind(fetchActivitiesRewindPayload.site, fetchActivitiesRewindPayload.number, fetchActivitiesRewindPayload.offset)
+        mActivityRestClient.fetchActivityRewind(fetchActivitiesRewindPayload.site,
+                fetchActivitiesRewindPayload.number,
+                fetchActivitiesRewindPayload.offset)
     }
 }
 

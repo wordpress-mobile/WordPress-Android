@@ -74,7 +74,10 @@ open class ActivityRestClient
         add(request)
     }
 
-    private fun buildActivityPayload(activityResponses: List<ActivitiesResponse.ActivityResponse>, site: SiteModel, number: Int, offset: Int): FetchedActivitiesPayload {
+    private fun buildActivityPayload(activityResponses: List<ActivitiesResponse.ActivityResponse>,
+                                     site: SiteModel,
+                                     number: Int,
+                                     offset: Int): FetchedActivitiesPayload {
         var error: ActivityErrorType? = null
 
         val activities = activityResponses.mapNotNull {
@@ -156,9 +159,9 @@ open class ActivityRestClient
             FetchedRewindStatePayload(RewindStatusError(errorType), site, number, offset)
 
     private fun <T> genericToError(error: BaseRequest.BaseNetworkError,
-                               genericError: T,
-                               invalidResponse: T,
-                               authorizationRequired: T): T {
+                                   genericError: T,
+                                   invalidResponse: T,
+                                   authorizationRequired: T): T {
         var errorType = genericError
         if (error.isGeneric && error.type == BaseRequest.GenericErrorType.INVALID_RESPONSE) {
             errorType = invalidResponse
@@ -220,4 +223,3 @@ open class ActivityRestClient
                                          val reason: String?)
     }
 }
-
