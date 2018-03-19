@@ -69,7 +69,6 @@ public class SiteModel extends Payload<BaseNetworkError> implements Identifiable
     @Column private boolean mIsJetpackInstalled;
     // mIsJetpackConnected is true if Jetpack is installed, activated and connected to a WordPress.com account.
     @Column private boolean mIsJetpackConnected;
-    @Column private boolean mIsAutomatedTransfer;
     @Column private String mJetpackVersion;
 
     // WPCom specifics
@@ -81,6 +80,11 @@ public class SiteModel extends Payload<BaseNetworkError> implements Identifiable
     @Column private String mIconUrl;
     @Column private boolean mHasFreePlan;
     @Column private String mUnmappedUrl;
+
+    // Automated Transfer
+    @Column private boolean mIsAutomatedTransfer;
+    @Column private boolean mIsEligibleForAutomatedTransfer;
+    @Column private String mAutomatedTransferId;
 
     // WPCom capabilities
     @Column private boolean mHasCapabilityEditPages;
@@ -511,6 +515,30 @@ public class SiteModel extends Payload<BaseNetworkError> implements Identifiable
         mUnmappedUrl = unMappedUrl;
     }
 
+    public boolean isAutomatedTransfer() {
+        return mIsAutomatedTransfer;
+    }
+
+    public void setIsAutomatedTransfer(boolean automatedTransfer) {
+        mIsAutomatedTransfer = automatedTransfer;
+    }
+
+    public boolean isEligibleForAutomatedTransfer() {
+        return mIsEligibleForAutomatedTransfer;
+    }
+
+    public void setIsEligibleForAutomatedTransfer(boolean eligibleForAutomatedTransfer) {
+        mIsEligibleForAutomatedTransfer = eligibleForAutomatedTransfer;
+    }
+
+    public String getAutomatedTransferId() {
+        return mAutomatedTransferId;
+    }
+
+    public void setAutomatedTransferId(String automatedTransferId) {
+        mAutomatedTransferId = automatedTransferId;
+    }
+
     public boolean isJetpackInstalled() {
         return mIsJetpackInstalled;
     }
@@ -525,14 +553,6 @@ public class SiteModel extends Payload<BaseNetworkError> implements Identifiable
 
     public void setIsJetpackConnected(boolean jetpackConnected) {
         mIsJetpackConnected = jetpackConnected;
-    }
-
-    public boolean isAutomatedTransfer() {
-        return mIsAutomatedTransfer;
-    }
-
-    public void setIsAutomatedTransfer(boolean automatedTransfer) {
-        mIsAutomatedTransfer = automatedTransfer;
     }
 
     public String getJetpackVersion() {
