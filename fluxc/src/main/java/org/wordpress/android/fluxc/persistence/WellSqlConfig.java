@@ -60,7 +60,7 @@ public class WellSqlConfig extends DefaultWellConfig {
 
     @Override
     public int getDbVersion() {
-        return 26;
+        return 27;
     }
 
     @Override
@@ -237,6 +237,11 @@ public class WellSqlConfig extends DefaultWellConfig {
                 db.execSQL("alter table SiteModel add SPACE_ALLOWED INTEGER");
                 db.execSQL("alter table SiteModel add SPACE_USED INTEGER");
                 db.execSQL("alter table SiteModel add SPACE_PERCENT_USED REAL");
+                oldVersion++;
+            case 26:
+                AppLog.d(T.DB, "Migrating to version " + (oldVersion + 1));
+                db.execSQL("alter table SiteModel add IS_ELIGIBLE_FOR_AUTOMATED_TRANSFER INTEGER");
+                db.execSQL("alter table SiteModel add AUTOMATED_TRANSFER_ID STRING");
                 oldVersion++;
         }
         db.setTransactionSuccessful();
