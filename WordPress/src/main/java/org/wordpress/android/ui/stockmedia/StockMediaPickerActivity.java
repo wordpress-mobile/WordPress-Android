@@ -1,5 +1,6 @@
 package org.wordpress.android.ui.stockmedia;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.NonNull;
@@ -34,6 +35,7 @@ import org.wordpress.android.util.ActivityUtils;
 import org.wordpress.android.util.AniUtils;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.DisplayUtils;
+import org.wordpress.android.util.LocaleManager;
 import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.PhotonUtils;
 import org.wordpress.android.util.StringUtils;
@@ -133,14 +135,18 @@ public class StockMediaPickerActivity extends AppCompatActivity implements Searc
         if (savedInstanceState == null) {
             showEmptyView(true);
         } else {
-            StockMediaRetainedData data = mRetainedFragment.getData();
-            if (data != null) {
-                mCanLoadMore = data.canLoadMore();
-                mNextPage = data.getNextPage();
-                mAdapter.setMediaList(data.getStockMediaList());
-                mAdapter.setSelectedItems(data.getSelectedItems());
-            }
             mSearchQuery = savedInstanceState.getString(KEY_SEARCH_QUERY);
+            if (!TextUtils.isEmpty(mSearchQuery)) {
+                StockMediaRetainedData data = mRetainedFragment.getData();
+                if (data != null) {
+                    mCanLoadMore = data.canLoadMore();
+                    mNextPage = data.getNextPage();
+                    mAdapter.setMediaList(data.getStockMediaList());
+                    mAdapter.setSelectedItems(data.getSelectedItems());
+                } else {
+                    submitSearch(mSearchQuery, true);
+                }
+            }
         }
 
         configureSearchView();
@@ -153,6 +159,11 @@ public class StockMediaPickerActivity extends AppCompatActivity implements Searc
             mSearchView.setOnCloseListener(null);
         }
         super.onDestroy();
+    }
+
+    @Override
+    protected void attachBaseContext(Context newBase) {
+        super.attachBaseContext(LocaleManager.setLocale(newBase));
     }
 
     @Override
@@ -285,7 +296,9 @@ public class StockMediaPickerActivity extends AppCompatActivity implements Searc
     }
 
     private void fetchStockMedia(@Nullable String searchQuery, int page) {
-        if (!NetworkUtils.checkConnection(this)) return;
+        if (mIsFetching || !NetworkUtils.checkConnection(this)) {
+            return;
+        }
 
         if (TextUtils.isEmpty(searchQuery)) {
             mAdapter.clear();
@@ -297,7 +310,6 @@ public class StockMediaPickerActivity extends AppCompatActivity implements Searc
         }
 
         showProgress(true);
-
         mIsFetching = true;
 
         mSearchQuery = searchQuery;
@@ -311,17 +323,17 @@ public class StockMediaPickerActivity extends AppCompatActivity implements Searc
     @SuppressWarnings("unused")
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onStockMediaListFetched(StockMediaStore.OnStockMediaListFetched event) {
+        // make sure these results are for the same query
+        if (mSearchQuery == null || !mSearchQuery.equals(event.searchTerm)) {
+            return;
+        }
+
         mIsFetching = false;
         showProgress(false);
 
         if (event.isError()) {
             AppLog.e(AppLog.T.MEDIA, "An error occurred while searching stock media");
             mCanLoadMore = false;
-            return;
-        }
-
-        // make sure these results are for the same query
-        if (mSearchQuery == null || !mSearchQuery.equals(event.searchTerm)) {
             return;
         }
 
@@ -456,7 +468,7 @@ public class StockMediaPickerActivity extends AppCompatActivity implements Searc
                 holder.mImageView.setScaleY(scale);
             }
 
-            if (!mIsFetching && mCanLoadMore && position == getItemCount() - 1) {
+            if (mCanLoadMore && position == getItemCount() - 1) {
                 fetchStockMedia(mSearchQuery, mNextPage);
             }
         }
