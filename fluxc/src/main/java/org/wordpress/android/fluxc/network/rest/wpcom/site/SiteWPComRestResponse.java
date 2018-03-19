@@ -13,6 +13,8 @@ public class SiteWPComRestResponse implements Response {
         public boolean videopress_enabled;
         public boolean featured_images_enabled;
         public boolean is_automated_transfer;
+        public boolean is_wpcom_store;
+        public boolean woocommerce_is_active;
         public String admin_url;
         public String login_url;
         public String gmt_offset;
