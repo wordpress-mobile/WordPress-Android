@@ -65,6 +65,8 @@ public class SiteCreationDomainFragment extends SiteCreationBaseFormFragment<Sit
 
     @Override
     protected void setupContent(ViewGroup rootView) {
+        // important for accessibility - talkback
+        getActivity().setTitle(R.string.site_creation_domain_selection_title);
         RecyclerView recyclerView = rootView.findViewById(R.id.recycler_view);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         recyclerView.setAdapter(mSiteCreationDomainAdapter);

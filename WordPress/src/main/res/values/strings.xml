@@ -2194,6 +2194,10 @@
 
     <!-- Site Creation -->
     <string name="site_creation_title">Create New Site</string>
+    <string name="site_creation_category_title">Create New Site Step 1</string>
+    <string name="site_creation_theme_selection_title">Create New Site Step 2</string>
+    <string name="site_creation_site_details_title">Create New Site Step 3</string>
+    <string name="site_creation_domain_selection_title">Create New Site Step 4</string>
     <string name="site_creation_label_category_title">Step 1 of 4</string>
     <string name="site_creation_label_category">What kind of site do you need?\nChoose an option below:</string>
     <string name="site_creation_title_blog">Start with a Blog</string>
