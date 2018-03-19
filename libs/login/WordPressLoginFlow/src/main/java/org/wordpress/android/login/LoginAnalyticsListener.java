@@ -7,6 +7,7 @@ import java.util.Map;
 
 public interface LoginAnalyticsListener {
     void trackAnalyticsSignIn(AccountStore accountStore, SiteStore siteStore, boolean isWpcomLogin);
+    void trackCreatedAccount();
     void trackEmailFormViewed();
     void trackInsertedInvalidUrl();
     void trackLoginFailed(String errorContext, String errorType, String errorDescription);
