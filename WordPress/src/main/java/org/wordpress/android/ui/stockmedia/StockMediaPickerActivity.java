@@ -18,6 +18,7 @@ import android.text.TextUtils;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import org.greenrobot.eventbus.Subscribe;
@@ -65,6 +66,7 @@ public class StockMediaPickerActivity extends AppCompatActivity implements Searc
     private StockMediaRetainedFragment mRetainedFragment;
     private ProgressDialog mProgressDialog;
 
+    private RecyclerView mRecycler;
     private ViewGroup mSelectionBar;
     private TextView mTextAdd;
 
@@ -119,11 +121,11 @@ public class StockMediaPickerActivity extends AppCompatActivity implements Searc
             actionBar.setDisplayShowTitleEnabled(true);
         }
 
-        RecyclerView recycler = findViewById(R.id.recycler);
-        recycler.setLayoutManager(new GridLayoutManager(this, getColumnCount()));
+        mRecycler = findViewById(R.id.recycler);
+        mRecycler.setLayoutManager(new GridLayoutManager(this, getColumnCount()));
 
         mAdapter = new StockMediaAdapter();
-        recycler.setAdapter(mAdapter);
+        mRecycler.setAdapter(mAdapter);
 
         mSelectionBar = findViewById(R.id.container_selection_bar);
         mTextAdd = findViewById(R.id.text_add);
@@ -360,6 +362,7 @@ public class StockMediaPickerActivity extends AppCompatActivity implements Searc
         showEmptyView(mAdapter.isEmpty() && !TextUtils.isEmpty(mSearchQuery));
     }
 
+
     @SuppressWarnings("unused")
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onStockMediaUploaded(MediaStore.OnStockMediaUploaded event) {
@@ -381,16 +384,30 @@ public class StockMediaPickerActivity extends AppCompatActivity implements Searc
         }
     }
 
-    private void showSelectionBar() {
-        if (mSelectionBar.getVisibility() != View.VISIBLE) {
+    private void showSelectionBar(final boolean show) {
+        if (show && mSelectionBar.getVisibility() != View.VISIBLE) {
             AniUtils.animateBottomBar(mSelectionBar, true);
-        }
-    }
-
-    private void hideSelectionBar() {
-        if (mSelectionBar.getVisibility() == View.VISIBLE) {
+        } else if (!show && mSelectionBar.getVisibility() == View.VISIBLE) {
             AniUtils.animateBottomBar(mSelectionBar, false);
+        } else {
+            return;
         }
+
+        // when the animation completes, adjust the relative layout params of the recycler to make
+        // sure the bar doesn't overlap the bottom row when showing
+        long msDelay = AniUtils.Duration.SHORT.toMillis(this);
+        mHandler.postDelayed(new Runnable() {
+            @Override public void run() {
+                if (!isFinishing()) {
+                    RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) mRecycler.getLayoutParams();
+                    if (show) {
+                        params.addRule(RelativeLayout.ABOVE, R.id.container_selection_bar);
+                    } else {
+                        params.addRule(RelativeLayout.ABOVE, 0);
+                    }
+                }
+            }
+        }, msDelay);
     }
 
     private void notifySelectionCountChanged() {
@@ -398,12 +415,12 @@ public class StockMediaPickerActivity extends AppCompatActivity implements Searc
         if (numSelected > 0) {
             String label = String.format(getString(R.string.add_count), numSelected);
             mTextAdd.setText(label);
-            showSelectionBar();
+            showSelectionBar(true);
             if (numSelected == 1) {
                 ActivityUtils.hideKeyboardForced(mSearchView);
             }
         } else {
-            hideSelectionBar();
+            showSelectionBar(false);
         }
     }
 
