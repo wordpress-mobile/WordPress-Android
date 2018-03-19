@@ -16,17 +16,20 @@ import org.wordpress.android.fluxc.store.AccountStore.AuthenticateErrorPayload;
 import org.wordpress.android.fluxc.utils.ErrorUtils.OnUnexpectedError;
 import org.wordpress.android.util.LanguageUtils;
 
-public abstract class BaseWPComRestClient {
+import javax.inject.Inject;
+
+public class BaseWPComRestClient {
     private AccessToken mAccessToken;
     private final RequestQueue mRequestQueue;
 
-    protected final Context mAppContext;
-    protected final Dispatcher mDispatcher;
-    protected UserAgent mUserAgent;
+    public final Context mAppContext;
+    public final Dispatcher mDispatcher;
+    public UserAgent mUserAgent;
 
     private OnAuthFailedListener mOnAuthFailedListener;
     private OnParseErrorListener mOnParseErrorListener;
 
+    @Inject
     public BaseWPComRestClient(Context appContext, Dispatcher dispatcher, RequestQueue requestQueue,
                                AccessToken accessToken, UserAgent userAgent) {
         mRequestQueue = requestQueue;
@@ -48,12 +51,12 @@ public abstract class BaseWPComRestClient {
         };
     }
 
-    protected Request add(WPComGsonRequest request) {
+    public Request add(WPComGsonRequest request) {
         // Add "locale=xx_XX" query parameter to all request by default
         return add(request, true);
     }
 
-    protected Request add(WPComGsonRequest request, boolean addLocaleParameter) {
+    public Request add(WPComGsonRequest request, boolean addLocaleParameter) {
         if (addLocaleParameter) {
             request.addQueryParameter("locale", LanguageUtils.getPatchedCurrentDeviceLanguage(mAppContext));
         }
@@ -61,12 +64,12 @@ public abstract class BaseWPComRestClient {
         return mRequestQueue.add(setRequestAuthParams(request, true));
     }
 
-    protected Request addUnauthedRequest(AccountSocialRequest request) {
+    public Request addUnauthedRequest(AccountSocialRequest request) {
         // Add "locale=xx_XX" query parameter to all request by default
         return addUnauthedRequest(request, true);
     }
 
-    protected Request addUnauthedRequest(AccountSocialRequest request, boolean addLocaleParameter) {
+    public Request addUnauthedRequest(AccountSocialRequest request, boolean addLocaleParameter) {
         if (addLocaleParameter) {
             request.addQueryParameter("locale", LanguageUtils.getPatchedCurrentDeviceLanguage(mAppContext));
             request.setOnParseErrorListener(mOnParseErrorListener);
@@ -75,19 +78,19 @@ public abstract class BaseWPComRestClient {
         return mRequestQueue.add(request);
     }
 
-    protected Request addUnauthedRequest(WPComGsonRequest request) {
+    public Request addUnauthedRequest(WPComGsonRequest request) {
         // Add "locale=xx_XX" query parameter to all request by default
         return addUnauthedRequest(request, true);
     }
 
-    protected Request addUnauthedRequest(WPComGsonRequest request, boolean addLocaleParameter) {
+    public Request addUnauthedRequest(WPComGsonRequest request, boolean addLocaleParameter) {
         if (addLocaleParameter) {
             request.addQueryParameter("locale", LanguageUtils.getPatchedCurrentDeviceLanguage(mAppContext));
         }
         return mRequestQueue.add(setRequestAuthParams(request, false));
     }
 
-    protected AccessToken getAccessToken() {
+    public AccessToken getAccessToken() {
         return mAccessToken;
     }
 
