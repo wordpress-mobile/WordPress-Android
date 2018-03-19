@@ -66,7 +66,6 @@ public class CommentsActivity extends AppCompatActivity
         ActionBar actionBar = getSupportActionBar();
         if (actionBar != null) {
             actionBar.setElevation(0);
-            actionBar.setTitle(R.string.comments);
             actionBar.setDisplayShowTitleEnabled(true);
             actionBar.setDisplayHomeAsUpEnabled(true);
         }

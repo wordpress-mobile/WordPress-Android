@@ -191,13 +191,16 @@
         <!-- Comments activities -->
         <activity
             android:name=".ui.comments.CommentsActivity"
-            android:theme="@style/Calypso.NoActionBar" />
+            android:theme="@style/Calypso.NoActionBar"
+            android:label="@string/comments"/>
         <activity
             android:name=".ui.comments.EditCommentActivity"
-            android:theme="@style/CalypsoTheme" />
+            android:theme="@style/CalypsoTheme"
+            android:label="@string/edit_comment"/>
         <activity
             android:name=".ui.comments.CommentsDetailActivity"
-            android:theme="@style/CalypsoTheme" />
+            android:theme="@style/CalypsoTheme"
+            android:label="@string/comments"/>
 
         <!-- Posts activities -->
         <activity
@@ -229,7 +232,8 @@
 
         <activity
             android:name=".ui.posts.PostsListActivity"
-            android:theme="@style/Calypso.NoActionBar" />
+            android:theme="@style/Calypso.NoActionBar"
+            android:label="" />
         <activity
             android:name=".ui.posts.PostPreviewActivity"
             android:label="@string/preview_post"
@@ -244,7 +248,8 @@
 
         <!-- plans -->
         <activity android:name=".ui.plans.PlansActivity"
-                  android:theme="@style/Calypso.NoActionBar"/>
+                  android:theme="@style/Calypso.NoActionBar"
+                  android:label="@string/plans"/>
 
         <!-- Stats Activities -->
         <activity
@@ -292,17 +297,19 @@
         <activity
             android:name=".ui.media.MediaPreviewActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
+            android:label="@string/media_settings_image_preview_desc"
             android:theme="@style/Theme.AppCompat.NoActionBar" />
         <activity
             android:name=".ui.media.MediaSettingsActivity"
             android:windowSoftInputMode="stateHidden|adjustPan"
-            android:label="@string/media"
+            android:label="@string/media_settings_screen_title"
             android:theme="@style/MediaSettings.Activity" />
 
         <!-- Theme Activities -->
         <activity
             android:name=".ui.themes.ThemeBrowserActivity"
-            android:theme="@style/Calypso.NoActionBar" />
+            android:theme="@style/Calypso.NoActionBar"
+            android:label="@string/themes"/>
         <activity
             android:name=".ui.themes.ThemeWebActivity"
             android:label="@string/selected_theme"

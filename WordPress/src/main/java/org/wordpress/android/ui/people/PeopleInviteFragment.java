@@ -282,6 +282,8 @@ public class PeopleInviteFragment extends Fragment implements RoleSelectDialogFr
             }
         });
         updateRemainingCharsView(remainingCharsTextView, mCustomMessage, MAX_CHARS);
+        // important for accessibility - talkback
+        getActivity().setTitle(R.string.invite_people);
     }
 
     private boolean endsWithDelimiter(String string) {
