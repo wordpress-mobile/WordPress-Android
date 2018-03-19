@@ -1,8 +1,6 @@
 package org.wordpress.android.fluxc.network.rest.wpcom.activity
 
-import android.content.Context
 import android.util.Log
-import com.android.volley.RequestQueue
 import org.wordpress.android.fluxc.Dispatcher
 import org.wordpress.android.fluxc.generated.ActivityActionBuilder
 import org.wordpress.android.fluxc.generated.endpoint.WPCOMV2
@@ -10,11 +8,9 @@ import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.model.activity.ActivityLogModel
 import org.wordpress.android.fluxc.model.activity.RewindStatusModel
 import org.wordpress.android.fluxc.network.BaseRequest
-import org.wordpress.android.fluxc.network.UserAgent
 import org.wordpress.android.fluxc.network.rest.wpcom.BaseWPComRestClient
 import org.wordpress.android.fluxc.network.rest.wpcom.WPComGsonRequest
-import org.wordpress.android.fluxc.network.rest.wpcom.WPComGsonRequest.buildGetRequest
-import org.wordpress.android.fluxc.network.rest.wpcom.auth.AccessToken
+import org.wordpress.android.fluxc.network.rest.wpcom.WPComGsonRequestBuilder
 import org.wordpress.android.fluxc.store.ActivityLogStore.ActivityError
 import org.wordpress.android.fluxc.store.ActivityLogStore.ActivityErrorType
 import org.wordpress.android.fluxc.store.ActivityLogStore.FetchedActivitiesPayload
@@ -27,14 +23,14 @@ import javax.inject.Singleton
 
 @Singleton
 open class ActivityLogRestClient
-@Inject constructor(appContext: Context, dispatcher: Dispatcher, requestQueue: RequestQueue,
-                    accessToken: AccessToken, userAgent: UserAgent)
-    : BaseWPComRestClient(appContext, dispatcher, requestQueue, accessToken, userAgent) {
+@Inject constructor(private val mDispatcher: Dispatcher,
+                    private val mRestClient: BaseWPComRestClient,
+                    private val mWPComGsonRequestBuilder: WPComGsonRequestBuilder) {
     fun fetchActivity(site: SiteModel, number: Int, offset: Int) {
         val url = WPCOMV2.sites.site(site.siteId).activity.url
         val pageNumber = offset / number + 1
         val params = mapOf("page" to pageNumber.toString(), "number" to number.toString())
-        val request = buildGetRequest(
+        val request = mWPComGsonRequestBuilder.buildGetRequest(
                 url, params, ActivitiesResponse::class.java,
                 { response ->
                     val activities = response.current.orderedItems
@@ -49,14 +45,14 @@ open class ActivityLogRestClient
                     val payload = FetchedActivitiesPayload(error, site, number, offset)
                     mDispatcher.dispatch(ActivityActionBuilder.newFetchedActivitiesAction(payload))
                 })
-        add(request)
+        mRestClient.add(request)
     }
 
     fun fetchActivityRewind(site: SiteModel, number: Int, offset: Int) {
         val url = WPCOMV2.sites.site(site.siteId).rewind.url
         val pageNumber = offset / number + 1
         val params = mapOf("page" to pageNumber.toString(), "number" to number.toString())
-        val request = buildGetRequest(
+        val request = mWPComGsonRequestBuilder.buildGetRequest(
                 url, params, RewindStatusResponse::class.java,
                 {
                     Log.d("activity_log", "Rewind: $it")
@@ -71,7 +67,7 @@ open class ActivityLogRestClient
                     val payload = FetchedRewindStatePayload(error, site, number, offset)
                     mDispatcher.dispatch(ActivityActionBuilder.newFetchedRewindStateAction(payload))
                 })
-        add(request)
+        mRestClient.add(request)
     }
 
     private fun buildActivityPayload(activityResponses: List<ActivitiesResponse.ActivityResponse>,
@@ -174,9 +170,9 @@ open class ActivityLogRestClient
         return errorType
     }
 
-    private data class ActivitiesResponse(val totalItems: Int?,
-                                          val summary: String?,
-                                          val current: Page) {
+    data class ActivitiesResponse(val totalItems: Int?,
+                                  val summary: String?,
+                                  val current: Page) {
         data class Page(val orderedItems: List<ActivityResponse>)
         data class ActivityResponse(val summary: String?,
                                     val content: Content?,
@@ -190,7 +186,6 @@ open class ActivityLogRestClient
                                     val gridicon: String?,
                                     val status: String?,
                                     val activity_id: String?,
-                                    val actvityObject: ActivityObject?,
                                     val is_discarded: Boolean?)
 
         data class Content(val text: String?)
@@ -204,11 +199,6 @@ open class ActivityLogRestClient
         data class Icon(val type: String?, val url: String?, val width: Int?, val height: Int?)
         data class Generator(val jetpack_version: Float?,
                              val blog_id: Long?)
-
-        data class ActivityObject(val type: String,
-                                  val name: String?,
-                                  val external_user_id: Long?,
-                                  val wpcom_user_id: Long?)
     }
 
     data class RewindStatusResponse(val reason: String,
