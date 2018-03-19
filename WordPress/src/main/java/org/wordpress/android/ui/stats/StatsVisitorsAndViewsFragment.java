@@ -485,6 +485,8 @@ public class StatsVisitorsAndViewsFragment extends StatsAbstractFragment
         mGraphView.setHorizontalLabels(horLabels);
         mGraphView.setAccessibleHorizontalLabels(makeAccessibleHorizontalLabels(horLabels));
         mGraphView.setGestureListener(this);
+        mGraphView.setImportantForAccessibility(atLeastOneResultIsAvailable
+                ? View.IMPORTANT_FOR_ACCESSIBILITY_YES : View.IMPORTANT_FOR_ACCESSIBILITY_NO);
 
         // If zero results in the current section disable clicks on the graph and show the dialog.
         mNoActivtyThisPeriodContainer.setVisibility(atLeastOneResultIsAvailable ? View.GONE : View.VISIBLE);
