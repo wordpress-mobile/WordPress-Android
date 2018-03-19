@@ -10,6 +10,7 @@ import org.wordpress.android.fluxc.network.rest.wpcom.site.SiteRestClient.Export
 import org.wordpress.android.fluxc.network.rest.wpcom.site.SiteRestClient.FetchWPComSiteResponsePayload;
 import org.wordpress.android.fluxc.network.rest.wpcom.site.SiteRestClient.IsWPComResponsePayload;
 import org.wordpress.android.fluxc.network.rest.wpcom.site.SiteRestClient.NewSiteResponsePayload;
+import org.wordpress.android.fluxc.store.SiteStore.AutomatedTransferEligibilityResponsePayload;
 import org.wordpress.android.fluxc.store.SiteStore.ConnectSiteInfoPayload;
 import org.wordpress.android.fluxc.store.SiteStore.FetchedPostFormatsPayload;
 import org.wordpress.android.fluxc.store.SiteStore.FetchedUserRolesPayload;
@@ -75,6 +76,8 @@ public enum SiteAction implements IAction {
     FETCHED_CONNECT_SITE_INFO,
     @Action(payloadType = FetchWPComSiteResponsePayload.class)
     FETCHED_WPCOM_SITE_BY_URL,
+    @Action(payloadType = AutomatedTransferEligibilityResponsePayload.class)
+    CHECKED_AUTOMATED_TRANSFER_ELIGIBILITY,
 
     // Local actions
     @Action(payloadType = SiteModel.class)

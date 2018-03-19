@@ -31,6 +31,7 @@ import org.wordpress.android.fluxc.network.rest.wpcom.auth.AccessToken;
 import org.wordpress.android.fluxc.network.rest.wpcom.auth.AppSecrets;
 import org.wordpress.android.fluxc.network.rest.wpcom.site.SiteWPComRestResponse.SitesResponse;
 import org.wordpress.android.fluxc.network.rest.wpcom.site.UserRoleWPComRestResponse.UserRolesResponse;
+import org.wordpress.android.fluxc.store.SiteStore.AutomatedTransferEligibilityResponsePayload;
 import org.wordpress.android.fluxc.store.SiteStore.ConnectSiteInfoPayload;
 import org.wordpress.android.fluxc.store.SiteStore.DeleteSiteError;
 import org.wordpress.android.fluxc.store.SiteStore.FetchedPostFormatsPayload;
@@ -493,7 +494,24 @@ public class SiteRestClient extends BaseWPComRestClient {
     // Automated Transfers
 
     public void checkAutomatedTransferEligibility(final SiteModel site) {
-        // TODO
+        String url = WPCOMREST.sites.site(site.getSiteId()).automated_transfers.eligibility.getUrlV1_1();
+        final WPComGsonRequest<AutomatedTransferEligibilityCheckResponse> request = WPComGsonRequest
+                .buildGetRequest(url, null, AutomatedTransferEligibilityCheckResponse.class,
+                new Listener<AutomatedTransferEligibilityCheckResponse>() {
+                    @Override
+                    public void onResponse(AutomatedTransferEligibilityCheckResponse response) {
+                        mDispatcher.dispatch(SiteActionBuilder.newCheckedAutomatedTransferEligibilityAction(
+                                new AutomatedTransferEligibilityResponsePayload(site, response.isEligible)));
+                    }
+                },
+                new BaseErrorListener() {
+                    @Override
+                    public void onErrorResponse(@NonNull BaseNetworkError error) {
+                        mDispatcher.dispatch(SiteActionBuilder.newCheckedAutomatedTransferEligibilityAction(
+                                new AutomatedTransferEligibilityResponsePayload(site, error)));
+                    }
+                });
+        add(request);
     }
 
     public void initiateAutomatedTransfer(final SiteModel site) {

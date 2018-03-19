@@ -141,6 +141,21 @@ public class SiteStore extends Store {
         }
     }
 
+    public static class AutomatedTransferEligibilityResponsePayload extends Payload<BaseNetworkError> {
+        public SiteModel site;
+        public boolean isEligible;
+
+        public AutomatedTransferEligibilityResponsePayload(SiteModel site, boolean isEligible) {
+            this.site = site;
+            this.isEligible = isEligible;
+        }
+
+        public AutomatedTransferEligibilityResponsePayload(SiteModel site, BaseNetworkError error) {
+            this.site = site;
+            this.error = error;
+        }
+    }
+
     public static class SiteError implements OnChangedError {
         public SiteErrorType type;
         public String message;
