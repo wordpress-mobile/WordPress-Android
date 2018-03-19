@@ -2,6 +2,7 @@ package org.wordpress.android.ui.accounts.login;
 
 import android.content.Context;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
@@ -74,13 +75,13 @@ public class LoginPrologueFragment extends Fragment {
             }
         };
 
-        WPViewPager pager = (WPViewPager) view.findViewById(R.id.intros_pager);
+        WPViewPager pager = view.findViewById(R.id.intros_pager);
         LoginProloguePagerAdapter adapter = new LoginProloguePagerAdapter(getChildFragmentManager());
         pager.setAdapter(adapter);
         pager.addOnPageChangeListener(listener);
 
         // Using a TabLayout for simulating a page indicator strip
-        TabLayout tabLayout = (TabLayout) view.findViewById(R.id.tab_layout_indicator);
+        TabLayout tabLayout = view.findViewById(R.id.tab_layout_indicator);
         tabLayout.setupWithViewPager(pager, true);
 
         if (savedInstanceState == null) {
@@ -88,6 +89,12 @@ public class LoginPrologueFragment extends Fragment {
         }
 
         return view;
+    }
+
+    @Override public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+        // important for accessibility - talkback
+        getActivity().setTitle(R.string.login_prologue_screen_title);
     }
 
     @Override

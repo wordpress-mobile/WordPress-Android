@@ -101,6 +101,17 @@
     <string name="notification_2fa_needed">Please provide an authentication code to continue.</string>
     <string name="notification_login_failed">An error has occurred.</string>
 
+    <!-- Screen titles -->
+    <string name="email_address_login_title">Email address login</string>
+    <string name="site_address_login_title">Site address login</string>
+    <string name="magic_link_login_title">Magic link login</string>
+    <string name="magic_link_sent_login_title">Magic link sent</string>
+    <string name="wpcom_login_title">Login password</string>
+    <string name="selfhosted_site_login_title">Login credentials</string>
+    <string name="email_signup_title">Sign up with email</string>
+    <string name="verification_2fa_screen_title">Code verification</string>
+
+
     <!-- HTTP Authentication -->
     <string name="http_authorization_required">Authorization required</string>
     <string name="httpuser">HTTP username</string>

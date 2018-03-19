@@ -76,7 +76,7 @@ public class LoginMagicLinkSentFragment extends Fragment {
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        Toolbar toolbar = (Toolbar) view.findViewById(R.id.toolbar);
+        Toolbar toolbar = view.findViewById(R.id.toolbar);
         ((AppCompatActivity) getActivity()).setSupportActionBar(toolbar);
 
         ActionBar actionBar = ((AppCompatActivity) getActivity()).getSupportActionBar();
@@ -88,6 +88,12 @@ public class LoginMagicLinkSentFragment extends Fragment {
         if (savedInstanceState == null) {
             mAnalyticsListener.trackMagicLinkOpenEmailClientViewed();
         }
+    }
+
+    @Override public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+        // important for accessibility - talkback
+        getActivity().setTitle(R.string.magic_link_sent_login_title);
     }
 
     @Override

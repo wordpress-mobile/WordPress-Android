@@ -47,6 +47,12 @@
     <string name="publicize_buttons_screen_title">Sharing buttons</string>
     <string name="media_settings_screen_title">File details</string>
     <string name="person_detail_screen_title">Person detail</string>
+    <string name="login_epilogue_screen_title">Logged in as</string>
+    <string name="login_prologue_screen_title">Login</string>
+    <string name="signup_email_screen_title">Email signup</string>
+    <string name="signup_epilogue_screen_title">New account</string>
+    <string name="signup_magic_link_title">Magic link sent</string>
+
 
     <!-- general strings -->
     <string name="device">Device</string>
