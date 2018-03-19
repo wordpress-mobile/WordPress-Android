@@ -108,6 +108,8 @@ public class LoginEmailFragment extends LoginBaseFormFragment<LoginListener> imp
 
     @Override
     protected void setupContent(ViewGroup rootView) {
+        // important for accessibility - talkback
+        getActivity().setTitle(R.string.email_address_login_title);
         mEmailInput = rootView.findViewById(R.id.login_email_row);
         if (BuildConfig.DEBUG) {
             mEmailInput.getEditText().setText(BuildConfig.DEBUG_WPCOM_LOGIN_EMAIL);
