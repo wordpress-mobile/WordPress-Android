@@ -29,6 +29,7 @@ import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.model.StockMediaModel;
 import org.wordpress.android.fluxc.store.StockMediaStore;
 import org.wordpress.android.ui.media.MediaPreviewActivity;
+import org.wordpress.android.ui.stockmedia.StockMediaRetainedFragment.StockMediaRetainedData;
 import org.wordpress.android.util.ActivityUtils;
 import org.wordpress.android.util.AniUtils;
 import org.wordpress.android.util.AppLog;
@@ -50,8 +51,6 @@ public class StockMediaPickerActivity extends AppCompatActivity implements Searc
     private static final String TAG_RETAINED_FRAGMENT = "retained_fragment";
 
     private static final String KEY_SEARCH_QUERY = "search_query";
-    private static final String KEY_CAN_LOAD_MORE = "can_load_more";
-    private static final String KEY_NEXT_PAGE = "next_page";
 
     private SiteModel mSite;
 
@@ -134,11 +133,14 @@ public class StockMediaPickerActivity extends AppCompatActivity implements Searc
         if (savedInstanceState == null) {
             showEmptyView(true);
         } else {
+            StockMediaRetainedData data = mRetainedFragment.getData();
+            if (data != null) {
+                mCanLoadMore = data.canLoadMore();
+                mNextPage = data.getNextPage();
+                mAdapter.setMediaList(data.getStockMediaList());
+                mAdapter.setSelectedItems(data.getSelectedItems());
+            }
             mSearchQuery = savedInstanceState.getString(KEY_SEARCH_QUERY);
-            mCanLoadMore = savedInstanceState.getBoolean(KEY_CAN_LOAD_MORE);
-            mNextPage = savedInstanceState.getInt(KEY_NEXT_PAGE);
-            mAdapter.setMediaList(mRetainedFragment.getStockMediaList());
-            mAdapter.setSelectedItems(mRetainedFragment.getSelectedItems());
         }
 
         configureSearchView();
@@ -157,18 +159,18 @@ public class StockMediaPickerActivity extends AppCompatActivity implements Searc
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
 
-        outState.putBoolean(KEY_CAN_LOAD_MORE, mCanLoadMore);
-        outState.putInt(KEY_NEXT_PAGE, mNextPage);
-
         if (mSite != null) {
             outState.putSerializable(WordPress.SITE, mSite);
         }
-        if (mSearchView != null && !TextUtils.isEmpty(mSearchView.getQuery())) {
-            outState.putString(KEY_SEARCH_QUERY, mSearchView.getQuery().toString());
-        }
 
-        mRetainedFragment.setStockMediaList(mAdapter.mItems);
-        mRetainedFragment.setSelectedItems(mAdapter.mSelectedItems);
+        String query = mSearchView != null ? mSearchView.getQuery().toString() : null;
+        outState.putString(KEY_SEARCH_QUERY, query);
+
+        StockMediaRetainedData data = new StockMediaRetainedData(mAdapter.mItems,
+                mAdapter.mSelectedItems,
+                mCanLoadMore,
+                mNextPage);
+        mRetainedFragment.setData(data);
     }
 
     @Override
