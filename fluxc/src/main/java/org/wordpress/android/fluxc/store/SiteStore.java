@@ -823,6 +823,16 @@ public class SiteStore extends Store {
             case SUGGESTED_DOMAINS:
                 handleSuggestedDomains((SuggestDomainsResponsePayload) action.getPayload());
                 break;
+            // Automated Transfer
+            case CHECK_AUTOMATED_TRANSFER_ELIGIBILITY:
+                checkAutomatedTransferEligibility((SiteModel) action.getPayload());
+                break;
+            case INITIATE_AUTOMATED_TRANSFER:
+                initiateAutomatedTransfer((SiteModel) action.getPayload());
+                break;
+            case CHECK_AUTOMATED_TRANSFER_STATUS:
+                checkAutomatedTransferStatus((SiteModel) action.getPayload());
+                break;
         }
     }
 
@@ -1086,5 +1096,19 @@ public class SiteStore extends Store {
             }
         }
         emitChange(event);
+    }
+
+    // Automated Transfers
+
+    private void checkAutomatedTransferEligibility(SiteModel site) {
+        mSiteRestClient.checkAutomatedTransferEligibility(site);
+    }
+
+    private void initiateAutomatedTransfer(SiteModel site) {
+        mSiteRestClient.initiateAutomatedTransfer(site);
+    }
+
+    private void checkAutomatedTransferStatus(SiteModel site) {
+        mSiteRestClient.checkAutomatedTransferStatus(site);
     }
 }

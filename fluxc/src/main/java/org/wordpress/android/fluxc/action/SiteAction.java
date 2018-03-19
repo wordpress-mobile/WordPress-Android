@@ -47,6 +47,12 @@ public enum SiteAction implements IAction {
     FETCH_CONNECT_SITE_INFO,
     @Action(payloadType = String.class)
     FETCH_WPCOM_SITE_BY_URL,
+    @Action(payloadType = SiteModel.class)
+    CHECK_AUTOMATED_TRANSFER_ELIGIBILITY,
+    @Action(payloadType = SiteModel.class)
+    INITIATE_AUTOMATED_TRANSFER,
+    @Action(payloadType = SiteModel.class)
+    CHECK_AUTOMATED_TRANSFER_STATUS,
 
     // Remote responses
     @Action(payloadType = SiteModel.class)

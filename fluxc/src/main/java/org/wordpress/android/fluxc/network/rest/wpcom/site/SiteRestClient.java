@@ -490,6 +490,22 @@ public class SiteRestClient extends BaseWPComRestClient {
         addUnauthedRequest(request);
     }
 
+    // Automated Transfers
+
+    public void checkAutomatedTransferEligibility(final SiteModel site) {
+        // TODO
+    }
+
+    public void initiateAutomatedTransfer(final SiteModel site) {
+        // TODO
+    }
+
+    public void checkAutomatedTransferStatus(final SiteModel site) {
+        // TODO
+    }
+
+    // Utils
+
     private SiteModel siteResponseToSiteModel(SiteWPComRestResponse from) {
         SiteModel site = new SiteModel();
         site.setSiteId(from.ID);
