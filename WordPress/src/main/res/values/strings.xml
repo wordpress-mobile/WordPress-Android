@@ -2179,6 +2179,8 @@
     <string name="notification_settings_switch_desc">Notifications</string>
     <string name="navigate_up_desc">navigate up</string>
     <string name="stats_list_cell_chevron_collapse_desc">collapse</string>
+    <string name="stats_bar_desc">Showing %s</string>
+    <string name="stats_bar_week_desc">Week of %s</string>
     <string name="fab_add_tag_desc">create tag</string>
     <string name="fab_create_post_desc">create post</string>
     <string name="fab_create_desc">create</string>
