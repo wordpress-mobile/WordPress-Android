@@ -18,6 +18,11 @@ public class LoginAnalyticsTracker implements LoginAnalyticsListener {
     }
 
     @Override
+    public void trackCreatedAccount() {
+        AnalyticsTracker.track(AnalyticsTracker.Stat.CREATED_ACCOUNT);
+    }
+
+    @Override
     public void trackEmailFormViewed() {
         AnalyticsTracker.track(AnalyticsTracker.Stat.LOGIN_EMAIL_FORM_VIEWED);
     }
