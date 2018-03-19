@@ -283,6 +283,7 @@ public class WPMainActivity extends AppCompatActivity {
             ActivityLauncher.showLoginEpilogue(this, getIntent().getBooleanExtra(ARG_DO_LOGIN_UPDATE, false),
                                                getIntent().getIntegerArrayListExtra(ARG_OLD_SITES_IDS));
         } else if (getIntent().getBooleanExtra(ARG_SHOW_SIGNUP_EPILOGUE, false) && savedInstanceState == null) {
+            AnalyticsTracker.track(AnalyticsTracker.Stat.CREATED_ACCOUNT);
             ActivityLauncher.showSignupEpilogue(this,
                                                 getIntent().getStringExtra(
                                                         SignupEpilogueActivity.EXTRA_SIGNUP_DISPLAY_NAME),
@@ -735,8 +736,11 @@ public class WPMainActivity extends AppCompatActivity {
         }
 
         if (mAccountStore.hasAccessToken()) {
+            AnalyticsTracker.track(AnalyticsTracker.Stat.SIGNED_IN);
+
             if (hasMagicLinkLoginIntent()) {
                 if (hasMagicLinkSignupIntent()) {
+                    AnalyticsTracker.track(AnalyticsTracker.Stat.CREATED_ACCOUNT);
                     AnalyticsTracker.track(AnalyticsTracker.Stat.SIGNUP_MAGIC_LINK_SUCCEEDED);
                     Intent intent = getIntent();
                     ActivityLauncher.showSignupEpilogue(this, null, null, null, null, true);
