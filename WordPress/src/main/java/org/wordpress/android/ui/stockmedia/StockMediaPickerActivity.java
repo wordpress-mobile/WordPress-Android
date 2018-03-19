@@ -1,10 +1,10 @@
 package org.wordpress.android.ui.stockmedia;
 
-import android.app.FragmentManager;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v4.app.FragmentManager;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.GridLayoutManager;
@@ -92,7 +92,7 @@ public class StockMediaPickerActivity extends AppCompatActivity implements Searc
             return;
         }
 
-        FragmentManager fm = getFragmentManager();
+        FragmentManager fm = getSupportFragmentManager();
         mRetainedFragment = (StockMediaRetainedFragment) fm.findFragmentByTag(TAG_RETAINED_FRAGMENT);
         if (mRetainedFragment == null) {
             mRetainedFragment = StockMediaRetainedFragment.newInstance();
@@ -188,7 +188,7 @@ public class StockMediaPickerActivity extends AppCompatActivity implements Searc
     @Override
     public void onPause() {
         if (isFinishing() && mRetainedFragment != null) {
-            getFragmentManager().beginTransaction().remove(mRetainedFragment).commit();
+            getSupportFragmentManager().beginTransaction().remove(mRetainedFragment).commit();
         }
         super.onPause();
     }
