@@ -760,6 +760,8 @@ public class AnalyticsTrackerNosara extends Tracker {
                 return "signup_email_to_login";
             case SIGNUP_MAGIC_LINK_FAILED:
                 return "signup_magic_link_failed";
+            case SIGNUP_MAGIC_LINK_SENT:
+                return "signup_magic_link_sent";
             case SIGNUP_MAGIC_LINK_SUCCEEDED:
                 return "signup_magic_link_succeeded";
             case SIGNUP_SOCIAL_2FA_NEEDED:
