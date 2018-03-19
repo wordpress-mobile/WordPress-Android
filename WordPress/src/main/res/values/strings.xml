@@ -52,6 +52,7 @@
     <string name="signup_email_screen_title">Email signup</string>
     <string name="signup_epilogue_screen_title">New account</string>
     <string name="signup_magic_link_title">Magic link sent</string>
+    <string name="share_intent_screen_title">Pick site</string>
 
 
     <!-- general strings -->

@@ -70,6 +70,12 @@ public class ShareIntentReceiverFragment extends Fragment {
         }
     }
 
+    @Override public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+        // important for accessibility - talkback
+        getActivity().setTitle(R.string.share_intent_screen_title);
+    }
+
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container,
@@ -113,14 +119,14 @@ public class ShareIntentReceiverFragment extends Fragment {
     }
 
     private void initShareActionPostButton(final ViewGroup layout) {
-        mSharePostBtn = (Button) layout.findViewById(R.id.primary_button);
+        mSharePostBtn = layout.findViewById(R.id.primary_button);
         addShareActionListener(mSharePostBtn, ShareAction.SHARE_TO_POST);
         mSharePostBtn.setVisibility(View.VISIBLE);
         mSharePostBtn.setText(R.string.share_action_post);
     }
 
     private void initShareActionMediaButton(final ViewGroup layout, boolean sharingMediaFile) {
-        mShareMediaBtn = (Button) layout.findViewById(R.id.secondary_button);
+        mShareMediaBtn = layout.findViewById(R.id.secondary_button);
         addShareActionListener(mShareMediaBtn, ShareAction.SHARE_TO_MEDIA_LIBRARY);
         mShareMediaBtn.setVisibility(sharingMediaFile ? View.VISIBLE : View.GONE);
         mShareMediaBtn.setText(R.string.share_action_media);
@@ -136,7 +142,7 @@ public class ShareIntentReceiverFragment extends Fragment {
     }
 
     private void initRecyclerView(ViewGroup layout) {
-        mRecyclerView = (RecyclerView) layout.findViewById(R.id.recycler_view);
+        mRecyclerView = layout.findViewById(R.id.recycler_view);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         mRecyclerView.setScrollBarStyle(View.SCROLLBARS_OUTSIDE_OVERLAY);
         mRecyclerView.setItemAnimator(null);
