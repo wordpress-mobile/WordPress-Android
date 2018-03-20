@@ -38,6 +38,11 @@ public class LoginAnalyticsTracker implements LoginAnalyticsListener {
     }
 
     @Override
+    public void trackLoginAutofillCredentialsUpdated() {
+        AnalyticsTracker.track(AnalyticsTracker.Stat.LOGIN_AUTOFILL_CREDENTIALS_UPDATED);
+    }
+
+    @Override
     public void trackLoginFailed(String errorContext, String errorType, String errorDescription) {
         AnalyticsTracker.track(AnalyticsTracker.Stat.LOGIN_FAILED, errorContext, errorType, errorDescription);
     }

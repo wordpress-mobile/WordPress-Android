@@ -234,7 +234,7 @@ public class LoginActivity extends AppCompatActivity implements ConnectionCallba
                 break;
             case RequestCodes.SMART_LOCK_SAVE:
                 if (resultCode == RESULT_OK) {
-                    AnalyticsTracker.track(AnalyticsTracker.Stat.LOGIN_AUTOFILL_CREDENTIALS_UPDATED);
+                    mAnalyticsListener.trackLoginAutofillCredentialsUpdated();
                     AppLog.d(AppLog.T.NUX, "Credentials saved");
                 } else {
                     AppLog.d(AppLog.T.NUX, "Credentials save cancelled");
