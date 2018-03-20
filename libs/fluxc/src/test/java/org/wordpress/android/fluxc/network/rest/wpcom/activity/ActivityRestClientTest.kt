@@ -6,6 +6,7 @@ import com.nhaarman.mockito_kotlin.mock
 import com.nhaarman.mockito_kotlin.verify
 import com.nhaarman.mockito_kotlin.whenever
 import junit.framework.Assert.assertEquals
+import junit.framework.Assert.assertNotNull
 import junit.framework.Assert.assertNull
 import junit.framework.Assert.assertTrue
 import org.junit.Before
@@ -17,6 +18,7 @@ import org.wordpress.android.fluxc.Dispatcher
 import org.wordpress.android.fluxc.action.ActivityAction
 import org.wordpress.android.fluxc.annotations.action.Action
 import org.wordpress.android.fluxc.model.SiteModel
+import org.wordpress.android.fluxc.model.activity.RewindStatusModel
 import org.wordpress.android.fluxc.network.BaseRequest
 import org.wordpress.android.fluxc.network.rest.wpcom.BaseWPComRestClient
 import org.wordpress.android.fluxc.network.rest.wpcom.WPComGsonRequest
@@ -24,6 +26,8 @@ import org.wordpress.android.fluxc.network.rest.wpcom.WPComGsonRequestBuilder
 import org.wordpress.android.fluxc.network.rest.wpcom.activity.ActivityRestClient.*
 import org.wordpress.android.fluxc.store.ActivityErrorType
 import org.wordpress.android.fluxc.store.FetchedActivitiesPayload
+import org.wordpress.android.fluxc.store.FetchedRewindStatePayload
+import org.wordpress.android.fluxc.store.RewindStatusErrorType
 
 @RunWith(MockitoJUnitRunner::class)
 class ActivityRestClientTest {
@@ -33,10 +37,14 @@ class ActivityRestClientTest {
     @Mock private lateinit var site: SiteModel
     private lateinit var urlCaptor: KArgumentCaptor<String>
     private lateinit var paramsCaptor: KArgumentCaptor<Map<String, String>>
-    private lateinit var classCaptor: KArgumentCaptor<Class<ActivityRestClient.ActivitiesResponse>>
-    private lateinit var successMethodCaptor: KArgumentCaptor<(ActivityRestClient.ActivitiesResponse) -> Unit>
+    private lateinit var activityResponseClassCaptor: KArgumentCaptor<Class<ActivityRestClient.ActivitiesResponse>>
+    private lateinit var rewindStatusResponseClassCaptor: KArgumentCaptor<Class<ActivityRestClient.RewindStatusResponse>>
+    private lateinit var activitySuccessMethodCaptor: KArgumentCaptor<(ActivityRestClient.ActivitiesResponse) -> Unit>
+    private lateinit var rewindStatusSuccessMethodCaptor:
+            KArgumentCaptor<(ActivityRestClient.RewindStatusResponse) -> Unit>
     private lateinit var errorMethodCaptor: KArgumentCaptor<(BaseRequest.BaseNetworkError) -> Unit>
     private lateinit var activityActionCaptor: KArgumentCaptor<Action<FetchedActivitiesPayload>>
+    private lateinit var rewindStatusActionCaptor: KArgumentCaptor<Action<FetchedRewindStatePayload>>
     private lateinit var activityRestClient: ActivityRestClient
     private val siteId: Long = 12
     private val number = 10
@@ -46,15 +54,18 @@ class ActivityRestClientTest {
     fun setUp() {
         urlCaptor = argumentCaptor()
         paramsCaptor = argumentCaptor()
-        classCaptor = argumentCaptor()
-        successMethodCaptor = argumentCaptor()
+        activityResponseClassCaptor = argumentCaptor()
+        rewindStatusResponseClassCaptor = argumentCaptor()
+        activitySuccessMethodCaptor = argumentCaptor()
+        rewindStatusSuccessMethodCaptor = argumentCaptor()
         errorMethodCaptor = argumentCaptor()
         activityActionCaptor = argumentCaptor()
+        rewindStatusActionCaptor = argumentCaptor()
         activityRestClient = ActivityRestClient(dispatcher, restClient, wpComGsonRequestBuilder)
     }
 
     @Test
-    fun passesCorrectParamToBuildRequest() {
+    fun fetchActivity_passesCorrectParamToBuildRequest() {
         val request = initFetchActivity()
 
         activityRestClient.fetchActivity(site, number, offset)
@@ -69,7 +80,7 @@ class ActivityRestClientTest {
     }
 
     @Test
-    fun dispatchesResponseOnSuccess() {
+    fun fetchActivity_dispatchesResponseOnSuccess() {
         val request = initFetchActivity()
 
         activityRestClient.fetchActivity(site, number, offset)
@@ -77,7 +88,7 @@ class ActivityRestClientTest {
         verify(restClient).add(request)
 
         val activitiesResponse = ActivitiesResponse(1, "response", ACTIVITY_RESPONSE_PAGE)
-        successMethodCaptor.firstValue.invoke(activitiesResponse)
+        activitySuccessMethodCaptor.firstValue.invoke(activitiesResponse)
 
         verify(dispatcher).dispatch(activityActionCaptor.capture())
         with(activityActionCaptor.firstValue) {
@@ -103,7 +114,7 @@ class ActivityRestClientTest {
     }
 
     @Test
-    fun dispatchesErrorOnMissingActivityId() {
+    fun fetchActivity_dispatchesErrorOnMissingActivityId() {
         val failingPage = ActivitiesResponse.Page(listOf(ACTIVITY_RESPONSE.copy(activity_id = null)))
         val request = initFetchActivity()
 
@@ -112,13 +123,13 @@ class ActivityRestClientTest {
         verify(restClient).add(request)
 
         val activitiesResponse = ActivitiesResponse(1, "response", failingPage)
-        successMethodCaptor.firstValue.invoke(activitiesResponse)
+        activitySuccessMethodCaptor.firstValue.invoke(activitiesResponse)
 
-        assertEmittedError(ActivityErrorType.MISSING_ACTIVITY_ID)
+        assertEmittedActivityError(ActivityErrorType.MISSING_ACTIVITY_ID)
     }
 
     @Test
-    fun dispatchesErrorOnMissingSummary() {
+    fun fetchActivity_dispatchesErrorOnMissingSummary() {
         val failingPage = ActivitiesResponse.Page(listOf(ACTIVITY_RESPONSE.copy(summary = null)))
         val request = initFetchActivity()
 
@@ -127,13 +138,13 @@ class ActivityRestClientTest {
         verify(restClient).add(request)
 
         val activitiesResponse = ActivitiesResponse(1, "response", failingPage)
-        successMethodCaptor.firstValue.invoke(activitiesResponse)
+        activitySuccessMethodCaptor.firstValue.invoke(activitiesResponse)
 
-        assertEmittedError(ActivityErrorType.MISSING_SUMMARY)
+        assertEmittedActivityError(ActivityErrorType.MISSING_SUMMARY)
     }
 
     @Test
-    fun dispatchesErrorOnMissingContentText() {
+    fun fetchActivity_dispatchesErrorOnMissingContentText() {
         val emptyContent = ActivitiesResponse.Content(null)
         val failingPage = ActivitiesResponse.Page(listOf(ACTIVITY_RESPONSE.copy(content = emptyContent)))
         val request = initFetchActivity()
@@ -143,13 +154,13 @@ class ActivityRestClientTest {
         verify(restClient).add(request)
 
         val activitiesResponse = ActivitiesResponse(1, "response", failingPage)
-        successMethodCaptor.firstValue.invoke(activitiesResponse)
+        activitySuccessMethodCaptor.firstValue.invoke(activitiesResponse)
 
-        assertEmittedError(ActivityErrorType.MISSING_CONTENT_TEXT)
+        assertEmittedActivityError(ActivityErrorType.MISSING_CONTENT_TEXT)
     }
 
     @Test
-    fun dispatchesErrorOnMissingPublishedDate() {
+    fun fetchActivity_dispatchesErrorOnMissingPublishedDate() {
         val failingPage = ActivitiesResponse.Page(listOf(ACTIVITY_RESPONSE.copy(published = null)))
         val request = initFetchActivity()
 
@@ -158,13 +169,13 @@ class ActivityRestClientTest {
         verify(restClient).add(request)
 
         val activitiesResponse = ActivitiesResponse(1, "response", failingPage)
-        successMethodCaptor.firstValue.invoke(activitiesResponse)
+        activitySuccessMethodCaptor.firstValue.invoke(activitiesResponse)
 
-        assertEmittedError(ActivityErrorType.MISSING_PUBLISHED_DATE)
+        assertEmittedActivityError(ActivityErrorType.MISSING_PUBLISHED_DATE)
     }
 
     @Test
-    fun dispatchesErrorOnFailure() {
+    fun fetchActivity_dispatchesErrorOnFailure() {
         val request = initFetchActivity()
 
         activityRestClient.fetchActivity(site, number, offset)
@@ -173,10 +184,127 @@ class ActivityRestClientTest {
 
         errorMethodCaptor.firstValue(BaseRequest.BaseNetworkError(BaseRequest.GenericErrorType.NETWORK_ERROR))
 
-        assertEmittedError(ActivityErrorType.GENERIC_ERROR)
+        assertEmittedActivityError(ActivityErrorType.GENERIC_ERROR)
     }
 
-    private fun assertEmittedError(errorType: ActivityErrorType) {
+    @Test
+    fun fetchActivityRewind_dispatchesResponseOnSuccess() {
+        val request = initFetchRewindStatus()
+
+        activityRestClient.fetchActivityRewind(site)
+
+        verify(restClient).add(request)
+
+        val state = RewindStatusModel.State.ACTIVE
+        val rewindResponse = REWIND_RESPONSE.copy(state = state.value)
+        rewindStatusSuccessMethodCaptor.firstValue.invoke(rewindResponse)
+
+        verify(dispatcher).dispatch(rewindStatusActionCaptor.capture())
+        with(rewindStatusActionCaptor.firstValue) {
+            assertEquals(this.type, ActivityAction.FETCHED_REWIND_STATE)
+            assertEquals(this.payload.site, site)
+            assertNull(this.payload.error)
+            assertNotNull(this.payload.rewindStatusModelResponse)
+            this.payload.rewindStatusModelResponse?.apply {
+                assertEquals(this.reason, REWIND_RESPONSE.reason)
+                assertEquals(this.state, state)
+                assertNotNull(this.restore)
+                this.restore?.apply {
+                    assertEquals(this.message, RESTORE_RESPONSE.message)
+                    assertEquals(this.status.value, RESTORE_RESPONSE.status)
+                    assertEquals(this.progress, RESTORE_RESPONSE.progress)
+                    assertEquals(this.id, RESTORE_RESPONSE.rewind_id)
+                    assertEquals(this.errorCode, RESTORE_RESPONSE.error_code)
+                    assertEquals(this.failureReason, RESTORE_RESPONSE.reason)
+                }
+            }
+        }
+    }
+
+    @Test
+    fun fetchActivityRewind_dispatchesGenericErrorOnFailure() {
+        val request = initFetchRewindStatus()
+
+        activityRestClient.fetchActivityRewind(site)
+
+        verify(restClient).add(request)
+
+        errorMethodCaptor.firstValue(BaseRequest.BaseNetworkError(BaseRequest.GenericErrorType.NETWORK_ERROR))
+
+        assertEmittedRewindStatusError(RewindStatusErrorType.GENERIC_ERROR)
+    }
+
+    @Test
+    fun fetchActivityRewind_dispatchesErrorOnMissingState() {
+        val request = initFetchRewindStatus()
+
+        activityRestClient.fetchActivityRewind(site)
+
+        verify(restClient).add(request)
+
+        val rewindResponse = REWIND_RESPONSE.copy(state = null)
+        rewindStatusSuccessMethodCaptor.firstValue.invoke(rewindResponse)
+
+        assertEmittedRewindStatusError(RewindStatusErrorType.MISSING_STATE)
+    }
+
+    @Test
+    fun fetchActivityRewind_dispatchesErrorOnWrongState() {
+        val request = initFetchRewindStatus()
+
+        activityRestClient.fetchActivityRewind(site)
+
+        verify(restClient).add(request)
+
+        val rewindResponse = REWIND_RESPONSE.copy(state = "wrong")
+        rewindStatusSuccessMethodCaptor.firstValue.invoke(rewindResponse)
+
+        assertEmittedRewindStatusError(RewindStatusErrorType.INVALID_REWIND_STATE)
+    }
+
+    @Test
+    fun fetchActivityRewind_dispatchesErrorOnMissingRestoreId() {
+        val request = initFetchRewindStatus()
+
+        activityRestClient.fetchActivityRewind(site)
+
+        verify(restClient).add(request)
+
+        val rewindResponse = REWIND_RESPONSE.copy(restoreResponse = RESTORE_RESPONSE.copy(rewind_id = null))
+        rewindStatusSuccessMethodCaptor.firstValue.invoke(rewindResponse)
+
+        assertEmittedRewindStatusError(RewindStatusErrorType.MISSING_RESTORE_ID)
+    }
+
+    @Test
+    fun fetchActivityRewind_dispatchesErrorOnMissingRestoreStatus() {
+        val request = initFetchRewindStatus()
+
+        activityRestClient.fetchActivityRewind(site)
+
+        verify(restClient).add(request)
+
+        val rewindResponse = REWIND_RESPONSE.copy(restoreResponse = RESTORE_RESPONSE.copy(status = null))
+        rewindStatusSuccessMethodCaptor.firstValue.invoke(rewindResponse)
+
+        assertEmittedRewindStatusError(RewindStatusErrorType.MISSING_RESTORE_STATUS)
+    }
+
+    @Test
+    fun fetchActivityRewind_dispatchesErrorOnWrongRestoreStatus() {
+        val request = initFetchRewindStatus()
+
+        activityRestClient.fetchActivityRewind(site)
+
+        verify(restClient).add(request)
+
+        val rewindResponse = REWIND_RESPONSE.copy(restoreResponse = RESTORE_RESPONSE.copy(status = "wrong"))
+        rewindStatusSuccessMethodCaptor.firstValue.invoke(rewindResponse)
+
+        assertEmittedRewindStatusError(RewindStatusErrorType.INVALID_RESTORE_STATUS)
+    }
+
+    private fun assertEmittedActivityError(errorType: ActivityErrorType) {
         verify(dispatcher).dispatch(activityActionCaptor.capture())
         with(activityActionCaptor.firstValue) {
             assertEquals(this.type, ActivityAction.FETCHED_ACTIVITIES)
@@ -188,13 +316,35 @@ class ActivityRestClientTest {
         }
     }
 
+    private fun assertEmittedRewindStatusError(errorType: RewindStatusErrorType) {
+        verify(dispatcher).dispatch(rewindStatusActionCaptor.capture())
+        with(rewindStatusActionCaptor.firstValue) {
+            assertEquals(this.type, ActivityAction.FETCHED_REWIND_STATE)
+            assertEquals(this.payload.site, site)
+            assertTrue(this.payload.isError)
+            assertEquals(this.payload.error.type, errorType)
+        }
+    }
+
     private fun initFetchActivity(): WPComGsonRequest<ActivityRestClient.ActivitiesResponse> {
         val request = mock<WPComGsonRequest<ActivityRestClient.ActivitiesResponse>>()
 
         whenever(wpComGsonRequestBuilder.buildGetRequest(urlCaptor.capture(),
                 paramsCaptor.capture(),
-                classCaptor.capture(),
-                successMethodCaptor.capture(),
+                activityResponseClassCaptor.capture(),
+                activitySuccessMethodCaptor.capture(),
+                errorMethodCaptor.capture())).thenReturn(request)
+        whenever(site.siteId).thenReturn(siteId)
+        return request
+    }
+
+    private fun initFetchRewindStatus(): WPComGsonRequest<ActivityRestClient.RewindStatusResponse> {
+        val request = mock<WPComGsonRequest<ActivityRestClient.RewindStatusResponse>>()
+
+        whenever(wpComGsonRequestBuilder.buildGetRequest(urlCaptor.capture(),
+                paramsCaptor.capture(),
+                rewindStatusResponseClassCaptor.capture(),
+                rewindStatusSuccessMethodCaptor.capture(),
                 errorMethodCaptor.capture())).thenReturn(request)
         whenever(site.siteId).thenReturn(siteId)
         return request

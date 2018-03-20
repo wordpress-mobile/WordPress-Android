@@ -1,7 +1,6 @@
 package org.wordpress.android.fluxc.network.rest.wpcom;
 
 import android.support.annotation.NonNull;
-import android.support.annotation.VisibleForTesting;
 import android.text.TextUtils;
 
 import com.android.volley.Response.Listener;
@@ -127,10 +126,5 @@ public class WPComGsonRequest<T> extends GsonRequest<T> {
         }
 
         return returnedError;
-    }
-
-    @VisibleForTesting
-    public void deliverResponse(T response) {
-        this.deliverResponse(response);
     }
 }

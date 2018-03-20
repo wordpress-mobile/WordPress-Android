@@ -1,6 +1,5 @@
 package org.wordpress.android.fluxc.network.rest.wpcom.activity
 
-import android.util.Log
 import org.wordpress.android.fluxc.Dispatcher
 import org.wordpress.android.fluxc.generated.ActivityActionBuilder
 import org.wordpress.android.fluxc.generated.endpoint.WPCOMV2
@@ -48,15 +47,12 @@ open class ActivityLogRestClient
         mRestClient.add(request)
     }
 
-    fun fetchActivityRewind(site: SiteModel, number: Int, offset: Int) {
+    fun fetchActivityRewind(site: SiteModel) {
         val url = WPCOMV2.sites.site(site.siteId).rewind.url
-        val pageNumber = offset / number + 1
-        val params = mapOf("page" to pageNumber.toString(), "number" to number.toString())
         val request = mWPComGsonRequestBuilder.buildGetRequest(
-                url, params, RewindStatusResponse::class.java,
+                url, mapOf(), RewindStatusResponse::class.java,
                 {
-                    Log.d("activity_log", "Rewind: $it")
-                    val payload = buildRewindStatusPayload(it, site, number, offset)
+                    val payload = buildRewindStatusPayload(it, site)
                     mDispatcher.dispatch(ActivityActionBuilder.newFetchedRewindStateAction(payload))
                 },
                 {
@@ -64,7 +60,7 @@ open class ActivityLogRestClient
                             RewindStatusErrorType.GENERIC_ERROR,
                             RewindStatusErrorType.INVALID_RESPONSE,
                             RewindStatusErrorType.AUTHORIZATION_REQUIRED), it.message)
-                    val payload = FetchedRewindStatePayload(error, site, number, offset)
+                    val payload = FetchedRewindStatePayload(error, site)
                     mDispatcher.dispatch(ActivityActionBuilder.newFetchedRewindStateAction(payload))
                 })
         mRestClient.add(request)
@@ -124,19 +120,23 @@ open class ActivityLogRestClient
         return FetchedActivitiesPayload(activities, site, number, offset)
     }
 
-    private fun buildRewindStatusPayload(response: RewindStatusResponse, site: SiteModel, number: Int, offset: Int):
+    private fun buildRewindStatusPayload(response: RewindStatusResponse, site: SiteModel):
             FetchedRewindStatePayload {
         if (response.state == null) {
-            return error(site, number, offset, RewindStatusErrorType.MISSING_STATE)
-        }
-        if (response.restoreResponse != null && response.restoreResponse.rewind_id == null) {
-            return error(site, number, offset, RewindStatusErrorType.MISSING_RESTORE_ID)
-        }
-        if (response.restoreResponse != null && response.restoreResponse.status == null) {
-            return error(site, number, offset, RewindStatusErrorType.MISSING_RESTORE_STATUS)
+            return error(site, RewindStatusErrorType.MISSING_STATE)
         }
         if (RewindStatusModel.State.fromValue(response.state) == null) {
-            return error(site, number, offset, RewindStatusErrorType.INVALID_REWIND_STATE)
+            return error(site, RewindStatusErrorType.INVALID_REWIND_STATE)
+        }
+        if (response.restoreResponse != null && response.restoreResponse.rewind_id == null) {
+            return error(site, RewindStatusErrorType.MISSING_RESTORE_ID)
+        }
+        if (response.restoreResponse != null && response.restoreResponse.status == null) {
+            return error(site, RewindStatusErrorType.MISSING_RESTORE_STATUS)
+        }
+        if (response.restoreResponse?.status != null
+                && RewindStatusModel.RestoreStatus.Status.fromValue(response.restoreResponse.status) == null) {
+            return error(site, RewindStatusErrorType.INVALID_RESTORE_STATUS)
         }
         val rewindStatusBuilder = RewindStatusModel.Builder(localSiteId = site.id,
                 remoteSiteId = site.siteId,
@@ -148,11 +148,11 @@ open class ActivityLogRestClient
                 restoreProgress = response.restoreResponse?.progress,
                 restoreMessage = response.restoreResponse?.message,
                 restoreFailureReason = response.restoreResponse?.reason)
-        return FetchedRewindStatePayload(rewindStatusBuilder.build(), site, number, offset)
+        return FetchedRewindStatePayload(rewindStatusBuilder.build(), site)
     }
 
-    private fun error(site: SiteModel, number: Int, offset: Int, errorType: RewindStatusErrorType) =
-            FetchedRewindStatePayload(RewindStatusError(errorType), site, number, offset)
+    private fun error(site: SiteModel, errorType: RewindStatusErrorType) =
+            FetchedRewindStatePayload(RewindStatusError(errorType), site)
 
     private fun <T> genericToError(error: BaseRequest.BaseNetworkError,
                                    genericError: T,
