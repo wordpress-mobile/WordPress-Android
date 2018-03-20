@@ -14,6 +14,7 @@ import org.wordpress.android.fluxc.store.SiteStore.AutomatedTransferEligibilityR
 import org.wordpress.android.fluxc.store.SiteStore.ConnectSiteInfoPayload;
 import org.wordpress.android.fluxc.store.SiteStore.FetchedPostFormatsPayload;
 import org.wordpress.android.fluxc.store.SiteStore.FetchedUserRolesPayload;
+import org.wordpress.android.fluxc.store.SiteStore.InitiateAutomatedTransferPayload;
 import org.wordpress.android.fluxc.store.SiteStore.NewSitePayload;
 import org.wordpress.android.fluxc.store.SiteStore.RefreshSitesXMLRPCPayload;
 import org.wordpress.android.fluxc.store.SiteStore.SuggestDomainsPayload;
@@ -50,7 +51,7 @@ public enum SiteAction implements IAction {
     FETCH_WPCOM_SITE_BY_URL,
     @Action(payloadType = SiteModel.class)
     CHECK_AUTOMATED_TRANSFER_ELIGIBILITY,
-    @Action(payloadType = SiteModel.class)
+    @Action(payloadType = InitiateAutomatedTransferPayload.class)
     INITIATE_AUTOMATED_TRANSFER,
     @Action(payloadType = SiteModel.class)
     CHECK_AUTOMATED_TRANSFER_STATUS,

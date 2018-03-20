@@ -514,8 +514,23 @@ public class SiteRestClient extends BaseWPComRestClient {
         add(request);
     }
 
-    public void initiateAutomatedTransfer(final SiteModel site) {
-        // TODO
+    public void initiateAutomatedTransfer(final SiteModel site, final String pluginSlugToInstall) {
+        String url = WPCOMREST.sites.site(site.getSiteId()).automated_transfers.initiate.getUrlV1_1();
+        Map<String, String> params = new HashMap<>();
+        params.put("plugin", pluginSlugToInstall);
+        final WPComGsonRequest<InitiateAutomatedTransferResponse> request = WPComGsonRequest
+                .buildGetRequest(url, params, InitiateAutomatedTransferResponse.class,
+                        new Listener<InitiateAutomatedTransferResponse>() {
+                            @Override
+                            public void onResponse(InitiateAutomatedTransferResponse response) {
+                            }
+                        },
+                        new BaseErrorListener() {
+                            @Override
+                            public void onErrorResponse(@NonNull BaseNetworkError error) {
+                            }
+                        });
+        add(request);
     }
 
     public void checkAutomatedTransferStatus(final SiteModel site) {
