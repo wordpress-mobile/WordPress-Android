@@ -506,8 +506,27 @@ public class MediaGridFragment extends Fragment implements MediaGridAdapterCallb
     }
 
     public void search(String searchTerm) {
+        List<MediaModel> mediaList;
         mSearchTerm = searchTerm;
-        List<MediaModel> mediaList = mMediaStore.searchSiteMedia(mSite, mSearchTerm);
+
+        switch (mFilter) {
+            case FILTER_IMAGES:
+                mediaList = mMediaStore.searchSiteImages(mSite, mSearchTerm);
+                break;
+            case FILTER_DOCUMENTS:
+                mediaList = mMediaStore.searchSiteDocuments(mSite, mSearchTerm);
+                break;
+            case FILTER_VIDEOS:
+                mediaList = mMediaStore.searchSiteVideos(mSite, mSearchTerm);
+                break;
+            case FILTER_AUDIO:
+                mediaList = mMediaStore.searchSiteAudio(mSite, mSearchTerm);
+                break;
+            default:
+                mediaList = mMediaStore.searchSiteMedia(mSite, mSearchTerm);
+                break;
+        }
+
         mGridAdapter.setMediaList(mediaList);
     }
 
