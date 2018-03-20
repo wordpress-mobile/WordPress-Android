@@ -19,7 +19,6 @@ import org.json.JSONObject;
 import org.wordpress.android.BuildConfig;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
-import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.login.LoginAnalyticsListener;
 import org.wordpress.android.ui.accounts.HelpActivity;
 import org.wordpress.android.ui.accounts.JetpackCallbacks;
@@ -150,7 +149,7 @@ public class MagicLinkRequestFragment extends Fragment {
             @Override
             public void onResponse(JSONObject response) {
                 mProgressDialog.cancel();
-                AnalyticsTracker.track(AnalyticsTracker.Stat.LOGIN_MAGIC_LINK_REQUESTED);
+                mAnalyticsListener.trackMagicLinkRequested();
                 if (mListener != null) {
                     mListener.onMagicLinkSent();
                 }
