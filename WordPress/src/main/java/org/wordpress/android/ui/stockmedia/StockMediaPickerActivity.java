@@ -311,6 +311,7 @@ public class StockMediaPickerActivity extends AppCompatActivity implements Searc
 
         showProgress(true);
         mIsFetching = true;
+        showEmptyView(false);
 
         mSearchQuery = searchQuery;
         AppLog.d(AppLog.T.MEDIA, "Fetching stock media page " + page);
