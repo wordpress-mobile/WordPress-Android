@@ -36,16 +36,16 @@ open class ActivityLogRestClient
         val params = mapOf("page" to pageNumber.toString(), "number" to number.toString())
         val request = buildGetRequest(
                 url, params, ActivitiesResponse::class.java,
-                {
-                    val activities = it.current.orderedItems
+                { response ->
+                    val activities = response.current.orderedItems
                     val payload = buildActivityPayload(activities, site, number, offset)
                     mDispatcher.dispatch(ActivityActionBuilder.newFetchedActivitiesAction(payload))
                 },
-                {
-                    val error = ActivityError(genericToError(it,
+                { networkError ->
+                    val error = ActivityError(genericToError(networkError,
                             ActivityErrorType.GENERIC_ERROR,
                             ActivityErrorType.INVALID_RESPONSE,
-                            ActivityErrorType.AUTHORIZATION_REQUIRED), it.message)
+                            ActivityErrorType.AUTHORIZATION_REQUIRED), networkError.message)
                     val payload = FetchedActivitiesPayload(error, site, number, offset)
                     mDispatcher.dispatch(ActivityActionBuilder.newFetchedActivitiesAction(payload))
                 })
