@@ -297,12 +297,18 @@ public class StockMediaPickerActivity extends AppCompatActivity implements Searc
     }
 
     private void fetchStockMedia(@Nullable String searchQuery, int page) {
-        if (mIsFetching || !NetworkUtils.checkConnection(this)) {
+        // We should always fetch the first page, but We should only load more pages if we are not
+        // already fetching anything
+        if ((mIsFetching && page != 1) || !NetworkUtils.checkConnection(this)) {
             return;
         }
 
+        mSearchQuery = searchQuery;
+
         if (TextUtils.isEmpty(searchQuery)) {
+            mIsFetching = false;
             mAdapter.clear();
+            showEmptyView(true);
             return;
         }
 
@@ -314,7 +320,6 @@ public class StockMediaPickerActivity extends AppCompatActivity implements Searc
         mIsFetching = true;
         showEmptyView(false);
 
-        mSearchQuery = searchQuery;
         AppLog.d(AppLog.T.MEDIA, "Fetching stock media page " + page);
 
         StockMediaStore.FetchStockMediaListPayload payload =
@@ -335,6 +340,7 @@ public class StockMediaPickerActivity extends AppCompatActivity implements Searc
 
         if (event.isError()) {
             AppLog.e(AppLog.T.MEDIA, "An error occurred while searching stock media");
+            ToastUtils.showToast(this, R.string.media_generic_error);
             mCanLoadMore = false;
             return;
         }
