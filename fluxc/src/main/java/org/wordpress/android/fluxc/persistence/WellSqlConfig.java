@@ -56,6 +56,7 @@ public class WellSqlConfig extends DefaultWellConfig {
         add(TermModel.class);
         add(ThemeModel.class);
         add(WPOrgPluginModel.class);
+        add(ActivityLogSqlUtils.Builder.class);
     }};
 
     @Override

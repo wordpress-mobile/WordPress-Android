@@ -91,9 +91,7 @@ open class ActivityLogRestClient
                     null
                 }
                 else -> {
-                    val activityModelBuilder = ActivityLogModel.Builder(
-                            localSiteId = site.id,
-                            remoteSiteId = site.siteId,
+                    ActivityLogModel(
                             activityID = it.activity_id,
                             summary = it.summary,
                             text = it.content.text,
@@ -105,12 +103,13 @@ open class ActivityLogRestClient
                             rewindID = it.rewind_id,
                             published = it.published,
                             discarded = it.is_discarded,
-                            displayName = it.actor?.name,
-                            actorType = it.actor?.type,
-                            wpcomUserID = it.actor?.wpcom_user_id,
-                            avatarURL = it.actor?.icon?.url,
-                            role = it.actor?.role)
-                    activityModelBuilder.build()
+                            actor = it.actor?.let {
+                                ActivityLogModel.ActivityActor(it.name,
+                                        it.type,
+                                        it.wpcom_user_id,
+                                        it.icon?.url,
+                                        it.role)
+                            })
                 }
             }
         }
