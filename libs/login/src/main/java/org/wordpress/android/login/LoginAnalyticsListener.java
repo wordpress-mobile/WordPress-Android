@@ -12,6 +12,7 @@ public interface LoginAnalyticsListener {
     void trackInsertedInvalidUrl();
     void trackLoginFailed(String errorContext, String errorType, String errorDescription);
     void trackLoginMagicLinkOpened();
+    void trackLoginMagicLinkSucceeded();
     void trackMagicLinkFailed(Map<String, ?> properties);
     void trackMagicLinkOpenEmailClientViewed();
     void trackMagicLinkRequested();
