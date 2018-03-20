@@ -458,6 +458,7 @@ public class StatsSingleItemDetailsActivity extends AppCompatActivity
                 DisplayUtils.dpToPx(this, StatsConstants.STATS_GRAPH_BAR_MAX_COLUMN_WIDTH_DP)
         );
         mGraphView.setHorizontalLabels(horLabels);
+        mGraphView.setAccessibleHorizontalLabels(horLabels);
         mGraphView.setGestureListener(this);
 
         // Reset the bar selected upon rotation of the device when the no. of bars can change with orientation.
@@ -497,7 +498,6 @@ public class StatsSingleItemDetailsActivity extends AppCompatActivity
         RecentWeeksListAdapter recentWeeksListAdapter = new RecentWeeksListAdapter(this, recentWeeks, mRestResponseParsed.getHighestWeekAverage());
         StatsUIHelper.reloadGroupViews(this, recentWeeksListAdapter, mRecentWeeksIdToExpandedMap, mRecentWeeksList);
      }
-
 
     private void setMainViewsLabel(String dateFormatted, int totals) {
         mStatsViewsLabel.setText(getString(R.string.stats_views) + ": "
@@ -902,6 +902,7 @@ public class StatsSingleItemDetailsActivity extends AppCompatActivity
                 StatsConstants.STATS_OUTPUT_DATE_MONTH_LONG_DAY_SHORT_FORMAT
         );
         setMainViewsLabel(currentItemStatsDate, dataToShowOnGraph[mSelectedBarGraphIndex].getViews());
+        mGraphContainer.announceForAccessibility(getString(R.string.stats_single_item_bad_desc, dataToShowOnGraph[mSelectedBarGraphIndex].getViews()));
     }
 
 }

@@ -143,11 +143,10 @@ class StatsBarGraph extends GraphView {
     @SuppressLint("ClickableViewAccessibility")
     @Override
     public boolean onTouchEvent(MotionEvent event) {
-        boolean handled = super.onTouchEvent(event);
-        if (mDetector != null && handled) {
+        if (mDetector != null) {
             this.mDetector.onTouchEvent(event);
         }
-        return handled;
+        return super.onTouchEvent(event);
     }
 
     private class HorizontalLabelsColor implements IndexDependentColor {
@@ -405,7 +404,7 @@ class StatsBarGraph extends GraphView {
 
             node.setSelected(getHighlightedBar() == virtualViewId);
 
-            node.setClickable(true);
+            node.setClickable(mGestureListener != null);
             node.setFocusable(true);
 
             node.addAction(AccessibilityNodeInfoCompat.ACTION_CLICK);
