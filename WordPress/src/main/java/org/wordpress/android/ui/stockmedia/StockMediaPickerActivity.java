@@ -83,8 +83,9 @@ public class StockMediaPickerActivity extends AppCompatActivity implements Searc
     private boolean mCanLoadMore;
     private int mNextPage;
 
-    @Inject Dispatcher mDispatcher;
+    @SuppressWarnings("unused")
     @Inject StockMediaStore mStockMediaStore;
+    @Inject Dispatcher mDispatcher;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
