@@ -48,6 +48,11 @@ public class LoginAnalyticsTracker implements LoginAnalyticsListener {
     }
 
     @Override
+    public void trackLoginMagicLinkExited() {
+        AnalyticsTracker.track(AnalyticsTracker.Stat.LOGIN_MAGIC_LINK_EXITED);
+    }
+
+    @Override
     public void trackLoginMagicLinkOpened() {
         AnalyticsTracker.track(AnalyticsTracker.Stat.LOGIN_MAGIC_LINK_OPENED);
     }

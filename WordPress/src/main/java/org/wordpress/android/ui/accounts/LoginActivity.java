@@ -429,7 +429,7 @@ public class LoginActivity extends AppCompatActivity implements ConnectionCallba
 
     @Override
     public void usePasswordInstead(String email) {
-        AnalyticsTracker.track(AnalyticsTracker.Stat.LOGIN_MAGIC_LINK_EXITED);
+        mAnalyticsListener.trackLoginMagicLinkExited();
         LoginEmailPasswordFragment loginEmailPasswordFragment =
                 LoginEmailPasswordFragment.newInstance(email, null, null, null, false);
         slideInFragment(loginEmailPasswordFragment, true, LoginEmailPasswordFragment.TAG);
