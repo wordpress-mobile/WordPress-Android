@@ -48,6 +48,11 @@ public class LoginAnalyticsTracker implements LoginAnalyticsListener {
     }
 
     @Override
+    public void trackLoginForgotPasswordClicked() {
+        AnalyticsTracker.track(AnalyticsTracker.Stat.LOGIN_FORGOT_PASSWORD_CLICKED);
+    }
+
+    @Override
     public void trackLoginMagicLinkExited() {
         AnalyticsTracker.track(AnalyticsTracker.Stat.LOGIN_MAGIC_LINK_EXITED);
     }
