@@ -70,7 +70,6 @@ public class StockMediaRestClient extends BaseWPComRestClient {
                     }
                 }
                                                                    );
-
         add(request);
     }
 }
