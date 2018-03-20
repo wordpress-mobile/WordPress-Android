@@ -141,6 +141,16 @@ public class SiteStore extends Store {
         }
     }
 
+    public static class InitiateAutomatedTransferPayload extends Payload<BaseNetworkError> {
+        public SiteModel site;
+        public String pluginSlugToInstall;
+
+        public InitiateAutomatedTransferPayload(SiteModel site, String pluginSlugToInstall) {
+            this.site = site;
+            this.pluginSlugToInstall = pluginSlugToInstall;
+        }
+    }
+
     public static class AutomatedTransferEligibilityResponsePayload extends Payload<BaseNetworkError> {
         public SiteModel site;
         public boolean isEligible;
@@ -851,7 +861,7 @@ public class SiteStore extends Store {
                 checkAutomatedTransferEligibility((SiteModel) action.getPayload());
                 break;
             case INITIATE_AUTOMATED_TRANSFER:
-                initiateAutomatedTransfer((SiteModel) action.getPayload());
+                initiateAutomatedTransfer((InitiateAutomatedTransferPayload) action.getPayload());
                 break;
             case CHECK_AUTOMATED_TRANSFER_STATUS:
                 checkAutomatedTransferStatus((SiteModel) action.getPayload());
@@ -1156,8 +1166,8 @@ public class SiteStore extends Store {
         emitChange(event);
     }
 
-    private void initiateAutomatedTransfer(SiteModel site) {
-        mSiteRestClient.initiateAutomatedTransfer(site);
+    private void initiateAutomatedTransfer(InitiateAutomatedTransferPayload payload) {
+        mSiteRestClient.initiateAutomatedTransfer(payload.site, payload.pluginSlugToInstall);
     }
 
     private void checkAutomatedTransferStatus(SiteModel site) {
