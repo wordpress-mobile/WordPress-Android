@@ -33,6 +33,11 @@ public class LoginAnalyticsTracker implements LoginAnalyticsListener {
     }
 
     @Override
+    public void trackLoginAccessed() {
+        AnalyticsTracker.track(AnalyticsTracker.Stat.LOGIN_ACCESSED);
+    }
+
+    @Override
     public void trackLoginFailed(String errorContext, String errorType, String errorDescription) {
         AnalyticsTracker.track(AnalyticsTracker.Stat.LOGIN_FAILED, errorContext, errorType, errorDescription);
     }

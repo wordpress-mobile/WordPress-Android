@@ -26,6 +26,7 @@ import org.wordpress.android.fluxc.network.MemorizingTrustManager;
 import org.wordpress.android.fluxc.store.SiteStore;
 import org.wordpress.android.login.GoogleFragment.GoogleListener;
 import org.wordpress.android.login.Login2FaFragment;
+import org.wordpress.android.login.LoginAnalyticsListener;
 import org.wordpress.android.login.LoginEmailFragment;
 import org.wordpress.android.login.LoginEmailPasswordFragment;
 import org.wordpress.android.login.LoginGoogleFragment;
@@ -93,6 +94,7 @@ public class LoginActivity extends AppCompatActivity implements ConnectionCallba
     private LoginMode mLoginMode;
 
     @Inject DispatchingAndroidInjector<Fragment> mFragmentInjector;
+    @Inject protected LoginAnalyticsListener mAnalyticsListener;
 
     @Override
     protected void attachBaseContext(Context newBase) {
@@ -107,7 +109,7 @@ public class LoginActivity extends AppCompatActivity implements ConnectionCallba
         setContentView(R.layout.login_activity);
 
         if (savedInstanceState == null) {
-            AnalyticsTracker.track(AnalyticsTracker.Stat.LOGIN_ACCESSED);
+            mAnalyticsListener.trackLoginAccessed();
 
             switch (getLoginMode()) {
                 case FULL:
