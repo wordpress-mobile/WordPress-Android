@@ -572,6 +572,8 @@ public class StatsSingleItemDetailsActivity extends AppCompatActivity
                 holder.imgMore.setVisibility(View.GONE);
             }
 
+            holder.imgMore.setImportantForAccessibility(View.IMPORTANT_FOR_ACCESSIBILITY_NO);
+
             holder.networkImageView.setVisibility(View.GONE);
             return convertView;
         }
@@ -651,6 +653,8 @@ public class StatsSingleItemDetailsActivity extends AppCompatActivity
             } else {
                 holder.imgMore.setVisibility(View.GONE);
             }
+
+            holder.imgMore.setImportantForAccessibility(View.IMPORTANT_FOR_ACCESSIBILITY_NO);
 
             // expand/collapse chevron
             holder.chevronImageView.setVisibility(numberOfChilds > 0 ? View.VISIBLE : View.GONE);
@@ -734,6 +738,8 @@ public class StatsSingleItemDetailsActivity extends AppCompatActivity
             } else {
                 holder.imgMore.setVisibility(View.GONE);
             }
+
+            holder.imgMore.setImportantForAccessibility(View.IMPORTANT_FOR_ACCESSIBILITY_NO);
 
             holder.networkImageView.setVisibility(View.GONE);
             return convertView;
