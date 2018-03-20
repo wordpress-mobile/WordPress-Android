@@ -614,6 +614,22 @@ public class MediaStore extends Store {
         return MediaSqlUtils.searchSiteMedia(siteModel, searchTerm);
     }
 
+    public List<MediaModel> searchSiteImages(SiteModel siteModel, String searchTerm) {
+        return MediaSqlUtils.searchSiteImages(siteModel, searchTerm);
+    }
+
+    public List<MediaModel> searchSiteVideos(SiteModel siteModel, String searchTerm) {
+        return MediaSqlUtils.searchSiteVideos(siteModel, searchTerm);
+    }
+
+    public List<MediaModel> searchSiteAudio(SiteModel siteModel, String searchTerm) {
+        return MediaSqlUtils.searchSiteAudio(siteModel, searchTerm);
+    }
+
+    public List<MediaModel> searchSiteDocuments(SiteModel siteModel, String searchTerm) {
+        return MediaSqlUtils.searchSiteDocuments(siteModel, searchTerm);
+    }
+
     public WellCursor<MediaModel> searchSiteMediaAsCursor(SiteModel siteModel, String searchTerm) {
         return MediaSqlUtils.searchSiteMediaAsCursor(siteModel, searchTerm);
     }
