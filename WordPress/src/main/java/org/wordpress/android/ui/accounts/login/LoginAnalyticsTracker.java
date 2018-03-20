@@ -58,6 +58,11 @@ public class LoginAnalyticsTracker implements LoginAnalyticsListener {
     }
 
     @Override
+    public void trackLoginSocialSuccess() {
+        AnalyticsTracker.track(AnalyticsTracker.Stat.LOGIN_SOCIAL_SUCCESS);
+    }
+
+    @Override
     public void trackMagicLinkFailed(Map<String, ?> properties) {
         AnalyticsTracker.track(AnalyticsTracker.Stat.LOGIN_MAGIC_LINK_FAILED, properties);
     }
