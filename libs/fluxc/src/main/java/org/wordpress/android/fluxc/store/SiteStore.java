@@ -360,6 +360,16 @@ public class SiteStore extends Store {
         }
     }
 
+    public static class OnAutomatedTransferInitiated extends OnChanged<SiteError> {
+        public SiteModel site;
+        public String pluginSlugToInstall;
+        public OnAutomatedTransferInitiated(SiteModel site, String pluginSlugToInstall, SiteError error) {
+            this.site = site;
+            this.pluginSlugToInstall = pluginSlugToInstall;
+            this.error = error;
+        }
+    }
+
     public static class UpdateSitesResult {
         public int rowsAffected = 0;
         public boolean duplicateSiteFound = false;
@@ -883,6 +893,9 @@ public class SiteStore extends Store {
                 handleCheckedAutomatedTransferEligibility((AutomatedTransferEligibilityResponsePayload)
                         action.getPayload());
                 break;
+            case INITIATED_AUTOMATED_TRANSFER:
+                handleInitiatedAutomatedTransfer((InitiateAutomatedTransferResponsePayload) action.getPayload());
+                break;
         }
     }
 
@@ -1155,7 +1168,6 @@ public class SiteStore extends Store {
     }
 
     private void handleCheckedAutomatedTransferEligibility(AutomatedTransferEligibilityResponsePayload payload) {
-        OnAutomatedTransferAvailabilityChecked event;
         // The site might have been updated while the request was going on. We get a new copy the DB instead of using
         // the payload.site to avoid missing any updates to it.
         SiteModel siteModel = getSiteByLocalId(payload.site.getId());
@@ -1175,12 +1187,34 @@ public class SiteStore extends Store {
                 siteError = new SiteError(SiteErrorType.DUPLICATE_SITE);
             }
         }
-        event = new OnAutomatedTransferAvailabilityChecked(siteModel, siteError);
-        emitChange(event);
+        emitChange(new OnAutomatedTransferAvailabilityChecked(siteModel, siteError));
     }
 
     private void initiateAutomatedTransfer(InitiateAutomatedTransferPayload payload) {
         mSiteRestClient.initiateAutomatedTransfer(payload.site, payload.pluginSlugToInstall);
+    }
+
+    private void handleInitiatedAutomatedTransfer(InitiateAutomatedTransferResponsePayload payload) {
+        // The site might have been updated while the request was going on. We get a new copy the DB instead of using
+        // the payload.site to avoid missing any updates to it.
+        SiteModel siteModel = getSiteByLocalId(payload.site.getId());
+        SiteError siteError = null;
+        if (payload.isError()) {
+            siteError = new SiteError(SiteErrorType.GENERIC_ERROR, payload.error.message);
+        } else if (siteModel == null) {
+            // This really shouldn't happen, because it'd mean that the user started a plugin install and immediately
+            // deleted their site before the request can be completed which is almost impossible. We are still adding
+            // it here as a sanity check and avoid a possible NPE however unlikely it is.
+            siteError = new SiteError(SiteErrorType.UNKNOWN_SITE);
+        } else {
+            siteModel.setAutomatedTransferId(payload.transferId);
+            try {
+                SiteSqlUtils.insertOrUpdateSite(siteModel);
+            } catch (DuplicateSiteException e) {
+                siteError = new SiteError(SiteErrorType.DUPLICATE_SITE);
+            }
+        }
+        emitChange(new OnAutomatedTransferInitiated(siteModel, payload.pluginSlugToInstall, siteError));
     }
 
     private void checkAutomatedTransferStatus(SiteModel site) {
