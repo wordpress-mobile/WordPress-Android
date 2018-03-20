@@ -70,6 +70,10 @@ public class LoginAnalyticsTracker implements LoginAnalyticsListener {
         AnalyticsTracker.track(AnalyticsTracker.Stat.SIGNUP_MAGIC_LINK_FAILED);
     }
 
+    @Override public void trackSignupMagicLinkSent() {
+        AnalyticsTracker.track(AnalyticsTracker.Stat.SIGNUP_MAGIC_LINK_SENT);
+    }
+
     @Override public void trackSignupMagicLinkSucceeded() {
         AnalyticsTracker.track(AnalyticsTracker.Stat.SIGNUP_MAGIC_LINK_SUCCEEDED);
     }
