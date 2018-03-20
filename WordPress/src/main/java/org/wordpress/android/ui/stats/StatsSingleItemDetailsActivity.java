@@ -32,6 +32,7 @@ import org.wordpress.android.networking.RestClientUtils;
 import org.wordpress.android.ui.ActivityId;
 import org.wordpress.android.ui.stats.models.PostViewsModel;
 import org.wordpress.android.ui.stats.models.VisitModel;
+import org.wordpress.android.util.AccessibilityUtils;
 import org.wordpress.android.util.AnalyticsUtils;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.DisplayUtils;
@@ -546,14 +547,17 @@ public class StatsSingleItemDetailsActivity extends AppCompatActivity
 
             holder.setEntryText(StatsUtils.parseDate(currentDay.getDay(), StatsConstants.STATS_INPUT_DATE_FORMAT, "EEE, MMM dd"));
 
-            // Intercept clicks at row level and eat the event. We don't want to show the ripple here.
-            holder.rowContent.setOnClickListener(
-                    new View.OnClickListener() {
-                        @Override
-                        public void onClick(View view) {
-
-                        }
-                    });
+            if(AccessibilityUtils.isAccessibilityEnabled(holder.rowContent.getContext())){
+                holder.rowContent.setClickable(false);
+            }else{
+                // Intercept clicks at row level and eat the event. We don't want to show the ripple here.
+                holder.rowContent.setOnClickListener(
+                        new View.OnClickListener() {
+                            @Override
+                            public void onClick(View view) {
+                            }
+                        });
+            }
             holder.rowContent.setBackgroundColor(Color.TRANSPARENT);
 
             // totals
@@ -705,14 +709,18 @@ public class StatsSingleItemDetailsActivity extends AppCompatActivity
 
             holder.setEntryText(StatsUtils.parseDate(currentMonth.getMonth(), "MM", StatsConstants.STATS_OUTPUT_DATE_MONTH_LONG_FORMAT));
 
-            // Intercept clicks at row level and eat the event. We don't want to show the ripple here.
-            holder.rowContent.setOnClickListener(
-                    new View.OnClickListener() {
-                        @Override
-                        public void onClick(View view) {
+            if(AccessibilityUtils.isAccessibilityEnabled(holder.rowContent.getContext())){
+                holder.rowContent.setClickable(false);
+            }else{
+                // Intercept clicks at row level and eat the event. We don't want to show the ripple here.
+                holder.rowContent.setOnClickListener(
+                        new View.OnClickListener() {
+                            @Override
+                            public void onClick(View view) {
+                            }
+                        });
+            }
 
-                        }
-                    });
             holder.rowContent.setBackgroundColor(Color.TRANSPARENT);
 
             // totals
