@@ -215,6 +215,9 @@ public class StatsVisitorsAndViewsFragment extends StatsAbstractFragment
         }
 
         public void setChecked(boolean checked) {
+            if (checked){
+                tab.announceForAccessibility("Showing " + labelItem.getLabel());
+            }
             this.isChecked = checked;
         }
     }
