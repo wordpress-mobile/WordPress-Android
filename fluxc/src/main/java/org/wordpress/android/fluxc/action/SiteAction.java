@@ -11,11 +11,12 @@ import org.wordpress.android.fluxc.network.rest.wpcom.site.SiteRestClient.FetchW
 import org.wordpress.android.fluxc.network.rest.wpcom.site.SiteRestClient.IsWPComResponsePayload;
 import org.wordpress.android.fluxc.network.rest.wpcom.site.SiteRestClient.NewSiteResponsePayload;
 import org.wordpress.android.fluxc.store.SiteStore.AutomatedTransferEligibilityResponsePayload;
+import org.wordpress.android.fluxc.store.SiteStore.AutomatedTransferStatusResponsePayload;
 import org.wordpress.android.fluxc.store.SiteStore.ConnectSiteInfoPayload;
 import org.wordpress.android.fluxc.store.SiteStore.FetchedPostFormatsPayload;
 import org.wordpress.android.fluxc.store.SiteStore.FetchedUserRolesPayload;
-import org.wordpress.android.fluxc.store.SiteStore.InitiateAutomatedTransferResponsePayload;
 import org.wordpress.android.fluxc.store.SiteStore.InitiateAutomatedTransferPayload;
+import org.wordpress.android.fluxc.store.SiteStore.InitiateAutomatedTransferResponsePayload;
 import org.wordpress.android.fluxc.store.SiteStore.NewSitePayload;
 import org.wordpress.android.fluxc.store.SiteStore.RefreshSitesXMLRPCPayload;
 import org.wordpress.android.fluxc.store.SiteStore.SuggestDomainsPayload;
@@ -82,6 +83,8 @@ public enum SiteAction implements IAction {
     CHECKED_AUTOMATED_TRANSFER_ELIGIBILITY,
     @Action(payloadType = InitiateAutomatedTransferResponsePayload.class)
     INITIATED_AUTOMATED_TRANSFER,
+    @Action(payloadType = AutomatedTransferStatusResponsePayload.class)
+    CHECKED_AUTOMATED_TRANSFER_STATUS,
 
     // Local actions
     @Action(payloadType = SiteModel.class)

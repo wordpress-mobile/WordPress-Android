@@ -28,7 +28,7 @@
 
 /sites/$site/automated-transfers/eligibility
 /sites/$site/automated-transfers/initiate
-/sites/$site/automated-transfers/status/$transfer_id
+/sites/$site/automated-transfers/status
 
 /sites/$site/comments/
 /sites/$site/comments/$comment_ID
