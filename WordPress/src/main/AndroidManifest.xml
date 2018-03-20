@@ -70,7 +70,6 @@
         android:largeHeap="true"
         android:networkSecurityConfig="@xml/network_security_config"
         android:theme="@style/WordPress"
-        android:resizeableActivity="true"
         tools:replace="allowBackup, icon,android:supportsRtl"
         android:supportsRtl="true"
         tools:ignore="UnusedAttribute">
