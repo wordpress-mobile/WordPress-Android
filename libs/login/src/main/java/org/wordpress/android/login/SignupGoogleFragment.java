@@ -1,5 +1,6 @@
 package org.wordpress.android.login;
 
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 
@@ -28,13 +29,17 @@ import static android.app.Activity.RESULT_OK;
 
 public class SignupGoogleFragment extends GoogleFragment {
     private ArrayList<Integer> mOldSitesIds;
+    private ProgressDialog mProgressDialog;
 
     private static final int REQUEST_SIGNUP = 1002;
 
     public static final String TAG = "signup_google_fragment_tag";
 
-    @Override public void onAttach(Context context) {
+    @Override
+    public void onAttach(Context context) {
         AndroidSupportInjection.inject(this);
+        mProgressDialog = ProgressDialog.show(
+                getActivity(), null, getString(R.string.signup_with_google_progress), true, false, null);
         super.onAttach(context);
     }
 
@@ -115,13 +120,21 @@ public class SignupGoogleFragment extends GoogleFragment {
                 } else if (result == RESULT_CANCELED) {
                     mAnalyticsListener.trackSignupSocialButtonFailure();
                     AppLog.e(T.NUX, "Google Signup Failed: result was CANCELED.");
+                    cancelProgressDialog();
                 } else {
                     mAnalyticsListener.trackSignupSocialButtonFailure();
                     AppLog.e(T.NUX, "Google Signup Failed: result was not OK or CANCELED.");
                     showErrorDialog(getString(R.string.login_error_generic));
+                    cancelProgressDialog();
                 }
 
                 break;
+        }
+    }
+
+    private void cancelProgressDialog() {
+        if (mProgressDialog.isShowing()) {
+            mProgressDialog.dismiss();
         }
     }
 
