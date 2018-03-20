@@ -451,7 +451,7 @@ public class LoginActivity extends AppCompatActivity implements ConnectionCallba
     public void needs2faSocial(String email, String userId, String nonceAuthenticator, String nonceBackup,
                                String nonceSms) {
         dismissSignupSheet();
-        AnalyticsTracker.track(AnalyticsTracker.Stat.LOGIN_SOCIAL_2FA_NEEDED);
+        mAnalyticsListener.trackLoginSocial2faNeeded();
         Login2FaFragment login2FaFragment = Login2FaFragment.newInstanceSocial(email, userId,
                                                                                nonceAuthenticator, nonceBackup,
                                                                                nonceSms);
@@ -460,7 +460,7 @@ public class LoginActivity extends AppCompatActivity implements ConnectionCallba
 
     @Override
     public void needs2faSocialConnect(String email, String password, String idToken, String service) {
-        AnalyticsTracker.track(AnalyticsTracker.Stat.LOGIN_SOCIAL_2FA_NEEDED);
+        mAnalyticsListener.trackLoginSocial2faNeeded();
         Login2FaFragment login2FaFragment =
                 Login2FaFragment.newInstanceSocialConnect(email, password, idToken, service);
         slideInFragment(login2FaFragment, true, Login2FaFragment.TAG);
