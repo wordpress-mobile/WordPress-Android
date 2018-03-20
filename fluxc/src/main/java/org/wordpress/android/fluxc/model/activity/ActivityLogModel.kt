@@ -6,18 +6,18 @@ import com.yarolegovich.wellsql.core.annotation.PrimaryKey
 import com.yarolegovich.wellsql.core.annotation.Table
 import java.util.Date
 
-data class ActivityModel(val activityID: String,
-                         val summary: String,
-                         val text: String,
-                         val name: String?,
-                         val type: String?,
-                         val gridicon: String?,
-                         val status: String?,
-                         val rewindable: Boolean?,
-                         val rewindID: Float?,
-                         val published: Date,
-                         val isDiscarded: Boolean?,
-                         val actor: ActivityActor? = null) {
+data class ActivityLogModel(val activityID: String,
+                            val summary: String,
+                            val text: String,
+                            val name: String?,
+                            val type: String?,
+                            val gridicon: String?,
+                            val status: String?,
+                            val rewindable: Boolean?,
+                            val rewindID: Float?,
+                            val published: Date,
+                            val isDiscarded: Boolean?,
+                            val actor: ActivityActor? = null) {
     enum class Status(value: String) {
         ERROR("error"), SUCCESS("success"), WARNING("warning");
     }
@@ -30,7 +30,7 @@ data class ActivityModel(val activityID: String,
         val isJetpack = { type == "Application" && displayName == "Jetpack" }
     }
 
-    @Table(name = "ActivityModel")
+    @Table(name = "ActivityLogModel")
     data class Builder(@PrimaryKey
                        @Column private var mId: Int = -1,
                        @Column var localSiteId: Int,
@@ -59,12 +59,12 @@ data class ActivityModel(val activityID: String,
 
         override fun getId() = mId
 
-        fun build(): ActivityModel {
+        fun build(): ActivityLogModel {
             var actor: ActivityActor? = null
             if (actorType != null || displayName != null || wpcomUserID != null || avatarURL != null || role != null) {
                 actor = ActivityActor(displayName, type, wpcomUserID, avatarURL, role)
             }
-            return ActivityModel(activityID,
+            return ActivityLogModel(activityID,
                     summary,
                     text,
                     name,

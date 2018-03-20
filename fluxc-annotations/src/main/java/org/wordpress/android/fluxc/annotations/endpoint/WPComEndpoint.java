@@ -7,7 +7,6 @@ public class WPComEndpoint {
     private static final String WPCOM_PREFIX_V1_2 = WPCOM_REST_PREFIX + "/rest/v1.2";
     private static final String WPCOM_PREFIX_V1_3 = WPCOM_REST_PREFIX + "/rest/v1.3";
     private static final String WPCOM_PREFIX_V0 = WPCOM_REST_PREFIX;
-    private static final String WPCOM_PREFIX_V2 = WPCOM_REST_PREFIX + "/wpcom/v2";
 
     private final String mEndpoint;
 
@@ -45,9 +44,5 @@ public class WPComEndpoint {
 
     public String getUrlV0() {
         return WPCOM_PREFIX_V0 + mEndpoint;
-    }
-
-    public String getUrlV2() {
-        return WPCOM_PREFIX_V2 + mEndpoint;
     }
 }

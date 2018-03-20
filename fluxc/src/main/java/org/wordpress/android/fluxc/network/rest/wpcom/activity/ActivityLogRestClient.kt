@@ -5,9 +5,9 @@ import android.util.Log
 import com.android.volley.RequestQueue
 import org.wordpress.android.fluxc.Dispatcher
 import org.wordpress.android.fluxc.generated.ActivityActionBuilder
-import org.wordpress.android.fluxc.generated.endpoint.WPCOMREST
+import org.wordpress.android.fluxc.generated.endpoint.WPCOMV2
 import org.wordpress.android.fluxc.model.SiteModel
-import org.wordpress.android.fluxc.model.activity.ActivityModel
+import org.wordpress.android.fluxc.model.activity.ActivityLogModel
 import org.wordpress.android.fluxc.model.activity.RewindStatusModel
 import org.wordpress.android.fluxc.network.BaseRequest
 import org.wordpress.android.fluxc.network.UserAgent
@@ -15,23 +15,23 @@ import org.wordpress.android.fluxc.network.rest.wpcom.BaseWPComRestClient
 import org.wordpress.android.fluxc.network.rest.wpcom.WPComGsonRequest
 import org.wordpress.android.fluxc.network.rest.wpcom.WPComGsonRequest.buildGetRequest
 import org.wordpress.android.fluxc.network.rest.wpcom.auth.AccessToken
-import org.wordpress.android.fluxc.store.ActivityError
-import org.wordpress.android.fluxc.store.ActivityErrorType
-import org.wordpress.android.fluxc.store.FetchedRewindStatePayload
-import org.wordpress.android.fluxc.store.FetchedActivitiesPayload
-import org.wordpress.android.fluxc.store.RewindStatusError
-import org.wordpress.android.fluxc.store.RewindStatusErrorType
+import org.wordpress.android.fluxc.store.ActivityLogStore.ActivityError
+import org.wordpress.android.fluxc.store.ActivityLogStore.ActivityErrorType
+import org.wordpress.android.fluxc.store.ActivityLogStore.FetchedActivitiesPayload
+import org.wordpress.android.fluxc.store.ActivityLogStore.FetchedRewindStatePayload
+import org.wordpress.android.fluxc.store.ActivityLogStore.RewindStatusError
+import org.wordpress.android.fluxc.store.ActivityLogStore.RewindStatusErrorType
 import java.util.Date
 import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
-open class ActivityRestClient
+open class ActivityLogRestClient
 @Inject constructor(appContext: Context, dispatcher: Dispatcher, requestQueue: RequestQueue,
                     accessToken: AccessToken, userAgent: UserAgent)
     : BaseWPComRestClient(appContext, dispatcher, requestQueue, accessToken, userAgent) {
     fun fetchActivity(site: SiteModel, number: Int, offset: Int) {
-        val url = WPCOMREST.sites.site(site.siteId).activity.urlV2
+        val url = WPCOMV2.sites.site(site.siteId).activity.url
         val pageNumber = offset / number + 1
         val params = mapOf("page" to pageNumber.toString(), "number" to number.toString())
         val request = buildGetRequest(
@@ -53,7 +53,7 @@ open class ActivityRestClient
     }
 
     fun fetchActivityRewind(site: SiteModel, number: Int, offset: Int) {
-        val url = WPCOMREST.sites.site(site.siteId).rewind.urlV2
+        val url = WPCOMV2.sites.site(site.siteId).rewind.url
         val pageNumber = offset / number + 1
         val params = mapOf("page" to pageNumber.toString(), "number" to number.toString())
         val request = buildGetRequest(
@@ -99,7 +99,7 @@ open class ActivityRestClient
                     null
                 }
                 else -> {
-                    val activityModelBuilder = ActivityModel.Builder(
+                    val activityModelBuilder = ActivityLogModel.Builder(
                             localSiteId = site.id,
                             remoteSiteId = site.siteId,
                             activityID = it.activity_id,

@@ -3,22 +3,19 @@ package org.wordpress.android.fluxc.action;
 import org.wordpress.android.fluxc.annotations.Action;
 import org.wordpress.android.fluxc.annotations.ActionEnum;
 import org.wordpress.android.fluxc.annotations.action.IAction;
-import org.wordpress.android.fluxc.store.FetchActivitiesPayload;
-import org.wordpress.android.fluxc.store.FetchRewindStatePayload;
-import org.wordpress.android.fluxc.store.FetchedRewindStatePayload;
-import org.wordpress.android.fluxc.store.FetchedActivitiesPayload;
+import org.wordpress.android.fluxc.store.ActivityLogStore;
 
 @ActionEnum
 public enum ActivityAction implements IAction {
     // Remote actions
-    @Action(payloadType = FetchActivitiesPayload.class)
+    @Action(payloadType = ActivityLogStore.FetchActivitiesPayload.class)
     FETCH_ACTIVITIES,
-    @Action(payloadType = FetchRewindStatePayload.class)
+    @Action(payloadType = ActivityLogStore.FetchRewindStatePayload.class)
     FETCH_REWIND_STATE,
 
     // Remote responses
-    @Action(payloadType = FetchedActivitiesPayload.class)
+    @Action(payloadType = ActivityLogStore.FetchedActivitiesPayload.class)
     FETCHED_ACTIVITIES,
-    @Action(payloadType = FetchedRewindStatePayload.class)
+    @Action(payloadType = ActivityLogStore.FetchedRewindStatePayload.class)
     FETCHED_REWIND_STATE
 }
