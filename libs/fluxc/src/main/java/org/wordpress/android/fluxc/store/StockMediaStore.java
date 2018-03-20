@@ -100,6 +100,9 @@ public class StockMediaStore extends Store {
 
         public static StockMediaErrorType fromBaseNetworkError(BaseNetworkError baseError) {
             // endpoint returns an empty media list for any type of error, including timeouts, server error, etc.
+            GENERIC_ERROR;
+
+        public static StockMediaErrorType fromBaseNetworkError(BaseNetworkError baseError) {
             return StockMediaErrorType.GENERIC_ERROR;
         }
     }
