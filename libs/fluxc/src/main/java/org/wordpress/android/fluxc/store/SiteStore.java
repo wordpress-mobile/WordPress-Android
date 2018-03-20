@@ -329,6 +329,14 @@ public class SiteStore extends Store {
         }
     }
 
+    public static class OnAutomatedTransferAvailabilityChecked extends OnChanged<SiteError> {
+        public SiteModel site;
+        public OnAutomatedTransferAvailabilityChecked(SiteModel site, SiteError siteError) {
+            this.site = site;
+            this.error = siteError;
+        }
+    }
+
     public static class UpdateSitesResult {
         public int rowsAffected = 0;
         public boolean duplicateSiteFound = false;
@@ -848,6 +856,10 @@ public class SiteStore extends Store {
             case CHECK_AUTOMATED_TRANSFER_STATUS:
                 checkAutomatedTransferStatus((SiteModel) action.getPayload());
                 break;
+            case CHECKED_AUTOMATED_TRANSFER_ELIGIBILITY:
+                handleCheckedAutomatedTransferEligibility((AutomatedTransferEligibilityResponsePayload)
+                        action.getPayload());
+                break;
         }
     }
 
@@ -1117,6 +1129,31 @@ public class SiteStore extends Store {
 
     private void checkAutomatedTransferEligibility(SiteModel site) {
         mSiteRestClient.checkAutomatedTransferEligibility(site);
+    }
+
+    private void handleCheckedAutomatedTransferEligibility(AutomatedTransferEligibilityResponsePayload payload) {
+        OnAutomatedTransferAvailabilityChecked event;
+        // The site might have been updated while the request was going on. We get a new copy the DB instead of using
+        // the payload.site to avoid missing any updates to it.
+        SiteModel siteModel = getSiteByLocalId(payload.site.getId());
+        SiteError siteError = null;
+        if (payload.isError()) {
+            siteError = new SiteError(SiteErrorType.GENERIC_ERROR, payload.error.message);
+        } else if (siteModel == null) {
+            // This really shouldn't happen, because it'd mean that the user started a plugin install and immediately
+            // deleted their site before the request can be completed which is almost impossible. We are still adding
+            // it here as a sanity check and avoid a possible NPE however unlikely it is.
+            siteError = new SiteError(SiteErrorType.UNKNOWN_SITE);
+        } else {
+            siteModel.setIsEligibleForAutomatedTransfer(payload.isEligible);
+            try {
+                SiteSqlUtils.insertOrUpdateSite(siteModel);
+            } catch (DuplicateSiteException e) {
+                siteError = new SiteError(SiteErrorType.DUPLICATE_SITE);
+            }
+        }
+        event = new OnAutomatedTransferAvailabilityChecked(siteModel, siteError);
+        emitChange(event);
     }
 
     private void initiateAutomatedTransfer(SiteModel site) {
