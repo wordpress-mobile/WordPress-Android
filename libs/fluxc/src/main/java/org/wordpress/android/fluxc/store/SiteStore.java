@@ -180,6 +180,22 @@ public class SiteStore extends Store {
         }
     }
 
+    public static class AutomatedTransferStatusResponsePayload extends Payload<AutomatedTransferError> {
+        public SiteModel site;
+        public String status;
+        public String transferId;
+
+        public AutomatedTransferStatusResponsePayload(SiteModel site, String status, String transferId) {
+            this.site = site;
+            this.status = status;
+            this.transferId = transferId;
+        }
+        public AutomatedTransferStatusResponsePayload(SiteModel site, AutomatedTransferError error) {
+            this.site = site;
+            this.error = error;
+        }
+    }
+
     public static class SiteError implements OnChangedError {
         public SiteErrorType type;
         public String message;
