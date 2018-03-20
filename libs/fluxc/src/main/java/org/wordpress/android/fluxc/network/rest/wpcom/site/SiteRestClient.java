@@ -31,7 +31,9 @@ import org.wordpress.android.fluxc.network.rest.wpcom.auth.AccessToken;
 import org.wordpress.android.fluxc.network.rest.wpcom.auth.AppSecrets;
 import org.wordpress.android.fluxc.network.rest.wpcom.site.SiteWPComRestResponse.SitesResponse;
 import org.wordpress.android.fluxc.network.rest.wpcom.site.UserRoleWPComRestResponse.UserRolesResponse;
+import org.wordpress.android.fluxc.store.SiteStore;
 import org.wordpress.android.fluxc.store.SiteStore.AutomatedTransferEligibilityResponsePayload;
+import org.wordpress.android.fluxc.store.SiteStore.AutomatedTransferError;
 import org.wordpress.android.fluxc.store.SiteStore.ConnectSiteInfoPayload;
 import org.wordpress.android.fluxc.store.SiteStore.DeleteSiteError;
 import org.wordpress.android.fluxc.store.SiteStore.FetchedPostFormatsPayload;
@@ -507,9 +509,11 @@ public class SiteRestClient extends BaseWPComRestClient {
                 },
                 new BaseErrorListener() {
                     @Override
-                    public void onErrorResponse(@NonNull BaseNetworkError error) {
+                    public void onErrorResponse(@NonNull BaseNetworkError networkError) {
+                        AutomatedTransferError payloadError = new AutomatedTransferError(((WPComGsonNetworkError)
+                                networkError).apiError, networkError.message);
                         mDispatcher.dispatch(SiteActionBuilder.newCheckedAutomatedTransferEligibilityAction(
-                                new AutomatedTransferEligibilityResponsePayload(site, error)));
+                                new AutomatedTransferEligibilityResponsePayload(site, payloadError)));
                     }
                 });
         add(request);
@@ -537,7 +541,8 @@ public class SiteRestClient extends BaseWPComRestClient {
                             public void onErrorResponse(@NonNull BaseNetworkError error) {
                                 InitiateAutomatedTransferResponsePayload payload =
                                         new InitiateAutomatedTransferResponsePayload(site, pluginSlugToInstall);
-                                payload.error = error;
+                                payload.error = new AutomatedTransferError(((WPComGsonNetworkError)
+                                        error).apiError, error.message);
                                 mDispatcher.dispatch(SiteActionBuilder.newInitiatedAutomatedTransferAction(payload));
                             }
                         });
