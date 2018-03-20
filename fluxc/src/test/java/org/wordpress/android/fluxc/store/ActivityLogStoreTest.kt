@@ -37,13 +37,10 @@ class ActivityLogStoreTest {
 
     @Test
     fun onFetchRewindStatusActionCallRestClient() {
-        val number = 10
-        val offset = 0
-
-        val payload = ActivityLogStore.FetchRewindStatePayload(siteModel, number, offset)
+        val payload = ActivityLogStore.FetchRewindStatePayload(siteModel)
         val action = ActivityActionBuilder.newFetchRewindStateAction(payload)
         mActivityLogStore.onAction(action)
 
-        verify(activityLogRestClient).fetchActivityRewind(siteModel, number, offset)
+        verify(activityLogRestClient).fetchActivityRewind(siteModel)
     }
 }
