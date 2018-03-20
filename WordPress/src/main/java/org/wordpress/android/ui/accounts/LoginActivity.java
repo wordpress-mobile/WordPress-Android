@@ -668,7 +668,7 @@ public class LoginActivity extends AppCompatActivity implements ConnectionCallba
 
     @Override
     public void onCredentialRetrieved(Credential credential) {
-        AnalyticsTracker.track(AnalyticsTracker.Stat.LOGIN_AUTOFILL_CREDENTIALS_FILLED);
+        mAnalyticsListener.trackLoginAutofillCredentialsFilled();
 
         mSmartLockHelperState = SmartLockHelperState.FINISHED;
 
