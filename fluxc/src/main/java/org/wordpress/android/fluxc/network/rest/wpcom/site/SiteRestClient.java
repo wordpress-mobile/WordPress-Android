@@ -31,11 +31,13 @@ import org.wordpress.android.fluxc.network.rest.wpcom.auth.AccessToken;
 import org.wordpress.android.fluxc.network.rest.wpcom.auth.AppSecrets;
 import org.wordpress.android.fluxc.network.rest.wpcom.site.SiteWPComRestResponse.SitesResponse;
 import org.wordpress.android.fluxc.network.rest.wpcom.site.UserRoleWPComRestResponse.UserRolesResponse;
+import org.wordpress.android.fluxc.store.SiteStore;
 import org.wordpress.android.fluxc.store.SiteStore.AutomatedTransferEligibilityResponsePayload;
 import org.wordpress.android.fluxc.store.SiteStore.ConnectSiteInfoPayload;
 import org.wordpress.android.fluxc.store.SiteStore.DeleteSiteError;
 import org.wordpress.android.fluxc.store.SiteStore.FetchedPostFormatsPayload;
 import org.wordpress.android.fluxc.store.SiteStore.FetchedUserRolesPayload;
+import org.wordpress.android.fluxc.store.SiteStore.InitiateAutomatedTransferResponsePayload;
 import org.wordpress.android.fluxc.store.SiteStore.NewSiteError;
 import org.wordpress.android.fluxc.store.SiteStore.NewSiteErrorType;
 import org.wordpress.android.fluxc.store.SiteStore.PostFormatsError;
@@ -523,11 +525,21 @@ public class SiteRestClient extends BaseWPComRestClient {
                         new Listener<InitiateAutomatedTransferResponse>() {
                             @Override
                             public void onResponse(InitiateAutomatedTransferResponse response) {
+                                InitiateAutomatedTransferResponsePayload payload =
+                                        new InitiateAutomatedTransferResponsePayload(site, pluginSlugToInstall);
+                                payload.status = response.status;
+                                payload.success = response.success;
+                                payload.transferId = response.transferId;
+                                mDispatcher.dispatch(SiteActionBuilder.newInitiatedAutomatedTransferAction(payload));
                             }
                         },
                         new BaseErrorListener() {
                             @Override
                             public void onErrorResponse(@NonNull BaseNetworkError error) {
+                                InitiateAutomatedTransferResponsePayload payload =
+                                        new InitiateAutomatedTransferResponsePayload(site, pluginSlugToInstall);
+                                payload.error = error;
+                                mDispatcher.dispatch(SiteActionBuilder.newInitiatedAutomatedTransferAction(payload));
                             }
                         });
         add(request);

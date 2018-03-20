@@ -166,6 +166,19 @@ public class SiteStore extends Store {
         }
     }
 
+    public static class InitiateAutomatedTransferResponsePayload extends Payload<BaseNetworkError> {
+        public SiteModel site;
+        public String pluginSlugToInstall;
+        public String status;
+        public boolean success;
+        public String transferId;
+
+        public InitiateAutomatedTransferResponsePayload(SiteModel site, String pluginSlugToInstall) {
+            this.site = site;
+            this.pluginSlugToInstall = pluginSlugToInstall;
+        }
+    }
+
     public static class SiteError implements OnChangedError {
         public SiteErrorType type;
         public String message;
