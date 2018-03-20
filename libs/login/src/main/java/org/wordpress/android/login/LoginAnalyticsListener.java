@@ -10,6 +10,7 @@ public interface LoginAnalyticsListener {
     void trackCreatedAccount();
     void trackEmailFormViewed();
     void trackInsertedInvalidUrl();
+    void trackLoginAccessed();
     void trackLoginFailed(String errorContext, String errorType, String errorDescription);
     void trackLoginMagicLinkOpened();
     void trackLoginMagicLinkSucceeded();
