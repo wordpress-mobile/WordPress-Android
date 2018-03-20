@@ -2,6 +2,7 @@ package org.wordpress.android.fluxc.store;
 
 import android.database.Cursor;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.text.TextUtils;
 
 import com.wellsql.generated.SiteModelTable;
@@ -141,7 +142,7 @@ public class SiteStore extends Store {
         }
     }
 
-    public static class InitiateAutomatedTransferPayload extends Payload<BaseNetworkError> {
+    public static class InitiateAutomatedTransferPayload extends Payload<AutomatedTransferError> {
         public SiteModel site;
         public String pluginSlugToInstall;
 
@@ -151,7 +152,7 @@ public class SiteStore extends Store {
         }
     }
 
-    public static class AutomatedTransferEligibilityResponsePayload extends Payload<BaseNetworkError> {
+    public static class AutomatedTransferEligibilityResponsePayload extends Payload<AutomatedTransferError> {
         public SiteModel site;
         public boolean isEligible;
 
@@ -160,13 +161,13 @@ public class SiteStore extends Store {
             this.isEligible = isEligible;
         }
 
-        public AutomatedTransferEligibilityResponsePayload(SiteModel site, BaseNetworkError error) {
+        public AutomatedTransferEligibilityResponsePayload(SiteModel site, AutomatedTransferError error) {
             this.site = site;
             this.error = error;
         }
     }
 
-    public static class InitiateAutomatedTransferResponsePayload extends Payload<BaseNetworkError> {
+    public static class InitiateAutomatedTransferResponsePayload extends Payload<AutomatedTransferError> {
         public SiteModel site;
         public String pluginSlugToInstall;
         public String status;
@@ -248,6 +249,16 @@ public class SiteStore extends Store {
 
         public ExportSiteError(ExportSiteErrorType type) {
             this.type = type;
+        }
+    }
+
+    public static class AutomatedTransferError implements OnChangedError {
+        public final @NonNull AutomatedTransferErrorType type;
+        public final @Nullable String message;
+
+        public AutomatedTransferError(@Nullable String type, @Nullable String message) {
+            this.type = AutomatedTransferErrorType.fromString(type);
+            this.message = message;
         }
     }
 
@@ -352,18 +363,18 @@ public class SiteStore extends Store {
         }
     }
 
-    public static class OnAutomatedTransferAvailabilityChecked extends OnChanged<SiteError> {
+    public static class OnAutomatedTransferAvailabilityChecked extends OnChanged<AutomatedTransferError> {
         public SiteModel site;
-        public OnAutomatedTransferAvailabilityChecked(SiteModel site, SiteError siteError) {
+        public OnAutomatedTransferAvailabilityChecked(SiteModel site, AutomatedTransferError error) {
             this.site = site;
-            this.error = siteError;
+            this.error = error;
         }
     }
 
-    public static class OnAutomatedTransferInitiated extends OnChanged<SiteError> {
+    public static class OnAutomatedTransferInitiated extends OnChanged<AutomatedTransferError> {
         public SiteModel site;
         public String pluginSlugToInstall;
-        public OnAutomatedTransferInitiated(SiteModel site, String pluginSlugToInstall, SiteError error) {
+        public OnAutomatedTransferInitiated(SiteModel site, String pluginSlugToInstall, AutomatedTransferError error) {
             this.site = site;
             this.pluginSlugToInstall = pluginSlugToInstall;
             this.error = error;
@@ -462,6 +473,21 @@ public class SiteStore extends Store {
                 String siteString = string.toUpperCase(Locale.US).replace(BLOG, SITE);
                 for (NewSiteErrorType v : NewSiteErrorType.values()) {
                     if (siteString.equalsIgnoreCase(v.name())) {
+                        return v;
+                    }
+                }
+            }
+            return GENERIC_ERROR;
+        }
+    }
+
+    public enum AutomatedTransferErrorType {
+        GENERIC_ERROR;
+
+        public static AutomatedTransferErrorType fromString(String type) {
+            if (!TextUtils.isEmpty(type)) {
+                for (AutomatedTransferErrorType v : AutomatedTransferErrorType.values()) {
+                    if (type.equalsIgnoreCase(v.name())) {
                         return v;
                     }
                 }
