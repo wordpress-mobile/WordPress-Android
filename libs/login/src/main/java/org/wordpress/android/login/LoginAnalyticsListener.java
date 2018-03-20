@@ -13,6 +13,7 @@ public interface LoginAnalyticsListener {
     void trackLoginAccessed();
     void trackLoginAutofillCredentialsUpdated();
     void trackLoginFailed(String errorContext, String errorType, String errorDescription);
+    void trackLoginForgotPasswordClicked();
     void trackLoginMagicLinkExited();
     void trackLoginMagicLinkOpened();
     void trackLoginMagicLinkOpenEmailClientClicked();
