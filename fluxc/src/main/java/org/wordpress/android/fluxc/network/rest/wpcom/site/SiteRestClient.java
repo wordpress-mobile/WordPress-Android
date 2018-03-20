@@ -31,7 +31,6 @@ import org.wordpress.android.fluxc.network.rest.wpcom.auth.AccessToken;
 import org.wordpress.android.fluxc.network.rest.wpcom.auth.AppSecrets;
 import org.wordpress.android.fluxc.network.rest.wpcom.site.SiteWPComRestResponse.SitesResponse;
 import org.wordpress.android.fluxc.network.rest.wpcom.site.UserRoleWPComRestResponse.UserRolesResponse;
-import org.wordpress.android.fluxc.store.SiteStore;
 import org.wordpress.android.fluxc.store.SiteStore.AutomatedTransferEligibilityResponsePayload;
 import org.wordpress.android.fluxc.store.SiteStore.ConnectSiteInfoPayload;
 import org.wordpress.android.fluxc.store.SiteStore.DeleteSiteError;
@@ -518,10 +517,10 @@ public class SiteRestClient extends BaseWPComRestClient {
 
     public void initiateAutomatedTransfer(final SiteModel site, final String pluginSlugToInstall) {
         String url = WPCOMREST.sites.site(site.getSiteId()).automated_transfers.initiate.getUrlV1_1();
-        Map<String, String> params = new HashMap<>();
+        Map<String, Object> params = new HashMap<>();
         params.put("plugin", pluginSlugToInstall);
         final WPComGsonRequest<InitiateAutomatedTransferResponse> request = WPComGsonRequest
-                .buildGetRequest(url, params, InitiateAutomatedTransferResponse.class,
+                .buildPostRequest(url, params, InitiateAutomatedTransferResponse.class,
                         new Listener<InitiateAutomatedTransferResponse>() {
                             @Override
                             public void onResponse(InitiateAutomatedTransferResponse response) {
