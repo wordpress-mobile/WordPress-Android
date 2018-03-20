@@ -743,7 +743,7 @@ public class WPMainActivity extends AppCompatActivity {
             if (hasMagicLinkLoginIntent()) {
                 if (hasMagicLinkSignupIntent()) {
                     mAnalyticsListener.trackCreatedAccount();
-                    AnalyticsTracker.track(AnalyticsTracker.Stat.SIGNUP_MAGIC_LINK_SUCCEEDED);
+                    mAnalyticsListener.trackSignupMagicLinkSucceeded();
                     Intent intent = getIntent();
                     ActivityLauncher.showSignupEpilogue(this, null, null, null, null, true);
                 } else {
