@@ -523,7 +523,7 @@ public class WPMainActivity extends AppCompatActivity {
     private void checkMagicLinkSignIn() {
         if (getIntent() != null) {
             if (getIntent().getBooleanExtra(LoginActivity.MAGIC_LOGIN, false)) {
-                AnalyticsTracker.track(AnalyticsTracker.Stat.LOGIN_MAGIC_LINK_SUCCEEDED);
+                mAnalyticsListener.trackLoginMagicLinkSucceeded();
                 startWithNewAccount();
             }
         }
@@ -747,7 +747,7 @@ public class WPMainActivity extends AppCompatActivity {
                     Intent intent = getIntent();
                     ActivityLauncher.showSignupEpilogue(this, null, null, null, null, true);
                 } else {
-                    AnalyticsTracker.track(AnalyticsTracker.Stat.LOGIN_MAGIC_LINK_SUCCEEDED);
+                    mAnalyticsListener.trackLoginMagicLinkSucceeded();
                     ActivityLauncher
                             .showLoginEpilogue(this, true, getIntent().getIntegerArrayListExtra(ARG_OLD_SITES_IDS));
                 }
