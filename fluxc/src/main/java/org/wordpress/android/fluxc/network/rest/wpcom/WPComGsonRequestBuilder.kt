@@ -1,8 +1,10 @@
 package org.wordpress.android.fluxc.network.rest.wpcom
 
 import org.wordpress.android.fluxc.network.BaseRequest
+import javax.inject.Inject
 
-class WPComGsonRequestBuilder {
+class WPComGsonRequestBuilder
+@Inject constructor(){
     /**
      * Creates a new GET request.
      * @param url the request URL
@@ -11,7 +13,8 @@ class WPComGsonRequestBuilder {
      * @param listener the success listener
      * @param errorListener the error listener
      */
-    fun <T> buildGetRequest(url: String, params: Map<String, String>,
+    fun <T> buildGetRequest(url: String,
+                            params: Map<String, String>,
                             clazz: Class<T>,
                             listener: (T) -> Unit,
                             errorListener: (BaseRequest.BaseNetworkError) -> Unit): WPComGsonRequest<T> {
