@@ -14,6 +14,7 @@ public interface LoginAnalyticsListener {
     void trackLoginAutofillCredentialsUpdated();
     void trackLoginFailed(String errorContext, String errorType, String errorDescription);
     void trackLoginMagicLinkOpened();
+    void trackLoginMagicLinkOpenEmailClientClicked();
     void trackLoginMagicLinkSucceeded();
     void trackLoginSocialSuccess();
     void trackMagicLinkFailed(Map<String, ?> properties);
