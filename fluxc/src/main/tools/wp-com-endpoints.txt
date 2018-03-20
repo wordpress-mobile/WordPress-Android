@@ -63,10 +63,5 @@
 
 /sites/$siteUrl#String
 
-/sites/$site/activity
-/sites/$site/rewind
-
-/activity-log/$site/rewind/to/$rewind_ID#String
-
 /users/new/
 /users/social/new
