@@ -20,6 +20,7 @@ import org.wordpress.android.BuildConfig;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.analytics.AnalyticsTracker;
+import org.wordpress.android.login.LoginAnalyticsListener;
 import org.wordpress.android.ui.accounts.HelpActivity;
 import org.wordpress.android.ui.accounts.JetpackCallbacks;
 import org.wordpress.android.util.HelpshiftHelper;
@@ -30,11 +31,15 @@ import org.wordpress.android.widgets.WPTextView;
 import java.util.HashMap;
 import java.util.Map;
 
+import javax.inject.Inject;
+
 public class MagicLinkRequestFragment extends Fragment {
     public static final String EMAIL_KEY = "email";
     public static final String CLIENT_ID_KEY = "client_id";
     public static final String CLIENT_SECRET_KEY = "client_secret";
     public static final String ERROR_KEY = "error";
+
+    @Inject protected LoginAnalyticsListener mAnalyticsListener;
 
     public interface OnMagicLinkFragmentInteraction {
         void onMagicLinkSent();
@@ -155,7 +160,7 @@ public class MagicLinkRequestFragment extends Fragment {
             public void onErrorResponse(VolleyError error) {
                 HashMap<String, String> errorProperties = new HashMap<>();
                 errorProperties.put(ERROR_KEY, error.getMessage());
-                AnalyticsTracker.track(AnalyticsTracker.Stat.LOGIN_MAGIC_LINK_FAILED, errorProperties);
+                mAnalyticsListener.trackMagicLinkFailed(errorProperties);
                 mProgressDialog.cancel();
                 if (isAdded()) {
                     ToastUtils.showToast(getActivity(), R.string.magic_link_unavailable_error_message,
