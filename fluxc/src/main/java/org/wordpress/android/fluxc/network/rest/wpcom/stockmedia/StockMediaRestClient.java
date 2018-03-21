@@ -15,6 +15,8 @@ import org.wordpress.android.fluxc.network.rest.wpcom.BaseWPComRestClient;
 import org.wordpress.android.fluxc.network.rest.wpcom.WPComGsonRequest;
 import org.wordpress.android.fluxc.network.rest.wpcom.auth.AccessToken;
 import org.wordpress.android.fluxc.store.StockMediaStore;
+import org.wordpress.android.fluxc.store.StockMediaStore.StockMediaError;
+import org.wordpress.android.fluxc.store.StockMediaStore.StockMediaErrorType;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.UrlUtils;
 
@@ -35,7 +37,7 @@ public class StockMediaRestClient extends BaseWPComRestClient {
     /**
      * Gets a list of stock media items matching a query string
      */
-    public void searchStockMedia(final String searchTerm, final int page) {
+    public void searchStockMedia(@NonNull final String searchTerm, final int page) {
         String url = WPCOMREST.meta.external_media.pexels.getUrlV1_1();
 
         Map<String, String> params = new HashMap<>();
@@ -50,25 +52,24 @@ public class StockMediaRestClient extends BaseWPComRestClient {
                     public void onResponse(SearchStockMediaResponse response) {
                         StockMediaStore.FetchedStockMediaListPayload payload =
                                 new StockMediaStore.FetchedStockMediaListPayload(
-                                response.media,
-                                searchTerm,
-                                response.nextPage,
-                                response.canLoadMore);
+                                        response.media,
+                                        searchTerm,
+                                        response.nextPage,
+                                        response.canLoadMore);
                         mDispatcher.dispatch(StockMediaActionBuilder.newFetchedStockMediaAction(payload));
                     }
                 }, new BaseRequest.BaseErrorListener() {
                     @Override
                     public void onErrorResponse(@NonNull BaseRequest.BaseNetworkError error) {
                         AppLog.e(AppLog.T.MEDIA, "VolleyError Fetching stock media: " + error);
-                        StockMediaStore.StockMediaError mediaError = new StockMediaStore.StockMediaError(
-                                StockMediaStore.StockMediaErrorType.fromBaseNetworkError(error), error.message);
+                        StockMediaError mediaError = new StockMediaError(
+                                StockMediaErrorType.fromBaseNetworkError(error), error.message);
                         StockMediaStore.FetchedStockMediaListPayload payload =
                                 new StockMediaStore.FetchedStockMediaListPayload(mediaError, searchTerm);
                         mDispatcher.dispatch(StockMediaActionBuilder.newFetchedStockMediaAction(payload));
                     }
                 }
-        );
-
+                                                                   );
         add(request);
     }
 }

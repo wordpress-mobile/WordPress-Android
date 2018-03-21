@@ -7,6 +7,8 @@ import android.text.TextUtils;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response.Listener;
 import com.google.gson.Gson;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonObject;
 import com.google.gson.stream.JsonReader;
 
 import org.apache.commons.text.StringEscapeUtils;
@@ -20,6 +22,8 @@ import org.wordpress.android.fluxc.generated.endpoint.WPCOMREST;
 import org.wordpress.android.fluxc.model.MediaModel;
 import org.wordpress.android.fluxc.model.MediaModel.MediaUploadState;
 import org.wordpress.android.fluxc.model.SiteModel;
+import org.wordpress.android.fluxc.model.StockMediaModel;
+import org.wordpress.android.fluxc.network.BaseRequest;
 import org.wordpress.android.fluxc.network.BaseRequest.BaseErrorListener;
 import org.wordpress.android.fluxc.network.BaseRequest.BaseNetworkError;
 import org.wordpress.android.fluxc.network.BaseUploadRequestBody.ProgressListener;
@@ -33,9 +37,12 @@ import org.wordpress.android.fluxc.store.MediaStore.MediaError;
 import org.wordpress.android.fluxc.store.MediaStore.MediaErrorType;
 import org.wordpress.android.fluxc.store.MediaStore.MediaPayload;
 import org.wordpress.android.fluxc.store.MediaStore.ProgressPayload;
+import org.wordpress.android.fluxc.store.MediaStore.UploadedStockMediaPayload;
+import org.wordpress.android.fluxc.store.StockMediaStore;
 import org.wordpress.android.fluxc.utils.MediaUtils;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
+import org.wordpress.android.util.StringUtils;
 
 import java.io.IOException;
 import java.io.StringReader;
@@ -379,6 +386,47 @@ public class MediaRestClient extends BaseWPComRestClient implements ProgressList
         mCurrentUploadCalls.remove(id);
         AppLog.d(T.MEDIA, "mediaRestClient: removed id: " + id + " from current uploads, remaining: "
                 + mCurrentUploadCalls.size());
+    }
+
+    public void uploadStockMedia(@NonNull final SiteModel site,
+                                 @NonNull List<StockMediaModel> stockMediaList) {
+        String url = WPCOMREST.sites.site(site.getSiteId()).external_media_upload.getUrlV1_1();
+
+        JsonArray jsonBody = new JsonArray();
+        for (StockMediaModel stockMedia : stockMediaList) {
+            JsonObject json = new JsonObject();
+            json.addProperty("url", StringUtils.notNullStr(stockMedia.getUrl()));
+            json.addProperty("name", StringUtils.notNullStr(stockMedia.getName()));
+            json.addProperty("title", StringUtils.notNullStr(stockMedia.getTitle()));
+            jsonBody.add(json.toString());
+        }
+
+        Map<String, Object> body = new HashMap<>();
+        body.put("service", "pexels");
+        body.put("external_ids", jsonBody);
+
+        WPComGsonRequest request = WPComGsonRequest.buildPostRequest(url, body, MultipleMediaResponse.class,
+                new com.android.volley.Response.Listener<MultipleMediaResponse>() {
+                    @Override
+                    public void onResponse(MultipleMediaResponse response) {
+                        // response is a list of media, exactly like that of MediaRestClient.fetchMediaList()
+                        List<MediaModel> mediaList = getMediaListFromRestResponse(response, site.getId());
+                        UploadedStockMediaPayload payload = new UploadedStockMediaPayload(site, mediaList);
+                        mDispatcher.dispatch(MediaActionBuilder.newUploadedStockMediaAction(payload));
+                    }
+                }, new BaseRequest.BaseErrorListener() {
+                    @Override
+                    public void onErrorResponse(@NonNull BaseRequest.BaseNetworkError error) {
+                        AppLog.e(AppLog.T.MEDIA, "VolleyError uploading stock media: " + error);
+                        StockMediaStore.StockMediaError mediaError = new StockMediaStore.StockMediaError(
+                                StockMediaStore.StockMediaErrorType.fromBaseNetworkError(error), error.message);
+                        UploadedStockMediaPayload payload = new UploadedStockMediaPayload(site, mediaError);
+                        mDispatcher.dispatch(MediaActionBuilder.newUploadedStockMediaAction(payload));
+                    }
+                }
+                                                                    );
+
+        add(request);
     }
 
     //
