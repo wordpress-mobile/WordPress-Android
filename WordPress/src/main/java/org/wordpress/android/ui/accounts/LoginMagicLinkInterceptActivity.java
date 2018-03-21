@@ -19,8 +19,8 @@ public class LoginMagicLinkInterceptActivity extends Activity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        ((WordPress) getApplication()).component().inject(this);
         super.onCreate(savedInstanceState);
+        ((WordPress) getApplication()).component().inject(this);
 
         mLoginAnalyticsListener.trackLoginMagicLinkOpened();
 
