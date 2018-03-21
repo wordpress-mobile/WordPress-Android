@@ -23,29 +23,29 @@ import org.wordpress.android.fluxc.network.BaseRequest
 import org.wordpress.android.fluxc.network.rest.wpcom.BaseWPComRestClient
 import org.wordpress.android.fluxc.network.rest.wpcom.WPComGsonRequest
 import org.wordpress.android.fluxc.network.rest.wpcom.WPComGsonRequestBuilder
-import org.wordpress.android.fluxc.network.rest.wpcom.activity.ActivityRestClient.*
-import org.wordpress.android.fluxc.store.ActivityErrorType
-import org.wordpress.android.fluxc.store.FetchedActivitiesPayload
-import org.wordpress.android.fluxc.store.FetchedRewindStatePayload
-import org.wordpress.android.fluxc.store.RewindStatusErrorType
+import org.wordpress.android.fluxc.network.rest.wpcom.activity.ActivityLogRestClient.*
+import org.wordpress.android.fluxc.store.ActivityLogStore.ActivityErrorType
+import org.wordpress.android.fluxc.store.ActivityLogStore.FetchedActivitiesPayload
+import org.wordpress.android.fluxc.store.ActivityLogStore.FetchedRewindStatePayload
+import org.wordpress.android.fluxc.store.ActivityLogStore.RewindStatusErrorType
 
 @RunWith(MockitoJUnitRunner::class)
-class ActivityRestClientTest {
+class ActivityLogRestClientTest {
     @Mock private lateinit var dispatcher: Dispatcher
     @Mock private lateinit var restClient: BaseWPComRestClient
     @Mock private lateinit var wpComGsonRequestBuilder: WPComGsonRequestBuilder
     @Mock private lateinit var site: SiteModel
     private lateinit var urlCaptor: KArgumentCaptor<String>
     private lateinit var paramsCaptor: KArgumentCaptor<Map<String, String>>
-    private lateinit var activityResponseClassCaptor: KArgumentCaptor<Class<ActivityRestClient.ActivitiesResponse>>
-    private lateinit var rewindStatusResponseClassCaptor: KArgumentCaptor<Class<ActivityRestClient.RewindStatusResponse>>
-    private lateinit var activitySuccessMethodCaptor: KArgumentCaptor<(ActivityRestClient.ActivitiesResponse) -> Unit>
+    private lateinit var activityResponseClassCaptor: KArgumentCaptor<Class<ActivityLogRestClient.ActivitiesResponse>>
+    private lateinit var rewindStatusResponseClassCaptor: KArgumentCaptor<Class<ActivityLogRestClient.RewindStatusResponse>>
+    private lateinit var activitySuccessMethodCaptor: KArgumentCaptor<(ActivityLogRestClient.ActivitiesResponse) -> Unit>
     private lateinit var rewindStatusSuccessMethodCaptor:
-            KArgumentCaptor<(ActivityRestClient.RewindStatusResponse) -> Unit>
+            KArgumentCaptor<(ActivityLogRestClient.RewindStatusResponse) -> Unit>
     private lateinit var errorMethodCaptor: KArgumentCaptor<(BaseRequest.BaseNetworkError) -> Unit>
     private lateinit var activityActionCaptor: KArgumentCaptor<Action<FetchedActivitiesPayload>>
     private lateinit var rewindStatusActionCaptor: KArgumentCaptor<Action<FetchedRewindStatePayload>>
-    private lateinit var activityRestClient: ActivityRestClient
+    private lateinit var activityRestClient: ActivityLogRestClient
     private val siteId: Long = 12
     private val number = 10
     private val offset = 0
@@ -61,7 +61,7 @@ class ActivityRestClientTest {
         errorMethodCaptor = argumentCaptor()
         activityActionCaptor = argumentCaptor()
         rewindStatusActionCaptor = argumentCaptor()
-        activityRestClient = ActivityRestClient(dispatcher, restClient, wpComGsonRequestBuilder)
+        activityRestClient = ActivityLogRestClient(dispatcher, restClient, wpComGsonRequestBuilder)
     }
 
     @Test
@@ -96,9 +96,9 @@ class ActivityRestClientTest {
             assertEquals(this.payload.number, number)
             assertEquals(this.payload.offset, offset)
             assertEquals(this.payload.site, site)
-            assertEquals(this.payload.activityModelRespons.size, 1)
+            assertEquals(this.payload.activityLogModels.size, 1)
             assertNull(this.payload.error)
-            with(this.payload.activityModelRespons[0]) {
+            with(this.payload.activityLogModels[0]) {
                 assertEquals(this.activityID, ACTIVITY_RESPONSE.activity_id)
                 assertEquals(this.gridicon, ACTIVITY_RESPONSE.gridicon)
                 assertEquals(this.isDiscarded, ACTIVITY_RESPONSE.is_discarded)
@@ -326,8 +326,8 @@ class ActivityRestClientTest {
         }
     }
 
-    private fun initFetchActivity(): WPComGsonRequest<ActivityRestClient.ActivitiesResponse> {
-        val request = mock<WPComGsonRequest<ActivityRestClient.ActivitiesResponse>>()
+    private fun initFetchActivity(): WPComGsonRequest<ActivityLogRestClient.ActivitiesResponse> {
+        val request = mock<WPComGsonRequest<ActivityLogRestClient.ActivitiesResponse>>()
 
         whenever(wpComGsonRequestBuilder.buildGetRequest(urlCaptor.capture(),
                 paramsCaptor.capture(),
@@ -338,8 +338,8 @@ class ActivityRestClientTest {
         return request
     }
 
-    private fun initFetchRewindStatus(): WPComGsonRequest<ActivityRestClient.RewindStatusResponse> {
-        val request = mock<WPComGsonRequest<ActivityRestClient.RewindStatusResponse>>()
+    private fun initFetchRewindStatus(): WPComGsonRequest<ActivityLogRestClient.RewindStatusResponse> {
+        val request = mock<WPComGsonRequest<ActivityLogRestClient.RewindStatusResponse>>()
 
         whenever(wpComGsonRequestBuilder.buildGetRequest(urlCaptor.capture(),
                 paramsCaptor.capture(),
