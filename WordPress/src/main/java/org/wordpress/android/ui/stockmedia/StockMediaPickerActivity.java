@@ -276,12 +276,6 @@ public class StockMediaPickerActivity extends AppCompatActivity implements Searc
     private void submitSearch(@Nullable final String query, boolean delayed) {
         mSearchQuery = query;
 
-        if (query == null || query.length() < MIN_SEARCH_QUERY_SIZE) {
-            mAdapter.clear();
-            showEmptyView(true);
-            return;
-        }
-
         if (delayed) {
             mHandler.postDelayed(new Runnable() {
                 @Override
@@ -305,8 +299,9 @@ public class StockMediaPickerActivity extends AppCompatActivity implements Searc
 
         mSearchQuery = searchQuery;
 
-        if (TextUtils.isEmpty(searchQuery)) {
+        if (mSearchQuery == null || mSearchQuery.length() < MIN_SEARCH_QUERY_SIZE) {
             mIsFetching = false;
+            showProgress(false);
             mAdapter.clear();
             showEmptyView(true);
             return;
