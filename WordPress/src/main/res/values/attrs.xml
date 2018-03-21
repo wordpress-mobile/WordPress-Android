@@ -36,7 +36,7 @@
         <attr name="horizontalSpacing" format="dimension" />
         <attr name="verticalSpacing" format="dimension" />
     </declare-styleable>
-    <declare-styleable name="FlowLayout_LayoutParams">
+    <declare-styleable name="FlowLayout_Layout">
         <attr name="layout_horizontalSpacing" format="dimension" />
         <attr name="layout_verticalSpacing" format="dimension" />
     </declare-styleable>

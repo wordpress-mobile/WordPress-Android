@@ -1,3 +1,15 @@
+buildscript {
+    repositories {
+        jcenter()
+    }
+
+    dependencies {
+        classpath 'com.automattic.android:fetchstyle:1.0'
+    }
+}
+
+apply plugin: 'com.automattic.android.fetchstyle'
+
 allprojects {
     apply plugin: 'checkstyle'
 
@@ -11,9 +23,6 @@ allprojects {
     if (tasks.findByPath('checkstyle') == null) {
         tasks.create(name: 'checkstyle', type: Checkstyle) {
             source 'src'
-            include '**/*.java'
-            include '**/*.kt'
-            exclude '**/gen/**'
 
             classpath = files()
         }

@@ -32,8 +32,7 @@
                 <org.wordpress.android.widgets.WPNetworkImageView
                     android:id="@+id/theme_grid_item_image"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentTop="true"
+                    android:layout_height="@dimen/theme_browser_preview_image_height"
                     android:adjustViewBounds="true"
                     android:scaleType="fitCenter" />
 

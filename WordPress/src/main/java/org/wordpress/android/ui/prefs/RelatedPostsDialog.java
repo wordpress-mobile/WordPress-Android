@@ -27,25 +27,24 @@ import java.util.List;
 
 public class RelatedPostsDialog extends DialogFragment
         implements DialogInterface.OnClickListener,
-                   CompoundButton.OnCheckedChangeListener {
-
+        CompoundButton.OnCheckedChangeListener {
     /**
      * boolean
-     *
+     * <p>
      * Sets the default state of the Show Related Posts switch. The switch is off by default.
      */
     public static final String SHOW_RELATED_POSTS_KEY = "related-posts";
 
     /**
      * boolean
-     *
+     * <p>
      * Sets the default state of the Show Headers checkbox. The checkbox is off by default.
      */
     public static final String SHOW_HEADER_KEY = "show-header";
 
     /**
      * boolean
-     *
+     * <p>
      * Sets the default state of the Show Images checkbox. The checkbox is off by default.
      */
     public static final String SHOW_IMAGES_KEY = "show-images";
@@ -62,7 +61,8 @@ public class RelatedPostsDialog extends DialogFragment
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         LayoutInflater inflater = getActivity().getLayoutInflater();
-        View v = inflater.inflate(R.layout.related_posts_dialog, null, false);
+        //noinspection InflateParams
+        View v = inflater.inflate(R.layout.related_posts_dialog, null);
 
         mShowRelatedPosts = (Switch) v.findViewById(R.id.toggle_related_posts_switch);
         mShowHeader = (CheckBox) v.findViewById(R.id.show_header_checkbox);
@@ -93,10 +93,12 @@ public class RelatedPostsDialog extends DialogFragment
         toggleViews(mShowRelatedPosts.isChecked());
 
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity(), R.style.Calypso_AlertDialog);
+        //noinspection InflateParams
         View titleView = inflater.inflate(R.layout.detail_list_preference_title, null);
         TextView titleText = ((TextView) titleView.findViewById(R.id.title));
         titleText.setText(R.string.site_settings_related_posts_title);
-        titleText.setLayoutParams(new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, RelativeLayout.LayoutParams.WRAP_CONTENT));
+        titleText.setLayoutParams(new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT,
+                                                                  RelativeLayout.LayoutParams.WRAP_CONTENT));
         builder.setCustomTitle(titleView);
         builder.setPositiveButton(android.R.string.ok, this);
         builder.setNegativeButton(R.string.cancel, this);
@@ -112,8 +114,12 @@ public class RelatedPostsDialog extends DialogFragment
         AlertDialog dialog = (AlertDialog) getDialog();
         Button positive = dialog.getButton(DialogInterface.BUTTON_POSITIVE);
         Button negative = dialog.getButton(DialogInterface.BUTTON_NEGATIVE);
-        if (positive != null) WPPrefUtils.layoutAsFlatButton(positive);
-        if (negative != null) WPPrefUtils.layoutAsFlatButton(negative);
+        if (positive != null) {
+            WPPrefUtils.layoutAsFlatButton(positive);
+        }
+        if (negative != null) {
+            WPPrefUtils.layoutAsFlatButton(negative);
+        }
     }
 
     @Override

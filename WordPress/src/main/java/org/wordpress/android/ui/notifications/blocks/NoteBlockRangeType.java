@@ -19,7 +19,9 @@ public enum NoteBlockRangeType {
     UNKNOWN;
 
     public static NoteBlockRangeType fromString(String value) {
-        if (TextUtils.isEmpty(value)) return UNKNOWN;
+        if (TextUtils.isEmpty(value)) {
+            return UNKNOWN;
+        }
 
         switch (value) {
             case "post":

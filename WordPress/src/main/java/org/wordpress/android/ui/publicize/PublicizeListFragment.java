@@ -109,7 +109,9 @@ public class PublicizeListFragment extends PublicizeBaseFragment {
     private final OnAdapterLoadedListener mAdapterLoadedListener = new OnAdapterLoadedListener() {
         @Override
         public void onAdapterLoaded(boolean isEmpty) {
-            if (!isAdded()) return;
+            if (!isAdded()) {
+                return;
+            }
 
             if (isEmpty) {
                 if (!NetworkUtils.isNetworkAvailable(getActivity())) {
@@ -139,5 +141,4 @@ public class PublicizeListFragment extends PublicizeBaseFragment {
     void reload() {
         getAdapter().reload();
     }
-
 }

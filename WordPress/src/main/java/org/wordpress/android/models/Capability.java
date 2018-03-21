@@ -10,13 +10,13 @@ public enum Capability {
     REMOVE_USERS("remove_users"), // Check if user can remove another user
     EDIT_PAGES("edit_pages"); // Check if user can edit Pages
 
-    private final String label;
+    private final String mLabel;
 
     Capability(String label) {
-        this.label = label;
+        this.mLabel = label;
     }
 
     public String getLabel() {
-        return label;
+        return mLabel;
     }
 }

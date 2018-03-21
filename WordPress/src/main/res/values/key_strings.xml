@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources>
+<resources xmlns:tools="http://schemas.android.com/tools">
     <!-- layout tags - do not translate -->
     <string name="fragment_tag_comment_list" translatable="false">fragment_comment_list</string>
-    <string name="fragment_tag_comment_detail" translatable="false">fragment_comment_detail</string>
+    <string name="fragment_tag_comment_detail" translatable="false" tools:ignore="UnusedResources">fragment_comment_detail</string>
     <string name="fragment_tag_reader_post_list" translatable="false">fragment_reader_post_list</string>
     <string name="fragment_tag_reader_post_detail" translatable="false">fragment_reader_post_detail</string>
     <string name="fragment_tag_post_preview" translatable="false">fragment_post_preview</string>
@@ -14,7 +14,7 @@
     <string name="pref_key_account_settings_root" translatable="false">wp_pref_root</string>
     <string name="pref_key_app_settings_root" translatable="false">wp_pref_root</string>
     <string name="pref_key_passlock_section" translatable="false">wp_passcode_lock_category</string>
-    <string name="pref_key_passlock" translatable="false">wp_pref_passlock_enabled</string>
+    <string name="pref_key_passlock" translatable="false" tools:ignore="UnusedResources">wp_pref_passlock_enabled</string>
     <string name="pref_key_send_usage" translatable="false">wp_pref_send_usage_stats</string>
     <string name="pref_key_device_settings" translatable="false">wp_pref_device_settings</string>
     <string name="pref_key_about_section" translatable="false">wp_pref_app_about_section</string>
@@ -26,11 +26,8 @@
     <string name="pref_notification_blogs" translatable="false">wp_pref_notification_blogs</string>
     <string name="pref_notification_other_category" translatable="false">wp_pref_notification_other_category</string>
     <string name="pref_notification_other_blogs" translatable="false">wp_pref_notification_other_blogs</string>
-    <string name="pref_notifications_enabled" translatable="false">wp_pref_notifications_enabled</string>
-    <string name="pref_notification_types" translatable="false">wp_pref_notification_types</string>
-    <string name="pref_notification_account_emails" translatable="false">wp_pref_notification_account_emails</string>
-    <string name="pref_notification_sights_sounds" translatable="false">wp_pref_notification_sights_sounds</string>
-    <string name="pref_key_notification_site_settings" translatable="false">wp_pref_notification_site_settings</string>
+    <string name="pref_notifications_enabled" translatable="false" tools:ignore="UnusedResources">wp_pref_notifications_enabled</string>
+    <string name="pref_notification_sights_sounds" translatable="false" tools:ignore="UnusedResources">wp_pref_notification_sights_sounds</string>
     <string name="pref_key_notification_pending_drafts" translatable="false">wp_pref_notification_pending_drafts</string>
     <string name="pref_key_site_screen" translatable="false">wp_pref_site_screen</string>
     <string name="pref_key_site_general" translatable="false">wp_pref_site_general</string>
@@ -74,14 +71,12 @@
     <string name="pref_key_site_sort_by" translatable="false">wp_pref_site_sort_by</string>
     <string name="pref_key_site_threading" translatable="false">wp_pref_site_threading</string>
     <string name="pref_key_site_paging" translatable="false">wp_pref_site_paging</string>
-    <string name="pref_key_site_manual_approval" translatable="false">wp_pref_site_manual_approval</string>
     <string name="pref_key_site_identity_required" translatable="false">wp_pref_site_identity_required</string>
     <string name="pref_key_site_user_account_required" translatable="false">wp_pref_site_user_account_required</string>
     <string name="pref_key_site_whitelist" translatable="false">wp_pref_site_whitelist</string>
     <string name="pref_key_site_multiple_links" translatable="false">wp_pref_site_multiple_links</string>
     <string name="pref_key_site_moderation_hold" translatable="false">wp_pref_site_moderation_hold</string>
     <string name="pref_key_site_blacklist" translatable="false">wp_pref_site_blacklist</string>
-    <string name="pref_key_site_danger" translatable="false">wp_pref_site_danger</string>
     <string name="pref_key_site_advanced" translatable="false">wp_pref_site_advanced</string>
     <string name="pref_key_site_disconnect" translatable="false">wp_pref_site_disconnect</string>
     <string name="pref_key_site_start_over" translatable="false">wp_pref_site_start_over</string>
@@ -92,18 +87,13 @@
     <string name="pref_key_primary_site" translatable="false">wp_pref_key_primary_site></string>
     <string name="pref_key_web_address" translatable="false">wp_pref_key_web_address</string>
     <string name="pref_key_site_start_over_screen" translatable="false">wp_pref_key_site_start_over_screen</string>
-    <string name="pref_key_sharing_reblog_and_like" translatable="false">wp_pref_sharing_reblog_and_like</string>
-    <string name="pref_key_sharing_buttons" translatable="false">wp_pref_sharing_buttons</string>
-    <string name="pref_key_reblog" translatable="false">wp_pref_sharing_reblog</string>
-    <string name="pref_key_like" translatable="false">wp_pref_sharing_like</string>
-    <string name="pref_key_twitter_username" translatable="false">wp_pref_twitter_handle</string>
-    <string name="pref_key_comment_likes" translatable="false">wp_pref_comment_likes</string>
-    <string name="pref_key_more_buttons" translatable="false">wp_pref_more_buttons</string>
-    <string name="pref_key_twitter_category" translatable="false">wp_pref_twitter_category</string>
     <!-- Speed up your site -->
     <string name="pref_key_speed_up_your_site_screen" translatable="false">wp_pref_speed_up_your_site_screen</string>
     <string name="pref_key_serve_images_from_our_servers" translatable="false">wp_pref_serve_images_from_our_servers</string>
     <string name="pref_key_lazy_load_images" translatable="false">wp_pref_lazy_load_images</string>
+    <!-- Media -->
+    <string name="pref_key_site_quota" translatable="false">wp_pref_key_site_quota</string>
+    <string name="pref_key_site_quota_space" translatable="false">wp_pref_key_site_quota_space</string>
 
     <!-- Jetpack Security -->
     <string name="pref_key_jetpack_settings" translatable="false">wp_pref_jetpack_settings</string>
@@ -301,20 +291,6 @@
         <item>66</item>
         <item>431</item>
         <item>11</item>
-    </string-array>
-
-    <string-array name="publicize_button_style_etries">
-        <item>@string/publicize_official_buttons</item>
-        <item>@string/publicize_icon_only</item>
-        <item>@string/publicize_icon_and_text</item>
-        <item>@string/publicize_text_only</item>
-    </string-array>
-
-    <string-array name="publicize_button_style_values" translatable="false">
-        <item>0</item>
-        <item>1</item>
-        <item>2</item>
-        <item>3</item>
     </string-array>
 
     <!-- Smart Lock for Passwords -->

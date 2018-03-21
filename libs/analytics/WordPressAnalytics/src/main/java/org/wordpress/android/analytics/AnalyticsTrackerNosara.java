@@ -13,7 +13,6 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class AnalyticsTrackerNosara extends Tracker {
-
     private static final String JETPACK_USER = "jetpack_user";
     private static final String NUMBER_OF_BLOGS = "number_of_blogs";
     private static final String TRACKS_ANON_ID = "nosara_tracks_anon_id";
@@ -37,6 +36,7 @@ public class AnalyticsTrackerNosara extends Tracker {
     }
 
     @Override
+    @SuppressWarnings("checkstyle:methodlength")
     public void track(AnalyticsTracker.Stat stat, Map<String, ?> properties) {
         if (mNosaraClient == null) {
             return;
@@ -229,15 +229,20 @@ public class AnalyticsTrackerNosara extends Tracker {
                 for (String key : predefinedEventProperties.keySet()) {
                     try {
                         if (propertiesToJSON.has(key)) {
-                            AppLog.w(AppLog.T.STATS, "The user has defined a property named: '" + key + "' that will override" +
-                                    "the same property pre-defined at event level. This may generate unexpected behavior!!");
-                            AppLog.w(AppLog.T.STATS, "User value: " + propertiesToJSON.get(key).toString() + " - pre-defined value: " +
-                                    predefinedEventProperties.get(key).toString());
+                            AppLog.w(AppLog.T.STATS,
+                                     "The user has defined a property named: '" + key + "' that will override"
+                                     + "the same property pre-defined at event level. This may generate unexpected "
+                                     + "behavior!!");
+                            AppLog.w(AppLog.T.STATS,
+                                     "User value: " + propertiesToJSON.get(key).toString()
+                                     + " - pre-defined value: "
+                                     + predefinedEventProperties.get(key).toString());
                         } else {
                             propertiesToJSON.put(key, predefinedEventProperties.get(key));
                         }
                     } catch (JSONException e) {
-                        AppLog.e(AppLog.T.STATS, "Error while merging user-defined properties with pre-defined properties", e);
+                        AppLog.e(AppLog.T.STATS,
+                                 "Error while merging user-defined properties with pre-defined properties", e);
                     }
                 }
             } catch (NullPointerException e) {
@@ -255,6 +260,7 @@ public class AnalyticsTrackerNosara extends Tracker {
             mNosaraClient.track(EVENTS_PREFIX + eventName, user, userType);
         }
     }
+
 
     @Override
     public void endSession() {
@@ -287,7 +293,7 @@ public class AnalyticsTrackerNosara extends Tracker {
         // De-anonymize user only when it's WPCOM and we have the username available (might still be waiting for it to
         //  be fetched).
         if (metadata.isUserConnected() && metadata.isWordPressComUser()
-                && !TextUtils.isEmpty(metadata.getUsername())) {
+            && !TextUtils.isEmpty(metadata.getUsername())) {
             setWordPressComUserName(metadata.getUsername());
             // Re-unify the user
             if (getAnonID() != null) {
@@ -301,8 +307,6 @@ public class AnalyticsTrackerNosara extends Tracker {
                 generateNewAnonID();
             }
         }
-
-
     }
 
 
@@ -320,6 +324,7 @@ public class AnalyticsTrackerNosara extends Tracker {
         return;
     }
 
+    @SuppressWarnings("checkstyle:methodlength")
     public static String getEventNameForStat(AnalyticsTracker.Stat stat) {
         if (!isValidEvent(stat)) {
             return null;
@@ -350,7 +355,7 @@ public class AnalyticsTrackerNosara extends Tracker {
                 return "reader_article_opened";
             case READER_ARTICLE_UNLIKED:
                 return "reader_article_unliked";
-            case READER_ARTICLE_RENDERED :
+            case READER_ARTICLE_RENDERED:
                 return "reader_article_rendered";
             case READER_BLOG_BLOCKED:
                 return "reader_blog_blocked";
@@ -575,10 +580,12 @@ public class AnalyticsTrackerNosara extends Tracker {
                 return "people_management_list_opened";
             case OPENED_PERSON:
                 return "people_management_details_opened";
-            case OPENED_PLUGINS:
-                return "plugins_opened";
             case OPENED_PLUGIN_DETAIL:
                 return "plugin_detail_opened";
+            case OPENED_PLUGIN_DIRECTORY:
+                return "plugin_directory_opened";
+            case OPENED_PLUGIN_LIST:
+                return "plugin_list_opened";
             case CREATE_ACCOUNT_INITIATED:
                 return "account_create_initiated";
             case CREATE_ACCOUNT_EMAIL_EXISTS:
@@ -599,10 +606,18 @@ public class AnalyticsTrackerNosara extends Tracker {
                 return "signed_in";
             case SIGNED_INTO_JETPACK:
                 return "signed_into_jetpack";
+            case INSTALL_JETPACK_SELECTED:
+                return "install_jetpack_selected";
+            case INSTALL_JETPACK_CANCELLED:
+                return "install_jetpack_canceled";
+            case INSTALL_JETPACK_COMPLETED:
+                return "install_jetpack_completed";
+            case CONNECT_JETPACK_SELECTED:
+                return "connect_jetpack_selected";
+            case CONNECT_JETPACK_FAILED:
+                return "connect_jetpack_failed";
             case ACCOUNT_LOGOUT:
                 return "account_logout";
-            case PERFORMED_JETPACK_SIGN_IN_FROM_STATS_SCREEN:
-                return "stats_screen_signed_into_jetpack";
             case STATS_ACCESSED:
                 return "stats_accessed";
             case STATS_INSIGHTS_ACCESSED:
@@ -623,14 +638,6 @@ public class AnalyticsTrackerNosara extends Tracker {
                 return "stats_bar_chart_tapped";
             case STATS_SCROLLED_TO_BOTTOM:
                 return "stats_scrolled_to_bottom";
-            case STATS_SELECTED_INSTALL_JETPACK:
-                return "stats_install_jetpack_selected";
-            case STATS_CANCELED_INSTALL_JETPACK:
-                return "stats_install_jetpack_canceled";
-            case STATS_COMPLETED_INSTALL_JETPACK:
-                return "stats_install_jetpack_completed";
-            case STATS_SELECTED_CONNECT_JETPACK:
-                return "stats_connect_jetpack_selected";
             case STATS_WIDGET_ADDED:
                 return "stats_widget_added";
             case STATS_WIDGET_REMOVED:
@@ -753,6 +760,8 @@ public class AnalyticsTrackerNosara extends Tracker {
                 return "signup_email_to_login";
             case SIGNUP_MAGIC_LINK_FAILED:
                 return "signup_magic_link_failed";
+            case SIGNUP_MAGIC_LINK_SENT:
+                return "signup_magic_link_sent";
             case SIGNUP_MAGIC_LINK_SUCCEEDED:
                 return "signup_magic_link_succeeded";
             case SIGNUP_SOCIAL_2FA_NEEDED:
@@ -935,14 +944,25 @@ public class AnalyticsTrackerNosara extends Tracker {
                 return "app_permission_denied";
             case SHARE_TO_WP_SUCCEEDED:
                 return "share_to_wp_succeeded";
-            case PLUGIN_REMOVED:
-                return "plugin_removed";
-            case PLUGIN_UPDATED:
-                return "plugin_updated";
+            case PLUGIN_ACTIVATED:
+                return "plugin_activated";
+            case PLUGIN_AUTOUPDATE_ENABLED:
+                return "plugin_autoupdate_enabled";
+            case PLUGIN_AUTOUPDATE_DISABLED:
+                return "plugin_autoupdate_disabled";
+            case PLUGIN_DEACTIVATED:
+                return "plugin_deactivated";
             case PLUGIN_INSTALLED:
                 return "plugin_installed";
+            case PLUGIN_REMOVED:
+                return "plugin_removed";
+            case PLUGIN_SEARCH_PERFORMED:
+                return "plugin_search_performed";
+            case PLUGIN_UPDATED:
+                return "plugin_updated";
             default:
                 return null;
         }
     }
 }
+// CHECKSTYLE END IGNORE

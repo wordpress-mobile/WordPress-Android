@@ -131,7 +131,7 @@ public class SiteCreationSiteDetailsFragment extends SiteCreationBaseFormFragmen
         view.post(new Runnable() {
             @Override
             public void run() {
-                Rect rect = new Rect(); //coordinates to scroll to
+                Rect rect = new Rect(); // coordinates to scroll to
                 view.getHitRect(rect);
                 mScrollView.requestChildRectangleOnScreen(view, rect, false);
             }

@@ -25,18 +25,19 @@ import org.wordpress.android.widgets.WPTextView;
 import javax.inject.Inject;
 
 public class SignInDialogFragment extends DialogFragment {
-    private static String ARG_TITLE = "title";
-    private static String ARG_DESCRIPTION = "message";
-    private static String ARG_IMAGE = "image";
-    private static String ARG_NUMBER_OF_BUTTONS = "number-of-buttons";
-    private static String ARG_FIRST_BUTTON_LABEL = "first-btn-label";
-    private static String ARG_SECOND_BUTTON_LABEL = "second-btn-label";
-    private static String ARG_THIRD_BUTTON_LABEL = "third-btn-label";
-    private static String ARG_SECOND_BUTTON_ACTION = "second-btn-action";
-    private static String ARG_THIRD_BUTTON_ACTION = "third-btn-action";
-    private static String ARG_TELL_ME_MORE_BUTTON_PARAM_NAME_FAQ_ID = "tell-me-more-btn-param-name-faq-id";
-    private static String ARG_TELL_ME_MORE_BUTTON_PARAM_NAME_SECTION_ID = "tell-me-more-btn-param-name-section-id";
-    public static String ARG_OPEN_URL_PARAM = "open-url-param";
+    private static final String ARG_TITLE = "title";
+    private static final String ARG_DESCRIPTION = "message";
+    private static final String ARG_IMAGE = "image";
+    private static final String ARG_NUMBER_OF_BUTTONS = "number-of-buttons";
+    private static final String ARG_FIRST_BUTTON_LABEL = "first-btn-label";
+    private static final String ARG_SECOND_BUTTON_LABEL = "second-btn-label";
+    private static final String ARG_THIRD_BUTTON_LABEL = "third-btn-label";
+    private static final String ARG_SECOND_BUTTON_ACTION = "second-btn-action";
+    private static final String ARG_THIRD_BUTTON_ACTION = "third-btn-action";
+    private static final String ARG_TELL_ME_MORE_BUTTON_PARAM_NAME_FAQ_ID = "tell-me-more-btn-param-name-faq-id";
+    private static final String ARG_TELL_ME_MORE_BUTTON_PARAM_NAME_SECTION_ID =
+            "tell-me-more-btn-param-name-section-id";
+    public static final String ARG_OPEN_URL_PARAM = "open-url-param";
 
     public static final int ACTION_FINISH = 1;
     public static final int ACTION_OPEN_URL = 2;
@@ -66,7 +67,7 @@ public class SignInDialogFragment extends DialogFragment {
                                                    String thirdButtonLabel, int secondButtonAction,
                                                    int thirdButtonAction) {
         return newInstance(title, message, imageSource, numberOfButtons, firstButtonLabel, secondButtonLabel,
-                thirdButtonLabel, secondButtonAction, thirdButtonAction, "", "");
+                           thirdButtonLabel, secondButtonAction, thirdButtonAction, "", "");
     }
 
     public static SignInDialogFragment newInstance(String title, String message, int imageSource, int numberOfButtons,
@@ -181,9 +182,11 @@ public class SignInDialogFragment extends DialogFragment {
                         HelpshiftHelper.ENTERED_URL_KEY));
                 HelpshiftHelper.getInstance().addMetaData(MetadataKey.USER_ENTERED_USERNAME, arguments.getString(
                         HelpshiftHelper.ENTERED_USERNAME_KEY));
+                HelpshiftHelper.getInstance().addMetaData(MetadataKey.USER_ENTERED_EMAIL, arguments.getString(
+                        HelpshiftHelper.ENTERED_EMAIL_KEY));
                 Tag origin = (Tag) arguments.getSerializable(HelpshiftHelper.ORIGIN_KEY);
                 HelpshiftHelper.getInstance().showConversation(getActivity(), mSiteStore,
-                        origin, mAccountStore.getAccount().getUserName());
+                                                               origin, mAccountStore.getAccount().getUserName());
                 dismissAllowingStateLoss();
                 break;
             case ACTION_OPEN_APPLICATION_LOG:

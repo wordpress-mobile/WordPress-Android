@@ -1,13 +1,12 @@
 package org.wordpress.android.util;
 
-import static android.content.Context.ACCESSIBILITY_SERVICE;
-
 import android.content.Context;
 import android.support.design.widget.Snackbar;
 import android.view.accessibility.AccessibilityManager;
 
-public class AccessibilityUtils {
+import static android.content.Context.ACCESSIBILITY_SERVICE;
 
+public class AccessibilityUtils {
     private static final int SNACKBAR_WITH_ACTION_DURATION_IN_MILLIS = 10000;
 
     public static boolean isAccessibilityEnabled(Context ctx) {

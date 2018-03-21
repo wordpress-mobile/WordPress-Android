@@ -20,7 +20,8 @@ import org.wordpress.android.util.ToastUtils;
 
 import javax.inject.Inject;
 
-public class PublicizeDetailFragment extends PublicizeBaseFragment implements PublicizeConnectionAdapter.OnAdapterLoadedListener {
+public class PublicizeDetailFragment extends PublicizeBaseFragment
+        implements PublicizeConnectionAdapter.OnAdapterLoadedListener {
     private SiteModel mSite;
     private String mServiceId;
 
@@ -92,7 +93,9 @@ public class PublicizeDetailFragment extends PublicizeBaseFragment implements Pu
     }
 
     public void loadData() {
-        if (!isAdded()) return;
+        if (!isAdded()) {
+            return;
+        }
 
         mService = PublicizeTable.getService(mServiceId);
         if (mService == null) {
@@ -138,7 +141,9 @@ public class PublicizeDetailFragment extends PublicizeBaseFragment implements Pu
 
     @Override
     public void onAdapterLoaded(boolean isEmpty) {
-        if (!isAdded()) return;
+        if (!isAdded()) {
+            return;
+        }
 
         mConnectionsCardView.setVisibility(isEmpty ? View.GONE : View.VISIBLE);
 

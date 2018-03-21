@@ -1,5 +1,6 @@
 package org.wordpress.android.ui.prefs;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.MenuItem;
@@ -10,18 +11,24 @@ import org.wordpress.android.Constants;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.ui.ActivityLauncher;
+import org.wordpress.android.util.LocaleManager;
 import org.wordpress.android.widgets.WPTextView;
 
 import java.util.Calendar;
 
 public class AboutActivity extends AppCompatActivity implements OnClickListener {
     @Override
+    protected void attachBaseContext(Context newBase) {
+        super.attachBaseContext(LocaleManager.setLocale(newBase));
+    }
+
+    @Override
     public void onCreate(Bundle icicle) {
         super.onCreate(icicle);
         setContentView(R.layout.about_activity);
 
         WPTextView version = (WPTextView) findViewById(R.id.about_version);
-        version.setText(getString(R.string.version) + " " + WordPress.versionName);
+        version.setText(getString(R.string.version_with_name_param, WordPress.versionName));
 
         WPTextView tos = (WPTextView) findViewById(R.id.about_tos);
         tos.setOnClickListener(this);
@@ -30,10 +37,12 @@ public class AboutActivity extends AppCompatActivity implements OnClickListener 
         pp.setOnClickListener(this);
 
         WPTextView publisher = (WPTextView) findViewById(R.id.about_publisher);
-        publisher.setText(getString(R.string.publisher) + " " + getString(R.string.automattic_inc));
+        publisher.setText(getString(R.string.publisher_with_company_param, getString(R.string.automattic_inc)));
 
         WPTextView copyright = (WPTextView) findViewById(R.id.about_copyright);
-        copyright.setText("©" + Calendar.getInstance().get(Calendar.YEAR) + " " + getString(R.string.automattic_inc));
+        copyright.setText(
+                getString(R.string.copyright_with_year_and_company_params, Calendar.getInstance().get(Calendar.YEAR),
+                        getString(R.string.automattic_inc)));
 
         WPTextView about = (WPTextView) findViewById(R.id.about_url);
         about.setOnClickListener(this);

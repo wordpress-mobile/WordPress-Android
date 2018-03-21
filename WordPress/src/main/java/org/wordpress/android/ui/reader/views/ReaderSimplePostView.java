@@ -26,7 +26,6 @@ import org.wordpress.android.widgets.WPNetworkImageView;
  * single simple post view
  */
 public class ReaderSimplePostView extends LinearLayout {
-
     public interface OnSimplePostClickListener {
         void onSimplePostClick(View v, long siteId, long postId);
     }
@@ -63,7 +62,8 @@ public class ReaderSimplePostView extends LinearLayout {
                          boolean isGlobal,
                          final OnSimplePostClickListener listener) {
         mSimplePost = simplePost;
-        int avatarSize = DisplayUtils.dpToPx(getContext(), getResources().getDimensionPixelSize(R.dimen.avatar_sz_extra_small));
+        int avatarSize =
+                DisplayUtils.dpToPx(getContext(), getResources().getDimensionPixelSize(R.dimen.avatar_sz_extra_small));
 
         LayoutInflater inflater = LayoutInflater.from(getContext());
 
@@ -117,8 +117,8 @@ public class ReaderSimplePostView extends LinearLayout {
             public void onClick(View view) {
                 if (listener != null) {
                     listener.onSimplePostClick(view,
-                            mSimplePost.getSiteId(),
-                            mSimplePost.getPostId());
+                                               mSimplePost.getSiteId(),
+                                               mSimplePost.getPostId());
                 }
             }
         });
@@ -127,20 +127,25 @@ public class ReaderSimplePostView extends LinearLayout {
     }
 
     private void toggleFollowStatus(final ReaderFollowButton btnFollow) {
-        if (!NetworkUtils.checkConnection(getContext())) return;
+        if (!NetworkUtils.checkConnection(getContext())) {
+            return;
+        }
 
         final boolean isAskingToFollow = !mSimplePost.isFollowing();
 
         ReaderActions.ActionListener listener = new ReaderActions.ActionListener() {
             @Override
             public void onActionResult(boolean succeeded) {
-                if (getContext() == null) return;
+                if (getContext() == null) {
+                    return;
+                }
 
                 btnFollow.setEnabled(true);
                 if (succeeded) {
                     mSimplePost.setIsFollowing(isAskingToFollow);
                 } else {
-                    int errResId = isAskingToFollow ? R.string.reader_toast_err_follow_blog : R.string.reader_toast_err_unfollow_blog;
+                    int errResId = isAskingToFollow ? R.string.reader_toast_err_follow_blog
+                            : R.string.reader_toast_err_unfollow_blog;
                     ToastUtils.showToast(getContext(), errResId);
                     btnFollow.setIsFollowed(!isAskingToFollow);
                 }

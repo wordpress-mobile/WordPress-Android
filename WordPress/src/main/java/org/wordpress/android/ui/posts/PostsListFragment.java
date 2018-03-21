@@ -77,7 +77,6 @@ public class PostsListFragment extends Fragment
         PostsListAdapter.OnLoadMoreListener,
         PostsListAdapter.OnPostSelectedListener,
         PostsListAdapter.OnPostButtonClickListener {
-
     public static final int POSTS_REQUEST_COUNT = 20;
     public static final String TAG = "posts_list_fragment_tag";
 
@@ -226,21 +225,25 @@ public class PostsListFragment extends Fragment
         }
 
         final PostModel post = mPostStore.
-                getPostByLocalPostId(data.getIntExtra(EditPostActivity.EXTRA_POST_LOCAL_ID, 0));
+                                                 getPostByLocalPostId(
+                                                         data.getIntExtra(EditPostActivity.EXTRA_POST_LOCAL_ID, 0));
 
-        if (post == null) {
+        if ((post == null)
+                && !data.getBooleanExtra(EditPostActivity.EXTRA_IS_DISCARDABLE, false)) {
             ToastUtils.showToast(getActivity(), R.string.post_not_found, ToastUtils.Duration.LONG);
             return;
         }
 
         UploadUtils.handleEditPostResultSnackbars(getActivity(),
-                getActivity().findViewById(R.id.coordinator), resultCode, data, post, mSite,
-                new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        UploadUtils.publishPost(getActivity(), post, mSite, mDispatcher);
-                    }
-                });
+                                                  getActivity().findViewById(R.id.coordinator), resultCode, data, post,
+                                                  mSite,
+                                                  new View.OnClickListener() {
+                                                      @Override
+                                                      public void onClick(View v) {
+                                                          UploadUtils
+                                                                  .publishPost(getActivity(), post, mSite, mDispatcher);
+                                                      }
+                                                  });
     }
 
     private void initSwipeToRefreshHelper(View view) {
@@ -260,7 +263,7 @@ public class PostsListFragment extends Fragment
                         requestPosts(false);
                     }
                 }
-        );
+                                                         );
     }
 
     private @Nullable PostsListAdapter getPostListAdapter() {
@@ -286,7 +289,9 @@ public class PostsListFragment extends Fragment
     }
 
     private void newPost() {
-        if (!isAdded()) return;
+        if (!isAdded()) {
+            return;
+        }
         ActivityLauncher.addNewPostOrPageForResult(getActivity(), mSite, mIsPage, false);
     }
 
@@ -297,7 +302,7 @@ public class PostsListFragment extends Fragment
             mRecyclerView.setAdapter(getPostListAdapter());
         }
 
-        // always (re)load when resumed to reflect changes made elsewhere
+        // always (re) load when resumed to reflect changes made elsewhere
         loadPosts(LoadMode.IF_CHANGED);
 
         // scale in the fab after a brief delay if it's not already showing
@@ -395,8 +400,8 @@ public class PostsListFragment extends Fragment
                 stringId = R.string.no_network_message;
                 break;
             case PERMISSION_ERROR:
-                stringId = mIsPage ? R.string.error_refresh_unauthorized_pages :
-                        R.string.error_refresh_unauthorized_posts;
+                stringId = mIsPage ? R.string.error_refresh_unauthorized_pages
+                        : R.string.error_refresh_unauthorized_posts;
                 break;
             case GENERIC_ERROR:
                 stringId = mIsPage ? R.string.error_refresh_pages : R.string.error_refresh_posts;
@@ -406,8 +411,8 @@ public class PostsListFragment extends Fragment
         }
 
         mEmptyViewTitle.setText(getText(stringId));
-        mEmptyViewImage.setVisibility(emptyViewMessageType == EmptyViewMessageType.NO_CONTENT ? View.VISIBLE :
-                View.GONE);
+        mEmptyViewImage.setVisibility(emptyViewMessageType == EmptyViewMessageType.NO_CONTENT ? View.VISIBLE
+                                              : View.GONE);
         mEmptyView.setVisibility(isPostAdapterEmpty() ? View.VISIBLE : View.GONE);
     }
 
@@ -502,7 +507,9 @@ public class PostsListFragment extends Fragment
      */
     @Override
     public void onPostButtonClicked(int buttonType, PostModel postClicked) {
-        if (!isAdded()) return;
+        if (!isAdded()) {
+            return;
+        }
 
         // Get the latest version of the post, in case it's changed since the last time we refreshed the post list
         final PostModel post = mPostStore.getPostByLocalPostId(postClicked.getId());
@@ -529,7 +536,7 @@ public class PostsListFragment extends Fragment
             case PostListButton.BUTTON_SUBMIT:
             case PostListButton.BUTTON_SYNC:
             case PostListButton.BUTTON_PUBLISH:
-                UploadUtils.publishPost(getActivity(), post, mSite, mDispatcher);
+                showPublishConfirmationDialog(post);
                 break;
             case PostListButton.BUTTON_VIEW:
                 ActivityLauncher.browsePostOrPage(getActivity(), mSite, post);
@@ -543,10 +550,22 @@ public class PostsListFragment extends Fragment
             case PostListButton.BUTTON_TRASH:
             case PostListButton.BUTTON_DELETE:
                 if (!UploadService.isPostUploadingOrQueued(post)) {
-                    trashPost(post);
+                    AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+                    builder.setTitle(post.isPage() ? getString(R.string.delete_page) : getString(R.string.delete_post))
+                            .setMessage(post.isPage() ? getString(R.string.dialog_confirm_delete_page)
+                                                : getString(R.string.dialog_confirm_delete_post))
+                            .setPositiveButton(R.string.delete, new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialogInterface, int i) {
+                                    trashPost(post);
+                                }
+                            })
+                            .setNegativeButton(R.string.cancel, null)
+                            .setCancelable(true);
+                    builder.create().show();
                 } else {
                     AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-                    builder.setTitle(getResources().getText(R.string.delete_post))
+                    builder.setTitle(post.isPage() ? getText(R.string.delete_page) : getText(R.string.delete_post))
                             .setMessage(R.string.dialog_confirm_cancel_post_media_uploading)
                             .setPositiveButton(R.string.delete, new DialogInterface.OnClickListener() {
                                 @Override
@@ -562,12 +581,28 @@ public class PostsListFragment extends Fragment
         }
     }
 
+    private void showPublishConfirmationDialog(final PostModel post) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+        builder.setTitle(getResources().getText(R.string.dialog_confirm_publish_title))
+               .setMessage(post.isPage() ? getString(R.string.dialog_confirm_publish_message_page)
+                                   : getString(R.string.dialog_confirm_publish_message_post))
+               .setPositiveButton(R.string.dialog_confirm_publish_yes, new DialogInterface.OnClickListener() {
+                   @Override
+                   public void onClick(DialogInterface dialogInterface, int i) {
+                       UploadUtils.publishPost(getActivity(), post, mSite, mDispatcher);
+                   }
+               })
+               .setNegativeButton(R.string.cancel, null)
+               .setCancelable(true);
+        builder.create().show();
+    }
+
     /*
      * send the passed post to the trash with undo
      */
     private void trashPost(final PostModel post) {
-        //only check if network is available in case this is not a local draft - local drafts have not yet
-        //been posted to the server so they can be trashed w/o further care
+        // only check if network is available in case this is not a local draft - local drafts have not yet
+        // been posted to the server so they can be trashed w/o further care
         if (!isAdded() || (!post.isLocalDraft() && !NetworkUtils.checkConnection(getActivity()))
             || getPostListAdapter() == null) {
             return;
@@ -602,7 +637,7 @@ public class PostsListFragment extends Fragment
 
         Snackbar snackbar = Snackbar.make(getView().findViewById(R.id.coordinator), text,
                 AccessibilityUtils.getSnackbarDuration(getActivity()))
-                .setAction(R.string.undo, undoListener);
+                                    .setAction(R.string.undo, undoListener);
 
         // wait for the undo snackbar to disappear before actually deleting the post
         snackbar.setCallback(new Snackbar.Callback() {
@@ -705,8 +740,8 @@ public class PostsListFragment extends Fragment
         if (isAdded() && event.post != null && event.post.getLocalSiteId() == mSite.getId()) {
             loadPosts(LoadMode.FORCED);
             UploadUtils.onPostUploadedSnackbarHandler(getActivity(),
-                    getActivity().findViewById(R.id.coordinator),
-                    event.isError(), event.post, null, mSite, mDispatcher);
+                                                      getActivity().findViewById(R.id.coordinator),
+                                                      event.isError(), event.post, null, mSite, mDispatcher);
         }
     }
 
@@ -739,7 +774,7 @@ public class PostsListFragment extends Fragment
 
         PostModel post = mPostStore.getPostByLocalPostId(event.media.getLocalPostId());
         if (post != null) {
-            if ((event.media.isError() || event.canceled)){
+            if ((event.media.isError() || event.canceled)) {
                 // if a media is cancelled or ends in error, and the post is not uploading nor queued,
                 // (meaning there is no other pending media to be uploaded for this post)
                 // then we should refresh it to show its new state
@@ -768,12 +803,12 @@ public class PostsListFragment extends Fragment
         EventBus.getDefault().removeStickyEvent(event);
         if (event.post != null) {
             UploadUtils.onPostUploadedSnackbarHandler(getActivity(),
-                    getActivity().findViewById(R.id.coordinator), true, event.post, event.errorMessage, mSite, mDispatcher);
-        }
-        else if (event.mediaModelList != null && !event.mediaModelList.isEmpty()) {
+                                                      getActivity().findViewById(R.id.coordinator), true, event.post,
+                                                      event.errorMessage, mSite, mDispatcher);
+        } else if (event.mediaModelList != null && !event.mediaModelList.isEmpty()) {
             UploadUtils.onMediaUploadedSnackbarHandler(getActivity(),
-                    getActivity().findViewById(R.id.coordinator), true,
-                    event.mediaModelList, mSite, event.errorMessage);
+                                                       getActivity().findViewById(R.id.coordinator), true,
+                                                       event.mediaModelList, mSite, event.errorMessage);
         }
     }
 
@@ -782,8 +817,8 @@ public class PostsListFragment extends Fragment
         EventBus.getDefault().removeStickyEvent(event);
         if (event.mediaModelList != null && !event.mediaModelList.isEmpty()) {
             UploadUtils.onMediaUploadedSnackbarHandler(getActivity(),
-                    getActivity().findViewById(R.id.coordinator), false,
-                    event.mediaModelList, mSite, event.successMessage);
+                                                       getActivity().findViewById(R.id.coordinator), false,
+                                                       event.mediaModelList, mSite, event.successMessage);
         }
     }
 
@@ -795,15 +830,15 @@ public class PostsListFragment extends Fragment
 
         if (event.mediaModelList != null && !event.mediaModelList.isEmpty()) {
             // if there' a Post to which the retried media belongs, clear their status
-            Set<PostModel> postsToRefresh = PostUtils.getPostsThatIncludeAnyOfTheseMedia(mPostStore, event.mediaModelList);
-            // now that we know which Posts  to refresh, let's do it
+            Set<PostModel> postsToRefresh =
+                    PostUtils.getPostsThatIncludeAnyOfTheseMedia(mPostStore, event.mediaModelList);
+            // now that we know which Posts to refresh, let's do it
             for (PostModel post : postsToRefresh) {
                 int position = getPostListAdapter().getPositionForPost(post);
                 if (position > -1) {
                     getPostListAdapter().notifyItemChanged(position);
                 }
             }
-
         }
     }
 }

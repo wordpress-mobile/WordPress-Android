@@ -2,7 +2,7 @@ package org.wordpress.android.widgets;
 
 /**
  * A Drawable object used to display text content.
- *
+ * <p>
  * Based on https://github.com/devunwired/textdrawable
  */
 
@@ -31,13 +31,12 @@ import android.util.TypedValue;
  * Optionally, a {@link Path} may be supplied on which to draw the text.
  *
  * A TextDrawable has an intrinsic size equal to that required to draw all
- * the text it has been supplied, when possible.  In cases where a {@link Path}
+ * the text it has been supplied, when possible. In cases where a {@link Path}
  * has been supplied, the caller must explicitly call
  * {@link #setBounds(android.graphics.Rect) setBounds()} to provide the Drawable
  * size based on the Path constraints.
  */
 public class TextDrawable extends Drawable {
-
     /* Platform XML constants for typeface */
     private static final int SANS = 1;
     private static final int SERIF = 2;
@@ -61,10 +60,10 @@ public class TextDrawable extends Drawable {
     private CharSequence mText = "";
 
     /* Attribute lists to pull default values from the current theme */
-    private static final int[] themeAttributes = {
+    private static final int[] THEME_ATTRIBUTES = {
             android.R.attr.textAppearance
     };
-    private static final int[] appearanceAttributes = {
+    private static final int[] APPEARANCE_ATTRIBUTES = {
             android.R.attr.textSize,
             android.R.attr.typeface,
             android.R.attr.textStyle,
@@ -74,11 +73,11 @@ public class TextDrawable extends Drawable {
 
     public TextDrawable(Context context) {
         super();
-        //Used to load and scale resource items
+        // Used to load and scale resource items
         mResources = context.getResources();
-        //Definition of this drawables size
+        // Definition of this drawables size
         mTextBounds = new Rect();
-        //Paint to use for the text
+        // Paint to use for the text
         mTextPaint = new TextPaint(Paint.ANTI_ALIAS_FLAG);
         mTextPaint.density = mResources.getDisplayMetrics().density;
         mTextPaint.setDither(true);
@@ -88,29 +87,29 @@ public class TextDrawable extends Drawable {
         int styleIndex = -1;
         int typefaceIndex = -1;
 
-        //Set default parameters from the current theme
-        TypedArray a = context.getTheme().obtainStyledAttributes(themeAttributes);
+        // Set default parameters from the current theme
+        TypedArray a = context.getTheme().obtainStyledAttributes(THEME_ATTRIBUTES);
         int appearanceId = a.getResourceId(0, -1);
         a.recycle();
 
         TypedArray ap = null;
         if (appearanceId != -1) {
-            ap = context.obtainStyledAttributes(appearanceId, appearanceAttributes);
+            ap = context.obtainStyledAttributes(appearanceId, APPEARANCE_ATTRIBUTES);
         }
         if (ap != null) {
-            for (int i=0; i < ap.getIndexCount(); i++) {
+            for (int i = 0; i < ap.getIndexCount(); i++) {
                 int attr = ap.getIndex(i);
                 switch (attr) {
-                    case 0: //Text Size
+                    case 0: // Text Size
                         textSize = a.getDimensionPixelSize(attr, textSize);
                         break;
-                    case 1: //Typeface
+                    case 1: // Typeface
                         typefaceIndex = a.getInt(attr, typefaceIndex);
                         break;
-                    case 2: //Text Style
+                    case 2: // Text Style
                         styleIndex = a.getInt(attr, styleIndex);
                         break;
-                    case 3: //Text Color
+                    case 3: // Text Color
                         textColor = a.getColorStateList(attr);
                         break;
                     default:
@@ -144,7 +143,7 @@ public class TextDrawable extends Drawable {
 
 
     public void setText(int text) {
-       this.setText(String.valueOf(text));
+        this.setText(String.valueOf(text));
     }
 
     /**
@@ -152,7 +151,9 @@ public class TextDrawable extends Drawable {
      * @param text Text to display
      */
     public void setText(CharSequence text) {
-        if (text == null) text = "";
+        if (text == null) {
+            text = "";
+        }
 
         mText = text;
 
@@ -174,7 +175,7 @@ public class TextDrawable extends Drawable {
     }
 
     /**
-     * Set the text size.  The value will be interpreted in "sp" units
+     * Set the text size. The value will be interpreted in "sp" units
      * @param size Text size value, in sp
      */
     public void setTextSize(float size) {
@@ -188,7 +189,7 @@ public class TextDrawable extends Drawable {
      */
     public void setTextSize(int unit, float size) {
         float dimension = TypedValue.applyDimension(unit, size,
-                mResources.getDisplayMetrics());
+                                                    mResources.getDisplayMetrics());
         setRawTextSize(dimension);
     }
 
@@ -229,14 +230,14 @@ public class TextDrawable extends Drawable {
     }
 
     /**
-     * Set the text alignment.  The alignment itself is based on the text layout direction.
+     * Set the text alignment. The alignment itself is based on the text layout direction.
      * For LTR text NORMAL is left aligned and OPPOSITE is right aligned.
      * For RTL text, those alignments are reversed.
-     * @param align Text alignment value.  Should be set to one of:
+     * @param align Text alignment value. Should be set to one of:
      *
-     *   {@link Layout.Alignment#ALIGN_NORMAL},
-     *   {@link Layout.Alignment#ALIGN_NORMAL},
-     *   {@link Layout.Alignment#ALIGN_OPPOSITE}.
+     * {@link Layout.Alignment#ALIGN_NORMAL},
+     * {@link Layout.Alignment#ALIGN_NORMAL},
+     * {@link Layout.Alignment#ALIGN_OPPOSITE}.
      */
     public void setTextAlign(Layout.Alignment align) {
         if (mTextAlignment != align) {
@@ -314,7 +315,7 @@ public class TextDrawable extends Drawable {
     }
 
     /**
-     * Optional Path object on which to draw the text.  If this is set,
+     * Optional Path object on which to draw the text. If this is set,
      * TextDrawable cannot properly measure the bounds this drawable will need.
      * You must call {@link #setBounds(int, int, int, int) setBounds()} before
      * applying this TextDrawable to any View.
@@ -333,21 +334,21 @@ public class TextDrawable extends Drawable {
      * the correct bounds when possible.
      */
     private void measureContent() {
-        //If drawing to a path, we cannot measure intrinsic bounds
-        //We must resly on setBounds being called externally
+        // If drawing to a path, we cannot measure intrinsic bounds
+        // We must resly on setBounds being called externally
         if (mTextPath != null) {
-            //Clear any previous measurement
+            // Clear any previous measurement
             mTextLayout = null;
             mTextBounds.setEmpty();
         } else {
-            //Measure text bounds
-            double desired = Math.ceil( Layout.getDesiredWidth(mText, mTextPaint) );
-            mTextLayout = new StaticLayout(mText, mTextPaint, (int)desired,
-                    mTextAlignment, 1.0f, 0.0f, false);
+            // Measure text bounds
+            double desired = Math.ceil(Layout.getDesiredWidth(mText, mTextPaint));
+            mTextLayout = new StaticLayout(mText, mTextPaint, (int) desired,
+                                           mTextAlignment, 1.0f, 0.0f, false);
             mTextBounds.set(0, 0, mTextLayout.getWidth(), mTextLayout.getHeight());
         }
 
-        //We may need to be redrawn
+        // We may need to be redrawn
         invalidateSelf();
     }
 
@@ -358,7 +359,7 @@ public class TextDrawable extends Drawable {
         int newColor = mTextColors.getColorForState(stateSet, Color.WHITE);
         if (mTextPaint.getColor() != newColor) {
             mTextPaint.setColor(newColor);
-            return  true;
+            return true;
         }
 
         return false;
@@ -366,7 +367,7 @@ public class TextDrawable extends Drawable {
 
     @Override
     protected void onBoundsChange(Rect bounds) {
-        //Update the internal bounds in response to any external requests
+        // Update the internal bounds in response to any external requests
         mTextBounds.set(bounds);
     }
 
@@ -381,13 +382,13 @@ public class TextDrawable extends Drawable {
 
     @Override
     protected boolean onStateChange(int[] state) {
-        //Upon state changes, grab the correct text color
+        // Upon state changes, grab the correct text color
         return updateTextColors(state);
     }
 
     @Override
     public int getIntrinsicHeight() {
-        //Return the vertical bounds measured, or -1 if none
+        // Return the vertical bounds measured, or -1 if none
         if (mTextBounds.isEmpty()) {
             return -1;
         } else {
@@ -397,7 +398,7 @@ public class TextDrawable extends Drawable {
 
     @Override
     public int getIntrinsicWidth() {
-        //Return the horizontal bounds measured, or -1 if none
+        // Return the horizontal bounds measured, or -1 if none
         if (mTextBounds.isEmpty()) {
             return -1;
         } else {
@@ -411,10 +412,10 @@ public class TextDrawable extends Drawable {
         final int count = canvas.save();
         canvas.translate(bounds.left, bounds.top);
         if (mTextPath == null) {
-            //Allow the layout to draw the text
+            // Allow the layout to draw the text
             mTextLayout.draw(canvas);
         } else {
-            //Draw directly on the canvas using the supplied path
+            // Draw directly on the canvas using the supplied path
             canvas.drawTextOnPath(mText.toString(), mTextPath, 0, 0, mTextPaint);
         }
         canvas.restoreToCount(count);
@@ -438,5 +439,4 @@ public class TextDrawable extends Drawable {
             mTextPaint.setColorFilter(cf);
         }
     }
-
 }

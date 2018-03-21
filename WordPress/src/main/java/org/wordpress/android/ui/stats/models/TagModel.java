@@ -11,7 +11,6 @@ public class TagModel implements Serializable {
     private String mType;
 
     public TagModel(JSONObject tagJSON) throws JSONException {
-
         this.mName = tagJSON.getString("name");
         this.mType = tagJSON.getString("type");
         this.mLink = tagJSON.getString("link");

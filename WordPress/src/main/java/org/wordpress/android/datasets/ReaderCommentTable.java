@@ -15,43 +15,43 @@ import org.wordpress.android.util.SqlUtils;
  */
 public class ReaderCommentTable {
     private static final String COLUMN_NAMES =
-                      " blog_id,"
-                    + " post_id,"
-                    + " comment_id,"
-                    + " parent_id,"
-                    + " author_name,"
-                    + " author_avatar,"
-                    + " author_url,"
-                    + " author_id,"
-                    + " author_blog_id,"
-                    + " published,"
-                    + " timestamp,"
-                    + " status,"
-                    + " text,"
-                    + " num_likes,"
-                    + " is_liked,"
-                    + " page_number";
+            " blog_id,"
+            + " post_id,"
+            + " comment_id,"
+            + " parent_id,"
+            + " author_name,"
+            + " author_avatar,"
+            + " author_url,"
+            + " author_id,"
+            + " author_blog_id,"
+            + " published,"
+            + " timestamp,"
+            + " status,"
+            + " text,"
+            + " num_likes,"
+            + " is_liked,"
+            + " page_number";
 
 
     protected static void createTables(SQLiteDatabase db) {
         db.execSQL("CREATE TABLE tbl_comments ("
-                + " blog_id             INTEGER DEFAULT 0,"
-                + " post_id             INTEGER DEFAULT 0,"
-                + "	comment_id		    INTEGER DEFAULT 0,"
-                + " parent_id           INTEGER DEFAULT 0,"
-                + "	author_name	        TEXT,"
-                + " author_avatar       TEXT,"
-                + "	author_url	        TEXT,"
-                + " author_id           INTEGER DEFAULT 0,"
-                + " author_blog_id      INTEGER DEFAULT 0,"
-                + " published           TEXT,"
-                + " timestamp           INTEGER DEFAULT 0,"
-                + " status              TEXT,"
-                + " text                TEXT,"
-                + " num_likes           INTEGER DEFAULT 0,"
-                + " is_liked            INTEGER DEFAULT 0,"
-                + " page_number         INTEGER DEFAULT 0,"
-                + " PRIMARY KEY (blog_id, post_id, comment_id))");
+                   + " blog_id INTEGER DEFAULT 0,"
+                   + " post_id INTEGER DEFAULT 0,"
+                   + " comment_id INTEGER DEFAULT 0,"
+                   + " parent_id INTEGER DEFAULT 0,"
+                   + " author_name TEXT,"
+                   + " author_avatar TEXT,"
+                   + " author_url TEXT,"
+                   + " author_id INTEGER DEFAULT 0,"
+                   + " author_blog_id INTEGER DEFAULT 0,"
+                   + " published TEXT,"
+                   + " timestamp INTEGER DEFAULT 0,"
+                   + " status TEXT,"
+                   + " text TEXT,"
+                   + " num_likes INTEGER DEFAULT 0,"
+                   + " is_liked INTEGER DEFAULT 0,"
+                   + " page_number INTEGER DEFAULT 0,"
+                   + " PRIMARY KEY (blog_id, post_id, comment_id))");
         db.execSQL("CREATE INDEX idx_page_number ON tbl_comments(page_number)");
     }
 
@@ -75,12 +75,12 @@ public class ReaderCommentTable {
     }
 
     public static boolean isEmpty() {
-        return (getNumComments()==0);
+        return (getNumComments() == 0);
     }
 
     private static int getNumComments() {
         long count = SqlUtils.getRowCount(ReaderDatabase.getReadableDb(), "tbl_comments");
-        return (int)count;
+        return (int) count;
     }
 
     /*
@@ -89,7 +89,7 @@ public class ReaderCommentTable {
     public static int getLastPageNumberForPost(long blogId, long postId) {
         String[] args = {Long.toString(blogId), Long.toString(postId)};
         return SqlUtils.intForQuery(ReaderDatabase.getReadableDb(),
-                "SELECT MAX(page_number) FROM tbl_comments WHERE blog_id=? AND post_id=?", args);
+                                    "SELECT MAX(page_number) FROM tbl_comments WHERE blog_id=? AND post_id=?", args);
     }
 
     /*
@@ -98,7 +98,9 @@ public class ReaderCommentTable {
     public static int getPageNumberForComment(long blogId, long postId, long commentId) {
         String[] args = {Long.toString(blogId), Long.toString(postId), Long.toString(commentId)};
         return SqlUtils.intForQuery(ReaderDatabase.getReadableDb(),
-                "SELECT page_number FROM tbl_comments WHERE blog_id=? AND post_id=? AND comment_id=?", args);
+                                    "SELECT page_number FROM tbl_comments "
+                                    + " WHERE blog_id=? AND post_id=? AND comment_id=?",
+                                    args);
     }
 
     /*
@@ -119,9 +121,11 @@ public class ReaderCommentTable {
         }
         return getNumCommentsForPost(post.blogId, post.postId);
     }
+
     private static int getNumCommentsForPost(long blogId, long postId) {
         String[] args = {Long.toString(blogId), Long.toString(postId)};
-        return SqlUtils.intForQuery(ReaderDatabase.getReadableDb(), "SELECT count(*) FROM tbl_comments WHERE blog_id=? AND post_id=?", args);
+        return SqlUtils.intForQuery(ReaderDatabase.getReadableDb(),
+                                    "SELECT count(*) FROM tbl_comments WHERE blog_id=? AND post_id=?", args);
     }
 
     public static ReaderCommentList getCommentsForPost(ReaderPost post) {
@@ -130,7 +134,8 @@ public class ReaderCommentTable {
         }
 
         String[] args = {Long.toString(post.blogId), Long.toString(post.postId)};
-        Cursor c = ReaderDatabase.getReadableDb().rawQuery("SELECT * FROM tbl_comments WHERE blog_id=? AND post_id=? ORDER BY timestamp", args);
+        Cursor c = ReaderDatabase.getReadableDb().rawQuery(
+                "SELECT * FROM tbl_comments WHERE blog_id=? AND post_id=? ORDER BY timestamp", args);
         try {
             ReaderCommentList comments = new ReaderCommentList();
             if (c.moveToFirst()) {
@@ -160,33 +165,31 @@ public class ReaderCommentTable {
 
         SQLiteDatabase db = ReaderDatabase.getWritableDb();
         db.beginTransaction();
-        SQLiteStatement stmt = db.compileStatement("INSERT OR REPLACE INTO tbl_comments ("
-                                                  + COLUMN_NAMES
-                                                  + ") VALUES (?1,?2,?3,?4,?5,?6,?7,?8,?9,?10,?11,?12,?13,?14,?15,?16)");
+        SQLiteStatement stmt = db.compileStatement("INSERT OR REPLACE INTO tbl_comments (" + COLUMN_NAMES + ") "
+                                                   + "VALUES (?1,?2,?3,?4,?5,?6,?7,?8,?9,?10,?11,?12,?13,?14,?15,?16)");
         try {
-            for (ReaderComment comment: comments) {
-                stmt.bindLong  (1,  comment.blogId);
-                stmt.bindLong  (2,  comment.postId);
-                stmt.bindLong  (3,  comment.commentId);
-                stmt.bindLong  (4,  comment.parentId);
-                stmt.bindString(5,  comment.getAuthorName());
-                stmt.bindString(6,  comment.getAuthorAvatar());
-                stmt.bindString(7,  comment.getAuthorUrl());
-                stmt.bindLong  (8,  comment.authorId);
-                stmt.bindLong  (9,  comment.authorBlogId);
+            for (ReaderComment comment : comments) {
+                stmt.bindLong(1, comment.blogId);
+                stmt.bindLong(2, comment.postId);
+                stmt.bindLong(3, comment.commentId);
+                stmt.bindLong(4, comment.parentId);
+                stmt.bindString(5, comment.getAuthorName());
+                stmt.bindString(6, comment.getAuthorAvatar());
+                stmt.bindString(7, comment.getAuthorUrl());
+                stmt.bindLong(8, comment.authorId);
+                stmt.bindLong(9, comment.authorBlogId);
                 stmt.bindString(10, comment.getPublished());
-                stmt.bindLong  (11, comment.timestamp);
+                stmt.bindLong(11, comment.timestamp);
                 stmt.bindString(12, comment.getStatus());
                 stmt.bindString(13, comment.getText());
-                stmt.bindLong  (14, comment.numLikes);
-                stmt.bindLong  (15, SqlUtils.boolToSql(comment.isLikedByCurrentUser));
-                stmt.bindLong  (16, comment.pageNumber);
+                stmt.bindLong(14, comment.numLikes);
+                stmt.bindLong(15, SqlUtils.boolToSql(comment.isLikedByCurrentUser));
+                stmt.bindLong(16, comment.pageNumber);
 
                 stmt.execute();
             }
 
             db.setTransactionSuccessful();
-
         } finally {
             db.endTransaction();
             SqlUtils.closeStatement(stmt);
@@ -194,7 +197,7 @@ public class ReaderCommentTable {
     }
 
     public static ReaderComment getComment(long blogId, long postId, long commentId) {
-        String[] args = new String[] {Long.toString(blogId), Long.toString(postId), Long.toString(commentId)};
+        String[] args = new String[]{Long.toString(blogId), Long.toString(postId), Long.toString(commentId)};
         Cursor c = ReaderDatabase.getReadableDb().rawQuery(
                 "SELECT * FROM tbl_comments WHERE blog_id=? AND post_id=? AND comment_id=? LIMIT 1", args);
         try {
@@ -227,7 +230,7 @@ public class ReaderCommentTable {
         StringBuilder sb = new StringBuilder(
                 "SELECT COUNT(*) FROM tbl_comments WHERE blog_id=? AND post_id=? AND comment_id IN (");
         boolean isFirst = true;
-        for (ReaderComment comment: comments) {
+        for (ReaderComment comment : comments) {
             if (isFirst) {
                 isFirst = false;
             } else {
@@ -238,7 +241,7 @@ public class ReaderCommentTable {
         sb.append(")");
 
         String[] args = {Long.toString(comments.get(0).blogId),
-                         Long.toString(comments.get(0).postId)};
+                Long.toString(comments.get(0).postId)};
         int numExisting = SqlUtils.intForQuery(ReaderDatabase.getReadableDb(), sb.toString(), args);
         return numExisting != comments.size();
     }
@@ -248,11 +251,11 @@ public class ReaderCommentTable {
      */
     public static int getNumLikesForComment(long blogId, long postId, long commentId) {
         String[] args = {Long.toString(blogId),
-                         Long.toString(postId),
-                         Long.toString(commentId)};
+                Long.toString(postId),
+                Long.toString(commentId)};
         return SqlUtils.intForQuery(ReaderDatabase.getReadableDb(),
-                "SELECT num_likes FROM tbl_comments WHERE blog_id=? AND post_id=? AND comment_id=?",
-                args);
+                                    "SELECT num_likes FROM tbl_comments WHERE blog_id=? AND post_id=? AND comment_id=?",
+                                    args);
     }
 
     /*
@@ -264,9 +267,9 @@ public class ReaderCommentTable {
         }
 
         String[] args =
-               {Long.toString(comment.blogId),
-                Long.toString(comment.postId),
-                Long.toString(comment.commentId)};
+                {Long.toString(comment.blogId),
+                        Long.toString(comment.postId),
+                        Long.toString(comment.commentId)};
 
         ContentValues values = new ContentValues();
         values.put("num_likes", numLikes);
@@ -285,13 +288,14 @@ public class ReaderCommentTable {
         }
         return isCommentLikedByCurrentUser(comment.blogId, comment.postId, comment.commentId);
     }
+
     public static boolean isCommentLikedByCurrentUser(long blogId, long postId, long commentId) {
         String[] args = {Long.toString(blogId),
                 Long.toString(postId),
                 Long.toString(commentId)};
         return SqlUtils.boolForQuery(ReaderDatabase.getReadableDb(),
-                "SELECT is_liked FROM tbl_comments WHERE blog_id=? AND post_id=? and comment_id=?",
-                args);
+                                     "SELECT is_liked FROM tbl_comments WHERE blog_id=? AND post_id=? and comment_id=?",
+                                     args);
     }
 
     public static boolean commentExists(long blogId, long postId, long commentId) {
@@ -300,7 +304,7 @@ public class ReaderCommentTable {
                 Long.toString(commentId)};
 
         return SqlUtils.boolForQuery(ReaderDatabase.getReadableDb(),
-                "SELECT 1 FROM tbl_comments WHERE blog_id=? AND post_id=? AND comment_id=?", args);
+                                     "SELECT 1 FROM tbl_comments WHERE blog_id=? AND post_id=? AND comment_id=?", args);
     }
 
     private static ReaderComment getCommentFromCursor(Cursor c) {

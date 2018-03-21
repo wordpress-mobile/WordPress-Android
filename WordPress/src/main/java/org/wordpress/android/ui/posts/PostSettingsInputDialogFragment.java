@@ -57,8 +57,8 @@ public class PostSettingsInputDialogFragment extends DialogFragment implements T
         outState.putBoolean(DISABLE_EMPTY_INPUT_TAG, mDisableEmptyInput);
     }
 
-    public static PostSettingsInputDialogFragment newInstance(String currentText, String title, String hint
-            , boolean disableEmptyInput) {
+    public static PostSettingsInputDialogFragment newInstance(String currentText, String title, String hint,
+                                                              boolean disableEmptyInput) {
         PostSettingsInputDialogFragment dialogFragment = new PostSettingsInputDialogFragment();
         Bundle args = new Bundle();
         args.putString(INPUT_TAG, currentText);
@@ -79,6 +79,7 @@ public class PostSettingsInputDialogFragment extends DialogFragment implements T
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity(), R.style.Calypso_AlertDialog);
         LayoutInflater layoutInflater = LayoutInflater.from(getActivity());
+        //noinspection InflateParams
         View dialogView = layoutInflater.inflate(R.layout.post_settings_input_dialog, null);
         builder.setView(dialogView);
         final EditText editText = (EditText) dialogView.findViewById(R.id.post_settings_input_dialog_edit_text);

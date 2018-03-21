@@ -44,6 +44,8 @@ import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.widgets.WPNetworkImageView;
 
+import java.util.Date;
+
 import javax.inject.Inject;
 
 public class ReaderCommentAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
@@ -86,46 +88,46 @@ public class ReaderCommentAdapter extends RecyclerView.Adapter<RecyclerView.View
     private ReaderActions.DataRequestedListener mDataRequestedListener;
 
     class CommentHolder extends RecyclerView.ViewHolder {
-        private final ViewGroup container;
-        private final TextView txtAuthor;
-        private final TextView txtText;
-        private final TextView txtDate;
+        private final ViewGroup mContainer;
+        private final TextView mTxtAuthor;
+        private final TextView mTxtText;
+        private final TextView mTxtDate;
 
-        private final WPNetworkImageView imgAvatar;
-        private final View spacerIndent;
-        private final View authorContainer;
-        private final ProgressBar progress;
+        private final WPNetworkImageView mImgAvatar;
+        private final View mSpacerIndent;
+        private final View mAuthorContainer;
+        private final ProgressBar mProgress;
 
-        private final ViewGroup replyView;
-        private final ReaderIconCountView countLikes;
+        private final ViewGroup mReplyView;
+        private final ReaderIconCountView mCountLikes;
 
-        public CommentHolder(View view) {
+        CommentHolder(View view) {
             super(view);
 
-            container = (ViewGroup) view.findViewById(R.id.layout_container);
+            mContainer = (ViewGroup) view.findViewById(R.id.layout_container);
 
-            txtAuthor = (TextView) view.findViewById(R.id.text_comment_author);
-            txtText = (TextView) view.findViewById(R.id.text_comment_text);
-            txtDate = (TextView) view.findViewById(R.id.text_comment_date);
+            mTxtAuthor = (TextView) view.findViewById(R.id.text_comment_author);
+            mTxtText = (TextView) view.findViewById(R.id.text_comment_text);
+            mTxtDate = (TextView) view.findViewById(R.id.text_comment_date);
 
-            imgAvatar = (WPNetworkImageView) view.findViewById(R.id.image_comment_avatar);
-            spacerIndent = view.findViewById(R.id.spacer_comment_indent);
-            progress = (ProgressBar) view.findViewById(R.id.progress_comment);
+            mImgAvatar = (WPNetworkImageView) view.findViewById(R.id.image_comment_avatar);
+            mSpacerIndent = view.findViewById(R.id.spacer_comment_indent);
+            mProgress = (ProgressBar) view.findViewById(R.id.progress_comment);
 
-            authorContainer = view.findViewById(R.id.layout_author);
+            mAuthorContainer = view.findViewById(R.id.layout_author);
 
-            replyView = (ViewGroup) view.findViewById(R.id.reply_container);
-            countLikes = (ReaderIconCountView) view.findViewById(R.id.count_likes);
+            mReplyView = (ViewGroup) view.findViewById(R.id.reply_container);
+            mCountLikes = (ReaderIconCountView) view.findViewById(R.id.count_likes);
 
-            txtText.setLinksClickable(true);
-            txtText.setMovementMethod(ReaderLinkMovementMethod.getInstance(mIsPrivatePost));
+            mTxtText.setLinksClickable(true);
+            mTxtText.setMovementMethod(ReaderLinkMovementMethod.getInstance(mIsPrivatePost));
         }
     }
 
     class PostHeaderHolder extends RecyclerView.ViewHolder {
         private final ReaderCommentsPostHeaderView mHeaderView;
 
-        public PostHeaderHolder(View view) {
+        PostHeaderHolder(View view) {
             super(view);
             mHeaderView = (ReaderCommentsPostHeaderView) view;
         }
@@ -227,16 +229,21 @@ public class ReaderCommentAdapter extends RecyclerView.Adapter<RecyclerView.View
         }
 
         final CommentHolder commentHolder = (CommentHolder) holder;
-        commentHolder.txtAuthor.setText(comment.getAuthorName());
+        commentHolder.mTxtAuthor.setText(comment.getAuthorName());
 
-        java.util.Date dtPublished = DateTimeUtils.dateFromIso8601(comment.getPublished());
-        commentHolder.txtDate.setText(DateTimeUtils.javaDateToTimeSpan(dtPublished, WordPress.getContext()));
+        java.util.Date dtPublished;
+        if (mShowProgressForHighlightedComment && mHighlightCommentId == comment.commentId) {
+            dtPublished = new Date();
+        } else {
+            dtPublished = DateTimeUtils.dateFromIso8601(comment.getPublished());
+        }
+        commentHolder.mTxtDate.setText(DateTimeUtils.javaDateToTimeSpan(dtPublished, WordPress.getContext()));
 
         if (comment.hasAuthorAvatar()) {
             String avatarUrl = GravatarUtils.fixGravatarUrl(comment.getAuthorAvatar(), mAvatarSz);
-            commentHolder.imgAvatar.setImageUrl(avatarUrl, WPNetworkImageView.ImageType.AVATAR);
+            commentHolder.mImgAvatar.setImageUrl(avatarUrl, WPNetworkImageView.ImageType.AVATAR);
         } else {
-            commentHolder.imgAvatar.showDefaultGravatarImageAndNullifyUrl();
+            commentHolder.mImgAvatar.showDefaultGravatarImageAndNullifyUrl();
         }
 
         // tapping avatar or author name opens blog preview
@@ -247,18 +254,18 @@ public class ReaderCommentAdapter extends RecyclerView.Adapter<RecyclerView.View
                     ReaderActivityLauncher.showReaderBlogPreview(view.getContext(), comment.authorBlogId);
                 }
             };
-            commentHolder.authorContainer.setOnClickListener(authorListener);
-            commentHolder.authorContainer.setClickable(true);
+            commentHolder.mAuthorContainer.setOnClickListener(authorListener);
+            commentHolder.mAuthorContainer.setOnClickListener(authorListener);
         } else {
-            commentHolder.authorContainer.setOnClickListener(null);
-            commentHolder.authorContainer.setClickable(false);
+            commentHolder.mAuthorContainer.setOnClickListener(null);
+            commentHolder.mAuthorContainer.setOnClickListener(null);
         }
 
         // author name uses different color for comments from the post's author
         if (comment.authorId == mPost.authorId) {
-            commentHolder.txtAuthor.setTextColor(mColorAuthor);
+            commentHolder.mTxtAuthor.setTextColor(mColorAuthor);
         } else {
-            commentHolder.txtAuthor.setTextColor(mColorNotAuthor);
+            commentHolder.mTxtAuthor.setTextColor(mColorNotAuthor);
         }
 
         // show indentation spacer for comments with parents and indent it based on comment level
@@ -266,31 +273,31 @@ public class ReaderCommentAdapter extends RecyclerView.Adapter<RecyclerView.View
         if (comment.parentId != 0 && comment.level > 0) {
             indentWidth = Math.min(MAX_INDENT_LEVEL, comment.level) * mIndentPerLevel;
             RelativeLayout.LayoutParams params =
-                    (RelativeLayout.LayoutParams) commentHolder.spacerIndent.getLayoutParams();
+                    (RelativeLayout.LayoutParams) commentHolder.mSpacerIndent.getLayoutParams();
             params.width = indentWidth;
-            commentHolder.spacerIndent.setVisibility(View.VISIBLE);
+            commentHolder.mSpacerIndent.setVisibility(View.VISIBLE);
         } else {
             indentWidth = 0;
-            commentHolder.spacerIndent.setVisibility(View.GONE);
+            commentHolder.mSpacerIndent.setVisibility(View.GONE);
         }
 
         int maxImageWidth = mContentWidth - indentWidth;
-        CommentUtils.displayHtmlComment(commentHolder.txtText, comment.getText(), maxImageWidth, mImageLoader);
+        CommentUtils.displayHtmlComment(commentHolder.mTxtText, comment.getText(), maxImageWidth, mImageLoader);
 
         // different background for highlighted comment, with optional progress bar
         if (mHighlightCommentId != 0 && mHighlightCommentId == comment.commentId) {
-            commentHolder.container.setBackgroundColor(mColorHighlight);
-            commentHolder.progress.setVisibility(mShowProgressForHighlightedComment ? View.VISIBLE : View.GONE);
+            commentHolder.mContainer.setBackgroundColor(mColorHighlight);
+            commentHolder.mProgress.setVisibility(mShowProgressForHighlightedComment ? View.VISIBLE : View.GONE);
         } else {
-            commentHolder.container.setBackgroundColor(Color.WHITE);
-            commentHolder.progress.setVisibility(View.GONE);
+            commentHolder.mContainer.setBackgroundColor(Color.WHITE);
+            commentHolder.mProgress.setVisibility(View.GONE);
         }
 
         if (!mAccountStore.hasAccessToken()) {
-            commentHolder.replyView.setVisibility(View.GONE);
+            commentHolder.mReplyView.setVisibility(View.GONE);
         } else {
             // tapping reply tells activity to show reply box
-            commentHolder.replyView.setOnClickListener(new View.OnClickListener() {
+            commentHolder.mReplyView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     if (mReplyListener != null) {
@@ -301,10 +308,10 @@ public class ReaderCommentAdapter extends RecyclerView.Adapter<RecyclerView.View
 
             if (mAnimateLikeCommentId != 0 && mAnimateLikeCommentId == comment.commentId) {
                 // simulate tapping on the "Like" button. Add a delay to help the user notice it.
-                commentHolder.countLikes.postDelayed(new Runnable() {
+                commentHolder.mCountLikes.postDelayed(new Runnable() {
                     @Override
                     public void run() {
-                        ReaderAnim.animateLikeButton(commentHolder.countLikes.getImageView(), true);
+                        ReaderAnim.animateLikeButton(commentHolder.mCountLikes.getImageView(), true);
                     }
                 }, 400);
 
@@ -354,17 +361,17 @@ public class ReaderCommentAdapter extends RecyclerView.Adapter<RecyclerView.View
         }
 
         if (mPost.canLikePost()) {
-            holder.countLikes.setVisibility(View.VISIBLE);
-            holder.countLikes.setSelected(comment.isLikedByCurrentUser);
-            holder.countLikes.setCount(comment.numLikes);
-            holder.countLikes.setContentDescription(ReaderUtils.getLongLikeLabelText(
-                    holder.countLikes.getContext(), comment.numLikes, comment.isLikedByCurrentUser));
+            holder.mCountLikes.setVisibility(View.VISIBLE);
+            holder.mCountLikes.setSelected(comment.isLikedByCurrentUser);
+            holder.mCountLikes.setCount(comment.numLikes);
+            holder.mCountLikes.setContentDescription(ReaderUtils.getLongLikeLabelText(
+                    holder.mCountLikes.getContext(), comment.numLikes, comment.isLikedByCurrentUser));
 
             if (!mAccountStore.hasAccessToken()) {
-                holder.countLikes.setEnabled(false);
+                holder.mCountLikes.setEnabled(false);
             } else {
-                holder.countLikes.setEnabled(true);
-                holder.countLikes.setOnClickListener(new View.OnClickListener() {
+                holder.mCountLikes.setEnabled(true);
+                holder.mCountLikes.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
                         int clickedPosition = holder.getAdapterPosition();
@@ -373,8 +380,8 @@ public class ReaderCommentAdapter extends RecyclerView.Adapter<RecyclerView.View
                 });
             }
         } else {
-            holder.countLikes.setVisibility(View.GONE);
-            holder.countLikes.setOnClickListener(null);
+            holder.mCountLikes.setVisibility(View.GONE);
+            holder.mCountLikes.setOnClickListener(null);
         }
     }
 
@@ -390,7 +397,7 @@ public class ReaderCommentAdapter extends RecyclerView.Adapter<RecyclerView.View
         }
 
         boolean isAskingToLike = !comment.isLikedByCurrentUser;
-        ReaderAnim.animateLikeButton(holder.countLikes.getImageView(), isAskingToLike);
+        ReaderAnim.animateLikeButton(holder.mCountLikes.getImageView(), isAskingToLike);
 
         if (!ReaderCommentActions.performLikeAction(comment, isAskingToLike, mAccountStore.getAccount().getUserId())) {
             ToastUtils.showToast(context, R.string.reader_toast_err_generic);
@@ -403,8 +410,9 @@ public class ReaderCommentAdapter extends RecyclerView.Adapter<RecyclerView.View
             showLikeStatus(holder, position);
         }
 
-        AnalyticsUtils.trackWithReaderPostDetails(isAskingToLike ? AnalyticsTracker.Stat.READER_ARTICLE_COMMENT_LIKED :
-                AnalyticsTracker.Stat.READER_ARTICLE_COMMENT_UNLIKED, mPost);
+        AnalyticsUtils.trackWithReaderPostDetails(isAskingToLike
+                                                    ? AnalyticsTracker.Stat.READER_ARTICLE_COMMENT_LIKED
+                                                    : AnalyticsTracker.Stat.READER_ARTICLE_COMMENT_UNLIKED, mPost);
     }
 
     public boolean refreshComment(long commentId) {
@@ -505,8 +513,8 @@ public class ReaderCommentAdapter extends RecyclerView.Adapter<RecyclerView.View
     private boolean mIsTaskRunning = false;
 
     private class LoadCommentsTask extends AsyncTask<Void, Void, Boolean> {
-        private ReaderCommentList tmpComments;
-        private boolean tmpMoreCommentsExist;
+        private ReaderCommentList mTmpComments;
+        private boolean mTmpMoreCommentsExist;
 
         @Override
         protected void onPreExecute() {
@@ -529,19 +537,19 @@ public class ReaderCommentAdapter extends RecyclerView.Adapter<RecyclerView.View
             // locally for this post
             int numServerComments = ReaderPostTable.getNumCommentsForPost(mPost);
             int numLocalComments = ReaderCommentTable.getNumCommentsForPost(mPost);
-            tmpMoreCommentsExist = (numServerComments > numLocalComments);
+            mTmpMoreCommentsExist = (numServerComments > numLocalComments);
 
-            tmpComments = ReaderCommentTable.getCommentsForPost(mPost);
-            return !mComments.isSameList(tmpComments);
+            mTmpComments = ReaderCommentTable.getCommentsForPost(mPost);
+            return !mComments.isSameList(mTmpComments);
         }
 
         @Override
         protected void onPostExecute(Boolean result) {
-            mMoreCommentsExist = tmpMoreCommentsExist;
+            mMoreCommentsExist = mTmpMoreCommentsExist;
 
             if (result) {
                 // assign the comments with children sorted under their parents and indent levels applied
-                mComments = new ReaderCommentLeveler(tmpComments).createLevelList();
+                mComments = new ReaderCommentLeveler(mTmpComments).createLevelList();
                 notifyDataSetChanged();
             }
             if (mDataLoadedListener != null) {
@@ -552,13 +560,12 @@ public class ReaderCommentAdapter extends RecyclerView.Adapter<RecyclerView.View
     }
 
     /*
-    *  Set a post to adapter and update relevant information in the post header
+    * Set a post to adapter and update relevant information in the post header
     */
     public void setPost(ReaderPost post) {
         if (post != null) {
             mPost = post;
-            notifyItemChanged(0); //notify header to update itself
+            notifyItemChanged(0); // notify header to update itself
         }
-
     }
 }

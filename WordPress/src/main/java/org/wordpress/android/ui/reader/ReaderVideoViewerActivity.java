@@ -1,5 +1,6 @@
 package org.wordpress.android.ui.reader;
 
+import android.content.Context;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -11,16 +12,20 @@ import android.widget.ProgressBar;
 
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
+import org.wordpress.android.util.LocaleManager;
 
 /**
  * Full screen landscape video player for the reader
  */
-
 public class ReaderVideoViewerActivity extends AppCompatActivity {
-
     private String mVideoUrl;
     private WebView mWebView;
     private ProgressBar mProgress;
+
+    @Override
+    protected void attachBaseContext(Context newBase) {
+        super.attachBaseContext(LocaleManager.setLocale(newBase));
+    }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -70,5 +75,4 @@ public class ReaderVideoViewerActivity extends AppCompatActivity {
         mWebView.saveState(outState);
         super.onSaveInstanceState(outState);
     }
-
 }

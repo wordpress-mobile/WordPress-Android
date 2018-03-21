@@ -11,6 +11,7 @@ import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
 import android.support.annotation.NonNull;
 import android.support.v4.graphics.drawable.DrawableCompat;
+import android.support.v4.util.SparseArrayCompat;
 import android.support.v7.widget.ListPopupWindow;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
@@ -58,9 +59,8 @@ import org.wordpress.android.widgets.WPNetworkImageView;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
+import java.util.Locale;
 
 import javax.inject.Inject;
 
@@ -101,7 +101,7 @@ public class PostsListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
 
     private final List<PostModel> mPosts = new ArrayList<>();
     private final List<PostModel> mHiddenPosts = new ArrayList<>();
-    private final Map<Integer, String> mFeaturedImageUrls = new HashMap<>();
+    private final SparseArrayCompat<String> mFeaturedImageUrls = new SparseArrayCompat<>();
 
     private RecyclerView mRecyclerView;
     private final LayoutInflater mLayoutInflater;
@@ -199,14 +199,14 @@ public class PostsListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
 
     private boolean canShowStatsForPost(PostModel post) {
         return mIsStatsSupported
-                && PostStatus.fromPost(post) == PostStatus.PUBLISHED
-                && !post.isLocalDraft()
-                && !post.isLocallyChanged();
+               && PostStatus.fromPost(post) == PostStatus.PUBLISHED
+               && !post.isLocalDraft()
+               && !post.isLocallyChanged();
     }
 
     private boolean canPublishPost(PostModel post) {
-        return post != null && !UploadService.isPostUploadingOrQueued(post) &&
-                (post.isLocallyChanged() || post.isLocalDraft() || PostStatus.fromPost(post) == PostStatus.DRAFT);
+        return post != null && !UploadService.isPostUploadingOrQueued(post)
+               && (post.isLocallyChanged() || post.isLocalDraft() || PostStatus.fromPost(post) == PostStatus.DRAFT);
     }
 
     @Override
@@ -225,63 +225,63 @@ public class PostsListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
             if (StringUtils.isNotEmpty(post.getTitle())) {
                 // Unescape HTML
                 String cleanPostTitle = StringEscapeUtils.unescapeHtml4(post.getTitle());
-                postHolder.txtTitle.setText(cleanPostTitle);
+                postHolder.mTxtTitle.setText(cleanPostTitle);
             } else {
-                postHolder.txtTitle.setText("(" + context.getResources().getText(R.string.untitled) + ")");
+                postHolder.mTxtTitle.setText(context.getResources().getText(R.string.untitled_in_parentheses));
             }
 
             String cleanPostExcerpt = PostUtils.getPostListExcerptFromPost(post);
 
             if (StringUtils.isNotEmpty(cleanPostExcerpt)) {
-                postHolder.txtExcerpt.setVisibility(View.VISIBLE);
+                postHolder.mTxtExcerpt.setVisibility(View.VISIBLE);
                 // Unescape HTML
                 cleanPostExcerpt = StringEscapeUtils.unescapeHtml4(cleanPostExcerpt);
                 // Collapse shortcodes: [gallery ids="1206,1205,1191"] -> [gallery]
                 cleanPostExcerpt = PostUtils.collapseShortcodes(cleanPostExcerpt);
-                postHolder.txtExcerpt.setText(cleanPostExcerpt);
+                postHolder.mTxtExcerpt.setText(cleanPostExcerpt);
             } else {
-                postHolder.txtExcerpt.setVisibility(View.GONE);
+                postHolder.mTxtExcerpt.setVisibility(View.GONE);
             }
 
-            showFeaturedImage(post.getId(), postHolder.imgFeatured);
+            showFeaturedImage(post.getId(), postHolder.mImgFeatured);
 
             // local drafts say "delete" instead of "trash"
             if (post.isLocalDraft()) {
-                postHolder.txtDate.setVisibility(View.GONE);
-                postHolder.btnTrash.setButtonType(PostListButton.BUTTON_DELETE);
+                postHolder.mTxtDate.setVisibility(View.GONE);
+                postHolder.mBtnTrash.setButtonType(PostListButton.BUTTON_DELETE);
             } else {
-                postHolder.txtDate.setText(PostUtils.getFormattedDate(post));
-                postHolder.txtDate.setVisibility(View.VISIBLE);
-                postHolder.btnTrash.setButtonType(PostListButton.BUTTON_TRASH);
+                postHolder.mTxtDate.setText(PostUtils.getFormattedDate(post));
+                postHolder.mTxtDate.setVisibility(View.VISIBLE);
+                postHolder.mBtnTrash.setButtonType(PostListButton.BUTTON_TRASH);
             }
 
             if (UploadService.isPostUploading(post)) {
-                postHolder.disabledOverlay.setVisibility(View.VISIBLE);
-                postHolder.progressBar.setIndeterminate(true);
+                postHolder.mDisabledOverlay.setVisibility(View.VISIBLE);
+                postHolder.mProgressBar.setIndeterminate(true);
             } else if (!AppPrefs.isAztecEditorEnabled() && UploadService.isPostUploadingOrQueued(post)) {
                 // Editing posts with uploading media is only supported in Aztec
-                postHolder.disabledOverlay.setVisibility(View.VISIBLE);
+                postHolder.mDisabledOverlay.setVisibility(View.VISIBLE);
             } else {
-                postHolder.progressBar.setIndeterminate(false);
-                postHolder.disabledOverlay.setVisibility(View.GONE);
+                postHolder.mProgressBar.setIndeterminate(false);
+                postHolder.mDisabledOverlay.setVisibility(View.GONE);
             }
 
-            updateStatusTextAndImage(postHolder.txtStatus, postHolder.imgStatus, post);
-            updatePostUploadProgressBar(postHolder.progressBar, post);
+            updateStatusTextAndImage(postHolder.mTxtStatus, postHolder.mImgStatus, post);
+            updatePostUploadProgressBar(postHolder.mProgressBar, post);
             configurePostButtons(postHolder, post);
         } else if (holder instanceof PageViewHolder) {
             PageViewHolder pageHolder = (PageViewHolder) holder;
             if (StringUtils.isNotEmpty(post.getTitle())) {
-                pageHolder.txtTitle.setText(post.getTitle());
+                pageHolder.mTxtTitle.setText(post.getTitle());
             } else {
-                pageHolder.txtTitle.setText("(" + context.getResources().getText(R.string.untitled) + ")");
+                pageHolder.mTxtTitle.setText(context.getResources().getText(R.string.untitled_in_parentheses));
             }
 
             String dateStr = getPageDateHeaderText(context, post);
-            pageHolder.txtDate.setText(dateStr);
+            pageHolder.mTxtDate.setText(dateStr);
 
-            updateStatusTextAndImage(pageHolder.txtStatus, pageHolder.imgStatus, post);
-            updatePostUploadProgressBar(pageHolder.progressBar, post);
+            updateStatusTextAndImage(pageHolder.mTxtStatus, pageHolder.mImgStatus, post);
+            updatePostUploadProgressBar(pageHolder.mProgressBar, post);
 
             // don't show date header if same as previous
             boolean showDate;
@@ -291,12 +291,11 @@ public class PostsListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
             } else {
                 showDate = true;
             }
-            pageHolder.dateHeader.setVisibility(showDate ? View.VISIBLE : View.GONE);
+            pageHolder.mDateHeader.setVisibility(showDate ? View.VISIBLE : View.GONE);
 
             // no "..." more button when uploading
-            pageHolder.btnMore.setVisibility(UploadService.isPostUploadingOrQueued(post) ? View.GONE :
-                    View.VISIBLE);
-            pageHolder.btnMore.setOnClickListener(new View.OnClickListener() {
+            pageHolder.mBtnMore.setVisibility(UploadService.isPostUploadingOrQueued(post) ? View.GONE : View.VISIBLE);
+            pageHolder.mBtnMore.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     showPagePopupMenu(v, post);
@@ -304,23 +303,23 @@ public class PostsListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
             });
 
             // only show the top divider for the first item
-            pageHolder.dividerTop.setVisibility(position == 0 ? View.VISIBLE : View.GONE);
+            pageHolder.mDividerTop.setVisibility(position == 0 ? View.VISIBLE : View.GONE);
 
             if (UploadService.isPostUploading(post)) {
-                pageHolder.disabledOverlay.setVisibility(View.VISIBLE);
-                pageHolder.progressBar.setIndeterminate(true);
+                pageHolder.mDisabledOverlay.setVisibility(View.VISIBLE);
+                pageHolder.mProgressBar.setIndeterminate(true);
             } else if (!AppPrefs.isAztecEditorEnabled() && UploadService.isPostUploadingOrQueued(post)) {
                 // Editing posts with uploading media is only supported in Aztec
-                pageHolder.disabledOverlay.setVisibility(View.VISIBLE);
+                pageHolder.mDisabledOverlay.setVisibility(View.VISIBLE);
             } else {
-                pageHolder.disabledOverlay.setVisibility(View.GONE);
-                pageHolder.progressBar.setIndeterminate(false);
+                pageHolder.mDisabledOverlay.setVisibility(View.GONE);
+                pageHolder.mProgressBar.setIndeterminate(false);
             }
         }
 
         // load more posts when we near the end
         if (mOnLoadMoreListener != null && position >= mPosts.size() - 1
-                && position >= PostsListFragment.POSTS_REQUEST_COUNT - 1) {
+            && position >= PostsListFragment.POSTS_REQUEST_COUNT - 1) {
             mOnLoadMoreListener.onLoadMore();
         }
 
@@ -339,7 +338,7 @@ public class PostsListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
         if (imageUrl == null) {
             imgFeatured.setVisibility(View.GONE);
         } else if (imageUrl.startsWith("http")) {
-            String photonUrl =  ReaderUtils.getResizedImageUrl(
+            String photonUrl = ReaderUtils.getResizedImageUrl(
                     imageUrl, mPhotonWidth, mPhotonHeight, !SiteUtils.isPhotonCapable(mSite));
             imgFeatured.setVisibility(View.VISIBLE);
             imgFeatured.setImageUrl(photonUrl, WPNetworkImageView.ImageType.PHOTO);
@@ -359,19 +358,19 @@ public class PostsListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
     /*
      * returns the caption to show in the date header for the passed page - pages with the same
      * caption will be grouped together
-     *  - if page is local draft, returns "Local draft"
-     *  - if page is scheduled, returns formatted date w/o time
-     *  - if created today or yesterday, returns "Today" or "Yesterday"
-     *  - if created this month, returns the number of days ago
-     *  - if created this year, returns the month name
-     *  - if created before this year, returns the month name with year
+     * - if page is local draft, returns "Local draft"
+     * - if page is scheduled, returns formatted date w/o time
+     * - if created today or yesterday, returns "Today" or "Yesterday"
+     * - if created this month, returns the number of days ago
+     * - if created this year, returns the month name
+     * - if created before this year, returns the month name with year
      */
     private static String getPageDateHeaderText(Context context, PostModel page) {
         if (page.isLocalDraft()) {
             return context.getString(R.string.local_draft);
         } else if (PostStatus.fromPost(page) == PostStatus.SCHEDULED) {
             return DateUtils.formatDateTime(context, DateTimeUtils.timestampFromIso8601Millis(page.getDateCreated()),
-                    DateUtils.FORMAT_ABBREV_ALL);
+                                            DateUtils.FORMAT_ABBREV_ALL);
         } else {
             Date dtCreated = DateTimeUtils.dateUTCFromIso8601(page.getDateCreated());
             Date dtNow = DateTimeUtils.nowUTC();
@@ -383,9 +382,9 @@ public class PostsListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
             } else if (DateTimeUtils.isSameMonthAndYear(dtCreated, dtNow)) {
                 return String.format(context.getString(R.string.days_ago), daysBetween);
             } else if (DateTimeUtils.isSameYear(dtCreated, dtNow)) {
-                return new SimpleDateFormat("MMMM").format(dtCreated);
+                return new SimpleDateFormat("MMMM", Locale.getDefault()).format(dtCreated);
             } else {
-                return new SimpleDateFormat("MMMM yyyy").format(dtCreated);
+                return new SimpleDateFormat("MMMM yyyy", Locale.getDefault()).format(dtCreated);
             }
         }
     }
@@ -415,8 +414,8 @@ public class PostsListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
     }
 
     private void updatePostUploadProgressBar(ProgressBar view, PostModel post) {
-        if (!mUploadStore.isFailedPost(post) &&
-                (UploadService.isPostUploadingOrQueued(post) || UploadService.hasInProgressMediaUploadsForPost(post))) {
+        if (!mUploadStore.isFailedPost(post)
+            && (UploadService.isPostUploadingOrQueued(post) || UploadService.hasInProgressMediaUploadsForPost(post))) {
             view.setVisibility(View.VISIBLE);
             int overallProgress = Math.round(UploadService.getMediaUploadProgressForPost(post) * 100);
             // Sometimes the progress bar can be stuck at 100% for a long time while further processing happens
@@ -443,7 +442,7 @@ public class PostsListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
             if (reason != null && !UploadService.hasInProgressMediaUploadsForPost(post)) {
                 if (reason.mediaError != null) {
                     errorMessage = context.getString(post.isPage() ? R.string.error_media_recover_page
-                            : R.string.error_media_recover_post);
+                                                             : R.string.error_media_recover_post);
                 } else if (reason.postError != null) {
                     errorMessage = UploadUtils.getErrorMessageFromPostError(context, post, reason.postError);
                 }
@@ -455,7 +454,7 @@ public class PostsListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
             } else if (UploadService.hasInProgressMediaUploadsForPost(post)) {
                 statusTextResId = R.string.uploading_media;
                 statusIconResId = R.drawable.ic_gridicons_cloud_upload;
-            } else if(UploadService.isPostQueued(post) || UploadService.hasPendingMediaUploadsForPost(post)) {
+            } else if (UploadService.isPostQueued(post) || UploadService.hasPendingMediaUploadsForPost(post)) {
                 // the Post (or its related media if such a thing exist) *is strictly* queued
                 statusTextResId = R.string.post_queued;
                 statusIconResId = R.drawable.ic_gridicons_cloud_upload;
@@ -519,7 +518,7 @@ public class PostsListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
     private void configurePostButtons(final PostViewHolder holder,
                                       final PostModel post) {
         boolean canRetry = mUploadStore.getUploadErrorForPost(post) != null
-                && !UploadService.hasInProgressMediaUploadsForPost(post);
+                           && !UploadService.hasInProgressMediaUploadsForPost(post);
         boolean canShowViewButton = !canRetry;
         boolean canShowStatsButton = canShowStatsForPost(post);
         boolean canShowPublishButton = canRetry || canPublishPost(post);
@@ -527,48 +526,54 @@ public class PostsListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
         // publish button is re-purposed depending on the situation
         if (canShowPublishButton) {
             if (!mSite.getHasCapabilityPublishPosts()) {
-                holder.btnPublish.setButtonType(PostListButton.BUTTON_SUBMIT);
+                holder.mBtnPublish.setButtonType(PostListButton.BUTTON_SUBMIT);
             } else if (canRetry) {
-                holder.btnPublish.setButtonType(PostListButton.BUTTON_RETRY);
+                holder.mBtnPublish.setButtonType(PostListButton.BUTTON_RETRY);
             } else if (PostStatus.fromPost(post) == PostStatus.SCHEDULED && post.isLocallyChanged()) {
-                holder.btnPublish.setButtonType(PostListButton.BUTTON_SYNC);
+                holder.mBtnPublish.setButtonType(PostListButton.BUTTON_SYNC);
             } else {
-                holder.btnPublish.setButtonType(PostListButton.BUTTON_PUBLISH);
+                holder.mBtnPublish.setButtonType(PostListButton.BUTTON_PUBLISH);
             }
         }
 
         // posts with local changes have preview rather than view button
         if (canShowViewButton) {
             if (post.isLocalDraft() || post.isLocallyChanged()) {
-                holder.btnView.setButtonType(PostListButton.BUTTON_PREVIEW);
+                holder.mBtnView.setButtonType(PostListButton.BUTTON_PREVIEW);
             } else {
-                holder.btnView.setButtonType(PostListButton.BUTTON_VIEW);
+                holder.mBtnView.setButtonType(PostListButton.BUTTON_VIEW);
             }
         }
 
         // edit is always visible
-        holder.btnEdit.setVisibility(View.VISIBLE);
-        holder.btnView.setVisibility(canShowViewButton ? View.VISIBLE : View.GONE);
+        holder.mBtnEdit.setVisibility(View.VISIBLE);
+        holder.mBtnView.setVisibility(canShowViewButton ? View.VISIBLE : View.GONE);
 
         int numVisibleButtons = 2;
-        if (canShowViewButton) numVisibleButtons++;
-        if (canShowPublishButton) numVisibleButtons++;
-        if (canShowStatsButton) numVisibleButtons++;
+        if (canShowViewButton) {
+            numVisibleButtons++;
+        }
+        if (canShowPublishButton) {
+            numVisibleButtons++;
+        }
+        if (canShowStatsButton) {
+            numVisibleButtons++;
+        }
 
         // if there's enough room to show all buttons then hide back/more and show stats/trash/publish,
         // otherwise show the more button and hide stats/trash/publish
         if (mShowAllButtons || numVisibleButtons <= 3) {
-            holder.btnMore.setVisibility(View.GONE);
-            holder.btnBack.setVisibility(View.GONE);
-            holder.btnTrash.setVisibility(View.VISIBLE);
-            holder.btnStats.setVisibility(canShowStatsButton ? View.VISIBLE : View.GONE);
-            holder.btnPublish.setVisibility(canShowPublishButton ? View.VISIBLE : View.GONE);
+            holder.mBtnMore.setVisibility(View.GONE);
+            holder.mBtnBack.setVisibility(View.GONE);
+            holder.mBtnTrash.setVisibility(View.VISIBLE);
+            holder.mBtnStats.setVisibility(canShowStatsButton ? View.VISIBLE : View.GONE);
+            holder.mBtnPublish.setVisibility(canShowPublishButton ? View.VISIBLE : View.GONE);
         } else {
-            holder.btnMore.setVisibility(View.VISIBLE);
-            holder.btnBack.setVisibility(View.GONE);
-            holder.btnTrash.setVisibility(View.GONE);
-            holder.btnStats.setVisibility(View.GONE);
-            holder.btnPublish.setVisibility(View.GONE);
+            holder.mBtnMore.setVisibility(View.VISIBLE);
+            holder.mBtnBack.setVisibility(View.GONE);
+            holder.mBtnTrash.setVisibility(View.GONE);
+            holder.mBtnStats.setVisibility(View.GONE);
+            holder.mBtnPublish.setVisibility(View.GONE);
         }
 
         View.OnClickListener btnClickListener = new View.OnClickListener() {
@@ -591,13 +596,13 @@ public class PostsListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
                 }
             }
         };
-        holder.btnEdit.setOnClickListener(btnClickListener);
-        holder.btnView.setOnClickListener(btnClickListener);
-        holder.btnStats.setOnClickListener(btnClickListener);
-        holder.btnTrash.setOnClickListener(btnClickListener);
-        holder.btnMore.setOnClickListener(btnClickListener);
-        holder.btnBack.setOnClickListener(btnClickListener);
-        holder.btnPublish.setOnClickListener(btnClickListener);
+        holder.mBtnEdit.setOnClickListener(btnClickListener);
+        holder.mBtnView.setOnClickListener(btnClickListener);
+        holder.mBtnStats.setOnClickListener(btnClickListener);
+        holder.mBtnTrash.setOnClickListener(btnClickListener);
+        holder.mBtnMore.setOnClickListener(btnClickListener);
+        holder.mBtnBack.setOnClickListener(btnClickListener);
+        holder.mBtnPublish.setOnClickListener(btnClickListener);
     }
 
     /*
@@ -612,27 +617,26 @@ public class PostsListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
         // then animate the row layout back in
         PropertyValuesHolder scaleX = PropertyValuesHolder.ofFloat(View.SCALE_X, 1f, 0f);
         PropertyValuesHolder scaleY = PropertyValuesHolder.ofFloat(View.SCALE_Y, 1f, 0f);
-        ObjectAnimator animOut = ObjectAnimator.ofPropertyValuesHolder(holder.layoutButtons, scaleX, scaleY);
+        ObjectAnimator animOut = ObjectAnimator.ofPropertyValuesHolder(holder.mLayoutButtons, scaleX, scaleY);
         animOut.setDuration(ROW_ANIM_DURATION);
         animOut.setInterpolator(new AccelerateInterpolator());
 
         animOut.addListener(new AnimatorListenerAdapter() {
             @Override
             public void onAnimationEnd(Animator animation) {
-
                 // row 1
-                holder.btnEdit.setVisibility(showRow1 ? View.VISIBLE : View.GONE);
-                holder.btnView.setVisibility(showRow1 ? View.VISIBLE : View.GONE);
-                holder.btnMore.setVisibility(showRow1 ? View.VISIBLE : View.GONE);
+                holder.mBtnEdit.setVisibility(showRow1 ? View.VISIBLE : View.GONE);
+                holder.mBtnView.setVisibility(showRow1 ? View.VISIBLE : View.GONE);
+                holder.mBtnMore.setVisibility(showRow1 ? View.VISIBLE : View.GONE);
                 // row 2
-                holder.btnStats.setVisibility(!showRow1 && canShowStatsForPost(post) ? View.VISIBLE : View.GONE);
-                holder.btnPublish.setVisibility(!showRow1 && canPublishPost(post) ? View.VISIBLE : View.GONE);
-                holder.btnTrash.setVisibility(!showRow1 ? View.VISIBLE : View.GONE);
-                holder.btnBack.setVisibility(!showRow1 ? View.VISIBLE : View.GONE);
+                holder.mBtnStats.setVisibility(!showRow1 && canShowStatsForPost(post) ? View.VISIBLE : View.GONE);
+                holder.mBtnPublish.setVisibility(!showRow1 && canPublishPost(post) ? View.VISIBLE : View.GONE);
+                holder.mBtnTrash.setVisibility(!showRow1 ? View.VISIBLE : View.GONE);
+                holder.mBtnBack.setVisibility(!showRow1 ? View.VISIBLE : View.GONE);
 
                 PropertyValuesHolder scaleX = PropertyValuesHolder.ofFloat(View.SCALE_X, 0f, 1f);
                 PropertyValuesHolder scaleY = PropertyValuesHolder.ofFloat(View.SCALE_Y, 0f, 1f);
-                ObjectAnimator animIn = ObjectAnimator.ofPropertyValuesHolder(holder.layoutButtons, scaleX, scaleY);
+                ObjectAnimator animIn = ObjectAnimator.ofPropertyValuesHolder(holder.mLayoutButtons, scaleX, scaleY);
                 animIn.setDuration(ROW_ANIM_DURATION);
                 animIn.setInterpolator(new DecelerateInterpolator());
                 animIn.start();
@@ -660,9 +664,9 @@ public class PostsListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
             if (position > -1) {
                 RecyclerView.ViewHolder viewHolder = mRecyclerView.findViewHolderForAdapterPosition(position);
                 if (viewHolder instanceof PostViewHolder) {
-                    updatePostUploadProgressBar(((PostViewHolder) viewHolder).progressBar, post);
+                    updatePostUploadProgressBar(((PostViewHolder) viewHolder).mProgressBar, post);
                 } else if (viewHolder instanceof PageViewHolder) {
-                    updatePostUploadProgressBar(((PageViewHolder) viewHolder).progressBar, post);
+                    updatePostUploadProgressBar(((PageViewHolder) viewHolder).mProgressBar, post);
                 }
             }
         }
@@ -681,7 +685,7 @@ public class PostsListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
             if (mPosts.size() > 0) {
                 notifyItemRemoved(position);
 
-                //when page is removed update the next one in case we need to show a header
+                // when page is removed update the next one in case we need to show a header
                 if (mIsPage) {
                     notifyItemChanged(position);
                 }
@@ -713,77 +717,77 @@ public class PostsListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
     }
 
     private class PostViewHolder extends RecyclerView.ViewHolder {
-        private final TextView txtTitle;
-        private final TextView txtExcerpt;
-        private final TextView txtDate;
-        private final TextView txtStatus;
-        private final ImageView imgStatus;
+        private final TextView mTxtTitle;
+        private final TextView mTxtExcerpt;
+        private final TextView mTxtDate;
+        private final TextView mTxtStatus;
+        private final ImageView mImgStatus;
 
-        private final PostListButton btnEdit;
-        private final PostListButton btnView;
-        private final PostListButton btnPublish;
-        private final PostListButton btnMore;
+        private final PostListButton mBtnEdit;
+        private final PostListButton mBtnView;
+        private final PostListButton mBtnPublish;
+        private final PostListButton mBtnMore;
 
-        private final PostListButton btnStats;
-        private final PostListButton btnTrash;
-        private final PostListButton btnBack;
+        private final PostListButton mBtnStats;
+        private final PostListButton mBtnTrash;
+        private final PostListButton mBtnBack;
 
-        private final WPNetworkImageView imgFeatured;
-        private final ViewGroup layoutButtons;
+        private final WPNetworkImageView mImgFeatured;
+        private final ViewGroup mLayoutButtons;
 
-        private final View disabledOverlay;
+        private final View mDisabledOverlay;
 
-        private final ProgressBar progressBar;
+        private final ProgressBar mProgressBar;
 
         PostViewHolder(View view) {
             super(view);
 
-            txtTitle = (TextView) view.findViewById(R.id.text_title);
-            txtExcerpt = (TextView) view.findViewById(R.id.text_excerpt);
-            txtDate = (TextView) view.findViewById(R.id.text_date);
-            txtStatus = (TextView) view.findViewById(R.id.text_status);
-            imgStatus = (ImageView) view.findViewById(R.id.image_status);
+            mTxtTitle = (TextView) view.findViewById(R.id.text_title);
+            mTxtExcerpt = (TextView) view.findViewById(R.id.text_excerpt);
+            mTxtDate = (TextView) view.findViewById(R.id.text_date);
+            mTxtStatus = (TextView) view.findViewById(R.id.text_status);
+            mImgStatus = (ImageView) view.findViewById(R.id.image_status);
 
-            btnEdit = (PostListButton) view.findViewById(R.id.btn_edit);
-            btnView = (PostListButton) view.findViewById(R.id.btn_view);
-            btnPublish = (PostListButton) view.findViewById(R.id.btn_publish);
-            btnMore = (PostListButton) view.findViewById(R.id.btn_more);
+            mBtnEdit = (PostListButton) view.findViewById(R.id.btn_edit);
+            mBtnView = (PostListButton) view.findViewById(R.id.btn_view);
+            mBtnPublish = (PostListButton) view.findViewById(R.id.btn_publish);
+            mBtnMore = (PostListButton) view.findViewById(R.id.btn_more);
 
-            btnStats = (PostListButton) view.findViewById(R.id.btn_stats);
-            btnTrash = (PostListButton) view.findViewById(R.id.btn_trash);
-            btnBack = (PostListButton) view.findViewById(R.id.btn_back);
+            mBtnStats = (PostListButton) view.findViewById(R.id.btn_stats);
+            mBtnTrash = (PostListButton) view.findViewById(R.id.btn_trash);
+            mBtnBack = (PostListButton) view.findViewById(R.id.btn_back);
 
-            imgFeatured = (WPNetworkImageView) view.findViewById(R.id.image_featured);
-            layoutButtons = (ViewGroup) view.findViewById(R.id.layout_buttons);
+            mImgFeatured = (WPNetworkImageView) view.findViewById(R.id.image_featured);
+            mLayoutButtons = (ViewGroup) view.findViewById(R.id.layout_buttons);
 
-            disabledOverlay = view.findViewById(R.id.disabled_overlay);
+            mDisabledOverlay = view.findViewById(R.id.disabled_overlay);
 
-            progressBar = (ProgressBar) view.findViewById(R.id.post_upload_progress);
+            mProgressBar = (ProgressBar) view.findViewById(R.id.post_upload_progress);
         }
     }
 
     private class PageViewHolder extends RecyclerView.ViewHolder {
-        private final TextView txtTitle;
-        private final TextView txtDate;
-        private final TextView txtStatus;
-        private final ImageView imgStatus;
-        private final ViewGroup dateHeader;
-        private final View btnMore;
-        private final View dividerTop;
-        private final View disabledOverlay;
-        private final ProgressBar progressBar;
+        private final TextView mTxtTitle;
+        private final TextView mTxtDate;
+        private final TextView mTxtStatus;
+        private final ImageView mImgStatus;
+        private final ViewGroup mDateHeader;
+        private final View mBtnMore;
+        private final View mDividerTop;
+        private final View mDisabledOverlay;
+        private final ProgressBar mProgressBar;
 
         PageViewHolder(View view) {
             super(view);
-            txtTitle = (TextView) view.findViewById(R.id.text_title);
-            txtStatus = (TextView) view.findViewById(R.id.text_status);
-            imgStatus = (ImageView) view.findViewById(R.id.image_status);
-            btnMore = view.findViewById(R.id.btn_more);
-            dividerTop = view.findViewById(R.id.divider_top);
-            dateHeader = (ViewGroup) view.findViewById(R.id.header_date);
-            txtDate = (TextView) dateHeader.findViewById(R.id.text_date);
-            disabledOverlay = view.findViewById(R.id.disabled_overlay);
-            progressBar = (ProgressBar) view.findViewById(R.id.post_upload_progress);
+            mTxtTitle = (TextView) view.findViewById(R.id.text_title);
+            mTxtStatus = (TextView) view.findViewById(R.id.text_status);
+            mImgStatus = (ImageView) view.findViewById(R.id.image_status);
+            mBtnMore = view.findViewById(R.id.btn_more);
+            mDividerTop = view.findViewById(R.id.divider_top);
+            mDateHeader = (ViewGroup) view.findViewById(R.id.header_date);
+            mTxtDate = (TextView) mDateHeader.findViewById(R.id.text_date);
+            mDisabledOverlay = view.findViewById(R.id.disabled_overlay);
+            mProgressBar = (ProgressBar) view.findViewById(R.id.post_upload_progress);
         }
     }
 
@@ -815,8 +819,8 @@ public class PostsListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
     }
 
     private class LoadPostsTask extends AsyncTask<Void, Void, Boolean> {
-        private List<PostModel> tmpPosts;
-        private final ArrayList<Long> mediaIdsToUpdate = new ArrayList<>();
+        private List<PostModel> mTmpPosts;
+        private final ArrayList<Long> mMediaIdsToUpdate = new ArrayList<>();
         private final LoadMode mLoadMode;
 
         LoadPostsTask(LoadMode loadMode) {
@@ -838,21 +842,21 @@ public class PostsListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
         @Override
         protected Boolean doInBackground(Void... nada) {
             if (mIsPage) {
-                tmpPosts = mPostStore.getPagesForSite(mSite);
+                mTmpPosts = mPostStore.getPagesForSite(mSite);
             } else {
-                tmpPosts = mPostStore.getPostsForSite(mSite);
+                mTmpPosts = mPostStore.getPostsForSite(mSite);
             }
 
             // Make sure we don't return any hidden posts
             if (mHiddenPosts.size() > 0) {
-                tmpPosts.removeAll(mHiddenPosts);
+                mTmpPosts.removeAll(mHiddenPosts);
             }
 
             // Go no further if existing post list is the same
-            if (mLoadMode == LoadMode.IF_CHANGED && PostUtils.postListsAreEqual(mPosts, tmpPosts)) {
+            if (mLoadMode == LoadMode.IF_CHANGED && PostUtils.postListsAreEqual(mPosts, mTmpPosts)) {
                 // Always update the list if there are uploading posts
                 boolean postsAreUploading = false;
-                for (PostModel post : tmpPosts) {
+                for (PostModel post : mTmpPosts) {
                     if (UploadService.isPostUploadingOrQueued(post)) {
                         postsAreUploading = true;
                         break;
@@ -867,7 +871,7 @@ public class PostsListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
             // Generate the featured image url for each post
             mFeaturedImageUrls.clear();
             boolean isPrivate = !SiteUtils.isPhotonCapable(mSite);
-            for (PostModel post : tmpPosts) {
+            for (PostModel post : mTmpPosts) {
                 String imageUrl = null;
                 if (post.getFeaturedImageId() != 0) {
                     MediaModel media = mMediaStore.getSiteMediaWithId(mSite, post.getFeaturedImageId());
@@ -876,7 +880,7 @@ public class PostsListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
                     } else {
                         // If the media isn't found it means the featured image info hasn't been added to
                         // the local media library yet, so add to the list of media IDs to request info for
-                        mediaIdsToUpdate.add(post.getFeaturedImageId());
+                        mMediaIdsToUpdate.add(post.getFeaturedImageId());
                     }
                 } else {
                     imageUrl = new ReaderImageScanner(post.getContent(), isPrivate).getLargestImage();
@@ -893,11 +897,11 @@ public class PostsListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
         protected void onPostExecute(Boolean result) {
             if (result) {
                 mPosts.clear();
-                mPosts.addAll(tmpPosts);
+                mPosts.addAll(mTmpPosts);
                 notifyDataSetChanged();
 
-                if (mediaIdsToUpdate.size() > 0) {
-                    for (Long mediaId : mediaIdsToUpdate) {
+                if (mMediaIdsToUpdate.size() > 0) {
+                    for (Long mediaId : mMediaIdsToUpdate) {
                         MediaModel mediaToDownload = new MediaModel();
                         mediaToDownload.setMediaId(mediaId);
                         mediaToDownload.setLocalSiteId(mSite.getId());

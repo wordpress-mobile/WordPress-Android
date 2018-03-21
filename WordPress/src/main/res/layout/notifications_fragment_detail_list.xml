@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent">
+                xmlns:tools="http://schemas.android.com/tools"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
 
     <!-- this container is needed in order to center the content of 'badge' notification types. -->
     <LinearLayout
@@ -9,13 +10,14 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@color/grey_light"
-        android:orientation="vertical">
+        android:orientation="vertical"
+        tools:ignore="UselessParent">
 
         <ListView
             android:id="@id/android:list"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:listSelector="@android:color/transparent" />
+            android:listSelector="@android:color/transparent"/>
 
     </LinearLayout>
 

@@ -3,6 +3,7 @@ package org.wordpress.android.ui.plans;
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.annotation.TargetApi;
+import android.content.Context;
 import android.graphics.Point;
 import android.os.Build;
 import android.os.Bundle;
@@ -33,6 +34,7 @@ import org.wordpress.android.util.AniUtils;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.DisplayUtils;
+import org.wordpress.android.util.LocaleManager;
 import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.UrlUtils;
@@ -58,6 +60,11 @@ public class PlansActivity extends AppCompatActivity {
 
     @Inject AccountStore mAccountStore;
     @Inject AccountStore mSiteStore;
+
+    @Override
+    protected void attachBaseContext(Context newBase) {
+        super.attachBaseContext(LocaleManager.setLocale(newBase));
+    }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -176,7 +183,8 @@ public class PlansActivity extends AppCompatActivity {
                     LinearLayout tabFirstChild = (LinearLayout) mTabLayout.getChildAt(0);
                     for (int i = 0; i < mTabLayout.getTabCount(); i++) {
                         LinearLayout tabView = (LinearLayout) (tabFirstChild.getChildAt(i));
-                        tabLayoutWidth += (tabView.getMeasuredWidth() + ViewCompat.getPaddingStart(tabView) + ViewCompat.getPaddingEnd(tabView));
+                        tabLayoutWidth += (tabView.getMeasuredWidth() + ViewCompat.getPaddingStart(tabView)
+                                           + ViewCompat.getPaddingEnd(tabView));
                     }
 
                     int displayWidth = DisplayUtils.getDisplayPixelWidth(PlansActivity.this);
@@ -219,7 +227,8 @@ public class PlansActivity extends AppCompatActivity {
                 int centerX = pt.x / 2;
                 int centerY = pt.y / 2;
 
-                Animator anim = ViewAnimationUtils.createCircularReveal(mViewPager, centerX, centerY, startRadius, endRadius);
+                Animator anim = ViewAnimationUtils.createCircularReveal(mViewPager, centerX, centerY, startRadius,
+                                                                        endRadius);
                 anim.setDuration(getResources().getInteger(android.R.integer.config_longAnimTime));
                 anim.setInterpolator(new AccelerateInterpolator());
 

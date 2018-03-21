@@ -1,7 +1,7 @@
 #!/bin/sh
 
-LANG_FILE=tools/exported-language-codes.csv
-RESDIR=WordPress/src/main/res/
+LANG_FILE=../tools/exported-language-codes.csv
+RESDIR=../WordPress/src/main/res/
 
 # Language definitions resource file
 HEADER=\<?xml\ version=\"1.0\"\ encoding=\"UTF-8\"?\>\\n\<!--Warning:\ Auto-generated\ file,\ don\'t\ edit\ it.--\>\\n\<resources\>\\n\<string-array\ name=\"available_languages\"\ translatable=\"false\"\>
@@ -25,7 +25,7 @@ for line in $(grep -v en-rUS $LANG_FILE) ; do
     echo updating $local - $code
     test -d $RESDIR/values-$local/ || mkdir $RESDIR/values-$local/
     test -f $RESDIR/values-$local/strings.xml && cp $RESDIR/values-$local/strings.xml $RESDIR/values-$local/strings.xml.bak
-    curl -sSfL --globoff -o $RESDIR/values-$local/strings.xml "http://translate.wordpress.org/projects/apps/android/dev/$code/default/export-translations?filters[status]=current&format=android" || (echo Error downloading $code && rm -rf $RESDIR/values-$local/)
+    curl -sSfL --globoff "http://translate.wordpress.org/projects/apps/android/dev/$code/default/export-translations?filters[status]=current&format=android" | sed $'s/\.\.\./\…/' | sed -E 's/(<string.*>.*)-(.*<\/string>)/\1–\2/g' | sed $'s/\t/    /g' > $RESDIR/values-$local/strings.xml || (echo Error downloading $code && rm -rf $RESDIR/values-$local/)
     test -f $RESDIR/values-$local/strings.xml.bak && rm $RESDIR/values-$local/strings.xml.bak
 done
 

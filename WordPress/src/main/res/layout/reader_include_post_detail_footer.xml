@@ -4,12 +4,13 @@
     included by ReaderPostDetailFragment
 -->
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:wp="http://schemas.android.com/apk/res-auto"
-    android:id="@+id/layout_post_detail_footer"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:background="@color/white"
-    android:paddingBottom="@dimen/margin_medium">
+                xmlns:tools="http://schemas.android.com/tools"
+                xmlns:wp="http://schemas.android.com/apk/res-auto"
+                android:id="@+id/layout_post_detail_footer"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/white"
+                android:paddingBottom="@dimen/margin_medium">
 
     <View
         android:id="@+id/divider_footer"
@@ -35,7 +36,8 @@
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
             android:orientation="horizontal"
-            android:layout_alignParentEnd="true">
+            android:layout_alignParentEnd="true"
+            tools:ignore="UselessParent">
 
             <org.wordpress.android.ui.reader.views.ReaderIconCountView
                 android:contentDescription="@string/reader_view_comments"

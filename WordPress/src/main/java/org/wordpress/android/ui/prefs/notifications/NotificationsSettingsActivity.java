@@ -1,6 +1,7 @@
 package org.wordpress.android.ui.prefs.notifications;
 
 import android.app.FragmentManager;
+import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v4.view.ViewCompat;
@@ -20,6 +21,7 @@ import android.widget.Toast;
 import org.wordpress.android.R;
 import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.ui.notifications.NotificationEvents;
+import org.wordpress.android.util.LocaleManager;
 
 import de.greenrobot.event.EventBus;
 
@@ -32,6 +34,11 @@ public class NotificationsSettingsActivity extends AppCompatActivity {
     protected SwitchCompat mMasterSwitch;
     protected Toolbar mToolbarSwitch;
     protected View mFragmentContainer;
+
+    @Override
+    protected void attachBaseContext(Context newBase) {
+        super.attachBaseContext(LocaleManager.setLocale(newBase));
+    }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -48,8 +55,8 @@ public class NotificationsSettingsActivity extends AppCompatActivity {
         FragmentManager fragmentManager = getFragmentManager();
         if (savedInstanceState == null) {
             fragmentManager.beginTransaction()
-                    .add(R.id.fragment_container, new NotificationsSettingsFragment())
-                    .commit();
+                           .add(R.id.fragment_container, new NotificationsSettingsFragment())
+                           .commit();
         }
 
         mMessageContainer = findViewById(R.id.notifications_settings_message_container);
@@ -112,9 +119,9 @@ public class NotificationsSettingsActivity extends AppCompatActivity {
 
         mToolbarSwitch = findViewById(R.id.toolbar_with_switch);
         mToolbarSwitch.inflateMenu(R.menu.notifications_settings_secondary);
-        mToolbarSwitch.setTitle(isMasterChecked ?
-                getString(R.string.notification_settings_master_status_on) :
-                getString(R.string.notification_settings_master_status_off));
+        mToolbarSwitch.setTitle(isMasterChecked
+                                        ? getString(R.string.notification_settings_master_status_on)
+                                        : getString(R.string.notification_settings_master_status_off));
 
         MenuItem menuItem = mToolbarSwitch.getMenu().findItem(R.id.master_switch);
         mMasterSwitch = (SwitchCompat) menuItem.getActionView();
@@ -128,10 +135,11 @@ public class NotificationsSettingsActivity extends AppCompatActivity {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 hideDisabledView(isChecked);
-                mToolbarSwitch.setTitle(isChecked ?
-                        getString(R.string.notification_settings_master_status_on) :
-                        getString(R.string.notification_settings_master_status_off));
-                mSharedPreferences.edit().putBoolean(getString(R.string.wp_pref_notifications_master), isChecked).apply();
+                mToolbarSwitch.setTitle(isChecked
+                                                ? getString(R.string.notification_settings_master_status_on)
+                                                : getString(R.string.notification_settings_master_status_off));
+                mSharedPreferences.edit().putBoolean(getString(R.string.wp_pref_notifications_master), isChecked)
+                                  .apply();
 
                 if (isChecked) {
                     AnalyticsTracker.track(AnalyticsTracker.Stat.NOTIFICATION_SETTINGS_APP_NOTIFICATIONS_ENABLED);
@@ -150,10 +158,10 @@ public class NotificationsSettingsActivity extends AppCompatActivity {
         mToolbarSwitch.setOnLongClickListener(new View.OnLongClickListener() {
             @Override
             public boolean onLongClick(View view) {
-                Toast.makeText(NotificationsSettingsActivity.this, mMasterSwitch.isChecked() ?
-                        getString(R.string.notification_settings_master_hint_on) :
-                        getString(R.string.notification_settings_master_hint_off),
-                        Toast.LENGTH_SHORT).show();
+                Toast.makeText(NotificationsSettingsActivity.this, mMasterSwitch.isChecked()
+                                       ? getString(R.string.notification_settings_master_hint_on)
+                                       : getString(R.string.notification_settings_master_hint_off),
+                               Toast.LENGTH_SHORT).show();
                 return true;
             }
         });
@@ -179,7 +187,7 @@ public class NotificationsSettingsActivity extends AppCompatActivity {
     /**
      * Hide view when Notification Settings are disabled by toggling the master switch off.
      *
-     * @param isMasterChecked   TRUE to hide disabled view, FALSE to show disabled view
+     * @param isMasterChecked TRUE to hide disabled view, FALSE to show disabled view
      */
     protected void hideDisabledView(boolean isMasterChecked) {
         LinearLayout notificationsDisabledView = findViewById(R.id.notification_settings_disabled_view);

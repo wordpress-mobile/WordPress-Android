@@ -13,6 +13,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.util.Locale;
 
 /**
  * database for all reader information
@@ -23,81 +24,83 @@ public class ReaderDatabase extends SQLiteOpenHelper {
 
     /*
      * version history
-     *   67 - added tbl_blog_info to ReaderBlogTable
-     *   68 - added author_blog_id to ReaderCommentTable
-     *   69 - renamed tbl_blog_urls to tbl_followed_blogs in ReaderBlogTable
-     *   70 - added author_id to ReaderCommentTable and ReaderPostTable
-     *   71 - added blog_id to ReaderUserTable
-     *   72 - removed tbl_followed_blogs from ReaderBlogTable
-     *   73 - added tbl_recommended_blogs to ReaderBlogTable
-     *   74 - added primary_tag to ReaderPostTable
-     *   75 - added secondary_tag to ReaderPostTable
-     *   76 - added feed_id to ReaderBlogTable
-     *   77 - restructured tag tables (ReaderTagTable)
-     *   78 - added tag_type to ReaderPostTable.tbl_post_tags
-     *   79 - added is_likes_enabled and is_sharing_enabled to tbl_posts
-     *   80 - added tbl_comment_likes in ReaderLikeTable, added num_likes to tbl_comments
-     *   81 - added image_url to tbl_blog_info
-     *   82 - added idx_posts_timestamp to tbl_posts
-     *   83 - removed tag_list from tbl_posts
-     *   84 - added tbl_attachments
-     *   85 - removed tbl_attachments, added attachments_json to tbl_posts
-     *   90 - added default values for all INTEGER columns that were missing them (hotfix 3.1.1)
-     *   92 - added default values for all INTEGER columns that were missing them (3.2)
-     *   93 - tbl_posts text is now truncated to a max length (3.3)
-     *   94 - added is_jetpack to tbl_posts (3.4)
-     *   95 - added page_number to tbl_comments (3.4)
-     *   96 - removed tbl_tag_updates, added date_updated to tbl_tags (3.4)
-     *   97 - added short_url to tbl_posts
-     *   98 - added feed_id to tbl_posts
-     *   99 - added feed_url to tbl_blog_info
-     *  100 - changed primary key on tbl_blog_info
-     *  101 - dropped is_reblogged from ReaderPostTable
-     *  102 - changed primary key of tbl_blog_info from blog_id+feed_id to just blog_id
-     *  103 - added discover_json to ReaderPostTable
-     *  104 - added word_count to ReaderPostTable
-     *  105 - added date_updated to ReaderBlogTable
-     *  106 - dropped is_likes_enabled and is_sharing_enabled from tbl_posts
-     *  107 - "Blogs I Follow" renamed to "Followed Sites"
-     *  108 - added "has_gap_marker" to tbl_post_tags
-     *  109 - added "feed_item_id" to tbl_posts
-     *  110 - added xpost_post_id and xpost_blog_id to tbl_posts
-     *  111 - added author_first_name to tbl_posts
-     *  112 - no structural change, just reset db
-     *  113 - added tag_title to tag tables
-     *  114 - renamed tag_name to tag_slug in tag tables
-     *  115 - added ReaderSearchTable
-     *  116 - added tag_display_name to tag tables
-     *  117 - changed tbl_posts.timestamp from INTEGER to REAL
-     *  118 - renamed tbl_search_history to tbl_search_suggestions
-     *  119 - renamed tbl_posts.timestamp to sort_index
-     *  120 - added "format" to tbl_posts
-     *  121 - removed word_count from tbl_posts
-     *  122 - changed tbl_posts primary key to pseudo_id
-     *  123 - changed tbl_posts.published to tbl_posts.date
-     *  124 - returned tbl_posts.published
-     *  125 - added tbl_posts.railcar_json
-     *  126 - separate fields in tbl_posts for date_liked, date_tagged, date_published
-     *  127 - changed tbl_posts.sort_index to tbl_posts.score
-     *  128 - added indexes on tbl_posts.date_published and tbl_posts.date_tagged
-     *  129 - denormalized post storage, dropped tbl_post_tags
-     *  130 - added tbl_posts.blog_image_url
-     *  131 - added tbl_posts.card_type
-     *  132 - no schema changes, simply clearing to accommodate gallery card_type
-     *  133 - no schema changes, simply clearing to accommodate video card_type
+     * 67 - added tbl_blog_info to ReaderBlogTable
+     * 68 - added author_blog_id to ReaderCommentTable
+     * 69 - renamed tbl_blog_urls to tbl_followed_blogs in ReaderBlogTable
+     * 70 - added author_id to ReaderCommentTable and ReaderPostTable
+     * 71 - added blog_id to ReaderUserTable
+     * 72 - removed tbl_followed_blogs from ReaderBlogTable
+     * 73 - added tbl_recommended_blogs to ReaderBlogTable
+     * 74 - added primary_tag to ReaderPostTable
+     * 75 - added secondary_tag to ReaderPostTable
+     * 76 - added feed_id to ReaderBlogTable
+     * 77 - restructured tag tables (ReaderTagTable)
+     * 78 - added tag_type to ReaderPostTable.tbl_post_tags
+     * 79 - added is_likes_enabled and is_sharing_enabled to tbl_posts
+     * 80 - added tbl_comment_likes in ReaderLikeTable, added num_likes to tbl_comments
+     * 81 - added image_url to tbl_blog_info
+     * 82 - added idx_posts_timestamp to tbl_posts
+     * 83 - removed tag_list from tbl_posts
+     * 84 - added tbl_attachments
+     * 85 - removed tbl_attachments, added attachments_json to tbl_posts
+     * 90 - added default values for all INTEGER columns that were missing them (hotfix 3.1.1)
+     * 92 - added default values for all INTEGER columns that were missing them (3.2)
+     * 93 - tbl_posts text is now truncated to a max length (3.3)
+     * 94 - added is_jetpack to tbl_posts (3.4)
+     * 95 - added page_number to tbl_comments (3.4)
+     * 96 - removed tbl_tag_updates, added date_updated to tbl_tags (3.4)
+     * 97 - added short_url to tbl_posts
+     * 98 - added feed_id to tbl_posts
+     * 99 - added feed_url to tbl_blog_info
+     * 100 - changed primary key on tbl_blog_info
+     * 101 - dropped is_reblogged from ReaderPostTable
+     * 102 - changed primary key of tbl_blog_info from blog_id+feed_id to just blog_id
+     * 103 - added discover_json to ReaderPostTable
+     * 104 - added word_count to ReaderPostTable
+     * 105 - added date_updated to ReaderBlogTable
+     * 106 - dropped is_likes_enabled and is_sharing_enabled from tbl_posts
+     * 107 - "Blogs I Follow" renamed to "Followed Sites"
+     * 108 - added "has_gap_marker" to tbl_post_tags
+     * 109 - added "feed_item_id" to tbl_posts
+     * 110 - added xpost_post_id and xpost_blog_id to tbl_posts
+     * 111 - added author_first_name to tbl_posts
+     * 112 - no structural change, just reset db
+     * 113 - added tag_title to tag tables
+     * 114 - renamed tag_name to tag_slug in tag tables
+     * 115 - added ReaderSearchTable
+     * 116 - added tag_display_name to tag tables
+     * 117 - changed tbl_posts.timestamp from INTEGER to REAL
+     * 118 - renamed tbl_search_history to tbl_search_suggestions
+     * 119 - renamed tbl_posts.timestamp to sort_index
+     * 120 - added "format" to tbl_posts
+     * 121 - removed word_count from tbl_posts
+     * 122 - changed tbl_posts primary key to pseudo_id
+     * 123 - changed tbl_posts.published to tbl_posts.date
+     * 124 - returned tbl_posts.published
+     * 125 - added tbl_posts.railcar_json
+     * 126 - separate fields in tbl_posts for date_liked, date_tagged, date_published
+     * 127 - changed tbl_posts.sort_index to tbl_posts.score
+     * 128 - added indexes on tbl_posts.date_published and tbl_posts.date_tagged
+     * 129 - denormalized post storage, dropped tbl_post_tags
+     * 130 - added tbl_posts.blog_image_url
+     * 131 - added tbl_posts.card_type
+     * 132 - no schema changes, simply clearing to accommodate gallery card_type
+     * 133 - no schema changes, simply clearing to accommodate video card_type
      */
 
     /*
-	 *  database singleton
-	 */
+     * database singleton
+     */
     private static ReaderDatabase mReaderDb;
-    private final static Object mDbLock = new Object();
+    private static final Object DB_LOCK = new Object();
+
     public static ReaderDatabase getDatabase() {
         if (mReaderDb == null) {
-            synchronized(mDbLock) {
+            synchronized (DB_LOCK) {
                 if (mReaderDb == null) {
                     mReaderDb = new ReaderDatabase(WordPress.getContext());
-                    // this ensures that onOpen() is called with a writable database (open will fail if app calls getReadableDb() first)
+                    // this ensures that onOpen() is called with a writable database
+                    // (open will fail if app calls getReadableDb() first)
                     mReaderDb.getWritableDatabase();
                 }
             }
@@ -108,6 +111,7 @@ public class ReaderDatabase extends SQLiteOpenHelper {
     public static SQLiteDatabase getReadableDb() {
         return getDatabase().getReadableDatabase();
     }
+
     public static SQLiteDatabase getWritableDb() {
         return getDatabase().getWritableDatabase();
     }
@@ -115,8 +119,8 @@ public class ReaderDatabase extends SQLiteOpenHelper {
     @Override
     public void onOpen(SQLiteDatabase db) {
         super.onOpen(db);
-        //copyDatabase(db);
-        //getDatabase().reset(db);
+        // copyDatabase(db);
+        // getDatabase().reset(db);
     }
 
     /*
@@ -200,24 +204,24 @@ public class ReaderDatabase extends SQLiteOpenHelper {
 
             // don't bother purging other data unless posts were purged
             if (numPostsDeleted > 0) {
-                AppLog.i(T.READER, String.format("%d total posts purged", numPostsDeleted));
+                AppLog.i(T.READER, String.format(Locale.ENGLISH, "%d total posts purged", numPostsDeleted));
 
                 // purge unattached comments
                 int numCommentsDeleted = ReaderCommentTable.purge(db);
                 if (numCommentsDeleted > 0) {
-                    AppLog.i(T.READER, String.format("%d comments purged", numCommentsDeleted));
+                    AppLog.i(T.READER, String.format(Locale.ENGLISH, "%d comments purged", numCommentsDeleted));
                 }
 
                 // purge unattached likes
                 int numLikesDeleted = ReaderLikeTable.purge(db);
                 if (numLikesDeleted > 0) {
-                    AppLog.i(T.READER, String.format("%d likes purged", numLikesDeleted));
+                    AppLog.i(T.READER, String.format(Locale.ENGLISH, "%d likes purged", numLikesDeleted));
                 }
 
                 // purge unattached thumbnails
                 int numThumbsPurged = ReaderThumbnailTable.purge(db);
                 if (numThumbsPurged > 0) {
-                    AppLog.i(T.READER, String.format("%d thumbnails purged", numThumbsPurged));
+                    AppLog.i(T.READER, String.format(Locale.ENGLISH, "%d thumbnails purged", numThumbsPurged));
                 }
             }
             db.setTransactionSuccessful();
@@ -259,6 +263,4 @@ public class ReaderDatabase extends SQLiteOpenHelper {
             AppLog.e(T.DB, "failed to copy reader database", e);
         }
     }
-
-
 }

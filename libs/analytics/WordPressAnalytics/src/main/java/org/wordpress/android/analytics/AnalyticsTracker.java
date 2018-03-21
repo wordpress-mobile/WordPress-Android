@@ -159,7 +159,6 @@ public final class AnalyticsTracker {
         NOTIFICATION_UPLOAD_MEDIA_SUCCESS_WRITE_POST,
         NOTIFICATION_UPLOAD_POST_ERROR_RETRY,
         NOTIFICATION_UPLOAD_MEDIA_ERROR_RETRY,
-        NOTIFICATIONS_SCREEN_SIGNED_INTO_JETPACK,
         OPENED_POSTS,
         OPENED_PAGES,
         OPENED_COMMENTS,
@@ -173,7 +172,8 @@ public final class AnalyticsTracker {
         OPENED_MY_PROFILE,
         OPENED_PEOPLE_MANAGEMENT,
         OPENED_PERSON,
-        OPENED_PLUGINS,
+        OPENED_PLUGIN_DIRECTORY,
+        OPENED_PLUGIN_LIST,
         OPENED_PLUGIN_DETAIL,
         CREATE_ACCOUNT_INITIATED,
         CREATE_ACCOUNT_EMAIL_EXISTS,
@@ -186,11 +186,11 @@ public final class AnalyticsTracker {
         ADDED_SELF_HOSTED_SITE,
         SIGNED_IN,
         SIGNED_INTO_JETPACK,
-        PERFORMED_JETPACK_SIGN_IN_FROM_STATS_SCREEN,
-        STATS_SELECTED_INSTALL_JETPACK,
-        STATS_CANCELED_INSTALL_JETPACK,
-        STATS_COMPLETED_INSTALL_JETPACK,
-        STATS_SELECTED_CONNECT_JETPACK,
+        INSTALL_JETPACK_SELECTED,
+        INSTALL_JETPACK_CANCELLED,
+        INSTALL_JETPACK_COMPLETED,
+        CONNECT_JETPACK_SELECTED,
+        CONNECT_JETPACK_FAILED,
         PUSH_NOTIFICATION_RECEIVED,
         PUSH_NOTIFICATION_TAPPED, // Same of opened
         SUPPORT_OPENED_HELPSHIFT_SCREEN,
@@ -249,6 +249,7 @@ public final class AnalyticsTracker {
         SIGNUP_CANCELED,
         SIGNUP_EMAIL_TO_LOGIN,
         SIGNUP_MAGIC_LINK_FAILED,
+        SIGNUP_MAGIC_LINK_SENT,
         SIGNUP_MAGIC_LINK_SUCCEEDED,
         SIGNUP_SOCIAL_2FA_NEEDED,
         SIGNUP_SOCIAL_ACCOUNTS_NEED_CONNECTING,
@@ -327,9 +328,14 @@ public final class AnalyticsTracker {
         APP_PERMISSION_GRANTED,
         APP_PERMISSION_DENIED,
         SHARE_TO_WP_SUCCEEDED,
+        PLUGIN_ACTIVATED,
+        PLUGIN_AUTOUPDATE_ENABLED,
+        PLUGIN_AUTOUPDATE_DISABLED,
+        PLUGIN_DEACTIVATED,
+        PLUGIN_INSTALLED,
         PLUGIN_REMOVED,
-        PLUGIN_UPDATED,
-        PLUGIN_INSTALLED
+        PLUGIN_SEARCH_PERFORMED,
+        PLUGIN_UPDATED
     }
 
     private static final List<Tracker> TRACKERS = new ArrayList<>();
@@ -345,7 +351,7 @@ public final class AnalyticsTracker {
         }
     }
 
-    public static void setHasUserOptedOut(boolean hasUserOptedOut){
+    public static void setHasUserOptedOut(boolean hasUserOptedOut) {
         if (hasUserOptedOut != mHasUserOptedOut) {
             mHasUserOptedOut = hasUserOptedOut;
         }

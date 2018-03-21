@@ -159,6 +159,8 @@
                 android:paddingRight="@dimen/margin_extra_large"
                 android:paddingEnd="@dimen/margin_extra_large"
                 android:visibility="gone"
+                app:passwordToggleEnabled="true"
+                app:passwordToggleTint="@color/grey"
                 app:wpIconDrawable="@drawable/ic_lock_grey_24dp"
                 tools:visibility="visible" >
             </org.wordpress.android.login.widgets.WPLoginInputRow>

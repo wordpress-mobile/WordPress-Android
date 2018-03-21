@@ -33,10 +33,12 @@ import com.google.android.gms.common.api.GoogleApiClient.OnConnectionFailedListe
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 import org.wordpress.android.fluxc.generated.AccountActionBuilder;
+import org.wordpress.android.fluxc.store.AccountStore;
 import org.wordpress.android.fluxc.store.AccountStore.OnAvailabilityChecked;
 import org.wordpress.android.login.util.SiteUtils;
 import org.wordpress.android.login.widgets.WPLoginInputRow;
 import org.wordpress.android.login.widgets.WPLoginInputRow.OnEditorCommitListener;
+import org.wordpress.android.util.ActivityUtils;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.EditTextUtils;
@@ -141,7 +143,7 @@ public class LoginEmailFragment extends LoginBaseFormFragment<LoginListener> imp
             @Override
             public void onClick(View view) {
                 mAnalyticsListener.trackSocialButtonClick();
-                EditTextUtils.hideSoftInput(mEmailInput.getEditText());
+                ActivityUtils.hideKeyboardForced(mEmailInput.getEditText());
 
                 if (NetworkUtils.checkConnection(getActivity())) {
                     if (isAdded()) {
@@ -348,7 +350,14 @@ public class LoginEmailFragment extends LoginBaseFormFragment<LoginListener> imp
         if (event.isError()) {
             // report the error but don't bail yet.
             AppLog.e(T.API, "OnAvailabilityChecked has error: " + event.error.type + " - " + event.error.message);
-            showEmailError(R.string.email_not_registered_wpcom);
+            // hide the keyboard to ensure the link to login using the site address is visible
+            ActivityUtils.hideKeyboardForced(mEmailInput);
+            // we validate the email prior to making the request, but just to be safe...
+            if (event.error.type == AccountStore.IsAvailableErrorType.INVALID) {
+                showEmailError(R.string.email_invalid);
+            } else {
+                showErrorDialog(getString(R.string.error_generic_network));
+            }
             return;
         }
 
@@ -356,9 +365,10 @@ public class LoginEmailFragment extends LoginBaseFormFragment<LoginListener> imp
             case EMAIL:
                 if (event.isAvailable) {
                     // email address is available on wpcom, so apparently the user can't login with that one.
+                    ActivityUtils.hideKeyboardForced(mEmailInput);
                     showEmailError(R.string.email_not_registered_wpcom);
                 } else if (mLoginListener != null) {
-                    EditTextUtils.hideSoftInput(mEmailInput.getEditText());
+                    ActivityUtils.hideKeyboardForced(mEmailInput);
                     mLoginListener.gotWpcomEmail(event.value);
                 }
                 break;
@@ -429,7 +439,7 @@ public class LoginEmailFragment extends LoginBaseFormFragment<LoginListener> imp
                     @Override
                     public void run() {
                         if (isAdded()) {
-                            EditTextUtils.showSoftInput(mEmailInput.getEditText());
+                            ActivityUtils.showKeyboard(mEmailInput.getEditText());
                         }
                     }
                 }, getResources().getInteger(android.R.integer.config_mediumAnimTime));

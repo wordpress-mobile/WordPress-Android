@@ -36,7 +36,6 @@ import java.util.List;
  * Based on BarGraph from the GraphView library.
  */
 class StatsBarGraph extends GraphView {
-
     private static final int DEFAULT_MAX_Y = 10;
 
     // Keep tracks of every bar drawn on the graph.
@@ -51,7 +50,7 @@ class StatsBarGraph extends GraphView {
     private final GestureDetectorCompat mDetector;
     private OnGestureListener mGestureListener;
 
-    public StatsBarGraph(Context context) {
+    StatsBarGraph(Context context) {
         super(context, "");
 
         int width = LayoutParams.MATCH_PARENT;
@@ -112,7 +111,6 @@ class StatsBarGraph extends GraphView {
         public boolean onFling(MotionEvent e1, MotionEvent e2, float velocityX, float velocityY) {
             return false;
         }
-
     }
 
     private void highlightBarAndBroadcastDate() {
@@ -162,18 +160,18 @@ class StatsBarGraph extends GraphView {
         gStyle.setNumVerticalLabels(3);
 
         setCustomLabelFormatter(new CustomLabelFormatter() {
-            private NumberFormat numberFormatter;
+            private NumberFormat mNumberFormatter;
 
             @Override
             public String formatLabel(double value, boolean isValueX) {
                 if (isValueX) {
                     return null;
                 }
-                if (numberFormatter == null) {
-                    numberFormatter = NumberFormat.getNumberInstance();
-                    numberFormatter.setMaximumFractionDigits(0);
+                if (mNumberFormatter == null) {
+                    mNumberFormatter = NumberFormat.getNumberInstance();
+                    mNumberFormatter.setMaximumFractionDigits(0);
                 }
-                return numberFormatter.format(value);
+                return mNumberFormatter.format(value);
             }
         });
     }
@@ -232,7 +230,7 @@ class StatsBarGraph extends GraphView {
                 canvas.drawRect(left, 10f, right, bottom, paint);
             }
 
-            if(mVirtualBars.size() < values.length){
+            if (mVirtualBars.size() < values.length) {
                 mVirtualBars.add(new BarChartRect(left - pad, 10f, right + pad, bottom));
             }
 
@@ -241,7 +239,9 @@ class StatsBarGraph extends GraphView {
                 if (mBarPositionToHighlight != i) {
                     paint.setColor(style.color);
                     paint.setAlpha(25);
-                    Shader shader = new LinearGradient(left + pad, bottom - 50, left + pad, bottom, Color.WHITE, Color.BLACK, Shader.TileMode.CLAMP);
+                    Shader shader =
+                            new LinearGradient(left + pad, bottom - 50, left + pad, bottom, Color.WHITE, Color.BLACK,
+                                               Shader.TileMode.CLAMP);
                     paint.setShader(shader);
                     canvas.drawRect(left + pad, bottom - 50, right - pad, bottom, paint);
                     paint.setShader(null);
@@ -370,7 +370,6 @@ class StatsBarGraph extends GraphView {
     }
 
     private class StatsBarGraphAccessibilityHelper extends ExploreByTouchHelper {
-
         StatsBarGraphAccessibilityHelper(View parentView) {
             super(parentView);
         }

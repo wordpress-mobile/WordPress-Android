@@ -1,5 +1,6 @@
 package org.wordpress.android.ui.posts;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -30,6 +31,7 @@ import org.wordpress.android.fluxc.store.TaxonomyStore.OnTaxonomyChanged;
 import org.wordpress.android.fluxc.store.TaxonomyStore.OnTermUploaded;
 import org.wordpress.android.fluxc.store.TaxonomyStore.RemoteTermPayload;
 import org.wordpress.android.models.CategoryNode;
+import org.wordpress.android.util.LocaleManager;
 import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.ToastUtils.Duration;
@@ -64,6 +66,11 @@ public class SelectCategoriesActivity extends AppCompatActivity {
     @Inject Dispatcher mDispatcher;
 
     @Override
+    protected void attachBaseContext(Context newBase) {
+        super.attachBaseContext(LocaleManager.setLocale(newBase));
+    }
+
+    @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         ((WordPress) getApplication()).component().inject(this);
@@ -89,7 +96,7 @@ public class SelectCategoriesActivity extends AppCompatActivity {
             actionBar.setDisplayHomeAsUpEnabled(true);
         }
 
-        mListView = (ListView)findViewById(android.R.id.list);
+        mListView = (ListView) findViewById(android.R.id.list);
         mListScrollPositionManager = new ListScrollPositionManager(mListView, false);
         mListView.setChoiceMode(ListView.CHOICE_MODE_MULTIPLE);
         mListView.setItemsCanFocus(false);
@@ -125,7 +132,7 @@ public class SelectCategoriesActivity extends AppCompatActivity {
                         refreshCategories();
                     }
                 }
-        );
+                                                         );
 
         populateCategoryList();
 
@@ -273,7 +280,8 @@ public class SelectCategoriesActivity extends AppCompatActivity {
 
                 if (event.isError()) {
                     if (!isFinishing()) {
-                        ToastUtils.showToast(SelectCategoriesActivity.this, R.string.category_refresh_error, Duration.LONG);
+                        ToastUtils.showToast(SelectCategoriesActivity.this, R.string.category_refresh_error,
+                                             Duration.LONG);
                     }
                 } else {
                     populateCategoryList();

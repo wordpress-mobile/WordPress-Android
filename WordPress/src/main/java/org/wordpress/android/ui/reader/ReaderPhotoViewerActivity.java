@@ -2,6 +2,7 @@ package org.wordpress.android.ui.reader;
 
 import android.app.Fragment;
 import android.app.FragmentManager;
+import android.content.Context;
 import android.os.Bundle;
 import android.os.Parcelable;
 import android.support.annotation.NonNull;
@@ -18,6 +19,7 @@ import org.wordpress.android.ui.reader.utils.ReaderImageScanner;
 import org.wordpress.android.ui.reader.views.ReaderPhotoView.PhotoViewListener;
 import org.wordpress.android.util.AniUtils;
 import org.wordpress.android.util.AppLog;
+import org.wordpress.android.util.LocaleManager;
 import org.wordpress.android.widgets.WPViewPager;
 import org.wordpress.android.widgets.WPViewPagerTransformer;
 import org.wordpress.android.widgets.WPViewPagerTransformer.TransformType;
@@ -28,7 +30,6 @@ import org.wordpress.android.widgets.WPViewPagerTransformer.TransformType;
  */
 public class ReaderPhotoViewerActivity extends AppCompatActivity
         implements PhotoViewListener {
-
     private String mInitialImageUrl;
     private boolean mIsPrivate;
     private boolean mIsGallery;
@@ -37,6 +38,11 @@ public class ReaderPhotoViewerActivity extends AppCompatActivity
     private PhotoPagerAdapter mAdapter;
     private TextView mTxtTitle;
     private boolean mIsTitleVisible;
+
+    @Override
+    protected void attachBaseContext(Context newBase) {
+        super.attachBaseContext(LocaleManager.setLocale(newBase));
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -210,7 +216,7 @@ public class ReaderPhotoViewerActivity extends AppCompatActivity
 
         @Override
         public int getCount() {
-            return (mImageList != null ? mImageList.size(): 0);
+            return (mImageList != null ? mImageList.size() : 0);
         }
 
         private int indexOfImageUrl(String imageUrl) {

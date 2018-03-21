@@ -31,12 +31,14 @@ public class StatsReferrersFragment extends StatsAbstractListFragment {
     protected boolean hasDataAvailable() {
         return mReferrers != null;
     }
+
     @Override
     protected void saveStatsData(Bundle outState) {
         if (hasDataAvailable()) {
             outState.putSerializable(ARG_REST_RESPONSE, mReferrers);
         }
     }
+
     @Override
     protected void restoreStatsData(Bundle savedInstanceState) {
         if (savedInstanceState.containsKey(ARG_REST_RESPONSE)) {
@@ -75,7 +77,8 @@ public class StatsReferrersFragment extends StatsAbstractListFragment {
 
         if (hasReferrers()) {
             BaseExpandableListAdapter adapter = new MyExpandableListAdapter(getActivity(), getReferrersGroups());
-            StatsUIHelper.reloadGroupViews(getActivity(), adapter, mGroupIdToExpandedMap, mList, getMaxNumberOfItemsToShowInList());
+            StatsUIHelper.reloadGroupViews(getActivity(), adapter, mGroupIdToExpandedMap, mList,
+                                           getMaxNumberOfItemsToShowInList());
             showHideNoResultsUI(false);
         } else {
             showHideNoResultsUI(true);
@@ -84,8 +87,8 @@ public class StatsReferrersFragment extends StatsAbstractListFragment {
 
     private boolean hasReferrers() {
         return mReferrers != null
-                && mReferrers.getGroups() != null
-                && mReferrers.getGroups().size() > 0;
+               && mReferrers.getGroups() != null
+               && mReferrers.getGroups().size() > 0;
     }
 
     private List<ReferrerGroupModel> getReferrersGroups() {
@@ -116,14 +119,17 @@ public class StatsReferrersFragment extends StatsAbstractListFragment {
     protected int getEntryLabelResId() {
         return R.string.stats_entry_referrers;
     }
+
     @Override
     protected int getTotalsLabelResId() {
         return R.string.stats_totals_views;
     }
+
     @Override
     protected int getEmptyLabelTitleResId() {
         return R.string.stats_empty_referrers_title;
     }
+
     @Override
     protected int getEmptyLabelDescResId() {
         return R.string.stats_empty_referrers_desc;
@@ -132,20 +138,20 @@ public class StatsReferrersFragment extends StatsAbstractListFragment {
     private class MyExpandableListAdapter extends BaseExpandableListAdapter {
         public final LayoutInflater inflater;
         public final Activity act;
-        private final List<ReferrerGroupModel> groups;
-        private final List<List<MyChildModel>> children;
+        private final List<ReferrerGroupModel> mGroups;
+        private final List<List<MyChildModel>> mChildren;
 
-        public MyExpandableListAdapter(Activity act, List<ReferrerGroupModel> groups) {
-            this.groups = groups;
+        MyExpandableListAdapter(Activity act, List<ReferrerGroupModel> groups) {
+            mGroups = groups;
             this.inflater = LayoutInflater.from(act);
             this.act = act;
 
             // The code below flattens the 3-levels tree of children to a 2-levels structure
             // that will be used later to populate the UI
-            this.children = new ArrayList<>(groups.size());
+            this.mChildren = new ArrayList<>(groups.size());
             // pre-populate the structure with null values
             for (int i = 0; i < groups.size(); i++) {
-                this.children.add(null);
+                this.mChildren.add(null);
             }
 
             for (int i = 0; i < groups.size(); i++) {
@@ -172,20 +178,20 @@ public class StatsReferrersFragment extends StatsAbstractListFragment {
                         currentGroupChildren.add(myChild);
                     }
                 }
-                this.children.set(i, currentGroupChildren);
+                this.mChildren.set(i, currentGroupChildren);
             }
         }
 
         private final class MyChildModel {
-            String name;
-            int views;
-            String url;
-            String icon;
+            public String name;
+            public int views;
+            public String url;
+            public String icon;
         }
 
         @Override
         public Object getChild(int groupPosition, int childPosition) {
-            List<MyChildModel> currentGroupChildren = children.get(groupPosition);
+            List<MyChildModel> currentGroupChildren = mChildren.get(groupPosition);
             return currentGroupChildren.get(childPosition);
         }
 
@@ -197,7 +203,6 @@ public class StatsReferrersFragment extends StatsAbstractListFragment {
         @Override
         public View getChildView(int groupPosition, final int childPosition,
                                  boolean isLastChild, View convertView, ViewGroup parent) {
-
             final MyChildModel currentChild = (MyChildModel) getChild(groupPosition, childPosition);
 
             if (convertView == null) {
@@ -230,7 +235,7 @@ public class StatsReferrersFragment extends StatsAbstractListFragment {
             holder.networkImageView.setVisibility(View.GONE);
             if (!TextUtils.isEmpty(currentChild.icon)) {
                 holder.networkImageView.setImageUrl(
-                        GravatarUtils.fixGravatarUrl(currentChild.icon, mResourceVars.headerAvatarSizePx),
+                        GravatarUtils.fixGravatarUrl(currentChild.icon, mResourceVars.mHeaderAvatarSizePx),
                         WPNetworkImageView.ImageType.GONE_UNTIL_AVAILABLE);
             }
 
@@ -242,7 +247,7 @@ public class StatsReferrersFragment extends StatsAbstractListFragment {
 
         @Override
         public int getChildrenCount(int groupPosition) {
-            List<MyChildModel> currentGroupChildren = children.get(groupPosition);
+            List<MyChildModel> currentGroupChildren = mChildren.get(groupPosition);
             if (currentGroupChildren == null) {
                 return 0;
             } else {
@@ -252,12 +257,12 @@ public class StatsReferrersFragment extends StatsAbstractListFragment {
 
         @Override
         public Object getGroup(int groupPosition) {
-            return groups.get(groupPosition);
+            return mGroups.get(groupPosition);
         }
 
         @Override
         public int getGroupCount() {
-            return groups.size();
+            return mGroups.size();
         }
 
 
@@ -269,7 +274,6 @@ public class StatsReferrersFragment extends StatsAbstractListFragment {
         @Override
         public View getGroupView(final int groupPosition, boolean isExpanded,
                                  View convertView, ViewGroup parent) {
-
             final StatsViewHolder holder;
             if (convertView == null) {
                 convertView = inflater.inflate(R.layout.stats_list_cell, parent, false);
@@ -307,7 +311,7 @@ public class StatsReferrersFragment extends StatsAbstractListFragment {
             holder.networkImageView.setVisibility(View.GONE);
             if (!TextUtils.isEmpty(icon)) {
                 holder.networkImageView.setImageUrl(
-                        GravatarUtils.fixGravatarUrl(icon, mResourceVars.headerAvatarSizePx),
+                        GravatarUtils.fixGravatarUrl(icon, mResourceVars.mHeaderAvatarSizePx),
                         WPNetworkImageView.ImageType.GONE_UNTIL_AVAILABLE);
             }
 
@@ -327,7 +331,6 @@ public class StatsReferrersFragment extends StatsAbstractListFragment {
                         rp.showPopup(holder.imgMore, group);
                     }
                 });
-
             } else {
                 holder.imgMore.setVisibility(View.GONE);
                 holder.imgMore.setClickable(false);
@@ -345,7 +348,6 @@ public class StatsReferrersFragment extends StatsAbstractListFragment {
         public boolean isChildSelectable(int groupPosition, int childPosition) {
             return false;
         }
-
     }
 
     @Override

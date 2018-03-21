@@ -15,7 +15,6 @@ import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.widgets.WPViewPager;
 
 public class LoginPrologueFragment extends Fragment {
-
     public static final String TAG = "login_prologue_fragment_tag";
 
     LoginPrologueListener mLoginPrologueListener;

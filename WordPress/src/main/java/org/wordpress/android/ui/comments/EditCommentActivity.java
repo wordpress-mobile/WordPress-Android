@@ -3,6 +3,7 @@ package org.wordpress.android.ui.comments;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
@@ -36,6 +37,7 @@ import org.wordpress.android.ui.ActivityId;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.EditTextUtils;
+import org.wordpress.android.util.LocaleManager;
 import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.ToastUtils;
 
@@ -55,6 +57,11 @@ public class EditCommentActivity extends AppCompatActivity {
     @Inject Dispatcher mDispatcher;
     @Inject SiteStore mSiteStore;
     @Inject CommentStore mCommentStore;
+
+    @Override
+    protected void attachBaseContext(Context newBase) {
+        super.attachBaseContext(LocaleManager.setLocale(newBase));
+    }
 
     @Override
     public void onCreate(Bundle icicle) {
@@ -137,9 +144,11 @@ public class EditCommentActivity extends AppCompatActivity {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
             }
+
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
             }
+
             @Override
             public void afterTextChanged(Editable s) {
                 boolean hasError = (editContent.getError() != null);
@@ -253,7 +262,7 @@ public class EditCommentActivity extends AppCompatActivity {
     }
 
     private void setFetchProgressVisible(boolean progressVisible) {
-        final ProgressBar progress = (ProgressBar)findViewById(R.id.edit_comment_progress);
+        final ProgressBar progress = (ProgressBar) findViewById(R.id.edit_comment_progress);
         final View editContainer = findViewById(R.id.edit_comment_container);
 
         if (progress == null || editContainer == null) {
@@ -272,11 +281,11 @@ public class EditCommentActivity extends AppCompatActivity {
             dialogBuilder.setTitle(getResources().getText(R.string.cancel_edit));
             dialogBuilder.setMessage(getResources().getText(R.string.sure_to_cancel_edit_comment));
             dialogBuilder.setPositiveButton(getResources().getText(R.string.yes),
-                    new DialogInterface.OnClickListener() {
-                        public void onClick(DialogInterface dialog, int whichButton) {
-                            finish();
-                        }
-                    });
+                                            new DialogInterface.OnClickListener() {
+                                                public void onClick(DialogInterface dialog, int whichButton) {
+                                                    finish();
+                                                }
+                                            });
             dialogBuilder.setNegativeButton(
                     getResources().getText(R.string.no),
                     new DialogInterface.OnClickListener() {
@@ -292,7 +301,9 @@ public class EditCommentActivity extends AppCompatActivity {
     }
 
     private void onCommentPushed(OnCommentChanged event) {
-        if (isFinishing()) return;
+        if (isFinishing()) {
+            return;
+        }
 
         dismissSaveDialog();
 
@@ -307,7 +318,9 @@ public class EditCommentActivity extends AppCompatActivity {
     }
 
     private void onCommentFetched(OnCommentChanged event) {
-        if (isFinishing() || !mFetchingComment) return;
+        if (isFinishing() || !mFetchingComment) {
+            return;
+        }
         mFetchingComment = false;
         setFetchProgressVisible(false);
 

@@ -1,15 +1,22 @@
 package org.wordpress.android.ui.prefs;
 
 import android.app.FragmentManager;
+import android.content.Context;
 import android.os.Bundle;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.view.MenuItem;
 
 import org.wordpress.android.R;
+import org.wordpress.android.util.LocaleManager;
 
 public class AccountSettingsActivity extends AppCompatActivity {
     private static final String KEY_ACCOUNT_SETTINGS_FRAGMENT = "account-settings-fragment";
+
+    @Override
+    protected void attachBaseContext(Context newBase) {
+        super.attachBaseContext(LocaleManager.setLocale(newBase));
+    }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -22,13 +29,14 @@ public class AccountSettingsActivity extends AppCompatActivity {
         }
 
         FragmentManager fragmentManager = getFragmentManager();
-        AccountSettingsFragment accountSettingsFragment = (AccountSettingsFragment) fragmentManager.findFragmentByTag(KEY_ACCOUNT_SETTINGS_FRAGMENT);
+        AccountSettingsFragment accountSettingsFragment =
+                (AccountSettingsFragment) fragmentManager.findFragmentByTag(KEY_ACCOUNT_SETTINGS_FRAGMENT);
         if (accountSettingsFragment == null) {
             accountSettingsFragment = new AccountSettingsFragment();
 
             fragmentManager.beginTransaction()
-                    .add(android.R.id.content, accountSettingsFragment, KEY_ACCOUNT_SETTINGS_FRAGMENT)
-                    .commit();
+                           .add(android.R.id.content, accountSettingsFragment, KEY_ACCOUNT_SETTINGS_FRAGMENT)
+                           .commit();
         }
     }
 

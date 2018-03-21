@@ -23,6 +23,7 @@
         tools:visibility="visible">
 
         <LinearLayout
+            tools:ignore="UselessParent"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerInParent="true"
@@ -78,7 +79,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:orientation="vertical">
+            android:orientation="vertical"
+            tools:ignore="UselessParent">
 
             <LinearLayout
                 android:id="@+id/container_retry_delete"
@@ -156,7 +158,8 @@
             android:includeFontPadding="false"
             android:textColor="@color/white"
             android:textSize="@dimen/text_sz_small"
-            tools:text="5" />
+            tools:text="5"
+            tools:ignore="UnusedAttribute"/>
     </FrameLayout>
 
     <FrameLayout

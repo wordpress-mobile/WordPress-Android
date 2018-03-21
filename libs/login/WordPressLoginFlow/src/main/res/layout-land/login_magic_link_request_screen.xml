@@ -1,6 +1,7 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    xmlns:tools="http://schemas.android.com/tools">
 
     <include
         android:id="@+id/toolbar"
@@ -55,7 +56,8 @@
         android:paddingTop="@dimen/margin_medium_large"
         android:paddingBottom="@dimen/margin_medium_large"
         android:layout_alignParentBottom="true"
-        android:clipToPadding="false">
+        android:clipToPadding="false"
+        tools:ignore="InconsistentLayout">
 
         <android.support.v7.widget.AppCompatButton
             style="@style/WordPress.Button.Secondary"

@@ -50,6 +50,7 @@ public class AddCategoryFragment extends AppCompatDialogFragment {
         LayoutInflater inflater = getActivity().getLayoutInflater();
 
         // Inflate view
+        //noinspection InflateParams
         View view = inflater.inflate(R.layout.add_category, null);
         mCategoryEditText = (EditText) view.findViewById(R.id.category_name);
         mParentSpinner = (Spinner) view.findViewById(R.id.parent_category);
@@ -57,8 +58,8 @@ public class AddCategoryFragment extends AppCompatDialogFragment {
         loadCategories();
 
         builder.setView(view)
-                .setPositiveButton(android.R.string.ok, null)
-                .setNegativeButton(android.R.string.cancel, null);
+               .setPositiveButton(android.R.string.ok, null)
+               .setNegativeButton(android.R.string.cancel, null);
 
         return builder.create();
     }
@@ -118,8 +119,8 @@ public class AddCategoryFragment extends AppCompatDialogFragment {
         ArrayList<CategoryNode> categoryLevels = CategoryNode.getSortedListOfCategoriesFromRoot(rootCategory);
         categoryLevels.add(0, new CategoryNode(0, 0, getString(R.string.top_level_category_name)));
         if (categoryLevels.size() > 0) {
-            ParentCategorySpinnerAdapter categoryAdapter = new ParentCategorySpinnerAdapter(getActivity(),
-                    R.layout.categories_row_parent, categoryLevels);
+            ParentCategorySpinnerAdapter categoryAdapter =
+                    new ParentCategorySpinnerAdapter(getActivity(), R.layout.categories_row_parent, categoryLevels);
             mParentSpinner.setAdapter(categoryAdapter);
         }
     }

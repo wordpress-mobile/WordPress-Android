@@ -2,6 +2,7 @@ package org.wordpress.android.ui.themes;
 
 import android.app.AlertDialog;
 import android.app.FragmentManager;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
@@ -30,6 +31,7 @@ import org.wordpress.android.ui.themes.ThemeBrowserFragment.ThemeBrowserFragment
 import org.wordpress.android.util.AnalyticsUtils;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
+import org.wordpress.android.util.LocaleManager;
 import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.ToastUtils;
 
@@ -39,7 +41,6 @@ import java.util.Map;
 import javax.inject.Inject;
 
 public class ThemeBrowserActivity extends AppCompatActivity implements ThemeBrowserFragmentCallback {
-
     public static boolean isAccessible(SiteModel site) {
         // themes are only accessible to admin wordpress.com users
         return site != null && site.isUsingWpComRestApi() && site.getHasCapabilityEditThemeOptions();
@@ -58,6 +59,11 @@ public class ThemeBrowserActivity extends AppCompatActivity implements ThemeBrow
 
     @Inject ThemeStore mThemeStore;
     @Inject Dispatcher mDispatcher;
+
+    @Override
+    protected void attachBaseContext(Context newBase) {
+        super.attachBaseContext(LocaleManager.setLocale(newBase));
+    }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -83,7 +89,8 @@ public class ThemeBrowserActivity extends AppCompatActivity implements ThemeBrow
             fetchInstalledThemesIfJetpackSite();
             fetchWpComThemesIfSyncTimedOut(false);
         } else {
-            mThemeBrowserFragment = (ThemeBrowserFragment) getFragmentManager().findFragmentByTag(ThemeBrowserFragment.TAG);
+            mThemeBrowserFragment =
+                    (ThemeBrowserFragment) getFragmentManager().findFragmentByTag(ThemeBrowserFragment.TAG);
         }
 
         Toolbar toolbar = findViewById(R.id.toolbar);
@@ -214,7 +221,7 @@ public class ThemeBrowserActivity extends AppCompatActivity implements ThemeBrow
             } else {
                 AppLog.d(T.THEMES, "Installed themes fetch successful!");
             }
-        } else if (event.origin == ThemeAction.REMOVE_SITE_THEMES){
+        } else if (event.origin == ThemeAction.REMOVE_SITE_THEMES) {
             // Since this is a logout event, we don't need to do anything
             AppLog.d(T.THEMES, "Site themes removed for site: " + event.site.getDisplayName());
         }
@@ -276,8 +283,10 @@ public class ThemeBrowserActivity extends AppCompatActivity implements ThemeBrow
     }
 
     private void updateCurrentThemeView() {
-        if (mCurrentTheme != null && mThemeBrowserFragment != null && mThemeBrowserFragment.getCurrentThemeTextView() != null) {
-            String text = TextUtils.isEmpty(mCurrentTheme.getName()) ? getString(R.string.unknown) : mCurrentTheme.getName();
+        if (mCurrentTheme != null && mThemeBrowserFragment != null
+            && mThemeBrowserFragment.getCurrentThemeTextView() != null) {
+            String text =
+                    TextUtils.isEmpty(mCurrentTheme.getName()) ? getString(R.string.unknown) : mCurrentTheme.getName();
             mThemeBrowserFragment.getCurrentThemeTextView().setText(text);
             mThemeBrowserFragment.setCurrentThemeId(mCurrentTheme.getThemeId());
         }
@@ -328,8 +337,8 @@ public class ThemeBrowserActivity extends AppCompatActivity implements ThemeBrow
     private void addBrowserFragment() {
         mThemeBrowserFragment = ThemeBrowserFragment.newInstance(mSite);
         getFragmentManager().beginTransaction()
-                .add(R.id.theme_browser_container, mThemeBrowserFragment, ThemeBrowserFragment.TAG)
-                .commit();
+                            .add(R.id.theme_browser_container, mThemeBrowserFragment, ThemeBrowserFragment.TAG)
+                            .commit();
     }
 
     private void showAlertDialogOnNewSettingNewTheme(ThemeModel newTheme) {
@@ -355,9 +364,12 @@ public class ThemeBrowserActivity extends AppCompatActivity implements ThemeBrow
     }
 
     private void startWebActivity(String themeId, ThemeWebActivity.ThemeWebActivityType type) {
-        if (!NetworkUtils.checkConnection(this)) return;
+        if (!NetworkUtils.checkConnection(this)) {
+            return;
+        }
 
-        ThemeModel theme = TextUtils.isEmpty(themeId) ? null : mThemeStore.getWpComThemeByThemeId(themeId.replace("-wpcom", ""));
+        ThemeModel theme =
+                TextUtils.isEmpty(themeId) ? null : mThemeStore.getWpComThemeByThemeId(themeId.replace("-wpcom", ""));
         if (theme == null) {
             theme = mThemeStore.getInstalledThemeByThemeId(mSite, themeId);
             if (theme == null) {

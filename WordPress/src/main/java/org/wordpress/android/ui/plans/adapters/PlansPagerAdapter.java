@@ -58,5 +58,4 @@ public class PlansPagerAdapter extends FragmentPagerAdapter {
         }
         return -1;
     }
-
 }

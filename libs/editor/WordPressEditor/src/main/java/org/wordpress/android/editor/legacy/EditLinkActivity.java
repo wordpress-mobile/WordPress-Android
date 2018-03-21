@@ -1,5 +1,6 @@
 package org.wordpress.android.editor.legacy;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -30,14 +31,13 @@ public class EditLinkActivity extends AppCompatActivity {
 
         final EditText urlEditText = (EditText) findViewById(R.id.linkURL);
         urlEditText.setOnClickListener(new View.OnClickListener() {
-            @Override
+            @SuppressLint("SetTextI18n") @Override
             public void onClick(View v) {
                 if (urlEditText.getText().toString().equals("")) {
                     urlEditText.setText("http://");
                     urlEditText.setSelection(7);
                 }
             }
-
         });
 
         okButton.setOnClickListener(new Button.OnClickListener() {

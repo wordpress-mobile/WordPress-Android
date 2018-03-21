@@ -3,6 +3,7 @@ package org.wordpress.android.ui.accounts.signup;
 import android.app.Notification;
 import android.content.Context;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Handler;
 import android.os.Looper;
 import android.support.annotation.NonNull;
@@ -10,6 +11,7 @@ import android.support.annotation.Nullable;
 import android.support.annotation.StringRes;
 import android.text.TextUtils;
 
+import org.greenrobot.eventbus.EventBusException;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 import org.wordpress.android.R;
@@ -28,6 +30,7 @@ import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.AutoForeground;
 import org.wordpress.android.util.AutoForegroundNotification;
+import org.wordpress.android.util.CrashlyticsUtils;
 import org.wordpress.android.util.LanguageUtils;
 
 import java.util.Map;
@@ -35,13 +38,10 @@ import java.util.Map;
 import javax.inject.Inject;
 
 public class SiteCreationService extends AutoForeground<SiteCreationState> {
-
     private static final String ARG_SITE_TITLE = "ARG_SITE_TITLE";
     private static final String ARG_SITE_TAGLINE = "ARG_SITE_TAGLINE";
     private static final String ARG_SITE_SLUG = "ARG_SITE_SLUG";
     private static final String ARG_SITE_THEME_ID = "ARG_SITE_THEME_ID";
-
-    private static final String ARG_SITE_REMOTE_ID = "ARG_SITE_REMOTE_ID";
 
     private static final String ARG_RESUME_PHASE = "ARG_RESUME_PHASE";
 
@@ -70,11 +70,11 @@ public class SiteCreationService extends AutoForeground<SiteCreationState> {
 
     public static class SiteCreationState implements AutoForeground.ServiceState {
         private @NonNull final SiteCreationStep mStep;
-        private final Object payload;
+        private final Object mPayload;
 
         SiteCreationState(@NonNull SiteCreationStep step, @Nullable Object payload) {
             this.mStep = step;
-            this.payload = payload;
+            this.mPayload = payload;
         }
 
         @NonNull
@@ -83,7 +83,7 @@ public class SiteCreationService extends AutoForeground<SiteCreationState> {
         }
 
         public Object getPayload() {
-            return payload;
+            return mPayload;
         }
 
         @Override
@@ -118,28 +118,28 @@ public class SiteCreationService extends AutoForeground<SiteCreationState> {
 
     private static class SiteCreationNotification {
         static Notification progress(Context context, int progress, @StringRes int titleString,
-                @StringRes int stepString) {
+                                     @StringRes int stepString) {
             return AutoForegroundNotification.progress(context, progress,
-                    titleString,
-                    stepString,
-                    R.drawable.ic_my_sites_24dp,
-                    R.color.blue_wordpress);
+                                                       titleString,
+                                                       stepString,
+                                                       R.drawable.ic_my_sites_24dp,
+                                                       R.color.blue_wordpress);
         }
 
         static Notification success(Context context) {
             return AutoForegroundNotification.success(context,
-                    R.string.notification_site_creation_title_success,
-                    R.string.notification_site_creation_created,
-                    R.drawable.ic_my_sites_24dp,
-                    R.color.blue_wordpress);
+                                                      R.string.notification_site_creation_title_success,
+                                                      R.string.notification_site_creation_created,
+                                                      R.drawable.ic_my_sites_24dp,
+                                                      R.color.blue_wordpress);
         }
 
         static Notification failure(Context context, @StringRes int content) {
             return AutoForegroundNotification.failure(context,
-                    R.string.notification_site_creation_title_stopped,
-                    content,
-                    R.drawable.ic_my_sites_24dp,
-                    R.color.blue_wordpress);
+                                                      R.string.notification_site_creation_title_stopped,
+                                                      content,
+                                                      R.drawable.ic_my_sites_24dp,
+                                                      R.color.blue_wordpress);
         }
     }
 
@@ -147,13 +147,16 @@ public class SiteCreationService extends AutoForeground<SiteCreationState> {
     @Inject SiteStore mSiteStore;
     @Inject ThemeStore mThemeStore;
 
+    private boolean mIsRetry;
+
+    private String mSiteSlug;
     private String mSiteTagline;
     private ThemeModel mSiteTheme;
-    private long mNewSiteRemoteId;
     private SiteModel mNewSite;
 
     public static void createSite(
             Context context,
+            SiteCreationState retryFromState,
             String siteTitle,
             String siteTagline,
             String siteSlug,
@@ -161,25 +164,14 @@ public class SiteCreationService extends AutoForeground<SiteCreationState> {
         clearSiteCreationServiceState();
 
         Intent intent = new Intent(context, SiteCreationService.class);
+
+        if (retryFromState != null) {
+            intent.putExtra(ARG_RESUME_PHASE, retryFromState.getStepName());
+        }
+
         intent.putExtra(ARG_SITE_TITLE, siteTitle);
         intent.putExtra(ARG_SITE_TAGLINE, siteTagline);
         intent.putExtra(ARG_SITE_SLUG, siteSlug);
-        intent.putExtra(ARG_SITE_THEME_ID, siteThemeId);
-        context.startService(intent);
-    }
-
-    public static void retryFromState(
-            Context context,
-            SiteCreationState retryFromState,
-            long newSiteRemoteId,
-            String siteTagline,
-            String siteThemeId) {
-        clearSiteCreationServiceState();
-
-        Intent intent = new Intent(context, SiteCreationService.class);
-        intent.putExtra(ARG_RESUME_PHASE, retryFromState.getStepName());
-        intent.putExtra(ARG_SITE_REMOTE_ID, newSiteRemoteId);
-        intent.putExtra(ARG_SITE_TAGLINE, siteTagline);
         intent.putExtra(ARG_SITE_THEME_ID, siteThemeId);
         context.startService(intent);
     }
@@ -198,11 +190,20 @@ public class SiteCreationService extends AutoForeground<SiteCreationState> {
 
     @Override
     protected void onProgressStart() {
-        mDispatcher.register(this);
+        AppLog.i(T.NUX, "SiteCreationService registering on EventBus");
+        try {
+            // it seems that for some users, the Service tries to register more than once. Let's guard to collect info
+            //  on this. Ticket: https://github.com/wordpress-mobile/WordPress-Android/issues/7353
+            mDispatcher.register(this);
+        } catch (EventBusException e) {
+            AppLog.w(T.NUX, "Registering SiteCreationService to EventBus failed! " + e.getMessage());
+            CrashlyticsUtils.logException(e, T.NUX);
+        }
     }
 
     @Override
     protected void onProgressEnd() {
+        AppLog.i(T.NUX, "SiteCreationService deregistering from EventBus");
         mDispatcher.unregister(this);
     }
 
@@ -211,18 +212,18 @@ public class SiteCreationService extends AutoForeground<SiteCreationState> {
         switch (state.getStep()) {
             case NEW_SITE:
                 return SiteCreationNotification.progress(this, 25, R.string.site_creation_creating_laying_foundation,
-                        R.string.notification_site_creation_step_creating);
+                                                         R.string.notification_site_creation_step_creating);
             case FETCHING_NEW_SITE:
                 return SiteCreationNotification.progress(this, 50, R.string.site_creation_creating_fetching_info,
-                        R.string.notification_site_creation_step_fetching);
+                                                         R.string.notification_site_creation_step_fetching);
             case SET_TAGLINE:
                 return SiteCreationNotification.progress(this, 75, R.string.site_creation_creating_configuring_content,
-                        R.string.notification_site_creation_step_tagline);
+                                                         R.string.notification_site_creation_step_tagline);
             case SET_THEME:
             case PRELOAD:
                 // treat PRELOAD step as SET_THEME since when in background the UI isn't doing any preloading.
                 return SiteCreationNotification.progress(this, 100, R.string.site_creation_creating_configuring_theme,
-                        R.string.notification_site_creation_step_theme);
+                                                         R.string.notification_site_creation_step_theme);
             case SUCCESS:
                 return SiteCreationNotification.success(this);
             case FAILURE:
@@ -238,6 +239,7 @@ public class SiteCreationService extends AutoForeground<SiteCreationState> {
 
     /**
      * Helper method to create a new State object and set it as the new state.
+     *
      * @param step The step of the new state
      * @param payload The payload to attach to the new state
      */
@@ -267,18 +269,30 @@ public class SiteCreationService extends AutoForeground<SiteCreationState> {
             return START_NOT_STICKY;
         }
 
+        setState(SiteCreationStep.IDLE, null);
+
+        mSiteSlug = intent.getStringExtra(ARG_SITE_SLUG);
         mSiteTagline = intent.getStringExtra(ARG_SITE_TAGLINE);
         String themeId = intent.getStringExtra(ARG_SITE_THEME_ID);
         mSiteTheme = mThemeStore.getWpComThemeByThemeId(themeId);
-        mNewSiteRemoteId = intent.getLongExtra(ARG_SITE_REMOTE_ID, -1);
 
-        if (mNewSiteRemoteId != -1) {
-            // load site from the DB. Note, this can be null if the site is not yet fetched from the network.
-            mNewSite = mSiteStore.getSiteBySiteId(mNewSiteRemoteId);
+        // load site from the DB. Note, this can be null if the site is not yet fetched from the network.
+        mNewSite = getWpcomSiteBySlug(mSiteSlug);
+
+        mIsRetry = intent.hasExtra(ARG_RESUME_PHASE);
+
+        final SiteCreationStep continueFromPhase = mIsRetry
+                ? SiteCreationStep.valueOf(intent.getStringExtra(ARG_RESUME_PHASE))
+                : SiteCreationStep.IDLE;
+
+        if (continueFromPhase == SiteCreationStep.IDLE && mNewSite != null) {
+            // site already exists but we're not in a retry attempt _after_ having issued the new-site creation call.
+            //  That means the slug requested corresponds to an already existing site! This is an indication that the
+            //  siteslug recommendation service is buggy.
+            AppLog.w(T.NUX, "WPCOM site with slug '" + mSiteSlug + "' already exists! Can't create a new one!");
+            notifyFailure();
+            return START_REDELIVER_INTENT;
         }
-
-        final SiteCreationStep continueFromPhase = intent.hasExtra(ARG_RESUME_PHASE) ?
-                SiteCreationStep.valueOf(intent.getStringExtra(ARG_RESUME_PHASE)) : SiteCreationStep.IDLE;
 
         if (new SiteCreationState(continueFromPhase, null).isTerminal()) {
             throw new RuntimeException("Internal inconsistency: SiteCreationService can't resume a terminal step!");
@@ -292,44 +306,60 @@ public class SiteCreationService extends AutoForeground<SiteCreationState> {
         return START_REDELIVER_INTENT;
     }
 
+    private SiteModel getWpcomSiteBySlug(String siteSlug) {
+        final String url = siteSlug + ".wordpress.com";
+        for (SiteModel site : mSiteStore.getSites()) {
+            if (Uri.parse(site.getUrl()).getHost().equals(url)) {
+                return site;
+            }
+        }
+
+        return null;
+    }
+
     private void executePhase(SiteCreationStep phase) {
         switch (phase) {
             case FETCHING_NEW_SITE:
-                if (mNewSiteRemoteId == -1) {
-                    throw new RuntimeException("Internal inconsistency: Cannot resume, invalid site id!");
+                if (TextUtils.isEmpty(mSiteSlug)) {
+                    throw new RuntimeException("Internal inconsistency: Cannot resume, site slug is empty!");
                 }
-                setState(SiteCreationStep.FETCHING_NEW_SITE, mNewSiteRemoteId);
+                setState(SiteCreationStep.FETCHING_NEW_SITE, null);
                 fetchNewSite();
                 break;
             case SET_TAGLINE:
                 if (mNewSite == null) {
-                    AppLog.w(T.NUX, "SiteCreationService invoked to resume tagline setup but site not found locally!");
+                    AppLog.w(T.NUX, "SiteCreationService can't do tagline setup. mNewSite is null!");
                     notifyFailure();
                     return;
                 }
-                setState(SiteCreationStep.SET_TAGLINE, mNewSiteRemoteId);
+                setState(SiteCreationStep.SET_TAGLINE, null);
                 setTagline();
                 break;
             case SET_THEME:
                 if (mNewSite == null) {
-                    AppLog.w(T.NUX, "SiteCreationService invoked to resume theme setup but site not found locally!");
+                    AppLog.w(T.NUX, "SiteCreationService can't do theme setup. mNewSite is null!");
                     notifyFailure();
                     return;
                 }
-                setState(SiteCreationStep.SET_THEME, mNewSiteRemoteId);
+                setState(SiteCreationStep.SET_THEME, null);
                 activateTheme(mSiteTheme);
                 break;
             case PRELOAD:
                 if (mNewSite == null) {
-                    AppLog.w(T.NUX, "SiteCreationService invoked to resume theme setup but site not found locally!");
+                    AppLog.w(T.NUX, "SiteCreationService can't do preload setup. mNewSite is null!");
                     notifyFailure();
                     return;
                 }
-                setState(SiteCreationStep.PRELOAD, mNewSiteRemoteId);
+                setState(SiteCreationStep.PRELOAD, null);
                 doPreloadDelay();
                 break;
             case SUCCESS:
-                setState(SiteCreationStep.SUCCESS, mSiteStore.getLocalIdForRemoteSiteId(mNewSiteRemoteId));
+                if (mNewSite == null) {
+                    AppLog.w(T.NUX, "SiteCreationService can't do success setup. mNewSite is null!");
+                    notifyFailure();
+                    return;
+                }
+                setState(SiteCreationStep.SUCCESS, mNewSite.getId());
                 break;
         }
     }
@@ -360,7 +390,8 @@ public class SiteCreationService extends AutoForeground<SiteCreationState> {
 
     private void setTagline() {
         if (!TextUtils.isEmpty(mSiteTagline)) {
-            SiteSettingsInterface siteSettings = SiteSettingsInterface.getInterface(this, mNewSite,
+            SiteSettingsInterface siteSettings = SiteSettingsInterface.getInterface(
+                    this, mNewSite,
                     new SiteSettingsInterface.SiteSettingsListener() {
                         @Override
                         public void onSaveError(Exception error) {
@@ -421,10 +452,10 @@ public class SiteCreationService extends AutoForeground<SiteCreationState> {
         SiteCreationState currentState = getState();
 
         AppLog.e(T.NUX, "SiteCreationService entered state FAILURE while on step: "
-                + (currentState == null ? "null" : currentState.getStep().name()));
+                        + (currentState == null ? "null" : currentState.getStep().name()));
 
         // new state is FAILURE and pass the previous state as payload
-        setState(SiteCreationStep.FAILURE, getState());
+        setState(SiteCreationStep.FAILURE, currentState);
     }
 
     // OnChanged events
@@ -434,13 +465,18 @@ public class SiteCreationService extends AutoForeground<SiteCreationState> {
     public void onNewSiteCreated(SiteStore.OnNewSiteCreated event) {
         AppLog.i(T.NUX, event.toString());
         if (event.isError()) {
+            if (mIsRetry && event.error.type == SiteStore.NewSiteErrorType.SITE_NAME_EXISTS) {
+                // just move to the next step. The site was already created on the server by our previous attempt.
+                AppLog.w(T.NUX, "WPCOM site already created but we are in retrying mode so, just move on.");
+                finishedPhase(SiteCreationStep.NEW_SITE);
+                return;
+            }
+
             notifyFailure();
             return;
         }
 
         AnalyticsTracker.track(AnalyticsTracker.Stat.CREATED_SITE);
-
-        mNewSiteRemoteId = event.newSiteRemoteId;
 
         finishedPhase(SiteCreationStep.NEW_SITE);
     }
@@ -456,7 +492,7 @@ public class SiteCreationService extends AutoForeground<SiteCreationState> {
             AppLog.e(T.NUX, event.error.type.toString());
         }
 
-        mNewSite = mSiteStore.getSiteBySiteId(mNewSiteRemoteId);
+        mNewSite = getWpcomSiteBySlug(mSiteSlug);
         if (mNewSite == null) {
             notifyFailure();
             return;

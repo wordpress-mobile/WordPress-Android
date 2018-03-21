@@ -34,7 +34,6 @@ import org.wordpress.android.widgets.WPTextView;
  * This basic block can support a media item (image/video) and/or text.
  */
 public class NoteBlock {
-
     private static final String PROPERTY_MEDIA_TYPE = "type";
     private static final String PROPERTY_MEDIA_URL = "url";
 
@@ -74,7 +73,7 @@ public class NoteBlock {
 
     Spannable getNoteText() {
         return NotificationsUtils.getSpannableContentForRanges(mNoteData, null,
-                mOnNoteBlockTextClickListener, false);
+                                                               mOnNoteBlockTextClickListener, false);
     }
 
     String getMetaHomeTitle() {
@@ -115,15 +114,15 @@ public class NoteBlock {
 
     boolean hasImageMediaItem() {
         String mediaType = getNoteMediaItem().optString(PROPERTY_MEDIA_TYPE, "");
-        return hasMediaArray() &&
-               (mediaType.startsWith("image") || mediaType.equals("badge")) &&
-               getNoteMediaItem().has(PROPERTY_MEDIA_URL);
+        return hasMediaArray()
+                && (mediaType.startsWith("image") || mediaType.equals("badge"))
+                && getNoteMediaItem().has(PROPERTY_MEDIA_URL);
     }
 
     private boolean hasVideoMediaItem() {
-        return hasMediaArray() &&
-               getNoteMediaItem().optString(PROPERTY_MEDIA_TYPE, "").startsWith("video") &&
-               getNoteMediaItem().has(PROPERTY_MEDIA_URL);
+        return hasMediaArray()
+                && getNoteMediaItem().optString(PROPERTY_MEDIA_TYPE, "").startsWith("video")
+                && getNoteMediaItem().has(PROPERTY_MEDIA_URL);
     }
 
     public boolean containsBadgeMediaType() {
@@ -195,7 +194,6 @@ public class NoteBlock {
                     noteBlockHolder.getTextView().setClickable(false);
                     noteBlockHolder.getTextView().setLongClickable(false);
                 }
-
             } else {
                 noteBlockHolder.getTextView().setGravity(Gravity.NO_GRAVITY);
                 noteBlockHolder.getTextView().setPadding(0, 0, 0, 0);
@@ -264,7 +262,6 @@ public class NoteBlock {
                 mVideoView.setMediaController(mediaController);
                 mediaController.requestFocus();
                 mVideoView.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
-
                     @Override
                     public void onPrepared(MediaPlayer mp) {
                         // Show the media controls when the video is ready to be played.

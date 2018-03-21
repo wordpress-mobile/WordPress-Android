@@ -125,78 +125,91 @@
                         </LinearLayout>
                     </RelativeLayout>
 
-                    <RelativeLayout style="@style/PluginCardViewHorizontalContainer">
+                    <RelativeLayout
+                        android:layout_height="wrap_content"
+                        android:layout_width="match_parent" >
 
                         <LinearLayout
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
+                            android:id="@+id/plugin_version_layout"
+                            android:background="?android:attr/selectableItemBackground"
+                            android:clickable="true"
+                            android:focusable="true"
+                            android:layout_alignParentLeft="true"
+                            android:layout_alignParentStart="true"
                             android:layout_centerVertical="true"
-                            android:orientation="vertical">
+                            android:layout_height="match_parent"
+                            android:layout_toLeftOf="@+id/plugin_btn_container"
+                            android:layout_toStartOf="@+id/plugin_btn_container"
+                            android:layout_width="wrap_content"
+                            android:orientation="vertical"
+                            android:paddingBottom="@dimen/margin_extra_large"
+                            android:paddingLeft="@dimen/margin_extra_large"
+                            android:paddingStart="@dimen/margin_extra_large"
+                            android:paddingTop="@dimen/margin_extra_large"
+                            tools:ignore="RtlSymmetry" >
 
                             <TextView
                                 android:id="@+id/plugin_version_top"
-                                style="@style/PluginCardViewPrimaryText"
-                                android:background="?android:attr/selectableItemBackground"
                                 android:drawablePadding="@dimen/margin_small"
-                                tools:drawableRight="@drawable/ic_info_outline_grey_dark_18dp"
+                                android:ellipsize="end"
+                                android:maxLines="1"
                                 tools:drawableEnd="@drawable/ic_info_outline_grey_dark_18dp"
-                                tools:text="plugin_version_top" />
+                                tools:drawableRight="@drawable/ic_info_outline_grey_dark_18dp"
+                                tools:text="plugin_version_top"
+                                style="@style/PluginCardViewPrimaryText" />
 
                             <TextView
                                 android:id="@+id/plugin_version_bottom"
-                                style="@style/PluginCardViewSecondaryText"
+                                android:ellipsize="end"
+                                android:maxLines="1"
                                 android:textColor="@color/grey_darken_10"
-                                tools:text="plugin_version_bottom" />
+                                tools:text="plugin_version_bottom"
+                                style="@style/PluginCardViewSecondaryText" />
                         </LinearLayout>
 
                         <FrameLayout
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
+                            android:id="@+id/plugin_btn_container"
                             android:layout_alignParentEnd="true"
                             android:layout_alignParentRight="true"
-                            android:layout_centerVertical="true">
+                            android:layout_centerVertical="true"
+                            android:layout_height="match_parent"
+                            android:layout_width="wrap_content"
+                            android:paddingEnd="@dimen/margin_extra_large"
+                            android:paddingLeft="@dimen/margin_extra_large"
+                            android:paddingRight="@dimen/margin_extra_large"
+                            android:paddingStart="@dimen/margin_extra_large" >
 
-                            <TextView
+                            <android.support.v7.widget.AppCompatButton
                                 android:id="@+id/plugin_btn_update"
-                                android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:background="@drawable/button_blue"
-                                android:paddingBottom="@dimen/margin_large"
-                                android:paddingLeft="@dimen/margin_extra_large"
-                                android:paddingRight="@dimen/margin_extra_large"
-                                android:paddingTop="@dimen/margin_large"
+                                android:layout_width="wrap_content"
                                 android:text="@string/update_verb"
                                 android:textAllCaps="true"
-                                android:textColor="@color/white"
+                                android:textAppearance="@style/TextAppearance.AppCompat.Widget.Button.Colored"
                                 android:textSize="@dimen/text_sz_medium"
                                 android:visibility="gone"
                                 tools:visibility="visible"
-                                android:paddingEnd="@dimen/margin_extra_large"
-                                android:paddingStart="@dimen/margin_extra_large"/>
+                                style="@style/WordPress.Button.Secondary" />
 
-                            <TextView
+                            <android.support.v7.widget.AppCompatButton
                                 android:id="@+id/plugin_btn_install"
-                                android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:background="@drawable/button_blue"
-                                android:paddingBottom="@dimen/margin_large"
-                                android:paddingLeft="@dimen/margin_extra_large"
-                                android:paddingRight="@dimen/margin_extra_large"
-                                android:paddingTop="@dimen/margin_large"
+                                android:layout_width="wrap_content"
                                 android:text="@string/plugin_install"
                                 android:textAllCaps="true"
-                                android:textColor="@color/white"
+                                android:textAppearance="@style/TextAppearance.AppCompat.Widget.Button.Colored"
                                 android:textSize="@dimen/text_sz_medium"
                                 android:visibility="gone"
-                                tools:visibility="visible" />
+                                tools:visibility="visible"
+                                style="@style/WordPress.Button.Secondary" />
 
-                            <TextView
+                            <android.support.v7.widget.AppCompatButton
                                 android:id="@+id/plugin_installed"
+                                android:enabled="false"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_gravity="center_vertical"
                                 android:text="@string/plugin_installed"
-                                android:textColor="@color/grey"
                                 android:textSize="@dimen/text_sz_medium"
                                 android:visibility="gone"
                                 tools:visibility="visible" />
@@ -311,6 +324,7 @@
 
             <android.support.v7.widget.CardView
                 style="@style/PluginCardView"
+                android:id="@+id/plugin_wp_org_details_container"
                 card_view:cardBackgroundColor="@color/white"
                 card_view:cardCornerRadius="@dimen/cardview_default_radius">
 
@@ -435,14 +449,4 @@
             <include layout="@layout/plugin_ratings_cardview" />
         </LinearLayout>
     </android.support.v4.widget.NestedScrollView>
-
-    <ProgressBar
-        android:id="@+id/plugin_fetching_progress_bar"
-        style="?android:attr/progressBarStyleLarge"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:visibility="gone"
-        tools:visibility="visible" />
-
 </android.support.design.widget.CoordinatorLayout>

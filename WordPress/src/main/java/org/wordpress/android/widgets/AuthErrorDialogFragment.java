@@ -14,7 +14,7 @@ import org.wordpress.android.ui.ActivityLauncher;
  * An alert dialog fragment for XML-RPC authentication failures
  */
 public class AuthErrorDialogFragment extends DialogFragment {
-    public static int DEFAULT_RESOURCE_ID = -1;
+    public static final int DEFAULT_RESOURCE_ID = -1;
 
     private int mMessageId = R.string.incorrect_credentials;
     private int mTitleId = R.string.connection_error;

@@ -67,5 +67,7 @@ public class RestClientFactoryTest implements RestClientFactoryAbstract {
         return make(queue);
     }
 
-    public enum Mode {EMPTY, CUSTOMIZABLE}
+    public enum Mode {
+        EMPTY, CUSTOMIZABLE
+    }
 }

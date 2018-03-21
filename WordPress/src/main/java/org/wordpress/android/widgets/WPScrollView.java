@@ -10,10 +10,11 @@ import android.widget.ScrollView;
  * ScrollView which reports when user has scrolled up or down, and when scrolling has completed
  */
 public class WPScrollView extends ScrollView {
-
     public interface ScrollDirectionListener {
         void onScrollUp(float distanceY);
+
         void onScrollDown(float distanceY);
+
         void onScrollCompleted();
     }
 
@@ -41,8 +42,8 @@ public class WPScrollView extends ScrollView {
     @Override
     public boolean onTouchEvent(MotionEvent event) {
         if (mScrollDirectionListener != null
-                && event.getActionMasked() == MotionEvent.ACTION_MOVE
-                && event.getHistorySize() > 0) {
+            && event.getActionMasked() == MotionEvent.ACTION_MOVE
+            && event.getHistorySize() > 0) {
             float initialY = event.getHistoricalY(event.getHistorySize() - 1);
             float distanceY = initialY - event.getY();
             if (distanceY < 0) {
@@ -76,6 +77,7 @@ public class WPScrollView extends ScrollView {
     public boolean canScrollUp() {
         return canScrollVertically(-1);
     }
+
     public boolean canScrollDown() {
         return canScrollVertically(1);
     }

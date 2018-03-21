@@ -56,6 +56,7 @@ import java.io.IOException;
 import java.lang.ref.WeakReference;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.Locale;
 import java.util.TreeMap;
 
 import javax.inject.Inject;
@@ -66,7 +67,7 @@ public class MeFragment extends Fragment {
     private static final String IS_DISCONNECTING = "IS_DISCONNECTING";
     private static final String IS_UPDATING_GRAVATAR = "IS_UPDATING_GRAVATAR";
 
-    private ViewGroup mAvatarFrame;
+    private ViewGroup mAvatarCard;
     private View mProgressBar;
     private ViewGroup mAvatarContainer;
     private WPNetworkImageView mAvatarImageView;
@@ -114,13 +115,13 @@ public class MeFragment extends Fragment {
                              Bundle savedInstanceState) {
         final ViewGroup rootView = (ViewGroup) inflater.inflate(R.layout.me_fragment, container, false);
 
-        mAvatarFrame = (ViewGroup) rootView.findViewById(R.id.frame_avatar);
-        mAvatarContainer = (ViewGroup) rootView.findViewById(R.id.avatar_container);
-        mAvatarImageView = (WPNetworkImageView) rootView.findViewById(R.id.me_avatar);
+        mAvatarCard = rootView.findViewById(R.id.card_avatar);
+        mAvatarContainer = rootView.findViewById(R.id.avatar_container);
+        mAvatarImageView = rootView.findViewById(R.id.me_avatar);
         mProgressBar = rootView.findViewById(R.id.avatar_progress);
-        mDisplayNameTextView = (TextView) rootView.findViewById(R.id.me_display_name);
-        mUsernameTextView = (TextView) rootView.findViewById(R.id.me_username);
-        mLoginLogoutTextView = (TextView) rootView.findViewById(R.id.me_login_logout_text_view);
+        mDisplayNameTextView = rootView.findViewById(R.id.me_display_name);
+        mUsernameTextView = rootView.findViewById(R.id.me_username);
+        mLoginLogoutTextView = rootView.findViewById(R.id.me_login_logout_text_view);
         mMyProfileView = rootView.findViewById(R.id.row_my_profile);
         mAccountSettingsView = rootView.findViewById(R.id.row_account_settings);
         mNotificationsView = rootView.findViewById(R.id.row_notifications);
@@ -245,7 +246,7 @@ public class MeFragment extends Fragment {
 
             mDisplayNameTextView.setVisibility(View.VISIBLE);
             mUsernameTextView.setVisibility(View.VISIBLE);
-            mAvatarFrame.setVisibility(View.VISIBLE);
+            mAvatarCard.setVisibility(View.VISIBLE);
             mMyProfileView.setVisibility(View.VISIBLE);
             mNotificationsView.setVisibility(View.VISIBLE);
             mNotificationsDividerView.setVisibility(View.VISIBLE);
@@ -253,7 +254,7 @@ public class MeFragment extends Fragment {
             final String avatarUrl = constructGravatarUrl(mAccountStore.getAccount());
             loadAvatar(avatarUrl, null);
 
-            mUsernameTextView.setText("@" + defaultAccount.getUserName());
+            mUsernameTextView.setText(getString(R.string.at_username, defaultAccount.getUserName()));
             mLoginLogoutTextView.setText(R.string.me_disconnect_from_wordpress_com);
 
             String displayName = defaultAccount.getDisplayName();
@@ -265,7 +266,7 @@ public class MeFragment extends Fragment {
         } else {
             mDisplayNameTextView.setVisibility(View.GONE);
             mUsernameTextView.setVisibility(View.GONE);
-            mAvatarFrame.setVisibility(View.GONE);
+            mAvatarCard.setVisibility(View.GONE);
             mProgressBar.setVisibility(View.GONE);
             mMyProfileView.setVisibility(View.GONE);
             mAccountSettingsView.setVisibility(View.GONE);
@@ -320,7 +321,7 @@ public class MeFragment extends Fragment {
 
     private void signOutWordPressComWithConfirmation() {
         String message = String.format(getString(R.string.sign_out_wpcom_confirm),
-                mAccountStore.getAccount().getUserName());
+                                       mAccountStore.getAccount().getUserName());
 
         new AlertDialog.Builder(getActivity())
                 .setMessage(message)
@@ -372,12 +373,12 @@ public class MeFragment extends Fragment {
                     Uri imageUri = Uri.parse(strMediaUri);
                     if (imageUri != null) {
                         boolean didGoWell = WPMediaUtils.fetchMediaAndDoNext(getActivity(), imageUri,
-                                new WPMediaUtils.MediaFetchDoNext() {
-                                    @Override
-                                    public void doNext(Uri uri) {
-                                        startCropActivity(uri);
-                                    }
-                                });
+                                                                             new WPMediaUtils.MediaFetchDoNext() {
+                                                                                 @Override
+                                                                                 public void doNext(Uri uri) {
+                                                                                     startCropActivity(uri);
+                                                                                 }
+                                                                             });
 
                         if (!didGoWell) {
                             AppLog.e(AppLog.T.UTILS, "Can't download picked or captured image");
@@ -390,13 +391,13 @@ public class MeFragment extends Fragment {
 
                 if (resultCode == Activity.RESULT_OK) {
                     WPMediaUtils.fetchMediaAndDoNext(getActivity(), UCrop.getOutput(data),
-                            new WPMediaUtils.MediaFetchDoNext() {
-                                @Override
-                                public void doNext(Uri uri) {
-                                    startGravatarUpload(MediaUtils.getRealPathFromURI(getActivity(), uri));
-                                }
-                            });
-
+                                                     new WPMediaUtils.MediaFetchDoNext() {
+                                                         @Override
+                                                         public void doNext(Uri uri) {
+                                                             startGravatarUpload(
+                                                                     MediaUtils.getRealPathFromURI(getActivity(), uri));
+                                                         }
+                                                     });
                 } else if (resultCode == UCrop.RESULT_ERROR) {
                     AppLog.e(AppLog.T.MAIN, "Image cropping failed!", UCrop.getError(data));
                     ToastUtils.showToast(getActivity(), R.string.error_cropping_image, Duration.SHORT);
@@ -424,9 +425,9 @@ public class MeFragment extends Fragment {
         options.setHideBottomControls(true);
 
         UCrop.of(uri, Uri.fromFile(new File(context.getCacheDir(), "cropped_for_gravatar.jpg")))
-                .withAspectRatio(1, 1)
-                .withOptions(options)
-                .start(getActivity(), this);
+             .withAspectRatio(1, 1)
+             .withOptions(options)
+             .start(getActivity(), this);
     }
 
     private void startGravatarUpload(final String filePath) {
@@ -444,20 +445,20 @@ public class MeFragment extends Fragment {
         showGravatarProgressBar(true);
 
         GravatarApi.uploadGravatar(file, mAccountStore.getAccount().getEmail(), mAccountStore.getAccessToken(),
-                new GravatarApi.GravatarUploadListener() {
-                    @Override
-                    public void onSuccess() {
-                        EventBus.getDefault().post(new GravatarUploadFinished(filePath, true));
-                    }
+                                   new GravatarApi.GravatarUploadListener() {
+                                       @Override
+                                       public void onSuccess() {
+                                           EventBus.getDefault().post(new GravatarUploadFinished(filePath, true));
+                                       }
 
-                    @Override
-                    public void onError() {
-                        EventBus.getDefault().post(new GravatarUploadFinished(filePath, false));
-                    }
-                });
+                                       @Override
+                                       public void onError() {
+                                           EventBus.getDefault().post(new GravatarUploadFinished(filePath, false));
+                                       }
+                                   });
     }
 
-    static public class GravatarUploadFinished {
+    public static class GravatarUploadFinished {
         public final String filePath;
         public final boolean success;
 
@@ -478,7 +479,7 @@ public class MeFragment extends Fragment {
         }
     }
 
-    static public class GravatarLoadFinished {
+    public static class GravatarLoadFinished {
         public final boolean success;
 
         public GravatarLoadFinished(boolean success) {
@@ -495,7 +496,7 @@ public class MeFragment extends Fragment {
 
     // injects a fabricated cache entry to the request cache
     private void injectCache(File file, String avatarUrl) throws IOException {
-        final SimpleDateFormat sdf = new SimpleDateFormat("E, dd MMM yyyy HH:mm:ss z");
+        final SimpleDateFormat sdf = new SimpleDateFormat("E, dd MMM yyyy HH:mm:ss z", Locale.ROOT);
         final long currentTimeMs = System.currentTimeMillis();
         final Date currentTime = new Date(currentTimeMs);
         final long fiveMinutesLaterMs = currentTimeMs + 5 * 60 * 1000;
@@ -519,7 +520,7 @@ public class MeFragment extends Fragment {
         entry.responseHeaders.put("Access-Control-Allow-Origin", "*");
         entry.responseHeaders.put("Cache-Control", "max-age=300");
         entry.responseHeaders.put("Content-Disposition", "inline; filename=\""
-                + mAccountStore.getAccount().getAvatarUrl() + ".jpeg\"");
+                                                         + mAccountStore.getAccount().getAvatarUrl() + ".jpeg\"");
         entry.responseHeaders.put("Content-Length", String.valueOf(file.length()));
         entry.responseHeaders.put("Content-Type", "image/jpeg");
         entry.responseHeaders.put("Date", sdf.format(currentTime));
@@ -539,7 +540,7 @@ public class MeFragment extends Fragment {
     private class SignOutWordPressComAsync extends AsyncTask<Void, Void, Void> {
         WeakReference<Context> mWeakContext;
 
-        public SignOutWordPressComAsync(Context context) {
+        SignOutWordPressComAsync(Context context) {
             mWeakContext = new WeakReference<Context>(context);
         }
 

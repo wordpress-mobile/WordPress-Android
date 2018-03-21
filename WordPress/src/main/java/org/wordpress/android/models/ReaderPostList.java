@@ -7,7 +7,6 @@ import org.wordpress.android.ui.reader.models.ReaderBlogIdPostId;
 import java.util.ArrayList;
 
 public class ReaderPostList extends ArrayList<ReaderPost> {
-
     public static ReaderPostList fromJson(JSONObject json) {
         if (json == null) {
             throw new IllegalArgumentException("null json post list");
@@ -65,7 +64,7 @@ public class ReaderPostList extends ArrayList<ReaderPost> {
             return false;
         }
 
-        for (ReaderPost post: posts) {
+        for (ReaderPost post : posts) {
             int index = indexOfPost(post);
             if (index == -1 || !post.isSamePost(this.get(index))) {
                 return false;
@@ -80,7 +79,7 @@ public class ReaderPostList extends ArrayList<ReaderPost> {
      */
     public ReaderPostList getPostsInBlog(long blogId) {
         ReaderPostList postsInBlog = new ReaderPostList();
-        for (ReaderPost post: this) {
+        for (ReaderPost post : this) {
             if (post.blogId == blogId) {
                 postsInBlog.add(post);
             }

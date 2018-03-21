@@ -11,30 +11,31 @@ public class RecyclerViewItemClickListener implements RecyclerView.OnItemTouchLi
     private final OnItemClickListener mListener;
 
     public interface OnItemClickListener {
-        public void onItemClick(View view, int position);
-        public void onLongItemClick(View view, int position);
+        void onItemClick(View view, int position);
+        void onLongItemClick(View view, int position);
     }
 
-    public RecyclerViewItemClickListener(Context context, final RecyclerView recyclerView, OnItemClickListener listener) {
+    public RecyclerViewItemClickListener(Context context, final RecyclerView recyclerView,
+                                         OnItemClickListener listener) {
         mListener = listener;
 
         mGestureDetector = new GestureDetector(
-            context,
-            new GestureDetector.SimpleOnGestureListener() {
-                @Override
-                public boolean onSingleTapUp(MotionEvent motionEvent) {
-                    return true;
-                }
+                context,
+                new GestureDetector.SimpleOnGestureListener() {
+                    @Override
+                    public boolean onSingleTapUp(MotionEvent motionEvent) {
+                        return true;
+                    }
 
-                @Override
-                public void onLongPress(MotionEvent e) {
-                    View child = recyclerView.findChildViewUnder(e.getX(), e.getY());
+                    @Override
+                    public void onLongPress(MotionEvent e) {
+                        View child = recyclerView.findChildViewUnder(e.getX(), e.getY());
 
-                    if (child != null && mListener != null) {
-                        mListener.onLongItemClick(child, recyclerView.getChildAdapterPosition(child));
+                        if (child != null && mListener != null) {
+                            mListener.onLongItemClick(child, recyclerView.getChildAdapterPosition(child));
+                        }
                     }
                 }
-            }
         );
     }
 
@@ -51,7 +52,7 @@ public class RecyclerViewItemClickListener implements RecyclerView.OnItemTouchLi
     }
 
     @Override
-    public void onRequestDisallowInterceptTouchEvent (boolean disallowIntercept){
+    public void onRequestDisallowInterceptTouchEvent(boolean disallowIntercept) {
     }
 
     @Override

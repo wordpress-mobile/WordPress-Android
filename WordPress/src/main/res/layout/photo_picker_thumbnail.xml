@@ -29,7 +29,8 @@
         android:textColor="@color/white"
         android:textSize="@dimen/text_sz_small"
         tools:text="5"
-        android:layout_marginStart="@dimen/margin_medium"/>
+        android:layout_marginStart="@dimen/margin_medium"
+        tools:ignore="UnusedAttribute"/>
 
     <ImageView
         android:id="@+id/image_video_overlay"

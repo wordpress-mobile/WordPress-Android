@@ -2,18 +2,13 @@ package org.wordpress.android.ui.prefs;
 
 import android.content.ActivityNotFoundException;
 import android.content.Intent;
-import android.content.SharedPreferences;
-import android.content.res.Configuration;
-import android.content.res.Resources;
 import android.net.Uri;
-import android.os.Build;
 import android.os.Bundle;
 import android.preference.ListPreference;
 import android.preference.Preference;
 import android.preference.Preference.OnPreferenceClickListener;
 import android.preference.PreferenceCategory;
 import android.preference.PreferenceFragment;
-import android.preference.PreferenceManager;
 import android.preference.PreferenceScreen;
 import android.text.TextUtils;
 import android.util.Pair;
@@ -27,7 +22,7 @@ import org.wordpress.android.fluxc.store.AccountStore;
 import org.wordpress.android.fluxc.store.SiteStore;
 import org.wordpress.android.util.AnalyticsUtils;
 import org.wordpress.android.util.AppLog;
-import org.wordpress.android.util.LanguageUtils;
+import org.wordpress.android.util.LocaleManager;
 import org.wordpress.android.util.WPMediaUtils;
 import org.wordpress.android.util.WPPrefUtils;
 
@@ -37,8 +32,8 @@ import java.util.Map;
 
 import javax.inject.Inject;
 
-public class AppSettingsFragment extends PreferenceFragment implements OnPreferenceClickListener, Preference.OnPreferenceChangeListener {
-    public static final String LANGUAGE_PREF_KEY = "language-pref";
+public class AppSettingsFragment extends PreferenceFragment
+        implements OnPreferenceClickListener, Preference.OnPreferenceChangeListener {
     public static final int LANGUAGE_CHANGED = 1000;
 
     private static final int IDX_LEGACY_EDITOR = 0;
@@ -46,7 +41,6 @@ public class AppSettingsFragment extends PreferenceFragment implements OnPrefere
     private static final int IDX_AZTEC_EDITOR = 2;
 
     private DetailListPreference mLanguagePreference;
-    private SharedPreferences mSettings;
 
     // This Device settings
     private WPSwitchPreference mOptimizedImage;
@@ -71,14 +65,16 @@ public class AppSettingsFragment extends PreferenceFragment implements OnPrefere
                 new Preference.OnPreferenceChangeListener() {
                     @Override
                     public boolean onPreferenceChange(Preference preference, Object newValue) {
-                        if (newValue == null) return false;
+                        if (newValue == null) {
+                            return false;
+                        }
                         // flush gathered events (if any)
                         AnalyticsTracker.flush();
-                        AnalyticsTracker.setHasUserOptedOut(!(boolean)newValue);
+                        AnalyticsTracker.setHasUserOptedOut(!(boolean) newValue);
                         return true;
                     }
                 }
-        );
+                                                                                             );
 
         mLanguagePreference = (DetailListPreference) findPreference(getString(R.string.pref_key_language));
         mLanguagePreference.setOnPreferenceChangeListener(this);
@@ -93,40 +89,45 @@ public class AppSettingsFragment extends PreferenceFragment implements OnPrefere
                 .setOnPreferenceClickListener(this);
 
         mOptimizedImage =
-                (WPSwitchPreference) WPPrefUtils.getPrefAndSetChangeListener(this, R.string.pref_key_optimize_image, this);
-        mImageMaxSizePref = (DetailListPreference) WPPrefUtils.getPrefAndSetChangeListener(this, R.string.pref_key_site_image_width, this);
+                (WPSwitchPreference) WPPrefUtils
+                        .getPrefAndSetChangeListener(this, R.string.pref_key_optimize_image, this);
+        mImageMaxSizePref = (DetailListPreference) WPPrefUtils
+                .getPrefAndSetChangeListener(this, R.string.pref_key_site_image_width, this);
         mImageQualityPref =
-                (DetailListPreference) WPPrefUtils.getPrefAndSetChangeListener(this, R.string.pref_key_site_image_quality, this);
+                (DetailListPreference) WPPrefUtils
+                        .getPrefAndSetChangeListener(this, R.string.pref_key_site_image_quality, this);
         mOptimizedVideo =
-                (WPSwitchPreference) WPPrefUtils.getPrefAndSetChangeListener(this, R.string.pref_key_optimize_video, this);
+                (WPSwitchPreference) WPPrefUtils
+                        .getPrefAndSetChangeListener(this, R.string.pref_key_optimize_video, this);
         mVideoWidthPref =
-                (DetailListPreference) WPPrefUtils.getPrefAndSetChangeListener(this, R.string.pref_key_site_video_width, this);
+                (DetailListPreference) WPPrefUtils
+                        .getPrefAndSetChangeListener(this, R.string.pref_key_site_video_width, this);
         mVideoEncorderBitratePref =
-                (DetailListPreference) WPPrefUtils.getPrefAndSetChangeListener(this, R.string.pref_key_site_video_encoder_bitrate, this);
+                (DetailListPreference) WPPrefUtils
+                        .getPrefAndSetChangeListener(this, R.string.pref_key_site_video_encoder_bitrate, this);
 
         // Set Local settings
         mOptimizedImage.setChecked(AppPrefs.isImageOptimize());
         setDetailListPreferenceValue(mImageMaxSizePref,
-                String.valueOf(AppPrefs.getImageOptimizeMaxSize()),
-                getLabelForImageMaxSizeValue(AppPrefs.getImageOptimizeMaxSize()));
+                                     String.valueOf(AppPrefs.getImageOptimizeMaxSize()),
+                                     getLabelForImageMaxSizeValue(AppPrefs.getImageOptimizeMaxSize()));
         setDetailListPreferenceValue(mImageQualityPref,
-                String.valueOf(AppPrefs.getImageOptimizeQuality()),
-                getLabelForImageQualityValue(AppPrefs.getImageOptimizeQuality()));
+                                     String.valueOf(AppPrefs.getImageOptimizeQuality()),
+                                     getLabelForImageQualityValue(AppPrefs.getImageOptimizeQuality()));
 
         mOptimizedVideo.setChecked(AppPrefs.isVideoOptimize());
         setDetailListPreferenceValue(mVideoWidthPref,
-                String.valueOf(AppPrefs.getVideoOptimizeWidth()),
-                getLabelForVideoMaxWidthValue(AppPrefs.getVideoOptimizeWidth()));
+                                     String.valueOf(AppPrefs.getVideoOptimizeWidth()),
+                                     getLabelForVideoMaxWidthValue(AppPrefs.getVideoOptimizeWidth()));
         setDetailListPreferenceValue(mVideoEncorderBitratePref,
-                String.valueOf(AppPrefs.getVideoOptimizeQuality()),
-                getLabelForVideoEncoderBitrateValue(AppPrefs.getVideoOptimizeQuality()));
+                                     String.valueOf(AppPrefs.getVideoOptimizeQuality()),
+                                     getLabelForVideoEncoderBitrateValue(AppPrefs.getVideoOptimizeQuality()));
         if (!WPMediaUtils.isVideoOptimizationAvailable()) {
             WPPrefUtils.removePreference(this, R.string.pref_key_optimize_media, R.string.pref_key_optimize_video);
             WPPrefUtils.removePreference(this, R.string.pref_key_optimize_media, R.string.pref_key_site_video_width);
-            WPPrefUtils.removePreference(this, R.string.pref_key_optimize_media, R.string.pref_key_site_video_encoder_bitrate);
+            WPPrefUtils.removePreference(this, R.string.pref_key_optimize_media,
+                                         R.string.pref_key_site_video_encoder_bitrate);
         }
-
-        mSettings = PreferenceManager.getDefaultSharedPreferences(getActivity());
 
         updateEditorSettings();
     }
@@ -157,7 +158,9 @@ public class AppSettingsFragment extends PreferenceFragment implements OnPrefere
 
     @Override
     public boolean onPreferenceChange(Preference preference, Object newValue) {
-        if (newValue == null) return false;
+        if (newValue == null) {
+            return false;
+        }
 
         if (preference == mLanguagePreference) {
             changeLanguage(newValue.toString());
@@ -172,13 +175,13 @@ public class AppSettingsFragment extends PreferenceFragment implements OnPrefere
             int newWidth = Integer.parseInt(newValue.toString());
             AppPrefs.setImageOptimizeMaxSize(newWidth);
             setDetailListPreferenceValue(mImageMaxSizePref,
-                    newValue.toString(),
-                    getLabelForImageMaxSizeValue(AppPrefs.getImageOptimizeMaxSize()));
+                                         newValue.toString(),
+                                         getLabelForImageMaxSizeValue(AppPrefs.getImageOptimizeMaxSize()));
         } else if (preference == mImageQualityPref) {
             AppPrefs.setImageOptimizeQuality(Integer.parseInt(newValue.toString()));
             setDetailListPreferenceValue(mImageQualityPref,
-                    newValue.toString(),
-                    getLabelForImageQualityValue(AppPrefs.getImageOptimizeQuality()));
+                                         newValue.toString(),
+                                         getLabelForImageQualityValue(AppPrefs.getImageOptimizeQuality()));
         } else if (preference == mOptimizedVideo) {
             AppPrefs.setVideoOptimize((Boolean) newValue);
             mVideoEncorderBitratePref.setEnabled((Boolean) newValue);
@@ -186,13 +189,13 @@ public class AppSettingsFragment extends PreferenceFragment implements OnPrefere
             int newWidth = Integer.parseInt(newValue.toString());
             AppPrefs.setVideoOptimizeWidth(newWidth);
             setDetailListPreferenceValue(mVideoWidthPref,
-                    newValue.toString(),
-                    getLabelForVideoMaxWidthValue(AppPrefs.getVideoOptimizeWidth()));
+                                         newValue.toString(),
+                                         getLabelForVideoMaxWidthValue(AppPrefs.getVideoOptimizeWidth()));
         } else if (preference == mVideoEncorderBitratePref) {
             AppPrefs.setVideoOptimizeQuality(Integer.parseInt(newValue.toString()));
             setDetailListPreferenceValue(mVideoEncorderBitratePref,
-                    newValue.toString(),
-                    getLabelForVideoEncoderBitrateValue(AppPrefs.getVideoOptimizeQuality()));
+                                         newValue.toString(),
+                                         getLabelForVideoEncoderBitrateValue(AppPrefs.getVideoOptimizeQuality()));
         }
         return true;
     }
@@ -207,15 +210,17 @@ public class AppSettingsFragment extends PreferenceFragment implements OnPrefere
 
     private void updateEditorSettings() {
         if (!AppPrefs.isVisualEditorAvailable()) {
-            PreferenceScreen preferenceScreen = (PreferenceScreen) findPreference(getActivity()
-                    .getString(R.string.pref_key_account_settings_root));
+            PreferenceScreen preferenceScreen =
+                    (PreferenceScreen) findPreference(getActivity().getString(R.string.pref_key_account_settings_root));
             PreferenceCategory editor = (PreferenceCategory) findPreference(getActivity()
-                    .getString(R.string.pref_key_editor));
+                                                                                    .getString(
+                                                                                            R.string.pref_key_editor));
             if (preferenceScreen != null && editor != null) {
                 preferenceScreen.removePreference(editor);
             }
         } else {
-            final ListPreference editorTypePreference = (ListPreference) findPreference(getActivity().getString(R.string.pref_key_editor_type));
+            final ListPreference editorTypePreference =
+                    (ListPreference) findPreference(getActivity().getString(R.string.pref_key_editor_type));
 
             editorTypePreference.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
                 @Override
@@ -262,37 +267,21 @@ public class AppSettingsFragment extends PreferenceFragment implements OnPrefere
     }
 
     private void changeLanguage(String languageCode) {
-        if (mLanguagePreference == null || TextUtils.isEmpty(languageCode)) return;
-
-        Resources res = getResources();
-        Configuration conf = res.getConfiguration();
-        // will return conf.locale if conf is non-null, or Locale.getDefault()
-        Locale currentLocale = LanguageUtils.getCurrentDeviceLanguage(WordPress.getContext());
-        Locale newLocale = WPPrefUtils.languageLocale(languageCode);
-
-        if (currentLocale.toString().equals(newLocale.getDisplayLanguage())) {
+        if (mLanguagePreference == null || TextUtils.isEmpty(languageCode)) {
             return;
         }
 
-        if (Locale.getDefault().toString().equals(newLocale.toString())) {
-            // remove custom locale key when original device locale is selected
-            mSettings.edit().remove(LANGUAGE_PREF_KEY).apply();
-        } else {
-            mSettings.edit().putString(LANGUAGE_PREF_KEY, newLocale.toString()).apply();
+        if (LocaleManager.isSameLanguage(languageCode)) {
+            return;
         }
-        updateLanguagePreference(languageCode);
 
-        // update configuration
-        conf.locale = newLocale;
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
-            conf.setLayoutDirection(newLocale);
-        }
-        res.updateConfiguration(conf, res.getDisplayMetrics());
+        LocaleManager.setNewLocale(WordPress.getContext(), languageCode);
+        updateLanguagePreference(languageCode);
 
         // Track language change on Analytics because we have both the device language and app selected language
         // data in Tracks metadata.
         Map<String, Object> properties = new HashMap<>();
-        properties.put("app_locale", conf.locale.toString());
+        properties.put("app_locale", Locale.getDefault());
         AnalyticsTracker.track(Stat.ACCOUNT_SETTINGS_LANGUAGE_CHANGED, properties);
 
         // Language is now part of metadata, so we need to refresh them
@@ -306,24 +295,29 @@ public class AppSettingsFragment extends PreferenceFragment implements OnPrefere
     }
 
     private void updateLanguagePreference(String languageCode) {
-        if (mLanguagePreference == null || TextUtils.isEmpty(languageCode)) return;
+        if (mLanguagePreference == null || TextUtils.isEmpty(languageCode)) {
+            return;
+        }
 
-        Locale languageLocale = WPPrefUtils.languageLocale(languageCode);
+        Locale languageLocale = LocaleManager.languageLocale(languageCode);
         String[] availableLocales = getResources().getStringArray(R.array.available_languages);
 
-        Pair<String[], String[]> pair = WPPrefUtils.createSortedLanguageDisplayStrings(availableLocales, languageLocale);
+        Pair<String[], String[]> pair =
+                LocaleManager.createSortedLanguageDisplayStrings(availableLocales, languageLocale);
         // check for a possible NPE
-        if (pair == null) return;
+        if (pair == null) {
+            return;
+        }
 
         String[] sortedEntries = pair.first;
         String[] sortedValues = pair.second;
 
         mLanguagePreference.setEntries(sortedEntries);
         mLanguagePreference.setEntryValues(sortedValues);
-        mLanguagePreference.setDetails(WPPrefUtils.createLanguageDetailDisplayStrings(sortedValues));
+        mLanguagePreference.setDetails(LocaleManager.createLanguageDetailDisplayStrings(sortedValues));
 
         mLanguagePreference.setValue(languageCode);
-        mLanguagePreference.setSummary(WPPrefUtils.getLanguageString(languageCode, languageLocale));
+        mLanguagePreference.setSummary(LocaleManager.getLanguageString(languageCode, languageLocale));
         mLanguagePreference.refreshAdapter();
     }
 
@@ -356,7 +350,7 @@ public class AppSettingsFragment extends PreferenceFragment implements OnPrefere
     private String getLabelForImageMaxSizeValue(int newValue) {
         String[] values = getActivity().getResources().getStringArray(R.array.site_settings_image_max_size_values);
         String[] entries = getActivity().getResources().getStringArray(R.array.site_settings_image_max_size_entries);
-        for (int i = 0; i < values.length ; i++) {
+        for (int i = 0; i < values.length; i++) {
             if (values[i].equals(String.valueOf(newValue))) {
                 return entries[i];
             }
@@ -368,7 +362,7 @@ public class AppSettingsFragment extends PreferenceFragment implements OnPrefere
     private String getLabelForImageQualityValue(int newValue) {
         String[] values = getActivity().getResources().getStringArray(R.array.site_settings_image_quality_values);
         String[] entries = getActivity().getResources().getStringArray(R.array.site_settings_image_quality_entries);
-        for (int i = 0; i < values.length ; i++) {
+        for (int i = 0; i < values.length; i++) {
             if (values[i].equals(String.valueOf(newValue))) {
                 return entries[i];
             }
@@ -380,7 +374,7 @@ public class AppSettingsFragment extends PreferenceFragment implements OnPrefere
     private String getLabelForVideoMaxWidthValue(int newValue) {
         String[] values = getActivity().getResources().getStringArray(R.array.site_settings_video_width_values);
         String[] entries = getActivity().getResources().getStringArray(R.array.site_settings_video_width_entries);
-        for (int i = 0; i < values.length ; i++) {
+        for (int i = 0; i < values.length; i++) {
             if (values[i].equals(String.valueOf(newValue))) {
                 return entries[i];
             }
@@ -392,7 +386,7 @@ public class AppSettingsFragment extends PreferenceFragment implements OnPrefere
     private String getLabelForVideoEncoderBitrateValue(int newValue) {
         String[] values = getActivity().getResources().getStringArray(R.array.site_settings_video_bitrate_values);
         String[] entries = getActivity().getResources().getStringArray(R.array.site_settings_video_bitrate_entries);
-        for (int i = 0; i < values.length ; i++) {
+        for (int i = 0; i < values.length; i++) {
             if (values[i].equals(String.valueOf(newValue))) {
                 return entries[i];
             }

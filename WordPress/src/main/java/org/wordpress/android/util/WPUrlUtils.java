@@ -4,7 +4,6 @@ import java.net.URI;
 import java.net.URL;
 
 public class WPUrlUtils {
-
     public static boolean safeToAddWordPressComAuthToken(String url) {
         return UrlUtils.isHttps(url) && isWordPressCom(url);
     }
@@ -41,5 +40,4 @@ public class WPUrlUtils {
         }
         return url.getHost().equals("gravatar.com") || url.getHost().endsWith(".gravatar.com");
     }
-
 }

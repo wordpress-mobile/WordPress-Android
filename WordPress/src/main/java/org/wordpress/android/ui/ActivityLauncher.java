@@ -17,8 +17,6 @@ import org.wordpress.android.WordPress;
 import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.fluxc.model.PostModel;
 import org.wordpress.android.fluxc.model.SiteModel;
-import org.wordpress.android.fluxc.model.plugin.SitePluginModel;
-import org.wordpress.android.fluxc.model.plugin.WPOrgPluginModel;
 import org.wordpress.android.login.LoginMode;
 import org.wordpress.android.networking.SSLCertsViewActivity;
 import org.wordpress.android.ui.accounts.HelpActivity;
@@ -66,9 +64,10 @@ import org.wordpress.passcodelock.AppLockManager;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ActivityLauncher {
+import static org.wordpress.android.ui.stats.StatsActivity.LOGGED_INTO_JETPACK;
 
-    public static void showMainActivityAndLoginEpilogue(Activity activity,  ArrayList<Integer> oldSitesIds,
+public class ActivityLauncher {
+    public static void showMainActivityAndLoginEpilogue(Activity activity, ArrayList<Integer> oldSitesIds,
                                                         boolean doLoginUpdate) {
         Intent intent = new Intent(activity, WPMainActivity.class);
         intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
@@ -117,7 +116,14 @@ public class ActivityLauncher {
         context.startActivity(intent);
     }
 
-    public static void startJetpackConnectionFlow(Context context, SiteModel site) {
+    public static void viewBlogStatsAfterJetpackSetup(Context context, SiteModel site) {
+        Intent intent = new Intent(context, StatsActivity.class);
+        intent.putExtra(WordPress.SITE, site);
+        intent.putExtra(LOGGED_INTO_JETPACK, true);
+        context.startActivity(intent);
+    }
+
+    public static void viewConnectJetpackForStats(Context context, SiteModel site) {
         Intent intent = new Intent(context, StatsConnectJetpackActivity.class);
         intent.putExtra(WordPress.SITE, site);
         context.startActivity(intent);
@@ -177,30 +183,20 @@ public class ActivityLauncher {
 
     public static void viewPluginBrowser(Context context, SiteModel site) {
         if (PluginUtils.isPluginFeatureAvailable(site)) {
-            AnalyticsUtils.trackWithSiteDetails(AnalyticsTracker.Stat.OPENED_PLUGINS, site);
+            AnalyticsUtils.trackWithSiteDetails(AnalyticsTracker.Stat.OPENED_PLUGIN_DIRECTORY, site);
             Intent intent = new Intent(context, PluginBrowserActivity.class);
             intent.putExtra(WordPress.SITE, site);
             context.startActivity(intent);
         }
     }
 
-    public static void viewPluginDetailForResult(Activity context, SiteModel site, SitePluginModel plugin) {
+    public static void viewPluginDetail(Activity context, SiteModel site, String slug) {
         if (PluginUtils.isPluginFeatureAvailable(site)) {
             AnalyticsUtils.trackWithSiteDetails(AnalyticsTracker.Stat.OPENED_PLUGIN_DETAIL, site);
             Intent intent = new Intent(context, PluginDetailActivity.class);
             intent.putExtra(WordPress.SITE, site);
-            intent.putExtra(PluginDetailActivity.KEY_PLUGIN_SLUG, plugin.getSlug());
-            context.startActivityForResult(intent, RequestCodes.PLUGIN_DETAIL);
-        }
-    }
-
-    public static void viewPluginDetailForResult(Activity context, SiteModel site, WPOrgPluginModel plugin) {
-        if (PluginUtils.isPluginFeatureAvailable(site)) {
-            AnalyticsUtils.trackWithSiteDetails(AnalyticsTracker.Stat.OPENED_PLUGIN_DETAIL, site);
-            Intent intent = new Intent(context, PluginDetailActivity.class);
-            intent.putExtra(WordPress.SITE, site);
-            intent.putExtra(PluginDetailActivity.KEY_PLUGIN_SLUG, plugin.getSlug());
-            context.startActivityForResult(intent, RequestCodes.PLUGIN_DETAIL);
+            intent.putExtra(PluginDetailActivity.KEY_PLUGIN_SLUG, slug);
+            context.startActivity(intent);
         }
     }
 
@@ -242,7 +238,9 @@ public class ActivityLauncher {
     }
 
     public static void viewPostPreviewForResult(Activity activity, SiteModel site, PostModel post) {
-        if (post == null) return;
+        if (post == null) {
+            return;
+        }
 
         Intent intent = new Intent(activity, PostPreviewActivity.class);
         intent.putExtra(EditPostActivity.EXTRA_POST_LOCAL_ID, post.getId());
@@ -251,7 +249,9 @@ public class ActivityLauncher {
     }
 
     public static void addNewPostOrPageForResult(Activity activity, SiteModel site, boolean isPage, boolean isPromo) {
-        if (site == null) return;
+        if (site == null) {
+            return;
+        }
 
         Intent intent = new Intent(activity, EditPostActivity.class);
         intent.putExtra(WordPress.SITE, site);
@@ -261,7 +261,9 @@ public class ActivityLauncher {
     }
 
     public static void editPostOrPageForResult(Activity activity, SiteModel site, PostModel post) {
-        if (site == null) return;
+        if (site == null) {
+            return;
+        }
 
         Intent intent = new Intent(activity, EditPostActivity.class);
         intent.putExtra(WordPress.SITE, site);
@@ -276,7 +278,9 @@ public class ActivityLauncher {
      * Load the post preview as an authenticated URL so stats aren't bumped
      */
     public static void browsePostOrPage(Context context, SiteModel site, PostModel post) {
-        if (site == null || post == null || TextUtils.isEmpty(post.getLink())) return;
+        if (site == null || post == null || TextUtils.isEmpty(post.getLink())) {
+            return;
+        }
 
         // always add the preview parameter to avoid bumping stats when viewing posts
         String url = UrlUtils.appendUrlParameter(post.getLink(), "preview", "true");
@@ -285,7 +289,8 @@ public class ActivityLauncher {
         if (site.isWPCom()) {
             WPWebViewActivity.openPostUrlByUsingGlobalWPCOMCredentials(context, url, shareableUrl, shareSubject);
         } else if (site.isJetpackConnected()) {
-            WPWebViewActivity.openJetpackBlogPostPreview(context, url, shareableUrl, shareSubject, site.getFrameNonce());
+            WPWebViewActivity
+                    .openJetpackBlogPostPreview(context, url, shareableUrl, shareSubject, site.getFrameNonce());
         } else {
             // Add the original post URL to the list of allowed URLs.
             // This is necessary because links are disabled in the webview, but WP removes "?preview=true"
@@ -331,9 +336,8 @@ public class ActivityLauncher {
         context.startActivity(intent);
     }
 
-    public static void newBlogForResult(Activity activity, String username) {
+    public static void newBlogForResult(Activity activity) {
         Intent intent = new Intent(activity, SiteCreationActivity.class);
-        intent.putExtra(SiteCreationActivity.ARG_USERNAME, username);
         activity.startActivityForResult(intent, RequestCodes.CREATE_SITE);
     }
 
@@ -350,7 +354,7 @@ public class ActivityLauncher {
     }
 
     public static void showLoginEpilogueForResult(Activity activity, boolean showAndReturn,
-            ArrayList<Integer> oldSitesIds) {
+                                                  ArrayList<Integer> oldSitesIds) {
         Intent intent = new Intent(activity, LoginEpilogueActivity.class);
         intent.putExtra(LoginEpilogueActivity.EXTRA_SHOW_AND_RETURN, showAndReturn);
         intent.putIntegerArrayListExtra(LoginEpilogueActivity.ARG_OLD_SITES_IDS, oldSitesIds);
@@ -369,16 +373,22 @@ public class ActivityLauncher {
     }
 
     public static void viewStatsSinglePostDetails(Context context, SiteModel site, PostModel post, boolean isPage) {
-        if (post == null) return;
+        if (post == null) {
+            return;
+        }
 
         StatsPostModel statsPostModel = new StatsPostModel(site.getSiteId(),
-                String.valueOf(post.getRemotePostId()), post.getTitle(), post.getLink(),
-                isPage ? StatsConstants.ITEM_TYPE_PAGE : StatsConstants.ITEM_TYPE_POST);
+                                                           String.valueOf(post.getRemotePostId()), post.getTitle(),
+                                                           post.getLink(),
+                                                           isPage ? StatsConstants.ITEM_TYPE_PAGE
+                                                                   : StatsConstants.ITEM_TYPE_POST);
         viewStatsSinglePostDetails(context, statsPostModel);
     }
 
     public static void viewStatsSinglePostDetails(Context context, StatsPostModel post) {
-        if (post == null) return;
+        if (post == null) {
+            return;
+        }
 
         Intent statsPostViewIntent = new Intent(context, StatsSingleItemDetailsActivity.class);
         statsPostViewIntent.putExtra(StatsSingleItemDetailsActivity.ARG_REMOTE_BLOG_ID, post.getBlogID());
@@ -444,7 +454,6 @@ public class ActivityLauncher {
 
             context.startActivity(intent);
             AppLockManager.getInstance().setExtendedTimeout();
-
         } catch (ActivityNotFoundException e) {
             ToastUtils.showToast(context, context.getString(R.string.cant_open_url), ToastUtils.Duration.LONG);
             AppLog.e(AppLog.T.UTILS, "No default app available on the device to open the link: " + url, e);

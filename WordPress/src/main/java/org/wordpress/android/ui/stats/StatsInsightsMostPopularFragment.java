@@ -12,6 +12,7 @@ import org.wordpress.android.ui.stats.service.StatsService;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.Locale;
 
 
 public class StatsInsightsMostPopularFragment extends StatsAbstractInsightsFragment {
@@ -23,12 +24,14 @@ public class StatsInsightsMostPopularFragment extends StatsAbstractInsightsFragm
     protected boolean hasDataAvailable() {
         return mInsightsPopularModel != null;
     }
+
     @Override
     protected void saveStatsData(Bundle outState) {
         if (hasDataAvailable()) {
             outState.putSerializable(ARG_REST_RESPONSE, mInsightsPopularModel);
         }
     }
+
     @Override
     protected void restoreStatsData(Bundle savedInstanceState) {
         if (savedInstanceState.containsKey(ARG_REST_RESPONSE)) {
@@ -64,7 +67,8 @@ public class StatsInsightsMostPopularFragment extends StatsAbstractInsightsFragm
         }
 
         LinearLayout ll = (LinearLayout) getActivity().getLayoutInflater()
-                .inflate(R.layout.stats_insights_most_popular_item, (ViewGroup) mResultContainer.getRootView(), false);
+                                                      .inflate(R.layout.stats_insights_most_popular_item,
+                                                               (ViewGroup) mResultContainer.getRootView(), false);
 
         int dayOfTheWeek = mInsightsPopularModel.getHighestDayOfWeek();
 
@@ -95,7 +99,7 @@ public class StatsInsightsMostPopularFragment extends StatsAbstractInsightsFragm
                 break;
         }
 
-        DateFormat formatter = new SimpleDateFormat("EEEE");
+        DateFormat formatter = new SimpleDateFormat("EEEE", Locale.getDefault());
         final TextView mostPopularDayTextView = (TextView) ll.findViewById(R.id.stats_most_popular_day);
         mostPopularDayTextView.setText(formatter.format(c.getTime()));
         final TextView mostPopularDayPercentTextView = (TextView) ll.findViewById(R.id.stats_most_popular_day_percent);
@@ -103,21 +107,22 @@ public class StatsInsightsMostPopularFragment extends StatsAbstractInsightsFragm
                 String.format(
                         getString(R.string.stats_insights_most_popular_percent_views),
                         roundToInteger(mInsightsPopularModel.getHighestDayPercent())
-                )
-        );
+                             )
+                                             );
 
         TextView mostPopularHourTextView = (TextView) ll.findViewById(R.id.stats_most_popular_hour);
         DateFormat timeFormat = android.text.format.DateFormat.getTimeFormat(getActivity());
         c.set(Calendar.HOUR_OF_DAY, mInsightsPopularModel.getHighestHour());
         c.set(Calendar.MINUTE, 0);
         mostPopularHourTextView.setText(timeFormat.format(c.getTime()));
-        final TextView mostPopularHourPercentTextView = (TextView) ll.findViewById(R.id.stats_most_popular_hour_percent);
+        final TextView mostPopularHourPercentTextView =
+                (TextView) ll.findViewById(R.id.stats_most_popular_hour_percent);
         mostPopularHourPercentTextView.setText(
                 String.format(
                         getString(R.string.stats_insights_most_popular_percent_views),
                         roundToInteger(mInsightsPopularModel.getHighestHourPercent())
-                )
-        );
+                             )
+                                              );
 
         mResultContainer.addView(ll);
     }

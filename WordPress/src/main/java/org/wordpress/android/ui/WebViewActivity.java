@@ -1,6 +1,6 @@
-
 package org.wordpress.android.ui;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
@@ -11,6 +11,7 @@ import android.view.Window;
 import android.webkit.WebView;
 
 import org.wordpress.android.R;
+import org.wordpress.android.util.LocaleManager;
 
 import java.util.Map;
 
@@ -18,11 +19,18 @@ import java.util.Map;
  * Basic activity for displaying a WebView.
  */
 public abstract class WebViewActivity extends AppCompatActivity {
-    /** Primary webview used to display content. */
+    /**
+     * Primary webview used to display content.
+     */
 
     private static final String URL = "url";
 
     protected WebView mWebView;
+
+    @Override
+    protected void attachBaseContext(Context newBase) {
+        super.attachBaseContext(LocaleManager.setLocale(newBase));
+    }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -162,6 +170,6 @@ public abstract class WebViewActivity extends AppCompatActivity {
     }
 
     protected void cancel() {
-        //nop
+        // nop
     }
 }

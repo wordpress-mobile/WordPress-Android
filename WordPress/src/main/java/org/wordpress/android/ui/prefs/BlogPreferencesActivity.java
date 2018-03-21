@@ -2,6 +2,7 @@ package org.wordpress.android.ui.prefs;
 
 import android.app.Fragment;
 import android.app.FragmentManager;
+import android.content.Context;
 import android.os.Bundle;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
@@ -19,6 +20,7 @@ import org.wordpress.android.fluxc.store.SiteStore;
 import org.wordpress.android.fluxc.store.SiteStore.OnSiteDeleted;
 import org.wordpress.android.fluxc.store.SiteStore.OnSiteRemoved;
 import org.wordpress.android.networking.ConnectionChangeReceiver;
+import org.wordpress.android.util.LocaleManager;
 import org.wordpress.android.util.SiteUtils;
 import org.wordpress.android.util.ToastUtils;
 
@@ -37,6 +39,11 @@ public class BlogPreferencesActivity extends AppCompatActivity {
     @Inject AccountStore mAccountStore;
     @Inject SiteStore mSiteStore;
     @Inject Dispatcher mDispatcher;
+
+    @Override
+    protected void attachBaseContext(Context newBase) {
+        super.attachBaseContext(LocaleManager.setLocale(newBase));
+    }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -69,8 +76,8 @@ public class BlogPreferencesActivity extends AppCompatActivity {
             siteSettingsFragment = new SiteSettingsFragment();
             siteSettingsFragment.setArguments(getIntent().getExtras());
             fragmentManager.beginTransaction()
-                    .replace(android.R.id.content, siteSettingsFragment, KEY_SETTINGS_FRAGMENT)
-                    .commit();
+                           .replace(android.R.id.content, siteSettingsFragment, KEY_SETTINGS_FRAGMENT)
+                           .commit();
         }
     }
 
@@ -115,9 +122,9 @@ public class BlogPreferencesActivity extends AppCompatActivity {
             siteSettingsFragment.setEditingEnabled(event.isConnected());
 
             // TODO: add this back when delete blog is back
-            //https://github.com/wordpress-mobile/WordPress-Android/commit/6a90e3fe46e24ee40abdc4a7f8f0db06f157900c
+            // https://github.com/wordpress-mobile/WordPress-Android/commit/6a90e3fe46e24ee40abdc4a7f8f0db06f157900c
             // Checks for stats widgets that were synched with a blog that could be gone now.
-            //            StatsWidgetProvider.updateWidgetsOnLogout(this);
+            // StatsWidgetProvider.updateWidgetsOnLogout(this);
         }
     }
 

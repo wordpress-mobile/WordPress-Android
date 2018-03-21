@@ -30,7 +30,6 @@ import uk.co.senab.photoview.PhotoViewAttacher;
  * but adds pinch/zoom and the ability to first load a lo-res version of the image
  */
 public class ReaderPhotoView extends RelativeLayout {
-
     public interface PhotoViewListener {
         void onTapPhotoView();
     }
@@ -86,8 +85,8 @@ public class ReaderPhotoView extends RelativeLayout {
 
     private boolean isRequestingUrl(ImageContainer container, String url) {
         return (container != null
-             && container.getRequestUrl() != null
-             && container.getRequestUrl().equals(url));
+                && container.getRequestUrl() != null
+                && container.getRequestUrl().equals(url));
     }
 
     @SuppressWarnings("BooleanMethodIsAlwaysInverted")
@@ -96,8 +95,8 @@ public class ReaderPhotoView extends RelativeLayout {
         // view, hold off on loading the image.
         if (getWidth() == 0 && getHeight() == 0) {
             boolean isFullyWrapContent = getLayoutParams() != null
-                    && getLayoutParams().height == ViewGroup.LayoutParams.WRAP_CONTENT
-                    && getLayoutParams().width == ViewGroup.LayoutParams.WRAP_CONTENT;
+                                         && getLayoutParams().height == ViewGroup.LayoutParams.WRAP_CONTENT
+                                         && getLayoutParams().width == ViewGroup.LayoutParams.WRAP_CONTENT;
             if (!isFullyWrapContent) {
                 return false;
             }
@@ -123,24 +122,25 @@ public class ReaderPhotoView extends RelativeLayout {
         showProgress();
 
         mLoResContainer = WordPress.sImageLoader.get(mLoResImageUrl,
-                new ImageLoader.ImageListener() {
-                    @Override
-                    public void onErrorResponse(VolleyError error) {
-                        AppLog.e(AppLog.T.READER, error);
-                        hideProgress();
-                        showError();
-                    }
+                                                     new ImageLoader.ImageListener() {
+                                                         @Override
+                                                         public void onErrorResponse(VolleyError error) {
+                                                             AppLog.e(AppLog.T.READER, error);
+                                                             hideProgress();
+                                                             showError();
+                                                         }
 
-                    @Override
-                    public void onResponse(final ImageContainer response, boolean isImmediate) {
-                        post(new Runnable() {
-                            @Override
-                            public void run() {
-                                handleResponse(response.getBitmap(), true);
-                            }
-                        });
-                    }
-                }, maxSize, maxSize);
+                                                         @Override
+                                                         public void onResponse(final ImageContainer response,
+                                                                                boolean isImmediate) {
+                                                             post(new Runnable() {
+                                                                 @Override
+                                                                 public void run() {
+                                                                     handleResponse(response.getBitmap(), true);
+                                                                 }
+                                                             });
+                                                         }
+                                                     }, maxSize, maxSize);
     }
 
     private void loadHiResImage() {
@@ -157,22 +157,23 @@ public class ReaderPhotoView extends RelativeLayout {
         int maxSize = Math.max(pt.x, pt.y);
 
         mHiResContainer = WordPress.sImageLoader.get(mHiResImageUrl,
-                new ImageLoader.ImageListener() {
-                    @Override
-                    public void onErrorResponse(VolleyError error) {
-                        AppLog.e(AppLog.T.READER, error);
-                    }
+                                                     new ImageLoader.ImageListener() {
+                                                         @Override
+                                                         public void onErrorResponse(VolleyError error) {
+                                                             AppLog.e(AppLog.T.READER, error);
+                                                         }
 
-                    @Override
-                    public void onResponse(final ImageContainer response, boolean isImmediate) {
-                        post(new Runnable() {
-                            @Override
-                            public void run() {
-                                handleResponse(response.getBitmap(), false);
-                            }
-                        });
-                    }
-                }, maxSize, maxSize);
+                                                         @Override
+                                                         public void onResponse(final ImageContainer response,
+                                                                                boolean isImmediate) {
+                                                             post(new Runnable() {
+                                                                 @Override
+                                                                 public void run() {
+                                                                     handleResponse(response.getBitmap(), false);
+                                                                 }
+                                                             });
+                                                         }
+                                                     }, maxSize, maxSize);
     }
 
     private void handleResponse(Bitmap bitmap, boolean isLoRes) {

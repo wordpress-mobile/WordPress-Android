@@ -28,9 +28,9 @@ public class WPWebChromeClient extends WebChromeClient {
 
     public void onProgressChanged(WebView webView, int progress) {
         if (mActivity != null
-                && !mActivity.isFinishing()
-                && mAutoUpdateActivityTitle
-                && !TextUtils.isEmpty(webView.getTitle())) {
+            && !mActivity.isFinishing()
+            && mAutoUpdateActivityTitle
+            && !TextUtils.isEmpty(webView.getTitle())) {
             mActivity.setTitle(webView.getTitle());
         }
         if (mProgressBar != null) {

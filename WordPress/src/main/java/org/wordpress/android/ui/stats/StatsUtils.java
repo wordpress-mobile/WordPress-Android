@@ -44,11 +44,11 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.Locale;
 import java.util.TimeZone;
 import java.util.concurrent.TimeUnit;
 
 public class StatsUtils {
-    @SuppressLint("SimpleDateFormat")
     private static long toMs(String date, String pattern) {
         if (date == null || date.equals("null")) {
             AppLog.w(T.UTILS, "Trying to parse a 'null' Stats Date.");
@@ -60,7 +60,7 @@ public class StatsUtils {
             return -1;
         }
 
-        SimpleDateFormat sdf = new SimpleDateFormat(pattern);
+        SimpleDateFormat sdf = new SimpleDateFormat(pattern, Locale.ROOT);
         try {
             return sdf.parse(date).getTime();
         } catch (ParseException e) {
@@ -76,8 +76,8 @@ public class StatsUtils {
         return toMs(date, StatsConstants.STATS_INPUT_DATE_FORMAT);
     }
 
-    public static String msToString(long ms, String format) {
-        SimpleDateFormat sdf = new SimpleDateFormat(format);
+    public static String msToLocalizedString(long ms, String format) {
+        SimpleDateFormat sdf = new SimpleDateFormat(format, Locale.getDefault());
         return sdf.format(new Date(ms));
     }
 
@@ -124,7 +124,7 @@ public class StatsUtils {
      * Get the current date in the form of yyyy-MM-dd (EX: 2013-07-18) *
      */
     public static String getCurrentDate() {
-        SimpleDateFormat sdf = new SimpleDateFormat(StatsConstants.STATS_INPUT_DATE_FORMAT);
+        SimpleDateFormat sdf = new SimpleDateFormat(StatsConstants.STATS_INPUT_DATE_FORMAT, Locale.ROOT);
         return sdf.format(new Date());
     }
 
@@ -133,13 +133,13 @@ public class StatsUtils {
      */
     private static String getCurrentDatetime() {
         String pattern = "yyyy-MM-dd HH:mm:ss"; // precision to seconds
-        SimpleDateFormat sdf = new SimpleDateFormat(pattern);
+        SimpleDateFormat sdf = new SimpleDateFormat(pattern, Locale.ROOT);
         return sdf.format(new Date());
     }
 
     private static String getCurrentDateTimeTZ(String blogTimeZoneOption, String pattern) {
         Date date = new Date();
-        SimpleDateFormat gmtDf = new SimpleDateFormat(pattern);
+        SimpleDateFormat gmtDf = new SimpleDateFormat(pattern, Locale.ROOT);
 
         if (blogTimeZoneOption == null) {
             AppLog.w(T.UTILS, "blogTimeZoneOption is null. getCurrentDateTZ() will return the device time!");
@@ -149,20 +149,20 @@ public class StatsUtils {
         /*
         Convert the timezone to a form that is compatible with Java TimeZone class
         WordPress returns something like the following:
-           UTC+0:30   ---->  0.5
-           UTC+1      ---->  1.0
-           UTC-0:30   ----> -1.0
+           UTC+0:30 ----> 0.5
+           UTC+1 ----> 1.0
+           UTC-0:30 ----> -1.0
         */
 
         AppLog.v(T.STATS, "Parsing the following Timezone received from WP: " + blogTimeZoneOption);
         String timezoneNormalized;
         if (TextUtils.isEmpty(blogTimeZoneOption) || blogTimeZoneOption.equals("0")
-                || blogTimeZoneOption.equals("0.0")) {
+            || blogTimeZoneOption.equals("0.0")) {
             timezoneNormalized = "GMT";
         } else {
             String[] timezoneSplitted = org.apache.commons.lang3.StringUtils.split(blogTimeZoneOption, ".");
             timezoneNormalized = timezoneSplitted[0];
-            if(timezoneSplitted.length > 1 && timezoneSplitted[1].equals("5")){
+            if (timezoneSplitted.length > 1 && timezoneSplitted[1].equals("5")) {
                 timezoneNormalized += ":30";
             }
             if (timezoneNormalized.startsWith("-")) {
@@ -181,9 +181,9 @@ public class StatsUtils {
         return gmtDf.format(date);
     }
 
-    public static String parseDate(String timestamp, String fromFormat, String toFormat) {
-        SimpleDateFormat from = new SimpleDateFormat(fromFormat);
-        SimpleDateFormat to = new SimpleDateFormat(toFormat);
+    public static String parseDateToLocalizedFormat(String timestamp, String fromFormat, String toFormat) {
+        SimpleDateFormat from = new SimpleDateFormat(fromFormat, Locale.ROOT);
+        SimpleDateFormat to = new SimpleDateFormat(toFormat, Locale.getDefault());
         try {
             Date date = from.parse(timestamp);
             return to.format(date);
@@ -195,8 +195,9 @@ public class StatsUtils {
 
     /**
      * Get a diff between two dates
-     * @param date1 the oldest date in Ms
-     * @param date2 the newest date in Ms
+     *
+     * @param date1    the oldest date in Ms
+     * @param date2    the newest date in Ms
      * @param timeUnit the unit in which you want the diff
      * @return the diff value, in the provided unit
      */
@@ -206,7 +207,8 @@ public class StatsUtils {
     }
 
 
-    //Calculate the correct start/end date for the selected period
+    // Calculate the correct start/end date for the selected period
+    @SuppressLint("SimpleDateFormat") // not sure what this method might be used for, so supressing for now
     public static String getPublishedEndpointPeriodDateParameters(StatsTimeframe timeframe, String date) {
         if (date == null) {
             AppLog.w(AppLog.T.STATS, "Can't calculate start and end period without a reference date");
@@ -225,39 +227,44 @@ public class StatsUtils {
             final String before;
             switch (timeframe) {
                 case DAY:
-                    after = StatsUtils.msToString(c.getTimeInMillis(), StatsConstants.STATS_INPUT_DATE_FORMAT);
+                    after = StatsUtils.msToLocalizedString(c.getTimeInMillis(), StatsConstants.STATS_INPUT_DATE_FORMAT);
                     c.add(Calendar.DAY_OF_YEAR, +1);
-                    before =  StatsUtils.msToString(c.getTimeInMillis(), StatsConstants.STATS_INPUT_DATE_FORMAT);
+                    before = StatsUtils.msToLocalizedString(c.getTimeInMillis(),
+                            StatsConstants.STATS_INPUT_DATE_FORMAT);
                     break;
                 case WEEK:
                     c.set(Calendar.DAY_OF_WEEK, Calendar.MONDAY);
-                    after = StatsUtils.msToString(c.getTimeInMillis(), StatsConstants.STATS_INPUT_DATE_FORMAT);
+                    after = StatsUtils.msToLocalizedString(c.getTimeInMillis(), StatsConstants.STATS_INPUT_DATE_FORMAT);
                     c.set(Calendar.DAY_OF_WEEK, Calendar.SUNDAY);
                     c.add(Calendar.DAY_OF_YEAR, +1);
-                    before = StatsUtils.msToString(c.getTimeInMillis(), StatsConstants.STATS_INPUT_DATE_FORMAT);
-                break;
+                    before = StatsUtils.msToLocalizedString(c.getTimeInMillis(),
+                            StatsConstants.STATS_INPUT_DATE_FORMAT);
+                    break;
                 case MONTH:
-                    //first day of the next month
+                    // first day of the next month
                     c.set(Calendar.DAY_OF_MONTH, c.getActualMaximum(Calendar.DAY_OF_MONTH));
                     c.add(Calendar.DAY_OF_YEAR, +1);
-                    before =  StatsUtils.msToString(c.getTimeInMillis(), StatsConstants.STATS_INPUT_DATE_FORMAT);
+                    before = StatsUtils.msToLocalizedString(c.getTimeInMillis(),
+                            StatsConstants.STATS_INPUT_DATE_FORMAT);
 
-                    //last day of the prev month
+                    // last day of the prev month
                     c.setTime(parsedDate);
                     c.set(Calendar.DAY_OF_MONTH, c.getActualMinimum(Calendar.DAY_OF_MONTH));
-                    after = StatsUtils.msToString(c.getTimeInMillis(), StatsConstants.STATS_INPUT_DATE_FORMAT);
+                    after = StatsUtils.msToLocalizedString(c.getTimeInMillis(),
+                            StatsConstants.STATS_INPUT_DATE_FORMAT);
                     break;
                 case YEAR:
-                    //first day of the next year
+                    // first day of the next year
                     c.set(Calendar.MONTH, Calendar.DECEMBER);
                     c.set(Calendar.DAY_OF_MONTH, 31);
                     c.add(Calendar.DAY_OF_YEAR, +1);
-                    before =  StatsUtils.msToString(c.getTimeInMillis(), StatsConstants.STATS_INPUT_DATE_FORMAT);
+                    before = StatsUtils.msToLocalizedString(c.getTimeInMillis(),
+                            StatsConstants.STATS_INPUT_DATE_FORMAT);
 
                     c.setTime(parsedDate);
                     c.set(Calendar.MONTH, Calendar.JANUARY);
                     c.set(Calendar.DAY_OF_MONTH, 1);
-                    after = StatsUtils.msToString(c.getTimeInMillis(), StatsConstants.STATS_INPUT_DATE_FORMAT);
+                    after = StatsUtils.msToLocalizedString(c.getTimeInMillis(), StatsConstants.STATS_INPUT_DATE_FORMAT);
                     break;
                 default:
                     AppLog.w(AppLog.T.STATS, "Can't calculate start and end period without a reference timeframe");
@@ -295,7 +302,7 @@ public class StatsUtils {
         }
         com.android.volley.AuthFailureError volleyError = (com.android.volley.AuthFailureError) error;
         if (volleyError.networkResponse != null && volleyError.networkResponse.data != null) {
-            String errorMessage = new String(volleyError.networkResponse.data).toLowerCase();
+            String errorMessage = new String(volleyError.networkResponse.data).toLowerCase(Locale.ROOT);
             return errorMessage.contains("api calls") && errorMessage.contains("disabled");
         } else {
             AppLog.e(T.STATS, "Network response is null in Volley. Can't check if it is a Rest Disabled error.");
@@ -379,26 +386,26 @@ public class StatsUtils {
             AppLog.d(AppLog.T.UTILS, "Type of the item is null. Opening it in the in-app browser: " + itemURL);
             WPWebViewActivity.openURL(ctx, itemURL);
         } else if (itemType.equals(StatsConstants.ITEM_TYPE_POST)
-                || itemType.equals(StatsConstants.ITEM_TYPE_PAGE)) {
+                   || itemType.equals(StatsConstants.ITEM_TYPE_PAGE)) {
             // If the post/page has ID == 0 is the home page, and we need to load the blog preview,
             // otherwise 404 is returned if we try to show the post in the reader
             if (itemID == 0) {
                 ReaderActivityLauncher.showReaderBlogPreview(
                         ctx,
                         blogID
-                );
+                                                            );
             } else {
                 ReaderActivityLauncher.showReaderPostDetail(
                         ctx,
                         blogID,
                         itemID
-                );
+                                                           );
             }
         } else if (itemType.equals(StatsConstants.ITEM_TYPE_HOME_PAGE)) {
             ReaderActivityLauncher.showReaderBlogPreview(
                     ctx,
                     blogID
-            );
+                                                        );
         } else {
             AppLog.d(AppLog.T.UTILS, "Opening the in-app browser: " + itemURL);
             WPWebViewActivity.openURL(ctx, itemURL);
@@ -434,57 +441,56 @@ public class StatsUtils {
 
     private static int roundUp(double num, double divisor) {
         double unrounded = num / divisor;
-        //return (int) Math.ceil(unrounded);
+        // return (int) Math.ceil(unrounded);
         return (int) (unrounded + 0.5);
     }
 
     public static String getSinceLabel(Context ctx, String dataSubscribed) {
-
         Date currentDateTime = new Date();
 
         try {
-            SimpleDateFormat from = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssZ");
+            SimpleDateFormat from = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssZ", Locale.ROOT);
             Date date = from.parse(dataSubscribed);
 
             // See http://momentjs.com/docs/#/displaying/fromnow/
             long currentDifference = Math.abs(
                     StatsUtils.getDateDiff(date, currentDateTime, TimeUnit.SECONDS)
-            );
+                                             );
 
-            if (currentDifference <= 45 ) {
+            if (currentDifference <= 45) {
                 return ctx.getString(R.string.stats_followers_seconds_ago);
             }
-            if (currentDifference < 90 ) {
+            if (currentDifference < 90) {
                 return ctx.getString(R.string.stats_followers_a_minute_ago);
             }
 
             // 90 seconds to 45 minutes
-            if (currentDifference <= 2700 ) {
+            if (currentDifference <= 2700) {
                 long minutes = StatsUtils.roundUp(currentDifference, 60);
                 String followersMinutes = ctx.getString(R.string.stats_followers_minutes);
                 return String.format(followersMinutes, minutes);
             }
 
             // 45 to 90 minutes
-            if (currentDifference <= 5400 ) {
+            if (currentDifference <= 5400) {
                 return ctx.getString(R.string.stats_followers_an_hour_ago);
             }
 
             // 90 minutes to 22 hours
-            if (currentDifference <= 79200 ) {
+            if (currentDifference <= 79200) {
                 long hours = StatsUtils.roundUp(currentDifference, 60 * 60);
                 String followersHours = ctx.getString(R.string.stats_followers_hours);
                 return String.format(followersHours, hours);
             }
 
             // 22 to 36 hours
-            if (currentDifference <= 129600 ) {
+            if (currentDifference <= 129600) {
                 return ctx.getString(R.string.stats_followers_a_day);
             }
 
             // 36 hours to 25 days
-            // 86400 secs in a day -  2160000 secs in 25 days
-            if (currentDifference <= 2160000 ) {
+            // 86400 secs in a day - 2160000 secs in 25 days
+            if (currentDifference <= 2160000) {
                 long days = StatsUtils.roundUp(currentDifference, 86400);
                 String followersDays = ctx.getString(R.string.stats_followers_days);
                 return String.format(followersDays, days);
@@ -492,20 +498,20 @@ public class StatsUtils {
 
             // 25 to 45 days
             // 3888000 secs in 45 days
-            if (currentDifference <= 3888000 ) {
+            if (currentDifference <= 3888000) {
                 return ctx.getString(R.string.stats_followers_a_month);
             }
 
             // 45 to 345 days
             // 2678400 secs in a month - 29808000 secs in 345 days
-            if (currentDifference <= 29808000 ) {
+            if (currentDifference <= 29808000) {
                 long months = StatsUtils.roundUp(currentDifference, 2678400);
                 String followersMonths = ctx.getString(R.string.stats_followers_months);
                 return String.format(followersMonths, months);
             }
 
             // 345 to 547 days (1.5 years)
-            if (currentDifference <= 47260800 ) {
+            if (currentDifference <= 47260800) {
                 return ctx.getString(R.string.stats_followers_a_year);
             }
 
@@ -514,7 +520,6 @@ public class StatsUtils {
             long years = StatsUtils.roundUp(currentDifference, 31536000);
             String followersYears = ctx.getString(R.string.stats_followers_years);
             return String.format(followersYears, years);
-
         } catch (ParseException e) {
             AppLog.e(AppLog.T.STATS, e);
         }
@@ -525,9 +530,9 @@ public class StatsUtils {
     /**
      * Transform a 2 characters country code into a 2 characters emoji flag.
      * Emoji letter A starts at: 0x1F1E6 thus,
-     * 0x1F1E6 + 5  = 0x1F1EB represents the letter F
+     * 0x1F1E6 + 5 = 0x1F1EB represents the letter F
      * 0x1F1E6 + 17 = 0x1F1F7 represents the letter R
-     *
+     * <p>
      * FR: 0x1F1EB 0x1F1F7 is the french flag: 🇫🇷
      * More infos on https://apps.timwhitlock.info/emoji/tables/iso3166
      *

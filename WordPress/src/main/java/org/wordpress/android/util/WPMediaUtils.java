@@ -33,7 +33,6 @@ import java.io.File;
 import java.io.IOException;
 
 public class WPMediaUtils {
-
     public interface LaunchCameraCallback {
         void onMediaCapturePathReady(String mediaCapturePath);
     }
@@ -51,8 +50,9 @@ public class WPMediaUtils {
         if (!AppPrefs.isImageOptimize()) {
             return null;
         }
-        
-        int resizeDimension = AppPrefs.getImageOptimizeMaxSize() > 1 ? AppPrefs.getImageOptimizeMaxSize() : Integer.MAX_VALUE;
+
+        int resizeDimension =
+                AppPrefs.getImageOptimizeMaxSize() > 1 ? AppPrefs.getImageOptimizeMaxSize() : Integer.MAX_VALUE;
         int quality = AppPrefs.getImageOptimizeQuality();
         // do not optimize if original-size and 100% quality are set.
         if (resizeDimension == Integer.MAX_VALUE && quality == 100) {
@@ -92,9 +92,8 @@ public class WPMediaUtils {
     }
 
     /**
-     *
      * Check if we should advertise image optimization feature for the current site.
-     *
+     * <p>
      * The following condition need to be all true:
      * 1) Image optimization is OFF on the site.
      * 2) Didn't already ask to enable the feature.
@@ -127,7 +126,6 @@ public class WPMediaUtils {
 
     public static void advertiseImageOptimization(final Activity activity,
                                                   final OnAdvertiseImageOptimizationListener listener) {
-
         DialogInterface.OnClickListener onClickListener = new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
@@ -165,7 +163,7 @@ public class WPMediaUtils {
      * Given a media error returns the error message to display on the UI.
      *
      * @param error The media error occurred
-     * @return String  The associated error message.
+     * @return String The associated error message.
      */
     public static @Nullable
     String getErrorMessage(final Context context, final MediaModel media,
@@ -182,7 +180,9 @@ public class WPMediaUtils {
             case AUTHORIZATION_REQUIRED:
                 return context.getString(R.string.media_error_no_permission_upload);
             case REQUEST_TOO_LARGE:
-                if (media == null) return null;
+                if (media == null) {
+                    return null;
+                }
 
                 if (media.isVideo()) {
                     return context.getString(R.string.media_error_http_too_large_video_upload);
@@ -224,14 +224,16 @@ public class WPMediaUtils {
     public static void launchVideoLibrary(Activity activity, boolean multiSelect) {
         AppLockManager.getInstance().setExtendedTimeout();
         activity.startActivityForResult(prepareVideoLibraryIntent(activity, multiSelect),
-                RequestCodes.VIDEO_LIBRARY);
+                                        RequestCodes.VIDEO_LIBRARY);
     }
 
     private static Intent prepareVideoLibraryIntent(Context context, boolean multiSelect) {
         Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
         intent.setType("video/*");
         if (multiSelect) {
-            intent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true);
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR2) {
+                intent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true);
+            }
         }
         return Intent.createChooser(intent, context.getString(R.string.pick_video));
     }
@@ -247,7 +249,8 @@ public class WPMediaUtils {
 
     public static void launchPictureLibrary(Activity activity, boolean multiSelect) {
         AppLockManager.getInstance().setExtendedTimeout();
-        activity.startActivityForResult(preparePictureLibraryIntent(activity.getString(R.string.pick_photo), multiSelect),
+        activity.startActivityForResult(
+                preparePictureLibraryIntent(activity.getString(R.string.pick_photo), multiSelect),
                 RequestCodes.PICTURE_LIBRARY);
     }
 
@@ -255,7 +258,9 @@ public class WPMediaUtils {
         Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
         intent.setType("image/*");
         if (multiSelect) {
-            intent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true);
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR2) {
+                intent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true);
+            }
         }
         return Intent.createChooser(intent, title);
     }
@@ -292,8 +297,9 @@ public class WPMediaUtils {
     private static Intent getLaunchCameraIntent(Context context, String applicationId, LaunchCameraCallback callback)
             throws IOException {
         File externalStoragePublicDirectory = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM);
-        String mediaCapturePath = externalStoragePublicDirectory + File.separator + "Camera" + File.separator + "wp-" + System
-                .currentTimeMillis() + ".jpg";
+        String mediaCapturePath =
+                externalStoragePublicDirectory + File.separator + "Camera" + File.separator + "wp-" + System
+                        .currentTimeMillis() + ".jpg";
 
         // make sure the directory we plan to store the recording in exists
         File directory = new File(mediaCapturePath).getParentFile();
@@ -313,8 +319,9 @@ public class WPMediaUtils {
             AppLog.e(T.MEDIA, "Cannot access the file planned to store the new media", e);
             throw new IOException("Cannot access the file planned to store the new media");
         } catch (NullPointerException e) {
-            AppLog.e(T.MEDIA, "Cannot access the file planned to store the new media - " +
-                    "FileProvider.getUriForFile cannot find a valid provider for the authority: " + applicationId + ".provider", e);
+            AppLog.e(T.MEDIA, "Cannot access the file planned to store the new media - "
+                              + "FileProvider.getUriForFile cannot find a valid provider for the authority: "
+                              + applicationId + ".provider", e);
             throw new IOException("Cannot access the file planned to store the new media");
         }
 
@@ -327,7 +334,8 @@ public class WPMediaUtils {
         return intent;
     }
 
-    private static Intent makePickOrCaptureIntent(Context context, String applicationId, LaunchCameraCallback callback) {
+    private static Intent makePickOrCaptureIntent(Context context, String applicationId,
+                                                  LaunchCameraCallback callback) {
         Intent pickPhotoIntent = prepareGalleryIntent(context.getString(R.string.capture_or_pick_photo));
 
         if (DeviceUtils.getInstance().hasCamera(context)) {
@@ -335,7 +343,7 @@ public class WPMediaUtils {
                 Intent cameraIntent = getLaunchCameraIntent(context, applicationId, callback);
                 pickPhotoIntent.putExtra(
                         Intent.EXTRA_INITIAL_INTENTS,
-                        new Intent[]{ cameraIntent });
+                        new Intent[]{cameraIntent});
             } catch (IOException e) {
                 // No need to write log here
             }
@@ -395,6 +403,7 @@ public class WPMediaUtils {
 
     /**
      * Returns a poster (thumbnail) URL given a VideoPress video URL
+     *
      * @param videoUrl the remote URL to the VideoPress video
      */
     public static String getVideoPressVideoPosterFromURL(String videoUrl) {
@@ -417,12 +426,12 @@ public class WPMediaUtils {
      */
     public static void scanMediaFile(@NonNull Context context, @NonNull String localMediaPath) {
         MediaScannerConnection.scanFile(context,
-                new String[]{localMediaPath}, null,
-                new MediaScannerConnection.OnScanCompletedListener() {
-                    public void onScanCompleted(String path, Uri uri) {
-                        AppLog.d(T.MEDIA, "Media scanner finished scanning " + path);
-                    }
-                });
+                                        new String[]{localMediaPath}, null,
+                                        new MediaScannerConnection.OnScanCompletedListener() {
+                                            public void onScanCompleted(String path, Uri uri) {
+                                                AppLog.d(T.MEDIA, "Media scanner finished scanning " + path);
+                                            }
+                                        });
     }
 
     /*
@@ -440,7 +449,7 @@ public class WPMediaUtils {
     public static boolean currentUserCanDeleteMedia(@NonNull SiteModel site) {
         return currentUserCanUploadMedia(site);
     }
-  
+
     /*
      * returns the minimum distance for a fling which determines whether to disable loading
      * thumbnails in the media grid or photo picker - used to conserve memory usage during
@@ -457,21 +466,22 @@ public class WPMediaUtils {
 
     public static boolean fetchMediaAndDoNext(Context context, Uri mediaUri, MediaFetchDoNext listener) {
         if (!MediaUtils.isInMediaStore(mediaUri)) {
-            // Do not download the file in async task. See https://github.com/wordpress-mobile/WordPress-Android/issues/5818
+            // Do not download the file in async task. See
+            // https://github.com/wordpress-mobile/WordPress-Android/issues/5818
             Uri downloadedUri = null;
             try {
                 downloadedUri = MediaUtils.downloadExternalMedia(context, mediaUri);
             } catch (IllegalStateException e) {
                 // Ref: https://github.com/wordpress-mobile/WordPress-Android/issues/5823
                 AppLog.e(AppLog.T.UTILS, "Can't download the image at: " + mediaUri.toString(), e);
-                CrashlyticsUtils.logException(e, AppLog.T.MEDIA, "Can't download the image at: " + mediaUri.toString() +
-                        " See issue #5823");
+                CrashlyticsUtils.logException(e, AppLog.T.MEDIA, "Can't download the image at: " + mediaUri.toString()
+                                                                 + " See issue #5823");
             }
             if (downloadedUri != null) {
                 listener.doNext(downloadedUri);
             } else {
                 ToastUtils.showToast(context, R.string.error_downloading_image,
-                        ToastUtils.Duration.SHORT);
+                                     ToastUtils.Duration.SHORT);
                 return false;
             }
         } else {
@@ -479,5 +489,4 @@ public class WPMediaUtils {
         }
         return true;
     }
-
 }

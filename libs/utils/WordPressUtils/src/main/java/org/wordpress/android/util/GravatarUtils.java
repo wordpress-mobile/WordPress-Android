@@ -6,10 +6,9 @@ import android.text.TextUtils;
  * see https://en.gravatar.com/site/implement/images/
  */
 public class GravatarUtils {
-
     // by default tell gravatar to respond to non-existent images with a 404 - this means
     // it's up to the caller to catch the 404 and provide a suitable default image
-    private static final DefaultImage DEFAULT_GRAVATAR = DefaultImage.STATUS_404;
+    private static final DefaultImage DEFAULT_GRAVATAR = DefaultImage.MYSTERY_MAN;
 
     private enum DefaultImage {
         MYSTERY_MAN,
@@ -48,6 +47,7 @@ public class GravatarUtils {
     public static String fixGravatarUrl(final String imageUrl, int avatarSz) {
         return fixGravatarUrl(imageUrl, avatarSz, DEFAULT_GRAVATAR);
     }
+
     public static String fixGravatarUrl(final String imageUrl, int avatarSz, DefaultImage defaultImage) {
         if (TextUtils.isEmpty(imageUrl)) {
             return "";
@@ -68,9 +68,9 @@ public class GravatarUtils {
 
     public static String gravatarFromEmail(final String email, int size, DefaultImage defaultImage) {
         return "http://gravatar.com/avatar/"
-              + StringUtils.getMd5Hash(StringUtils.notNullStr(email))
-              + "?d=" + defaultImage.toString()
-              + "&size=" + Integer.toString(size);
+               + StringUtils.getMd5Hash(StringUtils.notNullStr(email))
+               + "?d=" + defaultImage.toString()
+               + "&size=" + Integer.toString(size);
     }
 
     public static String blavatarFromUrl(final String url, int size) {
@@ -79,8 +79,8 @@ public class GravatarUtils {
 
     public static String blavatarFromUrl(final String url, int size, DefaultImage defaultImage) {
         return "http://gravatar.com/blavatar/"
-                + StringUtils.getMd5Hash(UrlUtils.getHost(url))
-                + "?d=" + defaultImage.toString()
-                + "&size=" + Integer.toString(size);
+               + StringUtils.getMd5Hash(UrlUtils.getHost(url))
+               + "?d=" + defaultImage.toString()
+               + "&size=" + Integer.toString(size);
     }
 }

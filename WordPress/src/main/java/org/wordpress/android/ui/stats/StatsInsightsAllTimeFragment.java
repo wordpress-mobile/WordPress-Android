@@ -20,12 +20,14 @@ public class StatsInsightsAllTimeFragment extends StatsAbstractInsightsFragment 
     protected boolean hasDataAvailable() {
         return mInsightsAllTimeModel != null;
     }
+
     @Override
     protected void saveStatsData(Bundle outState) {
         if (hasDataAvailable()) {
             outState.putSerializable(ARG_REST_RESPONSE, mInsightsAllTimeModel);
         }
     }
+
     @Override
     protected void restoreStatsData(Bundle savedInstanceState) {
         if (savedInstanceState.containsKey(ARG_REST_RESPONSE)) {
@@ -62,7 +64,8 @@ public class StatsInsightsAllTimeFragment extends StatsAbstractInsightsFragment 
         }
 
         LinearLayout ll = (LinearLayout) getActivity().getLayoutInflater()
-                .inflate(R.layout.stats_insights_all_time_item, (ViewGroup) mResultContainer.getRootView(), false);
+                                                      .inflate(R.layout.stats_insights_all_time_item,
+                                                              (ViewGroup) mResultContainer.getRootView(), false);
 
         TextView postsTextView = (TextView) ll.findViewById(R.id.stats_all_time_posts);
         TextView viewsTextView = (TextView) ll.findViewById(R.id.stats_all_time_views);
@@ -76,9 +79,8 @@ public class StatsInsightsAllTimeFragment extends StatsAbstractInsightsFragment 
         visitorsTextView.setText(FormatUtils.formatDecimal(mInsightsAllTimeModel.getVisitors()));
 
         besteverTextView.setText(FormatUtils.formatDecimal(mInsightsAllTimeModel.getViewsBestDayTotal()));
-        besteverDateTextView.setText(
-                StatsUtils.parseDate(mInsightsAllTimeModel.getViewsBestDay(), StatsConstants.STATS_INPUT_DATE_FORMAT, "MMMM dd, yyyy")
-        );
+        besteverDateTextView.setText(StatsUtils.parseDateToLocalizedFormat(mInsightsAllTimeModel.getViewsBestDay(),
+                StatsConstants.STATS_INPUT_DATE_FORMAT, "MMMM dd, yyyy"));
 
         mResultContainer.addView(ll);
     }
@@ -95,5 +97,4 @@ public class StatsInsightsAllTimeFragment extends StatsAbstractInsightsFragment 
     public String getTitle() {
         return getString(R.string.stats_insights_all_time);
     }
-
 }

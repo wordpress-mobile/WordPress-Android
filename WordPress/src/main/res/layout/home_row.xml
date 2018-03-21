@@ -43,7 +43,7 @@
             android:singleLine="true"
             android:text="@string/wordpress_blog"
             android:textColor="#444444"
-            android:textSize="20dip"
+            android:textSize="20sp"
             android:textStyle="bold"
             android:paddingEnd="8dip"/>
 
@@ -59,6 +59,6 @@
             android:text="@string/blogusername"
             android:textColor="#666666"
             android:textColorLink="@color/blue_wordpress"
-            android:textSize="12dip" />
+            android:textSize="12sp" />
     </LinearLayout>
 </RelativeLayout>

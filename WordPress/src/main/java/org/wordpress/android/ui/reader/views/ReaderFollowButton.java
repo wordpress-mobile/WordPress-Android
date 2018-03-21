@@ -25,7 +25,7 @@ public class ReaderFollowButton extends LinearLayout {
     private boolean mIsFollowed;
     private boolean mShowCaption;
 
-    public ReaderFollowButton(Context context){
+    public ReaderFollowButton(Context context) {
         super(context);
         initView(context, null);
     }
@@ -91,9 +91,11 @@ public class ReaderFollowButton extends LinearLayout {
     public void setIsFollowed(boolean isFollowed) {
         setIsFollowed(isFollowed, false);
     }
+
     public void setIsFollowedAnimated(boolean isFollowed) {
         setIsFollowed(isFollowed, true);
     }
+
     private void setIsFollowed(boolean isFollowed, boolean animateChanges) {
         if (isFollowed == mIsFollowed && mTextFollow.isSelected() == isFollowed) {
             return;

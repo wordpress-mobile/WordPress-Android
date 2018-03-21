@@ -4,9 +4,7 @@
           xmlns:tools="http://schemas.android.com/tools"
           android:installLocation="auto">
 
-    <uses-sdk
-        tools:overrideLibrary="org.m4m.android"
-        android:targetSdkVersion="17"/>
+    <uses-sdk tools:overrideLibrary="org.m4m.android" />
 
     <supports-screens
         android:anyDensity="true"
@@ -74,7 +72,7 @@
         android:theme="@style/WordPress"
         tools:replace="allowBackup, icon,android:supportsRtl"
         android:supportsRtl="true"
-        >
+        tools:ignore="UnusedAttribute">
 
         <meta-data
             android:name="com.google.android.geo.API_KEY"
