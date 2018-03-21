@@ -2189,9 +2189,29 @@
     <string name="notification_settings_switch_desc">Notifications</string>
     <string name="navigate_up_desc">navigate up</string>
     <string name="stats_list_cell_chevron_collapse_desc">collapse</string>
+    <string name="stats_bar_desc">Showing %s</string>
+    <string name="stats_bar_week_desc">Week of %s</string>
     <string name="fab_add_tag_desc">create tag</string>
     <string name="fab_create_post_desc">create post</string>
     <string name="fab_create_desc">create</string>
+    <string name="stats_legend">stats graph legend</string>
+    <string name="stats_tab_tap_content_description">showing %s</string>
+    <string name="stats_follower_since_desc">since %s ago</string>
+    <string name="stats_views_zero_desc">zero views</string>
+    <string name="stats_views_one_desc">one view</string>
+    <string name="stats_views_many_desc">%d views</string>
+    <string name="stats_clicks_zero_desc">zero clicks</string>
+    <string name="stats_clicks_one_desc">one click</string>
+    <string name="stats_clicks_many_desc">%d clicks</string>
+    <string name="stats_plays_zero_desc">zero plays</string>
+    <string name="stats_plays_one_desc">one play</string>
+    <string name="stats_plays_many_desc">%d plays</string>
+    <string name="stats_comments_zero_desc">zero comments</string>
+    <string name="stats_comments_one_desc">one comment</string>
+    <string name="stats_comments_many_desc">%d comments</string>
+    <string name="stats_followers_zero_desc">zero followers</string>
+    <string name="stats_followers_one_desc">one follower</string>
+    <string name="stats_followers_many_desc">%d followers</string>
 
     <!-- Site Creation -->
     <string name="site_creation_title">Create New Site</string>

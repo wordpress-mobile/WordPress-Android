@@ -59,6 +59,7 @@
             android:layout_width="fill_parent"
             android:layout_height="wrap_content">
             <LinearLayout
+                android:focusable="false"
                 android:id="@+id/stats_bar_chart_fragment_container"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
@@ -67,11 +68,12 @@
                 android:paddingRight="@dimen/margin_extra_small"
                 android:paddingBottom="@dimen/margin_large"
                 android:minHeight="@dimen/stats_barchart_height"
-                android:importantForAccessibility="noHideDescendants"
                 android:orientation="vertical"
                 android:paddingEnd="@dimen/margin_extra_small"
                 android:paddingStart="@dimen/margin_medium"/>
             <LinearLayout
+                android:contentDescription="@string/stats_no_activity_this_period"
+                android:importantForAccessibility="yes"
                 android:id="@+id/stats_bar_chart_no_activity"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -104,14 +106,15 @@
 
         <!-- Bottom Legend -->
         <LinearLayout
+            android:contentDescription="@string/stats_legend"
             android:id="@+id/stats_legend_container"
             android:orientation="horizontal"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:gravity="center_vertical"
-            android:importantForAccessibility="noHideDescendants"
             android:layout_marginBottom="@dimen/margin_medium">
             <LinearLayout
+                android:focusable="false"
                 android:orientation="horizontal"
                 android:layout_width="0dp"
                 android:layout_weight="1"
@@ -136,6 +139,7 @@
                     android:textColor="@color/grey_darken_30"/>
             </LinearLayout>
             <LinearLayout
+                android:focusable="false"
                 android:id="@+id/stats_checkbox_visitors_container"
                 android:orientation="horizontal"
                 android:layout_width="0dp"
@@ -144,6 +148,7 @@
                 android:gravity="center"
                 android:visibility="gone">
                 <CheckBox
+                    android:focusable="false"
                     android:id="@+id/stats_checkbox_visitors"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"

@@ -10,6 +10,7 @@
 
     <!-- Posts item -->
     <LinearLayout
+        android:focusable="true"
         android:orientation="vertical"
         android:layout_width="0dp"
         android:layout_weight="1"
@@ -57,6 +58,7 @@
 
     <!-- Views Item -->
     <LinearLayout
+        android:focusable="true"
         android:orientation="vertical"
         android:layout_width="0dp"
         android:layout_weight="1"
@@ -103,6 +105,7 @@
 
     <!-- Visitors Item -->
     <LinearLayout
+        android:focusable="true"
         android:orientation="vertical"
         android:layout_width="0dp"
         android:layout_weight="1"
@@ -149,6 +152,7 @@
 
     <!-- Best Ever Item -->
     <LinearLayout
+        android:focusable="true"
         android:orientation="vertical"
         android:layout_width="0dp"
         android:layout_weight="1"

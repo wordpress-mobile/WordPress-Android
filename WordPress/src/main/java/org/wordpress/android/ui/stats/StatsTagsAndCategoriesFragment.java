@@ -247,6 +247,13 @@ public class StatsTagsAndCategoriesFragment extends StatsAbstractListFragment {
 
             // totals
             holder.totalsTextView.setText(FormatUtils.formatDecimal(total));
+            holder.totalsTextView.setContentDescription(
+                    org.wordpress.android.util.StringUtils.getQuantityString(
+                            holder.totalsTextView.getContext(),
+                            R.string.stats_views_zero_desc,
+                            R.string.stats_views_one_desc,
+                            R.string.stats_views_many_desc,
+                            total));
 
             // expand/collapse chevron
             holder.chevronImageView.setVisibility(children > 0 ? View.VISIBLE : View.GONE);
