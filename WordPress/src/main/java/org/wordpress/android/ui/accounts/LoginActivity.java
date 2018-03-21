@@ -156,6 +156,15 @@ public class LoginActivity extends AppCompatActivity implements ConnectionCallba
         outState.putString(KEY_SMARTLOCK_HELPER_STATE, mSmartLockHelperState.name());
     }
 
+    @Override
+    protected void onDestroy() {
+        if (mSignupSheetDisplayed && mSignupSheet != null) {
+            mSignupSheet.dismiss();
+        }
+
+        super.onDestroy();
+    }
+
     private void showFragment(Fragment fragment, String tag) {
         FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
         fragmentTransaction.replace(R.id.fragment_container, fragment, tag);
