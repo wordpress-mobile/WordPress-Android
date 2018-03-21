@@ -43,7 +43,7 @@ class StatsBarGraph extends GraphView {
     private int mBarPositionToHighlight = -1;
     private boolean[] mWeekendDays;
 
-    private final StatsBarGraphAccessHelper mStatsBarGraphAccessHelper;
+    private final StatsBarGraphAccessibilityHelper mStatsBarGraphAccessibilityHelper;
     private final List<BarChartRect> mVirtualBars = new ArrayList<>();
     private String[] mAccessibleVirtualLabels;
 
@@ -64,17 +64,17 @@ class StatsBarGraph extends GraphView {
 
         if (isInEditMode()) {
             // Special considerations for edit mode.
-            mStatsBarGraphAccessHelper = null;
+            mStatsBarGraphAccessibilityHelper = null;
         } else {
             // Set up accessibility helper class.
-            mStatsBarGraphAccessHelper = new StatsBarGraphAccessHelper(this);
-            ViewCompat.setAccessibilityDelegate(this, mStatsBarGraphAccessHelper);
+            mStatsBarGraphAccessibilityHelper = new StatsBarGraphAccessibilityHelper(this);
+            ViewCompat.setAccessibilityDelegate(this, mStatsBarGraphAccessibilityHelper);
         }
     }
 
     @Override
     public boolean dispatchHoverEvent(MotionEvent event) {
-        if (mStatsBarGraphAccessHelper != null && mStatsBarGraphAccessHelper.dispatchHoverEvent(event)) {
+        if (mStatsBarGraphAccessibilityHelper != null && mStatsBarGraphAccessibilityHelper.dispatchHoverEvent(event)) {
             return true;
         }
 
@@ -122,8 +122,8 @@ class StatsBarGraph extends GraphView {
             if (mGestureListener != null) {
                 mGestureListener.onBarTapped(tappedBar);
             }
-            if (mStatsBarGraphAccessHelper != null) {
-                mStatsBarGraphAccessHelper.invalidateVirtualView(tappedBar);
+            if (mStatsBarGraphAccessibilityHelper != null) {
+                mStatsBarGraphAccessibilityHelper.invalidateVirtualView(tappedBar);
             }
         }
     }
@@ -134,8 +134,8 @@ class StatsBarGraph extends GraphView {
             if (mGestureListener != null) {
                 mGestureListener.onBarTapped(barIndex);
             }
-            if (mStatsBarGraphAccessHelper != null) {
-                mStatsBarGraphAccessHelper.invalidateVirtualView(barIndex);
+            if (mStatsBarGraphAccessibilityHelper != null) {
+                mStatsBarGraphAccessibilityHelper.invalidateVirtualView(barIndex);
             }
         }
     }
@@ -240,7 +240,9 @@ class StatsBarGraph extends GraphView {
                 canvas.drawRect(left, 10f, right, bottom, paint);
             }
 
-            mVirtualBars.add(new BarChartRect(left, 10f, right, bottom));
+            if(mVirtualBars.size() < values.length){
+                mVirtualBars.add(new BarChartRect(left, 10f, right, bottom));
+            }
 
             if ((top - bottom) == 1) {
                 // draw a placeholder
@@ -317,7 +319,7 @@ class StatsBarGraph extends GraphView {
     }
 
 
-     public void setAccessibleHorizontalLabels(String[] virtualLabels) {
+    public void setAccessibleHorizontalLabels(String[] virtualLabels) {
         mAccessibleVirtualLabels = virtualLabels;
     }
 
@@ -377,9 +379,9 @@ class StatsBarGraph extends GraphView {
         void onBarTapped(int tappedBar);
     }
 
-    private class StatsBarGraphAccessHelper extends ExploreByTouchHelper {
+    private class StatsBarGraphAccessibilityHelper extends ExploreByTouchHelper {
 
-        StatsBarGraphAccessHelper(View parentView) {
+        StatsBarGraphAccessibilityHelper(View parentView) {
             super(parentView);
         }
 
@@ -393,9 +395,9 @@ class StatsBarGraph extends GraphView {
         }
 
         @Override protected void getVisibleVirtualViews(List<Integer> virtualViewIds) {
-            final int count = mVirtualBars.size();
-            for (int index = 0; index < count; index++) {
-                virtualViewIds.add(index);
+                final int count = mVirtualBars.size();
+                for (int index = 0; index < count; index++) {
+                    virtualViewIds.add(index);
             }
         }
 
