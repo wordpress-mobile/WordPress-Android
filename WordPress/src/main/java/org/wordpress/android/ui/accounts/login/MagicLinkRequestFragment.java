@@ -67,6 +67,12 @@ public class MagicLinkRequestFragment extends Fragment {
     }
 
     @Override
+    public void onAttachFragment(Fragment childFragment) {
+        ((WordPress) getActivity().getApplication()).component().inject(this);
+        super.onAttachFragment(childFragment);
+    }
+
+    @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
