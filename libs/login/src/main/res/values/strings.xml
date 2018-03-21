@@ -64,6 +64,16 @@
     <string name="login_error_generic">There was some trouble connecting with the Google account.</string>
     <string name="login_error_generic_start">Google login could not be started.</string>
     <string name="login_error_suffix">\nMaybe try a different account?</string>
+    <string name="signup_email_error_generic">There was some trouble checking the email address.</string>
+    <string name="signup_email_header">To create your new WordPress.com account, please enter your email address.</string>
+    <string name="signup_magic_link_error">There was some trouble sending the email.  You can retry now or close and try again later.</string>
+    <string name="signup_magic_link_error_button_negative">Close</string>
+    <string name="signup_magic_link_error_button_positive">Retry</string>
+    <string name="signup_magic_link_message">We sent you a magic signup link! Check your email on this device, and tap the link in the email to finish signing up.</string>
+    <string name="signup_magic_link_progress">Sending email</string>
+    <string name="signup_terms_of_service_text">By signing up, you agree to our %1$sTerms of Service%2$s.</string>
+    <string name="signup_with_email_button">Sign Up with Email</string>
+    <string name="signup_with_google_button">Sign Up with Google</string>
 
     <string name="google_error_timeout">Google took too long to respond. You may need to wait until you have a stronger internet connection.</string>
 
@@ -110,6 +120,9 @@
     <string name="selfhosted_site_login_title">Login credentials</string>
     <string name="email_signup_title">Sign up with email</string>
     <string name="verification_2fa_screen_title">Code verification</string>
+
+    <string name="signup_email_screen_title">Email signup</string>
+    <string name="signup_magic_link_title">Magic link sent</string>
 
 
     <!-- HTTP Authentication -->

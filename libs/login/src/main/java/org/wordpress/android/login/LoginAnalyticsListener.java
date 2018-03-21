@@ -7,6 +7,7 @@ import java.util.Map;
 
 public interface LoginAnalyticsListener {
     void trackAnalyticsSignIn(AccountStore accountStore, SiteStore siteStore, boolean isWpcomLogin);
+    void trackCreatedAccount();
     void trackEmailFormViewed();
     void trackInsertedInvalidUrl();
     void trackLoginFailed(String errorContext, String errorType, String errorDescription);
@@ -15,6 +16,14 @@ public interface LoginAnalyticsListener {
     void trackMagicLinkRequested();
     void trackMagicLinkRequestFormViewed();
     void trackPasswordFormViewed();
+    void trackSignupEmailToLogin();
+    void trackSignupMagicLinkFailed();
+    void trackSignupMagicLinkSent();
+    void trackSignupMagicLinkSucceeded();
+    void trackSignupSocial2faNeeded();
+    void trackSignupSocialAccountsNeedConnecting();
+    void trackSignupSocialButtonFailure();
+    void trackSignupSocialToLogin();
     void trackSocialAccountsNeedConnecting();
     void trackSocialButtonClick();
     void trackSocialButtonFailure();
