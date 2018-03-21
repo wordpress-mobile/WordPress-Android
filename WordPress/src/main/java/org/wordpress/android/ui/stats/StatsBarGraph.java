@@ -24,6 +24,7 @@ import com.jjoe64.graphview.GraphViewStyle;
 import com.jjoe64.graphview.IndexDependentColor;
 
 import org.wordpress.android.R;
+import org.wordpress.android.util.AppLog;
 
 import java.text.NumberFormat;
 import java.util.ArrayList;
@@ -315,6 +316,7 @@ class StatsBarGraph extends GraphView {
         if (mAccessibleVirtualLabels != null && index < mAccessibleVirtualLabels.length) {
             return mAccessibleVirtualLabels[index];
         }
+        AppLog.w(AppLog.T.STATS, "Missing StatsBarGraph accessible label at index " + index);
         return "";
     }
 
