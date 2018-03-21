@@ -12,6 +12,7 @@ import org.wordpress.android.ui.stats.models.SearchTermModel;
 import org.wordpress.android.ui.stats.models.SearchTermsModel;
 import org.wordpress.android.ui.stats.service.StatsService;
 import org.wordpress.android.util.FormatUtils;
+import org.wordpress.android.util.StringUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -196,6 +197,13 @@ public class StatsSearchTermsFragment extends StatsAbstractListFragment {
 
             // totals
             holder.totalsTextView.setText(FormatUtils.formatDecimal(currentRowData.getTotals()));
+            holder.totalsTextView.setContentDescription(
+                    StringUtils.getQuantityString(
+                            holder.totalsTextView.getContext(),
+                            R.string.stats_views_zero_desc,
+                            R.string.stats_views_one_desc,
+                            R.string.stats_views_many_desc,
+                            currentRowData.getTotals()));
 
             // image
             holder.networkImageView.setVisibility(View.GONE);

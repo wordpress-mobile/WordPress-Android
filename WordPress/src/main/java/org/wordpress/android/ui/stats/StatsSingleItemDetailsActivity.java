@@ -38,6 +38,7 @@ import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.DisplayUtils;
 import org.wordpress.android.util.FormatUtils;
 import org.wordpress.android.util.NetworkUtils;
+import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.helpers.SwipeToRefreshHelper;
 import org.wordpress.android.util.widgets.CustomSwipeRefreshLayout;
@@ -562,6 +563,14 @@ public class StatsSingleItemDetailsActivity extends AppCompatActivity
 
             // totals
             holder.totalsTextView.setText(FormatUtils.formatDecimal(currentDay.getCount()));
+            holder.totalsTextView.setContentDescription(
+                    StringUtils.getQuantityString(
+                            holder.totalsTextView.getContext(),
+                            R.string.stats_views_zero_desc,
+                            R.string.stats_views_one_desc,
+                            R.string.stats_views_many_desc,
+                            currentDay.getCount()));
+
 
             // show the trophy indicator if the value is the maximum reached
             if (currentDay.getCount() == maxReachedValue && maxReachedValue > 0) {
@@ -646,6 +655,13 @@ public class StatsSingleItemDetailsActivity extends AppCompatActivity
 
             // totals
             holder.totalsTextView.setText(FormatUtils.formatDecimal(total));
+            holder.totalsTextView.setContentDescription(
+                    StringUtils.getQuantityString(
+                            holder.totalsTextView.getContext(),
+                            R.string.stats_views_zero_desc,
+                            R.string.stats_views_one_desc,
+                            R.string.stats_views_many_desc,
+                            total));
             if (shouldShowTheTrophyIcon) {
                 holder.imgMore.setVisibility(View.VISIBLE);
                 holder.imgMore.setImageDrawable(getResources().getDrawable(R.drawable.ic_trophy_alert_yellow_32dp));
@@ -729,6 +745,13 @@ public class StatsSingleItemDetailsActivity extends AppCompatActivity
 
             // totals
             holder.totalsTextView.setText(FormatUtils.formatDecimal(currentMonth.getCount()));
+            holder.totalsTextView.setContentDescription(
+                    StringUtils.getQuantityString(
+                            holder.totalsTextView.getContext(),
+                            R.string.stats_views_zero_desc,
+                            R.string.stats_views_one_desc,
+                            R.string.stats_views_many_desc,
+                            currentMonth.getCount()));
 
             // show the trophy indicator if the value is the maximum reached
             if (currentMonth.getCount() == maxReachedValue && maxReachedValue > 0) {
@@ -810,6 +833,13 @@ public class StatsSingleItemDetailsActivity extends AppCompatActivity
 
             // totals
             holder.totalsTextView.setText(FormatUtils.formatDecimal(total));
+            holder.totalsTextView.setContentDescription(
+                    StringUtils.getQuantityString(
+                            holder.totalsTextView.getContext(),
+                            R.string.stats_views_zero_desc,
+                            R.string.stats_views_one_desc,
+                            R.string.stats_views_many_desc,
+                            total));
 
             holder.networkImageView.setVisibility(View.GONE);
 
@@ -916,7 +946,12 @@ public class StatsSingleItemDetailsActivity extends AppCompatActivity
                 StatsConstants.STATS_OUTPUT_DATE_MONTH_LONG_DAY_SHORT_FORMAT
         );
         setMainViewsLabel(currentItemStatsDate, dataToShowOnGraph[mSelectedBarGraphIndex].getViews());
-        mGraphContainer.announceForAccessibility(getString(R.string.stats_single_item_bad_desc, dataToShowOnGraph[mSelectedBarGraphIndex].getViews()));
+        mGraphContainer.announceForAccessibility(
+                StringUtils.getQuantityString(this,
+                        R.string.stats_views_zero_desc,
+                        R.string.stats_views_one_desc,
+                        R.string.stats_views_many_desc,
+                        dataToShowOnGraph[mSelectedBarGraphIndex].getViews()));
     }
 
 }

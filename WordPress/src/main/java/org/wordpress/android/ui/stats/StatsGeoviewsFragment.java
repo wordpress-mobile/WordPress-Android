@@ -24,6 +24,7 @@ import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.DisplayUtils;
 import org.wordpress.android.util.FormatUtils;
 import org.wordpress.android.util.GravatarUtils;
+import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.widgets.WPNetworkImageView;
 
 import java.util.List;
@@ -265,6 +266,13 @@ public class StatsGeoviewsFragment extends StatsAbstractListFragment {
             String entry = currentRowData.getCountryFullName();
             String imageUrl = currentRowData.getFlatFlagIconURL();
             holder.totalsTextView.setText(FormatUtils.formatDecimal(currentRowData.getViews()));
+            holder.totalsTextView.setContentDescription(
+                    StringUtils.getQuantityString(
+                            holder.totalsTextView.getContext(),
+                            R.string.stats_views_zero_desc,
+                            R.string.stats_views_one_desc,
+                            R.string.stats_views_many_desc,
+                            currentRowData.getViews()));
 
             holder.setEntryText(entry);
 
