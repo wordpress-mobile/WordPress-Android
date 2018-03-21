@@ -47,6 +47,13 @@
     <string name="publicize_buttons_screen_title">Sharing buttons</string>
     <string name="media_settings_screen_title">File details</string>
     <string name="person_detail_screen_title">Person detail</string>
+    <string name="login_epilogue_screen_title">Logged in as</string>
+    <string name="login_prologue_screen_title">Login</string>
+    <string name="signup_email_screen_title">Email signup</string>
+    <string name="signup_epilogue_screen_title">New account</string>
+    <string name="signup_magic_link_title">Magic link sent</string>
+    <string name="share_intent_screen_title">Pick site</string>
+
 
     <!-- general strings -->
     <string name="device">Device</string>
@@ -2188,6 +2195,10 @@
 
     <!-- Site Creation -->
     <string name="site_creation_title">Create New Site</string>
+    <string name="site_creation_category_title">Create New Site Step 1</string>
+    <string name="site_creation_theme_selection_title">Create New Site Step 2</string>
+    <string name="site_creation_site_details_title">Create New Site Step 3</string>
+    <string name="site_creation_domain_selection_title">Create New Site Step 4</string>
     <string name="site_creation_label_category_title">Step 1 of 4</string>
     <string name="site_creation_label_category">What kind of site do you need?\nChoose an option below:</string>
     <string name="site_creation_title_blog">Start with a Blog</string>

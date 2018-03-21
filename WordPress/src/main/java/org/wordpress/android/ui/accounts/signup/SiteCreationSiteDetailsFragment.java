@@ -32,6 +32,8 @@ public class SiteCreationSiteDetailsFragment extends SiteCreationBaseFormFragmen
 
     @Override
     protected void setupContent(ViewGroup rootView) {
+        // important for accessibility - talkback
+        getActivity().setTitle(R.string.site_creation_site_details_title);
         mScrollView = rootView.findViewById(R.id.scroll_view);
 
         mSiteTitleInput = rootView.findViewById(R.id.site_creation_site_title_row);
