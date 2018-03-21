@@ -52,7 +52,7 @@ class ActivityLogStore
 
     class FetchRewindStatePayload(val site: SiteModel) : Payload<BaseRequest.BaseNetworkError>()
 
-    class FetchedActivitiesPayload(val activityLogModelRespons: List<ActivityLogModel> = listOf(),
+    class FetchedActivitiesPayload(val activityLogModels: List<ActivityLogModel> = listOf(),
                                    val site: SiteModel,
                                    val number: Int,
                                    val offset: Int) : Payload<ActivityError>() {
