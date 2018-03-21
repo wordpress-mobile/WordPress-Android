@@ -350,7 +350,23 @@ public class MediaGridFragment extends Fragment implements MediaGridAdapterCallb
     List<MediaModel> getFilteredMedia() {
         List<MediaModel> mediaList;
         if (!TextUtils.isEmpty(mSearchTerm)) {
-            mediaList = mMediaStore.searchSiteMedia(mSite, mSearchTerm);
+            switch (mFilter) {
+                case FILTER_IMAGES:
+                    mediaList = mMediaStore.searchSiteImages(mSite, mSearchTerm);
+                    break;
+                case FILTER_DOCUMENTS:
+                    mediaList = mMediaStore.searchSiteDocuments(mSite, mSearchTerm);
+                    break;
+                case FILTER_VIDEOS:
+                    mediaList = mMediaStore.searchSiteVideos(mSite, mSearchTerm);
+                    break;
+                case FILTER_AUDIO:
+                    mediaList = mMediaStore.searchSiteAudio(mSite, mSearchTerm);
+                    break;
+                default:
+                    mediaList = mMediaStore.searchSiteMedia(mSite, mSearchTerm);
+                    break;
+            }
         } else if (mBrowserType.isSingleImagePicker()) {
             mediaList = mMediaStore.getSiteImages(mSite);
         } else if (mBrowserType.canFilter()) {
@@ -507,7 +523,7 @@ public class MediaGridFragment extends Fragment implements MediaGridAdapterCallb
 
     public void search(String searchTerm) {
         mSearchTerm = searchTerm;
-        List<MediaModel> mediaList = mMediaStore.searchSiteMedia(mSite, mSearchTerm);
+        List<MediaModel> mediaList = getFilteredMedia();
         mGridAdapter.setMediaList(mediaList);
     }
 
