@@ -176,7 +176,7 @@ public class MediaStore extends Store {
      * Actions: UPLOADED_STOCK_MEDIA
      */
     @SuppressWarnings("WeakerAccess")
-    public static class UploadedStockMediaPayload extends Payload<StockMediaStore.StockMediaError> {
+    public static class UploadedStockMediaPayload extends Payload<UploadStockMediaError> {
         @NonNull public List<MediaModel> mediaList;
         @NonNull public SiteModel site;
 
@@ -185,7 +185,7 @@ public class MediaStore extends Store {
             this.mediaList = mediaList;
         }
 
-        public UploadedStockMediaPayload(@NonNull SiteModel site, @NonNull StockMediaStore.StockMediaError error) {
+        public UploadedStockMediaPayload(@NonNull SiteModel site, @NonNull UploadStockMediaError error) {
             this.site = site;
             this.error = error;
             this.mediaList = new ArrayList<>();
@@ -230,6 +230,15 @@ public class MediaStore extends Store {
             }
 
             return mediaError;
+        }
+    }
+
+    public static class UploadStockMediaError implements OnChangedError {
+        public UploadStockMediaErrorType type;
+        public String message;
+        public UploadStockMediaError(UploadStockMediaErrorType type, String message) {
+            this.type = type;
+            this.message = message;
         }
     }
 
@@ -282,7 +291,7 @@ public class MediaStore extends Store {
     }
 
     @SuppressWarnings("WeakerAccess")
-    public static class OnStockMediaUploaded extends OnChanged<StockMediaStore.StockMediaError> {
+    public static class OnStockMediaUploaded extends OnChanged<UploadStockMediaError> {
         @NonNull public List<MediaModel> mediaList;
         @Nullable public SiteModel site;
 
@@ -290,7 +299,7 @@ public class MediaStore extends Store {
             this.site = site;
             this.mediaList = mediaList;
         }
-        public OnStockMediaUploaded(@NonNull SiteModel site, @NonNull StockMediaStore.StockMediaError error) {
+        public OnStockMediaUploaded(@NonNull SiteModel site, @NonNull UploadStockMediaError error) {
             this.site = site;
             this.error = error;
             this.mediaList = new ArrayList<>();
