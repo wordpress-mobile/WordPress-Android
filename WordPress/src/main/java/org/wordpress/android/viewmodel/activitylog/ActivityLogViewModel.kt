@@ -1,5 +1,6 @@
-package org.wordpress.android.ui.activitylog
+package org.wordpress.android.viewmodel.activitylog
 
+import android.arch.lifecycle.MutableLiveData
 import android.arch.lifecycle.ViewModel
 import org.wordpress.android.fluxc.Dispatcher
 import org.wordpress.android.fluxc.model.activity.ActivityLogModel
@@ -10,7 +11,7 @@ class ActivityLogViewModel() : ViewModel() {
     private lateinit var dispatcher: Dispatcher
     private lateinit var activityLogStore: ActivityLogStore
 
-    private lateinit var activityLogModel: ActivityLogModel
+    private val activities: MutableLiveData<List<ActivityLogModel>> = MutableLiveData()
 
     @Inject
     constructor(dispatcher: Dispatcher, activityLogStore: ActivityLogStore) : this() {
