@@ -526,7 +526,7 @@ public class MediaGridFragment extends Fragment implements MediaGridAdapterCallb
         List<MediaModel> mediaList = getFilteredMedia();
         mGridAdapter.setMediaList(mediaList);
 
-        if(isEmpty()){
+        if(isEmpty()) {
             updateEmptyView(EmptyViewMessageType.NO_CONTENT);
         }
     }
