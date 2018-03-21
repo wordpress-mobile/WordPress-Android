@@ -37,8 +37,9 @@ import org.wordpress.android.fluxc.store.MediaStore.MediaError;
 import org.wordpress.android.fluxc.store.MediaStore.MediaErrorType;
 import org.wordpress.android.fluxc.store.MediaStore.MediaPayload;
 import org.wordpress.android.fluxc.store.MediaStore.ProgressPayload;
+import org.wordpress.android.fluxc.store.MediaStore.UploadStockMediaError;
+import org.wordpress.android.fluxc.store.MediaStore.UploadStockMediaErrorType;
 import org.wordpress.android.fluxc.store.MediaStore.UploadedStockMediaPayload;
-import org.wordpress.android.fluxc.store.StockMediaStore;
 import org.wordpress.android.fluxc.utils.MediaUtils;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
@@ -418,8 +419,8 @@ public class MediaRestClient extends BaseWPComRestClient implements ProgressList
                     @Override
                     public void onErrorResponse(@NonNull BaseRequest.BaseNetworkError error) {
                         AppLog.e(AppLog.T.MEDIA, "VolleyError uploading stock media: " + error);
-                        StockMediaStore.StockMediaError mediaError = new StockMediaStore.StockMediaError(
-                                StockMediaStore.StockMediaErrorType.fromBaseNetworkError(error), error.message);
+                        UploadStockMediaError mediaError = new UploadStockMediaError(
+                                UploadStockMediaErrorType.fromBaseNetworkError(error), error.message);
                         UploadedStockMediaPayload payload = new UploadedStockMediaPayload(site, mediaError);
                         mDispatcher.dispatch(MediaActionBuilder.newUploadedStockMediaAction(payload));
                     }
