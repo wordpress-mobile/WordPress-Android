@@ -531,7 +531,10 @@ public class StatsVisitorsAndViewsFragment extends StatsAbstractFragment
 
         for (int i = 0; i < horizontalLabels.length; i++) {
             if (getTimeframe() == StatsTimeframe.MONTH) {
-                accessibleLabels[i] = StatsUtils.parseDate(horizontalLabels[i], "MMM", "MMMM");
+                accessibleLabels[i] = StatsUtils.parseDate(
+                        horizontalLabels[i],
+                        StatsConstants.STATS_OUTPUT_DATE_MONTH_SHORT_FORMAT,
+                        StatsConstants.STATS_OUTPUT_DATE_MONTH_LONG_FORMAT);
             } else if (getTimeframe() == StatsTimeframe.WEEK) {
                 accessibleLabels[i] = getString(R.string.stats_bar_week_desc, StatsUtils.parseDate(
                         horizontalLabels[i],
@@ -682,7 +685,7 @@ public class StatsVisitorsAndViewsFragment extends StatsAbstractFragment
                 // ex: 2013W07W22 = July 22, 2013
                 return StatsUtils.parseDate(dateToFormat, "yyyy'W'MM'W'dd", StatsConstants.STATS_OUTPUT_DATE_MONTH_SHORT_DAY_SHORT_FORMAT);
             case MONTH:
-                return StatsUtils.parseDate(dateToFormat, "yyyy-MM", "MMM");
+                return StatsUtils.parseDate(dateToFormat, "yyyy-MM", StatsConstants.STATS_OUTPUT_DATE_MONTH_SHORT_FORMAT);
             case YEAR:
                 return StatsUtils.parseDate(dateToFormat, StatsConstants.STATS_INPUT_DATE_FORMAT, StatsConstants.STATS_OUTPUT_DATE_YEAR_FORMAT);
             default:
