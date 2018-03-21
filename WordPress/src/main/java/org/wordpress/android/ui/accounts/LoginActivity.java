@@ -142,6 +142,14 @@ public class LoginActivity extends AppCompatActivity implements ConnectionCallba
 
     @Override
     public void onSaveInstanceState(Bundle outState) {
+        SignupGoogleFragment signupGoogleFragment;
+        FragmentManager fragmentManager = getSupportFragmentManager();
+        signupGoogleFragment = (SignupGoogleFragment) fragmentManager.findFragmentByTag(SignupGoogleFragment.TAG);
+
+        if (signupGoogleFragment != null) {
+            fragmentManager.beginTransaction().remove(signupGoogleFragment).commit();
+        }
+
         super.onSaveInstanceState(outState);
 
         outState.putBoolean(KEY_SIGNUP_SHEET_DISPLAYED, mSignupSheetDisplayed);
