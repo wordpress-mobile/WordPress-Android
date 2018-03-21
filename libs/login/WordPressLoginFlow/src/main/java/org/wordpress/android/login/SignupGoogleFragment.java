@@ -45,7 +45,7 @@ public class SignupGoogleFragment extends GoogleFragment {
 
     @Override
     public void onDetach() {
-        cancelProgressDialog();
+        dismissProgressDialog();
         super.onDetach();
     }
 
@@ -126,20 +126,20 @@ public class SignupGoogleFragment extends GoogleFragment {
                 } else if (result == RESULT_CANCELED) {
                     mAnalyticsListener.trackSignupSocialButtonFailure();
                     AppLog.e(T.NUX, "Google Signup Failed: result was CANCELED.");
-                    cancelProgressDialog();
+                    dismissProgressDialog();
                 } else {
                     mAnalyticsListener.trackSignupSocialButtonFailure();
                     AppLog.e(T.NUX, "Google Signup Failed: result was not OK or CANCELED.");
                     showErrorDialog(getString(R.string.login_error_generic));
-                    cancelProgressDialog();
+                    dismissProgressDialog();
                 }
 
                 break;
         }
     }
 
-    private void cancelProgressDialog() {
-        if (mProgressDialog.isShowing()) {
+    private void dismissProgressDialog() {
+        if (mProgressDialog != null && mProgressDialog.isShowing()) {
             mProgressDialog.dismiss();
         }
     }
