@@ -103,7 +103,7 @@ public class WPMainActivity extends AppCompatActivity {
     @Inject SiteStore mSiteStore;
     @Inject PostStore mPostStore;
     @Inject Dispatcher mDispatcher;
-    @Inject protected LoginAnalyticsListener mAnalyticsListener;
+    @Inject protected LoginAnalyticsListener mLoginAnalyticsListener;
 
     /*
      * tab fragments implement this if their contents can be scrolled, called when user
@@ -285,7 +285,7 @@ public class WPMainActivity extends AppCompatActivity {
             ActivityLauncher.showLoginEpilogue(this, getIntent().getBooleanExtra(ARG_DO_LOGIN_UPDATE, false),
                                                getIntent().getIntegerArrayListExtra(ARG_OLD_SITES_IDS));
         } else if (getIntent().getBooleanExtra(ARG_SHOW_SIGNUP_EPILOGUE, false) && savedInstanceState == null) {
-            mAnalyticsListener.trackCreatedAccount();
+            mLoginAnalyticsListener.trackCreatedAccount();
             ActivityLauncher.showSignupEpilogue(this,
                                                 getIntent().getStringExtra(
                                                         SignupEpilogueActivity.EXTRA_SIGNUP_DISPLAY_NAME),
@@ -523,7 +523,7 @@ public class WPMainActivity extends AppCompatActivity {
     private void checkMagicLinkSignIn() {
         if (getIntent() != null) {
             if (getIntent().getBooleanExtra(LoginActivity.MAGIC_LOGIN, false)) {
-                mAnalyticsListener.trackLoginMagicLinkSucceeded();
+                mLoginAnalyticsListener.trackLoginMagicLinkSucceeded();
                 startWithNewAccount();
             }
         }
@@ -742,12 +742,12 @@ public class WPMainActivity extends AppCompatActivity {
 
             if (hasMagicLinkLoginIntent()) {
                 if (hasMagicLinkSignupIntent()) {
-                    mAnalyticsListener.trackCreatedAccount();
-                    mAnalyticsListener.trackSignupMagicLinkSucceeded();
+                    mLoginAnalyticsListener.trackCreatedAccount();
+                    mLoginAnalyticsListener.trackSignupMagicLinkSucceeded();
                     Intent intent = getIntent();
                     ActivityLauncher.showSignupEpilogue(this, null, null, null, null, true);
                 } else {
-                    mAnalyticsListener.trackLoginMagicLinkSucceeded();
+                    mLoginAnalyticsListener.trackLoginMagicLinkSucceeded();
                     ActivityLauncher
                             .showLoginEpilogue(this, true, getIntent().getIntegerArrayListExtra(ARG_OLD_SITES_IDS));
                 }

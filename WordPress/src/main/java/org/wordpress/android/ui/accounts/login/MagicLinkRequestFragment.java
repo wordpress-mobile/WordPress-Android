@@ -38,7 +38,7 @@ public class MagicLinkRequestFragment extends Fragment {
     public static final String CLIENT_SECRET_KEY = "client_secret";
     public static final String ERROR_KEY = "error";
 
-    @Inject protected LoginAnalyticsListener mAnalyticsListener;
+    @Inject protected LoginAnalyticsListener mLoginAnalyticsListener;
 
     public interface OnMagicLinkFragmentInteraction {
         void onMagicLinkSent();
@@ -155,7 +155,7 @@ public class MagicLinkRequestFragment extends Fragment {
             @Override
             public void onResponse(JSONObject response) {
                 mProgressDialog.cancel();
-                mAnalyticsListener.trackMagicLinkRequested();
+                mLoginAnalyticsListener.trackMagicLinkRequested();
                 if (mListener != null) {
                     mListener.onMagicLinkSent();
                 }
@@ -165,7 +165,7 @@ public class MagicLinkRequestFragment extends Fragment {
             public void onErrorResponse(VolleyError error) {
                 HashMap<String, String> errorProperties = new HashMap<>();
                 errorProperties.put(ERROR_KEY, error.getMessage());
-                mAnalyticsListener.trackMagicLinkFailed(errorProperties);
+                mLoginAnalyticsListener.trackMagicLinkFailed(errorProperties);
                 mProgressDialog.cancel();
                 if (isAdded()) {
                     ToastUtils.showToast(getActivity(), R.string.magic_link_unavailable_error_message,

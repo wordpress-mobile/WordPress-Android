@@ -15,14 +15,14 @@ import javax.inject.Inject;
  * or signup based on deep link scheme, host, and parameters.
  */
 public class LoginMagicLinkInterceptActivity extends Activity {
-    @Inject protected LoginAnalyticsListener mAnalyticsListener;
+    @Inject protected LoginAnalyticsListener mLoginAnalyticsListener;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         ((WordPress) getApplication()).component().inject(this);
         super.onCreate(savedInstanceState);
 
-        mAnalyticsListener.trackLoginMagicLinkOpened();
+        mLoginAnalyticsListener.trackLoginMagicLinkOpened();
 
         Intent intent = new Intent(this, WPMainActivity.class);
         intent.setAction(getIntent().getAction());

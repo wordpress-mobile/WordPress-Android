@@ -94,7 +94,7 @@ public class LoginActivity extends AppCompatActivity implements ConnectionCallba
     private LoginMode mLoginMode;
 
     @Inject DispatchingAndroidInjector<Fragment> mFragmentInjector;
-    @Inject protected LoginAnalyticsListener mAnalyticsListener;
+    @Inject protected LoginAnalyticsListener mLoginAnalyticsListener;
 
     @Override
     protected void attachBaseContext(Context newBase) {
@@ -109,7 +109,7 @@ public class LoginActivity extends AppCompatActivity implements ConnectionCallba
         setContentView(R.layout.login_activity);
 
         if (savedInstanceState == null) {
-            mAnalyticsListener.trackLoginAccessed();
+            mLoginAnalyticsListener.trackLoginAccessed();
 
             switch (getLoginMode()) {
                 case FULL:
@@ -234,7 +234,7 @@ public class LoginActivity extends AppCompatActivity implements ConnectionCallba
                 break;
             case RequestCodes.SMART_LOCK_SAVE:
                 if (resultCode == RESULT_OK) {
-                    mAnalyticsListener.trackLoginAutofillCredentialsUpdated();
+                    mLoginAnalyticsListener.trackLoginAutofillCredentialsUpdated();
                     AppLog.d(AppLog.T.NUX, "Credentials saved");
                 } else {
                     AppLog.d(AppLog.T.NUX, "Credentials save cancelled");
@@ -396,7 +396,7 @@ public class LoginActivity extends AppCompatActivity implements ConnectionCallba
 
     @Override
     public void loggedInViaSocialAccount(ArrayList<Integer> oldSitesIds, boolean doLoginUpdate) {
-        mAnalyticsListener.trackLoginSocialSuccess();
+        mLoginAnalyticsListener.trackLoginSocialSuccess();
         loggedInAndFinish(oldSitesIds, doLoginUpdate);
     }
 
@@ -420,7 +420,7 @@ public class LoginActivity extends AppCompatActivity implements ConnectionCallba
     @Override
     public void openEmailClient() {
         if (WPActivityUtils.isEmailClientAvailable(this)) {
-            mAnalyticsListener.trackLoginMagicLinkOpenEmailClientClicked();
+            mLoginAnalyticsListener.trackLoginMagicLinkOpenEmailClientClicked();
             WPActivityUtils.openEmailClient(this);
         } else {
             ToastUtils.showToast(this, R.string.login_email_client_not_found);
@@ -429,7 +429,7 @@ public class LoginActivity extends AppCompatActivity implements ConnectionCallba
 
     @Override
     public void usePasswordInstead(String email) {
-        mAnalyticsListener.trackLoginMagicLinkExited();
+        mLoginAnalyticsListener.trackLoginMagicLinkExited();
         LoginEmailPasswordFragment loginEmailPasswordFragment =
                 LoginEmailPasswordFragment.newInstance(email, null, null, null, false);
         slideInFragment(loginEmailPasswordFragment, true, LoginEmailPasswordFragment.TAG);
@@ -437,7 +437,7 @@ public class LoginActivity extends AppCompatActivity implements ConnectionCallba
 
     @Override
     public void forgotPassword(String url) {
-        mAnalyticsListener.trackLoginForgotPasswordClicked();
+        mLoginAnalyticsListener.trackLoginForgotPasswordClicked();
         ActivityLauncher.openUrlExternal(this, url + FORGOT_PASSWORD_URL_SUFFIX);
     }
 
@@ -451,7 +451,7 @@ public class LoginActivity extends AppCompatActivity implements ConnectionCallba
     public void needs2faSocial(String email, String userId, String nonceAuthenticator, String nonceBackup,
                                String nonceSms) {
         dismissSignupSheet();
-        mAnalyticsListener.trackLoginSocial2faNeeded();
+        mLoginAnalyticsListener.trackLoginSocial2faNeeded();
         Login2FaFragment login2FaFragment = Login2FaFragment.newInstanceSocial(email, userId,
                                                                                nonceAuthenticator, nonceBackup,
                                                                                nonceSms);
@@ -460,7 +460,7 @@ public class LoginActivity extends AppCompatActivity implements ConnectionCallba
 
     @Override
     public void needs2faSocialConnect(String email, String password, String idToken, String service) {
-        mAnalyticsListener.trackLoginSocial2faNeeded();
+        mLoginAnalyticsListener.trackLoginSocial2faNeeded();
         Login2FaFragment login2FaFragment =
                 Login2FaFragment.newInstanceSocialConnect(email, password, idToken, service);
         slideInFragment(login2FaFragment, true, Login2FaFragment.TAG);
@@ -668,7 +668,7 @@ public class LoginActivity extends AppCompatActivity implements ConnectionCallba
 
     @Override
     public void onCredentialRetrieved(Credential credential) {
-        mAnalyticsListener.trackLoginAutofillCredentialsFilled();
+        mLoginAnalyticsListener.trackLoginAutofillCredentialsFilled();
 
         mSmartLockHelperState = SmartLockHelperState.FINISHED;
 
