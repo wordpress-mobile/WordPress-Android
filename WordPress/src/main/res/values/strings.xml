@@ -32,7 +32,6 @@
     <string name="license_screen_title">License</string>
     <string name="help_screen_title">Help and Support</string>
     <string name="passcode_screen_title">WordPress Passcode</string>
-    <string name="me_screen_title">Me</string>
     <string name="notif_settings_screen_title">Notification settings</string>
     <string name="my_site_section_screen_title">My site</string>
     <string name="me_section_screen_title">Me</string>
@@ -1282,7 +1281,6 @@
     <string name="error_load_comment">Couldn\'t load the comment</string>
     <string name="error_downloading_image">Error downloading image</string>
     <string name="cd_related_post_preview_image">Related post preview image</string>
-    <string name="login_site_address_help_image">The site address can be found in the navigation bar of your web browser</string>
 
     <!-- Passcode lock -->
     <string name="passcode_manage">Manage PIN lock</string>
@@ -1500,7 +1498,6 @@
     <string name="my_site_btn_plugins">Plugins</string>
     <string name="my_site_create_new_site">Create a new site for your business, magazine, or personal blog; or connect an existing WordPress installation.</string>
     <string name="my_site_add_new_site">Add new site</string>
-    <string name="fab_content_description_write">Write</string>
 
     <!-- site picker -->
     <string name="site_picker_title">Choose site</string>
@@ -1896,7 +1893,6 @@
     <string name="password_incorrect">It looks like this password is incorrect. Please double check your information and try again.</string>
     <string name="login_magic_links_label">We\'ll email you a magic link that\'ll log you in instantly, no password needed. Hunt and peck no more!</string>
     <string name="login_magic_links_sent_label">Your magic link is on its way! Check your email on this device and tap the link in the email you received from WordPress.com.</string>
-    <string name="login_magic_links_sent_description">Magic link sent illustration</string>
     <string name="login_magic_link_email_requesting">Requesting log-in email</string>
     <string name="enter_wpcom_password">Enter your WordPress.com password.</string>
     <string name="enter_wpcom_password_google">To proceed with this Google account, please provide the matching WordPress.com password. This will be asked only once.</string>
@@ -2001,7 +1997,6 @@
     <string name="media_preview_desc">preview</string>
     <string name="media_settings_image_preview_desc">image preview</string>
     <string name="media_settings_play">play</string>
-    <string name="new_account_user_password_visibility_desc">change password visibility</string>
     <string name="people_invite_role_info_desc">role info</string>
     <string name="photo_picker_device_desc">pick from device</string>
     <string name="photo_picker_camera_desc">open camera</string>
@@ -2013,7 +2008,6 @@
     <string name="photo_picker_thumbnail_desc">Play video</string>
     <string name="reader_list_item_suggestion_remove_desc">delete</string>
     <string name="reader_photo_view_desc">photo</string>
-    <string name="sign_in_password_visibility_desc">change password visibility</string>
     <string name="stats_list_cell_chevron_expand_desc">expand</string>
     <string name="show_more_desc">show more</string>
     <string name="open_external_link_desc">open external link</string>
@@ -2083,5 +2077,4 @@
     <string name="site_creation_epilogue_congrats">Congratulations!\nYour site is ready.</string>
     <string name="site_creation_epilogue_configure">Configure</string>
     <string name="site_creation_epilogue_write">Write first post</string>
-    <string name="site_creation_content_description_confetti">Site creation completed successfully!</string>
 </resources>

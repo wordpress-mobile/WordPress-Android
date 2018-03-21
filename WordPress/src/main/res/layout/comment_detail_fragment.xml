@@ -79,7 +79,8 @@
                     android:gravity="start"
                     android:accessibilityTraversalAfter="@+id/text_name"
                     android:layout_alignStart="@+id/text_name"
-                    android:layout_toStartOf="@+id/text_status"/>
+                    android:layout_toStartOf="@+id/text_status"
+                    tools:ignore="UnusedAttribute"/>
 
                 <org.wordpress.android.widgets.WPTextView
                     android:id="@+id/text_date"
@@ -93,7 +94,8 @@
                     tools:text="date"
                     android:accessibilityTraversalAfter="@+id/text_post_title"
                     android:layout_alignParentEnd="true"
-                    android:layout_marginStart="@dimen/margin_small"/>
+                    android:layout_marginStart="@dimen/margin_small"
+                    tools:ignore="UnusedAttribute"/>
 
                 <org.wordpress.android.widgets.WPTextView
                     android:id="@+id/text_status"
@@ -108,7 +110,8 @@
                     tools:text="STATUS"
                     android:accessibilityTraversalAfter="@+id/text_date"
                     android:layout_alignParentEnd="true"
-                    android:layout_marginStart="@dimen/margin_small"/>
+                    android:layout_marginStart="@dimen/margin_small"
+                    tools:ignore="UnusedAttribute"/>
             </RelativeLayout>
 
             <!--

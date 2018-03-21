@@ -12,6 +12,8 @@
     android:minHeight="@dimen/min_touch_target_sz"
     android:paddingLeft="@dimen/margin_extra_large"
     android:paddingStart="@dimen/margin_extra_large"
+    android:paddingRight="@dimen/margin_extra_large"
+    android:paddingEnd="@dimen/margin_extra_large"
     android:maxLines="2"
     tools:text="yourname.wordpress.com"
     android:textColor="@color/grey_dark"
