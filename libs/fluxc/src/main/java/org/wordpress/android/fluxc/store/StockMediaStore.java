@@ -96,11 +96,10 @@ public class StockMediaStore extends Store {
     }
 
     public enum StockMediaErrorType {
-        // the endpoint for stock media search simply returns an empty list if there's any type of
-        // error (timeout, authentication, etc.), so we use only a simple GENERIC_ERROR here
         GENERIC_ERROR;
 
         public static StockMediaErrorType fromBaseNetworkError(BaseNetworkError baseError) {
+            // endpoint returns an empty media list for any type of error, including timeouts, server error, etc.
             return StockMediaErrorType.GENERIC_ERROR;
         }
     }
@@ -124,10 +123,10 @@ public class StockMediaStore extends Store {
 
         switch ((StockMediaAction) actionType) {
             case FETCH_STOCK_MEDIA:
-                performFetchStockMediaList((StockMediaStore.FetchStockMediaListPayload) action.getPayload());
+                performFetchStockMediaList((FetchStockMediaListPayload) action.getPayload());
                 break;
             case FETCHED_STOCK_MEDIA:
-                handleStockMediaListFetched((StockMediaStore.FetchedStockMediaListPayload) action.getPayload());
+                handleStockMediaListFetched((FetchedStockMediaListPayload) action.getPayload());
                 break;
         }
     }
