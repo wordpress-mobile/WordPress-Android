@@ -44,6 +44,12 @@ public class SignupGoogleFragment extends GoogleFragment {
     }
 
     @Override
+    public void onDetach() {
+        cancelProgressDialog();
+        super.onDetach();
+    }
+
+    @Override
     public void onActivityResult(int request, int result, Intent data) {
         super.onActivityResult(request, result, data);
 
