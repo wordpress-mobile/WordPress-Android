@@ -380,9 +380,9 @@ public class SiteStore extends Store {
         }
     }
 
-    public static class OnAutomatedTransferAvailabilityChecked extends OnChanged<AutomatedTransferError> {
+    public static class OnAutomatedTransferEligibilityChecked extends OnChanged<AutomatedTransferError> {
         public SiteModel site;
-        public OnAutomatedTransferAvailabilityChecked(SiteModel site, AutomatedTransferError error) {
+        public OnAutomatedTransferEligibilityChecked(SiteModel site, AutomatedTransferError error) {
             this.site = site;
             this.error = error;
         }
@@ -1230,7 +1230,7 @@ public class SiteStore extends Store {
         }
         // Refresh the site from DB
         SiteModel updatedSite = getSiteByLocalId(payload.site.getId());
-        emitChange(new OnAutomatedTransferAvailabilityChecked(updatedSite, payload.error));
+        emitChange(new OnAutomatedTransferEligibilityChecked(updatedSite, payload.error));
     }
 
     private void initiateAutomatedTransfer(InitiateAutomatedTransferPayload payload) {
