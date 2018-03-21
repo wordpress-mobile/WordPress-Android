@@ -216,7 +216,8 @@ public class StatsVisitorsAndViewsFragment extends StatsAbstractFragment
 
         public void setChecked(boolean checked) {
             if (checked){
-                tab.announceForAccessibility("Showing " + labelItem.getLabel());
+                tab.announceForAccessibility(
+                        tab.getContext().getString(R.string.stats_tab_tap_content_description, labelItem.getLabel()));
             }
             this.isChecked = checked;
         }
@@ -643,23 +644,19 @@ public class StatsVisitorsAndViewsFragment extends StatsAbstractFragment
                     c.setTime(parsedDate);
                     // first day of this week
                     c.set(Calendar.DAY_OF_WEEK, Calendar.MONDAY);
-                    String startDateLabel = StatsUtils.msToString(c.getTimeInMillis(),
-                            StatsConstants.STATS_OUTPUT_DATE_MONTH_LONG_DAY_LONG_FORMAT);
+                    String startDateLabel = StatsUtils.msToString(c.getTimeInMillis(), StatsConstants.STATS_OUTPUT_DATE_MONTH_LONG_DAY_LONG_FORMAT);
                     // last day of this week
                     c.add(Calendar.DAY_OF_WEEK, +6);
-                    String endDateLabel = StatsUtils.msToString(c.getTimeInMillis(),
-                            StatsConstants.STATS_OUTPUT_DATE_MONTH_LONG_DAY_LONG_FORMAT);
+                    String endDateLabel = StatsUtils.msToString(c.getTimeInMillis(), StatsConstants.STATS_OUTPUT_DATE_MONTH_LONG_DAY_LONG_FORMAT);
                     return String.format(prefix, startDateLabel + " - " + endDateLabel);
                 } catch (ParseException e) {
                     AppLog.e(AppLog.T.UTILS, e);
                     return "";
                 }
             case MONTH:
-                return String.format(prefix, StatsUtils.parseDate(date, StatsConstants.STATS_INPUT_DATE_FORMAT,
-                        StatsConstants.STATS_OUTPUT_DATE_MONTH_LONG_FORMAT));
+                return String.format(prefix, StatsUtils.parseDate(date, StatsConstants.STATS_INPUT_DATE_FORMAT, StatsConstants.STATS_OUTPUT_DATE_MONTH_LONG_FORMAT));
             case YEAR:
-                return String.format(prefix, StatsUtils.parseDate(date, StatsConstants.STATS_INPUT_DATE_FORMAT,
-                        StatsConstants.STATS_OUTPUT_DATE_YEAR_FORMAT));
+                return String.format(prefix, StatsUtils.parseDate(date, StatsConstants.STATS_INPUT_DATE_FORMAT, StatsConstants.STATS_OUTPUT_DATE_YEAR_FORMAT));
         }
         return "";
     }

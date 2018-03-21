@@ -115,17 +115,7 @@ class StatsBarGraph extends GraphView {
     }
 
     private void highlightBarAndBroadcastDate() {
-        int tappedBar = getTappedBar();
-        //AppLog.d(AppLog.T.STATS, this.getClass().getName() + " Tapped bar " + tappedBar);
-        if (tappedBar >= 0) {
-            highlightBar(tappedBar);
-            if (mGestureListener != null) {
-                mGestureListener.onBarTapped(tappedBar);
-            }
-            if (mStatsBarGraphAccessibilityHelper != null) {
-                mStatsBarGraphAccessibilityHelper.invalidateVirtualView(tappedBar);
-            }
-        }
+        highlightBarAndBroadcastDateAt(getTappedBar());
     }
 
     private void highlightBarAndBroadcastDateAt(int barIndex) {
@@ -140,6 +130,7 @@ class StatsBarGraph extends GraphView {
         }
     }
 
+    // accessibility is emplemented with StatsBarGraphAccessibilityHelper
     @SuppressLint("ClickableViewAccessibility")
     @Override
     public boolean onTouchEvent(MotionEvent event) {
@@ -249,9 +240,7 @@ class StatsBarGraph extends GraphView {
                 if (mBarPositionToHighlight != i) {
                     paint.setColor(style.color);
                     paint.setAlpha(25);
-                    Shader shader =
-                            new LinearGradient(left + pad, bottom - 50, left + pad, bottom, Color.WHITE, Color.BLACK,
-                                    Shader.TileMode.CLAMP);
+                    Shader shader = new LinearGradient(left + pad, bottom - 50, left + pad, bottom, Color.WHITE, Color.BLACK, Shader.TileMode.CLAMP);
                     paint.setShader(shader);
                     canvas.drawRect(left + pad, bottom - 50, right - pad, bottom, paint);
                     paint.setShader(null);
@@ -317,7 +306,6 @@ class StatsBarGraph extends GraphView {
     protected double getMinY() {
         return 0;
     }
-
 
     public void setAccessibleHorizontalLabels(String[] virtualLabels) {
         mAccessibleVirtualLabels = virtualLabels;

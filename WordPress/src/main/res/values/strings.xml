@@ -2185,6 +2185,7 @@
     <string name="fab_create_post_desc">create post</string>
     <string name="fab_create_desc">create</string>
     <string name="stats_legend">stats graph legend</string>
+    <string name="stats_tab_tap_content_description">showing %s</string>
     <string name="stats_follower_since_desc">since %s ago</string>
     <string name="stats_views_zero_desc">zero views</string>
     <string name="stats_views_one_desc">%d view</string>
