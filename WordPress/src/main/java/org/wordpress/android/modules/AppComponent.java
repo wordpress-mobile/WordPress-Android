@@ -21,6 +21,7 @@ import org.wordpress.android.ui.WPWebViewActivity;
 import org.wordpress.android.ui.accounts.HelpActivity;
 import org.wordpress.android.ui.accounts.LoginActivity;
 import org.wordpress.android.ui.accounts.LoginEpilogueActivity;
+import org.wordpress.android.ui.accounts.LoginMagicLinkInterceptActivity;
 import org.wordpress.android.ui.accounts.NewBlogFragment;
 import org.wordpress.android.ui.accounts.SignInDialogFragment;
 import org.wordpress.android.ui.accounts.SiteCreationActivity;
@@ -166,6 +167,8 @@ public interface AppComponent extends AndroidInjector<WordPress> {
     void inject(LoginEpilogueActivity object);
 
     void inject(LoginEpilogueFragment object);
+
+    void inject(LoginMagicLinkInterceptActivity object);
 
     void inject(SignupEpilogueFragment object);
 

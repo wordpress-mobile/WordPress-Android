@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 
+import org.wordpress.android.WordPress;
 import org.wordpress.android.login.LoginAnalyticsListener;
 import org.wordpress.android.ui.main.WPMainActivity;
 
@@ -18,9 +19,10 @@ public class LoginMagicLinkInterceptActivity extends Activity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        ((WordPress) getApplication()).component().inject(this);
         super.onCreate(savedInstanceState);
 
-         mAnalyticsListener.trackLoginMagicLinkOpened();
+        mAnalyticsListener.trackLoginMagicLinkOpened();
 
         Intent intent = new Intent(this, WPMainActivity.class);
         intent.setAction(getIntent().getAction());
