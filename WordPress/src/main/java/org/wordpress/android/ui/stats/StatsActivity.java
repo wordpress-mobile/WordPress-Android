@@ -70,6 +70,7 @@ public class StatsActivity extends AppCompatActivity
     private static final String SAVED_STATS_REQUESTED_DATE = "SAVED_STATS_REQUESTED_DATE";
     private static final String SAVED_STATS_SCROLL_POSITION = "SAVED_STATS_SCROLL_POSITION";
     private static final String SAVED_THERE_WAS_AN_ERROR_LOADING_STATS = "SAVED_THERE_WAS_AN_ERROR_LOADING_STATS";
+    private static final String CHROMEBOOK_FLAG = "org.chromium.arc.device_management";
 
     private Spinner mSpinner;
     private NestedScrollViewExt mOuterScrollView;
@@ -621,8 +622,8 @@ public class StatsActivity extends AppCompatActivity
         AppPrefs.bumpAnalyticsForStatsWidgetPromo();
 
         // Should we display the widget promo?
-        int counter = AppPrefs.getAnalyticsForStatsWidgetPromo();
-        if (counter == 3 || counter == 1000 || counter == 10000) {
+
+        if (shouldShouldWidgetPromo()) {
             AppCompatDialogFragment newFragment = new PromoDialog.Builder(
                     R.drawable.stats_widget_promo_header,
                     R.string.stats_widget_promo_title,
@@ -631,6 +632,17 @@ public class StatsActivity extends AppCompatActivity
                     .build();
             newFragment.show(getSupportFragmentManager(), "promote_widget_dialog");
         }
+    }
+
+    private boolean shouldShouldWidgetPromo() {
+        int counter = AppPrefs.getAnalyticsForStatsWidgetPromo();
+        boolean isCountAPromoMilestone = counter == 3 || counter == 1000 || counter == 10000;
+        
+        return isCountAPromoMilestone && !isChromebook();
+    }
+
+    private boolean isChromebook() {
+        return getApplicationContext().getPackageManager().hasSystemFeature(CHROMEBOOK_FLAG);
     }
 
     @SuppressWarnings("unused")
