@@ -210,7 +210,7 @@ public class SignupMagicLinkFragment extends Fragment {
                 AppLog.e(T.API, "OnAuthEmailSent error: " + event.error.type + " - " + event.error.message);
                 showErrorDialog(getString(R.string.signup_magic_link_error));
             } else {
-                mAnalyticsListener.trackSignupMagicLinkSucceeded();
+                mAnalyticsListener.trackSignupMagicLinkSent();
             }
         }
     }
