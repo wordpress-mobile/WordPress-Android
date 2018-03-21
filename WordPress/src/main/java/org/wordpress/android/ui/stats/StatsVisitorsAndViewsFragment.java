@@ -533,7 +533,10 @@ public class StatsVisitorsAndViewsFragment extends StatsAbstractFragment
             if (getTimeframe() == StatsTimeframe.MONTH) {
                 accessibleLabels[i] = StatsUtils.parseDate(horizontalLabels[i], "MMM", "MMMM");
             } else if (getTimeframe() == StatsTimeframe.WEEK) {
-                accessibleLabels[i] = getString(R.string.stats_bar_week_desc, horizontalLabels[i]);
+                accessibleLabels[i] = getString(R.string.stats_bar_week_desc, StatsUtils.parseDate(
+                        horizontalLabels[i],
+                        StatsConstants.STATS_OUTPUT_DATE_MONTH_SHORT_DAY_SHORT_FORMAT,
+                        StatsConstants.STATS_OUTPUT_DATE_MONTH_LONG_DAY_SHORT_FORMAT));
             } else {
                 accessibleLabels[i] = horizontalLabels[i];
             }
