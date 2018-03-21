@@ -232,7 +232,7 @@ class StatsBarGraph extends GraphView {
             }
 
             if(mVirtualBars.size() < values.length){
-                mVirtualBars.add(new BarChartRect(left, 10f, right, bottom));
+                mVirtualBars.add(new BarChartRect(left - pad, 10f, right - pad, bottom));
             }
 
             if ((top - bottom) == 1) {
