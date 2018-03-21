@@ -44,6 +44,9 @@
     <string name="me_section_screen_title">Me</string>
     <string name="reader_screen_title">Reader</string>
     <string name="notifications_screen_title">Notifications</string>
+    <string name="publicize_buttons_screen_title">Sharing buttons</string>
+    <string name="media_settings_screen_title">File details</string>
+    <string name="person_detail_screen_title">Person detail</string>
 
     <!-- general strings -->
     <string name="device">Device</string>
