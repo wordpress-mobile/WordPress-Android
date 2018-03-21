@@ -4,7 +4,7 @@ import org.wordpress.android.fluxc.network.BaseRequest
 import javax.inject.Inject
 
 class WPComGsonRequestBuilder
-@Inject constructor(){
+@Inject constructor() {
     /**
      * Creates a new GET request.
      * @param url the request URL
