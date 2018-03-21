@@ -16,6 +16,7 @@ import org.wordpress.android.fluxc.Payload;
 import org.wordpress.android.fluxc.action.SiteAction;
 import org.wordpress.android.fluxc.annotations.action.Action;
 import org.wordpress.android.fluxc.annotations.action.IAction;
+import org.wordpress.android.fluxc.generated.SiteActionBuilder;
 import org.wordpress.android.fluxc.model.PostFormatModel;
 import org.wordpress.android.fluxc.model.RoleModel;
 import org.wordpress.android.fluxc.model.SiteModel;
@@ -393,6 +394,17 @@ public class SiteStore extends Store {
         public OnAutomatedTransferInitiated(SiteModel site, String pluginSlugToInstall, AutomatedTransferError error) {
             this.site = site;
             this.pluginSlugToInstall = pluginSlugToInstall;
+            this.error = error;
+        }
+    }
+
+    public static class OnAutomatedTransferStatusChecked extends OnChanged<AutomatedTransferError> {
+        public SiteModel site;
+        public boolean isCompleted;
+        public OnAutomatedTransferStatusChecked(SiteModel site, boolean isCompleted,
+                                                @Nullable AutomatedTransferError error) {
+            this.site = site;
+            this.isCompleted = isCompleted;
             this.error = error;
         }
     }
@@ -938,6 +950,9 @@ public class SiteStore extends Store {
             case INITIATED_AUTOMATED_TRANSFER:
                 handleInitiatedAutomatedTransfer((InitiateAutomatedTransferResponsePayload) action.getPayload());
                 break;
+            case CHECKED_AUTOMATED_TRANSFER_STATUS:
+                handleCheckedAutomatedTransferStatus((AutomatedTransferStatusResponsePayload) action.getPayload());
+                break;
         }
     }
 
@@ -1233,5 +1248,19 @@ public class SiteStore extends Store {
 
     private void checkAutomatedTransferStatus(SiteModel site) {
         mSiteRestClient.checkAutomatedTransferStatus(site);
+    }
+
+    private void handleCheckedAutomatedTransferStatus(AutomatedTransferStatusResponsePayload payload) {
+        boolean isTransferCompleted = false;
+        if (!payload.isError()) {
+            isTransferCompleted = payload.status.equalsIgnoreCase("complete");
+
+            if (isTransferCompleted) {
+                // We need to fetch the site after AT is completed since it'll become a Jetpack site
+                mDispatcher.dispatch(SiteActionBuilder.newFetchSiteAction(payload.site));
+            }
+        }
+
+        emitChange(new OnAutomatedTransferStatusChecked(payload.site, isTransferCompleted, payload.error));
     }
 }
