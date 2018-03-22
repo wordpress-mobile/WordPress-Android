@@ -59,6 +59,7 @@ public class StockMediaPickerActivity extends AppCompatActivity implements Searc
 
     private static final String KEY_SEARCH_QUERY = "search_query";
     private static final String KEY_IS_UPLOADING = "is_uploading";
+    // this will be used later by the editor to insert uploaded stock photos into the current post
     public static final String KEY_UPLOADED_MEDIA_IDS = "uploaded_media_ids";
 
     private SiteModel mSite;
@@ -450,7 +451,7 @@ public class StockMediaPickerActivity extends AppCompatActivity implements Searc
         for (StockMediaModel media : items) {
             imageUrlList.add(media.getUrl());
         }
-        MediaPreviewActivity.showPreview(this, imageUrlList);
+        MediaPreviewActivity.showPreview(this, null, imageUrlList, imageUrlList.get(0));
     }
 
     private void uploadSelection() {

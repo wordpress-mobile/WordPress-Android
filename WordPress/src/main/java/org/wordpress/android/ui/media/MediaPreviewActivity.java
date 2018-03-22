@@ -89,7 +89,7 @@ public class MediaPreviewActivity extends AppCompatActivity implements MediaPrev
     /**
      * @param context self explanatory
      * @param site optional site this media is associated with
-     * @param contentUri URI of media - can be local or remote
+     * @param contentUri URI of initial media - can be local or remote
      */
     public static void showPreview(@NonNull Context context,
                                    @Nullable SiteModel site,
@@ -128,13 +128,22 @@ public class MediaPreviewActivity extends AppCompatActivity implements MediaPrev
 
     /**
      * @param context self explanatory
-     * @param imageUrlList list of image URLs to preview
+     * @param site optional site this media is associated with
+     * @param imageUrlList optional list of image URLs to page through
+     * @param contentUri URI of initial media
      */
     public static void showPreview(@NonNull Context context,
-                                   @NonNull ArrayList<String> imageUrlList) {
+                                   @Nullable SiteModel site,
+                                   @Nullable ArrayList<String> imageUrlList,
+                                   @NonNull String contentUri) {
         Intent intent = new Intent(context, MediaPreviewActivity.class);
-        intent.putExtra(MediaPreviewFragment.ARG_MEDIA_CONTENT_URI, imageUrlList.get(0));
-        intent.putStringArrayListExtra(ARG_URL_LIST, imageUrlList);
+        intent.putExtra(MediaPreviewFragment.ARG_MEDIA_CONTENT_URI, contentUri);
+        if (site != null) {
+            intent.putExtra(WordPress.SITE, site);
+        }
+        if (imageUrlList != null) {
+            intent.putStringArrayListExtra(ARG_URL_LIST, imageUrlList);
+        }
 
         startIntent(context, intent);
     }
