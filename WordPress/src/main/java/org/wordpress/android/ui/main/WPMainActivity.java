@@ -95,6 +95,7 @@ public class WPMainActivity extends AppCompatActivity {
     private WPMainTabLayout mTabLayout;
     private WPMainTabAdapter mTabAdapter;
     private TextView mConnectionBar;
+    private boolean mWasSwiped;
     private int mAppBarElevation;
 
     private SiteModel mSelectedSite;
@@ -212,7 +213,22 @@ public class WPMainActivity extends AppCompatActivity {
 
             @Override
             public void onPageScrollStateChanged(int state) {
-                // noop
+                if (!mWasSwiped && state == ViewPager.SCROLL_STATE_DRAGGING) {
+                    mWasSwiped = true;
+                }
+
+                if (mWasSwiped && state == ViewPager.SCROLL_STATE_IDLE) {
+                    mWasSwiped = false;
+
+                    switch (AppPrefs.getMainTabIndex()) {
+                        case WPMainTabAdapter.TAB_MY_SITE:
+                        case WPMainTabAdapter.TAB_READER:
+                        case WPMainTabAdapter.TAB_ME:
+                        case WPMainTabAdapter.TAB_NOTIFS:
+                        default:
+                            AnalyticsTracker.track(AnalyticsTracker.Stat.MAIN_TABS_SWIPED);
+                    }
+                }
             }
 
             @Override
@@ -224,7 +240,6 @@ public class WPMainActivity extends AppCompatActivity {
                 }
             }
         });
-
 
         String authTokenToSet = null;
 
