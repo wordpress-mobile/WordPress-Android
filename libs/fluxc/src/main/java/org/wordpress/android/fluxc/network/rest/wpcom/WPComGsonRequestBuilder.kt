@@ -2,7 +2,9 @@ package org.wordpress.android.fluxc.network.rest.wpcom
 
 import org.wordpress.android.fluxc.network.BaseRequest
 import javax.inject.Inject
+import javax.inject.Singleton
 
+@Singleton
 class WPComGsonRequestBuilder
 @Inject constructor() {
     /**
