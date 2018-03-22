@@ -1265,13 +1265,7 @@ public class SiteStore extends Store {
         boolean isTransferCompleted = false;
         if (!payload.isError()) {
             isTransferCompleted = payload.status.equalsIgnoreCase("complete");
-
-            if (isTransferCompleted) {
-                // We need to fetch the site after AT is completed since it'll become a Jetpack site
-                mDispatcher.dispatch(SiteActionBuilder.newFetchSiteAction(payload.site));
-            }
         }
-
         emitChange(new OnAutomatedTransferStatusChecked(payload.site, isTransferCompleted, payload.error));
     }
 }
