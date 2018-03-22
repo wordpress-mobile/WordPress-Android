@@ -173,7 +173,7 @@ public class SiteStore extends Store {
         public String pluginSlugToInstall;
         public String status;
         public boolean success;
-        public String transferId;
+        public int transferId;
 
         public InitiateAutomatedTransferResponsePayload(SiteModel site, String pluginSlugToInstall) {
             this.site = site;

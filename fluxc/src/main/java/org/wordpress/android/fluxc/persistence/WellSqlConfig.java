@@ -241,7 +241,7 @@ public class WellSqlConfig extends DefaultWellConfig {
             case 26:
                 AppLog.d(T.DB, "Migrating to version " + (oldVersion + 1));
                 db.execSQL("alter table SiteModel add IS_ELIGIBLE_FOR_AUTOMATED_TRANSFER INTEGER");
-                db.execSQL("alter table SiteModel add AUTOMATED_TRANSFER_ID STRING");
+                db.execSQL("alter table SiteModel add AUTOMATED_TRANSFER_ID INTEGER");
                 oldVersion++;
         }
         db.setTransactionSuccessful();

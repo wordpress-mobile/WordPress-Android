@@ -84,7 +84,7 @@ public class SiteModel extends Payload<BaseNetworkError> implements Identifiable
     // Automated Transfer
     @Column private boolean mIsAutomatedTransfer;
     @Column private boolean mIsEligibleForAutomatedTransfer;
-    @Column private String mAutomatedTransferId;
+    @Column private int mAutomatedTransferId;
 
     // WPCom capabilities
     @Column private boolean mHasCapabilityEditPages;
@@ -531,11 +531,11 @@ public class SiteModel extends Payload<BaseNetworkError> implements Identifiable
         mIsEligibleForAutomatedTransfer = eligibleForAutomatedTransfer;
     }
 
-    public String getAutomatedTransferId() {
+    public int getAutomatedTransferId() {
         return mAutomatedTransferId;
     }
 
-    public void setAutomatedTransferId(String automatedTransferId) {
+    public void setAutomatedTransferId(int automatedTransferId) {
         mAutomatedTransferId = automatedTransferId;
     }
 
