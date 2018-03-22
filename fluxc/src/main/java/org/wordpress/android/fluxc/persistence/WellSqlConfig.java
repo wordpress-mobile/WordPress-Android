@@ -3,6 +3,7 @@ package org.wordpress.android.fluxc.persistence;
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Build;
+import android.support.annotation.StringDef;
 
 import com.yarolegovich.wellsql.DefaultWellConfig;
 import com.yarolegovich.wellsql.WellSql;
@@ -11,56 +12,36 @@ import com.yarolegovich.wellsql.core.Identifiable;
 import com.yarolegovich.wellsql.core.TableClass;
 import com.yarolegovich.wellsql.mapper.SQLiteMapper;
 
-import org.wordpress.android.fluxc.model.AccountModel;
-import org.wordpress.android.fluxc.model.CommentModel;
-import org.wordpress.android.fluxc.model.MediaModel;
-import org.wordpress.android.fluxc.model.MediaUploadModel;
-import org.wordpress.android.fluxc.model.PostFormatModel;
-import org.wordpress.android.fluxc.model.PostModel;
-import org.wordpress.android.fluxc.model.PostUploadModel;
-import org.wordpress.android.fluxc.model.RoleModel;
-import org.wordpress.android.fluxc.model.SiteModel;
-import org.wordpress.android.fluxc.model.TaxonomyModel;
-import org.wordpress.android.fluxc.model.TermModel;
-import org.wordpress.android.fluxc.model.ThemeModel;
-import org.wordpress.android.fluxc.model.plugin.PluginDirectoryModel;
-import org.wordpress.android.fluxc.model.plugin.SitePluginModel;
-import org.wordpress.android.fluxc.model.plugin.WPOrgPluginModel;
-import org.wordpress.android.fluxc.network.HTTPAuthModel;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Retention;
+import java.lang.annotation.Target;
+import java.util.Arrays;
+import java.util.HashSet;
 import java.util.Map;
 
+import static java.lang.annotation.RetentionPolicy.SOURCE;
+
 public class WellSqlConfig extends DefaultWellConfig {
+    @Retention(SOURCE)
+    @StringDef({ADDON_WOOCOMMERCE})
+    @Target(ElementType.PARAMETER)
+    public @interface AddOn {}
+    public static final String ADDON_WOOCOMMERCE = "WC";
+
     public WellSqlConfig(Context context) {
         super(context);
     }
 
-    private static final List<Class<? extends Identifiable>> TABLES = new ArrayList<Class<? extends Identifiable>>() {{
-        add(AccountModel.class);
-        add(CommentModel.class);
-        add(HTTPAuthModel.class);
-        add(MediaModel.class);
-        add(MediaUploadModel.class);
-        add(PluginDirectoryModel.class);
-        add(PostFormatModel.class);
-        add(PostModel.class);
-        add(PostUploadModel.class);
-        add(RoleModel.class);
-        add(SiteModel.class);
-        add(SitePluginModel.class);
-        add(TaxonomyModel.class);
-        add(TermModel.class);
-        add(ThemeModel.class);
-        add(WPOrgPluginModel.class);
-    }};
+    public WellSqlConfig(Context context, @AddOn String... addOns) {
+        super(context, new HashSet<>(Arrays.asList(addOns)));
+    }
 
     @Override
     public int getDbVersion() {
-        return 26;
+        return 27;
     }
 
     @Override
@@ -70,7 +51,7 @@ public class WellSqlConfig extends DefaultWellConfig {
 
     @Override
     public void onCreate(SQLiteDatabase db, WellTableManager helper) {
-        for (Class<? extends Identifiable> table : TABLES) {
+        for (Class<? extends Identifiable> table : mTables) {
             helper.createTable(table);
         }
     }
@@ -238,6 +219,11 @@ public class WellSqlConfig extends DefaultWellConfig {
                 db.execSQL("alter table SiteModel add SPACE_USED INTEGER");
                 db.execSQL("alter table SiteModel add SPACE_PERCENT_USED REAL");
                 oldVersion++;
+            case 26:
+                AppLog.d(T.DB, "Migrating to version " + (oldVersion + 1));
+                db.execSQL("ALTER TABLE SiteModel ADD IS_WP_COM_STORE INTEGER");
+                db.execSQL("ALTER TABLE SiteModel ADD HAS_WOO_COMMERCE INTEGER");
+                oldVersion++;
         }
         db.setTransactionSuccessful();
         db.endTransaction();
@@ -253,7 +239,7 @@ public class WellSqlConfig extends DefaultWellConfig {
     }
 
     @Override
-    protected Map<Class<?>, SQLiteMapper<?>> registerMappers() {
+    protected Map<Class<? extends Identifiable>, SQLiteMapper<?>> registerMappers() {
         return super.registerMappers();
     }
 
@@ -262,10 +248,18 @@ public class WellSqlConfig extends DefaultWellConfig {
      */
     public void reset() {
         SQLiteDatabase db = WellSql.giveMeWritableDb();
-        for (Class<? extends Identifiable> clazz : TABLES) {
+        for (Class<? extends Identifiable> clazz : mTables) {
             TableClass table = getTable(clazz);
             db.execSQL("DROP TABLE IF EXISTS " + table.getTableName());
             db.execSQL(table.createStatement());
+        }
+    }
+
+    private void migrateAddOn(@AddOn String addOnName, SQLiteDatabase db, int oldDbVersion) {
+        if (mActiveAddOns.contains(addOnName)) {
+            switch (oldDbVersion) {
+                // TODO
+            }
         }
     }
 }
