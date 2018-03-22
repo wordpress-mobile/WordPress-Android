@@ -7,9 +7,9 @@ import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.model.activity.ActivityLogModel
 import org.wordpress.android.fluxc.model.activity.RewindStatusModel
 import org.wordpress.android.fluxc.network.BaseRequest
-import org.wordpress.android.fluxc.network.rest.wpcom.BaseWPComRestClient
 import org.wordpress.android.fluxc.network.rest.wpcom.WPComGsonRequest
 import org.wordpress.android.fluxc.network.rest.wpcom.WPComGsonRequestBuilder
+import org.wordpress.android.fluxc.network.rest.wpcom.WPComRestClient
 import org.wordpress.android.fluxc.store.ActivityLogStore.ActivityError
 import org.wordpress.android.fluxc.store.ActivityLogStore.ActivityErrorType
 import org.wordpress.android.fluxc.store.ActivityLogStore.FetchedActivitiesPayload
@@ -22,19 +22,19 @@ import javax.inject.Singleton
 
 @Singleton
 open class ActivityLogRestClient
-@Inject constructor(private val mDispatcher: Dispatcher,
-                    private val mRestClient: BaseWPComRestClient,
-                    private val mWPComGsonRequestBuilder: WPComGsonRequestBuilder) {
+@Inject constructor(private val dispatcher: Dispatcher,
+                    private val restClient: WPComRestClient,
+                    private val wpComGsonRequestBuilder: WPComGsonRequestBuilder) {
     fun fetchActivity(site: SiteModel, number: Int, offset: Int) {
         val url = WPCOMV2.sites.site(site.siteId).activity.url
         val pageNumber = offset / number + 1
         val params = mapOf("page" to pageNumber.toString(), "number" to number.toString())
-        val request = mWPComGsonRequestBuilder.buildGetRequest(
+        val request = wpComGsonRequestBuilder.buildGetRequest(
                 url, params, ActivitiesResponse::class.java,
                 { response ->
                     val activities = response.current.orderedItems
                     val payload = buildActivityPayload(activities, site, number, offset)
-                    mDispatcher.dispatch(ActivityActionBuilder.newFetchedActivitiesAction(payload))
+                    dispatcher.dispatch(ActivityActionBuilder.newFetchedActivitiesAction(payload))
                 },
                 { networkError ->
                     val error = ActivityError(genericToError(networkError,
@@ -42,18 +42,18 @@ open class ActivityLogRestClient
                             ActivityErrorType.INVALID_RESPONSE,
                             ActivityErrorType.AUTHORIZATION_REQUIRED), networkError.message)
                     val payload = FetchedActivitiesPayload(error, site, number, offset)
-                    mDispatcher.dispatch(ActivityActionBuilder.newFetchedActivitiesAction(payload))
+                    dispatcher.dispatch(ActivityActionBuilder.newFetchedActivitiesAction(payload))
                 })
-        mRestClient.add(request)
+        restClient.enqueueRequest(request)
     }
 
     fun fetchActivityRewind(site: SiteModel) {
         val url = WPCOMV2.sites.site(site.siteId).rewind.url
-        val request = mWPComGsonRequestBuilder.buildGetRequest(
+        val request = wpComGsonRequestBuilder.buildGetRequest(
                 url, mapOf(), RewindStatusResponse::class.java,
                 {
                     val payload = buildRewindStatusPayload(it, site)
-                    mDispatcher.dispatch(ActivityActionBuilder.newFetchedRewindStateAction(payload))
+                    dispatcher.dispatch(ActivityActionBuilder.newFetchedRewindStateAction(payload))
                 },
                 {
                     val error = RewindStatusError(genericToError(it,
@@ -61,9 +61,9 @@ open class ActivityLogRestClient
                             RewindStatusErrorType.INVALID_RESPONSE,
                             RewindStatusErrorType.AUTHORIZATION_REQUIRED), it.message)
                     val payload = FetchedRewindStatePayload(error, site)
-                    mDispatcher.dispatch(ActivityActionBuilder.newFetchedRewindStateAction(payload))
+                    dispatcher.dispatch(ActivityActionBuilder.newFetchedRewindStateAction(payload))
                 })
-        mRestClient.add(request)
+        restClient.enqueueRequest(request)
     }
 
     private fun buildActivityPayload(activityResponses: List<ActivitiesResponse.ActivityResponse>,

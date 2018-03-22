@@ -20,9 +20,9 @@ import org.wordpress.android.fluxc.annotations.action.Action
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.model.activity.RewindStatusModel
 import org.wordpress.android.fluxc.network.BaseRequest
-import org.wordpress.android.fluxc.network.rest.wpcom.BaseWPComRestClient
 import org.wordpress.android.fluxc.network.rest.wpcom.WPComGsonRequest
 import org.wordpress.android.fluxc.network.rest.wpcom.WPComGsonRequestBuilder
+import org.wordpress.android.fluxc.network.rest.wpcom.WPComRestClient
 import org.wordpress.android.fluxc.network.rest.wpcom.activity.ActivityLogRestClient.*
 import org.wordpress.android.fluxc.store.ActivityLogStore.ActivityErrorType
 import org.wordpress.android.fluxc.store.ActivityLogStore.FetchedActivitiesPayload
@@ -32,7 +32,7 @@ import org.wordpress.android.fluxc.store.ActivityLogStore.RewindStatusErrorType
 @RunWith(MockitoJUnitRunner::class)
 class ActivityLogRestClientTest {
     @Mock private lateinit var dispatcher: Dispatcher
-    @Mock private lateinit var restClient: BaseWPComRestClient
+    @Mock private lateinit var restClient: WPComRestClient
     @Mock private lateinit var wpComGsonRequestBuilder: WPComGsonRequestBuilder
     @Mock private lateinit var site: SiteModel
     private lateinit var urlCaptor: KArgumentCaptor<String>
@@ -70,7 +70,7 @@ class ActivityLogRestClientTest {
 
         activityRestClient.fetchActivity(site, number, offset)
 
-        verify(restClient).add(request)
+        verify(restClient).enqueueRequest(request)
 
         assertEquals(urlCaptor.firstValue, "https://public-api.wordpress.com/wpcom/v2/sites/$siteId/activity/")
         with(paramsCaptor.firstValue) {
@@ -85,7 +85,7 @@ class ActivityLogRestClientTest {
 
         activityRestClient.fetchActivity(site, number, offset)
 
-        verify(restClient).add(request)
+        verify(restClient).enqueueRequest(request)
 
         val activitiesResponse = ActivitiesResponse(1, "response", ACTIVITY_RESPONSE_PAGE)
         activitySuccessMethodCaptor.firstValue.invoke(activitiesResponse)
@@ -120,7 +120,7 @@ class ActivityLogRestClientTest {
 
         activityRestClient.fetchActivity(site, number, offset)
 
-        verify(restClient).add(request)
+        verify(restClient).enqueueRequest(request)
 
         val activitiesResponse = ActivitiesResponse(1, "response", failingPage)
         activitySuccessMethodCaptor.firstValue.invoke(activitiesResponse)
@@ -135,7 +135,7 @@ class ActivityLogRestClientTest {
 
         activityRestClient.fetchActivity(site, number, offset)
 
-        verify(restClient).add(request)
+        verify(restClient).enqueueRequest(request)
 
         val activitiesResponse = ActivitiesResponse(1, "response", failingPage)
         activitySuccessMethodCaptor.firstValue.invoke(activitiesResponse)
@@ -151,7 +151,7 @@ class ActivityLogRestClientTest {
 
         activityRestClient.fetchActivity(site, number, offset)
 
-        verify(restClient).add(request)
+        verify(restClient).enqueueRequest(request)
 
         val activitiesResponse = ActivitiesResponse(1, "response", failingPage)
         activitySuccessMethodCaptor.firstValue.invoke(activitiesResponse)
@@ -166,7 +166,7 @@ class ActivityLogRestClientTest {
 
         activityRestClient.fetchActivity(site, number, offset)
 
-        verify(restClient).add(request)
+        verify(restClient).enqueueRequest(request)
 
         val activitiesResponse = ActivitiesResponse(1, "response", failingPage)
         activitySuccessMethodCaptor.firstValue.invoke(activitiesResponse)
@@ -180,7 +180,7 @@ class ActivityLogRestClientTest {
 
         activityRestClient.fetchActivity(site, number, offset)
 
-        verify(restClient).add(request)
+        verify(restClient).enqueueRequest(request)
 
         errorMethodCaptor.firstValue(BaseRequest.BaseNetworkError(BaseRequest.GenericErrorType.NETWORK_ERROR))
 
@@ -193,7 +193,7 @@ class ActivityLogRestClientTest {
 
         activityRestClient.fetchActivityRewind(site)
 
-        verify(restClient).add(request)
+        verify(restClient).enqueueRequest(request)
 
         val state = RewindStatusModel.State.ACTIVE
         val rewindResponse = REWIND_RESPONSE.copy(state = state.value)
@@ -227,7 +227,7 @@ class ActivityLogRestClientTest {
 
         activityRestClient.fetchActivityRewind(site)
 
-        verify(restClient).add(request)
+        verify(restClient).enqueueRequest(request)
 
         errorMethodCaptor.firstValue(BaseRequest.BaseNetworkError(BaseRequest.GenericErrorType.NETWORK_ERROR))
 
@@ -240,7 +240,7 @@ class ActivityLogRestClientTest {
 
         activityRestClient.fetchActivityRewind(site)
 
-        verify(restClient).add(request)
+        verify(restClient).enqueueRequest(request)
 
         val rewindResponse = REWIND_RESPONSE.copy(state = null)
         rewindStatusSuccessMethodCaptor.firstValue.invoke(rewindResponse)
@@ -254,7 +254,7 @@ class ActivityLogRestClientTest {
 
         activityRestClient.fetchActivityRewind(site)
 
-        verify(restClient).add(request)
+        verify(restClient).enqueueRequest(request)
 
         val rewindResponse = REWIND_RESPONSE.copy(state = "wrong")
         rewindStatusSuccessMethodCaptor.firstValue.invoke(rewindResponse)
@@ -268,7 +268,7 @@ class ActivityLogRestClientTest {
 
         activityRestClient.fetchActivityRewind(site)
 
-        verify(restClient).add(request)
+        verify(restClient).enqueueRequest(request)
 
         val rewindResponse = REWIND_RESPONSE.copy(restoreResponse = RESTORE_RESPONSE.copy(rewind_id = null))
         rewindStatusSuccessMethodCaptor.firstValue.invoke(rewindResponse)
@@ -282,7 +282,7 @@ class ActivityLogRestClientTest {
 
         activityRestClient.fetchActivityRewind(site)
 
-        verify(restClient).add(request)
+        verify(restClient).enqueueRequest(request)
 
         val rewindResponse = REWIND_RESPONSE.copy(restoreResponse = RESTORE_RESPONSE.copy(status = null))
         rewindStatusSuccessMethodCaptor.firstValue.invoke(rewindResponse)
@@ -296,7 +296,7 @@ class ActivityLogRestClientTest {
 
         activityRestClient.fetchActivityRewind(site)
 
-        verify(restClient).add(request)
+        verify(restClient).enqueueRequest(request)
 
         val rewindResponse = REWIND_RESPONSE.copy(restoreResponse = RESTORE_RESPONSE.copy(status = "wrong"))
         rewindStatusSuccessMethodCaptor.firstValue.invoke(rewindResponse)
