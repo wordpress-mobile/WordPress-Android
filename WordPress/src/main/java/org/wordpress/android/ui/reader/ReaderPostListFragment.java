@@ -300,7 +300,13 @@ public class ReaderPostListFragment extends Fragment
         } else if (!ReaderTagTable.tagExists(getCurrentTag())) {
             // current tag no longer exists, revert to default
             AppLog.d(T.READER, "reader post list > current tag no longer valid");
-            setCurrentTag(ReaderUtils.getDefaultTag());
+            ReaderTag tag = ReaderUtils.getDefaultTag();
+            // it's possible the default tag won't exist if the user just changed the app's
+            // language, in which case default to the first tag in the table
+            if (!ReaderTagTable.tagExists(tag)) {
+                tag = ReaderTagTable.getFirstTag();
+            }
+            setCurrentTag(tag);
         } else {
             // otherwise, refresh posts to make sure any changes are reflected and auto-update
             // posts in the current tag if it's time
