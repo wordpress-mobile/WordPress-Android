@@ -46,9 +46,11 @@ import javax.inject.Inject;
 
 public class MediaPreviewActivity extends AppCompatActivity implements MediaPreviewFragment.OnMediaTappedListener {
     private static final String ARG_ID_LIST = "id_list";
+    private static final String ARG_URL_LIST = "url_list";
 
     private int mMediaId;
     private ArrayList<String> mMediaIdList;
+    private ArrayList<String> mMediaUrlList;
     private String mContentUri;
     private int mLastPosition;
 
@@ -112,6 +114,19 @@ public class MediaPreviewActivity extends AppCompatActivity implements MediaPrev
         startIntent(context, intent);
     }
 
+    /**
+     * @param context self explanatory
+     * @param imageUrlList list of image URLs to preview
+     */
+    public static void showPreview(@NonNull Context context,
+                                   @NonNull ArrayList<String> imageUrlList) {
+        Intent intent = new Intent(context, MediaPreviewActivity.class);
+        intent.putExtra(MediaPreviewFragment.ARG_MEDIA_CONTENT_URI, imageUrlList.get(0));
+        intent.putStringArrayListExtra(ARG_URL_LIST, imageUrlList);
+
+        startIntent(context, intent);
+    }
+
     private static void startIntent(Context context, Intent intent) {
         ActivityOptionsCompat options = ActivityOptionsCompat.makeCustomAnimation(
                 context,
@@ -138,6 +153,8 @@ public class MediaPreviewActivity extends AppCompatActivity implements MediaPrev
             mContentUri = savedInstanceState.getString(MediaPreviewFragment.ARG_MEDIA_CONTENT_URI);
             if (savedInstanceState.containsKey(ARG_ID_LIST)) {
                 mMediaIdList = savedInstanceState.getStringArrayList(ARG_ID_LIST);
+            } else if (savedInstanceState.containsKey(ARG_URL_LIST)) {
+                mMediaUrlList = savedInstanceState.getStringArrayList(ARG_URL_LIST);
             }
         } else {
             mSite = (SiteModel) getIntent().getSerializableExtra(WordPress.SITE);
@@ -145,6 +162,8 @@ public class MediaPreviewActivity extends AppCompatActivity implements MediaPrev
             mContentUri = getIntent().getStringExtra(MediaPreviewFragment.ARG_MEDIA_CONTENT_URI);
             if (getIntent().hasExtra(ARG_ID_LIST)) {
                 mMediaIdList = getIntent().getStringArrayListExtra(ARG_ID_LIST);
+            } else if (getIntent().hasExtra(ARG_URL_LIST)) {
+                mMediaUrlList = getIntent().getStringArrayListExtra(ARG_URL_LIST);
             }
         }
 
@@ -153,7 +172,7 @@ public class MediaPreviewActivity extends AppCompatActivity implements MediaPrev
             return;
         }
 
-        mToolbar = (Toolbar) findViewById(R.id.toolbar);
+        mToolbar = findViewById(R.id.toolbar);
         int toolbarColor = ContextCompat.getColor(this, R.color.transparent);
         //noinspection deprecation
         mToolbar.setBackgroundDrawable(new ColorDrawable(toolbarColor));
@@ -165,10 +184,12 @@ public class MediaPreviewActivity extends AppCompatActivity implements MediaPrev
         }
 
         View fragmentContainer = findViewById(R.id.fragment_container);
-        mViewPager = (ViewPager) findViewById(R.id.viewpager);
+        mViewPager = findViewById(R.id.viewpager);
 
         // use a ViewPager if we're passed a list of media, otherwise show a single fragment
-        if (mMediaIdList != null && mMediaIdList.size() > 1) {
+        boolean useViewPager = (mMediaIdList != null && mMediaIdList.size() > 1)
+                || (mMediaUrlList != null && mMediaUrlList.size() > 1);
+        if (useViewPager) {
             fragmentContainer.setVisibility(View.GONE);
             mViewPager.setVisibility(View.VISIBLE);
             setupViewPager();

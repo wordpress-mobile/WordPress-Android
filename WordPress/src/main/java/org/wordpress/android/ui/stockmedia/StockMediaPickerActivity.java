@@ -136,9 +136,9 @@ public class StockMediaPickerActivity extends AppCompatActivity implements Searc
                 uploadSelection();
             }
         });
-        findViewById(R.id.text_clear).setOnClickListener(new View.OnClickListener() {
+        findViewById(R.id.text_preview).setOnClickListener(new View.OnClickListener() {
             @Override public void onClick(View v) {
-                mAdapter.clearSelection();
+                previewSelection();
             }
         });
 
@@ -440,6 +440,17 @@ public class StockMediaPickerActivity extends AppCompatActivity implements Searc
         } else {
             showSelectionBar(false);
         }
+    }
+
+    private void previewSelection() {
+        List<StockMediaModel> items = mAdapter.getSelectedStockMedia();
+        if (items.size() == 0) return;
+
+        ArrayList<String> imageUrlList = new ArrayList<>();
+        for (StockMediaModel media : items) {
+            imageUrlList.add(media.getUrl());
+        }
+        MediaPreviewActivity.showPreview(this, imageUrlList);
     }
 
     private void uploadSelection() {
