@@ -26,6 +26,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.Animation;
 
+import org.greenrobot.eventbus.EventBus;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.fluxc.model.MediaModel;
@@ -44,7 +45,6 @@ import java.util.ArrayList;
 
 import javax.inject.Inject;
 
-import de.greenrobot.event.EventBus;
 
 public class MediaPreviewActivity extends AppCompatActivity implements MediaPreviewFragment.OnMediaTappedListener {
     private static final String ARG_ID_LIST = "id_list";
