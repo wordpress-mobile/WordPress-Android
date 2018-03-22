@@ -78,10 +78,10 @@ public class MediaPreviewActivity extends AppCompatActivity implements MediaPrev
     @Inject MediaStore mMediaStore;
     @Inject FluxCImageLoader mImageLoader;
 
-    public static class MediaPreviewSwiped {
+    static class MediaPreviewSwiped {
         final int mediaId;
 
-        public MediaPreviewSwiped(int mediaId) {
+        MediaPreviewSwiped(int mediaId) {
             this.mediaId = mediaId;
         }
     }
@@ -348,8 +348,8 @@ public class MediaPreviewActivity extends AppCompatActivity implements MediaPrev
                     String thisUrl = mMediaUrlList.get(i);
                     if (StringUtils.equals(thisUrl, mContentUri)) {
                         initialPos = i;
+                        break;
                     }
-                    break;
                 }
                 break;
         }
@@ -445,7 +445,6 @@ public class MediaPreviewActivity extends AppCompatActivity implements MediaPrev
                     // should never get here
                     return 0;
             }
-
         }
 
         @Override
