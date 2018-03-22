@@ -44,7 +44,7 @@
     <string name="login_prologue_screen_title">Login</string>
     <string name="signup_epilogue_screen_title">New account</string>
     <string name="share_intent_screen_title">Pick site</string>
-
+    <string name="notif_detail_screen_title">Notification detail %s</string>
 
     <!-- general strings -->
     <string name="posts">Posts</string>
