@@ -21,6 +21,7 @@ import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.fluxc.network.rest.wpcom.site.DomainSuggestionResponse;
 import org.wordpress.android.fluxc.store.SiteStore;
 import org.wordpress.android.ui.accounts.signup.SiteCreationDomainLoaderFragment.DomainSuggestionEvent;
+import org.wordpress.android.util.ActivityUtils;
 
 import java.util.ArrayList;
 
@@ -81,6 +82,11 @@ public class SiteCreationDomainFragment extends SiteCreationBaseFormFragment<Sit
         mFinishButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                // hide keyboard before calling the site creation action
+                if (getActivity() != null) {
+                    ActivityUtils.hideKeyboardForced(getActivity().getCurrentFocus());
+                }
+
                 mSiteCreationListener.withDomain(mSelectedDomain);
             }
         });
