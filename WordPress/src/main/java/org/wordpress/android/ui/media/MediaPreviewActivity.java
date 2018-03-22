@@ -51,12 +51,12 @@ public class MediaPreviewActivity extends AppCompatActivity implements MediaPrev
     private static final String ARG_URL_LIST = "url_list";
 
     enum PreviewType {
-        SINGLE_MEDIA_ITEM,
+        SINGLE_ITEM,
         MULTI_MEDIA_IDS,
-        MULTI_MEDIA_URLS;
+        MULTI_IMAGE_URLS;
 
         boolean isMulti() {
-            return this == MULTI_MEDIA_IDS || this == MULTI_MEDIA_URLS;
+            return this == MULTI_MEDIA_IDS || this == MULTI_IMAGE_URLS;
         }
     }
 
@@ -321,9 +321,9 @@ public class MediaPreviewActivity extends AppCompatActivity implements MediaPrev
             return PreviewType.MULTI_MEDIA_IDS;
         }
         if (mMediaUrlList != null && mMediaUrlList.size() > 1) {
-            return PreviewType.MULTI_MEDIA_URLS;
+            return PreviewType.MULTI_IMAGE_URLS;
         }
-        return PreviewType.SINGLE_MEDIA_ITEM;
+        return PreviewType.SINGLE_ITEM;
     }
 
     private void setupViewPager() {
@@ -343,7 +343,7 @@ public class MediaPreviewActivity extends AppCompatActivity implements MediaPrev
                     }
                 }
                 break;
-            case MULTI_MEDIA_URLS:
+            case MULTI_IMAGE_URLS:
                 for (int i = 0; i < mMediaUrlList.size(); i++) {
                     String thisUrl = mMediaUrlList.get(i);
                     if (StringUtils.equals(thisUrl, mContentUri)) {
@@ -358,28 +358,34 @@ public class MediaPreviewActivity extends AppCompatActivity implements MediaPrev
         mPagerAdapter.unpauseFragment(initialPos);
         mLastPosition = initialPos;
 
-        mViewPager.addOnPageChangeListener(new ViewPager.SimpleOnPageChangeListener() {
-            @Override
-            public void onPageSelected(int position) {
-                // pause the outgoing fragment and unpause the incoming one - this prevents audio/video from
-                // playing in inactive fragments
-                if (mLastPosition != position) {
-                    mPagerAdapter.pauseFragment(mLastPosition);
-                }
-                mPagerAdapter.unpauseFragment(position);
-                mLastPosition = position;
-                switch (getPreviewType()) {
-                    case MULTI_MEDIA_IDS:
+        switch (getPreviewType()) {
+            case MULTI_MEDIA_IDS:
+                mViewPager.addOnPageChangeListener(new ViewPager.SimpleOnPageChangeListener() {
+                    @Override
+                    public void onPageSelected(int position) {
+                        // pause the outgoing fragment and unpause the incoming one - this prevents audio/video from
+                        // playing in inactive fragments
+                        if (mLastPosition != position) {
+                            mPagerAdapter.pauseFragment(mLastPosition);
+                        }
+                        mPagerAdapter.unpauseFragment(position);
+                        mLastPosition = position;
                         mMediaId = Integer.valueOf(mMediaIdList.get(position));
                         // fire event so settings activity shows the same media as this activity (user may have swiped)
                         EventBus.getDefault().post(new MediaPreviewSwiped(mMediaId));
-                        break;
-                    case MULTI_MEDIA_URLS:
+                    }
+                });
+                break;
+            case MULTI_IMAGE_URLS:
+                mViewPager.addOnPageChangeListener(new ViewPager.SimpleOnPageChangeListener() {
+                    @Override
+                    public void onPageSelected(int position) {
+                        mLastPosition = position;
                         mContentUri = mMediaUrlList.get(position);
-                        break;
-                }
-            }
-        });
+                    }
+                });
+                break;
+        }
     }
 
     /*
@@ -400,26 +406,46 @@ public class MediaPreviewActivity extends AppCompatActivity implements MediaPrev
 
         @Override
         public Fragment getItem(int position) {
-            int id = Integer.valueOf(mMediaIdList.get(position));
-            MediaModel media = mMediaStore.getMediaWithLocalId(id);
-
-            // make sure we autoplay the initial item (relevant only for audio/video)
-            boolean autoPlay;
-            if (id == mMediaId && !mDidAutoPlay) {
-                autoPlay = true;
-                mDidAutoPlay = true;
-            } else {
-                autoPlay = false;
+            MediaPreviewFragment fragment;
+            switch (getPreviewType()) {
+                case MULTI_MEDIA_IDS:
+                    int id = Integer.valueOf(mMediaIdList.get(position));
+                    MediaModel media = mMediaStore.getMediaWithLocalId(id);
+                    // make sure we autoplay the initial item (relevant only for audio/video)
+                    boolean autoPlay;
+                    if (id == mMediaId && !mDidAutoPlay) {
+                        autoPlay = true;
+                        mDidAutoPlay = true;
+                    } else {
+                        autoPlay = false;
+                    }
+                    fragment = MediaPreviewFragment.newInstance(mSite, media, autoPlay);
+                    break;
+                case MULTI_IMAGE_URLS:
+                    String imageUrl = mMediaUrlList.get(position);
+                    fragment = MediaPreviewFragment.newInstance(null, imageUrl);
+                    break;
+                default:
+                    // should never get here
+                    return null;
             }
 
-            MediaPreviewFragment fragment = MediaPreviewFragment.newInstance(mSite, media, autoPlay);
             fragment.setOnMediaTappedListener(MediaPreviewActivity.this);
             return fragment;
         }
 
         @Override
         public int getCount() {
-            return mMediaIdList.size();
+            switch (getPreviewType()) {
+                case MULTI_MEDIA_IDS:
+                    return mMediaIdList.size();
+                case MULTI_IMAGE_URLS:
+                    return mMediaUrlList.size();
+                default:
+                    // should never get here
+                    return 0;
+            }
+
         }
 
         @Override
