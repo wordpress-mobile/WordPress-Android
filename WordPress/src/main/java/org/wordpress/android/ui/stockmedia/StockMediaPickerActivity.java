@@ -618,14 +618,6 @@ public class StockMediaPickerActivity extends AppCompatActivity implements Searc
             notifySelectionCountChanged();
         }
 
-        private void clearSelection() {
-            if (mSelectedItems.size() > 0) {
-                mSelectedItems.clear();
-                notifyDataSetChanged();
-                notifySelectionCountChanged();
-            }
-        }
-
         int getSelectionCount() {
             return mSelectedItems.size();
         }
