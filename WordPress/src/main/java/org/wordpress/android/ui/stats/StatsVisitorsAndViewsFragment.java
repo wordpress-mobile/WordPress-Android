@@ -262,8 +262,7 @@ public class StatsVisitorsAndViewsFragment extends StatsAbstractFragment
             mSelectedOverviewItemIndex = checkedId;
             if (mOverviewItemChangeListener != null) {
                 mOverviewItemChangeListener.onOverviewItemChanged(
-                        mOverviewItems[mSelectedOverviewItemIndex]
-                );
+                        mOverviewItems[mSelectedOverviewItemIndex]);
             }
             updateUI();
         }
@@ -493,10 +492,10 @@ public class StatsVisitorsAndViewsFragment extends StatsAbstractFragment
         mGraphView.getGraphViewStyle().setNumHorizontalLabels(dataToShowOnGraph.length);
         // Set the maximum size a column can get on the screen in PX
         mGraphView.getGraphViewStyle().setMaxColumnWidth(
-                DisplayUtils.dpToPx(getActivity(), StatsConstants.STATS_GRAPH_BAR_MAX_COLUMN_WIDTH_DP)
-        );
+                DisplayUtils.dpToPx(getActivity(), StatsConstants.STATS_GRAPH_BAR_MAX_COLUMN_WIDTH_DP));
         mGraphView.setHorizontalLabels(horLabels);
-        mGraphView.setAccessibleHorizontalLabels(makeAccessibleHorizontalLabels(horLabels));
+        mGraphView.setAccessibleHorizontalLabels(makeAccessibleHorizontalLabels(horLabels,
+                mainSeriesItems, selectedStatsType));
         mGraphView.setGestureListener(this);
         mGraphView.setImportantForAccessibility(atLeastOneResultIsAvailable
                 ? View.IMPORTANT_FOR_ACCESSIBILITY_YES : View.IMPORTANT_FOR_ACCESSIBILITY_NO);
@@ -535,23 +534,30 @@ public class StatsVisitorsAndViewsFragment extends StatsAbstractFragment
         mGraphView.highlightBar(barSelectedOnGraph);
     }
 
-    private String[] makeAccessibleHorizontalLabels(String[] horizontalLabels) {
+    private String[] makeAccessibleHorizontalLabels(String[] horizontalLabels,
+                                                    GraphView.GraphViewData[] dataToShowOnGraph,
+                                                    OverviewLabel typeOfStats) {
         String[] accessibleLabels = new String[horizontalLabels.length];
 
         for (int i = 0; i < horizontalLabels.length; i++) {
+            String barDate;
+
             if (getTimeframe() == StatsTimeframe.MONTH) {
-                accessibleLabels[i] = StatsUtils.parseDateToLocalizedFormat(
+                barDate = StatsUtils.parseDateToLocalizedFormat(
                         horizontalLabels[i],
                         StatsConstants.STATS_OUTPUT_DATE_MONTH_SHORT_FORMAT,
                         StatsConstants.STATS_OUTPUT_DATE_MONTH_LONG_FORMAT);
             } else if (getTimeframe() == StatsTimeframe.WEEK) {
-                accessibleLabels[i] = getString(R.string.stats_bar_week_desc, StatsUtils.parseDateToLocalizedFormat(
+                barDate = getString(R.string.stats_bar_week_desc, StatsUtils.parseDateToLocalizedFormat(
                         horizontalLabels[i],
                         StatsConstants.STATS_OUTPUT_DATE_MONTH_SHORT_DAY_SHORT_FORMAT,
                         StatsConstants.STATS_OUTPUT_DATE_MONTH_LONG_DAY_SHORT_FORMAT));
             } else {
-                accessibleLabels[i] = horizontalLabels[i];
+                barDate = horizontalLabels[i];
             }
+
+            accessibleLabels[i] = getString(R.string.stats_bar_date_value_type_desc, barDate,
+                    (int) dataToShowOnGraph[i].getY(), typeOfStats.getLabel());
         }
 
         return accessibleLabels;
@@ -694,8 +700,7 @@ public class StatsVisitorsAndViewsFragment extends StatsAbstractFragment
                 return StatsUtils.parseDateToLocalizedFormat(
                         dateToFormat,
                         StatsConstants.STATS_INPUT_DATE_FORMAT,
-                        StatsConstants.STATS_OUTPUT_DATE_MONTH_SHORT_DAY_SHORT_FORMAT
-                );
+                        StatsConstants.STATS_OUTPUT_DATE_MONTH_SHORT_DAY_SHORT_FORMAT);
             case WEEK:
                 // first four digits are the year
                 // followed by Wxx where xx is the month
