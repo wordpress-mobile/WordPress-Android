@@ -146,17 +146,17 @@ public class MediaPreviewFragment extends Fragment implements MediaController.Me
 
         View view = inflater.inflate(R.layout.media_preview_fragment, container, false);
 
-        mImageView = (ImageView) view.findViewById(R.id.image_preview);
-        mVideoView = (VideoView) view.findViewById(R.id.video_preview);
+        mImageView = view.findViewById(R.id.image_preview);
+        mVideoView = view.findViewById(R.id.video_preview);
 
-        mVideoFrame = (ViewGroup) view.findViewById(R.id.frame_video);
-        mAudioFrame = (ViewGroup) view.findViewById(R.id.frame_audio);
+        mVideoFrame = view.findViewById(R.id.frame_video);
+        mAudioFrame = view.findViewById(R.id.frame_audio);
 
         mVideoFrame.setVisibility(mIsVideo ? View.VISIBLE : View.GONE);
         mAudioFrame.setVisibility(mIsAudio ? View.VISIBLE : View.GONE);
 
         if (mIsAudio && !TextUtils.isEmpty(mTitle)) {
-            TextView txtAudioTitle = (TextView) view.findViewById(R.id.text_audio_title);
+            TextView txtAudioTitle = view.findViewById(R.id.text_audio_title);
             txtAudioTitle.setText(mTitle);
             txtAudioTitle.setVisibility(View.VISIBLE);
         }
