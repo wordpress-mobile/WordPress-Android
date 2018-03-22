@@ -465,7 +465,7 @@ public class StatsSingleItemDetailsActivity extends AppCompatActivity
         mGraphView.getGraphViewStyle().setMaxColumnWidth(
                 DisplayUtils.dpToPx(this, StatsConstants.STATS_GRAPH_BAR_MAX_COLUMN_WIDTH_DP));
         mGraphView.setHorizontalLabels(horLabels);
-        mGraphView.setAccessibleHorizontalLabels(horLabels);
+        mGraphView.setAccessibleHorizontalLabels(makeAccessibleHorizontalViewLabels(horLabels, dataToShowOnGraph));
         mGraphView.setGestureListener(this);
 
         // Reset the bar selected upon rotation of the device when the no. of bars can change with orientation.
@@ -504,6 +504,17 @@ public class StatsSingleItemDetailsActivity extends AppCompatActivity
         RecentWeeksListAdapter recentWeeksListAdapter =
                 new RecentWeeksListAdapter(this, recentWeeks, mRestResponseParsed.getHighestWeekAverage());
         StatsUIHelper.reloadGroupViews(this, recentWeeksListAdapter, mRecentWeeksIdToExpandedMap, mRecentWeeksList);
+    }
+
+    private String[] makeAccessibleHorizontalViewLabels(String[] horizontalLabels, VisitModel[] dataToShowOnGraph) {
+        String[] accessibleLabels = new String[horizontalLabels.length];
+
+        for (int i = 0; i < horizontalLabels.length; i++) {
+            accessibleLabels[i] = getString(R.string.stats_bar_date_value_desc, horizontalLabels[i],
+                    dataToShowOnGraph[i].getViews());
+        }
+
+        return accessibleLabels;
     }
 
     private void setMainViewsLabel(String dateFormatted, int totals) {
