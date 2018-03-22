@@ -6,5 +6,5 @@ public class InitiateAutomatedTransferResponse {
     public String status;
     public boolean success;
     @SerializedName("transfer_id")
-    public String transferId;
+    public int transferId;
 }
