@@ -139,7 +139,7 @@ public class StatsCommentsFragment extends StatsAbstractListFragment {
         if (mTopPagerSelectedButtonIndex == 0 && hasAuthors()) {
             adapter = new AuthorsAdapter(getActivity(), getAuthors());
         } else if (mTopPagerSelectedButtonIndex == 1 && hasPosts()) {
-            adapter = new PostsAndPagesAdapter(getActivity(), getPosts());
+            adapter = new PostsAndPagesAdapter(getActivity(), getPosts(), true);
         }
 
         if (adapter != null) {
