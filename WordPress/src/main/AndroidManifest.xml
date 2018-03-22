@@ -526,6 +526,7 @@
         <!-- Lib activities-->
         <activity
             android:name="com.yalantis.ucrop.UCropActivity"
+            android:label="@string/edit_photo_screen_title"
             android:theme="@style/Theme.AppCompat.Light.NoActionBar"/>
 
         <!-- Services -->
