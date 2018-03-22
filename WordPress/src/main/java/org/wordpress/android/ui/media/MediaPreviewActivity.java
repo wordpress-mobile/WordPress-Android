@@ -26,7 +26,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.Animation;
 
-import org.greenrobot.eventbus.EventBus;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.fluxc.model.MediaModel;
@@ -36,6 +35,7 @@ import org.wordpress.android.fluxc.tools.FluxCImageLoader;
 import org.wordpress.android.util.AniUtils;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.LocaleManager;
+import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.widgets.WPViewPagerTransformer;
 import org.wordpress.android.widgets.WPViewPagerTransformer.TransformType;
@@ -44,9 +44,21 @@ import java.util.ArrayList;
 
 import javax.inject.Inject;
 
+import de.greenrobot.event.EventBus;
+
 public class MediaPreviewActivity extends AppCompatActivity implements MediaPreviewFragment.OnMediaTappedListener {
     private static final String ARG_ID_LIST = "id_list";
     private static final String ARG_URL_LIST = "url_list";
+
+    enum PreviewType {
+        SINGLE_MEDIA_ITEM,
+        MULTI_MEDIA_IDS,
+        MULTI_MEDIA_URLS;
+
+        boolean isMulti() {
+            return this == MULTI_MEDIA_IDS || this == MULTI_MEDIA_URLS;
+        }
+    }
 
     private int mMediaId;
     private ArrayList<String> mMediaIdList;
@@ -187,9 +199,7 @@ public class MediaPreviewActivity extends AppCompatActivity implements MediaPrev
         mViewPager = findViewById(R.id.viewpager);
 
         // use a ViewPager if we're passed a list of media, otherwise show a single fragment
-        boolean useViewPager = (mMediaIdList != null && mMediaIdList.size() > 1)
-                || (mMediaUrlList != null && mMediaUrlList.size() > 1);
-        if (useViewPager) {
+        if (getPreviewType().isMulti()) {
             fragmentContainer.setVisibility(View.GONE);
             mViewPager.setVisibility(View.VISIBLE);
             setupViewPager();
@@ -225,6 +235,9 @@ public class MediaPreviewActivity extends AppCompatActivity implements MediaPrev
         outState.putString(MediaPreviewFragment.ARG_MEDIA_CONTENT_URI, mContentUri);
         if (mMediaIdList != null) {
             outState.putStringArrayList(ARG_ID_LIST, mMediaIdList);
+        }
+        if (mMediaUrlList != null) {
+            outState.putStringArrayList(ARG_URL_LIST, mMediaUrlList);
         }
     }
 
@@ -303,6 +316,16 @@ public class MediaPreviewActivity extends AppCompatActivity implements MediaPrev
         }
     }
 
+    private PreviewType getPreviewType() {
+        if (mMediaIdList != null && mMediaIdList.size() > 1) {
+            return PreviewType.MULTI_MEDIA_IDS;
+        }
+        if (mMediaUrlList != null && mMediaUrlList.size() > 1) {
+            return PreviewType.MULTI_MEDIA_URLS;
+        }
+        return PreviewType.SINGLE_MEDIA_ITEM;
+    }
+
     private void setupViewPager() {
         mPagerAdapter = new MediaPagerAdapter(getFragmentManager());
         mViewPager.setAdapter(mPagerAdapter);
@@ -310,18 +333,32 @@ public class MediaPreviewActivity extends AppCompatActivity implements MediaPrev
 
         // determine the position of the original media item so we can page to it immediately
         int initialPos = 0;
-        for (int i = 0; i < mMediaIdList.size(); i++) {
-            int thisId = Integer.valueOf(mMediaIdList.get(i));
-            if (thisId == mMediaId) {
-                initialPos = i;
+        switch (getPreviewType()) {
+            case MULTI_MEDIA_IDS:
+                for (int i = 0; i < mMediaIdList.size(); i++) {
+                    int thisId = Integer.valueOf(mMediaIdList.get(i));
+                    if (thisId == mMediaId) {
+                        initialPos = i;
+                        break;
+                    }
+                }
                 break;
-            }
+            case MULTI_MEDIA_URLS:
+                for (int i = 0; i < mMediaUrlList.size(); i++) {
+                    String thisUrl = mMediaUrlList.get(i);
+                    if (StringUtils.equals(thisUrl, mContentUri)) {
+                        initialPos = i;
+                    }
+                    break;
+                }
+                break;
         }
+
         mViewPager.setCurrentItem(initialPos);
         mPagerAdapter.unpauseFragment(initialPos);
         mLastPosition = initialPos;
 
-        mViewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+        mViewPager.addOnPageChangeListener(new ViewPager.SimpleOnPageChangeListener() {
             @Override
             public void onPageSelected(int position) {
                 // pause the outgoing fragment and unpause the incoming one - this prevents audio/video from
@@ -331,19 +368,16 @@ public class MediaPreviewActivity extends AppCompatActivity implements MediaPrev
                 }
                 mPagerAdapter.unpauseFragment(position);
                 mLastPosition = position;
-                mMediaId = Integer.valueOf(mMediaIdList.get(position));
-                // fire event so settings activity shows the same media as this activity (user may have swiped)
-                EventBus.getDefault().post(new MediaPreviewSwiped(mMediaId));
-            }
-
-            @Override
-            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
-                // noop
-            }
-
-            @Override
-            public void onPageScrollStateChanged(int state) {
-                // noop
+                switch (getPreviewType()) {
+                    case MULTI_MEDIA_IDS:
+                        mMediaId = Integer.valueOf(mMediaIdList.get(position));
+                        // fire event so settings activity shows the same media as this activity (user may have swiped)
+                        EventBus.getDefault().post(new MediaPreviewSwiped(mMediaId));
+                        break;
+                    case MULTI_MEDIA_URLS:
+                        mContentUri = mMediaUrlList.get(position);
+                        break;
+                }
             }
         });
     }
@@ -356,7 +390,7 @@ public class MediaPreviewActivity extends AppCompatActivity implements MediaPrev
         showToolbar();
     }
 
-    private class MediaPagerAdapter extends FragmentStatePagerAdapter {
+    class MediaPagerAdapter extends FragmentStatePagerAdapter {
         private final SparseArray<Fragment> mFragmentMap = new SparseArray<>();
         private boolean mDidAutoPlay;
 
@@ -403,14 +437,14 @@ public class MediaPreviewActivity extends AppCompatActivity implements MediaPrev
             super.destroyItem(container, position, object);
         }
 
-        private void pauseFragment(int position) {
+        void pauseFragment(int position) {
             Fragment fragment = mFragmentMap.get(position);
             if (fragment != null) {
                 ((MediaPreviewFragment) fragment).pauseMedia();
             }
         }
 
-        private void unpauseFragment(int position) {
+        void unpauseFragment(int position) {
             Fragment fragment = mFragmentMap.get(position);
             if (fragment != null) {
                 ((MediaPreviewFragment) fragment).playMedia();
