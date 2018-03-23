@@ -1733,7 +1733,7 @@ public class EditPostActivity extends AppCompatActivity implements
                 case 1:
                     return EditPostSettingsFragment.newInstance();
                 default:
-                    return EditPostPreviewFragment.newInstance(mSite, mPost);
+                    return EditPostPreviewFragment.newInstance(mPost);
             }
         }
 

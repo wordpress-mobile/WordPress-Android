@@ -24,20 +24,18 @@ import org.wordpress.android.util.WPHtml;
 import javax.inject.Inject;
 
 public class EditPostPreviewFragment extends Fragment {
-    private static final String ARG_POST_ID = "post_id";
+    private static final String ARG_LOCAL_POST_ID = "local_post_id";
     private WebView mWebView;
     private TextView mTextView;
-
+    private int mLocalPostId;
     private LoadPostPreviewTask mLoadTask;
-
-    private int mPostId;
 
     @Inject PostStore mPostStore;
 
     public static EditPostPreviewFragment newInstance(@NonNull PostModel post) {
         EditPostPreviewFragment fragment = new EditPostPreviewFragment();
         Bundle bundle = new Bundle();
-        bundle.putInt(ARG_POST_ID, post.getId());
+        bundle.putInt(ARG_LOCAL_POST_ID, post.getId());
         fragment.setArguments(bundle);
         return fragment;
     }
@@ -45,7 +43,7 @@ public class EditPostPreviewFragment extends Fragment {
     @Override
     public void setArguments(Bundle args) {
         super.setArguments(args);
-        mPostId = args.getInt(ARG_POST_ID);
+        mLocalPostId = args.getInt(ARG_LOCAL_POST_ID);
     }
 
     @Override
@@ -114,7 +112,7 @@ public class EditPostPreviewFragment extends Fragment {
                 return null;
             }
 
-            mPost = mPostStore.getPostByLocalPostId(mPostId);
+            mPost = mPostStore.getPostByLocalPostId(mLocalPostId);
             if (mPost == null) {
                 return null;
             }
