@@ -489,19 +489,15 @@ public class EditPostSettingsFragment extends Fragment {
      * this will be called by the activity when the user taps OK on a PostSettingsDialogFragment
      */
     public void onPostSettingsFragmentPositiveButtonClicked(@NonNull PostSettingsListDialogFragment fragment) {
-        DialogType dialogType = fragment.getDialogType();
-        String selectedItem = fragment.getSelectedItem();
-
-        switch (dialogType) {
+        switch (fragment.getDialogType()) {
             case POST_STATUS:
-                if (!StringUtils.isEmpty(selectedItem)) {
-                    updatePostStatus(selectedItem);
-                }
+                int index = fragment.getCheckedIndex();
+                String status = getPostStatusAtIndex(index).toString();
+                updatePostStatus(status);
                 break;
             case POST_FORMAT:
-                if (!StringUtils.isEmpty(selectedItem)) {
-                    updatePostFormat(getPostFormatKeyFromName(selectedItem));
-                }
+                String formatName = fragment.getSelectedItem();
+                updatePostFormat(getPostFormatKeyFromName(formatName));
                 break;
         }
     }

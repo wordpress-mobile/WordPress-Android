@@ -109,6 +109,10 @@ public class PostSettingsListDialogFragment extends DialogFragment {
         return mDialogType;
     }
 
+    public int getCheckedIndex() {
+        return mCheckedIndex;
+    }
+
     public @Nullable String getSelectedItem() {
         ListView listView = ((AlertDialog) getDialog()).getListView();
         if (listView != null) {
