@@ -13,7 +13,6 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.FragmentManager;
-import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.view.menu.MenuPopupHelper;
 import android.support.v7.widget.CardView;
@@ -29,7 +28,6 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.LinearLayout;
-import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.TimePicker;
 
@@ -66,7 +64,6 @@ import org.wordpress.android.ui.RequestCodes;
 import org.wordpress.android.ui.media.MediaBrowserType;
 import org.wordpress.android.ui.photopicker.PhotoPickerActivity;
 import org.wordpress.android.ui.posts.PostSettingsDialogFragment.DialogType;
-import org.wordpress.android.ui.posts.PostSettingsDialogFragment.OnPostSettingsDialogFragmentListener;
 import org.wordpress.android.ui.prefs.AppPrefs;
 import org.wordpress.android.ui.prefs.SiteSettingsInterface;
 import org.wordpress.android.ui.prefs.SiteSettingsInterface.SiteSettingsListener;
@@ -493,11 +490,18 @@ public class EditPostSettingsFragment extends Fragment {
      */
     public void onPostSettingsFragmentPositiveButtonClicked(@NonNull PostSettingsDialogFragment fragment) {
         DialogType dialogType = fragment.getDialogTyoe();
-        int index = fragment.getChoiceIndex();
+        String selectedItem = fragment.getSelectedItem();
 
         switch (dialogType) {
             case PUBLISH_DATE:
-                updatePostStatus(getPostStatusAtIndex(index).toString());
+                if (!StringUtils.isEmpty(selectedItem)) {
+                    updatePostStatus(selectedItem);
+                }
+                break;
+            case POST_FORMAT:
+                if (!StringUtils.isEmpty(selectedItem)) {
+                    updatePostFormat(getPostFormatKeyFromName(selectedItem));
+                }
                 break;
         }
     }
@@ -512,48 +516,28 @@ public class EditPostSettingsFragment extends Fragment {
         PostSettingsDialogFragment fragment =
                 PostSettingsDialogFragment.newInstance(DialogType.PUBLISH_DATE, index);
         fragment.show(fm, PostSettingsDialogFragment.TAG);
-
-        /*AlertDialog.Builder builder = new AlertDialog.Builder(getActivity(), R.style.Calypso_AlertDialog);
-        builder.setTitle(R.string.post_settings_status);
-        builder.setSingleChoiceItems(R.array.post_settings_statuses, getCurrentPostStatusIndex(), null);
-        builder.setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialog, int which) {
-                ListView listView = ((AlertDialog) dialog).getListView();
-                int index = listView.getCheckedItemPosition();
-                updatePostStatus(getPostStatusAtIndex(index).toString());
-            }
-        });
-        builder.setNegativeButton(R.string.cancel, null);
-        builder.show();*/
     }
 
     private void showPostFormatDialog() {
         if (!isAdded()) {
             return;
         }
-        int checkedItem = 0;
+
+        int checkedIndex = 0;
         String postFormat = getPost().getPostFormat();
         if (!TextUtils.isEmpty(postFormat)) {
             for (int i = 0; i < mPostFormatKeys.size(); i++) {
                 if (postFormat.equals(mPostFormatKeys.get(i))) {
-                    checkedItem = i;
+                    checkedIndex = i;
                     break;
                 }
             }
         }
 
-        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity(), R.style.Calypso_AlertDialog);
-        builder.setTitle(R.string.post_settings_post_format);
-        builder.setSingleChoiceItems(mPostFormatNames.toArray(new CharSequence[0]), checkedItem, null);
-        builder.setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialog, int which) {
-                ListView listView = ((AlertDialog) dialog).getListView();
-                String formatName = (String) listView.getAdapter().getItem(listView.getCheckedItemPosition());
-                updatePostFormat(getPostFormatKeyFromName(formatName));
-            }
-        });
-        builder.setNegativeButton(R.string.cancel, null);
-        builder.show();
+        FragmentManager fm = ((AppCompatActivity) getActivity()).getSupportFragmentManager();
+        PostSettingsDialogFragment fragment =
+                PostSettingsDialogFragment.newInstance(DialogType.POST_FORMAT, checkedIndex);
+        fragment.show(fm, PostSettingsDialogFragment.TAG);
     }
 
     private void showPostPasswordDialog() {

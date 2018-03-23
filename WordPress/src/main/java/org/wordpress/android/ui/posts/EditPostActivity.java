@@ -1339,9 +1339,12 @@ public class EditPostActivity extends AppCompatActivity implements
         }
     }
 
+    /*
+     * user clicked OK on a settings dialog displayed from the settings fragment - pass the event
+     * along to the settings fragment
+     */
     @Override
     public void onPostSettingsFragmentPositiveButtonClicked(@NonNull PostSettingsDialogFragment fragment) {
-        // pass it along to the settings fragment
         if (mEditPostSettingsFragment != null) {
             mEditPostSettingsFragment.onPostSettingsFragmentPositiveButtonClicked(fragment);
         }
