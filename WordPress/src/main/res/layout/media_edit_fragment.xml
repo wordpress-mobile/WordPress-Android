@@ -9,13 +9,16 @@
 
     <android.support.design.widget.TextInputLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:importantForAccessibility="no"
+        android:hint="@string/media_edit_title_text">
 
         <android.support.design.widget.TextInputEditText
             android:id="@+id/media_edit_fragment_title"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="@string/media_edit_title_text"
+            android:textColorHint="@color/transparent"
             android:inputType="textCapSentences|textAutoCorrect"
             tools:text="media_edit_title_text" />
 
@@ -24,6 +27,8 @@
     <android.support.design.widget.TextInputLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:importantForAccessibility="no"
+        android:hint="@string/media_edit_caption_text"
         android:layout_marginTop="@dimen/margin_small">
 
         <android.support.design.widget.TextInputEditText
@@ -31,6 +36,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="@string/media_edit_caption_text"
+            android:textColorHint="@color/transparent"
             android:inputType="textCapSentences|textAutoCorrect"
             tools:text="media_edit_fragment_caption" />
 
@@ -39,6 +45,8 @@
     <android.support.design.widget.TextInputLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:importantForAccessibility="no"
+        android:hint="@string/media_edit_description_text"
         android:layout_marginTop="@dimen/margin_small">
 
         <android.support.design.widget.TextInputEditText
@@ -47,6 +55,7 @@
             android:layout_height="wrap_content"
             android:gravity="top|start"
             android:hint="@string/media_edit_description_text"
+            android:textColorHint="@color/transparent"
             android:inputType="textCapSentences|textAutoCorrect"
             android:lines="3"
             tools:text="media_edit_fragment_caption" />

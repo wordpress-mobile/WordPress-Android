@@ -705,6 +705,8 @@ public class ReaderPostDetailFragment extends Fragment
 
         if (canShowLikeCount()) {
             countLikes.setCount(mPost.numLikes);
+            countLikes.setContentDescription(
+                    ReaderUtils.getLongLikeLabelText(getActivity(), mPost.numLikes, mPost.isLikedByCurrentUser));
             countLikes.setVisibility(View.VISIBLE);
             countLikes.setSelected(mPost.isLikedByCurrentUser);
             if (!mAccountStore.hasAccessToken()) {

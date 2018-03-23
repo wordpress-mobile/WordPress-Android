@@ -104,6 +104,12 @@ public class SignupMagicLinkFragment extends Fragment {
         }
     }
 
+    @Override public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+        // important for accessibility - talkback
+        getActivity().setTitle(R.string.signup_magic_link_title);
+    }
+
     @Override
     public void onAttach(Context context) {
         AndroidSupportInjection.inject(this);

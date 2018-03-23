@@ -68,7 +68,7 @@ public class StatsTopPostsAndPagesFragment extends StatsAbstractListFragment {
 
         if (hasTopPostsAndPages()) {
             List<StatsPostModel> postViews = mTopPostsAndPagesModel.getTopPostsAndPages();
-            ArrayAdapter adapter = new PostsAndPagesAdapter(getActivity(), postViews);
+            ArrayAdapter adapter = new PostsAndPagesAdapter(getActivity(), postViews, false);
             StatsUIHelper.reloadLinearLayout(getActivity(), adapter, mList, getMaxNumberOfItemsToShowInList());
             showHideNoResultsUI(false);
         } else {

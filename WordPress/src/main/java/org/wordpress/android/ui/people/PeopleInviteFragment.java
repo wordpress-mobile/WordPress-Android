@@ -282,6 +282,8 @@ public class PeopleInviteFragment extends Fragment implements RoleSelectDialogFr
             }
         });
         updateRemainingCharsView(remainingCharsTextView, mCustomMessage, maxChars);
+        // important for accessibility - talkback
+        getActivity().setTitle(R.string.invite_people);
     }
 
     private boolean endsWithDelimiter(String string) {
@@ -359,6 +361,7 @@ public class PeopleInviteFragment extends Fragment implements RoleSelectDialogFr
         mUsernamesContainer.addView(usernameButton, mUsernamesContainer.getChildCount() - 1);
 
         final ImageButton delete = (ImageButton) usernameButton.findViewById(R.id.username_delete);
+        delete.setContentDescription(getString(R.string.invite_user_delete_desc, username));
         delete.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

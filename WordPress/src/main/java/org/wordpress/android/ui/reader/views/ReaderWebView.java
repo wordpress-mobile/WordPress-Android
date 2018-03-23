@@ -191,6 +191,7 @@ public class ReaderWebView extends WebView {
     /*
      * detect when a link is tapped
      */
+    @SuppressLint("ClickableViewAccessibility") // works as is
     @Override
     public boolean onTouchEvent(MotionEvent event) {
         if (event.getAction() == MotionEvent.ACTION_UP && mUrlClickListener != null) {

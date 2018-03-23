@@ -27,6 +27,8 @@
         android:layout_height="wrap_content"
         android:background="?android:selectableItemBackground"
         android:orientation="vertical"
+        android:focusable="true"
+        android:labelFor="@+id/switch_view"
         android:padding="@dimen/margin_extra_large">
 
         <TextView
@@ -49,6 +51,8 @@
             android:layout_alignParentRight="true"
             android:layout_marginLeft="@dimen/margin_medium"
             app:theme="@style/WPPrefSwitch"
+            android:focusable="false"
+            android:clickable="false"
             tools:checked="true"
             android:layout_marginStart="@dimen/margin_medium"
             android:layout_alignParentEnd="true"/>
