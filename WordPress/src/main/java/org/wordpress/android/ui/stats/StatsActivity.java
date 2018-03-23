@@ -70,7 +70,7 @@ public class StatsActivity extends AppCompatActivity
     private static final String SAVED_STATS_REQUESTED_DATE = "SAVED_STATS_REQUESTED_DATE";
     private static final String SAVED_STATS_SCROLL_POSITION = "SAVED_STATS_SCROLL_POSITION";
     private static final String SAVED_THERE_WAS_AN_ERROR_LOADING_STATS = "SAVED_THERE_WAS_AN_ERROR_LOADING_STATS";
-    private static final String CHROMEBOOK_FLAG = "org.chromium.arc.device_management";
+    private static final String APP_RUNTIME_ON_CHROME_FLAG = "org.chromium.arc.device_management";
 
     private Spinner mSpinner;
     private NestedScrollViewExt mOuterScrollView;
@@ -643,7 +643,7 @@ public class StatsActivity extends AppCompatActivity
 
     // does not support widgets
     private boolean isAppRuntimeForChrome() {
-        return getApplicationContext().getPackageManager().hasSystemFeature(CHROMEBOOK_FLAG);
+        return getApplicationContext().getPackageManager().hasSystemFeature(APP_RUNTIME_ON_CHROME_FLAG);
     }
 
     @SuppressWarnings("unused")
