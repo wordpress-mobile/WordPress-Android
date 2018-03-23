@@ -17,6 +17,7 @@ import org.wordpress.android.fluxc.action.ActivityAction
 import org.wordpress.android.fluxc.generated.ActivityActionBuilder
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.model.activity.ActivityLogModel
+import org.wordpress.android.fluxc.model.activity.RewindStatusModel
 import org.wordpress.android.fluxc.network.rest.wpcom.activity.ActivityLogRestClient
 import org.wordpress.android.fluxc.persistence.ActivityLogSqlUtils
 
@@ -79,5 +80,30 @@ class ActivityLogStoreTest {
 
         verify(activityLogSqlUtils).getActivitiesForSite(siteModel, SelectQuery.ORDER_DESCENDING)
         assertEquals(activityModels, activityModelsFromDb)
+    }
+
+    @Test
+    fun storeFetchedRewindStatusToDb() {
+        val rewindStatusModel = mock<RewindStatusModel>()
+        val payload = ActivityLogStore.FetchedRewindStatePayload(rewindStatusModel, siteModel)
+        val action = ActivityActionBuilder.newFetchedRewindStateAction(payload)
+
+        activityLogStore.onAction(action)
+
+        verify(activityLogSqlUtils).insertOrUpdateRewindStatus(siteModel, rewindStatusModel)
+        val expectedChangeEvent = ActivityLogStore.OnRewindStatusFetched(ActivityAction.FETCHED_REWIND_STATE)
+        verify(dispatcher).emitChange(eq(expectedChangeEvent))
+    }
+
+    @Test
+    fun returnRewindStatusFromDb() {
+        val rewindStatusModel = mock<RewindStatusModel>()
+        whenever(activityLogSqlUtils.getRewindStatusForSite(siteModel))
+                .thenReturn(rewindStatusModel)
+
+        val rewindStatusFromDb = activityLogStore.getRewindStatusForSite(siteModel)
+
+        verify(activityLogSqlUtils).getRewindStatusForSite(siteModel)
+        assertEquals(rewindStatusModel, rewindStatusFromDb)
     }
 }

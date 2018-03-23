@@ -121,33 +121,28 @@ open class ActivityLogRestClient
 
     private fun buildRewindStatusPayload(response: RewindStatusResponse, site: SiteModel):
             FetchedRewindStatePayload {
-        if (response.state == null) {
-            return error(site, RewindStatusErrorType.MISSING_STATE)
-        }
-        if (RewindStatusModel.State.fromValue(response.state) == null) {
-            return error(site, RewindStatusErrorType.INVALID_REWIND_STATE)
-        }
-        if (response.restoreResponse != null && response.restoreResponse.rewind_id == null) {
-            return error(site, RewindStatusErrorType.MISSING_RESTORE_ID)
-        }
-        if (response.restoreResponse != null && response.restoreResponse.status == null) {
-            return error(site, RewindStatusErrorType.MISSING_RESTORE_STATUS)
-        }
-        if (response.restoreResponse?.status != null
-                && RewindStatusModel.RestoreStatus.Status.fromValue(response.restoreResponse.status) == null) {
-            return error(site, RewindStatusErrorType.INVALID_RESTORE_STATUS)
-        }
-        val rewindStatusBuilder = RewindStatusModel.Builder(localSiteId = site.id,
-                remoteSiteId = site.siteId,
-                rewindState = response.state,
+        val rewindStatusValue = response.state ?: return error(site, RewindStatusErrorType.MISSING_STATE)
+        val rewindStatus = RewindStatusModel.State.fromValue(rewindStatusValue)
+                ?: return error(site, RewindStatusErrorType.INVALID_REWIND_STATE)
+        val rewindId = response.restoreResponse?.rewind_id
+                ?: return error(site, RewindStatusErrorType.MISSING_RESTORE_ID)
+        val restoreStatusValue = response.restoreResponse?.status
+                ?: return error(site, RewindStatusErrorType.MISSING_RESTORE_STATUS)
+        val restoreStatus = RewindStatusModel.RestoreStatus.Status.fromValue(restoreStatusValue)
+                ?: return error(site, RewindStatusErrorType.INVALID_RESTORE_STATUS)
+
+        val rewindStatusModel = RewindStatusModel(state = rewindStatus,
                 reason = response.reason,
-                restoreId = response.restoreResponse?.rewind_id,
-                restoreErrorCode = response.restoreResponse?.error_code,
-                restoreState = response.restoreResponse?.status,
-                restoreProgress = response.restoreResponse?.progress,
-                restoreMessage = response.restoreResponse?.message,
-                restoreFailureReason = response.restoreResponse?.reason)
-        return FetchedRewindStatePayload(rewindStatusBuilder.build(), site)
+                restore = response.restoreResponse?.let {
+                    RewindStatusModel.RestoreStatus(id = rewindId,
+                            status = restoreStatus,
+                            progress = it.progress,
+                            message = it.message,
+                            errorCode = it.error_code,
+                            failureReason = it.reason)
+                }
+        )
+        return FetchedRewindStatePayload(rewindStatusModel, site)
     }
 
     private fun error(site: SiteModel, errorType: RewindStatusErrorType) =
