@@ -158,7 +158,7 @@ public class PostDatePickerDialogFragment extends DialogFragment {
 
             case TIME_PICKER:
                 boolean is24HrFormat = DateFormat.is24HourFormat(getActivity());
-                return new TimePickerDialog(
+                TimePickerDialog timePickerDialog = new TimePickerDialog(
                         getActivity(),
                         new TimePickerDialog.OnTimeSetListener() {
                             @Override
@@ -177,6 +177,8 @@ public class PostDatePickerDialogFragment extends DialogFragment {
                         mHour,
                         mMinute,
                         is24HrFormat);
+                timePickerDialog.setTitle(R.string.select_time);
+                return timePickerDialog;
 
             default:
                 // should never get here
