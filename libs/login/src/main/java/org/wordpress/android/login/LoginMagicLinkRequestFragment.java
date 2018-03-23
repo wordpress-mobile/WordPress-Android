@@ -99,7 +99,7 @@ public class LoginMagicLinkRequestFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.login_magic_link_request_screen, container, false);
-        mRequestMagicLinkButton = (Button) view.findViewById(R.id.login_request_magic_link);
+        mRequestMagicLinkButton = view.findViewById(R.id.login_request_magic_link);
         mRequestMagicLinkButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -123,7 +123,7 @@ public class LoginMagicLinkRequestFragment extends Fragment {
         });
 
         mAvatarProgressBar = view.findViewById(R.id.avatar_progress);
-        ImageView avatarView = (ImageView) view.findViewById(R.id.gravatar);
+        ImageView avatarView = view.findViewById(R.id.gravatar);
         Glide.with(this)
                 .load(GravatarUtils.gravatarFromEmail(mEmail,
                         getContext().getResources().getDimensionPixelSize(R.dimen.avatar_sz_login)))
@@ -153,7 +153,7 @@ public class LoginMagicLinkRequestFragment extends Fragment {
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        Toolbar toolbar = (Toolbar) view.findViewById(R.id.toolbar);
+        Toolbar toolbar = view.findViewById(R.id.toolbar);
         ((AppCompatActivity) getActivity()).setSupportActionBar(toolbar);
 
         ActionBar actionBar = ((AppCompatActivity) getActivity()).getSupportActionBar();
@@ -180,6 +180,8 @@ public class LoginMagicLinkRequestFragment extends Fragment {
             boolean gravatarInProgress = savedInstanceState.getBoolean(KEY_GRAVATAR_IN_PROGRESS);
             mAvatarProgressBar.setVisibility(gravatarInProgress ? View.VISIBLE : View.GONE);
         }
+        // important for accessibility - talkback
+        getActivity().setTitle(R.string.magic_link_login_title);
     }
 
     @Override
