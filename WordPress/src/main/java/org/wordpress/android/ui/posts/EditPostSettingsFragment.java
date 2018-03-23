@@ -493,7 +493,7 @@ public class EditPostSettingsFragment extends Fragment {
         String selectedItem = fragment.getSelectedItem();
 
         switch (dialogType) {
-            case PUBLISH_DATE:
+            case POST_STATUS:
                 if (!StringUtils.isEmpty(selectedItem)) {
                     updatePostStatus(selectedItem);
                 }
@@ -514,7 +514,7 @@ public class EditPostSettingsFragment extends Fragment {
         int index = getCurrentPostStatusIndex();
         FragmentManager fm = ((AppCompatActivity) getActivity()).getSupportFragmentManager();
         PostSettingsDialogFragment fragment =
-                PostSettingsDialogFragment.newInstance(DialogType.PUBLISH_DATE, index);
+                PostSettingsDialogFragment.newInstance(DialogType.POST_STATUS, index);
         fragment.show(fm, PostSettingsDialogFragment.TAG);
     }
 

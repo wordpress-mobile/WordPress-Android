@@ -19,7 +19,7 @@ public class PostSettingsDialogFragment extends DialogFragment {
     public static final String TAG = "post_settings_dialog_fragment";
 
     enum DialogType {
-        PUBLISH_DATE,
+        POST_STATUS,
         POST_FORMAT
     }
 
@@ -82,7 +82,7 @@ public class PostSettingsDialogFragment extends DialogFragment {
         };
 
         switch (mDialogTyoe) {
-            case PUBLISH_DATE:
+            case POST_STATUS:
                 builder.setTitle(R.string.post_settings_status);
                 builder.setSingleChoiceItems(
                         R.array.post_settings_statuses,
