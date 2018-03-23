@@ -707,6 +707,10 @@
     <string name="stats_jetpack_connection_setup_info">To use Stats on your WordPress site, you\'ll need to install the Jetpack plugin. Would you like to setup Jetpack?</string>
     <string name="stats_jetpack_connection_setup">Set up Jetpack</string>
 
+    <!-- activity log -->
+    <string name="activity">Activity</string>
+    <string name="activity_log">Activity Log</string>
+
     <!-- stats: errors -->
     <string name="stats_no_blog">Stats couldn\'t be loaded for the required blog</string>
     <string name="stats_generic_error">Required Stats couldn\'t be loaded</string>
