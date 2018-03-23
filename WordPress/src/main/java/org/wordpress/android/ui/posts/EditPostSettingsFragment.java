@@ -506,7 +506,7 @@ public class EditPostSettingsFragment extends Fragment {
         // if this was the date picker and the user didn't choose to publish immediately, show the
         // time picker dialog fragment so they can choose a publish time
         if (dialog.getDialogType() == PickerDialogType.DATE_PICKER
-                && !dialog.isPublishImmediately()) {
+                && !dialog.isPublishNow()) {
             showPostTimeSelectionDialog();
         }
     }

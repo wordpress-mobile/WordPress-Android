@@ -50,7 +50,7 @@ public class PostDatePickerDialogFragment extends DialogFragment {
     private int mMinute;
 
     private boolean mCanPublishImmediately;
-    private boolean mPublishImmediately;
+    private boolean mPublishNow;
 
     private OnPostDatePickerDialogListener mListener;
 
@@ -137,19 +137,21 @@ public class PostDatePickerDialogFragment extends DialogFragment {
                                         getCalender());
                             }
                         });
+                String neutralButtonTitle = mCanPublishImmediately ? getString(R.string.immediately)
+                        : getString(R.string.now);
+                datePickerDialog.setButton(
+                        DialogInterface.BUTTON_NEUTRAL,
+                        neutralButtonTitle,
+                        new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int id) {
+                                Calendar now = Calendar.getInstance();
+                                mPublishNow = true;
+                                mListener.onPostDatePickerDialogPositiveButtonClicked(
+                                        PostDatePickerDialogFragment.this,
+                                        now);
+                            }
+                        });
                 if (mCanPublishImmediately) {
-                    datePickerDialog.setButton(
-                            DialogInterface.BUTTON_NEUTRAL,
-                            getString(R.string.immediately),
-                            new DialogInterface.OnClickListener() {
-                                public void onClick(DialogInterface dialog, int id) {
-                                    Calendar now = Calendar.getInstance();
-                                    mPublishImmediately = true;
-                                    mListener.onPostDatePickerDialogPositiveButtonClicked(
-                                            PostDatePickerDialogFragment.this,
-                                            now);
-                                }
-                            });
                     // We shouldn't let the user pick a past date since we'll just override it to Immediately if they do
                     // We can't set the min date to now, so we need to subtract some amount of time
                     datePickerDialog.getDatePicker().setMinDate(System.currentTimeMillis() - 1000);
@@ -198,7 +200,7 @@ public class PostDatePickerDialogFragment extends DialogFragment {
         return mDialogType;
     }
 
-    public boolean isPublishImmediately() {
-        return mPublishImmediately;
+    public boolean isPublishNow() {
+        return mPublishNow;
     }
 }
