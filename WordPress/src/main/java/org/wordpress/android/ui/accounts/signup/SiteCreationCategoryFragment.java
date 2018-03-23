@@ -21,6 +21,8 @@ public class SiteCreationCategoryFragment extends SiteCreationBaseFormFragment<S
 
     @Override
     protected void setupContent(ViewGroup rootView) {
+        // important for accessibility - talkback
+        getActivity().setTitle(R.string.site_creation_category_title);
         rootView.findViewById(R.id.site_creation_card_blog).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

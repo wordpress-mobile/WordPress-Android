@@ -19,7 +19,8 @@
         android:background="@color/transparent"
         app:tabBackground="@drawable/indicator_selector"
         app:tabGravity="center"
-        app:tabIndicatorHeight="0dp" />
+        app:tabIndicatorHeight="0dp"
+        android:importantForAccessibility="noHideDescendants"/>
 
     <View
         android:layout_width="match_parent"

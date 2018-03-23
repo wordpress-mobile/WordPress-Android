@@ -11,6 +11,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.Nullable;
+import android.support.annotation.StringRes;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.RemoteInput;
 import android.support.v4.view.ViewPager;
@@ -134,13 +135,13 @@ public class WPMainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.main_activity);
 
-        mViewPager = (WPViewPager) findViewById(R.id.viewpager_main);
+        mViewPager = findViewById(R.id.viewpager_main);
         mViewPager.setOffscreenPageLimit(WPMainTabAdapter.NUM_TABS - 1);
 
         mTabAdapter = new WPMainTabAdapter(getFragmentManager());
         mViewPager.setAdapter(mTabAdapter);
 
-        mConnectionBar = (TextView) findViewById(R.id.connection_bar);
+        mConnectionBar = findViewById(R.id.connection_bar);
         mConnectionBar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -156,7 +157,7 @@ public class WPMainActivity extends AppCompatActivity {
                 }, 2000);
             }
         });
-        mTabLayout = (WPMainTabLayout) findViewById(R.id.tab_layout);
+        mTabLayout = findViewById(R.id.tab_layout);
         mTabLayout.createTabs();
 
         mTabLayout.setOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
@@ -491,6 +492,8 @@ public class WPMainActivity extends AppCompatActivity {
             GCMMessageService.removeAllNotifications(this);
         }
 
+        announceTitleForAccessibility(currentItem);
+
         checkConnection();
 
         // Update account to update the notification unseen status
@@ -501,6 +504,29 @@ public class WPMainActivity extends AppCompatActivity {
         ProfilingUtils.split("WPMainActivity.onResume");
         ProfilingUtils.dump();
         ProfilingUtils.stop();
+    }
+
+    private void announceTitleForAccessibility(int currentTabIndex) {
+        @StringRes int stringRes = -1;
+        switch (currentTabIndex) {
+            case WPMainTabAdapter.TAB_MY_SITE:
+                stringRes = R.string.my_site_section_screen_title;
+                break;
+            case WPMainTabAdapter.TAB_READER:
+                stringRes = R.string.reader_screen_title;
+                break;
+            case WPMainTabAdapter.TAB_ME:
+                stringRes = R.string.me_section_screen_title;
+                break;
+            case WPMainTabAdapter.TAB_NOTIFS:
+                stringRes = R.string.notifications_screen_title;
+                break;
+            default:
+                AppLog.w(T.MAIN, "announceTitleForAccessibility unknown tab index.");
+        }
+        if (stringRes != -1) {
+            getWindow().getDecorView().announceForAccessibility(getString(stringRes));
+        }
     }
 
     @Override

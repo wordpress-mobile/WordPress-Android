@@ -39,7 +39,9 @@
                     style="@style/ReaderImageView.Avatar"
                     android:layout_marginRight="@dimen/margin_large"
                     android:layout_marginTop="@dimen/margin_small"
-                    android:layout_marginEnd="@dimen/margin_large"/>
+                    android:layout_marginEnd="@dimen/margin_large"
+                    android:importantForAccessibility="no"
+                    />
 
                 <org.wordpress.android.widgets.WPTextView
                     android:id="@+id/text_name"
@@ -75,8 +77,10 @@
                     tools:text="text_post_title"
                     android:textAlignment="viewStart"
                     android:gravity="start"
+                    android:accessibilityTraversalAfter="@+id/text_name"
                     android:layout_alignStart="@+id/text_name"
-                    android:layout_toStartOf="@+id/text_status"/>
+                    android:layout_toStartOf="@+id/text_status"
+                    tools:ignore="UnusedAttribute"/>
 
                 <org.wordpress.android.widgets.WPTextView
                     android:id="@+id/text_date"
@@ -88,8 +92,10 @@
                     android:layout_marginTop="@dimen/margin_small"
                     android:maxLines="1"
                     tools:text="date"
+                    android:accessibilityTraversalAfter="@+id/text_post_title"
                     android:layout_alignParentEnd="true"
-                    android:layout_marginStart="@dimen/margin_small"/>
+                    android:layout_marginStart="@dimen/margin_small"
+                    tools:ignore="UnusedAttribute"/>
 
                 <org.wordpress.android.widgets.WPTextView
                     android:id="@+id/text_status"
@@ -102,8 +108,10 @@
                     android:textSize="@dimen/text_sz_small"
                     android:visibility="visible"
                     tools:text="STATUS"
+                    android:accessibilityTraversalAfter="@+id/text_date"
                     android:layout_alignParentEnd="true"
-                    android:layout_marginStart="@dimen/margin_small"/>
+                    android:layout_marginStart="@dimen/margin_small"
+                    tools:ignore="UnusedAttribute"/>
             </RelativeLayout>
 
             <!--

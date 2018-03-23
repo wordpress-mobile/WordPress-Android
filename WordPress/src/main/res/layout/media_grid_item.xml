@@ -35,7 +35,9 @@
                 android:layout_height="24dp"
                 android:layout_gravity="center_horizontal"
                 android:tint="@color/grey_dark"
-                tools:src="@drawable/ic_gridicons_page" />
+                tools:src="@drawable/ic_gridicons_page"
+                android:contentDescription="@null"
+                />
 
             <org.wordpress.android.widgets.WPTextView
                 android:id="@+id/media_grid_item_filetype"
@@ -97,6 +99,7 @@
                     android:layout_marginRight="@dimen/margin_medium"
                     android:background="@drawable/media_icon_circle"
                     android:padding="10dp"
+                    android:contentDescription="@string/media_grid_item_retry_desc"
                     app:srcCompat="@drawable/media_retry_image"
                     android:layout_marginStart="@dimen/margin_medium"
                     android:layout_marginEnd="@dimen/margin_medium"/>
@@ -109,6 +112,7 @@
                     android:layout_marginRight="@dimen/margin_medium"
                     android:background="@drawable/media_icon_circle"
                     android:padding="10dp"
+                    android:contentDescription="@string/media_grid_item_trash_desc"
                     app:srcCompat="@drawable/ic_trash_white_24dp"
                     android:layout_marginEnd="@dimen/margin_medium"
                     android:layout_marginStart="@dimen/margin_medium"/>
@@ -171,6 +175,7 @@
             android:layout_width="@dimen/photo_picker_preview_icon"
             android:layout_height="@dimen/photo_picker_preview_icon"
             android:padding="@dimen/margin_extra_small"
+            android:contentDescription="@string/media_grid_item_play_video_desc"
             app:srcCompat="@drawable/ic_play_video" />
 
     </FrameLayout>

@@ -1,6 +1,5 @@
 package org.wordpress.android.ui.publicize;
 
-import android.app.Fragment;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.NonNull;
@@ -33,7 +32,7 @@ import java.util.ArrayList;
 
 import javax.inject.Inject;
 
-public class PublicizeButtonPrefsFragment extends Fragment implements
+public class PublicizeButtonPrefsFragment extends PublicizeBaseFragment implements
         SiteSettingsInterface.SiteSettingsListener,
         WPPrefView.OnPrefChangedListener {
     private static final String TWITTER_PREFIX = "@";
@@ -151,6 +150,11 @@ public class PublicizeButtonPrefsFragment extends Fragment implements
         getSiteSettings(shouldFetchSettings);
 
         configureSharingButtons();
+    }
+
+    @Override public void onResume() {
+        super.onResume();
+        setTitle(R.string.publicize_buttons_screen_title);
     }
 
     /**

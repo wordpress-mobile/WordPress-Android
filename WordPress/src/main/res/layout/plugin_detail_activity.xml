@@ -35,6 +35,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="@dimen/plugin_banner_size"
                     android:background="@color/grey_lighten_20"
+                    android:contentDescription="@string/plugin_detail_banner_desc"
                     android:scaleType="centerCrop" />
 
                 <ImageView
@@ -42,6 +43,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_gravity="top"
+                    android:contentDescription="@null"
                     android:background="@drawable/media_settings_gradient_scrim"
                     tools:layout_height="74dp" />
             </FrameLayout>
@@ -87,6 +89,7 @@
                             android:layout_width="@dimen/plugin_icon_size"
                             android:layout_height="@dimen/plugin_icon_size"
                             android:layout_centerVertical="true"
+                            android:contentDescription="@string/plugin_detail_logo_desc"
                             tools:src="@drawable/plugin_placeholder" />
 
                         <LinearLayout

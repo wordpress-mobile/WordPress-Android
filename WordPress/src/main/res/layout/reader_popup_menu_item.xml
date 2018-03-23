@@ -14,6 +14,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginRight="@dimen/margin_large"
+        android:contentDescription="@null"
         tools:src="@drawable/ic_reader_following_alert_green_24dp"
         android:layout_marginEnd="@dimen/margin_large"/>
 

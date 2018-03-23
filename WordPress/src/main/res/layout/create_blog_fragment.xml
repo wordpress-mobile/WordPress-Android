@@ -63,6 +63,7 @@
                     android:layout_centerVertical="true"
                     android:layout_marginLeft="10dp"
                     android:tint="@color/grey_darken_10"
+                    android:contentDescription="@null"
                     android:layout_marginStart="10dp"/>
             </RelativeLayout>
 
@@ -82,7 +83,8 @@
                     app:srcCompat="@drawable/ic_globe_black_24dp"
                     android:layout_marginLeft="10dp"
                     android:tint="@color/grey_darken_10"
-                    android:layout_marginStart="10dp"/>
+                    android:layout_marginStart="10dp"
+                    android:contentDescription="@null"/>
 
                 <RelativeLayout
                     tools:ignore="RtlHardcoded"
@@ -144,6 +146,7 @@
                     android:layout_width="match_parent"
                     android:text="@string/create_new_blog_wpcom"
                     android:clickable="true"
+                    android:focusable="true"
                     android:gravity="center"
                     android:enabled="false"/>
 

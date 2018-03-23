@@ -100,7 +100,6 @@ public class ThemeBrowserActivity extends AppCompatActivity implements ThemeBrow
         if (actionBar != null) {
             actionBar.setDisplayShowTitleEnabled(true);
             actionBar.setDisplayHomeAsUpEnabled(true);
-            actionBar.setTitle(R.string.themes);
         }
     }
 
