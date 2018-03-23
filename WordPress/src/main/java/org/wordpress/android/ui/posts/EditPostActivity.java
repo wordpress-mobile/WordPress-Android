@@ -171,7 +171,8 @@ public class EditPostActivity extends AppCompatActivity implements
         OnRequestPermissionsResultCallback,
         PhotoPickerFragment.PhotoPickerListener,
         EditPostSettingsFragment.EditPostActivityHook,
-        BaseYesNoFragmentDialog.BasicYesNoDialogClickInterface {
+        BaseYesNoFragmentDialog.BasicYesNoDialogClickInterface,
+        PostSettingsDialogFragment.OnPostSettingsDialogFragmentListener {
     public static final String EXTRA_POST_LOCAL_ID = "postModelLocalId";
     public static final String EXTRA_IS_PAGE = "isPage";
     public static final String EXTRA_IS_PROMO = "isPromo";
@@ -1335,6 +1336,14 @@ public class EditPostActivity extends AppCompatActivity implements
     @Override public void onNegativeClicked(String instanceTag) {
         if (instanceTag != null && instanceTag == TAG_PUBLISH_CONFIRMATION_DIALOG) {
             // no op
+        }
+    }
+
+    @Override
+    public void onPostSettingsFragmentPositiveButtonClicked(@NonNull PostSettingsDialogFragment fragment) {
+        // pass it along to the settings fragment
+        if (mEditPostSettingsFragment != null) {
+            mEditPostSettingsFragment.onPostSettingsFragmentPositiveButtonClicked(fragment);
         }
     }
 

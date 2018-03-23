@@ -12,7 +12,9 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AlertDialog;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.view.menu.MenuPopupHelper;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.PopupMenu;
@@ -63,6 +65,8 @@ import org.wordpress.android.ui.ActivityLauncher;
 import org.wordpress.android.ui.RequestCodes;
 import org.wordpress.android.ui.media.MediaBrowserType;
 import org.wordpress.android.ui.photopicker.PhotoPickerActivity;
+import org.wordpress.android.ui.posts.PostSettingsDialogFragment.DialogType;
+import org.wordpress.android.ui.posts.PostSettingsDialogFragment.OnPostSettingsDialogFragmentListener;
 import org.wordpress.android.ui.prefs.AppPrefs;
 import org.wordpress.android.ui.prefs.SiteSettingsInterface;
 import org.wordpress.android.ui.prefs.SiteSettingsInterface.SiteSettingsListener;
@@ -129,6 +133,7 @@ public class EditPostSettingsFragment extends Fragment {
     @Inject MediaStore mMediaStore;
     @Inject TaxonomyStore mTaxonomyStore;
     @Inject Dispatcher mDispatcher;
+
 
     interface EditPostActivityHook {
         PostModel getPost();
@@ -483,11 +488,32 @@ public class EditPostSettingsFragment extends Fragment {
         startActivityForResult(tagsIntent, ACTIVITY_REQUEST_CODE_SELECT_TAGS);
     }
 
+    /*
+     * this will be called by the activity when the user taps OK on a PostSettingsDialogFragment
+     */
+    public void onPostSettingsFragmentPositiveButtonClicked(@NonNull PostSettingsDialogFragment fragment) {
+        DialogType dialogType = fragment.getDialogTyoe();
+        int index = fragment.getChoiceIndex();
+
+        switch (dialogType) {
+            case PUBLISH_DATE:
+                updatePostStatus(getPostStatusAtIndex(index).toString());
+                break;
+        }
+    }
+
     private void showStatusDialog() {
         if (!isAdded()) {
             return;
         }
-        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity(), R.style.Calypso_AlertDialog);
+
+        int index = getCurrentPostStatusIndex();
+        FragmentManager fm = ((AppCompatActivity) getActivity()).getSupportFragmentManager();
+        PostSettingsDialogFragment fragment =
+                PostSettingsDialogFragment.newInstance(DialogType.PUBLISH_DATE, index);
+        fragment.show(fm, PostSettingsDialogFragment.TAG);
+
+        /*AlertDialog.Builder builder = new AlertDialog.Builder(getActivity(), R.style.Calypso_AlertDialog);
         builder.setTitle(R.string.post_settings_status);
         builder.setSingleChoiceItems(R.array.post_settings_statuses, getCurrentPostStatusIndex(), null);
         builder.setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
@@ -498,7 +524,7 @@ public class EditPostSettingsFragment extends Fragment {
             }
         });
         builder.setNegativeButton(R.string.cancel, null);
-        builder.show();
+        builder.show();*/
     }
 
     private void showPostFormatDialog() {
