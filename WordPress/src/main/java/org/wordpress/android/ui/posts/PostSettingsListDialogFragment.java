@@ -17,7 +17,7 @@ public class PostSettingsListDialogFragment extends DialogFragment {
     private static final String ARG_DIALOG_TYPE = "dialog_type";
     private static final String ARG_CHECKED_INDEX = "checked_index";
 
-    public static final String TAG = "post_settings_dialog_fragment";
+    public static final String TAG = "post_list_settings_dialog_fragment";
 
     enum DialogType {
         POST_STATUS,
