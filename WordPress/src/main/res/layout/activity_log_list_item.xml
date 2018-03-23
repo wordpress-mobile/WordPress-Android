@@ -1,0 +1,120 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              xmlns:tools="http://schemas.android.com/tools"
+              android:layout_width="match_parent"
+              android:layout_height="wrap_content"
+              xmlns:app="http://schemas.android.com/apk/res-auto"
+              android:clickable="true"
+              android:focusable="true"
+              android:orientation="vertical">
+
+    <org.wordpress.android.widgets.WPTextView
+        android:id="@+id/activity_header_text"
+        style="@style/Calypso.Text.Header.ActivityLog"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_vertical"
+        android:clickable="false"
+        android:visibility="gone"
+        tools:visibility="visible"
+        android:padding="@dimen/margin_extra_large"
+        tools:text="January 2, 2010" />
+
+    <LinearLayout
+        android:id="@+id/activity_content_container"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="?android:selectableItemBackground"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="horizontal"
+            android:background="@color/white"
+            android:paddingBottom="@dimen/margin_medium"
+            android:paddingLeft="@dimen/margin_extra_large"
+            android:paddingRight="@dimen/margin_extra_large"
+            android:paddingTop="@dimen/margin_medium"
+            android:paddingEnd="@dimen/margin_extra_large"
+            android:paddingStart="@dimen/margin_extra_large">
+
+
+            <org.wordpress.android.widgets.NoticonTextView
+                android:id="@+id/action_icon"
+                android:layout_width="@dimen/notifications_avatar_sz"
+                android:layout_height="@dimen/notifications_avatar_sz"
+                android:layout_marginTop="1dp"
+                android:background="@drawable/shape_oval_blue_white_stroke"
+                android:layout_marginRight="@dimen/notifications_adjusted_font_margin"
+                android:layout_marginEnd="@dimen/notifications_adjusted_font_margin"
+                android:gravity="center"
+                android:textColor="@color/white"
+                android:textSize="32sp"
+                tools:text="@string/noticon_note" />
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:orientation="vertical">
+
+                <org.wordpress.android.widgets.WPTextView
+                    android:id="@+id/action_subject"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:ellipsize="end"
+                    android:maxLines="2"
+                    android:textColor="@color/grey_dark"
+                    android:textSize="@dimen/text_sz_large"
+                    android:textAlignment="viewStart"
+                    android:gravity="start"
+                    tools:text="Rewound to 12am on January 12" />
+
+                <org.wordpress.android.widgets.WPTextView
+                    android:id="@+id/action_detail"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="-1dp"
+                    android:ellipsize="end"
+                    android:maxLines="2"
+                    android:textColor="@color/grey"
+                    android:textSize="@dimen/text_sz_large"
+                    android:visibility="gone"
+                    tools:text="Rewind Complete"
+                    tools:visibility="visible" />
+
+            </LinearLayout>
+
+            <ImageButton
+                android:id="@+id/rewind_button"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginStart="@dimen/margin_extra_large"
+                android:layout_marginLeft="@dimen/margin_extra_large"
+                android:background="?attr/selectableItemBackgroundBorderless"
+                android:visibility="gone"
+                tools:visibility="visible"
+                app:srcCompat="@drawable/ic_comment_grey_24dp"
+                />
+
+        </LinearLayout>
+
+        <ProgressBar
+            android:id="@+id/rewind_progress_bar"
+            android:layout_width="match_parent"
+            android:layout_height="4dp"
+            android:indeterminate="false"
+            android:background="@color/blue_medium"/>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_marginTop="1dp"
+            android:background="@drawable/notifications_list_divider_full_width" />
+
+    </LinearLayout>
+
+</LinearLayout>
