@@ -13,9 +13,10 @@ import android.widget.ListView;
 import org.wordpress.android.R;
 import org.wordpress.android.util.AppLog;
 
-public class PostSettingsDialogFragment extends DialogFragment {
+public class PostSettingsListDialogFragment extends DialogFragment {
     private static final String ARG_DIALOG_TYPE = "dialog_type";
     private static final String ARG_CHECKED_INDEX = "checked_index";
+
     public static final String TAG = "post_settings_dialog_fragment";
 
     enum DialogType {
@@ -24,19 +25,15 @@ public class PostSettingsDialogFragment extends DialogFragment {
     }
 
     interface OnPostSettingsDialogFragmentListener {
-        void onPostSettingsFragmentPositiveButtonClicked(@NonNull PostSettingsDialogFragment fragment);
+        void onPostSettingsFragmentPositiveButtonClicked(@NonNull PostSettingsListDialogFragment fragment);
     }
 
-    private DialogType mDialogTyoe;
+    private DialogType mDialogType;
     private int mCheckedIndex;
     private OnPostSettingsDialogFragmentListener mListener;
 
-    public static PostSettingsDialogFragment newInstance(@NonNull DialogType dialogType) {
-        return newInstance(dialogType, 0);
-    }
-
-    public static PostSettingsDialogFragment newInstance(@NonNull DialogType dialogType, int index) {
-        PostSettingsDialogFragment fragment = new PostSettingsDialogFragment();
+    public static PostSettingsListDialogFragment newInstance(@NonNull DialogType dialogType, int index) {
+        PostSettingsListDialogFragment fragment = new PostSettingsListDialogFragment();
         Bundle args = new Bundle();
         args.putSerializable(ARG_DIALOG_TYPE, dialogType);
         args.putInt(ARG_CHECKED_INDEX, index);
@@ -55,10 +52,11 @@ public class PostSettingsDialogFragment extends DialogFragment {
     @Override
     public void setArguments(Bundle args) {
         super.setArguments(args);
-        mDialogTyoe = (DialogType) args.getSerializable(ARG_DIALOG_TYPE);
+        mDialogType = (DialogType) args.getSerializable(ARG_DIALOG_TYPE);
         mCheckedIndex = args.getInt(ARG_CHECKED_INDEX);
     }
 
+    @SuppressWarnings("deprecation")
     @Override
     public void onAttach(Activity activity) {
         super.onAttach(activity);
@@ -70,6 +68,7 @@ public class PostSettingsDialogFragment extends DialogFragment {
         }
     }
 
+    @NonNull
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
@@ -81,7 +80,7 @@ public class PostSettingsDialogFragment extends DialogFragment {
             }
         };
 
-        switch (mDialogTyoe) {
+        switch (mDialogType) {
             case POST_STATUS:
                 builder.setTitle(R.string.post_settings_status);
                 builder.setSingleChoiceItems(
@@ -96,13 +95,11 @@ public class PostSettingsDialogFragment extends DialogFragment {
                         mCheckedIndex,
                         clickListener);
                 break;
-            default:
-                return null;
         }
 
         builder.setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int which) {
-                mListener.onPostSettingsFragmentPositiveButtonClicked(PostSettingsDialogFragment.this);
+                mListener.onPostSettingsFragmentPositiveButtonClicked(PostSettingsListDialogFragment.this);
             }
         });
         builder.setNegativeButton(R.string.cancel, null);
@@ -110,8 +107,8 @@ public class PostSettingsDialogFragment extends DialogFragment {
         return builder.create();
     }
 
-    public DialogType getDialogTyoe() {
-        return mDialogTyoe;
+    public DialogType getDialogType() {
+        return mDialogType;
     }
 
     public @Nullable String getSelectedItem() {

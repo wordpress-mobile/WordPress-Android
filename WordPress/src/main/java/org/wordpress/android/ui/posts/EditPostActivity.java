@@ -172,7 +172,7 @@ public class EditPostActivity extends AppCompatActivity implements
         PhotoPickerFragment.PhotoPickerListener,
         EditPostSettingsFragment.EditPostActivityHook,
         BaseYesNoFragmentDialog.BasicYesNoDialogClickInterface,
-        PostSettingsDialogFragment.OnPostSettingsDialogFragmentListener {
+        PostSettingsListDialogFragment.OnPostSettingsDialogFragmentListener {
     public static final String EXTRA_POST_LOCAL_ID = "postModelLocalId";
     public static final String EXTRA_IS_PAGE = "isPage";
     public static final String EXTRA_IS_PROMO = "isPromo";
@@ -1344,7 +1344,7 @@ public class EditPostActivity extends AppCompatActivity implements
      * along to the settings fragment
      */
     @Override
-    public void onPostSettingsFragmentPositiveButtonClicked(@NonNull PostSettingsDialogFragment fragment) {
+    public void onPostSettingsFragmentPositiveButtonClicked(@NonNull PostSettingsListDialogFragment fragment) {
         if (mEditPostSettingsFragment != null) {
             mEditPostSettingsFragment.onPostSettingsFragmentPositiveButtonClicked(fragment);
         }

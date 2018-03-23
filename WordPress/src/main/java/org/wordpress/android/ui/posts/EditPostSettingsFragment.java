@@ -63,7 +63,7 @@ import org.wordpress.android.ui.ActivityLauncher;
 import org.wordpress.android.ui.RequestCodes;
 import org.wordpress.android.ui.media.MediaBrowserType;
 import org.wordpress.android.ui.photopicker.PhotoPickerActivity;
-import org.wordpress.android.ui.posts.PostSettingsDialogFragment.DialogType;
+import org.wordpress.android.ui.posts.PostSettingsListDialogFragment.DialogType;
 import org.wordpress.android.ui.prefs.AppPrefs;
 import org.wordpress.android.ui.prefs.SiteSettingsInterface;
 import org.wordpress.android.ui.prefs.SiteSettingsInterface.SiteSettingsListener;
@@ -488,8 +488,8 @@ public class EditPostSettingsFragment extends Fragment {
     /*
      * this will be called by the activity when the user taps OK on a PostSettingsDialogFragment
      */
-    public void onPostSettingsFragmentPositiveButtonClicked(@NonNull PostSettingsDialogFragment fragment) {
-        DialogType dialogType = fragment.getDialogTyoe();
+    public void onPostSettingsFragmentPositiveButtonClicked(@NonNull PostSettingsListDialogFragment fragment) {
+        DialogType dialogType = fragment.getDialogType();
         String selectedItem = fragment.getSelectedItem();
 
         switch (dialogType) {
@@ -513,9 +513,9 @@ public class EditPostSettingsFragment extends Fragment {
 
         int index = getCurrentPostStatusIndex();
         FragmentManager fm = ((AppCompatActivity) getActivity()).getSupportFragmentManager();
-        PostSettingsDialogFragment fragment =
-                PostSettingsDialogFragment.newInstance(DialogType.POST_STATUS, index);
-        fragment.show(fm, PostSettingsDialogFragment.TAG);
+        PostSettingsListDialogFragment fragment =
+                PostSettingsListDialogFragment.newInstance(DialogType.POST_STATUS, index);
+        fragment.show(fm, PostSettingsListDialogFragment.TAG);
     }
 
     private void showPostFormatDialog() {
@@ -535,9 +535,9 @@ public class EditPostSettingsFragment extends Fragment {
         }
 
         FragmentManager fm = ((AppCompatActivity) getActivity()).getSupportFragmentManager();
-        PostSettingsDialogFragment fragment =
-                PostSettingsDialogFragment.newInstance(DialogType.POST_FORMAT, checkedIndex);
-        fragment.show(fm, PostSettingsDialogFragment.TAG);
+        PostSettingsListDialogFragment fragment =
+                PostSettingsListDialogFragment.newInstance(DialogType.POST_FORMAT, checkedIndex);
+        fragment.show(fm, PostSettingsListDialogFragment.TAG);
     }
 
     private void showPostPasswordDialog() {
