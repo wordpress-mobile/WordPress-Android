@@ -33,8 +33,8 @@ android {
         dexInProcess = true
     }
 
-    compileSdkVersion 26
-    buildToolsVersion '26.0.2'
+    compileSdkVersion 27
+    buildToolsVersion '27.0.3'
 
     defaultConfig {
         applicationId "org.wordpress.android"
@@ -105,18 +105,18 @@ dependencies {
     implementation 'com.google.code.gson:gson:2.6.+'
     implementation 'org.ccil.cowan.tagsoup:tagsoup:1.2.1'
 
-    implementation 'com.android.support:support-compat:26.1.0'
-    implementation 'com.android.support:support-core-ui:26.1.0'
-    implementation 'com.android.support:support-fragment:26.1.0'
+    implementation 'com.android.support:support-compat:27.1.0'
+    implementation 'com.android.support:support-core-ui:27.1.0'
+    implementation 'com.android.support:support-fragment:27.1.0'
 
     implementation 'com.android.support:multidex:1.0.2'
-    implementation 'com.android.support:appcompat-v7:26.1.0'
-    implementation 'com.android.support:support-v13:26.1.0'
-    implementation 'com.android.support:cardview-v7:26.1.0'
-    implementation 'com.android.support:recyclerview-v7:26.1.0'
-    implementation 'com.android.support:design:26.1.0'
-    implementation 'com.android.support:percent:26.1.0'
-    implementation 'com.android.support:preference-v7:26.1.0'
+    implementation 'com.android.support:appcompat-v7:27.1.0'
+    implementation 'com.android.support:support-v13:27.1.0'
+    implementation 'com.android.support:cardview-v7:27.1.0'
+    implementation 'com.android.support:recyclerview-v7:27.1.0'
+    implementation 'com.android.support:design:27.1.0'
+    implementation 'com.android.support:percent:27.1.0'
+    implementation 'com.android.support:preference-v7:27.1.0'
 
     // ViewModel and LiveData
     implementation 'android.arch.lifecycle:extensions:1.1.1'
@@ -164,7 +164,7 @@ dependencies {
     implementation 'com.google.dagger:dagger-android-support:2.11'
     kapt 'com.google.dagger:dagger-android-processor:2.11'
 
-    implementation ("com.github.wordpress-mobile.WordPress-FluxC-Android:fluxc:44d777bbb0513aec2a0f69390987869c6aad1744") {
+    implementation ("com.github.wordpress-mobile.WordPress-FluxC-Android:fluxc:27daa246d961d64c3202831e6e068caa1a6d0c40") {
         exclude group: "com.android.volley"
     }
 
