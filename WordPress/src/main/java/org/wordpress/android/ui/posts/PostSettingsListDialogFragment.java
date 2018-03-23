@@ -45,8 +45,6 @@ public class PostSettingsListDialogFragment extends DialogFragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setCancelable(true);
-        int style = DialogFragment.STYLE_NORMAL, theme = 0;
-        setStyle(style, theme);
     }
 
     @Override
@@ -60,7 +58,6 @@ public class PostSettingsListDialogFragment extends DialogFragment {
     @Override
     public void onAttach(Activity activity) {
         super.onAttach(activity);
-
         try {
             mListener = (OnPostSettingsDialogFragmentListener) activity;
         } catch (ClassCastException e) {
@@ -71,7 +68,8 @@ public class PostSettingsListDialogFragment extends DialogFragment {
     @NonNull
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
-        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity(), R.style.Calypso_AlertDialog);
+
         DialogInterface.OnClickListener clickListener = new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
