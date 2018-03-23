@@ -1,23 +1,28 @@
 package org.wordpress.android.ui.posts;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.app.DatePickerDialog;
 import android.app.Dialog;
+import android.app.TimePickerDialog;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.DialogFragment;
+import android.text.format.DateFormat;
 import android.widget.DatePicker;
+import android.widget.TimePicker;
 
 import org.wordpress.android.R;
 import org.wordpress.android.fluxc.model.PostModel;
 
 import java.util.Calendar;
 
-public class PostDatePickerDialogFragment extends DialogFragment implements
-        DatePickerDialog.OnDateSetListener {
+public class PostDatePickerDialogFragment extends DialogFragment {
     interface OnPostDatePickerDialogListener {
-        void onPostDatePickerDialogPositiveButtonClicked(@NonNull PostDatePickerDialogFragment dialog);
+        void onPostDatePickerDialogPositiveButtonClicked(
+                @NonNull PostDatePickerDialogFragment dialog,
+                @NonNull Calendar calender);
     }
 
     enum DialogType {
@@ -27,34 +32,47 @@ public class PostDatePickerDialogFragment extends DialogFragment implements
 
     public static final String TAG = "post_date_picker_dialog_fragment";
     private static final String ARG_DIALOG_TYPE = "dialog_type";
+    private static final String ARG_CAN_PUBLISH_IMMEDIATELY = "can_publish_immediately";
+
     private static final String ARG_DAY = "day";
     private static final String ARG_MONTH = "month";
     private static final String ARG_YEAR = "year";
-    private static final String ARG_CAN_PUBLISH_IMMEDIATELY = "can_publish_immediately";
+
+    private static final String ARG_MINUTE = "minute";
+    private static final String ARG_HOUR = "hour";
 
     private DialogType mDialogType;
     private int mDay;
     private int mMonth;
     private int mYear;
+    private int mHour;
+    private int mMinute;
     private boolean mCanPublishImmediately;
 
     private OnPostDatePickerDialogListener mListener;
 
-    public static PostDatePickerDialogFragment newInstance(@NonNull PostModel post,
+    public static PostDatePickerDialogFragment newInstance(@NonNull DialogType dialogType,
+                                                           @NonNull PostModel post,
                                                            @NonNull Calendar calendar) {
         PostDatePickerDialogFragment fragment = new PostDatePickerDialogFragment();
 
         int year = calendar.get(Calendar.YEAR);
         int month = calendar.get(Calendar.MONTH);
         int day = calendar.get(Calendar.DAY_OF_MONTH);
+        int hour = calendar.get(Calendar.HOUR_OF_DAY);
+        int minute = calendar.get(Calendar.MINUTE);
         boolean canPublishImmediately = PostUtils.shouldPublishImmediatelyOptionBeAvailable(post);
 
         Bundle args = new Bundle();
+
         args.putInt(ARG_DAY, day);
         args.putInt(ARG_MONTH, month);
         args.putInt(ARG_YEAR, year);
+        args.putInt(ARG_MINUTE, minute);
+        args.putInt(ARG_HOUR, hour);
+
         args.putBoolean(ARG_CAN_PUBLISH_IMMEDIATELY, canPublishImmediately);
-        args.putSerializable(ARG_DIALOG_TYPE, DialogType.DATE_PICKER);
+        args.putSerializable(ARG_DIALOG_TYPE, dialogType);
 
         fragment.setArguments(args);
 
@@ -71,6 +89,9 @@ public class PostDatePickerDialogFragment extends DialogFragment implements
         mDay = args.getInt(ARG_DAY);
         mMonth = args.getInt(ARG_MONTH);
         mYear = args.getInt(ARG_YEAR);
+
+        mMinute = args.getInt(ARG_MINUTE);
+        mHour = args.getInt(ARG_HOUR);
     }
 
     @SuppressWarnings("deprecation")
@@ -86,41 +107,82 @@ public class PostDatePickerDialogFragment extends DialogFragment implements
 
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
-        final DatePickerDialog datePickerDialog = new DatePickerDialog(
-                getActivity(),
-                null,
-                mYear,
-                mMonth,
-                mDay);
-        datePickerDialog.setTitle(R.string.select_date);
-        datePickerDialog.setButton(
-                DialogInterface.BUTTON_POSITIVE,
-                getString(android.R.string.ok),
-                new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int id) {
-                        DatePicker datePicker = datePickerDialog.getDatePicker();
-                        mDay = datePicker.getDayOfMonth();
-                        mMonth = datePicker.getMonth();
-                        mYear = datePicker.getYear();
-                        getArguments().putInt(ARG_DAY, mDay);
-                        getArguments().putInt(ARG_MONTH, mMonth);
-                        getArguments().putInt(ARG_YEAR, mYear);
-                        mListener.onPostDatePickerDialogPositiveButtonClicked(
-                                PostDatePickerDialogFragment.this
-                        );
-                        // showPostTimeSelectionDialog(mYear, mMonth, mDay);
-                    }
-                });
-        datePickerDialog.setButton(
-                DialogInterface.BUTTON_NEUTRAL,
-                getString(R.string.immediately),
-                new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int id) {
-                        Calendar now = Calendar.getInstance();
-                        // updatePublishDate(now);
-                    }
-                });
-        datePickerDialog.setButton(
+        AlertDialog dialog;
+
+        switch (mDialogType) {
+            case DATE_PICKER:
+                final DatePickerDialog datePickerDialog = new DatePickerDialog(
+                        getActivity(),
+                        null,
+                        mYear,
+                        mMonth,
+                        mDay);
+                dialog = datePickerDialog;
+
+                datePickerDialog.setTitle(R.string.select_date);
+                datePickerDialog.setButton(
+                        DialogInterface.BUTTON_POSITIVE,
+                        getString(android.R.string.ok),
+                        new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int id) {
+                                DatePicker datePicker = datePickerDialog.getDatePicker();
+                                mDay = datePicker.getDayOfMonth();
+                                mMonth = datePicker.getMonth();
+                                mYear = datePicker.getYear();
+                                getArguments().putInt(ARG_DAY, mDay);
+                                getArguments().putInt(ARG_MONTH, mMonth);
+                                getArguments().putInt(ARG_YEAR, mYear);
+                                mListener.onPostDatePickerDialogPositiveButtonClicked(
+                                        PostDatePickerDialogFragment.this,
+                                        getCalender());
+                            }
+                        });
+                datePickerDialog.setButton(
+                        DialogInterface.BUTTON_NEUTRAL,
+                        getString(R.string.immediately),
+                        new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int id) {
+                                Calendar now = Calendar.getInstance();
+                                mListener.onPostDatePickerDialogPositiveButtonClicked(
+                                        PostDatePickerDialogFragment.this,
+                                        now);
+                            }
+                        });
+                if (mCanPublishImmediately) {
+                    // We shouldn't let the user pick a past date since we'll just override it to Immediately if they do
+                    // We can't set the min date to now, so we need to subtract some amount of time
+                    datePickerDialog.getDatePicker().setMinDate(System.currentTimeMillis() - 1000);
+                }
+                break;
+            case TIME_PICKER:
+                boolean is24HrFormat = DateFormat.is24HourFormat(getActivity());
+                final TimePickerDialog timePickerDialog = new TimePickerDialog(
+                        getActivity(),
+                        new TimePickerDialog.OnTimeSetListener() {
+                            @Override
+                            public void onTimeSet(TimePicker timePicker,
+                                                  int selectedHour,
+                                                  int selectedMinute) {
+                                mHour = selectedHour;
+                                mMinute = selectedMinute;
+                                getArguments().putInt(ARG_HOUR, mHour);
+                                getArguments().putInt(ARG_MINUTE, mMinute);
+                                mListener.onPostDatePickerDialogPositiveButtonClicked(
+                                        PostDatePickerDialogFragment.this,
+                                        getCalender());
+                            }
+                        },
+                        mHour,
+                        mMinute,
+                        is24HrFormat);
+                dialog = timePickerDialog;
+                break;
+            default:
+                // should never get here
+                return null;
+        }
+
+        dialog.setButton(
                 DialogInterface.BUTTON_NEGATIVE,
                 getString(android.R.string.cancel),
                 new DialogInterface.OnClickListener() {
@@ -129,17 +191,14 @@ public class PostDatePickerDialogFragment extends DialogFragment implements
                     }
                 });
 
-        if (mCanPublishImmediately) {
-            // We shouldn't let the user pick a past date since we'll just override it to Immediately if they do
-            // We can't set the min date to now, so we need to subtract some amount of time
-            datePickerDialog.getDatePicker().setMinDate(System.currentTimeMillis() - 1000);
-        }
 
-        return datePickerDialog;
+        return dialog;
     }
 
-    @Override
-    public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
-        // TODO
+    public @NonNull
+    Calendar getCalender() {
+        Calendar calendar = Calendar.getInstance();
+        calendar.set(mYear, mMonth, mDay, mHour, mMinute);
+        return calendar;
     }
 }

@@ -1,12 +1,9 @@
 package org.wordpress.android.ui.posts;
 
 import android.app.Activity;
-import android.app.DatePickerDialog;
 import android.app.Fragment;
 import android.app.TimePickerDialog;
-import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.res.Resources;
 import android.location.Address;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -26,7 +23,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.DatePicker;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.TimePicker;
@@ -559,6 +555,12 @@ public class EditPostSettingsFragment extends Fragment {
         }
 
         Calendar calendar = getCurrentPublishDateAsCalendar();
+        PostDatePickerDialogFragment fragment =
+                PostDatePickerDialogFragment.newInstance(getPost(), calendar);
+        FragmentManager fm = ((AppCompatActivity) getActivity()).getSupportFragmentManager();
+        fragment.show(fm, PostDatePickerDialogFragment.TAG);
+
+        /*Calendar calendar = getCurrentPublishDateAsCalendar();
         int year = calendar.get(Calendar.YEAR);
         int month = calendar.get(Calendar.MONTH);
         int day = calendar.get(Calendar.DAY_OF_MONTH);
@@ -597,7 +599,7 @@ public class EditPostSettingsFragment extends Fragment {
             // We can't set the min date to now, so we need to subtract some amount of time
             datePickerDialog.getDatePicker().setMinDate(System.currentTimeMillis() - 1000);
         }
-        datePickerDialog.show();
+        datePickerDialog.show();*/
     }
 
     private void showPostTimeSelectionDialog(final int selectedYear, final int selectedMonth, final int selectedDay) {
