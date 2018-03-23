@@ -10,6 +10,7 @@
     android:background="@color/white"
     android:paddingLeft="@dimen/margin_medium"
     android:paddingRight="@dimen/margin_medium"
+    android:importantForAccessibility="no"
     android:layout_marginStart="@dimen/reader_card_margin"
     android:paddingEnd="@dimen/margin_medium"
     android:paddingStart="@dimen/margin_medium"
@@ -42,6 +43,7 @@
             android:orientation="horizontal">
 
             <org.wordpress.android.widgets.WPNetworkImageView
+                android:importantForAccessibility="no"
                 android:id="@+id/image_comment_avatar"
                 android:layout_width="@dimen/avatar_sz_extra_small"
                 android:layout_height="@dimen/avatar_sz_extra_small"
@@ -112,6 +114,7 @@
                     android:layout_height="@dimen/reader_button_icon"
                     android:layout_gravity="center_vertical"
                     android:padding="@dimen/margin_extra_small"
+                    android:contentDescription="@null"
                     app:srcCompat="@drawable/ic_reply_grey_24dp" />
 
                 <org.wordpress.android.widgets.WPTextView

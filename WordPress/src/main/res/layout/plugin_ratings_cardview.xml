@@ -47,6 +47,7 @@
                 style="@style/PluginCardViewSecondaryElement.ExternalLinkImage"
                 android:layout_gravity="center_vertical"
                 android:tint="@color/blue_medium"
+                android:contentDescription="@string/open_external_link_desc"
                 app:srcCompat="@drawable/ic_external_black_24dp" />
         </LinearLayout>
 

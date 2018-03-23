@@ -467,6 +467,8 @@ public class PeopleManagementActivity extends AppCompatActivity
             ActionBar actionBar = getSupportActionBar();
             if (actionBar != null) {
                 actionBar.setTitle("");
+                // important for accessibility - talkback
+                setTitle(R.string.person_detail_screen_title);
             }
 
             fragmentTransaction.commit();

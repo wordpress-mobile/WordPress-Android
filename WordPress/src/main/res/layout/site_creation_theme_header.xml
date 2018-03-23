@@ -2,46 +2,55 @@
 <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    android:layout_height="wrap_content"
     android:layout_width="match_parent"
-    android:orientation="vertical"
-    android:clipChildren="false"
+    android:layout_height="wrap_content"
     android:animateLayoutChanges="true"
-    android:paddingTop="@dimen/margin_extra_large" >
+    android:clipChildren="false"
+    android:orientation="vertical"
+    android:paddingTop="@dimen/margin_extra_large">
 
-    <TextView
-        android:id="@+id/label_title"
-        android:layout_height="wrap_content"
+    <LinearLayout
         android:layout_width="match_parent"
-        android:paddingEnd="@dimen/margin_extra_large"
-        android:paddingLeft="@dimen/margin_extra_large"
-        android:paddingRight="@dimen/margin_extra_large"
-        android:paddingStart="@dimen/margin_extra_large"
-        android:text="@string/site_creation_label_theme_selection_title"
-        style="@style/SiteCreation.Heading" />
+        android:layout_height="wrap_content"
+        android:focusable="true"
+        android:orientation="vertical">
 
-    <TextView
-        android:id="@+id/label"
-        android:layout_height="wrap_content"
-        android:layout_width="match_parent"
-        android:layout_marginBottom="@dimen/margin_extra_large"
-        android:paddingEnd="@dimen/margin_extra_large"
-        android:paddingLeft="@dimen/margin_extra_large"
-        android:paddingRight="@dimen/margin_extra_large"
-        android:paddingStart="@dimen/margin_extra_large"
-        android:text="@string/site_creation_label_theme_selection"
-        style="@style/LoginTheme.TextLabel" />
+        <TextView
+            android:id="@+id/label_title"
+            style="@style/SiteCreation.Heading"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingEnd="@dimen/margin_extra_large"
+            android:paddingLeft="@dimen/margin_extra_large"
+            android:paddingRight="@dimen/margin_extra_large"
+            android:paddingStart="@dimen/margin_extra_large"
+            android:text="@string/site_creation_label_theme_selection_title"/>
+
+        <TextView
+            android:id="@+id/label"
+            style="@style/LoginTheme.TextLabel"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/margin_extra_large"
+            android:paddingEnd="@dimen/margin_extra_large"
+            android:paddingLeft="@dimen/margin_extra_large"
+            android:paddingRight="@dimen/margin_extra_large"
+            android:paddingStart="@dimen/margin_extra_large"
+            android:text="@string/site_creation_label_theme_selection"/>
+
+    </LinearLayout>
+
 
     <LinearLayout
         android:id="@+id/progress_container"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginBottom="@dimen/margin_extra_large"
+        android:orientation="vertical"
         android:paddingEnd="@dimen/margin_extra_large"
         android:paddingLeft="@dimen/margin_extra_large"
         android:paddingRight="@dimen/margin_extra_large"
         android:paddingStart="@dimen/margin_extra_large"
-        android:layout_marginBottom="@dimen/margin_extra_large"
-        android:orientation="vertical"
         android:visibility="gone"
         tools:visibility="visible">
 
@@ -53,10 +62,10 @@
 
         <TextView
             android:id="@+id/progress_label"
-            android:layout_height="wrap_content"
+            style="@style/LoginTheme.TextLabel"
             android:layout_width="match_parent"
-            android:text="@string/site_creation_label_theme_loading"
+            android:layout_height="wrap_content"
             android:gravity="center_horizontal"
-            style="@style/LoginTheme.TextLabel" />
+            android:text="@string/site_creation_label_theme_loading"/>
     </LinearLayout>
 </LinearLayout>
