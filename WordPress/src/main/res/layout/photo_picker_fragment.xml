@@ -42,6 +42,7 @@
             android:layout_width="175dp"
             android:layout_height="140dp"
             android:layout_gravity="center_horizontal"
+            android:contentDescription="@null"
             app:srcCompat="@drawable/ic_soft_ask_media" />
 
         <org.wordpress.android.widgets.WPTextView
@@ -89,6 +90,7 @@
             android:background="?android:selectableItemBackground"
             android:padding="@dimen/margin_medium"
             android:tint="@color/white"
+            android:contentDescription="@string/photo_picker_device_desc"
             app:srcCompat="@drawable/ic_image_white_48dp" />
 
         <ImageView
@@ -99,6 +101,7 @@
             android:background="?android:selectableItemBackground"
             android:padding="@dimen/margin_medium"
             android:tint="@color/white"
+            android:contentDescription="@string/photo_picker_camera_desc"
             app:srcCompat="@drawable/ic_camera_white_48dp" />
 
         <ImageView
@@ -109,6 +112,7 @@
             android:background="?android:selectableItemBackground"
             android:padding="@dimen/margin_medium"
             android:tint="@color/white"
+            android:contentDescription="@string/photo_picker_wpmedia_desc"
             app:srcCompat="@drawable/ic_my_sites_white_50dp" />
     </LinearLayout>
 

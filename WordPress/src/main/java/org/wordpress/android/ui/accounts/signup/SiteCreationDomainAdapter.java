@@ -107,12 +107,10 @@ public class SiteCreationDomainAdapter extends RecyclerView.Adapter<RecyclerView
 
     private static class DomainViewHolder extends RecyclerView.ViewHolder {
         private final RadioButton mRadioButton;
-        private final TextView mTextView;
 
         private DomainViewHolder(View itemView) {
             super(itemView);
             mRadioButton = itemView.findViewById(R.id.radio_button);
-            mTextView = itemView.findViewById(R.id.text);
         }
     }
 
@@ -238,7 +236,7 @@ public class SiteCreationDomainAdapter extends RecyclerView.Adapter<RecyclerView
         final String suggestion = getItem(position);
         final boolean onSelectedItem = suggestion.equals(mSelectedDomain);
         domainViewHolder.mRadioButton.setChecked(onSelectedItem);
-        domainViewHolder.mTextView.setText(suggestion);
+        domainViewHolder.mRadioButton.setText(suggestion);
 
         View.OnClickListener clickListener = new View.OnClickListener() {
             @Override
@@ -251,7 +249,6 @@ public class SiteCreationDomainAdapter extends RecyclerView.Adapter<RecyclerView
             }
         };
 
-        domainViewHolder.itemView.setOnClickListener(clickListener);
         domainViewHolder.mRadioButton.setOnClickListener(clickListener);
     }
 

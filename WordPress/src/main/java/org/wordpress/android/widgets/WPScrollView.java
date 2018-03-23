@@ -1,5 +1,6 @@
 package org.wordpress.android.widgets;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
@@ -37,6 +38,7 @@ public class WPScrollView extends ScrollView {
         mScrollDirectionListener = listener;
     }
 
+    @SuppressLint("ClickableViewAccessibility") // we are not detecting tap events, so can ignore this one
     @Override
     public boolean onTouchEvent(MotionEvent event) {
         if (mScrollDirectionListener != null

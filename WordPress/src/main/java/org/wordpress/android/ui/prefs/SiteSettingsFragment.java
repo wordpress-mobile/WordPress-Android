@@ -468,7 +468,7 @@ public class SiteSettingsFragment extends PreferenceFragment
             WPPrefUtils.layoutAsBody2(title);
         } else {
             // style preference title views
-            TextView title = (TextView) child.findViewById(android.R.id.title);
+            TextView title = child.findViewById(android.R.id.title);
             if (title != null) {
                 WPPrefUtils.layoutAsSubhead(title);
             }
@@ -1447,6 +1447,7 @@ public class SiteSettingsFragment extends PreferenceFragment
     private void showListEditorDialog(int titleRes, int headerRes) {
         mDialog = new Dialog(getActivity(), R.style.Calypso_SiteSettingsTheme);
         mDialog.setOnDismissListener(this);
+        mDialog.setTitle(titleRes);
         mDialog.setContentView(getListEditorView(getString(headerRes)));
         mDialog.show();
         WPActivityUtils.addToolbarToDialog(this, mDialog, getString(titleRes));
@@ -1458,7 +1459,7 @@ public class SiteSettingsFragment extends PreferenceFragment
         ((TextView) view.findViewById(R.id.list_editor_header_text)).setText(headerText);
 
         mAdapter = null;
-        final EmptyViewRecyclerView list = (EmptyViewRecyclerView) view.findViewById(android.R.id.list);
+        final EmptyViewRecyclerView list = view.findViewById(android.R.id.list);
         list.setLayoutManager(
                 new SmoothScrollLinearLayoutManager(
                         getActivity(),
@@ -1628,6 +1629,7 @@ public class SiteSettingsFragment extends PreferenceFragment
         String title = getString(R.string.site_settings_discussion_title);
         Dialog dialog = mMorePreference.getDialog();
         if (dialog != null) {
+            dialog.setTitle(title);
             setupPreferenceList((ListView) dialog.findViewById(android.R.id.list), getResources());
             WPActivityUtils.addToolbarToDialog(this, dialog, title);
             return true;

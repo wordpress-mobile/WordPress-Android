@@ -81,6 +81,7 @@
                 android:id="@+id/about_url"
                 android:text="@string/automattic_url"
                 android:clickable="true"
+                android:focusable="true"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/margin_medium"
