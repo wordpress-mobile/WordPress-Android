@@ -24,6 +24,7 @@ import org.wordpress.android.ui.accounts.LoginActivity;
 import org.wordpress.android.ui.accounts.LoginEpilogueActivity;
 import org.wordpress.android.ui.accounts.SignupEpilogueActivity;
 import org.wordpress.android.ui.accounts.SiteCreationActivity;
+import org.wordpress.android.ui.activitylog.ActivityLogActivity;
 import org.wordpress.android.ui.comments.CommentsActivity;
 import org.wordpress.android.ui.main.SitePickerActivity;
 import org.wordpress.android.ui.main.WPMainActivity;
@@ -198,6 +199,13 @@ public class ActivityLauncher {
             intent.putExtra(PluginDetailActivity.KEY_PLUGIN_SLUG, slug);
             context.startActivity(intent);
         }
+    }
+
+    public static void viewActivityLogList(Activity activity, SiteModel site) {
+        AnalyticsUtils.trackWithSiteDetails(AnalyticsTracker.Stat.OPENED_ACTIVITY_LOG_LIST, site);
+        Intent intent = new Intent(activity, ActivityLogActivity.class);
+        intent.putExtra(WordPress.SITE, site);
+        activity.startActivity(intent);
     }
 
     public static void viewBlogSettingsForResult(Activity activity, SiteModel site) {

@@ -75,6 +75,7 @@ public class MySiteFragment extends Fragment
     private LinearLayout mPageView;
     private LinearLayout mPlanContainer;
     private LinearLayout mPluginsContainer;
+    private LinearLayout mActivityLogContainer;
     private View mConfigurationHeader;
     private View mSettingsView;
     private LinearLayout mAdminView;
@@ -159,6 +160,7 @@ public class MySiteFragment extends Fragment
         mPeopleView = (LinearLayout) rootView.findViewById(R.id.row_people);
         mPlanContainer = (LinearLayout) rootView.findViewById(R.id.row_plan);
         mPluginsContainer = (LinearLayout) rootView.findViewById(R.id.row_plugins);
+        mActivityLogContainer = rootView.findViewById(R.id.row_activity_log);
         mConfigurationHeader = rootView.findViewById(R.id.row_configuration);
         mSettingsView = rootView.findViewById(R.id.row_settings);
         mSharingView = rootView.findViewById(R.id.row_sharing);
@@ -274,6 +276,14 @@ public class MySiteFragment extends Fragment
             @Override
             public void onClick(View view) {
                 ActivityLauncher.viewPluginBrowser(getActivity(), getSelectedSite());
+            }
+        });
+
+
+        mPluginsContainer.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                ActivityLauncher.viewActivityLogList(getActivity(), getSelectedSite());
             }
         });
 
