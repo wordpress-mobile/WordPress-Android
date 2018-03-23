@@ -638,10 +638,11 @@ public class StatsActivity extends AppCompatActivity
         int counter = AppPrefs.getAnalyticsForStatsWidgetPromo();
         boolean isCountAPromoMilestone = counter == 3 || counter == 1000 || counter == 10000;
         
-        return isCountAPromoMilestone && !isChromebook();
+        return isCountAPromoMilestone && !isAppRuntimeForChrome();
     }
 
-    private boolean isChromebook() {
+    // does not support widgets
+    private boolean isAppRuntimeForChrome() {
         return getApplicationContext().getPackageManager().hasSystemFeature(CHROMEBOOK_FLAG);
     }
 
