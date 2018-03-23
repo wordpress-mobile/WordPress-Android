@@ -28,16 +28,21 @@ class ActivityLogStore
 
         when (actionType) {
             ActivityAction.FETCH_ACTIVITIES -> fetchActivities(action.payload as FetchActivitiesPayload)
-            ActivityAction.FETCHED_ACTIVITIES -> storeActivityLog(action.payload as FetchedActivitiesPayload, actionType)
+            ActivityAction.FETCHED_ACTIVITIES -> storeActivityLog(action.payload as FetchedActivitiesPayload,
+                    actionType)
             ActivityAction.FETCH_REWIND_STATE -> fetchActivitiesRewind(action.payload as FetchRewindStatePayload)
-            else -> {
-            }
+            ActivityAction.FETCHED_REWIND_STATE -> storeRewindState(action.payload as FetchedRewindStatePayload,
+                    actionType)
         }
     }
 
     fun getActivityLogForSite(site: SiteModel, ascending: Boolean = true): List<ActivityLogModel> {
         val order = if (ascending) SelectQuery.ORDER_ASCENDING else SelectQuery.ORDER_DESCENDING
         return activityLogSqlUtils.getActivitiesForSite(site, order)
+    }
+
+    fun getRewindStatusForSite(site: SiteModel): RewindStatusModel? {
+        return activityLogSqlUtils.getRewindStatusForSite(site)
     }
 
     override fun onRegister() {
@@ -59,6 +64,15 @@ class ActivityLogStore
         }
     }
 
+    private fun storeRewindState(payload: FetchedRewindStatePayload, action: ActivityAction) {
+        if (payload.rewindStatusModelResponse != null) {
+            activityLogSqlUtils.insertOrUpdateRewindStatus(payload.site, payload.rewindStatusModelResponse)
+            emitChange(OnRewindStatusFetched(action))
+        } else if (payload.error != null) {
+            emitChange(OnRewindStatusFetched(payload.error, action))
+        }
+    }
+
     private fun fetchActivitiesRewind(fetchActivitiesRewindPayload: FetchRewindStatePayload) {
         activityLogRestClient.fetchActivityRewind(fetchActivitiesRewindPayload.site)
     }
@@ -68,6 +82,13 @@ class ActivityLogStore
                                    var causeOfChange: ActivityAction) : Store.OnChanged<ActivityError>() {
         constructor(error: ActivityError, causeOfChange: ActivityAction) :
                 this(rowsAffected = 0, causeOfChange = causeOfChange) {
+            this.error = error
+        }
+    }
+
+    data class OnRewindStatusFetched(var causeOfChange: ActivityAction) : Store.OnChanged<RewindStatusError>() {
+        constructor(error: RewindStatusError, causeOfChange: ActivityAction) :
+                this(causeOfChange = causeOfChange) {
             this.error = error
         }
     }

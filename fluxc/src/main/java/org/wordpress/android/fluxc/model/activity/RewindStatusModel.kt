@@ -61,36 +61,4 @@ data class RewindStatusModel(val state: State, val reason: String?, val restore:
             }
         }
     }
-
-    @Table(name = "RewindStatusModel")
-    data class Builder(@PrimaryKey
-                       @Column private var mId: Int = -1,
-                       @Column var localSiteId: Int,
-                       @Column var remoteSiteId: Long,
-                       @Column var rewindState: String? = null,
-                       @Column var reason: String? = null,
-                       @Column var restoreId: String? = null,
-                       @Column var restoreState: String? = null,
-                       @Column var restoreProgress: Int? = null,
-                       @Column var restoreMessage: String? = null,
-                       @Column var restoreErrorCode: String? = null,
-                       @Column var restoreFailureReason: String? = null) : Identifiable {
-        override fun setId(id: Int) {
-            this.mId = id
-        }
-
-        override fun getId() = mId
-
-        constructor() : this(-1, 0, 0)
-
-        fun build(): RewindStatusModel {
-            val restoreStatus = RestoreStatus.build(restoreId,
-                    restoreState,
-                    restoreProgress,
-                    restoreMessage,
-                    restoreErrorCode,
-                    restoreFailureReason)
-            return RewindStatusModel(rewindState?.let { State.fromValue(it) } ?: State.UNKNOWN, reason, restoreStatus)
-        }
-    }
 }
