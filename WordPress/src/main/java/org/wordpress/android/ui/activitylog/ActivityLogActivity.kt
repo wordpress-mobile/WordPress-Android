@@ -9,13 +9,11 @@ import android.support.v7.widget.Toolbar
 import org.wordpress.android.R
 import org.wordpress.android.WordPress
 import org.wordpress.android.fluxc.model.SiteModel
-import org.wordpress.android.ui.plugins.PluginListFragment
 import org.wordpress.android.viewmodel.activitylog.ActivityLogViewModel
 import javax.inject.Inject
 
 class ActivityLogActivity : AppCompatActivity() {
-    @Inject
-    private lateinit var viewModelFactory: ViewModelProvider.Factory
+    @Inject lateinit var viewModelFactory: ViewModelProvider.Factory
     private lateinit var viewModel: ActivityLogViewModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
