@@ -23,6 +23,7 @@ import java.util.ArrayList
 import java.util.HashMap
 import java.util.HashSet
 import javax.inject.Inject
+import kotlin.properties.Delegates
 
 @WorkerThread
 class PluginBrowserViewModel @Inject
@@ -33,9 +34,6 @@ constructor(private val mDispatcher: Dispatcher, private val mPluginStore: Plugi
     }
 
     private var mIsStarted = false
-    private var mSearchQuery: String? = null
-
-    var site: SiteModel? = null
 
     private val mHandler = Handler()
     private val mUpdatedPluginSlugSet = HashSet<String>()
@@ -54,15 +52,14 @@ constructor(private val mDispatcher: Dispatcher, private val mPluginStore: Plugi
 
     private val mTitle = MutableLiveData<String>()
 
-    // Search
+    var site: SiteModel? = null
 
-    var searchQuery: String?
-        get() = mSearchQuery
-        set(searchQuery) {
-            mSearchQuery = searchQuery
-            // Don't delay if the searchQuery is empty
-            submitSearch(searchQuery, !TextUtils.isEmpty(searchQuery))
+    var searchQuery: String by Delegates.observable("") {
+        _, oldValue, newValue ->
+        if (newValue != oldValue) {
+            submitSearch(newValue, true)
         }
+    }
 
     val sitePlugins: LiveData<List<ImmutablePluginModel>>
         get() = mSitePlugins
@@ -127,7 +124,7 @@ constructor(private val mDispatcher: Dispatcher, private val mPluginStore: Plugi
 
     fun writeToBundle(outState: Bundle) {
         outState.putSerializable(WordPress.SITE, site)
-        outState.putString(KEY_SEARCH_QUERY, mSearchQuery)
+        outState.putString(KEY_SEARCH_QUERY, searchQuery)
         outState.putString(KEY_TITLE, mTitle.value)
     }
 
@@ -138,7 +135,7 @@ constructor(private val mDispatcher: Dispatcher, private val mPluginStore: Plugi
             return
         }
         site = savedInstanceState.getSerializable(WordPress.SITE) as SiteModel
-        mSearchQuery = savedInstanceState.getString(KEY_SEARCH_QUERY)
+        searchQuery = savedInstanceState.getString(KEY_SEARCH_QUERY)
         setTitle(savedInstanceState.getString(KEY_TITLE))
     }
 
@@ -155,10 +152,6 @@ constructor(private val mDispatcher: Dispatcher, private val mPluginStore: Plugi
         fetchPlugins(PluginListType.FEATURED, false)
         fetchPlugins(PluginListType.POPULAR, false)
         fetchPlugins(PluginListType.NEW, false)
-        // If activity is recreated we need to re-search
-        if (shouldSearch()) {
-            fetchPlugins(PluginListType.SEARCH, false)
-        }
 
         mIsStarted = true
     }
@@ -259,7 +252,7 @@ constructor(private val mDispatcher: Dispatcher, private val mPluginStore: Plugi
     @Subscribe(threadMode = ThreadMode.BACKGROUND)
     @SuppressWarnings("unused")
     fun onPluginDirectoryFetched(event: PluginStore.OnPluginDirectoryFetched) {
-        val listStatus: PluginListStatus = if (event.isError) {
+        val listStatus = if (event.isError) {
             AppLog.e(T.PLUGINS, "An error occurred while fetching the plugin directory " + event.type + ": "
                     + event.error.type)
             PluginListStatus.ERROR
@@ -281,7 +274,7 @@ constructor(private val mDispatcher: Dispatcher, private val mPluginStore: Plugi
     @Subscribe(threadMode = ThreadMode.BACKGROUND)
     @SuppressWarnings("unused")
     fun onPluginDirectorySearched(event: PluginStore.OnPluginDirectorySearched) {
-        if (mSearchQuery == null || mSearchQuery != event.searchTerm) {
+        if (searchQuery != event.searchTerm) {
             return
         }
         if (event.isError) {
@@ -386,9 +379,8 @@ constructor(private val mDispatcher: Dispatcher, private val mPluginStore: Plugi
         reloadPluginDirectory(PluginDirectoryType.SITE)
     }
 
-    private fun updatePluginListWithNewPlugin(
-            mutableLiveData: MutableLiveData<List<ImmutablePluginModel>>,
-            newPluginMap: Map<String, ImmutablePluginModel>) {
+    private fun updatePluginListWithNewPlugin(mutableLiveData: MutableLiveData<List<ImmutablePluginModel>>,
+                                              newPluginMap: Map<String, ImmutablePluginModel>) {
         val pluginList = mutableLiveData.value
         if (pluginList == null || pluginList.isEmpty() || newPluginMap.isEmpty()) {
             // Nothing to update
@@ -417,11 +409,12 @@ constructor(private val mDispatcher: Dispatcher, private val mPluginStore: Plugi
 
     private fun shouldSearch(): Boolean {
         // We need at least 2 characters to be able to search plugins
-        return searchQuery != null && searchQuery!!.length > 1
+        return searchQuery.length > 1
     }
 
     private fun submitSearch(query: String?, delayed: Boolean) {
-        if (delayed) {
+        // If the query is not long enough we don't need to delay it
+        if (delayed && shouldSearch()) {
             mHandler.postDelayed({
                 if (StringUtils.equals(query, searchQuery)) {
                     submitSearch(query, false)
@@ -439,7 +432,7 @@ constructor(private val mDispatcher: Dispatcher, private val mPluginStore: Plugi
                 // 2. Before the fetch completes delete the text
                 // 3. In `onPluginDirectorySearched` the result will be ignored, because the query changed, but it won't
                 // be triggered again, because another fetch didn't happen (due to query being empty)
-                // 4. The status will be stuck in FETCHING until another search occurs. This following reset fixes the
+                // 4. The status will be stuck in FETCHING until another search occurs. The following reset fixes the
                 // problem.
                 mSearchPluginsListStatus.postValue(PluginListStatus.DONE)
             }
