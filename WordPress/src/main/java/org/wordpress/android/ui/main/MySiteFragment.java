@@ -280,7 +280,7 @@ public class MySiteFragment extends Fragment
         });
 
 
-        mPluginsContainer.setOnClickListener(new OnClickListener() {
+        mActivityLogContainer.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View view) {
                 ActivityLauncher.viewActivityLogList(getActivity(), getSelectedSite());

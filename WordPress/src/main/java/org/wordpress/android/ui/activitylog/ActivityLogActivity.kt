@@ -19,11 +19,11 @@ class ActivityLogActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
+        (application as WordPress).component().inject(this)
         setContentView(R.layout.activity_log_activity)
 
         val toolbar = findViewById<Toolbar>(R.id.toolbar)
         setSupportActionBar(toolbar)
-
 
         viewModel = ViewModelProviders.of(this, viewModelFactory).get(ActivityLogViewModel::class.java)
 
