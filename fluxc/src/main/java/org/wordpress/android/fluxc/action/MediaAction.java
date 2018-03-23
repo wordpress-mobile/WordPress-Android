@@ -9,6 +9,8 @@ import org.wordpress.android.fluxc.store.MediaStore.FetchMediaListPayload;
 import org.wordpress.android.fluxc.store.MediaStore.FetchMediaListResponsePayload;
 import org.wordpress.android.fluxc.store.MediaStore.MediaPayload;
 import org.wordpress.android.fluxc.store.MediaStore.ProgressPayload;
+import org.wordpress.android.fluxc.store.MediaStore.UploadStockMediaPayload;
+import org.wordpress.android.fluxc.store.MediaStore.UploadedStockMediaPayload;
 
 @ActionEnum
 public enum MediaAction implements IAction {
@@ -25,6 +27,8 @@ public enum MediaAction implements IAction {
     DELETE_MEDIA,
     @Action(payloadType = CancelMediaPayload.class)
     CANCEL_MEDIA_UPLOAD,
+    @Action(payloadType = UploadStockMediaPayload.class)
+    UPLOAD_STOCK_MEDIA,
 
     // Remote responses
     @Action(payloadType = MediaPayload.class)
@@ -39,6 +43,8 @@ public enum MediaAction implements IAction {
     DELETED_MEDIA,
     @Action(payloadType = ProgressPayload.class)
     CANCELED_MEDIA_UPLOAD,
+    @Action(payloadType = UploadedStockMediaPayload.class)
+    UPLOADED_STOCK_MEDIA,
 
     // Local actions
     @Action(payloadType = MediaModel.class)
