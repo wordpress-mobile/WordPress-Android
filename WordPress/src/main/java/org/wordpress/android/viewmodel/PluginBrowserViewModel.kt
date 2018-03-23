@@ -7,7 +7,6 @@ import android.os.Bundle
 import android.os.Handler
 import android.support.annotation.WorkerThread
 import android.text.TextUtils
-
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
 import org.wordpress.android.WordPress
@@ -18,40 +17,42 @@ import org.wordpress.android.fluxc.model.plugin.ImmutablePluginModel
 import org.wordpress.android.fluxc.model.plugin.PluginDirectoryType
 import org.wordpress.android.fluxc.store.PluginStore
 import org.wordpress.android.util.AppLog
+import org.wordpress.android.util.AppLog.T
 import org.wordpress.android.util.StringUtils
-
 import java.util.ArrayList
 import java.util.HashMap
 import java.util.HashSet
-
 import javax.inject.Inject
 
+@WorkerThread
 class PluginBrowserViewModel @Inject
 constructor(private val mDispatcher: Dispatcher, private val mPluginStore: PluginStore) : ViewModel() {
+    companion object {
+        private const val KEY_SEARCH_QUERY = "KEY_SEARCH_QUERY"
+        private const val KEY_TITLE = "KEY_TITLE"
+    }
+
     private var mIsStarted = false
     private var mSearchQuery: String? = null
-    // Simple Getters & Setters
 
     var site: SiteModel? = null
 
-    private val mHandler: Handler
-    // We don't want synthetic accessor methods to be introduced, so `protected` is used over `private`
-    // and the warning suppressed
-    protected val mUpdatedPluginSlugSet: MutableSet<String>
+    private val mHandler = Handler()
+    private val mUpdatedPluginSlugSet = HashSet<String>()
 
-    private val mFeaturedPluginsListStatus: MutableLiveData<PluginListStatus>
-    private val mNewPluginsListStatus: MutableLiveData<PluginListStatus>
-    private val mPopularPluginsListStatus: MutableLiveData<PluginListStatus>
-    private val mSitePluginsListStatus: MutableLiveData<PluginListStatus>
-    private val mSearchPluginsListStatus: MutableLiveData<PluginListStatus>
+    private val mFeaturedPluginsListStatus = MutableLiveData<PluginListStatus>()
+    private val mNewPluginsListStatus = MutableLiveData<PluginListStatus>()
+    private val mPopularPluginsListStatus = MutableLiveData<PluginListStatus>()
+    private val mSitePluginsListStatus = MutableLiveData<PluginListStatus>()
+    private val mSearchPluginsListStatus = MutableLiveData<PluginListStatus>()
 
-    private val mFeaturedPlugins: MutableLiveData<List<ImmutablePluginModel>>
-    private val mNewPlugins: MutableLiveData<List<ImmutablePluginModel>>
-    private val mPopularPlugins: MutableLiveData<List<ImmutablePluginModel>>
-    private val mSitePlugins: MutableLiveData<List<ImmutablePluginModel>>
-    private val mSearchResults: MutableLiveData<List<ImmutablePluginModel>>
+    private val mFeaturedPlugins = MutableLiveData<List<ImmutablePluginModel>>()
+    private val mNewPlugins = MutableLiveData<List<ImmutablePluginModel>>()
+    private val mPopularPlugins = MutableLiveData<List<ImmutablePluginModel>>()
+    private val mSitePlugins = MutableLiveData<List<ImmutablePluginModel>>()
+    private val mSearchResults = MutableLiveData<List<ImmutablePluginModel>>()
 
-    private val mTitle: MutableLiveData<String>
+    private val mTitle = MutableLiveData<String>()
 
     // Search
 
@@ -67,7 +68,7 @@ constructor(private val mDispatcher: Dispatcher, private val mPluginStore: Plugi
         get() = mSitePlugins
 
     val isSitePluginsEmpty: Boolean
-        get() = sitePlugins.value == null || sitePlugins.value!!.size == 0
+        get() = sitePlugins.value == null || sitePlugins.value!!.isEmpty()
 
     val featuredPlugins: LiveData<List<ImmutablePluginModel>>
         get() = mFeaturedPlugins
@@ -117,27 +118,11 @@ constructor(private val mDispatcher: Dispatcher, private val mPluginStore: Plugi
 
     init {
         mDispatcher.register(this)
-
-        mHandler = Handler()
-        mUpdatedPluginSlugSet = HashSet()
-
-        mFeaturedPlugins = MutableLiveData()
-        mSitePlugins = MutableLiveData()
-        mNewPlugins = MutableLiveData()
-        mPopularPlugins = MutableLiveData()
-        mSearchResults = MutableLiveData()
-
-        mFeaturedPluginsListStatus = MutableLiveData()
-        mNewPluginsListStatus = MutableLiveData()
-        mPopularPluginsListStatus = MutableLiveData()
-        mSitePluginsListStatus = MutableLiveData()
-        mSearchPluginsListStatus = MutableLiveData()
-        mTitle = MutableLiveData()
     }
 
     override fun onCleared() {
-        super.onCleared()
         mDispatcher.unregister(this)
+        super.onCleared()
     }
 
     fun writeToBundle(outState: Bundle) {
@@ -157,7 +142,6 @@ constructor(private val mDispatcher: Dispatcher, private val mPluginStore: Plugi
         setTitle(savedInstanceState.getString(KEY_TITLE))
     }
 
-    @WorkerThread
     fun start() {
         if (mIsStarted) {
             return
@@ -181,7 +165,6 @@ constructor(private val mDispatcher: Dispatcher, private val mPluginStore: Plugi
 
     // Site & WPOrg plugin management
 
-    @WorkerThread
     private fun reloadPluginDirectory(directoryType: PluginDirectoryType) {
         val pluginList = mPluginStore.getPluginDirectory(site!!, directoryType)
         when (directoryType) {
@@ -200,7 +183,6 @@ constructor(private val mDispatcher: Dispatcher, private val mPluginStore: Plugi
 
     // Network Requests
 
-    @WorkerThread
     private fun fetchPlugins(listType: PluginListType, loadMore: Boolean) {
         if (!shouldFetchPlugins(listType, loadMore)) {
             return
@@ -235,29 +217,23 @@ constructor(private val mDispatcher: Dispatcher, private val mPluginStore: Plugi
         }
     }
 
-    @WorkerThread
     private fun shouldFetchPlugins(listType: PluginListType, loadMore: Boolean): Boolean {
-        var currentStatus: PluginListStatus? = null
-        when (listType) {
-            PluginBrowserViewModel.PluginListType.SITE -> currentStatus = sitePluginsListStatus.value
-            PluginBrowserViewModel.PluginListType.FEATURED -> currentStatus = featuredPluginsListStatus.value
-            PluginBrowserViewModel.PluginListType.POPULAR -> currentStatus = popularPluginsListStatus.value
-            PluginBrowserViewModel.PluginListType.NEW -> currentStatus = newPluginsListStatus.value
-            PluginBrowserViewModel.PluginListType.SEARCH ->
-                // We should always do the initial search because the string might have changed and it is
-                // already optimized in submitSearch with a delay. Even though FluxC allows it, we don't do multiple
-                // pages of search, so if we are trying to load more, we can ignore it
-                return !loadMore
+        val currentStatus = when (listType) {
+            PluginBrowserViewModel.PluginListType.SITE -> sitePluginsListStatus.value
+            PluginBrowserViewModel.PluginListType.FEATURED -> featuredPluginsListStatus.value
+            PluginBrowserViewModel.PluginListType.POPULAR -> popularPluginsListStatus.value
+            PluginBrowserViewModel.PluginListType.NEW -> newPluginsListStatus.value
+            // We should always do the initial search because the string might have changed and it is
+            // already optimized in submitSearch with a delay. Even though FluxC allows it, we don't do multiple
+            // pages of search, so if we are trying to load more, we can ignore it
+            PluginBrowserViewModel.PluginListType.SEARCH -> return !loadMore
         }
         if (currentStatus == PluginListStatus.FETCHING || currentStatus == PluginListStatus.LOADING_MORE) {
             // if we are already fetching something we shouldn't start a new one. Even if we are loading more plugins
             // and the user pulled to refresh, we don't want (or need) the 2 requests colliding
             return false
         }
-        return if (loadMore && currentStatus != PluginListStatus.CAN_LOAD_MORE) {
-            // There is nothing to load more
-            false
-        } else true
+        return !(loadMore && currentStatus != PluginListStatus.CAN_LOAD_MORE)
     }
 
     fun loadMore(listType: PluginListType) {
@@ -267,10 +243,10 @@ constructor(private val mDispatcher: Dispatcher, private val mPluginStore: Plugi
     // Network Callbacks
 
     @Subscribe(threadMode = ThreadMode.BACKGROUND)
+    @SuppressWarnings("unused")
     fun onWPOrgPluginFetched(event: PluginStore.OnWPOrgPluginFetched) {
         if (event.isError) {
-            AppLog.e(AppLog.T.PLUGINS,
-                    "An error occurred while fetching the wporg plugin with type: " + event.error.type)
+            AppLog.e(T.PLUGINS, "An error occurred while fetching the wporg plugin with type: " + event.error.type)
             return
         }
         // Check if the slug is empty, if not add it to the set and only trigger the update
@@ -281,20 +257,21 @@ constructor(private val mDispatcher: Dispatcher, private val mPluginStore: Plugi
     }
 
     @Subscribe(threadMode = ThreadMode.BACKGROUND)
+    @SuppressWarnings("unused")
     fun onPluginDirectoryFetched(event: PluginStore.OnPluginDirectoryFetched) {
-        val listStatus: PluginListStatus
-        if (event.isError) {
-            AppLog.e(AppLog.T.PLUGINS, "An error occurred while fetching the plugin directory " + event.type + ": "
+        val listStatus: PluginListStatus = if (event.isError) {
+            AppLog.e(T.PLUGINS, "An error occurred while fetching the plugin directory " + event.type + ": "
                     + event.error.type)
-            listStatus = PluginListStatus.ERROR
+            PluginListStatus.ERROR
         } else {
-            listStatus = if (event.canLoadMore) PluginListStatus.CAN_LOAD_MORE else PluginListStatus.DONE
+            if (event.canLoadMore) PluginListStatus.CAN_LOAD_MORE else PluginListStatus.DONE
         }
         when (event.type) {
             PluginDirectoryType.FEATURED -> mFeaturedPluginsListStatus.postValue(listStatus)
             PluginDirectoryType.NEW -> mNewPluginsListStatus.postValue(listStatus)
             PluginDirectoryType.POPULAR -> mPopularPluginsListStatus.postValue(listStatus)
             PluginDirectoryType.SITE -> mSitePluginsListStatus.postValue(listStatus)
+            null -> AppLog.d(T.PLUGINS, "Plugin directory type shouldn't be null")
         }
         if (!event.isError) {
             reloadPluginDirectory(event.type)
@@ -302,12 +279,13 @@ constructor(private val mDispatcher: Dispatcher, private val mPluginStore: Plugi
     }
 
     @Subscribe(threadMode = ThreadMode.BACKGROUND)
+    @SuppressWarnings("unused")
     fun onPluginDirectorySearched(event: PluginStore.OnPluginDirectorySearched) {
         if (mSearchQuery == null || mSearchQuery != event.searchTerm) {
             return
         }
         if (event.isError) {
-            AppLog.e(AppLog.T.PLUGINS, "An error occurred while searching the plugin directory")
+            AppLog.e(T.PLUGINS, "An error occurred while searching the plugin directory")
             mSearchPluginsListStatus.postValue(PluginListStatus.ERROR)
             return
         }
@@ -316,6 +294,7 @@ constructor(private val mDispatcher: Dispatcher, private val mPluginStore: Plugi
     }
 
     @Subscribe(threadMode = ThreadMode.BACKGROUND)
+    @SuppressWarnings("unused")
     fun onSitePluginConfigured(event: PluginStore.OnSitePluginConfigured) {
         if (event.isError) {
             // The error should be handled wherever the action has been triggered from (probably PluginDetailActivity)
@@ -329,6 +308,7 @@ constructor(private val mDispatcher: Dispatcher, private val mPluginStore: Plugi
     }
 
     @Subscribe(threadMode = ThreadMode.BACKGROUND)
+    @SuppressWarnings("unused")
     fun onSitePluginDeleted(event: PluginStore.OnSitePluginDeleted) {
         if (event.isError) {
             // The error should be handled wherever the action has been triggered from (probably PluginDetailActivity)
@@ -342,6 +322,7 @@ constructor(private val mDispatcher: Dispatcher, private val mPluginStore: Plugi
     }
 
     @Subscribe(threadMode = ThreadMode.BACKGROUND)
+    @SuppressWarnings("unused")
     fun onSitePluginInstalled(event: PluginStore.OnSitePluginInstalled) {
         if (event.isError) {
             // The error should be handled wherever the action has been triggered from (probably PluginDetailActivity)
@@ -355,6 +336,7 @@ constructor(private val mDispatcher: Dispatcher, private val mPluginStore: Plugi
     }
 
     @Subscribe(threadMode = ThreadMode.BACKGROUND)
+    @SuppressWarnings("unused")
     fun onSitePluginUpdated(event: PluginStore.OnSitePluginUpdated) {
         if (event.isError) {
             // The error should be handled wherever the action has been triggered from (probably PluginDetailActivity)
@@ -369,7 +351,6 @@ constructor(private val mDispatcher: Dispatcher, private val mPluginStore: Plugi
 
     // Keeping the data up to date
 
-    @WorkerThread
     private fun updateAllPluginListsIfNecessary() {
         val copiedSet = HashSet(mUpdatedPluginSlugSet)
         mHandler.postDelayed({
@@ -381,11 +362,8 @@ constructor(private val mDispatcher: Dispatcher, private val mPluginStore: Plugi
         }, 250)
     }
 
-    // We don't want synthetic accessor methods to be introduced, so `protected` is used over `private` and the
-    // warning suppressed
-    @WorkerThread
-    protected fun updateAllPluginListsWithNewPlugins(updatedPluginSlugSet: Set<String>) {
-        if (updatedPluginSlugSet.size == 0) {
+    private fun updateAllPluginListsWithNewPlugins(updatedPluginSlugSet: Set<String>) {
+        if (updatedPluginSlugSet.isEmpty()) {
             return
         }
         val newPluginMap = HashMap<String, ImmutablePluginModel>(updatedPluginSlugSet.size)
@@ -404,17 +382,15 @@ constructor(private val mDispatcher: Dispatcher, private val mPluginStore: Plugi
 
         // Unfortunately we can't use the same method to update the site plugins because removing/installing plugins can
         // mess up the list. Also we care most about the Site Plugins and using the store to get the correct plugin
-        // information
-        // is much more reliable than any manual update we can make
+        // information is much more reliable than any manual update we can make
         reloadPluginDirectory(PluginDirectoryType.SITE)
     }
 
-    @WorkerThread
     private fun updatePluginListWithNewPlugin(
             mutableLiveData: MutableLiveData<List<ImmutablePluginModel>>,
             newPluginMap: Map<String, ImmutablePluginModel>) {
         val pluginList = mutableLiveData.value
-        if (pluginList == null || pluginList.size == 0 || newPluginMap.size == 0) {
+        if (pluginList == null || pluginList.isEmpty() || newPluginMap.isEmpty()) {
             // Nothing to update
             return
         }
@@ -444,10 +420,7 @@ constructor(private val mDispatcher: Dispatcher, private val mPluginStore: Plugi
         return searchQuery != null && searchQuery!!.length > 1
     }
 
-    // We don't want synthetic accessor methods to be introduced, so `protected` is used over `private` and the
-    // warning suppressed
-    @WorkerThread
-    protected fun submitSearch(query: String?, delayed: Boolean) {
+    private fun submitSearch(query: String?, delayed: Boolean) {
         if (delayed) {
             mHandler.postDelayed({
                 if (StringUtils.equals(query, searchQuery)) {
@@ -473,7 +446,6 @@ constructor(private val mDispatcher: Dispatcher, private val mPluginStore: Plugi
         }
     }
 
-    @WorkerThread
     private fun clearSearchResults() {
         mSearchResults.postValue(ArrayList())
     }
@@ -483,9 +455,10 @@ constructor(private val mDispatcher: Dispatcher, private val mPluginStore: Plugi
         if (!shouldSearch()) {
             return false
         }
-        return if (mSearchPluginsListStatus.value != PluginListStatus.DONE && mSearchPluginsListStatus.value != PluginListStatus.ERROR) {
+        return if (mSearchPluginsListStatus.value != PluginListStatus.DONE
+                && mSearchPluginsListStatus.value != PluginListStatus.ERROR) {
             false
-        } else searchResults.value == null || searchResults.value!!.size == 0
+        } else searchResults.value == null || searchResults.value!!.isEmpty()
     }
 
     fun setTitle(title: String?) {
@@ -493,18 +466,12 @@ constructor(private val mDispatcher: Dispatcher, private val mPluginStore: Plugi
     }
 
     fun getPluginsForListType(listType: PluginListType): List<ImmutablePluginModel>? {
-        when (listType) {
-            PluginBrowserViewModel.PluginListType.SITE -> return sitePlugins.value
-            PluginBrowserViewModel.PluginListType.FEATURED -> return featuredPlugins.value
-            PluginBrowserViewModel.PluginListType.POPULAR -> return popularPlugins.value
-            PluginBrowserViewModel.PluginListType.NEW -> return newPlugins.value
-            PluginBrowserViewModel.PluginListType.SEARCH -> return searchResults.value
+        return when (listType) {
+            PluginBrowserViewModel.PluginListType.SITE -> sitePlugins.value
+            PluginBrowserViewModel.PluginListType.FEATURED -> featuredPlugins.value
+            PluginBrowserViewModel.PluginListType.POPULAR -> popularPlugins.value
+            PluginBrowserViewModel.PluginListType.NEW -> newPlugins.value
+            PluginBrowserViewModel.PluginListType.SEARCH -> searchResults.value
         }
-        return null
-    }
-
-    companion object {
-        private val KEY_SEARCH_QUERY = "KEY_SEARCH_QUERY"
-        private val KEY_TITLE = "KEY_TITLE"
     }
 }
