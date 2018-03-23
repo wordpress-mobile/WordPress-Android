@@ -117,8 +117,10 @@ dependencies {
     implementation 'com.android.support:design:26.1.0'
     implementation 'com.android.support:percent:26.1.0'
     implementation 'com.android.support:preference-v7:26.1.0'
+
     // ViewModel and LiveData
-    implementation 'android.arch.lifecycle:extensions:1.1.0'
+    implementation 'android.arch.lifecycle:extensions:1.1.1'
+    implementation 'android.arch.paging:runtime:1.0.0-alpha7'
 
     implementation 'com.google.android.gms:play-services-gcm:10.0.1'
     implementation 'com.google.android.gms:play-services-auth:10.0.1'
@@ -162,7 +164,7 @@ dependencies {
     implementation 'com.google.dagger:dagger-android-support:2.11'
     kapt 'com.google.dagger:dagger-android-processor:2.11'
 
-    implementation ("com.github.wordpress-mobile.WordPress-FluxC-Android:fluxc:$fluxCVersion") {
+    implementation ("com.github.wordpress-mobile.WordPress-FluxC-Android:fluxc:44d777bbb0513aec2a0f69390987869c6aad1744") {
         exclude group: "com.android.volley"
     }
 
