@@ -147,6 +147,7 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -172,7 +173,8 @@ public class EditPostActivity extends AppCompatActivity implements
         PhotoPickerFragment.PhotoPickerListener,
         EditPostSettingsFragment.EditPostActivityHook,
         BaseYesNoFragmentDialog.BasicYesNoDialogClickInterface,
-        PostSettingsListDialogFragment.OnPostSettingsDialogFragmentListener {
+        PostSettingsListDialogFragment.OnPostSettingsDialogFragmentListener,
+        PostDatePickerDialogFragment.OnPostDatePickerDialogListener {
     public static final String EXTRA_POST_LOCAL_ID = "postModelLocalId";
     public static final String EXTRA_IS_PAGE = "isPage";
     public static final String EXTRA_IS_PROMO = "isPromo";
@@ -1344,9 +1346,17 @@ public class EditPostActivity extends AppCompatActivity implements
      * along to the settings fragment
      */
     @Override
-    public void onPostSettingsFragmentPositiveButtonClicked(@NonNull PostSettingsListDialogFragment fragment) {
+    public void onPostSettingsFragmentPositiveButtonClicked(@NonNull PostSettingsListDialogFragment dialog) {
         if (mEditPostSettingsFragment != null) {
-            mEditPostSettingsFragment.onPostSettingsFragmentPositiveButtonClicked(fragment);
+            mEditPostSettingsFragment.onPostSettingsFragmentPositiveButtonClicked(dialog);
+        }
+    }
+
+    @Override
+    public void onPostDatePickerDialogPositiveButtonClicked(@NonNull PostDatePickerDialogFragment dialog,
+                                                            @NonNull Calendar calender) {
+        if (mEditPostSettingsFragment != null) {
+            mEditPostSettingsFragment.onPostDatePickerDialogPositiveButtonClicked(dialog, calender);
         }
     }
 

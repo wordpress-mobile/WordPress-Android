@@ -25,7 +25,7 @@ public class PostDatePickerDialogFragment extends DialogFragment {
                 @NonNull Calendar calender);
     }
 
-    enum DialogType {
+    enum PickerDialogType {
         DATE_PICKER,
         TIME_PICKER
     }
@@ -41,17 +41,19 @@ public class PostDatePickerDialogFragment extends DialogFragment {
     private static final String ARG_MINUTE = "minute";
     private static final String ARG_HOUR = "hour";
 
-    private DialogType mDialogType;
+    private PickerDialogType mDialogType;
     private int mDay;
     private int mMonth;
     private int mYear;
     private int mHour;
     private int mMinute;
+
     private boolean mCanPublishImmediately;
+    private boolean mPublishImmediately;
 
     private OnPostDatePickerDialogListener mListener;
 
-    public static PostDatePickerDialogFragment newInstance(@NonNull DialogType dialogType,
+    public static PostDatePickerDialogFragment newInstance(@NonNull PickerDialogType dialogType,
                                                            @NonNull PostModel post,
                                                            @NonNull Calendar calendar) {
         PostDatePickerDialogFragment fragment = new PostDatePickerDialogFragment();
@@ -83,7 +85,7 @@ public class PostDatePickerDialogFragment extends DialogFragment {
     public void setArguments(Bundle args) {
         super.setArguments(args);
 
-        mDialogType = (DialogType) args.getSerializable(ARG_DIALOG_TYPE);
+        mDialogType = (PickerDialogType) args.getSerializable(ARG_DIALOG_TYPE);
         mCanPublishImmediately = args.getBoolean(ARG_CAN_PUBLISH_IMMEDIATELY);
 
         mDay = args.getInt(ARG_DAY);
@@ -143,6 +145,7 @@ public class PostDatePickerDialogFragment extends DialogFragment {
                         new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int id) {
                                 Calendar now = Calendar.getInstance();
+                                mPublishImmediately = true;
                                 mListener.onPostDatePickerDialogPositiveButtonClicked(
                                         PostDatePickerDialogFragment.this,
                                         now);
@@ -156,7 +159,7 @@ public class PostDatePickerDialogFragment extends DialogFragment {
                 break;
             case TIME_PICKER:
                 boolean is24HrFormat = DateFormat.is24HourFormat(getActivity());
-                final TimePickerDialog timePickerDialog = new TimePickerDialog(
+                TimePickerDialog timePickerDialog = new TimePickerDialog(
                         getActivity(),
                         new TimePickerDialog.OnTimeSetListener() {
                             @Override
@@ -195,10 +198,18 @@ public class PostDatePickerDialogFragment extends DialogFragment {
         return dialog;
     }
 
-    public @NonNull
-    Calendar getCalender() {
+    @NonNull
+    private Calendar getCalender() {
         Calendar calendar = Calendar.getInstance();
         calendar.set(mYear, mMonth, mDay, mHour, mMinute);
         return calendar;
+    }
+
+    public @NonNull PickerDialogType getDialogType() {
+        return mDialogType;
+    }
+
+    public boolean isPublishImmediately() {
+        return mPublishImmediately;
     }
 }

@@ -2,7 +2,6 @@ package org.wordpress.android.ui.posts;
 
 import android.app.Activity;
 import android.app.Fragment;
-import android.app.TimePickerDialog;
 import android.content.Intent;
 import android.location.Address;
 import android.os.AsyncTask;
@@ -15,7 +14,6 @@ import android.support.v7.view.menu.MenuPopupHelper;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.PopupMenu;
 import android.text.TextUtils;
-import android.text.format.DateFormat;
 import android.text.format.DateUtils;
 import android.view.ContextMenu;
 import android.view.LayoutInflater;
@@ -25,7 +23,6 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.TimePicker;
 
 import com.google.android.gms.common.GoogleApiAvailability;
 import com.google.android.gms.common.GooglePlayServicesNotAvailableException;
@@ -59,6 +56,7 @@ import org.wordpress.android.ui.ActivityLauncher;
 import org.wordpress.android.ui.RequestCodes;
 import org.wordpress.android.ui.media.MediaBrowserType;
 import org.wordpress.android.ui.photopicker.PhotoPickerActivity;
+import org.wordpress.android.ui.posts.PostDatePickerDialogFragment.PickerDialogType;
 import org.wordpress.android.ui.posts.PostSettingsListDialogFragment.DialogType;
 import org.wordpress.android.ui.prefs.AppPrefs;
 import org.wordpress.android.ui.prefs.SiteSettingsInterface;
@@ -482,7 +480,7 @@ public class EditPostSettingsFragment extends Fragment {
     }
 
     /*
-     * this will be called by the activity when the user taps OK on a PostSettingsDialogFragment
+     * called by the activity when the user taps OK on a PostSettingsDialogFragment
      */
     public void onPostSettingsFragmentPositiveButtonClicked(@NonNull PostSettingsListDialogFragment fragment) {
         switch (fragment.getDialogType()) {
@@ -495,6 +493,21 @@ public class EditPostSettingsFragment extends Fragment {
                 String formatName = fragment.getSelectedItem();
                 updatePostFormat(getPostFormatKeyFromName(formatName));
                 break;
+        }
+    }
+
+    /*
+     * called by the activity when the user taps OK on a PostDatePickerDialogFragment
+     */
+    public void onPostDatePickerDialogPositiveButtonClicked(
+            @NonNull PostDatePickerDialogFragment dialog,
+            @NonNull Calendar calender) {
+        updatePublishDate(calender);
+        // if this was the date picker and the user didn't choose to publish immediately, show the
+        // time picker dialog fragment so they can choose a publish time
+        if (dialog.getDialogType() == PickerDialogType.DATE_PICKER
+                && !dialog.isPublishImmediately()) {
+            showPostTimeSelectionDialog();
         }
     }
 
@@ -556,77 +569,21 @@ public class EditPostSettingsFragment extends Fragment {
 
         Calendar calendar = getCurrentPublishDateAsCalendar();
         PostDatePickerDialogFragment fragment =
-                PostDatePickerDialogFragment.newInstance(getPost(), calendar);
+                PostDatePickerDialogFragment.newInstance(PickerDialogType.DATE_PICKER, getPost(), calendar);
         FragmentManager fm = ((AppCompatActivity) getActivity()).getSupportFragmentManager();
         fragment.show(fm, PostDatePickerDialogFragment.TAG);
-
-        /*Calendar calendar = getCurrentPublishDateAsCalendar();
-        int year = calendar.get(Calendar.YEAR);
-        int month = calendar.get(Calendar.MONTH);
-        int day = calendar.get(Calendar.DAY_OF_MONTH);
-
-        Resources resources = getResources();
-        boolean isPublishImmediatelyAvailable = PostUtils.shouldPublishImmediatelyOptionBeAvailable(getPost());
-
-        final DatePickerDialog datePickerDialog = new DatePickerDialog(getActivity(), null, year, month, day);
-        datePickerDialog.setTitle(R.string.select_date);
-        datePickerDialog.setButton(DialogInterface.BUTTON_POSITIVE, resources.getString(android.R.string.ok),
-                                   new DialogInterface.OnClickListener() {
-                                       public void onClick(DialogInterface dialog, int id) {
-                                           DatePicker datePicker = datePickerDialog.getDatePicker();
-                                           int selectedYear = datePicker.getYear();
-                                           int selectedMonth = datePicker.getMonth();
-                                           int selectedDay = datePicker.getDayOfMonth();
-                                           showPostTimeSelectionDialog(selectedYear, selectedMonth, selectedDay);
-                                       }
-                                   });
-        String neutralButtonTitle = isPublishImmediatelyAvailable ? resources.getString(R.string.immediately)
-                : resources.getString(R.string.now);
-        datePickerDialog.setButton(DialogInterface.BUTTON_NEUTRAL, neutralButtonTitle,
-                                   new DialogInterface.OnClickListener() {
-                                       public void onClick(DialogInterface dialog, int id) {
-                                           Calendar now = Calendar.getInstance();
-                                           updatePublishDate(now);
-                                       }
-                                   });
-        datePickerDialog.setButton(DialogInterface.BUTTON_NEGATIVE, resources.getString(android.R.string.cancel),
-                                   new DialogInterface.OnClickListener() {
-                                       public void onClick(DialogInterface dialog, int id) {
-                                       }
-                                   });
-        if (isPublishImmediatelyAvailable) {
-            // We shouldn't let the user pick a past date since we'll just override it to Immediately if they do
-            // We can't set the min date to now, so we need to subtract some amount of time
-            datePickerDialog.getDatePicker().setMinDate(System.currentTimeMillis() - 1000);
-        }
-        datePickerDialog.show();*/
     }
 
-    private void showPostTimeSelectionDialog(final int selectedYear, final int selectedMonth, final int selectedDay) {
+    private void showPostTimeSelectionDialog() {
         if (!isAdded()) {
             return;
         }
-        final Calendar calendar = getCurrentPublishDateAsCalendar();
-        int hour = calendar.get(Calendar.HOUR_OF_DAY);
-        int minute = calendar.get(Calendar.MINUTE);
-        final TimePickerDialog timePickerDialog = new TimePickerDialog(getActivity(),
-                                                                       new TimePickerDialog.OnTimeSetListener() {
-                                                                           @Override
-                                                                           public void onTimeSet(TimePicker timePicker,
-                                                                                                 int selectedHour,
-                                                                                                 int selectedMinute) {
-                                                                               Calendar selectedCalendar =
-                                                                                       Calendar.getInstance();
-                                                                               selectedCalendar
-                                                                                       .set(selectedYear, selectedMonth,
-                                                                                            selectedDay, selectedHour,
-                                                                                            selectedMinute);
-                                                                               updatePublishDate(selectedCalendar);
-                                                                           }
-                                                                       }, hour, minute,
-                                                                       DateFormat.is24HourFormat(getActivity()));
-        timePickerDialog.setTitle(R.string.select_time);
-        timePickerDialog.show();
+
+        Calendar calendar = getCurrentPublishDateAsCalendar();
+        PostDatePickerDialogFragment fragment =
+                PostDatePickerDialogFragment.newInstance(PickerDialogType.TIME_PICKER, getPost(), calendar);
+        FragmentManager fm = ((AppCompatActivity) getActivity()).getSupportFragmentManager();
+        fragment.show(fm, PostDatePickerDialogFragment.TAG);
     }
 
     // Helpers
