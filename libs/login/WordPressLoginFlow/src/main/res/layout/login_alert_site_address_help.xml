@@ -20,6 +20,6 @@
         android:scaleType="fitCenter"
         android:adjustViewBounds="true"
         app:srcCompat="@drawable/login_site_address_help"
-        android:contentDescription="@string/login_site_address_help_image"/>
+        android:contentDescription="@null"/>
 
 </LinearLayout>

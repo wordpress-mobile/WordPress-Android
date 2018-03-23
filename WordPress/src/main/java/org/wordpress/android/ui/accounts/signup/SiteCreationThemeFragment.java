@@ -47,6 +47,8 @@ public class SiteCreationThemeFragment extends SiteCreationBaseFormFragment<Site
 
     @Override
     protected void setupContent(ViewGroup rootView) {
+        // important for accessibility - talkback
+        getActivity().setTitle(R.string.site_creation_theme_selection_title);
         RecyclerView recyclerView = (RecyclerView) rootView.findViewById(R.id.recycler_view);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         recyclerView.setAdapter(mSiteCreationThemeAdapter);

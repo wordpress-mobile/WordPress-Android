@@ -57,17 +57,20 @@ public class ReaderUserAdapter extends RecyclerView.Adapter<ReaderUserAdapter.Us
         if (user.hasUrl()) {
             holder.mTxtUrl.setVisibility(View.VISIBLE);
             holder.mTxtUrl.setText(user.getUrlDomain());
-            holder.itemView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    if (user.hasBlogId()) {
-                        ReaderActivityLauncher.showReaderBlogPreview(
-                                v.getContext(),
-                                user.blogId);
+            if (user.hasBlogId()) {
+                holder.itemView.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        ReaderActivityLauncher.showReaderBlogPreview(v.getContext(), user.blogId);
                     }
-                }
-            });
+                });
+                holder.mRootView.setEnabled(true);
+            } else {
+                holder.itemView.setOnClickListener(null);
+                holder.mRootView.setEnabled(false);
+            }
         } else {
+            holder.mRootView.setEnabled(false);
             holder.mTxtUrl.setVisibility(View.GONE);
             holder.itemView.setOnClickListener(null);
         }
@@ -90,9 +93,11 @@ public class ReaderUserAdapter extends RecyclerView.Adapter<ReaderUserAdapter.Us
         private final TextView mTxtName;
         private final TextView mTxtUrl;
         private final WPNetworkImageView mImgAvatar;
+        private final View mRootView;
 
         UserViewHolder(View view) {
             super(view);
+            mRootView = view;
             mTxtName = (TextView) view.findViewById(R.id.text_name);
             mTxtUrl = (TextView) view.findViewById(R.id.text_url);
             mImgAvatar = (WPNetworkImageView) view.findViewById(R.id.image_avatar);

@@ -10,6 +10,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_centerVertical="true"
+        android:contentDescription="@null"
         android:background="@drawable/reader_tear_repeat" />
 
     <org.wordpress.android.widgets.WPTextView
