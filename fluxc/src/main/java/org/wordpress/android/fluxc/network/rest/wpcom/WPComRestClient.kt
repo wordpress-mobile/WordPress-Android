@@ -19,7 +19,6 @@ class WPComRestClient
                 requestQueue,
                 accessToken,
                 userAgent) {
-
     fun enqueueRequest(request: WPComGsonRequest<*>): Request<*> {
         return add(request, true)
     }
