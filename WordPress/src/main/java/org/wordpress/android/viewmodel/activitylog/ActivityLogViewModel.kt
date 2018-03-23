@@ -3,6 +3,8 @@ package org.wordpress.android.viewmodel.activitylog
 import android.arch.lifecycle.MutableLiveData
 import android.arch.lifecycle.ViewModel
 import android.support.annotation.WorkerThread
+import org.greenrobot.eventbus.Subscribe
+import org.greenrobot.eventbus.ThreadMode
 import org.wordpress.android.fluxc.Dispatcher
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.model.activity.ActivityLogModel
@@ -34,5 +36,9 @@ class ActivityLogViewModel() : ViewModel() {
     @WorkerThread
     fun fetchActivityLogEntries() {
 //        events.postValue(activityLogStore.getEvents())
+    }
+
+    @Subscribe(threadMode = ThreadMode.BACKGROUND)
+    fun onActivitiesFetched(event: ActivityLogStore.ActivityError) {
     }
 }
