@@ -25,6 +25,7 @@ import android.widget.AutoCompleteTextView;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
@@ -759,6 +760,26 @@ public class ReaderPostListFragment extends Fragment
             && getPostListType() == ReaderPostListType.SEARCH_RESULTS
             && event.getQuery().equals(mCurrentSearchQuery)) {
             refreshPosts();
+        }
+    }
+
+    /*
+     * shows message and action to enable post notifications when a blog is followed
+     */
+    private void showPostNotificationsSnackbar(ReaderPost post) {
+        if (getView() != null) {
+            Snackbar.make(getView(), Html.fromHtml(getString(R.string.reader_followed_blog_notifications,
+                        post.getBlogName())),
+                        Snackbar.LENGTH_LONG)
+                    .setAction(getString(R.string.reader_followed_blog_notifications_action),
+                        new View.OnClickListener() {
+                            @Override public void onClick(View view) {
+                                // TODO: Replace message with API call.
+                                Toast.makeText(getActivity(), "Enabled", Toast.LENGTH_SHORT).show();
+                            }
+                        })
+                    .setActionTextColor(getResources().getColor(R.color.color_accent))
+                    .show();
         }
     }
 
@@ -1558,6 +1579,7 @@ public class ReaderPostListFragment extends Fragment
                 listPopup.dismiss();
                 switch ((int) id) {
                     case ReaderMenuAdapter.ITEM_FOLLOW:
+                        showPostNotificationsSnackbar(post);
                     case ReaderMenuAdapter.ITEM_UNFOLLOW:
                         toggleFollowStatusForPost(post);
                         break;

@@ -1340,6 +1340,9 @@
     <string name="reader_btn_follow">Follow</string>
     <string name="reader_btn_unfollow">Following</string>
 
+    <string name="reader_followed_blog_notifications">Following &lt;b&gt;%1$s&lt;/b&gt;&lt;br&gt;Enable post notifications?</string>
+    <string name="reader_followed_blog_notifications_action">Enable</string>
+
     <!-- EditText hints -->
     <string name="reader_hint_comment_on_post">Reply to post…</string>
     <string name="reader_hint_comment_on_comment">Reply to comment…</string>
