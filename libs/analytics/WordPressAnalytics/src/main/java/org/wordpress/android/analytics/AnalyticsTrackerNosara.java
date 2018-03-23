@@ -960,6 +960,12 @@ public class AnalyticsTrackerNosara extends Tracker {
                 return "plugin_search_performed";
             case PLUGIN_UPDATED:
                 return "plugin_updated";
+            case STOCK_MEDIA_ACCESSED:
+                return "stock_media_accessed";
+            case STOCK_MEDIA_SEARCHED :
+                return "stock_media_searched";
+            case STOCK_MEDIA_UPLOADED:
+                return "stock_media_uploaed";
             default:
                 return null;
         }

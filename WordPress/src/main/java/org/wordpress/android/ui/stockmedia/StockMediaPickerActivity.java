@@ -26,6 +26,7 @@ import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
+import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.fluxc.Dispatcher;
 import org.wordpress.android.fluxc.generated.MediaActionBuilder;
 import org.wordpress.android.fluxc.generated.StockMediaActionBuilder;
@@ -49,7 +50,9 @@ import org.wordpress.android.util.WPLinkMovementMethod;
 import org.wordpress.android.widgets.WPNetworkImageView;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.inject.Inject;
 
@@ -368,6 +371,8 @@ public class StockMediaPickerActivity extends AppCompatActivity implements Searc
             return;
         }
 
+        AnalyticsTracker.track(AnalyticsTracker.Stat.STOCK_MEDIA_SEARCHED);
+
         mNextPage = event.nextPage;
         mCanLoadMore = event.canLoadMore;
 
@@ -396,6 +401,11 @@ public class StockMediaPickerActivity extends AppCompatActivity implements Searc
             for (MediaModel media : event.mediaList) {
                 idList.add(media.getId());
             }
+
+            Map<String, Integer> properties = new HashMap<>();
+            properties.put("count", idList.size());
+            AnalyticsTracker.track(AnalyticsTracker.Stat.STOCK_MEDIA_UPLOADED, properties);
+
             Intent intent = new Intent();
             intent.putIntegerArrayListExtra(KEY_UPLOADED_MEDIA_IDS, idList);
             setResult(RESULT_OK, intent);

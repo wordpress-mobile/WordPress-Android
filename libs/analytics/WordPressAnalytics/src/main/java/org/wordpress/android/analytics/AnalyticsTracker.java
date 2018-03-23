@@ -335,7 +335,10 @@ public final class AnalyticsTracker {
         PLUGIN_INSTALLED,
         PLUGIN_REMOVED,
         PLUGIN_SEARCH_PERFORMED,
-        PLUGIN_UPDATED
+        PLUGIN_UPDATED,
+        STOCK_MEDIA_ACCESSED,
+        STOCK_MEDIA_SEARCHED,
+        STOCK_MEDIA_UPLOADED
     }
 
     private static final List<Tracker> TRACKERS = new ArrayList<>();
