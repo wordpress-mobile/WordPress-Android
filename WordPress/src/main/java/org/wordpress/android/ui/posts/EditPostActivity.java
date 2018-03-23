@@ -442,7 +442,7 @@ public class EditPostActivity extends AppCompatActivity implements
                                     @Override
                                     public void run() {
                                         if (mEditPostPreviewFragment != null) {
-                                            mEditPostPreviewFragment.loadPost(mPost);
+                                            mEditPostPreviewFragment.loadPost();
                                         }
                                     }
                                 });
@@ -1733,7 +1733,7 @@ public class EditPostActivity extends AppCompatActivity implements
                 case 1:
                     return EditPostSettingsFragment.newInstance();
                 default:
-                    return EditPostPreviewFragment.newInstance(mSite);
+                    return EditPostPreviewFragment.newInstance(mSite, mPost);
             }
         }
 

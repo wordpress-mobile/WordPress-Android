@@ -3,6 +3,8 @@ package org.wordpress.android.ui.posts;
 import android.app.Fragment;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.text.SpannableString;
 import android.text.Spanned;
 import android.view.LayoutInflater;
@@ -15,68 +17,54 @@ import android.widget.TextView;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.fluxc.model.PostModel;
-import org.wordpress.android.fluxc.model.SiteModel;
+import org.wordpress.android.fluxc.store.PostStore;
 import org.wordpress.android.util.StringUtils;
-import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.WPHtml;
 
+import javax.inject.Inject;
+
 public class EditPostPreviewFragment extends Fragment {
+    private static final String ARG_POST_ID = "post_id";
     private WebView mWebView;
     private TextView mTextView;
 
     private LoadPostPreviewTask mLoadTask;
 
-    private SiteModel mSite;
-    private PostModel mPost;
+    private int mPostId;
 
-    public static EditPostPreviewFragment newInstance(SiteModel site) {
+    @Inject PostStore mPostStore;
+
+    public static EditPostPreviewFragment newInstance(@NonNull PostModel post) {
         EditPostPreviewFragment fragment = new EditPostPreviewFragment();
         Bundle bundle = new Bundle();
-        bundle.putSerializable(WordPress.SITE, site);
+        bundle.putInt(ARG_POST_ID, post.getId());
         fragment.setArguments(bundle);
         return fragment;
     }
 
     @Override
-    public void onSaveInstanceState(Bundle outState) {
-        super.onSaveInstanceState(outState);
-        outState.putSerializable(WordPress.SITE, mSite);
+    public void setArguments(Bundle args) {
+        super.setArguments(args);
+        mPostId = args.getInt(ARG_POST_ID);
     }
 
     @Override
-    public void onCreate(Bundle savedInstanceState) {
+    public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        updateSiteOrFinishActivity(savedInstanceState);
-    }
-
-    private void updateSiteOrFinishActivity(Bundle savedInstanceState) {
-        if (savedInstanceState == null) {
-            if (getArguments() != null) {
-                mSite = (SiteModel) getArguments().getSerializable(WordPress.SITE);
-            } else {
-                mSite = (SiteModel) getActivity().getIntent().getSerializableExtra(WordPress.SITE);
-            }
-        } else {
-            mSite = (SiteModel) savedInstanceState.getSerializable(WordPress.SITE);
-        }
-
-        if (mSite == null) {
-            ToastUtils.showToast(getActivity(), R.string.blog_not_found, ToastUtils.Duration.SHORT);
-            getActivity().finish();
-        }
+        ((WordPress) getActivity().getApplicationContext()).component().inject(this);
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         ViewGroup rootView = (ViewGroup) inflater
                 .inflate(R.layout.edit_post_preview_fragment, container, false);
-        mWebView = (WebView) rootView.findViewById(R.id.post_preview_webview);
-        mTextView = (TextView) rootView.findViewById(R.id.post_preview_textview);
+        mWebView = rootView.findViewById(R.id.post_preview_webview);
+        mTextView = rootView.findViewById(R.id.post_preview_textview);
         mTextView.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
             @Override
             public void onGlobalLayout() {
                 if (getActivity() != null) {
-                    loadCurrentPost();
+                    loadPost();
                 }
                 mTextView.getViewTreeObserver().removeGlobalOnLayoutListener(this);
             }
@@ -90,7 +78,7 @@ public class EditPostPreviewFragment extends Fragment {
         super.onResume();
 
         if (getActivity() != null && !mTextView.isLayoutRequested()) {
-            loadCurrentPost();
+            loadPost();
         }
     }
 
@@ -104,25 +92,20 @@ public class EditPostPreviewFragment extends Fragment {
         }
     }
 
-    public void loadPost(PostModel post) {
+    void loadPost() {
         // cancel the previous load so we can load the new post
         if (mLoadTask != null) {
             mLoadTask.cancel(true);
-            mLoadTask = null;
         }
-        mPost = post;
-        loadCurrentPost();
-    }
 
-    private void loadCurrentPost() {
-        if (mLoadTask == null) {
-            mLoadTask = new LoadPostPreviewTask();
-            mLoadTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
-        }
+        mLoadTask = new LoadPostPreviewTask();
+        mLoadTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 
     // Load post content in the background
     private class LoadPostPreviewTask extends AsyncTask<Void, Void, Spanned> {
+        private PostModel mPost;
+
         @Override
         protected Spanned doInBackground(Void... params) {
             Spanned contentSpannable;
@@ -131,6 +114,7 @@ public class EditPostPreviewFragment extends Fragment {
                 return null;
             }
 
+            mPost = mPostStore.getPostByLocalPostId(mPostId);
             if (mPost == null) {
                 return null;
             }
