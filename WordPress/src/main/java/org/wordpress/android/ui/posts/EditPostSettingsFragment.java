@@ -571,7 +571,7 @@ public class EditPostSettingsFragment extends Fragment {
         PostDatePickerDialogFragment fragment =
                 PostDatePickerDialogFragment.newInstance(PickerDialogType.DATE_PICKER, getPost(), calendar);
         FragmentManager fm = ((AppCompatActivity) getActivity()).getSupportFragmentManager();
-        fragment.show(fm, PostDatePickerDialogFragment.TAG);
+        fragment.show(fm, PostDatePickerDialogFragment.TAG_DATE);
     }
 
     private void showPostTimeSelectionDialog() {
@@ -583,7 +583,7 @@ public class EditPostSettingsFragment extends Fragment {
         PostDatePickerDialogFragment fragment =
                 PostDatePickerDialogFragment.newInstance(PickerDialogType.TIME_PICKER, getPost(), calendar);
         FragmentManager fm = ((AppCompatActivity) getActivity()).getSupportFragmentManager();
-        fragment.show(fm, PostDatePickerDialogFragment.TAG);
+        fragment.show(fm, PostDatePickerDialogFragment.TAG_TIME);
     }
 
     // Helpers

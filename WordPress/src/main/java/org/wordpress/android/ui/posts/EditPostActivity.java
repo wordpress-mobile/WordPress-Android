@@ -1342,7 +1342,7 @@ public class EditPostActivity extends AppCompatActivity implements
     }
 
     /*
-     * user clicked OK on a settings dialog displayed from the settings fragment - pass the event
+     * user clicked OK on a settings list dialog displayed from the settings fragment - pass the event
      * along to the settings fragment
      */
     @Override
@@ -1352,6 +1352,10 @@ public class EditPostActivity extends AppCompatActivity implements
         }
     }
 
+    /*
+     * user clicked OK on a settings date/time dialog displayed from the settings fragment - pass the event
+     * along to the settings fragment
+     */
     @Override
     public void onPostDatePickerDialogPositiveButtonClicked(@NonNull PostDatePickerDialogFragment dialog,
                                                             @NonNull Calendar calender) {

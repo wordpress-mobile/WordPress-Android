@@ -1,7 +1,6 @@
 package org.wordpress.android.ui.posts;
 
 import android.app.Activity;
-import android.app.AlertDialog;
 import android.app.DatePickerDialog;
 import android.app.Dialog;
 import android.app.TimePickerDialog;
@@ -30,7 +29,9 @@ public class PostDatePickerDialogFragment extends DialogFragment {
         TIME_PICKER
     }
 
-    public static final String TAG = "post_date_picker_dialog_fragment";
+    public static final String TAG_DATE = "post_date_picker_dialog_fragment";
+    public static final String TAG_TIME = "post_time_picker_dialog_fragment";
+
     private static final String ARG_DIALOG_TYPE = "dialog_type";
     private static final String ARG_CAN_PUBLISH_IMMEDIATELY = "can_publish_immediately";
 
@@ -107,10 +108,9 @@ public class PostDatePickerDialogFragment extends DialogFragment {
         }
     }
 
+    @NonNull
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
-        AlertDialog dialog;
-
         switch (mDialogType) {
             case DATE_PICKER:
                 final DatePickerDialog datePickerDialog = new DatePickerDialog(
@@ -119,8 +119,6 @@ public class PostDatePickerDialogFragment extends DialogFragment {
                         mYear,
                         mMonth,
                         mDay);
-                dialog = datePickerDialog;
-
                 datePickerDialog.setTitle(R.string.select_date);
                 datePickerDialog.setButton(
                         DialogInterface.BUTTON_POSITIVE,
@@ -139,27 +137,28 @@ public class PostDatePickerDialogFragment extends DialogFragment {
                                         getCalender());
                             }
                         });
-                datePickerDialog.setButton(
-                        DialogInterface.BUTTON_NEUTRAL,
-                        getString(R.string.immediately),
-                        new DialogInterface.OnClickListener() {
-                            public void onClick(DialogInterface dialog, int id) {
-                                Calendar now = Calendar.getInstance();
-                                mPublishImmediately = true;
-                                mListener.onPostDatePickerDialogPositiveButtonClicked(
-                                        PostDatePickerDialogFragment.this,
-                                        now);
-                            }
-                        });
                 if (mCanPublishImmediately) {
+                    datePickerDialog.setButton(
+                            DialogInterface.BUTTON_NEUTRAL,
+                            getString(R.string.immediately),
+                            new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog, int id) {
+                                    Calendar now = Calendar.getInstance();
+                                    mPublishImmediately = true;
+                                    mListener.onPostDatePickerDialogPositiveButtonClicked(
+                                            PostDatePickerDialogFragment.this,
+                                            now);
+                                }
+                            });
                     // We shouldn't let the user pick a past date since we'll just override it to Immediately if they do
                     // We can't set the min date to now, so we need to subtract some amount of time
                     datePickerDialog.getDatePicker().setMinDate(System.currentTimeMillis() - 1000);
                 }
-                break;
+                return datePickerDialog;
+
             case TIME_PICKER:
                 boolean is24HrFormat = DateFormat.is24HourFormat(getActivity());
-                TimePickerDialog timePickerDialog = new TimePickerDialog(
+                return new TimePickerDialog(
                         getActivity(),
                         new TimePickerDialog.OnTimeSetListener() {
                             @Override
@@ -178,24 +177,11 @@ public class PostDatePickerDialogFragment extends DialogFragment {
                         mHour,
                         mMinute,
                         is24HrFormat);
-                dialog = timePickerDialog;
-                break;
+
             default:
                 // should never get here
                 return null;
         }
-
-        dialog.setButton(
-                DialogInterface.BUTTON_NEGATIVE,
-                getString(android.R.string.cancel),
-                new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int id) {
-                        // noop
-                    }
-                });
-
-
-        return dialog;
     }
 
     @NonNull
@@ -205,7 +191,8 @@ public class PostDatePickerDialogFragment extends DialogFragment {
         return calendar;
     }
 
-    public @NonNull PickerDialogType getDialogType() {
+    public @NonNull
+    PickerDialogType getDialogType() {
         return mDialogType;
     }
 
