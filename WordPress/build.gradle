@@ -45,6 +45,9 @@ android {
 
         multiDexEnabled true
         vectorDrawables.useSupportLibrary = true
+
+        //for UI Tests
+        testInstrumentationRunner 'android.support.test.runner.AndroidJUnitRunner'
     }
 
     flavorDimensions "buildType"
@@ -152,6 +155,11 @@ dependencies {
     androidTestImplementation 'org.mockito:mockito-core:1.10.19'
     androidTestImplementation 'com.squareup.okhttp:mockwebserver:2.7.5'
     androidTestImplementation 'com.squareup.okio:okio:1.13.0'
+
+    // UI Tests
+    androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.1'
+    androidTestImplementation 'com.android.support.test:runner:1.0.1'
+    androidTestImplementation 'com.android.support.test.espresso:espresso-contrib:3.0.1'
 
     // Provided by the WordPress-Android Repository
     implementation 'org.wordpress:passcodelock:1.5.1'
