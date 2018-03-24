@@ -917,6 +917,9 @@ public class EditPostActivity extends AppCompatActivity implements
             case WP_MEDIA:
                 ActivityLauncher.viewMediaPickerForResult(this, mSite, MediaBrowserType.EDITOR_PICKER);
                 break;
+            case STOCK_MEDIA:
+                ActivityLauncher.showStockMediaPickerForResult(this, mSite);
+                break;
         }
     }
 
