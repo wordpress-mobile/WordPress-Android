@@ -107,6 +107,7 @@ import org.wordpress.android.ui.posts.services.AztecVideoLoader;
 import org.wordpress.android.ui.prefs.AppPrefs;
 import org.wordpress.android.ui.prefs.ReleaseNotesActivity;
 import org.wordpress.android.ui.prefs.SiteSettingsInterface;
+import org.wordpress.android.ui.stockmedia.StockMediaPickerActivity;
 import org.wordpress.android.ui.uploads.PostEvents;
 import org.wordpress.android.ui.uploads.UploadService;
 import org.wordpress.android.ui.uploads.UploadUtils;
@@ -2465,6 +2466,16 @@ public class EditPostActivity extends AppCompatActivity implements
                     if (mEditorFragment instanceof AztecEditorFragment) {
                         mEditorFragment.onActivityResult(AztecEditorFragment.EDITOR_MEDIA_SETTINGS,
                                                          Activity.RESULT_OK, data);
+                    }
+                    break;
+                case RequestCodes.STOCK_MEDIA_PICKER:
+                    if (data != null && data.hasExtra(StockMediaPickerActivity.KEY_UPLOADED_MEDIA_IDS)) {
+                        long[] mediaIds =
+                                data.getLongArrayExtra(StockMediaPickerActivity.KEY_UPLOADED_MEDIA_IDS);
+                        for (long id : mediaIds) {
+                            addExistingMediaToEditor(id);
+                        }
+                        savePostAsync(null);
                     }
                     break;
             }

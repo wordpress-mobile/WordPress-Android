@@ -30,7 +30,6 @@ import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.fluxc.Dispatcher;
 import org.wordpress.android.fluxc.generated.MediaActionBuilder;
 import org.wordpress.android.fluxc.generated.StockMediaActionBuilder;
-import org.wordpress.android.fluxc.model.MediaModel;
 import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.model.StockMediaModel;
 import org.wordpress.android.fluxc.store.MediaStore;
@@ -62,7 +61,6 @@ public class StockMediaPickerActivity extends AppCompatActivity implements Searc
 
     private static final String KEY_SEARCH_QUERY = "search_query";
     private static final String KEY_IS_UPLOADING = "is_uploading";
-    // this will be used later by the editor to insert uploaded stock photos into the current post
     public static final String KEY_UPLOADED_MEDIA_IDS = "uploaded_media_ids";
 
     private SiteModel mSite;
@@ -397,17 +395,18 @@ public class StockMediaPickerActivity extends AppCompatActivity implements Searc
             ToastUtils.showToast(this, R.string.media_upload_error);
             AppLog.e(AppLog.T.MEDIA, "An error occurred while uploading stock media");
         } else {
-            ArrayList<Integer> idList = new ArrayList<>();
-            for (MediaModel media : event.mediaList) {
-                idList.add(media.getId());
+            int count = event.mediaList.size();
+            long[] idArray = new long[count];
+            for (int i = 0; i < count; i++) {
+                idArray[i] = event.mediaList.get(i).getMediaId();
             }
 
             Map<String, Integer> properties = new HashMap<>();
-            properties.put("count", idList.size());
+            properties.put("count", count);
             AnalyticsTracker.track(AnalyticsTracker.Stat.STOCK_MEDIA_UPLOADED, properties);
 
             Intent intent = new Intent();
-            intent.putIntegerArrayListExtra(KEY_UPLOADED_MEDIA_IDS, idList);
+            intent.putExtra(KEY_UPLOADED_MEDIA_IDS, idArray);
             setResult(RESULT_OK, intent);
             finish();
         }
