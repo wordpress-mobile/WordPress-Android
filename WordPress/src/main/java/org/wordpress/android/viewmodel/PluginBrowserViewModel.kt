@@ -16,6 +16,7 @@ import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.model.plugin.ImmutablePluginModel
 import org.wordpress.android.fluxc.model.plugin.PluginDirectoryType
 import org.wordpress.android.fluxc.store.PluginStore
+import org.wordpress.android.fluxc.store.PluginStore.FetchPluginDirectoryPayload
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.AppLog.T
 import org.wordpress.android.util.StringUtils
@@ -180,22 +181,22 @@ constructor(private val mDispatcher: Dispatcher, private val mPluginStore: Plugi
         when (listType) {
             PluginBrowserViewModel.PluginListType.SITE -> {
                 _sitePluginsListStatus.postValue(newStatus)
-                val payload = PluginStore.FetchPluginDirectoryPayload(PluginDirectoryType.SITE, site, loadMore)
+                val payload = FetchPluginDirectoryPayload(PluginDirectoryType.SITE, site, loadMore)
                 mDispatcher.dispatch(PluginActionBuilder.newFetchPluginDirectoryAction(payload))
             }
             PluginBrowserViewModel.PluginListType.FEATURED -> {
                 _featuredPluginsListStatus.postValue(newStatus)
-                val featuredPayload = PluginStore.FetchPluginDirectoryPayload(PluginDirectoryType.FEATURED, site, loadMore)
+                val featuredPayload = FetchPluginDirectoryPayload(PluginDirectoryType.FEATURED, site, loadMore)
                 mDispatcher.dispatch(PluginActionBuilder.newFetchPluginDirectoryAction(featuredPayload))
             }
             PluginBrowserViewModel.PluginListType.POPULAR -> {
                 _popularPluginsListStatus.postValue(newStatus)
-                val popularPayload = PluginStore.FetchPluginDirectoryPayload(PluginDirectoryType.POPULAR, site, loadMore)
+                val popularPayload = FetchPluginDirectoryPayload(PluginDirectoryType.POPULAR, site, loadMore)
                 mDispatcher.dispatch(PluginActionBuilder.newFetchPluginDirectoryAction(popularPayload))
             }
             PluginBrowserViewModel.PluginListType.NEW -> {
                 _newPluginsListStatus.postValue(newStatus)
-                val newPayload = PluginStore.FetchPluginDirectoryPayload(PluginDirectoryType.NEW, site, loadMore)
+                val newPayload = FetchPluginDirectoryPayload(PluginDirectoryType.NEW, site, loadMore)
                 mDispatcher.dispatch(PluginActionBuilder.newFetchPluginDirectoryAction(newPayload))
             }
             PluginBrowserViewModel.PluginListType.SEARCH -> {
