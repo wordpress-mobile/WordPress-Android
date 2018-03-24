@@ -916,6 +916,8 @@ public class AnalyticsTrackerNosara extends Tracker {
                 return "deep_linked_fallback";
             case DEEP_LINK_NOT_DEFAULT_HANDLER:
                 return "deep_link_not_default_handler";
+            case MAIN_TABS_SWIPED:
+                return "main_tabs_swiped";
             case MEDIA_LIBRARY_ADDED_PHOTO:
                 return "media_library_photo_added";
             case MEDIA_LIBRARY_ADDED_VIDEO:

@@ -253,6 +253,18 @@ public class ReaderTagTable {
         }
     }
 
+    public static ReaderTag getFirstTag() {
+        Cursor c = ReaderDatabase.getReadableDb().rawQuery("SELECT * FROM tbl_tags ORDER BY tag_slug LIMIT 1", null);
+        try {
+            if (c.moveToFirst()) {
+                return getTagFromCursor(c);
+            }
+            return null;
+        } finally {
+            SqlUtils.closeCursor(c);
+        }
+    }
+
     public static void deleteTag(ReaderTag tag) {
         if (tag == null) {
             return;
