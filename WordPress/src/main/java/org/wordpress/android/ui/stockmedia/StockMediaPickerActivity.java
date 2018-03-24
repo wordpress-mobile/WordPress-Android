@@ -26,6 +26,7 @@ import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
+import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.fluxc.Dispatcher;
 import org.wordpress.android.fluxc.generated.MediaActionBuilder;
 import org.wordpress.android.fluxc.generated.StockMediaActionBuilder;
@@ -49,7 +50,9 @@ import org.wordpress.android.util.WPLinkMovementMethod;
 import org.wordpress.android.widgets.WPNetworkImageView;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.inject.Inject;
 
@@ -59,6 +62,7 @@ public class StockMediaPickerActivity extends AppCompatActivity implements Searc
 
     private static final String KEY_SEARCH_QUERY = "search_query";
     private static final String KEY_IS_UPLOADING = "is_uploading";
+    // this will be used later by the editor to insert uploaded stock photos into the current post
     public static final String KEY_UPLOADED_MEDIA_IDS = "uploaded_media_ids";
 
     private SiteModel mSite;
@@ -136,9 +140,9 @@ public class StockMediaPickerActivity extends AppCompatActivity implements Searc
                 uploadSelection();
             }
         });
-        findViewById(R.id.text_clear).setOnClickListener(new View.OnClickListener() {
+        findViewById(R.id.text_preview).setOnClickListener(new View.OnClickListener() {
             @Override public void onClick(View v) {
-                mAdapter.clearSelection();
+                previewSelection();
             }
         });
 
@@ -367,6 +371,8 @@ public class StockMediaPickerActivity extends AppCompatActivity implements Searc
             return;
         }
 
+        AnalyticsTracker.track(AnalyticsTracker.Stat.STOCK_MEDIA_SEARCHED);
+
         mNextPage = event.nextPage;
         mCanLoadMore = event.canLoadMore;
 
@@ -395,6 +401,11 @@ public class StockMediaPickerActivity extends AppCompatActivity implements Searc
             for (MediaModel media : event.mediaList) {
                 idList.add(media.getId());
             }
+
+            Map<String, Integer> properties = new HashMap<>();
+            properties.put("count", idList.size());
+            AnalyticsTracker.track(AnalyticsTracker.Stat.STOCK_MEDIA_UPLOADED, properties);
+
             Intent intent = new Intent();
             intent.putIntegerArrayListExtra(KEY_UPLOADED_MEDIA_IDS, idList);
             setResult(RESULT_OK, intent);
@@ -440,6 +451,17 @@ public class StockMediaPickerActivity extends AppCompatActivity implements Searc
         } else {
             showSelectionBar(false);
         }
+    }
+
+    private void previewSelection() {
+        List<StockMediaModel> items = mAdapter.getSelectedStockMedia();
+        if (items.size() == 0) return;
+
+        ArrayList<String> imageUrlList = new ArrayList<>();
+        for (StockMediaModel media : items) {
+            imageUrlList.add(media.getUrl());
+        }
+        MediaPreviewActivity.showPreview(this, null, imageUrlList, imageUrlList.get(0));
     }
 
     private void uploadSelection() {
@@ -605,14 +627,6 @@ public class StockMediaPickerActivity extends AppCompatActivity implements Searc
             mSelectedItems.addAll(selectedItems);
             notifyDataSetChanged();
             notifySelectionCountChanged();
-        }
-
-        private void clearSelection() {
-            if (mSelectedItems.size() > 0) {
-                mSelectedItems.clear();
-                notifyDataSetChanged();
-                notifySelectionCountChanged();
-            }
         }
 
         int getSelectionCount() {
