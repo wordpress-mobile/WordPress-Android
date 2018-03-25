@@ -134,6 +134,7 @@
     <color name="reader_following">@color/alert_green</color>
     <color name="reader_hyperlink">@color/blue_medium</color>
     <color name="filtered_list_suggestions">#f8f8f8</color>
+    <color name="reader_accent_material_dark">@color/material_deep_teal_200</color>
 
     <!-- Comment Status -->
     <color name="comment_status_unapproved">@color/orange_jazzy</color>

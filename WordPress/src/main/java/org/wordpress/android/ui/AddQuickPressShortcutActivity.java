@@ -8,6 +8,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.content.pm.ShortcutInfoCompat;
 import android.support.v4.content.pm.ShortcutManagerCompat;
+import android.support.v4.graphics.drawable.IconCompat;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -150,7 +151,7 @@ public class AddQuickPressShortcutActivity extends ListActivity {
 
                     ShortcutInfoCompat pinShortcutInfo =
                             new ShortcutInfoCompat.Builder(getApplicationContext(), shortcutName)
-                                    .setIcon(R.mipmap.app_icon)
+                                    .setIcon(IconCompat.createWithResource(getApplicationContext(), R.mipmap.app_icon))
                                     .setShortLabel(shortcutName)
                                     .setIntent(shortcutIntent)
                                     .build();

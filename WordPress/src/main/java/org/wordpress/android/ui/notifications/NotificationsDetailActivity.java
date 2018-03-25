@@ -108,7 +108,7 @@ public class NotificationsDetailActivity extends AppCompatActivity implements
         }
 
         // set up the viewpager and adapter for lateral navigation
-        mViewPager = (WPViewPager) findViewById(R.id.viewpager);
+        mViewPager = findViewById(R.id.viewpager);
         mViewPager.setPageTransformer(false,
                                       new WPViewPagerTransformer(WPViewPagerTransformer.TransformType.SLIDE_OVER));
 
@@ -290,6 +290,8 @@ public class NotificationsDetailActivity extends AppCompatActivity implements
             }
 
             getSupportActionBar().setTitle(title);
+            // important for accessibility - talkback
+            setTitle(getString(R.string.notif_detail_screen_title, title));
         }
     }
 
@@ -426,7 +428,7 @@ public class NotificationsDetailActivity extends AppCompatActivity implements
 
     private void setProgressVisible(boolean visible) {
         final ProgressBar progress =
-                (ProgressBar) findViewById(R.id.progress_loading);
+                findViewById(R.id.progress_loading);
         if (progress != null) {
             progress.setVisibility(visible ? View.VISIBLE : View.GONE);
         }
@@ -512,7 +514,7 @@ public class NotificationsDetailActivity extends AppCompatActivity implements
             return (position >= 0 && position < getCount());
         }
 
-        public Note getNoteAtPosition(int position) {
+        private Note getNoteAtPosition(int position) {
             if (isValidPosition(position)) {
                 return mNoteList.get(position);
             } else {
@@ -520,7 +522,7 @@ public class NotificationsDetailActivity extends AppCompatActivity implements
             }
         }
 
-        public Note getNoteWithId(String id) {
+        private Note getNoteWithId(String id) {
             for (Note note : mNoteList) {
                 if (note.getId().equalsIgnoreCase(id)) {
                     return note;

@@ -24,6 +24,7 @@ import org.json.JSONObject;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.ui.notifications.utils.NotificationsUtils;
+import org.wordpress.android.util.AccessibilityUtils;
 import org.wordpress.android.util.DisplayUtils;
 import org.wordpress.android.util.JSONUtils;
 import org.wordpress.android.widgets.WPTextView;
@@ -114,14 +115,14 @@ public class NoteBlock {
     boolean hasImageMediaItem() {
         String mediaType = getNoteMediaItem().optString(PROPERTY_MEDIA_TYPE, "");
         return hasMediaArray()
-               && (mediaType.startsWith("image") || mediaType.equals("badge"))
-               && getNoteMediaItem().has(PROPERTY_MEDIA_URL);
+                && (mediaType.startsWith("image") || mediaType.equals("badge"))
+                && getNoteMediaItem().has(PROPERTY_MEDIA_URL);
     }
 
     private boolean hasVideoMediaItem() {
         return hasMediaArray()
-               && getNoteMediaItem().optString(PROPERTY_MEDIA_TYPE, "").startsWith("video")
-               && getNoteMediaItem().has(PROPERTY_MEDIA_URL);
+                && getNoteMediaItem().optString(PROPERTY_MEDIA_TYPE, "").startsWith("video")
+                && getNoteMediaItem().has(PROPERTY_MEDIA_URL);
     }
 
     public boolean containsBadgeMediaType() {
@@ -164,6 +165,9 @@ public class NoteBlock {
                     noteBlockHolder.hideImageView();
                 }
             });
+            if (mIsBadge) {
+                noteBlockHolder.getImageView().setImportantForAccessibility(View.IMPORTANT_FOR_ACCESSIBILITY_NO);
+            }
         } else {
             noteBlockHolder.hideImageView();
         }
@@ -180,11 +184,16 @@ public class NoteBlock {
         if (!TextUtils.isEmpty(getNoteText())) {
             if (mIsBadge) {
                 LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT,
-                                                                             LinearLayout.LayoutParams.MATCH_PARENT);
+                        LinearLayout.LayoutParams.MATCH_PARENT);
                 params.gravity = Gravity.CENTER_HORIZONTAL;
                 noteBlockHolder.getTextView().setLayoutParams(params);
                 noteBlockHolder.getTextView().setGravity(Gravity.CENTER_HORIZONTAL);
                 noteBlockHolder.getTextView().setPadding(0, DisplayUtils.dpToPx(view.getContext(), 8), 0, 0);
+
+                if (AccessibilityUtils.isAccessibilityEnabled(noteBlockHolder.getTextView().getContext())) {
+                    noteBlockHolder.getTextView().setClickable(false);
+                    noteBlockHolder.getTextView().setLongClickable(false);
+                }
             } else {
                 noteBlockHolder.getTextView().setGravity(Gravity.NO_GRAVITY);
                 noteBlockHolder.getTextView().setPadding(0, 0, 0, 0);
@@ -194,6 +203,7 @@ public class NoteBlock {
         } else {
             noteBlockHolder.getTextView().setVisibility(View.GONE);
         }
+
 
         view.setBackgroundColor(mBackgroundColor);
 
@@ -241,7 +251,7 @@ public class NoteBlock {
                 mVideoView = new VideoView(mRootLayout.getContext());
                 FrameLayout.LayoutParams layoutParams =
                         new FrameLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
-                                                     DisplayUtils.dpToPx(mRootLayout.getContext(), 220));
+                                DisplayUtils.dpToPx(mRootLayout.getContext(), 220));
                 mVideoView.setLayoutParams(layoutParams);
                 mRootLayout.addView(mVideoView, 0);
 

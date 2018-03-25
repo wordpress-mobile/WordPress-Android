@@ -10,7 +10,17 @@ public interface LoginAnalyticsListener {
     void trackCreatedAccount();
     void trackEmailFormViewed();
     void trackInsertedInvalidUrl();
+    void trackLoginAccessed();
+    void trackLoginAutofillCredentialsFilled();
+    void trackLoginAutofillCredentialsUpdated();
     void trackLoginFailed(String errorContext, String errorType, String errorDescription);
+    void trackLoginForgotPasswordClicked();
+    void trackLoginMagicLinkExited();
+    void trackLoginMagicLinkOpened();
+    void trackLoginMagicLinkOpenEmailClientClicked();
+    void trackLoginMagicLinkSucceeded();
+    void trackLoginSocial2faNeeded();
+    void trackLoginSocialSuccess();
     void trackMagicLinkFailed(Map<String, ?> properties);
     void trackMagicLinkOpenEmailClientViewed();
     void trackMagicLinkRequested();

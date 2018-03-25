@@ -26,6 +26,7 @@
                 android:id="@+id/theme_grid_item_image_layout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:importantForAccessibility="noHideDescendants"
                 android:foreground="?android:attr/selectableItemBackground">
 
                 <org.wordpress.android.widgets.WPNetworkImageView
