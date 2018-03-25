@@ -40,6 +40,7 @@
             tools:ignore="UselessParent">
 
             <org.wordpress.android.ui.reader.views.ReaderIconCountView
+                android:contentDescription="@string/reader_view_comments"
                 android:id="@+id/count_comments"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"

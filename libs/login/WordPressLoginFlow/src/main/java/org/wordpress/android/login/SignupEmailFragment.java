@@ -84,6 +84,8 @@ public class SignupEmailFragment extends LoginBaseFormFragment<LoginListener> im
 
     @Override
     protected void setupContent(ViewGroup rootView) {
+        // important for accessibility - talkback
+        getActivity().setTitle(R.string.signup_email_screen_title);
         mEmailInput = rootView.findViewById(R.id.login_email_row);
 
         if (BuildConfig.DEBUG) {

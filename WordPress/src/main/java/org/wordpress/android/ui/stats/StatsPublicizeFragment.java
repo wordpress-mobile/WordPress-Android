@@ -136,6 +136,13 @@ public class StatsPublicizeFragment extends StatsAbstractListFragment {
 
             // totals
             holder.totalsTextView.setText(FormatUtils.formatDecimal(currentRowData.getTotals()));
+            holder.totalsTextView.setContentDescription(
+                    org.wordpress.android.util.StringUtils.getQuantityString(
+                            holder.totalsTextView.getContext(),
+                            R.string.stats_followers_zero_desc,
+                            R.string.stats_followers_one_desc,
+                            R.string.stats_followers_many_desc,
+                            currentRowData.getTotals()));
 
             // image
             holder.networkImageView.setImageUrl(

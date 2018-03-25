@@ -170,6 +170,13 @@ public class StatsClicksFragment extends StatsAbstractListFragment {
             holder.totalsTextView.setText(FormatUtils.formatDecimal(
                     children.getTotals()
                                                                    ));
+            holder.totalsTextView.setContentDescription(
+                    org.wordpress.android.util.StringUtils.getQuantityString(
+                            holder.totalsTextView.getContext(),
+                            R.string.stats_clicks_zero_desc,
+                            R.string.stats_clicks_one_desc,
+                            R.string.stats_clicks_many_desc,
+                            children.getTotals()));
 
             // no icon
             holder.networkImageView.setVisibility(View.GONE);
@@ -232,6 +239,13 @@ public class StatsClicksFragment extends StatsAbstractListFragment {
 
             // totals
             holder.totalsTextView.setText(FormatUtils.formatDecimal(total));
+            holder.totalsTextView.setContentDescription(
+                    org.wordpress.android.util.StringUtils.getQuantityString(
+                            holder.totalsTextView.getContext(),
+                            R.string.stats_clicks_zero_desc,
+                            R.string.stats_clicks_one_desc,
+                            R.string.stats_clicks_many_desc,
+                            total));
 
             // Site icon
             holder.networkImageView.setVisibility(View.GONE);

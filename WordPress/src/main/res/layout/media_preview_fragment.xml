@@ -11,6 +11,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:clickable="true"
+        android:focusable="true"
         android:visibility="gone"
         tools:visibility="visible">
 
@@ -27,6 +28,7 @@
         android:layout_height="match_parent"
         android:background="@drawable/media_settings_background"
         android:clickable="true"
+        android:focusable="true"
         android:visibility="gone"
         tools:visibility="visible">
 
@@ -50,14 +52,16 @@
             android:layout_width="128dp"
             android:layout_height="128dp"
             android:layout_centerInParent="true"
-            app:srcCompat="@drawable/ic_gridicons_audio"/>
+            app:srcCompat="@drawable/ic_gridicons_audio"
+            android:contentDescription="@string/media_preview_audio_desc"/>
 
     </RelativeLayout>
 
     <ImageView
         android:id="@+id/image_preview"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"/>
+        android:layout_height="match_parent"
+        android:contentDescription="@string/media_preview_desc"/>
 
     <TextView
         android:id="@+id/text_error"

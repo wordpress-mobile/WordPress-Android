@@ -69,7 +69,6 @@ public class EditCommentActivity extends AppCompatActivity {
         ((WordPress) getApplication()).component().inject(this);
 
         setContentView(R.layout.comment_edit_activity);
-        setTitle(getString(R.string.edit_comment));
 
         ActionBar actionBar = getSupportActionBar();
         if (actionBar != null) {
