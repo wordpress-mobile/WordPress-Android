@@ -71,6 +71,7 @@ public class StockMediaPickerActivity extends AppCompatActivity implements Searc
     private RecyclerView mRecycler;
     private ViewGroup mSelectionBar;
     private TextView mTextAdd;
+    private TextView mTextPreview;
 
     private SearchView mSearchView;
     private String mSearchQuery;
@@ -132,12 +133,14 @@ public class StockMediaPickerActivity extends AppCompatActivity implements Searc
 
         mSelectionBar = findViewById(R.id.container_selection_bar);
         mTextAdd = findViewById(R.id.text_add);
+        mTextPreview = findViewById(R.id.text_preview);
+
         mTextAdd.setOnClickListener(new View.OnClickListener() {
             @Override public void onClick(View v) {
                 uploadSelection();
             }
         });
-        findViewById(R.id.text_preview).setOnClickListener(new View.OnClickListener() {
+        mTextPreview.setOnClickListener(new View.OnClickListener() {
             @Override public void onClick(View v) {
                 previewSelection();
             }
@@ -432,8 +435,12 @@ public class StockMediaPickerActivity extends AppCompatActivity implements Searc
     private void notifySelectionCountChanged() {
         int numSelected = mAdapter.getSelectionCount();
         if (numSelected > 0) {
-            String label = String.format(getString(R.string.add_count), numSelected);
-            mTextAdd.setText(label);
+            String labelAdd = String.format(getString(R.string.add_count), numSelected);
+            mTextAdd.setText(labelAdd);
+
+            String labelPreview = String.format(getString(R.string.preview_count), numSelected);
+            mTextPreview.setText(labelPreview);
+
             showSelectionBar(true);
             if (numSelected == 1) {
                 ActivityUtils.hideKeyboardForced(mSearchView);
