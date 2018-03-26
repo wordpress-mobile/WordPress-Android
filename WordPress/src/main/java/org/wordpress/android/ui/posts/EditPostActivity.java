@@ -148,6 +148,7 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -172,7 +173,9 @@ public class EditPostActivity extends AppCompatActivity implements
         OnRequestPermissionsResultCallback,
         PhotoPickerFragment.PhotoPickerListener,
         EditPostSettingsFragment.EditPostActivityHook,
-        BaseYesNoFragmentDialog.BasicYesNoDialogClickInterface {
+        BaseYesNoFragmentDialog.BasicYesNoDialogClickInterface,
+        PostSettingsListDialogFragment.OnPostSettingsDialogFragmentListener,
+        PostDatePickerDialogFragment.OnPostDatePickerDialogListener {
     public static final String EXTRA_POST_LOCAL_ID = "postModelLocalId";
     public static final String EXTRA_IS_PAGE = "isPage";
     public static final String EXTRA_IS_PROMO = "isPromo";
@@ -443,7 +446,7 @@ public class EditPostActivity extends AppCompatActivity implements
                                     @Override
                                     public void run() {
                                         if (mEditPostPreviewFragment != null) {
-                                            mEditPostPreviewFragment.loadPost(mPost);
+                                            mEditPostPreviewFragment.loadPost();
                                         }
                                     }
                                 });
@@ -1342,6 +1345,29 @@ public class EditPostActivity extends AppCompatActivity implements
         }
     }
 
+    /*
+     * user clicked OK on a settings list dialog displayed from the settings fragment - pass the event
+     * along to the settings fragment
+     */
+    @Override
+    public void onPostSettingsFragmentPositiveButtonClicked(@NonNull PostSettingsListDialogFragment dialog) {
+        if (mEditPostSettingsFragment != null) {
+            mEditPostSettingsFragment.onPostSettingsFragmentPositiveButtonClicked(dialog);
+        }
+    }
+
+    /*
+     * user clicked OK on a settings date/time dialog displayed from the settings fragment - pass the event
+     * along to the settings fragment
+     */
+    @Override
+    public void onPostDatePickerDialogPositiveButtonClicked(@NonNull PostDatePickerDialogFragment dialog,
+                                                            @NonNull Calendar calender) {
+        if (mEditPostSettingsFragment != null) {
+            mEditPostSettingsFragment.onPostDatePickerDialogPositiveButtonClicked(dialog, calender);
+        }
+    }
+
     private interface AfterSavePostListener {
         void onPostSave();
     }
@@ -1737,7 +1763,7 @@ public class EditPostActivity extends AppCompatActivity implements
                 case 1:
                     return EditPostSettingsFragment.newInstance();
                 default:
-                    return EditPostPreviewFragment.newInstance(mSite);
+                    return EditPostPreviewFragment.newInstance(mPost);
             }
         }
 
