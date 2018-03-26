@@ -31,7 +31,6 @@
     <string name="password_incorrect">It looks like this password is incorrect. Please double check your information and try again.</string>
     <string name="login_magic_links_label">We\'ll email you a magic link that\'ll log you in instantly, no password needed. Hunt and peck no more!</string>
     <string name="login_magic_links_sent_label">Your magic link is on its way! Check your email on this device and tap the link in the email you received from WordPress.com.</string>
-    <string name="login_magic_links_sent_description">Magic link sent illustration</string>
     <string name="login_magic_link_email_requesting">Requesting log-in email</string>
     <string name="magic_link_unavailable_error_message">Currently unavailable. Please enter your password</string>
     <string name="enter_wpcom_password">Enter your WordPress.com password.</string>
@@ -75,6 +74,7 @@
     <string name="signup_terms_of_service_text">By signing up, you agree to our %1$sTerms of Service%2$s.</string>
     <string name="signup_with_email_button">Sign Up with Email</string>
     <string name="signup_with_google_button">Sign Up with Google</string>
+    <string name="signup_with_google_progress">Signing up with Google&#8230;</string>
 
     <string name="google_error_timeout">Google took too long to respond. You may need to wait until you have a stronger internet connection.</string>
 
@@ -112,6 +112,20 @@
     <string name="notification_2fa_needed">Please provide an authentication code to continue.</string>
     <string name="notification_login_failed">An error has occurred.</string>
 
+    <!-- Screen titles -->
+    <string name="email_address_login_title">Email address login</string>
+    <string name="site_address_login_title">Site address login</string>
+    <string name="magic_link_login_title">Magic link login</string>
+    <string name="magic_link_sent_login_title">Magic link sent</string>
+    <string name="wpcom_login_title">Login password</string>
+    <string name="selfhosted_site_login_title">Login credentials</string>
+    <string name="email_signup_title">Sign up with email</string>
+    <string name="verification_2fa_screen_title">Code verification</string>
+
+    <string name="signup_email_screen_title">Email signup</string>
+    <string name="signup_magic_link_title">Magic link sent</string>
+
+
     <!-- HTTP Authentication -->
     <string name="http_authorization_required">Authorization required</string>
     <string name="httpuser">HTTP username</string>
@@ -121,6 +135,4 @@
     This resource will be automatically overwritten in the host project with the real value from google-services.json. -->
     <string name="default_web_client_id">placeholder</string>
 
-    <!-- Image Descriptions for Accessibility -->
-    <string name="login_site_address_help_image">The site address can be found in the navigation bar of your web browser</string>
 </resources>
