@@ -13,6 +13,7 @@ import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
 import android.text.Html;
 import android.text.TextUtils;
+import android.view.ContextThemeWrapper;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -331,7 +332,8 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
                 CommentStatus status = CommentStatus.fromString(mComment.getStatus());
                 // If the comment status is trash or spam, next deletion is a permanent deletion.
                 if (status == CommentStatus.TRASH || status == CommentStatus.SPAM) {
-                    AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(getActivity());
+                    AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(
+                            new ContextThemeWrapper(getActivity(), R.style.Calypso_Dialog));
                     dialogBuilder.setTitle(getResources().getText(R.string.delete));
                     dialogBuilder.setMessage(getResources().getText(R.string.dlg_sure_to_delete_comment));
                     dialogBuilder.setPositiveButton(getResources().getText(R.string.yes),

@@ -8,6 +8,7 @@ import android.database.MatrixCursor;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.widget.CursorAdapter;
 import android.text.TextUtils;
+import android.view.ContextThemeWrapper;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -163,7 +164,7 @@ public class ReaderSearchSuggestionAdapter extends CursorAdapter {
     }
 
     private void confirmClearSavedSearches(Context context) {
-        AlertDialog.Builder builder = new AlertDialog.Builder(context);
+        AlertDialog.Builder builder = new AlertDialog.Builder(new ContextThemeWrapper(context, R.style.Calypso_Dialog));
         builder.setMessage(R.string.dlg_confirm_clear_search_history)
                .setCancelable(true)
                .setNegativeButton(R.string.no, null)
