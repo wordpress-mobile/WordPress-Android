@@ -33,6 +33,7 @@ import android.text.TextWatcher;
 import android.text.style.ForegroundColorSpan;
 import android.text.style.SuggestionSpan;
 import android.util.DisplayMetrics;
+import android.view.ContextThemeWrapper;
 import android.view.DragEvent;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -630,7 +631,7 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
     private void checkForFailedUploadAndSwitchToHtmlMode() {
         // Show an Alert Dialog asking the user if he wants to remove all failed media before upload
         if (hasFailedMediaUploads()) {
-            new AlertDialog.Builder(getActivity())
+            new AlertDialog.Builder(new ContextThemeWrapper(getActivity(), R.style.Calypso_Dialog))
                     .setMessage(R.string.editor_failed_uploads_switch_html)
                     .setPositiveButton(R.string.editor_remove_failed_uploads, new DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface dialog, int id) {
@@ -1507,7 +1508,8 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
         switch (uploadStatus) {
             case ATTR_STATUS_UPLOADING:
                 // Display 'cancel upload' dialog
-                AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+                AlertDialog.Builder builder = new AlertDialog.Builder(
+                        new ContextThemeWrapper(getActivity(), R.style.Calypso_Dialog));
                 builder.setTitle(getString(R.string.stop_upload_dialog_title));
                 builder.setPositiveButton(R.string.stop_upload_dialog_button_yes,
                                           new DialogInterface.OnClickListener() {

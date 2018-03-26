@@ -30,6 +30,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
             android:layout_marginLeft="@dimen/content_margin"
+            android:contentDescription="@null"
             app:srcCompat="@drawable/ic_reply_grey_24dp"
             android:layout_marginStart="@dimen/content_margin"/>
 

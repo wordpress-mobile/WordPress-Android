@@ -467,6 +467,8 @@ public class PeopleManagementActivity extends AppCompatActivity
             ActionBar actionBar = getSupportActionBar();
             if (actionBar != null) {
                 actionBar.setTitle("");
+                // important for accessibility - talkback
+                setTitle(R.string.person_detail_screen_title);
             }
 
             fragmentTransaction.commit();
@@ -517,7 +519,7 @@ public class PeopleManagementActivity extends AppCompatActivity
             return;
         }
 
-        AlertDialog.Builder builder = new AlertDialog.Builder(this, R.style.Calypso_AlertDialog);
+        AlertDialog.Builder builder = new AlertDialog.Builder(this, R.style.Calypso_Dialog);
         builder.setTitle(getString(R.string.person_remove_confirmation_title, person.getDisplayName()));
         if (person.getPersonType() == Person.PersonType.USER) {
             builder.setMessage(getString(R.string.user_remove_confirmation_message, person.getDisplayName()));

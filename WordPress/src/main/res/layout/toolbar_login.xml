@@ -19,5 +19,6 @@
         android:layout_width="24dp"
         android:layout_height="24dp"
         android:layout_gravity="center"
+        android:contentDescription="@null"
         app:srcCompat="@drawable/ic_my_sites_white_32dp"/>
 </android.support.v7.widget.Toolbar>

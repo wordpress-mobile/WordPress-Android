@@ -6,6 +6,9 @@ import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatDialogFragment;
+import android.view.ContextThemeWrapper;
+
+import org.wordpress.android.R;
 
 public class BaseYesNoFragmentDialog extends AppCompatDialogFragment {
     private static final String STATE_KEY_TAG = "state_key_tag";
@@ -71,7 +74,8 @@ public class BaseYesNoFragmentDialog extends AppCompatDialogFragment {
 
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
-        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+        AlertDialog.Builder builder = new AlertDialog.Builder(
+                new ContextThemeWrapper(getActivity(), R.style.Calypso_Dialog));
         builder.setTitle(mTitle)
                .setMessage(mMessage)
                .setPositiveButton(mPositiveButtonLabel, new DialogInterface.OnClickListener() {

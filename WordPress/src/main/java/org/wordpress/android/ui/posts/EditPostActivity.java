@@ -32,6 +32,7 @@ import android.text.Spanned;
 import android.text.TextUtils;
 import android.text.style.CharacterStyle;
 import android.text.style.SuggestionSpan;
+import android.view.ContextThemeWrapper;
 import android.view.DragEvent;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -147,6 +148,7 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -171,7 +173,9 @@ public class EditPostActivity extends AppCompatActivity implements
         OnRequestPermissionsResultCallback,
         PhotoPickerFragment.PhotoPickerListener,
         EditPostSettingsFragment.EditPostActivityHook,
-        BaseYesNoFragmentDialog.BasicYesNoDialogClickInterface {
+        BaseYesNoFragmentDialog.BasicYesNoDialogClickInterface,
+        PostSettingsListDialogFragment.OnPostSettingsDialogFragmentListener,
+        PostDatePickerDialogFragment.OnPostDatePickerDialogListener {
     public static final String EXTRA_POST_LOCAL_ID = "postModelLocalId";
     public static final String EXTRA_IS_PAGE = "isPage";
     public static final String EXTRA_IS_PROMO = "isPromo";
@@ -442,7 +446,7 @@ public class EditPostActivity extends AppCompatActivity implements
                                     @Override
                                     public void run() {
                                         if (mEditPostPreviewFragment != null) {
-                                            mEditPostPreviewFragment.loadPost(mPost);
+                                            mEditPostPreviewFragment.loadPost();
                                         }
                                     }
                                 });
@@ -1338,6 +1342,29 @@ public class EditPostActivity extends AppCompatActivity implements
         }
     }
 
+    /*
+     * user clicked OK on a settings list dialog displayed from the settings fragment - pass the event
+     * along to the settings fragment
+     */
+    @Override
+    public void onPostSettingsFragmentPositiveButtonClicked(@NonNull PostSettingsListDialogFragment dialog) {
+        if (mEditPostSettingsFragment != null) {
+            mEditPostSettingsFragment.onPostSettingsFragmentPositiveButtonClicked(dialog);
+        }
+    }
+
+    /*
+     * user clicked OK on a settings date/time dialog displayed from the settings fragment - pass the event
+     * along to the settings fragment
+     */
+    @Override
+    public void onPostDatePickerDialogPositiveButtonClicked(@NonNull PostDatePickerDialogFragment dialog,
+                                                            @NonNull Calendar calender) {
+        if (mEditPostSettingsFragment != null) {
+            mEditPostSettingsFragment.onPostDatePickerDialogPositiveButtonClicked(dialog, calender);
+        }
+    }
+
     private interface AfterSavePostListener {
         void onPostSave();
     }
@@ -1484,7 +1511,8 @@ public class EditPostActivity extends AppCompatActivity implements
                     : String.format(getString(R.string.editor_confirm_email_prompt_message_with_email),
                                     account.getEmail());
 
-            AlertDialog.Builder builder = new AlertDialog.Builder(this);
+            AlertDialog.Builder builder = new AlertDialog.Builder(
+                    new ContextThemeWrapper(this, R.style.Calypso_Dialog));
             builder.setTitle(R.string.editor_confirm_email_prompt_title)
                    .setMessage(message)
                    .setPositiveButton(android.R.string.ok,
@@ -1733,7 +1761,7 @@ public class EditPostActivity extends AppCompatActivity implements
                 case 1:
                     return EditPostSettingsFragment.newInstance();
                 default:
-                    return EditPostPreviewFragment.newInstance(mSite);
+                    return EditPostPreviewFragment.newInstance(mPost);
             }
         }
 
@@ -2797,7 +2825,8 @@ public class EditPostActivity extends AppCompatActivity implements
         MediaModel media = mMediaStore.getMediaWithLocalId(StringUtils.stringToInt(mediaId));
         if (media == null) {
             AppLog.e(T.MEDIA, "Can't find media with local id: " + mediaId);
-            AlertDialog.Builder builder = new AlertDialog.Builder(this);
+            AlertDialog.Builder builder = new AlertDialog.Builder(
+                    new ContextThemeWrapper(this, R.style.Calypso_Dialog));
             builder.setTitle(getString(R.string.cannot_retry_deleted_media_item));
             builder.setPositiveButton(R.string.yes, new DialogInterface.OnClickListener() {
                 public void onClick(DialogInterface dialog, int id) {

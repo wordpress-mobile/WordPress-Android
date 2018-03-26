@@ -136,6 +136,7 @@
         android:layout_marginTop="@dimen/margin_extra_large"
         android:layout_below="@+id/text_error"
         android:clickable="true"
+        android:focusable="true"
         android:gravity="center"
         android:text="@string/sign_in_wpcom"
         android:visibility="gone"

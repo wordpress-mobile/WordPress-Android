@@ -525,6 +525,10 @@ public class MediaGridFragment extends Fragment implements MediaGridAdapterCallb
         mSearchTerm = searchTerm;
         List<MediaModel> mediaList = getFilteredMedia();
         mGridAdapter.setMediaList(mediaList);
+
+        if (isEmpty()) {
+            updateEmptyView(EmptyViewMessageType.NO_CONTENT);
+        }
     }
 
     public void clearSelection() {
