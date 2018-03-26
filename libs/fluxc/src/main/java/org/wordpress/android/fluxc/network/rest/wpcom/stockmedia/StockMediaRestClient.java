@@ -27,7 +27,8 @@ import javax.inject.Singleton;
 
 @Singleton
 public class StockMediaRestClient extends BaseWPComRestClient {
-    public static final int DEFAULT_NUM_STOCK_MEDIA_PER_FETCH = 20;
+    // this should be a multiple of both 3 and 4 since WPAndroid shows either 3 or 4 pics per row
+    public static final int DEFAULT_NUM_STOCK_MEDIA_PER_FETCH = 36;
 
     public StockMediaRestClient(Context appContext, Dispatcher dispatcher, RequestQueue requestQueue,
                                 AccessToken accessToken, UserAgent userAgent) {
