@@ -6,6 +6,7 @@ import android.os.Bundle
 import android.support.v4.app.FragmentTransaction
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.Toolbar
+import kotlinx.android.synthetic.main.activity_log_activity.*
 import org.wordpress.android.R
 import org.wordpress.android.WordPress
 import org.wordpress.android.fluxc.model.SiteModel
@@ -22,8 +23,7 @@ class ActivityLogActivity : AppCompatActivity() {
         (application as WordPress).component().inject(this)
         setContentView(R.layout.activity_log_activity)
 
-        val toolbar = findViewById<Toolbar>(R.id.toolbar)
-        setSupportActionBar(toolbar)
+        setSupportActionBar(toolbar as Toolbar)
 
         viewModel = ViewModelProviders.of(this, viewModelFactory).get(ActivityLogViewModel::class.java)
 
