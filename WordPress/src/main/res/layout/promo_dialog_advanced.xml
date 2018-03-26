@@ -2,11 +2,10 @@
 <RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:background="@color/white"
     android:layout_gravity="center"
     android:layout_height="wrap_content"
-    android:layout_width="@dimen/default_dialog_width" >
+    android:layout_width="@dimen/default_dialog_width">
 
     <LinearLayout
         android:id="@+id/promo_dialog_image_container"
@@ -81,7 +80,7 @@
             android:layout_width="wrap_content"
             android:minHeight="@dimen/default_dialog_button_height"
             android:textAllCaps="true"
-            android:textColor="@color/color_accent"
+            android:textColor="@color/blue_medium"
             style="?android:attr/borderlessButtonStyle" >
         </android.support.v7.widget.AppCompatButton>
 
@@ -91,7 +90,7 @@
             android:layout_width="wrap_content"
             android:minHeight="@dimen/default_dialog_button_height"
             android:textAllCaps="true"
-            android:textColor="@color/color_accent"
+            android:textColor="@color/blue_medium"
             style="?android:attr/borderlessButtonStyle" >
         </android.support.v7.widget.AppCompatButton>
 
