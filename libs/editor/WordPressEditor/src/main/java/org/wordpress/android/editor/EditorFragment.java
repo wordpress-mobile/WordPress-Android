@@ -541,6 +541,7 @@ public class EditorFragment extends EditorFragmentAbstract implements View.OnCli
         }
     }
 
+    @SuppressLint("AddJavascriptInterface")
     protected void initJsEditor() {
         if (!isAdded()) {
             return;
@@ -565,7 +566,6 @@ public class EditorFragment extends EditorFragmentAbstract implements View.OnCli
         if (Build.VERSION.SDK_INT < 17) {
             mWebView.setJsCallbackReceiver(new JsCallbackReceiver(this));
         } else {
-            //noinspection AddJavascriptInterface
             mWebView.addJavascriptInterface(new JsCallbackReceiver(this), JS_CALLBACK_HANDLER);
         }
 

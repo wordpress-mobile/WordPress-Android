@@ -104,6 +104,12 @@ public class SignupMagicLinkFragment extends Fragment {
         }
     }
 
+    @Override public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+        // important for accessibility - talkback
+        getActivity().setTitle(R.string.signup_magic_link_title);
+    }
+
     @Override
     public void onAttach(Context context) {
         AndroidSupportInjection.inject(this);
@@ -210,7 +216,7 @@ public class SignupMagicLinkFragment extends Fragment {
                 AppLog.e(T.API, "OnAuthEmailSent error: " + event.error.type + " - " + event.error.message);
                 showErrorDialog(getString(R.string.signup_magic_link_error));
             } else {
-                mAnalyticsListener.trackSignupMagicLinkSucceeded();
+                mAnalyticsListener.trackSignupMagicLinkSent();
             }
         }
     }

@@ -187,9 +187,13 @@ public class UsernameChangerFullScreenDialogFragment extends Fragment implements
     public boolean onConfirmClicked(FullScreenDialogController controller) {
         ActivityUtils.hideKeyboard(getActivity());
 
-        Bundle result = new Bundle();
-        result.putString(RESULT_USERNAME, mUsernamesAdapter.mItems.get(mUsernamesAdapter.getSelectedItem()));
-        controller.confirm(result);
+        if (mUsernamesAdapter != null && mUsernamesAdapter.mItems != null) {
+            Bundle result = new Bundle();
+            result.putString(RESULT_USERNAME, mUsernamesAdapter.mItems.get(mUsernamesAdapter.getSelectedItem()));
+            controller.confirm(result);
+        } else {
+            controller.dismiss();
+        }
 
         return true;
     }

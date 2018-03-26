@@ -1,24 +1,20 @@
 package org.wordpress.android.ui.posts;
 
 import android.app.Activity;
-import android.app.DatePickerDialog;
 import android.app.Fragment;
-import android.app.TimePickerDialog;
-import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.res.Resources;
 import android.location.Address;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.v7.app.AlertDialog;
+import android.support.v4.app.FragmentManager;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.view.menu.MenuPopupHelper;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.PopupMenu;
 import android.text.TextUtils;
-import android.text.format.DateFormat;
 import android.text.format.DateUtils;
 import android.view.ContextMenu;
 import android.view.LayoutInflater;
@@ -26,11 +22,8 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.DatePicker;
 import android.widget.LinearLayout;
-import android.widget.ListView;
 import android.widget.TextView;
-import android.widget.TimePicker;
 
 import com.google.android.gms.common.GoogleApiAvailability;
 import com.google.android.gms.common.GooglePlayServicesNotAvailableException;
@@ -64,6 +57,8 @@ import org.wordpress.android.ui.ActivityLauncher;
 import org.wordpress.android.ui.RequestCodes;
 import org.wordpress.android.ui.media.MediaBrowserType;
 import org.wordpress.android.ui.photopicker.PhotoPickerActivity;
+import org.wordpress.android.ui.posts.PostDatePickerDialogFragment.PickerDialogType;
+import org.wordpress.android.ui.posts.PostSettingsListDialogFragment.DialogType;
 import org.wordpress.android.ui.prefs.AppPrefs;
 import org.wordpress.android.ui.prefs.SiteSettingsInterface;
 import org.wordpress.android.ui.prefs.SiteSettingsInterface.SiteSettingsListener;
@@ -130,6 +125,7 @@ public class EditPostSettingsFragment extends Fragment {
     @Inject MediaStore mMediaStore;
     @Inject TaxonomyStore mTaxonomyStore;
     @Inject Dispatcher mDispatcher;
+
 
     interface EditPostActivityHook {
         PostModel getPost();
@@ -484,51 +480,70 @@ public class EditPostSettingsFragment extends Fragment {
         startActivityForResult(tagsIntent, ACTIVITY_REQUEST_CODE_SELECT_TAGS);
     }
 
+    /*
+     * called by the activity when the user taps OK on a PostSettingsDialogFragment
+     */
+    public void onPostSettingsFragmentPositiveButtonClicked(@NonNull PostSettingsListDialogFragment fragment) {
+        switch (fragment.getDialogType()) {
+            case POST_STATUS:
+                int index = fragment.getCheckedIndex();
+                String status = getPostStatusAtIndex(index).toString();
+                updatePostStatus(status);
+                break;
+            case POST_FORMAT:
+                String formatName = fragment.getSelectedItem();
+                updatePostFormat(getPostFormatKeyFromName(formatName));
+                break;
+        }
+    }
+
+    /*
+     * called by the activity when the user taps OK on a PostDatePickerDialogFragment
+     */
+    public void onPostDatePickerDialogPositiveButtonClicked(
+            @NonNull PostDatePickerDialogFragment dialog,
+            @NonNull Calendar calender) {
+        updatePublishDate(calender);
+        // if this was the date picker and the user didn't choose to publish immediately, show the
+        // time picker dialog fragment so they can choose a publish time
+        if (dialog.getDialogType() == PickerDialogType.DATE_PICKER
+                && !dialog.isPublishNow()) {
+            showPostTimeSelectionDialog();
+        }
+    }
+
     private void showStatusDialog() {
         if (!isAdded()) {
             return;
         }
-        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity(), R.style.Calypso_Dialog);
-        builder.setTitle(R.string.post_settings_status);
-        builder.setSingleChoiceItems(R.array.post_settings_statuses, getCurrentPostStatusIndex(), null);
-        builder.setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialog, int which) {
-                ListView listView = ((AlertDialog) dialog).getListView();
-                int index = listView.getCheckedItemPosition();
-                updatePostStatus(getPostStatusAtIndex(index).toString());
-            }
-        });
-        builder.setNegativeButton(R.string.cancel, null);
-        builder.show();
+
+        int index = getCurrentPostStatusIndex();
+        FragmentManager fm = ((AppCompatActivity) getActivity()).getSupportFragmentManager();
+        PostSettingsListDialogFragment fragment =
+                PostSettingsListDialogFragment.newInstance(DialogType.POST_STATUS, index);
+        fragment.show(fm, PostSettingsListDialogFragment.TAG);
     }
 
     private void showPostFormatDialog() {
         if (!isAdded()) {
             return;
         }
-        int checkedItem = 0;
+
+        int checkedIndex = 0;
         String postFormat = getPost().getPostFormat();
         if (!TextUtils.isEmpty(postFormat)) {
             for (int i = 0; i < mPostFormatKeys.size(); i++) {
                 if (postFormat.equals(mPostFormatKeys.get(i))) {
-                    checkedItem = i;
+                    checkedIndex = i;
                     break;
                 }
             }
         }
 
-        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity(), R.style.Calypso_Dialog);
-        builder.setTitle(R.string.post_settings_post_format);
-        builder.setSingleChoiceItems(mPostFormatNames.toArray(new CharSequence[0]), checkedItem, null);
-        builder.setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialog, int which) {
-                ListView listView = ((AlertDialog) dialog).getListView();
-                String formatName = (String) listView.getAdapter().getItem(listView.getCheckedItemPosition());
-                updatePostFormat(getPostFormatKeyFromName(formatName));
-            }
-        });
-        builder.setNegativeButton(R.string.cancel, null);
-        builder.show();
+        FragmentManager fm = ((AppCompatActivity) getActivity()).getSupportFragmentManager();
+        PostSettingsListDialogFragment fragment =
+                PostSettingsListDialogFragment.newInstance(DialogType.POST_FORMAT, checkedIndex);
+        fragment.show(fm, PostSettingsListDialogFragment.TAG);
     }
 
     private void showPostPasswordDialog() {
@@ -554,65 +569,22 @@ public class EditPostSettingsFragment extends Fragment {
         }
 
         Calendar calendar = getCurrentPublishDateAsCalendar();
-        int year = calendar.get(Calendar.YEAR);
-        int month = calendar.get(Calendar.MONTH);
-        int day = calendar.get(Calendar.DAY_OF_MONTH);
-
-        Resources resources = getResources();
-        boolean isPublishImmediatelyAvailable = PostUtils.shouldPublishImmediatelyOptionBeAvailable(getPost());
-
-        final DatePickerDialog datePickerDialog = new DatePickerDialog(getActivity(),
-                Build.VERSION.SDK_INT >= 21 ? R.style.Calypso_Dialog : 0, null, year, month, day);
-        datePickerDialog.setButton(DialogInterface.BUTTON_POSITIVE, resources.getString(android.R.string.ok),
-                                   new DialogInterface.OnClickListener() {
-                                       public void onClick(DialogInterface dialog, int id) {
-                                           DatePicker datePicker = datePickerDialog.getDatePicker();
-                                           int selectedYear = datePicker.getYear();
-                                           int selectedMonth = datePicker.getMonth();
-                                           int selectedDay = datePicker.getDayOfMonth();
-                                           showPostTimeSelectionDialog(selectedYear, selectedMonth, selectedDay);
-                                       }
-                                   });
-        String neutralButtonTitle = isPublishImmediatelyAvailable ? resources.getString(R.string.immediately)
-                : resources.getString(R.string.now);
-        datePickerDialog.setButton(DialogInterface.BUTTON_NEUTRAL, neutralButtonTitle,
-                                   new DialogInterface.OnClickListener() {
-                                       public void onClick(DialogInterface dialog, int id) {
-                                           Calendar now = Calendar.getInstance();
-                                           updatePublishDate(now);
-                                       }
-                                   });
-        datePickerDialog.setButton(DialogInterface.BUTTON_NEGATIVE, resources.getString(android.R.string.cancel),
-                                   new DialogInterface.OnClickListener() {
-                                       public void onClick(DialogInterface dialog, int id) {
-                                       }
-                                   });
-        if (isPublishImmediatelyAvailable) {
-            // We shouldn't let the user pick a past date since we'll just override it to Immediately if they do
-            // We can't set the min date to now, so we need to subtract some amount of time
-            datePickerDialog.getDatePicker().setMinDate(System.currentTimeMillis() - 1000);
-        }
-        datePickerDialog.show();
+        PostDatePickerDialogFragment fragment =
+                PostDatePickerDialogFragment.newInstance(PickerDialogType.DATE_PICKER, getPost(), calendar);
+        FragmentManager fm = ((AppCompatActivity) getActivity()).getSupportFragmentManager();
+        fragment.show(fm, PostDatePickerDialogFragment.TAG_DATE);
     }
 
-    private void showPostTimeSelectionDialog(final int selectedYear, final int selectedMonth, final int selectedDay) {
+    private void showPostTimeSelectionDialog() {
         if (!isAdded()) {
             return;
         }
-        final Calendar calendar = getCurrentPublishDateAsCalendar();
-        int hour = calendar.get(Calendar.HOUR_OF_DAY);
-        int minute = calendar.get(Calendar.MINUTE);
-        final TimePickerDialog timePickerDialog = new TimePickerDialog(getActivity(),
-                Build.VERSION.SDK_INT >= 21 ? R.style.Calypso_Dialog : 0,
-                new TimePickerDialog.OnTimeSetListener() {
-                    @Override
-                    public void onTimeSet(TimePicker timePicker, int selectedHour, int selectedMinute) {
-                        Calendar selectedCalendar = Calendar.getInstance();
-                        selectedCalendar.set(selectedYear, selectedMonth, selectedDay, selectedHour, selectedMinute);
-                        updatePublishDate(selectedCalendar);
-                    }
-                }, hour, minute, DateFormat.is24HourFormat(getActivity()));
-        timePickerDialog.show();
+
+        Calendar calendar = getCurrentPublishDateAsCalendar();
+        PostDatePickerDialogFragment fragment =
+                PostDatePickerDialogFragment.newInstance(PickerDialogType.TIME_PICKER, getPost(), calendar);
+        FragmentManager fm = ((AppCompatActivity) getActivity()).getSupportFragmentManager();
+        fragment.show(fm, PostDatePickerDialogFragment.TAG_TIME);
     }
 
     // Helpers

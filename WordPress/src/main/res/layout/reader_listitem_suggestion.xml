@@ -32,6 +32,7 @@
         android:layout_centerVertical="true"
         android:layout_marginLeft="@dimen/margin_small"
         android:background="?android:selectableItemBackground"
+        android:contentDescription="@string/reader_list_item_suggestion_remove_desc"
         android:padding="@dimen/margin_small"
         android:src="@drawable/ic_cross_grey_600_24dp"
         android:layout_marginStart="@dimen/margin_small"

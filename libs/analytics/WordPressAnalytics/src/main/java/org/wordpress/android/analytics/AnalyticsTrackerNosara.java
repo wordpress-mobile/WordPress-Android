@@ -760,6 +760,8 @@ public class AnalyticsTrackerNosara extends Tracker {
                 return "signup_email_to_login";
             case SIGNUP_MAGIC_LINK_FAILED:
                 return "signup_magic_link_failed";
+            case SIGNUP_MAGIC_LINK_SENT:
+                return "signup_magic_link_sent";
             case SIGNUP_MAGIC_LINK_SUCCEEDED:
                 return "signup_magic_link_succeeded";
             case SIGNUP_SOCIAL_2FA_NEEDED:
@@ -914,6 +916,8 @@ public class AnalyticsTrackerNosara extends Tracker {
                 return "deep_linked_fallback";
             case DEEP_LINK_NOT_DEFAULT_HANDLER:
                 return "deep_link_not_default_handler";
+            case MAIN_TABS_SWIPED:
+                return "main_tabs_swiped";
             case MEDIA_LIBRARY_ADDED_PHOTO:
                 return "media_library_photo_added";
             case MEDIA_LIBRARY_ADDED_VIDEO:

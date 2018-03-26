@@ -1,5 +1,6 @@
 package org.wordpress.android.ui.notifications.blocks;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.text.TextUtils;
 import android.view.MotionEvent;
@@ -56,6 +57,7 @@ public class UserNoteBlock extends NoteBlock {
         return R.layout.note_block_user;
     }
 
+    @SuppressLint("ClickableViewAccessibility") // fixed by setting a click listener to avatarImageView
     @Override
     public View configureView(View view) {
         final UserActionNoteBlockHolder noteBlockHolder = (UserActionNoteBlockHolder) view.getTag();
@@ -87,16 +89,21 @@ public class UserNoteBlock extends NoteBlock {
             String imageUrl = GravatarUtils.fixGravatarUrl(getNoteMediaItem().optString("url", ""), getAvatarSize());
             noteBlockHolder.mAvatarImageView.setImageUrl(imageUrl, WPNetworkImageView.ImageType.AVATAR);
             if (!TextUtils.isEmpty(getUserUrl())) {
+                //noinspection AndroidLintClickableViewAccessibility
                 noteBlockHolder.mAvatarImageView.setOnTouchListener(mOnGravatarTouchListener);
                 noteBlockHolder.mRootView.setEnabled(true);
                 noteBlockHolder.mRootView.setOnClickListener(mOnClickListener);
             } else {
+                //noinspection AndroidLintClickableViewAccessibility
                 noteBlockHolder.mAvatarImageView.setOnTouchListener(null);
                 noteBlockHolder.mRootView.setEnabled(false);
                 noteBlockHolder.mRootView.setOnClickListener(null);
             }
         } else {
+            noteBlockHolder.mRootView.setEnabled(false);
             noteBlockHolder.mAvatarImageView.showDefaultGravatarImageAndNullifyUrl();
+            noteBlockHolder.mRootView.setOnClickListener(null);
+            //noinspection AndroidLintClickableViewAccessibility
             noteBlockHolder.mAvatarImageView.setOnTouchListener(null);
         }
 
@@ -179,7 +186,7 @@ public class UserNoteBlock extends NoteBlock {
                 if (event.getActionMasked() == MotionEvent.ACTION_UP && mGravatarClickedListener != null) {
                     // Fire the listener, which will load the site preview for the user's site
                     // In the future we can use this to load a 'profile view' (currently in R&D)
-                    showBlogPreview();
+                    v.performClick();
                 }
             }
 
@@ -187,7 +194,7 @@ public class UserNoteBlock extends NoteBlock {
         }
     };
 
-    private void showBlogPreview() {
+    protected void showBlogPreview() {
         long siteId = Long.valueOf(JSONUtils.queryJSON(getNoteData(), "meta.ids.site", 0));
         long userId = Long.valueOf(JSONUtils.queryJSON(getNoteData(), "meta.ids.user", 0));
         String siteUrl = getUserUrl();

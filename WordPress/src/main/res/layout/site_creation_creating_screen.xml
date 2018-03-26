@@ -148,7 +148,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_above="@id/centerline"
-                android:contentDescription="@string/site_creation_content_description_confetti"
+                android:contentDescription="@null"
                 android:scaleType="center"
                 app:srcCompat="@drawable/img_confetti_284dp"/>
 
