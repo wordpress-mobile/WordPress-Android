@@ -61,7 +61,7 @@ public class LoginEmailFragment extends LoginBaseFormFragment<LoginListener> imp
     private static final String KEY_OLD_SITES_IDS = "KEY_OLD_SITES_IDS";
     private static final String KEY_REQUESTED_EMAIL = "KEY_REQUESTED_EMAIL";
     private static final String LOG_TAG = LoginEmailFragment.class.getSimpleName();
-    private static final int GOOGLE_API_CLIENT_ID = 1001;
+    private static final int GOOGLE_API_CLIENT_ID = 1002;
     private static final int EMAIL_CREDENTIALS_REQUEST_CODE = 25100;
 
     public static final String TAG = "login_email_fragment_tag";
