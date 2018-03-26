@@ -26,14 +26,12 @@ import java.util.HashSet
 import javax.inject.Inject
 import kotlin.properties.Delegates
 
+private const val KEY_SEARCH_QUERY = "KEY_SEARCH_QUERY"
+private const val KEY_TITLE = "KEY_TITLE"
+
 @WorkerThread
 class PluginBrowserViewModel @Inject
 constructor(private val mDispatcher: Dispatcher, private val mPluginStore: PluginStore) : ViewModel() {
-    companion object {
-        private const val KEY_SEARCH_QUERY = "KEY_SEARCH_QUERY"
-        private const val KEY_TITLE = "KEY_TITLE"
-    }
-
     enum class PluginListType {
         SITE,
         FEATURED,
@@ -445,8 +443,8 @@ constructor(private val mDispatcher: Dispatcher, private val mPluginStore: Plugi
         if (!shouldSearch()) {
             return false
         }
-        return if (_searchPluginsListStatus.value != PluginListStatus.DONE
-                && _searchPluginsListStatus.value != PluginListStatus.ERROR) {
+        return if (searchPluginsListStatus.value != PluginListStatus.DONE
+                && searchPluginsListStatus.value != PluginListStatus.ERROR) {
             false
         } else searchResults.value == null || searchResults.value!!.isEmpty()
     }
