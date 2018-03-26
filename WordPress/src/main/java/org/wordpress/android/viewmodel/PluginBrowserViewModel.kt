@@ -397,7 +397,8 @@ constructor(private val mDispatcher: Dispatcher, private val mPluginStore: Plugi
         if (!shouldSearch()) {
             return false
         }
-        return serPlugins.shouldShowEmptyView(false)
+        // Only show empty view if content is empty, we are not fetching new data and no errors occurred
+        return serPlugins.isEmpty() && !serPlugins.isFetchingFirstPage() && !serPlugins.isError()
     }
 
     fun setTitle(title: String?) {

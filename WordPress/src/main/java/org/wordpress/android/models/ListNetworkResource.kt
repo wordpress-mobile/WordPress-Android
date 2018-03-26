@@ -19,6 +19,7 @@ class ListNetworkResource<in T> constructor(private val paginationAvailable: Boo
         FETCHING_FIRST_PAGE, // Fetching or refreshing first page
         LOADING_MORE // Pagination
     }
+    private var data: MutableLiveData<List<T>> = MutableLiveData()
     private var status: MutableLiveData<Status> = MutableLiveData()
     private var errorMessage: String? = null
 
@@ -57,18 +58,25 @@ class ListNetworkResource<in T> constructor(private val paginationAvailable: Boo
 
     // Data Management
 
-    fun fetchedSuccessfully(newData: List<T>, wasLoadingMore: Boolean = false) {
-        TODO()
+    fun fetchedSuccessfully(newData: List<T>, canLoadMore: Boolean = false) {
+        data.postValue(newData)
+        updateStatusIfChanged(if (canLoadMore) Status.CAN_LOAD_MORE else Status.SUCCESS)
     }
 
     fun manuallyUpdateData(newData: List<T>) {
-        TODO()
+        data.postValue(newData)
     }
 
     // Helpers
 
-    fun shouldShowEmptyView(shouldShowWhileError: Boolean) : Boolean {
-        TODO()
+    fun isEmpty() = data.value == null || data.value!!.isEmpty()
+
+    fun isFetchingFirstPage() = status.value == Status.FETCHING_FIRST_PAGE
+
+    fun isError(): Boolean {
+        return status.value == Status.FETCH_ERROR
+                || status.value == Status.PAGINATION_ERROR
+                || status.value == Status.CONNECTION_ERROR
     }
 
     // Utils
