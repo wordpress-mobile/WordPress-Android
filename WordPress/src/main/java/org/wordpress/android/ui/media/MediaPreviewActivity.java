@@ -194,7 +194,7 @@ public class MediaPreviewActivity extends AppCompatActivity implements MediaPrev
         }
 
         mToolbar = findViewById(R.id.toolbar);
-        int toolbarColor = ContextCompat.getColor(this, R.color.transparent);
+        int toolbarColor = ContextCompat.getColor(this, R.color.black_translucent_40);
         //noinspection deprecation
         mToolbar.setBackgroundDrawable(new ColorDrawable(toolbarColor));
         setSupportActionBar(mToolbar);
@@ -218,6 +218,7 @@ public class MediaPreviewActivity extends AppCompatActivity implements MediaPrev
             showPreviewFragment();
         }
 
+        showToolbar();
         mFadeHandler.postDelayed(mFadeOutRunnable, FADE_DELAY_MS);
     }
 
@@ -304,6 +305,18 @@ public class MediaPreviewActivity extends AppCompatActivity implements MediaPrev
 
     private void showToolbar() {
         if (!isFinishing()) {
+            if (getPreviewType().isMulti()) {
+                int position = mViewPager.getCurrentItem();
+                int count = mPagerAdapter.getCount();
+                if (count > 1) {
+                    String title = String.format(
+                            getString(R.string.media_preview_title),
+                            position + 1,
+                            count);
+                    mToolbar.setTitle(title);
+                }
+            }
+
             mFadeHandler.removeCallbacks(mFadeOutRunnable);
             mFadeHandler.postDelayed(mFadeOutRunnable, FADE_DELAY_MS);
             if (mToolbar.getVisibility() != View.VISIBLE) {
@@ -382,6 +395,7 @@ public class MediaPreviewActivity extends AppCompatActivity implements MediaPrev
                         mMediaId = Integer.valueOf(mMediaIdList.get(position));
                         // fire event so settings activity shows the same media as this activity (user may have swiped)
                         EventBus.getDefault().post(new MediaPreviewSwiped(mMediaId));
+                        showToolbar();
                     }
                 });
                 break;
@@ -391,6 +405,7 @@ public class MediaPreviewActivity extends AppCompatActivity implements MediaPrev
                     public void onPageSelected(int position) {
                         mLastPosition = position;
                         mContentUri = mMediaUrlList.get(position);
+                        showToolbar();
                     }
                 });
                 break;

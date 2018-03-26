@@ -2008,6 +2008,7 @@
     <string name="media_grid_item_play_video_desc">play video</string>
     <string name="media_preview_audio_desc">audio</string>
     <string name="media_preview_desc">preview</string>
+    <string name="media_preview_title">%1$d of %2$d</string>
     <string name="media_settings_image_preview_desc">image preview</string>
     <string name="media_settings_play">play</string>
     <string name="people_invite_role_info_desc">role info</string>
