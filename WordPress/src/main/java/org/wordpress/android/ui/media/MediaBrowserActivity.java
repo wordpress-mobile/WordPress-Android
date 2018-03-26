@@ -828,7 +828,7 @@ public class MediaBrowserActivity extends AppCompatActivity implements MediaGrid
         }
 
         if (mBrowserType.isBrowser() && mSite.isUsingWpComRestApi()) {
-            popup.getMenu().add(R.string.photo_picker_choose_stock_media).setOnMenuItemClickListener(
+            popup.getMenu().add(R.string.photo_picker_stock_media).setOnMenuItemClickListener(
                     new MenuItem.OnMenuItemClickListener() {
                         @Override
                         public boolean onMenuItemClick(MenuItem item) {
