@@ -68,7 +68,7 @@ public class PostSettingsListDialogFragment extends DialogFragment {
     @NonNull
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
-        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity(), R.style.Calypso_AlertDialog);
+        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity(), R.style.Calypso_Dialog);
 
         DialogInterface.OnClickListener clickListener = new DialogInterface.OnClickListener() {
             @Override
