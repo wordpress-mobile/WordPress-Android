@@ -10,6 +10,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.view.ContextThemeWrapper;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
@@ -53,7 +54,8 @@ public class NumberPickerDialog extends DialogFragment
 
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
-        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity(), R.style.Calypso_Dialog);
+        AlertDialog.Builder builder = new AlertDialog.Builder(
+                new ContextThemeWrapper(getActivity(), R.style.Calypso_Dialog));
         View view = View.inflate(getActivity(), R.layout.number_picker_dialog, null);
         TextView switchText = (TextView) view.findViewById(R.id.number_picker_text);
         mSwitch = (Switch) view.findViewById(R.id.number_picker_switch);
