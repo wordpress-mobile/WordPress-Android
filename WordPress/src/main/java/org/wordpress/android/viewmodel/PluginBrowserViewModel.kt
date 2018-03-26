@@ -21,7 +21,11 @@ import org.wordpress.android.models.ListNetworkResource
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.AppLog.T
 import org.wordpress.android.util.StringUtils
-import org.wordpress.android.viewmodel.PluginBrowserViewModel.PluginListType.*
+import org.wordpress.android.viewmodel.PluginBrowserViewModel.PluginListType.FEATURED
+import org.wordpress.android.viewmodel.PluginBrowserViewModel.PluginListType.NEW
+import org.wordpress.android.viewmodel.PluginBrowserViewModel.PluginListType.POPULAR
+import org.wordpress.android.viewmodel.PluginBrowserViewModel.PluginListType.SEARCH
+import org.wordpress.android.viewmodel.PluginBrowserViewModel.PluginListType.SITE
 import java.util.ArrayList
 import java.util.HashMap
 import java.util.HashSet
@@ -370,7 +374,7 @@ constructor(private val mDispatcher: Dispatcher, private val mPluginStore: Plugi
                 }
             }, 250)
         } else {
-            clearSearchResults()
+            serPlugins.manuallyUpdateData(ArrayList())
 
             if (shouldSearch()) {
                 fetchPlugins(SEARCH, false)
@@ -383,13 +387,9 @@ constructor(private val mDispatcher: Dispatcher, private val mPluginStore: Plugi
                 // be triggered again, because another fetch didn't happen (due to query being empty)
                 // 4. The status will be stuck in FETCHING until another search occurs. The following reset fixes the
                 // problem.
-                _searchPluginsListStatus.postValue(PluginListStatus.DONE)
+                serPlugins.resetStatus()
             }
         }
-    }
-
-    private fun clearSearchResults() {
-        _searchResults.postValue(ArrayList())
     }
 
     fun shouldShowEmptySearchResultsView(): Boolean {

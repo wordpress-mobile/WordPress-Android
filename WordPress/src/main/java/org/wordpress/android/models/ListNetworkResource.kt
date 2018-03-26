@@ -2,9 +2,9 @@ package org.wordpress.android.models
 
 import android.arch.lifecycle.MutableLiveData
 
-class ListNetworkResource<T> constructor(private val paginationAvailable: Boolean = true) {
+class ListNetworkResource<in T> constructor(private val paginationAvailable: Boolean = true) {
     private enum class Status {
-        READY, // Initial state, data has not yet been fetched or refreshed
+        READY, // Initial state or manual reset (mostly for search)
 
         // Success states
         SUCCESS, // All data has been successfully fetched - unless user triggers a manual fetch, it's the final state
@@ -34,15 +34,13 @@ class ListNetworkResource<T> constructor(private val paginationAvailable: Boolea
 
     private fun shouldFetchFirstPage() = status.value != Status.FETCHING_FIRST_PAGE
 
-    // Updating Status - Fetch
+    // Updating Status
 
     fun fetching(loadingMore: Boolean = false) = if (loadingMore) loadingMore() else fetchingFirstPage()
 
     private fun fetchingFirstPage() = updateStatusIfChanged(Status.FETCHING_FIRST_PAGE)
 
     private fun loadingMore() = updateStatusIfChanged(Status.LOADING_MORE)
-
-    // Updating Status - Error
 
     fun connectionError() = updateStatusIfChanged(Status.CONNECTION_ERROR)
 
@@ -53,9 +51,17 @@ class ListNetworkResource<T> constructor(private val paginationAvailable: Boolea
         updateStatusIfChanged(newStatus)
     }
 
-    // Updating Status - Success
+    fun resetStatus() {
+        updateStatusIfChanged(Status.READY)
+    }
 
-    fun fetchedSuccessfully(data: List<T>, wasLoadingMore: Boolean = false) {
+    // Data Management
+
+    fun fetchedSuccessfully(newData: List<T>, wasLoadingMore: Boolean = false) {
+        TODO()
+    }
+
+    fun manuallyUpdateData(newData: List<T>) {
         TODO()
     }
 
