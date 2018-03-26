@@ -6,6 +6,7 @@ import android.app.DialogFragment;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.view.ContextThemeWrapper;
 
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
@@ -116,7 +117,8 @@ public class WPAlertDialogFragment extends DialogFragment implements DialogInter
             dialogType = WPAlertDialogType.ALERT;
         }
 
-        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+        AlertDialog.Builder builder = new AlertDialog.Builder(
+                new ContextThemeWrapper(getActivity(), R.style.Calypso_Dialog));
 
         builder.setTitle(title);
         builder.setMessage(message);

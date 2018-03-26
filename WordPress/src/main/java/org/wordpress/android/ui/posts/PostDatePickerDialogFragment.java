@@ -9,6 +9,7 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.DialogFragment;
 import android.text.format.DateFormat;
+import android.view.ContextThemeWrapper;
 import android.widget.DatePicker;
 import android.widget.TimePicker;
 
@@ -114,12 +115,11 @@ public class PostDatePickerDialogFragment extends DialogFragment {
         switch (mDialogType) {
             case DATE_PICKER:
                 final DatePickerDialog datePickerDialog = new DatePickerDialog(
-                        getActivity(),
+                        new ContextThemeWrapper(getActivity(), R.style.Calypso_Dialog),
                         null,
                         mYear,
                         mMonth,
                         mDay);
-                datePickerDialog.setTitle(R.string.select_date);
                 datePickerDialog.setButton(
                         DialogInterface.BUTTON_POSITIVE,
                         getString(android.R.string.ok),
@@ -161,7 +161,7 @@ public class PostDatePickerDialogFragment extends DialogFragment {
             case TIME_PICKER:
                 boolean is24HrFormat = DateFormat.is24HourFormat(getActivity());
                 TimePickerDialog timePickerDialog = new TimePickerDialog(
-                        getActivity(),
+                        new ContextThemeWrapper(getActivity(), R.style.Calypso_Dialog),
                         new TimePickerDialog.OnTimeSetListener() {
                             @Override
                             public void onTimeSet(TimePicker timePicker,
@@ -179,7 +179,6 @@ public class PostDatePickerDialogFragment extends DialogFragment {
                         mHour,
                         mMinute,
                         is24HrFormat);
-                timePickerDialog.setTitle(R.string.select_time);
                 return timePickerDialog;
 
             default:

@@ -17,6 +17,7 @@ import android.support.v7.widget.SwitchCompat;
 import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.util.SparseBooleanArray;
+import android.view.ContextThemeWrapper;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -405,7 +406,8 @@ public class WPPrefView extends LinearLayout implements
             txtSubtitle.setVisibility(GONE);
         }
 
-        AlertDialog.Builder builder = new AlertDialog.Builder(getContext())
+        AlertDialog.Builder builder = new AlertDialog.Builder(
+                new ContextThemeWrapper(getContext(), R.style.Calypso_Dialog))
                 .setTitle(mTitleTextView.getText())
                 .setView(customView)
                 .setNegativeButton(android.R.string.cancel, null)
@@ -431,7 +433,8 @@ public class WPPrefView extends LinearLayout implements
             checkedItems[i] = mListItems.get(i).mIsChecked;
         }
 
-        AlertDialog.Builder builder = new AlertDialog.Builder(getContext())
+        AlertDialog.Builder builder = new AlertDialog.Builder(
+                new ContextThemeWrapper(getContext(), R.style.Calypso_Dialog))
                 .setTitle(mTitleTextView.getText())
                 .setNegativeButton(android.R.string.cancel, null)
                 .setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
@@ -461,7 +464,8 @@ public class WPPrefView extends LinearLayout implements
             }
         }
 
-        AlertDialog.Builder builder = new AlertDialog.Builder(getContext())
+        AlertDialog.Builder builder = new AlertDialog.Builder(
+                new ContextThemeWrapper(getContext(), R.style.Calypso_Dialog))
                 .setTitle(mTitleTextView.getText())
                 .setNegativeButton(android.R.string.cancel, null)
                 .setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
