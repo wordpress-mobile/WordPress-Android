@@ -51,28 +51,6 @@ constructor(private val mDispatcher: Dispatcher, private val mPluginStore: Plugi
     private val handler = Handler()
     private val updatedPluginSlugSet = HashSet<String>()
 
-    private val _featuredPlugins = MutableLiveData<List<ImmutablePluginModel>>()
-    val featuredPlugins: LiveData<List<ImmutablePluginModel>>
-        get() = _featuredPlugins
-
-    private val _popularPlugins = MutableLiveData<List<ImmutablePluginModel>>()
-    val popularPlugins: LiveData<List<ImmutablePluginModel>>
-        get() = _popularPlugins
-
-    private val _newPlugins = MutableLiveData<List<ImmutablePluginModel>>()
-    val newPlugins: LiveData<List<ImmutablePluginModel>>
-        get() = _newPlugins
-
-    private val _sitePlugins = MutableLiveData<List<ImmutablePluginModel>>()
-    val sitePlugins: LiveData<List<ImmutablePluginModel>>
-        get() = _sitePlugins
-    val isSitePluginsEmpty: Boolean
-        get() = sitePlugins.value == null || sitePlugins.value!!.isEmpty()
-
-    private val _searchResults = MutableLiveData<List<ImmutablePluginModel>>()
-    val searchResults: LiveData<List<ImmutablePluginModel>>
-        get() = _searchResults
-
     private val ffPlugins = ListNetworkResource<ImmutablePluginModel>()
     private val nnPlugins = ListNetworkResource<ImmutablePluginModel>()
     private val ppPlugins = ListNetworkResource<ImmutablePluginModel>()
@@ -140,10 +118,10 @@ constructor(private val mDispatcher: Dispatcher, private val mPluginStore: Plugi
     private fun reloadPluginDirectory(directoryType: PluginDirectoryType) {
         val pluginList = mPluginStore.getPluginDirectory(site!!, directoryType)
         when (directoryType) {
-            PluginDirectoryType.FEATURED -> _featuredPlugins.postValue(pluginList)
-            PluginDirectoryType.NEW -> _newPlugins.postValue(pluginList)
-            PluginDirectoryType.POPULAR -> _popularPlugins.postValue(pluginList)
-            PluginDirectoryType.SITE -> _sitePlugins.postValue(pluginList)
+            PluginDirectoryType.FEATURED -> ffPlugins.manuallyUpdateData(pluginList)
+            PluginDirectoryType.NEW -> nnPlugins.manuallyUpdateData(pluginList)
+            PluginDirectoryType.POPULAR -> ppPlugins.manuallyUpdateData(pluginList)
+            PluginDirectoryType.SITE -> sisPlugins.manuallyUpdateData(pluginList)
         }
     }
 
@@ -321,10 +299,10 @@ constructor(private val mDispatcher: Dispatcher, private val mPluginStore: Plugi
         }
         // By combining all the updated plugins into one map, we can post a single update to the UI after changes are
         // reflected
-        updatePluginListWithNewPlugin(_featuredPlugins, newPluginMap)
-        updatePluginListWithNewPlugin(_newPlugins, newPluginMap)
-        updatePluginListWithNewPlugin(_popularPlugins, newPluginMap)
-        updatePluginListWithNewPlugin(_searchResults, newPluginMap)
+        updatePluginListWithNewPlugin(ffPlugins, newPluginMap)
+        updatePluginListWithNewPlugin(nnPlugins, newPluginMap)
+        updatePluginListWithNewPlugin(ppPlugins, newPluginMap)
+        updatePluginListWithNewPlugin(serPlugins, newPluginMap)
 
         // Unfortunately we can't use the same method to update the site plugins because removing/installing plugins can
         // mess up the list. Also we care most about the Site Plugins and using the store to get the correct plugin
@@ -332,9 +310,9 @@ constructor(private val mDispatcher: Dispatcher, private val mPluginStore: Plugi
         reloadPluginDirectory(PluginDirectoryType.SITE)
     }
 
-    private fun updatePluginListWithNewPlugin(mutableLiveData: MutableLiveData<List<ImmutablePluginModel>>,
+    private fun updatePluginListWithNewPlugin(pluginListNetworkResource: ListNetworkResource<ImmutablePluginModel>,
                                               newPluginMap: Map<String, ImmutablePluginModel>) {
-        val pluginList = mutableLiveData.value
+        val pluginList = pluginListNetworkResource.data.value
         if (pluginList == null || pluginList.isEmpty() || newPluginMap.isEmpty()) {
             // Nothing to update
             return
@@ -356,7 +334,7 @@ constructor(private val mDispatcher: Dispatcher, private val mPluginStore: Plugi
         }
         // Only update if the list is actually changed
         if (isChanged) {
-            mutableLiveData.postValue(newList)
+            pluginListNetworkResource.manuallyUpdateData(newList)
         }
     }
 
@@ -407,11 +385,11 @@ constructor(private val mDispatcher: Dispatcher, private val mPluginStore: Plugi
 
     fun getPluginsForListType(listType: PluginListType): List<ImmutablePluginModel>? {
         return when (listType) {
-            SITE -> sitePlugins.value
-            FEATURED -> featuredPlugins.value
-            POPULAR -> popularPlugins.value
-            NEW -> newPlugins.value
-            SEARCH -> searchResults.value
+            SITE -> sisPlugins.data.value
+            FEATURED -> ffPlugins.data.value
+            POPULAR -> ppPlugins.data.value
+            NEW -> nnPlugins.data.value
+            SEARCH -> serPlugins.data.value
         }
     }
 
