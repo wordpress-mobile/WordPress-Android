@@ -1,9 +1,10 @@
 package org.wordpress.android.models
 
+import android.arch.lifecycle.LiveData
 import android.arch.lifecycle.MutableLiveData
 
-class ListNetworkResource<in T> constructor(private val paginationAvailable: Boolean = true) {
-    private enum class Status {
+class ListNetworkResource<T> constructor(private val paginationAvailable: Boolean = true) {
+    enum class Status {
         READY, // Initial state or manual reset (mostly for search)
 
         // Success states
@@ -19,12 +20,18 @@ class ListNetworkResource<in T> constructor(private val paginationAvailable: Boo
         FETCHING_FIRST_PAGE, // Fetching or refreshing first page
         LOADING_MORE // Pagination
     }
-    private var data: MutableLiveData<List<T>> = MutableLiveData()
-    private var status: MutableLiveData<Status> = MutableLiveData()
+    private var _data: MutableLiveData<List<T>> = MutableLiveData()
+    private var _status: MutableLiveData<Status> = MutableLiveData()
     private var errorMessage: String? = null
 
+    val data: LiveData<List<T>>
+        get() = _data
+
+    val status: LiveData<Status>
+        get() = _status
+
     init {
-        status.value = Status.READY
+        _status.value = Status.READY
     }
 
     // Checking Status
@@ -59,12 +66,12 @@ class ListNetworkResource<in T> constructor(private val paginationAvailable: Boo
     // Data Management
 
     fun fetchedSuccessfully(newData: List<T>, canLoadMore: Boolean = false) {
-        data.postValue(newData)
+        _data.postValue(newData)
         updateStatusIfChanged(if (canLoadMore) Status.CAN_LOAD_MORE else Status.SUCCESS)
     }
 
     fun manuallyUpdateData(newData: List<T>) {
-        data.postValue(newData)
+        _data.postValue(newData)
     }
 
     // Helpers
@@ -83,7 +90,7 @@ class ListNetworkResource<in T> constructor(private val paginationAvailable: Boo
 
     private fun updateStatusIfChanged(newStatus: Status) {
         if (status.value != newStatus) {
-            status.postValue(newStatus)
+            _status.postValue(newStatus)
         }
     }
 }
