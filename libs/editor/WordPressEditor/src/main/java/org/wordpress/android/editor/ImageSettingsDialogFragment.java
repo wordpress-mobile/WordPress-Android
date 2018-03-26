@@ -12,6 +12,7 @@ import android.support.v4.content.ContextCompat;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
+import android.view.ContextThemeWrapper;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -320,7 +321,8 @@ public class ImageSettingsDialogFragment extends DialogFragment {
      * Displays a dialog asking the user to confirm that they want to exit, discarding unsaved changes.
      */
     private void showDiscardChangesDialog() {
-        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+        AlertDialog.Builder builder = new AlertDialog.Builder(
+                new ContextThemeWrapper(getActivity(), R.style.Calypso_Dialog));
         builder.setTitle(getString(R.string.image_settings_dismiss_dialog_title));
         builder.setPositiveButton(getString(R.string.discard), new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int id) {

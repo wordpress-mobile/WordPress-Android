@@ -32,6 +32,7 @@ import android.text.Spanned;
 import android.text.TextUtils;
 import android.text.style.CharacterStyle;
 import android.text.style.SuggestionSpan;
+import android.view.ContextThemeWrapper;
 import android.view.DragEvent;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -1514,7 +1515,8 @@ public class EditPostActivity extends AppCompatActivity implements
                     : String.format(getString(R.string.editor_confirm_email_prompt_message_with_email),
                                     account.getEmail());
 
-            AlertDialog.Builder builder = new AlertDialog.Builder(this);
+            AlertDialog.Builder builder = new AlertDialog.Builder(
+                    new ContextThemeWrapper(this, R.style.Calypso_Dialog));
             builder.setTitle(R.string.editor_confirm_email_prompt_title)
                    .setMessage(message)
                    .setPositiveButton(android.R.string.ok,
@@ -2845,7 +2847,8 @@ public class EditPostActivity extends AppCompatActivity implements
         MediaModel media = mMediaStore.getMediaWithLocalId(StringUtils.stringToInt(mediaId));
         if (media == null) {
             AppLog.e(T.MEDIA, "Can't find media with local id: " + mediaId);
-            AlertDialog.Builder builder = new AlertDialog.Builder(this);
+            AlertDialog.Builder builder = new AlertDialog.Builder(
+                    new ContextThemeWrapper(this, R.style.Calypso_Dialog));
             builder.setTitle(getString(R.string.cannot_retry_deleted_media_item));
             builder.setPositiveButton(R.string.yes, new DialogInterface.OnClickListener() {
                 public void onClick(DialogInterface dialog, int id) {

@@ -17,6 +17,7 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SearchView;
 import android.text.TextUtils;
+import android.view.ContextThemeWrapper;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -369,7 +370,8 @@ public class SiteSettingsTagListActivity extends AppCompatActivity
 
     private void confirmDeleteTag(@NonNull final TermModel term) {
         String message = String.format(getString(R.string.dlg_confirm_delete_tag), term.getName());
-        AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(this);
+        AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(
+                new ContextThemeWrapper(this, R.style.Calypso_Dialog));
         dialogBuilder.setMessage(message);
         dialogBuilder.setPositiveButton(getResources().getText(R.string.delete_yes),
                                         new DialogInterface.OnClickListener() {
