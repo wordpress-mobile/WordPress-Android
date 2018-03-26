@@ -186,7 +186,7 @@ open class ActivityLogRestClient
                                     val published: Date?,
                                     val generator: Generator?,
                                     val is_rewindable: Boolean?,
-                                    val rewind_id: Float?,
+                                    val rewind_id: String?,
                                     val gridicon: String?,
                                     val status: String?,
                                     val activity_id: String?,
