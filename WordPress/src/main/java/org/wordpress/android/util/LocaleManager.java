@@ -26,21 +26,6 @@ import java.util.Map;
  */
 public class LocaleManager {
     /**
-     * Length of a {@link String} (representing a language code) when there is no region included.
-     * For example: "en" contains no region, "en_US" contains a region (US)
-     * <p>
-     * Used to parse a language code {@link String} when creating a {@link Locale}.
-     */
-    private static final int NO_REGION_LANG_CODE_LEN = 2;
-
-    /**
-     * Index of a language code {@link String} where the region code begins. The language code
-     * format is cc_rr, where cc is the country code (e.g. en, es, az) and rr is the region code
-     * (e.g. us, au, gb).
-     */
-    private static final int REGION_SUBSTRING_INDEX = 3;
-
-    /**
      * Key used for saving the language selection to shared preferences.
      */
     private static final String LANGUAGE_KEY = "language-pref";
@@ -74,7 +59,7 @@ public class LocaleManager {
      */
     public static boolean isSameLanguage(@NonNull String language) {
         Locale newLocale = languageLocale(language);
-        return Locale.getDefault().getLanguage().equals(newLocale.getLanguage());
+        return Locale.getDefault().toString().equals(newLocale.toString());
     }
 
     /**
@@ -84,10 +69,7 @@ public class LocaleManager {
      */
     private static String getLanguage(Context context) {
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
-        if (prefs.contains(LANGUAGE_KEY)) {
-            return prefs.getString(LANGUAGE_KEY, "");
-        }
-        return LanguageUtils.getCurrentDeviceLanguageCode(context);
+        return prefs.getString(LANGUAGE_KEY, LanguageUtils.getCurrentDeviceLanguageCode());
     }
 
     /**
@@ -111,7 +93,7 @@ public class LocaleManager {
      * @return The modified context containing the updated localized resources
      */
     private static Context updateResources(Context context, String language) {
-        Locale locale = new Locale(language);
+        Locale locale = languageLocale(language);
         Locale.setDefault(locale);
 
         Resources res = context.getResources();
@@ -168,12 +150,15 @@ public class LocaleManager {
         if (TextUtils.isEmpty(languageCode)) {
             return Locale.getDefault();
         }
-
-        if (languageCode.length() > NO_REGION_LANG_CODE_LEN) {
-            return new Locale(languageCode.substring(0, NO_REGION_LANG_CODE_LEN),
-                    languageCode.substring(REGION_SUBSTRING_INDEX));
+        if (languageCode.contains("_")) {
+            // Attempt to parse language and region codes.
+            String[] opts = languageCode.split("_");
+            if (opts.length >= 2) {
+                return new Locale(opts[0], opts[1]);
+            } else {
+                return new Locale(opts[0]);
+            }
         }
-
         return new Locale(languageCode);
     }
 
