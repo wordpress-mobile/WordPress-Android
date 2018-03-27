@@ -107,6 +107,9 @@ constructor(private val mDispatcher: Dispatcher, private val mPluginStore: Plugi
         }
     }
 
+    private val shouldSearch: Boolean
+        get() = searchQuery.length > 1 // We need at least 2 characters to be able to search plugins
+
     init {
         mDispatcher.register(this)
     }
@@ -403,14 +406,9 @@ constructor(private val mDispatcher: Dispatcher, private val mPluginStore: Plugi
         }
     }
 
-    private fun shouldSearch(): Boolean {
-        // We need at least 2 characters to be able to search plugins
-        return searchQuery.length > 1
-    }
-
     private fun submitSearch(query: String, delayed: Boolean) {
         // If the query is not long enough we don't need to delay it
-        if (delayed && shouldSearch()) {
+        if (delayed && shouldSearch) {
             handler.postDelayed({
                 if (query == searchQuery) {
                     submitSearch(query, false)
@@ -419,7 +417,7 @@ constructor(private val mDispatcher: Dispatcher, private val mPluginStore: Plugi
         } else {
             clearSearchResults()
 
-            if (shouldSearch()) {
+            if (shouldSearch) {
                 fetchPlugins(PluginListType.SEARCH, false)
             } else {
                 // Due to the query being changed after the last fetch, the status won't ever be updated, so we need
@@ -441,7 +439,7 @@ constructor(private val mDispatcher: Dispatcher, private val mPluginStore: Plugi
 
     fun shouldShowEmptySearchResultsView(): Boolean {
         // Search query is less than 2 characters
-        if (!shouldSearch()) {
+        if (!shouldSearch) {
             return false
         }
         return if (searchPluginsListStatus.value != PluginListStatus.DONE
