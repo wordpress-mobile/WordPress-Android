@@ -51,11 +51,11 @@ constructor(private val mDispatcher: Dispatcher, private val mPluginStore: Plugi
     private val handler = Handler()
     private val updatedPluginSlugSet = HashSet<String>()
 
-    private val ffPlugins = ListNetworkResource<ImmutablePluginModel>()
-    private val nnPlugins = ListNetworkResource<ImmutablePluginModel>()
-    private val ppPlugins = ListNetworkResource<ImmutablePluginModel>()
-    private val sisPlugins = ListNetworkResource<ImmutablePluginModel>()
-    private val serPlugins = ListNetworkResource<ImmutablePluginModel>()
+    private val featuredPluginsResource = ListNetworkResource<ImmutablePluginModel>()
+    private val newPluginsResource = ListNetworkResource<ImmutablePluginModel>()
+    private val popularPluginsResource = ListNetworkResource<ImmutablePluginModel>()
+    private val sitePluginsResource = ListNetworkResource<ImmutablePluginModel>()
+    private val searchPluginsResource = ListNetworkResource<ImmutablePluginModel>()
 
     private val _title = MutableLiveData<String>()
     val title: LiveData<String>
@@ -118,10 +118,10 @@ constructor(private val mDispatcher: Dispatcher, private val mPluginStore: Plugi
     private fun reloadPluginDirectory(directoryType: PluginDirectoryType) {
         val pluginList = mPluginStore.getPluginDirectory(site!!, directoryType)
         when (directoryType) {
-            PluginDirectoryType.FEATURED -> ffPlugins.manuallyUpdateData(pluginList)
-            PluginDirectoryType.NEW -> nnPlugins.manuallyUpdateData(pluginList)
-            PluginDirectoryType.POPULAR -> ppPlugins.manuallyUpdateData(pluginList)
-            PluginDirectoryType.SITE -> sisPlugins.manuallyUpdateData(pluginList)
+            PluginDirectoryType.FEATURED -> featuredPluginsResource.manuallyUpdateData(pluginList)
+            PluginDirectoryType.NEW -> newPluginsResource.manuallyUpdateData(pluginList)
+            PluginDirectoryType.POPULAR -> popularPluginsResource.manuallyUpdateData(pluginList)
+            PluginDirectoryType.SITE -> sitePluginsResource.manuallyUpdateData(pluginList)
         }
     }
 
@@ -139,27 +139,27 @@ constructor(private val mDispatcher: Dispatcher, private val mPluginStore: Plugi
         }
         when (listType) {
             SITE -> {
-                sisPlugins.fetching(loadMore)
+                sitePluginsResource.fetching(loadMore)
                 val payload = FetchPluginDirectoryPayload(PluginDirectoryType.SITE, site, loadMore)
                 mDispatcher.dispatch(PluginActionBuilder.newFetchPluginDirectoryAction(payload))
             }
             FEATURED -> {
-                ffPlugins.fetching(loadMore)
+                featuredPluginsResource.fetching(loadMore)
                 val featuredPayload = FetchPluginDirectoryPayload(PluginDirectoryType.FEATURED, site, loadMore)
                 mDispatcher.dispatch(PluginActionBuilder.newFetchPluginDirectoryAction(featuredPayload))
             }
             POPULAR -> {
-                ppPlugins.fetching(loadMore)
+                popularPluginsResource.fetching(loadMore)
                 val popularPayload = FetchPluginDirectoryPayload(PluginDirectoryType.POPULAR, site, loadMore)
                 mDispatcher.dispatch(PluginActionBuilder.newFetchPluginDirectoryAction(popularPayload))
             }
             NEW -> {
-                nnPlugins.fetching(loadMore)
+                newPluginsResource.fetching(loadMore)
                 val newPayload = FetchPluginDirectoryPayload(PluginDirectoryType.NEW, site, loadMore)
                 mDispatcher.dispatch(PluginActionBuilder.newFetchPluginDirectoryAction(newPayload))
             }
             SEARCH -> {
-                serPlugins.fetching(loadMore)
+                searchPluginsResource.fetching(loadMore)
                 val searchPayload = PluginStore.SearchPluginDirectoryPayload(site, searchQuery, 1)
                 mDispatcher.dispatch(PluginActionBuilder.newSearchPluginDirectoryAction(searchPayload))
             }
@@ -211,10 +211,10 @@ constructor(private val mDispatcher: Dispatcher, private val mPluginStore: Plugi
         }
         if (event.isError) {
             AppLog.e(T.PLUGINS, "An error occurred while searching the plugin directory")
-            serPlugins.fetchError(event.error.message)
+            searchPluginsResource.fetchError(event.error.message)
             return
         }
-        serPlugins.fetchedSuccessfully(event.plugins, false)
+        searchPluginsResource.fetchedSuccessfully(event.plugins, false)
     }
 
     @Subscribe(threadMode = ThreadMode.BACKGROUND)
@@ -299,10 +299,10 @@ constructor(private val mDispatcher: Dispatcher, private val mPluginStore: Plugi
         }
         // By combining all the updated plugins into one map, we can post a single update to the UI after changes are
         // reflected
-        updatePluginListWithNewPlugin(ffPlugins, newPluginMap)
-        updatePluginListWithNewPlugin(nnPlugins, newPluginMap)
-        updatePluginListWithNewPlugin(ppPlugins, newPluginMap)
-        updatePluginListWithNewPlugin(serPlugins, newPluginMap)
+        updatePluginListWithNewPlugin(featuredPluginsResource, newPluginMap)
+        updatePluginListWithNewPlugin(newPluginsResource, newPluginMap)
+        updatePluginListWithNewPlugin(popularPluginsResource, newPluginMap)
+        updatePluginListWithNewPlugin(searchPluginsResource, newPluginMap)
 
         // Unfortunately we can't use the same method to update the site plugins because removing/installing plugins can
         // mess up the list. Also we care most about the Site Plugins and using the store to get the correct plugin
@@ -352,7 +352,7 @@ constructor(private val mDispatcher: Dispatcher, private val mPluginStore: Plugi
                 }
             }, 250)
         } else {
-            serPlugins.manuallyUpdateData(ArrayList())
+            searchPluginsResource.manuallyUpdateData(ArrayList())
 
             if (shouldSearch()) {
                 fetchPlugins(SEARCH, false)
@@ -365,7 +365,7 @@ constructor(private val mDispatcher: Dispatcher, private val mPluginStore: Plugi
                 // be triggered again, because another fetch didn't happen (due to query being empty)
                 // 4. The status will be stuck in FETCHING until another search occurs. The following reset fixes the
                 // problem.
-                serPlugins.resetStatus()
+                searchPluginsResource.resetStatus()
             }
         }
     }
@@ -376,7 +376,9 @@ constructor(private val mDispatcher: Dispatcher, private val mPluginStore: Plugi
             return false
         }
         // Only show empty view if content is empty, we are not fetching new data and no errors occurred
-        return serPlugins.isEmpty() && !serPlugins.isFetchingFirstPage() && !serPlugins.isError()
+        return searchPluginsResource.isEmpty()
+                && !searchPluginsResource.isFetchingFirstPage()
+                && !searchPluginsResource.isError()
     }
 
     fun setTitle(title: String?) {
@@ -385,31 +387,31 @@ constructor(private val mDispatcher: Dispatcher, private val mPluginStore: Plugi
 
     fun getPluginsForListType(listType: PluginListType): List<ImmutablePluginModel>? {
         return when (listType) {
-            SITE -> sisPlugins.data.value
-            FEATURED -> ffPlugins.data.value
-            POPULAR -> ppPlugins.data.value
-            NEW -> nnPlugins.data.value
-            SEARCH -> serPlugins.data.value
+            SITE -> sitePluginsResource.data.value
+            FEATURED -> featuredPluginsResource.data.value
+            POPULAR -> popularPluginsResource.data.value
+            NEW -> newPluginsResource.data.value
+            SEARCH -> searchPluginsResource.data.value
         }
     }
 
     private fun getListNetworkResourceForDirectoryType(directoryType: PluginDirectoryType):
             ListNetworkResource<ImmutablePluginModel> {
         return when (directoryType) {
-            PluginDirectoryType.FEATURED -> ffPlugins
-            PluginDirectoryType.NEW -> nnPlugins
-            PluginDirectoryType.POPULAR -> ppPlugins
-            PluginDirectoryType.SITE -> sisPlugins
+            PluginDirectoryType.FEATURED -> featuredPluginsResource
+            PluginDirectoryType.NEW -> newPluginsResource
+            PluginDirectoryType.POPULAR -> popularPluginsResource
+            PluginDirectoryType.SITE -> sitePluginsResource
         }
     }
 
     private fun getListNetworkResourceForListType(listType: PluginListType): ListNetworkResource<ImmutablePluginModel> {
         return when (listType) {
-            SITE -> sisPlugins
-            FEATURED -> ffPlugins
-            POPULAR -> ppPlugins
-            NEW -> nnPlugins
-            SEARCH -> serPlugins
+            SITE -> sitePluginsResource
+            FEATURED -> featuredPluginsResource
+            POPULAR -> popularPluginsResource
+            NEW -> newPluginsResource
+            SEARCH -> searchPluginsResource
         }
     }
 }
